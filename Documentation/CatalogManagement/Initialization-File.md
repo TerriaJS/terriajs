@@ -1,3 +1,38 @@
+## Catalog (init) files
+
+A catalog in Terria is defined in one or more catalog files (also known as "init files"). Each is a JSON file with this basic structure:
+
+```
+{
+    "catalog": [
+        {
+            "type": "group",
+            "name": "My group",
+            "items": [
+            ...
+            ]
+        },
+        ...
+    ],
+    "homeCamera": {
+        "north": -8,
+        "east": 158,
+        "south": -45,
+        "west": 109
+    }
+}
+```
+
+Key points:
+
+* `catalog` is an array
+* Every element of that array must have a `type` (corresponding to a value recognised by TerriaJS) and a `name`
+* The three major categories of catalog member types are:
+    - `group`: a manually defined grouping of layers
+    - item types such as `geojson`, `wms`, `wfs` and `esri-mapServer`, which refer to one single layer
+    - group types such as `ckan`, `wms-getCapabilities` and `esri-mapServer-group`
+
+Most of the other properties of each layer depend on the specific type. We're working on generating documentation for each type. Meanwhile, you can look at the source code in Terria's [/Models](/Models) folder.
 
 ##Downloading the current initialization file
 
