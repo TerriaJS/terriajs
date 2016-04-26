@@ -45,7 +45,8 @@ const ChartPanel = React.createClass({
         const columnItemNames = [''];  // We will add the catalog item name back into the csv column name.
         for (let i = chartableItems.length - 1; i >= 0; i--) {
             const item = chartableItems[i];
-            let columns = [getXColumn(item)];
+            const xColumn = getXColumn(item);
+            let columns = [xColumn];
             if (item.isEnabled && defined(item.tableStructure)) {
                 if (!defined(columns[0])) {
                     continue;
