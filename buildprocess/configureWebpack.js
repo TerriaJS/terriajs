@@ -2,8 +2,6 @@ var path = require('path');
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var StringReplacePlugin = require("string-replace-webpack-plugin");
 const cesiumDir = path.dirname(require.resolve('terriajs-cesium'));
-const DirectoryLoader = require('./directory-loader');
-const webpack = require('webpack');
 
 function configureWebpack(terriaJSBasePath, config, devMode) {
     config.resolve = config.resolve || {};
@@ -157,11 +155,6 @@ function configureWebpack(terriaJSBasePath, config, devMode) {
         loader: require.resolve('imports-loader') + '?require=>false'
     });
 
-    //config.module.loaders.push({
-    //    test: require.resolve('terriajs-cesium/Source/Core/TaskProcessor'),
-    //    loader: require.resolve('imports-loader') + '?require=>false'
-    //});
-
     config.module.loaders.push({
         test: /\.(png|jpg|svg|gif)$/,
         loader: require.resolve('url-loader') + '?limit=8192'
@@ -185,9 +178,12 @@ function configureWebpack(terriaJSBasePath, config, devMode) {
             '*': {
                 target: 'http://localhost:3001',
                 bypass: function (req, res, proxyOptions) {
-                    if (req.url.indexOf('/proxy') !== 0 && req.url.indexOf('/proj4lookup') !== 0 &&
-                        req.url.indexOf('/convert') !== 0 && req.url.indexOf('/proxydomains') !== 0 &&
-                        req.url.indexOf('/errorpage') !== 0 && req.url.indexOf('/initfile') !== 0) {
+                    if (req.url.indexOf('/proxy') < 0 &&
+                        req.url.indexOf('/proj4lookup') < 0 &&
+                        req.url.indexOf('/convert') < 0 &&
+                        req.url.indexOf('/proxyabledomains') < 0 &&
+                        req.url.indexOf('/errorpage') < 0 &&
+                        req.url.indexOf('/initfile') < 0) {
                         return req.originalUrl;
                     }
                 }
