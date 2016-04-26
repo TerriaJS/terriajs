@@ -16,6 +16,8 @@ const ChartExpandButton = React.createClass({
         terria: React.PropTypes.object.isRequired,
         sources: React.PropTypes.array,
         sourceNames: React.PropTypes.array,
+        downloads: React.PropTypes.array,
+        downloadNames: React.PropTypes.array,
         catalogItem: React.PropTypes.object,
         feature: React.PropTypes.object,
         id: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
@@ -39,11 +41,13 @@ const ChartExpandButton = React.createClass({
         if (!defined(this.props.sources)) {
             return null;
         }
-        const that = this;
+        // The downloads and download names default to the sources and source names if not defined.
+        const downloads = this.props.downloads || this.props.sources;
+        const downloadNames = this.props.downloadNames || this.props.sourceNames;
         let downloadButton;
         if (defined(this.props.sourceNames)) {
             const sourceNameObjects = this.props.sourceNames.map(name=>{ return {name: name}; });
-            const nameAndHrefObjects = this.props.sourceNames.map((name, i)=>{ return {name: name, href: that.props.sources[i]}; });
+            const nameAndHrefObjects = downloadNames.map((name, i)=>{ return {name: name, href: downloads[i]}; });
             if (this.props.canDownload) {
                 downloadButton = <Dropdown selectOption={this.downloadDropdown} options={nameAndHrefObjects} buttonClassName='btn--download btn-primary'></Dropdown>;
             }
@@ -56,7 +60,7 @@ const ChartExpandButton = React.createClass({
             );
         }
         if (this.props.canDownload) {
-            const href = this.props.sources[0];
+            const href = downloads[0];
             downloadButton = <a className='btn btn--download' href={href}></a>;
         }
         return (
