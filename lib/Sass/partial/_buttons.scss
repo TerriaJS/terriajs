@@ -200,14 +200,16 @@ folder-open;
 
 .btn--close-modal{
   @extend .btn--close;
-  &:hover{
+  &:hover,
+  &:focus{
     color: $color-primary;
   }
 }
 
 .btn--close-feature{
   @extend .btn--close;
-  &:hover{
+  &:hover,
+  &:focus{
     color: $color-primary;
   }
 }
@@ -255,7 +257,8 @@ folder-open;
     height: auto;
     display: block;
   }
-  &:hover{
+  &:hover, 
+  &:focus{
     border: $border-style;
   }
   &.is-active{
@@ -421,7 +424,10 @@ folder-open;
   height: $padding*3.1;
   font-family: $font-pop;
   line-height: 18px;
-  &:hover, .is-open &, &.is-active {
+  &:hover,
+  &:focus,
+  .is-open &, 
+  &.is-active {
     background: $color-primary;
     text-decoration: none;
   }
