@@ -41,7 +41,7 @@ These options only need to be changed in unusual deployments. They define the UR
 Option                      | Meaning | Default
 ----------------------------|---------|---------
 `"regionMappingDefinitionsUrl"` | Location of the JSON file that defines region mapping for CSV files. |`data/regionMapping.json`
-`"conversionServiceBaseUrl"`    | Location of OGR2OGR conversion service (part of TerriaJS-Server). | `convert/``
+`"conversionServiceBaseUrl"`    | Location of OGR2OGR conversion service (part of TerriaJS-Server). | `convert/`
 `"proj4ServiceBaseUrl"`         | Location of Proj4 projection lookup service (part of TerriaJS-Server) | `proj4/`
 `"corsProxyBaseUrl"`            | Location of CORS proxy service (part of TerriaJS-Server)| `proxy/`
 `"proxyableDomainsUrl"`         | Location of list of domains which the CORS proxy service will allow to be proxied. | `proxyabledomains/`
