@@ -17,7 +17,7 @@ Location | Purpose
 * [TerriaJS URL parameters](TerriaJS-URL-parameters.md)
 * [How to control TerriaJS through an `<iframe>`](TerriaJS-in-iframe.md)
 * [Extending TerriaJS](Extending-TerriaJS.md): A guide for developers wanting to add new features such as new catalog item types, or otherwise modify Terria behaviour.
-* [CKAN previewer](Ckan-previewer.md)
+* [CKAN previewer](CKAN-previewer.md)
 
 Other tools and info:
 
