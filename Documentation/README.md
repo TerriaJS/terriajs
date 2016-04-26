@@ -6,3 +6,7 @@
 * [Contributors](Contributors): How to add new features to Terria, be part of the TerriaJS development team, how to set up a development environment, how to write tests and perform code reviews.
 
 Looking for help using a Terria-based site? Try [how to access data through NationalMap](http://nationalmap.gov.au/help/howto.html).
+
+This documentation is maintained at https://github.com/TerriaJS/TerriaJS/tree/master/Documentation.
+
+It can be viewed at https://terria.io/Documentation.
