@@ -7,6 +7,6 @@
 
 Looking for help using a Terria-based site? Try [how to access data through NationalMap](http://nationalmap.gov.au/help/howto.html).
 
-This documentation is maintained at https://github.com/TerriaJS/TerriaJS/tree/master/Documentation.
+This documentation is maintained at [github.com/TerriaJS/TerriaJS/tree/master/Documentation](https://github.com/TerriaJS/TerriaJS/tree/master/Documentation).
 
-It can be viewed at https://terria.io/Documentation.
+It can be viewed at [terria.io/Documentation](http://terria.io/Documentation).
