@@ -6,14 +6,12 @@ Change Log
 
 * TerriaJS-based application are now best built using Webpack instead of Browserify.
 * Fixed an exception being thrown when selecting a region while another region highlight was still loading.
-
-### 2.3.1
-
 * Added support for configuration of how time is displayed on the timeline - catalog items can now specify a dateFormat hash
     in their configuration that has formats for `timelineTic` (what is displayed on the timeline itself) and `currentTime`
     (which is the current time at the top-left).
 * Fixed display when `tableStyle.colorBins` is 0.
 * Added `fogSettings` option to init file to customize fog settings, introduced in Cesium 1.16.
+* Improved zooming to csvs, to include a small margin around the points.
 * Support ArcGis MapServer extents specified in a wider range of projections, including GDA MGA zones.
 
 ### 2.3.0
