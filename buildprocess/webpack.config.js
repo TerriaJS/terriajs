@@ -21,6 +21,12 @@ var config = {
                 loader: 'imports?require=>false'
             }
         ]
+    },
+    worker: {
+        output: {
+            filename: "hash.worker.js",
+            chunkFilename: "[id].hash.worker.js"
+        }
     }
 };
 
