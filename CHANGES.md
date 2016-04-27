@@ -5,6 +5,7 @@ Change Log
 ### 3.0.0
 
 * TerriaJS-based application are now best built using Webpack instead of Browserify.
+* Injected clicked lat and long into templates under `{{terria.coords.latitude}}` and `{{terria.coords.longitude}}`.
 * Fixed an exception being thrown when selecting a region while another region highlight was still loading.
 * Added support for configuration of how time is displayed on the timeline - catalog items can now specify a dateFormat hash
     in their configuration that has formats for `timelineTic` (what is displayed on the timeline itself) and `currentTime`
