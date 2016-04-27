@@ -44,9 +44,7 @@ gulp.task('watch-specs', function(done) {
     var webpack = require('webpack');
     var webpackConfig = require('./buildprocess/webpack.config.js');
 
-    watchWebpack(webpack, Object.assign({}, webpackConfig, {
-        devtool: 'eval-source-map',
-    }), done);
+    watchWebpack(webpack, webpackConfig, done);
 });
 
 gulp.task('make-schema', function() {
