@@ -20,6 +20,11 @@ const TerriaViewerWrapper = React.createClass({
         });
     },
 
+    componentWillUnmount() {
+        this.terriaViewer.destroy();
+        document.getElementById('cesiumContainer').innerHTML = '';
+    },
+
     onMouseMove(event) {
         if (this.props.terria.cesium) {
             const rect = this.mapElement.getBoundingClientRect();
