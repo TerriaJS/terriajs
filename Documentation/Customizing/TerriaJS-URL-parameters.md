@@ -18,7 +18,7 @@ Parameter      | Meaning
 `mode=preview`   | Operate in "preview mode", which mostly means not showing a warning if the screen is `small`  
 `share=`...      | Load a map view previously saved using the "Share" function with URL shortening.
 `start=`...      | Load a map view previously saved without URL shortening. The argument is a URL-encoded JSON structure defined using an internal format described below.
-\<initfile\>     | Load catalog file as described below.
+`[initfile]`     | Load catalog file as described below.
 `tools=1`        | Enable the secret tools panel (an additional button at the top), which has features like timing the response times of WMS layers and exporting the current view as JSON.
 
 ### Catalog files (init files)
@@ -26,6 +26,8 @@ Parameter      | Meaning
 Any unrecognised parameter (eg `foo`) is treated as the name of a catalog file, loaded from the directory `wwwroot/init/foo.json`). Multiple catalog files can be loaded this way, and will be combined. Later files can override earlier ones.
 
 Example: http://nationalmap.gov.au#test
+
+See [Initialization File](../CatalogManagement/Initialization-File.md) for the format of catalog files.
 
 ### Start data
 

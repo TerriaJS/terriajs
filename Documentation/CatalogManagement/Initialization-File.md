@@ -56,3 +56,10 @@ Catalog files can be edited three ways:
 1. Using a desktop text editor. Be very careful to ensure that your file is valid JSON. This is more restrictive format than simple JavaScript, for instance. You can use http://jsonlint.com/ .
 2. Using a JSON-specific editor, such as http://www.jsoneditoronline.org/. This has the advantage that your file will be valid JSON.
 3. Using the Terria Catalog Editor, currently available in a preview version at http://nationalmap.gov.au/editor/ . This editor is not yet considered reliable, and may cause data corruption.
+
+## Catalog item documentation
+
+Currently we do not have user documentation for each of the specific catalog item types available. Sources of information:
+
+- the TerriaJS [Javascript Documentation](http://nationalmap.gov.au/build/TerriaJS/doc/Catalog.html) documents every property of each catalog item type, but does not distinguish between properties used internally and those loaded from catalog files.
+- the Terria Catalog Editor described above can be helpful.
