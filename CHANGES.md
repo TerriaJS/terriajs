@@ -28,6 +28,7 @@ Change Log
     * Fixed issue causing parts of geometry and billboards/labels to be clipped. [#3748](https://github.com/AnalyticalGraphicsInc/cesium/issues/3748)
     * Fixed bug where transparent image materials were drawn black.
     * Fixed `Color.fromCssColorString` from reusing the input `result` alpha value in some cases.
+* Added support for time-series data sets with gaps - these are skipped when scrubbing on the timeline or playing.
 
 ### 2.3.0
 
