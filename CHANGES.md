@@ -8,9 +8,6 @@ Change Log
 * Injected clicked lat and long into templates under `{{terria.coords.latitude}}` and `{{terria.coords.longitude}}`.
 * Fixed an exception being thrown when selecting a region while another region highlight was still loading.
 * Added `CesiumTerrainCatalogItem` to display a 3D surface model in a supported Cesium format.
-
-### 2.3.1
-
 * Added support for configuration of how time is displayed on the timeline - catalog items can now specify a dateFormat hash
     in their configuration that has formats for `timelineTic` (what is displayed on the timeline itself) and `currentTime`
     (which is the current time at the top-left).
