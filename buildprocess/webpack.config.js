@@ -11,7 +11,7 @@ var config = {
         filename: 'TerriaJS-specs.js',
         publicPath: 'build/'
     },
-    devtool: 'eval-source-map',
+    devtool: 'source-map',
     module: {
         loaders: [
             {
