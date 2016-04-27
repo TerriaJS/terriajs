@@ -57,7 +57,7 @@ Adding bridge:///Users/stevebennett/odev/nicta/nationalmap/vector-tiles/vector-t
 Config files have absolute paths, so publishing to a server requires editing all config files (all `hybrid.json` and the server's `config.json`). Replacing all the `hybrid.json` can be done using the following:
 
 ```bash
-find -name hybrid.json -exec sed -i .bak 's:/Users/Steve/Data61/vector-tile-server:/home/ubuntu/vector-tile-server:g' {} \;
+find -name hybrid.json -exec sed -i.bak 's:/Users/Steve/Data61/vector-tile-server:/home/ubuntu/vector-tile-server:g' {} \;
 ```
 
 ## Test the server from a Terria map

@@ -19,6 +19,8 @@ git checkout -b someBranchName
 
 If you're planning to upgrade TerriaJS's version of Cesium, you may choose to use the `terriajs` branch and merge in master from the official Cesium repository, instead of the precise version listed in `package.json`.
 
+If using the `terriajs` branch, use gulp task `terria-default` in order to build Cesium's assets for TerriaJS.
+
 Next, link your local version of Cesium into the global npm package repository:
 
 ```
