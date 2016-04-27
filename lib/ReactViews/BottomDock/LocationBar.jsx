@@ -43,7 +43,7 @@ const LocationBar = React.createClass({
 
     componentWillMount() {
         this.mapElement = document.getElementById('cesiumContainer');
-        this.geoidModel = new EarthGravityModel1996(this.props.terria.baseUrl + 'data/WW15MGH.DAC');
+        this.geoidModel = new EarthGravityModel1996(require('file!../../../wwwroot/data/WW15MGH.DAC'));
         this.useProjection = false;
         this.proj4Projection = '+proj=utm +ellps=GRS80 +units=m +no_defs';
         this.projectionUnits = 'm';

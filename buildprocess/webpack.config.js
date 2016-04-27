@@ -21,6 +21,11 @@ var config = {
                 loader: 'imports?require=>false'
             }
         ]
+    },
+    devServer: {
+        stats: 'minimal',
+        port: 3002,
+        contentBase: 'wwwroot/'
     }
 };
 

@@ -51,6 +51,10 @@ const DistanceLegend = React.createClass({
         });
     },
 
+    componentWillUnmount() {
+        this._removeSubscription && this._removeSubscription();
+    },
+
     addUpdateSubscription() {
         const that = this;
         if (defined(this.props.terria.cesium)) {

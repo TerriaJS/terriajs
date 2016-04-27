@@ -1,10 +1,10 @@
 @font-face {
     font-family: 'icomoon';
-    src: url('./TerriaJS/fonts/icomoon.eot?7u40jo');
-    src: url('./TerriaJS/fonts/icomoon.eot?7u40jo#iefix') format('embedded-opentype'),
-    url('./TerriaJS/fonts/icomoon.ttf?7u40jo') format('truetype'),
-    url('./TerriaJS/fonts/icomoon.woff?7u40jo') format('woff'),
-    url('./TerriaJS/fonts/icomoon.svg?7u40jo#icomoon') format('svg');
+    src: url('~TerriaJS/wwwroot/fonts/icomoon.eot?7u40jo');
+    src: url('~TerriaJS/wwwroot/fonts/icomoon.eot?7u40jo#iefix') format('embedded-opentype'),
+    url('~TerriaJS/wwwroot/fonts/icomoon.ttf?7u40jo') format('truetype'),
+    url('~TerriaJS/wwwroot/fonts/icomoon.woff?7u40jo') format('woff'),
+    url('~TerriaJS/wwwroot/fonts/icomoon.svg?7u40jo#icomoon') format('svg');
     font-weight: normal;
     font-style: normal;
 }

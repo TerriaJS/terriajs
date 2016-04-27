@@ -9,6 +9,9 @@
         "react",
         "jsx-control-statements"
     ],
+    "globals": {
+        "process": true
+    },
     "rules": {
         "jsx-control-statements/jsx-use-if-tag": 0,
 
