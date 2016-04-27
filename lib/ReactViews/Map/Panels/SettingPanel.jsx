@@ -91,7 +91,8 @@ const SettingPanel = React.createClass({
                                     className={'btn btn--basemap ' + (baseMap.catalogItem.name === currentBaseMap ? 'is-active' : '')}
                                     onClick={that.selectBaseMap.bind(this, baseMap)}
                                     onMouseEnter={that.mouseEnterBaseMap.bind(this, baseMap)}
-                                    onMouseLeave={that.mouseLeaveBaseMap.bind(this, baseMap)}>
+                                    onMouseLeave={that.mouseLeaveBaseMap.bind(this, baseMap)}
+                                    onFocus={that.mouseEnterBaseMap.bind(this, baseMap)}>
                                     <img alt={baseMap.catalogItem.name} src={baseMap.image}/>
                                 </button>
                             </li>);
