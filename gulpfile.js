@@ -137,11 +137,16 @@ gulp.task('copy-cesium-assets', function() {
     var path = require('path');
 
     var cesiumPackage = require.resolve('terriajs-cesium/package.json');
+    console.log("cesium package " + cesiumPackage);
     var cesiumRoot = path.dirname(cesiumPackage);
+    console.log("cesium root " + cesiumRoot);
     var cesiumWebRoot = path.join(cesiumRoot, 'wwwroot');
+    console.log("cesium web root " + cesiumWebRoot);
+    var huh = path.join(cesiumWebRoot, '**');
+    console.log("huh " + huh);
 
     return gulp.src([
-        path.join(cesiumWebRoot, '**')
+        huh
     ], {
         base: cesiumWebRoot
     }).pipe(gulp.dest('wwwroot/build/Cesium'));

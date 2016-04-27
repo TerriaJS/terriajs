@@ -14,7 +14,6 @@ var Cartographic = require('terriajs-cesium/Source/Core/Cartographic');
 var when = require('terriajs-cesium/Source/ThirdParty/when');
 var ImageryLayerFeatureInfo = require('terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo');
 var SceneTransforms = require('terriajs-cesium/Source/Scene/SceneTransforms');
-var TileBoundingBox = require('terriajs-cesium/Source/Scene/TileBoundingBox');
 var Rectangle = require('terriajs-cesium/Source/Core/Rectangle');
 
 var Cesium = require('../../lib/Models/Cesium');
@@ -34,7 +33,6 @@ describeIfSupported('Cesium Model', function() {
     var LONG_RAD = CesiumMath.toRadians(LONG_DEGREES);
     var EXPECTED_POS = Ellipsoid.WGS84.cartographicToCartesian(Cartographic.fromDegrees(LONG_DEGREES, LAT_DEGREES, HEIGHT));
     var RECTANGLE_CONTAINING_EXPECTED_POS = new Rectangle(LONG_RAD - 0.1, LAT_RAD - 0.1, LONG_RAD + 0.1, LAT_RAD + 0.1);
-    var expectedPosScreenCoords;
 
     var imageryLayers, imageryLayerPromises;
 
@@ -54,8 +52,6 @@ describeIfSupported('Cesium Model', function() {
 
         cesium = new Cesium(terria, cesiumWidget);
         cesium.scene.globe._imageryLayerCollection.removeAll(true);
-
-        expectedPosScreenCoords = SceneTransforms.wgs84ToWindowCoordinates(cesium.scene, EXPECTED_POS);
 
         imageryLayers = [];
         imageryLayerPromises = [];
@@ -180,101 +176,6 @@ describeIfSupported('Cesium Model', function() {
                 });
             });
 
-        });
-
-        describe('via clicking the screen', function() {
-            var doClick;
-
-            beforeEach(function() {
-                // There should be some way to make this work without cheating like this but I can't figure out how.
-                spyOn(cesium.scene.globe, 'pick').and.returnValue(EXPECTED_POS);
-                doClick = cesium.viewer.screenSpaceEventHandler.setInputAction.calls.argsFor(0)[0];
-
-                var tile = new TileBoundingBox({
-                    rectangle: RECTANGLE_CONTAINING_EXPECTED_POS
-                });
-
-                tile.data = {
-                    imagery: imageryLayers.map(function(layer, i) {
-                        return {
-                            readyImagery: {
-                                imageryLayer: layer,
-                                rectangle: RECTANGLE_CONTAINING_EXPECTED_POS,
-                                x: i + 1,
-                                y: i + 2,
-                                level: i + 3
-                            },
-                            textureCoordinateRectangle: {
-                                x: 0.5,
-                                z: 0.5,
-                                y: 0.5,
-                                w: 0.5
-                            }
-                        };
-                    })
-                };
-
-                cesium.scene.globe._surface._tilesToRender = [tile];
-            });
-
-            stateTests(function() {
-                doClick({position: expectedPosScreenCoords});
-            });
-
-            testFeatureInfoProcessing(function() {
-                doClick({position: expectedPosScreenCoords});
-            });
-
-            it('includes vector features alongside raster ones', function(done) {
-                var vectorFeatures = [{
-                    id: new Entity({
-                        name: 'entity1'
-                    })
-                }, {
-                    primitive: {
-                        id: new Entity({
-                            name: 'entity2'
-                        })
-                    }
-                }];
-
-                spyOn(cesium.scene, 'drillPick').and.returnValue(vectorFeatures);
-
-                var rasterFeature = new ImageryLayerFeatureInfo();
-                rasterFeature.name = 'entity3';
-                imageryLayerPromises[0].resolve([rasterFeature]);
-                imageryLayerPromises[1].resolve([]);
-
-                doClick({position: expectedPosScreenCoords});
-
-                terria.pickedFeatures.allFeaturesAvailablePromise.then(function() {
-                    expect(cesium.scene.drillPick).toHaveBeenCalledWith(expectedPosScreenCoords);
-
-                    expect(terria.pickedFeatures.features[0].name).toBe('entity1');
-                    expect(terria.pickedFeatures.features[1].name).toBe('entity2');
-                    expect(terria.pickedFeatures.features[2].name).toBe('entity3');
-                }).then(done).otherwise(done.fail);
-            });
-
-            it('records tile coordinates when getting raster features', function(done) {
-                doClick({position: expectedPosScreenCoords});
-
-                imageryLayerPromises[0].resolve([]);
-                imageryLayerPromises[1].resolve([]);
-
-                terria.pickedFeatures.allFeaturesAvailablePromise.then(function() {
-                    expect(terria.pickedFeatures.providerCoords['http://example.com/1']).toEqual({
-                        x: 1,
-                        y: 2,
-                        level: 3
-                    });
-                    expect(terria.pickedFeatures.providerCoords['http://example.com/2']).toEqual({
-                        x: 2,
-                        y: 3,
-                        level: 4
-                    });
-                }).then(done).otherwise(done.fail);
-            });
         });
     });
 
