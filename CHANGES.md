@@ -6,6 +6,7 @@ Change Log
 
 * TerriaJS-based application are now best built using Webpack instead of Browserify.
 * Fixed an exception being thrown when selecting a region while another region highlight was still loading.
+* Added `CesiumTerrainCatalogItem` to display a 3D surface model in a supported Cesium format.
 
 ### 2.3.1
 
