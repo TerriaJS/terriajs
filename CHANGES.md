@@ -15,6 +15,7 @@ Change Log
 * Added `fogSettings` option to init file to customize fog settings, introduced in Cesium 1.16.
 * Improved zooming to csvs, to include a small margin around the points.
 * Support ArcGis MapServer extents specified in a wider range of projections, including GDA MGA zones.
+* WMS legends now use a bigger font, include labels, and are anti-aliased when we can determine that the server is Geoserver and supports these options.
 * Updated to [Cesium](http://cesiumjs.org) 1.20.  Significant changes relevant to TerriaJS users include:
     * Fixed loading for KML `NetworkLink` to not append a `?` if there isn't a query string.
     * Fixed handling of non-standard KML `styleUrl` references within a `StyleMap`.
