@@ -47,6 +47,7 @@ describeIfSupported('NowViewing with a minimal Cesium viewer', function() {
     beforeEach(function() {
         container = document.createElement('div');
         document.body.appendChild(container);
+
         widget = new CesiumWidget(container, {
             imageryProvider: new TileCoordinatesImageryProvider()
         });

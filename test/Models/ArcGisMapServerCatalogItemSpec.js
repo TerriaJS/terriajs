@@ -8,19 +8,16 @@ var loadWithXhr = require('terriajs-cesium/Source/Core/loadWithXhr');
 var ArcGisMapServerCatalogItem = require('../../lib/Models/ArcGisMapServerCatalogItem');
 var LegendUrl = require('../../lib/Map/LegendUrl');
 
-var terria;
-var item;
-
-beforeEach(function() {
-    terria = new Terria({
-        baseUrl: './'
-    });
-    item = new ArcGisMapServerCatalogItem(terria);
-});
-
 describe('ArcGisMapServerCatalogItem', function() {
+    var terria;
+    var item;
 
     beforeEach(function() {
+        terria = new Terria({
+            baseUrl: './'
+        });
+        item = new ArcGisMapServerCatalogItem(terria);
+
         var realLoadWithXhr = loadWithXhr.load;
         // We replace calls to GA's servers with pre-captured JSON files so our testing is isolated, but reflects real data.
         spyOn(loadWithXhr, 'load').and.callFake(function(url, responseType, method, data, headers, deferred, overrideMimeType, preferText, timeout) {
@@ -44,7 +41,7 @@ describe('ArcGisMapServerCatalogItem', function() {
 
     it('throws if constructed without a Terria instance', function() {
         expect(function() {
-            var viewModel = new ArcGisMapServerCatalogItem(); // jshint ignore:line
+            var viewModel = new ArcGisMapServerCatalogItem(); // eslint-disable-line no-unused-vars
         }).toThrow();
     });
 

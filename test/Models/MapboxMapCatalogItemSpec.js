@@ -24,7 +24,7 @@ describe('MapboxMapCatalogItem', function() {
 
     it('throws if constructed without a Terria instance', function() {
         expect(function() {
-            var viewModel = new MapboxMapCatalogItem(); // jshint ignore:line
+            var viewModel = new MapboxMapCatalogItem(); // eslint-disable-line no-unused-vars
         }).toThrow();
     });
 
