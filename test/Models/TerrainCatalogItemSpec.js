@@ -99,4 +99,19 @@ describe('TerrainCatalogItem', function() {
             });
         }).then(done).otherwise(done.fail);
     });
+
+    it('throws when shown in 2D', function(done) {
+        terria.leaflet = {};
+        spyOn(item, '_createTerrainProvider').and.returnValue({});
+        spyOn(terria.error, 'raiseEvent');
+
+        item.isEnabled = true;
+
+        when(item.load()).then(function() {
+            expect(terria.error.raiseEvent).toHaveBeenCalled();
+            expect(item.isShown).toBe(false);
+            item.isShown = true;
+            expect(terria.error.raiseEvent.calls.count()).toBe(2);
+        }).then(done).otherwise(done.fail);
+    });
 });

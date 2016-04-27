@@ -31,7 +31,7 @@
                 ],
                 "items": [
                     {
-                        "name": "Imagery",
+                        "name": "Caco with Imagery - Imagery",
                         "type": "url-template",
                         "url": "http://agi-tas-demo.s3-website-us-east-1.amazonaws.com/SandwichOrtho/TILES/caco_f1_rgb1_v4_ortho_TILES/{z}/{x}/{reverseY}.png",
                         "minimumLevel": 13,
@@ -44,7 +44,7 @@
                         ]
                     },
                     {
-                      "name": "Terrain",
+                      "name": "Caco with Imagery - Terrain",
                       "type": "cesium-terrain",
                       "url": "http://stkdesktop.agi.com/stk-terrain/v1/tilesets/CacoSample/tiles"
                     }
