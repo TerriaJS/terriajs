@@ -30,7 +30,7 @@ const BottomDock = React.createClass({
         return (
             <div className='bottom-dock'>
                 <div className='location-distance'>
-                    <LocationBar terria={terria}/>
+                    <LocationBar terria={terria} mouseCoords={this.props.viewState.mouseCoords} />
                     <DistanceLegend terria={terria}/>
                 </div>
                 <ChartPanel terria={terria} onHeightChange={this.onHeightChange} viewState={this.props.viewState}/>

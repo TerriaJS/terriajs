@@ -19,7 +19,6 @@ const MapNavigation = React.createClass({
     propTypes: {
         terria: React.PropTypes.object,
         allBaseMaps: React.PropTypes.array,
-        terriaViewer: React.PropTypes.object
     },
 
     render() {
@@ -30,11 +29,12 @@ const MapNavigation = React.createClass({
                         <FullScreenButton terria={this.props.terria}/>
                     </li>
                     <li>
-                        <SettingPanel terria={this.props.terria} allBaseMaps={this.props.allBaseMaps}
-                                      terriaViewer={this.props.terriaViewer}/>
+                        <SettingPanel terria={this.props.terria} allBaseMaps={this.props.allBaseMaps}/>
                     </li>
                     <li>
-                        <DropdownPanel btnClass="btn--map btn--share" btnText="Share" btnTitle="change settings"
+                        <DropdownPanel btnClass="btn--map btn--share"
+                                       btnText="Share"
+                                       btnTitle="change settings"
                                        className="share-panel">
                             <SharePanel terria={this.props.terria}/>
                         </DropdownPanel>

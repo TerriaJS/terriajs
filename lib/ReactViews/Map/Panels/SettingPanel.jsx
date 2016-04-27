@@ -10,7 +10,6 @@ const SettingPanel = React.createClass({
 
     propTypes: {
         terria: React.PropTypes.object,
-        terriaViewer: React.PropTypes.object,
         viewerModes: React.PropTypes.array,
         allBaseMaps: React.PropTypes.array
     },
