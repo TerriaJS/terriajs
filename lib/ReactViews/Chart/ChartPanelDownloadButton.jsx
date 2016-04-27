@@ -23,22 +23,28 @@ const ChartPanelDownloadButton = React.createClass({
     },
 
     componentDidMount() {
+        const that = this;
+        console.log('ChartPanelDownloadButton componentDidMount');
+        this._subscription = knockout.getObservable(this.props.terria.catalog, 'chartableItems').subscribe(this.runWorker);
+        this.runWorker(this.props.terria.catalog.chartableItems);
+    },
+
+    runWorker(newValue) {
         var that = this;
-        this._subscription = knockout.getObservable(this.props.terria.catalog, 'chartableItems').subscribe(function(newValue) {
-            var HrefWorker = require("worker!./downloadHrefWorker");
-            var worker = new HrefWorker;
-            var essentialData = this.props.terria.catalog.chartableItems.map(item=>{
-                return {
-                    isEnabled: item.isEnabled,
-                    name: item.name,
-                    tableStructure: item.tableStructure
-                };
-            });
-            worker.postMessage(essentialData);
+        that.setState({href: undefined});
+        console.log('knockout getObservable chartableItems changed to', newValue);
+        const HrefWorker = require('worker!./downloadHrefWorker');
+        const worker = new HrefWorker;
+        const columnArrays = that.synthesizeColumnArrays();
+        const valueArrays = columnArrays.map(array => array.map(column => column.values));
+        console.log('value arrays', valueArrays);
+        if (valueArrays && valueArrays.length > 0) {
+            worker.postMessage(valueArrays);
             worker.onmessage = function(event) {
+                console.log('got worker message', event.data);
                 that.setState({href: event.data});
             }
-        }, this);
+        }
     },
 
     componentWillUnmount() {
@@ -47,37 +53,38 @@ const ChartPanelDownloadButton = React.createClass({
         }
     },
 
-    // synthesizeTableStructure() {
-    //     const chartableItems = this.props.terria.catalog.chartableItems;
-    //     const columnArrays = [];
-    //     const columnItemNames = [''];  // We will add the catalog item name back into the csv column name.
-    //     for (let i = chartableItems.length - 1; i >= 0; i--) {
-    //         const item = chartableItems[i];
-    //         const xColumn = getXColumn(item);
-    //         let columns = [xColumn];
-    //         if (item.isEnabled && defined(item.tableStructure)) {
-    //             if (!defined(columns[0])) {
-    //                 continue;
-    //             }
-    //             const yColumns = item.tableStructure.columnsByType[VarType.SCALAR].filter(column=>column.isActive);
-    //             if (yColumns.length > 0) {
-    //                 columns = columns.concat(yColumns);
-    //                 columnArrays.push(columns);
-    //                 for (let j = yColumns.length - 1; j >= 0; j--) {
-    //                     columnItemNames.push(item.name);
-    //                 }
-    //             }
-    //         }
-    //     }
-    //     const result = TableStructure.fromColumnArrays(columnArrays);
-    //     // Adjust the column names.
-    //     if (defined(result)) {
-    //         for (let k = result.columns.length - 1; k >= 0; k--) {
-    //             result.columns[k].name = columnItemNames[k] + ' ' + result.columns[k].name;
-    //         }
-    //     }
-    //     return result;
-    // },
+    synthesizeColumnArrays() {
+        const chartableItems = this.props.terria.catalog.chartableItems;
+        const columnArrays = [];
+        const columnItemNames = [''];  // We will add the catalog item name back into the csv column name.
+        for (let i = chartableItems.length - 1; i >= 0; i--) {
+            const item = chartableItems[i];
+            const xColumn = getXColumn(item);
+            let columns = [xColumn];
+            if (item.isEnabled && defined(item.tableStructure)) {
+                if (!defined(columns[0])) {
+                    continue;
+                }
+                const yColumns = item.tableStructure.columnsByType[VarType.SCALAR].filter(column=>column.isActive);
+                if (yColumns.length > 0) {
+                    columns = columns.concat(yColumns);
+                    columnArrays.push(columns);
+                    for (let j = yColumns.length - 1; j >= 0; j--) {
+                        columnItemNames.push(item.name);
+                    }
+                }
+            }
+        }
+        return columnArrays;
+        // const result = TableStructure.fromColumnArrays(columnArrays);
+        // // Adjust the column names.
+        // if (defined(result)) {
+        //     for (let k = result.columns.length - 1; k >= 0; k--) {
+        //         result.columns[k].name = columnItemNames[k] + ' ' + result.columns[k].name;
+        //     }
+        // }
+        // return result;
+    },
 
     render() {
         if (this.state.href) {
