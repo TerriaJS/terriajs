@@ -31,7 +31,6 @@ gulp.task('release-specs', function(done) {
     var webpackConfig = require('./buildprocess/webpack.config.js');
 
     runWebpack(webpack, Object.assign({}, webpackConfig, {
-        devtool: 'source-map',
         plugins: [
             new webpack.optimize.UglifyJsPlugin(),
             new webpack.optimize.DedupePlugin(),
@@ -45,7 +44,9 @@ gulp.task('watch-specs', function(done) {
     var webpack = require('webpack');
     var webpackConfig = require('./buildprocess/webpack.config.js');
 
-    watchWebpack(webpack, webpackConfig, done);
+    watchWebpack(webpack, Object.assign({}, webpackConfig, {
+        devtool: 'eval-source-map',
+    }), done);
 });
 
 gulp.task('make-schema', function() {
