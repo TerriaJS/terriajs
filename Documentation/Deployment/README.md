@@ -6,7 +6,7 @@
 * [Overall system architecture](Overall-system-architecture.md): How the bits fit together.
 * [Problems and solutions](Problems-and-Solutions.md): Go here if something bad happens.
 
-Once you're up and running, see [Working with Terria](/Documentation/WorkingWithTerria) for tweaking, configuring and skinning information.
+Once you're up and running, see [Customizing](/Documentation/Customizing) for tweaking, configuring and skinning information.
 
 In addition to deploying Terria itself, you may want to install support services:
 
