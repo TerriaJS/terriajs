@@ -18,6 +18,7 @@ const MapNavigation = React.createClass({
     mixins: [ObserveModelMixin],
     propTypes: {
         terria: React.PropTypes.object,
+        viewState: React.PropTypes.object.isRequired,
         allBaseMaps: React.PropTypes.array,
     },
 
@@ -26,7 +27,7 @@ const MapNavigation = React.createClass({
             <div className='map-navigation'>
                 <ul className='map-navigation__menu'>
                     <li>
-                        <FullScreenButton terria={this.props.terria}/>
+                        <FullScreenButton terria={this.props.terria} viewState={this.props.viewState} />
                     </li>
                     <li>
                         <SettingPanel terria={this.props.terria} allBaseMaps={this.props.allBaseMaps}/>

@@ -5,7 +5,8 @@
   width: $work-bench-width;
   height: 100vh;
   @extend .sm-show;
-  .is-full-screen &{
+
+  &.hidden {
     display: none!important;
   }
 }

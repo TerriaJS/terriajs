@@ -1,13 +1,14 @@
 import React from 'react';
 import TerriaViewer from '../ViewModels/TerriaViewer';
 import Cartesian2 from 'terriajs-cesium/Source/Core/Cartesian2';
+import classNames from 'classnames';
 
 const TerriaViewerWrapper = React.createClass({
     //mixins: [ObserveModelMixin],
 
     propTypes: {
         terria: React.PropTypes.object.isRequired,
-        mouseCoords: React.PropTypes.object.isRequired
+        viewState: React.PropTypes.object.isRequired
     },
 
     componentDidMount() {
@@ -29,15 +30,15 @@ const TerriaViewerWrapper = React.createClass({
         if (this.props.terria.cesium) {
             const rect = this.mapElement.getBoundingClientRect();
             const position = new Cartesian2(event.clientX - rect.left, event.clientY - rect.top);
-            this.props.mouseCoords.updateCoordinatesFromCesium(this.props.terria, position);
+            this.props.viewState.mouseCoords.updateCoordinatesFromCesium(this.props.terria, position);
         } else if (this.props.terria.leaflet) {
-            this.props.mouseCoords.updateCoordinatesFromLeaflet(this.props.terria, event.nativeEvent);
+            this.props.viewState.mouseCoords.updateCoordinatesFromLeaflet(this.props.terria, event.nativeEvent);
         }
     },
 
     render() {
         return (
-            <aside className="map overflow-hidden" onMouseMove={this.onMouseMove}>
+            <aside className={classNames('overflow-hidden', {'is-full-screen': this.props.viewState.isFullScreen})} onMouseMove={this.onMouseMove}>
                 <div id="cesiumContainer" ref={element => this.mapElement = element}></div>
             </aside>
         );
