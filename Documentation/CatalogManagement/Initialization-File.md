@@ -47,3 +47,10 @@ If using method 3, please note:
 
 - Files on Github, including Gist files, are not served with CORS. However, you can access them through a third-party service, rawgit.com. For instance, https://github.com/TerriaJS/terriajs/blob/master/wwwroot/test/init/test-tablestyle.json can be accessed as https://rawgit.com/TerriaJS/terriajs/master/wwwroot/test/init/test-tablestyle.json.
 
+## Editing catalog files
+
+Catalog files can be edited three ways:
+
+1. Using a desktop text editor. Be very careful to ensure that your file is valid JSON. This is more restrictive format than simple JavaScript, for instance. You can use http://jsonlint.com/ .
+2. Using a JSON-specific editor, such as http://www.jsoneditoronline.org/. This has the advantage that your file will be valid JSON.
+3. Using the Terria Catalog Editor, currently available in a preview version at http://nationalmap.gov.au/editor/ . This editor is not yet considered reliable, and may cause data corruption.
