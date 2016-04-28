@@ -20,7 +20,7 @@ const FullScreenButton = React.createClass({
         };
     },
     toggleFullScreen() {
-        this.props.viewState.isFullScreen = !this.props.viewState.isFullScreen;
+        this.props.viewState.isMapFullScreen = !this.props.viewState.isMapFullScreen;
 
         this.props.terria.currentViewer.notifyRepaintRequired();
 
@@ -31,7 +31,7 @@ const FullScreenButton = React.createClass({
     },
 
     renderButtonText() {
-        if (this.props.viewState.isFullScreen) {
+        if (this.props.viewState.isMapFullScreen) {
             return <span className='exit-full-screen'>Exit Full Screen</span>;
         } else {
             return <span className='enter-full-screen'></span>;
@@ -39,7 +39,7 @@ const FullScreenButton = React.createClass({
     },
 
     render() {
-        return (<div className='full-screen'><button type='button' onClick={this.toggleFullScreen} title='go to full screen mode' className={'btn btn--map full-screen__button ' + (this.props.viewState.isFullScreen ? 'is-active' : '')}>{this.renderButtonText()}</button></div>);
+        return (<div className='full-screen'><button type='button' onClick={this.toggleFullScreen} title='go to full screen mode' className={'btn btn--map full-screen__button ' + (this.props.viewState.isMapFullScreen ? 'is-active' : '')}>{this.renderButtonText()}</button></div>);
     }
 });
 module.exports = FullScreenButton;

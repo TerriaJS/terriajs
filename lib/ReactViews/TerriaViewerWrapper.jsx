@@ -38,7 +38,7 @@ const TerriaViewerWrapper = React.createClass({
 
     render() {
         return (
-            <aside className={classNames('overflow-hidden', {'is-full-screen': this.props.viewState.isFullScreen})} onMouseMove={this.onMouseMove}>
+            <aside className={classNames('overflow-hidden', {'is-full-screen': this.props.viewState.isMapFullScreen})} onMouseMove={this.onMouseMove}>
                 <div id="cesiumContainer" ref={element => this.mapElement = element}></div>
             </aside>
         );
