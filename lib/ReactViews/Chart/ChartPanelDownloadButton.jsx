@@ -40,9 +40,10 @@ const ChartPanelDownloadButton = React.createClass({
         const worker = new HrefWorker;
         const columnArrays = that.synthesizeColumnArrays();
         const valueArrays = columnArrays.map(array => array.map(column => column.values));
+        const nameArrays = columnArrays.map(array => array.map(column => column.name));
         console.log('value arrays', valueArrays);
         if (valueArrays && valueArrays.length > 0) {
-            worker.postMessage(valueArrays);
+            worker.postMessage({values: valueArrays, names: nameArrays});
             worker.onmessage = function(event) {
                 console.log('got worker message', event.data.slice(0, 60), '...');
                 that.setState({href: event.data});
