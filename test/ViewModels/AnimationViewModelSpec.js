@@ -8,6 +8,8 @@ var JulianDate = require('terriajs-cesium/Source/Core/JulianDate');
 var L = require('leaflet');
 var TimeInterval = require('terriajs-cesium/Source/Core/TimeInterval');
 var TimeIntervalCollection = require('terriajs-cesium/Source/Core/TimeIntervalCollection');
+var dateFormat = require('dateformat');
+
 
 describe('AnimationViewModel', function() {
     var terria, catalogItem;
@@ -170,5 +172,113 @@ describe('AnimationViewModel', function() {
             evt.clock = terria.clock;
             animationVm.timeline._topDiv.dispatchEvent(evt);
         }
+    });
+
+    describe('time slider initial time as specified by timesliderInitTime ', function() {
+        // Future developers take note: some of these tests will stop working in August 3015.
+        it('should be present if not provided', function() {
+            terria.clock.startTime = JulianDate.fromIso8601('2015-08-07');
+            terria.clock.stopTime = JulianDate.fromIso8601('3015-08-09');
+            terria.clock.currentTime = JulianDate.fromIso8601('2016-01-01');
+            terria.timeSeriesStack.addLayerToTop(catalogItem);
+            terria.clock.onTick.raiseEvent(terria.clock);
+            var dateNow = dateFormat(JulianDate.now());
+            var currentTime = dateFormat(terria.clock.currentTime);
+            expect(currentTime).toBe(dateNow);
+        });
+
+        it('should be start if "start" set', function() {
+            terria.clock.startTime = JulianDate.fromIso8601('2015-08-07');
+            terria.clock.stopTime = JulianDate.fromIso8601('2015-08-09');
+            terria.clock.currentTime = JulianDate.fromIso8601('2015-08-08');
+            catalogItem.timesliderInitTime = 'start';
+            terria.timeSeriesStack.addLayerToTop(catalogItem);
+            terria.clock.onTick.raiseEvent(terria.clock);
+            expect(animationVm.currentTimeString).toBe('07/08/2015, 00:00:00');
+        });
+
+        it('should be start if date specified is before range', function() {
+            terria.clock.startTime = JulianDate.fromIso8601('2015-08-07');
+            terria.clock.stopTime = JulianDate.fromIso8601('2015-08-09');
+            terria.clock.currentTime = JulianDate.fromIso8601('2015-08-08');
+            catalogItem.timesliderInitTime = '2000-08-08';
+            terria.timeSeriesStack.addLayerToTop(catalogItem);
+            terria.clock.onTick.raiseEvent(terria.clock);
+            expect(animationVm.currentTimeString).toBe('07/08/2015, 00:00:00');
+        });
+
+        it('should be current time if "present" set', function() {
+            terria.clock.startTime = JulianDate.fromIso8601('2015-08-07');
+            terria.clock.stopTime = JulianDate.fromIso8601('3015-08-09');
+            terria.clock.currentTime = JulianDate.fromIso8601('2015-08-09');
+            catalogItem.timesliderInitTime = 'present';
+            terria.timeSeriesStack.addLayerToTop(catalogItem);
+            terria.clock.onTick.raiseEvent(terria.clock);
+            var dateNow = dateFormat(JulianDate.now());
+            var currentTime = dateFormat(terria.clock.currentTime);
+            expect(currentTime).toBe(dateNow);
+        });
+
+        it('should be last time if "end" set', function() {
+            terria.clock.startTime = JulianDate.fromIso8601('2015-08-07');
+            terria.clock.stopTime = JulianDate.fromIso8601('2015-08-09');
+            terria.clock.currentTime = JulianDate.fromIso8601('2015-08-08');
+            catalogItem.timesliderInitTime = 'end';
+            terria.timeSeriesStack.addLayerToTop(catalogItem);
+            terria.clock.onTick.raiseEvent(terria.clock);
+            expect(animationVm.currentTimeString).toBe('09/08/2015, 00:00:00');
+        });
+
+        it('should be last time if date specified is after range', function() {
+            terria.clock.startTime = JulianDate.fromIso8601('2015-08-07');
+            terria.clock.stopTime = JulianDate.fromIso8601('2015-08-09');
+            terria.clock.currentTime = JulianDate.fromIso8601('2015-08-08');
+            catalogItem.timesliderInitTime = '3015-08-08';
+            terria.timeSeriesStack.addLayerToTop(catalogItem);
+            terria.clock.onTick.raiseEvent(terria.clock);
+            expect(animationVm.currentTimeString).toBe('09/08/2015, 00:00:00');
+        });
+
+        it('should be set to date specified if date is specified', function() {
+            terria.clock.startTime = JulianDate.fromIso8601('2015-08-07');
+            terria.clock.stopTime = JulianDate.fromIso8601('2015-08-11');
+            terria.clock.currentTime = JulianDate.fromIso8601('2015-08-21');
+            catalogItem.timesliderInitTime = '2015-08-08';
+            terria.timeSeriesStack.addLayerToTop(catalogItem);
+            terria.clock.onTick.raiseEvent(terria.clock);
+            expect(animationVm.currentTimeString).toBe('08/08/2015, 00:00:00');
+        });
+
+        it('should be set to start if date specified is before time range', function() {
+            terria.clock.startTime = JulianDate.fromIso8601('2015-08-07');
+            terria.clock.stopTime = JulianDate.fromIso8601('2015-08-09');
+            terria.clock.currentTime = JulianDate.fromIso8601('2015-08-09');
+            catalogItem.timesliderInitTime = '2014-08-08';
+            terria.timeSeriesStack.addLayerToTop(catalogItem);
+            terria.clock.onTick.raiseEvent(terria.clock);
+            expect(animationVm.currentTimeString).toBe('07/08/2015, 00:00:00');
+        });
+
+        it('should be set to end if date specified is after time range', function() {
+            terria.clock.startTime = JulianDate.fromIso8601('2015-08-07');
+            terria.clock.stopTime = JulianDate.fromIso8601('2015-08-09');
+            terria.clock.currentTime = JulianDate.fromIso8601('2015-08-09');
+            catalogItem.timesliderInitTime = '2222-08-08';
+            terria.timeSeriesStack.addLayerToTop(catalogItem);
+            terria.clock.onTick.raiseEvent(terria.clock);
+            expect(animationVm.currentTimeString).toBe('09/08/2015, 00:00:00');
+        });
+
+        it('should be set to present if a rubbish string is specified', function() {
+            terria.clock.startTime = JulianDate.fromIso8601('2015-08-07');
+            terria.clock.stopTime = JulianDate.fromIso8601('3015-08-09');
+            terria.clock.currentTime = JulianDate.fromIso8601('2015-08-09');
+            catalogItem.timesliderInitTime = '201508-08';
+            expect(function() {terria.timeSeriesStack.addLayerToTop(catalogItem)}).toThrow();
+            terria.clock.onTick.raiseEvent(terria.clock);
+            var dateNow = dateFormat(JulianDate.now());
+            var currentTime = dateFormat(terria.clock.currentTime);
+            expect(currentTime).toBe(dateNow);
+        });
     });
 });
