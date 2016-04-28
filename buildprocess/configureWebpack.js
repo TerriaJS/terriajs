@@ -3,7 +3,7 @@ var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var StringReplacePlugin = require("string-replace-webpack-plugin");
 const cesiumDir = path.dirname(require.resolve('terriajs-cesium'));
 
-function configureWebpack(terriaJSBasePath, config, devMode) {
+function configureWebpack(terriaJSBasePath, config, devMode, hot) {
     config.resolve = config.resolve || {};
     config.resolve.extensions = config.resolve.extensions || ['', '.webpack.js', '.web.js', '.js'];
     config.resolve.extensions.push('.jsx');
@@ -200,7 +200,7 @@ function configureWebpack(terriaJSBasePath, config, devMode) {
     ]);
 
 
-    if (devMode) {
+    if (hot) {
         config.module.loaders.push({
             test: /\.scss$/,
             loaders: [require.resolve('style-loader'), require.resolve('css-loader') + '?sourceMap', require.resolve('sass-loader') + '?sourceMap']
@@ -208,13 +208,13 @@ function configureWebpack(terriaJSBasePath, config, devMode) {
     } else {
         config.module.loaders.push({
             test: /\.scss$/,
-            loader: ExtractTextPlugin.extract(require.resolve('css-loader') + '?sourceMap!' + require.resolve('sass-loader') + '?sourceMap')
+            loader: ExtractTextPlugin.extract(require.resolve('css-loader') + '?sourceMap!' + require.resolve('sass-loader') + '?sourceMap', {
+                publicPath: ''
+            })
         });
 
         config.plugins.push(
-            new ExtractTextPlugin("nationalmap.css", {
-                disable: devMode
-            })
+            new ExtractTextPlugin("nationalmap.css")
         );
     }
 
