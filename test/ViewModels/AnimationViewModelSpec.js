@@ -274,7 +274,7 @@ describe('AnimationViewModel', function() {
             terria.clock.stopTime = JulianDate.fromIso8601('3015-08-09');
             terria.clock.currentTime = JulianDate.fromIso8601('2015-08-09');
             catalogItem.timesliderInitTime = '201508-08';
-            expect(function() {terria.timeSeriesStack.addLayerToTop(catalogItem)}).toThrow();
+            expect(function() { terria.timeSeriesStack.addLayerToTop(catalogItem); } ).toThrow();
             terria.clock.onTick.raiseEvent(terria.clock);
             var dateNow = dateFormat(JulianDate.now());
             var currentTime = dateFormat(terria.clock.currentTime);
