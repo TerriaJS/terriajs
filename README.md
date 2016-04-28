@@ -48,6 +48,10 @@ Now visit the site in your browser at `http://localhost:3001`.
  
 More information: [Deploying your own Terria Map](https://github.com/NICTA/nationalmap/wiki/Deploying-your-own-Terria-Map)
 
+Documentation about working with Terria and developing it is at http://terria.io/Documentation
+
+JavaScript documentation is at http://nationalmap.gov.au/build/TerriaJS/doc
+
 ### Components and naming
 
 * **[Terria™](http://terria.io)** is the overall name for the spatial data platform, including closed-source spatial analytics developed by Data61.
