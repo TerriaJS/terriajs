@@ -23,32 +23,33 @@ const ChartPanelDownloadButton = React.createClass({
     },
 
     componentDidMount() {
-        console.log('ChartPanelDownloadButton mounted', this.props.chartableItems);
+        // console.log('ChartPanelDownloadButton mounted', this.props.chartableItems);
         this.runWorker(this.props.chartableItems);
     },
 
     componentWillReceiveProps(newProps) {
-        console.log('ChartPanelDownloadButton receiving props', this.props.chartableItems, newProps.chartableItems);
+        // console.log('ChartPanelDownloadButton receiving props', this.props.chartableItems, newProps.chartableItems);
         this.runWorker(newProps.chartableItems);
     },
 
     runWorker(newValue) {
         const that = this;
-        that.setState({href: undefined});
-        console.log('ChartPanelDownloadButton running worker with chartableItems', newValue);
-        const HrefWorker = require('worker!./downloadHrefWorker');
-        const worker = new HrefWorker;
-        const columnArrays = that.synthesizeColumnArrays();
-        const valueArrays = columnArrays.map(array => array.map(column => column.values));
-        const nameArrays = columnArrays.map(array => array.map(column => column.name));
-        console.log('value arrays', valueArrays);
-        if (valueArrays && valueArrays.length > 0) {
-            worker.postMessage({values: valueArrays, names: nameArrays});
-            worker.onmessage = function(event) {
-                console.log('got worker message', event.data.slice(0, 60), '...');
-                that.setState({href: event.data});
-            };
+        if (window.Worker) {
+            that.setState({href: undefined});
+            // console.log('ChartPanelDownloadButton running worker with chartableItems', newValue);
+            const HrefWorker = require('worker!./downloadHrefWorker');
+            const worker = new HrefWorker;
+            const synthesized = that.synthesizeNameAndValueArrays();
+            // console.log('names and value arrays', synthesized.names, synthesized.values);
+            if (synthesized.values && synthesized.values.length > 0) {
+                worker.postMessage(synthesized);
+                worker.onmessage = function(event) {
+                    // console.log('got worker message', event.data.slice(0, 60), '...');
+                    that.setState({href: event.data});
+                };
+            }
         }
+        // Currently no fallback for IE9-10 - just can't download.
     },
 
     componentWillUnmount() {
@@ -57,10 +58,10 @@ const ChartPanelDownloadButton = React.createClass({
         }
     },
 
-    synthesizeColumnArrays() {
+    synthesizeNameAndValueArrays() {
         const chartableItems = this.props.chartableItems;
-        const columnArrays = [];
-        const columnItemNames = [''];  // We will add the catalog item name back into the csv column name.
+        const valueArrays = [];
+        const names = [''];  // We will add the catalog item name back into the csv column name.
         for (let i = chartableItems.length - 1; i >= 0; i--) {
             const item = chartableItems[i];
             const xColumn = getXColumn(item);
@@ -72,22 +73,14 @@ const ChartPanelDownloadButton = React.createClass({
                 const yColumns = item.tableStructure.columnsByType[VarType.SCALAR].filter(column=>column.isActive);
                 if (yColumns.length > 0) {
                     columns = columns.concat(yColumns);
-                    columnArrays.push(columns);
-                    for (let j = yColumns.length - 1; j >= 0; j--) {
-                        columnItemNames.push(item.name);
-                    }
+                    valueArrays.push(columns.map(column => column.values));
+                    yColumns.forEach(column => {
+                        names.push(item.name + ' ' + column.name);
+                    });
                 }
             }
         }
-        return columnArrays;
-        // const result = TableStructure.fromColumnArrays(columnArrays);
-        // // Adjust the column names.
-        // if (defined(result)) {
-        //     for (let k = result.columns.length - 1; k >= 0; k--) {
-        //         result.columns[k].name = columnItemNames[k] + ' ' + result.columns[k].name;
-        //     }
-        // }
-        // return result;
+        return {values: valueArrays, names: names};
     },
 
     render() {
