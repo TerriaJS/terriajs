@@ -1,19 +1,19 @@
 'use strict';
-
-import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
+/* eslint new-parens: 0 */
 
 import DataUri from '../../Core/DataUri';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
-import TableStructure from '../../Map/TableStructure';
+// import TableStructure from '../../Map/TableStructure';
 import VarType from '../../Map/VarType';
 
 const ChartPanelDownloadButton = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        terria: React.PropTypes.object.isRequired,
+        chartableItems: React.PropTypes.array.isRequired,
+        errorEvent: React.PropTypes.object.isRequired
     },
 
     _subscription: undefined,
@@ -23,16 +23,19 @@ const ChartPanelDownloadButton = React.createClass({
     },
 
     componentDidMount() {
-        const that = this;
-        console.log('ChartPanelDownloadButton componentDidMount');
-        this._subscription = knockout.getObservable(this.props.terria.catalog, 'chartableItems').subscribe(this.runWorker);
-        this.runWorker(this.props.terria.catalog.chartableItems);
+        console.log('ChartPanelDownloadButton mounted', this.props.chartableItems);
+        this.runWorker(this.props.chartableItems);
+    },
+
+    componentWillReceiveProps(newProps) {
+        console.log('ChartPanelDownloadButton receiving props', this.props.chartableItems, newProps.chartableItems);
+        this.runWorker(newProps.chartableItems);
     },
 
     runWorker(newValue) {
-        var that = this;
+        const that = this;
         that.setState({href: undefined});
-        console.log('knockout getObservable chartableItems changed to', newValue);
+        console.log('ChartPanelDownloadButton running worker with chartableItems', newValue);
         const HrefWorker = require('worker!./downloadHrefWorker');
         const worker = new HrefWorker;
         const columnArrays = that.synthesizeColumnArrays();
@@ -41,9 +44,9 @@ const ChartPanelDownloadButton = React.createClass({
         if (valueArrays && valueArrays.length > 0) {
             worker.postMessage(valueArrays);
             worker.onmessage = function(event) {
-                console.log('got worker message', event.data);
+                console.log('got worker message', event.data.slice(0, 60), '...');
                 that.setState({href: event.data});
-            }
+            };
         }
     },
 
@@ -54,7 +57,7 @@ const ChartPanelDownloadButton = React.createClass({
     },
 
     synthesizeColumnArrays() {
-        const chartableItems = this.props.terria.catalog.chartableItems;
+        const chartableItems = this.props.chartableItems;
         const columnArrays = [];
         const columnItemNames = [''];  // We will add the catalog item name back into the csv column name.
         for (let i = chartableItems.length - 1; i >= 0; i--) {
@@ -88,8 +91,7 @@ const ChartPanelDownloadButton = React.createClass({
 
     render() {
         if (this.state.href) {
-            // TODO: if you add true to this to forceError, you'll see it never gets raised... why?  Or worse, sometimes it gets raised even after the download has worked?
-            const checkCompatibility = DataUri.checkCompatibility.bind(null, this.props.terria, this.state.href);
+            const checkCompatibility = DataUri.checkCompatibility.bind(null, this.props.errorEvent, this.state.href, false);
             return (
                 <a className='btn btn--download' download='chart data.csv' href={this.state.href} onClick={checkCompatibility}>Download</a>
             );
