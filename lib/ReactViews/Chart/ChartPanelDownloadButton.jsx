@@ -1,26 +1,67 @@
 'use strict';
+/* eslint new-parens: 0 */
 
 import DataUri from '../../Core/DataUri';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
-import TableStructure from '../../Map/TableStructure';
+// import TableStructure from '../../Map/TableStructure';
 import VarType from '../../Map/VarType';
 
 const ChartPanelDownloadButton = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        terria: React.PropTypes.object.isRequired,
+        chartableItems: React.PropTypes.array.isRequired,
+        errorEvent: React.PropTypes.object.isRequired
     },
 
-    componentDidUpdate() {
+    _subscription: undefined,
+
+    getInitialState: function() {
+        return {href: undefined};
     },
 
-    synthesizeTableStructure() {
-        const chartableItems = this.props.terria.catalog.chartableItems;
-        const columnArrays = [];
-        const columnItemNames = [''];  // We will add the catalog item name back into the csv column name.
+    componentDidMount() {
+        // console.log('ChartPanelDownloadButton mounted', this.props.chartableItems);
+        this.runWorker(this.props.chartableItems);
+    },
+
+    componentWillReceiveProps(newProps) {
+        // console.log('ChartPanelDownloadButton receiving props', this.props.chartableItems, newProps.chartableItems);
+        this.runWorker(newProps.chartableItems);
+    },
+
+    runWorker(newValue) {
+        const that = this;
+        if (window.Worker) {
+            that.setState({href: undefined});
+            // console.log('ChartPanelDownloadButton running worker with chartableItems', newValue);
+            const HrefWorker = require('worker!./downloadHrefWorker');
+            const worker = new HrefWorker;
+            const synthesized = that.synthesizeNameAndValueArrays();
+            // console.log('names and value arrays', synthesized.names, synthesized.values);
+            if (synthesized.values && synthesized.values.length > 0) {
+                worker.postMessage(synthesized);
+                worker.onmessage = function(event) {
+                    // console.log('got worker message', event.data.slice(0, 60), '...');
+                    that.setState({href: event.data});
+                };
+            }
+        }
+        // Currently no fallback for IE9-10 - just can't download.
+    },
+
+    componentWillUnmount() {
+        if (defined(this._subscription)) {
+            this._subscription.dispose();
+        }
+    },
+
+    synthesizeNameAndValueArrays() {
+        const chartableItems = this.props.chartableItems;
+        const valueArrays = [];
+        const names = [''];  // We will add the catalog item name back into the csv column name.
         for (let i = chartableItems.length - 1; i >= 0; i--) {
             const item = chartableItems[i];
             const xColumn = getXColumn(item);
@@ -32,31 +73,21 @@ const ChartPanelDownloadButton = React.createClass({
                 const yColumns = item.tableStructure.columnsByType[VarType.SCALAR].filter(column=>column.isActive);
                 if (yColumns.length > 0) {
                     columns = columns.concat(yColumns);
-                    columnArrays.push(columns);
-                    for (let j = yColumns.length - 1; j >= 0; j--) {
-                        columnItemNames.push(item.name);
-                    }
+                    valueArrays.push(columns.map(column => column.values));
+                    yColumns.forEach(column => {
+                        names.push(item.name + ' ' + column.name);
+                    });
                 }
             }
         }
-        const result = TableStructure.fromColumnArrays(columnArrays);
-        // Adjust the column names.
-        if (defined(result)) {
-            for (let k = result.columns.length - 1; k >= 0; k--) {
-                result.columns[k].name = columnItemNames[k] + ' ' + result.columns[k].name;
-            }
-        }
-        return result;
+        return {values: valueArrays, names: names};
     },
 
     render() {
-        const tableStructureToDownload = this.synthesizeTableStructure();
-        if (defined(tableStructureToDownload)) {
-            const href = DataUri.make('csv', tableStructureToDownload.toCsvString('isoDateTime'));
-            // TODO: if you add true to this to forceError, you'll see it never gets raised... why?  Or worse, sometimes it gets raised even after the download has worked?
-            const checkCompatibility = DataUri.checkCompatibility.bind(null, this.props.terria, href);
+        if (this.state.href) {
+            const checkCompatibility = DataUri.checkCompatibility.bind(null, this.props.errorEvent, this.state.href, false);
             return (
-                <a className='btn btn--download' download='chart data.csv' href={href} onClick={checkCompatibility}>Download</a>
+                <a className='btn btn--download' download='chart data.csv' href={this.state.href} onClick={checkCompatibility}>Download</a>
             );
         }
         return null;

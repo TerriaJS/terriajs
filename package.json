@@ -42,7 +42,8 @@
     "togeojson": "^0.13.0",
     "urijs": "^1.17.1",
     "urthecast": "^1.0.0",
-    "webpack": "^1.12.14"
+    "webpack": "^1.12.14",
+    "worker-loader": "^0.7.0"
   },
   "devDependencies": {
     "babel-eslint": "^6.0.2",

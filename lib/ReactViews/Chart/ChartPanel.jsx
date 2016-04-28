@@ -122,7 +122,7 @@ const ChartPanel = React.createClass({
                         <div className="chart-panel__body">
                             <div className="chart-panel__header" style={{height: 41, boxSizing: 'border-box'}}>
                                 <label className="chart-panel__section-label label">{loader || 'Charts'}</label>
-                                <ChartPanelDownloadButton terria={this.props.terria} />
+                                <ChartPanelDownloadButton chartableItems={this.props.terria.catalog.chartableItems} errorEvent={this.props.terria.error} />
                                 <button type='button' className="btn btn--close-chart-panel" onClick={this.closePanel} />
                             </div>
                             <div>
