@@ -7,6 +7,6 @@
 
 Looking for help using a Terria-based site? Try [how to access data through NationalMap](http://nationalmap.gov.au/help/howto.html).
 
-JavaScript documentation (generated from source code comments) is available at http://nationalmap.gov.au/build/TerriaJS/doc.
+JavaScript documentation (generated from source code comments) is available at [nationalmap.gov.au/build/TerriaJS/doc](http://nationalmap.gov.au/build/TerriaJS/doc).
 
 This documentation is maintained at [github.com/TerriaJS/TerriaJS/tree/master/Documentation](https://github.com/TerriaJS/TerriaJS/tree/master/Documentation). It can be viewed at [terria.io/Documentation](http://terria.io/Documentation).
