@@ -1,10 +1,13 @@
 'use strict';
 const React = require('react');
+import ObserveModelMixin from '../../ObserveModelMixin';
 
 import triggerResize from '../../../Core/triggerResize';
 
 // The button to make the map full screen and hide the workbench.
 const FullScreenButton = React.createClass({
+    mixins: [ObserveModelMixin],
+
     propTypes: {
         terria: React.PropTypes.object,
         viewState: React.PropTypes.object.isRequired,
@@ -20,7 +23,7 @@ const FullScreenButton = React.createClass({
         this.props.viewState.isFullScreen = !this.props.viewState.isFullScreen;
 
         this.props.terria.currentViewer.notifyRepaintRequired();
-        
+
         // Allow any animations to finish, then trigger a resize.
         setTimeout(function() {
             triggerResize();

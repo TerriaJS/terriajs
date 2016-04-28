@@ -4,7 +4,6 @@
   z-index: 1;
   width: $work-bench-width;
   height: 100vh;
-  @extend .sm-show;
 
   &.hidden {
     display: none!important;
@@ -45,25 +44,15 @@
 }
 
 .map{
-  left: 0;
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
+  position: relative;
+  display: table-cell;
   @include transition(left $animation-fast ease-in);
-  // width: 100%;
+  height: 100vh;
+
   body.chart-is-visible &{
     bottom: $chart-height;
   }
 
-  @media screen and (min-width: $sm) {
-    //temp
-    // width: calc(100% - $work-bench-width);
-    left: $work-bench-width;
-    .is-full-screen &{
-      left: 0;
-    }
-  }
   #cesiumContainer{
     position: absolute;
     top: 0;
