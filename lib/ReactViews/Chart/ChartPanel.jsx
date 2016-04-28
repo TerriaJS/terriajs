@@ -3,13 +3,11 @@
 import Chart from './Chart.jsx';
 import ChartData from '../../Charts/ChartData';
 import ChartPanelDownloadButton from './ChartPanelDownloadButton';
-import DataUri from '../../Core/DataUri';
 import ClassList from 'class-list';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import Loader from '../Loader.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
-import TableStructure from '../../Map/TableStructure';
 import VarType from '../../Map/VarType';
 
 const height = 250;
