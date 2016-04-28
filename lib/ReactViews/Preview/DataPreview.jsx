@@ -110,10 +110,13 @@ const DataPreview = React.createClass({
                     </div>
                     </div>);
         } else if(typeof previewed.invoke !== 'undefined') {
-            return <InvokeFunction previewed={previewed}
+            return (
+                <div className='data-preview__inner'>
+                    <InvokeFunction previewed={previewed}
                                    terria={this.props.terria}
                                    viewState={this.props.viewState}
-                    />;
+                    />
+                </div>);
         }
         return null;
     },
