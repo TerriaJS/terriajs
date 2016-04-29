@@ -28,11 +28,11 @@ export default React.createClass({
     },
 
     componentDidMount() {
-        this.search(this.props.searchText || '');
+        this.search(this.props.searchText);
     },
 
     componentWillReceiveProps(nextProps) {
-        this.search(nextProps.searchText || '');
+        this.search(nextProps.searchText);
     },
 
     componentWillUnmount() {
@@ -41,7 +41,7 @@ export default React.createClass({
     },
 
     search(newText) {
-        this.state.searches.forEach(search => search.search(newText));
+        this.state.searches.forEach(search => search.search(newText || ''));
     },
 
     searchInDataCatalog() {
