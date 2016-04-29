@@ -60,6 +60,10 @@ const DataPreview = React.createClass({
         return items;
     },
 
+    backToMap() {
+        this.props.viewState.modalVisible = false;
+    },
+
     renderPreview(previewed) {
         if(previewed.isMappable) {
             return <DataPreviewMap terria={this.props.terria}
@@ -92,15 +96,18 @@ const DataPreview = React.createClass({
     renderActions(previewed) {
         const metadataItem = defined(previewed.nowViewingCatalogItem) ? previewed.nowViewingCatalogItem : previewed;
         if (previewed.isMappable) {
-            return (<div className='data-preview__inner'>
-                        {this.renderPreview(previewed)}
-                        <div className='data-preview__info'>
+            return (
+                <div className='data-preview__inner'>
+                    <h3>{previewed.name}</h3>
+                    {this.renderPreview(previewed)}
+                    <div className='data-preview__info'>
                         <button type='button' onClick={this.toggleOnMap}
-                                className="btn toggle-enable"
-                                title={previewed.isEnabled ? 'remove from map' : 'add to map'}>
-                            {previewed.isEnabled ? 'Remove from map' : 'Add to map'}
+                                className="btn toggle-enable data-preview__add-to-map">
+                            {previewed.isEnabled ? 'Remove from the map' : 'Add to the map'}
                         </button>
-                        <h3>{previewed.name}</h3>
+                        <button type='button' className="btn data-preview__back-to-map" onClick={this.backToMap}>
+                            Back to the map
+                        </button>
                         <div className="data-info url">
                             {this.renderDescription(metadataItem)}
                             {this.renderSections(metadataItem)}
@@ -108,7 +115,8 @@ const DataPreview = React.createClass({
                             {this.renderUrl(metadataItem)}
                         </div>
                     </div>
-                    </div>);
+                </div>
+            );
         } else if(typeof previewed.invoke !== 'undefined') {
             return (
                 <div className='data-preview__inner'>

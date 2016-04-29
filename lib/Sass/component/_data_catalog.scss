@@ -1,6 +1,8 @@
-.data-catalog{
-  font-size: 90%;
+.panel--data-catalogue {
+  font-size: 0.9rem;
+}
 
+.data-catalog{
   @extend .list-reset;
   ul{
     @extend .list-reset;

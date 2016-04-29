@@ -19,12 +19,22 @@
 .data-preview__inner{
   height: 100%;
   overflow-y: auto;
-  padding: $padding;
+  padding: 0 $padding * 2.5;
 }
 
 .data-preview{
   height: 100%;
   overflow: hidden;
+
+  &__add-to-map.btn {
+    display: inline-block;
+    width: 60%;
+  }
+
+  &__back-to-map.btn {
+    display: inline-block;
+    width: 40%;
+  }
 }
 
 .btn.toggle-enable{
@@ -37,7 +47,8 @@
     @extend .sm-show;
 
     top: 5px;
-    padding: 2px 5px 0 5px;
+    left: 0;
+    padding: 3px 5px 0 5px;
     height: 16px;
     font-size: 75%;
   }
@@ -49,7 +60,7 @@
   position: relative;
   background: #d5d5d5;
   cursor: auto;
-  margin: $padding;
+  margin: $padding 0;
 
   .leaflet-control-attribution {
     font-size: 6px;
