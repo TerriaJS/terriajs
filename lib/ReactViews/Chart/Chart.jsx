@@ -76,10 +76,7 @@ const Chart = React.createClass({
             // Nothing to do - the data was provided.
             return when(chartParameters.data);
         } else if (defined(that.props.url)) {
-            // Load in the data file as a TableStructure.
-            const tableStructure = new TableStructure('feature info');
-            return loadText(that.props.url)
-                .then(tableStructure.loadFromCsv.bind(tableStructure))
+            return loadIntoTableStructure(that.props.url)
                 .then(that.chartDataArrayFromTableStructure)
                 .otherwise(function(e) {
                     // It looks better to create a blank chart than no chart.
@@ -198,5 +195,16 @@ const Chart = React.createClass({
         );
     }
 });
+
+/**
+ * Loads data from a URL into a table structure.
+ * @param  {String} url The URL.
+ * @return {Promise} A promise which resolves to a table structure.
+ */
+function loadIntoTableStructure(url) {
+    // Load in the data file as a TableStructure. Currently only understands csv.
+    const tableStructure = new TableStructure('feature info');
+    return loadText(url).then(tableStructure.loadFromCsv.bind(tableStructure));
+}
 
 module.exports = Chart;
