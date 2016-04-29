@@ -29,9 +29,7 @@ const StandardUserInterface = React.createClass({
             featureInfoPanelIsVisible: false,
 
             // True if the feature info panel is collapsed.
-            featureInfoPanelIsCollapsed: false,
-
-            useMobileInterface: this.shouldUseMobileInterface()
+            featureInfoPanelIsCollapsed: false
         };
     },
 
@@ -59,15 +57,11 @@ const StandardUserInterface = React.createClass({
         window.addEventListener('dragover', this.dragOverListener, false);
 
         this.resizeListener = () => {
-            const useMobileInterface = this.shouldUseMobileInterface();
-            if (useMobileInterface !== this.state.useMobileInterface) {
-                this.setState({
-                    useMobileInterface: useMobileInterface
-                });
-            }
+            this.props.viewState.useSmallScreenInterface = this.shouldUseMobileInterface();
         };
 
         window.addEventListener('resize', this.resizeListener, false);
+        this.resizeListener();
     },
 
     componentWillUnmount() {
@@ -127,20 +121,20 @@ const StandardUserInterface = React.createClass({
         return (
             <div>
                 <div className='header'>
-                    {this.state.useMobileInterface && <MobileHeader terria={terria}
+                    {this.props.viewState.useSmallScreenInterface && <MobileHeader terria={terria}
                                   viewState={this.props.viewState}
                     />}
                     <div className='workbench'>
                         <Branding onClick={this.showWelcome}
                                   terria={terria}
                         />
-                        {!this.state.useMobileInterface && <SidePanel terria={terria}
+                        {!this.props.viewState.useSmallScreenInterface && <SidePanel terria={terria}
                                    viewState={this.props.viewState}
                         />}
                     </div>
                 </div>
                 <main>
-                    {!this.state.useMobileInterface && <ModalWindow terria={terria}
+                    {!this.props.viewState.useSmallScreenInterface && <ModalWindow terria={terria}
                                  viewState={this.props.viewState}
                     />}
                 </main>
