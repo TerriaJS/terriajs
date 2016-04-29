@@ -20,6 +20,12 @@ const DataPreviewMap = React.createClass({
         previewedCatalogItem: React.PropTypes.object
     },
 
+    getInitialState() {
+        return {
+            previewBadgeText: 'PREVIEW LOADING...',
+        };
+    },
+
     componentWillMount() {
         const terria = this.props.terria;
 
@@ -47,7 +53,6 @@ const DataPreviewMap = React.createClass({
         this.isZoomedToExtent = false;
         this.lastPreviewedCatalogItem = undefined;
         this.removePreviewFromMap = undefined;
-        this.previewBadgeElement = undefined;
     },
 
     componentDidMount() {
@@ -63,7 +68,9 @@ const DataPreviewMap = React.createClass({
             return;
         }
 
-        this.previewBadgeElement.textContent = 'PREVIEW LOADING...';
+        this.setState({
+            previewBadgeText: 'PREVIEW LOADING...'
+        });
 
         this.isZoomedToExtent = false;
         this.terriaPreview.currentViewer.zoomTo(this.terriaPreview.homeView);
@@ -80,7 +87,7 @@ const DataPreviewMap = React.createClass({
         const previewed = this.props.previewedCatalogItem;
         if (previewed && defined(previewed.type) && previewed.isMappable) {
             const that = this;
-            return when(previewed.load()).then(function() {
+            return when(previewed.load()).then(() => {
                 // If this item has a separate now viewing item, load it before continuing.
                 let nowViewingItem;
                 let loadNowViewingItemPromise;
@@ -107,18 +114,26 @@ const DataPreviewMap = React.createClass({
                         that.removePreviewFromMap = nowViewingItem.showOnSeparateMap(that.terriaPreview.currentViewer);
 
                         if (that.removePreviewFromMap) {
-                            that.previewBadgeElement.textContent = 'PREVIEW';
+                            this.setState({
+                                previewBadgeText: 'PREVIEW'
+                            });
                         } else {
-                            that.previewBadgeElement.textContent = 'NO PREVIEW AVAILABLE';
+                            this.setState({
+                                previewBadgeText: 'NO PREVIEW AVAILABLE'
+                            });
                         }
                     } else {
-                        that.previewBadgeElement.textContent = 'NO PREVIEW AVAILABLE';
+                        this.setState({
+                            previewBadgeText: 'NO PREVIEW AVAILABLE'
+                        });
                     }
 
                     that.updateBoundingRectangle();
                 });
-            }).otherwise(function() {
-                that.previewBadgeElement.textContent = 'NO PREVIEW AVAILABLE';
+            }).otherwise(() => {
+                this.setState({
+                    previewBadgeText: 'NO PREVIEW AVAILABLE'
+                });
             });
         }
     },
@@ -233,15 +248,11 @@ const DataPreviewMap = React.createClass({
         }
     },
 
-    refPreviewBadge(element) {
-        this.previewBadgeElement = element;
-    },
-
     render() {
         return (<div className='data-preview-map' onClick={this.clickMap}>
                     <div className='terria-preview' ref={this.mapIsReady}>
                     </div>
-                    <label className='label--preview-badge' ref={this.refPreviewBadge}>PREVIEW LOADING...</label>
+                    <label className='label--preview-badge'>{this.state.previewBadgeText}</label>
                 </div>
                 );
     }

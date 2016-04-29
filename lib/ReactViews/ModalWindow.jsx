@@ -32,8 +32,7 @@ const ModalWindow = React.createClass({
             <div onClick={this.bringToFront}
                  className={`data-panel-wrapper modal-wrapper ${this.isVisible() ? 'is-open' : ''} ${this.props.viewState.componentOnTop === this.props.viewState.componentOrderOptions.modelWindow ? 'is-top' : ''}`}
                  id="explorer-panel-wrapper"
-                 aria-hidden={!this.isVisible}
-            >
+                 aria-hidden={!this.isVisible}>
                 <div onClick={this.close}
                      id="modal-overlay"
                      className="modal-overlay"
@@ -43,7 +42,10 @@ const ModalWindow = React.createClass({
                      aria-labelledby="modalTitle"
                      aria-describedby="modalDescription"
                      role="dialog">
-                    <button type='button' onClick={this.close} className="btn btn--close-modal" title="Close data panel" data-target="close-modal" />
+                    <button type='button' onClick={this.close} className="btn btn--close-modal" title="Close data panel"
+                            data-target="close-modal">
+                        Done
+                    </button>
                     <Tabs terria={this.props.terria}
                           viewState={this.props.viewState}
                     />

@@ -18,8 +18,7 @@
 }
 
 .modal-wrapper{
-  position: fixed;
-  width: 100vw;
+  position: absolute;
   visibility: hidden;
   z-index: -100;
   opacity: 0;
@@ -29,8 +28,10 @@
     padding-right: 80px;
     padding-top: calc((100vh - #{$modal-content-height} - #{$modal-header-height})/2);
     padding-bottom: calc((100vh - #{$modal-content-height} - #{$modal-header-height})/2);
-    bottom: 0;
     top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
     visibility: hidden;
     &.is-open{
       visibility: visible;

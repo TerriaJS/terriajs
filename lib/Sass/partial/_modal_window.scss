@@ -50,6 +50,9 @@
   top: 0;
   right: 0;
   @extend .sm-show;
+  &:before {
+    content: '';
+  }
 }
 
 

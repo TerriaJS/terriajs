@@ -1,8 +1,11 @@
 .data-catalog{
+  font-size: 90%;
+
   @extend .list-reset;
   ul{
     @extend .list-reset;
     padding-left: $padding;
+    padding-top: $padding / 2;
   }
   .data-explorer & {
     background: $modal-secondary-bg;
@@ -24,6 +27,11 @@
   }
 
   .data--catalog-group{
+    .data--catalog-group {
+      margin-left: 7px;
+      border-left: 1px solid $grey-lighter;
+    }
+
     .btn--catalogue{
       &:before{
         color: darken($grey-lighter, 10%);
@@ -39,12 +47,12 @@
   .btn--catalog-item--action{
     position: absolute;
     color: $color-primary;
-    left: 0;
+    right: -5px;
     top: 0;
-    padding: $padding-small;
-    font-size: 1.6rem;
+    padding: 4px $padding-small;
+    font-size: 1.2rem;
     &.btn--remove-from-map{
-      font-size: 1.7rem;
+
     }
   }
 }
