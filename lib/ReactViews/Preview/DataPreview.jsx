@@ -78,7 +78,9 @@ const DataPreview = React.createClass({
         return (
                 <div className='data-preview'>
                     {previewed && this.renderActions(previewed)}
-                    {!previewed && <h3>Select a dataset to see a preview</h3>}
+                    {!previewed && (
+                        <div className='data-preview__inner'><h3>Select a dataset to see a preview</h3></div>
+                    )}
                     <button type='button' onClick={this.exitPreview}
                             className="btn btn--exist-preview"
                             title='exit preview'>

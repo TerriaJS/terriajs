@@ -22,14 +22,16 @@ const DataCatalogTab = React.createClass({
     componentWillMount() {
         this.searchProvider = new CatalogItemNameSearchProviderViewModel({terria: this.props.terria});
 
-        knockout.getObservable(this.props.viewState, 'catalogSearch').subscribe(function(newText) {
+        knockout.getObservable(this.props.viewState.searchState, 'catalogSearch').subscribe(function(newText) {
             this.searchProvider.search(newText);
-            this.searchBox.setText(newText);
+            if (this.searchBox) {
+                this.searchBox.setText(newText);
+            }
         }, this);
     },
 
     onSearchTextChanged(newText) {
-        this.props.viewState.catalogSearch = newText;
+        this.props.viewState.searchState.catalogSearch = newText;
     },
 
     render() {
@@ -37,7 +39,7 @@ const DataCatalogTab = React.createClass({
         return (
             <div className="panel-content">
                 <div className="data-explorer">
-                    <SearchBox initialText={this.props.viewState.catalogSearch}
+                    <SearchBox initialText={this.props.viewState.searchState.catalogSearch}
                                onSearchTextChanged={this.onSearchTextChanged}
                                ref={ref => {this.searchBox = ref;}} />
                     {this.renderDataCatalog()}
@@ -53,14 +55,14 @@ const DataCatalogTab = React.createClass({
 
     renderDataCatalog() {
         const terria = this.props.terria;
-        const isSearching = !!this.props.viewState.catalogSearch.length;
+        const isSearching = !!this.props.viewState.searchState.catalogSearch.length;
         const items = isSearching ?
             this.searchProvider.searchResults.map(result => result.catalogItem) :
             terria.catalog.group.items;
 
         return (
             <ul className='data-catalog'>
-                <SearchHeader {...this.searchProvider} />
+                <SearchHeader searchMessage={isSearching && this.searchProvider.searchMessage} />
                 {isSearching && <label className='label'>Search results</label>}
                 {items
                     .filter(defined)
