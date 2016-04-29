@@ -61,7 +61,10 @@ const SidePanel = React.createClass({
                                     <ul className="now-viewing__header">
                                         <li><label className='label'>Data Sets</label></li>
                                         <li><label className='label--badge label'>{this.props.terria.nowViewing.items.length}</label></li>
-                                        <li><button type='button' onClick={this.removeAll} className='btn right btn-remove'>Remove All</button></li>
+                                        <li className="now-viewing__remove">
+                                            <button type='button' onClick={this.removeAll} className='btn right btn-remove'>Remove All</button>
+                                            <i className="icon icon-remove" />
+                                        </li>
                                     </ul>
                                     <NowViewingContainer viewState={this.props.viewState}
                                                          terria={this.props.terria}
