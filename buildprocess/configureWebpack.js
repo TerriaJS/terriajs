@@ -183,7 +183,7 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot) {
                         req.url.indexOf('/convert') < 0 &&
                         req.url.indexOf('/proxyabledomains') < 0 &&
                         req.url.indexOf('/errorpage') < 0 &&
-                        req.url.indexOf('/initfile') < 0) {
+                        req.url.indexOf('/init') < 0) {
                         return req.originalUrl;
                     }
                 }
