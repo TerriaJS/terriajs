@@ -147,7 +147,11 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot) {
 
     config.module.loaders.push({
         test: /\.json$/,
-        include: terriaJSBasePath,
+        include: [
+            path.dirname(require.resolve('proj4/package.json')),
+            path.dirname(require.resolve('ent/package.json')),
+            path.dirname(require.resolve('entities/package.json'))
+        ],
         loader: require.resolve('json-loader')
     });
 
