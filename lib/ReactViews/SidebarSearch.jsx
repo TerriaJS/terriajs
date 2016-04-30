@@ -27,17 +27,21 @@ export default React.createClass({
         });
     },
 
+    componentDidMount() {
+        this.search(this.props.searchText);
+    },
+
     componentWillReceiveProps(nextProps) {
-        this.state.searches.forEach(search => search.search(nextProps.searchText));
+        this.search(nextProps.searchText);
     },
 
     componentWillUnmount() {
         // Cancel any searches that may be in progress
-        this.state.searches.forEach(search => search.search(''));
+        this.search('');
     },
 
     search(newText) {
-        this.state.searches.forEach(search => search.search(newText));
+        this.state.searches.forEach(search => search.search(newText || ''));
     },
 
     searchInDataCatalog() {
