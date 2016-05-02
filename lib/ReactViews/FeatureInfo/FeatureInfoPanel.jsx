@@ -104,7 +104,7 @@ const FeatureInfoPanel = React.createClass({
                             <li><Loader/></li>
                         </When>
                         <When condition={!featureInfoCatalogItems || featureInfoCatalogItems.length === 0}>
-                            <li className='no-results'> No results</li>
+                            <li className='no-results'>No results</li>
                         </When>
                         <Otherwise>
                             {featureInfoCatalogItems}

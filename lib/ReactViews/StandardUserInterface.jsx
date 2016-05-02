@@ -18,7 +18,7 @@ const StandardUserInterface = React.createClass({
         allBaseMaps: React.PropTypes.array,
         terriaViewer: React.PropTypes.object,
         viewState: React.PropTypes.object,
-        minimumLargeScreenWidth: React.PropTypes.integer
+        minimumLargeScreenWidth: React.PropTypes.number
     },
 
     mixins: [ObserveModelMixin],
@@ -48,7 +48,6 @@ const StandardUserInterface = React.createClass({
     },
 
     componentWillUnmount() {
-        this.pickedFeaturesSubscription.dispose();
         window.removeEventListener('resize', this.resizeListener, false);
         window.removeEventListener('dragover', this.dragOverListener, false);
     },
@@ -102,13 +101,13 @@ const StandardUserInterface = React.createClass({
                                  viewState={this.props.viewState}
                     />}
                 </main>
-                <div id="map-nav">
+                <div className="map-nav">
                     <MapNavigation terria={terria}
                                    allBaseMaps={allBaseMaps}
                                    terriaViewer={terriaViewer}
                     />
                 </div>
-                <div id='notification'>
+                <div className='notification'>
                     <Notification notification={this.props.viewState.getNextNotification()}
                                   onDismiss={this.closeNotification}
                     />
