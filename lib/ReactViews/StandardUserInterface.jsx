@@ -1,7 +1,6 @@
 import arrayContains from '../Core/arrayContains';
 import Branding from './Branding.jsx';
 import FeatureInfoPanel from './FeatureInfo/FeatureInfoPanel.jsx';
-import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 import MapNavigation from './Map/MapNavigation.jsx';
 import MobileHeader from './Mobile/MobileHeader.jsx';
 import ModalWindow from './ModalWindow.jsx';
@@ -19,28 +18,12 @@ const StandardUserInterface = React.createClass({
         allBaseMaps: React.PropTypes.array,
         terriaViewer: React.PropTypes.object,
         viewState: React.PropTypes.object,
+        minimumLargeScreenWidth: React.PropTypes.integer
     },
 
     mixins: [ObserveModelMixin],
 
-    getInitialState() {
-        return {
-            // True if the feature info panel is visible.
-            featureInfoPanelIsVisible: false,
-
-            // True if the feature info panel is collapsed.
-            featureInfoPanelIsCollapsed: false
-        };
-    },
-
     componentWillMount() {
-        this.pickedFeaturesSubscription = knockout.getObservable(this.props.terria, 'pickedFeatures').subscribe(() => {
-            this.setState({
-                featureInfoPanelIsVisible: true,
-                featureInfoPanelIsCollapsed: false
-            });
-        }, this);
-
         const that = this;
 
         // TO DO(chloe): change window into a container
@@ -78,29 +61,11 @@ const StandardUserInterface = React.createClass({
     },
 
     /**
-     * Show feature info panel.
-     */
-    closeFeatureInfoPanel() {
-        this.setState({
-            featureInfoPanelIsVisible: false
-        });
-    },
-
-    /**
      * Opens the explorer panel to show the welcome page.
      * @return {[type]} [description]
      */
     showWelcome() {
         this.props.viewState.openWelcome();
-    },
-
-    /**
-     * Changes the open/collapse state of the feature info panel.
-     */
-    changeFeatureInfoPanelIsCollapsed() {
-        this.setState({
-            featureInfoPanelIsCollapsed: !this.state.featureInfoPanelIsCollapsed
-        });
     },
 
     acceptDragDropFile() {
@@ -109,8 +74,7 @@ const StandardUserInterface = React.createClass({
     },
 
     shouldUseMobileInterface() {
-        // 640 must match the value of the $sm SASS variable.
-        return document.body.clientWidth < 640;
+        return document.body.clientWidth < (this.props.minimumLargeScreenWidth || 640);
     },
 
     render() {
@@ -153,10 +117,6 @@ const StandardUserInterface = React.createClass({
                 <ProgressBar terria={terria}/>
                 <FeatureInfoPanel terria={terria}
                                   viewState={this.props.viewState}
-                                  isVisible={this.state.featureInfoPanelIsVisible}
-                                  onClose={this.closeFeatureInfoPanel}
-                                  isCollapsed={this.state.featureInfoPanelIsCollapsed}
-                                  onChangeFeatureInfoPanelIsCollapsed={this.changeFeatureInfoPanelIsCollapsed}
                 />
                 <BottomDock terria={terria} viewState={this.props.viewState}/>
             </div>);
