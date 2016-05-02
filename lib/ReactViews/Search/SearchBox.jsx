@@ -8,7 +8,6 @@ import defined from 'terriajs-cesium/Source/Core/defined';
  */
 export default React.createClass({
     propTypes: {
-        initialSearchText: React.PropTypes.string,
         onSearchTextChanged: React.PropTypes.func.isRequired,
         initialText: React.PropTypes.string,
         onFocus: React.PropTypes.func,
@@ -33,18 +32,22 @@ export default React.createClass({
 
     searchWithDebounce() {
         // Trigger search 250ms after the last input.
-        this.removeDebounceTimeout();
+        this.removeDebounce();
 
-        this.debounceTimeout = setTimeout(() => {
-            this.props.onSearchTextChanged(this.state.text);
-            this.debounceTimeout = undefined;
-        }, 250);
+        this.debouncePromise = new Promise(resolve => {
+            this.debounceTimeout = setTimeout(() => {
+                this.props.onSearchTextChanged(this.state.text);
+                this.debounceTimeout = undefined;
+                resolve();
+            }, 250);
+        });
     },
 
-    removeDebounceTimeout() {
+    removeDebounce() {
         if (defined(this.debounceTimeout)) {
             clearTimeout(this.debounceTimeout);
             this.debounceTimeout = undefined;
+            this.debouncePromise = undefined;
         }
     },
 
@@ -73,7 +76,13 @@ export default React.createClass({
 
     onKeyDown(event) {
         if (event.keyCode === 13 && this.props.onEnterPressed) {
-            this.props.onEnterPressed(event);
+            const triggerOnEnterPressed = () => this.props.onEnterPressed(event);
+
+            if (this.debouncePromise) {
+                this.debouncePromise.then(triggerOnEnterPressed);
+            } else {
+                triggerOnEnterPressed();
+            }
         }
     },
 

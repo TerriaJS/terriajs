@@ -22,7 +22,7 @@ const DataCatalogTab = React.createClass({
     componentWillMount() {
         this.searchProvider = new CatalogItemNameSearchProviderViewModel({terria: this.props.terria});
 
-        knockout.getObservable(this.props.viewState.searchState, 'catalogSearch').subscribe(function(newText) {
+        knockout.getObservable(this.props.viewState.searchState, 'catalogSearchText').subscribe(function(newText) {
             this.searchProvider.search(newText);
             if (this.searchBox) {
                 this.searchBox.setText(newText);
@@ -31,7 +31,7 @@ const DataCatalogTab = React.createClass({
     },
 
     onSearchTextChanged(newText) {
-        this.props.viewState.searchState.catalogSearch = newText;
+        this.props.viewState.searchState.catalogSearchText = newText;
     },
 
     render() {
@@ -39,7 +39,7 @@ const DataCatalogTab = React.createClass({
         return (
             <div className="panel-content">
                 <div className="data-explorer">
-                    <SearchBox initialText={this.props.viewState.searchState.catalogSearch}
+                    <SearchBox initialText={this.props.viewState.searchState.catalogSearchText}
                                onSearchTextChanged={this.onSearchTextChanged}
                                ref={ref => {this.searchBox = ref;}} />
                     {this.renderDataCatalog()}
@@ -55,14 +55,14 @@ const DataCatalogTab = React.createClass({
 
     renderDataCatalog() {
         const terria = this.props.terria;
-        const isSearching = !!this.props.viewState.searchState.catalogSearch.length;
+        const isSearching = !!this.props.viewState.searchState.catalogSearchText.length;
         const items = isSearching ?
             this.searchProvider.searchResults.map(result => result.catalogItem) :
             terria.catalog.group.items;
 
         return (
             <ul className='data-catalog'>
-                <SearchHeader searchMessage={isSearching && this.searchProvider.searchMessage} />
+                <SearchHeader searchMessage={this.searchProvider.searchMessage} />
                 {isSearching && <label className='label'>Search results</label>}
                 {items
                     .filter(defined)

@@ -1,5 +1,4 @@
-import BingMapsSearchProviderViewModel from '../ViewModels/BingMapsSearchProviderViewModel.js';
-import GazetteerSearchProviderViewModel from '../ViewModels/GazetteerSearchProviderViewModel.js';
+
 import NowViewingContainer from './NowViewing/NowViewingContainer.jsx';
 import ObserveModelMixin from './ObserveModelMixin';
 import React from 'react';
@@ -22,46 +21,35 @@ const SidePanel = React.createClass({
         this.props.viewState.openAddData();
     },
 
-    getInitialState() {
-        return {
-            searchText: ''
-        };
-    },
-
     search(newText) {
-        this.setState({
-            searchText: newText
-        });
+        this.props.viewState.searchState.searchLocations(newText);
     },
 
     onSearchBoxFocus() {
-        this.props.viewState.searchState.hideSearch = false;
+        this.props.viewState.searchState.hideLocationSearch = false;
     },
 
     onEnterPressedInSearch() {
-        this.props.viewState.searchInCatalog(this.state.searchText);
+        this.props.viewState.searchState.goToFirstResult();
     },
 
     render() {
-        const terria = this.props.terria;
         return (
             <div className={'workbench__inner'}>
                 <div className='workbench__header'>
-                    <SearchBox onSearchTextChanged={this.search} onFocus={this.onSearchBoxFocus} onEnterPressed={this.onEnterPressedInSearch} />
+                    <SearchBox onSearchTextChanged={this.search}
+                               onFocus={this.onSearchBoxFocus}
+                               onEnterPressed={this.onEnterPressedInSearch}
+                               initialText={this.props.viewState.searchState.locationSearchText}/>
                     <div className='workbench__add-data'>
                         <button type='button' onClick={this.onAddDataClicked} className='btn'>Add Data</button>
                     </div>
                 </div>
                 <div className='workbench__body'>
                     <Choose>
-                        <When condition={this.state.searchText.length > 0 && !this.props.viewState.searchState.hideSearch}>
-                            <SidebarSearch terria={this.props.terria}
-                                           viewState={this.props.viewState}
-                                           searchText={this.state.searchText}
-                                           searches={[
-                                           new BingMapsSearchProviderViewModel({terria}),
-                                           new GazetteerSearchProviderViewModel({terria})
-                                       ]}/>
+                        <When
+                            condition={this.props.viewState.searchState.locationSearchText.length && !this.props.viewState.searchState.hideLocationSearch}>
+                            <SidebarSearch viewState={this.props.viewState}/>
                         </When>
                         <When
                             condition={this.props.terria.nowViewing.items && this.props.terria.nowViewing.items.length > 0}>
