@@ -36,9 +36,9 @@ export default React.createClass({
                 <div className='search__results'>
                     <ul className="now-viewing__header">
                         <li><label className='label'>Search Results</label></li>
-                        <li><label className='label--badge label'>{this.props.viewState.searchState.locationSearchResults.length}</label></li>
+                        <li><label className='label--badge label'>{this.props.viewState.searchState.locationSearchResults.reduce((count, result) => count + result.searchResults.length, 0)}</label></li>
                         <li>
-                            <button type='button' onClick={this.backToNowViewing} className='btn right'>Done</button>
+                            <button type='button' onClick={this.backToNowViewing} className='btn right btn--search-done'>Done</button>
                         </li>
                     </ul>
                     <For each="search" of={this.props.viewState.searchState.locationSearchResults}>

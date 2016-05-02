@@ -28,12 +28,24 @@
 
   &__add-to-map.btn {
     display: inline-block;
-    width: 60%;
+    margin-right: 2%;
+    width: 58%;
   }
 
   &__back-to-map.btn {
     display: inline-block;
     width: 40%;
+  }
+
+  &__placeholder {
+    text-align: center;
+    color: $text-dark;
+    padding-top: 80px;
+    font-size: 1.2rem;
+
+    .btn {
+      font-size: 1rem;
+    }
   }
 }
 

@@ -188,6 +188,49 @@ folder-open;
   color: $color-primary;
 }
 
+.btn--secondary {
+  color: $color-primary;
+  border: 2px solid $color-primary;
+  border-radius: 4px;
+
+  &:hover, &:focus {
+    border: 2px solid lighten($color-primary, 10%);
+    color: lighten($color-primary, 10%);
+  }
+}
+
+.btn--tertiary {
+  color: $modal-text;
+  border: 2px solid $modal-text;
+  border-radius: 4px;
+  padding: 8px 10px;
+
+  &:hover, &:focus {
+    border: 2px solid $color-primary;
+    color: $color-primary;
+  }
+}
+
+.btn--tertiary-dark {
+  color: #FFF;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 4px;
+  padding: 8px 10px;
+
+  &:hover, &:focus {
+    border: 1px solid $color-primary;
+    color: $color-primary;
+  }
+}
+
+.btn--search-done {
+  @extend .btn--tertiary-dark;
+
+  padding: 7px 10px;
+  margin-top: 5px;
+  border-radius: 2px;
+}
+
 .btn--remove-from-map{
   @extend .btn--remove;
   color: $color-primary;
@@ -199,11 +242,12 @@ folder-open;
 }
 
 .btn--close-modal{
-  @extend .btn--close;
-  &:hover,
-  &:focus{
-    color: $color-primary;
-  }
+  @extend .btn--secondary;
+
+  font-size: 0.8rem;
+  padding: 4px 10px;
+  margin: 5px;
+  font-weight: bold;
 }
 
 .btn--close-feature{

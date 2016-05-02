@@ -79,7 +79,11 @@ const DataPreview = React.createClass({
                 <div className='data-preview'>
                     {previewed && this.renderActions(previewed)}
                     {!previewed && (
-                        <div className='data-preview__inner'><h3>Select a dataset to see a preview</h3></div>
+                        <div className='data-preview__inner data-preview__placeholder'>
+                            <p>Select a dataset to see a preview</p>
+                            <p>- OR -</p>
+                            <button className="btn btn--tertiary" onClick={this.backToMap}>Go to the map</button>
+                        </div>
                     )}
                     <button type='button' onClick={this.exitPreview}
                             className="btn btn--exist-preview"
@@ -107,7 +111,7 @@ const DataPreview = React.createClass({
                                 className="btn toggle-enable data-preview__add-to-map">
                             {previewed.isEnabled ? 'Remove from the map' : 'Add to the map'}
                         </button>
-                        <button type='button' className="btn data-preview__back-to-map" onClick={this.backToMap}>
+                        <button type='button' className="btn btn--tertiary data-preview__back-to-map" onClick={this.backToMap}>
                             Back to the map
                         </button>
                         <div className="data-info url">
