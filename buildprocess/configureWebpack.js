@@ -1,9 +1,10 @@
 var path = require('path');
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var StringReplacePlugin = require("string-replace-webpack-plugin");
-const cesiumDir = path.dirname(require.resolve('terriajs-cesium'));
 
 function configureWebpack(terriaJSBasePath, config, devMode, hot) {
+    const cesiumDir = path.dirname(require.resolve('terriajs-cesium/package.json'));
+
     config.resolve = config.resolve || {};
     config.resolve.extensions = config.resolve.extensions || ['', '.webpack.js', '.web.js', '.js'];
     config.resolve.extensions.push('.jsx');
@@ -49,7 +50,7 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot) {
 
     config.module.loaders.push({
         test: /\.js?$/,
-        include: cesiumDir + '/Source/ThirdParty/Workers',
+        include: path.resolve(cesiumDir, 'Source', 'ThirdParty', 'Workers'),
         loader: StringReplacePlugin.replace({
             replacements: [
                 {
@@ -85,7 +86,7 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot) {
 
     config.module.loaders.push({
         test: /\.js?$/,
-        include: path.dirname(require.resolve('terriajs-cesium')) + '/Source/Workers',
+        include: path.resolve(cesiumDir, 'Source', 'Workers'),
         loader: StringReplacePlugin.replace({
             replacements: [
                 {
@@ -135,7 +136,7 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot) {
     config.module.loaders.push({
         test: /\.json|xml$/,
         loader: require.resolve('file-loader'),
-        include: cesiumDir + '/Source/Assets'
+        include: path.resolve(cesiumDir, 'Source', 'Assets')
     });
 
     config.module.loaders.push({
@@ -146,6 +147,11 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot) {
 
     config.module.loaders.push({
         test: /\.json$/,
+        include: [
+            path.dirname(require.resolve('proj4/package.json')),
+            path.dirname(require.resolve('ent/package.json')),
+            path.dirname(require.resolve('entities/package.json'))
+        ],
         loader: require.resolve('json-loader')
     });
 
@@ -157,16 +163,29 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot) {
 
     config.module.loaders.push({
         test: /\.(png|jpg|svg|gif)$/,
-        loader: require.resolve('url-loader') + '?limit=8192'
+        include: [
+            path.resolve(cesiumDir, 'Source', 'Assets'),
+            path.resolve(terriaJSBasePath, 'wwwroot', 'images')
+        ],
+        loader: require.resolve('url-loader'),
+        query: {
+            limit: 8192
+        }
     });
 
     config.module.loaders.push({
-        test: /fonts\/.*\.woff(2)?(\?.+)?$/,
-        loader: require.resolve('url-loader') + '?limit=10000&mimetype=application/font-woff'
+        test: /\.woff(2)?(\?.+)?$/,
+        include: path.resolve(terriaJSBasePath, 'wwwroot', 'fonts'),
+        loader: require.resolve('url-loader'),
+        query: {
+            limit: 10000,
+            mimetype: 'application/font-woff'
+        }
     });
 
     config.module.loaders.push({
-        test: /fonts\/.*\.(ttf|eot|svg)(\?.+)?/,
+        test: /\.(ttf|eot|svg)(\?.+)?$/,
+        include: path.resolve(terriaJSBasePath, 'wwwroot', 'fonts'),
         loader: require.resolve('file-loader')
     });
 
@@ -192,7 +211,7 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot) {
     };
 
     config.sassLoader = {
-        includePaths: [path.resolve(__dirname, "../lib/Sass")]
+        includePaths: [path.resolve(terriaJSBasePath, 'lib', 'Sass')]
     };
 
     config.plugins = (config.plugins || []).concat([
@@ -203,7 +222,11 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot) {
     if (hot) {
         config.module.loaders.push({
             test: /\.scss$/,
-            loaders: [require.resolve('style-loader'), require.resolve('css-loader') + '?sourceMap', require.resolve('sass-loader') + '?sourceMap']
+            loaders: [
+                require.resolve('style-loader'),
+                require.resolve('css-loader') + '?sourceMap',
+                require.resolve('sass-loader') + '?sourceMap'
+            ]
         });
     } else {
         config.module.loaders.push({

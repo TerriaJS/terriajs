@@ -3,7 +3,7 @@
 /*global require,describe,it,expect*/
 var JulianDate = require('terriajs-cesium/Source/Core/JulianDate');
 var TableStructure = require('../../lib/Map/TableStructure');
-var TableColumn = require('../../lib/Map/TableColumn');
+// var TableColumn = require('../../lib/Map/TableColumn');
 var VarType = require('../../lib/Map/VarType');
 
 var separator = ',';
@@ -210,42 +210,42 @@ describe('TableStructure', function() {
         expect(htmls[1]).toContain('12' + separator + '345');
     });
 
-    it('can synthesize from column arrays', function() {
-        var c1 = new TableColumn('col1', [20, 10, 30]);
-        var c2 = new TableColumn('col2', [1, 2, 3]);
-        var c3 = new TableColumn('col3', [15, 45]);
-        var c4 = new TableColumn('col4', [4, 5]);
-        var result = TableStructure.fromColumnArrays([[c1, c2], [c3, c4]]);
-        var valueArrays = result.columns.map(function(column) { return column.values; });
-        expect(valueArrays).toEqual([[10, 15, 20, 30, 45], [2, undefined, 1, 3, undefined], [undefined, 4, undefined, undefined, 5]]);
-        var names = result.columns.map(function(column) { return column.name; });
-        expect(names).toEqual(['col1', 'col2', 'col4']);
-    });
+    // it('can synthesize from column arrays', function() {
+    //     var c1 = new TableColumn('col1', [20, 10, 30]);
+    //     var c2 = new TableColumn('col2', [1, 2, 3]);
+    //     var c3 = new TableColumn('col3', [15, 45]);
+    //     var c4 = new TableColumn('col4', [4, 5]);
+    //     var result = TableStructure.fromColumnArrays([[c1, c2], [c3, c4]]);
+    //     var valueArrays = result.columns.map(function(column) { return column.values; });
+    //     expect(valueArrays).toEqual([[10, 15, 20, 30, 45], [2, undefined, 1, 3, undefined], [undefined, 4, undefined, undefined, 5]]);
+    //     var names = result.columns.map(function(column) { return column.name; });
+    //     expect(names).toEqual(['col1', 'col2', 'col4']);
+    // });
 
-    it('can synthesize from column arrays, with repeated x-values', function() {
-        var c1 = new TableColumn('col1', [20, 10, 30]);
-        var c2 = new TableColumn('col2', [1, 2, 3]);
-        var c3 = new TableColumn('col3', [15, 20]);
-        var c4 = new TableColumn('col4', [4, 5]);
-        var c5 = new TableColumn('col5', [20, 25]);
-        var c6 = new TableColumn('col6', [6, 7]);
-        var result = TableStructure.fromColumnArrays([[c1, c2], [c3, c4], [c5, c6]]);
-        var valueArrays = result.columns.map(function(column) { return column.values; });
-        expect(valueArrays).toEqual([[10, 15, 20, 25, 30], [2, undefined, 1, undefined, 3], [undefined, 4, 5, undefined, undefined], [undefined, undefined, 6, 7, undefined]]);
-    });
+    // it('can synthesize from column arrays, with repeated x-values', function() {
+    //     var c1 = new TableColumn('col1', [20, 10, 30]);
+    //     var c2 = new TableColumn('col2', [1, 2, 3]);
+    //     var c3 = new TableColumn('col3', [15, 20]);
+    //     var c4 = new TableColumn('col4', [4, 5]);
+    //     var c5 = new TableColumn('col5', [20, 25]);
+    //     var c6 = new TableColumn('col6', [6, 7]);
+    //     var result = TableStructure.fromColumnArrays([[c1, c2], [c3, c4], [c5, c6]]);
+    //     var valueArrays = result.columns.map(function(column) { return column.values; });
+    //     expect(valueArrays).toEqual([[10, 15, 20, 25, 30], [2, undefined, 1, undefined, 3], [undefined, 4, 5, undefined, undefined], [undefined, undefined, 6, 7, undefined]]);
+    // });
 
-    it('can synthesize from column arrays, with dates in different formats', function() {
-        var c1 = new TableColumn('col1', ['2016', '2015', '2017'], {type: VarType.TIME});
-        var c2 = new TableColumn('col2', [1, 2, 3]);
-        var c3 = new TableColumn('date', ['2015-06-01', '2016-01-01']);
-        var c4 = new TableColumn('col4', [4, 5]);
-        var c5 = new TableColumn('col5', ['2016', '2016-06'],  {type: VarType.TIME});
-        var c6 = new TableColumn('col6', [6, 7]);
-        var result = TableStructure.fromColumnArrays([[c1, c2], [c3, c4], [c5, c6]]);
-        var valueArrays = result.columns.map(function(column) { return column.values; });
-        // Don't test the exact representation of the dates, since that depends on the timezone this is running in.
-        // However, this does test that there are only 5 rows, and that '2016-01-01' was combined with '2016', etc.
-        expect(valueArrays.slice(1)).toEqual([[2, undefined, 1, undefined, 3], [undefined, 4, 5, undefined, undefined], [undefined, undefined, 6, 7, undefined]]);
-    });
+    // it('can synthesize from column arrays, with dates in different formats', function() {
+    //     var c1 = new TableColumn('col1', ['2016', '2015', '2017'], {type: VarType.TIME});
+    //     var c2 = new TableColumn('col2', [1, 2, 3]);
+    //     var c3 = new TableColumn('date', ['2015-06-01', '2016-01-01']);
+    //     var c4 = new TableColumn('col4', [4, 5]);
+    //     var c5 = new TableColumn('col5', ['2016', '2016-06'],  {type: VarType.TIME});
+    //     var c6 = new TableColumn('col6', [6, 7]);
+    //     var result = TableStructure.fromColumnArrays([[c1, c2], [c3, c4], [c5, c6]]);
+    //     var valueArrays = result.columns.map(function(column) { return column.values; });
+    //     // Don't test the exact representation of the dates, since that depends on the timezone this is running in.
+    //     // However, this does test that there are only 5 rows, and that '2016-01-01' was combined with '2016', etc.
+    //     expect(valueArrays.slice(1)).toEqual([[2, undefined, 1, undefined, 3], [undefined, 4, 5, undefined, undefined], [undefined, undefined, 6, 7, undefined]]);
+    // });
 
 });
