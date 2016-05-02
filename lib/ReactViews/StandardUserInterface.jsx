@@ -53,13 +53,6 @@ const StandardUserInterface = React.createClass({
     },
 
     /**
-     * Closes the current notification.
-     */
-    closeNotification() {
-        this.props.viewState.notifications.splice(0, 1);
-    },
-
-    /**
      * Opens the explorer panel to show the welcome page.
      * @return {[type]} [description]
      */
@@ -108,10 +101,8 @@ const StandardUserInterface = React.createClass({
                     />
                 </div>
                 <div className='notification'>
-                    <Notification notification={this.props.viewState.getNextNotification()}
-                                  onDismiss={this.closeNotification}
-                    />
-                    <MapInteractionWindow terria ={terria}/>
+                    <Notification viewState={this.props.viewState}/>
+                    <MapInteractionWindow terria={terria}/>
                 </div>
                 <ProgressBar terria={terria}/>
                 <FeatureInfoPanel terria={terria}
