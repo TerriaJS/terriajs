@@ -99,7 +99,7 @@ const DataPreviewMap = React.createClass({
                     loadNowViewingItemPromise = when();
                 }
 
-                return loadNowViewingItemPromise.then(function() {
+                return loadNowViewingItemPromise.then(() => {
                     // Now that the item is loaded, add it to the map.
                     // Unless we've started previewing something else in the meantime!
                     if (!that.isMounted() || previewed !== that.props.previewedCatalogItem) {
@@ -130,9 +130,11 @@ const DataPreviewMap = React.createClass({
 
                     that.updateBoundingRectangle();
                 });
-            }).otherwise(() => {
+            }).otherwise((err) => {
+                console.error(err);
+
                 this.setState({
-                    previewBadgeText: 'NO PREVIEW AVAILABLE'
+                    previewBadgeText: 'PREVIEW ERROR'
                 });
             });
         }
