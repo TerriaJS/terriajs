@@ -36,7 +36,7 @@
     "resolve": "^1.1.7",
     "simple-statistics": "^1.0.1",
     "superagent": "~1.7.0",
-    "terriajs-cesium": "1.19.3",
+    "terriajs-cesium": "git://github.com/TerriaJS/cesium#rd_cesium_3d_tiles",
     "togeojson": "^0.13.0",
     "urijs": "^1.17.1",
     "urthecast": "^1.0.0",
