@@ -16,6 +16,7 @@
     "hammerjs": "^2.0.6",
     "html2canvas": "0.5.0-alpha2",
     "imports-loader": "^0.6.5",
+    "javascript-natural-sort": "^0.7.1",
     "json-loader": "^0.5.4",
     "leaflet": "0.7.7",
     "less": "^2.6.1",
