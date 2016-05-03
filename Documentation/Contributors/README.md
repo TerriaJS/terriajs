@@ -8,7 +8,7 @@ For all contributors:
 
 Special cases:
 
-* [Setting up Saucelabs](Setting-up-Saucelabs-locally.md): Creating a local Saucelabs instance for cross-browser testing.
+* [Setting up Saucelabs](Setting-up-Saucelabs-Locally.md): Creating a local Saucelabs instance for cross-browser testing.
 * [Using Docker](Using-Docker.md): How to use Docker for development and deployment.
 
 
