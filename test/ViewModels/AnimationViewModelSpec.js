@@ -182,8 +182,8 @@ describe('AnimationViewModel', function() {
             terria.clock.currentTime = JulianDate.fromIso8601('2016-01-01');
             terria.timeSeriesStack.addLayerToTop(catalogItem);
             terria.clock.onTick.raiseEvent(terria.clock);
-            var dateNow = dateFormat(JulianDate.now());
-            var currentTime = dateFormat(terria.clock.currentTime);
+            var dateNow = dateFormat(JulianDate.now(), "MM-dd-yyyy");
+            var currentTime = dateFormat(terria.clock.currentTime, "MM-dd-yyyy");
             expect(currentTime).toBe(dateNow);
         });
 
@@ -214,8 +214,8 @@ describe('AnimationViewModel', function() {
             catalogItem.initialTimeSource = 'present';
             terria.timeSeriesStack.addLayerToTop(catalogItem);
             terria.clock.onTick.raiseEvent(terria.clock);
-            var dateNow = dateFormat(JulianDate.now());
-            var currentTime = dateFormat(terria.clock.currentTime);
+            var dateNow = dateFormat(JulianDate.now(), "MM-dd-yyyy");
+            var currentTime = dateFormat(terria.clock.currentTime, "MM-dd-yyyy");
             expect(currentTime).toBe(dateNow);
         });
 
@@ -276,8 +276,8 @@ describe('AnimationViewModel', function() {
             catalogItem.initialTimeSource = '201508-08';
             expect(function() { terria.timeSeriesStack.addLayerToTop(catalogItem); } ).toThrow();
             terria.clock.onTick.raiseEvent(terria.clock);
-            var dateNow = dateFormat(JulianDate.now());
-            var currentTime = dateFormat(terria.clock.currentTime);
+            var dateNow = dateFormat(JulianDate.now(), "MM-dd-yyyy");
+            var currentTime = dateFormat(terria.clock.currentTime, "MM-dd-yyyy");
             expect(currentTime).toBe(dateNow);
         });
     });
