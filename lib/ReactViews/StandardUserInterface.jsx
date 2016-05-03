@@ -12,6 +12,7 @@ import SidePanel from './SidePanel.jsx';
 import ProgressBar from './ProgressBar.jsx';
 import BottomDock from './BottomDock/BottomDock.jsx';
 import TerriaViewerWrapper from './TerriaViewerWrapper.jsx';
+import DisclaimerHandler from '../ReactViewModels/DisclaimerHandler';
 
 const StandardUserInterface = React.createClass({
     propTypes: {
@@ -45,19 +46,14 @@ const StandardUserInterface = React.createClass({
 
         window.addEventListener('resize', this.resizeListener, false);
         this.resizeListener();
+
+        this.disclaimerHandler = new DisclaimerHandler(this.props.terria, this.props.viewState);
     },
 
     componentWillUnmount() {
         window.removeEventListener('resize', this.resizeListener, false);
         window.removeEventListener('dragover', this.dragOverListener, false);
-    },
-
-    /**
-     * Opens the explorer panel to show the welcome page.
-     * @return {[type]} [description]
-     */
-    showWelcome() {
-        this.props.viewState.openWelcome();
+        this.disclaimerHandler.dispose();
     },
 
     acceptDragDropFile() {
@@ -67,6 +63,13 @@ const StandardUserInterface = React.createClass({
 
     shouldUseMobileInterface() {
         return document.body.clientWidth < (this.props.minimumLargeScreenWidth || 640);
+    },
+
+    // TODO: Super A/B test toggle remove soon!!!
+    toggleCloseModalAfterAdd() {
+        if (confirm('Toggle close modal after add?')) {
+            this.props.viewState.closeModalAfterAdd = !this.props.viewState.closeModalAfterAdd
+        }
     },
 
     render() {
@@ -82,9 +85,7 @@ const StandardUserInterface = React.createClass({
                                 <MobileHeader terria={terria} viewState={this.props.viewState} />
                             </If>
                             <div className='workbench'>
-                                <Branding onClick={this.showWelcome}
-                                          terria={terria}
-                                />
+                                <Branding terria={terria} onClick={this.toggleCloseModalAfterAdd} />
                                 <If condition={!this.props.viewState.useSmallScreenInterface}>
                                     <SidePanel terria={terria} viewState={this.props.viewState} />
                                 </If>

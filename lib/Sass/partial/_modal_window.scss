@@ -3,6 +3,7 @@
   background: $modal-bg;
   color: $modal-text;
   border-radius: $radius-small;
+  box-shadow: 0 0 15px 6px rgba(100, 100, 100, 0.3);
   z-index: $front-component-z-index - 1;
   opacity: 0;
   height: 100%;

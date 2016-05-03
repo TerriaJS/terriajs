@@ -61,10 +61,9 @@ $chart-darker: darken($dark, 8%);
 }
 
 .chart-panel__holder {
-  position: fixed;
+  position: absolute;
   left: 0;
   right: 0;
-  bottom: 0;
   z-index: 10;
   background: $dark;
   padding-bottom: 13px;
