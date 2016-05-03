@@ -174,7 +174,7 @@ describe('AnimationViewModel', function() {
         }
     });
 
-    describe('time slider initial time as specified by timesliderInitTime ', function() {
+    describe('time slider initial time as specified by initialTimeSource ', function() {
         // Future developers take note: some of these tests will stop working in August 3015.
         it('should be present if not provided', function() {
             terria.clock.startTime = JulianDate.fromIso8601('2015-08-07');
@@ -191,7 +191,7 @@ describe('AnimationViewModel', function() {
             terria.clock.startTime = JulianDate.fromIso8601('2015-08-07');
             terria.clock.stopTime = JulianDate.fromIso8601('2015-08-09');
             terria.clock.currentTime = JulianDate.fromIso8601('2015-08-08');
-            catalogItem.timesliderInitTime = 'start';
+            catalogItem.initialTimeSource = 'start';
             terria.timeSeriesStack.addLayerToTop(catalogItem);
             terria.clock.onTick.raiseEvent(terria.clock);
             expect(animationVm.currentTimeString).toBe('07/08/2015, 00:00:00');
@@ -201,7 +201,7 @@ describe('AnimationViewModel', function() {
             terria.clock.startTime = JulianDate.fromIso8601('2015-08-07');
             terria.clock.stopTime = JulianDate.fromIso8601('2015-08-09');
             terria.clock.currentTime = JulianDate.fromIso8601('2015-08-08');
-            catalogItem.timesliderInitTime = '2000-08-08';
+            catalogItem.initialTimeSource = '2000-08-08';
             terria.timeSeriesStack.addLayerToTop(catalogItem);
             terria.clock.onTick.raiseEvent(terria.clock);
             expect(animationVm.currentTimeString).toBe('07/08/2015, 00:00:00');
@@ -211,7 +211,7 @@ describe('AnimationViewModel', function() {
             terria.clock.startTime = JulianDate.fromIso8601('2015-08-07');
             terria.clock.stopTime = JulianDate.fromIso8601('3015-08-09');
             terria.clock.currentTime = JulianDate.fromIso8601('2015-08-09');
-            catalogItem.timesliderInitTime = 'present';
+            catalogItem.initialTimeSource = 'present';
             terria.timeSeriesStack.addLayerToTop(catalogItem);
             terria.clock.onTick.raiseEvent(terria.clock);
             var dateNow = dateFormat(JulianDate.now());
@@ -223,7 +223,7 @@ describe('AnimationViewModel', function() {
             terria.clock.startTime = JulianDate.fromIso8601('2015-08-07');
             terria.clock.stopTime = JulianDate.fromIso8601('2015-08-09');
             terria.clock.currentTime = JulianDate.fromIso8601('2015-08-08');
-            catalogItem.timesliderInitTime = 'end';
+            catalogItem.initialTimeSource = 'end';
             terria.timeSeriesStack.addLayerToTop(catalogItem);
             terria.clock.onTick.raiseEvent(terria.clock);
             expect(animationVm.currentTimeString).toBe('09/08/2015, 00:00:00');
@@ -233,7 +233,7 @@ describe('AnimationViewModel', function() {
             terria.clock.startTime = JulianDate.fromIso8601('2015-08-07');
             terria.clock.stopTime = JulianDate.fromIso8601('2015-08-09');
             terria.clock.currentTime = JulianDate.fromIso8601('2015-08-08');
-            catalogItem.timesliderInitTime = '3015-08-08';
+            catalogItem.initialTimeSource = '3015-08-08';
             terria.timeSeriesStack.addLayerToTop(catalogItem);
             terria.clock.onTick.raiseEvent(terria.clock);
             expect(animationVm.currentTimeString).toBe('09/08/2015, 00:00:00');
@@ -243,7 +243,7 @@ describe('AnimationViewModel', function() {
             terria.clock.startTime = JulianDate.fromIso8601('2015-08-07');
             terria.clock.stopTime = JulianDate.fromIso8601('2015-08-11');
             terria.clock.currentTime = JulianDate.fromIso8601('2015-08-21');
-            catalogItem.timesliderInitTime = '2015-08-08';
+            catalogItem.initialTimeSource = '2015-08-08';
             terria.timeSeriesStack.addLayerToTop(catalogItem);
             terria.clock.onTick.raiseEvent(terria.clock);
             expect(animationVm.currentTimeString).toBe('08/08/2015, 00:00:00');
@@ -253,7 +253,7 @@ describe('AnimationViewModel', function() {
             terria.clock.startTime = JulianDate.fromIso8601('2015-08-07');
             terria.clock.stopTime = JulianDate.fromIso8601('2015-08-09');
             terria.clock.currentTime = JulianDate.fromIso8601('2015-08-09');
-            catalogItem.timesliderInitTime = '2014-08-08';
+            catalogItem.initialTimeSource = '2014-08-08';
             terria.timeSeriesStack.addLayerToTop(catalogItem);
             terria.clock.onTick.raiseEvent(terria.clock);
             expect(animationVm.currentTimeString).toBe('07/08/2015, 00:00:00');
@@ -263,7 +263,7 @@ describe('AnimationViewModel', function() {
             terria.clock.startTime = JulianDate.fromIso8601('2015-08-07');
             terria.clock.stopTime = JulianDate.fromIso8601('2015-08-09');
             terria.clock.currentTime = JulianDate.fromIso8601('2015-08-09');
-            catalogItem.timesliderInitTime = '2222-08-08';
+            catalogItem.initialTimeSource = '2222-08-08';
             terria.timeSeriesStack.addLayerToTop(catalogItem);
             terria.clock.onTick.raiseEvent(terria.clock);
             expect(animationVm.currentTimeString).toBe('09/08/2015, 00:00:00');
@@ -273,7 +273,7 @@ describe('AnimationViewModel', function() {
             terria.clock.startTime = JulianDate.fromIso8601('2015-08-07');
             terria.clock.stopTime = JulianDate.fromIso8601('3015-08-09');
             terria.clock.currentTime = JulianDate.fromIso8601('2015-08-09');
-            catalogItem.timesliderInitTime = '201508-08';
+            catalogItem.initialTimeSource = '201508-08';
             expect(function() { terria.timeSeriesStack.addLayerToTop(catalogItem); } ).toThrow();
             terria.clock.onTick.raiseEvent(terria.clock);
             var dateNow = dateFormat(JulianDate.now());
