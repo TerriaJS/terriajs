@@ -171,7 +171,7 @@ describe('CatalogItemNameSearchProviderViewModel', function() {
         }
 
         // Add an 11th item that will flip out if asked to load.
-        var FlipOutGroup = function() {
+        var FlipOutGroup = function(terria) {
             CatalogGroup.call(this, terria);
 
             this.name = 'Flip Out Group';
@@ -180,6 +180,7 @@ describe('CatalogItemNameSearchProviderViewModel', function() {
             };
         };
         inherit(CatalogGroup, FlipOutGroup);
+        catalogGroup.add(new FlipOutGroup(terria));
 
         searchProvider.maxResults = maxResults;
         searchProvider.search('thing').then(function() {
