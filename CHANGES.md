@@ -2,6 +2,11 @@
 Change Log
 ==========
 
+### 3.0.1
+
+* Only trigger a search when the user presses enter or stops typing for 3 seconds.  This will greatly reduce the number of times that searches are performed, which is important with a geocoder like Bing Maps that counts each geocode as a transaction.
+* Reduced the tendency for search to lock up the web browser while it is in progress.
+
 ### 3.0.0
 
 * TerriaJS-based application are now best built using Webpack instead of Browserify.
