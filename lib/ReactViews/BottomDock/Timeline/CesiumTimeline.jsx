@@ -6,6 +6,7 @@ import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 import WrappedTimeline from 'terriajs-cesium/Source/Widgets/Timeline/Timeline';
 import JulianDate from 'terriajs-cesium/Source/Core/JulianDate';
 import {formatDateTime, formatDate, formatTime} from './DateFormats';
+import Styles from '!style-loader!css-loader?modules&sourceMap!sass-loader?sourceMap!./cesium-timeline.scss';
 
 const CesiumTimeline = React.createClass({
     propTypes: {
@@ -54,7 +55,7 @@ const CesiumTimeline = React.createClass({
 
     render() {
         return (
-            <div className="timeline__cesium-timeline" ref={ref => {this.timelineContainer = ref;}} />
+            <div className={Styles.cesiumTimeline} ref={ref => {this.timelineContainer = ref;}} />
         );
     }
 });

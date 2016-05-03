@@ -26,7 +26,7 @@ const TerriaViewerWrapper = React.createClass({
     },
 
     componentWillUnmount() {
-        this.terriaViewer.destroy();
+        this.terriaViewer && this.terriaViewer.destroy();
         document.getElementById('cesiumContainer').innerHTML = '';
     },
 
