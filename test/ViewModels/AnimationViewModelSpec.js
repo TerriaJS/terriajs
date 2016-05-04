@@ -182,8 +182,11 @@ describe('AnimationViewModel', function() {
             terria.clock.currentTime = JulianDate.fromIso8601('2016-01-01');
             terria.timeSeriesStack.addLayerToTop(catalogItem);
             terria.clock.onTick.raiseEvent(terria.clock);
-            var dateNow = dateFormat(JulianDate.now(), "MM-dd-yyyy");
-            var currentTime = dateFormat(terria.clock.currentTime, "MM-dd-yyyy");
+            var dateNow = (new Date()).toISOString();
+            var currentTime = JulianDate.toIso8601(terria.clock.currentTime, 3);
+            // Do not compare time, because on some systems the second could have ticked over between getting the two times.
+            dateNow = dateNow.substr(0, 10);
+            currentTime = currentTime.substr(0, 10);
             expect(currentTime).toBe(dateNow);
         });
 
@@ -214,8 +217,11 @@ describe('AnimationViewModel', function() {
             catalogItem.initialTimeSource = 'present';
             terria.timeSeriesStack.addLayerToTop(catalogItem);
             terria.clock.onTick.raiseEvent(terria.clock);
-            var dateNow = dateFormat(JulianDate.now(), "MM-dd-yyyy");
-            var currentTime = dateFormat(terria.clock.currentTime, "MM-dd-yyyy");
+            var dateNow = (new Date()).toISOString();
+            var currentTime = JulianDate.toIso8601(terria.clock.currentTime, 3);
+            // Do not compare time, because on some systems the second could have ticked over between getting the two times.
+            dateNow = dateNow.substr(0, 10);
+            currentTime = currentTime.substr(0, 10);
             expect(currentTime).toBe(dateNow);
         });
 
@@ -276,8 +282,11 @@ describe('AnimationViewModel', function() {
             catalogItem.initialTimeSource = '201508-08';
             expect(function() { terria.timeSeriesStack.addLayerToTop(catalogItem); } ).toThrow();
             terria.clock.onTick.raiseEvent(terria.clock);
-            var dateNow = dateFormat(JulianDate.now(), "MM-dd-yyyy");
-            var currentTime = dateFormat(terria.clock.currentTime, "MM-dd-yyyy");
+            var dateNow = (new Date()).toISOString();
+            var currentTime = JulianDate.toIso8601(terria.clock.currentTime, 3);
+            // Do not compare time, because on some systems the second could have ticked over between getting the two times.
+            dateNow = dateNow.substr(0, 10);
+            currentTime = currentTime.substr(0, 10);
             expect(currentTime).toBe(dateNow);
         });
     });
