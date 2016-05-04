@@ -58,7 +58,8 @@ describe('RegionProvider', function() {
         regionProvider = new RegionProvider('CED', {
             regionProp: 'CED_CODE',
             layerName: 'region_map:FID_CED_2011_AUST',
-            server: 'http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows'
+            server: 'http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows',
+            serverType: "WMS"
         });
 
     });

@@ -12,6 +12,7 @@ Change Log
     (which is the current time at the top-left).
 * Fixed display when `tableStyle.colorBins` is 0.
 * Added `fogSettings` option to init file to customize fog settings, introduced in Cesium 1.16.
+* Support ArcGis MapServer extents specified in a wider range of projections, including GDA MGA zones.
 
 ### 2.3.0
 
