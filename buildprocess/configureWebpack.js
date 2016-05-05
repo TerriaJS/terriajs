@@ -3,7 +3,7 @@ var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var StringReplacePlugin = require("string-replace-webpack-plugin");
 
 function configureWebpack(terriaJSBasePath, config, devMode, hot) {
-    const cesiumDir = path.dirname(require.resolve('terriajs-cesium/package.json'));
+    const cesiumDir = path.dirname(require.resolve('terriajs-cesium'));
 
     config.resolve = config.resolve || {};
     config.resolve.extensions = config.resolve.extensions || ['', '.webpack.js', '.web.js', '.js'];
@@ -27,72 +27,6 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot) {
                     pattern: /buildModuleUrl\([\'|\"](.*)[\'|\"]\)/ig,
                     replacement: function (match, p1, offset, string) {
                         return "require('" + cesiumDir + "/Source/" + p1 + "')";
-                    }
-                }
-            ]
-        })
-    });
-
-    config.module.loaders.push({
-        test: /\.js?$/,
-        include: require.resolve('terriajs-cesium/Source/ThirdParty/zip'),
-        loader: StringReplacePlugin.replace({
-            replacements: [
-                {
-                    pattern: /new Worker\(obj\.zip\.workerScriptsPath \+(.*)\)/ig,
-                    replacement: function (match, p1, offset, string) {
-                        return "require('" + require.resolve('worker-loader') + "!" + cesiumDir + "/Source/ThirdParty/Workers/' + " + p1 + ")()";
-                    }
-                }
-            ]
-        })
-    });
-
-    config.module.loaders.push({
-        test: /\.js?$/,
-        include: path.resolve(cesiumDir, 'Source', 'ThirdParty', 'Workers'),
-        loader: StringReplacePlugin.replace({
-            replacements: [
-                {
-                    pattern: "})(this)",
-                    replacement: function (match, p1, offset, string) {
-                        return "})(self)";
-                    }
-                }
-            ]
-        })
-    });
-
-    config.module.loaders.push({
-        test: /\.js?$/,
-        include: require.resolve('terriajs-cesium/Source/Core/TaskProcessor'),
-        loader: StringReplacePlugin.replace({
-            replacements: [
-                {
-                    pattern: /new Worker\(getBootstrapperUrl\(\)\)/ig,
-                    replacement: function (match, p1, offset, string) {
-                        return "require('" + require.resolve('worker-loader') + "!" + require.resolve('../lib/cesiumWorkerBootstrapper') + "')()";
-                    }
-                },
-                {
-                    pattern: "new Worker(getWorkerUrl('Workers/transferTypedArrayTest.js'))",
-                    replacement: function (match, p1, offset, string) {
-                        return "require('" + require.resolve('worker-loader') + "!" + cesiumDir + "/Source/Workers/transferTypedArrayTest.js')()";
-                    }
-                }
-            ]
-        })
-    });
-
-    config.module.loaders.push({
-        test: /\.js?$/,
-        include: path.resolve(cesiumDir, 'Source', 'Workers'),
-        loader: StringReplacePlugin.replace({
-            replacements: [
-                {
-                    pattern: /require\(\'Workers\/\' \+ moduleName\)/ig,
-                    replacement: function (match, p1, offset, string) {
-                        return "require('./' + moduleName)";
                     }
                 }
             ]
@@ -137,12 +71,6 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot) {
         test: /\.json|xml$/,
         loader: require.resolve('file-loader'),
         include: path.resolve(cesiumDir, 'Source', 'Assets')
-    });
-
-    config.module.loaders.push({
-        test: /\/Workers\/$/,
-        loader: require.resolve('file-loader'),
-        include: cesiumDir
     });
 
     config.module.loaders.push({
