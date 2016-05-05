@@ -191,6 +191,20 @@
               }
             }
           }
+        },
+        {
+          "name": "Template with new names",
+          "type": "csv",
+          "url": "/build/TerriaJS/test/csv/3000s.csv",
+          "opacity": 1,
+          "tableStyle": {
+            "columns": {
+              "Value": {
+                "name": "Renamed value"
+              }
+            }
+          },
+          "featureInfoTemplate" : "<ul><li>Postcode: {{Postcode}}</li><li>Value via original name: {{Value}}</li><li>Value via new name: {{Renamed value}}</li></ul>"
         }
       ]
     }
