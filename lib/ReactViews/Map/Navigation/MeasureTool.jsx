@@ -49,14 +49,16 @@ const MeasureTool = React.createClass({
             const currentPoint = pointEntities.entities.values[i];
             const currentPointPos = currentPoint.position.getValue(this.props.terria.clock.currentTime);
 
-            this.setState({ totalDistanceMetres: this.state.totalDistanceMetres + this.getGeodesicDistance(prevPointPos, currentPointPos)});
+            this.setState({ totalDistanceMetres: this.state.totalDistanceMetres + this.getGeodesicDistance(prevPointPos,
+                                                                                                           currentPointPos)});
 
             prevPointPos = currentPointPos;
         }
         if (this.state.userDrawing.closeLoop) {
             const firstPoint = pointEntities.entities.values[0];
             const firstPointPos = firstPoint.position.getValue(this.props.terria.clock.currentTime);
-            this.setState({ totalDistanceMetres: this.state.totalDistanceMetres + this.getGeodesicDistance(prevPointPos, firstPointPos)});
+            this.setState({ totalDistanceMetres: this.state.totalDistanceMetres + this.getGeodesicDistance(prevPointPos,
+                                                                                                           firstPointPos)});
         }
     },
 
