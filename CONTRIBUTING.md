@@ -8,7 +8,7 @@ A pull request MUST:
 - pass lint
 - follow code style (4-space indents, maximum semicolons, single-quoted strings etc)
 - update CHANGES.md (add a new version at the top if needed)
-- be submitted by someone who has signed the [Contributor Licence Agreement](cla-assistant.io/TerriaJS/terria).
+- be submitted by someone who has signed the [Contributor Licence Agreement](https://cla-assistant.io/TerriaJS/terriajs).
 - be a named branch (not master) which merges cleanly with master
 
 It SHOULD:
