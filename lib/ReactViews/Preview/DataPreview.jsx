@@ -33,9 +33,9 @@ const DataPreview = React.createClass({
 
     toggleOnMap() {
         this.props.previewed.toggleEnabled();
-         if(this.props.viewState.previewedItem.isEnabled === true && this.props.viewState.closeModalAfterAdd) {
-             this.props.viewState.modalVisible = false;
-         }
+        if (this.props.viewState.previewedItem.isEnabled === true && this.props.viewState.closeModalAfterAdd) {
+            this.props.viewState.modalVisible = false;
+        }
     },
 
     exitPreview() {

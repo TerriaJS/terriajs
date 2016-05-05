@@ -68,7 +68,7 @@ const StandardUserInterface = React.createClass({
     // TODO: Super A/B test toggle remove soon!!!
     toggleCloseModalAfterAdd() {
         if (confirm('Toggle close modal after add?')) {
-            this.props.viewState.closeModalAfterAdd = !this.props.viewState.closeModalAfterAdd
+            this.props.viewState.closeModalAfterAdd = !this.props.viewState.closeModalAfterAdd;
         }
     },
 

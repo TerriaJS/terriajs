@@ -1,14 +1,6 @@
 'use strict';
-import Cartesian2 from 'terriajs-cesium/Source/Core/Cartesian2';
-import Cartographic from 'terriajs-cesium/Source/Core/Cartographic';
-import CesiumMath from 'terriajs-cesium/Source/Core/Math';
-import defined from 'terriajs-cesium/Source/Core/defined';
-import EllipsoidTerrainProvider from 'terriajs-cesium/Source/Core/EllipsoidTerrainProvider';
-import Intersections2D from 'terriajs-cesium/Source/Core/Intersections2D';
 import ObserveModelMixin from './../ObserveModelMixin';
-import proj4 from 'proj4/lib/index.js';
 import React from 'react';
-import when from 'terriajs-cesium/Source/ThirdParty/when';
 
 const LocationBar = React.createClass({
     mixins: [ObserveModelMixin],
@@ -63,4 +55,5 @@ const LocationBar = React.createClass({
         );
     }
 });
+
 module.exports = LocationBar;
