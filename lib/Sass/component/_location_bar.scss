@@ -1,16 +1,6 @@
 $distance-bg: rgba($dark, 0.9);
 
-.location-distance{
-  @extend .clearfix;
-  display: none;
-  @media screen and (min-width: $sm){
-    display: block;
-  }
-  position: absolute;
-  top: -60px;
-  right: $padding*2;
-  z-index: 1;
-}
+
 
 .location-bar{
   @extend .clearfix;

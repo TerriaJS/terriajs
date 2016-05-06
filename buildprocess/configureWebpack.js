@@ -221,6 +221,18 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot) {
 
     if (hot) {
         config.module.loaders.push({
+            exclude: path.resolve(terriaJSBasePath, 'lib', 'Sass'),
+            include: path.resolve(terriaJSBasePath, 'lib'),
+            test: /\.scss$/,
+            loaders: [
+                require.resolve('style-loader'),
+                require.resolve('css-loader') + '?sourceMap&modules',
+                require.resolve('sass-loader') + '?sourceMap'
+            ]
+        });
+
+        config.module.loaders.push({
+            include: path.resolve(terriaJSBasePath, 'lib', 'Sass'),
             test: /\.scss$/,
             loaders: [
                 require.resolve('style-loader'),
@@ -230,6 +242,15 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot) {
         });
     } else {
         config.module.loaders.push({
+            exclude: path.resolve(terriaJSBasePath, 'lib', 'Sass'),
+            test: /\.scss$/,
+            loader: ExtractTextPlugin.extract(require.resolve('css-loader') + '?sourceMap&modules!' + require.resolve('sass-loader') + '?sourceMap', {
+                publicPath: ''
+            })
+        });
+
+        config.module.loaders.push({
+            include: path.resolve(terriaJSBasePath, 'lib', 'Sass'),
             test: /\.scss$/,
             loader: ExtractTextPlugin.extract(require.resolve('css-loader') + '?sourceMap!' + require.resolve('sass-loader') + '?sourceMap', {
                 publicPath: ''

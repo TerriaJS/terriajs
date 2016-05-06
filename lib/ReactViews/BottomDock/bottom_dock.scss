@@ -1,0 +1,24 @@
+@import '../../sass/global/variables.scss';
+@import '../../sass/global/mixins.scss';
+@import '../../sass/partial/base.scss';
+
+.bottomDock {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10;
+    background: $dark;
+}
+
+.locationDistance {
+  @extend .clearfix;
+  display: none;
+  @media screen and (min-width: $sm){
+    display: block;
+  }
+  position: absolute;
+  top: -60px;
+  right: $padding*2;
+  z-index: 1;
+}
