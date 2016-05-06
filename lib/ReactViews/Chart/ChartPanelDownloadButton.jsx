@@ -1,12 +1,17 @@
 'use strict';
+/* global Float32Array */
 /* eslint new-parens: 0 */
 
-import DataUri from '../../Core/DataUri';
 import defined from 'terriajs-cesium/Source/Core/defined';
+// import TaskProcessor from 'terriajs-cesium/Source/Core/TaskProcessor';
+// import when from 'terriajs-cesium/Source/ThirdParty/when';
+
+import DataUri from '../../Core/DataUri';
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
-// import TableStructure from '../../Map/TableStructure';
 import VarType from '../../Map/VarType';
+
+// const hrefProcessor = new TaskProcessor('lib/ReactViews/Chart/downloadHrefWorker');
 
 const ChartPanelDownloadButton = React.createClass({
     mixins: [ObserveModelMixin],
@@ -36,10 +41,23 @@ const ChartPanelDownloadButton = React.createClass({
         const that = this;
         if (window.Worker) {
             that.setState({href: undefined});
-            // console.log('ChartPanelDownloadButton running worker with chartableItems', newValue);
+            const synthesized = that.synthesizeNameAndValueArrays();
+            // It would be better to implement this using TaskProcessor, but this requires webpack magic.
+            // if (!synthesized.values || synthesized.values.length === 0) {
+            //     return;
+            // }
+            // // console.log('ChartPanelDownloadButton running worker with chartableItems', newValue);
+            // const promise = hrefProcessor.scheduleTask(synthesized);
+            // if (!defined(promise)) {
+            //     // Too many active tasks - ideally, try again later.
+            // } else {
+            //     when(promise, function(result) {
+            //         // use the result of the task
+            //         that.setState({href: result});
+            //     });
+            // }
             const HrefWorker = require('worker!./downloadHrefWorker');
             const worker = new HrefWorker;
-            const synthesized = that.synthesizeNameAndValueArrays();
             // console.log('names and value arrays', synthesized.names, synthesized.values);
             if (synthesized.values && synthesized.values.length > 0) {
                 worker.postMessage(synthesized);
@@ -73,7 +91,7 @@ const ChartPanelDownloadButton = React.createClass({
                 const yColumns = item.tableStructure.columnsByType[VarType.SCALAR].filter(column=>column.isActive);
                 if (yColumns.length > 0) {
                     columns = columns.concat(yColumns);
-                    valueArrays.push(columns.map(column => column.values));
+                    valueArrays.push(columns.map(column => new Float32Array(column.values)));
                     yColumns.forEach(column => {
                         names.push(item.name + ' ' + column.name);
                     });
