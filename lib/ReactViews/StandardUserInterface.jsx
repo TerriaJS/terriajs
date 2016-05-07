@@ -84,12 +84,12 @@ const StandardUserInterface = React.createClass({
                             <If condition={this.props.viewState.useSmallScreenInterface}>
                                 <MobileHeader terria={terria} viewState={this.props.viewState} />
                             </If>
-                            <div className='workbench'>
-                                <Branding terria={terria} onClick={this.toggleCloseModalAfterAdd} />
-                                <If condition={!this.props.viewState.useSmallScreenInterface}>
+                            <If condition={!this.props.viewState.useSmallScreenInterface}>
+                                <div className='workbench'>
+                                    <Branding terria={terria} onClick={this.toggleCloseModalAfterAdd} />
                                     <SidePanel terria={terria} viewState={this.props.viewState} />
-                                </If>
-                            </div>
+                                </div>
+                            </If>
                         </If>
 
                         <section className="map">
