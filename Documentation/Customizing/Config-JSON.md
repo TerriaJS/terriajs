@@ -32,7 +32,7 @@ Option                      | Meaning
 `"supportEmail"`            | The email address shown when things go wrong.
 `"brandBarElements": [ ]`   | An array of HTML strings that fill up the top left logo space.
 `"defaultMaximumShownFeatureInfos"` | The maximum number of "feature info" boxes that can be displayed when clicking a point. (Default: 100)
-
+`"initialBaseMap"` | The first basemap shown for new users. This string must match the label used to identify basemaps. Once a user switches basemap, their preference will override this.
 
 ## Advanced options
 
