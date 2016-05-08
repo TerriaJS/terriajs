@@ -8,7 +8,6 @@ var JulianDate = require('terriajs-cesium/Source/Core/JulianDate');
 var L = require('leaflet');
 var TimeInterval = require('terriajs-cesium/Source/Core/TimeInterval');
 var TimeIntervalCollection = require('terriajs-cesium/Source/Core/TimeIntervalCollection');
-var dateFormat = require('dateformat');
 
 
 describe('AnimationViewModel', function() {
