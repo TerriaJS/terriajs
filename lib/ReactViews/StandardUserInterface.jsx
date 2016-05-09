@@ -116,7 +116,7 @@ const StandardUserInterface = React.createClass({
                 </div>
 
                 <div className='feedback'>
-                    <Feedback/>
+                    <Feedback terria={this.props.terria} />
                 </div>
                 <FeatureInfoPanel terria={terria}
                                   viewState={this.props.viewState}
