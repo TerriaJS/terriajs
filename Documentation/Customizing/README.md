@@ -2,7 +2,7 @@
 
 These guides cover configuring, skinning and tweaking Terria. You'll need some basic sysadmin or development skills for most tasks. Some of these tricks you can use on any public Terria site.
 
-First, read [Deployment](/Documentation/Deployment) to get up and running.
+First, read [Deployment](/Documentation/Deployment/README.md) to get up and running.
 
 # Configuring
 
