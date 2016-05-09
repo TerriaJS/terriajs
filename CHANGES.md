@@ -6,8 +6,6 @@ Change Log
 
 * Only trigger a search when the user presses enter or stops typing for 3 seconds.  This will greatly reduce the number of times that searches are performed, which is important with a geocoder like Bing Maps that counts each geocode as a transaction.
 * Reduced the tendency for search to lock up the web browser while it is in progress.
-### 3.1.0
-
 * For WMS catalog items that have animated data, the initial time of the timeslider can be specified with `initialTimeSource` as `start`, `end`, `present` (nearest date to present), or with an ISO8601 date.
 
 ### 3.0.0
