@@ -12,8 +12,6 @@
     font-style: normal;
 }
 
-:global {
-
   [class^="icon-"], [class*=" icon-"] {
     /* use !important to prevent issues with browser extensions that change fonts */
     font-family: 'icomoon' !important;
@@ -259,4 +257,3 @@
   .icon-geolocation:before {
     content: "\e92a";
   }
-}

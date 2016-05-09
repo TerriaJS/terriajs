@@ -1,5 +1,5 @@
 import arrayContains from '../../Core/arrayContains';
-import Branding from './../Branding.jsx';
+import Branding from './../SidePanel/Branding.jsx';
 import FeatureInfoPanel from './../FeatureInfo/FeatureInfoPanel.jsx';
 import MapNavigation from './../Map/MapNavigation.jsx';
 import MobileHeader from './../Mobile/MobileHeader.jsx';
@@ -8,7 +8,7 @@ import Notification from './../Notification/Notification.jsx';
 import MapInteractionWindow from './../Notification/MapInteractionWindow.jsx';
 import ObserveModelMixin from './../ObserveModelMixin';
 import React from 'react';
-import SidePanel from './../SidePanel.jsx';
+import WorkBench from './../SidePanel/WorkBench.jsx';
 import ProgressBar from './../ProgressBar.jsx';
 import BottomDock from './../BottomDock/BottomDock.jsx';
 import TerriaViewerWrapper from './../TerriaViewerWrapper.jsx';
@@ -86,10 +86,10 @@ const StandardUserInterface = React.createClass({
                             <If condition={this.props.viewState.useSmallScreenInterface}>
                                 <MobileHeader terria={terria} viewState={this.props.viewState} />
                             </If>
-                            <div className={Styles.workBench}>
+                            <div className={Styles.sidePanel}>
                                 <Branding terria={terria} onClick={this.toggleCloseModalAfterAdd} />
                                 <If condition={!this.props.viewState.useSmallScreenInterface}>
-                                    <SidePanel terria={terria} viewState={this.props.viewState} />
+                                    <WorkBench terria={terria} viewState={this.props.viewState} />
                                 </If>
                             </div>
                         </If>

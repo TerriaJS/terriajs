@@ -1,9 +1,11 @@
 
-import NowViewingContainer from './NowViewing/NowViewingContainer.jsx';
-import ObserveModelMixin from './ObserveModelMixin';
+import NowViewingContainer from './../NowViewing/NowViewingContainer.jsx';
+import ObserveModelMixin from './../ObserveModelMixin';
 import React from 'react';
-import SidebarSearch from './SidebarSearch.jsx';
-import SearchBox from './Search/SearchBox.jsx';
+import SidebarSearch from './../SidebarSearch.jsx';
+import SearchBox from './../Search/SearchBox.jsx';
+
+import Styles from './work_bench.scss';
 
 const SidePanel = React.createClass({
     mixins: [ObserveModelMixin],
@@ -35,17 +37,17 @@ const SidePanel = React.createClass({
 
     render() {
         return (
-            <div className={'workbench__inner'}>
-                <div className='workbench__header'>
+            <div className={Styles.workBench}>
+                <div className={Styles.header}>
                     <SearchBox onSearchTextChanged={this.search}
                                onFocus={this.onSearchBoxFocus}
                                onEnterPressed={this.onEnterPressedInSearch}
                                initialText={this.props.viewState.searchState.locationSearchText}/>
-                    <div className='workbench__add-data'>
-                        <button type='button' onClick={this.onAddDataClicked} className='btn'>Add Data</button>
+                    <div className={Styles.addData}>
+                        <button type='button' onClick={this.onAddDataClicked} className={Styles.button}>Add Data</button>
                     </div>
                 </div>
-                <div className='workbench__body'>
+                <div className={Styles.body}>
                     <Choose>
                         <When
                             condition={this.props.viewState.searchState.locationSearchText.length && !this.props.viewState.searchState.hideLocationSearch}>

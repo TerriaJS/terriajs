@@ -1,0 +1,26 @@
+@import 'variables';
+@import 'mixins';
+
+.branding {
+  height: $sm-logo-height;
+  background: $dark;
+  @include transition(all, 0.5s, linear);
+
+  @media screen and (min-width: $sm) {
+    width: 100%;
+    padding: $padding;
+    height: $logo-height;
+  }
+}
+
+.logoButton {
+  background-color: transparent;
+  padding: 0;
+  height: 100%;
+}
+
+.logoImage {
+  display: block;
+  max-height: 100%;
+  width: auto;
+}

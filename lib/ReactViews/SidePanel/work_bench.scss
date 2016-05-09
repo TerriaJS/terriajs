@@ -1,0 +1,38 @@
+@import 'mixins';
+@import 'variables';
+
+.workBench {
+  position: relative;
+}
+
+.header {
+    padding: 0 $padding-small;
+    border-bottom: 1px solid $overlay;
+    background: $dark;
+}
+
+.body {
+    padding: 0 $padding-small;
+    overflow-y: auto;
+    height: calc(100vh - #{$workbench-header + $logo-height});
+}
+
+.addData {
+  margin: $padding-small 0;
+}
+
+.button {
+  composes: btn from '../../Sass/partial/_buttons.scss';
+  composes: btn-primary from '../../Sass/partial/_buttons.scss';
+  composes: btn-primary from '../../Sass/partial/_buttons.scss';
+  composes: icon from '../../Sass/global/_icons.scss';
+  composes: icon-add from '../../Sass/global/_icons.scss';
+
+  text-transform: uppercase;
+
+  &:before {
+    position: absolute;
+    font-size: 18px;
+    left: $padding*2;
+  }
+}

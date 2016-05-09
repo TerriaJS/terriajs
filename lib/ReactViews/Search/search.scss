@@ -1,0 +1,83 @@
+@import 'variables';
+@import 'mixins';
+
+// Search form
+//
+//.panel-content - Search form in modal window
+//.workbench__inner - Search form in workbench
+//
+// Markup:
+// <div class={{modifier_class}}>
+// <form class='form--search-data' autoComplete='off'>
+//   <label htmlFor='search' class='form__label'> Type keyword to search </label>
+//   <input id='search'
+//          type='text'
+//          name='search'
+//          class='form__search-field field'
+//          placeholder='Search'
+//          autoComplete='off'/>
+//   <button class='btn search-clear'></button>
+// </form>
+// </div>
+//
+// Style guide: 3.1
+//
+
+.searchData{
+  font-family: $font-pop;
+  position: relative;
+}
+
+.icon {
+  position: absolute;
+  font-size: 1.2rem;
+  color: $grey;
+  opacity: 0.5;
+  &:before{
+    display: block;
+  }
+}
+
+.formLabel{
+  composes: icon;
+  composes: icon from '../../Sass/global/_icons.scss';
+  composes: icon-search from '../../Sass/global/_icons.scss';
+  // hide label text but keep it machine visible
+  width: $input-height;
+  height: $input-height;
+  overflow: hidden;
+  &:before{
+    padding: 12px $padding*1.5;
+  }
+}
+
+input[type=text].searchField {
+  padding-left: $input-height;
+  width: 100%;
+
+  @include placeholder{
+    text-transform: uppercase;
+    font-size: $font-size-small;
+    text-align: left;
+    padding-left: calc(50% - 40px);
+    @include transition(all, 0.25s, linear);
+  }
+
+  &:focus{
+    @include placeholder{
+      padding-left: 0;
+    }
+  }
+}
+
+.searchClear{
+  right: $padding;
+  top: 0;
+  padding: 0;
+  composes: icon;
+  composes: icon from '../../Sass/global/_icons.scss';
+  composes: icon-clear from '../../Sass/global/_icons.scss';
+  &:before{
+    padding: $padding;
+  }
+}

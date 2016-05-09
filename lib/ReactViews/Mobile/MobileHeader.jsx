@@ -6,7 +6,7 @@ import GazetteerSearchProviderViewModel from '../../ViewModels/GazetteerSearchPr
 import SearchBox from '../Search/SearchBox.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
 import MobileModalWindow from './MobileModalWindow';
-import Branding from '../Branding.jsx';
+import Branding from '../SidePanel/Branding.jsx';
 
 const MobileHeader = React.createClass({
     mixins: [ObserveModelMixin],
