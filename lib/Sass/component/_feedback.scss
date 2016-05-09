@@ -1,3 +1,13 @@
+.feedback{
+    position: fixed;
+    right: $padding*2;
+    bottom: 100px;
+    background: #fff;
+    color: $dark;
+    border-radius: 20px;
+}
+
+
 .feedback--form{
     position: fixed;
     right: $padding*2;
@@ -6,6 +16,11 @@
     color: $dark;
     border-radius: $radius-medium;
     box-shadow: $box-shadow;
+    display: none;
+
+    &.is-open{
+      display: block;
+    }
 
   .form__header{
     position: relative;

@@ -13,32 +13,52 @@ const Feedback = React.createClass({
     },
 
     onClick() {
-        console.log('click');
+        this.setState({
+            isOpen: true
+        });
     },
 
-    handleChange(e){
-        console.log(e.target);
+    onDismiss() {
+        this.setState({
+            isOpen: false
+        });
+    },
+
+    onSubmit() {
+        if(this.state.email.length > 0) {
+            // submit form
+            this.setState({
+                isOpen: false
+            });
+        }
+    },
+
+    handleChange(e) {
+        this.setState({
+            [e.target.getAttribute('name')]: e.target.value
+        });
+
     },
 
     render() {
         return (
             <div className='feedback__inner'>
                 <button type='button' className='logo btn' onClick={this.onClick}>Give feedback</button>
-                <div className='feedback--form'>
+                <div className={`feedback--form ${this.state.isOpen ? 'is-open' : ''}`}>
                     <div className='form__header'>
                         <h4 className='form--title'>Feedback</h4>
-                        <button className='btn btn--close' title ='close feedback'></button>
+                        <button className='btn btn--close' onClick ={this.onDismiss} title ='close feedback'></button>
                     </div>
                     <form>
                       <label>Your name</label>
-                      <input type="text" className="field" value={this.state.name} onChange ={this.handleChange}/>
+                      <input type="text" name = 'name' className="field" value={this.state.name} onChange ={this.handleChange}/>
                       <label>Email Address *</label>
-                      <input type="password" className="field" value={this.state.email} onChange ={this.handleChange}/>
-                      <label>How can we improve</label>
+                      <input type="text" name = 'email' className="field" value={this.state.email} onChange ={this.handleChange}/>
+                      <label>How can we improve it</label>
                       <textarea className="field" name="feedback" value={this.state.feedback} onChange ={this.handleChange}/>
                       <div className='form__action'>
-                        <button type="submit" className="btn btn-cancel">Cancel</button>
-                        <button type="reset" className="btn btn-submit">Submit</button>
+                        <button type="button" className="btn btn-cancel" onClick ={this.onDismiss} >Cancel</button>
+                        <button type="submit" className="btn btn-submit">Submit</button>
                       </div>
                     </form>
             </div>
