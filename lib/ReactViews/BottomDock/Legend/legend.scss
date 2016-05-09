@@ -1,0 +1,40 @@
+@import 'variables';
+@import 'mixins';
+
+$distance-bg: rgba($dark, 0.9);
+//
+.baseLegend, .distanceLegend {
+  composes: btn from '../../../Sass/partial/_buttons.scss';
+
+  height: 29px;
+  float: left;
+  background-color: #fff;
+  color: $text-dark;
+  border-radius: $radius-medium;
+  padding: $padding-small $padding;
+  font-size: 0.8rem;
+  text-align: center;
+  line-height: 16px;
+
+  &:hover{
+    background: $faint-bg;
+  }
+
+  .bar{
+    background: $text-dark;
+  }
+}
+
+.locationBar{
+  composes: baseLegend;
+  margin-right: $padding;
+
+  span{
+    padding: 0 $padding-small;
+  }
+
+  li, div{
+    display: inline-block;
+    padding: 0 $padding-small;
+  }
+}

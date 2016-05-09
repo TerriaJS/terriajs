@@ -1,15 +1,20 @@
+@import './variables';
+@import './mixins';
+
 @font-face {
     font-family: 'icomoon';
-    src: url('~terriajs/wwwroot/fonts/icomoon.eot?7u40jo');
-    src: url('~terriajs/wwwroot/fonts/icomoon.eot?7u40jo#iefix') format('embedded-opentype'),
-    url('~terriajs/wwwroot/fonts/icomoon.ttf?7u40jo') format('truetype'),
-    url('~terriajs/wwwroot/fonts/icomoon.woff?7u40jo') format('woff'),
-    url('~terriajs/wwwroot/fonts/icomoon.svg?7u40jo#icomoon') format('svg');
+    src: url('../../../wwwroot/fonts/icomoon.eot?7u40jo');
+    src: url('../../../wwwroot/fonts/icomoon.eot?7u40jo#iefix') format('embedded-opentype'),
+    url('../../../wwwroot/fonts/icomoon.ttf?7u40jo') format('truetype'),
+    url('../../../wwwroot/fonts/icomoon.woff?7u40jo') format('woff'),
+    url('../../../wwwroot/fonts/icomoon.svg?7u40jo#icomoon') format('svg');
     font-weight: normal;
     font-style: normal;
 }
 
-[class^="icon-"], [class*=" icon-"] {
+:global {
+
+  [class^="icon-"], [class*=" icon-"] {
     /* use !important to prevent issues with browser extensions that change fonts */
     font-family: 'icomoon' !important;
     speak: none;
@@ -22,237 +27,236 @@
     /* Better Font Rendering =========== */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-}
-
-
-@-webkit-keyframes fa-spin {
-  0% {
-    -webkit-transform: rotate(0deg);
-            transform: rotate(0deg);
   }
-  100% {
-    -webkit-transform: rotate(359deg);
-            transform: rotate(359deg);
-  }
-}
 
-@keyframes fa-spin {
-  0% {
-    -webkit-transform: rotate(0deg);
-            transform: rotate(0deg);
+  @-webkit-keyframes fa-spin {
+    0% {
+      -webkit-transform: rotate(0deg);
+      transform: rotate(0deg);
+    }
+    100% {
+      -webkit-transform: rotate(359deg);
+      transform: rotate(359deg);
+    }
   }
-  100% {
-    -webkit-transform: rotate(359deg);
-            transform: rotate(359deg);
-  }
-}
 
-.icon-loader:before{
+  @keyframes fa-spin {
+    0% {
+      -webkit-transform: rotate(0deg);
+      transform: rotate(0deg);
+    }
+    100% {
+      -webkit-transform: rotate(359deg);
+      transform: rotate(359deg);
+    }
+  }
+
+  .icon-loader:before {
     -webkit-animation: fa-spin 2s infinite linear;
     animation: fa-spin 2s infinite linear;
-}
-
-
-// Icons
-//
-//.icon-add - icon
-//.icon-checkbox-checked - icon
-//.icon-checkbox-off - icon
-//.icon-checkbox-on - icon
-//.icon-clear - icon
-//.icon-close - icon
-//.icon-closed - icon
-//.icon-decrease - icon
-//.icon-expand - icon
-//.icon-increase - icon
-//.icon-invisible - icon
-//.icon-left - icon
-//.icon-loader - icon
-//.icon-location - icon
-//.icon-minus - icon
-//.icon-opened - icon
-//.icon-radio-off - icon
-//.icon-radio-on - icon
-//.icon-refresh - icon
-//.icon-remove - icon
-//.icon-right - icon
-//.icon-search - icon
-//.icon-share - icon
-//.icon-sphere - icon
-//.icon-visible - icon
-//.icon-facebook - icon
-//.icon-twitter - icon
-//.icon-link - icon
-//.icon-menu - icon
-//.icon-download -icon
-//.icon-line-chart - icon
-//.icon-backToStart - icon
-//.icon-pause - icon
-//.icon-play - icon
-//.icon-backward - icon
-//.icon-forward - icon
-//.icon-loop - icon
-//.icon-github - icon
-//.icon-stats-bars -icon
-//.icon-folder-open - icon
-//.icon-folder - icon
-//
-// Markup:
-// <i class='icon {{modifier_class}}'> </i>
-//
-// Style guide: 4.0
-//
-.icon:before{
-  /* use !important to prevent issues with browser extensions that change fonts */
-  font-family: 'icomoon' !important;
-  speak: none;
-  font-style: normal;
-  font-weight: normal;
-  font-variant: normal;
-  text-transform: none;
-  line-height: 1;
-  display: block;
-  box-sizing: border-box;
-
-  /* Better Font Rendering =========== */
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-.icon-dropdown {
-  @extend .icon-opened;
-  float: right;
-  margin-left: $padding-small;
-}
-
-.icon-download{
-  &:before{
-    line-height: $btn-default-line-height;
   }
-}
 
-.icon-backToStart:before {
+  // Icons
+  //
+  //.icon-add - icon
+  //.icon-checkbox-checked - icon
+  //.icon-checkbox-off - icon
+  //.icon-checkbox-on - icon
+  //.icon-clear - icon
+  //.icon-close - icon
+  //.icon-closed - icon
+  //.icon-decrease - icon
+  //.icon-expand - icon
+  //.icon-increase - icon
+  //.icon-invisible - icon
+  //.icon-left - icon
+  //.icon-loader - icon
+  //.icon-location - icon
+  //.icon-minus - icon
+  //.icon-opened - icon
+  //.icon-radio-off - icon
+  //.icon-radio-on - icon
+  //.icon-refresh - icon
+  //.icon-remove - icon
+  //.icon-right - icon
+  //.icon-search - icon
+  //.icon-share - icon
+  //.icon-sphere - icon
+  //.icon-visible - icon
+  //.icon-facebook - icon
+  //.icon-twitter - icon
+  //.icon-link - icon
+  //.icon-menu - icon
+  //.icon-download -icon
+  //.icon-line-chart - icon
+  //.icon-backToStart - icon
+  //.icon-pause - icon
+  //.icon-play - icon
+  //.icon-backward - icon
+  //.icon-forward - icon
+  //.icon-loop - icon
+  //.icon-github - icon
+  //.icon-stats-bars -icon
+  //.icon-folder-open - icon
+  //.icon-folder - icon
+  //
+  // Markup:
+  // <i class='icon {{modifier_class}}'> </i>
+  //
+  // Style guide: 4.0
+  //
+  .icon:before {
+    /* use !important to prevent issues with browser extensions that change fonts */
+    font-family: 'icomoon' !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    display: block;
+    box-sizing: border-box;
+
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  .icon-dropdown {
+    @extend .icon-opened;
+    float: right;
+    margin-left: $padding-small;
+  }
+
+  .icon-download {
+    &:before {
+      line-height: $btn-default-line-height;
+    }
+  }
+
+  .icon-backToStart:before {
     content: "\e900";
-}
-.icon-pause:before {
+  }
+  .icon-pause:before {
     content: "\e901";
-}
-.icon-play:before {
+  }
+  .icon-play:before {
     content: "\e902";
-}
-.icon-line-chart:before {
+  }
+  .icon-line-chart:before {
     content: "\e903";
-}
-.icon-twitter:before {
+  }
+  .icon-twitter:before {
     content: "\e904";
-}
-.icon-facebook:before {
+  }
+  .icon-facebook:before {
     content: "\e905";
-}
-.icon-menu:before {
+  }
+  .icon-menu:before {
     content: "\e906";
-}
-.icon-right:before {
+  }
+  .icon-right:before {
     content: "\e908";
-}
-.icon-invisible:before {
+  }
+  .icon-invisible:before {
     content: "\e909";
-}
-.icon-left:before {
+  }
+  .icon-left:before {
     content: "\e90a";
-}
-.icon-checkbox-checked:before {
+  }
+  .icon-checkbox-checked:before {
     content: "\e90b";
-}
-.icon-closed:before {
+  }
+  .icon-closed:before {
     content: "\e90c";
-}
-.icon-search:before {
+  }
+  .icon-search:before {
     content: "\e90d";
-}
-.icon-visible:before {
+  }
+  .icon-visible:before {
     content: "\e90e";
-}
-.icon-share:before {
+  }
+  .icon-share:before {
     content: "\e90f";
-}
-.icon-clear:before {
+  }
+  .icon-clear:before {
     content: "\e910";
-}
-.icon-close:before {
+  }
+  .icon-close:before {
     content: "\e911";
-}
-.icon-add:before {
+  }
+  .icon-add:before {
     content: "\e912";
-}
-.icon-sphere:before {
+  }
+  .icon-sphere:before {
     content: "\e913";
-}
-.icon-opened:before {
+  }
+  .icon-opened:before {
     content: "\e914";
-}
-.icon-expand:before {
+  }
+  .icon-expand:before {
     content: "\e915";
-}
-.icon-loader:before {
+  }
+  .icon-loader:before {
     content: "\e916";
-}
-.icon-location:before {
+  }
+  .icon-location:before {
     content: "\e917";
-}
-.icon-remove:before {
+  }
+  .icon-remove:before {
     content: "\e918";
-}
-.icon-refresh:before {
+  }
+  .icon-refresh:before {
     content: "\e919";
-}
-.icon-decrease:before {
+  }
+  .icon-decrease:before {
     content: "\e91a";
-}
-.icon-increase:before {
+  }
+  .icon-increase:before {
     content: "\e91b";
-}
-.icon-checkbox-off:before {
+  }
+  .icon-checkbox-off:before {
     content: "\e91c";
-}
-.icon-minus:before {
+  }
+  .icon-minus:before {
     content: "\e91d";
-}
-.icon-checkbox-on:before {
+  }
+  .icon-checkbox-on:before {
     content: "\e91e";
-}
-.icon-radio-off:before {
+  }
+  .icon-radio-off:before {
     content: "\e91f";
-}
-.icon-radio-on:before {
+  }
+  .icon-radio-on:before {
     content: "\e920";
-}
-.icon-link:before {
+  }
+  .icon-link:before {
     content: "\e921";
-}
-.icon-download:before {
+  }
+  .icon-download:before {
     content: "\e922";
-}
-.icon-backward:before {
+  }
+  .icon-backward:before {
     content: "\e923";
-}
-.icon-forward:before {
+  }
+  .icon-forward:before {
     content: "\e924";
-}
-.icon-loop:before {
+  }
+  .icon-loop:before {
     content: "\e925";
-}
-.icon-github:before {
+  }
+  .icon-github:before {
     content: "\e926";
-}
-.icon-stats-bars:before {
+  }
+  .icon-stats-bars:before {
     content: "\e927";
-}
-.icon-folder-open:before {
+  }
+  .icon-folder-open:before {
     content: "\e928";
-}
-.icon-folder:before {
+  }
+  .icon-folder:before {
     content: "\e929";
-}
-.icon-geolocation:before {
+  }
+  .icon-geolocation:before {
     content: "\e92a";
+  }
 }

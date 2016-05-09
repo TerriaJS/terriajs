@@ -44,7 +44,7 @@ const MyDataTab = React.createClass({
                     <ul className='data-catalog'>
                         <DataCatalogGroup group={this.state.dataCatalog} viewState={this.props.viewState} />
                     </ul>
-                    <button type='button' onClick={this.changeUploadView} className='btn--add-more-data btn'> Add more data</button>
+                    <button type='button' onClick={this.changeUploadView} className='btn--add-more-data btn btn-transparent'> Add more data</button>
                 </div>
             );
         }
@@ -55,7 +55,7 @@ const MyDataTab = React.createClass({
             <div className="panel-content">
                 <div className='my-data'>
                     <div className={'add-data ' + (!this.state.dataCatalog ? 'is-empty' : '' + ' ' + (!this.state.isUploadView ? 'is-hidden' : ''))}>
-                        <button type='button' onClick={this.changeUploadView} className='btn btn--back-to-my-data'> Back</button>
+                        <button type='button' onClick={this.changeUploadView} className='btn btn--back-to-my-data btn-transparent'> Back</button>
                         <h3>Adding your own data</h3>
                         <AddData updateCatalog={this.updateCatalog}
                                  terria={this.props.terria}

@@ -1,6 +1,5 @@
 @import '../../sass/global/variables.scss';
 @import '../../sass/global/mixins.scss';
-@import '../../sass/partial/base.scss';
 
 .bottomDock {
     position: absolute;
@@ -12,7 +11,7 @@
 }
 
 .locationDistance {
-  @extend .clearfix;
+  composes: clearfix from '../../sass/partial/_base.scss';
   display: none;
   @media screen and (min-width: $sm){
     display: block;

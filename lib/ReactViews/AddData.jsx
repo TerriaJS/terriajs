@@ -237,10 +237,10 @@ const AddData = React.createClass({
         return (
             <ul className='add-data-tablist tablist'>
                 <li className='tablist--local'>
-                    <button type='button' onClick={this.changeTab.bind(null, 'local')} className={'btn btn--add-data-tab ' + (this.state.activeTab === 'local' ? 'is-active' : '')}>ADD LOCAL DATA</button>
+                    <button type='button' onClick={this.changeTab.bind(null, 'local')} className={'btn btn--add-data-tab btn-transparent ' + (this.state.activeTab === 'local' ? 'is-active' : '')}>ADD LOCAL DATA</button>
                 </li>
                 <li className='tablist--local'>
-                    <button type='button' onClick={this.changeTab.bind(null, 'web')} className={'btn btn--add-data-tab ' + (this.state.activeTab === 'web' ? 'is-active' : '')}>ADD WEB DATA</button>
+                    <button type='button' onClick={this.changeTab.bind(null, 'web')} className={'btn btn--add-data-tab btn-transparent ' + (this.state.activeTab === 'web' ? 'is-active' : '')}>ADD WEB DATA</button>
                 </li>
             </ul>
             );
@@ -261,7 +261,7 @@ const AddData = React.createClass({
                 <label className='label'><strong>Step 2:</strong> Enter the URL of the data file or web service: </label>
                 <form className='url-input'>
                     <input value={this.state.remoteUrl} onChange={this.onRemoteUrlChange} className='field' type='text' placeholder='e.g. http://data.gov.au/geoserver/wms'/>
-                    <button type='button' onClick={this.handleUrl} className="btn btn--add-url">Add</button>
+                    <button type='button' onClick={this.handleUrl} className="btn btn--add-url btn-transparent">Add</button>
                 </form>
             </section>
             </div>
