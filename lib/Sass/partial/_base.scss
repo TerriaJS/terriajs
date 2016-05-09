@@ -63,6 +63,10 @@ fieldset {
   margin-bottom: 0;
 }
 
+textarea{
+  color: $text-dark;
+}
+
 input[type=text],
 input[type=date],
 input[type=datetime],

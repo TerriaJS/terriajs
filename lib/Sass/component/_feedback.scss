@@ -5,18 +5,20 @@
     background: #fff;
     color: $dark;
     border-radius: 20px;
+    box-shadow: $box-shadow;
 }
-
-
 .feedback--form{
     position: fixed;
-    right: $padding*2;
+    right: $padding/2;
     bottom: 100px;
     background: #fff;
     color: $dark;
     border-radius: $radius-medium;
     box-shadow: $box-shadow;
     display: none;
+    @media screen and (min-width : $sm){
+      right: $padding*2;
+    }
 
     &.is-open{
       display: block;

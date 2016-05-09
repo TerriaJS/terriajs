@@ -1,6 +1,7 @@
 'use strict';
 
 import React from 'react';
+import sendFeedback from './../Models/sendFeedback.js';
 
 const Feedback = React.createClass({
     getInitialState() {
@@ -8,7 +9,7 @@ const Feedback = React.createClass({
             isOpen: false,
             name: '',
             email: '',
-            feedback: ''
+            comment: ''
         };
     },
 
@@ -27,6 +28,11 @@ const Feedback = React.createClass({
     onSubmit() {
         if(this.state.email.length > 0) {
             // submit form
+            sendFeedback({
+                name: this.state.name,
+                email: this.state.email,
+                comment: this.state.comment
+            });
             this.setState({
                 isOpen: false
             });
@@ -37,7 +43,6 @@ const Feedback = React.createClass({
         this.setState({
             [e.target.getAttribute('name')]: e.target.value
         });
-
     },
 
     render() {
@@ -55,10 +60,10 @@ const Feedback = React.createClass({
                       <label>Email Address *</label>
                       <input type="text" name = 'email' className="field" value={this.state.email} onChange ={this.handleChange}/>
                       <label>How can we improve it</label>
-                      <textarea className="field" name="feedback" value={this.state.feedback} onChange ={this.handleChange}/>
+                      <textarea className="field" name="comment" value={this.state.comment} onChange ={this.handleChange}/>
                       <div className='form__action'>
                         <button type="button" className="btn btn-cancel" onClick ={this.onDismiss} >Cancel</button>
-                        <button type="submit" className="btn btn-submit">Submit</button>
+                        <button type="submit" className="btn btn-submit">Send</button>
                       </div>
                     </form>
             </div>
