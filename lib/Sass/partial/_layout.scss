@@ -67,6 +67,10 @@
     height: 100%;
     touch-action: none;
   }
+
+  @media screen and (max-width : $sm){
+    display: block;
+  }
 }
 
 .notification{

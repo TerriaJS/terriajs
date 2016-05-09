@@ -5,6 +5,7 @@ import defined from 'terriajs-cesium/Source/Core/defined';
 
 /**
  * Super-simple dumb search box component.
+ * Used for both data catalog search and location search.
  */
 export default React.createClass({
     propTypes: {
