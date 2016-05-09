@@ -115,9 +115,11 @@ const StandardUserInterface = React.createClass({
                     <MapInteractionWindow terria={terria}/>
                 </div>
 
-                <div className='feedback'>
-                    <Feedback terria={this.props.terria} />
-                </div>
+                <If condition={!this.props.viewState.useSmallScreenInterface}>
+                    <div className='feedback'>
+                        <Feedback terria={this.props.terria} />
+                    </div>
+                </If>
                 <FeatureInfoPanel terria={terria}
                                   viewState={this.props.viewState}
                 />

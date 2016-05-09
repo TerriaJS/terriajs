@@ -81,11 +81,12 @@ const Feedback = React.createClass({
                         <button className='btn btn--close' onClick ={this.onDismiss} title='close feedback'></button>
                     </div>
                     <form onSubmit={this.onSubmit}>
+                      <div className="form--description">We would love to hear from you!</div>
                       <label>Your name (optional)</label>
                       <input type="text" name="name" className="field" value={this.state.name} onChange={this.handleChange}/>
-                      <label>Email address (optional)</label>
+                      <label>Email address (optional)<br/><em>We can't follow up without it!</em></label>
                       <input type="text" name="email" className="field" value={this.state.email} onChange={this.handleChange}/>
-                      <label>Comments</label>
+                      <label>Comment or question</label>
                       <textarea className="field" name="comment" value={this.state.comment} onChange={this.handleChange}/>
                       <div className='form__action'>
                         <button type="button" className="btn btn-cancel" onClick ={this.onDismiss}>Cancel</button>

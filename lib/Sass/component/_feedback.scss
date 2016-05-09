@@ -17,27 +17,31 @@
     box-shadow: $box-shadow;
     display: none;
     @media screen and (min-width : $sm){
-      right: $padding*2;
+        right: $padding*2;
     }
 
     &.is-open{
-      display: block;
+        display: block;
     }
 
-  .form__header{
-    position: relative;
-    background: $faint-bg;
-    border-bottom: 1px solid $grey-lighter;
-    padding: $padding;
-  }
+    .form__header{
+        position: relative;
+        background: $faint-bg;
+        border-bottom: 1px solid $grey-lighter;
+        padding: $padding;
+    }
 
-  .form--title{
-    text-align: center;
-    margin: 0;
-  }
+    .form--title{
+        text-align: center;
+        margin: 0;
+    }
+
+    .form--description{
+        padding-bottom: 10px;
+    }
 
     form{
-      padding: $padding*2;
+        padding: $padding*2;
     }
     .btn-submit{
         background: $dark;
@@ -45,21 +49,21 @@
         margin-left: 10px;
     }
     .field{
-      margin-bottom: $padding;
+        margin-bottom: $padding;
     }
 
     .form__action{
-      text-align: right;
-      .btn{
-        border: 1px solid $grey;
-        border-radius: $radius-medium;
-        padding: $padding-small $padding*2;
+        text-align: right;
+        .btn{
+          border: 1px solid $grey;
+          border-radius: $radius-medium;
+          padding: $padding-small $padding*2;
       }
     }
 
     .btn--close{
-      position: absolute;
-      right: 0;
-      top: 0;
+        position: absolute;
+        right: 0;
+        top: 0;
     }
 }
