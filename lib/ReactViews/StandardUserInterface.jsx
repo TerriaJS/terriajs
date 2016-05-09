@@ -13,6 +13,7 @@ import ProgressBar from './ProgressBar.jsx';
 import BottomDock from './BottomDock/BottomDock.jsx';
 import TerriaViewerWrapper from './TerriaViewerWrapper.jsx';
 import DisclaimerHandler from '../ReactViewModels/DisclaimerHandler';
+import Feedback from './Feedback.jsx';
 
 const StandardUserInterface = React.createClass({
     propTypes: {
@@ -112,6 +113,10 @@ const StandardUserInterface = React.createClass({
                 <div className='notification'>
                     <Notification viewState={this.props.viewState}/>
                     <MapInteractionWindow terria={terria}/>
+                </div>
+
+                <div className='feedback'>
+                    <Feedback/>
                 </div>
                 <FeatureInfoPanel terria={terria}
                                   viewState={this.props.viewState}
