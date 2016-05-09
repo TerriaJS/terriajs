@@ -65,13 +65,6 @@ const StandardUserInterface = React.createClass({
         return document.body.clientWidth < (this.props.minimumLargeScreenWidth || 640);
     },
 
-    // TODO: Super A/B test toggle remove soon!!!
-    toggleCloseModalAfterAdd() {
-        if (confirm('Toggle close modal after add?')) {
-            this.props.viewState.closeModalAfterAdd = !this.props.viewState.closeModalAfterAdd;
-        }
-    },
-
     render() {
         const terria = this.props.terria;
         const allBaseMaps = this.props.allBaseMaps;
@@ -86,7 +79,7 @@ const StandardUserInterface = React.createClass({
                             </If>
                             <If condition={!this.props.viewState.useSmallScreenInterface}>
                                 <div className='workbench'>
-                                    <Branding terria={terria} onClick={this.toggleCloseModalAfterAdd} />
+                                    <Branding terria={terria} />
                                     <SidePanel terria={terria} viewState={this.props.viewState} />
                                 </div>
                             </If>
