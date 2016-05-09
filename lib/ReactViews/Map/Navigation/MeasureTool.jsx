@@ -16,7 +16,13 @@ const MeasureTool = React.createClass({
     getInitialState() {
         return {
             totalDistanceMetres: 0,
-            userDrawing: undefined
+            userDrawing: new UserDrawing(this.props.terria,
+            {
+                messageHeader: "Measure Tool",
+                onPointClickedCallback: this.onPointClicked,
+                onCleanUpCallback: this.onCleanUp,
+                onMakeDialogMessageCallback: this.onMakeDialogMessage
+            })
         };
     },
 
@@ -84,16 +90,6 @@ const MeasureTool = React.createClass({
     },
 
     handleClick() {
-        if (!defined(this.state.userDrawing)) {
-            this.setState({ userDrawing: new UserDrawing(this.props.terria,
-                {
-                    messageHeader: "Measure Tool",
-                    onPointClickedCallback: this.onPointClicked,
-                    onCleanUpCallback: this.onCleanUp,
-                    onMakeDialogMessageCallback: this.onMakeDialogMessage
-                })
-            });
-        }
         this.state.userDrawing.enterDrawMode();
     },
 
