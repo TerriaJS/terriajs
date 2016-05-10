@@ -8,7 +8,7 @@ const Feedback = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        terria: React.PropTypes.object.isRequired
+        viewState: React.PropTypes.object.isRequired
     },
 
     getInitialState() {
@@ -43,7 +43,7 @@ const Feedback = React.createClass({
 
             // submit form
             sendFeedback({
-                terria: this.props.terria,
+                terria: this.props.viewState.terria,
                 name: this.state.name,
                 email: this.state.email,
                 comment: this.state.comment

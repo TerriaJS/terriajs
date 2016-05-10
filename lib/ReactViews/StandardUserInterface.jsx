@@ -117,7 +117,7 @@ const StandardUserInterface = React.createClass({
 
                 <If condition={!this.props.viewState.useSmallScreenInterface}>
                     <div className='feedback'>
-                        <Feedback terria={this.props.terria} />
+                        <Feedback viewState={this.props.viewState} />
                     </div>
                 </If>
                 <FeatureInfoPanel terria={terria}
