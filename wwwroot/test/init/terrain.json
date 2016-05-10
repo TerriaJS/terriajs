@@ -21,6 +21,31 @@
                 ]
             },
             {
+                "name":"White oceans",
+                "type": "url-template",
+                "url": "https://api.mapbox.com/styles/v1/stevage/cio1lyl610026bbm94mcr1fpb/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoic3RldmFnZSIsImEiOiJGcW03aExzIn0.QUkUmTGIO3gGt83HiRIjQw",
+                "opacity": "1",
+                "maximumLevel":20
+            },
+            {
+                "name":"Checkered oceans",
+                "type": "url-template",
+                "url": "https://api.mapbox.com/styles/v1/stevage/cio1msppt004ca4np1uj496nx/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoic3RldmFnZSIsImEiOiJGcW03aExzIn0.QUkUmTGIO3gGt83HiRIjQw",
+                "opacity": "1"
+
+            },
+            {
+                "name": "Buzzard's Bay bathymetry",
+                "type": "cesium-terrain",
+                "url": "http://stkdesktop.agi.com/stk-terrain/v1/tilesets/USGS_Bathymetric_Mass_Coast/tiles",
+                "rectangle": [
+                    -70.746,
+                    41.41,
+                    -70.4,
+                    41.725
+                ]
+            },
+            {
                 "name": "Caco with Imagery",
                 "type": "composite",
                 "rectangle": [
