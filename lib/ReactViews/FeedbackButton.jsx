@@ -17,7 +17,7 @@ const FeedbackButton = React.createClass({
     render() {
         return (
             <div className='feedback__inner'>
-                <button type='button' className='logo btn' onClick={this.onClick}>Give feedback</button>
+                <button type='button' className='btn--feedback btn' onClick={this.onClick}>Give feedback</button>
             </div>
         );
     }
