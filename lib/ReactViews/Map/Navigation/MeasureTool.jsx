@@ -4,7 +4,6 @@ import ObserveModelMixin from '../../ObserveModelMixin';
 const UserDrawing = require('../../../Map/UserDrawing');
 const EllipsoidGeodesic = require('terriajs-cesium/Source/Core/EllipsoidGeodesic.js');
 const Ellipsoid = require('terriajs-cesium/Source/Core/Ellipsoid.js');
-const defined = require('terriajs-cesium/Source/Core/defined');
 
 const MeasureTool = React.createClass({
     mixins: [ObserveModelMixin],
@@ -17,12 +16,12 @@ const MeasureTool = React.createClass({
         return {
             totalDistanceMetres: 0,
             userDrawing: new UserDrawing(this.props.terria,
-            {
-                messageHeader: "Measure Tool",
-                onPointClickedCallback: this.onPointClicked,
-                onCleanUpCallback: this.onCleanUp,
-                onMakeDialogMessageCallback: this.onMakeDialogMessage
-            })
+                {
+                    messageHeader: "Measure Tool",
+                    onPointClickedCallback: this.onPointClicked,
+                    onCleanUpCallback: this.onCleanUp,
+                    onMakeDialogMessageCallback: this.onMakeDialogMessage
+                })
         };
     },
 

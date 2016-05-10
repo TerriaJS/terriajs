@@ -9,7 +9,6 @@ import ReactTestUtils from 'react-addons-test-utils';
 // cf. https://github.com/sheepsteak/react-shallow-testutils/commit/8daa3c2361acfa6ec45f533cf7eea5751c51bf24
 import {getMountedInstance} from 'react-shallow-testutils';
 
-import {findWithType} from 'react-shallow-testutils';
 import Terria from '../../lib/Models/Terria';
 
 import MeasureTool from '../../lib/ReactViews/Map/Navigation/MeasureTool';
@@ -18,11 +17,6 @@ const ConstantPositionProperty = require('terriajs-cesium/Source/DataSources/Con
 const Cartesian3 = require('terriajs-cesium/Source/Core/Cartesian3');
 const CustomDataSource = require('terriajs-cesium/Source/DataSources/CustomDataSource');
 
-function getShallowRenderedOutput(jsx) {
-    const renderer = ReactTestUtils.createRenderer();
-    renderer.render(jsx);
-    return renderer.getRenderOutput();
-}
 
 describe('MeasureTool-jsx', function() {
 
