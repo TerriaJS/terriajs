@@ -1,9 +1,8 @@
-
-import NowViewingContainer from './../NowViewing/NowViewingContainer.jsx';
-import ObserveModelMixin from './../ObserveModelMixin';
+import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
 import SidebarSearch from './../SidebarSearch.jsx';
 import SearchBox from './../Search/SearchBox.jsx';
+import NowViewing from '../NowViewing/NowViewing.jsx';
 
 import Styles from './work_bench.scss';
 
@@ -55,23 +54,7 @@ const SidePanel = React.createClass({
                         </When>
                         <When
                             condition={this.props.terria.nowViewing.items && this.props.terria.nowViewing.items.length > 0}>
-                            <div className="now-viewing">
-                                <ul className="now-viewing__header">
-                                    <li><label className='label'>Data Sets</label></li>
-                                    <li><label
-                                        className='label--badge label'>{this.props.terria.nowViewing.items.length}</label>
-                                    </li>
-                                    <li className="now-viewing__remove">
-                                        <button type='button' onClick={this.removeAll}
-                                                className='btn right btn-remove'>Remove All
-                                        </button>
-                                        <i className="icon icon-remove"/>
-                                    </li>
-                                </ul>
-                                <NowViewingContainer viewState={this.props.viewState}
-                                                     terria={this.props.terria}
-                                />
-                            </div>
+                            <NowViewing viewState={this.props.viewState} terria={this.props.terria} />
                         </When>
                         <Otherwise>
                             <div>

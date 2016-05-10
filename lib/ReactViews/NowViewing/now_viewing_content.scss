@@ -1,48 +1,3 @@
-// Save 1px for drop zone
-$now-viewing-margin: $padding-small - 1px;
-
-.now-viewing{
-  .workbench__inner.is-now-viewing &{
-    @media screen and (max-width: $sm){
-      position: fixed;
-      left: 0;
-      width: 100%;
-      top: $sm-logo-height;
-      bottom: $input-height;
-    }
-  }
-
-  &__remove {
-    .btn.btn-remove {
-      display: inline-block;
-      padding-right: 5px;
-      text-transform: capitalize;
-    }
-
-    .icon-remove {
-      display: inline-block;
-    }
-  }
-}
-
-.now-viewing__header{
-  @extend .sm-show;
-  @extend .list-reset;
-  @extend .clearfix;
-  .label, .btn{
-    line-height: 1;
-    text-transform: uppercase;
-    font-size: $font-size-small;
-  }
-
-  li{
-    display: inline-block;
-    float: left;
-    &:last-child{
-      float: right;
-    }
-  }
-}
 
 // Now viewing
 //
@@ -85,7 +40,7 @@ $now-viewing-margin: $padding-small - 1px;
 .now-viewing__item__header,
 .now-viewing__item__control
 {
-  @extend .list-reset;
+  composes: list-reset from '../../Sass/global/_base.scss';
 }
 
 .now-viewing__item{
@@ -112,11 +67,12 @@ $now-viewing-margin: $padding-small - 1px;
 }
 
 .now-viewing__item__header{
-  @extend .clearfix;
+  composes: list-reset from '../../Sass/global/_base.scss';
+
   width: 100%;
   li:first-child{
-    @extend .col;
-    @extend .col-1;
+    composes: col from '../../Sass/global/_base.scss';
+    composes: col-1 from '../../Sass/global/_base.scss';
   }
   li:nth-child(2){
     @extend .col;
@@ -131,7 +87,7 @@ $now-viewing-margin: $padding-small - 1px;
     width: 100%;
   }
   .btn--toggle{
-      text-align: center;
+    text-align: center;
   }
   .btn--toggle.is-open{
     @media screen and (min-width: $sm){
@@ -139,7 +95,7 @@ $now-viewing-margin: $padding-small - 1px;
     }
   }
   .now-viewing__item.is-open & {
-  border-bottom: 1px solid $border-color;
+    border-bottom: 1px solid $border-color;
   }
 }
 
@@ -282,7 +238,7 @@ $now-viewing-margin: $padding-small - 1px;
   span{
     width: 100%;
     line-height: 22px;
-    }
+  }
   .btn{
     width: 30px;
     &:before{

@@ -1,6 +1,9 @@
 var path = require('path');
 var StringReplacePlugin = require("string-replace-webpack-plugin");
 
+// If node-sass starts hanging, uncomment this line:
+//process.env.UV_THREADPOOL_SIZE = 128;
+
 function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlugin) {
     const cesiumDir = path.dirname(require.resolve('terriajs-cesium/package.json'));
 
@@ -209,10 +212,6 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
         },
     };
 
-    config.sassLoader = {
-        includePaths: [path.resolve(terriaJSBasePath, 'lib', 'Sass', 'partial'), path.resolve(terriaJSBasePath, 'lib', 'Sass', 'global')]
-    };
-
     config.plugins = (config.plugins || []).concat([
         new StringReplacePlugin()
     ]);
@@ -225,7 +224,7 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
             test: /\.scss$/,
             loaders: [
                 require.resolve('style-loader'),
-                require.resolve('css-loader') + '?sourceMap&modules&localIdentName=[name]__[local]&importLoaders=2',
+                require.resolve('css-loader') + '?sourceMap&modules&camelCase&localIdentName=[name]__[local]&importLoaders=2',
                 require.resolve('resolve-url-loader') + '?sourceMap',
                 require.resolve('sass-loader') + '?sourceMap'
             ]

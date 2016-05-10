@@ -5,7 +5,7 @@ import DataCatalogMember from '../DataCatalog/DataCatalogMember.jsx';
 import DataPreview from '../Preview/DataPreview.jsx';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import MobileSearch from './MobileSearch.jsx';
-import NowViewingContainer from '../NowViewing/NowViewingContainer.jsx';
+import NowViewingList from '../NowViewing/NowViewingList.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
 
@@ -48,7 +48,7 @@ const MobileModalWindow = React.createClass({
                     </div>;
         case this.props.viewState.mobileViewOptions.nowViewing:
             return <div className='modal--mobile-bg'>
-                        <NowViewingContainer viewState={this.props.viewState}
+                        <NowViewingList viewState={this.props.viewState}
                                              terria={this.props.terria}
                         />
                     </div>;

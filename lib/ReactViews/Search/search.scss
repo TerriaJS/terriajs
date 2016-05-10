@@ -1,5 +1,5 @@
-@import 'variables';
-@import 'mixins';
+@import '../../Sass/global/variables';
+@import '../../Sass/global/mixins';
 
 // Search form
 //
@@ -49,6 +49,10 @@
   &:before{
     padding: 12px $padding*1.5;
   }
+}
+
+.searchField {
+  composes: field from '../../Sass/partial/_form.scss';
 }
 
 input[type=text].searchField {

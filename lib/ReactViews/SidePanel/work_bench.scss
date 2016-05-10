@@ -1,5 +1,5 @@
-@import 'mixins';
-@import 'variables';
+@import '../../Sass/global/mixins';
+@import '../../Sass/global/variables';
 
 .workBench {
   position: relative;
@@ -23,7 +23,6 @@
 
 .button {
   composes: btn from '../../Sass/partial/_buttons.scss';
-  composes: btn-primary from '../../Sass/partial/_buttons.scss';
   composes: btn-primary from '../../Sass/partial/_buttons.scss';
   composes: icon from '../../Sass/global/_icons.scss';
   composes: icon-add from '../../Sass/global/_icons.scss';

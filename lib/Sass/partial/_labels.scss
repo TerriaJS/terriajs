@@ -1,3 +1,5 @@
+@import '../global/variables';
+
 label {
   vertical-align: middle;
 }
@@ -31,7 +33,7 @@ label {
   font-size: $font-size-small;
 }
 
-.label--badge{
+.label-badge{
   text-align: center;
   border: 1px solid;
   border-radius: 2px;
