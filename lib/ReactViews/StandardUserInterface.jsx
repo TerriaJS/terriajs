@@ -13,7 +13,8 @@ import ProgressBar from './ProgressBar.jsx';
 import BottomDock from './BottomDock/BottomDock.jsx';
 import TerriaViewerWrapper from './TerriaViewerWrapper.jsx';
 import DisclaimerHandler from '../ReactViewModels/DisclaimerHandler';
-import Feedback from './Feedback.jsx';
+import FeedbackButton from './FeedbackButton.jsx';
+import FeedbackForm from './FeedbackForm.jsx';
 
 const StandardUserInterface = React.createClass({
     propTypes: {
@@ -114,12 +115,12 @@ const StandardUserInterface = React.createClass({
                     <Notification viewState={this.props.viewState}/>
                     <MapInteractionWindow terria={terria}/>
                 </div>
-
-                <If condition={!this.props.viewState.useSmallScreenInterface}>
-                    <div className='feedback'>
-                        <Feedback viewState={this.props.viewState} />
-                    </div>
-                </If>
+                <div className='feedback'>
+                    <If condition={!this.props.viewState.useSmallScreenInterface}>
+                        <FeedbackButton viewState={this.props.viewState} />
+                    </If>
+                    <FeedbackForm viewState={this.props.viewState} />
+                </div>
                 <FeatureInfoPanel terria={terria}
                                   viewState={this.props.viewState}
                 />

@@ -4,7 +4,7 @@ import ObserveModelMixin from './ObserveModelMixin';
 import React from 'react';
 import sendFeedback from './../Models/sendFeedback.js';
 
-const Feedback = React.createClass({
+const FeedbackForm = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -13,7 +13,6 @@ const Feedback = React.createClass({
 
     getInitialState() {
         return {
-            isOpen: false,
             isSending: false,
             name: '',
             email: '',
@@ -21,16 +20,8 @@ const Feedback = React.createClass({
         };
     },
 
-    onClick() {
-        this.setState({
-            isOpen: true
-        });
-    },
-
     onDismiss() {
-        this.setState({
-            isOpen: false
-        });
+        this.props.viewState.feedbackFormIsVisible = false;
     },
 
     onSubmit(evt) {
@@ -51,9 +42,9 @@ const Feedback = React.createClass({
                 if (succeeded) {
                     this.setState({
                         isSending: false,
-                        isOpen: false,
                         comment: ''
                     });
+                    this.props.viewState.feedbackFormIsVisible = false;
                 } else {
                     this.setState({
                         isSending: false
@@ -74,8 +65,7 @@ const Feedback = React.createClass({
     render() {
         return (
             <div className='feedback__inner'>
-                <button type='button' className='logo btn' onClick={this.onClick}>Give feedback</button>
-                <div className={`feedback--form ${this.state.isOpen ? 'is-open' : ''}`}>
+                <div className={`feedback--form ${this.props.viewState.feedbackFormIsVisible ? 'is-open' : ''}`}>
                     <div className='form__header'>
                         <h4 className='form--title'>Feedback</h4>
                         <button className='btn btn--close' onClick ={this.onDismiss} title='close feedback'></button>
@@ -99,4 +89,4 @@ const Feedback = React.createClass({
     }
 });
 
-module.exports = Feedback;
+module.exports = FeedbackForm;
