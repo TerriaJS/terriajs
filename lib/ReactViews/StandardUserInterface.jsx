@@ -64,7 +64,7 @@ const StandardUserInterface = React.createClass({
     },
 
     shouldUseMobileInterface() {
-        return document.body.clientWidth < (this.props.minimumLargeScreenWidth || 640);
+        return document.body.clientWidth < (this.props.minimumLargeScreenWidth || 768);
     },
 
     render() {
