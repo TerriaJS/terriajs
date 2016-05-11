@@ -4,7 +4,6 @@ import DataCatalogTab from './DataCatalogTab.jsx';
 import MyDataTab from './MyDataTab.jsx';
 import ObserveModelMixin from './ObserveModelMixin';
 import React from 'react';
-import GettingStartedTab from './GettingStartedTab.jsx';
 import classNames from 'classnames';
 
 const Tabs = React.createClass({

@@ -71,6 +71,13 @@ const MobileHeader = React.createClass({
         });
     },
 
+    onClickFeedback() {
+        this.props.viewState.feedbackFormIsVisible = true;
+        this.setState({
+            menuIsOpen: false
+        });
+    },
+
     render() {
         const nowViewingLength = this.props.terria.nowViewing.items.length;
         return <div className='mobile__ui'>
@@ -95,6 +102,7 @@ const MobileHeader = React.createClass({
                         <li><a href=''>About</a></li>
                         <li><a href=''>Related maps</a></li>
                         <li><a href=''>Support</a></li>
+                        <li><button type="button" onClick={this.onClickFeedback}>Give feedback</button></li>
                         <li className='social'>Share</li>
                     </ul>
                     <MobileModalWindow terria={this.props.terria}

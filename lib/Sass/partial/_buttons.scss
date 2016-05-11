@@ -114,7 +114,8 @@ $btn-setting-size: 35px;
 //.btn--github - icon button
 //.btn--stats-bars - icon button
 //.btn--folder -icon button
-//.btn-folder-open - icon
+//.btn--folder-open - icon
+//.btn-feedback -icon
 //
 // Markup:
 // <button class='btn {{modifier_class}}'></button>
@@ -157,7 +158,8 @@ line-chart,
 github,
 stats-bars,
 folder,
-folder-open;
+folder-open,
+feedback;
 
 @each $icon in $icons {
     .btn--#{$icon}{

@@ -1,0 +1,23 @@
+@media print {
+   #ui{
+        display: none !important;
+    }
+    @page {
+        margin: 0.5cm 0.5cm auto 0.5cm;
+    }
+    body {
+        font: 12pt Georgia, "Times New Roman", Times, serif;
+        line-height: 1.3;
+    }
+    .map .cesium-widget canvas{
+        height: auto;
+    }
+
+    .map .cesium-widget{
+        height: 100%;
+    }
+
+    .cesium-widget-credits{
+        position: relative;
+    }
+}
