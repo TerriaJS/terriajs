@@ -23,7 +23,7 @@ const MobileSearch = React.createClass({
                         .filter(search=> search.constructor.name !== 'CatalogItemNameSearchProviderViewModel')
                         .filter(search => search.isSearching || (search.searchResults && search.searchResults.length))
                         .map(search => (<div key={search.constructor.name}>
-                                        <label className='label'>{search.name}</label>
+                                        <label className='label'>Locations & Official Place Names</label>
                                         <SearchHeader searchProvider={search} />
                                         <ul className=' mobile-search-results search-results-items'>
                                             { search.searchResults.map((result, i) => (
