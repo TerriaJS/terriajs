@@ -11,6 +11,18 @@ $now-viewing-margin: $padding-small - 1px;
       bottom: $input-height;
     }
   }
+
+  &__remove {
+    .btn.btn-remove {
+      display: inline-block;
+      padding-right: 5px;
+      text-transform: capitalize;
+    }
+
+    .icon-remove {
+      display: inline-block;
+    }
+  }
 }
 
 .now-viewing__header{
@@ -71,7 +83,7 @@ $now-viewing-margin: $padding-small - 1px;
 
 .now-viewing__content,
 .now-viewing__item__header,
-.now-viewing__item__control,
+.now-viewing__item__control
 {
   @extend .list-reset;
 }
@@ -134,16 +146,40 @@ $now-viewing-margin: $padding-small - 1px;
 .now-viewing__item__control{
   @extend .clearfix;
   margin: 0px -10px;
+  height: 20px;
+  position: relative;
+
   li{
     display: inline-block;
-    float: left;
+    position: absolute;
+    padding: 0 $padding;
   }
+
+  .info {
+    left: 33%;
+    padding: 0 5%;
+  }
+
+  .remove {
+    right: 0;
+
+    .icon-remove {
+      display: inline-block;
+      vertical-align: -1px;
+    }
+
+    .btn {
+      display: inline-block;
+      margin-right: 5px;
+    }
+  }
+
   .info{
     border-left: 1px solid $border-color;
     border-right: 1px solid $border-color;
   }
   .btn{
-    padding: 0 $padding;
+    padding: 0;
     font-size: $font-size-mini;
     &.btn--visibility{
       font-size: $font-size-small;

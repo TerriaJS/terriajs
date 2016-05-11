@@ -4,6 +4,7 @@ import React from 'react';
 
 import ClockRange from 'terriajs-cesium/Source/Core/ClockRange';
 import classnames from 'classnames';
+import Styles from '!style-loader!css-loader?modules&sourceMap!sass-loader?sourceMap!./timeline-controls.scss';
 
 const TimelineControls = React.createClass({
     propTypes: {
@@ -79,20 +80,20 @@ const TimelineControls = React.createClass({
 
     render() {
         return (
-            <div className="timeline__controls">
-                <button type='button' className="btn btn--timeline-control" onClick={this.gotoStart} title="Go to beginning">
+            <div className={Styles.controls}>
+                <button type='button' className={"btn " + Styles.timelineControl} onClick={this.gotoStart} title="Go to beginning">
                     <i className='icon icon-backToStart' />
                 </button>
-                <button type='button' className='btn btn--timeline-control' onClick={this.togglePlay} title="Play">
+                <button type='button' className={"btn " + Styles.timelineControl} onClick={this.togglePlay} title="Play">
                     <i className={classnames('icon', {'icon-pause': this.isPlaying(), 'icon-play': !this.isPlaying()})} />
                 </button>
-                <button type='button' className="btn btn--timeline-control" onClick={this.playSlower} title="Play Slower">
+                <button type='button' className={"btn " + Styles.timelineControl} onClick={this.playSlower} title="Play Slower">
                     <i className='icon icon-backward' />
                 </button>
-                <button type='button' className="btn btn--timeline-control" onClick={this.playFaster} title="Play Faster">
+                <button type='button' className={"btn " + Styles.timelineControl} onClick={this.playFaster} title="Play Faster">
                     <i className='icon icon-forward' />
                 </button>
-                <button type='button' className={classnames('btn', 'btn--timeline-control', {'is-active': this.isLooping()})}
+                <button type='button' className={classnames('btn', Styles.timelineControl, {[Styles.isActive]: this.isLooping()})}
                         onClick={this.toggleLoop} title="Loop at the end">
                     <i className='icon icon-refresh' />
                 </button>

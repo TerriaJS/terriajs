@@ -33,33 +33,36 @@ const DistanceLegend = React.createClass({
         };
     },
 
-    componentDidMount() {
-        this._removeSubscription = undefined;
+    componentWillMount() {
+        this.viewerSubscriptions = [];
+        this.removeUpdateSubscription = undefined;
+
         this._lastLegendUpdate = undefined;
 
-        this.props.terria.beforeViewerChanged.addEventListener(()=>{
-            if (defined(this._removeSubscription)) {
-                this._removeSubscription();
-                this._removeSubscription = undefined;
+        this.viewerSubscriptions.push(this.props.terria.beforeViewerChanged.addEventListener(()=>{
+            if (defined(this.removeUpdateSubscription)) {
+                this.removeUpdateSubscription();
+                this.removeUpdateSubscription = undefined;
             }
-        });
+        }));
 
         this.addUpdateSubscription();
 
-        this.props.terria.afterViewerChanged.addEventListener(()=>{
+        this.viewerSubscriptions.push(this.props.terria.afterViewerChanged.addEventListener(()=>{
             this.addUpdateSubscription();
-        });
+        }));
     },
 
     componentWillUnmount() {
-        this._removeSubscription && this._removeSubscription();
+        this.removeUpdateSubscription && this.removeUpdateSubscription();
+        this.viewerSubscriptions.forEach(remove => remove());
     },
 
     addUpdateSubscription() {
         const that = this;
         if (defined(this.props.terria.cesium)) {
             const scene = this.props.terria.cesium.scene;
-            this._removeSubscription = scene.postRender.addEventListener(()=>{
+            this.removeUpdateSubscription = scene.postRender.addEventListener(()=>{
                 this.updateDistanceLegendCesium(scene);
             });
         } else if (defined(this.props.terria.leaflet)) {
@@ -69,7 +72,7 @@ const DistanceLegend = React.createClass({
                 that.updateDistanceLegendLeaflet(map);
             };
 
-            that._removeSubscription = function() {
+            that.removeUpdateSubscription = function() {
                 map.off('zoomend', potentialChangeCallback);
                 map.off('moveend', potentialChangeCallback);
             };

@@ -96,6 +96,7 @@
 //.icon-stats-bars -icon
 //.icon-folder-open - icon
 //.icon-folder - icon
+//.icon-feedback - icon
 //
 // Markup:
 // <i class='icon {{modifier_class}}'> </i>
@@ -130,26 +131,29 @@
   }
 }
 
-.icon-backToStart:before {
+.icon-feedback:before {
     content: "\e900";
 }
-.icon-pause:before {
+.icon-backToStart:before {
     content: "\e901";
 }
-.icon-play:before {
+.icon-pause:before {
     content: "\e902";
 }
-.icon-line-chart:before {
+.icon-play:before {
     content: "\e903";
 }
-.icon-twitter:before {
+.icon-line-chart:before {
     content: "\e904";
 }
-.icon-facebook:before {
+.icon-twitter:before {
     content: "\e905";
 }
-.icon-menu:before {
+.icon-facebook:before {
     content: "\e906";
+}
+.icon-menu:before {
+    content: "\e907";
 }
 .icon-right:before {
     content: "\e908";

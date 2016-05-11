@@ -1,98 +1,53 @@
-.timeline {
-    display: table;
-    width: 100%;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    padding-right: 5px;
-
-    &__text-row {
-        display: table-row;
-    }
-
-    &__text-cell {
-        display: table-cell;
-
-        &--time {
-            padding-left: 15px;
-        }
-    }
-
-    &__controls-row {
-        display: table-row;
-    }
-
-    &__controls {
-        display: table-cell;
-        width: 180px;
-        vertical-align: middle;
-    }
-
-    &__cesium-timeline {
-        display: table-cell;
-        height: 19px;
-        vertical-align: bottom;
-    }
-
-    // Normalise the icons.
-    .icon-forward, .icon-backward {
-        &:before {
-            font-size: 20px;
-        }
-    }
-
-    .icon-refresh:before {
-        font-size: 18px;
-    }
-
-    .icon-backToStart, .icon-play, .icon-pause {
-        width: 10px;
-        margin-left: 7px;
-        display: inline-block;
-        vertical-align: 2px;
-    }
+.cesiumTimeline {
+  display: table-cell;
+  height: 19px;
+  vertical-align: bottom;
 }
 
-.cesium-timeline {
+:global {
+  .cesium-timeline {
     &-needle, &-trackContainer, &-ruler {
-        display: none !important;
+      display: none !important;
     }
+  }
 }
 
 // TODO: import this from cesium, doesn't work for me so far.
-.cesium-timeline-main {
+:global {
+  .cesium-timeline-main {
     position: relative;
     left: 0;
     bottom: 0;
     overflow: hidden;
     border: solid 1px #888;
-}
+  }
 
-.cesium-timeline-trackContainer {
+  .cesium-timeline-trackContainer {
     width: 100%;
     overflow: auto;
     border-top: solid 1px #888;
     position: relative;
     top: 0;
     left: 0;
-}
+  }
 
-.cesium-timeline-tracks {
+  .cesium-timeline-tracks {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
-}
+  }
 
-.cesium-timeline-needle {
+  .cesium-timeline-needle {
     position: absolute;
     left: 0;
     top: 1.7em;
     bottom: 0;
     width: 1px;
     background: #F00;
-}
+  }
 
-.cesium-timeline-bar {
+  .cesium-timeline-bar {
     position: relative;
     left: 0;
     top: 0;
@@ -105,64 +60,65 @@
     background: -moz-linear-gradient(top, rgba(116, 117, 119, 0.8) 0%, rgba(58, 68, 82, 0.8) 11%, rgba(46, 50, 56, 0.8) 46%, rgba(53, 53, 53, 0.8) 81%, rgba(53, 53, 53, 0.8) 100%); /* FF3.6+ */
     background: -webkit-linear-gradient(top, rgba(116, 117, 119, 0.8) 0%, rgba(58, 68, 82, 0.8) 11%, rgba(46, 50, 56, 0.8) 46%, rgba(53, 53, 53, 0.8) 81%, rgba(53, 53, 53, 0.8) 100%); /* Chrome10+,Safari5.1+ */
     background: linear-gradient(to bottom, rgba(116, 117, 119, 0.8) 0%, rgba(58, 68, 82, 0.8) 11%, rgba(46, 50, 56, 0.8) 46%, rgba(53, 53, 53, 0.8) 81%, rgba(53, 53, 53, 0.8) 100%); /* W3C */
-}
+  }
 
-.cesium-timeline-ruler {
+  .cesium-timeline-ruler {
     /* NOTE: The label and the ruler must use the same font/size */
     visibility: hidden;
     white-space: nowrap;
     font-size: 80%;
     z-index: -200;
-}
+  }
 
-.cesium-timeline-highlight {
+  .cesium-timeline-highlight {
     position: absolute;
     bottom: 0;
     left: 0;
     background: #08F;
-}
+  }
 
-.cesium-timeline-ticLabel {
+  .cesium-timeline-ticLabel {
     position: absolute;
     top: 0;
     left: 0;
     white-space: nowrap;
     font-size: 80%;
     color: #eee;
-}
+  }
 
-.cesium-timeline-ticMain {
+  .cesium-timeline-ticMain {
     position: absolute;
     bottom: 0;
     left: 0;
     width: 1px;
     height: 50%;
     background: #eee;
-}
+  }
 
-.cesium-timeline-ticSub {
+  .cesium-timeline-ticSub {
     position: absolute;
     bottom: 0;
     left: 0;
     width: 1px;
     height: 33%;
     background: #aaa;
-}
+  }
 
-.cesium-timeline-ticTiny {
+  .cesium-timeline-ticTiny {
     position: absolute;
     bottom: 0;
     left: 0;
     width: 1px;
     height: 25%;
     background: #888;
-}
+  }
 
-.cesium-timeline-icon16 {
+  .cesium-timeline-icon16 {
     display: block;
     position: absolute;
     width: 16px;
     height: 16px;
-    background-image: url("~terriajs/wwwroot/images/TimelineIcons.png");
+    background-image: url("../../../../wwwroot/images/TimelineIcons.png");
     background-repeat: no-repeat;
+  }
 }

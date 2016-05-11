@@ -36,7 +36,7 @@ describe('FeatureInfoPanel-jsx', function() {
         terria = new Terria({
             baseUrl: './'
         });
-        viewState = new ViewState();
+        viewState = new ViewState(terria);
         // const properties = {
         //     'Foo': 'bar',
         //     'moo': 'd"e"r,p'
@@ -47,14 +47,15 @@ describe('FeatureInfoPanel-jsx', function() {
         // });
     });
 
-    it('does not have visible class when isVisible false', function() {
-        const panel = <FeatureInfoPanel terria={terria} viewState={viewState} isVisible={false}/>;
+    it('does not have visible class when viewState.featureInfoPanelIsVisible not set', function() {
+        const panel = <FeatureInfoPanel terria={terria} viewState={viewState}/>;
         const result = getShallowRenderedOutput(panel);
         expect(result.props.className).not.toContain('visible');
     });
 
-    it('has visible class when isVisible true', function() {
-        const panel = <FeatureInfoPanel terria={terria} viewState={viewState} isVisible={true}/>;
+    it('has visible class when viewState.featureInfoPanelIsVisible is true', function() {
+        viewState.featureInfoPanelIsVisible = true;
+        const panel = <FeatureInfoPanel terria={terria} viewState={viewState}/>;
         const result = getShallowRenderedOutput(panel);
         expect(result.props.className).toContain('visible');
     });
@@ -63,7 +64,7 @@ describe('FeatureInfoPanel-jsx', function() {
         var pickedFeatures = new PickedFeatures();
         pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
         terria.pickedFeatures = pickedFeatures;
-        const panel = <FeatureInfoPanel terria={terria} viewState={viewState} isVisible={true}/>;
+        const panel = <FeatureInfoPanel terria={terria} viewState={viewState}/>;
         const result = getShallowRenderedOutput(panel);
         expect(findWithType(result, Loader)).toBeDefined();
     });

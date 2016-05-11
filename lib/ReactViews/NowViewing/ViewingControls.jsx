@@ -67,10 +67,9 @@ const ViewingControls = React.createClass({
         const nowViewingItem = this.props.nowViewingItem;
         let zoomButton = null;
         let infoButton = null;
-        let removeButton = null;
         let openFeatureButton = null;
         if (nowViewingItem.isMappable) {
-            zoomButton = <li className='zoom'><button type='button' onClick={this.zoomTo} title="Zoom to data" className="btn">Zoom To</button></li>;
+            zoomButton = <li className='zoom'><button type='button' onClick={this.zoomTo} title="Zoom to data" className="btn">Zoom To Extent</button></li>;
         }
         if (defined(nowViewingItem.tableStructure) && defined(nowViewingItem.tableStructure.sourceFeature)) {
             openFeatureButton = <li className='open-feature'><button type='button' onClick={this.openFeature} title="Open source feature" className="btn">Zoom To</button></li>;
@@ -78,13 +77,15 @@ const ViewingControls = React.createClass({
         if (nowViewingItem.showsInfo) {
             infoButton = <li className='info'><button type='button' onClick={this.previewItem} className='btn' title='info'>About This Data Set</button></li>;
         }
-        removeButton = <li className='remove'><button type='button' onClick={this.removeFromMap} title="Remove this data" className="btn">Remove</button></li>;
         return (
             <ul className="now-viewing__item__control">
                 {zoomButton}
                 {openFeatureButton}
                 {infoButton}
-                {removeButton}
+                <li className='remove'>
+                    <button type='button' onClick={this.removeFromMap} title="Remove this data" className="btn">Remove</button>
+                    <i className="icon icon-remove" />
+                </li>
             </ul>
         );
     }

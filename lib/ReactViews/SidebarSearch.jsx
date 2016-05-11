@@ -10,72 +10,49 @@ export default React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        searches: React.PropTypes.array,
         viewState: React.PropTypes.object.isRequired,
-        searchText: React.PropTypes.string
-    },
-
-    getDefaultProps() {
-        return {
-            searchText: ''
-        };
-    },
-
-    componentWillMount() {
-        this.setState({
-            searches: this.props.searches || []
-        });
-    },
-
-    componentDidMount() {
-        this.search(this.props.searchText);
-    },
-
-    componentWillReceiveProps(nextProps) {
-        this.search(nextProps.searchText);
-    },
-
-    componentWillUnmount() {
-        // Cancel any searches that may be in progress
-        this.search('');
-    },
-
-    search(newText) {
-        this.state.searches.forEach(search => search.search(newText || ''));
     },
 
     searchInDataCatalog() {
-        this.props.viewState.searchInCatalog(this.props.searchText);
+        this.props.viewState.searchInCatalog(this.props.viewState.searchState.locationSearchText);
+    },
+
+    backToNowViewing() {
+        this.props.viewState.searchState.hideLocationSearch = true;
     },
 
     render() {
         let linkToSearchData = null;
 
-        if (this.props.searchText.length > 0) {
+        if (this.props.viewState.searchState.locationSearchText.length > 0) {
             linkToSearchData = (
                 <button type='button' onClick={this.searchInDataCatalog} className='btn btn--data-search'>
-                    Search {this.props.searchText} in Data
+                    Search {this.props.viewState.searchState.locationSearchText} in the Data
                     Catalog<i className='icon icon-right-arrow'/></button>);
         }
 
         return (
             <div className='search'>
                 <div className='search__results'>
+                    <ul className="now-viewing__header">
+                        <li><label className='label'>Search Results</label></li>
+                        <li><label className='label--badge label'>{this.props.viewState.searchState.locationSearchResults.reduce((count, result) => count + result.searchResults.length, 0)}</label></li>
+                        <li>
+                            <button type='button' onClick={this.backToNowViewing} className='btn right btn--search-done'>Done</button>
+                        </li>
+                    </ul>
+                    <For each="search" of={this.props.viewState.searchState.locationSearchResults}>
+                        <div key={search.constructor.name}>
+                            <label className='label label-sub-heading'>{search.name}</label>
+                            <SearchHeader {...search} />
+                            <ul className='search-results-items'>
+                                { search.searchResults.map((result, i) => (
+                                    <LocationItem key={i} item={result}/>
+                                )) }
+                            </ul>
+                        </div>
+                    </For>
                     {linkToSearchData}
-                    {this.state.searches
-                        .filter(search => search.isSearching || (search.searchResults && search.searchResults.length))
-                        .map(search => (
-                            <div key={search.constructor.name}>
-                                <label className='label label-sub-heading'>{search.name}</label>
-                                <SearchHeader {...search} />
-                                <ul className='search-results-items'>
-                                    { search.searchResults.map((result, i) => (
-                                        <LocationItem key={i} item={result}/>
-                                    )) }
-                                </ul>
-                            </div>
-                        ))
-                    }
                 </div>
             </div>
         );

@@ -1,6 +1,8 @@
 .workbench{
+  display: table-cell;
   font-family: $font-pop;
   background: $overlay;
+  width: $work-bench-width;
   h1{
     margin: 0;
   }

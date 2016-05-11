@@ -114,7 +114,8 @@ $btn-setting-size: 35px;
 //.btn--github - icon button
 //.btn--stats-bars - icon button
 //.btn--folder -icon button
-//.btn-folder-open - icon
+//.btn--folder-open - icon
+//.btn-feedback -icon
 //
 // Markup:
 // <button class='btn {{modifier_class}}'></button>
@@ -157,7 +158,8 @@ line-chart,
 github,
 stats-bars,
 folder,
-folder-open;
+folder-open,
+feedback;
 
 @each $icon in $icons {
     .btn--#{$icon}{
@@ -188,6 +190,49 @@ folder-open;
   color: $color-primary;
 }
 
+.btn--secondary {
+  color: $color-primary;
+  border: 2px solid $color-primary;
+  border-radius: 4px;
+
+  &:hover, &:focus {
+    border: 2px solid lighten($color-primary, 10%);
+    color: lighten($color-primary, 10%);
+  }
+}
+
+.btn--tertiary {
+  color: $modal-text;
+  border: 2px solid $modal-text;
+  border-radius: 4px;
+  padding: 8px 10px;
+
+  &:hover, &:focus {
+    border: 2px solid $color-primary;
+    color: $color-primary;
+  }
+}
+
+.btn--tertiary-dark {
+  color: #FFF;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 4px;
+  padding: 8px 10px;
+
+  &:hover, &:focus {
+    border: 1px solid $color-primary;
+    color: $color-primary;
+  }
+}
+
+.btn--search-done {
+  @extend .btn--tertiary-dark;
+
+  padding: 7px 10px;
+  margin-top: 5px;
+  border-radius: 2px;
+}
+
 .btn--remove-from-map{
   @extend .btn--remove;
   color: $color-primary;
@@ -199,11 +244,12 @@ folder-open;
 }
 
 .btn--close-modal{
-  @extend .btn--close;
-  &:hover,
-  &:focus{
-    color: $color-primary;
-  }
+  @extend .btn--secondary;
+
+  font-size: 0.8rem;
+  padding: 4px 10px;
+  margin: 5px;
+  font-weight: bold;
 }
 
 .btn--close-feature{
@@ -257,7 +303,7 @@ folder-open;
     height: auto;
     display: block;
   }
-  &:hover, 
+  &:hover,
   &:focus{
     border: $border-style;
   }
@@ -298,23 +344,24 @@ folder-open;
 //
 
 .btn--catalogue{
-  padding-right: 30px;
+  padding: 5px 30px 5px $padding*3;
   position: relative;
   width: 100%;
+  font-weight: bold;
   @extend .btn--toggle;
-  padding-left: $padding*4;
+
   .btn--group-indicator{
     position: absolute;
     left: 0;
-    padding: 9px $padding-small;
+    padding: 5px $padding-small;
     top: 0;
-    font-size: 1.6rem;
+    font-size: 1.1rem;
     opacity: 0.5;
   }
   &:before{
     position: absolute;
     right: 5px;
-    top: 8px;
+    top: 5px;
   }
   &:hover,
   &:focus{
@@ -345,18 +392,11 @@ folder-open;
 
 .btn--catalog-item{
   @extend %wrap;
-  font-style: italic;
   position: relative;
   width: 100%;
-  padding: $padding-small $padding*2.2 $padding-small $padding*4;
-  @extend .btn--right;
-  &:before{
-      opacity: 0;
-      position: absolute;
-      right: 0;
-  }
-  &:hover,
-  &:focus{
+  padding: $padding-small $padding*2.2 $padding-small $padding*1.5;
+
+  &:focus,&:hover{
       color: $modal-highlight;
       &:before{
         opacity: 1;
@@ -426,7 +466,7 @@ folder-open;
   line-height: 18px;
   &:hover,
   &:focus,
-  .is-open &, 
+  .is-open &,
   &.is-active {
     background: $color-primary;
     text-decoration: none;
@@ -544,18 +584,6 @@ a.btn--map{
   }
 }
 
-
-.btn--timeline-control {
-    height: 29px;
-    width: 34px;
-
-    &.is-active {
-        color: $color-primary;
-    }
-    &:active {
-        color: $color-primary;
-    }
-}
 
 .btn--file-input, .btn--add-url{
   @extend .btn-primary;

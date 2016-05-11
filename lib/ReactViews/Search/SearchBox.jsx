@@ -5,12 +5,14 @@ import defined from 'terriajs-cesium/Source/Core/defined';
 
 /**
  * Super-simple dumb search box component.
+ * Used for both data catalog search and location search.
  */
 export default React.createClass({
     propTypes: {
-        initialSearchText: React.PropTypes.string,
         onSearchTextChanged: React.PropTypes.func.isRequired,
-        initialText: React.PropTypes.string
+        initialText: React.PropTypes.string,
+        onFocus: React.PropTypes.func,
+        onEnterPressed: React.PropTypes.func
     },
 
     getDefaultProps() {
@@ -31,18 +33,22 @@ export default React.createClass({
 
     searchWithDebounce() {
         // Trigger search 250ms after the last input.
-        this.removeDebounceTimeout();
+        this.removeDebounce();
 
-        this.debounceTimeout = setTimeout(() => {
-            this.props.onSearchTextChanged(this.state.text);
-            this.debounceTimeout = undefined;
-        }, 250);
+        this.debouncePromise = new Promise(resolve => {
+            this.debounceTimeout = setTimeout(() => {
+                this.props.onSearchTextChanged(this.state.text);
+                this.debounceTimeout = undefined;
+                resolve();
+            }, 250);
+        });
     },
 
-    removeDebounceTimeout() {
+    removeDebounce() {
         if (defined(this.debounceTimeout)) {
             clearTimeout(this.debounceTimeout);
             this.debounceTimeout = undefined;
+            this.debouncePromise = undefined;
         }
     },
 
@@ -69,6 +75,18 @@ export default React.createClass({
         });
     },
 
+    onKeyDown(event) {
+        if (event.keyCode === 13 && this.props.onEnterPressed) {
+            const triggerOnEnterPressed = () => this.props.onEnterPressed(event);
+
+            if (this.debouncePromise) {
+                this.debouncePromise.then(triggerOnEnterPressed);
+            } else {
+                triggerOnEnterPressed();
+            }
+        }
+    },
+
     render() {
         const clearButton = (
             <button type='button' className='btn btn--search-clear' onClick={this.clearSearch} />
@@ -82,6 +100,8 @@ export default React.createClass({
                        name='search'
                        value={this.state.text}
                        onChange={this.handleChange}
+                       onFocus={this.props.onFocus}
+                       onKeyDown={this.onKeyDown}
                        className='form__search-field field'
                        placeholder='Search'
                        autoComplete='off'/>
