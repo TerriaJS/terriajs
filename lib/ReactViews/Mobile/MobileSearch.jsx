@@ -5,7 +5,6 @@ import React from 'react';
 import SearchHeader from '../Search/SearchHeader.jsx';
 import LocationItem from '../LocationItem.jsx';
 import DataCatalogMember from '../DataCatalog/DataCatalogMember.jsx';
-import classNames from 'classnames';
 
 // A Location item when doing Bing map searvh or Gazetter search
 const MobileSearch = React.createClass({
@@ -16,7 +15,6 @@ const MobileSearch = React.createClass({
         terria: React.PropTypes.object,
         searches: React.PropTypes.array
     },
-
 
     renderLocationResult() {
         return this.props.searches
@@ -39,7 +37,7 @@ const MobileSearch = React.createClass({
 
         const items = search.searchResults.map(result => result.catalogItem);
 
-        if(items && items.filter(defined).length > 0){
+        if (items && items.filter(defined).length > 0) {
             return <div key={search.constructor.name}>
                 <label className='label'>{search.name}</label>
                     <ul className='data-catalog mobile-search-results '>
