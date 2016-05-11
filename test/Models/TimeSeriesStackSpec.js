@@ -7,14 +7,14 @@ var Terria = require('../../lib/Models/Terria');
 
 describe('TimeSeriesStack', function() {
     var clock, stack, terria;
-    /** The catalog item that last called getValue with the global clock */
-    var currentClockCatalogItem;
 
     beforeEach(function() {
         terria = new Terria({
             baseUrl: './'
         });
-        clock = {};
+        clock = {
+            setCatalogItem: jasmine.createSpy('setCatalogItem')
+        };
         stack = new TimeSeriesStack(clock);
     });
 
@@ -22,7 +22,7 @@ describe('TimeSeriesStack', function() {
         var catalogItem;
 
         beforeEach(function() {
-            catalogItem = buildCatalogItem();
+            catalogItem = new CatalogItem(terria);
             stack.addLayerToTop(catalogItem);
         });
 
@@ -31,7 +31,7 @@ describe('TimeSeriesStack', function() {
         });
 
         it('the global clock should take that layer\'s clock', function() {
-            expect(currentClockCatalogItem).toBe(catalogItem);
+            expect(clock.setCatalogItem.calls.mostRecent().args[0]).toEqual(catalogItem);
         });
     });
 
@@ -39,8 +39,8 @@ describe('TimeSeriesStack', function() {
         var catalogItem1, catalogItem2;
 
         beforeEach(function() {
-            catalogItem1 = buildCatalogItem();
-            catalogItem2 = buildCatalogItem();
+            catalogItem1 = new CatalogItem(terria);
+            catalogItem2 = new CatalogItem(terria);
 
             stack.addLayerToTop(catalogItem1);
             stack.addLayerToTop(catalogItem2);
@@ -51,7 +51,7 @@ describe('TimeSeriesStack', function() {
         });
 
         it('the global clock should be set to the second layer\'s value', function() {
-            expect(currentClockCatalogItem).toBe(catalogItem2);
+            expect(clock.setCatalogItem.calls.mostRecent().args[0]).toEqual(catalogItem2);
         });
     });
 
@@ -59,8 +59,8 @@ describe('TimeSeriesStack', function() {
         var catalogItem1, catalogItem2;
 
         beforeEach(function() {
-            catalogItem1 = buildCatalogItem();
-            catalogItem2 = buildCatalogItem();
+            catalogItem1 = new CatalogItem(terria);
+            catalogItem2 = new CatalogItem(terria);
 
             stack.addLayerToTop(catalogItem1);
             stack.addLayerToTop(catalogItem2);
@@ -72,7 +72,7 @@ describe('TimeSeriesStack', function() {
         });
 
         it('the global clock should have been set back to the first layer', function() {
-            expect(currentClockCatalogItem).toBe(catalogItem1);
+            expect(clock.setCatalogItem.calls.mostRecent().args[0]).toEqual(catalogItem1);
         });
     });
 
@@ -80,8 +80,8 @@ describe('TimeSeriesStack', function() {
         var catalogItem1, catalogItem2;
 
         beforeEach(function() {
-            catalogItem1 = buildCatalogItem();
-            catalogItem2 = buildCatalogItem();
+            catalogItem1 = new CatalogItem(terria);
+            catalogItem2 = new CatalogItem(terria);
 
             stack.addLayerToTop(catalogItem1);
             stack.addLayerToTop(catalogItem2);
@@ -93,7 +93,7 @@ describe('TimeSeriesStack', function() {
         });
 
         it('the global clock should still be set to the second layer\'s value', function() {
-            expect(currentClockCatalogItem).toBe(catalogItem2);
+            expect(clock.setCatalogItem.calls.mostRecent().args[0]).toEqual(catalogItem2);
         });
     });
 
@@ -101,8 +101,8 @@ describe('TimeSeriesStack', function() {
         var catalogItem1, catalogItem2;
 
         beforeEach(function() {
-            catalogItem1 = buildCatalogItem();
-            catalogItem2 = buildCatalogItem();
+            catalogItem1 = new CatalogItem(terria);
+            catalogItem2 = new CatalogItem(terria);
 
             stack.addLayerToTop(catalogItem1);
             stack.addLayerToTop(catalogItem2);
@@ -123,12 +123,12 @@ describe('TimeSeriesStack', function() {
         });
 
         it('the global clock should still be set to the first layer\'s value', function() {
-            expect(currentClockCatalogItem).toBe(catalogItem1);
+            expect(clock.setCatalogItem.calls.mostRecent().args[0]).toEqual(catalogItem1);
         });
     });
 
     it('when the stack is emptied, the global clock should stop', function() {
-        var catalogItem = buildCatalogItem();
+        var catalogItem = new CatalogItem(terria);
 
         stack.addLayerToTop(catalogItem);
         stack.clock.shouldAnimate = true;
@@ -142,7 +142,7 @@ describe('TimeSeriesStack', function() {
         it('on init', function() {});
 
         it('after having layers added and removed', function() {
-            var catalogItem = buildCatalogItem();
+            var catalogItem = new CatalogItem(terria);
             stack.addLayerToTop(catalogItem);
             stack.removeLayer(catalogItem);
         });
@@ -151,15 +151,4 @@ describe('TimeSeriesStack', function() {
             expect(stack.topLayer).toBeUndefined();
         });
     });
-
-    function buildCatalogItem() {
-        var catalogItem = new CatalogItem(terria);
-        catalogItem.clock = {
-            getValue: function(globalClock) {
-                expect(globalClock).toBe(clock);
-                currentClockCatalogItem = catalogItem;
-            }
-        };
-        return catalogItem;
-    }
 });
