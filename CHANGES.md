@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+### 4.0.0
+
+* `CswCatalogGroup` will now include Web Processing Services from the catalog if configured with `includeWps` set to true.
+
 ### 3.0.1
 
 * Only trigger a search when the user presses enter or stops typing for 3 seconds.  This will greatly reduce the number of times that searches are performed, which is important with a geocoder like Bing Maps that counts each geocode as a transaction.
