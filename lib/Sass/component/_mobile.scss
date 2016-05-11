@@ -145,7 +145,6 @@
     max-width: 100px;
     float: right;
     height: 100%;
-
     .btn--mobile-search{
         @extend .btn--search;
         margin: 0 auto;
@@ -153,9 +152,12 @@
         font-size: 20px;
     }
 
+    input{
+        border: 0;
+    }
+
     .btn--search-clear{
-        right: 70px;
-        top: 16px;
+        display: none;
     }
 
     .btn--mobile-search-cancel{
@@ -166,6 +168,7 @@
         font-size: $font-size-mini;
         font-weight: $font-weight-bold;
         display: none;
+        color: #3f4854;
     }
     .form--search-data{
         position: fixed;
@@ -173,7 +176,7 @@
         left: 0;
         right: 0;
         padding: $padding-small $padding*6 $padding-small $padding-small;
-        background: $dark;
+        background: #fff;
         display: none;
     }
 

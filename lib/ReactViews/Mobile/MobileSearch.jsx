@@ -17,17 +17,6 @@ const MobileSearch = React.createClass({
         searches: React.PropTypes.array
     },
 
-    getInitialState() {
-        return {
-            searchResultType: 0,
-        };
-    },
-
-    toggleSearchResults(index) {
-        this.setState({
-            searchResultType: index
-        });
-    },
 
     renderLocationResult() {
         return this.props.searches
@@ -50,8 +39,11 @@ const MobileSearch = React.createClass({
 
         const items = search.searchResults.map(result => result.catalogItem);
 
-        return <ul className='data-catalog mobile-search-results '>
-                    <SearchHeader searchProvider={search} />
+        if(items && items.filter(defined).length > 0){
+            return <div key={search.constructor.name}>
+                <label className='label label-sub-heading'>{search.name}</label>
+                    <ul className='data-catalog mobile-search-results '>
+                    <SearchHeader searchProvider={search}/>
                     {items.filter(defined)
                           .map((item, i) => (
                             <DataCatalogMember viewState={this.props.viewState}
@@ -60,25 +52,21 @@ const MobileSearch = React.createClass({
                                                key={item.uniqueId}
                             />
                         ))}
-                </ul>;
-
+                </ul>
+            </div>;
+        }
+        return null;
     },
 
     render() {
         return (
             <div className="search--mobile">
-            <div className='search-results-toggle'>
-                <button type='button'
-                        className={classNames('search--location', 'btn', {'is-active': this.state.searchResultType === 0})}
-                        onClick={this.toggleSearchResults.bind(this, 0)}>Location
-                </button>
-                <button type='button'
-                        className={classNames('search--data', 'btn', {'is-active': this.state.searchResultType === 1})}
-                        onClick={this.toggleSearchResults.bind(this, 1)}>Data
-                </button>
-            </div>
-                {this.state.searchResultType === 0 && this.renderLocationResult()}
-                {this.state.searchResultType === 1 && this.renderDataCatalogResult()}
+                <div className='search-results--location'>
+                    {this.renderLocationResult()}
+                </div>
+                <div className='search-results--data'>
+                    {this.renderDataCatalogResult()}
+                </div>
             </div>
         );
     }
