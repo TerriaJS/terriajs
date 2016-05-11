@@ -13,6 +13,8 @@ import ProgressBar from './ProgressBar.jsx';
 import BottomDock from './BottomDock/BottomDock.jsx';
 import TerriaViewerWrapper from './TerriaViewerWrapper.jsx';
 import DisclaimerHandler from '../ReactViewModels/DisclaimerHandler';
+import FeedbackButton from './FeedbackButton.jsx';
+import FeedbackForm from './FeedbackForm.jsx';
 
 const StandardUserInterface = React.createClass({
     propTypes: {
@@ -65,13 +67,6 @@ const StandardUserInterface = React.createClass({
         return document.body.clientWidth < (this.props.minimumLargeScreenWidth || 640);
     },
 
-    // TODO: Super A/B test toggle remove soon!!!
-    toggleCloseModalAfterAdd() {
-        if (confirm('Toggle close modal after add?')) {
-            this.props.viewState.closeModalAfterAdd = !this.props.viewState.closeModalAfterAdd
-        }
-    },
-
     render() {
         const terria = this.props.terria;
         const allBaseMaps = this.props.allBaseMaps;
@@ -84,12 +79,12 @@ const StandardUserInterface = React.createClass({
                             <If condition={this.props.viewState.useSmallScreenInterface}>
                                 <MobileHeader terria={terria} viewState={this.props.viewState} />
                             </If>
-                            <div className='workbench'>
-                                <Branding terria={terria} onClick={this.toggleCloseModalAfterAdd} />
-                                <If condition={!this.props.viewState.useSmallScreenInterface}>
+                            <If condition={!this.props.viewState.useSmallScreenInterface}>
+                                <div className='workbench'>
+                                    <Branding terria={terria} />
                                     <SidePanel terria={terria} viewState={this.props.viewState} />
-                                </If>
-                            </div>
+                                </div>
+                            </If>
                         </If>
 
                         <section className="map">
@@ -119,6 +114,12 @@ const StandardUserInterface = React.createClass({
                 <div className='notification'>
                     <Notification viewState={this.props.viewState}/>
                     <MapInteractionWindow terria={terria}/>
+                </div>
+                <div className='feedback'>
+                    <If condition={!this.props.viewState.useSmallScreenInterface}>
+                        <FeedbackButton viewState={this.props.viewState} />
+                    </If>
+                    <FeedbackForm viewState={this.props.viewState} />
                 </div>
                 <FeatureInfoPanel terria={terria}
                                   viewState={this.props.viewState}

@@ -67,7 +67,6 @@ const ViewingControls = React.createClass({
         const nowViewingItem = this.props.nowViewingItem;
         let zoomButton = null;
         let infoButton = null;
-        let removeButton = null;
         let openFeatureButton = null;
         if (nowViewingItem.isMappable) {
             zoomButton = <li className='zoom'><button type='button' onClick={this.zoomTo} title="Zoom to data" className="btn">Zoom To Extent</button></li>;

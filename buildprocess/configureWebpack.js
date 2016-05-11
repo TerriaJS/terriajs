@@ -26,7 +26,7 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot) {
                 {
                     pattern: /buildModuleUrl\([\'|\"](.*)[\'|\"]\)/ig,
                     replacement: function (match, p1, offset, string) {
-                        return "require('" + cesiumDir + "/Source/" + p1 + "')";
+                        return "require('" + cesiumDir.replace(/\\/g, '\\\\') + "/Source/" + p1.replace(/\\/g, '\\\\') + "')";
                     }
                 }
             ]
@@ -41,7 +41,7 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot) {
                 {
                     pattern: /new Worker\(obj\.zip\.workerScriptsPath \+(.*)\)/ig,
                     replacement: function (match, p1, offset, string) {
-                        return "require('" + require.resolve('worker-loader') + "!" + cesiumDir + "/Source/ThirdParty/Workers/' + " + p1 + ")()";
+                        return "require('" + require.resolve('worker-loader').replace(/\\/g, '\\\\') + "!" + cesiumDir.replace(/\\/g, '\\\\') + "/Source/ThirdParty/Workers/' + " + p1.replace(/\\/g, '\\\\') + ")()";
                     }
                 }
             ]
@@ -71,13 +71,13 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot) {
                 {
                     pattern: /new Worker\(getBootstrapperUrl\(\)\)/ig,
                     replacement: function (match, p1, offset, string) {
-                        return "require('" + require.resolve('worker-loader') + "!" + require.resolve('../lib/cesiumWorkerBootstrapper') + "')()";
+                        return "require('" + require.resolve('worker-loader').replace(/\\/g, '\\\\') + "!" + require.resolve('../lib/cesiumWorkerBootstrapper').replace(/\\/g, '\\\\') + "')()";
                     }
                 },
                 {
                     pattern: "new Worker(getWorkerUrl('Workers/transferTypedArrayTest.js'))",
                     replacement: function (match, p1, offset, string) {
-                        return "require('" + require.resolve('worker-loader') + "!" + cesiumDir + "/Source/Workers/transferTypedArrayTest.js')()";
+                        return "require('" + require.resolve('worker-loader').replace(/\\/g, '\\\\') + "!" + cesiumDir.replace(/\\/g, '\\\\') + "/Source/Workers/transferTypedArrayTest.js')()";
                     }
                 }
             ]
@@ -153,6 +153,12 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot) {
             path.dirname(require.resolve('entities/package.json'))
         ],
         loader: require.resolve('json-loader')
+    });
+
+    config.module.loaders.push({
+        test: /\.js$/,
+        include: path.resolve(path.dirname(require.resolve('terriajs-cesium/package.json')), 'Source'),
+        loader: require.resolve('./removeCesiumDebugPragmas')
     });
 
     // Don't let Cesium's `buildModuleUrl` and `TaskProcessor` see require - only the AMD version is relevant.

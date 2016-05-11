@@ -4,7 +4,7 @@ import Cartesian2 from 'terriajs-cesium/Source/Core/Cartesian2';
 import classNames from 'classnames';
 
 const TerriaViewerWrapper = React.createClass({
-    //mixins: [ObserveModelMixin],
+    // mixins: [ObserveModelMixin],
 
     propTypes: {
         terria: React.PropTypes.object.isRequired,
@@ -43,7 +43,7 @@ const TerriaViewerWrapper = React.createClass({
     render() {
         return (
             <aside className={classNames('overflow-hidden', {'is-full-screen': this.props.viewState.isMapFullScreen})} onMouseMove={this.onMouseMove}>
-                <div id="cesiumContainer" ref={element => this.mapElement = element}></div>
+                <div id="cesiumContainer" ref={element => {this.mapElement = element;}}></div>
             </aside>
         );
     }
