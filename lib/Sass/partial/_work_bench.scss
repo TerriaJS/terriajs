@@ -1,7 +1,7 @@
 .workbench{
   display: table-cell;
   font-family: $font-pop;
-  background: $overlay;
+
   width: $work-bench-width;
   h1{
     margin: 0;
@@ -10,6 +10,12 @@
 
 .workbench__inner{
   position: relative;
+}
+
+.workbench--empty{
+  padding: $padding;
+
+
 }
 
 .workbench__header{
@@ -21,7 +27,8 @@
 .workbench__body{
     padding: 0 $padding-small;
     overflow-y: auto;
-    height: calc(100vh - #{$workbench-header + $logo-height});
+    background: $overlay;
+    height: auto;
 }
 
 .workbench__add-data{
