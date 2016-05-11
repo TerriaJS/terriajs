@@ -9,7 +9,6 @@ import SearchBox from './Search/SearchBox.jsx';
 import CatalogItemNameSearchProviderViewModel from '../ViewModels/CatalogItemNameSearchProviderViewModel.js';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
-import Loader from './Loader';
 
 // The DataCatalog Tab
 const DataCatalogTab = React.createClass({
@@ -63,9 +62,8 @@ const DataCatalogTab = React.createClass({
 
         return (
             <ul className='data-catalog'>
-                <SearchHeader searchMessage={this.searchProvider.searchMessage} />
                 {isSearching && <label className='label'>Search results</label>}
-                {isSearching && this.searchProvider.isSearching && <Loader />}
+                {isSearching && <SearchHeader searchProvider={this.searchProvider} />}
                 {items
                     .filter(defined)
                     .map((item, i) => (
