@@ -23,7 +23,7 @@ const MobileSearch = React.createClass({
                         .filter(search=> search.constructor.name !== 'CatalogItemNameSearchProviderViewModel')
                         .filter(search => search.isSearching || (search.searchResults && search.searchResults.length))
                         .map(search => (<div key={search.constructor.name}>
-                                        <label className='label label-sub-heading'>{search.name}</label>
+                                        <label className='label'>{search.name}</label>
                                         <SearchHeader searchProvider={search} />
                                         <ul className=' mobile-search-results search-results-items'>
                                             { search.searchResults.map((result, i) => (
@@ -41,7 +41,7 @@ const MobileSearch = React.createClass({
 
         if(items && items.filter(defined).length > 0){
             return <div key={search.constructor.name}>
-                <label className='label label-sub-heading'>{search.name}</label>
+                <label className='label'>{search.name}</label>
                     <ul className='data-catalog mobile-search-results '>
                     <SearchHeader searchProvider={search}/>
                     {items.filter(defined)
