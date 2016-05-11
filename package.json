@@ -27,7 +27,7 @@
     "javascript-natural-sort": "^0.7.1",
     "json-loader": "^0.5.4",
     "jsx-control-statements": "3.1.2",
-    "leaflet": "0.7.7",
+    "leaflet": "0.7.3",
     "linkify-it": "^1.2.0",
     "markdown-it": "^6.0.1",
     "mustache": "^2.2.1",
