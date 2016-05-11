@@ -17,7 +17,9 @@ TerriaJS is a library for building rich, web-based geospatial data explorers, us
 * 3D globe (Cesium) or 2D mode (Leaflet). 3D objects supported in CZML format.
 * Time dimensions supported for CSV, CZML, WMS. Automatically animate layers, or slide the time control forward and backward.
 * Drag-and-drop files from your desktop the browser, for instant visualisation (no file upload to server required).
+* Wider range of file types supported through server-side OGR2OGR service (requires upload).
 * All ASGS region types (LGA, SA2, commonwealth electoral district etc) supported for [CSV region mapping](https://github.com/NICTA/nationalmap/wiki/csv-geo-au), plus several others: Primary Health Networks, Statistical Local Areas, ISO 3 letter country codes, etc.
+* Users can generate a reusable URL link of their current map view, to quickly share mashups of web-hosted data. Google's URL shortener is optionally used.
 
 ![Terria screenshot](terria-screenshot.png "Terria screenshot")
 
@@ -46,12 +48,24 @@ Now visit the site in your browser at `http://localhost:3001`.
  
 More information: [Deploying your own Terria Map](https://github.com/NICTA/nationalmap/wiki/Deploying-your-own-Terria-Map)
 
+Documentation about working with Terria and developing it is at http://terria.io/Documentation
+
+JavaScript documentation is at http://nationalmap.gov.au/build/TerriaJS/doc
+
 ### Components and naming
 
 * **[Terria™](http://terria.io)** is the overall name for the spatial data platform, including closed-source spatial analytics developed by Data61.
 * **TerriaJS** is this JavaScript library consisting of the 2D/3D map, catalog management and many spatial data connectors.
+* **[Cesium](https://github.com/TerriaJS/Cesium)** is the 3D WebGL rendering library used by TerriaJS, which provides many low-level functions for loading and displaying imagery and spatial formats such as GeoJSON and KML.
 * **[TerriaMap](https://github.com/TerriaJS/TerriaMap)** is a complete website starting point, using TerriaJS.
 * **[TerriaJS-Server](https://github.com/TerriaJS/TerriaJS-Server)** is a NodeJS-based server that provides proxying and support services for TerriaJS.
+* **[NationalMap](https://github.com/NICTA/NationalMap)** is the flagship Terria deployment, and the origin of the TerriaJS library.
+
+#### Related components
+
+* **[Catalog Editor](https://github.com/TerriaJS/catalog-editor)**, an automatically generated web interface for creating and editing catalog (init) files.
+* **[Generate-TerriaJS-Schema](https://github.com/TerriaJS/generate-terriajs-schema)**, a tool which automatically generates a schema for validating catalog files, and also the editor, by processing TerriaJS source code.
+* **[TerriaMapStatic](https://github.com/terriajs/terriamapstatic)**, a pre-built version of TerriaMap, which can be deployed as a static HTML website, such as on Github Pages.
 
 ### Using TerriaJS in an existing application
 

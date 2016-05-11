@@ -2,17 +2,39 @@
 Change Log
 ==========
 
+### 3.0.1
+
+* Only trigger a search when the user presses enter or stops typing for 3 seconds.  This will greatly reduce the number of times that searches are performed, which is important with a geocoder like Bing Maps that counts each geocode as a transaction.
+* Reduced the tendency for search to lock up the web browser while it is in progress.
+
 ### 3.0.0
 
 * TerriaJS-based application are now best built using Webpack instead of Browserify.
-### 2.3.1
-
+* Injected clicked lat and long into templates under `{{terria.coords.latitude}}` and `{{terria.coords.longitude}}`.
+* Fixed an exception being thrown when selecting a region while another region highlight was still loading.
+* Added `CesiumTerrainCatalogItem` to display a 3D surface model in a supported Cesium format.
 * Added support for configuration of how time is displayed on the timeline - catalog items can now specify a dateFormat hash
     in their configuration that has formats for `timelineTic` (what is displayed on the timeline itself) and `currentTime`
     (which is the current time at the top-left).
 * Fixed display when `tableStyle.colorBins` is 0.
 * Added `fogSettings` option to init file to customize fog settings, introduced in Cesium 1.16.
+* Improved zooming to csvs, to include a small margin around the points.
 * Support ArcGis MapServer extents specified in a wider range of projections, including GDA MGA zones.
+* WMS legends now use a bigger font, include labels, and are anti-aliased when we can determine that the server is Geoserver and supports these options.
+* Updated to [Cesium](http://cesiumjs.org) 1.20.  Significant changes relevant to TerriaJS users include:
+    * Fixed loading for KML `NetworkLink` to not append a `?` if there isn't a query string.
+    * Fixed handling of non-standard KML `styleUrl` references within a `StyleMap`.
+    * Fixed issue in KML where StyleMaps from external documents fail to load.
+    * Added translucent and colored image support to KML ground overlays
+    * `GeoJsonDataSource` now handles CRS `urn:ogc:def:crs:EPSG::4326`
+    * Fix a race condition that would cause the terrain to continue loading and unloading or cause a crash when changing terrain providers. [#3690](https://github.com/AnalyticalGraphicsInc/cesium/issues/3690)
+    * Fix issue where the `GroundPrimitive` volume was being clipped by the far plane. [#3706](https://github.com/AnalyticalGraphicsInc/cesium/issues/3706)
+    * Fixed a reentrancy bug in `EntityCollection.collectionChanged`. [#3739](https://github.com/AnalyticalGraphicsInc/cesium/pull/3739)
+    * Fixed a crash that would occur if you added and removed an `Entity` with a path without ever actually rendering it. [#3738](https://github.com/AnalyticalGraphicsInc/cesium/pull/3738)
+    * Fixed issue causing parts of geometry and billboards/labels to be clipped. [#3748](https://github.com/AnalyticalGraphicsInc/cesium/issues/3748)
+    * Fixed bug where transparent image materials were drawn black.
+    * Fixed `Color.fromCssColorString` from reusing the input `result` alpha value in some cases.
+* Added support for time-series data sets with gaps - these are skipped when scrubbing on the timeline or playing.
 
 ### 2.3.0
 
@@ -24,6 +46,14 @@ Change Log
 * Added support for the `copyrightText` property for ArcGis layers - this now shows up in info under "Copyright Text"
 * Showed a message in the catalog item info panel that informs the user that a catalog item is local and can't be shared.
 * TerriaJS now obtains its list of domains that the proxy will proxy for from the `proxyableDomains/` service.  The URL can be overridden by setting `parameters.proxyableDomainsUrl` in `config.json`.
+* Updated to [Cesium](http://cesiumjs.org) 1.19.  Significant changes relevant to TerriaJS users include:
+    * Improved KML support.
+        * Added support for `NetworkLink` refresh modes `onInterval`, `onExpire` and `onStop`. Includes support for `viewboundScale`, `viewFormat`, `httpQuery`.
+        * Added partial support for `NetworkLinkControl` including `minRefreshPeriod`, `cookie` and `expires`.
+        * Added support for local `StyleMap`. The `highlight` style is still ignored.
+        * Added support for `root://` URLs.
+        * Added more warnings for unsupported features.
+        * Improved style processing in IE.
 
 ### 2.2.1
 

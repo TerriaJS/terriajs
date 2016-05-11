@@ -61,14 +61,23 @@ describe('LegendHelper', function() {
         expect(legendHelper.legendUrl()).toBeDefined();  // Side-effects. Hmmm.
         expect(legendHelper.getColorArrayFromValue(9)).toEqual([0, 0, 255, 255]);
         expect(legendHelper.getColorArrayFromValue(5)[2]).toEqualEpsilon(127, 2);
-        expect(legendHelper.getColorArrayFromValue(1)).toEqual([0, 0, 0, 255]);
+
+        expect(compareColors(legendHelper.getColorArrayFromValue(1), [0, 0, 0, 255])).toBe(true);
+
         var legend = legendHelper._legend;
         var numItems = legend.items.length;
         expect(+legend.items[0].titleBelow).toEqual(1);
         expect(+legend.items[numItems - 1].titleAbove).toEqual(9);
-        expect(getColorArrayFromCssColorString(legend.gradientColorMap[0].color)).toEqual(legendHelper.getColorArrayFromValue(1));
-        expect(getColorArrayFromCssColorString(legend.gradientColorMap[1].color)).toEqual(legendHelper.getColorArrayFromValue(9));
+        expect(compareColors(getColorArrayFromCssColorString(legend.gradientColorMap[0].color), legendHelper.getColorArrayFromValue(1))).toBe(true);
+        expect(compareColors(getColorArrayFromCssColorString(legend.gradientColorMap[1].color), legendHelper.getColorArrayFromValue(9))).toBe(true);
     });
+
+    function compareColors(a, b) {
+        return Math.abs(a[0] - b[0]) <= 1 &&
+               Math.abs(a[1] - b[1]) <= 1 &&
+               Math.abs(a[2] - b[2]) <= 1 &&
+               Math.abs(a[3] - b[3]) <= 1;
+    }
 
 });
 
