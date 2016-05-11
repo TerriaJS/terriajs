@@ -16,17 +16,16 @@
 }
 .feedback--form{
     position: fixed;
-    right: $padding/2;
-    bottom: 100px;
+    right: 0;
     background: #fff;
     color: $dark;
+    bottom: 100px;
     border-radius: $radius-medium;
     box-shadow: $box-shadow;
     display: none;
     @media screen and (min-width : $sm){
         right: $padding*2;
     }
-
     &.is-open{
         display: block;
     }

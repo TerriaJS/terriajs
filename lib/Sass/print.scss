@@ -1,5 +1,9 @@
 @media print {
-   #ui{
+   .workbench,
+   .feedback,
+   .map-nav,
+   .notification,
+   .selection-indicator{
         display: none !important;
     }
     @page {
@@ -18,6 +22,7 @@
     }
 
     .cesium-widget-credits{
-        position: relative;
+        position: absolute;
+        color: #fff;
     }
 }

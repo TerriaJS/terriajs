@@ -102,7 +102,7 @@ const MobileHeader = React.createClass({
                         <li><a href=''>About</a></li>
                         <li><a href=''>Related maps</a></li>
                         <li><a href=''>Support</a></li>
-                        <li><button type="button" onClick={this.onClickFeedback}>Give feedback</button></li>
+                        <li><button type="button" className='btn btn-reset' onClick={this.onClickFeedback}>Give feedback</button></li>
                         <li className='social'>Share</li>
                     </ul>
                     <MobileModalWindow terria={this.props.terria}

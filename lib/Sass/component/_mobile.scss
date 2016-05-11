@@ -119,14 +119,16 @@
                 text-align: right;
                 padding: $padding-small*3;
             }
-            a{
+            a, .btn-reset{
                 padding: $padding-small*3 0;
                 color: $text-dark;
                 display: block;
                 border-bottom: 1px solid $grey-lighter;
+                font-weight: 400;
                 &:hover,
                 &:focus{
                     color: $color-primary;
+                    text-decoration: underline;
                 }
             }
         }
@@ -154,6 +156,7 @@
 
     input{
         border: 0;
+
     }
 
     .btn--search-clear{
