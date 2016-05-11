@@ -18,7 +18,7 @@
     "imports-loader": "^0.6.5",
     "javascript-natural-sort": "^0.7.1",
     "json-loader": "^0.5.4",
-    "leaflet": "0.7.7",
+    "leaflet": "0.7.3",
     "less": "^2.6.1",
     "less-plugin-npm-import": "^2.1.0",
     "linkify-it": "^1.2.0",
