@@ -3,8 +3,8 @@
 /* eslint new-parens: 0 */
 
 import defined from 'terriajs-cesium/Source/Core/defined';
-// import TaskProcessor from 'terriajs-cesium/Source/Core/TaskProcessor';
-// import when from 'terriajs-cesium/Source/ThirdParty/when';
+import TaskProcessor from 'terriajs-cesium/Source/Core/TaskProcessor';
+import when from 'terriajs-cesium/Source/ThirdParty/when';
 
 import DataUri from '../../Core/DataUri';
 import ObserveModelMixin from '../ObserveModelMixin';
@@ -40,32 +40,38 @@ const ChartPanelDownloadButton = React.createClass({
     runWorker(newValue) {
         const that = this;
         if (window.Worker) {
-            that.setState({href: undefined});
-            const synthesized = that.synthesizeNameAndValueArrays();
-            // It would be better to implement this using TaskProcessor, but this requires webpack magic.
-            // if (!synthesized.values || synthesized.values.length === 0) {
-            //     return;
-            // }
-            // // console.log('ChartPanelDownloadButton running worker with chartableItems', newValue);
-            // const promise = hrefProcessor.scheduleTask(synthesized);
-            // if (!defined(promise)) {
-            //     // Too many active tasks - ideally, try again later.
-            // } else {
-            //     when(promise, function(result) {
-            //         // use the result of the task
-            //         that.setState({href: result});
-            //     });
-            // }
-            const HrefWorker = require('worker!./downloadHrefWorker');
-            const worker = new HrefWorker;
-            // console.log('names and value arrays', synthesized.names, synthesized.values);
-            if (synthesized.values && synthesized.values.length > 0) {
-                worker.postMessage(synthesized);
-                worker.onmessage = function(event) {
-                    // console.log('got worker message', event.data.slice(0, 60), '...');
-                    that.setState({href: event.data});
-                };
-            }
+            when(TaskProcessor._canTransferArrayBuffer, function(canTransferArrayBuffer) {
+                if (!canTransferArrayBuffer) {
+                    // Don't try it if the browser can't handle transferring typed arrays.
+                    return;
+                }
+                that.setState({href: undefined});
+                const synthesized = that.synthesizeNameAndValueArrays();
+                // It would be better to implement this using TaskProcessor, but this requires webpack magic.
+                // if (!synthesized.values || synthesized.values.length === 0) {
+                //     return;
+                // }
+                // // console.log('ChartPanelDownloadButton running worker with chartableItems', newValue);
+                // const promise = hrefProcessor.scheduleTask(synthesized);
+                // if (!defined(promise)) {
+                //     // Too many active tasks - ideally, try again later.
+                // } else {
+                //     when(promise, function(result) {
+                //         // use the result of the task
+                //         that.setState({href: result});
+                //     });
+                // }
+                const HrefWorker = require('worker!./downloadHrefWorker');
+                const worker = new HrefWorker;
+                // console.log('names and value arrays', synthesized.names, synthesized.values);
+                if (synthesized.values && synthesized.values.length > 0) {
+                    worker.postMessage(synthesized);
+                    worker.onmessage = function(event) {
+                        // console.log('got worker message', event.data.slice(0, 60), '...');
+                        that.setState({href: event.data});
+                    };
+                }
+            });
         }
         // Currently no fallback for IE9-10 - just can't download.
     },
