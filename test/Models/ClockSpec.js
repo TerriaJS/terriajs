@@ -1,6 +1,7 @@
 'use strict';
 
 var Clock = require('../../lib/Models/Clock');
+var ClockStep = require('terriajs-cesium/Source/Core/ClockStep');
 var ImageryLayerCatalogItem = require('../../lib/Models/ImageryLayerCatalogItem');
 var Terria = require('../../lib/Models/Terria');
 var JulianDate = require('terriajs-cesium/Source/Core/JulianDate');
@@ -53,6 +54,7 @@ describe('Clock', function() {
         });
 
         it('should advance across a gap on tick if the tick would put currentTime into a gap', function() {
+            clock.clockStep = ClockStep.TICK_DEPENDENT;
             clock.currentTime = JulianDate.fromIso8601('2016-01-07');
 
             expect(clock.currentTime).not.toEqual(JulianDate.fromIso8601('2016-01-12'));

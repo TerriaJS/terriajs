@@ -48,10 +48,10 @@
 
 <div class="search-tab">
     <form class="search-tab-form" data-bind="submit: activateFirstResult">
-        <input class="search-tab-input" type="text" placeholder="Search address, landmark, or data set" data-bind="value: searchText, valueUpdate: 'input', hasFocus: searchBoxHasFocus, attr: {  tabindex: isActive ? 0 : -1 }" />
+        <input class="search-tab-input" type="text" placeholder="Search address, landmark, or data set" data-bind="value: searchText, valueUpdate: 'input', hasFocus: searchBoxHasFocus, attr: {  tabindex: isActive ? 0 : -1 }, event: { keypress: keyPressInSearch }" />
         <div class="search-tab-input-clear" data-bind="visible: searchText.length > 0, click: clearSearchText">&times;</div>
     </form>
-    <div class="search-tab-results-area" tabindex="-1" data-bind="visible: searchText, foreach: searchProviders">
+    <div class="search-tab-results-area" tabindex="-1" data-bind="visible: isSearchActive, foreach: searchProviders">
         <div class="search-tab-provider">
             <div class="search-tab-provider-header" data-bind="click: toggleOpen">
                 <a href="#" class="search-tab-provider-label" data-bind="text: name, attr: {tabindex: $root.isActive ? 0 : -1 }"></a>
