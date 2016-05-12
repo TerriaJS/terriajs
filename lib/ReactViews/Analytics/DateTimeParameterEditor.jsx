@@ -28,12 +28,18 @@ const DateTimeParameterEditor = React.createClass({
             dateTimeBreakOut.date = '';
             dateTimeBreakOut.time = '00:00';
         }
-        this.props.parameterValues[this.props.parameter.id] = dateTimeBreakOut.date + 'T' + dateTimeBreakOut.time;
+
+        this.setDateTime(dateTimeBreakOut);
+
         return dateTimeBreakOut;
     },
 
     setDateTime(dateTime) {
-        this.props.parameterValues[this.props.parameter.id] = dateTime.date + 'T' + dateTime.time;
+        if (dateTime.date && dateTime.time) {
+            this.props.parameterValues[this.props.parameter.id] = dateTime.date + 'T' + dateTime.time;
+        } else {
+            this.props.parameterValues[this.props.parameter.id] = undefined;
+        }
     },
 
     onChangeDate(e) {

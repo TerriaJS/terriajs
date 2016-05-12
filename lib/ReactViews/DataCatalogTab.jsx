@@ -62,8 +62,8 @@ const DataCatalogTab = React.createClass({
 
         return (
             <ul className='data-catalog'>
-                <SearchHeader searchMessage={this.searchProvider.searchMessage} />
                 {isSearching && <label className='label'>Search results</label>}
+                {isSearching && <SearchHeader searchProvider={this.searchProvider} />}
                 {items
                     .filter(defined)
                     .map((item, i) => (

@@ -31,7 +31,6 @@ gulp.task('release-specs', function(done) {
     var webpackConfig = require('./buildprocess/webpack.config.js');
 
     runWebpack(webpack, Object.assign({}, webpackConfig, {
-        devtool: 'source-map',
         plugins: [
             new webpack.optimize.UglifyJsPlugin(),
             new webpack.optimize.DedupePlugin(),

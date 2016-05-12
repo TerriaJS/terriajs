@@ -155,6 +155,12 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot) {
         loader: require.resolve('json-loader')
     });
 
+    config.module.loaders.push({
+        test: /\.js$/,
+        include: path.resolve(path.dirname(require.resolve('terriajs-cesium/package.json')), 'Source'),
+        loader: require.resolve('./removeCesiumDebugPragmas')
+    });
+
     // Don't let Cesium's `buildModuleUrl` and `TaskProcessor` see require - only the AMD version is relevant.
     config.module.loaders.push({
         test: require.resolve('terriajs-cesium/Source/Core/buildModuleUrl'),

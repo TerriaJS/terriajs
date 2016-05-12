@@ -5,7 +5,6 @@ import React from 'react';
 import SearchHeader from '../Search/SearchHeader.jsx';
 import LocationItem from '../LocationItem.jsx';
 import DataCatalogMember from '../DataCatalog/DataCatalogMember.jsx';
-import classNames from 'classnames';
 
 // A Location item when doing Bing map searvh or Gazetter search
 const MobileSearch = React.createClass({
@@ -17,25 +16,13 @@ const MobileSearch = React.createClass({
         searches: React.PropTypes.array
     },
 
-    getInitialState() {
-        return {
-            searchResultType: 0,
-        };
-    },
-
-    toggleSearchResults(index) {
-        this.setState({
-            searchResultType: index
-        });
-    },
-
     renderLocationResult() {
         return this.props.searches
                         .filter(search=> search.constructor.name !== 'CatalogItemNameSearchProviderViewModel')
                         .filter(search => search.isSearching || (search.searchResults && search.searchResults.length))
                         .map(search => (<div key={search.constructor.name}>
-                                        <label className='label label-sub-heading'>{search.name}</label>
-                                        <SearchHeader {...search} />
+                                        <label className='label'>Locations & Official Place Names</label>
+                                        <SearchHeader searchProvider={search} />
                                         <ul className=' mobile-search-results search-results-items'>
                                             { search.searchResults.map((result, i) => (
                                                 <LocationItem key={i} item={result}/>
@@ -50,8 +37,11 @@ const MobileSearch = React.createClass({
 
         const items = search.searchResults.map(result => result.catalogItem);
 
-        return <ul className='data-catalog mobile-search-results '>
-                    <SearchHeader {...search} />
+        if (items && items.filter(defined).length > 0) {
+            return <div key={search.constructor.name}>
+                <label className='label'>{search.name}</label>
+                    <ul className='data-catalog mobile-search-results '>
+                    <SearchHeader searchProvider={search}/>
                     {items.filter(defined)
                           .map((item, i) => (
                             <DataCatalogMember viewState={this.props.viewState}
@@ -60,25 +50,21 @@ const MobileSearch = React.createClass({
                                                key={item.uniqueId}
                             />
                         ))}
-                </ul>;
-
+                </ul>
+            </div>;
+        }
+        return null;
     },
 
     render() {
         return (
             <div className="search--mobile">
-            <div className='search-results-toggle'>
-                <button type='button'
-                        className={classNames('search--location', 'btn', {'is-active': this.state.searchResultType === 0})}
-                        onClick={this.toggleSearchResults.bind(this, 0)}>Location
-                </button>
-                <button type='button'
-                        className={classNames('search--data', 'btn', {'is-active': this.state.searchResultType === 1})}
-                        onClick={this.toggleSearchResults.bind(this, 1)}>Data
-                </button>
-            </div>
-                {this.state.searchResultType === 0 && this.renderLocationResult()}
-                {this.state.searchResultType === 1 && this.renderDataCatalogResult()}
+                <div className='search-results--location'>
+                    {this.renderLocationResult()}
+                </div>
+                <div className='search-results--data'>
+                    {this.renderDataCatalogResult()}
+                </div>
             </div>
         );
     }

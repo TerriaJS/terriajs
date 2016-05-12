@@ -1,18 +1,30 @@
 'use strict';
-
+import defined from 'terriajs-cesium/Source/Core/defined';
+import parseCustomHtmlToReact from '../Models/parseCustomHtmlToReact';
 import React from 'react';
 
 const Branding = React.createClass({
     propTypes: {
+        terria: React.PropTypes.object.isRequired,
+        version: React.PropTypes.string,
         onClick: React.PropTypes.func
     },
 
     render() {
+        let brandingHtmlElements = this.props.terria.configParameters.brandBarElements;
+        if (!defined(brandingHtmlElements)) {
+            brandingHtmlElements = ['<a target="_blank" href="http://terria.io"><img src="images/terria_logo.png" height="52" title="Version: {{ version }}" /></a>'];
+        }
+
+        const version = this.props.version || 'Unknown';
+
         return (
             <div className='branding'>
-                <button type='button' className='logo btn' onClick={this.props.onClick}>
-                    <img src="./images/branding.png" alt="Terria App Name" width="160" />
-                </button>
+                {brandingHtmlElements.map(element =>
+                    <div className="branding--element">
+                        {parseCustomHtmlToReact(element.replace(/\{\{\s*version\s*\}\}/, version))}
+                    </div>
+                )}
             </div>
         );
     }

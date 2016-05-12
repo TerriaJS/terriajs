@@ -50,7 +50,8 @@
           "name": "oa-gis.csiro.au",
           "type": "csw",
           "url": "http://oa-gis.csiro.au/geonetwork/srv/eng/csw",
-          "getRecordsTemplate": "<?xml version=\"1.0\" encoding=\"utf-8\"?><csw:GetRecords xmlns:csw=\"http://www.opengis.net/cat/csw/2.0.2\" version=\"2.0.2\" service=\"CSW\" resultType=\"results\" startPosition=\"{startPosition}\" maxRecords=\"100\"><csw:Query typeNames=\"csw:Record\" xmlns:ogc=\"http://www.opengis.net/ogc\" xmlns:gml=\"http://www.opengis.net/gml\"><csw:ElementSetName>full</csw:ElementSetName><csw:Constraint version=\"1.1.0\"><ogc:Filter></ogc:Filter></csw:Constraint></csw:Query></csw:GetRecords>"
+          "getRecordsTemplate": "<?xml version=\"1.0\" encoding=\"utf-8\"?><csw:GetRecords xmlns:csw=\"http://www.opengis.net/cat/csw/2.0.2\" version=\"2.0.2\" service=\"CSW\" resultType=\"results\" startPosition=\"{startPosition}\" maxRecords=\"100\"><csw:Query typeNames=\"csw:Record\" xmlns:ogc=\"http://www.opengis.net/ogc\" xmlns:gml=\"http://www.opengis.net/gml\"><csw:ElementSetName>full</csw:ElementSetName><csw:Constraint version=\"1.1.0\"><ogc:Filter></ogc:Filter></csw:Constraint></csw:Query></csw:GetRecords>",
+          "includeWps": true
         }
       ]
     }
