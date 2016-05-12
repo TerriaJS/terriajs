@@ -6,7 +6,6 @@
     color: $dark;
     border-radius: 20px;
     box-shadow: $box-shadow;
-    z-index: $front-component-z-index + 10;
     .btn--feedback{
         &:before{
             display: inline-block;
