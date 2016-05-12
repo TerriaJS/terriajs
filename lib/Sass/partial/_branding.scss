@@ -1,6 +1,7 @@
 .branding{
   height: $sm-logo-height;
   background: $dark;
+  display: table;
   @include transition(all, 0.5s, linear);
   .logo{
     padding: 0;
@@ -10,6 +11,9 @@
     display: block;
     max-height: 100%;
     width: auto;
+  }
+  .branding--element{
+    display: table-cell;
   }
   @media screen and (min-width: $sm){
       width: 100%;

@@ -21,7 +21,8 @@ const StandardUserInterface = React.createClass({
         terria: React.PropTypes.object,
         allBaseMaps: React.PropTypes.array,
         viewState: React.PropTypes.object,
-        minimumLargeScreenWidth: React.PropTypes.number
+        minimumLargeScreenWidth: React.PropTypes.number,
+        version: React.PropTypes.string
     },
 
     mixins: [ObserveModelMixin],
@@ -77,11 +78,11 @@ const StandardUserInterface = React.createClass({
                     <div className="ui-inner">
                         <If condition={!this.props.viewState.isMapFullScreen && !this.props.viewState.hideMapUi()}>
                             <If condition={this.props.viewState.useSmallScreenInterface}>
-                                <MobileHeader terria={terria} viewState={this.props.viewState} />
+                                <MobileHeader terria={terria} viewState={this.props.viewState} version={this.props.version} />
                             </If>
                             <If condition={!this.props.viewState.useSmallScreenInterface}>
                                 <div className='workbench'>
-                                    <Branding terria={terria} />
+                                    <Branding terria={terria} version={this.props.version} />
                                     <SidePanel terria={terria} viewState={this.props.viewState} />
                                 </div>
                             </If>
