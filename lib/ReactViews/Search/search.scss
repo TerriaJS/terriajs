@@ -70,6 +70,15 @@ input[type=text].searchField {
   }
 }
 
+//this does not seem to work
 .searchClear{
-  display: none;
+  right: $padding;
+  top: 0;
+  padding: 0;
+  composes: icon;
+  composes: icon from '../../Sass/global/_icons.scss';
+  composes: icon-clear from '../../Sass/global/_icons.scss';
+  &:before{
+    padding: $padding;
+  }
 }
