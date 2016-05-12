@@ -18,26 +18,28 @@ const SidePanel = React.createClass({
         this.props.viewState.openAddData();
     },
 
-    search(newText) {
-        this.props.viewState.searchState.searchLocations(newText);
+    changeSearchText(newText) {
+        this.props.viewState.searchState.locationSearchText = newText;
     },
 
-    onSearchBoxFocus() {
-        this.props.viewState.searchState.hideLocationSearch = false;
+    search() {
+        this.props.viewState.searchState.searchLocations();
     },
 
-    onEnterPressedInSearch() {
-        this.props.viewState.searchState.goToFirstResult();
+    startLocationSearch() {
+        this.props.viewState.searchState.showLocationSearch = true;
     },
 
     render() {
+        const searchState = this.props.viewState.searchState;
+
         return (
             <div className={Styles.workBench}>
                 <div className={Styles.header}>
-                    <SearchBox onSearchTextChanged={this.search}
-                               onFocus={this.onSearchBoxFocus}
-                               onEnterPressed={this.onEnterPressedInSearch}
-                               initialText={this.props.viewState.searchState.locationSearchText}/>
+                    <SearchBox onSearchTextChanged={this.changeSearchText}
+                               onDoSearch={this.search}
+                               onFocus={this.startLocationSearch}
+                               searchText={searchState.locationSearchText} />
                     <div className={Styles.addData}>
                         <button type='button' onClick={this.onAddDataClicked} className={Styles.button}>Add Data</button>
                     </div>
@@ -45,8 +47,8 @@ const SidePanel = React.createClass({
                 <div className={Styles.body}>
                     <Choose>
                         <When
-                            condition={this.props.viewState.searchState.locationSearchText.length && !this.props.viewState.searchState.hideLocationSearch}>
-                            <SidebarSearch viewState={this.props.viewState}/>
+                            condition={searchState.locationSearchText.length > 0 && searchState.showLocationSearch}>
+                            <SidebarSearch viewState={this.props.viewState} isWaitingForSearchToStart={searchState.isWaitingToStartLocationSearch} />
                         </When>
                         <When
                             condition={this.props.terria.nowViewing.items && this.props.terria.nowViewing.items.length > 0}>

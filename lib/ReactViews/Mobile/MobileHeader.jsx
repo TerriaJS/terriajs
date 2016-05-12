@@ -1,8 +1,5 @@
 'use strict';
 import React from 'react';
-import BingMapsSearchProviderViewModel from '../../ViewModels/BingMapsSearchProviderViewModel.js';
-import CatalogItemNameSearchProviderViewModel from '../../ViewModels/CatalogItemNameSearchProviderViewModel.js';
-import GazetteerSearchProviderViewModel from '../../ViewModels/GazetteerSearchProviderViewModel.js';
 import SearchBox from '../Search/SearchBox.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
 import MobileModalWindow from './MobileModalWindow';
@@ -18,13 +15,8 @@ const MobileHeader = React.createClass({
     },
 
     getInitialState() {
-        const terria = this.props.terria;
         return {
-            menuIsOpen: false,
-            searchText: '',
-            searches: [new BingMapsSearchProviderViewModel({terria}),
-                new GazetteerSearchProviderViewModel({terria}),
-                new CatalogItemNameSearchProviderViewModel({terria})]
+            menuIsOpen: false
         };
     },
 
@@ -52,11 +44,12 @@ const MobileHeader = React.createClass({
         location.reload();
     },
 
-    search(newText) {
-        this.setState({
-            searchText: newText
-        });
-        this.state.searches.forEach(search => search.search(newText));
+    changeSearchText(newText) {
+        this.props.viewState.searchState.unifiedSearchText = newText;
+    },
+
+    search() {
+        this.props.viewState.searchState.searchUnified();
     },
 
     toggleView(viewname) {
@@ -80,7 +73,9 @@ const MobileHeader = React.createClass({
     },
 
     render() {
+        const searchState = this.props.viewState.searchState;
         const nowViewingLength = this.props.terria.nowViewing.items.length;
+
         return (
             <div className='mobile__ui'>
                 <div className='mobile__header'>
@@ -119,7 +114,9 @@ const MobileHeader = React.createClass({
                         </When>
                         <Otherwise>
                             <div className="form--search-data">
-                                <SearchBox onSearchTextChanged={this.search}/>
+                                <SearchBox searchText={searchState.unifiedSearchText}
+                                           onSearchTextChanged={this.changeSearchText}
+                                           onDoSearch={this.search}/>
                             </div>
                             <button type='button'
                                     className='btn btn--mobile-search-cancel'
