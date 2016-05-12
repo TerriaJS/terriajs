@@ -14,7 +14,6 @@ const MobileModalWindow = React.createClass({
 
     propTypes: {
         terria: React.PropTypes.object,
-        searches: React.PropTypes.array,
         viewState: React.PropTypes.object.isRequired
     },
 
@@ -23,8 +22,7 @@ const MobileModalWindow = React.createClass({
         case this.props.viewState.mobileViewOptions.search:
             return <div className='modal--mobile-bg search'>
                     <MobileSearch terria={this.props.terria}
-                                 viewState={this.props.viewState}
-                                 searches={this.props.searches}
+                                  viewState={this.props.viewState}
                    />
                    </div>;
         case this.props.viewState.mobileViewOptions.data:
