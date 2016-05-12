@@ -1,0 +1,74 @@
+.feedback{
+    position: fixed;
+    right: $padding*2;
+    bottom: 100px;
+    background: #fff;
+    color: $dark;
+    border-radius: 20px;
+    box-shadow: $box-shadow;
+    .btn--feedback{
+        &:before{
+            display: inline-block;
+            padding-right: $padding;
+        }
+    }
+}
+.feedback--form{
+    position: fixed;
+    right: 0;
+    background: #fff;
+    color: $dark;
+    bottom: 100px;
+    border-radius: $radius-medium;
+    box-shadow: $box-shadow;
+    display: none;
+    @media screen and (min-width : $sm){
+        right: $padding*2;
+    }
+    &.is-open{
+        display: block;
+    }
+
+    .form__header{
+        position: relative;
+        background: $faint-bg;
+        border-bottom: 1px solid $grey-lighter;
+        padding: $padding;
+    }
+
+    .form--title{
+        text-align: center;
+        margin: 0;
+    }
+
+    .form--description{
+        padding-bottom: 10px;
+    }
+
+    form{
+        padding: $padding*2;
+    }
+    .btn-submit{
+        background: $dark;
+        color: #fff;
+        margin-left: 10px;
+    }
+    .field{
+        margin-bottom: $padding;
+    }
+
+    .form__action{
+        text-align: right;
+        .btn{
+          border: 1px solid $grey;
+          border-radius: $radius-medium;
+          padding: $padding-small $padding*2;
+      }
+    }
+
+    .btn--close{
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
+}

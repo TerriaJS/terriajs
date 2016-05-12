@@ -35,6 +35,12 @@ $chart-darker: darken($dark, 8%);
   font-size: 120%;
 }
 
+.units-label-shadow {
+    stroke: $chart-darker;
+    stroke-width: 2.5px;
+    opacity: 0.9;
+}
+
 .line-chart text {
   fill: $chart-text-color;
   font-family: monospace;

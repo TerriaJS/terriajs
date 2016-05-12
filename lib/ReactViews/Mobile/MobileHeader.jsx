@@ -13,7 +13,8 @@ const MobileHeader = React.createClass({
 
     propTypes: {
         terria: React.PropTypes.object,
-        viewState: React.PropTypes.object.isRequired
+        viewState: React.PropTypes.object.isRequired,
+        version: React.PropTypes.string
     },
 
     getInitialState() {
@@ -71,13 +72,20 @@ const MobileHeader = React.createClass({
         });
     },
 
+    onClickFeedback() {
+        this.props.viewState.feedbackFormIsVisible = true;
+        this.setState({
+            menuIsOpen: false
+        });
+    },
+
     render() {
         const nowViewingLength = this.props.terria.nowViewing.items.length;
         return <div className='mobile__ui'>
                     <div className='mobile__header'>
                         <div className='group group-left'>
                             <button type='button' onClick={this.toggleMenu} className='btn btn--menu btn--menu-mobile' title='toggle navigation'></button>
-                            <Branding onClick={this.refresh}/>
+                            <Branding terria={this.props.terria} version={this.props.version} onClick={this.refresh}/>
                         </div>
                         <div className='group group-right'>
                             <button type='button' className='btn btn-primary btn--mobile-add' onClick={this.onMobileDataCatalogClicked}>Data</button>
@@ -95,6 +103,7 @@ const MobileHeader = React.createClass({
                         <li><a href=''>About</a></li>
                         <li><a href=''>Related maps</a></li>
                         <li><a href=''>Support</a></li>
+                        <li><button type="button" className='btn btn-reset' onClick={this.onClickFeedback}>Give feedback</button></li>
                         <li className='social'>Share</li>
                     </ul>
                     <MobileModalWindow terria={this.props.terria}

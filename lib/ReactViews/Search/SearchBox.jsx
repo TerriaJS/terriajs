@@ -3,10 +3,11 @@
 import React from 'react';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import Styles from './search.scss';
-
+import when from 'terriajs-cesium/Source/ThirdParty/when';
 
 /**
  * Super-simple dumb search box component.
+ * Used for both data catalog search and location search.
  */
 export default React.createClass({
     propTypes: {
@@ -36,13 +37,13 @@ export default React.createClass({
         // Trigger search 250ms after the last input.
         this.removeDebounce();
 
-        this.debouncePromise = new Promise(resolve => {
-            this.debounceTimeout = setTimeout(() => {
-                this.props.onSearchTextChanged(this.state.text);
-                this.debounceTimeout = undefined;
-                resolve();
-            }, 250);
-        });
+        const deferred = when.defer();
+        this.debouncePromise = deferred.promise;
+        this.debounceTimeout = setTimeout(() => {
+            this.props.onSearchTextChanged(this.state.text);
+            this.debounceTimeout = undefined;
+            deferred.resolve();
+        }, 250);
     },
 
     removeDebounce() {

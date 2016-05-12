@@ -79,6 +79,13 @@ form.url-input{
 .field--parameter-editor{
   margin-bottom: $padding;
   position: relative;
+  input[type=date]{
+    width: 50%;
+		float: left;
+  }
+  input[type=time]{
+    width: 50%;
+  }
   input, select{
     width: 100%;
     display: block;

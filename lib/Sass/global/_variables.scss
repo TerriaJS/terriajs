@@ -33,7 +33,7 @@ $input-height: 40px;
 
 $sm-logo-height: $input-height;
 $logo-height: 70px;
-$mobile-header-height: $sm-logo-height + $padding-small + $padding + 2px;
+$mobile-header-height: $sm-logo-height + $padding + $padding-small;
 
 $modal-bg: $faint-bg;
 $modal-text: #000;
@@ -74,9 +74,9 @@ $radius-medium: 3px;
 $radius-small: 2px;
 
 //screen sizes
-$sm : 640px;
-$md: 832px;
-$lg: 1024px;
+$sm : 768px;
+$md: 992px;
+$lg: 1200px;
 
 $front-component-z-index: 99;
 

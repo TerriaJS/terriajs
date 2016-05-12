@@ -68,6 +68,8 @@ const DataPreviewMap = React.createClass({
             return;
         }
 
+        this.lastPreviewedCatalogItem = this.props.previewedCatalogItem;
+
         this.setState({
             previewBadgeText: 'PREVIEW LOADING...'
         });

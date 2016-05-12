@@ -3,6 +3,7 @@
 import classNames from 'classnames';
 import React from 'react';
 
+import defaultValue from 'terriajs-cesium/Source/Core/defaultValue';
 import defined from 'terriajs-cesium/Source/Core/defined';
 
 import CatalogGroup from '../../Models/CatalogGroup';
@@ -78,6 +79,11 @@ const ChartExpandButton = React.createClass({
 function expand(props, url) {
     const terria = props.terria;
     const newCatalogItem = new CsvCatalogItem(terria, url);
+    // Without this, if the chart data comes via the proxy, it would be cached for the default period of 2 weeks.
+    // So, retain the same `cacheDuration` as the parent data file.
+    // You can override this with the `pollSeconds` attribute (coming!).
+    // If neither is set, it should default to a small duration rather than 2 weeks - say 1 minute.
+    newCatalogItem.cacheDuration = defaultValue(props.catalogItem.cacheDuration, '1m');
     newCatalogItem.name = props.feature.name;
     newCatalogItem.id = props.feature.name + (props.id ? (' ' + props.id) : '') + ' (' + props.catalogItem.name + ')';
     const group = terria.catalog.upsertCatalogGroup(CatalogGroup, 'Chart Data', 'A group for chart data.');

@@ -12,16 +12,17 @@ import WorkBench from './../SidePanel/WorkBench.jsx';
 import ProgressBar from './../ProgressBar.jsx';
 import BottomDock from './../BottomDock/BottomDock.jsx';
 import TerriaViewerWrapper from './../TerriaViewerWrapper.jsx';
-import DisclaimerHandler from '../../ReactViewModels/DisclaimerHandler';
-
-import Styles from './standard-user-interface.scss';
+import DisclaimerHandler from '../ReactViewModels/DisclaimerHandler';
+import FeedbackButton from './FeedbackButton.jsx';
+import FeedbackForm from './FeedbackForm.jsx';
 
 const StandardUserInterface = React.createClass({
     propTypes: {
         terria: React.PropTypes.object,
         allBaseMaps: React.PropTypes.array,
         viewState: React.PropTypes.object,
-        minimumLargeScreenWidth: React.PropTypes.number
+        minimumLargeScreenWidth: React.PropTypes.number,
+        version: React.PropTypes.string
     },
 
     mixins: [ObserveModelMixin],
@@ -64,14 +65,7 @@ const StandardUserInterface = React.createClass({
     },
 
     shouldUseMobileInterface() {
-        return document.body.clientWidth < (this.props.minimumLargeScreenWidth || 640);
-    },
-
-    // TODO: Super A/B test toggle remove soon!!!
-    toggleCloseModalAfterAdd() {
-        if (confirm('Toggle close modal after add?')) {
-            this.props.viewState.closeModalAfterAdd = !this.props.viewState.closeModalAfterAdd;
-        }
+        return document.body.clientWidth < (this.props.minimumLargeScreenWidth || 768);
     },
 
     render() {
@@ -85,14 +79,13 @@ const StandardUserInterface = React.createClass({
                         <If condition={!this.props.viewState.isMapFullScreen && !this.props.viewState.hideMapUi()}>
                             <Choose>
                                 <When condition={this.props.viewState.useSmallScreenInterface}>
-                                    <MobileHeader terria={terria} viewState={this.props.viewState}/>
+                                    <MobileHeader terria={terria} viewState={this.props.viewState}
+                                                  version={this.props.version}/>
                                 </When>
                                 <Otherwise>
                                     <div className={Styles.sidePanel}>
-                                        <Branding terria={terria} onClick={this.toggleCloseModalAfterAdd}/>
-                                        <If condition={!this.props.viewState.useSmallScreenInterface}>
-                                            <WorkBench terria={terria} viewState={this.props.viewState}/>
-                                        </If>
+                                        <Branding terria={terria} version={this.props.version}/>
+                                        <WorkBench terria={terria} viewState={this.props.viewState}/>
                                     </div>
                                 </Otherwise>
                             </Choose>
@@ -122,6 +115,13 @@ const StandardUserInterface = React.createClass({
 
                 <Notification viewState={this.props.viewState}/>
                 <MapInteractionWindow terria={terria}/>
+
+                <div className='feedback'>
+                    <If condition={!this.props.viewState.useSmallScreenInterface}>
+                        <FeedbackButton viewState={this.props.viewState}/>
+                    </If>
+                    <FeedbackForm viewState={this.props.viewState}/>
+                </div>
 
                 <FeatureInfoPanel terria={terria}
                                   viewState={this.props.viewState}

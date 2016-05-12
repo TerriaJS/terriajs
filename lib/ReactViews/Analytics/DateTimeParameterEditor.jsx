@@ -9,17 +9,66 @@ const DateTimeParameterEditor = React.createClass({
         parameterValues: React.PropTypes.object
     },
 
-    onChange(e) {
-        this.props.parameterValues[this.props.parameter.id] = e.target.value;
+    getInitialState() {
+        return this.getDateTime();
+    },
+
+    getDateTime() {
+        const dateTimeBreakOut = {};
+        const timeDate = this.props.parameterValues[this.props.parameter.id];
+        if (timeDate !== undefined) {
+            const splits = timeDate.split('T');
+            dateTimeBreakOut.date = splits[0];
+            if (splits[1].length === 0) {
+                dateTimeBreakOut.time = '00:00';
+            } else {
+                dateTimeBreakOut.time = splits[1];
+            }
+        } else {
+            dateTimeBreakOut.date = '';
+            dateTimeBreakOut.time = '00:00';
+        }
+
+        this.setDateTime(dateTimeBreakOut);
+
+        return dateTimeBreakOut;
+    },
+
+    setDateTime(dateTime) {
+        if (dateTime.date && dateTime.time) {
+            this.props.parameterValues[this.props.parameter.id] = dateTime.date + 'T' + dateTime.time;
+        } else {
+            this.props.parameterValues[this.props.parameter.id] = undefined;
+        }
+    },
+
+    onChangeDate(e) {
+        const dateTimeBreakOut = this.getDateTime();
+        dateTimeBreakOut.date = e.target.value;
+        this.setDateTime(dateTimeBreakOut);
+        this.setState(dateTimeBreakOut);
+    },
+
+    onChangeTime(e) {
+        const dateTimeBreakOut = this.getDateTime();
+        dateTimeBreakOut.time = e.target.value;
+        this.setDateTime(dateTimeBreakOut);
+        this.setState(dateTimeBreakOut);
     },
 
     render() {
-        return (<input className='field'
-                        type="datetime-local"
-                        placeholder="YYYY-MM-DDTHH:mm:ss.sss"
-                        onChange={this.onChange}
-                        value={this.props.parameterValues[this.props.parameter.id]}
-                />);
+        return (<div>
+                 <input className='field'
+                        type="date"
+                        placeholder="YYYY-MM-DD"
+                        onChange={this.onChangeDate}
+                        value={this.state.date}/>
+                 <input className='field'
+                        type="time"
+                        placeholder="HH:mm:ss.sss"
+                        onChange={this.onChangeTime}
+                        value={this.state.time}/>
+                </div>);
     }
 });
 

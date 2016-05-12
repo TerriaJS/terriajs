@@ -53,8 +53,8 @@ const SidePanel = React.createClass({
                             <NowViewing viewState={this.props.viewState} terria={this.props.terria} />
                         </When>
                         <Otherwise>
-                            <div>
-                                <h3>Your workbench is empty</h3>
+                            <div className='workbench--empty'>
+                                <div>Your workbench is empty</div>
                                 <p><strong>Click 'Add Data' above to:</strong></p>
                                 <ul>
                                     <li>Browse the Data Catalogue</li>

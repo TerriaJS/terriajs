@@ -15,7 +15,7 @@
 }
 
 .modal--mobile-bg{
-    background: #fff;
+    background: rgba(#fff, 0.25);
     height: 100%;
     overflow-y: auto;
     &.search{
@@ -119,14 +119,16 @@
                 text-align: right;
                 padding: $padding-small*3;
             }
-            a{
+            a, .btn-reset{
                 padding: $padding-small*3 0;
                 color: $text-dark;
                 display: block;
                 border-bottom: 1px solid $grey-lighter;
+                font-weight: 400;
                 &:hover,
                 &:focus{
                     color: $color-primary;
+                    text-decoration: underline;
                 }
             }
         }
@@ -145,7 +147,6 @@
     max-width: 100px;
     float: right;
     height: 100%;
-
     .btn--mobile-search{
         @extend .btn--search;
         margin: 0 auto;
@@ -153,9 +154,13 @@
         font-size: 20px;
     }
 
+    input{
+        border: 0;
+        color: $color-primary;
+    }
+
     .btn--search-clear{
-        right: 70px;
-        top: 16px;
+        display: none;
     }
 
     .btn--mobile-search-cancel{
@@ -166,15 +171,17 @@
         font-size: $font-size-mini;
         font-weight: $font-weight-bold;
         display: none;
+        color: #3f4854;
     }
     .form--search-data{
         position: fixed;
-        top: $padding/2;
+        top: 0;
         left: 0;
         right: 0;
-        padding: $padding-small $padding*6 $padding-small $padding-small;
-        background: $dark;
+        padding: $padding $padding*6 $padding-small $padding-small;
+        background: #fff;
         display: none;
+        border-bottom: solid 1px #b2b2b2;
     }
 
     &.is-open{
@@ -225,32 +232,24 @@
     }
 }
 
-.search-results-toggle{
-    @extend .clearfix;
-    box-shadow: 0px 6px 10px -6px rgba(#000, 0.35);
-    padding: $padding-small 0;
-    .btn{
-        @extend .col-6;
-        text-transform: uppercase;
-        text-align: center;
-        &.is-active,
-        &:hover,
-        &:focus{
-            color: $color-primary;
-        }
-    }
-    .search--location{
-        border-right: 1px solid $grey-lighter;
-    }
-}
 
-.search--mobile .data-catalog{
-    padding: $padding;
+
+.search--mobile{
+    label{
+        background: #efeeee;
+        color: #3f4854;
+        font-size: 12px;
+        padding: $padding-small $padding;
+    }
 }
 
 .mobile-search-results{
     height: calc(100vh - #{$mobile-header-height + $input-height + 60px});
     overflow-y: auto;
+    li{
+        background: #fff;
+        margin-bottom: 2px;
+    }
 }
 
 

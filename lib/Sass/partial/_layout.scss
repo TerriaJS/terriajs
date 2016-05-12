@@ -18,7 +18,7 @@
 }
 
 .modal-wrapper{
-  position: absolute;
+  position: fixed;
   visibility: hidden;
   z-index: -100;
   opacity: 0;
@@ -39,7 +39,7 @@
     }
   }
   @media screen and (min-width : $md){
-    padding-left: 100px;
+    padding-left: 100px + $work-bench-width;
     padding-right: 100px;
   }
 }

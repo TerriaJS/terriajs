@@ -44,7 +44,7 @@ export default React.createClass({
                     <For each="search" of={this.props.viewState.searchState.locationSearchResults}>
                         <div key={search.constructor.name}>
                             <label className='label label-sub-heading'>{search.name}</label>
-                            <SearchHeader {...search} />
+                            <SearchHeader searchProvider={search} />
                             <ul className='search-results-items'>
                                 { search.searchResults.map((result, i) => (
                                     <LocationItem key={i} item={result}/>
