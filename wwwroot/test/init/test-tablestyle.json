@@ -191,6 +191,19 @@
               }
             }
           }
+        },
+        {
+          "name": "Value column hidden on Now Viewing",
+          "type": "csv",
+          "url": "/build/TerriaJS/test/csv/val_enum_postcode.csv",
+          "opacity": 1,
+          "tableStyle": {
+            "columns": {
+              "val1": {
+                "type": "HIDDEN"
+              }
+            }
+          }
         }
       ]
     }
