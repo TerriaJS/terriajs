@@ -18,32 +18,32 @@ const MobileSearch = React.createClass({
 
     renderLocationResult() {
         return this.props.searches
-                        .filter(search=> search.constructor.name !== 'CatalogItemNameSearchProviderViewModel')
-                        .filter(search => search.isSearching || (search.searchResults && search.searchResults.length))
-                        .map(search => (<div key={search.constructor.name}>
-                                        <label className='label'>Locations & Official Place Names</label>
-                                        <SearchHeader searchProvider={search} />
-                                        <ul className=' mobile-search-results search-results-items'>
-                                            { search.searchResults.map((result, i) => (
-                                                <LocationItem key={i} item={result}/>
-                                            ))}
-                                        </ul>
-                                    </div>));
+            .filter(search=> search.constructor.name !== 'CatalogItemNameSearchProviderViewModel')
+            .filter(search => search.isSearching || (search.searchResults && search.searchResults.length))
+            .map(search => (<div key={search.constructor.name}>
+                <label className='label'>Locations & Official Place Names</label>
+                <SearchHeader searchProvider={search}/>
+                <ul className=' mobile-search-results search-results-items'>
+                    { search.searchResults.map((result, i) => (
+                        <LocationItem key={i} item={result}/>
+                    ))}
+                </ul>
+            </div>));
     },
 
     renderDataCatalogResult() {
         const search = this.props.searches
-                      .filter(s=> s.constructor.name === 'CatalogItemNameSearchProviderViewModel')[0];
+            .filter(s=> s.constructor.name === 'CatalogItemNameSearchProviderViewModel')[0];
 
         const items = search.searchResults.map(result => result.catalogItem);
 
         if (items && items.filter(defined).length > 0) {
             return <div key={search.constructor.name}>
                 <label className='label'>{search.name}</label>
-                    <ul className='data-catalog mobile-search-results '>
+                <ul className='data-catalog mobile-search-results '>
                     <SearchHeader searchProvider={search}/>
                     {items.filter(defined)
-                          .map((item, i) => (
+                        .map((item, i) => (
                             <DataCatalogMember viewState={this.props.viewState}
                                                member={item}
                                                manageIsOpenLocally={search.isSearching}

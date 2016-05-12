@@ -23,8 +23,8 @@ const MobileHeader = React.createClass({
             menuIsOpen: false,
             searchText: '',
             searches: [new BingMapsSearchProviderViewModel({terria}),
-                       new GazetteerSearchProviderViewModel({terria}),
-                       new CatalogItemNameSearchProviderViewModel({terria})]
+                new GazetteerSearchProviderViewModel({terria}),
+                new CatalogItemNameSearchProviderViewModel({terria})]
         };
     },
 
@@ -60,7 +60,7 @@ const MobileHeader = React.createClass({
     },
 
     toggleView(viewname) {
-        if(this.props.viewState.mobileView !== viewname) {
+        if (this.props.viewState.mobileView !== viewname) {
             this.props.viewState.toggleModal(true);
             this.props.viewState.switchMobileView(viewname);
         } else {
@@ -81,36 +81,70 @@ const MobileHeader = React.createClass({
 
     render() {
         const nowViewingLength = this.props.terria.nowViewing.items.length;
-        return <div className='mobile__ui'>
-                    <div className='mobile__header'>
-                        <div className='group group-left'>
-                            <button type='button' onClick={this.toggleMenu} className='btn btn--menu btn--menu-mobile' title='toggle navigation'></button>
-                            <Branding terria={this.props.terria} version={this.props.version} onClick={this.refresh}/>
-                        </div>
-                        <div className='group group-right'>
-                            <button type='button' className='btn btn-primary btn--mobile-add' onClick={this.onMobileDataCatalogClicked}>Data</button>
-                            {(nowViewingLength > 0) && <button type='button' className='btn btn-primary btn--now-viewing ' onClick={this.onMobileNowViewingClicked}><span className='now-viewing__count'>{nowViewingLength}</span></button>}
-                            <div className={'mobile__search ' + ((this.props.viewState.mobileView === this.props.viewState.mobileViewOptions.search) ? 'is-open' : '')}>
-                                <button type='button' className='btn btn--mobile-search'
-                                        onClick={this.toggleSearch}></button>
-                                <SearchBox onSearchTextChanged={this.search}/>
-                                <button type='button' className='btn btn--mobile-search-cancel'
-                                        onClick={this.toggleSearch}>cancel</button>
+        return (
+            <div className='mobile__ui'>
+                <div className='mobile__header'>
+                    <Choose>
+                        <When
+                            condition={this.props.viewState.mobileView !== this.props.viewState.mobileViewOptions.search}>
+                            <div className='group group-left'>
+                                <button type='button'
+                                        onClick={this.toggleMenu}
+                                        className='btn btn--menu btn--menu-mobile'
+                                        title='toggle navigation'
+                                />
+                                <Branding terria={this.props.terria}
+                                          version={this.props.version}
+                                          onClick={this.refresh}
+                                />
                             </div>
-                        </div>
-                    </div>
-                    <ul className={`mobile__nav ${this.state.menuIsOpen ? 'is-open' : ''}`}>
-                        <li><a href=''>About</a></li>
-                        <li><a href=''>Related maps</a></li>
-                        <li><a href=''>Support</a></li>
-                        <li><button type="button" className='btn btn-reset' onClick={this.onClickFeedback}>Give feedback</button></li>
-                        <li className='social'>Share</li>
-                    </ul>
-                    <MobileModalWindow terria={this.props.terria}
-                                       viewState={this.props.viewState}
-                                       searches={this.state.searches}
-                    />
-                </div>;
+                            <div className='group group-right'>
+                                <button type='button'
+                                        className='btn btn-primary btn--mobile-add'
+                                        onClick={this.onMobileDataCatalogClicked}>
+                                    Data
+                                </button>
+                                <If condition={nowViewingLength > 0}>
+                                    <button type='button' className='btn btn-primary btn--now-viewing'
+                                            onClick={this.onMobileNowViewingClicked}>
+                                        <span className='now-viewing__count'>{nowViewingLength}</span>
+                                    </button>
+                                </If>
+                                <div className="mobile__search">
+                                    <button type='button'
+                                            className='btn btn--mobile-search'
+                                            onClick={this.toggleSearch}/>
+                                </div>
+                            </div>
+                        </When>
+                        <Otherwise>
+                            <div className="form--search-data">
+                                <SearchBox onSearchTextChanged={this.search}/>
+                            </div>
+                            <button type='button'
+                                    className='btn btn--mobile-search-cancel'
+                                    onClick={this.toggleSearch}>
+                                cancel
+                            </button>
+                        </Otherwise>
+                    </Choose>
+                </div>
+                <ul className={`mobile__nav ${this.state.menuIsOpen ? 'is-open' : ''}`}>
+                    <li><a href=''>About</a></li>
+                    <li><a href=''>Related maps</a></li>
+                    <li><a href=''>Support</a></li>
+                    <li>
+                        <button type="button" className='btn btn-reset' onClick={this.onClickFeedback}>Give feedback
+                        </button>
+                    </li>
+                    <li className='social'>Share</li>
+                </ul>
+                <MobileModalWindow terria={this.props.terria}
+                                   viewState={this.props.viewState}
+                                   searches={this.state.searches}
+                />
+            </div>
+        );
     }
 });
 module.exports = MobileHeader;

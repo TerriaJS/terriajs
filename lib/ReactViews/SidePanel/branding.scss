@@ -11,16 +11,8 @@
     padding: $padding;
     height: $logo-height;
   }
-}
 
-.logoButton {
-  background-color: transparent;
-  padding: 0;
-  height: 100%;
-}
-
-.logoImage {
-  display: block;
-  max-height: 100%;
-  width: auto;
+  img {
+    max-height: 100%;
+  }
 }

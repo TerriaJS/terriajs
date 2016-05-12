@@ -1,6 +1,6 @@
 'use strict';
 
-import ObserveModelMixin from './ObserveModelMixin';
+import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
 
 const FeedbackButton = React.createClass({

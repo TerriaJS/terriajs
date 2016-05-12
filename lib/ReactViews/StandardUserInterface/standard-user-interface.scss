@@ -2,16 +2,10 @@
 @import '../../Sass/global/mixins';
 
 .ui {
-  display: table;
   width: 100%;
 }
 
-.uiInner {
-  display: table-row;
-}
-
 .sidePanel {
-  display: table-cell;
   font-family: $font-pop;
   background: $overlay;
   width: $work-bench-width;
@@ -22,7 +16,6 @@
 
 .map{
   position: relative;
-  display: table-cell;
   @include transition(left $animation-fast ease-in);
   height: 100vh;
 
@@ -44,5 +37,24 @@
       height: 100%;
       touch-action: none;
     }
+  }
+}
+
+
+@media screen and (min-width: $sm) {
+  .ui {
+    display: table;
+  }
+
+  .uiInner {
+    display: table-row;
+  }
+
+  .sidePanel {
+    display: table-cell;
+  }
+
+  .map {
+    display: table-cell;
   }
 }
