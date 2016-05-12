@@ -12,12 +12,12 @@ const MobileSearch = React.createClass({
 
     propTypes: {
         viewState: React.PropTypes.object,
-        terria: React.PropTypes.object,
-        searches: React.PropTypes.array
+        terria: React.PropTypes.object
     },
 
     renderLocationResult() {
-        return this.props.searches
+        const searchState = this.props.viewState.searchState;
+        return searchState.unifiedSearchProviders
                         .filter(search=> search.constructor.name !== 'CatalogItemNameSearchProviderViewModel')
                         .filter(search => search.isSearching || (search.searchResults && search.searchResults.length))
                         .map(search => (<div key={search.constructor.name}>
@@ -32,7 +32,8 @@ const MobileSearch = React.createClass({
     },
 
     renderDataCatalogResult() {
-        const search = this.props.searches
+        const searchState = this.props.viewState.searchState;
+        const search = searchState.unifiedSearchProviders
                       .filter(s=> s.constructor.name === 'CatalogItemNameSearchProviderViewModel')[0];
 
         const items = search.searchResults.map(result => result.catalogItem);

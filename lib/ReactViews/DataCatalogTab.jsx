@@ -6,9 +6,7 @@ import ObserveModelMixin from './ObserveModelMixin';
 import React from 'react';
 import SearchHeader from './Search/SearchHeader.jsx';
 import SearchBox from './Search/SearchBox.jsx';
-import CatalogItemNameSearchProviderViewModel from '../ViewModels/CatalogItemNameSearchProviderViewModel.js';
 import defined from 'terriajs-cesium/Source/Core/defined';
-import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 
 // The DataCatalog Tab
 const DataCatalogTab = React.createClass({
@@ -19,19 +17,12 @@ const DataCatalogTab = React.createClass({
         viewState: React.PropTypes.object
     },
 
-    componentWillMount() {
-        this.searchProvider = new CatalogItemNameSearchProviderViewModel({terria: this.props.terria});
-
-        knockout.getObservable(this.props.viewState.searchState, 'catalogSearchText').subscribe(function(newText) {
-            this.searchProvider.search(newText);
-            if (this.searchBox) {
-                this.searchBox.setText(newText);
-            }
-        }, this);
+    changeSearchText(newText) {
+        this.props.viewState.searchState.catalogSearchText = newText;
     },
 
-    onSearchTextChanged(newText) {
-        this.props.viewState.searchState.catalogSearchText = newText;
+    search() {
+        this.props.viewState.searchState.searchCatalog();
     },
 
     render() {
@@ -39,9 +30,9 @@ const DataCatalogTab = React.createClass({
         return (
             <div className="panel-content">
                 <div className="data-explorer">
-                    <SearchBox initialText={this.props.viewState.searchState.catalogSearchText}
-                               onSearchTextChanged={this.onSearchTextChanged}
-                               ref={ref => {this.searchBox = ref;}} />
+                    <SearchBox searchText={this.props.viewState.searchState.catalogSearchText}
+                               onSearchTextChanged={this.changeSearchText}
+                               onDoSearch={this.search} />
                     {this.renderDataCatalog()}
                 </div>
                 <div className="data-preview__wrapper">
@@ -55,15 +46,16 @@ const DataCatalogTab = React.createClass({
 
     renderDataCatalog() {
         const terria = this.props.terria;
-        const isSearching = !!this.props.viewState.searchState.catalogSearchText.length;
+        const searchState = this.props.viewState.searchState;
+        const isSearching = searchState.catalogSearchText.length > 0;
         const items = isSearching ?
-            this.searchProvider.searchResults.map(result => result.catalogItem) :
+            searchState.catalogSearchProvider.searchResults.map(result => result.catalogItem) :
             terria.catalog.group.items;
 
         return (
             <ul className='data-catalog'>
-                {isSearching && <label className='label'>Search results</label>}
-                {isSearching && <SearchHeader searchProvider={this.searchProvider} />}
+                {isSearching && <label className="label">Search results</label>}
+                {isSearching && <SearchHeader searchProvider={searchState.catalogSearchProvider} isWaitingForSearchToStart={searchState.isWaitingToStartCatalogSearch} />}
                 {items
                     .filter(defined)
                     .map((item, i) => (

@@ -36,7 +36,9 @@ describe('FeatureInfoPanel-jsx', function() {
         terria = new Terria({
             baseUrl: './'
         });
-        viewState = new ViewState(terria);
+        viewState = new ViewState({
+            terria: terria
+        });
         // const properties = {
         //     'Foo': 'bar',
         //     'moo': 'd"e"r,p'
