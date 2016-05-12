@@ -1,6 +1,5 @@
 'use strict';
 
-import defined from 'terriajs-cesium/Source/Core/defined';
 import ObserveModelMixin from '../../ObserveModelMixin';
 import React from 'react';
 import classNames from 'classnames';

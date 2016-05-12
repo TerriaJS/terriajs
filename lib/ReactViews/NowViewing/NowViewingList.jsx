@@ -2,7 +2,6 @@
 
 import React from 'react';
 import NowViewingItem from './NowViewingItem.jsx';
-import defined from 'terriajs-cesium/Source/Core/defined';
 import ObserveModelMixin from './../ObserveModelMixin';
 import arrayContains from '../../Core/arrayContains';
 import Styles from './now-viewing-list.scss';
@@ -72,8 +71,6 @@ const NowViewingList = React.createClass({
 
     onDrop(e) {
         if (this.state.placeholderIndex >= 0) {
-            const dataTransfer = e.dataTransfer || e.originalEvent.dataTransfer;
-            //if (dataTransfer.dropEffect === 'move') {
             const draggedItemIndex = this.props.terria.nowViewing.items.indexOf(this.state.draggedItem);
             this.props.terria.nowViewing.items.splice(draggedItemIndex, 1);
 

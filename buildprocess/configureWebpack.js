@@ -222,10 +222,8 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
         new StringReplacePlugin()
     ]);
 
-
     if (hot) {
         config.module.loaders.push({
-            //exclude: path.resolve(terriaJSBasePath, 'lib', 'Sass'),
             include: path.resolve(terriaJSBasePath),
             test: /\.scss$/,
             loaders: [
@@ -235,48 +233,20 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
                 require.resolve('sass-loader') + '?sourceMap'
             ]
         });
-
-        //config.module.loaders.push({
-        //    include: path.resolve(terriaJSBasePath, 'lib', 'Sass'),
-        //    test: /\.scss$/,
-        //    loaders: [
-        //        require.resolve('style-loader'),
-        //        require.resolve('css-loader') + '?sourceMap',
-        //        require.resolve('resolve-url-loader') + '?sourceMap',
-        //        require.resolve('sass-loader') + '?sourceMap'
-        //    ]
-        //});
-    } else {
+    } else if (ExtractTextPlugin) {
         config.module.loaders.push({
             exclude: path.resolve(terriaJSBasePath, 'lib', 'Sass'),
             include: path.resolve(terriaJSBasePath, 'lib'),
             test: /\.scss$/,
             loader: ExtractTextPlugin.extract(
-                require.resolve('css-loader') + '?sourceMap&modules&localIdentName=[name]__[local]&importLoaders=2!' +
-                require.resolve('resolve-url-loader') + '!' +
+                require.resolve('css-loader') + '?sourceMap&modules&camelCase&localIdentName=[name]__[local]&importLoaders=2!' +
+                require.resolve('resolve-url-loader') + '?sourceMap!' +
                 require.resolve('sass-loader') + '?sourceMap',
                 {
                     publicPath: ''
                 }
             )
         });
-
-        //config.module.loaders.push({
-        //    include: path.resolve(terriaJSBasePath, 'lib', 'Sass'),
-        //    test: /\.scss$/,
-        //    loader: ExtractTextPlugin.extract(
-        //        require.resolve('css-loader') + '?sourceMap!' +
-        //        require.resolve('resolve-url-loader') + '?sourceMap!' +
-        //        require.resolve('sass-loader') + '?sourceMap',
-        //        {
-        //            publicPath: ''
-        //        }
-        //    )
-        //});
-
-        //config.plugins.push(
-        //    new ExtractTextPlugin("nationalmap.css")
-        //);
     }
 
     return config;
