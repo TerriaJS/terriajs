@@ -13,17 +13,6 @@
         display: block;
     }
 }
-
-.modal--mobile-bg{
-    background: rgba(#fff, 0.25);
-    height: 100%;
-    overflow-y: auto;
-    &.search{
-        overflow: hidden;
-    }
-}
-
-
 .mobile__ui{
     position: fixed;
     top: 0;
@@ -216,6 +205,8 @@
 
 
 .search--mobile{
+    overflow-y: auto;
+    height: 100%;
     label{
         background: #efeeee;
         color: #3f4854;
@@ -225,8 +216,7 @@
 }
 
 .mobile-search-results{
-    height: calc(100vh - #{$mobile-header-height + $input-height + 60px});
-    overflow-y: auto;
+    @extend .list-reset;
     li{
         background: #fff;
         margin-bottom: 2px;

@@ -23,11 +23,6 @@
 // Style guide: 3.1
 //
 
-.searchData{
-  font-family: $font-pop;
-  position: relative;
-}
-
 .icon {
   position: absolute;
   font-size: 1.2rem;
@@ -58,6 +53,7 @@
 input[type=text].searchField {
   padding-left: $input-height;
   width: 100%;
+  color: $color-primary;
 
   @include placeholder{
     text-transform: uppercase;
@@ -75,13 +71,5 @@ input[type=text].searchField {
 }
 
 .searchClear{
-  right: $padding;
-  top: 0;
-  padding: 0;
-  composes: icon;
-  composes: icon from '../../Sass/global/_icons.scss';
-  composes: icon-clear from '../../Sass/global/_icons.scss';
-  &:before{
-    padding: $padding;
-  }
+  display: none;
 }
