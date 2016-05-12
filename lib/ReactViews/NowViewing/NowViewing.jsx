@@ -11,6 +11,10 @@ const NowViewing = React.createClass({
         viewState: React.PropTypes.object.isRequired
     },
 
+    removeAll() {
+        this.props.terria.nowViewing.removeAll();
+    },
+
     render() {
         return (
             <div className={Styles.nowViewing}>

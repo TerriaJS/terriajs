@@ -1,6 +1,5 @@
 @import '../../Sass/global/variables';
 @import '../../Sass/global/mixins';
-@import '../../Sass/partial/base';
 
 // Now viewing
 //
@@ -78,8 +77,11 @@ $now-viewing-margin: $padding-small - 1px;
 .header {
   composes: list-reset from '../../Sass/partial/_base.scss';
 
-  float: left;
   width: 100%;
+}
+
+.header-clearfix {
+  composes: clearfix from '../../Sass/partial/_base.scss';
 }
 
 .btn {
@@ -134,71 +136,4 @@ $now-viewing-margin: $padding-small - 1px;
   font-size: 140%;
   margin-right: 5px;
   color: #CCC;
-}
-
-// Temp
-// Voldemort
-
-.now-viewing-item__voldemort {
-  padding: $padding 0 0 0;
-  .voldemort__inner {
-    padding: 0 $padding;
-    background: $overlay;
-  }
-  ul {
-    @extend .list-reset;
-    @extend .clearfix;
-  }
-  .has-children {
-    > span {
-      text-transform: uppercase;
-    }
-  }
-  .voldemort__children {
-    > ul {
-      display: none;
-    }
-    &.is-open {
-      > ul {
-        display: block;
-      }
-    }
-  }
-}
-
-.voldemort__children__header {
-  composes: flex from '../../Sass/partial/_base.scss';
-  span, .btn {
-    padding: $padding-small 0;
-  }
-  span {
-    width: 100%;
-    line-height: 22px;
-  }
-  .btn {
-    width: 30px;
-    &:before {
-      font-size: 1.2rem;
-    }
-  }
-}
-
-.btn--voldemort-unique-active {
-  composes: btn--radio-on from '../../Sass/partial/_buttons.scss';
-}
-
-.btn--voldemort-unique-inactive {
-  composes: btn--radio-off from '../../Sass/partial/_buttons.scss';
-}
-
-.btn--voldemort-multiple-active {
-  composes: btn--checkbox-on from '../../Sass/partial/_buttons.scss';
-}
-
-.btn--voldemort-multiple-inactive {
-  composes: btn--checkbox-off from '../../Sass/partial/_buttons.scss';
-}
-
-.now-viewing-item__legend {
-  font-size: 12px;
 }

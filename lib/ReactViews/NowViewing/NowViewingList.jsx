@@ -79,26 +79,12 @@ const NowViewingList = React.createClass({
 
             const addAtIndex = this.state.placeholderIndex > draggedItemIndex ? this.state.placeholderIndex - 1 : this.state.placeholderIndex;
             this.props.terria.nowViewing.items.splice(addAtIndex, 0, this.state.draggedItem);
-            //}
-            //if (this.props.terria.nowViewing.items.indexOf(this.state.draggedItem) > this.state.placeholderIndex) {
-            //    this.setState({
-            //        draggedItemId: this.state.draggedItemId + 1
-            //    });
-            //}
-
         }
 
         this.resetHover();
     },
 
     onDragEnd(e) {
-        //    const dataTransfer = e.dataTransfer || e.originalEvent.dataTransfer;
-        //
-        //    if (dataTransfer.dropEffect === 'move') {
-        //        //this.props.terria.nowViewing.items.splice(this.state.placeholderId, 0, this.state.draggedItem);
-        //    }
-        //
-        //    this.setState({});
         this.resetHover();
     },
 
@@ -118,14 +104,10 @@ const NowViewingList = React.createClass({
         this.setState({placeholderIndex: -1, draggedItem: null});
     },
 
-    getItems() {
-        return this.props.terria.nowViewing.items;
-    },
-
     render() {
         return (
             <ul className={Styles.nowViewingContent} onDragLeave={this.onDragLeaveContainer} onDrop={this.onDrop}>
-                <For each="item" of={this.getItems()} index="i">
+                <For each="item" of={this.props.terria.nowViewing.items} index="i">
                     {this.renderDropzone(i)}
                     <NowViewingItem nowViewingItem={item}
                                     key={item.uniqueId}
@@ -136,7 +118,7 @@ const NowViewingList = React.createClass({
                                     viewState={this.props.viewState}
                     />
                 </For>
-                {this.renderDropzone(this.getItems().length)}
+                {this.renderDropzone(this.props.terria.nowViewing.items.length)}
             </ul>
         );
     },

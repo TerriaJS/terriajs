@@ -83,15 +83,19 @@ const StandardUserInterface = React.createClass({
                 <div className={Styles.ui}>
                     <div className={Styles.uiInner}>
                         <If condition={!this.props.viewState.isMapFullScreen && !this.props.viewState.hideMapUi()}>
-                            <If condition={this.props.viewState.useSmallScreenInterface}>
-                                <MobileHeader terria={terria} viewState={this.props.viewState} />
-                            </If>
-                            <div className={Styles.sidePanel}>
-                                <Branding terria={terria} onClick={this.toggleCloseModalAfterAdd} />
-                                <If condition={!this.props.viewState.useSmallScreenInterface}>
-                                    <WorkBench terria={terria} viewState={this.props.viewState} />
-                                </If>
-                            </div>
+                            <Choose>
+                                <When condition={this.props.viewState.useSmallScreenInterface}>
+                                    <MobileHeader terria={terria} viewState={this.props.viewState}/>
+                                </When>
+                                <Otherwise>
+                                    <div className={Styles.sidePanel}>
+                                        <Branding terria={terria} onClick={this.toggleCloseModalAfterAdd}/>
+                                        <If condition={!this.props.viewState.useSmallScreenInterface}>
+                                            <WorkBench terria={terria} viewState={this.props.viewState}/>
+                                        </If>
+                                    </div>
+                                </Otherwise>
+                            </Choose>
                         </If>
 
                         <section className={Styles.map}>

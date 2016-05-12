@@ -8,7 +8,7 @@ import ObserveModelMixin from './../ObserveModelMixin';
 import Legend from './Controls/Legend';
 import OpacitySection from './Controls/OpacitySection';
 import ViewingControls from './Controls/ViewingControls';
-import Voldemort from './Controls/Voldemort';
+import ConceptViewer from './Controls/ConceptViewer';
 import ShortReport from './Controls/ShortReport';
 
 import Styles from './now-viewing-item.scss';
@@ -103,6 +103,7 @@ const NowViewingItem = React.createClass({
                                 )}
                         />
                     </li>
+                    <li className={Styles.headerClearfix} />
                 </ul>
 
                 <If condition={nowViewingItem.isLegendVisible}>
@@ -111,7 +112,7 @@ const NowViewingItem = React.createClass({
                         <OpacitySection nowViewingItem={nowViewingItem}/>
                         <Legend nowViewingItem={nowViewingItem}/>
                         <If condition={(defined(nowViewingItem.concepts) && nowViewingItem.concepts.length > 0)}>
-                            <Voldemort nowViewingItem={nowViewingItem}/>
+                            <ConceptViewer nowViewingItem={nowViewingItem}/>
                         </If>
                         <If condition={nowViewingItem.shortReport || (nowViewingItem.shortReportSections && nowViewingItem.shortReportSections.length)}>
                             <ShortReport nowViewingItem={nowViewingItem}/>

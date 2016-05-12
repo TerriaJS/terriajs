@@ -1,7 +1,7 @@
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
-import SidebarSearch from './../SidebarSearch.jsx';
-import SearchBox from './../Search/SearchBox.jsx';
+import SidebarSearch from '../SidebarSearch.jsx';
+import SearchBox from '../Search/SearchBox.jsx';
 import NowViewing from '../NowViewing/NowViewing.jsx';
 
 import Styles from './work_bench.scss';
@@ -12,10 +12,6 @@ const SidePanel = React.createClass({
     propTypes: {
         terria: React.PropTypes.object.isRequired,
         viewState: React.PropTypes.object.isRequired
-    },
-
-    removeAll() {
-        this.props.terria.nowViewing.removeAll();
     },
 
     onAddDataClicked() {
