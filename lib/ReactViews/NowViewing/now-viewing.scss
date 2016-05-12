@@ -1,9 +1,6 @@
 @import '../../Sass/global/variables';
 @import '../../Sass/global/mixins';
 
-// Save 1px for drop zone
-$now-viewing-margin: $padding-small - 1px;
-
 .now-viewing{
   .label, .btn {
     line-height: 1;

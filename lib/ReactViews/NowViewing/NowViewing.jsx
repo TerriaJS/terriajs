@@ -1,7 +1,7 @@
 import React from 'react';
 import NowViewingList from './NowViewingList.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
-import Styles from './now_viewing.scss';
+import Styles from './now-viewing.scss';
 
 const NowViewing = React.createClass({
     mixins: [ObserveModelMixin],

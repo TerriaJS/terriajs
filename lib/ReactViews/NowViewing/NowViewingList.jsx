@@ -5,8 +5,10 @@ import NowViewingItem from './NowViewingItem.jsx';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import ObserveModelMixin from './../ObserveModelMixin';
 import arrayContains from '../../Core/arrayContains';
+import Styles from './now-viewing-list.scss';
+import classNames from 'classnames';
 
-const NowViewingContainer = React.createClass({
+const NowViewingList = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -17,79 +19,87 @@ const NowViewingContainer = React.createClass({
     getInitialState() {
         return {
             placeholderIndex: -1,
-            draggedItemIndex: -1,
-            selectedItem: null
+            draggedItem: null
         };
     },
 
-    onDragStart(e) {
-        if (defined(e.dataTransfer)) {
-            e.dataTransfer.effectAllowed = 'move';
-            e.dataTransfer.setData('text', 'Dragging a Now Viewing item.');
-        } else {
-            e.originalEvent.dataTransfer.effectAllowed = 'move';
-            e.originalEvent.dataTransfer.setData('text', 'Dragging a Now Viewing item.');
-        }
-
-        const _draggedItemIndex = parseInt(e.currentTarget.dataset.key, 10);
+    onDragStart(item, index, e) {
+        const dataTransfer = e.dataTransfer || e.originalEvent.dataTransfer;
+        dataTransfer.effectAllowed = 'move';
+        dataTransfer.setData('text', 'Dragging a Now Viewing item.');
 
         this.setState({
-            draggedItemIndex: _draggedItemIndex,
-            selectedItem: this.props.terria.nowViewing.items[_draggedItemIndex]
+            draggedItem: item,
+            placeholderIndex: index
         });
     },
 
-    onDragEnd(e) {
-        if ((defined(e.dataTransfer) && (e.dataTransfer.dropEffect === 'move'))
-            || (e.originalEvent.dataTransfer.dropEffect === 'move')) {
-            this.props.terria.nowViewing.items.splice(this.state.draggedItemIndex, 1);
+    onDragOverDropZone(placeholderIndex, e) {
+        const dataTransfer = e.dataTransfer || e.originalEvent.dataTransfer;
 
-            this.setState({
-                draggedItemIndex: -1,
-                placeholderIndex: -1
-            });
-        } else if (this.state.placeholderIndex !== -1 || this.state.draggedItemIndex !== -1) {
-            this.setState({
-                placeholderIndex: -1,
-                draggedItemIndex: -1
-            });
-        }
-    },
-
-    onDragOverDropZone(e) {
-        if (e.dataTransfer.types && arrayContains(e.dataTransfer.types, 'Files')) {
+        if ((dataTransfer.types && arrayContains(dataTransfer.types, 'Files')) || !this.state.draggedItem) {
             return;
         }
-        const _placeholderIndex = parseInt(e.currentTarget.dataset.key, 10);
-        if(_placeholderIndex !== this.state.placeholderIndex) { this.setState({ placeholderIndex: _placeholderIndex });}
+
+        if (placeholderIndex !== this.state.placeholderIndex) {
+            this.setState({placeholderIndex: placeholderIndex});
+        }
+
+        dataTransfer.dropEffect = 'move';
         e.preventDefault();
         e.stopPropagation();
     },
 
-    onDragOverItem(e) {
-        if (e.dataTransfer.types && arrayContains(e.dataTransfer.types, 'Files')) {
+    onDragOverItem(over, e) {
+        const dataTransfer = e.dataTransfer || e.originalEvent.dataTransfer;
+
+        if ((dataTransfer.types && arrayContains(dataTransfer.types, 'Files')) || !this.state.draggedItem) {
             return;
         }
 
-        let over = parseInt(e.currentTarget.dataset.key, 10);
-        if(e.clientY - e.currentTarget.offsetTop > e.currentTarget.offsetHeight / 2) { over++; }
-        if(over !== this.state.placeholderIndex) { this.setState({ placeholderIndex: over }); }
+        if (e.clientY - e.currentTarget.offsetTop > e.currentTarget.offsetHeight / 2) {
+            over++;
+        }
+
+        if (over !== this.state.placeholderIndex) {
+            this.setState({placeholderIndex: over});
+        }
+
+        dataTransfer.dropEffect = 'move';
         e.preventDefault();
         e.stopPropagation();
     },
 
     onDrop(e) {
-        if (this.state.placeholderIndex !== -1) {
-            this.props.terria.nowViewing.items.splice(this.state.placeholderIndex, 0, this.state.selectedItem);
-            if (this.state.draggedItemIndex > this.state.placeholderIndex) {
-                this.setState({
-                    draggedItemIndex: this.state.draggedItemIndex + 1
-                });
-            }
-            this.setState({
-                placeholderIndex: -1
-            });
+        if (this.state.placeholderIndex >= 0) {
+            const dataTransfer = e.dataTransfer || e.originalEvent.dataTransfer;
+            //if (dataTransfer.dropEffect === 'move') {
+            const draggedItemIndex = this.props.terria.nowViewing.items.indexOf(this.state.draggedItem);
+            this.props.terria.nowViewing.items.splice(draggedItemIndex, 1);
+
+            const addAtIndex = this.state.placeholderIndex > draggedItemIndex ? this.state.placeholderIndex - 1 : this.state.placeholderIndex;
+            this.props.terria.nowViewing.items.splice(addAtIndex, 0, this.state.draggedItem);
+            //}
+            //if (this.props.terria.nowViewing.items.indexOf(this.state.draggedItem) > this.state.placeholderIndex) {
+            //    this.setState({
+            //        draggedItemId: this.state.draggedItemId + 1
+            //    });
+            //}
+
         }
+
+        this.resetHover();
+    },
+
+    onDragEnd(e) {
+        //    const dataTransfer = e.dataTransfer || e.originalEvent.dataTransfer;
+        //
+        //    if (dataTransfer.dropEffect === 'move') {
+        //        //this.props.terria.nowViewing.items.splice(this.state.placeholderId, 0, this.state.draggedItem);
+        //    }
+        //
+        //    this.setState({});
+        this.resetHover();
     },
 
     onDragLeaveContainer(e) {
@@ -99,51 +109,46 @@ const NowViewingContainer = React.createClass({
         const bottom = top + e.currentTarget.offsetHeight;
         const left = e.currentTarget.offsetLeft;
         const right = left + e.currentTarget.offsetWidth;
-        if(y <= top || y >= bottom || x <= left || x >= right) { this.resetHover(); }
-    },
-
-    resetHover(e) {
-        if(this.state.placeholderIndex !== -1) {
-            this.setState({ placeholderIndex: -1 });
+        if (y <= top || y >= bottom || x <= left || x >= right) {
+            this.setState({placeholderIndex: -1});
         }
     },
 
-    renderNowViewingItem(item, i) {
-        return <NowViewingItem nowViewingItem={item}
-                               index={i}
-                               key={'placeholder-' + i}
-                               dragging={this.state.draggedItemIndex === i}
-                               onDragOver={this.onDragOverItem}
-                               onDragStart={this.onDragStart}
-                               onDragEnd={this.onDragEnd}
-                               viewState={this.props.viewState}
-                />;
+    resetHover() {
+        this.setState({placeholderIndex: -1, draggedItem: null});
     },
 
-    renderPlaceholder(i) {
-        return <li className={(this.state.placeholderIndex === i) ? 'drop-zone is-active' : 'drop-zone'} data-key={i} key={i} onDragOver={this.onDragOverDropZone} ></li>;
-    },
-
-    renderListElements() {
-        const items = [];
-        let i;
-
-        const nowViewingItems = this.props.terria.nowViewing.items;
-
-        for (i = 0; i < nowViewingItems.length; i++) {
-            items.push(this.renderPlaceholder(i));
-            items.push(this.renderNowViewingItem(nowViewingItems[i], i));
-        }
-        items.push(this.renderPlaceholder(i));
-        return items;
+    getItems() {
+        return this.props.terria.nowViewing.items;
     },
 
     render() {
         return (
-            <ul className="now-viewing__content" onDragLeave={this.onDragLeaveContainer} onDrop={this.onDrop}>
-              {this.renderListElements()}
-            </ul>);
+            <ul className={Styles.nowViewingContent} onDragLeave={this.onDragLeaveContainer} onDrop={this.onDrop}>
+                <For each="item" of={this.getItems()} index="i">
+                    {this.renderDropzone(i)}
+                    <NowViewingItem nowViewingItem={item}
+                                    key={item.uniqueId}
+                                    dragging={this.state.draggedItem === item}
+                                    onDragOver={this.onDragOverItem.bind(this, i)}
+                                    onDragStart={this.onDragStart.bind(this, item, i)}
+                                    onDragEnd={this.onDragEnd}
+                                    viewState={this.props.viewState}
+                    />
+                </For>
+                {this.renderDropzone(this.getItems().length)}
+            </ul>
+        );
+    },
+
+    renderDropzone(index) {
+        return (
+            <li className={classNames(Styles.dropZone, {[Styles.isActive]: this.state.placeholderIndex === index})}
+                key={'dropzone' + index}
+                onDragOver={this.onDragOverDropZone.bind(this, index)}
+            />
+        );
     }
 });
 
-module.exports = NowViewingContainer;
+module.exports = NowViewingList;

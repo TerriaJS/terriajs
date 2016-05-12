@@ -2,7 +2,7 @@
 
 import defined from 'terriajs-cesium/Source/Core/defined';
 
-import ObserveModelMixin from './../ObserveModelMixin';
+import ObserveModelMixin from '../../ObserveModelMixin';
 import React from 'react';
 
 const Voldemort = React.createClass({

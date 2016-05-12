@@ -1,21 +1,23 @@
 'use strict';
 
 import defined from 'terriajs-cesium/Source/Core/defined';
-
-import Legend from './Legend';
-import ObserveModelMixin from './../ObserveModelMixin';
-import OpacitySection from './OpacitySection';
 import React from 'react';
-import ViewingControls from './ViewingControls';
-import Voldemort from './Voldemort';
-import ShortReport from './ShortReport';
+import classNames from 'classnames';
+
+import ObserveModelMixin from './../ObserveModelMixin';
+import Legend from './Controls/Legend';
+import OpacitySection from './Controls/OpacitySection';
+import ViewingControls from './Controls/ViewingControls';
+import Voldemort from './Controls/Voldemort';
+import ShortReport from './Controls/ShortReport';
+
+import Styles from './now-viewing-item.scss';
 
 const NowViewingItem = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
         nowViewingItem: React.PropTypes.object.isRequired,
-        index: React.PropTypes.number.isRequired,
         dragging: React.PropTypes.bool,
         onDragStart: React.PropTypes.func,
         onDragOver: React.PropTypes.func,
@@ -54,38 +56,68 @@ const NowViewingItem = React.createClass({
 
     render() {
         const nowViewingItem = this.props.nowViewingItem;
-        let chartIcon;
-        if (!nowViewingItem.isMappable) {
-            // TODO: use real CSS.
-            chartIcon = <i className='icon icon-line-chart' style={{float: 'left', fontSize: '140%', marginRight: '5px', color: '#CCC'}}></i>;
-        }
+
         return (
-            <li className={'now-viewing__item ' + (nowViewingItem.isLegendVisible === true ? 'is-open' : '') + ' ' + (this.props.dragging === true ? 'is-dragging' : '')}
-                onDragOver={this.onDragOver} data-key={this.props.index}>
-                <ul className="now-viewing__item__header">
-                    {(nowViewingItem.supportsToggleShown) && (<li className='visibility'>
-                        <button type='button' onClick={this.toggleVisibility} title="Data show/hide"
-                                className={'btn ' + (nowViewingItem.isShown ? 'btn--checkbox-on ' : 'btn--checkbox-off')}></button>
-                    </li>)}
-                    <li>
-                        <button type='button' draggable='true' data-key={this.props.index}
-                                onDragStart={this.onDragStart} onDragEnd={this.onDragEnd}
-                                className="btn btn--drag">{chartIcon}{nowViewingItem.name}</button>
+            <li className={classNames(
+                Styles.nowViewingItem,
+                {
+                    [Styles.isOpen]: nowViewingItem.isLegendVisible,
+                    [Styles.isDragging]: this.props.dragging
+                })}
+                onDragOver={this.onDragOver}>
+
+                <ul className={Styles.header}>
+                    <If condition={nowViewingItem.supportsToggleShown}>
+                        <li className={Styles.visibilityColumn}>
+                            <button type='button'
+                                    onClick={this.toggleVisibility}
+                                    title="Data show/hide"
+                                    className={classNames(
+                                        Styles.btnVisibility,
+                                        {
+                                            [Styles.btnVisibilityVisible]: nowViewingItem.isShown,
+                                            [Styles.btnVisibilityInvisible]: !nowViewingItem.isShown
+                                        }
+                                    )}
+                            />
+                        </li>
+                    </If>
+                    <li className={Styles.nameColumn}>
+                        <button type='button'
+                                draggable='true'
+                                onDragStart={this.onDragStart}
+                                onDragEnd={this.onDragEnd}
+                                className={classNames(Styles.btn)}>
+                            <If condition={!nowViewingItem.isMappable}>
+                                <i className={classNames(Styles.icon, Styles.iconLineChart)} />
+                            </If>
+                            {nowViewingItem.name}
+                        </button>
                     </li>
-                    <li>
-                        <button type='button' onClick={this.toggleDisplay}
-                                className={'btn btn--toggle ' + (nowViewingItem.isLegendVisible === true ? 'is-open' : '')}></button>
+                    <li className={Styles.toggleColumn}>
+                        <button type='button'
+                                onClick={this.toggleDisplay}
+                                className={classNames(
+                                    Styles.btnToggle,
+                                    {[Styles.btnToggleIsOpen]: nowViewingItem.isLegendVisible}
+                                )}
+                        />
                     </li>
                 </ul>
-                <div className="now-viewing__item__inner">
-                    <ViewingControls nowViewingItem={nowViewingItem} viewState={this.props.viewState}/>
-                    <OpacitySection nowViewingItem={nowViewingItem}/>
-                    <Legend nowViewingItem={nowViewingItem}/>
-                    <If condition={(defined(nowViewingItem.concepts) && nowViewingItem.concepts.length > 0)}>
-                        <Voldemort nowViewingItem={nowViewingItem}/>
-                    </If>
-                    <ShortReport nowViewingItem={nowViewingItem}/>
-                </div>
+
+                <If condition={nowViewingItem.isLegendVisible}>
+                    <div className={Styles.inner}>
+                        <ViewingControls nowViewingItem={nowViewingItem} viewState={this.props.viewState}/>
+                        <OpacitySection nowViewingItem={nowViewingItem}/>
+                        <Legend nowViewingItem={nowViewingItem}/>
+                        <If condition={(defined(nowViewingItem.concepts) && nowViewingItem.concepts.length > 0)}>
+                            <Voldemort nowViewingItem={nowViewingItem}/>
+                        </If>
+                        <If condition={nowViewingItem.shortReport || (nowViewingItem.shortReportSections && nowViewingItem.shortReportSections.length)}>
+                            <ShortReport nowViewingItem={nowViewingItem}/>
+                        </If>
+                    </div>
+                </If>
             </li>
         );
     }

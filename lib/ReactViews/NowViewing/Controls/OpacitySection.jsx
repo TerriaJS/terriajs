@@ -1,7 +1,9 @@
 'use strict';
 
-import ObserveModelMixin from './../ObserveModelMixin';
 import React from 'react';
+import ObserveModelMixin from '../../ObserveModelMixin';
+
+import Styles from './opacity-section.scss';
 
 const OpacitySection = React.createClass({
     mixins: [ObserveModelMixin],
@@ -20,7 +22,7 @@ const OpacitySection = React.createClass({
             return null;
         }
         return (
-            <div className="now-viewing__item__opacity">
+            <div className={Styles.opacity}>
                 <label htmlFor="opacity">Opacity: </label>
                 <input type='range' name='opacity' min='0' max='1' step='0.01' value={nowViewingItem.opacity} onChange={this.changeOpacity}/>
             </div>

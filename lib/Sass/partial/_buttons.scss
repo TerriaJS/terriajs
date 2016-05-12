@@ -182,13 +182,6 @@ $btn-setting-size: 35px;
     }
   }
 
-  .btn--visibility {
-    @extend .btn--invisible;
-    &.is-visible {
-      @extend .btn--visible;
-    }
-  }
-
   .btn--add-to-map {
     @extend .btn--add;
     color: $color-primary;
