@@ -225,14 +225,6 @@ feedback;
   }
 }
 
-.btn--search-done {
-  @extend .btn--tertiary-dark;
-
-  padding: 7px 10px;
-  margin-top: 5px;
-  border-radius: 2px;
-}
-
 .btn--remove-from-map {
   @extend .btn--remove;
   color: $color-primary;
@@ -499,34 +491,6 @@ a.btn--map {
   padding: 12px;
   @extend .icon;
   @extend .icon-clear;
-}
-
-// Search data catalog button
-//
-// Markup:
-// <button class="btn btn--data-search">Search <strong> a </strong>in data catalog</button>
-//
-// Style guide: Buttons.data-search
-
-.btn--data-search {
-  display: block;
-  width: auto;
-  color: $color-primary;
-  text-transform: uppercase;
-  padding-right: $padding*3;
-  position: relative;
-  @extend .btn--right;
-  &:before {
-    position: absolute;
-    top: 0;
-    right: 0;
-    padding: $padding;
-  }
-  i {
-    color: lighten($color-primary, 10%);
-    display: inline-block;
-    padding: 0 $padding-small;
-  }
 }
 
 // Dropdown trigger button

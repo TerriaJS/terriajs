@@ -2,7 +2,7 @@
 
 import React from 'react';
 import defined from 'terriajs-cesium/Source/Core/defined';
-import Styles from './search.scss';
+import Styles from './search-box.scss';
 
 /**
  * Super-simple dumb search box component.

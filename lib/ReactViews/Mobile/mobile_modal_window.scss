@@ -23,7 +23,7 @@
   overflow-y: auto;
   overflow-x: hidden;
   height: 100%;
-  padding: $input-height $padding-small $padding-small $padding-small;
+  padding: $input-height 0 $padding-small 0;
 }
 
 .closeModal{

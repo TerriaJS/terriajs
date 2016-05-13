@@ -3,7 +3,7 @@ import defined from 'terriajs-cesium/Source/Core/defined';
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
 import SearchHeader from '../Search/SearchHeader.jsx';
-import LocationItem from '../LocationItem.jsx';
+import SearchResult from '../Search/SearchResult.jsx';
 import DataCatalogMember from '../DataCatalog/DataCatalogMember.jsx';
 import Styles from './mobile_search.scss';
 
@@ -16,6 +16,10 @@ const MobileSearch = React.createClass({
         terria: React.PropTypes.object
     },
 
+    onLocationClick() {
+
+    },
+
     renderLocationResult() {
         const searchState = this.props.viewState.searchState;
         return searchState.unifiedSearchProviders
@@ -26,7 +30,7 @@ const MobileSearch = React.createClass({
                                         <SearchHeader searchProvider={search} />
                                         <ul className={Styles.results}>
                                             { search.searchResults.map((result, i) => (
-                                                <LocationItem key={i} item={result}/>
+                                                <SearchResult key={i} name={result.name} clickAction={result.clickAction} theme="light" />
                                             ))}
                                         </ul>
                                     </div>));

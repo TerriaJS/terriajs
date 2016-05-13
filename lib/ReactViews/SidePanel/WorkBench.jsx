@@ -1,6 +1,6 @@
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
-import SidebarSearch from '../SidebarSearch.jsx';
+import SidebarSearch from '../Search/SidebarSearch.jsx';
 import SearchBox from '../Search/SearchBox.jsx';
 import NowViewing from '../NowViewing/NowViewing.jsx';
 

@@ -77,7 +77,7 @@ input[type=text].searchField {
 //this does not seem to work
 .searchClear{
   right: $padding;
-  top: 0;
+  top: 3px;
   padding: 0;
   composes: icon;
   composes: icon from '../../Sass/global/_icons.scss';

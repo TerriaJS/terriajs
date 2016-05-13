@@ -20,10 +20,6 @@
   @extend .sm-show;
 }
 
-.no-results{
-  padding: $padding;
-}
-
 input[type=range] {
     /*removes default webkit styles*/
     -webkit-appearance: none;
