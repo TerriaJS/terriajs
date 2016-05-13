@@ -195,7 +195,8 @@ describe('CsvCatalogItem with lat and lon', function() {
             var tableStructure = csvItem.dataSource.tableStructure;
             var latColumn = tableStructure.columnsByType[VarType.LAT][0];
             var lonColumn = tableStructure.columnsByType[VarType.LON][0];
-            expect(tableStructure.columns[0].values.length).toBe(7);
+            // There are 7 lines after the header, but only 4 are non-blank.
+            expect(tableStructure.columns[0].values.length).toBe(4);
             expect(latColumn.minimumValue).toBeLessThan(-30);
             expect(lonColumn.minimumValue).toBeGreaterThan(150);
         }).otherwise(fail).then(done);
