@@ -11,7 +11,7 @@
 }
 
 .locationDistance {
-  composes: clearfix from '../../sass/partial/_base.scss';
+  composes: clearfix from '../../Sass/partial/_base.scss';
   display: none;
   @media screen and (min-width: $sm){
     display: block;
