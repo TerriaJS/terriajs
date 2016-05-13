@@ -90,6 +90,10 @@
             font-size: 0.8rem;
         }
     }
+
+    .search__searchClear{
+        display: none;
+    }
 }
 
 .mobile__nav{
@@ -136,7 +140,6 @@
     max-width: 100px;
     float: right;
     height: 100%;
-
     .btn--mobile-search{
         @extend .btn--search;
         margin: 0 auto;

@@ -13,7 +13,9 @@
   composes: sm-show from '../../Sass/partial/_base.scss';
   composes: list-reset from '../../Sass/partial/_base.scss';
   composes: clearfix from '../../Sass/partial/_base.scss';
-
+  margin: 0;
+  padding: 0;
+  clear: both;
   li{
     display: inline-block;
     float: left;

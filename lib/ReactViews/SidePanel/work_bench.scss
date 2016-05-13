@@ -4,6 +4,10 @@
 .workBench {
   position: relative;
 }
+.workbenchEmpty{
+  padding: $padding;
+  opacity: 0.8;
+}
 
 .header {
     padding: 0 $padding-small;
