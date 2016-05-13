@@ -44,46 +44,6 @@
   }
 }
 
-.map{
-  position: relative;
-  display: table-cell;
-  @include transition(left $animation-fast ease-in);
-  height: 100vh;
-
-  body.chart-is-visible &{
-    bottom: $chart-height;
-  }
-
-  #cesiumContainer{
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-  }
-
-  .cesium-widget, .cesium-widget canvas {
-    width: 100%;
-    height: 100%;
-    touch-action: none;
-  }
-
-  @media screen and (max-width : $sm){
-    display: block;
-  }
-}
-
-.notification{
-  .notification-wrapper{
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    z-index: $front-component-z-index +10;
-  }
-}
-
 .feature-info-panel{
   position: fixed;
   top: 10vh;

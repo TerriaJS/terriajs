@@ -42,7 +42,7 @@ const ModalWindow = React.createClass({
                      aria-labelledby="modalTitle"
                      aria-describedby="modalDescription"
                      role="dialog">
-                    <button type='button' onClick={this.close} className="btn btn--close-modal" title="Close data panel"
+                    <button type='button' onClick={this.close} className="btn btn-transparent btn--close-modal" title="Close data panel"
                             data-target="close-modal">
                         Done
                     </button>

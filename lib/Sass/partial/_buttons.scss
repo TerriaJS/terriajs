@@ -1,9 +1,13 @@
+@import '../global/icons';
+@import '../global/variables';
+
 $btn-setting-size: 35px;
 
 ::-moz-focus-inner {
   border: 0;
   padding: 0;
 }
+
 // Buttons
 //
 // Style guide: Buttons
@@ -18,19 +22,17 @@ $btn-setting-size: 35px;
 //<button class='btn {{modifier_class}}'> Button </button>
 //
 // Style guide: Buttons.default
-
-.btn{
+//
+.btn {
   font-weight: $font-weight-normal;
   box-shadow: none;
   border: 0;
-  margin: 0;
   text-align: left;
   cursor: pointer;
   line-height: $btn-default-line-height;
   padding: $padding;
-  background-color: transparent;
   @include transition(all 0.05s linear);
-  &:focus, &:hover{
+  &:focus, &:hover {
     box-shadow: none;
     border-color: transparent;
     outline: none;
@@ -38,14 +40,19 @@ $btn-setting-size: 35px;
   }
 }
 
-.btn-small{
+.btn-transparent {
+  background: transparent;
+  margin: 0;
+}
+
+.btn-small {
   padding: 0;
-  &:hover, &:focus{
-    color:$color-primary;
+  &:hover, &:focus {
+    color: $color-primary;
   }
 }
 
-.btn-primary{
+.btn-primary {
   display: block;
   background: $color-primary;
   font-family: 'Open Sans', sans-serif;
@@ -54,12 +61,12 @@ $btn-setting-size: 35px;
   width: 100%;
   box-sizing: border-box;
   border-radius: $radius-small;
-  &:hover{
+  &:hover {
     background: lighten($color-primary, 10%);
   }
 }
 
-.btn-grey{
+.btn-grey {
   padding: 0;
   text-transform: uppercase;
   font-size: $font-size-mini;
@@ -68,10 +75,10 @@ $btn-setting-size: 35px;
   line-height: 4;
   background: rgba(#fff, 0.15);
   border: 1px solid transparent;
-  &:hover{
-      border: $border-style;
+  &:hover {
+    border: $border-style;
   }
-  &.is-active{
+  &.is-active {
     background: $color-primary;
     border-color: $color-primary;
     color: #fff;
@@ -115,15 +122,14 @@ $btn-setting-size: 35px;
 //.btn--stats-bars - icon button
 //.btn--folder -icon button
 //.btn--folder-open - icon
-//.btn-feedback -icon
+//.btn--feedback -icon
 //
 // Markup:
 // <button class='btn {{modifier_class}}'></button>
 //
 // Style guide: Buttons.icon-button
 
-$icons:
-add,
+$icons: add,
 checkbox-checked,
 checkbox-off,
 checkbox-on,
@@ -162,30 +168,23 @@ folder-open,
 feedback;
 
 @each $icon in $icons {
-    .btn--#{$icon}{
-        @extend .icon;
-        @extend .icon-#{$icon};
-        &:before{
-          line-height: $btn-default-line-height;
-        }
+  .btn--#{$icon} {
+    @extend .icon;
+    @extend .icon-#{$icon};
+    &:before {
+      line-height: $btn-default-line-height;
     }
+  }
 }
 
-.btn--toggle{
+.btn--toggle {
   @extend .btn--closed;
-   &.is-open{
+  &.is-open {
     @extend .btn--opened;
   }
 }
 
-.btn--visibility{
-  @extend .btn--invisible;
-  &.is-visible {
-    @extend .btn--visible;
-  }
-}
-
-.btn--add-to-map{
+.btn--add-to-map {
   @extend .btn--add;
   color: $color-primary;
 }
@@ -202,6 +201,7 @@ feedback;
 }
 
 .btn--tertiary {
+  background-color: #FFF;
   color: $modal-text;
   border: 2px solid $modal-text;
   border-radius: 4px;
@@ -233,17 +233,17 @@ feedback;
   border-radius: 2px;
 }
 
-.btn--remove-from-map{
+.btn--remove-from-map {
   @extend .btn--remove;
   color: $color-primary;
 }
 
-.btn--loading-on-map{
+.btn--loading-on-map {
   @extend .btn--loader;
   color: $color-primary;
 }
 
-.btn--close-modal{
+.btn--close-modal {
   @extend .btn--secondary;
 
   font-size: 0.8rem;
@@ -252,14 +252,13 @@ feedback;
   font-weight: bold;
 }
 
-.btn--close-feature{
+.btn--close-feature {
   @extend .btn--close;
   &:hover,
-  &:focus{
+  &:focus {
     color: $color-primary;
   }
 }
-
 
 // Text and icon buttons
 //
@@ -270,16 +269,16 @@ feedback;
 //
 // Style guide: Buttons.icon-text-button
 
-.btn--location-name{
+.btn--location-name {
   @extend .icon;
-  &:before{
+  &:before {
     line-height: $btn-default-line-height;
     padding-right: $padding-small;
     display: inline-block;
   }
 }
 
-.btn--location-name{
+.btn--location-name {
   @extend .icon-location;
 }
 
@@ -292,25 +291,25 @@ feedback;
 //
 // Style guide: Buttons.button--image
 
-.btn--image{
+.btn--image {
   padding: 0;
   position: relative;
   display: block;
   line-height: 1.2;
   border: 1px solid transparent;
-  img{
+  img {
     width: 100%;
     height: auto;
     display: block;
   }
   &:hover,
-  &:focus{
+  &:focus {
     border: $border-style;
   }
-  &.is-active{
+  &.is-active {
     @extend .btn--checkbox-checked;
   }
-  &:before{
+  &:before {
     position: absolute;
     right: 0;
     top: 0;
@@ -325,12 +324,11 @@ feedback;
   }
 }
 
-.kss-modifier__example{
-  .btn.btn-basemap{
+.kss-modifier__example {
+  .btn.btn-basemap {
     max-width: 100px;
   }
 }
-
 
 // Data Catalog Group
 //
@@ -343,14 +341,14 @@ feedback;
 // Style guide: Buttons.data-catalog-group
 //
 
-.btn--catalogue{
+.btn--catalogue {
   padding: 5px 30px 5px $padding*3;
   position: relative;
   width: 100%;
   font-weight: bold;
   @extend .btn--toggle;
 
-  .btn--group-indicator{
+  .btn--group-indicator {
     position: absolute;
     left: 0;
     padding: 5px $padding-small;
@@ -358,21 +356,20 @@ feedback;
     font-size: 1.1rem;
     opacity: 0.5;
   }
-  &:before{
+  &:before {
     position: absolute;
     right: 5px;
     top: 5px;
   }
   &:hover,
-  &:focus{
+  &:focus {
     background: $modal-highlight;
     color: #fff;
-    .btn--group-indicator{
+    .btn--group-indicator {
       color: #fff;
     }
   }
 }
-
 
 // Data Catalog Item
 //
@@ -389,27 +386,26 @@ feedback;
 // Style guide: Buttons.btn--catalog-item
 //
 
-
-.btn--catalog-item{
+.btn--catalog-item {
   @extend %wrap;
   position: relative;
   width: 100%;
   padding: $padding-small $padding*2.2 $padding-small $padding*1.5;
 
-  &:focus,&:hover{
-      color: $modal-highlight;
-      &:before{
-        opacity: 1;
-      }
-  }
-  .is-previewed &{
+  &:focus, &:hover {
     color: $modal-highlight;
-    font-weight: $font-weight-bold;
-    &:before{
+    &:before {
       opacity: 1;
     }
   }
-  &.is-active{
+  .is-previewed & {
+    color: $modal-highlight;
+    font-weight: $font-weight-bold;
+    &:before {
+      opacity: 1;
+    }
+  }
+  &.is-active {
     color: $modal-highlight;
   }
 }
@@ -424,11 +420,11 @@ feedback;
 // Style guide: Buttons.modal-tab
 //
 
-.btn.btn--tab{
+.btn.btn--tab {
   border-right: 1px solid $modal-border;
   font-family: $font-pop;
   background: $modal-bg;
-  color:$modal-text;
+  color: $modal-text;
   font-size: 1rem;
   text-transform: uppercase;
   padding: $padding $padding*2;
@@ -438,12 +434,11 @@ feedback;
     color: $modal-highlight;
 
   }
-  &:hover , &:focus{
+  &:hover, &:focus {
     background: #fff;
     color: $modal-highlight;
   }
 }
-
 
 // Map buttons
 //
@@ -454,7 +449,7 @@ feedback;
 //
 // Style guide: Buttons.map-buttons
 
-.btn--map{
+.btn--map {
   background: $dark;
   text-transform: uppercase;
   font-size: $font-size-small;
@@ -472,9 +467,11 @@ feedback;
     text-decoration: none;
   }
 }
-a.btn--map{
+
+a.btn--map {
   line-height: 20px;
 }
+
 // Search Clear buttons
 //
 // Buttons to clear search
@@ -484,7 +481,7 @@ a.btn--map{
 //
 // Style guide: Buttons.btn--search-clear
 
-.btn--search-clear{
+.btn--search-clear {
   padding: 0;
   position: absolute;
   right: 0;
@@ -494,7 +491,6 @@ a.btn--map{
   @extend .icon-clear;
 }
 
-
 // Search data catalog button
 //
 // Markup:
@@ -502,7 +498,7 @@ a.btn--map{
 //
 // Style guide: Buttons.data-search
 
-.btn--data-search{
+.btn--data-search {
   display: block;
   width: auto;
   color: $color-primary;
@@ -510,19 +506,18 @@ a.btn--map{
   padding-right: $padding*3;
   position: relative;
   @extend .btn--right;
-  &:before{
+  &:before {
     position: absolute;
     top: 0;
     right: 0;
     padding: $padding;
   }
-  i{
+  i {
     color: lighten($color-primary, 10%);
     display: inline-block;
     padding: 0 $padding-small;
   }
 }
-
 
 // Dropdown trigger button
 //
@@ -531,17 +526,15 @@ a.btn--map{
 //
 // Style guide: Buttons.dropdown
 
-.btn--dropdown{
+.btn--dropdown {
   width: 100%;
   border: 2px solid $grey-lighter;
   color: $modal-text;
   &:hover,
-  &:focus{
-    border-color:$color-primary;
+  &:focus {
+    border-color: $color-primary;
   }
 }
-
-
 
 // Dropdown options button
 //
@@ -550,19 +543,16 @@ a.btn--map{
 //
 // Style guide: Buttons.dropdown-options
 
-.btn--dropdown-option{
+.btn--dropdown-option {
   width: 100%;
   padding: $padding-small;
-  &:hover, &:focus{
+  &:hover, &:focus {
     color: $color-primary;
   }
-  &.is-selected{
+  &.is-selected {
     color: $color-primary;
   }
 }
-
-
-
 
 // My data tab
 //
@@ -571,27 +561,26 @@ a.btn--map{
 //
 // Style guide: Buttons.btn--add-data-tab
 
-.btn--add-data-tab{
+.btn--add-data-tab {
   font-size: $font-size-small;
   font-weight: $font-weight-medium;
   width: 100%;
   padding: $padding-small $padding-small $padding-small 0;
   border-bottom: 2px solid $grey;
   color: $grey;
-  &:hover, &:focus, &.is-active{
+  &:hover, &:focus, &.is-active {
     color: $color-primary;
     border-bottom: 2px solid $color-primary;
   }
 }
 
-
-.btn--file-input, .btn--add-url{
+.btn--file-input, .btn--add-url {
   @extend .btn-primary;
 }
 
-.btn--radio{
+.btn--radio {
   padding: $padding-small;
-  &:before{
+  &:before {
     color: $color-primary;
     display: inline-block;
     padding: $padding-small $padding-small $padding-small 0;

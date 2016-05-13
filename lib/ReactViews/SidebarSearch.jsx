@@ -37,7 +37,7 @@ export default React.createClass({
         return (
             <div className='search'>
                 <div className='search__results'>
-                    <ul className="now-viewing__header">
+                    <ul className="now-viewing__header list-reset clearfix">
                         <li><label className='label'>Search Results</label></li>
                         <li><label className='label--badge label'>{searchResultCount}</label></li>
                         <li>
@@ -46,7 +46,7 @@ export default React.createClass({
                     </ul>
                     <For each="search" of={this.props.viewState.searchState.locationSearchProviders}>
                         <div key={search.constructor.name}>
-                            <label className='label label-sub-heading'>{search.name}</label>
+                            <h4 className='label search-result-label'>{search.name}</h4>
                             <SearchHeader searchProvider={search} isWaitingForSearchToStart={this.props.isWaitingForSearchToStart} />
                             <ul className='search-results-items'>
                                 { search.searchResults.map((result, i) => (

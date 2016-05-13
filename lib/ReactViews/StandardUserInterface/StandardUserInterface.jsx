@@ -1,20 +1,21 @@
-import arrayContains from '../Core/arrayContains';
-import Branding from './Branding.jsx';
-import FeatureInfoPanel from './FeatureInfo/FeatureInfoPanel.jsx';
-import MapNavigation from './Map/MapNavigation.jsx';
-import MobileHeader from './Mobile/MobileHeader.jsx';
-import ModalWindow from './ModalWindow.jsx';
-import Notification from './Notification/Notification.jsx';
-import MapInteractionWindow from './Notification/MapInteractionWindow.jsx';
-import ObserveModelMixin from './ObserveModelMixin';
+import arrayContains from '../../Core/arrayContains';
+import Branding from './../SidePanel/Branding.jsx';
+import FeatureInfoPanel from './../FeatureInfo/FeatureInfoPanel.jsx';
+import MapNavigation from './../Map/MapNavigation.jsx';
+import MobileHeader from './../Mobile/MobileHeader.jsx';
+import ModalWindow from './../ModalWindow.jsx';
+import Notification from './../Notification/Notification.jsx';
+import MapInteractionWindow from './../Notification/MapInteractionWindow.jsx';
+import ObserveModelMixin from './../ObserveModelMixin';
 import React from 'react';
-import SidePanel from './SidePanel.jsx';
-import ProgressBar from './ProgressBar.jsx';
-import BottomDock from './BottomDock/BottomDock.jsx';
-import TerriaViewerWrapper from './TerriaViewerWrapper.jsx';
-import DisclaimerHandler from '../ReactViewModels/DisclaimerHandler';
-import FeedbackButton from './FeedbackButton.jsx';
-import FeedbackForm from './FeedbackForm.jsx';
+import WorkBench from './../SidePanel/WorkBench.jsx';
+import ProgressBar from './../ProgressBar.jsx';
+import BottomDock from './../BottomDock/BottomDock.jsx';
+import TerriaViewerWrapper from './../TerriaViewerWrapper.jsx';
+import DisclaimerHandler from '../../ReactViewModels/DisclaimerHandler';
+import Styles from './standard-user-interface.scss';
+import FeedbackButton from '../Feedback/FeedbackButton.jsx';
+import FeedbackForm from '../Feedback/FeedbackForm.jsx';
 
 const StandardUserInterface = React.createClass({
     propTypes: {
@@ -74,21 +75,24 @@ const StandardUserInterface = React.createClass({
 
         return (
             <div>
-                <div className="ui">
-                    <div className="ui-inner">
+                <div className={Styles.ui}>
+                    <div className={Styles.uiInner}>
                         <If condition={!this.props.viewState.isMapFullScreen && !this.props.viewState.hideMapUi()}>
-                            <If condition={this.props.viewState.useSmallScreenInterface}>
-                                <MobileHeader terria={terria} viewState={this.props.viewState} version={this.props.version} />
-                            </If>
-                            <If condition={!this.props.viewState.useSmallScreenInterface}>
-                                <div className='workbench'>
-                                    <Branding terria={terria} version={this.props.version} />
-                                    <SidePanel terria={terria} viewState={this.props.viewState} />
-                                </div>
-                            </If>
+                            <Choose>
+                                <When condition={this.props.viewState.useSmallScreenInterface}>
+                                    <MobileHeader terria={terria} viewState={this.props.viewState}
+                                                  version={this.props.version}/>
+                                </When>
+                                <Otherwise>
+                                    <div className={Styles.sidePanel}>
+                                        <Branding terria={terria} version={this.props.version}/>
+                                        <WorkBench terria={terria} viewState={this.props.viewState}/>
+                                    </div>
+                                </Otherwise>
+                            </Choose>
                         </If>
 
-                        <section className="map">
+                        <section className={Styles.map}>
                             <ProgressBar terria={terria}/>
                             <TerriaViewerWrapper terria={this.props.terria} viewState={this.props.viewState}/>
                             <If condition={!this.props.viewState.hideMapUi()}>
@@ -104,24 +108,22 @@ const StandardUserInterface = React.createClass({
                 </div>
 
                 <If condition={!this.props.viewState.hideMapUi()}>
-                    <div className="map-nav">
-                        <MapNavigation terria={terria}
-                                       viewState={this.props.viewState}
-                                       allBaseMaps={allBaseMaps}
-                        />
-                    </div>
+                    <MapNavigation terria={terria}
+                                   viewState={this.props.viewState}
+                                   allBaseMaps={allBaseMaps}
+                    />
                 </If>
 
-                <div className='notification'>
-                    <Notification viewState={this.props.viewState}/>
-                    <MapInteractionWindow terria={terria}/>
-                </div>
+                <Notification viewState={this.props.viewState}/>
+                <MapInteractionWindow terria={terria}/>
+
                 <div className='feedback'>
                     <If condition={!this.props.viewState.useSmallScreenInterface}>
-                        <FeedbackButton viewState={this.props.viewState} />
+                        <FeedbackButton viewState={this.props.viewState}/>
                     </If>
-                    <FeedbackForm viewState={this.props.viewState} />
+                    <FeedbackForm viewState={this.props.viewState}/>
                 </div>
+
                 <FeatureInfoPanel terria={terria}
                                   viewState={this.props.viewState}
                 />

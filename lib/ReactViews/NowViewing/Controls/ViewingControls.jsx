@@ -6,10 +6,12 @@ import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
 import when from 'terriajs-cesium/Source/ThirdParty/when';
 import Rectangle from 'terriajs-cesium/Source/Core/Rectangle';
 
-import ObserveModelMixin from '../ObserveModelMixin';
-import PickedFeatures from '../../Map/PickedFeatures';
+import ObserveModelMixin from '../../ObserveModelMixin';
+import PickedFeatures from '../../../Map/PickedFeatures';
 
 import React from 'react';
+
+import Styles from './viewing-controls.scss';
 
 const ViewingControls = React.createClass({
     mixins: [ObserveModelMixin],
@@ -65,26 +67,21 @@ const ViewingControls = React.createClass({
 
     render() {
         const nowViewingItem = this.props.nowViewingItem;
-        let zoomButton = null;
-        let infoButton = null;
-        let openFeatureButton = null;
-        if (nowViewingItem.isMappable) {
-            zoomButton = <li className='zoom'><button type='button' onClick={this.zoomTo} title="Zoom to data" className="btn">Zoom To Extent</button></li>;
-        }
-        if (defined(nowViewingItem.tableStructure) && defined(nowViewingItem.tableStructure.sourceFeature)) {
-            openFeatureButton = <li className='open-feature'><button type='button' onClick={this.openFeature} title="Open source feature" className="btn">Zoom To</button></li>;
-        }
-        if (nowViewingItem.showsInfo) {
-            infoButton = <li className='info'><button type='button' onClick={this.previewItem} className='btn' title='info'>About This Data Set</button></li>;
-        }
+
         return (
-            <ul className="now-viewing__item__control">
-                {zoomButton}
-                {openFeatureButton}
-                {infoButton}
-                <li className='remove'>
-                    <button type='button' onClick={this.removeFromMap} title="Remove this data" className="btn">Remove</button>
-                    <i className="icon icon-remove" />
+            <ul className={Styles.control}>
+                <If condition={nowViewingItem.isMappable}>
+                    <li className={Styles.zoom}><button type='button' onClick={this.zoomTo} title="Zoom to data" className={Styles.btn}>Zoom To Extent</button></li>
+                </If>
+                <If condition={nowViewingItem.tableStructure && nowViewingItem.tableStructure.sourceFeature}>
+                    <li className={Styles.openFeature}><button type='button' onClick={this.openFeature} title="Open source feature" className={Styles.btn}>Zoom To</button></li>
+                </If>
+                <If condition={nowViewingItem.showsInfo}>
+                    <li className={Styles.info}><button type='button' onClick={this.previewItem} className={Styles.btn} title='info'>About This Data Set</button></li>
+                </If>
+                <li className={Styles.remove}>
+                    <button type='button' onClick={this.removeFromMap} title="Remove this data" className={Styles.btn}>Remove</button>
+                    <i className={Styles.iconRemove} />
                 </li>
             </ul>
         );

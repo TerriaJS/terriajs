@@ -1,0 +1,18 @@
+@import '../../Sass/global/variables';
+@import '../../Sass/global/mixins';
+
+.branding {
+  height: $sm-logo-height;
+  background: $dark;
+  @include transition(all, 0.5s, linear);
+
+  @media screen and (min-width: $sm) {
+    width: 100%;
+    padding: $padding;
+    height: $logo-height;
+  }
+
+  img {
+    max-height: 100%;
+  }
+}

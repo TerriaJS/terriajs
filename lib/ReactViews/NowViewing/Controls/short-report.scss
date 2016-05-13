@@ -1,0 +1,15 @@
+@import '../../../Sass/global/variables';
+
+.short-report {
+  padding: $padding;
+}
+
+
+.now-viewing-item__short-report {
+  .collapsible-header {
+    color: $color-secondary;
+    .btn--toggle {
+      padding-left: 0;
+    }
+  }
+}

@@ -1,57 +1,58 @@
+@import './variables';
+@import './mixins';
+
 @font-face {
-    font-family: 'icomoon';
-    src: url('~terriajs/wwwroot/fonts/icomoon.eot?7u40jo');
-    src: url('~terriajs/wwwroot/fonts/icomoon.eot?7u40jo#iefix') format('embedded-opentype'),
-    url('~terriajs/wwwroot/fonts/icomoon.ttf?7u40jo') format('truetype'),
-    url('~terriajs/wwwroot/fonts/icomoon.woff?7u40jo') format('woff'),
-    url('~terriajs/wwwroot/fonts/icomoon.svg?7u40jo#icomoon') format('svg');
-    font-weight: normal;
-    font-style: normal;
+  font-family: 'icomoon';
+  src: url('../../../wwwroot/fonts/icomoon.eot?7u40jo');
+  src: url('../../../wwwroot/fonts/icomoon.eot?7u40jo#iefix') format('embedded-opentype'),
+  url('../../../wwwroot/fonts/icomoon.ttf?7u40jo') format('truetype'),
+  url('../../../wwwroot/fonts/icomoon.woff?7u40jo') format('woff'),
+  url('../../../wwwroot/fonts/icomoon.svg?7u40jo#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
 }
 
 [class^="icon-"], [class*=" icon-"] {
-    /* use !important to prevent issues with browser extensions that change fonts */
-    font-family: 'icomoon' !important;
-    speak: none;
-    font-style: normal;
-    font-weight: normal;
-    font-variant: normal;
-    text-transform: none;
-    line-height: 1;
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
 
-    /* Better Font Rendering =========== */
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
-
 
 @-webkit-keyframes fa-spin {
   0% {
     -webkit-transform: rotate(0deg);
-            transform: rotate(0deg);
+    transform: rotate(0deg);
   }
   100% {
     -webkit-transform: rotate(359deg);
-            transform: rotate(359deg);
+    transform: rotate(359deg);
   }
 }
 
 @keyframes fa-spin {
   0% {
     -webkit-transform: rotate(0deg);
-            transform: rotate(0deg);
+    transform: rotate(0deg);
   }
   100% {
     -webkit-transform: rotate(359deg);
-            transform: rotate(359deg);
+    transform: rotate(359deg);
   }
 }
 
-.icon-loader:before{
-    -webkit-animation: fa-spin 2s infinite linear;
-    animation: fa-spin 2s infinite linear;
+.icon-loader:before {
+  -webkit-animation: fa-spin 2s infinite linear;
+  animation: fa-spin 2s infinite linear;
 }
-
 
 // Icons
 //
@@ -103,7 +104,7 @@
 //
 // Style guide: 4.0
 //
-.icon:before{
+.icon:before {
   /* use !important to prevent issues with browser extensions that change fonts */
   font-family: 'icomoon' !important;
   speak: none;
@@ -119,144 +120,187 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
 .icon-dropdown {
   @extend .icon-opened;
   float: right;
   margin-left: $padding-small;
 }
 
-.icon-download{
-  &:before{
+.icon-download {
+  &:before {
     line-height: $btn-default-line-height;
   }
 }
 
 .icon-feedback:before {
-    content: "\e900";
+  content: "\e900";
 }
+
 .icon-backToStart:before {
-    content: "\e901";
+  content: "\e901";
 }
+
 .icon-pause:before {
-    content: "\e902";
+  content: "\e902";
 }
+
 .icon-play:before {
-    content: "\e903";
+  content: "\e903";
 }
+
 .icon-line-chart:before {
-    content: "\e904";
+  content: "\e904";
 }
+
 .icon-twitter:before {
-    content: "\e905";
+  content: "\e905";
 }
+
 .icon-facebook:before {
-    content: "\e906";
+  content: "\e906";
 }
+
 .icon-menu:before {
-    content: "\e907";
+  content: "\e907";
 }
+
 .icon-right:before {
-    content: "\e908";
+  content: "\e908";
 }
+
 .icon-invisible:before {
-    content: "\e909";
+  content: "\e909";
 }
+
 .icon-left:before {
-    content: "\e90a";
+  content: "\e90a";
 }
+
 .icon-checkbox-checked:before {
-    content: "\e90b";
+  content: "\e90b";
 }
+
 .icon-closed:before {
-    content: "\e90c";
+  content: "\e90c";
 }
+
 .icon-search:before {
-    content: "\e90d";
+  content: "\e90d";
 }
+
 .icon-visible:before {
-    content: "\e90e";
+  content: "\e90e";
 }
+
 .icon-share:before {
-    content: "\e90f";
+  content: "\e90f";
 }
+
 .icon-clear:before {
-    content: "\e910";
+  content: "\e910";
 }
+
 .icon-close:before {
-    content: "\e911";
+  content: "\e911";
 }
+
 .icon-add:before {
-    content: "\e912";
+  content: "\e912";
 }
+
 .icon-sphere:before {
-    content: "\e913";
+  content: "\e913";
 }
+
 .icon-opened:before {
-    content: "\e914";
+  content: "\e914";
 }
+
 .icon-expand:before {
-    content: "\e915";
+  content: "\e915";
 }
+
 .icon-loader:before {
-    content: "\e916";
+  content: "\e916";
 }
+
 .icon-location:before {
-    content: "\e917";
+  content: "\e917";
 }
+
 .icon-remove:before {
-    content: "\e918";
+  content: "\e918";
 }
+
 .icon-refresh:before {
-    content: "\e919";
+  content: "\e919";
 }
+
 .icon-decrease:before {
-    content: "\e91a";
+  content: "\e91a";
 }
+
 .icon-increase:before {
-    content: "\e91b";
+  content: "\e91b";
 }
+
 .icon-checkbox-off:before {
-    content: "\e91c";
+  content: "\e91c";
 }
+
 .icon-minus:before {
-    content: "\e91d";
+  content: "\e91d";
 }
+
 .icon-checkbox-on:before {
-    content: "\e91e";
+  content: "\e91e";
 }
+
 .icon-radio-off:before {
-    content: "\e91f";
+  content: "\e91f";
 }
+
 .icon-radio-on:before {
-    content: "\e920";
+  content: "\e920";
 }
+
 .icon-link:before {
-    content: "\e921";
+  content: "\e921";
 }
+
 .icon-download:before {
-    content: "\e922";
+  content: "\e922";
 }
+
 .icon-backward:before {
-    content: "\e923";
+  content: "\e923";
 }
+
 .icon-forward:before {
-    content: "\e924";
+  content: "\e924";
 }
+
 .icon-loop:before {
-    content: "\e925";
+  content: "\e925";
 }
+
 .icon-github:before {
-    content: "\e926";
+  content: "\e926";
 }
+
 .icon-stats-bars:before {
-    content: "\e927";
+  content: "\e927";
 }
+
 .icon-folder-open:before {
-    content: "\e928";
+  content: "\e928";
 }
+
 .icon-folder:before {
-    content: "\e929";
+  content: "\e929";
 }
+
 .icon-geolocation:before {
-    content: "\e92a";
+  content: "\e92a";
 }

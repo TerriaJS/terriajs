@@ -1,0 +1,51 @@
+@import '../../../Sass/global/variables';
+
+.control {
+  composes: list-reset from '../../../Sass/partial/_base.scss';
+  composes: clearfix from '../../../Sass/partial/_base.scss';
+  height: 18px;
+  position: relative;
+
+  li {
+    display: inline-block;
+    position: absolute;
+    //padding: 0 $padding;
+  }
+}
+
+.remove {
+  right: 0;
+
+  .btn {
+    display: inline-block;
+    margin-right: 5px;
+  }
+}
+
+.btn {
+  composes: btn from '../../../Sass/partial/_buttons.scss';
+
+  &.btn {
+    padding: 0;
+    font-size: $font-size-mini;
+  }
+}
+
+.btn-remove {
+  composes: btn;
+}
+
+.info {
+  left: 33%;
+  padding: 0 5%;
+  border-left: 1px solid $border-color;
+  border-right: 1px solid $border-color;
+}
+
+.icon--remove {
+  display: inline-block;
+  vertical-align: -1px;
+
+  composes: icon from '../../../Sass/global/_icons.scss';
+  composes: icon-remove from '../../../Sass/global/_icons.scss';
+}

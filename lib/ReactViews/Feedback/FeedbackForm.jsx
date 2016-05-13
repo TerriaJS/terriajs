@@ -1,8 +1,8 @@
 'use strict';
 
-import ObserveModelMixin from './ObserveModelMixin';
+import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
-import sendFeedback from './../Models/sendFeedback.js';
+import sendFeedback from '../../Models/sendFeedback.js';
 
 const FeedbackForm = React.createClass({
     mixins: [ObserveModelMixin],

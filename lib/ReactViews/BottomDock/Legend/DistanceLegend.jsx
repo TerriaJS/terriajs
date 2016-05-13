@@ -5,7 +5,8 @@ import Cartesian2 from 'terriajs-cesium/Source/Core/Cartesian2';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import EllipsoidGeodesic from 'terriajs-cesium/Source/Core/EllipsoidGeodesic';
 import getTimestamp from 'terriajs-cesium/Source/Core/getTimestamp';
-import ObserveModelMixin from './../ObserveModelMixin';
+import ObserveModelMixin from '../../ObserveModelMixin';
+import Styles from './legend.scss';
 
 const geodesic = new EllipsoidGeodesic();
 
@@ -170,9 +171,9 @@ const DistanceLegend = React.createClass({
         };
 
         const distanceLabel = this.state.distanceLabel ?
-                (<div className='distance-legend'>
+                (<div className={Styles.distanceLegend}>
                   <label>{this.state.distanceLabel}</label>
-                  <div className='bar' style={barStyle}></div>
+                  <div className={Styles.bar} style={barStyle}></div>
                  </div>) : null;
 
         return distanceLabel;

@@ -1,9 +1,10 @@
-
-import NowViewingContainer from './NowViewing/NowViewingContainer.jsx';
-import ObserveModelMixin from './ObserveModelMixin';
+import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
-import SidebarSearch from './SidebarSearch.jsx';
-import SearchBox from './Search/SearchBox.jsx';
+import SidebarSearch from '../SidebarSearch.jsx';
+import SearchBox from '../Search/SearchBox.jsx';
+import NowViewing from '../NowViewing/NowViewing.jsx';
+
+import Styles from './work_bench.scss';
 
 const SidePanel = React.createClass({
     mixins: [ObserveModelMixin],
@@ -11,10 +12,6 @@ const SidePanel = React.createClass({
     propTypes: {
         terria: React.PropTypes.object.isRequired,
         viewState: React.PropTypes.object.isRequired
-    },
-
-    removeAll() {
-        this.props.terria.nowViewing.removeAll();
     },
 
     onAddDataClicked() {
@@ -37,17 +34,17 @@ const SidePanel = React.createClass({
         const searchState = this.props.viewState.searchState;
 
         return (
-            <div className={'workbench__inner'}>
-                <div className='workbench__header'>
+            <div className={Styles.workBench}>
+                <div className={Styles.header}>
                     <SearchBox onSearchTextChanged={this.changeSearchText}
                                onDoSearch={this.search}
                                onFocus={this.startLocationSearch}
                                searchText={searchState.locationSearchText} />
-                    <div className='workbench__add-data'>
-                        <button type='button' onClick={this.onAddDataClicked} className='btn'>Add Data</button>
+                    <div className={Styles.addData}>
+                        <button type='button' onClick={this.onAddDataClicked} className={Styles.button}>Add Data</button>
                     </div>
                 </div>
-                <div className='workbench__body'>
+                <div className={Styles.body}>
                     <Choose>
                         <When
                             condition={searchState.locationSearchText.length > 0 && searchState.showLocationSearch}>
@@ -55,26 +52,10 @@ const SidePanel = React.createClass({
                         </When>
                         <When
                             condition={this.props.terria.nowViewing.items && this.props.terria.nowViewing.items.length > 0}>
-                            <div className="now-viewing">
-                                <ul className="now-viewing__header">
-                                    <li><label className='label'>Data Sets</label></li>
-                                    <li><label
-                                        className='label--badge label'>{this.props.terria.nowViewing.items.length}</label>
-                                    </li>
-                                    <li className="now-viewing__remove">
-                                        <button type='button' onClick={this.removeAll}
-                                                className='btn right btn-remove'>Remove All
-                                        </button>
-                                        <i className="icon icon-remove"/>
-                                    </li>
-                                </ul>
-                                <NowViewingContainer viewState={this.props.viewState}
-                                                     terria={this.props.terria}
-                                />
-                            </div>
+                            <NowViewing viewState={this.props.viewState} terria={this.props.terria} />
                         </When>
                         <Otherwise>
-                            <div className='workbench--empty'>
+                            <div className={Styles.workbenchEmpty}>
                                 <div>Your workbench is empty</div>
                                 <p><strong>Click 'Add Data' above to:</strong></p>
                                 <ul>

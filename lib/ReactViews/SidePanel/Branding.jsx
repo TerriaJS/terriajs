@@ -1,7 +1,8 @@
 'use strict';
 import defined from 'terriajs-cesium/Source/Core/defined';
-import parseCustomHtmlToReact from '../Models/parseCustomHtmlToReact';
+import parseCustomHtmlToReact from '../../Models/parseCustomHtmlToReact';
 import React from 'react';
+import Styles from './branding.scss';
 
 const Branding = React.createClass({
     propTypes: {
@@ -19,12 +20,10 @@ const Branding = React.createClass({
         const version = this.props.version || 'Unknown';
 
         return (
-            <div className='branding'>
-                {brandingHtmlElements.map(element =>
-                    <div className="branding--element">
-                        {parseCustomHtmlToReact(element.replace(/\{\{\s*version\s*\}\}/, version))}
-                    </div>
-                )}
+            <div className={Styles.branding}>
+                <For each="element" of={brandingHtmlElements}>
+                    {parseCustomHtmlToReact(element.replace(/\{\{\s*version\s*\}\}/, version))}
+                </For>
             </div>
         );
     }

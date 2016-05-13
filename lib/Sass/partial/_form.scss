@@ -1,3 +1,5 @@
+@import "../global/_variables.scss";
+
 .field {
   border-style: solid;
   border-width: 1px;
@@ -31,85 +33,6 @@
 // Style guide: 3.0
 //
 
-// Search form
-//
-//.panel-content - Search form in modal window
-//.workbench__inner - Search form in workbench
-//
-// Markup:
-// <div class={{modifier_class}}>
-// <form class='form--search-data' autoComplete='off'>
-//   <label htmlFor='search' class='form__label'> Type keyword to search </label>
-//   <input id='search'
-//          type='text'
-//          name='search'
-//          class='form__search-field field'
-//          placeholder='Search'
-//          autoComplete='off'/>
-//   <button class='btn search-clear'></button>
-// </form>
-// </div>
-//
-// Style guide: 3.1
-//
-
-.form--search-data{
-  font-family: $font-pop;
-  position: relative;
-  .icon{
-    position: absolute;
-    font-size: 1.2rem;
-    color: $grey;
-    opacity: 0.5;
-    &:before{
-        display: block;
-      }
-  }
-
-  input{
-    padding-left: $input-height;
-    width: 100%;
-    @include placeholder{
-      text-transform: uppercase;
-      font-size: $font-size-small;
-      text-align: left;
-      padding-left: calc(50% - 40px);
-      @include transition(all, 0.25s, linear);
-    }
-    &:focus{
-      @include placeholder{
-      padding-left: 0;
-      }
-    }
-  }
-
-  .form__label{
-      @extend .icon;
-      @extend .icon-search;
-      // hide label text but keep it machine visible
-      width: $input-height;
-      height: $input-height;
-      overflow: hidden;
-      &:before{
-        padding: 12px $padding*1.5;
-      }
-    }
-    .btn.search-clear{
-      right: $padding;
-      top: 0;
-      padding: 0;
-      @extend .icon;
-      @extend .icon-clear;
-      &:before{
-        padding: $padding;
-      }
-    }
-
-  .panel-content &{
-    font-family: $font-base;
-    @extend .sm-show;
-  }
-}
 
 // Add data from url form
 //

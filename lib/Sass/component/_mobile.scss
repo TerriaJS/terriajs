@@ -13,17 +13,6 @@
         display: block;
     }
 }
-
-.modal--mobile-bg{
-    background: rgba(#fff, 0.25);
-    height: 100%;
-    overflow-y: auto;
-    &.search{
-        overflow: hidden;
-    }
-}
-
-
 .mobile__ui{
     position: fixed;
     top: 0;
@@ -101,6 +90,10 @@
             font-size: 0.8rem;
         }
     }
+
+    .search__searchClear{
+        display: none;
+    }
 }
 
 .mobile__nav{
@@ -158,40 +151,20 @@
         border: 0;
         color: $color-primary;
     }
+}
 
-    .btn--search-clear{
-        display: none;
-    }
+.form--search-data{
+  padding-right: $padding*6;
+}
 
-    .btn--mobile-search-cancel{
-        position: absolute;
-        right: 0;
-        top: $padding;
-        text-transform: uppercase;
-        font-size: $font-size-mini;
-        font-weight: $font-weight-bold;
-        display: none;
-        color: #3f4854;
-    }
-    .form--search-data{
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        padding: $padding $padding*6 $padding-small $padding-small;
-        background: #fff;
-        display: none;
-        border-bottom: solid 1px #b2b2b2;
-    }
-
-    &.is-open{
-        .form--search-data{
-            display: block;
-        }
-        .btn--mobile-search-cancel{
-            display: block;
-        }
-    }
+.btn--mobile-search-cancel{
+  position: absolute;
+  right: 0;
+  top: $padding;
+  text-transform: uppercase;
+  font-size: $font-size-mini;
+  font-weight: $font-weight-bold;
+  color: #FFF;
 }
 
 .btn--mobile-nav{
@@ -235,6 +208,8 @@
 
 
 .search--mobile{
+    overflow-y: auto;
+    height: 100%;
     label{
         background: #efeeee;
         color: #3f4854;
@@ -244,8 +219,7 @@
 }
 
 .mobile-search-results{
-    height: calc(100vh - #{$mobile-header-height + $input-height + 60px});
-    overflow-y: auto;
+    @extend .list-reset;
     li{
         background: #fff;
         margin-bottom: 2px;
