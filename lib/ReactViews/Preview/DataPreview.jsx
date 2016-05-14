@@ -38,10 +38,6 @@ const DataPreview = React.createClass({
         }
     },
 
-    exitPreview() {
-        this.props.viewState.switchMobileView(this.props.viewState.mobileViewOptions.data);
-    },
-
     sortInfoSections(items) {
         naturalSort.insensitive = true;
         const infoSectionOrder = defaultValue(this.props.previewed.infoSectionOrder, this._defaultInfoSectionOrder);
@@ -85,10 +81,6 @@ const DataPreview = React.createClass({
                             <button className="btn btn--tertiary" onClick={this.backToMap}>Go to the map</button>
                         </div>
                     )}
-                    <button type='button' onClick={this.exitPreview}
-                            className="btn btn--exist-preview"
-                            title='exit preview'>
-                    </button>
                 </div>
         );
     },

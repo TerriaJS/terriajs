@@ -29,8 +29,7 @@
     composes: btn-primary from '../../Sass/partial/_buttons.scss';
     composes: btn--increase from '../../Sass/partial/_buttons.scss';
     position: relative;
-    padding: $padding/2 $padding;
-    padding-left: $padding*3;
+    padding: $padding $padding $padding $padding*3;
     text-transform: uppercase;
     width: auto;
     &:before{
@@ -41,6 +40,13 @@
     }
     text-align: right;
 
+}
+
+.btnSearch{
+    composes: btn--search from '../../Sass/partial/_buttons.scss';
+    margin: 0 $padding;
+    display: block;
+    font-size: 20px;
 }
 
 .btnNowViewing{

@@ -113,11 +113,9 @@ const MobileHeader = React.createClass({
                                         <span className={Styles.nowViewingCount}>{nowViewingLength}</span>
                                     </button>
                                 </If>
-                                <div className="mobile__search">
-                                    <button type='button'
-                                            className='btn btn--mobile-search'
-                                            onClick={this.toggleSearch}/>
-                                </div>
+                                <button type='button'
+                                        className={Styles.btnSearch}
+                                        onClick={this.toggleSearch}/>
                             </div>
                         </When>
                         <Otherwise>
