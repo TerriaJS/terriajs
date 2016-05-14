@@ -4,6 +4,9 @@ import SearchBox from '../Search/SearchBox.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
 import MobileModalWindow from './MobileModalWindow';
 import Branding from '../SidePanel/Branding.jsx';
+import Styles from './mobile_header.scss';
+import classnames from "classnames";
+
 
 const MobileHeader = React.createClass({
     mixins: [ObserveModelMixin],
@@ -76,13 +79,17 @@ const MobileHeader = React.createClass({
         const searchState = this.props.viewState.searchState;
         const nowViewingLength = this.props.terria.nowViewing.items.length;
 
+        let navClassName = classnames(Styles.mobileNav, {
+          [Styles.isOpen]: this.state.menuIsOpen
+        });
+
         return (
-            <div className='mobile__ui'>
-                <div className='mobile__header'>
+            <div className={Styles.ui}>
+                <div className={Styles.mobileHeader}>
                     <Choose>
                         <When
                             condition={this.props.viewState.mobileView !== this.props.viewState.mobileViewOptions.search}>
-                            <div className='group group-left'>
+                            <div className={Styles.groupLeft}>
                                 <button type='button'
                                         onClick={this.toggleMenu}
                                         className='btn btn--menu btn--menu-mobile'
@@ -93,16 +100,16 @@ const MobileHeader = React.createClass({
                                           onClick={this.refresh}
                                 />
                             </div>
-                            <div className='group group-right'>
+                            <div className={Styles.groupRight}>
                                 <button type='button'
-                                        className='btn btn-primary btn--mobile-add'
+                                        className={Styles.btnAdd}
                                         onClick={this.onMobileDataCatalogClicked}>
                                     Data
                                 </button>
                                 <If condition={nowViewingLength > 0}>
-                                    <button type='button' className='btn btn-primary btn--now-viewing'
+                                    <button type='button' className={Styles.btnNowViewing}
                                             onClick={this.onMobileNowViewingClicked}>
-                                        <span className='now-viewing__count'>{nowViewingLength}</span>
+                                        <span className={Styles.nowViewingCount}>{nowViewingLength}</span>
                                     </button>
                                 </If>
                                 <div className="mobile__search">
@@ -126,15 +133,12 @@ const MobileHeader = React.createClass({
                         </Otherwise>
                     </Choose>
                 </div>
-                <ul className={`mobile__nav ${this.state.menuIsOpen ? 'is-open' : ''}`}>
+                <ul className={navClassName}>
                     <li><a href=''>About</a></li>
                     <li><a href=''>Related maps</a></li>
                     <li><a href=''>Support</a></li>
-                    <li>
-                        <button type="button" className='btn btn-reset' onClick={this.onClickFeedback}>Give feedback
-                        </button>
+                    <li><a href='' onClick={this.onClickFeedback}>Give feedback</a>
                     </li>
-                    <li className='social'>Share</li>
                 </ul>
                 <MobileModalWindow terria={this.props.terria}
                                    viewState={this.props.viewState}
