@@ -22,9 +22,10 @@ const MobileModalWindow = React.createClass({
     renderModalContent() {
         switch(this.props.viewState.mobileView) {
         case this.props.viewState.mobileViewOptions.search:
-            return <MobileSearch terria={this.props.terria}
+            return <div className={Styles.modalBg}>
+                    <MobileSearch terria={this.props.terria}
                                   viewState={this.props.viewState}
-                   />;
+                   /></div>;
         case this.props.viewState.mobileViewOptions.data:
             return <div className={Styles.modalBg}>
                     <ul className='data-catalog'>

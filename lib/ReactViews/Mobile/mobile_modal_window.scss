@@ -9,9 +9,9 @@
   left: 0;
   right: 0;
   color: $modal-text;
-  overflow: hidden;
   display: none;
   overflow-x: hidden;
+  overflow-y: hidden;
   width: 100%;
   &.isOpen{
       display: block;
@@ -20,9 +20,10 @@
 
 .modalBg{
   background: #fff;
-  height: 100%;
-  padding: $padding-small;
   overflow-y: auto;
+  overflow-x: hidden;
+  height: 100%;
+  padding: $input-height $padding-small $padding-small $padding-small;
 }
 
 .closeModal{
@@ -30,4 +31,6 @@
   composes: btn-primary from '../../Sass/partial/_buttons.scss';
   text-align: right;
   border-bottom: 2px solid #fff;
+  position: fixed;
+  z-index: 999;
 }
