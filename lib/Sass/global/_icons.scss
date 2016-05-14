@@ -98,6 +98,7 @@
 //.icon-folder-open - icon
 //.icon-folder - icon
 //.icon-feedback - icon
+//.icon-lightbulb - icon
 //
 // Markup:
 // <i class='icon {{modifier_class}}'> </i>
@@ -113,7 +114,7 @@
   font-variant: normal;
   text-transform: none;
   line-height: 1;
-  display: block;
+  display: line-block;
   box-sizing: border-box;
 
   /* Better Font Rendering =========== */
@@ -133,174 +134,136 @@
   }
 }
 
+.icon-lightbulb:before {
+    content: "\e900";
+}
 .icon-feedback:before {
-  content: "\e900";
+    content: "\e901";
 }
-
 .icon-backToStart:before {
-  content: "\e901";
+    content: "\e902";
 }
-
 .icon-pause:before {
-  content: "\e902";
+    content: "\e903";
 }
-
 .icon-play:before {
-  content: "\e903";
+    content: "\e904";
 }
-
 .icon-line-chart:before {
-  content: "\e904";
+    content: "\e905";
 }
-
 .icon-twitter:before {
-  content: "\e905";
+    content: "\e906";
 }
-
 .icon-facebook:before {
-  content: "\e906";
+    content: "\e907";
 }
-
 .icon-menu:before {
-  content: "\e907";
+    content: "\e908";
 }
-
 .icon-right:before {
-  content: "\e908";
+    content: "\e909";
 }
-
 .icon-invisible:before {
-  content: "\e909";
+    content: "\e90a";
 }
-
 .icon-left:before {
-  content: "\e90a";
+    content: "\e90b";
 }
-
 .icon-checkbox-checked:before {
-  content: "\e90b";
+    content: "\e90c";
 }
-
 .icon-closed:before {
-  content: "\e90c";
+    content: "\e90d";
 }
-
 .icon-search:before {
-  content: "\e90d";
+    content: "\e90e";
 }
-
 .icon-visible:before {
-  content: "\e90e";
+    content: "\e90f";
 }
-
 .icon-share:before {
-  content: "\e90f";
+    content: "\e910";
 }
-
 .icon-clear:before {
-  content: "\e910";
+    content: "\e911";
 }
-
 .icon-close:before {
-  content: "\e911";
+    content: "\e912";
 }
-
 .icon-add:before {
-  content: "\e912";
+    content: "\e913";
 }
-
 .icon-sphere:before {
-  content: "\e913";
+    content: "\e914";
 }
-
 .icon-opened:before {
-  content: "\e914";
+    content: "\e915";
 }
-
 .icon-expand:before {
-  content: "\e915";
+    content: "\e916";
 }
-
 .icon-loader:before {
-  content: "\e916";
+    content: "\e917";
 }
-
 .icon-location:before {
-  content: "\e917";
+    content: "\e918";
 }
-
 .icon-remove:before {
-  content: "\e918";
+    content: "\e919";
 }
-
 .icon-refresh:before {
-  content: "\e919";
+    content: "\e91a";
 }
-
 .icon-decrease:before {
-  content: "\e91a";
+    content: "\e91b";
 }
-
 .icon-increase:before {
-  content: "\e91b";
+    content: "\e91c";
 }
-
 .icon-checkbox-off:before {
-  content: "\e91c";
+    content: "\e91d";
 }
-
 .icon-minus:before {
-  content: "\e91d";
+    content: "\e91e";
 }
-
 .icon-checkbox-on:before {
-  content: "\e91e";
+    content: "\e91f";
 }
-
 .icon-radio-off:before {
-  content: "\e91f";
+    content: "\e920";
 }
-
 .icon-radio-on:before {
-  content: "\e920";
+    content: "\e921";
 }
-
 .icon-link:before {
-  content: "\e921";
+    content: "\e922";
 }
-
 .icon-download:before {
-  content: "\e922";
+    content: "\e923";
 }
-
 .icon-backward:before {
-  content: "\e923";
+    content: "\e924";
 }
-
 .icon-forward:before {
-  content: "\e924";
+    content: "\e925";
 }
-
 .icon-loop:before {
-  content: "\e925";
+    content: "\e926";
 }
-
 .icon-github:before {
-  content: "\e926";
+    content: "\e927";
 }
-
 .icon-stats-bars:before {
-  content: "\e927";
+    content: "\e928";
 }
-
 .icon-folder-open:before {
-  content: "\e928";
+    content: "\e929";
 }
-
 .icon-folder:before {
-  content: "\e929";
+    content: "\e92a";
+}
+.icon-geolocation:before {
+    content: "\e92b";
 }
 
-.icon-geolocation:before {
-  content: "\e92a";
-}

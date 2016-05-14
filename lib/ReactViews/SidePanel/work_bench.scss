@@ -8,7 +8,6 @@
   padding: $padding;
   opacity: 0.8;
 }
-
 .header {
     padding: 0 $padding-small;
     border-bottom: 1px solid $overlay;
@@ -38,4 +37,10 @@
     font-size: 18px;
     left: $padding*2;
   }
+}
+
+.iconTip{
+  composes: icon from '../../Sass/global/_icons.scss';
+  composes: icon-lightbulb from '../../Sass/global/_icons.scss';
+  margin-right: $padding-small;
 }
