@@ -1,0 +1,23 @@
+@import '../../Sass/global/variables';
+@import '../../Sass/global/mixins';
+
+.mobileModal{
+  position: fixed;
+  top: $mobile-header-height;
+  bottom: 0;
+  background: rgba(#fff, 0.8);
+  left: 0;
+  right: 0;
+  color: $modal-text;
+  overflow: hidden;
+  padding-bottom: $input-height;
+  display: none;
+  &.isOpen{
+      display: block;
+  }
+}
+
+.modalBg{
+  background: #fff;
+  height: 100%;
+}

@@ -1,21 +1,3 @@
-.modal--mobile{
-    position: fixed;
-    top: $mobile-header-height;
-    bottom: 0;
-    background: rgba(#fff, 0.8);
-    left: 0;
-    right: 0;
-    color: $modal-text;
-    overflow: hidden;
-    padding-bottom: $input-height;
-    display: none;
-    &.is-open{
-        display: block;
-    }
-}
-.modal--mobile{
-    position: relative;
-}
 .mobile__clear{
     position: relative;
 }
@@ -79,20 +61,6 @@
     text-align: center;
     font-size: 1.3rem;
 }
-
-.btn--menu-mobile{
-    font-size: 25px;
-    padding: $padding/2;
-    border-radius: $radius-small;
-    margin: $padding/2;
-    width: 37px;
-    &:hover, &:focus, & {
-        border: 1px solid rgba(#fff, 0.5);
-    }
-}
-
-
-
 .search--mobile{
     overflow-y: auto;
     height: 100%;

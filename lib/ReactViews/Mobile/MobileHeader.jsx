@@ -5,7 +5,7 @@ import ObserveModelMixin from '../ObserveModelMixin';
 import MobileModalWindow from './MobileModalWindow';
 import Branding from '../SidePanel/Branding.jsx';
 import Styles from './mobile_header.scss';
-import classnames from "classnames";
+import classNames from "classnames";
 
 
 const MobileHeader = React.createClass({
@@ -68,7 +68,8 @@ const MobileHeader = React.createClass({
         });
     },
 
-    onClickFeedback() {
+    onClickFeedback(e) {
+        e.preventDefault();
         this.props.viewState.feedbackFormIsVisible = true;
         this.setState({
             menuIsOpen: false
@@ -79,7 +80,7 @@ const MobileHeader = React.createClass({
         const searchState = this.props.viewState.searchState;
         const nowViewingLength = this.props.terria.nowViewing.items.length;
 
-        let navClassName = classnames(Styles.mobileNav, {
+        let navClassName = classNames(Styles.mobileNav, {
           [Styles.isOpen]: this.state.menuIsOpen
         });
 
@@ -92,7 +93,7 @@ const MobileHeader = React.createClass({
                             <div className={Styles.groupLeft}>
                                 <button type='button'
                                         onClick={this.toggleMenu}
-                                        className='btn btn--menu btn--menu-mobile'
+                                        className={Styles.btnMenu}
                                         title='toggle navigation'
                                 />
                                 <Branding terria={this.props.terria}
