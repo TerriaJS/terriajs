@@ -116,9 +116,8 @@
 .btnMenu{
     composes: btn--menu from '../../Sass/partial/_buttons.scss';
     font-size: 25px;
-    padding: $padding/2;
+    padding: 0 $padding-small;
     border-radius: $radius-small;
-    margin: $padding/2;
     width: 37px;
     &:hover, &:focus, & {
         border: 1px solid rgba(#fff, 0.5);
