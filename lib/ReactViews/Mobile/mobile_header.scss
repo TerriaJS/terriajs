@@ -44,7 +44,7 @@
 
 .btnSearch{
     composes: btn--search from '../../Sass/partial/_buttons.scss';
-    margin: 0 $padding;
+    margin: 0 0 0 $padding-small;
     display: block;
     font-size: 20px;
 }
