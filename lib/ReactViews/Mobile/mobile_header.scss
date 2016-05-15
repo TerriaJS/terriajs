@@ -44,9 +44,12 @@
 
 .btnSearch{
     composes: btn--search from '../../Sass/partial/_buttons.scss';
-    margin: 0 0 0 $padding-small;
     display: block;
     font-size: 20px;
+    &:before{
+        display: block;
+        margin: 0 $padding-small 0 $padding;
+    }
 }
 
 .btnNowViewing{
@@ -119,6 +122,7 @@
     padding: 0 $padding-small;
     border-radius: $radius-small;
     width: 37px;
+    margin-right: 3px;
     &:hover, &:focus, & {
         border: 1px solid rgba(#fff, 0.5);
     }
