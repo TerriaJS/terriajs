@@ -1,0 +1,25 @@
+{
+  "catalog": [
+    {
+      "name": "Polling examples",
+      "type": "group",
+      "isOpen": true,
+      "items": [
+        {
+          "name": "Lat/lon changes in 25s",
+          "type": "csv",
+          "url": "build/TerriaJS/test/csv/lat_lon_enum.csv",
+          "pollSeconds": 25,
+          "pollUrl": "build/TerriaJS/test/csv/lat_lon_enum_lots.csv"
+        },
+        {
+          "name": "Melbourne postcodes change in 25s",
+          "type": "csv",
+          "url": "build/TerriaJS/test/csv/postcode_val_enum.csv",
+          "pollSeconds": 25,
+          "pollUrl": "build/TerriaJS/test/csv/postcode_val_enum2.csv"
+        }
+      ]
+    }
+  ]
+}
