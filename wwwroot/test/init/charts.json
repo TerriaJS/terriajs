@@ -11,6 +11,13 @@
           "url": "test/powergen_no_time.csv"
         },
         {
+          "name": "Polled power Stations",
+          "type": "csv",
+          "url": "test/powergen_no_time.csv",
+          "pollSeconds": 30,
+          "pollUrl": "test/powergen_bad.csv"
+        },
+        {
           "name": "Power Stations (with template)",
           "type": "csv",
           "url": "test/powergen_no_time.csv",
