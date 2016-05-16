@@ -112,10 +112,22 @@ const StandardUserInterface = React.createClass({
 
                         <section className={Styles.map}>
                             <ProgressBar terria={terria}/>
-                            <TerriaViewerWrapper terria={this.props.terria} viewState={this.props.viewState}/>
-                            <If condition={!this.props.viewState.hideMapUi()}>
-                                <BottomDock terria={terria} viewState={this.props.viewState}/>
-                            </If>
+                            <div className={Styles.table}>
+                                <div className={Styles.row}>
+                                    <div className={Styles.cell}>
+                                        <TerriaViewerWrapper terria={this.props.terria}
+                                                             viewState={this.props.viewState}/>
+                                    </div>
+                                </div>
+                                <div className={Styles.row}>
+                                    <div className={Styles.cell}>
+                                        <If condition={!this.props.viewState.hideMapUi()}>
+                                            <BottomDock terria={terria} viewState={this.props.viewState}/>
+                                        </If>
+                                    </div>
+                                </div>
+                            </div>
+
                             <If condition={!this.props.viewState.useSmallScreenInterface}>
                                 <main>
                                     <ModalWindow terria={terria} viewState={this.props.viewState}/>

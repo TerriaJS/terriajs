@@ -28,6 +28,7 @@ const BottomDock = React.createClass({
 
     render() {
         const terria = this.props.terria;
+
         return (
             <div className={Styles.bottomDock} ref={element => this.bottomDock = element}>
                 <div className={Styles.locationDistance}>
