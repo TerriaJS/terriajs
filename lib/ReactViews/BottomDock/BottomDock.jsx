@@ -18,19 +18,11 @@ const BottomDock = React.createClass({
         viewState: React.PropTypes.object.isRequired
     },
 
-    componentDidUpdate() {
-        this.onHeightChange();
-    },
-
-    onHeightChange() {
-        setTimeout(() => {this.props.terria.commonViewerProps.shiftDisclaimerPx = this.bottomDock.offsetHeight;}, 0);
-    },
-
     render() {
         const terria = this.props.terria;
 
         return (
-            <div className={Styles.bottomDock} ref={element => this.bottomDock = element}>
+            <div className={Styles.bottomDock}>
                 <div className={Styles.locationDistance}>
                     <LocationBar terria={terria} mouseCoords={this.props.viewState.mouseCoords} />
                     <DistanceLegend terria={terria}/>
