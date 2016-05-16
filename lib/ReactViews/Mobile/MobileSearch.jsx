@@ -5,7 +5,7 @@ import React from 'react';
 import SearchHeader from '../Search/SearchHeader.jsx';
 import SearchResult from '../Search/SearchResult.jsx';
 import DataCatalogMember from '../DataCatalog/DataCatalogMember.jsx';
-import Styles from './mobile_search.scss';
+import Styles from './mobile-search.scss';
 
 // A Location item when doing Bing map searvh or Gazetter search
 const MobileSearch = React.createClass({

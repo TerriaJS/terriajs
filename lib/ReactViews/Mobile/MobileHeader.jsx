@@ -4,7 +4,7 @@ import SearchBox from '../Search/SearchBox.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
 import MobileModalWindow from './MobileModalWindow';
 import Branding from '../SidePanel/Branding.jsx';
-import Styles from './mobile_header.scss';
+import Styles from './mobile-header.scss';
 import classNames from "classnames";
 
 const MobileHeader = React.createClass({

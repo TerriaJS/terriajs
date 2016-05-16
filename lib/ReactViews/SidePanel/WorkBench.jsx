@@ -4,7 +4,7 @@ import SidebarSearch from '../Search/SidebarSearch.jsx';
 import SearchBox from '../Search/SearchBox.jsx';
 import NowViewing from '../NowViewing/NowViewing.jsx';
 
-import Styles from './work_bench.scss';
+import Styles from './work-bench.scss';
 
 const SidePanel = React.createClass({
     mixins: [ObserveModelMixin],

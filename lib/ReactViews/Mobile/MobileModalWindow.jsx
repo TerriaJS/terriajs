@@ -8,7 +8,7 @@ import MobileSearch from './MobileSearch.jsx';
 import NowViewingList from '../NowViewing/NowViewingList.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
-import Styles from './mobile_modal_window.scss';
+import Styles from './mobile-modal-window.scss';
 
 const MobileModalWindow = React.createClass({
     mixins: [ObserveModelMixin],

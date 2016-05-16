@@ -1,5 +1,5 @@
 import React from 'react';
-import Styles from './side_panel_header.scss';
+import Styles from './side-panel-header.scss';
 
 const SidePanelHeader = React.createClass({
     propTypes: {

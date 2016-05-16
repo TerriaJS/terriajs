@@ -6,7 +6,7 @@ import DistanceLegend from './Legend/DistanceLegend.jsx';
 import LocationBar from './Legend/LocationBar.jsx';
 import Timeline from './Timeline/Timeline.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
-import Styles from './bottom_dock.scss';
+import Styles from './bottom-dock.scss';
 
 const BottomDock = React.createClass({
     mixins: [ObserveModelMixin],

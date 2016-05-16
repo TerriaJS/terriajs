@@ -3,7 +3,7 @@
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
 import sendFeedback from '../../Models/sendFeedback.js';
-import Styles from './feedback_form.scss';
+import Styles from './feedback-form.scss';
 import classNames from "classnames";
 
 const FeedbackForm = React.createClass({
