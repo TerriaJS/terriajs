@@ -14,39 +14,28 @@
   }
 }
 
-.map{
+.map {
   position: relative;
   @include transition(left $animation-fast ease-in);
   height: 100vh;
+}
 
-  :global {
-    body.chart-is-visible & {
-      bottom: $chart-height;
-    }
-				//
-    //.blah {
-    //  //height: 100%;
-    //  position: relative;
-    //}
+.map__inner {
+  display: table;
+  width: 100%;
+  height: 100%;
+}
 
-    #cesiumContainer {
-      //position: absolute;
-      //top: 0;
-      //bottom: 0;
-      //left: 0;
-      //right: 0;
-      width: 100%;
-      height: 100%;
-      position: relative;
-    }
+.map__row {
+  display: table-row;
 
-    .cesium-widget canvas {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      touch-action: none;
-    }
+  &:first-child {
+    height: 100%;
   }
+}
+
+.map__cell {
+  display: table-cell;
 }
 
 @media screen and (min-width: $sm) {
@@ -64,24 +53,6 @@
   }
 
   .map {
-    display: table-cell;
-  }
-
-  .table {
-    display: table;
-    width: 100%;
-    height: 100%;
-  }
-
-  .row {
-    display: table-row;
-
-    &:first-child {
-      height: 100%;
-    }
-  }
-
-  .cell {
     display: table-cell;
   }
 }

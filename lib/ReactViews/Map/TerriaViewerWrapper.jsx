@@ -1,7 +1,7 @@
 import React from 'react';
-import TerriaViewer from '../ViewModels/TerriaViewer';
+import TerriaViewer from '../../ViewModels/TerriaViewer';
 import Cartesian2 from 'terriajs-cesium/Source/Core/Cartesian2';
-import classNames from 'classnames';
+import Styles from './terria-viewer-wrapper.scss';
 
 const TerriaViewerWrapper = React.createClass({
     // mixins: [ObserveModelMixin],
@@ -27,7 +27,7 @@ const TerriaViewerWrapper = React.createClass({
 
     componentWillUnmount() {
         this.terriaViewer && this.terriaViewer.destroy();
-        document.getElementById('cesiumContainer').innerHTML = '';
+        this.mapElement.innerHTML = '';
     },
 
     onMouseMove(event) {
@@ -43,8 +43,9 @@ const TerriaViewerWrapper = React.createClass({
     render() {
         return (
             <aside id="cesiumContainer"
-                 ref={element => {this.mapElement = element;}}
-                 onMouseMove={this.onMouseMove}
+                   className={Styles.cesiumContainer}
+                   ref={element => {this.mapElement = element;}}
+                   onMouseMove={this.onMouseMove}
              />
         );
     }

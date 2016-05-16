@@ -11,7 +11,7 @@ import React from 'react';
 import WorkBench from './../SidePanel/WorkBench.jsx';
 import ProgressBar from './../ProgressBar.jsx';
 import BottomDock from './../BottomDock/BottomDock.jsx';
-import TerriaViewerWrapper from './../TerriaViewerWrapper.jsx';
+import TerriaViewerWrapper from '../Map/TerriaViewerWrapper.jsx';
 import DisclaimerHandler from '../../ReactViewModels/DisclaimerHandler';
 import Styles from './standard-user-interface.scss';
 import FeedbackButton from '../Feedback/FeedbackButton.jsx';
@@ -112,15 +112,15 @@ const StandardUserInterface = React.createClass({
 
                         <section className={Styles.map}>
                             <ProgressBar terria={terria}/>
-                            <div className={Styles.table}>
-                                <div className={Styles.row}>
-                                    <div className={Styles.cell}>
+                            <div className={Styles.mapInner}>
+                                <div className={Styles.mapRow}>
+                                    <div className={Styles.mapCell}>
                                         <TerriaViewerWrapper terria={this.props.terria}
                                                              viewState={this.props.viewState}/>
                                     </div>
                                 </div>
-                                <div className={Styles.row}>
-                                    <div className={Styles.cell}>
+                                <div className={Styles.mapRow}>
+                                    <div className={Styles.mapCell}>
                                         <If condition={!this.props.viewState.hideMapUi()}>
                                             <BottomDock terria={terria} viewState={this.props.viewState}/>
                                         </If>
