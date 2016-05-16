@@ -39,7 +39,7 @@ const ChartPanelDownloadButton = React.createClass({
 
     runWorker(newValue) {
         const that = this;
-        if (window.Worker) {
+        if (window.Worker && (typeof Float32Array !== 'undefined')) {
             when(TaskProcessor._canTransferArrayBuffer, function(canTransferArrayBuffer) {
                 if (!canTransferArrayBuffer) {
                     // Don't try it if the browser can't handle transferring typed arrays.
@@ -97,7 +97,9 @@ const ChartPanelDownloadButton = React.createClass({
                 const yColumns = item.tableStructure.columnsByType[VarType.SCALAR].filter(column=>column.isActive);
                 if (yColumns.length > 0) {
                     columns = columns.concat(yColumns);
-                    valueArrays.push(columns.map(column => new Float32Array(column.values)));
+                    // Use typed array if possible so we can pass by pointer to the web worker.
+                    // Create a new array otherwise because if values are a knockout observable, they cannot be serialised for the web worker.
+                    valueArrays.push(columns.map(column => (column.type === VarType.SCALAR ? new Float32Array(column.values) : Array.prototype.slice.call(column.values))));
                     yColumns.forEach(column => {
                         names.push(item.name + ' ' + column.name);
                     });
