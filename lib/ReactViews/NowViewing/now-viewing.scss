@@ -5,7 +5,7 @@
 
 .remove-button {
   composes: btn from '../../Sass/partial/_buttons.scss';
-  composes: btn from '../SidePanel/side_panel_header.scss';
+  composes: btn from '../SidePanel/side-panel-header.scss';
 
   display: inline-block;
   padding-right: 5px;
