@@ -17,7 +17,7 @@
     "d3": "^3.5.14",
     "dateformat": "^1.0.12",
     "dompurify": "^0.7.3",
-    "extract-text-webpack-plugin": "^1.0.1",
+    "extract-text-webpack-plugin": "https://github.com/MicheleBertoli/extract-text-webpack-plugin#order-undefined-error",
     "file-loader": "^0.8.5",
     "gulp": "^3.9.1",
     "hammerjs": "^2.0.6",
