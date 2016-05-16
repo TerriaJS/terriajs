@@ -3,6 +3,8 @@
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
 import sendFeedback from '../../Models/sendFeedback.js';
+import Styles from './feedback_form.scss';
+import classNames from "classnames";
 
 const FeedbackForm = React.createClass({
     mixins: [ObserveModelMixin],
@@ -63,24 +65,27 @@ const FeedbackForm = React.createClass({
     },
 
     render() {
+        let feedbackFormClassNames = classNames(Styles.form, {
+            [Styles.isOpen]: this.props.viewState.feedbackFormIsVisible
+        });
         return (
             <div className='feedback__inner'>
-                <div className={`feedback--form ${this.props.viewState.feedbackFormIsVisible ? 'is-open' : ''}`}>
-                    <div className='form__header'>
-                        <h4 className='form--title'>Feedback</h4>
-                        <button className='btn btn--close' onClick ={this.onDismiss} title='close feedback'></button>
+                <div className={feedbackFormClassNames}>
+                    <div className={Styles.header}>
+                        <h4 className={Styles.title}>Feedback</h4>
+                        <button className={Styles.btnClose} onClick ={this.onDismiss} title='close feedback'></button>
                     </div>
                     <form onSubmit={this.onSubmit}>
-                      <div className="form--description">We would love to hear from you!</div>
+                      <div className={Styles.description}>We would love to hear from you!</div>
                       <label>Your name (optional)</label>
-                      <input type="text" name="name" className="field" value={this.state.name} onChange={this.handleChange}/>
+                      <input type="text" name="name" className={Styles.field} value={this.state.name} onChange={this.handleChange}/>
                       <label>Email address (optional)<br/><em>We can't follow up without it!</em></label>
-                      <input type="text" name="email" className="field" value={this.state.email} onChange={this.handleChange}/>
+                      <input type="text" name="email" className={Styles.field} value={this.state.email} onChange={this.handleChange}/>
                       <label>Comment or question</label>
-                      <textarea className="field" name="comment" value={this.state.comment} onChange={this.handleChange}/>
-                      <div className='form__action'>
-                        <button type="button" className="btn btn-cancel" onClick ={this.onDismiss}>Cancel</button>
-                        <button type="submit" className="btn btn-submit" disabled={this.state.isSending}>{this.state.isSending ? 'Sending...' : 'Send'}</button>
+                      <textarea className={Styles.field} name="comment" value={this.state.comment} onChange={this.handleChange}/>
+                      <div className={Styles.action}>
+                        <button type="button" className={Styles.btnCancel} onClick ={this.onDismiss}>Cancel</button>
+                        <button type="submit" className={Styles.btnSubmit} disabled={this.state.isSending}>{this.state.isSending ? 'Sending...' : 'Send'}</button>
                       </div>
                     </form>
             </div>

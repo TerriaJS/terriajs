@@ -8,6 +8,7 @@ import MobileSearch from './MobileSearch.jsx';
 import NowViewingList from '../NowViewing/NowViewingList.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
+import Styles from './mobile_modal_window.scss';
 
 const MobileModalWindow = React.createClass({
     mixins: [ObserveModelMixin],
@@ -20,11 +21,12 @@ const MobileModalWindow = React.createClass({
     renderModalContent() {
         switch(this.props.viewState.mobileView) {
         case this.props.viewState.mobileViewOptions.search:
-            return <MobileSearch terria={this.props.terria}
+            return <div className={Styles.modalBg}>
+                    <MobileSearch terria={this.props.terria}
                                   viewState={this.props.viewState}
-                   />;
+                   /></div>;
         case this.props.viewState.mobileViewOptions.data:
-            return <div className='modal--mobile-bg'>
+            return <div className={Styles.modalBg}>
                     <ul className='data-catalog'>
                     {this.props.terria.catalog.group.items.filter(defined)
                           .map((item, i) => (
@@ -36,14 +38,14 @@ const MobileModalWindow = React.createClass({
                 </ul>
             </div>;
         case this.props.viewState.mobileViewOptions.preview:
-            return <div className='modal--mobile-bg'>
+            return <div className={Styles.modalBg}>
                         <DataPreview terria={this.props.terria}
                                      viewState={this.props.viewState}
                                      previewed={this.props.viewState.previewedItem}
                         />
                     </div>;
         case this.props.viewState.mobileViewOptions.nowViewing:
-            return <div className='modal--mobile-bg'>
+            return <div className={Styles.modalBg}>
                         <NowViewingList viewState={this.props.viewState}
                                              terria={this.props.terria}
                         />
@@ -67,9 +69,12 @@ const MobileModalWindow = React.createClass({
     },
 
     render() {
-        return <div className={classNames('modal--mobile', {'is-open': this.props.viewState.modalVisible && this.props.viewState.mobileView})}>
+        let modalClass = classNames(Styles.mobileModal, {
+            [Styles.isOpen]: this.props.viewState.modalVisible && this.props.viewState.mobileView
+        });
+        return <div className={modalClass}>
+                    {(this.props.viewState.modalVisible && this.props.viewState.mobileView) && <button type='button' className={Styles.closeModal} onClick={this.onClearMobileUI}>Done</button>}
                     {this.renderModalContent()}
-                    {(this.props.viewState.modalVisible && this.props.viewState.mobileView) && <button type='button' className='btn mobile__clear btn--mobile-clear' onClick={this.onClearMobileUI}>Done</button>}
                 </div>;
     }
 });

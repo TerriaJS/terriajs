@@ -342,16 +342,22 @@ feedback;
 //
 
 .btn--catalogue {
-  padding: 5px 30px 5px $padding*3;
+  padding: $padding $padding*3;
+  @media screen and (min-width: $sm){
+    padding: $padding-small $padding*3;
+  }
+
   position: relative;
   width: 100%;
   font-weight: bold;
   @extend .btn--toggle;
-
   .btn--group-indicator {
     position: absolute;
     left: 0;
-    padding: 5px $padding-small;
+    padding: $padding $padding-small;
+    @media screen and (min-width: $sm){
+      padding: $padding-small;
+    }
     top: 0;
     font-size: 1.1rem;
     opacity: 0.5;
@@ -359,7 +365,11 @@ feedback;
   &:before {
     position: absolute;
     right: 5px;
-    top: 5px;
+    top: $padding;
+    @media screen and (min-width: $sm){
+      top: $padding-small;
+    }
+
   }
   &:hover,
   &:focus {

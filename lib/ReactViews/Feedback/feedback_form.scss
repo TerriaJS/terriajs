@@ -1,0 +1,77 @@
+@import '../../Sass/global/variables';
+@import '../../Sass/global/mixins';
+
+.form{
+    position: fixed;
+    background: #fff;
+    color: $dark;
+    border-radius: $radius-medium;
+    box-shadow: $box-shadow;
+    display: none;
+    @media screen and (min-width : $sm){
+        bottom: 100px;
+        right: $padding*2;
+    }
+    @media screen and (max-width : $sm){
+        right: 0;
+        top: $mobile-header-height;
+        left: 0;
+        max-height: calc(100vh - $mobile-header-height);
+        overflow-y: auto;
+    }
+    &.isOpen{
+        display: block;
+    }
+    form{
+        padding: $padding*2;
+    }
+}
+.header{
+    position: relative;
+    background: $faint-bg;
+    border-bottom: 1px solid $grey-lighter;
+    padding: $padding;
+}
+
+.title{
+    text-align: center;
+    margin: 0;
+}
+
+.description{
+    padding-bottom: 10px;
+}
+
+
+.btnSubmit{
+    composes: btn from '../../Sass/partial/_buttons.scss';
+    background: $dark;
+    color: #fff;
+    margin-left: 10px;
+    border-radius: $radius-medium;
+    padding: $padding-small $padding*2;
+
+}
+.field{
+    composes: field from '../../Sass/partial/_form.scss';
+    margin-bottom: $padding;
+}
+
+.action{
+    text-align: right;
+}
+
+.btnCancel{
+    composes: btn from '../../Sass/partial/_buttons.scss';
+    border: 1px solid $grey;
+    border-radius: $radius-medium;
+    padding: $padding-small $padding*2;
+}
+
+.btnClose{
+    composes: btn from '../../Sass/partial/_buttons.scss';
+    composes: btn--close from '../../Sass/partial/_buttons.scss';
+    position: absolute;
+    right: 0;
+    top: 0;
+}

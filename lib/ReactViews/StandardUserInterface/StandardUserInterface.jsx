@@ -42,21 +42,39 @@ const StandardUserInterface = React.createClass({
             that.acceptDragDropFile();
         };
 
-        window.addEventListener('dragover', this.dragOverListener, false);
+        document.addEventListener('dragover', this.dragOverListener, false);
 
         this.resizeListener = () => {
             this.props.viewState.useSmallScreenInterface = this.shouldUseMobileInterface();
         };
 
         window.addEventListener('resize', this.resizeListener, false);
-        this.resizeListener();
 
+        this.resizeListener();
         this.disclaimerHandler = new DisclaimerHandler(this.props.terria, this.props.viewState);
+    },
+
+    componentDidMount() {
+        this.escKeyListener = (e)=>{
+            let keycode;
+            if (e === null) { // ie
+                keycode = event.keyCode;
+            } else { // mozilla
+                keycode = e.which;
+            }
+            if(keycode === 27) {
+                // close modal
+                this.props.viewState.toggleModal(false);
+                this.props.viewState.dispose();
+            }
+        };
+        window.addEventListener('keydown', this.escKeyListener, true);
     },
 
     componentWillUnmount() {
         window.removeEventListener('resize', this.resizeListener, false);
-        window.removeEventListener('dragover', this.dragOverListener, false);
+        document.removeEventListener('dragover', this.dragOverListener, false);
+        window.removeEventListener('keydown', this.escKeyListener, false);
         this.disclaimerHandler.dispose();
     },
 

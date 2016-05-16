@@ -50,6 +50,10 @@
   composes: field from '../../Sass/partial/_form.scss';
 }
 
+.searchData{
+  position: relative;
+}
+
 input[type=text].searchField {
   padding-left: $input-height;
   width: 100%;

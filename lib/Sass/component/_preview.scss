@@ -19,7 +19,16 @@
 .data-preview__inner{
   height: 100%;
   overflow-y: auto;
-  padding: 0 $padding * 2.5;
+  padding: $padding-small;
+  h3{
+    margin: 0;
+  }
+  @media screen and (min-width: $sm){
+    padding: 0 $padding * 2.5;
+    h3{
+      margin: 0.5em 0;
+    }
+  }
 }
 
 .data-preview{

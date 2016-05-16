@@ -5,6 +5,7 @@ import React from 'react';
 import SearchHeader from '../Search/SearchHeader.jsx';
 import LocationItem from '../LocationItem.jsx';
 import DataCatalogMember from '../DataCatalog/DataCatalogMember.jsx';
+import Styles from './mobile_search.scss';
 
 // A Location item when doing Bing map searvh or Gazetter search
 const MobileSearch = React.createClass({
@@ -21,9 +22,9 @@ const MobileSearch = React.createClass({
                         .filter(search=> search.constructor.name !== 'CatalogItemNameSearchProviderViewModel')
                         .filter(search => search.isSearching || (search.searchResults && search.searchResults.length))
                         .map(search => (<div key={search.constructor.name}>
-                                        <label className='label'>Locations & Official Place Names</label>
+                                        <label className={Styles.label}>Locations & Official Place Names</label>
                                         <SearchHeader searchProvider={search} />
-                                        <ul className='mobile-search-results'>
+                                        <ul className={Styles.results}>
                                             { search.searchResults.map((result, i) => (
                                                 <LocationItem key={i} item={result}/>
                                             ))}
@@ -39,8 +40,8 @@ const MobileSearch = React.createClass({
         const items = search.searchResults.map(result => result.catalogItem);
         if (searchState.unifiedSearchText.length) {
             return <div key={search.constructor.name}>
-                <label className='label'>{search.name}</label>
-                <ul className='mobile-search-results '>
+                <label className={Styles.label}>{search.name}</label>
+                <ul className={Styles.results}>
                     <SearchHeader searchProvider={search}/>
                     {items.filter(defined)
                         .map((item, i) => (
@@ -58,7 +59,7 @@ const MobileSearch = React.createClass({
 
     render() {
         return (
-            <div className="search--mobile">
+            <div className={Styles.mobileSearch}>
                 <div className='search-results--location'>
                     {this.renderLocationResult()}
                 </div>
