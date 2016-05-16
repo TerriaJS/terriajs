@@ -7,7 +7,6 @@ import Branding from '../SidePanel/Branding.jsx';
 import Styles from './mobile_header.scss';
 import classNames from "classnames";
 
-
 const MobileHeader = React.createClass({
     mixins: [ObserveModelMixin],
 
@@ -81,7 +80,7 @@ const MobileHeader = React.createClass({
         const nowViewingLength = this.props.terria.nowViewing.items.length;
 
         let navClassName = classNames(Styles.mobileNav, {
-          [Styles.isOpen]: this.state.menuIsOpen
+            [Styles.isOpen]: this.state.menuIsOpen
         });
 
         return (

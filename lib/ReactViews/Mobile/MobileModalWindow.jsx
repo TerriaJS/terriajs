@@ -10,7 +10,6 @@ import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
 import Styles from './mobile_modal_window.scss';
 
-
 const MobileModalWindow = React.createClass({
     mixins: [ObserveModelMixin],
 
@@ -71,7 +70,7 @@ const MobileModalWindow = React.createClass({
 
     render() {
         let modalClass = classNames(Styles.mobileModal, {
-          [Styles.isOpen]: this.props.viewState.modalVisible && this.props.viewState.mobileView
+            [Styles.isOpen]: this.props.viewState.modalVisible && this.props.viewState.mobileView
         });
         return <div className={modalClass}>
                     {(this.props.viewState.modalVisible && this.props.viewState.mobileView) && <button type='button' className={Styles.closeModal} onClick={this.onClearMobileUI}>Done</button>}

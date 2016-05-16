@@ -7,7 +7,6 @@ import LocationItem from '../LocationItem.jsx';
 import DataCatalogMember from '../DataCatalog/DataCatalogMember.jsx';
 import Styles from './mobile_search.scss';
 
-
 // A Location item when doing Bing map searvh or Gazetter search
 const MobileSearch = React.createClass({
     mixins: [ObserveModelMixin],

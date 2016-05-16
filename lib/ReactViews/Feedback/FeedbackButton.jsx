@@ -4,7 +4,6 @@ import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
 import Styles from './feedback_button.scss';
 
-
 const FeedbackButton = React.createClass({
     mixins: [ObserveModelMixin],
 
