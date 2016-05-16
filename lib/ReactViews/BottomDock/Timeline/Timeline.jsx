@@ -7,7 +7,7 @@ import CesiumTimeline from './CesiumTimeline';
 import ClockRange from 'terriajs-cesium/Source/Core/ClockRange';
 import {formatDateTime} from './DateFormats';
 import JulianDate from 'terriajs-cesium/Source/Core/JulianDate';
-import Styles from '!style-loader!css-loader?modules&sourceMap!sass-loader?sourceMap!./timeline.scss';
+import Styles from './timeline.scss';
 
 const Timeline = React.createClass({
     propTypes: {
@@ -72,9 +72,9 @@ const Timeline = React.createClass({
 
         return (
             <div className={Styles.timeline}>
-                <div className={Styles['text-row']}>
-                    <div className={Styles['text-cell'] + ' ' + Styles.time} title="Current Time (tz info et al)">{this.state.currentTimeString}</div>
-                    <div className={Styles['text-cell']} title="Current Layer">{layerName}</div>
+                <div className={Styles.textRow}>
+                    <div className={Styles.textCell + ' ' + Styles.time} title="Current Time (tz info et al)">{this.state.currentTimeString}</div>
+                    <div className={Styles.textCell} title="Current Layer">{layerName}</div>
                 </div>
                 <div className={Styles.controlsRow}>
                     <TimelineControls clock={terria.clock} analytics={terria.analytics} currentViewer={terria.currentViewer} />

@@ -6,31 +6,59 @@
   vertical-align: middle;
 }
 
-.timelineControl {
+.timeline__control {
+  composes: btn from '../../../Sass/partial/_buttons.scss';
+
   height: 29px;
   width: 34px;
 
-  &.isActive {
+  &.is-active {
     color: $color-primary;
   }
 }
 
-:global {
-  // Normalise the icons.
-  .icon-forward, .icon-backward {
-    &:before {
-      font-size: 20px;
-    }
-  }
+.icon--back-to-start, .icon--forward, .icon--backward, .icon--pause, .icon--play, .icon--refresh {
+  composes: icon from '../../../Sass/global/_icons.scss';
+}
 
-  .icon-refresh:before {
+// Normalise these icons
+.icon--forward, .icon--backward {
+  &:before {
+    font-size: 20px;
+  }
+}
+
+.icon--back-to-start, .icon--play, .icon--pause {
+  width: 10px;
+  margin-left: 7px;
+  display: inline-block;
+  vertical-align: 2px;
+}
+
+.icon--back-to-start {
+  composes: icon-backToStart from '../../../Sass/global/_icons.scss';
+}
+
+.icon--forward {
+  composes: icon-forward from '../../../Sass/global/_icons.scss';
+}
+
+.icon--backward {
+  composes: icon-backward from '../../../Sass/global/_icons.scss';//
+}
+
+.icon--pause {
+  composes: icon-pause from '../../../Sass/global/_icons.scss';
+}
+
+.icon--play {
+  composes: icon-play from '../../../Sass/global/_icons.scss';
+}
+
+.icon--refresh {
+  &:before {
     font-size: 18px;
   }
 
-  .icon-backToStart, .icon-play, .icon-pause {
-    width: 10px;
-    margin-left: 7px;
-    display: inline-block;
-    vertical-align: 2px;
-  }
+  composes: icon-refresh from '../../../Sass/global/_icons.scss';
 }
