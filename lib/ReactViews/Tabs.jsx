@@ -4,7 +4,6 @@ import DataCatalogTab from './DataCatalogTab.jsx';
 import MyDataTab from './MyDataTab.jsx';
 import ObserveModelMixin from './ObserveModelMixin';
 import React from 'react';
-import GettingStartedTab from './GettingStartedTab.jsx';
 import classNames from 'classnames';
 
 const Tabs = React.createClass({
@@ -20,12 +19,6 @@ const Tabs = React.createClass({
         // This can be passed in as prop
         return {
             tabs: this.props.tabs || [
-                {
-                    title: 'getting-started',
-                    panel: <GettingStartedTab terria={this.props.terria}
-                                       viewState={this.props.viewState}
-                    />
-                },
                 {
                     title: 'data-catalogue',
                     panel: <DataCatalogTab terria={this.props.terria}

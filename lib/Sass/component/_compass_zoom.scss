@@ -19,7 +19,7 @@ $compass-width: 71px;
   width: $compass-width;
   height: $compass-width;
   .compass--outer-ring{
-    background-image: url('./TerriaJS/images/compass-outer.svg');
+    background-image: url('~terriajs/wwwroot/images/compass-outer.svg');
     height: $compass-width;
     width: $compass-width;
     border-radius: 50%;
@@ -31,7 +31,7 @@ $compass-width: 71px;
   }
 
   .compass--rotation-marker{
-    background-image: url('./TerriaJS/images/compass-rotation-marker.svg');
+    background-image: url('~terriajs/wwwroot/images/compass-rotation-marker.svg');
     height: $compass-width - 4px;
     width: $compass-width - 4px;
     border-radius: 50%;
@@ -49,7 +49,7 @@ $compass-width: 71px;
     border-radius: 50%;
     display: block;
     margin: 0 auto;
-    background-image: url('./TerriaJS/images/compass-inner.svg');
+    background-image: url('~terriajs/wwwroot/images/compass-inner.svg');
     background-repeat: no-repeat;
     background-size: contain;
   }

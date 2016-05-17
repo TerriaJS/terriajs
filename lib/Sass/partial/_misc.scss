@@ -1,4 +1,5 @@
 .selection-indicator{
+  pointer-events: none;
   position: absolute;
 }
 
@@ -21,10 +22,6 @@
 
 .leaflet-control-container{
   @extend .sm-show;
-}
-
-.no-results{
-  padding: $padding;
 }
 
 input[type=range] {

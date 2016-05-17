@@ -1,3 +1,5 @@
+@import '../global/variables';
+
 label {
   vertical-align: middle;
 }
@@ -9,7 +11,6 @@ label {
 }
 
 .no-results{
-  //temp
   padding: $padding !important;
   margin-bottom: $padding;
 }
@@ -31,7 +32,7 @@ label {
   font-size: $font-size-small;
 }
 
-.label--badge{
+.label-badge{
   text-align: center;
   border: 1px solid;
   border-radius: 2px;
@@ -49,8 +50,8 @@ label {
   position: absolute;
   top: 0;
   left: $padding;
+  //background-image: url('~terriajs/wwwroot/images/preview.svg');
   height: 22px;
-  //background-image: url('./TerriaJS/images/preview.svg');
   background-size: contain;
   background-color: white;
   text-color: #353B43;
@@ -61,6 +62,11 @@ label {
 .label--parameter-editor{
   font-weight: 600;
   line-height: 2;
+}
+
+.search-result-label{
+  margin: 0;
+  padding-bottom: 0;
 }
 
 

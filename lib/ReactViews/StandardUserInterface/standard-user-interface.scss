@@ -1,0 +1,58 @@
+@import '../../Sass/global/variables';
+@import '../../Sass/global/mixins';
+
+.ui {
+  width: 100%;
+}
+
+.sidePanel {
+  font-family: $font-pop;
+  background: $overlay;
+  width: $work-bench-width;
+  h1{
+    margin: 0;
+  }
+}
+
+.map {
+  position: relative;
+  @include transition(left $animation-fast ease-in);
+  height: 100vh;
+}
+
+.map__inner {
+  display: table;
+  width: 100%;
+  height: 100%;
+}
+
+.map__row {
+  display: table-row;
+
+  &:first-child {
+    height: 100%;
+  }
+}
+
+.map__cell {
+  display: table-cell;
+}
+
+@media screen and (min-width: $sm) {
+  .ui {
+    display: table;
+  }
+
+  .uiInner {
+    display: table-row;
+  }
+
+  .sidePanel {
+    display: table-cell;
+    vertical-align: top;
+  }
+
+  .map {
+    display: table-cell;
+  }
+}

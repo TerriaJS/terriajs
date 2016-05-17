@@ -1,0 +1,44 @@
+@import '../../Sass/global/mixins';
+@import '../../Sass/global/variables';
+
+.results {
+  @include transition(all 0.5s ease-in-out);
+}
+
+.heading {
+  margin: 0 0 $padding-small 0;
+}
+
+.provider-result {
+  margin-top: $padding-small;
+}
+
+.items {
+  composes: clearfix from '../../Sass/partial/_base.scss';
+  composes: list-reset from '../../Sass/partial/_base.scss';
+}
+
+.btn--done {
+  composes: btn from '../../Sass/partial/_buttons.scss';
+  composes: btn from '../SidePanel/side-panel-header.scss';
+  composes: btn--tertiary-dark from '../../Sass/partial/_buttons.scss';
+
+  padding: 7px 10px;
+  margin-top: 5px;
+  border-radius: 2px;
+}
+
+// Search data catalog button
+//
+// Markup:
+// <button class="btn btn--data-search">Search <strong> a </strong>in data catalog</button>
+//
+// Style guide: Buttons.data-search
+
+.btn--data-search {
+  composes: btn from '../../Sass/partial/_buttons.scss';
+
+  &:hover .icon--right-arrow {
+    opacity: 1;
+  }
+}

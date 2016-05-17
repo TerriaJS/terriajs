@@ -2,13 +2,10 @@
   visibility: hidden;
   overflow: hidden;
   height: 0;
-  @media screen and (min-width : $sm){
-    padding-left: $padding*2;
-  }
 
   .data-panel-wrapper.is-open &{
       visibility: visible;
-      width: 60%;
+      width: 50%;
       float: right;
       height: 100%;
       overflow: hidden;
@@ -22,11 +19,43 @@
 .data-preview__inner{
   height: 100%;
   overflow-y: auto;
+  padding: $padding-small;
+  h3{
+    margin: 0;
+  }
+  @media screen and (min-width: $sm){
+    padding: 0 $padding * 2.5;
+    h3{
+      margin: 0.5em 0;
+    }
+  }
 }
 
 .data-preview{
   height: 100%;
   overflow: hidden;
+
+  &__add-to-map.btn {
+    display: inline-block;
+    margin-right: 2%;
+    width: 58%;
+  }
+
+  &__back-to-map.btn {
+    display: inline-block;
+    width: 40%;
+  }
+
+  &__placeholder {
+    text-align: center;
+    color: $text-dark;
+    padding-top: 80px;
+    font-size: 1.2rem;
+
+    .btn {
+      font-size: 1rem;
+    }
+  }
 }
 
 .btn.toggle-enable{
@@ -37,20 +66,29 @@
   position: relative;
   .label--preview-badge{
     @extend .sm-show;
+
+    top: 5px;
+    left: 0;
+    padding: 3px 5px 0 5px;
+    height: 16px;
+    font-size: 75%;
   }
 }
 //Preview map
 .terria-preview{
-  height: 250px;
+  height: 150px;
   overflow: hidden;
   position: relative;
   background: #d5d5d5;
   cursor: auto;
-  margin: $padding;
-  border: $padding-small solid #fff;
-  box-shadow: $box-shadow;
+  margin: $padding 0;
+
+  .leaflet-control-attribution {
+    font-size: 6px;
+    background: none;
+  }
 }
 
 .data-preview__info{
-  padding: $padding-small;
+
 }

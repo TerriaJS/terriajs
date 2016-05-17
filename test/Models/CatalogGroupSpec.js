@@ -42,6 +42,146 @@ describe('CatalogGroup', function() {
         });
     });
 
+    it('sorts correctly when there is a number at the beginning', function(done) {
+        group.updateFromJson({
+            type: 'group',
+            items: [
+                {
+                    name: '10 Thing',
+                    type: 'group',
+                    url: 'http://not.valid'
+                },
+                {
+                    name: '2 Thing',
+                    type: 'group',
+                    url: 'http://not.valid.either'
+                },
+                {
+                    name: '1 Thing',
+                    type: 'group',
+                    url: 'http://not.valid.either'
+                }
+            ]
+        }).then(function() {
+            expect(group.items.length).toBe(3);
+            expect(group.items[0].name).toBe('1 Thing');
+            expect(group.items[1].name).toBe('2 Thing');
+            expect(group.items[2].name).toBe('10 Thing');
+        }).then(done).otherwise(done.fail);
+    });
+
+    it('sorts correctly when there is a number at the end', function(done) {
+        group.updateFromJson({
+            type: 'group',
+            items: [
+                {
+                    name: 'Thing 10',
+                    type: 'group',
+                    url: 'http://not.valid'
+                },
+                {
+                    name: 'Thing 2',
+                    type: 'group',
+                    url: 'http://not.valid.either'
+                },
+                {
+                    name: 'Thing 1',
+                    type: 'group',
+                    url: 'http://not.valid.either'
+                }
+            ]
+        }).then(function() {
+            expect(group.items.length).toBe(3);
+            expect(group.items[0].name).toBe('Thing 1');
+            expect(group.items[1].name).toBe('Thing 2');
+            expect(group.items[2].name).toBe('Thing 10');
+        }).then(done).otherwise(done.fail);
+    });
+
+    it('sorts items correctly when there is a number in the middle', function(done) {
+        group.updateFromJson({
+            type: 'group',
+            items: [
+                {
+                    name: 'Thing 10 Yay',
+                    type: 'group',
+                    url: 'http://not.valid'
+                },
+                {
+                    name: 'Thing 2 Yay',
+                    type: 'group',
+                    url: 'http://not.valid.either'
+                },
+                {
+                    name: 'Thing 1 Yay',
+                    type: 'group',
+                    url: 'http://not.valid.either'
+                }
+            ]
+        }).then(function() {
+            expect(group.items.length).toBe(3);
+            expect(group.items[0].name).toBe('Thing 1 Yay');
+            expect(group.items[1].name).toBe('Thing 2 Yay');
+            expect(group.items[2].name).toBe('Thing 10 Yay');
+        }).then(done).otherwise(done.fail);
+    });
+
+    it('sorts numbered items after unnumbered items', function(done) {
+        group.updateFromJson({
+            type: 'group',
+            items: [
+                {
+                    name: 'Thing 1',
+                    type: 'group',
+                    url: 'http://not.valid'
+                },
+                {
+                    name: 'Thing',
+                    type: 'group',
+                    url: 'http://not.valid.either'
+                }
+            ]
+        }).then(function() {
+            expect(group.items.length).toBe(2);
+            expect(group.items[0].name).toBe('Thing');
+            expect(group.items[1].name).toBe('Thing 1');
+        }).then(done).otherwise(done.fail);
+    });
+
+    it('sorts numbers before letters', function(done) {
+        group.updateFromJson({
+            type: 'group',
+            items: [
+                {
+                    name: 'A',
+                    type: 'group',
+                    url: 'http://not.valid'
+                },
+                {
+                    name: '10',
+                    type: 'group',
+                    url: 'http://not.valid.either'
+                },
+                {
+                    name: '2',
+                    type: 'group',
+                    url: 'http://not.valid.either'
+                },
+                {
+                    name: '1',
+                    type: 'group',
+                    url: 'http://not.valid.either'
+                }
+            ]
+        }).then(function() {
+            expect(group.items.length).toBe(4);
+            expect(group.items[0].name).toBe('1');
+            expect(group.items[1].name).toBe('2');
+            expect(group.items[2].name).toBe('10');
+            expect(group.items[3].name).toBe('A');
+        }).then(done).otherwise(done.fail);
+    });
+
     it('does not sort on load if preserveOrder is true', function(done) {
         group.updateFromJson({
             type: 'group',

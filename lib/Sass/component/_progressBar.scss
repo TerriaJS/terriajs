@@ -6,12 +6,6 @@
     background: rgba(255, 255, 255, 0.8);
     height: 5px;
     transition: opacity 200ms linear, width 200ms linear, visibility 400ms linear;
-    @media screen and (min-width : $sm){
-        left: $work-bench-width;
-        .is-full-screen &{
-            left: 0;
-        }
-    }
 }
 
 .map-progress-bar--complete {

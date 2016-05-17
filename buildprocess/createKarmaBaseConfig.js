@@ -17,21 +17,23 @@ module.exports = function(config) {
 
         // list of files / patterns to load in the browser
         files: [
-            'build/TerriaJS-specs.js', {
-                pattern: 'build/Cesium/**',
-                watched: false,
+            'build/TerriaJS-specs.js',
+            {
+                pattern: '**/*',
                 included: false,
-                served: true
+                served: true,
+                watched: false,
+                nocache: true
             }
         ],
 
         proxies: {
-            '/data': 'http://localhost:3002/data',
-            '/images': 'http://localhost:3002/images',
-            '/test': 'http://localhost:3002/test',
-            '/build': 'http://localhost:3002/build'
+            '/data': '/base/data',
+            '/images': '/base/images',
+            '/test': '/base/test',
+            '/build': '/base/build'
         },
-
+        
         // list of files to exclude
         exclude: [],
 

@@ -3,6 +3,7 @@
   background: $modal-bg;
   color: $modal-text;
   border-radius: $radius-small;
+  box-shadow: 0 0 15px 6px rgba(100, 100, 100, 0.3);
   z-index: $front-component-z-index - 1;
   opacity: 0;
   height: 100%;
@@ -37,7 +38,6 @@
   left: 0;
   z-index: $front-component-z-index - 10;
   opacity: 0;
-  background: $modal-overlay;
   @include transition(all 0.3s);
   .is-open.modal-wrapper &{
     opacity: 1;
@@ -50,6 +50,9 @@
   top: 0;
   right: 0;
   @extend .sm-show;
+  &:before {
+    content: '';
+  }
 }
 
 

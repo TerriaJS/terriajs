@@ -143,7 +143,7 @@ const Dropdown = React.createClass({
         return (
             <div className={'dropdown ' + (this.state.isOpen ? 'is-open' : '') + ' ' + (this.props.className || '')}>
                 <button type='button' onClick={this.onButtonClicked}
-                        className={(this.props.buttonClassName || 'btn--dropdown') + ' btn'}
+                        className={(this.props.buttonClassName || 'btn--dropdown') + ' btn btn-transparent'}
                         ref={element => {this.buttonElement = element;}}>
                     {defined(this.props.selected) ? this.props.selected[this.props.textProperty] : this.props.children}
                 </button>
@@ -153,14 +153,14 @@ const Dropdown = React.createClass({
                             <Choose>
                                 <When condition={option.href}>
                                     <a href={option.href}
-                                       className={classNames('btn', 'btn--dropdown-option', {'is-selected': option === this.props.selected})}
+                                       className={classNames('btn', 'btn--dropdown-option btn-transparent', {'is-selected': option === this.props.selected})}
                                        download={option.download}>
                                         {option[this.props.textProperty]}
                                     </a>
                                 </When>
                                 <Otherwise>
                                     <button type='button'
-                                            className={classNames('btn', 'btn--dropdown-option', {'is-selected': option === this.props.selected})}
+                                            className={classNames('btn', 'btn--dropdown-option btn-transparent', {'is-selected': option === this.props.selected})}
                                             onClick={() => this.select(option, index)}>
                                         {option[this.props.textProperty]}
                                     </button>

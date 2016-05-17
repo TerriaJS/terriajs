@@ -12,11 +12,7 @@ const FeatureInfoPanel = React.createClass({
     mixins: [ObserveModelMixin],
     propTypes: {
         terria: React.PropTypes.object.isRequired,
-        viewState: React.PropTypes.object.isRequired,
-        isVisible: React.PropTypes.bool,
-        isCollapsed: React.PropTypes.bool,
-        onClose: React.PropTypes.func,
-        onChangeFeatureInfoPanelIsCollapsed: React.PropTypes.func
+        viewState: React.PropTypes.object.isRequired
     },
 
     componentDidMount() {
@@ -75,31 +71,40 @@ const FeatureInfoPanel = React.createClass({
         });
     },
 
+    close() {
+        this.props.viewState.featureInfoPanelIsVisible = false;
+    },
+
+    toggleCollapsed() {
+        this.props.viewState.featureInfoPanelIsCollapsed = !this.props.viewState.featureInfoPanelIsCollapsed;
+    },
+
     render() {
         const terria = this.props.terria;
-        const componentOnTop = (this.props.viewState.componentOnTop === this.props.viewState.componentOrderOptions.featureInfoPanel);
+        const viewState = this.props.viewState;
+        const componentOnTop = (viewState.componentOnTop === viewState.componentOrderOptions.featureInfoPanel);
         const featureInfoCatalogItems = this.getFeatureInfoCatalogItems();
         return (
             <div
-                className={`feature-info-panel ${componentOnTop ? 'is-top' : ''} ${this.props.isCollapsed ? 'is-collapsed' : ''} ${this.props.isVisible ? 'is-visible' : ''}`}
-                aria-hidden={!this.props.isVisible}
+                className={`feature-info-panel ${componentOnTop ? 'is-top' : ''} ${viewState.featureInfoPanelIsCollapsed ? 'is-collapsed' : ''} ${viewState.featureInfoPanelIsVisible ? 'is-visible' : ''}`}
+                aria-hidden={!viewState.featureInfoPanelIsVisible}
                 onClick={this.bringToFront}>
                 <div className='feature-info-panel__header'>
-                    <button type='button' onClick={ this.props.onChangeFeatureInfoPanelIsCollapsed } className='btn'>
+                    <button type='button' onClick={ this.toggleCollapsed } className='btn'>
                         Feature Information
                     </button>
-                    <button type='button' onClick={ this.props.onClose } className="btn btn--close-feature"
+                    <button type='button' onClick={ this.close } className="btn btn--close-feature"
                             title="Close data panel"/>
                 </div>
                 <ul className="feature-info-panel__body">
                     <Choose>
-                        <When condition={this.props.isCollapsed || !this.props.isVisible}>
+                        <When condition={viewState.featureInfoPanelIsCollapsed || !viewState.featureInfoPanelIsVisible}>
                         </When>
                         <When condition={defined(terria.pickedFeatures) && terria.pickedFeatures.isLoading}>
                             <li><Loader/></li>
                         </When>
                         <When condition={!featureInfoCatalogItems || featureInfoCatalogItems.length === 0}>
-                            <li className='no-results'> No results</li>
+                            <li className='no-results'>No results</li>
                         </When>
                         <Otherwise>
                             {featureInfoCatalogItems}
@@ -143,7 +148,7 @@ function getFeaturesGroupedByCatalogItems(terria) {
 /**
  * Figures out what the catalog item for a feature is.
  *
- * @param nowViewing {@link NowViewing} to look in the items for.
+ * @param nowViewing {@link SidePanelHeader} to look in the items for.
  * @param feature Feature to match
  * @returns {CatalogItem}
  */

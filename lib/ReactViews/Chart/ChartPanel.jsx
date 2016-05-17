@@ -2,13 +2,12 @@
 
 import Chart from './Chart.jsx';
 import ChartData from '../../Charts/ChartData';
-import DataUri from '../../Core/DataUri';
+import ChartPanelDownloadButton from './ChartPanelDownloadButton';
 import ClassList from 'class-list';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import Loader from '../Loader.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
-import TableStructure from '../../Map/TableStructure';
 import VarType from '../../Map/VarType';
 
 const height = 250;
@@ -36,38 +35,9 @@ const ChartPanel = React.createClass({
     },
 
     componentDidUpdate() {
-        this.props.onHeightChange && this.props.onHeightChange();
-    },
-
-    synthesizeTableStructure() {
-        const chartableItems = this.props.terria.catalog.chartableItems;
-        const columnArrays = [];
-        const columnItemNames = [''];  // We will add the catalog item name back into the csv column name.
-        for (let i = chartableItems.length - 1; i >= 0; i--) {
-            const item = chartableItems[i];
-            let columns = [getXColumn(item)];
-            if (item.isEnabled && defined(item.tableStructure)) {
-                if (!defined(columns[0])) {
-                    continue;
-                }
-                const yColumns = item.tableStructure.columnsByType[VarType.SCALAR].filter(column=>column.isActive);
-                if (yColumns.length > 0) {
-                    columns = columns.concat(yColumns);
-                    columnArrays.push(columns);
-                    for (let j = yColumns.length - 1; j >= 0; j--) {
-                        columnItemNames.push(item.name);
-                    }
-                }
-            }
+        if (defined(this.props.onHeightChange)) {
+            this.props.onHeightChange();
         }
-        const result = TableStructure.fromColumnArrays(columnArrays);
-        // Adjust the column names.
-        if (defined(result)) {
-            for (let k = result.columns.length - 1; k >= 0; k--) {
-                result.columns[k].name = columnItemNames[k] + ' ' + result.columns[k].name;
-            }
-        }
-        return result;
     },
 
     bringToFront() {
@@ -145,14 +115,6 @@ const ChartPanel = React.createClass({
                 <Chart data={data} axisLabel={{x: xUnits, y: undefined}} height={height - 34}/>
             );
         }
-        const tableStructureToDownload = this.synthesizeTableStructure();
-        let downloadButton;
-        if (defined(tableStructureToDownload)) {
-            const href = DataUri.make('csv', tableStructureToDownload.toCsvString());
-            // TODO: if you add true to this to forceError, you'll see it never gets raised... why?
-            const checkCompatibility = DataUri.checkCompatibility.bind(null, this.props.terria, href);
-            downloadButton = <a className='btn btn--download' download='chart data.csv' href={href} onClick={checkCompatibility}>Download</a>;
-        }
         return (
             <div className={`chart-panel__holder ${(this.props.viewState && this.props.viewState.componentOnTop === this.props.viewState.componentOrderOptions.chart) ? 'is-top' : ''}`} onClick={this.bringToFront}>
                 <div className="chart-panel__holder__inner">
@@ -160,7 +122,7 @@ const ChartPanel = React.createClass({
                         <div className="chart-panel__body">
                             <div className="chart-panel__header" style={{height: 41, boxSizing: 'border-box'}}>
                                 <label className="chart-panel__section-label label">{loader || 'Charts'}</label>
-                                {downloadButton}
+                                <ChartPanelDownloadButton chartableItems={this.props.terria.catalog.chartableItems} errorEvent={this.props.terria.error} />
                                 <button type='button' className="btn btn--close-chart-panel" onClick={this.closePanel} />
                             </div>
                             <div>

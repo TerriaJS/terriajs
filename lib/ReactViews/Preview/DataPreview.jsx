@@ -33,13 +33,9 @@ const DataPreview = React.createClass({
 
     toggleOnMap() {
         this.props.previewed.toggleEnabled();
-        // if(this.props.viewState.previewedItem.isEnabled === true) {
-        //     this.props.viewState.modalVisible = false;
-        // }
-    },
-
-    exitPreview() {
-        this.props.viewState.switchMobileView(this.props.viewState.mobileViewOptions.data);
+        if (this.props.viewState.previewedItem.isEnabled === true && this.props.viewState.closeModalAfterAdd) {
+            this.props.viewState.modalVisible = false;
+        }
     },
 
     sortInfoSections(items) {
@@ -60,6 +56,10 @@ const DataPreview = React.createClass({
         return items;
     },
 
+    backToMap() {
+        this.props.viewState.modalVisible = false;
+    },
+
     renderPreview(previewed) {
         if(previewed.isMappable) {
             return <DataPreviewMap terria={this.props.terria}
@@ -74,11 +74,13 @@ const DataPreview = React.createClass({
         return (
                 <div className='data-preview'>
                     {previewed && this.renderActions(previewed)}
-                    {!previewed && <h3>Select a dataset to see a preview</h3>}
-                    <button type='button' onClick={this.exitPreview}
-                            className="btn btn--exist-preview"
-                            title='exit preview'>
-                    </button>
+                    {!previewed && (
+                        <div className='data-preview__inner data-preview__placeholder'>
+                            <p>Select a dataset to see a preview</p>
+                            <p>- OR -</p>
+                            <button className="btn btn--tertiary" onClick={this.backToMap}>Go to the map</button>
+                        </div>
+                    )}
                 </div>
         );
     },
@@ -92,15 +94,18 @@ const DataPreview = React.createClass({
     renderActions(previewed) {
         const metadataItem = defined(previewed.nowViewingCatalogItem) ? previewed.nowViewingCatalogItem : previewed;
         if (previewed.isMappable) {
-            return (<div className='data-preview__inner'>
-                        {this.renderPreview(previewed)}
-                        <div className='data-preview__info'>
+            return (
+                <div className='data-preview__inner'>
+                    <h3>{previewed.name}</h3>
+                    {this.renderPreview(previewed)}
+                    <div className='data-preview__info'>
                         <button type='button' onClick={this.toggleOnMap}
-                                className="btn toggle-enable"
-                                title={previewed.isEnabled ? 'remove from map' : 'add to map'}>
-                            {previewed.isEnabled ? 'Remove from map' : 'Add to map'}
+                                className="btn toggle-enable data-preview__add-to-map">
+                            {previewed.isEnabled ? 'Remove from the map' : 'Add to the map'}
                         </button>
-                        <h3>{previewed.name}</h3>
+                        <button type='button' className="btn btn--tertiary data-preview__back-to-map" onClick={this.backToMap}>
+                            Back to the map
+                        </button>
                         <div className="data-info url">
                             {this.renderDescription(metadataItem)}
                             {this.renderSections(metadataItem)}
@@ -108,12 +113,16 @@ const DataPreview = React.createClass({
                             {this.renderUrl(metadataItem)}
                         </div>
                     </div>
-                    </div>);
+                </div>
+            );
         } else if(typeof previewed.invoke !== 'undefined') {
-            return <InvokeFunction previewed={previewed}
+            return (
+                <div className='data-preview__inner'>
+                    <InvokeFunction previewed={previewed}
                                    terria={this.props.terria}
                                    viewState={this.props.viewState}
-                    />;
+                    />
+                </div>);
         }
         return null;
     },

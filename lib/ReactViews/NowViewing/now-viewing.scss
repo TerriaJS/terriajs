@@ -1,0 +1,19 @@
+@import '../../Sass/global/variables';
+@import '../../Sass/global/mixins';
+
+.now-viewing{}
+
+.remove-button {
+  composes: btn from '../../Sass/partial/_buttons.scss';
+  composes: btn from '../SidePanel/side-panel-header.scss';
+
+  display: inline-block;
+  padding-right: 5px;
+}
+
+.icon-remove {
+  composes: icon from '../../Sass/global/_icons.scss';
+  composes: icon-remove from '../../Sass/global/_icons.scss';
+
+  display: inline-block;
+}

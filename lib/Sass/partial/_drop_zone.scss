@@ -1,25 +1,27 @@
+@import '../global/_variables.scss';
+@import '../global/_mixins.scss';
 
-.drop-zone{
+.drop-zone {
   background: transparent;
   @include transition(height 0.25s ease-in-out);
-  &.is-active{
-  background: #fff;
-  background: -moz-radial-gradient(center, ellipse cover, rgba($dark-lighter, 0.7) 0%, rgba($dark, 1) 100%);
-  background: -webkit-radial-gradient(center, ellipse cover, rgba($dark-lighter, 0.7) 0%,rgba($dark, 1) 100%);
-  background: radial-gradient(ellipse at center, rgba($dark-lighter, 0.7) 0%,rgba($dark, 1) 100%);
-  border: 2px dashed #fff;
+  &.is-active {
+    background: #fff;
+    background: -moz-radial-gradient(center, ellipse cover, rgba($dark-lighter, 0.7) 0%, rgba($dark, 1) 100%);
+    background: -webkit-radial-gradient(center, ellipse cover, rgba($dark-lighter, 0.7) 0%, rgba($dark, 1) 100%);
+    background: radial-gradient(ellipse at center, rgba($dark-lighter, 0.7) 0%, rgba($dark, 1) 100%);
+    border: 2px dashed #fff;
   }
 }
 
-.my-data{
-  .drop-zone{
+.my-data {
+  .drop-zone {
     position: absolute;
     opacity: 0;
     z-index: -1;
-    .drop-zone-inner{
+    .drop-zone-inner {
       display: none;
     }
-    &.is-active{
+    &.is-active {
       @include transition(opacity, 0.2s);
       opacity: 1;
       display: block;
@@ -31,35 +33,35 @@
       height: 100vh;
       z-index: 99999;
       border: 0;
-      .drop-zone-inner{
+      .drop-zone-inner {
         display: block;
       }
-      @media screen and (min-width : $md){
+      @media screen and (min-width: $md) {
         left: -$work-bench-width - 50px;
       }
     }
   }
 
-  .drop-zone-inner{
+  .drop-zone-inner {
     color: #fff;
     color: rgba(#fff, 0.9);
     text-align: center;
     font-family: $font-pop;
-    .dnd-heading{
+    .dnd-heading {
       text-transform: uppercase;
       margin-top: 0.5em;
     }
-    div{
+    div {
       font-size: 1.5rem;
     }
     @include vertical-align();
-    &:before{
+    &:before {
       content: '';
       display: block;
       height: 80px;
       width: 70px;
       margin: 0 auto;
-      background-image: url('./TerriaJS/images/drag-drop.svg');
+      background-image: url('../../../wwwroot/images/drag-drop.svg');
       background-size: contain;
       background-repeat: no-repeat;
     }

@@ -1,4 +1,11 @@
 .notification-wrapper{
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: $front-component-z-index +10;
+
   display: none;
   align-items: center;
   justify-content: center;
@@ -28,7 +35,7 @@
 // Style guide: Component.notification
 
 .notification-wrapper{
-  background: rgba(#000, 0.8);
+  //background: rgba(#000, 0.8);
 }
 .notification{
   border-radius: $radius-small;

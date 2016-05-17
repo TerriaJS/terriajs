@@ -35,6 +35,12 @@ $chart-darker: darken($dark, 8%);
   font-size: 120%;
 }
 
+.units-label-shadow {
+    stroke: $chart-darker;
+    stroke-width: 2.5px;
+    opacity: 0.9;
+}
+
 .line-chart text {
   fill: $chart-text-color;
   font-family: monospace;
@@ -61,19 +67,11 @@ $chart-darker: darken($dark, 8%);
 }
 
 .chart-panel__holder {
-  position: fixed;
   left: 0;
   right: 0;
-  bottom: 0;
   z-index: 10;
   background: $dark;
   padding-bottom: 13px;
-  @media screen and (min-width: $sm) {
-    left: $work-bench-width;
-    .is-full-screen & {
-      left: 0;
-    }
-  }
 }
 
 .chart-panel__header {
