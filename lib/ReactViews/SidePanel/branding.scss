@@ -1,9 +1,10 @@
-@import '../../Sass/global/variables';
+@import '~terriajs-variables';
 @import '../../Sass/global/mixins';
 
 .branding {
   height: $sm-logo-height;
   background: $dark;
+  overflow: hidden;
   @include transition(all, 0.5s, linear);
 
   @media screen and (min-width: $sm) {

@@ -249,6 +249,10 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
         });
     }
 
+    config.resolve = config.resolve || {};
+    config.resolve.alias = config.resolve.alias || {};
+    config.resolve.alias['terriajs-variables'] = config.resolve.alias['terriajs-variables'] || require.resolve('../lib/Sass/global/_variables.scss');
+
     return config;
 }
 

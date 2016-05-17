@@ -1,5 +1,5 @@
 @import '../../Sass/global/mixins';
-@import '../../Sass/global/variables';
+@import '~terriajs-variables';
 
 .results {
   @include transition(all 0.5s ease-in-out);

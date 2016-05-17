@@ -1,4 +1,4 @@
-@import '../../../Sass/global/variables';
+@import '~terriajs-variables';
 
 .control {
   composes: list-reset from '../../../Sass/partial/_base.scss';
