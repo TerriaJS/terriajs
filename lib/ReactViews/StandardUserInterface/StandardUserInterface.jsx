@@ -13,9 +13,12 @@ import ProgressBar from './../ProgressBar.jsx';
 import BottomDock from './../BottomDock/BottomDock.jsx';
 import TerriaViewerWrapper from '../Map/TerriaViewerWrapper.jsx';
 import DisclaimerHandler from '../../ReactViewModels/DisclaimerHandler';
-import Styles from './standard-user-interface.scss';
-import FeedbackButton from '../Feedback/FeedbackButton.jsx';
 import FeedbackForm from '../Feedback/FeedbackForm.jsx';
+import FeedbackButton from '../Feedback/FeedbackButton.jsx';
+import DistanceLegend from '../Map/Legend/DistanceLegend.jsx';
+import LocationBar from '../Map/Legend/LocationBar.jsx';
+
+import Styles from './standard-user-interface.scss';
 
 const StandardUserInterface = React.createClass({
     propTypes: {
@@ -117,15 +120,25 @@ const StandardUserInterface = React.createClass({
                                     <div className={Styles.mapCell}>
                                         <TerriaViewerWrapper terria={this.props.terria}
                                                              viewState={this.props.viewState}/>
-                                    </div>
-                                </div>
-                                <div className={Styles.mapRow}>
-                                    <div className={Styles.mapCell}>
-                                        <If condition={!this.props.viewState.hideMapUi()}>
-                                            <BottomDock terria={terria} viewState={this.props.viewState}/>
+                                        <div className={Styles.locationDistance}>
+                                            <LocationBar terria={terria}
+                                                         mouseCoords={this.props.viewState.mouseCoords}/>
+                                            <DistanceLegend terria={terria}/>
+                                        </div>
+                                        <If condition={!this.props.viewState.useSmallScreenInterface}>
+                                            <div className={Styles.feedbackButtonWrapper}>
+                                                <FeedbackButton viewState={this.props.viewState}/>
+                                            </div>
                                         </If>
                                     </div>
                                 </div>
+                                <If condition={!this.props.viewState.hideMapUi()}>
+                                    <div className={Styles.mapRow}>
+                                        <div className={Styles.mapCell}>
+                                            <BottomDock terria={terria} viewState={this.props.viewState}/>
+                                        </div>
+                                    </div>
+                                </If>
                             </div>
 
                             <If condition={!this.props.viewState.useSmallScreenInterface}>
@@ -147,12 +160,9 @@ const StandardUserInterface = React.createClass({
                 <Notification viewState={this.props.viewState}/>
                 <MapInteractionWindow terria={terria}/>
 
-                <div className='feedback'>
-                    <If condition={!this.props.viewState.useSmallScreenInterface}>
-                        <FeedbackButton viewState={this.props.viewState}/>
-                    </If>
+                <aside className={Styles.feedback}>
                     <FeedbackForm viewState={this.props.viewState}/>
-                </div>
+                </aside>
 
                 <FeatureInfoPanel terria={terria}
                                   viewState={this.props.viewState}

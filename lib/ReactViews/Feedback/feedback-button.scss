@@ -2,9 +2,6 @@
 @import '../../Sass/global/mixins';
 
 .feedback{
-    position: fixed;
-    right: $padding*2;
-    bottom: 100px;
     background: #fff;
     color: $dark;
     border-radius: 20px;
