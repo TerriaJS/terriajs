@@ -97,7 +97,7 @@ $compass-width: 71px;
     border-radius: 50%;
     display: block;
     background: #fff;
-    padding: $ring-width/2;
+    padding: ($ring-width/2 + 1) $ring-width/2 ($ring-width/2 - 3px) $ring-width/2;
     color: $dark;
     &:before{
       font-size: 25px;
