@@ -1,0 +1,20 @@
+@import '~terriajs-variables';
+
+.now-viewing-content {
+  composes: list-reset from '../../Sass/partial/_base.scss';
+}
+
+.is-active {
+  composes: is-active from '../../Sass/partial/_drop_zone.scss';
+
+  &.drop-zone {
+    height: calc(#{$input-height} + #{$padding});
+  }
+}
+
+.drop-zone {
+  composes: drop-zone from '../../Sass/partial/_drop_zone.scss';
+  composes: clearfix from '../../Sass/partial/_base.scss';
+
+  height: 1px;
+}

@@ -10,6 +10,9 @@
                 <!-- ko if: !hasChildren -->
                     <div class="data-catalog-icon-holder">
                         <div class="data-catalog-arrow"></div>
+                        <!-- ko if: isActive && color -->
+                            <div class="data-catalog-swatch" data-bind="style: {'background': color}"></div>
+                        <!-- /ko -->
                     </div>
                 <!-- /ko -->
                 <!-- ko if: isSelectable -->
@@ -68,6 +71,12 @@
                     <div class="now-viewing-section-contents">
                         <span data-bind="text: typeof loadingMessage !== 'undefined' ? loadingMessage : 'Loading...'"></span>
                         <img data-bind="attr: { src: terria.baseUrl + 'images/ajax-loader.gif' }" width="16" height="16" />
+                    </div>
+                </div>
+
+                <div class="now-viewing-section" data-bind="visible: typeof isFailed !== 'undefined' && isFailed">
+                    <div class="now-viewing-section-contents">
+                        <span data-bind="text: typeof failedMessage !== 'undefined' ? failedMessage : 'Failed.'"></span>
                     </div>
                 </div>
 

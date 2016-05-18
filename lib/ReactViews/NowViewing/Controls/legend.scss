@@ -1,0 +1,33 @@
+@import '~terriajs-variables';
+
+.legend {
+  composes: clearfix from '../../../Sass/partial/_base.scss';
+  composes: list-reset from '../../../Sass/partial/_base.scss';
+  li {
+    display: block;
+  }
+}
+
+.legend__inner {
+  a, img {
+    display: block;
+  }
+  padding: $padding 0 0 0;
+}
+
+.legend--svg {
+  text {
+    fill: #fff;
+  }
+  :global .tick-mark {
+    stroke: #fff;
+  }
+  svg {
+    width: 100%;
+    display: block;
+    > rect {
+      width: 100%;
+      fill: rgba(#fff, 0.15);
+    }
+  }
+}

@@ -1,0 +1,22 @@
+// Loader
+//
+// Markup:
+// <div class='loader'>Loading</div>
+//
+// Style guide: Loader
+//
+.loader{
+  padding: $padding $padding $padding $padding*3 !important;
+  position: relative;
+  display: inline-block;
+  @extend .icon;
+  @extend .icon-loader;
+  &:before{
+    position: absolute;
+    left: $padding;
+    top: $padding;
+    font-size: 1rem;
+    line-height: 1.3;
+  }
+}
+

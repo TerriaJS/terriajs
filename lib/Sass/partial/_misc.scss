@@ -1,0 +1,66 @@
+.selection-indicator{
+  pointer-events: none;
+  position: absolute;
+}
+
+.cesium-widget-credits{
+  position: absolute;
+  bottom: 0;
+  left: 1rem;
+  font-size: 0.5rem;
+  color: rgba(#fff, 0.8);
+  @extend .sm-show;
+}
+
+.cesium-credit-image{
+  display: none;
+}
+
+.leaflet-control-container{
+  @extend .sm-show;
+}
+
+input[type=range] {
+    /*removes default webkit styles*/
+    -webkit-appearance: none;
+
+    /*fix for FF unable to apply focus style bug */
+    border: 0px solid white;
+
+    /*required for proper track sizing in FF*/
+    width: 100px;
+}
+input[type=range]::-webkit-slider-runnable-track {
+    width: 100px;
+    height: 1px;
+    background: #ddd;
+    border: none;
+    border-radius: 3px;
+    margin-top: -3px;
+}
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    border: none;
+    height: 12px;
+    width: 12px;
+    border-radius: 50%;
+    background: #fff;
+    margin-top: -6px;
+}
+input[type=range]:focus {
+    outline: none;
+}
+input[type=range]:focus::-webkit-slider-runnable-track {
+    background: #ccc;
+}
+
+.autocomplete{
+  @extend .list-reset;
+  max-height: 200px;
+  overflow-y: auto;
+  &.is-hidden{
+    display: none;
+  }
+}
+
+

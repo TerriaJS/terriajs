@@ -1,0 +1,10 @@
+
+<div>
+    <div class="parameter-editor-table-left">
+        <label data-bind="text: parameter.name, attr: { for: elementID, title: parameter.description }"></label>
+        <span data-bind="visible: parameter.isRequired" title="Required">*</span>
+    </div>
+    <div class="parameter-editor-table-right">
+        <input type="datetime-local" placeholder="YYYY-MM-DDTHH:mm:ss.sss" data-bind="value: value, attr: { id: elementID, title: parameter.description }" size="30" />
+    </div>
+</div>

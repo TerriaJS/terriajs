@@ -1,0 +1,130 @@
+@import '~terriajs-variables';
+@import '../../Sass/global/mixins';
+.ui{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: auto;
+    z-index: 13;
+    @media screen and (min-width : $sm){
+        left: -99999px;
+    }
+}
+
+.mobileHeader{
+    composes: sm-hide from '../../Sass/partial/_base.scss';
+    composes: clearfix from '../../Sass/partial/_base.scss';
+    justify-content: space-between;
+    font-family: $font-pop;
+    width: 100%;
+    background: $dark;
+    padding: $padding-small;
+    height: auto;
+    padding-top: $padding;
+}
+
+.btnAdd{
+    composes: btn from '../../Sass/partial/_buttons.scss';
+    composes: btn-primary from '../../Sass/partial/_buttons.scss';
+    composes: btn--increase from '../../Sass/partial/_buttons.scss';
+    position: relative;
+    padding: $padding $padding $padding $padding*3;
+    text-transform: uppercase;
+    width: auto;
+    &:before{
+        position: absolute;
+        top: $padding;
+        left: $padding/2;
+        font-size: 1.5rem;
+    }
+    text-align: right;
+
+}
+
+.btnSearch{
+    composes: btn--search from '../../Sass/partial/_buttons.scss';
+    display: block;
+    font-size: 20px;
+    &:before{
+        display: block;
+        margin: 0 $padding-small 0 $padding;
+    }
+}
+
+.btnNowViewing{
+    composes: btn from '../../Sass/partial/_buttons.scss';
+    composes: btn-primary from '../../Sass/partial/_buttons.scss';
+    composes: btn--visible from '../../Sass/partial/_buttons.scss';
+    margin: 0 $padding-small;
+    padding: $padding-small;
+    padding-right: $padding;
+    position: relative;
+    text-transform: uppercase;
+    width: 50px;
+    &:before{
+        font-size: 1.5rem;
+    }
+    .nowViewingCount{
+        position: absolute;
+        top: $padding-small;
+        right: $padding-small;
+        font-size: 0.8rem;
+    }
+}
+
+.groupLeft{
+    composes: flex from '../../Sass/partial/_base.scss';
+    composes: col-7 from '../../Sass/partial/_base.scss';
+    float: left;
+}
+
+.groupRight{
+    composes: flex from '../../Sass/partial/_base.scss';
+    composes: col-5 from '../../Sass/partial/_base.scss';
+    float: left;
+    justify-content: flex-end;
+}
+
+.mobileNav{
+        composes: list-reset from '../../Sass/partial/_base.scss';
+        display: none;
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: $mobile-header-height;
+        background:$mobile-main-bg;
+        color: $mobile-text;
+        text-align: left;
+        li{
+            padding: 0 $padding-small*3;
+            a, .a {
+                padding: $padding-small*3 0;
+                color: $text-dark;
+                display: block;
+                border-bottom: 1px solid $grey-lighter;
+                font-weight: 400;
+                &:hover,
+                &:focus{
+                    color: $color-primary;
+                    text-decoration: underline;
+                }
+            }
+        }
+    &.isOpen{
+        display: block;
+    }
+}
+
+.btnMenu{
+    composes: btn--menu from '../../Sass/partial/_buttons.scss';
+    font-size: 25px;
+    padding: 0 $padding-small;
+    border-radius: $radius-small;
+    width: 37px;
+    margin-right: 3px;
+    &:hover, &:focus, & {
+        border: 1px solid rgba(#fff, 0.5);
+    }
+}
+

@@ -1,0 +1,19 @@
+<script type="text/html" id="chart-inject-template">
+    <div class="chart-inject"></div>
+</script>
+
+<div class="chart-holder">
+	<!-- ko if: isLoading -->
+	<div class="chart-loading">
+		Loading…
+	</div>
+	<!-- /ko -->
+	<div data-bind="template: {name: 'chart-inject-template', afterRender: renderChart.bind($data)}"></div>
+    <!-- ko if: !isLoading && canExpand -->
+    <button class="expand-chart-button" data-bind="click: expand.bind($data)">Expand</button>
+    <!-- /ko -->
+    <!-- ko if: canDownload && options.src -->
+    <a class="download-chart-data" data-bind="attr: { 'href': options.src }">Download</a>
+    <div class="download-chart-data-clear"></div>
+    <!-- /ko -->
+</div>

@@ -1,0 +1,61 @@
+@import '~terriajs-variables';
+
+.location-item {
+}
+
+.location-item.light .btn {
+  background: $grey-lighter;
+
+  &:hover {
+    border: 1px solid $color-primary;
+    color: $color-primary;
+  }
+}
+
+.location-item.dark .btn {
+  background: $dark;
+  color: #FFF;
+
+  &:hover {
+    border: 1px solid #FFF;
+  }
+}
+
+.btn {
+  composes: btn from '../../Sass/partial/_buttons.scss';
+
+  &.btn {
+    position: relative;
+
+    border: 1px solid $grey;
+    padding: $padding;
+    margin-bottom: $padding-mini;
+    padding-right: $padding;
+    width: 100%;
+  }
+
+  &:hover {
+    .icon--right-arrow {
+      opacity: 1;
+    }
+  }
+}
+
+.btn--location-name {
+  composes: btn--location-name from '../../Sass/partial/_buttons.scss';
+}
+
+.icon--right-arrow {
+  composes: icon from '../../Sass/global/_icons.scss';
+  composes: icon-right from '../../Sass/global/_icons.scss';
+
+  position: absolute;
+  right: $padding-small;
+  top: 50%;
+  margin-top: -10px;
+  font-size: 20px;
+
+  @media screen and (min-width : $sm) {
+    opacity: 0;
+  }
+}

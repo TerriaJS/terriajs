@@ -1,0 +1,15 @@
+.cesium-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  cursor: auto;
+
+  :global {
+    .cesium-widget, .cesium-widget canvas {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      touch-action: none;
+    }
+  }
+}

@@ -1,0 +1,58 @@
+// Setting Panel
+//
+// Markup:
+// <div class="setting-panel__inner">
+// <div class="setting-panel__section setting-panel__viewer">
+// <label class="label label--setting-panel"> Map View </label>
+// <ul class="setting-panel__viewer-selector">
+// <li><button class="btn btn--viewer is-active">3D Terrain</button></li>
+// <li><button class="btn btn--viewer ">3D Smooth</button></li>
+// <li><button class="btn btn--viewer ">2D</button></li>
+// </ul>
+// </div><div class="setting-panel__section setting-panel__basemap">
+// <label class="label--setting-panel"> Base Map </label>
+// <label class="label label--active-map">Bing Maps Aerial with Labels</label>
+// <ul class="setting-panel__basemap-selector">
+// <li><button class="btn btn--basemap "><img alt="Australian Topography" src="../build/TerriaJS/images/australian-topo.png"></button></li>
+// <li><button class="btn btn--basemap "><img alt="Australian Hydrography" src="../build/TerriaJS/images/hydro.png"></button></li>
+// <li><button class="btn btn--basemap is-active"><img alt="Bing Maps Aerial with Labels" src="../build/TerriaJS/images/bing-aerial-labels.png"></button></li>
+// <li><button class="btn btn--basemap "><img alt="Bing Maps Aerial" src="../build/TerriaJS/images/bing-aerial.png"></button></li>
+// <li><button class="btn btn--basemap "><img alt="Bing Maps Roads" src="../build/TerriaJS/images/bing-maps-roads.png"></button></li>
+// <li><button class="btn btn--basemap "><img alt="Natural Earth II" src="../build/TerriaJS/images/natural-earth.png"></button></li>
+// <li><button class="btn btn--basemap "><img alt="NASA Black Marble" src="../build/TerriaJS/images/black-marble.png"></button></li>
+// <li><button class="btn btn--basemap "><img alt="Positron (Light)" src="../build/TerriaJS/images/positron.png"</button></li>
+// <li><button class="btn btn--basemap "><img alt="Dark Matter" src="../build/TerriaJS/images/dark-matter.png"></button></li>
+// </ul></div></div>
+//
+// Style guide: Component.setting-panel
+
+.btn--viewer{
+  @extend .btn-grey;
+}
+
+.btn--basemap{
+  @extend .btn--image;
+}
+
+.setting-panel {
+  @include dd-panel($setting-panel, $setting-panel/2 - 11px);
+}
+
+.setting-panel__viewer-selector,
+.setting-panel__basemap-selector{
+  @extend .clearfix;
+  @extend .list-reset;
+}
+
+.setting-panel__viewer-selector, .setting-panel__basemap-selector{
+  margin: 0 -$padding-mini;
+  li{
+    padding: $padding-mini;
+    @extend .col;
+    @extend .col-4;
+  }
+}
+
+
+
+

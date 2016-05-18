@@ -1,0 +1,17 @@
+{
+    "catalog": [
+        {
+            "name": "Web Processing Service (WPS)",
+            "type": "group",
+            "isOpen": true,
+            "items": [
+                {
+                    "name": "Australian Wave Energy Atlas PyWPS Server",
+                    "type": "wps-getCapabilities",
+                    "url": "http://oa-gis.csiro.au/wps",
+                    "isOpen": true
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,26 @@
+@import '~terriajs-variables';
+@import '../../Sass/global/mixins';
+
+.mobileSearch {
+}
+
+.results {
+  composes: list-reset from '../../Sass/partial/_base.scss';
+
+  &.results {
+    padding: 0 $padding $padding $padding;
+  }
+
+  li {
+    background: #fff;
+    margin-bottom: 2px;
+  }
+}
+
+.label {
+  color: #3f4854;
+  font-size: 12px;
+  padding: $padding-small $padding;
+  display: block;
+}
+

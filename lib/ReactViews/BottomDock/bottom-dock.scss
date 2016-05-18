@@ -1,0 +1,8 @@
+@import '../../Sass/global/variables.scss';
+@import '../../Sass/global/mixins.scss';
+
+.bottom-dock {
+  z-index: 10;
+  background: $dark;
+  position: relative;
+}

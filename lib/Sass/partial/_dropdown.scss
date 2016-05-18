@@ -1,0 +1,60 @@
+.dropdown {
+  position: relative;
+
+  .dropdown__list {
+    @extend .list-reset;
+
+    @include transform (scaleY(0) translateZ(0));
+    @include transition($animation-fast transform cubic-bezier(0.19, 1, 0.22, 1));
+    @include transform-origin(center, top);
+    overflow: hidden;
+    position: fixed;
+    z-index: 9999;
+    box-sizing: border-box;
+    background: #fff;
+    border-radius: $radius-small;
+    @include transition(transform, $animation-fast);
+  }
+//cubic-bezier(0.19, 1, 0.22, 1)
+  &.is-open {
+    .dropdown__list {
+      transform: scaleY(1) translateY(0)
+    }
+  }
+}
+
+//drop down for chart
+.preview-chart-wrapper {
+  .dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  .dropdown__list {
+    @extend .flex;
+  }
+}
+
+.my-data {
+  .dropdown {
+    position: relative;
+    width: 100%;
+
+    .dropdown__list {
+      box-shadow: $box-shadow;
+      margin-top: $padding-small;
+    }
+
+    &.is-open {
+      .dropdown__list {
+        height: 190px;
+        overflow-y: auto;
+      }
+    }
+  }
+}
+
+.feature-info-download {
+  .dropdown__list {
+    @extend .flex;
+  }
+}

@@ -1,0 +1,562 @@
+@import '../global/icons';
+@import '~terriajs-variables';
+
+$btn-setting-size: 35px;
+
+::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+
+// Buttons
+//
+// Style guide: Buttons
+
+// Default button
+//
+// .btn-small - small button
+// .btn-primary - Primary button
+// .btn-grey - Big grey button
+//
+// Markup:
+//<button class='btn {{modifier_class}}'> Button </button>
+//
+// Style guide: Buttons.default
+//
+.btn {
+  font-weight: $font-weight-normal;
+  box-shadow: none;
+  border: 0;
+  text-align: left;
+  cursor: pointer;
+  line-height: $btn-default-line-height;
+  padding: $padding;
+  @include transition(all 0.05s linear);
+  &:focus, &:hover {
+    box-shadow: none;
+    border-color: transparent;
+    outline: none;
+    opacity: 0.9;
+  }
+}
+
+.btn-transparent {
+  background: transparent;
+  margin: 0;
+}
+
+.btn-small {
+  padding: 0;
+  &:hover, &:focus {
+    color: $color-primary;
+  }
+}
+
+.btn-primary {
+  display: block;
+  background: $color-primary;
+  font-family: 'Open Sans', sans-serif;
+  color: #fff;
+  text-align: center;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: $radius-small;
+  &:hover {
+    background: lighten($color-primary, 10%);
+  }
+}
+
+.btn-grey {
+  padding: 0;
+  text-transform: uppercase;
+  font-size: $font-size-mini;
+  text-align: center;
+  width: 100%;
+  line-height: 4;
+  background: rgba(#fff, 0.15);
+  border: 1px solid transparent;
+  &:hover {
+    border: $border-style;
+  }
+  &.is-active {
+    background: $color-primary;
+    border-color: $color-primary;
+    color: #fff;
+  }
+}
+
+// Icon Buttons
+//
+//.btn--add - icon button
+//.btn--checkbox-checked - icon button
+//.btn--checkbox-off - icon button
+//.btn--checkbox-on - icon button
+//.btn--clear - icon button
+//.btn--close - icon button
+//.btn--closed - icon button
+//.btn--decrease - icon button
+//.btn--expand - icon button
+//.btn--increase - icon button
+//.btn--invisible - icon button
+//.btn--left - icon button
+//.btn--loader - icon button
+//.btn--location - icon button
+//.btn--minus - icon button
+//.btn--opened - icon button
+//.btn--radio-off - icon button
+//.btn--radio-on - icon button
+//.btn--refresh - icon button
+//.btn--remove - icon button
+//.btn--right - icon button
+//.btn--search - icon button
+//.btn--share - icon button
+//.btn--sphere - icon button
+//.btn--visible - icon button
+//.btn--facebook - icon button
+//.btn--twitter - icon button
+//.btn--link - icon button
+//.btn--menu - icon button
+//.btn--download - icon button
+//.btn--line-chart -icon button
+//.btn--github - icon button
+//.btn--stats-bars - icon button
+//.btn--folder -icon button
+//.btn--folder-open - icon
+//.btn--feedback -icon
+//
+// Markup:
+// <button class='btn {{modifier_class}}'></button>
+//
+// Style guide: Buttons.icon-button
+
+$icons: add,
+checkbox-checked,
+checkbox-off,
+checkbox-on,
+clear,
+close,
+closed,
+decrease,
+expand,
+increase,
+invisible,
+left,
+loader,
+location,
+minus,
+opened,
+radio-off,
+radio-on,
+refresh,
+remove,
+right,
+visible,
+search,
+share,
+sphere,
+geolocation,
+facebook,
+twitter,
+link,
+menu,
+download,
+line-chart,
+github,
+stats-bars,
+folder,
+folder-open,
+feedback;
+
+@each $icon in $icons {
+  .btn--#{$icon} {
+    @extend .icon;
+    @extend .icon-#{$icon};
+    &:before {
+      line-height: $btn-default-line-height;
+    }
+  }
+}
+
+.btn--toggle {
+  @extend .btn--closed;
+  &.is-open {
+    @extend .btn--opened;
+  }
+}
+
+.btn--add-to-map {
+  @extend .btn--add;
+  color: $color-primary;
+}
+
+.btn--secondary {
+  color: $color-primary;
+  border: 2px solid $color-primary;
+  border-radius: 4px;
+
+  &:hover, &:focus {
+    border: 2px solid lighten($color-primary, 10%);
+    color: lighten($color-primary, 10%);
+  }
+}
+
+.btn--tertiary {
+  background-color: #FFF;
+  color: $modal-text;
+  border: 2px solid $modal-text;
+  border-radius: 4px;
+  padding: 8px 10px;
+
+  &:hover, &:focus {
+    border: 2px solid $color-primary;
+    color: $color-primary;
+  }
+}
+
+.btn--tertiary-dark {
+  color: #FFF;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 4px;
+  padding: 8px 10px;
+
+  &:hover, &:focus {
+    border: 1px solid $color-primary;
+    color: $color-primary;
+  }
+}
+
+.btn--remove-from-map {
+  @extend .btn--remove;
+  color: $color-primary;
+}
+
+.btn--loading-on-map {
+  @extend .btn--loader;
+  color: $color-primary;
+}
+
+.btn--close-modal {
+  @extend .btn--secondary;
+
+  font-size: 0.8rem;
+  padding: 4px 10px;
+  margin: 5px;
+  font-weight: bold;
+}
+
+.btn--close-feature {
+  @extend .btn--close;
+  &:hover,
+  &:focus {
+    color: $color-primary;
+  }
+}
+
+// Text and icon buttons
+//
+// .btn--location-name - location item
+//
+// Markup:
+// <button class="btn {{modifier_class}}">button text </button>
+//
+// Style guide: Buttons.icon-text-button
+
+.btn--location-name {
+  @extend .icon;
+  &:before {
+    line-height: $btn-default-line-height;
+    padding-right: $padding-small;
+    display: inline-block;
+  }
+}
+
+.btn--location-name {
+  @extend .icon-location;
+}
+
+// Image button
+//
+//.is-active - Active button
+//
+// Markup:
+//<button class="btn btn--image {{modifier_class}}"><img alt="Australian Hydrography" src="../build/TerriaJS/images/hydro.png"></button>
+//
+// Style guide: Buttons.button--image
+
+.btn--image {
+  padding: 0;
+  position: relative;
+  display: block;
+  line-height: 1.2;
+  border: 1px solid transparent;
+  img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  &:hover,
+  &:focus {
+    border: $border-style;
+  }
+  &.is-active {
+    @extend .btn--checkbox-checked;
+  }
+  &:before {
+    position: absolute;
+    right: 0;
+    top: 0;
+    font-size: 20px;
+    background: $color-primary;
+    color: #fff;
+    z-index: 1;
+    text-align: center;
+    width: 22px;
+    border-radius: $radius-small;
+    height: 22px;
+  }
+}
+
+.kss-modifier__example {
+  .btn.btn-basemap {
+    max-width: 100px;
+  }
+}
+
+// Data Catalog Group
+//
+// Markup:
+//<div class='panel-content'>
+//<button class ='btn btn--catalogue' >National Data Sets</button>
+//<button class ='btn btn--catalogue is-open' >National Data Sets</button>
+//</div>
+//
+// Style guide: Buttons.data-catalog-group
+//
+
+.btn--catalogue {
+  padding: $padding $padding*3;
+  @media screen and (min-width: $sm){
+    padding: $padding-small $padding*3;
+  }
+
+  position: relative;
+  width: 100%;
+  font-weight: bold;
+  @extend .btn--toggle;
+  .btn--group-indicator {
+    position: absolute;
+    left: 0;
+    padding: $padding $padding-small;
+    @media screen and (min-width: $sm){
+      padding: $padding-small;
+    }
+    top: 0;
+    font-size: 1.1rem;
+    opacity: 0.5;
+  }
+  &:before {
+    position: absolute;
+    right: 5px;
+    top: $padding;
+    @media screen and (min-width: $sm){
+      top: $padding-small;
+    }
+
+  }
+  &:hover,
+  &:focus {
+    background: $modal-highlight;
+    color: #fff;
+    .btn--group-indicator {
+      color: #fff;
+    }
+  }
+}
+
+// Data Catalog Item
+//
+// .is-previewed - item being previewed
+//
+// Markup:
+//<div class='panel-content'>
+// <li class='data-catalog-item {{modifier_class}}'>
+// <button class='btn btn--catalog-item'>item name</button>
+// <button title="add or remove on map" class='btn btn--catalog-item--action btn--add-to-map'></button>
+// </li>
+//</div>
+//
+// Style guide: Buttons.btn--catalog-item
+//
+
+.btn--catalog-item {
+  @extend %wrap;
+  position: relative;
+  width: 100%;
+  padding: $padding-small $padding*2.2 $padding-small $padding*1.5;
+
+  &:focus, &:hover {
+    color: $modal-highlight;
+    &:before {
+      opacity: 1;
+    }
+  }
+  .is-previewed & {
+    color: $modal-highlight;
+    font-weight: $font-weight-bold;
+    &:before {
+      opacity: 1;
+    }
+  }
+  &.is-active {
+    color: $modal-highlight;
+  }
+}
+
+// Modal window tab buttons
+//
+// Tab buttons in modal window
+//
+// Markup:
+// <button class="btn btn--tab">Button</button>
+//
+// Style guide: Buttons.modal-tab
+//
+
+.btn.btn--tab {
+  border-right: 1px solid $modal-border;
+  font-family: $font-pop;
+  background: $modal-bg;
+  color: $modal-text;
+  font-size: 1rem;
+  text-transform: uppercase;
+  padding: $padding $padding*2;
+  border-bottom: 2px solid transparent;
+  li[aria-selected='true'] & {
+    background: #fff;
+    color: $modal-highlight;
+
+  }
+  &:hover, &:focus {
+    background: #fff;
+    color: $modal-highlight;
+  }
+}
+
+// Map buttons
+//
+// Buttons on the map
+//
+// Markup:
+// <button class="btn btn--map full-screen__button" title="full screen mode"></button>
+//
+// Style guide: Buttons.map-buttons
+
+.btn--map {
+  background: $dark;
+  text-transform: uppercase;
+  font-size: $font-size-small;
+  padding: 5px;
+  color: #fff;
+  display: block;
+  height: $padding*3.1;
+  font-family: $font-pop;
+  line-height: 18px;
+  &:hover,
+  &:focus,
+  .is-open &,
+  &.is-active {
+    background: $color-primary;
+    text-decoration: none;
+  }
+}
+
+a.btn--map {
+  line-height: 20px;
+}
+
+// Search Clear buttons
+//
+// Buttons to clear search
+//
+// Markup:
+// <button class="btn btn--search-clear" title="clear search text"></button>
+//
+// Style guide: Buttons.btn--search-clear
+
+.btn--search-clear {
+  padding: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: 12px;
+  @extend .icon;
+  @extend .icon-clear;
+}
+
+// Dropdown trigger button
+//
+// Markup:
+// <button class="btn btn--dropdown"> Select an option </button>
+//
+// Style guide: Buttons.dropdown
+
+.btn--dropdown {
+  width: 100%;
+  border: 2px solid $grey-lighter;
+  color: $modal-text;
+  &:hover,
+  &:focus {
+    border-color: $color-primary;
+  }
+}
+
+// Dropdown options button
+//
+// Markup:
+// <button class="btn btn--dropdown-option"> WMS Server </button>
+//
+// Style guide: Buttons.dropdown-options
+
+.btn--dropdown-option {
+  width: 100%;
+  padding: $padding-small;
+  &:hover, &:focus {
+    color: $color-primary;
+  }
+  &.is-selected {
+    color: $color-primary;
+  }
+}
+
+// My data tab
+//
+// Markup:
+// <button class="btn btn--add-data-tab"> Add local data </button>
+//
+// Style guide: Buttons.btn--add-data-tab
+
+.btn--add-data-tab {
+  font-size: $font-size-small;
+  font-weight: $font-weight-medium;
+  width: 100%;
+  padding: $padding-small $padding-small $padding-small 0;
+  border-bottom: 2px solid $grey;
+  color: $grey;
+  &:hover, &:focus, &.is-active {
+    color: $color-primary;
+    border-bottom: 2px solid $color-primary;
+  }
+}
+
+.btn--file-input, .btn--add-url {
+  @extend .btn-primary;
+}
+
+.btn--radio {
+  padding: $padding-small;
+  &:before {
+    color: $color-primary;
+    display: inline-block;
+    padding: $padding-small $padding-small $padding-small 0;
+  }
+}
