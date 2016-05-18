@@ -41,10 +41,10 @@
 
 .map__cell {
   display: table-cell;
+  height: 100%;
 
   &:last-child {
     width: 100%;
-    position: relative;
   }
 }
 
