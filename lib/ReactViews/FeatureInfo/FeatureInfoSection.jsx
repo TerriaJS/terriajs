@@ -8,6 +8,7 @@ import classNames from 'classnames';
 
 import formatNumberForLocale from '../../Core/formatNumberForLocale';
 import ObserveModelMixin from '../ObserveModelMixin';
+import propertyGetTimeValues from '../../Core/propertyGetTimeValues';
 import renderMarkdownInReact from '../../Core/renderMarkdownInReact';
 import FeatureInfoDownload from './FeatureInfoDownload';
 
@@ -39,7 +40,7 @@ const FeatureInfoSection = React.createClass({
         if (!this.isConstant()) {
             this.setState({
                 clockSubscription: this.props.clock.onTick.addEventListener(function(clock) {
-                    setCurrentFeatureValues(feature, clock.currentTime);
+                    setCurrentFeatureValues(feature, clock);
                 })
             });
         }
@@ -162,7 +163,7 @@ function propertyValues(feature, clock, formats) {
     // If they require .getValue, apply that.
     // If they have bad keys, fix them.
     // If they have formatting, apply it.
-    const properties = feature.currentProperties || getCurrentProperties(feature, clock.currentTime);
+    const properties = feature.currentProperties || propertyGetTimeValues(feature.properties, clock);
     const result = replaceBadKeyCharacters(properties);
     if (defined(formats)) {
         applyFormatsInPlace(result, formats);
@@ -238,20 +239,20 @@ function areAllPropertiesConstant(properties) {
 //     return newObject;
 // }
 
-/**
- * Gets properties from a feature at the provided time.
- *
- * @param {Entity} feature
- * @param {JulianDate} currentTime
- * @returns {Object} The properties for that time.
- */
-function getCurrentProperties(feature, currentTime) {
-    // Use this instead of the straight feature.currentProperties, so it works the first time through.
-    if (defined(feature.properties) && typeof feature.properties.getValue === 'function') {
-        return feature.properties.getValue(currentTime);
-    }
-    return feature.properties;
-}
+// /**
+//  * Gets properties from a feature at the provided time.
+//  *
+//  * @param {Entity} feature
+//  * @param {JulianDate} currentTime
+//  * @returns {Object} The properties for that time.
+//  */
+// function getCurrentProperties(feature, currentTime) {
+//     // Use this instead of the straight feature.currentProperties, so it works the first time through.
+//     if (defined(feature.properties) && typeof feature.properties.getValue === 'function') {
+//         return feature.properties.getValue(currentTime);
+//     }
+//     return feature.properties;
+// }
 
 /**
  * Gets a text description for the provided feature at a certain time.
@@ -271,12 +272,12 @@ function getCurrentDescription(feature, currentTime) {
  * @param {Entity} feature
  * @param {JulianDate} currentTime
  */
-function setCurrentFeatureValues(feature, currentTime) {
-    const newProperties = getCurrentProperties(feature, currentTime);
+function setCurrentFeatureValues(feature, clock) {
+    const newProperties = propertyGetTimeValues(feature.properties, clock);
     if (newProperties !== feature.currentProperties) {
         feature.currentProperties = newProperties;
     }
-    const newDescription = getCurrentDescription(feature, currentTime);
+    const newDescription = getCurrentDescription(feature, clock.currentTime);
     if (newDescription !== feature.currentDescription) {
         feature.currentDescription = newDescription;
     }
