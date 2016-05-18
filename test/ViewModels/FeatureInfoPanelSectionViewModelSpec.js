@@ -5,6 +5,9 @@ var FeatureInfoPanelViewModel = require('../../lib/ViewModels/FeatureInfoPanelVi
 var FeatureInfoPanelSectionViewModel = require('../../lib/ViewModels/FeatureInfoPanelSectionViewModel');
 var Terria = require('../../lib/Models/Terria');
 var Entity = require('terriajs-cesium/Source/DataSources/Entity');
+var PickedFeatures = require('../../lib/Map/PickedFeatures');
+var Ellipsoid = require('terriajs-cesium/Source/Core/Ellipsoid');
+var Cartographic = require('terriajs-cesium/Source/Core/Cartographic');
 
 
 describe('FeatureInfoPanelSectionViewModel', function() {
@@ -37,17 +40,17 @@ describe('FeatureInfoPanelSectionViewModel', function() {
     });
 
     it('uses a white background for complete HTML documents only', function() {
-        feature.description = {getValue: function() { return '<html><body>hi!</body></html>'}};
+        feature.description = {getValue: function() { return '<html><body>hi!</body></html>'; }};
         var section = new FeatureInfoPanelSectionViewModel(panel, feature);
         expect(section.useWhiteBackground).toBe(true);
         section.destroy();
 
-        feature.description = {getValue: function() { return '<div>hi!</div>'}};
+        feature.description = {getValue: function() { return '<div>hi!</div>'; }};
         section = new FeatureInfoPanelSectionViewModel(panel, feature);
         expect(section.useWhiteBackground).toBe(false);
         section.destroy();
 
-        feature.description = {getValue: function() { return '<html attr="yes">\n<body>hi!</body>\n</html>'}};
+        feature.description = {getValue: function() { return '<html attr="yes">\n<body>hi!</body>\n</html>'; }};
         section = new FeatureInfoPanelSectionViewModel(panel, feature);
         expect(section.useWhiteBackground).toBe(true);
         section.destroy();
@@ -89,6 +92,33 @@ describe('FeatureInfoPanelSectionViewModel', function() {
 
         it('templatedInfo should be available', function() {
             expect(section.templatedInfo).toBeDefined();
+        });
+    });
+
+
+    describe('lat and long of the clicked point', function() {
+        var section;
+
+        beforeEach(function() {
+            var catalogItem = {
+                featureInfoTemplate: '<div>{{terria.coords.latitude}} {{terria.coords.longitude}}</div>'
+            };
+            terria.pickedFeatures = new PickedFeatures();
+            terria.pickedFeatures.pickPosition = Ellipsoid.WGS84.cartographicToCartesian(Cartographic.fromDegrees(2, 4, 6));
+
+            section = new FeatureInfoPanelSectionViewModel(panel, feature, catalogItem);
+        });
+
+        it('should be available to the template', function() {
+            expect(section.templatedInfo).toBe('<div>3.999999999999998 2</div>');
+        });
+
+        it('should not be present in raw data', function() {
+            expect(section.rawData.terria).toBeUndefined();
+        });
+
+        it('should not stop CSVs from being available', function() {
+            expect(section.dataDownloads.length).toBe(2);
         });
     });
 

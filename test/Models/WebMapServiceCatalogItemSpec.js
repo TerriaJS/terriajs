@@ -30,7 +30,7 @@ describe('WebMapServiceCatalogItem', function() {
 
     it('throws if constructed without a Terria instance', function() {
         expect(function() {
-            var viewModel = new WebMapServiceCatalogItem(); // jshint ignore:line
+            var viewModel = new WebMapServiceCatalogItem(); // eslint-disable-line no-unused-vars
         }).toThrow();
     });
 

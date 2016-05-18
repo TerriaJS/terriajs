@@ -52,7 +52,7 @@ describe('CsvCatalogItem with lat and lon', function() {
 
     it('throws if constructed without a Terria instance', function() {
         expect(function() {
-            var viewModel = new CsvCatalogItem(); // jshint ignore:line
+            var viewModel = new CsvCatalogItem(); // eslint-disable-line no-unused-vars
         }).toThrow();
     });
 
@@ -343,6 +343,23 @@ describe('CsvCatalogItem with lat and lon', function() {
         csvItem.load().then(function() {
             var source = csvItem.dataSource;
             expect(source.tableStructure.activeTimeColumn.name).toEqual('year');
+        }).otherwise(fail).then(done);
+    });
+
+    it('returns valid values for intervals', function(done) {
+        csvItem.url = 'test/csv/lat_long_enum_moving_date.csv';
+        csvItem._tableStyle = new TableStyle({displayDuration: 60});
+        csvItem.load().then(function() {
+            var intervals = csvItem.intervals;
+
+            expect(intervals.length).toBe(6); // 13 rows over 6 days
+
+            // interval length is 1 houor
+            expect(intervals.get(0).start).toEqual(JulianDate.fromIso8601('2015-08-01'));
+            expect(intervals.get(0).stop).toEqual(JulianDate.fromIso8601('2015-08-01T01:00'));
+
+            expect(intervals.start).toEqual(JulianDate.fromIso8601('2015-08-01'));
+            expect(intervals.stop).toEqual(JulianDate.fromIso8601('2015-08-06T01:00'));
         }).otherwise(fail).then(done);
     });
 
@@ -689,7 +706,7 @@ describe('CsvCatalogItem with region mapping', function() {
             // TODO: This is the old test, which doesn't really have an equivalent in the new csv refactor:
             // expect(csvItem.dataSource.dataset.variables.state.regionCodes).toEqual(["queensland", "south australia", "western australia", "other territories"]);
             // Possibly something like this?  However, this fails - it includes tasmania and not queensland.
-            var names = csvItem.dataSource.tableStructure.columns[0].values.map(function(id) { return regionNames[id] });
+            var names = csvItem.dataSource.tableStructure.columns[0].values.map(function(id) { return regionNames[id]; });
             expect(names).toEqual(["queensland", "south australia", "western australia", "other territories"]);
         }).otherwise(fail).then(done);
     });
