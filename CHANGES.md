@@ -4,6 +4,7 @@ Change Log
 
 ### 3.1.1
 
+* Added support in FeatureInfoTemplate for referencing csv columns by either their name in the csv file, or the name they are given via `TableStyle.columns...name` (if any).
 * Improved CSV handling to ignore any blank lines, ie. those containing only commas.
 
 ### 3.1.0
