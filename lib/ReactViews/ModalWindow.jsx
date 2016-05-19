@@ -27,6 +27,19 @@ const ModalWindow = React.createClass({
         return !this.props.viewState.hideMapUi() && this.props.viewState.modalVisible;
     },
 
+    componentDidMount() {
+        this.escKeyListener = e => {
+            if (e.keyCode === 27) {
+                this.close();
+            }
+        };
+        window.addEventListener('keydown', this.escKeyListener, true);
+    },
+
+    componentWillUnmount() {
+        window.removeEventListener('keydown', this.escKeyListener, false);
+    },
+
     render() {
         return (
             <div onClick={this.bringToFront}

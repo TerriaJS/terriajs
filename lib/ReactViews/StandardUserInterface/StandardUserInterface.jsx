@@ -57,26 +57,9 @@ const StandardUserInterface = React.createClass({
         this.disclaimerHandler = new DisclaimerHandler(this.props.terria, this.props.viewState);
     },
 
-    componentDidMount() {
-        this.escKeyListener = (e)=>{
-            let keycode;
-            if (e === null) { // ie
-                keycode = event.keyCode;
-            } else { // mozilla
-                keycode = e.which;
-            }
-            if(keycode === 27) {
-                // close modal
-                this.props.viewState.toggleModal(false);
-            }
-        };
-        window.addEventListener('keydown', this.escKeyListener, true);
-    },
-
     componentWillUnmount() {
         window.removeEventListener('resize', this.resizeListener, false);
         document.removeEventListener('dragover', this.dragOverListener, false);
-        window.removeEventListener('keydown', this.escKeyListener, false);
         this.disclaimerHandler.dispose();
     },
 
