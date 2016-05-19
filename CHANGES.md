@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+### 3.1.1
+
+* Improved CSV handling to ignore any blank lines, ie. those containing only commas.
+
 ### 3.1.0
 
 * Only trigger a search when the user presses enter or stops typing for 3 seconds.  This will greatly reduce the number of times that searches are performed, which is important with a geocoder like Bing Maps that counts each geocode as a transaction.
