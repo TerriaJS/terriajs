@@ -22,11 +22,17 @@ import Styles from './standard-user-interface.scss';
 
 const StandardUserInterface = React.createClass({
     propTypes: {
-        terria: React.PropTypes.object,
+        terria: React.PropTypes.object.isRequired,
         allBaseMaps: React.PropTypes.array,
-        viewState: React.PropTypes.object,
+        viewState: React.PropTypes.object.isRequired,
         minimumLargeScreenWidth: React.PropTypes.number,
         version: React.PropTypes.string
+    },
+
+    getDefaultProps() {
+        return {
+            minimumLargeScreenWidth: 768
+        };
     },
 
     mixins: [ObserveModelMixin],
@@ -69,7 +75,7 @@ const StandardUserInterface = React.createClass({
     },
 
     shouldUseMobileInterface() {
-        return document.body.clientWidth < (this.props.minimumLargeScreenWidth || 768);
+        return document.body.clientWidth < this.props.minimumLargeScreenWidth;
     },
 
     render() {
@@ -142,11 +148,11 @@ const StandardUserInterface = React.createClass({
                 <Notification viewState={this.props.viewState}/>
                 <MapInteractionWindow terria={terria}/>
 
-                {this.props.terria.configParameters.feedbackUrl &&
+                <If condition={this.props.terria.configParameters.feedbackUrl}>
                     <aside className={Styles.feedback}>
                         <FeedbackForm viewState={this.props.viewState}/>
                     </aside>
-                }
+                </If>
 
                 <FeatureInfoPanel terria={terria}
                                   viewState={this.props.viewState}
