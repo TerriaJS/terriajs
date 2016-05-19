@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+### 3.1.1
+
+* Added support in FeatureInfoTemplate for referencing csv columns by either their name in the csv file, or the name they are given via `TableStyle.columns...name` (if any).
+
 ### 3.1.0
 
 * Only trigger a search when the user presses enter or stops typing for 3 seconds.  This will greatly reduce the number of times that searches are performed, which is important with a geocoder like Bing Maps that counts each geocode as a transaction.

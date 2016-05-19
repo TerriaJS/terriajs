@@ -95,19 +95,6 @@ describe('TableStructure', function() {
         expect(rowObjects[2]).toEqual({x: '4', y: '-3'});
     });
 
-    // it('can convert to row objects with names and ids', function() {
-    //     var data = [['x', 'y'], [3, 8], [4, -3]];
-    //     var options = {columnOptions: {
-    //         y: {name: 'new y'}
-    //     }};
-    //     var tableStructure = new TableStructure('foo', options);
-    //     tableStructure = tableStructure.loadFromJson(data);
-    //     var rowObjects = tableStructure.toNameAndIdRowObjects();
-    //     expect(rowObjects.length).toEqual(2);
-    //     expect(rowObjects[0]).toEqual({x: '3', y: '8', 'new y': '8'});
-    //     expect(rowObjects[1]).toEqual({x: '4', y: '-3', 'new y': '-3'});
-    // });
-
     it('can get column names', function() {
         var data = [['x', 'y'], [1, 5], [3, 8], [4, -3]];
         var tableStructure = TableStructure.fromJson(data);
