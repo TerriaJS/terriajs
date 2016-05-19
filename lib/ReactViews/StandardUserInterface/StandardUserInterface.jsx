@@ -125,7 +125,7 @@ const StandardUserInterface = React.createClass({
                                                          mouseCoords={this.props.viewState.mouseCoords}/>
                                             <DistanceLegend terria={terria}/>
                                         </div>
-                                        <If condition={!this.props.viewState.useSmallScreenInterface}>
+                                        <If condition={!this.props.viewState.useSmallScreenInterface && this.props.terria.configParameters.feedbackUrl}>
                                             <div className={Styles.feedbackButtonWrapper}>
                                                 <FeedbackButton viewState={this.props.viewState}/>
                                             </div>
@@ -160,9 +160,11 @@ const StandardUserInterface = React.createClass({
                 <Notification viewState={this.props.viewState}/>
                 <MapInteractionWindow terria={terria}/>
 
-                <aside className={Styles.feedback}>
-                    <FeedbackForm viewState={this.props.viewState}/>
-                </aside>
+                {this.props.terria.configParameters.feedbackUrl &&
+                    <aside className={Styles.feedback}>
+                        <FeedbackForm viewState={this.props.viewState}/>
+                    </aside>
+                }
 
                 <FeatureInfoPanel terria={terria}
                                   viewState={this.props.viewState}
