@@ -68,7 +68,6 @@ const StandardUserInterface = React.createClass({
             if(keycode === 27) {
                 // close modal
                 this.props.viewState.toggleModal(false);
-                this.props.viewState.dispose();
             }
         };
         window.addEventListener('keydown', this.escKeyListener, true);
