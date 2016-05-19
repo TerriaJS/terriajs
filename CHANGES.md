@@ -6,6 +6,7 @@ Change Log
 
 * Added support in FeatureInfoTemplate for referencing csv columns by either their name in the csv file, or the name they are given via `TableStyle.columns...name` (if any).
 * Improved CSV handling to ignore any blank lines, ie. those containing only commas.
+* Fixed a bug in `CswCatalogGroup` that prevented it from working in Internet Explorer.
 
 ### 3.1.0
 
