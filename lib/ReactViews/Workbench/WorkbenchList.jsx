@@ -1,13 +1,11 @@
-'use strict';
-
 import React from 'react';
-import NowViewingItem from './NowViewingItem.jsx';
+import WorkbenchItem from './WorkbenchItem.jsx';
 import ObserveModelMixin from './../ObserveModelMixin';
 import arrayContains from '../../Core/arrayContains';
-import Styles from './now-viewing-list.scss';
+import Styles from './workbench-list.scss';
 import classNames from 'classnames';
 
-const NowViewingList = React.createClass({
+const WorkbenchList = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -106,13 +104,13 @@ const NowViewingList = React.createClass({
             <ul className={Styles.nowViewingContent} onDragLeave={this.onDragLeaveContainer} onDrop={this.onDrop}>
                 <For each="item" of={this.props.terria.nowViewing.items} index="i">
                     {this.renderDropzone(i)}
-                    <NowViewingItem nowViewingItem={item}
-                                    key={item.uniqueId}
-                                    dragging={this.state.draggedItem === item}
-                                    onDragOver={this.onDragOverItem.bind(this, i)}
-                                    onDragStart={this.onDragStart.bind(this, item, i)}
-                                    onDragEnd={this.onDragEnd}
-                                    viewState={this.props.viewState}
+                    <WorkbenchItem nowViewingItem={item}
+                                   key={item.uniqueId}
+                                   dragging={this.state.draggedItem === item}
+                                   onDragOver={this.onDragOverItem.bind(this, i)}
+                                   onDragStart={this.onDragStart.bind(this, item, i)}
+                                   onDragEnd={this.onDragEnd}
+                                   viewState={this.props.viewState}
                     />
                 </For>
                 {this.renderDropzone(this.props.terria.nowViewing.items.length)}
@@ -130,4 +128,4 @@ const NowViewingList = React.createClass({
     }
 });
 
-module.exports = NowViewingList;
+module.exports = WorkbenchList;

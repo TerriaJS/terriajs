@@ -1,24 +1,23 @@
 import arrayContains from '../../Core/arrayContains';
+import BottomDock from './../BottomDock/BottomDock.jsx';
 import Branding from './../SidePanel/Branding.jsx';
+import DisclaimerHandler from '../../ReactViewModels/DisclaimerHandler';
+import DistanceLegend from '../Map/Legend/DistanceLegend.jsx';
 import FeatureInfoPanel from './../FeatureInfo/FeatureInfoPanel.jsx';
+import FeedbackButton from '../Feedback/FeedbackButton.jsx';
+import FeedbackForm from '../Feedback/FeedbackForm.jsx';
+import LocationBar from '../Map/Legend/LocationBar.jsx';
+import MapInteractionWindow from './../Notification/MapInteractionWindow.jsx';
 import MapNavigation from './../Map/MapNavigation.jsx';
 import MobileHeader from './../Mobile/MobileHeader.jsx';
 import ModalWindow from './../ModalWindow.jsx';
 import Notification from './../Notification/Notification.jsx';
-import MapInteractionWindow from './../Notification/MapInteractionWindow.jsx';
 import ObserveModelMixin from './../ObserveModelMixin';
-import React from 'react';
-import WorkBench from './../SidePanel/WorkBench.jsx';
 import ProgressBar from './../ProgressBar.jsx';
-import BottomDock from './../BottomDock/BottomDock.jsx';
-import TerriaViewerWrapper from '../Map/TerriaViewerWrapper.jsx';
-import DisclaimerHandler from '../../ReactViewModels/DisclaimerHandler';
-import FeedbackForm from '../Feedback/FeedbackForm.jsx';
-import FeedbackButton from '../Feedback/FeedbackButton.jsx';
-import DistanceLegend from '../Map/Legend/DistanceLegend.jsx';
-import LocationBar from '../Map/Legend/LocationBar.jsx';
-
+import React from 'react';
+import SidePanel from './../SidePanel/SidePanel.jsx';
 import Styles from './standard-user-interface.scss';
+import TerriaViewerWrapper from '../Map/TerriaViewerWrapper.jsx';
 
 const StandardUserInterface = React.createClass({
     propTypes: {
@@ -95,7 +94,7 @@ const StandardUserInterface = React.createClass({
                                 <Otherwise>
                                     <div className={Styles.sidePanel}>
                                         <Branding terria={terria} version={this.props.version}/>
-                                        <WorkBench terria={terria} viewState={this.props.viewState}/>
+                                        <SidePanel terria={terria} viewState={this.props.viewState}/>
                                     </div>
                                 </Otherwise>
                             </Choose>

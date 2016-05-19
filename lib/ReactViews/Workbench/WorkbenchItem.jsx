@@ -11,7 +11,7 @@ import ViewingControls from './Controls/ViewingControls';
 import ConceptViewer from './Controls/ConceptViewer';
 import ShortReport from './Controls/ShortReport';
 
-import Styles from './now-viewing-item.scss';
+import Styles from './workbench-item.scss';
 
 const NowViewingItem = React.createClass({
     mixins: [ObserveModelMixin],

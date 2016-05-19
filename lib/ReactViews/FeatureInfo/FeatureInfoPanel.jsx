@@ -148,7 +148,7 @@ function getFeaturesGroupedByCatalogItems(terria) {
 /**
  * Figures out what the catalog item for a feature is.
  *
- * @param nowViewing {@link SidePanelHeader} to look in the items for.
+ * @param nowViewing {@link NowViewing} to look in the items for.
  * @param feature Feature to match
  * @returns {CatalogItem}
  */

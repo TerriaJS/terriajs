@@ -80,8 +80,9 @@ const ViewingControls = React.createClass({
                     <li className={Styles.info}><button type='button' onClick={this.previewItem} className={Styles.btn} title='info'>About This Data Set</button></li>
                 </If>
                 <li className={Styles.remove}>
-                    <button type='button' onClick={this.removeFromMap} title="Remove this data" className={Styles.btn}>Remove</button>
-                    <i className={Styles.iconRemove} />
+                    <button type='button' onClick={this.removeFromMap} title="Remove this data" className={Styles.btn}>
+                        Remove <i className={Styles.iconRemove} />
+                    </button>
                 </li>
             </ul>
         );

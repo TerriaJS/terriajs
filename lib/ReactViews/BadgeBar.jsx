@@ -1,12 +1,12 @@
 import React from 'react';
-import Styles from './side-panel-header.scss';
+import Styles from './badge-bar.scss';
 
-const SidePanelHeader = React.createClass({
+const BadgeBar = React.createClass({
     propTypes: {
         label: React.PropTypes.string,
         badge: React.PropTypes.number,
         buttonCaption: React.PropTypes.string,
-        children: React.PropTypes.array
+        children: React.PropTypes.node
     },
 
     render() {
@@ -26,4 +26,4 @@ const SidePanelHeader = React.createClass({
     }
 });
 
-export default SidePanelHeader;
+export default BadgeBar;

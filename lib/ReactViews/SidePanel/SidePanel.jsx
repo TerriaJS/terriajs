@@ -1,10 +1,9 @@
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
-import SidebarSearch from '../Search/SidebarSearch.jsx';
 import SearchBox from '../Search/SearchBox.jsx';
-import NowViewing from '../NowViewing/NowViewing.jsx';
-
-import Styles from './work-bench.scss';
+import SidebarSearch from '../Search/SidebarSearch.jsx';
+import Styles from './side-panel.scss';
+import Workbench from '../Workbench/Workbench.jsx';
 
 const SidePanel = React.createClass({
     mixins: [ObserveModelMixin],
@@ -52,7 +51,7 @@ const SidePanel = React.createClass({
                         </When>
                         <When
                             condition={this.props.terria.nowViewing.items && this.props.terria.nowViewing.items.length > 0}>
-                            <NowViewing viewState={this.props.viewState} terria={this.props.terria} />
+                            <Workbench viewState={this.props.viewState} terria={this.props.terria} />
                         </When>
                         <Otherwise>
                             <div className={Styles.workbenchEmpty}>

@@ -1,10 +1,10 @@
 import React from 'react';
-import NowViewingList from './NowViewingList.jsx';
+import WorkbenchList from './WorkbenchList.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
-import SidePanelHeader from '../SidePanel/SidePanelHeader.jsx';
-import Styles from './now-viewing.scss';
+import BadgeBar from '../BadgeBar.jsx';
+import Styles from './workbench.scss';
 
-const NowViewing = React.createClass({
+const Workbench = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -19,16 +19,15 @@ const NowViewing = React.createClass({
     render() {
         return (
             <div className={Styles.nowViewing}>
-                <SidePanelHeader label="Data Sets" badge={this.props.terria.nowViewing.items.length}>
+                <BadgeBar label="Data Sets" badge={this.props.terria.nowViewing.items.length}>
                     <button type='button' onClick={this.removeAll} className={Styles.removeButton}>
-                        Remove All
+                        Remove All <i className={Styles.iconRemove}/>
                     </button>
-                    <i className={Styles.iconRemove}/>
-                </SidePanelHeader>
-                <NowViewingList viewState={this.props.viewState} terria={this.props.terria}/>
+                </BadgeBar>
+                <WorkbenchList viewState={this.props.viewState} terria={this.props.terria}/>
             </div>
         );
     }
 });
 
-export default NowViewing;
+export default Workbench;

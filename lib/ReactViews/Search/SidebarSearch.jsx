@@ -4,7 +4,7 @@ import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
 import SearchHeader from './SearchHeader.jsx';
 import SearchResult from './SearchResult.jsx';
-import SidePanelHeader from '../SidePanel/SidePanelHeader.jsx';
+import BadgeBar from '../BadgeBar.jsx';
 
 import Styles from './sidebar-search.scss';
 
@@ -31,11 +31,11 @@ export default React.createClass({
         return (
             <div className={Styles.search}>
                 <div className={Styles.results}>
-                    <SidePanelHeader label="Search Results" badge={searchResultCount}>
+                    <BadgeBar label="Search Results" badge={searchResultCount}>
                         <button type='button' onClick={this.backToNowViewing}
                                 className={Styles.btnDone}>Done
                         </button>
-                    </SidePanelHeader>
+                    </BadgeBar>
                     <For each="search" of={this.props.viewState.searchState.locationSearchProviders}>
                         <div key={search.constructor.name} className={Styles.providerResult}>
                             <h4 className={Styles.heading}>{search.name}</h4>
