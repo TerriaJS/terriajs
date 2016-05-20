@@ -7,6 +7,8 @@ import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 import Entity from 'terriajs-cesium/Source/DataSources/Entity';
+import Styles from './feature-info-panel.scss';
+import classNames from 'classnames';
 
 const FeatureInfoPanel = React.createClass({
     mixins: [ObserveModelMixin],
@@ -82,11 +84,16 @@ const FeatureInfoPanel = React.createClass({
     render() {
         const terria = this.props.terria;
         const viewState = this.props.viewState;
-        const componentOnTop = (viewState.componentOnTop === viewState.componentOrderOptions.featureInfoPanel);
+
         const featureInfoCatalogItems = this.getFeatureInfoCatalogItems();
+        const panelClassName = classNames(Styles.panel, {
+            [Styles.isOnTop]: viewState.componentOnTop === viewState.componentOrderOptions.featureInfoPanel,
+            [Styles.isCollapsed]: viewState.featureInfoPanelIsCollapsed,
+            [Styles.isVisible]: viewState.featureInfoPanelIsVisible
+        });
         return (
             <div
-                className={`feature-info-panel ${componentOnTop ? 'is-top' : ''} ${viewState.featureInfoPanelIsCollapsed ? 'is-collapsed' : ''} ${viewState.featureInfoPanelIsVisible ? 'is-visible' : ''}`}
+                className={panelClassName}
                 aria-hidden={!viewState.featureInfoPanelIsVisible}
                 onClick={this.bringToFront}>
                 <div className='feature-info-panel__header'>
@@ -96,7 +103,7 @@ const FeatureInfoPanel = React.createClass({
                     <button type='button' onClick={ this.close } className="btn btn--close-feature"
                             title="Close data panel"/>
                 </div>
-                <ul className="feature-info-panel__body">
+                <ul className={Styles.body}>
                     <Choose>
                         <When condition={viewState.featureInfoPanelIsCollapsed || !viewState.featureInfoPanelIsVisible}>
                         </When>

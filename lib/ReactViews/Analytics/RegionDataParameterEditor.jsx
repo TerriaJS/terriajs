@@ -3,6 +3,8 @@ import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 import VarType from '../../Map/VarType';
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
+import Styles from './parameter-editor.scss';
+
 
 const RegionDataParameterEditor = React.createClass({
     mixins: [ObserveModelMixin],
@@ -135,7 +137,7 @@ const RegionDataParameterEditor = React.createClass({
 
     renderContent() {
         if(this.catalogItemsWithMatchingRegion().length > 0) {
-            return <div className="parameter-editor--data"><ul className='parameter-editor-tree'>{this.catalogItemsWithMatchingRegion().map((catalogItem, i)=>
+            return <div className={Styles.data}><ul className={Styles.tree}>{this.catalogItemsWithMatchingRegion().map((catalogItem, i)=>
                 <li key ={i}><button type='button' onClick={this.toggleOpenCatalogItem.bind(this, catalogItem)}
                                      className={`btn btn--catalogue ${this.catalogItemIsOpen(catalogItem) ? 'is-open' : ''}`}>{catalogItem.name}</button>{this.catalogItemIsOpen(catalogItem) && this.renderItemChildren(catalogItem)}</li>
             )}</ul></div>;
@@ -147,7 +149,7 @@ const RegionDataParameterEditor = React.createClass({
     },
 
     renderItemChildren(catalogItem) {
-        return <ul className='parameter-editor-tree'>{catalogItem.regionMapping.tableStructure.columns.map((column, i)=>{
+        return <ul className={Styles.tree}>{catalogItem.regionMapping.tableStructure.columns.map((column, i)=>{
             if (column.type === VarType.SCALAR) {
                 return <li key ={i}
                            className='clearfix data-catalog-item'>

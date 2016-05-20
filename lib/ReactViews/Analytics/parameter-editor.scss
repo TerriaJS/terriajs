@@ -1,0 +1,14 @@
+@import '~terriajs-variables';
+@import '../../Sass/global/mixins';
+
+.tree{
+  composes: list-reset from '../../Sass/partial/_base.scss';
+}
+
+.btnCatalogue{
+  padding-left: $padding;
+}
+
+.data {
+    background: #fff;
+}

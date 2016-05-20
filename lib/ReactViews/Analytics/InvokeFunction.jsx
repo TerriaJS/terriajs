@@ -6,6 +6,8 @@ import ParameterEditor from './ParameterEditor';
 import when from 'terriajs-cesium/Source/ThirdParty/when';
 import TerriaError from '../../Core/TerriaError';
 import renderMarkdownInReact from '../../Core/renderMarkdownInReact';
+import Styles from './invoke-function.scss';
+
 
 const InvokeFunction = React.createClass({
     mixins: [ObserveModelMixin],
@@ -77,13 +79,13 @@ const InvokeFunction = React.createClass({
     );},
 
     render() {
-        return (<div className='invoke-function'>
-                    <div className="invoke-function__content">
+        return (<div className={Styles.invokeFunction}>
+                    <div className={Styles.content}>
                         <h3>{this.props.previewed.name}</h3>
-                        <div className="invoke-function__description">{renderMarkdownInReact(this.props.previewed.description, this.props.previewed, null)}</div>
+                        <div className="description">{renderMarkdownInReact(this.props.previewed.description, this.props.previewed, null)}</div>
                         {this.getParams()}
                     </div>
-                    <div className="invoke-function__footer">
+                    <div className={Styles.footer}>
                         <button type='button' className='btn btn-primary' onClick={this.submit}>Run Analysis</button>
                     </div>
                 </div>);

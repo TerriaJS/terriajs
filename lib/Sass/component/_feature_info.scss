@@ -25,38 +25,12 @@
 //
 // Style guide: Component.feature-info-panel
 
-.feature-info-panel{
-  background:rgba($dark, 0.95);
-  color: #fff;
-  border-radius: $radius-small;
-  display: none;
-
-  &.is-visible{
-    display: block;
-    z-index: 10;
-  }
-
-  &, .btn, li{
-    font-size: $font-size-small;
-  }
-
-  .btn {
-    padding: 4px 9px;
-    margin-right: 4px;
-  }
-
+.feature-info-panel__panel{
   .btn--download {
     padding: 3px;
     width: 27px;
     margin-left: 3px;
   }
-
-  &.is-collapsed{
-    .feature-info-panel__body{
-      display: none;
-    }
-  }
-
 }
 
 .feature-info-panel__section {

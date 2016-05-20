@@ -44,25 +44,13 @@
   }
 }
 
-.feature-info-panel{
-  position: fixed;
-  top: 10vh;
-  right: 10px;
-  max-width: 95%;
-  min-width: 150px;
-  max-height: 80vh;
-  z-index: 5;
-  @media screen and (min-width : $md){
-    //temp
-    max-width: calc(100vw - #{$work-bench-width} - 150px);
-    right: 105px;
-  }
-  #kss-node &{
-    position: relative;
-    top: 0;
-    left: 0;
-  }
-}
+// .feature-info-panel{
+//   #kss-node &{
+//     position: relative;
+//     top: 0;
+//     left: 0;
+//   }
+// }
 
 .is-top{
   z-index: $front-component-z-index!important;

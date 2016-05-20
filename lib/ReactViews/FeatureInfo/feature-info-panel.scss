@@ -1,0 +1,38 @@
+@import '~terriajs-variables';
+@import '../../Sass/global/mixins';
+
+.panel{
+  background:rgba($dark, 0.95);
+  color: #fff;
+  border-radius: $radius-small;
+  display: none;
+  position: fixed;
+  top: 10vh;
+  right: 10px;
+  max-width: 95%;
+  min-width: 150px;
+  max-height: 80vh;
+  z-index: 5;
+  @media screen and (min-width : $md){
+    //temp
+    max-width: calc(100vw - #{$work-bench-width} - 150px);
+    right: 105px;
+  }
+}
+
+.isOnTop{
+  z-index: $front-component-z-index!important;
+}
+
+.isCollapsed{
+  .body{
+    display: none;
+  }
+}
+
+.isVisible{
+  display: block;
+  z-index: 10;
+}
+
+
