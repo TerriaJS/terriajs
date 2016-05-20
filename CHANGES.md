@@ -2,8 +2,11 @@
 Change Log
 ==========
 
-### 3.1.1
+### 3.2.0
 
+* Deprecated in this version:
+  - `CkanCatalogItem.createCatalogItemFromResource`'s `options` `allowGroups` has been replaced with `allowWmsGroups` and `allowWfsGroups`.
+* Added support for WFS in CKAN items.
 * Fixed bug which prevented the terria-server's `"proxyAllDomains": true` option from working.
 * Added support in FeatureInfoTemplate for referencing csv columns by either their name in the csv file, or the name they are given via `TableStyle.columns...name` (if any).
 * Improved CSV handling to ignore any blank lines, ie. those containing only commas.
