@@ -1,0 +1,36 @@
+@import '~terriajs-variables';
+@import '../../../Sass/global/mixins';
+
+// My location
+//
+// Markup:
+// <div class='my-location'>
+//   <button class='btn btn--my-location btn--geolocation'></button>
+// </div>
+//
+// Style guide: Component.my-location
+
+.myLocation{
+  position: fixed;
+  bottom: $input-height + $padding;
+  right: 2vw;
+  @media screen and (min-width: $sm){
+    //temp
+    position: absolute;
+    right: 28px;
+    top: 170px;
+  }
+}
+.btn{
+    composes: btn--geolocation from '../../../Sass/partial/_buttons.scss';
+    border-radius: 50%;
+    display: block;
+    background: #fff;
+    padding: ($ring-width/2 + 1) $ring-width/2 ($ring-width/2 - 3px) $ring-width/2;
+    color: $dark;
+    &:before{
+      font-size: 25px;
+      line-height: 1;
+      text-align: center;
+    }
+  }
