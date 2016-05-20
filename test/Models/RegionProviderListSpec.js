@@ -5,12 +5,15 @@
 var RegionProviderList = require('../../lib/Map/RegionProviderList');
 var RegionProvider = require('../../lib/Map/RegionProvider');
 var TableStructure = require('../../lib/Map/TableStructure.js');
+var CorsProxy = require('../../lib/Core/CorsProxy');
 
 describe('RegionProviderList', function() {
+    var corsProxy;
     var regionProvideListPromise;
 
     beforeEach(function() {
-        regionProvideListPromise = RegionProviderList.fromUrl('test/csv/regionMapping.json');
+        corsProxy = new CorsProxy();
+        regionProvideListPromise = RegionProviderList.fromUrl('test/csv/regionMapping.json', corsProxy);
     });
 
     afterEach(function() {
@@ -62,7 +65,7 @@ describe('RegionProviderList', function() {
             '</wfs:ValueCollection>'
         });
         var regionDetails, regionProvider;
-        var regionProviderList = new RegionProviderList().initFromObject({
+        var regionProviderList = new RegionProviderList(corsProxy).initFromObject({
             regionWmsMap: {
                 POA: poaDescriptor
             }
@@ -108,7 +111,7 @@ describe('RegionProviderList', function() {
             '   </wfs:member>\n' +
             '</wfs:ValueCollection>'
         });
-        var regionProvider = new RegionProvider('POA2', poaDescriptor);
+        var regionProvider = new RegionProvider('POA2', poaDescriptor, corsProxy);
         var tableStructure = new TableStructure();
         tableStructure.loadFromCsv('postcode,value\n0800,1\n0885,2');
         regionProvider.loadRegionIDs().then(function() {
@@ -133,7 +136,7 @@ describe('RegionProviderList', function() {
         var poa2 = JSON.parse(JSON.stringify(poaDescriptor));
         //poa2.dataReplacements = [ [ '^()(?=\\d\\d\\d$)', '0' ] ];
         poa2.dataReplacements = [['^(Clifton Hill|Fitzroy North)$', '3068']];
-        var regionProvider = new RegionProvider("POA2", poa2);
+        var regionProvider = new RegionProvider("POA2", poa2, corsProxy);
         var tableStructure = new TableStructure();
         tableStructure.loadFromCsv('postcode,value\nFitzroy North,1\nFitzroy,-1\n^(Clifton Hill|Fitzroy North)$,-1');
         regionProvider.loadRegionIDs().then(function() {
