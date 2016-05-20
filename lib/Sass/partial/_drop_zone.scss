@@ -26,8 +26,8 @@
       opacity: 1;
       display: block;
       position: fixed;
-      top: calc(20px - 15vh);
-      left: -$padding*3;
+      top: 0;
+      left: 0;
       z-index: 99;
       width: 100vw;
       height: 100vh;
@@ -36,9 +36,9 @@
       .drop-zone-inner {
         display: block;
       }
-      @media screen and (min-width: $md) {
-        left: -$work-bench-width - 50px;
-      }
+      // @media screen and (min-width: $md) {
+      //   left: -$work-bench-width - 50px;
+      // }
     }
   }
 
