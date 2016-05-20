@@ -9,8 +9,12 @@
 }
 
 .legend__inner {
-  a, img {
+  a{
     display: block;
+  }
+  img {
+    display: inline-block;
+    background: #fff;
   }
   padding: $padding 0 0 0;
 }

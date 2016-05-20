@@ -14,7 +14,7 @@
     position: fixed;
     top: 20px;
     right: $padding;
-    z-index: $front-component-z-index + 1;
+    z-index: $front-component-z-index/2;
 }
 
 .modal-wrapper{
@@ -39,8 +39,8 @@
     }
   }
   @media screen and (min-width : $md){
-    padding-left: 100px + $work-bench-width;
-    padding-right: 100px;
+    padding-left: 50px + $work-bench-width;
+    padding-right: 50px;
   }
 }
 
