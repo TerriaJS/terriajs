@@ -10,6 +10,7 @@ const getTimestamp = require('terriajs-cesium/Source/Core/getTimestamp');
 const Matrix4 = require('terriajs-cesium/Source/Core/Matrix4');
 const Ray = require('terriajs-cesium/Source/Core/Ray');
 const Transforms = require('terriajs-cesium/Source/Core/Transforms');
+import Styles from './compass.scss';
 
 // the compass on map
 const Compass = React.createClass({
@@ -110,10 +111,10 @@ const Compass = React.createClass({
         };
 
         return (
-            <div className='compass' onMouseDown ={this.handleMouseDown} onDoubleClick ={this.handleDoubleClick} onMouseUp ={this.resetRotater}>
-              <div className='compass--outer-ring' style={outerCircleStyle}></div>
-              <div className='compass--inner-ring' title='Click and drag to rotate the camera'></div>
-              <div className='compass--rotation-marker' style={rotationMarkerStyle}></div>
+            <div className={Styles.compass} onMouseDown ={this.handleMouseDown} onDoubleClick ={this.handleDoubleClick} onMouseUp ={this.resetRotater}>
+              <div className={Styles.outerRing} style={outerCircleStyle}></div>
+              <div className={Styles.innerRing} title='Click and drag to rotate the camera'></div>
+              <div className={Styles.rotationMarker} style={rotationMarkerStyle}></div>
             </div>
             );
     }

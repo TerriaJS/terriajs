@@ -3,32 +3,6 @@
 // Style guide: Component
 
 .map-navigation{
-    .compass{
-      position: absolute;
-      right: $padding;
-      top: 75px;
-      @extend .sm-show;
-    }
-
-    .zoom-control{
-      position: absolute;
-      //temp
-      right: 34px;
-      top: 240px;
-      @extend .sm-show;
-    }
-
-    .my-location{
-      position: fixed;
-      bottom: $input-height + $padding;
-      right: 2vw;
-      @media screen and (min-width: $sm){
-        //temp
-        position: absolute;
-        right: 28px;
-        top: 170px;
-      }
-    }
     .map-navigation__menu{
       @extend .list-reset;
       @extend .clearfix;
@@ -38,14 +12,6 @@
         float: left;
       }
     }
-}
-
-
-
-.full-screen__button{
-  .enter-full-screen{
-    @extend .btn--expand;
-  }
 }
 
 .dd-panel__button{
@@ -60,11 +26,7 @@
   }
 }
 
-.full-screen__button .enter-full-screen{
-  &:before{
-    font-size: 1.6rem;
-  }
-}
+
 
 .dd-panel__button{
   &:before{
@@ -73,7 +35,6 @@
   }
 }
 
-.full-screen__button,
 .dd-panel__button,
 .about-link__button{
   margin-right: $padding;

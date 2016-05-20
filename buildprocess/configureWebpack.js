@@ -11,6 +11,8 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
     config.resolve.extensions = config.resolve.extensions || ['', '.webpack.js', '.web.js', '.js'];
     config.resolve.extensions.push('.jsx');
     config.resolve.alias = config.resolve.alias || {};
+    config.resolve.root = config.resolve.root || [];
+    config.resolve.root.push(path.resolve(terriaJSBasePath, 'wwwroot'));
 
     config.module = config.module || {};
     config.module.loaders = config.module.loaders || [];

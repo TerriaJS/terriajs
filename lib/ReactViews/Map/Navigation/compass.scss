@@ -1,0 +1,57 @@
+@import '~terriajs-variables';
+@import '../../../Sass/global/mixins';
+// Map Compass
+//
+// Markup:
+// <div class="compass">
+// <div class="outerRing"></div>
+// <div class="innerRing" title="Click and drag to rotate the camera"></div>
+// <div class="rotationMarker"></div>
+// </div>
+//
+// Style guide: Component.map-compass
+
+.compass{
+  cursor: default;
+  width: $compass-width;
+  height: $compass-width;
+  position: absolute;
+  right: $padding;
+  top: 75px;
+  composes: sm-show from '../../../Sass/partial/_base.scss';
+}
+.innerRing{
+  @include vertical-align();
+  height: $compass-width - $ring-width*3.5;
+  width: $compass-width - $ring-width*3.5;
+  border-radius: 50%;
+  display: block;
+  margin: 0 auto;
+  background-image: url('images/compass-inner.svg');
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+.rotationMarker{
+  background-image: url('images/compass-rotation-marker.svg');
+  height: $compass-width - 4px;
+  width: $compass-width - 4px;
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.outerRing{
+  background-image: url('images/compass-outer.svg');
+  height: $compass-width;
+  width: $compass-width;
+  border-radius: 50%;
+  position: absolute;
+  background-repeat: no-repeat;
+  background-size: contain;
+  top: 0;
+  left: 0;
+}
+
