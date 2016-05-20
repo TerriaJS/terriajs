@@ -1,12 +1,15 @@
 'use strict';
 
 /*global require*/
-var corsProxy = require('../../lib/Core/corsProxy');
+var CorsProxy = require('../../lib/Core/CorsProxy');
 
-describe('corsProxy', function() {
+describe('CorsProxy', function() {
+    var corsProxy;
     var originalPageIsHttps, originalAlwaysUseProxy;
 
     beforeEach(function() {
+        corsProxy = new CorsProxy();
+
         originalPageIsHttps = corsProxy.pageIsHttps;
         originalAlwaysUseProxy = corsProxy.alwaysUseProxy;
         corsProxy.pageIsHttps = false;
