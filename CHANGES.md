@@ -4,7 +4,7 @@ Change Log
 
 ### 3.1.1
 
-* The following previously-deprecated functionality was removed in this version:
+* Deprecated in this version:
   - `CkanCatalogItem.createCatalogItemFromResource`'s `options` `allowGroups` has been replaced with `allowWmsGroups` and `allowWfsGroups`.
 * Added support for WFS in CKAN items.
 * Fixed bug which prevented the terria-server's `"proxyAllDomains": true` option from working.
