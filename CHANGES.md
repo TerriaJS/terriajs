@@ -6,6 +6,7 @@ Change Log
 
 * Fixed a bug on IE9 which prevented shortened URLs from loading.
 * Fixed a map started with smooth terrain being unable to switch to 3D terrain.
+* Fixed a bug in `CkanCatalogItem` that prevented it from using the proxy for dataset URLs.
 
 ### 3.2.0
 
