@@ -2,7 +2,7 @@
 Change Log
 ==========
 
-### 3.1.1
+### 3.2.0
 
 * Deprecated in this version:
   - `CkanCatalogItem.createCatalogItemFromResource`'s `options` `allowGroups` has been replaced with `allowWmsGroups` and `allowWfsGroups`.
