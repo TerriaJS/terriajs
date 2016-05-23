@@ -7,6 +7,7 @@ Change Log
 * Fixed a bug on IE9 which prevented shortened URLs from loading.
 * Fixed a map started with smooth terrain being unable to switch to 3D terrain.
 * Fixed a bug in `CkanCatalogItem` that prevented it from using the proxy for dataset URLs.
+* Fixed feature picking when displaying a point-based vector and a region mapped layer at the same time.
 
 ### 3.2.0
 
