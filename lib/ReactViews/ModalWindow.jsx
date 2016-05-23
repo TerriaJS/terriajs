@@ -14,7 +14,7 @@ const ModalWindow = React.createClass({
     },
 
     close() {
-        this.props.viewState.modalVisible = false;
+        this.props.viewState.explorerPanelIsVisible = false;
         this.props.viewState.switchMobileView('nowViewing');
     },
 
@@ -24,7 +24,7 @@ const ModalWindow = React.createClass({
     },
 
     isVisible() {
-        return !this.props.viewState.hideMapUi() && this.props.viewState.modalVisible;
+        return !this.props.viewState.hideMapUi() && this.props.viewState.explorerPanelIsVisible;
     },
 
     componentDidMount() {

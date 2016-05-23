@@ -40,7 +40,7 @@ const InvokeFunction = React.createClass({
             // Show the Now Viewing panel
             this.props.previewed.terria.nowViewing.showNowViewingRequested.raiseEvent();
             // Close modal window
-            this.props.viewState.toggleModal(false);
+            this.props.viewState.explorerPanelIsVisible = false;
             // mobile switch to nowvewing
             this.props.viewState.switchMobileView(this.props.viewState.mobileViewOptions.preview);
 

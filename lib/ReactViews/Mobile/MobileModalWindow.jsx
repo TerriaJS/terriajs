@@ -57,23 +57,23 @@ const MobileModalWindow = React.createClass({
 
     onClearMobileUI() {
         this.props.viewState.switchMobileView(null);
-        this.props.viewState.toggleModal(false);
+        this.props.viewState.explorerPanelIsVisible = false;
     },
 
     componentWillReceiveProps() {
         if((this.props.terria.nowViewing.items.length === 0) &&
           (this.props.viewState.mobileView === this.props.viewState.mobileViewOptions.nowViewing)) {
             this.props.viewState.switchMobileView(null);
-            this.props.viewState.toggleModal(false);
+            this.props.viewState.explorerPanelIsVisible = false;
         }
     },
 
     render() {
         let modalClass = classNames(Styles.mobileModal, {
-            [Styles.isOpen]: this.props.viewState.modalVisible && this.props.viewState.mobileView
+            [Styles.isOpen]: this.props.viewState.explorerPanelIsVisible && this.props.viewState.mobileView
         });
         return <div className={modalClass}>
-                    {(this.props.viewState.modalVisible && this.props.viewState.mobileView) && <button type='button' className={Styles.closeModal} onClick={this.onClearMobileUI}>Done</button>}
+                    {(this.props.viewState.explorerPanelIsVisible && this.props.viewState.mobileView) && <button type='button' className={Styles.closeModal} onClick={this.onClearMobileUI}>Done</button>}
                     {this.renderModalContent()}
                 </div>;
     }
