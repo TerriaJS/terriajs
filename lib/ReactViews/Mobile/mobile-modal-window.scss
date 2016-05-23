@@ -19,11 +19,11 @@
 }
 
 .modalBg{
-  background: rgba(#fff, 0.9);
+  background: rgba(#fff, 0.5);
   overflow-y: auto;
   overflow-x: hidden;
   height: 100%;
-  padding: $input-height 0 $padding-small 0;
+  padding: $input-height $padding-small $padding-small $padding-small;
 }
 
 .closeModal{
