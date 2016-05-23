@@ -69,11 +69,18 @@ const WorkbenchList = React.createClass({
 
     onDrop(e) {
         if (this.state.placeholderIndex >= 0) {
-            const draggedItemIndex = this.props.terria.nowViewing.items.indexOf(this.state.draggedItem);
-            this.props.terria.nowViewing.items.splice(draggedItemIndex, 1);
-
+            let draggedItemIndex = this.props.terria.nowViewing.items.indexOf(this.state.draggedItem);
             const addAtIndex = this.state.placeholderIndex > draggedItemIndex ? this.state.placeholderIndex - 1 : this.state.placeholderIndex;
-            this.props.terria.nowViewing.items.splice(addAtIndex, 0, this.state.draggedItem);
+
+            while (draggedItemIndex < addAtIndex) {
+                this.props.terria.nowViewing.lower(this.state.draggedItem);
+                ++draggedItemIndex;
+            }
+
+            while (draggedItemIndex > addAtIndex) {
+                this.props.terria.nowViewing.raise(this.state.draggedItem);
+                --draggedItemIndex;
+            }
         }
 
         this.resetHover();
