@@ -2,6 +2,7 @@
 @import '../../Sass/global/mixins';
 
 .form{
+    z-index: 1;
     position: fixed;
     background: #fff;
     color: $dark;
