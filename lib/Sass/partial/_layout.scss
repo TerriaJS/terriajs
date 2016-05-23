@@ -44,14 +44,39 @@
   }
 }
 
-// .feature-info-panel{
-//   #kss-node &{
-//     position: relative;
-//     top: 0;
-//     left: 0;
-//   }
-// }
 
 .is-top{
   z-index: $front-component-z-index!important;
+}
+
+.data-preview__wrapper{
+  visibility: hidden;
+  overflow: hidden;
+  height: 0;
+
+  .data-panel-wrapper.is-open &{
+      visibility: visible;
+      width: 60%;
+      float: right;
+      height: 100%;
+      overflow: hidden;
+  }
+  h4{
+    margin-top: $padding;
+  }
+}
+
+.leaflet-control-attribution {
+    font-size: 6px;
+    background: none;
+}
+
+//Preview map
+.terria-preview{
+  height: 150px;
+  overflow: hidden;
+  position: relative;
+  background: #d5d5d5;
+  cursor: auto;
+  margin: $padding 0;
 }

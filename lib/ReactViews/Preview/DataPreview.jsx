@@ -8,6 +8,8 @@ import naturalSort from 'javascript-natural-sort';
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
 import renderMarkdownInReact from '../../Core/renderMarkdownInReact';
+import Styles from './data-preview.scss';
+
 
 // Data preview section, for the preview map see DataPreviewMap
 const DataPreview = React.createClass({
@@ -72,13 +74,13 @@ const DataPreview = React.createClass({
     render() {
         const previewed = this.props.previewed;
         return (
-                <div className='data-preview'>
+                <div className={Styles.preview}>
                     {previewed && this.renderActions(previewed)}
                     {!previewed && (
-                        <div className='data-preview__inner data-preview__placeholder'>
+                        <div className={Styles.placeholder}>
                             <p>Select a dataset to see a preview</p>
                             <p>- OR -</p>
-                            <button className="btn btn--tertiary" onClick={this.backToMap}>Go to the map</button>
+                            <button className={Styles.btnBackToMap} onClick={this.backToMap}>Go to the map</button>
                         </div>
                     )}
                 </div>
@@ -95,15 +97,15 @@ const DataPreview = React.createClass({
         const metadataItem = defined(previewed.nowViewingCatalogItem) ? previewed.nowViewingCatalogItem : previewed;
         if (previewed.isMappable) {
             return (
-                <div className='data-preview__inner'>
+                <div className={Styles.previewInner}>
                     <h3>{previewed.name}</h3>
                     {this.renderPreview(previewed)}
-                    <div className='data-preview__info'>
+                    <div className={Styles.previewedInfo}>
                         <button type='button' onClick={this.toggleOnMap}
-                                className="btn toggle-enable data-preview__add-to-map">
+                                className={Styles.btnAdd}>
                             {previewed.isEnabled ? 'Remove from the map' : 'Add to the map'}
                         </button>
-                        <button type='button' className="btn btn--tertiary data-preview__back-to-map" onClick={this.backToMap}>
+                        <button type='button' className={Styles.btnBack } onClick={this.backToMap}>
                             Back to the map
                         </button>
                         <div className="data-info url">
@@ -117,7 +119,7 @@ const DataPreview = React.createClass({
             );
         } else if(typeof previewed.invoke !== 'undefined') {
             return (
-                <div className='data-preview__inner'>
+                <div className={Styles.previewInner}>
                     <InvokeFunction previewed={previewed}
                                    terria={this.props.terria}
                                    viewState={this.props.viewState}

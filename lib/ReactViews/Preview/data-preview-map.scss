@@ -1,0 +1,18 @@
+@import '~terriajs-variables';
+@import '../../Sass/global/mixins';
+
+.map{
+  position: relative;
+}
+.badge{
+  top: 5px;
+  left: 0;
+  padding: 3px 5px 0 5px;
+  height: 16px;
+  font-size: 75%;
+  position: absolute;
+  background: #fff;
+}
+
+
+

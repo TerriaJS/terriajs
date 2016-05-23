@@ -11,6 +11,8 @@ const Terria = require('../../Models/Terria');
 const TerriaViewer = require('../../ViewModels/TerriaViewer.js');
 const ViewerMode = require('../../Models/ViewerMode');
 const when = require('terriajs-cesium/Source/ThirdParty/when');
+import Styles from './data-preview-map.scss';
+
 
 const DataPreviewMap = React.createClass({
     mixins: [ObserveModelMixin],
@@ -253,10 +255,10 @@ const DataPreviewMap = React.createClass({
     },
 
     render() {
-        return (<div className='data-preview-map' onClick={this.clickMap}>
+        return (<div className={Styles.map} onClick={this.clickMap}>
                     <div className='terria-preview' ref={this.mapIsReady}>
                     </div>
-                    <label className='label--preview-badge'>{this.state.previewBadgeText}</label>
+                    <label className={Styles.badge}>{this.state.previewBadgeText}</label>
                 </div>
                 );
     }
