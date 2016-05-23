@@ -3,6 +3,7 @@
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
 import renderMarkdownInReact from '../../Core/renderMarkdownInReact';
+import Styles from './notification-window.scss';
 
 const NotificationWindow = React.createClass({
     mixins: [ObserveModelMixin],
@@ -26,17 +27,17 @@ const NotificationWindow = React.createClass({
         const buttonCaption = this.props.buttonCaption || 'OK';
 
         return (
-            <div className="notification-wrapper is-visible">
-                <div className='notification'>
-                    <div className='notification__inner'>
+            <div className={Styles.wrapper}>
+                <div className={Styles.notification}>
+                    <div className={Styles.inner}>
                         <h3 className='title'>{title}</h3>
                         {window.location.host === 'localhost:3001' && title.toLowerCase().indexOf('error') >= 0 &&
                             <div><img src='./build/TerriaJS/images/feature.gif'/></div>
                         }
-                        <div className='body'>{renderMarkdownInReact(message)}</div>
+                        <div className={Styles.body}>{renderMarkdownInReact(message)}</div>
                     </div>
-                    <div className='notification__footer'>
-                        <button type='button' className='btn' onClick={this.dismiss}>{buttonCaption}</button>
+                    <div className={Styles.footer}>
+                        <button type='button' className={Styles.btn}onClick={this.dismiss}>{buttonCaption}</button>
                     </div>
                 </div>
             </div>
