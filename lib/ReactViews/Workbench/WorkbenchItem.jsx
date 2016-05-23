@@ -13,11 +13,11 @@ import ShortReport from './Controls/ShortReport';
 
 import Styles from './workbench-item.scss';
 
-const NowViewingItem = React.createClass({
+const WorkbenchItem = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        nowViewingItem: React.PropTypes.object.isRequired,
+        item: React.PropTypes.object.isRequired,
         dragging: React.PropTypes.bool,
         onDragStart: React.PropTypes.func,
         onDragOver: React.PropTypes.func,
@@ -27,7 +27,7 @@ const NowViewingItem = React.createClass({
     },
 
     toggleDisplay() {
-        this.props.nowViewingItem.isLegendVisible = !this.props.nowViewingItem.isLegendVisible;
+        this.props.item.isLegendVisible = !this.props.item.isLegendVisible;
     },
 
     onDragStart(e) {
@@ -46,28 +46,28 @@ const NowViewingItem = React.createClass({
         this.props.setWrapperState({
             modalWindowIsOpen: true,
             activeTab: 1,
-            previewed: this.props.nowViewingItem,
+            previewed: this.props.item,
         });
     },
 
     toggleVisibility() {
-        this.props.nowViewingItem.isShown = !this.props.nowViewingItem.isShown;
+        this.props.item.isShown = !this.props.item.isShown;
     },
 
     render() {
-        const nowViewingItem = this.props.nowViewingItem;
+        const workbenchItem = this.props.item;
 
         return (
             <li className={classNames(
-                Styles.nowViewingItem,
+                Styles.workbenchItem,
                 {
-                    [Styles.isOpen]: nowViewingItem.isLegendVisible,
+                    [Styles.isOpen]: workbenchItem.isLegendVisible,
                     [Styles.isDragging]: this.props.dragging
                 })}
                 onDragOver={this.onDragOver}>
 
                 <ul className={Styles.header}>
-                    <If condition={nowViewingItem.supportsToggleShown}>
+                    <If condition={workbenchItem.supportsToggleShown}>
                         <li className={Styles.visibilityColumn}>
                             <button type='button'
                                     onClick={this.toggleVisibility}
@@ -75,8 +75,8 @@ const NowViewingItem = React.createClass({
                                     className={classNames(
                                         Styles.btnVisibility,
                                         {
-                                            [Styles.btnVisibilityVisible]: nowViewingItem.isShown,
-                                            [Styles.btnVisibilityInvisible]: !nowViewingItem.isShown
+                                            [Styles.btnVisibilityVisible]: workbenchItem.isShown,
+                                            [Styles.btnVisibilityInvisible]: !workbenchItem.isShown
                                         }
                                     )}
                             />
@@ -88,10 +88,10 @@ const NowViewingItem = React.createClass({
                                 onDragStart={this.onDragStart}
                                 onDragEnd={this.onDragEnd}
                                 className={classNames(Styles.btn)}>
-                            <If condition={!nowViewingItem.isMappable}>
+                            <If condition={!workbenchItem.isMappable}>
                                 <i className={classNames(Styles.icon, Styles.iconLineChart)} />
                             </If>
-                            {nowViewingItem.name}
+                            {workbenchItem.name}
                         </button>
                     </li>
                     <li className={Styles.toggleColumn}>
@@ -99,23 +99,23 @@ const NowViewingItem = React.createClass({
                                 onClick={this.toggleDisplay}
                                 className={classNames(
                                     Styles.btnToggle,
-                                    {[Styles.btnToggleIsOpen]: nowViewingItem.isLegendVisible}
+                                    {[Styles.btnToggleIsOpen]: workbenchItem.isLegendVisible}
                                 )}
                         />
                     </li>
                     <li className={Styles.headerClearfix} />
                 </ul>
 
-                <If condition={nowViewingItem.isLegendVisible}>
+                <If condition={workbenchItem.isLegendVisible}>
                     <div className={Styles.inner}>
-                        <ViewingControls nowViewingItem={nowViewingItem} viewState={this.props.viewState}/>
-                        <OpacitySection nowViewingItem={nowViewingItem}/>
-                        <Legend nowViewingItem={nowViewingItem}/>
-                        <If condition={(defined(nowViewingItem.concepts) && nowViewingItem.concepts.length > 0)}>
-                            <ConceptViewer nowViewingItem={nowViewingItem}/>
+                        <ViewingControls item={workbenchItem} viewState={this.props.viewState}/>
+                        <OpacitySection item={workbenchItem}/>
+                        <Legend item={workbenchItem}/>
+                        <If condition={(defined(workbenchItem.concepts) && workbenchItem.concepts.length > 0)}>
+                            <ConceptViewer item={workbenchItem}/>
                         </If>
-                        <If condition={nowViewingItem.shortReport || (nowViewingItem.shortReportSections && nowViewingItem.shortReportSections.length)}>
-                            <ShortReport nowViewingItem={nowViewingItem}/>
+                        <If condition={workbenchItem.shortReport || (workbenchItem.shortReportSections && workbenchItem.shortReportSections.length)}>
+                            <ShortReport item={workbenchItem}/>
                         </If>
                     </div>
                 </If>
@@ -124,4 +124,4 @@ const NowViewingItem = React.createClass({
     }
 });
 
-module.exports = NowViewingItem;
+module.exports = WorkbenchItem;

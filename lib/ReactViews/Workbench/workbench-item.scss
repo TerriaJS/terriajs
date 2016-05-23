@@ -1,56 +1,56 @@
 @import '~terriajs-variables';
 @import '../../Sass/global/mixins';
 
-// Now viewing
+// Workbench
 //
-// .is-open - now viewing open state
+// .is-open - workbench open state
 //
 // Markup:
-// <ul class='now-viewing-content'>
-// <li class='now-viewing-item {{modifier_class}}'>
-//   <ul class ="now-viewing__item-header">
+// <ul class='workbench-content'>
+// <li class='workbench-item {{modifier_class}}'>
+//   <ul class ="workbench__item-header">
 //     <li><button class="btn btn--drag">National Broadband</button></li>
 //     <li><button class='btn btn--toggle'></button></li>
 //   </ul>
 //   <div class ="inner">
-//     <ul class="now-viewing-item-control">
+//     <ul class="workbench-item-control">
 //        <li class='zoom'><button title="Zoom in data" class="btn">Zoom To</button></li>
 //        <li class='info'><button class='btn' title='info'>info</button></li>
 //        <li class='remove'><button title="Remove this data" class="btn">Remove</button></li>
 //        <li class='visibility'><button title="Data show/hide" class='btn btn--visibility '></button></li>
 //     </ul>
-//     <div class="now-viewing-item__opacity">
+//     <div class="workbench-item__opacity">
 //       <label htmlFor="opacity">Opacity: </label>
 //       <input type='range' name='opacity' min='0' max='1' step='0.01' />
 //     </div>
-//     <div class="now-viewing-item__legend">
+//     <div class="workbench-item__legend">
 //       No legend to show
 //     </div>
 //   </div>
 //   </li>
 // </ul>
 //
-// Style guide: Component.now-viewing
+// Style guide: Component.workbench
 
 // Save 1px for drop zone
-$now-viewing-margin: $padding-small - 1px;
+$workbench-margin: $padding-small - 1px;
 
 .kss-modifier__example {
-  .now-viewing-item {
+  .workbench-item {
     width: 300px;
   }
 }
 
-.now-viewing-item {
+.workbench-item {
   @include greybox();
   color: #fff;
   font-family: $font-pop;
-  margin: $now-viewing-margin/2 0;
+  margin: $workbench-margin/2 0;
 
   &.is-dragging {
     opacity: 0.5;
 
-    .now-viewing__header {
+    .workbench__header {
       display: none !important;
     }
 

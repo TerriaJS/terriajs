@@ -10,14 +10,14 @@ const ConceptViewer = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        nowViewingItem: React.PropTypes.object.isRequired
+        item: React.PropTypes.object.isRequired
     },
 
     render() {
         return (
             <div className={Styles.root}>
                 <For each="concept" index="i"
-                     of={this.props.nowViewingItem.concepts.filter(concept => concept.isVisible)}>
+                     of={this.props.item.concepts.filter(concept => concept.isVisible)}>
                     <div className={Styles.inner} key={i}>
                         <ul className={Styles.childrenList}>
                             <Concept concept={concept}/>

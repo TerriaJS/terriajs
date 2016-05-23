@@ -12,7 +12,7 @@ import React from 'react';
 const Legend = React.createClass({
     mixins: [ObserveModelMixin],
     propTypes: {
-        nowViewingItem: React.PropTypes.object
+        item: React.PropTypes.object
     },
 
     onImageError(legend) {
@@ -20,8 +20,8 @@ const Legend = React.createClass({
     },
 
     getLegends() {
-        if (defined(this.props.nowViewingItem.legendUrls)) {
-            return this.props.nowViewingItem.legendUrls.map((legendUrl)=>{
+        if (defined(this.props.item.legendUrls)) {
+            return this.props.item.legendUrls.map((legendUrl)=>{
                 return {
                     url: proxyCatalogItemUrl(this.catalogMember, legendUrl.url),
                     isImage: legendUrl.isImage(),
@@ -40,8 +40,8 @@ const Legend = React.createClass({
             <ul className={Styles.legend}>
                 <div className={Styles.legendInner}>
                     <Choose>
-                        <When condition={this.props.nowViewingItem.isLoading}>
-                            <li><Loader message={this.props.nowViewingItem.loadingMessage}/></li>
+                        <When condition={this.props.item.isLoading}>
+                            <li><Loader message={this.props.item.loadingMessage}/></li>
                         </When>
                         <Otherwise>
                             <For each="legend" index="i" of={this.getLegends()}>

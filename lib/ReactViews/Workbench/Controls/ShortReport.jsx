@@ -9,20 +9,20 @@ const ShortReport = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        nowViewingItem: React.PropTypes.object.isRequired
+        item: React.PropTypes.object.isRequired
     },
 
     render() {
         return (
             <div className={Styles.shortReport}>
-                <If condition={this.props.nowViewingItem.shortReport}>
-                    {renderMarkdownInReact(this.props.nowViewingItem.shortReport, this.props.nowViewingItem, null)}
+                <If condition={this.props.item.shortReport}>
+                    {renderMarkdownInReact(this.props.item.shortReport, this.props.item, null)}
                 </If>
-                <If condition={this.props.nowViewingItem.shortReportSections}>
-                    <For each="r" of={this.props.nowViewingItem.shortReportSections} index="i">
+                <If condition={this.props.item.shortReportSections}>
+                    <For each="r" of={this.props.item.shortReportSections} index="i">
                         <div key={i}>
                             <label>{r.name}</label>
-                            {renderMarkdownInReact(r.content, this.props.nowViewingItem, null)}
+                            {renderMarkdownInReact(r.content, this.props.item, null)}
                         </div>
                     </For>
                 </If>

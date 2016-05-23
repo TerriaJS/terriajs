@@ -1,7 +1,7 @@
 @import '~terriajs-variables';
 @import '../../Sass/global/mixins';
 
-.now-viewing{}
+.workbench {}
 
 .remove-button {
   composes: btn from '../../Sass/partial/_buttons.scss';

@@ -101,10 +101,10 @@ const WorkbenchList = React.createClass({
 
     render() {
         return (
-            <ul className={Styles.nowViewingContent} onDragLeave={this.onDragLeaveContainer} onDrop={this.onDrop}>
+            <ul className={Styles.workbenchContent} onDragLeave={this.onDragLeaveContainer} onDrop={this.onDrop}>
                 <For each="item" of={this.props.terria.nowViewing.items} index="i">
                     {this.renderDropzone(i)}
-                    <WorkbenchItem nowViewingItem={item}
+                    <WorkbenchItem item={item}
                                    key={item.uniqueId}
                                    dragging={this.state.draggedItem === item}
                                    onDragOver={this.onDragOverItem.bind(this, i)}

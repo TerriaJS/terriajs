@@ -18,7 +18,7 @@ const Workbench = React.createClass({
 
     render() {
         return (
-            <div className={Styles.nowViewing}>
+            <div className={Styles.workbench}>
                 <BadgeBar label="Data Sets" badge={this.props.terria.nowViewing.items.length}>
                     <button type='button' onClick={this.removeAll} className={Styles.removeButton}>
                         Remove All <i className={Styles.iconRemove}/>
