@@ -139,7 +139,7 @@ const RegionDataParameterEditor = React.createClass({
         if(this.catalogItemsWithMatchingRegion().length > 0) {
             return <div className={Styles.data}><ul className={Styles.tree}>{this.catalogItemsWithMatchingRegion().map((catalogItem, i)=>
                 <li key ={i}><button type='button' onClick={this.toggleOpenCatalogItem.bind(this, catalogItem)}
-                                     className={`btn btn--catalogue ${this.catalogItemIsOpen(catalogItem) ? 'is-open' : ''}`}>{catalogItem.name}</button>{this.catalogItemIsOpen(catalogItem) && this.renderItemChildren(catalogItem)}</li>
+                                     className={`btn btn--catalog ${this.catalogItemIsOpen(catalogItem) ? 'is-open' : ''}`}>{catalogItem.name}</button>{this.catalogItemIsOpen(catalogItem) && this.renderItemChildren(catalogItem)}</li>
             )}</ul></div>;
         }
         return <div className="parameter-editor-important-note">
