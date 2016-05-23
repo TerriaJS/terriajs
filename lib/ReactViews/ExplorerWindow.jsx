@@ -1,11 +1,8 @@
-'use strict';
-
 import ObserveModelMixin from './ObserveModelMixin';
 import React from 'react';
 import Tabs from './Tabs.jsx';
 
-// TODO: Rename this :/
-const ModalWindow = React.createClass({
+const ExplorerWindow = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -67,4 +64,4 @@ const ModalWindow = React.createClass({
     }
 });
 
-module.exports = ModalWindow;
+module.exports = ExplorerWindow;

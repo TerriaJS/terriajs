@@ -10,7 +10,7 @@ import LocationBar from '../Map/Legend/LocationBar.jsx';
 import MapInteractionWindow from './../Notification/MapInteractionWindow.jsx';
 import MapNavigation from './../Map/MapNavigation.jsx';
 import MobileHeader from './../Mobile/MobileHeader.jsx';
-import ModalWindow from './../ModalWindow.jsx';
+import ExplorerWindow from './../ExplorerWindow.jsx';
 import Notification from './../Notification/Notification.jsx';
 import ObserveModelMixin from './../ObserveModelMixin';
 import ProgressBar from './../ProgressBar.jsx';
@@ -130,7 +130,7 @@ const StandardUserInterface = React.createClass({
 
                             <If condition={!this.props.viewState.useSmallScreenInterface}>
                                 <main>
-                                    <ModalWindow terria={terria} viewState={this.props.viewState}/>
+                                    <ExplorerWindow terria={terria} viewState={this.props.viewState}/>
                                 </main>
                             </If>
                         </section>
