@@ -5,6 +5,7 @@ Change Log
 ### 3.3.0
 
 * Support `parameters` property in WebFeatureServiceCatalogItem to allow accessing URLs which need additional parameters.
+* Support `flipGmlCoords` property in WebFeatureServiceCatalogItem to support incorrect EPSG:4326 lon-lat ordering.
 
 ### 3.2.1
 
