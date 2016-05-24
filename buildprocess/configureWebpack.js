@@ -174,8 +174,8 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
     config.module.loaders.push({
         test: /\.(png|jpg|svg|gif)$/,
         include: [
-            path.resolve(cesiumDir, 'Source', 'Assets'),
-            path.resolve(terriaJSBasePath, 'wwwroot', 'images')
+            path.resolve(terriaJSBasePath),
+            path.resolve(cesiumDir)
         ],
         loader: require.resolve('url-loader'),
         query: {
@@ -224,22 +224,14 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
         new StringReplacePlugin()
     ]);
 
-    if (hot) {
-        config.module.loaders.push({
-            include: path.resolve(terriaJSBasePath),
-            test: /\.scss$/,
-            loaders: [
-                require.resolve('style-loader'),
-                require.resolve('css-loader') + '?sourceMap&modules&camelCase&localIdentName=[name]__[local]&importLoaders=2',
-                require.resolve('resolve-url-loader') + '?sourceMap',
-                require.resolve('sass-loader') + '?sourceMap'
-            ]
-        });
-    } else if (ExtractTextPlugin) {
+    if (ExtractTextPlugin) {
         config.module.loaders.push({
             exclude: path.resolve(terriaJSBasePath, 'lib', 'Sass'),
-            include: path.resolve(terriaJSBasePath, 'lib'),
-            test: /\.scss$/,
+            include: [
+                terriaJSBasePath,
+                cesiumDir
+            ],
+            test: /\.s?css$/,
             loader: ExtractTextPlugin.extract(
                 require.resolve('css-loader') + '?sourceMap&modules&camelCase&localIdentName=[name]__[local]&importLoaders=2!' +
                 require.resolve('resolve-url-loader') + '?sourceMap!' +
@@ -248,6 +240,20 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
                     publicPath: ''
                 }
             )
+        });
+    } else {
+        config.module.loaders.push({
+            include: [
+                terriaJSBasePath,
+                cesiumDir
+            ],
+            test: /\.scss$/,
+            loaders: [
+                require.resolve('style-loader'),
+                require.resolve('css-loader') + '?sourceMap&modules&camelCase&localIdentName=[name]__[local]&importLoaders=2',
+                require.resolve('resolve-url-loader') + '?sourceMap',
+                require.resolve('sass-loader') + '?sourceMap'
+            ]
         });
     }
 

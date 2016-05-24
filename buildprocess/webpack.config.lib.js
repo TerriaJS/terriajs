@@ -1,5 +1,6 @@
 var configureWebpack = require('./configureWebpack');
 var path = require('path');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 var config = {
     entry: './terria.lib.js',
@@ -10,9 +11,12 @@ var config = {
         libraryTarget: 'umd',
         umdNamedDefined: true
     },
-    devtool: 'source-map'
+    devtool: 'source-map',
+    plugins: [
+        new ExtractTextPlugin("terria.css", {ignoreOrder: true})
+    ]
 };
 
-configureWebpack(path.resolve(__dirname, '../'), config);
+configureWebpack(path.resolve(__dirname, '../'), config, false, false, ExtractTextPlugin);
 
 module.exports = config;

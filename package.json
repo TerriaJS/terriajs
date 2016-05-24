@@ -57,7 +57,6 @@
     "eslint": "^2.7.0",
     "eslint-plugin-jsx-control-statements": "2.1.1",
     "eslint-plugin-react": "^4.3.0",
-    "extract-text-webpack-plugin": "^1.0.1",
     "generate-terriajs-schema": "^1.2.1",
     "glob-all": "^3.0.1",
     "gulp-ruby-sass": "^2.0.5",
@@ -88,7 +87,7 @@
     "postpublish": "bash -c \"git tag -a ${npm_package_version} -m \"${npm_package_version}\" && git push origin ${npm_package_version}\"",
     "postinstall": "gulp post-npm-install",
     "make-schema": "gulp make-schema",
-    "start": "webpack-dev-server --inline --config buildprocess/webpack.config.js",
-    "hot": "webpack-dev-server --inline --config buildprocess/webpack.config.js --hot"
+    "start": "webpack-dev-server --inline --config buildprocess/webpack.config.dev.js",
+    "hot": "webpack-dev-server --inline --config buildprocess/webpack.config.hot.js --hot"
   }
 }
