@@ -31,6 +31,10 @@ TerriaJS is a library for building rich, web-based geospatial data explorers, us
 * [NEII Viewer](http://neii.org.au/viewer)
 * [AURIN Map](http://map.aurin.org.au/)
 * [Global Risk Map](http://globalriskmap.nicta.com.au)
+* [WA Map](http://map.beta.data.wa.gov.au/)
+* [Leylines](http://maps.leylines.ch/)
+* [PropellerAero](http://www.propelleraero.com/)
+* [Tampa Bay Map](http://tampabaymap.org/)
 
 #### Prototypes and sites in development
 
