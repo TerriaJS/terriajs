@@ -85,7 +85,7 @@ const RectangleParameterEditor = React.createClass({
             }
         });
 
-        that.props.viewState.toggleModal(false);
+        that.props.viewState.explorerPanelIsVisible = false;
     },
 
     render() {
