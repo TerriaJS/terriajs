@@ -36,6 +36,7 @@ TerriaJS is a library for building rich, web-based geospatial data explorers, us
 * [PropellerAero](http://www.propelleraero.com/)
 * [Tampa Bay Map](http://tampabaymap.org/)
 * [Latin America Map](http://www.latam-map.org/) 
+* [Ground Water Visualisation System](http://groundwater-vis.research.nicta.com.au/)
 
 #### Prototypes and sites in development
 
