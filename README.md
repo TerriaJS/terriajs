@@ -35,9 +35,11 @@ TerriaJS is a library for building rich, web-based geospatial data explorers, us
 * [Leylines](http://maps.leylines.ch/)
 * [PropellerAero](http://www.propelleraero.com/)
 * [Tampa Bay Map](http://tampabaymap.org/)
+* [Latin America Map](http://www.latam-map.org/) 
 
 #### Prototypes and sites in development
 
+* [Australian Wave Energy Atlas](http://awavea.csiro.au/)
 * [ParlMap](http://parlmap.terria.io/) (authorisation required)
 * [City of Sydney data explorer](http://data.cityofsydney.nsw.gov.au/map)
 * [USGS Protected Areas database](https://maps.usgs.gov/beta/padus/) (beta)
