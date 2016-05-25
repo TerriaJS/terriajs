@@ -13,7 +13,9 @@ const ViewerMode = require('../../Models/ViewerMode');
 const when = require('terriajs-cesium/Source/ThirdParty/when');
 import Styles from './data-preview-map.scss';
 
-
+/**
+ * Leaflet-based preview map that sits within the preview.
+ */
 const DataPreviewMap = React.createClass({
     mixins: [ObserveModelMixin],
 
@@ -255,12 +257,12 @@ const DataPreviewMap = React.createClass({
     },
 
     render() {
-        return (<div className={Styles.map} onClick={this.clickMap}>
-                    <div className='terria-preview' ref={this.mapIsReady}>
-                    </div>
-                    <label className={Styles.badge}>{this.state.previewBadgeText}</label>
-                </div>
-                );
+        return (
+            <div className={Styles.map} onClick={this.clickMap}>
+                <div className={Styles.terriaPreview} ref={this.mapIsReady}/>
+                <label className={Styles.badge}>{this.state.previewBadgeText}</label>
+            </div>
+        );
     }
 });
 module.exports = DataPreviewMap;

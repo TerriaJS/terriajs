@@ -1,0 +1,38 @@
+@import '~terriajs-variables';
+@import '../../Sass/global/mixins';
+
+.btn--back-to-map {
+  composes: btn from '../../Sass/partial/_buttons.scss';
+  composes: btn--tertiary from '../../Sass/partial/_buttons.scss';
+
+  font-size: 1rem;
+}
+
+.previewed-info {
+
+}
+
+.btn--add{
+  composes: btn from '../../Sass/partial/_buttons.scss';
+  composes: btn-primary from '../../Sass/partial/_buttons.scss';
+
+  // toggle-enable data-preview__add-to-map
+  @media screen and (min-width: $sm){
+      display: inline-block;
+      margin-right: 2%;
+      width: 58%;
+  }
+}
+
+.btn--back {
+  display: none;
+  text-align: center;
+
+  @media screen and (min-width: $sm){
+    composes: btn from '../../Sass/partial/_buttons.scss';
+    composes: btn--tertiary from '../../Sass/partial/_buttons.scss';
+
+    display: inline-block;
+    width: 40%;
+  }
+}

@@ -14,5 +14,21 @@
   background: #fff;
 }
 
+//Preview map
+.terria-preview {
+  &:global(.leaflet-container) {
+    height: 150px;
+    overflow: hidden;
+    position: relative;
+    background: #d5d5d5;
+    cursor: auto;
+    margin: $padding 0;
+  }
 
-
+  :global {
+    .leaflet-control-attribution {
+      font-size: 6px;
+      background: none;
+    }
+  }
+}
