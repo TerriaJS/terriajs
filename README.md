@@ -18,10 +18,27 @@ TerriaJS is a library for building rich, web-based geospatial data explorers, us
 * Time dimensions supported for CSV, CZML, WMS. Automatically animate layers, or slide the time control forward and backward.
 * Drag-and-drop files from your desktop the browser, for instant visualisation (no file upload to server required).
 * Wider range of file types supported through server-side OGR2OGR service (requires upload).
-* All ASGS region types (LGA, SA2, commonwealth electoral district etc) supported for [CSV region mapping](https://github.com/NICTA/nationalmap/wiki/csv-geo-au), plus several others: Primary Health Networks, Statistical Local Areas, ISO 3 letter country codes, etc.
+* All ASGS (Australian Statistical Geographic Standard) region types (LGA, SA2, commonwealth electoral district etc) supported for [CSV region mapping](https://github.com/NICTA/nationalmap/wiki/csv-geo-au), plus several others: Primary Health Networks, Statistical Local Areas, ISO 3 letter country codes, etc.
 * Users can generate a reusable URL link of their current map view, to quickly share mashups of web-hosted data. Google's URL shortener is optionally used.
 
 ![Terria screenshot](terria-screenshot.png "Terria screenshot")
+
+### Sites using TerriaJS
+
+* [National Map](http://nationalmap.gov.au)
+* [AREMI](http://nationalmap.gov.au/renewables)
+* [Northern Australia Investment Map](http://nationalmap.gov.au/northernaustralia)
+* [NEII Viewer](http://neii.org.au/viewer)
+* [AURIN Map](http://map.aurin.org.au/)
+* [Global Risk Map](http://globalriskmap.nicta.com.au)
+
+#### Prototypes and sites in development
+
+* [ParlMap](http://parlmap.terria.io/) (authorisation required)
+* [City of Sydney data explorer](http://data.cityofsydney.nsw.gov.au/map)
+* [USGS Protected Areas database](https://maps.usgs.gov/beta/padus/) (beta)
+* [GeoGLAM Rangeland and Pasture Productivity](http://map.geo-rapp.org/)
+* [Greater Sydney Commission](http://nationalmap.research.nicta.com.au/greatersydney/)
 
 ### Technical
 
