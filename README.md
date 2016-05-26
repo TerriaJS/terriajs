@@ -54,6 +54,7 @@ Sites we're aware of that are using TerriaJS. These are not endorsements or test
 * [Latin America Map](http://www.latam-map.org/) 
 * [USGS Protected Areas database](https://maps.usgs.gov/beta/padus/) (beta)
 * [Map-N-Tour](http://mapntour.squarespace.com/news/?tag=3D+Map+Platforms)
+* [Innovisite France](http://www.innovisite.com/map/france/) (beta)
 
 ### Technical
 
