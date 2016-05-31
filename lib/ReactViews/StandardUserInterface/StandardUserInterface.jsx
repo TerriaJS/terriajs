@@ -13,7 +13,7 @@ import MobileHeader from './../Mobile/MobileHeader.jsx';
 import ExplorerWindow from './../ExplorerWindow.jsx';
 import Notification from './../Notification/Notification.jsx';
 import ObserveModelMixin from './../ObserveModelMixin';
-import ProgressBar from './../ProgressBar.jsx';
+import ProgressBar from '../Map/ProgressBar.jsx';
 import React from 'react';
 import SidePanel from './../SidePanel/SidePanel.jsx';
 import Styles from './standard-user-interface.scss';
