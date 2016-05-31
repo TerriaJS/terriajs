@@ -1,42 +1,36 @@
 @import '~terriajs-variables';
 @import '../../../Sass/global/mixins';
 
-// .full-screen__button{
-//   .enter-full-screen{
-//     composes: btn--expand from '../../../Sass/partial/_buttons.scss';
-//   }
-// }
+.full-screen {
 
-// .full-screen__button .enter-full-screen{
-//   &:before{
-//     font-size: 1.6rem;
-//   }
-// }
-
-
-
-.btn{
-    composes: btn from '../../../Sass/partial/_buttons.scss';
-    composes: btn--map from '../../../Sass/partial/_buttons.scss';
-    margin-right: $padding;
-    border-radius: $radius-small;
-    &,
-    &:hover,
-    &:focus{
-      border: 0;
-    }
 }
 
-.enter{
+.btn {
+  composes: btn from '../../../Sass/partial/_buttons.scss';
+  composes: btn--map from '../../../Sass/partial/_buttons.scss';
+  margin-right: $padding;
+  border-radius: $radius-small;
+  &,
+  &:hover,
+  &:focus {
+    border: 0;
+  }
+}
+
+.enter {
+  &:before {
+    font-size: 1.6rem;
+  }
+
   composes: btn--expand from '../../../Sass/partial/_buttons.scss';
 }
 
-.exit{
-  &:before{
+.exit {
+  &:before {
     font-size: 1.6rem;
   }
 }
 
-.isActive{
+.isActive {
   background: $color-primary;
 }

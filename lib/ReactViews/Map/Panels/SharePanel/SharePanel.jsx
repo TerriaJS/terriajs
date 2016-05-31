@@ -4,6 +4,11 @@ import React from 'react';
 import {buildShareLink, buildShortShareLink} from './BuildShareLink';
 import ObserverModelMixin from '../../../ObserveModelMixin';
 import defined from 'terriajs-cesium/Source/Core/defined';
+import classNames from 'classnames';
+import DropdownPanel from '../DropdownPanel.jsx';
+
+import Styles from './share_panel.scss';
+import DropdownStyles from '../dropdown_panel.scss';
 
 const SharePanel = React.createClass({
     mixins: [ObserverModelMixin],
@@ -28,16 +33,6 @@ const SharePanel = React.createClass({
             imageUrl: '',
             shareUrl: ''
         };
-    },
-
-    componentWillMount() {
-        this.props.terria.currentViewer.captureScreenshot().then(dataUrl => {
-            this.setState({
-                imageUrl: dataUrl
-            });
-        });
-
-        this.updateForShortening();
     },
 
     updateForShortening() {
@@ -92,41 +87,76 @@ const SharePanel = React.createClass({
         this.forceUpdate();
     },
 
-    render() {
+    onOpenChanged(open) {
+        this.setState({
+            isOpen: open
+        });
 
-        // Only generate it if we're currently open
-        if (this.props.isOpen) {
+        if (open) {
+            this.props.terria.currentViewer.captureScreenshot().then(dataUrl => {
+                this.setState({
+                    imageUrl: dataUrl
+                });
+            });
 
-            const iframeCode = this.state.shareUrl.length ? `<iframe style="width: 720px; height: 405px; border: none;"` +
-                `src="${this.state.shareUrl}" allowFullScreen mozAllowFullScreen webkitAllowFullScreen></iframe>` : '';
-            const shareImgStyle = {backgroundImage: 'url(' + this.state.imageUrl + ')'};
-            return (
-                <div className='dd-panel__content'>
-                    <div className='dd_panel-header dd-panel__section'><label className='dd-panel__section share-panel__label'>Share</label></div>
-                    <div className="dd-panel__section">
-                        <div className="img--share" style={shareImgStyle}></div>
-                        <div className='image--link'><a href={this.state.imageUrl} target='_blank'>View full size image</a></div>
-                    </div>
-                    <div className="dd-panel__section">
-                        <p>To copy to clipboard, click the link below and press CTRL+C or ⌘+C:</p>
-                        <input className="field" type="text" value={this.state.shareUrl}
-                               placeholder={this.state.placeholder} readOnly
-                               onClick={e => e.target.select()}/>
-                    </div>
-                    <div className="dd-panel__section">
-                        <p>To embed, copy this code to embed this map into an HTML page:</p>
-                        <input className="field" type="text" readOnly placeholder={this.state.placeholder}
-                               value={iframeCode}
-                               onClick={e => e.target.select()}/>
-                    </div>
-                    <If condition={this.isUrlShortenable()}>
-                    <div className="dd-panel__section shorten-url">
-                        <button className={`btn ${this.shouldShorten() ? 'btn--checkbox-on' : 'btn--checkbox-off'}`} onClick={this.onShortenClicked}>Shorten the share URL using a web service</button>
-                    </div>
-                    </If>
-                </div>
-            );
+            this.updateForShortening();
         }
+    },
+
+    render() {
+        const dropdownTheme = {
+            btn: classNames(Styles.btnMap, Styles.btnShare),
+            outer: Styles.sharePanel,
+            inner: Styles.dropdownInner
+        };
+
+        const iframeCode = this.state.shareUrl.length ?
+            `<iframe style="width: 720px; height: 405px; border: none;" src="${this.state.shareUrl}" allowFullScreen mozAllowFullScreen webkitAllowFullScreen></iframe>`
+            : '';
+        const shareImgStyle = {
+            backgroundImage: 'url(' + this.state.imageUrl + ')'
+        };
+
+        return (
+            <DropdownPanel theme={dropdownTheme}
+                           btnText="Share"
+                           btnTitle="change settings"
+                           onOpenChanged={this.onOpenChanged}>
+                <If condition={this.state.isOpen}>
+                    <div className={classNames(Styles.content, DropdownStyles.content)}>
+                        <div className={classNames(DropdownStyles.header, DropdownStyles.section)}>
+                            <label className={Styles.label}>Share</label>
+                        </div>
+                        <div className={DropdownStyles.section}>
+                            <div className={Styles.imgShare} style={shareImgStyle}></div>
+                            <div className={Styles.imgLink}>
+                                <a href={this.state.imageUrl} target='_blank'>View full size image</a>
+                            </div>
+                        </div>
+                        <div className={DropdownStyles.section}>
+                            <p>To copy to clipboard, click the link below and press CTRL+C or ⌘+C:</p>
+                            <input className={Styles.field} type="text" value={this.state.shareUrl}
+                                   placeholder={this.state.placeholder} readOnly
+                                   onClick={e => e.target.select()}/>
+                        </div>
+                        <div className={DropdownStyles.section}>
+                            <p>To embed, copy this code to embed this map into an HTML page:</p>
+                            <input className={Styles.field} type="text" readOnly placeholder={this.state.placeholder}
+                                   value={iframeCode}
+                                   onClick={e => e.target.select()}/>
+                        </div>
+                        <If condition={this.isUrlShortenable()}>
+                            <div className={classNames(DropdownStyles.section, Styles.shortenUrl)}>
+                                <button
+                                    className={classNames(Styles.btn, {[Styles.btnCheckboxOn]: this.shouldShorten(), [Styles.btnCheckboxOff]: !this.shouldShorten()})}
+                                    onClick={this.onShortenClicked}>Shorten the share URL using a web service
+                                </button>
+                            </div>
+                        </If>
+                    </div>
+                </If>
+            </DropdownPanel>
+        );
     }
 });
 

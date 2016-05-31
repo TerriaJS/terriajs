@@ -1,0 +1,72 @@
+@import '../../../Sass/global/variables';
+@import '../../../Sass/global/mixins';
+
+.panel {
+  width: auto;
+
+  &.is-open .inner {
+    @include transform (scale(1) translateZ(0));
+  }
+}
+
+.content {
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.inner {
+  @include transform (scale(0) translateZ(0));
+  @include transition(0.2s all cubic-bezier(0.4, 0, 0.2, 1));
+  box-shadow: $box-shadow;
+  position: absolute;
+  margin-top: 15px;
+  z-index: 1;
+  border-radius: $radius-small;
+  background: $dark;
+  color: #fff;
+  border: $border-style;
+  right: $padding*4;
+
+  &:before {
+    content: '';
+    display: block;
+    height: 20px;
+    width: 20px;
+    background: $dark;
+    position: absolute;
+    top: -10px;
+    @include transform(rotate(45deg));
+  }
+}
+
+.section {
+  padding: $padding-small;
+  display: block;
+}
+
+.button {
+  composes: btn from '../../../Sass/partial/_buttons.scss';
+
+  padding-left: $padding*3.5;
+  margin-right: $padding;
+  border-radius: $radius-small;
+  position: relative;
+
+  &,
+  &:hover,
+  &:focus {
+    border: 0;
+  }
+
+  &:before {
+    display: inline-block;
+    padding-right: $padding-small;
+    line-height: 1;
+    font-size: 1.5rem;
+    position: absolute;
+    left: 5px;
+    top: 4px;
+  }
+}
+

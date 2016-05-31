@@ -35,7 +35,7 @@
 }
 
 .setting-panel {
-  @include dd-panel($setting-panel, $setting-panel/2 - 11px);
+  //@include dd-panel($setting-panel, $setting-panel/2 - 11px);
 }
 
 .setting-panel__viewer-selector,

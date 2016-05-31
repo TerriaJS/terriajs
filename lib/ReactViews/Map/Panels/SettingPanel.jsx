@@ -66,9 +66,14 @@ const SettingPanel = React.createClass({
         const currentViewer = this.props.terria.viewerMode;
         const currentBaseMap = this.props.terria.baseMap.name;
 
+        const dropdownTheme = {
+            outer: 'setting-panel',
+            btn: 'btn--map btn--sphere'
+        };
+
         // To do : aria-hidden={!this.state.isOpen}
         return (
-            <DropdownPanel btnClass="btn--map btn--sphere" btnTitle="Change view" className="setting-panel" btnText="Map">
+            <DropdownPanel theme={dropdownTheme} btnTitle="Change view" btnText="Map">
                 <div className='setting-panel__viewer dd-panel__section'>
                     <label className='label label--setting-panel'> Map View </label>
                     <ul className='setting-panel__viewer-selector'>

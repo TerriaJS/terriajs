@@ -1,0 +1,59 @@
+@import '../../../../Sass/global/variables';
+@import '../../../../Sass/global/mixins';
+
+.share-panel {
+}
+
+.dropdown-inner {
+  width: $share-panel-width;
+  @include transform-origin($share-panel-caret-left, top);
+
+  &:before {
+    left: $share-panel-caret-left;
+  }
+}
+
+.btn--map {
+  composes: btn--map from '../../../../Sass/partial/_buttons.scss';
+}
+
+.btn--share {
+  composes: btn--share from '../../../../Sass/partial/_buttons.scss';
+}
+
+.img--share {
+  composes: img--share from '../../../../Sass/global/_icons.scss';
+
+  width: 100%;
+  height: $share-panel-width / 4*3;
+  overflow: hidden;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+.image--link {
+  composes: img--link from '../../../../Sass/global/_icons.scss';
+}
+
+p {
+  margin: $padding 0;
+  display: block;
+}
+
+.field {
+  composes: field from '../../../../Sass/partial/_form.scss';
+
+  color: #ddd;
+  background: $overlay;
+}
+
+.shorten-url {
+  .btn {
+    padding: 0;
+    &:before {
+      display: inline-block;
+      padding-right: $padding-small;
+    }
+  }
+}
