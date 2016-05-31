@@ -66,7 +66,7 @@
   position: absolute;
   bottom: 75px;
   right: $padding*2;
-  z-index: 1;
+  z-index: 0;
 }
 
 @media screen and (min-width: $sm) {

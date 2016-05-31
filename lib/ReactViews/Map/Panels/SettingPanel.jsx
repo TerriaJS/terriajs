@@ -1,8 +1,14 @@
 'use strict';
+
 import React from 'react';
+import classNames from 'classnames';
+
 import ViewerMode from '../../../Models/ViewerMode';
 import ObserveModelMixin from '../../ObserveModelMixin';
 import DropdownPanel from './DropdownPanel.jsx';
+
+import Styles from './setting-panel.scss';
+import DropdownStyles from './dropdown-panel.scss';
 
 // The basemap and viewer setting panel
 const SettingPanel = React.createClass({
@@ -67,40 +73,42 @@ const SettingPanel = React.createClass({
         const currentBaseMap = this.props.terria.baseMap.name;
 
         const dropdownTheme = {
-            outer: 'setting-panel',
-            btn: 'btn--map btn--sphere'
+            outer: Styles.settingPanel,
+            inner: Styles.dropdownInner,
+            btn: Styles.btnDropdown
         };
 
-        // To do : aria-hidden={!this.state.isOpen}
         return (
             <DropdownPanel theme={dropdownTheme} btnTitle="Change view" btnText="Map">
-                <div className='setting-panel__viewer dd-panel__section'>
-                    <label className='label label--setting-panel'> Map View </label>
-                    <ul className='setting-panel__viewer-selector'>
+                <div className={classNames(Styles.viewer, DropdownStyles.section)}>
+                    <label className={DropdownStyles.heading}> Map View </label>
+                    <ul className={Styles.viewerSelector}>
                         <For each="viewerMode" of={this.props.viewerModes} index="i">
-                            <li key={i}>
+                            <li key={i} className={Styles.listItem}>
                                 <button onClick={that.selectViewer.bind(this, i)}
-                                        className={'btn btn--viewer ' + (i === currentViewer ? 'is-active' : '')}>{viewerMode}</button>
+                                        className={classNames(Styles.btnViewer, {[Styles.isActive]: i === currentViewer})}>
+                                    {viewerMode}
+                                </button>
                             </li>
                         </For>
                     </ul>
                 </div>
-                <div className='setting-panel__basemap dd-panel__section'>
-                    <label className='label label--setting-panel'> Base Map </label>
-                    <label className='label label--active-map'>{this.state.activeMap}</label>
-                    <ul className='setting-panel__basemap-selector'>
-                        {this.props.allBaseMaps.map((baseMap, i) => {
-                            return (<li key={i}>
+                <div className={classNames(Styles.baseMap, DropdownStyles.section)}>
+                    <label className={DropdownStyles.heading}> Base Map </label>
+                    <label className={DropdownStyles.subHeading}>{this.state.activeMap}</label>
+                    <ul className={Styles.baseMapSelector}>
+                        <For each="baseMap" index="i" of={this.props.allBaseMaps}>
+                            <li key={i} className={Styles.listItem}>
                                 <button
-                                    className={'btn btn--basemap ' + (baseMap.catalogItem.name === currentBaseMap ? 'is-active' : '')}
+                                    className={classNames(Styles.btnBaseMap, {[Styles.isActive]: baseMap.catalogItem.name === currentBaseMap})}
                                     onClick={that.selectBaseMap.bind(this, baseMap)}
                                     onMouseEnter={that.mouseEnterBaseMap.bind(this, baseMap)}
                                     onMouseLeave={that.mouseLeaveBaseMap.bind(this, baseMap)}
                                     onFocus={that.mouseEnterBaseMap.bind(this, baseMap)}>
                                     <img alt={baseMap.catalogItem.name} src={baseMap.image}/>
                                 </button>
-                            </li>);
-                        }, this)}
+                            </li>
+                        </For>
                     </ul>
                 </div>
             </DropdownPanel>

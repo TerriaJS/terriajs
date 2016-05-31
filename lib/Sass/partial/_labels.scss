@@ -15,23 +15,6 @@ label {
   margin-bottom: $padding;
 }
 
-.label--setting-panel,
-.label--active-map,
-.share-panel__label{
-  text-transform: uppercase;
-  padding: $padding-small 0;
-  display: block;
-}
-.label--active-map{
-  font-size: $font-size-mini;
-}
-
-
-.active-map__label{
-  padding: $padding-small 0;
-  font-size: $font-size-small;
-}
-
 .label-badge{
   text-align: center;
   border: 1px solid;

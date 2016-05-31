@@ -40,6 +40,25 @@
   }
 }
 
+.label {
+  composes: label from '../../../Sass/partial/_form.scss';
+
+  text-transform: uppercase;
+  padding: $padding-small 0;
+  display: block;
+}
+
+.heading {
+  composes: label;
+  padding: $padding-small 0;
+  font-size: $font-size-small;
+}
+
+.sub-heading {
+  composes: label;
+  font-size: $font-size-mini;
+}
+
 .section {
   padding: $padding-small;
   display: block;

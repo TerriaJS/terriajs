@@ -7,8 +7,8 @@ import defined from 'terriajs-cesium/Source/Core/defined';
 import classNames from 'classnames';
 import DropdownPanel from '../DropdownPanel.jsx';
 
-import Styles from './share_panel.scss';
-import DropdownStyles from '../dropdown_panel.scss';
+import Styles from './share-panel.scss';
+import DropdownStyles from '../dropdown-panel.scss';
 
 const SharePanel = React.createClass({
     mixins: [ObserverModelMixin],
@@ -125,7 +125,7 @@ const SharePanel = React.createClass({
                 <If condition={this.state.isOpen}>
                     <div className={classNames(Styles.content, DropdownStyles.content)}>
                         <div className={classNames(DropdownStyles.header, DropdownStyles.section)}>
-                            <label className={Styles.label}>Share</label>
+                            <label className={DropdownStyles.heading}>Share</label>
                         </div>
                         <div className={DropdownStyles.section}>
                             <div className={Styles.imgShare} style={shareImgStyle}></div>
@@ -134,13 +134,13 @@ const SharePanel = React.createClass({
                             </div>
                         </div>
                         <div className={DropdownStyles.section}>
-                            <p>To copy to clipboard, click the link below and press CTRL+C or ⌘+C:</p>
+                            <p className={Styles.paragraph}>To copy to clipboard, click the link below and press CTRL+C or ⌘+C:</p>
                             <input className={Styles.field} type="text" value={this.state.shareUrl}
                                    placeholder={this.state.placeholder} readOnly
                                    onClick={e => e.target.select()}/>
                         </div>
                         <div className={DropdownStyles.section}>
-                            <p>To embed, copy this code to embed this map into an HTML page:</p>
+                            <p className={Styles.paragraph}>To embed, copy this code to embed this map into an HTML page:</p>
                             <input className={Styles.field} type="text" readOnly placeholder={this.state.placeholder}
                                    value={iframeCode}
                                    onClick={e => e.target.select()}/>

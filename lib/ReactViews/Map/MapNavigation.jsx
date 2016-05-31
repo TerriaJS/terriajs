@@ -12,7 +12,7 @@ import FullScreenButton from './Navigation/FullScreenButton.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
 import ViewerMode from '../../Models/ViewerMode';
 
-import Styles from './map_navigation.scss';
+import Styles from './map-navigation.scss';
 
 // The map navigation region
 const MapNavigation = React.createClass({

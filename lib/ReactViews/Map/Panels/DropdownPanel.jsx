@@ -2,7 +2,7 @@
 
 import React from 'react';
 import classNames from 'classnames';
-import Styles from './dropdown_panel.scss';
+import Styles from './dropdown-panel.scss';
 
 const DropdownPanel = React.createClass({
     propTypes: {
