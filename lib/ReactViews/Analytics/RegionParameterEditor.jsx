@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import GeoJsonCatalogItem from '../../Models/GeoJsonCatalogItem';
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
@@ -169,10 +170,20 @@ const RegionParameterEditor = React.createClass({
     },
 
     renderOptions() {
-        return <ul className={`autocomplete ${this.state.autocompleteVisible ? '' : 'is-hidden'}`}>{this.state.autoCompleteOptions.map((op, i)=>
-                    <li className="" key={i}><button type='button' className='btn' onClick={this.selectRegion.bind(this, op)}>{op.name}</button></li>
+        const className = classNames({
+            [Styles.autocomplete]: true,
+            [Styles.isHidden]: !this.state.autocompleteVisible
+        });
+
+        return (
+            <ul className={className}>
+                {this.state.autoCompleteOptions.map((op, i)=>
+                    <li className="" key={i}>
+                        <button type='button' className={Styles.autocompleteItem} onClick={this.selectRegion.bind(this, op)}>{op.name}</button>
+                    </li>
                 )}
-                </ul>;
+            </ul>
+        );
     },
 
     getDisplayValue() {
@@ -190,8 +201,8 @@ const RegionParameterEditor = React.createClass({
 
     render() {
         return <div>
-                    <div className="field--parameter-editor">
-                        <input className='field'
+                    <div className={Styles.parameterEditor}>
+                        <input className={Styles.regionInput}
                                type="text"
                                autoComplete="off"
                                value={this.getDisplayValue()}
@@ -199,10 +210,10 @@ const RegionParameterEditor = React.createClass({
                                placeholder="Type a region name or click the map below"
                         />
                         {this.renderOptions()}
-                    </div>
-                    <div className={Styles.embeddedMap}>
-                        <div className={Styles.map} ref='mapContainer'></div>
-                        <div className={Styles.mapUi} ref='uiContainer'></div>
+                        <div className={Styles.embeddedMap}>
+                            <div className={Styles.map} ref='mapContainer'></div>
+                            <div className={Styles.mapUi} ref='uiContainer'></div>
+                        </div>
                     </div>
                 </div>;
     },

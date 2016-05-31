@@ -12,3 +12,15 @@
 .data {
     background: #fff;
 }
+
+.parameter-editor {
+  margin-bottom: $padding;
+  position: relative;
+  input[type=date] {
+    width: 50%;
+    float: left;
+  }
+  input[type=time] {
+    width: 50%;
+  }
+}
