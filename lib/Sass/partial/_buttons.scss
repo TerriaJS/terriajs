@@ -334,9 +334,9 @@ feedback;
 //
 
 .btn--catalog {
-  padding: $padding $padding*3;
+  padding: $padding 30px+$padding;
   @media screen and (min-width: $sm){
-    padding: $padding-small $padding*3;
+    padding: $padding-small 30px+$padding;
   }
 
   position: relative;
@@ -346,9 +346,9 @@ feedback;
   .btn--group-indicator {
     position: absolute;
     left: 0;
-    padding: $padding $padding-small;
+    padding: $padding $padding*2.2 $padding $padding*1.5;
     @media screen and (min-width: $sm){
-      padding: $padding-small;
+      padding: $padding-small $padding*2.2 $padding-small $padding*1.5;
     }
     top: 0;
     font-size: 1.1rem;
