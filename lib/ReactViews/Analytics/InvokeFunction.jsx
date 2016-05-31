@@ -1,4 +1,3 @@
-'use strict';
 import React from 'react';
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 import ObserveModelMixin from '../ObserveModelMixin';
@@ -7,7 +6,6 @@ import when from 'terriajs-cesium/Source/ThirdParty/when';
 import TerriaError from '../../Core/TerriaError';
 import renderMarkdownInReact from '../../Core/renderMarkdownInReact';
 import Styles from './invoke-function.scss';
-
 
 const InvokeFunction = React.createClass({
     mixins: [ObserveModelMixin],

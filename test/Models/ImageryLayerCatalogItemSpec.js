@@ -11,7 +11,6 @@ var TimeInterval = require('terriajs-cesium/Source/Core/TimeInterval');
 describe('Time slider initial time as specified by initialTimeSource ', function() {
     var terria;
     var catalogItem;
-    var animationVm;
 
     beforeEach(function() {
         terria = new Terria({
