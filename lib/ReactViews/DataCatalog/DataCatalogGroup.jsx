@@ -51,6 +51,11 @@ const DataCatalogGroup = React.createClass({
         this.props.group.toggleOpen();
     },
 
+    clickGroup() {
+        this.toggleOpen();
+        this.props.viewState.viewCatalogItem(this.props.group);
+    },
+
     render() {
         const group = this.props.group;
         let contents = null;
@@ -63,7 +68,7 @@ const DataCatalogGroup = React.createClass({
         }
         return (
             <li>
-                <button type='button' className={classNames('btn', 'btn-transparent', 'btn--catalog', {'is-open': this.isOpen()})} onClick={this.toggleOpen}>
+                <button type='button' className={classNames('btn', 'btn-transparent', 'btn--catalog', {'is-open': this.isOpen()})} onClick={this.clickGroup}>
                     <i className={`btn--group-indicator ${this.isOpen() ? 'btn--folder-open' : 'btn--folder'}`}/>
                     {group.name}
                 </button>
