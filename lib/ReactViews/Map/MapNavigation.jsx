@@ -37,7 +37,7 @@ const MapNavigation = React.createClass({
                         <SharePanel terria={this.props.terria}/>
                     </li>
                     <li className={Styles.menuItem}>
-                        <div><a className={'btn btn--map ' + Styles.aboutLinkButton} href='#' title='about'> About </a></div>
+                        <div><a className={Styles.btnAboutLink} href='#' title='about'> About </a></div>
                     </li>
                 </ul>
                 <If condition={this.props.terria.viewerMode !== ViewerMode.Leaflet}>

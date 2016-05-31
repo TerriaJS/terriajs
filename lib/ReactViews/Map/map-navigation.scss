@@ -18,9 +18,13 @@
   float: left;
 }
 
-.about-link__button {
+.btn--about-link {
+  composes: btn from '../../Sass/partial/_buttons.scss';
+  composes: btn--map from '../../Sass/partial/_buttons.scss';
+
   margin-right: $padding;
   border-radius: $radius-small;
+
   &,
   &:hover,
   &:focus {
