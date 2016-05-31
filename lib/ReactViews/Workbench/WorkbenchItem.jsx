@@ -1,17 +1,16 @@
 'use strict';
 
-import defined from 'terriajs-cesium/Source/Core/defined';
-import React from 'react';
+import AbsPercentageWorkbenchSection from './Controls/AbsPercentageWorkbenchSection';
 import classNames from 'classnames';
-
-import ObserveModelMixin from './../ObserveModelMixin';
-import Legend from './Controls/Legend';
-import OpacitySection from './Controls/OpacitySection';
-import ViewingControls from './Controls/ViewingControls';
 import ConceptViewer from './Controls/ConceptViewer';
+import defined from 'terriajs-cesium/Source/Core/defined';
+import Legend from './Controls/Legend';
+import ObserveModelMixin from './../ObserveModelMixin';
+import OpacitySection from './Controls/OpacitySection';
+import React from 'react';
 import ShortReport from './Controls/ShortReport';
-
 import Styles from './workbench-item.scss';
+import ViewingControls from './Controls/ViewingControls';
 
 const WorkbenchItem = React.createClass({
     mixins: [ObserveModelMixin],
@@ -110,6 +109,9 @@ const WorkbenchItem = React.createClass({
                     <div className={Styles.inner}>
                         <ViewingControls item={workbenchItem} viewState={this.props.viewState}/>
                         <OpacitySection item={workbenchItem}/>
+                        <If condition={workbenchItem.type === 'abs-itt'}>
+                            <AbsPercentageWorkbenchSection item={workbenchItem}/>
+                        </If>
                         <Legend item={workbenchItem}/>
                         <If condition={(defined(workbenchItem.concepts) && workbenchItem.concepts.length > 0)}>
                             <ConceptViewer item={workbenchItem}/>
