@@ -4,6 +4,7 @@ import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 import ObserveModelMixin from '../ObserveModelMixin';
 import OpenStreetMapCatalogItem from '../../Models/OpenStreetMapCatalogItem';
 import React from 'react';
+import Styles from './region-parameter-editor.scss';
 import Terria from '../../Models/Terria';
 import TerriaViewer from '../../ViewModels/TerriaViewer';
 import ViewerMode from '../../Models/ViewerMode';
@@ -199,9 +200,9 @@ const RegionParameterEditor = React.createClass({
                         />
                         {this.renderOptions()}
                     </div>
-                    <div className="data-preview-map">
-                        <div className="terria-preview" ref='mapContainer'></div>
-                        <div className="parameter-editor-map-ui" ref='uiContainer'></div>
+                    <div className={Styles.embeddedMap}>
+                        <div className={Styles.map} ref='mapContainer'></div>
+                        <div className={Styles.mapUi} ref='uiContainer'></div>
                     </div>
                 </div>;
     },
