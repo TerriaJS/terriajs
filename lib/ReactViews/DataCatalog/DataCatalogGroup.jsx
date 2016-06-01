@@ -62,6 +62,8 @@ const DataCatalogGroup = React.createClass({
         if (this.isOpen()) {
             contents = (
                 <ul className="data--catalog-group">
+                    {group.isLoading && <li key="loader"><Loader /></li>}
+                    {!group.isLoading && group.items.length === 0 && <li className="label no-results" key="empty"> This group is empty </li>}
                     {this.renderGroup(group)}
                 </ul>
             );
@@ -87,12 +89,6 @@ const DataCatalogGroup = React.createClass({
                 overrideOpen={this.props.manageIsOpenLocally}
             />
         ));
-
-        if (group.isLoading) {
-            children.push(<li key="loader"><Loader /></li>);
-        } else if (group.items.length === 0) {
-            children.push(<li className="label no-results" key="empty"> This group is empty </li>);
-        }
 
         return children;
     }
