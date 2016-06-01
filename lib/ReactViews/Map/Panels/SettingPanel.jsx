@@ -36,6 +36,11 @@ const SettingPanel = React.createClass({
     selectBaseMap(baseMap, event) {
         event.stopPropagation();
         this.props.terria.baseMap = baseMap.catalogItem;
+        this.props.terria.baseMapContrastColor = baseMap.contrastColor;
+
+        // We store the user's chosen basemap for future use, but it's up to the instance to decide
+        // whether to use that at start up.
+        this.props.terria.setLocalProperty('basemap', baseMap.catalogItem.name);
     },
 
     mouseEnterBaseMap(baseMap) {
