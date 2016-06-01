@@ -12,6 +12,8 @@ import propertyGetTimeValues from '../../Core/propertyGetTimeValues';
 import renderMarkdownInReact from '../../Core/renderMarkdownInReact';
 import FeatureInfoDownload from './FeatureInfoDownload';
 
+import Styles from './feature-info-section.scss';
+
 // We use Mustache templates inside React views, where React does the escaping; don't escape twice, or eg. " => &quot;
 Mustache.escape = function(string) { return string; };
 
@@ -117,20 +119,20 @@ const FeatureInfoSection = React.createClass({
     },
 
     render() {
-        // console.log('render FeatureInfoSection', this.props.feature.name, this.props.clock.currentTime, getCurrentProperties(this.props.feature, this.props.clock.currentTime));
         const catalogItemName = (this.props.catalogItem && this.props.catalogItem.name) || '';
         const fullName = (catalogItemName ? (catalogItemName + ' - ') : '') + this.renderDataTitle();
         const templateData = this.getTemplateData();
+
         return (
-            <li className={classNames('feature-info-panel__section', {'is-open': this.props.isOpen})}>
-                <button type='button' onClick={this.clickHeader} className={classNames('btn', 'feature-info-panel__title', {'is-open': this.props.isOpen})}>
+            <li className={classNames(Styles.section)}>
+                <button type='button' onClick={this.clickHeader} className={classNames(Styles.title, {[Styles.btnIsOpen]: this.props.isOpen})}>
                     {fullName}
                 </button>
                 <If condition={this.props.isOpen}>
-                    <section className='feature-info-panel__content'>
+                    <section className={Styles.content}>
                         <If condition={this.hasTemplate()}>
                             {renderMarkdownInReact(this.descriptionFromTemplate(), this.props.catalogItem, this.props.feature)}
-                            <button type="button" className="btn btn-primary feature-info-panel__raw-data-button" onClick={this.toggleRawData}>
+                            <button type="button" className={Styles.rawDataButton} onClick={this.toggleRawData}>
                                 {this.state.showRawData ? 'Hide' : 'Show'} Raw Data
                             </button>
                         </If>
@@ -221,38 +223,6 @@ function areAllPropertiesConstant(properties) {
     }
     return result;
 }
-
-// Because x.getValue() returns the same object if it has not changed, we don't need this.
-// function newObjectOnlyIfChanged(oldObject, newObject) {
-//     // Does a shallow compare, and returns the old object if there is no change, otherwise the new object.
-//     if (defined(oldObject) && defined(newObject) && arraysAreEqual(Object.keys(oldObject), Object.keys(newObject))) {
-//         for (const key in newObject) {
-//             if (newObject.hasOwnProperty(key)) {
-//                 if (oldObject[key] !== newObject[key]) {
-//                     return newObject;
-//                 }
-//             }
-//         }
-//         return oldObject;
-//     }
-//     // If the keys have changed, then just use the new object.
-//     return newObject;
-// }
-
-// /**
-//  * Gets properties from a feature at the provided time.
-//  *
-//  * @param {Entity} feature
-//  * @param {JulianDate} currentTime
-//  * @returns {Object} The properties for that time.
-//  */
-// function getCurrentProperties(feature, currentTime) {
-//     // Use this instead of the straight feature.currentProperties, so it works the first time through.
-//     if (defined(feature.properties) && typeof feature.properties.getValue === 'function') {
-//         return feature.properties.getValue(currentTime);
-//     }
-//     return feature.properties;
-// }
 
 /**
  * Gets a text description for the provided feature at a certain time.

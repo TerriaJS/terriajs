@@ -244,14 +244,6 @@ feedback;
   font-weight: bold;
 }
 
-.btn--close-feature {
-  @extend .btn--close;
-  &:hover,
-  &:focus {
-    color: $color-primary;
-  }
-}
-
 // Text and icon buttons
 //
 // .btn--location-name - location item

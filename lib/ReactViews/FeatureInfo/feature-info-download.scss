@@ -1,0 +1,23 @@
+@import '~terriajs-variables';
+
+.download {
+  float: right;
+  margin: 10px 1px;
+
+  // TODO: Remove when dropdown is modulesified.
+  :global {
+    .dropdown__list {
+      display: flex;
+    }
+  }
+}
+
+.btn {
+  composes: btn from './feature-info-panel.scss';
+  composes: btn-primary from '../../Sass/partial/_buttons.scss';
+}
+
+.icon--download {
+  composes: icon from '../../Sass/global/_icons.scss';
+  composes: icon-download from '../../Sass/global/_icons.scss';
+}

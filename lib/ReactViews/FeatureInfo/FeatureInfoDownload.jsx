@@ -2,6 +2,8 @@ import React from 'react';
 import Dropdown from '../Dropdown';
 import FeatureDetection from 'terriajs-cesium/Source/Core/FeatureDetection';
 
+import Styles from './feature-info-download.scss';
+
 const FeatureInfoDownload = React.createClass({
     propTypes: {
         data: React.PropTypes.object.isRequired,
@@ -50,9 +52,9 @@ const FeatureInfoDownload = React.createClass({
         return (
             <Dropdown options={links}
                       textProperty="label"
-                      className="feature-info-download"
-                      buttonClassName="btn-primary">
-                <i style={{display: 'inline-block'}} className="icon icon-download"/> Download Data&nbsp;▾
+                      className={Styles.download}
+                      buttonClassName={Styles.btn}>
+                <i style={{display: 'inline-block'}} className={Styles.iconDownload} /> Download Data&nbsp;▾
             </Dropdown>
         );
     }
