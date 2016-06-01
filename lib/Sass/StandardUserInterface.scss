@@ -1,28 +1,28 @@
-@import "~terriajs/lib/Sass/global/normalize";
+@import "./global/normalize";
 
-@import "~terriajs/lib/Sass/global/variables";
-@import "~terriajs/lib/Sass/global/icons";
-@import "~terriajs/lib/Sass/global/mixins";
-@import "~terriajs/lib/Sass/partial/base";
-@import "~terriajs/lib/Sass/partial/type";
-@import "~terriajs/lib/Sass/partial/buttons";
-@import "~terriajs/lib/Sass/partial/dropdown";
-@import "~terriajs/lib/Sass/partial/form";
-@import "~terriajs/lib/Sass/partial/labels";
-@import "~terriajs/lib/Sass/partial/layout";
-@import "~terriajs/lib/Sass/partial/tables";
-@import "~terriajs/lib/Sass/partial/tabs";
-@import "~terriajs/lib/Sass/partial/map";
-@import "~terriajs/lib/Sass/partial/leaflet";
+@import "./global/variables";
+@import "./global/icons";
+@import "./global/mixins";
+@import "./partial/base";
+@import "./partial/type";
+@import "./partial/buttons";
+@import "./partial/dropdown";
+@import "./partial/form";
+@import "./partial/labels";
+@import "./partial/layout";
+@import "./partial/tables";
+@import "./partial/tabs";
+@import "./partial/map";
+@import "./partial/leaflet";
 // component styles
-@import "~terriajs/lib/Sass/partial/drop_zone";
+@import "./partial/drop_zone";
 
-@import "~terriajs/lib/Sass/partial/misc";
-@import "~terriajs/lib/Sass/partial/modal_window";
-@import "~terriajs/lib/Sass/partial/my_data";
+@import "./partial/misc";
+@import "./partial/modal_window";
+@import "./partial/my_data";
 
-@import "~terriajs/lib/Sass/component/loader";
-@import "~terriajs/lib/Sass/component/chart";
-@import "~terriajs/lib/Sass/component/data_catalog";
+@import "./component/loader";
+@import "./component/chart";
+@import "./component/data_catalog";
 
-@import "~terriajs/lib/Sass/print";
+@import "./print";
