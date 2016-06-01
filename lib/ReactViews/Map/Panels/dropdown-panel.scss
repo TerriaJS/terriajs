@@ -41,8 +41,6 @@
 }
 
 .label {
-  composes: label from '../../../Sass/partial/_form.scss';
-
   text-transform: uppercase;
   padding: $padding-small 0;
   display: block;

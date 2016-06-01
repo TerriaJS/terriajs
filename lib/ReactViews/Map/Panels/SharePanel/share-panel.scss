@@ -32,8 +32,6 @@
 }
 
 .img--share {
-  composes: img--share from '../../../../Sass/global/_icons.scss';
-
   width: 100%;
   height: $share-panel-width / 4*3;
   overflow: hidden;
