@@ -20,9 +20,12 @@ const MappablePreview = React.createClass({
         viewState: React.PropTypes.object.isRequired,
     },
 
-    toggleOnMap() {
+    toggleOnMap(event) {
         this.props.previewed.toggleEnabled();
-        if (this.props.viewState.previewedItem.isEnabled === true && this.props.viewState.closeModalAfterAdd) {
+        if (this.props.viewState.previewedItem.isEnabled === true &&
+            this.props.viewState.closeModalAfterAdd &&
+            !event.shiftKey && !event.ctrlKey) {
+
             this.props.viewState.explorerPanelIsVisible = false;
         }
     },
