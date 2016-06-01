@@ -55,8 +55,7 @@ const Concept = React.createClass({
         const concept = this.props.concept;
 
         return (
-            <li className={classNames({[Styles.isOpen]: concept.isOpen})}
-                style={this.getColorStyle()}>
+            <li style={this.getColorStyle()}>
                 <If condition={concept.name}>
                     <div className={classNames(Styles.header, {[Styles.hasChildren]: concept.hasChildren})}>
                         <If condition={concept.hasChildren}>

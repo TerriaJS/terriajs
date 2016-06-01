@@ -585,3 +585,42 @@ textarea {
   position: absolute;
   left: 360px;
 }
+
+// This is what happens when we mess up with CSS Modules so make it SUPER SUPER OBVIOUS
+// TODO: Remove in build
+.undefined {
+  &:before {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    background: red !important;
+    content: "There are elements with class undefined on the page! Fix them!" !important;
+    color: yellow !important;
+    opacity: 1 !important;
+    z-index: 100000 !important;
+  }
+
+  position: relative;
+  background: #F00 !important;
+  color: yellow !important;
+  border: 3px orange dashed !important;
+
+  animation-name: flash;
+  animation-duration: 1s;
+  animation-timing-function: step-start;
+  animation-iteration-count: infinite;
+}
+
+@keyframes flash {
+  0% {
+    background: #F00;
+    color: yellow;
+    border: 3px orange dashed;
+  }
+
+  50% {
+    background: #0FF;
+    color: black;
+    border: 3px red dashed;
+  }
+}

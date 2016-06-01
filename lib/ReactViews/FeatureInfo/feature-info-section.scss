@@ -47,6 +47,7 @@
 .raw-data-button {
   composes: btn from '../../Sass/partial/_buttons.scss';
   composes: btn-primary from '../../Sass/partial/_buttons.scss';
+  composes: btn--small from '../../Sass/partial/_buttons.scss';
 
   width: auto;
   float: right;

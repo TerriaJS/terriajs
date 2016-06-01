@@ -5,7 +5,7 @@ import ArcGisMapServerCatalogItem from '../Models/ArcGisMapServerCatalogItem';
 import createCatalogItemFromFileOrUrl from '../Models/createCatalogItemFromFileOrUrl';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import DragDropFile from './DragDropFile.jsx';
-import Dropdown from './Dropdown.jsx';
+import Dropdown from './Generic/Dropdown';
 import FileInput from './FileInput.jsx';
 import ObserveModelMixin from './ObserveModelMixin';
 import OpenStreetMapCatalogItem from '../Models/OpenStreetMapCatalogItem';
@@ -247,17 +247,23 @@ const AddData = React.createClass({
     },
 
     renderPanels() {
+        const dropdownTheme = {
+            dropdown: 'add-data__dropdown',
+            list: 'add-data__list',
+            isOpen: '__dropdown-list--is-open'
+        };
+
         return (
             <div className='tab-panels'>
             <section aria-hidden = {this.state.activeTab === 'local' ? 'false' : 'true'} className={'tab-panel panel--local ' + (this.state.activeTab === 'local' ? 'is-active' : '')}>
                 <label className='label'><strong>Step 1:</strong> Select type of file to add: </label>
-                <Dropdown options={localDataType} selected={this.state.localDataType} selectOption={this.selectLocalOption} matchWidth={true} />
+                <Dropdown options={localDataType} selected={this.state.localDataType} selectOption={this.selectLocalOption} matchWidth={true} theme={dropdownTheme} />
                 <label className='label'><strong>Step 2:</strong> Select a local data file to add: </label>
                 <FileInput accept=".csv,.kml" onChange={this.handleFile} />
             </section>
             <section aria-hidden = {this.state.activeTab === 'web' ? 'false' : 'true'} className={'tab-panel panel--web ' + (this.state.activeTab === 'web' ? 'is-active' : '')}>
                 <label className='label'><strong>Step 1:</strong> Select type of file to add: </label>
-                <Dropdown options={remoteDataType} selected={this.state.remoteDataType} selectOption={this.selectRemoteOption} matchWidth={true} />
+                <Dropdown options={remoteDataType} selected={this.state.remoteDataType} selectOption={this.selectRemoteOption} matchWidth={true} theme={dropdownTheme} />
                 <label className='label'><strong>Step 2:</strong> Enter the URL of the data file or web service: </label>
                 <form className='url-input'>
                     <input value={this.state.remoteUrl} onChange={this.onRemoteUrlChange} className='field' type='text' placeholder='e.g. http://data.gov.au/geoserver/wms'/>

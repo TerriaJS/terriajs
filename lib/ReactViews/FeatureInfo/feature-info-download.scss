@@ -1,15 +1,9 @@
 @import '~terriajs-variables';
+@import '../../Sass/global/mixins';
 
 .download {
   float: right;
   margin: 10px 1px;
-
-  // TODO: Remove when dropdown is modulesified.
-  :global {
-    .dropdown__list {
-      display: flex;
-    }
-  }
 }
 
 .btn {
@@ -20,4 +14,12 @@
 .icon--download {
   composes: icon from '../../Sass/global/_icons.scss';
   composes: icon-download from '../../Sass/global/_icons.scss';
+}
+
+.dropdown__list {
+  display: flex;
+}
+
+.dropdown__button {
+  composes: btn--small from '../../Sass/partial/_buttons.scss';
 }

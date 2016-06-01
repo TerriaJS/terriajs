@@ -8,8 +8,10 @@ import defined from 'terriajs-cesium/Source/Core/defined';
 
 import CatalogGroup from '../../Models/CatalogGroup';
 import CsvCatalogItem from '../../Models/CsvCatalogItem';
-import Dropdown from '../Dropdown';
+import Dropdown from '../Generic/Dropdown';
 import raiseErrorToUser from '../../Models/raiseErrorToUser';
+
+import ButtonStyles from '../../Sass/partial/_buttons.scss';
 
 const ChartExpandButton = React.createClass({
 
@@ -47,15 +49,29 @@ const ChartExpandButton = React.createClass({
         const downloadNames = this.props.downloadNames || this.props.sourceNames;
         let downloadButton;
         if (defined(this.props.sourceNames)) {
+            const dropdownTheme = {
+                dropdown: 'preview-chart-wrapper__dropdown',
+                list: 'preview-chart-wrapper__list',
+                button: ButtonStyles.btnSmall,
+                btnOption: 'chart-expand__dropdown__btn--option'
+            };
+
             const sourceNameObjects = this.props.sourceNames.map(name=>{ return {name: name}; });
             const nameAndHrefObjects = downloadNames.map((name, i)=>{ return {name: name, href: downloads[i]}; });
             if (this.props.canDownload) {
-                downloadButton = <Dropdown selectOption={this.downloadDropdown} options={nameAndHrefObjects} buttonClassName='btn--download btn-primary'></Dropdown>;
+                const downloadDropdownTheme = Object.assign({}, dropdownTheme, {
+                    button: 'btn--download ' + ButtonStyles.btnSmall
+                });
+                downloadButton = <Dropdown selectOption={this.downloadDropdown} options={nameAndHrefObjects} theme={downloadDropdownTheme}></Dropdown>;
             }
+
             return (
                 <div className={classNames('chart-expand', {'raise-to-title': this.props.raiseToTitle})}>
                     <div className='chart-dropdown-button'>
-                        <Dropdown selectOption={this.expandDropdown} buttonClassName="btn-primary" options={sourceNameObjects}>Expand&nbsp;▾</Dropdown>{downloadButton}
+                        <Dropdown selectOption={this.expandDropdown} options={sourceNameObjects} theme={dropdownTheme}>
+                            Expand&nbsp;▾
+                        </Dropdown>
+                        {downloadButton}
                     </div>
                 </div>
             );
