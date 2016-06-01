@@ -11,8 +11,6 @@ import CsvCatalogItem from '../../Models/CsvCatalogItem';
 import Dropdown from '../Generic/Dropdown';
 import raiseErrorToUser from '../../Models/raiseErrorToUser';
 
-import ButtonStyles from '../../Sass/partial/_buttons.scss';
-
 const ChartExpandButton = React.createClass({
 
     propTypes: {
@@ -52,7 +50,7 @@ const ChartExpandButton = React.createClass({
             const dropdownTheme = {
                 dropdown: 'preview-chart-wrapper__dropdown',
                 list: 'preview-chart-wrapper__list',
-                button: ButtonStyles.btnSmall,
+                button: 'btn--small',
                 btnOption: 'chart-expand__dropdown__btn--option'
             };
 
@@ -60,7 +58,7 @@ const ChartExpandButton = React.createClass({
             const nameAndHrefObjects = downloadNames.map((name, i)=>{ return {name: name, href: downloads[i]}; });
             if (this.props.canDownload) {
                 const downloadDropdownTheme = Object.assign({}, dropdownTheme, {
-                    button: 'btn--download ' + ButtonStyles.btnSmall
+                    button: 'btn--download btn--small'
                 });
                 downloadButton = <Dropdown selectOption={this.downloadDropdown} options={nameAndHrefObjects} theme={downloadDropdownTheme}></Dropdown>;
             }

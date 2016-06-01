@@ -518,7 +518,8 @@ a.btn--map {
   }
 }
 
-.btn--small {
+//FIXME
+.btn--small, ._buttons__btn-primary.btn--small {
   padding: 4px 9px;
   margin-right: 4px;
   font-size: 13px;

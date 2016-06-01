@@ -29,14 +29,6 @@
   composes: btn from '../../Sass/partial/_buttons.scss';
   composes: btn-primary from '../../Sass/partial/_buttons.scss';
   composes: btn-transparent from '../../Sass/partial/_buttons.scss';
-
-  width: 100%;
-  border: 2px solid $grey-lighter;
-  color: $modal-text;
-  &:hover,
-  &:focus {
-    border-color: $color-primary;
-  }
 }
 
 .btn--option {
