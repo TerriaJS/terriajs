@@ -1,0 +1,29 @@
+@import "~terriajs/lib/Sass/global/normalize";
+
+@import "~terriajs/lib/Sass/global/variables";
+@import "~terriajs/lib/Sass/global/icons";
+@import "~terriajs/lib/Sass/global/mixins";
+@import "~terriajs/lib/Sass/partial/base";
+@import "~terriajs/lib/Sass/partial/type";
+@import "~terriajs/lib/Sass/partial/buttons";
+@import "~terriajs/lib/Sass/partial/dropdown";
+@import "~terriajs/lib/Sass/partial/form";
+@import "~terriajs/lib/Sass/partial/labels";
+@import "~terriajs/lib/Sass/partial/layout";
+@import "~terriajs/lib/Sass/partial/tables";
+@import "~terriajs/lib/Sass/partial/tabs";
+@import "~terriajs/lib/Sass/partial/map";
+@import "~terriajs/lib/Sass/partial/leaflet";
+// component styles
+@import "~terriajs/lib/Sass/partial/drop_zone";
+
+@import "~terriajs/lib/Sass/partial/misc";
+@import "~terriajs/lib/Sass/partial/modal_window";
+@import "~terriajs/lib/Sass/partial/my_data";
+
+@import "~terriajs/lib/Sass/component/loader";
+@import "~terriajs/lib/Sass/component/chart";
+@import "~terriajs/lib/Sass/component/data_catalog";
+@import "~terriajs/lib/Sass/component/feature_info";
+
+@import "~terriajs/lib/Sass/print";
