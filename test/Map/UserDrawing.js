@@ -16,6 +16,6 @@ describe('UserDrawing', function() {
     it('will use default options if options are not specified', function() {
         var userDrawing = new UserDrawing(terria);
 
-        expect(userDrawing._getDialogMessage()).toEqual("<strong>Draw on Map</strong></br><i>Click to add a point</i>");
+        expect(userDrawing._getDialogMessage()).toEqual("<div><strong>Draw on Map</strong></br><i>Click to add a point</i></div>");
     });
 });

@@ -4,6 +4,9 @@ import ObserveModelMixin from '../../ObserveModelMixin';
 const UserDrawing = require('../../../Map/UserDrawing');
 const EllipsoidGeodesic = require('terriajs-cesium/Source/Core/EllipsoidGeodesic.js');
 const Ellipsoid = require('terriajs-cesium/Source/Core/Ellipsoid.js');
+const CesiumMath = require('terriajs-cesium/Source/Core/Math.js');
+const PolygonGeometryLibrary = require('terriajs-cesium/Source/Core/PolygonGeometryLibrary.js');
+const Cartesian3 = require('terriajs-cesium/Source/Core/Cartesian3.js');
 
 const MeasureTool = React.createClass({
     mixins: [ObserveModelMixin],
@@ -15,6 +18,7 @@ const MeasureTool = React.createClass({
     getInitialState() {
         return {
             totalDistanceMetres: 0,
+            totalAreaMetresSquared: 0,
             userDrawing: new UserDrawing(this.props.terria,
                 {
                     messageHeader: "Measure Tool",
@@ -25,21 +29,32 @@ const MeasureTool = React.createClass({
         };
     },
 
-    prettifyDistance(distance) {
-        if (distance <= 0) {
+    prettifyNumber(number, squared) {
+        if (number <= 0) {
             return "";
         }
-        // Given a number representing a distance in metres, make it human readable
+        // Given a number representing a number in metres, make it human readable
         let label = "m";
-        if (distance > 999) {
-            label = "km";
-            distance = distance/1000.0;
+        if (squared) {
+            if (number > 999999) {
+                label = "km";
+                number = number/1000000.0;
+            }
+        } else {
+            if (number > 999) {
+                label = "km";
+                number = number/1000.0;
+            }
         }
-        distance = distance.toFixed(2);
+        number = number.toFixed(2);
         // http://stackoverflow.com/questions/2901102/how-to-print-a-number-with-commas-as-thousands-separators-in-javascript
-        distance = distance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        const distanceStr = distance + " " + label;
-        return distanceStr;
+        number = number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        let numberStr = number + " " + label;
+        if (squared)
+        {
+            numberStr += "\u00B2";
+        }
+        return numberStr;
     },
 
     updateDistance(pointEntities) {
@@ -67,6 +82,61 @@ const MeasureTool = React.createClass({
         }
     },
 
+    updateArea(pointEntities) {
+        this.setState({ totalAreaMetresSquared: 0 });
+        if (!this.state.userDrawing.closeLoop) {
+            // Not a closed polygon? Don't calculate area.
+            return;
+        }
+        if (pointEntities.entities.values.length < 3) {
+            return;
+        }
+        const perPositionHeight = true;
+
+        let positions = [];
+        for (let i=0; i < pointEntities.entities.values.length; i++) {
+            const currentPoint = pointEntities.entities.values[i];
+            const currentPointPos = currentPoint.position.getValue(this.props.terria.clock.currentTime);
+            positions.push(currentPointPos);
+        }
+
+        const geom = PolygonGeometryLibrary.createGeometryFromPositions(Ellipsoid.WGS84,
+                                                                        positions,
+                                                                        CesiumMath.RADIANS_PER_DEGREE,
+                                                                        perPositionHeight);
+
+        if (geom.indices.length % 3 !== 0 || geom.attributes.position.values.length % 3 !== 0)
+        {
+            // Something has gone wrong. We expect triangles. Can't calcuate area.
+            return;
+        }
+
+        let coords = [];
+        for (let i = 0; i < geom.attributes.position.values.length; i+=3)
+        {
+            coords.push(new Cartesian3(geom.attributes.position.values[i],
+                                       geom.attributes.position.values[i+1],
+                                       geom.attributes.position.values[i+2]));
+        }
+        let area = 0;
+        for (let i=0; i < geom.indices.length; i+=3)
+        {
+            let ind1 = geom.indices[i];
+            let ind2 = geom.indices[i+1];
+            let ind3 = geom.indices[i+2];
+
+            const a = Cartesian3.distance(coords[ind1], coords[ind2]);
+            const b = Cartesian3.distance(coords[ind2], coords[ind3]);
+            const c = Cartesian3.distance(coords[ind3], coords[ind1]);
+
+            // Heron's formula
+            let s = (a + b + c)/2.0;
+            area += Math.sqrt(s*(s-a)*(s-b)*(s-c));
+        }
+
+        this.setState({ totalAreaMetresSquared: area });
+    },
+
     getGeodesicDistance(pointOne, pointTwo) {
         // Note that Cartesian.distance gives the straight line distance between the two points, ignoring
         // curvature. This is not what we want.
@@ -78,14 +148,22 @@ const MeasureTool = React.createClass({
 
     onCleanUp() {
         this.setState({totalDistanceMetres: 0});
+        this.setState({totalAreaMetresSquared: 0});
     },
 
     onPointClicked(pointEntities) {
         this.updateDistance(pointEntities);
+        this.updateArea(pointEntities);
     },
 
     onMakeDialogMessage() {
-        return this.prettifyDistance(this.state.totalDistanceMetres);
+        let distance = this.prettifyNumber(this.state.totalDistanceMetres, false);
+        let message = distance;
+        if (this.state.totalAreaMetresSquared !== 0)
+        {
+            message += "<br>" + this.prettifyNumber(this.state.totalAreaMetresSquared, true);
+        }
+        return message;
     },
 
     handleClick() {
