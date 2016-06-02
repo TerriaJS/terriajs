@@ -44,6 +44,15 @@ const DataPreviewMap = React.createClass({
         this.terriaPreview.homeView = terria.homeView;
         this.terriaPreview.initialView = terria.homeView;
         this.terriaPreview.regionMappingDefinitionsUrl = terria.regionMappingDefinitionsUrl;
+        this._unsubscribeErrorHandler = this.terriaPreview.error.addEventListener(e => {
+            if (e.sender === this.props.previewedCatalogItem ||
+                (e.sender && e.sender.nowViewingCatalogItem === this.props.previewedCatalogItem)) {
+                this._errorPreviewingCatalogItem = true;
+                this.setState({
+                    previewBadgeText: 'NO PREVIEW AVAILABLE'
+                });
+            }
+        });
 
         // TODO: we shouldn't hard code the base map here. (copied from branch analyticsWithCharts)
         const positron = new OpenStreetMapCatalogItem(this.terriaPreview);
@@ -57,6 +66,13 @@ const DataPreviewMap = React.createClass({
         this.isZoomedToExtent = false;
         this.lastPreviewedCatalogItem = undefined;
         this.removePreviewFromMap = undefined;
+    },
+
+    componentWillUnmount() {
+        if (this._unsubscribeErrorHandler) {
+            this._unsubscribeErrorHandler();
+            this._unsubscribeErrorHandler = undefined;
+        }
     },
 
     componentDidMount() {
@@ -108,7 +124,7 @@ const DataPreviewMap = React.createClass({
                 return loadNowViewingItemPromise.then(() => {
                     // Now that the item is loaded, add it to the map.
                     // Unless we've started previewing something else in the meantime!
-                    if (!that.isMounted() || previewed !== that.props.previewedCatalogItem) {
+                    if (!that._unsubscribeErrorHandler || previewed !== that.props.previewedCatalogItem) {
                         return;
                     }
 
@@ -117,9 +133,14 @@ const DataPreviewMap = React.createClass({
                             that.terriaPreview.clock.currentTime = nowViewingItem.clock.currentTime;
                         }
 
+                        this._errorPreviewingCatalogItem = false;
                         that.removePreviewFromMap = nowViewingItem.showOnSeparateMap(that.terriaPreview.currentViewer);
 
-                        if (that.removePreviewFromMap) {
+                        if (this._errorPreviewingCatalogItem) {
+                            this.setState({
+                                previewBadgeText: 'NO PREVIEW AVAILABLE'
+                            });
+                        } else if (that.removePreviewFromMap) {
                             this.setState({
                                 previewBadgeText: 'PREVIEW'
                             });
