@@ -80,7 +80,8 @@
     "react-addons-test-utils": "0.14.7",
     "react-shallow-testutils": "^1.0.0",
     "terriajs-jasmine-ajax": "^3.2.1",
-    "terriajs-server": "^1.4.1"
+    "terriajs-server": "^1.4.1",
+    "webpack-dev-server": "^1.14.1"
   },
   "scripts": {
     "prepublish": "gulp post-npm-install",
