@@ -18,6 +18,13 @@
     max-width: calc(100vw - #{$work-bench-width} - 150px);
     right: 105px;
   }
+  @media print{
+    display: block;
+    position: relative;
+    color: #000;
+    margin: 0.5cm;
+    z-index: 999;
+  }
 }
 
 .is-on-top {

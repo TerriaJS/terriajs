@@ -1,11 +1,11 @@
 @media print {
-   .workbench,
-   .feedback,
-   .map-nav,
-   .notification,
-   .selection-indicator{
-        display: none !important;
-    }
+   // .workbench,
+   // .feedback,
+   // .map-nav,
+   // .notification,
+   // .selection-indicator{
+   //      display: none !important;
+   //  }
     @page {
         margin: 0.5cm 0.5cm auto 0.5cm;
     }
@@ -24,5 +24,27 @@
     .cesium-widget-credits{
         position: absolute;
         color: #fff;
+    }
+
+    .modal-wrapper{
+      position: relative;
+      opacity: 1;
+      z-index: 99;
+    }
+    #modal-overlay{
+      display: none;
+    }
+    #explorer-panel{
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .tab-panel .panel-content{
+      overflow: visible;
+      height: auto;
+    }
+    .data-panel-wrapper.is-open .data-preview__wrapper,
+    .data-panel-wrapper .data-preview__wrapper{
+      float: left;
     }
 }

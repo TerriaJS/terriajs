@@ -20,6 +20,9 @@
     right: 28px;
     top: 170px;
   }
+  @media print{
+    display: none;
+  }
 }
 .btn{
     composes: btn--geolocation from '../../../Sass/partial/_buttons.scss';

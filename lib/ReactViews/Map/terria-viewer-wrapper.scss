@@ -3,6 +3,9 @@
   height: 100%;
   position: relative;
   cursor: auto;
+  @media print{
+    height: 100vh;
+  }
 
   :global {
     .cesium-widget, .cesium-widget canvas {
