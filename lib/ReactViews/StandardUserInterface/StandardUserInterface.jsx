@@ -80,9 +80,6 @@ const StandardUserInterface = React.createClass({
     render() {
         const terria = this.props.terria;
         const allBaseMaps = this.props.allBaseMaps;
-
-        let disclaimer = this.props.terria.configParameters.printDisclaimer;
-
         return (
             <div>
                 <div className={Styles.ui}>
