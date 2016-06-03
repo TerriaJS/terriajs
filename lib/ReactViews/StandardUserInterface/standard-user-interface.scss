@@ -50,6 +50,9 @@
   &:last-child {
     width: 100%;
   }
+  @media print{
+    display: block;
+  }
 }
 
 .feedback {}
