@@ -24,6 +24,10 @@
     color: #000;
     margin: 0.5cm;
     z-index: 999;
+    height: auto;
+    max-height: none;
+    min-height: 0;
+    page-break-after : auto;
   }
 }
 
@@ -82,4 +86,7 @@
   overflow-y: auto;
   overflow-x: auto;
   max-height: calc(80vh - #{$padding*2 + $btn-default-line-height});
+  @media print{
+    max-height: none;
+  }
 }

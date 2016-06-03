@@ -27,24 +27,18 @@
     }
 
     .modal-wrapper{
-      position: relative;
-      opacity: 1;
-      z-index: 99;
-    }
-    #modal-overlay{
       display: none;
-    }
-    #explorer-panel{
-      visibility: visible;
-      opacity: 1;
-    }
-
-    .tab-panel .panel-content{
-      overflow: visible;
-      height: auto;
     }
     .data-panel-wrapper.is-open .data-preview__wrapper,
     .data-panel-wrapper .data-preview__wrapper{
       float: left;
+    }
+
+    #cesiumContainer{
+        height: auto;
+        width: auto;
+      &.leaflet-container{
+          height: 100vh;
+      }
     }
 }
