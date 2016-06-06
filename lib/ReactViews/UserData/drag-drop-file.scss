@@ -1,0 +1,58 @@
+@import '../../Sass/global/variables';
+@import '../../Sass/global/mixins';
+
+.drop-zone {
+  composes: drop-zone from '../../Sass/partial/_drop_zone.scss';
+
+  position: absolute;
+  opacity: 0;
+  z-index: -1;
+
+  &.is-active {
+    @include transition(opacity, 0.2s);
+
+    opacity: 1;
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 99;
+    width: 100vw;
+    height: 100vh;
+    border: 0;
+  }
+}
+
+.is-active {
+  composes: is-active from '../../Sass/partial/_drop_zone.scss';
+}
+
+.drop-zone-inner {
+  @include vertical-align();
+
+  color: #fff;
+  color: rgba(#fff, 0.9);
+  text-align: center;
+  font-family: $font-pop;
+
+  &:before {
+    content: '';
+    display: block;
+    height: 80px;
+    width: 70px;
+    margin: 0 auto;
+    background-image: url('images/drag-drop.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+}
+
+.dnd-heading {
+  text-transform: uppercase;
+  margin-top: 0.5em;
+}
+
+.dnd-hint {
+  font-size: 1.5rem;
+}
+

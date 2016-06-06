@@ -1,4 +1,7 @@
+import React from 'react';
+
 import arrayContains from '../../Core/arrayContains';
+
 import BottomDock from './../BottomDock/BottomDock.jsx';
 import Branding from './../SidePanel/Branding.jsx';
 import DisclaimerHandler from '../../ReactViewModels/DisclaimerHandler';
@@ -14,10 +17,11 @@ import ExplorerWindow from './../ExplorerWindow.jsx';
 import Notification from './../Notification/Notification.jsx';
 import ObserveModelMixin from './../ObserveModelMixin';
 import ProgressBar from '../Map/ProgressBar.jsx';
-import React from 'react';
+import DragDropFile from '../UserData/DragDropFile.jsx';
 import SidePanel from './../SidePanel/SidePanel.jsx';
-import Styles from './standard-user-interface.scss';
 import TerriaViewerWrapper from '../Map/TerriaViewerWrapper.jsx';
+
+import Styles from './standard-user-interface.scss';
 
 const StandardUserInterface = React.createClass({
     propTypes: {
@@ -155,6 +159,10 @@ const StandardUserInterface = React.createClass({
 
                 <FeatureInfoPanel terria={terria}
                                   viewState={this.props.viewState}
+                />
+
+                <DragDropFile terria={this.props.terria}
+                              viewState={this.props.viewState}
                 />
             </div>
         );

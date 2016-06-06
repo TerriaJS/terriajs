@@ -140,7 +140,7 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
     config.module.loaders.push({
         test: /\.json|xml$/,
         loader: require.resolve('file-loader'),
-        include: path.resolve(cesiumDir, 'Source', 'Assets')
+        // include: path.resolve(cesiumDir, 'Source', 'Assets')
     });
 
     config.module.loaders.push({

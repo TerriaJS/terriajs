@@ -1,9 +1,9 @@
 'use strict';
 import React from 'react';
-import DataCatalogGroup from './DataCatalog/DataCatalogGroup.jsx';
-import DataPreview from './Preview/DataPreview.jsx';
+import DataCatalogGroup from '../DataCatalog/DataCatalogGroup.jsx';
+import DataPreview from '../Preview/DataPreview.jsx';
 import AddData from './AddData.jsx';
-import ObserveModelMixin from './ObserveModelMixin';
+import ObserveModelMixin from '../ObserveModelMixin';
 
 const disclaimer = <p>Data added in this way is not saved or made visible to others unless you explicitly share it by
     using the Share panel. </p>;
@@ -19,14 +19,12 @@ const MyDataTab = React.createClass({
 
     getInitialState() {
         return {
-            dataCatalog: undefined,
             isUploadView: true
         };
     },
 
     updateCatalog(dataCatalog) {
         this.setState({
-            dataCatalog: dataCatalog,
             isUploadView: false
         });
     },
@@ -38,11 +36,12 @@ const MyDataTab = React.createClass({
     },
 
     renderContent() {
-        if (this.state.dataCatalog) {
+        if (this.props.terria.catalog.userAddedDataGroup) {
             return (<div className="added-data">
                     {disclaimer}
                     <ul className='data-catalog'>
-                        <DataCatalogGroup group={this.state.dataCatalog} viewState={this.props.viewState} />
+                        <DataCatalogGroup group={this.props.terria.catalog.userAddedDataGroup}
+                                          viewState={this.props.viewState}/>
                     </ul>
                     <button type='button' onClick={this.changeUploadView} className='btn--add-more-data btn btn-transparent'> Add more data</button>
                 </div>
@@ -54,10 +53,11 @@ const MyDataTab = React.createClass({
         return (
             <div className="panel-content">
                 <div className='my-data'>
-                    <div className={'add-data ' + (!this.state.dataCatalog ? 'is-empty' : '' + ' ' + (!this.state.isUploadView ? 'is-hidden' : ''))}>
+                    <div
+                        className={'add-data ' + (!this.props.terria.catalog.userAddedDataGroup.items.length ? 'is-empty' : '' + ' ' + (!this.state.isUploadView ? 'is-hidden' : ''))}>
                         <button type='button' onClick={this.changeUploadView} className='btn btn--back-to-my-data btn-transparent'> Back</button>
                         <h3>Adding your own data</h3>
-                        <AddData updateCatalog={this.updateCatalog}
+                        <AddData
                                  terria={this.props.terria}
                                  viewState={this.props.viewState}
                         />
