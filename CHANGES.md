@@ -7,6 +7,7 @@ Change Log
 * Fixed a bug on IE9 which prevented shortened URLs from loading.
 * Fixed a map started with smooth terrain being unable to switch to 3D terrain.
 * Fixed a bug in `CkanCatalogItem` that prevented it from using the proxy for dataset URLs.
+* Fixed a bug where sharing a time-series layer would completely crash Terria on reload.
 
 ### 3.2.0
 
