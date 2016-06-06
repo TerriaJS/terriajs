@@ -154,7 +154,8 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
         include: [
             path.dirname(require.resolve('proj4/package.json')),
             path.dirname(require.resolve('ent/package.json')),
-            path.dirname(require.resolve('entities/package.json'))
+            path.dirname(require.resolve('entities/package.json')),
+            path.dirname(require.resolve('html-to-react'))
         ],
         loader: require.resolve('json-loader')
     });
