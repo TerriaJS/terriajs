@@ -8,6 +8,8 @@ Change Log
 * Fixed a map started with smooth terrain being unable to switch to 3D terrain.
 * Fixed a bug in `CkanCatalogItem` that prevented it from using the proxy for dataset URLs.
 * Stopped generation of WMS intervals being dependent on JS dates and hence sensitive to DST time gaps.
+* Fixed a bug which led to zero property values being considered time-varying in the Feature Info panel.
+* Fixed a bug which prevented lat/lon injection into templates with time-varying properties.
 
 ### 3.2.0
 
