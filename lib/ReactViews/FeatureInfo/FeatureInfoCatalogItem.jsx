@@ -50,6 +50,7 @@ const FeatureInfoCatalogItem = React.createClass({
                         viewState={this.props.viewState}
                         catalogItem={catalogItem}
                         feature={feature}
+                        position={terria.pickedFeatures && terria.pickedFeatures.pickPosition}
                         clock={terria.clock}
                         template={featureInfoTemplate}
                         isOpen={feature === terria.selectedFeature}

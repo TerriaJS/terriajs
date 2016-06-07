@@ -4,7 +4,10 @@ import Mustache from 'mustache';
 import React from 'react';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import isArray from 'terriajs-cesium/Source/Core/isArray';
+import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
+import CesiumMath from 'terriajs-cesium/Source/Core/Math';
 import classNames from 'classnames';
+
 
 import formatNumberForLocale from '../../Core/formatNumberForLocale';
 import ObserveModelMixin from '../ObserveModelMixin';
@@ -24,6 +27,7 @@ const FeatureInfoSection = React.createClass({
         viewState: React.PropTypes.object.isRequired,
         template: React.PropTypes.oneOfType([React.PropTypes.object, React.PropTypes.string]),
         feature: React.PropTypes.object,
+        position: React.PropTypes.object,
         clock: React.PropTypes.object,
         catalogItem: React.PropTypes.object,  // Note this may not be known (eg. WFS).
         isOpen: React.PropTypes.bool,
@@ -56,7 +60,26 @@ const FeatureInfoSection = React.createClass({
     },
 
     getTemplateData() {
-        return propertyValues(this.props.feature, this.props.clock, this.props.template && this.props.template.formats);
+        const propertyData = propertyValues(
+            this.props.feature,
+            this.props.clock,
+            this.props.template && this.props.template.formats
+        );
+
+        let terriaData;
+        if (this.props.position) {
+            const latLngInRadians = Ellipsoid.WGS84.cartesianToCartographic(this.props.position);
+            terriaData = {
+                terria: {
+                    coords: {
+                        latitude: CesiumMath.toDegrees(latLngInRadians.latitude),
+                        longitude: CesiumMath.toDegrees(latLngInRadians.longitude)
+                    }
+                }
+            };
+        }
+
+        return Object.assign({}, propertyData || {}, terriaData || {});
     },
 
     clickHeader() {
