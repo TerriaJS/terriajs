@@ -7,6 +7,7 @@ Change Log
 * Fixed a bug on IE9 which prevented shortened URLs from loading.
 * Fixed a map started with smooth terrain being unable to switch to 3D terrain.
 * Fixed a bug in `CkanCatalogItem` that prevented it from using the proxy for dataset URLs.
+* Stopped generation of WMS intervals being dependent on JS dates and hence sensitive to DST time gaps.
 
 ### 3.2.0
 
