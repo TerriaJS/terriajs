@@ -18,10 +18,43 @@ TerriaJS is a library for building rich, web-based geospatial data explorers, us
 * Time dimensions supported for CSV, CZML, WMS. Automatically animate layers, or slide the time control forward and backward.
 * Drag-and-drop files from your desktop the browser, for instant visualisation (no file upload to server required).
 * Wider range of file types supported through server-side OGR2OGR service (requires upload).
-* All ASGS region types (LGA, SA2, commonwealth electoral district etc) supported for [CSV region mapping](https://github.com/NICTA/nationalmap/wiki/csv-geo-au), plus several others: Primary Health Networks, Statistical Local Areas, ISO 3 letter country codes, etc.
+* All ASGS (Australian Statistical Geographic Standard) region types (LGA, SA2, commonwealth electoral district etc) supported for [CSV region mapping](https://github.com/NICTA/nationalmap/wiki/csv-geo-au), plus several others: Primary Health Networks, Statistical Local Areas, ISO 3 letter country codes, etc.
 * Users can generate a reusable URL link of their current map view, to quickly share mashups of web-hosted data. Google's URL shortener is optionally used.
 
 ![Terria screenshot](terria-screenshot.png "Terria screenshot")
+
+### Who's using TerriaJS?
+
+#### Sites developed by Data61
+
+* [National Map](http://nationalmap.gov.au)
+* [AREMI](http://nationalmap.gov.au/renewables)
+* [Northern Australia Investment Map](http://nationalmap.gov.au/northernaustralia)
+* [NEII Viewer](http://neii.org.au/viewer)
+* [AURIN Map](http://map.aurin.org.au/)
+* [Global Risk Map](http://globalriskmap.nicta.com.au)
+* [Ground Water Visualisation System](http://groundwater-vis.research.nicta.com.au/)
+
+#### Prototypes and sites in development
+
+* [Australian Wave Energy Atlas](http://awavea.csiro.au/)
+* [ParlMap](http://parlmap.terria.io/) (authorisation required)
+* [City of Sydney data explorer](http://data.cityofsydney.nsw.gov.au/map)
+* [GeoGLAM Rangeland and Pasture Productivity](http://map.geo-rapp.org/)
+* [Greater Sydney Commission](http://nationalmap.research.nicta.com.au/greatersydney/)
+
+#### Not Data61
+
+Sites we're aware of that are using TerriaJS. These are not endorsements or testimonials.
+
+* [WA Map](http://map.beta.data.wa.gov.au/)
+* [Leylines](http://maps.leylines.ch/)
+* [PropellerAero](http://www.propelleraero.com/)
+* [Tampa Bay Map](http://tampabaymap.org/)
+* [Latin America Map](http://www.latam-map.org/) 
+* [USGS Protected Areas database](https://maps.usgs.gov/beta/padus/) (beta)
+* [Map-N-Tour](http://mapntour.squarespace.com/news/?tag=3D+Map+Platforms)
+* [Innovisite France Beta](http://www.innovisite.com/map/france/)
 
 ### Technical
 
