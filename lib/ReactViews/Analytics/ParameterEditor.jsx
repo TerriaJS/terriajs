@@ -2,6 +2,7 @@
 import React from 'react';
 import ObserveModelMixin from '../ObserveModelMixin';
 import PointParameterEditor from './PointParameterEditor';
+import RectangleParameterEditor from './RectangleParameterEditor';
 import RegionParameterEditor from './RegionParameterEditor';
 import RegionTypeParameterEditor from './RegionTypeParameterEditor';
 import RegionDataParameterEditor from './RegionDataParameterEditor';
@@ -26,6 +27,12 @@ const ParameterEditor = React.createClass({
         switch(this.props.parameter.type) {
         case 'point':
             return <PointParameterEditor previewed={this.props.previewed}
+                                         viewState={this.props.viewState}
+                                         parameter={this.props.parameter}
+                                         parameterValues={this.props.parameterValues}
+                    />;
+        case 'rectangle':
+            return <RectangleParameterEditor previewed={this.props.previewed}
                                          viewState={this.props.viewState}
                                          parameter={this.props.parameter}
                                          parameterValues={this.props.parameterValues}
