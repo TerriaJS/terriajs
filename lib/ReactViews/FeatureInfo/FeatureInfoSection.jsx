@@ -218,7 +218,7 @@ function areAllPropertiesConstant(properties) {
     let result = true;
     for (const key in properties) {
         if (properties.hasOwnProperty(key)) {
-            result = result && properties[key] && (properties[key].isConstant !== false);
+            result = result && defined(properties[key]) && (properties[key].isConstant !== false);
         }
     }
     return result;

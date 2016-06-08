@@ -149,13 +149,20 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
         include: cesiumDir
     });
 
+    var externalModulesWithJson = ['proj4/package.json', 'entities', 'html-to-react']
+        .map(function(module) {
+           try {
+               return path.dirname(require.resolve(module));
+           } catch (e) {
+               console.warn('Could not resolve module "' + module + ". Possibly this is no longer a dep of the project?");
+           }
+        }).filter(function(resolvedModule) {
+            return !!resolvedModule;
+        });
+
     config.module.loaders.push({
         test: /\.json$/,
-        include: [
-            path.dirname(require.resolve('proj4/package.json')),
-            path.dirname(require.resolve('ent/package.json')),
-            path.dirname(require.resolve('entities/package.json'))
-        ],
+        include: externalModulesWithJson,
         loader: require.resolve('json-loader')
     });
 
