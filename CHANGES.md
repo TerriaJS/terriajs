@@ -5,6 +5,7 @@ Change Log
 ### 3.3.0
 
 * Support `parameters` property in WebFeatureServiceCatalogItem to allow accessing URLs which need additional parameters.
+* Fixed a bug where sharing a time-series layer would completely crash Terria on reload.
 
 ### 3.2.1
 
