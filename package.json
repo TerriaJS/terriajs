@@ -31,11 +31,10 @@
     "linkify-it": "^1.2.0",
     "markdown-it": "^6.0.1",
     "mustache": "^2.2.1",
+    "mutationobserver-shim": "^0.3.1",
     "proj4": "^2.3.14",
     "raw-loader": "^0.5.1",
-    "react": "0.14.8",
     "react-addons-pure-render-mixin": "0.14.8",
-    "react-dnd": "^2.1.4",
     "resolve": "^1.1.7",
     "resolve-url-loader": "^1.4.3",
     "sass-loader": "^3.2.0",
@@ -77,11 +76,17 @@
     "kss": "^2.1.1",
     "node-notifier": "^4.5.0",
     "node-sass": "^3.4.2",
+    "react": "0.14.x",
     "react-addons-test-utils": "0.14.7",
+    "react-dom": "0.14.x",
     "react-shallow-testutils": "^1.0.0",
     "terriajs-jasmine-ajax": "^3.2.1",
     "terriajs-server": "^1.4.1",
     "webpack-dev-server": "^1.14.1"
+  },
+  "peerDependencies": {
+    "react": "0.14.x",
+    "react-dom": "0.14.x"
   },
   "scripts": {
     "prepublish": "gulp post-npm-install",

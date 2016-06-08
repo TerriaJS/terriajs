@@ -1,12 +1,11 @@
+
+import React from 'react';
+
 import arrayContains from '../../Core/arrayContains';
-import BottomDock from './../BottomDock/BottomDock.jsx';
 import Branding from './../SidePanel/Branding.jsx';
 import DisclaimerHandler from '../../ReactViewModels/DisclaimerHandler';
-import DistanceLegend from '../Map/Legend/DistanceLegend.jsx';
 import FeatureInfoPanel from './../FeatureInfo/FeatureInfoPanel.jsx';
-import FeedbackButton from '../Feedback/FeedbackButton.jsx';
 import FeedbackForm from '../Feedback/FeedbackForm.jsx';
-import LocationBar from '../Map/Legend/LocationBar.jsx';
 import MapInteractionWindow from './../Notification/MapInteractionWindow.jsx';
 import MapNavigation from './../Map/MapNavigation.jsx';
 import MobileHeader from './../Mobile/MobileHeader.jsx';
@@ -14,12 +13,15 @@ import ExplorerWindow from './../ExplorerWindow.jsx';
 import Notification from './../Notification/Notification.jsx';
 import ObserveModelMixin from './../ObserveModelMixin';
 import ProgressBar from '../Map/ProgressBar.jsx';
-import React from 'react';
 import SidePanel from './../SidePanel/SidePanel.jsx';
+import MapContainer from './MapColumn.jsx';
+
 import Styles from './standard-user-interface.scss';
-import TerriaViewerWrapper from '../Map/TerriaViewerWrapper.jsx';
 
 const StandardUserInterface = React.createClass({
+
+    mixins: [ObserveModelMixin],
+
     propTypes: {
         terria: React.PropTypes.object.isRequired,
         allBaseMaps: React.PropTypes.array,
@@ -33,8 +35,6 @@ const StandardUserInterface = React.createClass({
             minimumLargeScreenWidth: 768
         };
     },
-
-    mixins: [ObserveModelMixin],
 
     componentWillMount() {
         const that = this;
@@ -101,37 +101,7 @@ const StandardUserInterface = React.createClass({
 
                         <section className={Styles.map}>
                             <ProgressBar terria={terria}/>
-                            <div className={Styles.mapInner}>
-                                <div className={Styles.mapRow}>
-                                    <div className={Styles.mapCell}>
-                                        <TerriaViewerWrapper terria={this.props.terria}
-                                                             viewState={this.props.viewState}/>
-                                        <div className={Styles.locationDistance}>
-                                            <LocationBar terria={terria}
-                                                         mouseCoords={this.props.viewState.mouseCoords}/>
-                                            <DistanceLegend terria={terria}/>
-                                        </div>
-                                        <If condition={!this.props.viewState.useSmallScreenInterface && this.props.terria.configParameters.feedbackUrl}>
-                                            <div className={Styles.feedbackButtonWrapper}>
-                                                <FeedbackButton viewState={this.props.viewState}/>
-                                            </div>
-                                        </If>
-                                    </div>
-                                <If condition={this.props.terria.configParameters.printDisclaimer}>
-                                    <div className={Styles.mapCell}>
-                                        <a className='print-disclaimer' href={this.props.terria.configParameters.printDisclaimer.url}>{this.props.terria.configParameters.printDisclaimer.text}</a>
-                                        </div>
-                                </If>
-                                </div>
-                                <If condition={!this.props.viewState.hideMapUi()}>
-                                    <div className={Styles.mapRow}>
-                                        <div className={Styles.mapCell}>
-                                            <BottomDock terria={terria} viewState={this.props.viewState}/>
-                                        </div>
-                                    </div>
-                                </If>
-                            </div>
-
+                            <MapContainer terria={terria} viewState={this.props.viewState} />
                             <If condition={!this.props.viewState.useSmallScreenInterface}>
                                 <main>
                                     <ExplorerWindow terria={terria} viewState={this.props.viewState}/>

@@ -1,0 +1,116 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+import 'mutationobserver-shim';
+
+import TerriaViewerWrapper from '../Map/TerriaViewerWrapper.jsx';
+import LocationBar from '../Map/Legend/LocationBar.jsx';
+import DistanceLegend from '../Map/Legend/DistanceLegend.jsx';
+import FeedbackButton from '../Feedback/FeedbackButton.jsx';
+import ObserveModelMixin from './../ObserveModelMixin';
+import BottomDock from './../BottomDock/BottomDock.jsx';
+import FeatureDetection from 'terriajs-cesium/Source/Core/FeatureDetection';
+
+
+import Styles from './map-column.scss';
+
+const isIE = FeatureDetection.isInternetExplorer();
+
+/**
+ * Right-hand column that contains the map, controls that sit over the map and sometimes the bottom dock containing
+ * the timeline and charts.
+ *
+ * Note that because IE9-11 is terrible the pure-CSS layout that is used in nice browsers doesn't work, so for IE only
+ * we use a (usually polyfilled) MutationObserver to watch the bottom dock and resize when it changes.
+ */
+const MapColumn = React.createClass({
+    mixins: [ObserveModelMixin],
+
+    propTypes: {
+        terria: React.PropTypes.object.isRequired,
+        viewState: React.PropTypes.object.isRequired,
+    },
+
+    getInitialState() {
+        return {};
+    },
+
+    componentWillMount() {
+        if (isIE) {
+            this.observer = new MutationObserver(this.resizeMapCell);
+        }
+    },
+
+    addBottomDock(bottomDock) {
+        if (isIE) {
+            this.observer.observe(ReactDOM.findDOMNode(bottomDock), {
+                childList: true,
+                subtree: true
+            });
+        }
+    },
+
+    newMapCell(mapCell) {
+        if (isIE) {
+            this.mapCell = mapCell;
+
+            this.resizeMapCell();
+        }
+    },
+
+    resizeMapCell() {
+        if (this.mapCell) {
+            this.setState({
+                height: this.mapCell.offsetHeight
+            });
+        }
+    },
+
+    componentWillUnmount() {
+        if (isIE) {
+            this.observer.disconnect();
+        }
+    },
+
+    render() {
+        return (
+            <div className={Styles.mapInner}>
+                <div className={Styles.mapRow}>
+                    <div className={Styles.mapCell} ref={this.newMapCell}>
+                        <div className={Styles.mapWrapper}
+                             style={{height: this.state.height || (isIE ? '100vh' : '100%')}}>
+                            <TerriaViewerWrapper terria={this.props.terria}
+                                                 viewState={this.props.viewState}/>
+                        </div>
+                        <div className={Styles.locationDistance}>
+                            <LocationBar terria={this.props.terria}
+                                         mouseCoords={this.props.viewState.mouseCoords}/>
+                            <DistanceLegend terria={this.props.terria}/>
+                        </div>
+                        <If condition={!this.props.viewState.useSmallScreenInterface && this.props.terria.configParameters.feedbackUrl}>
+                            <div className={Styles.feedbackButtonWrapper}>
+                                <FeedbackButton viewState={this.props.viewState}/>
+                            </div>
+                        </If>
+                    </div>
+                    <If condition={this.props.terria.configParameters.printDisclaimer}>
+                        <div className={Styles.mapCell}>
+                            <a className={Styles.printDisclaimer}
+                               href={this.props.terria.configParameters.printDisclaimer.url}>{this.props.terria.configParameters.printDisclaimer.text}
+                            </a>
+                        </div>
+                    </If>
+                </div>
+                <If condition={!this.props.viewState.hideMapUi()}>
+                    <div className={Styles.mapRow}>
+                        <div className={Styles.mapCell}>
+                            <BottomDock terria={this.props.terria} viewState={this.props.viewState}
+                                        ref={this.addBottomDock}/>
+                        </div>
+                    </div>
+                </If>
+            </div>
+        );
+    }
+});
+
+export default MapColumn;
