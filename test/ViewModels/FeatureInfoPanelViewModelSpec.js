@@ -222,6 +222,13 @@ describe('FeatureInfoPanelViewModel templating', function() {
         }).then(done).otherwise(done.fail);
     });
 
+    it('can format numbers in template using terria.formatNumber', function(done) {
+        item.featureInfoTemplate = 'Raw: {{big}}  Formatted: {{#terria.formatNumber}}{{big}}{{/terria.formatNumber}}';
+        return loadAndPick().then(function() {
+            expect(panel.sections[0].templatedInfo).toBe('Raw: 1234567  Formatted: ' + '1' + separator + '234' + separator + '567');
+        }).then(done).otherwise(done.fail);
+    });
+
     it('can render a recursive featureInfoTemplate', function(done) {
 
         item.featureInfoTemplate = {
