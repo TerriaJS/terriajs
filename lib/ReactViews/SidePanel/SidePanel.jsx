@@ -1,3 +1,4 @@
+import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
 import SearchBox from '../Search/SearchBox.jsx';
@@ -11,6 +12,34 @@ const SidePanel = React.createClass({
     propTypes: {
         terria: React.PropTypes.object.isRequired,
         viewState: React.PropTypes.object.isRequired
+    },
+
+    componentDidMount() {
+        this.subscribeToProps();
+    },
+
+    componentDidUpdate() {
+        this.subscribeToProps();
+    },
+
+    componentWillUnmount() {
+        this.unsubscribeFromProps();
+    },
+
+    subscribeToProps() {
+        this.unsubscribeFromProps();
+
+        // Close the search results when the Now Viewing changes (so that it's visible).
+        this._nowViewingChangeSubscription = knockout.getObservable(this.props.terria.nowViewing, 'items').subscribe(() => {
+            this.props.viewState.searchState.showLocationSearch = false;
+        });
+    },
+
+    unsubscribeFromProps() {
+        if (this._nowViewingChangeSubscription) {
+            this._nowViewingChangeSubscription.dispose();
+            this._nowViewingChangeSubscription = undefined;
+        }
     },
 
     onAddDataClicked() {
@@ -45,8 +74,7 @@ const SidePanel = React.createClass({
                 </div>
                 <div className={Styles.body}>
                     <Choose>
-                        <When
-                            condition={searchState.locationSearchText.length > 0 && searchState.showLocationSearch}>
+                        <When condition={searchState.locationSearchText.length > 0 && searchState.showLocationSearch}>
                             <SidebarSearch viewState={this.props.viewState} isWaitingForSearchToStart={searchState.isWaitingToStartLocationSearch} />
                         </When>
                         <When

@@ -96,11 +96,11 @@ const FeatureInfoPanel = React.createClass({
                 className={panelClassName}
                 aria-hidden={!viewState.featureInfoPanelIsVisible}
                 onClick={this.bringToFront}>
-                <div className='feature-info-panel__header'>
-                    <button type='button' onClick={ this.toggleCollapsed } className='btn'>
+                <div className={Styles.header}>
+                    <button type='button' onClick={ this.toggleCollapsed } className={Styles.btn}>
                         Feature Information
                     </button>
-                    <button type='button' onClick={ this.close } className="btn btn--close-feature"
+                    <button type='button' onClick={ this.close } className={Styles.btnCloseFeature}
                             title="Close data panel"/>
                 </div>
                 <ul className={Styles.body}>
@@ -111,7 +111,7 @@ const FeatureInfoPanel = React.createClass({
                             <li><Loader/></li>
                         </When>
                         <When condition={!featureInfoCatalogItems || featureInfoCatalogItems.length === 0}>
-                            <li className='no-results'>No results</li>
+                            <li className={Styles.noResults}>No results</li>
                         </When>
                         <Otherwise>
                             {featureInfoCatalogItems}

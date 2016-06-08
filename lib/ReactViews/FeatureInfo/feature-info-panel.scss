@@ -20,19 +20,59 @@
   }
 }
 
-.isOnTop{
+.is-on-top {
   z-index: $front-component-z-index!important;
 }
 
-.isCollapsed{
+.is-collapsed {
   .body{
     display: none;
   }
 }
 
-.isVisible{
+.is-visible {
   display: block;
   z-index: 10;
 }
 
+.header{
+  background: $dark;
+  padding-right: $input-height;
+}
 
+.btn {
+  composes: btn from '../../Sass/partial/_buttons.scss';
+
+  padding: 4px 9px;
+  margin-right: 4px;
+}
+
+.btn--download {
+  padding: 3px;
+  width: 27px;
+  margin-left: 3px;
+}
+
+.btn--close-feature{
+  composes: btn;
+  composes: btn--close from '../../Sass/partial/_buttons.scss';
+
+  &:hover,
+  &:focus {
+    color: $color-primary;
+  }
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.no-results {
+  composes: no-results from '../../Sass/partial/_labels.scss';
+}
+
+.body{
+  composes: list-reset from '../../Sass/partial/_base.scss';
+  overflow-y: auto;
+  overflow-x: auto;
+  max-height: calc(80vh - #{$padding*2 + $btn-default-line-height});
+}

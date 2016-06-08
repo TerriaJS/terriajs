@@ -184,7 +184,7 @@ $chart-darker: darken($dark, 8%);
   float: right;
 }
 
-.chart-dropdown-button .btn--dropdown-option {
+.chart-expand__dropdown__btn--option {
   width: auto;
   float: left;
   color: $color-primary;
@@ -245,6 +245,14 @@ $chart-darker: darken($dark, 8%);
 
 .preview-chart-wrapper {
   position: relative;
+
+  &__dropdown {
+    display: inline-block;
+  }
+
+  &__list {
+    display: flex;
+  }
 }
 
 .chart-panel .axis .colors path {
@@ -264,12 +272,11 @@ $chart-darker: darken($dark, 8%);
   }
 
   .btn--download {
-    width: $input-height;
     display: inline-block;
     text-align: center;
-    &:before {
-      line-height: 22px;
-    }
+    padding: 4px 3px;
+    width: 27px;
+    margin-left: 3px;
   }
 
   .btn--chart-expand {

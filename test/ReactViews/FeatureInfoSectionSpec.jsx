@@ -19,7 +19,7 @@ if (typeof Intl === 'object' && typeof Intl.NumberFormat === 'function') {
     separator = (Intl.NumberFormat().format(1000)[1]);
 }
 
-const contentClass = 'feature-info-panel__content';
+const contentClass = 'feature-info-section__content';
 
 function getShallowRenderedOutput(jsx) {
     const renderer = ReactTestUtils.createRenderer();
@@ -252,7 +252,7 @@ describe('FeatureInfoSection', function() {
             const template = {name: '{{name}} {{foo}}'};
             const section = <FeatureInfoSection feature={feature} isOpen={false} clock={terria.clock} template={template} viewState={viewState} />;
             const result = getShallowRenderedOutput(section);
-            const nameElement = findAllWithClass(result, 'feature-info-panel__title')[0];
+            const nameElement = findAllWithClass(result, 'feature-info-section__title')[0];
             const name = nameElement.props.children;
             expect(name).toContain('Kay bar');
         });

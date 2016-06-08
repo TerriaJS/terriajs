@@ -1,4 +1,4 @@
-.map-progress-bar {
+.progress-bar {
     z-index: 1;
     position: absolute;
     top: 0;
@@ -8,7 +8,7 @@
     transition: opacity 200ms linear, width 200ms linear, visibility 400ms linear;
 }
 
-.map-progress-bar--complete {
+.complete {
     animation-duration: 400ms;
     animation-name: complete;
 }

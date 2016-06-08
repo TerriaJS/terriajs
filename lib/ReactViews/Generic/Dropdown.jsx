@@ -4,17 +4,18 @@ import React from 'react';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import classNames from 'classnames';
 
+import Styles from './dropdown.scss';
+
 // Use this as drop down rather than the html <select> tag so we have more consistent styling
 // Uses the contents of the element as the name of the dropdown if none selected.
 const Dropdown = React.createClass({
     propTypes: {
-        className: React.PropTypes.string, // Class added to the dropdown button.
+        theme: React.PropTypes.object,
         options: React.PropTypes.array, // Must be an array of objects with name properties. Uses <a> when there is an href property, else <button type='button'>.
         selected: React.PropTypes.object,
         selectOption: React.PropTypes.func, // The callback function; its arguments are the chosen object and its index.
         textProperty: React.PropTypes.string, // property to display as text
         matchWidth: React.PropTypes.bool,
-        buttonClassName: React.PropTypes.string,
         children: React.PropTypes.any
     },
 
@@ -23,7 +24,8 @@ const Dropdown = React.createClass({
             options: [],
             selected: undefined,
             textProperty: 'name',
-            align: 'left'
+            align: 'left',
+            theme: {}
         };
     },
 
@@ -140,27 +142,29 @@ const Dropdown = React.createClass({
     },
 
     render() {
+        const isOpenStyle = Styles.isOpen + ' ' + (this.props.theme.isOpen || '');
+
         return (
-            <div className={'dropdown ' + (this.state.isOpen ? 'is-open' : '') + ' ' + (this.props.className || '')}>
+            <div className={classNames(Styles.dropdown, this.props.theme.dropdown)}>
                 <button type='button' onClick={this.onButtonClicked}
-                        className={(this.props.buttonClassName || 'btn--dropdown') + ' btn btn-transparent'}
+                        className={classNames(this.props.theme.button, Styles.btnDropdown)}
                         ref={element => {this.buttonElement = element;}}>
                     {defined(this.props.selected) ? this.props.selected[this.props.textProperty] : this.props.children}
                 </button>
-                <ul className='dropdown__list' style={this.state.dropdownPosition}>
+                <ul className={classNames(Styles.list, this.props.theme.list, {[isOpenStyle]: this.state.isOpen})} style={this.state.dropdownPosition}>
                     <For each="option" of={this.props.options} index="index">
                         <li key={option[this.props.textProperty]}>
                             <Choose>
                                 <When condition={option.href}>
                                     <a href={option.href}
-                                       className={classNames('btn', 'btn--dropdown-option btn-transparent', {'is-selected': option === this.props.selected})}
+                                       className={classNames(Styles.btnOption, this.props.theme.btnOption || '', {[Styles.isSelected]: option === this.props.selected})}
                                        download={option.download}>
                                         {option[this.props.textProperty]}
                                     </a>
                                 </When>
                                 <Otherwise>
                                     <button type='button'
-                                            className={classNames('btn', 'btn--dropdown-option btn-transparent', {'is-selected': option === this.props.selected})}
+                                            className={classNames(Styles.btnOption, this.props.theme.btnOption || '', {[Styles.isSelected]: option === this.props.selected})}
                                             onClick={() => this.select(option, index)}>
                                         {option[this.props.textProperty]}
                                     </button>

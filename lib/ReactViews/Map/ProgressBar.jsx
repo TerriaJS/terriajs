@@ -2,7 +2,9 @@
 
 import React from 'react';
 import EventHelper from 'terriajs-cesium/Source/Core/EventHelper';
-import classnames from 'classnames';
+import classNames from 'classnames';
+
+import Styles from './progress-bar.scss';
 
 // The map navigation region
 const ProgressBar = React.createClass({
@@ -44,7 +46,7 @@ const ProgressBar = React.createClass({
         const complete = this.state.percentage === 100;
 
         return (
-            <div className={classnames('map-progress-bar', {'map-progress-bar--complete': complete})} style={{visibility, width}} />
+            <div className={classNames(Styles.progressBar, {[Styles.complete]: complete})} style={{visibility, width}} />
         );
     }
 });

@@ -51,19 +51,26 @@ const DataCatalogGroup = React.createClass({
         this.props.group.toggleOpen();
     },
 
+    clickGroup() {
+        this.toggleOpen();
+        this.props.viewState.viewCatalogItem(this.props.group);
+    },
+
     render() {
         const group = this.props.group;
         let contents = null;
         if (this.isOpen()) {
             contents = (
                 <ul className="data--catalog-group">
+                    {group.isLoading && <li key="loader"><Loader /></li>}
+                    {!group.isLoading && group.items.length === 0 && <li className="label no-results" key="empty"> This group is empty </li>}
                     {this.renderGroup(group)}
                 </ul>
             );
         }
         return (
             <li>
-                <button type='button' className={classNames('btn', 'btn-transparent', 'btn--catalog', {'is-open': this.isOpen()})} onClick={this.toggleOpen}>
+                <button type='button' className={classNames('btn', 'btn-transparent', 'btn--catalog', {'is-open': this.isOpen()})} onClick={this.clickGroup}>
                     <i className={`btn--group-indicator ${this.isOpen() ? 'btn--folder-open' : 'btn--folder'}`}/>
                     {group.name}
                 </button>
@@ -82,12 +89,6 @@ const DataCatalogGroup = React.createClass({
                 overrideOpen={this.props.manageIsOpenLocally}
             />
         ));
-
-        if (group.isLoading) {
-            children.push(<li key="loader"><Loader /></li>);
-        } else if (group.items.length === 0) {
-            children.push(<li className="label no-results" key="empty"> This group is empty </li>);
-        }
 
         return children;
     }

@@ -1,11 +1,10 @@
 'use strict';
 
-import React from 'react';
-
+import GroupPreview from './GroupPreview';
 import InvokeFunction from '../Analytics/InvokeFunction';
-import ObserveModelMixin from '../ObserveModelMixin';
 import MappablePreview from './MappablePreview';
-
+import ObserveModelMixin from '../ObserveModelMixin';
+import React from 'react';
 import Styles from './data-preview.scss';
 
 /**
@@ -13,7 +12,6 @@ import Styles from './data-preview.scss';
  */
 const DataPreview = React.createClass({
     mixins: [ObserveModelMixin],
-
 
     propTypes: {
         terria: React.PropTypes.object.isRequired,
@@ -42,6 +40,12 @@ const DataPreview = React.createClass({
                                             terria={this.props.terria}
                                             viewState={this.props.viewState}
                             />
+                        </div>
+                    </When>
+                    <When condition={previewed && previewed.isGroup}>
+                        <div className={Styles.previewInner}>
+                            <GroupPreview previewed={previewed} terria={this.props.terria}
+                                          viewState={this.props.viewState}/>
                         </div>
                     </When>
                     <Otherwise>

@@ -1,4 +1,3 @@
-'use strict';
 import React from 'react';
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 import ObserveModelMixin from '../ObserveModelMixin';
@@ -7,7 +6,6 @@ import when from 'terriajs-cesium/Source/ThirdParty/when';
 import TerriaError from '../../Core/TerriaError';
 import renderMarkdownInReact from '../../Core/renderMarkdownInReact';
 import Styles from './invoke-function.scss';
-
 
 const InvokeFunction = React.createClass({
     mixins: [ObserveModelMixin],
@@ -70,7 +68,7 @@ const InvokeFunction = React.createClass({
         // components are refreshed when different previewed items are
         // displayed
         return this.props.previewed.parameters.map((param, i)=>
-        <ParameterEditor key={param.id + this.props.previewed.identifier}
+        <ParameterEditor key={param.id + this.props.previewed.uniqueId}
                          parameter={param}
                          viewState={this.props.viewState}
                          previewed={this.props.previewed}

@@ -5,7 +5,6 @@ import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
 import Styles from './parameter-editor.scss';
 
-
 const RegionDataParameterEditor = React.createClass({
     mixins: [ObserveModelMixin],
 

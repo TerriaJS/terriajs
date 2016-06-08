@@ -1,10 +1,9 @@
-'use strict';
-
 import defined from 'terriajs-cesium/Source/Core/defined';
 import FeatureInfoSection from './FeatureInfoSection.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
 
+import Styles from './feature-info-catalog-item.scss';
 
 // Any Catalog in a feature-info-panel
 const FeatureInfoCatalogItem = React.createClass({
@@ -62,15 +61,15 @@ const FeatureInfoCatalogItem = React.createClass({
         }
 
         return (
-            <li className ='feature-info__group'>
-                <ul className='feature-info-panel__sections'>
+            <li className={Styles.group}>
+                <ul className={Styles.sections}>
                     <If condition={hiddenNumber === 1}>
-                        <li className='feature-info-panel__not_all'>
+                        <li className={Styles.messageItem}>
                             More than {maximumShownFeatureInfos} {catalogItem.name} features were found. The first {maximumShownFeatureInfos} are shown below.
                         </li>
                     </If>
                     <If condition={hiddenNumber > 1}>
-                        <li className='feature-info-panel__not_all'>
+                        <li className={Styles.messageItem}>
                             {totalFeaturesCount} {catalogItem.name} features were found. The first {maximumShownFeatureInfos} are shown below.
                         </li>
                     </If>

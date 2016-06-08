@@ -3,6 +3,8 @@
 }
 
 .data-catalog{
+  margin-top: $padding;
+
   @extend .list-reset;
   ul{
     @extend .list-reset;
