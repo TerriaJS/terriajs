@@ -80,7 +80,6 @@ const StandardUserInterface = React.createClass({
     render() {
         const terria = this.props.terria;
         const allBaseMaps = this.props.allBaseMaps;
-
         return (
             <div>
                 <div className={Styles.ui}>
@@ -118,6 +117,11 @@ const StandardUserInterface = React.createClass({
                                             </div>
                                         </If>
                                     </div>
+                                <If condition={this.props.terria.configParameters.printDisclaimer}>
+                                    <div className={Styles.mapCell}>
+                                        <a className='print-disclaimer' href={this.props.terria.configParameters.printDisclaimer.url}>{this.props.terria.configParameters.printDisclaimer.text}</a>
+                                        </div>
+                                </If>
                                 </div>
                                 <If condition={!this.props.viewState.hideMapUi()}>
                                     <div className={Styles.mapRow}>
@@ -152,6 +156,8 @@ const StandardUserInterface = React.createClass({
                         <FeedbackForm viewState={this.props.viewState}/>
                     </aside>
                 </If>
+
+
 
                 <FeatureInfoPanel terria={terria}
                                   viewState={this.props.viewState}

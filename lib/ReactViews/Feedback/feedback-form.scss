@@ -26,6 +26,9 @@
     form{
         padding: $padding*2;
     }
+    @media print{
+        display: none;
+    }
 }
 .header{
     position: relative;

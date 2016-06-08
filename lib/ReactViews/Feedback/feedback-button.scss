@@ -6,6 +6,9 @@
     color: $dark;
     border-radius: 20px;
     box-shadow: $box-shadow;
+    @media print{
+        display: none;
+    }
 }
 
 .btnFeedback{
@@ -14,6 +17,9 @@
     composes: icon-feedback from '../../Sass/global/_icons.scss';
     &:before{
         padding-right: $padding;
+    }
+    @media print{
+        display: none;
     }
 }
 

@@ -5,6 +5,9 @@
   top: 20px;
   right: $padding;
   z-index: $front-component-z-index/2;
+  @media print{
+    display: none;
+  }
 }
 
 .menu {

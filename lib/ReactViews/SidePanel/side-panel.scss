@@ -7,17 +7,26 @@
 .workbenchEmpty{
   padding: $padding;
   opacity: 0.8;
+  @media print{
+    display: none;
+  }
 }
 .header {
     padding: 0 $padding-small;
     border-bottom: 1px solid $overlay;
     background: $dark;
+    @media print{
+      display: none;
+    }
 }
 
 .body {
     padding: 0 $padding-small;
     overflow-y: auto;
     height: calc(100vh - #{$workbench-header + $logo-height});
+    @media print{
+      height: auto;
+    }
 }
 
 .addData {

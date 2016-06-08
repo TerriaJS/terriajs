@@ -3,9 +3,11 @@
   height: 100%;
   position: relative;
   cursor: auto;
-
   :global {
     .cesium-widget, .cesium-widget canvas {
+      @media print{
+        position: relative;
+      }
       position: absolute;
       width: 100%;
       height: 100%;

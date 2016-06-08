@@ -20,7 +20,9 @@ body {
   background: $dark;
   color: #fff;
   .terria & {
-    overflow: hidden;
+    @media screen{
+      overflow: hidden;
+    }
   }
 }
 
@@ -623,4 +625,8 @@ textarea {
     color: black;
     border: 3px red dashed;
   }
+}
+
+.print-disclaimer{
+  display: none;
 }

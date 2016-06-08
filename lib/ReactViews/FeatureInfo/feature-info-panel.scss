@@ -18,6 +18,17 @@
     max-width: calc(100vw - #{$work-bench-width} - 150px);
     right: 105px;
   }
+  @media print{
+    display: block;
+    position: relative;
+    color: #000;
+    margin: 0.5cm;
+    z-index: 999;
+    height: auto;
+    max-height: none;
+    min-height: 0;
+    page-break-after : auto;
+  }
 }
 
 .is-on-top {
@@ -75,4 +86,7 @@
   overflow-y: auto;
   overflow-x: auto;
   max-height: calc(80vh - #{$padding*2 + $btn-default-line-height});
+  @media print{
+    max-height: none;
+  }
 }

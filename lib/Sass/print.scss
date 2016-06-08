@@ -1,11 +1,11 @@
 @media print {
-   .workbench,
-   .feedback,
-   .map-nav,
-   .notification,
-   .selection-indicator{
-        display: none !important;
-    }
+   // .workbench,
+   // .feedback,
+   // .map-nav,
+   // .notification,
+   // .selection-indicator{
+   //      display: none !important;
+   //  }
     @page {
         margin: 0.5cm 0.5cm auto 0.5cm;
     }
@@ -18,11 +18,33 @@
     }
 
     .map .cesium-widget{
-        height: 100%;
+        //height: 100%;
     }
 
     .cesium-widget-credits{
         position: absolute;
         color: #fff;
+    }
+
+    .modal-wrapper{
+      display: none;
+    }
+    .data-panel-wrapper.is-open .data-preview__wrapper,
+    .data-panel-wrapper .data-preview__wrapper{
+      float: left;
+    }
+
+    #cesiumContainer{
+        height: auto;
+        width: auto;
+      &.leaflet-container{
+          height: 100vh;
+      }
+    }
+
+    .print-disclaimer{
+      display: block;
+      width: 100%;
+      clear: both;
     }
 }
