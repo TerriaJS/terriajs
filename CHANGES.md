@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+### 3.3.0
+
+* Support `parameters` property in WebFeatureServiceCatalogItem to allow accessing URLs which need additional parameters.
+
 ### 3.2.1
 
 * Fixed a bug on IE9 which prevented shortened URLs from loading.
