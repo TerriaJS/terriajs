@@ -6,6 +6,7 @@ Change Log
 
 * Support `parameters` property in WebFeatureServiceCatalogItem to allow accessing URLs which need additional parameters.
 * Fixed a bug where sharing a time-series layer would completely crash Terria on reload.
+* Added a direct way to format numbers in feature info templates, eg. `{{#terria.formatNumber}}{"useGrouping": true, "maximumFractionDigits": 3}{{value}}{{/terria.formatNumber}}`. The quotes around the keys are optional.
 
 ### 3.2.1
 
