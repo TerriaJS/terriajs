@@ -10,7 +10,6 @@ import ObserveModelMixin from './../ObserveModelMixin';
 import BottomDock from './../BottomDock/BottomDock.jsx';
 import FeatureDetection from 'terriajs-cesium/Source/Core/FeatureDetection';
 
-
 import Styles from './map-column.scss';
 
 const isIE = FeatureDetection.isInternetExplorer();
