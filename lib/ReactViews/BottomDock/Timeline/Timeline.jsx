@@ -52,8 +52,7 @@ const Timeline = React.createClass({
 
     updateForNewTopLayer() {
         let autoPlay = this.props.terria.configParameters.autoPlay;
-        if(!defined(autoPlay))
-        {
+        if(!defined(autoPlay)) {
             autoPlay = this.props.autoPlay;
         }
         const terria = this.props.terria;
