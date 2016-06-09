@@ -127,7 +127,6 @@ const StandardUserInterface = React.createClass({
                     </aside>
                 </If>
 
-
                 <FeatureInfoPanel terria={terria}
                                   viewState={this.props.viewState}
                 />
