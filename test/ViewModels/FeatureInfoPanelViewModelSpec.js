@@ -222,6 +222,38 @@ describe('FeatureInfoPanelViewModel templating', function() {
         }).then(done).otherwise(done.fail);
     });
 
+    it('can format numbers using terria.formatNumber', function(done) {
+        item.featureInfoTemplate = 'Base: {{#terria.formatNumber}}{{big}}{{/terria.formatNumber}}';
+        item.featureInfoTemplate += '  Sep: {{#terria.formatNumber}}{"useGrouping":true}{{big}}{{/terria.formatNumber}}';
+        item.featureInfoTemplate += '  DP: {{#terria.formatNumber}}{"maximumFractionDigits":3}{{decimal}}{{/terria.formatNumber}}';
+        return loadAndPick().then(function() {
+            expect(panel.sections[0].templatedInfo).toBe('Base: 1234567  Sep: ' + '1' + separator + '234' + separator + '567' + '  DP: 3.142');
+        }).then(done).otherwise(done.fail);
+    });
+
+    it('can format numbers using terria.formatNumber without quotes', function(done) {
+        item.featureInfoTemplate = 'Sep: {{#terria.formatNumber}}{useGrouping:true}{{big}}{{/terria.formatNumber}}';
+        item.featureInfoTemplate += '  DP: {{#terria.formatNumber}}{maximumFractionDigits:3}{{decimal}}{{/terria.formatNumber}}';
+        return loadAndPick().then(function() {
+            expect(panel.sections[0].templatedInfo).toBe('Sep: ' + '1' + separator + '234' + separator + '567' + '  DP: 3.142');
+        }).then(done).otherwise(done.fail);
+    });
+
+    // Do we want it to handle badly specified options gracefully?
+    // it('handles bad terria.formatNumber options gracefully', function(done) {
+    //     item.featureInfoTemplate = 'Test: {{#terria.formatNumber}}{badjson}{{big}}{{/terria.formatNumber}}';
+    //     return loadAndPick().then(function() {
+    //         expect(panel.sections[0].templatedInfo).toBe('Test: 1234567');
+    //     }).then(done).otherwise(done.fail);
+    // });
+
+    it('handles non-numbers terria.formatNumber', function(done) {
+        item.featureInfoTemplate = 'Test: {{#terria.formatNumber}}text{{/terria.formatNumber}}';
+        return loadAndPick().then(function() {
+            expect(panel.sections[0].templatedInfo).toBe('Test: text');
+        }).then(done).otherwise(done.fail);
+    });
+
     it('can render a recursive featureInfoTemplate', function(done) {
 
         item.featureInfoTemplate = {
