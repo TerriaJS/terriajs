@@ -102,6 +102,24 @@
                 "tableStyle": {
                     "colorBins": 9
                 }
+            },
+            {
+                "name": "RDA LGA 2015 (Top)",
+                "type": "csv",
+                "url": "build/TerriaJS/test/csv/RDA_LGA_2015_16.csv",
+                "tableStyle": {
+                    "dataVariable": "RDA_NAME",
+                    "colorBinMethod": "top"
+                }
+            },
+            {
+                "name": "RDA LGA 2015 (Color cycling)",
+                "type": "csv",
+                "url": "build/TerriaJS/test/csv/RDA_LGA_2015_16.csv",
+                "tableStyle": {
+                    "dataVariable": "RDA_NAME",
+                    "colorBinMethod": "cycle"
+                }
             }
         ]
     }]

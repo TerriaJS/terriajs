@@ -2,11 +2,41 @@
 Change Log
 ==========
 
-### 3.0.1
+### 3.3.0
+
+* Support `parameters` property in WebFeatureServiceCatalogItem to allow accessing URLs which need additional parameters.
+* Fixed a bug where sharing a time-series layer would completely crash Terria on reload.
+* When the number of unique values in a CSV column exceeds the number of color bins available, the legend now displays "XX other values" as the label for the last bucket rather than simply "Other".
+* CSV columns with up to 21 unique values can now be fully displayed in the legend.  Previously, the number of bins was limited to 9.
+* Added `cycle` option to `tableColumnStyle.colorBinMethod` for enumeration-type CSV columns.  When the number of unique values in the column exceeds the number of color bins available, this option makes TerriaJS color all values by cycling through the available colors, rather than coloring only the most common values and lumping the rest into an "Other" bucket.
+
+### 3.2.1
+
+* Fixed a bug on IE9 which prevented shortened URLs from loading.
+* Fixed a map started with smooth terrain being unable to switch to 3D terrain.
+* Fixed a bug in `CkanCatalogItem` that prevented it from using the proxy for dataset URLs.
+* Fixed feature picking when displaying a point-based vector and a region mapped layer at the same time.
+* Stopped generation of WMS intervals being dependent on JS dates and hence sensitive to DST time gaps.
+* Fixed a bug which led to zero property values being considered time-varying in the Feature Info panel.
+* Fixed a bug which prevented lat/lon injection into templates with time-varying properties.
+
+### 3.2.0
+
+* Deprecated in this version:
+  - `CkanCatalogItem.createCatalogItemFromResource`'s `options` `allowGroups` has been replaced with `allowWmsGroups` and `allowWfsGroups`.
+* Added support for WFS in CKAN items.
+* Fixed bug which prevented the terria-server's `"proxyAllDomains": true` option from working.
+* Added support in FeatureInfoTemplate for referencing csv columns by either their name in the csv file, or the name they are given via `TableStyle.columns...name` (if any).
+* Improved CSV handling to ignore any blank lines, ie. those containing only commas.
+* Fixed a bug in `CswCatalogGroup` that prevented it from working in Internet Explorer.
+
+### 3.1.0
 
 * Only trigger a search when the user presses enter or stops typing for 3 seconds.  This will greatly reduce the number of times that searches are performed, which is important with a geocoder like Bing Maps that counts each geocode as a transaction.
 * Reduced the tendency for search to lock up the web browser while it is in progress.
 * Include "engines" attribute in package.json to indicate required Node and NPM version.
+* For WMS catalog items that have animated data, the initial time of the timeslider can be specified with `initialTimeSource` as `start`, `end`, `present` (nearest date to present), or with an ISO8601 date.
+* Added ability to remove csv columns from the Now Viewing panel, using `"type": "HIDDEN"` in `tableStyle.columns`.
 
 ### 3.0.0
 
