@@ -2,6 +2,9 @@
 
 .workbench-content {
   composes: list-reset from '../../Sass/partial/_base.scss';
+  @media print{
+    page-break-after : always;
+  }
 }
 
 .is-active {

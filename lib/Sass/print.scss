@@ -34,11 +34,24 @@
       float: left;
     }
 
+    .map-column__map__cell.map{
+      // force stack layout
+      display: block;
+    }
+
+    .map-column__map-wrapper{
+      position: relative!important;
+      div, aside{
+        height: auto !important;
+      }
+    }
+
     #cesiumContainer{
         height: auto;
         width: auto;
       &.leaflet-container{
-          height: 100vh;
+          // leaflet needs a height, this overrides the auto height
+          height: 100vh!important;
       }
     }
 }
