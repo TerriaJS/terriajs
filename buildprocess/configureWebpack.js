@@ -266,8 +266,8 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
 
     // Alias react and react-dom to the one used by the building folder - apparently we can rely on the dir always being
     // called node_modules https://github.com/npm/npm/issues/2734
-    config.resolve.alias['react'] = path.resolve(process.cwd(), 'node_modules', 'react');
-    config.resolve.alias['react-dom'] = path.resolve(process.cwd(), 'node_modules', 'react-dom');
+    config.resolve.alias['react'] = path.dirname(require.resolve('react'));
+    config.resolve.alias['react-dom'] = path.dirname(require.resolve('react-dom'));
 
     return config;
 }
