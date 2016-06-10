@@ -477,25 +477,59 @@ describe('CsvCatalogItem with lat and lon', function() {
         }).otherwise(fail).then(done);
     });
 
-    it('replaces enum tail with "Other" in the legend', function(done) {
+    it('replaces enum tail with "X other values" in the legend', function(done) {
         csvItem.url = 'test/csv/lat_lon_enum_lots.csv';
         csvItem._tableStyle = new TableStyle({colorBins: 9});
         csvItem.load().then(function() {
             expect(csvItem.legendUrl).toBeDefined();
             var url = csvItem.legendUrl.url;
-            expect(url).toContain('Other');
+            expect(url).toContain('2 other values');
             expect(url).not.toContain('unicorns');
             expect(url).toContain('guinea pigs');
         }).otherwise(fail).then(done);
     });
 
-    it('does not replace enum tail with Other if it fits', function(done) {
+    it('does not replace enum tail with "other values" if it fits', function(done) {
         csvItem.url = 'test/csv/lat_lon_enum_lots2.csv';
         csvItem._tableStyle = new TableStyle({colorBins: 9});
         csvItem.load().then(function() {
             expect(csvItem.legendUrl).toBeDefined();
-            expect(csvItem.legendUrl.url).not.toContain('Other');
+            expect(csvItem.legendUrl.url).not.toContain('other values');
             expect(csvItem.legendUrl.url).toContain('turtles');
+        }).otherwise(fail).then(done);
+    });
+
+    it('honors colorBins property when it is less than the number of colors in the palette', function(done) {
+        csvItem.url = 'test/csv/lat_lon_enum_lots.csv';
+        csvItem._tableStyle = new TableStyle({colorBins: 3});
+        csvItem.load().then(function() {
+            expect(csvItem.legendUrl).toBeDefined();
+            var url = csvItem.legendUrl.url;
+            expect(url).toContain('8 other values');
+            expect(url).toContain('cats');
+            expect(url).toContain('dogs');
+        }).otherwise(fail).then(done);
+    });
+
+    it('displays a "XX values" legend when colorBinMethod=cycle and there are more unique values than color bins', function(done) {
+        csvItem.url = 'test/csv/lat_lon_enum_lots.csv';
+        csvItem._tableStyle = new TableStyle({colorBins: 9, colorBinMethod: 'cycle'});
+        csvItem.load().then(function() {
+            expect(csvItem.legendUrl).toBeDefined();
+            var url = csvItem.legendUrl.url;
+            expect(url).toContain('10 values');
+            expect(url).not.toContain('dogs');
+        }).otherwise(fail).then(done);
+    });
+
+    it('displays a normal legend when colorBinMethod=cycle but there are less unique values than color bins', function(done) {
+        csvItem.url = 'test/csv/lat_lon_enum_lots.csv';
+        csvItem._tableStyle = new TableStyle({colorBins: 15, colorBinMethod: 'cycle'});
+        csvItem.load().then(function() {
+            expect(csvItem.legendUrl).toBeDefined();
+            var url = csvItem.legendUrl.url;
+            expect(url).not.toContain('values');
+            expect(url).toContain('dogs');
         }).otherwise(fail).then(done);
     });
 
@@ -875,15 +909,49 @@ describe('CsvCatalogItem with region mapping', function() {
         }).otherwise(fail).then(done);
     });
 
-    it('replaces enum tail with "Other" in the legend', function(done) {
+    it('replaces enum tail with "X other values" in the legend', function(done) {
         csvItem.url = 'test/csv/postcode_enum_lots.csv';
         csvItem._tableStyle = new TableStyle({colorBins: 9});
         csvItem.load().then(function() {
             expect(csvItem.legendUrl).toBeDefined();
             var url = csvItem.legendUrl.url;
-            expect(url).toContain('Other');
+            expect(url).toContain('2 other values');
             expect(url).not.toContain('unicorns');
             expect(url).toContain('guinea pigs');
+        }).otherwise(fail).then(done);
+    });
+
+    it('honors colorBins property when it is less than the number of colors in the palette', function(done) {
+        csvItem.url = 'test/csv/postcode_enum_lots.csv';
+        csvItem._tableStyle = new TableStyle({colorBins: 3});
+        csvItem.load().then(function() {
+            expect(csvItem.legendUrl).toBeDefined();
+            var url = csvItem.legendUrl.url;
+            expect(url).toContain('8 other values');
+            expect(url).toContain('cats');
+            expect(url).toContain('dogs');
+        }).otherwise(fail).then(done);
+    });
+
+    it('displays a "XX values" legend when colorBinMethod=cycle and there are more unique values than color bins', function(done) {
+        csvItem.url = 'test/csv/postcode_enum_lots.csv';
+        csvItem._tableStyle = new TableStyle({colorBins: 9, colorBinMethod: 'cycle'});
+        csvItem.load().then(function() {
+            expect(csvItem.legendUrl).toBeDefined();
+            var url = csvItem.legendUrl.url;
+            expect(url).toContain('10 values');
+            expect(url).not.toContain('dogs');
+        }).otherwise(fail).then(done);
+    });
+
+    it('displays a normal legend when colorBinMethod=cycle but there are less unique values than color bins', function(done) {
+        csvItem.url = 'test/csv/postcode_enum_lots.csv';
+        csvItem._tableStyle = new TableStyle({colorBins: 15, colorBinMethod: 'cycle'});
+        csvItem.load().then(function() {
+            expect(csvItem.legendUrl).toBeDefined();
+            var url = csvItem.legendUrl.url;
+            expect(url).not.toContain('values');
+            expect(url).toContain('dogs');
         }).otherwise(fail).then(done);
     });
 
