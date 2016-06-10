@@ -8,7 +8,6 @@ import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
 import CesiumMath from 'terriajs-cesium/Source/Core/Math';
 import classNames from 'classnames';
 
-
 import formatNumberForLocale from '../../Core/formatNumberForLocale';
 import ObserveModelMixin from '../ObserveModelMixin';
 import propertyGetTimeValues from '../../Core/propertyGetTimeValues';

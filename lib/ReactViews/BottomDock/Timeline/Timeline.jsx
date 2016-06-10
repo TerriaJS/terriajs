@@ -8,6 +8,7 @@ import ClockRange from 'terriajs-cesium/Source/Core/ClockRange';
 import {formatDateTime} from './DateFormats';
 import JulianDate from 'terriajs-cesium/Source/Core/JulianDate';
 import Styles from './timeline.scss';
+import defined from 'terriajs-cesium/Source/Core/defined';
 
 const Timeline = React.createClass({
     propTypes: {
@@ -50,11 +51,15 @@ const Timeline = React.createClass({
     },
 
     updateForNewTopLayer() {
+        let autoPlay = this.props.terria.configParameters.autoPlay;
+        if(!defined(autoPlay)) {
+            autoPlay = this.props.autoPlay;
+        }
         const terria = this.props.terria;
         const newTopLayer = terria.timeSeriesStack.topLayer;
 
         // default to playing and looping when shown unless told otherwise
-        if (newTopLayer && this.props.autoPlay) {
+        if (newTopLayer && autoPlay) {
             terria.clock.tick();
             terria.clock.shouldAnimate = true;
         }
