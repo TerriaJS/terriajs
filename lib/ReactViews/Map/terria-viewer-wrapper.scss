@@ -5,6 +5,9 @@
   left: 0;
   position: absolute;
   cursor: auto;
+  @media print{
+    position: relative;
+  }
   :global {
     .cesium-widget, .cesium-widget canvas {
       @media print{

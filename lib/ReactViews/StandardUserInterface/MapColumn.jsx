@@ -9,6 +9,7 @@ import FeedbackButton from '../Feedback/FeedbackButton.jsx';
 import ObserveModelMixin from './../ObserveModelMixin';
 import BottomDock from './../BottomDock/BottomDock.jsx';
 import FeatureDetection from 'terriajs-cesium/Source/Core/FeatureDetection';
+import classNames from "classnames";
 
 
 import Styles from './map-column.scss';
@@ -75,7 +76,7 @@ const MapColumn = React.createClass({
         return (
             <div className={Styles.mapInner}>
                 <div className={Styles.mapRow}>
-                    <div className={Styles.mapCell} ref={this.newMapCell}>
+                    <div className={classNames(Styles.mapCell, 'map')} ref={this.newMapCell}>
                         <div className={Styles.mapWrapper}
                              style={{height: this.state.height || (isIE ? '100vh' : '100%')}}>
                             <TerriaViewerWrapper terria={this.props.terria}
@@ -93,7 +94,7 @@ const MapColumn = React.createClass({
                         </If>
                     </div>
                     <If condition={this.props.terria.configParameters.printDisclaimer}>
-                        <div className={Styles.mapCell}>
+                        <div className={classNames(Styles.mapCell, 'print')}>
                             <a className={Styles.printDisclaimer}
                                href={this.props.terria.configParameters.printDisclaimer.url}>{this.props.terria.configParameters.printDisclaimer.text}
                             </a>
