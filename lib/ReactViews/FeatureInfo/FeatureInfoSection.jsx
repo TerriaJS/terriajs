@@ -66,20 +66,22 @@ const FeatureInfoSection = React.createClass({
             this.props.template && this.props.template.formats
         );
 
-        let terriaData;
+        let terriaData = {
+            terria: {
+                formatNumber: mustacheFormatNumberFunction
+            }
+        };
         if (this.props.position) {
             const latLngInRadians = Ellipsoid.WGS84.cartesianToCartographic(this.props.position);
-            terriaData = {
-                terria: {
-                    coords: {
-                        latitude: CesiumMath.toDegrees(latLngInRadians.latitude),
-                        longitude: CesiumMath.toDegrees(latLngInRadians.longitude)
-                    }
+            terriaData.terria = {
+                coords: {
+                    latitude: CesiumMath.toDegrees(latLngInRadians.latitude),
+                    longitude: CesiumMath.toDegrees(latLngInRadians.longitude)
                 }
             };
         }
 
-        return Object.assign({}, propertyData || {}, terriaData || {});
+        return Object.assign({}, propertyData || {}, terriaData);
     },
 
     clickHeader() {
@@ -178,7 +180,7 @@ const FeatureInfoSection = React.createClass({
 
 /**
  * Gets a map of property labels to property values for a feature at the provided clock's time.
- *
+ * @private
  * @param {Entity} feature a feature to get values for
  * @param {Clock} clock a clock to get the time from
  * @param {Object} [formats] A map of property labels to the number formats that should be applied for them.
@@ -198,7 +200,7 @@ function propertyValues(feature, clock, formats) {
 
 /**
  * Formats values in an object if their keys match the provided formats object.
- *
+ * @private
  * @param {Object} properties a map of property labels to property values.
  * @param {Object} formats A map of property labels to the number formats that should be applied for them.
  */
@@ -213,6 +215,7 @@ function applyFormatsInPlace(properties, formats) {
 
 /**
  * Recursively replace '.' and '#' in property keys with _, since Mustache cannot reference keys with these characters.
+ * @private
  */
 function replaceBadKeyCharacters(properties) {
     // if properties is anything other than an Object type, return it. Otherwise recurse through its properties.
@@ -232,7 +235,7 @@ function replaceBadKeyCharacters(properties) {
 /**
  * Determines whether all properties in the provided properties object have an isConstant flag set - otherwise they're
  * assumed to be time-varying.
- *
+ * @private
  * @returns {boolean}
  */
 function areAllPropertiesConstant(properties) {
@@ -249,6 +252,7 @@ function areAllPropertiesConstant(properties) {
 
 /**
  * Gets a text description for the provided feature at a certain time.
+ * @private
  * @param {Entity} feature
  * @param {JulianDate} currentTime
  * @returns {String}
@@ -262,6 +266,7 @@ function getCurrentDescription(feature, currentTime) {
 
 /**
  * Updates {@link Entity#currentProperties} and {@link Entity#currentDescription} with the values at the provided time.
+ * @private
  * @param {Entity} feature
  * @param {JulianDate} currentTime
  */
@@ -274,6 +279,31 @@ function setCurrentFeatureValues(feature, clock) {
     if (newDescription !== feature.currentDescription) {
         feature.currentDescription = newDescription;
     }
+}
+
+/**
+ * Returns a function which implements number formatting in Mustache templates, using this syntax:
+ * {{#terria.formatNumber}}{useGrouping: true}{{value}}{{/terria.formatNumber}}
+ * @private
+ */
+function mustacheFormatNumberFunction() {
+    return function(text, render) {
+        // Eg. "{foo:1}hi there".match(optionReg) = ["{foo:1}hi there", "{foo:1}", "hi there"].
+        // Note this won't work with nested objects in the options (but these aren't used yet).
+        const optionReg = /^(\{[^}]+\})(.*)/;
+        const components = text.match(optionReg);
+        // This regex unfortunately matches double-braced text like {{number}}, so detect that separately and do not treat it as option json.
+        const startsWithdoubleBraces = (text.length > 4) && (text[0] === '{') && (text[1] === '{');
+        if (!components || startsWithdoubleBraces) {
+            // If no options were provided, just use the defaults.
+            return formatNumberForLocale(render(text));
+        }
+        // Allow {foo: 1} by converting it to {"foo": 1} for JSON.parse.
+        const quoteReg = /([{,])(\s*)([A-Za-z0-9_\-]+?)\s*:/;
+        const jsonOptions = components[1].replace(quoteReg, '$1"$3":');
+        const options = JSON.parse(jsonOptions);
+        return formatNumberForLocale(render(components[2]), options);
+    };
 }
 
 module.exports = FeatureInfoSection;
