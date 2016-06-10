@@ -110,8 +110,10 @@ const Compass = React.createClass({
             opacity: ''
         };
 
+        const description = 'Drag outer ring: rotate view.\nDrag inner gyroscope: free orbit.\nDouble-click: reset view.\nTIP: You can also free orbit by holding the CTRL key and dragging the map.';
+
         return (
-            <div className={Styles.compass} onMouseDown ={this.handleMouseDown} onDoubleClick ={this.handleDoubleClick} onMouseUp ={this.resetRotater}>
+            <div className={Styles.compass} title ={description} onMouseDown ={this.handleMouseDown} onDoubleClick ={this.handleDoubleClick} onMouseUp ={this.resetRotater}>
               <div className={Styles.outerRing} style={outerCircleStyle}></div>
               <div className={Styles.innerRing} title='Click and drag to rotate the camera'></div>
               <div className={Styles.rotationMarker} style={rotationMarkerStyle}></div>
