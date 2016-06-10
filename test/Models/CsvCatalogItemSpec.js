@@ -511,13 +511,13 @@ describe('CsvCatalogItem with lat and lon', function() {
         }).otherwise(fail).then(done);
     });
 
-    it('displays a "Various Values" legend when colorBinMethod=cycle and there are more unique values than color bins', function(done) {
+    it('displays a "XX values" legend when colorBinMethod=cycle and there are more unique values than color bins', function(done) {
         csvItem.url = 'test/csv/lat_lon_enum_lots.csv';
         csvItem._tableStyle = new TableStyle({colorBins: 9, colorBinMethod: 'cycle'});
         csvItem.load().then(function() {
             expect(csvItem.legendUrl).toBeDefined();
             var url = csvItem.legendUrl.url;
-            expect(url).toContain('Various Values');
+            expect(url).toContain('10 values');
             expect(url).not.toContain('dogs');
         }).otherwise(fail).then(done);
     });
@@ -528,7 +528,7 @@ describe('CsvCatalogItem with lat and lon', function() {
         csvItem.load().then(function() {
             expect(csvItem.legendUrl).toBeDefined();
             var url = csvItem.legendUrl.url;
-            expect(url).not.toContain('Various Values');
+            expect(url).not.toContain('values');
             expect(url).toContain('dogs');
         }).otherwise(fail).then(done);
     });
@@ -933,13 +933,13 @@ describe('CsvCatalogItem with region mapping', function() {
         }).otherwise(fail).then(done);
     });
 
-    it('displays a "Various Values" legend when colorBinMethod=cycle and there are more unique values than color bins', function(done) {
+    it('displays a "XX values" legend when colorBinMethod=cycle and there are more unique values than color bins', function(done) {
         csvItem.url = 'test/csv/postcode_enum_lots.csv';
         csvItem._tableStyle = new TableStyle({colorBins: 9, colorBinMethod: 'cycle'});
         csvItem.load().then(function() {
             expect(csvItem.legendUrl).toBeDefined();
             var url = csvItem.legendUrl.url;
-            expect(url).toContain('Various Values');
+            expect(url).toContain('10 values');
             expect(url).not.toContain('dogs');
         }).otherwise(fail).then(done);
     });
@@ -950,7 +950,7 @@ describe('CsvCatalogItem with region mapping', function() {
         csvItem.load().then(function() {
             expect(csvItem.legendUrl).toBeDefined();
             var url = csvItem.legendUrl.url;
-            expect(url).not.toContain('Various Values');
+            expect(url).not.toContain('values');
             expect(url).toContain('dogs');
         }).otherwise(fail).then(done);
     });
