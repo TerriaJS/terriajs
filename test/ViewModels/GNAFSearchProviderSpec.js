@@ -17,7 +17,7 @@ describe('GNAFSearchProvider', function() {
             baseUrl: './',
         });
         terria.currentViewer = {
-            getBoundingBoxCoords: jasmine.createSpy('getBoundingBoxCoords'),
+            getCurrentExtent: jasmine.createSpy('getCurrentExtent'),
             zoomTo: jasmine.createSpy('zoomTo')
         };
 

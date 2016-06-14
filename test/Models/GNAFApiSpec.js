@@ -1,38 +1,36 @@
 'use strict';
 
+var when = require('terriajs-cesium/Source/ThirdParty/when');
+var Rectangle = require('terriajs-cesium/Source/Core/Rectangle');
+var loadWithXhr = require('terriajs-cesium/Source/Core/loadWithXhr');
+
 var GNAFApi = require('../../lib/Models/GNAFApi');
 var CorsProxy = require('../../lib/Core/CorsProxy');
-var when = require('terriajs-cesium/Source/ThirdParty/when');
+var CustomMatchers = require('../Utility/CustomMatchers');
 
 var UNPROXIED_URL = 'http://example.com';
 var PROXIED_URL = 'http://proxy/example.com';
 var SEARCH_TERM = 'bananas';
-var BOUNDING_BOX = {
-    topLeft: {
-        latitude: 1,
-        longitude: 2
-    },
-    bottomRight: {
-        latitude: 3,
-        longitude: 4
-    }
-};
+// Rectangle is west, south, east, north
+var RECTANGLE = Rectangle.fromDegrees(1, 2, 3, 4);
 
 describe('GNAFApi', function() {
-    var gnafApi, loadWithXhr, loadDeferredFirst, loadDeferredSecond, corsProxy;
+    var gnafApi, loadDeferredFirst, loadDeferredSecond, corsProxy;
 
     beforeEach(function() {
-        loadDeferredFirst = when.defer();
-        loadDeferredSecond = when.defer();
+        jasmine.addMatchers(CustomMatchers);
         var loadDeferredCount = 1;
 
-        loadWithXhr = jasmine.createSpy('loadWithXhr').and.callFake(function() {
+        loadDeferredFirst = when.defer();
+        loadDeferredSecond = when.defer();
+
+        spyOn(loadWithXhr, 'load').and.callFake(function(url, responseType, method, data, headers, deferred) {
             if (loadDeferredCount === 1) {
-                loadDeferredCount++;
-                return loadDeferredFirst;
+                deferred.resolve(loadDeferredFirst);
             } else {
-                return loadDeferredSecond;
+                deferred.resolve(loadDeferredSecond);
             }
+            loadDeferredCount++;
         });
 
         corsProxy = new CorsProxy();
@@ -50,7 +48,7 @@ describe('GNAFApi', function() {
     it('should make calls to the URL passed to it', function() {
         gnafApi.geoCode(SEARCH_TERM);
 
-        expect(loadWithXhr.calls.argsFor(0)[0].url).toBe(PROXIED_URL);
+        expect(loadWithXhr.load.calls.argsFor(0)[0]).toBe(PROXIED_URL);
     });
 
     it('should have a default for URL', function() {
@@ -62,7 +60,7 @@ describe('GNAFApi', function() {
         expect(newCorsProxy.getURLProxyIfNecessary.calls.argsFor(0)[0].length).toBeGreaterThan(0);
         newGnafApi.geoCode(SEARCH_TERM);
 
-        expect(loadWithXhr.calls.argsFor(0)[0].url).toBe('another url');
+        expect(loadWithXhr.load.calls.argsFor(0)[0]).toBe('another url');
     });
 
     it('should convert results from elastic search scheme to something nicer', function(done) {
@@ -108,7 +106,7 @@ describe('GNAFApi', function() {
 
         geoCodeCall.then(fail).otherwise(function(error) {
             expect(error.message).toBe('too bad');
-        }).then(done);
+        }).then(done).otherwise(fail);
     });
 
     describe('location', function() {
@@ -119,13 +117,13 @@ describe('GNAFApi', function() {
         });
 
         it('should be passed to elasticsearch if present as arg to geoCode()', function() {
-            gnafApi.geoCode(SEARCH_TERM, BOUNDING_BOX);
+            gnafApi.geoCode(SEARCH_TERM, RECTANGLE);
 
             var location = getXhrArgs().filter.geo_bounding_box.location;
-            expect(location.top_left.lat).toBe(1);
-            expect(location.top_left.lon).toBe(2);
-            expect(location.bottom_right.lat).toBe(3);
-            expect(location.bottom_right.lon).toBe(4);
+            expect(location.top_left.lat).toBe(4);
+            expect(location.top_left.lon).toBe(1);
+            expect(location.bottom_right.lat).toBe(2);
+            expect(location.bottom_right.lon).toEqualEpsilon(3, 0.001);
         });
     });
 
@@ -147,18 +145,18 @@ describe('GNAFApi', function() {
 
     describe('a second request', function() {
         it('should be made if a bounding box is passed and the first request does not return enough for max results', function(done) {
-            var geoCodeCall = gnafApi.geoCode(SEARCH_TERM, BOUNDING_BOX, 4);
+            var geoCodeCall = gnafApi.geoCode(SEARCH_TERM, RECTANGLE, 4);
 
             loadDeferredFirst.resolve(JSON.stringify(EXAMPLE_RESPONSE));
             loadDeferredSecond.resolve(JSON.stringify(EXAMPLE_SECOND_RESPONSE));
 
             geoCodeCall.then(function(results) {
-                expect(loadWithXhr.calls.count()).toBe(2);
+                expect(loadWithXhr.load.calls.count()).toBe(2);
             }).then(done).otherwise(fail);
         });
 
         it('should have its unique results concatenated to the first request\'s results', function(done) {
-            var geoCodeCall = gnafApi.geoCode(SEARCH_TERM, BOUNDING_BOX, 6);
+            var geoCodeCall = gnafApi.geoCode(SEARCH_TERM, RECTANGLE, 6);
 
             loadDeferredFirst.resolve(JSON.stringify(EXAMPLE_RESPONSE));
             loadDeferredSecond.resolve(JSON.stringify(EXAMPLE_SECOND_RESPONSE));
@@ -183,7 +181,7 @@ describe('GNAFApi', function() {
         });
 
         it('should only provide maxResults hits even if the combined results number higher than that', function(done) {
-            var geoCodeCall = gnafApi.geoCode(SEARCH_TERM, BOUNDING_BOX, 4);
+            var geoCodeCall = gnafApi.geoCode(SEARCH_TERM, RECTANGLE, 4);
 
             loadDeferredFirst.resolve(JSON.stringify(EXAMPLE_RESPONSE));
             loadDeferredSecond.resolve(JSON.stringify(EXAMPLE_SECOND_RESPONSE));
@@ -194,7 +192,7 @@ describe('GNAFApi', function() {
         });
 
         it('should pass its failure through its promise', function(done) {
-            var geoCodeCall = gnafApi.geoCode(SEARCH_TERM, BOUNDING_BOX, 4);
+            var geoCodeCall = gnafApi.geoCode(SEARCH_TERM, RECTANGLE, 4);
 
             loadDeferredFirst.resolve(JSON.stringify(EXAMPLE_RESPONSE));
             loadDeferredSecond.reject(new Error('too bad'));
@@ -206,12 +204,12 @@ describe('GNAFApi', function() {
 
         describe('should not be made if', function() {
             it('the first request returns enough for max results', function(done) {
-                var geoCodeCall = gnafApi.geoCode(SEARCH_TERM, BOUNDING_BOX, 3);
+                var geoCodeCall = gnafApi.geoCode(SEARCH_TERM, RECTANGLE, 3);
 
                 loadDeferredFirst.resolve(JSON.stringify(EXAMPLE_RESPONSE));
 
                 geoCodeCall.then(function(results) {
-                    expect(loadWithXhr.calls.count()).toBe(1);
+                    expect(loadWithXhr.load.calls.count()).toBe(1);
                 }).then(done).otherwise(fail);
             });
 
@@ -221,14 +219,14 @@ describe('GNAFApi', function() {
                 loadDeferredFirst.resolve(JSON.stringify(EXAMPLE_RESPONSE));
 
                 geoCodeCall.then(function(results) {
-                    expect(loadWithXhr.calls.count()).toBe(1);
+                    expect(loadWithXhr.load.calls.count()).toBe(1);
                 }).then(done).otherwise(fail);
             });
         });
     });
 
     function getXhrArgs() {
-        return JSON.parse(loadWithXhr.calls.argsFor(0)[0].data);
+        return JSON.parse(loadWithXhr.load.calls.argsFor(0)[3]);
     }
 });
 
