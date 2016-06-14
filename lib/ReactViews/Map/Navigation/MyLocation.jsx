@@ -3,6 +3,7 @@ import React from 'react';
 import ObserveModelMixin from '../../ObserveModelMixin';
 import Rectangle from 'terriajs-cesium/Source/Core/Rectangle';
 import Styles from './my_location.scss';
+import TerriaError from '../../../Core/TerriaError';
 
 const GeoJsonCatalogItem = require('../../../Models/GeoJsonCatalogItem');
 
@@ -20,10 +21,29 @@ const MyLocation = React.createClass({
     },
 
     getLocation() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(this.zoomToMyLocation);
+        if(navigator.geolocation) {
+            const options = {
+                enableHighAccuracy: true,
+                timeout: 5000,
+                maximumAge: 0
+            };
+            navigator.geolocation.getCurrentPosition(
+                this.zoomToMyLocation,
+                (err)=>{
+                    this.props.terria.error.raiseEvent(new TerriaError({
+                        sender: this,
+                        title: 'Error getting location',
+                        message: err.message
+                    }));
+                },
+                options
+            );
         } else {
-            console.log('geo location is not supported');
+            this.props.terria.error.raiseEvent(new TerriaError({
+                sender: this,
+                title: 'Error getting location',
+                message: 'Your browser does not support location.'
+            }));
         }
     },
 
