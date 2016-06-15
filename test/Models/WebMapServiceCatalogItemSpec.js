@@ -73,7 +73,7 @@ describe('WebMapServiceCatalogItem', function() {
                               "foo": "bar" }
             });
             wmsItem.load().then(function() {
-                expect(wmsItem.legendUrl).toEqual(new LegendUrl('http://www.example.com/request=GetLegendGraphic?secondUrl&styles=jet2&foo=bar', 'image/gif'));
+                expect(wmsItem.legendUrl).toEqual(new LegendUrl('http://www.example.com/foo?request=GetLegendGraphic&secondUrl&styles=jet2&foo=bar', 'image/gif'));
                 done();
             }).otherwise(function(e) {
                 fail(e);
@@ -107,7 +107,7 @@ describe('WebMapServiceCatalogItem', function() {
                 layers: 'single_period'
             });
             wmsItem.load().then(function() {
-                expect(wmsItem.legendUrl).toEqual(new LegendUrl('http://www.example.com/request=GetLegendGraphic?firstUrl', 'image/gif'));
+                expect(wmsItem.legendUrl).toEqual(new LegendUrl('http://www.example.com/foo?request=GetLegendGraphic&firstUrl', 'image/gif'));
                 done();
             }).otherwise(function(e) {
                 fail(e);
@@ -122,7 +122,7 @@ describe('WebMapServiceCatalogItem', function() {
                 layers: 'single_period'
             });
             wmsItem.load().then(function() {
-                expect(wmsItem.legendUrl).toEqual(new LegendUrl('http://www.example.com/request=GetLegendGraphic?firstUrl', 'image/gif'));
+                expect(wmsItem.legendUrl).toEqual(new LegendUrl('http://www.example.com/foo?request=GetLegendGraphic&firstUrl', 'image/gif'));
                 done();
             }).otherwise(function(e) {
                 fail(e);
@@ -137,7 +137,7 @@ describe('WebMapServiceCatalogItem', function() {
                 layers: 'single_period'
             });
             wmsItem.load().then(function() {
-                expect(wmsItem.legendUrl).toEqual(new LegendUrl('http://www.example.com/request=GetLegendGraphic?firstUrl', 'image/gif'));
+                expect(wmsItem.legendUrl).toEqual(new LegendUrl('http://www.example.com/foo?request=GetLegendGraphic&firstUrl', 'image/gif'));
                 done();
             }).otherwise(function(e) {
                 fail(e);

@@ -102,13 +102,13 @@
                         <Format>image/gif</Format>
                         <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink"
                                         xlink:type="simple"
-                                        xlink:href="http://www.example.com/request=GetLegendGraphic?firstUrl"/>
+                                        xlink:href="http://www.example.com/foo?request=GetLegendGraphic&amp;firstUrl"/>
                     </LegendURL>
                     <LegendURL width="72" height="72">
                         <Format>image/gif</Format>
                         <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink"
                                         xlink:type="simple"
-                                        xlink:href="http://www.example.com/request=GetLegendGraphic?secondUrl"/>
+                                        xlink:href="http://www.example.com/foo?request=GetLegendGraphic&amp;secondUrl"/>
                     </LegendURL>
                 </Style>
             </Layer>
