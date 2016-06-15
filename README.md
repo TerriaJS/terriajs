@@ -2,7 +2,7 @@
 TerriaJS
 ============
 
-[![Join the chat at https://gitter.im/TerriaJS/terriajs](https://badges.gitter.im/TerriaJS/terriajs.svg)](https://gitter.im/TerriaJS/terriajs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Build Status](https://travis-ci.org/TerriaJS/terriajs.svg?branch=master)](https://travis-ci.org/TerriaJS/terriajs)
+[![Join the chat at https://gitter.im/TerriaJS/terriajs](https://badges.gitter.im/TerriaJS/terriajs.svg)](https://gitter.im/TerriaJS/terriajs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Build Status](https://travis-ci.org/TerriaJS/terriajs.svg?branch=master)](https://travis-ci.org/TerriaJS/terriajs) [![Docs](https://img.shields.io/badge/docs-online-blue.svg)](http://terria.io/Documentation)
 
 ![Terria logo](terria-logo.png "Terria logo")
 
