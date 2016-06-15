@@ -6,7 +6,6 @@ Change Log
 
 * `CswCatalogGroup` will now include Web Processing Services from the catalog if configured with `includeWps` set to true.
 
-### 3.0.1
 ### 3.3.0
 
 * Support `parameters` property in WebFeatureServiceCatalogItem to allow accessing URLs that need additional parameters.
