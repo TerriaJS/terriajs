@@ -65,7 +65,7 @@ const FeatureInfoSection = React.createClass({
             this.props.template && this.props.template.formats
         );
 
-        let terriaData = {
+        const terriaData = {
             terria: {
                 formatNumber: mustacheFormatNumberFunction
             }
