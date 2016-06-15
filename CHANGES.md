@@ -4,8 +4,8 @@ Change Log
 
 ### 3.3.0
 
-* Support `parameters` property in WebFeatureServiceCatalogItem to allow accessing URLs which need additional parameters.
-* Fixed a bug where sharing a time-series layer would completely crash Terria on reload.
+* Support `parameters` property in WebFeatureServiceCatalogItem to allow accessing URLs that need additional parameters.
+* Fixed a bug where visiting a shared link with a time-series layer would crash load.
 * Added a direct way to format numbers in feature info templates, eg. `{{#terria.formatNumber}}{"useGrouping": true, "maximumFractionDigits": 3}{{value}}{{/terria.formatNumber}}`. The quotes around the keys are optional.
 * When the number of unique values in a CSV column exceeds the number of color bins available, the legend now displays "XX other values" as the label for the last bucket rather than simply "Other".
 * CSV columns with up to 21 unique values can now be fully displayed in the legend.  Previously, the number of bins was limited to 9.
