@@ -145,12 +145,21 @@ gulp.task('test-saucelabs', function(done) {
     runKarma('./buildprocess/karma-saucelabs.conf.js', done);
 });
 
-gulp.task('test-local', function(done) {
-    runKarma('./buildprocess/karma-local.conf.js', done);
+gulp.task('test-electron', function(done) {
+    runKarma('./buildprocess/karma-electron.conf.js', done);
+});
+
+gulp.task('test-travis', function(done) {
+    if (process.env.SAUCE_ACCESS_KEY) {
+        runKarma('./buildprocess/karma-saucelabs.conf.js', done);
+    } else {
+        console.log('SauceLabs testing is not available for pull requests outside the main repo; using Electron instead.');
+        runKarma('./buildprocess/karma-electron.conf.js', done);
+    }
 });
 
 gulp.task('test', function(done) {
-    runKarma('./buildprocess/karma-electron.conf.js', done);
+    runKarma('./buildprocess/karma-local.conf.js', done);
 });
 
 function runKarma(configFile, done) {
