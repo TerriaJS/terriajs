@@ -1,0 +1,122 @@
+@import '~terriajs-variables';
+@import '../../Sass/global/mixins';
+
+.modal-wrapper {
+  position: fixed;
+  visibility: hidden;
+  z-index: -100;
+  opacity: 0;
+
+  @media screen and (min-width: $sm) {
+    z-index: $front-component-z-index - 1;
+    padding-left: $padding*2;
+    padding-right: 80px;
+    padding-top: calc((100vh - #{$modal-content-height} - #{$modal-header-height}) / 2);
+    padding-bottom: calc((100vh - #{$modal-content-height} - #{$modal-header-height}) / 2);
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    visibility: hidden;
+
+    &.is-open {
+      visibility: visible;
+      opacity: 1;
+    }
+  }
+
+  @media screen and (min-width: $md) {
+    padding-left: 30px + $work-bench-width;
+    padding-right: 30px;
+  }
+
+  @media print {
+    display: none;
+  }
+}
+
+.data-preview__wrapper {
+  visibility: hidden;
+  overflow: hidden;
+  height: 0;
+
+  .is-open & {
+    visibility: visible;
+    width: 60%;
+    float: right;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  @media print {
+    float: left;
+  }
+
+  h4 {
+    margin-top: $padding;
+  }
+}
+
+.explorer-panel {
+  position: relative;
+  background: $modal-bg;
+  color: $modal-text;
+  border-radius: $radius-small;
+  box-shadow: 0 0 15px 6px rgba(100, 100, 100, 0.3);
+  z-index: $front-component-z-index - 1;
+  opacity: 0;
+  height: 100%;
+  overflow-y: auto;
+  visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+  backface-visibility: hidden;
+  @include transition(all 0.3s);
+  @media screen and (min-width: $sm) {
+    @include transform(translateY(20%));
+    width: 100%;
+    overflow: hidden;
+    margin: 0 auto;
+  }
+  .is-open & {
+    @media screen and (min-width: $sm) {
+      @include transform(none);
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+}
+
+.modal-overlay {
+  composes: sm-show from '../../Sass/partial/_base.scss';
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  visibility: hidden;
+  top: 0;
+  left: 0;
+  z-index: $front-component-z-index - 10;
+  opacity: 0;
+  @include transition(all 0.3s);
+  .is-open.modal-wrapper & {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+.btn--close-modal {
+  composes: sm-show from '../../Sass/partial/_base.scss';
+  composes: btn from '../../Sass/partial/_buttons.scss';
+  composes: btn-transparent from '../../Sass/partial/_buttons.scss';
+
+  position: absolute;
+  top: 0;
+  right: 0;
+  &:before {
+    content: '';
+  }
+}
+
+.is-top {
+  z-index: $front-component-z-index !important;
+}

@@ -1,9 +1,9 @@
 'use strict';
 import React from 'react';
-import DataCatalogGroup from './DataCatalog/DataCatalogGroup.jsx';
-import DataPreview from './Preview/DataPreview.jsx';
+import DataCatalogGroup from '../../../DataCatalog/DataCatalogGroup.jsx';
+import DataPreview from '../../../Preview/DataPreview.jsx';
 import AddData from './AddData.jsx';
-import ObserveModelMixin from './ObserveModelMixin';
+import ObserveModelMixin from '../../../ObserveModelMixin';
 
 const disclaimer = <p>Data added in this way is not saved or made visible to others unless you explicitly share it by
     using the Share panel. </p>;

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE WMT_MS_Capabilities SYSTEM "http://schemas.opengis.net/wms/1.1.1/capabilities_1_1_1.dtd">
+<WMT_MS_Capabilities
+        version="1.1.1"
+        updateSequence="2016-06-15T16:20:02.871Z"
+        xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Service Metadata -->
+    <Service>
+        <!-- The WMT-defined name for this type of service -->
+        <Name>OGC:WMS</Name>
+        <!-- Human-readable title for pick lists -->
+        <Title>THREDDS Data Server</Title>
+        <!-- Narrative description providing additional information -->
+        <Abstract>Scientific Data</Abstract>
+        <KeywordList>
+            <Keyword>meteorology</Keyword>
+            <Keyword>atmosphere</Keyword>
+            <Keyword>climate</Keyword>
+            <Keyword>ocean</Keyword>
+            <Keyword>earth science</Keyword>
+            </KeywordList>
+        <!-- Top-level web address of service or service provider. See also OnlineResource
+        elements under <DCPType>. -->
+        <OnlineResource xlink:type="simple" xlink:href="http://example.com"/>
+        <!-- Contact information -->
+        <ContactInformation>
+            <ContactPersonPrimary>
+                <ContactPerson></ContactPerson>
+                <ContactOrganization></ContactOrganization>
+            </ContactPersonPrimary>
+            <ContactVoiceTelephone></ContactVoiceTelephone>
+            <ContactElectronicMailAddress></ContactElectronicMailAddress>
+        </ContactInformation>
+        <!-- Fees or access constraints imposed. -->
+        <Fees>none</Fees>
+        <AccessConstraints>none</AccessConstraints>
+    </Service>
+    <Capability>
+        <Request>
+            <GetCapabilities>
+                <Format>application/vnd.ogc.wms_xml</Format>
+                <DCPType>
+                    <HTTP>
+                        <Get>
+                            <OnlineResource xlink:type="simple" xlink:href="http://example.com/wms" />
+                        </Get>
+                    </HTTP>
+                </DCPType>
+            </GetCapabilities>
+            <GetMap>
+                <Format>image/png</Format>
+                <Format>image/png;mode=32bit</Format>
+                <Format>image/gif</Format>
+                <Format>image/jpeg</Format>
+                <Format>application/vnd.google-earth.kmz</Format>
+                <DCPType>
+                    <HTTP>
+                        <Get>
+                            <OnlineResource xlink:type="simple" xlink:href="http://example.com/wms" />
+                        </Get>
+                    </HTTP>
+                </DCPType>
+            </GetMap>
+            <GetFeatureInfo>
+                <Format>image/png</Format>
+                <Format>text/xml</Format>
+                <DCPType>
+                    <HTTP>
+                        <Get>
+                            <OnlineResource xlink:type="simple" xlink:href="http://example.com/wms" />
+                        </Get>
+                    </HTTP>
+                </DCPType>
+            </GetFeatureInfo>
+        </Request>
+        <Exception>
+            <Format>application/vnd.ogc.se_xml</Format>
+            <!--<Format>application/vnd.ogc.se_inimage</Format>
+            <Format>application/vnd.ogc.se_blank</Format>-->
+        </Exception>
+
+        <Layer>
+            <Title>THREDDS Data Server</Title><SRS>EPSG:4326</SRS>
+            <SRS>CRS:84</SRS>
+            <SRS>EPSG:41001</SRS>
+            <SRS>EPSG:27700</SRS>
+            <SRS>EPSG:3408</SRS>
+            <SRS>EPSG:3409</SRS>
+            <SRS>EPSG:3857</SRS>
+            <SRS>EPSG:32661</SRS>
+            <SRS>EPSG:32761</SRS>
+            <Layer>
+                <Title>Test dataset</Title>
+                <Layer queryable="1">
+                    <Name>ncwms</Name>
+                    <Title>ncwms layer</Title>
+                    <Abstract>example layer following ncwms layout</Abstract>
+                    <LatLonBoundingBox minx="142.0050048828125" maxx="155.9949951171875" miny="-25.4950008392334" maxy="-9.505000114440918"/>
+                    <BoundingBox SRS="EPSG:4326" minx="142.0050048828125" maxx="155.9949951171875" miny="-25.4950008392334" maxy="-9.505000114440918"/>
+                    <Dimension name="time" units="ISO8601"/><Extent name="time" multipleValues="1" current="1" default="2014-01-01T00:00:00.000Z">
+                          2002-01-01T00:00:00.000Z,2003-01-01T00:00:00.000Z,2004-01-01T00:00:00.000Z,2005-01-01T00:00:00.000Z,2006-01-01T00:00:00.000Z,2007-01-01T00:00:00.000Z,2008-01-01T00:00:00.000Z,2009-01-01T00:00:00.000Z,2010-01-01T00:00:00.000Z,2011-01-01T00:00:00.000Z,2012-01-01T00:00:00.000Z,2013-01-01T00:00:00.000Z,2014-01-01T00:00:00.000Z</Extent>
+                    <Style>
+                      <Name>boxfill/ncview</Name>
+                        <Title>boxfill/ncview</Title>
+                        <Abstract>boxfill style, using the ncview palette </Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://example.com/wms?REQUEST=GetLegendGraphic&amp;LAYER=ncwms&amp;PALETTE=ncview"/>
+                        </LegendURL>
+                    </Style>
+                    <Style>
+                      <Name>boxfill/occam</Name>
+                        <Title>boxfill/occam</Title>
+                        <Abstract>boxfill style, using the occam palette </Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://example.com/wms?REQUEST=GetLegendGraphic&amp;LAYER=ncwms&amp;PALETTE=occam"/>
+                        </LegendURL>
+                    </Style>
+                    <Style>
+                      <Name>boxfill/rainbow</Name>
+                        <Title>boxfill/rainbow</Title>
+                        <Abstract>boxfill style, using the rainbow palette </Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://example.com/wms?REQUEST=GetLegendGraphic&amp;LAYER=ncwms&amp;PALETTE=rainbow"/>
+                        </LegendURL>
+                    </Style>
+                    </Layer>
+                </Layer>
+            </Layer>
+    </Capability>
+</WMT_MS_Capabilities>

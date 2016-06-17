@@ -5,7 +5,7 @@ import arrayContains from '../../Core/arrayContains';
 import Branding from './../SidePanel/Branding.jsx';
 import DisclaimerHandler from '../../ReactViewModels/DisclaimerHandler';
 import DragDropFile from './../DragDropFile.jsx';
-import ExplorerWindow from './../ExplorerWindow.jsx';
+import ExplorerWindow from './../ExplorerWindow/ExplorerWindow.jsx';
 import FeatureInfoPanel from './../FeatureInfo/FeatureInfoPanel.jsx';
 import FeedbackForm from '../Feedback/FeedbackForm.jsx';
 import MapContainer from './MapColumn.jsx';

@@ -1,19 +1,20 @@
 'use strict';
-import addUserCatalogMember from '../Models/addUserCatalogMember';
-import ArcGisCatalogGroup from '../Models/ArcGisCatalogGroup';
-import ArcGisMapServerCatalogItem from '../Models/ArcGisMapServerCatalogItem';
-import createCatalogItemFromFileOrUrl from '../Models/createCatalogItemFromFileOrUrl';
-import Dropdown from './Generic/Dropdown';
+
+import addUserCatalogMember from '../../../../Models/addUserCatalogMember';
+import ArcGisCatalogGroup from '../../../../Models/ArcGisCatalogGroup';
+import ArcGisMapServerCatalogItem from '../../../../Models/ArcGisMapServerCatalogItem';
+import createCatalogItemFromFileOrUrl from '../../../../Models/createCatalogItemFromFileOrUrl';
+import Dropdown from '../../../Generic/Dropdown';
 import FileInput from './FileInput.jsx';
-import handleFile from '../Core/handleFile';
-import ObserveModelMixin from './ObserveModelMixin';
-import OpenStreetMapCatalogItem from '../Models/OpenStreetMapCatalogItem';
+import getDataType from '../../../../Core/getDataType';
+import ObserveModelMixin from '../../../ObserveModelMixin';
+import OpenStreetMapCatalogItem from '../../../../Models/OpenStreetMapCatalogItem';
 import React from 'react';
-import WebFeatureServiceCatalogGroup from '../Models/WebFeatureServiceCatalogGroup';
-import WebMapServiceCatalogGroup from '../Models/WebMapServiceCatalogGroup';
-import WebMapTileServiceCatalogGroup from '../Models/WebMapTileServiceCatalogGroup';
-import TerriaError from '../Core/TerriaError';
-import getDataType from '../Core/getDataType';
+import TerriaError from '../../../../Core/TerriaError';
+import WebFeatureServiceCatalogGroup from '../../../../Models/WebFeatureServiceCatalogGroup';
+import WebMapServiceCatalogGroup from '../../../../Models/WebMapServiceCatalogGroup';
+import WebMapTileServiceCatalogGroup from '../../../../Models/WebMapTileServiceCatalogGroup';
+import handleFile from '../../../../Core/handleFile';
 
 const wfsUrlRegex = /\bwfs\b/i;
 

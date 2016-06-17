@@ -1,6 +1,6 @@
 'use strict';
 import React from 'react';
-import renderMarkdownInReact from '../Core/renderMarkdownInReact';
+import renderMarkdownInReact from '../../../Core/renderMarkdownInReact';
 // The welcome tab, not used in current design
 const GettingStartedTab = React.createClass({
     propTypes: {

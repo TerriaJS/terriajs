@@ -1,6 +1,9 @@
-import ObserveModelMixin from './ObserveModelMixin';
 import React from 'react';
+import classNames from 'classnames';
+
+import ObserveModelMixin from '../ObserveModelMixin';
 import Tabs from './Tabs.jsx';
+import Styles from './explorer-window.scss';
 
 const ExplorerWindow = React.createClass({
     mixins: [ObserveModelMixin],
@@ -40,27 +43,35 @@ const ExplorerWindow = React.createClass({
     render() {
         return (
             <div onClick={this.bringToFront}
-                 className={`data-panel-wrapper modal-wrapper ${this.isVisible() ? 'is-open' : ''} ${this.props.viewState.componentOnTop === this.props.viewState.componentOrderOptions.modelWindow ? 'is-top' : ''}`}
+                 className={classNames(
+                     Styles.modalWrapper,
+                     {
+                         [Styles.isOpen]: this.isVisible(),
+                         [Styles.isTop]: this.props.viewState.componentOnTop === this.props.viewState.componentOrderOptions.modelWindow
+                     }
+                 )}
                  id="explorer-panel-wrapper"
                  aria-hidden={!this.isVisible}>
                 <div onClick={this.close}
                      id="modal-overlay"
-                     className="modal-overlay"
+                     className={Styles.modalOverlay}
                      tabIndex="-1"/>
                 <div id="explorer-panel"
-                     className="explorer-panel modal-content"
+                     className={classNames(Styles.explorerPanel, Styles.modalContent)}
                      aria-labelledby="modalTitle"
                      aria-describedby="modalDescription"
                      role="dialog">
-                    <button type='button' onClick={this.close} className="btn btn-transparent btn--close-modal" title="Close data panel"
+                    <button type='button'
+                            onClick={this.close}
+                            className={Styles.btnCloseModal}
+                            title="Close data panel"
                             data-target="close-modal">
                         Done
                     </button>
-                    <Tabs terria={this.props.terria}
-                          viewState={this.props.viewState}
-                    />
+                    <Tabs terria={this.props.terria} viewState={this.props.viewState}/>
                 </div>
-            </div>);
+            </div>
+        );
     }
 });
 
