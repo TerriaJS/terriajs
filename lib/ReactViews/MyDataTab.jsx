@@ -17,34 +17,14 @@ const MyDataTab = React.createClass({
         viewState: React.PropTypes.object
     },
 
-    getInitialState() {
-        return {
-            dataCatalog: undefined,
-            isUploadView: true
-        };
-    },
-
-    updateCatalog(dataCatalog) {
-        this.setState({
-            dataCatalog: dataCatalog,
-            isUploadView: false
-        });
-    },
-
-    changeUploadView() {
-        this.setState({
-            isUploadView: !this.state.isUploadView
-        });
-    },
-
     renderContent() {
-        if (this.state.dataCatalog) {
+        if (this.props.terria.catalog.userAddedDataGroup) {
             return (<div className="added-data">
                     {disclaimer}
                     <ul className='data-catalog'>
-                        <DataCatalogGroup group={this.state.dataCatalog} viewState={this.props.viewState} />
+                        <DataCatalogGroup group={this.props.terria.catalog.userAddedDataGroup} viewState={this.props.viewState} />
                     </ul>
-                    <button type='button' onClick={this.changeUploadView} className='btn--add-more-data btn btn-transparent'> Add more data</button>
+                    <button type='button' onClick={()=>this.props.viewState.myDataIsUploadView = true} className='btn--add-more-data btn btn-transparent'> Add more data</button>
                 </div>
             );
         }
@@ -54,11 +34,10 @@ const MyDataTab = React.createClass({
         return (
             <div className="panel-content">
                 <div className='my-data'>
-                    <div className={'add-data ' + (!this.state.dataCatalog ? 'is-empty' : '' + ' ' + (!this.state.isUploadView ? 'is-hidden' : ''))}>
+                    <div className={'add-data ' + (!this.props.terria.catalog.userAddedDataGroup ? 'is-empty' : '' + ' ' + (!this.props.viewState.myDataIsUploadView ? 'is-hidden' : ''))}>
                         <button type='button' onClick={this.changeUploadView} className='btn btn--back-to-my-data btn-transparent'> Back</button>
                         <h3>Adding your own data</h3>
-                        <AddData updateCatalog={this.updateCatalog}
-                                 terria={this.props.terria}
+                        <AddData terria={this.props.terria}
                                  viewState={this.props.viewState}
                         />
                     </div>

@@ -13,91 +13,13 @@ import WebFeatureServiceCatalogGroup from '../Models/WebFeatureServiceCatalogGro
 import WebMapServiceCatalogGroup from '../Models/WebMapServiceCatalogGroup';
 import WebMapTileServiceCatalogGroup from '../Models/WebMapTileServiceCatalogGroup';
 import TerriaError from '../Core/TerriaError';
+import getDataType from '../Core/getDataType';
 
 const wfsUrlRegex = /\bwfs\b/i;
 
 // Local and remote data have different dataType options
-const remoteDataType = [
-    {
-        value: 'auto',
-        name: 'Auto-detect (recommended)'
-    },
-    {
-        value: 'wms-getCapabilities',
-        name: 'Web Map Service (WMS) Server'
-    },
-    {
-        value: 'wmts-getCapabilities',
-        name: 'Web Map Tile Service (WMTS) Server'
-    },
-    {
-        value: 'wfs-getCapabilities',
-        name: 'Web Feature Service (WFS) Server'
-    },
-    {
-        value: 'esri-group',
-        name: 'Esri ArcGIS Server'
-    },
-    {
-        value: 'open-street-map',
-        name: 'Open Street Map Server'
-    },
-    {
-        value: 'geojson',
-        name: 'GeoJSON'
-    },
-    {
-        value: 'kml',
-        name: 'KML or KMZ'
-    },
-    {
-        value: 'csv',
-        name: 'CSV'
-    },
-    {
-        value: 'czml',
-        name: 'CZML'
-    },
-    {
-        value: 'gpx',
-        name: 'GPX'
-    },
-    {
-        value: 'other',
-        name: 'Other (use conversion service)'
-    },
-];
-
-const localDataType = [
-    {
-        value: 'auto',
-        name: 'Auto-detect (recommended)'
-    },
-    {
-        value: 'geojson',
-        name: 'GeoJSON'
-    },
-    {
-        value: 'kml',
-        name: 'KML or KMZ'
-    },
-    {
-        value: 'csv',
-        name: 'CSV'
-    },
-    {
-        value: 'czml',
-        name: 'CZML'
-    },
-    {
-        value: 'gpx',
-        name: 'GPX'
-    },
-    {
-        value: 'other',
-        name: 'Other (use conversion service)'
-    },
-];
+const remoteDataType = getDataType().remoteDataType;
+const localDataType = getDataType().localDataType;
 
 /**
  * Add data panel in modal window -> My data tab
@@ -107,7 +29,6 @@ const AddData = React.createClass({
 
     propTypes: {
         terria: React.PropTypes.object,
-        updateCatalog: React.PropTypes.func,
         viewState: React.PropTypes.object,
         allowDropInitFiles: React.PropTypes.bool
     },
@@ -146,7 +67,7 @@ const AddData = React.createClass({
 
     handleUploadFile(e) {
         try {
-            handleFile(e, this.props.terria, this.state.localDataType, this.props.updateCatalog);
+            handleFile(e, this.props.terria, this.state.localDataType, ()=>{this.props.viewState.myDataIsUploadView = false;});
         } catch(err) {
             this.props.terria.error.raiseEvent(new TerriaError({
                 sender: this,

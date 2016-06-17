@@ -15,15 +15,12 @@ const DragDropFile = React.createClass({
     handleDrop(e) {
         e.preventDefault();
         e.stopPropagation();
-        function callback(c){
-            console.log(c);
-        };
 
         const fakeEvent = {
             target: e.dataTransfer
         };
         try {
-            handleFile(fakeEvent, this.props.terria, null, callback);
+            handleFile(fakeEvent, this.props.terria, null, ()=>{this.props.viewState.myDataIsUploadView = false;});
         } catch(err) {
             this.props.terria.error.raiseEvent(new TerriaError({
                 sender: this,
