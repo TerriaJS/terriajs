@@ -5,6 +5,7 @@ Change Log
 ### 3.3.1
 
 * Fixed a bug that caused the `corsProxyBaseUrl` specified in `config.json` to be ignored.
+* Fixed a bug preventing downloading feature info data in CSV format if it contained nulls.
 
 ### 3.3.0
 
