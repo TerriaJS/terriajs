@@ -8,7 +8,6 @@ import DragDropFile from './../DragDropFile.jsx';
 import ExplorerWindow from './../ExplorerWindow.jsx';
 import FeatureInfoPanel from './../FeatureInfo/FeatureInfoPanel.jsx';
 import FeedbackForm from '../Feedback/FeedbackForm.jsx';
-import handleFile from '../../Core/handleFile';
 import MapContainer from './MapColumn.jsx';
 import MapInteractionWindow from './../Notification/MapInteractionWindow.jsx';
 import MapNavigation from './../Map/MapNavigation.jsx';
@@ -79,10 +78,6 @@ const StandardUserInterface = React.createClass({
         return document.body.clientWidth < this.props.minimumLargeScreenWidth;
     },
 
-    handleDroppedFile(e) {
-        handleFile(e, this.props.terria, null);
-    },
-
     render() {
         const terria = this.props.terria;
         const allBaseMaps = this.props.allBaseMaps;
@@ -137,7 +132,6 @@ const StandardUserInterface = React.createClass({
                                   viewState={this.props.viewState}
                 />
                 <DragDropFile terria={this.props.terria}
-                              handleFile={this.handleDroppedFile}
                               viewState={this.props.viewState}
                 />
             </div>

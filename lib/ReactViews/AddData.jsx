@@ -12,7 +12,7 @@ import React from 'react';
 import WebFeatureServiceCatalogGroup from '../Models/WebFeatureServiceCatalogGroup';
 import WebMapServiceCatalogGroup from '../Models/WebMapServiceCatalogGroup';
 import WebMapTileServiceCatalogGroup from '../Models/WebMapTileServiceCatalogGroup';
-
+import TerriaError from '../Core/TerriaError';
 
 const wfsUrlRegex = /\bwfs\b/i;
 
@@ -144,8 +144,16 @@ const AddData = React.createClass({
         });
     },
 
-    handleUploadFile(e){
-        handleFile(e, this.props.terria, that.props.updateCatalog);
+    handleUploadFile(e) {
+        try {
+            handleFile(e, this.props.terria, this.state.localDataType, this.props.updateCatalog);
+        } catch(err) {
+            this.props.terria.error.raiseEvent(new TerriaError({
+                sender: this,
+                title: err.title,
+                message: err.message
+            }));
+        }
     },
 
     handleUrl(e) {
@@ -226,7 +234,7 @@ const AddData = React.createClass({
                 <label className='label'><strong>Step 1:</strong> Select type of file to add: </label>
                 <Dropdown options={localDataType} selected={this.state.localDataType} selectOption={this.selectLocalOption} matchWidth={true} theme={dropdownTheme} />
                 <label className='label'><strong>Step 2:</strong> Select a local data file to add: </label>
-                <FileInput accept=".csv,.kml" onChange={this.handleFile} />
+                <FileInput accept=".csv,.kml" onChange={this.handleUploadFile} />
             </section>
             <section aria-hidden = {this.state.activeTab === 'web' ? 'false' : 'true'} className={'tab-panel panel--web ' + (this.state.activeTab === 'web' ? 'is-active' : '')}>
                 <label className='label'><strong>Step 1:</strong> Select type of file to add: </label>

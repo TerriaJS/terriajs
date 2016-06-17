@@ -2,25 +2,28 @@
 import React from 'react';
 import ObserveModelMixin from './ObserveModelMixin';
 import TerriaError from './../Core/TerriaError';
+import handleFile from '../Core/handleFile';
 
 const DragDropFile = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
         terria: React.PropTypes.object,
-        handleFile: React.PropTypes.func,
         viewState: React.PropTypes.object,
     },
 
     handleDrop(e) {
         e.preventDefault();
         e.stopPropagation();
+        function callback(c){
+            console.log(c);
+        };
 
         const fakeEvent = {
             target: e.dataTransfer
         };
         try {
-            this.props.handleFile(fakeEvent);
+            handleFile(fakeEvent, this.props.terria, null, callback);
         } catch(err) {
             this.props.terria.error.raiseEvent(new TerriaError({
                 sender: this,
