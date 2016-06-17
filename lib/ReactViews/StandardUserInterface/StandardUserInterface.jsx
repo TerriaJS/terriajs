@@ -4,18 +4,19 @@ import React from 'react';
 import arrayContains from '../../Core/arrayContains';
 import Branding from './../SidePanel/Branding.jsx';
 import DisclaimerHandler from '../../ReactViewModels/DisclaimerHandler';
+import DragDropFile from './../DragDropFile.jsx';
+import ExplorerWindow from './../ExplorerWindow.jsx';
 import FeatureInfoPanel from './../FeatureInfo/FeatureInfoPanel.jsx';
 import FeedbackForm from '../Feedback/FeedbackForm.jsx';
+import handleFile from '../../Core/handleFile';
+import MapContainer from './MapColumn.jsx';
 import MapInteractionWindow from './../Notification/MapInteractionWindow.jsx';
 import MapNavigation from './../Map/MapNavigation.jsx';
 import MobileHeader from './../Mobile/MobileHeader.jsx';
-import ExplorerWindow from './../ExplorerWindow.jsx';
 import Notification from './../Notification/Notification.jsx';
 import ObserveModelMixin from './../ObserveModelMixin';
 import ProgressBar from '../Map/ProgressBar.jsx';
 import SidePanel from './../SidePanel/SidePanel.jsx';
-import MapContainer from './MapColumn.jsx';
-import DragDropFile from './../DragDropFile.jsx';
 
 import Styles from './standard-user-interface.scss';
 
@@ -78,6 +79,10 @@ const StandardUserInterface = React.createClass({
         return document.body.clientWidth < this.props.minimumLargeScreenWidth;
     },
 
+    handleDroppedFile(e) {
+        handleFile(e, this.props.terria, null);
+    },
+
     render() {
         const terria = this.props.terria;
         const allBaseMaps = this.props.allBaseMaps;
@@ -132,7 +137,7 @@ const StandardUserInterface = React.createClass({
                                   viewState={this.props.viewState}
                 />
                 <DragDropFile terria={this.props.terria}
-                              handleFile={this.handleFile}
+                              handleFile={this.handleDroppedFile}
                               viewState={this.props.viewState}
                 />
             </div>

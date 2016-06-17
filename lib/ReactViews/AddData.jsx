@@ -3,19 +3,16 @@ import addUserCatalogMember from '../Models/addUserCatalogMember';
 import ArcGisCatalogGroup from '../Models/ArcGisCatalogGroup';
 import ArcGisMapServerCatalogItem from '../Models/ArcGisMapServerCatalogItem';
 import createCatalogItemFromFileOrUrl from '../Models/createCatalogItemFromFileOrUrl';
-import defined from 'terriajs-cesium/Source/Core/defined';
-import DragDropFile from './DragDropFile.jsx';
 import Dropdown from './Generic/Dropdown';
 import FileInput from './FileInput.jsx';
+import handleFile from '../Core/handleFile';
 import ObserveModelMixin from './ObserveModelMixin';
 import OpenStreetMapCatalogItem from '../Models/OpenStreetMapCatalogItem';
 import React from 'react';
 import WebFeatureServiceCatalogGroup from '../Models/WebFeatureServiceCatalogGroup';
 import WebMapServiceCatalogGroup from '../Models/WebMapServiceCatalogGroup';
 import WebMapTileServiceCatalogGroup from '../Models/WebMapTileServiceCatalogGroup';
-import when from 'terriajs-cesium/Source/ThirdParty/when';
-import raiseErrorOnRejectedPromise from '../Models/raiseErrorOnRejectedPromise';
-import readJson from '../Core/readJson';
+
 
 const wfsUrlRegex = /\bwfs\b/i;
 
@@ -147,38 +144,8 @@ const AddData = React.createClass({
         });
     },
 
-    handleFile(e) {
-        const that = this;
-        const files = e.target.files;
-        if (!defined(files)) {
-            console.log('file api not supported');
-        }
-
-        if (files.length > 0) {
-            const promises = [];
-
-            for (let i = 0; i < files.length; ++i) {
-                const file = files[i];
-                this.props.terria.analytics.logEvent('uploadFile', 'browse', file.name);
-                if (file.name.toUpperCase().indexOf('.JSON') !== -1) {
-                    raiseErrorOnRejectedPromise(that.props.terria, readJson(file).then((json)=>{
-                        if (that.props.allowDropInitFiles && (json.catalog || json.services)) {
-                            // This is an init file.
-                            return that.props.terria.addInitSource(json);
-                        }
-                        promises.push(addUserCatalogMember(this.props.terria, createCatalogItemFromFileOrUrl(this.props.terria, file, this.state.localDataType.value, true)));
-                    }));
-                } else {
-                    promises.push(addUserCatalogMember(this.props.terria, createCatalogItemFromFileOrUrl(this.props.terria, file, this.state.localDataType.value, true)));
-                }
-            }
-            if(promises.length > 0) {
-                when.all(promises, () => {
-                    const userCatalog = that.props.terria.catalog.userAddedDataGroup;
-                    that.props.updateCatalog(userCatalog);
-                });
-            }
-        }
+    handleUploadFile(e){
+        handleFile(e, this.props.terria, that.props.updateCatalog);
     },
 
     handleUrl(e) {

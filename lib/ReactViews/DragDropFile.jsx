@@ -1,7 +1,11 @@
 'use strict';
 import React from 'react';
+import ObserveModelMixin from './ObserveModelMixin';
+import TerriaError from './../Core/TerriaError';
 
 const DragDropFile = React.createClass({
+    mixins: [ObserveModelMixin],
+
     propTypes: {
         terria: React.PropTypes.object,
         handleFile: React.PropTypes.func,
@@ -15,8 +19,15 @@ const DragDropFile = React.createClass({
         const fakeEvent = {
             target: e.dataTransfer
         };
-
-        this.props.handleFile(fakeEvent);
+        try {
+            this.props.handleFile(fakeEvent);
+        } catch(err) {
+            this.props.terria.error.raiseEvent(new TerriaError({
+                sender: this,
+                title: err.title,
+                message: err.message
+            }));
+        }
         this.props.viewState.isDraggingDroppingFile = false;
     },
 
@@ -36,12 +47,17 @@ const DragDropFile = React.createClass({
         }
     },
 
+    handleMouseLeave(){
+        this.props.viewState.isDraggingDroppingFile = false;
+    },
+
     render() {
         return <div onDrop={this.handleDrop}
                     onDragEnter={this.handleDragEnter}
                     onDragOver={this.handleDragOver}
                     onDragLeave={this.handleDragLeave}
-                    className={(this.props.viewState.isDraggingDroppingFile === true ? 'is-active' : '') + ' drop-zone'}>
+                    onMouseLeave = {this.handleMouseLeave}
+                    className={(this.props.viewState.isDraggingDroppingFile ? 'is-active' : '') + ' drop-zone'}>
                         <div className='drop-zone-inner'>
                             <h3 className='dnd-heading'> Drag & Drop </h3>
                             <div>Your data anywhere to view on the map</div>
