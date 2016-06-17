@@ -30,15 +30,9 @@ const AddData = React.createClass({
 
     propTypes: {
         terria: React.PropTypes.object,
-        viewState: React.PropTypes.object,
-        allowDropInitFiles: React.PropTypes.bool
+        viewState: React.PropTypes.object
     },
 
-    getDefaultProps: function() {
-        return {
-            allowDropInitFiles: true
-        };
-    },
 
     getInitialState() {
         return {
