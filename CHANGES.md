@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+### 3.3.1
+
+* Fixed a bug that caused the `corsProxyBaseUrl` specified in `config.json` to be ignored.
+
 ### 3.3.0
 
 * Support `parameters` property in WebFeatureServiceCatalogItem to allow accessing URLs that need additional parameters.
