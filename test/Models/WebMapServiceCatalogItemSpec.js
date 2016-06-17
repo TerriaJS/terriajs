@@ -165,6 +165,30 @@ describe('WebMapServiceCatalogItem', function() {
         });
     });
 
+    describe('metadata urls', function() {
+        it('are parsed when one is present', function(done) {
+            wmsItem.updateFromJson({
+                url: 'http://foo.com/bar',
+                metadataUrl: 'test/WMS/single_metadata_url.xml',
+                layers: 'single_period'
+            });
+            wmsItem.load().then(function() {
+                expect(wmsItem.findInfoSection('Metadata URL(s)').content).toBe('http://examplemetadata.com');
+            }).then(done).otherwise(fail);
+        });
+
+        it('are parsed when multiple are present', function(done) {
+            wmsItem.updateFromJson({
+                url: 'http://foo.com/bar',
+                metadataUrl: 'test/WMS/multiple_metadata_url.xml',
+                layers: 'single_period'
+            });
+            wmsItem.load().then(function() {
+                expect(wmsItem.findInfoSection('Metadata URL(s)').content).toBe('http://examplemetadata1.com<br>http://examplemetadata2.com');
+            }).then(done).otherwise(fail);
+        });
+    });
+
     it('derives getCapabilitiesUrl from url if getCapabilitiesUrl is not explicitly provided', function() {
         wmsItem.url = 'http://foo.com/bar';
         expect(wmsItem.getCapabilitiesUrl.indexOf(wmsItem.url)).toBe(0);
