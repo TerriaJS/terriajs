@@ -5,6 +5,7 @@ Change Log
 ### 4.0.0
 
 * `CswCatalogGroup` will now include Web Processing Services from the catalog if configured with `includeWps` set to true.
+* `WebMapServiceCatalogItem` will now detect ncWMS servers and set isNcWMS to true.
 
 ### 3.3.0
 
