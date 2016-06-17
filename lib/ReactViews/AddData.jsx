@@ -277,11 +277,6 @@ const AddData = React.createClass({
     render() {
         return (
         <div className='add-data-inner'>
-            <DragDropFile terria={this.props.terria}
-                          handleFile={this.handleFile}
-                          isActive={this.props.viewState.isDraggingDroppingFile}
-                          onFinishDroppingFile={this.onFinishDroppingFile}
-            />
             {this.renderTabs()}
             {this.renderPanels()}
         </div>);

@@ -15,6 +15,7 @@ import ObserveModelMixin from './../ObserveModelMixin';
 import ProgressBar from '../Map/ProgressBar.jsx';
 import SidePanel from './../SidePanel/SidePanel.jsx';
 import MapContainer from './MapColumn.jsx';
+import DragDropFile from './../DragDropFile.jsx';
 
 import Styles from './standard-user-interface.scss';
 
@@ -129,6 +130,10 @@ const StandardUserInterface = React.createClass({
 
                 <FeatureInfoPanel terria={terria}
                                   viewState={this.props.viewState}
+                />
+                <DragDropFile terria={this.props.terria}
+                              handleFile={this.handleFile}
+                              viewState={this.props.viewState}
                 />
             </div>
         );

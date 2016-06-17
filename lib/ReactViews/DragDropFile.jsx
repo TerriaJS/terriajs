@@ -3,10 +3,9 @@ import React from 'react';
 
 const DragDropFile = React.createClass({
     propTypes: {
-        isActive: React.PropTypes.bool,
         terria: React.PropTypes.object,
         handleFile: React.PropTypes.func,
-        onFinishDroppingFile: React.PropTypes.func
+        viewState: React.PropTypes.object,
     },
 
     handleDrop(e) {
@@ -18,7 +17,7 @@ const DragDropFile = React.createClass({
         };
 
         this.props.handleFile(fakeEvent);
-        this.props.onFinishDroppingFile();
+        this.props.viewState.isDraggingDroppingFile = false;
     },
 
     handleDragEnter(e) {
@@ -33,7 +32,7 @@ const DragDropFile = React.createClass({
 
     handleDragLeave(e) {
         if (e.screenX === 0 && e.screenY === 0) {
-            this.props.onFinishDroppingFile();
+            this.props.viewState.isDraggingDroppingFile = false;
         }
     },
 
@@ -42,7 +41,7 @@ const DragDropFile = React.createClass({
                     onDragEnter={this.handleDragEnter}
                     onDragOver={this.handleDragOver}
                     onDragLeave={this.handleDragLeave}
-                    className={(this.props.isActive ? 'is-active' : '') + ' drop-zone'}>
+                    className={(this.props.viewState.isDraggingDroppingFile === true ? 'is-active' : '') + ' drop-zone'}>
                         <div className='drop-zone-inner'>
                             <h3 className='dnd-heading'> Drag & Drop </h3>
                             <div>Your data anywhere to view on the map</div>
