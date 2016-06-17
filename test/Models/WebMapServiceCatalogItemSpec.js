@@ -173,7 +173,7 @@ describe('WebMapServiceCatalogItem', function() {
                 layers: 'single_period'
             });
             wmsItem.load().then(function() {
-                expect(wmsItem.findInfoSection('Metadata URL(s)').content).toBe('http://examplemetadata.com');
+                expect(wmsItem.findInfoSection('Data Metadata Links').content).toBe('http://examplemetadata.com');
             }).then(done).otherwise(fail);
         });
 
@@ -184,7 +184,7 @@ describe('WebMapServiceCatalogItem', function() {
                 layers: 'single_period'
             });
             wmsItem.load().then(function() {
-                expect(wmsItem.findInfoSection('Metadata URL(s)').content).toBe('http://examplemetadata1.com<br>http://examplemetadata2.com');
+                expect(wmsItem.findInfoSection('Data Metadata Links').content).toBe('http://examplemetadata1.com<br>http://examplemetadata2.com');
             }).then(done).otherwise(fail);
         });
     });
