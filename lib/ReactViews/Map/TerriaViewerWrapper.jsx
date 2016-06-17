@@ -30,7 +30,20 @@ const TerriaViewerWrapper = React.createClass({
         this.mapElement.innerHTML = '';
     },
 
+    lastMouseX: -1,
+    lastMouseY: -1,
+
     onMouseMove(event) {
+        // Avoid duplicate mousemove events.  Why would we get duplicate mousemove events?  I'm glad you asked:
+        // http://stackoverflow.com/questions/17818493/mousemove-event-repeating-every-second/17819113
+        // I (Kevin Ring) see this consistent on my laptop when Windows Media Player is running.
+        if (event.clientX === this.lastMouseX && event.clientY === this.lastMouseY) {
+            return;
+        }
+
+        this.lastMouseX = event.clientX;
+        this.lastMouseY = event.clientY;
+
         if (this.props.terria.cesium) {
             const rect = this.mapElement.getBoundingClientRect();
             const position = new Cartesian2(event.clientX - rect.left, event.clientY - rect.top);
