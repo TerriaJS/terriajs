@@ -5,6 +5,7 @@ Change Log
 ### 3.3.1
 
 * Fixed a bug that caused the `corsProxyBaseUrl` specified in `config.json` to be ignored.
+* Added support for the WMS Style/MetadataURL tag in layer description.
 
 ### 3.3.0
 
