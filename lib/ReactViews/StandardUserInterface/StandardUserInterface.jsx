@@ -9,7 +9,7 @@ import FeedbackForm from '../Feedback/FeedbackForm.jsx';
 import MapInteractionWindow from './../Notification/MapInteractionWindow.jsx';
 import MapNavigation from './../Map/MapNavigation.jsx';
 import MobileHeader from './../Mobile/MobileHeader.jsx';
-import ExplorerWindow from './../ExplorerWindow.jsx';
+import ExplorerWindow from '../ExplorerWindow/ExplorerWindow.jsx';
 import Notification from './../Notification/Notification.jsx';
 import ObserveModelMixin from './../ObserveModelMixin';
 import ProgressBar from '../Map/ProgressBar.jsx';

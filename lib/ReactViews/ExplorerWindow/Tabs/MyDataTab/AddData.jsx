@@ -1,21 +1,21 @@
 'use strict';
-import addUserCatalogMember from '../Models/addUserCatalogMember';
-import ArcGisCatalogGroup from '../Models/ArcGisCatalogGroup';
-import ArcGisMapServerCatalogItem from '../Models/ArcGisMapServerCatalogItem';
-import createCatalogItemFromFileOrUrl from '../Models/createCatalogItemFromFileOrUrl';
+import addUserCatalogMember from '../../../../Models/addUserCatalogMember';
+import ArcGisCatalogGroup from '../../../../Models/ArcGisCatalogGroup';
+import ArcGisMapServerCatalogItem from '../../../../Models/ArcGisMapServerCatalogItem';
+import createCatalogItemFromFileOrUrl from '../../../../Models/createCatalogItemFromFileOrUrl';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import DragDropFile from './DragDropFile.jsx';
-import Dropdown from './Generic/Dropdown';
+import Dropdown from '../../../Generic/Dropdown';
 import FileInput from './FileInput.jsx';
-import ObserveModelMixin from './ObserveModelMixin';
-import OpenStreetMapCatalogItem from '../Models/OpenStreetMapCatalogItem';
+import ObserveModelMixin from '../../../ObserveModelMixin';
+import OpenStreetMapCatalogItem from '../../../../Models/OpenStreetMapCatalogItem';
 import React from 'react';
-import WebFeatureServiceCatalogGroup from '../Models/WebFeatureServiceCatalogGroup';
-import WebMapServiceCatalogGroup from '../Models/WebMapServiceCatalogGroup';
-import WebMapTileServiceCatalogGroup from '../Models/WebMapTileServiceCatalogGroup';
+import WebFeatureServiceCatalogGroup from '../../../../Models/WebFeatureServiceCatalogGroup';
+import WebMapServiceCatalogGroup from '../../../../Models/WebMapServiceCatalogGroup';
+import WebMapTileServiceCatalogGroup from '../../../../Models/WebMapTileServiceCatalogGroup';
 import when from 'terriajs-cesium/Source/ThirdParty/when';
-import raiseErrorOnRejectedPromise from '../Models/raiseErrorOnRejectedPromise';
-import readJson from '../Core/readJson';
+import raiseErrorOnRejectedPromise from '../../../../Models/raiseErrorOnRejectedPromise';
+import readJson from '../../../../Core/readJson';
 
 const wfsUrlRegex = /\bwfs\b/i;
 

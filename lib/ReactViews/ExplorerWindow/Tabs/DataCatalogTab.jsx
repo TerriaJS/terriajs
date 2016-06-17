@@ -1,11 +1,11 @@
 'use strict';
 
-import DataCatalogMember from './DataCatalog/DataCatalogMember.jsx';
-import DataPreview from './Preview/DataPreview.jsx';
-import ObserveModelMixin from './ObserveModelMixin';
+import DataCatalogMember from '../../DataCatalog/DataCatalogMember.jsx';
+import DataPreview from '../../Preview/DataPreview.jsx';
+import ObserveModelMixin from '../../ObserveModelMixin';
 import React from 'react';
-import SearchHeader from './Search/SearchHeader.jsx';
-import SearchBox from './Search/SearchBox.jsx';
+import SearchHeader from '../../Search/SearchHeader.jsx';
+import SearchBox from '../../Search/SearchBox.jsx';
 import defined from 'terriajs-cesium/Source/Core/defined';
 
 // The DataCatalog Tab

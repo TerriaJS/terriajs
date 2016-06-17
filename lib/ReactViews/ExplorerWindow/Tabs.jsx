@@ -1,8 +1,8 @@
 'use strict';
 
-import DataCatalogTab from './DataCatalogTab.jsx';
-import MyDataTab from './MyDataTab.jsx';
-import ObserveModelMixin from './ObserveModelMixin';
+import DataCatalogTab from './Tabs/DataCatalogTab.jsx';
+import MyDataTab from './Tabs/MyDataTab/MyDataTab.jsx';
+import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
 import classNames from 'classnames';
 
