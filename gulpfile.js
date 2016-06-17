@@ -145,8 +145,12 @@ gulp.task('test-saucelabs', function(done) {
     runKarma('./buildprocess/karma-saucelabs.conf.js', done);
 });
 
-gulp.task('test', function(done) {
+gulp.task('test-local', function(done) {
     runKarma('./buildprocess/karma-local.conf.js', done);
+});
+
+gulp.task('test', function(done) {
+    runKarma('./buildprocess/karma-electron.conf.js', done);
 });
 
 function runKarma(configFile, done) {
