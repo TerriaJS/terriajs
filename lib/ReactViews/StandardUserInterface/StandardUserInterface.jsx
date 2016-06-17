@@ -50,7 +50,7 @@ const StandardUserInterface = React.createClass({
             that.acceptDragDropFile();
         };
 
-        document.addEventListener('dragover', this.dragOverListener, false);
+        document.getElementById('ui').addEventListener('dragover', this.dragOverListener, false);
 
         this.resizeListener = () => {
             this.props.viewState.useSmallScreenInterface = this.shouldUseMobileInterface();
