@@ -35,7 +35,7 @@ const MyDataTab = React.createClass({
             <div className="panel-content">
                 <div className='my-data'>
                     <div className={'add-data ' + (!this.props.terria.catalog.userAddedDataGroup ? 'is-empty' : '' + ' ' + (!this.props.viewState.myDataIsUploadView ? 'is-hidden' : ''))}>
-                        <button type='button' onClick={this.changeUploadView} className='btn btn--back-to-my-data btn-transparent'> Back</button>
+                        <button type='button' onClick={()=>this.props.viewState.myDataIsUploadView = !this.props.viewState.myDataIsUploadView} className='btn btn--back-to-my-data btn-transparent'> Back</button>
                         <h3>Adding your own data</h3>
                         <AddData terria={this.props.terria}
                                  viewState={this.props.viewState}
