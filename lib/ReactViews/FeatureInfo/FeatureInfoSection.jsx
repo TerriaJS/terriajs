@@ -65,20 +65,21 @@ const FeatureInfoSection = React.createClass({
             this.props.template && this.props.template.formats
         );
 
-        const terriaData = {
-            terria: {
+        if (defined(propertyData)) {
+
+            propertyData.terria = {
                 formatNumber: mustacheFormatNumberFunction
-            }
-        };
-        if (this.props.position) {
-            const latLngInRadians = Ellipsoid.WGS84.cartesianToCartographic(this.props.position);
-            terriaData.terria.coords = {
-                latitude: CesiumMath.toDegrees(latLngInRadians.latitude),
-                longitude: CesiumMath.toDegrees(latLngInRadians.longitude)
             };
+            if (this.props.position) {
+                const latLngInRadians = Ellipsoid.WGS84.cartesianToCartographic(this.props.position);
+                propertyData.terria.coords = {
+                    latitude: CesiumMath.toDegrees(latLngInRadians.latitude),
+                    longitude: CesiumMath.toDegrees(latLngInRadians.longitude)
+                };
+            }
         }
 
-        return Object.assign({}, propertyData || {}, terriaData);
+        return propertyData;
     },
 
     clickHeader() {
