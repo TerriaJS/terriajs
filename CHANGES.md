@@ -7,6 +7,7 @@ Change Log
 * Support JSON5 (http://json5.org/) use in init files and config files, so comments can be used and object keys don't need to be quoted. 
 * Fixed a bug that caused the `corsProxyBaseUrl` specified in `config.json` to be ignored.
 * Added support for the WMS Style/MetadataURL tag in layer description.
+* Long auto-generated legend titles now word wrap in most web browsers.
 
 ### 3.3.0
 
