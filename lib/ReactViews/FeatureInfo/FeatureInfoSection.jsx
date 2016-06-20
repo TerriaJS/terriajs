@@ -72,11 +72,9 @@ const FeatureInfoSection = React.createClass({
         };
         if (this.props.position) {
             const latLngInRadians = Ellipsoid.WGS84.cartesianToCartographic(this.props.position);
-            terriaData.terria = {
-                coords: {
-                    latitude: CesiumMath.toDegrees(latLngInRadians.latitude),
-                    longitude: CesiumMath.toDegrees(latLngInRadians.longitude)
-                }
+            terriaData.terria.coords = {
+                latitude: CesiumMath.toDegrees(latLngInRadians.latitude),
+                longitude: CesiumMath.toDegrees(latLngInRadians.longitude)
             };
         }
 
