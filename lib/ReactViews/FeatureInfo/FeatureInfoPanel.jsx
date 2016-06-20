@@ -7,6 +7,8 @@ import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 import Entity from 'terriajs-cesium/Source/DataSources/Entity';
+import Styles from './feature-info-panel.scss';
+import classNames from 'classnames';
 
 const FeatureInfoPanel = React.createClass({
     mixins: [ObserveModelMixin],
@@ -82,21 +84,26 @@ const FeatureInfoPanel = React.createClass({
     render() {
         const terria = this.props.terria;
         const viewState = this.props.viewState;
-        const componentOnTop = (viewState.componentOnTop === viewState.componentOrderOptions.featureInfoPanel);
+
         const featureInfoCatalogItems = this.getFeatureInfoCatalogItems();
+        const panelClassName = classNames(Styles.panel, {
+            [Styles.isOnTop]: viewState.componentOnTop === viewState.componentOrderOptions.featureInfoPanel,
+            [Styles.isCollapsed]: viewState.featureInfoPanelIsCollapsed,
+            [Styles.isVisible]: viewState.featureInfoPanelIsVisible
+        });
         return (
             <div
-                className={`feature-info-panel ${componentOnTop ? 'is-top' : ''} ${viewState.featureInfoPanelIsCollapsed ? 'is-collapsed' : ''} ${viewState.featureInfoPanelIsVisible ? 'is-visible' : ''}`}
+                className={panelClassName}
                 aria-hidden={!viewState.featureInfoPanelIsVisible}
                 onClick={this.bringToFront}>
-                <div className='feature-info-panel__header'>
-                    <button type='button' onClick={ this.toggleCollapsed } className='btn'>
+                <div className={Styles.header}>
+                    <button type='button' onClick={ this.toggleCollapsed } className={Styles.btn}>
                         Feature Information
                     </button>
-                    <button type='button' onClick={ this.close } className="btn btn--close-feature"
+                    <button type='button' onClick={ this.close } className={Styles.btnCloseFeature}
                             title="Close data panel"/>
                 </div>
-                <ul className="feature-info-panel__body">
+                <ul className={Styles.body}>
                     <Choose>
                         <When condition={viewState.featureInfoPanelIsCollapsed || !viewState.featureInfoPanelIsVisible}>
                         </When>
@@ -104,7 +111,7 @@ const FeatureInfoPanel = React.createClass({
                             <li><Loader/></li>
                         </When>
                         <When condition={!featureInfoCatalogItems || featureInfoCatalogItems.length === 0}>
-                            <li className='no-results'>No results</li>
+                            <li className={Styles.noResults}>No results</li>
                         </When>
                         <Otherwise>
                             {featureInfoCatalogItems}
@@ -148,7 +155,7 @@ function getFeaturesGroupedByCatalogItems(terria) {
 /**
  * Figures out what the catalog item for a feature is.
  *
- * @param nowViewing {@link SidePanelHeader} to look in the items for.
+ * @param nowViewing {@link NowViewing} to look in the items for.
  * @param feature Feature to match
  * @returns {CatalogItem}
  */

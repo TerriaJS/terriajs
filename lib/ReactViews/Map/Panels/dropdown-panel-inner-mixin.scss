@@ -1,0 +1,10 @@
+@import '../../../Sass/global/mixins';
+
+@mixin dropdown-inner($width, $caret-left) {
+  width: $width;
+  @include transform-origin($caret-left, top);
+  &:before {
+    z-index: -1;
+    left: $caret-left;
+  }
+}

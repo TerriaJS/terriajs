@@ -1,20 +1,8 @@
 @import '../../Sass/global/variables.scss';
 @import '../../Sass/global/mixins.scss';
 
-.bottomDock {
+.bottom-dock {
   z-index: 10;
   background: $dark;
   position: relative;
-}
-
-.locationDistance {
-  composes: clearfix from '../../Sass/partial/_base.scss';
-  display: none;
-  @media screen and (min-width: $sm) {
-    display: block;
-  }
-  position: absolute;
-  top: -60px;
-  right: $padding*2;
-  z-index: 1;
 }

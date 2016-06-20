@@ -4,6 +4,9 @@ import ObserveModelMixin from '../../ObserveModelMixin';
 
 import triggerResize from '../../../Core/triggerResize';
 
+import Styles from './full_screen_button.scss';
+import classNames from "classnames";
+
 // The button to make the map full screen and hide the workbench.
 const FullScreenButton = React.createClass({
     mixins: [ObserveModelMixin],
@@ -32,14 +35,22 @@ const FullScreenButton = React.createClass({
 
     renderButtonText() {
         if (this.props.viewState.isMapFullScreen) {
-            return <span className='exit-full-screen'>Exit Full Screen</span>;
+            return <span className={Styles.exit}>Exit Full Screen</span>;
         } else {
-            return <span className='enter-full-screen'></span>;
+            return <span className={Styles.enter}></span>;
         }
     },
 
     render() {
-        return (<div className='full-screen'><button type='button' onClick={this.toggleFullScreen} title='go to full screen mode' className={'btn btn--map full-screen__button ' + (this.props.viewState.isMapFullScreen ? 'is-active' : '')}>{this.renderButtonText()}</button></div>);
+        const btnClassName = classNames(Styles.btn, {
+            [Styles.isActive]: this.props.viewState.isMapFullScreen
+        });
+        return (
+            <div className={Styles.fullScreen}>
+                <button type='button' onClick={this.toggleFullScreen} title='go to full screen mode'
+                        className={btnClassName}>{this.renderButtonText()}</button>
+            </div>
+        );
     }
 });
 module.exports = FullScreenButton;

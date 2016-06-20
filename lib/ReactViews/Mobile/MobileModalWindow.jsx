@@ -5,7 +5,7 @@ import DataCatalogMember from '../DataCatalog/DataCatalogMember.jsx';
 import DataPreview from '../Preview/DataPreview.jsx';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import MobileSearch from './MobileSearch.jsx';
-import NowViewingList from '../NowViewing/NowViewingList.jsx';
+import WorkbenchList from '../Workbench/WorkbenchList.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
 import Styles from './mobile-modal-window.scss';
@@ -46,8 +46,8 @@ const MobileModalWindow = React.createClass({
                     </div>;
         case this.props.viewState.mobileViewOptions.nowViewing:
             return <div className={Styles.modalBg}>
-                        <NowViewingList viewState={this.props.viewState}
-                                             terria={this.props.terria}
+                        <WorkbenchList viewState={this.props.viewState}
+                                       terria={this.props.terria}
                         />
                     </div>;
         default:
@@ -57,23 +57,23 @@ const MobileModalWindow = React.createClass({
 
     onClearMobileUI() {
         this.props.viewState.switchMobileView(null);
-        this.props.viewState.toggleModal(false);
+        this.props.viewState.explorerPanelIsVisible = false;
     },
 
     componentWillReceiveProps() {
         if((this.props.terria.nowViewing.items.length === 0) &&
           (this.props.viewState.mobileView === this.props.viewState.mobileViewOptions.nowViewing)) {
             this.props.viewState.switchMobileView(null);
-            this.props.viewState.toggleModal(false);
+            this.props.viewState.explorerPanelIsVisible = false;
         }
     },
 
     render() {
         let modalClass = classNames(Styles.mobileModal, {
-            [Styles.isOpen]: this.props.viewState.modalVisible && this.props.viewState.mobileView
+            [Styles.isOpen]: this.props.viewState.explorerPanelIsVisible && this.props.viewState.mobileView
         });
         return <div className={modalClass}>
-                    {(this.props.viewState.modalVisible && this.props.viewState.mobileView) && <button type='button' className={Styles.closeModal} onClick={this.onClearMobileUI}>Done</button>}
+                    {(this.props.viewState.explorerPanelIsVisible && this.props.viewState.mobileView) && <button type='button' className={Styles.closeModal} onClick={this.onClearMobileUI}>Done</button>}
                     {this.renderModalContent()}
                 </div>;
     }

@@ -16,11 +16,15 @@ const MobileSearch = React.createClass({
         terria: React.PropTypes.object
     },
 
-    onLocationClick() {
+    onLocationClick(result) {
+        result.clickAction();
+        // Close modal window
+        this.props.viewState.switchMobileView(null);
 
     },
 
     renderLocationResult() {
+        const that = this;
         const searchState = this.props.viewState.searchState;
         return searchState.unifiedSearchProviders
                         .filter(search=> search.constructor.name !== 'CatalogItemNameSearchProviderViewModel')
@@ -30,7 +34,7 @@ const MobileSearch = React.createClass({
                                         <SearchHeader searchProvider={search} />
                                         <ul className={Styles.results}>
                                             { search.searchResults.map((result, i) => (
-                                                <SearchResult key={i} name={result.name} clickAction={result.clickAction} theme="light" />
+                                                <SearchResult key={i} name={result.name} clickAction={that.onLocationClick.bind(that, result)} theme="light" />
                                             ))}
                                         </ul>
                                     </div>));

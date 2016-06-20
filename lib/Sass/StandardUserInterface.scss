@@ -1,0 +1,26 @@
+@import "./global/normalize";
+
+@import "~terriajs-variables";
+@import "./global/icons";
+@import "./global/mixins";
+@import "./partial/base";
+@import "./partial/type";
+@import "./partial/buttons";
+@import "./partial/form";
+@import "./partial/labels";
+@import "./partial/layout";
+@import "./partial/tables";
+@import "./partial/tabs";
+@import "./partial/map";
+@import "./partial/leaflet";
+// component styles
+@import "./partial/drop_zone";
+
+@import "./partial/misc";
+@import "./partial/my_data";
+
+@import "./component/loader";
+@import "./component/chart";
+@import "./component/data_catalog";
+
+@import "./print";

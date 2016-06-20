@@ -1,5 +1,5 @@
 @import '../global/icons';
-@import '../global/variables';
+@import '~terriajs-variables';
 
 $btn-setting-size: 35px;
 
@@ -244,14 +244,6 @@ feedback;
   font-weight: bold;
 }
 
-.btn--close-feature {
-  @extend .btn--close;
-  &:hover,
-  &:focus {
-    color: $color-primary;
-  }
-}
-
 // Text and icon buttons
 //
 // .btn--location-name - location item
@@ -326,17 +318,17 @@ feedback;
 //
 // Markup:
 //<div class='panel-content'>
-//<button class ='btn btn--catalogue' >National Data Sets</button>
-//<button class ='btn btn--catalogue is-open' >National Data Sets</button>
+//<button class ='btn btn--catalog' >National Data Sets</button>
+//<button class ='btn btn--catalog is-open' >National Data Sets</button>
 //</div>
 //
 // Style guide: Buttons.data-catalog-group
 //
 
-.btn--catalogue {
-  padding: $padding $padding*3;
+.btn--catalog {
+  padding: $padding 30px+$padding;
   @media screen and (min-width: $sm){
-    padding: $padding-small $padding*3;
+    padding: $padding-small 30px+$padding;
   }
 
   position: relative;
@@ -346,9 +338,9 @@ feedback;
   .btn--group-indicator {
     position: absolute;
     left: 0;
-    padding: $padding $padding-small;
+    padding: $padding $padding*2.2 $padding $padding*1.5;
     @media screen and (min-width: $sm){
-      padding: $padding-small;
+      padding: $padding-small $padding*2.2 $padding-small $padding*1.5;
     }
     top: 0;
     font-size: 1.1rem;
@@ -493,41 +485,6 @@ a.btn--map {
   @extend .icon-clear;
 }
 
-// Dropdown trigger button
-//
-// Markup:
-// <button class="btn btn--dropdown"> Select an option </button>
-//
-// Style guide: Buttons.dropdown
-
-.btn--dropdown {
-  width: 100%;
-  border: 2px solid $grey-lighter;
-  color: $modal-text;
-  &:hover,
-  &:focus {
-    border-color: $color-primary;
-  }
-}
-
-// Dropdown options button
-//
-// Markup:
-// <button class="btn btn--dropdown-option"> WMS Server </button>
-//
-// Style guide: Buttons.dropdown-options
-
-.btn--dropdown-option {
-  width: 100%;
-  padding: $padding-small;
-  &:hover, &:focus {
-    color: $color-primary;
-  }
-  &.is-selected {
-    color: $color-primary;
-  }
-}
-
 // My data tab
 //
 // Markup:
@@ -559,4 +516,11 @@ a.btn--map {
     display: inline-block;
     padding: $padding-small $padding-small $padding-small 0;
   }
+}
+
+//FIXME
+.btn--small, ._buttons__btn-primary.btn--small {
+  padding: 4px 9px;
+  margin-right: 4px;
+  font-size: 13px;
 }

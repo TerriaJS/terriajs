@@ -1,5 +1,10 @@
-@import '../../Sass/global/variables';
+@import '~terriajs-variables';
 @import '../../Sass/global/mixins';
+
+// NOTE: When changing this file with hot-reloading on you might see the globe in the map disappear. Don't panic! This
+// happens because losing this stylesheet for a second causes Cesium to zoom itself as far out as it can go for some
+// reason - you can change pretty much other file to do another hot-reload and get your globe back, or just zoom
+// back in.
 
 .ui {
   width: 100%;
@@ -18,24 +23,10 @@
   position: relative;
   @include transition(left $animation-fast ease-in);
   height: 100vh;
-}
-
-.map__inner {
-  display: table;
-  width: 100%;
-  height: 100%;
-}
-
-.map__row {
-  display: table-row;
-
-  &:first-child {
-    height: 100%;
+  @media print{
+    height: auto;
+    page-break-after: always;
   }
-}
-
-.map__cell {
-  display: table-cell;
 }
 
 @media screen and (min-width: $sm) {
@@ -50,9 +41,15 @@
   .sidePanel {
     display: table-cell;
     vertical-align: top;
+    @media print{
+      display: block;
+    }
   }
 
   .map {
     display: table-cell;
+    @media print{
+      display: block;
+    }
   }
 }

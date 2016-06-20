@@ -30,7 +30,7 @@ const MobileHeader = React.createClass({
         this.setState({
             menuIsOpen: !this.state.menuIsOpen
         });
-        this.props.viewState.toggleModal(false);
+        this.props.viewState.explorerPanelIsVisible = false;
         this.props.viewState.switchMobileView(null);
     },
 
@@ -56,10 +56,10 @@ const MobileHeader = React.createClass({
 
     toggleView(viewname) {
         if (this.props.viewState.mobileView !== viewname) {
-            this.props.viewState.toggleModal(true);
+            this.props.viewState.explorerPanelIsVisible = true;
             this.props.viewState.switchMobileView(viewname);
         } else {
-            this.props.viewState.toggleModal(false);
+            this.props.viewState.explorerPanelIsVisible = false;
             this.props.viewState.switchMobileView(null);
         }
         this.setState({

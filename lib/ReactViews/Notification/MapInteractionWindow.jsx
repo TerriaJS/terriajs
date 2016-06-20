@@ -3,6 +3,8 @@
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
 import parseCustomHtmlToReact from '../../Models/parseCustomHtmlToReact';
+import Styles from './map-interaction-window.scss';
+import classNames from 'classnames';
 
 const MapInteractionWindow = React.createClass({
     mixins: [ObserveModelMixin],
@@ -13,10 +15,14 @@ const MapInteractionWindow = React.createClass({
 
     render() {
         const interactionMode = this.props.terria.mapInteractionModeStack && this.props.terria.mapInteractionModeStack[this.props.terria.mapInteractionModeStack.length - 1];
+        let windowClass = classNames(Styles.window, {
+            [Styles.isActive]: interactionMode
+        });
+
         return (
-            <div className={`map-interaction-window ${interactionMode ? 'is-active' : ''}`} aria-hidden={ !interactionMode }>
-            <div className="map-interaction-content">{interactionMode && parseCustomHtmlToReact(interactionMode.message())}</div>
-            <button type='button' onClick={interactionMode && interactionMode.onCancel}
+            <div className={windowClass} aria-hidden={ !interactionMode }>
+              <div className={Styles.content}>{interactionMode && parseCustomHtmlToReact(interactionMode.message())}</div>
+              <button type='button' onClick={interactionMode && interactionMode.onCancel}
                           className='btn btn-primary'>{interactionMode && interactionMode.buttonText}</button>
             </div>);
     }

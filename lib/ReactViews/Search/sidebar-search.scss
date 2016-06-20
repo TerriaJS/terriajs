@@ -1,5 +1,5 @@
 @import '../../Sass/global/mixins';
-@import '../../Sass/global/variables';
+@import '~terriajs-variables';
 
 .results {
   @include transition(all 0.5s ease-in-out);
@@ -20,7 +20,7 @@
 
 .btn--done {
   composes: btn from '../../Sass/partial/_buttons.scss';
-  composes: btn from '../SidePanel/side-panel-header.scss';
+  composes: btn from '../badge-bar.scss';
   composes: btn--tertiary-dark from '../../Sass/partial/_buttons.scss';
 
   padding: 7px 10px;

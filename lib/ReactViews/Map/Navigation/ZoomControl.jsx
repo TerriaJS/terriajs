@@ -7,6 +7,7 @@ const Ellipsoid = require('terriajs-cesium/Source/Core/Ellipsoid');
 const Tween = require('terriajs-cesium/Source/ThirdParty/Tween');
 const CesiumMath = require('terriajs-cesium/Source/Core/Math');
 const Cartesian3 = require('terriajs-cesium/Source/Core/Cartesian3');
+import Styles from './zoom_control.scss';
 
 // Map zoom control
 const ZoomControl = React.createClass({
@@ -117,11 +118,11 @@ const ZoomControl = React.createClass({
 
     render() {
         return (
-        <div className='zoom-control'>
-          <ul>
-            <li><button type='button' onClick={this.zoomIn} className='btn btn-transparent btn--increase' title='zoom in'></button></li>
-            <li><button type='button' onClick={this.zoomReset} className='btn btn-transparent btn--refresh' title='reset zoom'></button></li>
-            <li><button type='button' onClick={this.zoomOut} className='btn btn-transparent btn--decrease' title='zoom out'></button></li>
+        <div className={Styles.zoomControl}>
+          <ul className='list-reset'>
+            <li><button type='button' onClick={this.zoomIn} className={Styles.increase} title='zoom in'></button></li>
+            <li><button type='button' onClick={this.zoomReset} className={Styles.refresh} title='reset zoom'></button></li>
+            <li><button type='button' onClick={this.zoomOut} className={Styles.decrease} title='zoom out'></button></li>
           </ul>
       </div>);
     }

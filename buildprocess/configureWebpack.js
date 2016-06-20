@@ -11,6 +11,8 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
     config.resolve.extensions = config.resolve.extensions || ['', '.webpack.js', '.web.js', '.js'];
     config.resolve.extensions.push('.jsx');
     config.resolve.alias = config.resolve.alias || {};
+    config.resolve.root = config.resolve.root || [];
+    config.resolve.root.push(path.resolve(terriaJSBasePath, 'wwwroot'));
 
     config.module = config.module || {};
     config.module.loaders = config.module.loaders || [];
@@ -147,13 +149,20 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
         include: cesiumDir
     });
 
+    var externalModulesWithJson = ['proj4/package.json', 'entities', 'html-to-react', 'ent']
+        .map(function(module) {
+           try {
+               return path.dirname(require.resolve(module));
+           } catch (e) {
+               console.warn('Could not resolve module "' + module + ". Possibly this is no longer a dep of the project?");
+           }
+        }).filter(function(resolvedModule) {
+            return !!resolvedModule;
+        });
+
     config.module.loaders.push({
         test: /\.json$/,
-        include: [
-            path.dirname(require.resolve('proj4/package.json')),
-            path.dirname(require.resolve('ent/package.json')),
-            path.dirname(require.resolve('entities/package.json'))
-        ],
+        include: externalModulesWithJson,
         loader: require.resolve('json-loader')
     });
 
@@ -172,8 +181,8 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
     config.module.loaders.push({
         test: /\.(png|jpg|svg|gif)$/,
         include: [
-            path.resolve(cesiumDir, 'Source', 'Assets'),
-            path.resolve(terriaJSBasePath, 'wwwroot', 'images')
+            path.resolve(terriaJSBasePath),
+            path.resolve(cesiumDir)
         ],
         loader: require.resolve('url-loader'),
         query: {
@@ -248,6 +257,17 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
             )
         });
     }
+
+    config.resolve = config.resolve || {};
+    config.resolve.alias = config.resolve.alias || {};
+
+    // Make a terriajs-variables alias so it's really easy to override our sass variables by aliasing over the top of this.
+    config.resolve.alias['terriajs-variables'] = config.resolve.alias['terriajs-variables'] || require.resolve('../lib/Sass/global/_variables.scss');
+
+    // Alias react and react-dom to the one used by the building folder - apparently we can rely on the dir always being
+    // called node_modules https://github.com/npm/npm/issues/2734
+    config.resolve.alias['react'] = path.dirname(require.resolve('react'));
+    config.resolve.alias['react-dom'] = path.dirname(require.resolve('react-dom'));
 
     return config;
 }

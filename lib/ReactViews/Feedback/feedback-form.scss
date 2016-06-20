@@ -1,7 +1,8 @@
-@import '../../Sass/global/variables';
+@import '~terriajs-variables';
 @import '../../Sass/global/mixins';
 
 .form{
+    z-index: 1;
     position: fixed;
     background: #fff;
     color: $dark;
@@ -24,6 +25,9 @@
     }
     form{
         padding: $padding*2;
+    }
+    @media print{
+        display: none;
     }
 }
 .header{

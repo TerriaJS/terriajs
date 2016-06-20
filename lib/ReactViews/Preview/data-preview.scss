@@ -1,0 +1,37 @@
+@import '~terriajs-variables';
+@import '../../Sass/global/mixins';
+
+.preview {
+    height: 100%;
+    overflow: hidden;
+}
+.placeholder {
+  text-align: center;
+  color: $text-dark;
+  padding-top: 80px;
+  font-size: 1.2rem;
+}
+
+.btn--back-to-map {
+  composes: btn from '../../Sass/partial/_buttons.scss';
+  composes: btn--tertiary from '../../Sass/partial/_buttons.scss';
+  font-size: 1rem;
+}
+
+.preview__inner {
+  height: 100%;
+  overflow-y: auto;
+  padding: $padding-small;
+
+  h3{
+    margin: 0;
+  }
+
+  @media screen and (min-width: $sm){
+    padding: 0 $padding;
+
+    h3{
+      margin: 0.5em 0;
+    }
+  }
+}

@@ -4,12 +4,17 @@ import Mustache from 'mustache';
 import React from 'react';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import isArray from 'terriajs-cesium/Source/Core/isArray';
+import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
+import CesiumMath from 'terriajs-cesium/Source/Core/Math';
 import classNames from 'classnames';
 
 import formatNumberForLocale from '../../Core/formatNumberForLocale';
 import ObserveModelMixin from '../ObserveModelMixin';
+import propertyGetTimeValues from '../../Core/propertyGetTimeValues';
 import renderMarkdownInReact from '../../Core/renderMarkdownInReact';
 import FeatureInfoDownload from './FeatureInfoDownload';
+
+import Styles from './feature-info-section.scss';
 
 // We use Mustache templates inside React views, where React does the escaping; don't escape twice, or eg. " => &quot;
 Mustache.escape = function(string) { return string; };
@@ -21,6 +26,7 @@ const FeatureInfoSection = React.createClass({
         viewState: React.PropTypes.object.isRequired,
         template: React.PropTypes.oneOfType([React.PropTypes.object, React.PropTypes.string]),
         feature: React.PropTypes.object,
+        position: React.PropTypes.object,
         clock: React.PropTypes.object,
         catalogItem: React.PropTypes.object,  // Note this may not be known (eg. WFS).
         isOpen: React.PropTypes.bool,
@@ -39,7 +45,7 @@ const FeatureInfoSection = React.createClass({
         if (!this.isConstant()) {
             this.setState({
                 clockSubscription: this.props.clock.onTick.addEventListener(function(clock) {
-                    setCurrentFeatureValues(feature, clock.currentTime);
+                    setCurrentFeatureValues(feature, clock);
                 })
             });
         }
@@ -53,7 +59,27 @@ const FeatureInfoSection = React.createClass({
     },
 
     getTemplateData() {
-        return propertyValues(this.props.feature, this.props.clock, this.props.template && this.props.template.formats);
+        const propertyData = propertyValues(
+            this.props.feature,
+            this.props.clock,
+            this.props.template && this.props.template.formats
+        );
+
+        if (defined(propertyData)) {
+
+            propertyData.terria = {
+                formatNumber: mustacheFormatNumberFunction
+            };
+            if (this.props.position) {
+                const latLngInRadians = Ellipsoid.WGS84.cartesianToCartographic(this.props.position);
+                propertyData.terria.coords = {
+                    latitude: CesiumMath.toDegrees(latLngInRadians.latitude),
+                    longitude: CesiumMath.toDegrees(latLngInRadians.longitude)
+                };
+            }
+        }
+
+        return propertyData;
     },
 
     clickHeader() {
@@ -116,20 +142,20 @@ const FeatureInfoSection = React.createClass({
     },
 
     render() {
-        // console.log('render FeatureInfoSection', this.props.feature.name, this.props.clock.currentTime, getCurrentProperties(this.props.feature, this.props.clock.currentTime));
         const catalogItemName = (this.props.catalogItem && this.props.catalogItem.name) || '';
         const fullName = (catalogItemName ? (catalogItemName + ' - ') : '') + this.renderDataTitle();
         const templateData = this.getTemplateData();
+
         return (
-            <li className={classNames('feature-info-panel__section', {'is-open': this.props.isOpen})}>
-                <button type='button' onClick={this.clickHeader} className={classNames('btn', 'feature-info-panel__title', {'is-open': this.props.isOpen})}>
+            <li className={classNames(Styles.section)}>
+                <button type='button' onClick={this.clickHeader} className={classNames(Styles.title, {[Styles.btnIsOpen]: this.props.isOpen})}>
                     {fullName}
                 </button>
                 <If condition={this.props.isOpen}>
-                    <section className='feature-info-panel__content'>
+                    <section className={Styles.content}>
                         <If condition={this.hasTemplate()}>
                             {renderMarkdownInReact(this.descriptionFromTemplate(), this.props.catalogItem, this.props.feature)}
-                            <button type="button" className="btn btn-primary feature-info-panel__raw-data-button" onClick={this.toggleRawData}>
+                            <button type="button" className={Styles.rawDataButton} onClick={this.toggleRawData}>
                                 {this.state.showRawData ? 'Hide' : 'Show'} Raw Data
                             </button>
                         </If>
@@ -152,7 +178,7 @@ const FeatureInfoSection = React.createClass({
 
 /**
  * Gets a map of property labels to property values for a feature at the provided clock's time.
- *
+ * @private
  * @param {Entity} feature a feature to get values for
  * @param {Clock} clock a clock to get the time from
  * @param {Object} [formats] A map of property labels to the number formats that should be applied for them.
@@ -162,7 +188,7 @@ function propertyValues(feature, clock, formats) {
     // If they require .getValue, apply that.
     // If they have bad keys, fix them.
     // If they have formatting, apply it.
-    const properties = feature.currentProperties || getCurrentProperties(feature, clock.currentTime);
+    const properties = feature.currentProperties || propertyGetTimeValues(feature.properties, clock);
     const result = replaceBadKeyCharacters(properties);
     if (defined(formats)) {
         applyFormatsInPlace(result, formats);
@@ -172,7 +198,7 @@ function propertyValues(feature, clock, formats) {
 
 /**
  * Formats values in an object if their keys match the provided formats object.
- *
+ * @private
  * @param {Object} properties a map of property labels to property values.
  * @param {Object} formats A map of property labels to the number formats that should be applied for them.
  */
@@ -187,6 +213,7 @@ function applyFormatsInPlace(properties, formats) {
 
 /**
  * Recursively replace '.' and '#' in property keys with _, since Mustache cannot reference keys with these characters.
+ * @private
  */
 function replaceBadKeyCharacters(properties) {
     // if properties is anything other than an Object type, return it. Otherwise recurse through its properties.
@@ -206,7 +233,7 @@ function replaceBadKeyCharacters(properties) {
 /**
  * Determines whether all properties in the provided properties object have an isConstant flag set - otherwise they're
  * assumed to be time-varying.
- *
+ * @private
  * @returns {boolean}
  */
 function areAllPropertiesConstant(properties) {
@@ -215,46 +242,15 @@ function areAllPropertiesConstant(properties) {
     let result = true;
     for (const key in properties) {
         if (properties.hasOwnProperty(key)) {
-            result = result && properties[key] && (properties[key].isConstant !== false);
+            result = result && defined(properties[key]) && (properties[key].isConstant !== false);
         }
     }
     return result;
 }
 
-// Because x.getValue() returns the same object if it has not changed, we don't need this.
-// function newObjectOnlyIfChanged(oldObject, newObject) {
-//     // Does a shallow compare, and returns the old object if there is no change, otherwise the new object.
-//     if (defined(oldObject) && defined(newObject) && arraysAreEqual(Object.keys(oldObject), Object.keys(newObject))) {
-//         for (const key in newObject) {
-//             if (newObject.hasOwnProperty(key)) {
-//                 if (oldObject[key] !== newObject[key]) {
-//                     return newObject;
-//                 }
-//             }
-//         }
-//         return oldObject;
-//     }
-//     // If the keys have changed, then just use the new object.
-//     return newObject;
-// }
-
-/**
- * Gets properties from a feature at the provided time.
- *
- * @param {Entity} feature
- * @param {JulianDate} currentTime
- * @returns {Object} The properties for that time.
- */
-function getCurrentProperties(feature, currentTime) {
-    // Use this instead of the straight feature.currentProperties, so it works the first time through.
-    if (defined(feature.properties) && typeof feature.properties.getValue === 'function') {
-        return feature.properties.getValue(currentTime);
-    }
-    return feature.properties;
-}
-
 /**
  * Gets a text description for the provided feature at a certain time.
+ * @private
  * @param {Entity} feature
  * @param {JulianDate} currentTime
  * @returns {String}
@@ -268,18 +264,44 @@ function getCurrentDescription(feature, currentTime) {
 
 /**
  * Updates {@link Entity#currentProperties} and {@link Entity#currentDescription} with the values at the provided time.
+ * @private
  * @param {Entity} feature
  * @param {JulianDate} currentTime
  */
-function setCurrentFeatureValues(feature, currentTime) {
-    const newProperties = getCurrentProperties(feature, currentTime);
+function setCurrentFeatureValues(feature, clock) {
+    const newProperties = propertyGetTimeValues(feature.properties, clock);
     if (newProperties !== feature.currentProperties) {
         feature.currentProperties = newProperties;
     }
-    const newDescription = getCurrentDescription(feature, currentTime);
+    const newDescription = getCurrentDescription(feature, clock.currentTime);
     if (newDescription !== feature.currentDescription) {
         feature.currentDescription = newDescription;
     }
+}
+
+/**
+ * Returns a function which implements number formatting in Mustache templates, using this syntax:
+ * {{#terria.formatNumber}}{useGrouping: true}{{value}}{{/terria.formatNumber}}
+ * @private
+ */
+function mustacheFormatNumberFunction() {
+    return function(text, render) {
+        // Eg. "{foo:1}hi there".match(optionReg) = ["{foo:1}hi there", "{foo:1}", "hi there"].
+        // Note this won't work with nested objects in the options (but these aren't used yet).
+        const optionReg = /^(\{[^}]+\})(.*)/;
+        const components = text.match(optionReg);
+        // This regex unfortunately matches double-braced text like {{number}}, so detect that separately and do not treat it as option json.
+        const startsWithdoubleBraces = (text.length > 4) && (text[0] === '{') && (text[1] === '{');
+        if (!components || startsWithdoubleBraces) {
+            // If no options were provided, just use the defaults.
+            return formatNumberForLocale(render(text));
+        }
+        // Allow {foo: 1} by converting it to {"foo": 1} for JSON.parse.
+        const quoteReg = /([{,])(\s*)([A-Za-z0-9_\-]+?)\s*:/;
+        const jsonOptions = components[1].replace(quoteReg, '$1"$3":');
+        const options = JSON.parse(jsonOptions);
+        return formatNumberForLocale(render(components[2]), options);
+    };
 }
 
 module.exports = FeatureInfoSection;

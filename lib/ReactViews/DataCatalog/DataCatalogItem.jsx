@@ -33,12 +33,19 @@ const DataCatalogItem = React.createClass({
         return <button type='button' onClick={this.setPreviewedItem} title="preview" className='btn btn--catalog-item--action btn--stats-bars' />;
     },
 
-    toggleEnable() {
+    toggleEnable(event) {
         this.props.item.toggleEnabled();
         // set preview as well
         this.props.viewState.viewCatalogItem(this.props.item);
         // mobile switch to nowvewing
         this.props.viewState.switchMobileView(this.props.viewState.mobileViewOptions.preview);
+        if (this.props.viewState.previewedItem.isEnabled === true &&
+            this.props.viewState.closeModalAfterAdd === true &&
+            !event.shiftKey && !event.ctrlKey) {
+
+            // close modal window
+            this.props.viewState.explorerPanelIsVisible = false;
+        }
     },
 
     setPreviewedItem() {

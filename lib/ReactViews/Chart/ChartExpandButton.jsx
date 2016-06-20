@@ -8,17 +8,21 @@ import defined from 'terriajs-cesium/Source/Core/defined';
 
 import CatalogGroup from '../../Models/CatalogGroup';
 import CsvCatalogItem from '../../Models/CsvCatalogItem';
-import Dropdown from '../Dropdown';
+import Dropdown from '../Generic/Dropdown';
 import raiseErrorToUser from '../../Models/raiseErrorToUser';
 
 const ChartExpandButton = React.createClass({
 
     propTypes: {
         terria: React.PropTypes.object.isRequired,
+        // Either provide URLs to the expanded data.
         sources: React.PropTypes.array,
         sourceNames: React.PropTypes.array,
         downloads: React.PropTypes.array,
         downloadNames: React.PropTypes.array,
+        // Or, provide a tableStructure directly.
+        tableStructure: React.PropTypes.object,
+        //
         catalogItem: React.PropTypes.object,
         feature: React.PropTypes.object,
         id: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
@@ -31,7 +35,11 @@ const ChartExpandButton = React.createClass({
     },
 
     expandButton() {
-        expand(this.props, this.props.sources[this.props.sources.length - 1]);
+        if (defined(this.props.sources)) {
+            expand(this.props, this.props.sources[this.props.sources.length - 1]);
+        } else {
+            expand(this.props); // Will expand from this.props.tableStructure.
+        }
     },
 
     expandDropdown(selected, sourceIndex) {
@@ -39,7 +47,7 @@ const ChartExpandButton = React.createClass({
     },
 
     render() {
-        if (!defined(this.props.sources)) {
+        if (!defined(this.props.sources) && !defined(this.props.tableStructure)) {
             return null;
         }
         // The downloads and download names default to the sources and source names if not defined.
@@ -47,20 +55,34 @@ const ChartExpandButton = React.createClass({
         const downloadNames = this.props.downloadNames || this.props.sourceNames;
         let downloadButton;
         if (defined(this.props.sourceNames)) {
+            const dropdownTheme = {
+                dropdown: 'preview-chart-wrapper__dropdown',
+                list: 'preview-chart-wrapper__list',
+                button: 'btn--small',
+                btnOption: 'chart-expand__dropdown__btn--option'
+            };
+
             const sourceNameObjects = this.props.sourceNames.map(name=>{ return {name: name}; });
             const nameAndHrefObjects = downloadNames.map((name, i)=>{ return {name: name, href: downloads[i]}; });
             if (this.props.canDownload) {
-                downloadButton = <Dropdown selectOption={this.downloadDropdown} options={nameAndHrefObjects} buttonClassName='btn--download btn-primary'></Dropdown>;
+                const downloadDropdownTheme = Object.assign({}, dropdownTheme, {
+                    button: 'btn--download btn--small'
+                });
+                downloadButton = <Dropdown selectOption={this.downloadDropdown} options={nameAndHrefObjects} theme={downloadDropdownTheme}></Dropdown>;
             }
+
             return (
                 <div className={classNames('chart-expand', {'raise-to-title': this.props.raiseToTitle})}>
                     <div className='chart-dropdown-button'>
-                        <Dropdown selectOption={this.expandDropdown} buttonClassName="btn-primary" options={sourceNameObjects}>Expand&nbsp;▾</Dropdown>{downloadButton}
+                        <Dropdown selectOption={this.expandDropdown} options={sourceNameObjects} theme={dropdownTheme}>
+                            Expand&nbsp;▾
+                        </Dropdown>
+                        {downloadButton}
                     </div>
                 </div>
             );
         }
-        if (this.props.canDownload) {
+        if (this.props.canDownload && defined(downloads)) {
             const href = downloads[0];
             downloadButton = <a className='btn btn--download' href={href}></a>;
         }
@@ -74,11 +96,15 @@ const ChartExpandButton = React.createClass({
 });
 
 /**
- * Expands a chart into the bottom dock.
+ * Reads chart data from a URL or tableStructure into a CsvCatalogItem, which shows it in the bottom dock.
+ * @private
  */
 function expand(props, url) {
     const terria = props.terria;
     const newCatalogItem = new CsvCatalogItem(terria, url);
+    if (!defined(url)) {
+        newCatalogItem.data = props.tableStructure;
+    }
     // Without this, if the chart data comes via the proxy, it would be cached for the default period of 2 weeks.
     // So, retain the same `cacheDuration` as the parent data file.
     // You can override this with the `pollSeconds` attribute (coming!).

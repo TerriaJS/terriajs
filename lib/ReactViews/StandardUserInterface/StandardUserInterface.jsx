@@ -1,32 +1,40 @@
+
+import React from 'react';
+
 import arrayContains from '../../Core/arrayContains';
 import Branding from './../SidePanel/Branding.jsx';
+import DisclaimerHandler from '../../ReactViewModels/DisclaimerHandler';
 import FeatureInfoPanel from './../FeatureInfo/FeatureInfoPanel.jsx';
+import FeedbackForm from '../Feedback/FeedbackForm.jsx';
+import MapInteractionWindow from './../Notification/MapInteractionWindow.jsx';
 import MapNavigation from './../Map/MapNavigation.jsx';
 import MobileHeader from './../Mobile/MobileHeader.jsx';
-import ModalWindow from './../ModalWindow.jsx';
+import ExplorerWindow from '../ExplorerWindow/ExplorerWindow.jsx';
 import Notification from './../Notification/Notification.jsx';
-import MapInteractionWindow from './../Notification/MapInteractionWindow.jsx';
 import ObserveModelMixin from './../ObserveModelMixin';
-import React from 'react';
-import WorkBench from './../SidePanel/WorkBench.jsx';
-import ProgressBar from './../ProgressBar.jsx';
-import BottomDock from './../BottomDock/BottomDock.jsx';
-import TerriaViewerWrapper from '../Map/TerriaViewerWrapper.jsx';
-import DisclaimerHandler from '../../ReactViewModels/DisclaimerHandler';
+import ProgressBar from '../Map/ProgressBar.jsx';
+import SidePanel from './../SidePanel/SidePanel.jsx';
+import MapContainer from './MapColumn.jsx';
+
 import Styles from './standard-user-interface.scss';
-import FeedbackButton from '../Feedback/FeedbackButton.jsx';
-import FeedbackForm from '../Feedback/FeedbackForm.jsx';
 
 const StandardUserInterface = React.createClass({
+
+    mixins: [ObserveModelMixin],
+
     propTypes: {
-        terria: React.PropTypes.object,
+        terria: React.PropTypes.object.isRequired,
         allBaseMaps: React.PropTypes.array,
-        viewState: React.PropTypes.object,
+        viewState: React.PropTypes.object.isRequired,
         minimumLargeScreenWidth: React.PropTypes.number,
         version: React.PropTypes.string
     },
 
-    mixins: [ObserveModelMixin],
+    getDefaultProps() {
+        return {
+            minimumLargeScreenWidth: 768
+        };
+    },
 
     componentWillMount() {
         const that = this;
@@ -54,27 +62,9 @@ const StandardUserInterface = React.createClass({
         this.disclaimerHandler = new DisclaimerHandler(this.props.terria, this.props.viewState);
     },
 
-    componentDidMount() {
-        this.escKeyListener = (e)=>{
-            let keycode;
-            if (e === null) { // ie
-                keycode = event.keyCode;
-            } else { // mozilla
-                keycode = e.which;
-            }
-            if(keycode === 27) {
-                // close modal
-                this.props.viewState.toggleModal(false);
-                this.props.viewState.dispose();
-            }
-        };
-        window.addEventListener('keydown', this.escKeyListener, true);
-    },
-
     componentWillUnmount() {
         window.removeEventListener('resize', this.resizeListener, false);
         document.removeEventListener('dragover', this.dragOverListener, false);
-        window.removeEventListener('keydown', this.escKeyListener, false);
         this.disclaimerHandler.dispose();
     },
 
@@ -84,13 +74,12 @@ const StandardUserInterface = React.createClass({
     },
 
     shouldUseMobileInterface() {
-        return document.body.clientWidth < (this.props.minimumLargeScreenWidth || 768);
+        return document.body.clientWidth < this.props.minimumLargeScreenWidth;
     },
 
     render() {
         const terria = this.props.terria;
         const allBaseMaps = this.props.allBaseMaps;
-
         return (
             <div>
                 <div className={Styles.ui}>
@@ -104,7 +93,7 @@ const StandardUserInterface = React.createClass({
                                 <Otherwise>
                                     <div className={Styles.sidePanel}>
                                         <Branding terria={terria} version={this.props.version}/>
-                                        <WorkBench terria={terria} viewState={this.props.viewState}/>
+                                        <SidePanel terria={terria} viewState={this.props.viewState}/>
                                     </div>
                                 </Otherwise>
                             </Choose>
@@ -112,25 +101,10 @@ const StandardUserInterface = React.createClass({
 
                         <section className={Styles.map}>
                             <ProgressBar terria={terria}/>
-                            <div className={Styles.mapInner}>
-                                <div className={Styles.mapRow}>
-                                    <div className={Styles.mapCell}>
-                                        <TerriaViewerWrapper terria={this.props.terria}
-                                                             viewState={this.props.viewState}/>
-                                    </div>
-                                </div>
-                                <div className={Styles.mapRow}>
-                                    <div className={Styles.mapCell}>
-                                        <If condition={!this.props.viewState.hideMapUi()}>
-                                            <BottomDock terria={terria} viewState={this.props.viewState}/>
-                                        </If>
-                                    </div>
-                                </div>
-                            </div>
-
+                            <MapContainer terria={terria} viewState={this.props.viewState} />
                             <If condition={!this.props.viewState.useSmallScreenInterface}>
                                 <main>
-                                    <ModalWindow terria={terria} viewState={this.props.viewState}/>
+                                    <ExplorerWindow terria={terria} viewState={this.props.viewState}/>
                                 </main>
                             </If>
                         </section>
@@ -147,12 +121,11 @@ const StandardUserInterface = React.createClass({
                 <Notification viewState={this.props.viewState}/>
                 <MapInteractionWindow terria={terria}/>
 
-                <div className='feedback'>
-                    <If condition={!this.props.viewState.useSmallScreenInterface}>
-                        <FeedbackButton viewState={this.props.viewState}/>
-                    </If>
-                    <FeedbackForm viewState={this.props.viewState}/>
-                </div>
+                <If condition={this.props.terria.configParameters.feedbackUrl}>
+                    <aside className={Styles.feedback}>
+                        <FeedbackForm viewState={this.props.viewState}/>
+                    </aside>
+                </If>
 
                 <FeatureInfoPanel terria={terria}
                                   viewState={this.props.viewState}

@@ -49,17 +49,17 @@ describe('FeatureInfoPanel-jsx', function() {
         // });
     });
 
-    it('does not have visible class when viewState.featureInfoPanelIsVisible not set', function() {
+    it('does not have isVisible class when viewState.featureInfoPanelIsVisible not set', function() {
         const panel = <FeatureInfoPanel terria={terria} viewState={viewState}/>;
         const result = getShallowRenderedOutput(panel);
-        expect(result.props.className).not.toContain('visible');
+        expect(result.props.className).not.toContain('is-visible');
     });
 
-    it('has visible class when viewState.featureInfoPanelIsVisible is true', function() {
+    it('has isVisible class when viewState.featureInfoPanelIsVisible is true', function() {
         viewState.featureInfoPanelIsVisible = true;
         const panel = <FeatureInfoPanel terria={terria} viewState={viewState}/>;
         const result = getShallowRenderedOutput(panel);
-        expect(result.props.className).toContain('visible');
+        expect(result.props.className).toContain('is-visible');
     });
 
     it('displays loader while asychronously loading feature information', function() {

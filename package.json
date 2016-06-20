@@ -1,8 +1,12 @@
 {
   "name": "terriajs",
-  "version": "3.1.0",
+  "version": "3.3.0",
   "description": "Geospatial data visualization platform.",
   "license": "Apache-2.0",
+  "engines" : {
+    "node" : ">= 5.10.0",
+    "npm":  ">= 3.0.0"
+  },
   "repository": {
     "type": "git",
     "url": "http://github.com/TerriaJS/terriajs"
@@ -17,11 +21,11 @@
     "d3": "^3.5.14",
     "dateformat": "^1.0.12",
     "dompurify": "^0.7.3",
-    "extract-text-webpack-plugin": "https://github.com/MicheleBertoli/extract-text-webpack-plugin#order-undefined-error",
+    "extract-text-webpack-plugin": "git://github.com/TerriaJS/extract-text-webpack-plugin#order-undefined-error",
     "file-loader": "^0.8.5",
     "gulp": "^3.9.1",
     "hammerjs": "^2.0.6",
-    "html-to-react": "^1.0.0",
+    "html-to-react": "git://github.com/TerriaJS/html-to-react.git#merged",
     "html2canvas": "0.5.0-alpha2",
     "imports-loader": "^0.6.5",
     "javascript-natural-sort": "^0.7.1",
@@ -31,11 +35,10 @@
     "linkify-it": "^1.2.0",
     "markdown-it": "^6.0.1",
     "mustache": "^2.2.1",
+    "mutationobserver-shim": "^0.3.1",
     "proj4": "^2.3.14",
     "raw-loader": "^0.5.1",
-    "react": "0.14.8",
     "react-addons-pure-render-mixin": "0.14.8",
-    "react-dnd": "^2.1.4",
     "resolve": "^1.1.7",
     "resolve-url-loader": "^1.4.3",
     "sass-loader": "^3.2.0",
@@ -55,9 +58,8 @@
     "babel-eslint": "^6.0.2",
     "css-loader": "^0.23.1",
     "eslint": "^2.7.0",
-    "eslint-plugin-jsx-control-statements": "git+https://github.com/AlexGilleran/eslint-plugin-jsx-control-statements.git",
+    "eslint-plugin-jsx-control-statements": "2.1.1",
     "eslint-plugin-react": "^4.3.0",
-    "extract-text-webpack-plugin": "^1.0.1",
     "generate-terriajs-schema": "^1.2.1",
     "glob-all": "^3.0.1",
     "gulp-ruby-sass": "^2.0.5",
@@ -78,17 +80,24 @@
     "kss": "^2.1.1",
     "node-notifier": "^4.5.0",
     "node-sass": "^3.4.2",
+    "react": "0.14.x",
     "react-addons-test-utils": "0.14.7",
+    "react-dom": "0.14.x",
     "react-shallow-testutils": "^1.0.0",
     "terriajs-jasmine-ajax": "^3.2.1",
-    "terriajs-server": "^1.4.1"
+    "terriajs-server": "^1.4.1",
+    "webpack-dev-server": "^1.14.1"
+  },
+  "peerDependencies": {
+    "react": "0.14.x",
+    "react-dom": "0.14.x"
   },
   "scripts": {
     "prepublish": "gulp post-npm-install",
     "postpublish": "bash -c \"git tag -a ${npm_package_version} -m \"${npm_package_version}\" && git push origin ${npm_package_version}\"",
     "postinstall": "gulp post-npm-install",
     "make-schema": "gulp make-schema",
-    "start": "webpack-dev-server --inline --config buildprocess/webpack.config.js",
-    "hot": "webpack-dev-server --inline --config buildprocess/webpack.config.js --hot"
+    "start": "webpack-dev-server --inline --config buildprocess/webpack.config.dev.js",
+    "hot": "webpack-dev-server --inline --config buildprocess/webpack.config.hot.js --hot"
   }
 }

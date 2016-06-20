@@ -22,7 +22,7 @@ const Branding = React.createClass({
         return (
             <div className={Styles.branding}>
                 <For each="element" of={brandingHtmlElements}>
-                    {parseCustomHtmlToReact(element.replace(/\{\{\s*version\s*\}\}/, version))}
+                    {parseCustomHtmlToReact(element.replace(/\{\{\s*version\s*\}\}/g, version))}
                 </For>
             </div>
         );

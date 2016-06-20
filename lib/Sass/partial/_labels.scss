@@ -1,4 +1,4 @@
-@import '../global/variables';
+@import '~terriajs-variables';
 
 label {
   vertical-align: middle;
@@ -13,23 +13,6 @@ label {
 .no-results{
   padding: $padding !important;
   margin-bottom: $padding;
-}
-
-.label--setting-panel,
-.label--active-map,
-.share-panel__label{
-  text-transform: uppercase;
-  padding: $padding-small 0;
-  display: block;
-}
-.label--active-map{
-  font-size: $font-size-mini;
-}
-
-
-.active-map__label{
-  padding: $padding-small 0;
-  font-size: $font-size-small;
 }
 
 .label-badge{

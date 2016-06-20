@@ -1,8 +1,10 @@
-.panel--data-catalogue {
+.panel--data-catalog {
   font-size: 0.9rem;
 }
 
 .data-catalog{
+  margin-top: $padding;
+
   @extend .list-reset;
   ul{
     @extend .list-reset;
@@ -19,7 +21,7 @@
     height: calc(100% - #{$input-height});
     }
   }
-  & > li > .btn--catalogue{
+  & > li > .btn--catalog{
     font-weight: 600;
     border-bottom: 1px solid $grey-lighter;
     padding-left: $padding;
@@ -34,7 +36,7 @@
       border-left: 1px solid $grey-lighter;
     }
 
-    .btn--catalogue{
+    .btn--catalog{
       &:before{
         color: darken($grey-lighter, 10%);
       }

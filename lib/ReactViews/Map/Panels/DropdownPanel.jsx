@@ -1,15 +1,22 @@
 'use strict';
 
 import React from 'react';
-import classnames from 'classnames';
+import classNames from 'classnames';
+import Styles from './dropdown-panel.scss';
 
 const DropdownPanel = React.createClass({
     propTypes: {
-        btnClass: React.PropTypes.string.isRequired,
-        children: React.PropTypes.any.isRequired,
+        theme: React.PropTypes.object.isRequired,
+        children: React.PropTypes.any,
         btnTitle: React.PropTypes.string,
         btnText: React.PropTypes.string,
-        className: React.PropTypes.string
+        onOpenChanged: React.PropTypes.func
+    },
+
+    getDefaultProps() {
+        return {
+            onOpenChanged: () => {}
+        };
     },
 
     getInitialState() {
@@ -52,9 +59,12 @@ const DropdownPanel = React.createClass({
                 isOpen: true
             });
 
-            setTimeout(() => this.setState({
-                isOpenCss: true
-            }), 0);
+            setTimeout(() => {
+                this.setState({
+                    isOpenCss: true
+                });
+                this.props.onOpenChanged(open);
+            }, 0);
         } else {
             window.removeEventListener('click', this.close);
 
@@ -64,32 +74,31 @@ const DropdownPanel = React.createClass({
                 isOpenCss: false
             });
 
-            setTimeout(() => this.setState({
-                isOpen: false
-            }), 200); // TODO: Determine when it stops animating instead of duplicating the 200ms timeout?
+            setTimeout(() => {
+                this.setState({
+                    isOpen: false
+                });
+                this.props.onOpenChanged(open);
+            }, 200); // TODO: Determine when it stops animating instead of duplicating the 200ms timeout?
         }
     },
 
     getDoNotReactId() {
-        return `do-not-react-${this.props.btnText}-${this.props.btnTitle}-${this.props.btnClass}`;
+        return `do-not-react-${this.props.btnText}-${this.props.btnTitle}-${this.props.theme.btn}`;
     },
 
     render() {
         return (
-            <div className={classnames({'is-open': this.state.isOpenCss}, this.props.className)}>
+            <div className={classNames({[Styles.isOpen]: this.state.isOpenCss}, Styles.panel, this.props.theme.outer)}>
                 <button onClick={this.togglePanel}
                         type='button'
-                        className={classnames('dd-panel__button', 'btn', this.props.btnClass)}
+                        className={classNames(Styles.button, this.props.theme.btn)}
                         title={this.props.btnTitle}>
                     {this.props.btnText}
                 </button>
                 <If condition={this.state.isOpen}>
-                    <div className='dd-panel__inner' onClick={this.onPanelClicked}>
-                        {React.Children.map(this.props.children, child =>
-                            React.cloneElement(child, {
-                                isOpen: this.state.isOpen
-                            })
-                        )}
+                    <div className={classNames(Styles.inner, this.props.theme.inner)} onClick={this.onPanelClicked}>
+                        {this.props.children}
                     </div>
                 </If>
             </div>
