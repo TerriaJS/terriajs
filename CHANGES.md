@@ -2,15 +2,22 @@
 Change Log
 ==========
 
+### 3.3.1
+
+* Fixed a bug that caused the `corsProxyBaseUrl` specified in `config.json` to be ignored.
+
 ### 3.3.0
 
-* Support `parameters` property in WebFeatureServiceCatalogItem to allow accessing URLs which need additional parameters.
-* Fixed a bug where sharing a time-series layer would completely crash Terria on reload.
+* Support `parameters` property in WebFeatureServiceCatalogItem to allow accessing URLs that need additional parameters.
+* Fixed a bug where visiting a shared link with a time-series layer would crash load.
 * Added a direct way to format numbers in feature info templates, eg. `{{#terria.formatNumber}}{"useGrouping": true, "maximumFractionDigits": 3}{{value}}{{/terria.formatNumber}}`. The quotes around the keys are optional.
 * When the number of unique values in a CSV column exceeds the number of color bins available, the legend now displays "XX other values" as the label for the last bucket rather than simply "Other".
 * CSV columns with up to 21 unique values can now be fully displayed in the legend.  Previously, the number of bins was limited to 9.
 * Added `cycle` option to `tableColumnStyle.colorBinMethod` for enumeration-type CSV columns.  When the number of unique values in the column exceeds the number of color bins available, this option makes TerriaJS color all values by cycling through the available colors, rather than coloring only the most common values and lumping the rest into an "Other" bucket.
 * Support JSON5 (http://json5.org/) use in init files and config files, so comments can be used and object keys don't need to be quoted. 
+* Metadata and single data files (e.g. KML, GeoJSON) are now consistently cached for one day instead of two weeks.
+* `WebMapServiceCatalogItem` now uses the legend for the `style` specified in `parameters` when possible.  It also now includes the `parameters` when building a `GetLegendGraphic` URL.
+* Fixed a bug that prevented switching to the 3D view after starting the application in 2D mode.
 
 ### 3.2.1
 
