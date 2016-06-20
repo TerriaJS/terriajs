@@ -2,9 +2,10 @@
 Change Log
 ==========
 
-### 3.3.1
+### 3.4.0
 
 * Fixed a bug that caused the `corsProxyBaseUrl` specified in `config.json` to be ignored.
+* Long auto-generated legend titles now word wrap in most web browsers.
 
 ### 3.3.0
 
