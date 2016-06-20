@@ -1,8 +1,12 @@
 {
   "name": "terriajs",
-  "version": "3.2.1",
+  "version": "3.3.0",
   "description": "Geospatial data visualization platform.",
   "license": "Apache-2.0",
+  "engines" : {
+    "node" : ">= 5.10.0",
+    "npm":  ">= 3.0.0"
+  },
   "repository": {
     "type": "git",
     "url": "http://github.com/TerriaJS/terriajs"
@@ -17,6 +21,7 @@
     "html2canvas": "0.5.0-alpha2",
     "imports-loader": "^0.6.5",
     "javascript-natural-sort": "^0.7.1",
+    "json5": "^0.5.0",
     "json-loader": "^0.5.4",
     "leaflet": "0.7.3",
     "less": "^2.6.1",

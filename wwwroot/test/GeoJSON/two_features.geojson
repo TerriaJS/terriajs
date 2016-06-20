@@ -35,6 +35,7 @@
 				"condition":2,
 				"historic#.":-12,
 				"big":1234567,
+				"decimal":3.1415926,
 				"funding_ba":"Capex"
 			}
 		},
@@ -71,6 +72,7 @@
 				"condition":1,
 				"historic#.":-11,
 				"big":234567,
+				"decimal":2.7182818,
 				"funding_ba":"Initial"
 			}
 		}

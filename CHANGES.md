@@ -2,11 +2,32 @@
 Change Log
 ==========
 
+### 3.4.0
+
+* Support JSON5 (http://json5.org/) use in init files and config files, so comments can be used and object keys don't need to be quoted. 
+* Fixed a bug that caused the `corsProxyBaseUrl` specified in `config.json` to be ignored.
+
+### 3.3.0
+
+* Support `parameters` property in WebFeatureServiceCatalogItem to allow accessing URLs that need additional parameters.
+* Fixed a bug where visiting a shared link with a time-series layer would crash load.
+* Added a direct way to format numbers in feature info templates, eg. `{{#terria.formatNumber}}{"useGrouping": true, "maximumFractionDigits": 3}{{value}}{{/terria.formatNumber}}`. The quotes around the keys are optional.
+* When the number of unique values in a CSV column exceeds the number of color bins available, the legend now displays "XX other values" as the label for the last bucket rather than simply "Other".
+* CSV columns with up to 21 unique values can now be fully displayed in the legend.  Previously, the number of bins was limited to 9.
+* Added `cycle` option to `tableColumnStyle.colorBinMethod` for enumeration-type CSV columns.  When the number of unique values in the column exceeds the number of color bins available, this option makes TerriaJS color all values by cycling through the available colors, rather than coloring only the most common values and lumping the rest into an "Other" bucket.
+* Metadata and single data files (e.g. KML, GeoJSON) are now consistently cached for one day instead of two weeks.
+* `WebMapServiceCatalogItem` now uses the legend for the `style` specified in `parameters` when possible.  It also now includes the `parameters` when building a `GetLegendGraphic` URL.
+* Fixed a bug that prevented switching to the 3D view after starting the application in 2D mode.
+
 ### 3.2.1
 
 * Fixed a bug on IE9 which prevented shortened URLs from loading.
 * Fixed a map started with smooth terrain being unable to switch to 3D terrain.
 * Fixed a bug in `CkanCatalogItem` that prevented it from using the proxy for dataset URLs.
+* Fixed feature picking when displaying a point-based vector and a region mapped layer at the same time.
+* Stopped generation of WMS intervals being dependent on JS dates and hence sensitive to DST time gaps.
+* Fixed a bug which led to zero property values being considered time-varying in the Feature Info panel.
+* Fixed a bug which prevented lat/lon injection into templates with time-varying properties.
 
 ### 3.2.0
 
@@ -22,6 +43,7 @@ Change Log
 
 * Only trigger a search when the user presses enter or stops typing for 3 seconds.  This will greatly reduce the number of times that searches are performed, which is important with a geocoder like Bing Maps that counts each geocode as a transaction.
 * Reduced the tendency for search to lock up the web browser while it is in progress.
+* Include "engines" attribute in package.json to indicate required Node and NPM version.
 * For WMS catalog items that have animated data, the initial time of the timeslider can be specified with `initialTimeSource` as `start`, `end`, `present` (nearest date to present), or with an ISO8601 date.
 * Added ability to remove csv columns from the Now Viewing panel, using `"type": "HIDDEN"` in `tableStyle.columns`.
 

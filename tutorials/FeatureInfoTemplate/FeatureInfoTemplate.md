@@ -26,11 +26,11 @@ The template will replace all occurrences of `{{property}}` with the value of th
 
 The result is:
 
-<img src="template.png">
+<img src="../static/template.png">
 
 instead of:
 
-<img src="no_template.png">
+<img src="../static/no_template.png">
 
 You can provide a template to use for the name of the collapsible section (eg. to replace `RGB` in the example above), like so:
 
@@ -57,3 +57,33 @@ You can make use of partial templates (and even recursive templates) by specifyi
 After Mustache has rendered the template, the result is displayed using [Markdown](https://help.github.com/articles/markdown-basics/), so you could also write:
 
               "featureInfoTemplate" : "Pixel colour: *Red={{Red}} Blue={{Blue}} Green={{Green}}*."
+
+## Formatting numbers
+
+The preferred way to format numbers is using the `formats` option, eg:
+
+              "featureInfoTemplate": {
+                "template": "Pixel colour: <b>Red={{Red}} Blue={{Blue}} Green={{Green}}</b>.",
+                "formats": {
+                  "Red": {
+                    "maximumFractionDigits": 2
+                  },
+                  "Green": {
+                    "maximumFractionDigits": 2
+                  },
+                  "Blue": {
+                    "maximumFractionDigits": 2
+                  }
+                }
+              }
+
+The supported format options are `"maximumFractionDigits": X` (to set the number of decimal places to X), `"useGrouping": true` (to show thousands separators), and `"style": "percent"` (eg. to show 0.15 as 15%).
+
+A second method is to use `terria.formatNumber` directly in the template. This accepts an initial JSON string describing the same options as above. To simplify the notation, the quotes around the keys are optional here.
+
+              "featureInfoTemplate": "template": "Pixel colour: <b>Red={{#terria.formatNumber}}{maximumFractionDigits:3}{{Red}}{{/terria.formatNumber}}</b>."
+
+## Other supporting data
+
+In the template, the clicked point's latitude and longitude are also available as `{{terria.coords.latitude}}` and `{{terria.coords.longitude}}`.
+
