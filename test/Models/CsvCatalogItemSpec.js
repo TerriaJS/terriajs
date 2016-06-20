@@ -1235,13 +1235,9 @@ describe('CsvCatalogItem with region mapping', function() {
 });
 
 describe('CsvCatalogItem with addresses', function() {
-
-    // How to test this without checking in a key? This key is now disabled, but the test worked when it was active.
-    /*it('knows the lat long coordinates of the addresses if geocoder url and key are defined', function(done) {
+    it('knows the lat long coordinates of the addresses', function(done) {
         var terria = new Terria({
-            baseUrl: './',
-            geocoderUrl: "https://search.mapzen.com/v1/search",
-            geocoderKey: "search-wEPIcrU"
+            baseUrl: './'
         });
         var csvItem = new CsvCatalogItem(terria);
         csvItem.url = 'test/csv/address_to_lat_long.csv';
@@ -1251,23 +1247,7 @@ describe('CsvCatalogItem with addresses', function() {
             expect(csvItem.tableStructure.hasLatitudeAndLongitude).toBe(true);
             var rows = csvItem.tableStructure._rows;
             expect(rows[0]).toEqual(["Lat", "Lon", "Station name", "Address"]);
-            expect(rows[1]).toEqual([-35.24381, 149.098245, "BELCONNEN HOUSE", "120 Thynne St Bruce ACT 2617"]);
-        }).otherwise(fail).then(done);
-    });*/
-
-    it('does not know the lat long coordinates of the addresses if geocoder url and key are undefined', function(done) {
-        var terria = new Terria({
-            baseUrl: './',
-        });
-        var csvItem = new CsvCatalogItem(terria);
-        csvItem.url = 'test/csv/address_to_lat_long.csv';
-        csvItem.load().then(function() {
-            expect(csvItem.regionMapping).toBeUndefined();
-            expect(csvItem.tableStructure.hasAddress).toBe(true);
-            expect(csvItem.tableStructure.hasLatitudeAndLongitude).toBe(false);
-            var rows = csvItem.tableStructure._rows;
-            expect(rows[0]).toEqual(["Station name", "Address"]);
-            expect(rows[1]).toEqual(["BELCONNEN HOUSE", "120 Thynne St Bruce ACT 2617"]);
+            expect(rows[1]).toEqual([-35.24381015, 149.09824456, "BELCONNEN HOUSE", "120 Thynne St Bruce ACT 2617"]);
         }).otherwise(fail).then(done);
     });
 });
