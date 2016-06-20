@@ -28,7 +28,7 @@ const DataCatalogTab = React.createClass({
     render() {
         const terria = this.props.terria;
         return (
-            <div className="panel-content">
+            <div>
                 <div className="data-explorer">
                     <SearchBox searchText={this.props.viewState.searchState.catalogSearchText}
                                onSearchTextChanged={this.changeSearchText}

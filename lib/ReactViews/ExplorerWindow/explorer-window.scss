@@ -51,10 +51,6 @@
   @media print {
     float: left;
   }
-
-  h4 {
-    margin-top: $padding;
-  }
 }
 
 .explorer-panel {
@@ -108,7 +104,12 @@
   composes: sm-show from '../../Sass/partial/_base.scss';
   composes: btn from '../../Sass/partial/_buttons.scss';
   composes: btn-transparent from '../../Sass/partial/_buttons.scss';
+  composes: btn--secondary from '../../Sass/partial/_buttons.scss';
 
+  font-size: 0.8rem;
+  padding: 4px 10px;
+  margin: 5px;
+  font-weight: bold;
   position: absolute;
   top: 0;
   right: 0;

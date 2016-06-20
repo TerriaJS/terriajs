@@ -1,9 +1,6 @@
-.panel--data-catalog {
-  font-size: 0.9rem;
-}
-
 .data-catalog{
   margin-top: $padding;
+  font-size: 0.9rem;
 
   @extend .list-reset;
   ul{
