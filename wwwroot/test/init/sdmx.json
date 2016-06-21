@@ -114,6 +114,13 @@
                         "A"
                     ]
                 }
+            },
+            {
+                "name": "Economic Outlook 97 Annual Projections, June 2015",
+                "type": "sdmx-json",
+                "url": "http://stats.oecd.org/sdmx-json/data/EO97_INTERNET",
+                "regionDimensionId": "LOCATION",
+                "regionType": "ISO3"
             }
         ]
     }]
