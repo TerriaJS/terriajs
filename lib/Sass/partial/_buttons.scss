@@ -61,7 +61,8 @@ $btn-setting-size: 35px;
   width: 100%;
   box-sizing: border-box;
   border-radius: $radius-small;
-  &:hover {
+
+  &:hover, &--hover {
     background: lighten($color-primary, 10%);
   }
 }
@@ -447,9 +448,6 @@ a.btn--map {
 }
 
 
-.btn--file-input {
-  @extend .btn-primary;
-}
 
 .btn--radio {
   padding: $padding-small;

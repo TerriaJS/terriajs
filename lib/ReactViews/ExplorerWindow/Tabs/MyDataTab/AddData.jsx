@@ -180,7 +180,7 @@ const AddData = React.createClass({
                         </label>
                         <form className={Styles.urlInput}>
                             <input value={this.state.remoteUrl} onChange={this.onRemoteUrlChange}
-                                   className={Styles.field}
+                                   className={Styles.urlInputTextBox}
                                    type='text'
                                    placeholder='e.g. http://data.gov.au/geoserver/wms'/>
                             <button type='button' onClick={this.handleUrl} className={Styles.urlInputBtn}>
