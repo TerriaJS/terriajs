@@ -1,0 +1,77 @@
+@import '~terriajs-variables';
+@import '../../../../Sass/global/mixins';
+
+@include empty-module("inner");
+@include empty-module("tab-panels");
+@include empty-module("tab-panel");
+
+.tab-list{
+  composes: tab-list from '../../tabs.scss';
+
+  padding-right: 0;
+}
+
+.tab-list__item {
+  composes: tab-list__item from '../../tabs.scss';
+
+  margin-right: 3px;
+}
+
+.label{
+  composes: label from '../../../../Sass/partial/_labels.scss';
+
+  padding-left: 0;
+}
+
+.field {
+  composes: field from '../../../../Sass/partial/_form.scss';
+}
+
+.url-input {
+  composes: url-input from '../../../../Sass/partial/_form.scss';
+}
+
+.url-input__btn {
+  composes: btn from '../../../../Sass/partial/_buttons.scss';
+  composes: btn-transparent from '../../../../Sass/partial/_buttons.scss';
+  composes: btn-primary from '../../../../Sass/partial/_buttons.scss';
+
+  width: auto;
+}
+
+.dropdown {
+  width: 100%;
+}
+
+.dropdown-list {
+  box-shadow: $box-shadow;
+  margin-top: $padding-small;
+}
+
+.dropdown-list--is-open {
+  height: 190px;
+  overflow-y: auto;
+}
+
+// My data tab
+//
+// Markup:
+// <button class="btn btn--add-data-tab"> Add local data </button>
+//
+// Style guide: Buttons.btn--add-data-tab
+
+.tab-list__btn {
+  composes: btn from '../../../../Sass/partial/_buttons.scss';
+  composes: btn-transparent from '../../../../Sass/partial/_buttons.scss';
+
+  font-size: $font-size-small;
+  font-weight: $font-weight-medium;
+  width: 100%;
+  padding: $padding-small $padding-small $padding-small 0;
+  border-bottom: 2px solid $grey;
+  color: $grey;
+  &:hover, &:focus, &.is-active {
+    color: $color-primary;
+    border-bottom: 2px solid $color-primary;
+  }
+}

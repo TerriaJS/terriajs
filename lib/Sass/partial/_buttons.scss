@@ -446,27 +446,8 @@ a.btn--map {
   @extend .icon-clear;
 }
 
-// My data tab
-//
-// Markup:
-// <button class="btn btn--add-data-tab"> Add local data </button>
-//
-// Style guide: Buttons.btn--add-data-tab
 
-.btn--add-data-tab {
-  font-size: $font-size-small;
-  font-weight: $font-weight-medium;
-  width: 100%;
-  padding: $padding-small $padding-small $padding-small 0;
-  border-bottom: 2px solid $grey;
-  color: $grey;
-  &:hover, &:focus, &.is-active {
-    color: $color-primary;
-    border-bottom: 2px solid $color-primary;
-  }
-}
-
-.btn--file-input, .btn--add-url {
+.btn--file-input {
   @extend .btn-primary;
 }
 

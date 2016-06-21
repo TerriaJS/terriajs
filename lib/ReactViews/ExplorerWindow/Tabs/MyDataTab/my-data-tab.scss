@@ -12,32 +12,6 @@
   padding: $padding;
   height: 100%;
   overflow: hidden;
-
-  .label{
-    padding-left: 0;
-  }
-
-  &__dropdown {
-    width: 100%;
-  }
-
-  &__dropdown-list {
-    box-shadow: $box-shadow;
-    margin-top: $padding-small;
-  }
-
-  &__dropdown-list--is-open {
-    height: 190px;
-    overflow-y: auto;
-  }
-}
-
-.add-data-tablist{
-  padding-right: 0;
-
-  li{
-    margin-right: 3px;
-  }
 }
 
 .added-data{

@@ -1,14 +1,11 @@
 import React from 'react';
-import classNames from 'classnames';
 
 import DataCatalogGroup from '../../../DataCatalog/DataCatalogGroup.jsx';
 import DataPreview from '../../../Preview/DataPreview.jsx';
 import AddData from './AddData.jsx';
 import ObserveModelMixin from '../../../ObserveModelMixin';
-import Styles from './my-data-tab.scss';
 
-const DISCLAIMER = <p>Data added in this way is not saved or made visible to others unless you explicitly share it by
-    using the Share panel. </p>;
+import Styles from './my-data-tab.scss';
 
 // My data tab include Add data section and preview section
 const MyDataTab = React.createClass({
@@ -38,9 +35,10 @@ const MyDataTab = React.createClass({
                         />
                     </div>
                     </If>
-                    <If condition={this.state.dataCatalog}>
+                    <If condition={this.props.terria.catalog.userAddedDataGroup}>
                         <div className={Styles.addedData}>
-                            {DISCLAIMER}
+                            <p>Data added in this way is not saved or made visible to others unless you explicitly share
+                                it by using the Share panel. </p>
                             <ul className={Styles.dataCatalog}>
                                 <DataCatalogGroup group={this.props.terria.catalog.userAddedDataGroup}
                                                   viewState={this.props.viewState}/>
