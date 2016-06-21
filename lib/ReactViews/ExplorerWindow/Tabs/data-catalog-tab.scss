@@ -26,18 +26,6 @@
   }
 }
 
-.data-preview__wrapper {
-  visibility: visible;
-  width: 60%;
-  float: right;
-  height: 100%;
-  overflow: hidden;
-
-  @media print {
-    float: left;
-  }
-}
-
 .data--catalog-group {
   composes: list-reset from '../../../Sass/partial/_base.scss';
   padding-left: $padding-small;

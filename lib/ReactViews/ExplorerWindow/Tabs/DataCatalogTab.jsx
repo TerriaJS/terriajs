@@ -34,16 +34,15 @@ const DataCatalogTab = React.createClass({
                 <div className={Styles.dataExplorer}>
                     <SearchBox searchText={this.props.viewState.searchState.catalogSearchText}
                                onSearchTextChanged={this.changeSearchText}
-                               onDoSearch={this.search} />
+                               onDoSearch={this.search}/>
                     {this.renderDataCatalog()}
                 </div>
-                <div className={Styles.dataPreviewWrapper}>
-                    <DataPreview terria={terria}
-                                 viewState={this.props.viewState}
-                                 previewed={this.props.viewState.previewedItem}
-                    />
-                </div>
-            </div>);
+                <DataPreview terria={terria}
+                             viewState={this.props.viewState}
+                             previewed={this.props.viewState.previewedItem}
+                />
+            </div>
+        );
     },
 
     renderDataCatalog() {
@@ -64,11 +63,11 @@ const DataCatalogTab = React.createClass({
                                   isWaitingForSearchToStart={searchState.isWaitingToStartCatalogSearch}/>
                 </If>
                 <For each="item" of={items}>
-                        <DataCatalogMember viewState={this.props.viewState}
-                                           member={item}
-                                           manageIsOpenLocally={isSearching}
-                                           key={item.uniqueId}
-                        />
+                    <DataCatalogMember viewState={this.props.viewState}
+                                       member={item}
+                                       manageIsOpenLocally={isSearching}
+                                       key={item.uniqueId}
+                    />
                 </For>
             </ul>
         );
