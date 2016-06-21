@@ -164,8 +164,6 @@ download,
 line-chart,
 github,
 stats-bars,
-folder,
-folder-open,
 feedback;
 
 @each $icon in $icons {
@@ -306,56 +304,6 @@ feedback;
   }
 }
 
-// Data Catalog Group
-//
-// Markup:
-//<div class='panel-content'>
-//<button class ='btn btn--catalog' >National Data Sets</button>
-//<button class ='btn btn--catalog is-open' >National Data Sets</button>
-//</div>
-//
-// Style guide: Buttons.data-catalog-group
-//
-
-.btn--catalog {
-  padding: $padding 30px+$padding;
-  @media screen and (min-width: $sm){
-    padding: $padding-small 30px+$padding;
-  }
-
-  position: relative;
-  width: 100%;
-  font-weight: bold;
-  @extend .btn--toggle;
-  .btn--group-indicator {
-    position: absolute;
-    left: 0;
-    padding: $padding $padding*2.2 $padding $padding*1.5;
-    @media screen and (min-width: $sm){
-      padding: $padding-small $padding*2.2 $padding-small $padding*1.5;
-    }
-    top: 0;
-    font-size: 1.1rem;
-    opacity: 0.5;
-  }
-  &:before {
-    position: absolute;
-    right: 5px;
-    top: $padding;
-    @media screen and (min-width: $sm){
-      top: $padding-small;
-    }
-
-  }
-  &:hover,
-  &:focus {
-    background: $modal-highlight;
-    color: #fff;
-    .btn--group-indicator {
-      color: #fff;
-    }
-  }
-}
 
 // Data Catalog Item
 //

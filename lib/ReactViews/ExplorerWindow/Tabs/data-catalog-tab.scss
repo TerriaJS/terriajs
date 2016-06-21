@@ -1,0 +1,81 @@
+@import '~terriajs-variables';
+@import '../../../Sass/global/mixins';
+
+.root {
+  height: 100%;
+}
+
+.data-explorer {
+  composes: tab-left-col from '../tabs.scss';
+}
+
+.data-catalog {
+  composes: list-reset from '../../../Sass/partial/_base.scss';
+
+  margin-top: $padding;
+  font-size: 0.9rem;
+
+  background: $modal-secondary-bg;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: $padding;
+  box-sizing: border-box;
+
+  @media screen and (min-width: $sm) {
+    height: calc(100% - #{$input-height});
+  }
+
+  .data--catalog-group {
+    .data--catalog-group {
+      margin-left: 7px;
+      border-left: 1px solid $grey-lighter;
+    }
+
+    .btn--catalog {
+      &:before {
+        color: darken($grey-lighter, 10%);
+      }
+    }
+  }
+}
+
+.data-preview__wrapper {
+  visibility: visible;
+  width: 60%;
+  float: right;
+  height: 100%;
+  overflow: hidden;
+
+  @media print {
+    float: left;
+  }
+}
+
+.data-catalog-item {
+  display: block;
+  width: 100%;
+  position: relative;
+
+  .btn--catalog-item--action {
+    position: absolute;
+    color: $color-primary;
+    right: -5px;
+    top: 0;
+    padding: 4px $padding-small;
+    font-size: 1.2rem;
+
+    &.btn--remove-from-map {
+
+    }
+  }
+}
+
+.data--catalog-group {
+  composes: list-reset from '../../../Sass/partial/_base.scss';
+  padding-left: $padding-small;
+}
+
+.label {
+  composes: label from '../../../Sass/partial/_labels.scss';
+}
+

@@ -35,24 +35,6 @@
   }
 }
 
-.data-preview__wrapper {
-  visibility: hidden;
-  overflow: hidden;
-  height: 0;
-
-  .is-open & {
-    visibility: visible;
-    width: 60%;
-    float: right;
-    height: 100%;
-    overflow: hidden;
-  }
-
-  @media print {
-    float: left;
-  }
-}
-
 .explorer-panel {
   position: relative;
   background: $modal-bg;

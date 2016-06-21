@@ -30,7 +30,7 @@ const MyDataTab = React.createClass({
 
     render() {
         return (
-            <div className={Styles.myData}>
+            <div className={Styles.root}>
                 <div className={Styles.leftCol}>
                     <If condition={this.props.viewState.myDataIsUploadView}>
                         <div className={Styles.addedData}>

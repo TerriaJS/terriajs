@@ -1,10 +1,11 @@
-'use strict';
+import React from 'react';
+import classNames from 'classnames';
 
 import DataCatalogMember from './DataCatalogMember.jsx';
 import Loader from '../Loader.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
-import React from 'react';
-import classNames from 'classnames';
+
+import Styles from './data-catalog-group.scss';
 
 const DataCatalogGroup = React.createClass({
     mixins: [ObserveModelMixin],
@@ -56,41 +57,61 @@ const DataCatalogGroup = React.createClass({
         this.props.viewState.viewCatalogItem(this.props.group);
     },
 
-    render() {
-        const group = this.props.group;
-        let contents = null;
-        if (this.isOpen()) {
-            contents = (
-                <ul className="data--catalog-group">
-                    {group.isLoading && <li key="loader"><Loader /></li>}
-                    {!group.isLoading && group.items.length === 0 && <li className="label no-results" key="empty"> This group is empty </li>}
-                    {this.renderGroup(group)}
-                </ul>
-            );
-        }
-        return (
-            <li>
-                <button type='button' className={classNames('btn', 'btn-transparent', 'btn--catalog', {'is-open': this.isOpen()})} onClick={this.clickGroup}>
-                    <i className={`btn--group-indicator ${this.isOpen() ? 'btn--folder-open' : 'btn--folder'}`}/>
-                    {group.name}
-                </button>
-                {contents}
-            </li>
-        );
+    isTopLevel() {
+        const parent = this.props.group.parent;
+        return !parent || !parent.parent;
     },
 
-    renderGroup(group) {
-        const children = group.items.map(item => (
-            <DataCatalogMember
-                key={item.uniqueId}
-                member={item}
-                viewState={this.props.viewState}
-                userData={this.props.userData}
-                overrideOpen={this.props.manageIsOpenLocally}
-            />
-        ));
+    render() {
+        const group = this.props.group;
 
-        return children;
+        return (
+            <li className={Styles.root}>
+                <button type='button'
+                        className={classNames(
+                            Styles.btnCatalog,
+                            {[Styles.btnCatalogTopLevel]: this.isTopLevel()},
+                            {[Styles.btnIsOpen]: this.isOpen()}
+                        )}
+                        onClick={this.clickGroup}>
+                    <If condition={!this.isTopLevel()}>
+                        <i className={classNames(
+                            Styles.iconFolder,
+                            {[Styles.iconFolderOpen]: this.isOpen()},
+                            {[Styles.iconFolderClosed]: !this.isOpen()})}
+                        />
+                    </If>
+                    {group.name}
+                    <i className={classNames(
+                        Styles.caret,
+                        {[Styles.caretOpen]: this.isOpen()},
+                        {[Styles.caretClosed]: !this.isOpen()},
+                        {[Styles.caretLowerLevel]: !this.isTopLevel()}
+                    )}/>
+                </button>
+                <If condition={this.isOpen()}>
+                    <ul className={Styles.catalogGroup}>
+                        <Choose>
+                            <When condition={group.isLoading}>
+                                <li key="loader"><Loader /></li>
+                            </When>
+                            <When condition={group.items.length === 0}>
+                                <li className={classNames(Styles.label, Styles.labelNoResults)} key="empty">This group is empty</li>
+                            </When>
+                        </Choose>
+                        <For each="item" of={group.items}>
+                            <DataCatalogMember
+                                key={item.uniqueId}
+                                member={item}
+                                viewState={this.props.viewState}
+                                userData={this.props.userData}
+                                overrideOpen={this.props.manageIsOpenLocally}
+                            />
+                        </For>
+                    </ul>
+                </If>
+            </li>
+        );
     }
 });
 

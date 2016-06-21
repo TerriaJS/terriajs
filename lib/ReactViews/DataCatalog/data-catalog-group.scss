@@ -1,0 +1,115 @@
+@import '~terriajs-variables';
+@import '../../Sass/global/mixins';
+
+@include empty-module("root");
+
+// Data Catalog Group
+//
+// Markup:
+//<div class='panel-content'>
+//<button class ='btn btn--catalog' >National Data Sets</button>
+//<button class ='btn btn--catalog is-open' >National Data Sets</button>
+//</div>
+//
+// Style guide: Buttons.data-catalog-group
+//
+
+.btn--catalog {
+  composes: btn from '../../Sass/partial/_buttons.scss';
+  composes: btn-transparent from '../../Sass/partial/_buttons.scss';
+
+  padding: $padding 30px+$padding;
+  position: relative;
+  width: 100%;
+  font-weight: bold;
+
+  @media screen and (min-width: $sm) {
+    padding: $padding-small 30px+$padding;
+  }
+
+  &--top-level {
+    font-weight: 600;
+    border-bottom: 1px solid $grey-lighter;
+    padding-left: $padding;
+  }
+
+  &:hover, &:focus {
+    background: $modal-highlight;
+    color: #fff;
+    .btn--group-indicator {
+      color: #fff;
+    }
+  }
+}
+
+.btn--is-open {
+  composes: is-open from '../../Sass/partial/_buttons.scss';
+}
+
+.icon-folder {
+  composes: icon from '../../Sass/global/_icons.scss';
+
+  position: absolute;
+  left: 0;
+  padding: $padding+1 $padding*2.2 $padding $padding*1.5;
+  top: 0;
+  font-size: 1.1rem;
+  opacity: 0.5;
+
+  @media screen and (min-width: $sm) {
+    padding: $padding-small+1 $padding*2.2 $padding-small $padding*1.5;
+  }
+
+  &-closed {
+    composes: icon-folder from '../../Sass/global/_icons.scss';
+  }
+
+  &-open {
+    composes: icon-folder-open from '../../Sass/global/_icons.scss';
+  }
+}
+
+.caret {
+  composes: icon from '../../Sass/global/_icons.scss';
+
+  &:before {
+    position: absolute;
+    right: 5px;
+    top: $padding;
+
+    @media screen and (min-width: $sm) {
+      top: $padding-small;
+    }
+  }
+
+  &--open {
+    composes: icon-opened from '../../Sass/global/_icons.scss';
+  }
+
+  &--closed {
+    composes: icon-closed from '../../Sass/global/_icons.scss';
+
+    &:before {
+      margin-top: 3px;
+    }
+  }
+
+  &--lower-level:before {
+    color: $grey-lighter;
+  }
+}
+
+.catalog-group {
+  composes: list-reset from '../../Sass/partial/_base.scss';
+
+  padding-left: $padding;
+  padding-top: $padding / 2;
+}
+
+.label {
+  composes: label from '../../Sass/partial/_labels.scss';
+}
+
+.label--no-results {
+  composes: no-results from '../../Sass/partial/_labels.scss';
+}

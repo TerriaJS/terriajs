@@ -1,12 +1,14 @@
-'use strict';
+import React from 'react';
+
+import defined from 'terriajs-cesium/Source/Core/defined';
 
 import DataCatalogMember from '../../DataCatalog/DataCatalogMember.jsx';
 import DataPreview from '../../Preview/DataPreview.jsx';
 import ObserveModelMixin from '../../ObserveModelMixin';
-import React from 'react';
 import SearchHeader from '../../Search/SearchHeader.jsx';
 import SearchBox from '../../Search/SearchBox.jsx';
-import defined from 'terriajs-cesium/Source/Core/defined';
+
+import Styles from './data-catalog-tab.scss';
 
 // The DataCatalog Tab
 const DataCatalogTab = React.createClass({
@@ -28,14 +30,14 @@ const DataCatalogTab = React.createClass({
     render() {
         const terria = this.props.terria;
         return (
-            <div>
-                <div className="data-explorer">
+            <div className={Styles.root}>
+                <div className={Styles.dataExplorer}>
                     <SearchBox searchText={this.props.viewState.searchState.catalogSearchText}
                                onSearchTextChanged={this.changeSearchText}
                                onDoSearch={this.search} />
                     {this.renderDataCatalog()}
                 </div>
-                <div className="data-preview__wrapper">
+                <div className={Styles.dataPreviewWrapper}>
                     <DataPreview terria={terria}
                                  viewState={this.props.viewState}
                                  previewed={this.props.viewState.previewedItem}
@@ -48,25 +50,28 @@ const DataCatalogTab = React.createClass({
         const terria = this.props.terria;
         const searchState = this.props.viewState.searchState;
         const isSearching = searchState.catalogSearchText.length > 0;
-        const items = isSearching ?
-            searchState.catalogSearchProvider.searchResults.map(result => result.catalogItem) :
-            terria.catalog.group.items;
+        const items = (
+            isSearching ?
+                searchState.catalogSearchProvider.searchResults.map(result => result.catalogItem) :
+                terria.catalog.group.items
+        ).filter(defined);
 
         return (
-            <ul className='data-catalog'>
-                {isSearching && <label className="label">Search results</label>}
-                {isSearching && <SearchHeader searchProvider={searchState.catalogSearchProvider} isWaitingForSearchToStart={searchState.isWaitingToStartCatalogSearch} />}
-                {items
-                    .filter(defined)
-                    .map((item, i) => (
+            <ul className={Styles.dataCatalog}>
+                <If condition={isSearching}>
+                    <label className={Styles.label}>Search results</label>
+                    <SearchHeader searchProvider={searchState.catalogSearchProvider}
+                                  isWaitingForSearchToStart={searchState.isWaitingToStartCatalogSearch}/>
+                </If>
+                <For each="item" of={items}>
                         <DataCatalogMember viewState={this.props.viewState}
                                            member={item}
                                            manageIsOpenLocally={isSearching}
                                            key={item.uniqueId}
                         />
-                    ))
-                }
-            </ul>);
+                </For>
+            </ul>
+        );
     }
 });
 
