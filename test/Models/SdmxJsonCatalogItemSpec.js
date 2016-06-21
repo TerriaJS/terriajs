@@ -71,10 +71,11 @@ describe('SdmxJsonCatalogItem', function() {
 
     describe('loading', function() {
         var regionMappingJson, lgaData;
-        var dataflowFoo, dataFooBD2, dataFoo2;
+        var dataflowFoo, dataFoo, dataFooBD2, dataFoo2;
         beforeEach(function(done) {
             when.all([
                 loadText('test/SDMX-JSON/dataflow-foo.json').then(function(text) { dataflowFoo = text; }),
+                loadText('test/SDMX-JSON/data-foo-2013.json').then(function(text) { dataFoo = text; }),
                 loadText('test/SDMX-JSON/data-foo-BD2-2013.json').then(function(text) { dataFooBD2 = text; }),
                 loadText('test/SDMX-JSON/data-foo2-2013.json').then(function(text) { dataFoo2 = text; }),
                 loadText('data/regionMapping.json').then(function(text) { regionMappingJson = text; }),
@@ -82,11 +83,12 @@ describe('SdmxJsonCatalogItem', function() {
             ]).then(function() {
                 jasmine.Ajax.install();
                 jasmine.Ajax.stubRequest(/.*/).andError(); // Fail all requests by default.
-                jasmine.Ajax.stubRequest('http://sdmx.example.com/sdmx-json/dataflow/FOO').andReturn({responseText: dataflowFoo});
-                jasmine.Ajax.stubRequest('http://sdmx.example.com/sdmx-json/data/FOO/BD_2.LGA_2013..A/all?startTime=2013&endTime=2013').andReturn({responseText: dataFooBD2});
-                jasmine.Ajax.stubRequest('http://sdmx.example.com/sdmx-json/data/FOO2/BD_2+BD_4..A../all?startTime=2013&endTime=2013').andReturn({responseText: dataFoo2});
-                jasmine.Ajax.stubRequest('data/regionMapping.json').andReturn({responseText: regionMappingJson});
-                jasmine.Ajax.stubRequest('data/regionids/region_map-FID_LGA_2015_AUST_LGA_CODE15.json').andReturn({responseText: lgaData});
+                jasmine.Ajax.stubRequest('http://sdmx.example.com/sdmx-json/dataflow/FOO').andReturn({ responseText: dataflowFoo });
+                jasmine.Ajax.stubRequest('http://sdmx.example.com/sdmx-json/data/FOO/BD_2+BD_4.LGA_2013..A/all?startTime=2013&endTime=2013').andReturn({ responseText: dataFoo });
+                jasmine.Ajax.stubRequest('http://sdmx.example.com/sdmx-json/data/FOO/BD_2.LGA_2013..A/all?startTime=2013&endTime=2013').andReturn({ responseText: dataFooBD2 });
+                jasmine.Ajax.stubRequest('http://sdmx.example.com/sdmx-json/data/FOO2/BD_2+BD_4..A../all?startTime=2013&endTime=2013').andReturn({ responseText: dataFoo2 });
+                jasmine.Ajax.stubRequest('data/regionMapping.json').andReturn({ responseText: regionMappingJson });
+                jasmine.Ajax.stubRequest('data/regionids/region_map-FID_LGA_2015_AUST_LGA_CODE15.json').andReturn({ responseText: lgaData });
             }).then(done).otherwise(done.fail);
         });
 
@@ -94,7 +96,7 @@ describe('SdmxJsonCatalogItem', function() {
             jasmine.Ajax.uninstall();
         });
 
-        it('works with a simple SDMX-JSON file', function(done) {
+        it('works with a simple file', function(done) {
             item.updateFromJson({
                 name: 'Foo',
                 url: 'http://sdmx.example.com/sdmx-json/data/FOO/BD_2.LGA_2013..A/all?startTime=2013&endTime=2013'
@@ -114,7 +116,7 @@ describe('SdmxJsonCatalogItem', function() {
             }).otherwise(fail).then(done);
         });
 
-        it('works with a two-concept SDMX-JSON file', function(done) {
+        it('works with a two-concept file', function(done) {
             item.updateFromJson({
                 name: 'Foo2',
                 url: 'http://sdmx.example.com/sdmx-json/data/FOO2/BD_2+BD_4..A../all?startTime=2013&endTime=2013'
@@ -140,7 +142,7 @@ describe('SdmxJsonCatalogItem', function() {
             }).otherwise(fail).then(done);
         });
 
-        it('works with a generic SDMX-JSON endpoint', function(done) {
+        it('works with a generic endpoint', function(done) {
             item.updateFromJson({
                 name: 'Foo',
                 url: 'http://sdmx.example.com/sdmx-json/data/FOO',
@@ -157,6 +159,34 @@ describe('SdmxJsonCatalogItem', function() {
                 expect(columnNames[0]).toEqual('LGA_code_2013');
                 expect(item.tableStructure.columns[0].values).toEqual(['17100', '56520', '54970', '10300', '29399']);
                 expect(item.tableStructure.columns[1].values).toEqual([1140, 535, 79, 12, 38]);
+                expect(item.tableStructure.columns[1].values).toEqual(item.tableStructure.columns[2].values);
+                // Expect it to show the birth/death concept to the user.
+                expect(item.concepts.length).toEqual(1);
+            }).otherwise(fail).then(done);
+        });
+
+        it('works with selectedInitially on a generic endpoint', function(done) {
+            item.updateFromJson({
+                name: 'Foo',
+                url: 'http://sdmx.example.com/sdmx-json/data/FOO',
+                startTime: '2013',
+                endTime: '2013',
+                selectedInitially: {
+                    'MEASURE': ['BD_2', 'BD_4']
+                }
+            });
+            item.load().then(function() {
+                // Expect it to have realised this is regional data.
+                var regionDetails = item.regionMapping.regionDetails;
+                expect(regionDetails).toBeDefined();
+                // Expect it to have created the right table of data (with no time dimension).
+                var columnNames = item.tableStructure.getColumnNames();
+                expect(columnNames.length).toEqual(4); // Region, BD_2, BD_4 and a total.
+                expect(columnNames[0]).toEqual('LGA_code_2013');
+                expect(item.tableStructure.columns[0].values).toEqual(['17100', '56520', '54970', '10300', '29399']);
+                expect(item.tableStructure.columns[1].values).toEqual([1140, 535, 79, 12, 38]);
+                expect(item.tableStructure.columns[2].values).toEqual([140, 235, 279, 812, 338]);
+                expect(item.tableStructure.columns[3].values).toEqual([1280, 770, 358, 824, 376]);
                 // Expect it to show the birth/death concept to the user.
                 expect(item.concepts.length).toEqual(1);
             }).otherwise(fail).then(done);
@@ -175,24 +205,6 @@ describe('SdmxJsonCatalogItem', function() {
                 expect(true).toBe(true);
             }).then(done);
         });
-
-        // TODO: (this is old)
-        // it('works with selectedInitially parameter', function(done) {
-        //     item.updateFromJson({
-        //         name: 'Name',
-        //         datasetId: 'foo',
-        //         url: 'http://abs.example.com',
-        //         filter: ["REGIONTYPE.SA4"]  // Should use SA4 now
-        //     });
-        //     item.load().then(function() {
-        //         var regionDetails = item.regionMapping.regionDetails;
-        //         expect(regionDetails).toBeDefined();
-        //         var columnNames = item.tableStructure.getColumnNames();
-        //         expect(columnNames.slice(0, 3)).toEqual(["sa4_code_2011", "Year", "0-1 years"]);
-        //         var percentage = item.tableStructure.activeItems[0].values[0];
-        //         expect(percentage).toEqual(12.5);  // 26 / 208 * 100
-        //     }).otherwise(fail).then(done);
-        // });
 
         it('is less than 2000 characters when serialised to JSON then URLEncoded', function(done) {
             item.updateFromJson({
