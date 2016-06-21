@@ -1,13 +1,17 @@
 @import '~terriajs-variables';
 @import '../../../../Sass/global/mixins';
 
-.my-data{
+.my-data {
+  height: 100%;
+}
+
+.left-col {
   composes: tab-left-col from '../../tabs.scss';
 
   overflow-y: hidden;
 }
 
-.add-data{
+.added-data{
   background: $modal-secondary-bg;
   padding: $padding;
   height: 100%;
@@ -38,7 +42,7 @@
 
 .btn--add-more-data{
   composes: btn from '../../../../Sass/partial/_buttons.scss';
-  composes: btn--transparent from '../../../../Sass/partial/_buttons.scss';
+  composes: btn-transparent from '../../../../Sass/partial/_buttons.scss';
   composes: btn-primary from '../../../../Sass/partial/_buttons.scss';
   margin-top: $padding;
 }

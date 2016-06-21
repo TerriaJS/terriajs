@@ -16,26 +16,37 @@ const MyDataTab = React.createClass({
         viewState: React.PropTypes.object
     },
 
+    onBackButtonClicked() {
+        this.props.viewState.myDataIsUploadView = false;
+    },
+
+    onAddMoreDataButtonClicked() {
+        this.props.viewState.myDataIsUploadView = true;
+    },
+
+    hasUserAddedData() {
+        return this.props.terria.catalog.userAddedDataGroup.items.length > 0;
+    },
+
     render() {
         return (
-            <div>
-                <div className={Styles.myData}>
+            <div className={Styles.myData}>
+                <div className={Styles.leftCol}>
                     <If condition={this.props.viewState.myDataIsUploadView}>
-                        <div className={Styles.addData}>
-                            <If condition={this.props.terria.catalog.userAddedDataGroup}>
+                        <div className={Styles.addedData}>
+                            <If condition={this.hasUserAddedData()}>
                                 <button type='button'
-                                        onClick={()=>this.props.viewState.myDataIsUploadView = !this.props.viewState.myDataIsUploadView}
-                                        className={Styles.backToMyData}>
+                                        onClick={this.onBackButtonClicked}
+                                        className={Styles.btnBackToMyData}>
                                     Back
                                 </button>
                             </If>
-                        <h3>Adding your own data</h3>
+                            <h3>Adding your own data</h3>
                             <AddData terria={this.props.terria}
-                                     viewState={this.props.viewState}
-                        />
-                    </div>
+                                     viewState={this.props.viewState}/>
+                        </div>
                     </If>
-                    <If condition={this.props.terria.catalog.userAddedDataGroup}>
+                    <If condition={this.hasUserAddedData()}>
                         <div className={Styles.addedData}>
                             <p>Data added in this way is not saved or made visible to others unless you explicitly share
                                 it by using the Share panel. </p>
@@ -43,7 +54,8 @@ const MyDataTab = React.createClass({
                                 <DataCatalogGroup group={this.props.terria.catalog.userAddedDataGroup}
                                                   viewState={this.props.viewState}/>
                             </ul>
-                            <button type='button' onClick={()=>this.props.viewState.myDataIsUploadView = true}
+                            <button type='button'
+                                    onClick={this.onAddMoreDataButtonClicked}
                                     className={Styles.btnAddMoreData}>
                                 Add more data
                             </button>
