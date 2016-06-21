@@ -51,8 +51,6 @@ const StandardUserInterface = React.createClass({
             that.acceptDragDropFile();
         };
 
-        document.getElementById('ui').addEventListener('dragover', this.dragOverListener, false);
-
         this.resizeListener = () => {
             this.props.viewState.useSmallScreenInterface = this.shouldUseMobileInterface();
         };
@@ -61,6 +59,10 @@ const StandardUserInterface = React.createClass({
 
         this.resizeListener();
         this.disclaimerHandler = new DisclaimerHandler(this.props.terria, this.props.viewState);
+    },
+
+    componentDidMount() {
+        this._wrapper.addEventListener('dragover', this.dragOverListener, false);
     },
 
     componentWillUnmount() {
@@ -82,7 +84,7 @@ const StandardUserInterface = React.createClass({
         const terria = this.props.terria;
         const allBaseMaps = this.props.allBaseMaps;
         return (
-            <div>
+            <div ref={(w) => this._wrapper = w}>
                 <div className={Styles.ui}>
                     <div className={Styles.uiInner}>
                         <If condition={!this.props.viewState.isMapFullScreen && !this.props.viewState.hideMapUi()}>
