@@ -4,17 +4,18 @@ import React from 'react';
 import arrayContains from '../../Core/arrayContains';
 import Branding from './../SidePanel/Branding.jsx';
 import DisclaimerHandler from '../../ReactViewModels/DisclaimerHandler';
+import DragDropFile from './../DragDropFile.jsx';
+import ExplorerWindow from './../ExplorerWindow/ExplorerWindow.jsx';
 import FeatureInfoPanel from './../FeatureInfo/FeatureInfoPanel.jsx';
 import FeedbackForm from '../Feedback/FeedbackForm.jsx';
+import MapContainer from './MapColumn.jsx';
 import MapInteractionWindow from './../Notification/MapInteractionWindow.jsx';
 import MapNavigation from './../Map/MapNavigation.jsx';
 import MobileHeader from './../Mobile/MobileHeader.jsx';
-import ExplorerWindow from '../ExplorerWindow/ExplorerWindow.jsx';
 import Notification from './../Notification/Notification.jsx';
 import ObserveModelMixin from './../ObserveModelMixin';
 import ProgressBar from '../Map/ProgressBar.jsx';
 import SidePanel from './../SidePanel/SidePanel.jsx';
-import MapContainer from './MapColumn.jsx';
 
 import Styles from './standard-user-interface.scss';
 
@@ -50,8 +51,6 @@ const StandardUserInterface = React.createClass({
             that.acceptDragDropFile();
         };
 
-        document.addEventListener('dragover', this.dragOverListener, false);
-
         this.resizeListener = () => {
             this.props.viewState.useSmallScreenInterface = this.shouldUseMobileInterface();
         };
@@ -60,6 +59,10 @@ const StandardUserInterface = React.createClass({
 
         this.resizeListener();
         this.disclaimerHandler = new DisclaimerHandler(this.props.terria, this.props.viewState);
+    },
+
+    componentDidMount() {
+        this._wrapper.addEventListener('dragover', this.dragOverListener, false);
     },
 
     componentWillUnmount() {
@@ -81,7 +84,7 @@ const StandardUserInterface = React.createClass({
         const terria = this.props.terria;
         const allBaseMaps = this.props.allBaseMaps;
         return (
-            <div>
+            <div ref={(w) => this._wrapper = w}>
                 <div className={Styles.ui}>
                     <div className={Styles.uiInner}>
                         <If condition={!this.props.viewState.isMapFullScreen && !this.props.viewState.hideMapUi()}>
@@ -129,6 +132,9 @@ const StandardUserInterface = React.createClass({
 
                 <FeatureInfoPanel terria={terria}
                                   viewState={this.props.viewState}
+                />
+                <DragDropFile terria={this.props.terria}
+                              viewState={this.props.viewState}
                 />
             </div>
         );
