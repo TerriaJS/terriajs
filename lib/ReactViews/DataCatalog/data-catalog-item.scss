@@ -1,0 +1,75 @@
+@import '~terriajs-variables';
+@import '../../Sass/global/mixins';
+
+.root {
+  composes: clearfix from '../../Sass/partial/_base.scss';
+
+  display: block;
+  width: 100%;
+  position: relative;
+}
+
+// Data Catalog Item
+//
+// .is-previewed - item being previewed
+//
+// Markup:
+//<div class='panel-content'>
+// <li class='data-catalog-item {{modifier_class}}'>
+// <button class='btn btn--catalog-item'>item name</button>
+// <button title="add or remove on map" class='btn btn--catalog-item--action btn--add-to-map'></button>
+// </li>
+//</div>
+//
+// Style guide: Buttons.btn--catalog-item
+//
+
+.btn-catalog-item {
+  composes: btn from '../../Sass/partial/_buttons.scss';
+  @extend %wrap;
+  position: relative;
+  width: 100%;
+  padding: $padding-small $padding*2.2 $padding-small $padding*1.5;
+
+  &:focus, &:hover {
+    color: $modal-highlight;
+    &:before {
+      opacity: 1;
+    }
+  }
+
+  &--is-previewed {
+    color: $modal-highlight;
+    font-weight: $font-weight-bold;
+    &:before {
+      opacity: 1;
+    }
+  }
+}
+
+.btn-action {
+  composes: btn from '../../Sass/partial/_buttons.scss';
+
+  position: absolute;
+  color: $color-primary;
+  right: -5px;
+  top: 0;
+  padding: 4px $padding-small;
+  font-size: 1.2rem;
+
+  &--stats-bars {
+    composes: btn--stats-bars from '../../Sass/partial/_buttons.scss';
+  }
+
+  &--add-to-map {
+    composes: btn--add from '../../Sass/partial/_buttons.scss';
+  }
+
+  &--remove-from-map {
+    composes: btn--remove from '../../Sass/partial/_buttons.scss';
+  }
+
+  &--loading-on-map {
+    composes: btn--loader from '../../Sass/partial/_buttons.scss';
+  }
+}

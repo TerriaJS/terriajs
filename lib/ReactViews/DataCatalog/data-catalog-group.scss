@@ -95,15 +95,19 @@
   }
 
   &--lower-level:before {
-    color: $grey-lighter;
+    color: darken($grey-lighter, 10%);
   }
 }
 
 .catalog-group {
   composes: list-reset from '../../Sass/partial/_base.scss';
-
   padding-left: $padding;
   padding-top: $padding / 2;
+
+  &--lower-level {
+    margin-left: 7px;
+    border-left: 1px solid $grey-lighter;
+  }
 }
 
 .label {

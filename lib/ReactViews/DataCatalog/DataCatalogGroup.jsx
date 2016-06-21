@@ -90,13 +90,20 @@ const DataCatalogGroup = React.createClass({
                     )}/>
                 </button>
                 <If condition={this.isOpen()}>
-                    <ul className={Styles.catalogGroup}>
+                    <ul className={classNames(
+                        Styles.catalogGroup,
+                        {[Styles.catalogGroupLowerLevel]: !this.isTopLevel()}
+                    )}>
                         <Choose>
                             <When condition={group.isLoading}>
-                                <li key="loader"><Loader /></li>
+                                <li key="loader">
+                                    <Loader />
+                                </li>
                             </When>
                             <When condition={group.items.length === 0}>
-                                <li className={classNames(Styles.label, Styles.labelNoResults)} key="empty">This group is empty</li>
+                                <li className={classNames(Styles.label, Styles.labelNoResults)} key="empty">
+                                    This group is empty
+                                </li>
                             </When>
                         </Choose>
                         <For each="item" of={group.items}>

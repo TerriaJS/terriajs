@@ -183,11 +183,6 @@ feedback;
   }
 }
 
-.btn--add-to-map {
-  @extend .btn--add;
-  color: $color-primary;
-}
-
 .btn--secondary {
   color: $color-primary;
   border: 2px solid $color-primary;
@@ -222,16 +217,6 @@ feedback;
     border: 1px solid $color-primary;
     color: $color-primary;
   }
-}
-
-.btn--remove-from-map {
-  @extend .btn--remove;
-  color: $color-primary;
-}
-
-.btn--loading-on-map {
-  @extend .btn--loader;
-  color: $color-primary;
 }
 
 // Text and icon buttons
@@ -305,44 +290,6 @@ feedback;
 }
 
 
-// Data Catalog Item
-//
-// .is-previewed - item being previewed
-//
-// Markup:
-//<div class='panel-content'>
-// <li class='data-catalog-item {{modifier_class}}'>
-// <button class='btn btn--catalog-item'>item name</button>
-// <button title="add or remove on map" class='btn btn--catalog-item--action btn--add-to-map'></button>
-// </li>
-//</div>
-//
-// Style guide: Buttons.btn--catalog-item
-//
-
-.btn--catalog-item {
-  @extend %wrap;
-  position: relative;
-  width: 100%;
-  padding: $padding-small $padding*2.2 $padding-small $padding*1.5;
-
-  &:focus, &:hover {
-    color: $modal-highlight;
-    &:before {
-      opacity: 1;
-    }
-  }
-  .is-previewed & {
-    color: $modal-highlight;
-    font-weight: $font-weight-bold;
-    &:before {
-      opacity: 1;
-    }
-  }
-  &.is-active {
-    color: $modal-highlight;
-  }
-}
 
 // Map buttons
 //

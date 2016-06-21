@@ -1,11 +1,12 @@
-'use strict';
+import React from 'react';
+import classNames from 'classnames';
 
 import addedByUser from '../../Core/addedByUser';
-import classNames from 'classnames';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import ObserveModelMixin from '../ObserveModelMixin';
 import raiseErrorOnRejectedPromise from '../../Models/raiseErrorOnRejectedPromise';
-import React from 'react';
+
+import Styles from './data-catalog-item.scss';
 
 // Individual dataset
 const DataCatalogItem = React.createClass({
@@ -14,23 +15,6 @@ const DataCatalogItem = React.createClass({
     propTypes: {
         item: React.PropTypes.object.isRequired,
         viewState: React.PropTypes.object.isRequired
-    },
-
-    renderIconClass() {
-        if (this.props.item.isEnabled) {
-            if (this.props.item.isLoading) {
-                return 'btn--loading-on-map';
-            }
-            return 'btn--remove-from-map';
-        }
-        return 'btn--add-to-map';
-    },
-
-    renderItemIcon() {
-        if(this.props.item.isMappable) {
-            return <button type='button' onClick={this.toggleEnable} title="add to map" className={'btn btn--catalog-item--action ' + (this.renderIconClass())} />;
-        }
-        return <button type='button' onClick={this.setPreviewedItem} title="preview" className='btn btn--catalog-item--action btn--stats-bars' />;
     },
 
     toggleEnable(event) {
@@ -65,29 +49,42 @@ const DataCatalogItem = React.createClass({
     render() {
         const item = this.props.item;
         return (
-            <li className={classNames('clearfix data-catalog-item', {'is-previewed': this.isSelected()})}>
+            <li className={classNames(Styles.root)}>
                 <button type='button'
                         onClick={this.setPreviewedItem}
-                        className={`btn btn--catalog-item ${item.isMappable ? 'catalog-item' : 'service-item'}`}>
+                        className={classNames(
+                            Styles.btnCatalogItem,
+                            {[Styles.btnCatalogItemIsPreviewed]: this.isSelected()}
+                        )}>
                     {item.name}
                 </button>
                 <Choose>
                     <When condition={!defined(item.invoke)}>
                         <button type='button' onClick={this.toggleEnable}
                                 title="add to map"
-                                className={'btn btn--catalog-item--action ' + (this.renderIconClass())}
+                                className={classNames(Styles.btnAction, this.renderIconClass())}
                         />
                     </When>
                     <Otherwise>
                         <button type='button'
                                 onClick={this.setPreviewedItem}
                                 title="preview"
-                                className='btn btn--catalog-item--action btn--stats-bars'
+                                className={classNames(Styles.btnAction, Styles.btnActionStatsBars)}
                         />
                     </Otherwise>
                 </Choose>
             </li>
         );
+    },
+
+    renderIconClass() {
+        if (this.props.item.isEnabled) {
+            if (this.props.item.isLoading) {
+                return Styles.btnActionLoadingOnMap;
+            }
+            return Styles.btnActionRemoveFromMap;
+        }
+        return Styles.btnActionAddToMap;
     }
 });
 
