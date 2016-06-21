@@ -1,106 +1,26 @@
 'use strict';
+
 import addUserCatalogMember from '../../../../Models/addUserCatalogMember';
 import ArcGisCatalogGroup from '../../../../Models/ArcGisCatalogGroup';
 import ArcGisMapServerCatalogItem from '../../../../Models/ArcGisMapServerCatalogItem';
 import createCatalogItemFromFileOrUrl from '../../../../Models/createCatalogItemFromFileOrUrl';
-import defined from 'terriajs-cesium/Source/Core/defined';
-import DragDropFile from './DragDropFile.jsx';
 import Dropdown from '../../../Generic/Dropdown';
 import FileInput from './FileInput.jsx';
+import getDataType from '../../../../Core/getDataType';
 import ObserveModelMixin from '../../../ObserveModelMixin';
 import OpenStreetMapCatalogItem from '../../../../Models/OpenStreetMapCatalogItem';
 import React from 'react';
+import TerriaError from '../../../../Core/TerriaError';
 import WebFeatureServiceCatalogGroup from '../../../../Models/WebFeatureServiceCatalogGroup';
 import WebMapServiceCatalogGroup from '../../../../Models/WebMapServiceCatalogGroup';
 import WebMapTileServiceCatalogGroup from '../../../../Models/WebMapTileServiceCatalogGroup';
-import when from 'terriajs-cesium/Source/ThirdParty/when';
-import raiseErrorOnRejectedPromise from '../../../../Models/raiseErrorOnRejectedPromise';
-import readJson from '../../../../Core/readJson';
+import handleFile from '../../../../Core/handleFile';
 
 const wfsUrlRegex = /\bwfs\b/i;
 
 // Local and remote data have different dataType options
-const remoteDataType = [
-    {
-        value: 'auto',
-        name: 'Auto-detect (recommended)'
-    },
-    {
-        value: 'wms-getCapabilities',
-        name: 'Web Map Service (WMS) Server'
-    },
-    {
-        value: 'wmts-getCapabilities',
-        name: 'Web Map Tile Service (WMTS) Server'
-    },
-    {
-        value: 'wfs-getCapabilities',
-        name: 'Web Feature Service (WFS) Server'
-    },
-    {
-        value: 'esri-group',
-        name: 'Esri ArcGIS Server'
-    },
-    {
-        value: 'open-street-map',
-        name: 'Open Street Map Server'
-    },
-    {
-        value: 'geojson',
-        name: 'GeoJSON'
-    },
-    {
-        value: 'kml',
-        name: 'KML or KMZ'
-    },
-    {
-        value: 'csv',
-        name: 'CSV'
-    },
-    {
-        value: 'czml',
-        name: 'CZML'
-    },
-    {
-        value: 'gpx',
-        name: 'GPX'
-    },
-    {
-        value: 'other',
-        name: 'Other (use conversion service)'
-    },
-];
-
-const localDataType = [
-    {
-        value: 'auto',
-        name: 'Auto-detect (recommended)'
-    },
-    {
-        value: 'geojson',
-        name: 'GeoJSON'
-    },
-    {
-        value: 'kml',
-        name: 'KML or KMZ'
-    },
-    {
-        value: 'csv',
-        name: 'CSV'
-    },
-    {
-        value: 'czml',
-        name: 'CZML'
-    },
-    {
-        value: 'gpx',
-        name: 'GPX'
-    },
-    {
-        value: 'other',
-        name: 'Other (use conversion service)'
-    },
-];
+const remoteDataType = getDataType().remoteDataType;
+const localDataType = getDataType().localDataType;
 
 /**
  * Add data panel in modal window -> My data tab
@@ -110,16 +30,9 @@ const AddData = React.createClass({
 
     propTypes: {
         terria: React.PropTypes.object,
-        updateCatalog: React.PropTypes.func,
-        viewState: React.PropTypes.object,
-        allowDropInitFiles: React.PropTypes.bool
+        viewState: React.PropTypes.object
     },
 
-    getDefaultProps: function() {
-        return {
-            allowDropInitFiles: true
-        };
-    },
 
     getInitialState() {
         return {
@@ -147,37 +60,15 @@ const AddData = React.createClass({
         });
     },
 
-    handleFile(e) {
-        const that = this;
-        const files = e.target.files;
-        if (!defined(files)) {
-            console.log('file api not supported');
-        }
-
-        if (files.length > 0) {
-            const promises = [];
-
-            for (let i = 0; i < files.length; ++i) {
-                const file = files[i];
-                this.props.terria.analytics.logEvent('uploadFile', 'browse', file.name);
-                if (file.name.toUpperCase().indexOf('.JSON') !== -1) {
-                    raiseErrorOnRejectedPromise(that.props.terria, readJson(file).then((json)=>{
-                        if (that.props.allowDropInitFiles && (json.catalog || json.services)) {
-                            // This is an init file.
-                            return that.props.terria.addInitSource(json);
-                        }
-                        promises.push(addUserCatalogMember(this.props.terria, createCatalogItemFromFileOrUrl(this.props.terria, file, this.state.localDataType.value, true)));
-                    }));
-                } else {
-                    promises.push(addUserCatalogMember(this.props.terria, createCatalogItemFromFileOrUrl(this.props.terria, file, this.state.localDataType.value, true)));
-                }
-            }
-            if(promises.length > 0) {
-                when.all(promises, () => {
-                    const userCatalog = that.props.terria.catalog.userAddedDataGroup;
-                    that.props.updateCatalog(userCatalog);
-                });
-            }
+    handleUploadFile(e) {
+        try {
+            handleFile(e, this.props.terria, this.state.localDataType, ()=>{this.props.viewState.myDataIsUploadView = false;});
+        } catch(err) {
+            this.props.terria.error.raiseEvent(new TerriaError({
+                sender: this,
+                title: err.title,
+                message: err.message
+            }));
         }
     },
 
@@ -259,7 +150,7 @@ const AddData = React.createClass({
                 <label className='label'><strong>Step 1:</strong> Select type of file to add: </label>
                 <Dropdown options={localDataType} selected={this.state.localDataType} selectOption={this.selectLocalOption} matchWidth={true} theme={dropdownTheme} />
                 <label className='label'><strong>Step 2:</strong> Select a local data file to add: </label>
-                <FileInput accept=".csv,.kml" onChange={this.handleFile} />
+                <FileInput accept=".csv,.kml" onChange={this.handleUploadFile} />
             </section>
             <section aria-hidden = {this.state.activeTab === 'web' ? 'false' : 'true'} className={'tab-panel panel--web ' + (this.state.activeTab === 'web' ? 'is-active' : '')}>
                 <label className='label'><strong>Step 1:</strong> Select type of file to add: </label>
@@ -277,11 +168,6 @@ const AddData = React.createClass({
     render() {
         return (
         <div className='add-data-inner'>
-            <DragDropFile terria={this.props.terria}
-                          handleFile={this.handleFile}
-                          isActive={this.props.viewState.isDraggingDroppingFile}
-                          onFinishDroppingFile={this.onFinishDroppingFile}
-            />
             {this.renderTabs()}
             {this.renderPanels()}
         </div>);

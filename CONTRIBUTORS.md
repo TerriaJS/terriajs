@@ -30,3 +30,5 @@ The following people have contributed to TerriaJS:
 * [CSIRO Oceans and Atmosphere](http://www.csiro.au/en/Research/OandA)
    * [Simon Pigot](https://github.com/sppigot)
 * [Code X](https://github.com/x-Code-x)
+* [USGS](https://www.usgs.gov/)
+   * [Jordan Walker](https://github.com/jiwalker-usgs)

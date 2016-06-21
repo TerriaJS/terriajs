@@ -19,41 +19,22 @@ const MyDataTab = React.createClass({
         viewState: React.PropTypes.object
     },
 
-    getInitialState() {
-        return {
-            dataCatalog: undefined,
-            isUploadView: true
-        };
-    },
-
-    updateCatalog(dataCatalog) {
-        this.setState({
-            dataCatalog: dataCatalog,
-            isUploadView: false
-        });
-    },
-
-    changeUploadView() {
-        this.setState({
-            isUploadView: !this.state.isUploadView
-        });
-    },
-
     render() {
         return (
             <div>
                 <div className={Styles.myData}>
-                    <If condition={this.state.isUploadView}>
+                    <If condition={this.props.viewState.myDataIsUploadView}>
                         <div className={Styles.addData}>
-                            <If condition={this.state.dataCatalog}>
-                                <button type='button' onClick={this.changeUploadView} className={Styles.backToMyData}>
+                            <If condition={this.props.terria.catalog.userAddedDataGroup}>
+                                <button type='button'
+                                        onClick={()=>this.props.viewState.myDataIsUploadView = !this.props.viewState.myDataIsUploadView}
+                                        className={Styles.backToMyData}>
                                     Back
                                 </button>
                             </If>
                         <h3>Adding your own data</h3>
-                        <AddData updateCatalog={this.updateCatalog}
-                                 terria={this.props.terria}
-                                 viewState={this.props.viewState}
+                            <AddData terria={this.props.terria}
+                                     viewState={this.props.viewState}
                         />
                     </div>
                     </If>
@@ -61,9 +42,11 @@ const MyDataTab = React.createClass({
                         <div className={Styles.addedData}>
                             {DISCLAIMER}
                             <ul className={Styles.dataCatalog}>
-                                <DataCatalogGroup group={this.state.dataCatalog} viewState={this.props.viewState}/>
+                                <DataCatalogGroup group={this.props.terria.catalog.userAddedDataGroup}
+                                                  viewState={this.props.viewState}/>
                             </ul>
-                            <button type='button' onClick={this.changeUploadView} className={Styles.btnAddMoreData}>
+                            <button type='button' onClick={()=>this.props.viewState.myDataIsUploadView = true}
+                                    className={Styles.btnAddMoreData}>
                                 Add more data
                             </button>
                         </div>
@@ -79,4 +62,5 @@ const MyDataTab = React.createClass({
         );
     }
 });
+
 module.exports = MyDataTab;
