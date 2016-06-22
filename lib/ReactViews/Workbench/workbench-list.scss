@@ -2,6 +2,8 @@
 
 .workbench-content {
   composes: list-reset from '../../Sass/partial/_base.scss';
+  position: relative;
+
   @media print{
     page-break-after : always;
   }
@@ -9,15 +11,15 @@
 
 .is-active {
   composes: is-active from '../../Sass/partial/_drop_zone.scss';
-
-  &.drop-zone {
-    height: calc(#{$input-height} + #{$padding});
-  }
 }
 
 .drop-zone {
   composes: drop-zone from '../../Sass/partial/_drop_zone.scss';
   composes: clearfix from '../../Sass/partial/_base.scss';
 
-  height: 1px;
+  height: 2px;
+
+  &.is-active {
+    height: calc(#{$input-height} + #{$padding});
+  }
 }

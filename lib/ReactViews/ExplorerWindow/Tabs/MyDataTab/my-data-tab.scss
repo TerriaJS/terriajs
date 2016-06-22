@@ -5,6 +5,10 @@
   height: 100%;
 }
 
+.data-catalog {
+  composes: list-reset from '../../../../Sass/partial/_base.scss';
+}
+
 .left-col {
   composes: tab-left-col from '../../tabs.scss';
 
