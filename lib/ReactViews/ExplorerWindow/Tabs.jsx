@@ -41,6 +41,8 @@ const Tabs = React.createClass({
     },
 
     render() {
+        const item = this.state.tabs[this.props.viewState.modalTabIndex];
+
         return (
             <div className={Styles.tabs}>
                 <ul className={Styles.tabList} role="tablist">
@@ -60,19 +62,16 @@ const Tabs = React.createClass({
                     </For>
                 </ul>
 
-                <For each="item" index="i" of={this.state.tabs}>
-                    <section
-                        key={item.title}
-                        aria-hidden={this.props.viewState.modalTabIndex !== i}
-                        id={'panel--' + item.title}
-                        className={classNames(Styles.tabPanel, {[Styles.isActive]: this.props.viewState.modalTabIndex === i})}
-                        aria-labelledby={'tablist--' + item.title}
-                        role='tabpanel' tabIndex='0'>
-                        <div className={Styles.panelContent}>
-                            {item.panel}
-                        </div>
-                    </section>
-                </For>
+                <section
+                    key={item.title}
+                    id={'panel--' + item.title}
+                    className={classNames(Styles.tabPanel, Styles.isActive)}
+                    aria-labelledby={'tablist--' + item.title}
+                    role='tabpanel' tabIndex='0'>
+                    <div className={Styles.panelContent}>
+                        {item.panel}
+                    </div>
+                </section>
             </div>
         );
     }

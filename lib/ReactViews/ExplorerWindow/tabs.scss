@@ -16,18 +16,8 @@
 }
 
 .tab-panel {
-  position: absolute;
-  left: -10000px;
-  z-index: -1;
   width: 100%;
   height: $modal-content-height;
-
-  &.is-active {
-    z-index: 1;
-    position: relative;
-    opacity: 1;
-    left: 0;
-  }
 
   &:focus {
     outline: none;
