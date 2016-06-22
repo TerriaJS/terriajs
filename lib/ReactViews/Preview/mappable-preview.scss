@@ -1,15 +1,13 @@
 @import '~terriajs-variables';
 @import '../../Sass/global/mixins';
 
+@include empty-module("previewed-info");
+
 .btn--back-to-map {
   composes: btn from '../../Sass/partial/_buttons.scss';
   composes: btn--tertiary from '../../Sass/partial/_buttons.scss';
 
   font-size: 1rem;
-}
-
-.previewed-info {
-
 }
 
 .btn--add{
@@ -35,4 +33,21 @@
     display: inline-block;
     width: 40%;
   }
+}
+
+.field {
+  composes: field from '../../Sass/partial/_form.scss';
+}
+
+
+// URL
+//
+// Markup:
+// <p class='url'> <a href="https://programs.communications.gov.au/geoserver/ows"'>https://programs.communications.gov.au/geoserver/ows/geoserver/ows/geoserver/ows/geoserver/ows/geoserver/ows/geoserver/ows/geoserver/ows/geoserver/ows/geoserver/ows</a></p>
+//
+// Style guide: 1.8
+//
+
+.url{
+  @extend %wrap;
 }

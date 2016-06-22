@@ -115,17 +115,6 @@ a:hover {
   text-decoration: underline;
 }
 
-// URL
-//
-// Markup:
-// <p class='url'> <a href="https://programs.communications.gov.au/geoserver/ows"'>https://programs.communications.gov.au/geoserver/ows/geoserver/ows/geoserver/ows/geoserver/ows/geoserver/ows/geoserver/ows/geoserver/ows/geoserver/ows/geoserver/ows</a></p>
-//
-// Style guide: 1.8
-//
-
-.url{
-  @extend %wrap;
-}
 
 pre, code, samp {
   font-family: 'Source Code Pro', Consolas, monospace;

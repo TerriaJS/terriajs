@@ -50,7 +50,7 @@ const MappablePreview = React.createClass({
                     <button type='button' className={Styles.btnBack} onClick={this.backToMap}>
                         Back to the map
                     </button>
-                    <div className="data-info url">
+                    <div className={Styles.url}>
                         <If condition={catalogItem.description && catalogItem.description.length > 0}>
                             <div>
                                 <h4>Description</h4>
@@ -96,7 +96,7 @@ const MappablePreview = React.createClass({
                                 </Choose>
 
                                 <input readOnly
-                                       className='field'
+                                       className={Styles.field}
                                        type="text"
                                        value={catalogItem.url}
                                        onClick={this.selectUrl} />

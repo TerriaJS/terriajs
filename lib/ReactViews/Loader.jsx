@@ -2,6 +2,8 @@
 import ObserveModelMixin from './ObserveModelMixin';
 import React from 'react';
 
+import Styles from './loader.scss';
+
 const Loader = React.createClass({
     mixins: [ObserveModelMixin],
 
@@ -10,7 +12,7 @@ const Loader = React.createClass({
     },
 
     render() {
-        return <span className='loader'>{this.props.message || 'Loading'}</span>;
+        return <span className={Styles.loader}>{this.props.message || 'Loading'}</span>;
     }
 });
 module.exports = Loader;
