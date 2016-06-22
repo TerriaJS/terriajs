@@ -3,6 +3,7 @@
 .legend {
   composes: clearfix from '../../../Sass/partial/_base.scss';
   composes: list-reset from '../../../Sass/partial/_base.scss';
+  font-family: $font-mono;
   li {
     display: block;
   }
