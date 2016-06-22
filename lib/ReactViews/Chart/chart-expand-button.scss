@@ -1,0 +1,82 @@
+@import '~terriajs-variables';
+@import '../../Sass/global/mixins';
+
+.dropdown {
+  display: inline-block;
+
+  &__list {
+    display: flex;
+  }
+
+  &__btn {
+    composes: btn--small from '../../Sass/partial/_buttons.scss';
+  }
+
+  &__btn--option {
+    width: auto;
+    float: left;
+    color: $color-primary;
+
+    &:hover, &:focus {
+      background: $color-primary;
+      color: orange;
+      text-decoration: none;
+    }
+  }
+}
+
+.chart-expand {
+  z-index: 999;
+  position: absolute;
+  right: 0;
+}
+
+.raise-to-title {
+  top: -21px;
+}
+
+.chart-dropdown-button {
+  position: relative;
+  float: right;
+}
+
+.btn--dropdown {
+  // largely to undo .btn--dropdown
+  // It would be better to add a class to the Add Data dropdown instead.
+  z-index: 999;
+  color: white; // TODO
+  font-family: $font-pop;
+  border: none;
+  padding: 1px 8px;
+  margin-right: 3px;
+  width: auto;
+  float: right;
+}
+
+.btn-small {
+  composes: btn--small from '../../Sass/partial/_buttons.scss';
+}
+
+.btn-download {
+  composes: btn--download from '../../Sass/partial/_buttons.scss';
+
+  display: inline-block;
+  text-align: center;
+  padding: 4px 3px;
+  width: 27px;
+  margin-left: 3px;
+  color: white;
+
+  &:hover, &:focus {
+    text-decoration: none;
+  }
+}
+
+.btn--chart-expand {
+  display: inline-block;
+  z-index: 999;
+  background: $color-primary;
+  padding: 1px 8px;
+  right: 0;
+  margin-right: 3px;
+}

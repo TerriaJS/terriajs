@@ -1,7 +1,11 @@
 'use strict';
 
-import ObserveModelMixin from '../ObserveModelMixin';
+import classNames from 'classnames'
 import React from 'react';
+
+import ObserveModelMixin from '../ObserveModelMixin';
+
+import Styles from './collapsible.scss';
 
 const Collapsible = React.createClass({
     mixins: [ObserveModelMixin],
@@ -25,15 +29,17 @@ const Collapsible = React.createClass({
         let body;
         if (this.state.isOpen) {
             body = (
-                <div className='collapsible-body'>
+                <div className={Styles.body}>
                     {this.props.children}
                 </div>
             );
         }
         return (
-            <div className='collapsible'>
-                <div className='collapsible-header'>
-                    <button type='button' onClick={this.toggleOpen} className={'btn btn--toggle ' + (this.state.isOpen === true ? 'is-open' : '')}></button>
+            <div className={Styles.root}>
+                <div className={Styles.header}>
+                    <button type='button'
+                            onClick={this.toggleOpen}
+                            className={classNames(Styles.btn, {[Styles.isOpen]: this.state.isOpen})}/>
                     <span>{this.props.title}</span>
                 </div>
                 {body}

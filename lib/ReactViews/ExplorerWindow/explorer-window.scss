@@ -101,5 +101,5 @@
 }
 
 .is-top {
-  z-index: $front-component-z-index !important;
+  composes: is-top from '../../Sass/partial/_layout.scss';
 }

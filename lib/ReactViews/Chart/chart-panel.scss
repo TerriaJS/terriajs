@@ -1,0 +1,82 @@
+@import '~terriajs-variables';
+@import '../../Sass/global/mixins';
+
+@include empty-module('inner');
+@include empty-module('chart-panel');
+
+.holder {
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background: $dark;
+  padding-bottom: 13px;
+}
+
+.header {
+  height: 41px;
+  box-sizing: border-box;
+  position: relative;
+  background-color: $chart-darker;
+  font-size: 13px;
+}
+
+.chart {
+  :global {
+    .line-chart .axis path.domain {
+      stroke: $chart-axis-color;
+    }
+
+    .line-chart .axis .tick line {
+      stroke: $chart-grid-color;
+    }
+
+    .line-chart .axis .colors line {
+      stroke-width: 2;
+    }
+
+    .line-chart .plot-area {
+      fill: $chart-area-color;
+    }
+
+    .line-chart text {
+      font-size: 120%;
+    }
+  }
+}
+
+.chart-panel .axis .colors path {
+  stroke-width: 2;
+}
+
+.section-label, .btn {
+  display: inline-block;
+  vertical-align: top;
+}
+
+.section-label {
+  composes: label from '../../Sass/partial/_labels.scss';
+}
+
+.loader {
+  padding: 0px 0px 0px $padding*3 !important;
+  &:before {
+    top: 0px;
+  }
+}
+
+.btn--close-chart-panel {
+  composes: btn from '../../Sass/partial/_buttons.scss';
+  composes: btn--close from '../../Sass/partial/_buttons.scss';
+
+  position: absolute;
+  right: 0;
+  top: 0;
+  &:hover,
+  &:focus {
+    color: $color-primary;
+  }
+}
+
+.is-top {
+  composes: is-top from '../../Sass/partial/_layout.scss';
+}

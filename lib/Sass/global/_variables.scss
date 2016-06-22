@@ -1,7 +1,6 @@
 @import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,400italic,600);
 @import url(https://fonts.googleapis.com/css?family=Lato:400,700);
 
-
 $font-pop:'Open Sans', sans-serif;
 $font-base: 'Open Sans', sans-serif;
 $font-mono: monospace, sans-serif;
@@ -84,4 +83,9 @@ $lg: 1200px;
 
 $front-component-z-index: 99;
 
-
+$chart-area-color: rgba(#fff, 0.075);
+$chart-axis-color: #fff;
+$chart-grid-color: rgba(#fff, 0.085);
+$chart-text-color: #fff;
+$chart-line-color: #ccc;
+$chart-darker: darken($dark, 8%);
