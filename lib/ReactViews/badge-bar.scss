@@ -36,5 +36,12 @@
 
 .label-badge {
   composes: label;
-  composes: label-badge from '../Sass/common/_labels.scss';
+
+  text-align: center;
+  border: 1px solid;
+  border-radius: 2px;
+  box-sizing: content-box;
+  padding: $padding-small/2 $padding-small;
+  margin-top: 7px;
+  font-size: 8px;
 }

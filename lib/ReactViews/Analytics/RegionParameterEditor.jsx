@@ -1,16 +1,19 @@
 import classNames from 'classnames';
+import React from 'react';
+
 import defined from 'terriajs-cesium/Source/Core/defined';
-import GeoJsonCatalogItem from '../../Models/GeoJsonCatalogItem';
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
+import when from 'terriajs-cesium/Source/ThirdParty/when';
+
+import GeoJsonCatalogItem from '../../Models/GeoJsonCatalogItem';
 import ObserveModelMixin from '../ObserveModelMixin';
 import OpenStreetMapCatalogItem from '../../Models/OpenStreetMapCatalogItem';
-import React from 'react';
-import Styles from './region-parameter-editor.scss';
 import Terria from '../../Models/Terria';
 import TerriaViewer from '../../ViewModels/TerriaViewer';
 import ViewerMode from '../../Models/ViewerMode';
 import WebMapServiceCatalogItem from '../../Models/WebMapServiceCatalogItem';
-import when from 'terriajs-cesium/Source/ThirdParty/when';
+
+import Styles from './parameter-editors.scss';
 
 const RegionParameterEditor = React.createClass({
     mixins: [ObserveModelMixin],
@@ -55,10 +58,10 @@ const RegionParameterEditor = React.createClass({
         this.terriaForRegionSelection.baseMap = positron;
         // handle feature picking
         const that = this;
-        knockout.getObservable(this.terriaForRegionSelection, 'pickedFeatures').subscribe(function() {
+        knockout.getObservable(this.terriaForRegionSelection, 'pickedFeatures').subscribe(function () {
             const pickedFeatures = that.terriaForRegionSelection.pickedFeatures;
             that._lastPickedFeatures = pickedFeatures;
-            when(pickedFeatures.allFeaturesAvailablePromise, function() {
+            when(pickedFeatures.allFeaturesAvailablePromise, function () {
                 if (pickedFeatures !== that._lastPickedFeatures || pickedFeatures.features.length === 0) {
                     return;
                 }
@@ -80,10 +83,10 @@ const RegionParameterEditor = React.createClass({
         });
 
         knockout.defineProperty(this, 'regionValue', {
-            get: function() {
+            get: function () {
                 return this.props.parameter.getValue(this.props.parameterValues);
             },
-            set: function(value) {
+            set: function (value) {
                 if (defined(value) && defined(value.realRegion)) {
                     value = value.realRegion;
                 }
@@ -94,7 +97,7 @@ const RegionParameterEditor = React.createClass({
         });
 
         knockout.defineProperty(this, 'regionProvider', {
-            get: function() {
+            get: function () {
                 return this.props.parameter.getRegionProvider(this.props.parameterValues);
             }
         });
@@ -136,8 +139,8 @@ const RegionParameterEditor = React.createClass({
         const result = [];
         const regions = this.regionProvider.regions;
         const regionNames = this._regionNames;
-        if(regions && regions.length > 0) {
-            for(let i = 0; i < regions.length; i ++) {
+        if (regions && regions.length > 0) {
+            for (let i = 0; i < regions.length; i++) {
                 const name = regionNames[i];
                 if (name && name.toLowerCase().indexOf(e.target.value) >= 0) {
                     result.push({
@@ -155,7 +158,7 @@ const RegionParameterEditor = React.createClass({
         this._displayValue = e.target.value;
         this.setState({
             autocompleteVisible: result.length > 0 &&
-                                 result.length < 100,
+            result.length < 100,
             autoCompleteOptions: result
         });
     },
@@ -167,23 +170,6 @@ const RegionParameterEditor = React.createClass({
             autocompleteVisible: false,
             autoCompleteOptions: []
         });
-    },
-
-    renderOptions() {
-        const className = classNames({
-            [Styles.autocomplete]: true,
-            [Styles.isHidden]: !this.state.autocompleteVisible
-        });
-
-        return (
-            <ul className={className}>
-                {this.state.autoCompleteOptions.map((op, i)=>
-                    <li className="" key={i}>
-                        <button type='button' className={Styles.autocompleteItem} onClick={this.selectRegion.bind(this, op)}>{op.name}</button>
-                    </li>
-                )}
-            </ul>
-        );
     },
 
     getDisplayValue() {
@@ -199,25 +185,6 @@ const RegionParameterEditor = React.createClass({
         }
     },
 
-    render() {
-        return <div>
-                    <div className={Styles.parameterEditor}>
-                        <input className={Styles.regionInput}
-                               type="text"
-                               autoComplete="off"
-                               value={this.getDisplayValue()}
-                               onChange={this.textChange}
-                               placeholder="Type a region name or click the map below"
-                        />
-                        {this.renderOptions()}
-                        <div className={Styles.embeddedMap}>
-                            <div className={Styles.map} ref='mapContainer'></div>
-                            <div className={Styles.mapUi} ref='uiContainer'></div>
-                        </div>
-                    </div>
-                </div>;
-    },
-
     addRegionLayer() {
         const that = this;
 
@@ -227,7 +194,7 @@ const RegionParameterEditor = React.createClass({
 
         this._loadingRegionProvider = this.regionProvider;
 
-        when.all([that.regionProvider.loadRegionIDs(), that.regionProvider.loadRegionNames()]).then(function() {
+        when.all([that.regionProvider.loadRegionIDs(), that.regionProvider.loadRegionNames()]).then(function () {
             if (that.regionProvider !== that._loadingRegionProvider) {
                 return;
             }
@@ -266,7 +233,7 @@ const RegionParameterEditor = React.createClass({
         const terria = this.props.previewed.terria;
 
         const that = this;
-        this.regionProvider.getRegionFeature(terria, value, that._lastRegionFeature).then(function(feature) {
+        this.regionProvider.getRegionFeature(terria, value, that._lastRegionFeature).then(function (feature) {
             if (parameterValues[parameter.id] !== value) {
                 // Value has already changed.
                 return;
@@ -283,7 +250,7 @@ const RegionParameterEditor = React.createClass({
                 that._selectedRegionCatalogItem.isEnabled = true;
                 that._selectedRegionCatalogItem.zoomTo();
             }
-        }).otherwise(function() {
+        }).otherwise(function () {
             if (parameterValues[parameter.id] !== value) {
                 // Value has already changed.
                 return;
@@ -294,6 +261,43 @@ const RegionParameterEditor = React.createClass({
                 that._selectedRegionCatalogItem = undefined;
             }
         });
+    },
+
+    render() {
+        return <div>
+            <div className={Styles.parameterEditor}>
+                <input className={Styles.regionInput}
+                       type="text"
+                       autoComplete="off"
+                       value={this.getDisplayValue()}
+                       onChange={this.textChange}
+                       placeholder="Type a region name or click the map below"
+                />
+                {this.renderOptions()}
+                <div className={Styles.embeddedMap}>
+                    <div className={Styles.map} ref='mapContainer'></div>
+                    <div className={Styles.mapUi} ref='uiContainer'></div>
+                </div>
+            </div>
+        </div>;
+    },
+
+    renderOptions() {
+        const className = classNames({
+            [Styles.autocomplete]: true,
+            [Styles.isHidden]: !this.state.autocompleteVisible
+        });
+
+        return (
+            <ul className={className}>
+                {this.state.autoCompleteOptions.map((op, i)=>
+                    <li key={i}>
+                        <button type='button' className={Styles.autocompleteItem}
+                                onClick={this.selectRegion.bind(this, op)}>{op.name}</button>
+                    </li>
+                )}
+            </ul>
+        );
     }
 });
 

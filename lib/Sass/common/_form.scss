@@ -1,4 +1,4 @@
-@import "variables";
+@import '~terriajs-variables';
 
 .field {
   border-style: solid;
@@ -17,35 +17,13 @@
 
 .field:disabled,
 .field.is-disabled {
-  background-color: rgba(0,0,0,.125);
+  background-color: rgba(0, 0, 0, .125);
   opacity: .5;
 }
 
 .field:read-only:not(select),
 .field.is-read-only {
-  background-color: rgba(0,0,0,.125);
+  background-color: rgba(0, 0, 0, .125);
 }
 
 
-
-// Forms
-//
-// Style guide: 3.0
-//
-
-
-.field--parameter-editor{
-  margin-bottom: $padding;
-  position: relative;
-  input[type=date]{
-    width: 50%;
-		float: left;
-  }
-  input[type=time]{
-    width: 50%;
-  }
-  input, select{
-    width: 100%;
-    display: block;
-  }
-}

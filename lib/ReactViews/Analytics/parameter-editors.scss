@@ -1,0 +1,119 @@
+@import '~terriajs-variables';
+@import '../../Sass/common/mixins';
+
+.tree {
+  composes: list-reset from '../../Sass/common/_base.scss';
+}
+
+@include empty-module("parameter-editor-important-note");
+
+.data {
+  background: #fff;
+}
+
+.parameter-editor {
+  margin-bottom: $padding;
+  position: relative;
+  input[type=date] {
+    width: 50%;
+    float: left;
+  }
+  input[type=time] {
+    width: 50%;
+  }
+}
+
+.field {
+  composes: field from '../../Sass/common/_form.scss';
+}
+
+.field--parameter-editor {
+  margin-bottom: $padding;
+  position: relative;
+  input[type=date] {
+    width: 50%;
+    float: left;
+  }
+  input[type=time] {
+    width: 50%;
+  }
+  input, select {
+    width: 100%;
+    display: block;
+  }
+}
+
+.label {
+  compose: field from '../../Sass/common/_label.scss';
+
+  font-weight: 600;
+  line-height: 2;
+}
+
+.btn-catalog {
+  padding-left: $padding;
+}
+
+.btn-selector {
+  compose: btn from '../../Sass/common/_buttons.scss';
+  compose: btn-primary from '../../Sass/common/_buttons.scss';
+}
+
+.map {
+  :global {
+    .leaflet-container {
+      height: 200px;
+      overflow: hidden;
+      position: relative;
+      background: #d5d5d5;
+      cursor: auto;
+      margin: $padding 0;
+    }
+
+    .leaflet-control-attribution {
+      font-size: 6px;
+      background: none;
+    }
+  }
+}
+
+.region-input {
+  composes: field from '../../Sass/common/_form.scss';
+  width: 100%;
+  display: block;
+}
+
+.is-hidden {
+  composes: is-hidden from '../../Sass/common/_form.scss';
+}
+
+.autocomplete {
+  composes: autocomplete from '../../Sass/common/_form.scss';
+}
+
+.autocomplete-item {
+  composes: btn from '../../Sass/common/_buttons.scss';
+  composes: btn from '../../Sass/common/_form.scss';
+}
+
+@include empty-module("radio");
+
+.btn-radio {
+  composes: btn from '../../Sass/common/_buttons.scss';
+
+  padding: 5px;
+
+  &:before {
+    color: #08abd5;
+    display: inline-block;
+    padding: 5px 5px 5px 0;
+  }
+}
+
+.btn-radio--off {
+  composes: btn--radio-off from '../../Sass/common/_buttons.scss';
+}
+
+.btn-radio--on {
+  composes: btn--radio-on from '../../Sass/common/_buttons.scss';
+}
