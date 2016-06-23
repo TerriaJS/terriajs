@@ -1,4 +1,3 @@
-'use strict';
 import React from 'react';
 import Styles from './search-result.scss';
 import classNames from 'classnames';

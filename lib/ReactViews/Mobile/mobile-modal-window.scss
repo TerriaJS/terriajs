@@ -34,3 +34,7 @@
   position: fixed;
   z-index: 999;
 }
+
+.data-catalog {
+  composes: data-catalog from '../ExplorerWindow/Tabs/data-catalog-tab.scss';
+}

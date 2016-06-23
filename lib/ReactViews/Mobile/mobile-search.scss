@@ -24,3 +24,5 @@
   display: block;
 }
 
+@include empty-module("location")
+@include empty-module("data")
