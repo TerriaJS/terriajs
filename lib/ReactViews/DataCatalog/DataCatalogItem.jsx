@@ -5,8 +5,7 @@ import addedByUser from '../../Core/addedByUser';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import ObserveModelMixin from '../ObserveModelMixin';
 import raiseErrorOnRejectedPromise from '../../Models/raiseErrorOnRejectedPromise';
-
-import Styles from './data-catalog-item.scss';
+import CatalogItem from './CatalogItem';
 
 // Individual dataset
 const DataCatalogItem = React.createClass({
@@ -49,42 +48,26 @@ const DataCatalogItem = React.createClass({
     render() {
         const item = this.props.item;
         return (
-            <li className={classNames(Styles.root)}>
-                <button type='button'
-                        onClick={this.setPreviewedItem}
-                        className={classNames(
-                            Styles.btnCatalogItem,
-                            {[Styles.btnCatalogItemIsPreviewed]: this.isSelected()}
-                        )}>
-                    {item.name}
-                </button>
-                <Choose>
-                    <When condition={!defined(item.invoke)}>
-                        <button type='button' onClick={this.toggleEnable}
-                                title="add to map"
-                                className={classNames(Styles.btnAction, this.renderIconClass())}
-                        />
-                    </When>
-                    <Otherwise>
-                        <button type='button'
-                                onClick={this.setPreviewedItem}
-                                title="preview"
-                                className={classNames(Styles.btnAction, Styles.btnActionStatsBars)}
-                        />
-                    </Otherwise>
-                </Choose>
-            </li>
+            <CatalogItem
+                onTextClick={this.setPreviewedItem}
+                selected={this.isSelected()}
+                text={item.name}
+                btnState={this.getState()}
+                onBtnClick={defined(item.invoke) ? this.setPreviewedItem : this.toggleEnable}
+            />
         );
     },
 
-    renderIconClass() {
-        if (this.props.item.isEnabled) {
-            if (this.props.item.isLoading) {
-                return Styles.btnActionLoadingOnMap;
-            }
-            return Styles.btnActionRemoveFromMap;
+    getState() {
+        if (this.props.item.isLoading) {
+            return 'loading';
+        } else if (this.props.item.isEnabled) {
+            return 'remove';
+        } else if (!defined(this.props.item.invoke)) {
+            return 'add';
+        } else {
+            return 'stats';
         }
-        return Styles.btnActionAddToMap;
     }
 });
 
