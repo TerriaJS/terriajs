@@ -206,6 +206,12 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
         loader: require.resolve('file-loader')
     });
 
+    config.module.loaders.push({
+        test: /\.svg$/,
+        include: path.resolve(terriaJSBasePath, 'path', 'to', 'svgs'),
+        loader: require.resolve('svg-sprite-loader')
+    });
+
     config.devServer = config.devServer || {
         stats: 'minimal',
         port: 3003,
