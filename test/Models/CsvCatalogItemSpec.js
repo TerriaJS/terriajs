@@ -729,6 +729,42 @@ describe('CsvCatalogItem with region mapping', function() {
         }).otherwise(fail).then(done);
     });
 
+    it('matches mapped region column names', function(done) {
+        csvItem.updateFromJson({
+            data: 'nothing,value\n31000,1',
+            tableStyle: {
+                columns: {
+                    'nothing': {
+                        name: 'lga_code'
+                    }
+                }
+            }
+        });
+        csvItem.load().then(function() {
+            csvItem.isEnabled = true;  // The recolorFunction call is only made once the layer is enabled.
+            var regionDetails = csvItem.regionMapping.regionDetails;
+            expect(regionDetails).toBeDefined();
+        }).otherwise(fail).then(done);
+    });
+
+    it('matches original name of mapped region column names', function(done) {
+        csvItem.updateFromJson({
+            data: 'lga_code,value\n31000,1',
+            tableStyle: {
+                columns: {
+                    'lga_code': {
+                        name: 'something'
+                    }
+                }
+            }
+        });
+        csvItem.load().then(function() {
+            csvItem.isEnabled = true;  // The recolorFunction call is only made once the layer is enabled.
+            var regionDetails = csvItem.regionMapping.regionDetails;
+            expect(regionDetails).toBeDefined();
+        }).otherwise(fail).then(done);
+    });
+
     // TODO: What is this testing?
     xit('matches numeric state IDs with regexes', function(done) {
         csvItem.updateFromJson({data: 'state,value\n3,30\n4,40\n5,50,\n8,80\n9,90'});
