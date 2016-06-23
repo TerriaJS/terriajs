@@ -1,6 +1,4 @@
-
 import React from 'react';
-
 import arrayContains from '../../Core/arrayContains';
 import Branding from './../SidePanel/Branding.jsx';
 import DisclaimerHandler from '../../ReactViewModels/DisclaimerHandler';
@@ -16,6 +14,7 @@ import Notification from './../Notification/Notification.jsx';
 import ObserveModelMixin from './../ObserveModelMixin';
 import ProgressBar from '../Map/ProgressBar.jsx';
 import SidePanel from './../SidePanel/SidePanel.jsx';
+import Sprite from 'svg-sprite-loader/lib/web/sprite';
 
 import Styles from './standard-user-interface.scss';
 
@@ -40,7 +39,10 @@ const StandardUserInterface = React.createClass({
     componentWillMount() {
         const that = this;
 
-        // TO DO(chloe): change window into a container
+        const sprite = new Sprite();
+
+        sprite.elem = sprite.render(document.body);
+
         this.dragOverListener = e => {
             if (!e.dataTransfer.types || !arrayContains(e.dataTransfer.types, 'Files')) {
                 return;
@@ -66,6 +68,7 @@ const StandardUserInterface = React.createClass({
     },
 
     componentWillUnmount() {
+        sprite.elem.parentNode.removeChild(sprite.elem);
         window.removeEventListener('resize', this.resizeListener, false);
         document.removeEventListener('dragover', this.dragOverListener, false);
         this.disclaimerHandler.dispose();
