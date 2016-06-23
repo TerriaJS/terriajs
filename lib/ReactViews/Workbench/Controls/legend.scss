@@ -30,7 +30,7 @@
   svg {
     width: 100%;
     display: block;
-    > rect {
+    :global rect.background {
       width: 100%;
       fill: rgba(#fff, 0.15);
     }

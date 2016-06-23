@@ -33,11 +33,23 @@
                 }
             },
             {
-                "name": "CSV (no 0) with blank values as zero",
+                "name": "CSV with colorBins=0 (gradient)",
                 "type": "csv",
                 "data": "longitude,latitude,value\n134,-26,5\n121,-33,\n124,-32,3\n130,-30,4\n132,-28,1",
                 "tableStyle": {
-                    "replaceWithZeroValues": [null]
+                    "replaceWithZeroValues": [null],
+                    "colorBins": 0
+                }
+            },
+            {
+                "name": "CSV with colorBins=0 (gradient) and blank values separated",
+                "type": "csv",
+                "data": "longitude,latitude,value\n134,-26,5\n121,-33,\n124,-32,3\n130,-30,4\n132,-28,1",
+                "tableStyle": {
+                    "replaceWithZeroValues": [],
+                    "nullColor": "green",
+                    "nullLabel": "blank",
+                    "colorBins": 0
                 }
             },
             {
