@@ -741,27 +741,23 @@ describe('CsvCatalogItem with region mapping', function() {
             }
         });
         csvItem.load().then(function() {
-            csvItem.isEnabled = true;  // The recolorFunction call is only made once the layer is enabled.
-            var regionDetails = csvItem.regionMapping.regionDetails;
-            expect(regionDetails).toBeDefined();
+            expect(csvItem.regionMapping.regionDetails).toBeDefined();
         }).otherwise(fail).then(done);
     });
 
-    it('matches original name of mapped region column names', function(done) {
+    it('does not match original name of mapped region column names', function(done) {
         csvItem.updateFromJson({
             data: 'lga_code,value\n31000,1',
             tableStyle: {
                 columns: {
                     'lga_code': {
-                        name: 'something'
+                        name: 'something else'
                     }
                 }
             }
         });
         csvItem.load().then(function() {
-            csvItem.isEnabled = true;  // The recolorFunction call is only made once the layer is enabled.
-            var regionDetails = csvItem.regionMapping.regionDetails;
-            expect(regionDetails).toBeDefined();
+            expect(csvItem.regionMapping).not.toBeDefined();
         }).otherwise(fail).then(done);
     });
 
