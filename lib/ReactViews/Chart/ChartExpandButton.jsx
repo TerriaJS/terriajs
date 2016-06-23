@@ -157,7 +157,7 @@ function expand(props, url) {
                     column.isActive = activeConcepts[columnNumber];
                 });
             } else if (defined(props.yColumns)) {
-                const activeColumns = props.yColumns.map(nameOrIndex=>tableStructure.getColumnWithNameOrIndex(nameOrIndex));
+                const activeColumns = props.yColumns.map(nameOrIndex=>tableStructure.getColumnWithNameIdOrIndex(nameOrIndex));
                 tableStructure.columns.forEach(column=>{
                     column.isActive = activeColumns.indexOf(column) >= 0;
                 });
