@@ -6,121 +6,110 @@
         "isOpen": true,
         "items": [
             {
-                "name": "Example 1",
-                "type": "sdmx-json",
-                "url": "data/abs_sdmx_example1.json"
-            },
-            {
-                "name": "Example 2",
-                "type": "sdmx-json",
-                "url": "data/abs_sdmx_example2.json"
-            },
-            {
-                "name": "Two dimensions",
-                "type": "sdmx-json",
-                "url": "/data/sdmx_example3.json",
-                "dataflowUrlComponent": ""
-            },
-            {
-                "name": "Non-spatial",
-                "type": "sdmx-json",
-                "url": "data/sdmx_example4.json"
-            },
-            {
-                "name": "OECD Annual GDP VOBARSA (online)",
-                "type": "sdmx-json",
-                "url": "http://stats.oecd.org/sdmx-json/data/QNA/.B1_GE.VOBARSA.A/all",
-                "regionDimensionId": "LOCATION",
-                "regionType": "ISO3",
-                "featureInfoTemplate": {
-                    "template": "<p>Annual {{date}} GDP: {{Value}}</p><p>(expenditure approach, seasonally adjusted, units TBC)</p>",
-                    "formats": {
-                        "Value": {
-                            "maximumFractionDigits": 0,
-                            "useGrouping": true
-                        }
+                "name": "Local files",
+                "type": "group",
+                "isOpen": true,
+                "items": [
+                    {
+                        "name": "Simple example",
+                        "type": "sdmx-json",
+                        "url": "build/TerriaJS/test/SDMX-JSON/data-foo-2013.json",
+                        "dataflowUrlComponent": ""
+                    },
+                    {
+                        "name": "Two dimensions",
+                        "type": "sdmx-json",
+                        "url": "build/TerriaJS/test/SDMX-JSON/data-foo2-2013.json",
+                        "dataflowUrlComponent": ""
+                    },
+                    {
+                        "name": "Time varying",
+                        "type": "sdmx-json",
+                        "url": "build/TerriaJS/test/SDMX-JSON/data-foo-BD2-2011_2013.json",
+                        "dataflowUrlComponent": ""
+                    },
+                    {
+                        "name": "Non-spatial",
+                        "type": "sdmx-json",
+                        "url": "build/TerriaJS/test/SDMX-JSON/data-nonspatial.json",
+                        "dataflowUrlComponent": ""
                     }
-                }
+                ]
             },
             {
-                "name": "OECD Annual GDP VOBARSA (local copy)",
-                "type": "sdmx-json",
-                "url": "data/oecd_qna_example.json",
-                "regionDimensionId": "LOCATION",
-                "regionType": "ISO3",
-                "featureInfoTemplate": {
-                    "template": "<p>Annual {{date}} GDP: {{Value}}</p><p>(expenditure approach, seasonally adjusted, units TBC)</p>",
-                    "formats": {
-                        "Value": {
-                            "maximumFractionDigits": 0,
-                            "useGrouping": true
-                        }
-                    }
-                },
-                "tableStyle": {
-                    "columns": {
-                        "Value": {
-                            "format": {
-                                "maximumFractionDigits": 2,
-                                "useGrouping": true
+                "name": "OECD data",
+                "type": "group",
+                "isOpen": true,
+                "items": [
+                    {
+                        "name": "Annual GDP VOBARSA (online)",
+                        "type": "sdmx-json",
+                        "url": "http://stats.oecd.org/sdmx-json/data/QNA/.B1_GE.VOBARSA.A/all",
+                        "regionDimensionId": "LOCATION",
+                        "regionType": "ISO3",
+                        "featureInfoTemplate": {
+                            "template": "<p>Annual {{date}} GDP: {{Value}}</p><p>(expenditure approach, seasonally adjusted, units TBC)</p>",
+                            "formats": {
+                                "Value": {
+                                    "maximumFractionDigits": 0,
+                                    "useGrouping": true
+                                }
                             }
                         }
+                    },
+                    {
+                        "name": "Quarterly National Accounts (QNA)",
+                        "type": "sdmx-json",
+                        "url": "http://stats.oecd.org/sdmx-json/data/QNA",
+                        "regionDimensionId": "LOCATION",
+                        "regionType": "ISO3",
+                        "startTime": "1970",
+                        "endTime": "2016",
+                        "whitelist": {
+                            "SUBJECT": [
+                                "B1_GA", "B1_GE", "B1GD"
+                            ],
+                            "MEASURE": [
+                                "VOBARSA", "VPVOBARSA", "LNBQRSA"
+                            ],
+                            "FREQUENCY": [
+                                "A"
+                            ]
+                        },
+                        "selectedInitially": {
+                            "SUBJECT": [
+                                "B1_GE"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "OECD QNA 2005 only",
+                        "type": "sdmx-json",
+                        "url": "http://stats.oecd.org/sdmx-json/data/QNA",
+                        "regionDimensionId": "LOCATION",
+                        "regionType": "ISO3",
+                        "startTime": "2005",
+                        "endTime": "2005",
+                        "whitelist": {
+                            "SUBJECT": [
+                                "B1_GE", "B1_GA", "B1GD"
+                            ],
+                            "MEASURE": [
+                                "VOBARSA", "VPVOBARSA", "LNBQRSA"
+                            ],
+                            "FREQUENCY": [
+                                "A"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "Economic Outlook 97 Annual Projections, June 2015",
+                        "type": "sdmx-json",
+                        "url": "http://stats.oecd.org/sdmx-json/data/EO97_INTERNET",
+                        "regionDimensionId": "LOCATION",
+                        "regionType": "ISO3"
                     }
-                }
-            },
-            {
-                "name": "OECD Some QNA (local copy)",
-                "type": "sdmx-json",
-                "url": "data/oecd_qna2.json",
-                "regionDimensionId": "LOCATION",
-                "regionType": "ISO3"
-            },
-            {
-                "name": "OECD QNA",
-                "type": "sdmx-json",
-                "url": "http://stats.oecd.org/sdmx-json/data/QNA",
-                "regionDimensionId": "LOCATION",
-                "regionType": "ISO3",
-                "startTime": "1970",
-                "endTime": "2016",
-                "whitelist": {
-                    "SUBJECT": [
-                        "B1_GE", "B1_GA", "B1GD"
-                    ],
-                    "MEASURE": [
-                        "VOBARSA", "VPVOBARSA", "LNBQRSA"
-                    ],
-                    "FREQUENCY": [
-                        "A"
-                    ]
-                }
-            },
-            {
-                "name": "OECD QNA 2005 only",
-                "type": "sdmx-json",
-                "url": "http://stats.oecd.org/sdmx-json/data/QNA",
-                "regionDimensionId": "LOCATION",
-                "regionType": "ISO3",
-                "startTime": "2005",
-                "endTime": "2005",
-                "whitelist": {
-                    "SUBJECT": [
-                        "B1_GE", "B1_GA", "B1GD"
-                    ],
-                    "MEASURE": [
-                        "VOBARSA", "VPVOBARSA", "LNBQRSA"
-                    ],
-                    "FREQUENCY": [
-                        "A"
-                    ]
-                }
-            },
-            {
-                "name": "Economic Outlook 97 Annual Projections, June 2015",
-                "type": "sdmx-json",
-                "url": "http://stats.oecd.org/sdmx-json/data/EO97_INTERNET",
-                "regionDimensionId": "LOCATION",
-                "regionType": "ISO3"
+                ]
             }
         ]
     }]
