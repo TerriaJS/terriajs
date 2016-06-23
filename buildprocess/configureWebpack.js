@@ -237,7 +237,7 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
             test: /\.scss$/,
             loaders: [
                 require.resolve('style-loader'),
-                require.resolve('css-loader') + '?sourceMap&modules&camelCase&localIdentName=[name]__[local]&importLoaders=2',
+                require.resolve('css-loader') + '?sourceMap&modules&camelCase&localIdentName=tjs-[name]__[local]&importLoaders=2',
                 require.resolve('resolve-url-loader') + '?sourceMap',
                 require.resolve('sass-loader') + '?sourceMap'
             ]
@@ -248,7 +248,7 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
             include: path.resolve(terriaJSBasePath, 'lib'),
             test: /\.scss$/,
             loader: ExtractTextPlugin.extract(
-                require.resolve('css-loader') + '?sourceMap&modules&camelCase&localIdentName=[name]__[local]&importLoaders=2!' +
+                require.resolve('css-loader') + '?sourceMap&modules&camelCase&localIdentName=tjs-[name]__[local]&importLoaders=2!' +
                 require.resolve('resolve-url-loader') + '?sourceMap!' +
                 require.resolve('sass-loader') + '?sourceMap',
                 {
