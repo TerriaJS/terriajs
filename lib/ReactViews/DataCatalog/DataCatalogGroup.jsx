@@ -1,11 +1,8 @@
 import React from 'react';
-import classNames from 'classnames';
 
-import DataCatalogMember from './DataCatalogMember.jsx';
-import Loader from '../Loader.jsx';
+import DataCatalogMember from './DataCatalogMember';
+import CatalogGroup from './CatalogGroup';
 import ObserveModelMixin from '../ObserveModelMixin';
-
-import Styles from './data-catalog-group.scss';
 
 const DataCatalogGroup = React.createClass({
     mixins: [ObserveModelMixin],
@@ -66,58 +63,23 @@ const DataCatalogGroup = React.createClass({
         const group = this.props.group;
 
         return (
-            <li className={Styles.root}>
-                <button type='button'
-                        className={classNames(
-                            Styles.btnCatalog,
-                            {[Styles.btnCatalogTopLevel]: this.isTopLevel()},
-                            {[Styles.btnIsOpen]: this.isOpen()}
-                        )}
-                        onClick={this.clickGroup}>
-                    <If condition={!this.isTopLevel()}>
-                        <i className={classNames(
-                            Styles.iconFolder,
-                            {[Styles.iconFolderOpen]: this.isOpen()},
-                            {[Styles.iconFolderClosed]: !this.isOpen()})}
-                        />
-                    </If>
-                    {group.name}
-                    <i className={classNames(
-                        Styles.caret,
-                        {[Styles.caretOpen]: this.isOpen()},
-                        {[Styles.caretClosed]: !this.isOpen()},
-                        {[Styles.caretLowerLevel]: !this.isTopLevel()}
-                    )}/>
-                </button>
-                <If condition={this.isOpen()}>
-                    <ul className={classNames(
-                        Styles.catalogGroup,
-                        {[Styles.catalogGroupLowerLevel]: !this.isTopLevel()}
-                    )}>
-                        <Choose>
-                            <When condition={group.isLoading}>
-                                <li key="loader">
-                                    <Loader />
-                                </li>
-                            </When>
-                            <When condition={group.items.length === 0}>
-                                <li className={classNames(Styles.label, Styles.labelNoResults)} key="empty">
-                                    This group is empty
-                                </li>
-                            </When>
-                        </Choose>
-                        <For each="item" of={group.items}>
-                            <DataCatalogMember
-                                key={item.uniqueId}
-                                member={item}
-                                viewState={this.props.viewState}
-                                userData={this.props.userData}
-                                overrideOpen={this.props.manageIsOpenLocally}
-                            />
-                        </For>
-                    </ul>
-                </If>
-            </li>
+            <CatalogGroup
+                text={group.name}
+                topLevel={this.isTopLevel()}
+                open={this.isOpen()}
+                loading={group.isLoading}
+                emptyMessage="This group is empty"
+                onClick={this.clickGroup}>
+                <For each="item" of={group.items}>
+                    <DataCatalogMember
+                        key={item.uniqueId}
+                        member={item}
+                        viewState={this.props.viewState}
+                        userData={this.props.userData}
+                        overrideOpen={this.props.manageIsOpenLocally}
+                    />
+                </For>
+            </CatalogGroup>
         );
     }
 });
