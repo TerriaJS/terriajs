@@ -1,3 +1,6 @@
+@import '~terriajs-variables';
+@import '../../Sass/common/mixins';
+
 .cesium-container {
   top: 0;
   right: 0;
@@ -5,10 +8,34 @@
   left: 0;
   position: absolute;
   cursor: auto;
+
   @media print{
     position: relative;
   }
+
   :global {
+    .selection-indicator{
+      pointer-events: none;
+      position: absolute;
+    }
+
+    .cesium-widget-credits{
+      position: absolute;
+      bottom: 0;
+      left: 1rem;
+      font-size: 0.5rem;
+      color: rgba(#fff, 0.8);
+      @extend %sm-show;
+    }
+
+    .cesium-credit-image{
+      display: none;
+    }
+
+    .leaflet-control-container{
+      @extend %sm-show;
+    }
+
     .cesium-widget, .cesium-widget canvas {
       @media print{
         position: relative;

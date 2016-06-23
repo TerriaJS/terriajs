@@ -1,24 +1,4 @@
-.selection-indicator{
-  pointer-events: none;
-  position: absolute;
-}
 
-.cesium-widget-credits{
-  position: absolute;
-  bottom: 0;
-  left: 1rem;
-  font-size: 0.5rem;
-  color: rgba(#fff, 0.8);
-  @extend .sm-show;
-}
-
-.cesium-credit-image{
-  display: none;
-}
-
-.leaflet-control-container{
-  @extend .sm-show;
-}
 
 input[type=range] {
     /*removes default webkit styles*/
@@ -53,14 +33,3 @@ input[type=range]:focus {
 input[type=range]:focus::-webkit-slider-runnable-track {
     background: #ccc;
 }
-
-.autocomplete{
-  @extend .list-reset;
-  max-height: 200px;
-  overflow-y: auto;
-  &.is-hidden{
-    display: none;
-  }
-}
-
-

@@ -1,5 +1,5 @@
 @import '~terriajs-variables';
-@import '../../Sass/global/mixins';
+@import '../../Sass/common/mixins';
 
 @include empty-module("root");
 
@@ -15,8 +15,8 @@
 //
 
 .btn--catalog {
-  composes: btn from '../../Sass/partial/_buttons.scss';
-  composes: btn-transparent from '../../Sass/partial/_buttons.scss';
+  composes: btn from '../../Sass/common/_buttons.scss';
+  composes: btn-transparent from '../../Sass/common/_buttons.scss';
 
   padding: $padding 30px+$padding;
   position: relative;
@@ -43,11 +43,11 @@
 }
 
 .btn--is-open {
-  composes: is-open from '../../Sass/partial/_buttons.scss';
+  composes: is-open from '../../Sass/common/_buttons.scss';
 }
 
 .icon-folder {
-  composes: icon from '../../Sass/global/_icons.scss';
+  composes: icon from '../../Sass/common/_icons.scss';
 
   position: absolute;
   left: 0;
@@ -61,16 +61,16 @@
   }
 
   &-closed {
-    composes: icon-folder from '../../Sass/global/_icons.scss';
+    composes: icon-folder from '../../Sass/common/_icons.scss';
   }
 
   &-open {
-    composes: icon-folder-open from '../../Sass/global/_icons.scss';
+    composes: icon-folder-open from '../../Sass/common/_icons.scss';
   }
 }
 
 .caret {
-  composes: icon from '../../Sass/global/_icons.scss';
+  composes: icon from '../../Sass/common/_icons.scss';
 
   &:before {
     position: absolute;
@@ -83,11 +83,11 @@
   }
 
   &--open {
-    composes: icon-opened from '../../Sass/global/_icons.scss';
+    composes: icon-opened from '../../Sass/common/_icons.scss';
   }
 
   &--closed {
-    composes: icon-closed from '../../Sass/global/_icons.scss';
+    composes: icon-closed from '../../Sass/common/_icons.scss';
 
     &:before {
       margin-top: 3px;
@@ -100,7 +100,7 @@
 }
 
 .catalog-group {
-  composes: list-reset from '../../Sass/partial/_base.scss';
+  composes: list-reset from '../../Sass/common/_base.scss';
   padding-left: $padding;
   padding-top: $padding / 2;
 
@@ -111,9 +111,9 @@
 }
 
 .label {
-  composes: label from '../../Sass/partial/_labels.scss';
+  composes: label from '../../Sass/common/_labels.scss';
 }
 
 .label--no-results {
-  composes: no-results from '../../Sass/partial/_labels.scss';
+  composes: no-results from '../../Sass/common/_labels.scss';
 }

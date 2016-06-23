@@ -1,10 +1,7 @@
 @import '~terriajs-variables';
 
-label {
-  vertical-align: middle;
-}
-
 .label{
+  vertical-align: middle;
   padding: $padding;
   display: block;
   line-height: $btn-default-line-height;

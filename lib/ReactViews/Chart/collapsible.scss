@@ -1,15 +1,15 @@
 @import '~terriajs-variables';
-@import '../../Sass/global/mixins';
+@import '../../Sass/common/mixins';
 
 @include empty-module('root');
 @include empty-module('body');
 @include empty-module('header');
 
 .btn {
-  composes: btn from '../../Sass/partial/_buttons.scss';
-  composes: btn--toggle from '../../Sass/partial/_buttons.scss';
+  composes: btn from '../../Sass/common/_buttons.scss';
+  composes: btn--toggle from '../../Sass/common/_buttons.scss';
 }
 
 .is-open {
-  composes: is-open from '../../Sass/partial/_buttons.scss';
+  composes: is-open from '../../Sass/common/_buttons.scss';
 }

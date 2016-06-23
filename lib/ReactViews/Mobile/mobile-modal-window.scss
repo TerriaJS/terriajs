@@ -1,5 +1,5 @@
 @import '~terriajs-variables';
-@import '../../Sass/global/mixins';
+@import '../../Sass/common/mixins';
 
 .mobileModal{
   position: fixed;
@@ -27,8 +27,8 @@
 }
 
 .closeModal{
-  composes: btn from '../../Sass/partial/_buttons.scss';
-  composes: btn-primary from '../../Sass/partial/_buttons.scss';
+  composes: btn from '../../Sass/common/_buttons.scss';
+  composes: btn-primary from '../../Sass/common/_buttons.scss';
   text-align: right;
   border-bottom: 2px solid #fff;
   position: fixed;

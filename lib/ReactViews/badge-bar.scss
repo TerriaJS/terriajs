@@ -1,10 +1,10 @@
 @import '~terriajs-variables';
-@import '../Sass/global/mixins';
+@import '../Sass/common/mixins';
 
 .header{
-  composes: sm-show from '../Sass/partial/_base.scss';
-  composes: clearfix from '../Sass/partial/_base.scss';
-  composes: list-reset from '../Sass/partial/_base.scss';
+  composes: sm-show from '../Sass/common/_base.scss';
+  composes: clearfix from '../Sass/common/_base.scss';
+  composes: list-reset from '../Sass/common/_base.scss';
   li{
     display: inline-block;
     float: left;
@@ -15,7 +15,7 @@
 }
 
 .label {
-  composes: label from '../Sass/partial/_labels.scss';
+  composes: label from '../Sass/common/_labels.scss';
 }
 
 .label, .btn {
@@ -36,5 +36,5 @@
 
 .label-badge {
   composes: label;
-  composes: label-badge from '../Sass/partial/_labels.scss';
+  composes: label-badge from '../Sass/common/_labels.scss';
 }

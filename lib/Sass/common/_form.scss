@@ -1,4 +1,4 @@
-@import "../global/_variables.scss";
+@import "variables";
 
 .field {
   border-style: solid;
@@ -47,23 +47,5 @@
   input, select{
     width: 100%;
     display: block;
-  }
-}
-
-.autocomplete {
-  background: #fff;
-  padding: $padding;
-  box-shadow: $box-shadow;
-  position: absolute;
-  z-index: 99;
-  right: 0;
-  left: 0;
-  .btn{
-    &:hover, &:focus{
-      color: $color-primary;
-    }
-  }
-  &.is-hidden{
-    display: none;
   }
 }

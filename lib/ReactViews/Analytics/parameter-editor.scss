@@ -1,8 +1,8 @@
 @import '~terriajs-variables';
-@import '../../Sass/global/mixins';
+@import '../../Sass/common/mixins';
 
 .tree{
-  composes: list-reset from '../../Sass/partial/_base.scss';
+  composes: list-reset from '../../Sass/common/_base.scss';
 }
 
 .btnCatalog{

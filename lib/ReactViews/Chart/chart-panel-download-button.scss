@@ -1,9 +1,9 @@
 @import '~terriajs-variables';
-@import '../../Sass/global/mixins';
+@import '../../Sass/common/mixins';
 
 .btn-download {
-  composes: btn from '../../Sass/partial/_buttons.scss';
-  composes: btn--download from '../../Sass/partial/_buttons.scss';
+  composes: btn from '../../Sass/common/_buttons.scss';
+  composes: btn--download from '../../Sass/common/_buttons.scss';
 
   text-transform: uppercase;
   color: #fff;

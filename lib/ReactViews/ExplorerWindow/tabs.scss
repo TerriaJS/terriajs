@@ -1,12 +1,12 @@
 @import '~terriajs-variables';
-@import '../../Sass/global/mixins';
+@import '../../Sass/common/mixins';
 
 .tabs {
 }
 
 .tab-list {
-  composes: list-reset from '../../Sass/partial/_base.scss';
-  composes: clearfix from '../../Sass/partial/_base.scss';
+  composes: list-reset from '../../Sass/common/_base.scss';
+  composes: clearfix from '../../Sass/common/_base.scss';
   padding-right: 100px;
 }
 
@@ -25,7 +25,7 @@
 }
 
 .panel-content {
-  composes: clearfix from '../../Sass/partial/_base.scss';
+  composes: clearfix from '../../Sass/common/_base.scss';
   position: relative;
   background: $modal-bg;
   color: $modal-text;
@@ -65,7 +65,7 @@
 //
 
 .btn--tab {
-  composes: btn from '../../Sass/partial/_buttons.scss';
+  composes: btn from '../../Sass/common/_buttons.scss';
 
   font-family: $font-pop;
   background: $modal-bg;

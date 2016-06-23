@@ -1,5 +1,5 @@
 @import '~terriajs-variables';
-@import '../global/_mixins.scss';
+@import 'mixins';
 
 .drop-zone {
   @include transition(height 0.25s ease-in-out);

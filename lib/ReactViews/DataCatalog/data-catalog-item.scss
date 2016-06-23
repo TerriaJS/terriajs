@@ -1,8 +1,8 @@
 @import '~terriajs-variables';
-@import '../../Sass/global/mixins';
+@import '../../Sass/common/mixins';
 
 .root {
-  composes: clearfix from '../../Sass/partial/_base.scss';
+  composes: clearfix from '../../Sass/common/_base.scss';
 
   display: block;
   width: 100%;
@@ -25,7 +25,7 @@
 //
 
 .btn-catalog-item {
-  composes: btn from '../../Sass/partial/_buttons.scss';
+  composes: btn from '../../Sass/common/_buttons.scss';
   @extend %wrap;
   position: relative;
   width: 100%;
@@ -48,7 +48,7 @@
 }
 
 .btn-action {
-  composes: btn from '../../Sass/partial/_buttons.scss';
+  composes: btn from '../../Sass/common/_buttons.scss';
 
   position: absolute;
   color: $color-primary;
@@ -58,18 +58,25 @@
   font-size: 1.2rem;
 
   &--stats-bars {
-    composes: btn--stats-bars from '../../Sass/partial/_buttons.scss';
+    composes: btn--stats-bars from '../../Sass/common/_buttons.scss';
   }
 
   &--add-to-map {
-    composes: btn--add from '../../Sass/partial/_buttons.scss';
+    composes: btn--add from '../../Sass/common/_buttons.scss';
   }
 
   &--remove-from-map {
-    composes: btn--remove from '../../Sass/partial/_buttons.scss';
+    composes: btn--remove from '../../Sass/common/_buttons.scss';
   }
 
   &--loading-on-map {
-    composes: btn--loader from '../../Sass/partial/_buttons.scss';
+    composes: icon from '../../Sass/common/_icons.scss';
+    composes: icon-loader from '../../Sass/common/_icons.scss';
+    top: 3px;
+    right: 12px;
+
+    &:before{
+      position: absolute;
+    }
   }
 }

@@ -1,5 +1,5 @@
 @import '~terriajs-variables';
-@import '../../../Sass/global/mixins';
+@import '../../../Sass/common/mixins';
 
 .root {
   height: 100%;
@@ -10,7 +10,7 @@
 }
 
 .data-catalog {
-  composes: list-reset from '../../../Sass/partial/_base.scss';
+  composes: list-reset from '../../../Sass/common/_base.scss';
 
   margin-top: $padding;
   font-size: 0.9rem;
@@ -27,11 +27,11 @@
 }
 
 .data--catalog-group {
-  composes: list-reset from '../../../Sass/partial/_base.scss';
+  composes: list-reset from '../../../Sass/common/_base.scss';
   padding-left: $padding-small;
 }
 
 .label {
-  composes: label from '../../../Sass/partial/_labels.scss';
+  composes: label from '../../../Sass/common/_labels.scss';
 }
 

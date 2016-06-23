@@ -1,8 +1,8 @@
 @import '~terriajs-variables';
-@import '../Sass/global/_mixins.scss';
+@import '../Sass/common/mixins';
 
 .drop-zone {
-  composes: drop-zone from '../Sass/partial/_drop_zone.scss';
+  composes: drop-zone from '../Sass/common/_drop_zone.scss';
 
   position: absolute;
 
@@ -18,7 +18,7 @@
 }
 
 .is-active {
-  composes: is-active from '../Sass/partial/_drop_zone.scss';
+  composes: is-active from '../Sass/common/_drop_zone.scss';
 }
 
 .inner {

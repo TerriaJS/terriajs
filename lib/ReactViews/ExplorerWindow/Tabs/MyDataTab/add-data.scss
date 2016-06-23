@@ -1,5 +1,5 @@
 @import '~terriajs-variables';
-@import '../../../../Sass/global/mixins';
+@import '../../../../Sass/common/mixins';
 
 @include empty-module("inner");
 @include empty-module("tab-panels");
@@ -24,8 +24,8 @@
   //
   // Style guide: Buttons.btn--add-data-tab
   &__btn {
-    composes: btn from '../../../../Sass/partial/_buttons.scss';
-    composes: btn-transparent from '../../../../Sass/partial/_buttons.scss';
+    composes: btn from '../../../../Sass/common/_buttons.scss';
+    composes: btn-transparent from '../../../../Sass/common/_buttons.scss';
 
     font-size: $font-size-small;
     font-weight: $font-weight-medium;
@@ -41,7 +41,7 @@
 }
 
 .label{
-  composes: label from '../../../../Sass/partial/_labels.scss';
+  composes: label from '../../../../Sass/common/_labels.scss';
 
   padding-left: 0;
 }
@@ -72,15 +72,15 @@
 //
 .url-input {
   &__text-box {
-    composes: field from '../../../../Sass/partial/_form.scss';
+    composes: field from '../../../../Sass/common/_form.scss';
     width: calc(100% - 50px);
     float: left;
   }
 
   &__btn {
-    composes: btn from '../../../../Sass/partial/_buttons.scss';
-    composes: btn-transparent from '../../../../Sass/partial/_buttons.scss';
-    composes: btn-primary from '../../../../Sass/partial/_buttons.scss';
+    composes: btn from '../../../../Sass/common/_buttons.scss';
+    composes: btn-transparent from '../../../../Sass/common/_buttons.scss';
+    composes: btn-primary from '../../../../Sass/common/_buttons.scss';
 
     width: 50px;
     float: left;

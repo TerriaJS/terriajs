@@ -1,5 +1,5 @@
 @import '~terriajs-variables';
-@import '../../Sass/global/mixins';
+@import '../../Sass/common/mixins';
 
 .dropdown {
   display: inline-block;
@@ -9,7 +9,7 @@
   }
 
   &__btn {
-    composes: btn--small from '../../Sass/partial/_buttons.scss';
+    composes: btn--small from '../../Sass/common/_buttons.scss';
   }
 
   &__btn--option {
@@ -54,11 +54,11 @@
 }
 
 .btn-small {
-  composes: btn--small from '../../Sass/partial/_buttons.scss';
+  composes: btn--small from '../../Sass/common/_buttons.scss';
 }
 
 .btn-download {
-  composes: btn--download from '../../Sass/partial/_buttons.scss';
+  composes: btn--download from '../../Sass/common/_buttons.scss';
 
   display: inline-block;
   text-align: center;

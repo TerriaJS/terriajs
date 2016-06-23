@@ -1,5 +1,5 @@
 @import '~terriajs-variables';
-@import '../../Sass/global/mixins';
+@import '../../Sass/common/mixins';
 
 .parameterEditor {
   composes: parameter-editor from './parameter-editor.scss';
@@ -22,20 +22,20 @@
 }
 
 .region-input {
-  composes: field from '../../Sass/partial/_form.scss';
+  composes: field from '../../Sass/common/_form.scss';
   width: 100%;
   display: block;
 }
 
 .autocomplete {
-  composes: autocomplete from '../../Sass/partial/_form.scss';
+  composes: autocomplete from '../../Sass/common/_form.scss';
 }
 
 .is-hidden {
-  composes: is-hidden from '../../Sass/partial/_form.scss';
+  composes: is-hidden from '../../Sass/common/_form.scss';
 }
 
 .autocomplete-item {
-  composes: btn from '../../Sass/partial/_buttons.scss';
-  composes: btn from '../../Sass/partial/_form.scss';
+  composes: btn from '../../Sass/common/_buttons.scss';
+  composes: btn from '../../Sass/common/_form.scss';
 }

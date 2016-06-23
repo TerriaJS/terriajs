@@ -1,5 +1,5 @@
 @import '~terriajs-variables';
-@import '../../Sass/global/mixins';
+@import '../../Sass/common/mixins';
 .ui{
     position: fixed;
     top: 0;
@@ -13,8 +13,8 @@
 }
 
 .mobileHeader{
-    composes: sm-hide from '../../Sass/partial/_base.scss';
-    composes: clearfix from '../../Sass/partial/_base.scss';
+    composes: sm-hide from '../../Sass/common/_base.scss';
+    composes: clearfix from '../../Sass/common/_base.scss';
     justify-content: space-between;
     font-family: $font-pop;
     width: 100%;
@@ -25,9 +25,9 @@
 }
 
 .btnAdd{
-    composes: btn from '../../Sass/partial/_buttons.scss';
-    composes: btn-primary from '../../Sass/partial/_buttons.scss';
-    composes: btn--increase from '../../Sass/partial/_buttons.scss';
+    composes: btn from '../../Sass/common/_buttons.scss';
+    composes: btn-primary from '../../Sass/common/_buttons.scss';
+    composes: btn--increase from '../../Sass/common/_buttons.scss';
     position: relative;
     padding: $padding $padding $padding $padding*3;
     text-transform: uppercase;
@@ -43,7 +43,7 @@
 }
 
 .btnSearch{
-    composes: btn--search from '../../Sass/partial/_buttons.scss';
+    composes: btn--search from '../../Sass/common/_buttons.scss';
     display: block;
     font-size: 20px;
     &:before{
@@ -53,9 +53,9 @@
 }
 
 .btnNowViewing{
-    composes: btn from '../../Sass/partial/_buttons.scss';
-    composes: btn-primary from '../../Sass/partial/_buttons.scss';
-    composes: btn--visible from '../../Sass/partial/_buttons.scss';
+    composes: btn from '../../Sass/common/_buttons.scss';
+    composes: btn-primary from '../../Sass/common/_buttons.scss';
+    composes: btn--visible from '../../Sass/common/_buttons.scss';
     margin: 0 $padding-small;
     padding: $padding-small;
     padding-right: $padding;
@@ -74,20 +74,20 @@
 }
 
 .groupLeft{
-    composes: flex from '../../Sass/partial/_base.scss';
-    composes: col-7 from '../../Sass/partial/_base.scss';
+    composes: flex from '../../Sass/common/_base.scss';
+    composes: col-7 from '../../Sass/common/_base.scss';
     float: left;
 }
 
 .groupRight{
-    composes: flex from '../../Sass/partial/_base.scss';
-    composes: col-5 from '../../Sass/partial/_base.scss';
+    composes: flex from '../../Sass/common/_base.scss';
+    composes: col-5 from '../../Sass/common/_base.scss';
     float: left;
     justify-content: flex-end;
 }
 
 .mobileNav{
-        composes: list-reset from '../../Sass/partial/_base.scss';
+        composes: list-reset from '../../Sass/common/_base.scss';
         display: none;
         position: absolute;
         left: 0;
@@ -117,7 +117,7 @@
 }
 
 .btnMenu{
-    composes: btn--menu from '../../Sass/partial/_buttons.scss';
+    composes: btn--menu from '../../Sass/common/_buttons.scss';
     font-size: 25px;
     padding: 0 $padding-small;
     border-radius: $radius-small;
