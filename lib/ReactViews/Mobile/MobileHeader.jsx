@@ -6,6 +6,7 @@ import MobileModalWindow from './MobileModalWindow';
 import Branding from '../SidePanel/Branding.jsx';
 import Styles from './mobile-header.scss';
 import classNames from "classnames";
+import Icon from "../Icon.jsx";
 
 const MobileHeader = React.createClass({
     mixins: [ObserveModelMixin],
@@ -113,8 +114,9 @@ const MobileHeader = React.createClass({
                                     </button>
                                 </If>
                                 <button type='button'
-                                        className={Styles.btnSearch}
-                                        onClick={this.toggleSearch}/>
+                                        onClick={this.toggleSearch}>
+                                        <Icon glyph={Icon.GLYPHS.TEST}/>
+                                        </button>
                             </div>
                         </When>
                         <Otherwise>

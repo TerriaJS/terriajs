@@ -14,13 +14,12 @@ import Notification from './../Notification/Notification.jsx';
 import ObserveModelMixin from './../ObserveModelMixin';
 import ProgressBar from '../Map/ProgressBar.jsx';
 import SidePanel from './../SidePanel/SidePanel.jsx';
-import Sprite from 'svg-sprite-loader/lib/web/sprite';
+//import Sprite from 'svg-sprite-loader/lib/web/sprite';
 
 import Styles from './standard-user-interface.scss';
 
-const sprite = new Sprite();
+//const sprite = new Sprite();
 const StandardUserInterface = React.createClass({
-
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -39,7 +38,7 @@ const StandardUserInterface = React.createClass({
 
     componentWillMount() {
         const that = this;
-        sprite.elem = sprite.render(document.body);
+        //sprite.elem = sprite.render(document.body);
 
         this.dragOverListener = e => {
             if (!e.dataTransfer.types || !arrayContains(e.dataTransfer.types, 'Files')) {
@@ -66,7 +65,7 @@ const StandardUserInterface = React.createClass({
     },
 
     componentWillUnmount() {
-        sprite.elem.parentNode.removeChild(sprite.elem);
+        //sprite.elem.parentNode.removeChild(sprite.elem);
         window.removeEventListener('resize', this.resizeListener, false);
         document.removeEventListener('dragover', this.dragOverListener, false);
         this.disclaimerHandler.dispose();
