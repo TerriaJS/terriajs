@@ -52,10 +52,10 @@ const Chart = React.createClass({
     },
 
     chartDataArrayFromTableStructure(table) {
-        const xColumn = table.getColumnWithNameOrIndex(this.props.xColumn || 0);
+        const xColumn = table.getColumnWithNameIdOrIndex(this.props.xColumn || 0);
         let yColumns = [table.columns[1]];
         if (defined(this.props.yColumns)) {
-            yColumns = this.props.yColumns.map(yCol=>table.getColumnWithNameOrIndex(yCol));
+            yColumns = this.props.yColumns.map(yCol=>table.getColumnWithNameIdOrIndex(yCol));
         }
         const pointArrays = table.toPointArrays(xColumn, yColumns);
         // The data id should be set to something unique, eg. its source id + column index.
