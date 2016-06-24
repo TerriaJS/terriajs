@@ -1,15 +1,9 @@
-'use strict';
-
-import classNames from 'classnames'
+import classNames from 'classnames';
 import React from 'react';
-
-import ObserveModelMixin from '../ObserveModelMixin';
 
 import Styles from './collapsible.scss';
 
 const Collapsible = React.createClass({
-    mixins: [ObserveModelMixin],
-
     propTypes: {
         title: React.PropTypes.string,
         startsOpen: React.PropTypes.bool,

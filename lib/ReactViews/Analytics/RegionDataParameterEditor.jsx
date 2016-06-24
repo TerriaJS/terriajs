@@ -1,5 +1,4 @@
 import React from 'react';
-import classNames from 'classnames';
 
 import defined from 'terriajs-cesium/Source/Core/defined';
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';

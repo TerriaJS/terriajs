@@ -1,5 +1,4 @@
 import React from 'react';
-import classNames from 'classnames';
 
 import addedByUser from '../../Core/addedByUser';
 import defined from 'terriajs-cesium/Source/Core/defined';

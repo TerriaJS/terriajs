@@ -5,6 +5,11 @@ import Loader from '../Loader.jsx';
 
 import Styles from './data-catalog-group.scss';
 
+/**
+ * Dumb component that encapsulated the display logic for a catalog group.
+ *
+ * @constructor
+ */
 function CatalogGroup(props) {
     return (
         <li className={Styles.root}>
