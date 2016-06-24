@@ -5,7 +5,6 @@ var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 var testGlob = ['./test/**/*.js', './test/**/*.jsx', '!./test/Utility/*.js'];
-console.log(JSON.stringify(glob.sync(testGlob)));
 
 module.exports = function(hot, dev) {
     var config = {
