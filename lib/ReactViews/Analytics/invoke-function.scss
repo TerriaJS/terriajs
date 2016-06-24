@@ -1,12 +1,14 @@
 @import '~terriajs-variables';
 @import '../../Sass/common/mixins';
 
-.invokeFunction{
+.invoke-function {
   padding: $padding-small;
   position: relative;
   height: 100%;
+
   @media screen and (min-width : $sm){
     padding: 0;
+    margin-right: -5px;
   }
 }
 

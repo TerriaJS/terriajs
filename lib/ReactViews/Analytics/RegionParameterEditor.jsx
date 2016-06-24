@@ -47,6 +47,9 @@ const RegionParameterEditor = React.createClass({
         this.terriaForRegionSelection.homeView = terria.homeView;
         this.terriaForRegionSelection.initialView = terria.homeView;
         this.terriaForRegionSelection.regionMappingDefinitionsUrl = terria.regionMappingDefinitionsUrl;
+        this.terriaForRegionSelection.error.addEventListener(e => {
+            console.log(e);
+        });
 
         // TODO: we shouldn't hard code the base map here. (copied from branch analyticsWithCharts)
         const positron = new OpenStreetMapCatalogItem(this.terriaForRegionSelection);
@@ -56,6 +59,7 @@ const RegionParameterEditor = React.createClass({
         positron.opacity = 1.0;
         positron.subdomains = ['a', 'b', 'c', 'd'];
         this.terriaForRegionSelection.baseMap = positron;
+
         // handle feature picking
         const that = this;
         knockout.getObservable(this.terriaForRegionSelection, 'pickedFeatures').subscribe(function () {
@@ -111,7 +115,7 @@ const RegionParameterEditor = React.createClass({
     componentDidMount() {
         TerriaViewer.create(this.terriaForRegionSelection, {
             mapContainer: this.refs.mapContainer,
-            uiContainer: this.refs.uiContainer
+            // uiContainer: this.refs.uiContainer
         });
     },
 

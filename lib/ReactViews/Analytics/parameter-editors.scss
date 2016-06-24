@@ -88,12 +88,29 @@
 }
 
 .autocomplete {
-  composes: autocomplete from '../../Sass/common/_form.scss';
+  composes: list-reset from '../../Sass/common/_base.scss';
+
+  max-height: 200px;
+  overflow-y: auto;
+  background: #fff;
+  padding: $padding;
+  box-shadow: $box-shadow;
+  position: absolute;
+  z-index: 99;
+  right: 0;
+  left: 0;
+
+  &.is-hidden {
+    display: none;
+  }
 }
 
 .autocomplete-item {
   composes: btn from '../../Sass/common/_buttons.scss';
-  composes: btn from '../../Sass/common/_form.scss';
+
+  &:hover, &:focus {
+    color: $color-primary;
+  }
 }
 
 @include empty-module("radio");

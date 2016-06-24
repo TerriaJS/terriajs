@@ -159,7 +159,7 @@ const RegionDataParameterEditor = React.createClass({
                                 open={this.catalogItemIsOpen(catalogItem)}
                                 onClick={this.toggleOpenCatalogItem.bind(this, catalogItem)}
                                 loading={false}>
-                                this.renderItemChildren(catalogItem)
+                                {this.renderItemChildren(catalogItem)}
                             </CatalogGroup>
                         </For>
                     </ul>
