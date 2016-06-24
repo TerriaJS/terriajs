@@ -4,7 +4,7 @@ var StringReplacePlugin = require("string-replace-webpack-plugin");
 // If node-sass starts hanging, uncomment this line:
 //process.env.UV_THREADPOOL_SIZE = 128;
 
-function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlugin) {
+function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlugin, disableStyleLoader) {
     const cesiumDir = path.dirname(require.resolve('terriajs-cesium/package.json'));
 
     config.resolve = config.resolve || {};
@@ -231,7 +231,7 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
         new StringReplacePlugin()
     ]);
 
-    if (hot) {
+    if (hot && !disableStyleLoader) {
         config.module.loaders.push({
             include: path.resolve(terriaJSBasePath),
             test: /\.scss$/,
