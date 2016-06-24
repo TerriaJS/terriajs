@@ -62,10 +62,10 @@ const RegionParameterEditor = React.createClass({
 
         // handle feature picking
         const that = this;
-        knockout.getObservable(this.terriaForRegionSelection, 'pickedFeatures').subscribe(function () {
+        knockout.getObservable(this.terriaForRegionSelection, 'pickedFeatures').subscribe(function() {
             const pickedFeatures = that.terriaForRegionSelection.pickedFeatures;
             that._lastPickedFeatures = pickedFeatures;
-            when(pickedFeatures.allFeaturesAvailablePromise, function () {
+            when(pickedFeatures.allFeaturesAvailablePromise, function() {
                 if (pickedFeatures !== that._lastPickedFeatures || pickedFeatures.features.length === 0) {
                     return;
                 }
@@ -87,10 +87,10 @@ const RegionParameterEditor = React.createClass({
         });
 
         knockout.defineProperty(this, 'regionValue', {
-            get: function () {
+            get: function() {
                 return this.props.parameter.getValue(this.props.parameterValues);
             },
-            set: function (value) {
+            set: function(value) {
                 if (defined(value) && defined(value.realRegion)) {
                     value = value.realRegion;
                 }
@@ -101,7 +101,7 @@ const RegionParameterEditor = React.createClass({
         });
 
         knockout.defineProperty(this, 'regionProvider', {
-            get: function () {
+            get: function() {
                 return this.props.parameter.getRegionProvider(this.props.parameterValues);
             }
         });
@@ -115,7 +115,7 @@ const RegionParameterEditor = React.createClass({
     componentDidMount() {
         TerriaViewer.create(this.terriaForRegionSelection, {
             mapContainer: this.refs.mapContainer,
-            // uiContainer: this.refs.uiContainer
+            uiContainer: this.refs.uiContainer
         });
     },
 
@@ -161,8 +161,7 @@ const RegionParameterEditor = React.createClass({
         }
         this._displayValue = e.target.value;
         this.setState({
-            autocompleteVisible: result.length > 0 &&
-            result.length < 100,
+            autocompleteVisible: result.length > 0 && result.length < 100,
             autoCompleteOptions: result
         });
     },
@@ -198,7 +197,7 @@ const RegionParameterEditor = React.createClass({
 
         this._loadingRegionProvider = this.regionProvider;
 
-        when.all([that.regionProvider.loadRegionIDs(), that.regionProvider.loadRegionNames()]).then(function () {
+        when.all([that.regionProvider.loadRegionIDs(), that.regionProvider.loadRegionNames()]).then(function() {
             if (that.regionProvider !== that._loadingRegionProvider) {
                 return;
             }
@@ -237,7 +236,7 @@ const RegionParameterEditor = React.createClass({
         const terria = this.props.previewed.terria;
 
         const that = this;
-        this.regionProvider.getRegionFeature(terria, value, that._lastRegionFeature).then(function (feature) {
+        this.regionProvider.getRegionFeature(terria, value, that._lastRegionFeature).then(function(feature) {
             if (parameterValues[parameter.id] !== value) {
                 // Value has already changed.
                 return;
@@ -254,7 +253,7 @@ const RegionParameterEditor = React.createClass({
                 that._selectedRegionCatalogItem.isEnabled = true;
                 that._selectedRegionCatalogItem.zoomTo();
             }
-        }).otherwise(function () {
+        }).otherwise(function() {
             if (parameterValues[parameter.id] !== value) {
                 // Value has already changed.
                 return;
