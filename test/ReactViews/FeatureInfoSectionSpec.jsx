@@ -14,12 +14,14 @@ import TimeIntervalCollectionProperty from 'terriajs-cesium/Source/DataSources/T
 import FeatureInfoSection from '../../lib/ReactViews/FeatureInfo/FeatureInfoSection';
 import Terria from '../../lib/Models/Terria';
 
+import Styles from '../../lib/ReactViews/FeatureInfo/feature-info-section.scss';
+
 let separator = ',';
 if (typeof Intl === 'object' && typeof Intl.NumberFormat === 'function') {
     separator = (Intl.NumberFormat().format(1000)[1]);
 }
 
-const contentClass = 'feature-info-section__content';
+const contentClass = Styles.content;
 
 function getShallowRenderedOutput(jsx) {
     const renderer = ReactTestUtils.createRenderer();
@@ -276,7 +278,7 @@ describe('FeatureInfoSection', function() {
             const template = {name: '{{name}} {{foo}}'};
             const section = <FeatureInfoSection feature={feature} isOpen={false} clock={terria.clock} template={template} viewState={viewState} />;
             const result = getShallowRenderedOutput(section);
-            const nameElement = findAllWithClass(result, 'feature-info-section__title')[0];
+            const nameElement = findAllWithClass(result, Styles.title)[0];
             const name = nameElement.props.children;
             expect(name).toContain('Kay bar');
         });

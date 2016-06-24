@@ -5,6 +5,7 @@ import React from 'react';
 
 import defaultValue from 'terriajs-cesium/Source/Core/defaultValue';
 import defined from 'terriajs-cesium/Source/Core/defined';
+import combine from 'terriajs-cesium/Source/Core/combine';
 
 import CatalogGroup from '../../Models/CatalogGroup';
 import CsvCatalogItem from '../../Models/CsvCatalogItem';
@@ -67,7 +68,7 @@ const ChartExpandButton = React.createClass({
             const sourceNameObjects = this.props.sourceNames.map(name=>{ return {name: name}; });
             const nameAndHrefObjects = downloadNames.map((name, i)=>{ return {name: name, href: downloads[i]}; });
             if (this.props.canDownload) {
-                const downloadDropdownTheme = Object.assign({}, dropdownTheme, {
+                const downloadDropdownTheme = combine(combine({}, dropdownTheme), {
                     button: classNames(Styles.btnSmall, Styles.btnDownload)
                 });
                 downloadButton = <Dropdown selectOption={this.downloadDropdown} options={nameAndHrefObjects} theme={downloadDropdownTheme} />;
