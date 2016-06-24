@@ -7,6 +7,8 @@ import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 import Entity from 'terriajs-cesium/Source/DataSources/Entity';
+import Icon from "../Icon.jsx";
+
 import Styles from './feature-info-panel.scss';
 import classNames from 'classnames';
 
@@ -101,7 +103,9 @@ const FeatureInfoPanel = React.createClass({
                         Feature Information
                     </button>
                     <button type='button' onClick={ this.close } className={Styles.btnCloseFeature}
-                            title="Close data panel"/>
+                            title="Close data panel">
+                            <Icon glyph={Icon.GLYPHS.close}/>
+                    </button>
                 </div>
                 <ul className={Styles.body}>
                     <Choose>

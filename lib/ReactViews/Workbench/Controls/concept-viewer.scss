@@ -47,34 +47,9 @@
 
 .btn--toggle {
   left: 0;
-
-  composes: btn--toggle from '../../../Sass/partial/_buttons.scss';
-}
-
-.btn--is-open {
-  composes: is-open from '../../../Sass/partial/_buttons.scss';
 }
 
 .btn--checkbox {
   left: 15px;
 }
 
-.btn--unique-active {
-  composes: btn--checkbox;
-  composes: btn--radio-on from '../../../Sass/partial/_buttons.scss';
-}
-
-.btn--unique-inactive {
-  composes: btn--checkbox;
-  composes: btn--radio-off from '../../../Sass/partial/_buttons.scss';
-}
-
-.btn--multiple-active {
-  composes: btn--checkbox;
-  composes: btn--checkbox-on from '../../../Sass/partial/_buttons.scss';
-}
-
-.btn--multiple-inactive {
-  composes: btn--checkbox;
-  composes: btn--checkbox-off from '../../../Sass/partial/_buttons.scss';
-}

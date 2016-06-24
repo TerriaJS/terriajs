@@ -6,6 +6,7 @@ import defined from 'terriajs-cesium/Source/Core/defined';
 import ObserveModelMixin from '../ObserveModelMixin';
 import raiseErrorOnRejectedPromise from '../../Models/raiseErrorOnRejectedPromise';
 import React from 'react';
+import Icon from "../Icon.jsx";
 
 // Individual dataset
 const DataCatalogItem = React.createClass({
@@ -16,21 +17,14 @@ const DataCatalogItem = React.createClass({
         viewState: React.PropTypes.object.isRequired
     },
 
-    renderIconClass() {
+    renderIcons() {
         if (this.props.item.isEnabled) {
             if (this.props.item.isLoading) {
-                return 'btn--loading-on-map';
+                return <Icon glyph={Icon.GLYPHS.loader}/>;
             }
-            return 'btn--remove-from-map';
+            return <Icon glyph={Icon.GLYPHS.remove}/>;
         }
-        return 'btn--add-to-map';
-    },
-
-    renderItemIcon() {
-        if(this.props.item.isMappable) {
-            return <button type='button' onClick={this.toggleEnable} title="add to map" className={'btn btn--catalog-item--action ' + (this.renderIconClass())} />;
-        }
-        return <button type='button' onClick={this.setPreviewedItem} title="preview" className='btn btn--catalog-item--action btn--stats-bars' />;
+        return <Icon glyph={Icon.GLYPHS.add}/>;
     },
 
     toggleEnable(event) {
@@ -75,15 +69,17 @@ const DataCatalogItem = React.createClass({
                     <When condition={!defined(item.invoke)}>
                         <button type='button' onClick={this.toggleEnable}
                                 title="add to map"
-                                className={'btn btn--catalog-item--action ' + (this.renderIconClass())}
-                        />
+                                className={'btn btn--catalog-item--action '}>
+                                {this.renderIcons()}
+                        </button>
                     </When>
                     <Otherwise>
                         <button type='button'
                                 onClick={this.setPreviewedItem}
                                 title="preview"
-                                className='btn btn--catalog-item--action btn--stats-bars'
-                        />
+                                className='btn btn--catalog-item--action'>
+                                <Icon glyph={Icon.GLYPHS.barChart}/>
+                        </button>
                     </Otherwise>
                 </Choose>
             </li>

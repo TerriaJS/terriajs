@@ -60,17 +60,9 @@ $workbench-margin: $padding-small - 1px;
 
 .btn-visibility {
   composes: btn;
-
   font-size: $font-size-small;
 }
 
-.btn-visibility--visible {
-  composes: btn--checkbox-on from '../../Sass/partial/_buttons.scss';
-}
-
-.btn-visibility--invisible {
-  composes: btn--checkbox-off from '../../Sass/partial/_buttons.scss';
-}
 
 .nameColumn {
   composes: col from  '../../Sass/partial/_base.scss';
@@ -80,16 +72,6 @@ $workbench-margin: $padding-small - 1px;
 .toggleColumn {
   composes: col from  '../../Sass/partial/_base.scss';
   composes: col-1 from  '../../Sass/partial/_base.scss';
-}
-
-.btn--toggle {
-  composes: btn;
-  composes: btn--toggle from '../../Sass/partial/_buttons.scss';
-  text-align: center;
-}
-
-.btn--toggle--is-open {
-  composes: is-open from  '../../Sass/partial/_buttons.scss';
 }
 
 .icon {

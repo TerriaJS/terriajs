@@ -27,7 +27,6 @@
 .btnAdd{
     composes: btn from '../../Sass/partial/_buttons.scss';
     composes: btn-primary from '../../Sass/partial/_buttons.scss';
-    composes: btn--increase from '../../Sass/partial/_buttons.scss';
     position: relative;
     padding: $padding $padding $padding $padding*3;
     text-transform: uppercase;

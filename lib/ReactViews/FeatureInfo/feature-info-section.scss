@@ -9,8 +9,6 @@
 
 .title{
   composes: btn from './feature-info-panel.scss';
-  composes: btn--toggle from '../../Sass/partial/_buttons.scss';
-
   position: relative;
   width: 100%;
   background: $dark;
@@ -22,9 +20,6 @@
   }
 }
 
-.btn--is-open {
-  composes: is-open from '../../Sass/partial/_buttons.scss';
-}
 
 .content{
   padding: $padding-small;

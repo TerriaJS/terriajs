@@ -107,6 +107,7 @@ const MobileHeader = React.createClass({
                                         className={Styles.btnAdd}
                                         onClick={this.onMobileDataCatalogClicked}>
                                     Data
+                                    <Icon glyph={Icon.GLYPHS.increase}/>
                                 </button>
                                 <If condition={nowViewingLength > 0}>
                                     <button type='button' className={Styles.btnNowViewing}
@@ -117,7 +118,7 @@ const MobileHeader = React.createClass({
                                 <button type='button'
                                         onClick={this.toggleSearch}>
                                         <Icon glyph={Icon.GLYPHS.search}/>
-                                        </button>
+                                </button>
                             </div>
                         </When>
                         <Otherwise>

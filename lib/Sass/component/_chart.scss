@@ -106,7 +106,6 @@ $chart-darker: darken($dark, 8%);
 }
 
 .btn--close-chart-panel {
-  @extend .btn--close;
   position: absolute;
   right: 0;
   top: 0;

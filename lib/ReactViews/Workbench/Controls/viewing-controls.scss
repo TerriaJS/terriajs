@@ -45,7 +45,4 @@
 .icon--remove {
   display: inline-block;
   vertical-align: -1px;
-
-  composes: icon from '../../../Sass/global/_icons.scss';
-  composes: icon-remove from '../../../Sass/global/_icons.scss';
 }

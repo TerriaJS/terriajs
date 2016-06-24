@@ -1,15 +1,13 @@
 'use strict';
-
 import Cartographic from 'terriajs-cesium/Source/Core/Cartographic';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
-import when from 'terriajs-cesium/Source/ThirdParty/when';
-import Rectangle from 'terriajs-cesium/Source/Core/Rectangle';
-
+import Icon from "../../Icon.jsx";
 import ObserveModelMixin from '../../ObserveModelMixin';
 import PickedFeatures from '../../../Map/PickedFeatures';
-
 import React from 'react';
+import Rectangle from 'terriajs-cesium/Source/Core/Rectangle';
+import when from 'terriajs-cesium/Source/ThirdParty/when';
 
 import Styles from './viewing-controls.scss';
 
@@ -81,7 +79,7 @@ const ViewingControls = React.createClass({
                 </If>
                 <li className={Styles.remove}>
                     <button type='button' onClick={this.removeFromMap} title="Remove this data" className={Styles.btn}>
-                        Remove <i className={Styles.iconRemove} />
+                        Remove <Icon glyph={Icon.GLYPHS.remove}/>
                     </button>
                 </li>
             </ul>

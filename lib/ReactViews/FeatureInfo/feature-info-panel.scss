@@ -65,8 +65,6 @@
 
 .btn--close-feature{
   composes: btn;
-  composes: btn--close from '../../Sass/partial/_buttons.scss';
-
   &:hover,
   &:focus {
     color: $color-primary;

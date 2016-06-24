@@ -1,4 +1,3 @@
-@import '../global/icons';
 @import '~terriajs-variables';
 
 $btn-setting-size: 35px;
@@ -31,7 +30,6 @@ $btn-setting-size: 35px;
   cursor: pointer;
   line-height: $btn-default-line-height;
   padding: $padding;
-  @include transition(all 0.05s linear);
   &:focus, &:hover {
     box-shadow: none;
     border-color: transparent;
@@ -85,104 +83,7 @@ $btn-setting-size: 35px;
   }
 }
 
-// Icon Buttons
-//
-//.btn--add - icon button
-//.btn--checkbox-checked - icon button
-//.btn--checkbox-off - icon button
-//.btn--checkbox-on - icon button
-//.btn--clear - icon button
-//.btn--close - icon button
-//.btn--closed - icon button
-//.btn--decrease - icon button
-//.btn--expand - icon button
-//.btn--increase - icon button
-//.btn--invisible - icon button
-//.btn--left - icon button
-//.btn--loader - icon button
-//.btn--location - icon button
-//.btn--minus - icon button
-//.btn--opened - icon button
-//.btn--radio-off - icon button
-//.btn--radio-on - icon button
-//.btn--refresh - icon button
-//.btn--remove - icon button
-//.btn--right - icon button
-//.btn--search - icon button
-//.btn--share - icon button
-//.btn--sphere - icon button
-//.btn--visible - icon button
-//.btn--facebook - icon button
-//.btn--twitter - icon button
-//.btn--link - icon button
-//.btn--menu - icon button
-//.btn--download - icon button
-//.btn--line-chart -icon button
-//.btn--github - icon button
-//.btn--stats-bars - icon button
-//.btn--folder -icon button
-//.btn--folder-open - icon
-//.btn--feedback -icon
-//
-// Markup:
-// <button class='btn {{modifier_class}}'></button>
-//
-// Style guide: Buttons.icon-button
 
-$icons: add,
-checkbox-checked,
-checkbox-off,
-checkbox-on,
-clear,
-close,
-closed,
-decrease,
-expand,
-increase,
-invisible,
-left,
-loader,
-location,
-minus,
-opened,
-radio-off,
-radio-on,
-refresh,
-remove,
-right,
-visible,
-search,
-share,
-sphere,
-geolocation,
-facebook,
-twitter,
-link,
-menu,
-download,
-line-chart,
-github,
-stats-bars,
-folder,
-folder-open,
-feedback;
-
-@each $icon in $icons {
-  .btn--#{$icon} {
-    @extend .icon;
-    @extend .icon-#{$icon};
-    &:before {
-      line-height: $btn-default-line-height;
-    }
-  }
-}
-
-.btn--toggle {
-  @extend .btn--closed;
-  &.is-open {
-    @extend .btn--opened;
-  }
-}
 
 .btn--add-to-map {
   color: $color-primary;
@@ -229,7 +130,6 @@ feedback;
 }
 
 .btn--loading-on-map {
-  @extend .btn--loader;
   color: $color-primary;
 }
 
@@ -242,17 +142,9 @@ feedback;
   font-weight: bold;
 }
 
-// Text and icon buttons
-//
-// .btn--location-name - location item
-//
-// Markup:
-// <button class="btn {{modifier_class}}">button text </button>
-//
-// Style guide: Buttons.icon-text-button
+
 
 .btn--location-name {
-  @extend .icon;
   &:before {
     line-height: $btn-default-line-height;
     padding-right: $padding-small;
@@ -261,17 +153,8 @@ feedback;
 }
 
 .btn--location-name {
-  @extend .icon-location;
 }
 
-// Image button
-//
-//.is-active - Active button
-//
-// Markup:
-//<button class="btn btn--image {{modifier_class}}"><img alt="Australian Hydrography" src="../build/TerriaJS/images/hydro.png"></button>
-//
-// Style guide: Buttons.button--image
 
 .btn--image {
   padding: 0;
@@ -288,9 +171,6 @@ feedback;
   &:focus {
     border: $border-style;
   }
-  &.is-active {
-    @extend .btn--checkbox-checked;
-  }
   &:before {
     position: absolute;
     right: 0;
@@ -306,11 +186,6 @@ feedback;
   }
 }
 
-.kss-modifier__example {
-  .btn.btn-basemap {
-    max-width: 100px;
-  }
-}
 
 // Data Catalog Group
 //
@@ -364,7 +239,6 @@ feedback;
 
 
 .btn--catalog-item {
-  @extend %wrap;
   position: relative;
   width: 100%;
   padding: $padding-small $padding*2.2 $padding-small $padding*1.5;
@@ -464,8 +338,6 @@ a.btn--map {
   right: 0;
   top: 0;
   padding: 12px;
-  @extend .icon;
-  @extend .icon-clear;
 }
 
 // My data tab
