@@ -3,6 +3,8 @@ node_js:
 - '5'
 script:
 - gulp lint docs release
+- npm start &
+- sleep 5
 - gulp test-saucelabs
 env:
   global:
