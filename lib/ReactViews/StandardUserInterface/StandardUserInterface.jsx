@@ -18,6 +18,7 @@ import Sprite from 'svg-sprite-loader/lib/web/sprite';
 
 import Styles from './standard-user-interface.scss';
 
+const sprite = new Sprite();
 const StandardUserInterface = React.createClass({
 
     mixins: [ObserveModelMixin],
@@ -38,9 +39,6 @@ const StandardUserInterface = React.createClass({
 
     componentWillMount() {
         const that = this;
-
-        const sprite = new Sprite();
-
         sprite.elem = sprite.render(document.body);
 
         this.dragOverListener = e => {

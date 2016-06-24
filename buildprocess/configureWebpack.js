@@ -208,7 +208,7 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
 
     config.module.loaders.push({
         test: /\.svg$/,
-        include: path.resolve(terriaJSBasePath, 'path', 'to', 'svgs'),
+        include: path.resolve(terriaJSBasePath, 'wwwroot', 'images', 'icons'),
         loader: require.resolve('svg-sprite-loader')
     });
 
