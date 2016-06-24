@@ -115,7 +115,7 @@ const MobileHeader = React.createClass({
                                 </If>
                                 <button type='button'
                                         onClick={this.toggleSearch}>
-                                        <Icon glyph={Icon.GLYPHS.TEST}/>
+                                        <Icon glyph={Icon.GLYPHS.test}/>
                                         </button>
                             </div>
                         </When>

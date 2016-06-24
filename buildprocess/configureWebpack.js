@@ -184,6 +184,10 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
             path.resolve(terriaJSBasePath),
             path.resolve(cesiumDir)
         ],
+        exclude: [
+            path.resolve(terriaJSBasePath, 'wwwroot', 'images', 'icons'),
+            path.resolve(terriaJSBasePath, 'wwwroot', 'fonts')
+        ],
         loader: require.resolve('url-loader'),
         query: {
             limit: 8192
