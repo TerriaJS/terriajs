@@ -34,10 +34,6 @@
 }
 
 .formLabel{
-  composes: icon;
-  composes: icon from '../../Sass/global/_icons.scss';
-  composes: icon-search from '../../Sass/global/_icons.scss';
-  // hide label text but keep it machine visible
   width: $input-height;
   height: $input-height;
   overflow: hidden;
@@ -80,8 +76,6 @@ input[type=text].searchField {
   top: 3px;
   padding: 0;
   composes: icon;
-  composes: icon from '../../Sass/global/_icons.scss';
-  composes: icon-clear from '../../Sass/global/_icons.scss';
   &:before{
     padding: $padding;
   }

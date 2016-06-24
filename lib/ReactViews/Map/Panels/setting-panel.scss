@@ -39,5 +39,4 @@
 
 .btn--dropdown {
   composes: btn--map from '../../../Sass/partial/_buttons.scss';
-  composes: btn--sphere from '../../../Sass/partial/_buttons.scss';
 }

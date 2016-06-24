@@ -21,8 +21,6 @@
   &:before {
     font-size: 1.6rem;
   }
-
-  composes: btn--expand from '../../../Sass/partial/_buttons.scss';
 }
 
 .exit {

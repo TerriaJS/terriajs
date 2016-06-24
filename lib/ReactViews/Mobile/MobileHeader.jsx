@@ -94,8 +94,9 @@ const MobileHeader = React.createClass({
                                 <button type='button'
                                         onClick={this.toggleMenu}
                                         className={Styles.btnMenu}
-                                        title='toggle navigation'
-                                />
+                                        title='toggle navigation'>
+                                    <Icon glyph={Icon.GLYPHS.menu}/>
+                                </button>
                                 <Branding terria={this.props.terria}
                                           version={this.props.version}
                                           onClick={this.refresh}
@@ -115,7 +116,7 @@ const MobileHeader = React.createClass({
                                 </If>
                                 <button type='button'
                                         onClick={this.toggleSearch}>
-                                        <Icon glyph={Icon.GLYPHS.test}/>
+                                        <Icon glyph={Icon.GLYPHS.search}/>
                                         </button>
                             </div>
                         </When>

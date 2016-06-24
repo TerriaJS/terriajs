@@ -117,7 +117,6 @@
 }
 
 .btnMenu{
-    composes: btn--menu from '../../Sass/partial/_buttons.scss';
     font-size: 25px;
     padding: 0 $padding-small;
     border-radius: $radius-small;

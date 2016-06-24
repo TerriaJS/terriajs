@@ -185,7 +185,6 @@ feedback;
 }
 
 .btn--add-to-map {
-  @extend .btn--add;
   color: $color-primary;
 }
 
@@ -226,7 +225,6 @@ feedback;
 }
 
 .btn--remove-from-map {
-  @extend .btn--remove;
   color: $color-primary;
 }
 
@@ -334,7 +332,6 @@ feedback;
   position: relative;
   width: 100%;
   font-weight: bold;
-  @extend .btn--toggle;
   .btn--group-indicator {
     position: absolute;
     left: 0;
@@ -365,20 +362,6 @@ feedback;
   }
 }
 
-// Data Catalog Item
-//
-// .is-previewed - item being previewed
-//
-// Markup:
-//<div class='panel-content'>
-// <li class='data-catalog-item {{modifier_class}}'>
-// <button class='btn btn--catalog-item'>item name</button>
-// <button title="add or remove on map" class='btn btn--catalog-item--action btn--add-to-map'></button>
-// </li>
-//</div>
-//
-// Style guide: Buttons.btn--catalog-item
-//
 
 .btn--catalog-item {
   @extend %wrap;

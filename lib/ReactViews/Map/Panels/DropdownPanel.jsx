@@ -2,6 +2,8 @@
 
 import React from 'react';
 import classNames from 'classnames';
+import Icon from "../../Icon.jsx";
+
 import Styles from './dropdown-panel.scss';
 
 const DropdownPanel = React.createClass({
@@ -94,6 +96,7 @@ const DropdownPanel = React.createClass({
                         type='button'
                         className={classNames(Styles.button, this.props.theme.btn)}
                         title={this.props.btnTitle}>
+                    <Icon glyph={Icon.GLYPHS[this.props.theme.icon]}/>
                     {this.props.btnText}
                 </button>
                 <If condition={this.state.isOpen}>

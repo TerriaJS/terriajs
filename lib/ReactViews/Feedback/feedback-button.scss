@@ -13,8 +13,6 @@
 
 .btnFeedback{
     composes: btn from '../../Sass/partial/_buttons.scss';
-    composes: icon from '../../Sass/global/_icons.scss';
-    composes: icon-feedback from '../../Sass/global/_icons.scss';
     &:before{
         padding-right: $padding;
     }

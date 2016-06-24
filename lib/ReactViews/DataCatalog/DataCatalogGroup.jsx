@@ -5,6 +5,8 @@ import Loader from '../Loader.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
 import classNames from 'classnames';
+import Icon from "../Icon.jsx";
+
 
 const DataCatalogGroup = React.createClass({
     mixins: [ObserveModelMixin],
@@ -70,9 +72,11 @@ const DataCatalogGroup = React.createClass({
         }
         return (
             <li>
-                <button type='button' className={classNames('btn', 'btn-transparent', 'btn--catalog', {'is-open': this.isOpen()})} onClick={this.clickGroup}>
-                    <i className={`btn--group-indicator ${this.isOpen() ? 'btn--folder-open' : 'btn--folder'}`}/>
+                <button type='button' className={classNames('btn', 'btn-transparent', 'btn--catalog')} onClick={this.clickGroup}>
+
+                    {this.isOpen() ? <Icon glyph={Icon.GLYPHS.folder}/> : <Icon glyph={Icon.GLYPHS.folderOpen}/>}
                     {group.name}
+                    {this.isOpen() ? <Icon glyph={Icon.GLYPHS.opened}/> : <Icon glyph={Icon.GLYPHS.closed}/>}
                 </button>
                 {contents}
             </li>

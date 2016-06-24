@@ -1,15 +1,6 @@
 @import '~terriajs-variables';
 @import '../../../Sass/global/mixins';
 
-// My location
-//
-// Markup:
-// <div class='my-location'>
-//   <button class='btn btn--my-location btn--geolocation'></button>
-// </div>
-//
-// Style guide: Component.my-location
-
 .myLocation{
   position: fixed;
   bottom: $input-height + $padding;
@@ -25,7 +16,6 @@
   }
 }
 .btn{
-    composes: btn--geolocation from '../../../Sass/partial/_buttons.scss';
     border-radius: 50%;
     display: block;
     background: #fff;
