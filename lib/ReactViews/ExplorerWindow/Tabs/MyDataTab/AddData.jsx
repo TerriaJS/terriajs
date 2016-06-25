@@ -282,7 +282,7 @@ function loadOpenStreetMapServer(viewModel) {
  * Loads a catalog item from a file.
  */
 function loadFile(viewModel) {
-    return createCatalogItemFromFileOrUrl(viewModel.props.terria, viewModel.state.remoteUrl, viewModel.state.remoteDataType, true);
+    return createCatalogItemFromFileOrUrl(viewModel.props.terria, viewModel.state.remoteUrl, viewModel.state.remoteDataType.value, true);
 }
 
 module.exports = AddData;
