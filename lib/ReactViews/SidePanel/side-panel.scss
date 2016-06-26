@@ -1,4 +1,4 @@
-@import '../../Sass/global/mixins';
+@import '../../Sass/common/mixins';
 @import '~terriajs-variables';
 
 .workBench {
@@ -34,10 +34,10 @@
 }
 
 .button {
-  composes: btn from '../../Sass/partial/_buttons.scss';
-  composes: btn-primary from '../../Sass/partial/_buttons.scss';
-  composes: icon from '../../Sass/global/_icons.scss';
-  composes: icon-add from '../../Sass/global/_icons.scss';
+  composes: btn from '../../Sass/common/_buttons.scss';
+  composes: btn-primary from '../../Sass/common/_buttons.scss';
+  composes: icon from '../../Sass/common/_icons.scss';
+  composes: icon-add from '../../Sass/common/_icons.scss';
 
   text-transform: uppercase;
 
@@ -49,7 +49,7 @@
 }
 
 .iconTip{
-  composes: icon from '../../Sass/global/_icons.scss';
-  composes: icon-lightbulb from '../../Sass/global/_icons.scss';
+  composes: icon from '../../Sass/common/_icons.scss';
+  composes: icon-lightbulb from '../../Sass/common/_icons.scss';
   margin-right: $padding-small;
 }

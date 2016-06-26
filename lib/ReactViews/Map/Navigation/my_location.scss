@@ -1,5 +1,5 @@
 @import '~terriajs-variables';
-@import '../../../Sass/global/mixins';
+@import '../../../Sass/common/mixins';
 
 // My location
 //
@@ -25,7 +25,7 @@
   }
 }
 .btn{
-    composes: btn--geolocation from '../../../Sass/partial/_buttons.scss';
+    composes: btn--geolocation from '../../../Sass/common/_buttons.scss';
     border-radius: 50%;
     display: block;
     background: #fff;

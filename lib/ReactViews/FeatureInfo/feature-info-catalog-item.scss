@@ -4,7 +4,7 @@
 }
 
 .sections {
-  composes: list-reset from '../../Sass/partial/_base.scss';
+  composes: list-reset from '../../Sass/common/_base.scss';
 }
 
 .message-item {

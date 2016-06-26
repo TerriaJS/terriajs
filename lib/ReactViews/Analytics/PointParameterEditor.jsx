@@ -1,11 +1,15 @@
 import React from 'react';
+
 import Cartographic from 'terriajs-cesium/Source/Core/Cartographic';
 import CesiumMath from 'terriajs-cesium/Source/Core/Math';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
+
 import MapInteractionMode from '../../Models/MapInteractionMode';
 import ObserveModelMixin from '../ObserveModelMixin';
+
+import Styles from './parameter-editors.scss';
 
 const PointParameterEditor = React.createClass({
     mixins: [ObserveModelMixin],
@@ -54,14 +58,14 @@ const PointParameterEditor = React.createClass({
 
         const pickPointMode = new MapInteractionMode({
             message: 'Select a point by clicking on the map.',
-            onCancel: function() {
+            onCancel: function () {
                 terria.mapInteractionModeStack.pop();
                 that.props.viewState.openAddData();
             }
         });
         terria.mapInteractionModeStack.push(pickPointMode);
 
-        knockout.getObservable(pickPointMode, 'pickedFeatures').subscribe(function(pickedFeatures) {
+        knockout.getObservable(pickPointMode, 'pickedFeatures').subscribe(function (pickedFeatures) {
             if (defined(pickedFeatures.pickPosition)) {
                 that.props.parameterValues[that.props.parameter.id] = Ellipsoid.WGS84.cartesianToCartographic(pickedFeatures.pickPosition);
                 terria.mapInteractionModeStack.pop();
@@ -76,10 +80,17 @@ const PointParameterEditor = React.createClass({
     },
 
     render() {
-        return <div className=''>
-                    <input className='field field--parameter-editor' type="text" onChange={this.onTextChange} value={this.state.value}/>
-                    <button type='button' onClick={this.selectPointOnMap} className='btn btn-primary btn-selector'>Select location</button>
-                </div>;
+        return (
+            <div>
+                <input className={Styles.fieldParameterEditor}
+                       type="text"
+                       onChange={this.onTextChange}
+                       value={this.state.value}/>
+                <button type='button' onClick={this.selectPointOnMap} className={Styles.btnSelector}>
+                    Select location
+                </button>
+            </div>
+        );
     }
 });
 

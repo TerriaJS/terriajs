@@ -1,5 +1,5 @@
 @import '~terriajs-variables';
-@import '../../../Sass/global/mixins';
+@import '../../../Sass/common/mixins';
 
 // Map Zoom
 //
@@ -13,7 +13,8 @@
 //
 // Style guide: Component.map-zoom
 
-.zoomControl{
+.zoomControl {
+  composes: sm-show from '../../../Sass/common/_base.scss';
   background: $dark;
   color: #fff;
   width: $ring-width*2.2;
@@ -24,18 +25,23 @@
   position: absolute;
   right: 34px;
   top: 240px;
-  composes: sm-show from '../../../Sass/partial/_base.scss';
 }
-  .increase{
-    composes: btn--increase from '../../../Sass/partial/_buttons.scss';
-    padding: 0;
-  }
-  .decrease{
-    composes: btn--decrease from '../../../Sass/partial/_buttons.scss';
-    padding: 0;
-  }
 
-  .refresh{
-    composes: btn--refresh from '../../../Sass/partial/_buttons.scss';
-    padding: 0;
-  }
+.list-reset {
+  composes: list-reset from '../../../Sass/common/_base.scss';
+}
+
+.increase {
+  composes: btn--increase from '../../../Sass/common/_buttons.scss';
+  padding: 0;
+}
+
+.decrease {
+  composes: btn--decrease from '../../../Sass/common/_buttons.scss';
+  padding: 0;
+}
+
+.refresh {
+  composes: btn--refresh from '../../../Sass/common/_buttons.scss';
+  padding: 0;
+}

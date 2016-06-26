@@ -1,8 +1,11 @@
-'use strict';
 import React from 'react';
+import classNames from 'classnames';
+
 import ObserveModelMixin from './ObserveModelMixin';
 import TerriaError from './../Core/TerriaError';
 import handleFile from '../Core/handleFile';
+
+import Styles from './drag-drop-file.scss';
 
 const DragDropFile = React.createClass({
     mixins: [ObserveModelMixin],
@@ -20,8 +23,10 @@ const DragDropFile = React.createClass({
             target: e.dataTransfer
         };
         try {
-            handleFile(fakeEvent, this.props.terria, null, ()=>{this.props.viewState.myDataIsUploadView = false;});
-        } catch(err) {
+            handleFile(fakeEvent, this.props.terria, null, ()=> {
+                this.props.viewState.myDataIsUploadView = false;
+            });
+        } catch (err) {
             this.props.terria.error.raiseEvent(new TerriaError({
                 sender: this,
                 title: err.title,
@@ -47,22 +52,26 @@ const DragDropFile = React.createClass({
         }
     },
 
-    handleMouseLeave(){
+    handleMouseLeave() {
         this.props.viewState.isDraggingDroppingFile = false;
     },
 
     render() {
-        return <div onDrop={this.handleDrop}
-                    onDragEnter={this.handleDragEnter}
-                    onDragOver={this.handleDragOver}
-                    onDragLeave={this.handleDragLeave}
-                    onMouseLeave = {this.handleMouseLeave}
-                    className={(this.props.viewState.isDraggingDroppingFile ? 'is-active' : '') + ' drop-zone'}>
-                        <div className='drop-zone-inner'>
-                            <h3 className='dnd-heading'> Drag & Drop </h3>
-                            <div>Your data anywhere to view on the map</div>
-                        </div>
-                    </div>;
+        return (
+            <div onDrop={this.handleDrop}
+                 onDragEnter={this.handleDragEnter}
+                 onDragOver={this.handleDragOver}
+                 onDragLeave={this.handleDragLeave}
+                 onMouseLeave={this.handleMouseLeave}
+                 className={classNames(Styles.dropZone, {[Styles.isActive]: this.props.viewState.isDraggingDroppingFile})}>
+                <If condition={this.props.viewState.isDraggingDroppingFile}>
+                    <div className={Styles.inner}>
+                        <h3 className={Styles.heading}>Drag & Drop</h3>
+                        <div className={Styles.caption}>Your data anywhere to view on the map</div>
+                    </div>
+                </If>
+            </div>
+        );
     }
 });
 

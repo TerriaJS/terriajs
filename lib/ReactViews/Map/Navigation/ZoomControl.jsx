@@ -119,12 +119,13 @@ const ZoomControl = React.createClass({
     render() {
         return (
         <div className={Styles.zoomControl}>
-          <ul className='list-reset'>
+          <ul className={Styles.listReset}>
             <li><button type='button' onClick={this.zoomIn} className={Styles.increase} title='zoom in'></button></li>
             <li><button type='button' onClick={this.zoomReset} className={Styles.refresh} title='reset zoom'></button></li>
             <li><button type='button' onClick={this.zoomOut} className={Styles.decrease} title='zoom out'></button></li>
           </ul>
-      </div>);
+        </div>
+        );
     }
 });
 module.exports = ZoomControl;

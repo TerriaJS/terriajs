@@ -1,3 +1,5 @@
+@import '~terriajs-variables';
+
 .workbench{
   box-sizing: border-box;
   position: relative;
@@ -9,3 +11,6 @@
   }
 }
 
+.is-top {
+  z-index: $front-component-z-index !important;
+}
