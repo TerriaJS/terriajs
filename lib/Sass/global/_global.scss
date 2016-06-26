@@ -1,0 +1,143 @@
+
+html {
+  font-size: 95%;
+  @media (min-width: $sm) {
+    font-size: 87.5%;
+  }
+  //disallow text select because it's annoying
+  // &.terria{
+  //   -webkit-touch-callout: none;
+  //   -webkit-user-select: none;
+  //   -khtml-user-select: none;
+  //   -moz-user-select: none;
+  //   -ms-user-select: none;
+  //   user-select: none;
+  // }
+}
+
+body {
+  background: $dark;
+  color: #fff;
+  .terria & {
+    @media screen{
+      overflow: hidden;
+    }
+  }
+}
+
+img {
+  max-width: 100%
+}
+
+svg {
+  max-height: 100%
+}
+
+dl, ol, ul {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+pre {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+pre, code {
+  background-color: transparent;
+  border-radius: 3px;
+}
+
+hr {
+  border: 0;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-bottom-color: rgba(0, 0, 0, .125);
+}
+
+div, a {
+  box-sizing: border-box;
+}
+
+input,
+select,
+textarea,
+fieldset {
+  font-family: inherit;
+  font-size: 1rem;
+  box-sizing: border-box;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+button {
+  background-color: transparent;
+  padding: 0;
+  margin: 0;
+  border: 0;
+}
+
+input[type=text],
+input[type=date],
+input[type=datetime],
+input[type=datetime-local],
+input[type=email],
+input[type=month],
+input[type=number],
+input[type=password],
+input[type=search],
+input[type=tel],
+input[type=time],
+input[type=url],
+input[type=week] {
+  height: $input-height;
+  color: $text-dark;
+  display: block;
+  padding: .5rem .5rem;
+  vertical-align: middle;
+  -webkit-appearance: none;
+}
+
+select {
+  line-height: 1.75;
+  padding: .5rem .5rem;
+}
+
+::selection {
+  background: $color-primary; /* WebKit/Blink Browsers */
+  color: #fff;
+}
+
+::-moz-selection {
+  background: $color-primary; /* Gecko Browsers */
+  color: #fff;
+}
+
+select:not([multiple]) {
+  height: 2.55rem;
+  vertical-align: middle;
+}
+
+textarea {
+  line-height: 1.75;
+  padding: .5rem .5rem;
+}
+
+::-webkit-scrollbar {
+  width: 5px; /* for vertical scrollbars */
+  height: 5px; /* for horizontal scrollbars */
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(#000, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(#000, 0.3);
+}
+
+.icon{
+  max-height: 30px;
+  max-width: 30px;
+  fill: green;
+}

@@ -1,5 +1,5 @@
 @import '~terriajs-variables';
-@import '../../../Sass/global/mixins';
+@import '../../../Sass/common/mixins';
 
 // concept-viewer
 
@@ -13,8 +13,8 @@
 }
 
 .children-list {
-  composes: list-reset from '../../../Sass/partial/_base.scss';
-  composes: clearfix from '../../../Sass/partial/_base.scss';
+  composes: list-reset from '../../../Sass/common/_base.scss';
+  composes: clearfix from '../../../Sass/common/_base.scss';
 }
 
 .header {
@@ -36,20 +36,16 @@
 }
 
 .items {
-  composes: list-reset from '../../../Sass/partial/_base.scss';
+  composes: list-reset from '../../../Sass/common/_base.scss';
 
   margin-left: 15px;
 }
 
 .btn {
-  composes: btn from '../../../Sass/partial/_buttons.scss';
+  composes: btn from '../../../Sass/common/_buttons.scss';
 }
 
 .btn--toggle {
   left: 0;
-}
-
-.btn--checkbox {
-  left: 15px;
 }
 

@@ -1,4 +1,4 @@
-@import '../../Sass/global/mixins';
+@import '../../Sass/common/mixins';
 @import '~terriajs-variables';
 
 .results {
@@ -14,14 +14,14 @@
 }
 
 .items {
-  composes: clearfix from '../../Sass/partial/_base.scss';
-  composes: list-reset from '../../Sass/partial/_base.scss';
+  composes: clearfix from '../../Sass/common/_base.scss';
+  composes: list-reset from '../../Sass/common/_base.scss';
 }
 
 .btn--done {
-  composes: btn from '../../Sass/partial/_buttons.scss';
+  composes: btn from '../../Sass/common/_buttons.scss';
   composes: btn from '../badge-bar.scss';
-  composes: btn--tertiary-dark from '../../Sass/partial/_buttons.scss';
+  composes: btn--tertiary-dark from '../../Sass/common/_buttons.scss';
 
   padding: 7px 10px;
   margin-top: 5px;
@@ -36,7 +36,7 @@
 // Style guide: Buttons.data-search
 
 .btn--data-search {
-  composes: btn from '../../Sass/partial/_buttons.scss';
+  composes: btn from '../../Sass/common/_buttons.scss';
 
   &:hover .icon--right-arrow {
     opacity: 1;

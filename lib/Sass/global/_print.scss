@@ -25,17 +25,6 @@
         position: absolute;
         color: #fff;
     }
-    .map-column__map__cell.map{
-      // force stack layout
-      display: block;
-    }
-
-    .map-column__map-wrapper{
-      position: relative!important;
-      div, aside{
-        height: auto !important;
-      }
-    }
 
     #cesiumContainer{
         height: auto;

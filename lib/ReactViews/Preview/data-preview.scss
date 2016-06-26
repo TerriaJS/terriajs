@@ -1,5 +1,5 @@
 @import '~terriajs-variables';
-@import '../../Sass/global/mixins';
+@import '../../Sass/common/mixins';
 
 .preview {
     height: 100%;
@@ -13,8 +13,8 @@
 }
 
 .btn--back-to-map {
-  composes: btn from '../../Sass/partial/_buttons.scss';
-  composes: btn--tertiary from '../../Sass/partial/_buttons.scss';
+  composes: btn from '../../Sass/common/_buttons.scss';
+  composes: btn--tertiary from '../../Sass/common/_buttons.scss';
   font-size: 1rem;
 }
 

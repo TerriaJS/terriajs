@@ -131,7 +131,8 @@ const ZoomControl = React.createClass({
                 <Icon glyph={Icon.GLYPHS.decrease}/>
             </button></li>
           </ul>
-      </div>);
+        </div>
+        );
     }
 });
 module.exports = ZoomControl;

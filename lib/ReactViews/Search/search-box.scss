@@ -1,5 +1,5 @@
 @import '~terriajs-variables';
-@import '../../Sass/global/mixins';
+@import '../../Sass/common/mixins';
 
 // Search form
 //
@@ -43,7 +43,7 @@
 }
 
 .searchField {
-  composes: field from '../../Sass/partial/_form.scss';
+  composes: field from '../../Sass/common/_form.scss';
 }
 
 .searchData{
@@ -75,7 +75,6 @@ input[type=text].searchField {
   right: $padding;
   top: 3px;
   padding: 0;
-  composes: icon;
   &:before{
     padding: $padding;
   }

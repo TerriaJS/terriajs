@@ -99,7 +99,8 @@
     "postpublish": "bash -c \"git tag -a ${npm_package_version} -m \"${npm_package_version}\" && git push origin ${npm_package_version}\"",
     "postinstall": "gulp post-npm-install",
     "make-schema": "gulp make-schema",
-    "start": "webpack-dev-server --inline --config buildprocess/webpack.config.dev.js",
-    "hot": "webpack-dev-server --inline --config buildprocess/webpack.config.hot.js --hot"
+    "start": "bash ./node_modules/terriajs-server/run_server.sh --port 3002",
+    "dev": "webpack-dev-server --inline --config buildprocess/webpack.config.dev.js --host 0.0.0.0",
+    "hot": "webpack-dev-server --inline --config buildprocess/webpack.config.hot.js --hot --host 0.0.0.0"
   }
 }

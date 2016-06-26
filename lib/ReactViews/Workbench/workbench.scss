@@ -1,10 +1,10 @@
 @import '~terriajs-variables';
-@import '../../Sass/global/mixins';
+@import '../../Sass/common/mixins';
 
 .workbench {}
 
 .remove-button {
-  composes: btn from '../../Sass/partial/_buttons.scss';
+  composes: btn from '../../Sass/common/_buttons.scss';
   composes: btn from '../badge-bar.scss';
   display: inline-block;
   padding-right: 5px;

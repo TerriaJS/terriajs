@@ -11,9 +11,9 @@
 }
 
 .menu {
-  composes: list-reset from '../../Sass/partial/_base.scss';
-  composes: clearfix from '../../Sass/partial/_base.scss';
-  composes: sm-show from '../../Sass/partial/_base.scss';
+  composes: list-reset from '../../Sass/common/_base.scss';
+  composes: clearfix from '../../Sass/common/_base.scss';
+  composes: sm-show from '../../Sass/common/_base.scss';
 }
 
 .menu-item {
@@ -22,8 +22,8 @@
 }
 
 .btn--about-link {
-  composes: btn from '../../Sass/partial/_buttons.scss';
-  composes: btn--map from '../../Sass/partial/_buttons.scss';
+  composes: btn from '../../Sass/common/_buttons.scss';
+  composes: btn--map from '../../Sass/common/_buttons.scss';
 
   margin-right: $padding;
   border-radius: $radius-small;

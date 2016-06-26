@@ -7,21 +7,6 @@ $btn-setting-size: 35px;
   padding: 0;
 }
 
-// Buttons
-//
-// Style guide: Buttons
-
-// Default button
-//
-// .btn-small - small button
-// .btn-primary - Primary button
-// .btn-grey - Big grey button
-//
-// Markup:
-//<button class='btn {{modifier_class}}'> Button </button>
-//
-// Style guide: Buttons.default
-//
 .btn {
   font-weight: $font-weight-normal;
   box-shadow: none;
@@ -59,7 +44,8 @@ $btn-setting-size: 35px;
   width: 100%;
   box-sizing: border-box;
   border-radius: $radius-small;
-  &:hover {
+
+  &:hover, &--hover {
     background: lighten($color-primary, 10%);
   }
 }
@@ -82,8 +68,6 @@ $btn-setting-size: 35px;
     color: #fff;
   }
 }
-
-
 
 .btn--add-to-map {
   color: $color-primary;
@@ -142,61 +126,6 @@ $btn-setting-size: 35px;
   font-weight: bold;
 }
 
-
-
-.btn--location-name {
-  &:before {
-    line-height: $btn-default-line-height;
-    padding-right: $padding-small;
-    display: inline-block;
-  }
-}
-
-.btn--location-name {
-}
-
-
-.btn--image {
-  padding: 0;
-  position: relative;
-  display: block;
-  line-height: 1.2;
-  border: 1px solid transparent;
-  img {
-    width: 100%;
-    height: auto;
-    display: block;
-  }
-  &:hover,
-  &:focus {
-    border: $border-style;
-  }
-  &:before {
-    position: absolute;
-    right: 0;
-    top: 0;
-    font-size: 20px;
-    background: $color-primary;
-    color: #fff;
-    z-index: 1;
-    text-align: center;
-    width: 22px;
-    border-radius: $radius-small;
-    height: 22px;
-  }
-}
-
-
-// Data Catalog Group
-//
-// Markup:
-//<div class='panel-content'>
-//<button class ='btn btn--catalog' >National Data Sets</button>
-//<button class ='btn btn--catalog is-open' >National Data Sets</button>
-//</div>
-//
-// Style guide: Buttons.data-catalog-group
-//
 
 .btn--catalog {
   padding: $padding 30px+$padding;
@@ -284,11 +213,7 @@ $btn-setting-size: 35px;
     background: #fff;
     color: $modal-highlight;
 
-  }
-  &:hover, &:focus {
-    background: #fff;
-    color: $modal-highlight;
-  }
+}
 }
 
 // Map buttons
@@ -340,29 +265,7 @@ a.btn--map {
   padding: 12px;
 }
 
-// My data tab
-//
-// Markup:
-// <button class="btn btn--add-data-tab"> Add local data </button>
-//
-// Style guide: Buttons.btn--add-data-tab
 
-.btn--add-data-tab {
-  font-size: $font-size-small;
-  font-weight: $font-weight-medium;
-  width: 100%;
-  padding: $padding-small $padding-small $padding-small 0;
-  border-bottom: 2px solid $grey;
-  color: $grey;
-  &:hover, &:focus, &.is-active {
-    color: $color-primary;
-    border-bottom: 2px solid $color-primary;
-  }
-}
-
-.btn--file-input, .btn--add-url {
-  @extend .btn-primary;
-}
 
 .btn--radio {
   padding: $padding-small;

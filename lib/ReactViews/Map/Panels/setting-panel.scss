@@ -1,5 +1,5 @@
 @import '~terriajs-variables';
-@import '../../../Sass/global/mixins';
+@import '../../../Sass/common/mixins';
 @import './dropdown-panel-inner-mixin';
 
 .setting-panel {
@@ -11,8 +11,8 @@
 
 .viewer-selector,
 .base-map-selector {
-  composes: clearfix from '../../../Sass/partial/_base.scss';
-  composes: list-reset from '../../../Sass/partial/_base.scss';
+  composes: clearfix from '../../../Sass/common/_base.scss';
+  composes: list-reset from '../../../Sass/common/_base.scss';
 
   margin: 0 -$padding-mini;
 }
@@ -20,23 +20,20 @@
 .list-item {
   padding: $padding-mini;
 
-  composes: col from '../../../Sass/partial/_base.scss';
-  composes: col-4 from '../../../Sass/partial/_base.scss';
+  composes: col from '../../../Sass/common/_base.scss';
+  composes: col-4 from '../../../Sass/common/_base.scss';
 }
 
 .btn--viewer {
-  composes: btn from '../../../Sass/partial/_buttons.scss';
-  composes: btn-grey from '../../../Sass/partial/_buttons.scss';
+  composes: btn from '../../../Sass/common/_buttons.scss';
 }
 
 .btn--base-map {
-  composes: btn--image from '../../../Sass/partial/_buttons.scss';
 }
 
 .is-active {
-  composes: is-active from '../../../Sass/partial/_buttons.scss';
 }
 
 .btn--dropdown {
-  composes: btn--map from '../../../Sass/partial/_buttons.scss';
+  composes: btn--map from '../../../Sass/common/_buttons.scss';
 }

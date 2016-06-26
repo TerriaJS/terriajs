@@ -4,7 +4,7 @@ var StringReplacePlugin = require("string-replace-webpack-plugin");
 // If node-sass starts hanging, uncomment this line:
 //process.env.UV_THREADPOOL_SIZE = 128;
 
-function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlugin) {
+function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlugin, disableStyleLoader) {
     const cesiumDir = path.dirname(require.resolve('terriajs-cesium/package.json'));
 
     config.resolve = config.resolve || {};
@@ -241,13 +241,13 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
         new StringReplacePlugin()
     ]);
 
-    if (hot) {
+    if (hot && !disableStyleLoader) {
         config.module.loaders.push({
             include: path.resolve(terriaJSBasePath),
             test: /\.scss$/,
             loaders: [
                 require.resolve('style-loader'),
-                require.resolve('css-loader') + '?sourceMap&modules&camelCase&localIdentName=[name]__[local]&importLoaders=2',
+                require.resolve('css-loader') + '?sourceMap&modules&camelCase&localIdentName=tjs-[name]__[local]&importLoaders=2',
                 require.resolve('resolve-url-loader') + '?sourceMap',
                 require.resolve('sass-loader') + '?sourceMap'
             ]
@@ -258,7 +258,7 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
             include: path.resolve(terriaJSBasePath, 'lib'),
             test: /\.scss$/,
             loader: ExtractTextPlugin.extract(
-                require.resolve('css-loader') + '?sourceMap&modules&camelCase&localIdentName=[name]__[local]&importLoaders=2!' +
+                require.resolve('css-loader') + '?sourceMap&modules&camelCase&localIdentName=tjs-[name]__[local]&importLoaders=2!' +
                 require.resolve('resolve-url-loader') + '?sourceMap!' +
                 require.resolve('sass-loader') + '?sourceMap',
                 {
@@ -272,7 +272,7 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
     config.resolve.alias = config.resolve.alias || {};
 
     // Make a terriajs-variables alias so it's really easy to override our sass variables by aliasing over the top of this.
-    config.resolve.alias['terriajs-variables'] = config.resolve.alias['terriajs-variables'] || require.resolve('../lib/Sass/global/_variables.scss');
+    config.resolve.alias['terriajs-variables'] = config.resolve.alias['terriajs-variables'] || require.resolve('../lib/Sass/common/_variables.scss');
 
     // Alias react and react-dom to the one used by the building folder - apparently we can rely on the dir always being
     // called node_modules https://github.com/npm/npm/issues/2734

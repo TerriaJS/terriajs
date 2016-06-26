@@ -1,14 +1,18 @@
 'use strict';
 
+import React from 'react';
+import classNames from 'classnames';
+
+import defined from 'terriajs-cesium/Source/Core/defined';
+
 import Chart from './Chart.jsx';
 import ChartData from '../../Charts/ChartData';
 import ChartPanelDownloadButton from './ChartPanelDownloadButton';
-import ClassList from 'class-list';
-import defined from 'terriajs-cesium/Source/Core/defined';
 import Loader from '../Loader.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
-import React from 'react';
 import VarType from '../../Map/VarType';
+
+import Styles from './chart-panel.scss';
 
 const height = 250;
 
@@ -43,21 +47,6 @@ const ChartPanel = React.createClass({
     bringToFront() {
         // Bring chart to front.
         this.props.viewState.switchComponentOrder(this.props.viewState.componentOrderOptions.chart);
-    },
-
-    toggleBodyClass(isVisible) {
-        const body = document.body;
-        if(isVisible) {
-            ClassList(body).add('chart-is-visible');
-        } else {
-            ClassList(body).remove('chart-is-visible');
-        }
-        this.props.terria.currentViewer.notifyRepaintRequired();
-        // toggleBodyClass was introduced in 3542ad0 - why does it do this?
-        // // Allow any animations to finish, then trigger a resize.
-        // setTimeout(function() {
-        //     triggerResize();
-        // }, this.props.animationDuration || 1000); // This 1000 should match the default duration in LineChart.
     },
 
     render() {
@@ -99,7 +88,7 @@ const ChartPanel = React.createClass({
         const isLoading = (chartableItems.length > 0) && (chartableItems[chartableItems.length - 1].isLoading);
         const isVisible = (data.length > 0) || isLoading;
 
-        this.toggleBodyClass(isVisible);
+        this.props.terria.currentViewer.notifyRepaintRequired();
 
         if (!isVisible) {
             return null;
@@ -107,7 +96,7 @@ const ChartPanel = React.createClass({
         let loader;
         let chart;
         if (isLoading) {
-            loader = <Loader/>;
+            loader = <Loader className={Styles.loader}/>;
         }
         if (data.length > 0) {
             // TODO: use a calculation for the 34 pixels taken off...
@@ -116,16 +105,18 @@ const ChartPanel = React.createClass({
             );
         }
         return (
-            <div className={`chart-panel__holder ${(this.props.viewState && this.props.viewState.componentOnTop === this.props.viewState.componentOrderOptions.chart) ? 'is-top' : ''}`} onClick={this.bringToFront}>
-                <div className="chart-panel__holder__inner">
-                    <div className="chart-panel" style={{height: height}}>
-                        <div className="chart-panel__body">
-                            <div className="chart-panel__header" style={{height: 41, boxSizing: 'border-box'}}>
-                                <label className="chart-panel__section-label label">{loader || 'Charts'}</label>
+            <div
+                className={classNames(Styles.holder, {[Styles.isTop]: this.props.viewState && this.props.viewState.componentOnTop === this.props.viewState.componentOrderOptions.chart})}
+                onClick={this.bringToFront}>
+                <div className={Styles.inner}>
+                    <div className={Styles.chartPanel} style={{height: height}}>
+                        <div className={Styles.body}>
+                            <div className={Styles.header}>
+                                <label className={Styles.sectionLabel}>{loader || 'Charts'}</label>
                                 <ChartPanelDownloadButton chartableItems={this.props.terria.catalog.chartableItems} errorEvent={this.props.terria.error} />
-                                <button type='button' className="btn btn--close-chart-panel" onClick={this.closePanel} />
+                                <button type='button' className={Styles.btnCloseChartPanel} onClick={this.closePanel}/>
                             </div>
-                            <div>
+                            <div className={Styles.chart}>
                                 {chart}
                             </div>
                         </div>

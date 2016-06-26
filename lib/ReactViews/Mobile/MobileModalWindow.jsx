@@ -8,6 +8,7 @@ import MobileSearch from './MobileSearch.jsx';
 import WorkbenchList from '../Workbench/WorkbenchList.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
+
 import Styles from './mobile-modal-window.scss';
 
 const MobileModalWindow = React.createClass({
@@ -27,7 +28,7 @@ const MobileModalWindow = React.createClass({
                    /></div>;
         case this.props.viewState.mobileViewOptions.data:
             return <div className={Styles.modalBg}>
-                    <ul className='data-catalog'>
+                    <ul className={Styles.dataCatalog}>
                     {this.props.terria.catalog.group.items.filter(defined)
                           .map((item, i) => (
                             <DataCatalogMember viewState={this.props.viewState}

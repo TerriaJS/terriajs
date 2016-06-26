@@ -1,4 +1,5 @@
-'use strict';
+import React from 'react';
+import classNames from 'classnames';
 
 import addUserCatalogMember from '../../../../Models/addUserCatalogMember';
 import ArcGisCatalogGroup from '../../../../Models/ArcGisCatalogGroup';
@@ -9,12 +10,13 @@ import FileInput from './FileInput.jsx';
 import getDataType from '../../../../Core/getDataType';
 import ObserveModelMixin from '../../../ObserveModelMixin';
 import OpenStreetMapCatalogItem from '../../../../Models/OpenStreetMapCatalogItem';
-import React from 'react';
 import TerriaError from '../../../../Core/TerriaError';
 import WebFeatureServiceCatalogGroup from '../../../../Models/WebFeatureServiceCatalogGroup';
 import WebMapServiceCatalogGroup from '../../../../Models/WebMapServiceCatalogGroup';
 import WebMapTileServiceCatalogGroup from '../../../../Models/WebMapTileServiceCatalogGroup';
 import handleFile from '../../../../Core/handleFile';
+
+import Styles from './add-data.scss';
 
 const wfsUrlRegex = /\bwfs\b/i;
 
@@ -33,7 +35,6 @@ const AddData = React.createClass({
         viewState: React.PropTypes.object
     },
 
-
     getInitialState() {
         return {
             localDataType: localDataType[0], // By default select the first item (auto)
@@ -42,6 +43,7 @@ const AddData = React.createClass({
             remoteUrl: undefined // By default there's no remote url
         };
     },
+
     selectLocalOption(option) {
         this.setState({
             localDataType: option
@@ -62,8 +64,10 @@ const AddData = React.createClass({
 
     handleUploadFile(e) {
         try {
-            handleFile(e, this.props.terria, this.state.localDataType, ()=>{this.props.viewState.myDataIsUploadView = false;});
-        } catch(err) {
+            handleFile(e, this.props.terria, this.state.localDataType, ()=> {
+                this.props.viewState.myDataIsUploadView = false;
+            });
+        } catch (err) {
             this.props.terria.error.raiseEvent(new TerriaError({
                 sender: this,
                 title: err.title,
@@ -125,52 +129,77 @@ const AddData = React.createClass({
     },
 
     renderTabs() {
+        const tabs = [{
+            id: 'local',
+            caption: 'ADD LOCAL DATA'
+        }, {
+            id: 'web',
+            caption: 'ADD WEB DATA'
+        }];
+
         return (
-            <ul className='add-data-tablist tablist'>
-                <li className='tablist--local'>
-                    <button type='button' onClick={this.changeTab.bind(null, 'local')} className={'btn btn--add-data-tab btn-transparent ' + (this.state.activeTab === 'local' ? 'is-active' : '')}>ADD LOCAL DATA</button>
-                </li>
-                <li className='tablist--local'>
-                    <button type='button' onClick={this.changeTab.bind(null, 'web')} className={'btn btn--add-data-tab btn-transparent ' + (this.state.activeTab === 'web' ? 'is-active' : '')}>ADD WEB DATA</button>
-                </li>
+            <ul className={Styles.tabList}>
+                <For each="tab" of={tabs}>
+                    <li className={Styles.tabListItem} key={tab.id}>
+                        <button type='button' onClick={this.changeTab.bind(null, tab.id)}
+                                className={classNames(Styles.tabListBtn, {[Styles.isActive]: this.state.activeTab === tab.id})}>
+                            {tab.caption}
+                        </button>
+                    </li>
+                </For>
             </ul>
-            );
+        );
     },
 
     renderPanels() {
         const dropdownTheme = {
-            dropdown: 'add-data__dropdown',
-            list: 'add-data__list',
-            isOpen: '__dropdown-list--is-open'
+            dropdown: Styles.dropdown,
+            list: Styles.dropdownList,
+            isOpen: Styles.dropdownListIsOpen
         };
 
         return (
-            <div className='tab-panels'>
-            <section aria-hidden = {this.state.activeTab === 'local' ? 'false' : 'true'} className={'tab-panel panel--local ' + (this.state.activeTab === 'local' ? 'is-active' : '')}>
-                <label className='label'><strong>Step 1:</strong> Select type of file to add: </label>
-                <Dropdown options={localDataType} selected={this.state.localDataType} selectOption={this.selectLocalOption} matchWidth={true} theme={dropdownTheme} />
-                <label className='label'><strong>Step 2:</strong> Select a local data file to add: </label>
-                <FileInput accept=".csv,.kml" onChange={this.handleUploadFile} />
-            </section>
-            <section aria-hidden = {this.state.activeTab === 'web' ? 'false' : 'true'} className={'tab-panel panel--web ' + (this.state.activeTab === 'web' ? 'is-active' : '')}>
-                <label className='label'><strong>Step 1:</strong> Select type of file to add: </label>
-                <Dropdown options={remoteDataType} selected={this.state.remoteDataType} selectOption={this.selectRemoteOption} matchWidth={true} theme={dropdownTheme} />
-                <label className='label'><strong>Step 2:</strong> Enter the URL of the data file or web service: </label>
-                <form className='url-input'>
-                    <input value={this.state.remoteUrl} onChange={this.onRemoteUrlChange} className='field' type='text' placeholder='e.g. http://data.gov.au/geoserver/wms'/>
-                    <button type='button' onClick={this.handleUrl} className="btn btn--add-url btn-transparent">Add</button>
-                </form>
-            </section>
+            <div className={Styles.tabPanels}>
+                <If condition={this.state.activeTab === 'local'}>
+                    <section className={Styles.tabPanel}>
+                        <label className={Styles.label}><strong>Step 1:</strong> Select type of file to add: </label>
+                        <Dropdown options={localDataType} selected={this.state.localDataType}
+                                  selectOption={this.selectLocalOption} matchWidth={true} theme={dropdownTheme}/>
+                        <label className={Styles.label}><strong>Step 2:</strong> Select a local data file to add:
+                        </label>
+                        <FileInput accept=".csv,.kml" onChange={this.handleUploadFile}/>
+                    </section>
+                </If>
+                <If condition={this.state.activeTab === 'web'}>
+                    <section className={Styles.tabPanel}>
+                        <label className={Styles.label}><strong>Step 1:</strong> Select type of file to add: </label>
+                        <Dropdown options={remoteDataType} selected={this.state.remoteDataType}
+                                  selectOption={this.selectRemoteOption} matchWidth={true} theme={dropdownTheme}/>
+                        <label className={Styles.label}><strong>Step 2:</strong> Enter the URL of the data file or web
+                            service:
+                        </label>
+                        <form className={Styles.urlInput}>
+                            <input value={this.state.remoteUrl} onChange={this.onRemoteUrlChange}
+                                   className={Styles.urlInputTextBox}
+                                   type='text'
+                                   placeholder='e.g. http://data.gov.au/geoserver/wms'/>
+                            <button type='button' onClick={this.handleUrl} className={Styles.urlInputBtn}>
+                                Add
+                            </button>
+                        </form>
+                    </section>
+                </If>
             </div>
-            );
+        );
     },
 
     render() {
         return (
-        <div className='add-data-inner'>
-            {this.renderTabs()}
-            {this.renderPanels()}
-        </div>);
+            <div className={Styles.inner}>
+                {this.renderTabs()}
+                {this.renderPanels()}
+            </div>
+        );
     }
 });
 
@@ -183,7 +212,7 @@ function loadAuto(viewModel, loadFunctions, index) {
     index = 0;
     const loadFunction = loadFunctions[index];
 
-    return loadFunction(viewModel).otherwise(function() {
+    return loadFunction(viewModel).otherwise(function () {
         return loadAuto(viewModel, loadFunctions, index + 1);
     });
 }
@@ -198,7 +227,7 @@ function loadWms(viewModel) {
     wms.name = viewModel.state.remoteUrl;
     wms.url = viewModel.state.remoteUrl;
 
-    return wms.load().then(function() {
+    return wms.load().then(function () {
         return wms;
     });
 }
@@ -213,7 +242,7 @@ function loadWfs(viewModel) {
     wfs.name = viewModel.state.remoteUrl;
     wfs.url = viewModel.state.remoteUrl;
 
-    return wfs.load().then(function() {
+    return wfs.load().then(function () {
         return wfs;
     });
 }
@@ -228,7 +257,7 @@ function loadWmts(viewModel) {
     wmts.name = viewModel.state.remoteUrl;
     wmts.url = viewModel.state.remoteUrl;
 
-    return wmts.load().then(function() {
+    return wmts.load().then(function () {
         return wmts;
     });
 }
@@ -243,7 +272,7 @@ function loadMapServer(viewModel) {
     mapServer.name = viewModel.state.remoteUrl;
     mapServer.url = viewModel.state.remoteUrl;
 
-    return mapServer.load().then(function() {
+    return mapServer.load().then(function () {
         return mapServer;
     });
 }
@@ -257,7 +286,7 @@ function loadMapServerLayer(viewModel) {
     const mapServer = new ArcGisMapServerCatalogItem(viewModel.props.terria);
     mapServer.name = viewModel.state.remoteUrl;
     mapServer.url = viewModel.state.remoteUrl;
-    return mapServer.load().then(function() {
+    return mapServer.load().then(function () {
         return mapServer;
     });
 }
@@ -273,7 +302,7 @@ function loadOpenStreetMapServer(viewModel) {
     openStreetMapServer.name = viewModel.state.remoteUrl;
     openStreetMapServer.url = viewModel.state.remoteUrl;
 
-    return openStreetMapServer.load().then(function() {
+    return openStreetMapServer.load().then(function () {
         return openStreetMapServer;
     });
 }

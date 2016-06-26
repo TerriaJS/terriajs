@@ -1,5 +1,5 @@
 @import '~terriajs-variables';
-@import '../../Sass/global/mixins';
+@import '../../Sass/common/mixins';
 // Save 1px for drop zone
 $workbench-margin: $padding-small - 1px;
 
@@ -34,28 +34,28 @@ $workbench-margin: $padding-small - 1px;
 }
 
 .inner {
-  composes: clearfix from '../../Sass/partial/_base.scss';
+  composes: clearfix from '../../Sass/common/_base.scss';
   padding: $padding;
   border-top: 1px solid $border-color;
 }
 
 .header {
-  composes: list-reset from '../../Sass/partial/_base.scss';
+  composes: list-reset from '../../Sass/common/_base.scss';
 
   width: 100%;
 }
 
 .header-clearfix {
-  composes: clearfix from '../../Sass/partial/_base.scss';
+  composes: clearfix from '../../Sass/common/_base.scss';
 }
 
 .btn {
-  composes: btn from '../../Sass/partial/_buttons.scss';
+  composes: btn from '../../Sass/common/_buttons.scss';
 }
 
 .visibilityColumn {
-  composes: col from  '../../Sass/partial/_base.scss';
-  composes: col-1 from  '../../Sass/partial/_base.scss';
+  composes: col from  '../../Sass/common/_base.scss';
+  composes: col-1 from  '../../Sass/common/_base.scss';
 }
 
 .btn-visibility {
@@ -65,17 +65,17 @@ $workbench-margin: $padding-small - 1px;
 
 
 .nameColumn {
-  composes: col from  '../../Sass/partial/_base.scss';
-  composes: col-10 from  '../../Sass/partial/_base.scss';
+  composes: col from  '../../Sass/common/_base.scss';
+  composes: col-10 from  '../../Sass/common/_base.scss';
 }
 
 .toggleColumn {
-  composes: col from  '../../Sass/partial/_base.scss';
-  composes: col-1 from  '../../Sass/partial/_base.scss';
+  composes: col from  '../../Sass/common/_base.scss';
+  composes: col-1 from  '../../Sass/common/_base.scss';
 }
 
 .icon {
-  composes: icon from '../../Sass/global/_icons.scss';
+  composes: icon from '../../Sass/common/_icons.scss';
 }
 
 .icon-line-chart {

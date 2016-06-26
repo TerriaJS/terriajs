@@ -1,5 +1,5 @@
 @import '~terriajs-variables';
-@import '../../../Sass/global/mixins';
+@import '../../../Sass/common/mixins';
 // Map Compass
 //
 // Markup:
@@ -18,7 +18,7 @@
   position: absolute;
   right: $padding;
   top: 75px;
-  composes: sm-show from '../../../Sass/partial/_base.scss';
+  composes: sm-show from '../../../Sass/common/_base.scss';
 }
 .innerRing{
   @include vertical-align();

@@ -5,7 +5,6 @@ var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 var testGlob = ['./test/**/*.js', './test/**/*.jsx', '!./test/Utility/*.js'];
-console.log(JSON.stringify(glob.sync(testGlob)));
 
 module.exports = function(hot, dev) {
     var config = {
@@ -40,6 +39,7 @@ module.exports = function(hot, dev) {
             new webpack.optimize.OccurrenceOrderPlugin()
         ];
     }
+    config.plugins = [new ExtractTextPlugin("nationalmap.css", {disable: false, ignoreOrder: true})];
 
-    return configureWebpack(path.resolve(__dirname, '../'), config, hot, true);
+    return configureWebpack(path.resolve(__dirname, '../'), config, hot, hot, ExtractTextPlugin, true);
 };

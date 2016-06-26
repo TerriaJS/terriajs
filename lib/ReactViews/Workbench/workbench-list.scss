@@ -1,23 +1,25 @@
 @import '~terriajs-variables';
 
 .workbench-content {
-  composes: list-reset from '../../Sass/partial/_base.scss';
+  composes: list-reset from '../../Sass/common/_base.scss';
+  position: relative;
+
   @media print{
     page-break-after : always;
   }
 }
 
 .is-active {
-  composes: is-active from '../../Sass/partial/_drop_zone.scss';
-
-  &.drop-zone {
-    height: calc(#{$input-height} + #{$padding});
-  }
+  composes: is-active from '../../Sass/common/_drop_zone.scss';
 }
 
 .drop-zone {
-  composes: drop-zone from '../../Sass/partial/_drop_zone.scss';
-  composes: clearfix from '../../Sass/partial/_base.scss';
+  composes: drop-zone from '../../Sass/common/_drop_zone.scss';
+  composes: clearfix from '../../Sass/common/_base.scss';
 
-  height: 1px;
+  height: 2px;
+
+  &.is-active {
+    height: calc(#{$input-height} + #{$padding});
+  }
 }

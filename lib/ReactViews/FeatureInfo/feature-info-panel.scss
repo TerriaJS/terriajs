@@ -1,5 +1,5 @@
 @import '~terriajs-variables';
-@import '../../Sass/global/mixins';
+@import '../../Sass/common/mixins';
 
 .panel{
   background:rgba($dark, 0.95);
@@ -51,7 +51,7 @@
 }
 
 .btn {
-  composes: btn from '../../Sass/partial/_buttons.scss';
+  composes: btn from '../../Sass/common/_buttons.scss';
 
   padding: 4px 9px;
   margin-right: 4px;
@@ -75,11 +75,11 @@
 }
 
 .no-results {
-  composes: no-results from '../../Sass/partial/_labels.scss';
+  composes: no-results from '../../Sass/common/_labels.scss';
 }
 
 .body{
-  composes: list-reset from '../../Sass/partial/_base.scss';
+  composes: list-reset from '../../Sass/common/_base.scss';
   overflow-y: auto;
   overflow-x: auto;
   max-height: calc(80vh - #{$padding*2 + $btn-default-line-height});

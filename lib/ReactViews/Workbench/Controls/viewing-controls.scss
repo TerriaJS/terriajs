@@ -1,8 +1,8 @@
 @import '~terriajs-variables';
 
 .control {
-  composes: list-reset from '../../../Sass/partial/_base.scss';
-  composes: clearfix from '../../../Sass/partial/_base.scss';
+  composes: list-reset from '../../../Sass/common/_base.scss';
+  composes: clearfix from '../../../Sass/common/_base.scss';
   height: 18px;
   position: relative;
 
@@ -23,7 +23,7 @@
 }
 
 .btn {
-  composes: btn from '../../../Sass/partial/_buttons.scss';
+  composes: btn from '../../../Sass/common/_buttons.scss';
 
   &.btn {
     padding: 0;
