@@ -102,7 +102,7 @@
                         <Format>image/gif</Format>
                         <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink"
                                         xlink:type="simple"
-                                        xlink:href="http://www.example.com/legendUrl"/>
+                                        xlink:href="http://www.example.com/foo?request=GetLegendGraphic&amp;firstUrl"/>
                     </LegendURL>
                 </Style>
             </Layer>

@@ -92,30 +92,16 @@
                 <BoundingBox SRS="EPSG:4326" maxx="46.3841552734" maxy="-123.29158783" minx="46.0292739868" miny="-124.177688599" />
                 <Dimension name="time" units="ISO8601" />
 
-                    <Extent name="time">2015-04-27T16:15:00/2015-04-27T18:45:00/PT15M</Extent>
+                <Extent name="time">2015-04-27T16:15:00/2015-04-27T18:45:00/PT15M</Extent>
 
                 <Style>
                     <Name>jet</Name>
                     <Title>jet</Title>
                     <Abstract></Abstract>
-                    <LegendURL width="72" height="72">
-                        <Format>image/gif</Format>
-                        <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink"
-                                        xlink:type="simple"
-                                        xlink:href="http://www.example.com/foo?request=GetLegendGraphic&amp;firstUrl"/>
-                    </LegendURL>
-                </Style>
-
-                <Style>
-                    <Name>jet2</Name>
-                    <Title>jet2</Title>
-                    <Abstract></Abstract>
-                    <LegendURL width="72" height="72">
-                        <Format>image/gif</Format>
-                        <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink"
-                                        xlink:type="simple"
-                                        xlink:href="http://www.example.com/foo?request=GetLegendGraphic&amp;secondUrl"/>
-                    </LegendURL>
+                    <MetadataURL type="TC211">
+                        <Format>text/html</Format>
+                        <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://examplemetadata.com" xlink:type="simple"/>
+                    </MetadataURL>
                 </Style>
             </Layer>
 

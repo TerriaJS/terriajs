@@ -14,7 +14,7 @@ Command | Comment
 `sudo apt-get install -y nodejs npm` | Install NodeJS (run this on all versions of Linux, including Ubuntu).
 `sudo npm install -g gulp`| Install Gulp, which is the actual build tool. Install it system-wide, as administrator (Windows 8+) or sudo (Ubuntu / Mac OS X). See also: [Install npm packages globally without sudo on OS X and Linux](https://github.com/sindresorhus/guides/blob/master/npm-global-without-sudo.md).
 `git clone https://github.com/TerriaJS/TerriaMap.git` | Get the code
-`cd Map`|
+`cd TerriaMap`|
 `npm install` | Install the dependencies. This may take a while. [TerriaJS-Server](https://github.com/TerriaJS/terriajs-server) is installed to `node_modules/terriajs-server`.
 `gulp` | Build it, using Gulp. This compiles all the code into just a couple of big JavaScript files and moves other assets into `wwwroot/`.
 `npm start` | Start the server.
