@@ -45,6 +45,8 @@ describe('SdmxJsonCatalogItem', function() {
             dataUrlComponent: 'atad'
         });
         var json = item.serializeToJson();
+        // This json should include selectedInitially.
+        expect(json.selectedInitially).toBeDefined();
         var reconstructed = new SdmxJsonCatalogItem(terria);
         reconstructed.updateFromJson(json);
         // item.concepts has a circular dependency via its __knockoutSubscribable property,
