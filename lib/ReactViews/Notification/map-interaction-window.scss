@@ -21,3 +21,8 @@
 .content{
   margin-bottom: $padding;
 }
+
+.btn{
+  composes: btn from '../../Sass/common/_buttons.scss';
+  composes: btn-primary from '../../Sass/common/_buttons.scss';
+}

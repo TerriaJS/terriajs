@@ -24,6 +24,10 @@ const InvokeFunction = React.createClass({
         this.initializeParameters(this.props);
     },
 
+    componentWillUnmount() {
+        this.removeContextItem();
+    },
+
     componentWillReceiveProps(nextProps) {
         this.initializeParameters(nextProps);
     },
@@ -64,8 +68,17 @@ const InvokeFunction = React.createClass({
         knockout.track(this._parameterValues);
 
         // Enable the context item, if any.
+        this.removeContextItem();
         if (defined(props.previewed.contextItem)) {
             props.previewed.contextItem.isEnabled = true;
+            this._lastContextItem = props.previewed.contextItem;
+        }
+    },
+
+    removeContextItem() {
+        if (defined(this._lastContextItem)) {
+            this._lastContextItem.isEnabled = false;
+            this._lastContextItem = undefined;
         }
     },
 
