@@ -5,6 +5,7 @@ import ParameterEditor from './ParameterEditor';
 import when from 'terriajs-cesium/Source/ThirdParty/when';
 import TerriaError from '../../Core/TerriaError';
 import renderMarkdownInReact from '../../Core/renderMarkdownInReact';
+import defined from 'terriajs-cesium/Source/Core/defined';
 import Styles from './invoke-function.scss';
 
 const InvokeFunction = React.createClass({
@@ -61,6 +62,11 @@ const InvokeFunction = React.createClass({
         }
 
         knockout.track(this._parameterValues);
+
+        // Enable the context item, if any.
+        if (defined(props.previewed.contextItem)) {
+            props.previewed.contextItem.isEnabled = true;
+        }
     },
 
     getParams() {
