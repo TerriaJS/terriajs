@@ -113,8 +113,7 @@ const AddData = React.createClass({
         }
 
         addUserCatalogMember(this.props.terria, promise).then(() => {
-            const userCatalog = that.props.terria.catalog.userAddedDataGroup;
-            that.props.updateCatalog(userCatalog);
+            this.props.viewState.myDataIsUploadView = false;
         });
     },
 
