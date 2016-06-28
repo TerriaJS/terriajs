@@ -260,11 +260,11 @@ describe('Leaflet Model', function() {
 
                 it('includes vector features with click events both before and after the map click event', function(done) {
                     // vector and map clicks can come in any order.
-                    leaflet.scene.featureClicked.raiseEvent(vectorFeature1);
+                    leaflet.scene.featureClicked.raiseEvent(vectorFeature1, { latlng: latlng });
                     click({
                         latlng: latlng
                     });
-                    leaflet.scene.featureClicked.raiseEvent(vectorFeature2);
+                    leaflet.scene.featureClicked.raiseEvent(vectorFeature2, { latlng: latlng });
 
                     finishPickingPromise();
 
@@ -277,15 +277,15 @@ describe('Leaflet Model', function() {
                 });
 
                 it('resets the picked vector features if a subsequent map click is made', function(done) {
-                    leaflet.scene.featureClicked.raiseEvent(vectorFeature1);
+                    leaflet.scene.featureClicked.raiseEvent(vectorFeature1, { latlng: latlng });
                     click({
                         latlng: latlng
                     });
-                    leaflet.scene.featureClicked.raiseEvent(vectorFeature2);
+                    leaflet.scene.featureClicked.raiseEvent(vectorFeature2, { latlng: latlng });
 
                     // The reset happens in a runLater, which a second click will always come behind in a browser,
                     // but this isn't guaranteed in unit tests because they're just two setTimeouts racing each other,
-                    // so give this a healthy 500ms delay to make sure it comes in behind the 0ms delay in Leaflet.js.
+                    // so give this a healthy 50ms delay to make sure it comes in behind the 0ms delay in Leaflet.js.
                     setTimeout(function() {
                         click({
                             latlng: latlng
@@ -295,7 +295,7 @@ describe('Leaflet Model', function() {
                             expect(terria.pickedFeatures.features.length).toBe(3);
                             expect(terria.pickedFeatures.features[0].name).toBe('1');
                         }).then(done).otherwise(done.fail);
-                    }, 500);
+                    }, 50);
                 });
             });
         });

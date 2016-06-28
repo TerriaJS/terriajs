@@ -113,8 +113,7 @@ const AddData = React.createClass({
         }
 
         addUserCatalogMember(this.props.terria, promise).then(() => {
-            const userCatalog = that.props.terria.catalog.userAddedDataGroup;
-            that.props.updateCatalog(userCatalog);
+            this.props.viewState.myDataIsUploadView = false;
         });
     },
 
@@ -311,7 +310,7 @@ function loadOpenStreetMapServer(viewModel) {
  * Loads a catalog item from a file.
  */
 function loadFile(viewModel) {
-    return createCatalogItemFromFileOrUrl(viewModel.props.terria, viewModel.state.remoteUrl, viewModel.state.remoteDataType, true);
+    return createCatalogItemFromFileOrUrl(viewModel.props.terria, viewModel.state.remoteUrl, viewModel.state.remoteDataType.value, true);
 }
 
 module.exports = AddData;

@@ -1,5 +1,7 @@
 'use strict';
 
+// For documentation on the custom <chart> tag, see lib/Models/registerCustomComponentTypes.js.
+//
 // Two possible approaches to combining D3 and React:
 // 1. Render SVG element in React, let React keep control of the DOM.
 // 2. React treats the element like a blackbox, and D3 is in control.
@@ -18,9 +20,9 @@ import DeveloperError from 'terriajs-cesium/Source/Core/DeveloperError';
 import loadText from 'terriajs-cesium/Source/Core/loadText';
 import when from 'terriajs-cesium/Source/ThirdParty/when';
 
-import ChartData from '../../Charts/ChartData';
-import LineChart from '../../Charts/LineChart';
-import TableStructure from '../../Map/TableStructure';
+import ChartData from '../../../Charts/ChartData';
+import LineChart from '../../../Charts/LineChart';
+import TableStructure from '../../../Map/TableStructure';
 
 import Styles from './chart.scss';
 
