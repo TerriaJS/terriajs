@@ -1,5 +1,5 @@
 @import '~terriajs-variables';
-@import '../../Sass/common/mixins';
+@import '../../../Sass/common/mixins';
 
 @include empty-module('inner');
 @include empty-module('chart-panel');
@@ -54,7 +54,7 @@
 }
 
 .section-label {
-  composes: label from '../../Sass/common/_labels.scss';
+  composes: label from '../../../Sass/common/_labels.scss';
 }
 
 .loader {
@@ -65,8 +65,8 @@
 }
 
 .btn--close-chart-panel {
-  composes: btn from '../../Sass/common/_buttons.scss';
-  composes: btn--close from '../../Sass/common/_buttons.scss';
+  composes: btn from '../../../Sass/common/_buttons.scss';
+  composes: btn--close from '../../../Sass/common/_buttons.scss';
 
   position: absolute;
   right: 0;
@@ -78,5 +78,5 @@
 }
 
 .is-top {
-  composes: is-top from '../../Sass/common/_layout.scss';
+  composes: is-top from '../../../Sass/common/_layout.scss';
 }

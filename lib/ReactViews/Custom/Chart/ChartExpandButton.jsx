@@ -5,15 +5,18 @@ import React from 'react';
 
 import defaultValue from 'terriajs-cesium/Source/Core/defaultValue';
 import defined from 'terriajs-cesium/Source/Core/defined';
-import combine from 'terriajs-cesium/Source/Core/combine';
+import clone from 'terriajs-cesium/Source/Core/clone';
 
-import CatalogGroup from '../../Models/CatalogGroup';
-import CsvCatalogItem from '../../Models/CsvCatalogItem';
-import Dropdown from '../Generic/Dropdown';
-import raiseErrorToUser from '../../Models/raiseErrorToUser';
+import CatalogGroup from '../../../Models/CatalogGroup';
+import CsvCatalogItem from '../../../Models/CsvCatalogItem';
+import Dropdown from '../../Generic/Dropdown';
+import raiseErrorToUser from '../../../Models/raiseErrorToUser';
 
 import Styles from './chart-expand-button.scss';
 
+// This displays both an "expand" button, which enables a new catalog item based on the chart data,
+// and a "download" button, which downloads the data.
+//
 const ChartExpandButton = React.createClass({
 
     propTypes: {
@@ -68,9 +71,8 @@ const ChartExpandButton = React.createClass({
             const sourceNameObjects = this.props.sourceNames.map(name=>{ return {name: name}; });
             const nameAndHrefObjects = downloadNames.map((name, i)=>{ return {name: name, href: downloads[i]}; });
             if (this.props.canDownload) {
-                const downloadDropdownTheme = combine(combine({}, dropdownTheme), {
-                    button: classNames(Styles.btnSmall, Styles.btnDownload)
-                });
+                const downloadDropdownTheme = clone(dropdownTheme);
+                downloadDropdownTheme.button = classNames(Styles.btnSmall, Styles.btnDownload);
                 downloadButton = <Dropdown selectOption={this.downloadDropdown} options={nameAndHrefObjects} theme={downloadDropdownTheme} />;
             }
 
@@ -87,7 +89,7 @@ const ChartExpandButton = React.createClass({
         }
         if (this.props.canDownload && defined(downloads)) {
             const href = downloads[0];
-            downloadButton = <a className={Styles.btnDownload} href={href} />;
+            downloadButton = <a className={classNames(Styles.btnSmall, Styles.aDownload)} href={href} />;
         }
         return (
             <div className={Styles.chartExpand}>

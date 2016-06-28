@@ -1,5 +1,5 @@
 @import '~terriajs-variables';
-@import '../../Sass/common/mixins';
+@import '../../../Sass/common/mixins';
 
 .dropdown {
   display: inline-block;
@@ -9,7 +9,7 @@
   }
 
   &__btn {
-    composes: btn--small from '../../Sass/common/_buttons.scss';
+    composes: btn--small from '../../../Sass/common/_buttons.scss';
   }
 
   &__btn--option {
@@ -54,11 +54,11 @@
 }
 
 .btn-small {
-  composes: btn--small from '../../Sass/common/_buttons.scss';
+  composes: btn--small from '../../../Sass/common/_buttons.scss';
 }
 
 .btn-download {
-  composes: btn--download from '../../Sass/common/_buttons.scss';
+  composes: btn--download from '../../../Sass/common/_buttons.scss';
 
   display: inline-block;
   text-align: center;
@@ -79,4 +79,19 @@
   padding: 1px 8px;
   right: 0;
   margin-right: 3px;
+}
+
+.a--download {
+  composes: btn--download from '../../../Sass/common/_buttons.scss';
+
+  display: inline-block;
+  text-align: center;
+  padding: 1px 8px 0 8px;
+  margin-left: 3px;
+  color: white;
+  background: $color-primary;
+
+  &:hover, &:focus {
+    text-decoration: none;
+  }
 }
