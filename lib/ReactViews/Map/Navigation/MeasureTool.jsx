@@ -1,6 +1,7 @@
 'use strict';
 import React from 'react';
 import ObserveModelMixin from '../../ObserveModelMixin';
+import Styles from './measure_tool.scss';
 const UserDrawing = require('../../../Map/UserDrawing');
 const EllipsoidGeodesic = require('terriajs-cesium/Source/Core/EllipsoidGeodesic.js');
 const Ellipsoid = require('terriajs-cesium/Source/Core/Ellipsoid.js');
@@ -22,6 +23,7 @@ const MeasureTool = React.createClass({
             userDrawing: new UserDrawing(this.props.terria,
                 {
                     messageHeader: "Measure Tool",
+                    allowPolygon: false,
                     onPointClickedCallback: this.onPointClicked,
                     onCleanUpCallback: this.onCleanUp,
                     onMakeDialogMessageCallback: this.onMakeDialogMessage
@@ -171,8 +173,8 @@ const MeasureTool = React.createClass({
     },
 
     render() {
-        return <div className='measure-tool'>
-                  <button type='button' className='btn btn--increase'
+        return <div className={Styles.measureTool}>
+                  <button type='button' className={Styles.btn}
                           title='measure distance between two points'
                           onClick={this.handleClick}></button>
                </div>;
