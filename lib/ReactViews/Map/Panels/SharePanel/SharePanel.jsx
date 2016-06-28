@@ -1,7 +1,7 @@
 'use strict';
 
 import React from 'react';
-import {buildShareLink, buildShortShareLink} from './BuildShareLink';
+import {buildShareLink, buildShortShareLink, canShorten} from './BuildShareLink';
 import ObserverModelMixin from '../../../ObserveModelMixin';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import classNames from 'classnames';
@@ -65,7 +65,7 @@ const SharePanel = React.createClass({
     },
 
     isUrlShortenable() {
-        return this.props.terria.urlShortener && this.props.terria.urlShortener.isUsable;
+        return canShorten(this.props.terria);
     },
 
     shouldShorten() {
