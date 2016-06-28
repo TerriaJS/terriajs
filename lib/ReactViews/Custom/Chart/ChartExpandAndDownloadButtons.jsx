@@ -12,12 +12,12 @@ import CsvCatalogItem from '../../../Models/CsvCatalogItem';
 import Dropdown from '../../Generic/Dropdown';
 import raiseErrorToUser from '../../../Models/raiseErrorToUser';
 
-import Styles from './chart-expand-button.scss';
+import Styles from './chart-expand-and-download-buttons.scss';
 
 // This displays both an "expand" button, which enables a new catalog item based on the chart data,
 // and a "download" button, which downloads the data.
 //
-const ChartExpandButton = React.createClass({
+const ChartExpandAndDownloadButtons = React.createClass({
 
     propTypes: {
         terria: React.PropTypes.object.isRequired,
@@ -174,4 +174,4 @@ function expand(props, url) {
     });
 }
 
-module.exports = ChartExpandButton;
+module.exports = ChartExpandAndDownloadButtons;
