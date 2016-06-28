@@ -1,5 +1,5 @@
 @import '~terriajs-variables';
-@import '../../../Sass/global/mixins';
+@import '../../../Sass/common/mixins';
 
 // concept-viewer
 
@@ -13,8 +13,8 @@
 }
 
 .children-list {
-  composes: list-reset from '../../../Sass/partial/_base.scss';
-  composes: clearfix from '../../../Sass/partial/_base.scss';
+  composes: list-reset from '../../../Sass/common/_base.scss';
+  composes: clearfix from '../../../Sass/common/_base.scss';
 }
 
 .header {
@@ -36,23 +36,23 @@
 }
 
 .items {
-  composes: list-reset from '../../../Sass/partial/_base.scss';
+  composes: list-reset from '../../../Sass/common/_base.scss';
 
   margin-left: 15px;
 }
 
 .btn {
-  composes: btn from '../../../Sass/partial/_buttons.scss';
+  composes: btn from '../../../Sass/common/_buttons.scss';
 }
 
 .btn--toggle {
   left: 0;
 
-  composes: btn--toggle from '../../../Sass/partial/_buttons.scss';
+  composes: btn--toggle from '../../../Sass/common/_buttons.scss';
 }
 
 .btn--is-open {
-  composes: is-open from '../../../Sass/partial/_buttons.scss';
+  composes: is-open from '../../../Sass/common/_buttons.scss';
 }
 
 .btn--checkbox {
@@ -61,20 +61,20 @@
 
 .btn--unique-active {
   composes: btn--checkbox;
-  composes: btn--radio-on from '../../../Sass/partial/_buttons.scss';
+  composes: btn--radio-on from '../../../Sass/common/_buttons.scss';
 }
 
 .btn--unique-inactive {
   composes: btn--checkbox;
-  composes: btn--radio-off from '../../../Sass/partial/_buttons.scss';
+  composes: btn--radio-off from '../../../Sass/common/_buttons.scss';
 }
 
 .btn--multiple-active {
   composes: btn--checkbox;
-  composes: btn--checkbox-on from '../../../Sass/partial/_buttons.scss';
+  composes: btn--checkbox-on from '../../../Sass/common/_buttons.scss';
 }
 
 .btn--multiple-inactive {
   composes: btn--checkbox;
-  composes: btn--checkbox-off from '../../../Sass/partial/_buttons.scss';
+  composes: btn--checkbox-off from '../../../Sass/common/_buttons.scss';
 }

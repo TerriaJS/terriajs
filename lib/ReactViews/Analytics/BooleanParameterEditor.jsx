@@ -1,6 +1,8 @@
 import React from 'react';
 import ObserveModelMixin from '../ObserveModelMixin';
 
+import Styles from './parameter-editors.scss';
+
 const BooleanParameterEditor = React.createClass({
     mixins: [ObserveModelMixin],
     propTypes: {
@@ -20,17 +22,17 @@ const BooleanParameterEditor = React.createClass({
         if (state === true) {
             name = this.props.parameter.trueName || this.props.parameter.name;
             description = this.props.parameter.trueDescription || this.props.parameter.description;
-            classNames = this.props.parameterValues[this.props.parameter.id] && this.props.parameterValues[this.props.parameter.id] === true ? 'btn--radio-on' : 'btn--radio-off';
+            classNames = this.props.parameterValues[this.props.parameter.id] && this.props.parameterValues[this.props.parameter.id] === true ? Styles.btnRadioOn : Styles.btnRadioOff;
         } else {
             name = this.props.parameter.falseName || this.props.parameter.name;
             description = this.props.parameter.falseDescription || this.props.parameter.description;
-            classNames = this.props.parameterValues[this.props.parameter.id] && this.props.parameterValues[this.props.parameter.id] === true ? 'btn--radio-off' : 'btn--radio-on';
+            classNames = this.props.parameterValues[this.props.parameter.id] && this.props.parameterValues[this.props.parameter.id] === true ? Styles.btnRadioOff : Styles.btnRadioOn;
 
         }
         return (
-            <div className='radio'>
+            <div className={Styles.radio}>
                 <button type='button'
-                        className={`btn btn--radio ${classNames}`}
+                        className={`${Styles.btnRadio} ${classNames}`}
                         title={description}
                         onClick={this.onClick}>
                     {name}

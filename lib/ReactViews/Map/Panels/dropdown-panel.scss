@@ -1,5 +1,5 @@
 @import '~terriajs-variables';
-@import '../../../Sass/global/mixins';
+@import '../../../Sass/common/mixins';
 
 .panel {
   width: auto;
@@ -63,7 +63,7 @@
 }
 
 .button {
-  composes: btn from '../../../Sass/partial/_buttons.scss';
+  composes: btn from '../../../Sass/common/_buttons.scss';
 
   padding-left: $padding*3.5;
   margin-right: $padding;

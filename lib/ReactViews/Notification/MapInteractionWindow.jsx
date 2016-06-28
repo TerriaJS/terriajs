@@ -21,7 +21,7 @@ const MapInteractionWindow = React.createClass({
         return (
             <div className={windowClass} aria-hidden={ !interactionMode }>
               <div className={Styles.content}>{interactionMode && interactionMode.message}</div><button type='button' onClick={interactionMode && interactionMode.onCancel}
-                          className='btn btn-primary'>Cancel</button>
+                          className={Styles.btn}>Cancel</button>
             </div>);
     }
 });

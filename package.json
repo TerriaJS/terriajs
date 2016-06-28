@@ -1,6 +1,6 @@
 {
   "name": "terriajs",
-  "version": "3.3.0",
+  "version": "3.4.0",
   "description": "Geospatial data visualization platform.",
   "license": "Apache-2.0",
   "engines" : {
@@ -29,6 +29,7 @@
     "html2canvas": "0.5.0-alpha2",
     "imports-loader": "^0.6.5",
     "javascript-natural-sort": "^0.7.1",
+    "json5": "^0.5.0",
     "json-loader": "^0.5.4",
     "jsx-control-statements": "3.1.2",
     "leaflet": "0.7.3",
@@ -86,6 +87,7 @@
     "react-addons-test-utils": "0.14.7",
     "react-dom": "0.14.x",
     "react-shallow-testutils": "^1.0.0",
+    "socket.io": "1.4.7",
     "terriajs-jasmine-ajax": "^3.2.1",
     "terriajs-server": "^1.4.1",
     "webpack-dev-server": "^1.14.1"
@@ -99,7 +101,8 @@
     "postpublish": "bash -c \"git tag -a ${npm_package_version} -m \"${npm_package_version}\" && git push origin ${npm_package_version}\"",
     "postinstall": "gulp post-npm-install",
     "make-schema": "gulp make-schema",
-    "start": "webpack-dev-server --inline --config buildprocess/webpack.config.dev.js",
-    "hot": "webpack-dev-server --inline --config buildprocess/webpack.config.hot.js --hot"
+    "start": "bash ./node_modules/terriajs-server/run_server.sh --port 3002",
+    "dev": "webpack-dev-server --inline --config buildprocess/webpack.config.dev.js --host 0.0.0.0",
+    "hot": "webpack-dev-server --inline --config buildprocess/webpack.config.hot.js --hot --host 0.0.0.0"
   }
 }

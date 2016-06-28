@@ -1,5 +1,5 @@
 @import '~terriajs-variables';
-@import '../../Sass/global/mixins';
+@import '../../Sass/common/mixins';
 
 .feedback{
     background: #fff;
@@ -12,9 +12,9 @@
 }
 
 .btnFeedback{
-    composes: btn from '../../Sass/partial/_buttons.scss';
-    composes: icon from '../../Sass/global/_icons.scss';
-    composes: icon-feedback from '../../Sass/global/_icons.scss';
+    composes: btn from '../../Sass/common/_buttons.scss';
+    composes: icon from '../../Sass/common/_icons.scss';
+    composes: icon-feedback from '../../Sass/common/_icons.scss';
     &:before{
         padding-right: $padding;
     }

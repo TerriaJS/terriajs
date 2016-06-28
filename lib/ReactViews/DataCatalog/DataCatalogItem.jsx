@@ -1,11 +1,10 @@
-'use strict';
+import React from 'react';
 
 import addedByUser from '../../Core/addedByUser';
-import classNames from 'classnames';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import ObserveModelMixin from '../ObserveModelMixin';
 import raiseErrorOnRejectedPromise from '../../Models/raiseErrorOnRejectedPromise';
-import React from 'react';
+import CatalogItem from './CatalogItem';
 
 // Individual dataset
 const DataCatalogItem = React.createClass({
@@ -16,30 +15,13 @@ const DataCatalogItem = React.createClass({
         viewState: React.PropTypes.object.isRequired
     },
 
-    renderIconClass() {
-        if (this.props.item.isEnabled) {
-            if (this.props.item.isLoading) {
-                return 'btn--loading-on-map';
-            }
-            return 'btn--remove-from-map';
-        }
-        return 'btn--add-to-map';
-    },
-
-    renderItemIcon() {
-        if(this.props.item.isMappable) {
-            return <button type='button' onClick={this.toggleEnable} title="add to map" className={'btn btn--catalog-item--action ' + (this.renderIconClass())} />;
-        }
-        return <button type='button' onClick={this.setPreviewedItem} title="preview" className='btn btn--catalog-item--action btn--stats-bars' />;
-    },
-
     toggleEnable(event) {
         this.props.item.toggleEnabled();
         // set preview as well
         this.props.viewState.viewCatalogItem(this.props.item);
         // mobile switch to nowvewing
         this.props.viewState.switchMobileView(this.props.viewState.mobileViewOptions.preview);
-        if (this.props.viewState.previewedItem.isEnabled === true &&
+        if (this.props.item.isEnabled === true &&
             this.props.viewState.closeModalAfterAdd === true &&
             !event.shiftKey && !event.ctrlKey) {
 
@@ -65,29 +47,26 @@ const DataCatalogItem = React.createClass({
     render() {
         const item = this.props.item;
         return (
-            <li className={classNames('clearfix data-catalog-item', {'is-previewed': this.isSelected()})}>
-                <button type='button'
-                        onClick={this.setPreviewedItem}
-                        className={`btn btn--catalog-item ${item.isMappable ? 'catalog-item' : 'service-item'}`}>
-                    {item.name}
-                </button>
-                <Choose>
-                    <When condition={!defined(item.invoke)}>
-                        <button type='button' onClick={this.toggleEnable}
-                                title="add to map"
-                                className={'btn btn--catalog-item--action ' + (this.renderIconClass())}
-                        />
-                    </When>
-                    <Otherwise>
-                        <button type='button'
-                                onClick={this.setPreviewedItem}
-                                title="preview"
-                                className='btn btn--catalog-item--action btn--stats-bars'
-                        />
-                    </Otherwise>
-                </Choose>
-            </li>
+            <CatalogItem
+                onTextClick={this.setPreviewedItem}
+                selected={this.isSelected()}
+                text={item.name}
+                btnState={this.getState()}
+                onBtnClick={defined(item.invoke) ? this.setPreviewedItem : this.toggleEnable}
+            />
         );
+    },
+
+    getState() {
+        if (this.props.item.isLoading) {
+            return 'loading';
+        } else if (this.props.item.isEnabled) {
+            return 'remove';
+        } else if (!defined(this.props.item.invoke)) {
+            return 'add';
+        } else {
+            return 'stats';
+        }
     }
 });
 

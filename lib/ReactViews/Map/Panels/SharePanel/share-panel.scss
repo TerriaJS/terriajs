@@ -1,5 +1,5 @@
 @import '~terriajs-variables';
-@import '../../../../Sass/global/mixins';
+@import '../../../../Sass/common/mixins';
 @import '../dropdown-panel-inner-mixin';
 
 .share-panel {
@@ -14,21 +14,21 @@
 }
 
 .btn--map {
-  composes: btn--map from '../../../../Sass/partial/_buttons.scss';
+  composes: btn--map from '../../../../Sass/common/_buttons.scss';
 }
 
 .btn--share {
-  composes: btn--share from '../../../../Sass/partial/_buttons.scss';
+  composes: btn--share from '../../../../Sass/common/_buttons.scss';
 }
 
 .btn--checkbox-off {
-  composes: btn from '../../../../Sass/partial/_buttons.scss';
-  composes: btn--checkbox-off from '../../../../Sass/partial/_buttons.scss';
+  composes: btn from '../../../../Sass/common/_buttons.scss';
+  composes: btn--checkbox-off from '../../../../Sass/common/_buttons.scss';
 }
 
 .btn--checkbox-on {
-  composes: btn from '../../../../Sass/partial/_buttons.scss';
-  composes: btn--checkbox-on from '../../../../Sass/partial/_buttons.scss';
+  composes: btn from '../../../../Sass/common/_buttons.scss';
+  composes: btn--checkbox-on from '../../../../Sass/common/_buttons.scss';
 }
 
 .img--share {
@@ -41,7 +41,7 @@
 }
 
 .image--link {
-  composes: img--link from '../../../../Sass/global/_icons.scss';
+  composes: img--link from '../../../../Sass/common/_icons.scss';
 }
 
 .paragraph {
@@ -50,7 +50,7 @@
 }
 
 .field {
-  composes: field from '../../../../Sass/partial/_form.scss';
+  composes: field from '../../../../Sass/common/_form.scss';
 
   color: #ddd;
   background: $overlay;

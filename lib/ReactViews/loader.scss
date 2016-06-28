@@ -1,0 +1,26 @@
+@import '~terriajs-variables';
+@import '../Sass/common/mixins';
+
+// Loader
+//
+// Markup:
+// <div class='loader'>Loading</div>
+//
+// Style guide: Loader
+//
+.loader{
+  composes: icon from '../Sass/common/_icons.scss';
+  composes: icon-loader from '../Sass/common/_icons.scss';
+
+  padding: $padding $padding $padding $padding*3 !important;
+  position: relative;
+  display: inline-block;
+
+  &:before{
+    position: absolute;
+    left: $padding;
+    top: $padding;
+    font-size: 1rem;
+    line-height: 1.3;
+  }
+}
