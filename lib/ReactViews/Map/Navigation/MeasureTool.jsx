@@ -52,8 +52,7 @@ const MeasureTool = React.createClass({
         // http://stackoverflow.com/questions/2901102/how-to-print-a-number-with-commas-as-thousands-separators-in-javascript
         number = number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         let numberStr = number + " " + label;
-        if (squared)
-        {
+        if (squared) {
             numberStr += "\u00B2";
         }
         return numberStr;
@@ -95,7 +94,7 @@ const MeasureTool = React.createClass({
         }
         const perPositionHeight = true;
 
-        let positions = [];
+        const positions = [];
         for (let i=0; i < pointEntities.entities.values.length; i++) {
             const currentPoint = pointEntities.entities.values[i];
             const currentPointPos = currentPoint.position.getValue(this.props.terria.clock.currentTime);
@@ -107,32 +106,29 @@ const MeasureTool = React.createClass({
                                                                         CesiumMath.RADIANS_PER_DEGREE,
                                                                         perPositionHeight);
 
-        if (geom.indices.length % 3 !== 0 || geom.attributes.position.values.length % 3 !== 0)
-        {
+        if (geom.indices.length % 3 !== 0 || geom.attributes.position.values.length % 3 !== 0) {
             // Something has gone wrong. We expect triangles. Can't calcuate area.
             return;
         }
 
-        let coords = [];
-        for (let i = 0; i < geom.attributes.position.values.length; i+=3)
-        {
+        const coords = [];
+        for (let i = 0; i < geom.attributes.position.values.length; i+=3) {
             coords.push(new Cartesian3(geom.attributes.position.values[i],
                                        geom.attributes.position.values[i+1],
                                        geom.attributes.position.values[i+2]));
         }
         let area = 0;
-        for (let i=0; i < geom.indices.length; i+=3)
-        {
-            let ind1 = geom.indices[i];
-            let ind2 = geom.indices[i+1];
-            let ind3 = geom.indices[i+2];
+        for (let i=0; i < geom.indices.length; i+=3) {
+            const ind1 = geom.indices[i];
+            const ind2 = geom.indices[i+1];
+            const ind3 = geom.indices[i+2];
 
             const a = Cartesian3.distance(coords[ind1], coords[ind2]);
             const b = Cartesian3.distance(coords[ind2], coords[ind3]);
             const c = Cartesian3.distance(coords[ind3], coords[ind1]);
 
             // Heron's formula
-            let s = (a + b + c)/2.0;
+            const s = (a + b + c)/2.0;
             area += Math.sqrt(s*(s-a)*(s-b)*(s-c));
         }
 
@@ -159,10 +155,9 @@ const MeasureTool = React.createClass({
     },
 
     onMakeDialogMessage() {
-        let distance = this.prettifyNumber(this.state.totalDistanceMetres, false);
+        const distance = this.prettifyNumber(this.state.totalDistanceMetres, false);
         let message = distance;
-        if (this.state.totalAreaMetresSquared !== 0)
-        {
+        if (this.state.totalAreaMetresSquared !== 0) {
             message += "<br>" + this.prettifyNumber(this.state.totalAreaMetresSquared, true);
         }
         return message;
