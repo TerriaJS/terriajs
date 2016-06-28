@@ -6,7 +6,7 @@ import DataCatalogItem from './DataCatalogItem.jsx';
 import DataCatalogGroup from './DataCatalogGroup.jsx';
 
 /**
- * Component that is either a {@link DataCatalogItem} or a {@link DataCatalogMember} and encapsulated this choosing logic.
+ * Component that is either a {@link CatalogItem} or a {@link DataCatalogMember} and encapsulated this choosing logic.
  */
 export default React.createClass({
     mixins: [ObserveModelMixin],

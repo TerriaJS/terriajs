@@ -1,12 +1,14 @@
 @import '~terriajs-variables';
-@import '../../Sass/global/mixins';
+@import '../../Sass/common/mixins';
 
-.invokeFunction{
+.invoke-function {
   padding: $padding-small;
   position: relative;
   height: 100%;
+
   @media screen and (min-width : $sm){
     padding: 0;
+    margin-right: -5px;
   }
 }
 
@@ -31,4 +33,11 @@
   h3{
     margin-top: 0;
   }
+}
+
+@include empty-module("description")
+
+.btn {
+  composes: btn from '../../Sass/common/_buttons.scss';
+  composes: btn-primary from '../../Sass/common/_buttons.scss';
 }

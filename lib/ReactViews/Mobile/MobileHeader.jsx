@@ -118,13 +118,13 @@ const MobileHeader = React.createClass({
                             </div>
                         </When>
                         <Otherwise>
-                            <div className="form--search-data">
+                            <div className={Styles.formSearchData}>
                                 <SearchBox searchText={searchState.unifiedSearchText}
                                            onSearchTextChanged={this.changeSearchText}
                                            onDoSearch={this.search}/>
                             </div>
                             <button type='button'
-                                    className='btn btn--mobile-search-cancel'
+                                    className={Styles.btnCancel}
                                     onClick={this.toggleSearch}>
                                 cancel
                             </button>

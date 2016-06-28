@@ -1,5 +1,5 @@
 @import '~terriajs-variables';
-@import '../../Sass/global/mixins';
+@import '../../Sass/common/mixins';
 
 .modal-wrapper {
   position: fixed;
@@ -35,28 +35,6 @@
   }
 }
 
-.data-preview__wrapper {
-  visibility: hidden;
-  overflow: hidden;
-  height: 0;
-
-  .is-open & {
-    visibility: visible;
-    width: 60%;
-    float: right;
-    height: 100%;
-    overflow: hidden;
-  }
-
-  @media print {
-    float: left;
-  }
-
-  h4 {
-    margin-top: $padding;
-  }
-}
-
 .explorer-panel {
   position: relative;
   background: $modal-bg;
@@ -88,7 +66,7 @@
 }
 
 .modal-overlay {
-  composes: sm-show from '../../Sass/partial/_base.scss';
+  composes: sm-show from '../../Sass/common/_base.scss';
   position: fixed;
   width: 100%;
   height: 100%;
@@ -105,10 +83,15 @@
 }
 
 .btn--close-modal {
-  composes: sm-show from '../../Sass/partial/_base.scss';
-  composes: btn from '../../Sass/partial/_buttons.scss';
-  composes: btn-transparent from '../../Sass/partial/_buttons.scss';
+  composes: sm-show from '../../Sass/common/_base.scss';
+  composes: btn from '../../Sass/common/_buttons.scss';
+  composes: btn-transparent from '../../Sass/common/_buttons.scss';
+  composes: btn--secondary from '../../Sass/common/_buttons.scss';
 
+  font-size: 0.8rem;
+  padding: 4px 10px;
+  margin: 5px;
+  font-weight: bold;
   position: absolute;
   top: 0;
   right: 0;
@@ -118,5 +101,5 @@
 }
 
 .is-top {
-  z-index: $front-component-z-index !important;
+  composes: is-top from '../../Sass/common/_layout.scss';
 }

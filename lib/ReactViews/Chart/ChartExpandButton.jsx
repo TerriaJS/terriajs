@@ -5,11 +5,14 @@ import React from 'react';
 
 import defaultValue from 'terriajs-cesium/Source/Core/defaultValue';
 import defined from 'terriajs-cesium/Source/Core/defined';
+import combine from 'terriajs-cesium/Source/Core/combine';
 
 import CatalogGroup from '../../Models/CatalogGroup';
 import CsvCatalogItem from '../../Models/CsvCatalogItem';
 import Dropdown from '../Generic/Dropdown';
 import raiseErrorToUser from '../../Models/raiseErrorToUser';
+
+import Styles from './chart-expand-button.scss';
 
 const ChartExpandButton = React.createClass({
 
@@ -56,24 +59,24 @@ const ChartExpandButton = React.createClass({
         let downloadButton;
         if (defined(this.props.sourceNames)) {
             const dropdownTheme = {
-                dropdown: 'preview-chart-wrapper__dropdown',
-                list: 'preview-chart-wrapper__list',
-                button: 'btn--small',
-                btnOption: 'chart-expand__dropdown__btn--option'
+                dropdown: Styles.dropdown,
+                list: Styles.dropdownList,
+                button: Styles.dropdownBtn,
+                btnOption: Styles.dropdownBtnOption
             };
 
             const sourceNameObjects = this.props.sourceNames.map(name=>{ return {name: name}; });
             const nameAndHrefObjects = downloadNames.map((name, i)=>{ return {name: name, href: downloads[i]}; });
             if (this.props.canDownload) {
-                const downloadDropdownTheme = Object.assign({}, dropdownTheme, {
-                    button: 'btn--download btn--small'
+                const downloadDropdownTheme = combine(combine({}, dropdownTheme), {
+                    button: classNames(Styles.btnSmall, Styles.btnDownload)
                 });
-                downloadButton = <Dropdown selectOption={this.downloadDropdown} options={nameAndHrefObjects} theme={downloadDropdownTheme}></Dropdown>;
+                downloadButton = <Dropdown selectOption={this.downloadDropdown} options={nameAndHrefObjects} theme={downloadDropdownTheme} />;
             }
 
             return (
-                <div className={classNames('chart-expand', {'raise-to-title': this.props.raiseToTitle})}>
-                    <div className='chart-dropdown-button'>
+                <div className={classNames(Styles.chartExpand, {[Styles.raiseToTitle]: this.props.raiseToTitle})}>
+                    <div className={Styles.chartDropdownButton}>
                         <Dropdown selectOption={this.expandDropdown} options={sourceNameObjects} theme={dropdownTheme}>
                             Expand&nbsp;▾
                         </Dropdown>
@@ -84,11 +87,11 @@ const ChartExpandButton = React.createClass({
         }
         if (this.props.canDownload && defined(downloads)) {
             const href = downloads[0];
-            downloadButton = <a className='btn btn--download' href={href}></a>;
+            downloadButton = <a className={Styles.btnDownload} href={href} />;
         }
         return (
-            <div className='chart-expand'>
-                <button type='button' className='btn btn--chart-expand' onClick={this.expandButton}>Expand</button>{downloadButton}
+            <div className={Styles.chartExpand}>
+                <button type='button' className={Styles.btnChartExpand} onClick={this.expandButton}>Expand</button>{downloadButton}
             </div>
         );
     }

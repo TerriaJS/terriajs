@@ -1,6 +1,8 @@
 import React from 'react';
 import ObserveModelMixin from '../ObserveModelMixin';
 
+import Styles from './parameter-editors.scss';
+
 const GenericParameterEditor = React.createClass({
     mixins: [ObserveModelMixin],
     propTypes: {
@@ -14,7 +16,7 @@ const GenericParameterEditor = React.createClass({
     },
 
     render() {
-        return (<input className='field'
+        return (<input className={Styles.field}
                        type="text"
                        onChange={this.onChange}
                        value={this.props.parameterValues[this.props.parameter.id]}
