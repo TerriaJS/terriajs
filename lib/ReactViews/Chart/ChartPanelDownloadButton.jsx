@@ -1,12 +1,12 @@
-'use strict';
 /* eslint new-parens: 0 */
+import React from 'react';
 
 import DataUri from '../../Core/DataUri';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import ObserveModelMixin from '../ObserveModelMixin';
-import React from 'react';
-// import TableStructure from '../../Map/TableStructure';
 import VarType from '../../Map/VarType';
+
+import Styles from './chart-panel-download-button.scss';
 
 const ChartPanelDownloadButton = React.createClass({
     mixins: [ObserveModelMixin],
@@ -87,7 +87,10 @@ const ChartPanelDownloadButton = React.createClass({
         if (this.state.href) {
             const checkCompatibility = DataUri.checkCompatibility.bind(null, this.props.errorEvent, this.state.href, false);
             return (
-                <a className='btn btn--download' download='chart data.csv' href={this.state.href} onClick={checkCompatibility}>Download</a>
+                <a className={Styles.btnDownload}
+                   download='chart data.csv'
+                   href={this.state.href}
+                   onClick={checkCompatibility}>Download</a>
             );
         }
         return null;

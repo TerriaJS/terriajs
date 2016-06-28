@@ -23,7 +23,7 @@ const MapInteractionWindow = React.createClass({
             <div className={windowClass} aria-hidden={ !interactionMode }>
               <div className={Styles.content}>{interactionMode && parseCustomHtmlToReact(interactionMode.message())}</div>
               <button type='button' onClick={interactionMode && interactionMode.onCancel}
-                          className='btn btn-primary'>{interactionMode && interactionMode.buttonText}</button>
+                  className={Styles.btn}>{interactionMode && interactionMode.buttonText}</button>
             </div>);
     }
 });

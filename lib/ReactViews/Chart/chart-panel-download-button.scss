@@ -1,0 +1,21 @@
+@import '~terriajs-variables';
+@import '../../Sass/common/mixins';
+
+.btn-download {
+  composes: btn from '../../Sass/common/_buttons.scss';
+  composes: btn--download from '../../Sass/common/_buttons.scss';
+
+  text-transform: uppercase;
+  color: #fff;
+  float: right;
+  margin-right: $input-height;
+
+  &:hover, &:focus {
+    text-decoration: none;
+    color: $color-primary;
+  }
+
+  &:before {
+    display: inline-block;
+  }
+}

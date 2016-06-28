@@ -1,0 +1,32 @@
+@import '~terriajs-variables';
+@import '../../../../Sass/common/mixins';
+
+@include empty-module("file-input");
+
+// Add data from url form
+//
+// Markup:
+// <form class='url-input' autocomplete="off">
+// <input class='field' type='text' placeholder='e.g. http://data.gov.au/geoserver/wms'/>
+// <button class="btn btn--add-url">Add</button>
+// </form>
+//
+// Style guide: 3.2
+//
+
+.input {
+  width: 100%;
+  opacity: 0;
+  position: absolute;
+  padding: $padding;
+  cursor: pointer;
+}
+
+.btn {
+  composes: btn from '../../../../Sass/common/_buttons.scss';
+  composes: btn-primary from '../../../../Sass/common/_buttons.scss';
+
+  &--hover {
+    composes: btn-primary--hover from '../../../../Sass/common/_buttons.scss';
+  }
+}

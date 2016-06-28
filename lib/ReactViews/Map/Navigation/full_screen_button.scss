@@ -1,13 +1,13 @@
 @import '~terriajs-variables';
-@import '../../../Sass/global/mixins';
+@import '../../../Sass/common/mixins';
 
 .full-screen {
 
 }
 
 .btn {
-  composes: btn from '../../../Sass/partial/_buttons.scss';
-  composes: btn--map from '../../../Sass/partial/_buttons.scss';
+  composes: btn from '../../../Sass/common/_buttons.scss';
+  composes: btn--map from '../../../Sass/common/_buttons.scss';
   margin-right: $padding;
   border-radius: $radius-small;
   &,
@@ -22,7 +22,7 @@
     font-size: 1.6rem;
   }
 
-  composes: btn--expand from '../../../Sass/partial/_buttons.scss';
+  composes: btn--expand from '../../../Sass/common/_buttons.scss';
 }
 
 .exit {

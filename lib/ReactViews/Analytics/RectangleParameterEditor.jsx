@@ -1,11 +1,15 @@
 import React from 'react';
+
 import Cartographic from 'terriajs-cesium/Source/Core/Cartographic';
 import CesiumMath from 'terriajs-cesium/Source/Core/Math';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import Rectangle from 'terriajs-cesium/Source/Core/Rectangle';
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
+
 import MapInteractionMode from '../../Models/MapInteractionMode';
 import ObserveModelMixin from '../ObserveModelMixin';
+
+import Styles from './parameter-editors.scss';
 
 const RectangleParameterEditor = React.createClass({
     mixins: [ObserveModelMixin],
@@ -64,7 +68,7 @@ const RectangleParameterEditor = React.createClass({
         const pickPointMode = new MapInteractionMode({
             message: 'Press the SHIFT key and hold down the left mouse button to draw a rectangle.',
             drawRectangle: true,
-            onCancel: function() {
+            onCancel: function () {
                 terria.mapInteractionModeStack.pop();
                 terria.selectBox = false;
                 that.props.viewState.openAddData();
@@ -73,9 +77,9 @@ const RectangleParameterEditor = React.createClass({
         terria.selectBox = true;
         terria.mapInteractionModeStack.push(pickPointMode);
 
-        knockout.getObservable(pickPointMode, 'pickedFeatures').subscribe(function(pickedFeatures) {
+        knockout.getObservable(pickPointMode, 'pickedFeatures').subscribe(function (pickedFeatures) {
             if (pickedFeatures instanceof Rectangle) {
-                that.props.parameterValues[that.props.parameter.id] = pickedFeatures; 
+                that.props.parameterValues[that.props.parameter.id] = pickedFeatures;
                 terria.mapInteractionModeStack.pop();
                 terria.selectBox = false;
                 that.props.viewState.openAddData();
@@ -89,10 +93,19 @@ const RectangleParameterEditor = React.createClass({
     },
 
     render() {
-        return <div className=''>
-                    <input className='field field--parameter-editor' type="text" onChange={this.onTextChange} value={this.state.value}/>
-                    <button type='button' onClick={this.selectRectangleOnMap} className='btn btn-primary btn-selector'>Click to draw rectangle.</button>
-                </div>;
+        return (
+            <div>
+                <input className={Styles.parameterEditor}
+                       type="text"
+                       onChange={this.onTextChange}
+                       value={this.state.value}/>
+                <button type='button'
+                        onClick={this.selectRectangleOnMap}
+                        className={Styles.btnSelector}>
+                    Click to draw rectangle.
+                </button>
+            </div>
+        );
     }
 });
 

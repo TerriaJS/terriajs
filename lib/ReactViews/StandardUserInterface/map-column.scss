@@ -1,5 +1,5 @@
 @import '~terriajs-variables';
-@import '../../Sass/global/mixins';
+@import '../../Sass/common/mixins';
 
 .map__inner {
   display: table;
@@ -34,13 +34,19 @@
   top: 0;
   width: 100%;
   z-index: 0;
+
+  @media print {
+    position: relative!important;
+    div, aside{
+      height: auto !important;
+    }
+  }
 }
 
-.feedback {
-}
+@include empty-module("feedback");
 
 .location-distance {
-  composes: clearfix from '../../Sass/partial/_base.scss';
+  composes: clearfix from '../../Sass/common/_base.scss';
   display: none;
   @media screen and (min-width: $sm) {
     display: block;

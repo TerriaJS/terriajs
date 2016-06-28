@@ -1,5 +1,7 @@
 'use strict';
 
+// For documentation on the custom <chart> tag, see lib/Models/registerCustomComponentTypes.js.
+//
 // Two possible approaches to combining D3 and React:
 // 1. Render SVG element in React, let React keep control of the DOM.
 // 2. React treats the element like a blackbox, and D3 is in control.
@@ -21,7 +23,8 @@ import when from 'terriajs-cesium/Source/ThirdParty/when';
 import ChartData from '../../Charts/ChartData';
 import LineChart from '../../Charts/LineChart';
 import TableStructure from '../../Map/TableStructure';
-// import VarType from '../Map/VarType';
+
+import Styles from './chart.scss';
 
 const defaultHeight = 100;
 
@@ -52,10 +55,10 @@ const Chart = React.createClass({
     },
 
     chartDataArrayFromTableStructure(table) {
-        const xColumn = table.getColumnWithNameOrIndex(this.props.xColumn || 0);
+        const xColumn = table.getColumnWithNameIdOrIndex(this.props.xColumn || 0);
         let yColumns = [table.columns[1]];
         if (defined(this.props.yColumns)) {
-            yColumns = this.props.yColumns.map(yCol=>table.getColumnWithNameOrIndex(yCol));
+            yColumns = this.props.yColumns.map(yCol=>table.getColumnWithNameIdOrIndex(yCol));
         }
         const pointArrays = table.toPointArrays(xColumn, yColumns);
         // The data id should be set to something unique, eg. its source id + column index.
@@ -155,6 +158,7 @@ const Chart = React.createClass({
                 left: 0
             };
             tooltipSettings = {
+                className: Styles.toolTip,
                 id: this._tooltipId,
                 align: 'prefer-right', // With right/left alignment, the offset is relative to the svg, so need to inset.
                 offset: {top: 40, left: 66, right: 30, bottom: 5}
@@ -194,7 +198,7 @@ const Chart = React.createClass({
 
     render() {
         return (
-            <div className='chart' ref={element=>{this.buttonElement = element;}}></div>
+            <div className={Styles.chart} ref={element=>{this.buttonElement = element;}}></div>
         );
     }
 });

@@ -1,12 +1,12 @@
 @import '~terriajs-variables';
-@import '../../Sass/global/mixins';
+@import '../../Sass/common/mixins';
 
 .dropdown {
   position: relative;
 }
 
 .list {
-  composes: list-reset from '../../Sass/partial/_base.scss';
+  composes: list-reset from '../../Sass/common/_base.scss';
 
   @include transform (scaleY(0) translateZ(0));
   @include transition($animation-fast transform cubic-bezier(0.19, 1, 0.22, 1));
@@ -26,15 +26,15 @@
 }
 
 .btn--dropdown {
-  composes: btn from '../../Sass/partial/_buttons.scss';
-  composes: btn-primary from '../../Sass/partial/_buttons.scss';
-  composes: btn-transparent from '../../Sass/partial/_buttons.scss';
+  composes: btn from '../../Sass/common/_buttons.scss';
+  composes: btn-primary from '../../Sass/common/_buttons.scss';
+  composes: btn-transparent from '../../Sass/common/_buttons.scss';
 }
 
 .btn--option {
-  composes: btn from '../../Sass/partial/_buttons.scss';
-  composes: btn-transparent from '../../Sass/partial/_buttons.scss';
-  composes: btn--small from '../../Sass/partial/_buttons.scss';
+  composes: btn from '../../Sass/common/_buttons.scss';
+  composes: btn-transparent from '../../Sass/common/_buttons.scss';
+  composes: btn--small from '../../Sass/common/_buttons.scss';
 
   width: 100%;
 

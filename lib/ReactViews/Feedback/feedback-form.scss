@@ -1,5 +1,5 @@
 @import '~terriajs-variables';
-@import '../../Sass/global/mixins';
+@import '../../Sass/common/mixins';
 
 .form{
     z-index: 1;
@@ -10,7 +10,7 @@
     box-shadow: $box-shadow;
     display: none;
     @media screen and (min-width : $sm){
-        bottom: 100px;
+        bottom: 75px;
         right: $padding*2;
     }
     @media screen and (max-width : $sm){
@@ -48,7 +48,7 @@
 
 
 .btnSubmit{
-    composes: btn from '../../Sass/partial/_buttons.scss';
+    composes: btn from '../../Sass/common/_buttons.scss';
     background: $dark;
     color: #fff;
     margin-left: 10px;
@@ -57,7 +57,7 @@
 
 }
 .field{
-    composes: field from '../../Sass/partial/_form.scss';
+    composes: field from '../../Sass/common/_form.scss';
     margin-bottom: $padding;
 }
 
@@ -66,15 +66,15 @@
 }
 
 .btnCancel{
-    composes: btn from '../../Sass/partial/_buttons.scss';
+    composes: btn from '../../Sass/common/_buttons.scss';
     border: 1px solid $grey;
     border-radius: $radius-medium;
     padding: $padding-small $padding*2;
 }
 
 .btnClose{
-    composes: btn from '../../Sass/partial/_buttons.scss';
-    composes: btn--close from '../../Sass/partial/_buttons.scss';
+    composes: btn from '../../Sass/common/_buttons.scss';
+    composes: btn--close from '../../Sass/common/_buttons.scss';
     position: absolute;
     right: 0;
     top: 0;

@@ -5,6 +5,7 @@ import ParameterEditor from './ParameterEditor';
 import when from 'terriajs-cesium/Source/ThirdParty/when';
 import TerriaError from '../../Core/TerriaError';
 import renderMarkdownInReact from '../../Core/renderMarkdownInReact';
+import defined from 'terriajs-cesium/Source/Core/defined';
 import Styles from './invoke-function.scss';
 
 const InvokeFunction = React.createClass({
@@ -21,6 +22,10 @@ const InvokeFunction = React.createClass({
         knockout.track(this, ['_parameterValues']);
 
         this.initializeParameters(this.props);
+    },
+
+    componentWillUnmount() {
+        this.removeContextItem();
     },
 
     componentWillReceiveProps(nextProps) {
@@ -61,6 +66,20 @@ const InvokeFunction = React.createClass({
         }
 
         knockout.track(this._parameterValues);
+
+        // Enable the context item, if any.
+        this.removeContextItem();
+        if (defined(props.previewed.contextItem)) {
+            props.previewed.contextItem.isEnabled = true;
+            this._lastContextItem = props.previewed.contextItem;
+        }
+    },
+
+    removeContextItem() {
+        if (defined(this._lastContextItem)) {
+            this._lastContextItem.isEnabled = false;
+            this._lastContextItem = undefined;
+        }
     },
 
     getParams() {
@@ -80,11 +99,11 @@ const InvokeFunction = React.createClass({
         return (<div className={Styles.invokeFunction}>
                     <div className={Styles.content}>
                         <h3>{this.props.previewed.name}</h3>
-                        <div className="description">{renderMarkdownInReact(this.props.previewed.description, this.props.previewed, null)}</div>
+                        <div className={Styles.description}>{renderMarkdownInReact(this.props.previewed.description, this.props.previewed, null)}</div>
                         {this.getParams()}
                     </div>
                     <div className={Styles.footer}>
-                        <button type='button' className='btn btn-primary' onClick={this.submit}>Run Analysis</button>
+                        <button type='button' className={Styles.btn} onClick={this.submit}>Run Analysis</button>
                     </div>
                 </div>);
     }

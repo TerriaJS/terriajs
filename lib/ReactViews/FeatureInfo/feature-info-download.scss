@@ -1,5 +1,5 @@
 @import '~terriajs-variables';
-@import '../../Sass/global/mixins';
+@import '../../Sass/common/mixins';
 
 .download {
   float: right;
@@ -8,12 +8,12 @@
 
 .btn {
   composes: btn from './feature-info-panel.scss';
-  composes: btn-primary from '../../Sass/partial/_buttons.scss';
+  composes: btn-primary from '../../Sass/common/_buttons.scss';
 }
 
 .icon--download {
-  composes: icon from '../../Sass/global/_icons.scss';
-  composes: icon-download from '../../Sass/global/_icons.scss';
+  composes: icon from '../../Sass/common/_icons.scss';
+  composes: icon-download from '../../Sass/common/_icons.scss';
 }
 
 .dropdown__list {
@@ -21,5 +21,5 @@
 }
 
 .dropdown__button {
-  composes: btn--small from '../../Sass/partial/_buttons.scss';
+  composes: btn--small from '../../Sass/common/_buttons.scss';
 }

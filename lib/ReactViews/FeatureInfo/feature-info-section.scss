@@ -1,15 +1,15 @@
 @import '~terriajs-variables';
-@import '../../Sass/global/mixins';
+@import '../../Sass/common/mixins';
 
 .section {
-  composes: clearfix from '../../Sass/partial/_base.scss';
+  composes: clearfix from '../../Sass/common/_base.scss';
   background: $overlay;
   border-top: 1px solid $dark-lighter;
 }
 
 .title{
   composes: btn from './feature-info-panel.scss';
-  composes: btn--toggle from '../../Sass/partial/_buttons.scss';
+  composes: btn--toggle from '../../Sass/common/_buttons.scss';
 
   position: relative;
   width: 100%;
@@ -23,7 +23,7 @@
 }
 
 .btn--is-open {
-  composes: is-open from '../../Sass/partial/_buttons.scss';
+  composes: is-open from '../../Sass/common/_buttons.scss';
 }
 
 .content{
@@ -45,9 +45,9 @@
 }
 
 .raw-data-button {
-  composes: btn from '../../Sass/partial/_buttons.scss';
-  composes: btn-primary from '../../Sass/partial/_buttons.scss';
-  composes: btn--small from '../../Sass/partial/_buttons.scss';
+  composes: btn from '../../Sass/common/_buttons.scss';
+  composes: btn-primary from '../../Sass/common/_buttons.scss';
+  composes: btn--small from '../../Sass/common/_buttons.scss';
 
   width: auto;
   float: right;
