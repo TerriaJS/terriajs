@@ -3,7 +3,7 @@
 /*global require, fail*/
 import Chart from '../../lib/ReactViews/Custom/Chart/Chart';
 // import ChartExpandButton from '../../lib/ReactViews/Custom/Chart/ChartExpandButton';
-import Collapsible from '../../lib/ReactViews/Custom/Chart/Collapsible';
+import Collapsible from '../../lib/ReactViews/Custom/Collapsible/Collapsible';
 import parseCustomHtmlToReact from '../../lib/Models/parseCustomHtmlToReact';
 import registerCustomComponentTypes from '../../lib/Models/registerCustomComponentTypes';
 import Terria from '../../lib/Models/Terria';
