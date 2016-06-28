@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-- '5'
+- '5.11.0'
 script:
 - gulp lint docs release
 - gulp test-saucelabs
