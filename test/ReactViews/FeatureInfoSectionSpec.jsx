@@ -14,12 +14,14 @@ import TimeIntervalCollectionProperty from 'terriajs-cesium/Source/DataSources/T
 import FeatureInfoSection from '../../lib/ReactViews/FeatureInfo/FeatureInfoSection';
 import Terria from '../../lib/Models/Terria';
 
+import Styles from '../../lib/ReactViews/FeatureInfo/feature-info-section.scss';
+
 let separator = ',';
 if (typeof Intl === 'object' && typeof Intl.NumberFormat === 'function') {
     separator = (Intl.NumberFormat().format(1000)[1]);
 }
 
-const contentClass = 'feature-info-section__content';
+const contentClass = Styles.content;
 
 function getShallowRenderedOutput(jsx) {
     const renderer = ReactTestUtils.createRenderer();
@@ -58,7 +60,7 @@ describe('FeatureInfoSection', function() {
             'foo': 'bar',
             'material': 'steel',
             'material.process.#1': 'smelted',
-            'size': '12345678',
+            'size': '12345678.9012',
             'efficiency': '0.2345678',
             'owner_html': 'Jay<br>Smith',
             'ampersand': 'A & B',
@@ -193,31 +195,38 @@ describe('FeatureInfoSection', function() {
             const template = 'Size: {{size}}';
             const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template} viewState={viewState} />;
             const result = getShallowRenderedOutput(section);
-            expect(findAllEqualTo(result, 'Size: 12345678').length).toEqual(1);
+            expect(findAllEqualTo(result, 'Size: 12345678.9012').length).toEqual(1);
         });
 
         it('can format numbers with commas', function() {
             const template = {template: 'Size: {{size}}', formats: {size: {useGrouping: true}}};
             const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template} viewState={viewState} />;
             const result = getShallowRenderedOutput(section);
-            expect(findAllEqualTo(result, 'Size: 12' + separator + '345' + separator + '678').length).toEqual(1);
+            expect(findAllEqualTo(result, 'Size: 12' + separator + '345' + separator + '678.9012').length).toEqual(1);
         });
 
         it('can format numbers using terria.formatNumber', function() {
             let template = 'Base: {{#terria.formatNumber}}{{size}}{{/terria.formatNumber}}';
-            template += '  Sep: {{#terria.formatNumber}}{"useGrouping":true}{{size}}{{/terria.formatNumber}}';
+            template += '  Sep: {{#terria.formatNumber}}{"useGrouping":true, "maximumFractionDigits":3}{{size}}{{/terria.formatNumber}}';
             template += '  DP: {{#terria.formatNumber}}{"maximumFractionDigits":3}{{efficiency}}{{/terria.formatNumber}}';
             const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template} viewState={viewState} />;
             const result = getShallowRenderedOutput(section);
-            expect(findAllEqualTo(result, 'Base: 12345678  Sep: 12' + separator + '345' + separator + '678  DP: 0.235').length).toEqual(1);
+            expect(findAllEqualTo(result, 'Base: 12345678.9012  Sep: 12' + separator + '345' + separator + '678.901  DP: 0.235').length).toEqual(1);
         });
 
         it('can format numbers using terria.formatNumber without quotes', function() {
-            let template = 'Sep: {{#terria.formatNumber}}{useGrouping:true}{{size}}{{/terria.formatNumber}}';
+            let template = 'Sep: {{#terria.formatNumber}}{useGrouping:true, maximumFractionDigits:3}{{size}}{{/terria.formatNumber}}';
             template += '  DP: {{#terria.formatNumber}}{maximumFractionDigits:3}{{efficiency}}{{/terria.formatNumber}}';
             const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template} viewState={viewState} />;
             const result = getShallowRenderedOutput(section);
-            expect(findAllEqualTo(result, 'Sep: 12' + separator + '345' + separator + '678  DP: 0.235').length).toEqual(1);
+            expect(findAllEqualTo(result, 'Sep: 12' + separator + '345' + separator + '678.901  DP: 0.235').length).toEqual(1);
+        });
+
+        it('can handle white text in terria.formatNumber', function() {
+            let template = 'Sep: {{#terria.formatNumber}}{"useGrouping":true, "maximumFractionDigits":3} \n {{size}}{{/terria.formatNumber}}';
+            const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template} viewState={viewState} />;
+            const result = getShallowRenderedOutput(section);
+            expect(findAllEqualTo(result, 'Sep: 12' + separator + '345' + separator + '678.901').length).toEqual(1);
         });
 
         it('handles non-numbers terria.formatNumber', function() {
@@ -276,7 +285,7 @@ describe('FeatureInfoSection', function() {
             const template = {name: '{{name}} {{foo}}'};
             const section = <FeatureInfoSection feature={feature} isOpen={false} clock={terria.clock} template={template} viewState={viewState} />;
             const result = getShallowRenderedOutput(section);
-            const nameElement = findAllWithClass(result, 'feature-info-section__title')[0];
+            const nameElement = findAllWithClass(result, Styles.title)[0];
             const name = nameElement.props.children;
             expect(name).toContain('Kay bar');
         });

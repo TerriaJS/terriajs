@@ -81,12 +81,14 @@ const MapColumn = React.createClass({
                             <TerriaViewerWrapper terria={this.props.terria}
                                                  viewState={this.props.viewState}/>
                         </div>
-                        <div className={Styles.locationDistance}>
-                            <LocationBar terria={this.props.terria}
-                                         mouseCoords={this.props.viewState.mouseCoords}/>
-                            <DistanceLegend terria={this.props.terria}/>
-                        </div>
-                        <If condition={!this.props.viewState.useSmallScreenInterface && this.props.terria.configParameters.feedbackUrl}>
+                        <If condition={!this.props.viewState.hideMapUi()}>
+                            <div className={Styles.locationDistance}>
+                                <LocationBar terria={this.props.terria}
+                                             mouseCoords={this.props.viewState.mouseCoords}/>
+                                <DistanceLegend terria={this.props.terria}/>
+                            </div>
+                        </If>
+                        <If condition={!this.props.viewState.useSmallScreenInterface && this.props.terria.configParameters.feedbackUrl && !this.props.viewState.hideMapUi()}>
                             <div className={Styles.feedbackButtonWrapper}>
                                 <FeedbackButton viewState={this.props.viewState}/>
                             </div>

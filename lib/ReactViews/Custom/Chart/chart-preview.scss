@@ -1,0 +1,15 @@
+@import '~terriajs-variables';
+@import '../../../Sass/common/mixins';
+
+.chart {
+  padding: 0;
+}
+
+.preview-chart-wrapper {
+  position: relative;
+}
+
+.chart-title-from-table {
+  line-height: 2;
+  padding: 0 $padding;
+}

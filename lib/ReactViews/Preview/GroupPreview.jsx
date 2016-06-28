@@ -29,7 +29,7 @@ const GroupPreview = React.createClass({
             <div>
                 <h3>{this.props.previewed.name}</h3>
                 <div className={Styles.previewedInfo}>
-                    <div className="data-info url">
+                    <div className={Styles.url}>
                         <Choose>
                             <When
                                 condition={this.props.previewed.description && this.props.previewed.description.length > 0}>

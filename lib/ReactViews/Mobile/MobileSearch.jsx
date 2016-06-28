@@ -23,27 +23,40 @@ const MobileSearch = React.createClass({
 
     },
 
+    render() {
+        return (
+            <div className={Styles.mobileSearch}>
+                <div className={Styles.location}>
+                    {this.renderLocationResult()}
+                </div>
+                <div className={Styles.data}>
+                    {this.renderDataCatalogResult()}
+                </div>
+            </div>
+        );
+    },
+
     renderLocationResult() {
         const that = this;
         const searchState = this.props.viewState.searchState;
         return searchState.unifiedSearchProviders
-                        .filter(search=> search.constructor.name !== 'CatalogItemNameSearchProviderViewModel')
-                        .filter(search => search.isSearching || (search.searchResults && search.searchResults.length))
-                        .map(search => (<div key={search.constructor.name}>
-                                        <label className={Styles.label}>Locations & Official Place Names</label>
-                                        <SearchHeader searchProvider={search} />
-                                        <ul className={Styles.results}>
-                                            { search.searchResults.map((result, i) => (
-                                                <SearchResult key={i} name={result.name} clickAction={that.onLocationClick.bind(that, result)} theme="light" />
-                                            ))}
-                                        </ul>
-                                    </div>));
+            .filter(search=> search.constructor.name !== 'CatalogItemNameSearchProviderViewModel')
+            .filter(search => search.isSearching || (search.searchResults && search.searchResults.length))
+            .map(search => (<div key={search.constructor.name}>
+                <label className={Styles.label}>Locations & Official Place Names</label>
+                <SearchHeader searchProvider={search} />
+                <ul className={Styles.results}>
+                    { search.searchResults.map((result, i) => (
+                        <SearchResult key={i} name={result.name} clickAction={that.onLocationClick.bind(that, result)} theme="light" />
+                    ))}
+                </ul>
+            </div>));
     },
 
     renderDataCatalogResult() {
         const searchState = this.props.viewState.searchState;
         const search = searchState.unifiedSearchProviders
-                      .filter(s=> s.constructor.name === 'CatalogItemNameSearchProviderViewModel')[0];
+            .filter(s=> s.constructor.name === 'CatalogItemNameSearchProviderViewModel')[0];
 
         const items = search.searchResults.map(result => result.catalogItem);
         if (searchState.unifiedSearchText.length) {
@@ -63,19 +76,6 @@ const MobileSearch = React.createClass({
             </div>;
         }
         return null;
-    },
-
-    render() {
-        return (
-            <div className={Styles.mobileSearch}>
-                <div className='search-results--location'>
-                    {this.renderLocationResult()}
-                </div>
-                <div className='search-results--data'>
-                    {this.renderDataCatalogResult()}
-                </div>
-            </div>
-        );
     }
 });
 

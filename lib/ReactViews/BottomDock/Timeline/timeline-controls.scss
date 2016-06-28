@@ -7,7 +7,7 @@
 }
 
 .timeline__control {
-  composes: btn from '../../../Sass/partial/_buttons.scss';
+  composes: btn from '../../../Sass/common/_buttons.scss';
 
   height: 29px;
   width: 34px;
@@ -18,7 +18,7 @@
 }
 
 .icon--back-to-start, .icon--forward, .icon--backward, .icon--pause, .icon--play, .icon--refresh {
-  composes: icon from '../../../Sass/global/_icons.scss';
+  composes: icon from '../../../Sass/common/_icons.scss';
 }
 
 // Normalise these icons
@@ -36,23 +36,23 @@
 }
 
 .icon--back-to-start {
-  composes: icon-backToStart from '../../../Sass/global/_icons.scss';
+  composes: icon-backToStart from '../../../Sass/common/_icons.scss';
 }
 
 .icon--forward {
-  composes: icon-forward from '../../../Sass/global/_icons.scss';
+  composes: icon-forward from '../../../Sass/common/_icons.scss';
 }
 
 .icon--backward {
-  composes: icon-backward from '../../../Sass/global/_icons.scss';//
+  composes: icon-backward from '../../../Sass/common/_icons.scss';//
 }
 
 .icon--pause {
-  composes: icon-pause from '../../../Sass/global/_icons.scss';
+  composes: icon-pause from '../../../Sass/common/_icons.scss';
 }
 
 .icon--play {
-  composes: icon-play from '../../../Sass/global/_icons.scss';
+  composes: icon-play from '../../../Sass/common/_icons.scss';
 }
 
 .icon--refresh {
@@ -60,5 +60,5 @@
     font-size: 18px;
   }
 
-  composes: icon-refresh from '../../../Sass/global/_icons.scss';
+  composes: icon-refresh from '../../../Sass/common/_icons.scss';
 }

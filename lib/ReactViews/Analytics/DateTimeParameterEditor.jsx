@@ -1,6 +1,8 @@
 import React from 'react';
 import ObserveModelMixin from '../ObserveModelMixin';
 
+import Styles from './parameter-editors.scss';
+
 const DateTimeParameterEditor = React.createClass({
     mixins: [ObserveModelMixin],
     propTypes: {
@@ -58,17 +60,17 @@ const DateTimeParameterEditor = React.createClass({
 
     render() {
         return (<div>
-                 <input className='field'
-                        type="date"
-                        placeholder="YYYY-MM-DD"
-                        onChange={this.onChangeDate}
-                        value={this.state.date}/>
-                 <input className='field'
-                        type="time"
-                        placeholder="HH:mm:ss.sss"
-                        onChange={this.onChangeTime}
-                        value={this.state.time}/>
-                </div>);
+            <input className={Styles.field}
+                   type="date"
+                   placeholder="YYYY-MM-DD"
+                   onChange={this.onChangeDate}
+                   value={this.state.date}/>
+            <input className={Styles.field}
+                   type="time"
+                   placeholder="HH:mm:ss.sss"
+                   onChange={this.onChangeTime}
+                   value={this.state.time}/>
+        </div>);
     }
 });
 

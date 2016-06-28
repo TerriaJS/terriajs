@@ -1,0 +1,88 @@
+@import '~terriajs-variables';
+@import '../../../../Sass/common/mixins';
+
+@include empty-module("inner");
+@include empty-module("tab-panels");
+@include empty-module("tab-panel");
+@include empty-module("url-input");
+
+.tab-list{
+  composes: tab-list from '../../tabs.scss';
+
+  padding-right: 0;
+
+  &__item {
+    composes: tab-list__item from '../../tabs.scss';
+
+    margin-right: 3px;
+  }
+
+  // My data tab
+  //
+  // Markup:
+  // <button class="btn btn--add-data-tab"> Add local data </button>
+  //
+  // Style guide: Buttons.btn--add-data-tab
+  &__btn {
+    composes: btn from '../../../../Sass/common/_buttons.scss';
+    composes: btn-transparent from '../../../../Sass/common/_buttons.scss';
+
+    font-size: $font-size-small;
+    font-weight: $font-weight-medium;
+    width: 100%;
+    padding: $padding-small $padding-small $padding-small 0;
+    border-bottom: 2px solid $grey;
+    color: $grey;
+    &:hover, &:focus, &.is-active {
+      color: $color-primary;
+      border-bottom: 2px solid $color-primary;
+    }
+  }
+}
+
+.label{
+  composes: label from '../../../../Sass/common/_labels.scss';
+
+  padding-left: 0;
+}
+
+.dropdown {
+  width: 100%;
+
+  &__dropdown-list {
+    box-shadow: $box-shadow;
+    margin-top: $padding-small;
+
+    &--is-open {
+      height: 190px;
+      overflow-y: auto;
+    }
+  }
+}
+
+// Add data from local form
+//
+// Markup:
+// <form class='file-input'>
+// <input type='file'/>
+// <label class='btn btn--file-input'>Upload File</label>
+// </form>
+//
+// Style guide: 3.3
+//
+.url-input {
+  &__text-box {
+    composes: field from '../../../../Sass/common/_form.scss';
+    width: calc(100% - 50px);
+    float: left;
+  }
+
+  &__btn {
+    composes: btn from '../../../../Sass/common/_buttons.scss';
+    composes: btn-transparent from '../../../../Sass/common/_buttons.scss';
+    composes: btn-primary from '../../../../Sass/common/_buttons.scss';
+
+    width: 50px;
+    float: left;
+  }
+}

@@ -1,0 +1,37 @@
+@import '~terriajs-variables';
+@import '../../../Sass/common/mixins';
+
+.root {
+  height: 100%;
+}
+
+.data-explorer {
+  composes: tab-left-col from '../tabs.scss';
+}
+
+.data-catalog {
+  composes: list-reset from '../../../Sass/common/_base.scss';
+
+  margin-top: $padding;
+  font-size: 0.9rem;
+
+  background: $modal-secondary-bg;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: $padding;
+  box-sizing: border-box;
+
+  @media screen and (min-width: $sm) {
+    height: calc(100% - #{$input-height});
+  }
+}
+
+.data--catalog-group {
+  composes: list-reset from '../../../Sass/common/_base.scss';
+  padding-left: $padding-small;
+}
+
+.label {
+  composes: label from '../../../Sass/common/_labels.scss';
+}
+

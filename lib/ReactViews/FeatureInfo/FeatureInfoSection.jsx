@@ -58,13 +58,16 @@ const FeatureInfoSection = React.createClass({
         }
     },
 
-    getTemplateData() {
-        const propertyData = propertyValues(
+    getPropertyValues() {
+        return propertyValues(
             this.props.feature,
             this.props.clock,
             this.props.template && this.props.template.formats
         );
+    },
 
+    getTemplateData() {
+        const propertyData = this.getPropertyValues();
         if (defined(propertyData)) {
 
             propertyData.terria = {
@@ -78,7 +81,6 @@ const FeatureInfoSection = React.createClass({
                 };
             }
         }
-
         return propertyData;
     },
 
@@ -144,7 +146,10 @@ const FeatureInfoSection = React.createClass({
     render() {
         const catalogItemName = (this.props.catalogItem && this.props.catalogItem.name) || '';
         const fullName = (catalogItemName ? (catalogItemName + ' - ') : '') + this.renderDataTitle();
-        const templateData = this.getTemplateData();
+        const templateData = this.getPropertyValues();
+        if (defined(templateData)) {
+            delete templateData._terria_columnAliases;
+        }
 
         return (
             <li className={classNames(Styles.section)}>
@@ -288,7 +293,8 @@ function mustacheFormatNumberFunction() {
     return function(text, render) {
         // Eg. "{foo:1}hi there".match(optionReg) = ["{foo:1}hi there", "{foo:1}", "hi there"].
         // Note this won't work with nested objects in the options (but these aren't used yet).
-        const optionReg = /^(\{[^}]+\})(.*)/;
+        // Note I use [\s\S]* instead of .* at the end - .* does not match newlines, [\s\S]* does.
+        const optionReg = /^(\{[^}]+\})([\s\S]*)/;
         const components = text.match(optionReg);
         // This regex unfortunately matches double-braced text like {{number}}, so detect that separately and do not treat it as option json.
         const startsWithdoubleBraces = (text.length > 4) && (text[0] === '{') && (text[1] === '{');
@@ -297,7 +303,7 @@ function mustacheFormatNumberFunction() {
             return formatNumberForLocale(render(text));
         }
         // Allow {foo: 1} by converting it to {"foo": 1} for JSON.parse.
-        const quoteReg = /([{,])(\s*)([A-Za-z0-9_\-]+?)\s*:/;
+        const quoteReg = /([{,])(\s*)([A-Za-z0-9_\-]+?)\s*:/g;
         const jsonOptions = components[1].replace(quoteReg, '$1"$3":');
         const options = JSON.parse(jsonOptions);
         return formatNumberForLocale(render(components[2]), options);
