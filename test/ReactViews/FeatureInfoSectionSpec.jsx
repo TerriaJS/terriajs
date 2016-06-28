@@ -178,13 +178,13 @@ describe('FeatureInfoSection', function() {
     it('maintains and applies inline style attributes', function() {
         feature = new Entity({
             name: 'Foo',
-            description: '<div style="background:#ABC">countdown</div>'
+            description: '<div style="background:rgb(170, 187, 204)">countdown</div>'
         });
         const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} viewState={viewState} />;
         const result = getShallowRenderedOutput(section);
         const divs = findAllWithPropsChildEqualTo(result, 'countdown');
         expect(divs.length).toEqual(1);
-        expect(divs[0].props.style.background).toEqual('#ABC');
+        expect(divs[0].props.style.background).toEqual('rgb(170, 187, 204)'); // Note #ABC is converted by IE11 to rgb(170, 187, 204), so just test that directly.
     });
 
     it('does not break when html format feature info has style tag', function() {
