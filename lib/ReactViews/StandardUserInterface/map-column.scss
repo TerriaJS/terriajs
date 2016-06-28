@@ -19,10 +19,7 @@
 .map__cell {
   display: table-cell;
   position: relative;
-
-  &:last-child {
-    width: 100%;
-  }
+  width: 100%;
 
   @media print {
     display: block;
