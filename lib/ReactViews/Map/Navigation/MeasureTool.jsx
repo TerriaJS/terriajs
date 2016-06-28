@@ -101,6 +101,7 @@ const MeasureTool = React.createClass({
             positions.push(currentPointPos);
         }
 
+        // Request the triangles that make up the polygon from Cesium.
         const geom = PolygonGeometryLibrary.createGeometryFromPositions(Ellipsoid.WGS84,
                                                                         positions,
                                                                         CesiumMath.RADIANS_PER_DEGREE,

@@ -58,8 +58,7 @@ const PointParameterEditor = React.createClass({
 
         const pickPointMode = new MapInteractionMode({
             message: 'Select a point by clicking on the map.',
-            buttonText: 'Cancel',
-            onCancel: function() {
+            onCancel: function () {
                 terria.mapInteractionModeStack.pop();
                 that.props.viewState.openAddData();
             }
