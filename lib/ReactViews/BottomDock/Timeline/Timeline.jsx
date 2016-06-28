@@ -9,6 +9,7 @@ import {formatDateTime} from './DateFormats';
 import JulianDate from 'terriajs-cesium/Source/Core/JulianDate';
 import Styles from './timeline.scss';
 import defined from 'terriajs-cesium/Source/Core/defined';
+import dateFormat from 'dateformat';
 
 const Timeline = React.createClass({
     propTypes: {
@@ -35,8 +36,15 @@ const Timeline = React.createClass({
 
         this.removeTickEvent = this.props.terria.clock.onTick.addEventListener(clock => {
             const time = clock.currentTime;
+            let currentTime;
+            if (defined(this.props.terria.timeSeriesStack.topLayer) && defined(this.props.terria.timeSeriesStack.topLayer.dateFormat.currentTime)) {
+                currentTime = dateFormat(time, this.props.terria.timeSeriesStack.topLayer.dateFormat.currentTime);
+            } else {
+                currentTime = formatDateTime(JulianDate.toDate(time), this.props.locale);
+            }
+
             this.setState({
-                currentTimeString: formatDateTime(JulianDate.toDate(time), this.props.locale)
+                currentTimeString: currentTime
             });
         });
 
