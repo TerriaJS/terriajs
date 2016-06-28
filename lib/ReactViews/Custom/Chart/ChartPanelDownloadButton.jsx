@@ -1,10 +1,11 @@
 /* eslint new-parens: 0 */
 import React from 'react';
 
-import DataUri from '../../Core/DataUri';
 import defined from 'terriajs-cesium/Source/Core/defined';
-import ObserveModelMixin from '../ObserveModelMixin';
-import VarType from '../../Map/VarType';
+
+import DataUri from '../../../Core/DataUri';
+import ObserveModelMixin from '../../ObserveModelMixin';
+import VarType from '../../../Map/VarType';
 
 import Styles from './chart-panel-download-button.scss';
 

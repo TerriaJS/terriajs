@@ -8,7 +8,7 @@ import ReactTestUtils from 'react-addons-test-utils';
 // cf. https://github.com/sheepsteak/react-shallow-testutils/commit/8daa3c2361acfa6ec45f533cf7eea5751c51bf24
 import {getMountedInstance} from 'react-shallow-testutils';
 
-import Chart  from '../../lib/ReactViews/Chart/Chart';
+import Chart  from '../../lib/ReactViews/Custom/Chart/Chart';
 import ChartData  from '../../lib/Charts/ChartData';
 import TableStructure  from '../../lib/Map/TableStructure';
 

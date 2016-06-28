@@ -20,9 +20,9 @@ import DeveloperError from 'terriajs-cesium/Source/Core/DeveloperError';
 import loadText from 'terriajs-cesium/Source/Core/loadText';
 import when from 'terriajs-cesium/Source/ThirdParty/when';
 
-import ChartData from '../../Charts/ChartData';
-import LineChart from '../../Charts/LineChart';
-import TableStructure from '../../Map/TableStructure';
+import ChartData from '../../../Charts/ChartData';
+import LineChart from '../../../Charts/LineChart';
+import TableStructure from '../../../Map/TableStructure';
 
 import Styles from './chart.scss';
 
