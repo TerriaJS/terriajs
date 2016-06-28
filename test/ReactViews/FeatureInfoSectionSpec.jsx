@@ -6,6 +6,8 @@ import React from 'react';
 import ReactTestUtils from 'react-addons-test-utils';
 import {findAllWithType, findAllWithClass, findAll} from 'react-shallow-testutils';
 
+import Cartographic from 'terriajs-cesium/Source/Core/Cartographic';
+import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
 import Entity from 'terriajs-cesium/Source/DataSources/Entity';
 import JulianDate from 'terriajs-cesium/Source/Core/JulianDate';
 import TimeInterval from 'terriajs-cesium/Source/Core/TimeInterval';
@@ -312,6 +314,14 @@ describe('FeatureInfoSection', function() {
             expect(name).toContain('Kay bar');
         });
 
+        it('can access clicked lat and long', function() {
+            const template = '<div>Clicked {{#terria.formatNumber}}{maximumFractionDigits:0}{{terria.coords.latitude}}{{/terria.formatNumber}}, {{#terria.formatNumber}}{maximumFractionDigits:0}{{terria.coords.longitude}}{{/terria.formatNumber}}</div>';
+            const position = Ellipsoid.WGS84.cartographicToCartesian(Cartographic.fromDegrees(77, 44, 6));
+            const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template} viewState={viewState} position={position}/>;
+            const result = getShallowRenderedOutput(section);
+            expect(findAllEqualTo(result, 'Clicked 44, 77').length).toEqual(1);
+        });
+
         it('can render a recursive featureInfoTemplate', function() {
             const template = {
                 template: '<ul>{{>show_children}}</ul>',
@@ -345,7 +355,31 @@ describe('FeatureInfoSection', function() {
             expect(findAllWithType(content, 'li').length).toEqual(6);
         });
 
+    });
 
+    describe('raw data', function() {
+
+        beforeEach(function() {
+            feature.description = {
+                getValue: function() { return '<p>hi!</p>'; },
+                isConstant: true
+            };
+        });
+
+        it('does not appear if no template', function() {
+            const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} viewState={viewState} />;
+            const result = getShallowRenderedOutput(section);
+            expect(findAllEqualTo(result, 'Hide Raw Data').length).toEqual(0);
+            expect(findAllEqualTo(result, 'Show Raw Data').length).toEqual(0);
+        });
+
+        it('shows "Show Raw Data" if template', function() {
+            const template = 'Test';
+            const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} viewState={viewState} template={template} />;
+            const result = getShallowRenderedOutput(section);
+            expect(findAllEqualTo(result, 'Hide Raw Data').length).toEqual(0);
+            expect(findAllEqualTo(result, 'Show Raw Data').length).toEqual(1);
+        });
 
     });
 
