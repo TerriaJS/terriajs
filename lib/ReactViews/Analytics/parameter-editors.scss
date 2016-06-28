@@ -55,8 +55,8 @@
 }
 
 .btn-selector {
-  compose: btn from '../../Sass/common/_buttons.scss';
-  compose: btn-primary from '../../Sass/common/_buttons.scss';
+  composes: btn from '../../Sass/common/_buttons.scss';
+  composes: btn-primary from '../../Sass/common/_buttons.scss';
 }
 
 .map {
