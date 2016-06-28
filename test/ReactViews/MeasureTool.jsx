@@ -82,7 +82,7 @@ describe('MeasureTool-jsx', function() {
         const distance_m = instance.getGeodesicDistance(positionOne, positionTwo);
         // This is a golden distance test, but the actual distance from LA to Auckland is roughly 10,494.93 km, so
         // close.
-        expect(distance_m).toEqual(10476961.667267017);
+        expect(Math.abs(distance_m - 10476961.667267017) < 2e-9).toBeTruthy();
     });
 
     it('measures geodesic distance in 2D mode', function() {
@@ -101,7 +101,7 @@ describe('MeasureTool-jsx', function() {
         const distance_m = instance.getGeodesicDistance(positionOne, positionTwo);
         // This is a golden distance test, but the actual distance from LA to Auckland is roughly 10,494.93 km, so
         // close.
-        expect(distance_m).toEqual(10476961.667267017);
+        expect(Math.abs(distance_m - 10476961.667267017) < 2e-9).toBeTruthy();
     });
 
     it('measures distance accurately', function() {
