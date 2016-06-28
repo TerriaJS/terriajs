@@ -1,5 +1,7 @@
 'use strict';
 
+// For documentation on the custom <chart> tag, see lib/Models/registerCustomComponentTypes.js.
+//
 // Two possible approaches to combining D3 and React:
 // 1. Render SVG element in React, let React keep control of the DOM.
 // 2. React treats the element like a blackbox, and D3 is in control.
