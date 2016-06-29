@@ -28,12 +28,17 @@ const StandardUserInterface = React.createClass({
         allBaseMaps: React.PropTypes.array,
         viewState: React.PropTypes.object.isRequired,
         minimumLargeScreenWidth: React.PropTypes.number,
-        version: React.PropTypes.string
+        version: React.PropTypes.string,
+        customElements: React.PropTypes.shape({
+            mapTop: React.PropTypes.arrayOf(React.PropTypes.element),
+            mapSide: React.PropTypes.arrayOf(React.PropTypes.element)
+        })
     },
 
     getDefaultProps() {
         return {
-            minimumLargeScreenWidth: 768
+            minimumLargeScreenWidth: 768,
+            customElements: {}
         };
     },
 
@@ -118,6 +123,7 @@ const StandardUserInterface = React.createClass({
                     <MapNavigation terria={terria}
                                    viewState={this.props.viewState}
                                    allBaseMaps={allBaseMaps}
+                                   extraMenuElements={this.props.customElements.mapTop}
                     />
                 </If>
 

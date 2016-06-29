@@ -12,7 +12,7 @@
   max-width: 95%;
   min-width: 150px;
   max-height: 80vh;
-  z-index: 5;
+  z-index: 0;
   @media screen and (min-width : $md){
     //temp
     max-width: calc(100vw - #{$work-bench-width} - 150px);
@@ -42,7 +42,6 @@
 
 .is-visible {
   display: block;
-  z-index: 10;
 }
 
 .header{

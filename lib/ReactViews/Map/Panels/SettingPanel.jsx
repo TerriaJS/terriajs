@@ -17,7 +17,8 @@ const SettingPanel = React.createClass({
     propTypes: {
         terria: React.PropTypes.object,
         viewerModes: React.PropTypes.array,
-        allBaseMaps: React.PropTypes.array
+        allBaseMaps: React.PropTypes.array,
+        viewState: React.PropTypes.object.isRequired
     },
 
     getDefaultProps() {
@@ -84,7 +85,7 @@ const SettingPanel = React.createClass({
         };
 
         return (
-            <DropdownPanel theme={dropdownTheme} btnTitle="Change view" btnText="Map">
+            <DropdownPanel theme={dropdownTheme} btnTitle="Change view" btnText="Map" viewState={this.props.viewState}>
                 <div className={classNames(Styles.viewer, DropdownStyles.section)}>
                     <label className={DropdownStyles.heading}> Map View </label>
                     <ul className={Styles.viewerSelector}>

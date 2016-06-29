@@ -1,24 +1,21 @@
 @import '~terriajs-variables';
 @import '../../../../Sass/common/mixins';
-@import '../dropdown-panel-inner-mixin';
 
 .share-panel {
 }
 
 .dropdown-inner {
-  @include dropdown-inner($share-panel-width, $share-panel-caret-left);
+  width: $share-panel-width;
+  @include transform-origin(50%, top);
 }
 
 .heading-label {
 
 }
 
-.btn--map {
-  composes: btn--map from '../../../../Sass/common/_buttons.scss';
-}
-
 .btn--share {
   composes: btn--share from '../../../../Sass/common/_buttons.scss';
+  padding-left: $padding*3.5;
 }
 
 .btn--checkbox-off {

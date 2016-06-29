@@ -17,7 +17,8 @@ const SharePanel = React.createClass({
         terria: React.PropTypes.object,
         userPropWhiteList: React.PropTypes.array,
         isOpen: React.PropTypes.bool,
-        shortenUrls: React.PropTypes.bool
+        shortenUrls: React.PropTypes.bool,
+        viewState: React.PropTypes.object.isRequired
     },
 
     getDefaultProps() {
@@ -105,7 +106,7 @@ const SharePanel = React.createClass({
 
     render() {
         const dropdownTheme = {
-            btn: classNames(Styles.btnMap, Styles.btnShare),
+            btn: Styles.btnShare,
             outer: Styles.sharePanel,
             inner: Styles.dropdownInner
         };
@@ -120,6 +121,7 @@ const SharePanel = React.createClass({
         return (
             <DropdownPanel theme={dropdownTheme}
                            btnText="Share"
+                           viewState={this.props.viewState}
                            btnTitle="change settings"
                            onOpenChanged={this.onOpenChanged}>
                 <If condition={this.state.isOpen}>
