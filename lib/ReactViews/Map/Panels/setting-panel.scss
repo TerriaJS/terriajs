@@ -37,6 +37,6 @@
 }
 
 .btn--dropdown {
-  composes: btn--map from '../../../Sass/common/_buttons.scss';
+  padding-left: $padding*3.5;
   composes: btn--sphere from '../../../Sass/common/_buttons.scss';
 }

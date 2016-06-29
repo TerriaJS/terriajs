@@ -13,12 +13,9 @@
 
 }
 
-.btn--map {
-  composes: btn--map from '../../../../Sass/common/_buttons.scss';
-}
-
 .btn--share {
   composes: btn--share from '../../../../Sass/common/_buttons.scss';
+  padding-left: $padding*3.5;
 }
 
 .btn--checkbox-off {

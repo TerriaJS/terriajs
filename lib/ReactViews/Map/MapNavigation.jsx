@@ -38,10 +38,10 @@ const MapNavigation = React.createClass({
                         <FullScreenButton terria={this.props.terria} viewState={this.props.viewState} />
                     </li>
                     <li className={Styles.menuItem}>
-                        <SettingPanel terria={this.props.terria} allBaseMaps={this.props.allBaseMaps}/>
+                        <SettingPanel terria={this.props.terria} allBaseMaps={this.props.allBaseMaps} viewState={this.props.viewState} />
                     </li>
                     <li className={Styles.menuItem}>
-                        <SharePanel terria={this.props.terria}/>
+                        <SharePanel terria={this.props.terria} viewState={this.props.viewState}/>
                     </li>
                     <For each="element" of={this.props.extraMenuElements}>
                         <li className={Styles.menuItem} key={element.id}>

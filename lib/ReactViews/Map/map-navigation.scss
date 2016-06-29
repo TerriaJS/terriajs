@@ -4,7 +4,8 @@
   position: fixed;
   top: 20px;
   right: $padding;
-  z-index: $front-component-z-index/2;
+  z-index: 1;
+
   @media print{
     display: none;
   }
