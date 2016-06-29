@@ -4,7 +4,8 @@
 // import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 import React from 'react';
 import ReactTestUtils from 'react-addons-test-utils';
-import {findAllWithType, findAllWithClass, findWithRef, findAll} from 'react-shallow-testutils';
+import {findAllWithType, findAllWithClass, findWithRef} from 'react-shallow-testutils';
+import {getShallowRenderedOutput, findAllEqualTo, findAllWithPropsChildEqualTo} from './MoreShallowTools';
 
 import Cartographic from 'terriajs-cesium/Source/Core/Cartographic';
 import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
@@ -30,25 +31,25 @@ if (typeof Intl === 'object' && typeof Intl.NumberFormat === 'function') {
 
 const contentClass = Styles.content;
 
-function getShallowRenderedOutput(jsx) {
-    const renderer = ReactTestUtils.createRenderer();
-    renderer.render(jsx);
-    return renderer.getRenderOutput();
-}
+// function getShallowRenderedOutput(jsx) {
+//     const renderer = ReactTestUtils.createRenderer();
+//     renderer.render(jsx);
+//     return renderer.getRenderOutput();
+// }
 
-function findAllEqualTo(reactElement, text) {
-    return findAll(reactElement, (element) => element && element === text);
-}
+// function findAllEqualTo(reactElement, text) {
+//     return findAll(reactElement, (element) => element && element === text);
+// }
 
-function findAllWithPropsChildEqualTo(reactElement, text) {
-    // Returns elements with element.props.children[i] or element.props.children[i][j] equal to text, for any i or j.
-    return findAll(reactElement, (element) => {
-        if (!(element && element.props && element.props.children)) {
-            return;
-        }
-        return element.props.children.indexOf(text) >= 0 || (element.props.children.some && element.props.children.some(x => x && x.length && x.indexOf(text) >= 0));
-    });
-}
+// function findAllWithPropsChildEqualTo(reactElement, text) {
+//     // Returns elements with element.props.children[i] or element.props.children[i][j] equal to text, for any i or j.
+//     return findAll(reactElement, (element) => {
+//         if (!(element && element.props && element.props.children)) {
+//             return;
+//         }
+//         return element.props.children.indexOf(text) >= 0 || (element.props.children.some && element.props.children.some(x => x && x.length && x.indexOf(text) >= 0));
+//     });
+// }
 
 // function getContentAndDescription(renderedResult) {
 //     const content = findAllWithClass(renderedResult, contentClass)[0];
