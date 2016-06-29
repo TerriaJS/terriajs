@@ -22,10 +22,10 @@ function CatalogGroup(props) {
                         )}
                     onClick={props.onClick}>
                 <If condition={!props.topLevel}>
-                    {props.open ? <Icon glyph={Icon.GLYPHS.folderOpen}/> : <Icon glyph={Icon.GLYPHS.folder}/> }
+                 <span className={Styles.folder}>{props.open ? <Icon glyph={Icon.GLYPHS.folderOpen}/> : <Icon glyph={Icon.GLYPHS.folder}/>}</span>
                 </If>
                 {props.text}
-                {props.open ? <Icon glyph={Icon.GLYPHS.opened}/> : <Icon glyph={Icon.GLYPHS.closed}/> }
+                <span className={Styles.caret}>{props.open ? <Icon glyph={Icon.GLYPHS.opened}/> : <Icon glyph={Icon.GLYPHS.closed}/>}</span>
             </button>
             <If condition={props.open}>
                 <ul className={classNames(
