@@ -261,7 +261,7 @@ function areAllPropertiesConstant(properties) {
  * @returns {String}
  */
 function getCurrentDescription(feature, currentTime) {
-    if (typeof feature.description.getValue === 'function') {
+    if (feature.description && typeof feature.description.getValue === 'function') {
         return feature.description.getValue(currentTime);
     }
     return feature.description;

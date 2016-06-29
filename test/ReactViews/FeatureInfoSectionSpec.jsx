@@ -13,7 +13,12 @@ import JulianDate from 'terriajs-cesium/Source/Core/JulianDate';
 import TimeInterval from 'terriajs-cesium/Source/Core/TimeInterval';
 import TimeIntervalCollectionProperty from 'terriajs-cesium/Source/DataSources/TimeIntervalCollectionProperty';
 
+import Catalog from '../../lib/Models/Catalog';
+import createCatalogMemberFromType from '../../lib/Models/createCatalogMemberFromType';
+import CatalogGroup from '../../lib/Models/CatalogGroup';
+import CzmlCatalogItem from '../../lib/Models/CzmlCatalogItem';
 import FeatureInfoSection from '../../lib/ReactViews/FeatureInfo/FeatureInfoSection';
+import loadJson from 'terriajs-cesium/Source/Core/loadJson';
 import Terria from '../../lib/Models/Terria';
 
 import Styles from '../../lib/ReactViews/FeatureInfo/feature-info-section.scss';
@@ -384,81 +389,69 @@ describe('FeatureInfoSection', function() {
 
     });
 
-    // describe('CZML templating', function() {
-    //     var terria,
-    //         panel,
-    //         catalog,
-    //         item,
-    //         timeVaryingItem;
+    describe('CZML templating', function() {
+        let item;
+        let timeVaryingItem;
 
-    //     beforeEach(function(done) {
-    //         terria = new Terria({
-    //             baseUrl: './'
-    //         });
-    //         panel = new FeatureInfoPanelViewModel({
-    //             terria: terria
-    //         });
-    //         createCatalogMemberFromType.register('group', CatalogGroup);
-    //         createCatalogMemberFromType.register('czml', CzmlCatalogItem);
-    //         return loadJson('test/init/czml-with-template.json').then(function(json) {
-    //             catalog = new Catalog(terria);
-    //             return catalog.updateFromJson(json.catalog).then(function() {
-    //                 item = catalog.group.items[0].items[0];
-    //                 timeVaryingItem = catalog.group.items[0].items[1];
-    //             });
-    //         }).then(done).otherwise(done.fail);
-    //     });
+        beforeEach(function(done) {
+            createCatalogMemberFromType.register('group', CatalogGroup);
+            createCatalogMemberFromType.register('czml', CzmlCatalogItem);
+            return loadJson('test/init/czml-with-template.json').then(function(json) {
+                const catalog = new Catalog(terria);
+                return catalog.updateFromJson(json.catalog).then(function() {
+                    item = catalog.group.items[0].items[0];
+                    timeVaryingItem = catalog.group.items[0].items[1];
+                });
+            }).then(done).otherwise(done.fail);
+        });
 
-    //     afterEach(function() {
-    //         panel.destroy();
-    //         panel = undefined;
-    //     });
+        it('uses and completes a string-form featureInfoTemplate', function(done) {
+            // target = '<table><tbody><tr><td>Name:</td><td>Test</td></tr><tr><td>Type:</td><td>ABC</td></tr></tbody></table><br />
+            //           <table><tbody><tr><td>Year</td><td>Capacity</td></tr><tr><td>2010</td><td>14.4</td></tr><tr><td>2011</td><td>22.8</td></tr><tr><td>2012</td><td>10.7</td></tr></tbody></table>';
+            return item.load().then(function() {
+                expect(item.dataSource.entities.values.length).toBeGreaterThan(0);
+                const feature = item.dataSource.entities.values[0];
+                const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} viewState={viewState} template={item.featureInfoTemplate} />;
+                const result = getShallowRenderedOutput(section);
+                expect(findAllEqualTo(result, 'ABC').length).toEqual(1);
+                expect(findAllEqualTo(result, '2010').length).toEqual(1);
+                expect(findAllEqualTo(result, '14.4').length).toEqual(1);
+                expect(findAllEqualTo(result, '2012').length).toEqual(1);
+                expect(findAllEqualTo(result, '10.7').length).toEqual(1);
+            }).then(done).otherwise(done.fail);
+        });
 
-    //     it('uses and completes a string-form featureInfoTemplate if present', function() {
-    //         var target = '<table><tbody><tr><td>Name:</td><td>Test</td></tr><tr><td>Type:</td><td>ABC</td></tr></tbody></table><br /><table><tbody><tr><td>Year</td><td>Capacity</td></tr><tr><td>2010</td><td>14.4</td></tr><tr><td>2011</td><td>22.8</td></tr><tr><td>2012</td><td>10.7</td></tr></tbody></table>';
-    //         return item.load().then(function() {
-    //             expect(item.dataSource.entities.values.length).toBeGreaterThan(0);
-    //             panel.terria.nowViewing.add(item);
-    //             var feature = item.dataSource.entities.values[0];
-    //             var pickedFeatures = new PickedFeatures();
-    //             pickedFeatures.features.push(feature);
-    //             pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
+        it('uses and completes a time-varying, string-form featureInfoTemplate', function(done) {
+            // targetBlank = '<table><tbody><tr><td>Name:</td><td>Test</td></tr><tr><td>Type:</td><td></td></tr></tbody></table><br />
+            //                <table><tbody><tr><td>Year</td><td>Capacity</td></tr><tr><td>2010</td><td>14.4</td></tr><tr><td>2011</td><td>22.8</td></tr><tr><td>2012</td><td>10.7</td></tr></tbody></table>';
+            // targetABC = '<table><tbody><tr><td>Name:</td><td>Test</td></tr><tr><td>Type:</td><td>ABC</td></tr></tbody></table><br />
+            //              <table><tbody><tr><td>Year</td><td>Capacity</td></tr><tr><td>2010</td><td>14.4</td></tr><tr><td>2011</td><td>22.8</td></tr><tr><td>2012</td><td>10.7</td></tr></tbody></table>';
+            // targetDEF = '<table><tbody><tr><td>Name:</td><td>Test</td></tr><tr><td>Type:</td><td>DEF</td></tr></tbody></table><br />
+            //              <table><tbody><tr><td>Year</td><td>Capacity</td></tr><tr><td>2010</td><td>14.4</td></tr><tr><td>2011</td><td>22.8</td></tr><tr><td>2012</td><td>10.7</td></tr></tbody></table>';
+            return timeVaryingItem.load().then(function() {
+                expect(timeVaryingItem.dataSource.entities.values.length).toBeGreaterThan(0);
+                const feature = timeVaryingItem.dataSource.entities.values[0];
+                terria.clock.currentTime = JulianDate.fromIso8601('2010-02-02');
+                let section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} viewState={viewState} template={timeVaryingItem.featureInfoTemplate} />;
+                let result = getShallowRenderedOutput(section);
+                expect(findAllEqualTo(result, 'ABC').length).toEqual(0);
+                expect(findAllEqualTo(result, 'DEF').length).toEqual(0);
 
-    //             return panel.showFeatures(pickedFeatures).then(function() {
-    //                 expect(panel.sections[0].templatedInfo).toEqual(target);
-    //             });
-    //         }).then(done).otherwise(done.fail);
-    //     });
+                terria.clock.currentTime = JulianDate.fromIso8601('2012-02-02');
+                section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} viewState={viewState} template={timeVaryingItem.featureInfoTemplate} />;
+                result = getShallowRenderedOutput(section);
+                expect(findAllEqualTo(result, 'ABC').length).toEqual(1);
+                expect(findAllEqualTo(result, 'DEF').length).toEqual(0);
 
-    //     it('uses and completes a time-varying, string-form featureInfoTemplate if present', function() {
-    //         var targetBlank = '<table><tbody><tr><td>Name:</td><td>Test</td></tr><tr><td>Type:</td><td></td></tr></tbody></table><br /><table><tbody><tr><td>Year</td><td>Capacity</td></tr><tr><td>2010</td><td>14.4</td></tr><tr><td>2011</td><td>22.8</td></tr><tr><td>2012</td><td>10.7</td></tr></tbody></table>';
-    //         var targetABC = '<table><tbody><tr><td>Name:</td><td>Test</td></tr><tr><td>Type:</td><td>ABC</td></tr></tbody></table><br /><table><tbody><tr><td>Year</td><td>Capacity</td></tr><tr><td>2010</td><td>14.4</td></tr><tr><td>2011</td><td>22.8</td></tr><tr><td>2012</td><td>10.7</td></tr></tbody></table>';
-    //         var targetDEF = '<table><tbody><tr><td>Name:</td><td>Test</td></tr><tr><td>Type:</td><td>DEF</td></tr></tbody></table><br /><table><tbody><tr><td>Year</td><td>Capacity</td></tr><tr><td>2010</td><td>14.4</td></tr><tr><td>2011</td><td>22.8</td></tr><tr><td>2012</td><td>10.7</td></tr></tbody></table>';
+                terria.clock.currentTime = JulianDate.fromIso8601('2014-02-02');
+                section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} viewState={viewState} template={timeVaryingItem.featureInfoTemplate} />;
+                result = getShallowRenderedOutput(section);
+                expect(findAllEqualTo(result, 'ABC').length).toEqual(0);
+                expect(findAllEqualTo(result, 'DEF').length).toEqual(1);
 
-    //         return timeVaryingItem.load().then(function() {
-    //             expect(timeVaryingItem.dataSource.entities.values.length).toBeGreaterThan(0);
-    //             panel.terria.nowViewing.add(timeVaryingItem);
-    //             var feature = timeVaryingItem.dataSource.entities.values[0];
-    //             var pickedFeatures = new PickedFeatures();
-    //             pickedFeatures.features.push(feature);
-    //             pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
+            }).then(done).otherwise(done.fail);
+        });
 
-    //             terria.clock.currentTime = JulianDate.fromIso8601('2010-02-02');
-
-    //             return panel.showFeatures(pickedFeatures).then(function() {
-    //                 expect(panel.sections[0].templatedInfo).toEqual(targetBlank);
-
-    //                 terria.clock.currentTime = JulianDate.fromIso8601('2012-02-02');
-    //                 terria.clock.tick();
-    //                 expect(panel.sections[0].templatedInfo).toEqual(targetABC);
-
-    //                 terria.clock.currentTime = JulianDate.fromIso8601('2014-02-02');
-    //                 terria.clock.tick();
-    //                 expect(panel.sections[0].templatedInfo).toEqual(targetDEF);
-    //             });
-    //         }).then(done).otherwise(done.fail);
-
-    //     });
-    // });
+    });
 
 });
