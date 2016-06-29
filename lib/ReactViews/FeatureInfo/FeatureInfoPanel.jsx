@@ -37,6 +37,10 @@ const FeatureInfoPanel = React.createClass({
                 if (defined(pickedFeatures.allFeaturesAvailablePromise)) {
                     pickedFeatures.allFeaturesAvailablePromise.then(() => {
                         terria.selectedFeature = pickedFeatures.features.filter(featureHasInfo)[0];
+                        if (!defined(terria.selectedFeature) && (pickedFeatures.features.length > 0)) {
+                            // Handles the case when no features have info - still want something to be open.
+                            terria.selectedFeature = pickedFeatures.features[0];
+                        }
                     });
                 }
             }
@@ -68,6 +72,7 @@ const FeatureInfoPanel = React.createClass({
                     catalogItem={catalogItem}
                     features={features}
                     terria={this.props.terria}
+                    onToggleOpen={this.toggleOpenFeature}
                 />
             );
         });
@@ -79,6 +84,15 @@ const FeatureInfoPanel = React.createClass({
 
     toggleCollapsed() {
         this.props.viewState.featureInfoPanelIsCollapsed = !this.props.viewState.featureInfoPanelIsCollapsed;
+    },
+
+    toggleOpenFeature(feature) {
+        const terria = this.props.terria;
+        if (feature === terria.selectedFeature) {
+            terria.selectedFeature = undefined;
+        } else {
+            terria.selectedFeature = feature;
+        }
     },
 
     render() {
