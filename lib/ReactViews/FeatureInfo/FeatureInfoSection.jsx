@@ -163,7 +163,7 @@ const FeatureInfoSection = React.createClass({
                         <If condition={this.hasTemplate()}>
                             {renderMarkdownInReact(this.descriptionFromTemplate(), this.props.catalogItem, this.props.feature)}
                             <button type="button" className={Styles.rawDataButton} onClick={this.toggleRawData}>
-                                {this.state.showRawData ? 'Hide' : 'Show'} Raw Data
+                                {this.state.showRawData ? 'Hide Raw Data' : 'Show Raw Data'}
                             </button>
                         </If>
 
