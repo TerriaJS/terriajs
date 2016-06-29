@@ -15,34 +15,24 @@
 
 .remove {
   right: 0;
-
-  .btn {
-    display: inline-block;
-    margin-right: 5px;
+  svg{
+    height: 20px;
+    width: 20px;
+    fill: #fff;
+    vertical-align: bottom;
   }
 }
 
 .btn {
   composes: btn from '../../../Sass/common/_buttons.scss';
-
   &.btn {
     padding: 0;
     font-size: $font-size-mini;
   }
 }
-
-.btn-remove {
-  composes: btn;
-}
-
 .info {
   left: 33%;
   padding: 0 5%;
   border-left: 1px solid $border-color;
   border-right: 1px solid $border-color;
-}
-
-.icon--remove {
-  display: inline-block;
-  vertical-align: -1px;
 }

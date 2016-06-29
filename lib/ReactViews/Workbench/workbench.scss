@@ -4,12 +4,13 @@
 .workbench {}
 
 .remove-button {
-  composes: btn from '../../Sass/common/_buttons.scss';
-  composes: btn from '../badge-bar.scss';
   display: inline-block;
-  padding-right: 5px;
+  svg{
+    height: 20px;
+    width: 20px;
+    fill: #ffffff;
+    display: inline-block;
+    vertical-align: middle;
+  }
 }
 
-.icon-remove {
-  display: inline-block;
-}

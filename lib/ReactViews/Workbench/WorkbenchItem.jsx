@@ -81,10 +81,9 @@ const WorkbenchItem = React.createClass({
                         <button type='button'
                                 draggable='true'
                                 onDragStart={this.onDragStart}
-                                onDragEnd={this.onDragEnd}
-                                className={classNames(Styles.btn)}>
+                                onDragEnd={this.onDragEnd}>
                             <If condition={!workbenchItem.isMappable}>
-                                <Icon glyph={Icon.GLYPHS.lineChart}/>
+                                <span className={Styles.iconLineChart}><Icon glyph={Icon.GLYPHS.lineChart}/></span>
                             </If>
                             {workbenchItem.name}
                         </button>

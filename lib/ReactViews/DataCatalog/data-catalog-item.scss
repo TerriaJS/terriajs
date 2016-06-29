@@ -3,12 +3,10 @@
 
 .root {
   composes: clearfix from '../../Sass/common/_base.scss';
-
   display: block;
   width: 100%;
   position: relative;
 }
-
 
 .btn-catalog-item {
   composes: btn from '../../Sass/common/_buttons.scss';

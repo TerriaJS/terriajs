@@ -41,7 +41,6 @@ $workbench-margin: $padding-small - 1px;
 
 .header {
   composes: list-reset from '../../Sass/common/_base.scss';
-
   width: 100%;
 }
 
@@ -49,17 +48,19 @@ $workbench-margin: $padding-small - 1px;
   composes: clearfix from '../../Sass/common/_base.scss';
 }
 
-.btn {
-  composes: btn from '../../Sass/common/_buttons.scss';
-}
 
 .visibilityColumn {
   composes: col from  '../../Sass/common/_base.scss';
   composes: col-1 from  '../../Sass/common/_base.scss';
+  svg{
+    height: 15px;
+    width: 15px;
+    fill: #fff;
+    padding: 7px;
+  }
 }
 
 .btn-visibility {
-  composes: btn;
   font-size: $font-size-small;
 }
 
@@ -67,20 +68,25 @@ $workbench-margin: $padding-small - 1px;
 .nameColumn {
   composes: col from  '../../Sass/common/_base.scss';
   composes: col-10 from  '../../Sass/common/_base.scss';
+  padding: 5px;
 }
 
 .toggleColumn {
   composes: col from  '../../Sass/common/_base.scss';
   composes: col-1 from  '../../Sass/common/_base.scss';
+  svg{
+    height: 30px;
+    width: 20px;
+    fill: #fff;
+  }
 }
-
-.icon {
-  composes: icon from '../../Sass/common/_icons.scss';
-}
-
-.icon-line-chart {
+.iconLineChart {
   float: left;
   font-size: 140%;
   margin-right: 5px;
-  color: #CCC;
+  svg{
+    height: 30px;
+    width: 20px;
+    fill: #CCC;
+  }
 }
