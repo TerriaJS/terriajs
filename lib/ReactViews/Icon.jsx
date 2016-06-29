@@ -1,7 +1,6 @@
 import React from 'react';
 // icon.jsx
 const GLYPHS = {
-    test: require('../../wwwroot/images/icons/test.svg'),
     add: require('../../wwwroot/images/icons/add.svg'),
     expand: require('../../wwwroot/images/icons/expand.svg'),
     backToStart: require('../../wwwroot/images/icons/back-to-start.svg'),

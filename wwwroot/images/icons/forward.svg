@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg width="61px" height="64px" viewBox="0 0 61 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
-    <!-- Generator: Sketch 3.4.3 (16044) - http://www.bohemiancoding.com/sketch -->
+<svg width="100px" height="100px" viewBox="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 3.8.3 (29802) - http://www.bohemiancoding.com/sketch -->
     <title>forward</title>
-    <desc>Created with Sketch.</desc>
-    <defs></defs>
-    <path d="M46.2162162,16.3963964 L46.2162162,45.2252252 L17.3873874,16.3963964 L17.3873874,79.8198198 L46.2162162,50.990991 L46.2162162,79.8198198 L77.9279279,48.1081081 L46.2162162,16.3963964 Z" id="forward" sketch:type="MSShapeGroup"></path>
+    <path d="M52.353255,44.2543236 L52.353255,25.7422551 C52.353255,23.7589706 51.2417086,23.3139215 49.8705465,24.7470336 L26.9582886,48.6944826 C26.2654188,49.4186567 26.268278,50.5849415 26.9582886,51.3061273 L49.8705465,75.2535763 C51.242303,76.6873097 52.353255,76.2411126 52.353255,74.2583548 L52.353255,55.7462863 L71.0172914,75.2535763 C72.3890479,76.6873097 73.5,76.2411126 73.5,74.2583548 L73.5,25.7422551 C73.5,23.7589706 72.3884535,23.3139215 71.0172914,24.7470336 L52.353255,44.2543236 Z" id="path-1"></path>
 </svg>

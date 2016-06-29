@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg width="56px" height="10px" viewBox="0 0 56 10" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
-    <!-- Generator: Sketch 3.4.3 (16044) - http://www.bohemiancoding.com/sketch -->
+<svg width="100px" height="100px" viewBox="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 3.8.3 (29802) - http://www.bohemiancoding.com/sketch -->
     <title>decrease</title>
-    <path d="M73.8918919,47.3393694 C73.8918919,44.7885586 73.6704505,42.7267568 71.1197297,42.7267568 L21.3127027,42.7267568 C18.7665766,42.7267568 18.5405405,44.7885586 18.5405405,47.3393694 C18.5405405,49.8901802 18.7665766,51.951982 21.3127027,51.951982 L71.1243243,51.951982 C73.6704505,51.951982 73.8918919,49.8901802 73.8918919,47.3393694 L73.8918919,47.3393694 Z" id="decrease" sketch:type="MSShapeGroup"></path>
+    <path d="M66.4299517,48.5 L33.5088567,48.5 C32.1014493,48.5 31,49.2682927 31,50.25 C31,51.2317073 32.1014493,52 33.5088567,52 L66.4911433,52 C67.8985507,52 69,51.2317073 69,50.25 C68.9388084,49.2682927 67.8373591,48.5 66.4299517,48.5 L66.4299517,48.5 Z"></path>
 </svg>
