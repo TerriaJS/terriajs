@@ -2,17 +2,19 @@
 
 import Mustache from 'mustache';
 import React from 'react';
-import defined from 'terriajs-cesium/Source/Core/defined';
-import isArray from 'terriajs-cesium/Source/Core/isArray';
-import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
+
+import CallbackProperty from 'terriajs-cesium/Source/DataSources/CallbackProperty';
 import CesiumMath from 'terriajs-cesium/Source/Core/Math';
 import classNames from 'classnames';
+import defined from 'terriajs-cesium/Source/Core/defined';
+import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
+import isArray from 'terriajs-cesium/Source/Core/isArray';
 
+import FeatureInfoDownload from './FeatureInfoDownload';
 import formatNumberForLocale from '../../Core/formatNumberForLocale';
 import ObserveModelMixin from '../ObserveModelMixin';
 import propertyGetTimeValues from '../../Core/propertyGetTimeValues';
 import renderMarkdownInReact from '../../Core/renderMarkdownInReact';
-import FeatureInfoDownload from './FeatureInfoDownload';
 
 import Styles from './feature-info-section.scss';
 
@@ -109,7 +111,11 @@ const FeatureInfoSection = React.createClass({
         //     markdownToHtml (which applies MarkdownIt.render and DOMPurify.sanitize), and then
         //     parseCustomHtmlToReact (which calls htmlToReactParser).
         // Note that there is an unnecessary HTML encoding and decoding in this combination which would be good to remove.
-        return feature.currentDescription || getCurrentDescription(feature, this.props.clock.currentTime);
+        let description = feature.currentDescription || getCurrentDescription(feature, this.props.clock.currentTime);
+        if (!defined(description) && defined(feature.properties)) {
+            description = describeFromProperties(feature.properties, this.props.clock.currentTime);
+        }
+        return description;
     },
 
     renderDataTitle() {
@@ -318,6 +324,43 @@ function mustacheFormatNumberFunction() {
         const options = JSON.parse(jsonOptions);
         return formatNumberForLocale(render(components[2]), options);
     };
+}
+
+const simpleStyleIdentifiers = ['title', 'description', //
+'marker-size', 'marker-symbol', 'marker-color', 'stroke', //
+'stroke-opacity', 'stroke-width', 'fill', 'fill-opacity'];
+
+/**
+ * A way to produce a description if properties are available but no template is given.
+ * Derived from Cesium's geoJsonDataSource, but made to work with possibly time-varying properties.
+ * @private
+ */
+function describeFromProperties(properties, time) {
+    let html = '';
+    for (const key in properties) {
+        if (properties.hasOwnProperty(key)) {
+            if (simpleStyleIdentifiers.indexOf(key) !== -1) {
+                continue;
+            }
+            let value = properties[key];
+            if (defined(value)) {
+                if (defined(value.getValue)) {
+                    value = value.getValue(time);
+                }
+                if (Array.isArray(properties)) {
+                    html += '<tr><td>' + describeFromProperties(value, time) + '</td></tr>';
+                } else if (typeof value === 'object') {
+                    html += '<tr><th>' + key + '</th><td>' + describeFromProperties(value, time) + '</td></tr>';
+                } else {
+                    html += '<tr><th>' + key + '</th><td>' + value + '</td></tr>';
+                }
+            }
+        }
+    }
+    if (html.length > 0) {
+        html = '<table class="cesium-infoBox-defaultTable"><tbody>' + html + '</tbody></table>';
+    }
+    return html;
 }
 
 module.exports = FeatureInfoSection;

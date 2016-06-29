@@ -215,6 +215,28 @@ describe('FeatureInfoSection', function() {
         expect(findWithRef(result, 'no-info')).toBeDefined();
     });
 
+    it('shows properties if no description', function() {
+        // Tests both static and potentially time-varying properties.
+        feature = new Entity({
+            name: 'Meals',
+            properties: {
+                lunch: 'eggs',
+                dinner: {
+                    getValue: function() {
+                        return 'ham';
+                    }
+                }
+            }
+        });
+        const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} viewState={viewState} />;
+        const result = getShallowRenderedOutput(section);
+        expect(findAllEqualTo(result, 'Meals').length).toEqual(1);
+        expect(findAllEqualTo(result, 'lunch').length).toEqual(1);
+        expect(findAllEqualTo(result, 'eggs').length).toEqual(1);
+        expect(findAllEqualTo(result, 'dinner').length).toEqual(1);
+        expect(findAllEqualTo(result, 'ham').length).toEqual(1);
+    });
+
     describe('templating', function() {
 
         it('uses and completes a string-form featureInfoTemplate if present', function() {
