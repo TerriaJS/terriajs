@@ -1,5 +1,3 @@
-'use strict';
-
 import React from 'react';
 
 import Compass from './Navigation/Compass.jsx';
@@ -21,6 +19,15 @@ const MapNavigation = React.createClass({
         terria: React.PropTypes.object,
         viewState: React.PropTypes.object.isRequired,
         allBaseMaps: React.PropTypes.array,
+        extraMenuElements: React.PropTypes.arrayOf(React.PropTypes.element),
+        extraNavElements: React.PropTypes.arrayOf(React.PropTypes.element)
+    },
+
+    getDefaultProps() {
+        return {
+            extraMenuElements: [],
+            extraNavElements: []
+        };
     },
 
     render() {
@@ -36,15 +43,20 @@ const MapNavigation = React.createClass({
                     <li className={Styles.menuItem}>
                         <SharePanel terria={this.props.terria}/>
                     </li>
-                    <li className={Styles.menuItem}>
-                        <div><a className={Styles.btnAboutLink} href='#' title='about'> About </a></div>
-                    </li>
+                    <For each="element" of={this.props.extraMenuElements}>
+                        <li className={Styles.menuItem} key={element.id}>
+                            {element}
+                        </li>
+                    </For>
                 </ul>
                 <If condition={this.props.terria.viewerMode !== ViewerMode.Leaflet}>
                     <Compass terria={this.props.terria}/>
                 </If>
                 <MyLocation terria={this.props.terria}/>
                 <ZoomControl terria={this.props.terria}/>
+                <For each="element" of={this.props.extraNavElements}>
+                    {element}
+                </For>
             </div>
         );
     }

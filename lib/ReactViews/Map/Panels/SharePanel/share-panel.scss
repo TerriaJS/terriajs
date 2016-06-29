@@ -1,12 +1,12 @@
 @import '~terriajs-variables';
 @import '../../../../Sass/common/mixins';
-@import '../dropdown-panel-inner-mixin';
 
 .share-panel {
 }
 
 .dropdown-inner {
-  @include dropdown-inner($share-panel-width, $share-panel-caret-left);
+  width: $share-panel-width;
+  @include transform-origin(50%, top);
 }
 
 .heading-label {

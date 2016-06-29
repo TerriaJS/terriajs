@@ -4,6 +4,8 @@ import React from 'react';
 import classNames from 'classnames';
 import Styles from './dropdown-panel.scss';
 
+import defined from 'terriajs-cesium/Source/Core/defined';
+
 const DropdownPanel = React.createClass({
     propTypes: {
         theme: React.PropTypes.object.isRequired,
@@ -83,6 +85,24 @@ const DropdownPanel = React.createClass({
         }
     },
 
+    onInnerMounted(innerElement) {
+        if (innerElement) {
+            const offset = this.buttonElement.offsetLeft - innerElement.offsetLeft;
+            const dropdownOffset = offset > 0 ? offset : this.buttonElement.offsetLeft;
+            const caretOffset = Math.max((this.buttonElement.clientWidth / 2 - 10) - (dropdownOffset - this.buttonElement.offsetLeft), 0);
+
+            this.setState({
+                caretOffset: caretOffset >= 0 && (caretOffset + 'px'),
+                dropdownOffset: dropdownOffset + 'px'
+            });
+        } else {
+            this.setState({
+                caretOffset: undefined,
+                dropdownOffset: undefined
+            });
+        }
+    },
+
     getDoNotReactId() {
         return `do-not-react-${this.props.btnText}-${this.props.btnTitle}-${this.props.theme.btn}`;
     },
@@ -93,11 +113,22 @@ const DropdownPanel = React.createClass({
                 <button onClick={this.togglePanel}
                         type='button'
                         className={classNames(Styles.button, this.props.theme.btn)}
-                        title={this.props.btnTitle}>
+                        title={this.props.btnTitle}
+                        ref={element => this.buttonElement = element}>
                     {this.props.btnText}
                 </button>
                 <If condition={this.state.isOpen}>
-                    <div className={classNames(Styles.inner, this.props.theme.inner)} onClick={this.onPanelClicked}>
+                    <div className={classNames(Styles.inner, this.props.theme.inner)}
+                         onClick={this.onPanelClicked}
+                         ref={this.onInnerMounted}
+                         style={{
+                             left: this.state.dropdownOffset,
+                             transformOrigin: `${this.state.caretOffset} top`
+                         }}>
+                        <If condition={defined(this.state.caretOffset)}>
+                            <span className={Styles.caret}
+                                  style={{left: this.state.caretOffset}}/>
+                        </If>
                         {this.props.children}
                     </div>
                 </If>
