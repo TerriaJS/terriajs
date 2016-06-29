@@ -64,10 +64,16 @@
 }
 
 .btn--close-feature{
-  composes: btn;
   &:hover,
   &:focus {
-    color: $color-primary;
+    svg{
+      fill: $color-primary;
+    }
+  }
+  svg{
+    height: 23px;
+    width: 23px;
+    fill: #ffffff;
   }
   position: absolute;
   top: 0;
