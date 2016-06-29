@@ -28,7 +28,7 @@
   background: $dark;
   color: #fff;
   border: $border-style;
-  right: $padding*4;
+  right: $padding*2;
 
   &--is-on-top {
     z-index: $front-component-z-index !important;

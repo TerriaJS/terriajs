@@ -43,8 +43,8 @@ const MapNavigation = React.createClass({
                     <li className={Styles.menuItem}>
                         <SharePanel terria={this.props.terria} viewState={this.props.viewState}/>
                     </li>
-                    <For each="element" of={this.props.extraMenuElements}>
-                        <li className={Styles.menuItem} key={element.id}>
+                    <For each="element" of={this.props.extraMenuElements} index="i">
+                        <li className={Styles.menuItem} key={i}>
                             {element}
                         </li>
                     </For>
