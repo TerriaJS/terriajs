@@ -241,6 +241,15 @@ $btn-setting-size: 35px;
     background: $color-primary;
     text-decoration: none;
   }
+  svg{
+    height: 30px;
+    width: 30px;
+    fill: #fff;
+  }
+
+  span{
+    vertical-align: top;
+  }
 }
 
 a.btn--map {

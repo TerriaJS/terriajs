@@ -53,15 +53,14 @@ $workbench-margin: $padding-small - 1px;
   composes: col from  '../../Sass/common/_base.scss';
   composes: col-1 from  '../../Sass/common/_base.scss';
   svg{
-    height: 15px;
-    width: 15px;
+    height: 30px;
+    width: 30px;
     fill: #fff;
-    padding: 7px;
   }
 }
 
 .btn-visibility {
-  font-size: $font-size-small;
+
 }
 
 

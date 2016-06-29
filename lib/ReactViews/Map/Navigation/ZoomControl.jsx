@@ -120,7 +120,7 @@ const ZoomControl = React.createClass({
     render() {
         return (
         <div className={Styles.zoomControl}>
-          <ul className='list-reset'>
+          <ul className={Styles.list}>
             <li><button type='button' onClick={this.zoomIn} className={Styles.increase} title='zoom in'>
                 <Icon glyph={Icon.GLYPHS.increase}/>
             </button></li>

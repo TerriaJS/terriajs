@@ -6,7 +6,6 @@
   bottom: $input-height + $padding;
   right: 2vw;
   @media screen and (min-width: $sm){
-    //temp
     position: absolute;
     right: 28px;
     top: 170px;
@@ -19,11 +18,11 @@
     border-radius: 50%;
     display: block;
     background: #fff;
-    padding: ($ring-width/2 + 1) $ring-width/2 ($ring-width/2 - 3px) $ring-width/2;
     color: $dark;
-    &:before{
-      font-size: 25px;
-      line-height: 1;
-      text-align: center;
+    height: 40px;
+    width: 40px;
+    svg{
+      height: 40px;
+      width: 40px;
     }
   }
