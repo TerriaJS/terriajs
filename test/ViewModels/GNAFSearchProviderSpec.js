@@ -89,6 +89,22 @@ describe('GNAFSearchProvider', function() {
             expect(searchProvider.searchResults[1].isImportant).toBe(false);
         });
 
+        it('should provide the location of the result in the search result', function() {
+            searchProvider.search(QUERY);
+
+            geoCodeDeferred.resolve([{
+                name: 'Test',
+                locational: true,
+                location: {
+                    latitude: 123,
+                    longitude: 321
+                }
+            }]);
+
+            expect(searchProvider.searchResults[0].location.latitude).toBe(123);
+            expect(searchProvider.searchResults[0].location.longitude).toBe(321);
+        });
+
         it('should correctly create a clickAction function from the location', function() {
             searchProvider.search(QUERY);
 

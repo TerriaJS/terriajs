@@ -1,0 +1,71 @@
+// My data
+.add-data-tablist{
+  padding-right: 0;
+  li{
+    margin-right: 3px;
+  }
+}
+
+// //My data
+.my-data{
+  overflow-y: hidden;
+}
+
+.add-data{
+  background: $modal-secondary-bg;
+  padding: $padding;
+  height: 100%;
+  overflow: hidden;
+
+  .label{
+    padding-left: 0;
+  }
+
+  &.is-hidden{
+    position: absolute;
+    left: -1000px;
+  }
+
+  &__dropdown {
+    width: 100%;
+  }
+
+  &__dropdown-list {
+    box-shadow: $box-shadow;
+    margin-top: $padding-small;
+  }
+
+  &__dropdown-list--is-open {
+    height: 190px;
+    overflow-y: auto;
+  }
+}
+
+.added-data{
+  height: 100%;
+  overflow-y: auto;
+  background: $modal-secondary-bg;
+  padding: $padding;
+}
+
+.btn--back-to-my-data{
+  position: relative;
+  padding-left: $padding*2;
+  @extend .btn-small;
+  &:before{
+    position: absolute;
+    left: 0;
+  }
+  .add-data.is-empty &{
+    display: none;
+  }
+}
+
+.btn--add-more-data{
+  @extend .btn-primary;
+  margin-top: $padding;
+}
+
+
+
+
