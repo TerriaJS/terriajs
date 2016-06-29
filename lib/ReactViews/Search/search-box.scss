@@ -1,44 +1,12 @@
 @import '~terriajs-variables';
 @import '../../Sass/common/mixins';
 
-// Search form
-//
-//.panel-content - Search form in modal window
-//.workbench__inner - Search form in workbench
-//
-// Markup:
-// <div class={{modifier_class}}>
-// <form class='form--search-data' autoComplete='off'>
-//   <label htmlFor='search' class='form__label'> Type keyword to search </label>
-//   <input id='search'
-//          type='text'
-//          name='search'
-//          class='form__search-field field'
-//          placeholder='Search'
-//          autoComplete='off'/>
-//   <button class='btn search-clear'></button>
-// </form>
-// </div>
-//
-// Style guide: 3.1
-//
-
-.icon {
-  position: absolute;
-  font-size: 1.2rem;
-  color: $grey;
-  opacity: 0.5;
-  &:before{
-    display: block;
-  }
-}
-
 .formLabel{
-  width: $input-height;
-  height: $input-height;
-  overflow: hidden;
-  &:before{
-    padding: 12px $padding*1.5;
+  position: absolute;
+  svg{
+    height: $input-height;
+    width: $input-height;
+    fill: $charcoal-grey;
   }
 }
 

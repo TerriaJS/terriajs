@@ -212,8 +212,7 @@ $btn-setting-size: 35px;
   li[aria-selected='true'] & {
     background: #fff;
     color: $modal-highlight;
-
-}
+  }
 }
 
 // Map buttons
@@ -264,8 +263,6 @@ a.btn--map {
   top: 0;
   padding: 12px;
 }
-
-
 
 .btn--radio {
   padding: $padding-small;

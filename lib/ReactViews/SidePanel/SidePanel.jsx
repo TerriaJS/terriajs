@@ -71,8 +71,7 @@ const SidePanel = React.createClass({
                                searchText={searchState.locationSearchText} />
                     <div className={Styles.addData}>
                         <button type='button' onClick={this.onAddDataClicked} className={Styles.button}>
-                            Add
-                            <Icon glyph={Icon.GLYPHS.add}/>
+                            <Icon glyph={Icon.GLYPHS.add}/>Add
                         </button>
                     </div>
                 </div>

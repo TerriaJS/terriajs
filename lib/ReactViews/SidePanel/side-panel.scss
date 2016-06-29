@@ -34,15 +34,17 @@
 }
 
 .button {
-  composes: btn from '../../Sass/common/_buttons.scss';
   composes: btn-primary from '../../Sass/common/_buttons.scss';
-
+  line-height: $input-height;
   text-transform: uppercase;
-
-  &:before {
+  svg{
     position: absolute;
     font-size: 18px;
     left: $padding*2;
+    height: $input-height;
+    width: $input-height;
+    display: inline-block;
+    fill: #ffffff;
   }
 }
 

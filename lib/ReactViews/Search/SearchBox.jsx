@@ -74,7 +74,7 @@ export default React.createClass({
             <form className={Styles.searchData} autoComplete='off' onSubmit={event => event.preventDefault()}>
                 <label htmlFor='search' className={Styles.formLabel}>
                 <Icon glyph={Icon.GLYPHS.search}/>
-                 Type keyword to search </label>
+                </label>
                 <input id='search'
                        type='text'
                        name='search'
