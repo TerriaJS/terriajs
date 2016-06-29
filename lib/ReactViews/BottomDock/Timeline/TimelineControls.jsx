@@ -5,6 +5,7 @@ import React from 'react';
 import ClockRange from 'terriajs-cesium/Source/Core/ClockRange';
 import classnames from 'classnames';
 import Styles from './timeline-controls.scss';
+import Icon from "../../Icon.jsx";
 
 const TimelineControls = React.createClass({
     propTypes: {
@@ -82,20 +83,20 @@ const TimelineControls = React.createClass({
         return (
             <div className={Styles.controls}>
                 <button type='button' className={Styles.timelineControl} onClick={this.gotoStart} title="Go to beginning">
-                    <i className={Styles.iconBackToStart} />
+                    <Icon glyph={Icon.GLYPHS.backToStart}/>
                 </button>
                 <button type='button' className={Styles.timelineControl} onClick={this.togglePlay} title="Play">
-                    <i className={classnames({[Styles.iconPause]: this.isPlaying(), [Styles.iconPlay]: !this.isPlaying()})} />
+                    {this.isPlaying() ? <Icon glyph={Icon.GLYPHS.pause}/> : <Icon glyph={Icon.GLYPHS.play}/>}
                 </button>
                 <button type='button' className={Styles.timelineControl} onClick={this.playSlower} title="Play Slower">
-                    <i className={Styles.iconBackward} />
+                    <Icon glyph={Icon.GLYPHS.backward}/>
                 </button>
                 <button type='button' className={Styles.timelineControl} onClick={this.playFaster} title="Play Faster">
-                    <i className={Styles.iconForward} />
+                    <Icon glyph={Icon.GLYPHS.forward}/>
                 </button>
                 <button type='button' className={classnames(Styles.timelineControl, {[Styles.isActive]: this.isLooping()})}
                         onClick={this.toggleLoop} title="Loop at the end">
-                    <i className={Styles.iconRefresh} />
+                    <Icon glyph={Icon.GLYPHS.refresh}/>
                 </button>
             </div>
         );

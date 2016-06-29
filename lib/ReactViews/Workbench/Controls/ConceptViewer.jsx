@@ -52,6 +52,12 @@ const Concept = React.createClass({
         }
     },
 
+    getFillStyle() {
+        if (this.props.concept.color) {
+            return {fill: this.props.concept.color};
+        }
+    },
+
     render() {
         const concept = this.props.concept;
 
@@ -74,10 +80,10 @@ const Concept = React.createClass({
                                     style={this.getColorStyle()}
                                     className={Styles.btn}
                                     title='select variable'>
-                                    {(concept.isActive && this.props.allowMultiple) && <Icon glyph={Icon.GLYPHS.checkboxOn}/>}
-                                    {(!concept.isActive && this.props.allowMultiple) && <Icon glyph={Icon.GLYPHS.checkboxOff}/>}
-                                    {(concept.isActive && !this.props.allowMultiple) && <Icon glyph={Icon.GLYPHS.radioOn}/>}
-                                    {(!concept.isActive && !this.props.allowMultiple) && <Icon glyph={Icon.GLYPHS.radioOff}/>}
+                                    {(concept.isActive && this.props.allowMultiple) && <Icon style={this.getFillStyle()} glyph={Icon.GLYPHS.checkboxOn}/>}
+                                    {(!concept.isActive && this.props.allowMultiple) && <Icon style={this.getFillStyle()} glyph={Icon.GLYPHS.checkboxOff}/>}
+                                    {(concept.isActive && !this.props.allowMultiple) && <Icon style={this.getFillStyle()} glyph={Icon.GLYPHS.radioOn}/>}
+                                    {(!concept.isActive && !this.props.allowMultiple) && <Icon style={this.getFillStyle()} glyph={Icon.GLYPHS.radioOff}/>}
                             </button>
                         </If>
                         {concept.name}

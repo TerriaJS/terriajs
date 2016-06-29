@@ -28,21 +28,18 @@
   .btn {
     position: absolute;
     padding: 0;
-    width: 20px;
-    &:before {
-      font-size: 1.2rem;
+    left: 0;
+    svg{
+      height: 30px;
+      width: 30px;
+      margin-top: -5px;
     }
   }
 }
 
 .items {
   composes: list-reset from '../../../Sass/common/_base.scss';
-
   margin-left: 15px;
-}
-
-.btn {
-  composes: btn from '../../../Sass/common/_buttons.scss';
 }
 
 .btn--toggle {

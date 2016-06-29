@@ -68,6 +68,11 @@ fieldset {
   box-sizing: border-box;
   margin-top: 0;
   margin-bottom: 0;
+  border-style: solid;
+  border-width: 1px;
+  border-color: $field-border;
+  border-radius: $radius-small;
+  width: 100%;
 }
 
 button {
@@ -134,5 +139,18 @@ textarea {
 
 ::-webkit-scrollbar-thumb {
   background: rgba(#000, 0.3);
+}
+
+button{
+  font-weight: $font-weight-normal;
+  box-shadow: none;
+  border: 0;
+  cursor: pointer;
+  &:focus, &:hover {
+    box-shadow: none;
+    border-color: transparent;
+    outline: none;
+    opacity: 0.9;
+  }
 }
 

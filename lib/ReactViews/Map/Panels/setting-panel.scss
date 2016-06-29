@@ -48,17 +48,17 @@
       position: absolute;
       right: 0;
       top: 0;
-      fill: $turquoise-blue;
+      fill: #ffffff;
       z-index: 1;
-      text-align: center;
       width: 22px;
       border-radius: $radius-small;
       height: 22px;
     }
+  &.is-active {
+  border: 2px solid $turquoise-blue;
+  }
 }
 
-.is-active {
-}
 
 .btn--dropdown {
   composes: btn--map from '../../../Sass/common/_buttons.scss';

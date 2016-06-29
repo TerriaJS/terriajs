@@ -73,8 +73,11 @@
 }
 
 .btnClose{
-    composes: btn from '../../Sass/common/_buttons.scss';
     position: absolute;
     right: 0;
     top: 0;
+    svg{
+        height: 30px;
+        width: 30px;
+    }
 }

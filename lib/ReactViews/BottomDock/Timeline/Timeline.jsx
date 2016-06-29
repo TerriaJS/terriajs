@@ -11,6 +11,7 @@ import Styles from './timeline.scss';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import dateFormat from 'dateformat';
 
+
 const Timeline = React.createClass({
     propTypes: {
         terria: React.PropTypes.object.isRequired,

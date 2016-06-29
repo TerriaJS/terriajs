@@ -65,15 +65,20 @@
 }
 
 .btn--close-chart-panel {
-  composes: btn from '../../../Sass/common/_buttons.scss';
-  composes: btn--close from '../../../Sass/common/_buttons.scss';
-
   position: absolute;
   right: 0;
   top: 0;
+  padding: 8px;
+  svg{
+    height: 25px;
+    width: 25px;
+    fill: #fff;
+  }
   &:hover,
   &:focus {
-    color: $color-primary;
+    svg{
+      fill: $color-primary;
+    }
   }
 }
 

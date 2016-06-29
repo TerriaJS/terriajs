@@ -107,12 +107,12 @@ const SettingPanel = React.createClass({
                         <For each="baseMap" index="i" of={this.props.allBaseMaps}>
                             <li key={i} className={Styles.listItem}>
                                 <button
-                                    className={Styles.btnBaseMap}
+                                    className={classNames(Styles.btnBaseMap, {[Styles.isActive]: baseMap.catalogItem.name === currentBaseMap })}
                                     onClick={that.selectBaseMap.bind(this, baseMap)}
                                     onMouseEnter={that.mouseEnterBaseMap.bind(this, baseMap)}
                                     onMouseLeave={that.mouseLeaveBaseMap.bind(this, baseMap)}
                                     onFocus={that.mouseEnterBaseMap.bind(this, baseMap)}>
-                                    {baseMap.catalogItem.name === currentBaseMap ? <Icon glyph={Icon.GLYPHS.checkboxChecked }/>: <Icon glyph={Icon.GLYPHS.checkboxOff}/>}
+                                    {baseMap.catalogItem.name === currentBaseMap ? <Icon glyph={Icon.GLYPHS.selected }/>: <Icon glyph={Icon.GLYPHS.radioOff}/>}
                                     <img alt={baseMap.catalogItem.name} src={baseMap.image}/>
                                 </button>
                             </li>

@@ -6,7 +6,7 @@ const GLYPHS = {
     backToStart: require('../../wwwroot/images/icons/back-to-start.svg'),
     backward: require('../../wwwroot/images/icons/backward.svg'),
     bulb: require('../../wwwroot/images/icons/bulb.svg'),
-    checkboxChecked: require('../../wwwroot/images/icons/checkbox-checked.svg'),
+    selected: require('../../wwwroot/images/icons/selected.svg'),
     checkboxOff: require('../../wwwroot/images/icons/checkbox-off.svg'),
     checkboxOn: require('../../wwwroot/images/icons/checkbox-on.svg'),
     close: require('../../wwwroot/images/icons/close.svg'),
@@ -43,12 +43,13 @@ const GLYPHS = {
 
 const Icon = React.createClass({
     propTypes: {
-        glyph: React.PropTypes.string
+        glyph: React.PropTypes.string,
+        style: React.PropTypes.object
     },
     render() {
         let glyph = this.props.glyph;
         return (
-            <svg className="icon" dangerouslySetInnerHTML={{__html: '<use xlink:href="' + glyph + '"></use>'}}/>
+            <svg style= {this.props.style} className="icon" dangerouslySetInnerHTML={{__html: '<use xlink:href="' + glyph + '"></use>'}}/>
         );
     }
 });

@@ -68,6 +68,7 @@ $workbench-margin: $padding-small - 1px;
   composes: col from  '../../Sass/common/_base.scss';
   composes: col-10 from  '../../Sass/common/_base.scss';
   padding: 5px;
+  text-align:left;
 }
 
 .toggleColumn {
@@ -84,8 +85,10 @@ $workbench-margin: $padding-small - 1px;
   font-size: 140%;
   margin-right: 5px;
   svg{
-    height: 30px;
-    width: 20px;
+    height: 18px;
+    width: 18px;
     fill: #CCC;
+    display: inline-block;
+    vertical-align: top;
   }
 }
