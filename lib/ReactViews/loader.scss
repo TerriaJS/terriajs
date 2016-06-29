@@ -1,19 +1,16 @@
 @import '~terriajs-variables';
 @import '../Sass/common/mixins';
 
-// Loader
-//
-// Markup:
-// <div class='loader'>Loading</div>
-//
-// Style guide: Loader
-//
 .loader{
-  padding: $padding $padding $padding $padding*3 !important;
+  padding: $padding;
   position: relative;
   display: inline-block;
   svg{
     height: 25px;
     width: 25px;
+    display: line-block;
+  }
+  span{
+    line-height: 1.8;
   }
 }

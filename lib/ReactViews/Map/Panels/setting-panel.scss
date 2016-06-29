@@ -26,9 +26,35 @@
 
 .btn--viewer {
   composes: btn from '../../../Sass/common/_buttons.scss';
+  composes: btn-grey from '../../../Sass/common/_buttons.scss';
 }
 
 .btn--base-map {
+    padding: 0;
+    position: relative;
+    display: block;
+    line-height: 1.2;
+    border: 1px solid transparent;
+    img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    &:hover,
+    &:focus {
+      border: $border-style;
+    }
+    svg{
+      position: absolute;
+      right: 0;
+      top: 0;
+      fill: $turquoise-blue;
+      z-index: 1;
+      text-align: center;
+      width: 22px;
+      border-radius: $radius-small;
+      height: 22px;
+    }
 }
 
 .is-active {
