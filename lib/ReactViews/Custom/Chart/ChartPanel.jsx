@@ -6,11 +6,11 @@ import classNames from 'classnames';
 import defined from 'terriajs-cesium/Source/Core/defined';
 
 import Chart from './Chart.jsx';
-import ChartData from '../../Charts/ChartData';
+import ChartData from '../../../Charts/ChartData';
 import ChartPanelDownloadButton from './ChartPanelDownloadButton';
-import Loader from '../Loader.jsx';
-import ObserveModelMixin from '../ObserveModelMixin';
-import VarType from '../../Map/VarType';
+import Loader from '../../Loader.jsx';
+import ObserveModelMixin from '../../ObserveModelMixin';
+import VarType from '../../../Map/VarType';
 
 import Styles from './chart-panel.scss';
 

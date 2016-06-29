@@ -1,7 +1,7 @@
 'use strict';
 
 import React from 'react';
-import ChartPanel from '../Chart/ChartPanel.jsx';
+import ChartPanel from '../Custom/Chart/ChartPanel.jsx';
 import Timeline from './Timeline/Timeline.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
 import Styles from './bottom-dock.scss';

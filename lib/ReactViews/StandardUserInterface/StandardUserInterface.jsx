@@ -119,7 +119,7 @@ const StandardUserInterface = React.createClass({
                 <Notification viewState={this.props.viewState}/>
                 <MapInteractionWindow terria={terria}/>
 
-                <If condition={this.props.terria.configParameters.feedbackUrl}>
+                <If condition={this.props.terria.configParameters.feedbackUrl && !this.props.viewState.hideMapUi()}>
                     <aside className={Styles.feedback}>
                         <FeedbackForm viewState={this.props.viewState}/>
                     </aside>

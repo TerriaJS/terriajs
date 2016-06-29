@@ -59,13 +59,16 @@ const FeatureInfoSection = React.createClass({
         }
     },
 
-    getTemplateData() {
-        const propertyData = propertyValues(
+    getPropertyValues() {
+        return propertyValues(
             this.props.feature,
             this.props.clock,
             this.props.template && this.props.template.formats
         );
+    },
 
+    getTemplateData() {
+        const propertyData = this.getPropertyValues();
         if (defined(propertyData)) {
 
             propertyData.terria = {
@@ -79,7 +82,6 @@ const FeatureInfoSection = React.createClass({
                 };
             }
         }
-
         return propertyData;
     },
 
@@ -145,7 +147,10 @@ const FeatureInfoSection = React.createClass({
     render() {
         const catalogItemName = (this.props.catalogItem && this.props.catalogItem.name) || '';
         const fullName = (catalogItemName ? (catalogItemName + ' - ') : '') + this.renderDataTitle();
-        const templateData = this.getTemplateData();
+        const templateData = this.getPropertyValues();
+        if (defined(templateData)) {
+            delete templateData._terria_columnAliases;
+        }
 
         return (
             <li className={classNames(Styles.section)}>
