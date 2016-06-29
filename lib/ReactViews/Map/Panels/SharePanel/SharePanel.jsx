@@ -17,7 +17,8 @@ const SharePanel = React.createClass({
         terria: React.PropTypes.object,
         userPropWhiteList: React.PropTypes.array,
         isOpen: React.PropTypes.bool,
-        shortenUrls: React.PropTypes.bool
+        shortenUrls: React.PropTypes.bool,
+        viewState: React.PropTypes.object.isRequired
     },
 
     getDefaultProps() {

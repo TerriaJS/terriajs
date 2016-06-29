@@ -17,7 +17,8 @@ const SettingPanel = React.createClass({
     propTypes: {
         terria: React.PropTypes.object,
         viewerModes: React.PropTypes.array,
-        allBaseMaps: React.PropTypes.array
+        allBaseMaps: React.PropTypes.array,
+        viewState: React.PropTypes.object.isRequired
     },
 
     getDefaultProps() {
