@@ -1,8 +1,6 @@
 'use strict';
 
 //*global require,expect*/
-// import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
-import React from 'react';
 import ReactTestUtils from 'react-addons-test-utils';
 import {findAll} from 'react-shallow-testutils';
 

@@ -3,7 +3,6 @@
 import Mustache from 'mustache';
 import React from 'react';
 
-import CallbackProperty from 'terriajs-cesium/Source/DataSources/CallbackProperty';
 import CesiumMath from 'terriajs-cesium/Source/Core/Math';
 import classNames from 'classnames';
 import defined from 'terriajs-cesium/Source/Core/defined';

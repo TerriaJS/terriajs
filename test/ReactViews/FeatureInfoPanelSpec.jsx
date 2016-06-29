@@ -3,15 +3,12 @@
 /*global require,expect*/
 // import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 import React from 'react';
-import {findWithType, findAllWithType} from 'react-shallow-testutils';
+import {findWithType} from 'react-shallow-testutils';
 import {getShallowRenderedOutput} from './MoreShallowTools';
 
 // import Entity from 'terriajs-cesium/Source/DataSources/Entity';
 
-import Entity from 'terriajs-cesium/Source/DataSources/Entity';
-
 import FeatureInfoPanel  from '../../lib/ReactViews/FeatureInfo/FeatureInfoPanel';
-import FeatureInfoSection from '../../lib/ReactViews/FeatureInfo/FeatureInfoSection';
 import Loader from '../../lib/ReactViews/Loader';
 import PickedFeatures from '../../lib/Map/PickedFeatures';
 import runLater from '../../lib/Core/runLater';
