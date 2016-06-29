@@ -1,0 +1,69 @@
+@import '~terriajs-variables';
+
+.controls {
+  display: table-cell;
+  width: 180px;
+  vertical-align: middle;
+}
+
+.timeline__control {
+  height: 29px;
+  width: 34px;
+  svg{
+    height: 25px;
+    width: 25px;
+    fill: #ffffff;
+  }
+
+  &.is-active {
+    svg{
+      fill: $color-primary;
+    }
+  }
+}
+
+.icon--back-to-start, .icon--forward, .icon--backward, .icon--pause, .icon--play, .icon--refresh {
+  // composes: icon from '../../../Sass/common/_icons.scss';
+}
+
+// Normalise these icons
+.icon--forward, .icon--backward {
+  &:before {
+    font-size: 20px;
+  }
+}
+
+.icon--back-to-start, .icon--play, .icon--pause {
+  width: 10px;
+  margin-left: 7px;
+  display: inline-block;
+  vertical-align: 2px;
+}
+
+// .icon--back-to-start {
+//   composes: icon-backToStart from '../../../Sass/common/_icons.scss';
+// }
+
+// .icon--forward {
+//   composes: icon-forward from '../../../Sass/common/_icons.scss';
+// }
+
+// .icon--backward {
+//   composes: icon-backward from '../../../Sass/common/_icons.scss';//
+// }
+
+// .icon--pause {
+//   composes: icon-pause from '../../../Sass/common/_icons.scss';
+// }
+
+// .icon--play {
+//   composes: icon-play from '../../../Sass/common/_icons.scss';
+// }
+
+.icon--refresh {
+  &:before {
+    font-size: 18px;
+  }
+
+  // composes: icon-refresh from '../../../Sass/common/_icons.scss';
+}

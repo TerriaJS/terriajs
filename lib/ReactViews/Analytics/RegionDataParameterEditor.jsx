@@ -1,8 +1,13 @@
+import React from 'react';
+
 import defined from 'terriajs-cesium/Source/Core/defined';
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 import VarType from '../../Map/VarType';
 import ObserveModelMixin from '../ObserveModelMixin';
-import React from 'react';
+import CatalogItem from '../DataCatalog/CatalogItem';
+import CatalogGroup from '../DataCatalog/CatalogGroup';
+
+import Styles from './parameter-editors.scss';
 
 const RegionDataParameterEditor = React.createClass({
     mixins: [ObserveModelMixin],
@@ -84,9 +89,9 @@ const RegionDataParameterEditor = React.createClass({
         }
 
         return defined(value[column.name]) &&
-               value[column.name] &&
-               value[column.name].regionColumn === catalogItem.regionMapping.regionDetails[0].column &&
-               value[column.name].valueColumn === column;
+            value[column.name] &&
+            value[column.name].regionColumn === catalogItem.regionMapping.regionDetails[0].column &&
+            value[column.name].valueColumn === column;
     },
 
     getCatalogItemDetails(catalogItemDetails, catalogItem) {
@@ -133,42 +138,62 @@ const RegionDataParameterEditor = React.createClass({
         return details.isEntirelyActive;
     },
 
+    render() {
+        return (
+            <div className={Styles.parameterEditor}>
+                {this.renderContent()}
+            </div>
+        );
+    },
+
     renderContent() {
-        if(this.catalogItemsWithMatchingRegion().length > 0) {
-            return <div className="parameter-editor--data"><ul className='parameter-editor-tree'>{this.catalogItemsWithMatchingRegion().map((catalogItem, i)=>
-                <li key ={i}><button type='button' onClick={this.toggleOpenCatalogItem.bind(this, catalogItem)}
-                                     className={`btn btn--catalogue ${this.catalogItemIsOpen(catalogItem) ? 'is-open' : ''}`}>{catalogItem.name}</button>{this.catalogItemIsOpen(catalogItem) && this.renderItemChildren(catalogItem)}</li>
-            )}</ul></div>;
+        if (this.catalogItemsWithMatchingRegion().length > 0) {
+            return (
+                <div className={Styles.data}>
+                    <ul className={Styles.tree}>
+                        <For each="catalogItem" index="i" of={this.catalogItemsWithMatchingRegion()}>
+                            <CatalogGroup
+                                text={catalogItem.name}
+                                topLevel={false}
+                                open={this.catalogItemIsOpen(catalogItem)}
+                                onClick={this.toggleOpenCatalogItem.bind(this, catalogItem)}
+                                loading={false}>
+                                {this.renderItemChildren(catalogItem)}
+                            </CatalogGroup>
+                        </For>
+                    </ul>
+                </div>
+            );
         }
-        return <div className="parameter-editor-important-note">
-                    No characteristics are available because you have not added any data to the map for this region type, {this.regionProvider() ? this.regionProvider().regionType : 'None'}.
-                    You may use your own data with this analysis by creating a CSV following the <a target="_blank" href="https://github.com/NICTA/nationalmap/wiki/csv-geo-au">csv-geo-au</a> guidelines and dragging and dropping it onto the map.
-                </div>;
+        return (
+            <div className={Styles.parameterEditorImportantNote}>
+                No characteristics are available because you have not added any data to the map for this region
+                type, {this.regionProvider() ? this.regionProvider().regionType : 'None'}.
+                You may use your own data with this analysis by creating a CSV following the
+                <a target="_blank" href="https://github.com/NICTA/nationalmap/wiki/csv-geo-au">csv-geo-au</a>
+                guidelines and dragging and dropping it onto the map.
+            </div>
+        );
     },
 
     renderItemChildren(catalogItem) {
-        return <ul className='parameter-editor-tree'>{catalogItem.regionMapping.tableStructure.columns.map((column, i)=>{
-            if (column.type === VarType.SCALAR) {
-                return <li key ={i}
-                           className='clearfix data-catalog-item'>
-                            <button type='button'
-                                    onClick={this.toggleActive.bind(this, catalogItem, column)}
-                                    className={`btn btn--catalog-item ${this.isActive(catalogItem, column) ? 'is-active' : ''}`}>
-                                {column.name}
-                            </button>
-                            <button type='button' onClick={this.toggleActive.bind(this, catalogItem, column)}
-                                    title="add to map"
-                                    className={`btn btn--catalog-item--action ${this.isActive(catalogItem, column) ? 'btn--remove-from-map' : 'btn--add-to-map'}`}
+        return (
+            <ul className={Styles.tree}>
+                {catalogItem.regionMapping.tableStructure.columns.map((column, i)=> {
+                    if (column.type === VarType.SCALAR) {
+                        return (
+                            <CatalogItem
+                                onTextClick={this.toggleActive.bind(this, catalogItem, column)}
+                                selected={this.isActive(catalogItem, column)}
+                                text={column.name}
+                                onBtnClick={this.toggleActive.bind(this, catalogItem, column)}
+                                btnState={this.isActive(catalogItem, column) ? 'remove' : 'add'}
                             />
-                        </li>;
-            }
-        })}</ul>;
-    },
-
-    render() {
-        return <div className='parameter-editor'>
-                    {this.renderContent()}
-               </div>;
+                        );
+                    }
+                })}
+            </ul>
+        );
     }
 });
 module.exports = RegionDataParameterEditor;

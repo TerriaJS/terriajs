@@ -3,8 +3,8 @@
 /*global require,expect*/
 // import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 import React from 'react';
-import ReactTestUtils from 'react-addons-test-utils';
 import {findWithType} from 'react-shallow-testutils';
+import {getShallowRenderedOutput} from './MoreShallowTools';
 
 // import Entity from 'terriajs-cesium/Source/DataSources/Entity';
 
@@ -20,13 +20,7 @@ import ViewState from '../../lib/ReactViewModels/ViewState';
 //     separator = (Intl.NumberFormat().format(1000)[1]);
 // }
 
-function getShallowRenderedOutput(jsx) {
-    const renderer = ReactTestUtils.createRenderer();
-    renderer.render(jsx);
-    return renderer.getRenderOutput();
-}
-
-describe('FeatureInfoPanel-jsx', function() {
+describe('FeatureInfoPanel', function() {
 
     let terria;
     // let feature;
@@ -36,58 +30,54 @@ describe('FeatureInfoPanel-jsx', function() {
         terria = new Terria({
             baseUrl: './'
         });
-        viewState = new ViewState();
-        // const properties = {
-        //     'Foo': 'bar',
-        //     'moo': 'd"e"r,p'
-        // };
-        // feature = new Entity({
-        //     name: 'Bar',
-        //     properties: properties
-        // });
+        viewState = new ViewState({
+            terria: terria
+        });
     });
 
-    it('does not have visible class when isVisible false', function() {
-        const panel = <FeatureInfoPanel terria={terria} viewState={viewState} isVisible={false}/>;
+    it('does not have isVisible class when viewState.featureInfoPanelIsVisible not set', function() {
+        const panel = <FeatureInfoPanel terria={terria} viewState={viewState}/>;
         const result = getShallowRenderedOutput(panel);
-        expect(result.props.className).not.toContain('visible');
+        expect(result.props.className).not.toContain('is-visible');
     });
 
-    it('has visible class when isVisible true', function() {
-        const panel = <FeatureInfoPanel terria={terria} viewState={viewState} isVisible={true}/>;
+    it('has isVisible class when viewState.featureInfoPanelIsVisible is true', function() {
+        viewState.featureInfoPanelIsVisible = true;
+        const panel = <FeatureInfoPanel terria={terria} viewState={viewState}/>;
         const result = getShallowRenderedOutput(panel);
-        expect(result.props.className).toContain('visible');
+        expect(result.props.className).toContain('is-visible');
     });
 
     it('displays loader while asychronously loading feature information', function() {
         var pickedFeatures = new PickedFeatures();
         pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
         terria.pickedFeatures = pickedFeatures;
-        const panel = <FeatureInfoPanel terria={terria} viewState={viewState} isVisible={true}/>;
+        const panel = <FeatureInfoPanel terria={terria} viewState={viewState}/>;
         const result = getShallowRenderedOutput(panel);
         expect(findWithType(result, Loader)).toBeDefined();
     });
 
+    // This test won't work for two reasons:
+    //   - the behaviour it tests occurs in ComponentDidMount
+    //   - FeatureInfoPanel doesn't have FeatureInfoSections - there is a FeatureInfoCatalogItem layer in between.
+    //
+    // it('shows an open section even if none have any info', function() {
+    //     const feature1 = new Entity({
+    //         name: 'Foo'
+    //     });
+    //     const feature2 = new Entity({
+    //         name: 'Bar'
+    //     });
+    //     var pickedFeatures = new PickedFeatures();
+    //     pickedFeatures.allFeaturesAvailablePromise = runLater(function() {
+    //         pickedFeatures.features = [feature1, feature2];
+    //     });
+    //     terria.pickedFeatures = pickedFeatures;
+    //     const panel = <FeatureInfoPanel terria={terria} viewState={viewState}/>;
+    //     const result = getShallowRenderedOutput(panel);
+    //     const sections = findAllWithType(result, FeatureInfoSection);
+    //     expect(sections.length).toEqual(2);
+    //     expect(sections[0].props.isOpen).toBe(true);
+    // });
+
 });
-
-// function treeContainsText(tree, s) {
-//     if (tree.props.children === undefined) {
-//         return false;
-//     }
-//     if (tree.props.children.props !== undefined) {
-//         // A single child is sometimes present in children without being in an array.
-//         return treeContainsText(tree.props.children, s)
-//     }
-//     if (!Array.isArray(tree.props.children)) {
-//         // Text is presented as a child, with no object around it.
-//         console.log(tree.props.children);
-//         return tree.props.children.indexOf(s) >= 0;
-//     }
-//     for (var i = 0; i < tree.props.children.length; ++i) {
-//         if (treeContainsText(tree.props.children[i], s)) {
-//             return true;
-//         }
-//     }
-
-//     return false;
-// }

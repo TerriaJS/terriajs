@@ -1,0 +1,21 @@
+@import '~terriajs-variables';
+@import '../../../Sass/common/mixins';
+
+.btn {
+  composes: btn from '../../../Sass/common/_buttons.scss';
+}
+
+.btn--checkbox {
+  left: 15px;
+  float: left;
+}
+
+.btn--active {
+  composes: btn--checkbox;
+  composes: btn--checkbox-on from '../../../Sass/common/_buttons.scss';
+}
+
+.btn--inactive {
+  composes: btn--checkbox;
+  composes: btn--checkbox-off from '../../../Sass/common/_buttons.scss';
+}

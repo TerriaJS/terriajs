@@ -7,6 +7,9 @@ import CesiumTimeline from './CesiumTimeline';
 import ClockRange from 'terriajs-cesium/Source/Core/ClockRange';
 import {formatDateTime} from './DateFormats';
 import JulianDate from 'terriajs-cesium/Source/Core/JulianDate';
+import Styles from './timeline.scss';
+import defined from 'terriajs-cesium/Source/Core/defined';
+import dateFormat from 'dateformat';
 
 const Timeline = React.createClass({
     propTypes: {
@@ -33,8 +36,15 @@ const Timeline = React.createClass({
 
         this.removeTickEvent = this.props.terria.clock.onTick.addEventListener(clock => {
             const time = clock.currentTime;
+            let currentTime;
+            if (defined(this.props.terria.timeSeriesStack.topLayer) && defined(this.props.terria.timeSeriesStack.topLayer.dateFormat.currentTime)) {
+                currentTime = dateFormat(time, this.props.terria.timeSeriesStack.topLayer.dateFormat.currentTime);
+            } else {
+                currentTime = formatDateTime(JulianDate.toDate(time), this.props.locale);
+            }
+
             this.setState({
-                currentTimeString: formatDateTime(JulianDate.toDate(time), this.props.locale)
+                currentTimeString: currentTime
             });
         });
 
@@ -49,11 +59,15 @@ const Timeline = React.createClass({
     },
 
     updateForNewTopLayer() {
+        let autoPlay = this.props.terria.configParameters.autoPlay;
+        if(!defined(autoPlay)) {
+            autoPlay = this.props.autoPlay;
+        }
         const terria = this.props.terria;
         const newTopLayer = terria.timeSeriesStack.topLayer;
 
         // default to playing and looping when shown unless told otherwise
-        if (newTopLayer && this.props.autoPlay) {
+        if (newTopLayer && autoPlay) {
             terria.clock.tick();
             terria.clock.shouldAnimate = true;
         }
@@ -70,12 +84,12 @@ const Timeline = React.createClass({
         const layerName = terria.timeSeriesStack.topLayer && terria.timeSeriesStack.topLayer.name;
 
         return (
-            <div className="timeline">
-                <div className="timeline__text-row">
-                    <div className="timeline__text-cell timeline__text-cell--time" title="Current Time (tz info et al)">{this.state.currentTimeString}</div>
-                    <div className="timeline__text-cell" title="Current Layer">{layerName}</div>
+            <div className={Styles.timeline}>
+                <div className={Styles.textRow}>
+                    <div className={Styles.textCell + ' ' + Styles.time} title="Current Time (tz info et al)">{this.state.currentTimeString}</div>
+                    <div className={Styles.textCell} title="Current Layer">{layerName}</div>
                 </div>
-                <div className="timeline__controls-row">
+                <div className={Styles.controlsRow}>
                     <TimelineControls clock={terria.clock} analytics={terria.analytics} currentViewer={terria.currentViewer} />
                     <CesiumTimeline terria={terria} />
                 </div>

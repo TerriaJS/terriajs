@@ -1,11 +1,10 @@
 'use strict';
 
 import React from 'react';
-import ChartPanel from '../Chart/ChartPanel.jsx';
-import DistanceLegend from './DistanceLegend.jsx';
-import LocationBar from './LocationBar.jsx';
+import ChartPanel from '../Custom/Chart/ChartPanel.jsx';
 import Timeline from './Timeline/Timeline.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
+import Styles from './bottom-dock.scss';
 
 const BottomDock = React.createClass({
     mixins: [ObserveModelMixin],
@@ -17,22 +16,11 @@ const BottomDock = React.createClass({
         viewState: React.PropTypes.object.isRequired
     },
 
-    componentDidUpdate() {
-        this.onHeightChange();
-    },
-
-    onHeightChange() {
-        setTimeout(() => {this.props.terria.commonViewerProps.shiftDisclaimerPx = document.querySelector('.bottom-dock').offsetHeight;}, 0);
-    },
-
     render() {
         const terria = this.props.terria;
+
         return (
-            <div className='bottom-dock'>
-                <div className='location-distance'>
-                    <LocationBar terria={terria}/>
-                    <DistanceLegend terria={terria}/>
-                </div>
+            <div className={Styles.bottomDock}>
                 <ChartPanel terria={terria} onHeightChange={this.onHeightChange} viewState={this.props.viewState}/>
                 <If condition={terria.timeSeriesStack.topLayer}>
                     <Timeline terria={terria}/>

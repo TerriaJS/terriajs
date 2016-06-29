@@ -1,0 +1,28 @@
+[
+ {
+    "id" : "document",
+    "name" : "Glowing Polyline",
+    "version" : "1.0"
+ },
+ {
+    "id" : "blueLine",
+    "name" : "Glowing blue line on the surface",
+    "polyline" : {
+      "positions" : {
+        "cartographicDegrees" : [
+          -75, 37, 0,
+          -125, 37, 0
+        ]
+      },
+      "material" : {
+        "polylineGlow" : {
+          "color" : {
+            "rgba" : [0, 0, 0, 255],
+            "glowPower" : 0.2
+          }
+        }
+      },
+      "width" : 10
+    }
+  }
+]

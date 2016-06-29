@@ -7,6 +7,8 @@ const Ellipsoid = require('terriajs-cesium/Source/Core/Ellipsoid');
 const Tween = require('terriajs-cesium/Source/ThirdParty/Tween');
 const CesiumMath = require('terriajs-cesium/Source/Core/Math');
 const Cartesian3 = require('terriajs-cesium/Source/Core/Cartesian3');
+import Icon from "../../Icon.jsx";
+import Styles from './zoom_control.scss';
 
 // Map zoom control
 const ZoomControl = React.createClass({
@@ -117,13 +119,20 @@ const ZoomControl = React.createClass({
 
     render() {
         return (
-        <div className='zoom-control'>
-          <ul>
-            <li><button type='button' onClick={this.zoomIn} className='btn btn--increase' title='zoom in'></button></li>
-            <li><button type='button' onClick={this.zoomReset} className='btn btn--refresh' title='reset zoom'></button></li>
-            <li><button type='button' onClick={this.zoomOut} className='btn btn--decrease' title='zoom out'></button></li>
+        <div className={Styles.zoomControl}>
+          <ul className={Styles.list}>
+            <li><button type='button' onClick={this.zoomIn} className={Styles.increase} title='zoom in'>
+                <Icon glyph={Icon.GLYPHS.increase}/>
+            </button></li>
+            <li><button type='button' onClick={this.zoomReset} className={Styles.refresh} title='reset zoom'>
+                <Icon glyph={Icon.GLYPHS.refresh}/>
+            </button></li>
+            <li><button type='button' onClick={this.zoomOut} className={Styles.decrease} title='zoom out'>
+                <Icon glyph={Icon.GLYPHS.decrease}/>
+            </button></li>
           </ul>
-      </div>);
+        </div>
+        );
     }
 });
 module.exports = ZoomControl;

@@ -2,18 +2,107 @@
 Change Log
 ==========
 
+### 4.0.0
+
+* `CswCatalogGroup` will now include Web Processing Services from the catalog if configured with `includeWps` set to true.
+* `WebMapServiceCatalogItem` will now detect ncWMS servers and set isNcWMS to true.
+* Added partial support for the SDMX-JSON format.
+
+### 3.4.0
+
+* Support JSON5 (http://json5.org/) use in init files and config files, so comments can be used and object keys don't need to be quoted. 
+* Fixed a bug that caused the `corsProxyBaseUrl` specified in `config.json` to be ignored.
+* Fixed a bug preventing downloading feature info data in CSV format if it contained nulls.
+* Added support for the WMS Style/MetadataURL tag in layer description.
+* Long auto-generated legend titles now word wrap in most web browsers.
+
+### 3.3.0
+
+* Support `parameters` property in WebFeatureServiceCatalogItem to allow accessing URLs that need additional parameters.
+* Fixed a bug where visiting a shared link with a time-series layer would crash load.
+* Added a direct way to format numbers in feature info templates, eg. `{{#terria.formatNumber}}{"useGrouping": true, "maximumFractionDigits": 3}{{value}}{{/terria.formatNumber}}`. The quotes around the keys are optional.
+* When the number of unique values in a CSV column exceeds the number of color bins available, the legend now displays "XX other values" as the label for the last bucket rather than simply "Other".
+* CSV columns with up to 21 unique values can now be fully displayed in the legend.  Previously, the number of bins was limited to 9.
+* Added `cycle` option to `tableColumnStyle.colorBinMethod` for enumeration-type CSV columns.  When the number of unique values in the column exceeds the number of color bins available, this option makes TerriaJS color all values by cycling through the available colors, rather than coloring only the most common values and lumping the rest into an "Other" bucket.
+* Metadata and single data files (e.g. KML, GeoJSON) are now consistently cached for one day instead of two weeks.
+* `WebMapServiceCatalogItem` now uses the legend for the `style` specified in `parameters` when possible.  It also now includes the `parameters` when building a `GetLegendGraphic` URL.
+* Fixed a bug that prevented switching to the 3D view after starting the application in 2D mode.
+
+### 3.2.1
+
+* Fixed a bug on IE9 which prevented shortened URLs from loading.
+* Fixed a map started with smooth terrain being unable to switch to 3D terrain.
+* Fixed a bug in `CkanCatalogItem` that prevented it from using the proxy for dataset URLs.
+* Fixed feature picking when displaying a point-based vector and a region mapped layer at the same time.
+* Stopped generation of WMS intervals being dependent on JS dates and hence sensitive to DST time gaps.
+* Fixed a bug which led to zero property values being considered time-varying in the Feature Info panel.
+* Fixed a bug which prevented lat/lon injection into templates with time-varying properties.
+
+### 3.2.0
+
+* Deprecated in this version:
+  - `CkanCatalogItem.createCatalogItemFromResource`'s `options` `allowGroups` has been replaced with `allowWmsGroups` and `allowWfsGroups`.
+* Added support for WFS in CKAN items.
+* Fixed bug which prevented the terria-server's `"proxyAllDomains": true` option from working.
+* Added support in FeatureInfoTemplate for referencing csv columns by either their name in the csv file, or the name they are given via `TableStyle.columns...name` (if any).
+* Improved CSV handling to ignore any blank lines, ie. those containing only commas.
+* Fixed a bug in `CswCatalogGroup` that prevented it from working in Internet Explorer.
+
+### 3.1.0
+
+* Only trigger a search when the user presses enter or stops typing for 3 seconds.  This will greatly reduce the number of times that searches are performed, which is important with a geocoder like Bing Maps that counts each geocode as a transaction.
+* Reduced the tendency for search to lock up the web browser while it is in progress.
+* Include "engines" attribute in package.json to indicate required Node and NPM version.
+* For WMS catalog items that have animated data, the initial time of the timeslider can be specified with `initialTimeSource` as `start`, `end`, `present` (nearest date to present), or with an ISO8601 date.
+* Added ability to remove csv columns from the Now Viewing panel, using `"type": "HIDDEN"` in `tableStyle.columns`.
+
 ### 3.0.0
 
 * TerriaJS-based application are now best built using Webpack instead of Browserify.
+* Injected clicked lat and long into templates under `{{terria.coords.latitude}}` and `{{terria.coords.longitude}}`.
+* Fixed an exception being thrown when selecting a region while another region highlight was still loading.
+* Added `CesiumTerrainCatalogItem` to display a 3D surface model in a supported Cesium format.
+* Added support for configuration of how time is displayed on the timeline - catalog items can now specify a dateFormat hash
+    in their configuration that has formats for `timelineTic` (what is displayed on the timeline itself) and `currentTime`
+    (which is the current time at the top-left).
+* Fixed display when `tableStyle.colorBins` is 0.
+* Added `fogSettings` option to init file to customize fog settings, introduced in Cesium 1.16.
+* Improved zooming to csvs, to include a small margin around the points.
+* Support ArcGis MapServer extents specified in a wider range of projections, including GDA MGA zones.
+* WMS legends now use a bigger font, include labels, and are anti-aliased when we can determine that the server is Geoserver and supports these options.
+* Updated to [Cesium](http://cesiumjs.org) 1.20.  Significant changes relevant to TerriaJS users include:
+    * Fixed loading for KML `NetworkLink` to not append a `?` if there isn't a query string.
+    * Fixed handling of non-standard KML `styleUrl` references within a `StyleMap`.
+    * Fixed issue in KML where StyleMaps from external documents fail to load.
+    * Added translucent and colored image support to KML ground overlays
+    * `GeoJsonDataSource` now handles CRS `urn:ogc:def:crs:EPSG::4326`
+    * Fix a race condition that would cause the terrain to continue loading and unloading or cause a crash when changing terrain providers. [#3690](https://github.com/AnalyticalGraphicsInc/cesium/issues/3690)
+    * Fix issue where the `GroundPrimitive` volume was being clipped by the far plane. [#3706](https://github.com/AnalyticalGraphicsInc/cesium/issues/3706)
+    * Fixed a reentrancy bug in `EntityCollection.collectionChanged`. [#3739](https://github.com/AnalyticalGraphicsInc/cesium/pull/3739)
+    * Fixed a crash that would occur if you added and removed an `Entity` with a path without ever actually rendering it. [#3738](https://github.com/AnalyticalGraphicsInc/cesium/pull/3738)
+    * Fixed issue causing parts of geometry and billboards/labels to be clipped. [#3748](https://github.com/AnalyticalGraphicsInc/cesium/issues/3748)
+    * Fixed bug where transparent image materials were drawn black.
+    * Fixed `Color.fromCssColorString` from reusing the input `result` alpha value in some cases.
+* Added support for time-series data sets with gaps - these are skipped when scrubbing on the timeline or playing.
 
 ### 2.3.0
 
+* Share links now contain details about the picked point, picked features and currently selected feature.
 * Reorganised the display of disclaimers so that they're triggered by `CatalogGroup` and `CatalogItem` models, which trigger `terria.disclaimerEvent`, which is listened to by DisclaimerViewModel`. `DisclaimerViewModel` must be added by the map that's using Terria.
 * Added a mechanism for hiding the source of a CatalogItem in the view info popup.
 * Added the `hideSource` flag to the init json for hiding the source of a CatalogItem in the View Info popup.
 * Fixed a bug where `CatalogMember.load` would return a new promise every time it was called, instead of retaining the one in progress.
 * Added support for the `copyrightText` property for ArcGis layers - this now shows up in info under "Copyright Text"
 * Showed a message in the catalog item info panel that informs the user that a catalog item is local and can't be shared.
+* TerriaJS now obtains its list of domains that the proxy will proxy for from the `proxyableDomains/` service.  The URL can be overridden by setting `parameters.proxyableDomainsUrl` in `config.json`.
+* Updated to [Cesium](http://cesiumjs.org) 1.19.  Significant changes relevant to TerriaJS users include:
+    * Improved KML support.
+        * Added support for `NetworkLink` refresh modes `onInterval`, `onExpire` and `onStop`. Includes support for `viewboundScale`, `viewFormat`, `httpQuery`.
+        * Added partial support for `NetworkLinkControl` including `minRefreshPeriod`, `cookie` and `expires`.
+        * Added support for local `StyleMap`. The `highlight` style is still ignored.
+        * Added support for `root://` URLs.
+        * Added more warnings for unsupported features.
+        * Improved style processing in IE.
 
 ### 2.2.1
 

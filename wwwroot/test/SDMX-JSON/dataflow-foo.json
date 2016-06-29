@@ -1,0 +1,121 @@
+{
+    "header": {
+        "id": "foo",
+        "test": true
+    },
+    "structure": {
+        "name": "foo",
+        "description": "Foo Example",
+        "dimensions": {
+            "observation": [{
+                "keyPosition": 0,
+                "id": "MEASURE",
+                "name": "Data Item",
+                "values": [{
+                    "id": "BD_2",
+                    "name": "Births"
+                }, {
+                    "id": "BD_4",
+                    "name": "Deaths"
+                }]
+            }, {
+                "keyPosition": 1,
+                "id": "REGIONTYPE",
+                "name": "Region Type",
+                "values": [{
+                    "id": "LGA_2013",
+                    "name": "Local Government Areas (2013)"
+                }]
+            }, {
+                "keyPosition": 2,
+                "id": "REGION",
+                "name": "Region",
+                "values": [{
+                    "id": "17100",
+                    "name": "Strathfield (A)"
+                }, {
+                    "id": "56520",
+                    "name": "Narrogin (T)"
+                }, {
+                    "id": "54970",
+                    "name": "Laverton (S)"
+                }, {
+                    "id": "10300",
+                    "name": "Balranald (A)"
+                }, {
+                    "id": "29399",
+                    "name": "Unincorporated Vic"
+                }]
+            }, {
+                "keyPosition": 3,
+                "id": "FREQUENCY",
+                "name": "Frequency",
+                "values": [{
+                    "id": "A",
+                    "name": "Annual"
+                }],
+                "role": "FREQ"
+            }, {
+                "keyPosition": 4,
+                "id": "TIME_PERIOD",
+                "name": "Time",
+                "values": [{
+                    "id": "2008",
+                    "name": "2008"
+                }, {
+                    "id": "2009",
+                    "name": "2009"
+                }, {
+                    "id": "2010",
+                    "name": "2010"
+                }, {
+                    "id": "2011",
+                    "name": "2011"
+                }, {
+                    "id": "2012",
+                    "name": "2012"
+                }, {
+                    "id": "2013",
+                    "name": "2013"
+                }],
+                "role": "TIME_PERIOD"
+            }]
+        },
+        "attributes": {
+            "observation": [{
+                "id": "TIME_FORMAT",
+                "name": "Time Format",
+                "values": [{
+                    "id": "P1Y",
+                    "name": "Annual"
+                }, {
+                    "id": "P1M",
+                    "name": "Annual"
+                }, {
+                    "id": "P3M",
+                    "name": "Quarterly"
+                }, {
+                    "id": "P6M",
+                    "name": "Half-yearly"
+                }, {
+                    "id": "P1D",
+                    "name": "Daily"
+                }]
+            }, {
+                "id": "OBS_STATUS",
+                "name": "Observation Status",
+                "values": [{
+                    "id": "n",
+                    "name": "not available for publication but included in totals"
+                }, {
+                    "id": "o",
+                    "name": "nil or rounded to zero"
+                }, {
+                    "id": "v",
+                    "name": "not available for publication but included in totals"
+                }]
+            }]
+        },
+        "annotations": []
+    }
+}

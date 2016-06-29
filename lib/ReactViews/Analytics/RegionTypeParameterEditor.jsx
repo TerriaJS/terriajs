@@ -2,6 +2,8 @@ import React from 'react';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import ObserveModelMixin from '../ObserveModelMixin';
 
+import Styles from './parameter-editors.scss';
+
 const RegionTypeParameterEditor = React.createClass({
     mixins: [ObserveModelMixin],
     propTypes: {
@@ -52,7 +54,7 @@ const RegionTypeParameterEditor = React.createClass({
         if(!defined(this.props.parameterValues[this.props.parameter.id])) {
             this.props.parameterValues[this.props.parameter.id] = this.getDefaultValue();
         }
-        return <select className='field'
+        return <select className={Styles.field}
                        onChange={this.onChange}
                        value={this.props.parameterValues[this.props.parameter.id] ? this.props.parameterValues[this.props.parameter.id].regionType : ''}>
                        {this.state.regionProviders.map((r, i)=>

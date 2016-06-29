@@ -1,29 +1,25 @@
 'use strict';
 import React from 'react';
-import BingMapsSearchProviderViewModel from '../../ViewModels/BingMapsSearchProviderViewModel.js';
-import CatalogItemNameSearchProviderViewModel from '../../ViewModels/CatalogItemNameSearchProviderViewModel.js';
-import GazetteerSearchProviderViewModel from '../../ViewModels/GazetteerSearchProviderViewModel.js';
 import SearchBox from '../Search/SearchBox.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
 import MobileModalWindow from './MobileModalWindow';
-import Branding from '../Branding.jsx';
+import Branding from '../SidePanel/Branding.jsx';
+import Styles from './mobile-header.scss';
+import classNames from "classnames";
+import Icon from "../Icon.jsx";
 
 const MobileHeader = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
         terria: React.PropTypes.object,
-        viewState: React.PropTypes.object.isRequired
+        viewState: React.PropTypes.object.isRequired,
+        version: React.PropTypes.string
     },
 
     getInitialState() {
-        const terria = this.props.terria;
         return {
-            menuIsOpen: false,
-            searchText: '',
-            searches: [new BingMapsSearchProviderViewModel({terria}),
-                       new GazetteerSearchProviderViewModel({terria}),
-                       new CatalogItemNameSearchProviderViewModel({terria})]
+            menuIsOpen: false
         };
     },
 
@@ -35,7 +31,7 @@ const MobileHeader = React.createClass({
         this.setState({
             menuIsOpen: !this.state.menuIsOpen
         });
-        this.props.viewState.toggleModal(false);
+        this.props.viewState.explorerPanelIsVisible = false;
         this.props.viewState.switchMobileView(null);
     },
 
@@ -51,19 +47,20 @@ const MobileHeader = React.createClass({
         location.reload();
     },
 
-    search(newText) {
-        this.setState({
-            searchText: newText
-        });
-        this.state.searches.forEach(search => search.search(newText));
+    changeSearchText(newText) {
+        this.props.viewState.searchState.unifiedSearchText = newText;
+    },
+
+    search() {
+        this.props.viewState.searchState.searchUnified();
     },
 
     toggleView(viewname) {
-        if(this.props.viewState.mobileView !== viewname) {
-            this.props.viewState.toggleModal(true);
+        if (this.props.viewState.mobileView !== viewname) {
+            this.props.viewState.explorerPanelIsVisible = true;
             this.props.viewState.switchMobileView(viewname);
         } else {
-            this.props.viewState.toggleModal(false);
+            this.props.viewState.explorerPanelIsVisible = false;
             this.props.viewState.switchMobileView(null);
         }
         this.setState({
@@ -71,37 +68,88 @@ const MobileHeader = React.createClass({
         });
     },
 
+    onClickFeedback(e) {
+        e.preventDefault();
+        this.props.viewState.feedbackFormIsVisible = true;
+        this.setState({
+            menuIsOpen: false
+        });
+    },
+
     render() {
+        const searchState = this.props.viewState.searchState;
         const nowViewingLength = this.props.terria.nowViewing.items.length;
-        return <div className='mobile__ui'>
-                    <div className='mobile__header'>
-                        <div className='group group-left'>
-                            <button type='button' onClick={this.toggleMenu} className='btn btn--menu btn--menu-mobile' title='toggle navigation'></button>
-                            <Branding onClick={this.refresh}/>
-                        </div>
-                        <div className='group group-right'>
-                            <button type='button' className='btn btn-primary btn--mobile-add' onClick={this.onMobileDataCatalogClicked}>Data</button>
-                            {(nowViewingLength > 0) && <button type='button' className='btn btn-primary btn--now-viewing ' onClick={this.onMobileNowViewingClicked}><span className='now-viewing__count'>{nowViewingLength}</span></button>}
-                            <div className={'mobile__search ' + ((this.props.viewState.mobileView === this.props.viewState.mobileViewOptions.search) ? 'is-open' : '')}>
-                                <button type='button' className='btn btn--mobile-search'
-                                        onClick={this.toggleSearch}></button>
-                                <SearchBox onSearchTextChanged={this.search}/>
-                                <button type='button' className='btn btn--mobile-search-cancel'
-                                        onClick={this.toggleSearch}>cancel</button>
+
+        let navClassName = classNames(Styles.mobileNav, {
+            [Styles.isOpen]: this.state.menuIsOpen
+        });
+
+        return (
+            <div className={Styles.ui}>
+                <div className={Styles.mobileHeader}>
+                    <Choose>
+                        <When
+                            condition={this.props.viewState.mobileView !== this.props.viewState.mobileViewOptions.search}>
+                            <div className={Styles.groupLeft}>
+                                <button type='button'
+                                        onClick={this.toggleMenu}
+                                        className={Styles.btnMenu}
+                                        title='toggle navigation'>
+                                    <Icon glyph={Icon.GLYPHS.menu}/>
+                                </button>
+                                <Branding terria={this.props.terria}
+                                          version={this.props.version}
+                                          onClick={this.refresh}
+                                />
                             </div>
-                        </div>
-                    </div>
-                    <ul className={`mobile__nav ${this.state.menuIsOpen ? 'is-open' : ''}`}>
-                        <li><a href=''>About</a></li>
-                        <li><a href=''>Related maps</a></li>
-                        <li><a href=''>Support</a></li>
-                        <li className='social'>Share</li>
-                    </ul>
-                    <MobileModalWindow terria={this.props.terria}
-                                       viewState={this.props.viewState}
-                                       searches={this.state.searches}
-                    />
-                </div>;
+                            <div className={Styles.groupRight}>
+                                <button type='button'
+                                        className={Styles.btnAdd}
+                                        onClick={this.onMobileDataCatalogClicked}>
+                                    Data
+                                    <Icon glyph={Icon.GLYPHS.increase}/>
+                                </button>
+                                <If condition={nowViewingLength > 0}>
+                                    <button type='button' className={Styles.btnNowViewing}
+                                            onClick={this.onMobileNowViewingClicked}>
+                                        <Icon glyph={Icon.GLYPHS.eye}/>
+                                        <span className={Styles.nowViewingCount}>{nowViewingLength}</span>
+                                    </button>
+                                </If>
+                                <button className={Styles.btnSearch}
+                                        type='button'
+                                        onClick={this.toggleSearch}>
+                                        <Icon glyph={Icon.GLYPHS.search}/>
+                                </button>
+                            </div>
+                        </When>
+                        <Otherwise>
+                            <div className={Styles.formSearchData}>
+                                <SearchBox searchText={searchState.unifiedSearchText}
+                                           onSearchTextChanged={this.changeSearchText}
+                                           onDoSearch={this.search}/>
+                            </div>
+                            <button type='button'
+                                    className={Styles.btnCancel}
+                                    onClick={this.toggleSearch}>
+                                cancel
+                            </button>
+                        </Otherwise>
+                    </Choose>
+                </div>
+                <ul className={navClassName}>
+                    <li><a href=''>About</a></li>
+                    <li><a href=''>Related maps</a></li>
+                    <li><a href=''>Support</a></li>
+                    <li><a href='' onClick={this.onClickFeedback}>Give feedback</a>
+                    </li>
+                </ul>
+                <MobileModalWindow terria={this.props.terria}
+                                   viewState={this.props.viewState}
+                                   searches={this.state.searches}
+                />
+            </div>
+        );
     }
 });
 module.exports = MobileHeader;

@@ -1,0 +1,33 @@
+@import '~terriajs-variables';
+@import '../Sass/common/mixins';
+
+.header{
+  composes: sm-show from '../Sass/common/_base.scss';
+  composes: clearfix from '../Sass/common/_base.scss';
+  composes: list-reset from '../Sass/common/_base.scss';
+  padding: 10px 0;
+  li{
+    display: inline-block;
+    float: left;
+    font-size: 12px;
+    label,
+    button,
+    span{
+      line-height: 1;
+    }
+    &:last-child{
+      float: right;
+    }
+  }
+}
+
+.label-badge {
+  text-align: center;
+  border: 1px solid;
+  border-radius: 2px;
+  box-sizing: content-box;
+  padding: $padding-small/2 $padding-small;
+  margin-top: 7px;
+  font-size: 8px;
+  margin-left: 10px;
+}

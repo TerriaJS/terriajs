@@ -6,6 +6,9 @@ import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 import WrappedTimeline from 'terriajs-cesium/Source/Widgets/Timeline/Timeline';
 import JulianDate from 'terriajs-cesium/Source/Core/JulianDate';
 import {formatDateTime, formatDate, formatTime} from './DateFormats';
+import Styles from '!style-loader!css-loader?modules&sourceMap!sass-loader?sourceMap!./cesium-timeline.scss';
+import defined from 'terriajs-cesium/Source/Core/defined';
+import dateFormat from 'dateformat';
 
 const CesiumTimeline = React.createClass({
     propTypes: {
@@ -17,6 +20,13 @@ const CesiumTimeline = React.createClass({
         this.cesiumTimeline = new WrappedTimeline(this.timelineContainer, this.props.terria.clock);
 
         this.cesiumTimeline.makeLabel = time => {
+            if (defined(this.props.terria.timeSeriesStack.topLayer)) {
+                const layer = this.props.terria.timeSeriesStack.topLayer;
+                if (defined(layer.dateFormat.timelineTic)) {
+                    return dateFormat(JulianDate.toDate(time), layer.dateFormat.timelineTic);
+                }
+            }
+
             const totalDays = JulianDate.daysDifference(this.props.terria.clock.stopTime, this.props.terria.clock.startTime);
             if (totalDays > 14) {
                 return formatDate(JulianDate.toDate(time), this.locale);
@@ -54,7 +64,7 @@ const CesiumTimeline = React.createClass({
 
     render() {
         return (
-            <div className="timeline__cesium-timeline" ref={ref => {this.timelineContainer = ref;}} />
+            <div className={Styles.cesiumTimeline} ref={ref => {this.timelineContainer = ref;}} />
         );
     }
 });

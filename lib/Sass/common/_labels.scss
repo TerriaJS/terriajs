@@ -1,0 +1,15 @@
+@import '~terriajs-variables';
+
+.label {
+  vertical-align: middle;
+  padding: $padding;
+  display: block;
+  line-height: $btn-default-line-height;
+}
+
+.no-results {
+  padding: $padding !important;
+  margin-bottom: $padding;
+}
+
+

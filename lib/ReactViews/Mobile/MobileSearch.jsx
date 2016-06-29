@@ -3,9 +3,9 @@ import defined from 'terriajs-cesium/Source/Core/defined';
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
 import SearchHeader from '../Search/SearchHeader.jsx';
-import LocationItem from '../LocationItem.jsx';
+import SearchResult from '../Search/SearchResult.jsx';
 import DataCatalogMember from '../DataCatalog/DataCatalogMember.jsx';
-import classNames from 'classnames';
+import Styles from './mobile-search.scss';
 
 // A Location item when doing Bing map searvh or Gazetter search
 const MobileSearch = React.createClass({
@@ -13,74 +13,69 @@ const MobileSearch = React.createClass({
 
     propTypes: {
         viewState: React.PropTypes.object,
-        terria: React.PropTypes.object,
-        searches: React.PropTypes.array
+        terria: React.PropTypes.object
     },
 
-    getInitialState() {
-        return {
-            searchResultType: 0,
-        };
+    onLocationClick(result) {
+        result.clickAction();
+        // Close modal window
+        this.props.viewState.switchMobileView(null);
+
     },
 
-    toggleSearchResults(index) {
-        this.setState({
-            searchResultType: index
-        });
+    render() {
+        return (
+            <div className={Styles.mobileSearch}>
+                <div className={Styles.location}>
+                    {this.renderLocationResult()}
+                </div>
+                <div className={Styles.data}>
+                    {this.renderDataCatalogResult()}
+                </div>
+            </div>
+        );
     },
 
     renderLocationResult() {
-        return this.props.searches
-                        .filter(search=> search.constructor.name !== 'CatalogItemNameSearchProviderViewModel')
-                        .filter(search => search.isSearching || (search.searchResults && search.searchResults.length))
-                        .map(search => (<div key={search.constructor.name}>
-                                        <label className='label label-sub-heading'>{search.name}</label>
-                                        <SearchHeader {...search} />
-                                        <ul className=' mobile-search-results search-results-items'>
-                                            { search.searchResults.map((result, i) => (
-                                                <LocationItem key={i} item={result}/>
-                                            ))}
-                                        </ul>
-                                    </div>));
+        const that = this;
+        const searchState = this.props.viewState.searchState;
+        return searchState.unifiedSearchProviders
+            .filter(search=> search.constructor.name !== 'CatalogItemNameSearchProviderViewModel')
+            .filter(search => search.isSearching || (search.searchResults && search.searchResults.length))
+            .map(search => (<div key={search.constructor.name}>
+                <label className={Styles.label}>Locations & Official Place Names</label>
+                <SearchHeader searchProvider={search} />
+                <ul className={Styles.results}>
+                    { search.searchResults.map((result, i) => (
+                        <SearchResult key={i} name={result.name} clickAction={that.onLocationClick.bind(that, result)} theme="light" />
+                    ))}
+                </ul>
+            </div>));
     },
 
     renderDataCatalogResult() {
-        const search = this.props.searches
-                      .filter(s=> s.constructor.name === 'CatalogItemNameSearchProviderViewModel')[0];
+        const searchState = this.props.viewState.searchState;
+        const search = searchState.unifiedSearchProviders
+            .filter(s=> s.constructor.name === 'CatalogItemNameSearchProviderViewModel')[0];
 
         const items = search.searchResults.map(result => result.catalogItem);
-
-        return <ul className='data-catalog mobile-search-results '>
-                    <SearchHeader {...search} />
+        if (searchState.unifiedSearchText.length) {
+            return <div key={search.constructor.name}>
+                <label className={Styles.label}>{search.name}</label>
+                <ul className={Styles.results}>
+                    <SearchHeader searchProvider={search}/>
                     {items.filter(defined)
-                          .map((item, i) => (
+                        .map((item, i) => (
                             <DataCatalogMember viewState={this.props.viewState}
                                                member={item}
                                                manageIsOpenLocally={search.isSearching}
                                                key={item.uniqueId}
                             />
                         ))}
-                </ul>;
-
-    },
-
-    render() {
-        return (
-            <div className="search--mobile">
-            <div className='search-results-toggle'>
-                <button type='button'
-                        className={classNames('search--location', 'btn', {'is-active': this.state.searchResultType === 0})}
-                        onClick={this.toggleSearchResults.bind(this, 0)}>Location
-                </button>
-                <button type='button'
-                        className={classNames('search--data', 'btn', {'is-active': this.state.searchResultType === 1})}
-                        onClick={this.toggleSearchResults.bind(this, 1)}>Data
-                </button>
-            </div>
-                {this.state.searchResultType === 0 && this.renderLocationResult()}
-                {this.state.searchResultType === 1 && this.renderDataCatalogResult()}
-            </div>
-        );
+                </ul>
+            </div>;
+        }
+        return null;
     }
 });
 

@@ -1,0 +1,56 @@
+@import '../../Sass/common/mixins';
+@import '~terriajs-variables';
+
+.workBench {
+  position: relative;
+}
+.workbenchEmpty{
+  padding: $padding;
+  opacity: 0.8;
+  @media print{
+    display: none;
+  }
+  svg{
+    height: 25px;
+    width: 25px;
+    display: inline-block;
+    fill: #ffffff;
+    vertical-align: bottom;
+  }
+}
+.header {
+    padding: 0 $padding-small;
+    border-bottom: 1px solid $overlay;
+    background: $dark;
+    @media print{
+      display: none;
+    }
+}
+
+.body {
+    padding: 0 $padding-small;
+    overflow-y: auto;
+    height: calc(100vh - #{$workbench-header + $logo-height});
+    @media print{
+      height: auto;
+    }
+}
+
+.addData {
+  margin: $padding-small 0;
+}
+
+.button {
+  composes: btn-primary from '../../Sass/common/_buttons.scss';
+  line-height: $input-height;
+  text-transform: uppercase;
+  svg{
+    position: absolute;
+    left: $padding;
+    height: $input-height;
+    width: $input-height;
+    display: block;
+    fill: #ffffff;
+  }
+}
+

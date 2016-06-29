@@ -1,0 +1,40 @@
+{
+    "catalog": [{
+        "name": "Time series tests",
+        "type": "group",
+        "isOpen": true,
+        "items": [
+            {
+                "name": "WMS time series (solar hourly direct, BOM)",
+                "layers": "Mean direct normal exposure",
+                "info": [
+                    {
+                        "name": "Licensing, Terms & Conditions",
+                        "content": "[Licence](http://creativecommons.org/licenses/by/3.0/au/)"
+                    }
+                ],
+                "dataCustodian": "[Australian Bureau of Meteorology](http://www.bom.gov.au/water/geofabric/)",
+                "url": "http://neii.bom.gov.au/services/solarclim/wms/data/monClim_dirNorExp1Hou.nc?service=WMS&version=1.3.0&request=GetCapabilities&LAYER=mean_exposure",
+                "type": "wms",
+                "opacity": "1.0",
+                "displayDuration": 360,
+                "dateFormat": {
+                    "timelineTic": "mmmm",
+                    "currentTime": "mmmm HH:MM:ss"
+                }
+            },
+            {
+                "name": "Lat lon CSV with duration of 1 hour",
+                "type": "csv",
+                "url": "build/TerriaJS/test/csv/lat_lon_date_value.csv",
+                "tableStyle": {
+                    "displayDuration": 60
+                },
+                "dateFormat": {
+                    "timelineTic": "HH:MM",
+                    "currentTime": "mmmm HH:MM:ss"
+                }
+            }
+        ]
+    }]
+}

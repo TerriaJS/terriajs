@@ -1,0 +1,63 @@
+@import '~terriajs-variables';
+@import '../../../../Sass/common/mixins';
+
+.share-panel {
+}
+
+.dropdown-inner {
+  width: $share-panel-width;
+  @include transform-origin(50%, top);
+}
+
+.heading-label {
+
+}
+
+.btn--share {
+  composes: btn--share from '../../../../Sass/common/_buttons.scss';
+}
+
+.btn--checkbox-off {
+  composes: btn from '../../../../Sass/common/_buttons.scss';
+  composes: btn--checkbox-off from '../../../../Sass/common/_buttons.scss';
+}
+
+.btn--checkbox-on {
+  composes: btn from '../../../../Sass/common/_buttons.scss';
+  composes: btn--checkbox-on from '../../../../Sass/common/_buttons.scss';
+}
+
+.img--share {
+  width: 100%;
+  height: $share-panel-width / 4*3;
+  overflow: hidden;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+.image--link {
+  // composes: img--link from '../../../../Sass/common/_icons.scss';
+}
+
+.paragraph {
+  margin: $padding 0;
+  display: block;
+}
+
+.field {
+  composes: field from '../../../../Sass/common/_form.scss';
+
+  color: #ddd;
+  background: $overlay;
+}
+
+.shorten-url {
+  .btn {
+    padding: 0;
+    &:before {
+      display: inline-block;
+      padding-right: $padding-small;
+    }
+  }
+}

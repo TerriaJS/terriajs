@@ -1,0 +1,28 @@
+@import '~terriajs-variables';
+@import '../../../Sass/common/mixins';
+
+.myLocation{
+  position: fixed;
+  bottom: $input-height + $padding;
+  right: 2vw;
+  @media screen and (min-width: $sm){
+    position: absolute;
+    right: 28px;
+    top: 170px;
+  }
+  @media print{
+    display: none;
+  }
+}
+.btn{
+    border-radius: 50%;
+    display: block;
+    background: #fff;
+    color: $dark;
+    height: 40px;
+    width: 40px;
+    svg{
+      height: 40px;
+      width: 40px;
+    }
+  }

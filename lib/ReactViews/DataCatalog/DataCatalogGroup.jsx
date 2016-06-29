@@ -1,10 +1,8 @@
-'use strict';
-
-import DataCatalogMember from './DataCatalogMember.jsx';
-import Loader from '../Loader.jsx';
-import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
-import classNames from 'classnames';
+
+import DataCatalogMember from './DataCatalogMember';
+import CatalogGroup from './CatalogGroup';
+import ObserveModelMixin from '../ObserveModelMixin';
 
 const DataCatalogGroup = React.createClass({
     mixins: [ObserveModelMixin],
@@ -51,45 +49,38 @@ const DataCatalogGroup = React.createClass({
         this.props.group.toggleOpen();
     },
 
-    render() {
-        const group = this.props.group;
-        let contents = null;
-        if (this.isOpen()) {
-            contents = (
-                <ul className="data--catalog-group">
-                    {this.renderGroup(group)}
-                </ul>
-            );
-        }
-        return (
-            <li>
-                <button type='button' className={classNames('btn', 'btn--catalogue', {'is-open': this.isOpen()})} onClick={this.toggleOpen}>
-                    <i className={`btn--group-indicator ${this.isOpen() ? 'btn--folder-open' : 'btn--folder'}`}/>
-                    {group.name}
-                </button>
-                {contents}
-            </li>
-        );
+    clickGroup() {
+        this.toggleOpen();
+        this.props.viewState.viewCatalogItem(this.props.group);
     },
 
-    renderGroup(group) {
-        const children = group.items.map(item => (
-            <DataCatalogMember
-                key={item.uniqueId}
-                member={item}
-                viewState={this.props.viewState}
-                userData={this.props.userData}
-                overrideOpen={this.props.manageIsOpenLocally}
-            />
-        ));
+    isTopLevel() {
+        const parent = this.props.group.parent;
+        return !parent || !parent.parent;
+    },
 
-        if (group.isLoading) {
-            children.push(<li key="loader"><Loader /></li>);
-        } else if (group.items.length === 0) {
-            children.push(<li className="label no-results" key="empty"> No data </li>);
-        }
+    render() {
+        const group = this.props.group;
 
-        return children;
+        return (
+            <CatalogGroup
+                text={group.name}
+                topLevel={this.isTopLevel()}
+                open={this.isOpen()}
+                loading={group.isLoading}
+                emptyMessage="This group is empty"
+                onClick={this.clickGroup}>
+                <For each="item" of={group.items}>
+                    <DataCatalogMember
+                        key={item.uniqueId}
+                        member={item}
+                        viewState={this.props.viewState}
+                        userData={this.props.userData}
+                        overrideOpen={this.props.manageIsOpenLocally}
+                    />
+                </For>
+            </CatalogGroup>
+        );
     }
 });
 

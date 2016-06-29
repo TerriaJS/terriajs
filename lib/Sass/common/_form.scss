@@ -1,0 +1,29 @@
+@import '~terriajs-variables';
+
+.field {
+  border-style: solid;
+  border-width: 1px;
+  border-color: $field-border;
+  border-radius: $radius-small;
+  width: 100%;
+}
+
+.field:focus,
+.field.is-focused {
+  outline: none;
+  border-color: rgba($color-primary, 0.5);
+  box-shadow: none;
+}
+
+.field:disabled,
+.field.is-disabled {
+  background-color: rgba(0, 0, 0, .125);
+  opacity: .5;
+}
+
+.field:read-only:not(select),
+.field.is-read-only {
+  background-color: rgba(0, 0, 0, .125);
+}
+
+

@@ -10,6 +10,7 @@ const getTimestamp = require('terriajs-cesium/Source/Core/getTimestamp');
 const Matrix4 = require('terriajs-cesium/Source/Core/Matrix4');
 const Ray = require('terriajs-cesium/Source/Core/Ray');
 const Transforms = require('terriajs-cesium/Source/Core/Transforms');
+import Styles from './compass.scss';
 
 // the compass on map
 const Compass = React.createClass({
@@ -27,6 +28,13 @@ const Compass = React.createClass({
 
     componentDidMount() {
         viewerChange(this);
+    },
+
+    componentWillUnmount() {
+        document.removeEventListener('mousemove', this.orbitMouseMoveFunction, false);
+        document.removeEventListener('mouseup', this.orbitMouseUpFunction, false);
+        this._unsubscribeFromClockTick && this._unsubscribeFromClockTick();
+        this._unsubscribeFromPostRender && this._unsubscribeFromPostRender();
     },
 
     handleMouseDown(e) {
@@ -51,6 +59,7 @@ const Compass = React.createClass({
             return true;
         }
     },
+
     handleDoubleClick(e) {
         const scene = this.props.terria.cesium.scene;
         const camera = scene.camera;
@@ -101,11 +110,13 @@ const Compass = React.createClass({
             opacity: ''
         };
 
+        const description = 'Drag outer ring: rotate view.\nDrag inner gyroscope: free orbit.\nDouble-click: reset view.\nTIP: You can also free orbit by holding the CTRL key and dragging the map.';
+
         return (
-            <div className='compass' onMouseDown ={this.handleMouseDown} onDoubleClick ={this.handleDoubleClick} onMouseUp ={this.resetRotater}>
-              <div className='compass--outer-ring' style={outerCircleStyle}></div>
-              <div className='compass--inner-ring' title='Click and drag to rotate the camera'></div>
-              <div className='compass--rotation-marker' style={rotationMarkerStyle}></div>
+            <div className={Styles.compass} title ={description} onMouseDown ={this.handleMouseDown} onDoubleClick ={this.handleDoubleClick} onMouseUp ={this.resetRotater}>
+              <div className={Styles.outerRing} style={outerCircleStyle}></div>
+              <div className={Styles.innerRing} title='Click and drag to rotate the camera'></div>
+              <div className={Styles.rotationMarker} style={rotationMarkerStyle}></div>
             </div>
             );
     }
@@ -302,7 +313,7 @@ function orbit(viewModel, compassElement, cursorVector) {
 
     document.addEventListener('mousemove', viewModel.orbitMouseMoveFunction, false);
     document.addEventListener('mouseup', viewModel.orbitMouseUpFunction, false);
-    viewModel.props.terria.clock.onTick.addEventListener(viewModel.orbitTickFunction);
+    viewModel._unsubscribeFromClockTick = viewModel.props.terria.clock.onTick.addEventListener(viewModel.orbitTickFunction);
 
     updateAngleAndOpacity(cursorVector, compassElement.getBoundingClientRect().width);
 }
@@ -312,20 +323,20 @@ function orbit(viewModel, compassElement, cursorVector) {
  */
 function viewerChange(viewModel) {
     if (defined(viewModel.props.terria.cesium)) {
-        if (viewModel._unsubcribeFromPostRender) {
-            viewModel._unsubcribeFromPostRender();
-            viewModel._unsubcribeFromPostRender = undefined;
+        if (viewModel._unsubscribeFromPostRender) {
+            viewModel._unsubscribeFromPostRender();
+            viewModel._unsubscribeFromPostRender = undefined;
         }
 
-        viewModel._unsubcribeFromPostRender = viewModel.props.terria.cesium.scene.postRender.addEventListener(function() {
+        viewModel._unsubscribeFromPostRender = viewModel.props.terria.cesium.scene.postRender.addEventListener(function() {
             viewModel.setState({
                 heading: viewModel.props.terria.cesium.scene.camera.heading
             });
         });
     } else {
-        if (viewModel._unsubcribeFromPostRender) {
-            viewModel._unsubcribeFromPostRender();
-            viewModel._unsubcribeFromPostRender = undefined;
+        if (viewModel._unsubscribeFromPostRender) {
+            viewModel._unsubscribeFromPostRender();
+            viewModel._unsubscribeFromPostRender = undefined;
         }
         viewModel.showCompass = false;
     }
