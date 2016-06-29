@@ -147,6 +147,23 @@ describe('FeatureInfoSection', function() {
         expect(terria.clock.onTick.numberOfListeners).toEqual(0);  // we do want to be sure that if this is the implementation, we tidy up after ourselves.
     });
 
+    it('does not set a clock event listener if no description or properties', function() {
+        const emptyFeature = new Entity({
+            name: 'Empty'
+        });
+        const renderer = ReactTestUtils.createRenderer();
+        const section = <FeatureInfoSection feature={emptyFeature} isOpen={true} clock={terria.clock} viewState={viewState} />;
+        renderer.render(section);
+        expect(terria.clock.onTick.numberOfListeners).toEqual(0);
+    });
+
+    it('does not set a clock event listener if no description and constant properties', function() {
+        const renderer = ReactTestUtils.createRenderer();
+        const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} viewState={viewState} />;
+        renderer.render(section);
+        expect(terria.clock.onTick.numberOfListeners).toEqual(0);
+    });
+
     it('handles features with no properties', function() {
         feature = new Entity({
             name: 'Foot',

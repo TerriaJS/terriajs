@@ -131,15 +131,22 @@ const FeatureInfoSection = React.createClass({
 
     isConstant() {
         // The info is constant if:
-        // No template is provided, and feature.description is defined and constant,
+        // 1. There is no info (ie. no description and no properties).
+        // 2. A template is provided and all feature.properties are constant.
         // OR
-        // A template is provided and all feature.properties are constant.
+        // 3. No template is provided, and feature.description is either not defined, or defined and constant.
         // If info is NOT constant, we need to keep updating the description.
         const feature = this.props.feature;
-        const template = this.props.template;
-        let isConstant = !defined(template) && defined(feature.description) && feature.description.isConstant;
-        isConstant = isConstant || (defined(template) && areAllPropertiesConstant(feature.properties));
-        return isConstant;
+        if (!defined(feature.description) && !defined(feature.properties)) {
+            return true;
+        }
+        if (defined(this.props.template)) {
+            return areAllPropertiesConstant(feature.properties);
+        }
+        if (defined(feature.description)) {
+            return feature.description.isConstant; // This should always be a "Property" eg. a ConstantProperty.
+        }
+        return true;
     },
 
     toggleRawData() {
