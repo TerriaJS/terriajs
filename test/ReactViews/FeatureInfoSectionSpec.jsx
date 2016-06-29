@@ -184,7 +184,8 @@ describe('FeatureInfoSection', function() {
         const result = getShallowRenderedOutput(section);
         const divs = findAllWithPropsChildEqualTo(result, 'countdown');
         expect(divs.length).toEqual(1);
-        expect(divs[0].props.style.background).toEqual('rgb(170, 187, 204)'); // Note #ABC is converted by IE11 to rgb(170, 187, 204), so just test that directly.
+        // Note #ABC is converted by IE11 to rgb(170, 187, 204), so just test that directly. Also IE11 adds space to the front, so strip all spaces out.
+        expect(divs[0].props.style.background.replace(/ /g,'')).toEqual('rgb(170,187,204)');
     });
 
     it('does not break when html format feature info has style tag', function() {
