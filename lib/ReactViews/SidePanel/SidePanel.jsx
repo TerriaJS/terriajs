@@ -75,7 +75,10 @@ const SidePanel = React.createClass({
                 <div className={Styles.body}>
                     <Choose>
                         <When condition={searchState.locationSearchText.length > 0 && searchState.showLocationSearch}>
-                            <SidebarSearch viewState={this.props.viewState} isWaitingForSearchToStart={searchState.isWaitingToStartLocationSearch} />
+                            <SidebarSearch
+                                terria={this.props.terria}
+                                viewState={this.props.viewState}
+                                isWaitingForSearchToStart={searchState.isWaitingToStartLocationSearch} />
                         </When>
                         <When
                             condition={this.props.terria.nowViewing.items && this.props.terria.nowViewing.items.length > 0}>
