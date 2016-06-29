@@ -1,12 +1,11 @@
 @import '~terriajs-variables';
 @import '../../../Sass/common/mixins';
-@import './dropdown-panel-inner-mixin';
 
 .setting-panel {
 }
 
 .dropdown-inner {
-  @include dropdown-inner($setting-panel, $setting-panel/2 - 11px);
+  width: $setting-panel;
 }
 
 .viewer-selector,
@@ -61,5 +60,5 @@
 
 
 .btn--dropdown {
-  composes: btn--map from '../../../Sass/common/_buttons.scss';
+  composes: btn--sphere from '../../../Sass/common/_buttons.scss';
 }
