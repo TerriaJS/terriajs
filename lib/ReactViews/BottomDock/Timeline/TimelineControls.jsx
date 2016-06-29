@@ -96,7 +96,7 @@ const TimelineControls = React.createClass({
                 </button>
                 <button type='button' className={classnames(Styles.timelineControl, {[Styles.isActive]: this.isLooping()})}
                         onClick={this.toggleLoop} title="Loop at the end">
-                    <Icon glyph={Icon.GLYPHS.refresh}/>
+                    <Icon glyph={Icon.GLYPHS.loop}/>
                 </button>
             </div>
         );

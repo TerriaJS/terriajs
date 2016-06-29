@@ -112,10 +112,12 @@ const MobileHeader = React.createClass({
                                 <If condition={nowViewingLength > 0}>
                                     <button type='button' className={Styles.btnNowViewing}
                                             onClick={this.onMobileNowViewingClicked}>
+                                        <Icon glyph={Icon.GLYPHS.eye}/>
                                         <span className={Styles.nowViewingCount}>{nowViewingLength}</span>
                                     </button>
                                 </If>
-                                <button type='button'
+                                <button className={Styles.btnSearch}
+                                        type='button'
                                         onClick={this.toggleSearch}>
                                         <Icon glyph={Icon.GLYPHS.search}/>
                                 </button>
