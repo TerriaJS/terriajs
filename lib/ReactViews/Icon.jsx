@@ -47,7 +47,7 @@ const Icon = React.createClass({
         style: React.PropTypes.object
     },
     render() {
-        let glyph = this.props.glyph;
+        const glyph = this.props.glyph;
         return (
             <svg style= {this.props.style} className="icon" dangerouslySetInnerHTML={{__html: '<use xlink:href="' + glyph + '"></use>'}}/>
         );
