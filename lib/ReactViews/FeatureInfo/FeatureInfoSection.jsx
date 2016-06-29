@@ -150,6 +150,11 @@ const FeatureInfoSection = React.createClass({
         if (defined(templateData)) {
             delete templateData._terria_columnAliases;
         }
+        const showRawData = !this.hasTemplate() || this.state.showRawData;
+        let rawDataDescription;
+        if (showRawData) {
+            rawDataDescription = this.descriptionFromFeature();
+        }
 
         return (
             <li className={classNames(Styles.section)}>
@@ -165,8 +170,13 @@ const FeatureInfoSection = React.createClass({
                             </button>
                         </If>
 
-                        <If condition={!this.hasTemplate() || this.state.showRawData}>
-                            {renderMarkdownInReact(this.descriptionFromFeature(), this.props.catalogItem, this.props.feature)}
+                        <If condition={showRawData}>
+                            <If condition={defined(rawDataDescription)}>
+                                {renderMarkdownInReact(rawDataDescription, this.props.catalogItem, this.props.feature)}
+                            </If>
+                            <If condition={!defined(rawDataDescription)}>
+                                <div ref="no-info" key="no-info">No information available.</div>
+                            </If>
                             <If condition={defined(templateData)}>
                                 <FeatureInfoDownload key='download'
                                     viewState={this.props.viewState}

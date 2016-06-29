@@ -4,7 +4,7 @@
 // import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 import React from 'react';
 import ReactTestUtils from 'react-addons-test-utils';
-import {findAllWithType, findAllWithClass, findAll} from 'react-shallow-testutils';
+import {findAllWithType, findAllWithClass, findWithRef, findAll} from 'react-shallow-testutils';
 
 import Cartographic from 'terriajs-cesium/Source/Core/Cartographic';
 import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
@@ -203,6 +203,16 @@ describe('FeatureInfoSection', function() {
         const result = getShallowRenderedOutput(section);
         expect(findAllEqualTo(result, 'Foo').length).toEqual(1);
         expect(findAllEqualTo(result, 'BAR').length).toEqual(1);
+    });
+
+    it('does not break when there are neither properties nor description', function() {
+        feature = new Entity({
+            name: 'Vapid'
+        });
+        const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} viewState={viewState} />;
+        const result = getShallowRenderedOutput(section);
+        expect(findAllEqualTo(result, 'Vapid').length).toEqual(1);
+        expect(findWithRef(result, 'no-info')).toBeDefined();
     });
 
     describe('templating', function() {
