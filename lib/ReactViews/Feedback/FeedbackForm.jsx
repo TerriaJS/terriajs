@@ -4,6 +4,7 @@ import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
 import sendFeedback from '../../Models/sendFeedback.js';
 import Styles from './feedback-form.scss';
+import Icon from "../Icon.jsx";
 import classNames from "classnames";
 
 const FeedbackForm = React.createClass({
@@ -73,7 +74,9 @@ const FeedbackForm = React.createClass({
                 <div className={feedbackFormClassNames}>
                     <div className={Styles.header}>
                         <h4 className={Styles.title}>Feedback</h4>
-                        <button className={Styles.btnClose} onClick ={this.onDismiss} title='close feedback'></button>
+                        <button className={Styles.btnClose} onClick ={this.onDismiss} title='close feedback'>
+                            <Icon glyph={Icon.GLYPHS.close}/>
+                        </button>
                     </div>
                     <form onSubmit={this.onSubmit}>
                       <div className={Styles.description}>We would love to hear from you!</div>

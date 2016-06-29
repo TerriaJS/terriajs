@@ -2,6 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 
 import Loader from '../Loader.jsx';
+import Icon from "../Icon.jsx";
 
 import Styles from './data-catalog-group.scss';
 
@@ -21,19 +22,10 @@ function CatalogGroup(props) {
                         )}
                     onClick={props.onClick}>
                 <If condition={!props.topLevel}>
-                    <i className={classNames(
-                            Styles.iconFolder,
-                            {[Styles.iconFolderOpen]: props.open},
-                            {[Styles.iconFolderClosed]: !props.open})}
-                    />
+                 <span className={Styles.folder}>{props.open ? <Icon glyph={Icon.GLYPHS.folderOpen}/> : <Icon glyph={Icon.GLYPHS.folder}/>}</span>
                 </If>
                 {props.text}
-                <i className={classNames(
-                        Styles.caret,
-                        {[Styles.caretOpen]: props.open},
-                        {[Styles.caretClosed]: !props.open},
-                        {[Styles.caretLowerLevel]: !props.topLevel}
-                    )}/>
+                <span className={Styles.caret}>{props.open ? <Icon glyph={Icon.GLYPHS.opened}/> : <Icon glyph={Icon.GLYPHS.closed}/>}</span>
             </button>
             <If condition={props.open}>
                 <ul className={classNames(

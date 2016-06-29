@@ -3,9 +3,9 @@
   "version": "3.4.0",
   "description": "Geospatial data visualization platform.",
   "license": "Apache-2.0",
-  "engines" : {
-    "node" : ">= 5.10.0",
-    "npm":  ">= 3.0.0"
+  "engines": {
+    "node": ">= 5.10.0",
+    "npm": ">= 3.0.0"
   },
   "repository": {
     "type": "git",
@@ -87,6 +87,7 @@
     "react-addons-test-utils": "0.14.7",
     "react-dom": "0.14.x",
     "react-shallow-testutils": "^1.0.0",
+    "svg-sprite-loader": "0.0.23",
     "socket.io": "1.4.7",
     "terriajs-jasmine-ajax": "^3.2.1",
     "terriajs-server": "^1.4.1",
