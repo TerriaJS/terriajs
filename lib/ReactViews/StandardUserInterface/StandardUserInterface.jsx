@@ -1,6 +1,4 @@
-
 import React from 'react';
-
 import arrayContains from '../../Core/arrayContains';
 import Branding from './../SidePanel/Branding.jsx';
 import DisclaimerHandler from '../../ReactViewModels/DisclaimerHandler';
@@ -20,7 +18,6 @@ import SidePanel from './../SidePanel/SidePanel.jsx';
 import Styles from './standard-user-interface.scss';
 
 const StandardUserInterface = React.createClass({
-
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -44,8 +41,6 @@ const StandardUserInterface = React.createClass({
 
     componentWillMount() {
         const that = this;
-
-        // TO DO(chloe): change window into a container
         this.dragOverListener = e => {
             if (!e.dataTransfer.types || !arrayContains(e.dataTransfer.types, 'Files')) {
                 return;

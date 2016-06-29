@@ -15,7 +15,6 @@
 
 .btn--share {
   composes: btn--share from '../../../../Sass/common/_buttons.scss';
-  padding-left: $padding*3.5;
 }
 
 .btn--checkbox-off {
@@ -38,7 +37,7 @@
 }
 
 .image--link {
-  composes: img--link from '../../../../Sass/common/_icons.scss';
+  // composes: img--link from '../../../../Sass/common/_icons.scss';
 }
 
 .paragraph {

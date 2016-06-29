@@ -184,6 +184,10 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
             path.resolve(terriaJSBasePath),
             path.resolve(cesiumDir)
         ],
+        exclude: [
+            path.resolve(terriaJSBasePath, 'wwwroot', 'images', 'icons'),
+            path.resolve(terriaJSBasePath, 'wwwroot', 'fonts')
+        ],
         loader: require.resolve('url-loader'),
         query: {
             limit: 8192
@@ -204,6 +208,12 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
         test: /\.(ttf|eot|svg)(\?.+)?$/,
         include: path.resolve(terriaJSBasePath, 'wwwroot', 'fonts'),
         loader: require.resolve('file-loader')
+    });
+
+    config.module.loaders.push({
+        test: /\.svg$/,
+        include: path.resolve(terriaJSBasePath, 'wwwroot', 'images', 'icons'),
+        loader: require.resolve('svg-sprite-loader')
     });
 
     config.devServer = config.devServer || {

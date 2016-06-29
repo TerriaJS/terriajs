@@ -2,6 +2,8 @@
 
 import React from 'react';
 import classNames from 'classnames';
+import Icon from "../../Icon.jsx";
+
 import Styles from './dropdown-panel.scss';
 
 import defined from 'terriajs-cesium/Source/Core/defined';
@@ -124,6 +126,7 @@ const DropdownPanel = React.createClass({
                         className={classNames(Styles.button, this.props.theme.btn)}
                         title={this.props.btnTitle}
                         ref={element => this.buttonElement = element}>
+                    <Icon glyph={Icon.GLYPHS[this.props.theme.icon]}/>
                     {this.props.btnText}
                 </button>
                 <If condition={this.state.isOpen}>

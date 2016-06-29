@@ -29,14 +29,36 @@
 }
 
 .btn--base-map {
-  composes: btn--image from '../../../Sass/common/_buttons.scss';
+    padding: 0;
+    position: relative;
+    display: block;
+    line-height: 1.2;
+    border: 1px solid transparent;
+    img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    &:hover,
+    &:focus {
+      border: $border-style;
+    }
+    svg{
+      position: absolute;
+      right: 0;
+      top: 0;
+      fill: #ffffff;
+      z-index: 1;
+      width: 22px;
+      border-radius: $radius-small;
+      height: 22px;
+    }
+  &.is-active {
+  border: 2px solid $turquoise-blue;
+  }
 }
 
-.is-active {
-  composes: is-active from '../../../Sass/common/_buttons.scss';
-}
 
 .btn--dropdown {
-  padding-left: $padding*3.5;
   composes: btn--sphere from '../../../Sass/common/_buttons.scss';
 }

@@ -81,15 +81,5 @@
   &:focus {
     border: 0;
   }
-
-  &:before {
-    display: inline-block;
-    padding-right: $padding-small;
-    line-height: 1;
-    font-size: 1.5rem;
-    position: absolute;
-    left: 5px;
-    top: 4px;
-  }
 }
 

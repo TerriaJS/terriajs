@@ -1,7 +1,9 @@
+import BadgeBar from '../BadgeBar.jsx';
+import Icon from "../Icon.jsx";
+import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
 import WorkbenchList from './WorkbenchList.jsx';
-import ObserveModelMixin from '../ObserveModelMixin';
-import BadgeBar from '../BadgeBar.jsx';
+
 import Styles from './workbench.scss';
 
 const Workbench = React.createClass({
@@ -21,7 +23,7 @@ const Workbench = React.createClass({
             <div className={Styles.workbench}>
                 <BadgeBar label="Data Sets" badge={this.props.terria.nowViewing.items.length}>
                     <button type='button' onClick={this.removeAll} className={Styles.removeButton}>
-                        Remove All <i className={Styles.iconRemove}/>
+                        Remove All <Icon glyph={Icon.GLYPHS.remove}/>
                     </button>
                 </BadgeBar>
                 <WorkbenchList viewState={this.props.viewState} terria={this.props.terria}/>

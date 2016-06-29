@@ -14,6 +14,7 @@ import formatNumberForLocale from '../../Core/formatNumberForLocale';
 import ObserveModelMixin from '../ObserveModelMixin';
 import propertyGetTimeValues from '../../Core/propertyGetTimeValues';
 import renderMarkdownInReact from '../../Core/renderMarkdownInReact';
+import Icon from "../Icon.jsx";
 
 import Styles from './feature-info-section.scss';
 
@@ -170,8 +171,9 @@ const FeatureInfoSection = React.createClass({
 
         return (
             <li className={classNames(Styles.section)}>
-                <button type='button' onClick={this.clickHeader} className={classNames(Styles.title, {[Styles.btnIsOpen]: this.props.isOpen})}>
+                <button type='button' onClick={this.clickHeader} className={Styles.title}>
                     {fullName}
+                    {this.props.isOpen ? <Icon glyph={Icon.GLYPHS.opened}/> : <Icon glyph={Icon.GLYPHS.closed}/>}
                 </button>
                 <If condition={this.props.isOpen}>
                     <section className={Styles.content}>
