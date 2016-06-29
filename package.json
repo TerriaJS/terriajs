@@ -58,6 +58,7 @@
   "devDependencies": {
     "babel-eslint": "^6.0.2",
     "css-loader": "^0.23.1",
+    "electron-prebuilt": "^1.2.3",
     "eslint": "^2.7.0",
     "eslint-plugin-jsx-control-statements": "2.1.1",
     "eslint-plugin-react": "^4.3.0",
@@ -71,6 +72,7 @@
     "karma-browserstack-launcher": "^0.1.10",
     "karma-chrome-launcher": "^0.2.3",
     "karma-detect-browsers": "^2.0.2",
+    "karma-electron-launcher": "^0.1.0",
     "karma-firefox-launcher": "^0.1.7",
     "karma-ie-launcher": "^0.2.0",
     "karma-jasmine": "^0.3.8",
