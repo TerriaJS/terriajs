@@ -8,7 +8,7 @@ import DragDropFile from './../DragDropFile.jsx';
 import ExplorerWindow from './../ExplorerWindow/ExplorerWindow.jsx';
 import FeatureInfoPanel from './../FeatureInfo/FeatureInfoPanel.jsx';
 import FeedbackForm from '../Feedback/FeedbackForm.jsx';
-import MapContainer from './MapColumn.jsx';
+import MapColumn from './MapColumn.jsx';
 import MapInteractionWindow from './../Notification/MapInteractionWindow.jsx';
 import MapNavigation from './../Map/MapNavigation.jsx';
 import MobileHeader from './../Mobile/MobileHeader.jsx';
@@ -104,7 +104,7 @@ const StandardUserInterface = React.createClass({
 
                         <section className={Styles.map}>
                             <ProgressBar terria={terria}/>
-                            <MapContainer terria={terria} viewState={this.props.viewState} />
+                            <MapColumn terria={terria} viewState={this.props.viewState} />
                             <If condition={!this.props.viewState.useSmallScreenInterface}>
                                 <main>
                                     <ExplorerWindow terria={terria} viewState={this.props.viewState}/>

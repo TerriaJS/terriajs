@@ -75,6 +75,12 @@ const FeatureInfoPanel = React.createClass({
 
     close() {
         this.props.viewState.featureInfoPanelIsVisible = false;
+
+        // give the close animation time to finish before unselecting, to avoid jumpiness
+        setTimeout(() => {
+            this.props.terria.pickedFeatures = undefined;
+            this.props.terria.selectedFeature = undefined;
+        }, 200);
     },
 
     toggleCollapsed() {
