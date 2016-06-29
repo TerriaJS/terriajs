@@ -6,6 +6,8 @@ import React from 'react';
 import ReactTestUtils from 'react-addons-test-utils';
 import {findAllWithType, findAllWithClass, findAll} from 'react-shallow-testutils';
 
+import Cartographic from 'terriajs-cesium/Source/Core/Cartographic';
+import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
 import Entity from 'terriajs-cesium/Source/DataSources/Entity';
 import JulianDate from 'terriajs-cesium/Source/Core/JulianDate';
 import TimeInterval from 'terriajs-cesium/Source/Core/TimeInterval';
@@ -31,6 +33,16 @@ function getShallowRenderedOutput(jsx) {
 
 function findAllEqualTo(reactElement, text) {
     return findAll(reactElement, (element) => element && element === text);
+}
+
+function findAllWithPropsChildEqualTo(reactElement, text) {
+    // Returns elements with element.props.children[i] or element.props.children[i][j] equal to text, for any i or j.
+    return findAll(reactElement, (element) => {
+        if (!(element && element.props && element.props.children)) {
+            return;
+        }
+        return element.props.children.indexOf(text) >= 0 || (element.props.children.some && element.props.children.some(x => x && x.length && x.indexOf(text) >= 0));
+    });
 }
 
 // function getContentAndDescription(renderedResult) {
@@ -163,8 +175,21 @@ describe('FeatureInfoSection', function() {
         expect(findAllEqualTo(result, '&lt;\n').length).toEqual(0);  // Also cover the possibility that it might be encoded.
     });
 
-    it('does not break when html format feature info has inline style', function() {
-        // Note this does not test that it actually uses the inline style.
+    it('maintains and applies inline style attributes', function() {
+        feature = new Entity({
+            name: 'Foo',
+            description: '<div style="background:rgb(170, 187, 204)">countdown</div>'
+        });
+        const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} viewState={viewState} />;
+        const result = getShallowRenderedOutput(section);
+        const divs = findAllWithPropsChildEqualTo(result, 'countdown');
+        expect(divs.length).toEqual(1);
+        // Note #ABC is converted by IE11 to rgb(170, 187, 204), so just test that directly. Also IE11 adds space to the front, so strip all spaces out.
+        expect(divs[0].props.style.background.replace(/ /g,'')).toEqual('rgb(170,187,204)');
+    });
+
+    it('does not break when html format feature info has style tag', function() {
+        // Note this does not test that it actually uses the style tag for styling.
         feature = new Entity({
             name: 'Foo',
             description: '<html><head><title>GetFeatureInfo</title></head><style>table.info tr {background:#fff;}</style><body><table class="info"><tr><th>thing</th></tr><tr><td>BAR</td></tr></table><br/></body></html>'
@@ -290,6 +315,14 @@ describe('FeatureInfoSection', function() {
             expect(name).toContain('Kay bar');
         });
 
+        it('can access clicked lat and long', function() {
+            const template = '<div>Clicked {{#terria.formatNumber}}{maximumFractionDigits:0}{{terria.coords.latitude}}{{/terria.formatNumber}}, {{#terria.formatNumber}}{maximumFractionDigits:0}{{terria.coords.longitude}}{{/terria.formatNumber}}</div>';
+            const position = Ellipsoid.WGS84.cartographicToCartesian(Cartographic.fromDegrees(77, 44, 6));
+            const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template} viewState={viewState} position={position}/>;
+            const result = getShallowRenderedOutput(section);
+            expect(findAllEqualTo(result, 'Clicked 44, 77').length).toEqual(1);
+        });
+
         it('can render a recursive featureInfoTemplate', function() {
             const template = {
                 template: '<ul>{{>show_children}}</ul>',
@@ -323,7 +356,31 @@ describe('FeatureInfoSection', function() {
             expect(findAllWithType(content, 'li').length).toEqual(6);
         });
 
+    });
 
+    describe('raw data', function() {
+
+        beforeEach(function() {
+            feature.description = {
+                getValue: function() { return '<p>hi!</p>'; },
+                isConstant: true
+            };
+        });
+
+        it('does not appear if no template', function() {
+            const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} viewState={viewState} />;
+            const result = getShallowRenderedOutput(section);
+            expect(findAllEqualTo(result, 'Hide Raw Data').length).toEqual(0);
+            expect(findAllEqualTo(result, 'Show Raw Data').length).toEqual(0);
+        });
+
+        it('shows "Show Raw Data" if template', function() {
+            const template = 'Test';
+            const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} viewState={viewState} template={template} />;
+            const result = getShallowRenderedOutput(section);
+            expect(findAllEqualTo(result, 'Hide Raw Data').length).toEqual(0);
+            expect(findAllEqualTo(result, 'Show Raw Data').length).toEqual(1);
+        });
 
     });
 
