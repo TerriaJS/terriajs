@@ -78,8 +78,7 @@ const MobileModalWindow = React.createClass({
             [Styles.isOpen]: this.props.viewState.explorerPanelIsVisible && this.props.viewState.mobileView
         });
         const mobileView = this.props.viewState.mobileView;
-
-
+        
         return (
             <div className={modalClass}>
                 <div className={Styles.modalBg}>
