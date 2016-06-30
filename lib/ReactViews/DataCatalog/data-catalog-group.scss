@@ -10,7 +10,6 @@
   width: 100%;
   font-weight: bold;
   svg{
-
     display: inline-block;
   }
   @media screen and (min-width: $sm) {
@@ -40,26 +39,23 @@
   top: 0;
   opacity: 0.5;
   svg{
-    height: 23px;
-    width: 23px;
+    height: 25px;
+    width: 25px;
+    display: block;
   }
   @media screen and (min-width: $sm) {
-
   }
 }
 
 .caret {
+  position: absolute;
+  right: 5px;
+  top: $padding-small;
   svg{
-    position: absolute;
-    right: 5px;
-    top: $padding;
     fill: $charcoal-grey;
     opacity: 0.5;
-    height: 20px;
-    width: 20px;
-    @media screen and (min-width: $sm) {
-      top: $padding-small;
-    }
+    height: 18px;
+    width: 18px;
   }
 }
 
