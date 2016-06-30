@@ -66,9 +66,9 @@ const RectangleParameterEditor = React.createClass({
         terria.pickedFeatures = undefined;
 
         const pickPointMode = new MapInteractionMode({
-            message: 'Press the SHIFT key and hold down the left mouse button to draw a rectangle.',
+            message: 'Press the SHIFT key and hold down the left mouse button to draw a rectangle',
             drawRectangle: true,
-            onCancel: function () {
+            onCancel: function() {
                 terria.mapInteractionModeStack.pop();
                 terria.selectBox = false;
                 that.props.viewState.openAddData();
@@ -102,7 +102,7 @@ const RectangleParameterEditor = React.createClass({
                 <button type='button'
                         onClick={this.selectRectangleOnMap}
                         className={Styles.btnSelector}>
-                    Click to draw rectangle.
+                    Click to draw rectangle
                 </button>
             </div>
         );
