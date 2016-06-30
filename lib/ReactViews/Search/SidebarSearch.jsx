@@ -5,6 +5,7 @@ import React from 'react';
 import SearchHeader from './SearchHeader.jsx';
 import SearchResult from './SearchResult.jsx';
 import BadgeBar from '../BadgeBar.jsx';
+
 import CustomDataSource from 'terriajs-cesium/Source/DataSources/CustomDataSource';
 import Entity from 'terriajs-cesium/Source/DataSources/Entity.js';
 import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
@@ -13,6 +14,8 @@ import Cartesian3 from 'terriajs-cesium/Source/Core/Cartesian3';
 import VerticalOrigin from 'terriajs-cesium/Source/Scene/VerticalOrigin';
 
 import Styles from './sidebar-search.scss';
+
+const MAP_MARKER_COLOR = '#08ABD5';
 
 // Handle any of the three kinds of search based on the props
 export default React.createClass({
@@ -35,12 +38,13 @@ export default React.createClass({
 
     onLocationClick(result) {
         this.mapPointerDataSource.entities.removeAll();
+
         const firstPointEntity = new Entity({
             name: result.name,
             position: Ellipsoid.WGS84.cartographicToCartesian(Cartographic.fromDegrees(result.location.longitude, result.location.latitude)),
             description: `${result.location.latitude}, ${result.location.longitude}`,
             billboard: {
-                image: require('../../../wwwroot/images/map_pin.svg'),
+                image: getMarkerIcon(),
                 scale: 0.65,
                 eyeOffset: new Cartesian3(0.0, 0.0, 50.0),
                 verticalOrigin: VerticalOrigin.BOTTOM,
@@ -101,3 +105,15 @@ export default React.createClass({
         );
     }
 });
+
+function getMarkerIcon() {
+    // if (!window.btoa) {
+    //     // IE9 can't btoa so they get a crappy black icon (serves them right for making our job harder!!)
+    //     return ;
+    // } else {
+    // Other browsers use the already-downloaded SVG sprite, with a class!
+    const svgAsText = require('!!raw-loader!../../../wwwroot/images/icons/location.svg').replace('<svg', `<svg stroke-width="2" stroke-opacity="0.7" stroke="#000000" fill="${MAP_MARKER_COLOR}"`);
+    // const svgAsText = `<svg viewBox="0 0 100 100" class="icon ${Styles.mapMarkerSvg}" xmlns:xlink="http://www.w3.org/1999/xlink"><use xlink:href="${Icon.GLYPHS.location}"></use></svg>`;
+    return `data:image/svg+xml,${svgAsText}`;
+    // }
+}
