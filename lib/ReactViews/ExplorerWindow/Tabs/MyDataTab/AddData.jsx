@@ -97,7 +97,7 @@ const AddData = React.createClass({
                 loadFunctions = wmsThenWfs.concat(others);
             }
 
-            promise = loadAuto(that, loadFunctions);
+            promise = loadAuto(that, loadFunctions, 0);
         } else if (that.state.remoteDataType.value === 'wms-getCapabilities') {
             promise = loadWms(that);
         } else if (that.state.remoteDataType.value === 'wfs-getCapabilities') {
@@ -208,9 +208,7 @@ const AddData = React.createClass({
  * @returns {Promise}
  */
 function loadAuto(viewModel, loadFunctions, index) {
-    index = 0;
     const loadFunction = loadFunctions[index];
-
     return loadFunction(viewModel).otherwise(function () {
         return loadAuto(viewModel, loadFunctions, index + 1);
     });

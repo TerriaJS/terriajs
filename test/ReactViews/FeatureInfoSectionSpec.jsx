@@ -4,14 +4,22 @@
 // import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 import React from 'react';
 import ReactTestUtils from 'react-addons-test-utils';
-import {findAllWithType, findAllWithClass, findAll} from 'react-shallow-testutils';
+import {findAllWithType, findAllWithClass, findWithRef} from 'react-shallow-testutils';
+import {getShallowRenderedOutput, findAllEqualTo, findAllWithPropsChildEqualTo} from './MoreShallowTools';
 
+import Cartographic from 'terriajs-cesium/Source/Core/Cartographic';
+import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
 import Entity from 'terriajs-cesium/Source/DataSources/Entity';
 import JulianDate from 'terriajs-cesium/Source/Core/JulianDate';
 import TimeInterval from 'terriajs-cesium/Source/Core/TimeInterval';
 import TimeIntervalCollectionProperty from 'terriajs-cesium/Source/DataSources/TimeIntervalCollectionProperty';
 
+import Catalog from '../../lib/Models/Catalog';
+import createCatalogMemberFromType from '../../lib/Models/createCatalogMemberFromType';
+import CatalogGroup from '../../lib/Models/CatalogGroup';
+import CzmlCatalogItem from '../../lib/Models/CzmlCatalogItem';
 import FeatureInfoSection from '../../lib/ReactViews/FeatureInfo/FeatureInfoSection';
+import loadJson from 'terriajs-cesium/Source/Core/loadJson';
 import Terria from '../../lib/Models/Terria';
 
 import Styles from '../../lib/ReactViews/FeatureInfo/feature-info-section.scss';
@@ -23,15 +31,25 @@ if (typeof Intl === 'object' && typeof Intl.NumberFormat === 'function') {
 
 const contentClass = Styles.content;
 
-function getShallowRenderedOutput(jsx) {
-    const renderer = ReactTestUtils.createRenderer();
-    renderer.render(jsx);
-    return renderer.getRenderOutput();
-}
+// function getShallowRenderedOutput(jsx) {
+//     const renderer = ReactTestUtils.createRenderer();
+//     renderer.render(jsx);
+//     return renderer.getRenderOutput();
+// }
 
-function findAllEqualTo(reactElement, text) {
-    return findAll(reactElement, (element) => element && element === text);
-}
+// function findAllEqualTo(reactElement, text) {
+//     return findAll(reactElement, (element) => element && element === text);
+// }
+
+// function findAllWithPropsChildEqualTo(reactElement, text) {
+//     // Returns elements with element.props.children[i] or element.props.children[i][j] equal to text, for any i or j.
+//     return findAll(reactElement, (element) => {
+//         if (!(element && element.props && element.props.children)) {
+//             return;
+//         }
+//         return element.props.children.indexOf(text) >= 0 || (element.props.children.some && element.props.children.some(x => x && x.length && x.indexOf(text) >= 0));
+//     });
+// }
 
 // function getContentAndDescription(renderedResult) {
 //     const content = findAllWithClass(renderedResult, contentClass)[0];
@@ -129,6 +147,23 @@ describe('FeatureInfoSection', function() {
         expect(terria.clock.onTick.numberOfListeners).toEqual(0);  // we do want to be sure that if this is the implementation, we tidy up after ourselves.
     });
 
+    it('does not set a clock event listener if no description or properties', function() {
+        const emptyFeature = new Entity({
+            name: 'Empty'
+        });
+        const renderer = ReactTestUtils.createRenderer();
+        const section = <FeatureInfoSection feature={emptyFeature} isOpen={true} clock={terria.clock} viewState={viewState} />;
+        renderer.render(section);
+        expect(terria.clock.onTick.numberOfListeners).toEqual(0);
+    });
+
+    it('does not set a clock event listener if no description and constant properties', function() {
+        const renderer = ReactTestUtils.createRenderer();
+        const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} viewState={viewState} />;
+        renderer.render(section);
+        expect(terria.clock.onTick.numberOfListeners).toEqual(0);
+    });
+
     it('handles features with no properties', function() {
         feature = new Entity({
             name: 'Foot',
@@ -163,8 +198,21 @@ describe('FeatureInfoSection', function() {
         expect(findAllEqualTo(result, '&lt;\n').length).toEqual(0);  // Also cover the possibility that it might be encoded.
     });
 
-    it('does not break when html format feature info has inline style', function() {
-        // Note this does not test that it actually uses the inline style.
+    it('maintains and applies inline style attributes', function() {
+        feature = new Entity({
+            name: 'Foo',
+            description: '<div style="background:rgb(170, 187, 204)">countdown</div>'
+        });
+        const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} viewState={viewState} />;
+        const result = getShallowRenderedOutput(section);
+        const divs = findAllWithPropsChildEqualTo(result, 'countdown');
+        expect(divs.length).toEqual(1);
+        // Note #ABC is converted by IE11 to rgb(170, 187, 204), so just test that directly. Also IE11 adds space to the front, so strip all spaces out.
+        expect(divs[0].props.style.background.replace(/ /g,'')).toEqual('rgb(170,187,204)');
+    });
+
+    it('does not break when html format feature info has style tag', function() {
+        // Note this does not test that it actually uses the style tag for styling.
         feature = new Entity({
             name: 'Foo',
             description: '<html><head><title>GetFeatureInfo</title></head><style>table.info tr {background:#fff;}</style><body><table class="info"><tr><th>thing</th></tr><tr><td>BAR</td></tr></table><br/></body></html>'
@@ -173,6 +221,38 @@ describe('FeatureInfoSection', function() {
         const result = getShallowRenderedOutput(section);
         expect(findAllEqualTo(result, 'Foo').length).toEqual(1);
         expect(findAllEqualTo(result, 'BAR').length).toEqual(1);
+    });
+
+    it('does not break when there are neither properties nor description', function() {
+        feature = new Entity({
+            name: 'Vapid'
+        });
+        const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} viewState={viewState} />;
+        const result = getShallowRenderedOutput(section);
+        expect(findAllEqualTo(result, 'Vapid').length).toEqual(1);
+        expect(findWithRef(result, 'no-info')).toBeDefined();
+    });
+
+    it('shows properties if no description', function() {
+        // Tests both static and potentially time-varying properties.
+        feature = new Entity({
+            name: 'Meals',
+            properties: {
+                lunch: 'eggs',
+                dinner: {
+                    getValue: function() {
+                        return 'ham';
+                    }
+                }
+            }
+        });
+        const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} viewState={viewState} />;
+        const result = getShallowRenderedOutput(section);
+        expect(findAllEqualTo(result, 'Meals').length).toEqual(1);
+        expect(findAllEqualTo(result, 'lunch').length).toEqual(1);
+        expect(findAllEqualTo(result, 'eggs').length).toEqual(1);
+        expect(findAllEqualTo(result, 'dinner').length).toEqual(1);
+        expect(findAllEqualTo(result, 'ham').length).toEqual(1);
     });
 
     describe('templating', function() {
@@ -290,6 +370,14 @@ describe('FeatureInfoSection', function() {
             expect(name).toContain('Kay bar');
         });
 
+        it('can access clicked lat and long', function() {
+            const template = '<div>Clicked {{#terria.formatNumber}}{maximumFractionDigits:0}{{terria.coords.latitude}}{{/terria.formatNumber}}, {{#terria.formatNumber}}{maximumFractionDigits:0}{{terria.coords.longitude}}{{/terria.formatNumber}}</div>';
+            const position = Ellipsoid.WGS84.cartographicToCartesian(Cartographic.fromDegrees(77, 44, 6));
+            const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template} viewState={viewState} position={position}/>;
+            const result = getShallowRenderedOutput(section);
+            expect(findAllEqualTo(result, 'Clicked 44, 77').length).toEqual(1);
+        });
+
         it('can render a recursive featureInfoTemplate', function() {
             const template = {
                 template: '<ul>{{>show_children}}</ul>',
@@ -323,85 +411,97 @@ describe('FeatureInfoSection', function() {
             expect(findAllWithType(content, 'li').length).toEqual(6);
         });
 
+    });
 
+    describe('raw data', function() {
+
+        beforeEach(function() {
+            feature.description = {
+                getValue: function() { return '<p>hi!</p>'; },
+                isConstant: true
+            };
+        });
+
+        it('does not appear if no template', function() {
+            const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} viewState={viewState} />;
+            const result = getShallowRenderedOutput(section);
+            expect(findAllEqualTo(result, 'Hide Raw Data').length).toEqual(0);
+            expect(findAllEqualTo(result, 'Show Raw Data').length).toEqual(0);
+        });
+
+        it('shows "Show Raw Data" if template', function() {
+            const template = 'Test';
+            const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} viewState={viewState} template={template} />;
+            const result = getShallowRenderedOutput(section);
+            expect(findAllEqualTo(result, 'Hide Raw Data').length).toEqual(0);
+            expect(findAllEqualTo(result, 'Show Raw Data').length).toEqual(1);
+        });
 
     });
 
-    // describe('CZML templating', function() {
-    //     var terria,
-    //         panel,
-    //         catalog,
-    //         item,
-    //         timeVaryingItem;
+    describe('CZML templating', function() {
+        let item;
+        let timeVaryingItem;
 
-    //     beforeEach(function(done) {
-    //         terria = new Terria({
-    //             baseUrl: './'
-    //         });
-    //         panel = new FeatureInfoPanelViewModel({
-    //             terria: terria
-    //         });
-    //         createCatalogMemberFromType.register('group', CatalogGroup);
-    //         createCatalogMemberFromType.register('czml', CzmlCatalogItem);
-    //         return loadJson('test/init/czml-with-template.json').then(function(json) {
-    //             catalog = new Catalog(terria);
-    //             return catalog.updateFromJson(json.catalog).then(function() {
-    //                 item = catalog.group.items[0].items[0];
-    //                 timeVaryingItem = catalog.group.items[0].items[1];
-    //             });
-    //         }).then(done).otherwise(done.fail);
-    //     });
+        beforeEach(function(done) {
+            createCatalogMemberFromType.register('group', CatalogGroup);
+            createCatalogMemberFromType.register('czml', CzmlCatalogItem);
+            return loadJson('test/init/czml-with-template.json').then(function(json) {
+                const catalog = new Catalog(terria);
+                return catalog.updateFromJson(json.catalog).then(function() {
+                    item = catalog.group.items[0].items[0];
+                    timeVaryingItem = catalog.group.items[0].items[1];
+                });
+            }).then(done).otherwise(done.fail);
+        });
 
-    //     afterEach(function() {
-    //         panel.destroy();
-    //         panel = undefined;
-    //     });
+        it('uses and completes a string-form featureInfoTemplate', function(done) {
+            // target = '<table><tbody><tr><td>Name:</td><td>Test</td></tr><tr><td>Type:</td><td>ABC</td></tr></tbody></table><br />
+            //           <table><tbody><tr><td>Year</td><td>Capacity</td></tr><tr><td>2010</td><td>14.4</td></tr><tr><td>2011</td><td>22.8</td></tr><tr><td>2012</td><td>10.7</td></tr></tbody></table>';
+            return item.load().then(function() {
+                expect(item.dataSource.entities.values.length).toBeGreaterThan(0);
+                const feature = item.dataSource.entities.values[0];
+                const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} viewState={viewState} template={item.featureInfoTemplate} />;
+                const result = getShallowRenderedOutput(section);
+                expect(findAllEqualTo(result, 'ABC').length).toEqual(1);
+                expect(findAllEqualTo(result, '2010').length).toEqual(1);
+                expect(findAllEqualTo(result, '14.4').length).toEqual(1);
+                expect(findAllEqualTo(result, '2012').length).toEqual(1);
+                expect(findAllEqualTo(result, '10.7').length).toEqual(1);
+            }).then(done).otherwise(done.fail);
+        });
 
-    //     it('uses and completes a string-form featureInfoTemplate if present', function() {
-    //         var target = '<table><tbody><tr><td>Name:</td><td>Test</td></tr><tr><td>Type:</td><td>ABC</td></tr></tbody></table><br /><table><tbody><tr><td>Year</td><td>Capacity</td></tr><tr><td>2010</td><td>14.4</td></tr><tr><td>2011</td><td>22.8</td></tr><tr><td>2012</td><td>10.7</td></tr></tbody></table>';
-    //         return item.load().then(function() {
-    //             expect(item.dataSource.entities.values.length).toBeGreaterThan(0);
-    //             panel.terria.nowViewing.add(item);
-    //             var feature = item.dataSource.entities.values[0];
-    //             var pickedFeatures = new PickedFeatures();
-    //             pickedFeatures.features.push(feature);
-    //             pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
+        it('uses and completes a time-varying, string-form featureInfoTemplate', function(done) {
+            // targetBlank = '<table><tbody><tr><td>Name:</td><td>Test</td></tr><tr><td>Type:</td><td></td></tr></tbody></table><br />
+            //                <table><tbody><tr><td>Year</td><td>Capacity</td></tr><tr><td>2010</td><td>14.4</td></tr><tr><td>2011</td><td>22.8</td></tr><tr><td>2012</td><td>10.7</td></tr></tbody></table>';
+            // targetABC = '<table><tbody><tr><td>Name:</td><td>Test</td></tr><tr><td>Type:</td><td>ABC</td></tr></tbody></table><br />
+            //              <table><tbody><tr><td>Year</td><td>Capacity</td></tr><tr><td>2010</td><td>14.4</td></tr><tr><td>2011</td><td>22.8</td></tr><tr><td>2012</td><td>10.7</td></tr></tbody></table>';
+            // targetDEF = '<table><tbody><tr><td>Name:</td><td>Test</td></tr><tr><td>Type:</td><td>DEF</td></tr></tbody></table><br />
+            //              <table><tbody><tr><td>Year</td><td>Capacity</td></tr><tr><td>2010</td><td>14.4</td></tr><tr><td>2011</td><td>22.8</td></tr><tr><td>2012</td><td>10.7</td></tr></tbody></table>';
+            return timeVaryingItem.load().then(function() {
+                expect(timeVaryingItem.dataSource.entities.values.length).toBeGreaterThan(0);
+                const feature = timeVaryingItem.dataSource.entities.values[0];
+                terria.clock.currentTime = JulianDate.fromIso8601('2010-02-02');
+                let section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} viewState={viewState} template={timeVaryingItem.featureInfoTemplate} />;
+                let result = getShallowRenderedOutput(section);
+                expect(findAllEqualTo(result, 'ABC').length).toEqual(0);
+                expect(findAllEqualTo(result, 'DEF').length).toEqual(0);
 
-    //             return panel.showFeatures(pickedFeatures).then(function() {
-    //                 expect(panel.sections[0].templatedInfo).toEqual(target);
-    //             });
-    //         }).then(done).otherwise(done.fail);
-    //     });
+                terria.clock.currentTime = JulianDate.fromIso8601('2012-02-02');
+                section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} viewState={viewState} template={timeVaryingItem.featureInfoTemplate} />;
+                result = getShallowRenderedOutput(section);
+                expect(findAllEqualTo(result, 'ABC').length).toEqual(1);
+                expect(findAllEqualTo(result, 'DEF').length).toEqual(0);
 
-    //     it('uses and completes a time-varying, string-form featureInfoTemplate if present', function() {
-    //         var targetBlank = '<table><tbody><tr><td>Name:</td><td>Test</td></tr><tr><td>Type:</td><td></td></tr></tbody></table><br /><table><tbody><tr><td>Year</td><td>Capacity</td></tr><tr><td>2010</td><td>14.4</td></tr><tr><td>2011</td><td>22.8</td></tr><tr><td>2012</td><td>10.7</td></tr></tbody></table>';
-    //         var targetABC = '<table><tbody><tr><td>Name:</td><td>Test</td></tr><tr><td>Type:</td><td>ABC</td></tr></tbody></table><br /><table><tbody><tr><td>Year</td><td>Capacity</td></tr><tr><td>2010</td><td>14.4</td></tr><tr><td>2011</td><td>22.8</td></tr><tr><td>2012</td><td>10.7</td></tr></tbody></table>';
-    //         var targetDEF = '<table><tbody><tr><td>Name:</td><td>Test</td></tr><tr><td>Type:</td><td>DEF</td></tr></tbody></table><br /><table><tbody><tr><td>Year</td><td>Capacity</td></tr><tr><td>2010</td><td>14.4</td></tr><tr><td>2011</td><td>22.8</td></tr><tr><td>2012</td><td>10.7</td></tr></tbody></table>';
+                terria.clock.currentTime = JulianDate.fromIso8601('2014-02-02');
+                section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} viewState={viewState} template={timeVaryingItem.featureInfoTemplate} />;
+                result = getShallowRenderedOutput(section);
+                expect(findAllEqualTo(result, 'ABC').length).toEqual(0);
+                expect(findAllEqualTo(result, 'DEF').length).toEqual(1);
 
-    //         return timeVaryingItem.load().then(function() {
-    //             expect(timeVaryingItem.dataSource.entities.values.length).toBeGreaterThan(0);
-    //             panel.terria.nowViewing.add(timeVaryingItem);
-    //             var feature = timeVaryingItem.dataSource.entities.values[0];
-    //             var pickedFeatures = new PickedFeatures();
-    //             pickedFeatures.features.push(feature);
-    //             pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
+            }).then(done).otherwise(done.fail);
+        });
 
-    //             terria.clock.currentTime = JulianDate.fromIso8601('2010-02-02');
-
-    //             return panel.showFeatures(pickedFeatures).then(function() {
-    //                 expect(panel.sections[0].templatedInfo).toEqual(targetBlank);
-
-    //                 terria.clock.currentTime = JulianDate.fromIso8601('2012-02-02');
-    //                 terria.clock.tick();
-    //                 expect(panel.sections[0].templatedInfo).toEqual(targetABC);
-
-    //                 terria.clock.currentTime = JulianDate.fromIso8601('2014-02-02');
-    //                 terria.clock.tick();
-    //                 expect(panel.sections[0].templatedInfo).toEqual(targetDEF);
-    //             });
-    //         }).then(done).otherwise(done.fail);
-
-    //     });
-    // });
+    });
 
 });

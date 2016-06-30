@@ -7,18 +7,23 @@
 }
 
 .timeline__control {
-  composes: btn from '../../../Sass/common/_buttons.scss';
-
   height: 29px;
   width: 34px;
+  svg{
+    height: 25px;
+    width: 25px;
+    fill: #ffffff;
+  }
 
   &.is-active {
-    color: $color-primary;
+    svg{
+      fill: $color-primary;
+    }
   }
 }
 
 .icon--back-to-start, .icon--forward, .icon--backward, .icon--pause, .icon--play, .icon--refresh {
-  composes: icon from '../../../Sass/common/_icons.scss';
+  // composes: icon from '../../../Sass/common/_icons.scss';
 }
 
 // Normalise these icons
@@ -35,30 +40,30 @@
   vertical-align: 2px;
 }
 
-.icon--back-to-start {
-  composes: icon-backToStart from '../../../Sass/common/_icons.scss';
-}
+// .icon--back-to-start {
+//   composes: icon-backToStart from '../../../Sass/common/_icons.scss';
+// }
 
-.icon--forward {
-  composes: icon-forward from '../../../Sass/common/_icons.scss';
-}
+// .icon--forward {
+//   composes: icon-forward from '../../../Sass/common/_icons.scss';
+// }
 
-.icon--backward {
-  composes: icon-backward from '../../../Sass/common/_icons.scss';//
-}
+// .icon--backward {
+//   composes: icon-backward from '../../../Sass/common/_icons.scss';//
+// }
 
-.icon--pause {
-  composes: icon-pause from '../../../Sass/common/_icons.scss';
-}
+// .icon--pause {
+//   composes: icon-pause from '../../../Sass/common/_icons.scss';
+// }
 
-.icon--play {
-  composes: icon-play from '../../../Sass/common/_icons.scss';
-}
+// .icon--play {
+//   composes: icon-play from '../../../Sass/common/_icons.scss';
+// }
 
 .icon--refresh {
   &:before {
     font-size: 18px;
   }
 
-  composes: icon-refresh from '../../../Sass/common/_icons.scss';
+  // composes: icon-refresh from '../../../Sass/common/_icons.scss';
 }

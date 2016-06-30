@@ -6,6 +6,7 @@ import MobileModalWindow from './MobileModalWindow';
 import Branding from '../SidePanel/Branding.jsx';
 import Styles from './mobile-header.scss';
 import classNames from "classnames";
+import Icon from "../Icon.jsx";
 
 const MobileHeader = React.createClass({
     mixins: [ObserveModelMixin],
@@ -93,8 +94,9 @@ const MobileHeader = React.createClass({
                                 <button type='button'
                                         onClick={this.toggleMenu}
                                         className={Styles.btnMenu}
-                                        title='toggle navigation'
-                                />
+                                        title='toggle navigation'>
+                                    <Icon glyph={Icon.GLYPHS.menu}/>
+                                </button>
                                 <Branding terria={this.props.terria}
                                           version={this.props.version}
                                           onClick={this.refresh}
@@ -105,16 +107,20 @@ const MobileHeader = React.createClass({
                                         className={Styles.btnAdd}
                                         onClick={this.onMobileDataCatalogClicked}>
                                     Data
+                                    <Icon glyph={Icon.GLYPHS.increase}/>
                                 </button>
                                 <If condition={nowViewingLength > 0}>
                                     <button type='button' className={Styles.btnNowViewing}
                                             onClick={this.onMobileNowViewingClicked}>
+                                        <Icon glyph={Icon.GLYPHS.eye}/>
                                         <span className={Styles.nowViewingCount}>{nowViewingLength}</span>
                                     </button>
                                 </If>
-                                <button type='button'
-                                        className={Styles.btnSearch}
-                                        onClick={this.toggleSearch}/>
+                                <button className={Styles.btnSearch}
+                                        type='button'
+                                        onClick={this.toggleSearch}>
+                                        <Icon glyph={Icon.GLYPHS.search}/>
+                                </button>
                             </div>
                         </When>
                         <Otherwise>

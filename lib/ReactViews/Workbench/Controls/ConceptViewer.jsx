@@ -2,6 +2,7 @@
 
 import ObserveModelMixin from '../../ObserveModelMixin';
 import React from 'react';
+import Icon from "../../Icon.jsx";
 import classNames from 'classnames';
 
 import Styles from './concept-viewer.scss';
@@ -51,6 +52,12 @@ const Concept = React.createClass({
         }
     },
 
+    getFillStyle() {
+        if (this.props.concept.color) {
+            return {fill: this.props.concept.color};
+        }
+    },
+
     render() {
         const concept = this.props.concept;
 
@@ -62,25 +69,22 @@ const Concept = React.createClass({
                             <button type='button'
                                     onClick={this.toggleOpen}
                                     style={this.getColorStyle()}
-                                    className={classNames(Styles.btn, Styles.btnToggle, {[Styles.btnIsOpen]: concept.isOpen})}
-                                    title='open variable selection'
-                            />
+                                    className={Styles.btn}
+                                    title='open variable selection'>
+                                    {concept.isOpen ? <Icon glyph={Icon.GLYPHS.opened}/> : <Icon glyph={Icon.GLYPHS.closed}/>}
+                            </button>
                         </If>
                         <If condition={concept.isSelectable}>
                             <button type='button'
                                     onClick={this.toggleActive}
                                     style={this.getColorStyle()}
-                                    className={classNames(
-                                        Styles.btn,
-                                        {
-                                            [Styles.btnMultipleActive]: concept.isActive && this.props.allowMultiple,
-                                            [Styles.btnMultipleInactive]: !concept.isActive && this.props.allowMultiple,
-                                            [Styles.btnUniqueActive]: concept.isActive && !this.props.allowMultiple,
-                                            [Styles.btnUniqueInactive]: !concept.isActive && !this.props.allowMultiple,
-                                        }
-                                    )}
-                                    title='select variable'
-                            />
+                                    className={Styles.btn}
+                                    title='select variable'>
+                                    {(concept.isActive && this.props.allowMultiple) && <Icon style={this.getFillStyle()} glyph={Icon.GLYPHS.checkboxOn}/>}
+                                    {(!concept.isActive && this.props.allowMultiple) && <Icon style={this.getFillStyle()} glyph={Icon.GLYPHS.checkboxOff}/>}
+                                    {(concept.isActive && !this.props.allowMultiple) && <Icon style={this.getFillStyle()} glyph={Icon.GLYPHS.radioOn}/>}
+                                    {(!concept.isActive && !this.props.allowMultiple) && <Icon style={this.getFillStyle()} glyph={Icon.GLYPHS.radioOff}/>}
+                            </button>
                         </If>
                         {concept.name}
                     </div>

@@ -3,99 +3,63 @@
 
 @include empty-module("root");
 
-// Data Catalog Group
-//
-// Markup:
-//<div class='panel-content'>
-//<button class ='btn btn--catalog' >National Data Sets</button>
-//<button class ='btn btn--catalog is-open' >National Data Sets</button>
-//</div>
-//
-// Style guide: Buttons.data-catalog-group
-//
-
 .btn--catalog {
-  composes: btn from '../../Sass/common/_buttons.scss';
-  composes: btn-transparent from '../../Sass/common/_buttons.scss';
-
+  text-align: left;
   padding: $padding 30px+$padding;
   position: relative;
   width: 100%;
   font-weight: bold;
+  svg{
 
+    display: inline-block;
+  }
   @media screen and (min-width: $sm) {
     padding: $padding-small 30px+$padding;
-  }
-
-  &--top-level {
-    font-weight: 600;
-    border-bottom: 1px solid $grey-lighter;
-    padding-left: $padding;
   }
 
   &:hover, &:focus {
     background: $modal-highlight;
     color: #fff;
-    .btn--group-indicator {
-      color: #fff;
-    }
   }
 }
 
-.btn--is-open {
-  composes: is-open from '../../Sass/common/_buttons.scss';
+.btnCatalogTopLevel{
+  font-weight: 600;
+  border-bottom: 1px solid $grey-lighter;
+  padding-left: $padding;
 }
 
-.icon-folder {
-  composes: icon from '../../Sass/common/_icons.scss';
+.btnIsOpen{
 
+}
+
+
+.folder {
   position: absolute;
   left: 0;
-  padding: $padding+1 $padding*2.2 $padding $padding*1.5;
   top: 0;
-  font-size: 1.1rem;
   opacity: 0.5;
-
+  svg{
+    height: 23px;
+    width: 23px;
+  }
   @media screen and (min-width: $sm) {
-    padding: $padding-small+1 $padding*2.2 $padding-small $padding*1.5;
-  }
 
-  &-closed {
-    composes: icon-folder from '../../Sass/common/_icons.scss';
-  }
-
-  &-open {
-    composes: icon-folder-open from '../../Sass/common/_icons.scss';
   }
 }
 
 .caret {
-  composes: icon from '../../Sass/common/_icons.scss';
-
-  &:before {
+  svg{
     position: absolute;
     right: 5px;
     top: $padding;
-
+    fill: $charcoal-grey;
+    opacity: 0.5;
+    height: 20px;
+    width: 20px;
     @media screen and (min-width: $sm) {
       top: $padding-small;
     }
-  }
-
-  &--open {
-    composes: icon-opened from '../../Sass/common/_icons.scss';
-  }
-
-  &--closed {
-    composes: icon-closed from '../../Sass/common/_icons.scss';
-
-    &:before {
-      margin-top: 3px;
-    }
-  }
-
-  &--lower-level:before {
-    color: darken($grey-lighter, 10%);
   }
 }
 
@@ -103,7 +67,6 @@
   composes: list-reset from '../../Sass/common/_base.scss';
   padding-left: $padding;
   padding-top: $padding / 2;
-
   &--lower-level {
     margin-left: 7px;
     border-left: 1px solid $grey-lighter;

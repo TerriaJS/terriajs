@@ -12,11 +12,17 @@
 }
 
 .btnFeedback{
-    composes: btn from '../../Sass/common/_buttons.scss';
-    composes: icon from '../../Sass/common/_icons.scss';
-    composes: icon-feedback from '../../Sass/common/_icons.scss';
-    &:before{
-        padding-right: $padding;
+    // composes: btn from '../../Sass/common/_buttons.scss';
+    padding: 5px;
+    svg{
+        width: 30px;
+        height: 30px;
+        display: inline-block;
+        vertical-align: bottom;
+    }
+    span{
+        vertical-align: top;
+        line-height: 2.2;
     }
     @media print{
         display: none;

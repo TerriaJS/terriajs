@@ -28,53 +28,22 @@
   .btn {
     position: absolute;
     padding: 0;
-    width: 20px;
-    &:before {
-      font-size: 1.2rem;
+    left: 0;
+    svg{
+      height: 30px;
+      width: 30px;
+      margin-top: -5px;
+      fill: #fff;
     }
   }
 }
 
 .items {
   composes: list-reset from '../../../Sass/common/_base.scss';
-
   margin-left: 15px;
-}
-
-.btn {
-  composes: btn from '../../../Sass/common/_buttons.scss';
 }
 
 .btn--toggle {
   left: 0;
-
-  composes: btn--toggle from '../../../Sass/common/_buttons.scss';
 }
 
-.btn--is-open {
-  composes: is-open from '../../../Sass/common/_buttons.scss';
-}
-
-.btn--checkbox {
-  left: 15px;
-}
-
-.btn--unique-active {
-  composes: btn--checkbox;
-  composes: btn--radio-on from '../../../Sass/common/_buttons.scss';
-}
-
-.btn--unique-inactive {
-  composes: btn--checkbox;
-  composes: btn--radio-off from '../../../Sass/common/_buttons.scss';
-}
-
-.btn--multiple-active {
-  composes: btn--checkbox;
-  composes: btn--checkbox-on from '../../../Sass/common/_buttons.scss';
-}
-
-.btn--multiple-inactive {
-  composes: btn--checkbox;
-  composes: btn--checkbox-off from '../../../Sass/common/_buttons.scss';
-}

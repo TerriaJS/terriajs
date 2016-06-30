@@ -10,6 +10,13 @@
   @media print{
     display: none;
   }
+  svg{
+    height: 25px;
+    width: 25px;
+    display: inline-block;
+    fill: #ffffff;
+    vertical-align: bottom;
+  }
 }
 .header {
     padding: 0 $padding-small;
@@ -22,6 +29,7 @@
 
 .body {
     padding: 0 $padding-small;
+    overflow-x: hidden;
     overflow-y: auto;
     height: calc(100vh - #{$workbench-header + $logo-height});
     @media print{
@@ -34,22 +42,15 @@
 }
 
 .button {
-  composes: btn from '../../Sass/common/_buttons.scss';
   composes: btn-primary from '../../Sass/common/_buttons.scss';
-  composes: icon from '../../Sass/common/_icons.scss';
-  composes: icon-add from '../../Sass/common/_icons.scss';
-
-  text-transform: uppercase;
-
-  &:before {
+  line-height: $input-height;
+  svg{
     position: absolute;
-    font-size: 18px;
-    left: $padding*2;
+    left: $padding;
+    height: $input-height;
+    width: $input-height;
+    display: block;
+    fill: #ffffff;
   }
 }
 
-.iconTip{
-  composes: icon from '../../Sass/common/_icons.scss';
-  composes: icon-lightbulb from '../../Sass/common/_icons.scss';
-  margin-right: $padding-small;
-}

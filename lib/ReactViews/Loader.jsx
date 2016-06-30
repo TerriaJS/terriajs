@@ -1,6 +1,7 @@
 'use strict';
 import ObserveModelMixin from './ObserveModelMixin';
 import React from 'react';
+import Icon from "./Icon.jsx";
 
 import Styles from './loader.scss';
 
@@ -20,7 +21,10 @@ const Loader = React.createClass({
     },
 
     render() {
-        return <span className={Styles.loader}>{this.props.message}</span>;
+        return <span className={Styles.loader}>
+                  <Icon glyph={Icon.GLYPHS.loader}/>
+                  {this.props.message || 'Loading'}
+               </span>;
     }
 });
 module.exports = Loader;
