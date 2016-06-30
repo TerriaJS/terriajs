@@ -38,18 +38,15 @@ const MappablePreview = React.createClass({
 
         return (
             <div>
-                <h3>{catalogItem.name}</h3>
                 <If condition={catalogItem.isMappable}>
                     <DataPreviewMap terria={this.props.terria} previewedCatalogItem={this.props.previewed}/>
                 </If>
+                <button type='button' onClick={this.toggleOnMap}
+                        className={Styles.btnAdd}>
+                    {this.props.previewed.isEnabled ? 'Remove from the map' : 'Add to the map'}
+                </button>
                 <div className={Styles.previewedInfo}>
-                    <button type='button' onClick={this.toggleOnMap}
-                            className={Styles.btnAdd}>
-                        {this.props.previewed.isEnabled ? 'Remove from the map' : 'Add to the map'}
-                    </button>
-                    <button type='button' className={Styles.btnBack} onClick={this.backToMap}>
-                        Back to the map
-                    </button>
+                    <h3>{catalogItem.name}</h3>
                     <div className={Styles.url}>
                         <If condition={catalogItem.description && catalogItem.description.length > 0}>
                             <div>
