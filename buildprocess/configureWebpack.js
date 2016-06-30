@@ -149,7 +149,7 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
         include: cesiumDir
     });
 
-    var externalModulesWithJson = ['proj4/package.json', 'entities', 'html-to-react', 'ent']
+    var externalModulesWithJson = ['proj4/package.json', 'entities', 'html-to-react', 'ent', 'htmlparser2/package.json']
         .map(function(module) {
            try {
                return path.dirname(require.resolve(module));
