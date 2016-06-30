@@ -58,14 +58,11 @@
 }
 
 .btn-download {
-  composes: btn--download from '../../../Sass/common/_buttons.scss';
-
-  display: inline-block;
-  text-align: center;
-  padding: 4px 3px;
-  width: 27px;
-  margin-left: 3px;
-  color: white;
+  svg{
+    height: 20px;
+    width: 20px;
+    fill: #fff;
+  }
 
   &:hover, &:focus {
     text-decoration: none;

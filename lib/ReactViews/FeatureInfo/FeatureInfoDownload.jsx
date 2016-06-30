@@ -1,6 +1,7 @@
 import React from 'react';
 import Dropdown from '../Generic/Dropdown';
 import FeatureDetection from 'terriajs-cesium/Source/Core/FeatureDetection';
+import Icon from "../Icon.jsx";
 
 import Styles from './feature-info-download.scss';
 
@@ -54,7 +55,7 @@ const FeatureInfoDownload = React.createClass({
                       textProperty="label"
                       theme={{dropdown: Styles.download, list: Styles.dropdownList, button: Styles.dropdownButton}}
                       buttonClassName={Styles.btn}>
-                <i style={{display: 'inline-block'}} className={Styles.iconDownload} /> Download Data&nbsp;▾
+                <span className={Styles.iconDownload}><Icon glyph={Icon.GLYPHS.download}/></span> Download Data&nbsp;▾
             </Dropdown>
         );
     }

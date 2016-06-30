@@ -11,6 +11,7 @@ import CatalogGroup from '../../../Models/CatalogGroup';
 import CsvCatalogItem from '../../../Models/CsvCatalogItem';
 import Dropdown from '../../Generic/Dropdown';
 import raiseErrorToUser from '../../../Models/raiseErrorToUser';
+import Icon from "../../Icon.jsx";
 
 import Styles from './chart-expand-and-download-buttons.scss';
 
@@ -73,6 +74,7 @@ const ChartExpandAndDownloadButtons = React.createClass({
             if (this.props.canDownload) {
                 const downloadDropdownTheme = clone(dropdownTheme);
                 downloadDropdownTheme.button = classNames(Styles.btnSmall, Styles.btnDownload);
+                downloadDropdownTheme.icon = <Icon glyph={Icon.GLYPHS.download}/>;
                 downloadButton = <Dropdown selectOption={this.downloadDropdown} options={nameAndHrefObjects} theme={downloadDropdownTheme} />;
             }
 
@@ -89,7 +91,7 @@ const ChartExpandAndDownloadButtons = React.createClass({
         }
         if (this.props.canDownload && defined(downloads)) {
             const href = downloads[0];
-            downloadButton = <a className={classNames(Styles.btnSmall, Styles.aDownload)} href={href} />;
+            downloadButton = <a className={classNames(Styles.btnSmall, Styles.aDownload)} href={href}><Icon glyph={Icon.GLYPHS.download}/></a>;
         }
         return (
             <div className={Styles.chartExpand}>
