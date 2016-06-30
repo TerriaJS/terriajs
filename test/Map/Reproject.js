@@ -2,16 +2,8 @@
 
 /*global require,describe,it,expect*/
 var Reproject = require('../../lib/Map/Reproject');
-var Terria = require('../../lib/Models/Terria');
 
 describe('Reproject', function() {
-    var terria;
-
-    beforeEach(function () {
-        terria = new Terria({
-            baseUrl: './'
-        });
-    });
 
     it('function crsStringToCode translates CRS strings to Proj4 codes', function() {
         expect(Reproject.crsStringToCode("EPSG:4326")).toEqual("EPSG:4326");
