@@ -6,6 +6,13 @@
       "isOpen": true,
       "items": [
         {
+          "name": "x-y chart changes in 15s",
+          "type": "csv",
+          "url": "build/TerriaJS/test/csv_nongeo/xy.csv",
+          "pollSeconds": 15,
+          "pollUrl": "build/TerriaJS/test/csv_nongeo/xy2.csv"
+        },
+        {
           "name": "Lat/lon changes in 25s",
           "type": "csv",
           "url": "build/TerriaJS/test/csv/lat_lon_enum.csv",
