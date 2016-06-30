@@ -11,6 +11,7 @@ import React from 'react';
 import ShortReport from './Controls/ShortReport';
 import Styles from './workbench-item.scss';
 import ViewingControls from './Controls/ViewingControls';
+import Icon from "../Icon.jsx";
 
 const WorkbenchItem = React.createClass({
     mixins: [ObserveModelMixin],
@@ -71,36 +72,27 @@ const WorkbenchItem = React.createClass({
                             <button type='button'
                                     onClick={this.toggleVisibility}
                                     title="Data show/hide"
-                                    className={classNames(
-                                        Styles.btnVisibility,
-                                        {
-                                            [Styles.btnVisibilityVisible]: workbenchItem.isShown,
-                                            [Styles.btnVisibilityInvisible]: !workbenchItem.isShown
-                                        }
-                                    )}
-                            />
+                                    className={Styles.btnVisibility}>
+                                    {workbenchItem.isShown ? <Icon glyph={Icon.GLYPHS.checkboxOn}/> : <Icon glyph={Icon.GLYPHS.checkboxOff}/>}
+                            </button>
                         </li>
                     </If>
                     <li className={Styles.nameColumn}>
                         <button type='button'
                                 draggable='true'
                                 onDragStart={this.onDragStart}
-                                onDragEnd={this.onDragEnd}
-                                className={classNames(Styles.btn)}>
+                                onDragEnd={this.onDragEnd}>
                             <If condition={!workbenchItem.isMappable}>
-                                <i className={classNames(Styles.icon, Styles.iconLineChart)} />
+                                <span className={Styles.iconLineChart}><Icon glyph={Icon.GLYPHS.lineChart}/></span>
                             </If>
                             {workbenchItem.name}
                         </button>
                     </li>
                     <li className={Styles.toggleColumn}>
                         <button type='button'
-                                onClick={this.toggleDisplay}
-                                className={classNames(
-                                    Styles.btnToggle,
-                                    {[Styles.btnToggleIsOpen]: workbenchItem.isLegendVisible}
-                                )}
-                        />
+                                onClick={this.toggleDisplay}>
+                                {workbenchItem.isLegendVisible ? <Icon glyph={Icon.GLYPHS.opened}/> : <Icon glyph={Icon.GLYPHS.closed}/>}
+                        </button>
                     </li>
                     <li className={Styles.headerClearfix} />
                 </ul>

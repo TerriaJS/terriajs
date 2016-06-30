@@ -3,6 +3,7 @@
 import React from 'react';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import Styles from './search-box.scss';
+import Icon from "../Icon.jsx";
 
 /**
  * Super-simple dumb search box component.
@@ -66,12 +67,14 @@ export default React.createClass({
 
     render() {
         const clearButton = (
-            <button type='button' className={Styles.searchClear} onClick={this.clearSearch} />
+            <button type='button' className={Styles.searchClear} onClick={this.clearSearch}><Icon glyph={Icon.GLYPHS.close}/></button>
         );
 
         return (
             <form className={Styles.searchData} autoComplete='off' onSubmit={event => event.preventDefault()}>
-                <label htmlFor='search' className={Styles.formLabel}> Type keyword to search </label>
+                <label htmlFor='search' className={Styles.formLabel}>
+                <Icon glyph={Icon.GLYPHS.search}/>
+                </label>
                 <input id='search'
                        type='text'
                        name='search'

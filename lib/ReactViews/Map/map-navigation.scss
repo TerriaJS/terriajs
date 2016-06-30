@@ -4,7 +4,8 @@
   position: fixed;
   top: 20px;
   right: $padding;
-  z-index: $front-component-z-index/2;
+  z-index: 1;
+
   @media print{
     display: none;
   }
@@ -19,19 +20,5 @@
 .menu-item {
   display: block;
   float: left;
-}
-
-.btn--about-link {
-  composes: btn from '../../Sass/common/_buttons.scss';
-  composes: btn--map from '../../Sass/common/_buttons.scss';
-
-  margin-right: $padding;
-  border-radius: $radius-small;
-
-  &,
-  &:hover,
-  &:focus {
-    border: 0;
-  }
 }
 

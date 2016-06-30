@@ -3,6 +3,7 @@
 .legend {
   composes: clearfix from '../../../Sass/common/_base.scss';
   composes: list-reset from '../../../Sass/common/_base.scss';
+  font-family: $font-mono;
   li {
     display: block;
   }
@@ -29,7 +30,7 @@
   svg {
     width: 100%;
     display: block;
-    > rect {
+    :global rect.background {
       width: 100%;
       fill: rgba(#fff, 0.15);
     }

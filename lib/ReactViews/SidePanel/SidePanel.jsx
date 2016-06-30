@@ -5,6 +5,7 @@ import SearchBox from '../Search/SearchBox.jsx';
 import SidebarSearch from '../Search/SidebarSearch.jsx';
 import Styles from './side-panel.scss';
 import Workbench from '../Workbench/Workbench.jsx';
+import Icon from "../Icon.jsx";
 
 const SidePanel = React.createClass({
     mixins: [ObserveModelMixin],
@@ -69,13 +70,18 @@ const SidePanel = React.createClass({
                                onFocus={this.startLocationSearch}
                                searchText={searchState.locationSearchText} />
                     <div className={Styles.addData}>
-                        <button type='button' onClick={this.onAddDataClicked} className={Styles.button}>Add Data</button>
+                        <button type='button' onClick={this.onAddDataClicked} className={Styles.button}>
+                            <Icon glyph={Icon.GLYPHS.add}/>Add data
+                        </button>
                     </div>
                 </div>
                 <div className={Styles.body}>
                     <Choose>
                         <When condition={searchState.locationSearchText.length > 0 && searchState.showLocationSearch}>
-                            <SidebarSearch viewState={this.props.viewState} isWaitingForSearchToStart={searchState.isWaitingToStartLocationSearch} />
+                            <SidebarSearch
+                                terria={this.props.terria}
+                                viewState={this.props.viewState}
+                                isWaitingForSearchToStart={searchState.isWaitingToStartLocationSearch} />
                         </When>
                         <When
                             condition={this.props.terria.nowViewing.items && this.props.terria.nowViewing.items.length > 0}>
@@ -89,7 +95,7 @@ const SidePanel = React.createClass({
                                     <li>Browse the Data Catalogue</li>
                                     <li>Load your own data onto the map</li>
                                 </ul>
-                                <p><i className={Styles.iconTip}/><strong>TIP:</strong> <em>All of your active data sets will be listed
+                                <p><Icon glyph={Icon.GLYPHS.bulb}/><strong>TIP:</strong> <em>All of your active data sets will be listed
                                     here</em></p>
                             </div>
                         </Otherwise>
