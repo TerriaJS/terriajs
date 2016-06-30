@@ -4,11 +4,11 @@
 .myLocation{
   position: fixed;
   bottom: $input-height + $padding;
-  right: 2vw;
+  right: 35px;
   @media screen and (min-width: $sm){
     position: absolute;
     right: 28px;
-    top: 170px;
+    top: 153px;
   }
   @media print{
     display: none;
@@ -19,10 +19,13 @@
     display: block;
     background: #fff;
     color: $dark;
-    height: 40px;
-    width: 40px;
+    height: 31px;
+    width: 30px;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.15);
     svg{
-      height: 40px;
-      width: 40px;
+      height: 20px;
+      width: 20px;
+      margin: 0 auto;
+      vertical-align: middle;
     }
   }
