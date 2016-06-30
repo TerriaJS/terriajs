@@ -7,6 +7,8 @@ import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 import Entity from 'terriajs-cesium/Source/DataSources/Entity';
+import Icon from "../Icon.jsx";
+
 import Styles from './feature-info-panel.scss';
 import classNames from 'classnames';
 
@@ -37,6 +39,10 @@ const FeatureInfoPanel = React.createClass({
                 if (defined(pickedFeatures.allFeaturesAvailablePromise)) {
                     pickedFeatures.allFeaturesAvailablePromise.then(() => {
                         terria.selectedFeature = pickedFeatures.features.filter(featureHasInfo)[0];
+                        if (!defined(terria.selectedFeature) && (pickedFeatures.features.length > 0)) {
+                            // Handles the case when no features have info - still want something to be open.
+                            terria.selectedFeature = pickedFeatures.features[0];
+                        }
                     });
                 }
             }
@@ -68,6 +74,7 @@ const FeatureInfoPanel = React.createClass({
                     catalogItem={catalogItem}
                     features={features}
                     terria={this.props.terria}
+                    onToggleOpen={this.toggleOpenFeature}
                 />
             );
         });
@@ -75,10 +82,25 @@ const FeatureInfoPanel = React.createClass({
 
     close() {
         this.props.viewState.featureInfoPanelIsVisible = false;
+
+        // give the close animation time to finish before unselecting, to avoid jumpiness
+        setTimeout(() => {
+            this.props.terria.pickedFeatures = undefined;
+            this.props.terria.selectedFeature = undefined;
+        }, 200);
     },
 
     toggleCollapsed() {
         this.props.viewState.featureInfoPanelIsCollapsed = !this.props.viewState.featureInfoPanelIsCollapsed;
+    },
+
+    toggleOpenFeature(feature) {
+        const terria = this.props.terria;
+        if (feature === terria.selectedFeature) {
+            terria.selectedFeature = undefined;
+        } else {
+            terria.selectedFeature = feature;
+        }
     },
 
     render() {
@@ -101,7 +123,9 @@ const FeatureInfoPanel = React.createClass({
                         Feature Information
                     </button>
                     <button type='button' onClick={ this.close } className={Styles.btnCloseFeature}
-                            title="Close data panel"/>
+                            title="Close data panel">
+                            <Icon glyph={Icon.GLYPHS.close}/>
+                    </button>
                 </div>
                 <ul className={Styles.body}>
                     <Choose>

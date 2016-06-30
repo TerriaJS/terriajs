@@ -9,6 +9,7 @@ import DropdownPanel from '../DropdownPanel.jsx';
 
 import Styles from './share-panel.scss';
 import DropdownStyles from '../dropdown-panel.scss';
+import Icon from "../../../Icon.jsx";
 
 const SharePanel = React.createClass({
     mixins: [ObserverModelMixin],
@@ -17,7 +18,8 @@ const SharePanel = React.createClass({
         terria: React.PropTypes.object,
         userPropWhiteList: React.PropTypes.array,
         isOpen: React.PropTypes.bool,
-        shortenUrls: React.PropTypes.bool
+        shortenUrls: React.PropTypes.bool,
+        viewState: React.PropTypes.object.isRequired
     },
 
     getDefaultProps() {
@@ -105,9 +107,10 @@ const SharePanel = React.createClass({
 
     render() {
         const dropdownTheme = {
-            btn: classNames(Styles.btnMap, Styles.btnShare),
+            btn: Styles.btnShare,
             outer: Styles.sharePanel,
-            inner: Styles.dropdownInner
+            inner: Styles.dropdownInner,
+            icon: 'share'
         };
 
         const iframeCode = this.state.shareUrl.length ?
@@ -120,6 +123,7 @@ const SharePanel = React.createClass({
         return (
             <DropdownPanel theme={dropdownTheme}
                            btnText="Share"
+                           viewState={this.props.viewState}
                            btnTitle="change settings"
                            onOpenChanged={this.onOpenChanged}>
                 <If condition={this.state.isOpen}>
@@ -149,7 +153,9 @@ const SharePanel = React.createClass({
                             <div className={classNames(DropdownStyles.section, Styles.shortenUrl)}>
                                 <button
                                     className={classNames(Styles.btn, {[Styles.btnCheckboxOn]: this.shouldShorten(), [Styles.btnCheckboxOff]: !this.shouldShorten()})}
-                                    onClick={this.onShortenClicked}>Shorten the share URL using a web service
+                                    onClick={this.onShortenClicked}>
+                                    {this.shouldShorten() ? <Icon glyph={Icon.GLYPHS.checkboxOn}/> : <Icon glyph={Icon.GLYPHS.checkboxOff}/>}
+                                    Shorten the share URL using a web service
                                 </button>
                             </div>
                         </If>

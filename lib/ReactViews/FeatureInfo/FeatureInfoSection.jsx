@@ -2,17 +2,19 @@
 
 import Mustache from 'mustache';
 import React from 'react';
-import defined from 'terriajs-cesium/Source/Core/defined';
-import isArray from 'terriajs-cesium/Source/Core/isArray';
-import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
+
 import CesiumMath from 'terriajs-cesium/Source/Core/Math';
 import classNames from 'classnames';
+import defined from 'terriajs-cesium/Source/Core/defined';
+import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
+import isArray from 'terriajs-cesium/Source/Core/isArray';
 
+import FeatureInfoDownload from './FeatureInfoDownload';
 import formatNumberForLocale from '../../Core/formatNumberForLocale';
 import ObserveModelMixin from '../ObserveModelMixin';
 import propertyGetTimeValues from '../../Core/propertyGetTimeValues';
 import renderMarkdownInReact from '../../Core/renderMarkdownInReact';
-import FeatureInfoDownload from './FeatureInfoDownload';
+import Icon from "../Icon.jsx";
 
 import Styles from './feature-info-section.scss';
 
@@ -58,13 +60,16 @@ const FeatureInfoSection = React.createClass({
         }
     },
 
-    getTemplateData() {
-        const propertyData = propertyValues(
+    getPropertyValues() {
+        return propertyValues(
             this.props.feature,
             this.props.clock,
             this.props.template && this.props.template.formats
         );
+    },
 
+    getTemplateData() {
+        const propertyData = this.getPropertyValues();
         if (defined(propertyData)) {
 
             propertyData.terria = {
@@ -78,7 +83,6 @@ const FeatureInfoSection = React.createClass({
                 };
             }
         }
-
         return propertyData;
     },
 
@@ -107,7 +111,11 @@ const FeatureInfoSection = React.createClass({
         //     markdownToHtml (which applies MarkdownIt.render and DOMPurify.sanitize), and then
         //     parseCustomHtmlToReact (which calls htmlToReactParser).
         // Note that there is an unnecessary HTML encoding and decoding in this combination which would be good to remove.
-        return feature.currentDescription || getCurrentDescription(feature, this.props.clock.currentTime);
+        let description = feature.currentDescription || getCurrentDescription(feature, this.props.clock.currentTime);
+        if (!defined(description) && defined(feature.properties)) {
+            description = describeFromProperties(feature.properties, this.props.clock.currentTime);
+        }
+        return description;
     },
 
     renderDataTitle() {
@@ -124,15 +132,22 @@ const FeatureInfoSection = React.createClass({
 
     isConstant() {
         // The info is constant if:
-        // No template is provided, and feature.description is defined and constant,
+        // 1. There is no info (ie. no description and no properties).
+        // 2. A template is provided and all feature.properties are constant.
         // OR
-        // A template is provided and all feature.properties are constant.
+        // 3. No template is provided, and feature.description is either not defined, or defined and constant.
         // If info is NOT constant, we need to keep updating the description.
         const feature = this.props.feature;
-        const template = this.props.template;
-        let isConstant = !defined(template) && defined(feature.description) && feature.description.isConstant;
-        isConstant = isConstant || (defined(template) && areAllPropertiesConstant(feature.properties));
-        return isConstant;
+        if (!defined(feature.description) && !defined(feature.properties)) {
+            return true;
+        }
+        if (defined(this.props.template)) {
+            return areAllPropertiesConstant(feature.properties);
+        }
+        if (defined(feature.description)) {
+            return feature.description.isConstant; // This should always be a "Property" eg. a ConstantProperty.
+        }
+        return true;
     },
 
     toggleRawData() {
@@ -144,24 +159,38 @@ const FeatureInfoSection = React.createClass({
     render() {
         const catalogItemName = (this.props.catalogItem && this.props.catalogItem.name) || '';
         const fullName = (catalogItemName ? (catalogItemName + ' - ') : '') + this.renderDataTitle();
-        const templateData = this.getTemplateData();
+        const templateData = this.getPropertyValues();
+        if (defined(templateData)) {
+            delete templateData._terria_columnAliases;
+        }
+        const showRawData = !this.hasTemplate() || this.state.showRawData;
+        let rawDataDescription;
+        if (showRawData) {
+            rawDataDescription = this.descriptionFromFeature();
+        }
 
         return (
             <li className={classNames(Styles.section)}>
-                <button type='button' onClick={this.clickHeader} className={classNames(Styles.title, {[Styles.btnIsOpen]: this.props.isOpen})}>
+                <button type='button' onClick={this.clickHeader} className={Styles.title}>
                     {fullName}
+                    {this.props.isOpen ? <Icon glyph={Icon.GLYPHS.opened}/> : <Icon glyph={Icon.GLYPHS.closed}/>}
                 </button>
                 <If condition={this.props.isOpen}>
                     <section className={Styles.content}>
                         <If condition={this.hasTemplate()}>
                             {renderMarkdownInReact(this.descriptionFromTemplate(), this.props.catalogItem, this.props.feature)}
                             <button type="button" className={Styles.rawDataButton} onClick={this.toggleRawData}>
-                                {this.state.showRawData ? 'Hide' : 'Show'} Raw Data
+                                {this.state.showRawData ? 'Hide Raw Data' : 'Show Raw Data'}
                             </button>
                         </If>
 
-                        <If condition={!this.hasTemplate() || this.state.showRawData}>
-                            {renderMarkdownInReact(this.descriptionFromFeature(), this.props.catalogItem, this.props.feature)}
+                        <If condition={showRawData}>
+                            <If condition={defined(rawDataDescription)}>
+                                {renderMarkdownInReact(rawDataDescription, this.props.catalogItem, this.props.feature)}
+                            </If>
+                            <If condition={!defined(rawDataDescription)}>
+                                <div ref="no-info" key="no-info">No information available.</div>
+                            </If>
                             <If condition={defined(templateData)}>
                                 <FeatureInfoDownload key='download'
                                     viewState={this.props.viewState}
@@ -256,7 +285,7 @@ function areAllPropertiesConstant(properties) {
  * @returns {String}
  */
 function getCurrentDescription(feature, currentTime) {
-    if (typeof feature.description.getValue === 'function') {
+    if (feature.description && typeof feature.description.getValue === 'function') {
         return feature.description.getValue(currentTime);
     }
     return feature.description;
@@ -303,6 +332,43 @@ function mustacheFormatNumberFunction() {
         const options = JSON.parse(jsonOptions);
         return formatNumberForLocale(render(components[2]), options);
     };
+}
+
+const simpleStyleIdentifiers = ['title', 'description', //
+'marker-size', 'marker-symbol', 'marker-color', 'stroke', //
+'stroke-opacity', 'stroke-width', 'fill', 'fill-opacity'];
+
+/**
+ * A way to produce a description if properties are available but no template is given.
+ * Derived from Cesium's geoJsonDataSource, but made to work with possibly time-varying properties.
+ * @private
+ */
+function describeFromProperties(properties, time) {
+    let html = '';
+    for (const key in properties) {
+        if (properties.hasOwnProperty(key)) {
+            if (simpleStyleIdentifiers.indexOf(key) !== -1) {
+                continue;
+            }
+            let value = properties[key];
+            if (defined(value)) {
+                if (defined(value.getValue)) {
+                    value = value.getValue(time);
+                }
+                if (Array.isArray(properties)) {
+                    html += '<tr><td>' + describeFromProperties(value, time) + '</td></tr>';
+                } else if (typeof value === 'object') {
+                    html += '<tr><th>' + key + '</th><td>' + describeFromProperties(value, time) + '</td></tr>';
+                } else {
+                    html += '<tr><th>' + key + '</th><td>' + value + '</td></tr>';
+                }
+            }
+        }
+    }
+    if (html.length > 0) {
+        html = '<table class="cesium-infoBox-defaultTable"><tbody>' + html + '</tbody></table>';
+    }
+    return html;
 }
 
 module.exports = FeatureInfoSection;

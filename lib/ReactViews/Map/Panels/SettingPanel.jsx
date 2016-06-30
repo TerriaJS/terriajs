@@ -6,6 +6,7 @@ import classNames from 'classnames';
 import ViewerMode from '../../../Models/ViewerMode';
 import ObserveModelMixin from '../../ObserveModelMixin';
 import DropdownPanel from './DropdownPanel.jsx';
+import Icon from "../../Icon.jsx";
 
 import Styles from './setting-panel.scss';
 import DropdownStyles from './dropdown-panel.scss';
@@ -17,7 +18,8 @@ const SettingPanel = React.createClass({
     propTypes: {
         terria: React.PropTypes.object,
         viewerModes: React.PropTypes.array,
-        allBaseMaps: React.PropTypes.array
+        allBaseMaps: React.PropTypes.array,
+        viewState: React.PropTypes.object.isRequired
     },
 
     getDefaultProps() {
@@ -80,11 +82,12 @@ const SettingPanel = React.createClass({
         const dropdownTheme = {
             outer: Styles.settingPanel,
             inner: Styles.dropdownInner,
-            btn: Styles.btnDropdown
+            btn: Styles.btnDropdown,
+            icon: 'sphere'
         };
 
         return (
-            <DropdownPanel theme={dropdownTheme} btnTitle="Change view" btnText="Map">
+            <DropdownPanel theme={dropdownTheme} btnTitle="Change view" btnText="Map" viewState={this.props.viewState}>
                 <div className={classNames(Styles.viewer, DropdownStyles.section)}>
                     <label className={DropdownStyles.heading}> Map View </label>
                     <ul className={Styles.viewerSelector}>
@@ -105,11 +108,12 @@ const SettingPanel = React.createClass({
                         <For each="baseMap" index="i" of={this.props.allBaseMaps}>
                             <li key={i} className={Styles.listItem}>
                                 <button
-                                    className={classNames(Styles.btnBaseMap, {[Styles.isActive]: baseMap.catalogItem.name === currentBaseMap})}
+                                    className={classNames(Styles.btnBaseMap, {[Styles.isActive]: baseMap.catalogItem.name === currentBaseMap })}
                                     onClick={that.selectBaseMap.bind(this, baseMap)}
                                     onMouseEnter={that.mouseEnterBaseMap.bind(this, baseMap)}
                                     onMouseLeave={that.mouseLeaveBaseMap.bind(this, baseMap)}
                                     onFocus={that.mouseEnterBaseMap.bind(this, baseMap)}>
+                                    {baseMap.catalogItem.name === currentBaseMap ? <Icon glyph={Icon.GLYPHS.selected }/>: <Icon glyph={Icon.GLYPHS.radioOff}/>}
                                     <img alt={baseMap.catalogItem.name} src={baseMap.image}/>
                                 </button>
                             </li>

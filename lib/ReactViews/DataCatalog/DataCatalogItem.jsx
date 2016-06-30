@@ -1,5 +1,4 @@
 import React from 'react';
-
 import addedByUser from '../../Core/addedByUser';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import ObserveModelMixin from '../ObserveModelMixin';
@@ -21,7 +20,7 @@ const DataCatalogItem = React.createClass({
         this.props.viewState.viewCatalogItem(this.props.item);
         // mobile switch to nowvewing
         this.props.viewState.switchMobileView(this.props.viewState.mobileViewOptions.preview);
-        if (this.props.viewState.previewedItem.isEnabled === true &&
+        if (this.props.item.isEnabled === true &&
             this.props.viewState.closeModalAfterAdd === true &&
             !event.shiftKey && !event.ctrlKey) {
 
