@@ -91,7 +91,7 @@ const DataPreviewMap = React.createClass({
         this.lastPreviewedCatalogItem = this.props.previewedCatalogItem;
 
         this.setState({
-            previewBadgeText: 'PREVIEW LOADING...'
+            previewBadgeText: 'DATA PREVIEW LOADING...'
         });
 
         this.isZoomedToExtent = false;
@@ -142,7 +142,7 @@ const DataPreviewMap = React.createClass({
                             });
                         } else if (that.removePreviewFromMap) {
                             this.setState({
-                                previewBadgeText: 'PREVIEW'
+                                previewBadgeText: 'DATA PREVIEW'
                             });
                         } else {
                             this.setState({
@@ -161,7 +161,7 @@ const DataPreviewMap = React.createClass({
                 console.error(err);
 
                 this.setState({
-                    previewBadgeText: 'PREVIEW ERROR'
+                    previewBadgeText: 'DATA PREVIEW ERROR'
                 });
             });
         }

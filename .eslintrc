@@ -148,7 +148,7 @@
         "eol-last": 0,
         "func-names": 0,
         "func-style": 0,
-        "indent": [0, 4],
+        "indent": [0, 4, {"SwitchCase": 1}],
         "key-spacing": [0, {
             "beforeColon": false,
             "afterColon": true

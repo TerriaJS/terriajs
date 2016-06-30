@@ -11,6 +11,9 @@
 
 .provider-result {
   margin-top: $padding-small;
+  svg{
+    fill: #ffffff;
+  }
 }
 
 .items {
@@ -18,27 +21,11 @@
   composes: list-reset from '../../Sass/common/_base.scss';
 }
 
+
 .btn--done {
   composes: btn from '../../Sass/common/_buttons.scss';
   composes: btn from '../badge-bar.scss';
   composes: btn--tertiary-dark from '../../Sass/common/_buttons.scss';
-
   padding: 7px 10px;
-  margin-top: 5px;
   border-radius: 2px;
-}
-
-// Search data catalog button
-//
-// Markup:
-// <button class="btn btn--data-search">Search <strong> a </strong>in data catalog</button>
-//
-// Style guide: Buttons.data-search
-
-.btn--data-search {
-  composes: btn from '../../Sass/common/_buttons.scss';
-
-  &:hover .icon--right-arrow {
-    opacity: 1;
-  }
 }

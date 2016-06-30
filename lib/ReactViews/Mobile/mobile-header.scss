@@ -25,46 +25,47 @@
   padding-top: $padding;
 }
 
-.btn-add {
-  composes: btn from '../../Sass/common/_buttons.scss';
-  composes: btn-primary from '../../Sass/common/_buttons.scss';
-  composes: btn--increase from '../../Sass/common/_buttons.scss';
-  position: relative;
-  padding: $padding $padding $padding $padding*3;
-  text-transform: uppercase;
-  width: auto;
-  &:before {
-    position: absolute;
-    top: $padding;
-    left: $padding/2;
-    font-size: 1.5rem;
-  }
-  text-align: right;
-
+.btnAdd{
+    composes: btn from '../../Sass/common/_buttons.scss';
+    composes: btn-primary from '../../Sass/common/_buttons.scss';
+    position: relative;
+    padding: $padding $padding $padding $padding*3;
+    text-transform: uppercase;
+    width: auto;
+    text-align: right;
+    svg{
+      position: absolute;
+      top: $padding;
+      left: $padding/2;
+      width: 18px;
+      height: 18px;
+      fill: #ffffff;
+    }
 }
 
 .btn-search {
-  composes: btn--search from '../../Sass/common/_buttons.scss';
   display: block;
   font-size: 20px;
-  &:before {
-    display: block;
-    margin: 0 $padding-small 0 $padding;
+  svg{
+    height: 30px;
+    width: 30px;
+    fill: #fff;
   }
 }
 
 .btn-now-viewing {
   composes: btn from '../../Sass/common/_buttons.scss';
   composes: btn-primary from '../../Sass/common/_buttons.scss';
-  composes: btn--visible from '../../Sass/common/_buttons.scss';
   margin: 0 $padding-small;
   padding: $padding-small;
   padding-right: $padding;
   position: relative;
   text-transform: uppercase;
   width: 50px;
-  &:before {
-    font-size: 1.5rem;
+  svg{
+    height: 30px;
+    width: 30px;
+    fill: #fff;
   }
   .nowViewingCount {
     position: absolute;
@@ -118,20 +119,21 @@
   }
 }
 
-.btn-menu {
-  composes: btn--menu from '../../Sass/common/_buttons.scss';
-  font-size: 25px;
-  padding: 0 $padding-small;
-  border-radius: $radius-small;
-  width: 37px;
-  margin-right: 3px;
-  &:hover, &:focus, & {
-    border: 1px solid rgba(#fff, 0.5);
-  }
+.btnMenu{
+    font-size: 25px;
+    padding: 0 $padding-small;
+    border-radius: $radius-small;
+    margin-right: 3px;
+    &:hover, &:focus, & {
+        border: 1px solid rgba(#fff, 0.5);
+    }
+    svg{
+      height: 37px;
+      width: 37px;
+      fill: #fff;
+    }
 }
 
-.btn-cancel {
-  composes: btn from '../../Sass/common/_buttons.scss';
-}
+
 
 @include empty-module("form-search-data");

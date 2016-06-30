@@ -4,6 +4,7 @@ import ObserveModelMixin from '../../ObserveModelMixin';
 import Rectangle from 'terriajs-cesium/Source/Core/Rectangle';
 import Styles from './my_location.scss';
 import TerriaError from '../../../Core/TerriaError';
+import Icon from "../../Icon.jsx";
 
 const GeoJsonCatalogItem = require('../../../Models/GeoJsonCatalogItem');
 
@@ -83,7 +84,9 @@ const MyLocation = React.createClass({
         return <div className={Styles.myLocation}>
                   <button type='button' className={Styles.btn}
                           title='go to my location'
-                          onClick={this.handleCick}></button>
+                          onClick={this.handleCick}>
+                          <Icon glyph={Icon.GLYPHS.geolocation}/>
+                  </button>
                </div>;
     }
 });

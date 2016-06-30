@@ -3,9 +3,9 @@
   "version": "3.4.0",
   "description": "Geospatial data visualization platform.",
   "license": "Apache-2.0",
-  "engines" : {
-    "node" : ">= 5.10.0",
-    "npm":  ">= 3.0.0"
+  "engines": {
+    "node": ">= 5.10.0",
+    "npm": ">= 3.0.0"
   },
   "repository": {
     "type": "git",
@@ -60,6 +60,7 @@
   "devDependencies": {
     "babel-eslint": "^6.0.2",
     "css-loader": "^0.23.1",
+    "electron-prebuilt": "^1.2.3",
     "eslint": "^2.7.0",
     "eslint-plugin-jsx-control-statements": "2.1.1",
     "eslint-plugin-react": "^4.3.0",
@@ -73,6 +74,7 @@
     "karma-browserstack-launcher": "^0.1.10",
     "karma-chrome-launcher": "^0.2.3",
     "karma-detect-browsers": "^2.0.2",
+    "karma-electron-launcher": "^0.1.0",
     "karma-firefox-launcher": "^0.1.7",
     "karma-ie-launcher": "^0.2.0",
     "karma-jasmine": "^0.3.8",
@@ -87,6 +89,7 @@
     "react-addons-test-utils": "0.14.7",
     "react-dom": "0.14.x",
     "react-shallow-testutils": "^1.0.0",
+    "svg-sprite-loader": "0.0.23",
     "socket.io": "1.4.7",
     "terriajs-jasmine-ajax": "^3.2.1",
     "terriajs-server": "^1.4.1",
