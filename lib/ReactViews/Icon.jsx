@@ -1,4 +1,6 @@
 import React from 'react';
+import classNames from 'classnames';
+
 // icon.jsx
 const GLYPHS = {
     add: require('../../wwwroot/images/icons/add.svg'),
@@ -44,12 +46,13 @@ const GLYPHS = {
 const Icon = React.createClass({
     propTypes: {
         glyph: React.PropTypes.string,
-        style: React.PropTypes.object
+        style: React.PropTypes.object,
+        className: React.PropTypes.string
     },
     render() {
         const glyph = this.props.glyph;
         return (
-            <svg viewBox="0 0 100 100" style= {this.props.style} className="icon" dangerouslySetInnerHTML={{__html: '<use xlink:href="' + glyph + '"></use>'}}/>
+            <svg viewBox="0 0 100 100" className={classNames('icon', this.props.className)} style={this.props.style} dangerouslySetInnerHTML={{__html: '<use xlink:href="' + glyph + '"></use>'}}/>
         );
     }
 });
