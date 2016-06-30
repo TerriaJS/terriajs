@@ -14,13 +14,15 @@ if (typeof Intl === 'object' && typeof Intl.NumberFormat === 'function') {
 describe('TableStructure', function() {
 
     it('can read from json object', function() {
+        // Use a copy of data to make the column, because knockout adds stuff to data.
+        // Also, test a "slice" of the column's values, to remove knockout stuff.
         var data = [['x', 'y'], [1, 5], [3, 8], [4, -3]];
-        var tableStructure = TableStructure.fromJson(data);
+        var tableStructure = TableStructure.fromJson(data.slice());
         expect(tableStructure.columns.length).toEqual(2);
         expect(tableStructure.columns[0].name).toEqual('x');
-        expect(tableStructure.columns[0].values).toEqual([1, 3, 4]);
+        expect(tableStructure.columns[0].values.slice()).toEqual([1, 3, 4]);
         expect(tableStructure.columns[1].name).toEqual('y');
-        expect(tableStructure.columns[1].values).toEqual([5, 8, -3]);
+        expect(tableStructure.columns[1].values.slice()).toEqual([5, 8, -3]);
     });
 
     it('can read from csv string', function() {
@@ -28,9 +30,9 @@ describe('TableStructure', function() {
         var tableStructure = TableStructure.fromCsv(csvString);
         expect(tableStructure.columns.length).toEqual(2);
         expect(tableStructure.columns[0].name).toEqual('x');
-        expect(tableStructure.columns[0].values).toEqual([1, 3, 4]);
+        expect(tableStructure.columns[0].values.slice()).toEqual([1, 3, 4]);
         expect(tableStructure.columns[1].name).toEqual('y');
-        expect(tableStructure.columns[1].values).toEqual([5, 8, -3]);
+        expect(tableStructure.columns[1].values.slice()).toEqual([5, 8, -3]);
     });
 
     it('can read from json object into existing structure', function() {
@@ -39,9 +41,9 @@ describe('TableStructure', function() {
         tableStructure.loadFromJson(data);
         expect(tableStructure.columns.length).toEqual(2);
         expect(tableStructure.columns[0].name).toEqual('x');
-        expect(tableStructure.columns[0].values).toEqual([1, 3, 4]);
+        expect(tableStructure.columns[0].values.slice()).toEqual([1, 3, 4]);
         expect(tableStructure.columns[1].name).toEqual('y');
-        expect(tableStructure.columns[1].values).toEqual([5, 8, -3]);
+        expect(tableStructure.columns[1].values.slice()).toEqual([5, 8, -3]);
     });
 
     it('can read from csv string into existing structure', function() {
@@ -50,9 +52,9 @@ describe('TableStructure', function() {
         tableStructure.loadFromCsv(csvString);
         expect(tableStructure.columns.length).toEqual(2);
         expect(tableStructure.columns[0].name).toEqual('x');
-        expect(tableStructure.columns[0].values).toEqual([1, 3, 4]);
+        expect(tableStructure.columns[0].values.slice()).toEqual([1, 3, 4]);
         expect(tableStructure.columns[1].name).toEqual('y');
-        expect(tableStructure.columns[1].values).toEqual([5, 8, -3]);
+        expect(tableStructure.columns[1].values.slice()).toEqual([5, 8, -3]);
     });
 
     it('can convert to ArrayOfColumns', function() {
