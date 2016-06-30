@@ -460,4 +460,34 @@ describe('WebMapServiceCatalogItem', function() {
         });
         wmsItem.load().then(done.fail).otherwise(done);
     });
+
+    it('detects ncWMS implementation correctly', function(done) {
+        wmsItem.updateFromJson({
+            url: 'http://example.com',
+            metadataUrl: 'test/WMS/ncwms_service.xml',
+            layers: 'ncwms'
+        });
+        wmsItem.load().then(function() {
+            expect(wmsItem.isNcWMS).toBe(true);
+            done();
+        }).otherwise(function(e) {
+            fail(e);
+            done();
+        });
+    });
+
+    it('does not indicate ncWMS on other service', function(done) {
+        wmsItem.updateFromJson({
+            url: 'http://example.com',
+            metadataUrl: 'test/WMS/single_style_legend_url.xml',
+            layers: 'single_period'
+        });
+        wmsItem.load().then(function() {
+            expect(wmsItem.isNcWMS).toBe(undefined);
+            done();
+        }).otherwise(function(e) {
+            fail(e);
+            done();
+        });
+    });
 });

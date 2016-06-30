@@ -1,0 +1,34 @@
+@import '~terriajs-variables';
+@import '../../Sass/common/mixins';
+
+.map{
+  position: relative;
+}
+.badge{
+  top: 5px;
+  left: 0;
+  padding: 3px 5px 0 5px;
+  height: 16px;
+  font-size: 75%;
+  position: absolute;
+  background: #fff;
+}
+
+//Preview map
+.terria-preview {
+  &:global(.leaflet-container) {
+    height: 150px;
+    overflow: hidden;
+    position: relative;
+    background: #d5d5d5;
+    cursor: auto;
+    margin: $padding 0;
+  }
+
+  :global {
+    .leaflet-control-attribution {
+      font-size: 6px;
+      background: none;
+    }
+  }
+}

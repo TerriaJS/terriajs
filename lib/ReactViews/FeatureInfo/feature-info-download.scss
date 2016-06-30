@@ -1,0 +1,25 @@
+@import '~terriajs-variables';
+@import '../../Sass/common/mixins';
+
+.download {
+  float: right;
+  margin: 10px 1px;
+}
+
+.btn {
+  composes: btn from './feature-info-panel.scss';
+  composes: btn-primary from '../../Sass/common/_buttons.scss';
+}
+
+.icon--download {
+  composes: icon from '../../Sass/common/_icons.scss';
+  composes: icon-download from '../../Sass/common/_icons.scss';
+}
+
+.dropdown__list {
+  display: flex;
+}
+
+.dropdown__button {
+  composes: btn--small from '../../Sass/common/_buttons.scss';
+}

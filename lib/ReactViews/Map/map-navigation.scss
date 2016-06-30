@@ -1,0 +1,37 @@
+@import '~terriajs-variables';
+
+.map-navigation{
+  position: fixed;
+  top: 20px;
+  right: $padding;
+  z-index: $front-component-z-index/2;
+  @media print{
+    display: none;
+  }
+}
+
+.menu {
+  composes: list-reset from '../../Sass/common/_base.scss';
+  composes: clearfix from '../../Sass/common/_base.scss';
+  composes: sm-show from '../../Sass/common/_base.scss';
+}
+
+.menu-item {
+  display: block;
+  float: left;
+}
+
+.btn--about-link {
+  composes: btn from '../../Sass/common/_buttons.scss';
+  composes: btn--map from '../../Sass/common/_buttons.scss';
+
+  margin-right: $padding;
+  border-radius: $radius-small;
+
+  &,
+  &:hover,
+  &:focus {
+    border: 0;
+  }
+}
+

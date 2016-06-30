@@ -1,0 +1,40 @@
+@import '~terriajs-variables';
+@import '../../Sass/common/mixins';
+
+.mobileModal{
+  position: fixed;
+  top: $mobile-header-height;
+  bottom: 0;
+  background: rgba(#fff, 0.8);
+  left: 0;
+  right: 0;
+  color: $modal-text;
+  display: none;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  width: 100%;
+  &.isOpen{
+      display: block;
+  }
+}
+
+.modalBg{
+  background: rgba(#fff, 0.5);
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 100%;
+  padding: $input-height $padding-small $padding-small $padding-small;
+}
+
+.closeModal{
+  composes: btn from '../../Sass/common/_buttons.scss';
+  composes: btn-primary from '../../Sass/common/_buttons.scss';
+  text-align: right;
+  border-bottom: 2px solid #fff;
+  position: fixed;
+  z-index: 999;
+}
+
+.data-catalog {
+  composes: data-catalog from '../ExplorerWindow/Tabs/data-catalog-tab.scss';
+}

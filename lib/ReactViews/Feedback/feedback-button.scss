@@ -1,0 +1,25 @@
+@import '~terriajs-variables';
+@import '../../Sass/common/mixins';
+
+.feedback{
+    background: #fff;
+    color: $dark;
+    border-radius: 20px;
+    box-shadow: $box-shadow;
+    @media print{
+        display: none;
+    }
+}
+
+.btnFeedback{
+    composes: btn from '../../Sass/common/_buttons.scss';
+    composes: icon from '../../Sass/common/_icons.scss';
+    composes: icon-feedback from '../../Sass/common/_icons.scss';
+    &:before{
+        padding-right: $padding;
+    }
+    @media print{
+        display: none;
+    }
+}
+

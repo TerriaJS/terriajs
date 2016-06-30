@@ -1,0 +1,57 @@
+@import '~terriajs-variables';
+@import '../../Sass/common/mixins';
+
+.section {
+  composes: clearfix from '../../Sass/common/_base.scss';
+  background: $overlay;
+  border-top: 1px solid $dark-lighter;
+}
+
+.title{
+  composes: btn from './feature-info-panel.scss';
+  composes: btn--toggle from '../../Sass/common/_buttons.scss';
+
+  position: relative;
+  width: 100%;
+  background: $dark;
+
+  &:before{
+    position: absolute;
+    right: $padding;
+    top: 0;
+  }
+}
+
+.btn--is-open {
+  composes: is-open from '../../Sass/common/_buttons.scss';
+}
+
+.content{
+  padding: $padding-small;
+  position: relative;
+
+  // Can't change these to target classes because we're directly styling markup from cesium.
+  table {
+    font-family: monospace;
+    max-width: 100%;
+  }
+
+  td {
+    position: relative;
+    border-collapse: collapse;
+    border: 1px solid $dark;
+    font-size: 13px;
+  }
+}
+
+.raw-data-button {
+  composes: btn from '../../Sass/common/_buttons.scss';
+  composes: btn-primary from '../../Sass/common/_buttons.scss';
+  composes: btn--small from '../../Sass/common/_buttons.scss';
+
+  width: auto;
+  float: right;
+
+  margin-bottom: 13px;
+  margin-right: 1px;
+}

@@ -1,0 +1,47 @@
+@import '~terriajs-variables';
+@import '../../../Sass/common/mixins';
+
+// Map Zoom
+//
+// Markup:
+// <div class="zoomControl">
+// <ul>
+// <li><button class="btn btn--increase" title="zoom in"></button></li>
+// <li><button class="btn btn--refresh" title="reset zoom"></button></li>
+// <li><button class="btn btn--decrease" title="zoom out"></button></li></ul>
+// </div>
+//
+// Style guide: Component.map-zoom
+
+.zoomControl {
+  composes: sm-show from '../../../Sass/common/_base.scss';
+  background: $dark;
+  color: #fff;
+  width: $ring-width*2.2;
+  border-radius: 100px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  text-align: center;
+  font-size: 15px;
+  position: absolute;
+  right: 34px;
+  top: 240px;
+}
+
+.list-reset {
+  composes: list-reset from '../../../Sass/common/_base.scss';
+}
+
+.increase {
+  composes: btn--increase from '../../../Sass/common/_buttons.scss';
+  padding: 0;
+}
+
+.decrease {
+  composes: btn--decrease from '../../../Sass/common/_buttons.scss';
+  padding: 0;
+}
+
+.refresh {
+  composes: btn--refresh from '../../../Sass/common/_buttons.scss';
+  padding: 0;
+}

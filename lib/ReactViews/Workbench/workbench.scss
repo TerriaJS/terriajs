@@ -1,0 +1,18 @@
+@import '~terriajs-variables';
+@import '../../Sass/common/mixins';
+
+.workbench {}
+
+.remove-button {
+  composes: btn from '../../Sass/common/_buttons.scss';
+  composes: btn from '../badge-bar.scss';
+
+  display: inline-block;
+  padding-right: 5px;
+}
+
+.icon-remove {
+  composes: icon from '../../Sass/common/_icons.scss';
+  composes: icon-remove from '../../Sass/common/_icons.scss';
+  display: inline-block;
+}

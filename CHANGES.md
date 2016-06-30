@@ -2,6 +2,12 @@
 Change Log
 ==========
 
+### 4.0.0
+
+* `CswCatalogGroup` will now include Web Processing Services from the catalog if configured with `includeWps` set to true.
+* `WebMapServiceCatalogItem` will now detect ncWMS servers and set isNcWMS to true.
+* Added partial support for the SDMX-JSON format.
+
 ### 3.4.0
 
 * Support JSON5 (http://json5.org/) use in init files and config files, so comments can be used and object keys don't need to be quoted. 
@@ -194,6 +200,17 @@ Change Log
   - `nullColor`: A css string. Defaults to black. This colour is used to display null values. It is also used to colour points when no variable is selected.
   - `nullLabel`: A string used to label null or blank values in the legend. Defaults to ''.
   - `timeColumn`: Provide the name or index (starting at 0) of a csv column, if any. Defaults to the first time column found, if any. Use `null` to explicitly disregard all time columns.
+* Removed variables consisting only of html tags from the Now Viewing panel.
+* Added support for the csv datetime formats: YYYY, YYYY-MM and YYYY-MM-DD HH:MM(:SS).
+* Improved formatting of datetimes from csv files in the feature info panel.
+* Removed variables consisting only of html tags from the Now Viewing panel.
+* Improved handling of rows with missing dates in csv time columns.
+* Introduced four new json tableStyle parameters:
+  - `replaceWithZeroValues`: Defaults to `[null, '-']`. These values are coloured as if they were zero if they appear in a csv column with numbers. `null` catches missing values. These rows are ignored if they appear in a csv time column. 
+  - `replaceWithNullValues`: Defaults to `['na', 'NA']`. These values are coloured as if they were null if they appear in a csv column with numbers. These rows are ignored if they appear in a csv time column.
+  - `nullColor`: A css string. Defaults to a dark blue. This colour is used to display null values (but it does not appear on the legend). It is also used to colour points when no variable is selected.
+  - `timeColumn`: Provide the name or index (starting at 0) of a csv column, if any. Defaults to the first time column found, if any. Use `null` to explicitly disregard all time columns.
+* Added id matching for catalog members:
 * Improved formatting of datetimes from csv files in the feature info panel.
 * Removed variables consisting only of HTML tags from the Now Viewing panel.
 * Added ID matching for catalog members:

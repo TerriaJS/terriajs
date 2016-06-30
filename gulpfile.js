@@ -20,7 +20,7 @@ gulp.task('post-npm-install', ['copy-cesium-assets']);
 gulp.task('build-specs', function(done) {
     var runWebpack = require('./buildprocess/runWebpack.js');
     var webpack = require('webpack');
-    var webpackConfig = require('./buildprocess/webpack.config.js');
+    var webpackConfig = require('./buildprocess/webpack.config.make.js')(false, true);
 
     runWebpack(webpack, webpackConfig, done);
 });
@@ -28,21 +28,15 @@ gulp.task('build-specs', function(done) {
 gulp.task('release-specs', function(done) {
     var runWebpack = require('./buildprocess/runWebpack.js');
     var webpack = require('webpack');
-    var webpackConfig = require('./buildprocess/webpack.config.js');
+    var webpackConfig = require('./buildprocess/webpack.config.make.js')(false, false);
 
-    runWebpack(webpack, Object.assign({}, webpackConfig, {
-        plugins: [
-            new webpack.optimize.UglifyJsPlugin(),
-            new webpack.optimize.DedupePlugin(),
-            new webpack.optimize.OccurrenceOrderPlugin()
-        ].concat(webpackConfig.plugins || [])
-    }), done);
+    runWebpack(webpack, webpackConfig, done);
 });
 
 gulp.task('watch-specs', function(done) {
     var watchWebpack = require('./buildprocess/watchWebpack');
     var webpack = require('webpack');
-    var webpackConfig = require('./buildprocess/webpack.config.js');
+    var webpackConfig = require('./buildprocess/webpack.config.make.js')(false, true);
 
     watchWebpack(webpack, webpackConfig, done);
 });
@@ -63,6 +57,8 @@ gulp.task('lint', function() {
 
     runExternalModule('eslint/bin/eslint.js', [
         'lib', 'test',
+        '--ext', '.jsx',
+        '--ext', '.js',
         '--ignore-pattern', 'lib/ThirdParty',
         '--max-warnings', '0'
     ]);
@@ -75,7 +71,7 @@ gulp.task('build-libs', function(done) {
     var path = require('path');
     var runWebpack = require('./buildprocess/runWebpack.js');
     var webpack = require('webpack');
-    var webpackConfig = require('./buildprocess/webpack.lib.config.js');
+    var webpackConfig = require('./buildprocess/webpack.config.lib.js');
 
     // Build an index.js to export all of the modules.
     var index = '';
@@ -84,16 +80,13 @@ gulp.task('build-libs', function(done) {
     index += '\n';
     index += '/*global require*/\n';
     index += '\n';
-    index += 'module.exports = {};\n';
-    index += 'module.exports.Cesium = require(\'terriajs-cesium/Source/Cesium\');\n';
 
     var modules = glob.sync([
-            './lib/**/*.js',
-            './lib/**/*.ts',
-            '!./lib/CopyrightModule.js',
-            '!./lib/cesiumWorkerBootstrapper.js',
-            '!./lib/ThirdParty/**',
-            '!./lib/SvgPaths/**'
+        './lib/**/*.js',
+        '!./lib/CopyrightModule.js',
+        '!./lib/cesiumWorkerBootstrapper.js',
+        '!./lib/ThirdParty/**',
+        '!./lib/SvgPaths/**'
     ]);
 
     var directories = {};
@@ -108,11 +101,11 @@ gulp.task('build-libs', function(done) {
             var propertyName = moduleParts.slice(0, i + 1).join('.');
             if (!directories[propertyName]) {
                 directories[propertyName] = true;
-                index += 'module.exports.' + propertyName + ' = {};\n';
+                index += 'exports.' + propertyName + ' = {};\n';
             }
         }
 
-        index += 'module.exports.' + moduleParts.join('.') + ' = require(\'' + module + '\');\n';
+        index += 'exports.' + moduleParts.join('.') + ' = require(\'' + module + '\');\n';
     });
 
     fs.writeFileSync('terria.lib.js', index);

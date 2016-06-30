@@ -1,0 +1,109 @@
+'use strict';
+
+import React from 'react';
+import classNames from 'classnames';
+import Styles from './dropdown-panel.scss';
+
+const DropdownPanel = React.createClass({
+    propTypes: {
+        theme: React.PropTypes.object.isRequired,
+        children: React.PropTypes.any,
+        btnTitle: React.PropTypes.string,
+        btnText: React.PropTypes.string,
+        onOpenChanged: React.PropTypes.func
+    },
+
+    getDefaultProps() {
+        return {
+            onOpenChanged: () => {}
+        };
+    },
+
+    getInitialState() {
+        return {
+            isOpen: false
+        };
+    },
+
+    componentWillUnmount() {
+        window.removeEventListener('click', this.close);
+    },
+
+    close(e) {
+        // Only close if this wasn't a click on our open/close button.
+        if (!e[this.getDoNotReactId()]) {
+            this.setOpen(false);
+        }
+    },
+
+    onPanelClicked(e) {
+        e.stopPropagation();
+    },
+
+    togglePanel(e) {
+        // Tag this event so that we know not to react to it when it hits the window.
+        // We could just set stopPropagation on it, but this would mean that clicks on other buttons that stopPropagation
+        // would cause the panel not to close.
+        e.nativeEvent[this.getDoNotReactId()] = true;
+
+        this.setOpen(!this.state.isOpen);
+    },
+
+    setOpen(open) {
+        if (open) {
+            window.addEventListener('click', this.close);
+
+            // If we're opening we want to immediately cause the panel to render, then just after then change the css
+            // class on it so it animates.
+            this.setState({
+                isOpen: true
+            });
+
+            setTimeout(() => {
+                this.setState({
+                    isOpenCss: true
+                });
+                this.props.onOpenChanged(open);
+            }, 0);
+        } else {
+            window.removeEventListener('click', this.close);
+
+            // If we're closing we want to immediately change the css class to cause it to animate shut, then when it's
+            // finished actually stop it rendering with isOpen = false
+            this.setState({
+                isOpenCss: false
+            });
+
+            setTimeout(() => {
+                this.setState({
+                    isOpen: false
+                });
+                this.props.onOpenChanged(open);
+            }, 200); // TODO: Determine when it stops animating instead of duplicating the 200ms timeout?
+        }
+    },
+
+    getDoNotReactId() {
+        return `do-not-react-${this.props.btnText}-${this.props.btnTitle}-${this.props.theme.btn}`;
+    },
+
+    render() {
+        return (
+            <div className={classNames({[Styles.isOpen]: this.state.isOpenCss}, Styles.panel, this.props.theme.outer)}>
+                <button onClick={this.togglePanel}
+                        type='button'
+                        className={classNames(Styles.button, this.props.theme.btn)}
+                        title={this.props.btnTitle}>
+                    {this.props.btnText}
+                </button>
+                <If condition={this.state.isOpen}>
+                    <div className={classNames(Styles.inner, this.props.theme.inner)} onClick={this.onPanelClicked}>
+                        {this.props.children}
+                    </div>
+                </If>
+            </div>
+        );
+    }
+});
+
+export default DropdownPanel;
