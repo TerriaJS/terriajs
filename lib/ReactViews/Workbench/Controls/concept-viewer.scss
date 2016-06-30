@@ -20,22 +20,41 @@
 .header {
   padding: 5px 0 5px 40px;
   position: relative;
-
+  line-height: 1.3;
   &.has-children {
     text-transform: uppercase;
   }
-
-  .btn {
-    position: absolute;
-    padding: 0;
-    left: 0;
+  button {
     svg{
-      height: 30px;
-      width: 30px;
-      margin-top: -5px;
       fill: #fff;
     }
   }
+}
+
+.btnToggleOpen{
+  display: inline-block;
+  padding: 5px 0px;
+  svg{
+    height: 18px;
+    width: 18px;
+  }
+}
+
+.btnToggleActive{
+  display: inline-block;
+  padding: 5px 0px;
+  svg{
+    height: 18px;
+    width: 18px;
+  }
+}
+
+.btnGroup{
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: block;
+  width: 40px;
 }
 
 .items {
@@ -43,7 +62,4 @@
   margin-left: 15px;
 }
 
-.btn--toggle {
-  left: 0;
-}
 
