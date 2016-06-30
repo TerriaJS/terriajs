@@ -87,7 +87,6 @@ export default React.createClass({
                     <If condition={this.props.viewState.searchState.locationSearchText.length > 0}>
                         <div className={Styles.providerResult}>
                             <h4 className={Styles.heading}>Data Catalog</h4>
-
                             <ul className={Styles.items}>
                                 <SearchResult clickAction={this.searchInDataCatalog}
                                               showPin={false}

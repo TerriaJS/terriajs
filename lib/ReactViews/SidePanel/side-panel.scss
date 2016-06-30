@@ -29,6 +29,7 @@
 
 .body {
     padding: 0 $padding-small;
+    overflow-x: hidden;
     overflow-y: auto;
     height: calc(100vh - #{$workbench-header + $logo-height});
     @media print{
@@ -43,7 +44,6 @@
 .button {
   composes: btn-primary from '../../Sass/common/_buttons.scss';
   line-height: $input-height;
-  text-transform: uppercase;
   svg{
     position: absolute;
     left: $padding;
