@@ -2,23 +2,16 @@ import React from 'react';
 import classNames from 'classnames';
 
 import addUserCatalogMember from '../../../../Models/addUserCatalogMember';
-import ArcGisCatalogGroup from '../../../../Models/ArcGisCatalogGroup';
-import ArcGisMapServerCatalogItem from '../../../../Models/ArcGisMapServerCatalogItem';
 import createCatalogItemFromFileOrUrl from '../../../../Models/createCatalogItemFromFileOrUrl';
+import createCatalogMemberFromType from '../../../../Models/createCatalogMemberFromType';
 import Dropdown from '../../../Generic/Dropdown';
 import FileInput from './FileInput.jsx';
 import getDataType from '../../../../Core/getDataType';
 import ObserveModelMixin from '../../../ObserveModelMixin';
-import OpenStreetMapCatalogItem from '../../../../Models/OpenStreetMapCatalogItem';
 import TerriaError from '../../../../Core/TerriaError';
-import WebFeatureServiceCatalogGroup from '../../../../Models/WebFeatureServiceCatalogGroup';
-import WebMapServiceCatalogGroup from '../../../../Models/WebMapServiceCatalogGroup';
-import WebMapTileServiceCatalogGroup from '../../../../Models/WebMapTileServiceCatalogGroup';
 import handleFile from '../../../../Core/handleFile';
 
 import Styles from './add-data.scss';
-
-const wfsUrlRegex = /\bwfs\b/i;
 
 // Local and remote data have different dataType options
 const remoteDataType = getDataType().remoteDataType;
@@ -83,35 +76,15 @@ const AddData = React.createClass({
         const that = this;
         let promise;
         if (that.state.remoteDataType.value === 'auto') {
-            const wmsThenWfs = [loadWms, loadWfs];
-            const wfsThenWms = [loadWfs, loadWms];
-            const others = [loadWmts, loadMapServer, loadMapServerLayer, loadFile];
-
-            let loadFunctions;
-
-            // Does this look like a WFS URL?  If so, try that first (before WMS).
-            // This accounts for the fact that a single URL often works as both WMS and WFS.
-            if (wfsUrlRegex.test(url)) {
-                loadFunctions = wfsThenWms.concat(others);
-            } else {
-                loadFunctions = wmsThenWfs.concat(others);
-            }
-
-            promise = loadAuto(that, loadFunctions, 0);
-        } else if (that.state.remoteDataType.value === 'wms-getCapabilities') {
-            promise = loadWms(that);
-        } else if (that.state.remoteDataType.value === 'wfs-getCapabilities') {
-            promise = loadWfs(that);
-        } else if (that.state.remoteDataType.value === 'esri-group') {
-            promise = loadMapServer(that).otherwise(() => {
-                return loadMapServerLayer(that);
-            });
-        } else if (that.state.remoteDataType.value === 'open-street-map') {
-            promise = loadOpenStreetMapServer(that);
-        } else {
             promise = loadFile(that);
+        } else {
+            const newItem = createCatalogMemberFromType(that.state.remoteDataType.value, that.props.terria);
+            newItem.name = that.state.remoteUrl;
+            newItem.url = that.state.remoteUrl;
+            promise = newItem.load().then(function () {
+                return newItem;
+            });
         }
-
         addUserCatalogMember(this.props.terria, promise).then(() => {
             this.props.viewState.myDataIsUploadView = false;
         });
@@ -201,108 +174,6 @@ const AddData = React.createClass({
         );
     }
 });
-
-/**
- * Loads data, automatically determining the format.
- *
- * @returns {Promise}
- */
-function loadAuto(viewModel, loadFunctions, index) {
-    const loadFunction = loadFunctions[index];
-    return loadFunction(viewModel).otherwise(function () {
-        return loadAuto(viewModel, loadFunctions, index + 1);
-    });
-}
-
-/**
- * Loads a Web Map Service catalog group.
- *
- * @returns {Promise}
- */
-function loadWms(viewModel) {
-    const wms = new WebMapServiceCatalogGroup(viewModel.props.terria);
-    wms.name = viewModel.state.remoteUrl;
-    wms.url = viewModel.state.remoteUrl;
-
-    return wms.load().then(function () {
-        return wms;
-    });
-}
-
-/**
- * Loads a Web Feature Service catalog group.
- *
- * @returns {Promise}
- */
-function loadWfs(viewModel) {
-    const wfs = new WebFeatureServiceCatalogGroup(viewModel.props.terria);
-    wfs.name = viewModel.state.remoteUrl;
-    wfs.url = viewModel.state.remoteUrl;
-
-    return wfs.load().then(function () {
-        return wfs;
-    });
-}
-
-/**
- * Loads a Web Map Tile Service catalog group.
- *
- * @returns {Promise}
- */
-function loadWmts(viewModel) {
-    const wmts = new WebMapTileServiceCatalogGroup(viewModel.props.terria);
-    wmts.name = viewModel.state.remoteUrl;
-    wmts.url = viewModel.state.remoteUrl;
-
-    return wmts.load().then(function () {
-        return wmts;
-    });
-}
-
-/**
- * Loads an ArcGis catalog group.
- *
- * @returns {Promise.<T>}
- */
-function loadMapServer(viewModel) {
-    const mapServer = new ArcGisCatalogGroup(viewModel.props.terria);
-    mapServer.name = viewModel.state.remoteUrl;
-    mapServer.url = viewModel.state.remoteUrl;
-
-    return mapServer.load().then(function () {
-        return mapServer;
-    });
-}
-
-/**
- * Loads a single ArcGis layer.
- *
- * @returns {Promise.<T>}
- */
-function loadMapServerLayer(viewModel) {
-    const mapServer = new ArcGisMapServerCatalogItem(viewModel.props.terria);
-    mapServer.name = viewModel.state.remoteUrl;
-    mapServer.url = viewModel.state.remoteUrl;
-    return mapServer.load().then(function () {
-        return mapServer;
-    });
-}
-
-/**
- * Loads an item from a open street map server.
- *
- * @param viewModel
- * @returns {Promise.<T>}
- */
-function loadOpenStreetMapServer(viewModel) {
-    const openStreetMapServer = new OpenStreetMapCatalogItem(viewModel.props.terria);
-    openStreetMapServer.name = viewModel.state.remoteUrl;
-    openStreetMapServer.url = viewModel.state.remoteUrl;
-
-    return openStreetMapServer.load().then(function () {
-        return openStreetMapServer;
-    });
-}
 
 /**
  * Loads a catalog item from a file.
