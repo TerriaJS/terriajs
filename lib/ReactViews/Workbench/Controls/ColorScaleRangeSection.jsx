@@ -17,6 +17,7 @@ const ColorScaleRangeSection = React.createClass({
 
     updateRange() {
         this.props.item.parameters.colorscalerange = [this.minRange, this.maxRange].join();
+        this.props.item.refresh();
     },
 
     changeRangeMin(event) {
