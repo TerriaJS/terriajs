@@ -39,7 +39,10 @@
     "togeojson": "^0.13.0",
     "urijs": "^1.17.1",
     "urthecast": "^1.0.0",
-    "webpack": "^1.12.14"
+    "webpack": "^1.12.14",
+    "pbf": "^1.3.2",
+    "vector-tile": "1.2.0",
+    "point-in-polygon": "1.0.0"
   },
   "devDependencies": {
     "babel-eslint": "^6.0.2",
