@@ -122,6 +122,47 @@ describe('FeatureInfoPanelSectionViewModel', function() {
         });
     });
 
+    it('lat and long of the clicked point are available with time-varying properties', function() {
+        // Added because it used to only work for constant properties - see https://github.com/TerriaJS/terriajs/pull/1595 .
+        var catalogItem = {
+            featureInfoTemplate: '<div>{{terria.coords.latitude}} {{terria.coords.longitude}}</div>'
+        };
+        terria.pickedFeatures = new PickedFeatures();
+        terria.pickedFeatures.pickPosition = Ellipsoid.WGS84.cartographicToCartesian(Cartographic.fromDegrees(2, 4, 6));
+        var varyingProperties = {
+            'foo': {a: 'bar', isConstant: false},
+            'abc': 'def'
+        };
+        var varyingFeature = new Entity({
+            name: 'Bar',
+            properties: varyingProperties,
+            imageryLayer: {}
+        });
+        var section = new FeatureInfoPanelSectionViewModel(panel, varyingFeature, catalogItem);
+
+        expect(section.templatedInfo).toBe('<div>3.999999999999998 2</div>');
+    });
+
+    it('does not think a falsy property value is time-varying', function() {
+        // Added because it used to think this - see https://github.com/TerriaJS/terriajs/pull/1595 .
+        var catalogItem = {
+            featureInfoTemplate: '<div>{{terria.coords.latitude}} {{terria.coords.longitude}}</div>'
+        };
+        terria.pickedFeatures = new PickedFeatures();
+        terria.pickedFeatures.pickPosition = Ellipsoid.WGS84.cartographicToCartesian(Cartographic.fromDegrees(2, 4, 6));
+        var falsyProperties = {
+            'foo': 0,
+            'abc': 'def'
+        };
+        var falsyFeature = new Entity({
+            name: 'Bar',
+            properties: falsyProperties,
+            imageryLayer: {}
+        });
+        var section = new FeatureInfoPanelSectionViewModel(panel, falsyFeature, catalogItem);
+        expect(section.terria.clock.onTick.numberOfListeners).toEqual(0);
+    });
+
     describe('when template is not provided', function () {
         var section;
 

@@ -3,6 +3,7 @@
 /*global require,describe,it,expect,beforeEach,fail*/
 
 var RegionProvider = require('../../lib/Map/RegionProvider');
+var CorsProxy = require('../../lib/Core/CorsProxy');
 
 // This test would be nice, but regionProvider.processRegionIds is no longer exposed in the API.
 // We could test it by loading in some json via loadRegionIDs instead.
@@ -60,7 +61,7 @@ describe('RegionProvider', function() {
             layerName: 'region_map:FID_CED_2011_AUST',
             server: 'http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows',
             serverType: "WMS"
-        });
+        }, new CorsProxy());
 
     });
 

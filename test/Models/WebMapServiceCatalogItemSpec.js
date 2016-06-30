@@ -64,6 +64,42 @@ describe('WebMapServiceCatalogItem', function() {
             });
         });
 
+        it('incorporates parameters if legendUrl comes from style', function(done) {
+            wmsItem.updateFromJson({
+                url: 'http://example.com',
+                metadataUrl: 'test/WMS/multiple_style_legend_url.xml',
+                layers: 'single_period',
+                parameters: { "styles": "jet2",
+                              "foo": "bar" }
+            });
+            wmsItem.load().then(function() {
+                expect(wmsItem.legendUrl).toEqual(new LegendUrl('http://www.example.com/foo?request=GetLegendGraphic&secondUrl&styles=jet2&foo=bar', 'image/gif'));
+                done();
+            }).otherwise(function(e) {
+                fail(e);
+                done();
+            });
+
+        });
+
+        it('incorporates parameters if legendUrl is created from scratch', function(done) {
+            wmsItem.updateFromJson({
+                url: 'http://foo.com/bar',
+                metadataUrl: 'test/WMS/no_legend_url.xml',
+                layers: 'single_period',
+                parameters: { "alpha": "beta",
+                              "foo": "bar" }
+            });
+            wmsItem.load().then(function() {
+                expect(wmsItem.legendUrl.url.indexOf('http://foo.com/bar?service=WMS&version=1.1.0&request=GetLegendGraphic&format=image%2Fpng&transparent=True&layer=single_period&alpha=beta&foo=bar')).toBe(0);
+                done();
+            }).otherwise(function(e) {
+                fail(e);
+                done();
+            });
+
+        });
+
         it('is read from XML when specified with a single style', function(done) {
             wmsItem.updateFromJson({
                 url: 'http://example.com',
@@ -71,7 +107,7 @@ describe('WebMapServiceCatalogItem', function() {
                 layers: 'single_period'
             });
             wmsItem.load().then(function() {
-                expect(wmsItem.legendUrl).toEqual(new LegendUrl('http://www.example.com/legendUrl', 'image/gif'));
+                expect(wmsItem.legendUrl).toEqual(new LegendUrl('http://www.example.com/foo?request=GetLegendGraphic&firstUrl', 'image/gif'));
                 done();
             }).otherwise(function(e) {
                 fail(e);
@@ -79,14 +115,14 @@ describe('WebMapServiceCatalogItem', function() {
             });
         });
 
-        it('is read from the first style tag when XML specifies multiple styles for a layer', function(done) {
+        it('is read from the first style tag when XML specifies multiple styles for a layer, provided style is unspecified', function(done) {
             wmsItem.updateFromJson({
                 url: 'http://example.com',
                 metadataUrl: 'test/WMS/multiple_style_legend_url.xml',
                 layers: 'single_period'
             });
             wmsItem.load().then(function() {
-                expect(wmsItem.legendUrl).toEqual(new LegendUrl('http://www.example.com/legendUrl', 'image/gif'));
+                expect(wmsItem.legendUrl).toEqual(new LegendUrl('http://www.example.com/foo?request=GetLegendGraphic&firstUrl', 'image/gif'));
                 done();
             }).otherwise(function(e) {
                 fail(e);
@@ -101,7 +137,7 @@ describe('WebMapServiceCatalogItem', function() {
                 layers: 'single_period'
             });
             wmsItem.load().then(function() {
-                expect(wmsItem.legendUrl).toEqual(new LegendUrl('http://www.example.com/legendUrl', 'image/gif'));
+                expect(wmsItem.legendUrl).toEqual(new LegendUrl('http://www.example.com/foo?request=GetLegendGraphic&firstUrl', 'image/gif'));
                 done();
             }).otherwise(function(e) {
                 fail(e);
@@ -126,6 +162,30 @@ describe('WebMapServiceCatalogItem', function() {
                 fail(e);
                 done();
             });
+        });
+    });
+
+    describe('metadata urls', function() {
+        it('are parsed when one is present', function(done) {
+            wmsItem.updateFromJson({
+                url: 'http://foo.com/bar',
+                metadataUrl: 'test/WMS/single_metadata_url.xml',
+                layers: 'single_period'
+            });
+            wmsItem.load().then(function() {
+                expect(wmsItem.findInfoSection('Metadata Links').content).toBe('http://examplemetadata.com');
+            }).then(done).otherwise(fail);
+        });
+
+        it('are parsed when multiple are present', function(done) {
+            wmsItem.updateFromJson({
+                url: 'http://foo.com/bar',
+                metadataUrl: 'test/WMS/multiple_metadata_url.xml',
+                layers: 'single_period'
+            });
+            wmsItem.load().then(function() {
+                expect(wmsItem.findInfoSection('Metadata Links').content).toBe('http://examplemetadata1.com<br>http://examplemetadata2.com');
+            }).then(done).otherwise(fail);
         });
     });
 
