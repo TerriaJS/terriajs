@@ -41,7 +41,7 @@ const Legend = React.createClass({
                 <div className={Styles.legendInner}>
                     <Choose>
                         <When condition={this.props.item.isLoading}>
-                            <li><Loader message={this.props.item.loadingMessage}/></li>
+                            <li className={Styles.loader}><Loader message={this.props.item.loadingMessage}/></li>
                         </When>
                         <Otherwise>
                             <For each="legend" index="i" of={this.getLegends()}>
