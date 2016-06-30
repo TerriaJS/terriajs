@@ -1,48 +1,13 @@
 @import '~terriajs-variables';
 @import '../../Sass/common/mixins';
 
-// Search form
-//
-//.panel-content - Search form in modal window
-//.workbench__inner - Search form in workbench
-//
-// Markup:
-// <div class={{modifier_class}}>
-// <form class='form--search-data' autoComplete='off'>
-//   <label htmlFor='search' class='form__label'> Type keyword to search </label>
-//   <input id='search'
-//          type='text'
-//          name='search'
-//          class='form__search-field field'
-//          placeholder='Search'
-//          autoComplete='off'/>
-//   <button class='btn search-clear'></button>
-// </form>
-// </div>
-//
-// Style guide: 3.1
-//
-
-.icon {
-  position: absolute;
-  font-size: 1.2rem;
-  color: $grey;
-  opacity: 0.5;
-  &:before{
-    display: block;
-  }
-}
-
 .formLabel{
-  composes: icon;
-  composes: icon from '../../Sass/common/_icons.scss';
-  composes: icon-search from '../../Sass/common/_icons.scss';
-  // hide label text but keep it machine visible
-  width: $input-height;
-  height: $input-height;
-  overflow: hidden;
-  &:before{
-    padding: 12px $padding*1.5;
+  position: absolute;
+  svg{
+    height: $input-height;
+    width: $input-height;
+    fill: $charcoal-grey;
+    fill-opacity: 0.5;
   }
 }
 
@@ -52,13 +17,15 @@
 
 .searchData{
   position: relative;
+  width: 100%;
 }
 
 input[type=text].searchField {
   padding-left: $input-height;
-  width: 100%;
+  padding-right: $input-height;
   color: $color-primary;
-
+  width: 100%;
+  overflow: hidden;
   @include placeholder{
     text-transform: uppercase;
     font-size: $font-size-small;
@@ -76,13 +43,15 @@ input[type=text].searchField {
 
 //this does not seem to work
 .searchClear{
-  right: $padding;
-  top: 3px;
+  right: 0;
+  top: 0;
   padding: 0;
-  composes: icon;
-  composes: icon from '../../Sass/common/_icons.scss';
-  composes: icon-clear from '../../Sass/common/_icons.scss';
-  &:before{
-    padding: $padding;
+  position: absolute;
+  padding: 5px;
+  svg{
+    height: 30px;
+    width: 30px;
+    fill: $charcoal-grey;
+    fill-opacity: 0.5;
   }
 }

@@ -41,7 +41,6 @@ $workbench-margin: $padding-small - 1px;
 
 .header {
   composes: list-reset from '../../Sass/common/_base.scss';
-
   width: 100%;
 }
 
@@ -49,56 +48,57 @@ $workbench-margin: $padding-small - 1px;
   composes: clearfix from '../../Sass/common/_base.scss';
 }
 
-.btn {
-  composes: btn from '../../Sass/common/_buttons.scss';
-}
 
 .visibilityColumn {
   composes: col from  '../../Sass/common/_base.scss';
   composes: col-1 from  '../../Sass/common/_base.scss';
+  padding: 8px 10px;
+  //remove additional space below inline element
+  button{
+    display: block;
+  }
+  svg{
+    height: 14px;
+    width: 14px;
+    fill: #fff;
+  }
 }
 
 .btn-visibility {
-  composes: btn;
 
-  font-size: $font-size-small;
 }
 
-.btn-visibility--visible {
-  composes: btn--checkbox-on from '../../Sass/common/_buttons.scss';
-}
-
-.btn-visibility--invisible {
-  composes: btn--checkbox-off from '../../Sass/common/_buttons.scss';
-}
 
 .nameColumn {
   composes: col from  '../../Sass/common/_base.scss';
   composes: col-10 from  '../../Sass/common/_base.scss';
+  padding: 5px;
+  text-align:left;
 }
 
 .toggleColumn {
   composes: col from  '../../Sass/common/_base.scss';
   composes: col-1 from  '../../Sass/common/_base.scss';
+  padding: 5px;
+  //remove additional space below inline element
+  button{
+    display: block;
+  }
+  svg{
+    height: 18px;
+    width: 18px;
+    fill: #fff;
+  }
 }
-
-.btn--toggle {
-  composes: btn;
-  composes: btn--toggle from '../../Sass/common/_buttons.scss';
-  text-align: center;
-}
-
-.btn--toggle--is-open {
-  composes: is-open from  '../../Sass/common/_buttons.scss';
-}
-
-.icon {
-  composes: icon from '../../Sass/common/_icons.scss';
-}
-
-.icon-line-chart {
+.iconLineChart {
   float: left;
   font-size: 140%;
   margin-right: 5px;
-  color: #CCC;
+  svg{
+    height: 18px;
+    width: 18px;
+    fill: #CCC;
+    display: inline-block;
+    vertical-align: top;
+  }
 }

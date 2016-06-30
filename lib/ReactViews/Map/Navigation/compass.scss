@@ -16,14 +16,14 @@
   width: $compass-width;
   height: $compass-width;
   position: absolute;
-  right: $padding;
-  top: 75px;
+  right: 17px;
+  top: 79px;
   composes: sm-show from '../../../Sass/common/_base.scss';
 }
 .innerRing{
   @include vertical-align();
-  height: $compass-width - $ring-width*3.5;
-  width: $compass-width - $ring-width*3.5;
+  height: $compass-width - $ring-width -20px;
+  width: $compass-width - $ring-width -20px;
   border-radius: 50%;
   display: block;
   margin: 0 auto;

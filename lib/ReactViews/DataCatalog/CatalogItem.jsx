@@ -1,5 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
+import Icon from "../Icon.jsx";
 
 import Styles from './data-catalog-item.scss';
 
@@ -9,11 +10,11 @@ const STATE_TO_TITLE = {
     add: 'Add'
 };
 
-const STATE_TO_BUTTON_CLASS = {
-    loading: Styles.btnActionLoadingOnMap,
-    remove: Styles.btnActionRemoveFromMap,
-    add: Styles.btnActionAddToMap,
-    stats: Styles.btnActionStatsBars
+const STATE_TO_ICONS = {
+    loading: <Icon glyph={Icon.GLYPHS.loader}/>,
+    remove: <Icon glyph={Icon.GLYPHS.remove}/>,
+    add: <Icon glyph={Icon.GLYPHS.add}/>,
+    stats: <Icon glyph={Icon.GLYPHS.barChart}/>
 };
 
 /** Dumb catalog item */
@@ -31,8 +32,9 @@ function CatalogItem(props) {
             <button type='button'
                     onClick={props.onBtnClick}
                     title={STATE_TO_TITLE[props.btnState] || ''}
-                    className={classNames(Styles.btnAction, STATE_TO_BUTTON_CLASS[props.btnState])}
-            />
+                    className={Styles.btnAction}>
+                    {STATE_TO_ICONS[props.btnState]}
+            </button>
         </li>
     );
 }

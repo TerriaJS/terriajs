@@ -9,21 +9,25 @@
 
 .title{
   composes: btn from './feature-info-panel.scss';
-  composes: btn--toggle from '../../Sass/common/_buttons.scss';
-
   position: relative;
   width: 100%;
   background: $dark;
-
-  &:before{
-    position: absolute;
-    right: $padding;
-    top: 0;
+  min-height: 20px;
+  span{
+    display: block;
+    padding-right: 30px;
+    font-weight: 300;
+    font-size: 13px;
   }
-}
-
-.btn--is-open {
-  composes: is-open from '../../Sass/common/_buttons.scss';
+  svg{
+    height: 20px;
+    width: 20px;
+    fill: #fff;
+    float: right;
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
 }
 
 .content{

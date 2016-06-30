@@ -2,7 +2,7 @@ var path = require('path');
 var StringReplacePlugin = require("string-replace-webpack-plugin");
 
 // If node-sass starts hanging, uncomment this line:
-//process.env.UV_THREADPOOL_SIZE = 128;
+process.env.UV_THREADPOOL_SIZE = 128;
 
 function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlugin, disableStyleLoader) {
     const cesiumDir = path.dirname(require.resolve('terriajs-cesium/package.json'));
@@ -149,7 +149,7 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
         include: cesiumDir
     });
 
-    var externalModulesWithJson = ['proj4/package.json', 'entities', 'html-to-react', 'ent']
+    var externalModulesWithJson = ['proj4/package.json', 'entities', 'html-to-react', 'ent', 'htmlparser2/package.json']
         .map(function(module) {
            try {
                return path.dirname(require.resolve(module));
@@ -184,6 +184,10 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
             path.resolve(terriaJSBasePath),
             path.resolve(cesiumDir)
         ],
+        exclude: [
+            path.resolve(terriaJSBasePath, 'wwwroot', 'images', 'icons'),
+            path.resolve(terriaJSBasePath, 'wwwroot', 'fonts')
+        ],
         loader: require.resolve('url-loader'),
         query: {
             limit: 8192
@@ -204,6 +208,12 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
         test: /\.(ttf|eot|svg)(\?.+)?$/,
         include: path.resolve(terriaJSBasePath, 'wwwroot', 'fonts'),
         loader: require.resolve('file-loader')
+    });
+
+    config.module.loaders.push({
+        test: /\.svg$/,
+        include: path.resolve(terriaJSBasePath, 'wwwroot', 'images', 'icons'),
+        loader: require.resolve('svg-sprite-loader')
     });
 
     config.devServer = config.devServer || {

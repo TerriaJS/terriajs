@@ -5,7 +5,6 @@
 
 .location-item.light .btn {
   background: $grey-lighter;
-
   &:hover {
     border: 1px solid $color-primary;
     color: $color-primary;
@@ -15,47 +14,73 @@
 .location-item.dark .btn {
   background: $dark;
   color: #FFF;
+  span{
+      overflow-wrap: break-word;
+      word-wrap: break-word;
+
+      -ms-word-break: break-all;
+      /* This is the dangerous one in WebKit, as it breaks things wherever */
+      word-break: break-all;
+      /* Instead use this non-standard one: */
+      word-break: break-word;
+
+      /* Adds a hyphen where the word breaks, if supported (No Blink) */
+      -ms-hyphens: auto;
+      -moz-hyphens: auto;
+      -webkit-hyphens: auto;
+      hyphens: auto;
+  }
 
   &:hover {
     border: 1px solid #FFF;
   }
+
+  svg{
+    height: 30px;
+    width: 30px;
+  }
 }
+
+.locationIcon{
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  padding: 5px 0;
+}
+
+.arrowIcon{
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  padding: 5px 0;
+  svg{
+    fill-opacity: 0;
+  }
+}
+
+
 
 .btn {
   composes: btn from '../../Sass/common/_buttons.scss';
-
   &.btn {
     position: relative;
-
     border: 1px solid $grey;
     padding: $padding;
     margin-bottom: $padding-mini;
     padding-right: $padding;
     width: 100%;
   }
-
   &:hover {
-    .icon--right-arrow {
-      opacity: 1;
+    .arrowIcon svg{
+      fill-opacity: 1;
     }
   }
-}
-
-.btn--location-name {
-  composes: btn--location-name from '../../Sass/common/_buttons.scss';
-}
-
-.icon--right-arrow {
-  composes: icon from '../../Sass/common/_icons.scss';
-  composes: icon-right from '../../Sass/common/_icons.scss';
-
-  position: absolute;
-  right: $padding-small;
-  top: 50%;
-  margin-top: -10px;
-  font-size: 20px;
-
-  @media screen and (min-width : $sm) {
-    opacity: 0;
+  &.btnLocationName{
+    padding: $padding $padding*3;
   }
 }
+
+
+

@@ -12,7 +12,11 @@
   max-width: 95%;
   min-width: 150px;
   max-height: 80vh;
-  z-index: 5;
+  z-index: 0;
+
+  svg{
+    fill: #fff;
+  }
   @media screen and (min-width : $md){
     //temp
     max-width: calc(100vw - #{$work-bench-width} - 150px);
@@ -42,7 +46,6 @@
 
 .is-visible {
   display: block;
-  z-index: 10;
 }
 
 .header{
@@ -64,12 +67,16 @@
 }
 
 .btn--close-feature{
-  composes: btn;
-  composes: btn--close from '../../Sass/common/_buttons.scss';
-
   &:hover,
   &:focus {
-    color: $color-primary;
+    svg{
+      fill: $color-primary;
+    }
+  }
+  svg{
+    height: 23px;
+    width: 23px;
+    fill: #ffffff;
   }
   position: absolute;
   top: 0;

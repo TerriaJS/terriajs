@@ -11,6 +11,7 @@ import ChartPanelDownloadButton from './ChartPanelDownloadButton';
 import Loader from '../../Loader.jsx';
 import ObserveModelMixin from '../../ObserveModelMixin';
 import VarType from '../../../Map/VarType';
+import Icon from "../../Icon.jsx";
 
 import Styles from './chart-panel.scss';
 
@@ -114,7 +115,9 @@ const ChartPanel = React.createClass({
                             <div className={Styles.header}>
                                 <label className={Styles.sectionLabel}>{loader || 'Charts'}</label>
                                 <ChartPanelDownloadButton chartableItems={this.props.terria.catalog.chartableItems} errorEvent={this.props.terria.error} />
-                                <button type='button' className={Styles.btnCloseChartPanel} onClick={this.closePanel}/>
+                                <button type='button' className={Styles.btnCloseChartPanel} onClick={this.closePanel}>
+                                    <Icon glyph={Icon.GLYPHS.close}/>
+                                </button>
                             </div>
                             <div className={Styles.chart}>
                                 {chart}
