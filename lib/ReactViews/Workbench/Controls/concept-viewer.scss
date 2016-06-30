@@ -20,10 +20,8 @@
 .header {
   padding: 5px 0 5px 40px;
   position: relative;
-  line-height: 1.3;
-  &.has-children {
-    text-transform: uppercase;
-  }
+  line-height: 1.4;
+
   button {
     svg{
       fill: #fff;
