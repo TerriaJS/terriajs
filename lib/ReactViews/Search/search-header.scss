@@ -1,0 +1,8 @@
+@import '~terriajs-variables';
+
+.no-results {
+  compose: label from '../../Sass/global/_labels.scss';
+  compose: no-results from '../../Sass/global/_labels.scss';
+
+  padding-left: $padding;
+}

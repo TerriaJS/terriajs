@@ -16,12 +16,28 @@
   padding: $padding;
   height: 100%;
   overflow: hidden;
+
   .label{
     padding-left: 0;
   }
+
   &.is-hidden{
     position: absolute;
     left: -1000px;
+  }
+
+  &__dropdown {
+    width: 100%;
+  }
+
+  &__dropdown-list {
+    box-shadow: $box-shadow;
+    margin-top: $padding-small;
+  }
+
+  &__dropdown-list--is-open {
+    height: 190px;
+    overflow-y: auto;
   }
 }
 
@@ -36,7 +52,6 @@
   position: relative;
   padding-left: $padding*2;
   @extend .btn-small;
-  @extend .btn--left;
   &:before{
     position: absolute;
     left: 0;

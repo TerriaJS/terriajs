@@ -1,0 +1,38 @@
+@import '~terriajs-variables';
+
+.legend {
+  composes: clearfix from '../../../Sass/common/_base.scss';
+  composes: list-reset from '../../../Sass/common/_base.scss';
+  font-family: $font-mono;
+  li {
+    display: block;
+  }
+}
+
+.legend__inner {
+  a{
+    display: block;
+  }
+  img {
+    display: inline-block;
+    background: #fff;
+  }
+  padding: $padding 0 0 0;
+}
+
+.legend--svg {
+  text {
+    fill: #fff;
+  }
+  :global .tick-mark {
+    stroke: #fff;
+  }
+  svg {
+    width: 100%;
+    display: block;
+    :global rect.background {
+      width: 100%;
+      fill: rgba(#fff, 0.15);
+    }
+  }
+}

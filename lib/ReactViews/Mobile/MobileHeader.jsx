@@ -4,8 +4,9 @@ import SearchBox from '../Search/SearchBox.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
 import MobileModalWindow from './MobileModalWindow';
 import Branding from '../SidePanel/Branding.jsx';
-import Styles from './mobile_header.scss';
+import Styles from './mobile-header.scss';
 import classNames from "classnames";
+import Icon from "../Icon.jsx";
 
 const MobileHeader = React.createClass({
     mixins: [ObserveModelMixin],
@@ -30,7 +31,7 @@ const MobileHeader = React.createClass({
         this.setState({
             menuIsOpen: !this.state.menuIsOpen
         });
-        this.props.viewState.toggleModal(false);
+        this.props.viewState.explorerPanelIsVisible = false;
         this.props.viewState.switchMobileView(null);
     },
 
@@ -56,10 +57,10 @@ const MobileHeader = React.createClass({
 
     toggleView(viewname) {
         if (this.props.viewState.mobileView !== viewname) {
-            this.props.viewState.toggleModal(true);
+            this.props.viewState.explorerPanelIsVisible = true;
             this.props.viewState.switchMobileView(viewname);
         } else {
-            this.props.viewState.toggleModal(false);
+            this.props.viewState.explorerPanelIsVisible = false;
             this.props.viewState.switchMobileView(null);
         }
         this.setState({
@@ -93,8 +94,9 @@ const MobileHeader = React.createClass({
                                 <button type='button'
                                         onClick={this.toggleMenu}
                                         className={Styles.btnMenu}
-                                        title='toggle navigation'
-                                />
+                                        title='toggle navigation'>
+                                    <Icon glyph={Icon.GLYPHS.menu}/>
+                                </button>
                                 <Branding terria={this.props.terria}
                                           version={this.props.version}
                                           onClick={this.refresh}
@@ -105,26 +107,30 @@ const MobileHeader = React.createClass({
                                         className={Styles.btnAdd}
                                         onClick={this.onMobileDataCatalogClicked}>
                                     Data
+                                    <Icon glyph={Icon.GLYPHS.increase}/>
                                 </button>
                                 <If condition={nowViewingLength > 0}>
                                     <button type='button' className={Styles.btnNowViewing}
                                             onClick={this.onMobileNowViewingClicked}>
+                                        <Icon glyph={Icon.GLYPHS.eye}/>
                                         <span className={Styles.nowViewingCount}>{nowViewingLength}</span>
                                     </button>
                                 </If>
-                                <button type='button'
-                                        className={Styles.btnSearch}
-                                        onClick={this.toggleSearch}/>
+                                <button className={Styles.btnSearch}
+                                        type='button'
+                                        onClick={this.toggleSearch}>
+                                        <Icon glyph={Icon.GLYPHS.search}/>
+                                </button>
                             </div>
                         </When>
                         <Otherwise>
-                            <div className="form--search-data">
+                            <div className={Styles.formSearchData}>
                                 <SearchBox searchText={searchState.unifiedSearchText}
                                            onSearchTextChanged={this.changeSearchText}
                                            onDoSearch={this.search}/>
                             </div>
                             <button type='button'
-                                    className='btn btn--mobile-search-cancel'
+                                    className={Styles.btnCancel}
                                     onClick={this.toggleSearch}>
                                 cancel
                             </button>

@@ -2,7 +2,8 @@
 
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
-import Styles from './feedback_button.scss';
+import Styles from './feedback-button.scss';
+import Icon from "../Icon.jsx";
 
 const FeedbackButton = React.createClass({
     mixins: [ObserveModelMixin],
@@ -18,7 +19,10 @@ const FeedbackButton = React.createClass({
     render() {
         return (
             <div className={Styles.feedback}>
-                <button type='button' className={Styles.btnFeedback} onClick={this.onClick}>Give feedback</button>
+                <button type='button' className={Styles.btnFeedback} onClick={this.onClick}>
+                    <Icon glyph={Icon.GLYPHS.feedback}/>
+                    Give feedback
+                </button>
             </div>
         );
     }

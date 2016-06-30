@@ -7,6 +7,10 @@ import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 import Entity from 'terriajs-cesium/Source/DataSources/Entity';
+import Icon from "../Icon.jsx";
+
+import Styles from './feature-info-panel.scss';
+import classNames from 'classnames';
 
 const FeatureInfoPanel = React.createClass({
     mixins: [ObserveModelMixin],
@@ -35,6 +39,10 @@ const FeatureInfoPanel = React.createClass({
                 if (defined(pickedFeatures.allFeaturesAvailablePromise)) {
                     pickedFeatures.allFeaturesAvailablePromise.then(() => {
                         terria.selectedFeature = pickedFeatures.features.filter(featureHasInfo)[0];
+                        if (!defined(terria.selectedFeature) && (pickedFeatures.features.length > 0)) {
+                            // Handles the case when no features have info - still want something to be open.
+                            terria.selectedFeature = pickedFeatures.features[0];
+                        }
                     });
                 }
             }
@@ -66,6 +74,7 @@ const FeatureInfoPanel = React.createClass({
                     catalogItem={catalogItem}
                     features={features}
                     terria={this.props.terria}
+                    onToggleOpen={this.toggleOpenFeature}
                 />
             );
         });
@@ -73,30 +82,52 @@ const FeatureInfoPanel = React.createClass({
 
     close() {
         this.props.viewState.featureInfoPanelIsVisible = false;
+
+        // give the close animation time to finish before unselecting, to avoid jumpiness
+        setTimeout(() => {
+            this.props.terria.pickedFeatures = undefined;
+            this.props.terria.selectedFeature = undefined;
+        }, 200);
     },
 
     toggleCollapsed() {
         this.props.viewState.featureInfoPanelIsCollapsed = !this.props.viewState.featureInfoPanelIsCollapsed;
     },
 
+    toggleOpenFeature(feature) {
+        const terria = this.props.terria;
+        if (feature === terria.selectedFeature) {
+            terria.selectedFeature = undefined;
+        } else {
+            terria.selectedFeature = feature;
+        }
+    },
+
     render() {
         const terria = this.props.terria;
         const viewState = this.props.viewState;
-        const componentOnTop = (viewState.componentOnTop === viewState.componentOrderOptions.featureInfoPanel);
+
         const featureInfoCatalogItems = this.getFeatureInfoCatalogItems();
+        const panelClassName = classNames(Styles.panel, {
+            [Styles.isOnTop]: viewState.componentOnTop === viewState.componentOrderOptions.featureInfoPanel,
+            [Styles.isCollapsed]: viewState.featureInfoPanelIsCollapsed,
+            [Styles.isVisible]: viewState.featureInfoPanelIsVisible
+        });
         return (
             <div
-                className={`feature-info-panel ${componentOnTop ? 'is-top' : ''} ${viewState.featureInfoPanelIsCollapsed ? 'is-collapsed' : ''} ${viewState.featureInfoPanelIsVisible ? 'is-visible' : ''}`}
+                className={panelClassName}
                 aria-hidden={!viewState.featureInfoPanelIsVisible}
                 onClick={this.bringToFront}>
-                <div className='feature-info-panel__header'>
-                    <button type='button' onClick={ this.toggleCollapsed } className='btn'>
+                <div className={Styles.header}>
+                    <button type='button' onClick={ this.toggleCollapsed } className={Styles.btn}>
                         Feature Information
                     </button>
-                    <button type='button' onClick={ this.close } className="btn btn--close-feature"
-                            title="Close data panel"/>
+                    <button type='button' onClick={ this.close } className={Styles.btnCloseFeature}
+                            title="Close data panel">
+                            <Icon glyph={Icon.GLYPHS.close}/>
+                    </button>
                 </div>
-                <ul className="feature-info-panel__body">
+                <ul className={Styles.body}>
                     <Choose>
                         <When condition={viewState.featureInfoPanelIsCollapsed || !viewState.featureInfoPanelIsVisible}>
                         </When>
@@ -104,7 +135,7 @@ const FeatureInfoPanel = React.createClass({
                             <li><Loader/></li>
                         </When>
                         <When condition={!featureInfoCatalogItems || featureInfoCatalogItems.length === 0}>
-                            <li className='no-results'>No results</li>
+                            <li className={Styles.noResults}>No results</li>
                         </When>
                         <Otherwise>
                             {featureInfoCatalogItems}

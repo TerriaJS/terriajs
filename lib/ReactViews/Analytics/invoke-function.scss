@@ -1,0 +1,43 @@
+@import '~terriajs-variables';
+@import '../../Sass/common/mixins';
+
+.invoke-function {
+  padding: $padding-small;
+  position: relative;
+  height: 100%;
+
+  @media screen and (min-width : $sm){
+    padding: 0;
+    margin-right: -5px;
+  }
+}
+
+.footer{
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 1000;
+  background: $modal-bg;
+  padding: $padding-small;
+}
+
+.content{
+  @media screen and (min-width : $sm){
+    //max-height: calc(#{$modal-content-height} - #{$padding*2});
+  }
+  max-height: 100%;
+  overflow-y: auto;
+  padding-bottom: $input-height + $padding;
+  padding-right: $padding;
+  h3{
+    margin-top: 0;
+  }
+}
+
+@include empty-module("description")
+
+.btn {
+  composes: btn from '../../Sass/common/_buttons.scss';
+  composes: btn-primary from '../../Sass/common/_buttons.scss';
+}

@@ -1,0 +1,97 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,400italic,600);
+@import url(https://fonts.googleapis.com/css?family=Lato:400,700);
+
+$font-pop:'Open Sans', sans-serif;
+$font-base: 'Open Sans', sans-serif;
+$font-mono: monospace, sans-serif;
+$font : $font-base;
+
+$color-primary: #08ABD5;
+$color-secondary: #06CCFF;
+
+$animation-fast: 0.1s;
+
+$dark: #3F4854;
+$dark-lighter: #595B60;
+$grey: #888888;
+$grey-lighter: #ddd;
+$field-border: #ddd;
+$overlay: rgba(255, 255, 255, 0.15);
+
+$text-dark: #888;
+$faint-bg: #f5f5f5;
+$warning: #FF5B6F;
+$info-color: #FFFF00;   // ADDED BY AGS FOR FEATURE INFO PANEL
+
+$padding: 10px;
+$padding-small: 5px;
+$padding-mini: 3px;
+
+$btn-default-line-height: 20px;
+$input-height: 40px;
+
+$sm-logo-height: $input-height;
+$logo-height: 70px;
+$mobile-header-height: $sm-logo-height + $padding + $padding-small;
+
+$modal-bg: $faint-bg;
+$modal-text: #000;
+$modal-secondary-bg: rgba($dark-lighter, 0.05);
+$modal-overlay: rgba(#000,0.7);
+$modal-highlight: $color-primary;
+$modal-border: $grey-lighter;
+$modal-content-height: 70vh;
+$modal-header-height: $btn-default-line-height + $padding*2;
+
+$mobile-main-bg: #ffffff;
+$mobile-text: #000;
+
+
+$font-size-large: 1.3rem;
+$font-size-base: 1rem;
+$font-size-small: 13px;
+$font-size-mini: 10px;
+
+$font-weight-bold: 600;
+$font-weight-medium: 500;
+$font-weight-normal: 400;
+
+$work-bench-width : 350px;
+$setting-panel: 300px;
+$share-panel-width: $setting-panel;
+$share-panel-caret-left: 215px;
+$feature-info-panel-width: 500px;
+$branding-height: 55px;
+$workbench-header: $input-height*2 + $padding-small*2 + 1px;
+$chart-height: 250px;
+
+$border-color: rgba(#fff, 0.15);
+$border-style: 1px solid $border-color;
+$box-shadow: 0px 6px 22px -6px rgba(#000, 0.75);
+
+$radius-medium: 3px;
+$radius-small: 2px;
+
+$ring-width: 10px;
+$compass-width: 55px;
+
+
+//screen sizes
+$sm : 768px;
+$md: 992px;
+$lg: 1200px;
+
+$front-component-z-index: 99;
+
+$chart-area-color: rgba(#fff, 0.075);
+$chart-axis-color: #fff;
+$chart-grid-color: rgba(#fff, 0.085);
+$chart-text-color: #fff;
+$chart-line-color: #ccc;
+$chart-darker: darken($dark, 8%);
+
+
+
+$charcoal-grey: #3f4854;
+$turquoise-blue: #08abd5;
+

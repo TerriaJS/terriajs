@@ -1,6 +1,8 @@
 import React from 'react';
 import ObserveModelMixin from '../ObserveModelMixin';
 
+import Styles from './parameter-editors.scss';
+
 const EnumerationParameterEditor = React.createClass({
     mixins: [ObserveModelMixin],
     propTypes: {
@@ -14,7 +16,7 @@ const EnumerationParameterEditor = React.createClass({
     },
 
     render() {
-        return (<select className='field'
+        return (<select className={Styles.field}
                         onChange={this.onChange}
                         value={this.props.parameterValues[this.props.parameter.id]}
                 >

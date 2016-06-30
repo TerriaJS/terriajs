@@ -1,0 +1,98 @@
+@import '~terriajs-variables';
+@import '../../Sass/common/mixins';
+
+.panel{
+  background:rgba($dark, 0.95);
+  color: #fff;
+  border-radius: $radius-small;
+  display: none;
+  position: fixed;
+  top: 10vh;
+  right: 10px;
+  max-width: 95%;
+  min-width: 150px;
+  max-height: 80vh;
+  z-index: 0;
+
+  svg{
+    fill: #fff;
+  }
+  @media screen and (min-width : $md){
+    //temp
+    max-width: calc(100vw - #{$work-bench-width} - 150px);
+    right: 105px;
+  }
+  @media print{
+    position: relative;
+    color: #000;
+    margin: 0.5cm;
+    z-index: 999;
+    height: auto;
+    max-height: none;
+    min-height: 0;
+    page-break-after : auto;
+  }
+}
+
+.is-on-top {
+  z-index: $front-component-z-index!important;
+}
+
+.is-collapsed {
+  .body{
+    display: none;
+  }
+}
+
+.is-visible {
+  display: block;
+}
+
+.header{
+  background: $dark;
+  padding-right: $input-height;
+}
+
+.btn {
+  composes: btn from '../../Sass/common/_buttons.scss';
+
+  padding: 4px 9px;
+  margin-right: 4px;
+}
+
+.btn--download {
+  padding: 3px;
+  width: 27px;
+  margin-left: 3px;
+}
+
+.btn--close-feature{
+  &:hover,
+  &:focus {
+    svg{
+      fill: $color-primary;
+    }
+  }
+  svg{
+    height: 23px;
+    width: 23px;
+    fill: #ffffff;
+  }
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.no-results {
+  composes: no-results from '../../Sass/common/_labels.scss';
+}
+
+.body{
+  composes: list-reset from '../../Sass/common/_base.scss';
+  overflow-y: auto;
+  overflow-x: auto;
+  max-height: calc(80vh - #{$padding*2 + $btn-default-line-height});
+  @media print{
+    max-height: none;
+  }
+}
