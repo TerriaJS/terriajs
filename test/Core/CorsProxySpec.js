@@ -41,10 +41,10 @@ describe('CorsProxy', function() {
             expect(corsProxy.shouldUseProxy('http://example2.com')).toBe(false);
         });
 
-        it('should combine the passed proxyDomains with those returned from calling proxyableDomains url', function() {
+        it('should ignore the passed proxyDomains if also provided a serverconfig list', function() {
             corsProxy.init({ allowProxyFor: [ 'example2.com' ] }, undefined, ['example.com']);
 
-            expect(corsProxy.shouldUseProxy('http://example.com')).toBe(true);
+            expect(corsProxy.shouldUseProxy('http://example.com')).toBe(false);
             expect(corsProxy.shouldUseProxy('http://example2.com')).toBe(true);
             expect(corsProxy.shouldUseProxy('http://example3.com')).toBe(false);
         });
