@@ -43,7 +43,7 @@
   },
   "devDependencies": {
     "babel-eslint": "^6.0.2",
-    "eslint": "^2.7.0",
+    "eslint": "^3.0.0",
     "generate-terriajs-schema": "^1.2.1",
     "glob-all": "^3.0.1",
     "gulp-util": "^3.0.7",
