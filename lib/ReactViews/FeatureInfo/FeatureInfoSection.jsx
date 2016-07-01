@@ -269,6 +269,9 @@ function areAllPropertiesConstant(properties) {
     // test this by assuming property is time-varying only if property.isConstant === false.
     // (so if it is undefined or true, it is constant.)
     let result = true;
+    if (defined(properties.isConstant)) {
+        return properties.isConstant;
+    }
     for (const key in properties) {
         if (properties.hasOwnProperty(key)) {
             result = result && defined(properties[key]) && (properties[key].isConstant !== false);
