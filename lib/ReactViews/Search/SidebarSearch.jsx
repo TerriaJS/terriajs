@@ -34,7 +34,7 @@ export default React.createClass({
         return {
             mapMarkerColorPrimary: DEFAULT_PRIMARY_MAP_MARKER_COLOR,
             mapMarkerColorSecondary: DEFAULT_SECONDARY_MAP_MARKER_COLOR
-        }
+        };
     },
 
     componentWillMount() {
