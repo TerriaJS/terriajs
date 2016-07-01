@@ -18,7 +18,7 @@
 }
 
 .header {
-  padding: 5px 0 5px 40px;
+  padding: 5px 0 5px 45px;
   position: relative;
   line-height: 1.4;
 
@@ -30,7 +30,8 @@
 }
 
 .btnToggleOpen{
-  display: inline-block;
+  display: block;
+  float: left;
   padding: 5px 0px;
   svg{
     height: 18px;
@@ -39,7 +40,8 @@
 }
 
 .btnToggleActive{
-  display: inline-block;
+  display: block;
+  float: right;
   padding: 5px 0px;
   svg{
     height: 18px;
@@ -53,6 +55,7 @@
   top: 0;
   display: block;
   width: 40px;
+
 }
 
 .items {

@@ -72,7 +72,7 @@ const Concept = React.createClass({
                                         style={this.getColorStyle()}
                                         className={Styles.btnToggleOpen}
                                         title='open variable selection'>
-                                        {concept.isOpen ? <Icon glyph={Icon.GLYPHS.opened}/> : <Icon glyph={Icon.GLYPHS.closed}/>}
+                                        {concept.isOpen ? <Icon glyph={Icon.GLYPHS.showLess}/> : <Icon glyph={Icon.GLYPHS.showMore}/>}
                                 </button>
                             </If>
                             <If condition={concept.isSelectable}>
