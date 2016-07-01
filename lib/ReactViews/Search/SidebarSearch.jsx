@@ -70,31 +70,33 @@ export default React.createClass({
                                 className={Styles.btnDone}>Done
                         </button>
                     </BadgeBar>
-                    <For each="search" of={this.props.viewState.searchState.locationSearchProviders}>
-                        <div key={search.constructor.name} className={Styles.providerResult}>
-                            <h4 className={Styles.heading}>{search.name}</h4>
-                            <SearchHeader searchProvider={search}
-                                          isWaitingForSearchToStart={this.props.isWaitingForSearchToStart}/>
-                            <ul className={Styles.items}>
-                                { search.searchResults.map((result, i) => (
-                                    <SearchResult key={i}
-                                                  clickAction={this.onLocationClick.bind(this, result)}
-                                                  name={result.name}/>
-                                )) }
-                            </ul>
-                        </div>
-                    </For>
-                    <If condition={this.props.viewState.searchState.locationSearchText.length > 0}>
-                        <div className={Styles.providerResult}>
-                            <h4 className={Styles.heading}>Data Catalog</h4>
-                            <ul className={Styles.items}>
-                                <SearchResult clickAction={this.searchInDataCatalog}
-                                              showPin={false}
-                                              name={`Search ${this.props.viewState.searchState.locationSearchText} in the Data Catalog`}
-                                />
-                            </ul>
-                        </div>
-                    </If>
+                    <div className={Styles.resultsContent}>
+                        <For each="search" of={this.props.viewState.searchState.locationSearchProviders}>
+                            <div key={search.constructor.name} className={Styles.providerResult}>
+                                <h4 className={Styles.heading}>{search.name}</h4>
+                                <SearchHeader searchProvider={search}
+                                              isWaitingForSearchToStart={this.props.isWaitingForSearchToStart}/>
+                                <ul className={Styles.items}>
+                                    { search.searchResults.map((result, i) => (
+                                        <SearchResult key={i}
+                                                      clickAction={this.onLocationClick.bind(this, result)}
+                                                      name={result.name}/>
+                                    )) }
+                                </ul>
+                            </div>
+                        </For>
+                        <If condition={this.props.viewState.searchState.locationSearchText.length > 0}>
+                            <div className={Styles.providerResult}>
+                                <h4 className={Styles.heading}>Data Catalog</h4>
+                                <ul className={Styles.items}>
+                                    <SearchResult clickAction={this.searchInDataCatalog}
+                                                  showPin={false}
+                                                  name={`Search ${this.props.viewState.searchState.locationSearchText} in the Data Catalog`}
+                                    />
+                                </ul>
+                            </div>
+                        </If>
+                    </div>
                 </div>
             </div>
         );
