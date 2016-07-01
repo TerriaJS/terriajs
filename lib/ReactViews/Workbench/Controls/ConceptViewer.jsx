@@ -64,7 +64,7 @@ const Concept = React.createClass({
         return (
             <li style={this.getColorStyle()}>
                 <If condition={concept.name}>
-                    <div className={classNames(Styles.header, {[Styles.hasChildren]: concept.hasChildren})}>
+                    <div className={classNames(Styles.header, {[Styles.hasChildren]: concept.hasChildren, [Styles.isSelectable]: concept.isSelectable})}>
                         <div className={Styles.btnGroup}>
                             <If condition={concept.hasChildren}>
                                 <button type='button'
