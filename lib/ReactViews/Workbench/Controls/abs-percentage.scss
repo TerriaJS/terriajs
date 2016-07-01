@@ -2,20 +2,29 @@
 @import '../../../Sass/common/mixins';
 
 .btn {
-  composes: btn from '../../../Sass/common/_buttons.scss';
+  position: relative;
+  text-align: left;
+  svg{
+    height: 14px;
+    width: 14px;
+    fill: #fff;
+    position: absolute;
+    top: 5px;
+    left: 5px;
+  }
+  span{
+    line-height: 1.2;
+    vertical-align: top;
+    display: inline-block;
+    padding: 3px 5px 3px 25px;
+  }
 }
 
 .btn--checkbox {
-  left: 15px;
-  float: left;
 }
 
 .btn--active {
-  composes: btn--checkbox;
-  composes: btn--checkbox-on from '../../../Sass/common/_buttons.scss';
 }
 
 .btn--inactive {
-  composes: btn--checkbox;
-  composes: btn--checkbox-off from '../../../Sass/common/_buttons.scss';
 }

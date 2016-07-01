@@ -12,8 +12,13 @@
 }
 
 .icon--download {
-  composes: icon from '../../Sass/common/_icons.scss';
-  composes: icon-download from '../../Sass/common/_icons.scss';
+  display: inline-block;
+  vertical-align: bottom;
+  svg{
+    height: 20px;
+    width: 20px;
+    fill: #fff;
+  }
 }
 
 .dropdown__list {

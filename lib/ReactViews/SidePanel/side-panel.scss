@@ -7,6 +7,8 @@
 .workbenchEmpty{
   padding: $padding;
   opacity: 0.8;
+  border: dashed 1px rgba(255, 255, 255, 0.5);
+  margin-top: 5px;
   @media print{
     display: none;
   }
@@ -46,7 +48,7 @@
   line-height: $input-height;
   svg{
     position: absolute;
-    left: $padding;
+    left: $padding-small;
     height: $input-height;
     width: $input-height;
     display: block;
