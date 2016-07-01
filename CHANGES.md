@@ -8,6 +8,7 @@ Change Log
 * `WebMapServiceCatalogItem` will now detect ncWMS servers and set isNcWMS to true.
 * New `ShareDataService` which can store and resolve data. Currently it is used as a replacement for Google URL Shortener, which can't handle long URLs.
 * New `ServerConfig` object which provides configuration information about the server, including which domains can be proxied for. This changes the way CorsProxy is initialised.
+* Added partial support for the SDMX-JSON format.
 
 ### 3.4.0
 

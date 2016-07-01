@@ -13,16 +13,8 @@ const FeatureInfoCatalogItem = React.createClass({
         features: React.PropTypes.array,
         catalogItem: React.PropTypes.object,
         terria: React.PropTypes.object.isRequired,
-        viewState: React.PropTypes.object.isRequired
-    },
-
-    toggleOpenFeature(feature) {
-        const terria = this.props.terria;
-        if (feature === terria.selectedFeature) {
-            terria.selectedFeature = undefined;
-        } else {
-            terria.selectedFeature = feature;
-        }
+        viewState: React.PropTypes.object.isRequired,
+        onToggleOpen: React.PropTypes.func.isRequired
     },
 
     render() {
@@ -54,7 +46,7 @@ const FeatureInfoCatalogItem = React.createClass({
                         clock={terria.clock}
                         template={featureInfoTemplate}
                         isOpen={feature === terria.selectedFeature}
-                        onClickHeader={this.toggleOpenFeature}
+                        onClickHeader={this.props.onToggleOpen}
                     />
                 );
             });

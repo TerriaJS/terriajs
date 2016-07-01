@@ -5,6 +5,12 @@ import React from 'react';
 import SearchHeader from './SearchHeader.jsx';
 import SearchResult from './SearchResult.jsx';
 import BadgeBar from '../BadgeBar.jsx';
+import CustomDataSource from 'terriajs-cesium/Source/DataSources/CustomDataSource';
+import Entity from 'terriajs-cesium/Source/DataSources/Entity.js';
+import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
+import Cartographic from 'terriajs-cesium/Source/Core/Cartographic';
+import Cartesian3 from 'terriajs-cesium/Source/Core/Cartesian3';
+import VerticalOrigin from 'terriajs-cesium/Source/Scene/VerticalOrigin';
 
 import Styles from './sidebar-search.scss';
 
@@ -14,7 +20,35 @@ export default React.createClass({
 
     propTypes: {
         viewState: React.PropTypes.object.isRequired,
-        isWaitingForSearchToStart: React.PropTypes.bool
+        isWaitingForSearchToStart: React.PropTypes.bool,
+        terria: React.PropTypes.object.isRequired
+    },
+
+    componentWillMount() {
+        this.mapPointerDataSource = new CustomDataSource('Points');
+        this.props.terria.dataSources.add(this.mapPointerDataSource);
+    },
+
+    componentWillUnmount() {
+        this.props.terria.dataSources.remove(this.mapPointerDataSource);
+    },
+
+    onLocationClick(result) {
+        this.mapPointerDataSource.entities.removeAll();
+        const firstPointEntity = new Entity({
+            name: result.name,
+            position: Ellipsoid.WGS84.cartographicToCartesian(Cartographic.fromDegrees(result.location.longitude, result.location.latitude)),
+            description: `${result.location.latitude}, ${result.location.longitude}`,
+            billboard: {
+                image: require('../../../wwwroot/images/map_pin.svg'),
+                scale: 0.65,
+                eyeOffset: new Cartesian3(0.0, 0.0, 50.0),
+                verticalOrigin: VerticalOrigin.BOTTOM,
+            }
+        });
+        this.mapPointerDataSource.entities.add(firstPointEntity);
+
+        result.clickAction();
     },
 
     searchInDataCatalog() {
@@ -43,7 +77,9 @@ export default React.createClass({
                                           isWaitingForSearchToStart={this.props.isWaitingForSearchToStart}/>
                             <ul className={Styles.items}>
                                 { search.searchResults.map((result, i) => (
-                                    <SearchResult key={i} clickAction={result.clickAction} name={result.name}/>
+                                    <SearchResult key={i}
+                                                  clickAction={this.onLocationClick.bind(this, result)}
+                                                  name={result.name}/>
                                 )) }
                             </ul>
                         </div>

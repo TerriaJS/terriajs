@@ -1,11 +1,10 @@
 'use strict';
 const React = require('react');
 import ObserveModelMixin from '../../ObserveModelMixin';
-
 import triggerResize from '../../../Core/triggerResize';
-
 import Styles from './full_screen_button.scss';
 import classNames from "classnames";
+import Icon from "../../Icon.jsx";
 
 // The button to make the map full screen and hide the workbench.
 const FullScreenButton = React.createClass({
@@ -37,7 +36,7 @@ const FullScreenButton = React.createClass({
         if (this.props.viewState.isMapFullScreen) {
             return <span className={Styles.exit}>Exit Full Screen</span>;
         } else {
-            return <span className={Styles.enter}></span>;
+            return <Icon glyph={Icon.GLYPHS.expand}/>;
         }
     },
 

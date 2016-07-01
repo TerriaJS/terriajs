@@ -6,61 +6,6 @@ var Rectangle = require('terriajs-cesium/Source/Core/Rectangle');
 var Terria = require('../../lib/Models/Terria');
 var AbsIttCatalogItem = require('../../lib/Models/AbsIttCatalogItem');
 
-describe('AbsIttCatalogItem._generateAllCombinations', function() {
-
-    it('works with one code and one concept', function() {
-        var test = [[1]];
-        var target = [[1]];
-        expect(AbsIttCatalogItem._generateAllCombinations(test)).toEqual(target);
-    });
-
-    it('works with one code per concept', function() {
-        var test = [[1], [2], [3], [4]];
-        var target = [[1, 2, 3, 4]];
-        expect(AbsIttCatalogItem._generateAllCombinations(test)).toEqual(target);
-    });
-
-    it('works with two codes in a single concept', function() {
-        var test = [[1, 10]];
-        var target = [[1], [10]];
-        expect(AbsIttCatalogItem._generateAllCombinations(test)).toEqual(target);
-    });
-
-    it('works with two codes in first concept', function() {
-        var test = [[1, 10], [2], [3], [4]];
-        var target = [[1, 2, 3, 4], [10, 2, 3, 4]];
-        expect(AbsIttCatalogItem._generateAllCombinations(test)).toEqual(target);
-    });
-
-    it('works with two codes in first two concepts', function() {
-        var test = [[1, 10], [2, 20], [3], [4]];
-        // Actually the order of the subarrays is not important.
-        var target = [[1, 2, 3, 4], [1, 20, 3, 4], [10, 2, 3, 4], [10, 20, 3, 4]];
-        expect(AbsIttCatalogItem._generateAllCombinations(test)).toEqual(target);
-    });
-
-    it('works with two codes in first three concepts', function() {
-        var test = [[1, 10], [2, 20], [3, 30], [4]];
-        // Actually the order of the subarrays is not important.
-        var target =  [[ 1, 2, 3, 4], [1, 2, 30, 4], [1, 20, 3, 4], [1, 20, 30, 4], [10, 2, 3, 4], [10, 2, 30, 4], [10, 20, 3, 4], [10, 20, 30, 4]];
-        expect(AbsIttCatalogItem._generateAllCombinations(test)).toEqual(target);
-    });
-
-    it('works with two codes in last concept', function() {
-        var test = [[1], [2], [3], [4, 40]];
-        var target = [[1, 2, 3, 4], [1, 2, 3, 40]];
-        expect(AbsIttCatalogItem._generateAllCombinations(test)).toEqual(target);
-    });
-
-    it('works with two codes in last two concepts', function() {
-        var test = [[1], [2], [3, 30], [4, 40]];
-        var target = [[1, 2, 3, 4], [1, 2, 3, 40], [1, 2, 30, 4], [1, 2, 30, 40]];
-        expect(AbsIttCatalogItem._generateAllCombinations(test)).toEqual(target);
-    });
-
-});
-
-
 describe('AbsIttCatalogItem', function() {
     var terria;
     var item;

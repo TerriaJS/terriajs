@@ -15,37 +15,25 @@
 
 .remove {
   right: 0;
-
-  .btn {
+  svg{
+    height: 20px;
+    width: 20px;
+    fill: #fff;
+    vertical-align: bottom;
     display: inline-block;
-    margin-right: 5px;
   }
 }
 
 .btn {
   composes: btn from '../../../Sass/common/_buttons.scss';
-
   &.btn {
     padding: 0;
     font-size: $font-size-mini;
   }
 }
-
-.btn-remove {
-  composes: btn;
-}
-
 .info {
   left: 33%;
   padding: 0 5%;
   border-left: 1px solid $border-color;
   border-right: 1px solid $border-color;
-}
-
-.icon--remove {
-  display: inline-block;
-  vertical-align: -1px;
-
-  composes: icon from '../../../Sass/common/_icons.scss';
-  composes: icon-remove from '../../../Sass/common/_icons.scss';
 }
