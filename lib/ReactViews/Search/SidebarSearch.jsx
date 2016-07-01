@@ -15,7 +15,8 @@ import VerticalOrigin from 'terriajs-cesium/Source/Scene/VerticalOrigin';
 
 import Styles from './sidebar-search.scss';
 
-const MAP_MARKER_COLOR = '#08ABD5';
+const DEFAULT_PRIMARY_MAP_MARKER_COLOR = '#08ABD5';
+const DEFAULT_SECONDARY_MAP_MARKER_COLOR = '#3F4854';
 
 // Handle any of the three kinds of search based on the props
 export default React.createClass({
@@ -24,7 +25,16 @@ export default React.createClass({
     propTypes: {
         viewState: React.PropTypes.object.isRequired,
         isWaitingForSearchToStart: React.PropTypes.bool,
-        terria: React.PropTypes.object.isRequired
+        terria: React.PropTypes.object.isRequired,
+        mapMarkerColorPrimary: React.PropTypes.string,
+        mapMarkerColorSecondary: React.PropTypes.string
+    },
+
+    getDefaultProps() {
+        return {
+            mapMarkerColorPrimary: DEFAULT_PRIMARY_MAP_MARKER_COLOR,
+            mapMarkerColorSecondary: DEFAULT_SECONDARY_MAP_MARKER_COLOR
+        }
     },
 
     componentWillMount() {
@@ -44,10 +54,10 @@ export default React.createClass({
             position: Ellipsoid.WGS84.cartographicToCartesian(Cartographic.fromDegrees(result.location.longitude, result.location.latitude)),
             description: `${result.location.latitude}, ${result.location.longitude}`,
             billboard: {
-                image: getMarkerIcon(),
-                scale: 0.65,
+                image: this.getMarkerIcon(),
+                scale: 0.5,
                 eyeOffset: new Cartesian3(0.0, 0.0, 50.0),
-                verticalOrigin: VerticalOrigin.BOTTOM,
+                verticalOrigin: VerticalOrigin.BOTTOM
             }
         });
         this.mapPointerDataSource.entities.add(firstPointEntity);
@@ -61,6 +71,13 @@ export default React.createClass({
 
     backToNowViewing() {
         this.props.viewState.searchState.showLocationSearch = false;
+    },
+
+    getMarkerIcon() {
+        const svgAsText = require('!!raw-loader!../../../wwwroot/images/map-pin.svg')
+            .replace(/id="Oval-30" fill=".*"/, `id="Oval-30" fill="${this.props.mapMarkerColorPrimary}"`)
+            .replace(/id="Oval-31" fill=".*"/, `id="Oval-31" fill="${this.props.mapMarkerColorSecondary}"`);
+        return `data:image/svg+xml,${svgAsText}`;
     },
 
     render() {
@@ -105,15 +122,3 @@ export default React.createClass({
         );
     }
 });
-
-function getMarkerIcon() {
-    // if (!window.btoa) {
-    //     // IE9 can't btoa so they get a crappy black icon (serves them right for making our job harder!!)
-    //     return ;
-    // } else {
-    // Other browsers use the already-downloaded SVG sprite, with a class!
-    const svgAsText = require('!!raw-loader!../../../wwwroot/images/icons/location.svg').replace('<svg', `<svg stroke-width="2" stroke-opacity="0.7" stroke="#000000" fill="${MAP_MARKER_COLOR}"`);
-    // const svgAsText = `<svg viewBox="0 0 100 100" class="icon ${Styles.mapMarkerSvg}" xmlns:xlink="http://www.w3.org/1999/xlink"><use xlink:href="${Icon.GLYPHS.location}"></use></svg>`;
-    return `data:image/svg+xml,${svgAsText}`;
-    // }
-}
