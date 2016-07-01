@@ -3,7 +3,10 @@
 .workbench-content {
   composes: list-reset from '../../Sass/common/_base.scss';
   position: relative;
-
+  height: calc(100vh - #{$workbench-header + $logo-height});
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 0 $padding-small;
   @media print{
     page-break-after : always;
   }
@@ -16,9 +19,7 @@
 .drop-zone {
   composes: drop-zone from '../../Sass/common/_drop_zone.scss';
   composes: clearfix from '../../Sass/common/_base.scss';
-
   height: 2px;
-
   &.is-active {
     height: calc(#{$input-height} + #{$padding});
   }
