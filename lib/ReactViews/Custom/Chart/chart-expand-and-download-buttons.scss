@@ -83,10 +83,17 @@
 .a--download {
   composes: btn--download from '../../../Sass/common/_buttons.scss';
   text-align: center;
-  padding: 1px 8px 0 8px;
+  padding: 1px 5px 0 5px;
   margin-left: 3px;
   color: white;
   background: $color-primary;
+  display: block;
+  width: 30px;
+  float: right;
+  svg{
+    height: 20px;
+    width: 20px;
+  }
 
   &:hover, &:focus {
     text-decoration: none;
