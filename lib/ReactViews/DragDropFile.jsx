@@ -23,7 +23,7 @@ const DragDropFile = React.createClass({
             target: e.dataTransfer
         };
         try {
-            handleFile(fakeEvent, this.props.terria, null, ()=> {
+            handleFile(fakeEvent, this.props.terria, this.props.viewState, null, ()=> {
                 this.props.viewState.myDataIsUploadView = false;
             });
         } catch (err) {

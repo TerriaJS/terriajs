@@ -57,7 +57,7 @@ const AddData = React.createClass({
 
     handleUploadFile(e) {
         try {
-            handleFile(e, this.props.terria, this.state.localDataType, ()=> {
+            handleFile(e, this.props.terria, this.props.viewState, this.state.localDataType, ()=> {
                 this.props.viewState.myDataIsUploadView = false;
             });
         } catch (err) {
@@ -179,7 +179,7 @@ const AddData = React.createClass({
  * Loads a catalog item from a file.
  */
 function loadFile(viewModel) {
-    return createCatalogItemFromFileOrUrl(viewModel.props.terria, viewModel.state.remoteUrl, viewModel.state.remoteDataType.value, true);
+    return createCatalogItemFromFileOrUrl(viewModel.props.terria, viewModel.props.viewState, viewModel.state.remoteUrl, viewModel.state.remoteDataType.value, true);
 }
 
 module.exports = AddData;
