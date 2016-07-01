@@ -30,10 +30,7 @@
 }
 
 .body {
-    padding: 0 $padding-small;
-    overflow-x: hidden;
-    overflow-y: auto;
-    height: calc(100vh - #{$workbench-header + $logo-height});
+    overflow: hidden;
     @media print{
       height: auto;
     }
