@@ -58,7 +58,7 @@ const FeatureInfoSection = React.createClass({
         }
         // There's another situation that requires updating: when a custom component auto-updates.
         // TODO: Currently we only check for this on mount, so if it changes over time, won't pick it up.
-        // (The trick is it updates state, and you can't nest that inside the above setState...)
+        // (The clockSubscription above happens every tick, so don't test there! Ideally would test only on update.)
         setTimeoutForUpdatingCustomComponents(that);
     },
 
@@ -421,11 +421,20 @@ function setTimeoutForUpdatingCustomComponents(that) {  // eslint-disable-line r
         that.setState({
             timeoutId: setTimeout(() => {
                 console.log('triggering update', that.props.feature);
-                if (defined(that.props.feature.currentProperties._terria_updateTrigger)) {
-                    that.props.feature.currentProperties._terria_updateTrigger++;
+                // These lines simply increment _terria_updateTrigger by 1, handling various initially undefined cases.
+                if (!defined(that.props.feature.currentProperties)) {
+                    that.props.feature.currentProperties = {
+                        _terria_updateTrigger: 1  // eslint-disable-line camelcase
+                    };
+                } else if (!defined(that.props.feature.currentProperties._terria_updateTrigger)) {
+                    that.props.feature.currentProperties._terria_updateTrigger = 1;  // eslint-disable-line camelcase
                 } else {
-                    that.props.feature.currentProperties._terria_updateTrigger = 1; // eslint-disable-line camelcase
+                    that.props.feature.currentProperties._terria_updateTrigger++;
                 }
+                // And finish by triggering the next timeout, but do this in another timeout so we aren't nesting setStates.
+                setTimeout(() => {
+                    setTimeoutForUpdatingCustomComponents(that);
+                }, 5);
             }, minUpdateTime)
         });
     }
