@@ -25,6 +25,7 @@ Mustache.escape = function(string) { return string; };
 // Individual feature info section
 const FeatureInfoSection = React.createClass({
     mixins: [ObserveModelMixin],
+
     propTypes: {
         viewState: React.PropTypes.object.isRequired,
         template: React.PropTypes.oneOfType([React.PropTypes.object, React.PropTypes.string]),
@@ -39,11 +40,13 @@ const FeatureInfoSection = React.createClass({
     getInitialState() {
         return {
             clockSubscription: undefined,
+            timeoutId: undefined,
             showRawData: false
         };
     },
 
     componentWillMount() {
+        const that = this;
         const feature = this.props.feature;
         // If the feature description or properties update over time, we need to update when they change.
         if (!this.isConstant()) {
@@ -54,7 +57,9 @@ const FeatureInfoSection = React.createClass({
             });
         }
         // There's another situation that requires updating: when a custom component auto-updates.
-        // Since this depends on the precise text being rendered, don't check on mount - do it on render.
+        // TODO: Currently we only check for this on mount, so if it changes over time, won't pick it up.
+        // (The trick is it updates state, and you can't nest that inside the above setState...)
+        setTimeoutForUpdatingCustomComponents(that);
     },
 
     componentWillUnmount() {
@@ -62,14 +67,13 @@ const FeatureInfoSection = React.createClass({
             // Remove the event listener.
             this.state.clockSubscription();
         }
+        if (defined(this.state.timeoutId)) {
+            clearTimeout(this.state.timeoutId);
+        }
     },
 
     getPropertyValues() {
-        return propertyValues(
-            this.props.feature,
-            this.props.clock,
-            this.props.template && this.props.template.formats
-        );
+        return getPropertyValuesForFeature(this.props.feature, this.props.clock, this.props.template && this.props.template.formats);
     },
 
     getTemplateData() {
@@ -123,15 +127,12 @@ const FeatureInfoSection = React.createClass({
     },
 
     renderDataTitle() {
-        const feature = this.props.feature;
-        const clock = this.props.clock;
         const template = this.props.template;
         if (typeof template === 'object' && defined(template.name)) {
-            const context = propertyValues(feature, clock, template.formats);
-            return Mustache.render(template.name, context);
+            return Mustache.render(template.name, this.getPropertyValues());
         }
-
-        return (this.props.feature && this.props.feature.name) || '';
+        const feature = this.props.feature;
+        return (feature && feature.name) || '';
     },
 
     isConstant() {
@@ -163,25 +164,7 @@ const FeatureInfoSection = React.createClass({
     render() {
         const catalogItemName = (this.props.catalogItem && this.props.catalogItem.name) || '';
         const fullName = (catalogItemName ? (catalogItemName + ' - ') : '') + this.renderDataTitle();
-        const templateData = this.getPropertyValues();
-        if (defined(templateData)) {
-            delete templateData._terria_columnAliases;
-            delete templateData._terria_updateTrigger;
-        }
-        const showRawData = !this.hasTemplate() || this.state.showRawData;
-        let rawDataDescription;
-        let reactRawData;
-        if (showRawData) {
-            rawDataDescription = this.descriptionFromFeature();
-            if (defined(rawDataDescription)) {
-                reactRawData = renderMarkdownInReact(rawDataDescription, this.props.catalogItem, this.props.feature);
-            }
-        }
-        const reactInfo = this.hasTemplate() ? renderMarkdownInReact(this.descriptionFromTemplate(), this.props.catalogItem, this.props.feature) : rawDataDescription;
-        const customComponents = CustomComponents.find(reactInfo);
-        console.log('customComponents = ', customComponents);
-        const updateTimes = customComponents.map(match => match.type.selfUpdateSeconds(match.reactComponent));
-        console.log('update times', updateTimes);
+        const reactInfo = getInfoAsReactComponent(this);
 
         return (
             <li className={classNames(Styles.section)}>
@@ -192,23 +175,23 @@ const FeatureInfoSection = React.createClass({
                 <If condition={this.props.isOpen}>
                     <section className={Styles.content}>
                         <If condition={this.hasTemplate()}>
-                            {reactInfo}
+                            {reactInfo.info}
                             <button type="button" className={Styles.rawDataButton} onClick={this.toggleRawData}>
                                 {this.state.showRawData ? 'Hide Raw Data' : 'Show Raw Data'}
                             </button>
                         </If>
 
-                        <If condition={showRawData}>
-                            <If condition={defined(rawDataDescription)}>
-                                {reactRawData}
+                        <If condition={reactInfo.showRawData}>
+                            <If condition={reactInfo.hasRawData}>
+                                {reactInfo.rawData}
                             </If>
-                            <If condition={!defined(rawDataDescription)}>
+                            <If condition={!reactInfo.hasRawData}>
                                 <div ref="no-info" key="no-info">No information available.</div>
                             </If>
-                            <If condition={defined(templateData)}>
+                            <If condition={defined(reactInfo.templateData)}>
                                 <FeatureInfoDownload key='download'
                                     viewState={this.props.viewState}
-                                    data={templateData}
+                                    data={reactInfo.templateData}
                                     name={catalogItemName} />
                             </If>
                         </If>
@@ -222,11 +205,11 @@ const FeatureInfoSection = React.createClass({
 /**
  * Gets a map of property labels to property values for a feature at the provided clock's time.
  * @private
- * @param {Entity} feature a feature to get values for
- * @param {Clock} clock a clock to get the time from
+ * @param {Entity} feature A feature to get values for.
+ * @param {Clock} clock A clock to get the time from.
  * @param {Object} [formats] A map of property labels to the number formats that should be applied for them.
  */
-function propertyValues(feature, clock, formats) {
+function getPropertyValuesForFeature(feature, clock, formats) {
     // Manipulate the properties before templating them.
     // If they require .getValue, apply that.
     // If they have bad keys, fix them.
@@ -386,6 +369,66 @@ function describeFromProperties(properties, time) {
         html = '<table class="cesium-infoBox-defaultTable"><tbody>' + html + '</tbody></table>';
     }
     return html;
+}
+
+function getArrayMinimum(numberArray) {  // eslint-disable-line require-jsdoc
+    return Math.min.apply(null, numberArray.filter(x => defined(x)));
+}
+
+/**
+ * @param  {ReactClass} that The FeatureInfoSection.
+ * @return {Object} Returns {templateData, info, rawData, showRawData, hasRawData}.
+ *                  templateData is the object passed to the templating engine.
+ *                  info is the main body of the info section, as a react component.
+ *                  rawData is the same for the raw data, if it needs to be shown.
+ *                  showRawData is whether to show the rawData.
+ *                  hasRawData is whether there is any rawData to show.
+ */
+function getInfoAsReactComponent(that) {
+    const templateData = that.getPropertyValues();
+    if (defined(templateData)) {
+        delete templateData._terria_columnAliases;
+        delete templateData._terria_updateTrigger;
+    }
+    const showRawData = !that.hasTemplate() || that.state.showRawData;
+    let rawDataHtml;
+    let rawData;
+    if (showRawData) {
+        rawDataHtml = that.descriptionFromFeature();
+        if (defined(rawDataHtml)) {
+            rawData = renderMarkdownInReact(rawDataHtml, that.props.catalogItem, that.props.feature);
+        }
+    }
+    return {
+        templateData: templateData,
+        info: that.hasTemplate() ? renderMarkdownInReact(that.descriptionFromTemplate(), that.props.catalogItem, that.props.feature) : rawData,
+        rawData: rawData,
+        showRawData: showRawData,
+        hasRawData: !!rawDataHtml
+    };
+}
+
+function setTimeoutForUpdatingCustomComponents(that) {  // eslint-disable-line require-jsdoc
+    const {info} = getInfoAsReactComponent(that);
+    const customComponents = CustomComponents.find(info);
+    const updateTimes = customComponents.map(match => match.type.selfUpdateSeconds(match.reactComponent));
+    const minUpdateTime = getArrayMinimum(updateTimes);
+    console.log('update times', updateTimes, minUpdateTime);
+    if (defined(that.state.timeoutId)) {
+        clearTimeout(that.state.timeoutId);
+    }
+    if (minUpdateTime > 0) {
+        that.setState({
+            timeoutId: setTimeout(() => {
+                console.log('triggering update', that.props.feature);
+                if (defined(that.props.feature.currentProperties._terria_updateTrigger)) {
+                    that.props.feature.currentProperties._terria_updateTrigger++;
+                } else {
+                    that.props.feature.currentProperties._terria_updateTrigger = 1; // eslint-disable-line camelcase
+                }
+            }, minUpdateTime)
+        });
+    }
 }
 
 module.exports = FeatureInfoSection;
