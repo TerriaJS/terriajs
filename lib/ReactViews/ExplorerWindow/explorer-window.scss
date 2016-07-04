@@ -18,6 +18,7 @@
     right: 0;
     left: 0;
     visibility: hidden;
+    @include transition(all 0.3s);
 
     &.is-open {
       visibility: visible;

@@ -143,13 +143,13 @@ const Dropdown = React.createClass({
 
     render() {
         const isOpenStyle = Styles.isOpen + ' ' + (this.props.theme.isOpen || '');
-
         return (
             <div className={classNames(Styles.dropdown, this.props.theme.dropdown)}>
                 <button type='button' onClick={this.onButtonClicked}
                         className={classNames(this.props.theme.button, Styles.btnDropdown)}
                         ref={element => {this.buttonElement = element;}}>
                     {defined(this.props.selected) ? this.props.selected[this.props.textProperty] : this.props.children}
+                    {defined(this.props.theme.icon) ? this.props.theme.icon : null}
                 </button>
                 <ul className={classNames(Styles.list, this.props.theme.list, {[isOpenStyle]: this.state.isOpen})} style={this.state.dropdownPosition}>
                     <For each="option" of={this.props.options} index="index">

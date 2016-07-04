@@ -63,11 +63,12 @@ const DataCatalogTab = React.createClass({
                                   isWaitingForSearchToStart={searchState.isWaitingToStartCatalogSearch}/>
                 </If>
                 <For each="item" of={items}>
-                    <DataCatalogMember viewState={this.props.viewState}
-                                       member={item}
-                                       manageIsOpenLocally={isSearching}
-                                       key={item.uniqueId}
-                    />
+                    {item !== this.props.terria.catalog.userAddedDataGroup &&
+                        <DataCatalogMember viewState={this.props.viewState}
+                                           member={item}
+                                           manageIsOpenLocally={isSearching}
+                                           key={item.uniqueId}
+                    />}
                 </For>
             </ul>
         );
