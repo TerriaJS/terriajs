@@ -52,9 +52,14 @@ $workbench-margin: $padding-small - 1px;
 .visibilityColumn {
   composes: col from  '../../Sass/common/_base.scss';
   composes: col-1 from  '../../Sass/common/_base.scss';
+  padding: 8px 10px;
+  //remove additional space below inline element
+  button{
+    display: block;
+  }
   svg{
-    height: 30px;
-    width: 30px;
+    height: 14px;
+    width: 14px;
     fill: #fff;
   }
 }
@@ -74,9 +79,14 @@ $workbench-margin: $padding-small - 1px;
 .toggleColumn {
   composes: col from  '../../Sass/common/_base.scss';
   composes: col-1 from  '../../Sass/common/_base.scss';
+  padding: 5px;
+  //remove additional space below inline element
+  button{
+    display: block;
+  }
   svg{
-    height: 30px;
-    width: 20px;
+    height: 18px;
+    width: 18px;
     fill: #fff;
   }
 }

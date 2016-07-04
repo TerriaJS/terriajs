@@ -5,12 +5,22 @@
   @include transition(all 0.5s ease-in-out);
 }
 
+.resultsContent{
+  height: calc(100vh - #{$workbench-header + $logo-height});
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 0 $padding-small;
+}
+
 .heading {
   margin: 0 0 $padding-small 0;
 }
 
 .provider-result {
   margin-top: $padding-small;
+  svg{
+    fill: #ffffff;
+  }
 }
 
 .items {
@@ -23,6 +33,8 @@
   composes: btn from '../../Sass/common/_buttons.scss';
   composes: btn from '../badge-bar.scss';
   composes: btn--tertiary-dark from '../../Sass/common/_buttons.scss';
-  padding: 7px 10px;
+  padding: 5px;
+  font-size: 10px;
   border-radius: 2px;
+  vertical-align: top;
 }
