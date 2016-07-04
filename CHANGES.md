@@ -9,6 +9,7 @@ Change Log
 * Fixed a bug preventing downloading feature info data in CSV format if it contained nulls.
 * Added support for the WMS Style/MetadataURL tag in layer description.
 * Long auto-generated legend titles now word wrap in most web browsers.
+* Ungrouped items in CKAN catalog items are now grouped under an item whose title is determined by .ungroupedTitle (default: "No group").
 * CKAN's default search regex for KMLs also includes KMZ.
 
 ### 3.3.0
