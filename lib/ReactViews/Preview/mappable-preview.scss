@@ -1,14 +1,6 @@
 @import '~terriajs-variables';
 @import '../../Sass/common/mixins';
 
-@include empty-module("previewed-info");
-
-.btn--back-to-map {
-  composes: btn from '../../Sass/common/_buttons.scss';
-  composes: btn--tertiary from '../../Sass/common/_buttons.scss';
-
-  font-size: 1rem;
-}
 
 .btn--add{
   composes: btn from '../../Sass/common/_buttons.scss';
@@ -17,23 +9,17 @@
   // toggle-enable data-preview__add-to-map
   @media screen and (min-width: $sm){
       display: inline-block;
-      margin-right: 2%;
-      width: 58%;
+      width: inherit;
+      position: absolute;
+      top: $padding-small;
+      right: $padding-small;
   }
 }
 
-.btn--back {
-  display: none;
-  text-align: center;
-
-  @media screen and (min-width: $sm){
-    composes: btn from '../../Sass/common/_buttons.scss';
-    composes: btn--tertiary from '../../Sass/common/_buttons.scss';
-
-    display: inline-block;
-    width: 40%;
-  }
+.previewed--info {
+  margin: 2*$padding;
 }
+
 
 .field {
   composes: field from '../../Sass/common/_form.scss';

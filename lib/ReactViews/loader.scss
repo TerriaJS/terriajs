@@ -2,15 +2,43 @@
 @import '../Sass/common/mixins';
 
 .loader{
-  padding: $padding;
+  padding: $padding $padding $padding 30px;
   position: relative;
   display: inline-block;
   svg{
     height: 25px;
     width: 25px;
     display: line-block;
+    position: absolute;
+    left: 0;
+    top: $padding;
+    -webkit-animation: spin 2s infinite linear;
+    animation: spin 2s infinite linear;
   }
   span{
     line-height: 1.8;
+    font-size: 14px;
+  }
+}
+
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(359deg);
+            transform: rotate(359deg);
+  }
+}
+
+@keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(359deg);
+            transform: rotate(359deg);
   }
 }

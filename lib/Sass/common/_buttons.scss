@@ -225,15 +225,16 @@ $btn-setting-size: 35px;
 // Style guide: Buttons.map-buttons
 
 .btn--map {
-  background: $dark;
-  text-transform: uppercase;
-  font-size: $font-size-small;
-  padding: 5px;
+  font-size: 12px;
+  padding: 5px 0;
   color: #fff;
   display: block;
-  height: $padding*3.1;
+  height: 25px;
   font-family: $font-pop;
-  line-height: 18px;
+  opacity: 0.95;
+  background-color: $charcoal-grey;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.25);
+  line-height: 1.3;
   &:hover,
   &:focus,
   .is-open &,
@@ -242,14 +243,16 @@ $btn-setting-size: 35px;
     text-decoration: none;
   }
   svg{
-    height: 30px;
-    width: 30px;
+    height: 15px;
+    width: 15px;
     fill: #fff;
     display: inline-block;
+    padding: 0 5px;
   }
 
   span{
     vertical-align: top;
+    margin: 0 5px;
   }
 }
 

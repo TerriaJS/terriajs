@@ -5,7 +5,7 @@
   position: fixed;
   top: $mobile-header-height;
   bottom: 0;
-  background: rgba(#fff, 0.8);
+  background: rgba(#fff, 0.9);
   left: 0;
   right: 0;
   color: $modal-text;
@@ -19,20 +19,51 @@
 }
 
 .modalBg{
-  background: rgba(#fff, 0.5);
   overflow-y: auto;
   overflow-x: hidden;
-  height: 100%;
-  padding: $input-height $padding-small $padding-small $padding-small;
+  padding: 0;
 }
 
-.closeModal{
+.modal-top {
+  height: 40px;
+  width: 100%;
+  background: $color-primary;
+  box-shadow: 2px 0 2px rgba(100, 100, 100, 0.5);
+}
+
+.button {
   composes: btn from '../../Sass/common/_buttons.scss';
-  composes: btn-primary from '../../Sass/common/_buttons.scss';
-  text-align: right;
-  border-bottom: 2px solid #fff;
-  position: fixed;
-  z-index: 999;
+  color: #fff;
+
+  width: auto;
+}
+
+.done-button{
+  composes: button;
+
+  float: right;
+}
+
+.back-button {
+  composes: button;
+
+  float: left;
+  height: 40px;
+  width: 40px;
+  padding: 5px;
+
+  &--inactive {
+    opacity: 0.5;
+
+    &:focus, &:hover {
+      opacity: 0.5;
+    }
+  }
+}
+
+.icon-back {
+  fill: #FFFFFF;
+  stroke: #FFFFFF;
 }
 
 .data-catalog {

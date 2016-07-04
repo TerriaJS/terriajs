@@ -21,15 +21,14 @@
 .preview__inner {
   height: 100%;
   overflow-y: auto;
-  padding: $padding-small;
+  margin: 0 $padding-small;
+  position: relative;
 
   h3{
     margin: 0;
   }
 
   @media screen and (min-width: $sm){
-    padding: 0 $padding;
-
     h3{
       margin: 0.5em 0;
     }

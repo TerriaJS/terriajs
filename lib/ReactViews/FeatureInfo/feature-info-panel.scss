@@ -7,7 +7,7 @@
   border-radius: $radius-small;
   display: none;
   position: fixed;
-  top: 10vh;
+  top: $mobile-header-height + 10px;
   right: 10px;
   max-width: 95%;
   min-width: 150px;
@@ -79,7 +79,7 @@
     fill: #ffffff;
   }
   position: absolute;
-  top: 0;
+  top: 3px;
   right: 0;
 }
 

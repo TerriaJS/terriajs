@@ -128,9 +128,6 @@ const SharePanel = React.createClass({
                            onOpenChanged={this.onOpenChanged}>
                 <If condition={this.state.isOpen}>
                     <div className={classNames(Styles.content, DropdownStyles.content)}>
-                        <div className={classNames(DropdownStyles.header, DropdownStyles.section)}>
-                            <label className={DropdownStyles.heading}>Share</label>
-                        </div>
                         <div className={DropdownStyles.section}>
                             <div className={Styles.imgShare} style={shareImgStyle}></div>
                             <div className={Styles.imgLink}>

@@ -3,11 +3,11 @@
 
 .formLabel{
   position: absolute;
-  left: 5px;
   svg{
     height: $input-height;
     width: $input-height;
     fill: $charcoal-grey;
+    fill-opacity: 0.5;
   }
 }
 
@@ -17,13 +17,15 @@
 
 .searchData{
   position: relative;
+  width: 100%;
 }
 
 input[type=text].searchField {
   padding-left: $input-height;
-  width: 100%;
+  padding-right: $input-height;
   color: $color-primary;
-
+  width: 100%;
+  overflow: hidden;
   @include placeholder{
     text-transform: uppercase;
     font-size: $font-size-small;
@@ -41,10 +43,15 @@ input[type=text].searchField {
 
 //this does not seem to work
 .searchClear{
-  right: $padding;
-  top: 3px;
+  right: 0;
+  top: 0;
   padding: 0;
-  &:before{
-    padding: $padding;
+  position: absolute;
+  padding: 5px;
+  svg{
+    height: 30px;
+    width: 30px;
+    fill: $charcoal-grey;
+    fill-opacity: 0.5;
   }
 }
