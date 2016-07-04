@@ -26,6 +26,9 @@
 .btn--viewer {
   composes: btn from '../../../Sass/common/_buttons.scss';
   composes: btn-grey from '../../../Sass/common/_buttons.scss';
+  &.is-active{
+    border: 1px solid rgba(255, 255, 255, 0.5);
+  }
 }
 
 .btn--base-map {
@@ -54,7 +57,7 @@
       height: 22px;
     }
   &.is-active {
-  border: 2px solid $turquoise-blue;
+    border: 2px solid $turquoise-blue;
   }
 }
 
