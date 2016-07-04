@@ -13,6 +13,7 @@ import FeatureInfoDownload from './FeatureInfoDownload';
 import formatNumberForLocale from '../../Core/formatNumberForLocale';
 import ObserveModelMixin from '../ObserveModelMixin';
 import propertyGetTimeValues from '../../Core/propertyGetTimeValues';
+import CustomComponents from '../../Models/CustomComponents';
 import renderMarkdownInReact from '../../Core/renderMarkdownInReact';
 import Icon from "../Icon.jsx";
 
@@ -44,6 +45,7 @@ const FeatureInfoSection = React.createClass({
 
     componentWillMount() {
         const feature = this.props.feature;
+        // If the feature description or properties update over time, we need to update when they change.
         if (!this.isConstant()) {
             this.setState({
                 clockSubscription: this.props.clock.onTick.addEventListener(function(clock) {
@@ -51,6 +53,8 @@ const FeatureInfoSection = React.createClass({
                 })
             });
         }
+        // There's another situation that requires updating: when a custom component auto-updates.
+        // Since this depends on the precise text being rendered, don't check on mount - do it on render.
     },
 
     componentWillUnmount() {
@@ -162,12 +166,22 @@ const FeatureInfoSection = React.createClass({
         const templateData = this.getPropertyValues();
         if (defined(templateData)) {
             delete templateData._terria_columnAliases;
+            delete templateData._terria_updateTrigger;
         }
         const showRawData = !this.hasTemplate() || this.state.showRawData;
         let rawDataDescription;
+        let reactRawData;
         if (showRawData) {
             rawDataDescription = this.descriptionFromFeature();
+            if (defined(rawDataDescription)) {
+                reactRawData = renderMarkdownInReact(rawDataDescription, this.props.catalogItem, this.props.feature);
+            }
         }
+        const reactInfo = this.hasTemplate() ? renderMarkdownInReact(this.descriptionFromTemplate(), this.props.catalogItem, this.props.feature) : rawDataDescription;
+        const customComponents = CustomComponents.find(reactInfo);
+        console.log('customComponents = ', customComponents);
+        const updateTimes = customComponents.map(match => match.type.selfUpdateSeconds(match.reactComponent));
+        console.log('update times', updateTimes);
 
         return (
             <li className={classNames(Styles.section)}>
@@ -178,7 +192,7 @@ const FeatureInfoSection = React.createClass({
                 <If condition={this.props.isOpen}>
                     <section className={Styles.content}>
                         <If condition={this.hasTemplate()}>
-                            {renderMarkdownInReact(this.descriptionFromTemplate(), this.props.catalogItem, this.props.feature)}
+                            {reactInfo}
                             <button type="button" className={Styles.rawDataButton} onClick={this.toggleRawData}>
                                 {this.state.showRawData ? 'Hide Raw Data' : 'Show Raw Data'}
                             </button>
@@ -186,7 +200,7 @@ const FeatureInfoSection = React.createClass({
 
                         <If condition={showRawData}>
                             <If condition={defined(rawDataDescription)}>
-                                {renderMarkdownInReact(rawDataDescription, this.props.catalogItem, this.props.feature)}
+                                {reactRawData}
                             </If>
                             <If condition={!defined(rawDataDescription)}>
                                 <div ref="no-info" key="no-info">No information available.</div>
