@@ -9,7 +9,7 @@ import FileInput from './FileInput.jsx';
 import getDataType from '../../../../Core/getDataType';
 import ObserveModelMixin from '../../../ObserveModelMixin';
 import TerriaError from '../../../../Core/TerriaError';
-import handleFile from '../../../../Core/handleFile';
+import addUserFiles from '../../../../Models/addUserFiles';
 
 import Styles from './add-data.scss';
 
@@ -56,17 +56,12 @@ const AddData = React.createClass({
     },
 
     handleUploadFile(e) {
-        try {
-            handleFile(e, this.props.terria, this.props.viewState, this.state.localDataType, ()=> {
-                this.props.viewState.myDataIsUploadView = false;
+        addUserFiles(e.target.files, this.props.terria, this.props.viewState, this.state.localDataType)
+            .then(addedCatalogItems => {
+                if (addedCatalogItems.length > 0) {
+                    this.props.viewState.myDataIsUploadView = false;
+                }
             });
-        } catch (err) {
-            this.props.terria.error.raiseEvent(new TerriaError({
-                sender: this,
-                title: err.title,
-                message: err.message
-            }));
-        }
     },
 
     handleUrl(e) {

@@ -3,7 +3,7 @@ import classNames from 'classnames';
 
 import ObserveModelMixin from './ObserveModelMixin';
 import TerriaError from './../Core/TerriaError';
-import handleFile from '../Core/handleFile';
+import addUserFiles from '../Models/addUserFiles';
 
 import Styles from './drag-drop-file.scss';
 
@@ -23,7 +23,7 @@ const DragDropFile = React.createClass({
             target: e.dataTransfer
         };
         try {
-            handleFile(fakeEvent, this.props.terria, this.props.viewState, null, ()=> {
+            addUserFiles(fakeEvent, this.props.terria, this.props.viewState, null, ()=> {
                 this.props.viewState.myDataIsUploadView = false;
             });
         } catch (err) {

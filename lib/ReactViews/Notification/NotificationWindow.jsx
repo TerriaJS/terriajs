@@ -46,10 +46,10 @@ const NotificationWindow = React.createClass({
                         <div className={Styles.body}>{renderMarkdownInReact(message)}</div>
                     </div>
                     <div className={Styles.footer}>
+                        <button type='button' className={Styles.btn} onClick={this.confirm}>{confirmText}</button>
                         <If condition={denyText}>
                             <button type='button' className={Styles.btn} onClick={this.deny}>{denyText}</button>
                         </If>
-                        <button type='button' className={Styles.btn} onClick={this.confirm}>{confirmText}</button>
                     </div>
                 </div>
             </div>
