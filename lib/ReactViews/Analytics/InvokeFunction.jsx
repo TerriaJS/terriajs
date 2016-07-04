@@ -99,7 +99,7 @@ const InvokeFunction = React.createClass({
         return (<div className={Styles.invokeFunction}>
                     <div className={Styles.content}>
                         <h3>{this.props.previewed.name}</h3>
-                        <div className={Styles.description}>{renderMarkdownInReact(this.props.previewed.description, this.props.previewed, null)}</div>
+                        <div className={Styles.description}>{renderMarkdownInReact(this.props.previewed.description, {catalogItem: this.props.previewed})}</div>
                         {this.getParams()}
                     </div>
                     <div className={Styles.footer}>

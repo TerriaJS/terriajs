@@ -334,9 +334,9 @@ function mustacheFormatNumberFunction() {
     };
 }
 
-const simpleStyleIdentifiers = ['title', 'description', //
-'marker-size', 'marker-symbol', 'marker-color', 'stroke', //
-'stroke-opacity', 'stroke-width', 'fill', 'fill-opacity'];
+const simpleStyleIdentifiers = ['title', 'description',
+    'marker-size', 'marker-symbol', 'marker-color', 'stroke',
+    'stroke-opacity', 'stroke-width', 'fill', 'fill-opacity'];
 
 /**
  * A way to produce a description if properties are available but no template is given.
@@ -386,22 +386,29 @@ function getArrayMinimum(numberArray) {  // eslint-disable-line require-jsdoc
  */
 function getInfoAsReactComponent(that) {
     const templateData = that.getPropertyValues();
+    let updateCounter;
     if (defined(templateData)) {
+        updateCounter = templateData._terria_updateCounter || 0;
         delete templateData._terria_columnAliases;
-        delete templateData._terria_updateTrigger;
+        delete templateData._terria_updateCounter;
     }
+    const context = {
+        catalogItem: that.props.catalogItem,
+        feature: that.props.feature,
+        updateCounter: updateCounter
+    };
     const showRawData = !that.hasTemplate() || that.state.showRawData;
     let rawDataHtml;
     let rawData;
     if (showRawData) {
         rawDataHtml = that.descriptionFromFeature();
         if (defined(rawDataHtml)) {
-            rawData = renderMarkdownInReact(rawDataHtml, that.props.catalogItem, that.props.feature);
+            rawData = renderMarkdownInReact(rawDataHtml, context);
         }
     }
     return {
         templateData: templateData,
-        info: that.hasTemplate() ? renderMarkdownInReact(that.descriptionFromTemplate(), that.props.catalogItem, that.props.feature) : rawData,
+        info: that.hasTemplate() ? renderMarkdownInReact(that.descriptionFromTemplate(), context) : rawData,
         rawData: rawData,
         showRawData: showRawData,
         hasRawData: !!rawDataHtml
@@ -421,15 +428,15 @@ function setTimeoutForUpdatingCustomComponents(that) {  // eslint-disable-line r
         that.setState({
             timeoutId: setTimeout(() => {
                 console.log('triggering update', that.props.feature);
-                // These lines simply increment _terria_updateTrigger by 1, handling various initially undefined cases.
+                // These lines simply increment _terria_updateCounter by 1, handling various initially undefined cases.
                 if (!defined(that.props.feature.currentProperties)) {
                     that.props.feature.currentProperties = {
-                        _terria_updateTrigger: 1  // eslint-disable-line camelcase
+                        _terria_updateCounter: 1  // eslint-disable-line camelcase
                     };
-                } else if (!defined(that.props.feature.currentProperties._terria_updateTrigger)) {
-                    that.props.feature.currentProperties._terria_updateTrigger = 1;  // eslint-disable-line camelcase
+                } else if (!defined(that.props.feature.currentProperties._terria_updateCounter)) {
+                    that.props.feature.currentProperties._terria_updateCounter = 1;  // eslint-disable-line camelcase
                 } else {
-                    that.props.feature.currentProperties._terria_updateTrigger++;
+                    that.props.feature.currentProperties._terria_updateCounter++;
                 }
                 // And finish by triggering the next timeout, but do this in another timeout so we aren't nesting setStates.
                 setTimeout(() => {

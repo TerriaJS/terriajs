@@ -35,7 +35,7 @@ const GroupPreview = React.createClass({
                                 condition={this.props.previewed.description && this.props.previewed.description.length > 0}>
                                 <div>
                                     <h4>Description</h4>
-                                    {renderMarkdownInReact(this.props.previewed.description, this.props.previewed)}
+                                    {renderMarkdownInReact(this.props.previewed.description, {catalogItem: this.props.previewed})}
                                 </div>
                             </When>
                         </Choose>
@@ -45,7 +45,7 @@ const GroupPreview = React.createClass({
                         <If condition={metadataItem.dataCustodian}>
                             <div>
                                 <h4>Data Custodian</h4>
-                                {renderMarkdownInReact(metadataItem.dataCustodian, metadataItem)}
+                                {renderMarkdownInReact(metadataItem.dataCustodian, {catalogItem: metadataItem})}
                             </div>
                         </If>
 

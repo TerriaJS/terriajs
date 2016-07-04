@@ -51,7 +51,7 @@ const MappablePreview = React.createClass({
                         <If condition={catalogItem.description && catalogItem.description.length > 0}>
                             <div>
                                 <h4>Description</h4>
-                                {renderMarkdownInReact(catalogItem.description, catalogItem)}
+                                {renderMarkdownInReact(catalogItem.description, {catalogItem: catalogItem})}
                             </div>
                         </If>
 
@@ -68,7 +68,7 @@ const MappablePreview = React.createClass({
                         <If condition={catalogItem.dataCustodian && catalogItem.dataCustodian.length > 0}>
                             <div>
                                 <h4>Data Custodian</h4>
-                                {renderMarkdownInReact(catalogItem.dataCustodian, catalogItem)}
+                                {renderMarkdownInReact(catalogItem.dataCustodian, {catalogItem: catalogItem})}
                             </div>
                         </If>
 
