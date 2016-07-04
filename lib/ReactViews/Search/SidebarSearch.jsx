@@ -5,6 +5,7 @@ import React from 'react';
 import SearchHeader from './SearchHeader.jsx';
 import SearchResult from './SearchResult.jsx';
 import BadgeBar from '../BadgeBar.jsx';
+
 import CustomDataSource from 'terriajs-cesium/Source/DataSources/CustomDataSource';
 import Entity from 'terriajs-cesium/Source/DataSources/Entity.js';
 import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
@@ -14,6 +15,9 @@ import VerticalOrigin from 'terriajs-cesium/Source/Scene/VerticalOrigin';
 
 import Styles from './sidebar-search.scss';
 
+const DEFAULT_PRIMARY_MAP_MARKER_COLOR = '#08ABD5';
+const DEFAULT_SECONDARY_MAP_MARKER_COLOR = '#3F4854';
+
 // Handle any of the three kinds of search based on the props
 export default React.createClass({
     mixins: [ObserveModelMixin],
@@ -21,7 +25,16 @@ export default React.createClass({
     propTypes: {
         viewState: React.PropTypes.object.isRequired,
         isWaitingForSearchToStart: React.PropTypes.bool,
-        terria: React.PropTypes.object.isRequired
+        terria: React.PropTypes.object.isRequired,
+        mapMarkerColorPrimary: React.PropTypes.string,
+        mapMarkerColorSecondary: React.PropTypes.string
+    },
+
+    getDefaultProps() {
+        return {
+            mapMarkerColorPrimary: DEFAULT_PRIMARY_MAP_MARKER_COLOR,
+            mapMarkerColorSecondary: DEFAULT_SECONDARY_MAP_MARKER_COLOR
+        };
     },
 
     componentWillMount() {
@@ -35,15 +48,16 @@ export default React.createClass({
 
     onLocationClick(result) {
         this.mapPointerDataSource.entities.removeAll();
+
         const firstPointEntity = new Entity({
             name: result.name,
             position: Ellipsoid.WGS84.cartographicToCartesian(Cartographic.fromDegrees(result.location.longitude, result.location.latitude)),
             description: `${result.location.latitude}, ${result.location.longitude}`,
             billboard: {
-                image: require('../../../wwwroot/images/map_pin.svg'),
-                scale: 0.65,
+                image: this.getMarkerIcon(),
+                scale: 0.5,
                 eyeOffset: new Cartesian3(0.0, 0.0, 50.0),
-                verticalOrigin: VerticalOrigin.BOTTOM,
+                verticalOrigin: VerticalOrigin.BOTTOM
             }
         });
         this.mapPointerDataSource.entities.add(firstPointEntity);
@@ -57,6 +71,13 @@ export default React.createClass({
 
     backToNowViewing() {
         this.props.viewState.searchState.showLocationSearch = false;
+    },
+
+    getMarkerIcon() {
+        const svgAsText = require('!!raw-loader!../../../wwwroot/images/map-pin.svg')
+            .replace(/id="Oval-30" fill=".*"/, `id="Oval-30" fill="${this.props.mapMarkerColorPrimary}"`)
+            .replace(/id="Oval-31" fill=".*"/, `id="Oval-31" fill="${this.props.mapMarkerColorSecondary}"`);
+        return `data:image/svg+xml,${svgAsText}`;
     },
 
     render() {
