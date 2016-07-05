@@ -40,7 +40,7 @@ const FeatureInfoSection = React.createClass({
     getInitialState() {
         return {
             clockSubscription: undefined,
-            timeoutId: undefined,
+            timeoutIds: [],
             showRawData: false
         };
     },
@@ -58,7 +58,7 @@ const FeatureInfoSection = React.createClass({
         // For (2), use a event listener to update the feature's currentProperties/currentDescription directly.
         // For simplicity, we do not currently support both at once.
         if (this.isConstant()) { // TODO: rename this.isConstant.
-            setTimeoutForUpdatingCustomComponents(that);
+            setTimeoutsForUpdatingCustomComponents(that);
         } else {
             this.setState({
                 clockSubscription: this.props.clock.onTick.addEventListener(function(clock) {
@@ -73,9 +73,9 @@ const FeatureInfoSection = React.createClass({
             // Remove the event listener.
             this.state.clockSubscription();
         }
-        if (defined(this.state.timeoutId)) {
-            clearTimeout(this.state.timeoutId);
-        }
+        this.state.timeoutIds.forEach(id => {
+            clearTimeout(id);
+        });
     },
 
     getPropertyValues() {
@@ -377,10 +377,6 @@ function describeFromProperties(properties, time) {
     return html;
 }
 
-function getArrayMinimum(numberArray) {  // eslint-disable-line require-jsdoc
-    return Math.min.apply(null, numberArray.filter(x => defined(x)));
-}
-
 /**
  * @param  {ReactClass} that The FeatureInfoSection.
  * @return {Object} Returns {templateData, info, rawData, showRawData, hasRawData}.
@@ -392,14 +388,14 @@ function getArrayMinimum(numberArray) {  // eslint-disable-line require-jsdoc
  */
 function getInfoAsReactComponent(that) {
     const templateData = that.getPropertyValues();
-    const updateCounter = that.props.feature.updateCounter;
+    const updateCounters = that.props.feature.updateCounters;
     if (defined(templateData)) {
         delete templateData._terria_columnAliases;
     }
     const context = {
         catalogItem: that.props.catalogItem,
         feature: that.props.feature,
-        updateCounter: updateCounter
+        updateCounters: updateCounters
     };
     const showRawData = !that.hasTemplate() || that.state.showRawData;
     let rawDataHtml;
@@ -419,31 +415,41 @@ function getInfoAsReactComponent(that) {
     };
 }
 
-function setTimeoutForUpdatingCustomComponents(that) {  // eslint-disable-line require-jsdoc
+function setTimeoutsForUpdatingCustomComponents(that) { // eslint-disable-line require-jsdoc
     const {info} = getInfoAsReactComponent(that);
-    const customComponents = CustomComponents.find(info);
-    const updateTimes = customComponents.map(match => match.type.selfUpdateSeconds(match.reactComponent));
-    const minUpdateTime = getArrayMinimum(updateTimes);
-    console.log('update times', updateTimes, minUpdateTime);
-    if (defined(that.state.timeoutId)) {
-        clearTimeout(that.state.timeoutId);
-    }
-    if (minUpdateTime > 0) {
-        that.setState({
-            timeoutId: setTimeout(() => {
-                console.log('triggering update', that.props.feature);
-                if (!defined(that.props.feature.updateCounter)) {
-                    that.props.feature.updateCounter = 1;
-                } else {
-                    that.props.feature.updateCounter++;
-                }
-                // And finish by triggering the next timeout, but do this in another timeout so we aren't nesting setStates.
-                setTimeout(() => {
-                    setTimeoutForUpdatingCustomComponents(that);
-                }, 5);
-            }, minUpdateTime)
-        });
-    }
+    const foundCustomComponents = CustomComponents.find(info);
+    foundCustomComponents.forEach((match, componentNumber) => {
+        const updateSeconds = match.type.selfUpdateSeconds(match.reactComponent);
+        if (updateSeconds > 0) {
+            setTimeoutForUpdatingCustomComponent(that, match.reactComponent, updateSeconds, componentNumber);
+        }
+    });
+}
+
+function setTimeoutForUpdatingCustomComponent(that, reactComponent, updateSeconds, componentNumber) { // eslint-disable-line require-jsdoc
+    const timeoutId = setTimeout(() => {
+        // Update the counter for this component. Handle various undefined cases.
+        const updateCounters = that.props.feature.updateCounters;
+        const counterObject = {
+            reactComponent: reactComponent,
+            counter: (defined(updateCounters) && defined(updateCounters[componentNumber])) ? updateCounters[componentNumber].counter + 1 : 1
+        };
+        if (!defined(that.props.feature.updateCounters)) {
+            const counters = {};
+            counters[componentNumber] = counterObject;
+            that.props.feature.updateCounters = counters;
+        } else {
+            that.props.feature.updateCounters[componentNumber] = counterObject;
+        }
+        // And finish by triggering the next timeout, but do this in another timeout so we aren't nesting setStates.
+        setTimeout(() => {
+            setTimeoutForUpdatingCustomComponent(that, reactComponent, updateSeconds, componentNumber);
+            // console.log('Removing ' + timeoutId + ' from', that.state.timeoutIds);
+            that.setState({timeoutIds: that.state.timeoutIds.filter(id => timeoutId !== id)});
+        }, 5);
+    }, updateSeconds * 1000);
+    const timeoutIds = that.state.timeoutIds;
+    that.setState({timeoutIds: timeoutIds.concat(timeoutId)});
 }
 
 module.exports = FeatureInfoSection;

@@ -43,7 +43,8 @@ const Chart = React.createClass({
         axisLabel: React.PropTypes.object,
         transitionDuration: React.PropTypes.number,
         highlightX: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
-        updateCounter: React.PropTypes.number,  // change this to trigger an update.
+        updateCounter: React.PropTypes.any,  // Change this to trigger an update.
+        pollSeconds: React.PropTypes.any, // This is not used by Chart. It is used internally by registerCustomComponentTypes.
         // You can provide the data directly via props.data (ChartData[]):
         data: React.PropTypes.array,
         // Or, provide a URL to the data, along with optional xColumn, yColumns, colors
