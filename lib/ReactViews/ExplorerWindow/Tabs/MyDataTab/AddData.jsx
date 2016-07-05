@@ -62,6 +62,7 @@ const AddData = React.createClass({
                     this.props.viewState.myDataIsUploadView = false;
                 }
             });
+
     },
 
     handleUrl(e) {
@@ -80,8 +81,10 @@ const AddData = React.createClass({
                 return newItem;
             });
         }
-        addUserCatalogMember(this.props.terria, promise).then(() => {
-            this.props.viewState.myDataIsUploadView = false;
+        addUserCatalogMember(this.props.terria, promise).then(addedItem => {
+            if (addedItem && !(addedItem instanceof TerriaError)) {
+                this.props.viewState.myDataIsUploadView = false;
+            }
         });
     },
 
