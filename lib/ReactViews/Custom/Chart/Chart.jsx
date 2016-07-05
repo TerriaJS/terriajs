@@ -129,11 +129,16 @@ const Chart = React.createClass({
     },
 
     componentDidUpdate() {
-        // TODO: rewrite this comment in light of new second half
-        // Note if we were provided with a URL, not direct data, we don't reload the URL.
-        // This could be a problem if the URL has changed, or if the intention is to reload new data from the same URL.
+        // Update the chart with props.data, if present.
+        // If the data came from a URL, there are three possibilities:
+        // 1. The URL has changed.
+        // 2. The URL is the same and therefore we do not want to reload it.
+        // 3. The URL is the same, but the chart came from a self-updating <chart> tag (ie. one with a poll-seconds attribute),
+        //    and so we do want to reload it.
         // Note that registerCustomComponent types wraps its charts in a div with a key based on the url,
-        // so when the URL changes, it actually mounts a new component, thereby triggering a load.
+        // so if the URL has changed, it actually mounts a new component, thereby triggering a load.
+        // (Ie. we don't need to cover case (1) here.)
+        // In case (3), props.updateCounter will be set to an integer, and we should update the data from the URL.
         const element = this._element;
         const chartParameters = this.getChartParameters();
         if (defined(chartParameters.data)) {
