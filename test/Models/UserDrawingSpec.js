@@ -1,6 +1,6 @@
 'use strict';
 
-/*global require,describe,it,expect*/
+/*global require,describe,xdescribe,it,expect*/
 var UserDrawing = require('../../lib/Models/UserDrawing');
 var Terria = require('../../lib/Models/Terria');
 var Cesium = require('../../lib/Models/Cesium');
@@ -11,8 +11,11 @@ var CesiumWidget = require('terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWi
 var TileCoordinatesImageryProvider = require('terriajs-cesium/Source/Scene/TileCoordinatesImageryProvider');
 var Cartographic = require('terriajs-cesium/Source/Core/Cartographic');
 var CesiumMath = require('terriajs-cesium/Source/Core/Math');
+var supportsWebGL = require('../../lib/Core/supportsWebGL');
 
-describe('UserDrawing', function() {
+var describeIfSupported = supportsWebGL() ? describe : xdescribe;
+
+describeIfSupported('UserDrawing that requires WebGL', function() {
     var container;
     var widget;
     var cesium;
@@ -28,9 +31,6 @@ describe('UserDrawing', function() {
         terria = new Terria({
             baseUrl: './'
         });
-        cesium = new Cesium(terria, widget);
-        terria.currentViewer = cesium;
-        terria.cesium = cesium;
     });
 
     afterEach(function() {
@@ -38,6 +38,30 @@ describe('UserDrawing', function() {
             widget = widget.destroy();
         }
         document.body.removeChild(container);
+    });
+
+    it('changes cursor to crosshair when entering drawing mode', function() {
+        cesium = new Cesium(terria, widget);
+        terria.currentViewer = cesium;
+        terria.cesium = cesium;
+
+        var options = { terria: terria };
+        var userDrawing = new UserDrawing(options);
+        expect(userDrawing.terria.cesium.viewer.canvas.style.cursor).toEqual("");
+        userDrawing.enterDrawMode();
+        expect(userDrawing.terria.cesium.viewer.canvas.style.cursor).toEqual("crosshair");
+        userDrawing._cleanUp();
+        expect(userDrawing.terria.cesium.viewer.canvas.style.cursor).toEqual("auto");
+    });
+});
+
+describe('UserDrawing', function() {
+    var terria;
+
+    beforeEach(function() {
+        terria = new Terria({
+            baseUrl: './'
+        });
     });
 
     it('will use default options if options are not specified', function() {
@@ -54,17 +78,6 @@ describe('UserDrawing', function() {
 
         expect(userDrawing._getDialogMessage()).toEqual("<div><strong>Draw on Map</strong></br>HELLO</br><i>Click to add a point</i></div>");
     });
-
-    it('changes cursor to crosshair when entering drawing mode', function() {
-        var options = { terria: terria };
-        var userDrawing = new UserDrawing(options);
-        expect(userDrawing.terria.cesium.viewer.canvas.style.cursor).toEqual("");
-        userDrawing.enterDrawMode();
-        expect(userDrawing.terria.cesium.viewer.canvas.style.cursor).toEqual("crosshair");
-        userDrawing._cleanUp();
-        expect(userDrawing.terria.cesium.viewer.canvas.style.cursor).toEqual("auto");
-    });
-
     it('listens for user picks on map after entering drawing mode', function() {
         var options = { terria: terria };
         var userDrawing = new UserDrawing(options);
@@ -195,8 +208,6 @@ describe('UserDrawing', function() {
         expect(userDrawing.otherEntities.entities.values.length).toEqual(0);
         expect(userDrawing.inDrawMode).toBeFalsy();
         expect(userDrawing.closeLoop).toBeFalsy();
-
-        expect(userDrawing.terria.cesium.viewer.canvas.style.cursor).toEqual("auto");
     });
 
     it('ensures onCleanUp callback is called when clean up occurs', function() {
