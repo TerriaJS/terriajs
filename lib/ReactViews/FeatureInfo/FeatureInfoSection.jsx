@@ -172,7 +172,7 @@ const FeatureInfoSection = React.createClass({
         return (
             <li className={classNames(Styles.section)}>
                 <button type='button' onClick={this.clickHeader} className={Styles.title}>
-                    {fullName}
+                    <span>{fullName}</span>
                     {this.props.isOpen ? <Icon glyph={Icon.GLYPHS.opened}/> : <Icon glyph={Icon.GLYPHS.closed}/>}
                 </button>
                 <If condition={this.props.isOpen}>

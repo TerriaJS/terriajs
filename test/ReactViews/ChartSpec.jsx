@@ -4,10 +4,6 @@
 import React from 'react';
 import ReactTestUtils from 'react-addons-test-utils';
 
-// Note getMountedInstance will be built into React 15, and not available in v2.0.0 of react-shallow-testutils
-// cf. https://github.com/sheepsteak/react-shallow-testutils/commit/8daa3c2361acfa6ec45f533cf7eea5751c51bf24
-import {getMountedInstance} from 'react-shallow-testutils';
-
 import Chart  from '../../lib/ReactViews/Custom/Chart/Chart';
 import ChartData  from '../../lib/Charts/ChartData';
 import TableStructure  from '../../lib/Map/TableStructure';
@@ -34,7 +30,7 @@ describe('Chart', function() {
         const chart = <Chart url='test/csv_nongeo/time_series.csv'/>;
         const renderer = ReactTestUtils.createRenderer();
         renderer.render(chart);
-        const instance = getMountedInstance(renderer);
+        const instance = renderer.getMountedInstance(renderer);
         instance.getChartDataPromise(instance.getChartParameters()).then(function(data) {
             expect(data.length).toEqual(1);
             expect(data[0].points.length).toEqual(8);
@@ -47,7 +43,7 @@ describe('Chart', function() {
         const chart = <Chart tableStructure={tableStructure} />;
         const renderer = ReactTestUtils.createRenderer();
         renderer.render(chart);
-        const instance = getMountedInstance(renderer);
+        const instance = renderer.getMountedInstance(renderer);
         instance.getChartDataPromise(instance.getChartParameters()).then(function(data) {
             expect(data.length).toEqual(1);
             expect(data[0].name).toEqual('y');
@@ -60,7 +56,7 @@ describe('Chart', function() {
         const chart = <Chart data={[chartData]} />;
         const renderer = ReactTestUtils.createRenderer();
         renderer.render(chart);
-        const instance = getMountedInstance(renderer);
+        const instance = renderer.getMountedInstance(renderer);
         instance.getChartDataPromise(instance.getChartParameters()).then(function(data) {
             expect(data.length).toEqual(1);
             expect(data[0].name).toEqual('foo');
