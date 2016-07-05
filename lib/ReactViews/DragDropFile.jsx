@@ -2,7 +2,6 @@ import React from 'react';
 import classNames from 'classnames';
 
 import ObserveModelMixin from './ObserveModelMixin';
-import TerriaError from './../Core/TerriaError';
 import addUserFiles from '../Models/addUserFiles';
 
 import Styles from './drag-drop-file.scss';
