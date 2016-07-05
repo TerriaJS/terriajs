@@ -50,21 +50,21 @@ const FeatureInfoSection = React.createClass({
         const feature = this.props.feature;
         // Do we need to dynamically update this feature info over time?
         // There are two situations in which we would:
-        // 1. When a custom component self-updates.
+        // 1. When the feature description or properties are time-varying.
+        // 2. When a custom component self-updates.
         //    Eg. <chart poll-seconds="60" src="xyz.csv"> must reload data from xyz.csv every 60 seconds.
-        // 2. When the feature description or properties are time-varying.
         //
-        // For (1), use a regular javascript setTimeout to update a counter in feature's currentProperties.
-        // For (2), use a event listener to update the feature's currentProperties/currentDescription directly.
+        // For (1), use a event listener to update the feature's currentProperties/currentDescription directly.
+        // For (2), use a regular javascript setTimeout to update a counter in feature's currentProperties.
         // For simplicity, we do not currently support both at once.
-        if (this.isConstant()) { // TODO: rename this.isConstant.
-            setTimeoutsForUpdatingCustomComponents(that);
-        } else {
+        if (this.isFeatureTimeVarying()) {
             this.setState({
                 clockSubscription: this.props.clock.onTick.addEventListener(function(clock) {
                     setCurrentFeatureValues(feature, clock);
                 })
             });
+        } else {
+            setTimeoutsForUpdatingCustomComponents(that);
         }
     },
 
@@ -141,24 +141,24 @@ const FeatureInfoSection = React.createClass({
         return (feature && feature.name) || '';
     },
 
-    isConstant() {
-        // The info is constant if:
+    isFeatureTimeVarying() {
+        // The feature is NOT time-varying if:
         // 1. There is no info (ie. no description and no properties).
         // 2. A template is provided and all feature.properties are constant.
         // OR
         // 3. No template is provided, and feature.description is either not defined, or defined and constant.
-        // If info is NOT constant, we need to keep updating the description.
+        // If info is time-varying, we need to keep updating the description.
         const feature = this.props.feature;
         if (!defined(feature.description) && !defined(feature.properties)) {
-            return true;
+            return false;
         }
         if (defined(this.props.template)) {
-            return areAllPropertiesConstant(feature.properties);
+            return !areAllPropertiesConstant(feature.properties);
         }
         if (defined(feature.description)) {
-            return feature.description.isConstant; // This should always be a "Property" eg. a ConstantProperty.
+            return !feature.description.isConstant; // This should always be a "Property" eg. a ConstantProperty.
         }
-        return true;
+        return false;
     },
 
     toggleRawData() {
