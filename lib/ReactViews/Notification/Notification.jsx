@@ -11,10 +11,19 @@ const Notification = React.createClass({
         viewState: React.PropTypes.object
     },
 
-    dismiss() {
+    confirm() {
         const notification = this.props.viewState.notifications[0];
         if (notification && notification.confirmAction) {
             notification.confirmAction();
+        }
+
+        this.props.viewState.notifications.splice(0, 1);
+    },
+
+    deny() {
+        const notification = this.props.viewState.notifications[0];
+        if (notification && notification.denyAction) {
+            notification.denyAction();
         }
 
         this.props.viewState.notifications.splice(0, 1);
@@ -26,8 +35,10 @@ const Notification = React.createClass({
             <NotificationWindow
                 title={notification.title}
                 message={notification.message}
-                buttonCaption={notification.confirmText}
-                onDismiss={this.dismiss}
+                confirmText={notification.confirmText}
+                denyText={notification.denyText}
+                onConfirm={this.confirm}
+                onDeny={this.deny}
             />);
     }
 });
