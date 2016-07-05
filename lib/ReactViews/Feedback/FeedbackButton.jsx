@@ -21,7 +21,7 @@ const FeedbackButton = React.createClass({
             <div className={Styles.feedback}>
                 <button type='button' className={Styles.btnFeedback} onClick={this.onClick}>
                     <Icon glyph={Icon.GLYPHS.feedback}/>
-                    Give feedback
+                    <span>Give feedback</span>
                 </button>
             </div>
         );

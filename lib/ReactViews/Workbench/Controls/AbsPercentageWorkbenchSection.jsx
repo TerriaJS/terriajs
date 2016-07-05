@@ -34,7 +34,7 @@ const AbsPercentageWorkbenchSection = React.createClass({
                         )}
                 >
                     {this.props.item.displayPercent ? <Icon glyph={Icon.GLYPHS.checkboxOn}/> :<Icon glyph={Icon.GLYPHS.checkboxOff}/>}
-                    Display as a percentage of region population
+                    <span>Display as a percentage of region population</span>
                 </button>
             </label>
         );

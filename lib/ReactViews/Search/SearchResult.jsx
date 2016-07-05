@@ -24,7 +24,7 @@ const LocationItem = React.createClass({
             <li className={classNames(Styles.locationItem, {[Styles.dark]: this.props.theme === 'dark', [Styles.light]: this.props.theme === 'light'})}>
                 <button type='button' onClick={this.props.clickAction} className={classNames(Styles.btn, {[Styles.btnLocationName]: this.props.showPin})}>
                     {this.props.showPin ? <span className={Styles.locationIcon}><Icon glyph={Icon.GLYPHS.location}/></span> : null}
-                    {this.props.name}
+                    <span>{this.props.name}</span>
                     <span className={Styles.arrowIcon}><Icon glyph={Icon.GLYPHS.right}/></span>
                 </button>
             </li>
