@@ -30,10 +30,7 @@
 }
 
 .body {
-    padding: 0 $padding-small;
-    overflow-x: hidden;
-    overflow-y: auto;
-    height: calc(100vh - #{$workbench-header + $logo-height});
+    overflow: hidden;
     @media print{
       height: auto;
     }
@@ -46,6 +43,8 @@
 .button {
   composes: btn-primary from '../../Sass/common/_buttons.scss';
   line-height: $input-height;
+  padding-left: 0;
+  padding-right: 30px;
   svg{
     position: absolute;
     left: $padding-small;

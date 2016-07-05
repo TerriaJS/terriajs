@@ -39,7 +39,7 @@
     "mutationobserver-shim": "^0.3.1",
     "proj4": "^2.3.14",
     "raw-loader": "^0.5.1",
-    "react-addons-pure-render-mixin": "0.14.8",
+    "react-addons-pure-render-mixin": "15.2.0",
     "resolve": "^1.1.7",
     "resolve-url-loader": "^1.4.3",
     "sass-loader": "^3.2.0",
@@ -83,10 +83,10 @@
     "kss": "^2.1.1",
     "node-notifier": "^4.5.0",
     "node-sass": "^3.4.2",
-    "react": "0.14.x",
-    "react-addons-test-utils": "0.14.7",
-    "react-dom": "0.14.x",
-    "react-shallow-testutils": "^1.0.0",
+    "react": "15.2.0",
+    "react-addons-test-utils": "15.2.0",
+    "react-dom": "15.2.0",
+    "react-shallow-testutils": "^2.0.0",
     "svg-sprite-loader": "0.0.23",
     "socket.io": "1.4.7",
     "terriajs-jasmine-ajax": "^3.2.1",
@@ -94,8 +94,8 @@
     "webpack-dev-server": "^1.14.1"
   },
   "peerDependencies": {
-    "react": "0.14.x",
-    "react-dom": "0.14.x"
+    "react": "^15.2.0",
+    "react-dom": "^15.2.0"
   },
   "scripts": {
     "prepublish": "gulp post-npm-install",

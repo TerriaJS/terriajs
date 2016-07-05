@@ -27,11 +27,6 @@ describe('CorsProxy', function() {
     });
 
     describe('init', function() {
-        it('should load json from proxyUrl', function() {
-            corsProxy.init('http://example.com/proxyabledomains', '', {});
-
-            expect(loadJson).toHaveBeenCalledWith('http://example.com/proxyabledomains');
-        });
 
         it('should use baseProxyUrl for subsequent proxy calls', function() {
             corsProxy.init('', 'proxy2/', {});
@@ -46,33 +41,21 @@ describe('CorsProxy', function() {
             expect(corsProxy.shouldUseProxy('http://example2.com')).toBe(false);
         });
 
-        it('should combine the passed proxyDomains with those returned from calling proxyableDomains url', function(done) {
-            var initPromise = corsProxy.init('http://example.com/proxyabledomains', undefined, ['example.com']);
+        it('should ignore the passed proxyDomains if also provided a serverconfig list', function() {
+            corsProxy.init({ allowProxyFor: [ 'example2.com' ] }, undefined, ['example.com']);
 
-            loadDeferred.resolve({
-                proxyableDomains: ['example2.com']
-            });
-
-            initPromise.then(function() {
-                expect(corsProxy.shouldUseProxy('http://example.com')).toBe(true);
-                expect(corsProxy.shouldUseProxy('http://example2.com')).toBe(true);
-                expect(corsProxy.shouldUseProxy('http://example3.com')).toBe(false);
-            }).then(done).otherwise(fail);
+            expect(corsProxy.shouldUseProxy('http://example.com')).toBe(false);
+            expect(corsProxy.shouldUseProxy('http://example2.com')).toBe(true);
+            expect(corsProxy.shouldUseProxy('http://example3.com')).toBe(false);
         });
 
-        it('should honour proxyAllDomains being returned in proxyableDomains json by proxying all domains', function(done) {
-            var initPromise = corsProxy.init('http://example.com/proxyabledomains', undefined, ['example.com']);
+        it('should honour proxyAllDomains being returned in proxyableDomains json by proxying all domains', function() {
+            corsProxy.init({ allowProxyFor: [ 'example2.com' ], proxyAllDomains: true }, undefined, ['example.com']);
 
-            loadDeferred.resolve({
-                proxyableDomains: ['example2.com'],
-                proxyAllDomains: true
-            });
-
-            initPromise.then(function() {
-                expect(corsProxy.shouldUseProxy('http://example.com')).toBe(true);
-                expect(corsProxy.shouldUseProxy('http://example2.com')).toBe(true);
-                expect(corsProxy.shouldUseProxy('http://example3.com')).toBe(true);
-            }).then(done).otherwise(fail);
+            expect(corsProxy.shouldUseProxy('http://example.com')).toBe(true);
+            expect(corsProxy.shouldUseProxy('http://example2.com')).toBe(true);
+            expect(corsProxy.shouldUseProxy('http://example3.com')).toBe(true);
+            
         });
     });
 

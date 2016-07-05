@@ -23,7 +23,7 @@ const Loader = React.createClass({
     render() {
         return <span className={Styles.loader}>
                   <Icon glyph={Icon.GLYPHS.loader}/>
-                  {this.props.message || 'Loading'}
+                  <span>{this.props.message || 'Loading'}</span>
                </span>;
     }
 });

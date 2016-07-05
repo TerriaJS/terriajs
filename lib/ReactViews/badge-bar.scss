@@ -5,7 +5,11 @@
   composes: sm-show from '../Sass/common/_base.scss';
   composes: clearfix from '../Sass/common/_base.scss';
   composes: list-reset from '../Sass/common/_base.scss';
-  padding: 10px 0;
+  padding: $padding $padding-small;
+  //to make sure scrolling of the content below the badge is correct
+  height: $badge-height;
+  overflow: hidden;
+  box-sizing: border-box;
   li{
     display: inline-block;
     float: left;
@@ -15,6 +19,7 @@
     button,
     span{
       line-height: 1;
+      vertical-align: baseline;
     }
     &:last-child{
       float: right;

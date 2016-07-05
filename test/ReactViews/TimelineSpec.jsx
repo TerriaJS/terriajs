@@ -5,10 +5,6 @@
 import React from 'react';
 import ReactTestUtils from 'react-addons-test-utils';
 
-// Note getMountedInstance will be built into React 15, and not available in v2.0.0 of react-shallow-testutils
-// cf. https://github.com/sheepsteak/react-shallow-testutils/commit/8daa3c2361acfa6ec45f533cf7eea5751c51bf24
-import {getMountedInstance} from 'react-shallow-testutils';
-
 const Terria = require('../../lib/Models/Terria');
 
 const ImageryLayerCatalogItem = require('../../lib/Models/ImageryLayerCatalogItem');
@@ -19,7 +15,7 @@ const DataSourceClock = require('terriajs-cesium/Source/DataSources/DataSourceCl
 function getMounted(jsx) {
     const renderer = ReactTestUtils.createRenderer();
     renderer.render(jsx);
-    return getMountedInstance(renderer);
+    return renderer.getMountedInstance(renderer);
 }
 
 describe('Timeline', function() {

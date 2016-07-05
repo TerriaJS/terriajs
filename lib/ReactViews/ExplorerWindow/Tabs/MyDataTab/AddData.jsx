@@ -9,7 +9,7 @@ import FileInput from './FileInput.jsx';
 import getDataType from '../../../../Core/getDataType';
 import ObserveModelMixin from '../../../ObserveModelMixin';
 import TerriaError from '../../../../Core/TerriaError';
-import handleFile from '../../../../Core/handleFile';
+import addUserFiles from '../../../../Models/addUserFiles';
 
 import Styles from './add-data.scss';
 
@@ -56,17 +56,13 @@ const AddData = React.createClass({
     },
 
     handleUploadFile(e) {
-        try {
-            handleFile(e, this.props.terria, this.state.localDataType, ()=> {
-                this.props.viewState.myDataIsUploadView = false;
+        addUserFiles(e.target.files, this.props.terria, this.props.viewState, this.state.localDataType)
+            .then(addedCatalogItems => {
+                if (addedCatalogItems.length > 0) {
+                    this.props.viewState.myDataIsUploadView = false;
+                }
             });
-        } catch (err) {
-            this.props.terria.error.raiseEvent(new TerriaError({
-                sender: this,
-                title: err.title,
-                message: err.message
-            }));
-        }
+
     },
 
     handleUrl(e) {
@@ -85,8 +81,10 @@ const AddData = React.createClass({
                 return newItem;
             });
         }
-        addUserCatalogMember(this.props.terria, promise).then(() => {
-            this.props.viewState.myDataIsUploadView = false;
+        addUserCatalogMember(this.props.terria, promise).then(addedItem => {
+            if (addedItem && !(addedItem instanceof TerriaError)) {
+                this.props.viewState.myDataIsUploadView = false;
+            }
         });
     },
 
@@ -150,12 +148,12 @@ const AddData = React.createClass({
                         <label className={Styles.label}><strong>Step 2:</strong> Enter the URL of the data file or web
                             service:
                         </label>
-                        <form className={Styles.urlInput}>
+                        <form className={Styles.urlInput} onSubmit={this.handleUrl}>
                             <input value={this.state.remoteUrl} onChange={this.onRemoteUrlChange}
                                    className={Styles.urlInputTextBox}
                                    type='text'
                                    placeholder='e.g. http://data.gov.au/geoserver/wms'/>
-                            <button type='button' onClick={this.handleUrl} className={Styles.urlInputBtn}>
+                            <button type='submit' onClick={this.handleUrl} className={Styles.urlInputBtn}>
                                 Add
                             </button>
                         </form>
@@ -179,7 +177,7 @@ const AddData = React.createClass({
  * Loads a catalog item from a file.
  */
 function loadFile(viewModel) {
-    return createCatalogItemFromFileOrUrl(viewModel.props.terria, viewModel.state.remoteUrl, viewModel.state.remoteDataType.value, true);
+    return createCatalogItemFromFileOrUrl(viewModel.props.terria, viewModel.props.viewState, viewModel.state.remoteUrl, viewModel.state.remoteDataType.value, true);
 }
 
 module.exports = AddData;
