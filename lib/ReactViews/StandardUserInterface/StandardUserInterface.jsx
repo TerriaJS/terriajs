@@ -14,6 +14,8 @@ import Notification from './../Notification/Notification.jsx';
 import ObserveModelMixin from './../ObserveModelMixin';
 import ProgressBar from '../Map/ProgressBar.jsx';
 import SidePanel from './../SidePanel/SidePanel.jsx';
+import MenuItem from './customizable/MenuItem.jsx';
+import MenuPanel from './customizable/MenuPanel.jsx';
 
 import Styles from './standard-user-interface.scss';
 
@@ -25,17 +27,12 @@ const StandardUserInterface = React.createClass({
         allBaseMaps: React.PropTypes.array,
         viewState: React.PropTypes.object.isRequired,
         minimumLargeScreenWidth: React.PropTypes.number,
-        version: React.PropTypes.string,
-        customElements: React.PropTypes.shape({
-            mapTop: React.PropTypes.arrayOf(React.PropTypes.element),
-            mapSide: React.PropTypes.arrayOf(React.PropTypes.element)
-        })
+        version: React.PropTypes.string
     },
 
     getDefaultProps() {
         return {
-            minimumLargeScreenWidth: 768,
-            customElements: {}
+            minimumLargeScreenWidth: 768
         };
     },
 
@@ -81,6 +78,21 @@ const StandardUserInterface = React.createClass({
     },
 
     render() {
+        const children = React.Children.toArray(this.props.children);
+        const customElements = children.map(child =>
+            React.cloneElement(child, {
+                smallScreen: !!this.props.viewState.useSmallScreenInterface
+            })
+        ).reduce((soFar, child) => {
+            if (child.type.location === 'menu') {
+                soFar.menuItems.push(child);
+            }
+
+            return soFar;
+        }, {
+            menuItems: []
+        });
+
         const terria = this.props.terria;
         const allBaseMaps = this.props.allBaseMaps;
         return (
@@ -90,8 +102,11 @@ const StandardUserInterface = React.createClass({
                         <If condition={!this.props.viewState.isMapFullScreen && !this.props.viewState.hideMapUi()}>
                             <Choose>
                                 <When condition={this.props.viewState.useSmallScreenInterface}>
-                                    <MobileHeader terria={terria} viewState={this.props.viewState}
-                                                  version={this.props.version}/>
+                                    <MobileHeader terria={terria}
+                                                  menuItems={customElements.menuItems}
+                                                  viewState={this.props.viewState}
+                                                  version={this.props.version}
+                                    />
                                 </When>
                                 <Otherwise>
                                     <div className={Styles.sidePanel}>
@@ -118,7 +133,7 @@ const StandardUserInterface = React.createClass({
                     <MapNavigation terria={terria}
                                    viewState={this.props.viewState}
                                    allBaseMaps={allBaseMaps}
-                                   extraMenuElements={this.props.customElements.mapTop}
+                                   customMenuItems={customElements.menuItems}
                     />
                 </If>
 

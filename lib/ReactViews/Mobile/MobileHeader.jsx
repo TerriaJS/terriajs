@@ -1,4 +1,3 @@
-'use strict';
 import React from 'react';
 import SearchBox from '../Search/SearchBox.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
@@ -14,13 +13,20 @@ const MobileHeader = React.createClass({
     propTypes: {
         terria: React.PropTypes.object,
         viewState: React.PropTypes.object.isRequired,
-        version: React.PropTypes.string
+        version: React.PropTypes.string,
+        menuItems: React.PropTypes.array
     },
 
     getInitialState() {
         return {
             menuIsOpen: false
         };
+    },
+
+    getDefaultProps() {
+        return {
+            menuItems: []
+        }
     },
 
     toggleSearch() {
@@ -138,11 +144,12 @@ const MobileHeader = React.createClass({
                     </Choose>
                 </div>
                 <ul className={navClassName}>
-                    <li><a href=''>About</a></li>
-                    <li><a href=''>Related maps</a></li>
-                    <li><a href=''>Support</a></li>
-                    <li><a href='' onClick={this.onClickFeedback}>Give feedback</a>
-                    </li>
+                    <For each="menuItem" of={this.props.menuItems}>
+                        {menuItem}
+                    </For>
+                    {/*<li>
+                        <a href='' onClick={this.onClickFeedback}>Give feedback</a>
+                    </li>*/}
                 </ul>
                 <MobileModalWindow terria={this.props.terria}
                                    viewState={this.props.viewState}

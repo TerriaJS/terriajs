@@ -19,15 +19,23 @@ const MapNavigation = React.createClass({
         terria: React.PropTypes.object,
         viewState: React.PropTypes.object.isRequired,
         allBaseMaps: React.PropTypes.array,
-        extraMenuElements: React.PropTypes.arrayOf(React.PropTypes.element),
+        customMenuItems: React.PropTypes.arrayOf(React.PropTypes.element),
         extraNavElements: React.PropTypes.arrayOf(React.PropTypes.element)
     },
 
     getDefaultProps() {
         return {
-            extraMenuElements: [],
+            customMenuItems: [],
             extraNavElements: []
         };
+    },
+
+    getMenuItems() {
+        return [
+            <SettingPanel terria={this.props.terria} allBaseMaps={this.props.allBaseMaps}
+                          viewState={this.props.viewState}/>,
+            <SharePanel terria={this.props.terria} viewState={this.props.viewState}/>
+        ].concat(this.props.customMenuItems);
     },
 
     render() {
@@ -37,26 +45,24 @@ const MapNavigation = React.createClass({
                     <li className={Styles.menuItem}>
                         <FullScreenButton terria={this.props.terria} viewState={this.props.viewState} />
                     </li>
-                    <li className={Styles.menuItem}>
-                        <SettingPanel terria={this.props.terria} allBaseMaps={this.props.allBaseMaps} viewState={this.props.viewState} />
-                    </li>
-                    <li className={Styles.menuItem}>
-                        <SharePanel terria={this.props.terria} viewState={this.props.viewState}/>
-                    </li>
-                    <For each="element" of={this.props.extraMenuElements} index="i">
-                        <li className={Styles.menuItem} key={i}>
-                            {element}
-                        </li>
-                    </For>
+                    <If condition={!this.props.viewState.useSmallScreenInterface}>
+                        <For each="element" of={this.getMenuItems()} index="i">
+                            <li className={Styles.menuItem} key={i}>
+                                {element}
+                            </li>
+                        </For>
+                    </If>
                 </ul>
                 <If condition={this.props.terria.viewerMode !== ViewerMode.Leaflet}>
                     <Compass terria={this.props.terria}/>
                 </If>
                 <MyLocation terria={this.props.terria}/>
                 <ZoomControl terria={this.props.terria}/>
-                <For each="element" of={this.props.extraNavElements}>
-                    {element}
-                </For>
+                <If condition={!this.props.viewState.useSmallScreenInterface}>
+                    <For each="element" of={this.props.extraNavElements}>
+                        {element}
+                    </For>
+                </If>
             </div>
         );
     }
