@@ -129,7 +129,7 @@ const DropdownPanel = React.createClass({
                     <If condition={this.props.theme.icon}>
                         <Icon glyph={Icon.GLYPHS[this.props.theme.icon]}/>
                     </If>
-                    {this.props.btnText}
+                    <span>{this.props.btnText}</span>
                 </button>
                 <If condition={this.state.isOpen}>
                     <div className={classNames(

@@ -64,7 +64,7 @@ const Concept = React.createClass({
         return (
             <li style={this.getColorStyle()}>
                 <If condition={concept.name}>
-                    <div className={classNames(Styles.header, {[Styles.hasChildren]: concept.hasChildren})}>
+                    <div className={classNames(Styles.header, {[Styles.hasChildren]: concept.hasChildren, [Styles.isSelectable]: concept.isSelectable})}>
                         <div className={Styles.btnGroup}>
                             <If condition={concept.hasChildren}>
                                 <button type='button'
@@ -72,7 +72,7 @@ const Concept = React.createClass({
                                         style={this.getColorStyle()}
                                         className={Styles.btnToggleOpen}
                                         title='open variable selection'>
-                                        {concept.isOpen ? <Icon glyph={Icon.GLYPHS.opened}/> : <Icon glyph={Icon.GLYPHS.closed}/>}
+                                        {concept.isOpen ? <Icon glyph={Icon.GLYPHS.showLess}/> : <Icon glyph={Icon.GLYPHS.showMore}/>}
                                 </button>
                             </If>
                             <If condition={concept.isSelectable}>

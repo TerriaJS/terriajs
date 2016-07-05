@@ -366,7 +366,8 @@ describe('FeatureInfoSection', function() {
             const section = <FeatureInfoSection feature={feature} isOpen={false} clock={terria.clock} template={template} viewState={viewState} />;
             const result = getShallowRenderedOutput(section);
             const nameElement = findAllWithClass(result, Styles.title)[0];
-            const name = nameElement.props.children;
+            const nameSpan = nameElement.props.children[0];
+            const name = nameSpan.props.children;
             expect(name).toContain('Kay bar');
         });
 

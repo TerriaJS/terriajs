@@ -18,7 +18,7 @@
 }
 
 .header {
-  padding: 5px 0 5px 40px;
+  padding: 5px 0 5px 22px;
   position: relative;
   line-height: 1.4;
 
@@ -27,37 +27,55 @@
       fill: #fff;
     }
   }
+
+  .btnGroup{
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: block;
+    width: 14px;
+  }
+
+  &.hasChildren.isSelectable{
+    padding: 5px 0 5px 36px;
+    .btnGroup{
+      width: 32px;
+    }
+    .btnToggleOpen{
+      float: left;
+    }
+    .btnToggleActive{
+      float: right;
+    }
+  }
 }
 
+
+
 .btnToggleOpen{
-  display: inline-block;
-  padding: 5px 0px;
+  display: block;
+  padding: 7px 0px;
   svg{
-    height: 18px;
-    width: 18px;
+    height: 14px;
+    width: 14px;
   }
 }
 
 .btnToggleActive{
-  display: inline-block;
-  padding: 5px 0px;
+  display: block;
+  padding: 7px 0px;
   svg{
-    height: 18px;
-    width: 18px;
+    height: 14px;
+    width: 14px;
   }
 }
 
-.btnGroup{
-  position: absolute;
-  left: 0;
-  top: 0;
-  display: block;
-  width: 40px;
-}
+
 
 .items {
   composes: list-reset from '../../../Sass/common/_base.scss';
-  margin-left: 15px;
+  margin-left: 18px;
+  font-weight: 300;
 }
 
 

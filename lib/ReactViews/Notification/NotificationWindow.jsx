@@ -11,20 +11,29 @@ const NotificationWindow = React.createClass({
     propTypes: {
         title: React.PropTypes.string.isRequired,
         message: React.PropTypes.string.isRequired,
-        onDismiss: React.PropTypes.func.isRequired,
-        buttonCaption: React.PropTypes.string
+        confirmText: React.PropTypes.string,
+        denyText: React.PropTypes.string,
+        onConfirm: React.PropTypes.func.isRequired,
+        onDeny: React.PropTypes.func.isRequired
     },
 
-    dismiss() {
-        if (this.props.onDismiss) {
-            this.props.onDismiss();
+    confirm() {
+        if (this.props.onConfirm) {
+            this.props.onConfirm();
+        }
+    },
+
+    deny() {
+        if (this.props.onDeny) {
+            this.props.onDeny();
         }
     },
 
     render() {
         const title = this.props.title;
         const message = this.props.message;
-        const buttonCaption = this.props.buttonCaption || 'OK';
+        const confirmText = this.props.confirmText || 'OK';
+        const denyText = this.props.denyText;
 
         return (
             <div className={Styles.wrapper}>
@@ -37,7 +46,10 @@ const NotificationWindow = React.createClass({
                         <div className={Styles.body}>{renderMarkdownInReact(message)}</div>
                     </div>
                     <div className={Styles.footer}>
-                        <button type='button' className={Styles.btn}onClick={this.dismiss}>{buttonCaption}</button>
+                        <button type='button' className={Styles.btn} onClick={this.confirm}>{confirmText}</button>
+                        <If condition={denyText}>
+                            <button type='button' className={Styles.btn} onClick={this.deny}>{denyText}</button>
+                        </If>
                     </div>
                 </div>
             </div>
