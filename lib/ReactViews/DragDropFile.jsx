@@ -19,20 +19,13 @@ const DragDropFile = React.createClass({
         e.preventDefault();
         e.stopPropagation();
 
-        const fakeEvent = {
-            target: e.dataTransfer
-        };
-        try {
-            addUserFiles(fakeEvent, this.props.terria, this.props.viewState, null, ()=> {
-                this.props.viewState.myDataIsUploadView = false;
+        addUserFiles(e.dataTransfer.files, this.props.terria, this.props.viewState, null)
+            .then(addedCatalogItems => {
+                if (addedCatalogItems.length > 0) {
+                    this.props.viewState.myDataIsUploadView = false;
+                }
             });
-        } catch (err) {
-            this.props.terria.error.raiseEvent(new TerriaError({
-                sender: this,
-                title: err.title,
-                message: err.message
-            }));
-        }
+
         this.props.viewState.isDraggingDroppingFile = false;
     },
 
