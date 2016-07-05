@@ -48,18 +48,24 @@ const FeatureInfoSection = React.createClass({
     componentWillMount() {
         const that = this;
         const feature = this.props.feature;
-        // If the feature description or properties update over time, we need to update when they change.
-        if (!this.isConstant()) {
+        // Do we need to dynamically update this feature info over time?
+        // There are two situations in which we would:
+        // 1. When a custom component self-updates.
+        //    Eg. <chart poll-seconds="60" src="xyz.csv"> must reload data from xyz.csv every 60 seconds.
+        // 2. When the feature description or properties are time-varying.
+        //
+        // For (1), use a regular javascript setTimeout to update a counter in feature's currentProperties.
+        // For (2), use a event listener to update the feature's currentProperties/currentDescription directly.
+        // For simplicity, we do not currently support both at once.
+        if (this.isConstant()) { // TODO: rename this.isConstant.
+            setTimeoutForUpdatingCustomComponents(that);
+        } else {
             this.setState({
                 clockSubscription: this.props.clock.onTick.addEventListener(function(clock) {
                     setCurrentFeatureValues(feature, clock);
                 })
             });
         }
-        // There's another situation that requires updating: when a custom component auto-updates.
-        // TODO: Currently we only check for this on mount, so if it changes over time, won't pick it up.
-        // (The clockSubscription above happens every tick, so don't test there! Ideally would test only on update.)
-        setTimeoutForUpdatingCustomComponents(that);
     },
 
     componentWillUnmount() {
@@ -386,11 +392,9 @@ function getArrayMinimum(numberArray) {  // eslint-disable-line require-jsdoc
  */
 function getInfoAsReactComponent(that) {
     const templateData = that.getPropertyValues();
-    let updateCounter;
+    const updateCounter = that.props.feature.updateCounter;
     if (defined(templateData)) {
-        updateCounter = templateData._terria_updateCounter || 0;
         delete templateData._terria_columnAliases;
-        delete templateData._terria_updateCounter;
     }
     const context = {
         catalogItem: that.props.catalogItem,
@@ -428,15 +432,10 @@ function setTimeoutForUpdatingCustomComponents(that) {  // eslint-disable-line r
         that.setState({
             timeoutId: setTimeout(() => {
                 console.log('triggering update', that.props.feature);
-                // These lines simply increment _terria_updateCounter by 1, handling various initially undefined cases.
-                if (!defined(that.props.feature.currentProperties)) {
-                    that.props.feature.currentProperties = {
-                        _terria_updateCounter: 1  // eslint-disable-line camelcase
-                    };
-                } else if (!defined(that.props.feature.currentProperties._terria_updateCounter)) {
-                    that.props.feature.currentProperties._terria_updateCounter = 1;  // eslint-disable-line camelcase
+                if (!defined(that.props.feature.updateCounter)) {
+                    that.props.feature.updateCounter = 1;
                 } else {
-                    that.props.feature.currentProperties._terria_updateCounter++;
+                    that.props.feature.updateCounter++;
                 }
                 // And finish by triggering the next timeout, but do this in another timeout so we aren't nesting setStates.
                 setTimeout(() => {
