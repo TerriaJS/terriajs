@@ -50,20 +50,7 @@ const ChartPanelDownloadButton = React.createClass({
                 }
                 that.setState({href: undefined});
                 const synthesized = that.synthesizeNameAndValueArrays();
-                // It would be better to implement this using TaskProcessor, but this requires webpack magic.
-                // if (!synthesized.values || synthesized.values.length === 0) {
-                //     return;
-                // }
-                // // console.log('ChartPanelDownloadButton running worker with chartableItems', newValue);
-                // const promise = hrefProcessor.scheduleTask(synthesized);
-                // if (!defined(promise)) {
-                //     // Too many active tasks - ideally, try again later.
-                // } else {
-                //     when(promise, function(result) {
-                //         // use the result of the task
-                //         that.setState({href: result});
-                //     });
-                // }
+                // Could implement this using TaskProcessor, but requires webpack magic.
                 const HrefWorker = require('worker!./downloadHrefWorker');
                 const worker = new HrefWorker;
                 // console.log('names and value arrays', synthesized.names, synthesized.values);
