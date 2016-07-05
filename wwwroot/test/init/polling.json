@@ -53,6 +53,12 @@
           "type": "csv",
           "url": "build/TerriaJS/test/csv/lat_lon_enum.csv",
           "featureInfoTemplate": "<p>Enum: {{enum}}</p><chart poll-seconds='8' poll-sources='build/TerriaJS/test/csv_nongeo/B_2d.csv' sources='build/TerriaJS/test/csv_nongeo/A_1d.csv' source-names='1d' preview-x-label='Last 24 hours' column-names='Time,Signal at 560 GHz,Signal at 890 GHz' column-units='Date,Watts,Watts' y-column='1'></chart>"
+        },
+        {
+          "name": "Lat/lon static, with two updating charts 5s, 9s",
+          "type": "csv",
+          "url": "build/TerriaJS/test/csv/lat_lon_enum.csv",
+          "featureInfoTemplate": "<p>Enum: {{enum}}</p><chart poll-seconds='5' poll-sources='build/TerriaJS/test/csv_nongeo/B_2d.csv' sources='build/TerriaJS/test/csv_nongeo/A_1d.csv' source-names='1d' preview-x-label='Last 24 hours' column-names='Time,Signal at 560 GHz,Signal at 890 GHz' column-units='Date,Watts,Watts' y-column='1'></chart><chart poll-seconds='8' poll-sources='build/TerriaJS/test/csv_nongeo/B_2d.csv' sources='build/TerriaJS/test/csv_nongeo/A_1d.csv' source-names='1d' preview-x-label='Last 24 hours' column-names='Time,Signal at 560 GHz,Signal at 890 GHz' column-units='Date,Watts,Watts' y-column='2'></chart>"
         }
       ]
     }
