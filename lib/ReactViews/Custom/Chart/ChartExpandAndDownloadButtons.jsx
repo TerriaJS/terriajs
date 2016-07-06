@@ -31,7 +31,7 @@ const ChartExpandAndDownloadButtons = React.createClass({
         // Optional polling info that would need to be transferred to any standalone catalog item.
         pollSources: React.PropTypes.array,
         pollSeconds: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
-        pollReplaceData: React.PropTypes.bool,
+        pollReplace: React.PropTypes.bool,
         updateCounter: React.PropTypes.any,  // Change this to trigger an update.
         // Or, provide a tableStructure directly.
         tableStructure: React.PropTypes.object,
@@ -132,7 +132,7 @@ function expand(props, sourceIndex) {
         newCatalogItem.polling = new Polling({
             seconds: props.pollSeconds,
             url: (defined(sourceIndex) && defined(pollSources)) ? pollSources[Math.min(sourceIndex, pollSources.length - 1)] : undefined,
-            replaceData: props.pollReplaceData
+            replace: props.pollReplace
         });
     }
     const group = terria.catalog.upsertCatalogGroup(CatalogGroup, 'Chart Data', 'A group for chart data.');

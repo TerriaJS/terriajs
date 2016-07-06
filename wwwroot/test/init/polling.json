@@ -11,7 +11,8 @@
           "url": "build/TerriaJS/test/csv_nongeo/xy.csv",
           "polling": {
             "seconds": 15,
-            "url": "build/TerriaJS/test/csv_nongeo/xy2.csv"
+            "url": "build/TerriaJS/test/csv_nongeo/xy2.csv",
+            "replace": true
           }
         },
         {
@@ -20,7 +21,8 @@
           "url": "build/TerriaJS/test/csv/lat_lon_enum.csv",
           "polling": {
             "seconds": 25,
-            "url": "build/TerriaJS/test/csv/lat_lon_enum_lots.csv"
+            "url": "build/TerriaJS/test/csv/lat_lon_enum_lots.csv",
+            "replace": true
           }
         },
         {
@@ -29,7 +31,8 @@
           "url": "build/TerriaJS/test/csv/postcode_val_enum.csv",
           "polling": {
             "seconds": 20,
-            "url": "build/TerriaJS/test/csv/postcode_val_enum2.csv"
+            "url": "build/TerriaJS/test/csv/postcode_val_enum2.csv",
+            "replace": true
           }
         },
         {
@@ -38,7 +41,8 @@
           "url": "build/TerriaJS/test/csv/postcode_val_enum.csv",
           "polling": {
             "seconds": 20,
-            "url": "build/TerriaJS/test/csv/postcode_val_enum2.csv"
+            "url": "build/TerriaJS/test/csv/postcode_val_enum2.csv",
+            "replace": true
           },
           "featureInfoTemplate": "<p>Postcode: {{postcode}}</p><p>Val1: {{val1}}</p><p>Enum: {{enum}}</enum>"
         },
@@ -48,7 +52,8 @@
           "url": "build/TerriaJS/test/csv/lga_value_enum.csv",
           "polling": {
             "seconds": 20,
-            "url": "build/TerriaJS/test/csv/lga_value_enum2.csv"
+            "url": "build/TerriaJS/test/csv/lga_value_enum2.csv",
+            "replace": true
           },
           "featureInfoTemplate": "<p>Enum: {{enum}}</p><p>Value: {{value}}</p><chart sources='build/TerriaJS/test/csv_nongeo/{{letter}}_1d.csv,build/TerriaJS/test/csv_nongeo/{{letter}}_2d.csv,build/TerriaJS/test/csv_nongeo/{{letter}}_5d.csv' source-names='1d,2d,5d' preview-x-label='Last 24 hours' column-names='Time,Signal at 560 GHz,Signal at 890 GHz' column-units='Date,Watts,Watts' y-column='1'></chart>"
         },
