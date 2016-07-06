@@ -2,9 +2,13 @@
 Change Log
 ==========
 
+### 4.0.0
+
+* When importing csv files that contain addresses rather than coordinates, the addresses are transformed into coordinates so that the results can be shown on the map.
+
 ### 3.4.0
 
-* Support JSON5 (http://json5.org/) use in init files and config files, so comments can be used and object keys don't need to be quoted. 
+* Support JSON5 (http://json5.org/) use in init files and config files, so comments can be used and object keys don't need to be quoted.
 * Fixed a bug that caused the `corsProxyBaseUrl` specified in `config.json` to be ignored.
 * Fixed a bug preventing downloading feature info data in CSV format if it contained nulls.
 * Added support for the WMS Style/MetadataURL tag in layer description.
