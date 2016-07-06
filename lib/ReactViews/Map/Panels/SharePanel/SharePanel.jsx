@@ -1,7 +1,7 @@
 'use strict';
 
 import React from 'react';
-import {buildShareLink, buildShortShareLink} from './BuildShareLink';
+import {buildShareLink, buildShortShareLink, canShorten} from './BuildShareLink';
 import ObserverModelMixin from '../../../ObserveModelMixin';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import classNames from 'classnames';
@@ -67,7 +67,7 @@ const SharePanel = React.createClass({
     },
 
     isUrlShortenable() {
-        return this.props.terria.urlShortener && this.props.terria.urlShortener.isUsable;
+        return canShorten(this.props.terria);
     },
 
     shouldShorten() {
@@ -128,9 +128,6 @@ const SharePanel = React.createClass({
                            onOpenChanged={this.onOpenChanged}>
                 <If condition={this.state.isOpen}>
                     <div className={classNames(Styles.content, DropdownStyles.content)}>
-                        <div className={classNames(DropdownStyles.header, DropdownStyles.section)}>
-                            <label className={DropdownStyles.heading}>Share</label>
-                        </div>
                         <div className={DropdownStyles.section}>
                             <div className={Styles.imgShare} style={shareImgStyle}></div>
                             <div className={Styles.imgLink}>

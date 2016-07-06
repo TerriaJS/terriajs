@@ -3,12 +3,17 @@
 
 .btn-download {
   composes: btn from '../../../Sass/common/_buttons.scss';
-  composes: btn--download from '../../../Sass/common/_buttons.scss';
-
   text-transform: uppercase;
   color: #fff;
   float: right;
   margin-right: $input-height;
+  svg{
+    height: 20px;
+    width: 20px;
+    fill: #ffffff;
+    display: inline-block;
+    vertical-align: bottom;
+  }
 
   &:hover, &:focus {
     text-decoration: none;

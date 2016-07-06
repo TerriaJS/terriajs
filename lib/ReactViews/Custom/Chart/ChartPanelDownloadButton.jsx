@@ -6,6 +6,7 @@ import defined from 'terriajs-cesium/Source/Core/defined';
 import DataUri from '../../../Core/DataUri';
 import ObserveModelMixin from '../../ObserveModelMixin';
 import VarType from '../../../Map/VarType';
+import Icon from "../../Icon.jsx";
 
 import Styles from './chart-panel-download-button.scss';
 
@@ -91,7 +92,8 @@ const ChartPanelDownloadButton = React.createClass({
                 <a className={Styles.btnDownload}
                    download='chart data.csv'
                    href={this.state.href}
-                   onClick={checkCompatibility}>Download</a>
+                   onClick={checkCompatibility}>
+                <Icon glyph={Icon.GLYPHS.download}/>Download</a>
             );
         }
         return null;

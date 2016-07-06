@@ -1,4 +1,6 @@
 import React from 'react';
+import classNames from 'classnames';
+
 // icon.jsx
 const GLYPHS = {
     add: require('../../wwwroot/images/icons/add.svg'),
@@ -12,8 +14,8 @@ const GLYPHS = {
     closed: require('../../wwwroot/images/icons/closed.svg'),
     decrease: require('../../wwwroot/images/icons/decrease.svg'),
     download: require('../../wwwroot/images/icons/download.svg'),
-    eye: require('../../wwwroot/images/icons/eye.svg'),
     expand: require('../../wwwroot/images/icons/expand.svg'),
+    eye: require('../../wwwroot/images/icons/eye.svg'),
     feedback: require('../../wwwroot/images/icons/feedback.svg'),
     folder: require('../../wwwroot/images/icons/folder.svg'),
     folderOpen: require('../../wwwroot/images/icons/folder-open.svg'),
@@ -38,18 +40,21 @@ const GLYPHS = {
     search: require('../../wwwroot/images/icons/search.svg'),
     selected: require('../../wwwroot/images/icons/selected.svg'),
     share: require('../../wwwroot/images/icons/share.svg'),
+    showLess: require('../../wwwroot/images/icons/show-less.svg'),
+    showMore: require('../../wwwroot/images/icons/show-more.svg'),
     sphere: require('../../wwwroot/images/icons/sphere.svg'),
 };
 
 const Icon = React.createClass({
     propTypes: {
         glyph: React.PropTypes.string,
-        style: React.PropTypes.object
+        style: React.PropTypes.object,
+        className: React.PropTypes.string
     },
     render() {
         const glyph = this.props.glyph;
         return (
-            <svg viewBox="0 0 100 100" style= {this.props.style} className="icon" dangerouslySetInnerHTML={{__html: '<use xlink:href="' + glyph + '"></use>'}}/>
+            <svg viewBox="0 0 100 100" className={classNames('icon', this.props.className)} style={this.props.style} dangerouslySetInnerHTML={{__html: '<use xlink:href="' + glyph + '"></use>'}}/>
         );
     }
 });

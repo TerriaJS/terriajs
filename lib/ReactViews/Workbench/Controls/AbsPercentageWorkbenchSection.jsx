@@ -3,6 +3,7 @@
 import classNames from 'classnames';
 import ObserveModelMixin from '../../ObserveModelMixin';
 import React from 'react';
+import Icon from "../../Icon.jsx";
 import Styles from './abs-percentage.scss';
 
 const AbsPercentageWorkbenchSection = React.createClass({
@@ -31,8 +32,10 @@ const AbsPercentageWorkbenchSection = React.createClass({
                                 [Styles.btnInactive]: !this.props.item.displayPercent
                             }
                         )}
-                />
-                Display as a percentage of region population
+                >
+                    {this.props.item.displayPercent ? <Icon glyph={Icon.GLYPHS.checkboxOn}/> :<Icon glyph={Icon.GLYPHS.checkboxOff}/>}
+                    <span>Display as a percentage of region population</span>
+                </button>
             </label>
         );
     }

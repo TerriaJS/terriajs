@@ -17,16 +17,6 @@
   composes: btn--share from '../../../../Sass/common/_buttons.scss';
 }
 
-.btn--checkbox-off {
-  composes: btn from '../../../../Sass/common/_buttons.scss';
-  composes: btn--checkbox-off from '../../../../Sass/common/_buttons.scss';
-}
-
-.btn--checkbox-on {
-  composes: btn from '../../../../Sass/common/_buttons.scss';
-  composes: btn--checkbox-on from '../../../../Sass/common/_buttons.scss';
-}
-
 .img--share {
   width: 100%;
   height: $share-panel-width / 4*3;
@@ -53,11 +43,14 @@
 }
 
 .shorten-url {
-  .btn {
-    padding: 0;
-    &:before {
-      display: inline-block;
-      padding-right: $padding-small;
-    }
+  button {
+    text-align: left;
+  }
+  svg{
+    display: inline;
+    padding-right: 5px;
+    fill: #fff;
+    height: 14px;
+    width: 14px;
   }
 }

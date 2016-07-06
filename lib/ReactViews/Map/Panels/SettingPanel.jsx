@@ -60,17 +60,17 @@ const SettingPanel = React.createClass({
     selectViewer(viewer, event) {
         event.stopPropagation();
         switch (viewer) {
-        case 0:
-            this.props.terria.viewerMode = ViewerMode.CesiumTerrain;
-            break;
-        case 1:
-            this.props.terria.viewerMode = ViewerMode.CesiumEllipsoid;
-            break;
-        case 2:
-            this.props.terria.viewerMode = ViewerMode.Leaflet;
-            break;
-        default:
-            return;
+            case 0:
+                this.props.terria.viewerMode = ViewerMode.CesiumTerrain;
+                break;
+            case 1:
+                this.props.terria.viewerMode = ViewerMode.CesiumEllipsoid;
+                break;
+            case 2:
+                this.props.terria.viewerMode = ViewerMode.Leaflet;
+                break;
+            default:
+                return;
         }
     },
 

@@ -125,7 +125,14 @@ const Chart = React.createClass({
     },
 
     componentDidUpdate() {
-        LineChart.update(this.buttonElement, this.getChartParameters());
+        // Note if we were provided with a URL, not direct data, we don't reload the URL.
+        // This could be a problem if the URL has changed, or if the intention is to reload new data from the same URL.
+        // Note that registerCustomComponent types wraps its charts in a div with a key based on the url,
+        // so when the URL changes, it actually mounts a new component, thereby triggering a load.
+        const chartParameters = this.getChartParameters();
+        if (defined(chartParameters.data)) {
+            LineChart.update(this.buttonElement, chartParameters);
+        }
     },
 
     componentWillUnmount() {

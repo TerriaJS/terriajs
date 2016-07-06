@@ -16,7 +16,7 @@ const BadgeBar = React.createClass({
                     <label className={Styles.title}>{this.props.label}</label>
                 </li>
                 <li>
-                    <label className={Styles.labelBadge}>{this.props.badge}</label>
+                    <label className={Styles.labelBadge}>[ {this.props.badge} ]</label>
                 </li>
                 <li>
                     {this.props.children}

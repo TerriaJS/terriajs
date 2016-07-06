@@ -6,6 +6,8 @@ Change Log
 
 * `CswCatalogGroup` will now include Web Processing Services from the catalog if configured with `includeWps` set to true.
 * `WebMapServiceCatalogItem` will now detect ncWMS servers and set isNcWMS to true.
+* New `ShareDataService` which can store and resolve data. Currently it is used as a replacement for Google URL Shortener, which can't handle long URLs.
+* New `ServerConfig` object which provides configuration information about the server, including which domains can be proxied for. This changes the way CorsProxy is initialised.
 * Added partial support for the SDMX-JSON format.
 
 ### 3.4.0
@@ -15,6 +17,9 @@ Change Log
 * Fixed a bug preventing downloading feature info data in CSV format if it contained nulls.
 * Added support for the WMS Style/MetadataURL tag in layer description.
 * Long titles in locally-generated titles now word-wrap in most web browsers.
+* Long auto-generated legend titles now word wrap in most web browsers.
+* Ungrouped items in CKAN catalog items are now grouped under an item whose title is determined by .ungroupedTitle (default: "No group").
+* CKAN's default search regex for KMLs also includes KMZ.
 
 ### 3.3.0
 
