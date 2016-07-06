@@ -46,7 +46,6 @@ describe('RegionProviderList', function() {
     var poaDescriptor = {
             "layerName":"region_map:FID_POA_2011_AUST",
             "server": "http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows",
-            "serverType": "WMS",
             "regionProp": "POA_CODE",
             "aliases": ["poa_2011", "postcode_2011", "poa", "poa_code", "poa_code_2011", "postcode"],
             "digits": 4,
