@@ -207,7 +207,7 @@ describe('TableStructure', function() {
         var optionsNoAddr = {columnOptions: {y: {name: 'new y', format: {useGrouping: true, maximumFractionDigits: 1}}}};
         var tableStructureNoAddr = new TableStructure('foo', optionsNoAddr);
         tableStructureNoAddr = tableStructure.loadFromJson(dataNoAddr);
-        expect(tableStructure.hasAddress).toBe(false);
+        expect(tableStructureNoAddr.hasAddress).toBe(false);
     });
 
     it('can add columns', function() {
