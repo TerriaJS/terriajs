@@ -16,9 +16,9 @@ describe('Reproject', function() {
     });
 
     it('function willNeedReprojecting predicts correctly if something needs reprojecting', function() {
-        expect(Reproject.willNeedReprojecting("EPSG:4326")).toBeFalsy();
-        expect(Reproject.willNeedReprojecting("CRS84")).toBeTruthy();
-        expect(Reproject.willNeedReprojecting("EPSG:1234")).toBeTruthy();
+        expect(Reproject.willNeedReprojecting("EPSG:4326")).toBe(false);
+        expect(Reproject.willNeedReprojecting("CRS84")).toBe(true);
+        expect(Reproject.willNeedReprojecting("EPSG:1234")).toBe(true);
     });
 
     it('function reprojectPoint reprojects a point from one CRS to another', function() {
