@@ -117,8 +117,8 @@ function expand(props, url) {
     // You can override this with the `pollSeconds` attribute (coming!).
     // If neither is set, it should default to a small duration rather than 2 weeks - say 1 minute.
     newCatalogItem.cacheDuration = defaultValue(props.catalogItem.cacheDuration, '1m');
-    newCatalogItem.name = props.feature.name;
-    newCatalogItem.id = props.feature.name + (props.id ? (' ' + props.id) : '') + ' (' + props.catalogItem.name + ')';
+    newCatalogItem.name = (props.feature && props.feature.name) || 'Chart';
+    newCatalogItem.id = newCatalogItem.name + (props.id ? (' ' + props.id) : '') + ' (' + props.catalogItem.name + ')';
     const group = terria.catalog.upsertCatalogGroup(CatalogGroup, 'Chart Data', 'A group for chart data.');
     group.isOpen = true;
     const existingChartItemIds = group.items.map(item=>item.uniqueId);
