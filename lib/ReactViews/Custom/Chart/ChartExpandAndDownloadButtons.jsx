@@ -10,6 +10,7 @@ import clone from 'terriajs-cesium/Source/Core/clone';
 import CatalogGroup from '../../../Models/CatalogGroup';
 import CsvCatalogItem from '../../../Models/CsvCatalogItem';
 import Dropdown from '../../Generic/Dropdown';
+import Polling from '../../../Models/Polling';
 import raiseErrorToUser from '../../../Models/raiseErrorToUser';
 import Icon from "../../Icon.jsx";
 
@@ -126,10 +127,14 @@ function expand(props, sourceIndex) {
     newCatalogItem.name = props.feature.name;
     newCatalogItem.id = props.feature.name + (props.id ? (' ' + props.id) : '') + ' (' + props.catalogItem.name + ')';
 
-    const pollSources = props.pollSources;
-    newCatalogItem.pollUrl = (defined(sourceIndex) && defined(pollSources)) ? pollSources[Math.min(sourceIndex, pollSources.length - 1)] : undefined;
-    newCatalogItem.pollSeconds = props.pollSeconds;
-    newCatalogItem.pollReplaceData = props.pollReplaceData;
+    if (defined(props.pollSeconds)) {
+        const pollSources = props.pollSources;
+        newCatalogItem.polling = new Polling({
+            seconds: props.pollSeconds,
+            url: (defined(sourceIndex) && defined(pollSources)) ? pollSources[Math.min(sourceIndex, pollSources.length - 1)] : undefined,
+            replaceData: props.pollReplaceData
+        });
+    }
     const group = terria.catalog.upsertCatalogGroup(CatalogGroup, 'Chart Data', 'A group for chart data.');
     group.isOpen = true;
     const existingChartItemIds = group.items.map(item=>item.uniqueId);

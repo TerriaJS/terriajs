@@ -9,37 +9,47 @@
           "name": "x-y chart changes in 15s",
           "type": "csv",
           "url": "build/TerriaJS/test/csv_nongeo/xy.csv",
-          "pollSeconds": 15,
-          "pollUrl": "build/TerriaJS/test/csv_nongeo/xy2.csv"
+          "polling": {
+            "seconds": 15,
+            "url": "build/TerriaJS/test/csv_nongeo/xy2.csv"
+          }
         },
         {
           "name": "Lat/lon changes in 25s",
           "type": "csv",
           "url": "build/TerriaJS/test/csv/lat_lon_enum.csv",
-          "pollSeconds": 25,
-          "pollUrl": "build/TerriaJS/test/csv/lat_lon_enum_lots.csv"
+          "polling": {
+            "seconds": 25,
+            "url": "build/TerriaJS/test/csv/lat_lon_enum_lots.csv"
+          }
         },
         {
           "name": "Melbourne postcodes change in 20s",
           "type": "csv",
           "url": "build/TerriaJS/test/csv/postcode_val_enum.csv",
-          "pollSeconds": 20,
-          "pollUrl": "build/TerriaJS/test/csv/postcode_val_enum2.csv"
+          "polling": {
+            "seconds": 20,
+            "url": "build/TerriaJS/test/csv/postcode_val_enum2.csv"
+          }
         },
         {
           "name": "Melbourne postcodes change in 20s with template",
           "type": "csv",
           "url": "build/TerriaJS/test/csv/postcode_val_enum.csv",
-          "pollSeconds": 20,
-          "pollUrl": "build/TerriaJS/test/csv/postcode_val_enum2.csv",
+          "polling": {
+            "seconds": 20,
+            "url": "build/TerriaJS/test/csv/postcode_val_enum2.csv"
+          },
           "featureInfoTemplate": "<p>Postcode: {{postcode}}</p><p>Val1: {{val1}}</p><p>Enum: {{enum}}</enum>"
         },
         {
           "name": "LGAs change in 20s, regular chart",
           "type": "csv",
           "url": "build/TerriaJS/test/csv/lga_value_enum.csv",
-          "pollSeconds": 20,
-          "pollUrl": "build/TerriaJS/test/csv/lga_value_enum2.csv",
+          "polling": {
+            "seconds": 20,
+            "url": "build/TerriaJS/test/csv/lga_value_enum2.csv"
+          },
           "featureInfoTemplate": "<p>Enum: {{enum}}</p><p>Value: {{value}}</p><chart sources='build/TerriaJS/test/csv_nongeo/{{letter}}_1d.csv,build/TerriaJS/test/csv_nongeo/{{letter}}_2d.csv,build/TerriaJS/test/csv_nongeo/{{letter}}_5d.csv' source-names='1d,2d,5d' preview-x-label='Last 24 hours' column-names='Time,Signal at 560 GHz,Signal at 890 GHz' column-units='Date,Watts,Watts' y-column='1'></chart>"
         },
         {
