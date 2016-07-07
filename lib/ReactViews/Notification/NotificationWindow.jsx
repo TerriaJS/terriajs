@@ -2,7 +2,7 @@
 
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
-import renderMarkdownInReact from '../../Core/renderMarkdownInReact';
+import parseCustomMarkdownToReact from '../Custom/parseCustomMarkdownToReact';
 import Styles from './notification-window.scss';
 
 const NotificationWindow = React.createClass({
@@ -43,7 +43,7 @@ const NotificationWindow = React.createClass({
                         {window.location.host === 'localhost:3001' && title.toLowerCase().indexOf('error') >= 0 &&
                             <div><img src='./build/TerriaJS/images/feature.gif'/></div>
                         }
-                        <div className={Styles.body}>{renderMarkdownInReact(message)}</div>
+                        <div className={Styles.body}>{parseCustomMarkdownToReact(message)}</div>
                     </div>
                     <div className={Styles.footer}>
                         <button type='button' className={Styles.btn} onClick={this.confirm}>{confirmText}</button>

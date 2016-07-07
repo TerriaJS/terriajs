@@ -1,6 +1,6 @@
 'use strict';
 import defined from 'terriajs-cesium/Source/Core/defined';
-import parseCustomHtmlToReact from '../../Models/parseCustomHtmlToReact';
+import parseCustomHtmlToReact from '../Custom/parseCustomHtmlToReact';
 import React from 'react';
 import Styles from './branding.scss';
 
