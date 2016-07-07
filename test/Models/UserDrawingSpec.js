@@ -73,7 +73,7 @@ describe('UserDrawing', function() {
 
     it('getDialogMessage contains callback message if callback is specified', function() {
         var options = { terria: terria,
-                        onMakeDialogMessageCallback: function() { return "HELLO"; }};
+                        onMakeDialogMessage: function() { return "HELLO"; }};
         var userDrawing = new UserDrawing(options);
 
         expect(userDrawing._getDialogMessage()).toEqual("<div><strong>Draw on Map</strong></br>HELLO</br><i>Click to add a point</i></div>");
@@ -94,7 +94,7 @@ describe('UserDrawing', function() {
         };
         var callback = new Callback();
         var options = { terria: terria,
-                        onPointClickedCallback: callback.callback};
+                        onPointClicked: callback.callback};
         var userDrawing = new UserDrawing(options);
         expect(callback.pointEntities).toEqual(0);
         userDrawing.enterDrawMode();
@@ -218,7 +218,7 @@ describe('UserDrawing', function() {
         };
         var callback = new Callback();
         var options = { terria: terria,
-                        onCleanUpCallback: callback.callback};
+                        onCleanUp: callback.callback};
         var userDrawing = new UserDrawing(options);
         userDrawing.enterDrawMode();
         expect(callback.called).toBeFalsy();
