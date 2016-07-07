@@ -4,7 +4,7 @@ import CesiumMath from 'terriajs-cesium/Source/Core/Math';
 import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
 import defined from 'terriajs-cesium/Source/Core/defined';
 
-import UserDrawing from '../../Map/UserDrawing';
+import UserDrawing from '../../Models/UserDrawing';
 import ObserveModelMixin from '../ObserveModelMixin';
 import Styles from './parameter-editors.scss';
 
@@ -21,10 +21,11 @@ const PolygonParameterEditor = React.createClass({
     getInitialState() {
         return {
             value: "",
-            userDrawing: new UserDrawing(this.props.previewed.terria,
+            userDrawing: new UserDrawing(
                 {
-                    onPointClickedCallback: this.onPointClicked,
-                    onCleanUpCallback: this.onCleanUp
+                    terria: this.props.previewed.terria,
+                    onPointClicked: this.onPointClicked,
+                    onCleanUp: this.onCleanUp
                 })
         };
     },
