@@ -100,7 +100,3 @@
     content: '';
   }
 }
-
-.is-top {
-  composes: is-top from '../../Sass/common/_layout.scss';
-}

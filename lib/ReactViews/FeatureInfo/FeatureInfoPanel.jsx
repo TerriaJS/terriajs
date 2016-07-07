@@ -56,11 +56,6 @@ const FeatureInfoPanel = React.createClass({
         }
     },
 
-    bringToFront() {
-        // Bring feature info panel to front.
-        this.props.viewState.switchComponentOrder(this.props.viewState.componentOrderOptions.featureInfoPanel);
-    },
-
     getFeatureInfoCatalogItems() {
         const {catalogItems, featureCatalogItemPairs} = getFeaturesGroupedByCatalogItems(this.props.terria);
 
@@ -109,15 +104,13 @@ const FeatureInfoPanel = React.createClass({
 
         const featureInfoCatalogItems = this.getFeatureInfoCatalogItems();
         const panelClassName = classNames(Styles.panel, {
-            [Styles.isOnTop]: viewState.componentOnTop === viewState.componentOrderOptions.featureInfoPanel,
             [Styles.isCollapsed]: viewState.featureInfoPanelIsCollapsed,
             [Styles.isVisible]: viewState.featureInfoPanelIsVisible
         });
         return (
             <div
                 className={panelClassName}
-                aria-hidden={!viewState.featureInfoPanelIsVisible}
-                onClick={this.bringToFront}>
+                aria-hidden={!viewState.featureInfoPanelIsVisible}>
                 <div className={Styles.header}>
                     <button type='button' onClick={ this.toggleCollapsed } className={Styles.btn}>
                         Feature Information

@@ -45,11 +45,6 @@ const ChartPanel = React.createClass({
         }
     },
 
-    bringToFront() {
-        // Bring chart to front.
-        this.props.viewState.switchComponentOrder(this.props.viewState.componentOrderOptions.chart);
-    },
-
     render() {
         const chartableItems = this.props.terria.catalog.chartableItems;
         let data = [];
@@ -107,8 +102,7 @@ const ChartPanel = React.createClass({
         }
         return (
             <div
-                className={classNames(Styles.holder, {[Styles.isTop]: this.props.viewState && this.props.viewState.componentOnTop === this.props.viewState.componentOrderOptions.chart})}
-                onClick={this.bringToFront}>
+                className={classNames(Styles.holder, {[Styles.isTop]: this.props.viewState})}>
                 <div className={Styles.inner}>
                     <div className={Styles.chartPanel} style={{height: height}}>
                         <div className={Styles.body}>

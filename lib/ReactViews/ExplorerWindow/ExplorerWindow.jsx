@@ -18,11 +18,6 @@ const ExplorerWindow = React.createClass({
         this.props.viewState.switchMobileView('nowViewing');
     },
 
-    bringToFront() {
-        // Bring modal window to front.
-        this.props.viewState.switchComponentOrder(this.props.viewState.componentOrderOptions.modelWindow);
-    },
-
     isVisible() {
         return !this.props.viewState.hideMapUi() && this.props.viewState.explorerPanelIsVisible;
     },
@@ -42,12 +37,10 @@ const ExplorerWindow = React.createClass({
 
     render() {
         return (
-            <div onClick={this.bringToFront}
-                 className={classNames(
+            <div className={classNames(
                      Styles.modalWrapper,
                      {
-                         [Styles.isOpen]: this.isVisible(),
-                         [Styles.isTop]: this.props.viewState.componentOnTop === this.props.viewState.componentOrderOptions.modelWindow
+                         [Styles.isOpen]: this.isVisible()
                      }
                  )}
                  id="explorer-panel-wrapper"
