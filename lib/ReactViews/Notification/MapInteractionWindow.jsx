@@ -2,6 +2,7 @@
 
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
+import parseCustomHtmlToReact from '../../Models/parseCustomHtmlToReact';
 import Styles from './map-interaction-window.scss';
 import classNames from 'classnames';
 
@@ -20,8 +21,9 @@ const MapInteractionWindow = React.createClass({
 
         return (
             <div className={windowClass} aria-hidden={ !interactionMode }>
-              <div className={Styles.content}>{interactionMode && interactionMode.message}</div><button type='button' onClick={interactionMode && interactionMode.onCancel}
-                          className={Styles.btn}>Cancel</button>
+              <div className={Styles.content}>{interactionMode && parseCustomHtmlToReact(interactionMode.message())}</div>
+              <button type='button' onClick={interactionMode && interactionMode.onCancel}
+                  className={Styles.btn}>{interactionMode && interactionMode.buttonText}</button>
             </div>);
     }
 });
