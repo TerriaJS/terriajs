@@ -13,8 +13,8 @@ import FeatureInfoDownload from './FeatureInfoDownload';
 import formatNumberForLocale from '../../Core/formatNumberForLocale';
 import ObserveModelMixin from '../ObserveModelMixin';
 import propertyGetTimeValues from '../../Core/propertyGetTimeValues';
-import CustomComponents from '../../Models/CustomComponents';
-import renderMarkdownInReact from '../../Core/renderMarkdownInReact';
+import CustomComponents from '../Custom/CustomComponents';
+import parseCustomMarkdownToReact from '../Custom/parseCustomMarkdownToReact';
 import Icon from "../Icon.jsx";
 
 import Styles from './feature-info-section.scss';
@@ -121,7 +121,7 @@ const FeatureInfoSection = React.createClass({
     descriptionFromFeature() {
         const feature = this.props.feature;
         // This description could contain injected <script> tags etc.
-        // Before rendering, we will pass it through renderMarkdownInReact, which applies
+        // Before rendering, we will pass it through parseCustomMarkdownToReact, which applies
         //     markdownToHtml (which applies MarkdownIt.render and DOMPurify.sanitize), and then
         //     parseCustomHtmlToReact (which calls htmlToReactParser).
         // Note that there is an unnecessary HTML encoding and decoding in this combination which would be good to remove.
@@ -403,12 +403,12 @@ function getInfoAsReactComponent(that) {
     if (showRawData) {
         rawDataHtml = that.descriptionFromFeature();
         if (defined(rawDataHtml)) {
-            rawData = renderMarkdownInReact(rawDataHtml, context);
+            rawData = parseCustomMarkdownToReact(rawDataHtml, context);
         }
     }
     return {
         templateData: templateData,
-        info: that.hasTemplate() ? renderMarkdownInReact(that.descriptionFromTemplate(), context) : rawData,
+        info: that.hasTemplate() ? parseCustomMarkdownToReact(that.descriptionFromTemplate(), context) : rawData,
         rawData: rawData,
         showRawData: showRawData,
         hasRawData: !!rawDataHtml

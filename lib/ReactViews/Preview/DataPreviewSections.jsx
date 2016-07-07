@@ -1,7 +1,7 @@
 import React from 'react';
 
 import naturalSort from 'javascript-natural-sort';
-import renderMarkdownInReact from '../../Core/renderMarkdownInReact';
+import parseCustomMarkdownToReact from '../Custom/parseCustomMarkdownToReact';
 import ObserveModelMixin from '../ObserveModelMixin';
 
 naturalSort.insensitive = true;
@@ -58,7 +58,7 @@ const DataPreviewSections = React.createClass({
                     <If condition={item.content && item.content.length > 0}>
                         <div key={i}>
                             <h4>{item.name}</h4>
-                            {renderMarkdownInReact(item.content, {catalogItem: metadataItem})}
+                            {parseCustomMarkdownToReact(item.content, {catalogItem: metadataItem})}
                         </div>
                     </If>
                 </For>
