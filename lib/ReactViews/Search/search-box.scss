@@ -1,0 +1,57 @@
+@import '~terriajs-variables';
+@import '../../Sass/common/mixins';
+
+.formLabel{
+  position: absolute;
+  svg{
+    height: $input-height;
+    width: $input-height;
+    fill: $charcoal-grey;
+    fill-opacity: 0.5;
+  }
+}
+
+.searchField {
+  composes: field from '../../Sass/common/_form.scss';
+}
+
+.searchData{
+  position: relative;
+  width: 100%;
+}
+
+input[type=text].searchField {
+  padding-left: $input-height;
+  padding-right: $input-height;
+  color: $color-primary;
+  width: 100%;
+  overflow: hidden;
+  @include placeholder{
+    text-transform: uppercase;
+    font-size: $font-size-small;
+    text-align: left;
+    padding-left: calc(50% - 40px);
+    @include transition(all, 0.25s, linear);
+  }
+
+  &:focus{
+    @include placeholder{
+      padding-left: 0;
+    }
+  }
+}
+
+//this does not seem to work
+.searchClear{
+  right: 0;
+  top: 0;
+  padding: 0;
+  position: absolute;
+  padding: 5px;
+  svg{
+    height: 30px;
+    width: 30px;
+    fill: $charcoal-grey;
+    fill-opacity: 0.5;
+  }
+}
