@@ -2,7 +2,7 @@
 
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
-import parseCustomHtmlToReact from '../../Models/parseCustomHtmlToReact';
+import parseCustomHtmlToReact from '../Custom/parseCustomHtmlToReact';
 import Styles from './map-interaction-window.scss';
 import classNames from 'classnames';
 
