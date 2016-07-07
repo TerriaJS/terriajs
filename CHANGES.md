@@ -10,6 +10,9 @@ Change Log
 * New `ServerConfig` object which provides configuration information about the server, including which domains can be proxied for. This changes the way CorsProxy is initialised.
 * Added partial support for the SDMX-JSON format.
 * `UserDrawing` added for drawing lines and polygons on the map.
+### 3.5.0
+
+* Add documentation of camera properties.
 
 ### 3.4.0
 
