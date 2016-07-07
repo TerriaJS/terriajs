@@ -1,0 +1,85 @@
+@import '~terriajs-variables';
+@import '../../../Sass/common/mixins';
+
+.panel {
+  width: auto;
+
+  &.is-open .inner {
+    @include transform (scale(1) translateZ(0));
+  }
+}
+
+.content {
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.inner {
+  @include transform (scale(0) translateZ(0));
+  @include transition(0.2s all cubic-bezier(0.4, 0, 0.2, 1));
+  @include transform-origin(50%, top);
+
+  box-shadow: $box-shadow;
+  position: absolute;
+  margin-top: 15px;
+  z-index: 1;
+  border-radius: $radius-small;
+  background: $dark;
+  color: #fff;
+  border: $border-style;
+  right: $padding*2;
+
+  &--is-on-top {
+    z-index: $front-component-z-index !important;
+  }
+}
+
+.caret {
+  content: '';
+  display: block;
+  height: 20px;
+  width: 20px;
+  background: $dark;
+  position: absolute;
+  top: -10px;
+  @include transform(rotate(45deg));
+}
+
+.label {
+  text-transform: uppercase;
+  padding: $padding-small 0;
+  display: block;
+}
+
+.heading {
+  composes: label;
+  padding: $padding-small 0;
+  font-size: $font-size-small;
+}
+
+.sub-heading {
+  composes: label;
+  font-size: $font-size-mini;
+}
+
+.section {
+  padding: $padding-small;
+  display: block;
+}
+
+.button {
+  composes: btn from '../../../Sass/common/_buttons.scss';
+  composes: btn--map from '../../../Sass/common/_buttons.scss';
+
+  margin-right: $padding;
+  border-radius: $radius-small;
+  position: relative;
+
+  &,
+  &:hover,
+  &:focus {
+    border: 0;
+  }
+}
+

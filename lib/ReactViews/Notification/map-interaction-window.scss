@@ -1,0 +1,28 @@
+@import '~terriajs-variables';
+@import '../../Sass/common/mixins';
+
+
+.window{
+  display: none;
+  position: fixed;
+  left: 50%;
+  background: #fff;
+  width: 200px;
+  top: 50px;
+  z-index: 999;
+  color: #000;
+  padding: $padding;
+}
+
+.isActive{
+  display: block;
+}
+
+.content{
+  margin-bottom: $padding;
+}
+
+.btn{
+  composes: btn from '../../Sass/common/_buttons.scss';
+  composes: btn-primary from '../../Sass/common/_buttons.scss';
+}

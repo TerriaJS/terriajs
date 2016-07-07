@@ -1,0 +1,31 @@
+@import '~terriajs-variables';
+@import '../../Sass/common/mixins';
+
+
+.btn--add{
+  composes: btn from '../../Sass/common/_buttons.scss';
+  composes: btn-primary from '../../Sass/common/_buttons.scss';
+
+  // toggle-enable data-preview__add-to-map
+  @media screen and (min-width: $sm){
+      display: inline-block;
+      width: inherit;
+      position: absolute;
+      top: $padding-small;
+      right: $padding-small;
+  }
+}
+
+.previewed--info {
+  margin: 2*$padding;
+}
+
+
+.field {
+  composes: field from '../../Sass/common/_form.scss';
+}
+
+
+.url{
+  @extend %wrap;
+}

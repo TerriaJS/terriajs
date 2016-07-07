@@ -51,6 +51,26 @@
                 }
             },
             {
+                "name": "CSV with colorBins=0 (gradient)",
+                "type": "csv",
+                "data": "longitude,latitude,value\n134,-26,5\n121,-33,\n124,-32,3\n130,-30,4\n132,-28,1",
+                "tableStyle": {
+                    "replaceWithZeroValues": [null],
+                    "colorBins": 0
+                }
+            },
+            {
+                "name": "CSV with colorBins=0 (gradient) and blank values separated",
+                "type": "csv",
+                "data": "longitude,latitude,value\n134,-26,5\n121,-33,\n124,-32,3\n130,-30,4\n132,-28,1",
+                "tableStyle": {
+                    "replaceWithZeroValues": [],
+                    "nullColor": "green",
+                    "nullLabel": "blank",
+                    "colorBins": 0
+                }
+            },
+            {
                 "name": "CSV with blank string values",
                 "type": "csv",
                 "data": "longitude,latitude,enum\n134,-26,dog\n121,-33,\n124,-32,cat\n130,-30,frog\n132,-28,dog",

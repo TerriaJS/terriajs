@@ -1,0 +1,70 @@
+import React from 'react';
+
+import naturalSort from 'javascript-natural-sort';
+import renderMarkdownInReact from '../../Core/renderMarkdownInReact';
+import ObserveModelMixin from '../ObserveModelMixin';
+
+naturalSort.insensitive = true;
+
+// Should get it from option
+const DEFAULT_SECTION_ORDER = [
+    'Disclaimer',
+    'Description',
+    'Data Description',
+    'Dataset Description',
+    'Service Description',
+    'Resource Description',
+    'Licence',
+    'Access Constraints'
+];
+
+/**
+ * CatalogItem-defined sections that sit within the preview description. These are ordered according to the catalog item's
+ * order if available.
+ */
+const DataPreviewSections = React.createClass({
+    mixins: [ObserveModelMixin],
+
+    propTypes: {
+        metadataItem: React.PropTypes.object.isRequired
+    },
+
+    sortInfoSections(items) {
+        const infoSectionOrder = this.props.metadataItem.infoSectionOrder || DEFAULT_SECTION_ORDER;
+
+        items.sort(function(a, b) {
+            const aIndex = infoSectionOrder.indexOf(a.name);
+            const bIndex = infoSectionOrder.indexOf(b.name);
+            if (aIndex >= 0 && bIndex < 0) {
+                return -1;
+            } else if (aIndex < 0 && bIndex >= 0) {
+                return 1;
+            } else if (aIndex < 0 && bIndex < 0) {
+                return naturalSort(a.name, b.name);
+            }
+            return aIndex - bIndex;
+        });
+
+        return items;
+    },
+
+    render() {
+        const metadataItem = this.props.metadataItem;
+        const items = metadataItem.info.slice();
+
+        return (
+            <div>
+                <For each="item" index="i" of={this.sortInfoSections(items)}>
+                    <If condition={item.content && item.content.length > 0}>
+                        <div key={i}>
+                            <h4>{item.name}</h4>
+                            {renderMarkdownInReact(item.content, metadataItem)}
+                        </div>
+                    </If>
+                </For>
+            </div>
+        );
+    }
+});
+
+export default DataPreviewSections;
