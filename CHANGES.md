@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+### 3.5.0
+
+* Add documentation of camera properties.
+
 ### 3.4.0
 
 * Support JSON5 (http://json5.org/) use in init files and config files, so comments can be used and object keys don't need to be quoted. 
