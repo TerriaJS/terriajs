@@ -95,7 +95,7 @@ Documentation is automatically generated from the source via jdocs.  It will be 
 
 It is still very early stages, so the documentation is rather minimal and referencing the source code is probably a better way to determine the best way to use the existing functionality.
 
-You can click [here](http://nationalmap.nicta.com.au/doc/) to reference the documentation on the National Map site.
+You can click [here](http://nationalmap.gov.au/build/TerriaJS/doc/) to reference the documentation on the National Map site.
 
 ## Tests / Specs
 
