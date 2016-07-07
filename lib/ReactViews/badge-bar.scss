@@ -5,25 +5,25 @@
   composes: sm-show from '../Sass/common/_base.scss';
   composes: clearfix from '../Sass/common/_base.scss';
   composes: list-reset from '../Sass/common/_base.scss';
-  padding: 0 $padding-small;
+
+  padding-left: $padding-small + $padding;
+  // Line up remove icons when there is no scrollbar
+  padding-right: $padding-small + $padding + 1;
+
   background-color: $overlay;
   //to make sure scrolling of the content below the badge is correct
   height: $badge-height;
   line-height: $badge-height;
-  //overflow: hidden;
   box-shadow: 0 1px 10px rgba(0,0,0,0.7);
-  box-sizing: border-box;
+
+  // Border top and bottom
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-style: solid none;
+
   li{
     display: inline-block;
     float: left;
     font-size: 12px;
-    /*line-height: 2;
-    label,
-    button,
-    span{
-      line-height: 1;
-      vertical-align: baseline;
-    }*/
     &:last-child{
       float: right;
     }

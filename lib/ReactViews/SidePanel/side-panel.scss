@@ -8,7 +8,7 @@
   padding: $padding;
   opacity: 0.8;
   border: dashed 1px rgba(255, 255, 255, 0.5);
-  margin-top: 5px;
+  margin: $padding-small;
   @media print{
     display: none;
   }
@@ -22,7 +22,6 @@
 }
 .header {
     padding: 0 $padding-small;
-    border-bottom: 1px solid $overlay;
     background: $dark;
     @media print{
       display: none;

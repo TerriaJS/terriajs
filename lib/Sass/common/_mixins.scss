@@ -15,7 +15,7 @@
 }
 
 @mixin greybox(){
-  background: $dark;
+  background: $overlay;
 }
 
 @mixin transform($transforms) {
