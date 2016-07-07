@@ -27,10 +27,8 @@ input[type=text].searchField {
   width: 100%;
   overflow: hidden;
   @include placeholder{
-    text-transform: uppercase;
     font-size: $font-size-small;
-    text-align: left;
-    padding-left: calc(50% - 40px);
+    text-align: center;
     @include transition(all, 0.25s, linear);
   }
 
@@ -41,16 +39,17 @@ input[type=text].searchField {
   }
 }
 
-//this does not seem to work
+
 .searchClear{
   right: 0;
   top: 0;
-  padding: 0;
   position: absolute;
-  padding: 5px;
+  height: $input-height;
+  width: $input-height;
   svg{
-    height: 30px;
-    width: 30px;
+    height: 25px;
+    width: 25px;
+    margin: 0 auto;
     fill: $charcoal-grey;
     fill-opacity: 0.5;
   }

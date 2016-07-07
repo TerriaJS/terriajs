@@ -226,7 +226,7 @@ $btn-setting-size: 35px;
 
 .btn--map {
   font-size: 12px;
-  padding: 5px 0;
+  padding: 5px 5px;
   color: #fff;
   display: block;
   height: 25px;
@@ -256,9 +256,6 @@ $btn-setting-size: 35px;
   }
 }
 
-a.btn--map {
-  line-height: 20px;
-}
 
 // Search Clear buttons
 //
