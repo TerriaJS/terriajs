@@ -10,6 +10,7 @@ import clone from 'terriajs-cesium/Source/Core/clone';
 import CatalogGroup from '../../../Models/CatalogGroup';
 import CsvCatalogItem from '../../../Models/CsvCatalogItem';
 import Dropdown from '../../Generic/Dropdown';
+import Polling from '../../../Models/Polling';
 import raiseErrorToUser from '../../../Models/raiseErrorToUser';
 import Icon from "../../Icon.jsx";
 
@@ -27,6 +28,11 @@ const ChartExpandAndDownloadButtons = React.createClass({
         sourceNames: React.PropTypes.array,
         downloads: React.PropTypes.array,
         downloadNames: React.PropTypes.array,
+        // Optional polling info that would need to be transferred to any standalone catalog item.
+        pollSources: React.PropTypes.array,
+        pollSeconds: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
+        pollReplace: React.PropTypes.bool,
+        updateCounter: React.PropTypes.any,  // Change this to trigger an update.
         // Or, provide a tableStructure directly.
         tableStructure: React.PropTypes.object,
         //
@@ -43,14 +49,14 @@ const ChartExpandAndDownloadButtons = React.createClass({
 
     expandButton() {
         if (defined(this.props.sources)) {
-            expand(this.props, this.props.sources[this.props.sources.length - 1]);
+            expand(this.props, this.props.sources.length - 1);
         } else {
             expand(this.props); // Will expand from this.props.tableStructure.
         }
     },
 
     expandDropdown(selected, sourceIndex) {
-        expand(this.props, this.props.sources[sourceIndex]);
+        expand(this.props, sourceIndex);
     },
 
     render() {
@@ -106,8 +112,9 @@ const ChartExpandAndDownloadButtons = React.createClass({
  * Reads chart data from a URL or tableStructure into a CsvCatalogItem, which shows it in the bottom dock.
  * @private
  */
-function expand(props, url) {
+function expand(props, sourceIndex) {
     const terria = props.terria;
+    const url = defined(sourceIndex) ? props.sources[sourceIndex] : undefined;
     const newCatalogItem = new CsvCatalogItem(terria, url);
     if (!defined(url)) {
         newCatalogItem.data = props.tableStructure;
@@ -119,6 +126,15 @@ function expand(props, url) {
     newCatalogItem.cacheDuration = defaultValue(props.catalogItem.cacheDuration, '1m');
     newCatalogItem.name = props.feature.name;
     newCatalogItem.id = props.feature.name + (props.id ? (' ' + props.id) : '') + ' (' + props.catalogItem.name + ')';
+
+    if (defined(props.pollSeconds)) {
+        const pollSources = props.pollSources;
+        newCatalogItem.polling = new Polling({
+            seconds: props.pollSeconds,
+            url: (defined(sourceIndex) && defined(pollSources)) ? pollSources[Math.min(sourceIndex, pollSources.length - 1)] : undefined,
+            replace: props.pollReplace
+        });
+    }
     const group = terria.catalog.upsertCatalogGroup(CatalogGroup, 'Chart Data', 'A group for chart data.');
     group.isOpen = true;
     const existingChartItemIds = group.items.map(item=>item.uniqueId);

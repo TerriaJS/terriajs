@@ -115,9 +115,10 @@ describe('SdmxJsonCatalogItem', function() {
                 var columnNames = item.tableStructure.getColumnNames();
                 expect(columnNames.length).toEqual(3);
                 expect(columnNames[1]).toEqual('LGA_code_2013');
-                expect(item.tableStructure.columns[0].values).toEqual(['2013', '2013', '2013', '2013', '2013']);
-                expect(item.tableStructure.columns[1].values).toEqual(['17100', '56520', '54970', '10300', '29399']);
-                expect(item.tableStructure.columns[2].values).toEqual([1140, 535, 79, 12, 38]);
+                // Test a "slice" of the column's values, to remove knockout stuff.
+                expect(item.tableStructure.columns[0].values.slice()).toEqual(['2013', '2013', '2013', '2013', '2013']);
+                expect(item.tableStructure.columns[1].values.slice()).toEqual(['17100', '56520', '54970', '10300', '29399']);
+                expect(item.tableStructure.columns[2].values.slice()).toEqual([1140, 535, 79, 12, 38]);
                 // Expect it not to show any concepts to the user.
                 expect(item.concepts.length).toEqual(0);
             }).otherwise(fail).then(done);
@@ -136,13 +137,13 @@ describe('SdmxJsonCatalogItem', function() {
                 var columnNames = item.tableStructure.getColumnNames();
                 expect(columnNames.length).toEqual(7);
                 expect(columnNames[1]).toEqual('LGA_code_2013');
-                expect(item.tableStructure.columns[0].values).toEqual(['2013', '2013', '2013', '2013', '2013']);
-                expect(item.tableStructure.columns[1].values).toEqual(['17100', '56520', '54970', '10300', '29399']);
-                expect(item.tableStructure.columns[2].values).toEqual([1140, 535, 79, 12, 38]);
-                expect(item.tableStructure.columns[3].values).toEqual([2140, 2535, 2179, 2112, 2138]);
-                expect(item.tableStructure.columns[4].values).toEqual([140, 35, 179, 112, 138]);
-                expect(item.tableStructure.columns[5].values).toEqual([1140, 1035, 579, 1512, 2138]);
-                expect(item.tableStructure.columns[6].values).toEqual([1140, 535, 79, 12, 38]);
+                expect(item.tableStructure.columns[0].values.slice()).toEqual(['2013', '2013', '2013', '2013', '2013']);
+                expect(item.tableStructure.columns[1].values.slice()).toEqual(['17100', '56520', '54970', '10300', '29399']);
+                expect(item.tableStructure.columns[2].values.slice()).toEqual([1140, 535, 79, 12, 38]);
+                expect(item.tableStructure.columns[3].values.slice()).toEqual([2140, 2535, 2179, 2112, 2138]);
+                expect(item.tableStructure.columns[4].values.slice()).toEqual([140, 35, 179, 112, 138]);
+                expect(item.tableStructure.columns[5].values.slice()).toEqual([1140, 1035, 579, 1512, 2138]);
+                expect(item.tableStructure.columns[6].values.slice()).toEqual([1140, 535, 79, 12, 38]);
                 // Expect it to show 2 concepts to the user, each with 2 sub items.
                 expect(item.concepts.length).toEqual(2);
                 expect(item.concepts[0].items.length).toEqual(2);
@@ -165,10 +166,10 @@ describe('SdmxJsonCatalogItem', function() {
                 var columnNames = item.tableStructure.getColumnNames();
                 expect(columnNames.length).toEqual(4); // It shows a single concept and so always shows a total column.
                 expect(columnNames[1]).toEqual('LGA_code_2013');
-                expect(item.tableStructure.columns[0].values).toEqual(['2013', '2013', '2013', '2013', '2013']);
-                expect(item.tableStructure.columns[1].values).toEqual(['17100', '56520', '54970', '10300', '29399']);
-                expect(item.tableStructure.columns[2].values).toEqual([1140, 535, 79, 12, 38]);
-                expect(item.tableStructure.columns[3].values).toEqual(item.tableStructure.columns[2].values);
+                expect(item.tableStructure.columns[0].values.slice()).toEqual(['2013', '2013', '2013', '2013', '2013']);
+                expect(item.tableStructure.columns[1].values.slice()).toEqual(['17100', '56520', '54970', '10300', '29399']);
+                expect(item.tableStructure.columns[2].values.slice()).toEqual([1140, 535, 79, 12, 38]);
+                expect(item.tableStructure.columns[3].values.slice()).toEqual(item.tableStructure.columns[2].values.slice());
                 // Expect it to show the birth/death concept to the user.
                 expect(item.concepts.length).toEqual(1);
             }).otherwise(fail).then(done);
@@ -192,11 +193,11 @@ describe('SdmxJsonCatalogItem', function() {
                 var columnNames = item.tableStructure.getColumnNames();
                 expect(columnNames.length).toEqual(5); // Region, BD_2, BD_4 and a total.
                 expect(columnNames[1]).toEqual('LGA_code_2013');
-                expect(item.tableStructure.columns[0].values).toEqual(['2013', '2013', '2013', '2013', '2013']);
-                expect(item.tableStructure.columns[1].values).toEqual(['17100', '56520', '54970', '10300', '29399']);
-                expect(item.tableStructure.columns[2].values).toEqual([1140, 535, 79, 12, 38]);
-                expect(item.tableStructure.columns[3].values).toEqual([140, 235, 279, 812, 338]);
-                expect(item.tableStructure.columns[4].values).toEqual([1280, 770, 358, 824, 376]);
+                expect(item.tableStructure.columns[0].values.slice()).toEqual(['2013', '2013', '2013', '2013', '2013']);
+                expect(item.tableStructure.columns[1].values.slice()).toEqual(['17100', '56520', '54970', '10300', '29399']);
+                expect(item.tableStructure.columns[2].values.slice()).toEqual([1140, 535, 79, 12, 38]);
+                expect(item.tableStructure.columns[3].values.slice()).toEqual([140, 235, 279, 812, 338]);
+                expect(item.tableStructure.columns[4].values.slice()).toEqual([1280, 770, 358, 824, 376]);
                 // Expect it to show the birth/death concept to the user.
                 expect(item.concepts.length).toEqual(1);
             }).otherwise(fail).then(done);

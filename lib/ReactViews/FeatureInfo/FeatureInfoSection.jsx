@@ -13,7 +13,8 @@ import FeatureInfoDownload from './FeatureInfoDownload';
 import formatNumberForLocale from '../../Core/formatNumberForLocale';
 import ObserveModelMixin from '../ObserveModelMixin';
 import propertyGetTimeValues from '../../Core/propertyGetTimeValues';
-import renderMarkdownInReact from '../../Core/renderMarkdownInReact';
+import CustomComponents from '../Custom/CustomComponents';
+import parseCustomMarkdownToReact from '../Custom/parseCustomMarkdownToReact';
 import Icon from "../Icon.jsx";
 
 import Styles from './feature-info-section.scss';
@@ -24,6 +25,7 @@ Mustache.escape = function(string) { return string; };
 // Individual feature info section
 const FeatureInfoSection = React.createClass({
     mixins: [ObserveModelMixin],
+
     propTypes: {
         viewState: React.PropTypes.object.isRequired,
         template: React.PropTypes.oneOfType([React.PropTypes.object, React.PropTypes.string]),
@@ -38,18 +40,31 @@ const FeatureInfoSection = React.createClass({
     getInitialState() {
         return {
             clockSubscription: undefined,
+            timeoutIds: [],
             showRawData: false
         };
     },
 
     componentWillMount() {
+        const that = this;
         const feature = this.props.feature;
-        if (!this.isConstant()) {
+        // Do we need to dynamically update this feature info over time?
+        // There are two situations in which we would:
+        // 1. When the feature description or properties are time-varying.
+        // 2. When a custom component self-updates.
+        //    Eg. <chart poll-seconds="60" src="xyz.csv"> must reload data from xyz.csv every 60 seconds.
+        //
+        // For (1), use a event listener to update the feature's currentProperties/currentDescription directly.
+        // For (2), use a regular javascript setTimeout to update a counter in feature's currentProperties.
+        // For simplicity, we do not currently support both at once.
+        if (this.isFeatureTimeVarying()) {
             this.setState({
                 clockSubscription: this.props.clock.onTick.addEventListener(function(clock) {
                     setCurrentFeatureValues(feature, clock);
                 })
             });
+        } else {
+            setTimeoutsForUpdatingCustomComponents(that);
         }
     },
 
@@ -58,14 +73,13 @@ const FeatureInfoSection = React.createClass({
             // Remove the event listener.
             this.state.clockSubscription();
         }
+        this.state.timeoutIds.forEach(id => {
+            clearTimeout(id);
+        });
     },
 
     getPropertyValues() {
-        return propertyValues(
-            this.props.feature,
-            this.props.clock,
-            this.props.template && this.props.template.formats
-        );
+        return getPropertyValuesForFeature(this.props.feature, this.props.clock, this.props.template && this.props.template.formats);
     },
 
     getTemplateData() {
@@ -107,7 +121,7 @@ const FeatureInfoSection = React.createClass({
     descriptionFromFeature() {
         const feature = this.props.feature;
         // This description could contain injected <script> tags etc.
-        // Before rendering, we will pass it through renderMarkdownInReact, which applies
+        // Before rendering, we will pass it through parseCustomMarkdownToReact, which applies
         //     markdownToHtml (which applies MarkdownIt.render and DOMPurify.sanitize), and then
         //     parseCustomHtmlToReact (which calls htmlToReactParser).
         // Note that there is an unnecessary HTML encoding and decoding in this combination which would be good to remove.
@@ -119,35 +133,32 @@ const FeatureInfoSection = React.createClass({
     },
 
     renderDataTitle() {
-        const feature = this.props.feature;
-        const clock = this.props.clock;
         const template = this.props.template;
         if (typeof template === 'object' && defined(template.name)) {
-            const context = propertyValues(feature, clock, template.formats);
-            return Mustache.render(template.name, context);
+            return Mustache.render(template.name, this.getPropertyValues());
         }
-
-        return (this.props.feature && this.props.feature.name) || '';
+        const feature = this.props.feature;
+        return (feature && feature.name) || '';
     },
 
-    isConstant() {
-        // The info is constant if:
+    isFeatureTimeVarying() {
+        // The feature is NOT time-varying if:
         // 1. There is no info (ie. no description and no properties).
         // 2. A template is provided and all feature.properties are constant.
         // OR
         // 3. No template is provided, and feature.description is either not defined, or defined and constant.
-        // If info is NOT constant, we need to keep updating the description.
+        // If info is time-varying, we need to keep updating the description.
         const feature = this.props.feature;
         if (!defined(feature.description) && !defined(feature.properties)) {
-            return true;
+            return false;
         }
         if (defined(this.props.template)) {
-            return areAllPropertiesConstant(feature.properties);
+            return !areAllPropertiesConstant(feature.properties);
         }
         if (defined(feature.description)) {
-            return feature.description.isConstant; // This should always be a "Property" eg. a ConstantProperty.
+            return !feature.description.isConstant; // This should always be a "Property" eg. a ConstantProperty.
         }
-        return true;
+        return false;
     },
 
     toggleRawData() {
@@ -159,15 +170,7 @@ const FeatureInfoSection = React.createClass({
     render() {
         const catalogItemName = (this.props.catalogItem && this.props.catalogItem.name) || '';
         const fullName = (catalogItemName ? (catalogItemName + ' - ') : '') + this.renderDataTitle();
-        const templateData = this.getPropertyValues();
-        if (defined(templateData)) {
-            delete templateData._terria_columnAliases;
-        }
-        const showRawData = !this.hasTemplate() || this.state.showRawData;
-        let rawDataDescription;
-        if (showRawData) {
-            rawDataDescription = this.descriptionFromFeature();
-        }
+        const reactInfo = getInfoAsReactComponent(this);
 
         return (
             <li className={classNames(Styles.section)}>
@@ -178,23 +181,23 @@ const FeatureInfoSection = React.createClass({
                 <If condition={this.props.isOpen}>
                     <section className={Styles.content}>
                         <If condition={this.hasTemplate()}>
-                            {renderMarkdownInReact(this.descriptionFromTemplate(), this.props.catalogItem, this.props.feature)}
+                            {reactInfo.info}
                             <button type="button" className={Styles.rawDataButton} onClick={this.toggleRawData}>
                                 {this.state.showRawData ? 'Hide Raw Data' : 'Show Raw Data'}
                             </button>
                         </If>
 
-                        <If condition={showRawData}>
-                            <If condition={defined(rawDataDescription)}>
-                                {renderMarkdownInReact(rawDataDescription, this.props.catalogItem, this.props.feature)}
+                        <If condition={reactInfo.showRawData}>
+                            <If condition={reactInfo.hasRawData}>
+                                {reactInfo.rawData}
                             </If>
-                            <If condition={!defined(rawDataDescription)}>
+                            <If condition={!reactInfo.hasRawData}>
                                 <div ref="no-info" key="no-info">No information available.</div>
                             </If>
-                            <If condition={defined(templateData)}>
+                            <If condition={defined(reactInfo.templateData)}>
                                 <FeatureInfoDownload key='download'
                                     viewState={this.props.viewState}
-                                    data={templateData}
+                                    data={reactInfo.templateData}
                                     name={catalogItemName} />
                             </If>
                         </If>
@@ -208,11 +211,11 @@ const FeatureInfoSection = React.createClass({
 /**
  * Gets a map of property labels to property values for a feature at the provided clock's time.
  * @private
- * @param {Entity} feature a feature to get values for
- * @param {Clock} clock a clock to get the time from
+ * @param {Entity} feature A feature to get values for.
+ * @param {Clock} clock A clock to get the time from.
  * @param {Object} [formats] A map of property labels to the number formats that should be applied for them.
  */
-function propertyValues(feature, clock, formats) {
+function getPropertyValuesForFeature(feature, clock, formats) {
     // Manipulate the properties before templating them.
     // If they require .getValue, apply that.
     // If they have bad keys, fix them.
@@ -269,6 +272,9 @@ function areAllPropertiesConstant(properties) {
     // test this by assuming property is time-varying only if property.isConstant === false.
     // (so if it is undefined or true, it is constant.)
     let result = true;
+    if (defined(properties.isConstant)) {
+        return properties.isConstant;
+    }
     for (const key in properties) {
         if (properties.hasOwnProperty(key)) {
             result = result && defined(properties[key]) && (properties[key].isConstant !== false);
@@ -334,9 +340,9 @@ function mustacheFormatNumberFunction() {
     };
 }
 
-const simpleStyleIdentifiers = ['title', 'description', //
-'marker-size', 'marker-symbol', 'marker-color', 'stroke', //
-'stroke-opacity', 'stroke-width', 'fill', 'fill-opacity'];
+const simpleStyleIdentifiers = ['title', 'description',
+    'marker-size', 'marker-symbol', 'marker-color', 'stroke',
+    'stroke-opacity', 'stroke-width', 'fill', 'fill-opacity'];
 
 /**
  * A way to produce a description if properties are available but no template is given.
@@ -369,6 +375,81 @@ function describeFromProperties(properties, time) {
         html = '<table class="cesium-infoBox-defaultTable"><tbody>' + html + '</tbody></table>';
     }
     return html;
+}
+
+/**
+ * @param  {ReactClass} that The FeatureInfoSection.
+ * @return {Object} Returns {templateData, info, rawData, showRawData, hasRawData}.
+ *                  templateData is the object passed to the templating engine.
+ *                  info is the main body of the info section, as a react component.
+ *                  rawData is the same for the raw data, if it needs to be shown.
+ *                  showRawData is whether to show the rawData.
+ *                  hasRawData is whether there is any rawData to show.
+ */
+function getInfoAsReactComponent(that) {
+    const templateData = that.getPropertyValues();
+    const updateCounters = that.props.feature.updateCounters;
+    if (defined(templateData)) {
+        delete templateData._terria_columnAliases;
+    }
+    const context = {
+        catalogItem: that.props.catalogItem,
+        feature: that.props.feature,
+        updateCounters: updateCounters
+    };
+    const showRawData = !that.hasTemplate() || that.state.showRawData;
+    let rawDataHtml;
+    let rawData;
+    if (showRawData) {
+        rawDataHtml = that.descriptionFromFeature();
+        if (defined(rawDataHtml)) {
+            rawData = parseCustomMarkdownToReact(rawDataHtml, context);
+        }
+    }
+    return {
+        templateData: templateData,
+        info: that.hasTemplate() ? parseCustomMarkdownToReact(that.descriptionFromTemplate(), context) : rawData,
+        rawData: rawData,
+        showRawData: showRawData,
+        hasRawData: !!rawDataHtml
+    };
+}
+
+function setTimeoutsForUpdatingCustomComponents(that) { // eslint-disable-line require-jsdoc
+    const {info} = getInfoAsReactComponent(that);
+    const foundCustomComponents = CustomComponents.find(info);
+    foundCustomComponents.forEach((match, componentNumber) => {
+        const updateSeconds = match.type.selfUpdateSeconds(match.reactComponent);
+        if (updateSeconds > 0) {
+            setTimeoutForUpdatingCustomComponent(that, match.reactComponent, updateSeconds, componentNumber);
+        }
+    });
+}
+
+function setTimeoutForUpdatingCustomComponent(that, reactComponent, updateSeconds, componentNumber) { // eslint-disable-line require-jsdoc
+    const timeoutId = setTimeout(() => {
+        // Update the counter for this component. Handle various undefined cases.
+        const updateCounters = that.props.feature.updateCounters;
+        const counterObject = {
+            reactComponent: reactComponent,
+            counter: (defined(updateCounters) && defined(updateCounters[componentNumber])) ? updateCounters[componentNumber].counter + 1 : 1
+        };
+        if (!defined(that.props.feature.updateCounters)) {
+            const counters = {};
+            counters[componentNumber] = counterObject;
+            that.props.feature.updateCounters = counters;
+        } else {
+            that.props.feature.updateCounters[componentNumber] = counterObject;
+        }
+        // And finish by triggering the next timeout, but do this in another timeout so we aren't nesting setStates.
+        setTimeout(() => {
+            setTimeoutForUpdatingCustomComponent(that, reactComponent, updateSeconds, componentNumber);
+            // console.log('Removing ' + timeoutId + ' from', that.state.timeoutIds);
+            that.setState({timeoutIds: that.state.timeoutIds.filter(id => timeoutId !== id)});
+        }, 5);
+    }, updateSeconds * 1000);
+    const timeoutIds = that.state.timeoutIds;
+    that.setState({timeoutIds: timeoutIds.concat(timeoutId)});
 }
 
 module.exports = FeatureInfoSection;
