@@ -15,7 +15,7 @@ export default (LargeScreenComponent, SmallScreenComponent, location) => {
     }
 
     ResponsiveSwitch.propTypes = {
-        smallScreen: React.PropTypes.bool.isRequired
+        smallScreen: React.PropTypes.bool
     };
 
     ResponsiveSwitch.location = location;

@@ -5,7 +5,7 @@ import {buildShareLink, buildShortShareLink} from './BuildShareLink';
 import ObserverModelMixin from '../../../ObserveModelMixin';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import classNames from 'classnames';
-import DropdownPanel from '../DropdownPanel.jsx';
+import MenuPanel from '../../../StandardUserInterface/customizable/MenuPanel.jsx';
 
 import Styles from './share-panel.scss';
 import DropdownStyles from '../dropdown-panel.scss';
@@ -121,11 +121,11 @@ const SharePanel = React.createClass({
         };
 
         return (
-            <DropdownPanel theme={dropdownTheme}
-                           btnText="Share"
-                           viewState={this.props.viewState}
-                           btnTitle="change settings"
-                           onOpenChanged={this.onOpenChanged}>
+            <MenuPanel theme={dropdownTheme}
+                       btnText="Share"
+                       viewState={this.props.viewState}
+                       btnTitle="change settings"
+                       onOpenChanged={this.onOpenChanged}>
                 <If condition={this.state.isOpen}>
                     <div className={classNames(Styles.content, DropdownStyles.content)}>
                         <div className={DropdownStyles.section}>
@@ -158,7 +158,7 @@ const SharePanel = React.createClass({
                         </If>
                     </div>
                 </If>
-            </DropdownPanel>
+            </MenuPanel>
         );
     }
 });

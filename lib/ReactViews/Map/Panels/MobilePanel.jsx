@@ -3,9 +3,11 @@ import classNames from 'classnames';
 
 import MobileMenuItem from '../../Mobile/MobileMenuItem';
 
+import Styles from './mobile-menu-panel.scss';
+
 const MobilePanel = React.createClass({
     propTypes: {
-        // theme: React.PropTypes.object.isRequired,
+        theme: React.PropTypes.object.isRequired,
         children: React.PropTypes.any,
         btnTitle: React.PropTypes.string,
         btnText: React.PropTypes.string,
@@ -26,46 +28,28 @@ const MobilePanel = React.createClass({
         };
     },
 
+    togglePanel() {
+        this.setState({
+            isOpen: !this.state.isOpen
+        });
+        this.props.onOpenChanged(!this.state.isOpen);
+    },
+
     render() {
         return (
-            <MobileMenuItem onClick={this.togglePanel} caption={this.props.btnText}/>
-        );
-
-        // return (
-        //     <div className={classNames({[Styles.isOpen]: this.state.isOpenCss}, Styles.panel, this.props.theme.outer)}>
-        //         <button onClick={this.togglePanel}
-        //                 type='button'
-        //                 className={classNames(Styles.button, this.props.theme.btn)}
-        //                 title={this.props.btnTitle}
-        //                 ref={element => this.buttonElement = element}>
-        //             <If condition={this.props.theme.icon}>
-        //                 <Icon glyph={Icon.GLYPHS[this.props.theme.icon]}/>
-        //             </If>
-        //             {this.props.btnText}
-        //         </button>
-        //         <If condition={this.state.isOpen}>
-        //             <div className={classNames(
-        //                     Styles.inner,
-        //                     this.props.theme.inner,
-        //                     {[Styles.innerIsOnTop]: this.props.viewState.componentOnTop === this.props.viewState.componentOrderOptions.dropdownPanel}
-        //                  )}
-        //                  onClick={this.onPanelClicked}
-        //                  ref={this.onInnerMounted}
-        //                  style={{
-        //                      left: this.state.dropdownOffset,
-        //                      transformOrigin: `${this.state.caretOffset} top`
-        //                  }}>
-        //                 <If condition={defined(this.state.caretOffset)}>
-        //                     <span className={Styles.caret}
-        //                           style={{left: this.state.caretOffset}}/>
-        //                 </If>
-        //                 <div className={Styles.content}>
-        //                     {this.props.children}
-        //                 </div>
-        //             </div>
-        //         </If>
-        //     </div>
-        // );
+            <div>
+                <MobileMenuItem onClick={this.togglePanel} caption={this.props.btnText}/>
+                <If condition={this.state.isOpen}>
+                    <div
+                        className={classNames(Styles.inner, this.props.theme.inner)}
+                        onClick={this.onPanelClicked}>
+                        <div className={Styles.content}>
+                            {this.props.children}
+                        </div>
+                    </div>
+                </If>
+            </div>
+        )
     }
 });
 

@@ -5,7 +5,7 @@ import classNames from 'classnames';
 
 import ViewerMode from '../../../Models/ViewerMode';
 import ObserveModelMixin from '../../ObserveModelMixin';
-import DropdownPanel from './DropdownPanel.jsx';
+import MenuPanel from '../../StandardUserInterface/customizable/MenuPanel.jsx';
 import Icon from "../../Icon.jsx";
 
 import Styles from './setting-panel.scss';
@@ -87,7 +87,7 @@ const SettingPanel = React.createClass({
         };
 
         return (
-            <DropdownPanel theme={dropdownTheme} btnTitle="Change view" btnText="Map" viewState={this.props.viewState}>
+            <MenuPanel theme={dropdownTheme} btnTitle="Change view" btnText="Map" viewState={this.props.viewState}>
                 <div className={classNames(Styles.viewer, DropdownStyles.section)}>
                     <label className={DropdownStyles.heading}> Map View </label>
                     <ul className={Styles.viewerSelector}>
@@ -120,7 +120,7 @@ const SettingPanel = React.createClass({
                         </For>
                     </ul>
                 </div>
-            </DropdownPanel>
+            </MenuPanel>
         );
     }
 });

@@ -19,23 +19,15 @@ const MapNavigation = React.createClass({
         terria: React.PropTypes.object,
         viewState: React.PropTypes.object.isRequired,
         allBaseMaps: React.PropTypes.array,
-        customMenuItems: React.PropTypes.arrayOf(React.PropTypes.element),
+        menuItems: React.PropTypes.arrayOf(React.PropTypes.element),
         extraNavElements: React.PropTypes.arrayOf(React.PropTypes.element)
     },
 
     getDefaultProps() {
         return {
-            customMenuItems: [],
+            menuItems: [],
             extraNavElements: []
         };
-    },
-
-    getMenuItems() {
-        return [
-            <SettingPanel terria={this.props.terria} allBaseMaps={this.props.allBaseMaps}
-                          viewState={this.props.viewState}/>,
-            <SharePanel terria={this.props.terria} viewState={this.props.viewState}/>
-        ].concat(this.props.customMenuItems);
     },
 
     render() {
@@ -46,7 +38,7 @@ const MapNavigation = React.createClass({
                         <FullScreenButton terria={this.props.terria} viewState={this.props.viewState} />
                     </li>
                     <If condition={!this.props.viewState.useSmallScreenInterface}>
-                        <For each="element" of={this.getMenuItems()} index="i">
+                        <For each="element" of={this.props.menuItems} index="i">
                             <li className={Styles.menuItem} key={i}>
                                 {element}
                             </li>

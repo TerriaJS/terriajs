@@ -14,8 +14,8 @@ import Notification from './../Notification/Notification.jsx';
 import ObserveModelMixin from './../ObserveModelMixin';
 import ProgressBar from '../Map/ProgressBar.jsx';
 import SidePanel from './../SidePanel/SidePanel.jsx';
-import MenuItem from './customizable/MenuItem.jsx';
-import MenuPanel from './customizable/MenuPanel.jsx';
+import SettingPanel from '../Map/Panels/SettingPanel.jsx';
+import SharePanel from '../Map/Panels/SharePanel/SharePanel.jsx';
 
 import Styles from './standard-user-interface.scss';
 
@@ -90,7 +90,11 @@ const StandardUserInterface = React.createClass({
 
             return soFar;
         }, {
-            menuItems: []
+            menuItems: [
+                <SettingPanel terria={this.props.terria} allBaseMaps={this.props.allBaseMaps}
+                              viewState={this.props.viewState}/>,
+                <SharePanel terria={this.props.terria} viewState={this.props.viewState}/>
+            ]
         });
 
         const terria = this.props.terria;
@@ -133,7 +137,7 @@ const StandardUserInterface = React.createClass({
                     <MapNavigation terria={terria}
                                    viewState={this.props.viewState}
                                    allBaseMaps={allBaseMaps}
-                                   customMenuItems={customElements.menuItems}
+                                   menuItems={customElements.menuItems}
                     />
                 </If>
 
