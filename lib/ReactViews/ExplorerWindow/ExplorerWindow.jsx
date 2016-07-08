@@ -36,13 +36,15 @@ const ExplorerWindow = React.createClass({
     },
 
     render() {
+        const className = classNames(
+            Styles.modalWrapper,
+            {
+                [Styles.isOpen]: this.isVisible()
+            }
+        );
+
         return (
-            <div className={classNames(
-                     Styles.modalWrapper,
-                     {
-                         [Styles.isOpen]: this.isVisible()
-                     }
-                 )}
+            <div className={className}
                  id="explorer-panel-wrapper"
                  aria-hidden={!this.isVisible}>
                 <div onClick={this.close}
