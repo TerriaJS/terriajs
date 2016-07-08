@@ -3,9 +3,7 @@ node_js:
 - '5'
 script:
 - gulp lint docs release
-- npm start &
-- sleep 5
-- gulp test-saucelabs
+- gulp test-travis
 env:
   global:
   - secure: ONX4S6726nQH107YhcYsTJzH4uQDGTpSjPb33hzYT6Jv+9FBo81mcae20+zt+7AuresNXN2e/Mx6kkEooAPIa0DvMHfGu+7SPnG1yeAJVZzIJvanvYqnyMEcLbJgy09aqP8FqrW+EZAFoE5Oh1zxQqr59e/u1i3hvLdIbGE7AWM=

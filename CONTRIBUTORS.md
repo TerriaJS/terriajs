@@ -33,3 +33,5 @@ The following people have contributed to TerriaJS:
 * [USGS](https://www.usgs.gov/)
    * [Jordan Walker](https://github.com/jiwalker-usgs)
    * [Rich Signell](https://github.com/rsignell-usgs)
+* [JCU e-Research](http://eresearch.jcu.edu.au/)
+   * [Daniel Baird](https://github.com/DanielBaird)

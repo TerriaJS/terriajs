@@ -1,0 +1,16 @@
+@import '~terriajs-variables';
+@import '../../Sass/common/mixins';
+
+.workbench {}
+
+.remove-button {
+  display: inline-block;
+  svg{
+    height: 20px;
+    width: 20px;
+    fill: #ffffff;
+    display: inline-block;
+    vertical-align: middle;
+  }
+}
+

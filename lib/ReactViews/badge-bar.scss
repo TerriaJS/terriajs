@@ -1,0 +1,36 @@
+@import '~terriajs-variables';
+@import '../Sass/common/mixins';
+
+.header{
+  composes: sm-show from '../Sass/common/_base.scss';
+  composes: clearfix from '../Sass/common/_base.scss';
+  composes: list-reset from '../Sass/common/_base.scss';
+  padding: $padding $padding-small;
+  //to make sure scrolling of the content below the badge is correct
+  height: $badge-height;
+  overflow: hidden;
+  box-sizing: border-box;
+  li{
+    display: inline-block;
+    float: left;
+    font-size: 12px;
+    line-height: 2;
+    label,
+    button,
+    span{
+      line-height: 1;
+      vertical-align: baseline;
+    }
+    &:last-child{
+      float: right;
+    }
+  }
+}
+
+.label-badge {
+  text-align: center;
+  box-sizing: content-box;
+  padding: 0;
+  margin-top: 7px;
+  margin-left: 10px;
+}

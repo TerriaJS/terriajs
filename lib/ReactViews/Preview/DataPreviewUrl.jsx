@@ -1,0 +1,52 @@
+import React from 'react';
+
+import ObserveModelMixin from '../ObserveModelMixin';
+
+/**
+ * URL section of the preview.
+ */
+const DataPreviewUrl = React.createClass({
+    mixins: [ObserveModelMixin],
+
+    propTypes: {
+        metadataItem: React.PropTypes.object.isRequired
+    },
+
+    selectUrl(e) {
+        e.target.select();
+    },
+
+    render() {
+        return (
+            <div>
+                <h4>{this.props.metadataItem.typeName} URL</h4>
+                <If condition={this.props.metadataItem.type === 'wms'}>
+                    <p>
+                        This is a <a href="https://en.wikipedia.org/wiki/Web_Map_Service" target="_blank">WMS
+                        service</a>, which generates map images on request. It can be used in GIS software with this
+                        URL:
+                    </p>
+                </If>
+                <If condition={this.props.metadataItem.type === 'wfs'}>
+                    <p>
+                        This is a <a href="https://en.wikipedia.org/wiki/Web_Feature_Service" target="_blank">WFS
+                        service</a>, which transfers raw spatial data on request. It can be used in GIS software
+                        with this URL:
+                    </p>
+                </If>
+                <input readOnly className='field' type="text" value={this.props.metadataItem.url}
+                       onClick={this.selectUrl}/>
+                <If condition={(this.props.metadataItem.type === 'wms' || (this.props.metadataItem.type === 'esri-mapServer' && this.props.metadataItem.layers))}>
+                    <p>Layer
+                        name{this.props.metadataItem.layers.split(',').length > 1 ? 's' : ''}: {this.props.metadataItem.layers}</p>
+                </If>
+                <If condition={this.props.metadataItem.type === 'wfs'}>
+                    <p>Type
+                        name{this.props.metadataItem.typeNames.split(',').length > 1 ? 's' : ''}: {this.props.metadataItem.typeNames}</p>
+                </If>
+            </div>
+        );
+    }
+});
+
+export default DataPreviewUrl;
