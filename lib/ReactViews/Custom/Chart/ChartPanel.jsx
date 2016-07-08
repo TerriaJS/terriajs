@@ -1,7 +1,6 @@
 'use strict';
 
 import React from 'react';
-import classNames from 'classnames';
 
 import defined from 'terriajs-cesium/Source/Core/defined';
 
@@ -102,7 +101,7 @@ const ChartPanel = React.createClass({
         }
         return (
             <div
-                className={classNames(Styles.holder, {[Styles.isTop]: this.props.viewState})}>
+                className={Styles.holder}>
                 <div className={Styles.inner}>
                     <div className={Styles.chartPanel} style={{height: height}}>
                         <div className={Styles.body}>
