@@ -15,6 +15,9 @@
   composes: list-reset from '../../Sass/common/_base.scss';
   composes: clearfix from '../../Sass/common/_base.scss';
   composes: sm-show from '../../Sass/common/_base.scss';
+
+  /* Align About button with compass */
+  margin-right: 7px;
 }
 
 .menu-item {

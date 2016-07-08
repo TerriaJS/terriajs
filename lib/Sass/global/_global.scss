@@ -20,10 +20,8 @@ html {
 body {
   background: $dark;
   color: #fff;
-  .terria & {
-    @media screen{
-      overflow: hidden;
-    }
+  @media screen{
+    overflow: hidden;
   }
 }
 

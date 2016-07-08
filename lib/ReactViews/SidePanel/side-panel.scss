@@ -6,9 +6,9 @@
 }
 .workbenchEmpty{
   padding: $padding;
-  opacity: 0.8;
+  background: $overlay;
   border: dashed 1px rgba(255, 255, 255, 0.5);
-  margin-top: 5px;
+  margin: $padding-small;
   @media print{
     display: none;
   }
@@ -22,7 +22,6 @@
 }
 .header {
     padding: 0 $padding-small;
-    border-bottom: 1px solid $overlay;
     background: $dark;
     @media print{
       display: none;
@@ -43,8 +42,6 @@
 .button {
   composes: btn-primary from '../../Sass/common/_buttons.scss';
   line-height: $input-height;
-  padding-left: 0;
-  padding-right: 30px;
   svg{
     position: absolute;
     left: $padding-small;
