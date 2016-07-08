@@ -14,9 +14,6 @@
   &:-ms-input-placeholder {@content}
 }
 
-@mixin greybox(){
-  background: $dark;
-}
 
 @mixin transform($transforms) {
      -moz-transform: $transforms;
