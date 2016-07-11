@@ -26,6 +26,7 @@ const MappablePreview = React.createClass({
             !event.shiftKey && !event.ctrlKey) {
 
             this.props.viewState.explorerPanelIsVisible = false;
+            this.props.viewState.mobileView = null;
         }
     },
 

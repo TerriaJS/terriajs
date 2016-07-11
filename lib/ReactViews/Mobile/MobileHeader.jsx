@@ -167,14 +167,16 @@ const MobileHeader = React.createClass({
                                                    onDoSearch={this.searchLocations}
                                                    searchBoxLabel="Search for locations"
                                                    alwaysShowClear={true}
-                                                   onClear={this.closeLocationSearch} />
+                                                   onClear={this.closeLocationSearch}
+                                                   autoFocus={true} />
                                     </When>
                                     <When condition={searchState.showMobileCatalogSearch}>
                                         <SearchBox searchText={searchState.catalogSearchText}
                                                    onSearchTextChanged={this.changeCatalogSearchText}
                                                    onDoSearch={this.searchCatalog}
                                                    searchBoxLabel="Search the catalogue"
-                                                   onClear={this.closeCatalogSearch} />
+                                                   onClear={this.closeCatalogSearch}
+                                                   autoFocus={true} />
                                     </When>
                                 </Choose>
                             </div>

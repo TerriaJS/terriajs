@@ -17,13 +17,15 @@ export default React.createClass({
         onFocus: React.PropTypes.func,
         searchBoxLabel: React.PropTypes.string,
         onClear: React.PropTypes.func,
-        alwaysShowClear: React.PropTypes.bool
+        alwaysShowClear: React.PropTypes.bool,
+        autoFocus: React.PropTypes.bool
     },
 
     getDefaultProps() {
         return {
             searchBoxLabel: 'Search',
-            alwaysShowClear: false
+            alwaysShowClear: false,
+            autoFocus: false
         };
     },
 
@@ -98,7 +100,8 @@ export default React.createClass({
                        onKeyDown={this.onKeyDown}
                        className={Styles.searchField}
                        placeholder={this.props.searchBoxLabel}
-                       autoComplete='off'/>
+                       autoComplete='off'
+                       autoFocus={this.props.autoFocus} />
                 {(this.props.alwaysShowClear || this.hasValue()) && clearButton}
             </form>
         );
