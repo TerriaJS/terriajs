@@ -29,6 +29,7 @@
     composes: btn from '../../Sass/common/_buttons.scss';
     composes: btn-primary from '../../Sass/common/_buttons.scss';
     position: relative;
+    margin: 0 $padding-small;
     padding: $padding $padding $padding $padding*3;
     text-transform: uppercase;
     width: auto;
@@ -44,12 +45,20 @@
 }
 
 .btn-search {
-  display: block;
-  font-size: 20px;
+  composes: btn from '../../Sass/common/_buttons.scss';
+  composes: btn-primary from '../../Sass/common/_buttons.scss';
+  margin: 0 $padding-small;
+  padding: $padding-small;
+  padding-right: $padding;
+  position: relative;
+  text-transform: uppercase;
+  width: 40px;
   svg{
-    height: 30px;
-    width: 30px;
+    height: 28px;
+    width: 28px;
     fill: #fff;
+    position: relative;
+    left: 3px;
   }
 }
 
