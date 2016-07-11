@@ -1,4 +1,15 @@
-/* required styles */
+// This makes Leaflet work in hot mode
+:global {
+  .leaflet-container {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+}
+
+// Built-in leaflet styles
 :global {
   .leaflet-map-pane,
   .leaflet-tile,

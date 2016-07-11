@@ -31,7 +31,7 @@ describe('Chart', function() {
         const renderer = ReactTestUtils.createRenderer();
         renderer.render(chart);
         const instance = renderer.getMountedInstance(renderer);
-        instance.getChartDataPromise(instance.getChartParameters()).then(function(data) {
+        instance.getChartDataPromise(undefined, instance.props.url).then(function(data) {
             expect(data.length).toEqual(1);
             expect(data[0].points.length).toEqual(8);
         }).then(done).otherwise(fail);
@@ -44,7 +44,7 @@ describe('Chart', function() {
         const renderer = ReactTestUtils.createRenderer();
         renderer.render(chart);
         const instance = renderer.getMountedInstance(renderer);
-        instance.getChartDataPromise(instance.getChartParameters()).then(function(data) {
+        instance.getChartDataPromise(instance.getChartParameters().data).then(function(data) {
             expect(data.length).toEqual(1);
             expect(data[0].name).toEqual('y');
             expect(data[0].points.length).toEqual(3);
@@ -57,7 +57,7 @@ describe('Chart', function() {
         const renderer = ReactTestUtils.createRenderer();
         renderer.render(chart);
         const instance = renderer.getMountedInstance(renderer);
-        instance.getChartDataPromise(instance.getChartParameters()).then(function(data) {
+        instance.getChartDataPromise(instance.getChartParameters().data).then(function(data) {
             expect(data.length).toEqual(1);
             expect(data[0].name).toEqual('foo');
             expect(data[0].points.length).toEqual(2);

@@ -10,6 +10,17 @@
                 "data": "longitude,latitude,value\n134.384,-26.716,5\n121.659,-33.592,10"
             },
             {
+                "name": "Melbourne postcodes with time column",
+                "type": "csv",
+                "url": "build/TerriaJS/test/csv/postcode_val_enum_time.csv"
+            },
+            {
+                "name": "Melbourne postcodes with time column and template",
+                "type": "csv",
+                "url": "build/TerriaJS/test/csv/postcode_val_enum_time.csv",
+                "featureInfoTemplate": "<p>Postcode: {{postcode}}</p><p>Time: {{time}}</p><p>Val1: {{val1}}</p><p>Enum: {{enum}}</enum>"
+            },
+            {
                 "name": "Region-mapped CSV from init file",
                 "type": "csv",
                 "data": "POA,value\n2880,5\n5710,10"

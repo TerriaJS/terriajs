@@ -4,7 +4,7 @@ import DataPreviewSections from './DataPreviewSections';
 import DataPreviewUrl from './DataPreviewUrl.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
 import Styles from './mappable-preview.scss';
-import renderMarkdownInReact from '../../Core/renderMarkdownInReact';
+import parseCustomMarkdownToReact from '../Custom/parseCustomMarkdownToReact';
 
 /**
  * A "preview" for CatalogGroup.
@@ -35,7 +35,7 @@ const GroupPreview = React.createClass({
                                 condition={this.props.previewed.description && this.props.previewed.description.length > 0}>
                                 <div>
                                     <h4>Description</h4>
-                                    {renderMarkdownInReact(this.props.previewed.description, this.props.previewed)}
+                                    {parseCustomMarkdownToReact(this.props.previewed.description, {catalogItem: this.props.previewed})}
                                 </div>
                             </When>
                         </Choose>
@@ -45,7 +45,7 @@ const GroupPreview = React.createClass({
                         <If condition={metadataItem.dataCustodian}>
                             <div>
                                 <h4>Data Custodian</h4>
-                                {renderMarkdownInReact(metadataItem.dataCustodian, metadataItem)}
+                                {parseCustomMarkdownToReact(metadataItem.dataCustodian, {catalogItem: metadataItem})}
                             </div>
                         </If>
 
