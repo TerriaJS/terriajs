@@ -23,8 +23,23 @@ const MobileHeader = React.createClass({
         };
     },
 
-    toggleSearch() {
-        this.toggleView(this.props.viewState.mobileViewOptions.search);
+    showSearch() {
+        const viewState = this.props.viewState;
+        const mobileView = viewState.mobileView;
+        const mobileViewOptions = viewState.mobileViewOptions;
+        const searchState = viewState.searchState;
+        if (mobileView === mobileViewOptions.data || mobileView === mobileViewOptions.preview) {
+            searchState.showMobileCatalogSearch = true;
+        } else {
+            searchState.showMobileLocationSearch = true;
+            this.showLocationSearchResults();
+        }
+    },
+
+    closeSearch() {
+        this.props.viewState.searchState.showMobileLocationSearch = false;
+        this.props.viewState.explorerPanelIsVisible = false;
+        this.props.viewState.switchMobileView(null);
     },
 
     toggleMenu() {
@@ -43,16 +58,33 @@ const MobileHeader = React.createClass({
         this.toggleView(this.props.viewState.mobileViewOptions.nowViewing);
     },
 
-    refresh() {
-        location.reload();
+    changeLocationSearchText(newText) {
+        this.props.viewState.searchState.locationSearchText = newText;
+        this.showLocationSearchResults();
     },
 
-    changeSearchText(newText) {
-        this.props.viewState.searchState.unifiedSearchText = newText;
+    showLocationSearchResults() {
+        const text = this.props.viewState.searchState.locationSearchText;
+        if (text && text.length > 0) {
+            this.props.viewState.explorerPanelIsVisible = true;
+            this.props.viewState.mobileView = this.props.viewState.mobileViewOptions.locationSearchResults;
+        } else {
+            // TODO: return to the preview mobileView, rather than dropping back to the map
+            this.props.viewState.explorerPanelIsVisible = false;
+            this.props.viewState.mobileView = null;
+        }
     },
 
-    search() {
-        this.props.viewState.searchState.searchUnified();
+    changeCatalogSearchText(newText) {
+        this.props.viewState.searchState.catalogSearchText = newText;
+    },
+
+    searchLocations() {
+        this.props.viewState.searchState.searchLocations();
+    },
+
+    searchCatalog() {
+        this.props.viewState.searchState.searchCatalog();
     },
 
     toggleView(viewname) {
@@ -88,8 +120,7 @@ const MobileHeader = React.createClass({
             <div className={Styles.ui}>
                 <div className={Styles.mobileHeader}>
                     <Choose>
-                        <When
-                            condition={this.props.viewState.mobileView !== this.props.viewState.mobileViewOptions.search}>
+                        <When condition={!searchState.showMobileLocationSearch && !searchState.showMobileCatalogSearch}>
                             <div className={Styles.groupLeft}>
                                 <button type='button'
                                         onClick={this.toggleMenu}
@@ -99,7 +130,6 @@ const MobileHeader = React.createClass({
                                 </button>
                                 <Branding terria={this.props.terria}
                                           version={this.props.version}
-                                          onClick={this.refresh}
                                 />
                             </div>
                             <div className={Styles.groupRight}>
@@ -118,22 +148,30 @@ const MobileHeader = React.createClass({
                                 </If>
                                 <button className={Styles.btnSearch}
                                         type='button'
-                                        onClick={this.toggleSearch}>
-                                        <Icon glyph={Icon.GLYPHS.search}/>
+                                        onClick={this.showSearch}>
+                                    <Icon glyph={Icon.GLYPHS.search} />
                                 </button>
                             </div>
                         </When>
                         <Otherwise>
                             <div className={Styles.formSearchData}>
-                                <SearchBox searchText={searchState.unifiedSearchText}
-                                           onSearchTextChanged={this.changeSearchText}
-                                           onDoSearch={this.search}/>
+                                <Choose>
+                                    <When condition={searchState.showMobileLocationSearch}>
+                                        <SearchBox searchText={searchState.locationSearchText}
+                                                   onSearchTextChanged={this.changeLocationSearchText}
+                                                   onDoSearch={this.searchLocations}
+                                                   searchBoxLabel="Search for locations"
+                                                   alwaysShowClear={true}
+                                                   onClear={this.closeSearch} />
+                                    </When>
+                                    <When condition={searchState.showMobileCatalogSearch}>
+                                        <SearchBox searchText={searchState.catalogSearchText}
+                                                   onSearchTextChanged={this.changeCatalogSearchText}
+                                                   onDoSearch={this.searchCatalog}
+                                                   searchBoxLabel="Search the catalogue" />
+                                    </When>
+                                </Choose>
                             </div>
-                            <button type='button'
-                                    className={Styles.btnCancel}
-                                    onClick={this.toggleSearch}>
-                                cancel
-                            </button>
                         </Otherwise>
                     </Choose>
                 </div>

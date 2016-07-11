@@ -1,9 +1,8 @@
 import React from 'react';
 import classNames from 'classnames';
 
-import DataCatalogMember from '../DataCatalog/DataCatalogMember.jsx';
+import DataCatalog from '../DataCatalog/DataCatalog.jsx';
 import DataPreview from '../Preview/DataPreview.jsx';
-import defined from 'terriajs-cesium/Source/Core/defined';
 import MobileSearch from './MobileSearch.jsx';
 import WorkbenchList from '../Workbench/WorkbenchList.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
@@ -20,32 +19,31 @@ const MobileModalWindow = React.createClass({
     },
 
     renderModalContent() {
-        switch (this.props.viewState.mobileView) {
-            case this.props.viewState.mobileViewOptions.search:
+        const viewState = this.props.viewState;
+        const searchState = viewState.searchState;
+
+        if (viewState.mobileView !== viewState.mobileViewOptions.data &&
+            viewState.mobileView !== viewState.mobileViewOptions.preview &&
+            searchState.showMobileLocationSearch &&
+            searchState.locationSearchText.length > 0) {
+
+            return (<MobileSearch terria={this.props.terria} viewState={this.props.viewState}/>);
+        }
+
+        switch (viewState.mobileView) {
+            case viewState.mobileViewOptions.data:
                 return (
-                    <MobileSearch terria={this.props.terria} viewState={this.props.viewState}/>
+                    <DataCatalog terria={this.props.terria}
+                                 viewState={this.props.viewState} />
                 );
-            case this.props.viewState.mobileViewOptions.data:
-                return (
-                    <ul className={Styles.dataCatalog}>
-                        {this.props.terria.catalog.group.items.filter(defined)
-                            .map((item, i) => (
-                                <DataCatalogMember viewState={this.props.viewState}
-                                                   member={item}
-                                                   key={item.uniqueId}
-                                />
-                            ))
-                        }
-                    </ul>
-                );
-            case this.props.viewState.mobileViewOptions.preview:
+            case viewState.mobileViewOptions.preview:
                 return (
                     <DataPreview terria={this.props.terria}
                                  viewState={this.props.viewState}
                                  previewed={this.props.viewState.previewedItem}
                     />
                 );
-            case this.props.viewState.mobileViewOptions.nowViewing:
+            case viewState.mobileViewOptions.nowViewing:
                 return (
                     <WorkbenchList viewState={this.props.viewState}
                                    terria={this.props.terria}
@@ -59,6 +57,7 @@ const MobileModalWindow = React.createClass({
     onClearMobileUI() {
         this.props.viewState.switchMobileView(null);
         this.props.viewState.explorerPanelIsVisible = false;
+        this.props.viewState.searchState.showMobileLocationSearch = false;
     },
 
     componentWillReceiveProps() {
@@ -78,7 +77,7 @@ const MobileModalWindow = React.createClass({
             [Styles.isOpen]: this.props.viewState.explorerPanelIsVisible && this.props.viewState.mobileView
         });
         const mobileView = this.props.viewState.mobileView;
-        
+
         return (
             <div className={modalClass}>
                 <div className={Styles.modalBg}>
