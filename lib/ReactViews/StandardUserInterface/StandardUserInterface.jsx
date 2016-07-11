@@ -9,6 +9,7 @@ import FeedbackForm from '../Feedback/FeedbackForm.jsx';
 import MapColumn from './MapColumn.jsx';
 import MapInteractionWindow from './../Notification/MapInteractionWindow.jsx';
 import MapNavigation from './../Map/MapNavigation.jsx';
+import MenuBar from './../Map/MenuBar.jsx';
 import MobileHeader from './../Mobile/MobileHeader.jsx';
 import Notification from './../Notification/Notification.jsx';
 import ObserveModelMixin from './../ObserveModelMixin';
@@ -115,10 +116,13 @@ const StandardUserInterface = React.createClass({
                 </div>
 
                 <If condition={!this.props.viewState.hideMapUi()}>
+                    <MenuBar terria={terria}
+                             viewState={this.props.viewState}
+                             allBaseMaps={allBaseMaps}
+                             extraMenuElements={this.props.customElements.mapTop}
+                    />
                     <MapNavigation terria={terria}
                                    viewState={this.props.viewState}
-                                   allBaseMaps={allBaseMaps}
-                                   extraMenuElements={this.props.customElements.mapTop}
                     />
                 </If>
 
