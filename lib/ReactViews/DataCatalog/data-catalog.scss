@@ -11,6 +11,8 @@
   overflow-x: hidden;
   box-sizing: border-box;
 
+  height: calc(100vh - #{$mobile-header-height + $modal-header-height});
+
   @media screen and (min-width: $sm) {
     padding-right: $padding;
     margin-top: $padding;
