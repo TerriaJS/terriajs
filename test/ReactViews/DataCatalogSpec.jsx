@@ -7,7 +7,7 @@ import React from 'react';
 import Terria from '../../lib/Models/Terria';
 import ViewState from '../../lib/ReactViewModels/ViewState';
 
-describe('DataCatalogTab', function() {
+describe('DataCatalog', function() {
     let terria;
     let viewState;
 
