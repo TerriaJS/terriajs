@@ -37,7 +37,7 @@ const MobilePanel = React.createClass({
 
     render() {
         return (
-            <div>
+            <li>
                 <MobileMenuItem onClick={this.togglePanel} caption={this.props.btnText}/>
                 <If condition={this.state.isOpen}>
                     <div
@@ -48,7 +48,7 @@ const MobilePanel = React.createClass({
                         </div>
                     </div>
                 </If>
-            </div>
+            </li>
         )
     }
 });
