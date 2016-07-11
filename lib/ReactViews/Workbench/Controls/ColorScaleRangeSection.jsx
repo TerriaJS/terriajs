@@ -2,7 +2,7 @@
 
 import React from 'react';
 import ObserveModelMixin from '../../ObserveModelMixin';
-
+import defined from 'terriajs-cesium/Source/Core/defined';
 import Styles from './colorscalerange-section.scss';
 
 const ColorScaleRangeSection = React.createClass({
@@ -30,11 +30,12 @@ const ColorScaleRangeSection = React.createClass({
 
     render() {
         const item = this.props.item;
-        this.minRange = item.parameters.colorscalerange.split(',')[0];
-        this.maxRange = item.parameters.colorscalerange.split(',')[1];
-        if (!item.isNcWMS) {
+        if (!defined(item.parameters) || !defined(item.parameters.colorscalerange)) {
             return null;
         }
+
+        this.minRange = item.parameters.colorscalerange.split(',')[0];
+        this.maxRange = item.parameters.colorscalerange.split(',')[1];
         return (
             <div className={Styles.colorscalerange}>
                 <label>Colorscalerange: </label>
