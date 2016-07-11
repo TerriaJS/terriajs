@@ -36,10 +36,15 @@ const MobileHeader = React.createClass({
         }
     },
 
-    closeSearch() {
+    closeLocationSearch() {
         this.props.viewState.searchState.showMobileLocationSearch = false;
         this.props.viewState.explorerPanelIsVisible = false;
         this.props.viewState.switchMobileView(null);
+    },
+
+    closeCatalogSearch() {
+        this.props.viewState.searchState.showMobileCatalogSearch = false;
+        this.props.viewState.searchState.catalogSearchText = '';
     },
 
     toggleMenu() {
@@ -162,13 +167,14 @@ const MobileHeader = React.createClass({
                                                    onDoSearch={this.searchLocations}
                                                    searchBoxLabel="Search for locations"
                                                    alwaysShowClear={true}
-                                                   onClear={this.closeSearch} />
+                                                   onClear={this.closeLocationSearch} />
                                     </When>
                                     <When condition={searchState.showMobileCatalogSearch}>
                                         <SearchBox searchText={searchState.catalogSearchText}
                                                    onSearchTextChanged={this.changeCatalogSearchText}
                                                    onDoSearch={this.searchCatalog}
-                                                   searchBoxLabel="Search the catalogue" />
+                                                   searchBoxLabel="Search the catalogue"
+                                                   onClear={this.closeCatalogSearch} />
                                     </When>
                                 </Choose>
                             </div>

@@ -58,6 +58,8 @@ const MobileModalWindow = React.createClass({
         this.props.viewState.switchMobileView(null);
         this.props.viewState.explorerPanelIsVisible = false;
         this.props.viewState.searchState.showMobileLocationSearch = false;
+        this.props.viewState.searchState.showMobileCatalogSearch = false;
+        this.props.viewState.searchState.catalogSearchText = '';
     },
 
     componentWillReceiveProps() {
