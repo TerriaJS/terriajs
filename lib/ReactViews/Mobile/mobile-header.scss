@@ -88,22 +88,6 @@
   justify-content: flex-end;
 }
 
-.mobile-nav {
-  composes: list-reset from '../../Sass/common/_base.scss';
-  display: none;
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: $mobile-header-height;
-  background: $mobile-main-bg;
-  color: $mobile-text;
-  text-align: left;
-
-  &.is-open {
-    display: block;
-  }
-}
-
 .btnMenu{
     font-size: 25px;
     padding: 0 $padding-small;

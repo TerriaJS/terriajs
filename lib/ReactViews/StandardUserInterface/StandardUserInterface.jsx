@@ -92,8 +92,8 @@ const StandardUserInterface = React.createClass({
         }, {
             menuItems: [
                 <SettingPanel terria={this.props.terria} allBaseMaps={this.props.allBaseMaps}
-                              viewState={this.props.viewState}/>,
-                <SharePanel terria={this.props.terria} viewState={this.props.viewState}/>
+                              viewState={this.props.viewState} key="settings"/>,
+                <SharePanel terria={this.props.terria} viewState={this.props.viewState} key="share"/>
             ]
         });
 
