@@ -226,7 +226,8 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
                         req.url.indexOf('/convert') < 0 &&
                         req.url.indexOf('/proxyabledomains') < 0 &&
                         req.url.indexOf('/errorpage') < 0 &&
-                        req.url.indexOf('/init') < 0) {
+                        req.url.indexOf('/init') < 0 &&
+                        req.url.indexOf('/serverconfig') < 0) {
                         return req.originalUrl;
                     }
                 }
