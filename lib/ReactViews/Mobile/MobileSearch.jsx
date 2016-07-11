@@ -29,9 +29,6 @@ const MobileSearch = React.createClass({
                 <div className={Styles.location}>
                     {this.renderLocationResult()}
                 </div>
-                <div className={Styles.data}>
-                    {this.renderDataCatalogResult()}
-                </div>
             </div>
         );
     },

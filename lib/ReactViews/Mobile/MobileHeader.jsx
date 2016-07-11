@@ -146,7 +146,6 @@ const MobileHeader = React.createClass({
                 </ul>
                 <MobileModalWindow terria={this.props.terria}
                                    viewState={this.props.viewState}
-                                   searches={this.state.searches}
                 />
             </div>
         );
