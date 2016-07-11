@@ -4,7 +4,7 @@ import DataPreviewSections from './DataPreviewSections';
 import DataPreviewMap from './DataPreviewMap.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
 import Styles from './mappable-preview.scss';
-import renderMarkdownInReact from '../../Core/renderMarkdownInReact';
+import parseCustomMarkdownToReact from '../Custom/parseCustomMarkdownToReact';
 
 /**
  * CatalogItem preview that is mappable (as opposed to say, an analytics item that can't be displayed on a map without
@@ -51,7 +51,7 @@ const MappablePreview = React.createClass({
                         <If condition={catalogItem.description && catalogItem.description.length > 0}>
                             <div>
                                 <h4>Description</h4>
-                                {renderMarkdownInReact(catalogItem.description, catalogItem)}
+                                {parseCustomMarkdownToReact(catalogItem.description, {catalogItem: catalogItem})}
                             </div>
                         </If>
 
@@ -68,7 +68,7 @@ const MappablePreview = React.createClass({
                         <If condition={catalogItem.dataCustodian && catalogItem.dataCustodian.length > 0}>
                             <div>
                                 <h4>Data Custodian</h4>
-                                {renderMarkdownInReact(catalogItem.dataCustodian, catalogItem)}
+                                {parseCustomMarkdownToReact(catalogItem.dataCustodian, {catalogItem: catalogItem})}
                             </div>
                         </If>
 

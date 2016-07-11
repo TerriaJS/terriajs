@@ -2,8 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 
 import ObserveModelMixin from './ObserveModelMixin';
-import TerriaError from './../Core/TerriaError';
-import handleFile from '../Core/handleFile';
+import addUserFiles from '../Models/addUserFiles';
 
 import Styles from './drag-drop-file.scss';
 
@@ -19,20 +18,13 @@ const DragDropFile = React.createClass({
         e.preventDefault();
         e.stopPropagation();
 
-        const fakeEvent = {
-            target: e.dataTransfer
-        };
-        try {
-            handleFile(fakeEvent, this.props.terria, null, ()=> {
-                this.props.viewState.myDataIsUploadView = false;
+        addUserFiles(e.dataTransfer.files, this.props.terria, this.props.viewState, null)
+            .then(addedCatalogItems => {
+                if (addedCatalogItems.length > 0) {
+                    this.props.viewState.myDataIsUploadView = false;
+                }
             });
-        } catch (err) {
-            this.props.terria.error.raiseEvent(new TerriaError({
-                sender: this,
-                title: err.title,
-                message: err.message
-            }));
-        }
+
         this.props.viewState.isDraggingDroppingFile = false;
     },
 

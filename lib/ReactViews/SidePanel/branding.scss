@@ -3,7 +3,6 @@
 
 .branding {
   height: $sm-logo-height;
-  background: $dark;
   overflow: hidden;
   @include transition(all, 0.5s, linear);
 

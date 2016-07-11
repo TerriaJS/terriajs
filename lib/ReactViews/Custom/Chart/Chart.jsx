@@ -43,6 +43,8 @@ const Chart = React.createClass({
         axisLabel: React.PropTypes.object,
         transitionDuration: React.PropTypes.number,
         highlightX: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
+        updateCounter: React.PropTypes.any,  // Change this to trigger an update.
+        pollSeconds: React.PropTypes.any, // This is not used by Chart. It is used internally by registerCustomComponentTypes.
         // You can provide the data directly via props.data (ChartData[]):
         data: React.PropTypes.array,
         // Or, provide a URL to the data, along with optional xColumn, yColumns, colors
@@ -50,6 +52,7 @@ const Chart = React.createClass({
         xColumn: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
         yColumns: React.PropTypes.array,
         colors: React.PropTypes.array,
+        pollUrl: React.PropTypes.string,
         // Or, provide a tableStructure directly.
         tableStructure: React.PropTypes.object
     },
@@ -72,17 +75,14 @@ const Chart = React.createClass({
         );
     },
 
-    getChartDataPromise(chartParameters) {
+    getChartDataPromise(data, url) {
         // Returns a promise that resolves to an array of ChartData.
         const that = this;
-        if (defined(chartParameters.data)) {
+        if (defined(data)) {
             // Nothing to do - the data was provided.
-            return when(chartParameters.data);
-        } else if (defined(that.props.url)) {
-            // Load in the data file as a TableStructure.
-            const tableStructure = new TableStructure('feature info');
-            return loadText(that.props.url)
-                .then(tableStructure.loadFromCsv.bind(tableStructure))
+            return when(data);
+        } else if (defined(url)) {
+            return loadIntoTableStructure(url)
                 .then(that.chartDataArrayFromTableStructure)
                 .otherwise(function(e) {
                     // It looks better to create a blank chart than no chart.
@@ -98,10 +98,10 @@ const Chart = React.createClass({
     componentDidMount() {
         const that = this;
         const chartParameters = that.getChartParameters();
-        const promise = that.getChartDataPromise(chartParameters);
+        const promise = that.getChartDataPromise(chartParameters.data, that.props.url);
         promise.then(function(data) {
             chartParameters.data = data;
-            LineChart.create(that.buttonElement, chartParameters);
+            LineChart.create(that._element, chartParameters);
         });
         that._promise = promise.then(function() {
             // that.rnd = Math.random();
@@ -109,10 +109,14 @@ const Chart = React.createClass({
             // So we return the bound listener function from the promise.
             const resize = function() {
                 // This function basically the same as componentDidUpdate, but it speeds up transitions.
-                if (that.buttonElement) {
+                // Note same caveats - doesn't work if the data came from a URL.
+                // That's ok for our purposes, since the URL is only used in a feature info panel, which never resizes dynamically.
+                if (that._element) {
                     const localChartParameters = that.getChartParameters();
-                    localChartParameters.transitionDuration = 1;
-                    LineChart.update(that.buttonElement, localChartParameters);
+                    if (defined(chartParameters.data)) {
+                        localChartParameters.transitionDuration = 1;
+                        LineChart.update(that._element, localChartParameters);
+                    }
                 } else {
                     // This would happen if event listeners were not properly removed (ie. if you get this error, a bug was introduced to this code).
                     throw new DeveloperError('Missing chart DOM element ' + that.url);
@@ -125,7 +129,29 @@ const Chart = React.createClass({
     },
 
     componentDidUpdate() {
-        LineChart.update(this.buttonElement, this.getChartParameters());
+        // Update the chart with props.data, if present.
+        // If the data came from a URL, there are three possibilities:
+        // 1. The URL has changed.
+        // 2. The URL is the same and therefore we do not want to reload it.
+        // 3. The URL is the same, but the chart came from a self-updating <chart> tag (ie. one with a poll-seconds attribute),
+        //    and so we do want to reload it.
+        // Note that registerCustomComponent types wraps its charts in a div with a key based on the url,
+        // so if the URL has changed, it actually mounts a new component, thereby triggering a load.
+        // (Ie. we don't need to cover case (1) here.)
+        // In case (3), props.updateCounter will be set to an integer, and we should update the data from the URL.
+        const element = this._element;
+        const chartParameters = this.getChartParameters();
+        if (defined(chartParameters.data)) {
+            LineChart.update(element, chartParameters);
+        } else if (this.props.updateCounter > 0) {
+            // The risk here is if it's a time-varying csv with <chart> polling as well.
+            const url = this.props.pollUrl || this.props.url;
+            const promise = this.getChartDataPromise(chartParameters.data, url);
+            promise.then(function(data) {
+                chartParameters.data = data;
+                LineChart.update(element, chartParameters);
+            });
+        }
     },
 
     componentWillUnmount() {
@@ -133,8 +159,8 @@ const Chart = React.createClass({
         this._promise.then(function(listener) {
             window.removeEventListener('resize', listener);
             // console.log('Removed resize listener for', that.props.url, that.rnd, listener);
-            LineChart.destroy(that.buttonElement, that.getChartParameters());
-            that.buttonElement = undefined;
+            LineChart.destroy(that._element, that.getChartParameters());
+            that._element = undefined;
         });
         this._promise = undefined;
     },
@@ -198,9 +224,20 @@ const Chart = React.createClass({
 
     render() {
         return (
-            <div className={Styles.chart} ref={element=>{this.buttonElement = element;}}></div>
+            <div className={Styles.chart} ref={element=>{this._element = element;}}></div>
         );
     }
 });
+
+/**
+ * Loads data from a URL into a table structure.
+ * @param  {String} url The URL.
+ * @return {Promise} A promise which resolves to a table structure.
+ */
+function loadIntoTableStructure(url) {
+    // Load in the data file as a TableStructure. Currently only understands csv.
+    const tableStructure = new TableStructure('feature info');
+    return loadText(url).then(tableStructure.loadFromCsv.bind(tableStructure));
+}
 
 module.exports = Chart;

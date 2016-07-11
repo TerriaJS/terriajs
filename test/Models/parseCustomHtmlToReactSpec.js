@@ -2,10 +2,9 @@
 
 /*global require, fail*/
 import Chart from '../../lib/ReactViews/Custom/Chart/Chart';
-// import ChartExpandButton from '../../lib/ReactViews/Custom/Chart/ChartExpandButton';
 import Collapsible from '../../lib/ReactViews/Custom/Collapsible/Collapsible';
-import parseCustomHtmlToReact from '../../lib/Models/parseCustomHtmlToReact';
-import registerCustomComponentTypes from '../../lib/Models/registerCustomComponentTypes';
+import parseCustomHtmlToReact from '../../lib/ReactViews/Custom/parseCustomHtmlToReact';
+import registerCustomComponentTypes from '../../lib/ReactViews/Custom/registerCustomComponentTypes';
 import Terria from '../../lib/Models/Terria';
 
 import {findAllWithType, findAll} from 'react-shallow-testutils';

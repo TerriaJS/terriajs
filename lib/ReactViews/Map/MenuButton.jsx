@@ -14,7 +14,7 @@ function MenuButton(props) {
                href={props.href}
                target={props.href !== '#' ? '_blank' : undefined}
                title={props.caption}>
-                {props.caption}
+                <span>{props.caption}</span>
             </a>
         </div>
     );
