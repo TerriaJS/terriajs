@@ -1,10 +1,7 @@
-'use strict';
-// import defined from 'terriajs-cesium/Source/Core/defined';
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
 import SearchHeader from '../Search/SearchHeader.jsx';
 import SearchResult from '../Search/SearchResult.jsx';
-// import DataCatalogMember from '../DataCatalog/DataCatalogMember.jsx';
 import Styles from './mobile-search.scss';
 
 // A Location item when doing Bing map searvh or Gazetter search
@@ -20,7 +17,7 @@ const MobileSearch = React.createClass({
         result.clickAction();
         // Close modal window
         this.props.viewState.switchMobileView(null);
-
+        this.props.viewState.searchState.showMobileLocationSearch = false;
     },
 
     render() {
@@ -48,31 +45,6 @@ const MobileSearch = React.createClass({
                 </ul>
             </div>));
     }
-
-    // renderDataCatalogResult() {
-    //     const searchState = this.props.viewState.searchState;
-    //     const search = searchState.unifiedSearchProviders
-    //         .filter(s=> s.constructor.name === 'CatalogItemNameSearchProviderViewModel')[0];
-
-    //     const items = search.searchResults.map(result => result.catalogItem);
-    //     if (searchState.unifiedSearchText.length) {
-    //         return <div key={search.constructor.name}>
-    //             <label className={Styles.label}>{search.name}</label>
-    //             <ul className={Styles.results}>
-    //                 <SearchHeader searchProvider={search}/>
-    //                 {items.filter(defined)
-    //                     .map((item, i) => (
-    //                         <DataCatalogMember viewState={this.props.viewState}
-    //                                            member={item}
-    //                                            manageIsOpenLocally={search.isSearching}
-    //                                            key={item.uniqueId}
-    //                         />
-    //                     ))}
-    //             </ul>
-    //         </div>;
-    //     }
-    //     return null;
-    // }
 });
 
 module.exports = MobileSearch;

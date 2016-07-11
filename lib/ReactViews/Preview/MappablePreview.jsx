@@ -125,8 +125,8 @@ const MappablePreview = React.createClass({
                                     <Choose>
                                         <When condition={catalogItem.dataUrlType.indexOf('wfs') === 0 || catalogItem.dataUrlType.indexOf('wcs') === 0}>
                                             Use the link below to download the data.  See the
-                                            {catalogItem.dataUrlType.indexOf('wfs') === 0 && <a href="http://docs.geoserver.org/latest/en/user/services/wfs/reference.html" target="_blank">Web Feature Service (WFS) documentation</a>}
-                                            {catalogItem.dataUrlType.indexOf('wcs') === 0 && <a href="http://docs.geoserver.org/latest/en/user/services/wcs/reference.html" target="_blank">Web Coverage Service (WCS) documentation</a>}
+                                            {catalogItem.dataUrlType.indexOf('wfs') === 0 && <a href="http://docs.geoserver.org/latest/en/user/services/wfs/reference.html" target="_blank" key="wfs">Web Feature Service (WFS) documentation</a>}
+                                            {catalogItem.dataUrlType.indexOf('wcs') === 0 && <a href="http://docs.geoserver.org/latest/en/user/services/wcs/reference.html" target="_blank" key="wms">Web Coverage Service (WCS) documentation</a>}
                                             for more information on customising URL query parameters.
                                         </When>
                                         <Otherwise>
@@ -134,7 +134,7 @@ const MappablePreview = React.createClass({
                                         </Otherwise>
                                     </Choose>
                                     <br/>
-                                    <a href={catalogItem.dataUrl} target="_blank">{catalogItem.dataUrl}</a>
+                                    <a href={catalogItem.dataUrl} key={catalogItem.dataUrl} target="_blank">{catalogItem.dataUrl}</a>
                                 </p>
                             </If>
                         </If>
