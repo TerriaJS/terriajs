@@ -65,7 +65,6 @@ const PolygonParameterEditor = React.createClass({
         this.setState({
             value: this.getValue()
         });
-
     },
 
     onPointClicked(pointEntities) {
