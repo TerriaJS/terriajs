@@ -12,7 +12,7 @@
   position: relative;
   width: 100%;
   background: $dark;
-  min-height: 30px;
+  min-height: 40px;
   margin: 0;
   padding-right: 30px;
   span{
@@ -26,8 +26,8 @@
     fill: #fff;
     float: right;
     position: absolute;
-    top: 5px;
-    right: 0;
+    top: 10px;
+    right: 5px;
   }
 }
 

@@ -14,7 +14,19 @@ export default React.createClass({
         onSearchTextChanged: React.PropTypes.func.isRequired,
         onDoSearch: React.PropTypes.func.isRequired,
         searchText: React.PropTypes.string.isRequired,
-        onFocus: React.PropTypes.func
+        onFocus: React.PropTypes.func,
+        searchBoxLabel: React.PropTypes.string,
+        onClear: React.PropTypes.func,
+        alwaysShowClear: React.PropTypes.bool,
+        autoFocus: React.PropTypes.bool
+    },
+
+    getDefaultProps() {
+        return {
+            searchBoxLabel: 'Search',
+            alwaysShowClear: false,
+            autoFocus: false
+        };
     },
 
     componentWillUnmount() {
@@ -57,6 +69,10 @@ export default React.createClass({
     clearSearch() {
         this.props.onSearchTextChanged('');
         this.search();
+
+        if (this.props.onClear) {
+            this.props.onClear();
+        }
     },
 
     onKeyDown(event) {
@@ -83,9 +99,10 @@ export default React.createClass({
                        onFocus={this.props.onFocus}
                        onKeyDown={this.onKeyDown}
                        className={Styles.searchField}
-                       placeholder='Search'
-                       autoComplete='off'/>
-                {this.hasValue() && clearButton}
+                       placeholder={this.props.searchBoxLabel}
+                       autoComplete='off'
+                       autoFocus={this.props.autoFocus} />
+                {(this.props.alwaysShowClear || this.hasValue()) && clearButton}
             </form>
         );
     }

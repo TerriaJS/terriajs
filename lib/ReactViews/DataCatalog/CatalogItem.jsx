@@ -14,7 +14,8 @@ const STATE_TO_ICONS = {
     loading: <Icon glyph={Icon.GLYPHS.loader}/>,
     remove: <Icon glyph={Icon.GLYPHS.remove}/>,
     add: <Icon glyph={Icon.GLYPHS.add}/>,
-    stats: <Icon glyph={Icon.GLYPHS.barChart}/>
+    stats: <Icon glyph={Icon.GLYPHS.barChart}/>,
+    preview: <Icon glyph={Icon.GLYPHS.right}/>
 };
 
 /** Dumb catalog item */
@@ -44,7 +45,7 @@ CatalogItem.propTypes = {
     selected: React.PropTypes.bool,
     text: React.PropTypes.string,
     onBtnClick: React.PropTypes.func,
-    btnState: React.PropTypes.oneOf(['loading', 'remove', 'add', 'stats'])
+    btnState: React.PropTypes.oneOf(Object.keys(STATE_TO_ICONS))
 };
 
 export default CatalogItem;

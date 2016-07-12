@@ -47,6 +47,7 @@
 .header{
   background: $dark;
   padding-right: $input-height;
+  line-height: $modal-header-height;
 }
 
 .btn {
@@ -73,10 +74,13 @@
     height: 23px;
     width: 23px;
     fill: #ffffff;
+    position: relative;
+    left: 10px;
   }
   position: absolute;
-  top: 3px;
   right: 0;
+  width: $modal-header-height;
+  height: $modal-header-height;
 }
 
 .no-results {

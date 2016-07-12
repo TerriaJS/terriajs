@@ -1,7 +1,7 @@
 import React from 'react';
 
 import defined from 'terriajs-cesium/Source/Core/defined';
-
+import DataCatalog from '../../DataCatalog/DataCatalog.jsx';
 import DataCatalogMember from '../../DataCatalog/DataCatalogMember.jsx';
 import DataPreview from '../../Preview/DataPreview.jsx';
 import ObserveModelMixin from '../../ObserveModelMixin';
@@ -35,7 +35,8 @@ const DataCatalogTab = React.createClass({
                     <SearchBox searchText={this.props.viewState.searchState.catalogSearchText}
                                onSearchTextChanged={this.changeSearchText}
                                onDoSearch={this.search}/>
-                    {this.renderDataCatalog()}
+                    <DataCatalog terria={this.props.terria}
+                                 viewState={this.props.viewState} />
                 </div>
                 <DataPreview terria={terria}
                              viewState={this.props.viewState}
