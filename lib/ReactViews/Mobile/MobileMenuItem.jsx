@@ -1,4 +1,7 @@
 import React from 'react';
+
+import defined from 'terriajs-cesium/Source/Core/defined';
+
 import Styles from './mobile-menu-item.scss';
 
 export default function MobileMenuItem(props) {
@@ -15,3 +18,7 @@ export default function MobileMenuItem(props) {
         </div>
     );
 }
+
+MobileMenuItem.defaultProps = {
+    onClick: () => {}
+};

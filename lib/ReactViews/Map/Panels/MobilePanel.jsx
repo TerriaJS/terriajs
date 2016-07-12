@@ -2,10 +2,13 @@ import React from 'react';
 import classNames from 'classnames';
 
 import MobileMenuItem from '../../Mobile/MobileMenuItem';
+import ObserveModelMixin from '../../ObserveModelMixin';
 
 import Styles from './mobile-menu-panel.scss';
 
 const MobilePanel = React.createClass({
+    mixins: [ObserveModelMixin],
+
     propTypes: {
         theme: React.PropTypes.object.isRequired,
         children: React.PropTypes.any,
@@ -17,8 +20,8 @@ const MobilePanel = React.createClass({
 
     getDefaultProps() {
         return {
-            onOpenChanged: () => {
-            }
+            onOpenChanged: () => {},
+            onClick: () => {}
         };
     },
 
@@ -33,12 +36,13 @@ const MobilePanel = React.createClass({
             isOpen: !this.state.isOpen
         });
         this.props.onOpenChanged(!this.state.isOpen);
+        this.props.onClick();
     },
 
     render() {
         return (
-            <li>
-                <MobileMenuItem onClick={this.togglePanel} caption={this.props.btnText}/>
+            <div>
+                <MobileMenuItem onClick={this.togglePanel} caption={this.props.btnText} />
                 <If condition={this.state.isOpen}>
                     <div
                         className={classNames(Styles.inner, this.props.theme.inner)}
@@ -48,7 +52,7 @@ const MobilePanel = React.createClass({
                         </div>
                     </div>
                 </If>
-            </li>
+            </div>
         )
     }
 });
