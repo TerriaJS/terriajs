@@ -9,7 +9,7 @@ import MenuPanel from '../../StandardUserInterface/customizable/MenuPanel.jsx';
 import Icon from "../../Icon.jsx";
 
 import Styles from './setting-panel.scss';
-import DropdownStyles from './dropdown-panel.scss';
+import DropdownStyles from './panel.scss';
 
 // The basemap and viewer setting panel
 const SettingPanel = React.createClass({

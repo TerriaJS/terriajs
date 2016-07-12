@@ -39,7 +39,7 @@ const MobileMenu = React.createClass({
                 </If>
                 <ul className={classNames(Styles.mobileNav, {[Styles.mobileNavHidden]: !this.props.viewState.mobileMenuVisible})}>
                     <For each="menuItem" of={this.props.menuItems} index="i">
-                        <div onClick={() => this.props.viewState.mobileMenuVisible = false}>
+                        <div onClick={() => this.props.viewState.mobileMenuVisible = false} key={menuItem.key}>
                             {menuItem}
                         </div>
                     </For>

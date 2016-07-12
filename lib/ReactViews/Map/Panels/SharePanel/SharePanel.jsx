@@ -8,7 +8,7 @@ import classNames from 'classnames';
 import MenuPanel from '../../../StandardUserInterface/customizable/MenuPanel.jsx';
 
 import Styles from './share-panel.scss';
-import DropdownStyles from '../dropdown-panel.scss';
+import DropdownStyles from '../panel.scss';
 import Icon from "../../../Icon.jsx";
 
 const SharePanel = React.createClass({
@@ -128,7 +128,6 @@ const SharePanel = React.createClass({
                        onOpenChanged={this.onOpenChanged}
                        smallScreen={this.props.viewState.useSmallScreenInterface}>
                 <If condition={this.state.isOpen}>
-                    <div className={classNames(Styles.content, DropdownStyles.content)}>
                         <div className={DropdownStyles.section}>
                             <div className={Styles.imgShare} style={shareImgStyle}></div>
                             <div className={Styles.imgLink}>
@@ -157,7 +156,6 @@ const SharePanel = React.createClass({
                                 </button>
                             </div>
                         </If>
-                    </div>
                 </If>
             </MenuPanel>
         );

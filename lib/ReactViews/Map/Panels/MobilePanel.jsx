@@ -1,13 +1,14 @@
 import React from 'react';
-import classNames from 'classnames';
 
 import MobileMenuItem from '../../Mobile/MobileMenuItem';
 import ObserveModelMixin from '../../ObserveModelMixin';
+import BaseOuterPanel from './BaseOuterPanel';
+import InnerPanel from './InnerPanel';
 
-import Styles from './mobile-menu-panel.scss';
+import Styles from './panel.scss';
 
 const MobilePanel = React.createClass({
-    mixins: [ObserveModelMixin],
+    mixins: [ObserveModelMixin, BaseOuterPanel],
 
     propTypes: {
         theme: React.PropTypes.object.isRequired,
@@ -18,39 +19,20 @@ const MobilePanel = React.createClass({
         viewState: React.PropTypes.object
     },
 
-    getDefaultProps() {
-        return {
-            onOpenChanged: () => {},
-            onClick: () => {}
-        };
-    },
-
-    getInitialState() {
-        return {
-            isOpen: false
-        };
-    },
-
-    togglePanel() {
-        this.setState({
-            isOpen: !this.state.isOpen
-        });
-        this.props.onOpenChanged(!this.state.isOpen);
-        this.props.onClick();
-    },
-
     render() {
         return (
             <div>
-                <MobileMenuItem onClick={this.togglePanel} caption={this.props.btnText} />
+                <MobileMenuItem onClick={this.openPanel} caption={this.props.btnText}/>
                 <If condition={this.state.isOpen}>
-                    <div
-                        className={classNames(Styles.inner, this.props.theme.inner)}
-                        onClick={this.onPanelClicked}>
-                        <div className={Styles.content}>
-                            {this.props.children}
-                        </div>
-                    </div>
+                    {/* The overlay doesn't actually need to do anything except block clicks, as InnerPanel will listen to the window */}
+                    <div className={Styles.overlay}/>
+                    
+                    <InnerPanel theme={this.props.theme}
+                                caretOffset="15px"
+                                doNotCloseFlag={this.getDoNotCloseFlag()}
+                                onDismissed={this.onDismissed}>
+                        {this.props.children}
+                    </InnerPanel>
                 </If>
             </div>
         )

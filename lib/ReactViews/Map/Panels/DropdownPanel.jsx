@@ -3,12 +3,16 @@
 import React from 'react';
 import classNames from 'classnames';
 import Icon from "../../Icon.jsx";
+import InnerPanel from './InnerPanel';
+import ObserveModelMixin from '../../ObserveModelMixin';
+import BaseOuterPanel from './BaseOuterPanel';
 
-import Styles from './dropdown-panel.scss';
+import Styles from './panel.scss';
 
-import defined from 'terriajs-cesium/Source/Core/defined';
 
 const DropdownPanel = React.createClass({
+    mixins: [ObserveModelMixin, BaseOuterPanel],
+    
     propTypes: {
         theme: React.PropTypes.object.isRequired,
         children: React.PropTypes.any,
@@ -16,76 +20,6 @@ const DropdownPanel = React.createClass({
         btnText: React.PropTypes.string,
         onOpenChanged: React.PropTypes.func,
         viewState: React.PropTypes.object
-    },
-
-    getDefaultProps() {
-        return {
-            onOpenChanged: () => {}
-        };
-    },
-
-    getInitialState() {
-        return {
-            isOpen: false
-        };
-    },
-
-    componentWillUnmount() {
-        window.removeEventListener('click', this.close);
-    },
-
-    close(e) {
-        // Only close if this wasn't a click on our open/close button.
-        if (!e[this.getDoNotReactId()]) {
-            this.setOpen(false);
-        }
-    },
-
-    onPanelClicked(e) {
-        e.stopPropagation();
-    },
-
-    togglePanel(e) {
-        // Tag this event so that we know not to react to it when it hits the window.
-        // We could just set stopPropagation on it, but this would mean that clicks on other buttons that stopPropagation
-        // would cause the panel not to close.
-        e.nativeEvent[this.getDoNotReactId()] = true;
-
-        this.setOpen(!this.state.isOpen);
-    },
-
-    setOpen(open) {
-        if (open) {
-            window.addEventListener('click', this.close);
-
-            // If we're opening we want to immediately cause the panel to render, then just after then change the css
-            // class on it so it animates.
-            this.setState({
-                isOpen: true
-            });
-
-            setTimeout(() => {
-                this.setState({
-                    isOpenCss: true
-                });
-                this.props.onOpenChanged(open);
-            }, 0);
-        } else {
-            window.removeEventListener('click', this.close);
-
-            // If we're closing we want to immediately change the css class to cause it to animate shut, then when it's
-            // finished actually stop it rendering with isOpen = false
-            this.setState({
-                isOpenCss: false
-            });
-
-            setTimeout(() => {
-                this.setState({
-                    isOpen: false
-                });
-                this.props.onOpenChanged(open);
-            }, 200); // TODO: Determine when it stops animating instead of duplicating the 200ms timeout?
-        }
     },
 
     onInnerMounted(innerElement) {
@@ -110,18 +44,15 @@ const DropdownPanel = React.createClass({
         }
     },
 
-    getDoNotReactId() {
-        return `do-not-react-${this.props.btnText}-${this.props.btnTitle}-${this.props.theme.btn}`;
-    },
-
     bringToFront() {
         this.props.viewState.switchComponentOrder(this.props.viewState.componentOrderOptions.dropdownPanel);
     },
 
+
     render() {
         return (
-            <div className={classNames({[Styles.isOpen]: this.state.isOpenCss}, Styles.panel, this.props.theme.outer)}>
-                <button onClick={this.togglePanel}
+            <div className={classNames(Styles.panel, this.props.theme.outer)}>
+                <button onClick={this.openPanel}
                         type='button'
                         className={classNames(Styles.button, this.props.theme.btn)}
                         title={this.props.btnTitle}
@@ -132,25 +63,16 @@ const DropdownPanel = React.createClass({
                     <span>{this.props.btnText}</span>
                 </button>
                 <If condition={this.state.isOpen}>
-                    <div className={classNames(
-                            Styles.inner,
-                            this.props.theme.inner,
-                            {[Styles.innerIsOnTop]: this.props.viewState.componentOnTop === this.props.viewState.componentOrderOptions.dropdownPanel}
-                         )}
-                         onClick={this.onPanelClicked}
-                         ref={this.onInnerMounted}
-                         style={{
-                             left: this.state.dropdownOffset,
-                             transformOrigin: `${this.state.caretOffset} top`
-                         }}>
-                        <If condition={defined(this.state.caretOffset)}>
-                            <span className={Styles.caret}
-                                  style={{left: this.state.caretOffset}}/>
-                        </If>
-                        <div className={Styles.content}>
-                            {this.props.children}
-                        </div>
-                    </div>
+                    <InnerPanel
+                        onDismissed={this.onDismissed}
+                        innerRef={this.onInnerMounted}
+                        doNotCloseFlag={this.getDoNotCloseFlag()}
+                        onTop={this.props.viewState.componentOnTop === this.props.viewState.componentOrderOptions.dropdownPanel}
+                        theme={this.props.theme}
+                        caretOffset={this.state.caretOffset}
+                        dropdownOffset={this.state.dropdownOffset}>
+                        {this.props.children}
+                    </InnerPanel>
                 </If>
             </div>
         );
