@@ -4,23 +4,13 @@ import React from 'react';
 import classNames from 'classnames';
 import Icon from "../../Icon.jsx";
 import InnerPanel from './InnerPanel';
-import ObserveModelMixin from '../../ObserveModelMixin';
 import BaseOuterPanel from './BaseOuterPanel';
 
 import Styles from './panel.scss';
 
 
 const DropdownPanel = React.createClass({
-    mixins: [ObserveModelMixin, BaseOuterPanel],
-    
-    propTypes: {
-        theme: React.PropTypes.object.isRequired,
-        children: React.PropTypes.any,
-        btnTitle: React.PropTypes.string,
-        btnText: React.PropTypes.string,
-        onOpenChanged: React.PropTypes.func,
-        viewState: React.PropTypes.object
-    },
+    mixins: [BaseOuterPanel],
 
     onInnerMounted(innerElement) {
         if (innerElement) {
@@ -44,11 +34,6 @@ const DropdownPanel = React.createClass({
         }
     },
 
-    bringToFront() {
-        this.props.viewState.switchComponentOrder(this.props.viewState.componentOrderOptions.dropdownPanel);
-    },
-
-
     render() {
         return (
             <div className={classNames(Styles.panel, this.props.theme.outer)}>
@@ -67,7 +52,6 @@ const DropdownPanel = React.createClass({
                         onDismissed={this.onDismissed}
                         innerRef={this.onInnerMounted}
                         doNotCloseFlag={this.getDoNotCloseFlag()}
-                        onTop={this.props.viewState.componentOnTop === this.props.viewState.componentOrderOptions.dropdownPanel}
                         theme={this.props.theme}
                         caretOffset={this.state.caretOffset}
                         dropdownOffset={this.state.dropdownOffset}>

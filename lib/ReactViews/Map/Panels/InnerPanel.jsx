@@ -6,7 +6,23 @@ import defined from 'terriajs-cesium/Source/Core/defined';
 import Styles from './panel.scss';
 
 const InnerPanel = React.createClass({
+    propTypes: {
+        /**
+         * A property that will be looked for on window click events - if it's set, the click event will not cause the
+         * panel to close.
+         */
+        doNotCloseFlag: React.PropTypes.string,
+        /** Will be called when the panel has finished hiding */
+        onDismissed: React.PropTypes.func,
+        /** Theme to style components */
+        theme: React.PropTypes.object,
+        /** How far the caret at the top of the panel should be from its left, as CSS (so #px or #% are both valid) */
+        caretOffset: React.PropTypes.string,
+        /** Will be passed as "ref" to the outermost element */
+        innerRef: React.PropTypes.oneOf(React.PropTypes.func, React.PropTypes.string),
 
+        children: React.PropTypes.arrayOf(React.PropTypes.element)
+    },
 
     getDefaultProps() {
         return {
