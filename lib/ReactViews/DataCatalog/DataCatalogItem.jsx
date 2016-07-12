@@ -26,6 +26,7 @@ const DataCatalogItem = React.createClass({
 
             // close modal window
             this.props.viewState.explorerPanelIsVisible = false;
+            this.props.viewState.mobileView = null;
         }
     },
 
@@ -51,7 +52,7 @@ const DataCatalogItem = React.createClass({
                 selected={this.isSelected()}
                 text={item.name}
                 btnState={this.getState()}
-                onBtnClick={defined(item.invoke) ? this.setPreviewedItem : this.toggleEnable}
+                onBtnClick={defined(item.invoke) || this.props.viewState.useSmallScreenInterface ? this.setPreviewedItem : this.toggleEnable}
             />
         );
     },
@@ -59,6 +60,8 @@ const DataCatalogItem = React.createClass({
     getState() {
         if (this.props.item.isLoading) {
             return 'loading';
+        } else if (this.props.viewState.useSmallScreenInterface) {
+            return 'preview';
         } else if (this.props.item.isEnabled) {
             return 'remove';
         } else if (!defined(this.props.item.invoke)) {

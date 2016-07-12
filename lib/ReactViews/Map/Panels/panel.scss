@@ -17,7 +17,7 @@
   @include transform-origin(50%, top);
 
   box-shadow: $box-shadow;
-  z-index: 1;
+  z-index: 20;
   border-radius: $radius-small;
   background: $dark;
   color: #fff;
@@ -36,10 +36,6 @@
     bottom: auto;
     left: auto;
     margin: 14px 0 0 0;
-  }
-
-  &--is-on-top {
-    z-index: $front-component-z-index !important;
   }
 
   &.is-open {

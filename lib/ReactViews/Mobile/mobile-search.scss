@@ -24,5 +24,12 @@
   display: block;
 }
 
-@include empty-module("location")
+.location {
+  height: calc(100vh - #{$workbench-header + $logo-height});
+
+  @media screen and (max-width : $sm) {
+    height: calc(100vh - #{$mobile-header-height + $modal-header-height});
+  }
+}
+
 @include empty-module("data")

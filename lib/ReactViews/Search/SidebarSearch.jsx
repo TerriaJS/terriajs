@@ -70,7 +70,7 @@ export default React.createClass({
     },
 
     backToNowViewing() {
-        this.props.viewState.searchState.showLocationSearch = false;
+        this.props.viewState.searchState.showLocationSearchResults = false;
     },
 
     getMarkerIcon() {
