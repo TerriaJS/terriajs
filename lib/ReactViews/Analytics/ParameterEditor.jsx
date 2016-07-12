@@ -3,6 +3,7 @@ import React from 'react';
 import ObserveModelMixin from '../ObserveModelMixin';
 import PointParameterEditor from './PointParameterEditor';
 import RectangleParameterEditor from './RectangleParameterEditor';
+import PolygonParameterEditor from './PolygonParameterEditor';
 import RegionParameterEditor from './RegionParameterEditor';
 import RegionTypeParameterEditor from './RegionTypeParameterEditor';
 import RegionDataParameterEditor from './RegionDataParameterEditor';
@@ -36,6 +37,13 @@ const ParameterEditor = React.createClass({
                 />);
             case 'rectangle':
                 return <RectangleParameterEditor
+                    previewed={this.props.previewed}
+                    viewState={this.props.viewState}
+                    parameter={this.props.parameter}
+                    parameterValues={this.props.parameterValues}
+                />;
+            case 'polygon':
+                return <PolygonParameterEditor
                     previewed={this.props.previewed}
                     viewState={this.props.viewState}
                     parameter={this.props.parameter}
@@ -94,7 +102,7 @@ const ParameterEditor = React.createClass({
                        htmlFor={this.fieldId + this.props.parameter.type}>
                     {this.props.parameter.name}
                     {this.props.parameter.isRequired &&
-                    <span>(required)</span>
+                    <span> (required)</span>
                     }
                 </label>
                 <div id={this.fieldId + this.props.parameter.type} className={Styles.fieldParameterEditor}>

@@ -11,6 +11,13 @@ const EnumerationParameterEditor = React.createClass({
         parameterValues: React.PropTypes.object
     },
 
+    getInitialState() {
+        this.props.parameterValues[this.props.parameter.id] = this.props.parameter.possibleValues[0];
+        return {
+            value: this.props.parameterValues[this.props.parameter.id]
+        };
+    },
+
     onChange(e) {
         this.props.parameterValues[this.props.parameter.id] = e.target.value;
     },
