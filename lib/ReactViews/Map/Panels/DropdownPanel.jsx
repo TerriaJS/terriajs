@@ -114,10 +114,6 @@ const DropdownPanel = React.createClass({
         return `do-not-react-${this.props.btnText}-${this.props.btnTitle}-${this.props.theme.btn}`;
     },
 
-    bringToFront() {
-        this.props.viewState.switchComponentOrder(this.props.viewState.componentOrderOptions.dropdownPanel);
-    },
-
     render() {
         return (
             <div className={classNames({[Styles.isOpen]: this.state.isOpenCss}, Styles.panel, this.props.theme.outer)}>
@@ -134,8 +130,7 @@ const DropdownPanel = React.createClass({
                 <If condition={this.state.isOpen}>
                     <div className={classNames(
                             Styles.inner,
-                            this.props.theme.inner,
-                            {[Styles.innerIsOnTop]: this.props.viewState.componentOnTop === this.props.viewState.componentOrderOptions.dropdownPanel}
+                            this.props.theme.inner
                          )}
                          onClick={this.onPanelClicked}
                          ref={this.onInnerMounted}

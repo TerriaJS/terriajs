@@ -23,16 +23,12 @@
   box-shadow: $box-shadow;
   position: absolute;
   margin-top: 15px;
-  z-index: 1;
+  z-index: 20;
   border-radius: $radius-small;
   background: $dark;
   color: #fff;
   border: $border-style;
   right: $padding*2;
-
-  &--is-on-top {
-    z-index: $front-component-z-index !important;
-  }
 }
 
 .caret {

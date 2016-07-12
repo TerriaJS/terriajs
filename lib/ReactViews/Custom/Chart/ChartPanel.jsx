@@ -1,7 +1,6 @@
 'use strict';
 
 import React from 'react';
-import classNames from 'classnames';
 
 import defined from 'terriajs-cesium/Source/Core/defined';
 
@@ -43,11 +42,6 @@ const ChartPanel = React.createClass({
         if (defined(this.props.onHeightChange)) {
             this.props.onHeightChange();
         }
-    },
-
-    bringToFront() {
-        // Bring chart to front.
-        this.props.viewState.switchComponentOrder(this.props.viewState.componentOrderOptions.chart);
     },
 
     render() {
@@ -107,8 +101,7 @@ const ChartPanel = React.createClass({
         }
         return (
             <div
-                className={classNames(Styles.holder, {[Styles.isTop]: this.props.viewState && this.props.viewState.componentOnTop === this.props.viewState.componentOrderOptions.chart})}
-                onClick={this.bringToFront}>
+                className={Styles.holder}>
                 <div className={Styles.inner}>
                     <div className={Styles.chartPanel} style={{height: height}}>
                         <div className={Styles.body}>
