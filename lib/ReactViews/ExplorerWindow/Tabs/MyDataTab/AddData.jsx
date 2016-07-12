@@ -128,6 +128,14 @@ const AddData = React.createClass({
             isOpen: Styles.dropdownListIsOpen
         };
 
+        const dataTypes = localDataType.reduce(function(result, currentDataType) {
+            if (currentDataType.extensions) {
+                return result.concat(currentDataType.extensions.map(extension => '.' + extension));
+            } else {
+                return result;
+            }
+        }, []);
+
         return (
             <div className={Styles.tabPanels}>
                 <If condition={this.state.activeTab === 'local'}>
@@ -137,7 +145,7 @@ const AddData = React.createClass({
                                   selectOption={this.selectLocalOption} matchWidth={true} theme={dropdownTheme}/>
                         <label className={Styles.label}><strong>Step 2:</strong> Select a local data file to add:
                         </label>
-                        <FileInput accept=".csv,.kml" onChange={this.handleUploadFile}/>
+                        <FileInput accept={dataTypes.join(',')} onChange={this.handleUploadFile}/>
                     </section>
                 </If>
                 <If condition={this.state.activeTab === 'web'}>
