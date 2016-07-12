@@ -12,7 +12,7 @@
   max-width: 95%;
   min-width: 150px;
   max-height: 80vh;
-  z-index: 0;
+  z-index: 10;
 
   svg{
     fill: #fff;
@@ -32,10 +32,6 @@
     min-height: 0;
     page-break-after : auto;
   }
-}
-
-.is-on-top {
-  z-index: $front-component-z-index!important;
 }
 
 .is-collapsed {
