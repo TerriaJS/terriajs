@@ -6,7 +6,7 @@
   top: 0;
   left: 0;
   width: 100vw;
-  height: auto;
+  height: 50px;
   z-index: 13;
   @media screen and (min-width: $sm) {
     left: -99999px;
@@ -21,7 +21,7 @@
   width: 100%;
   background: $dark;
   padding: $padding-small;
-  height: auto;
+  height: 100%;
 }
 
 .btnAdd{
@@ -82,15 +82,16 @@
 
 .group-left {
   composes: flex from '../../Sass/common/_base.scss';
-  composes: col-7 from '../../Sass/common/_base.scss';
-  float: left;
+  position: absolute;
+  left: 5px;
+  right: 200px;
+  overflow: hidden;
 }
 
 .group-right {
   composes: flex from '../../Sass/common/_base.scss';
-  composes: col-5 from '../../Sass/common/_base.scss';
-  float: left;
-  justify-content: flex-end;
+  position: absolute;
+  right: 0;
 }
 
 .mobile-nav {
