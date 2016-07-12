@@ -1,0 +1,12 @@
+@import '~terriajs-variables';
+
+.map-navigation{
+  position: fixed;
+  top: 20px;
+  right: $padding;
+  z-index: 1;
+
+  @media print{
+    display: none;
+  }
+}

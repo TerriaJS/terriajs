@@ -2,6 +2,16 @@
 Change Log
 ==========
 
+### 4.0.0
+
+* `CswCatalogGroup` will now include Web Processing Services from the catalog if configured with `includeWps` set to true.
+* `WebMapServiceCatalogItem` will now detect ncWMS servers and set isNcWMS to true.
+* New `ShareDataService` which can store and resolve data. Currently it is used as a replacement for Google URL Shortener, which can't handle long URLs.
+* New `ServerConfig` object which provides configuration information about the server, including which domains can be proxied for. This changes the way CorsProxy is initialised.
+* Added partial support for the SDMX-JSON format.
+* `UserDrawing` added for drawing lines and polygons on the map.
+* CkanCatalogGroup's `filterQuery` items can now be specified as objects instead of URL-encoded strings.
+
 ### 3.5.0
 
 * Ungrouped items in CKAN catalog items are now grouped under an item whose title is determined by .ungroupedTitle (default: "No group").
@@ -10,10 +20,11 @@ Change Log
 
 ### 3.4.0
 
-* Support JSON5 (http://json5.org/) use in init files and config files, so comments can be used and object keys don't need to be quoted. 
+* Support JSON5 (http://json5.org/) use in init files and config files, so comments can be used and object keys don't need to be quoted.
 * Fixed a bug that caused the `corsProxyBaseUrl` specified in `config.json` to be ignored.
 * Fixed a bug preventing downloading feature info data in CSV format if it contained nulls.
 * Added support for the WMS Style/MetadataURL tag in layer description.
+* Long titles in locally-generated titles now word-wrap in most web browsers.
 * Long auto-generated legend titles now word wrap in most web browsers.
 
 ### 3.3.0
@@ -200,6 +211,17 @@ Change Log
   - `nullColor`: A css string. Defaults to black. This colour is used to display null values. It is also used to colour points when no variable is selected.
   - `nullLabel`: A string used to label null or blank values in the legend. Defaults to ''.
   - `timeColumn`: Provide the name or index (starting at 0) of a csv column, if any. Defaults to the first time column found, if any. Use `null` to explicitly disregard all time columns.
+* Removed variables consisting only of html tags from the Now Viewing panel.
+* Added support for the csv datetime formats: YYYY, YYYY-MM and YYYY-MM-DD HH:MM(:SS).
+* Improved formatting of datetimes from csv files in the feature info panel.
+* Removed variables consisting only of html tags from the Now Viewing panel.
+* Improved handling of rows with missing dates in csv time columns.
+* Introduced four new json tableStyle parameters:
+  - `replaceWithZeroValues`: Defaults to `[null, '-']`. These values are coloured as if they were zero if they appear in a csv column with numbers. `null` catches missing values. These rows are ignored if they appear in a csv time column.
+  - `replaceWithNullValues`: Defaults to `['na', 'NA']`. These values are coloured as if they were null if they appear in a csv column with numbers. These rows are ignored if they appear in a csv time column.
+  - `nullColor`: A css string. Defaults to a dark blue. This colour is used to display null values (but it does not appear on the legend). It is also used to colour points when no variable is selected.
+  - `timeColumn`: Provide the name or index (starting at 0) of a csv column, if any. Defaults to the first time column found, if any. Use `null` to explicitly disregard all time columns.
+* Added id matching for catalog members:
 * Improved formatting of datetimes from csv files in the feature info panel.
 * Removed variables consisting only of HTML tags from the Now Viewing panel.
 * Added ID matching for catalog members:

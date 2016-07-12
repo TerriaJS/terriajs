@@ -588,7 +588,7 @@
       "server": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
       "regionProp": "ISO3",
       "aliases": [
-        "iso3",
+        "cnt3",
         "iso3",
         "country"
       ],

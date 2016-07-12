@@ -1,0 +1,81 @@
+@import '~terriajs-variables';
+@import '../../../Sass/common/mixins';
+
+// concept-viewer
+
+.root {
+  padding: $padding 0 0 0;
+}
+
+.inner {
+  padding: 0 $padding;
+  background: $overlay;
+}
+
+.children-list {
+  composes: list-reset from '../../../Sass/common/_base.scss';
+  composes: clearfix from '../../../Sass/common/_base.scss';
+}
+
+.header {
+  padding: 5px 0 5px 22px;
+  position: relative;
+  line-height: 1.4;
+
+  button {
+    svg{
+      fill: #fff;
+    }
+  }
+
+  .btnGroup{
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: block;
+    width: 14px;
+  }
+
+  &.hasChildren.isSelectable{
+    padding: 5px 0 5px 36px;
+    .btnGroup{
+      width: 32px;
+    }
+    .btnToggleOpen{
+      float: left;
+    }
+    .btnToggleActive{
+      float: right;
+    }
+  }
+}
+
+
+
+.btnToggleOpen{
+  display: block;
+  padding: 7px 0px;
+  svg{
+    height: 14px;
+    width: 14px;
+  }
+}
+
+.btnToggleActive{
+  display: block;
+  padding: 7px 0px;
+  svg{
+    height: 14px;
+    width: 14px;
+  }
+}
+
+
+
+.items {
+  composes: list-reset from '../../../Sass/common/_base.scss';
+  margin-left: 18px;
+  font-weight: 300;
+}
+
+

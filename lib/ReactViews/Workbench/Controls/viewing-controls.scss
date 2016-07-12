@@ -1,0 +1,39 @@
+@import '~terriajs-variables';
+
+.control {
+  composes: list-reset from '../../../Sass/common/_base.scss';
+  composes: clearfix from '../../../Sass/common/_base.scss';
+  height: 18px;
+  position: relative;
+
+  li {
+    display: inline-block;
+    position: absolute;
+    //padding: 0 $padding;
+  }
+}
+
+.remove {
+  right: 0;
+  svg{
+    height: 20px;
+    width: 20px;
+    fill: #fff;
+    vertical-align: bottom;
+    display: inline-block;
+  }
+}
+
+.btn {
+  composes: btn from '../../../Sass/common/_buttons.scss';
+  &.btn {
+    padding: 0;
+    font-size: $font-size-mini;
+  }
+}
+.info {
+  left: 33%;
+  padding: 0 5%;
+  border-left: 1px solid $border-color;
+  border-right: 1px solid $border-color;
+}

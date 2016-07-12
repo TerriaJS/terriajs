@@ -1,0 +1,35 @@
+@import '~terriajs-variables';
+@import '../Sass/common/mixins';
+
+.header{
+  composes: sm-show from '../Sass/common/_base.scss';
+  composes: clearfix from '../Sass/common/_base.scss';
+  composes: list-reset from '../Sass/common/_base.scss';
+
+  padding-left: $padding-small + $padding;
+  // Line up remove icons when there is no scrollbar
+  padding-right: $padding-small + $padding + 1;
+
+  background-color: $overlay;
+  //to make sure scrolling of the content below the badge is correct
+  height: $badge-height;
+  line-height: $badge-height;
+  box-shadow: 0 1px 10px rgba(0,0,0,0.7);
+
+  li{
+    display: inline-block;
+    float: left;
+    font-size: 12px;
+    &:last-child{
+      float: right;
+    }
+  }
+}
+
+.label-badge {
+  text-align: center;
+  box-sizing: content-box;
+  padding: 0;
+  margin-top: 7px;
+  margin-left: 10px;
+}

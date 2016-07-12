@@ -1,0 +1,291 @@
+@import '~terriajs-variables';
+
+$btn-setting-size: 35px;
+
+::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+
+.btn {
+  font-weight: $font-weight-normal;
+  box-shadow: none;
+  border: 0;
+  text-align: left;
+  cursor: pointer;
+  line-height: $btn-default-line-height;
+  padding: $padding;
+  &:focus, &:hover {
+    box-shadow: none;
+    border-color: transparent;
+    outline: none;
+    opacity: 0.9;
+  }
+}
+
+.btn-transparent {
+  background: transparent;
+  margin: 0;
+}
+
+.btn-small {
+  padding: 0;
+  &:hover, &:focus {
+    color: $color-primary;
+  }
+}
+
+.btn-primary {
+  display: block;
+  background: $color-primary;
+  font-family: 'Open Sans', sans-serif;
+  color: #fff;
+  text-align: center;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: $radius-small;
+
+  &:hover, &--hover {
+    background: lighten($color-primary, 10%);
+  }
+}
+
+.btn-grey {
+  padding: 0;
+  text-transform: uppercase;
+  font-size: $font-size-mini;
+  text-align: center;
+  width: 100%;
+  line-height: 4;
+  background: rgba(#fff, 0.15);
+  border: 1px solid transparent;
+  &:hover {
+    border: $border-style;
+  }
+  &.is-active {
+    background: $color-primary;
+    border-color: $color-primary;
+    color: #fff;
+  }
+}
+
+.btn--add-to-map {
+  color: $color-primary;
+}
+
+.btn--secondary {
+  color: $color-primary;
+  border: 2px solid $color-primary;
+  border-radius: 4px;
+
+  &:hover, &:focus {
+    border: 2px solid lighten($color-primary, 10%);
+    color: lighten($color-primary, 10%);
+  }
+}
+
+.btn--tertiary {
+  background-color: #FFF;
+  color: $modal-text;
+  border: 2px solid $modal-text;
+  border-radius: 4px;
+  padding: 8px 10px;
+
+  &:hover, &:focus {
+    border: 2px solid $color-primary;
+    color: $color-primary;
+  }
+}
+
+.btn--tertiary-dark {
+  color: #FFF;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 4px;
+  padding: 8px 10px;
+
+  &:hover, &:focus {
+    border: 1px solid $color-primary;
+    color: $color-primary;
+  }
+}
+
+.btn--remove-from-map {
+  color: $color-primary;
+}
+
+.btn--loading-on-map {
+  color: $color-primary;
+}
+
+.btn--close-modal {
+  @extend .btn--secondary;
+
+  font-size: 0.8rem;
+  padding: 4px 10px;
+  margin: 5px;
+  font-weight: bold;
+}
+
+
+.btn--catalog {
+  padding: $padding 30px+$padding;
+  @media screen and (min-width: $sm){
+    padding: $padding-small 30px+$padding;
+  }
+
+  position: relative;
+  width: 100%;
+  font-weight: bold;
+  .btn--group-indicator {
+    position: absolute;
+    left: 0;
+    padding: $padding $padding*2.2 $padding $padding*1.5;
+    @media screen and (min-width: $sm){
+      padding: $padding-small $padding*2.2 $padding-small $padding*1.5;
+    }
+    top: 0;
+    font-size: 1.1rem;
+    opacity: 0.5;
+  }
+  &:before {
+    position: absolute;
+    right: 5px;
+    top: $padding;
+    @media screen and (min-width: $sm){
+      top: $padding-small;
+    }
+
+  }
+  &:hover,
+  &:focus {
+    background: $modal-highlight;
+    color: #fff;
+    .btn--group-indicator {
+      color: #fff;
+    }
+  }
+}
+
+
+.btn--catalog-item {
+  position: relative;
+  width: 100%;
+  padding: $padding-small $padding*2.2 $padding-small $padding*1.5;
+
+  &:focus, &:hover {
+    color: $modal-highlight;
+    &:before {
+      opacity: 1;
+    }
+  }
+  .is-previewed & {
+    color: $modal-highlight;
+    font-weight: $font-weight-bold;
+    &:before {
+      opacity: 1;
+    }
+  }
+  &.is-active {
+    color: $modal-highlight;
+  }
+}
+
+// Modal window tab buttons
+//
+// Tab buttons in modal window
+//
+// Markup:
+// <button class="btn btn--tab">Button</button>
+//
+// Style guide: Buttons.modal-tab
+//
+
+.btn.btn--tab {
+  border-right: 1px solid $modal-border;
+  font-family: $font-pop;
+  background: $modal-bg;
+  color: $modal-text;
+  font-size: 1rem;
+  text-transform: uppercase;
+  padding: $padding $padding*2;
+  border-bottom: 2px solid transparent;
+  li[aria-selected='true'] & {
+    background: #fff;
+    color: $modal-highlight;
+  }
+}
+
+// Map buttons
+//
+// Buttons on the map
+//
+// Markup:
+// <button class="btn btn--map full-screen__button" title="full screen mode"></button>
+//
+// Style guide: Buttons.map-buttons
+
+.btn--map {
+  font-size: 12px;
+  padding: 5px 5px;
+  color: #fff;
+  display: block;
+  height: 25px;
+  font-family: $font-pop;
+  opacity: 0.95;
+  background-color: $charcoal-grey;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.25);
+  line-height: 1.3;
+  &:hover,
+  &:focus,
+  .is-open &,
+  &.is-active {
+    background: $color-primary;
+    text-decoration: none;
+  }
+  svg{
+    height: 15px;
+    width: 15px;
+    fill: #fff;
+    display: inline-block;
+    padding: 0 5px;
+  }
+
+  span{
+    vertical-align: top;
+    margin: 0 5px;
+  }
+}
+
+
+// Search Clear buttons
+//
+// Buttons to clear search
+//
+// Markup:
+// <button class="btn btn--search-clear" title="clear search text"></button>
+//
+// Style guide: Buttons.btn--search-clear
+
+.btn--search-clear {
+  padding: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: 12px;
+}
+
+.btn--radio {
+  padding: $padding-small;
+  &:before {
+    color: $color-primary;
+    display: inline-block;
+    padding: $padding-small $padding-small $padding-small 0;
+  }
+}
+
+//FIXME
+.btn--small, ._buttons__btn-primary.btn--small {
+  padding: 4px 9px;
+  margin-right: 4px;
+  font-size: 13px;
+}

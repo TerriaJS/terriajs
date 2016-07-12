@@ -1,0 +1,269 @@
+{
+    "header": {
+        "id": "Non-spatial",
+        "test": true
+    },
+    "dataSets": [{
+        "action": "Information",
+        "series": {
+            "0:0:0:0:0": {
+                "attributes": [0],
+                "observations": {
+                    "0": [1140.0, null],
+					"1": [11140.0, null],
+					"2": [21140.0, null]
+                }
+            },
+            "0:0:1:0:0": {
+                "attributes": [0],
+                "observations": {
+                    "0": [535.0, null],
+					"1": [1535.0, null],
+					"2": [2535.0, null]
+                }
+            },
+            "0:0:2:0:0": {
+                "attributes": [0],
+                "observations": {
+                    "0": [79.0, null],
+					"1": [179.0, null],
+					"2": [279.0, null]
+                }
+            },
+            "0:0:3:0:0": {
+                "attributes": [0],
+                "observations": {
+                    "0": [12.0, null],
+					"1": [112.0, null],
+					"2": [212.0, null]
+                }
+            },
+            "0:0:4:0:0": {
+                "attributes": [0],
+                "observations": {
+                    "0": [38.0, null],
+					"1": [138.0, null],
+					"2": [238.0, null]
+                }
+            },
+            "1:0:0:0:0": {
+                "attributes": [0],
+                "observations": {
+                    "0": [140.0, null],
+					"1": [1140.0, null],
+					"2": [2140.0, null]
+                }
+            },
+            "1:0:1:0:0": {
+                "attributes": [0],
+                "observations": {
+                    "0": [35.0, null],
+					"1": [135.0, null],
+					"2": [235.0, null]
+                }
+            },
+            "1:0:2:0:0": {
+                "attributes": [0],
+                "observations": {
+                    "0": [179.0, null],
+					"1": [1179.0, null],
+					"2": [2179.0, null]
+                }
+            },
+            "1:0:3:0:0": {
+                "attributes": [0],
+                "observations": {
+                    "0": [112.0, null],
+					"1": [1112.0, null],
+					"2": [2112.0, null]
+                }
+            },
+            "1:0:4:0:0": {
+                "attributes": [0],
+                "observations": {
+                    "0": [138.0, null],
+					"1": [1138.0, null],
+					"2": [2138.0, null]
+                }
+            },
+            "0:0:0:0:1": {
+                "attributes": [0],
+                "observations": {
+                    "0": [2140.0, null],
+					"1": [12140.0, null],
+					"2": [22140.0, null]
+                }
+            },
+            "0:0:1:0:1": {
+                "attributes": [0],
+                "observations": {
+                    "0": [2535.0, null],
+					"1": [12535.0, null],
+					"2": [22535.0, null]
+                }
+            },
+            "0:0:2:0:1": {
+                "attributes": [0],
+                "observations": {
+                    "0": [2179.0, null],
+					"1": [12179.0, null],
+					"2": [22179.0, null]
+                }
+            },
+            "0:0:3:0:1": {
+                "attributes": [0],
+                "observations": {
+                    "0": [2112.0, null],
+					"1": [12112.0, null],
+					"2": [22112.0, null]
+                }
+            },
+            "0:0:4:0:1": {
+                "attributes": [0],
+                "observations": {
+                    "0": [2138.0, null],
+					"1": [12138.0, null],
+					"2": [22138.0, null]
+                }
+            },
+            "1:0:0:0:1": {
+                "attributes": [0],
+                "observations": {
+                    "0": [1140.0, null],
+					"1": [11140.0, null],
+					"2": [21140.0, null]
+                }
+            },
+            "1:0:1:0:1": {
+                "attributes": [0],
+                "observations": {
+                    "0": [1035.0, null],
+					"1": [11035.0, null],
+					"2": [21035.0, null]
+                }
+            },
+            "1:0:2:0:1": {
+                "attributes": [0],
+                "observations": {
+                    "0": [579.0, null],
+					"1": [1579.0, null],
+					"2": [2579.0, null]
+                }
+            },
+            "1:0:3:0:1": {
+                "attributes": [0],
+                "observations": {
+                    "0": [1512.0, null],
+					"1": [11512.0, null],
+					"2": [21512.0, null]
+                }
+            },
+            "1:0:4:0:1": {
+                "attributes": [0],
+                "observations": {
+                    "0": [2138.0, null],
+					"1": [12138.0, null],
+					"2": [22138.0, null]
+                }
+            }
+        }
+    }],
+    "structure": {
+        "name": "Non-spatial data",
+        "description": "Non-spatial data",
+        "dimensions": {
+            "series": [{
+                "keyPosition": 0,
+                "id": "MEASURE",
+                "name": "Data Item",
+                "values": [{
+                    "id": "BD_2",
+                    "name": "Births"
+                }, {
+                    "id": "BD_4",
+                    "name": "Deaths"
+                }]
+            }, {
+                "keyPosition": 1,
+                "id": "SOMETHING",
+                "name": "Something",
+                "values": [{
+                    "id": "Number",
+                    "name": "Number"
+                }]
+            }, {
+                "keyPosition": 2,
+                "id": "EDUCATION",
+                "name": "Education",
+                "values": [{
+                    "id": "Primary",
+                    "name": "Primary school only"
+                }, {
+                    "id": "Secondary",
+                    "name": "Secondary school only"
+                }, {
+                    "id": "Tertiary",
+                    "name": "Undergraduate degree"
+                }, {
+                    "id": "Postgrad",
+                    "name": "Postgraduate degree"
+                }, {
+                    "id": "None",
+                    "name": "None"
+                }]
+            }, {
+                "keyPosition": 3,
+                "id": "FREQUENCY",
+                "name": "Frequency",
+                "values": [{
+                    "id": "A",
+                    "name": "Annual"
+                }],
+                "role": "FREQ"
+            }, {
+                "keyPosition": 4,
+                "id": "AGE",
+                "name": "Age",
+                "values": [{
+                    "id": "0-20",
+                    "name": "0 - 20 Years"
+                }, {
+                    "id": "21+",
+                    "name": "21+ Years"
+                }]
+            }],
+            "observation": [{
+                "id": "TIME_PERIOD",
+                "name": "Time",
+                "values": [{
+                    "id": "2011",
+                    "name": "2011"
+                }, {
+                    "id": "2012",
+                    "name": "2012"
+                }, {
+                    "id": "2013",
+                    "name": "2013"
+                }],
+                "role": "TIME_PERIOD"
+            }]
+        },
+        "attributes": {
+            "dataSet": [],
+            "series": [{
+                "id": "TIME_FORMAT",
+                "name": "Time Format",
+                "values": [{
+                    "id": "P1Y",
+                    "name": "Annual"
+                }]
+            }],
+            "observation": [{
+                "id": "OBS_STATUS",
+                "name": "Observation Status",
+                "values": []
+            }]
+        },
+        "annotations": []
+    }
+}

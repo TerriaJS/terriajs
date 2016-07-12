@@ -1,0 +1,22 @@
+@import '~terriajs-variables';
+@import '../../Sass/common/mixins';
+
+.branding {
+  height: $sm-logo-height;
+  overflow: hidden;
+  @include transition(all, 0.5s, linear);
+
+  @media screen and (min-width: $sm) {
+    width: 100%;
+    padding: $padding;
+    height: $logo-height;
+  }
+
+  @media print{
+    height: 2cm;
+  }
+
+  img {
+    max-height: 100%;
+  }
+}
