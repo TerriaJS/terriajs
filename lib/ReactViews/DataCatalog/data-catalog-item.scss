@@ -29,6 +29,12 @@
       opacity: 1;
     }
   }
+
+  @media screen and (max-width: $sm) {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid $grey-lighter;
+  }
 }
 
 .btn-action {
@@ -36,6 +42,11 @@
   color: $color-primary;
   right: 0;
   top: 0;
+
+  @media screen and (max-width: $sm) {
+    top: 5px;
+  }
+
   svg{
     height: 30px;
     width: 30px;

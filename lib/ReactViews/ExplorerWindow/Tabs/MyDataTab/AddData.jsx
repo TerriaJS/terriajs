@@ -101,10 +101,10 @@ const AddData = React.createClass({
     renderTabs() {
         const tabs = [{
             id: 'local',
-            caption: 'ADD LOCAL DATA'
+            caption: 'Add Local Data'
         }, {
             id: 'web',
-            caption: 'ADD WEB DATA'
+            caption: 'Add Web Data'
         }];
 
         return (

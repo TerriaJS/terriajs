@@ -21,12 +21,14 @@ const Tabs = React.createClass({
         return {
             tabs: this.props.tabs || [
                 {
+                    name: 'Data Catalog',
                     title: 'data-catalog',
                     panel: <DataCatalogTab terria={this.props.terria}
                                            viewState={this.props.viewState}
                     />
                 },
                 {
+                    name: 'My Data',
                     title: 'my-data',
                     panel: <MyDataTab terria={this.props.terria}
                                       viewState={this.props.viewState}
@@ -56,7 +58,7 @@ const Tabs = React.createClass({
                             <button type='button'
                                     onClick={this.activateTab.bind(this, i)}
                                     className={classNames(Styles.btnTab, {[Styles.btnSelected]: this.props.viewState.modalTabIndex === i})}>
-                                {item.title.replace(/-/g, ' ')}
+                                {item.name}
                             </button>
                         </li>
                     </For>

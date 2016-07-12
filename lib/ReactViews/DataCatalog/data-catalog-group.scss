@@ -5,15 +5,17 @@
 
 .btn--catalog {
   text-align: left;
-  padding: $padding 30px+$padding;
+  padding: $padding-small 30px+$padding;
   position: relative;
   width: 100%;
   font-weight: bold;
   svg{
     display: inline-block;
   }
-  @media screen and (min-width: $sm) {
-    padding: $padding-small 30px+$padding;
+  @media screen and (max-width: $sm) {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid $grey-lighter;
   }
 
   &:hover, &:focus {
@@ -55,7 +57,7 @@
 .caret {
   position: absolute;
   right: 2px;
-  top: 5px;
+  top: 7px;
   svg{
     fill: $charcoal-grey;
     opacity: 0.5;
@@ -64,6 +66,7 @@
   }
   @media screen and (min-width: $sm) {
     right: 5px;
+    top: 5px;
     svg{
       height: 18px;
       width: 18px;

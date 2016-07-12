@@ -4,6 +4,11 @@
 .preview {
     height: 100%;
     overflow: hidden;
+
+    @media screen and (max-width: $sm){
+      height: calc(100vh - #{$mobile-header-height + $modal-header-height});
+      overflow: auto;
+    }
 }
 .placeholder {
   text-align: center;
