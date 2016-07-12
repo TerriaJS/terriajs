@@ -52,7 +52,6 @@ $btn-setting-size: 35px;
 
 .btn-grey {
   padding: 0;
-  text-transform: uppercase;
   font-size: $font-size-mini;
   text-align: center;
   width: 100%;
@@ -206,7 +205,6 @@ $btn-setting-size: 35px;
   background: $modal-bg;
   color: $modal-text;
   font-size: 1rem;
-  text-transform: uppercase;
   padding: $padding $padding*2;
   border-bottom: 2px solid transparent;
   li[aria-selected='true'] & {
