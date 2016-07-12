@@ -20,6 +20,12 @@ export default function MobileMenuItem(props) {
     );
 }
 
+MobileMenuItem.propTypes = {
+    href: React.PropTypes.string,
+    onClick: React.PropTypes.func,
+    caption: React.PropTypes.string
+};
+
 MobileMenuItem.defaultProps = {
     onClick: () => {}
 };

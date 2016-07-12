@@ -19,9 +19,9 @@ const InnerPanel = React.createClass({
         /** How far the caret at the top of the panel should be from its left, as CSS (so #px or #% are both valid) */
         caretOffset: React.PropTypes.string,
         /** Will be passed as "ref" to the outermost element */
-        innerRef: React.PropTypes.oneOf(React.PropTypes.func, React.PropTypes.string),
+        innerRef: React.PropTypes.oneOfType([React.PropTypes.func, React.PropTypes.string]),
 
-        children: React.PropTypes.arrayOf(React.PropTypes.element)
+        children: React.PropTypes.oneOfType([React.PropTypes.arrayOf(React.PropTypes.element), React.PropTypes.element])
     },
 
     getDefaultProps() {

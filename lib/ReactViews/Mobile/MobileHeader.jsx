@@ -121,7 +121,8 @@ const MobileHeader = React.createClass({
                     </Choose>
                 </div>
                 <MobileMenu menuItems={this.props.menuItems}
-                            viewState={this.props.viewState} />
+                            viewState={this.props.viewState}
+                            showFeedback={!!this.props.terria.configParameters.feedbackUrl}/>
                 <MobileModalWindow terria={this.props.terria}
                                    viewState={this.props.viewState}
                                    searches={this.state.searches}
