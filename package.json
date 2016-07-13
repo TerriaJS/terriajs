@@ -93,7 +93,7 @@
     "svg-sprite-loader": "0.0.23",
     "socket.io": "1.4.7",
     "terriajs-jasmine-ajax": "^3.2.1",
-    "terriajs-server": "^2.3.0",
+    "terriajs-server": "^2.5.1",
     "webpack-dev-server": "^1.14.1"
   },
   "peerDependencies": {
