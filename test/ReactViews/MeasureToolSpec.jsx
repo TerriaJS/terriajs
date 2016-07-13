@@ -4,11 +4,6 @@
 // import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 import React from 'react';
 import ReactTestUtils from 'react-addons-test-utils';
-
-// Note getMountedInstance will be built into React 15, and not available in v2.0.0 of react-shallow-testutils
-// cf. https://github.com/sheepsteak/react-shallow-testutils/commit/8daa3c2361acfa6ec45f533cf7eea5751c51bf24
-import {getMountedInstance} from 'react-shallow-testutils';
-
 import Terria from '../../lib/Models/Terria';
 
 import MeasureTool from '../../lib/ReactViews/Map/Navigation/MeasureTool';
@@ -20,6 +15,11 @@ const Cartographic = require('terriajs-cesium/Source/Core/Cartographic');
 const CustomDataSource = require('terriajs-cesium/Source/DataSources/CustomDataSource');
 const CesiumMath = require('terriajs-cesium/Source/Core/Math');
 
+function getMounted(jsx) {
+    const renderer = ReactTestUtils.createRenderer();
+    renderer.render(jsx);
+    return renderer.getMountedInstance(renderer);
+}
 
 describe('MeasureTool-jsx', function() {
 
@@ -33,9 +33,7 @@ describe('MeasureTool-jsx', function() {
 
     it('prettifies distance when distance is in metres', function() {
         const measureTool = <MeasureTool terria={terria}/>;
-        const renderer = ReactTestUtils.createRenderer();
-        renderer.render(measureTool);
-        const instance = getMountedInstance(renderer);
+        const instance = getMounted(measureTool);
         let squared = false;
         const prettyDistance = instance.prettifyNumber(480, squared);
 
@@ -49,9 +47,7 @@ describe('MeasureTool-jsx', function() {
 
     it('prettifies distance when distance is in kilometres', function() {
         const measureTool = <MeasureTool terria={terria}/>;
-        const renderer = ReactTestUtils.createRenderer();
-        renderer.render(measureTool);
-        const instance = getMountedInstance(renderer);
+        const instance = getMounted(measureTool);
         const prettyDistance = instance.prettifyNumber(1280.23, false);
 
         expect(prettyDistance).toEqual("1.28 km");
@@ -59,9 +55,7 @@ describe('MeasureTool-jsx', function() {
 
     it('prettifies distance when distance is very large', function() {
         const measureTool = <MeasureTool terria={terria}/>;
-        const renderer = ReactTestUtils.createRenderer();
-        renderer.render(measureTool);
-        const instance = getMountedInstance(renderer);
+        const instance = getMounted(measureTool);
         const prettyDistance = instance.prettifyNumber(123123280.23, false);
 
         expect(prettyDistance).toEqual("123,123.28 km");
@@ -69,9 +63,7 @@ describe('MeasureTool-jsx', function() {
 
     it('measures geodesic distance in 3D mode', function() {
         const measureTool = <MeasureTool terria={terria}/>;
-        const renderer = ReactTestUtils.createRenderer();
-        renderer.render(measureTool);
-        const instance = getMountedInstance(renderer);
+        const instance = getMounted(measureTool);
 
         // Roughly Auckland
         const positionOne = new Cartesian3(-5088454.576893678, 465233.10329933715, -3804299.6786334896);
@@ -88,9 +80,7 @@ describe('MeasureTool-jsx', function() {
     it('measures geodesic distance in 2D mode', function() {
         terria.viewerMode = '2d';
         const measureTool = <MeasureTool terria={terria}/>;
-        const renderer = ReactTestUtils.createRenderer();
-        renderer.render(measureTool);
-        const instance = getMountedInstance(renderer);
+        const instance = getMounted(measureTool);
 
         // Roughly Auckland
         const positionOne = new Cartesian3(-5088454.576893678, 465233.10329933715, -3804299.6786334896);
@@ -106,9 +96,7 @@ describe('MeasureTool-jsx', function() {
 
     it('measures distance accurately', function() {
         const measureTool = <MeasureTool terria={terria}/>;
-        const renderer = ReactTestUtils.createRenderer();
-        renderer.render(measureTool);
-        const instance = getMountedInstance(renderer);
+        const instance = getMounted(measureTool);
 
         // And by accurately, I mean similar to google maps. Points are visually distinguishable points on parliament
         // house.
@@ -129,9 +117,7 @@ describe('MeasureTool-jsx', function() {
 
     it('measures distance accurately with geoscience australia test', function() {
         const measureTool = <MeasureTool terria={terria}/>;
-        const renderer = ReactTestUtils.createRenderer();
-        renderer.render(measureTool);
-        const instance = getMountedInstance(renderer);
+        const instance = getMounted(measureTool);
 
         const pointEntities = new CustomDataSource();
 
@@ -156,9 +142,7 @@ describe('MeasureTool-jsx', function() {
 
     it('measures distance accurately with more points', function() {
         const measureTool = <MeasureTool terria={terria}/>;
-        const renderer = ReactTestUtils.createRenderer();
-        renderer.render(measureTool);
-        const instance = getMountedInstance(renderer);
+        const instance = getMounted(measureTool);
 
         // And by accurately, I mean similar to google maps. Points are visually distinguishable points on parliament
         // house. This is roughly the same distance as 'measures distance accurately' but has more points.
@@ -188,9 +172,7 @@ describe('MeasureTool-jsx', function() {
 
     it('updates distance when a point is removed', function() {
         const measureTool = <MeasureTool terria={terria}/>;
-        const renderer = ReactTestUtils.createRenderer();
-        renderer.render(measureTool);
-        const instance = getMountedInstance(renderer);
+        const instance = getMounted(measureTool);
 
         const pointEntities = new CustomDataSource();
         pointEntities.entities.add(new Entity({
@@ -220,9 +202,7 @@ describe('MeasureTool-jsx', function() {
 
     it('measures area correctly compared to hand-calculated area', function() {
         const measureTool = <MeasureTool terria={terria}/>;
-        const renderer = ReactTestUtils.createRenderer();
-        renderer.render(measureTool);
-        const instance = getMountedInstance(renderer);
+        const instance = getMounted(measureTool);
 
         const pointEntities = new CustomDataSource();
         const pt1Position = new Cartographic(CesiumMath.toRadians(149.121), CesiumMath.toRadians(-35.309), CesiumMath.toRadians(0));
