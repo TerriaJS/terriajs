@@ -20,6 +20,8 @@ const InnerPanel = React.createClass({
         caretOffset: React.PropTypes.string,
         /** Will be passed as "ref" to the outermost element */
         innerRef: React.PropTypes.oneOfType([React.PropTypes.func, React.PropTypes.string]),
+        /** How far the dropdown should be offset from the left of the container. */
+        dropdownOffset: React.PropTypes.string,
 
         children: React.PropTypes.oneOfType([React.PropTypes.arrayOf(React.PropTypes.element), React.PropTypes.element])
     },
@@ -32,14 +34,12 @@ const InnerPanel = React.createClass({
     },
 
     getInitialState() {
-        return {}
+        return {};
     },
 
     componentDidMount() {
         window.addEventListener('click', this.close);
-        this.setState({
-            isOpenCss: true
-        });
+        setTimeout(() => this.setState({isOpenCss: true}));
     },
 
     componentWillUnmount() {
@@ -68,15 +68,14 @@ const InnerPanel = React.createClass({
             <div className={classNames(
                     Styles.inner,
                     this.props.theme.inner,
-                    {[Styles.isOpen]: this.state.isOpenCss},
-                    {[Styles.innerIsOnTop]: this.props.onTop}
+                    {[Styles.isOpen]: this.state.isOpenCss}
                  )}
                  ref={this.props.innerRef}
-                 onClick={onPanelClicked}
+                 onClick={e => e.stopPropagation()}
                  style={{
-                    left: this.props.dropdownOffset,
-                    transformOrigin: this.props.caretOffset && `${this.props.caretOffset} top`
-                }}>
+                     left: this.props.dropdownOffset,
+                     transformOrigin: this.props.caretOffset && `${this.props.caretOffset} top`
+                 }}>
                 <If condition={defined(this.props.caretOffset)}>
                     <span className={Styles.caret} style={{left: this.props.caretOffset}}/>
                 </If>
@@ -87,9 +86,5 @@ const InnerPanel = React.createClass({
         );
     }
 });
-
-function onPanelClicked(e) {
-    e.stopPropagation();
-}
 
 export default InnerPanel;

@@ -26,7 +26,7 @@ const MobileMenu = React.createClass({
         return {
             menuItems: [],
             showFeedback: false
-        }
+        };
     },
 
     toggleMenu() {
@@ -43,7 +43,7 @@ const MobileMenu = React.createClass({
     },
 
     hideMenu() {
-        this.props.viewState.mobileMenuVisible = false
+        this.props.viewState.mobileMenuVisible = false;
     },
 
     render() {

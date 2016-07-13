@@ -21,7 +21,7 @@ const MapNavigation = React.createClass({
     getDefaultProps() {
         return {
             navItems: []
-        }
+        };
     },
 
     render() {
@@ -39,7 +39,7 @@ const MapNavigation = React.createClass({
                     <MyLocation terria={this.props.terria}/>
                 </div>
                 <For each="item" of={this.props.navItems}>
-                    <div key={item.key} className={Styles.control}>
+                    <div className={Styles.control}>
                         {item}
                     </div>
                 </For>

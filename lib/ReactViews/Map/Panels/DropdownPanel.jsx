@@ -1,4 +1,5 @@
-'use strict';
+// proptypes are in mixin
+/* eslint react/prop-types:0*/
 
 import React from 'react';
 import classNames from 'classnames';
@@ -7,7 +8,6 @@ import InnerPanel from './InnerPanel';
 import BaseOuterPanel from './BaseOuterPanel';
 
 import Styles from './panel.scss';
-
 
 const DropdownPanel = React.createClass({
     mixins: [BaseOuterPanel],

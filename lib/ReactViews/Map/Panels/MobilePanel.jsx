@@ -1,3 +1,6 @@
+// proptypes are in mixin.
+/* eslint react/prop-types:0*/
+
 import React from 'react';
 
 import MobileMenuItem from '../../Mobile/MobileMenuItem';
@@ -25,7 +28,7 @@ const MobilePanel = React.createClass({
                     </InnerPanel>
                 </If>
             </div>
-        )
+        );
     }
 });
 

@@ -19,7 +19,6 @@ import processCustomElements from './processCustomElements';
 
 import Styles from './standard-user-interface.scss';
 
-
 const StandardUserInterface = React.createClass({
     mixins: [ObserveModelMixin],
 
@@ -28,7 +27,8 @@ const StandardUserInterface = React.createClass({
         allBaseMaps: React.PropTypes.array,
         viewState: React.PropTypes.object.isRequired,
         minimumLargeScreenWidth: React.PropTypes.number,
-        version: React.PropTypes.string
+        version: React.PropTypes.string,
+        children: React.PropTypes.oneOfType(React.PropTypes.arrayOf(React.PropTypes.element), React.PropTypes.element)
     },
 
     getDefaultProps() {

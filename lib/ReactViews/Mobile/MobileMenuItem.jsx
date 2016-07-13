@@ -1,9 +1,8 @@
 import React from 'react';
 
-import defined from 'terriajs-cesium/Source/Core/defined';
-
 import Styles from './mobile-menu-item.scss';
 
+/** A simple text item in the mobile menu */
 export default function MobileMenuItem(props) {
     return (
         <div className={Styles.root}>
