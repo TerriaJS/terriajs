@@ -11,15 +11,16 @@ import Styles from './map-navigation.scss';
 // The map navigation region
 const MapNavigation = React.createClass({
     mixins: [ObserveModelMixin],
+
     propTypes: {
-        terria: React.PropTypes.object,
+        terria: React.PropTypes.object.isRequired,
         viewState: React.PropTypes.object.isRequired,
-        extraNavElements: React.PropTypes.arrayOf(React.PropTypes.element)
+        navItems: React.PropTypes.arrayOf(React.PropTypes.element)
     },
 
     getDefaultProps() {
         return {
-            extraNavElements: []
+            navItems: []
         };
     },
 
@@ -27,12 +28,20 @@ const MapNavigation = React.createClass({
         return (
             <div className={Styles.mapNavigation}>
                 <If condition={this.props.terria.viewerMode !== ViewerMode.Leaflet}>
-                    <Compass terria={this.props.terria}/>
+                    <div className={Styles.control}>
+                        <Compass terria={this.props.terria}/>
+                    </div>
                 </If>
-                <MyLocation terria={this.props.terria}/>
-                <ZoomControl terria={this.props.terria}/>
-                <For each="element" of={this.props.extraNavElements}>
-                    {element}
+                <div className={Styles.control}>
+                    <ZoomControl terria={this.props.terria}/>
+                </div>
+                <div className={Styles.control}>
+                    <MyLocation terria={this.props.terria}/>
+                </div>
+                <For each="item" of={this.props.navItems}>
+                    <div className={Styles.control}>
+                        {item}
+                    </div>
                 </For>
             </div>
         );

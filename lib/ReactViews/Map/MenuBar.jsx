@@ -15,12 +15,12 @@ const MenuBar = React.createClass({
         terria: React.PropTypes.object,
         viewState: React.PropTypes.object.isRequired,
         allBaseMaps: React.PropTypes.array,
-        extraMenuElements: React.PropTypes.arrayOf(React.PropTypes.element)
+        menuItems: React.PropTypes.arrayOf(React.PropTypes.element)
     },
 
     getDefaultProps() {
         return {
-            extraMenuElements: []
+            menuItems: []
         };
     },
 
@@ -29,19 +29,24 @@ const MenuBar = React.createClass({
             <div className={Styles.menuArea}>
                 <ul className={Styles.menu}>
                     <li className={Styles.menuItem}>
-                        <FullScreenButton terria={this.props.terria} viewState={this.props.viewState} />
+                        <FullScreenButton terria={this.props.terria} viewState={this.props.viewState}/>
                     </li>
                     <li className={Styles.menuItem}>
-                        <SettingPanel terria={this.props.terria} allBaseMaps={this.props.allBaseMaps} viewState={this.props.viewState} />
+                        <SettingPanel terria={this.props.terria}
+                                      allBaseMaps={this.props.allBaseMaps}
+                                      viewState={this.props.viewState}/>
                     </li>
                     <li className={Styles.menuItem}>
-                        <SharePanel terria={this.props.terria} viewState={this.props.viewState}/>
+                        <SharePanel terria={this.props.terria}
+                                    viewState={this.props.viewState}/>
                     </li>
-                    <For each="element" of={this.props.extraMenuElements} index="i">
-                        <li className={Styles.menuItem} key={i}>
-                            {element}
-                        </li>
-                    </For>
+                    <If condition={!this.props.viewState.useSmallScreenInterface}>
+                        <For each="element" of={this.props.menuItems} index="i">
+                            <li className={Styles.menuItem} key={i}>
+                                {element}
+                            </li>
+                        </For>
+                    </If>
                 </ul>
             </div>
         );

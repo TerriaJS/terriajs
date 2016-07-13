@@ -6,7 +6,7 @@
   top: 0;
   left: 0;
   width: 100vw;
-  height: 50px;
+  height: $mobile-header-height;
   z-index: 13;
   @media screen and (min-width: $sm) {
     left: -99999px;
@@ -92,37 +92,6 @@
   composes: flex from '../../Sass/common/_base.scss';
   position: absolute;
   right: 0;
-}
-
-.mobile-nav {
-  composes: list-reset from '../../Sass/common/_base.scss';
-  display: none;
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: $mobile-header-height;
-  background: $mobile-main-bg;
-  color: $mobile-text;
-  text-align: left;
-  li {
-    padding: 0 $padding-small*3;
-    a, .a {
-      padding: $padding-small*3 0;
-      color: $text-dark;
-      display: block;
-      border-bottom: 1px solid $grey-lighter;
-      font-weight: 400;
-      &:hover,
-      &:focus {
-        color: $color-primary;
-        text-decoration: underline;
-      }
-    }
-  }
-
-  &.is-open {
-    display: block;
-  }
 }
 
 .btnMenu{

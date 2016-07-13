@@ -2,18 +2,13 @@
 @import '../../../Sass/common/mixins';
 
 .myLocation{
-  position: fixed;
-  bottom: 25px;
-  right: 25px;
-  @media screen and (min-width: $sm){
-    position: absolute;
-    right: 28px;
-    top: 153px;
-  }
+  display: inline-block;
+
   @media print{
     display: none;
   }
 }
+
 .btn{
     border-radius: 50%;
     display: block;

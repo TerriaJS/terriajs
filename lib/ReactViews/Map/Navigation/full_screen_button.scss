@@ -8,7 +8,6 @@
 .btn {
   composes: btn from '../../../Sass/common/_buttons.scss';
   composes: btn--map from '../../../Sass/common/_buttons.scss';
-  margin-right: $padding;
   border-radius: $radius-small;
   &,
   &:hover,

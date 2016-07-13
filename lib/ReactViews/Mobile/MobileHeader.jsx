@@ -1,12 +1,11 @@
-'use strict';
 import React from 'react';
 import SearchBox from '../Search/SearchBox.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
 import MobileModalWindow from './MobileModalWindow';
 import Branding from '../SidePanel/Branding.jsx';
 import Styles from './mobile-header.scss';
-import classNames from "classnames";
 import Icon from "../Icon.jsx";
+import MobileMenu from './MobileMenu';
 
 const MobileHeader = React.createClass({
     mixins: [ObserveModelMixin],
@@ -14,13 +13,13 @@ const MobileHeader = React.createClass({
     propTypes: {
         terria: React.PropTypes.object,
         viewState: React.PropTypes.object.isRequired,
-        version: React.PropTypes.string
+        allBaseMaps: React.PropTypes.array.isRequired,
+        version: React.PropTypes.string,
+        menuItems: React.PropTypes.array
     },
 
     getInitialState() {
-        return {
-            menuIsOpen: false
-        };
+        return {};
     },
 
     showSearch() {
@@ -45,14 +44,6 @@ const MobileHeader = React.createClass({
     closeCatalogSearch() {
         this.props.viewState.searchState.showMobileCatalogSearch = false;
         this.props.viewState.searchState.catalogSearchText = '';
-    },
-
-    toggleMenu() {
-        this.setState({
-            menuIsOpen: !this.state.menuIsOpen
-        });
-        this.props.viewState.explorerPanelIsVisible = false;
-        this.props.viewState.switchMobileView(null);
     },
 
     onMobileDataCatalogClicked() {
@@ -100,9 +91,6 @@ const MobileHeader = React.createClass({
             this.props.viewState.explorerPanelIsVisible = false;
             this.props.viewState.switchMobileView(null);
         }
-        this.setState({
-            menuIsOpen: false
-        });
     },
 
     onClickFeedback(e) {
@@ -117,10 +105,6 @@ const MobileHeader = React.createClass({
         const searchState = this.props.viewState.searchState;
         const nowViewingLength = this.props.terria.nowViewing.items.length;
 
-        let navClassName = classNames(Styles.mobileNav, {
-            [Styles.isOpen]: this.state.menuIsOpen
-        });
-
         return (
             <div className={Styles.ui}>
                 <div className={Styles.mobileHeader}>
@@ -128,7 +112,7 @@ const MobileHeader = React.createClass({
                         <When condition={!searchState.showMobileLocationSearch && !searchState.showMobileCatalogSearch}>
                             <div className={Styles.groupLeft}>
                                 <button type='button'
-                                        onClick={this.toggleMenu}
+                                        onClick={() => this.props.viewState.mobileMenuVisible = true}
                                         className={Styles.btnMenu}
                                         title='toggle navigation'>
                                     <Icon glyph={Icon.GLYPHS.menu}/>
@@ -183,13 +167,11 @@ const MobileHeader = React.createClass({
                         </Otherwise>
                     </Choose>
                 </div>
-                <ul className={navClassName}>
-                    <li><a href=''>About</a></li>
-                    <li><a href=''>Related maps</a></li>
-                    <li><a href=''>Support</a></li>
-                    <li><a href='' onClick={this.onClickFeedback}>Give feedback</a>
-                    </li>
-                </ul>
+                <MobileMenu menuItems={this.props.menuItems}
+                            viewState={this.props.viewState}
+                            allBaseMaps={this.props.allBaseMaps}
+                            terria={this.props.terria}
+                            showFeedback={!!this.props.terria.configParameters.feedbackUrl}/>
                 <MobileModalWindow terria={this.props.terria}
                                    viewState={this.props.viewState}
                 />
