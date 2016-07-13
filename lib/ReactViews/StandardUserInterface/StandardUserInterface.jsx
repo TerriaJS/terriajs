@@ -28,7 +28,7 @@ const StandardUserInterface = React.createClass({
         viewState: React.PropTypes.object.isRequired,
         minimumLargeScreenWidth: React.PropTypes.number,
         version: React.PropTypes.string,
-        children: React.PropTypes.oneOfType(React.PropTypes.arrayOf(React.PropTypes.element), React.PropTypes.element)
+        children: React.PropTypes.oneOfType([React.PropTypes.arrayOf(React.PropTypes.element), React.PropTypes.element])
     },
 
     getDefaultProps() {
