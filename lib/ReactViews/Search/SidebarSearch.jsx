@@ -93,7 +93,7 @@ export default React.createClass({
                     </BadgeBar>
                     <div className={Styles.resultsContent}>
                         <For each="search" of={this.props.viewState.searchState.locationSearchProviders}>
-                            <div key={search.constructor.name} className={Styles.providerResult}>
+                            <div key={search.name} className={Styles.providerResult}>
                                 <h4 className={Styles.heading}>{search.name}</h4>
                                 <SearchHeader searchProvider={search}
                                               isWaitingForSearchToStart={this.props.isWaitingForSearchToStart}/>

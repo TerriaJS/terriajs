@@ -35,7 +35,7 @@ const MobileSearch = React.createClass({
         const searchState = this.props.viewState.searchState;
         return searchState.locationSearchProviders
             .filter(search => search.isSearching || (search.searchResults && search.searchResults.length))
-            .map(search => (<div key={search.constructor.name}>
+            .map(search => (<div key={search.name}>
                 <label className={Styles.label}>{search.name}</label>
                 <SearchHeader searchProvider={search} />
                 <ul className={Styles.results}>
