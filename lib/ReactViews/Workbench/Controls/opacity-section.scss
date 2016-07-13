@@ -3,9 +3,11 @@
 .opacity {
   padding: $padding 0;
   border-bottom: 1px solid $border-color;
-  text-transform: uppercase;
   font-size: $font-size-mini;
   label {
     margin-right: $padding-small;
+  }
+  input[type=range] {
+    width: 175px;
   }
 }

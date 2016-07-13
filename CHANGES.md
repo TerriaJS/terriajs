@@ -4,6 +4,7 @@ Change Log
 
 ### 4.0.0
 
+* Rewrote the TerriaJS user interface using React.  We believe the new interface is a drastic improvement, incorporating user feedback and the results of usability testing.  Currently, it is a bit harder to customize than our old user interface, so if your application has extensive customizations, we suggest delaying upgrading to this version for a little while logner.
 * `CswCatalogGroup` will now include Web Processing Services from the catalog if configured with `includeWps` set to true.
 * `WebMapServiceCatalogItem` will now detect ncWMS servers and set isNcWMS to true.
 * New `ShareDataService` which can store and resolve data. Currently it is used as a replacement for Google URL Shortener, which can't handle long URLs.

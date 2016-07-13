@@ -2,9 +2,9 @@
 
 .map-navigation{
   position: fixed;
-  right: $padding + 7px;
+  right: 25px;
   z-index: 1;
-  bottom: $padding + 7px;
+  bottom: 25px;
 
   @media print{
     display: none;
@@ -20,4 +20,8 @@
 .control {
   margin: 15px 0;
   text-align: center;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
 }
