@@ -59,20 +59,22 @@ const FeatureInfoPanel = React.createClass({
     getFeatureInfoCatalogItems() {
         const {catalogItems, featureCatalogItemPairs} = getFeaturesGroupedByCatalogItems(this.props.terria);
 
-        return catalogItems.map((catalogItem, i) => {
-            // From the pairs, select only those with this catalog item, and pull the features out of the pair objects.
-            const features = featureCatalogItemPairs.filter(pair => pair.catalogItem === catalogItem).map(pair => pair.feature);
-            return (
-                <FeatureInfoCatalogItem
-                    key={i}
-                    viewState={this.props.viewState}
-                    catalogItem={catalogItem}
-                    features={features}
-                    terria={this.props.terria}
-                    onToggleOpen={this.toggleOpenFeature}
-                />
-            );
-        });
+        return catalogItems
+            .filter(catalogItem => defined(catalogItem))
+            .map((catalogItem, i) => {
+                // From the pairs, select only those with this catalog item, and pull the features out of the pair objects.
+                const features = featureCatalogItemPairs.filter(pair => pair.catalogItem === catalogItem).map(pair => pair.feature);
+                return (
+                    <FeatureInfoCatalogItem
+                        key={i}
+                        viewState={this.props.viewState}
+                        catalogItem={catalogItem}
+                        features={features}
+                        terria={this.props.terria}
+                        onToggleOpen={this.toggleOpenFeature}
+                    />
+                );
+            });
     },
 
     close() {
@@ -117,7 +119,7 @@ const FeatureInfoPanel = React.createClass({
                     </button>
                     <button type='button' onClick={ this.close } className={Styles.btnCloseFeature}
                             title="Close data panel">
-                            <Icon glyph={Icon.GLYPHS.close}/>
+                        <Icon glyph={Icon.GLYPHS.close}/>
                     </button>
                 </div>
                 <ul className={Styles.body}>
