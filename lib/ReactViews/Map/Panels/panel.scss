@@ -22,7 +22,7 @@
   background: $dark;
   color: #fff;
   border: $border-style;
-  max-width: calc(100% - 10px);
+  max-width: calc(100vw - 10px);
 
   position: fixed;
   top: $mobile-header-height;
