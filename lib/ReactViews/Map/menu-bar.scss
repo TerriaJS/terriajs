@@ -23,4 +23,9 @@
 .menu-item {
   display: block;
   float: left;
+  margin-right: $padding;
+
+  &:last-child {
+    margin-right: 0;
+  }
 }

@@ -31,6 +31,15 @@ const MenuBar = React.createClass({
                     <li className={Styles.menuItem}>
                         <FullScreenButton terria={this.props.terria} viewState={this.props.viewState}/>
                     </li>
+                    <li className={Styles.menuItem}>
+                        <SettingPanel terria={this.props.terria}
+                                      allBaseMaps={this.props.allBaseMaps}
+                                      viewState={this.props.viewState}/>
+                    </li>
+                    <li className={Styles.menuItem}>
+                        <SharePanel terria={this.props.terria}
+                                    viewState={this.props.viewState}/>
+                    </li>
                     <If condition={!this.props.viewState.useSmallScreenInterface}>
                         <For each="element" of={this.props.menuItems} index="i">
                             <li className={Styles.menuItem} key={i}>

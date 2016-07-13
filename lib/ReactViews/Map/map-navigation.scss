@@ -2,11 +2,22 @@
 
 .map-navigation{
   position: fixed;
-  top: 20px;
-  right: $padding;
+  right: $padding + 7px;
   z-index: 1;
+  bottom: $padding + 7px;
 
   @media print{
     display: none;
   }
+
+  @media screen and (min-width: $sm) {
+    top: 80px;
+    bottom: auto;
+  }
+
+}
+
+.control {
+  margin: 15px 0;
+  text-align: center;
 }

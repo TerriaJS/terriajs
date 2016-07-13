@@ -13,6 +13,7 @@ const MobileHeader = React.createClass({
     propTypes: {
         terria: React.PropTypes.object,
         viewState: React.PropTypes.object.isRequired,
+        allBaseMaps: React.PropTypes.array.isRequired,
         version: React.PropTypes.string,
         menuItems: React.PropTypes.array
     },
@@ -168,6 +169,8 @@ const MobileHeader = React.createClass({
                 </div>
                 <MobileMenu menuItems={this.props.menuItems}
                             viewState={this.props.viewState}
+                            allBaseMaps={this.props.allBaseMaps}
+                            terria={this.props.terria}
                             showFeedback={!!this.props.terria.configParameters.feedbackUrl}/>
                 <MobileModalWindow terria={this.props.terria}
                                    viewState={this.props.viewState}

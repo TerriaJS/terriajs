@@ -2,14 +2,8 @@
 @import '../../../Sass/common/mixins';
 
 .myLocation{
-  position: fixed;
-  bottom: $input-height + $padding;
-  right: 35px;
-  @media screen and (min-width: $sm){
-    position: absolute;
-    right: 28px;
-    top: 153px;
-  }
+  display: inline-block;
+
   @media print{
     display: none;
   }

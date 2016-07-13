@@ -15,10 +15,10 @@ import Notification from './../Notification/Notification.jsx';
 import ObserveModelMixin from './../ObserveModelMixin';
 import ProgressBar from '../Map/ProgressBar.jsx';
 import SidePanel from './../SidePanel/SidePanel.jsx';
-import SettingPanel from '../Map/Panels/SettingPanel.jsx';
-import SharePanel from '../Map/Panels/SharePanel/SharePanel.jsx';
+import processCustomElements from './processCustomElements';
 
 import Styles from './standard-user-interface.scss';
+
 
 const StandardUserInterface = React.createClass({
     mixins: [ObserveModelMixin],
@@ -79,24 +79,10 @@ const StandardUserInterface = React.createClass({
     },
 
     render() {
-        const children = React.Children.toArray(this.props.children);
-        const customElements = children.map(child =>
-            React.cloneElement(child, {
-                smallScreen: !!this.props.viewState.useSmallScreenInterface
-            })
-        ).reduce((soFar, child) => {
-            if (child.type.location === 'menu') {
-                soFar.menuItems.push(child);
-            }
-
-            return soFar;
-        }, {
-            menuItems: [
-                <SettingPanel terria={this.props.terria} allBaseMaps={this.props.allBaseMaps}
-                              viewState={this.props.viewState} key="settings"/>,
-                <SharePanel terria={this.props.terria} viewState={this.props.viewState} key="share"/>
-            ]
-        });
+        const customElements = processCustomElements(
+            this.props.viewState.useSmallScreenInterface,
+            this.props.children
+        );
 
         const terria = this.props.terria;
         const allBaseMaps = this.props.allBaseMaps;
@@ -108,9 +94,10 @@ const StandardUserInterface = React.createClass({
                             <Choose>
                                 <When condition={this.props.viewState.useSmallScreenInterface}>
                                     <MobileHeader terria={terria}
-                                                  menuItems={customElements.menuItems}
+                                                  menuItems={customElements.menu}
                                                   viewState={this.props.viewState}
                                                   version={this.props.version}
+                                                  allBaseMaps={allBaseMaps}
                                     />
                                 </When>
                                 <Otherwise>
@@ -138,10 +125,11 @@ const StandardUserInterface = React.createClass({
                     <MenuBar terria={terria}
                              viewState={this.props.viewState}
                              allBaseMaps={allBaseMaps}
-                             menuItems={customElements.menuItems}
+                             menuItems={customElements.menu}
                     />
                     <MapNavigation terria={terria}
                                    viewState={this.props.viewState}
+                                   navItems={customElements.nav}
                     />
                 </If>
 

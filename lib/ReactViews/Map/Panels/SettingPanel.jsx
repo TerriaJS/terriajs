@@ -16,16 +16,15 @@ const SettingPanel = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        terria: React.PropTypes.object,
+        terria: React.PropTypes.object.isRequired,
         viewerModes: React.PropTypes.array,
-        allBaseMaps: React.PropTypes.array,
+        allBaseMaps: React.PropTypes.array.isRequired,
         viewState: React.PropTypes.object.isRequired
     },
 
     getDefaultProps() {
         return {
-            viewerModes: ['3D Terrain', '3D Smooth', '2D'],
-            allBaseMaps: []
+            viewerModes: ['3D Terrain', '3D Smooth', '2D']
         };
     },
 

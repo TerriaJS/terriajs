@@ -12,12 +12,10 @@
 // Style guide: Component.map-compass
 
 .compass{
+  position: relative;
   cursor: default;
   width: $compass-width;
   height: $compass-width;
-  position: absolute;
-  right: 17px;
-  top: 79px;
   composes: sm-show from '../../../Sass/common/_base.scss';
 }
 .innerRing{

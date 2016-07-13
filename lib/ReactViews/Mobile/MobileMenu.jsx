@@ -3,6 +3,9 @@ import React from 'react';
 import ObserveModelMixin from '../ObserveModelMixin';
 import classNames from 'classnames';
 import MobileMenuItem from './MobileMenuItem';
+import SettingPanel from '../Map/Panels/SettingPanel.jsx';
+import SharePanel from '../Map/Panels/SharePanel/SharePanel.jsx';
+import Terria from '../../Models/Terria';
 
 import ViewState from '../../ReactViewModels/ViewState';
 
@@ -14,7 +17,9 @@ const MobileMenu = React.createClass({
     propTypes: {
         menuItems: React.PropTypes.arrayOf(React.PropTypes.element),
         viewState: React.PropTypes.instanceOf(ViewState).isRequired,
-        showFeedback: React.PropTypes.bool
+        showFeedback: React.PropTypes.bool,
+        terria: React.PropTypes.instanceOf(Terria).isRequired,
+        allBaseMaps: React.PropTypes.array.isRequired
     },
 
     getDefaultProps() {
@@ -37,6 +42,10 @@ const MobileMenu = React.createClass({
         this.props.viewState.mobileMenuVisible = false;
     },
 
+    hideMenu() {
+        this.props.viewState.mobileMenuVisible = false
+    },
+
     render() {
         // return this.props.viewState.mobileMenuVisible ? (
         return (
@@ -45,9 +54,21 @@ const MobileMenu = React.createClass({
                     <div className={Styles.overlay} onClick={this.toggleMenu}></div>
                 </If>
                 <div
-                    className={classNames(Styles.mobileNav, {[Styles.mobileNavHidden]: !this.props.viewState.mobileMenuVisible})}>
+                    className={classNames(
+                        Styles.mobileNav,
+                        {[Styles.mobileNavHidden]: !this.props.viewState.mobileMenuVisible}
+                    )}>
+                    <div onClick={this.hideMenu}>
+                        <SettingPanel terria={this.props.terria}
+                                      allBaseMaps={this.props.allBaseMaps}
+                                      viewState={this.props.viewState}/>
+                    </div>
+                    <div onClick={this.hideMenu}>
+                        <SharePanel terria={this.props.terria}
+                                    viewState={this.props.viewState}/>
+                    </div>
                     <For each="menuItem" of={this.props.menuItems}>
-                        <div onClick={() => this.props.viewState.mobileMenuVisible = false} key={menuItem.key}>
+                        <div onClick={this.hideMenu} key={menuItem.key}>
                             {menuItem}
                         </div>
                     </For>
