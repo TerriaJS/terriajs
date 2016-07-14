@@ -74,10 +74,7 @@ export default React.createClass({
     },
 
     getMarkerIcon() {
-        const svgAsText = require('!!raw-loader!../../../wwwroot/images/map-pin.svg')
-            .replace(/id="Oval-30" fill=".*"/, `id="Oval-30" fill="${this.props.mapMarkerColorPrimary}"`)
-            .replace(/id="Oval-31" fill=".*"/, `id="Oval-31" fill="${this.props.mapMarkerColorSecondary}"`);
-        return `data:image/svg+xml,${svgAsText}`;
+        return require('../../../wwwroot/images/map-pin.png');
     },
 
     render() {
