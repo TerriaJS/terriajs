@@ -1,8 +1,12 @@
-import DataCatalogMember from './DataCatalogMember.jsx';
-import defined from 'terriajs-cesium/Source/Core/defined';
-import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
+import classNames from 'classnames';
+
+import defined from 'terriajs-cesium/Source/Core/defined';
+
+import DataCatalogMember from './DataCatalogMember.jsx';
+import ObserveModelMixin from '../ObserveModelMixin';
 import SearchHeader from '../Search/SearchHeader.jsx';
+
 import Styles from './data-catalog.scss';
 
 // Displays the data catalog.
@@ -12,6 +16,24 @@ const DataCatalog = React.createClass({
     propTypes: {
         terria: React.PropTypes.object,
         viewState: React.PropTypes.object
+    },
+
+    getInitialState() {
+        return {
+            isScrolling: false
+        }
+    },
+
+    onTouchStart() {
+        this.setState({
+            isScrolling: true
+        })
+    },
+
+    onTouchEnd() {
+        this.setState({
+            isScrolling: false
+        });
     },
 
     render() {
@@ -25,7 +47,8 @@ const DataCatalog = React.createClass({
         ).filter(defined);
 
         return (
-            <ul className={Styles.dataCatalog}>
+            <ul className={classNames(Styles.dataCatalog, {[Styles.scrolling]: this.state.isScrolling})}
+                onScroll={this.onTouchStart} onTouchEnd={this.onTouchEnd}>
                 <If condition={isSearching}>
                     <label className={Styles.label}>Search results</label>
                     <SearchHeader searchProvider={searchState.catalogSearchProvider}
