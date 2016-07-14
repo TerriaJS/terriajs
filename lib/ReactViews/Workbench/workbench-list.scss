@@ -6,6 +6,7 @@
   height: calc(100vh - #{$workbench-header + $logo-height});
   overflow-x: hidden;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   padding: 0 $padding-small;
   @media print{
     page-break-after : always;

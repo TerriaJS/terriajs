@@ -12,6 +12,7 @@
   display: none;
   overflow-x: hidden;
   overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
   width: 100%;
   &.isOpen{
       display: block;
@@ -21,6 +22,7 @@
 .modalBg{
   overflow-y: auto;
   overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
   padding: 0;
 }
 
