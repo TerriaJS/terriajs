@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+### 4.0.1
+
+* Fixed a bug that caused an error message to be formatted incorrectly when displayed to the user.
+
 ### 4.0.0
 
 * Rewrote the TerriaJS user interface using React.  We believe the new interface is a drastic improvement, incorporating user feedback and the results of usability testing.  Currently, it is a bit harder to customize than our old user interface, so if your application has extensive customizations, we suggest delaying upgrading to this version for a little while logner.
