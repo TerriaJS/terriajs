@@ -10,13 +10,26 @@
   overflow-y: auto;
   overflow-x: hidden;
   box-sizing: border-box;
+  -webkit-overflow-scrolling: touch;
 
-  height: calc(100vh - #{$mobile-header-height + $modal-header-height});
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: $modal-header-height;
+
+
+  &.scrolling {
+    * {
+      pointer-events: none;
+    }
+  }
 
   @media screen and (min-width: $sm) {
     padding-right: $padding;
     margin-top: $padding;
     height: calc(100% - #{$input-height});
+    position: static;
   }
 }
 

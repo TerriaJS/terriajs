@@ -16,6 +16,7 @@ import ObserveModelMixin from './../ObserveModelMixin';
 import ProgressBar from '../Map/ProgressBar.jsx';
 import SidePanel from './../SidePanel/SidePanel.jsx';
 import processCustomElements from './processCustomElements';
+import 'inobounce';
 
 import Styles from './standard-user-interface.scss';
 

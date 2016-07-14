@@ -91,6 +91,7 @@
   composes: list-reset from '../../Sass/common/_base.scss';
   overflow-y: auto;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   max-height: calc(80vh - #{$padding*2 + $btn-default-line-height});
   @media print{
     max-height: none;
