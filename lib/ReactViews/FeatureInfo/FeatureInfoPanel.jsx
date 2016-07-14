@@ -196,7 +196,7 @@ function determineCatalogItem(nowViewing, feature) {
         if (dataSource.name === SEARCH_MARKER_DATA_SOURCE_NAME) {
             return {
                 name: 'Search Marker'
-            }
+            };
         }
 
         for (i = nowViewing.items.length - 1; i >= 0; i--) {
