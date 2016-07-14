@@ -53,8 +53,11 @@ const Icon = React.createClass({
     },
     render() {
         const glyph = this.props.glyph;
+        // dangerouslySetInnerHTML={{__html: '<use xlink:href="' + glyph + '"></use>'}}
         return (
-            <svg viewBox="0 0 100 100" className={classNames('icon', this.props.className)} style={this.props.style} dangerouslySetInnerHTML={{__html: '<use xlink:href="' + glyph + '"></use>'}}/>
+            <svg viewBox="0 0 100 100" className={classNames('icon', this.props.className)} style={this.props.style}>
+                <use xlinkHref={glyph}></use>
+            </svg>
         );
     }
 });
