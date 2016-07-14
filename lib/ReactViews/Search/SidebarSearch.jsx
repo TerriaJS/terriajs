@@ -74,10 +74,7 @@ export default React.createClass({
     },
 
     getMarkerIcon() {
-        const svgAsText = require('!!raw-loader!../../../wwwroot/images/map-pin.svg')
-            .replace(/id="Oval-30" fill=".*"/, `id="Oval-30" fill="${this.props.mapMarkerColorPrimary}"`)
-            .replace(/id="Oval-31" fill=".*"/, `id="Oval-31" fill="${this.props.mapMarkerColorSecondary}"`);
-        return `data:image/svg+xml,${svgAsText}`;
+        return require('../../../wwwroot/images/map-pin.png');
     },
 
     render() {
@@ -93,7 +90,7 @@ export default React.createClass({
                     </BadgeBar>
                     <div className={Styles.resultsContent}>
                         <For each="search" of={this.props.viewState.searchState.locationSearchProviders}>
-                            <div key={search.constructor.name} className={Styles.providerResult}>
+                            <div key={search.name} className={Styles.providerResult}>
                                 <h4 className={Styles.heading}>{search.name}</h4>
                                 <SearchHeader searchProvider={search}
                                               isWaitingForSearchToStart={this.props.isWaitingForSearchToStart}/>
