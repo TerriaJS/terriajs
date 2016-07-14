@@ -1,0 +1,65 @@
+{
+  "catalog": [
+    {
+      "name": "Chart examples",
+      "type": "group",
+      "isOpen": true,
+      "items": [
+        {
+          "name": "Power Stations",
+          "type": "csv",
+          "url": "test/powergen_no_time.csv"
+        },
+        {
+          "name": "Power Stations (with template)",
+          "type": "csv",
+          "url": "test/powergen_no_time.csv",
+          "cacheDuration": "5m",
+          "featureInfoTemplate": "<h3>{{Station Name}} ({{DUID}})</h3><p><strong>{{Participant}}</strong><div><strong>{{Current Output (MW)}}MW</strong> at {{Most Recent Output Time (AEST)}}</div><div><strong>{{Current % of Reg Cap}}%</strong> of {{Reg Cap (MW)}}MW registered capacity</div><div><strong>{{Current % of Max Cap}}%</strong> of {{Max Cap (MW)}}MW maximum capacity</div></p><table><tbody><tr><td>Category</td><td class='strong'>{{Category}}</td></tr><tr><td>Classification</td><td class='strong'>{{Classification}}</td></tr><tr><td>Fuel Source</td><td class='strong'>{{Fuel Source - Primary}} ({{Fuel Source - Descriptor}})</td></tr><tr><td>Technology Type</td><td class='strong'>{{Technology Type - Primary}} ({{Technology Type - Descriptor}})</td></tr><tr><td>Physical Unit No.</td><td class='strong'>{{Physical Unit No_}}</td></tr><tr><td>Aggregation</td><td class='strong'>{{Aggregation}}</td></tr><tr><td>Unit Size (MW)</td><td class='strong'>{{Unit Size (MW)}}</td></tr><tr><td>Power generation</td><td><chart sources='http://services.aremi.nicta.com.au/aemo/v4/duidcsv/{{DUID}}?offset=1D,http://services.aremi.nicta.com.au/aemo/v4/duidcsv/{{DUID}}?offset=5D,http://services.aremi.nicta.com.au/aemo/v4/duidcsv/{{DUID}}?offset=30D,http://services.aremi.nicta.com.au/aemo/v4/duidcsv/{{DUID}}?offset=3M' source-names='1d,5d,30d,3m' downloads='http://services.aremi.nicta.com.au/aemo/v4/duidcsv/{{DUID}}?offset=1D,http://services.aremi.nicta.com.au/aemo/v4/duidcsv/{{DUID}}?offset=5D,http://services.aremi.nicta.com.au/aemo/v4/duidcsv/{{DUID}}?offset=30D,http://services.aremi.nicta.com.au/aemo/v4/duidcsv/{{DUID}}?offset=3M,http://services.aremi.nicta.com.au/aemo/v4/duidcsv/{{DUID}}?offset=1Y' download-names='1d,5d,30d,3m,1y' preview-x-label='Last 24 hours' column-names='Time,Power Generation' column-units='Date,MW'></chart></td></tr></tbody></table>"
+        },
+        {
+          "name": "Star Stations",
+          "type": "csv",
+          "url": "build/TerriaJS/test/csv/lat_lon_name_url_col.csv",
+          "featureInfoTemplate" : "<table><tbody><tr><td>Type</td><td>Station</td></tr><tr><td>Value</td><td>{{col}}</td></tr><tr><td>Signal at 560Hz</td><td><chart sources='{{url}}_1d.csv,{{url}}_2d.csv,{{url}}_5d.csv' source-names='1d,2d,5d' preview-x-label='Last 24 hours' column-names='Time,Signal at 560 GHz,Signal at 890 GHz' column-units='Date,Watts,Watts' y-column='1'></chart></td></tr></tbody></table><p>Sample data only</p>"
+        },
+        {
+          "name": "Sheep Stations",
+          "type": "csv",
+          "url": "build/TerriaJS/test/csv/lat_lon_nullvalue.csv",
+          "featureInfoTemplate" : {
+            "name": "Number {{value}}",
+            "template": "<p>All sheep stations have the same time series plot.</p><chart src='build/TerriaJS/test/csv_nongeo/time_series.csv' column-units=',litres,horsepower' y-column='1'></chart>"
+          }
+        },
+        {
+          "name": "XY Plot",
+          "type": "csv",
+          "url": "build/TerriaJS/test/csv_nongeo/xy.csv"
+        },
+        {
+          "name": "Time series",
+          "type": "csv",
+          "url": "build/TerriaJS/test/csv_nongeo/time_series.csv"
+        },
+        {
+          "name": "Train Stations",
+          "type": "csv",
+          "url": "build/TerriaJS/test/csv/lat_lon_nullvalue.csv",
+          "featureInfoTemplate" : {
+            "name": "Number {{value}}",
+            "template": "<p>All train stations have the same x-y plot.</p><chart src='build/TerriaJS/test/csv_nongeo/xy.csv'></chart>"
+          }
+        },
+        {
+          "name": "Chart with inline data",
+          "type": "csv",
+          "url": "build/TerriaJS/test/csv/lat_lon_name_value.csv",
+          "featureInfoTemplate" : {
+            "template": "<p>Chart with inline data</p><chart>x,y\n1,3\n5,10\n8,-2\n10,{{value}}\n</chart>"
+          }
+        }
+      ]
+    }
+  ]
+}

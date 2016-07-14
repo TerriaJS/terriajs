@@ -1,0 +1,19 @@
+@import '~terriajs-variables';
+
+.colorscalerange {
+  label {
+    margin-right: $padding-small;
+  }
+}
+
+.title {
+  margin-top: 10px;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.btn {
+  composes: btn from '../../../Sass/common/_buttons.scss';
+  composes: btn-primary from '../../../Sass/common/_buttons.scss';
+  margin-top: 10px;
+}

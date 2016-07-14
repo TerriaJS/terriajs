@@ -1,0 +1,47 @@
+import DataCatalogMember from './DataCatalogMember.jsx';
+import defined from 'terriajs-cesium/Source/Core/defined';
+import ObserveModelMixin from '../ObserveModelMixin';
+import React from 'react';
+import SearchHeader from '../Search/SearchHeader.jsx';
+import Styles from './data-catalog.scss';
+
+// Displays the data catalog.
+const DataCatalog = React.createClass({
+    mixins: [ObserveModelMixin],
+
+    propTypes: {
+        terria: React.PropTypes.object,
+        viewState: React.PropTypes.object
+    },
+
+    render() {
+        const terria = this.props.terria;
+        const searchState = this.props.viewState.searchState;
+        const isSearching = searchState.catalogSearchText.length > 0;
+        const items = (
+            isSearching ?
+                searchState.catalogSearchProvider.searchResults.map(result => result.catalogItem) :
+                terria.catalog.group.items
+        ).filter(defined);
+
+        return (
+            <ul className={Styles.dataCatalog}>
+                <If condition={isSearching}>
+                    <label className={Styles.label}>Search results</label>
+                    <SearchHeader searchProvider={searchState.catalogSearchProvider}
+                                  isWaitingForSearchToStart={searchState.isWaitingToStartCatalogSearch}/>
+                </If>
+                <For each="item" of={items}>
+                    {item !== this.props.terria.catalog.userAddedDataGroup &&
+                        <DataCatalogMember viewState={this.props.viewState}
+                                           member={item}
+                                           manageIsOpenLocally={isSearching}
+                                           key={item.uniqueId}
+                    />}
+                </For>
+            </ul>
+        );
+    }
+});
+
+module.exports = DataCatalog;

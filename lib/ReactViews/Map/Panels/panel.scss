@@ -1,0 +1,96 @@
+@import '~terriajs-variables';
+@import '../../../Sass/common/mixins';
+
+.panel {
+  width: auto;
+}
+
+.content {
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.inner {
+  @include transform (scale(0) translateZ(0));
+  @include transition(0.2s all cubic-bezier(0.4, 0, 0.2, 1));
+  @include transform-origin(50%, top);
+
+  box-shadow: $box-shadow;
+  z-index: 20;
+  border-radius: $radius-small;
+  background: $dark;
+  color: #fff;
+  border: $border-style;
+  max-width: calc(100vw - 10px);
+
+  position: fixed;
+  top: $mobile-header-height;
+  left: 0;
+  margin: 14px 5px 5px 5px;
+
+  @media screen and (min-width: $md) {
+    position: absolute;
+    right: $padding*2;
+    top: auto;
+    bottom: auto;
+    left: auto;
+    margin: 14px 0 0 0;
+  }
+
+  &.is-open {
+    @include transform (scale(1) translateZ(0));
+  }
+}
+
+.caret {
+  content: '';
+  display: block;
+  height: 20px;
+  width: 20px;
+  background: $dark;
+  position: absolute;
+  top: -10px;
+  z-index: -1;
+  @include transform(rotate(45deg));
+}
+
+.label {
+  padding: $padding-small 0;
+  display: block;
+}
+
+.heading {
+  composes: label;
+  padding: $padding-small 0;
+  font-size: $font-size-small;
+}
+
+.sub-heading {
+  composes: label;
+  font-size: $font-size-mini;
+}
+
+.section {
+  padding: $padding-small;
+  display: block;
+}
+
+.button {
+  composes: btn from '../../../Sass/common/_buttons.scss';
+  composes: btn--map from '../../../Sass/common/_buttons.scss';
+
+  border-radius: $radius-small;
+  position: relative;
+
+  &,
+  &:hover,
+  &:focus {
+    border: 0;
+  }
+}
+
+.overlay {
+  position: fixed;
+  left: 0; right: 0; bottom: 0; top: 0;
+}

@@ -1,0 +1,78 @@
+@import '~terriajs-variables';
+@import '../../Sass/common/mixins';
+
+.root {
+  composes: clearfix from '../../Sass/common/_base.scss';
+  display: block;
+  width: 100%;
+  position: relative;
+}
+
+.btn-catalog-item {
+  composes: btn from '../../Sass/common/_buttons.scss';
+  @extend %wrap;
+  position: relative;
+  width: 100%;
+  padding: $padding-small $padding*2.5 $padding-small $padding*1.5;
+
+  &:focus, &:hover {
+    color: $modal-highlight;
+    &:before {
+      opacity: 1;
+    }
+  }
+
+  &--is-previewed {
+    color: $modal-highlight;
+    font-weight: $font-weight-bold;
+    &:before {
+      opacity: 1;
+    }
+  }
+
+  @media screen and (max-width: $sm) {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid $grey-lighter;
+  }
+}
+
+.btn-action {
+  position: absolute;
+  color: $color-primary;
+  right: 0;
+  top: 0;
+
+  @media screen and (max-width: $sm) {
+    top: 5px;
+  }
+
+  svg{
+    height: 30px;
+    width: 30px;
+    fill: $charcoal-grey;
+  }
+
+  &:hover, &:focus{
+    svg{
+      fill: $turquoise-blue;
+    }
+  }
+
+  &--stats-bars {
+  }
+
+  &--add-to-map {
+  }
+
+  &--remove-from-map {
+  }
+
+  &--loading-on-map {
+    top: 3px;
+    right: 12px;
+    &:before{
+      position: absolute;
+    }
+  }
+}

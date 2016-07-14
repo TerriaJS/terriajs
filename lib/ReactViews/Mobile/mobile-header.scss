@@ -1,0 +1,114 @@
+@import '~terriajs-variables';
+@import '../../Sass/common/mixins';
+
+.ui {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: $mobile-header-height;
+  z-index: 13;
+  @media screen and (min-width: $sm) {
+    left: -99999px;
+  }
+}
+
+.mobile-header {
+  composes: sm-hide from '../../Sass/common/_base.scss';
+  composes: clearfix from '../../Sass/common/_base.scss';
+  justify-content: space-between;
+  font-family: $font-pop;
+  width: 100%;
+  background: $dark;
+  padding: $padding-small;
+  height: 100%;
+}
+
+.btnAdd{
+    composes: btn from '../../Sass/common/_buttons.scss';
+    composes: btn-primary from '../../Sass/common/_buttons.scss';
+    position: relative;
+    margin: 0 $padding-small;
+    padding: $padding $padding $padding $padding*3;
+    width: auto;
+    text-align: right;
+    svg{
+      position: absolute;
+      top: $padding;
+      left: $padding/2;
+      width: 18px;
+      height: 18px;
+      fill: #ffffff;
+    }
+}
+
+.btn-search {
+  composes: btn from '../../Sass/common/_buttons.scss';
+  composes: btn-primary from '../../Sass/common/_buttons.scss';
+  margin: 0 $padding-small;
+  padding: $padding-small;
+  padding-right: $padding;
+  position: relative;
+  width: 40px;
+  svg{
+    height: 28px;
+    width: 28px;
+    fill: #fff;
+    position: relative;
+    left: 2px;
+  }
+}
+
+.btn-now-viewing {
+  composes: btn from '../../Sass/common/_buttons.scss';
+  composes: btn-primary from '../../Sass/common/_buttons.scss';
+  margin: 0 $padding-small;
+  padding: $padding-small;
+  padding-right: $padding;
+  position: relative;
+  width: 50px;
+  svg{
+    height: 28px;
+    width: 28px;
+    fill: #fff;
+  }
+  .nowViewingCount {
+    position: absolute;
+    top: $padding-small;
+    right: $padding-small;
+    font-size: 0.8rem;
+  }
+}
+
+.group-left {
+  composes: flex from '../../Sass/common/_base.scss';
+  position: absolute;
+  left: 5px;
+  right: 200px;
+  overflow: hidden;
+}
+
+.group-right {
+  composes: flex from '../../Sass/common/_base.scss';
+  position: absolute;
+  right: 0;
+}
+
+.btnMenu{
+    font-size: 25px;
+    padding: 0 $padding-small;
+    border-radius: $radius-small;
+    margin-right: 3px;
+    &:hover, &:focus, & {
+        border: 1px solid rgba(#fff, 0.5);
+    }
+    svg{
+      height: 37px;
+      width: 37px;
+      fill: #fff;
+    }
+}
+
+
+
+@include empty-module("form-search-data");

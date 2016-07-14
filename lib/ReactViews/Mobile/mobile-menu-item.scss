@@ -1,0 +1,21 @@
+@import '~terriajs-variables';
+
+.root {
+  padding: 0 $padding-small*3;
+}
+
+.link {
+  width: 100%;
+  text-align: left;
+  padding: $padding-small*3 0;
+  color: $text-dark;
+  display: block;
+  border-bottom: 1px solid $grey-lighter;
+  font-weight: 400;
+  &:hover,
+  &:focus {
+    color: $color-primary;
+    text-decoration: underline;
+    border-bottom: 1px solid $grey-lighter;
+  }
+}

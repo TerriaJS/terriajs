@@ -21,14 +21,14 @@ describe('ArcGisMapServerCatalogItem', function() {
         var realLoadWithXhr = loadWithXhr.load;
         // We replace calls to GA's servers with pre-captured JSON files so our testing is isolated, but reflects real data.
         spyOn(loadWithXhr, 'load').and.callFake(function(url, responseType, method, data, headers, deferred, overrideMimeType, preferText, timeout) {
-            url = url.replace ('http://example.com/42/', '/Dynamic_National_Map_Hydrography_and_Marine/');
+            url = url.replace ('http://example.com/42/', '');
             if (url.match('Dynamic_National_Map_Hydrography_and_Marine/MapServer')) {
-                url = url.replace(/^.*\/MapServer/, '/test/ArcGisMapServer/Dynamic_National_Map_Hydrography_and_Marine/MapServer');
+                url = url.replace(/^.*\/MapServer/, 'MapServer');
                 url = url.replace(/MapServer\/?\?f=json$/i, 'mapserver.json');
                 url = url.replace(/MapServer\/Legend\/?\?f=json$/i, 'legend.json');
                 url = url.replace(/MapServer\/Layers\/?\?f=json$/i, 'layers.json');
                 url = url.replace(/MapServer\/31\/?\?f=json$/i, '31.json');
-                arguments[0] = url;
+                arguments[0] = require('!file!../../wwwroot/test/ArcGisMapServer/Dynamic_National_Map_Hydrography_and_Marine/' + url);
             }
             return realLoadWithXhr.apply(undefined, arguments);
         });

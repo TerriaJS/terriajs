@@ -1,0 +1,89 @@
+@import '~terriajs-variables';
+@import '../../Sass/common/mixins';
+
+.tabs {
+}
+
+.tab-list {
+  composes: list-reset from '../../Sass/common/_base.scss';
+  composes: clearfix from '../../Sass/common/_base.scss';
+  padding-right: 100px;
+}
+
+.tab-list__item {
+  display: inline-block;
+  float: left;
+}
+
+.tab-panel {
+  width: 100%;
+  height: $modal-content-height;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.panel-content {
+  composes: clearfix from '../../Sass/common/_base.scss';
+  position: relative;
+  background: $modal-bg;
+  color: $modal-text;
+  padding: $padding;
+  border-top: 1px solid $grey-lighter;
+  height: 100%;
+  overflow: hidden;
+}
+
+.tab-left-col {
+  @media screen and (min-width: $sm) {
+    width: 40%;
+    float: left;
+    height: 100%;
+  }
+}
+
+:global {
+  .data-explorer,
+  .my-data {
+    @media screen and (min-width: $sm) {
+      width: 40%;
+      float: left;
+      height: 100%;
+    }
+  }
+}
+
+// Modal window tab buttons
+//
+// Tab buttons in modal window
+//
+// Markup:
+// <button class="btn btn--tab">Button</button>
+//
+// Style guide: Buttons.modal-tab
+//
+
+.btn--tab {
+  composes: btn from '../../Sass/common/_buttons.scss';
+
+  font-family: $font-pop;
+  background: $modal-bg;
+  color: $modal-text;
+  font-size: 1rem;
+  padding: $padding $padding*2;
+
+  &.btn--tab {
+    border-right: 1px solid $modal-border;
+  }
+
+  &:hover, &:focus {
+    background: #fff;
+    color: $modal-highlight;
+  }
+}
+
+.btn--selected {
+  background: #fff;
+  color: $modal-highlight;
+}

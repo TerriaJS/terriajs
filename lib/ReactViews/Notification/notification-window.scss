@@ -1,0 +1,47 @@
+@import '~terriajs-variables';
+@import '../../Sass/common/mixins';
+
+.wrapper{
+  composes: flex from '../../Sass/common/_base.scss';
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: $front-component-z-index +10;
+  align-items: center;
+  justify-content: center;
+}
+
+.notification{
+  border-radius: $radius-small;
+  border: 1px solid darken($dark, 3%);
+  background: $dark;
+  z-index: 300;
+  width: 500px;
+  height: auto;
+}
+
+.inner{
+    padding: $padding $padding*2;
+    height: 100%;
+    max-height: calc(100vh - #{$input-height*3});
+    overflow-y: auto;
+}
+
+.footer{
+  display: block;
+}
+
+.body{
+  font-size: $font-size-small;
+}
+
+.btn{
+    composes: btn from '../../Sass/common/_buttons.scss';
+    background: rgba(#fff, 0.50);
+    text-align: center;
+    width: 100%;
+    font-size: $font-size-small;
+    border-radius: 0 0 $radius-small $radius-small;
+}

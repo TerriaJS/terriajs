@@ -1,0 +1,27 @@
+@import '~terriajs-variables';
+
+.map-navigation{
+  position: fixed;
+  right: 25px;
+  z-index: 1;
+  bottom: 25px;
+
+  @media print{
+    display: none;
+  }
+
+  @media screen and (min-width: $sm) {
+    top: 80px;
+    bottom: auto;
+  }
+
+}
+
+.control {
+  margin: 15px 0;
+  text-align: center;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}

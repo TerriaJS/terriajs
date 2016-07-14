@@ -1,7 +1,6 @@
 'use strict';
 
 /*global require,beforeEach*/
-var AnimationViewModel = require('../../lib/ViewModels/AnimationViewModel');
 var JulianDate = require('terriajs-cesium/Source/Core/JulianDate');
 var Terria = require('../../lib/Models/Terria');
 
@@ -12,16 +11,11 @@ var TimeInterval = require('terriajs-cesium/Source/Core/TimeInterval');
 describe('Time slider initial time as specified by initialTimeSource ', function() {
     var terria;
     var catalogItem;
-    var animationVm;
 
     beforeEach(function() {
         terria = new Terria({
             baseUrl: './'
         });
-        animationVm = new AnimationViewModel({
-            terria: terria
-        });
-        animationVm.timeline = jasmine.createSpyObj('timeline', ['zoomTo', 'resize', '_makeTics']);
 
         catalogItem = new ImageryLayerCatalogItem(terria);
     });

@@ -1,0 +1,35 @@
+@import '~terriajs-variables';
+@import '../../Sass/common/mixins';
+
+.mobileSearch {
+}
+
+.results {
+  composes: list-reset from '../../Sass/common/_base.scss';
+
+  &.results {
+    padding: 0 $padding $padding $padding;
+  }
+
+  li {
+    background: #fff;
+    margin-bottom: 2px;
+  }
+}
+
+.label {
+  color: #3f4854;
+  font-size: 12px;
+  padding: $padding-small $padding;
+  display: block;
+}
+
+.location {
+  height: calc(100vh - #{$workbench-header + $logo-height});
+
+  @media screen and (max-width : $sm) {
+    height: calc(100vh - #{$mobile-header-height + $modal-header-height});
+  }
+}
+
+@include empty-module("data")
