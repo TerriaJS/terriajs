@@ -28,7 +28,7 @@
 }
 
 .modal-top {
-  height: 40px;
+  height: $mobile-modal-top-height;
   width: 100%;
   background: $color-primary;
   box-shadow: 2px 0 2px rgba(100, 100, 100, 0.5);

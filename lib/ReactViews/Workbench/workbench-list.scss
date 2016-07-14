@@ -13,7 +13,7 @@
   }
 
   @media screen and (max-width : $sm) {
-    height: calc(100vh - #{$mobile-header-height + $modal-header-height});
+    height: calc(100% - #{$mobile-modal-top-height});
   }
 }
 
