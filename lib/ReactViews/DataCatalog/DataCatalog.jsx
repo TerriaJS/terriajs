@@ -48,7 +48,7 @@ const DataCatalog = React.createClass({
 
         return (
             <ul className={classNames(Styles.dataCatalog, {[Styles.scrolling]: this.state.isScrolling})}
-                onScroll={this.onTouchStart} onTouchEnd={this.onTouchEnd}>
+                onTouchStart={this.onTouchStart} onTouchEnd={this.onTouchEnd}>
                 <If condition={isSearching}>
                     <label className={Styles.label}>Search results</label>
                     <SearchHeader searchProvider={searchState.catalogSearchProvider}
