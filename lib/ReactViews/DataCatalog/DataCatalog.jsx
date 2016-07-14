@@ -21,13 +21,13 @@ const DataCatalog = React.createClass({
     getInitialState() {
         return {
             isScrolling: false
-        }
+        };
     },
 
     onTouchStart() {
         this.setState({
             isScrolling: true
-        })
+        });
     },
 
     onTouchEnd() {
