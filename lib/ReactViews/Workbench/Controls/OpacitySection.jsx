@@ -1,11 +1,10 @@
 'use strict';
 
-import InputRange from 'react-input-range';
+import RangeSlider from 'react-rangeslider';
 import React from 'react';
 import ObserveModelMixin from '../../ObserveModelMixin';
 
 import Styles from './opacity-section.scss';
-import InputRangeStyles from './input-range.scss';
 
 const OpacitySection = React.createClass({
     mixins: [ObserveModelMixin],
@@ -14,7 +13,7 @@ const OpacitySection = React.createClass({
         item: React.PropTypes.object.isRequired
     },
 
-    changeOpacity(component, value) {
+    changeOpacity(value) {
         this.props.item.opacity = value / 100.0;
     },
 
@@ -26,7 +25,7 @@ const OpacitySection = React.createClass({
         return (
             <div className={Styles.opacity}>
                 <label htmlFor="opacity">Opacity: </label>
-                <InputRange classNames={InputRangeStyles} name='opacity' minValue={0} maxValue={100} step={1} value={item.opacity * 100 | 0} onChange={this.changeOpacity}/>
+                <RangeSlider className={Styles.rangeSlider} name='opacity' min={0} max={100} step={1} value={item.opacity * 100 | 0} onChange={this.changeOpacity}/>
             </div>
         );
     }
