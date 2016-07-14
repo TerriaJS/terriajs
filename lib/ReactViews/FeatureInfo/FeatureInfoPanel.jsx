@@ -8,6 +8,7 @@ import React from 'react';
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 import Entity from 'terriajs-cesium/Source/DataSources/Entity';
 import Icon from "../Icon.jsx";
+import { SEARCH_MARKER_DATA_SOURCE_NAME } from '../Search/SearchMarkerUtils';
 
 import Styles from './feature-info-panel.scss';
 import classNames from 'classnames';
@@ -60,6 +61,7 @@ const FeatureInfoPanel = React.createClass({
         const {catalogItems, featureCatalogItemPairs} = getFeaturesGroupedByCatalogItems(this.props.terria);
 
         return catalogItems
+            .filter(catalogItem => defined(catalogItem))
             .map((catalogItem, i) => {
                 // From the pairs, select only those with this catalog item, and pull the features out of the pair objects.
                 const features = featureCatalogItemPairs.filter(pair => pair.catalogItem === catalogItem).map(pair => pair.feature);
@@ -190,6 +192,13 @@ function determineCatalogItem(nowViewing, feature) {
     let i;
     if (defined(feature.entityCollection) && defined(feature.entityCollection.owner)) {
         const dataSource = feature.entityCollection.owner;
+
+        if (dataSource.name === SEARCH_MARKER_DATA_SOURCE_NAME) {
+            return {
+                name: 'Search Marker'
+            }
+        }
+
         for (i = nowViewing.items.length - 1; i >= 0; i--) {
             if (nowViewing.items[i].dataSource === dataSource) {
                 result = nowViewing.items[i];
@@ -211,11 +220,6 @@ function determineCatalogItem(nowViewing, feature) {
         }
         return result;
     }
-
-    // Otherwise, no luck.
-    return {
-        name: 'N/A'
-    };
 }
 
 /**
