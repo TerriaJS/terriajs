@@ -18,24 +18,6 @@ const DataCatalog = React.createClass({
         viewState: React.PropTypes.object
     },
 
-    getInitialState() {
-        return {
-            isScrolling: false
-        };
-    },
-
-    onTouchStart() {
-        this.setState({
-            isScrolling: true
-        });
-    },
-
-    onTouchEnd() {
-        this.setState({
-            isScrolling: false
-        });
-    },
-
     render() {
         const terria = this.props.terria;
         const searchState = this.props.viewState.searchState;
@@ -47,8 +29,7 @@ const DataCatalog = React.createClass({
         ).filter(defined);
 
         return (
-            <ul className={classNames(Styles.dataCatalog, {[Styles.scrolling]: this.state.isScrolling})}
-                onTouchStart={this.onTouchStart} onTouchEnd={this.onTouchEnd}>
+            <ul className={Styles.dataCatalog}>
                 <If condition={isSearching}>
                     <label className={Styles.label}>Search results</label>
                     <SearchHeader searchProvider={searchState.catalogSearchProvider}

@@ -18,13 +18,6 @@
   bottom: 0;
   top: $modal-header-height;
 
-
-  &.scrolling {
-    * {
-      pointer-events: none;
-    }
-  }
-
   @media screen and (min-width: $sm) {
     padding-right: $padding;
     margin-top: $padding;
