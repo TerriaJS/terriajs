@@ -2,6 +2,11 @@
 Change Log
 ==========
 
+### 4.0.2
+
+* Fixed a bug that prevented opening catalog groups on iOS.
+* Fixed a CSS warning.
+
 ### 4.0.1
 
 * Fixed a bug that caused an error message to be formatted incorrectly when displayed to the user.
