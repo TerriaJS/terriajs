@@ -36,12 +36,17 @@ const ChartPanelDownloadButton = React.createClass({
     },
 
     componentWillReceiveProps(newProps) {
-        // console.log('ChartPanelDownloadButton receiving props', this.props.chartableItems, newProps.chartableItems);
-        this.runWorker(newProps.chartableItems);
+        // We only need to re-run the worker if chartableItems has changed.
+        if (newProps.chartableItems !== this.props.chartableItems ||
+            this.props.chartableItems.some((item, i) => item.lastPolled !== newProps.chartableItems[i].lastPolled)) {
+            this.runWorker(newProps.chartableItems);
+        }
     },
 
     runWorker(newValue) {
         const that = this;
+
+
         if (window.Worker && (typeof Float32Array !== 'undefined')) {
             when(TaskProcessor._canTransferArrayBuffer, function(canTransferArrayBuffer) {
                 if (!canTransferArrayBuffer) {
@@ -49,18 +54,22 @@ const ChartPanelDownloadButton = React.createClass({
                     return;
                 }
                 that.setState({href: undefined});
-                const synthesized = that.synthesizeNameAndValueArrays();
-                // Could implement this using TaskProcessor, but requires webpack magic.
-                const HrefWorker = require('worker!./downloadHrefWorker');
-                const worker = new HrefWorker;
-                // console.log('names and value arrays', synthesized.names, synthesized.values);
-                if (synthesized.values && synthesized.values.length > 0) {
-                    worker.postMessage(synthesized);
-                    worker.onmessage = function(event) {
-                        // console.log('got worker message', event.data.slice(0, 60), '...');
-                        that.setState({href: event.data});
-                    };
-                }
+
+                const loadingPromises = newValue.map(item => item.load());
+                when.all(loadingPromises).then(() => {
+                    const synthesized = that.synthesizeNameAndValueArrays();
+                    // Could implement this using TaskProcessor, but requires webpack magic.
+                    const HrefWorker = require('worker!./downloadHrefWorker');
+                    const worker = new HrefWorker;
+                    // console.log('names and value arrays', synthesized.names, synthesized.values);
+                    if (synthesized.values && synthesized.values.length > 0) {
+                        worker.postMessage(synthesized);
+                        worker.onmessage = function(event) {
+                            // console.log('got worker message', event.data.slice(0, 60), '...');
+                            that.setState({href: event.data});
+                        };
+                    }
+                });
             });
         }
         // Currently no fallback for IE9-10 - just can't download.
@@ -75,10 +84,12 @@ const ChartPanelDownloadButton = React.createClass({
     synthesizeNameAndValueArrays() {
         const chartableItems = this.props.chartableItems;
         const valueArrays = [];
-        const names = [''];  // We will add the catalog item name back into the csv column name.
+        const names = [];  // We will add the catalog item name back into the csv column name.
         for (let i = chartableItems.length - 1; i >= 0; i--) {
             const item = chartableItems[i];
             const xColumn = getXColumn(item);
+            names.push(getXColumnName(item, xColumn));
+
             let columns = [xColumn];
             if (item.isEnabled && defined(item.tableStructure)) {
                 if (!defined(columns[0])) {
@@ -113,6 +124,14 @@ const ChartPanelDownloadButton = React.createClass({
         return null;
     }
 });
+
+function getXColumnName(item, column) {
+    if (item.timeColumn) {
+        return 'date';
+    } else {
+        return column.name;
+    }
+}
 
 /**
  * Gets the column that will be used for the X axis of the chart.
