@@ -6,6 +6,9 @@ Change Log
 * Made the column title for time-based CSV exports from chart default to 'date'
 * Stopped the CSV creation webworker from being run multiple times on viewing a chart.
 
+* Removed the empty circles from non-selected base maps on the Map settings panel.
+* Prevented text from being selected when dragging the compass control.
+
 ### 4.0.2
 
 * Fixed a bug that prevented opening catalog groups on iOS.

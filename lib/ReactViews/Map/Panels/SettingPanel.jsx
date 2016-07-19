@@ -113,7 +113,7 @@ const SettingPanel = React.createClass({
                                     onMouseEnter={that.mouseEnterBaseMap.bind(this, baseMap)}
                                     onMouseLeave={that.mouseLeaveBaseMap.bind(this, baseMap)}
                                     onFocus={that.mouseEnterBaseMap.bind(this, baseMap)}>
-                                    {baseMap.catalogItem.name === currentBaseMap ? <Icon glyph={Icon.GLYPHS.selected }/>: <Icon glyph={Icon.GLYPHS.radioOff}/>}
+                                    {baseMap.catalogItem.name === currentBaseMap ? <Icon glyph={Icon.GLYPHS.selected }/>: null }
                                     <img alt={baseMap.catalogItem.name} src={baseMap.image}/>
                                 </button>
                             </li>
