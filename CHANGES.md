@@ -2,11 +2,11 @@
 Change Log
 ==========
 
-### 4.0.3
+### 4.1.0
 
 * Removed the empty circles from non-selected base maps on the Map settings panel.
 * Prevented text from being selected when dragging the compass control.
-* Tool added that measures distance between points.
+* Added a `MeasureTool` to allow the user to interactively measure the distance between points.
 
 ### 4.0.2
 
