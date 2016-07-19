@@ -2,12 +2,13 @@
 Change Log
 ==========
 
-### 4.0.3
+### 4.1.0
 
 * Made the column title for time-based CSV exports from chart default to 'date'
 * Stopped the CSV creation webworker from being run multiple times on viewing a chart.
 * Removed the empty circles from non-selected base maps on the Map settings panel.
 * Prevented text from being selected when dragging the compass control.
+* Added the `MeasureTool` to allow users to interactively measure the distance between points.
 
 ### 4.0.2
 

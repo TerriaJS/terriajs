@@ -1,0 +1,36 @@
+@import '~terriajs-variables';
+@import '../../../Sass/common/mixins';
+
+// Measure tool
+//
+// Markup:
+// <div class='measure-tool'>
+//   <button class='btn btn--measure-tool'></button>
+// </div>
+//
+
+.measureTool{
+  position: fixed;
+  bottom: $input-height + $padding;
+  right: 2vw;
+  @media screen and (min-width: $sm){
+    //temp
+    position: absolute;
+    right: 28px;
+    top: 240px;
+  }
+  @media print{
+    display: none;
+  }
+}
+.btn{
+    @include vertical-align();
+    height: 35px;
+    width: 35px;
+    border-radius: 50%;
+    display: block;
+    margin: 0 auto;
+    background-image: url('images/tool-measure-noShadow.svg');
+    background-repeat: no-repeat;
+    background-size: contain;
+}
