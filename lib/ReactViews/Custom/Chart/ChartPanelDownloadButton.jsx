@@ -17,7 +17,7 @@ import Styles from './chart-panel-download-button.scss';
 
 // const hrefProcessor = new TaskProcessor('lib/ReactViews/Chart/downloadHrefWorker');
 
-const RUN_WORKER_DEBOUNCE = 100;
+const RUN_WORKER_DEBOUNCE = 100; // Wait 100ms for initial setup changes to be completed.
 const TIME_COLUMN_DEFAULT_NAME = 'date';
 
 const ChartPanelDownloadButton = React.createClass({
