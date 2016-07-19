@@ -100,6 +100,27 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
         })
     });
 
+    // The sprintf module included by Cesium includes a license comment with a big
+    // pile of links, some of which are apparently dodgy and cause Websense to flag
+    // web workers that include the comment as malicious.  So here we munge URLs in
+    // comments so broken security software doesn't consider them links that a user
+    // might actually visit.
+    config.module.loaders.push({
+        test: /\.js?$/,
+        include: path.resolve(cesiumDir, 'Source', 'ThirdParty'),
+        loader: StringReplacePlugin.replace({
+            replacements: [
+                {
+                    pattern: /\/\*[\S\s]*?\*\//g, // find multi-line comments
+                    replacement: function (match) {
+                        // replace http:// and https:// with a spelling-out of it.
+                        return match.replace(/(https?):\/\//g, '$1-colon-slashslash ');
+                    }
+                }
+            ]
+        })
+    });
+
     // Use Babel to compile our JavaScript files.
     config.module.loaders.push({
         test: /\.jsx?$/,
