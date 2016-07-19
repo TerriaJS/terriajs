@@ -17,8 +17,9 @@
         right: 0;
         top: $mobile-header-height;
         left: 0;
-        max-height: calc(100vh - $mobile-header-height);
+        max-height: calc(100vh - #{$mobile-header-height});
         overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
     }
     &.isOpen{
         display: block;

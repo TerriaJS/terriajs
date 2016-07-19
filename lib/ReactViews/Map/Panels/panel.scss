@@ -6,9 +6,10 @@
 }
 
 .content {
-  max-height: calc(100vh - 100px);
+  max-height: calc(100vh - 150px);
   overflow-y: auto;
   overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
 }
 
 .inner {
@@ -22,14 +23,14 @@
   background: $dark;
   color: #fff;
   border: $border-style;
-  max-width: calc(100% - 10px);
+  max-width: calc(100vw - 10px);
 
   position: fixed;
   top: $mobile-header-height;
   left: 0;
   margin: 14px 5px 5px 5px;
 
-  @media screen and (min-width: $md) {
+  @media screen and (min-width: $sm) {
     position: absolute;
     right: $padding*2;
     top: auto;

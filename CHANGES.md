@@ -2,6 +2,20 @@
 Change Log
 ==========
 
+### 4.0.3
+
+* Removed the empty circles from non-selected base maps on the Map settings panel.
+* Prevented text from being selected when dragging the compass control.
+
+### 4.0.2
+
+* Fixed a bug that prevented opening catalog groups on iOS.
+* Fixed a CSS warning.
+
+### 4.0.1
+
+* Fixed a bug that caused an error message to be formatted incorrectly when displayed to the user.
+
 ### 4.0.0
 
 * Rewrote the TerriaJS user interface using React.  We believe the new interface is a drastic improvement, incorporating user feedback and the results of usability testing.  Currently, it is a bit harder to customize than our old user interface, so if your application has extensive customizations, we suggest delaying upgrading to this version for a little while logner.

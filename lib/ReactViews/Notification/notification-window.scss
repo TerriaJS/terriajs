@@ -27,6 +27,7 @@
     height: 100%;
     max-height: calc(100vh - #{$input-height*3});
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .footer{

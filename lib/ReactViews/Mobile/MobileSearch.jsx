@@ -1,7 +1,10 @@
-import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
+
 import SearchHeader from '../Search/SearchHeader.jsx';
 import SearchResult from '../Search/SearchResult.jsx';
+import {addMarker} from '../Search/SearchMarkerUtils';
+import ObserveModelMixin from '../ObserveModelMixin';
+
 import Styles from './mobile-search.scss';
 
 // A Location item when doing Bing map searvh or Gazetter search
@@ -15,6 +18,9 @@ const MobileSearch = React.createClass({
 
     onLocationClick(result) {
         result.clickAction();
+
+        addMarker(this.props.terria, this.props.viewState, result);
+
         // Close modal window
         this.props.viewState.switchMobileView(null);
         this.props.viewState.searchState.showMobileLocationSearch = false;
@@ -35,7 +41,7 @@ const MobileSearch = React.createClass({
         const searchState = this.props.viewState.searchState;
         return searchState.locationSearchProviders
             .filter(search => search.isSearching || (search.searchResults && search.searchResults.length))
-            .map(search => (<div key={search.constructor.name}>
+            .map(search => (<div key={search.name}>
                 <label className={Styles.label}>{search.name}</label>
                 <SearchHeader searchProvider={search} />
                 <ul className={Styles.results}>

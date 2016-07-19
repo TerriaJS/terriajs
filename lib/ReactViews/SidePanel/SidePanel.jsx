@@ -1,11 +1,15 @@
-import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
-import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
+
+import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
+
+import ObserveModelMixin from '../ObserveModelMixin';
 import SearchBox from '../Search/SearchBox.jsx';
 import SidebarSearch from '../Search/SidebarSearch.jsx';
-import Styles from './side-panel.scss';
 import Workbench from '../Workbench/Workbench.jsx';
 import Icon from "../Icon.jsx";
+import { removeMarker } from '../Search/SearchMarkerUtils';
+
+import Styles from './side-panel.scss';
 
 const SidePanel = React.createClass({
     mixins: [ObserveModelMixin],
@@ -49,6 +53,10 @@ const SidePanel = React.createClass({
 
     changeSearchText(newText) {
         this.props.viewState.searchState.locationSearchText = newText;
+
+        if (newText.length === 0) {
+            removeMarker(this.props.terria, this.props.viewState);
+        }
     },
 
     search() {

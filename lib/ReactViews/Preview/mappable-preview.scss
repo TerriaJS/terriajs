@@ -5,6 +5,7 @@
 .btn--add{
   composes: btn from '../../Sass/common/_buttons.scss';
   composes: btn-primary from '../../Sass/common/_buttons.scss';
+  z-index: 10; // keeps the button above the preview map in IE9.
 
   // toggle-enable data-preview__add-to-map
   @media screen and (min-width: $sm){
