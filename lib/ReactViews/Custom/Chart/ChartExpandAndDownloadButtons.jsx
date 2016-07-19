@@ -149,6 +149,7 @@ function expand(props, sourceIndex) {
         oldCatalogItem.isEnabled = false;
         group.remove(oldCatalogItem);
     }
+    group.add(newCatalogItem);
     newCatalogItem.isLoading = true;
     newCatalogItem.isMappable = false;
     terria.catalog.chartableItems.push(newCatalogItem);  // Notify the chart panel so it shows "loading".
@@ -184,8 +185,6 @@ function expand(props, sourceIndex) {
                     column.isActive = activeColumns.indexOf(column) >= 0;
                 });
             }
-
-            group.add(newCatalogItem);
         } catch(e) {
             // This does not actually make it to the user.
             return raiseErrorToUser(terria, e);

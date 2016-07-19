@@ -2,6 +2,7 @@
 /* global Float32Array */
 /* eslint new-parens: 0 */
 import React from 'react';
+import debounce from 'lodash.debounce';
 
 import defined from 'terriajs-cesium/Source/Core/defined';
 import TaskProcessor from 'terriajs-cesium/Source/Core/TaskProcessor';
@@ -15,6 +16,9 @@ import Icon from "../../Icon.jsx";
 import Styles from './chart-panel-download-button.scss';
 
 // const hrefProcessor = new TaskProcessor('lib/ReactViews/Chart/downloadHrefWorker');
+
+const RUN_WORKER_DEBOUNCE = 100;
+const TIME_COLUMN_DEFAULT_NAME = 'date';
 
 const ChartPanelDownloadButton = React.createClass({
     mixins: [ObserveModelMixin],
@@ -30,22 +34,22 @@ const ChartPanelDownloadButton = React.createClass({
         return {href: undefined};
     },
 
+    componentWillMount() {
+        // Changes to the graph item's catalog item results in new props being passed to this component 5 times on load...
+        // a debounce is a simple way to ensure it only gets run once for every batch of real changes.
+        this.debouncedRunWorker = debounce(this.runWorker, RUN_WORKER_DEBOUNCE);
+    },
+
     componentDidMount() {
-        // console.log('ChartPanelDownloadButton mounted', this.props.chartableItems);
-        this.runWorker(this.props.chartableItems);
+        this.debouncedRunWorker(this.props.chartableItems);
     },
 
     componentWillReceiveProps(newProps) {
-        // We only need to re-run the worker if chartableItems has changed.
-        if (newProps.chartableItems !== this.props.chartableItems ||
-            this.props.chartableItems.some((item, i) => item.lastPolled !== newProps.chartableItems[i].lastPolled)) {
-            this.runWorker(newProps.chartableItems);
-        }
+        this.debouncedRunWorker(newProps.chartableItems);
     },
 
     runWorker(newValue) {
         const that = this;
-
 
         if (window.Worker && (typeof Float32Array !== 'undefined')) {
             when(TaskProcessor._canTransferArrayBuffer, function(canTransferArrayBuffer) {
@@ -57,7 +61,7 @@ const ChartPanelDownloadButton = React.createClass({
 
                 const loadingPromises = newValue.map(item => item.load());
                 when.all(loadingPromises).then(() => {
-                    const synthesized = that.synthesizeNameAndValueArrays();
+                    const synthesized = that.synthesizeNameAndValueArrays(newValue);
                     // Could implement this using TaskProcessor, but requires webpack magic.
                     const HrefWorker = require('worker!./downloadHrefWorker');
                     const worker = new HrefWorker;
@@ -69,6 +73,8 @@ const ChartPanelDownloadButton = React.createClass({
                             that.setState({href: event.data});
                         };
                     }
+                }).otherwise((error) => {
+                    console.error(error);
                 });
             });
         }
@@ -81,14 +87,17 @@ const ChartPanelDownloadButton = React.createClass({
         }
     },
 
-    synthesizeNameAndValueArrays() {
-        const chartableItems = this.props.chartableItems;
+    synthesizeNameAndValueArrays(chartableItems) {
         const valueArrays = [];
         const names = [];  // We will add the catalog item name back into the csv column name.
+
         for (let i = chartableItems.length - 1; i >= 0; i--) {
             const item = chartableItems[i];
             const xColumn = getXColumn(item);
-            names.push(getXColumnName(item, xColumn));
+
+            if (!names.length) {
+                names.push(getXColumnName(item, xColumn));
+            }
 
             let columns = [xColumn];
             if (item.isEnabled && defined(item.tableStructure)) {
@@ -127,7 +136,7 @@ const ChartPanelDownloadButton = React.createClass({
 
 function getXColumnName(item, column) {
     if (item.timeColumn) {
-        return 'date';
+        return TIME_COLUMN_DEFAULT_NAME;
     } else {
         return column.name;
     }
