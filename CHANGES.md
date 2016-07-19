@@ -2,11 +2,15 @@
 Change Log
 ==========
 
+### 4.0.3
+
+* Removed the empty circles from non-selected base maps on the Map settings panel.
+* Prevented text from being selected when dragging the compass control.
+
 ### 4.0.2
 
 * Fixed a bug that prevented opening catalog groups on iOS.
 * Fixed a CSS warning.
-* Removed the empty circles from non-selected base maps on the Map settings panel.
 
 ### 4.0.1
 
