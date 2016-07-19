@@ -6,6 +6,7 @@ Change Log
 
 * Fixed a bug that prevented opening catalog groups on iOS.
 * Fixed a CSS warning.
+* Removed the empty circles from non-selected base maps on the Map settings panel.
 
 ### 4.0.1
 
