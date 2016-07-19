@@ -134,6 +134,9 @@ const ChartPanelDownloadButton = React.createClass({
     }
 });
 
+/**
+ * Gets the name for the x column - this will be 'date' if it's a time column otherwise it'll be the column's name.
+ */
 function getXColumnName(item, column) {
     if (item.timeColumn) {
         return TIME_COLUMN_DEFAULT_NAME;
