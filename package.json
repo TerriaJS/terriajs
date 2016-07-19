@@ -93,7 +93,7 @@
     "react-addons-test-utils": "15.2.1",
     "react-dom": "15.2.1",
     "react-shallow-testutils": "^2.0.0",
-    "svg-sprite-loader": "0.0.25",
+    "svg-sprite-loader": "0.0.26",
     "socket.io": "1.4.7",
     "terriajs-jasmine-ajax": "^3.2.1",
     "terriajs-server": "^2.5.1",
