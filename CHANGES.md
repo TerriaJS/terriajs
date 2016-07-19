@@ -2,6 +2,15 @@
 Change Log
 ==========
 
+### 4.1.0
+
+* Made the column title for time-based CSV exports from chart default to 'date'
+* Stopped the CSV creation webworker from being run multiple times on viewing a chart.
+* Removed the empty circles from non-selected base maps on the Map settings panel.
+* Prevented text from being selected when dragging the compass control.
+* Added the `MeasureTool` to allow users to interactively measure the distance between points.
+* Worked around a problem in the Websense Web Filter that caused it to block access to some of the TerriaJS Web Workers due to a URL in the license text in a comment in a source file.
+
 ### 4.0.2
 
 * Fixed a bug that prevented opening catalog groups on iOS.
@@ -14,6 +23,10 @@ Change Log
 ### 4.0.0
 
 * Rewrote the TerriaJS user interface using React.  We believe the new interface is a drastic improvement, incorporating user feedback and the results of usability testing.  Currently, it is a bit harder to customize than our old user interface, so if your application has extensive customizations, we suggest delaying upgrading to this version for a little while logner.
+* Added support for non-geospatial CSV files, which display in a new chart panel.
+* Added support for customisable tags in Feature Info templates.
+* Implemented [`<chart>` and `<collapsible>`](https://github.com/TerriaJS/terriajs/blob/4.0.0/lib/ReactViews/Custom/registerCustomComponentTypes.js#L52-L106) tags in Feature Info templates.
+* Added support for [polling](https://github.com/TerriaJS/terriajs/blob/4.0.0/lib/Models/Polling.js) for updates to CSV files.
 * `CswCatalogGroup` will now include Web Processing Services from the catalog if configured with `includeWps` set to true.
 * `WebMapServiceCatalogItem` will now detect ncWMS servers and set isNcWMS to true.
 * New `ShareDataService` which can store and resolve data. Currently it is used as a replacement for Google URL Shortener, which can't handle long URLs.

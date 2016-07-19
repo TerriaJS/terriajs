@@ -48,7 +48,7 @@ const MappablePreview = React.createClass({
                 </button>
                 <div className={Styles.previewedInfo}>
                     <h3>{catalogItem.name}</h3>
-                    <div className={Styles.url}>
+                    <div className={Styles.description}>
                         <If condition={catalogItem.description && catalogItem.description.length > 0}>
                             <div>
                                 <h4>Description</h4>

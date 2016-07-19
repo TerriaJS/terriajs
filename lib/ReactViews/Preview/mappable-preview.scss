@@ -21,12 +21,10 @@
   margin: 2*$padding;
 }
 
-
 .field {
   composes: field from '../../Sass/common/_form.scss';
 }
 
-
-.url{
+.description{
   @extend %wrap;
 }
