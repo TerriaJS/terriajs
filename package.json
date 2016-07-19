@@ -52,7 +52,7 @@
     "string-replace-webpack-plugin": "0.0.3",
     "style-loader": "git://github.com/TerriaJS/style-loader#chromeWorkaround",
     "superagent": "^2.0.0",
-    "terriajs-cesium": "1.20.1",
+    "terriajs-cesium": "1.23.0",
     "togeojson": "^0.13.0",
     "urijs": "^1.17.1",
     "url-loader": "^0.5.7",
