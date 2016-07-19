@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+### 4.0.3
+* Made the column title for time-based CSV exports from chart default to 'date'
+* Stopped the CSV creation webworker from being run multiple times on viewing a chart.
+
 ### 4.0.2
 
 * Fixed a bug that prevented opening catalog groups on iOS.
