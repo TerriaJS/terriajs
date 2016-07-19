@@ -38,6 +38,9 @@ const Compass = React.createClass({
     },
 
     handleMouseDown(e) {
+        if(e.stopPropagation) e.stopPropagation();
+        if(e.preventDefault) e.preventDefault();
+
         const compassElement = e.currentTarget;
         const compassRectangle = e.currentTarget.getBoundingClientRect();
         const maxDistance = compassRectangle.width / 2.0;
