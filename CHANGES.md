@@ -10,6 +10,7 @@ Change Log
 * Prevented text from being selected when dragging the compass control.
 * Added the `MeasureTool` to allow users to interactively measure the distance between points.
 * Worked around a problem in the Websense Web Filter that caused it to block access to some of the TerriaJS Web Workers due to a URL in the license text in a comment in a source file.
+* Fixed catalog reordering in browsers other than Chrome
 
 ### 4.0.2
 
