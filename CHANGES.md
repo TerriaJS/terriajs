@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+### 4.1.2
+
+* Fixed a bug that prevented sharing from working in Internet Explorer.
+
 ### 4.1.1
 
 * Stopped IE9 from setting bizarre inline dimensions on custom branding images.
