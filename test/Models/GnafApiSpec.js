@@ -100,7 +100,39 @@ describe('GnafApi', function() {
         }).then(done).otherwise(fail);
     });
 
-    it('should convert results from a bulk elastic search scheme to something nicer', function(done) {
+    it('should pass an XHR error back to its promise', function(done) {
+        var geoCodeCall = gnafApi.geoCode(SEARCH_TERM);
+
+        loadDeferredFirst.reject(new Error('too bad'));
+
+        geoCodeCall.then(fail).otherwise(function(error) {
+            expect(error.message).toBe('too bad');
+        }).then(done).otherwise(fail);
+    });
+
+    it('should bulk geocode search terms if asked', function() {
+        gnafApi._bulkGeocodeSingleRequest([SEARCH_TERM, ANOTHER_SEARCH_TERM]);
+        // Bulk geocode search term is not valid json because it has multiple root elements
+        var xhrArgsStr = loadWithXhr.load.calls.argsFor(0)[3];
+
+        expect(xhrArgsStr).toBe(EXAMPLE_BULK_REQUEST_STR);
+    });
+
+    it('should split array into batches properly', function() {
+        var arrayToSplit = ["a", "b", "c", "d", "e", "f", "g", "h"];
+        var batchSize = 3;
+        var splitArray = GnafApi._splitIntoBatches(arrayToSplit, batchSize);
+        expect(splitArray[0]).toEqual(["a", "b", "c"]);
+        expect(splitArray[1]).toEqual(["d", "e", "f"]);
+        expect(splitArray[2]).toEqual(["g", "h"]);
+
+        batchSize = 2;
+        var innerSplitArray = GnafApi._splitIntoBatches(splitArray, batchSize);
+        expect(innerSplitArray[0]).toEqual([["a", "b", "c"], ["d", "e", "f"]]);
+        expect(innerSplitArray[1]).toEqual([["g", "h"]]);
+    });
+
+    it('should convert results from a bulk elastic search scheme to hits', function(done) {
         var geoCodeCall = gnafApi.bulkGeoCode([SEARCH_TERM, ANOTHER_SEARCH_TERM]);
 
         loadDeferredFirst.resolve(JSON.stringify(EXAMPLE_BULK_RESPONSE));
@@ -111,38 +143,21 @@ describe('GnafApi', function() {
             var hit1 = results[0];
             var hit2 = results[1];
 
-            expect(hit1.id).toBe('GASA_415329873');
-            expect(hit1.name).toBe('17 CLIFFORD WAY, VALLEY VIEW SA 5093');
-            expect(hit1.score).toBe(2.5471735);
-            expect(hit1.flatNumber).toBe(3);
-            expect(hit1.level).toBe(2);
-            expect(hit1.numberFirst).toBe(17);
-            expect(hit1.numberLast).toBe(54);
-            expect(hit1.street.name).toBe('CLIFFORD');
-            expect(hit1.street.typeName).toBe('WAY');
-            expect(hit1.localityName).toBe('VALLEY VIEW');
-            expect(hit1.localityVariantNames).toEqual(['INGLEBURN MILPO', 'ST ANDREWS']);
-            expect(hit1.state.abbreviation).toBe('SA');
-            expect(hit1.state.name).toBe('SOUTH AUSTRALIA');
-            expect(hit1.postCode).toBe('5093');
-            expect(hit1.location.latitude).toBe(-34.83720711);
-            expect(hit1.location.longitude).toBe(138.6667804);
+            expect(hit1.id).toBe('GAACT716851370');
+            expect(hit1.name).toBe('7 LONDON CIRCUIT, CITY ACT 2601');
+            expect(hit1.score).toBe(6.957387);
+            expect(hit1.numberFirst).toBe(7);
+            expect(hit1.numberLast).toBeUndefined();
+            expect(hit1.street.name).toBe('LONDON');
+            expect(hit1.street.typeName).toBe('CCT');
+            expect(hit1.localityName).toBe('CITY');
+            expect(hit1.location.latitude).toBe(-35.28150121);
+            expect(hit1.location.longitude).toBe(149.12512965);
 
-            expect(hit2.name).toBe('17 CLIFFORD STREET, BAYSWATER VIC 3153');
+            expect(hit2.name).toBe('POLICE STATION, 18 LONDON CIRCUIT, CITY ACT 2601');
             expect(hit2.flatNumber).toBeUndefined();
             expect(hit2.levelNumber).toBeUndefined();
             expect(hit2.numberLast).toBeUndefined();
-            expect(hit2.localityVariantNames).toEqual([]);
-        }).then(done).otherwise(fail);
-    });
-
-    it('should pass an XHR error back to its promise', function(done) {
-        var geoCodeCall = gnafApi.geoCode(SEARCH_TERM);
-
-        loadDeferredFirst.reject(new Error('too bad'));
-
-        geoCodeCall.then(fail).otherwise(function(error) {
-            expect(error.message).toBe('too bad');
         }).then(done).otherwise(fail);
     });
 
@@ -690,3 +705,5 @@ var EXAMPLE_BULK_RESPONSE = {
       }
    ]
 };
+
+var EXAMPLE_BULK_REQUEST_STR = '{}\n{"query":{"match":{"d61Address":{"query":"bananas","fuzziness":2,"prefix_length":2}}},"rescore":{"query":{"rescore_query":{"match":{"d61Address":{"query":"bananas"}}},"query_weight":0}},"size":1}\n{}\n{"query":{"match":{"d61Address":{"query":"papayas","fuzziness":2,"prefix_length":2}}},"rescore":{"query":{"rescore_query":{"match":{"d61Address":{"query":"papayas"}}},"query_weight":0}},"size":1}\n';
