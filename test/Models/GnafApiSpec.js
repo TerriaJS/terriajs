@@ -11,6 +11,7 @@ var CustomMatchers = require('../Utility/CustomMatchers');
 var UNPROXIED_URL = 'http://example.com';
 var PROXIED_URL = 'http://proxy/example.com';
 var SEARCH_TERM = 'bananas';
+var ANOTHER_SEARCH_TERM = 'papayas';
 // Rectangle is west, south, east, north
 var RECTANGLE = Rectangle.fromDegrees(1, 2, 3, 4);
 
@@ -70,6 +71,42 @@ describe('GnafApi', function() {
 
         geoCodeCall.then(function(results) {
             expect(results.length).toBe(3);
+
+            var hit1 = results[0];
+            var hit2 = results[1];
+
+            expect(hit1.id).toBe('GASA_415329873');
+            expect(hit1.name).toBe('17 CLIFFORD WAY, VALLEY VIEW SA 5093');
+            expect(hit1.score).toBe(2.5471735);
+            expect(hit1.flatNumber).toBe(3);
+            expect(hit1.level).toBe(2);
+            expect(hit1.numberFirst).toBe(17);
+            expect(hit1.numberLast).toBe(54);
+            expect(hit1.street.name).toBe('CLIFFORD');
+            expect(hit1.street.typeName).toBe('WAY');
+            expect(hit1.localityName).toBe('VALLEY VIEW');
+            expect(hit1.localityVariantNames).toEqual(['INGLEBURN MILPO', 'ST ANDREWS']);
+            expect(hit1.state.abbreviation).toBe('SA');
+            expect(hit1.state.name).toBe('SOUTH AUSTRALIA');
+            expect(hit1.postCode).toBe('5093');
+            expect(hit1.location.latitude).toBe(-34.83720711);
+            expect(hit1.location.longitude).toBe(138.6667804);
+
+            expect(hit2.name).toBe('17 CLIFFORD STREET, BAYSWATER VIC 3153');
+            expect(hit2.flatNumber).toBeUndefined();
+            expect(hit2.levelNumber).toBeUndefined();
+            expect(hit2.numberLast).toBeUndefined();
+            expect(hit2.localityVariantNames).toEqual([]);
+        }).then(done).otherwise(fail);
+    });
+
+    it('should convert results from a bulk elastic search scheme to something nicer', function(done) {
+        var geoCodeCall = gnafApi.bulkGeoCode([SEARCH_TERM, ANOTHER_SEARCH_TERM]);
+
+        loadDeferredFirst.resolve(JSON.stringify(EXAMPLE_BULK_RESPONSE));
+
+        geoCodeCall.then(function(results) {
+            console.log(results);
 
             var hit1 = results[0];
             var hit2 = results[1];
@@ -461,4 +498,195 @@ var EXAMPLE_SECOND_RESPONSE = {
             }
         }]
     }
+};
+
+var EXAMPLE_BULK_RESPONSE = {
+   "responses":[
+      {
+         "took":656,
+         "timed_out":false,
+         "_shards":{
+            "total":5,
+            "successful":5,
+            "failed":0
+         },
+         "hits":{
+            "total":770555,
+            "max_score":2.9654915,
+            "hits":[
+               {
+                  "_index":"gnaf",
+                  "_type":"gnaf",
+                  "_id":"GAACT716851370",
+                  "_score":6.957387,
+                  "_source":{
+                     "addressDetailPid":"GAACT716851370",
+                     "addressSiteName":null,
+                     "buildingName":null,
+                     "flatTypeCode":"D61_NULL",
+                     "flatTypeName":"D61_NULL",
+                     "flat":{
+                        "prefix":"D61_NULL",
+                        "number":-1,
+                        "suffix":"D61_NULL"
+                     },
+                     "levelTypeCode":"D61_NULL",
+                     "levelTypeName":"D61_NULL",
+                     "level":{
+                        "prefix":"D61_NULL",
+                        "number":-1,
+                        "suffix":"D61_NULL"
+                     },
+                     "numberFirst":{
+                        "prefix":"D61_NULL",
+                        "number":7,
+                        "suffix":"D61_NULL"
+                     },
+                     "numberLast":{
+                        "prefix":"D61_NULL",
+                        "number":-1,
+                        "suffix":"D61_NULL"
+                     },
+                     "street":{
+                        "name":"LONDON",
+                        "typeCode":"CIRCUIT",
+                        "typeName":"CCT",
+                        "suffixCode":"D61_NULL",
+                        "suffixName":"D61_NULL"
+                     },
+                     "localityName":"CITY",
+                     "stateAbbreviation":"ACT",
+                     "stateName":"AUSTRALIAN CAPITAL TERRITORY",
+                     "postcode":"2601",
+                     "aliasPrincipal":"P",
+                     "primarySecondary":"P",
+                     "location":{
+                        "lat":-35.28150121,
+                        "lon":149.12512965
+                     },
+                     "streetVariant":[
+
+                     ],
+                     "localityVariant":[
+                        {
+                           "localityName":"CANBERRA"
+                        },
+                        {
+                           "localityName":"CANBERRA CITY"
+                        },
+                        {
+                           "localityName":"ACTON"
+                        },
+                        {
+                           "localityName":"CANBERRA CENTRAL"
+                        }
+                     ],
+                     "d61Address":[
+                        "",
+                        "7 LONDON CIRCUIT",
+                        "CITY ACT 2601",
+                        "CANBERRA ACT",
+                        "CANBERRA CITY ACT",
+                        "ACTON ACT",
+                        "CANBERRA CENTRAL ACT"
+                     ]
+                  }
+               }
+            ]
+         }
+      },
+      {
+         "took":649,
+         "timed_out":false,
+         "_shards":{
+            "total":5,
+            "successful":5,
+            "failed":0
+         },
+         "hits":{
+            "total":582761,
+            "max_score":2.648175,
+            "hits":[
+               {
+                  "_index":"gnaf",
+                  "_type":"gnaf",
+                  "_id":"GAACT714873042",
+                  "_score":6.0663557,
+                  "_source":{
+                     "addressDetailPid":"GAACT714873042",
+                     "addressSiteName":null,
+                     "buildingName":"POLICE STATION",
+                     "flatTypeCode":"D61_NULL",
+                     "flatTypeName":"D61_NULL",
+                     "flat":{
+                        "prefix":"D61_NULL",
+                        "number":-1,
+                        "suffix":"D61_NULL"
+                     },
+                     "levelTypeCode":"D61_NULL",
+                     "levelTypeName":"D61_NULL",
+                     "level":{
+                        "prefix":"D61_NULL",
+                        "number":-1,
+                        "suffix":"D61_NULL"
+                     },
+                     "numberFirst":{
+                        "prefix":"D61_NULL",
+                        "number":18,
+                        "suffix":"D61_NULL"
+                     },
+                     "numberLast":{
+                        "prefix":"D61_NULL",
+                        "number":-1,
+                        "suffix":"D61_NULL"
+                     },
+                     "street":{
+                        "name":"LONDON",
+                        "typeCode":"CIRCUIT",
+                        "typeName":"CCT",
+                        "suffixCode":"D61_NULL",
+                        "suffixName":"D61_NULL"
+                     },
+                     "localityName":"CITY",
+                     "stateAbbreviation":"ACT",
+                     "stateName":"AUSTRALIAN CAPITAL TERRITORY",
+                     "postcode":"2601",
+                     "aliasPrincipal":"P",
+                     "primarySecondary":"0",
+                     "location":{
+                        "lat":-35.28088698,
+                        "lon":149.12622398
+                     },
+                     "streetVariant":[
+
+                     ],
+                     "localityVariant":[
+                        {
+                           "localityName":"CANBERRA"
+                        },
+                        {
+                           "localityName":"CANBERRA CITY"
+                        },
+                        {
+                           "localityName":"ACTON"
+                        },
+                        {
+                           "localityName":"CANBERRA CENTRAL"
+                        }
+                     ],
+                     "d61Address":[
+                        "POLICE STATION",
+                        "18 LONDON CIRCUIT",
+                        "CITY ACT 2601",
+                        "CANBERRA ACT",
+                        "CANBERRA CITY ACT",
+                        "ACTON ACT",
+                        "CANBERRA CENTRAL ACT"
+                     ]
+                  }
+               }
+            ]
+         }
+      }
+   ]
 };
