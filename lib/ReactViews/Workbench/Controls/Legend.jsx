@@ -55,7 +55,7 @@ const Legend = React.createClass({
                                     <When condition={legend.isImage && legend.insertDirectly}>
                                         <li key={i}
                                             onError={this.onImageError.bind(this, legend)}
-                                            className={Styles.legendSvg, {[Styles.legendImagehasError]: legend.imageHasError}}
+                                            className={classNames(Styles.legendSvg , {[Styles.legendImagehasError]: legend.imageHasError})}
                                             dangerouslySetInnerHTML={legend.safeSvgContent}
                                         />
                                     </When>
