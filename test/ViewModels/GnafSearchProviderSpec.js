@@ -1,7 +1,7 @@
 var when = require('terriajs-cesium/Source/ThirdParty/when');
 
 var Terria = require('../../lib/Models/Terria');
-var GnafSearchProviderViewModel = require('../../lib/ViewModels/GNAFSearchProviderViewModel');
+var GnafSearchProviderViewModel = require('../../lib/ViewModels/GnafSearchProviderViewModel');
 var knockout = require('terriajs-cesium/Source/ThirdParty/knockout');
 
 var QUERY = 'this is a search';

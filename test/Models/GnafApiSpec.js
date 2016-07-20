@@ -4,7 +4,7 @@ var when = require('terriajs-cesium/Source/ThirdParty/when');
 var Rectangle = require('terriajs-cesium/Source/Core/Rectangle');
 var loadWithXhr = require('terriajs-cesium/Source/Core/loadWithXhr');
 
-var GnafApi = require('../../lib/Models/GNAFApi');
+var GnafApi = require('../../lib/Models/GnafApi');
 var CorsProxy = require('../../lib/Core/CorsProxy');
 var CustomMatchers = require('../Utility/CustomMatchers');
 
@@ -42,7 +42,7 @@ describe('GnafApi', function() {
     it('should pass searchTerm through to elasticsearch', function() {
         gnafApi.geoCode(SEARCH_TERM);
 
-        expect(getXhrArgs().query.bool.must[0].match.d61Address.query).toBe(SEARCH_TERM);
+        expect(getXhrArgs().query.match.d61Address.query).toBe(SEARCH_TERM);
     });
 
     it('should make calls to the URL passed to it', function() {
