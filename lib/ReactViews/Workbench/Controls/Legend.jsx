@@ -5,6 +5,7 @@ import defined from 'terriajs-cesium/Source/Core/defined';
 import Loader from '../../Loader.jsx';
 import ObserveModelMixin from '../../ObserveModelMixin';
 import proxyCatalogItemUrl from '../../../Models/proxyCatalogItemUrl';
+import classNames from 'classnames';
 import Styles from './legend.scss';
 
 import React from 'react';
@@ -17,6 +18,11 @@ const Legend = React.createClass({
 
     onImageError(legend) {
         legend.imageHasError = true;
+        this.forceUpdate();
+    },
+
+    componentWillMount() {
+        this.legends = this.getLegends();
     },
 
     getLegends() {
@@ -30,7 +36,7 @@ const Legend = React.createClass({
                     insertDirectly: !!legendUrl.safeSvgContent, // we only insert content we generated ourselves, not arbitrary SVG from init files.
                     safeSvgContent: {__html: legendUrl.safeSvgContent}
                 };
-            }).filter(legendUrl => !legendUrl.imageHasError);
+            });
         }
         return [];
     },
@@ -44,17 +50,17 @@ const Legend = React.createClass({
                             <li className={Styles.loader}><Loader message={this.props.item.loadingMessage}/></li>
                         </When>
                         <Otherwise>
-                            <For each="legend" index="i" of={this.getLegends()}>
+                            <For each="legend" index="i" of={this.legends}>
                                 <Choose>
                                     <When condition={legend.isImage && legend.insertDirectly}>
                                         <li key={i}
                                             onError={this.onImageError.bind(this, legend)}
-                                            className={Styles.legendSvg}
+                                            className={Styles.legendSvg, {[Styles.legendImagehasError]: legend.imageHasError}}
                                             dangerouslySetInnerHTML={legend.safeSvgContent}
                                         />
                                     </When>
                                     <When condition={legend.isImage}>
-                                        <li key={legend.url}>
+                                        <li key={legend.url} className={classNames({[Styles.legendImagehasError]: legend.imageHasError})}>
                                             <a onError={this.onImageError.bind(this, legend)}
                                                href={legend.url}
                                                target="_blank">
