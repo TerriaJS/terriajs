@@ -13,34 +13,23 @@ import ShortReport from './Controls/ShortReport';
 import Styles from './workbench-item.scss';
 import ViewingControls from './Controls/ViewingControls';
 import Icon from "../Icon.jsx";
+import {sortable} from 'react-anything-sortable';
 
 const WorkbenchItem = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
+        style: React.PropTypes.object,
+        className: React.PropTypes.string,
+        onMouseDown: React.PropTypes.func.isRequired,
+        onTouchStart: React.PropTypes.func.isRequired,
         item: React.PropTypes.object.isRequired,
-        dragging: React.PropTypes.bool,
-        onDragStart: React.PropTypes.func,
-        onDragOver: React.PropTypes.func,
-        onDragEnd: React.PropTypes.func,
         viewState: React.PropTypes.object.isRequired,
         setWrapperState: React.PropTypes.func
     },
 
     toggleDisplay() {
         this.props.item.isLegendVisible = !this.props.item.isLegendVisible;
-    },
-
-    onDragStart(e) {
-        this.props.onDragStart(e);
-    },
-
-    onDragOver(e) {
-        this.props.onDragOver(e);
-    },
-
-    onDragEnd(e) {
-        this.props.onDragEnd(e);
     },
 
     openModal() {
@@ -59,13 +48,15 @@ const WorkbenchItem = React.createClass({
         const workbenchItem = this.props.item;
 
         return (
-            <li className={classNames(
-                Styles.workbenchItem,
-                {
-                    [Styles.isOpen]: workbenchItem.isLegendVisible,
-                    [Styles.isDragging]: this.props.dragging
-                })}
-                onDragOver={this.onDragOver}>
+            <li
+                style={this.props.style}
+                className={classNames(
+                    this.props.className,
+                    Styles.workbenchItem,
+                    {
+                        [Styles.isOpen]: workbenchItem.isLegendVisible
+                    })}
+                >
 
                 <ul className={Styles.header}>
                     <If condition={workbenchItem.supportsToggleShown}>
@@ -79,15 +70,15 @@ const WorkbenchItem = React.createClass({
                         </li>
                     </If>
                     <li className={Styles.nameColumn}>
-                        <button type='button'
-                                draggable='true'
-                                onDragStart={this.onDragStart}
-                                onDragEnd={this.onDragEnd}>
+                        <div
+                            onMouseDown={this.props.onMouseDown}
+                            onTouchStart={this.props.onTouchStart}
+                            className={Styles.draggable}>
                             <If condition={!workbenchItem.isMappable}>
                                 <span className={Styles.iconLineChart}><Icon glyph={Icon.GLYPHS.lineChart}/></span>
                             </If>
                             {workbenchItem.name}
-                        </button>
+                        </div>
                     </li>
                     <li className={Styles.toggleColumn}>
                         <button type='button'
@@ -120,4 +111,4 @@ const WorkbenchItem = React.createClass({
     }
 });
 
-module.exports = WorkbenchItem;
+module.exports = sortable(WorkbenchItem);
