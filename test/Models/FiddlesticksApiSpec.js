@@ -4,7 +4,7 @@ var when = require('terriajs-cesium/Source/ThirdParty/when');
 var Rectangle = require('terriajs-cesium/Source/Core/Rectangle');
 var loadWithXhr = require('terriajs-cesium/Source/Core/loadWithXhr');
 
-var GNAFApi = require('../../lib/Models/GNAFApi');
+var GnafApi = require('../../lib/Models/GNAFApi');
 var CorsProxy = require('../../lib/Core/CorsProxy');
 var CustomMatchers = require('../Utility/CustomMatchers');
 
@@ -14,7 +14,7 @@ var SEARCH_TERM = 'bananas';
 // Rectangle is west, south, east, north
 var RECTANGLE = Rectangle.fromDegrees(1, 2, 3, 4);
 
-describe('GNAFApi', function() {
+describe('GnafApi', function() {
     var gnafApi, loadDeferredFirst, loadDeferredSecond, corsProxy;
 
     beforeEach(function() {
@@ -36,7 +36,7 @@ describe('GNAFApi', function() {
         corsProxy = new CorsProxy();
         spyOn(corsProxy, 'getURLProxyIfNecessary').and.returnValue(PROXIED_URL);
 
-        gnafApi = new GNAFApi(corsProxy, UNPROXIED_URL, loadWithXhr);
+        gnafApi = new GnafApi(corsProxy, UNPROXIED_URL, loadWithXhr);
     });
 
     it('should pass searchTerm through to elasticsearch', function() {
@@ -55,7 +55,7 @@ describe('GNAFApi', function() {
         var newCorsProxy = new CorsProxy();
         spyOn(newCorsProxy, 'getURLProxyIfNecessary').and.returnValue('another url');
 
-        var newGnafApi = new GNAFApi(newCorsProxy, undefined, loadWithXhr);
+        var newGnafApi = new GnafApi(newCorsProxy, undefined, loadWithXhr);
 
         expect(newCorsProxy.getURLProxyIfNecessary.calls.argsFor(0)[0].length).toBeGreaterThan(0);
         newGnafApi.geoCode(SEARCH_TERM);

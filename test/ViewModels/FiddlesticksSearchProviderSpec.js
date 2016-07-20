@@ -1,13 +1,13 @@
 var when = require('terriajs-cesium/Source/ThirdParty/when');
 
 var Terria = require('../../lib/Models/Terria');
-var GNAFSearchProviderViewModel = require('../../lib/ViewModels/GNAFSearchProviderViewModel');
+var GnafSearchProviderViewModel = require('../../lib/ViewModels/GNAFSearchProviderViewModel');
 var knockout = require('terriajs-cesium/Source/ThirdParty/knockout');
 
 var QUERY = 'this is a search';
 var FLIGHT_DURATION_SECONDS = 2;
 
-describe('GNAFSearchProvider', function() {
+describe('GnafSearchProvider', function() {
     var terria;
     var searchProvider;
     var gnafApi, geoCodeDeferred;
@@ -27,7 +27,7 @@ describe('GNAFSearchProvider', function() {
             geoCode: jasmine.createSpy('geoCode').and.returnValue(geoCodeDeferred)
         };
 
-        searchProvider = new GNAFSearchProviderViewModel({
+        searchProvider = new GnafSearchProviderViewModel({
             terria: terria,
             gnafApi: gnafApi,
             flightDurationSeconds: FLIGHT_DURATION_SECONDS
@@ -63,7 +63,7 @@ describe('GNAFSearchProvider', function() {
             expect(searchProvider.searchMessage.toLowerCase().indexOf('error')).toBeGreaterThan(-1);
         });
 
-        it('should correctly change GNAFApi results to search results', function() {
+        it('should correctly change GnafApi results to search results', function() {
             searchProvider.search(QUERY);
 
             geoCodeDeferred.resolve([{
