@@ -110,14 +110,6 @@ describe('GnafApi', function() {
         }).then(done).otherwise(fail);
     });
 
-    it('should bulk geocode search terms if asked', function() {
-        gnafApi._bulkGeocodeSingleRequest([SEARCH_TERM, ANOTHER_SEARCH_TERM]);
-        // Bulk geocode search term is not valid json because it has multiple root elements
-        var xhrArgsStr = loadWithXhr.load.calls.argsFor(0)[3];
-
-        expect(xhrArgsStr).toBe(EXAMPLE_BULK_REQUEST_STR);
-    });
-
     it('should split array into batches properly', function() {
         var arrayToSplit = ["a", "b", "c", "d", "e", "f", "g", "h"];
         var batchSize = 3;
@@ -130,6 +122,14 @@ describe('GnafApi', function() {
         var innerSplitArray = GnafApi._splitIntoBatches(splitArray, batchSize);
         expect(innerSplitArray[0]).toEqual([["a", "b", "c"], ["d", "e", "f"]]);
         expect(innerSplitArray[1]).toEqual([["g", "h"]]);
+    });
+
+    it('should bulk geocode search terms if asked', function() {
+        gnafApi._bulkGeocodeSingleRequest([SEARCH_TERM, ANOTHER_SEARCH_TERM]);
+        // Bulk geocode search term is not valid json because it has multiple root elements
+        var xhrArgsStr = loadWithXhr.load.calls.argsFor(0)[3];
+
+        expect(xhrArgsStr).toBe(EXAMPLE_BULK_REQUEST_STR);
     });
 
     it('should convert results from a bulk elastic search scheme to hits', function(done) {
