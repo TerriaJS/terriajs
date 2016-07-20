@@ -2,6 +2,12 @@
 Change Log
 ==========
 
+### 4.1.1
+
+* Stopped IE9 from setting bizarre inline dimensions on custom branding images.
+* Fixed workbench reordering in browsers other than Chrome.
+* URLs on the dataset info page are now auto-selected by clicked, making them easier to copy.
+
 ### 4.1.0
 
 * Made the column title for time-based CSV exports from chart default to 'date'
@@ -10,9 +16,6 @@ Change Log
 * Prevented text from being selected when dragging the compass control.
 * Added the `MeasureTool` to allow users to interactively measure the distance between points.
 * Worked around a problem in the Websense Web Filter that caused it to block access to some of the TerriaJS Web Workers due to a URL in the license text in a comment in a source file.
-* Stopped IE9 from setting bizarre inline dimensions on custom branding images.
-* Fixed workbench reordering in browsers other than Chrome.
-* URLs on the dataset info page are now auto-selected by clicked, making them easier to copy.
 
 ### 4.0.2
 
