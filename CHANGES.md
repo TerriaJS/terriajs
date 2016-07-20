@@ -12,6 +12,7 @@ Change Log
 * Worked around a problem in the Websense Web Filter that caused it to block access to some of the TerriaJS Web Workers due to a URL in the license text in a comment in a source file.
 * Stopped IE9 from setting bizarre inline dimensions on custom branding images.
 * Fixed workbench reordering in browsers other than Chrome.
+* URLs on the dataset info page are now auto-selected by clicked, making them easier to copy.
 
 ### 4.0.2
 

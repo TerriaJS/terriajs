@@ -97,7 +97,7 @@ const MappablePreview = React.createClass({
                                        className={Styles.field}
                                        type="text"
                                        value={catalogItem.url}
-                                       onClick={this.selectUrl} />
+                                       onClick={e => e.target.select()} />
 
                                 <Choose>
                                     <When condition={catalogItem.type === 'wms' || (catalogItem.type === 'esri-mapServer' && typeof catalogItem.layers !== 'undefined')}>
