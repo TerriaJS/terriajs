@@ -1,28 +1,22 @@
 @import '~terriajs-variables';
 @import '../../Sass/common/mixins';
-// Save 1px for drop zone
-$workbench-margin: $padding-small - 1px;
+
+$workbench-margin: $padding-small;
 
 .workbench-item {
   background: $dark-with-overlay;
   color: #fff;
   font-family: $font-pop;
-  margin: $workbench-margin/2 0;
+  margin: $workbench-margin 0;
   border: 1px solid rgba(255, 255, 255, 0.15);
-  @media print{
-    color: #000;
+
+  &.workbench-item:global(.ui-sortable-item) {
+    cursor: auto;
+    float: none;
   }
 
-  &.is-dragging {
-    opacity: 0.5;
-
-    .workbench__header {
-      display: none !important;
-    }
-
-    .inner {
-      display: none !important;
-    }
+  @media print{
+    color: #000;
   }
 
   .is-open {
@@ -102,4 +96,8 @@ $workbench-margin: $padding-small - 1px;
     display: inline-block;
     vertical-align: top;
   }
+}
+
+.draggable {
+  cursor: move;
 }
