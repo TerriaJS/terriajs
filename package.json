@@ -44,6 +44,7 @@
     "proj4": "^2.3.14",
     "raw-loader": "^0.5.1",
     "react-addons-pure-render-mixin": "15.2.1",
+    "react-anything-sortable": "^1.5.2",
     "react-rangeslider": "^1.0.3",
     "resolve": "^1.1.7",
     "resolve-url-loader": "^1.4.3",
