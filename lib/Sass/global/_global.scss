@@ -134,11 +134,11 @@ textarea {
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(#000, 0.1);
+  background: rgba($color-primary, 0.1);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(#000, 0.3);
+  background: rgba($color-primary, 0.4);
 }
 
 button{

@@ -3,6 +3,7 @@
 import React from 'react';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import Styles from './search-box.scss';
+import debounce from 'lodash.debounce';
 import Icon from "../Icon.jsx";
 
 /**
@@ -29,6 +30,10 @@ export default React.createClass({
         };
     },
 
+    componentWillMount() {
+        this.debounced = debounce(this.search, 200);
+    },
+
     componentWillUnmount() {
         this.removeDebounce();
     },
@@ -38,13 +43,10 @@ export default React.createClass({
     },
 
     searchWithDebounce() {
-        // Trigger search 2 seconds after the last input.
         this.removeDebounce();
-
+        // Trigger search 2 seconds after the last input.
         if (this.props.searchText.length > 0) {
-            this.debounceTimeout = setTimeout(() => {
-                this.search();
-            }, 2000);
+            this.debounced();
         }
     },
 
@@ -54,10 +56,7 @@ export default React.createClass({
     },
 
     removeDebounce() {
-        if (defined(this.debounceTimeout)) {
-            clearTimeout(this.debounceTimeout);
-            this.debounceTimeout = undefined;
-        }
+        this.debounced.cancel();
     },
 
     handleChange(event) {
