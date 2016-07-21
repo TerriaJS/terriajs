@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+### 4.1.3
+
+* Adds bulk geocoding capability for Australian addresses. So GnafAPI can be used with batches of addresses, if configured.
+
 ### 4.1.2
 
 * Fixed a bug that prevented sharing from working in Internet Explorer.
