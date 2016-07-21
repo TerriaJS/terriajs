@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+### 4.1.3
+
+* For csvs that contain Australian addresses, and provided that batchGeocoder is set on Terria, the addresses will be geocoded and displayed on the map.
+
 ### 4.1.2
 
 * Fixed a bug that prevented sharing from working in Internet Explorer.
