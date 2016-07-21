@@ -706,4 +706,4 @@ var EXAMPLE_BULK_RESPONSE = {
    ]
 };
 
-var EXAMPLE_BULK_REQUEST_STR = '{}\n{"query":{"match":{"d61Address":{"query":"bananas","fuzziness":2,"prefix_length":2}}},"rescore":{"query":{"rescore_query":{"match":{"d61Address":{"query":"bananas"}}},"query_weight":0}},"size":1}\n{}\n{"query":{"match":{"d61Address":{"query":"papayas","fuzziness":2,"prefix_length":2}}},"rescore":{"query":{"rescore_query":{"match":{"d61Address":{"query":"papayas"}}},"query_weight":0}},"size":1}\n';
+var EXAMPLE_BULK_REQUEST_STR = '{"query":{"match":{"d61Address":{"query":"bananas","fuzziness":2,"prefix_length":2}}},"rescore":{"query":{"rescore_query":{"match":{"d61Address":{"query":"bananas"}}},"query_weight":0}},"size":1}\n{"query":{"match":{"d61Address":{"query":"papayas","fuzziness":2,"prefix_length":2}}},"rescore":{"query":{"rescore_query":{"match":{"d61Address":{"query":"papayas"}}},"query_weight":0}},"size":1}\n';
