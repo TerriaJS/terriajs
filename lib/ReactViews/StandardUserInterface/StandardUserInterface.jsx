@@ -16,6 +16,7 @@ import ObserveModelMixin from './../ObserveModelMixin';
 import ProgressBar from '../Map/ProgressBar.jsx';
 import SidePanel from './../SidePanel/SidePanel.jsx';
 import processCustomElements from './processCustomElements';
+import classNames from 'classnames';
 import 'inobounce';
 
 import Styles from './standard-user-interface.scss';
@@ -123,15 +124,17 @@ const StandardUserInterface = React.createClass({
                 </div>
 
                 <If condition={!this.props.viewState.hideMapUi()}>
-                    <MenuBar terria={terria}
-                             viewState={this.props.viewState}
-                             allBaseMaps={allBaseMaps}
-                             menuItems={customElements.menu}
-                    />
-                    <MapNavigation terria={terria}
-                                   viewState={this.props.viewState}
-                                   navItems={customElements.nav}
-                    />
+                    <div className = {classNames({[Styles.explorerPanelIsVisible]: this.props.viewState.explorerPanelIsVisible})}>
+                        <MenuBar terria={terria}
+                                 viewState={this.props.viewState}
+                                 allBaseMaps={allBaseMaps}
+                                 menuItems={customElements.menu}
+                        />
+                        <MapNavigation terria={terria}
+                                       viewState={this.props.viewState}
+                                       navItems={customElements.nav}
+                        />
+                    </div>
                 </If>
 
                 <Notification viewState={this.props.viewState}/>
@@ -143,9 +146,11 @@ const StandardUserInterface = React.createClass({
                     </aside>
                 </If>
 
-                <FeatureInfoPanel terria={terria}
-                                  viewState={this.props.viewState}
-                />
+                <div className = {classNames({[Styles.explorerPanelIsVisible]: this.props.viewState.explorerPanelIsVisible})}>
+                    <FeatureInfoPanel terria={terria}
+                                      viewState={this.props.viewState}
+                    />
+                </div>
                 <DragDropFile terria={this.props.terria}
                               viewState={this.props.viewState}
                 />
