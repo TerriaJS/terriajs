@@ -5,6 +5,7 @@ Change Log
 ### 4.1.3
 
 * For csvs that contain Australian addresses, and provided that batchGeocoder is set on Terria, the addresses will be geocoded and displayed on the map.
+* Show load indicator for user added files.
 
 ### 4.1.2
 
