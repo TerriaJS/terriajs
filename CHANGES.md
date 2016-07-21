@@ -6,6 +6,9 @@ Change Log
 * Made explorer panel not rendered at all when hidden and made the preview map destroy itself when unmounted - this mitigates performance issues from having leaflet running
   in the background on very busy vector datasets.
 
+* Fixed a bug that caused the selection indicator to get small when near the right edge of the map and to overlap the side panel when past the left edge.
+* Map controls and menus now become translucent while the explorer window (Data Catalog) is visible.
+
 ### 4.1.2
 
 * Fixed a bug that prevented sharing from working in Internet Explorer.
