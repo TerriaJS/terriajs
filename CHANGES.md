@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+### 4.1.3
+
+* Show load indicator for user added files.
+
 ### 4.1.2
 
 * Fixed a bug that prevented sharing from working in Internet Explorer.
