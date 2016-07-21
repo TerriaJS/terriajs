@@ -2,6 +2,16 @@
 Change Log
 ==========
 
+### 4.1.2
+
+* Fixed a bug that prevented sharing from working in Internet Explorer.
+
+### 4.1.1
+
+* Stopped IE9 from setting bizarre inline dimensions on custom branding images.
+* Fixed workbench reordering in browsers other than Chrome.
+* URLs on the dataset info page are now auto-selected by clicked, making them easier to copy.
+
 ### 4.1.0
 
 * Made the column title for time-based CSV exports from chart default to 'date'

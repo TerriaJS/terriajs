@@ -24,7 +24,7 @@
 .drop-zone {
   composes: drop-zone from '../../Sass/common/_drop_zone.scss';
   composes: clearfix from '../../Sass/common/_base.scss';
-  height: 2px;
+  height: 10px;
   &.is-active {
     height: calc(#{$input-height} + #{$padding});
   }
