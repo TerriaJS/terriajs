@@ -69,6 +69,9 @@ const DataPreviewMap = React.createClass({
     },
 
     componentWillUnmount() {
+        this.terriaViewer && this.terriaViewer.destroy();
+        this.mapElement.innerHTML = '';
+
         if (this._unsubscribeErrorHandler) {
             this._unsubscribeErrorHandler();
             this._unsubscribeErrorHandler = undefined;
@@ -263,11 +266,13 @@ const DataPreviewMap = React.createClass({
 
     mapIsReady(mapContainer) {
         if (mapContainer) {
-            const t = TerriaViewer.create(this.terriaPreview, {
+            this.mapElement = mapContainer;
+
+            this.terriaViewer = TerriaViewer.create(this.terriaPreview, {
                 mapContainer: mapContainer
             });
             // disable preview map interaction
-            const map = t.terria.leaflet.map;
+            const map = this.terriaViewer.terria.leaflet.map;
             map.touchZoom.disable();
             map.doubleClickZoom.disable();
             map.scrollWheelZoom.disable();

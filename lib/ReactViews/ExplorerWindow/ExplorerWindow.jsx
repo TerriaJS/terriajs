@@ -1,8 +1,10 @@
 import React from 'react';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import classNames from 'classnames';
 
 import ObserveModelMixin from '../ObserveModelMixin';
 import Tabs from './Tabs.jsx';
+
 import Styles from './explorer-window.scss';
 
 const ExplorerWindow = React.createClass({
@@ -36,36 +38,39 @@ const ExplorerWindow = React.createClass({
     },
 
     render() {
-        const className = classNames(
-            Styles.modalWrapper,
-            {
-                [Styles.isOpen]: this.isVisible()
-            }
-        );
-
         return (
-            <div className={className}
-                 id="explorer-panel-wrapper"
-                 aria-hidden={!this.isVisible}>
-                <div onClick={this.close}
-                     id="modal-overlay"
-                     className={Styles.modalOverlay}
-                     tabIndex="-1"/>
-                <div id="explorer-panel"
-                     className={classNames(Styles.explorerPanel, Styles.modalContent)}
-                     aria-labelledby="modalTitle"
-                     aria-describedby="modalDescription"
-                     role="dialog">
-                    <button type='button'
-                            onClick={this.close}
-                            className={Styles.btnCloseModal}
-                            title="Close data panel"
-                            data-target="close-modal">
-                        Done
-                    </button>
-                    <Tabs terria={this.props.terria} viewState={this.props.viewState}/>
-                </div>
-            </div>
+            <ReactCSSTransitionGroup
+                transitionName={{
+                    enter: Styles.animatingEnter,
+                    leave: Styles.animatingLeave
+                }}
+                transitionEnterTimeout={200}
+                transitionLeaveTimeout={200}>
+                <If condition={this.isVisible()}>
+                    <div className={Styles.modalWrapper}
+                         id="explorer-panel-wrapper"
+                         aria-hidden={!this.isVisible}>
+                        <div onClick={this.close}
+                             id="modal-overlay"
+                             className={Styles.modalOverlay}
+                             tabIndex="-1"/>
+                        <div id="explorer-panel"
+                             className={classNames(Styles.explorerPanel, Styles.modalContent)}
+                             aria-labelledby="modalTitle"
+                             aria-describedby="modalDescription"
+                             role="dialog">
+                            <button type='button'
+                                    onClick={this.close}
+                                    className={Styles.btnCloseModal}
+                                    title="Close data panel"
+                                    data-target="close-modal">
+                                Done
+                            </button>
+                            <Tabs terria={this.props.terria} viewState={this.props.viewState}/>
+                        </div>
+                    </div>
+                </If>
+            </ReactCSSTransitionGroup>
         );
     }
 });

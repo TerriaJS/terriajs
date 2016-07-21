@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+### 4.1.3
+* Made explorer panel not rendered at all when hidden and made the preview map destroy itself when unmounted - this mitigates performance issues from having leaflet running
+  in the background on very busy vector datasets.
+
 ### 4.1.2
 
 * Fixed a bug that prevented sharing from working in Internet Explorer.
