@@ -109,12 +109,11 @@
 
 .btnMenu{
     height: 40px;
-
     font-size: 25px;
     padding: 0 $padding-small;
     border-radius: $radius-small;
     margin-right: 3px;
-
+    vertical-align: top;
     &:hover, &:focus, & {
         border: 1px solid rgba(#fff, 0.5);
     }
