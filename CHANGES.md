@@ -2,6 +2,11 @@
 Change Log
 ==========
 
+### 4.1.3
+
+* Fixed a bug that caused the selection indicator to get small when near the right edge of the map and to overlap the side panel when past the left edge.
+* Map controls and menus now become translucent while the explorer window (Data Catalog) is visible.
+
 ### 4.1.2
 
 * Fixed a bug that prevented sharing from working in Internet Explorer.
