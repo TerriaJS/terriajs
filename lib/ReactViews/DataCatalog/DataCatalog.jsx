@@ -1,8 +1,11 @@
-import DataCatalogMember from './DataCatalogMember.jsx';
-import defined from 'terriajs-cesium/Source/Core/defined';
-import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
+
+import defined from 'terriajs-cesium/Source/Core/defined';
+
+import DataCatalogMember from './DataCatalogMember.jsx';
+import ObserveModelMixin from '../ObserveModelMixin';
 import SearchHeader from '../Search/SearchHeader.jsx';
+
 import Styles from './data-catalog.scss';
 
 // Displays the data catalog.

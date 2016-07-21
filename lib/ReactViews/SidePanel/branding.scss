@@ -18,5 +18,9 @@
 
   img {
     max-height: 100%;
+
+    // For some reason without this IE9 flips out and stretches the images.
+    width: auto;
+    height: auto;
   }
 }

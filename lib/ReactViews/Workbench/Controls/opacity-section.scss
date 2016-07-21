@@ -11,3 +11,31 @@
     width: 175px;
   }
 }
+
+.rangeSlider {
+  height: 10px;
+  border-radius: 5px;
+  background: $border-color;
+  margin-top: 5px;
+
+  :global {
+    .rangeslider__fill {
+      height: 100%;
+      background: #fff;
+      border-radius: 5px;
+      top: 0;
+      position: relative;
+    }
+
+    .rangeslider__handle {
+      width: 20px;
+      height: 20px;
+      border-radius: 20px;
+      top: -15px;
+      background: #fff;
+      border: 1px solid #ccc;
+      display: inline-block;
+      position: relative;
+    }
+  }
+}

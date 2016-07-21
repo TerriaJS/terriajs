@@ -6,6 +6,7 @@ import Branding from '../SidePanel/Branding.jsx';
 import Styles from './mobile-header.scss';
 import Icon from "../Icon.jsx";
 import MobileMenu from './MobileMenu';
+import { removeMarker } from '../Search/SearchMarkerUtils';
 
 const MobileHeader = React.createClass({
     mixins: [ObserveModelMixin],
@@ -56,6 +57,11 @@ const MobileHeader = React.createClass({
 
     changeLocationSearchText(newText) {
         this.props.viewState.searchState.locationSearchText = newText;
+
+        if (newText.length === 0) {
+            removeMarker(this.props.terria, this.props.viewState);
+        }
+
         this.showLocationSearchResults();
     },
 
