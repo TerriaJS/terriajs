@@ -8,7 +8,7 @@
 }
 
 .location-item.light .btn {
-  border-bottom: 1px solid $grey;
+  border-bottom: 1px solid rgba($grey, 0.4);
   background: transparent;
   &:hover {
     border-bottom: 1px solid $color-primary;
