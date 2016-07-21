@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+### 4.1.3
+
+* Fixed a bug that caused the selection indicator to get small when near the right edge of the map and to overlap the side panel when past the left edge.
+
 ### 4.1.2
 
 * Fixed a bug that prevented sharing from working in Internet Explorer.
