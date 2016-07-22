@@ -60,7 +60,7 @@ const DataPreviewMap = React.createClass({
         positron.url = '//global.ssl.fastly.net/light_all/';
         positron.attribution = '© OpenStreetMap contributors ODbL, © CartoDB CC-BY 3.0';
         positron.opacity = 1.0;
-        positron.subdomains = ['cartodb-basemaps-a','cartodb-basemaps-b','cartodb-basemaps-c','cartodb-basemaps-d'];
+        positron.subdomains = ['cartodb-basemaps-a', 'cartodb-basemaps-b', 'cartodb-basemaps-c', 'cartodb-basemaps-d'];
         this.terriaPreview.baseMap = positron;
 
         this.isZoomedToExtent = false;
@@ -70,7 +70,6 @@ const DataPreviewMap = React.createClass({
 
     componentWillUnmount() {
         this.terriaViewer && this.terriaViewer.destroy();
-        this.mapElement.innerHTML = '';
 
         if (this._unsubscribeErrorHandler) {
             this._unsubscribeErrorHandler();
@@ -266,19 +265,23 @@ const DataPreviewMap = React.createClass({
 
     mapIsReady(mapContainer) {
         if (mapContainer) {
-            this.mapElement = mapContainer;
+            // This gets called when React is rendering the entire explorer window onto the DOM and is quite a heavy
+            // process, so we'll yield to the render with a setTimeout and do the map setup right afterwards.
+            setTimeout(() => {
+                this.mapElement = mapContainer;
 
-            this.terriaViewer = TerriaViewer.create(this.terriaPreview, {
-                mapContainer: mapContainer
+                this.terriaViewer = TerriaViewer.create(this.terriaPreview, {
+                    mapContainer: mapContainer
+                });
+                // disable preview map interaction
+                const map = this.terriaViewer.terria.leaflet.map;
+                map.touchZoom.disable();
+                map.doubleClickZoom.disable();
+                map.scrollWheelZoom.disable();
+                map.boxZoom.disable();
+                map.keyboard.disable();
+                map.dragging.disable();
             });
-            // disable preview map interaction
-            const map = this.terriaViewer.terria.leaflet.map;
-            map.touchZoom.disable();
-            map.doubleClickZoom.disable();
-            map.scrollWheelZoom.disable();
-            map.boxZoom.disable();
-            map.keyboard.disable();
-            map.dragging.disable();
         }
     },
 
