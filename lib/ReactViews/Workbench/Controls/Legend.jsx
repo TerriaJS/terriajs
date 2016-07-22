@@ -1,13 +1,13 @@
 'use strict';
 
+import classNames from 'classnames';
 import defined from 'terriajs-cesium/Source/Core/defined';
-
+import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 import Loader from '../../Loader.jsx';
 import ObserveModelMixin from '../../ObserveModelMixin';
 import proxyCatalogItemUrl from '../../../Models/proxyCatalogItemUrl';
-import Styles from './legend.scss';
-
 import React from 'react';
+import Styles from './legend.scss';
 
 const Legend = React.createClass({
     mixins: [ObserveModelMixin],
@@ -15,24 +15,55 @@ const Legend = React.createClass({
         item: React.PropTypes.object
     },
 
-    onImageError(legend) {
-        legend.imageHasError = true;
+    componentWillMount() {
+        this.legendsWithError = {};
     },
 
-    getLegends() {
-        if (defined(this.props.item.legendUrls)) {
-            return this.props.item.legendUrls.map((legendUrl)=>{
-                return {
-                    url: proxyCatalogItemUrl(this.catalogMember, legendUrl.url),
-                    isImage: legendUrl.isImage(),
-                    imageHasError: false,
-                    onImageError: this.onImageError,
-                    insertDirectly: !!legendUrl.safeSvgContent, // we only insert content we generated ourselves, not arbitrary SVG from init files.
-                    safeSvgContent: {__html: legendUrl.safeSvgContent}
-                };
-            }).filter(legendUrl => !legendUrl.imageHasError);
+    onImageError(legend) {
+        this.legendsWithError[legend.url] = true;
+    },
+
+    doesLegendHaveError(legend) {
+        const hasError = this.legendsWithError[legend.url];
+        if (!defined(hasError)) {
+            this.legendsWithError[legend.url] = false;
+            knockout.track(this.legendsWithError, [legend.url]);
         }
-        return [];
+        return this.legendsWithError[legend.url];
+    },
+
+    renderLegend(legendUrl, i) {
+        const isImage = legendUrl.isImage();
+        const insertDirectly = !!legendUrl.safeSvgContent; // we only insert content we generated ourselves, not arbitrary SVG from init files.
+        const safeSvgContent = {__html: legendUrl.safeSvgContent};
+        const proxiedUrl = proxyCatalogItemUrl(this.catalogMember, legendUrl.url);
+
+        return (
+            <Choose>
+                <When condition={isImage && insertDirectly}>
+                    <li key={i}
+                        onError={this.onImageError.bind(this, legendUrl)}
+                        className={classNames(Styles.legendSvg , {[Styles.legendImagehasError]: this.doesLegendHaveError(legendUrl)})}
+                        dangerouslySetInnerHTML={safeSvgContent}
+                    />
+                </When>
+                <When condition={isImage}>
+                    <li key={proxiedUrl} className={classNames({[Styles.legendImagehasError]: this.doesLegendHaveError(legendUrl)})}>
+                        <a onError={this.onImageError.bind(this, legendUrl)}
+                           href={proxiedUrl}
+                           target="_blank">
+                            <img src={proxiedUrl}/>
+                        </a>
+                    </li>
+                </When>
+                <Otherwise>
+                    <li key={proxiedUrl}>
+                        <a href={proxiedUrl}
+                           target="_blank">Open legend in a separate tab
+                        </a>
+                    </li>
+                </Otherwise>
+            </Choose>);
     },
 
     render() {
@@ -44,32 +75,8 @@ const Legend = React.createClass({
                             <li className={Styles.loader}><Loader message={this.props.item.loadingMessage}/></li>
                         </When>
                         <Otherwise>
-                            <For each="legend" index="i" of={this.getLegends()}>
-                                <Choose>
-                                    <When condition={legend.isImage && legend.insertDirectly}>
-                                        <li key={i}
-                                            onError={this.onImageError.bind(this, legend)}
-                                            className={Styles.legendSvg}
-                                            dangerouslySetInnerHTML={legend.safeSvgContent}
-                                        />
-                                    </When>
-                                    <When condition={legend.isImage}>
-                                        <li key={legend.url}>
-                                            <a onError={this.onImageError.bind(this, legend)}
-                                               href={legend.url}
-                                               target="_blank">
-                                                <img src={legend.url}/>
-                                            </a>
-                                        </li>
-                                    </When>
-                                    <Otherwise>
-                                        <li key={legend.url}>
-                                            <a href={legend.url}
-                                               target="_blank">Open legend in a separate tab
-                                            </a>
-                                        </li>
-                                    </Otherwise>
-                                </Choose>
+                            <For each="legend" index="i" of={this.props.item.legendUrls}>
+                                {this.renderLegend(legend, i)}
                             </For>
                         </Otherwise>
                     </Choose>
