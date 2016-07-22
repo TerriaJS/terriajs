@@ -1,7 +1,6 @@
 'use strict';
 
 import React from 'react';
-import defined from 'terriajs-cesium/Source/Core/defined';
 import Styles from './search-box.scss';
 import debounce from 'lodash.debounce';
 import Icon from "../Icon.jsx";
