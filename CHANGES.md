@@ -6,6 +6,7 @@ Change Log
 
 * Fixed a bug that caused the selection indicator to get small when near the right edge of the map and to overlap the side panel when past the left edge.
 * Map controls and menus now become translucent while the explorer window (Data Catalog) is visible.
+* Legend images that fail to load are now hidden entirely.
 
 ### 4.1.2
 
