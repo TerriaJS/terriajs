@@ -1,0 +1,18 @@
+{
+    "catalog": [
+        {
+            "type": "group",
+            "name": "bom",
+            "isOpen": true,
+            "items": [
+                {
+                    "name": "BOM SOS",
+                    "url": "http://www.bom.gov.au/waterdata/services",
+                    "type": "sos-group",
+                    "isOpen": true
+
+                }
+            ]
+        }
+    ]
+}
