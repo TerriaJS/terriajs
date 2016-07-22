@@ -29,6 +29,12 @@
                         "dataflowUrlComponent": ""
                     },
                     {
+                        "name": "Data as observations not series",
+                        "type": "sdmx-json",
+                        "url": "build/TerriaJS/test/SDMX-JSON/data-as-observations.json",
+                        "dataflowUrlComponent": ""
+                    },
+                    {
                         "name": "Non-spatial",
                         "type": "sdmx-json",
                         "url": "build/TerriaJS/test/SDMX-JSON/data-nonspatial.json",
