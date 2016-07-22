@@ -2,6 +2,23 @@
 Change Log
 ==========
 
+### 4.1.3
+
+* Fixed a bug that caused the selection indicator to get small when near the right edge of the map and to overlap the side panel when past the left edge.
+* Map controls and menus now become translucent while the explorer window (Data Catalog) is visible.
+* Legend images that fail to load are now hidden entirely.
+* Improved the appearance of the opacity slider and added a percentage display.
+
+### 4.1.2
+
+* Fixed a bug that prevented sharing from working in Internet Explorer.
+
+### 4.1.1
+
+* Stopped IE9 from setting bizarre inline dimensions on custom branding images.
+* Fixed workbench reordering in browsers other than Chrome.
+* URLs on the dataset info page are now auto-selected by clicked, making them easier to copy.
+
 ### 4.1.0
 
 * Made the column title for time-based CSV exports from chart default to 'date'
