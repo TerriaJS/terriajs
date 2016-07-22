@@ -5,6 +5,7 @@ import React from 'react';
 import Icon from "../../Icon.jsx";
 import classNames from 'classnames';
 
+import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 import Styles from './concept-viewer.scss';
 
 const ConceptViewer = React.createClass({
@@ -60,7 +61,6 @@ const Concept = React.createClass({
 
     render() {
         const concept = this.props.concept;
-
         return (
             <li style={this.getColorStyle()}>
                 <If condition={concept.name}>
