@@ -5,6 +5,7 @@ import Styles from './search-box.scss';
 import debounce from 'lodash.debounce';
 import Icon from "../Icon.jsx";
 
+const DEBOUNCE_INTERVAL = 2000;
 /**
  * Super-simple dumb search box component.
  * Used for both data catalog search and location search.
@@ -30,7 +31,7 @@ export default React.createClass({
     },
 
     componentWillMount() {
-        this.debounced = debounce(this.search, 200);
+        this.searchWithDebounce = debounce(this.search, DEBOUNCE_INTERVAL);
     },
 
     componentWillUnmount() {
@@ -41,21 +42,13 @@ export default React.createClass({
         return this.props.searchText.length > 0;
     },
 
-    searchWithDebounce() {
-        this.removeDebounce();
-        // Trigger search 2 seconds after the last input.
-        if (this.props.searchText.length > 0) {
-            this.debounced();
-        }
-    },
-
     search() {
         this.removeDebounce();
         this.props.onDoSearch();
     },
 
     removeDebounce() {
-        this.debounced.cancel();
+        this.searchWithDebounce.cancel();
     },
 
     handleChange(event) {
