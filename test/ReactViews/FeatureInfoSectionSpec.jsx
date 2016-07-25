@@ -67,11 +67,13 @@ describe('FeatureInfoSection', function() {
     let terria;
     let feature;
     let viewState;
+    let initialSubscribers;
 
     beforeEach(function() {
         terria = new Terria({
             baseUrl: './'
         });
+        initialSubscribers = terria.clock.onTick.numberOfListeners;
         viewState = {}; // Not important for tests, but is a required prop.
         const properties = {
             'name': 'Kay',
@@ -142,9 +144,9 @@ describe('FeatureInfoSection', function() {
         const renderer = ReactTestUtils.createRenderer();
         const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} viewState={viewState} />;
         renderer.render(section);
-        expect(terria.clock.onTick.numberOfListeners).toEqual(1);  // This implementation is not required, but while we have it, keep this test so we know the next one is meaningful.
+        expect(terria.clock.onTick.numberOfListeners).toEqual(initialSubscribers + 1);  // This implementation is not required, but while we have it, keep this test so we know the next one is meaningful.
         renderer.unmount();
-        expect(terria.clock.onTick.numberOfListeners).toEqual(0);  // we do want to be sure that if this is the implementation, we tidy up after ourselves.
+        expect(terria.clock.onTick.numberOfListeners).toEqual(initialSubscribers);  // we do want to be sure that if this is the implementation, we tidy up after ourselves.
     });
 
     it('does not set a clock event listener if no description or properties', function() {
@@ -154,14 +156,14 @@ describe('FeatureInfoSection', function() {
         const renderer = ReactTestUtils.createRenderer();
         const section = <FeatureInfoSection feature={emptyFeature} isOpen={true} clock={terria.clock} viewState={viewState} />;
         renderer.render(section);
-        expect(terria.clock.onTick.numberOfListeners).toEqual(0);
+        expect(terria.clock.onTick.numberOfListeners).toEqual(initialSubscribers);
     });
 
     it('does not set a clock event listener if no description and constant properties', function() {
         const renderer = ReactTestUtils.createRenderer();
         const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} viewState={viewState} />;
         renderer.render(section);
-        expect(terria.clock.onTick.numberOfListeners).toEqual(0);
+        expect(terria.clock.onTick.numberOfListeners).toEqual(initialSubscribers);
     });
 
     it('handles features with no properties', function() {
