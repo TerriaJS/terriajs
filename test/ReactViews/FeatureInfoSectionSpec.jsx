@@ -426,7 +426,7 @@ describe('FeatureInfoSection', function() {
         it('does not appear if no template', function() {
             const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} viewState={viewState} />;
             const result = getShallowRenderedOutput(section);
-            expect(findAllEqualTo(result, 'Hide Raw Data').length).toEqual(0);
+            expect(findAllEqualTo(result, 'Show Curated Data').length).toEqual(0);
             expect(findAllEqualTo(result, 'Show Raw Data').length).toEqual(0);
         });
 
@@ -434,7 +434,7 @@ describe('FeatureInfoSection', function() {
             const template = 'Test';
             const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} viewState={viewState} template={template} />;
             const result = getShallowRenderedOutput(section);
-            expect(findAllEqualTo(result, 'Hide Raw Data').length).toEqual(0);
+            expect(findAllEqualTo(result, 'Show Curated Data').length).toEqual(0);
             expect(findAllEqualTo(result, 'Show Raw Data').length).toEqual(1);
         });
 
