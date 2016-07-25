@@ -8,7 +8,7 @@ import PickedFeatures from '../../../Map/PickedFeatures';
 import React from 'react';
 import Rectangle from 'terriajs-cesium/Source/Core/Rectangle';
 import when from 'terriajs-cesium/Source/ThirdParty/when';
-
+import classNames from 'classnames';
 import Styles from './viewing-controls.scss';
 
 const ViewingControls = React.createClass({
@@ -65,9 +65,8 @@ const ViewingControls = React.createClass({
 
     render() {
         const item = this.props.item;
-
         return (
-            <ul className={Styles.control}>
+            <ul className={classNames(Styles.control, {[Styles.hasZoom]: item.isMappable})}>
                 <If condition={item.isMappable}>
                     <li className={Styles.zoom}><button type='button' onClick={this.zoomTo} title="Zoom to data" className={Styles.btn}>Zoom To Extent</button></li>
                 </If>
