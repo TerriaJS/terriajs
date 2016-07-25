@@ -37,16 +37,13 @@
   -moz-backface-visibility: hidden;
   backface-visibility: hidden;
 
-  opacity: 1;
-  visibility: visible;
-  @include transform(none);
-  @include transition(all 0.2s);
+  @include transform(translateY(20%));
+  opacity: 0;
+  @include transition(all 0.3s);
 
-  .animating-enter &, .animating-leave & {
-    @include transform(translateY(20%));
-    opacity: 0;
-    visibility: hidden;
-    margin: 0 auto;
+  &.is-mounted {
+    opacity: 1;
+    @include transform(none);
   }
 }
 
@@ -60,12 +57,6 @@
   z-index: $front-component-z-index - 10;
   opacity: 1;
   visibility: visible;
-  @include transition(all 0.2s);
-
-  .animating-enter &, .animating-leave & {
-    visibility: hidden;
-    opacity: 0;
-  }
 }
 
 .btn--close-modal {

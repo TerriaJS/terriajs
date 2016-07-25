@@ -1,11 +1,13 @@
 import React from 'react';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import classNames from 'classnames';
+import ko from 'terriajs-cesium/Source/ThirdParty/knockout';
 
 import ObserveModelMixin from '../ObserveModelMixin';
 import Tabs from './Tabs.jsx';
 
 import Styles from './explorer-window.scss';
+
+const SLIDE_DURATION = 300;
 
 const ExplorerWindow = React.createClass({
     mixins: [ObserveModelMixin],
@@ -15,13 +17,27 @@ const ExplorerWindow = React.createClass({
         viewState: React.PropTypes.object.isRequired
     },
 
+    getInitialState() {
+        return {
+            isMounted: false
+        };
+    },
+
     close() {
         this.props.viewState.explorerPanelIsVisible = false;
         this.props.viewState.switchMobileView('nowViewing');
     },
 
-    isVisible() {
-        return !this.props.viewState.hideMapUi() && this.props.viewState.explorerPanelIsVisible;
+    componentWillMount() {
+        this.props.viewState.explorerPanelAnimating = true;
+
+        this._pickedFeaturesSubscription = ko.pureComputed(this.isVisible, this).subscribe(isVisible => {
+            if (isVisible) {
+                this.slideIn();
+            } else {
+                this.slideOut();
+            }
+        }, this);
     },
 
     componentDidMount() {
@@ -33,45 +49,69 @@ const ExplorerWindow = React.createClass({
         window.addEventListener('keydown', this.escKeyListener, true);
     },
 
+    slideIn() {
+        this.props.viewState.explorerPanelAnimating = true;
+
+        this.setState({
+            visible: true
+        });
+        setTimeout(() => {
+            this.setState({
+                slidIn: true
+            });
+
+            setTimeout(() => this.props.viewState.explorerPanelAnimating = false, SLIDE_DURATION);
+        });
+    },
+
+    slideOut() {
+        this.setState({
+            slidIn: false
+        });
+        setTimeout(() => {
+            this.setState({
+                visible: false
+            });
+        }, SLIDE_DURATION);
+    },
+
     componentWillUnmount() {
         window.removeEventListener('keydown', this.escKeyListener, false);
+
+        this._pickedFeaturesSubscription.dispose();
+    },
+
+    isVisible() {
+        return !this.props.viewState.useSmallScreenInterface && !this.props.viewState.hideMapUi() && this.props.viewState.explorerPanelIsVisible;
     },
 
     render() {
-        return (
-            <ReactCSSTransitionGroup
-                transitionName={{
-                    enter: Styles.animatingEnter,
-                    leave: Styles.animatingLeave
-                }}
-                transitionEnterTimeout={200}
-                transitionLeaveTimeout={200}>
-                <If condition={this.isVisible()}>
-                    <div className={Styles.modalWrapper}
-                         id="explorer-panel-wrapper"
-                         aria-hidden={!this.isVisible}>
-                        <div onClick={this.close}
-                             id="modal-overlay"
-                             className={Styles.modalOverlay}
-                             tabIndex="-1"/>
-                        <div id="explorer-panel"
-                             className={classNames(Styles.explorerPanel, Styles.modalContent)}
-                             aria-labelledby="modalTitle"
-                             aria-describedby="modalDescription"
-                             role="dialog">
-                            <button type='button'
-                                    onClick={this.close}
-                                    className={Styles.btnCloseModal}
-                                    title="Close data panel"
-                                    data-target="close-modal">
-                                Done
-                            </button>
-                            <Tabs terria={this.props.terria} viewState={this.props.viewState}/>
-                        </div>
-                    </div>
-                </If>
-            </ReactCSSTransitionGroup>
-        );
+        const visible = this.state.visible;
+
+        return visible ? (
+            <div className={Styles.modalWrapper}
+                 id="explorer-panel-wrapper"
+                 aria-hidden={!visible}>
+                <div onClick={this.close}
+                     id="modal-overlay"
+                     className={Styles.modalOverlay}
+                     tabIndex="-1"/>
+                <div id="explorer-panel"
+                     className={classNames(Styles.explorerPanel, Styles.modalContent, {[Styles.isMounted]: this.state.slidIn})}
+                     aria-labelledby="modalTitle"
+                     aria-describedby="modalDescription"
+                     role="dialog">
+                    <button type='button'
+                            onClick={this.close}
+                            className={Styles.btnCloseModal}
+                            title="Close data panel"
+                            data-target="close-modal">
+                        Done
+                    </button>
+                    <Tabs terria={this.props.terria} viewState={this.props.viewState}/>
+                </div>
+            </div>
+        ) : null;
     }
 });
 

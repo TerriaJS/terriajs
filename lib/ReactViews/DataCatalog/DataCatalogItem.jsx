@@ -21,7 +21,6 @@ const DataCatalogItem = React.createClass({
         // mobile switch to nowvewing
         this.props.viewState.switchMobileView(this.props.viewState.mobileViewOptions.preview);
         if (this.props.item.isEnabled === true &&
-            this.props.viewState.closeModalAfterAdd === true &&
             !event.shiftKey && !event.ctrlKey) {
 
             // close modal window

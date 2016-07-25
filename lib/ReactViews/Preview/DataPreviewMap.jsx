@@ -11,6 +11,8 @@ const Terria = require('../../Models/Terria');
 const TerriaViewer = require('../../ViewModels/TerriaViewer.js');
 const ViewerMode = require('../../Models/ViewerMode');
 const when = require('terriajs-cesium/Source/ThirdParty/when');
+import classNames from 'classnames';
+
 import Styles from './data-preview-map.scss';
 
 /**
@@ -21,7 +23,8 @@ const DataPreviewMap = React.createClass({
 
     propTypes: {
         terria: React.PropTypes.object.isRequired,
-        previewedCatalogItem: React.PropTypes.object
+        previewedCatalogItem: React.PropTypes.object,
+        showMap: React.PropTypes.bool
     },
 
     getInitialState() {
@@ -69,7 +72,7 @@ const DataPreviewMap = React.createClass({
     },
 
     componentWillUnmount() {
-        this.terriaViewer && this.terriaViewer.destroy();
+        this.destroyPreviewMap();
 
         if (this._unsubscribeErrorHandler) {
             this._unsubscribeErrorHandler();
@@ -77,12 +80,12 @@ const DataPreviewMap = React.createClass({
         }
     },
 
-    componentDidMount() {
-        this.updatePreview();
-    },
-
-    componentDidUpdate() {
-        this.updatePreview();
+    componentWillReceiveProps(newProps) {
+        if (newProps.showMap && !this.props.showMap) {
+            this.initMap();
+        } else {
+            this.updatePreview();
+        }
     },
 
     updatePreview() {
@@ -265,30 +268,54 @@ const DataPreviewMap = React.createClass({
 
     mapIsReady(mapContainer) {
         if (mapContainer) {
-            // This gets called when React is rendering the entire explorer window onto the DOM and is quite a heavy
-            // process, so we'll yield to the render with a setTimeout and do the map setup right afterwards.
-            setTimeout(() => {
-                this.mapElement = mapContainer;
+            this.mapElement = mapContainer;
 
-                this.terriaViewer = TerriaViewer.create(this.terriaPreview, {
-                    mapContainer: mapContainer
-                });
-                // disable preview map interaction
-                const map = this.terriaViewer.terria.leaflet.map;
-                map.touchZoom.disable();
-                map.doubleClickZoom.disable();
-                map.scrollWheelZoom.disable();
-                map.boxZoom.disable();
-                map.keyboard.disable();
-                map.dragging.disable();
+            if (this.props.showMap) {
+                this.initMap();
+            }
+        } else {
+            // this.destroyPreviewMap();
+        }
+    },
+
+    destroyPreviewMap() {
+        this.terriaViewer && this.terriaViewer.destroy();
+        if (this.mapElement) {
+            this.mapElement.innerHTML = '';
+        }
+    },
+
+    initMap() {
+        if (this.mapElement) {
+            this.terriaViewer = TerriaViewer.create(this.terriaPreview, {
+                mapContainer: this.mapElement
             });
+
+            // disable preview map interaction
+            const map = this.terriaViewer.terria.leaflet.map;
+            map.touchZoom.disable();
+            map.doubleClickZoom.disable();
+            map.scrollWheelZoom.disable();
+            map.boxZoom.disable();
+            map.keyboard.disable();
+            map.dragging.disable();
+
+            this.updatePreview();
         }
     },
 
     render() {
         return (
             <div className={Styles.map} onClick={this.clickMap}>
-                <div className={Styles.terriaPreview} ref={this.mapIsReady}/>
+                <Choose>
+                    <When condition={this.props.showMap}>
+                        <div className={classNames(Styles.terriaPreview)} ref={this.mapIsReady}/>
+                    </When>
+                    <Otherwise>
+                        <div className={classNames(Styles.terriaPreview, Styles.placeholder)}/>
+                    </Otherwise>
+                </Choose>
+
                 <label className={Styles.badge}>{this.state.previewBadgeText}</label>
             </div>
         );

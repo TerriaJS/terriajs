@@ -114,11 +114,9 @@ const StandardUserInterface = React.createClass({
                         <section className={Styles.map}>
                             <ProgressBar terria={terria}/>
                             <MapColumn terria={terria} viewState={this.props.viewState} />
-                            <If condition={!this.props.viewState.useSmallScreenInterface}>
-                                <main>
-                                    <ExplorerWindow terria={terria} viewState={this.props.viewState}/>
-                                </main>
-                            </If>
+                            <main>
+                                <ExplorerWindow terria={terria} viewState={this.props.viewState}/>
+                            </main>
                         </section>
                     </div>
                 </div>
