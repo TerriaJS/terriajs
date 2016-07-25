@@ -180,14 +180,11 @@ const FeatureInfoSection = React.createClass({
                 </button>
                 <If condition={this.props.isOpen}>
                     <section className={Styles.content}>
-                        <If condition={this.hasTemplate()}>
-                            {reactInfo.info}
-                            <button type="button" className={Styles.rawDataButton} onClick={this.toggleRawData}>
-                                {this.state.showRawData ? 'Hide Raw Data' : 'Show Raw Data'}
+                    <button type="button" className={Styles.rawDataButton} onClick={this.toggleRawData}>
+                                {this.state.showRawData ? 'Show Curated Data' : 'Show Raw Data'}
                             </button>
-                        </If>
-
-                        <If condition={reactInfo.showRawData}>
+                    <Choose>
+                        <When condition={reactInfo.showRawData}>
                             <If condition={reactInfo.hasRawData}>
                                 {reactInfo.rawData}
                             </If>
@@ -200,7 +197,14 @@ const FeatureInfoSection = React.createClass({
                                     data={reactInfo.templateData}
                                     name={catalogItemName} />
                             </If>
-                        </If>
+                            </When>
+                            <Otherwise>
+                                <If condition={this.hasTemplate()}>
+                                    {reactInfo.info}
+
+                                </If>
+                            </Otherwise>
+                        </Choose>
                     </section>
                 </If>
             </li>
