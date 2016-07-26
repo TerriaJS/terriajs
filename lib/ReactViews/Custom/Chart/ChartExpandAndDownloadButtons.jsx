@@ -131,9 +131,19 @@ function expand(props, sourceIndex) {
             tableStyleOptions.columns[columnNumber].units = props.columnUnits[columnNumber];
         }
     }
+    // Set the active columns via tableStyle too.
+    if (defined(props.yColumns)) {
+        props.yColumns.forEach(nameOrIndex => {
+            if (!defined(tableStyleOptions[nameOrIndex])) {
+                tableStyleOptions[nameOrIndex] = {};
+            }
+            tableStyleOptions[nameOrIndex].active = true;
+        });
+    }
     const options = {
         tableStyle: new TableStyle(tableStyleOptions)
     };
+
     const newCatalogItem = new CsvCatalogItem(terria, url, options);
     if (!defined(url)) {
         newCatalogItem.data = props.tableStructure;
@@ -180,28 +190,14 @@ function expand(props, sourceIndex) {
             newCatalogItem.sourceCatalogItem = props.catalogItem;
             const tableStructure = newCatalogItem.tableStructure;
             tableStructure.sourceFeature = props.feature;
-            // tableStructure.columns.forEach((column, columnNumber) => {
-            //     if (defined(props.columnNames) && props.columnNames[columnNumber]) {
-            //         column.name = props.columnNames[columnNumber];
-            //     }
-            //     if (defined(props.columnUnits) && props.columnUnits[columnNumber]) {
-            //         column.units = props.columnUnits[columnNumber];
-            //     }
-            // });
             if (defined(existingColors)) {
                 tableStructure.columns.forEach((column, columnNumber) => {
                     column.color = existingColors[columnNumber];
                 });
             }
-            // Activate columns at the end, so that units and names flow through to the chart panel.
             if (defined(activeConcepts) && activeConcepts.some(a => a)) {
                 tableStructure.columns.forEach((column, columnNumber) => {
                     column.isActive = activeConcepts[columnNumber];
-                });
-            } else if (defined(props.yColumns)) {
-                const activeColumns = props.yColumns.map(nameOrIndex=>tableStructure.getColumnWithNameIdOrIndex(nameOrIndex));
-                tableStructure.columns.forEach(column => {
-                    column.isActive = activeColumns.indexOf(column) >= 0;
                 });
             }
         } catch(e) {
