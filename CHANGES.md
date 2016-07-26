@@ -2,6 +2,12 @@
 Change Log
 ==========
 
+### 4.1.4
+
+* AllowedValues for LiteralData WPS input now works even if only one value specified
+* Fixed bug in WPS polygon datatype to return valid polygon geojson
+* Fix regression: cursor changes in UserDrawing now functions in 2D as well as 3D
+
 ### 4.1.3
 
 * Fixed a bug that caused the selection indicator to get small when near the right edge of the map and to overlap the side panel when past the left edge.
