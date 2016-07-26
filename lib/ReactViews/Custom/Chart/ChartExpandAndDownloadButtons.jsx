@@ -12,6 +12,7 @@ import CsvCatalogItem from '../../../Models/CsvCatalogItem';
 import Dropdown from '../../Generic/Dropdown';
 import Polling from '../../../Models/Polling';
 import raiseErrorToUser from '../../../Models/raiseErrorToUser';
+import TableStyle from '../../../Models/TableStyle';
 import Icon from "../../Icon.jsx";
 
 import Styles from './chart-expand-and-download-buttons.scss';
@@ -75,8 +76,8 @@ const ChartExpandAndDownloadButtons = React.createClass({
                 btnOption: Styles.dropdownBtnOption
             };
 
-            const sourceNameObjects = this.props.sourceNames.map(name=>{ return {name: name}; });
-            const nameAndHrefObjects = downloadNames.map((name, i)=>{ return {name: name, href: downloads[i]}; });
+            const sourceNameObjects = this.props.sourceNames.map(name => { return {name: name}; });
+            const nameAndHrefObjects = downloadNames.map((name, i) => { return {name: name, href: downloads[i]}; });
             if (this.props.canDownload) {
                 const downloadDropdownTheme = clone(dropdownTheme);
                 downloadDropdownTheme.button = classNames(Styles.btnSmall, Styles.btnDownload);
@@ -115,7 +116,25 @@ const ChartExpandAndDownloadButtons = React.createClass({
 function expand(props, sourceIndex) {
     const terria = props.terria;
     const url = defined(sourceIndex) ? props.sources[sourceIndex] : undefined;
-    const newCatalogItem = new CsvCatalogItem(terria, url);
+
+    // Set the table style so that the names and units of the columns appear immediately, not with a delay.
+    const tableStyleOptions = {
+        columns: {}
+    };
+    const maxColumnNamesAndUnits = Math.max(props.columnNames && props.columnNames.length || 0, props.columnUnits && props.columnUnits.length || 0);
+    for (let columnNumber = 0; columnNumber < maxColumnNamesAndUnits; columnNumber++) {
+        tableStyleOptions.columns[columnNumber] = {};
+        if (defined(props.columnNames) && props.columnNames[columnNumber]) {
+            tableStyleOptions.columns[columnNumber].name = props.columnNames[columnNumber];
+        }
+        if (defined(props.columnUnits) && props.columnUnits[columnNumber]) {
+            tableStyleOptions.columns[columnNumber].units = props.columnUnits[columnNumber];
+        }
+    }
+    const options = {
+        tableStyle: new TableStyle(tableStyleOptions)
+    };
+    const newCatalogItem = new CsvCatalogItem(terria, url, options);
     if (!defined(url)) {
         newCatalogItem.data = props.tableStructure;
     }
@@ -137,15 +156,15 @@ function expand(props, sourceIndex) {
     }
     const group = terria.catalog.upsertCatalogGroup(CatalogGroup, 'Chart Data', 'A group for chart data.');
     group.isOpen = true;
-    const existingChartItemIds = group.items.map(item=>item.uniqueId);
+    const existingChartItemIds = group.items.map(item => item.uniqueId);
     const existingIndex = existingChartItemIds.indexOf(newCatalogItem.uniqueId);
     let existingColors;
     let activeConcepts;
     if (existingIndex >= 0) {
         // First, keep a copy of the active items and colors used, so we can keep them the same with the new chart.
         const oldCatalogItem = group.items[existingIndex];
-        activeConcepts = oldCatalogItem.tableStructure.columns.map(column=>column.isActive);
-        existingColors = oldCatalogItem.tableStructure.columns.map(column=>column.color);
+        activeConcepts = oldCatalogItem.tableStructure.columns.map(column => column.isActive);
+        existingColors = oldCatalogItem.tableStructure.columns.map(column => column.color);
         oldCatalogItem.isEnabled = false;
         group.remove(oldCatalogItem);
     }
@@ -155,33 +174,33 @@ function expand(props, sourceIndex) {
     terria.catalog.chartableItems.push(newCatalogItem);  // Notify the chart panel so it shows "loading".
     newCatalogItem.isEnabled = true;  // This loads it as well.
     // Is there a better way to set up an action to occur once the file has loaded?
-    newCatalogItem.load().then(function() {
+    newCatalogItem.load().then(() => {
         // Enclose in try-catch rather than otherwise so that if load itself fails, we don't do this at all.
         try {
             newCatalogItem.sourceCatalogItem = props.catalogItem;
             const tableStructure = newCatalogItem.tableStructure;
             tableStructure.sourceFeature = props.feature;
-            tableStructure.columns.forEach((column, columnNumber)=>{
-                if (defined(props.columnNames) && props.columnNames[columnNumber]) {
-                    column.name = props.columnNames[columnNumber];
-                }
-                if (defined(props.columnUnits) && props.columnUnits[columnNumber]) {
-                    column.units = props.columnUnits[columnNumber];
-                }
-            });
+            // tableStructure.columns.forEach((column, columnNumber) => {
+            //     if (defined(props.columnNames) && props.columnNames[columnNumber]) {
+            //         column.name = props.columnNames[columnNumber];
+            //     }
+            //     if (defined(props.columnUnits) && props.columnUnits[columnNumber]) {
+            //         column.units = props.columnUnits[columnNumber];
+            //     }
+            // });
             if (defined(existingColors)) {
-                tableStructure.columns.forEach((column, columnNumber)=>{
+                tableStructure.columns.forEach((column, columnNumber) => {
                     column.color = existingColors[columnNumber];
                 });
             }
             // Activate columns at the end, so that units and names flow through to the chart panel.
-            if (defined(activeConcepts) && activeConcepts.some(a=>a)) {
-                tableStructure.columns.forEach((column, columnNumber)=>{
+            if (defined(activeConcepts) && activeConcepts.some(a => a)) {
+                tableStructure.columns.forEach((column, columnNumber) => {
                     column.isActive = activeConcepts[columnNumber];
                 });
             } else if (defined(props.yColumns)) {
                 const activeColumns = props.yColumns.map(nameOrIndex=>tableStructure.getColumnWithNameIdOrIndex(nameOrIndex));
-                tableStructure.columns.forEach(column=>{
+                tableStructure.columns.forEach(column => {
                     column.isActive = activeColumns.indexOf(column) >= 0;
                 });
             }
