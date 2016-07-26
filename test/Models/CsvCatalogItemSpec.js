@@ -1266,21 +1266,3 @@ describe('CsvCatalogItem with region mapping', function() {
 
 });
 
-describe('CsvCatalogItem with addresses', function() {
-    it('knows the lat long coordinates of the addresses', function(done) {
-        var terria = new Terria({
-            baseUrl: './'
-        });
-        var csvItem = new CsvCatalogItem(terria);
-        csvItem.url = 'test/csv/address_to_lat_long.csv';
-        csvItem.load().then(function() {
-            expect(csvItem.regionMapping).toBeUndefined();
-            expect(csvItem.tableStructure.hasAddress).toBe(true);
-            expect(csvItem.tableStructure.hasLatitudeAndLongitude).toBe(true);
-            var rows = csvItem.tableStructure._rows;
-            expect(rows[0]).toEqual(["Lat", "Lon", "Station name", "Address"]);
-            expect(rows[1]).toEqual([-35.24381015, 149.09824456, "BELCONNEN HOUSE", "120 Thynne St Bruce ACT 2617"]);
-        }).otherwise(fail).then(done);
-    });
-});
-
