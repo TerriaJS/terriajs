@@ -1,0 +1,27 @@
+Wed 27 Jul 2016 09:40:24 AEST
+TerriaJS Server 2.5.1
+Warning: Can't open config file. ALL proxy requests will be accepted..
+
+Serving directory "/Users/che291/Sites/aremi-natmap/node_modules/terriajs/wwwroot" on port 3002 to the world.
+(node:1009) fs: re-evaluating native module sources is not supported. If you are using the graceful-fs module, please update it to a more recent version.
+(node:1009) fs: re-evaluating native module sources is not supported. If you are using the graceful-fs module, please update it to a more recent version.
+Warning: The configuration does not contain a "allowProxyFor" list.  The server will proxy _any_ request.
+(TerriaJS-Server running with pid 1009)
+Launching 8 worker processes.
+Convert warning: ogr2ogr (gdal) is not installed or inaccessible, so the format conversion service will fail.
+(node:1014) fs: re-evaluating native module sources is not supported. If you are using the graceful-fs module, please update it to a more recent version.
+(node:1013) fs: re-evaluating native module sources is not supported. If you are using the graceful-fs module, please update it to a more recent version.
+(node:1016) fs: re-evaluating native module sources is not supported. If you are using the graceful-fs module, please update it to a more recent version.
+(node:1018) fs: re-evaluating native module sources is not supported. If you are using the graceful-fs module, please update it to a more recent version.
+(node:1017) fs: re-evaluating native module sources is not supported. If you are using the graceful-fs module, please update it to a more recent version.
+(node:1019) fs: re-evaluating native module sources is not supported. If you are using the graceful-fs module, please update it to a more recent version.
+(node:1020) fs: re-evaluating native module sources is not supported. If you are using the graceful-fs module, please update it to a more recent version.
+(node:1015) fs: re-evaluating native module sources is not supported. If you are using the graceful-fs module, please update it to a more recent version.
+(node:1014) fs: re-evaluating native module sources is not supported. If you are using the graceful-fs module, please update it to a more recent version.
+(node:1013) fs: re-evaluating native module sources is not supported. If you are using the graceful-fs module, please update it to a more recent version.
+(node:1016) fs: re-evaluating native module sources is not supported. If you are using the graceful-fs module, please update it to a more recent version.
+(node:1018) fs: re-evaluating native module sources is not supported. If you are using the graceful-fs module, please update it to a more recent version.
+(node:1017) fs: re-evaluating native module sources is not supported. If you are using the graceful-fs module, please update it to a more recent version.
+(node:1019) fs: re-evaluating native module sources is not supported. If you are using the graceful-fs module, please update it to a more recent version.
+(node:1020) fs: re-evaluating native module sources is not supported. If you are using the graceful-fs module, please update it to a more recent version.
+(node:1015) fs: re-evaluating native module sources is not supported. If you are using the graceful-fs module, please update it to a more recent version.
