@@ -180,27 +180,30 @@ const FeatureInfoSection = React.createClass({
                 </button>
                 <If condition={this.props.isOpen}>
                     <section className={Styles.content}>
-                        <If condition={this.hasTemplate()}>
-                            {reactInfo.info}
-                            <button type="button" className={Styles.rawDataButton} onClick={this.toggleRawData}>
-                                {this.state.showRawData ? 'Hide Raw Data' : 'Show Raw Data'}
-                            </button>
-                        </If>
-
-                        <If condition={reactInfo.showRawData}>
-                            <If condition={reactInfo.hasRawData}>
-                                {reactInfo.rawData}
-                            </If>
-                            <If condition={!reactInfo.hasRawData}>
-                                <div ref="no-info" key="no-info">No information available.</div>
-                            </If>
-                            <If condition={defined(reactInfo.templateData)}>
-                                <FeatureInfoDownload key='download'
-                                    viewState={this.props.viewState}
-                                    data={reactInfo.templateData}
-                                    name={catalogItemName} />
-                            </If>
-                        </If>
+                    <If condition={this.hasTemplate()}>
+                        <button type="button" className={Styles.rawDataButton} onClick={this.toggleRawData}>
+                            {this.state.showRawData ? 'Show Curated Data' : 'Show Raw Data'}
+                        </button>
+                    </If>
+                    <Choose>
+                            <When condition={reactInfo.showRawData || !this.hasTemplate()}>
+                                <If condition={reactInfo.hasRawData}>
+                                    {reactInfo.rawData}
+                                </If>
+                                <If condition={!reactInfo.hasRawData}>
+                                    <div ref="no-info" key="no-info">No information available.</div>
+                                </If>
+                                <If condition={defined(reactInfo.templateData)}>
+                                    <FeatureInfoDownload key='download'
+                                        viewState={this.props.viewState}
+                                        data={reactInfo.templateData}
+                                        name={catalogItemName} />
+                                </If>
+                            </When>
+                            <Otherwise>
+                                    {reactInfo.info}
+                            </Otherwise>
+                        </Choose>
                     </section>
                 </If>
             </li>
