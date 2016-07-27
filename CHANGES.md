@@ -2,13 +2,6 @@
 Change Log
 ==========
 
-### 4.1.4
-
-* AllowedValues for LiteralData WPS input now works even if only one value specified
-* Fixed bug in WPS polygon datatype to return valid polygon geojson
-* Fix regression: cursor changes in UserDrawing now functions in 2D as well as 3D
-
-### 4.1.3
 ### 4.2.0
 
 * Fixed a bug that caused the selection indicator to get small when near the right edge of the map and to overlap the side panel when past the left edge.
@@ -16,6 +9,9 @@ Change Log
 * Removed find-and-replace for cesium workers from the webpack build as it's done in terriajs-cesium now.
 * Legend images that fail to load are now hidden entirely.
 * Improved the appearance of the opacity slider and added a percentage display.
+* AllowedValues for LiteralData WPS input now works even if only one value specified.
+* Fixed bug in WPS polygon datatype to return valid polygon geojson.
+* Fix regression: cursor changes in UserDrawing now functions in 2D as well as 3D.
 * Updated to [Cesium](http://cesiumjs.org) 1.23 (from 1.20).  See the [change log](https://github.com/AnalyticalGraphicsInc/cesium/blob/1.23/CHANGES.md) for details.
 
 ### 4.1.2
