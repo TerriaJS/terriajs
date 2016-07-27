@@ -24,7 +24,7 @@ const OpacitySection = React.createClass({
         }
         return (
             <div className={Styles.opacity}>
-                <label htmlFor="opacity">Opacity: </label>
+                <label htmlFor="opacity">Opacity: {parseInt(item.opacity * 100, 10)} %</label>
                 <RangeSlider className={Styles.rangeSlider} name='opacity' min={0} max={100} step={1} value={item.opacity * 100 | 0} onChange={this.changeOpacity}/>
             </div>
         );
