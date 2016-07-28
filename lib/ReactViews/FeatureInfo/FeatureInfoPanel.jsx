@@ -61,6 +61,7 @@ const FeatureInfoPanel = React.createClass({
         const {catalogItems, featureCatalogItemPairs} = getFeaturesGroupedByCatalogItems(this.props.terria);
 
         return catalogItems
+            .filter(catalogItem => defined(catalogItem))
             .map((catalogItem, i) => {
                 // From the pairs, select only those with this catalog item, and pull the features out of the pair objects.
                 const features = featureCatalogItemPairs.filter(pair => pair.catalogItem === catalogItem).map(pair => pair.feature);
@@ -187,8 +188,12 @@ function determineCatalogItem(nowViewing, feature) {
     // "Data sources" (eg. czml, geojson, kml, csv) have an entity collection defined on the entity
     // (and therefore the feature).
     // Then match up the data source on the feature with a now-viewing item's data source.
+    //
+    // Gpx, Ogr, WebFeatureServiceCatalogItem, ArcGisFeatureServerCatalogItem, WebProcessingServiceCatalogItem
+    // all have a this._geoJsonItem, which we also need to check.
     let result;
     let i;
+    let item;
     if (defined(feature.entityCollection) && defined(feature.entityCollection.owner)) {
         const dataSource = feature.entityCollection.owner;
 
@@ -199,8 +204,9 @@ function determineCatalogItem(nowViewing, feature) {
         }
 
         for (i = nowViewing.items.length - 1; i >= 0; i--) {
-            if (nowViewing.items[i].dataSource === dataSource) {
-                result = nowViewing.items[i];
+            item = nowViewing.items[i];
+            if (item.dataSource === dataSource || (defined(item._geoJsonItem) && item._geoJsonItem.dataSource === dataSource)) {
+                result = item;
                 break;
             }
         }
