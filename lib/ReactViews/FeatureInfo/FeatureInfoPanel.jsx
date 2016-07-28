@@ -61,7 +61,6 @@ const FeatureInfoPanel = React.createClass({
         const {catalogItems, featureCatalogItemPairs} = getFeaturesGroupedByCatalogItems(this.props.terria);
 
         return catalogItems
-            .filter(catalogItem => defined(catalogItem))
             .map((catalogItem, i) => {
                 // From the pairs, select only those with this catalog item, and pull the features out of the pair objects.
                 const features = featureCatalogItemPairs.filter(pair => pair.catalogItem === catalogItem).map(pair => pair.feature);

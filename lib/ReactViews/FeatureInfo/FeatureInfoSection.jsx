@@ -138,7 +138,7 @@ const FeatureInfoSection = React.createClass({
             return Mustache.render(template.name, this.getPropertyValues());
         }
         const feature = this.props.feature;
-        return (feature && feature.name) || '';
+        return (feature && feature.name) || 'Site Data';
     },
 
     isFeatureTimeVarying() {
