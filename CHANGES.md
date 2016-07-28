@@ -8,6 +8,7 @@ Change Log
 * Map controls and menus now become translucent while the explorer window (Data Catalog) is visible.
 * Legend images that fail to load are now hidden entirely.
 * Improved the appearance of the opacity slider and added a percentage display.
+* Added support for ArcGis FeatureServers.
 
 ### 4.1.2
 
