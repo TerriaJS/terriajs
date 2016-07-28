@@ -21,7 +21,7 @@ describe('ArcGisFeatureServerCatalogItem', function() {
         spyOn(loadWithXhr, 'load').and.callFake(function(url, responseType, method, data, headers, deferred, overrideMimeType, preferText, timeout) {
             if (url.match('Wildfire/FeatureServer')) {
                 url = url.replace(/^.*\/FeatureServer/, 'FeatureServer');
-                url = url.replace(/FeatureServer\/query\?f=json&layerDefs=%7B0%3A%22.*%22%7D$/i, '0.json');
+                url = url.replace(/FeatureServer\/query\?f=json&layerDefs=%7B1%3A%22.*%22%7D$/i, '1.json');
                 arguments[0] = require('!file!../../wwwroot/test/ArcGisFeatureServer/Wildfire/' + url);
             }
             return realLoadWithXhr.apply(undefined, arguments);
@@ -58,8 +58,8 @@ describe('ArcGisFeatureServerCatalogItem', function() {
         expect(item.url).toBe('http://my.arcgis.com');
     });
 
-    it('properly loads a single layer specified as FeatureServer/0', function(done) {
-        var url = 'http://example.com/arcgis/rest/services/Wildfire/FeatureServer/0';
+    it('properly loads a single layer specified as FeatureServer/1', function(done) {
+        var url = 'http://example.com/arcgis/rest/services/Wildfire/FeatureServer/1';
         item.updateFromJson({url: url});
         item.load().then(function() {
             expect(loadWithXhr.load.calls.count()).toEqual(1);
