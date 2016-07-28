@@ -3,10 +3,8 @@
 /*global require,describe,it,expect,beforeEach*/
 
 var Terria = require('../../lib/Models/Terria');
-var Legend = require('../../lib/Map/Legend');
 var loadWithXhr = require('terriajs-cesium/Source/Core/loadWithXhr');
 var ArcGisFeatureServerCatalogItem = require('../../lib/Models/ArcGisFeatureServerCatalogItem');
-var LegendUrl = require('../../lib/Map/LegendUrl');
 
 describe('ArcGisFeatureServerCatalogItem', function() {
     var terria;
@@ -23,7 +21,7 @@ describe('ArcGisFeatureServerCatalogItem', function() {
         spyOn(loadWithXhr, 'load').and.callFake(function(url, responseType, method, data, headers, deferred, overrideMimeType, preferText, timeout) {
             if (url.match('Wildfire/FeatureServer')) {
                 url = url.replace(/^.*\/FeatureServer/, 'FeatureServer');
-                url = url.replace(/FeatureServer\/query\?f=json&layerDefs=%7B0%3A%22.*%22%7D$/i, '0.json')
+                url = url.replace(/FeatureServer\/query\?f=json&layerDefs=%7B0%3A%22.*%22%7D$/i, '0.json');
                 arguments[0] = require('!file!../../wwwroot/test/ArcGisFeatureServer/Wildfire/' + url);
             }
             return realLoadWithXhr.apply(undefined, arguments);
