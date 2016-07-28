@@ -82,18 +82,18 @@ const DataPreviewMap = React.createClass({
 
     componentWillReceiveProps(newProps) {
         if (newProps.showMap && !this.props.showMap) {
-            this.initMap();
+            this.initMap(newProps.previewedCatalogItem);
         } else {
-            this.updatePreview();
+            this.updatePreview(newProps.previewedCatalogItem);
         }
     },
 
-    updatePreview() {
-        if (this.lastPreviewedCatalogItem === this.props.previewedCatalogItem) {
+    updatePreview(previewedCatalogItem) {
+        if (this.lastPreviewedCatalogItem === previewedCatalogItem) {
             return;
         }
 
-        this.lastPreviewedCatalogItem = this.props.previewedCatalogItem;
+        this.lastPreviewedCatalogItem = previewedCatalogItem;
 
         this.setState({
             previewBadgeText: 'DATA PREVIEW LOADING...'
@@ -111,7 +111,7 @@ const DataPreviewMap = React.createClass({
             this.rectangleCatalogItem.isEnabled = false;
         }
 
-        const previewed = this.props.previewedCatalogItem;
+        const previewed = previewedCatalogItem;
         if (previewed && defined(previewed.type) && previewed.isMappable) {
             const that = this;
             return when(previewed.load()).then(() => {
@@ -129,7 +129,7 @@ const DataPreviewMap = React.createClass({
                 return loadNowViewingItemPromise.then(() => {
                     // Now that the item is loaded, add it to the map.
                     // Unless we've started previewing something else in the meantime!
-                    if (!that._unsubscribeErrorHandler || previewed !== that.props.previewedCatalogItem) {
+                    if (!that._unsubscribeErrorHandler || previewed !== that.lastPreviewedCatalogItem) {
                         return;
                     }
 
@@ -271,10 +271,8 @@ const DataPreviewMap = React.createClass({
             this.mapElement = mapContainer;
 
             if (this.props.showMap) {
-                this.initMap();
+                this.initMap(this.props.previewedCatalogItem);
             }
-        } else {
-            // this.destroyPreviewMap();
         }
     },
 
@@ -285,7 +283,7 @@ const DataPreviewMap = React.createClass({
         }
     },
 
-    initMap() {
+    initMap(previewedCatalogItem) {
         if (this.mapElement) {
             this.terriaViewer = TerriaViewer.create(this.terriaPreview, {
                 mapContainer: this.mapElement
@@ -300,7 +298,7 @@ const DataPreviewMap = React.createClass({
             map.keyboard.disable();
             map.dragging.disable();
 
-            this.updatePreview();
+            this.updatePreview(previewedCatalogItem);
         }
     },
 
