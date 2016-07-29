@@ -18,7 +18,7 @@
     "babel-preset-react": "^6.5.0",
     "class-list": "^0.1.1",
     "classnames": "^2.2.3",
-    "d3": "^3.5.14",
+    "d3": "^4.1.1",
     "dateformat": "^1.0.12",
     "dompurify": "^0.7.3",
     "extract-text-webpack-plugin": "git://github.com/TerriaJS/extract-text-webpack-plugin#order-undefined-error",
