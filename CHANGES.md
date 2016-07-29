@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+### 4.2.1
+
+* Enumeration parameter now defaults to what is shown in UI, and if parameter is optional, '' is default.
+
 ### 4.2.0
 
 * Fixed a bug that caused the selection indicator to get small when near the right edge of the map and to overlap the side panel when past the left edge.
