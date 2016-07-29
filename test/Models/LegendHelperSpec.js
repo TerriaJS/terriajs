@@ -38,7 +38,7 @@ describe('LegendHelper', function() {
         var tableStyle = new TableStyle({colorMap: 'red-red'});
         var legendHelper = new LegendHelper(tableColumn, tableStyle);
         expect(legendHelper).toBeDefined();
-        expect(legendHelper.legendUrl()).toBeDefined();  // Side-effects. Hmmm.
+        expect(legendHelper.legendUrl()).toBeDefined();  // Do this for its side-effects. Hmmm.
         expect(legendHelper.getColorArrayFromValue(9)).toEqual(legendHelper.getColorArrayFromValue(5));
         expect(legendHelper.getColorArrayFromValue(1)).toEqual(legendHelper.getColorArrayFromValue(5));
         var legend = legendHelper._legend;
@@ -47,6 +47,22 @@ describe('LegendHelper', function() {
         expect(getColorArrayFromCssColorString(legend.items[0].color)).toEqual(legendHelper.getColorArrayFromValue(1));
         expect(getColorArrayFromCssColorString(legend.items[1].color)).toEqual(legendHelper.getColorArrayFromValue(5));
         expect(getColorArrayFromCssColorString(legend.items[2].color)).toEqual(legendHelper.getColorArrayFromValue(9));
+    });
+
+    it('handles integer number of colorBins', function() {
+        var tableStyle = new TableStyle({colorBins: 3});
+        var legendHelper = new LegendHelper(tableColumn, tableStyle);
+        expect(legendHelper).toBeDefined();
+        expect(legendHelper.legendUrl()).toBeDefined();  // Do this for its side-effects. Hmmm.
+        expect(legendHelper._binColors.length).toEqual(3);
+    });
+
+    it('handles array of colorBins', function() {
+        var tableStyle = new TableStyle({colorBins: [0, 2, 6, 10]});
+        var legendHelper = new LegendHelper(tableColumn, tableStyle);
+        expect(legendHelper).toBeDefined();
+        expect(legendHelper.legendUrl()).toBeDefined();  // Do this for its side-effects. Hmmm.
+        expect(legendHelper._binColors.length).toEqual(3);
     });
 
     it('colors points via a color gradient when colorBins is 0', function() {

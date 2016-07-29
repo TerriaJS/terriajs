@@ -49,6 +49,16 @@
           }
         },
         {
+          "name": "Array of color bins",
+          "type": "csv",
+          "url": "/build/TerriaJS/test/csv/3000s.csv",
+          "opacity": 1,
+          "tableStyle": {
+            "colorBins": [3000, 3100, 3800, 3850, 3950, 4000],
+            "colorMap": "black-red"
+          }
+        },
+        {
           "name": "Color brewer 10-class Set3",
           "type": "csv",
           "url": "/build/TerriaJS/test/csv/3000s.csv",
