@@ -205,7 +205,7 @@ function determineCatalogItem(nowViewing, feature) {
 
         for (i = nowViewing.items.length - 1; i >= 0; i--) {
             item = nowViewing.items[i];
-            if (item.dataSource === dataSource || (defined(item._geoJsonItem) && item._geoJsonItem.dataSource === dataSource)) {
+            if (item.dataSource === dataSource) {
                 result = item;
                 break;
             }
