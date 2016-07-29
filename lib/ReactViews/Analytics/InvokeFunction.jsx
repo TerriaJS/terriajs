@@ -28,6 +28,10 @@ const InvokeFunction = React.createClass({
         this.removeContextItem();
     },
 
+    componentWillReceiveProps(nextProps) {
+        this.initializeParameters(nextProps);
+    },
+
     componentWillUpdate(nextProps, nextState) {
         this.initializeParameters(nextProps);
     },
