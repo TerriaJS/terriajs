@@ -59,6 +59,26 @@
           }
         },
         {
+          "name": "Array of color bins (subset only)",
+          "type": "csv",
+          "url": "/build/TerriaJS/test/csv/3000s.csv",
+          "opacity": 1,
+          "tableStyle": {
+            "colorBins": [3200, 3350, 3800, 3850, 3900],
+            "colorMap": "black-red"
+          }
+        },
+        {
+          "name": "Array of color bins (superset)",
+          "type": "csv",
+          "url": "/build/TerriaJS/test/csv/3000s.csv",
+          "opacity": 1,
+          "tableStyle": {
+            "colorBins": [2000, 2500, 3200, 3350, 3800, 3850, 3900, 5000, 8000],
+            "colorMap": "black-red"
+          }
+        },
+        {
           "name": "Color brewer 10-class Set3",
           "type": "csv",
           "url": "/build/TerriaJS/test/csv/3000s.csv",
