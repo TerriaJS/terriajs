@@ -2,12 +2,15 @@
 Change Log
 ==========
 
-### 4.1.3
+### 4.2.0
 
 * Fixed a bug that caused the selection indicator to get small when near the right edge of the map and to overlap the side panel when past the left edge.
 * Map controls and menus now become translucent while the explorer window (Data Catalog) is visible.
+* Removed find-and-replace for cesium workers from the webpack build as it's done in terriajs-cesium now.
 * Legend images that fail to load are now hidden entirely.
 * Improved the appearance of the opacity slider and added a percentage display.
+* Updated to [Cesium](http://cesiumjs.org) 1.23 (from 1.20).  See the [change log](https://github.com/AnalyticalGraphicsInc/cesium/blob/1.23/CHANGES.md) for details.
+* Fixed a bug which prevented feature info showing for Gpx-, Ogr-, WebFeatureService-, ArcGisFeatureServer-, and WebProcessingService- CatalogItems.
 
 ### 4.1.2
 

@@ -7,14 +7,16 @@
   position: relative;
 
   li {
-    display: inline-block;
-    position: absolute;
-    //padding: 0 $padding;
+    display: block;
+    float: left;
+    box-sizing: border-box;
   }
 }
 
 .remove {
-  right: 0;
+  text-align: right;
+  border-left: 1px solid $border-color;
+  width: 30%;
   svg{
     height: 20px;
     width: 20px;
@@ -31,9 +33,19 @@
     font-size: $font-size-mini;
   }
 }
-.info {
-  left: 33%;
-  padding: 0 5%;
-  border-left: 1px solid $border-color;
+
+.zoom{
   border-right: 1px solid $border-color;
+  width: 30%;
+}
+
+.info {
+  text-align: left;
+  width: 40%;
+}
+
+.hasZoom{
+  .info{
+    text-align: center;
+  }
 }

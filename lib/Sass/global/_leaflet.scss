@@ -1,6 +1,7 @@
 // This makes Leaflet work in hot mode
 :global {
   .leaflet-container {
+    cursor: auto!important;
     position: absolute;
     top: 0;
     right: 0;
