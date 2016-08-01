@@ -35,9 +35,10 @@
                         "dataflowUrlComponent": ""
                     },
                     {
-                        "name": "Data as observations, repeated dimension",
+                        "name": "Data as observations, hidden repeated dimension",
                         "type": "sdmx-json",
                         "url": "build/TerriaJS/test/SDMX-JSON/data-as-obs-repeated-dim.json",
+                        "aggregatedDimensionIds": ["STATE"],
                         "dataflowUrlComponent": ""
                     },
                     {
