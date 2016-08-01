@@ -15,13 +15,27 @@
   }
 }
 
+
+
 .provider-result {
   margin-top: $padding-small;
-  svg{
-    fill: #ffffff;
-  }
   .items{
     display: none;
+  }
+}
+
+// on mobile, we don't want the gap between search results
+.light{
+  background: #fff;
+  margin-top: 0;
+  svg{
+    fill: #000;
+  }
+}
+
+.dark{
+   svg{
+    fill: #ffffff;
   }
 }
 
@@ -34,11 +48,6 @@
 .items {
   composes: clearfix from '../../Sass/common/_base.scss';
   composes: list-reset from '../../Sass/common/_base.scss';
-}
-
-
-.isDark{
-  color: #000;
 }
 
 

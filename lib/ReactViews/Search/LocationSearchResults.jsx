@@ -14,11 +14,18 @@ const LocationSearchResults = React.createClass({
         terria: React.PropTypes.object.isRequired,
         search: React.PropTypes.object.isRequired,
         onLocationClick: React.PropTypes.func.isRequired,
+        theme: React.PropTypes.string
     },
 
     getInitialState() {
         return {
             isOpen: true
+        };
+    },
+
+    getDefaultProps() {
+        return {
+            theme: "dark"
         };
     },
 
@@ -31,7 +38,7 @@ const LocationSearchResults = React.createClass({
     render() {
         const search = this.props.search;
         return (<div key={search.name}
-                     className={classNames(Styles.providerResult, {[Styles.isOpen]: this.state.isOpen})}>
+                     className={classNames(Styles.providerResult, {[Styles.isOpen]: this.state.isOpen, [Styles.dark]: this.props.theme === 'dark', [Styles.light]: this.props.theme === 'light'})}>
                     <button onClick={this.toggleGroup} className={Styles.heading}>
                         <span>{search.name}</span>
                         <Icon glyph={this.state.isOpen ? Icon.GLYPHS.opened : Icon.GLYPHS.closed}/>
