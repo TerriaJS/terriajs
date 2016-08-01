@@ -1,18 +1,6 @@
 @import '../../Sass/common/mixins';
 @import '~terriajs-variables';
 
-.results {
-  @include transition(all 0.5s ease-in-out);
-}
-
-.resultsContent{
-  height: calc(100vh - #{$workbench-header + $logo-height});
-  overflow-x: hidden;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  padding: 0 $padding-small;
-}
-
 .heading {
   padding: $padding-small;
   position: relative;
@@ -37,21 +25,20 @@
   }
 }
 
+.isOpen{
+  .items{
+    display: block;
+  }
+}
 
-.btnList{
+.items {
   composes: clearfix from '../../Sass/common/_base.scss';
   composes: list-reset from '../../Sass/common/_base.scss';
 }
 
 
-.btn--done {
-  composes: btn from '../../Sass/common/_buttons.scss';
-  composes: btn from '../badge-bar.scss';
-  composes: btn--tertiary-dark from '../../Sass/common/_buttons.scss';
-  padding: 5px;
-  font-size: 10px;
-  border-radius: 2px;
+.isDark{
+  color: #000;
 }
-
 
 

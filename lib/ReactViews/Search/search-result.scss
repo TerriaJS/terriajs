@@ -14,6 +14,9 @@
     border-bottom: 1px solid $color-primary;
     color: $color-primary;
   }
+  svg {
+    fill: #000;
+  }
 }
 
 .search-result.dark .btn {
