@@ -6,6 +6,9 @@ import Styles from './terria-viewer-wrapper.scss';
 const TerriaViewerWrapper = React.createClass({
     // mixins: [ObserveModelMixin],
 
+    lastMouseX: -1,
+    lastMouseY: -1,
+
     propTypes: {
         terria: React.PropTypes.object.isRequired,
         viewState: React.PropTypes.object.isRequired
@@ -29,9 +32,6 @@ const TerriaViewerWrapper = React.createClass({
         this.terriaViewer && this.terriaViewer.destroy();
         this.mapElement.innerHTML = '';
     },
-
-    lastMouseX: -1,
-    lastMouseY: -1,
 
     onMouseMove(event) {
         // Avoid duplicate mousemove events.  Why would we get duplicate mousemove events?  I'm glad you asked:
