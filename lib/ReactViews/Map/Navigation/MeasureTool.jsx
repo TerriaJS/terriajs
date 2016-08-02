@@ -2,12 +2,17 @@
 import React from 'react';
 import ObserveModelMixin from '../../ObserveModelMixin';
 import Styles from './measure_tool.scss';
+import Icon from "../../Icon.jsx";
+
 const UserDrawing = require('../../../Models/UserDrawing');
 const EllipsoidGeodesic = require('terriajs-cesium/Source/Core/EllipsoidGeodesic.js');
 const Ellipsoid = require('terriajs-cesium/Source/Core/Ellipsoid.js');
+const EllipsoidTangentPlane = require('terriajs-cesium/Source/Core/EllipsoidTangentPlane.js');
 const CesiumMath = require('terriajs-cesium/Source/Core/Math.js');
 const PolygonGeometryLibrary = require('terriajs-cesium/Source/Core/PolygonGeometryLibrary.js');
+const PolygonHierarchy = require('terriajs-cesium/Source/Core/PolygonHierarchy.js');
 const Cartesian3 = require('terriajs-cesium/Source/Core/Cartesian3.js');
+const VertexFormat = require('terriajs-cesium/Source/Core/VertexFormat.js');
 
 const MeasureTool = React.createClass({
     mixins: [ObserveModelMixin],
@@ -103,10 +108,14 @@ const MeasureTool = React.createClass({
         }
 
         // Request the triangles that make up the polygon from Cesium.
+        const tangentPlane = EllipsoidTangentPlane.fromPoints(positions, Ellipsoid.WGS84);
+        const polygons = PolygonGeometryLibrary.polygonsFromHierarchy(new PolygonHierarchy(positions), perPositionHeight, tangentPlane, Ellipsoid.WGS84);
+
         const geom = PolygonGeometryLibrary.createGeometryFromPositions(Ellipsoid.WGS84,
-                                                                        positions,
+                                                                        polygons.polygons[0],
                                                                         CesiumMath.RADIANS_PER_DEGREE,
-                                                                        perPositionHeight);
+                                                                        perPositionHeight,
+                                                                        VertexFormat.POSITION_ONLY);
 
         if (geom.indices.length % 3 !== 0 || geom.attributes.position.values.length % 3 !== 0) {
             // Something has gone wrong. We expect triangles. Can't calcuate area.
@@ -173,7 +182,9 @@ const MeasureTool = React.createClass({
         return <div className={Styles.measureTool}>
                   <button type='button' className={Styles.btn}
                           title='measure distance between two points'
-                          onClick={this.handleClick}></button>
+                          onClick={this.handleClick}>
+                          <Icon glyph={Icon.GLYPHS.measure}/>
+                  </button>
                </div>;
     }
 });
