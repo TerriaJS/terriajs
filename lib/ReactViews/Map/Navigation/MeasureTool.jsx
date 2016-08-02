@@ -2,6 +2,8 @@
 import React from 'react';
 import ObserveModelMixin from '../../ObserveModelMixin';
 import Styles from './measure_tool.scss';
+import Icon from "../../Icon.jsx";
+
 const UserDrawing = require('../../../Models/UserDrawing');
 const EllipsoidGeodesic = require('terriajs-cesium/Source/Core/EllipsoidGeodesic.js');
 const Ellipsoid = require('terriajs-cesium/Source/Core/Ellipsoid.js');
@@ -180,7 +182,9 @@ const MeasureTool = React.createClass({
         return <div className={Styles.measureTool}>
                   <button type='button' className={Styles.btn}
                           title='measure distance between two points'
-                          onClick={this.handleClick}></button>
+                          onClick={this.handleClick}>
+                          <Icon glyph={Icon.GLYPHS.measure}/>
+                  </button>
                </div>;
     }
 });
