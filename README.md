@@ -121,3 +121,11 @@ The entire process can be easily automated using [gulp](http://gulpjs.com/).  Se
 All assets in `node_modules/terriajs/wwwroot` should be copied to `[your app's web root directory]/build/TerriaJS`.
 
 We'd like to thank these awesome online services that provide us with free accounts for our open source work!  [BrowserStack](https://www.browserstack.com), [Sauce Labs](https://saucelabs.com/), [Travis CI](https://travis-ci.org/)
+
+### Join the community
+
+Get in touch!
+
+* Chat in our [Gitter chat room](https://gitter.im/TerriaJS/terriajs)
+* Join the [TerriaJS Google Group](https://groups.google.com/forum/#!forum/terriajs)
+* Raise issues in the [Github issue tracker](https://github.com/TerriaJS/TerriaJS)

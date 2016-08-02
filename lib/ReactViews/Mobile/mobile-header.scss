@@ -24,9 +24,17 @@
   height: 100%;
 }
 
+.btn {
+  composes: btn from '../../Sass/common/_buttons.scss';
+  composes: btn-primary from '../../Sass/common/_buttons.scss';
+
+  height: 40px;
+  vertical-align: top;
+}
+
 .btnAdd{
-    composes: btn from '../../Sass/common/_buttons.scss';
-    composes: btn-primary from '../../Sass/common/_buttons.scss';
+    composes: btn;
+
     position: relative;
     margin: 0 $padding-small;
     padding: $padding $padding $padding $padding*3;
@@ -43,8 +51,7 @@
 }
 
 .btn-search {
-  composes: btn from '../../Sass/common/_buttons.scss';
-  composes: btn-primary from '../../Sass/common/_buttons.scss';
+  composes: btn;
   margin: 0 $padding-small;
   padding: $padding-small;
   padding-right: $padding;
@@ -60,8 +67,7 @@
 }
 
 .btn-now-viewing {
-  composes: btn from '../../Sass/common/_buttons.scss';
-  composes: btn-primary from '../../Sass/common/_buttons.scss';
+  composes: btn;
   margin: 0 $padding-small;
   padding: $padding-small;
   padding-right: $padding;
@@ -76,32 +82,42 @@
     position: absolute;
     top: $padding-small;
     right: $padding-small;
+
+  }
+  .doubleDigit{
     font-size: 0.8rem;
   }
 }
 
 .group-left {
-  composes: flex from '../../Sass/common/_base.scss';
   position: absolute;
   left: 5px;
-  right: 200px;
-  overflow: hidden;
+
+  > * {
+    display: inline-block;
+  }
 }
 
 .group-right {
-  composes: flex from '../../Sass/common/_base.scss';
   position: absolute;
   right: 0;
+
+  > * {
+    display: inline-block;
+  }
 }
 
 .btnMenu{
+    height: 40px;
     font-size: 25px;
     padding: 0 $padding-small;
     border-radius: $radius-small;
     margin-right: 3px;
+    vertical-align: top;
     &:hover, &:focus, & {
         border: 1px solid rgba(#fff, 0.5);
     }
+
     svg{
       height: 37px;
       width: 37px;

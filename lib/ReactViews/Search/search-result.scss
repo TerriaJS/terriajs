@@ -1,12 +1,17 @@
 @import '~terriajs-variables';
 
 .location-item {
+    span{
+      overflow-wrap: break-word;
+      word-wrap: break-word;
+  }
 }
 
 .location-item.light .btn {
-  background: $grey-lighter;
+  border-bottom: 1px solid rgba($grey, 0.4);
+  background: transparent;
   &:hover {
-    border: 1px solid $color-primary;
+    border-bottom: 1px solid $color-primary;
     color: $color-primary;
   }
 }
@@ -14,23 +19,6 @@
 .location-item.dark .btn {
   background: $overlay;
   color: #FFF;
-  span{
-      overflow-wrap: break-word;
-      word-wrap: break-word;
-
-      -ms-word-break: break-all;
-      /* This is the dangerous one in WebKit, as it breaks things wherever */
-      word-break: break-all;
-      /* Instead use this non-standard one: */
-      word-break: break-word;
-
-      /* Adds a hyphen where the word breaks, if supported (No Blink) */
-      -ms-hyphens: auto;
-      -moz-hyphens: auto;
-      -webkit-hyphens: auto;
-      hyphens: auto;
-  }
-
   &:hover {
     border: 1px solid #FFF;
   }
@@ -41,20 +29,23 @@
   }
 }
 
-.locationIcon{
+.location-icon {
   position: absolute;
-  top: 0;
+  top: 5px;
   bottom: 0;
-  left: 0;
-  padding: 5px 0;
+  left: 1px;
+  height: 35px;
+  width: 30px;
 }
 
-.arrowIcon{
+.arrow-icon {
   position: absolute;
-  top: 0;
+  top: 5px;
   bottom: 0;
-  right: 0;
-  padding: 5px 0;
+  right: 1px;
+  height: 35px;
+  width: 30px;
+
   svg{
     fill-opacity: 0;
   }
@@ -66,14 +57,17 @@
   composes: btn from '../../Sass/common/_buttons.scss';
   &.btn {
     position: relative;
-    border: 1px solid $grey;
     padding: $padding;
     margin-bottom: $padding-mini;
     padding-right: $padding;
     width: 100%;
+    border: 1px solid transparent;
+    @media screen and (min-width: $sm){
+      border: 1px solid $grey;
+    }
   }
   &:hover {
-    .arrowIcon svg{
+    .arrow-icon svg{
       fill-opacity: 1;
     }
   }

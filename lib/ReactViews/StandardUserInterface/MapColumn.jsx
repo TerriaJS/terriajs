@@ -37,6 +37,7 @@ const MapColumn = React.createClass({
     componentWillMount() {
         if (isIE) {
             this.observer = new MutationObserver(this.resizeMapCell);
+            window.addEventListener('resize', this.resizeMapCell, false);
         }
     },
 
@@ -67,6 +68,7 @@ const MapColumn = React.createClass({
 
     componentWillUnmount() {
         if (isIE) {
+            window.removeEventListener('resize', this.resizeMapCell, false);
             this.observer.disconnect();
         }
     },

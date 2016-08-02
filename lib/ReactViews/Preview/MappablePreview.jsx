@@ -21,10 +21,7 @@ const MappablePreview = React.createClass({
 
     toggleOnMap(event) {
         this.props.previewed.toggleEnabled();
-        if (this.props.previewed.isEnabled === true &&
-            this.props.viewState.closeModalAfterAdd &&
-            !event.shiftKey && !event.ctrlKey) {
-
+        if (this.props.previewed.isEnabled === true && !event.shiftKey && !event.ctrlKey) {
             this.props.viewState.explorerPanelIsVisible = false;
             this.props.viewState.mobileView = null;
         }
@@ -40,7 +37,8 @@ const MappablePreview = React.createClass({
         return (
             <div>
                 <If condition={catalogItem.isMappable}>
-                    <DataPreviewMap terria={this.props.terria} previewedCatalogItem={this.props.previewed}/>
+                    <DataPreviewMap terria={this.props.terria} previewedCatalogItem={this.props.previewed}
+                                    showMap={!this.props.viewState.explorerPanelAnimating} />
                 </If>
                 <button type='button' onClick={this.toggleOnMap}
                         className={Styles.btnAdd}>
@@ -48,7 +46,7 @@ const MappablePreview = React.createClass({
                 </button>
                 <div className={Styles.previewedInfo}>
                     <h3>{catalogItem.name}</h3>
-                    <div className={Styles.url}>
+                    <div className={Styles.description}>
                         <If condition={catalogItem.description && catalogItem.description.length > 0}>
                             <div>
                                 <h4>Description</h4>
@@ -97,7 +95,7 @@ const MappablePreview = React.createClass({
                                        className={Styles.field}
                                        type="text"
                                        value={catalogItem.url}
-                                       onClick={this.selectUrl} />
+                                       onClick={e => e.target.select()} />
 
                                 <Choose>
                                     <When condition={catalogItem.type === 'wms' || (catalogItem.type === 'esri-mapServer' && typeof catalogItem.layers !== 'undefined')}>

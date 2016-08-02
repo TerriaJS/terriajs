@@ -6,13 +6,14 @@
   height: calc(100vh - #{$workbench-header + $logo-height});
   overflow-x: hidden;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   padding: 0 $padding-small;
   @media print{
     page-break-after : always;
   }
 
   @media screen and (max-width : $sm) {
-    height: calc(100vh - #{$mobile-header-height + $modal-header-height});
+    height: calc(100% - #{$mobile-modal-top-height});
   }
 }
 
@@ -23,7 +24,7 @@
 .drop-zone {
   composes: drop-zone from '../../Sass/common/_drop_zone.scss';
   composes: clearfix from '../../Sass/common/_base.scss';
-  height: 2px;
+  height: 10px;
   &.is-active {
     height: calc(#{$input-height} + #{$padding});
   }

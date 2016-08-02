@@ -6,6 +6,8 @@ import Branding from '../SidePanel/Branding.jsx';
 import Styles from './mobile-header.scss';
 import Icon from "../Icon.jsx";
 import MobileMenu from './MobileMenu';
+import classNames from 'classnames';
+import { removeMarker } from '../Search/SearchMarkerUtils';
 
 const MobileHeader = React.createClass({
     mixins: [ObserveModelMixin],
@@ -56,6 +58,11 @@ const MobileHeader = React.createClass({
 
     changeLocationSearchText(newText) {
         this.props.viewState.searchState.locationSearchText = newText;
+
+        if (newText.length === 0) {
+            removeMarker(this.props.terria, this.props.viewState);
+        }
+
         this.showLocationSearchResults();
     },
 
@@ -132,7 +139,7 @@ const MobileHeader = React.createClass({
                                     <button type='button' className={Styles.btnNowViewing}
                                             onClick={this.onMobileNowViewingClicked}>
                                         <Icon glyph={Icon.GLYPHS.eye}/>
-                                        <span className={Styles.nowViewingCount}>{nowViewingLength}</span>
+                                        <span className={classNames(Styles.nowViewingCount , {[Styles.doubleDigit]: nowViewingLength > 9})}>{nowViewingLength}</span>
                                     </button>
                                 </If>
                                 <button className={Styles.btnSearch}

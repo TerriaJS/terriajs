@@ -2,9 +2,53 @@
 Change Log
 ==========
 
+### 4.2.0
+
+* Fixed a bug that caused the selection indicator to get small when near the right edge of the map and to overlap the side panel when past the left edge.
+* Map controls and menus now become translucent while the explorer window (Data Catalog) is visible.
+* Removed find-and-replace for cesium workers from the webpack build as it's done in terriajs-cesium now.
+* Legend images that fail to load are now hidden entirely.
+* Improved the appearance of the opacity slider and added a percentage display.
+* Updated to [Cesium](http://cesiumjs.org) 1.23 (from 1.20).  See the [change log](https://github.com/AnalyticalGraphicsInc/cesium/blob/1.23/CHANGES.md) for details.
+* Fixed a bug which prevented feature info showing for Gpx-, Ogr-, WebFeatureService-, ArcGisFeatureServer-, and WebProcessingService- CatalogItems.
+* Added support for `tableStyle.colorBins` as array of values specifying the boundaries between the color bins in the legend, eg. `[3000, 3500, 3900, 4000]`. `colorBins` can still be an integer specifying the number of bins, in which case Terria determines the boundaries.
+* Made explorer panel not rendered at all when hidden and made the preview map destroy itself when unmounted - this mitigates performance issues from having Leaflet running in the background on very busy vector datasets.
+
+### 4.1.2
+
+* Fixed a bug that prevented sharing from working in Internet Explorer.
+
+### 4.1.1
+
+* Stopped IE9 from setting bizarre inline dimensions on custom branding images.
+* Fixed workbench reordering in browsers other than Chrome.
+* URLs on the dataset info page are now auto-selected by clicked, making them easier to copy.
+
+### 4.1.0
+
+* Made the column title for time-based CSV exports from chart default to 'date'
+* Stopped the CSV creation webworker from being run multiple times on viewing a chart.
+* Removed the empty circles from non-selected base maps on the Map settings panel.
+* Prevented text from being selected when dragging the compass control.
+* Added the `MeasureTool` to allow users to interactively measure the distance between points.
+* Worked around a problem in the Websense Web Filter that caused it to block access to some of the TerriaJS Web Workers due to a URL in the license text in a comment in a source file.
+
+### 4.0.2
+
+* Fixed a bug that prevented opening catalog groups on iOS.
+* Fixed a CSS warning.
+
+### 4.0.1
+
+* Fixed a bug that caused an error message to be formatted incorrectly when displayed to the user.
+
 ### 4.0.0
 
 * Rewrote the TerriaJS user interface using React.  We believe the new interface is a drastic improvement, incorporating user feedback and the results of usability testing.  Currently, it is a bit harder to customize than our old user interface, so if your application has extensive customizations, we suggest delaying upgrading to this version for a little while logner.
+* Added support for non-geospatial CSV files, which display in a new chart panel.
+* Added support for customisable tags in Feature Info templates.
+* Implemented [`<chart>` and `<collapsible>`](https://github.com/TerriaJS/terriajs/blob/4.0.0/lib/ReactViews/Custom/registerCustomComponentTypes.js#L52-L106) tags in Feature Info templates.
+* Added support for [polling](https://github.com/TerriaJS/terriajs/blob/4.0.0/lib/Models/Polling.js) for updates to CSV files.
 * `CswCatalogGroup` will now include Web Processing Services from the catalog if configured with `includeWps` set to true.
 * `WebMapServiceCatalogItem` will now detect ncWMS servers and set isNcWMS to true.
 * New `ShareDataService` which can store and resolve data. Currently it is used as a replacement for Google URL Shortener, which can't handle long URLs.

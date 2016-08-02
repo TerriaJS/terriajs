@@ -17,6 +17,7 @@
   background: $modal-secondary-bg;
   overflow-y: auto;
   overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
   box-sizing: border-box;
 
   @media screen and (min-width: $sm) {

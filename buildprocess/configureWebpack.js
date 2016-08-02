@@ -34,72 +34,26 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
         })
     });
 
+    // The sprintf module included by Cesium includes a license comment with a big
+    // pile of links, some of which are apparently dodgy and cause Websense to flag
+    // web workers that include the comment as malicious.  So here we munge URLs in
+    // comments so broken security software doesn't consider them links that a user
+    // might actually visit.
     config.module.loaders.push({
         test: /\.js?$/,
-        include: require.resolve('terriajs-cesium/Source/ThirdParty/zip'),
+        include: path.resolve(cesiumDir, 'Source', 'ThirdParty'),
         loader: StringReplacePlugin.replace({
             replacements: [
                 {
-                    pattern: /new Worker\(obj\.zip\.workerScriptsPath \+(.*)\)/ig,
-                    replacement: function (match, p1, offset, string) {
-                        return "require('" + require.resolve('worker-loader').replace(/\\/g, '\\\\') + "!" + cesiumDir.replace(/\\/g, '\\\\') + "/Source/ThirdParty/Workers/' + " + p1.replace(/\\/g, '\\\\') + ")()";
+                    pattern: /\/\*[\S\s]*?\*\//g, // find multi-line comments
+                    replacement: function (match) {
+                        // replace http:// and https:// with a spelling-out of it.
+                        return match.replace(/(https?):\/\//g, '$1-colon-slashslash ');
                     }
                 }
             ]
         })
     });
-
-    config.module.loaders.push({
-        test: /\.js?$/,
-        include: path.resolve(cesiumDir, 'Source', 'ThirdParty', 'Workers'),
-        loader: StringReplacePlugin.replace({
-            replacements: [
-                {
-                    pattern: "})(this)",
-                    replacement: function (match, p1, offset, string) {
-                        return "})(self)";
-                    }
-                }
-            ]
-        })
-    });
-
-    config.module.loaders.push({
-        test: /\.js?$/,
-        include: require.resolve('terriajs-cesium/Source/Core/TaskProcessor'),
-        loader: StringReplacePlugin.replace({
-            replacements: [
-                {
-                    pattern: /new Worker\(getBootstrapperUrl\(\)\)/ig,
-                    replacement: function (match, p1, offset, string) {
-                        return "require('" + require.resolve('worker-loader').replace(/\\/g, '\\\\') + "!" + require.resolve('../lib/cesiumWorkerBootstrapper').replace(/\\/g, '\\\\') + "')()";
-                    }
-                },
-                {
-                    pattern: "new Worker(getWorkerUrl('Workers/transferTypedArrayTest.js'))",
-                    replacement: function (match, p1, offset, string) {
-                        return "require('" + require.resolve('worker-loader').replace(/\\/g, '\\\\') + "!" + cesiumDir.replace(/\\/g, '\\\\') + "/Source/Workers/transferTypedArrayTest.js')()";
-                    }
-                }
-            ]
-        })
-    });
-
-    config.module.loaders.push({
-        test: /\.js?$/,
-        include: path.resolve(cesiumDir, 'Source', 'Workers'),
-        loader: StringReplacePlugin.replace({
-            replacements: [
-                {
-                    pattern: /require\(\'Workers\/\' \+ moduleName\)/ig,
-                    replacement: function (match, p1, offset, string) {
-                        return "require('./' + moduleName)";
-                    }
-                }
-            ]
-        })
-    });
-
     // Use Babel to compile our JavaScript files.
     config.module.loaders.push({
         test: /\.jsx?$/,
@@ -116,8 +70,6 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
             ]
         }
     });
-
-    //
 
     // Use the raw loader for our view HTML.  We don't use the html-loader because it
     // will doing things with images that we don't (currently) want.
@@ -138,12 +90,6 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
         test: /\.json|xml$/,
         loader: require.resolve('file-loader'),
         include: path.resolve(cesiumDir, 'Source', 'Assets')
-    });
-
-    config.module.loaders.push({
-        test: /\/Workers\/$/,
-        loader: require.resolve('file-loader'),
-        include: cesiumDir
     });
 
     var externalModulesWithJson = ['proj4/package.json', 'entities', 'html-to-react', 'ent', 'htmlparser2/package.json']

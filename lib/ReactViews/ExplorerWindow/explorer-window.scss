@@ -3,28 +3,15 @@
 
 .modal-wrapper {
   position: fixed;
-  visibility: hidden;
-  z-index: -100;
-  opacity: 0;
-
-  @media screen and (min-width: $sm) {
-    z-index: $front-component-z-index - 1;
-    padding-left: $padding*2;
-    padding-right: 80px;
-    padding-top: calc((100vh - #{$modal-content-height} - #{$modal-header-height}) / 2);
-    padding-bottom: calc((100vh - #{$modal-content-height} - #{$modal-header-height}) / 2);
-    top: 0;
-    bottom: 0;
-    right: 0;
-    left: 0;
-    visibility: hidden;
-    @include transition(all 0.3s);
-
-    &.is-open {
-      visibility: visible;
-      opacity: 1;
-    }
-  }
+  z-index: $front-component-z-index - 1;
+  padding-left: $padding*2;
+  padding-right: 80px;
+  padding-top: calc((100vh - #{$modal-content-height} - #{$modal-header-height}) / 2);
+  padding-bottom: calc((100vh - #{$modal-content-height} - #{$modal-header-height}) / 2);
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
 
   @media screen and (min-width: $md) {
     padding-left: 30px + $work-bench-width;
@@ -43,26 +30,20 @@
   border-radius: $radius-small;
   box-shadow: 0 0 15px 6px rgba(100, 100, 100, 0.3);
   z-index: $front-component-z-index - 1;
-  opacity: 0;
   height: 100%;
   overflow-y: auto;
-  visibility: hidden;
+  -webkit-overflow-scrolling: touch;
   -webkit-backface-visibility: hidden;
   -moz-backface-visibility: hidden;
   backface-visibility: hidden;
+
+  @include transform(translateY(20%));
+  opacity: 0;
   @include transition(all 0.3s);
-  @media screen and (min-width: $sm) {
-    @include transform(translateY(20%));
-    width: 100%;
-    overflow: hidden;
-    margin: 0 auto;
-  }
-  .is-open & {
-    @media screen and (min-width: $sm) {
-      @include transform(none);
-      opacity: 1;
-      visibility: visible;
-    }
+
+  &.is-mounted {
+    opacity: 1;
+    @include transform(none);
   }
 }
 
@@ -71,16 +52,11 @@
   position: fixed;
   width: 100%;
   height: 100%;
-  visibility: hidden;
   top: 0;
   left: 0;
   z-index: $front-component-z-index - 10;
-  opacity: 0;
-  @include transition(all 0.3s);
-  .is-open.modal-wrapper & {
-    opacity: 1;
-    visibility: visible;
-  }
+  opacity: 1;
+  visibility: visible;
 }
 
 .btn--close-modal {

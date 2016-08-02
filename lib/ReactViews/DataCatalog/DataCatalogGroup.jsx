@@ -3,6 +3,7 @@ import React from 'react';
 import DataCatalogMember from './DataCatalogMember';
 import CatalogGroup from './CatalogGroup';
 import ObserveModelMixin from '../ObserveModelMixin';
+import addedByUser from '../../Core/addedByUser';
 
 const DataCatalogGroup = React.createClass({
     mixins: [ObserveModelMixin],
@@ -59,9 +60,14 @@ const DataCatalogGroup = React.createClass({
         return !parent || !parent.parent;
     },
 
+    isSelected() {
+        return addedByUser(this.props.group) ?
+            this.props.viewState.userDataPreviewedItem === this.props.group :
+            this.props.viewState.previewedItem === this.props.group;
+    },
+
     render() {
         const group = this.props.group;
-
         return (
             <CatalogGroup
                 text={group.name}
@@ -69,7 +75,8 @@ const DataCatalogGroup = React.createClass({
                 open={this.isOpen()}
                 loading={group.isLoading}
                 emptyMessage="This group is empty"
-                onClick={this.clickGroup}>
+                onClick={this.clickGroup}
+                selected ={this.isSelected()}>
                 <For each="item" of={group.items}>
                     <DataCatalogMember
                         key={item.uniqueId}

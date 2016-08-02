@@ -10,21 +10,36 @@
   width: 100%;
 }
 
+.explorerPanelIsVisible{
+  opacity: 0.3;
+}
+
 .sidePanel {
   font-family: $font-pop;
   background: $dark;
   width: $work-bench-width;
   max-width: $work-bench-width;
-  h1{
+
+  h1 {
     margin: 0;
+  }
+
+  @media print{
+    display: block;
   }
 }
 
 .map {
-  position: relative;
   @include transition(left $animation-fast ease-in);
-  height: 100vh;
-  @media print{
+
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: $mobile-header-height;
+  bottom: 0;
+
+  @media print {
+    display: block;
     height: auto;
     page-break-after: always;
   }
@@ -42,15 +57,16 @@
   .sidePanel {
     display: table-cell;
     vertical-align: top;
-    @media print{
-      display: block;
-    }
   }
 
   .map {
     display: table-cell;
-    @media print{
-      display: block;
-    }
+    position: relative;
+    height: 100vh;
+    top: auto;
+    bottom: auto;
+    left: auto;
+    right: auto;
+    overflow: hidden;
   }
 }
