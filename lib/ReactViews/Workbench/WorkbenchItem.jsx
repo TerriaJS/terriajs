@@ -50,14 +50,7 @@ const WorkbenchItem = React.createClass({
         return (
             <li
                 style={this.props.style}
-                className={classNames(
-                    this.props.className,
-                    Styles.workbenchItem,
-                    {
-                        [Styles.isOpen]: workbenchItem.isLegendVisible
-                    })}
-                >
-
+                className={classNames(this.props.className, Styles.workbenchItem,{[Styles.isOpen]: workbenchItem.isLegendVisible})}>
                 <ul className={Styles.header}>
                     <If condition={workbenchItem.supportsToggleShown}>
                         <li className={Styles.visibilityColumn}>
