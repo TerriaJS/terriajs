@@ -46,7 +46,6 @@ const WorkbenchItem = React.createClass({
 
     render() {
         const workbenchItem = this.props.item;
-
         return (
             <li
                 style={this.props.style}
