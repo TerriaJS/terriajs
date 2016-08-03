@@ -11,6 +11,8 @@ const Terria = require('../../Models/Terria');
 const TerriaViewer = require('../../ViewModels/TerriaViewer.js');
 const ViewerMode = require('../../Models/ViewerMode');
 const when = require('terriajs-cesium/Source/ThirdParty/when');
+import classNames from 'classnames';
+
 import Styles from './data-preview-map.scss';
 
 /**
@@ -21,7 +23,8 @@ const DataPreviewMap = React.createClass({
 
     propTypes: {
         terria: React.PropTypes.object.isRequired,
-        previewedCatalogItem: React.PropTypes.object
+        previewedCatalogItem: React.PropTypes.object,
+        showMap: React.PropTypes.bool
     },
 
     getInitialState() {
@@ -60,7 +63,7 @@ const DataPreviewMap = React.createClass({
         positron.url = '//global.ssl.fastly.net/light_all/';
         positron.attribution = '© OpenStreetMap contributors ODbL, © CartoDB CC-BY 3.0';
         positron.opacity = 1.0;
-        positron.subdomains = ['cartodb-basemaps-a','cartodb-basemaps-b','cartodb-basemaps-c','cartodb-basemaps-d'];
+        positron.subdomains = ['cartodb-basemaps-a', 'cartodb-basemaps-b', 'cartodb-basemaps-c', 'cartodb-basemaps-d'];
         this.terriaPreview.baseMap = positron;
 
         this.isZoomedToExtent = false;
@@ -69,26 +72,28 @@ const DataPreviewMap = React.createClass({
     },
 
     componentWillUnmount() {
+        this.destroyPreviewMap();
+
         if (this._unsubscribeErrorHandler) {
             this._unsubscribeErrorHandler();
             this._unsubscribeErrorHandler = undefined;
         }
     },
 
-    componentDidMount() {
-        this.updatePreview();
+    componentWillReceiveProps(newProps) {
+        if (newProps.showMap && !this.props.showMap) {
+            this.initMap(newProps.previewedCatalogItem);
+        } else {
+            this.updatePreview(newProps.previewedCatalogItem);
+        }
     },
 
-    componentDidUpdate() {
-        this.updatePreview();
-    },
-
-    updatePreview() {
-        if (this.lastPreviewedCatalogItem === this.props.previewedCatalogItem) {
+    updatePreview(previewedCatalogItem) {
+        if (this.lastPreviewedCatalogItem === previewedCatalogItem) {
             return;
         }
 
-        this.lastPreviewedCatalogItem = this.props.previewedCatalogItem;
+        this.lastPreviewedCatalogItem = previewedCatalogItem;
 
         this.setState({
             previewBadgeText: 'DATA PREVIEW LOADING...'
@@ -106,7 +111,7 @@ const DataPreviewMap = React.createClass({
             this.rectangleCatalogItem.isEnabled = false;
         }
 
-        const previewed = this.props.previewedCatalogItem;
+        const previewed = previewedCatalogItem;
         if (previewed && defined(previewed.type) && previewed.isMappable) {
             const that = this;
             return when(previewed.load()).then(() => {
@@ -124,7 +129,7 @@ const DataPreviewMap = React.createClass({
                 return loadNowViewingItemPromise.then(() => {
                     // Now that the item is loaded, add it to the map.
                     // Unless we've started previewing something else in the meantime!
-                    if (!that._unsubscribeErrorHandler || previewed !== that.props.previewedCatalogItem) {
+                    if (!that._unsubscribeErrorHandler || previewed !== that.lastPreviewedCatalogItem) {
                         return;
                     }
 
@@ -263,24 +268,52 @@ const DataPreviewMap = React.createClass({
 
     mapIsReady(mapContainer) {
         if (mapContainer) {
-            const t = TerriaViewer.create(this.terriaPreview, {
-                mapContainer: mapContainer
+            this.mapElement = mapContainer;
+
+            if (this.props.showMap) {
+                this.initMap(this.props.previewedCatalogItem);
+            }
+        }
+    },
+
+    destroyPreviewMap() {
+        this.terriaViewer && this.terriaViewer.destroy();
+        if (this.mapElement) {
+            this.mapElement.innerHTML = '';
+        }
+    },
+
+    initMap(previewedCatalogItem) {
+        if (this.mapElement) {
+            this.terriaViewer = TerriaViewer.create(this.terriaPreview, {
+                mapContainer: this.mapElement
             });
+
             // disable preview map interaction
-            const map = t.terria.leaflet.map;
+            const map = this.terriaViewer.terria.leaflet.map;
             map.touchZoom.disable();
             map.doubleClickZoom.disable();
             map.scrollWheelZoom.disable();
             map.boxZoom.disable();
             map.keyboard.disable();
             map.dragging.disable();
+
+            this.updatePreview(previewedCatalogItem);
         }
     },
 
     render() {
         return (
             <div className={Styles.map} onClick={this.clickMap}>
-                <div className={Styles.terriaPreview} ref={this.mapIsReady}/>
+                <Choose>
+                    <When condition={this.props.showMap}>
+                        <div className={classNames(Styles.terriaPreview)} ref={this.mapIsReady}/>
+                    </When>
+                    <Otherwise>
+                        <div className={classNames(Styles.terriaPreview, Styles.placeholder)}/>
+                    </Otherwise>
+                </Choose>
+
                 <label className={Styles.badge}>{this.state.previewBadgeText}</label>
             </div>
         );

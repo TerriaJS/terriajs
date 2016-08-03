@@ -1,10 +1,8 @@
 import React from 'react';
 
-import SearchHeader from '../Search/SearchHeader.jsx';
-import SearchResult from '../Search/SearchResult.jsx';
 import {addMarker} from '../Search/SearchMarkerUtils';
 import ObserveModelMixin from '../ObserveModelMixin';
-
+import LocationSearchResults from '../Search/LocationSearchResults.jsx';
 import Styles from './mobile-search.scss';
 
 // A Location item when doing Bing map searvh or Gazetter search
@@ -37,19 +35,21 @@ const MobileSearch = React.createClass({
     },
 
     renderLocationResult() {
-        const that = this;
         const searchState = this.props.viewState.searchState;
+        const theme = 'light';
         return searchState.locationSearchProviders
             .filter(search => search.isSearching || (search.searchResults && search.searchResults.length))
-            .map(search => (<div key={search.name}>
-                <label className={Styles.label}>{search.name}</label>
-                <SearchHeader searchProvider={search} />
-                <ul className={Styles.results}>
-                    { search.searchResults.map((result, i) => (
-                        <SearchResult key={i} name={result.name} clickAction={that.onLocationClick.bind(that, result)} theme="light" />
-                    ))}
-                </ul>
-            </div>));
+            .map(search =>
+                <LocationSearchResults key={search.name}
+                                       terria={this.props.terria}
+                                       viewState={this.props.viewState}
+                                       search={search}
+                                       onLocationClick={this.onLocationClick}
+                                       isWaitingForSearchToStart={searchState.isWaitingForSearchToStart}
+                                       theme={theme}
+
+                />
+            );
     }
 });
 

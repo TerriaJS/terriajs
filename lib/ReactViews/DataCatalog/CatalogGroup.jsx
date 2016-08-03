@@ -18,7 +18,8 @@ function CatalogGroup(props) {
                     className={classNames(
                             Styles.btnCatalog,
                             {[Styles.btnCatalogTopLevel]: props.topLevel},
-                            {[Styles.btnIsOpen]: props.open}
+                            {[Styles.btnIsOpen]: props.open},
+                            {[Styles.isPreviewed]: props.selected}
                         )}
                     onClick={props.onClick}>
                 <If condition={!props.topLevel}>
@@ -61,7 +62,8 @@ CatalogGroup.propTypes = {
     children: React.PropTypes.oneOfType([
         React.PropTypes.element,
         React.PropTypes.arrayOf(React.PropTypes.element)
-    ])
+    ]),
+    selected: React.PropTypes.bool
 };
 
 export default CatalogGroup;
