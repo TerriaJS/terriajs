@@ -1,22 +1,28 @@
 @import '~terriajs-variables';
 
 .opacity {
+  composes: clearfix from '../../../Sass/common/_base.scss';
   padding: $padding 0;
   border-bottom: 1px solid $border-color;
   font-size: $font-size-mini;
+
   label {
     margin-right: $padding-small;
+    float: left;
+    width: 80px;
   }
   input[type=range] {
-    width: 175px;
+    width: calc(100% - 85px);
   }
 }
 
 .rangeSlider {
-  height: 10px;
+  height: 2px;
   border-radius: 5px;
   background: $border-color;
-  margin-top: 5px;
+  width: calc(100% - 85px);
+  float: left;
+  margin-top: 7px;
 
   :global {
     .rangeslider__fill {
@@ -28,12 +34,11 @@
     }
 
     .rangeslider__handle {
-      width: 20px;
-      height: 20px;
+      width: 12px;
+      height: 12px;
       border-radius: 20px;
-      top: -15px;
+      top: -7px;
       background: #fff;
-      border: 1px solid #ccc;
       display: inline-block;
       position: relative;
     }

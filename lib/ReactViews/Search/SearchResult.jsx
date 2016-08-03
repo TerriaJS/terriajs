@@ -4,7 +4,7 @@ import Styles from './search-result.scss';
 import classNames from 'classnames';
 
 // A Location item when doing Bing map searvh or Gazetter search
-const LocationItem = React.createClass({
+const SearchResult = React.createClass({
     propTypes: {
         name: React.PropTypes.string.isRequired,
         clickAction: React.PropTypes.func.isRequired,
@@ -21,7 +21,7 @@ const LocationItem = React.createClass({
 
     render() {
         return (
-            <li className={classNames(Styles.locationItem, {[Styles.dark]: this.props.theme === 'dark', [Styles.light]: this.props.theme === 'light'})}>
+            <li className={classNames(Styles.searchResult, {[Styles.dark]: this.props.theme === 'dark', [Styles.light]: this.props.theme === 'light'})}>
                 <button type='button' onClick={this.props.clickAction} className={classNames(Styles.btn, {[Styles.btnLocationName]: this.props.showPin})}>
                     {this.props.showPin ? <span className={Styles.locationIcon}><Icon glyph={Icon.GLYPHS.location}/></span> : null}
                     <span>{this.props.name}</span>
@@ -32,4 +32,4 @@ const LocationItem = React.createClass({
     }
 });
 
-module.exports = LocationItem;
+module.exports = SearchResult;

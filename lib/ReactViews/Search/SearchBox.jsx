@@ -1,10 +1,11 @@
 'use strict';
 
 import React from 'react';
-import defined from 'terriajs-cesium/Source/Core/defined';
 import Styles from './search-box.scss';
+import debounce from 'lodash.debounce';
 import Icon from "../Icon.jsx";
 
+const DEBOUNCE_INTERVAL = 2000;
 /**
  * Super-simple dumb search box component.
  * Used for both data catalog search and location search.
@@ -29,6 +30,10 @@ export default React.createClass({
         };
     },
 
+    componentWillMount() {
+        this.searchWithDebounce = debounce(this.search, DEBOUNCE_INTERVAL);
+    },
+
     componentWillUnmount() {
         this.removeDebounce();
     },
@@ -37,27 +42,13 @@ export default React.createClass({
         return this.props.searchText.length > 0;
     },
 
-    searchWithDebounce() {
-        // Trigger search 2 seconds after the last input.
-        this.removeDebounce();
-
-        if (this.props.searchText.length > 0) {
-            this.debounceTimeout = setTimeout(() => {
-                this.search();
-            }, 2000);
-        }
-    },
-
     search() {
         this.removeDebounce();
         this.props.onDoSearch();
     },
 
     removeDebounce() {
-        if (defined(this.debounceTimeout)) {
-            clearTimeout(this.debounceTimeout);
-            this.debounceTimeout = undefined;
-        }
+        this.searchWithDebounce.cancel();
     },
 
     handleChange(event) {
