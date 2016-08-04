@@ -38,7 +38,7 @@ const PolygonParameterEditor = React.createClass({
     },
 
     getValue() {
-        const pointsLongLats = this.props.parameterValues[this.props.parameter.id];
+        const pointsLongLats = this.props.parameterValues[this.props.parameter.id][0];
 
         let polygon = "";
         for (let i=0; i<pointsLongLats.length; i++) {
@@ -79,7 +79,7 @@ const PolygonParameterEditor = React.createClass({
             points.push(CesiumMath.toDegrees(cartographic.latitude));
             pointsLongLats.push(points);
         }
-        this.props.parameterValues[this.props.parameter.id] = pointsLongLats;
+        this.props.parameterValues[this.props.parameter.id] = [pointsLongLats];
     },
 
     selectPolygonOnMap() {

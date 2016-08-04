@@ -1,22 +1,25 @@
 @import '~terriajs-variables';
 
-.location-item {
+.search-result {
     span{
       overflow-wrap: break-word;
       word-wrap: break-word;
   }
 }
 
-.location-item.light .btn {
+.search-result.light .btn {
   border-bottom: 1px solid rgba($grey, 0.4);
   background: transparent;
   &:hover {
     border-bottom: 1px solid $color-primary;
     color: $color-primary;
   }
+  svg {
+    fill: #000;
+  }
 }
 
-.location-item.dark .btn {
+.search-result.dark .btn {
   background: $overlay;
   color: #FFF;
   &:hover {
