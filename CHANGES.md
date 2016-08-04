@@ -16,6 +16,8 @@ Change Log
 * Removed find-and-replace for cesium workers from the webpack build as it's done in terriajs-cesium now.
 * Legend images that fail to load are now hidden entirely.
 * Improved the appearance of the opacity slider and added a percentage display.
+* Added support for ArcGis FeatureServers.
+* Breaking change: Catalog types `esri-group` or `esri-mapServer-group` were previously synonyms. Now `esri-group` must be used for REST services (eg. URLs ending in `gis/rest/services`), while `esri-mapServer-group` must be used for MapServers (eg. URLs ending in /MapServer).
 * AllowedValues for LiteralData WPS input now works even if only one value specified.
 * Fixed bug in WPS polygon datatype to return valid polygon geojson.
 * Fix regression: cursor changes in UserDrawing now functions in 2D as well as 3D.
