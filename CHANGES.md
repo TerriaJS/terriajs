@@ -2,6 +2,9 @@
 Change Log
 ==========
 
+### 4.1.3
+
+* Adds bulk geocoding capability for Australian addresses. So GnafAPI can be used with batches of addresses, if configured.
 ### 4.2.0
 
 * Fixed a bug that caused the selection indicator to get small when near the right edge of the map and to overlap the side panel when past the left edge.
