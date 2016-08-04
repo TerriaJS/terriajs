@@ -29,6 +29,7 @@ const GLYPHS = {
     location: require('../../wwwroot/images/icons/location.svg'),
     loop: require('../../wwwroot/images/icons/loop.svg'),
     menu: require('../../wwwroot/images/icons/menu.svg'),
+    measure: require('../../wwwroot/images/icons/measure.svg'),
     opened: require('../../wwwroot/images/icons/opened.svg'),
     pause: require('../../wwwroot/images/icons/pause.svg'),
     play: require('../../wwwroot/images/icons/play.svg'),

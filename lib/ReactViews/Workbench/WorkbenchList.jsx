@@ -6,6 +6,7 @@ import ObserveModelMixin from './../ObserveModelMixin';
 
 import Styles from './workbench-list.scss';
 import '!!style-loader!css-loader?sourceMap!react-anything-sortable/sortable.css';
+import '!!style-loader!css-loader?sourceMap!./sortable.css';
 
 const WorkbenchList = React.createClass({
     mixins: [ObserveModelMixin],

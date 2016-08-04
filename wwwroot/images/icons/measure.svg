@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="50px"
+   height="50px"
+   viewBox="0 0 50 50"
+   version="1.1"
+   id="svg2"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="measure.svg">
+  <metadata
+     id="metadata11">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>geolocation</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs9" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1871"
+     inkscape:window-height="1062"
+     id="namedview7"
+     showgrid="false"
+     inkscape:zoom="9.44"
+     inkscape:cx="-3.8039725"
+     inkscape:cy="31.840336"
+     inkscape:window-x="49"
+     inkscape:window-y="18"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2" />
+  <!-- Generator: Sketch 3.4.3 (16044) - http://www.bohemiancoding.com/sketch -->
+  <title
+     id="title4">geolocation</title>
+  <g
+     style="fill:none;fill-rule:evenodd;stroke:none;stroke-width:1"
+     transform="matrix(2.4724577,0,0,2.4724577,-59.063562,-169.57639)"
+     id="Artboard-2">
+    <g
+       transform="translate(19,63)"
+       id="tool-measure-noShadow">
+      <g
+         transform="translate(6,11)"
+         id="Group-2"
+         style="stroke:#3f4854">
+        <g
+           transform="translate(0,8.526316)"
+           id="Group-Copy-4">
+          <path
+             id="Line-Copy-13"
+             d="M 9,0 9,4.4428312"
+             inkscape:connector-curvature="0"
+             style="stroke:#000000;stroke-opacity:1" />
+          <path
+             id="Line-Copy-14"
+             d="m 3.3157895,0 0,4.4428312"
+             inkscape:connector-curvature="0"
+             style="stroke:#000000;stroke-opacity:1" />
+          <path
+             id="Line-Copy-15"
+             d="m 6.1578947,0 0,3.1361162"
+             inkscape:connector-curvature="0"
+             style="stroke:#000000;stroke-opacity:1" />
+          <path
+             id="Line-Copy-20"
+             d="m 0.47368421,0 0,3.1361162"
+             inkscape:connector-curvature="0"
+             style="stroke:#000000;stroke-opacity:1" />
+          <path
+             id="Line-Copy-17"
+             d="m 14.684211,0 0,4.4428312"
+             inkscape:connector-curvature="0"
+             style="stroke:#000000;stroke-opacity:1" />
+          <path
+             id="Line-Copy-19"
+             d="m 11.842105,0 0,3.1361162"
+             inkscape:connector-curvature="0"
+             style="stroke:#000000;stroke-opacity:1" />
+          <path
+             id="Line-Copy-21"
+             d="m 17.526316,0 0,3.1361162"
+             inkscape:connector-curvature="0"
+             style="stroke:#000000;stroke-opacity:1" />
+        </g>
+        <circle
+           r="2.5"
+           cy="2.5"
+           cx="15.5"
+           id="Oval-46"
+           style="stroke:#000000;stroke-width:1.82005136;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none" />
+        <circle
+           r="2.5"
+           cy="2.5"
+           cx="2.5"
+           id="Oval-46-Copy"
+           style="stroke:#000000;stroke-width:1.82005136;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none" />
+        <path
+           id="Line"
+           d="m 11.842105,2.368421 -5.6842103,0"
+           inkscape:connector-curvature="0"
+           style="stroke:#000000;stroke-linecap:square;stroke-opacity:1" />
+      </g>
+    </g>
+  </g>
+</svg>

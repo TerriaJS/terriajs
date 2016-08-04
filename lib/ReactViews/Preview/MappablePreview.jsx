@@ -21,10 +21,7 @@ const MappablePreview = React.createClass({
 
     toggleOnMap(event) {
         this.props.previewed.toggleEnabled();
-        if (this.props.previewed.isEnabled === true &&
-            this.props.viewState.closeModalAfterAdd &&
-            !event.shiftKey && !event.ctrlKey) {
-
+        if (this.props.previewed.isEnabled === true && !event.shiftKey && !event.ctrlKey) {
             this.props.viewState.explorerPanelIsVisible = false;
             this.props.viewState.mobileView = null;
         }
@@ -40,7 +37,8 @@ const MappablePreview = React.createClass({
         return (
             <div>
                 <If condition={catalogItem.isMappable}>
-                    <DataPreviewMap terria={this.props.terria} previewedCatalogItem={this.props.previewed}/>
+                    <DataPreviewMap terria={this.props.terria} previewedCatalogItem={this.props.previewed}
+                                    showMap={!this.props.viewState.explorerPanelAnimating} />
                 </If>
                 <button type='button' onClick={this.toggleOnMap}
                         className={Styles.btnAdd}>
