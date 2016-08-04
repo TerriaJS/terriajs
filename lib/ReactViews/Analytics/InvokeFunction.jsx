@@ -19,9 +19,8 @@ const InvokeFunction = React.createClass({
 
     componentWillMount() {
         this._parameterValues = {};
-        knockout.track(this, ['_parameterValues']);
-
-        this.initializeParameters(this.props);
+        this.defaultPropsIfNeeded(this.props);
+        this.enableContextItem(this.props);
     },
 
     componentWillUnmount() {
@@ -29,11 +28,17 @@ const InvokeFunction = React.createClass({
     },
 
     componentWillReceiveProps(nextProps) {
-        this.initializeParameters(nextProps);
+        // This will be called when component is already mounted but props change, for example if you go from one WPS
+        // item to another. In that instance, we'll need to clear parameter values.
+        this._parameterValues = {};
+        this.defaultPropsIfNeeded(nextProps);
+        this.enableContextItem(nextProps);
     },
 
     componentWillUpdate(nextProps, nextState) {
-        this.initializeParameters(nextProps);
+        // This is needed as componentWillReceiveProps may be called before it has parameters. But if parameters have
+        // already been set (defaulted or set by user) nothing will change.
+        this.defaultPropsIfNeeded(nextProps);
     },
 
     submit() {
@@ -60,18 +65,18 @@ const InvokeFunction = React.createClass({
         }
     },
 
-    initializeParameters(props) {
-        this._parameterValues = {};
-
+    defaultPropsIfNeeded(props) {
         const parameters = props.previewed.parameters;
         for (let i = 0; i < parameters.length; ++i) {
             const parameter = parameters[i];
-            this._parameterValues[parameter.id] = parameter.defaultValue;
+            if (!(parameter.id in this._parameterValues)) {
+                this._parameterValues[parameter.id] = parameter.defaultValue;
+            }
         }
-
         knockout.track(this._parameterValues);
+    },
 
-        // Enable the context item, if any.
+    enableContextItem(props) {
         this.removeContextItem();
         if (defined(props.previewed.contextItem)) {
             props.previewed.contextItem.isEnabled = true;
