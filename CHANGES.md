@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+### 4.2.1
+
+* Enumeration parameter now defaults to what is shown in UI, and if parameter is optional, '' is default.
+
 ### 4.1.3
 
 * Adds bulk geocoding capability for Australian addresses. So GnafAPI can be used with batches of addresses, if configured.
