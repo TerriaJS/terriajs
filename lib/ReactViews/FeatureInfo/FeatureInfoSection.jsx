@@ -46,36 +46,20 @@ const FeatureInfoSection = React.createClass({
     },
 
     componentWillMount() {
-        const that = this;
-        const feature = this.props.feature;
-        // Do we need to dynamically update this feature info over time?
-        // There are two situations in which we would:
-        // 1. When the feature description or properties are time-varying.
-        // 2. When a custom component self-updates.
-        //    Eg. <chart poll-seconds="60" src="xyz.csv"> must reload data from xyz.csv every 60 seconds.
-        //
-        // For (1), use a event listener to update the feature's currentProperties/currentDescription directly.
-        // For (2), use a regular javascript setTimeout to update a counter in feature's currentProperties.
-        // For simplicity, we do not currently support both at once.
-        if (this.isFeatureTimeVarying()) {
-            this.setState({
-                clockSubscription: this.props.clock.onTick.addEventListener(function(clock) {
-                    setCurrentFeatureValues(feature, clock);
-                })
-            });
-        } else {
-            setTimeoutsForUpdatingCustomComponents(that);
+        setSubscriptionsAndTimeouts(this, this.props.feature);
+    },
+
+    componentWillReceiveProps(nextProps) {
+        // If the feature changed (without an unmount/mount),
+        // change the subscriptions that handle time-varying data.
+        if (nextProps.feature !== this.props.feature) {
+            removeSubscriptionsAndTimeouts(this);
+            setSubscriptionsAndTimeouts(this, nextProps.feature);
         }
     },
 
     componentWillUnmount() {
-        if (defined(this.state.clockSubscription)) {
-            // Remove the event listener.
-            this.state.clockSubscription();
-        }
-        this.state.timeoutIds.forEach(id => {
-            clearTimeout(id);
-        });
+        removeSubscriptionsAndTimeouts(this);
     },
 
     getPropertyValues() {
@@ -141,14 +125,13 @@ const FeatureInfoSection = React.createClass({
         return (feature && feature.name) || 'Site Data';
     },
 
-    isFeatureTimeVarying() {
+    isFeatureTimeVarying(feature) {
         // The feature is NOT time-varying if:
         // 1. There is no info (ie. no description and no properties).
         // 2. A template is provided and all feature.properties are constant.
         // OR
         // 3. No template is provided, and feature.description is either not defined, or defined and constant.
         // If info is time-varying, we need to keep updating the description.
-        const feature = this.props.feature;
         if (!defined(feature.description) && !defined(feature.properties)) {
             return false;
         }
@@ -210,6 +193,43 @@ const FeatureInfoSection = React.createClass({
         );
     }
 });
+
+/**
+ * Do we need to dynamically update this feature info over time?
+ * There are two situations in which we would:
+ * 1. When the feature description or properties are time-varying.
+ * 2. When a custom component self-updates.
+ *    Eg. <chart poll-seconds="60" src="xyz.csv"> must reload data from xyz.csv every 60 seconds.
+ *
+ * For (1), use a event listener to update the feature's currentProperties/currentDescription directly.
+ * For (2), use a regular javascript setTimeout to update a counter in feature's currentProperties.
+ * For simplicity, we do not currently support both at once.
+ * @private
+ */
+function setSubscriptionsAndTimeouts(featureInfoSection, feature) {
+    if (featureInfoSection.isFeatureTimeVarying(feature)) {
+        featureInfoSection.setState({
+            clockSubscription: featureInfoSection.props.clock.onTick.addEventListener(function(clock) {
+                setCurrentFeatureValues(feature, clock);
+            })
+        });
+    } else {
+        setTimeoutsForUpdatingCustomComponents(featureInfoSection);
+    }
+}
+
+/**
+ * Remove the clock subscription (event listener) and timeouts.
+ * @private
+ */
+function removeSubscriptionsAndTimeouts(featureInfoSection) {
+    if (defined(featureInfoSection.state.clockSubscription)) {
+        featureInfoSection.state.clockSubscription();
+    }
+    featureInfoSection.state.timeoutIds.forEach(id => {
+        clearTimeout(id);
+    });
+}
 
 /**
  * Gets a map of property labels to property values for a feature at the provided clock's time.
