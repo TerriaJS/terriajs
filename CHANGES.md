@@ -2,15 +2,10 @@
 Change Log
 ==========
 
-### 4.2.1
-
-* Enumeration parameter now defaults to what is shown in UI, and if parameter is optional, '' is default.
-
-### 4.1.3
-
-* Adds bulk geocoding capability for Australian addresses. So GnafAPI can be used with batches of addresses, if configured.
 ### 4.2.0
 
+* Enumeration parameter now defaults to what is shown in UI, and if parameter is optional, '' is default.
+* Adds bulk geocoding capability for Australian addresses. So GnafAPI can be used with batches of addresses, if configured.
 * Fixed a bug that caused the selection indicator to get small when near the right edge of the map and to overlap the side panel when past the left edge.
 * Map controls and menus now become translucent while the explorer window (Data Catalog) is visible.
 * Removed find-and-replace for cesium workers from the webpack build as it's done in terriajs-cesium now.
