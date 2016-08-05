@@ -288,7 +288,7 @@ describe('SdmxJsonCatalogItem', function() {
                 expect(item.tableStructure.columns[0].values.slice()).toEqual(['2001', '2001', '2001', '2001', '2001', '2001', '2001', '2001', '2001']);
                 expect(item.tableStructure.columns[1].values.slice()).toEqual(['1', '2', '3', '4', '5', '6', '7', '8', '9']);
                 // Expect it to have aggregated up the data across the STATE dimension.
-                expect(item.tableStructure.columns[2].values.slice()).toEqual([17658, 14042, 9739, 6572, 2970, 4940, 945, 7222, 13001]);
+                expect(item.tableStructure.columns[2].values.slice()).toEqual([17658, 14042, 9739, 6572, 2970, 4940, null, 1945, 13001]);
                 // Expect it not to show any concepts to the user.
                 expect(item.concepts.length).toEqual(0);
             }).otherwise(fail).then(done);
