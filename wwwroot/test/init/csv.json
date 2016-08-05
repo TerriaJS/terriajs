@@ -8,7 +8,11 @@
                 "name": "Moving features",
                 "type": "csv",
                 "url": "build/TerriaJS/test/csv/lat_lon_enum_date_id.csv",
-                "idColumns": ["id"]
+                "idColumns": ["id"],
+                "tableStyle": {
+                    "dataVariable": "value",
+                    "scaleByValue": true
+                }
             },
             {
                 "name": "Lat/lon CSV from init file",
