@@ -1,0 +1,14 @@
+lat,lon,enum,date,id
+-36,145,stationary,2015-08-05,feature_A
+-37,145,moving,2015-08-01,feature_B
+-37,145.4,moving,2015-08-05,feature_B
+-37,145.5,moving,2015-08-06,feature_B
+-37,145.1,moving,2015-08-02,feature_B
+-36.5,145.05,blip,2015-08-02,feature_C
+-37,145.2,moving,2015-08-03,feature_B
+-37,145.3,moving,2015-08-04,feature_B
+-36,145,stationary,2015-08-04,feature_A
+-36,145,stationary,2015-08-01,feature_A
+-36,145,stationary,2015-08-02,feature_A
+-36,145,stationary,2015-08-03,feature_A
+-36,145,stationary,2015-08-06,feature_A

@@ -5,6 +5,12 @@
         "isOpen": true,
         "items": [
             {
+                "name": "Moving features",
+                "type": "csv",
+                "url": "build/TerriaJS/test/csv/lat_lon_enum_date_id.csv",
+                "idColumns": ["id"]
+            },
+            {
                 "name": "Lat/lon CSV from init file",
                 "type": "csv",
                 "data": "longitude,latitude,value\n134.384,-26.716,5\n121.659,-33.592,10"
