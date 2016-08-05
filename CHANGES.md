@@ -22,6 +22,7 @@ Change Log
 * Added support for `tableStyle.colorBins` as array of values specifying the boundaries between the color bins in the legend, eg. `[3000, 3500, 3900, 4000]`. `colorBins` can still be an integer specifying the number of bins, in which case Terria determines the boundaries.
 * Made explorer panel not rendered at all when hidden and made the preview map destroy itself when unmounted - this mitigates performance issues from having Leaflet running in the background on very busy vector datasets.
 * Fixed a bug which prevented time-varying CZML feature info from updating.
+* Added support for moving-point csv files, via an `idColumns` array on csv catalog items.
 
 ### 4.1.2
 
