@@ -2,6 +2,13 @@
 Change Log
 ==========
 
+### 4.2.1
+
+* Enumeration parameter now defaults to what is shown in UI, and if parameter is optional, '' is default.
+
+### 4.1.3
+
+* Adds bulk geocoding capability for Australian addresses. So GnafAPI can be used with batches of addresses, if configured.
 ### 4.2.0
 
 * Fixed a bug that caused the selection indicator to get small when near the right edge of the map and to overlap the side panel when past the left edge.
@@ -9,9 +16,17 @@ Change Log
 * Removed find-and-replace for cesium workers from the webpack build as it's done in terriajs-cesium now.
 * Legend images that fail to load are now hidden entirely.
 * Improved the appearance of the opacity slider and added a percentage display.
+* Added support for ArcGis FeatureServers.
+* Breaking change: Catalog types `esri-group` or `esri-mapServer-group` were previously synonyms. Now `esri-group` must be used for REST services (eg. URLs ending in `gis/rest/services`), while `esri-mapServer-group` must be used for MapServers (eg. URLs ending in /MapServer).
+* AllowedValues for LiteralData WPS input now works even if only one value specified.
+* Fixed bug in WPS polygon datatype to return valid polygon geojson.
+* Fix regression: cursor changes in UserDrawing now functions in 2D as well as 3D.
 * Updated to [Cesium](http://cesiumjs.org) 1.23 (from 1.20).  See the [change log](https://github.com/AnalyticalGraphicsInc/cesium/blob/1.23/CHANGES.md) for details.
 * Fixed a bug which prevented feature info showing for Gpx-, Ogr-, WebFeatureService-, ArcGisFeatureServer-, and WebProcessingService- CatalogItems.
 * Added support for a wider range of SDMX-JSON data files, including the ability to sum over dimensions via `aggregatedDimensionIds`.
+* Added support for `tableStyle.colorBins` as array of values specifying the boundaries between the color bins in the legend, eg. `[3000, 3500, 3900, 4000]`. `colorBins` can still be an integer specifying the number of bins, in which case Terria determines the boundaries.
+* Made explorer panel not rendered at all when hidden and made the preview map destroy itself when unmounted - this mitigates performance issues from having Leaflet running in the background on very busy vector datasets.
+* Fixed a bug which prevented time-varying CZML feature info from updating.
 
 ### 4.1.2
 

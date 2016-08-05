@@ -1,0 +1,51 @@
+@import '../../Sass/common/mixins';
+@import '~terriajs-variables';
+
+.heading {
+  padding: $padding-small;
+  position: relative;
+  width: 100%;
+  text-align: left;
+  svg{
+    height: 20px;
+    width: 20px;
+    position: absolute;
+    right: $padding-small;
+    top: $padding-small;
+  }
+}
+
+.provider-result {
+  margin-top: $padding-small;
+  .items{
+    display: none;
+  }
+}
+
+// on mobile, we don't want the gap between search results
+.light{
+  background: #fff;
+  margin-top: 0;
+  svg{
+    fill: #000;
+  }
+}
+
+.dark{
+   svg{
+    fill: #ffffff;
+  }
+}
+
+.isOpen{
+  .items{
+    display: block;
+  }
+}
+
+.items {
+  composes: clearfix from '../../Sass/common/_base.scss';
+  composes: list-reset from '../../Sass/common/_base.scss';
+}
+
+
