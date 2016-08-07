@@ -5,10 +5,21 @@
         "isOpen": true,
         "items": [
             {
-                "name": "Moving features",
+                "name": "Moving features (sampled)",
                 "type": "csv",
                 "url": "build/TerriaJS/test/csv/lat_lon_enum_date_id.csv",
                 "idColumns": ["id"],
+                "tableStyle": {
+                    "dataVariable": "value",
+                    "scaleByValue": true
+                }
+            },
+            {
+                "name": "Moving features (not sampled)",
+                "type": "csv",
+                "url": "build/TerriaJS/test/csv/lat_lon_enum_date_id.csv",
+                "idColumns": ["id"],
+                "isSampled": false,
                 "tableStyle": {
                     "dataVariable": "value",
                     "scaleByValue": true
