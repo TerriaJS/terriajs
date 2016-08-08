@@ -213,13 +213,77 @@ describe('TableStructure', function() {
     });
 
     it('can get feature id mapping', function() {
-        var data = [['year', 'id', 'lat', 'lon'], [1970, 'A', 16.8, 5.2], [1971, 'B', 16.2, 5.2], [1971, 'A', 67.8, 1.2], [1972, 'B', 68.2, 2.2],];
+        var data = [['year', 'id', 'lat', 'lon'], [1970, 'A', 16.8, 5.2], [1971, 'B', 16.2, 5.2], [1971, 'A', 67.8, 1.2], [1972, 'B', 68.2, 2.2]];
         var options = {idColumnNames: ['id']};
         var tableStructure = new TableStructure('foo', options);
         tableStructure = tableStructure.loadFromJson(data);
         var map = tableStructure.getIdMapping();
         expect(map['A']).toEqual([0, 2]);
         expect(map['B']).toEqual([1, 3]);
+    });
+
+    it('can append a table', function() {
+        var data = [['year', 'id', 'lat', 'lon'], [1970, 'A', 16.8, 5.2], [1971, 'B', 16.2, 5.2]];
+        var dat2 = [['year', 'id', 'lat', 'lon'], [1980, 'C', 16.8, 5.2], [1981, 'D', 16.2, 5.2]];
+        var table1 = new TableStructure('foo');
+        var table2 = new TableStructure('bar');
+        table1 = table1.loadFromJson(data);
+        table2 = table2.loadFromJson(dat2);
+        table1.append(table2);
+        expect(table1.columns[0].values.slice()).toEqual([1970, 1971, 1980, 1981]);
+        expect(table1.columns[1].values.slice()).toEqual(['A', 'B', 'C', 'D']);
+    });
+
+    it('can append part of a table', function() {
+        var data = [['year', 'id', 'lat', 'lon'], [1970, 'A', 16.8, 5.2], [1971, 'B', 16.2, 5.2]];
+        var dat2 = [['year', 'id', 'lat', 'lon'], [1980, 'C', 16.8, 5.2], [1981, 'D', 16.2, 5.2], [1982, 'E', 16, 5], [1983, 'F', 15, 6]];
+        var table1 = new TableStructure('foo');
+        var table2 = new TableStructure('bar');
+        table1 = table1.loadFromJson(data);
+        table2 = table2.loadFromJson(dat2);
+        table1.append(table2, [1, 3]);
+        expect(table1.columns[0].values.slice()).toEqual([1970, 1971, 1981, 1983]);
+        expect(table1.columns[1].values.slice()).toEqual(['A', 'B', 'D', 'F']);
+    });
+
+    it('can replace rows', function() {
+        var data = [['year', 'id', 'lat', 'lon'], [1970, 'A', 16.8, 5.2], [1971, 'B', 16.2, 5.2]];
+        var dat2 = [['year', 'id', 'lat', 'lon'], [1980, 'C', 16.8, 5.2], [1981, 'D', 16.2, 5.2]];
+        var table1 = new TableStructure('foo');
+        var table2 = new TableStructure('bar');
+        table1 = table1.loadFromJson(data);
+        table2 = table2.loadFromJson(dat2);
+        table1.replaceRows(table2, {1: 0});
+        expect(table1.columns[0].values.slice()).toEqual([1970, 1980]);
+        expect(table1.columns[1].values.slice()).toEqual(['A', 'C']);
+    });
+
+    it('can merge tables with dates', function() {
+        var data = [['year', 'id', 'lat', 'lon'], [1970, 'A', 16.8, 5.2], [1971, 'B', 16.2, 5.2]];
+        var dat2 = [['year', 'id', 'lat', 'lon'], [1970, 'A', 12, 8], [1971, 'A', 13, 9], [1975, 'C', 15, 5.5]];
+        var options = {idColumnNames: ['id']};
+        var table1 = new TableStructure('foo', options);
+        var table2 = new TableStructure('bar');  // Only uses idColumnNames on table1.
+        table1 = table1.loadFromJson(data);
+        table2 = table2.loadFromJson(dat2);
+        table1.activeTimeColumn = table1.columns[0];
+        table1.merge(table2);
+        expect(table1.columns[0].values.slice()).toEqual([1970, 1971, 1971, 1975]);
+        expect(table1.columns[1].values.slice()).toEqual(['A', 'B', 'A', 'C']);
+        expect(table1.columns[2].values.slice()).toEqual([12, 16.2, 13, 15]);
+    });
+
+    it('can merge tables without dates', function() {
+        var data = [['id', 'lat', 'lon'], ['A', 16.8, 5.2], ['B', 16.2, 5.2]];
+        var dat2 = [['id', 'lat', 'lon'], ['A', 12, 8], ['C', 15, 5.5]];
+        var options = {idColumnNames: ['id']};
+        var table1 = new TableStructure('foo', options);
+        var table2 = new TableStructure('bar');  // Only uses idColumnNames on table1.
+        table1 = table1.loadFromJson(data);
+        table2 = table2.loadFromJson(dat2);
+        table1.merge(table2);
+        expect(table1.columns[0].values.slice()).toEqual(['A', 'B', 'C']);
+        expect(table1.columns[1].values.slice()).toEqual([12, 16.2, 15]);
     });
 
 });
