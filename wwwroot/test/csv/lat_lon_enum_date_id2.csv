@@ -1,0 +1,15 @@
+lat,lon,enum,date,id,value
+-36,135,moo,2015-08-01,feature A,-13
+-36,135,baa,2015-08-02,feature A,-5
+-36,135,moo,2015-08-04,feature A,-15
+-36,135,baa,2015-08-05,feature A,-7
+-36,135,moo,2015-08-06,feature A,-10
+-21,145,hovering,2015-08-01,feature B,-4
+-37,126,foo,2015-08-02,feature B,-15
+-23,105,going!,2015-08-03,feature B,-5
+-33,120,bar,2015-08-04,feature B,-14
+-20,100,hovering,2015-08-05,feature B,-6
+-37,110,going!,2015-08-06,feature B,-13
+-30,145.5,bonk,2015-08-02,feature C,-16
+-33,140,bonk,2015-08-01,feature Q,-16
+-36,142.5,moo,2015-08-05,feature Q,-4

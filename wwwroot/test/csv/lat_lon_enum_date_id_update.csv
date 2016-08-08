@@ -1,0 +1,6 @@
+lat,lon,enum,date,id,value
+-20,100,hovering,2015-08-05,feature B,13
+-37,110,going!,2015-08-06,feature B,6
+-30,145.5,bonk,2015-08-02,feature C,13
+-33,140,bonk,2015-08-01,feature E,4
+-36,142.5,moo,2015-08-05,feature E,16
