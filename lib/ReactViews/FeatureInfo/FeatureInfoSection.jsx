@@ -80,6 +80,10 @@ const FeatureInfoSection = React.createClass({
                     longitude: CesiumMath.toDegrees(latLngInRadians.longitude)
                 };
             }
+            if (defined(propertyData._terria_rowNumbers) && defined(this.props.catalogItem)) {
+                const table = this.props.catalogItem.tableStructure;
+                propertyData.terria.timeSeriesData = table && table.toCsvString(undefined, propertyData._terria_rowNumbers);
+            }
         }
         return propertyData;
     },
@@ -172,6 +176,9 @@ const FeatureInfoSection = React.createClass({
                             <When condition={reactInfo.showRawData || !this.hasTemplate()}>
                                 <If condition={reactInfo.hasRawData}>
                                     {reactInfo.rawData}
+                                    <If condition={reactInfo.timeSeriesChart}>
+                                        {reactInfo.timeSeriesChart}
+                                    </If>
                                 </If>
                                 <If condition={!reactInfo.hasRawData}>
                                     <div ref="no-info" key="no-info">No information available.</div>
@@ -408,12 +415,23 @@ function describeFromProperties(properties, time) {
  *                  rawData is the same for the raw data, if it needs to be shown.
  *                  showRawData is whether to show the rawData.
  *                  hasRawData is whether there is any rawData to show.
+ *                  timeSeriesData - if the feature has timeseries data that could be shown in chart, this is it.
  */
 function getInfoAsReactComponent(that) {
     const templateData = that.getPropertyValues();
     const updateCounters = that.props.feature.updateCounters;
+    let timeSeriesChart;
+    if (defined(templateData._terria_rowNumbers) && defined(that.props.catalogItem)) {
+        const table = that.props.catalogItem.tableStructure;
+        const timeSeriesData = table && table.toCsvString(undefined, templateData._terria_rowNumbers);
+        if (timeSeriesData) {
+            timeSeriesChart = timeSeriesData; // TODO: replace with a chart.
+        }
+    }
+
     if (defined(templateData)) {
         delete templateData._terria_columnAliases;
+        delete templateData._terria_rowNumbers;
     }
     const context = {
         catalogItem: that.props.catalogItem,
@@ -434,7 +452,8 @@ function getInfoAsReactComponent(that) {
         info: that.hasTemplate() ? parseCustomMarkdownToReact(that.descriptionFromTemplate(), context) : rawData,
         rawData: rawData,
         showRawData: showRawData,
-        hasRawData: !!rawDataHtml
+        hasRawData: !!rawDataHtml,
+        timeSeriesChart: timeSeriesChart
     };
 }
 
