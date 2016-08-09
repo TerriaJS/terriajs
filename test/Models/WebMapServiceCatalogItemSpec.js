@@ -381,6 +381,9 @@ describe('WebMapServiceCatalogItem', function() {
             layers: '13_intervals'
         });
         wmsItem.load().then(function() {
+            // interval is now lazy loaded. '_load' gets called only prior to
+            // use of the WMS data.
+            wmsItem._load();
             expect(wmsItem.intervals.length).toEqual(13);
             done();
         }).otherwise(function() {
@@ -399,6 +402,9 @@ describe('WebMapServiceCatalogItem', function() {
             layers: 'single_period'
         });
         wmsItem.load().then(function() {
+            // interval is now lazy loaded. '_load' gets called only prior to
+            // use of the WMS data.
+            wmsItem._load();
             expect(wmsItem.intervals.length).toEqual(1);
             done();
         }).otherwise(function(e) {
@@ -417,6 +423,9 @@ describe('WebMapServiceCatalogItem', function() {
             layers: 'single_period'
         });
         wmsItem.load().then(function() {
+            // interval is now lazy loaded. '_load' gets called only prior to
+            // use of the WMS data.
+            wmsItem._load();
             expect(wmsItem.intervals.length).toEqual(11);
             done();
         }).otherwise(function(e) {
@@ -438,7 +447,14 @@ describe('WebMapServiceCatalogItem', function() {
             remover();
             done();
         });
-        wmsItem.load();
+        wmsItem.load().then(function() {
+          // interval is now lazy loaded. '_load' gets called only prior to
+          // use of the WMS data.
+          wmsItem._load();
+        }).otherwise(function(e) {
+            fail(e);
+            done();
+        });
     });
 
     it('discards invalid layer names as long as at least one layer name is valid', function(done) {
@@ -491,3 +507,4 @@ describe('WebMapServiceCatalogItem', function() {
         });
     });
 });
+
