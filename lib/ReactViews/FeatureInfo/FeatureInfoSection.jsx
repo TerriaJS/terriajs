@@ -9,13 +9,14 @@ import defined from 'terriajs-cesium/Source/Core/defined';
 import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
 import isArray from 'terriajs-cesium/Source/Core/isArray';
 
+import CustomComponents from '../Custom/CustomComponents';
 import FeatureInfoDownload from './FeatureInfoDownload';
 import formatNumberForLocale from '../../Core/formatNumberForLocale';
+import Icon from '../Icon.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
 import propertyGetTimeValues from '../../Core/propertyGetTimeValues';
-import CustomComponents from '../Custom/CustomComponents';
 import parseCustomMarkdownToReact from '../Custom/parseCustomMarkdownToReact';
-import Icon from "../Icon.jsx";
+import VarType from '../../Map/VarType';
 
 import Styles from './feature-info-section.scss';
 
@@ -177,7 +178,9 @@ const FeatureInfoSection = React.createClass({
                                 <If condition={reactInfo.hasRawData}>
                                     {reactInfo.rawData}
                                     <If condition={reactInfo.timeSeriesChart}>
-                                        {reactInfo.timeSeriesChart}
+                                        <div className="time-series-chart">
+                                            {reactInfo.timeSeriesChart}
+                                        </div>
                                     </If>
                                 </If>
                                 <If condition={!reactInfo.hasRawData}>
@@ -420,12 +423,27 @@ function describeFromProperties(properties, time) {
 function getInfoAsReactComponent(that) {
     const templateData = that.getPropertyValues();
     const updateCounters = that.props.feature.updateCounters;
+
+    const context = {
+        catalogItem: that.props.catalogItem,
+        feature: that.props.feature,
+        updateCounters: updateCounters
+    };
+
     let timeSeriesChart;
-    if (defined(templateData._terria_rowNumbers) && defined(that.props.catalogItem)) {
+    if (defined(templateData._terria_rowNumbers) && defined(that.props.catalogItem) && CustomComponents.isRegistered('chart')) {
         const table = that.props.catalogItem.tableStructure;
         const timeSeriesData = table && table.toCsvString(undefined, templateData._terria_rowNumbers);
         if (timeSeriesData) {
-            timeSeriesChart = timeSeriesData; // TODO: replace with a chart.
+            // Only show it as a line chart if the data is sampled (so a line chart makes sense), and the active column is a scalar.
+            const yColumn = table.getActiveColumns()[0];
+            if (that.props.catalogItem.isSampled && yColumn.type === VarType.SCALAR) {
+                const xAttribute = 'x-column="' + table.activeTimeColumn.name + '" ';
+                const yAttribute = 'y-column="' + yColumn.name + '" ';
+                const idAttribute = 'id="' + that.props.feature.id + '" ';
+                const chartTemplate = '<chart ' + xAttribute + yAttribute + idAttribute + '>' + timeSeriesData.replace(/\\n/g, '\\n') + '</chart>';
+                timeSeriesChart = parseCustomMarkdownToReact(chartTemplate, context);
+            }
         }
     }
 
@@ -433,11 +451,6 @@ function getInfoAsReactComponent(that) {
         delete templateData._terria_columnAliases;
         delete templateData._terria_rowNumbers;
     }
-    const context = {
-        catalogItem: that.props.catalogItem,
-        feature: that.props.feature,
-        updateCounters: updateCounters
-    };
     const showRawData = !that.hasTemplate() || that.state.showRawData;
     let rawDataHtml;
     let rawData;
