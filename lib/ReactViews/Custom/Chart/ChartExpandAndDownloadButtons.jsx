@@ -200,6 +200,7 @@ function expand(props, sourceIndex) {
                     column.isActive = activeConcepts[columnNumber];
                 });
             }
+            newCatalogItem.setChartable();
         } catch(e) {
             // This does not actually make it to the user.
             return raiseErrorToUser(terria, e);
