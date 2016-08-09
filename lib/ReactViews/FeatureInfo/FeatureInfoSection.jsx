@@ -420,12 +420,18 @@ function describeFromProperties(properties, time) {
 function getInfoAsReactComponent(that) {
     const templateData = that.getPropertyValues();
     const updateCounters = that.props.feature.updateCounters;
+    const context = {
+        catalogItem: that.props.catalogItem,
+        feature: that.props.feature,
+        updateCounters: updateCounters
+    };
     let timeSeriesChart;
-    if (defined(templateData._terria_rowNumbers) && defined(that.props.catalogItem)) {
+    if (defined(templateData._terria_rowNumbers) && defined(that.props.catalogItem) && CustomComponents.isRegistered('chart')) {
         const table = that.props.catalogItem.tableStructure;
         const timeSeriesData = table && table.toCsvString(undefined, templateData._terria_rowNumbers);
         if (timeSeriesData) {
-            timeSeriesChart = timeSeriesData; // TODO: replace with a chart.
+            const chartTemplate = '<chart data="' + timeSeriesData + '"></chart>';
+            timeSeriesChart = parseCustomMarkdownToReact(chartTemplate, context);
         }
     }
 
@@ -433,11 +439,6 @@ function getInfoAsReactComponent(that) {
         delete templateData._terria_columnAliases;
         delete templateData._terria_rowNumbers;
     }
-    const context = {
-        catalogItem: that.props.catalogItem,
-        feature: that.props.feature,
-        updateCounters: updateCounters
-    };
     const showRawData = !that.hasTemplate() || that.state.showRawData;
     let rawDataHtml;
     let rawData;
