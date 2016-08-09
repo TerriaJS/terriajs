@@ -2,10 +2,9 @@
 Change Log
 ==========
 
-### 5.0.0
+### 4.2.0
 
-* Breaking change: Catalog types `esri-group` or `esri-mapServer-group` were previously synonyms. Now `esri-group` must be used for REST services (eg. URLs ending in `gis/rest/services`), while `esri-mapServer-group` must be used for MapServers (eg. URLs ending in /MapServer).
-* Added support for ArcGis FeatureServers.
+* Added support for ArcGis FeatureServers, using the new catalog types `esri-featureServer` and `esri-featureServer-group`. For backwards compatability, catalog types `esri-group` and `esri-mapServer-group` both continue to work for either REST service endpoints (eg. URLs ending in `gis/rest/services`) or MapServer endpoints (eg. URLs ending in /MapServer). However, the intention is that `esri-group` be for REST services and `esri-mapServer-group` be for MapServers.
 * Enumeration parameter now defaults to what is shown in UI, and if parameter is optional, '' is default.
 * Adds bulk geocoding capability for Australian addresses. So GnafAPI can be used with batches of addresses, if configured.
 * Fixed a bug that caused the selection indicator to get small when near the right edge of the map and to overlap the side panel when past the left edge.
