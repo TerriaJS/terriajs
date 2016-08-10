@@ -201,7 +201,7 @@ function expand(props, sourceIndex) {
                 });
             }
             newCatalogItem.setChartable();
-            // Because we set the active items beforehand, getNextColor won't be triggered. So set colors manually.
+            // If we set the active columns already, getNextColor won't be triggered. So set any missing colors manually.
             tableStructure.columns.filter(column => column.isActive && !defined(column.color)).forEach((column) => {
                 column.color = tableStructure.getColorCallback();
             });
