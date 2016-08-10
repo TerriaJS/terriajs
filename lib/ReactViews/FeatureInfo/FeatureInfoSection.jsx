@@ -411,6 +411,36 @@ function describeFromProperties(properties, time) {
 }
 
 /**
+ * Get parameters that should be exposed to the template, to help show a timeseries chart of the feature data.
+ * @private
+ */
+function getTimeSeriesChartInfo(catalogItem, feature, rowNumbers) {
+    if (defined(rowNumbers) && defined(catalogItem) && CustomComponents.isRegistered('chart')) {
+        const table = catalogItem.tableStructure;
+        const timeSeriesData = table && table.toCsvString(undefined, rowNumbers);
+        if (timeSeriesData) {
+            // Only show it as a line chart if the data is sampled (so a line chart makes sense), and the active column is a scalar.
+            const yColumn = table.getActiveColumns()[0];
+            if (catalogItem.isSampled && yColumn.type === VarType.SCALAR) {
+                const result = {
+                    xName: table.activeTimeColumn.name,
+                    yName: yColumn.name,
+                    id: feature.id,
+                    data: timeSeriesData.replace(/\\n/g, '\\n')
+                };
+                const xAttribute = 'x-column="' + result.xName + '" ';
+                const yAttribute = 'y-column="' + result.yName + '" ';
+                const idAttribute = 'id="' + result.id + '" ';
+                result.chart = '<chart ' + xAttribute + yAttribute + idAttribute + '>' + result.data + '</chart>';
+                return result;
+            }
+        }
+    }
+}
+
+/**
+ * Wrangle the provided feature data into more convenient forms.
+ * @private
  * @param  {ReactClass} that The FeatureInfoSection.
  * @return {Object} Returns {templateData, info, rawData, showRawData, hasRawData}.
  *                  templateData is the object passed to the templating engine.
@@ -430,21 +460,10 @@ function getInfoAsReactComponent(that) {
         updateCounters: updateCounters
     };
 
+    const timeSeriesChartInfo = getTimeSeriesChartInfo(that.props.catalogItem, that.props.feature, templateData._terria_rowNumbers);
     let timeSeriesChart;
-    if (defined(templateData._terria_rowNumbers) && defined(that.props.catalogItem) && CustomComponents.isRegistered('chart')) {
-        const table = that.props.catalogItem.tableStructure;
-        const timeSeriesData = table && table.toCsvString(undefined, templateData._terria_rowNumbers);
-        if (timeSeriesData) {
-            // Only show it as a line chart if the data is sampled (so a line chart makes sense), and the active column is a scalar.
-            const yColumn = table.getActiveColumns()[0];
-            if (that.props.catalogItem.isSampled && yColumn.type === VarType.SCALAR) {
-                const xAttribute = 'x-column="' + table.activeTimeColumn.name + '" ';
-                const yAttribute = 'y-column="' + yColumn.name + '" ';
-                const idAttribute = 'id="' + that.props.feature.id + '" ';
-                const chartTemplate = '<chart ' + xAttribute + yAttribute + idAttribute + '>' + timeSeriesData.replace(/\\n/g, '\\n') + '</chart>';
-                timeSeriesChart = parseCustomMarkdownToReact(chartTemplate, context);
-            }
-        }
+    if (defined(timeSeriesChartInfo)) {
+        timeSeriesChart = parseCustomMarkdownToReact(timeSeriesChartInfo.chart, context);
     }
 
     if (defined(templateData)) {
