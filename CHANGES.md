@@ -2,8 +2,10 @@
 Change Log
 ==========
 
-### 4.2.0
+### 5.0.0
 
+* Breaking change: Catalog types `esri-group` or `esri-mapServer-group` were previously synonyms. Now `esri-group` must be used for REST services (eg. URLs ending in `gis/rest/services`), while `esri-mapServer-group` must be used for MapServers (eg. URLs ending in /MapServer).
+* Added support for ArcGis FeatureServers.
 * Enumeration parameter now defaults to what is shown in UI, and if parameter is optional, '' is default.
 * Adds bulk geocoding capability for Australian addresses. So GnafAPI can be used with batches of addresses, if configured.
 * Fixed a bug that caused the selection indicator to get small when near the right edge of the map and to overlap the side panel when past the left edge.
@@ -11,8 +13,6 @@ Change Log
 * Removed find-and-replace for cesium workers from the webpack build as it's done in terriajs-cesium now.
 * Legend images that fail to load are now hidden entirely.
 * Improved the appearance of the opacity slider and added a percentage display.
-* Added support for ArcGis FeatureServers.
-* Breaking change: Catalog types `esri-group` or `esri-mapServer-group` were previously synonyms. Now `esri-group` must be used for REST services (eg. URLs ending in `gis/rest/services`), while `esri-mapServer-group` must be used for MapServers (eg. URLs ending in /MapServer).
 * AllowedValues for LiteralData WPS input now works even if only one value specified.
 * Fixed bug in WPS polygon datatype to return valid polygon geojson.
 * Fix regression: cursor changes in UserDrawing now functions in 2D as well as 3D.
