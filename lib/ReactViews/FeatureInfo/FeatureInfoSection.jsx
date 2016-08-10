@@ -9,13 +9,14 @@ import defined from 'terriajs-cesium/Source/Core/defined';
 import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
 import isArray from 'terriajs-cesium/Source/Core/isArray';
 
+import CustomComponents from '../Custom/CustomComponents';
 import FeatureInfoDownload from './FeatureInfoDownload';
 import formatNumberForLocale from '../../Core/formatNumberForLocale';
+import Icon from '../Icon.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
 import propertyGetTimeValues from '../../Core/propertyGetTimeValues';
-import CustomComponents from '../Custom/CustomComponents';
 import parseCustomMarkdownToReact from '../Custom/parseCustomMarkdownToReact';
-import Icon from "../Icon.jsx";
+import VarType from '../../Map/VarType';
 
 import Styles from './feature-info-section.scss';
 
@@ -80,6 +81,7 @@ const FeatureInfoSection = React.createClass({
                     longitude: CesiumMath.toDegrees(latLngInRadians.longitude)
                 };
             }
+            propertyData.terria.timeSeries = getTimeSeriesChartContext(this.props.catalogItem, this.props.feature, propertyData._terria_rowNumbers);
         }
         return propertyData;
     },
@@ -172,6 +174,11 @@ const FeatureInfoSection = React.createClass({
                             <When condition={reactInfo.showRawData || !this.hasTemplate()}>
                                 <If condition={reactInfo.hasRawData}>
                                     {reactInfo.rawData}
+                                    <If condition={reactInfo.timeSeriesChart}>
+                                        <div className={Styles.timeSeriesChart}>
+                                            {reactInfo.timeSeriesChart}
+                                        </div>
+                                    </If>
                                 </If>
                                 <If condition={!reactInfo.hasRawData}>
                                     <div ref="no-info" key="no-info">No information available.</div>
@@ -401,6 +408,36 @@ function describeFromProperties(properties, time) {
 }
 
 /**
+ * Get parameters that should be exposed to the template, to help show a timeseries chart of the feature data.
+ * @private
+ */
+function getTimeSeriesChartContext(catalogItem, feature, rowNumbers) {
+    if (defined(rowNumbers) && defined(catalogItem) && CustomComponents.isRegistered('chart')) {
+        const table = catalogItem.tableStructure;
+        const timeSeriesData = table && table.toCsvString(undefined, rowNumbers);
+        if (timeSeriesData) {
+            // Only show it as a line chart if the data is sampled (so a line chart makes sense), and the active column is a scalar.
+            const yColumn = table.getActiveColumns()[0];
+            if (catalogItem.isSampled && yColumn.type === VarType.SCALAR) {
+                const result = {
+                    xName: table.activeTimeColumn.name,
+                    yName: yColumn.name,
+                    id: feature.id,
+                    data: timeSeriesData.replace(/\\n/g, '\\n')
+                };
+                const xAttribute = 'x-column="' + result.xName + '" ';
+                const yAttribute = 'y-column="' + result.yName + '" ';
+                const idAttribute = 'id="' + result.id + '" ';
+                result.chart = '<chart ' + xAttribute + yAttribute + idAttribute + '>' + result.data + '</chart>';
+                return result;
+            }
+        }
+    }
+}
+
+/**
+ * Wrangle the provided feature data into more convenient forms.
+ * @private
  * @param  {ReactClass} that The FeatureInfoSection.
  * @return {Object} Returns {templateData, info, rawData, showRawData, hasRawData}.
  *                  templateData is the object passed to the templating engine.
@@ -408,18 +445,26 @@ function describeFromProperties(properties, time) {
  *                  rawData is the same for the raw data, if it needs to be shown.
  *                  showRawData is whether to show the rawData.
  *                  hasRawData is whether there is any rawData to show.
+ *                  timeSeriesData - if the feature has timeseries data that could be shown in chart, this is it.
  */
 function getInfoAsReactComponent(that) {
     const templateData = that.getPropertyValues();
     const updateCounters = that.props.feature.updateCounters;
-    if (defined(templateData)) {
-        delete templateData._terria_columnAliases;
-    }
     const context = {
         catalogItem: that.props.catalogItem,
         feature: that.props.feature,
         updateCounters: updateCounters
     };
+    let timeSeriesChart;
+
+    if (defined(templateData)) {
+        const timeSeriesChartContext = getTimeSeriesChartContext(that.props.catalogItem, that.props.feature, templateData._terria_rowNumbers);
+        if (defined(timeSeriesChartContext)) {
+            timeSeriesChart = parseCustomMarkdownToReact(timeSeriesChartContext.chart, context);
+        }
+        delete templateData._terria_columnAliases;
+        delete templateData._terria_rowNumbers;
+    }
     const showRawData = !that.hasTemplate() || that.state.showRawData;
     let rawDataHtml;
     let rawData;
@@ -434,7 +479,8 @@ function getInfoAsReactComponent(that) {
         info: that.hasTemplate() ? parseCustomMarkdownToReact(that.descriptionFromTemplate(), context) : rawData,
         rawData: rawData,
         showRawData: showRawData,
-        hasRawData: !!rawDataHtml
+        hasRawData: !!rawDataHtml,
+        timeSeriesChart: timeSeriesChart
     };
 }
 
