@@ -450,20 +450,18 @@ function getTimeSeriesChartContext(catalogItem, feature, rowNumbers) {
 function getInfoAsReactComponent(that) {
     const templateData = that.getPropertyValues();
     const updateCounters = that.props.feature.updateCounters;
-
     const context = {
         catalogItem: that.props.catalogItem,
         feature: that.props.feature,
         updateCounters: updateCounters
     };
-
-    const timeSeriesChartContext = getTimeSeriesChartContext(that.props.catalogItem, that.props.feature, templateData._terria_rowNumbers);
     let timeSeriesChart;
-    if (defined(timeSeriesChartContext)) {
-        timeSeriesChart = parseCustomMarkdownToReact(timeSeriesChartContext.chart, context);
-    }
 
     if (defined(templateData)) {
+        const timeSeriesChartContext = getTimeSeriesChartContext(that.props.catalogItem, that.props.feature, templateData._terria_rowNumbers);
+        if (defined(timeSeriesChartContext)) {
+            timeSeriesChart = parseCustomMarkdownToReact(timeSeriesChartContext.chart, context);
+        }
         delete templateData._terria_columnAliases;
         delete templateData._terria_rowNumbers;
     }
