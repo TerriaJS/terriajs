@@ -24,6 +24,7 @@ Change Log
 * Fixed a bug which prevented time-varying CZML feature info from updating.
 * Added support for moving-point csv files, via an `idColumns` array on csv catalog items. By default, feature positions, color and size are interpolated between the known time values; set `isSampled` to false to prevent this. (Color and size are never interpolated when they are drawn from a text column.)
 * Added support for polling csv files with a partial update, and by using `idColumns` to identify features across updates.
+* Added a time series chart to the Feature Info Panel for sampled, moving features.
 
 ### 4.1.2
 
