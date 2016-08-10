@@ -81,10 +81,7 @@ const FeatureInfoSection = React.createClass({
                     longitude: CesiumMath.toDegrees(latLngInRadians.longitude)
                 };
             }
-            if (defined(propertyData._terria_rowNumbers) && defined(this.props.catalogItem)) {
-                const table = this.props.catalogItem.tableStructure;
-                propertyData.terria.timeSeriesData = table && table.toCsvString(undefined, propertyData._terria_rowNumbers);
-            }
+            propertyData.terria.timeSeries = getTimeSeriesChartContext(this.props.catalogItem, this.props.feature, propertyData._terria_rowNumbers);
         }
         return propertyData;
     },
@@ -414,7 +411,7 @@ function describeFromProperties(properties, time) {
  * Get parameters that should be exposed to the template, to help show a timeseries chart of the feature data.
  * @private
  */
-function getTimeSeriesChartInfo(catalogItem, feature, rowNumbers) {
+function getTimeSeriesChartContext(catalogItem, feature, rowNumbers) {
     if (defined(rowNumbers) && defined(catalogItem) && CustomComponents.isRegistered('chart')) {
         const table = catalogItem.tableStructure;
         const timeSeriesData = table && table.toCsvString(undefined, rowNumbers);
@@ -460,10 +457,10 @@ function getInfoAsReactComponent(that) {
         updateCounters: updateCounters
     };
 
-    const timeSeriesChartInfo = getTimeSeriesChartInfo(that.props.catalogItem, that.props.feature, templateData._terria_rowNumbers);
+    const timeSeriesChartContext = getTimeSeriesChartContext(that.props.catalogItem, that.props.feature, templateData._terria_rowNumbers);
     let timeSeriesChart;
-    if (defined(timeSeriesChartInfo)) {
-        timeSeriesChart = parseCustomMarkdownToReact(timeSeriesChartInfo.chart, context);
+    if (defined(timeSeriesChartContext)) {
+        timeSeriesChart = parseCustomMarkdownToReact(timeSeriesChartContext.chart, context);
     }
 
     if (defined(templateData)) {

@@ -15,6 +15,28 @@
                 }
             },
             {
+                "name": "Moving features (sampled, with info template)",
+                "type": "csv",
+                "url": "build/TerriaJS/test/csv/lat_lon_enum_date_id.csv",
+                "idColumns": ["id"],
+                "tableStyle": {
+                    "dataVariable": "value",
+                    "scaleByValue": true
+                },
+                "featureInfoTemplate": "<p>Name: {{id}}</p><h2>Time series</h2><p>{{terria.timeSeries.chart}}</p>"
+            },
+            {
+                "name": "Moving features (sampled, with manual info template)",
+                "type": "csv",
+                "url": "build/TerriaJS/test/csv/lat_lon_enum_date_id.csv",
+                "idColumns": ["id"],
+                "tableStyle": {
+                    "dataVariable": "value",
+                    "scaleByValue": true
+                },
+                "featureInfoTemplate": "<p>Name: {{id}}</p><h2>Time series</h2><p><chart x-column='{{terria.timeSeries.xName}}' y-column='{{terria.timeSeries.yName}}' id='{{terria.timeSeries.id}}'>{{terria.timeSeries.data}}</chart></p>"
+            },
+            {
                 "name": "Moving features (not sampled)",
                 "type": "csv",
                 "url": "build/TerriaJS/test/csv/lat_lon_enum_date_id.csv",
