@@ -175,7 +175,7 @@ const FeatureInfoSection = React.createClass({
                                 <If condition={reactInfo.hasRawData}>
                                     {reactInfo.rawData}
                                     <If condition={reactInfo.timeSeriesChart}>
-                                        <div className="time-series-chart">
+                                        <div className={Styles.timeSeriesChart}>
                                             {reactInfo.timeSeriesChart}
                                         </div>
                                     </If>
