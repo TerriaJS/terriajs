@@ -29,6 +29,12 @@ module.exports = function(hot, dev) {
             stats: 'minimal',
             port: 3002,
             contentBase: 'wwwroot/'
+        },
+        externals: {
+            'cheerio': 'window',
+            'react/addons': true,
+            'react/lib/ExecutionEnvironment': true,
+            'react/lib/ReactContext': true
         }
     };
 
