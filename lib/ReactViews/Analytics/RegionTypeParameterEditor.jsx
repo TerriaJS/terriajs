@@ -51,10 +51,10 @@ const RegionTypeParameterEditor = React.createClass({
     },
 
     render() {
-        if (!defined(this.props.previewed.parameterValues[this.props.parameter.id])) {
-            this.props.previewed.setParameterValue(this.props.parameter.id, this.getDefaultValue());
+        let rawValue = this.props.previewed.parameterValues[this.props.parameter.id];
+        if (!defined(rawValue)) {
+            rawValue = this.getDefaultValue();
         }
-        const rawValue = this.props.previewed.parameterValues[this.props.parameter.id];
         return <select className={Styles.field}
                        onChange={this.onChange}
                        value={defined(rawValue) ? rawValue.regionType : ''}>
