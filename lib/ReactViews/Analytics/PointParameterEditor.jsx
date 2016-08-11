@@ -17,13 +17,12 @@ const PointParameterEditor = React.createClass({
     propTypes: {
         previewed: React.PropTypes.object,
         parameter: React.PropTypes.object,
-        viewState: React.PropTypes.object,
-        parameterValues: React.PropTypes.object
+        viewState: React.PropTypes.object
     },
 
     getInitialState() {
         return {
-            value: ''
+            value: this.getValue()
         };
     },
 
@@ -35,7 +34,7 @@ const PointParameterEditor = React.createClass({
     },
 
     getValue() {
-        const cartographic = this.props.parameterValues[this.props.parameter.id];
+        const cartographic = this.props.previewed.parameterValues[this.props.parameter.id];
         if (defined(cartographic)) {
             return CesiumMath.toDegrees(cartographic.longitude) + ',' + CesiumMath.toDegrees(cartographic.latitude);
         } else {
@@ -46,7 +45,8 @@ const PointParameterEditor = React.createClass({
     setValue(value) {
         const coordinates = value.split(',');
         if (coordinates.length >= 2) {
-            this.props.parameterValues[this.props.parameter.id] = Cartographic.fromDegrees(parseFloat(coordinates[0]), parseFloat(coordinates[1]));
+            const value = Cartographic.fromDegrees(parseFloat(coordinates[0]), parseFloat(coordinates[1]));
+            this.props.previewed.setParameterValue(this.props.parameter.id, value);
         }
     },
 
@@ -65,14 +65,12 @@ const PointParameterEditor = React.createClass({
         });
         terria.mapInteractionModeStack.push(pickPointMode);
 
-        knockout.getObservable(pickPointMode, 'pickedFeatures').subscribe(function (pickedFeatures) {
+        knockout.getObservable(pickPointMode, 'pickedFeatures').subscribe(function(pickedFeatures) {
             if (defined(pickedFeatures.pickPosition)) {
-                that.props.parameterValues[that.props.parameter.id] = Ellipsoid.WGS84.cartesianToCartographic(pickedFeatures.pickPosition);
+                const value = Ellipsoid.WGS84.cartesianToCartographic(pickedFeatures.pickPosition);
+                that.props.previewed.setParameterValue(that.props.parameter.id, value);
                 terria.mapInteractionModeStack.pop();
                 that.props.viewState.openAddData();
-                that.setState({
-                    value: that.getValue()
-                });
             }
         });
 
@@ -86,7 +84,7 @@ const PointParameterEditor = React.createClass({
                        type="text"
                        onChange={this.onTextChange}
                        value={this.state.value}/>
-                <button type='button' onClick={this.selectPointOnMap} className={Styles.btnSelector}>
+                <button type="button" onClick={this.selectPointOnMap} className={Styles.btnSelector}>
                     Select location
                 </button>
             </div>

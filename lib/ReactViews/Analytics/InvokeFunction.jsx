@@ -1,5 +1,4 @@
 import React from 'react';
-import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 import ObserveModelMixin from '../ObserveModelMixin';
 import ParameterEditor from './ParameterEditor';
 import when from 'terriajs-cesium/Source/ThirdParty/when';
@@ -18,8 +17,6 @@ const InvokeFunction = React.createClass({
     },
 
     componentWillMount() {
-        this._parameterValues = {};
-        this.defaultPropsIfNeeded(this.props);
         this.enableContextItem(this.props);
     },
 
@@ -29,21 +26,13 @@ const InvokeFunction = React.createClass({
 
     componentWillReceiveProps(nextProps) {
         // This will be called when component is already mounted but props change, for example if you go from one WPS
-        // item to another. In that instance, we'll need to clear parameter values.
-        this._parameterValues = {};
-        this.defaultPropsIfNeeded(nextProps);
+        // item to another.
         this.enableContextItem(nextProps);
-    },
-
-    componentWillUpdate(nextProps, nextState) {
-        // This is needed as componentWillReceiveProps may be called before it has parameters. But if parameters have
-        // already been set (defaulted or set by user) nothing will change.
-        this.defaultPropsIfNeeded(nextProps);
     },
 
     submit() {
         try {
-            const promise = when(this.props.previewed.invoke(this._parameterValues))
+            const promise = when(this.props.previewed.invoke())
                 .otherwise(terriaError => {
                     if (terriaError instanceof TerriaError) {
                         this.props.previewed.terria.error.raiseEvent(terriaError);
@@ -63,17 +52,6 @@ const InvokeFunction = React.createClass({
             }
             return undefined;
         }
-    },
-
-    defaultPropsIfNeeded(props) {
-        const parameters = props.previewed.parameters;
-        for (let i = 0; i < parameters.length; ++i) {
-            const parameter = parameters[i];
-            if (!(parameter.id in this._parameterValues)) {
-                this._parameterValues[parameter.id] = parameter.defaultValue;
-            }
-        }
-        knockout.track(this._parameterValues);
     },
 
     enableContextItem(props) {
@@ -100,7 +78,6 @@ const InvokeFunction = React.createClass({
                          parameter={param}
                          viewState={this.props.viewState}
                          previewed={this.props.previewed}
-                         parameterValues={this._parameterValues}
         />
     );},
 

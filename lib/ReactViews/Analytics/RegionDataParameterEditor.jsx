@@ -14,8 +14,7 @@ const RegionDataParameterEditor = React.createClass({
 
     propTypes: {
         previewed: React.PropTypes.object,
-        parameter: React.PropTypes.object,
-        parameterValues: React.PropTypes.object
+        parameter: React.PropTypes.object
     },
 
     componentWillMount() {
@@ -27,19 +26,19 @@ const RegionDataParameterEditor = React.createClass({
     },
 
     getValue() {
-        return this.props.parameterValues[this.props.parameter.id];
+        return this.props.previewed.parameterValues[this.props.parameter.id];
     },
 
     setValue(value) {
-        this.props.parameterValues[this.props.parameter.id] = value;
+        this.props.previewed.setParameterValue(this.props.parameter.id, value);
     },
 
     regionProvider() {
-        return this.props.parameter.getRegionProvider(this.props.parameterValues);
+        return this.props.parameter.getRegionProvider(this.props.previewed.parameterValues);
     },
 
     catalogItemsWithMatchingRegion() {
-        return this.props.parameter.getEnabledItemsWithMatchingRegionType(this.props.parameterValues);
+        return this.props.parameter.getEnabledItemsWithMatchingRegionType(this.props.previewed.parameterValues);
     },
 
     toggleActive(catalogItem, column) {
