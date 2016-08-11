@@ -7,24 +7,23 @@ const EnumerationParameterEditor = React.createClass({
     mixins: [ObserveModelMixin],
     propTypes: {
         previewed: React.PropTypes.object,
-        parameter: React.PropTypes.object,
-        parameterValues: React.PropTypes.object
+        parameter: React.PropTypes.object
     },
 
     getInitialState() {
         return {
-            value: this.props.parameterValues[this.props.parameter.id]
+            value: this.props.previewed.parameterValues[this.props.parameter.id]
         };
     },
 
     onChange(e) {
-        this.props.parameterValues[this.props.parameter.id] = e.target.value;
+        this.props.previewed.setParameterValue(this.props.parameter.id, e.target.value);
     },
 
     render() {
         return (<select className={Styles.field}
                         onChange={this.onChange}
-                        value={this.props.parameterValues[this.props.parameter.id]}
+                        value={this.props.previewed.parameterValues[this.props.parameter.id]}
                 >
                     {this.props.parameter.possibleValues.map((v, i)=>
                         <option value={v} key={i}>{v}</option>)}

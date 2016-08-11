@@ -2,6 +2,7 @@ import React from 'react';
 
 import Cartographic from 'terriajs-cesium/Source/Core/Cartographic';
 import CesiumMath from 'terriajs-cesium/Source/Core/Math';
+import clone from 'terriajs-cesium/Source/Core/clone';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
@@ -17,13 +18,12 @@ const PointParameterEditor = React.createClass({
     propTypes: {
         previewed: React.PropTypes.object,
         parameter: React.PropTypes.object,
-        viewState: React.PropTypes.object,
-        parameterValues: React.PropTypes.object
+        viewState: React.PropTypes.object
     },
 
     getInitialState() {
         return {
-            value: ''
+            value: this.getValue()
         };
     },
 
@@ -35,7 +35,7 @@ const PointParameterEditor = React.createClass({
     },
 
     getValue() {
-        const cartographic = this.props.parameterValues[this.props.parameter.id];
+        const cartographic = this.props.previewed.parameterValues[this.props.parameter.id];
         if (defined(cartographic)) {
             return CesiumMath.toDegrees(cartographic.longitude) + ',' + CesiumMath.toDegrees(cartographic.latitude);
         } else {
@@ -46,7 +46,8 @@ const PointParameterEditor = React.createClass({
     setValue(value) {
         const coordinates = value.split(',');
         if (coordinates.length >= 2) {
-            this.props.parameterValues[this.props.parameter.id] = Cartographic.fromDegrees(parseFloat(coordinates[0]), parseFloat(coordinates[1]));
+            const value = Cartographic.fromDegrees(parseFloat(coordinates[0]), parseFloat(coordinates[1]));
+            this.props.previewed.setParameterValue(this.props.parameter.id, value);
         }
     },
 
@@ -67,12 +68,10 @@ const PointParameterEditor = React.createClass({
 
         knockout.getObservable(pickPointMode, 'pickedFeatures').subscribe(function (pickedFeatures) {
             if (defined(pickedFeatures.pickPosition)) {
-                that.props.parameterValues[that.props.parameter.id] = Ellipsoid.WGS84.cartesianToCartographic(pickedFeatures.pickPosition);
+                const value = Ellipsoid.WGS84.cartesianToCartographic(pickedFeatures.pickPosition);
+                that.props.previewed.setParameterValue(that.props.parameter.id, value);
                 terria.mapInteractionModeStack.pop();
                 that.props.viewState.openAddData();
-                that.setState({
-                    value: that.getValue()
-                });
             }
         });
 
