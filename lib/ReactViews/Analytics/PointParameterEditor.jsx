@@ -2,7 +2,6 @@ import React from 'react';
 
 import Cartographic from 'terriajs-cesium/Source/Core/Cartographic';
 import CesiumMath from 'terriajs-cesium/Source/Core/Math';
-import clone from 'terriajs-cesium/Source/Core/clone';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
@@ -66,7 +65,7 @@ const PointParameterEditor = React.createClass({
         });
         terria.mapInteractionModeStack.push(pickPointMode);
 
-        knockout.getObservable(pickPointMode, 'pickedFeatures').subscribe(function (pickedFeatures) {
+        knockout.getObservable(pickPointMode, 'pickedFeatures').subscribe(function(pickedFeatures) {
             if (defined(pickedFeatures.pickPosition)) {
                 const value = Ellipsoid.WGS84.cartesianToCartographic(pickedFeatures.pickPosition);
                 that.props.previewed.setParameterValue(that.props.parameter.id, value);
@@ -85,7 +84,7 @@ const PointParameterEditor = React.createClass({
                        type="text"
                        onChange={this.onTextChange}
                        value={this.state.value}/>
-                <button type='button' onClick={this.selectPointOnMap} className={Styles.btnSelector}>
+                <button type="button" onClick={this.selectPointOnMap} className={Styles.btnSelector}>
                     Select location
                 </button>
             </div>

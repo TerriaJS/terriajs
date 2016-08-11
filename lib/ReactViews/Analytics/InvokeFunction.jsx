@@ -1,5 +1,4 @@
 import React from 'react';
-import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 import ObserveModelMixin from '../ObserveModelMixin';
 import ParameterEditor from './ParameterEditor';
 import when from 'terriajs-cesium/Source/ThirdParty/when';

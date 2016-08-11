@@ -8,8 +8,7 @@ const RegionTypeParameterEditor = React.createClass({
     mixins: [ObserveModelMixin],
     propTypes: {
         previewed: React.PropTypes.object,
-        parameter: React.PropTypes.object,
-        parameterValues: React.PropTypes.object
+        parameter: React.PropTypes.object
     },
 
     getInitialState() {
@@ -23,7 +22,8 @@ const RegionTypeParameterEditor = React.createClass({
     },
 
     onChange(e) {
-        this.props.parameterValues[this.props.parameter.id] = this.state.regionProviders.filter(r=> r.regionType === e.target.value)[0];
+        const value = this.state.regionProviders.filter(r=> r.regionType === e.target.value)[0];
+        this.props.previewed.setParameterValue(this.props.parameter.id, value);
     },
 
     getDefaultValue() {
@@ -36,7 +36,7 @@ const RegionTypeParameterEditor = React.createClass({
                 }
             }
         }
-        if(this.state.regionProviders.length) {
+        if (this.state.regionProviders.length) {
             return this.state.regionProviders[0];
         }
     },
@@ -51,12 +51,13 @@ const RegionTypeParameterEditor = React.createClass({
     },
 
     render() {
-        if(!defined(this.props.parameterValues[this.props.parameter.id])) {
-            this.props.parameterValues[this.props.parameter.id] = this.getDefaultValue();
+        if (!defined(this.props.previewed.parameterValues[this.props.parameter.id])) {
+            this.props.previewed.setParameterValue(this.props.parameter.id, this.getDefaultValue());
         }
+        const rawValue = this.props.previewed.parameterValues[this.props.parameter.id];
         return <select className={Styles.field}
                        onChange={this.onChange}
-                       value={this.props.parameterValues[this.props.parameter.id] ? this.props.parameterValues[this.props.parameter.id].regionType : ''}>
+                       value={defined(rawValue) ? rawValue.regionType : ''}>
                        {this.state.regionProviders.map((r, i)=>
                         (<option value={r.regionType}
                                  key={i}
