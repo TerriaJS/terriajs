@@ -26,21 +26,6 @@ const RegionTypeParameterEditor = React.createClass({
         this.props.previewed.setParameterValue(this.props.parameter.id, value);
     },
 
-    getDefaultValue() {
-        const nowViewingItems = this.props.previewed.terria.nowViewing.items;
-        if(nowViewingItems.length > 0) {
-            for (let i = 0; i < nowViewingItems.length; ++i) {
-                const item = nowViewingItems[i];
-                if (defined(item.regionMapping) && defined(item.regionMapping.regionDetails) && item.regionMapping.regionDetails.length > 0) {
-                    return item.regionMapping.regionDetails[0].regionProvider;
-                }
-            }
-        }
-        if (this.state.regionProviders.length) {
-            return this.state.regionProviders[0];
-        }
-    },
-
     getAllOptions() {
         const that = this;
         this.props.parameter.getAllRegionTypes().then(function(_regionProviders) {
@@ -53,7 +38,7 @@ const RegionTypeParameterEditor = React.createClass({
     render() {
         let rawValue = this.props.previewed.parameterValues[this.props.parameter.id];
         if (!defined(rawValue)) {
-            rawValue = this.getDefaultValue();
+            rawValue = this.props.parameter.defaultValue;
         }
         return <select className={Styles.field}
                        onChange={this.onChange}
