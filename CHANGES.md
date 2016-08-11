@@ -4,6 +4,7 @@ Change Log
 
 ### 4.2.0
 
+* There is a known bug in this version which prevents the user from being able to choose a region for some Analytics functions.
 * Added support for ArcGis FeatureServers, using the new catalog types `esri-featureServer` and `esri-featureServer-group`. Catalog type `esri-group` can load REST service, MapServer and FeatureServer endpoints. (For backwards compatability, catalog type `esri-mapServer-group` continues to work for REST service as well as MapServer endpoints.)
 * Enumeration parameter now defaults to what is shown in UI, and if parameter is optional, '' is default.
 * Adds bulk geocoding capability for Australian addresses. So GnafAPI can be used with batches of addresses, if configured.
