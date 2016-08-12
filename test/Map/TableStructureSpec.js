@@ -212,42 +212,83 @@ describe('TableStructure', function() {
         expect(htmls[1]).toContain('12' + separator + '345');
     });
 
-    // it('can synthesize from column arrays', function() {
-    //     var c1 = new TableColumn('col1', [20, 10, 30]);
-    //     var c2 = new TableColumn('col2', [1, 2, 3]);
-    //     var c3 = new TableColumn('col3', [15, 45]);
-    //     var c4 = new TableColumn('col4', [4, 5]);
-    //     var result = TableStructure.fromColumnArrays([[c1, c2], [c3, c4]]);
-    //     var valueArrays = result.columns.map(function(column) { return column.values; });
-    //     expect(valueArrays).toEqual([[10, 15, 20, 30, 45], [2, undefined, 1, 3, undefined], [undefined, 4, undefined, undefined, 5]]);
-    //     var names = result.columns.map(function(column) { return column.name; });
-    //     expect(names).toEqual(['col1', 'col2', 'col4']);
-    // });
+    it('can get feature id mapping', function() {
+        var data = [['year', 'id', 'lat', 'lon'], [1970, 'A', 16.8, 5.2], [1971, 'B', 16.2, 5.2], [1971, 'A', 67.8, 1.2], [1972, 'B', 68.2, 2.2]];
+        var options = {idColumnNames: ['id']};
+        var tableStructure = new TableStructure('foo', options);
+        tableStructure = tableStructure.loadFromJson(data);
+        var map = tableStructure.getIdMapping();
+        expect(map['A']).toEqual([0, 2]);
+        expect(map['B']).toEqual([1, 3]);
+    });
 
-    // it('can synthesize from column arrays, with repeated x-values', function() {
-    //     var c1 = new TableColumn('col1', [20, 10, 30]);
-    //     var c2 = new TableColumn('col2', [1, 2, 3]);
-    //     var c3 = new TableColumn('col3', [15, 20]);
-    //     var c4 = new TableColumn('col4', [4, 5]);
-    //     var c5 = new TableColumn('col5', [20, 25]);
-    //     var c6 = new TableColumn('col6', [6, 7]);
-    //     var result = TableStructure.fromColumnArrays([[c1, c2], [c3, c4], [c5, c6]]);
-    //     var valueArrays = result.columns.map(function(column) { return column.values; });
-    //     expect(valueArrays).toEqual([[10, 15, 20, 25, 30], [2, undefined, 1, undefined, 3], [undefined, 4, 5, undefined, undefined], [undefined, undefined, 6, 7, undefined]]);
-    // });
+    it('can append a table', function() {
+        var data = [['year', 'id', 'lat', 'lon'], [1970, 'A', 16.8, 5.2], [1971, 'B', 16.2, 5.2]];
+        var dat2 = [['year', 'id', 'lat', 'lon'], [1980, 'C', 16.8, 5.2], [1981, 'D', 16.2, 5.2]];
+        var table1 = new TableStructure('foo');
+        var table2 = new TableStructure('bar');
+        table1 = table1.loadFromJson(data);
+        table2 = table2.loadFromJson(dat2);
+        table1.append(table2);
+        expect(table1.columns[0].values.slice()).toEqual([1970, 1971, 1980, 1981]);
+        expect(table1.columns[1].values.slice()).toEqual(['A', 'B', 'C', 'D']);
+    });
 
-    // it('can synthesize from column arrays, with dates in different formats', function() {
-    //     var c1 = new TableColumn('col1', ['2016', '2015', '2017'], {type: VarType.TIME});
-    //     var c2 = new TableColumn('col2', [1, 2, 3]);
-    //     var c3 = new TableColumn('date', ['2015-06-01', '2016-01-01']);
-    //     var c4 = new TableColumn('col4', [4, 5]);
-    //     var c5 = new TableColumn('col5', ['2016', '2016-06'],  {type: VarType.TIME});
-    //     var c6 = new TableColumn('col6', [6, 7]);
-    //     var result = TableStructure.fromColumnArrays([[c1, c2], [c3, c4], [c5, c6]]);
-    //     var valueArrays = result.columns.map(function(column) { return column.values; });
-    //     // Don't test the exact representation of the dates, since that depends on the timezone this is running in.
-    //     // However, this does test that there are only 5 rows, and that '2016-01-01' was combined with '2016', etc.
-    //     expect(valueArrays.slice(1)).toEqual([[2, undefined, 1, undefined, 3], [undefined, 4, 5, undefined, undefined], [undefined, undefined, 6, 7, undefined]]);
-    // });
+    it('can append part of a table', function() {
+        var data = [['year', 'id', 'lat', 'lon'], [1970, 'A', 16.8, 5.2], [1971, 'B', 16.2, 5.2]];
+        var dat2 = [['year', 'id', 'lat', 'lon'], [1980, 'C', 16.8, 5.2], [1981, 'D', 16.2, 5.2], [1982, 'E', 16, 5], [1983, 'F', 15, 6]];
+        var table1 = new TableStructure('foo');
+        var table2 = new TableStructure('bar');
+        table1 = table1.loadFromJson(data);
+        table2 = table2.loadFromJson(dat2);
+        table1.append(table2, [1, 3]);
+        expect(table1.columns[0].values.slice()).toEqual([1970, 1971, 1981, 1983]);
+        expect(table1.columns[1].values.slice()).toEqual(['A', 'B', 'D', 'F']);
+    });
+
+    it('can replace rows', function() {
+        var data = [['year', 'id', 'lat', 'lon'], [1970, 'A', 16.8, 5.2], [1971, 'B', 16.2, 5.2]];
+        var dat2 = [['year', 'id', 'lat', 'lon'], [1980, 'C', 16.8, 5.2], [1981, 'D', 16.2, 5.2]];
+        var table1 = new TableStructure('foo');
+        var table2 = new TableStructure('bar');
+        table1 = table1.loadFromJson(data);
+        table2 = table2.loadFromJson(dat2);
+        table1.replaceRows(table2, {1: 0});
+        expect(table1.columns[0].values.slice()).toEqual([1970, 1980]);
+        expect(table1.columns[1].values.slice()).toEqual(['A', 'C']);
+    });
+
+    it('can merge tables with dates', function() {
+        var data = [['year', 'id', 'lat', 'lon'], [1970, 'A', 16.8, 5.2], [1971, 'B', 16.2, 5.2]];
+        var dat2 = [['year', 'id', 'lat', 'lon'], [1975, 'C', 15, 5.5], [1970, 'A', 12, 8], [1971, 'A', 13, 9]];
+        var options = {idColumnNames: ['id']};
+        var table1 = new TableStructure('foo', options);
+        var table2 = new TableStructure('bar');  // Only uses idColumnNames on table1.
+        table1 = table1.loadFromJson(data);
+        table2 = table2.loadFromJson(dat2);
+        table1.activeTimeColumn = table1.columns[0];
+        table1.columns[1].isActive = true;
+        table1.columns[1].color = 'blue';
+        table1.merge(table2);
+        expect(table1.columns[0].values.slice()).toEqual([1970, 1971, 1975, 1971]);
+        expect(table1.activeTimeColumn.dates.length).toEqual(4); // ie. activeTimeColumn updates too.
+        expect(table1.columns[1].values.slice()).toEqual(['A', 'B', 'C', 'A']);
+        expect(table1.columns[2].values.slice()).toEqual([12, 16.2, 15, 13]);
+        expect(table1.columns[1].isActive).toBe(true); // ie. Don't lose options on the columns.
+        expect(table1.columns[1].color).toEqual('blue');
+    });
+
+    it('can merge tables without dates', function() {
+        var data = [['id', 'lat', 'lon'], ['A', 16.8, 5.2], ['B', 16.2, 5.2]];
+        var dat2 = [['id', 'lat', 'lon'], ['A', 12, 8], ['C', 15, 5.5]];
+        var options = {idColumnNames: ['id']};
+        var table1 = new TableStructure('foo', options);
+        var table2 = new TableStructure('bar');  // Only uses idColumnNames on table1.
+        table1 = table1.loadFromJson(data);
+        table2 = table2.loadFromJson(dat2);
+        table1.merge(table2);
+        expect(table1.columns[0].values.slice()).toEqual(['A', 'B', 'C']);
+        expect(table1.columns[1].values.slice()).toEqual([12, 16.2, 15]);
+    });
 
 });

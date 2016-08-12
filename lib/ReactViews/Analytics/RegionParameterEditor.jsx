@@ -20,12 +20,10 @@ const RegionParameterEditor = React.createClass({
 
     propTypes: {
         previewed: React.PropTypes.object,
-        parameter: React.PropTypes.object,
-        parameterValues: React.PropTypes.object,
+        parameter: React.PropTypes.object
     },
 
     componentWillMount() {
-
         this._lastPickedFeatures = undefined;
         this._loadingRegionProvider = undefined;
         this._selectedRegionCatalogItem = undefined;
@@ -71,7 +69,7 @@ const RegionParameterEditor = React.createClass({
                 }
                 const feature = pickedFeatures.features[0];
                 that._lastRegionFeature = feature.data;
-                that.regionValue = that.props.parameter.findRegionByID(feature.properties[that.regionProvider.regionProp], that.props.parameterValues);
+                that.regionValue = that.props.parameter.findRegionByID(feature.properties[that.regionProvider.regionProp], that.props.previewed.parameterValues);
 
                 if (defined(that._selectedRegionCatalogItem)) {
                     that._selectedRegionCatalogItem.isEnabled = false;
@@ -88,13 +86,13 @@ const RegionParameterEditor = React.createClass({
 
         knockout.defineProperty(this, 'regionValue', {
             get: function() {
-                return this.props.parameter.getValue(this.props.parameterValues);
+                return this.props.parameter.getValue(this.props.previewed.parameterValues);
             },
             set: function(value) {
                 if (defined(value) && defined(value.realRegion)) {
                     value = value.realRegion;
                 }
-                this.props.parameterValues[this.props.parameter.id] = value;
+                this.props.previewed.setParameterValue(this.props.parameter.id, value);
                 this._displayValue = undefined;
                 this.updateMapFromValue(this);
             }
@@ -102,7 +100,7 @@ const RegionParameterEditor = React.createClass({
 
         knockout.defineProperty(this, 'regionProvider', {
             get: function() {
-                return this.props.parameter.getRegionProvider(this.props.parameterValues);
+                return this.props.parameter.getRegionProvider(this.props.previewed.parameterValues);
             }
         });
 
@@ -232,7 +230,7 @@ const RegionParameterEditor = React.createClass({
 
         const value = this.regionValue;
         const parameter = this.props.parameter;
-        const parameterValues = this.props.parameterValues;
+        const parameterValues = this.props.previewed.parameterValues;
         const terria = this.props.previewed.terria;
 
         const that = this;

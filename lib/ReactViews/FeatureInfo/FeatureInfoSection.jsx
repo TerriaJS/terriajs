@@ -9,13 +9,14 @@ import defined from 'terriajs-cesium/Source/Core/defined';
 import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
 import isArray from 'terriajs-cesium/Source/Core/isArray';
 
+import CustomComponents from '../Custom/CustomComponents';
 import FeatureInfoDownload from './FeatureInfoDownload';
 import formatNumberForLocale from '../../Core/formatNumberForLocale';
+import Icon from '../Icon.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
 import propertyGetTimeValues from '../../Core/propertyGetTimeValues';
-import CustomComponents from '../Custom/CustomComponents';
 import parseCustomMarkdownToReact from '../Custom/parseCustomMarkdownToReact';
-import Icon from "../Icon.jsx";
+import VarType from '../../Map/VarType';
 
 import Styles from './feature-info-section.scss';
 
@@ -48,36 +49,20 @@ const FeatureInfoSection = React.createClass({
     },
 
     componentWillMount() {
-        const that = this;
-        const feature = this.props.feature;
-        // Do we need to dynamically update this feature info over time?
-        // There are two situations in which we would:
-        // 1. When the feature description or properties are time-varying.
-        // 2. When a custom component self-updates.
-        //    Eg. <chart poll-seconds="60" src="xyz.csv"> must reload data from xyz.csv every 60 seconds.
-        //
-        // For (1), use a event listener to update the feature's currentProperties/currentDescription directly.
-        // For (2), use a regular javascript setTimeout to update a counter in feature's currentProperties.
-        // For simplicity, we do not currently support both at once.
-        if (this.isFeatureTimeVarying()) {
-            this.setState({
-                clockSubscription: this.props.clock.onTick.addEventListener(function(clock) {
-                    setCurrentFeatureValues(feature, clock);
-                })
-            });
-        } else {
-            setTimeoutsForUpdatingCustomComponents(that);
+        setSubscriptionsAndTimeouts(this, this.props.feature);
+    },
+
+    componentWillReceiveProps(nextProps) {
+        // If the feature changed (without an unmount/mount),
+        // change the subscriptions that handle time-varying data.
+        if (nextProps.feature !== this.props.feature) {
+            removeSubscriptionsAndTimeouts(this);
+            setSubscriptionsAndTimeouts(this, nextProps.feature);
         }
     },
 
     componentWillUnmount() {
-        if (defined(this.state.clockSubscription)) {
-            // Remove the event listener.
-            this.state.clockSubscription();
-        }
-        this.state.timeoutIds.forEach(id => {
-            clearTimeout(id);
-        });
+        removeSubscriptionsAndTimeouts(this);
     },
 
     getPropertyValues() {
@@ -98,9 +83,7 @@ const FeatureInfoSection = React.createClass({
                     longitude: CesiumMath.toDegrees(latLngInRadians.longitude)
                 };
             }
-            return propertyData;
-        } else {
-            return {};
+            propertyData.terria.timeSeries = getTimeSeriesChartContext(this.props.catalogItem, this.props.feature, propertyData._terria_rowNumbers);
         }
     },
 
@@ -145,14 +128,13 @@ const FeatureInfoSection = React.createClass({
         return (feature && feature.name) || 'Site Data';
     },
 
-    isFeatureTimeVarying() {
+    isFeatureTimeVarying(feature) {
         // The feature is NOT time-varying if:
         // 1. There is no info (ie. no description and no properties).
         // 2. A template is provided and all feature.properties are constant.
         // OR
         // 3. No template is provided, and feature.description is either not defined, or defined and constant.
         // If info is time-varying, we need to keep updating the description.
-        const feature = this.props.feature;
         if (!defined(feature.description) && !defined(feature.properties)) {
             return false;
         }
@@ -184,31 +166,37 @@ const FeatureInfoSection = React.createClass({
                 </button>
                 <If condition={this.props.isOpen}>
                     <section className={Styles.content}>
-                        <If condition={this.hasTemplate()}>
-                            <button type="button" className={Styles.rawDataButton} onClick={this.toggleRawData}>
-                                {this.state.showRawData ? 'Show Curated Data' : 'Show Raw Data'}
-                            </button>
-                        </If>
-                        <div className={Styles.clearfix}>
-                            <Choose>
-                                <When condition={reactInfo.showRawData || !this.hasTemplate()}>
-                                    <If condition={reactInfo.hasRawData}>
-                                        {reactInfo.rawData}
+                    <If condition={this.hasTemplate()}>
+                        <button type="button" className={Styles.rawDataButton} onClick={this.toggleRawData}>
+                            {this.state.showRawData ? 'Show Curated Data' : 'Show Raw Data'}
+                        </button>
+                    </If>
+            <div className={Styles.clearfix}>
+                    <Choose>
+                            <When condition={reactInfo.showRawData || !this.hasTemplate()}>
+                                <If condition={reactInfo.hasRawData}>
+                                    {reactInfo.rawData}
+                                    <If condition={reactInfo.timeSeriesChart}>
+                                        <div className={Styles.timeSeriesChart}>
+                                            {reactInfo.timeSeriesChart}
+                                        </div>
                                     </If>
-                                    <If condition={!reactInfo.hasRawData}>
-                                        <div ref="no-info" key="no-info">No information available.</div>
-                                    </If>
-                                    <If condition={defined(reactInfo.templateData)}>
-                                        <FeatureInfoDownload key='download'
-                                                             viewState={this.props.viewState}
-                                                             data={reactInfo.templateData}
-                                                             name={catalogItemName}/>
-                                    </If>
-                                </When>
-                                <Otherwise>
+                                </If>
+                                <If condition={!reactInfo.hasRawData}>
+                                    <div ref="no-info" key="no-info">No information available.</div>
+                                </If>
+                                <If condition={defined(reactInfo.templateData)}>
+                                    <FeatureInfoDownload key='download'
+                                        viewState={this.props.viewState}
+                                        data={reactInfo.templateData}
+                                        name={catalogItemName} />
+                                </If>
+                            </When>
+                            <Otherwise>
                                     {reactInfo.info}
                                 </Otherwise>
                             </Choose>
+            </div>
                         </div>
                     </section>
                 </If>
@@ -216,6 +204,43 @@ const FeatureInfoSection = React.createClass({
         );
     }
 });
+
+/**
+ * Do we need to dynamically update this feature info over time?
+ * There are two situations in which we would:
+ * 1. When the feature description or properties are time-varying.
+ * 2. When a custom component self-updates.
+ *    Eg. <chart poll-seconds="60" src="xyz.csv"> must reload data from xyz.csv every 60 seconds.
+ *
+ * For (1), use a event listener to update the feature's currentProperties/currentDescription directly.
+ * For (2), use a regular javascript setTimeout to update a counter in feature's currentProperties.
+ * For simplicity, we do not currently support both at once.
+ * @private
+ */
+function setSubscriptionsAndTimeouts(featureInfoSection, feature) {
+    if (featureInfoSection.isFeatureTimeVarying(feature)) {
+        featureInfoSection.setState({
+            clockSubscription: featureInfoSection.props.clock.onTick.addEventListener(function(clock) {
+                setCurrentFeatureValues(feature, clock);
+            })
+        });
+    } else {
+        setTimeoutsForUpdatingCustomComponents(featureInfoSection);
+    }
+}
+
+/**
+ * Remove the clock subscription (event listener) and timeouts.
+ * @private
+ */
+function removeSubscriptionsAndTimeouts(featureInfoSection) {
+    if (defined(featureInfoSection.state.clockSubscription)) {
+        featureInfoSection.state.clockSubscription();
+    }
+    featureInfoSection.state.timeoutIds.forEach(id => {
+        clearTimeout(id);
+    });
+}
 
 /**
  * Gets a map of property labels to property values for a feature at the provided clock's time.
@@ -387,6 +412,36 @@ function describeFromProperties(properties, time) {
 }
 
 /**
+ * Get parameters that should be exposed to the template, to help show a timeseries chart of the feature data.
+ * @private
+ */
+function getTimeSeriesChartContext(catalogItem, feature, rowNumbers) {
+    if (defined(rowNumbers) && defined(catalogItem) && CustomComponents.isRegistered('chart')) {
+        const table = catalogItem.tableStructure;
+        const timeSeriesData = table && table.toCsvString(undefined, rowNumbers);
+        if (timeSeriesData) {
+            // Only show it as a line chart if the data is sampled (so a line chart makes sense), and the active column is a scalar.
+            const yColumn = table.getActiveColumns()[0];
+            if (catalogItem.isSampled && yColumn.type === VarType.SCALAR) {
+                const result = {
+                    xName: table.activeTimeColumn.name,
+                    yName: yColumn.name,
+                    id: feature.id,
+                    data: timeSeriesData.replace(/\\n/g, '\\n')
+                };
+                const xAttribute = 'x-column="' + result.xName + '" ';
+                const yAttribute = 'y-column="' + result.yName + '" ';
+                const idAttribute = 'id="' + result.id + '" ';
+                result.chart = '<chart ' + xAttribute + yAttribute + idAttribute + '>' + result.data + '</chart>';
+                return result;
+            }
+        }
+    }
+}
+
+/**
+ * Wrangle the provided feature data into more convenient forms.
+ * @private
  * @param  {ReactClass} that The FeatureInfoSection.
  * @return {Object} Returns {templateData, info, rawData, showRawData, hasRawData}.
  *                  templateData is the object passed to the templating engine.
@@ -394,18 +449,26 @@ function describeFromProperties(properties, time) {
  *                  rawData is the same for the raw data, if it needs to be shown.
  *                  showRawData is whether to show the rawData.
  *                  hasRawData is whether there is any rawData to show.
+ *                  timeSeriesData - if the feature has timeseries data that could be shown in chart, this is it.
  */
 function getInfoAsReactComponent(that) {
     const templateData = that.getPropertyValues();
     const updateCounters = that.props.feature.updateCounters;
-    if (defined(templateData)) {
-        delete templateData._terria_columnAliases;
-    }
     const context = {
         catalogItem: that.props.catalogItem,
         feature: that.props.feature,
         updateCounters: updateCounters
     };
+    let timeSeriesChart;
+
+    if (defined(templateData)) {
+        const timeSeriesChartContext = getTimeSeriesChartContext(that.props.catalogItem, that.props.feature, templateData._terria_rowNumbers);
+        if (defined(timeSeriesChartContext)) {
+            timeSeriesChart = parseCustomMarkdownToReact(timeSeriesChartContext.chart, context);
+        }
+        delete templateData._terria_columnAliases;
+        delete templateData._terria_rowNumbers;
+    }
     const showRawData = !that.hasTemplate() || that.state.showRawData;
     let rawDataHtml;
     let rawData;
@@ -420,7 +483,8 @@ function getInfoAsReactComponent(that) {
         info: that.hasTemplate() ? parseCustomMarkdownToReact(that.descriptionFromTemplate(), context) : rawData,
         rawData: rawData,
         showRawData: showRawData,
-        hasRawData: !!rawDataHtml
+        hasRawData: !!rawDataHtml,
+        timeSeriesChart: timeSeriesChart
     };
 }
 

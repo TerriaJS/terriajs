@@ -200,6 +200,11 @@ function expand(props, sourceIndex) {
                     column.isActive = activeConcepts[columnNumber];
                 });
             }
+            newCatalogItem.setChartable();
+            // If we set the active columns already, getNextColor won't be triggered. So set any missing colors manually.
+            tableStructure.columns.filter(column => column.isActive && !defined(column.color)).forEach((column) => {
+                column.color = tableStructure.getColorCallback();
+            });
         } catch(e) {
             // This does not actually make it to the user.
             return raiseErrorToUser(terria, e);

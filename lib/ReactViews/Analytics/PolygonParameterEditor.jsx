@@ -1,8 +1,8 @@
 import React from 'react';
 
 import CesiumMath from 'terriajs-cesium/Source/Core/Math';
-import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
 import defined from 'terriajs-cesium/Source/Core/defined';
+import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
 
 import UserDrawing from '../../Models/UserDrawing';
 import ObserveModelMixin from '../ObserveModelMixin';
@@ -14,13 +14,12 @@ const PolygonParameterEditor = React.createClass({
     propTypes: {
         previewed: React.PropTypes.object,
         parameter: React.PropTypes.object,
-        viewState: React.PropTypes.object,
-        parameterValues: React.PropTypes.object
+        viewState: React.PropTypes.object
     },
 
     getInitialState() {
         return {
-            value: "",
+            value: this.getValue(),
             userDrawing: new UserDrawing(
                 {
                     terria: this.props.previewed.terria,
@@ -38,19 +37,23 @@ const PolygonParameterEditor = React.createClass({
     },
 
     getValue() {
-        const pointsLongLats = this.props.parameterValues[this.props.parameter.id];
+        const rawValue = this.props.previewed.parameterValues[this.props.parameter.id];
+        if (!defined(rawValue) || rawValue.length < 1) {
+            return '';
+        }
+        const pointsLongLats = rawValue[0];
 
-        let polygon = "";
-        for (let i=0; i<pointsLongLats.length; i++) {
-            polygon += "[" + pointsLongLats[i][0].toFixed(3) + ", " + pointsLongLats[i][1].toFixed(3) + "]";
-            if (i !== pointsLongLats.length-1) {
-                polygon += ", ";
+        let polygon = '';
+        for (let i = 0; i < pointsLongLats.length; i++) {
+            polygon += '[' + pointsLongLats[i][0].toFixed(3) + ', ' + pointsLongLats[i][1].toFixed(3) + ']';
+            if (i !== pointsLongLats.length - 1) {
+                polygon += ', ';
             }
         }
-        if (defined(polygon)) {
-            return "[" + polygon + "]";
+        if (polygon.length > 0) {
+            return '[' + polygon + ']';
         } else {
-            return "";
+            return '';
         }
     },
 
@@ -62,9 +65,6 @@ const PolygonParameterEditor = React.createClass({
 
     onCleanUp() {
         this.props.viewState.openAddData();
-        this.setState({
-            value: this.getValue()
-        });
     },
 
     onPointClicked(pointEntities) {
@@ -79,7 +79,7 @@ const PolygonParameterEditor = React.createClass({
             points.push(CesiumMath.toDegrees(cartographic.latitude));
             pointsLongLats.push(points);
         }
-        this.props.parameterValues[this.props.parameter.id] = pointsLongLats;
+        this.props.previewed.setParameterValue(this.props.parameter.id, [pointsLongLats]);
     },
 
     selectPolygonOnMap() {
@@ -94,7 +94,7 @@ const PolygonParameterEditor = React.createClass({
                        type="text"
                        onChange={this.onTextChange}
                        value={this.state.value}/>
-                <button type='button'
+                <button type="button"
                         onClick={this.selectPolygonOnMap}
                         className={Styles.btnSelector}>
                     Click to draw polygon
