@@ -61,3 +61,7 @@
   margin-right: 1px;
   margin-top: 10px;
 }
+
+.clearfix {
+  composes: clearfix from '../../Sass/common/_base.scss';
+}

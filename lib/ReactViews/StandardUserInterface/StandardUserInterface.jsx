@@ -21,11 +21,50 @@ import 'inobounce';
 
 import Styles from './standard-user-interface.scss';
 
+/** blah */
 const StandardUserInterface = React.createClass({
+    displayName: 'StandardUserInterface',
+
+    statics: {
+        styleguide: {
+            index: '5.2',
+            category: 'UI',
+            title: 'Standard User Interface',
+            props: (() => {
+
+                const Terria = require('../../Models/Terria');
+                const ViewState = require('../../ReactViewModels/ViewState').default;
+                const terria = new Terria({baseUrl: './'});
+//temp
+                var createAustraliaBaseMapOptions = require('../../ViewModels/createAustraliaBaseMapOptions');
+                var createGlobalBaseMapOptions = require('../../ViewModels/createGlobalBaseMapOptions');
+                var selectBaseMap = require('../../ViewModels/selectBaseMap');
+// Create the various base map options.
+                var australiaBaseMaps = createAustraliaBaseMapOptions(terria);
+                var globalBaseMaps = createGlobalBaseMapOptions(terria, '');
+
+                var allBaseMaps = australiaBaseMaps.concat(globalBaseMaps);
+                selectBaseMap(terria, allBaseMaps, 'Bing Maps Aerial with Labels', true);
+
+                return {
+                    terria,
+                    viewState: new ViewState({terria}),
+                    allBaseMaps
+                };
+            })()
+        },
+    },
+
     mixins: [ObserveModelMixin],
 
     propTypes: {
+        /**
+         * Terria instance
+         */
         terria: React.PropTypes.object.isRequired,
+        /**
+         * All the base maps.
+         */
         allBaseMaps: React.PropTypes.array,
         viewState: React.PropTypes.object.isRequired,
         minimumLargeScreenWidth: React.PropTypes.number,

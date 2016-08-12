@@ -4,6 +4,8 @@
   composes: clearfix from '../../../Sass/common/_base.scss';
   composes: list-reset from '../../../Sass/common/_base.scss';
   font-family: $font-mono;
+  font-size: 0.85rem;
+
   li {
     display: block;
   }

@@ -20,7 +20,9 @@ import Icon from "../Icon.jsx";
 import Styles from './feature-info-section.scss';
 
 // We use Mustache templates inside React views, where React does the escaping; don't escape twice, or eg. " => &quot;
-Mustache.escape = function(string) { return string; };
+Mustache.escape = function(string) {
+    return string;
+};
 
 // Individual feature info section
 const FeatureInfoSection = React.createClass({
@@ -96,8 +98,10 @@ const FeatureInfoSection = React.createClass({
                     longitude: CesiumMath.toDegrees(latLngInRadians.longitude)
                 };
             }
+            return propertyData;
+        } else {
+            return {};
         }
-        return propertyData;
     },
 
     clickHeader() {
@@ -180,30 +184,32 @@ const FeatureInfoSection = React.createClass({
                 </button>
                 <If condition={this.props.isOpen}>
                     <section className={Styles.content}>
-                    <If condition={this.hasTemplate()}>
-                        <button type="button" className={Styles.rawDataButton} onClick={this.toggleRawData}>
-                            {this.state.showRawData ? 'Show Curated Data' : 'Show Raw Data'}
-                        </button>
-                    </If>
-                    <Choose>
-                            <When condition={reactInfo.showRawData || !this.hasTemplate()}>
-                                <If condition={reactInfo.hasRawData}>
-                                    {reactInfo.rawData}
-                                </If>
-                                <If condition={!reactInfo.hasRawData}>
-                                    <div ref="no-info" key="no-info">No information available.</div>
-                                </If>
-                                <If condition={defined(reactInfo.templateData)}>
-                                    <FeatureInfoDownload key='download'
-                                        viewState={this.props.viewState}
-                                        data={reactInfo.templateData}
-                                        name={catalogItemName} />
-                                </If>
-                            </When>
-                            <Otherwise>
+                        <If condition={this.hasTemplate()}>
+                            <button type="button" className={Styles.rawDataButton} onClick={this.toggleRawData}>
+                                {this.state.showRawData ? 'Show Curated Data' : 'Show Raw Data'}
+                            </button>
+                        </If>
+                        <div className={Styles.clearfix}>
+                            <Choose>
+                                <When condition={reactInfo.showRawData || !this.hasTemplate()}>
+                                    <If condition={reactInfo.hasRawData}>
+                                        {reactInfo.rawData}
+                                    </If>
+                                    <If condition={!reactInfo.hasRawData}>
+                                        <div ref="no-info" key="no-info">No information available.</div>
+                                    </If>
+                                    <If condition={defined(reactInfo.templateData)}>
+                                        <FeatureInfoDownload key='download'
+                                                             viewState={this.props.viewState}
+                                                             data={reactInfo.templateData}
+                                                             name={catalogItemName}/>
+                                    </If>
+                                </When>
+                                <Otherwise>
                                     {reactInfo.info}
-                            </Otherwise>
-                        </Choose>
+                                </Otherwise>
+                            </Choose>
+                        </div>
                     </section>
                 </If>
             </li>

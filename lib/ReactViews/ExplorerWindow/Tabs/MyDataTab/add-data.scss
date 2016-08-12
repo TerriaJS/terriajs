@@ -44,6 +44,7 @@
   composes: label from '../../../../Sass/common/_labels.scss';
 
   padding-left: 0;
+  font-size: 0.9rem;
 }
 
 .dropdown {
@@ -54,9 +55,9 @@
     margin-top: $padding-small;
 
     &--is-open {
+      composes: scrollbars from '../../../../Sass/common/_base.scss';
       height: 190px;
       overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
     }
   }
 }

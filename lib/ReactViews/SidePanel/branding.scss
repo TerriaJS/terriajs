@@ -2,6 +2,7 @@
 @import '../../Sass/common/mixins';
 
 .branding {
+  box-sizing: border-box;
   height: $sm-logo-height;
   overflow: hidden;
   @include transition(all, 0.5s, linear);
@@ -18,6 +19,7 @@
 
   img {
     max-height: 100%;
+    max-width: 100%;
 
     // For some reason without this IE9 flips out and stretches the images.
     width: auto;

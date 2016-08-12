@@ -11,6 +11,7 @@
 
 .data-catalog {
   composes: list-reset from '../../../Sass/common/_base.scss';
+  composes: scrollbars from '../../../Sass/common/_base.scss';
 
   font-size: 0.9rem;
 

@@ -2,10 +2,14 @@
 @import '~terriajs-variables';
 
 .heading {
+  composes: btn from '../../Sass/common/_buttons.scss';
+  color: $text-light;
   padding: $padding-small;
   position: relative;
   width: 100%;
   text-align: left;
+  font-weight: bold;
+
   svg{
     height: 20px;
     width: 20px;

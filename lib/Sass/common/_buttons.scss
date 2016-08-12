@@ -8,13 +8,20 @@ $btn-setting-size: 35px;
 }
 
 .btn {
+  background-color: transparent;
+  margin: 0;
+  border: 0;
+  padding: 0;
+  box-sizing: border-box;
   font-weight: $font-weight-normal;
   box-shadow: none;
-  border: 0;
   text-align: left;
   cursor: pointer;
   line-height: $btn-default-line-height;
-  padding: $padding;
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-family: $font-base;
+
   &:focus, &:hover {
     box-shadow: none;
     border-color: transparent;
@@ -44,6 +51,7 @@ $btn-setting-size: 35px;
   width: 100%;
   box-sizing: border-box;
   border-radius: $radius-small;
+  padding: $padding;
 
   &:hover, &--hover {
     background: lighten($color-primary, 10%);

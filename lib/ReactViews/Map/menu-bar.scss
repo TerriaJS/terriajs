@@ -1,7 +1,7 @@
 @import '~terriajs-variables';
 
 .menu-area {
-  position: fixed;
+  position: absolute;
   top: 20px;
   right: $padding;
   z-index: 20;

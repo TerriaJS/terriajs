@@ -1,7 +1,7 @@
 import React from 'react';
 
 import ObserveModelMixin from '../ObserveModelMixin';
-
+import Styles from './data-preview.scss';
 /**
  * URL section of the preview.
  */
@@ -19,7 +19,7 @@ const DataPreviewUrl = React.createClass({
     render() {
         return (
             <div>
-                <h4>{this.props.metadataItem.typeName} URL</h4>
+                <h4 className={Styles.h4}>{this.props.metadataItem.typeName} URL</h4>
                 <If condition={this.props.metadataItem.type === 'wms'}>
                     <p>
                         This is a <a href="https://en.wikipedia.org/wiki/Web_Map_Service" target="_blank">WMS
@@ -34,7 +34,7 @@ const DataPreviewUrl = React.createClass({
                         with this URL:
                     </p>
                 </If>
-                <input readOnly className='field' type="text" value={this.props.metadataItem.url}
+                <input readOnly className={Styles.field} type="text" value={this.props.metadataItem.url}
                        onClick={this.selectUrl}/>
                 <If condition={(this.props.metadataItem.type === 'wms' || (this.props.metadataItem.type === 'esri-mapServer' && this.props.metadataItem.layers))}>
                     <p>Layer

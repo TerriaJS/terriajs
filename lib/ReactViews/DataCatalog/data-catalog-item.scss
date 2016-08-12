@@ -9,6 +9,7 @@
 }
 
 .btn-catalog-item {
+  font-size: 0.8rem;
   composes: btn from '../../Sass/common/_buttons.scss';
   @extend %wrap;
   position: relative;
@@ -38,6 +39,8 @@
 }
 
 .btn-action {
+  composes: btn from '../../Sass/common/_buttons.scss';
+
   position: absolute;
   color: $color-primary;
   right: 0;

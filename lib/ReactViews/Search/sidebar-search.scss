@@ -3,21 +3,28 @@
 
 .results {
   @include transition(all 0.5s ease-in-out);
+  box-sizing: border-box;
+  color: $text-light;
 }
 
-.resultsContent{
+.results-content {
+  composes: scrollbars from '../../Sass/common/_base.scss';
+
   height: calc(100vh - #{$workbench-header + $logo-height});
   overflow-x: hidden;
   overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
   padding: 0 $padding-small;
 }
 
 .heading {
+  composes: h4 from '../../Sass/common/_base.scss';
+
   padding: $padding-small;
   position: relative;
   width: 100%;
   text-align: left;
+  color: $text-light;
+
   svg{
     height: 20px;
     width: 20px;
