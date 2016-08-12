@@ -21,7 +21,7 @@
 
 .modalBg{
   composes: scrollbars from '../../Sass/common/_base.scss';
-  
+
   overflow-y: auto;
   overflow-x: hidden;
   padding: 0;
@@ -46,6 +46,7 @@
   composes: button;
 
   float: right;
+  padding: $padding;
 }
 
 .back-button {
