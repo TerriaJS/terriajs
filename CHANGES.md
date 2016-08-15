@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+### 4.2.1
+
+* Fixed bug that prevented the preview map displaying on mobile devices.
+
 ### 4.2.0
 
 * There is a known bug in this version which prevents the user from being able to choose a region for some Analytics functions.
