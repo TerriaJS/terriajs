@@ -36,14 +36,14 @@ const StandardUserInterface = React.createClass({
                 const ViewState = require('../../ReactViewModels/ViewState').default;
                 const terria = new Terria({baseUrl: './'});
 //temp
-                var createAustraliaBaseMapOptions = require('../../ViewModels/createAustraliaBaseMapOptions');
-                var createGlobalBaseMapOptions = require('../../ViewModels/createGlobalBaseMapOptions');
-                var selectBaseMap = require('../../ViewModels/selectBaseMap');
+                const createAustraliaBaseMapOptions = require('../../ViewModels/createAustraliaBaseMapOptions');
+                const createGlobalBaseMapOptions = require('../../ViewModels/createGlobalBaseMapOptions');
+                const selectBaseMap = require('../../ViewModels/selectBaseMap');
 // Create the various base map options.
-                var australiaBaseMaps = createAustraliaBaseMapOptions(terria);
-                var globalBaseMaps = createGlobalBaseMapOptions(terria, '');
+                const australiaBaseMaps = createAustraliaBaseMapOptions(terria);
+                const globalBaseMaps = createGlobalBaseMapOptions(terria, '');
 
-                var allBaseMaps = australiaBaseMaps.concat(globalBaseMaps);
+                const allBaseMaps = australiaBaseMaps.concat(globalBaseMaps);
                 selectBaseMap(terria, allBaseMaps, 'Bing Maps Aerial with Labels', true);
 
                 return {
