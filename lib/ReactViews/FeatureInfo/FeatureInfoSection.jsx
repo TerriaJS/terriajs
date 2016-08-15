@@ -85,6 +85,7 @@ const FeatureInfoSection = React.createClass({
             }
             propertyData.terria.timeSeries = getTimeSeriesChartContext(this.props.catalogItem, this.props.feature, propertyData._terria_rowNumbers);
         }
+        return propertyData;
     },
 
     clickHeader() {
@@ -171,8 +172,8 @@ const FeatureInfoSection = React.createClass({
                             {this.state.showRawData ? 'Show Curated Data' : 'Show Raw Data'}
                         </button>
                     </If>
-            <div className={Styles.clearfix}>
-                    <Choose>
+                    <div className={Styles.clearfix}>
+                        <Choose>
                             <When condition={reactInfo.showRawData || !this.hasTemplate()}>
                                 <If condition={reactInfo.hasRawData}>
                                     {reactInfo.rawData}
@@ -193,11 +194,10 @@ const FeatureInfoSection = React.createClass({
                                 </If>
                             </When>
                             <Otherwise>
-                                    {reactInfo.info}
-                                </Otherwise>
-                            </Choose>
-            </div>
-                        </div>
+                                {reactInfo.info}
+                            </Otherwise>
+                        </Choose>
+                    </div>
                     </section>
                 </If>
             </li>
