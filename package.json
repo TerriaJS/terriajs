@@ -60,7 +60,7 @@
     "style-loader": "git://github.com/TerriaJS/style-loader#chromeWorkaround",
     "superagent": "^2.0.0",
     "terriajs-cesium": "1.23.2",
-    "togeojson": "^0.13.0",
+    "togeojson": "^0.14.2",
     "urijs": "^1.17.1",
     "url-loader": "^0.5.7",
     "urthecast": "^1.0.0",
