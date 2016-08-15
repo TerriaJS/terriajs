@@ -16,7 +16,8 @@
 
 .legend__inner {
   a{
-    display: block;
+    // Only the actual legend should be clickable rather than the whole area
+    display: inline-block;
   }
   img {
     display: inline-block;

@@ -197,15 +197,7 @@ $btn-setting-size: 35px;
   }
 }
 
-// Modal window tab buttons
-//
-// Tab buttons in modal window
-//
-// Markup:
-// <button class="btn btn--tab">Button</button>
-//
-// Style guide: Buttons.modal-tab
-//
+
 
 .btn.btn--tab {
   border-right: 1px solid $modal-border;
@@ -221,14 +213,6 @@ $btn-setting-size: 35px;
   }
 }
 
-// Map buttons
-//
-// Buttons on the map
-//
-// Markup:
-// <button class="btn btn--map full-screen__button" title="full screen mode"></button>
-//
-// Style guide: Buttons.map-buttons
 
 .btn--map {
   font-size: 12px;
@@ -261,14 +245,7 @@ $btn-setting-size: 35px;
   }
 }
 
-// Search Clear buttons
-//
-// Buttons to clear search
-//
-// Markup:
-// <button class="btn btn--search-clear" title="clear search text"></button>
-//
-// Style guide: Buttons.btn--search-clear
+
 
 .btn--search-clear {
   padding: 0;
