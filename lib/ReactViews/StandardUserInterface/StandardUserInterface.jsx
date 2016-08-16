@@ -23,38 +23,6 @@ import Styles from './standard-user-interface.scss';
 
 /** blah */
 const StandardUserInterface = React.createClass({
-    displayName: 'StandardUserInterface',
-
-    statics: {
-        styleguide: {
-            index: '5.2',
-            category: 'UI',
-            title: 'Standard User Interface',
-            props: (() => {
-
-                const Terria = require('../../Models/Terria');
-                const ViewState = require('../../ReactViewModels/ViewState').default;
-                const terria = new Terria({baseUrl: './'});
-//temp
-                const createAustraliaBaseMapOptions = require('../../ViewModels/createAustraliaBaseMapOptions');
-                const createGlobalBaseMapOptions = require('../../ViewModels/createGlobalBaseMapOptions');
-                const selectBaseMap = require('../../ViewModels/selectBaseMap');
-// Create the various base map options.
-                const australiaBaseMaps = createAustraliaBaseMapOptions(terria);
-                const globalBaseMaps = createGlobalBaseMapOptions(terria, '');
-
-                const allBaseMaps = australiaBaseMaps.concat(globalBaseMaps);
-                selectBaseMap(terria, allBaseMaps, 'Bing Maps Aerial with Labels', true);
-
-                return {
-                    terria,
-                    viewState: new ViewState({terria}),
-                    allBaseMaps
-                };
-            })()
-        },
-    },
-
     mixins: [ObserveModelMixin],
 
     propTypes: {
