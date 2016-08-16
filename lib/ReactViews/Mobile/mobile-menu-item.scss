@@ -11,7 +11,7 @@
   color: $text-dark;
   display: block;
   border-bottom: 1px solid $grey-lighter;
-  font-weight: 400;
+  font-weight: $font-weight-normal;
   &:hover,
   &:focus {
     color: $color-primary;

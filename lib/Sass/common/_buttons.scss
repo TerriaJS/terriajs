@@ -122,7 +122,7 @@ $btn-setting-size: 35px;
   font-size: 0.8rem;
   padding: 4px 10px;
   margin: 5px;
-  font-weight: bold;
+  font-weight: $font-weight-normal;
 }
 
 
@@ -134,7 +134,7 @@ $btn-setting-size: 35px;
 
   position: relative;
   width: 100%;
-  font-weight: bold;
+  font-weight: $font-weight-normal;
   .btn--group-indicator {
     position: absolute;
     left: 0;
