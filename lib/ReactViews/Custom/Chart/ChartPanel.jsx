@@ -48,7 +48,6 @@ const ChartPanel = React.createClass({
         const chartableItems = this.props.terria.catalog.chartableItems;
         let data = [];
         let xUnits;
-        const itemsToInactivate = [];
         for (let i = chartableItems.length - 1; i >= 0; i--) {
             const item = chartableItems[i];
             if (item.isEnabled && defined(item.tableStructure)) {
@@ -65,7 +64,6 @@ const ChartPanel = React.createClass({
                 }
             }
         }
-
 
         const isLoading = (chartableItems.length > 0) && (chartableItems[chartableItems.length - 1].isLoading);
         const isVisible = (data.length > 0) || isLoading;
