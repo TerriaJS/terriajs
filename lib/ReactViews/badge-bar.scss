@@ -11,6 +11,8 @@
   padding-right: $padding-small + $padding + 1;
 
   background-color: $overlay;
+  color: $text-light;
+
   //to make sure scrolling of the content below the badge is correct
   height: $badge-height;
   line-height: $badge-height;

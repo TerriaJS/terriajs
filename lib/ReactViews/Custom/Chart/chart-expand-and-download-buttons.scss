@@ -56,6 +56,7 @@
 }
 
 .btn-download {
+  composes: btn from '../../../Sass/common/_buttons.scss';
   text-align: center;
   padding: 4px 3px;
   width: 27px;
@@ -73,6 +74,7 @@
 }
 
 .btn--chart-expand {
+  composes: btn from '../../../Sass/common/_buttons.scss';
   z-index: 999;
   background: $color-primary;
   padding: 1px 8px;
