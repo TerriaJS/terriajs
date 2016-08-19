@@ -380,6 +380,7 @@ describe('WebMapServiceCatalogItem', function() {
             metadataUrl: 'test/WMS/comma_sep_datetimes.xml',
             layers: '13_intervals'
         });
+        console.log('load');
         wmsItem.load().then(function() {
             expect(wmsItem.intervals.length).toEqual(13);
             done();
