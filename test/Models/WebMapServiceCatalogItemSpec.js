@@ -380,10 +380,8 @@ describe('WebMapServiceCatalogItem', function() {
             metadataUrl: 'test/WMS/comma_sep_datetimes.xml',
             layers: '13_intervals'
         });
+        console.log('load');
         wmsItem.load().then(function() {
-            // interval is now lazy loaded. '_load' gets called only prior to
-            // use of the WMS data.
-            wmsItem._load();
             expect(wmsItem.intervals.length).toEqual(13);
             done();
         }).otherwise(function() {
@@ -402,9 +400,6 @@ describe('WebMapServiceCatalogItem', function() {
             layers: 'single_period'
         });
         wmsItem.load().then(function() {
-            // interval is now lazy loaded. '_load' gets called only prior to
-            // use of the WMS data.
-            wmsItem._load();
             expect(wmsItem.intervals.length).toEqual(1);
             done();
         }).otherwise(function(e) {
@@ -423,9 +418,6 @@ describe('WebMapServiceCatalogItem', function() {
             layers: 'single_period'
         });
         wmsItem.load().then(function() {
-            // interval is now lazy loaded. '_load' gets called only prior to
-            // use of the WMS data.
-            wmsItem._load();
             expect(wmsItem.intervals.length).toEqual(11);
             done();
         }).otherwise(function(e) {
@@ -448,9 +440,6 @@ describe('WebMapServiceCatalogItem', function() {
             done();
         });
         wmsItem.load().then(function() {
-          // interval is now lazy loaded. '_load' gets called only prior to
-          // use of the WMS data.
-          wmsItem._load();
         }).otherwise(function(e) {
             fail(e);
             done();
