@@ -10,6 +10,8 @@
 }
 
 .btn{
+    composes: btn from '../../../Sass/common/_buttons.scss';
+
     border-radius: 50%;
     display: block;
     background: #fff;
