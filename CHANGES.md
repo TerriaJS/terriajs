@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+### 4.2.2
+
+* Refactored Csv, AbsItt and Sdmx-Json catalog items to depend on a common `TableCatalogItem`. Deprecated `CsvCatalogItem.setActiveTimeColumn` in favour of `tableStructure.setActiveTimeColumn`.
+
 ### 4.2.1
 
 * Fixed bug that prevented the preview map displaying on mobile devices.
