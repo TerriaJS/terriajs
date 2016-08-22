@@ -27,6 +27,9 @@
 
   @media print {
     display: block;
+    &.map{
+      height: 80vh;
+    }
   }
 }
 
