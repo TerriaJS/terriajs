@@ -26,7 +26,7 @@
     "d3-shape": "^1.0.0",
     "d3-transition": "^1.0.0",
     "dateformat": "^1.0.12",
-    "dompurify": "^0.7.3",
+    "dompurify": "^0.8.3",
     "extract-text-webpack-plugin": "git://github.com/TerriaJS/extract-text-webpack-plugin#order-undefined-error",
     "file-loader": "^0.8.5",
     "gulp": "^3.9.1",
