@@ -4,7 +4,7 @@ Change Log
 
 ### 4.3.0
 
-* Added `Terria.batchGeocoder` property.  If set, the batch geocoder is used to resolve addresses in CSV files.
+* Added `Terria.batchGeocoder` property.  If set, the batch geocoder is used to resolve addresses in CSV files so that they can be shown as points on the map.
 * Added `GnafAddressConverter` to resolve Australian addresses using the GNAF API.
 * Added a loading indicator for user-added files.
 
@@ -67,7 +67,6 @@ Change Log
 
 ### 4.0.0
 
-* When importing csv files that contain addresses rather than coordinates, the addresses are transformed into coordinates so that the results can be shown on the map.
 * Rewrote the TerriaJS user interface using React.  We believe the new interface is a drastic improvement, incorporating user feedback and the results of usability testing.  Currently, it is a bit harder to customize than our old user interface, so if your application has extensive customizations, we suggest delaying upgrading to this version for a little while logner.
 * Added support for non-geospatial CSV files, which display in a new chart panel.
 * Added support for customisable tags in Feature Info templates.
