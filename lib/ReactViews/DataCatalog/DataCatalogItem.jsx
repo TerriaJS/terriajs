@@ -14,16 +14,21 @@ const DataCatalogItem = React.createClass({
         viewState: React.PropTypes.object.isRequired
     },
 
+    onBtnClicked(event) {
+        if (defined(this.props.item.invoke) || this.props.viewState.useSmallScreenInterface) {
+            this.setPreviewedItem();
+        } else {
+            this.toggleEnable(event);
+        }
+    },
+
     toggleEnable(event) {
         this.props.item.toggleEnabled();
-        // set preview as well
-        this.props.viewState.viewCatalogItem(this.props.item);
-        // mobile switch to nowvewing
-        this.props.viewState.switchMobileView(this.props.viewState.mobileViewOptions.preview);
-        if (this.props.item.isEnabled === true &&
-            this.props.viewState.closeModalAfterAdd === true &&
-            !event.shiftKey && !event.ctrlKey) {
 
+        // set preview as well
+        this.setPreviewedItem();
+
+        if (this.props.item.isEnabled === true && !event.shiftKey && !event.ctrlKey) {
             // close modal window
             this.props.viewState.explorerPanelIsVisible = false;
             this.props.viewState.mobileView = null;
@@ -32,7 +37,6 @@ const DataCatalogItem = React.createClass({
 
     setPreviewedItem() {
         raiseErrorOnRejectedPromise(this.props.item.terria, this.props.item.load());
-        this.props.item.load();
         this.props.viewState.viewCatalogItem(this.props.item);
         // mobile switch to nowvewing
         this.props.viewState.switchMobileView(this.props.viewState.mobileViewOptions.preview);
@@ -52,7 +56,7 @@ const DataCatalogItem = React.createClass({
                 selected={this.isSelected()}
                 text={item.name}
                 btnState={this.getState()}
-                onBtnClick={defined(item.invoke) || this.props.viewState.useSmallScreenInterface ? this.setPreviewedItem : this.toggleEnable}
+                onBtnClick={this.onBtnClicked}
             />
         );
     },

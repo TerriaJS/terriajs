@@ -1,9 +1,13 @@
 import React from 'react';
 import classNames from 'classnames';
+import ko from 'terriajs-cesium/Source/ThirdParty/knockout';
 
 import ObserveModelMixin from '../ObserveModelMixin';
 import Tabs from './Tabs.jsx';
+
 import Styles from './explorer-window.scss';
+
+const SLIDE_DURATION = 300;
 
 const ExplorerWindow = React.createClass({
     mixins: [ObserveModelMixin],
@@ -13,13 +17,22 @@ const ExplorerWindow = React.createClass({
         viewState: React.PropTypes.object.isRequired
     },
 
+    getInitialState() {
+        return {
+            isMounted: false
+        };
+    },
+
     close() {
         this.props.viewState.explorerPanelIsVisible = false;
         this.props.viewState.switchMobileView('nowViewing');
     },
 
-    isVisible() {
-        return !this.props.viewState.hideMapUi() && this.props.viewState.explorerPanelIsVisible;
+    componentWillMount() {
+        this.props.viewState.explorerPanelAnimating = true;
+
+        this._pickedFeaturesSubscription = ko.pureComputed(this.isVisible, this).subscribe(this.onVisibilityChange);
+        this.onVisibilityChange(this.isVisible());
     },
 
     componentDidMount() {
@@ -31,28 +44,63 @@ const ExplorerWindow = React.createClass({
         window.addEventListener('keydown', this.escKeyListener, true);
     },
 
+    onVisibilityChange(isVisible) {
+        if (isVisible) {
+            this.slideIn();
+        } else {
+            this.slideOut();
+        }
+    },
+
+    slideIn() {
+        this.props.viewState.explorerPanelAnimating = true;
+
+        this.setState({
+            visible: true
+        });
+        setTimeout(() => {
+            this.setState({
+                slidIn: true
+            });
+
+            setTimeout(() => this.props.viewState.explorerPanelAnimating = false, SLIDE_DURATION);
+        });
+    },
+
+    slideOut() {
+        this.setState({
+            slidIn: false
+        });
+        setTimeout(() => {
+            this.setState({
+                visible: false
+            });
+        }, SLIDE_DURATION);
+    },
+
     componentWillUnmount() {
         window.removeEventListener('keydown', this.escKeyListener, false);
+
+        this._pickedFeaturesSubscription.dispose();
+    },
+
+    isVisible() {
+        return !this.props.viewState.useSmallScreenInterface && !this.props.viewState.hideMapUi() && this.props.viewState.explorerPanelIsVisible;
     },
 
     render() {
-        const className = classNames(
-            Styles.modalWrapper,
-            {
-                [Styles.isOpen]: this.isVisible()
-            }
-        );
+        const visible = this.state.visible;
 
-        return (
-            <div className={className}
+        return visible ? (
+            <div className={Styles.modalWrapper}
                  id="explorer-panel-wrapper"
-                 aria-hidden={!this.isVisible}>
+                 aria-hidden={!visible}>
                 <div onClick={this.close}
                      id="modal-overlay"
                      className={Styles.modalOverlay}
                      tabIndex="-1"/>
                 <div id="explorer-panel"
-                     className={classNames(Styles.explorerPanel, Styles.modalContent)}
+                     className={classNames(Styles.explorerPanel, Styles.modalContent, {[Styles.isMounted]: this.state.slidIn})}
                      aria-labelledby="modalTitle"
                      aria-describedby="modalDescription"
                      role="dialog">
@@ -66,7 +114,7 @@ const ExplorerWindow = React.createClass({
                     <Tabs terria={this.props.terria} viewState={this.props.viewState}/>
                 </div>
             </div>
-        );
+        ) : null;
     }
 });
 

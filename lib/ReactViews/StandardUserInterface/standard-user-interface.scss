@@ -7,7 +7,15 @@
 // back in.
 
 .ui {
+  @media screen{
+    overflow: hidden;
+  }
+  background: $dark;
   width: 100%;
+}
+
+.explorerPanelIsVisible{
+  opacity: 0.3;
 }
 
 .sidePanel {
@@ -15,6 +23,7 @@
   background: $dark;
   width: $work-bench-width;
   max-width: $work-bench-width;
+  box-sizing: border-box;
 
   h1 {
     margin: 0;
@@ -63,5 +72,6 @@
     bottom: auto;
     left: auto;
     right: auto;
+    overflow: hidden;
   }
 }

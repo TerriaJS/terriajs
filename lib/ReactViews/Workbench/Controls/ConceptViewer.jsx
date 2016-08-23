@@ -1,10 +1,9 @@
 'use strict';
 
+import classNames from 'classnames';
+import Icon from "../../Icon.jsx";
 import ObserveModelMixin from '../../ObserveModelMixin';
 import React from 'react';
-import Icon from "../../Icon.jsx";
-import classNames from 'classnames';
-
 import Styles from './concept-viewer.scss';
 
 const ConceptViewer = React.createClass({

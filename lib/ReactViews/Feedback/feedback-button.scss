@@ -1,31 +1,36 @@
 @import '~terriajs-variables';
 @import '../../Sass/common/mixins';
 
-.feedback{
-    background: #fff;
-    color: $dark;
-    border-radius: 20px;
-    box-shadow: $box-shadow;
-    @media print{
-        display: none;
-    }
+.feedback {
+  background: #fff;
+  font-family: $font-base;
+  font-size: 0.9rem;
+  color: $dark;
+  border-radius: 20px;
+  box-shadow: $box-shadow;
+  @media print {
+    display: none;
+  }
 }
 
-.btnFeedback{
-    // composes: btn from '../../Sass/common/_buttons.scss';
-    padding: 5px;
-    svg{
-        width: 30px;
-        height: 30px;
-        display: inline-block;
-        vertical-align: bottom;
-    }
-    span{
-        vertical-align: top;
-        line-height: 2.2;
-    }
-    @media print{
-        display: none;
-    }
+.btnFeedback {
+  composes: btn from '../../Sass/common/_buttons.scss';
+  padding: 5px;
+
+  svg {
+    width: 30px;
+    height: 30px;
+    display: inline-block;
+    vertical-align: bottom;
+  }
+
+  span {
+    vertical-align: top;
+    line-height: 2.2;
+  }
+
+  @media print {
+    display: none;
+  }
 }
 

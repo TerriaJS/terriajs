@@ -60,9 +60,8 @@ $workbench-margin: $padding-small;
 }
 
 .btn-visibility {
-
+  composes: btn from '../../Sass/common/_buttons.scss';
 }
-
 
 .nameColumn {
   composes: col from  '../../Sass/common/_base.scss';
@@ -76,15 +75,18 @@ $workbench-margin: $padding-small;
   composes: col-1 from  '../../Sass/common/_base.scss';
   padding: 5px;
   //remove additional space below inline element
-  button{
-    display: block;
-  }
   svg{
     height: 18px;
     width: 18px;
     fill: #fff;
   }
 }
+
+.btn-toggle {
+  composes: btn from '../../Sass/common/_buttons.scss';
+  display: block;
+}
+
 .iconLineChart {
   float: left;
   font-size: 140%;
@@ -99,5 +101,6 @@ $workbench-margin: $padding-small;
 }
 
 .draggable {
+  font-size: 0.9rem;
   cursor: move;
 }

@@ -22,6 +22,7 @@
   background: $dark;
   padding: $padding-small;
   height: 100%;
+  box-sizing: border-box;
 }
 
 .btn {
@@ -32,22 +33,24 @@
   vertical-align: top;
 }
 
-.btnAdd{
-    composes: btn;
+.btn-add {
+  composes: btn;
 
-    position: relative;
-    margin: 0 $padding-small;
-    padding: $padding $padding $padding $padding*3;
-    width: auto;
-    text-align: right;
-    svg{
-      position: absolute;
-      top: $padding;
-      left: $padding/2;
-      width: 18px;
-      height: 18px;
-      fill: #ffffff;
-    }
+  position: relative;
+  margin: 0 $padding-small;
+  padding: $padding $padding $padding $padding*3;
+  width: auto;
+  text-align: right;
+  font-size: 0.95rem;
+
+  svg {
+    position: absolute;
+    top: $padding;
+    left: $padding/2;
+    width: 18px;
+    height: 18px;
+    fill: #ffffff;
+  }
 }
 
 .btn-search {
@@ -57,7 +60,7 @@
   padding-right: $padding;
   position: relative;
   width: 40px;
-  svg{
+  svg {
     height: 28px;
     width: 28px;
     fill: #fff;
@@ -73,7 +76,7 @@
   padding-right: $padding;
   position: relative;
   width: 50px;
-  svg{
+  svg {
     height: 28px;
     width: 28px;
     fill: #fff;
@@ -82,6 +85,9 @@
     position: absolute;
     top: $padding-small;
     right: $padding-small;
+
+  }
+  .doubleDigit {
     font-size: 0.8rem;
   }
 }
@@ -104,25 +110,23 @@
   }
 }
 
-.btnMenu{
-    height: 40px;
+.btnMenu {
+  composes: btn from '../../Sass/common/_buttons.scss';
+  height: 40px;
+  font-size: 25px;
+  padding: 0 $padding-small;
+  border-radius: $radius-small;
+  margin-right: 3px;
+  vertical-align: top;
+  &:hover, &:focus, & {
+    border: 1px solid rgba(#fff, 0.5);
+  }
 
-    font-size: 25px;
-    padding: 0 $padding-small;
-    border-radius: $radius-small;
-    margin-right: 3px;
-
-    &:hover, &:focus, & {
-        border: 1px solid rgba(#fff, 0.5);
-    }
-
-    svg{
-      height: 37px;
-      width: 37px;
-      fill: #fff;
-    }
+  svg {
+    height: 37px;
+    width: 37px;
+    fill: #fff;
+  }
 }
-
-
 
 @include empty-module("form-search-data");

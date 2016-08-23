@@ -72,8 +72,8 @@ describe('SdmxJsonCatalogItem', function() {
     });
 
     describe('loading', function() {
-        var regionMappingJson, lgaData;
-        var dataflowFoo, dataFoo, dataFooBD2, dataFooBD2t, dataFoo2, dataNonSpatial;
+        var regionMappingJson, lgaData, steData;
+        var dataflowFoo, dataFoo, dataFooBD2, dataFooBD2t, dataFoo2, dataNonSpatial, dataAsObs, dataAsObsRepeated;
         beforeEach(function(done) {
             when.all([
                 loadText('test/SDMX-JSON/dataflow-foo.json').then(function(text) { dataflowFoo = text; }),
@@ -82,8 +82,11 @@ describe('SdmxJsonCatalogItem', function() {
                 loadText('test/SDMX-JSON/data-foo-BD2-2011_2013.json').then(function(text) { dataFooBD2t = text; }),
                 loadText('test/SDMX-JSON/data-foo2-2013.json').then(function(text) { dataFoo2 = text; }),
                 loadText('test/SDMX-JSON/data-nonspatial.json').then(function(text) { dataNonSpatial = text; }),
+                loadText('test/SDMX-JSON/data-as-observations.json').then(function(text) { dataAsObs = text; }),
+                loadText('test/SDMX-JSON/data-as-obs-repeated-dim.json').then(function(text) { dataAsObsRepeated = text; }),
                 loadText('data/regionMapping.json').then(function(text) { regionMappingJson = text; }),
-                loadText('data/regionids/region_map-FID_LGA_2015_AUST_LGA_CODE15.json').then(function(text) { lgaData = text; })
+                loadText('data/regionids/region_map-FID_LGA_2015_AUST_LGA_CODE15.json').then(function(text) { lgaData = text; }),
+                loadText('data/regionids/region_map-FID_STE_2011_AUST_STE_CODE11.json').then(function(text) { steData = text; })
             ]).then(function() {
                 jasmine.Ajax.install();
                 jasmine.Ajax.stubRequest(/.*/).andError(); // Fail all requests by default.
@@ -93,8 +96,11 @@ describe('SdmxJsonCatalogItem', function() {
                 jasmine.Ajax.stubRequest('http://sdmx.example.com/sdmx-json/data/FOO/BD_2.LGA_2013..A/all?startTime=2011&endTime=2013').andReturn({ responseText: dataFooBD2t });
                 jasmine.Ajax.stubRequest('http://sdmx.example.com/sdmx-json/data/FOO2/BD_2+BD_4..A../all?startTime=2013&endTime=2013').andReturn({ responseText: dataFoo2 });
                 jasmine.Ajax.stubRequest('http://sdmx.example.com/sdmx-json/data/NONSPATIAL/all/all').andReturn({ responseText: dataNonSpatial });
+                jasmine.Ajax.stubRequest('http://sdmx.example.com/sdmx-json/data/FOO-OBS/./all').andReturn({ responseText: dataAsObs });
+                jasmine.Ajax.stubRequest('http://sdmx.example.com/sdmx-json/data/FOO-OBS-RPT/./all').andReturn({ responseText: dataAsObsRepeated });
                 jasmine.Ajax.stubRequest('data/regionMapping.json').andReturn({ responseText: regionMappingJson });
                 jasmine.Ajax.stubRequest('data/regionids/region_map-FID_LGA_2015_AUST_LGA_CODE15.json').andReturn({ responseText: lgaData });
+                jasmine.Ajax.stubRequest('data/regionids/region_map-FID_STE_2011_AUST_STE_CODE11.json').andReturn({ responseText: steData });
             }).then(done).otherwise(done.fail);
         });
 
@@ -239,6 +245,52 @@ describe('SdmxJsonCatalogItem', function() {
                 expect(item.tableStructure.columns[0].values.length).toEqual(3); // 3 dates.
                 // Expect it to show 3 concepts to the user.
                 expect(item.concepts.length).toEqual(3);
+            }).otherwise(fail).then(done);
+        });
+
+        it('works with a data provided as observations not series', function(done) {
+            item.updateFromJson({
+                name: 'Foo',
+                url: 'http://sdmx.example.com/sdmx-json/data/FOO-OBS/./all'
+            });
+            item.load().then(function() {
+                // Expect it to have realised this is regional data.
+                var regionDetails = item.regionMapping.regionDetails;
+                expect(regionDetails).toBeDefined();
+                // Expect it to have created the right table of data (with a time dimension).
+                var columnNames = item.tableStructure.getColumnNames();
+                expect(columnNames.length).toEqual(3);
+                expect(columnNames[0]).toEqual('date');
+                expect(columnNames[1]).toEqual('STE_code');
+                expect(item.tableStructure.columns[0].values.slice()).toEqual(['2001', '2001', '2001', '2001', '2001', '2001', '2001', '2001', '2001']);
+                expect(item.tableStructure.columns[1].values.slice()).toEqual(['1', '2', '3', '4', '5', '6', '7', '8', '9']);
+                expect(item.tableStructure.columns[2].values.slice()).toEqual([17658, 14042, 9739, 6572, 2970, 4940, 945, 7222, 13001]);
+                // Expect it not to show any concepts to the user.
+                expect(item.concepts.length).toEqual(0);
+            }).otherwise(fail).then(done);
+        });
+
+        it('works with an aggregated dimension', function(done) {
+            item.updateFromJson({
+                name: 'Foo',
+                url: 'http://sdmx.example.com/sdmx-json/data/FOO-OBS-RPT/./all',
+                aggregatedDimensionIds: ['STATE']
+            });
+            item.load().then(function() {
+                // Expect it to have realised this is regional data.
+                var regionDetails = item.regionMapping.regionDetails;
+                expect(regionDetails).toBeDefined();
+                // Expect it to have created the right table of data (with a time dimension).
+                var columnNames = item.tableStructure.getColumnNames();
+                expect(columnNames.length).toEqual(3);
+                expect(columnNames[0]).toEqual('date');
+                expect(columnNames[1]).toEqual('STE_code');
+                expect(item.tableStructure.columns[0].values.slice()).toEqual(['2001', '2001', '2001', '2001', '2001', '2001', '2001', '2001', '2001']);
+                expect(item.tableStructure.columns[1].values.slice()).toEqual(['1', '2', '3', '4', '5', '6', '7', '8', '9']);
+                // Expect it to have aggregated up the data across the STATE dimension.
+                expect(item.tableStructure.columns[2].values.slice()).toEqual([17658, 14042, 9739, 6572, 2970, 4940, null, 1945, 13001]);
+                // Expect it not to show any concepts to the user.
+                expect(item.concepts.length).toEqual(0);
             }).otherwise(fail).then(done);
         });
 

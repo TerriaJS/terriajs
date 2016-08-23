@@ -119,19 +119,25 @@ const ZoomControl = React.createClass({
 
     render() {
         return (
-        <div className={Styles.zoomControl}>
-          <ul className={Styles.list}>
-            <li><button type='button' onClick={this.zoomIn} className={Styles.increase} title='zoom in'>
-                <Icon glyph={Icon.GLYPHS.increase}/>
-            </button></li>
-            <li><button type='button' onClick={this.zoomReset} className={Styles.refresh} title='reset zoom'>
-                <Icon glyph={Icon.GLYPHS.refresh}/>
-            </button></li>
-            <li><button type='button' onClick={this.zoomOut} className={Styles.decrease} title='zoom out'>
-                <Icon glyph={Icon.GLYPHS.decrease}/>
-            </button></li>
-          </ul>
-        </div>
+            <div className={Styles.zoomControl}>
+                <ul className={Styles.list}>
+                    <li>
+                        <button type='button' onClick={this.zoomIn} className={Styles.increase} title='zoom in'>
+                            <Icon glyph={Icon.GLYPHS.increase}/>
+                        </button>
+                    </li>
+                    <li>
+                        <button type='button' onClick={this.zoomReset} className={Styles.refresh} title='reset zoom'>
+                            <Icon glyph={Icon.GLYPHS.refresh}/>
+                        </button>
+                    </li>
+                    <li>
+                        <button type='button' onClick={this.zoomOut} className={Styles.decrease} title='zoom out'>
+                            <Icon glyph={Icon.GLYPHS.decrease}/>
+                        </button>
+                    </li>
+                </ul>
+            </div>
         );
     }
 });

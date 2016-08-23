@@ -17,6 +17,8 @@
     .selection-indicator{
       pointer-events: none;
       position: absolute;
+      width: 50px;
+      height: 50px;
     }
 
     .cesium-widget-credits{
@@ -26,6 +28,11 @@
       font-size: 0.5rem;
       color: rgba(#fff, 0.8);
       @extend %sm-show;
+
+      a {
+        text-decoration: none;
+        color: $color-primary;
+      }
     }
 
     .cesium-credit-image{

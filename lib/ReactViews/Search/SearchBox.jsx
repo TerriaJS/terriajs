@@ -1,21 +1,28 @@
-'use strict';
-
 import React from 'react';
-import defined from 'terriajs-cesium/Source/Core/defined';
-import Styles from './search-box.scss';
+import debounce from 'lodash.debounce';
 import Icon from "../Icon.jsx";
 
+import Styles from './search-box.scss';
+
+const DEBOUNCE_INTERVAL = 2000;
+
 /**
- * Super-simple dumb search box component.
- * Used for both data catalog search and location search.
+ * Simple dumb search box component that leaves the actual execution of searches to the component that renders it. Note
+ * that just like an input, this calls onSearchTextChanged when the value is changed, and expects that its parent
+ * component will listen for this and update searchText with the new value.
  */
 export default React.createClass({
     propTypes: {
+        /** Called when the search changes, after a debounce of {@link DEBOUNCE_INTERVAL} ms */
         onSearchTextChanged: React.PropTypes.func.isRequired,
+        /** Called when an actual search is triggered, either by clicking the button or pressing Enter */
         onDoSearch: React.PropTypes.func.isRequired,
+        /** The search text to display in the search box */
         searchText: React.PropTypes.string.isRequired,
+        /** Called when the search box receives focus */
         onFocus: React.PropTypes.func,
-        searchBoxLabel: React.PropTypes.string,
+
+        placeholder: React.PropTypes.string,
         onClear: React.PropTypes.func,
         alwaysShowClear: React.PropTypes.bool,
         autoFocus: React.PropTypes.bool
@@ -23,10 +30,14 @@ export default React.createClass({
 
     getDefaultProps() {
         return {
-            searchBoxLabel: 'Search',
+            placeholder: 'Search',
             alwaysShowClear: false,
             autoFocus: false
         };
+    },
+
+    componentWillMount() {
+        this.searchWithDebounce = debounce(this.search, DEBOUNCE_INTERVAL);
     },
 
     componentWillUnmount() {
@@ -37,27 +48,13 @@ export default React.createClass({
         return this.props.searchText.length > 0;
     },
 
-    searchWithDebounce() {
-        // Trigger search 2 seconds after the last input.
-        this.removeDebounce();
-
-        if (this.props.searchText.length > 0) {
-            this.debounceTimeout = setTimeout(() => {
-                this.search();
-            }, 2000);
-        }
-    },
-
     search() {
         this.removeDebounce();
         this.props.onDoSearch();
     },
 
     removeDebounce() {
-        if (defined(this.debounceTimeout)) {
-            clearTimeout(this.debounceTimeout);
-            this.debounceTimeout = undefined;
-        }
+        this.searchWithDebounce.cancel();
     },
 
     handleChange(event) {
@@ -99,7 +96,7 @@ export default React.createClass({
                        onFocus={this.props.onFocus}
                        onKeyDown={this.onKeyDown}
                        className={Styles.searchField}
-                       placeholder={this.props.searchBoxLabel}
+                       placeholder={this.props.placeholder}
                        autoComplete='off'
                        autoFocus={this.props.autoFocus} />
                 {(this.props.alwaysShowClear || this.hasValue()) && clearButton}

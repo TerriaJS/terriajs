@@ -9,6 +9,7 @@
 }
 
 .btn-catalog-item {
+  font-size: 0.8rem;
   composes: btn from '../../Sass/common/_buttons.scss';
   @extend %wrap;
   position: relative;
@@ -31,6 +32,7 @@
   }
 
   @media screen and (max-width: $sm) {
+    font-size: 0.9rem;
     padding-top: 10px;
     padding-bottom: 10px;
     border-bottom: 1px solid $grey-lighter;
@@ -38,6 +40,8 @@
 }
 
 .btn-action {
+  composes: btn from '../../Sass/common/_buttons.scss';
+
   position: absolute;
   color: $color-primary;
   right: 0;

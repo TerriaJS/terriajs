@@ -46,18 +46,10 @@ const WorkbenchItem = React.createClass({
 
     render() {
         const workbenchItem = this.props.item;
-
         return (
             <li
                 style={this.props.style}
-                className={classNames(
-                    this.props.className,
-                    Styles.workbenchItem,
-                    {
-                        [Styles.isOpen]: workbenchItem.isLegendVisible
-                    })}
-                >
-
+                className={classNames(this.props.className, Styles.workbenchItem,{[Styles.isOpen]: workbenchItem.isLegendVisible})}>
                 <ul className={Styles.header}>
                     <If condition={workbenchItem.supportsToggleShown}>
                         <li className={Styles.visibilityColumn}>
@@ -82,6 +74,7 @@ const WorkbenchItem = React.createClass({
                     </li>
                     <li className={Styles.toggleColumn}>
                         <button type='button'
+                                className={Styles.btnToggle}
                                 onClick={this.toggleDisplay}>
                                 {workbenchItem.isLegendVisible ? <Icon glyph={Icon.GLYPHS.opened}/> : <Icon glyph={Icon.GLYPHS.closed}/>}
                         </button>

@@ -8,7 +8,7 @@ import PickedFeatures from '../../../Map/PickedFeatures';
 import React from 'react';
 import Rectangle from 'terriajs-cesium/Source/Core/Rectangle';
 import when from 'terriajs-cesium/Source/ThirdParty/when';
-
+import classNames from 'classnames';
 import Styles from './viewing-controls.scss';
 
 const ViewingControls = React.createClass({
@@ -65,14 +65,13 @@ const ViewingControls = React.createClass({
 
     render() {
         const item = this.props.item;
-
         return (
-            <ul className={Styles.control}>
+            <ul className={classNames(Styles.control, {[Styles.hasZoom]: item.isMappable || item.tableStructure && item.tableStructure.sourceFeature})}>
                 <If condition={item.isMappable}>
                     <li className={Styles.zoom}><button type='button' onClick={this.zoomTo} title="Zoom to data" className={Styles.btn}>Zoom To Extent</button></li>
                 </If>
                 <If condition={item.tableStructure && item.tableStructure.sourceFeature}>
-                    <li className={Styles.openFeature}><button type='button' onClick={this.openFeature} title="Open source feature" className={Styles.btn}>Zoom To</button></li>
+                    <li className={Styles.zoom}><button type='button' onClick={this.openFeature} title="Zoom to data" className={Styles.btn}>Zoom To</button></li>
                 </If>
                 <If condition={item.showsInfo}>
                     <li className={Styles.info}><button type='button' onClick={this.previewItem} className={Styles.btn} title='info'>About This Data Set</button></li>

@@ -1,18 +1,26 @@
 @import '~terriajs-variables';
 @import '../../Sass/common/mixins';
 
-@include empty-module("root");
+.root {
+  font-family: $font-base;
+}
 
 .btn--catalog {
+  composes: btn from '../../Sass/common/_buttons.scss';
+
   text-align: left;
+  font-size: 0.8rem;
   padding: $padding-small 30px+$padding;
   position: relative;
   width: 100%;
   font-weight: bold;
+  line-height: normal;
+
   svg{
     display: inline-block;
   }
   @media screen and (max-width: $sm) {
+    font-size: 0.9rem;
     padding-top: 10px;
     padding-bottom: 10px;
     border-bottom: 1px solid $grey-lighter;
@@ -30,8 +38,9 @@
   padding-left: $padding;
 }
 
-.btnIsOpen{
-
+.isPreviewed{
+  background: $color-primary;
+  color: #ffffff;
 }
 
 
@@ -86,8 +95,9 @@
 
 .label {
   composes: label from '../../Sass/common/_labels.scss';
+  font-size: 0.8rem;
 }
 
 .label--no-results {
-  composes: no-results from '../../Sass/common/_labels.scss';
+  composes: label;
 }

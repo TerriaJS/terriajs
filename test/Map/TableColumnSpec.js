@@ -2,6 +2,7 @@
 
 /*global require,describe,it,expect*/
 var JulianDate = require('terriajs-cesium/Source/Core/JulianDate');
+var TimeInterval = require('terriajs-cesium/Source/Core/TimeInterval');
 
 var TableColumn = require('../../lib/Map/TableColumn');
 var VarType = require('../../lib/Map/VarType');
@@ -294,10 +295,10 @@ describe('TableColumn', function() {
         var data = ['2016-01-03', '2016-01-04', '2016-01-05'];
         var sevenDaysInMinutes = 60 * 24 * 7;
         var tableColumn = new TableColumn('date', data, {displayDuration: sevenDaysInMinutes});
-        var availability = tableColumn.availabilities[0];
-        expect(availability.contains(JulianDate.fromIso8601('2016-01-09'))).toBe(true);
-        expect(availability.contains(JulianDate.fromIso8601('2016-01-11'))).toBe(false);
-        var durationInSeconds = JulianDate.secondsDifference(availability.stop, availability.start);
+        var interval = tableColumn.timeIntervals[0];
+        expect(TimeInterval.contains(interval, JulianDate.fromIso8601('2016-01-09'))).toBe(true);
+        expect(TimeInterval.contains(interval, JulianDate.fromIso8601('2016-01-11'))).toBe(false);
+        var durationInSeconds = JulianDate.secondsDifference(interval.stop, interval.start);
         expect(durationInSeconds).toEqual(sevenDaysInMinutes * 60);
     });
 

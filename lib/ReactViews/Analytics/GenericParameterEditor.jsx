@@ -7,19 +7,18 @@ const GenericParameterEditor = React.createClass({
     mixins: [ObserveModelMixin],
     propTypes: {
         previewed: React.PropTypes.object,
-        parameter: React.PropTypes.object,
-        parameterValues: React.PropTypes.object
+        parameter: React.PropTypes.object
     },
 
     onChange(e) {
-        this.props.parameterValues[this.props.parameter.id] = e.target.value;
+        this.props.previewed.setParameterValues(this.props.parameter.id, e.target.value);
     },
 
     render() {
         return (<input className={Styles.field}
                        type="text"
                        onChange={this.onChange}
-                       value={this.props.parameterValues[this.props.parameter.id]}
+                       value={this.props.previewed.parameterValues[this.props.parameter.id]}
                 />);
     }
 });

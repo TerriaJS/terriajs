@@ -7,7 +7,7 @@
 .badge{
   top: 5px;
   left: 5px;
-  padding: 3px 5px 0 5px;
+  padding: 3px 5px 3px 5px;
   height: 16px;
   font-size: 75%;
   position: absolute;
@@ -30,4 +30,8 @@
       background: none;
     }
   }
+}
+
+.placeholder {
+  height: 200px;
 }

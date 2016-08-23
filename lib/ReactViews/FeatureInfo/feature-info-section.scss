@@ -1,5 +1,6 @@
 @import '~terriajs-variables';
 @import '../../Sass/common/mixins';
+@include empty-module("time-series-chart");
 
 .section {
   composes: clearfix from '../../Sass/common/_base.scss';
@@ -59,4 +60,9 @@
 
   margin-bottom: 13px;
   margin-right: 1px;
+  margin-top: 10px;
+}
+
+.clearfix {
+  composes: clearfix from '../../Sass/common/_base.scss';
 }

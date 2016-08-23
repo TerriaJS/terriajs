@@ -1,5 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
+import Styles from './icon.scss';
 
 // icon.jsx
 const GLYPHS = {
@@ -29,6 +30,7 @@ const GLYPHS = {
     location: require('../../wwwroot/images/icons/location.svg'),
     loop: require('../../wwwroot/images/icons/loop.svg'),
     menu: require('../../wwwroot/images/icons/menu.svg'),
+    measure: require('../../wwwroot/images/icons/measure.svg'),
     opened: require('../../wwwroot/images/icons/opened.svg'),
     pause: require('../../wwwroot/images/icons/pause.svg'),
     play: require('../../wwwroot/images/icons/play.svg'),
@@ -54,7 +56,7 @@ const Icon = React.createClass({
     render() {
         const glyph = this.props.glyph;
         return (
-            <svg viewBox="0 0 100 100" className={classNames('icon', this.props.className)} style={this.props.style}>
+            <svg viewBox="0 0 100 100" className={classNames('icon', this.props.className, Styles.svg)} style={this.props.style}>
                 <use xlinkHref={glyph}></use>
             </svg>
         );

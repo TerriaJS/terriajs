@@ -20,7 +20,6 @@ const ParameterEditor = React.createClass({
     propTypes: {
         parameter: React.PropTypes.object,
         viewState: React.PropTypes.object,
-        parameterValues: React.PropTypes.object,
         previewed: React.PropTypes.object
     },
 
@@ -33,64 +32,54 @@ const ParameterEditor = React.createClass({
                     previewed={this.props.previewed}
                     viewState={this.props.viewState}
                     parameter={this.props.parameter}
-                    parameterValues={this.props.parameterValues}
                 />);
             case 'rectangle':
                 return <RectangleParameterEditor
                     previewed={this.props.previewed}
                     viewState={this.props.viewState}
                     parameter={this.props.parameter}
-                    parameterValues={this.props.parameterValues}
                 />;
             case 'polygon':
                 return <PolygonParameterEditor
                     previewed={this.props.previewed}
                     viewState={this.props.viewState}
                     parameter={this.props.parameter}
-                    parameterValues={this.props.parameterValues}
                 />;
             case 'enumeration':
                 return <EnumerationParameterEditor
                     previewed={this.props.previewed}
                     viewState={this.props.viewState}
                     parameter={this.props.parameter}
-                    parameterValues={this.props.parameterValues}
                 />;
             case 'dateTime':
                 return <DateTimeParameterEditor
                     previewed={this.props.previewed}
                     parameter={this.props.parameter}
-                    parameterValues={this.props.parameterValues}
                 />;
             case 'region':
                 return <RegionParameterEditor
                     previewed={this.props.previewed}
                     parameter={this.props.parameter}
-                    parameterValues={this.props.parameterValues}
                 />;
             case 'regionType':
                 return <RegionTypeParameterEditor
                     previewed={this.props.previewed}
                     parameter={this.props.parameter}
-                    parameterValues={this.props.parameterValues}
                 />;
             case 'regionData':
                 return <RegionDataParameterEditor
                     previewed={this.props.previewed}
                     parameter={this.props.parameter}
-                    parameterValues={this.props.parameterValues}
                 />;
             case 'boolean':
                 return <BooleanParameterEditor
                     previewed={this.props.previewed}
                     parameter={this.props.parameter}
-                    parameterValues={this.props.parameterValues}
                 />;
             default:
                 return <GenericParameterEditor
                     previewed={this.props.previewed}
                     parameter={this.props.parameter}
-                    parameterValues={this.props.parameterValues}
                 />;
         }
     },
