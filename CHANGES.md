@@ -2,10 +2,12 @@
 Change Log
 ==========
 
-### 4.1.3
+### 4.3.0
 
-* For csvs that contain Australian addresses, and provided that batchGeocoder is set on Terria, the addresses will be geocoded and displayed on the map.
-* Show load indicator for user added files.
+* Added `Terria.batchGeocoder` property.  If set, the batch geocoder is used to resolve addresses in CSV files.
+* Added `GnafAddressConverter` to resolve Australian addresses using the GNAF API.
+* Added a loading indicator for user-added files.
+
 ### 4.2.1
 
 * Fixed bug that prevented the preview map displaying on mobile devices.
