@@ -5,7 +5,7 @@ Change Log
 ### 4.3.0
 
 * Added `Terria.batchGeocoder` property.  If set, the batch geocoder is used to resolve addresses in CSV files so that they can be shown as points on the map.
-* Added `GnafAddressConverter` to resolve Australian addresses using the GNAF API.
+* Added `GnafAddressGeocoder` to resolve Australian addresses using the GNAF API.
 * Added a loading indicator for user-added files.
 
 ### 4.2.1
