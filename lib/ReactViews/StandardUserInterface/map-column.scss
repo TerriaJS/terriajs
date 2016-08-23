@@ -27,9 +27,12 @@
 
   @media print {
     display: block;
-    &.map{
-      height: 80vh;
-    }
+  }
+}
+
+.map-cell-map{
+  @media print{
+    min-height: 80vh;
   }
 }
 
@@ -40,7 +43,6 @@
   z-index: 0;
 
   @media print {
-    position: relative!important;
     div, aside{
       height: auto !important;
     }
