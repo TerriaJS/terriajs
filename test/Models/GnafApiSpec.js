@@ -4,17 +4,18 @@ var when = require('terriajs-cesium/Source/ThirdParty/when');
 var Rectangle = require('terriajs-cesium/Source/Core/Rectangle');
 var loadWithXhr = require('terriajs-cesium/Source/Core/loadWithXhr');
 
-var GNAFApi = require('../../lib/Models/GNAFApi');
+var GnafApi = require('../../lib/Models/GnafApi');
 var CorsProxy = require('../../lib/Core/CorsProxy');
 var CustomMatchers = require('../Utility/CustomMatchers');
 
 var UNPROXIED_URL = 'http://example.com';
 var PROXIED_URL = 'http://proxy/example.com';
 var SEARCH_TERM = 'bananas';
+var ANOTHER_SEARCH_TERM = 'papayas';
 // Rectangle is west, south, east, north
 var RECTANGLE = Rectangle.fromDegrees(1, 2, 3, 4);
 
-describe('GNAFApi', function() {
+describe('GnafApi', function() {
     var gnafApi, loadDeferredFirst, loadDeferredSecond, corsProxy;
 
     beforeEach(function() {
@@ -36,13 +37,13 @@ describe('GNAFApi', function() {
         corsProxy = new CorsProxy();
         spyOn(corsProxy, 'getURLProxyIfNecessary').and.returnValue(PROXIED_URL);
 
-        gnafApi = new GNAFApi(corsProxy, UNPROXIED_URL, loadWithXhr);
+        gnafApi = new GnafApi(corsProxy, UNPROXIED_URL, loadWithXhr);
     });
 
     it('should pass searchTerm through to elasticsearch', function() {
         gnafApi.geoCode(SEARCH_TERM);
 
-        expect(getXhrArgs().query.bool.must[0].match.d61Address.query).toBe(SEARCH_TERM);
+        expect(getXhrArgs().query.match.d61Address.query).toBe(SEARCH_TERM);
     });
 
     it('should make calls to the URL passed to it', function() {
@@ -55,7 +56,7 @@ describe('GNAFApi', function() {
         var newCorsProxy = new CorsProxy();
         spyOn(newCorsProxy, 'getURLProxyIfNecessary').and.returnValue('another url');
 
-        var newGnafApi = new GNAFApi(newCorsProxy, undefined, loadWithXhr);
+        var newGnafApi = new GnafApi(newCorsProxy, undefined, loadWithXhr);
 
         expect(newCorsProxy.getURLProxyIfNecessary.calls.argsFor(0)[0].length).toBeGreaterThan(0);
         newGnafApi.geoCode(SEARCH_TERM);
@@ -106,6 +107,57 @@ describe('GNAFApi', function() {
 
         geoCodeCall.then(fail).otherwise(function(error) {
             expect(error.message).toBe('too bad');
+        }).then(done).otherwise(fail);
+    });
+
+    it('should split array into batches properly', function() {
+        var arrayToSplit = ["a", "b", "c", "d", "e", "f", "g", "h"];
+        var batchSize = 3;
+        var splitArray = GnafApi._splitIntoBatches(arrayToSplit, batchSize);
+        expect(splitArray[0]).toEqual(["a", "b", "c"]);
+        expect(splitArray[1]).toEqual(["d", "e", "f"]);
+        expect(splitArray[2]).toEqual(["g", "h"]);
+
+        batchSize = 2;
+        var innerSplitArray = GnafApi._splitIntoBatches(splitArray, batchSize);
+        expect(innerSplitArray[0]).toEqual([["a", "b", "c"], ["d", "e", "f"]]);
+        expect(innerSplitArray[1]).toEqual([["g", "h"]]);
+    });
+
+    it('should bulk geocode search terms if asked', function() {
+        gnafApi._bulkGeocodeSingleRequest([SEARCH_TERM, ANOTHER_SEARCH_TERM]);
+        // Bulk geocode search term is not valid json because it has multiple root elements
+        var xhrArgsStr = loadWithXhr.load.calls.argsFor(0)[3];
+
+        expect(xhrArgsStr).toBe(EXAMPLE_BULK_REQUEST_STR);
+    });
+
+    it('should convert results from a bulk elastic search scheme to hits', function(done) {
+        var geoCodeCall = gnafApi.bulkGeoCode([SEARCH_TERM, ANOTHER_SEARCH_TERM]);
+
+        loadDeferredFirst.resolve(JSON.stringify(EXAMPLE_BULK_RESPONSE));
+
+        geoCodeCall.then(function(results) {
+            console.log(results);
+
+            var hit1 = results[0];
+            var hit2 = results[1];
+
+            expect(hit1.id).toBe('GAACT716851370');
+            expect(hit1.name).toBe('7 LONDON CIRCUIT, CITY ACT 2601');
+            expect(hit1.score).toBe(6.957387);
+            expect(hit1.numberFirst).toBe(7);
+            expect(hit1.numberLast).toBeUndefined();
+            expect(hit1.street.name).toBe('LONDON');
+            expect(hit1.street.typeName).toBe('CCT');
+            expect(hit1.localityName).toBe('CITY');
+            expect(hit1.location.latitude).toBe(-35.28150121);
+            expect(hit1.location.longitude).toBe(149.12512965);
+
+            expect(hit2.name).toBe('POLICE STATION, 18 LONDON CIRCUIT, CITY ACT 2601');
+            expect(hit2.flatNumber).toBeUndefined();
+            expect(hit2.levelNumber).toBeUndefined();
+            expect(hit2.numberLast).toBeUndefined();
         }).then(done).otherwise(fail);
     });
 
@@ -462,3 +514,196 @@ var EXAMPLE_SECOND_RESPONSE = {
         }]
     }
 };
+
+var EXAMPLE_BULK_RESPONSE = {
+   "responses":[
+      {
+         "took":656,
+         "timed_out":false,
+         "_shards":{
+            "total":5,
+            "successful":5,
+            "failed":0
+         },
+         "hits":{
+            "total":770555,
+            "max_score":2.9654915,
+            "hits":[
+               {
+                  "_index":"gnaf",
+                  "_type":"gnaf",
+                  "_id":"GAACT716851370",
+                  "_score":6.957387,
+                  "_source":{
+                     "addressDetailPid":"GAACT716851370",
+                     "addressSiteName":null,
+                     "buildingName":null,
+                     "flatTypeCode":"D61_NULL",
+                     "flatTypeName":"D61_NULL",
+                     "flat":{
+                        "prefix":"D61_NULL",
+                        "number":-1,
+                        "suffix":"D61_NULL"
+                     },
+                     "levelTypeCode":"D61_NULL",
+                     "levelTypeName":"D61_NULL",
+                     "level":{
+                        "prefix":"D61_NULL",
+                        "number":-1,
+                        "suffix":"D61_NULL"
+                     },
+                     "numberFirst":{
+                        "prefix":"D61_NULL",
+                        "number":7,
+                        "suffix":"D61_NULL"
+                     },
+                     "numberLast":{
+                        "prefix":"D61_NULL",
+                        "number":-1,
+                        "suffix":"D61_NULL"
+                     },
+                     "street":{
+                        "name":"LONDON",
+                        "typeCode":"CIRCUIT",
+                        "typeName":"CCT",
+                        "suffixCode":"D61_NULL",
+                        "suffixName":"D61_NULL"
+                     },
+                     "localityName":"CITY",
+                     "stateAbbreviation":"ACT",
+                     "stateName":"AUSTRALIAN CAPITAL TERRITORY",
+                     "postcode":"2601",
+                     "aliasPrincipal":"P",
+                     "primarySecondary":"P",
+                     "location":{
+                        "lat":-35.28150121,
+                        "lon":149.12512965
+                     },
+                     "streetVariant":[
+
+                     ],
+                     "localityVariant":[
+                        {
+                           "localityName":"CANBERRA"
+                        },
+                        {
+                           "localityName":"CANBERRA CITY"
+                        },
+                        {
+                           "localityName":"ACTON"
+                        },
+                        {
+                           "localityName":"CANBERRA CENTRAL"
+                        }
+                     ],
+                     "d61Address":[
+                        "",
+                        "7 LONDON CIRCUIT",
+                        "CITY ACT 2601",
+                        "CANBERRA ACT",
+                        "CANBERRA CITY ACT",
+                        "ACTON ACT",
+                        "CANBERRA CENTRAL ACT"
+                     ]
+                  }
+               }
+            ]
+         }
+      },
+      {
+         "took":649,
+         "timed_out":false,
+         "_shards":{
+            "total":5,
+            "successful":5,
+            "failed":0
+         },
+         "hits":{
+            "total":582761,
+            "max_score":2.648175,
+            "hits":[
+               {
+                  "_index":"gnaf",
+                  "_type":"gnaf",
+                  "_id":"GAACT714873042",
+                  "_score":6.0663557,
+                  "_source":{
+                     "addressDetailPid":"GAACT714873042",
+                     "addressSiteName":null,
+                     "buildingName":"POLICE STATION",
+                     "flatTypeCode":"D61_NULL",
+                     "flatTypeName":"D61_NULL",
+                     "flat":{
+                        "prefix":"D61_NULL",
+                        "number":-1,
+                        "suffix":"D61_NULL"
+                     },
+                     "levelTypeCode":"D61_NULL",
+                     "levelTypeName":"D61_NULL",
+                     "level":{
+                        "prefix":"D61_NULL",
+                        "number":-1,
+                        "suffix":"D61_NULL"
+                     },
+                     "numberFirst":{
+                        "prefix":"D61_NULL",
+                        "number":18,
+                        "suffix":"D61_NULL"
+                     },
+                     "numberLast":{
+                        "prefix":"D61_NULL",
+                        "number":-1,
+                        "suffix":"D61_NULL"
+                     },
+                     "street":{
+                        "name":"LONDON",
+                        "typeCode":"CIRCUIT",
+                        "typeName":"CCT",
+                        "suffixCode":"D61_NULL",
+                        "suffixName":"D61_NULL"
+                     },
+                     "localityName":"CITY",
+                     "stateAbbreviation":"ACT",
+                     "stateName":"AUSTRALIAN CAPITAL TERRITORY",
+                     "postcode":"2601",
+                     "aliasPrincipal":"P",
+                     "primarySecondary":"0",
+                     "location":{
+                        "lat":-35.28088698,
+                        "lon":149.12622398
+                     },
+                     "streetVariant":[
+
+                     ],
+                     "localityVariant":[
+                        {
+                           "localityName":"CANBERRA"
+                        },
+                        {
+                           "localityName":"CANBERRA CITY"
+                        },
+                        {
+                           "localityName":"ACTON"
+                        },
+                        {
+                           "localityName":"CANBERRA CENTRAL"
+                        }
+                     ],
+                     "d61Address":[
+                        "POLICE STATION",
+                        "18 LONDON CIRCUIT",
+                        "CITY ACT 2601",
+                        "CANBERRA ACT",
+                        "CANBERRA CITY ACT",
+                        "ACTON ACT",
+                        "CANBERRA CENTRAL ACT"
+                     ]
+                  }
+               }
+            ]
+         }
+      }
+   ]
+};
+
+var EXAMPLE_BULK_REQUEST_STR = '{"query":{"match":{"d61Address":{"query":"bananas","fuzziness":2,"prefix_length":2}}},"rescore":{"query":{"rescore_query":{"match":{"d61Address":{"query":"bananas"}}},"query_weight":0}},"size":1}\n{"query":{"match":{"d61Address":{"query":"papayas","fuzziness":2,"prefix_length":2}}},"rescore":{"query":{"rescore_query":{"match":{"d61Address":{"query":"papayas"}}},"query_weight":0}},"size":1}\n';

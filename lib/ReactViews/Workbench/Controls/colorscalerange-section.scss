@@ -1,6 +1,7 @@
 @import '~terriajs-variables';
 
 .colorscalerange {
+  font-size: 0.9rem;
   label {
     margin-right: $padding-small;
   }
@@ -16,4 +17,8 @@
   composes: btn from '../../../Sass/common/_buttons.scss';
   composes: btn-primary from '../../../Sass/common/_buttons.scss';
   margin-top: 10px;
+}
+
+.field {
+  composes: field from '../../../Sass/common/_form.scss';
 }

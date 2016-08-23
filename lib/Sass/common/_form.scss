@@ -1,6 +1,43 @@
 @import '~terriajs-variables';
 
+
+.input {
+  font-family: inherit;
+  font-size: 0.9rem;
+  box-sizing: border-box;
+  margin-top: 0;
+  margin-bottom: 0;
+  border-style: solid;
+  border-width: 1px;
+  border-color: $field-border;
+  border-radius: $radius-small;
+  width: 100%;
+}
+
+.input[type=text],
+.input[type=date],
+.input[type=datetime],
+.input[type=datetime-local],
+.input[type=email],
+.input[type=month],
+.input[type=number],
+.input[type=password],
+.input[type=search],
+.input[type=tel],
+.input[type=time],
+.input[type=url],
+.input[type=week] {
+  height: $input-height;
+  color: $text-dark;
+  display: block;
+  padding: .5rem .5rem;
+  vertical-align: middle;
+  -webkit-appearance: none;
+}
+
 .field {
+  composes: input;
+
   border-style: solid;
   border-width: 1px;
   border-color: $field-border;

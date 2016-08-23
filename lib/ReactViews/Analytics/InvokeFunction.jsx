@@ -1,5 +1,4 @@
 import React from 'react';
-import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 import ObserveModelMixin from '../ObserveModelMixin';
 import ParameterEditor from './ParameterEditor';
 import when from 'terriajs-cesium/Source/ThirdParty/when';
@@ -18,10 +17,7 @@ const InvokeFunction = React.createClass({
     },
 
     componentWillMount() {
-        this._parameterValues = {};
-        knockout.track(this, ['_parameterValues']);
-
-        this.initializeParameters(this.props);
+        this.enableContextItem(this.props);
     },
 
     componentWillUnmount() {
@@ -29,12 +25,14 @@ const InvokeFunction = React.createClass({
     },
 
     componentWillReceiveProps(nextProps) {
-        this.initializeParameters(nextProps);
+        // This will be called when component is already mounted but props change, for example if you go from one WPS
+        // item to another.
+        this.enableContextItem(nextProps);
     },
 
     submit() {
         try {
-            const promise = when(this.props.previewed.invoke(this._parameterValues))
+            const promise = when(this.props.previewed.invoke())
                 .otherwise(terriaError => {
                     if (terriaError instanceof TerriaError) {
                         this.props.previewed.terria.error.raiseEvent(terriaError);
@@ -56,18 +54,7 @@ const InvokeFunction = React.createClass({
         }
     },
 
-    initializeParameters(props) {
-        this._parameterValues = {};
-
-        const parameters = props.previewed.parameters;
-        for (let i = 0; i < parameters.length; ++i) {
-            const parameter = parameters[i];
-            this._parameterValues[parameter.id] = parameter.defaultValue;
-        }
-
-        knockout.track(this._parameterValues);
-
-        // Enable the context item, if any.
+    enableContextItem(props) {
         this.removeContextItem();
         if (defined(props.previewed.contextItem)) {
             props.previewed.contextItem.isEnabled = true;
@@ -91,7 +78,6 @@ const InvokeFunction = React.createClass({
                          parameter={param}
                          viewState={this.props.viewState}
                          previewed={this.props.previewed}
-                         parameterValues={this._parameterValues}
         />
     );},
 

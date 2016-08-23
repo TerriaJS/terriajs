@@ -70,23 +70,33 @@
     .linechart-title .name {
       margin-right: 7px;
       font-family: monospace;
-      font-size: 120%;
+      font-size: 110%;
     }
   }
 }
 
 .tool-tip {
+  color: $text-light;
   z-index: 9999;
   background-color: $chart-darker;
   padding: 5px 5px 10px 10px;
   font-family: monospace;
 
   :global {
+    table {
+      border-collapse: collapse;
+      border-spacing: 0;
+      max-width: 100%;
+      width: 100%;
+    }
+
     .color {
       width: 16px;
       height: 2px;
       margin: 0 0 4px 0;
       display: inline-block;
+      margin-right: 11px;
+      margin-left: -5px;
     }
 
     .value {
@@ -108,12 +118,6 @@
     td {
       padding-top: 2px;
       padding-bottom: 2px;
-    }
-
-    .color {
-      width: 16px;
-      margin-right: 11px;
-      margin-left: -5px;
     }
   }
 }

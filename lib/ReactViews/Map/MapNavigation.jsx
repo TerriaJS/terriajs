@@ -38,8 +38,8 @@ const MapNavigation = React.createClass({
                 <div className={Styles.control}>
                     <MyLocation terria={this.props.terria}/>
                 </div>
-                <For each="item" of={this.props.navItems}>
-                    <div className={Styles.control}>
+                <For each="item" of={this.props.navItems} index="i">
+                    <div className={Styles.control} key={i}>
                         {item}
                     </div>
                 </For>
