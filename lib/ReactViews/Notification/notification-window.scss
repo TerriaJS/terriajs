@@ -1,8 +1,10 @@
 @import '~terriajs-variables';
 @import '../../Sass/common/mixins';
 
-.wrapper{
+.wrapper {
   composes: flex from '../../Sass/common/_base.scss';
+  color: $text-light;
+  font-family: $font-base;
   position: fixed;
   top: 0;
   left: 0;
@@ -11,9 +13,13 @@
   z-index: $front-component-z-index +10;
   align-items: center;
   justify-content: center;
+
+  a {
+    @extend %link;
+  }
 }
 
-.notification{
+.notification {
   border-radius: $radius-small;
   border: 1px solid darken($dark, 3%);
   background: $dark;
@@ -22,27 +28,33 @@
   height: auto;
 }
 
-.inner{
-    padding: $padding $padding*2;
-    height: 100%;
-    max-height: calc(100vh - #{$input-height*3});
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
+.title {
+  composes: h3 from '../../Sass/common/_base.scss';
 }
 
-.footer{
+.inner {
+  composes: scrollbars from '../../Sass/common/_base.scss';
+
+  padding: $padding $padding*2;
+  height: 100%;
+  max-height: calc(100vh - #{$input-height*3});
+  overflow-y: auto;
+}
+
+.footer {
   display: block;
 }
 
-.body{
+.body {
   font-size: $font-size-small;
 }
 
-.btn{
-    composes: btn from '../../Sass/common/_buttons.scss';
-    background: rgba(#fff, 0.50);
-    text-align: center;
-    width: 100%;
-    font-size: $font-size-small;
-    border-radius: 0 0 $radius-small $radius-small;
+.btn {
+  composes: btn from '../../Sass/common/_buttons.scss';
+  padding: $padding;
+  background: rgba(#fff, 0.50);
+  text-align: center;
+  width: 100%;
+  font-size: $font-size-small;
+  border-radius: 0 0 $radius-small $radius-small;
 }

@@ -3,6 +3,8 @@
 
 .btn-download {
   composes: btn from '../../../Sass/common/_buttons.scss';
+
+  padding: 10px;
   color: #fff;
   float: right;
   margin-right: $input-height;

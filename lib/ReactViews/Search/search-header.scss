@@ -1,8 +1,7 @@
 @import '~terriajs-variables';
 
 .no-results {
-  compose: label from '../../Sass/global/_labels.scss';
-  compose: no-results from '../../Sass/global/_labels.scss';
-
+  composes: label from '../../Sass/common/_labels.scss';
   padding-left: $padding;
+  font-size: 0.9rem;
 }

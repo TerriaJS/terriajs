@@ -4,13 +4,15 @@
 $distance-bg: rgba($dark, 0.9);
 
 .baseLegend, .distanceLegend {
-  height: 29px;
+  box-sizing: border-box;
+  font-family: $font-base;
   float: left;
   background-color: #fff;
   color: $text-dark;
   border-radius: $radius-medium;
   padding: $padding-small $padding;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
+  height: 29px;
   text-align: center;
   line-height: 16px;
   border: 0;

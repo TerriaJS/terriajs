@@ -2,6 +2,7 @@
 @import '../../Sass/common/mixins';
 
 .mobileModal{
+  composes: scrollbars from '../../Sass/common/_base.scss';
   position: fixed;
   top: $mobile-header-height;
   bottom: 0;
@@ -12,7 +13,6 @@
   display: none;
   overflow-x: hidden;
   overflow-y: hidden;
-  -webkit-overflow-scrolling: touch;
   width: 100%;
   &.isOpen{
       display: block;
@@ -20,9 +20,10 @@
 }
 
 .modalBg{
+  composes: scrollbars from '../../Sass/common/_base.scss';
+
   overflow-y: auto;
   overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
   padding: 0;
   height: 100%;
 }
@@ -45,6 +46,7 @@
   composes: button;
 
   float: right;
+  padding: $padding;
 }
 
 .back-button {
