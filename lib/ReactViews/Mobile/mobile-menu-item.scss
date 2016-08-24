@@ -5,6 +5,9 @@
 }
 
 .link {
+  composes: btn from '../../Sass/common/_buttons.scss';
+
+  font-size: 1rem;
   width: 100%;
   text-align: left;
   padding: $padding-small*3 0;

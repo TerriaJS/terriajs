@@ -87,10 +87,10 @@
 
 .autocomplete {
   composes: list-reset from '../../Sass/common/_base.scss';
+  composes: scrollbars from '../../Sass/common/_base.scss';
 
   max-height: 200px;
   overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
   background: #fff;
   padding: $padding;
   box-shadow: $box-shadow;

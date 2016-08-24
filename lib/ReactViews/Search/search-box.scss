@@ -13,6 +13,7 @@
 
 .searchField {
   composes: field from '../../Sass/common/_form.scss';
+  font-family: $font-base;
 }
 
 .searchData{
@@ -41,6 +42,7 @@ input[type=text].searchField {
 
 
 .searchClear{
+  composes: btn from '../../Sass/common/_buttons.scss';
   right: 0;
   top: 0;
   position: absolute;

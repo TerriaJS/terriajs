@@ -90,6 +90,11 @@
   .#{$module-name} { /*!*/ }
 }
 
+%link {
+  color: $color-primary;
+  text-decoration: none;
+}
+
 %sm-show, %md-show, %lg-show {
   display: none !important
 }
