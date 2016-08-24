@@ -21,11 +21,18 @@ import 'inobounce';
 
 import Styles from './standard-user-interface.scss';
 
+/** blah */
 const StandardUserInterface = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
+        /**
+         * Terria instance
+         */
         terria: React.PropTypes.object.isRequired,
+        /**
+         * All the base maps.
+         */
         allBaseMaps: React.PropTypes.array,
         viewState: React.PropTypes.object.isRequired,
         minimumLargeScreenWidth: React.PropTypes.number,

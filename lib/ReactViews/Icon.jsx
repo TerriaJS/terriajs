@@ -1,5 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
+import Styles from './icon.scss';
 
 // icon.jsx
 const GLYPHS = {
@@ -55,7 +56,7 @@ const Icon = React.createClass({
     render() {
         const glyph = this.props.glyph;
         return (
-            <svg viewBox="0 0 100 100" className={classNames('icon', this.props.className)} style={this.props.style}>
+            <svg viewBox="0 0 100 100" className={classNames('icon', this.props.className, Styles.svg)} style={this.props.style}>
                 <use xlinkHref={glyph}></use>
             </svg>
         );

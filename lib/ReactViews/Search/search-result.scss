@@ -1,9 +1,10 @@
 @import '~terriajs-variables';
 
 .search-result {
-    span{
-      overflow-wrap: break-word;
-      word-wrap: break-word;
+
+  span {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
   }
 }
 
@@ -26,7 +27,7 @@
     border: 1px solid #FFF;
   }
 
-  svg{
+  svg {
     height: 30px;
     width: 30px;
   }
@@ -49,12 +50,10 @@
   height: 35px;
   width: 30px;
 
-  svg{
+  svg {
     fill-opacity: 0;
   }
 }
-
-
 
 .btn {
   composes: btn from '../../Sass/common/_buttons.scss';
@@ -65,16 +64,16 @@
     padding-right: $padding;
     width: 100%;
     border: 1px solid transparent;
-    @media screen and (min-width: $sm){
+    @media screen and (min-width: $sm) {
       border: 1px solid $grey;
     }
   }
   &:hover {
-    .arrow-icon svg{
+    .arrow-icon svg {
       fill-opacity: 1;
     }
   }
-  &.btnLocationName{
+  &.btnLocationName {
     padding: $padding $padding*3;
   }
 }

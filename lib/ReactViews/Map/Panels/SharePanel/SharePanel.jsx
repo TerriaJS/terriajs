@@ -130,8 +130,8 @@ const SharePanel = React.createClass({
                 <If condition={this.state.isOpen}>
                         <div className={DropdownStyles.section}>
                             <div className={Styles.imgShare} style={shareImgStyle}></div>
-                            <div className={Styles.imgLink}>
-                                <a href={this.state.imageUrl} target='_blank'>View full size image</a>
+                            <div className={Styles.linkWrapper}>
+                                <a className={Styles.link} href={this.state.imageUrl} target='_blank'>View full size image</a>
                             </div>
                         </div>
                         <div className={DropdownStyles.section}>

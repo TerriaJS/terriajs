@@ -212,6 +212,22 @@ describe('TableStructure', function() {
         expect(htmls[1]).toContain('12' + separator + '345');
     });
 
+    it('can tell if it has address data', function() {
+        var data = [['x', 'y', 'Address'], [1.678, 5.123, "25 Gozzard Street, GUNGAHLIN TOWN CENTRE, ACT"],
+                                           [54321, 12345, "137 Reed Street, TUGGERANONG, ACT"],
+                                           [4, -3, "81 Mildura Street, FYSHWICK, ACT"]];
+        var options = {columnOptions: {y: {name: 'new y', format: {useGrouping: true, maximumFractionDigits: 1}}}};
+        var tableStructure = new TableStructure('foo', options);
+        tableStructure = tableStructure.loadFromJson(data);
+        expect(tableStructure.hasAddress).toBe(true);
+
+        var dataNoAddr = [['x', 'y'], [1.678, 5.123], [54321, 12345], [4, -3]];
+        var optionsNoAddr = {columnOptions: {y: {name: 'new y', format: {useGrouping: true, maximumFractionDigits: 1}}}};
+        var tableStructureNoAddr = new TableStructure('foo', optionsNoAddr);
+        tableStructureNoAddr = tableStructure.loadFromJson(dataNoAddr);
+        expect(tableStructureNoAddr.hasAddress).toBe(false);
+    });
+
     it('can get feature id mapping', function() {
         var data = [['year', 'id', 'lat', 'lon'], [1970, 'A', 16.8, 5.2], [1971, 'B', 16.2, 5.2], [1971, 'A', 67.8, 1.2], [1972, 'B', 68.2, 2.2]];
         var options = {idColumnNames: ['id']};
@@ -291,4 +307,18 @@ describe('TableStructure', function() {
         expect(table1.columns[1].values.slice()).toEqual([12, 16.2, 15]);
     });
 
+    it('can add columns', function() {
+        var dataNoAddr = [['x', 'y'], [1.678, 5.123], [54321, 12345], [4, -3]];
+        var options = {columnOptions: {y: {name: 'new y', format: {useGrouping: true, maximumFractionDigits: 1}}}};
+        var tableStructure = new TableStructure('foo', options);
+        tableStructure = tableStructure.loadFromJson(dataNoAddr);
+        var longValues = [44.0, 55.0, 66.0];
+        var latValues = [11.0, 22.0, 33.0];
+        expect(tableStructure.hasLatitudeAndLongitude).toBe(false);
+        tableStructure.addColumn("lat", latValues);
+        tableStructure.addColumn("lon", longValues);
+        expect(tableStructure.hasLatitudeAndLongitude).toBe(true);
+        expect(tableStructure.columns[VarType.LAT].values).toBe(latValues);
+        expect(tableStructure.columns[VarType.LON].values).toBe(longValues);
+    });
 });

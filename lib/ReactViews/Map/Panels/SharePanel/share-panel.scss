@@ -2,6 +2,7 @@
 @import '../../../../Sass/common/mixins';
 
 .share-panel {
+  font-size: 0.9rem;
 }
 
 .dropdown-inner {
@@ -26,8 +27,10 @@
   background-size: cover;
 }
 
-.image--link {
-  // composes: img--link from '../../../../Sass/common/_icons.scss';
+@include empty-module('link-wrapper');
+
+.link {
+  composes: link from '../../../../Sass/common/_base.scss';
 }
 
 .paragraph {

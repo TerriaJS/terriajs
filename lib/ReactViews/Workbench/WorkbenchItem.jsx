@@ -74,6 +74,7 @@ const WorkbenchItem = React.createClass({
                     </li>
                     <li className={Styles.toggleColumn}>
                         <button type='button'
+                                className={Styles.btnToggle}
                                 onClick={this.toggleDisplay}>
                                 {workbenchItem.isLegendVisible ? <Icon glyph={Icon.GLYPHS.opened}/> : <Icon glyph={Icon.GLYPHS.closed}/>}
                         </button>

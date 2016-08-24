@@ -28,6 +28,11 @@
       font-size: 0.5rem;
       color: rgba(#fff, 0.8);
       @extend %sm-show;
+
+      a {
+        text-decoration: none;
+        color: $color-primary;
+      }
     }
 
     .cesium-credit-image{

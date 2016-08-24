@@ -5,6 +5,12 @@ Change Log
 ### 4.2.2
 
 * Refactored Csv, AbsItt and Sdmx-Json catalog items to depend on a common `TableCatalogItem`. Deprecated `CsvCatalogItem.setActiveTimeColumn` in favour of `tableStructure.setActiveTimeColumn`.
+### 4.3.0
+
+* Added `Terria.batchGeocoder` property.  If set, the batch geocoder is used to resolve addresses in CSV files so that they can be shown as points on the map.
+* Added `GnafAddressGeocoder` to resolve Australian addresses using the GNAF API.
+* Added a loading indicator for user-added files.
+* Fixed a bug that prevented printing the map in the 2D mode.
 
 ### 4.2.1
 

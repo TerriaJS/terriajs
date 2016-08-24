@@ -1,8 +1,7 @@
 @import '~terriajs-variables';
 @import '../../Sass/common/mixins';
 
-.tabs {
-}
+@include empty-module("tabs");
 
 .tab-list {
   composes: list-reset from '../../Sass/common/_base.scss';
@@ -70,7 +69,7 @@
   font-family: $font-pop;
   background: $modal-bg;
   color: $modal-text;
-  font-size: 1rem;
+  font-size: 0.9rem;
   padding: $padding $padding*2;
 
   &.btn--tab {
