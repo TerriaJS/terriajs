@@ -1264,3 +1264,4 @@ describe('CsvCatalogItem with region mapping', function() {
     });
 
 });
+
