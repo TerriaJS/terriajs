@@ -8,6 +8,7 @@ Change Log
 * Added `GnafAddressGeocoder` to resolve Australian addresses using the GNAF API.
 * Added a loading indicator for user-added files.
 * Fixed a bug that prevented printing the map in the 2D mode.
+* Fixed a bug when changing between x-axis units in the chart panel.
 
 ### 4.2.1
 
