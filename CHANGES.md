@@ -9,6 +9,7 @@ Change Log
 * Added a loading indicator for user-added files.
 * Fixed a bug that prevented printing the map in the 2D mode.
 * Refactored Csv, AbsItt and Sdmx-Json catalog items to depend on a common `TableCatalogItem`. Deprecated `CsvCatalogItem.setActiveTimeColumn` in favour of `tableStructure.setActiveTimeColumn`.
+* Fixed a bug when changing between x-axis units in the chart panel.
 
 ### 4.2.1
 
