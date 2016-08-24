@@ -48,8 +48,6 @@ const ChartPanel = React.createClass({
         const chartableItems = this.props.terria.catalog.chartableItems;
         let data = [];
         let xUnits;
-        let xType;
-        const itemsToInactivate = [];
         for (let i = chartableItems.length - 1; i >= 0; i--) {
             const item = chartableItems[i];
             if (item.isEnabled && defined(item.tableStructure)) {
@@ -57,13 +55,6 @@ const ChartPanel = React.createClass({
                 if (defined(xColumn)) {
                     const yColumns = item.tableStructure.columnsByType[VarType.SCALAR].filter(column=>column.isActive);
                     if (yColumns.length > 0) {
-                        if (!defined(xType)) {
-                            xType = xColumn.type;
-                        } else if (xColumn.type !== xType) {
-                            // If this x column type doesn't match the previous one, flag it to turn it off.
-                            itemsToInactivate.push(i);
-                            continue;
-                        }
                         const yColumnNumbers = yColumns.map(yColumn=>item.tableStructure.columns.indexOf(yColumn));
                         const pointArrays = item.tableStructure.toPointArrays(xColumn, yColumns);
                         const thisData = pointArrays.map(chartDataFunctionFromPoints(item, yColumns, yColumnNumbers));
@@ -73,12 +64,6 @@ const ChartPanel = React.createClass({
                 }
             }
         }
-        // This changes chartableItems. Does this trigger a re-render?
-        itemsToInactivate.forEach(i=>{
-            chartableItems[i].tableStructure.columns.forEach(column=>{
-                column.isActive = false;
-            });
-        });
 
         const isLoading = (chartableItems.length > 0) && (chartableItems[chartableItems.length - 1].isLoading);
         const isVisible = (data.length > 0) || isLoading;
