@@ -7,6 +7,8 @@
   border-radius: 100px;
   border: solid 1px rgba(255, 255, 255, 0.2);
   text-align: center;
+  box-sizing: border-box;
+  line-height: 1.2rem;
 
   width: 24px;
   height: 60px;
@@ -26,3 +28,6 @@
   composes: list-reset from '../../../Sass/common/_base.scss';
 }
 
+.increase, .decrease, .refresh {
+  composes: btn from '../../../Sass/common/_buttons.scss';
+}

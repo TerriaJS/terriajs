@@ -1,5 +1,3 @@
-"use strict";
-
 import Loader from '../Loader.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
@@ -16,7 +14,7 @@ export default React.createClass({
 
     render() {
         if (this.props.searchProvider.isSearching || this.props.isWaitingForSearchToStart) {
-            return <div key="loader"><Loader/></div>;
+            return <div key="loader" className={Styles.loader}><Loader/></div>;
         } else if (this.props.searchProvider.searchMessage) {
             return <div key="message" className={Styles.noResults}>{this.props.searchProvider.searchMessage}</div>;
         } else {

@@ -21,6 +21,8 @@
 }
 
 .chart {
+  color: $text-light;
+
   :global {
     .line-chart .axis path.domain {
       stroke: $chart-axis-color;
@@ -39,7 +41,7 @@
     }
 
     .line-chart text {
-      font-size: 120%;
+      font-size: 110%;
     }
   }
 }
@@ -49,6 +51,7 @@
 }
 
 .section-label, .btn {
+  color: $text-light;
   display: inline-block;
   vertical-align: top;
 }
@@ -65,6 +68,7 @@
 }
 
 .btn--close-chart-panel {
+  composes: btn from '../../../Sass/common/_buttons.scss';
   position: absolute;
   right: 0;
   top: 0;

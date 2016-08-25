@@ -2,41 +2,58 @@
 @import '../../Sass/common/mixins';
 
 .preview {
-    height: 100%;
-    overflow: hidden;
+  height: 100%;
+  overflow: hidden;
+  font-family: $font-base;
 
-    @media screen and (max-width: $sm){
-      height: calc(100% - #{$mobile-modal-top-height});
-      overflow: auto;
-    }
+  @media screen and (max-width: $sm) {
+    height: calc(100% - #{$mobile-modal-top-height});
+    composes: scrollbars from '../../Sass/common/_base.scss';
+    overflow: auto;
+  }
 }
+
 .placeholder {
   text-align: center;
   color: $text-dark;
   padding-top: 80px;
-  font-size: 1.2rem;
 }
 
 .btn--back-to-map {
   composes: btn from '../../Sass/common/_buttons.scss';
   composes: btn--tertiary from '../../Sass/common/_buttons.scss';
-  font-size: 1rem;
+  font-size: 0.9rem;
 }
 
 .preview__inner {
   height: 100%;
   overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
+  composes: scrollbars from '../../Sass/common/_base.scss';
+
   margin: 0 $padding-small;
   position: relative;
 
-  h3{
+  h3 {
     margin: 0;
   }
 
-  @media screen and (min-width: $sm){
-    h3{
+  @media screen and (min-width: $sm) {
+    h3 {
       margin: 0.5em 0;
     }
   }
+}
+
+.field {
+  composes: field from '../../Sass/common/_form.scss';
+}
+
+.h4 {
+  composes: h4 from '../../Sass/common/_base.scss';
+
+  font-size: 0.9rem;
+}
+
+.h3 {
+  composes: h3 from '../../Sass/common/_base.scss';
 }

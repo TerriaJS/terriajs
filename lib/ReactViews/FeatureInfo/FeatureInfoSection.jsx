@@ -21,7 +21,9 @@ import VarType from '../../Map/VarType';
 import Styles from './feature-info-section.scss';
 
 // We use Mustache templates inside React views, where React does the escaping; don't escape twice, or eg. " => &quot;
-Mustache.escape = function(string) { return string; };
+Mustache.escape = function(string) {
+    return string;
+};
 
 // Individual feature info section
 const FeatureInfoSection = React.createClass({
@@ -170,7 +172,8 @@ const FeatureInfoSection = React.createClass({
                             {this.state.showRawData ? 'Show Curated Data' : 'Show Raw Data'}
                         </button>
                     </If>
-                    <Choose>
+                    <div className={Styles.clearfix}>
+                        <Choose>
                             <When condition={reactInfo.showRawData || !this.hasTemplate()}>
                                 <If condition={reactInfo.hasRawData}>
                                     {reactInfo.rawData}
@@ -191,9 +194,10 @@ const FeatureInfoSection = React.createClass({
                                 </If>
                             </When>
                             <Otherwise>
-                                    {reactInfo.info}
+                                {reactInfo.info}
                             </Otherwise>
                         </Choose>
+                    </div>
                     </section>
                 </If>
             </li>

@@ -31,13 +31,8 @@ const ExplorerWindow = React.createClass({
     componentWillMount() {
         this.props.viewState.explorerPanelAnimating = true;
 
-        this._pickedFeaturesSubscription = ko.pureComputed(this.isVisible, this).subscribe(isVisible => {
-            if (isVisible) {
-                this.slideIn();
-            } else {
-                this.slideOut();
-            }
-        }, this);
+        this._pickedFeaturesSubscription = ko.pureComputed(this.isVisible, this).subscribe(this.onVisibilityChange);
+        this.onVisibilityChange(this.isVisible());
     },
 
     componentDidMount() {
@@ -47,6 +42,14 @@ const ExplorerWindow = React.createClass({
             }
         };
         window.addEventListener('keydown', this.escKeyListener, true);
+    },
+
+    onVisibilityChange(isVisible) {
+        if (isVisible) {
+            this.slideIn();
+        } else {
+            this.slideOut();
+        }
     },
 
     slideIn() {
