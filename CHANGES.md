@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+### 4.3.1
+
+* Added the ability to specify the URL to the `serverConfig` service in `config.json` as `parameters.serverConfigUrl`.
+
 ### 4.3.0
 
 * Added `Terria.batchGeocoder` property.  If set, the batch geocoder is used to resolve addresses in CSV files so that they can be shown as points on the map.
