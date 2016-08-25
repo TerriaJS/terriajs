@@ -28,6 +28,8 @@
 
 .btn {
   composes: btn from '../../../Sass/common/_buttons.scss';
+  color: $text-light;
+
   &.btn {
     padding: 0;
     font-size: $font-size-mini;

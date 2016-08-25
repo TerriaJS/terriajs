@@ -13,6 +13,7 @@
   min-width: 150px;
   max-height: 80vh;
   z-index: 10;
+  font-family: $font-base;
 
   svg{
     fill: #fff;
@@ -55,6 +56,7 @@
 
   padding: 4px 9px;
   margin-right: 4px;
+  color: $text-light;
 }
 
 .btn--download {

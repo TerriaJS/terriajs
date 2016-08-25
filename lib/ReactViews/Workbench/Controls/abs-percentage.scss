@@ -2,6 +2,9 @@
 @import '../../../Sass/common/mixins';
 
 .btn {
+  composes: btn from '../../../Sass/common/_buttons.scss';
+  color: $text-light;
+  margin-top: $padding;
   position: relative;
   text-align: left;
   svg{
