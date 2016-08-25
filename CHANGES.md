@@ -9,7 +9,7 @@ Change Log
 * Added a loading indicator for user-added files.
 * Fixed a bug that prevented printing the map in the 2D mode.
 * Fixed a bug when changing between x-axis units in the chart panel.
-* Moved all Terria styles into CSS-modules code (except Leaflet) - `lib/Sass/StandardUserInterface.scss` no longer needs to be imported and now only includes styles for backwards compatibility. 
+* Moved all Terria styles into CSS-modules code (except Leaflet) - `lib/Sass/StandardUserInterface.scss` no longer needs to be imported and now only includes styles for backwards compatibility.
 
 ### 4.2.1
 
