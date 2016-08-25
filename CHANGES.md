@@ -2,6 +2,8 @@
 Change Log
 ==========
 
+* Fixed a bug which caused Cesium to crash when plotting a CSV with non-numerical data in the depth column
+
 ### 4.2.1
 
 * Fixed bug that prevented the preview map displaying on mobile devices.
