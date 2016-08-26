@@ -2,9 +2,10 @@
 Change Log
 ==========
 
-### 4.3.3
+### 4.4.0
 
 * Fixed a bug which caused Cesium to crash when plotting a CSV with non-numerical data in the depth column.
+* Refactored Csv, AbsItt and Sdmx-Json catalog items to depend on a common `TableCatalogItem`. Deprecated `CsvCatalogItem.setActiveTimeColumn` in favour of `tableStructure.setActiveTimeColumn`.
 
 ### 4.3.2
 
@@ -20,7 +21,6 @@ Change Log
 * Added `GnafAddressGeocoder` to resolve Australian addresses using the GNAF API.
 * Added a loading indicator for user-added files.
 * Fixed a bug that prevented printing the map in the 2D mode.
-* Refactored Csv, AbsItt and Sdmx-Json catalog items to depend on a common `TableCatalogItem`. Deprecated `CsvCatalogItem.setActiveTimeColumn` in favour of `tableStructure.setActiveTimeColumn`.
 * Fixed a bug when changing between x-axis units in the chart panel.
 * Moved all Terria styles into CSS-modules code (except Leaflet) - `lib/Sass/StandardUserInterface.scss` no longer needs to be imported and now only includes styles for backwards compatibility.
 
