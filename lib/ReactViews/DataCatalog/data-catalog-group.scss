@@ -13,8 +13,7 @@
   padding: $padding-small 30px+$padding;
   position: relative;
   width: 100%;
-  font-weight: bold;
-  line-height: normal;
+  font-weight: $font-weight-bold;
 
   svg{
     display: inline-block;
@@ -33,7 +32,7 @@
 }
 
 .btnCatalogTopLevel{
-  font-weight: 600;
+  font-weight: $font-weight-bold;
   border-bottom: 1px solid $grey-lighter;
   padding-left: $padding;
 }

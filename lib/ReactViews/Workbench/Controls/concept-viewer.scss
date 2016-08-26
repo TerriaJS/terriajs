@@ -78,7 +78,7 @@
 .items {
   composes: list-reset from '../../../Sass/common/_base.scss';
   margin-left: 18px;
-  font-weight: 300;
+  font-weight: $font-weight-normal;
 }
 
 

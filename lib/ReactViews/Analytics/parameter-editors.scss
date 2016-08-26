@@ -46,7 +46,7 @@
 .label {
   compose: field from '../../Sass/common/_label.scss';
 
-  font-weight: 600;
+  font-weight: $font-weight-bold;
   line-height: 2;
 }
 
