@@ -2,9 +2,10 @@
 Change Log
 ==========
 
-### 4.3.3
+### 4.4.0
 
 * Fixed a bug which caused Cesium to crash when plotting a CSV with non-numerical data in the depth column.
+* Refactored Csv, AbsItt and Sdmx-Json catalog items to depend on a common `TableCatalogItem`. Deprecated `CsvCatalogItem.setActiveTimeColumn` in favour of `tableStructure.setActiveTimeColumn`.
 
 ### 4.3.2
 
