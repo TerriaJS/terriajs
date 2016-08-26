@@ -172,7 +172,7 @@ const FeatureInfoSection = React.createClass({
                             {this.state.showRawData ? 'Show Curated Data' : 'Show Raw Data'}
                         </button>
                     </If>
-                    <div className={Styles.clearfix}>
+                    <div>
                         <Choose>
                             <When condition={reactInfo.showRawData || !this.hasTemplate()}>
                                 <If condition={reactInfo.hasRawData}>

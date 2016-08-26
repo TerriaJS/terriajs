@@ -30,6 +30,12 @@
   }
 }
 
+.map-cell-map{
+  @media print{
+    min-height: 80vh;
+  }
+}
+
 .map-wrapper {
   position: absolute;
   top: 0;
@@ -37,7 +43,6 @@
   z-index: 0;
 
   @media print {
-    position: relative!important;
     div, aside{
       height: auto !important;
     }

@@ -77,7 +77,7 @@ const MapColumn = React.createClass({
         return (
             <div className={Styles.mapInner}>
                 <div className={Styles.mapRow}>
-                    <div className={classNames(Styles.mapCell, 'map')} ref={this.newMapCell}>
+                    <div className={classNames(Styles.mapCell, Styles.mapCellMap)} ref={this.newMapCell}>
                         <div className={Styles.mapWrapper}
                              style={{height: this.state.height || (isIE ? '100vh' : '100%')}}>
                             <TerriaViewerWrapper terria={this.props.terria}

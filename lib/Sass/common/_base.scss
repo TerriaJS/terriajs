@@ -2,23 +2,13 @@
 @import 'mixins';
 
 .clearfix {
-  clear: both;
+  @extend %clearfix;
 }
 
 .list-reset {
   list-style: none;
   padding-left: 0;
   margin: 0;
-}
-
-.clearfix:before,
-.clearfix:after {
-  content: " ";
-  display: table
-}
-
-.clearfix:after {
-  clear: both
 }
 
 .display-none {
