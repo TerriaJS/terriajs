@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+### 4.3.2
+
+* Fixed css styling of shorten URL checkbox.
+
 ### 4.3.1
 
 * Added the ability to specify the URL to the `serverConfig` service in `config.json` as `parameters.serverConfigUrl`.
