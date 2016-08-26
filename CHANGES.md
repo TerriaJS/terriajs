@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+### 4.3.3
+
+* Fixed a bug which caused Cesium to crash when plotting a CSV with non-numerical data in the depth column.
+
 ### 4.3.2
 
 * Fixed css styling of shorten URL checkbox.
