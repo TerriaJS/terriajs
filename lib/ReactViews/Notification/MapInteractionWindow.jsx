@@ -15,7 +15,7 @@ const MapInteractionWindow = React.createClass({
 
     render() {
         const interactionMode = this.props.terria.mapInteractionModeStack && this.props.terria.mapInteractionModeStack[this.props.terria.mapInteractionModeStack.length - 1];
-        let windowClass = classNames(Styles.window, {
+        const windowClass = classNames(Styles.window, {
             [Styles.isActive]: interactionMode
         });
 
