@@ -67,7 +67,7 @@ const FeedbackForm = React.createClass({
     },
 
     render() {
-        let feedbackFormClassNames = classNames(Styles.form, {
+        const feedbackFormClassNames = classNames(Styles.form, {
             [Styles.isOpen]: this.props.viewState.feedbackFormIsVisible
         });
         return (
