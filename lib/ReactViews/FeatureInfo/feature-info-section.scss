@@ -38,8 +38,10 @@
 
   // Can't change these to target classes because we're directly styling markup from cesium.
   table {
+    @extend %clearfix;
     font-family: monospace;
     max-width: 100%;
+    border-collapse: collapse;
   }
 
   td {
@@ -47,6 +49,7 @@
     border-collapse: collapse;
     border: 1px solid $dark;
     font-size: 13px;
+    padding: 5px;
   }
 }
 
@@ -61,8 +64,4 @@
   margin-bottom: 13px;
   margin-right: 1px;
   margin-top: 10px;
-}
-
-.clearfix {
-  composes: clearfix from '../../Sass/common/_base.scss';
 }

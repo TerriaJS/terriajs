@@ -2,12 +2,28 @@
 Change Log
 ==========
 
+### 4.4.0
+
+* Fixed a bug which caused Cesium to crash when plotting a CSV with non-numerical data in the depth column.
+* Refactored Csv, AbsItt and Sdmx-Json catalog items to depend on a common `TableCatalogItem`. Deprecated `CsvCatalogItem.setActiveTimeColumn` in favour of `tableStructure.setActiveTimeColumn`.
+* Fixed css styling of the timeline and added padding to the feature info panel.
+
+### 4.3.2
+
+* Fixed css styling of shorten URL checkbox.
+
+### 4.3.1
+
+* Added the ability to specify the URL to the `serverConfig` service in `config.json` as `parameters.serverConfigUrl`.
+
 ### 4.3.0
 
 * Added `Terria.batchGeocoder` property.  If set, the batch geocoder is used to resolve addresses in CSV files so that they can be shown as points on the map.
 * Added `GnafAddressGeocoder` to resolve Australian addresses using the GNAF API.
 * Added a loading indicator for user-added files.
 * Fixed a bug that prevented printing the map in the 2D mode.
+* Fixed a bug when changing between x-axis units in the chart panel.
+* Moved all Terria styles into CSS-modules code (except Leaflet) - `lib/Sass/StandardUserInterface.scss` no longer needs to be imported and now only includes styles for backwards compatibility.
 
 ### 4.2.1
 

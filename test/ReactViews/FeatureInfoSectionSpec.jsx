@@ -305,7 +305,7 @@ describe('FeatureInfoSection', function() {
         });
 
         it('can handle white text in terria.formatNumber', function() {
-            let template = 'Sep: {{#terria.formatNumber}}{"useGrouping":true, "maximumFractionDigits":3} \n {{size}}{{/terria.formatNumber}}';
+            const template = 'Sep: {{#terria.formatNumber}}{"useGrouping":true, "maximumFractionDigits":3} \n {{size}}{{/terria.formatNumber}}';
             const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template} viewState={viewState} />;
             const result = getShallowRenderedOutput(section);
             expect(findAllEqualTo(result, 'Sep: 12' + separator + '345' + separator + '678.901').length).toEqual(1);
