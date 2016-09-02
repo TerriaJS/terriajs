@@ -134,10 +134,10 @@ function expand(props, sourceIndex) {
     // Set the active columns via tableStyle too.
     if (defined(props.yColumns)) {
         props.yColumns.forEach(nameOrIndex => {
-            if (!defined(tableStyleOptions[nameOrIndex])) {
-                tableStyleOptions[nameOrIndex] = {};
+            if (!defined(tableStyleOptions.columns[nameOrIndex])) {
+                tableStyleOptions.columns[nameOrIndex] = {};
             }
-            tableStyleOptions[nameOrIndex].active = true;
+            tableStyleOptions.columns[nameOrIndex].active = true;
         });
     }
     const options = {
