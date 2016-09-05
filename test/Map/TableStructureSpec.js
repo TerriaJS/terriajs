@@ -335,4 +335,21 @@ describe('TableStructure', function() {
         expect(tableStructure.columns[VarType.LAT].values).toBe(latValues);
         expect(tableStructure.columns[VarType.LON].values).toBe(longValues);
     });
+
+    it('can sort columns', function() {
+        var data = [['x', 'y', 'z'], [3, 5, 'a'], [1, 8, 'c'], [4, -3, 'b']];
+        var tableStructure = TableStructure.fromJson(data);
+        tableStructure.sortBy(tableStructure.getColumnWithName('x'));
+        expect(tableStructure.getColumnWithName('x').values.slice()).toEqual([1, 3, 4]);
+        expect(tableStructure.getColumnWithName('y').values.slice()).toEqual([8, 5, -3]);
+        expect(tableStructure.getColumnWithName('z').values.slice()).toEqual(['c', 'a', 'b']);
+        tableStructure.sortBy(tableStructure.getColumnWithName('z'));
+        expect(tableStructure.getColumnWithName('x').values.slice()).toEqual([3, 4, 1]);
+        expect(tableStructure.getColumnWithName('y').values.slice()).toEqual([5, -3, 8]);
+        expect(tableStructure.getColumnWithName('z').values.slice()).toEqual(['a', 'b', 'c']);
+        tableStructure.sortBy(tableStructure.getColumnWithName('x'), function(a, b) { return b - a; }); // descending
+        expect(tableStructure.getColumnWithName('x').values.slice()).toEqual([4, 3, 1]);
+        expect(tableStructure.getColumnWithName('y').values.slice()).toEqual([-3, 5, 8]);
+        expect(tableStructure.getColumnWithName('z').values.slice()).toEqual(['b', 'a', 'c']);
+    });
 });
