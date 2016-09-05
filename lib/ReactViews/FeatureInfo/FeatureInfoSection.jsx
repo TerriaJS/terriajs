@@ -83,7 +83,7 @@ const FeatureInfoSection = React.createClass({
                     longitude: CesiumMath.toDegrees(latLngInRadians.longitude)
                 };
             }
-            propertyData.terria.timeSeries = getTimeSeriesChartContext(this.props.catalogItem, this.props.feature, propertyData._terria_rowNumbers);
+            propertyData.terria.timeSeries = getTimeSeriesChartContext(this.props.catalogItem, this.props.feature, propertyData._terria_getChartData);
         }
         return propertyData;
     },
@@ -416,10 +416,10 @@ function describeFromProperties(properties, time) {
  * Get parameters that should be exposed to the template, to help show a timeseries chart of the feature data.
  * @private
  */
-function getTimeSeriesChartContext(catalogItem, feature, rowNumbers) {
-    if (defined(rowNumbers) && defined(catalogItem) && CustomComponents.isRegistered('chart')) {
+function getTimeSeriesChartContext(catalogItem, feature, getChartData) {
+    if (defined(getChartData) && defined(catalogItem) && CustomComponents.isRegistered('chart')) {
         const table = catalogItem.tableStructure;
-        const timeSeriesData = table && table.toCsvString('isoDateTime', rowNumbers, false); // false => do not format numbers.
+        const timeSeriesData = getChartData();
         if (timeSeriesData) {
             // Only show it as a line chart if the data is sampled (so a line chart makes sense), and the active column is a scalar.
             const yColumn = table.getActiveColumns()[0];
@@ -467,13 +467,13 @@ function getInfoAsReactComponent(that) {
     let timeSeriesChartTitle;
 
     if (defined(templateData)) {
-        const timeSeriesChartContext = getTimeSeriesChartContext(that.props.catalogItem, that.props.feature, templateData._terria_rowNumbers);
+        const timeSeriesChartContext = getTimeSeriesChartContext(that.props.catalogItem, that.props.feature, templateData._terria_getChartData);
         if (defined(timeSeriesChartContext)) {
             timeSeriesChart = parseCustomMarkdownToReact(timeSeriesChartContext.chart, context);
             timeSeriesChartTitle = timeSeriesChartContext.title;
         }
         delete templateData._terria_columnAliases;
-        delete templateData._terria_rowNumbers;
+        delete templateData._terria_getChartData;
     }
     const showRawData = !that.hasTemplate() || that.state.showRawData;
     let rawDataHtml;
