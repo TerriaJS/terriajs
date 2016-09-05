@@ -419,7 +419,7 @@ function describeFromProperties(properties, time) {
 function getTimeSeriesChartContext(catalogItem, feature, rowNumbers) {
     if (defined(rowNumbers) && defined(catalogItem) && CustomComponents.isRegistered('chart')) {
         const table = catalogItem.tableStructure;
-        const timeSeriesData = table && table.toCsvString(undefined, rowNumbers, false); // false => do not format numbers.
+        const timeSeriesData = table && table.toCsvString('isoDateTime', rowNumbers, false); // false => do not format numbers.
         if (timeSeriesData) {
             // Only show it as a line chart if the data is sampled (so a line chart makes sense), and the active column is a scalar.
             const yColumn = table.getActiveColumns()[0];
