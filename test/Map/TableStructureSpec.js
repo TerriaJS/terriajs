@@ -352,4 +352,12 @@ describe('TableStructure', function() {
         expect(tableStructure.getColumnWithName('y').values.slice()).toEqual([-3, 5, 8]);
         expect(tableStructure.getColumnWithName('z').values.slice()).toEqual(['b', 'a', 'c']);
     });
+
+    it('can sort columns by date', function() {
+        // Note the last date occurs before the first, but a string compare would disagree.
+        var data = [['date', 'v'], ['2010-06-20T10:00:00.0+1000', 'a'], ['2010-06-19T10:00:00.0+1000', 'b'], ['2010-06-20T10:00:00.0+1100', 'c']];
+        var tableStructure = TableStructure.fromJson(data);
+        tableStructure.sortBy(tableStructure.columns[0]);
+        expect(tableStructure.columns[1].values.slice()).toEqual(['b', 'c', 'a']);
+    });
 });
