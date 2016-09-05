@@ -7,6 +7,7 @@ Change Log
 * Fixed a bug which caused Cesium to crash when plotting a CSV with non-numerical data in the depth column.
 * Refactored Csv, AbsItt and Sdmx-Json catalog items to depend on a common `TableCatalogItem`. Deprecated `CsvCatalogItem.setActiveTimeColumn` in favour of `tableStructure.setActiveTimeColumn`.
 * Fixed css styling of the timeline and added padding to the feature info panel.
+* Improved rendering speed when changing the display variable for large lat/lon csv files.
 
 ### 4.3.2
 
