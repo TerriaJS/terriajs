@@ -132,6 +132,9 @@ function expand(props, sourceIndex) {
         }
     }
     // Set the active columns via tableStyle too.
+    // This is a bit inconsistent with the above, since above we index with column number
+    // and here we may be indexing with number or id or name.
+    // But it works. (TableStyle.columns may have multiple references to the same column.)
     if (defined(props.yColumns)) {
         props.yColumns.forEach(nameOrIndex => {
             if (!defined(tableStyleOptions.columns[nameOrIndex])) {
