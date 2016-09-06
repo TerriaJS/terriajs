@@ -4,38 +4,15 @@
 var DragPoints = require('../../lib/Map/DragPoints');
 var Terria = require('../../lib/Models/Terria');
 var ViewerMode = require('../../lib/Models/ViewerMode');
-var Cesium = require('../../lib/Models/Cesium');
 var Entity = require('terriajs-cesium/Source/DataSources/Entity.js');
-var EntityCollection = require('terriajs-cesium/Source/DataSources/EntityCollection.js');
-var CesiumWidget = require('terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget');
-var L = require('leaflet');
-var Leaflet = require('../../lib/Models/Leaflet');
 
 describe('DragPoints', function() {
     var terria;
-    var container;
 
     beforeEach(function() {
         terria = new Terria({
             baseUrl: './'
         });
-        container = document.createElement('div');
-        container.id = 'container';
-        document.body.appendChild(container);
-
-        // Setting up both Cesium and Leaflet context as we're going to switch between them.
-        var cesiumWidget = new CesiumWidget(container);
-        cesiumWidget.entities = new EntityCollection();
-        var cesium = new Cesium(terria, cesiumWidget);
-        terria.cesium = cesium;
-
-        var map = L.map('container').setView([-28.5, 135], 5);
-        var leaflet = new Leaflet(terria, map);
-        terria.leaflet = leaflet;
-    });
-
-    afterEach(function() {
-        document.body.removeChild(container);
     });
 
     it('will change helper to right type if viewerMode changes to Leaflet', function() {
