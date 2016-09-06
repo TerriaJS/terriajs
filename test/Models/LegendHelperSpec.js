@@ -87,7 +87,7 @@ describe('LegendHelper', function() {
         var legendHelper = new LegendHelper(enumTableColumn, tableStyle);
         expect(legendHelper).toBeDefined();
         expect(legendHelper.legendUrl()).toBeDefined();  // Do this for its side-effects. Hmmm.
-        expect(Object.keys(legendHelper._binColor).length).toEqual(2); // For values 'A' and 'B'
+        expect(Object.keys(legendHelper._binColors).length).toEqual(2); // For values 'A' and 'B'
     });
 
     it('filters array of colorBins if enum values are not present', function() {
@@ -96,7 +96,7 @@ describe('LegendHelper', function() {
         var legendHelper = new LegendHelper(enumTableColumn, tableStyle);
         expect(legendHelper).toBeDefined();
         expect(legendHelper.legendUrl()).toBeDefined();  // Do this for its side-effects. Hmmm.
-        expect(Object.keys(legendHelper._binColor).length).toEqual(1); // For value 'A' only
+        expect(Object.keys(legendHelper._binColors).length).toEqual(1); // For value 'A' only
     });
 
     it('colors points via a color gradient when colorBins is 0', function() {
