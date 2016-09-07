@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+### 3.6.0
+
+* Support `flipGmlCoords` property in WebFeatureServiceCatalogItem to support incorrect EPSG:4326 lon-lat ordering.
+
 ### 3.5.0
 
 * Ungrouped items in CKAN catalog items are now grouped under an item whose title is determined by .ungroupedTitle (default: "No group").
@@ -18,8 +22,6 @@ Change Log
 
 ### 3.3.0
 
-* Support `parameters` property in WebFeatureServiceCatalogItem to allow accessing URLs which need additional parameters.
-* Support `flipGmlCoords` property in WebFeatureServiceCatalogItem to support incorrect EPSG:4326 lon-lat ordering.
 * Support `parameters` property in WebFeatureServiceCatalogItem to allow accessing URLs that need additional parameters.
 * Fixed a bug where visiting a shared link with a time-series layer would crash load.
 * Added a direct way to format numbers in feature info templates, eg. `{{#terria.formatNumber}}{"useGrouping": true, "maximumFractionDigits": 3}{{value}}{{/terria.formatNumber}}`. The quotes around the keys are optional.
