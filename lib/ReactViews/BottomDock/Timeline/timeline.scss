@@ -1,3 +1,5 @@
+@import '~terriajs-variables';
+
 .timeline {
   display: table;
   width: 100%;
@@ -8,6 +10,9 @@
 
 .text-row {
   display: table-row;
+  color: #fff;
+  font-family: $font-base;
+  font-size: 13px;
 }
 
 .text-cell {

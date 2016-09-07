@@ -5,8 +5,13 @@ Change Log
 ### 4.4.0
 
 * Fixed a bug which caused Cesium to crash when plotting a CSV with non-numerical data in the depth column.
+* Added automatic time-series charts of attributes to the feature info of time-varying region-mapped csvs.
 * Refactored Csv, AbsItt and Sdmx-Json catalog items to depend on a common `TableCatalogItem`. Deprecated `CsvCatalogItem.setActiveTimeColumn` in favour of `tableStructure.setActiveTimeColumn`.
 * Error in geocoding addresses in csv files now shows in dialog box.
+* Fixed css styling of the timeline and added padding to the feature info panel.
+* Improved rendering speed when changing the display variable for large lat/lon csv files.
+* Default to moving feature csvs if a time, lat, lon and a column named `id` are present.
+* Fixed a bug so units flow through to charts of moving csv features.
 
 ### 4.3.2
 
