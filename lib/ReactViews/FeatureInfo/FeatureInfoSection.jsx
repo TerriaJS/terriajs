@@ -427,12 +427,14 @@ function getTimeSeriesChartContext(catalogItem, feature, rowNumbers) {
                     xName: table.activeTimeColumn.name,
                     yName: yColumn.name,
                     id: feature.id,
-                    data: timeSeriesData.replace(/\\n/g, '\\n')
+                    data: timeSeriesData.replace(/\\n/g, '\\n'),
+                    units: table.columns.map(column => column.units || '').join(',')
                 };
                 const xAttribute = 'x-column="' + result.xName + '" ';
                 const yAttribute = 'y-column="' + result.yName + '" ';
                 const idAttribute = 'id="' + result.id + '" ';
-                result.chart = '<chart ' + xAttribute + yAttribute + idAttribute + '>' + result.data + '</chart>';
+                const unitsAttribute = 'column-units = "' + result.units + '" ';
+                result.chart = '<chart ' + xAttribute + yAttribute + unitsAttribute + idAttribute + '>' + result.data + '</chart>';
                 return result;
             }
         }
