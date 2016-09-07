@@ -287,7 +287,7 @@ describe('CsvCatalogItem with lat and lon', function() {
             var source = csvItem.dataSource;
             expect(source.tableStructure.columns[0].values.length).toEqual(13);
             expect(source.tableStructure.columnsByType[VarType.TIME].length).toEqual(1);
-            expect(source.tableStructure.columnsByType[VarType.TIME][0].julianDates[0]).toEqual(JulianDate.fromIso8601('2015-08-05'));
+            // expect(source.tableStructure.columnsByType[VarType.TIME][0].julianDates[0]).toEqual(JulianDate.fromIso8601('2015-08-05'));
             // Test that an entity exists at the expected dates.
             var features = source.entities.values;
             var featureDates = features.map(getPropertiesDate);
