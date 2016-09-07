@@ -53,9 +53,9 @@ const ChartPanel = React.createClass({
             if (item.isEnabled && defined(item.tableStructure)) {
                 const xColumn = getXColumn(item);
                 if (defined(xColumn)) {
-                    const yColumns = item.tableStructure.columnsByType[VarType.SCALAR].filter(column=>column.isActive);
+                    const yColumns = item.tableStructure.columnsByType[VarType.SCALAR].filter(column => column.isActive);
                     if (yColumns.length > 0) {
-                        const yColumnNumbers = yColumns.map(yColumn=>item.tableStructure.columns.indexOf(yColumn));
+                        const yColumnNumbers = yColumns.map(yColumn => item.tableStructure.columns.indexOf(yColumn));
                         const pointArrays = item.tableStructure.toPointArrays(xColumn, yColumns);
                         const thisData = pointArrays.map(chartDataFunctionFromPoints(item, yColumns, yColumnNumbers));
                         data = data.concat(thisData);

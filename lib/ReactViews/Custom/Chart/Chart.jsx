@@ -61,12 +61,12 @@ const Chart = React.createClass({
         const xColumn = table.getColumnWithNameIdOrIndex(this.props.xColumn || 0);
         let yColumns = [table.columns[1]];
         if (defined(this.props.yColumns)) {
-            yColumns = this.props.yColumns.map(yCol=>table.getColumnWithNameIdOrIndex(yCol));
+            yColumns = this.props.yColumns.map(yCol => table.getColumnWithNameIdOrIndex(yCol));
         }
         const pointArrays = table.toPointArrays(xColumn, yColumns);
         // The data id should be set to something unique, eg. its source id + column index.
         // If we're here, the data was downloaded from a single file or table, so the column index is unique by itself.
-        return pointArrays.map((points, index)=>
+        return pointArrays.map((points, index) =>
             new ChartData(points, {
                 id: index,
                 name: yColumns[index].name,
