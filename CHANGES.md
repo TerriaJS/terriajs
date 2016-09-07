@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+### 3.6.0
+
+* Support `flipGmlCoords` property in WebFeatureServiceCatalogItem to support incorrect EPSG:4326 lon-lat ordering.
+
 ### 3.5.0
 
 * Ungrouped items in CKAN catalog items are now grouped under an item whose title is determined by .ungroupedTitle (default: "No group").
