@@ -13,14 +13,15 @@ const BottomDock = React.createClass({
 
     propTypes: {
         terria: React.PropTypes.object.isRequired,
-        viewState: React.PropTypes.object.isRequired
+        viewState: React.PropTypes.object.isRequired,
+        domElementRef: React.PropTypes.function
     },
 
     render() {
         const terria = this.props.terria;
 
         return (
-            <div className={Styles.bottomDock}>
+            <div className={Styles.bottomDock} ref={this.props.domElementRef}>
                 <ChartPanel terria={terria} onHeightChange={this.onHeightChange} viewState={this.props.viewState}/>
                 <If condition={terria.timeSeriesStack.topLayer}>
                     <Timeline terria={terria}/>

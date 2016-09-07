@@ -8,6 +8,7 @@ Change Log
 * Refactored Csv, AbsItt and Sdmx-Json catalog items to depend on a common `TableCatalogItem`. Deprecated `CsvCatalogItem.setActiveTimeColumn` in favour of `tableStructure.setActiveTimeColumn`.
 * Fixed css styling of the timeline and added padding to the feature info panel.
 * Default to moving feature csvs if a time, lat, lon and a column named `id` are present.
+* Fixed a bug so units flow through to charts of moving csv features.
 
 ### 4.3.2
 
