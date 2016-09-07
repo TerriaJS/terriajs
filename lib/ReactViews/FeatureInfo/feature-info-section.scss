@@ -1,5 +1,6 @@
 @import '~terriajs-variables';
 @import '../../Sass/common/mixins';
+@include empty-module("time-series-chart");
 
 .section {
   composes: clearfix from '../../Sass/common/_base.scss';
@@ -37,8 +38,10 @@
 
   // Can't change these to target classes because we're directly styling markup from cesium.
   table {
+    @extend %clearfix;
     font-family: monospace;
     max-width: 100%;
+    border-collapse: collapse;
   }
 
   td {
@@ -46,6 +49,7 @@
     border-collapse: collapse;
     border: 1px solid $dark;
     font-size: 13px;
+    padding: 5px;
   }
 }
 

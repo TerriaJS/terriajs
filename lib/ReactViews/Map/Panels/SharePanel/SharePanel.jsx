@@ -130,8 +130,8 @@ const SharePanel = React.createClass({
                 <If condition={this.state.isOpen}>
                         <div className={DropdownStyles.section}>
                             <div className={Styles.imgShare} style={shareImgStyle}></div>
-                            <div className={Styles.imgLink}>
-                                <a href={this.state.imageUrl} target='_blank'>View full size image</a>
+                            <div className={Styles.linkWrapper}>
+                                <a className={Styles.link} href={this.state.imageUrl} target='_blank'>View full size image</a>
                             </div>
                         </div>
                         <div className={DropdownStyles.section}>
@@ -148,9 +148,7 @@ const SharePanel = React.createClass({
                         </div>
                         <If condition={this.isUrlShortenable()}>
                             <div className={classNames(DropdownStyles.section, Styles.shortenUrl)}>
-                                <button
-                                    className={classNames(Styles.btn, {[Styles.btnCheckboxOn]: this.shouldShorten(), [Styles.btnCheckboxOff]: !this.shouldShorten()})}
-                                    onClick={this.onShortenClicked}>
+                                <button onClick={this.onShortenClicked}>
                                     {this.shouldShorten() ? <Icon glyph={Icon.GLYPHS.checkboxOn}/> : <Icon glyph={Icon.GLYPHS.checkboxOff}/>}
                                     Shorten the share URL using a web service
                                 </button>

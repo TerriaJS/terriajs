@@ -5,6 +5,7 @@
 
 .root {
   padding: $padding 0 0 0;
+  font-size: 0.9rem;
 }
 
 .inner {
@@ -53,6 +54,7 @@
 
 
 .btnToggleOpen{
+  composes: btn from '../../../Sass/common/_buttons.scss';
   display: block;
   padding: 7px 0px;
   svg{
@@ -62,6 +64,7 @@
 }
 
 .btnToggleActive{
+  composes: btn from '../../../Sass/common/_buttons.scss';
   display: block;
   padding: 7px 0px;
   svg{

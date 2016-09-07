@@ -31,11 +31,6 @@
   box-shadow: 0 0 15px 6px rgba(100, 100, 100, 0.3);
   z-index: $front-component-z-index - 1;
   height: 100%;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  -webkit-backface-visibility: hidden;
-  -moz-backface-visibility: hidden;
-  backface-visibility: hidden;
 
   @include transform(translateY(20%));
   opacity: 0;
@@ -65,7 +60,7 @@
   composes: btn-transparent from '../../Sass/common/_buttons.scss';
   composes: btn--secondary from '../../Sass/common/_buttons.scss';
 
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   padding: 4px 10px;
   margin: 5px;
   font-weight: bold;

@@ -8,6 +8,8 @@ output.log
 npm-debug.log
 .DS_Store
 terria.lib.js
+terriajs-server.log
+terriajs.pid
 
 # added by GitSavvy
 /wwwroot/schema/

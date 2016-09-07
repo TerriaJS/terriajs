@@ -13,6 +13,7 @@ var ImageryProviderHooks = require('../../lib/Map/ImageryProviderHooks');
 var loadAndStubTextResources = require('../Utility/loadAndStubTextResources');
 var TableStyle = require('../../lib/Models/TableStyle');
 var Terria = require('../../lib/Models/Terria');
+var TimeInterval = require('terriajs-cesium/Source/Core/TimeInterval');
 var VarType = require('../../lib/Map/VarType');
 
 var greenTableStyle = new TableStyle({
@@ -242,12 +243,11 @@ describe('CsvCatalogItem with lat and lon', function() {
     it('supports dates', function(done) {
         csvItem.url = 'test/csv/lat_long_enum_moving_date.csv';
         csvItem.load().then(function() {
-            var j = JulianDate.fromIso8601;
             var source = csvItem.dataSource;
             expect(source.tableStructure.activeTimeColumn.name).toEqual('date');
             expect(source.tableStructure.columns[0].values.length).toEqual(13);
             expect(source.tableStructure.columnsByType[VarType.TIME].length).toEqual(1);
-            expect(source.tableStructure.columnsByType[VarType.TIME][0].julianDates[0]).toEqual(j('2015-08-01'));
+            expect(source.tableStructure.columnsByType[VarType.TIME][0].julianDates[0]).toEqual(JulianDate.fromIso8601('2015-08-01'));
             // Test that an entity exists at the expected dates.
             var features = source.entities.values;
             var featureDates = features.map(getPropertiesDate);
@@ -256,7 +256,7 @@ describe('CsvCatalogItem with lat and lon', function() {
             var earlyFeature = features[featureDates.indexOf('2015-08-01')];
             // The date '2015-08-01' appears to be interpreted as starting at midnight in the local time zone (at least on Chrome).
             // Eg. in Sydney summer, JulianDate.toIso8601(earlyFeature.availability.start) returns "2015-07-31T14:00:00Z".
-            expect(earlyFeature.availability.contains(j('2015-08-01'))).toBe(true);
+            expect(TimeInterval.contains(earlyFeature.availability, JulianDate.fromIso8601('2015-08-01'))).toBe(true);
             // Also test the duration of the interval is just under one day (the time between input rows).
             var durationInSeconds = JulianDate.secondsDifference(earlyFeature.availability.stop, earlyFeature.availability.start);
             expect(durationInSeconds).toBeGreaterThan(23 * 3600);  // more than 23 hours
@@ -273,7 +273,7 @@ describe('CsvCatalogItem with lat and lon', function() {
             var features = csvItem.dataSource.entities.values;
             var featureDates = features.map(getPropertiesDate);
             var earlyFeature = features[featureDates.indexOf('2015-08-01')];
-            expect(earlyFeature.availability.contains(JulianDate.fromIso8601('2015-08-01T12:00:00Z'))).toBe(true);
+            expect(TimeInterval.contains(earlyFeature.availability, JulianDate.fromIso8601('2015-08-01T12:00:00Z'))).toBe(true);
             var durationInSeconds = JulianDate.secondsDifference(earlyFeature.availability.stop, earlyFeature.availability.start);
             expect(durationInSeconds).toEqual(sevenDaysInMinutes * 60);
         }).otherwise(fail).then(done);
@@ -284,11 +284,10 @@ describe('CsvCatalogItem with lat and lon', function() {
         // Could delete, or change it to test something more useful.
         csvItem.url = 'test/csv/lat_lon_enum_moving_date_unsorted.csv';
         csvItem.load().then(function() {
-            var j = JulianDate.fromIso8601;
             var source = csvItem.dataSource;
             expect(source.tableStructure.columns[0].values.length).toEqual(13);
             expect(source.tableStructure.columnsByType[VarType.TIME].length).toEqual(1);
-            expect(source.tableStructure.columnsByType[VarType.TIME][0].julianDates[0]).toEqual(j('2015-08-05'));
+            expect(source.tableStructure.columnsByType[VarType.TIME][0].julianDates[0]).toEqual(JulianDate.fromIso8601('2015-08-05'));
             // Test that an entity exists at the expected dates.
             var features = source.entities.values;
             var featureDates = features.map(getPropertiesDate);
@@ -297,7 +296,7 @@ describe('CsvCatalogItem with lat and lon', function() {
             var earlyFeature = features[featureDates.indexOf('2015-08-01')];
             // The date '2015-08-01' appears to be interpreted as starting at midnight in the local time zone (at least on Chrome).
             // Eg. in Sydney summer, JulianDate.toIso8601(earlyFeature.availability.start) returns "2015-07-31T14:00:00Z".
-            expect(earlyFeature.availability.contains(j('2015-08-01'))).toBe(true);
+            expect(TimeInterval.contains(earlyFeature.availability, JulianDate.fromIso8601('2015-08-01'))).toBe(true);
             // Also test the duration of the interval is just under one day (the time between input rows).
             var durationInSeconds = JulianDate.secondsDifference(earlyFeature.availability.stop, earlyFeature.availability.start);
             expect(durationInSeconds).toBeGreaterThan(23 * 3600);  // more than 23 hours
@@ -1265,3 +1264,4 @@ describe('CsvCatalogItem with region mapping', function() {
     });
 
 });
+

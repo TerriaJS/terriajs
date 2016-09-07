@@ -8,8 +8,7 @@ const RegionTypeParameterEditor = React.createClass({
     mixins: [ObserveModelMixin],
     propTypes: {
         previewed: React.PropTypes.object,
-        parameter: React.PropTypes.object,
-        parameterValues: React.PropTypes.object
+        parameter: React.PropTypes.object
     },
 
     getInitialState() {
@@ -23,22 +22,8 @@ const RegionTypeParameterEditor = React.createClass({
     },
 
     onChange(e) {
-        this.props.parameterValues[this.props.parameter.id] = this.state.regionProviders.filter(r=> r.regionType === e.target.value)[0];
-    },
-
-    getDefaultValue() {
-        const nowViewingItems = this.props.previewed.terria.nowViewing.items;
-        if(nowViewingItems.length > 0) {
-            for (let i = 0; i < nowViewingItems.length; ++i) {
-                const item = nowViewingItems[i];
-                if (defined(item.regionMapping) && defined(item.regionMapping.regionDetails) && item.regionMapping.regionDetails.length > 0) {
-                    return item.regionMapping.regionDetails[0].regionProvider;
-                }
-            }
-        }
-        if(this.state.regionProviders.length) {
-            return this.state.regionProviders[0];
-        }
+        const value = this.state.regionProviders.filter(r=> r.regionType === e.target.value)[0];
+        this.props.previewed.setParameterValue(this.props.parameter.id, value);
     },
 
     getAllOptions() {
@@ -51,12 +36,13 @@ const RegionTypeParameterEditor = React.createClass({
     },
 
     render() {
-        if(!defined(this.props.parameterValues[this.props.parameter.id])) {
-            this.props.parameterValues[this.props.parameter.id] = this.getDefaultValue();
+        let rawValue = this.props.previewed.parameterValues[this.props.parameter.id];
+        if (!defined(rawValue)) {
+            rawValue = this.props.parameter.defaultValue;
         }
         return <select className={Styles.field}
                        onChange={this.onChange}
-                       value={this.props.parameterValues[this.props.parameter.id] ? this.props.parameterValues[this.props.parameter.id].regionType : ''}>
+                       value={defined(rawValue) ? rawValue.regionType : ''}>
                        {this.state.regionProviders.map((r, i)=>
                         (<option value={r.regionType}
                                  key={i}

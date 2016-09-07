@@ -105,6 +105,11 @@
   .#{$module-name} { /*!*/ }
 }
 
+%link {
+  color: $color-primary;
+  text-decoration: none;
+}
+
 %sm-show, %md-show, %lg-show {
   display: none !important
 }
@@ -145,3 +150,13 @@
   }
 }
 
+%clearfix {
+  clear: both;
+
+  &:before,
+  &:after {
+    content: " ";
+    display: table;
+    clear: both;
+  }
+}

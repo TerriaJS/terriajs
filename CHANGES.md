@@ -2,11 +2,39 @@
 Change Log
 ==========
 
-### 4.1.3
+### 4.4.0
 
-* Adds bulk geocoding capability for Australian addresses. So GnafAPI can be used with batches of addresses, if configured.
+* Fixed a bug which caused Cesium to crash when plotting a CSV with non-numerical data in the depth column.
+* Refactored Csv, AbsItt and Sdmx-Json catalog items to depend on a common `TableCatalogItem`. Deprecated `CsvCatalogItem.setActiveTimeColumn` in favour of `tableStructure.setActiveTimeColumn`.
+* Fixed css styling of the timeline and added padding to the feature info panel.
+
+### 4.3.2
+
+* Fixed css styling of shorten URL checkbox.
+
+### 4.3.1
+
+* Added the ability to specify the URL to the `serverConfig` service in `config.json` as `parameters.serverConfigUrl`.
+
+### 4.3.0
+
+* Added `Terria.batchGeocoder` property.  If set, the batch geocoder is used to resolve addresses in CSV files so that they can be shown as points on the map.
+* Added `GnafAddressGeocoder` to resolve Australian addresses using the GNAF API.
+* Added a loading indicator for user-added files.
+* Fixed a bug that prevented printing the map in the 2D mode.
+* Fixed a bug when changing between x-axis units in the chart panel.
+* Moved all Terria styles into CSS-modules code (except Leaflet) - `lib/Sass/StandardUserInterface.scss` no longer needs to be imported and now only includes styles for backwards compatibility.
+
+### 4.2.1
+
+* Fixed bug that prevented the preview map displaying on mobile devices.
+
 ### 4.2.0
 
+* There is a known bug in this version which prevents the user from being able to choose a region for some Analytics functions.
+* Added support for ArcGis FeatureServers, using the new catalog types `esri-featureServer` and `esri-featureServer-group`. Catalog type `esri-group` can load REST service, MapServer and FeatureServer endpoints. (For backwards compatability, catalog type `esri-mapServer-group` continues to work for REST service as well as MapServer endpoints.)
+* Enumeration parameter now defaults to what is shown in UI, and if parameter is optional, '' is default.
+* Adds bulk geocoding capability for Australian addresses. So GnafAPI can be used with batches of addresses, if configured.
 * Fixed a bug that caused the selection indicator to get small when near the right edge of the map and to overlap the side panel when past the left edge.
 * Map controls and menus now become translucent while the explorer window (Data Catalog) is visible.
 * Removed find-and-replace for cesium workers from the webpack build as it's done in terriajs-cesium now.
@@ -17,9 +45,14 @@ Change Log
 * Fix regression: cursor changes in UserDrawing now functions in 2D as well as 3D.
 * Updated to [Cesium](http://cesiumjs.org) 1.23 (from 1.20).  See the [change log](https://github.com/AnalyticalGraphicsInc/cesium/blob/1.23/CHANGES.md) for details.
 * Fixed a bug which prevented feature info showing for Gpx-, Ogr-, WebFeatureService-, ArcGisFeatureServer-, and WebProcessingService- CatalogItems.
+* Added support for a wider range of SDMX-JSON data files, including the ability to sum over dimensions via `aggregatedDimensionIds`.
 * Added support for `tableStyle.colorBins` as array of values specifying the boundaries between the color bins in the legend, eg. `[3000, 3500, 3900, 4000]`. `colorBins` can still be an integer specifying the number of bins, in which case Terria determines the boundaries.
 * Made explorer panel not rendered at all when hidden and made the preview map destroy itself when unmounted - this mitigates performance issues from having Leaflet running in the background on very busy vector datasets.
 * Fixed a bug which prevented time-varying CZML feature info from updating.
+* Added support for moving-point csv files, via an `idColumns` array on csv catalog items. By default, feature positions, color and size are interpolated between the known time values; set `isSampled` to false to prevent this. (Color and size are never interpolated when they are drawn from a text column.)
+* Added support for polling csv files with a partial update, and by using `idColumns` to identify features across updates.
+* Added a time series chart to the Feature Info Panel for sampled, moving features.
+* Fixed a bug which sometimes prevented feature info from appearing when two region-mapped csv files were displayed.
 
 ### 4.1.2
 

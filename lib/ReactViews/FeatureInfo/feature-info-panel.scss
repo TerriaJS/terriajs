@@ -13,6 +13,7 @@
   min-width: 150px;
   max-height: 80vh;
   z-index: 10;
+  font-family: $font-base;
 
   svg{
     fill: #fff;
@@ -55,6 +56,7 @@
 
   padding: 4px 9px;
   margin-right: 4px;
+  color: $text-light;
 }
 
 .btn--download {
@@ -64,6 +66,8 @@
 }
 
 .btn--close-feature{
+  composes: btn from '../../Sass/common/_buttons.scss';
+
   &:hover,
   &:focus {
     svg{
@@ -89,10 +93,13 @@
 
 .body{
   composes: list-reset from '../../Sass/common/_base.scss';
+  composes: scrollbars from '../../Sass/common/_base.scss';
+
   overflow-y: auto;
   overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
   max-height: calc(80vh - #{$padding*2 + $btn-default-line-height});
+  font-size: 0.9rem;
+
   @media print{
     max-height: none;
   }

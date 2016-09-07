@@ -2,6 +2,7 @@
 
 /*global require,describe,it,expect*/
 var JulianDate = require('terriajs-cesium/Source/Core/JulianDate');
+var TimeInterval = require('terriajs-cesium/Source/Core/TimeInterval');
 
 var TableColumn = require('../../lib/Map/TableColumn');
 var VarType = require('../../lib/Map/VarType');
@@ -61,6 +62,12 @@ describe('TableColumn', function() {
         var data = [130.3, 131.3, 133.3];
         var tableColumn = new TableColumn('lon', data.slice());
         expect(tableColumn.type).toEqual(VarType.LON);
+    });
+
+    it('can detect address type', function() {
+        var data = ["7 London Circuit Canberra City ACT 2601"];
+        var tableColumn = new TableColumn('address', data);
+        expect(tableColumn.type).toEqual(VarType.ADDR);
     });
 
     it('can detect time type from yyyy-mm-dd', function() {
@@ -209,7 +216,6 @@ describe('TableColumn', function() {
     it('can calculate sub-second finish dates', function() {
         var data = ['2016-01-03T12:15:00Z', '2016-01-03T12:15:00.4Z', '2016-01-03T12:15:01Z'];
         var tableColumn = new TableColumn('date', data.slice());
-        
         expect(tableColumn.finishJulianDates).toEqual([
             JulianDate.fromIso8601('2016-01-03T12:15:00.38Z'), // Shaves off 5% of 0.4, ie. 0.02.
             JulianDate.fromIso8601('2016-01-03T12:15:00.97Z'), // Shaves off 5% of 0.6, ie. 0.03.
@@ -288,11 +294,11 @@ describe('TableColumn', function() {
     it('supports displayDuration', function() {
         var data = ['2016-01-03', '2016-01-04', '2016-01-05'];
         var sevenDaysInMinutes = 60 * 24 * 7;
-        var tableColumn = new TableColumn('date', data, {displayDuration: sevenDaysInMinutes});        
-        var availability = tableColumn.availabilities[0];
-        expect(availability.contains(JulianDate.fromIso8601('2016-01-09'))).toBe(true);
-        expect(availability.contains(JulianDate.fromIso8601('2016-01-11'))).toBe(false);
-        var durationInSeconds = JulianDate.secondsDifference(availability.stop, availability.start);
+        var tableColumn = new TableColumn('date', data, {displayDuration: sevenDaysInMinutes});
+        var interval = tableColumn.timeIntervals[0];
+        expect(TimeInterval.contains(interval, JulianDate.fromIso8601('2016-01-09'))).toBe(true);
+        expect(TimeInterval.contains(interval, JulianDate.fromIso8601('2016-01-11'))).toBe(false);
+        var durationInSeconds = JulianDate.secondsDifference(interval.stop, interval.start);
         expect(durationInSeconds).toEqual(sevenDaysInMinutes * 60);
     });
 
