@@ -21,6 +21,7 @@ describe('AnimationViewModel', function() {
             terria: terria
         });
         animationVm.timeline = jasmine.createSpyObj('timeline', ['zoomTo', 'resize', '_makeTics']);
+        animationVm.listenForTopLayerChanges();
 
         catalogItem = new ImageryLayerCatalogItem(terria);
         catalogItem.clock = jasmine.createSpyObj('clock', ['getValue']);
