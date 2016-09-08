@@ -75,7 +75,7 @@ const Legend = React.createClass({
                             <li className={Styles.loader}><Loader message={this.props.item.loadingMessage}/></li>
                         </When>
                         <Otherwise>
-                            <For each="legend" index="i" of={this.props.item.legendUrls}>
+                            <For each="legend" index="i" of={this.props.item.legendUrls || []}>
                                 {this.renderLegend(legend, i)}
                             </For>
                         </Otherwise>
