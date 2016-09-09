@@ -40,7 +40,7 @@ const StyleSelectorSection = React.createClass({
     renderStyleSelectorForLayer(layer) {
         const item = this.props.item;
         const styles = item.availableStyles[layer];
-        if (!defined(styles)) {
+        if (!defined(styles) || styles.length < 2) {
             return null;
         }
 
