@@ -1,0 +1,18 @@
+{
+	"catalog": [
+		{
+			"name": "WMS",
+			"type": "group",
+			"isPromoted": true,
+			"isOpen": true,
+			"items": [
+				{
+					"name": "Multiple layers with multiple styles",
+					"type": "wms",
+					"url": "http://www.smast.umassd.edu:8080/ncWMS2/wms",
+					"layers": "FVCOM-NECOFS-GOM3/x,FVCOM-NECOFS-GOM3/y"
+				}
+			]
+		}
+	]
+}

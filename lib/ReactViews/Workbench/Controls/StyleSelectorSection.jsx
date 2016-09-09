@@ -13,10 +13,19 @@ const StyleSelectorSection = React.createClass({
         item: React.PropTypes.object.isRequired
     },
 
-    changeStyle(event) {
+    changeStyle(layer, event) {
         const item = this.props.item;
-        // TODO: handle multiple layers
-        item.styles = event.target.value;
+        const layers = item.layers.split(',');
+        const styles = item.styles.split(',');
+
+        const layerIndex = layers.indexOf(layer.name);
+        if (layerIndex == -1) {
+            // Not a valid layer?  Something went wrong.
+            return;
+        }
+
+        styles[layerIndex] = event.target.value;
+        item.styles = styles.join(',');
         item.refresh();
     },
 
@@ -29,9 +38,11 @@ const StyleSelectorSection = React.createClass({
         }
 
         const layerTitles = item.layerTitles;
+        const styles = item.styles.split(',');
         const layers = item.layers.split(',').map((item, i) => ({
             name: item.trim(),
-            title: layerTitles[i] || item.trim()
+            title: (layerTitles && layerTitles[i]) || item.trim(),
+            style: styles[i]
         }));
 
         return (
@@ -48,15 +59,12 @@ const StyleSelectorSection = React.createClass({
             return null;
         }
 
-        // TODO: get the friendly title of the layer, instead of the name (ID).
-        // TODO: handle multiple layers
-
         const label = item.layers.indexOf(',') >= 0 ? layer.title + ' Style' : 'Style';
 
         return (
-            <div key={layer}>
-                <label htmlFor={layer}>{label}</label>
-                <select className={Styles.field} name={layer.name} value={item.styles} onChange={this.changeStyle}>
+            <div key={layer.name}>
+                <label htmlFor={layer.name}>{label}</label>
+                <select className={Styles.field} name={layer.name} value={layer.style} onChange={this.changeStyle.bind(this, layer)}>
                     {styles.map(item => <option key={item.name} value={item.name}>{item.title}</option>)}
                 </select>
             </div>
