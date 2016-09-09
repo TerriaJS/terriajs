@@ -5,6 +5,7 @@ Change Log
 ### 4.5.0
 
 * Fixed a bug that prevented fractional seconds in time-varying WMS periodicity.
+* Fixed a bug that prevented some links on the dataset info / preview panel from working correctly.
 
 ### 4.4.0
 
