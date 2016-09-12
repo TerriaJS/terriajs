@@ -8,8 +8,7 @@
                 {
                     "name": "BOM SOS",
                     "url": "http://www.bom.gov.au/waterdata/services",
-                    "type": "sos-group",
-                    "isOpen": true
+                    "type": "sos"
 
                 }
             ]
