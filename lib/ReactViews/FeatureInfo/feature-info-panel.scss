@@ -9,8 +9,8 @@
   position: fixed;
   top: $mobile-header-height + 10px;
   right: 10px;
-  max-width: 95%;
-  min-width: 150px;
+  max-width: calc(100% - 20px);
+  width: 500px;
   max-height: 80vh;
   z-index: 10;
   font-family: $font-base;
@@ -47,13 +47,12 @@
 
 .header{
   background: $dark;
-  padding-right: $input-height;
+  padding-right: $modal-header-height*2;
   line-height: $modal-header-height;
 }
 
 .btn {
   composes: btn from '../../Sass/common/_buttons.scss';
-
   padding: 4px 9px;
   margin-right: 4px;
   color: $text-light;
@@ -85,6 +84,27 @@
   right: 0;
   width: $modal-header-height;
   height: $modal-header-height;
+}
+
+.btn--minimize-feature{
+  composes: btn from '../../Sass/common/_buttons.scss';
+  position: absolute;
+  right: $modal-header-height/2;
+  width: $modal-header-height;
+  height: $modal-header-height;
+  &:hover,
+  &:focus {
+    svg{
+      fill: $color-primary;
+    }
+  }
+  svg{
+    height: 20px;
+    width: 20px;
+    fill: #ffffff;
+    position: relative;
+    left: 10px;
+  }
 }
 
 .no-results {

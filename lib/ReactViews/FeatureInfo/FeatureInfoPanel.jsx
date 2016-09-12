@@ -115,9 +115,15 @@ const FeatureInfoPanel = React.createClass({
                 className={panelClassName}
                 aria-hidden={!viewState.featureInfoPanelIsVisible}>
                 <div className={Styles.header}>
-                    <button type='button' onClick={ this.toggleCollapsed } className={Styles.btn}>
+                    <span type='button' className={Styles.btn}>
                         Feature Information
+                    </span>
+
+                    <button type='button' onClick={ this.toggleCollapsed } className={Styles.btnMinimizeFeature}
+                            title="minimise data panel">
+                        <Icon glyph={viewState.featureInfoPanelIsCollapsed ? Icon.GLYPHS.expand : Icon.GLYPHS.add}/>
                     </button>
+
                     <button type='button' onClick={ this.close } className={Styles.btnCloseFeature}
                             title="Close data panel">
                         <Icon glyph={Icon.GLYPHS.close}/>
