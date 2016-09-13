@@ -9,6 +9,8 @@ Change Log
 * Refactored Csv, AbsItt and Sdmx-Json catalog items to depend on a common `TableCatalogItem`. Deprecated `CsvCatalogItem.setActiveTimeColumn` in favour of `tableStructure.setActiveTimeColumn`.
 * Error in geocoding addresses in csv files now shows in dialog box.
 * Fixed css styling of the timeline and added padding to the feature info panel.
+* Deprecated `indicesIntoUniqueValues`, `indicesOrValues`, `indicesOrNumericalValues` & `usesIndicesIntoUniqueValues` in `TableColumn` (`isEnum` replaces `usesIndicesIntoUniqueValues`).
+* Added support for explicitly colouring enum columns using a `tableStyle.colorBins` array of `{"value":v, "color":c}` objects
 * Improved rendering speed when changing the display variable for large lat/lon csv files.
 * Default to moving feature csvs if a time, lat, lon and a column named `id` are present.
 * Fixed a bug so units flow through to charts of moving csv features.
