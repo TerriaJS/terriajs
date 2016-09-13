@@ -486,6 +486,18 @@ describe('CsvCatalogItem with lat and lon', function() {
         }).otherwise(fail).then(done);
     });
 
+    it('when no column selected, colors with non-null color', function(done) {
+        csvItem.url = 'test/csv/lat_lon_enum_val.csv';
+        csvItem._tableStyle = new TableStyle({
+            dataVariable: null,
+            nullColor: '#000000'
+        });
+        var nullColor = new Color(0, 0, 0, 1);
+        csvItem.load().then(function() {
+            expect(featureColor(csvItem, 1)).not.toEqual(nullColor);
+        }).otherwise(fail).then(done);
+    });
+
     it('replaces enum tail with "X other values" in the legend', function(done) {
         csvItem.url = 'test/csv/lat_lon_enum_lots.csv';
         csvItem._tableStyle = new TableStyle({colorBins: 9});
