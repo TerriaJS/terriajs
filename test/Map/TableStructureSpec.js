@@ -78,12 +78,26 @@ describe('TableStructure', function() {
         var data = [['x', 'y'], [1.678, 9.883], [54321, 12345], [4, -3]];
         var options = {columnOptions: {
             x: {format: {maximumFractionDigits: 0}},
-            y: {name: 'new y', format: {useGrouping: true, maximumFractionDigits: 1}}
+            y: {name: 'new y (,000)', format: {useGrouping: true, maximumFractionDigits: 1}}
         }};
-        var target = [['x', 'new y'], ['2', '9.9'], ['54321', '12' + separator + '345'], ['4', '-3']];
+        var target = [['x', 'new y (,000)'], ['2', '9.9'], ['54321', '12' + separator + '345'], ['4', '-3']];
         var tableStructure = new TableStructure('foo', options);
         tableStructure = tableStructure.loadFromJson(data);
         var rows = tableStructure.toArrayOfRows();
+        expect(rows.length).toEqual(4);
+        expect(rows).toEqual(target);
+    });
+
+    it('can convert to ArrayOfRows with formatting and quotes if containing commas', function() {
+        var data = [['x', 'y'], [1.678, 9.883], [54321, 12345], [4, -3]];
+        var options = {columnOptions: {
+            x: {format: {maximumFractionDigits: 0}},
+            y: {name: 'new y (,000)', format: {useGrouping: true, maximumFractionDigits: 1}}
+        }};
+        var target = [['x', '"new y (,000)"'], ['2', '9.9'], ['54321', '"12' + separator + '345"'], ['4', '-3']];
+        var tableStructure = new TableStructure('foo', options);
+        tableStructure = tableStructure.loadFromJson(data);
+        var rows = tableStructure.toArrayOfRows(undefined, undefined, true, true); // 4th argument requests the quotes.
         expect(rows.length).toEqual(4);
         expect(rows).toEqual(target);
     });
@@ -320,5 +334,30 @@ describe('TableStructure', function() {
         expect(tableStructure.hasLatitudeAndLongitude).toBe(true);
         expect(tableStructure.columns[VarType.LAT].values).toBe(latValues);
         expect(tableStructure.columns[VarType.LON].values).toBe(longValues);
+    });
+
+    it('can sort columns', function() {
+        var data = [['x', 'y', 'z'], [3, 5, 'a'], [1, 8, 'c'], [4, -3, 'b']];
+        var tableStructure = TableStructure.fromJson(data);
+        tableStructure.sortBy(tableStructure.getColumnWithName('x'));
+        expect(tableStructure.getColumnWithName('x').values.slice()).toEqual([1, 3, 4]);
+        expect(tableStructure.getColumnWithName('y').values.slice()).toEqual([8, 5, -3]);
+        expect(tableStructure.getColumnWithName('z').values.slice()).toEqual(['c', 'a', 'b']);
+        tableStructure.sortBy(tableStructure.getColumnWithName('z'));
+        expect(tableStructure.getColumnWithName('x').values.slice()).toEqual([3, 4, 1]);
+        expect(tableStructure.getColumnWithName('y').values.slice()).toEqual([5, -3, 8]);
+        expect(tableStructure.getColumnWithName('z').values.slice()).toEqual(['a', 'b', 'c']);
+        tableStructure.sortBy(tableStructure.getColumnWithName('x'), function(a, b) { return b - a; }); // descending
+        expect(tableStructure.getColumnWithName('x').values.slice()).toEqual([4, 3, 1]);
+        expect(tableStructure.getColumnWithName('y').values.slice()).toEqual([-3, 5, 8]);
+        expect(tableStructure.getColumnWithName('z').values.slice()).toEqual(['b', 'a', 'c']);
+    });
+
+    it('can sort columns by date', function() {
+        // Note the last date occurs before the first, but a string compare would disagree.
+        var data = [['date', 'v'], ['2010-06-20T10:00:00.0+1000', 'a'], ['2010-06-19T10:00:00.0+1000', 'b'], ['2010-06-20T10:00:00.0+1100', 'c']];
+        var tableStructure = TableStructure.fromJson(data);
+        tableStructure.sortBy(tableStructure.columns[0]);
+        expect(tableStructure.columns[1].values.slice()).toEqual(['b', 'c', 'a']);
     });
 });

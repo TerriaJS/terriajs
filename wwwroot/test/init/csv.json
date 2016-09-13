@@ -32,9 +32,15 @@
                 "idColumns": ["id"],
                 "tableStyle": {
                     "dataVariable": "value",
-                    "scaleByValue": true
+                    "scaleByValue": true,
+                    "columns": {
+                        "value": {
+                            "name": "speed",
+                            "units": "km/hr"
+                        }
+                    }
                 },
-                "featureInfoTemplate": "<p>Name: {{id}}</p><h2>Time series</h2><p><chart x-column='{{terria.timeSeries.xName}}' y-column='{{terria.timeSeries.yName}}' id='{{terria.timeSeries.id}}'>{{terria.timeSeries.data}}</chart></p>"
+                "featureInfoTemplate": "<p>Name: {{id}}</p><h2>Time series</h2><p><chart x-column='{{terria.timeSeries.xName}}' y-column='{{terria.timeSeries.yName}}' column-units='{{terria.timeSeries.units}}' id='{{terria.timeSeries.id}}'>{{terria.timeSeries.data}}</chart></p>"
             },
             {
                 "name": "Moving features (not sampled)",
