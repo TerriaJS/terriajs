@@ -40,9 +40,9 @@ describe('TableColumn', function() {
         var data = ['small', 'medium', null, 'big'];
         var tableColumn = new TableColumn('size', data.slice());
         expect(tableColumn.type).toEqual(VarType.ENUM);
-        expect(tableColumn.usesIndicesIntoUniqueValues).toBe(true);
-        expect(tableColumn.indicesOrValues[1]).not.toBe(null);
-        expect(tableColumn.indicesOrValues[2]).toBe(null);
+        expect(tableColumn.isEnum).toBe(true);
+        expect(tableColumn.values[1]).not.toBe(null);
+        expect(tableColumn.values[2]).toBe(null);
     });
 
     it('ignores missing values when calculating min/max', function() {
