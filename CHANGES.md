@@ -17,6 +17,7 @@ Change Log
 * ContextItem now shown during location selection.
 * Fixed a bug that caused `&amp;` to appear in some URLs instead of simply `&`, leading to an error when visiting the link.
 * Added the ability to pass a LineString to a Web Processing Service.
+* Fixed a bug that caused an error message to appear repeatedly when there was an error downloading tiles for a base map.
 
 ### 4.3.3
 
