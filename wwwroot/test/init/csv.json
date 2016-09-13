@@ -139,6 +139,19 @@
                 }
             },
             {
+                "name": "CSV with explicit enum colors",
+                "type": "csv",
+                "data": "longitude,latitude,enum\n134,-26,dog\n121,-33,\n124,-32,cat\n130,-30,frog\n132,-28,dog",
+                "tableStyle": {
+                    "nullLabel": "blank",
+                    "colorBins": [
+                        {"value": "dog", "color": "lightblue"},
+                        {"value": "cat", "color": "pink"},
+                        {"value": "frog", "color": "green"}
+                    ]
+                }
+            },
+            {
                 "name": "Lat/lon CSV with duration of 1 hour",
                 "type": "csv",
                 "url": "build/TerriaJS/test/csv/lat_lon_date_value.csv",
