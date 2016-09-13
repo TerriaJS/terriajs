@@ -45,7 +45,13 @@ gulp.task('make-schema', function() {
     var genSchema = require('generate-terriajs-schema');
 
     return genSchema({
-        source: '.',
+        sourceGlob: [
+            './lib/Models/*CatalogItem.js',
+            './lib/Models/*CatalogGroup.js',
+            './lib/Models/*CatalogMember.js',
+            '!./lib/Models/addUserCatalogMember.js',
+            '!./lib/Models/AsyncFunctionResultCatalogItem.js'
+        ],
         dest: 'wwwroot/schema',
         noversionsubdir: true,
         quiet: true
