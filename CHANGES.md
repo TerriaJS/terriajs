@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+### 4.3.3
+
+* Use react-rangeslider 1.0.4 because 1.0.5 was published incorrectly.
+
 ### 4.3.2
 
 * Fixed css styling of shorten URL checkbox.
