@@ -12,6 +12,7 @@ Change Log
 * Improved rendering speed when changing the display variable for large lat/lon csv files.
 * Default to moving feature csvs if a time, lat, lon and a column named `id` are present.
 * Fixed a bug so units flow through to charts of moving csv features.
+* Added the ability to pass a LineString to a Web Processing Service.
 
 ### 4.3.2
 
