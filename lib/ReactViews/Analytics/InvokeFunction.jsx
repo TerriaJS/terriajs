@@ -4,7 +4,6 @@ import ParameterEditor from './ParameterEditor';
 import when from 'terriajs-cesium/Source/ThirdParty/when';
 import TerriaError from '../../Core/TerriaError';
 import parseCustomMarkdownToReact from '../Custom/parseCustomMarkdownToReact';
-import defined from 'terriajs-cesium/Source/Core/defined';
 import Styles from './invoke-function.scss';
 
 const InvokeFunction = React.createClass({
@@ -14,20 +13,6 @@ const InvokeFunction = React.createClass({
         terria: React.PropTypes.object,
         previewed: React.PropTypes.object,
         viewState: React.PropTypes.object
-    },
-
-    componentWillMount() {
-        this.enableContextItem(this.props);
-    },
-
-    componentWillUnmount() {
-        this.removeContextItem();
-    },
-
-    componentWillReceiveProps(nextProps) {
-        // This will be called when component is already mounted but props change, for example if you go from one WPS
-        // item to another.
-        this.enableContextItem(nextProps);
     },
 
     submit() {
@@ -51,21 +36,6 @@ const InvokeFunction = React.createClass({
                 this.props.previewed.terria.error.raiseEvent(e);
             }
             return undefined;
-        }
-    },
-
-    enableContextItem(props) {
-        this.removeContextItem();
-        if (defined(props.previewed.contextItem)) {
-            props.previewed.contextItem.isEnabled = true;
-            this._lastContextItem = props.previewed.contextItem;
-        }
-    },
-
-    removeContextItem() {
-        if (defined(this._lastContextItem)) {
-            this._lastContextItem.isEnabled = false;
-            this._lastContextItem = undefined;
         }
     },
 
