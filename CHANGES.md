@@ -18,6 +18,10 @@ Change Log
 * Fixed a bug that caused `&amp;` to appear in some URLs instead of simply `&`, leading to an error when visiting the link.
 * Added the ability to pass a LineString to a Web Processing Service.
 
+### 4.3.3
+
+* Use react-rangeslider 1.0.4 because 1.0.5 was published incorrectly.
+
 ### 4.3.2
 
 * Fixed css styling of shorten URL checkbox.
