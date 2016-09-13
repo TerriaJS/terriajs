@@ -13,6 +13,7 @@ Change Log
 * Default to moving feature csvs if a time, lat, lon and a column named `id` are present.
 * Fixed a bug so units flow through to charts of moving csv features.
 * Added the ability to pass a LineString to a Web Processing Service.
+* Fixed a bug that caused an error message to appear repeatedly when there was an error downloading tiles for a base map.
 
 ### 4.3.2
 
