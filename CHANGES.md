@@ -13,6 +13,7 @@ Change Log
 * Default to moving feature csvs if a time, lat, lon and a column named `id` are present.
 * Fixed a bug so units flow through to charts of moving csv features.
 * Fixed a bug that caused `&amp;` to appear in some URLs in the unesr interface instead of simply `&`, leading to an error when visiting the link.
+* Added the ability to pass a LineString to a Web Processing Service.
 
 ### 4.3.2
 
