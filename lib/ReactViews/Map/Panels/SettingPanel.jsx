@@ -30,7 +30,7 @@ const SettingPanel = React.createClass({
 
     getInitialState() {
         return {
-            activeMap: this.props.terria.baseMap ? this.props.terria.baseMap.name : undefined
+            activeMap: this.props.terria.baseMap ? this.props.terria.baseMap.name : '(None)'
         };
     },
 
@@ -52,7 +52,7 @@ const SettingPanel = React.createClass({
 
     mouseLeaveBaseMap() {
         this.setState({
-            activeMap: this.props.terria.baseMap ? this.props.terria.baseMap.name : undefined
+            activeMap: this.props.terria.baseMap ? this.props.terria.baseMap.name : '(None)'
         });
     },
 
@@ -76,7 +76,7 @@ const SettingPanel = React.createClass({
     render() {
         const that = this;
         const currentViewer = this.props.terria.viewerMode;
-        const currentBaseMap = this.props.terria.baseMap ? this.props.terria.baseMap.name : undefined;
+        const currentBaseMap = this.props.terria.baseMap ? this.props.terria.baseMap.name : '(None)';
 
         const dropdownTheme = {
             outer: Styles.settingPanel,
