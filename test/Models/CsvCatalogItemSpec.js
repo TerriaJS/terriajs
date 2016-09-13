@@ -220,6 +220,16 @@ describe('CsvCatalogItem with lat and lon', function() {
         }).otherwise(fail).then(done);
     });
 
+    it('does not set an active variable to dataVariable if null', function(done) {
+        csvItem.url = 'test/csv/lat_lon_enum_val.csv';
+        csvItem._tableStyle = new TableStyle({
+            dataVariable: null
+        });
+        csvItem.load().then(function() {
+            expect(csvItem.dataSource.tableStructure.activeItems.length).toEqual(0);
+        }).otherwise(fail).then(done);
+    });
+
     it('colors enum fields the same (only) when the value is the same', function(done) {
         csvItem.url = 'test/csv/lat_lon_enum.csv';
         csvItem.load().then(function() {
