@@ -18,9 +18,12 @@ Change Log
 * ContextItem now shown during location selection.
 * Fixed a bug that caused `&amp;` to appear in some URLs instead of simply `&`, leading to an error when visiting the link.
 * Added the ability to pass a LineString to a Web Processing Service.
+* Fixed a bug which prevented `tableStyle.dataVariable` = `null` from working.
 * Uses a smarter default column for csv files.
 * Fixed a bug that caused an error message to appear repeatedly when there was an error downloading tiles for a base map.
+* Fixed a bug that caused WMS layer names and WFS type names to not be displayed on the dataset info page.
 * We now preserve the state of the feature information panel when sharing.  This was lost in the transition to the new user interface in 4.0.0.
+* Fixed bug where generic parameters such as strings were not passed through to WPS services.
 
 ### 4.3.3
 
