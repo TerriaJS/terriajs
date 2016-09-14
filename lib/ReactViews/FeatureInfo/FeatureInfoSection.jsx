@@ -458,7 +458,7 @@ function getTimeSeriesChartContext(catalogItem, feature, getChartData) {
  */
 function getInfoAsReactComponent(that) {
     const templateData = that.getPropertyValues();
-    const downloadableData = templateData._terria_numericalProperties || templateData;
+    const downloadableData = defined(templateData) ? (templateData._terria_numericalProperties || templateData) : undefined;
     const updateCounters = that.props.feature.updateCounters;
     const context = {
         catalogItem: that.props.catalogItem,
