@@ -34,6 +34,7 @@ describe('formatNumberForLocale', function() {
         });
 
         it('maximumFractionDigits works with rounding', function() {
+            expect(formatNumberForLocale(-1.66, {maximumFractionDigits: 0})).toBe('-2');
             expect(formatNumberForLocale(-6789123.45678901, {maximumFractionDigits: 2})).toBe('-6789123' + decimalPoint + '46');
             expect(formatNumberForLocale(-6789123.45678901, {maximumFractionDigits: 2})).toBe('-6789123' + decimalPoint + '46');
             expect(formatNumberForLocale(9.999, {maximumFractionDigits: 2})).toContain('10');  // Accept 10, 10.0 or 10.00
@@ -41,6 +42,7 @@ describe('formatNumberForLocale', function() {
         });
 
         it('minimumFractionDigits works', function() {
+            expect(formatNumberForLocale(3, {minimumFractionDigits: 2})).toBe('3' + decimalPoint + '00');
             expect(formatNumberForLocale(-6789123.4, {minimumFractionDigits: 2})).toBe('-6789123' + decimalPoint + '40');
             expect(formatNumberForLocale(-6789123, {minimumFractionDigits: 2, maximumFractionDigits: 3})).toBe('-6789123' + decimalPoint + '00');
             expect(formatNumberForLocale(-9.999, {minimumFractionDigits: 1, maximumFractionDigits: 2})).toContain('-10.0'); // Accept -10.0 or -10.00 (but not 10).
