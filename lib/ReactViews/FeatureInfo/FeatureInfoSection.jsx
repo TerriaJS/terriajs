@@ -101,6 +101,13 @@ const FeatureInfoSection = React.createClass({
     descriptionFromTemplate() {
         const template = this.props.template;
         const templateData = this.getTemplateData();
+        // If property names were changed, let the template access the original property names too.
+        if (defined(templateData) && defined(templateData._terria_columnAliases)) {
+            for (let i = 0; i < templateData._terria_columnAliases.length; i++) {
+                const alias = templateData._terria_columnAliases[i];
+                templateData[alias.id] = templateData[alias.name];
+            }
+        }
         return typeof template === 'string' ?
             Mustache.render(template, templateData) :
             Mustache.render(template.template, templateData, template.partials);
@@ -187,7 +194,7 @@ const FeatureInfoSection = React.createClass({
                                 <If condition={!reactInfo.hasRawData}>
                                     <div ref="no-info" key="no-info">No information available.</div>
                                 </If>
-                                <If condition={defined(reactInfo.templateData)}>
+                                <If condition={defined(reactInfo.downloadableData)}>
                                     <FeatureInfoDownload key='download'
                                         viewState={this.props.viewState}
                                         data={reactInfo.downloadableData}
