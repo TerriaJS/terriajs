@@ -454,8 +454,7 @@ function getTimeSeriesChartContext(catalogItem, feature, getChartData) {
  * Wrangle the provided feature data into more convenient forms.
  * @private
  * @param  {ReactClass} that The FeatureInfoSection.
- * @return {Object} Returns {templateData, info, rawData, showRawData, hasRawData, ...}.
- *                  templateData is the object passed to the templating engine.
+ * @return {Object} Returns {info, rawData, showRawData, hasRawData, ...}.
  *                  info is the main body of the info section, as a react component.
  *                  rawData is the same for the raw data, if it needs to be shown.
  *                  showRawData is whether to show the rawData.
@@ -481,9 +480,6 @@ function getInfoAsReactComponent(that) {
             timeSeriesChart = parseCustomMarkdownToReact(timeSeriesChartContext.chart, context);
             timeSeriesChartTitle = timeSeriesChartContext.title;
         }
-        delete templateData._terria_columnAliases;
-        delete templateData._terria_numericalProperties;
-        delete templateData._terria_getChartData;
     }
     const showRawData = !that.hasTemplate() || that.state.showRawData;
     let rawDataHtml;
@@ -495,7 +491,6 @@ function getInfoAsReactComponent(that) {
         }
     }
     return {
-        templateData: templateData,
         info: that.hasTemplate() ? parseCustomMarkdownToReact(that.descriptionFromTemplate(), context) : rawData,
         rawData: rawData,
         showRawData: showRawData,
