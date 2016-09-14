@@ -5,6 +5,7 @@
   height: 100%;
   overflow: hidden;
   font-family: $font-base;
+  font-size: 0.9rem;
 
   @media screen and (max-width: $sm) {
     height: calc(100% - #{$mobile-modal-top-height});
