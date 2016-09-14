@@ -20,6 +20,7 @@ Change Log
 * Added the ability to pass a LineString to a Web Processing Service.
 * Uses a smarter default column for csv files.
 * Fixed a bug that caused an error message to appear repeatedly when there was an error downloading tiles for a base map.
+* Fixed a bug that caused WMS layer names and WFS type names to not be displayed on the dataset info page.
 
 ### 4.3.3
 
