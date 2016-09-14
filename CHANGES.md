@@ -20,6 +20,7 @@ Change Log
 * Added the ability to pass a LineString to a Web Processing Service.
 * Uses a smarter default column for csv files.
 * Fixed a bug that caused an error message to appear repeatedly when there was an error downloading tiles for a base map.
+* We now preserve the state of the feature information panel when sharing.  This was lost in the transition to the new user interface in 4.0.0.
 
 ### 4.3.3
 
