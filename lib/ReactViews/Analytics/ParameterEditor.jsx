@@ -94,16 +94,18 @@ const ParameterEditor = React.createClass({
     render() {
         return (
             <form>
-                <label className={Styles.label}
-                       htmlFor={this.fieldId + this.props.parameter.type}>
-                    {this.props.parameter.name}
-                    {this.props.parameter.isRequired &&
-                    <span> (required)</span>
-                    }
-                </label>
-                <div id={this.fieldId + this.props.parameter.type} className={Styles.fieldParameterEditor}>
-                    {this.renderEditor()}
-                </div>
+                <If condition={this.props.parameter.display}>
+                    <label className={Styles.label}
+                           htmlFor={this.fieldId + this.props.parameter.type}>
+                        {this.props.parameter.name}
+                        {this.props.parameter.isRequired &&
+                        <span> (required)</span>
+                        }
+                    </label>
+                    <div id={this.fieldId + this.props.parameter.type} className={Styles.fieldParameterEditor}>
+                            {this.renderEditor()}
+                    </div>
+                </If>
             </form>
         );
     }

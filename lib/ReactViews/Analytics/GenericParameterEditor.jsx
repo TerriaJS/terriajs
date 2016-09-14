@@ -15,11 +15,26 @@ const GenericParameterEditor = React.createClass({
     },
 
     render() {
-        return (<input className={Styles.field}
-                       type="text"
-                       onChange={this.onChange}
-                       value={this.props.previewed.parameterValues[this.props.parameter.id]}
-                />);
+        const patternConstraint = this.props.parameter.constraints && this.props.parameter.constraints.pattern;
+        return (
+            <div className="constrainedTextField">
+                <If condition={patternConstraint}>
+                    <input className={Styles.field}
+                                       type="text"
+                                       onChange={this.onChange}
+                                       pattern={patternConstraint}
+                                       value={this.props.previewed.parameterValues[this.props.parameter.id]}
+                    />
+                </If>
+                <If condition={!patternConstraint}>
+                    <input className={Styles.field}
+                                       type="text"
+                                       onChange={this.onChange}
+                                       value={this.props.previewed.parameterValues[this.props.parameter.id]}
+                    />
+                </If>
+            </div>
+        );
     }
 });
 
