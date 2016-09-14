@@ -26,6 +26,9 @@
   z-index: 300;
   width: 500px;
   height: auto;
+  pre{
+    padding: 10px 5px;
+  }
 }
 
 .title {
@@ -51,6 +54,7 @@
 
 .btn {
   composes: btn from '../../Sass/common/_buttons.scss';
+  color: #fff;
   padding: $padding;
   background: rgba(#fff, 0.50);
   text-align: center;

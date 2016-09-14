@@ -3,34 +3,31 @@
 
 .invoke-function {
   padding: $padding-small;
-  position: relative;
-  height: 100%;
-
+  height: auto;
+  overflow-y: visible;
+  padding-bottom: $input-height + $padding;
+  a{
+    color: $color-primary;
+  }
   @media screen and (min-width : $sm){
     padding: 0;
-    margin-right: -5px;
   }
 }
 
 .footer{
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  z-index: 1000;
+  width: 100%;
   background: $modal-bg;
-  padding: $padding-small;
+  padding: 5px 10px 5px 0;
+  composes: clearfix from '../../Sass/common/_base.scss';
 }
 
 .content{
-  composes: scrollbars from '../../Sass/common/_base.scss';
-
   @media screen and (min-width : $sm){
     //max-height: calc(#{$modal-content-height} - #{$padding*2});
   }
   max-height: 100%;
-  overflow-y: auto;
-  padding-bottom: $input-height + $padding;
+  overflow-y: visible;
+  // padding-bottom: $input-height + $padding;
   padding-right: $padding;
   h3{
     margin-top: 0;
@@ -42,4 +39,6 @@
 .btn {
   composes: btn from '../../Sass/common/_buttons.scss';
   composes: btn-primary from '../../Sass/common/_buttons.scss';
+  width: 200px;
+  float: right;
 }

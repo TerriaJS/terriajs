@@ -38,6 +38,7 @@
     width: 50%;
   }
   input, select {
+    height: $input-height;
     width: 100%;
     display: block;
   }
@@ -45,7 +46,6 @@
 
 .label {
   compose: field from '../../Sass/common/_label.scss';
-
   font-weight: 600;
   line-height: 2;
 }
