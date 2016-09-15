@@ -80,10 +80,6 @@ const Dropdown = React.createClass({
     },
 
     showList() {
-        this.setState({
-            isOpen: true
-        });
-
         // Add a listener to every ancestor capable of scrolling that will close the dropdown when this occurs.
         const addScrollListeners = (element, listeningToSoFar) => {
             if (element.scrollHeight > element.clientHeight) {
@@ -111,7 +107,8 @@ const Dropdown = React.createClass({
         }
 
         this.setState({
-            dropdownPosition
+            dropdownPosition,
+            isOpen: true
         });
 
         // Add the listener to be triggered when a click happens anywhere on the body (including the toggle button)
