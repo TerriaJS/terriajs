@@ -444,7 +444,6 @@ function getTimeSeriesChartContext(catalogItem, feature, getChartData) {
                 const idAttribute = 'id="' + result.id + '" ';
                 const unitsAttribute = 'column-units = "' + result.units + '" ';
                 result.chart = '<chart ' + xAttribute + yAttribute + unitsAttribute + idAttribute + '>' + result.data + '</chart>';
-                console.log(result.chart);
                 return result;
             }
         }
