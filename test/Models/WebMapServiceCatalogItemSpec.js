@@ -265,7 +265,7 @@ describe('WebMapServiceCatalogItem', function() {
         expect(wmsItem.metadataUrl).toBeUndefined();
         expect(wmsItem.url).toBeUndefined();
         expect(wmsItem.layers).toBe('');
-        expect(wmsItem.parameters).toEqual({});
+        expect(wmsItem.parameters).toEqual({colorscalerange: undefined});
         expect(wmsItem.tilingScheme).toBeUndefined();
         expect(wmsItem.getFeatureInfoFormats).toBeUndefined();
     });
