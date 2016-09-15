@@ -23,6 +23,7 @@ Change Log
 * Fixed a bug that caused an error message to appear repeatedly when there was an error downloading tiles for a base map.
 * Fixed a bug that caused WMS layer names and WFS type names to not be displayed on the dataset info page.
 * We now preserve the state of the feature information panel when sharing.  This was lost in the transition to the new user interface in 4.0.0.
+* Added a popup message when using region mapping on old browsers without an `ArrayBuffer` type (such as Internet Explorer 9).  These browsers won't support vector tile based region mapping.
 
 ### 4.3.3
 
