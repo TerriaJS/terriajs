@@ -26,6 +26,7 @@ Change Log
 * Fixed bug where generic parameters such as strings were not passed through to WPS services.
 * Removed the Australian Hydrography layer, as the source is no longer available.
 * Newly-added user data is now automatically selected for the preview map.
+* Fixed a bug where selecting a new column on a moving point csv file did not update the chart in the feature info panel.
 
 ### 4.3.3
 
