@@ -113,6 +113,11 @@
   }
 }
 
+.embeddedMap{
+  position: relative;
+  height: 200px;
+}
+
 @include empty-module("radio");
 
 .btn-radio {
