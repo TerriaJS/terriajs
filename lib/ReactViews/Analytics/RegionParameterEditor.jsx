@@ -267,7 +267,7 @@ const RegionParameterEditor = React.createClass({
     render() {
         return <div>
             <div className={Styles.parameterEditor}>
-                <input className={Styles.regionInput}
+                <input className={Styles.field}
                        type="text"
                        autoComplete="off"
                        value={this.getDisplayValue()}

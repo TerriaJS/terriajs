@@ -53,14 +53,17 @@ const InvokeFunction = React.createClass({
 
     render() {
         return (<div className={Styles.invokeFunction}>
-                    <div className={Styles.content}>
-                        <h3>{this.props.previewed.name}</h3>
-                        <div className={Styles.description}>{parseCustomMarkdownToReact(this.props.previewed.description, {catalogItem: this.props.previewed})}</div>
-                        {this.getParams()}
-                    </div>
                     <div className={Styles.footer}>
                         <button type='button' className={Styles.btn} onClick={this.submit}>Run Analysis</button>
                     </div>
+
+                    <div className={Styles.content}>
+                        <h3>{this.props.previewed.name}</h3>
+                        <div className={Styles.description}>{parseCustomMarkdownToReact(this.props.previewed.description, {catalogItem: this.props.previewed})}</div>
+
+                        {this.getParams()}
+                    </div>
+
                 </div>);
     }
 });

@@ -80,7 +80,7 @@ const PointParameterEditor = React.createClass({
     render() {
         return (
             <div>
-                <input className={Styles.fieldParameterEditor}
+                <input className={Styles.field}
                        type="text"
                        onChange={this.onTextChange}
                        value={this.state.value}/>
