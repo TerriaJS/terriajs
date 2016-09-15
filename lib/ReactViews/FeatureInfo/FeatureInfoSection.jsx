@@ -101,6 +101,13 @@ const FeatureInfoSection = React.createClass({
     descriptionFromTemplate() {
         const template = this.props.template;
         const templateData = this.getTemplateData();
+        // If property names were changed, let the template access the original property names too.
+        if (defined(templateData) && defined(templateData._terria_columnAliases)) {
+            for (let i = 0; i < templateData._terria_columnAliases.length; i++) {
+                const alias = templateData._terria_columnAliases[i];
+                templateData[alias.id] = templateData[alias.name];
+            }
+        }
         return typeof template === 'string' ?
             Mustache.render(template, templateData) :
             Mustache.render(template.template, templateData, template.partials);
@@ -187,10 +194,10 @@ const FeatureInfoSection = React.createClass({
                                 <If condition={!reactInfo.hasRawData}>
                                     <div ref="no-info" key="no-info">No information available.</div>
                                 </If>
-                                <If condition={defined(reactInfo.templateData)}>
+                                <If condition={defined(reactInfo.downloadableData)}>
                                     <FeatureInfoDownload key='download'
                                         viewState={this.props.viewState}
-                                        data={reactInfo.templateData}
+                                        data={reactInfo.downloadableData}
                                         name={catalogItemName} />
                                 </If>
                             </When>
@@ -447,16 +454,17 @@ function getTimeSeriesChartContext(catalogItem, feature, getChartData) {
  * Wrangle the provided feature data into more convenient forms.
  * @private
  * @param  {ReactClass} that The FeatureInfoSection.
- * @return {Object} Returns {templateData, info, rawData, showRawData, hasRawData}.
- *                  templateData is the object passed to the templating engine.
+ * @return {Object} Returns {info, rawData, showRawData, hasRawData, ...}.
  *                  info is the main body of the info section, as a react component.
  *                  rawData is the same for the raw data, if it needs to be shown.
  *                  showRawData is whether to show the rawData.
  *                  hasRawData is whether there is any rawData to show.
- *                  timeSeriesData - if the feature has timeseries data that could be shown in chart, this is it.
+ *                  timeSeriesChart - if the feature has timeseries data that could be shown in chart, this is the chart.
+ *                  downloadableData is the same as template data, but numerical.
  */
 function getInfoAsReactComponent(that) {
     const templateData = that.getPropertyValues();
+    const downloadableData = defined(templateData) ? (templateData._terria_numericalProperties || templateData) : undefined;
     const updateCounters = that.props.feature.updateCounters;
     const context = {
         catalogItem: that.props.catalogItem,
@@ -472,8 +480,6 @@ function getInfoAsReactComponent(that) {
             timeSeriesChart = parseCustomMarkdownToReact(timeSeriesChartContext.chart, context);
             timeSeriesChartTitle = timeSeriesChartContext.title;
         }
-        delete templateData._terria_columnAliases;
-        delete templateData._terria_getChartData;
     }
     const showRawData = !that.hasTemplate() || that.state.showRawData;
     let rawDataHtml;
@@ -485,13 +491,13 @@ function getInfoAsReactComponent(that) {
         }
     }
     return {
-        templateData: templateData,
         info: that.hasTemplate() ? parseCustomMarkdownToReact(that.descriptionFromTemplate(), context) : rawData,
         rawData: rawData,
         showRawData: showRawData,
         hasRawData: !!rawDataHtml,
         timeSeriesChartTitle: timeSeriesChartTitle,
-        timeSeriesChart: timeSeriesChart
+        timeSeriesChart: timeSeriesChart,
+        downloadableData: downloadableData
     };
 }
 
