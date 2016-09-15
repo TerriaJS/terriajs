@@ -25,6 +25,7 @@ Change Log
 * We now preserve the state of the feature information panel when sharing.  This was lost in the transition to the new user interface in 4.0.0.
 * Fixed bug where generic parameters such as strings were not passed through to WPS services.
 * Removed the Australian Hydrography layer, as the source is no longer available.
+* Fixed a bug that caused the GetCapabilities URL of a WMS catalog item to be shown even when `hideSource` was set to true.
 
 ### 4.3.3
 
