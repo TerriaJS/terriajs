@@ -28,7 +28,6 @@
   position: relative;
   background: $modal-bg;
   color: $modal-text;
-  padding: $padding;
   border-top: 1px solid $grey-lighter;
   height: 100%;
   overflow: hidden;
@@ -39,6 +38,11 @@
     width: 40%;
     float: left;
     height: 100%;
+    padding: 0 $padding-small;
+    background: $modal-secondary-bg;
+    form{
+      margin: $padding 0;
+    }
   }
 }
 

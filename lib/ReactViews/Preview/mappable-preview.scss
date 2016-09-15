@@ -2,13 +2,12 @@
 @import '../../Sass/common/mixins';
 
 .root {
-  font-size: 0.9rem;
+
 }
 
 .btn--add{
   composes: btn from '../../Sass/common/_buttons.scss';
   composes: btn-primary from '../../Sass/common/_buttons.scss';
-
   z-index: 10; // keeps the button above the preview map in IE9.
   padding: 10px;
 
