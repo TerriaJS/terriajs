@@ -76,6 +76,7 @@ Change Log
 * Added support for polling csv files with a partial update, and by using `idColumns` to identify features across updates.
 * Added a time series chart to the Feature Info Panel for sampled, moving features.
 * Fixed a bug which sometimes prevented feature info from appearing when two region-mapped csv files were displayed.
+* Fixed the preview map extent being one item behind what was actually selected.
 
 ### 4.1.2
 
