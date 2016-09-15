@@ -25,6 +25,7 @@ Change Log
 * We now preserve the state of the feature information panel when sharing.  This was lost in the transition to the new user interface in 4.0.0.
 * Fixed bug where generic parameters such as strings were not passed through to WPS services.
 * Fixed a bug where the chart panel did not update with polled data files.
+* Removed the Australian Hydrography layer, as the source is no longer available.
 
 ### 4.3.3
 
