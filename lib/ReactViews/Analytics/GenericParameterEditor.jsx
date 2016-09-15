@@ -11,7 +11,7 @@ const GenericParameterEditor = React.createClass({
     },
 
     onChange(e) {
-        this.props.previewed.setParameterValues(this.props.parameter.id, e.target.value);
+        this.props.previewed.setParameterValue(this.props.parameter.id, e.target.value);
     },
 
     render() {
