@@ -4,7 +4,6 @@
 var loadText = require('terriajs-cesium/Source/Core/loadText');
 var TableDataSource = require('../../lib/Models/TableDataSource');
 var TableStyle = require('../../lib/Models/TableStyle');
-var VarType = require('../../lib/Map/VarType');
 
 
 describe('TableDataSource', function() {
