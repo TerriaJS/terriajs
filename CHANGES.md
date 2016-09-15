@@ -24,6 +24,7 @@ Change Log
 * Fixed a bug that caused WMS layer names and WFS type names to not be displayed on the dataset info page.
 * We now preserve the state of the feature information panel when sharing.  This was lost in the transition to the new user interface in 4.0.0.
 * Fixed bug where generic parameters such as strings were not passed through to WPS services.
+* Fixed a bug where the chart panel did not update with polled data files.
 * Removed the Australian Hydrography layer, as the source is no longer available.
 * Newly-added user data is now automatically selected for the preview map.
 * Fixed dropdowns dropping from the bounds of the screen in safari.
