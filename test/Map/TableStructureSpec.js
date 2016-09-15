@@ -7,8 +7,10 @@ var TableStructure = require('../../lib/Map/TableStructure');
 var VarType = require('../../lib/Map/VarType');
 
 var separator = ',';
+var decimalPoint = '.';
 if (typeof Intl === 'object' && typeof Intl.NumberFormat === 'function') {
     separator = (Intl.NumberFormat().format(1000)[1]);
+    decimalPoint = Intl.NumberFormat().format(0.5)[1];
 }
 
 describe('TableStructure', function() {
@@ -118,6 +120,20 @@ describe('TableStructure', function() {
         expect(rowObjects[0]).toEqual({x: '1', y: '5.12345'});
         expect(rowObjects[1]).toEqual({x: '3', y: '8'});
         expect(rowObjects[2]).toEqual({x: '4', y: '-3'});
+    });
+
+    it('can convert to string and number row objects', function() {
+        var data = [['x', 'y'], [1.678, -9.883], [54321, 12345], [4, -3]];
+        var options = {columnOptions: {
+            x: {format: {maximumFractionDigits: 0}},
+            y: {name: 'newy', format: {useGrouping: true, maximumFractionDigits: 1}}
+        }};
+        var tableStructure = new TableStructure('foo', options);
+        tableStructure = tableStructure.loadFromJson(data);
+        var rowObjects = tableStructure.toStringAndNumberRowObjects();
+        expect(rowObjects.length).toEqual(3);
+        expect(rowObjects[0]).toEqual({string: {x: '2', newy: '-9' + decimalPoint + '9'}, number: {x: 1.678, newy: -9.883}});
+        expect(rowObjects[1]).toEqual({string: {x: '54321', newy: '12' + separator + '345'}, number: {x: 54321, newy: 12345}});
     });
 
     it('can convert to point arrays', function() {
@@ -353,11 +369,11 @@ describe('TableStructure', function() {
         expect(tableStructure.getColumnWithName('z').values.slice()).toEqual(['b', 'a', 'c']);
     });
 
-    it('can sort columns by date', function() {
+    it('can sort columns by date, even with null dates', function() {
         // Note the last date occurs before the first, but a string compare would disagree.
-        var data = [['date', 'v'], ['2010-06-20T10:00:00.0+1000', 'a'], ['2010-06-19T10:00:00.0+1000', 'b'], ['2010-06-20T10:00:00.0+1100', 'c']];
+        var data = [['date', 'v'], ['2010-06-20T10:00:00.0+1000', 'a'], ['2010-06-19T10:00:00.0+1000', 'b'], [null, 'n'], ['2010-06-20T10:00:00.0+1100', 'c']];
         var tableStructure = TableStructure.fromJson(data);
         tableStructure.sortBy(tableStructure.columns[0]);
-        expect(tableStructure.columns[1].values.slice()).toEqual(['b', 'c', 'a']);
+        expect(tableStructure.columns[1].values.slice()).toEqual(['b', 'c', 'a', 'n']);
     });
 });

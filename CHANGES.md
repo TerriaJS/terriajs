@@ -12,9 +12,25 @@ Change Log
 * Refactored Csv, AbsItt and Sdmx-Json catalog items to depend on a common `TableCatalogItem`. Deprecated `CsvCatalogItem.setActiveTimeColumn` in favour of `tableStructure.setActiveTimeColumn`.
 * Error in geocoding addresses in csv files now shows in dialog box.
 * Fixed css styling of the timeline and added padding to the feature info panel.
+* Enhanced json support to recognise JSON5 format for user-added files.
+* Deprecated `indicesIntoUniqueValues`, `indicesOrValues`, `indicesOrNumericalValues` & `usesIndicesIntoUniqueValues` in `TableColumn` (`isEnum` replaces `usesIndicesIntoUniqueValues`).
+* Added support for explicitly colouring enum columns using a `tableStyle.colorBins` array of `{"value":v, "color":c}` objects
 * Improved rendering speed when changing the display variable for large lat/lon csv files.
 * Default to moving feature csvs if a time, lat, lon and a column named `id` are present.
 * Fixed a bug so units flow through to charts of moving csv features.
+* ContextItem now shown during location selection.
+* Fixed a bug that caused `&amp;` to appear in some URLs instead of simply `&`, leading to an error when visiting the link.
+* Added the ability to pass a LineString to a Web Processing Service.
+* Fixed a bug which prevented `tableStyle.dataVariable` = `null` from working.
+* Uses a smarter default column for csv files.
+* Fixed a bug that caused an error message to appear repeatedly when there was an error downloading tiles for a base map.
+* Fixed a bug that caused WMS layer names and WFS type names to not be displayed on the dataset info page.
+* We now preserve the state of the feature information panel when sharing.  This was lost in the transition to the new user interface in 4.0.0.
+* Fixed bug where generic parameters such as strings were not passed through to WPS services.
+
+### 4.3.3
+
+* Use react-rangeslider 1.0.4 because 1.0.5 was published incorrectly.
 
 ### 4.3.2
 
