@@ -24,9 +24,11 @@ Change Log
 * Fixed a bug that caused WMS layer names and WFS type names to not be displayed on the dataset info page.
 * We now preserve the state of the feature information panel when sharing.  This was lost in the transition to the new user interface in 4.0.0.
 * Fixed bug where generic parameters such as strings were not passed through to WPS services.
+* Fixed a bug where the chart panel did not update with polled data files.
 * Removed the Australian Hydrography layer, as the source is no longer available.
 * Newly-added user data is now automatically selected for the preview map.
 * Fixed a bug where selecting a new column on a moving point csv file did not update the chart in the feature info panel.
+* Fixed dropdowns dropping from the bounds of the screen in safari.
 
 ### 4.3.3
 
@@ -77,6 +79,7 @@ Change Log
 * Added support for polling csv files with a partial update, and by using `idColumns` to identify features across updates.
 * Added a time series chart to the Feature Info Panel for sampled, moving features.
 * Fixed a bug which sometimes prevented feature info from appearing when two region-mapped csv files were displayed.
+* Fixed the preview map extent being one item behind what was actually selected.
 
 ### 4.1.2
 
