@@ -33,6 +33,7 @@
           "typeNames": "admin_bnds:COM20111216_ELB_region",
           "nameProperty": "ELECT_DIV",
           "groupByProperty": "STATE",
+          "hideSource": true,
           "itemProperties": {
             "description": "Commonwealth Electoral Divisions\n\n© Commonwealth of Australia (Australian Electoral Commission)2015",
             "info": [

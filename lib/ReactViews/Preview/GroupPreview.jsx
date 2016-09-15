@@ -49,7 +49,7 @@ const GroupPreview = React.createClass({
                             </div>
                         </If>
 
-                        <If condition={metadataItem.url && metadataItem.url.length}>
+                        <If condition={metadataItem.url && metadataItem.url.length && !metadataItem.hideSource}>
                             <DataPreviewUrl metadataItem={metadataItem}/>
                         </If>
                     </div>
