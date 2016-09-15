@@ -2,6 +2,9 @@
 Change Log
 ==========
 
+### 4.5.0
+* Remove Australian Hydro layer, as the source is no longer available.
+
 ### 4.4.0
 
 * Fixed a bug which caused Cesium to crash when plotting a CSV with non-numerical data in the depth column.
