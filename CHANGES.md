@@ -2,6 +2,9 @@
 Change Log
 ==========
 
+### 4.4.1
+* Fixed THREDDs color scale range and legends not showing on first add.
+
 ### 4.4.0
 
 * Fixed a bug that caused Cesium (3D view) to crash when plotting a CSV with non-numerical data in the depth column.
