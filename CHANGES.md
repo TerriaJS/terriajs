@@ -26,6 +26,7 @@ Change Log
 * Fixed bug where generic parameters such as strings were not passed through to WPS services.
 * Fixed a bug where the chart panel did not update with polled data files.
 * Removed the Australian Hydrography layer, as the source is no longer available.
+* Fixed a bug that caused the GetCapabilities URL of a WMS catalog item to be shown even when `hideSource` was set to true.
 * Newly-added user data is now automatically selected for the preview map.
 * Fixed dropdowns dropping from the bounds of the screen in safari.
 
