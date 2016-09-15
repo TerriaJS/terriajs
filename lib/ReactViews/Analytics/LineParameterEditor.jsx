@@ -90,7 +90,7 @@ const LineParameterEditor = React.createClass({
     render() {
         return (
             <div>
-                <input className={Styles.parameterEditor}
+                <input className={Styles.field}
                        type="text"
                        onChange={this.onTextChange}
                        value={this.state.value}/>
