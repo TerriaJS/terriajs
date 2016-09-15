@@ -26,6 +26,7 @@ Change Log
 * Fixed bug where generic parameters such as strings were not passed through to WPS services.
 * Removed the Australian Hydrography layer, as the source is no longer available.
 * Newly-added user data is now automatically selected for the preview map.
+* Fixed dropdowns dropping from the bounds of the screen in safari.
 
 ### 4.3.3
 
