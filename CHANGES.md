@@ -28,7 +28,10 @@ Change Log
 * Removed the Australian Hydrography layer, as the source is no longer available.
 * Fixed a bug that caused the GetCapabilities URL of a WMS catalog item to be shown even when `hideSource` was set to true.
 * Newly-added user data is now automatically selected for the preview map.
+* Fixed a bug where selecting a new column on a moving point csv file did not update the chart in the feature info panel.
 * Fixed dropdowns dropping from the bounds of the screen in safari.
+* Fixed a bug which prevented the feature info panel from updating with polled lat/lon csvs.
+* Improved handing of missing data in charts, so that it is ignored instead of shown as 0.
 
 ### 4.3.3
 
