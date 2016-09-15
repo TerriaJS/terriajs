@@ -25,6 +25,7 @@
 
 .field {
   composes: field from '../../Sass/common/_form.scss';
+  margin-bottom: $padding-small;
 }
 
 .field--parameter-editor {
