@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+### 4.4.1
+
+* Improved feature info display of time-varying region-mapped csvs, so that chart is still shown at times with no data.
+
 ### 4.4.0
 
 * Fixed a bug that caused Cesium (3D view) to crash when plotting a CSV with non-numerical data in the depth column.
