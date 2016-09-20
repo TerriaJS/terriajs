@@ -480,6 +480,24 @@ function getInfoAsReactComponent(that) {
     let rawData;
     if (showRawData) {
         rawDataHtml = that.descriptionFromFeature();
+        /*
+        if (defined(that.props.feature._properties["Aristotle Metadata: Name"])) {
+            var keyVal = that.props.feature._properties["Aristotle Metadata: Name"];
+            var replaceValue = "<tr><td>Aristotle Metadata: Name</td><td>" + keyVal + "</td></tr>";
+            rawDataHtml = rawDataHtml.replace("<\/table>", replaceValue + "<\/table>");
+        }
+        if (defined(that.props.feature._properties["Aristotle Metadata: DataType"])) {
+            var keyVal = that.props.feature._properties["Aristotle Metadata: DataType"];
+            var replaceValue = "<tr><td>Aristotle Metadata: DataType</td><td>" + keyVal + "</td></tr>";
+            rawDataHtml = rawDataHtml.replace("<\/table>", replaceValue + "<\/table>");
+        }
+        if (defined(that.props.feature._properties["Aristotle Metadata: Definition"])) {
+            var keyVal = that.props.feature._properties["Aristotle Metadata: Definition"];
+            var replaceValue = "<tr><td>Aristotle Metadata: Definition</td><td>" + keyVal + "</td></tr>";
+            rawDataHtml = rawDataHtml.replace("<\/table>", replaceValue + "<\/table>");
+        }
+        */
+
         if (defined(rawDataHtml)) {
             rawData = parseCustomMarkdownToReact(rawDataHtml, context);
         }

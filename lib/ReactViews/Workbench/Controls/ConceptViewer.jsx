@@ -58,6 +58,7 @@ const Concept = React.createClass({
     },
 
     render() {
+        // Concept is a... TableStructure?? Ok. Or a TableColumn...
         const concept = this.props.concept;
 
         return (
@@ -88,6 +89,9 @@ const Concept = React.createClass({
                             </If>
                         </div>
                         {concept.name}
+                        <If condition={concept.meta_name}>
+                            <div style={{fontSize:'10px'}} title={concept.meta_definition}>{concept.meta_name}</div>
+                        </If>
                     </div>
                 </If>
                 <If condition={concept.isOpen}>
