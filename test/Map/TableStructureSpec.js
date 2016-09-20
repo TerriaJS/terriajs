@@ -312,7 +312,7 @@ describe('TableStructure', function() {
         var table2 = new TableStructure('bar');  // Only uses idColumnNames on table1.
         table1 = table1.loadFromJson(data);
         table2 = table2.loadFromJson(dat2);
-        table1.activeTimeColumn = table1.columns[0];
+        table1.setActiveTimeColumn(0);
         table1.columns[1].isActive = true;
         table1.columns[1].color = 'blue';
         table1.merge(table2);
