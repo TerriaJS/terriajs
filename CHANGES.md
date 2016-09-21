@@ -5,6 +5,7 @@ Change Log
 ### 4.4.1
 
 * Improved feature info display of time-varying region-mapped csvs, so that chart is still shown at times with no data.
+* Improved wording for feature info panel when there is no data.
 
 ### 4.4.0
 
