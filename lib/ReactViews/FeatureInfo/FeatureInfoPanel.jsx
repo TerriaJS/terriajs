@@ -107,12 +107,12 @@ const FeatureInfoPanel = React.createClass({
             // set local storage for the first time
             if(this.props.viewState.firstTime) {
                 this.props.viewState.firstTime = false;
-                return "Clicking on the map will reveal information about your active data sets";
+                return "Click on the map to learn more about a location";
             }
             // if there is a local storage flat
-            return "No data at this location, try elsewhere or add more datasets?";
+            return "No data is available here - try another location.";
         } else{
-            return "No data on the map, add a dataset maybe ?";
+            return "Click 'Add Data' to add data to the map.";
         }
     },
 
