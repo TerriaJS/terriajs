@@ -101,6 +101,21 @@ const FeatureInfoPanel = React.createClass({
         }
     },
 
+    getMessageForNoResults() {
+        if(this.props.terria.nowViewing.hasItems) {
+            // if no local storage flag
+            // set local storage for the first time
+            if(!localStorage.launched) {
+                localStorage.setItem('launched', true);
+                return "Clicking on the map will reveal information about your active data sets";
+            }
+            // if there is a local storage flat
+            return "No data at this location, try elsewhere or add more datasets?";
+        } else{
+            return "No data on the map, add a dataset maybe ?";
+        }
+    },
+
     render() {
         const terria = this.props.terria;
         const viewState = this.props.viewState;
@@ -111,6 +126,7 @@ const FeatureInfoPanel = React.createClass({
             [Styles.isVisible]: viewState.featureInfoPanelIsVisible
         });
         return (
+
             <div
                 className={panelClassName}
                 aria-hidden={!viewState.featureInfoPanelIsVisible}>
@@ -131,7 +147,7 @@ const FeatureInfoPanel = React.createClass({
                             <li><Loader/></li>
                         </When>
                         <When condition={!featureInfoCatalogItems || featureInfoCatalogItems.length === 0}>
-                            <li className={Styles.noResults}>No results</li>
+                            <li className={Styles.noResults}>{this.getMessageForNoResults()}</li>
                         </When>
                         <Otherwise>
                             {featureInfoCatalogItems}
