@@ -102,16 +102,15 @@ const FeatureInfoPanel = React.createClass({
     },
 
     getMessageForNoResults() {
-        if(this.props.terria.nowViewing.hasItems) {
-            // if no local storage flag
-            // set local storage for the first time
-            if(this.props.viewState.firstTime) {
+        if (this.props.terria.nowViewing.hasItems) {
+            // feature info shows up becuase data has been added for the first time
+            if (this.props.viewState.firstTime) {
                 this.props.viewState.firstTime = false;
                 return "Click on the map to learn more about a location";
             }
-            // if there is a local storage flat
+            // if clicking on somewhere that has no data
             return "No data is available here - try another location.";
-        } else{
+        } else {
             return "Click 'Add Data' to add data to the map.";
         }
     },
