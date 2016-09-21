@@ -105,8 +105,8 @@ const FeatureInfoPanel = React.createClass({
         if(this.props.terria.nowViewing.hasItems) {
             // if no local storage flag
             // set local storage for the first time
-            if(!localStorage.launched) {
-                localStorage.setItem('launched', true);
+            if(this.props.viewState.firstTime) {
+                this.props.viewState.firstTime = false;
                 return "Clicking on the map will reveal information about your active data sets";
             }
             // if there is a local storage flat
