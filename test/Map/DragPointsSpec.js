@@ -20,6 +20,7 @@ describe('DragPoints', function() {
         var dragPointsHelper = new DragPoints(terria);
         expect(dragPointsHelper._dragPointsHelper.type).toEqual("Cesium");
         terria.viewerMode = ViewerMode.Leaflet;
+        terria.afterViewerChanged.raiseEvent();
         expect(dragPointsHelper._dragPointsHelper.type).toEqual("Leaflet");
     });
 
@@ -28,6 +29,7 @@ describe('DragPoints', function() {
         var dragPointsHelper = new DragPoints(terria);
         expect(dragPointsHelper._dragPointsHelper.type).toEqual("Leaflet");
         terria.viewerMode = ViewerMode.CesiumTerrain;
+        terria.afterViewerChanged.raiseEvent();
         expect(dragPointsHelper._dragPointsHelper.type).toEqual("Cesium");
     });
 
