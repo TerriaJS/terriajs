@@ -5,7 +5,6 @@ import Styles from './measure_tool.scss';
 import Icon from "../../Icon.jsx";
 
 const UserDrawing = require('../../../Models/UserDrawing');
-const defined = require('terriajs-cesium/Source/Core/defined');
 const EllipsoidGeodesic = require('terriajs-cesium/Source/Core/EllipsoidGeodesic.js');
 const Ellipsoid = require('terriajs-cesium/Source/Core/Ellipsoid.js');
 const EllipsoidTangentPlane = require('terriajs-cesium/Source/Core/EllipsoidTangentPlane.js');
