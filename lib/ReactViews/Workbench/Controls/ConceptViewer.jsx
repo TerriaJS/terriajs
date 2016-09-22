@@ -60,7 +60,6 @@ const Concept = React.createClass({
     render() {
         // Concept is a... TableStructure?? Ok. Or a TableColumn...
         const concept = this.props.concept;
-
         return (
             <li style={this.getColorStyle()}>
                 <If condition={concept.name}>
@@ -88,9 +87,11 @@ const Concept = React.createClass({
                                 </button>
                             </If>
                         </div>
-                        {concept.name}
                         <If condition={concept.meta_name}>
-                            <div style={{fontSize:'10px'}} title={concept.meta_definition}>{concept.meta_name}</div>
+                            <div title={`${concept.name}: ${concept.meta_definition}`}>{concept.meta_name}</div>
+                        </If>
+                        <If condition={!concept.meta_name}>
+                            <div>{concept.name}</div>
                         </If>
                     </div>
                 </If>
