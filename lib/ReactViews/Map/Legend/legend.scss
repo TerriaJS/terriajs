@@ -17,6 +17,7 @@ $distance-bg: rgba($dark, 0.9);
   outline: 0;
   font-family: $font-mono;
   max-height: 21px;
+  margin-top: 5px;
   &:hover{
     background: $faint-bg;
   }
@@ -44,7 +45,7 @@ $distance-bg: rgba($dark, 0.9);
 }
 
 .distanceLegend{
-  width: 100px;
+  width: 110px;
 }
 
 .useProjection{
