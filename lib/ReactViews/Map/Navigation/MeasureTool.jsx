@@ -5,6 +5,7 @@ import Styles from './measure_tool.scss';
 import Icon from "../../Icon.jsx";
 
 const UserDrawing = require('../../../Models/UserDrawing');
+const defined = require('terriajs-cesium/Source/Core/defined');
 const EllipsoidGeodesic = require('terriajs-cesium/Source/Core/EllipsoidGeodesic.js');
 const Ellipsoid = require('terriajs-cesium/Source/Core/Ellipsoid.js');
 const EllipsoidTangentPlane = require('terriajs-cesium/Source/Core/EllipsoidTangentPlane.js');
@@ -31,6 +32,7 @@ const MeasureTool = React.createClass({
                     messageHeader: "Measure Tool",
                     allowPolygon: false,
                     onPointClicked: this.onPointClicked,
+                    onPointMoved: this.onPointMoved,
                     onCleanUp: this.onCleanUp,
                     onMakeDialogMessage: this.onMakeDialogMessage
                 })
@@ -163,6 +165,11 @@ const MeasureTool = React.createClass({
     onPointClicked(pointEntities) {
         this.updateDistance(pointEntities);
         this.updateArea(pointEntities);
+    },
+
+    onPointMoved(pointEntities) {
+        // This is no different to clicking a point.
+        this.onPointClicked(pointEntities);
     },
 
     onMakeDialogMessage() {
