@@ -9,26 +9,28 @@ $distance-bg: rgba($dark, 0.9);
   float: left;
   background-color: #fff;
   color: $text-dark;
-  border-radius: $radius-medium;
-  padding: $padding-small $padding;
+  padding: $padding-small $padding-small;
   font-size: 0.7rem;
-  height: 29px;
   text-align: center;
-  line-height: 16px;
+  line-height: 1;
   border: 0;
   outline: 0;
+  font-family: $font-mono;
+  max-height: 21px;
   &:hover{
     background: $faint-bg;
   }
 
   .bar{
     background: $text-dark;
+    margin: 0 auto;
   }
 }
 
 .locationBar{
   composes: baseLegend;
-  margin-right: $padding;
+  margin-right: $padding-small;
+  width: 350px;
 
   span{
     padding: 0 $padding-small;
@@ -38,4 +40,12 @@ $distance-bg: rgba($dark, 0.9);
     display: inline-block;
     padding: 0 $padding-small;
   }
+}
+
+.distanceLegend{
+  width: 100px;
+}
+
+.useProjection{
+  width: 450px;
 }
