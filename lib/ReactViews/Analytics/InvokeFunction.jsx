@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import ObserveModelMixin from '../ObserveModelMixin';
 import ParameterEditor from './ParameterEditor';
 import when from 'terriajs-cesium/Source/ThirdParty/when';
@@ -15,7 +16,25 @@ const InvokeFunction = React.createClass({
         viewState: React.PropTypes.object
     },
 
-    submit() {
+    // Thanks https://gist.github.com/ashblue/7759368
+    hasHtml5Validation() {
+        return typeof document.createElement('input').checkValidity === 'function';
+    },
+
+    submit(e) {
+        e.preventDefault();
+        debugger;
+
+        if (this.hasHtml5Validation()) {
+            if (!ReactDOM.findDOMNode(this).checkValidity()) {
+                console.log("NOT VALID");
+            } else {
+                console.log("VALID");
+            }
+        } else {
+            console.log("No validation");
+        }
+
         try {
             const promise = when(this.props.previewed.invoke())
                 .otherwise(terriaError => {
@@ -52,16 +71,16 @@ const InvokeFunction = React.createClass({
     );},
 
     render() {
-        return (<div className={Styles.invokeFunction}>
+        return (<form className={Styles.invokeFunction} onSubmit={this.submit}>
                     <div className={Styles.content}>
                         <h3>{this.props.previewed.name}</h3>
                         <div className={Styles.description}>{parseCustomMarkdownToReact(this.props.previewed.description, {catalogItem: this.props.previewed})}</div>
                         {this.getParams()}
                     </div>
                     <div className={Styles.footer}>
-                        <button type='button' className={Styles.btn} onClick={this.submit}>Run Analysis</button>
+                        <input type='submit' className={Styles.btn} value="Run Analysis"/>
                     </div>
-                </div>);
+                </form>);
     }
 });
 

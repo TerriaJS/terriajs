@@ -93,7 +93,7 @@ const ParameterEditor = React.createClass({
 
     render() {
         return (
-            <form>
+            <div>
                 <If condition={this.props.parameter.display}>
                     <label className={Styles.label}
                            htmlFor={this.fieldId + this.props.parameter.type}>
@@ -106,7 +106,7 @@ const ParameterEditor = React.createClass({
                             {this.renderEditor()}
                     </div>
                 </If>
-            </form>
+            </div>
         );
     }
 });
