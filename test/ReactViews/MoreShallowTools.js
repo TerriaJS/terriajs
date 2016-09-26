@@ -4,10 +4,20 @@
 import ReactTestUtils from 'react-addons-test-utils';
 import {findAll} from 'react-shallow-testutils';
 
-export function getShallowRenderedOutput(jsx) {
+export function getRenderedRenderer(jsx) {
     const renderer = ReactTestUtils.createRenderer();
     renderer.render(jsx);
+    return renderer;
+}
+
+export function getShallowRenderedOutput(jsx) {
+    const renderer = getRenderedRenderer(jsx);
     return renderer.getRenderOutput();
+}
+
+export function getMountedInstance(jsx) {
+    const renderer = getRenderedRenderer(jsx);
+    return renderer.getMountedInstance(renderer);
 }
 
 export function findAllEqualTo(reactElement, text) {

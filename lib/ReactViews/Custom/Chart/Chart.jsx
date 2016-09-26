@@ -62,12 +62,12 @@ const Chart = React.createClass({
         const xColumn = table.getColumnWithNameIdOrIndex(this.props.xColumn || 0);
         let yColumns = [table.columns[1]];
         if (defined(this.props.yColumns)) {
-            yColumns = this.props.yColumns.map(yCol=>table.getColumnWithNameIdOrIndex(yCol));
+            yColumns = this.props.yColumns.map(yCol => table.getColumnWithNameIdOrIndex(yCol));
         }
         const pointArrays = table.toPointArrays(xColumn, yColumns);
         // The data id should be set to something unique, eg. its source id + column index.
         // If we're here, the data was downloaded from a single file or table, so the column index is unique by itself.
-        return pointArrays.map((points, index)=>
+        return pointArrays.map((points, index) =>
             new ChartData(points, {
                 id: index,
                 name: yColumns[index].name,
@@ -80,7 +80,7 @@ const Chart = React.createClass({
         // Returns a promise that resolves to an array of ChartData.
         const that = this;
         if (defined(data)) {
-            // Nothing to do - the data was provided.
+            // Nothing to do - the data was provided (either as props.data or props.tableStructure).
             return when(data);
         } else if (defined(url)) {
             return loadIntoTableStructure(catalogItem, url)
@@ -89,10 +89,6 @@ const Chart = React.createClass({
                     // It looks better to create a blank chart than no chart.
                     return [];
                 });
-        } else if (defined(that.props.tableStructure)) {
-            // We were given a tableStructure, just convert it to a chartDataArray.
-            const chartDataArray = that.chartDataArrayFromTableStructure(that.props.tableStructure);
-            return when(chartDataArray);
         }
     },
 
@@ -130,7 +126,7 @@ const Chart = React.createClass({
     },
 
     componentDidUpdate() {
-        // Update the chart with props.data, if present.
+        // Update the chart with props.data or props.tableStructure, if present.
         // If the data came from a URL, there are three possibilities:
         // 1. The URL has changed.
         // 2. The URL is the same and therefore we do not want to reload it.
@@ -207,8 +203,15 @@ const Chart = React.createClass({
             margin = {top: 0, right: 0, bottom: 0, left: 0};
         }
 
+        let chartData;
+        if (defined(this.props.data)) {
+            chartData = this.props.data;
+        } else if (defined(this.props.tableStructure)) {
+            chartData = this.chartDataArrayFromTableStructure(this.props.tableStructure);
+        }
+
         return {
-            data: this.props.data,
+            data: chartData,
             domain: this.props.domain,
             width: '100%',
             height: defaultValue(this.props.height, defaultHeight),

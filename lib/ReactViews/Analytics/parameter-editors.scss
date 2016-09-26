@@ -25,6 +25,7 @@
 
 .field {
   composes: field from '../../Sass/common/_form.scss';
+  margin-bottom: $padding;
 }
 
 .field--parameter-editor {
@@ -110,6 +111,11 @@
   &:hover, &:focus {
     color: $color-primary;
   }
+}
+
+.embeddedMap{
+  position: relative;
+  height: 200px;
 }
 
 @include empty-module("radio");

@@ -35,12 +35,10 @@ const DataPreview = React.createClass({
                         </div>
                     </When>
                     <When condition={previewed && typeof previewed.invoke !== 'undefined'}>
-                        <div className={Styles.previewInner}>
-                            <InvokeFunction previewed={previewed}
-                                            terria={this.props.terria}
-                                            viewState={this.props.viewState}
-                            />
-                        </div>
+                        <InvokeFunction previewed={previewed}
+                                        terria={this.props.terria}
+                                        viewState={this.props.viewState}
+                        />
                     </When>
                     <When condition={previewed && previewed.isGroup}>
                         <div className={Styles.previewInner}>
