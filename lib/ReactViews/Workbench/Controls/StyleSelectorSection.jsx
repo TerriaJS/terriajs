@@ -19,7 +19,7 @@ const StyleSelectorSection = React.createClass({
         const styles = item.styles.split(',');
 
         const layerIndex = layers.indexOf(layer.name);
-        if (layerIndex == -1) {
+        if (layerIndex === -1) {
             // Not a valid layer?  Something went wrong.
             return;
         }

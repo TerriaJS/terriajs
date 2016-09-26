@@ -5,7 +5,8 @@ Change Log
 ### 4.5.0
 
 * Fixed a bug that prevented fractional seconds in time-varying WMS periodicity.
-* Fixed a bug that prevented some links on the dataset info / preview panel from working correctly.
+* Added the ability to the workbench UI to select the `style` to use to display a Web Map Service (WMS) layer when multiple styles are available.
+
 ### 4.4.1
 
 * Improved feature info display of time-varying region-mapped csvs, so that chart is still shown at times with no data.
