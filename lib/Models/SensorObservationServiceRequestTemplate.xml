@@ -30,6 +30,6 @@
 </gml:TimePeriod>
 </fes:During>
 </sos:temporalFilter>
-</sos:GetObservation>
+</sos:{{action}}>
 </soap12:Body>
 </soap12:Envelope>
