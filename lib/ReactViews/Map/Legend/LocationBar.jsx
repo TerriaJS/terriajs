@@ -1,4 +1,5 @@
 'use strict';
+import classNames from "classnames";
 import ObserveModelMixin from '../../ObserveModelMixin';
 import React from 'react';
 import Styles from './legend.scss';
@@ -24,7 +25,7 @@ const LocationBar = React.createClass({
 
     render() {
         return (
-            <button type='button' className={Styles.locationBar} onClick={this.toggleUseProjection}>
+            <button type='button' className={classNames(Styles.locationBar, {[Styles.useProjection]: this.props.mouseCoords.useProjection})} onClick={this.toggleUseProjection}>
                 <Choose>
                     <When condition={!this.props.mouseCoords.useProjection}>
                         <div><span>Lat</span><span>{this.props.mouseCoords.latitude}</span></div>
