@@ -138,6 +138,15 @@
                     "nullLabel": "blank"
                 }
             },
+             {
+                "name": "CSV with all values replaced with null",
+                "type": "csv",
+                "data": "longitude,latitude,val\n134,-26,0\n121,-33,\n124,-32,",
+                "tableStyle": {
+                    "replaceWithNullValues": [0],
+                    "nullLabel": "blank"
+                }
+            },
             {
                 "name": "CSV with explicit enum colors",
                 "type": "csv",
