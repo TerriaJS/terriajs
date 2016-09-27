@@ -19,7 +19,9 @@ A catalog in Terria is defined in one or more catalog files (also known as "init
         "east": 158,
         "south": -45,
         "west": 109
-    }
+    },
+    "initialCamera": { ... },
+    "corsDomains": [ "myserver.gov.au" ]
 }
 ```
 
@@ -59,7 +61,14 @@ Catalog files can be edited three ways:
 
 ## Catalog file properties
 
-### Setting camera positions
+### `corsDomains`
+
+By default, Terria proxies all requests, assuming that the servers do not support CORS. You can add hosts that are known to support CORS to this property to avoid proxying them. (This property is also supported by TerriaJS-Server).
+
+`"corsDomains": [ "myserver.gov.au" ]`
+
+
+### `homeCamera` and `initialCamera`
 
 Maps have two camera positions, `homeCamera` and `initialCamera`. They are specified identically. All the examples here use `homeCamera`, but apply equally to both.
 
