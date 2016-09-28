@@ -16,7 +16,7 @@
 					"name": "TDS with multiple styles, COLORSCALERANGE, and a time dimension",
 					"type": "wms",
 					"url": "http://thredds.ucar.edu/thredds/wms/grib/NCEP/WW3/Global/Best",
-					"layers": "Direction_of_wind_waves_surface"
+					"layers": "Significant_height_of_wind_waves_surface"
 				}
 			]
 		}
