@@ -5,6 +5,7 @@ import PointParameterEditor from './PointParameterEditor';
 import LineParameterEditor from './LineParameterEditor';
 import RectangleParameterEditor from './RectangleParameterEditor';
 import PolygonParameterEditor from './PolygonParameterEditor';
+import GeoJsonParameterEditor from './GeoJsonParameterEditor';
 import RegionParameterEditor from './RegionParameterEditor';
 import RegionTypeParameterEditor from './RegionTypeParameterEditor';
 import RegionDataParameterEditor from './RegionDataParameterEditor';
@@ -48,6 +49,12 @@ const ParameterEditor = React.createClass({
                 />;
             case 'polygon':
                 return <PolygonParameterEditor
+                    previewed={this.props.previewed}
+                    viewState={this.props.viewState}
+                    parameter={this.props.parameter}
+                />;
+            case 'geojson':
+                return <GeoJsonParameterEditor
                     previewed={this.props.previewed}
                     viewState={this.props.viewState}
                     parameter={this.props.parameter}
