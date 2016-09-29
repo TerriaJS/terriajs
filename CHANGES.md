@@ -5,6 +5,7 @@ Change Log
 ### 4.4.1
 
 * Improved feature info display of time-varying region-mapped csvs, so that chart is still shown at times with no data.
+* Fix visual hierarchy of groups and items in the catalog.
 
 ### 4.4.0
 
