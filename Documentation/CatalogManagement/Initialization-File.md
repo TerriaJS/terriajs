@@ -63,7 +63,7 @@ Catalog files can be edited three ways:
 
 ### `corsDomains`
 
-By default, Terria proxies all requests, assuming that the servers do not support CORS. You can add hosts that are known to support CORS to this property to avoid proxying them. (This property is also supported by TerriaJS-Server).
+By default, Terria proxies all requests within TerriaJS-Server's whitelist, making the assumption that the servers do not support CORS. You can add hosts that are known to support CORS to this property to avoid proxying them.
 
 `"corsDomains": [ "myserver.gov.au" ]`
 
