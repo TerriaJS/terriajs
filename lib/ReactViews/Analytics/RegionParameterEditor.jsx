@@ -13,14 +13,18 @@ import TerriaViewer from '../../ViewModels/TerriaViewer';
 import ViewerMode from '../../Models/ViewerMode';
 import WebMapServiceCatalogItem from '../../Models/WebMapServiceCatalogItem';
 
+import RegionTypeParameterEditor from './RegionTypeParameterEditor';
+import MapInteractionMode from '../../Models/MapInteractionMode';
 import Styles from './parameter-editors.scss';
+
 
 const RegionParameterEditor = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
         previewed: React.PropTypes.object,
-        parameter: React.PropTypes.object
+        parameter: React.PropTypes.object,
+        viewState: React.PropTypes.object
     },
 
     componentWillMount() {
@@ -34,55 +38,8 @@ const RegionParameterEditor = React.createClass({
 
         const terria = this.props.previewed.terria;
 
-        this.terriaForRegionSelection = new Terria({
-            appName: terria.appName,
-            supportEmail: terria.supportEmail,
-            baseUrl: terria.baseUrl,
-            cesiumBaseUrl: terria.cesiumBaseUrl
-        });
-
-        this.terriaForRegionSelection.viewerMode = ViewerMode.Leaflet;
-        this.terriaForRegionSelection.homeView = terria.homeView;
-        this.terriaForRegionSelection.initialView = terria.homeView;
-        this.terriaForRegionSelection.regionMappingDefinitionsUrl = terria.regionMappingDefinitionsUrl;
-        this.terriaForRegionSelection.error.addEventListener(e => {
-            console.log(e);
-        });
-
-        // TODO: we shouldn't hard code the base map here. (copied from branch analyticsWithCharts)
-        const positron = new OpenStreetMapCatalogItem(this.terriaForRegionSelection);
-        positron.name = 'Positron (Light)';
-        positron.url = 'http://basemaps.cartocdn.com/light_all/';
-        positron.attribution = '© OpenStreetMap contributors ODbL, © CartoDB CC-BY 3.0';
-        positron.opacity = 1.0;
-        positron.subdomains = ['a', 'b', 'c', 'd'];
-        this.terriaForRegionSelection.baseMap = positron;
-
         // handle feature picking
         const that = this;
-        knockout.getObservable(this.terriaForRegionSelection, 'pickedFeatures').subscribe(function() {
-            const pickedFeatures = that.terriaForRegionSelection.pickedFeatures;
-            that._lastPickedFeatures = pickedFeatures;
-            when(pickedFeatures.allFeaturesAvailablePromise, function() {
-                if (pickedFeatures !== that._lastPickedFeatures || pickedFeatures.features.length === 0) {
-                    return;
-                }
-                const feature = pickedFeatures.features[0];
-                that._lastRegionFeature = feature.data;
-                that.regionValue = that.props.parameter.findRegionByID(feature.properties[that.regionProvider.regionProp], that.props.previewed.parameterValues);
-
-                if (defined(that._selectedRegionCatalogItem)) {
-                    that._selectedRegionCatalogItem.isEnabled = false;
-                    that._selectedRegionCatalogItem = undefined;
-                }
-
-                if (defined(feature.data) && feature.data.type === 'Feature') {
-                    that._selectedRegionCatalogItem = new GeoJsonCatalogItem(that.terriaForRegionSelection);
-                    that._selectedRegionCatalogItem.data = feature.data;
-                    that._selectedRegionCatalogItem.isEnabled = true;
-                }
-            });
-        });
 
         knockout.defineProperty(this, 'regionValue', {
             get: function() {
@@ -108,13 +65,6 @@ const RegionParameterEditor = React.createClass({
 
         this.addRegionLayer();
         this.updateMapFromValue();
-    },
-
-    componentDidMount() {
-        TerriaViewer.create(this.terriaForRegionSelection, {
-            mapContainer: this.refs.mapContainer,
-            uiContainer: this.refs.uiContainer
-        });
     },
 
     getInitialState() {
@@ -206,7 +156,7 @@ const RegionParameterEditor = React.createClass({
                 that._regionsCatalogItem = undefined;
             }
 
-            that._regionsCatalogItem = new WebMapServiceCatalogItem(that.terriaForRegionSelection);
+            that._regionsCatalogItem = new WebMapServiceCatalogItem(that.props.previewed.terria);
             that._regionsCatalogItem.url = that.regionProvider.server;
             that._regionsCatalogItem.layers = that.regionProvider.layerName;
             that._regionsCatalogItem.parameters = {
@@ -246,7 +196,7 @@ const RegionParameterEditor = React.createClass({
             }
 
             if (defined(feature) && feature.type === 'Feature') {
-                that._selectedRegionCatalogItem = new GeoJsonCatalogItem(that.terriaForRegionSelection);
+                that._selectedRegionCatalogItem = new GeoJsonCatalogItem(that.props.previewed.terria);
                 that._selectedRegionCatalogItem.data = feature;
                 that._selectedRegionCatalogItem.isEnabled = true;
                 that._selectedRegionCatalogItem.zoomTo();
@@ -264,41 +214,66 @@ const RegionParameterEditor = React.createClass({
         });
     },
 
-    render() {
-        return <div>
-            <div className={Styles.parameterEditor}>
-                <input className={Styles.field}
-                       type="text"
-                       autoComplete="off"
-                       value={this.getDisplayValue()}
-                       onChange={this.textChange}
-                       placeholder="Type a region name or click the map below"
-                />
-                {this.renderOptions()}
-                <div className={Styles.embeddedMap}>
-                    <div className={Styles.map} ref='mapContainer'></div>
-                    <div className={Styles.mapUi} ref='uiContainer'></div>
-                </div>
-            </div>
-        </div>;
-    },
+    selectRegionOnMap() {
+        const terria = this.props.previewed.terria;
+        const that = this;
+        // Cancel any feature picking already in progress.
+        terria.pickedFeatures = undefined;
 
-    renderOptions() {
-        const className = classNames({
-            [Styles.autocomplete]: true,
-            [Styles.isHidden]: !this.state.autocompleteVisible
+        const pickPointMode = new MapInteractionMode({
+            message: 'Select a region on the map',
+            onCancel: function () {
+            },
+            customUi: function() {
+                return (<RegionTypeParameterEditor
+                            previewed={that.props.previewed}
+                            parameter={that.props.parameter.regionProvider}
+                        />);
+            }
+        });
+        terria.mapInteractionModeStack.push(pickPointMode);
+
+        knockout.getObservable(pickPointMode, 'pickedFeatures').subscribe(function(pickedFeatures) {
+            if (!defined(pickedFeatures)) {
+                return;
+            }
+            that._lastPickedFeatures = pickedFeatures;
+            when(pickedFeatures.allFeaturesAvailablePromise, function() {
+                if (pickedFeatures !== that._lastPickedFeatures || pickedFeatures.features.length === 0) {
+                    return;
+                }
+                const feature = pickedFeatures.features[0];
+                that._lastRegionFeature = feature.data;
+                that.regionValue = that.props.parameter.findRegionByID(feature.properties[that.regionProvider.regionProp], that.props.previewed.parameterValues);
+
+                if (defined(that._selectedRegionCatalogItem)) {
+                    that._selectedRegionCatalogItem.isEnabled = false;
+                    that._selectedRegionCatalogItem = undefined;
+                }
+
+                if (defined(feature.data) && feature.data.type === 'Feature') {
+                    that._selectedRegionCatalogItem = new GeoJsonCatalogItem(that.terriaForRegionSelection);
+                    that._selectedRegionCatalogItem.data = feature.data;
+                    that._selectedRegionCatalogItem.isEnabled = true;
+                }
+                terria.mapInteractionModeStack.pop();
+                that.props.viewState.openAddData();
+            });
         });
 
-        return (
-            <ul className={className}>
-                {this.state.autoCompleteOptions.map((op, i)=>
-                    <li key={i}>
-                        <button type='button' className={Styles.autocompleteItem}
-                                onClick={this.selectRegion.bind(this, op)}>{op.name}</button>
-                    </li>
-                )}
-            </ul>
-        );
+        that.props.viewState.explorerPanelIsVisible = false;
+    },
+
+    render() {
+        return (<div>
+                    <input className={Styles.field}
+                           type="text"
+                           onChange={this.onTextChange}
+                           value={this.state.value}/>
+                    <button type="button" onClick={this.selectRegionOnMap} className={Styles.btnSelector}>
+                        Select region
+                    </button>
+                </div>);
     }
 });
 

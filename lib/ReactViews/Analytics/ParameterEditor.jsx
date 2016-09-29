@@ -66,6 +66,7 @@ const ParameterEditor = React.createClass({
             case 'region':
                 return <RegionParameterEditor
                     previewed={this.props.previewed}
+                    viewState={this.props.viewState}
                     parameter={this.props.parameter}
                 />;
             case 'regionType':
