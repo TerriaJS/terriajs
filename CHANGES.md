@@ -9,7 +9,7 @@ Change Log
 * Fixed a bug that prevented the Share panel from being used at all if the URL shortening service encountered an error.
 * Fixed a bug that could cause an error when adding multiple catalog items to the map quickly.
 * Tweaked the z-order of the window that appear when hovering over a chart series so that it does not appear on top of the Feature Information panel.
-* We now show the feature info panel the first time a dataset is added, containing with a suggestion to click the map to learn more about a location.  Also improved the wording for the feature info panel when there is no data.
+* We now show the feature info panel the first time a dataset is added, containing a suggestion to click the map to learn more about a location.  Also improved the wording for the feature info panel when there is no data.
 
 ### 4.4.1
 
