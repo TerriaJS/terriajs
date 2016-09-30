@@ -99,7 +99,7 @@
     "node-notifier": "^4.5.0",
     "node-sass": "^3.4.2",
     "react": "15.3.1",
-    "react-addons-test-utils": "15.3.1",
+    "react-addons-test-utils": "15.3.2",
     "react-dom": "15.3.1",
     "react-shallow-testutils": "^2.0.0",
     "socket.io": "1.4.7",
