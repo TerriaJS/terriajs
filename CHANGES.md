@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+### 4.5.0
+
+* Added the ability to drag existing points when creating a `UserDrawing`.
+
 ### 4.4.1
 
 * Improved feature info display of time-varying region-mapped csvs, so that chart is still shown at times with no data.
