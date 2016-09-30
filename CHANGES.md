@@ -2,6 +2,16 @@
 Change Log
 ==========
 
+### 4.5.0
+
+* Added the ability to drag existing points when creating a `UserDrawing`.
+* Fixed a bug that could cause nonsensical legends for CSV columns with all null values.
+
+### 4.4.1
+
+* Improved feature info display of time-varying region-mapped csvs, so that chart is still shown at times with no data.
+* Fix visual hierarchy of groups and items in the catalog.
+
 ### 4.4.0
 
 * Fixed a bug that caused Cesium (3D view) to crash when plotting a CSV with non-numerical data in the depth column.
