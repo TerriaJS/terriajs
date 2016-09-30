@@ -49,7 +49,7 @@
     "point-geometry": "^0.0.0",
     "proj4": "^2.3.14",
     "raw-loader": "^0.5.1",
-    "react-addons-pure-render-mixin": "15.3.1",
+    "react-addons-pure-render-mixin": "15.3.2",
     "react-anything-sortable": "^1.5.2",
     "react-rangeslider": "^1.0.7",
     "resolve": "^1.1.7",
@@ -103,7 +103,7 @@
     "react-dom": "15.3.2",
     "react-shallow-testutils": "^2.0.0",
     "socket.io": "1.4.7",
-    "svg-sprite-loader": "0.0.27",
+    "svg-sprite-loader": "0.0.28",
     "terriajs-jasmine-ajax": "^3.2.1",
     "terriajs-server": "^2.5.1",
     "webpack-dev-server": "^1.14.1"
