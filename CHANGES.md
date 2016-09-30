@@ -5,6 +5,7 @@ Change Log
 ### 4.5.0
 
 * Added the ability to drag existing points when creating a `UserDrawing`.
+* Fixed a bug that could cause nonsensical legends for CSV columns with all null values.
 
 ### 4.4.1
 
