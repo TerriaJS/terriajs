@@ -6,6 +6,7 @@ Change Log
 
 * Added the ability to drag existing points when creating a `UserDrawing`.
 * Fixed a bug that could cause nonsensical legends for CSV columns with all null values.
+* Fixed a bug that prevented the Share panel from being used at all if the URL shortening service encountered an error.
 
 ### 4.4.1
 
