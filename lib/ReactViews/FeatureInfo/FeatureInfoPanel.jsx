@@ -104,8 +104,8 @@ const FeatureInfoPanel = React.createClass({
     getMessageForNoResults() {
         if (this.props.terria.nowViewing.hasItems) {
             // feature info shows up becuase data has been added for the first time
-            if (this.props.viewState.firstTime) {
-                this.props.viewState.firstTime = false;
+            if (this.props.viewState.firstTimeAddingData) {
+                this.props.viewState.firstTimeAddingData = false;
                 return "Click on the map to learn more about a location";
             }
             // if clicking on somewhere that has no data
