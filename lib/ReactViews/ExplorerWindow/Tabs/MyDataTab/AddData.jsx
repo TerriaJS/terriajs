@@ -59,7 +59,7 @@ const AddData = React.createClass({
         addUserFiles(e.target.files, this.props.terria, this.props.viewState, this.state.localDataType)
             .then(addedCatalogItems => {
                 if (addedCatalogItems.length > 0) {
-                    this.props.viewState.myDataIsUploadView = false;
+                    this.onFileAddFinished(addedCatalogItems[0]);
                 }
             });
 
@@ -83,19 +83,20 @@ const AddData = React.createClass({
         }
         addUserCatalogMember(this.props.terria, promise).then(addedItem => {
             if (addedItem && !(addedItem instanceof TerriaError)) {
-                this.props.viewState.myDataIsUploadView = false;
+                this.onFileAddFinished(addedItem);
             }
         });
+    },
+
+    onFileAddFinished(fileToSelect) {
+        this.props.viewState.myDataIsUploadView = false;
+        this.props.viewState.viewCatalogItem(fileToSelect);
     },
 
     onRemoteUrlChange(event) {
         this.setState({
             remoteUrl: event.target.value
         });
-    },
-
-    onFinishDroppingFile() {
-        this.props.viewState.isDraggingDroppingFile = false;
     },
 
     renderTabs() {

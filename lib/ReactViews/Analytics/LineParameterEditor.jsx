@@ -8,7 +8,7 @@ import UserDrawing from '../../Models/UserDrawing';
 import ObserveModelMixin from '../ObserveModelMixin';
 import Styles from './parameter-editors.scss';
 
-const PolygonParameterEditor = React.createClass({
+const LineParameterEditor = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -24,7 +24,8 @@ const PolygonParameterEditor = React.createClass({
                 {
                     terria: this.props.previewed.terria,
                     onPointClicked: this.onPointClicked,
-                    onCleanUp: this.onCleanUp
+                    onCleanUp: this.onCleanUp,
+                    allowPolygon: false
                 })
         };
     },
@@ -37,21 +38,20 @@ const PolygonParameterEditor = React.createClass({
     },
 
     getValue() {
-        const rawValue = this.props.previewed.parameterValues[this.props.parameter.id];
-        if (!defined(rawValue) || rawValue.length < 1) {
+        const pointsLongLats = this.props.previewed.parameterValues[this.props.parameter.id];
+        if (!defined(pointsLongLats) || pointsLongLats.length < 1) {
             return '';
         }
-        const pointsLongLats = rawValue[0];
 
-        let polygon = '';
+        let line = '';
         for (let i = 0; i < pointsLongLats.length; i++) {
-            polygon += '[' + pointsLongLats[i][0].toFixed(3) + ', ' + pointsLongLats[i][1].toFixed(3) + ']';
+            line += '[' + pointsLongLats[i][0].toFixed(3) + ', ' + pointsLongLats[i][1].toFixed(3) + ']';
             if (i !== pointsLongLats.length - 1) {
-                polygon += ', ';
+                line += ', ';
             }
         }
-        if (polygon.length > 0) {
-            return '[' + polygon + ']';
+        if (line.length > 0) {
+            return line;
         } else {
             return '';
         }
@@ -79,10 +79,10 @@ const PolygonParameterEditor = React.createClass({
             points.push(CesiumMath.toDegrees(cartographic.latitude));
             pointsLongLats.push(points);
         }
-        this.props.previewed.setParameterValue(this.props.parameter.id, [pointsLongLats]);
+        this.props.previewed.setParameterValue(this.props.parameter.id, pointsLongLats);
     },
 
-    selectPolygonOnMap() {
+    selectLineOnMap() {
         this.state.userDrawing.enterDrawMode();
         this.props.viewState.explorerPanelIsVisible = false;
     },
@@ -95,13 +95,13 @@ const PolygonParameterEditor = React.createClass({
                        onChange={this.onTextChange}
                        value={this.state.value}/>
                 <button type="button"
-                        onClick={this.selectPolygonOnMap}
+                        onClick={this.selectLineOnMap}
                         className={Styles.btnSelector}>
-                    Click to draw polygon
+                    Click to draw line
                 </button>
             </div>
         );
     }
 });
 
-module.exports = PolygonParameterEditor;
+module.exports = LineParameterEditor;

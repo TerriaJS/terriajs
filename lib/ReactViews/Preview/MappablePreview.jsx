@@ -37,7 +37,8 @@ const MappablePreview = React.createClass({
         return (
             <div className={Styles.root}>
                 <If condition={catalogItem.isMappable}>
-                    <DataPreviewMap terria={this.props.terria} previewedCatalogItem={this.props.previewed}
+                    <DataPreviewMap terria={this.props.terria}
+                                    previewedCatalogItem={catalogItem}
                                     showMap={!this.props.viewState.explorerPanelAnimating || this.props.viewState.useSmallScreenInterface} />
                 </If>
                 <button type='button' onClick={this.toggleOnMap}
@@ -76,14 +77,14 @@ const MappablePreview = React.createClass({
                                 <h4 className={Styles.h4}>{catalogItem.typeName} URL</h4>
                                 <Choose>
                                     <When condition={catalogItem.type === 'wms'}>
-                                        <p>
+                                        <p key="wms-description">
                                             This is a <a href="https://en.wikipedia.org/wiki/Web_Map_Service" target="_blank">WMS
                                             service</a>, which generates map images on request. It can be used in GIS software with this
                                             URL:
                                         </p>
                                     </When>
                                     <When condition={catalogItem.type === 'wfs'}>
-                                        <p>
+                                        <p key="wfs-description">
                                             This is a <a href="https://en.wikipedia.org/wiki/Web_Feature_Service" target="_blank">WFS
                                             service</a>, which transfers raw spatial data on request. It can be used in GIS software with this
                                             URL:
@@ -99,12 +100,12 @@ const MappablePreview = React.createClass({
 
                                 <Choose>
                                     <When condition={catalogItem.type === 'wms' || (catalogItem.type === 'esri-mapServer' && typeof catalogItem.layers !== 'undefined')}>
-                                        <p>
+                                        <p key="wms-layers">
                                             Layer name{catalogItem.layers.split(',').length > 1 ? 's' : ''}: {catalogItem.layers}
                                         </p>
                                     </When>
                                     <When condition={catalogItem.type === 'wfs'}>
-                                        <p>
+                                        <p key="wfs-typeNames">
                                             Type name{catalogItem.typeNames.split(',').length > 1 ? 's' : ''}: {catalogItem.typeNames}
                                         </p>
                                     </When>

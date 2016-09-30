@@ -32,9 +32,15 @@
                 "idColumns": ["id"],
                 "tableStyle": {
                     "dataVariable": "value",
-                    "scaleByValue": true
+                    "scaleByValue": true,
+                    "columns": {
+                        "value": {
+                            "name": "speed",
+                            "units": "km/hr"
+                        }
+                    }
                 },
-                "featureInfoTemplate": "<p>Name: {{id}}</p><h2>Time series</h2><p><chart x-column='{{terria.timeSeries.xName}}' y-column='{{terria.timeSeries.yName}}' id='{{terria.timeSeries.id}}'>{{terria.timeSeries.data}}</chart></p>"
+                "featureInfoTemplate": "<p>Name: {{id}}</p><h2>Time series</h2><p><chart x-column='{{terria.timeSeries.xName}}' y-column='{{terria.timeSeries.yName}}' column-units='{{terria.timeSeries.units}}' id='{{terria.timeSeries.id}}'>{{terria.timeSeries.data}}</chart></p>"
             },
             {
                 "name": "Moving features (not sampled)",
@@ -125,11 +131,32 @@
                 }
             },
             {
+                "name": "CSV with no data variable selected",
+                "type": "csv",
+                "data": "longitude,latitude,value\n134,-26,5\n121,-33,\n124,-32,3\n130,-30,4\n132,-28,1",
+                "tableStyle": {
+                    "dataVariable": null
+                }
+            },
+            {
                 "name": "CSV with blank string values",
                 "type": "csv",
                 "data": "longitude,latitude,enum\n134,-26,dog\n121,-33,\n124,-32,cat\n130,-30,frog\n132,-28,dog",
                 "tableStyle": {
                     "nullLabel": "blank"
+                }
+            },
+            {
+                "name": "CSV with explicit enum colors",
+                "type": "csv",
+                "data": "longitude,latitude,enum\n134,-26,dog\n121,-33,\n124,-32,cat\n130,-30,frog\n132,-28,dog",
+                "tableStyle": {
+                    "nullLabel": "blank",
+                    "colorBins": [
+                        {"value": "dog", "color": "lightblue"},
+                        {"value": "cat", "color": "pink"},
+                        {"value": "frog", "color": "green"}
+                    ]
                 }
             },
             {

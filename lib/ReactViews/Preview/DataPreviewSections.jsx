@@ -52,7 +52,7 @@ const DataPreviewSections = React.createClass({
 
     render() {
         const metadataItem = this.props.metadataItem;
-        const items = metadataItem.info.slice();
+        const items = metadataItem.hideSource ? metadataItem.infoWithoutSources : metadataItem.info.slice();
 
         return (
             <div>
