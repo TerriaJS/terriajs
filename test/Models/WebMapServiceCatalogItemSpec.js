@@ -73,7 +73,7 @@ describe('WebMapServiceCatalogItem', function() {
                               "foo": "bar" }
             });
             wmsItem.load().then(function() {
-                expect(wmsItem.legendUrl).toEqual(new LegendUrl('http://www.example.com/foo?request=GetLegendGraphic&secondUrl&styles=jet2&foo=bar', 'image/gif'));
+                expect(wmsItem.legendUrl).toEqual(new LegendUrl('http://www.example.com/foo?request=GetLegendGraphic&secondUrl&styles=jet2&foo=bar&srs=EPSG%3A3857', 'image/gif'));
                 done();
             }).otherwise(function(e) {
                 fail(e);
@@ -91,7 +91,7 @@ describe('WebMapServiceCatalogItem', function() {
                               "foo": "bar" }
             });
             wmsItem.load().then(function() {
-                expect(wmsItem.legendUrl.url.indexOf('http://foo.com/bar?service=WMS&version=1.1.0&request=GetLegendGraphic&format=image%2Fpng&transparent=True&layer=single_period&alpha=beta&foo=bar')).toBe(0);
+                expect(wmsItem.legendUrl.url.indexOf('http://foo.com/bar?service=WMS&version=1.1.0&request=GetLegendGraphic&format=image%2Fpng&transparent=True&layer=single_period&alpha=beta&foo=bar&srs=EPSG%3A3857')).toBe(0);
                 done();
             }).otherwise(function(e) {
                 fail(e);
@@ -107,7 +107,7 @@ describe('WebMapServiceCatalogItem', function() {
                 layers: 'single_period'
             });
             wmsItem.load().then(function() {
-                expect(wmsItem.legendUrl).toEqual(new LegendUrl('http://www.example.com/foo?request=GetLegendGraphic&firstUrl', 'image/gif'));
+                expect(wmsItem.legendUrl).toEqual(new LegendUrl('http://www.example.com/foo?request=GetLegendGraphic&firstUrl&srs=EPSG%3A3857', 'image/gif'));
                 done();
             }).otherwise(function(e) {
                 fail(e);
@@ -122,7 +122,7 @@ describe('WebMapServiceCatalogItem', function() {
                 layers: 'single_period'
             });
             wmsItem.load().then(function() {
-                expect(wmsItem.legendUrl).toEqual(new LegendUrl('http://www.example.com/foo?request=GetLegendGraphic&firstUrl', 'image/gif'));
+                expect(wmsItem.legendUrl).toEqual(new LegendUrl('http://www.example.com/foo?request=GetLegendGraphic&firstUrl&srs=EPSG%3A3857', 'image/gif'));
                 done();
             }).otherwise(function(e) {
                 fail(e);
@@ -137,7 +137,7 @@ describe('WebMapServiceCatalogItem', function() {
                 layers: 'single_period'
             });
             wmsItem.load().then(function() {
-                expect(wmsItem.legendUrl).toEqual(new LegendUrl('http://www.example.com/foo?request=GetLegendGraphic&firstUrl', 'image/gif'));
+                expect(wmsItem.legendUrl).toEqual(new LegendUrl('http://www.example.com/foo?request=GetLegendGraphic&firstUrl&srs=EPSG%3A3857', 'image/gif'));
                 done();
             }).otherwise(function(e) {
                 fail(e);
