@@ -1,15 +1,15 @@
-lat,lon,enum,date,id,value
--36,145,foo,2015-08-01,feature A,13
--36,145,bar,2015-08-02,feature A,5
--36,145,foo,2015-08-04,feature A,15
--36,145,bar,2015-08-05,feature A,7
--36,145,foo,2015-08-06,feature A,10
--21,115,moving,2015-08-01,feature B,4
--37,136,foo,2015-08-02,feature B,15
--23,155,going!,2015-08-03,feature B,5
--33,130,bar,2015-08-04,feature B,14
--20,150,moving,2015-08-05,feature B,6
--37,140,going!,2015-08-06,feature B,13
--30,145.5,blip,2015-08-02,feature C,16
--33,140,blip,2015-08-03,feature D,16
-,144.5,gone,2015-08-05,feature D,14
+lat,lon,enum,date,id,value,level
+-36,145,foo,2015-08-01,feature A,13,50
+-36,145,bar,2015-08-02,feature A,5,60
+-36,145,foo,2015-08-04,feature A,15,70
+-36,145,bar,2015-08-05,feature A,7,55
+-36,145,foo,2015-08-06,feature A,10,66
+-21,115,moving,2015-08-01,feature B,4,33
+-37,136,foo,2015-08-02,feature B,15,55
+-23,155,going!,2015-08-03,feature B,5,41
+-33,130,bar,2015-08-04,feature B,14,22
+-20,150,moving,2015-08-05,feature B,6,77
+-37,140,going!,2015-08-06,feature B,13,47
+-30,145.5,blip,2015-08-02,feature C,16,10
+-33,140,blip,2015-08-03,feature D,16,50
+,144.5,gone,2015-08-05,feature D,14,80

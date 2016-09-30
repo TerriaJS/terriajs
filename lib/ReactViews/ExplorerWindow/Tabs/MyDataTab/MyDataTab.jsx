@@ -48,8 +48,10 @@ const MyDataTab = React.createClass({
                     </If>
                     <If condition={this.hasUserAddedData()}>
                         <div className={Styles.addedData}>
-                            <p className={Styles.explanation}>Data added in this way is not saved or made visible to others unless you explicitly share
-                                it by using the Share panel. </p>
+                            <p className={Styles.explanation}>
+                                Data added in this way is not saved or made visible to others unless you explicitly share
+                                it by using the Share panel.
+                            </p>
                             <ul className={Styles.dataCatalog}>
                                 <DataCatalogGroup group={this.props.terria.catalog.userAddedDataGroup}
                                                   viewState={this.props.viewState}/>

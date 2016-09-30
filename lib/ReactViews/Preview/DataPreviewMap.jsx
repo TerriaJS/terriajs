@@ -160,7 +160,7 @@ const DataPreviewMap = React.createClass({
                         });
                     }
 
-                    that.updateBoundingRectangle();
+                    that.updateBoundingRectangle(previewed);
                 });
             }).otherwise((err) => {
                 console.error(err);
@@ -188,16 +188,15 @@ const DataPreviewMap = React.createClass({
             this.terriaPreview.currentViewer.zoomTo(this.terriaPreview.homeView);
         }
 
-        this.updateBoundingRectangle();
+        this.updateBoundingRectangle(this.props.previewedCatalogItem);
     },
 
-    updateBoundingRectangle() {
+    updateBoundingRectangle(catalogItem) {
         if (defined(this.rectangleCatalogItem)) {
             this.rectangleCatalogItem.isEnabled = false;
             this.rectangleCatalogItem = undefined;
         }
 
-        let catalogItem = this.props.previewedCatalogItem;
         catalogItem = defaultValue(catalogItem.nowViewingCatalogItem, catalogItem);
 
         if (!defined(catalogItem) || !defined(catalogItem.rectangle)) {

@@ -2,24 +2,46 @@
 Change Log
 ==========
 
+### 4.5.0
+
+* Added the ability to drag existing points when creating a `UserDrawing`.
+
+### 4.4.1
+
+* Improved feature info display of time-varying region-mapped csvs, so that chart is still shown at times with no data.
+* Fix visual hierarchy of groups and items in the catalog.
+
 ### 4.4.0
 
-* Fixed a bug which caused Cesium to crash when plotting a CSV with non-numerical data in the depth column.
+* Fixed a bug that caused Cesium (3D view) to crash when plotting a CSV with non-numerical data in the depth column.
 * Added automatic time-series charts of attributes to the feature info of time-varying region-mapped csvs.
 * Refactored Csv, AbsItt and Sdmx-Json catalog items to depend on a common `TableCatalogItem`. Deprecated `CsvCatalogItem.setActiveTimeColumn` in favour of `tableStructure.setActiveTimeColumn`.
 * Error in geocoding addresses in csv files now shows in dialog box.
-* Fixed css styling of the timeline and added padding to the feature info panel.
-* Enhanced json support to recognise JSON5 format for user-added files.
-* Deprecated `indicesIntoUniqueValues`, `indicesOrValues`, `indicesOrNumericalValues` & `usesIndicesIntoUniqueValues` in `TableColumn` (`isEnum` replaces `usesIndicesIntoUniqueValues`).
+* Fixed CSS styling of the timeline and added padding to the feature info panel.
+* Enhanced JSON support to recognise JSON5 format for user-added files.
+* Deprecated `indicesIntoUniqueValues`, `indicesOrValues`, `indicesOrNumericalValues` and `usesIndicesIntoUniqueValues` in `TableColumn` (`isEnum` replaces `usesIndicesIntoUniqueValues`).
 * Added support for explicitly colouring enum columns using a `tableStyle.colorBins` array of `{"value":v, "color":c}` objects
 * Improved rendering speed when changing the display variable for large lat/lon csv files.
-* Default to moving feature csvs if a time, lat, lon and a column named `id` are present.
-* Fixed a bug so units flow through to charts of moving csv features.
-* ContextItem now shown during location selection.
+* Default to moving feature CSVs if a time, latitude, longitude and a column named `id` are present.
+* Fixed a bug so units flow through to charts of moving CSV features.
+* Fixed a bug that prevented the `contextItem` of a `CatalogFunction` from showing during location selection.
 * Fixed a bug that caused `&amp;` to appear in some URLs instead of simply `&`, leading to an error when visiting the link.
 * Added the ability to pass a LineString to a Web Processing Service.
-* Uses a smarter default column for csv files.
+* Fixed a bug that prevented `tableStyle.dataVariable` = `null` from working.
+* Uses a smarter default column for CSV files.
 * Fixed a bug that caused an error message to appear repeatedly when there was an error downloading tiles for a base map.
+* Fixed a bug that caused WMS layer names and WFS type names to not be displayed on the dataset info page.
+* We now preserve the state of the feature information panel when sharing.  This was lost in the transition to the new user interface in 4.0.0.
+* Added a popup message when using region mapping on old browsers without an `ArrayBuffer` type (such as Internet Explorer 9).  These browsers won't support vector tile based region mapping.
+* Fixed bug where generic parameters such as strings were not passed through to WPS services.
+* Fixed a bug where the chart panel did not update with polled data files.
+* Removed the Australian Hydrography layer from `createAustraliaBaseMapOptions`, as the source is no longer available.
+* Fixed a bug that caused the GetCapabilities URL of a WMS catalog item to be shown even when `hideSource` was set to true.
+* Newly-added user data is now automatically selected for the preview map.
+* Fixed a bug where selecting a new column on a moving point CSV file did not update the chart in the feature info panel.
+* Fixed dropdowns dropping from the bounds of the screen in Safari.
+* Fixed a bug that prevented the feature info panel from updating with polled lat/lon csvs.
+* Improved handing of missing data in charts, so that it is ignored instead of shown as 0.
 
 ### 4.3.3
 
@@ -70,6 +92,7 @@ Change Log
 * Added support for polling csv files with a partial update, and by using `idColumns` to identify features across updates.
 * Added a time series chart to the Feature Info Panel for sampled, moving features.
 * Fixed a bug which sometimes prevented feature info from appearing when two region-mapped csv files were displayed.
+* Fixed the preview map extent being one item behind what was actually selected.
 
 ### 4.1.2
 
