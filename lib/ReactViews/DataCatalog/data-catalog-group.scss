@@ -46,7 +46,7 @@
 
 .folder {
   position: absolute;
-  left: 0;
+  left: 8px;
   top: 5px;
   opacity: 0.5;
   svg{
@@ -88,7 +88,7 @@
   padding-left: $padding;
   padding-top: $padding / 2;
   &--lower-level {
-    margin-left: 7px;
+    margin-left: 20px;
     border-left: 1px solid $grey-lighter;
   }
 }

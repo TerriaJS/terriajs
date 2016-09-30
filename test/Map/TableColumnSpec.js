@@ -28,6 +28,12 @@ describe('TableColumn', function() {
         expect(tableColumn.type).toEqual(VarType.SCALAR);
     });
 
+    it('replaces null values before generating numericalValues', function() {
+        var data = [0,0,0];
+        var tableColumn = new TableColumn('x', data.slice(), {replaceWithNullValues: [0]});
+        expect(tableColumn.numericalValues.slice()).toEqual([]);
+    });
+
     it('treats hyphens, blanks and NA as strings in string data', function() {
         var data = ['%', '-', '!', 'NA', ''];
         var tableColumn = new TableColumn('x', data.slice());
