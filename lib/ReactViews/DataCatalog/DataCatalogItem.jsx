@@ -32,6 +32,9 @@ const DataCatalogItem = React.createClass({
             // close modal window
             this.props.viewState.explorerPanelIsVisible = false;
             this.props.viewState.mobileView = null;
+            if (this.props.viewState.firstTimeAddingData) {
+                this.props.viewState.featureInfoPanelIsVisible = true;
+            }
         }
     },
 

@@ -2,9 +2,25 @@
 Change Log
 ==========
 
+### 4.5.0
+
+* Fixed a bug that prevented fractional seconds in time-varying WMS periodicity.
+* Added the ability to the workbench UI to select the `style` to use to display a Web Map Service (WMS) layer when multiple styles are available.
+* Improved the error reporting and handling when specifying invalid values for the WMS COLORSCALERANGE parameter in the UI.
+* Added the ability to drag existing points when creating a `UserDrawing`.
+* Fixed a bug that could cause nonsensical legends for CSV columns with all null values.
+* Fixed a bug that prevented the Share panel from being used at all if the URL shortening service encountered an error.
+* Fixed a bug that could cause an error when adding multiple catalog items to the map quickly.
+* Tweaked the z-order of the window that appear when hovering over a chart series so that it does not appear on top of the Feature Information panel.
+* Fixed a bug that could lead to incorrect colors in a legend for a CSV file with explicit `colorBins` and cut off at a minimum and maximum.
+* We now show the feature info panel the first time a dataset is added, containing a suggestion to click the map to learn more about a location.  Also improved the wording for the feature info panel when there is no data.
+* Fixed support for time-varying feature info for vector tile based region mapping.
+* `updateApplicationOnMessageFromParentWindow` now also allows messages from the `opener` window, i.e. the window that opened the page by calling `window.open`.  The parent or opener may now also send a message with an `allowOrigin` property to specify an origin that should be allowed to post messages.
+
 ### 4.4.1
 
 * Improved feature info display of time-varying region-mapped csvs, so that chart is still shown at times with no data.
+* Fix visual hierarchy of groups and items in the catalog.
 
 ### 4.4.0
 
