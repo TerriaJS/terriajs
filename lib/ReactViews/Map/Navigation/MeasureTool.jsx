@@ -31,6 +31,7 @@ const MeasureTool = React.createClass({
                     messageHeader: "Measure Tool",
                     allowPolygon: false,
                     onPointClicked: this.onPointClicked,
+                    onPointMoved: this.onPointMoved,
                     onCleanUp: this.onCleanUp,
                     onMakeDialogMessage: this.onMakeDialogMessage
                 })
@@ -163,6 +164,11 @@ const MeasureTool = React.createClass({
     onPointClicked(pointEntities) {
         this.updateDistance(pointEntities);
         this.updateArea(pointEntities);
+    },
+
+    onPointMoved(pointEntities) {
+        // This is no different to clicking a point.
+        this.onPointClicked(pointEntities);
     },
 
     onMakeDialogMessage() {
