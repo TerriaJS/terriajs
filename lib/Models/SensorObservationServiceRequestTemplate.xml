@@ -10,7 +10,7 @@
 >
 <soap12:Header>
 <wsa:To>http://www.ogc.org/SOS</wsa:To>
-<wsa:Action>http://www.opengis.net/def/serviceOperation/sos/core/2.0/{{action}}</wsa:Action>
+<wsa:Action>http://www.opengis.net/def/serviceOperation/sos/{{actionClass}}/2.0/{{action}}</wsa:Action>
 <wsa:ReplyTo>
 <wsa:Address>http://www.w3.org/2005/08/addressing/anonymous</wsa:Address>
 </wsa:ReplyTo>
