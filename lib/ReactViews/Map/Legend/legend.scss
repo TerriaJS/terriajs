@@ -32,8 +32,7 @@ $distance-bg: rgba($dark, 0.9);
 .locationBar{
   composes: baseLegend;
   margin-right: $padding-small;
-  width: 350px;
-
+  width: 370px;
   span{
     padding: 0 $padding-small;
   }
@@ -49,5 +48,5 @@ $distance-bg: rgba($dark, 0.9);
 }
 
 .useProjection{
-  width: 450px;
+  width: 470px;
 }

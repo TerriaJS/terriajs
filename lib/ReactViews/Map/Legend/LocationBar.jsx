@@ -28,16 +28,16 @@ const LocationBar = React.createClass({
             <button type='button' className={classNames(Styles.locationBar, {[Styles.useProjection]: this.props.mouseCoords.useProjection})} onClick={this.toggleUseProjection}>
                 <Choose>
                     <When condition={!this.props.mouseCoords.useProjection}>
-                        <div><span>Lat</span><span>{this.props.mouseCoords.latitude}</span></div>
-                        <div><span>Lon</span><span>{this.props.mouseCoords.longitude}</span></div>
+                        <div className='section'><span>Lat</span><span>{this.props.mouseCoords.latitude}</span></div>
+                        <div className='section'><span>Lon</span><span>{this.props.mouseCoords.longitude}</span></div>
                     </When>
                     <Otherwise>
-                        <div><span>ZONE</span><span>{this.props.mouseCoords.utmZone}</span></div>
-                        <div><span>E</span><span>{this.props.mouseCoords.east}</span></div>
-                        <div><span>N</span><span>{this.props.mouseCoords.north}</span></div>
+                        <div className='section'><span>ZONE</span><span>{this.props.mouseCoords.utmZone}</span></div>
+                        <div className='section'><span>E</span><span>{this.props.mouseCoords.east}</span></div>
+                        <div className='section'><span>N</span><span>{this.props.mouseCoords.north}</span></div>
                     </Otherwise>
                 </Choose>
-                <div>
+                <div className='section'>
                     <span>Elev</span>
                     <span>{this.props.mouseCoords.elevation}</span>
                 </div>
