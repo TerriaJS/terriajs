@@ -422,4 +422,20 @@ describe('TableStructure', function() {
         ]);
     });
 
+    it('calculates id-specific date periods', function() {
+        // A and B both have two two-day observations, but they are interspersed.
+        // Without an id column, they would have one-day observations.
+        var data = [['date', 'id'], ['2016-01-01T00:00:00Z', 'A'], ['2016-01-02T00:00:00Z', 'B'], ['2016-01-03T00:00:00Z', 'A'], ['2016-01-04T00:00:00Z', 'B']];
+        var tableStructure = TableStructure.fromJson(data);
+        tableStructure.idColumnNames = ['id'];
+        tableStructure.shaveSeconds = 0;
+        tableStructure.setActiveTimeColumn();
+        expect(tableStructure.finishJulianDates).toEqual([
+            JulianDate.fromIso8601('2016-01-03T00:00:00Z'),
+            JulianDate.fromIso8601('2016-01-04T00:00:00Z'),
+            JulianDate.fromIso8601('2016-01-05T00:00:00Z'),
+            JulianDate.fromIso8601('2016-01-06T00:00:00Z')
+        ]);
+    });
+
 });
