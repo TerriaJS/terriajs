@@ -8,8 +8,10 @@
                 {
                     "name": "BOM SOS",
                     "url": "http://www.bom.gov.au/waterdata/services",
-                    "type": "sos"
-
+                    "type": "sos",
+                    "tableStyle": {
+                        "scaleByValue": true
+                    }
                 }
             ]
         }
