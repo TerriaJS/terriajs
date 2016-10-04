@@ -377,7 +377,6 @@ describe('TableStructure', function() {
         expect(tableStructure.columns[1].values.slice()).toEqual(['b', 'c', 'a', 'n']);
     });
 
-
     it('can calculate finish dates', function() {
         var data = [['date'], ['2016-01-03T12:15:00Z'], ['2016-01-03T12:15:30Z']];
         var tableStructure = TableStructure.fromJson(data);
@@ -410,6 +409,17 @@ describe('TableStructure', function() {
         expect(TimeInterval.contains(interval, JulianDate.fromIso8601('2016-01-11'))).toBe(false);
         var durationInSeconds = JulianDate.secondsDifference(interval.stop, interval.start);
         expect(durationInSeconds).toEqual(sevenDaysInMinutes * 60);
+    });
+
+    it('uses start_date and end_date', function() {
+        // Note these end dates overlap (12:15:00-12:16:10, 12:15:30-12:16:40).
+        var data = [['start_date', 'end_date'], ['2016-01-03T12:15:00Z', '2016-01-03T12:16:10Z'], ['2016-01-03T12:15:30Z', '2016-01-03T12:16:40Z']];
+        var tableStructure = TableStructure.fromJson(data);
+        tableStructure.setActiveTimeColumn();
+        expect(tableStructure.finishJulianDates).toEqual([
+            JulianDate.fromIso8601('2016-01-03T12:16:10Z'),
+            JulianDate.fromIso8601('2016-01-03T12:16:40Z')
+        ]);
     });
 
 });
