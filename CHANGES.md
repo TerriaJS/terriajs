@@ -16,6 +16,7 @@ Change Log
 * We now show the feature info panel the first time a dataset is added, containing a suggestion to click the map to learn more about a location.  Also improved the wording for the feature info panel when there is no data.
 * Fixed support for time-varying feature info for vector tile based region mapping.
 * `updateApplicationOnMessageFromParentWindow` now also allows messages from the `opener` window, i.e. the window that opened the page by calling `window.open`.  The parent or opener may now also send a message with an `allowOrigin` property to specify an origin that should be allowed to post messages.
+* Fixed a bug that prevented charts from loading http urls from https.
 
 ### 4.4.1
 
