@@ -3,7 +3,7 @@
 /*global require,describe,it,expect*/
 var JulianDate = require('terriajs-cesium/Source/Core/JulianDate');
 var TableStructure = require('../../lib/Map/TableStructure');
-// var TableColumn = require('../../lib/Map/TableColumn');
+var TimeInterval = require('terriajs-cesium/Source/Core/TimeInterval');
 var VarType = require('../../lib/Map/VarType');
 
 var separator = ',';
@@ -376,4 +376,40 @@ describe('TableStructure', function() {
         tableStructure.sortBy(tableStructure.columns[0]);
         expect(tableStructure.columns[1].values.slice()).toEqual(['b', 'c', 'a', 'n']);
     });
+
+
+    it('can calculate finish dates', function() {
+        var data = [['date'], ['2016-01-03T12:15:00Z'], ['2016-01-03T12:15:30Z']];
+        var tableStructure = TableStructure.fromJson(data);
+        tableStructure.setActiveTimeColumn();
+        expect(tableStructure.finishJulianDates).toEqual([
+            JulianDate.fromIso8601('2016-01-03T12:15:29Z'),
+            JulianDate.fromIso8601('2016-01-03T12:16:00Z') // Final one should have the average spacing, 30 sec.
+        ]);
+    });
+
+    it('can calculate sub-second finish dates', function() {
+        var data = [['date'], ['2016-01-03T12:15:00Z'], ['2016-01-03T12:15:00.4Z'], ['2016-01-03T12:15:01Z']];
+        var tableStructure = TableStructure.fromJson(data);
+        tableStructure.setActiveTimeColumn();
+        expect(tableStructure.finishJulianDates).toEqual([
+            JulianDate.fromIso8601('2016-01-03T12:15:00.38Z'), // Shaves off 5% of 0.4, ie. 0.02.
+            JulianDate.fromIso8601('2016-01-03T12:15:00.97Z'), // Shaves off 5% of 0.6, ie. 0.03.
+            JulianDate.fromIso8601('2016-01-03T12:15:01.5Z') // Average spacing is 0.5 second.
+        ]);
+    });
+
+    it('supports displayDuration', function() {
+        var data = [['date'], ['2016-01-03'], ['2016-01-04'], ['2016-01-05']];
+        var sevenDaysInMinutes = 60 * 24 * 7;
+        var tableStructure = new TableStructure('test', {displayDuration: sevenDaysInMinutes});
+        TableStructure.fromJson(data, tableStructure);
+        tableStructure.setActiveTimeColumn();
+        var interval = tableStructure.timeIntervals[0];
+        expect(TimeInterval.contains(interval, JulianDate.fromIso8601('2016-01-09'))).toBe(true);
+        expect(TimeInterval.contains(interval, JulianDate.fromIso8601('2016-01-11'))).toBe(false);
+        var durationInSeconds = JulianDate.secondsDifference(interval.stop, interval.start);
+        expect(durationInSeconds).toEqual(sevenDaysInMinutes * 60);
+    });
+
 });
