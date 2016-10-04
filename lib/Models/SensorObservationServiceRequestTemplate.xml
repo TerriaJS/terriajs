@@ -25,8 +25,8 @@
 <fes:During>
 <fes:ValueReference>om:phenomenonTime</fes:ValueReference>
 <gml:TimePeriod gml:id="tp1">
-<gml:beginPosition>2000-01-01T00:00:00+10</gml:beginPosition>
-<gml:endPosition>2009-12-31T23:59:59+10</gml:endPosition>
+<gml:beginPosition>2014-01-01T00:00:00+10</gml:beginPosition>
+<gml:endPosition>2016-12-31T23:59:59+10</gml:endPosition>
 </gml:TimePeriod>
 </fes:During>
 </sos:temporalFilter>
