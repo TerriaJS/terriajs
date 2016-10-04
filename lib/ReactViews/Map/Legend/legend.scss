@@ -39,14 +39,19 @@ $distance-bg: rgba($dark, 0.9);
   li, div{
     display: inline-block;
     padding: 0 $padding-small;
+    text-align: left;
   }
 
   .section-long{
     width: 130px;
   }
 
-  .section-short{
+  .section{
     width: 110px;
+  }
+
+  .section-short{
+    width: 70px;
   }
 }
 
