@@ -15,6 +15,26 @@
                 }
             },
             {
+                "name": "Moving features turned off with []",
+                "type": "csv",
+                "url": "build/TerriaJS/test/csv/lat_lon_enum_date_id.csv",
+                "idColumns": [],
+                "tableStyle": {
+                    "dataVariable": "value",
+                    "scaleByValue": true
+                }
+            },
+            {
+                "name": "Moving features turned off with null",
+                "type": "csv",
+                "url": "build/TerriaJS/test/csv/lat_lon_enum_date_id.csv",
+                "idColumns": null,
+                "tableStyle": {
+                    "dataVariable": "value",
+                    "scaleByValue": true
+                }
+            },
+            {
                 "name": "Moving features (sampled, with info template)",
                 "type": "csv",
                 "url": "build/TerriaJS/test/csv/lat_lon_enum_date_id.csv",
