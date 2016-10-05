@@ -23,7 +23,7 @@
                     "dataVariable": "value",
                     "scaleByValue": true
                 },
-                "featureInfoTemplate": "<p>Name: {{id}}</p><h2>Time series</h2><p>{{terria.timeSeries.chart}}</p>"
+                "featureInfoTemplate": "<p>Name: {{id}}</p><h2>Time series</h2>{{terria.timeSeries.chart}}"
             },
             {
                 "name": "Moving features (sampled, with manual info template)",
