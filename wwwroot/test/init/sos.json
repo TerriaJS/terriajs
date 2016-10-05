@@ -11,7 +11,7 @@
                     "type": "sos",
                     "tableStyle": {
                         "scaleByValue": true,
-                        "scale": 12
+                        "scale": 2
                     }
                 }
             ]
