@@ -17,6 +17,8 @@ Change Log
 * Fixed support for time-varying feature info for vector tile based region mapping.
 * `updateApplicationOnMessageFromParentWindow` now also allows messages from the `opener` window, i.e. the window that opened the page by calling `window.open`.  The parent or opener may now also send a message with an `allowOrigin` property to specify an origin that should be allowed to post messages.
 * Fixed a bug that prevented charts from loading http urls from https.
+* Fixed a bug that prevented default parameters to `CatalogFunction`s from being shown in the user interface.
+* Fixed a problem that made `BooleanParameter`s show up incorrectly in the user interface.
 
 ### 4.4.1
 
