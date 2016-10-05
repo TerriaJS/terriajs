@@ -268,6 +268,15 @@ describe('TableStructure', function() {
         expect(map['B']).toEqual([1, 3]);
     });
 
+    it('can handle idColumnNames = []', function() {
+        var data = [['year', 'id', 'lat', 'lon'], [1970, 'A', 16.8, 5.2], [1971, 'B', 16.2, 5.2], [1971, 'A', 67.8, 1.2], [1972, 'B', 68.2, 2.2]];
+        var options = {idColumnNames: []};
+        var tableStructure = new TableStructure('foo', options);
+        tableStructure = tableStructure.loadFromJson(data);
+        var map = tableStructure.getIdMapping();
+        expect(map).toEqual({});
+    });
+
     it('can append a table', function() {
         var data = [['year', 'id', 'lat', 'lon'], [1970, 'A', 16.8, 5.2], [1971, 'B', 16.2, 5.2]];
         var dat2 = [['year', 'id', 'lat', 'lon'], [1980, 'C', 16.8, 5.2], [1981, 'D', 16.2, 5.2]];
