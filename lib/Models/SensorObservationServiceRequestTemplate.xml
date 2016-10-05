@@ -21,15 +21,17 @@
 {{#parameters}}
 <sos:{{name}}>{{value}}</sos:{{name}}>
 {{/parameters}}
+{{#temporalFilters}}
 <sos:temporalFilter>
 <fes:During>
 <fes:ValueReference>om:phenomenonTime</fes:ValueReference>
-<gml:TimePeriod gml:id="tp1">
-<gml:beginPosition>2014-01-01T00:00:00+10</gml:beginPosition>
-<gml:endPosition>2016-12-31T23:59:59+10</gml:endPosition>
+<gml:TimePeriod gml:id="tp{{index}}">
+<gml:beginPosition>{{startDate}}</gml:beginPosition>
+<gml:endPosition>{{endDate}}</gml:endPosition>
 </gml:TimePeriod>
 </fes:During>
 </sos:temporalFilter>
+{{/temporalFilters}}
 </sos:{{action}}>
 </soap12:Body>
 </soap12:Envelope>
