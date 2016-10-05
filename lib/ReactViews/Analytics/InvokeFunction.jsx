@@ -15,6 +15,18 @@ const InvokeFunction = React.createClass({
         viewState: React.PropTypes.object
     },
 
+    componentWillMount() {
+        if (this.props.previewed.applyParameterDefaultValues) {
+            this.props.previewed.parameterValues = this.props.previewed.applyParameterDefaultValues(this.props.previewed.parameterValues);
+        }
+    },
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.previewed.applyParameterDefaultValues) {
+            nextProps.previewed.parameterValues = nextProps.previewed.applyParameterDefaultValues(nextProps.previewed.parameterValues);
+        }
+    },
+
     submit() {
         try {
             const promise = when(this.props.previewed.invoke())

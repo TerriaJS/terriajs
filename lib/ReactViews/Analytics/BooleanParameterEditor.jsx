@@ -1,4 +1,5 @@
 import React from 'react';
+import Icon from '../Icon.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
 
 import Styles from './parameter-editors.scss';
@@ -31,11 +32,13 @@ const BooleanParameterEditor = React.createClass({
 
         }
         return (
-            <div className={Styles.radio}>
+            <div className={Styles.btnRadio}>
                 <button type='button'
                         className={`${Styles.btnRadio} ${classNames}`}
                         title={description}
                         onClick={this.onClick}>
+                    {value && <Icon glyph={Icon.GLYPHS.radioOn}/>}
+                    {!value && <Icon glyph={Icon.GLYPHS.radioOff}/>}
                     {name}
                 </button>
             </div>
