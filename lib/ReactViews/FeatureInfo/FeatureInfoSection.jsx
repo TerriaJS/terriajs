@@ -393,22 +393,29 @@ const simpleStyleIdentifiers = ['title', 'description',
  */
 function describeFromProperties(properties, time) {
     let html = '';
-    for (const key in properties) {
-        if (properties.hasOwnProperty(key)) {
-            if (simpleStyleIdentifiers.indexOf(key) !== -1) {
-                continue;
-            }
-            let value = properties[key];
-            if (defined(value)) {
-                if (defined(value.getValue)) {
-                    value = value.getValue(time);
+    if (typeof properties.getValue === 'function') {
+        const singleValue = properties.getValue(time);
+        if (defined(singleValue)) {
+            html = '<tr><th>' + '</th><td>' + singleValue + '</td></tr>';
+        }
+    } else {
+        for (const key in properties) {
+            if (properties.hasOwnProperty(key)) {
+                if (simpleStyleIdentifiers.indexOf(key) !== -1) {
+                    continue;
                 }
-                if (Array.isArray(properties)) {
-                    html += '<tr><td>' + describeFromProperties(value, time) + '</td></tr>';
-                } else if (typeof value === 'object') {
-                    html += '<tr><th>' + key + '</th><td>' + describeFromProperties(value, time) + '</td></tr>';
-                } else {
-                    html += '<tr><th>' + key + '</th><td>' + value + '</td></tr>';
+                let value = properties[key];
+                if (defined(value)) {
+                    if (typeof value.getValue === 'function') {
+                        value = value.getValue(time);
+                    }
+                    if (Array.isArray(properties)) {
+                        html += '<tr><td>' + describeFromProperties(value, time) + '</td></tr>';
+                    } else if (typeof value === 'object') {
+                        html += '<tr><th>' + key + '</th><td>' + describeFromProperties(value, time) + '</td></tr>';
+                    } else {
+                        html += '<tr><th>' + key + '</th><td>' + value + '</td></tr>';
+                    }
                 }
             }
         }
