@@ -10,7 +10,8 @@
                     "url": "http://www.bom.gov.au/waterdata/services",
                     "type": "sos",
                     "tableStyle": {
-                        "scaleByValue": true
+                        "scaleByValue": true,
+                        "scale": 12
                     }
                 }
             ]
