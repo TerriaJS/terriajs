@@ -1,3 +1,87 @@
+// Available offerings/procedures (name, identifier):
+// Yearly:
+// DMQaQc.Merged.YearlyTotal.CalYear   http://bom.gov.au/waterdata/services/tstypes/Pat2_C_B_1_YearlyTot24
+// DMQaQc.Merged.YearlyMean.CalYear    http://bom.gov.au/waterdata/services/tstypes/Pat3_C_B_1_YearlyMean
+// DMQaQc.Merged.YearlyMean.CalYear    http://bom.gov.au/waterdata/services/tstypes/Pat4_C_B_1_YearlyMean
+// DMQaQc.Merged.YearlyMean.CalYear    http://bom.gov.au/waterdata/services/tstypes/Pat1_C_B_1_YearlyMean
+// 9 YearMax   http://bom.gov.au/waterdata/services/tstypes/Year.Max
+// 8 YearMin   http://bom.gov.au/waterdata/services/tstypes/Year.Min
+// 7 YearMean  http://bom.gov.au/waterdata/services/tstypes/Year.Mean
+// DMQaQc.Merged.YearlyMean.CalYear    http://bom.gov.au/waterdata/services/tstypes/Pat9_C_B_1_YearlyMean
+// DMQaQc.Merged.YearlyMean.CalYear    http://bom.gov.au/waterdata/services/tstypes/Pat6_C_B_1_YearlyMean
+// DMQaQc.Merged.YearlyMean.CalYear    http://bom.gov.au/waterdata/services/tstypes/Pat7_C_B_1_YearlyMean
+
+// Monthly:
+// DMQaQc.Merged.MonthlyTotal.CalMonth http://bom.gov.au/waterdata/services/tstypes/Pat2_C_B_1_MonthlyTot24
+// DMQaQc.Merged.MonthlyMean.CalMonth  http://bom.gov.au/waterdata/services/tstypes/Pat3_C_B_1_MonthlyMean
+// DMQaQc.Merged.MonthlyMean.CalMonth  http://bom.gov.au/waterdata/services/tstypes/Pat4_C_B_1_MonthlyMean
+// DMQaQc.Merged.MonthlyMean.CalMonth  http://bom.gov.au/waterdata/services/tstypes/Pat1_C_B_1_MonthlyMean
+// 5 MonthMin  http://bom.gov.au/waterdata/services/tstypes/Month.Min
+// 4 MonthMean http://bom.gov.au/waterdata/services/tstypes/Month.Mean
+// 6 MonthMax  http://bom.gov.au/waterdata/services/tstypes/Month.Max
+// DMQaQc.Merged.MonthlyMean.CalMonth  http://bom.gov.au/waterdata/services/tstypes/Pat9_C_B_1_MonthlyMean
+// DMQaQc.Merged.MonthlyMean.CalMonth  http://bom.gov.au/waterdata/services/tstypes/Pat6_C_B_1_MonthlyMean
+// DMQaQc.Merged.MonthlyMean.CalMonth  http://bom.gov.au/waterdata/services/tstypes/Pat7_C_B_1_MonthlyMean
+
+// Daily/Day:
+// DMQaQc.Merged.DailyTotal.24HR   http://bom.gov.au/waterdata/services/tstypes/Pat2_C_B_1_DailyTot24
+// DMQaQc.Merged.DailyTotal.09HR   http://bom.gov.au/waterdata/services/tstypes/Pat2_C_B_1_DailyTot09
+// DMQaQc.Merged.DailyMin.24HR http://bom.gov.au/waterdata/services/tstypes/Pat3_C_B_1_DailyMin
+// DMQaQc.Merged.DailyMax.24HR http://bom.gov.au/waterdata/services/tstypes/Pat3_C_B_1_DailyMax
+// DMQaQc.Merged.DailyMean.24HR    http://bom.gov.au/waterdata/services/tstypes/Pat3_C_B_1_DailyMean
+// DMQaQc.Merged.DailyMean.24HR    http://bom.gov.au/waterdata/services/tstypes/Pat4_C_B_1_DailyMean
+// PR01QaQc.Merged.Daily.09HR  http://bom.gov.au/waterdata/services/tstypes/Pat4_C_B_1_Daily09_PR01
+// PR01ManQC.Manual.Daily.09HR http://bom.gov.au/waterdata/services/tstypes/Pat4_C_Std_PR01ManQcf_09hr
+// DMQaQc.Merged.DailyMin.24HR http://bom.gov.au/waterdata/services/tstypes/Pat4_C_B_1_DailyMin
+// DMQaQc.Merged.DailyMax.24HR http://bom.gov.au/waterdata/services/tstypes/Pat4_C_B_1_DailyMax
+// DMQaQc.Merged.DailyMean.09HR    http://bom.gov.au/waterdata/services/tstypes/Pat4_C_B_1_DailyMean09
+// PR01QaQc.Merged.DailyMean.09HR  http://bom.gov.au/waterdata/services/tstypes/Pat4_C_B_1_DailyMean09_PR01
+// DMQaQc.Merged.DailyMax.24HR http://bom.gov.au/waterdata/services/tstypes/Pat1_C_B_1_DailyMax
+// DMQaQc.Merged.DailyMean.24HR    http://bom.gov.au/waterdata/services/tstypes/Pat1_C_B_1_DailyMean
+// DMQaQc.Merged.DailyMin.24HR http://bom.gov.au/waterdata/services/tstypes/Pat1_C_B_1_DailyMin
+// DMQaQc.Merged.DailyMin.24HR http://bom.gov.au/waterdata/services/tstypes/Pat9_C_B_1_DailyMin
+// DMQaQc.Merged.DailyMax.24HR http://bom.gov.au/waterdata/services/tstypes/Pat9_C_B_1_DailyMax
+// DMQaQc.Merged.DailyMean.24HR    http://bom.gov.au/waterdata/services/tstypes/Pat9_C_B_1_DailyMean
+// DMQaQc.Merged.DailyMean.24HR    http://bom.gov.au/waterdata/services/tstypes/Pat6_C_B_1_DailyMean
+// DMQaQc.Merged.DailyMin.24HR http://bom.gov.au/waterdata/services/tstypes/Pat6_C_B_1_DailyMin
+// DMQaQc.Merged.DailyMax.24HR http://bom.gov.au/waterdata/services/tstypes/Pat6_C_B_1_DailyMax
+// PR02TVQaQc.Merged.DailyMean.24HR    http://bom.gov.au/waterdata/services/tstypes/Pat6_PR02_TV_1_DailyMean
+// PR02AVQaQc.Merged.DailyMean.24HR    http://bom.gov.au/waterdata/services/tstypes/Pat6_PR02_AV_1_DailyMean
+// DMQaQc.Merged.DailyMin.24HR http://bom.gov.au/waterdata/services/tstypes/Pat7_C_B_1_DailyMin
+// DMQaQc.Merged.DailyMean.24HR    http://bom.gov.au/waterdata/services/tstypes/Pat7_C_B_1_DailyMean
+// DMQaQc.Merged.DailyMax.24HR http://bom.gov.au/waterdata/services/tstypes/Pat7_C_B_1_DailyMax
+// PR02AHDQaQc.Merged.DailyMean.24HR   http://bom.gov.au/waterdata/services/tstypes/Pat7_PR02_AHD_1_DailyMean
+// PR01QaQc.Merged.Daily.09HR-1    http://bom.gov.au/waterdata/services/tstypes/Pat4_C_B_1_Daily09_PR01-1
+// PR01ManQC.Manual.Daily.09HR-1   http://bom.gov.au/waterdata/services/tstypes/Pat4_C_Std_PR01ManQcf_09hr-1
+// PR01QaQc.Merged.DailyMean.09HR-1    http://bom.gov.au/waterdata/services/tstypes/Pat4_C_B_1_DailyMean09_PR01-1"
+// 1 DayMean   http://bom.gov.au/waterdata/services/tstypes/Day.Mean
+// 3 DayMax    http://bom.gov.au/waterdata/services/tstypes/Day.Max
+// 2 DayMin    http://bom.gov.au/waterdata/services/tstypes/Day.Min
+
+// Recommended continuous values:
+// DMQaQc.Merged.AsStored.1    http://bom.gov.au/waterdata/services/tstypes/Pat2_C_B_1
+
+// All the others listed at the end
+//
+//
+// Available observableProperties:
+// "http://bom.gov.au/waterdata/services/parameters/Water Course Discharge"
+// "http://bom.gov.au/waterdata/services/parameters/Water Course Level"
+// "http://bom.gov.au/waterdata/services/parameters/Rainfall"
+// "http://bom.gov.au/waterdata/services/parameters/Ground Water Level"
+// "http://bom.gov.au/waterdata/services/parameters/Dry Air Temperature"
+// "http://bom.gov.au/waterdata/services/parameters/Relative Humidity"
+// "http://bom.gov.au/waterdata/services/parameters/Wind Speed"
+// "http://bom.gov.au/waterdata/services/parameters/Evaporation"
+// "http://bom.gov.au/waterdata/services/parameters/Wind Direction"
+// "http://bom.gov.au/waterdata/services/parameters/Water Temperature"
+// "http://bom.gov.au/waterdata/services/parameters/Electrical Conductivity @ 25C"
+// "http://bom.gov.au/waterdata/services/parameters/Turbidity"
+// "http://bom.gov.au/waterdata/services/parameters/Generic"
+// "http://bom.gov.au/waterdata/services/parameters/Storage Volume"
+// "http://bom.gov.au/waterdata/services/parameters/Storage Level"
+// "http://bom.gov.au/waterdata/services/parameters/pH"
+// "http://bom.gov.au/waterdata/services/parameters/Wet Air Temperature"
 {
     "catalog": [
         {
@@ -6,15 +90,289 @@
             "isOpen": true,
             "items": [
                 {
-                    "name": "BOM SOS",
+                    "name": "BOM SOS 2x4",
                     "url": "http://www.bom.gov.au/waterdata/services",
                     "type": "sos",
                     "tableStyle": {
                         "scaleByValue": true,
                         "scale": 2
-                    }
+                    },
+                    "proceduresName": "Frequency",
+                    "observablePropertiesName": "Observations",
+                    "startDate": "2004-01-01T00:00:00+10",
+                    "endDate": "2007-02-01T00:00:00+10",
+                    "procedures": [
+                        {
+                            "name": "http://bom.gov.au/waterdata/services/tstypes/Pat7_C_B_1_YearlyMean",  // Year.Mean doesn't seem to have any data
+                            "title": "Annual Mean"
+                        },
+                        {
+                            "name": "http://bom.gov.au/waterdata/services/tstypes/Pat7_C_B_1_MonthlyMean",  // Month.Mean has no data
+                            "title": "Monthly Mean"
+                        }
+                    ],
+                    "observableProperties": [
+                        {
+                            "name": "http://bom.gov.au/waterdata/services/parameters/Storage Level",
+                            "title": "Storage Level"
+                        },
+                        {
+                            "name": "http://bom.gov.au/waterdata/services/parameters/Storage Volume",
+                            "title": "Storage Volume"
+                        },
+                        {
+                            "name": "http://bom.gov.au/waterdata/services/parameters/Water Course Level",
+                            "title": "Water Course Level"
+                        },
+                        {
+                            "name": "http://bom.gov.au/waterdata/services/parameters/Water Course Discharge",
+                            "title": "Water Course Discharge"
+                        }
+                    ]
+                },
+                {
+                    "name": "BOM SOS Alternative Yearly options",
+                    "url": "http://www.bom.gov.au/waterdata/services",
+                    "type": "sos",
+                    "tableStyle": {
+                        "scaleByValue": true,
+                        "scale": 2
+                    },
+                    "proceduresName": "Frequency",
+                    "observablePropertiesName": "Observations",
+                    "startDate": "2000-01-01T00:00:00+10",
+                    "endDate": "2016-10-01T00:00:00+10",
+                    "procedures": [
+                        {
+                            "name": "http://bom.gov.au/waterdata/services/tstypes/Pat7_C_B_1_YearlyMean",
+                            "title": "Pat7_C_B_1_YearlyMean"
+                        },
+                        {"name":"http://bom.gov.au/waterdata/services/tstypes/Pat2_C_B_1_YearlyTot24","title":"Pat2_C_B_1_YearlyTot24 YearlyTotal"},
+                        {"name":"http://bom.gov.au/waterdata/services/tstypes/Pat3_C_B_1_YearlyMean","title":" Pat3_C_B_1_YearlyMean"},
+                        {"name":"http://bom.gov.au/waterdata/services/tstypes/Pat4_C_B_1_YearlyMean","title":"Pat4_C_B_1_YearlyMean"},
+                        {"name":"http://bom.gov.au/waterdata/services/tstypes/Pat1_C_B_1_YearlyMean","title":"Pat1_C_B_1_YearlyMean"},
+                        {"name":"http://bom.gov.au/waterdata/services/tstypes/Year.Max","title":"9 YearMax"},
+                        {"name":"http://bom.gov.au/waterdata/services/tstypes/Year.Min","title":"8 YearMin"},
+                        {"name":"http://bom.gov.au/waterdata/services/tstypes/Year.Mean","title":"7 YearMean"},
+                        {"name":"http://bom.gov.au/waterdata/services/tstypes/Pat9_C_B_1_YearlyMean","title":"Pat9_C_B_1_YearlyMean"},
+                        {"name":"http://bom.gov.au/waterdata/services/tstypes/Pat6_C_B_1_YearlyMean","title":"Pat6_C_B_1_YearlyMean"}
+                    ],
+                    "observableProperties": [
+                        {
+                            "name": "http://bom.gov.au/waterdata/services/parameters/Storage Level",
+                            "title": "Storage Level"
+                        },
+                        {
+                            "name": "http://bom.gov.au/waterdata/services/parameters/Storage Volume",
+                            "title": "Storage Volume"
+                        },
+                        {
+                            "name": "http://bom.gov.au/waterdata/services/parameters/Water Course Level",
+                            "title": "Water Course Level"
+                        },
+                        {
+                            "name": "http://bom.gov.au/waterdata/services/parameters/Water Course Discharge",
+                            "title": "Water Course Discharge"
+                        }
+                    ]
+                },
+                {
+                    "name": "BOM SOS Yearly Storage Volume first",
+                    "url": "http://www.bom.gov.au/waterdata/services",
+                    "type": "sos",
+                    "tableStyle": {
+                        "scaleByValue": true,
+                        "scale": 2
+                    },
+                    "proceduresName": "Frequency",
+                    "observablePropertiesName": "Observations",
+                    "startDate": "2000-01-01T00:00:00+10",
+                    "endDate": "2016-10-01T00:00:00+10",
+                    "procedures": [
+                        {
+                            "name": "http://bom.gov.au/waterdata/services/tstypes/Pat7_C_B_1_YearlyMean",
+                            "title": "Pat7_C_B_1_YearlyMean"
+                        }
+                    ],
+                    "observableProperties": [
+                        {
+                            "name": "http://bom.gov.au/waterdata/services/parameters/Storage Volume",
+                            "title": "Storage Volume"
+                        },
+                        {
+                            "name": "http://bom.gov.au/waterdata/services/parameters/Storage Level",
+                            "title": "Storage Level"
+                        },
+                        {
+                            "name": "http://bom.gov.au/waterdata/services/parameters/Water Course Level",
+                            "title": "Water Course Level"
+                        },
+                        {
+                            "name": "http://bom.gov.au/waterdata/services/parameters/Water Course Discharge",
+                            "title": "Water Course Discharge"
+                        }
+                    ]
+                },                {
+                    "name": "BOM SOS Alternative Yearly diff order",
+                    "url": "http://www.bom.gov.au/waterdata/services",
+                    "type": "sos",
+                    "tableStyle": {
+                        "scaleByValue": true,
+                        "scale": 2
+                    },
+                    "proceduresName": "Frequency",
+                    "observablePropertiesName": "Observations",
+                    "startDate": "2000-01-01T00:00:00+10",
+                    "endDate": "2016-10-01T00:00:00+10",
+                    "procedures": [
+                        {"name":"http://bom.gov.au/waterdata/services/tstypes/Pat3_C_B_1_YearlyMean","title":"Pat3_C_B_1_YearlyMean"},
+                        {
+                            "name": "http://bom.gov.au/waterdata/services/tstypes/Pat7_C_B_1_YearlyMean",
+                            "title": "Pat7_C_B_1_YearlyMean"
+                        },
+                        {"name":"http://bom.gov.au/waterdata/services/tstypes/Pat2_C_B_1_YearlyTot24","title":"Pat2_C_B_1_YearlyTot24 YearlyTotal"},
+                        {"name":"http://bom.gov.au/waterdata/services/tstypes/Pat4_C_B_1_YearlyMean","title":"Pat4_C_B_1_YearlyMean"},
+                        {"name":"http://bom.gov.au/waterdata/services/tstypes/Pat1_C_B_1_YearlyMean","title":"Pat1_C_B_1_YearlyMean"},
+                        {"name":"http://bom.gov.au/waterdata/services/tstypes/Year.Max","title":"9 YearMax"},
+                        {"name":"http://bom.gov.au/waterdata/services/tstypes/Year.Min","title":"8 YearMin"},
+                        {"name":"http://bom.gov.au/waterdata/services/tstypes/Year.Mean","title":"7 YearMean"},
+                        {"name":"http://bom.gov.au/waterdata/services/tstypes/Pat9_C_B_1_YearlyMean","title":"Pat9_C_B_1_YearlyMean"},
+                        {"name":"http://bom.gov.au/waterdata/services/tstypes/Pat6_C_B_1_YearlyMean","title":"Pat6_C_B_1_YearlyMean"}
+                    ],
+                    "observableProperties": [
+                        {
+                            "name": "http://bom.gov.au/waterdata/services/parameters/Storage Level",
+                            "title": "Storage Level"
+                        },
+                        {
+                            "name": "http://bom.gov.au/waterdata/services/parameters/Storage Volume",
+                            "title": "Storage Volume"
+                        },
+                        {
+                            "name": "http://bom.gov.au/waterdata/services/parameters/Water Course Level",
+                            "title": "Water Course Level"
+                        },
+                        {
+                            "name": "http://bom.gov.au/waterdata/services/parameters/Water Course Discharge",
+                            "title": "Water Course Discharge"
+                        }
+                    ]
                 }
             ]
         }
     ]
 }
+//
+// All the others:
+//
+// DMQaQc.Auto.AsStored.1  http://bom.gov.au/waterdata/services/tstypes/Pat2_C_Std_QaQc_1
+// ObsPOR.Merged.AsStored.1    http://bom.gov.au/waterdata/services/tstypes/Pat2_C_STD_1
+// Received.Provisional.AsStored.1 http://bom.gov.au/waterdata/services/tstypes/R_P_1ST
+// DMmanQC.Manual.AsStored.1   http://bom.gov.au/waterdata/services/tstypes/Pat2_C_Std_Qcf_1
+// Harmonised.Provisionalbest.AsStored.1   http://bom.gov.au/waterdata/services/tstypes/Pat2_PB_1
+// CombinedProv.Merged.AsStored.1  http://bom.gov.au/waterdata/services/tstypes/Pat2_P_C_1
+// Received.Provisionalbest.AsStored.1 http://bom.gov.au/waterdata/services/tstypes/R_PB_1ST
+// Harmonised.Validated.AsStored.1 http://bom.gov.au/waterdata/services/tstypes/Pat2_V_1
+// Harmonised.Provisional.AsStored.1   http://bom.gov.au/waterdata/services/tstypes/Pat2_P_1
+// Received.Validated.AsStored.1   http://bom.gov.au/waterdata/services/tstypes/R_V_1ST
+// Received.Combined.AsStored.1    http://bom.gov.au/waterdata/services/tstypes/R_PC_1ST
+// Harmonised.Combined.AsStored.1  http://bom.gov.au/waterdata/services/tstypes/Pat2_PC_1
+// ObsPOR.Merged.AsStored.1    http://bom.gov.au/waterdata/services/tstypes/Pat3_C_Std_1
+// Received.ProvisionalFlood.AsStored.2    http://bom.gov.au/waterdata/services/tstypes/Pat3_R_PF_2
+// Harmonised.Combined.AsStored.1  http://bom.gov.au/waterdata/services/tstypes/Pat3_PC_1
+// Harmonised.ProvisionalFlood.AsStored.1  http://bom.gov.au/waterdata/services/tstypes/Pat3_PF_1
+// Received.ProvisionalFlood.AsStored.3    http://bom.gov.au/waterdata/services/tstypes/Pat3_R_PF_3
+// DMmanQC.Manual.AsStored.1   http://bom.gov.au/waterdata/services/tstypes/Pat3_C_Std_Qcf_1
+// DMQaQc.Auto.AsStored.1  http://bom.gov.au/waterdata/services/tstypes/Pat3_C_Std_QaQc_1
+// CombinedProv.Merged.AsStored.1  http://bom.gov.au/waterdata/services/tstypes/Pat3_P_C_1
+// PR01ManQC.Manual.AsStored.1 http://bom.gov.au/waterdata/services/tstypes/Pat3_C_PR01manQcf_1
+// Received.ProvisionalFlood.AsStored.4    http://bom.gov.au/waterdata/services/tstypes/Pat3_R_PF_4
+// Harmonised.Provisional.AsStored.1   http://bom.gov.au/waterdata/services/tstypes/Pat3_P_1
+// DMQaQc.Merged.HourlyMean.HR http://bom.gov.au/waterdata/services/tstypes/Pat3_C_B_1_HourlyMean
+// Harmonised.Validated.AsStored.1 http://bom.gov.au/waterdata/services/tstypes/Pat3_V_1
+// DMQaQc.Merged.AsStored.1    http://bom.gov.au/waterdata/services/tstypes/Pat3_C_B_1
+// Received.ProvisionalFlood.AsStored.1    http://bom.gov.au/waterdata/services/tstypes/Pat3_R_PF_1
+// Harmonised.Provisionalbest.AsStored.1   http://bom.gov.au/waterdata/services/tstypes/Pat3_PB_1
+// PR01QaQc.Merged.HourlyMean.HR   http://bom.gov.au/waterdata/services/tstypes/Pat4_C_B_1_HourlyMean_PR01
+// Derived.Merged.AsStored.1   http://bom.gov.au/waterdata/services/tstypes/Pat4_D_1
+// PR01ManQC.Manual.Hourly.HR  http://bom.gov.au/waterdata/services/tstypes/Pat4_C_Std_PR01ManQcf_HR
+// Harmonised.Validated.AsStored.1 http://bom.gov.au/waterdata/services/tstypes/Pat4_V_1
+// Harmonised.Combined.AsStored.1  http://bom.gov.au/waterdata/services/tstypes/Pat4_PC_1
+// DMQaQc.Merged.AsStored.1    http://bom.gov.au/waterdata/services/tstypes/Pat4_C_B_1
+// CombinedProv.Merged.AsStored.1  http://bom.gov.au/waterdata/services/tstypes/Pat4_P_C_1
+// ObsPOR.Merged.AsStored.1    http://bom.gov.au/waterdata/services/tstypes/Pat4_C_Std_1
+// Harmonised.Provisional.AsStored.1   http://bom.gov.au/waterdata/services/tstypes/Pat4_P_1
+// DMQaQc.Merged.HourlyMean.HR http://bom.gov.au/waterdata/services/tstypes/Pat4_C_B_1_HourlyMean
+// PR01ManQC.Manual.AsStored.1 http://bom.gov.au/waterdata/services/tstypes/Pat4_C_Std_PR01ManQcf_1
+// PR01QaQc.Merged.AsStored.1  http://bom.gov.au/waterdata/services/tstypes/Pat4_C_B_1_PR01
+// DMmanQC.Manual.AsStored.1   http://bom.gov.au/waterdata/services/tstypes/Pat4_C_Std_DMmanQcf_1
+// DMQaQc.Auto.AsStored.1  http://bom.gov.au/waterdata/services/tstypes/Pat4_C_Std_QaQc_1
+// Harmonised.Provisionalbest.AsStored.1   http://bom.gov.au/waterdata/services/tstypes/Pat4_PB_1
+// PR01QaQc.Merged.Hourly.HR   http://bom.gov.au/waterdata/services/tstypes/Pat4_C_B_1_Hourly_PR01
+// Derived.Flood.AsStored.1    http://bom.gov.au/waterdata/services/tstypes/Pat4_D_F_1
+// DMmanQC.Manual.AsStored.1   http://bom.gov.au/waterdata/services/tstypes/Pat1_C_Std_Qcf_1
+// ObsPOR.Merged.AsStored.1    http://bom.gov.au/waterdata/services/tstypes/Pat1_C_Std_1
+// Harmonised.Provisionalbest.AsStored.1   http://bom.gov.au/waterdata/services/tstypes/Pat1_PB_1
+// DMQaQc.Merged.AsStored.1    http://bom.gov.au/waterdata/services/tstypes/Pat1_C_B_1
+// CombinedProv.Merged.AsStored.1  http://bom.gov.au/waterdata/services/tstypes/Pat1_P_C_1
+// Harmonised.Validated.AsStored.1 http://bom.gov.au/waterdata/services/tstypes/Pat1_V_1
+// Harmonised.Combined.AsStored.1  http://bom.gov.au/waterdata/services/tstypes/Pat1_PC_1
+// Harmonised.Provisional.AsStored.1   http://bom.gov.au/waterdata/services/tstypes/Pat1_P_1
+// DMQaQc.Auto.AsStored.1  http://bom.gov.au/waterdata/services/tstypes/Pat1_C_Std_QaQc_1
+// 0 Cmd   http://bom.gov.au/waterdata/services/tstypes/Cmd.O
+// A1 Cmd per TS   http://bom.gov.au/waterdata/services/tstypes/Cmd
+// DMQaQc.Auto.AsStored.1  http://bom.gov.au/waterdata/services/tstypes/Pat9_C_Std_QaQc_1
+// ObsPOR.Merged.AsStored.1    http://bom.gov.au/waterdata/services/tstypes/Pat9_C_Std_1
+// Harmonised.Provisionalbest.AsStored.1   http://bom.gov.au/waterdata/services/tstypes/Pat9_PB_1
+// Harmonised.Provisional.AsStored.1   http://bom.gov.au/waterdata/services/tstypes/Pat9_P_1
+// DMmanQC.Manual.AsStored.1   http://bom.gov.au/waterdata/services/tstypes/Pat9_C_Std_Qcf_1
+// Standard.Validated.AsStored.1   http://bom.gov.au/waterdata/services/tstypes/Pat9_V_Std_1
+// DMQaQc.Merged.AsStored.1    http://bom.gov.au/waterdata/services/tstypes/Pat9_C_B_1
+// Standard.Provisional.AsStored.1 http://bom.gov.au/waterdata/services/tstypes/Pat9_P_Std_1
+// CombinedProv.Merged.AsStored.1  http://bom.gov.au/waterdata/services/tstypes/Pat9_P_C_1
+// Harmonised.Validated.AsStored.1 http://bom.gov.au/waterdata/services/tstypes/Pat9_V_1
+// Harmonised.Combined.AsStored.1  http://bom.gov.au/waterdata/services/tstypes/Pat9_PC_1
+// PR02QaQc.Merged.AsStored.1  http://bom.gov.au/waterdata/services/tstypes/Pat6_PR02_1
+// Harmonised.Provisional.AsStored.1   http://bom.gov.au/waterdata/services/tstypes/Pat6_P_1
+// ObsPOR.Merged.AsStored.1    http://bom.gov.au/waterdata/services/tstypes/Pat6_C_Std_1
+// PR02AVQaQc.Merged.AsStored.1    http://bom.gov.au/waterdata/services/tstypes/Pat6_PR02_AV_1
+// DMQaQc.Merged.HourlyMean.HR http://bom.gov.au/waterdata/services/tstypes/Pat6_C_B_1_HourlyMean
+// DMmanQC.Manual.AsStored.1   http://bom.gov.au/waterdata/services/tstypes/Pat6_C_Std_Qcf_1
+// Harmonised.Validated.AsStored.1 http://bom.gov.au/waterdata/services/tstypes/Pat6_V_1
+// DMQaQc.Merged.AsStored.1    http://bom.gov.au/waterdata/services/tstypes/Pat6_C_B_1
+// CombinedProv.Merged.AsStored.1  http://bom.gov.au/waterdata/services/tstypes/Pat6_P_C_1
+// Harmonised.Combined.AsStored.1  http://bom.gov.au/waterdata/services/tstypes/Pat6_PC_1
+// PR02ManQC.Manual.AsStored.1 http://bom.gov.au/waterdata/services/tstypes/Pat6_PR02_ManQc_1
+// Derived.Merged.AsStored.1   http://bom.gov.au/waterdata/services/tstypes/Pat6_D_1
+// DMQaQc.Auto.AsStored.1  http://bom.gov.au/waterdata/services/tstypes/Pat6_C_Std_QaQc_1
+// Harmonised.Provisionalbest.AsStored.1   http://bom.gov.au/waterdata/services/tstypes/Pat6_PB_1
+// A1 per Value    http://bom.gov.au/waterdata/services/tstypes/Cmd.O-2
+// DMQaQc.Merged.HourlyMean.HR http://bom.gov.au/waterdata/services/tstypes/Pat7_C_B_1_HourlyMean
+// DMQaQc.Merged.AsStored.1    http://bom.gov.au/waterdata/services/tstypes/Pat7_C_B_1
+// ObsPOR.Merged.AsStored.1    http://bom.gov.au/waterdata/services/tstypes/Pat7_C_Std_1
+// Harmonised.Validated.AsStored.1 http://bom.gov.au/waterdata/services/tstypes/Pat7_V_1
+// Harmonised.Provisional.AsStored.1   http://bom.gov.au/waterdata/services/tstypes/Pat7_P_1
+// CombinedProv.Merged.AsStored.1  http://bom.gov.au/waterdata/services/tstypes/Pat7_P_C_1
+// DMQaQc.Auto.AsStored.1  http://bom.gov.au/waterdata/services/tstypes/Pat7_C_Std_QaQc_1
+// Harmonised.Provisionalbest.AsStored.1   http://bom.gov.au/waterdata/services/tstypes/Pat7_PB_1
+// DMmanQC.Manual.AsStored.1   http://bom.gov.au/waterdata/services/tstypes/Pat7_C_Std_DMmanQcf_1
+// Harmonised.Combined.AsStored.1  http://bom.gov.au/waterdata/services/tstypes/Pat7_PC_1
+// PR02AHDQaQc.Merged.AsStored.1   http://bom.gov.au/waterdata/services/tstypes/Pat7_PR02_AHD_1
+// PR02ManQC.Manual.AsStored.1 http://bom.gov.au/waterdata/services/tstypes/Pat7_PR02_ManQc_1
+// PR02QaQc.Merged.AsStored.1  http://bom.gov.au/waterdata/services/tstypes/Pat7_PR02_1
+// DMmanQC.Manual.AsStored.1   http://bom.gov.au/waterdata/services/tstypes/Pat8_C_Std_Qcf_1
+// DMQaQc.Auto.AsStored.1  http://bom.gov.au/waterdata/services/tstypes/Pat8_C_Std_QaQc_1
+// Harmonised.Validated.AsStored.1 http://bom.gov.au/waterdata/services/tstypes/Pat8_V_1
+// ObsPOR.Merged.AsStored.1    http://bom.gov.au/waterdata/services/tstypes/Pat8_C_Std_1
+// CombinedProv.Merged.AsStored.1  http://bom.gov.au/waterdata/services/tstypes/Pat8_P_C_1
+// DMQaQc.Merged.AsStored.1    http://bom.gov.au/waterdata/services/tstypes/Pat8_C_B_1
+// Harmonised.Combined.AsStored.1  http://bom.gov.au/waterdata/services/tstypes/Pat8_PC_1
+// Harmonised.Provisionalbest.AsStored.1   http://bom.gov.au/waterdata/services/tstypes/Pat8_PB_1
+// Harmonised.Provisional.AsStored.1   http://bom.gov.au/waterdata/services/tstypes/Pat8_P_1
+// PR01QaQc.Merged.HourlyMean.HR-1 http://bom.gov.au/waterdata/services/tstypes/Pat4_C_B_1_HourlyMean_PR01-1
+// PR01QaQc.Merged.AsStored.1-1    http://bom.gov.au/waterdata/services/tstypes/Pat4_C_B_1_PR01-1
+// Derived.Flood.AsStored.1-1  http://bom.gov.au/waterdata/services/tstypes/Pat4_D_F_1-1
+// PR01QaQc.Merged.Hourly.HR-1 http://bom.gov.au/waterdata/services/tstypes/Pat4_C_B_1_Hourly_PR01-1
+// PR01ManQC.Manual.AsStored.1-1   http://bom.gov.au/waterdata/services/tstypes/Pat4_C_Std_PR01ManQcf_1-1
+// Derived.Merged.AsStored.1-1 http://bom.gov.au/waterdata/services/tstypes/Pat4_D_1-1
+// PR01ManQC.Manual.Hourly.HR-1    http://bom.gov.au/waterdata/services/tstypes/Pat4_C_Std_PR01ManQcf_HR-1
