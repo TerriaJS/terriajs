@@ -100,15 +100,16 @@
                     "proceduresName": "Frequency",
                     "observablePropertiesName": "Observation type",
                     "startDate": "2004-01-01T00:00:00+10",
-                    "endDate": "2007-02-01T00:00:00+10",
                     "procedures": [
                         {
                             "name": "http://bom.gov.au/waterdata/services/tstypes/Pat7_C_B_1_YearlyMean",  // Year.Mean doesn't seem to have any data
-                            "title": "Annual Mean"
+                            "title": "Annual Mean",
+                            "defaultDuration": "20y"
                         },
                         {
                             "name": "http://bom.gov.au/waterdata/services/tstypes/Pat7_C_B_1_MonthlyMean",  // Month.Mean has no data
-                            "title": "Monthly Mean"
+                            "title": "Monthly Mean",
+                            "defaultDuration": "2y"
                         // We need to limit these to a specific date range before using.
                         // },
                         // {
