@@ -1,3 +1,5 @@
+"use strict";
+
 import React from 'react';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import ObserveModelMixin from '../ObserveModelMixin';
