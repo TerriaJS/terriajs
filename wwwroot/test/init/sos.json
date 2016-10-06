@@ -98,7 +98,7 @@
                         "scale": 2
                     },
                     "proceduresName": "Frequency",
-                    "observablePropertiesName": "Observations",
+                    "observablePropertiesName": "Observation type",
                     "startDate": "2004-01-01T00:00:00+10",
                     "endDate": "2007-02-01T00:00:00+10",
                     "procedures": [
@@ -139,7 +139,7 @@
                         "scale": 2
                     },
                     "proceduresName": "Frequency",
-                    "observablePropertiesName": "Observations",
+                    "observablePropertiesName": "Observation type",
                     "startDate": "2000-01-01T00:00:00+10",
                     "endDate": "2016-10-01T00:00:00+10",
                     "procedures": [
@@ -185,23 +185,77 @@
                         "scale": 2
                     },
                     "proceduresName": "Frequency",
-                    "observablePropertiesName": "Observations",
+                    "observablePropertiesName": "Observation type",
                     "startDate": "2006-01-01T00:00:00+10",
                     "endDate": "2007-10-01T00:00:00+10",
                     "procedures": [
                         {
                             "name": "http://bom.gov.au/waterdata/services/tstypes/Pat7_C_B_1_MonthlyMean",
-                            "title": "Pat7_C_B_1_YearlyMean"
+                            "title": "Pat7_C_B_1_MonthlyMean"
                         },
-                        {"name":"http://bom.gov.au/waterdata/services/tstypes/Pat2_C_B_1_MonthlyTot24","title":"Pat2_C_B_1_YearlyTot24 MonthlyTotal"},
+                        {"name":"http://bom.gov.au/waterdata/services/tstypes/Pat2_C_B_1_MonthlyTot24","title":"Pat2_C_B_1_MonthlyTot24 MonthlyTotal"},
                         {"name":"http://bom.gov.au/waterdata/services/tstypes/Pat3_C_B_1_MonthlyMean","title":"Pat3_C_B_1_MonthlyMean"},
                         {"name":"http://bom.gov.au/waterdata/services/tstypes/Pat4_C_B_1_MonthlyMean","title":"Pat4_C_B_1_MonthlyMean"},
                         {"name":"http://bom.gov.au/waterdata/services/tstypes/Pat1_C_B_1_MonthlyMean","title":"Pat1_C_B_1_MonthlyMean"},
-                        {"name":"http://bom.gov.au/waterdata/services/tstypes/Month.Max","title":"9 MonthMax"},
-                        {"name":"http://bom.gov.au/waterdata/services/tstypes/Month.Min","title":"8 MonthMin"},
-                        {"name":"http://bom.gov.au/waterdata/services/tstypes/Month.Mean","title":"7 MonthMean"},
+                        {"name":"http://bom.gov.au/waterdata/services/tstypes/Month.Max","title":"MonthMax"},
+                        {"name":"http://bom.gov.au/waterdata/services/tstypes/Month.Min","title":"MonthMin"},
+                        {"name":"http://bom.gov.au/waterdata/services/tstypes/Month.Mean","title":"MonthMean"},
                         {"name":"http://bom.gov.au/waterdata/services/tstypes/Pat9_C_B_1_MonthlyMean","title":"Pat9_C_B_1_MonthlyMean"},
                         {"name":"http://bom.gov.au/waterdata/services/tstypes/Pat6_C_B_1_MonthlyMean","title":"Pat6_C_B_1_MonthlyMean"}
+                    ],
+                    "observableProperties": [
+                        {
+                            "name": "http://bom.gov.au/waterdata/services/parameters/Storage Level",
+                            "title": "Storage Level"
+                        },
+                        {
+                            "name": "http://bom.gov.au/waterdata/services/parameters/Storage Volume",
+                            "title": "Storage Volume"
+                        },
+                        {
+                            "name": "http://bom.gov.au/waterdata/services/parameters/Water Course Level",
+                            "title": "Water Course Level"
+                        },
+                        {
+                            "name": "http://bom.gov.au/waterdata/services/parameters/Water Course Discharge",
+                            "title": "Water Course Discharge"
+                        }
+                    ]
+                },
+                {
+                    "name": "BOM SOS Alternative Daily options",
+                    "url": "http://www.bom.gov.au/waterdata/services",
+                    "type": "sos",
+                    "tableStyle": {
+                        "scaleByValue": true,
+                        "scale": 2
+                    },
+                    "proceduresName": "Frequency",
+                    "observablePropertiesName": "Observation type",
+                    "startDate": "2007-09-01T00:00:00+10",
+                    "endDate": "2007-10-01T00:00:00+10",
+                    "procedures": [
+                        {"name": "http://bom.gov.au/waterdata/services/tstypes/Pat7_C_B_1_DailyMean","title": "Pat7_C_B_1_DailyMean"},
+                        {"name":"http://bom.gov.au/waterdata/services/tstypes/Pat2_C_B_1_DailyTot24","title":"Pat2_C_B_1_DailyTot24 DailyTotal"},
+                        {"name":"http://bom.gov.au/waterdata/services/tstypes/Pat3_C_B_1_DailyMean","title":"Pat3_C_B_1_DailyMean"},
+                        {"name":"http://bom.gov.au/waterdata/services/tstypes/Pat4_C_B_1_DailyMean","title":"Pat4_C_B_1_DailyMean"},
+                        {"name":"http://bom.gov.au/waterdata/services/tstypes/Pat1_C_B_1_DailyMean","title":"Pat1_C_B_1_DailyMean"},
+                        {"name":"http://bom.gov.au/waterdata/services/tstypes/Day.Max","title":"DayMax"},
+                        {"name":"http://bom.gov.au/waterdata/services/tstypes/Day.Min","title":"DayMin"},
+                        {"name":"http://bom.gov.au/waterdata/services/tstypes/Day.Mean","title":"DayMean"},
+                        {"name":"http://bom.gov.au/waterdata/services/tstypes/Pat9_C_B_1_DailyMean","title":"Pat9_C_B_1_DailyMean"},
+                        {"name":"http://bom.gov.au/waterdata/services/tstypes/Pat6_C_B_1_DailyMean","title":"Pat6_C_B_1_DailyMean"},
+
+                        {"name": "http://bom.gov.au/waterdata/services/tstypes/Pat7_C_B_1_DailyMax","title": "Pat7_C_B_1_DailyMax"},
+                        {"name":"http://bom.gov.au/waterdata/services/tstypes/Pat2_C_B_1_DailyTot09","title":"Pat2_C_B_1_DailyTot09 DailyTotal"},
+                        {"name":"http://bom.gov.au/waterdata/services/tstypes/Pat3_C_B_1_DailyMax","title":"Pat3_C_B_1_DailyMax"},
+                        {"name":"http://bom.gov.au/waterdata/services/tstypes/Pat4_C_B_1_DailyMax","title":"Pat4_C_B_1_DailyMax"},
+                        {"name":"http://bom.gov.au/waterdata/services/tstypes/Pat1_C_B_1_DailyMax","title":"Pat1_C_B_1_DailyMax"},
+                        {"name":"http://bom.gov.au/waterdata/services/tstypes/Day.Max","title":"DayMax"},
+                        {"name":"http://bom.gov.au/waterdata/services/tstypes/Day.Min","title":"DayMin"},
+                        {"name":"http://bom.gov.au/waterdata/services/tstypes/Day.Max","title":"DayMax"},
+                        {"name":"http://bom.gov.au/waterdata/services/tstypes/Pat9_C_B_1_DailyMax","title":"Pat9_C_B_1_DailyMax"},
+                        {"name":"http://bom.gov.au/waterdata/services/tstypes/Pat6_C_B_1_DailyMax","title":"Pat6_C_B_1_DailyMax"}
                     ],
                     "observableProperties": [
                         {
