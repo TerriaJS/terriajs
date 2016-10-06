@@ -19,9 +19,10 @@ Change Log
 * Fixed a bug that prevented charts from loading http urls from https.
 * Fixed a bug that prevented default parameters to `CatalogFunction`s from being shown in the user interface.
 * Fixed a problem that made `BooleanParameter`s show up incorrectly in the user interface.
-* Embedded `<Chart>` elements now support two new optional attributes:
+* Embedded `<chart>` elements now support two new optional attributes:
    * `title`: overrides the title that would otherwise be derived from the name of the feature.
    * `hide-buttons`: If `"true"`, the Expand and Download buttons are hidden from the chart.
+* Fixed a bug in embedded `<collapsible>` elements that prevented them from being expandable.
 
 ### 4.4.1
 
