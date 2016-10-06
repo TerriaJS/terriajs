@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import React from 'react';
-
+import Icon from '../../Icon';
 import Styles from './collapsible.scss';
 
 const Collapsible = React.createClass({
@@ -33,7 +33,9 @@ const Collapsible = React.createClass({
                 <div className={Styles.header}>
                     <button type='button'
                             onClick={this.toggleOpen}
-                            className={classNames(Styles.btn, {[Styles.isOpen]: this.state.isOpen})}/>
+                            className={classNames(Styles.btn, {[Styles.isOpen]: this.state.isOpen})}>
+                        <Icon glyph={this.state.isOpen ? Icon.GLYPHS.opened : Icon.GLYPHS.closed} />
+                    </button>
                     <span>{this.props.title}</span>
                 </div>
                 {body}
