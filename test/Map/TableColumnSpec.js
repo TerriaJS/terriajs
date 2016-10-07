@@ -1,9 +1,6 @@
 'use strict';
 
 /*global require,describe,it,expect*/
-var JulianDate = require('terriajs-cesium/Source/Core/JulianDate');
-var TimeInterval = require('terriajs-cesium/Source/Core/TimeInterval');
-
 var TableColumn = require('../../lib/Map/TableColumn');
 var VarType = require('../../lib/Map/VarType');
 var VarSubType = require('../../lib/Map/VarSubType');
@@ -26,6 +23,12 @@ describe('TableColumn', function() {
         expect(tableColumn.name).toEqual('x');
         expect(tableColumn.values.slice()).toEqual([1, null, 4, null, null, 3]);
         expect(tableColumn.type).toEqual(VarType.SCALAR);
+    });
+
+    it('replaces null values before generating numericalValues', function() {
+        var data = [0,0,0];
+        var tableColumn = new TableColumn('x', data.slice(), {replaceWithNullValues: [0]});
+        expect(tableColumn.numericalValues.slice()).toEqual([]);
     });
 
     it('treats hyphens, blanks and NA as strings in string data', function() {
@@ -203,26 +206,6 @@ describe('TableColumn', function() {
         expect(tableColumn.dates[2].getUTCDate()).toEqual(4);
     });
 
-
-    it('can calculate finish dates', function() {
-        var data = ['2016-01-03T12:15:00Z', '2016-01-03T12:15:30Z'];
-        var tableColumn = new TableColumn('date', data.slice());
-        expect(tableColumn.finishJulianDates).toEqual([
-            JulianDate.fromIso8601('2016-01-03T12:15:29Z'),
-            JulianDate.fromIso8601('2016-01-03T12:16:00Z') // Final one should have the average spacing, 30 sec.
-        ]);
-    });
-
-    it('can calculate sub-second finish dates', function() {
-        var data = ['2016-01-03T12:15:00Z', '2016-01-03T12:15:00.4Z', '2016-01-03T12:15:01Z'];
-        var tableColumn = new TableColumn('date', data.slice());
-        expect(tableColumn.finishJulianDates).toEqual([
-            JulianDate.fromIso8601('2016-01-03T12:15:00.38Z'), // Shaves off 5% of 0.4, ie. 0.02.
-            JulianDate.fromIso8601('2016-01-03T12:15:00.97Z'), // Shaves off 5% of 0.6, ie. 0.03.
-            JulianDate.fromIso8601('2016-01-03T12:15:01.5Z') // Average spacing is 0.5 second.
-        ]);
-    });
-
     it('treats numerical data >= 9999 in a column named time as scalars', function() {
         var data = [9999, 1230, 130];
         var tableColumn = new TableColumn('date', data.slice());
@@ -289,17 +272,6 @@ describe('TableColumn', function() {
         );
         var target = [4, 0.5, 'bad'];
         expect(result).toEqual(target);
-    });
-
-    it('supports displayDuration', function() {
-        var data = ['2016-01-03', '2016-01-04', '2016-01-05'];
-        var sevenDaysInMinutes = 60 * 24 * 7;
-        var tableColumn = new TableColumn('date', data, {displayDuration: sevenDaysInMinutes});
-        var interval = tableColumn.timeIntervals[0];
-        expect(TimeInterval.contains(interval, JulianDate.fromIso8601('2016-01-09'))).toBe(true);
-        expect(TimeInterval.contains(interval, JulianDate.fromIso8601('2016-01-11'))).toBe(false);
-        var durationInSeconds = JulianDate.secondsDifference(interval.stop, interval.start);
-        expect(durationInSeconds).toEqual(sevenDaysInMinutes * 60);
     });
 
 });

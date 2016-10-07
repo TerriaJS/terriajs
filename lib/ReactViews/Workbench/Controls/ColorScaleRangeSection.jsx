@@ -72,10 +72,10 @@ const ColorScaleRangeSection = React.createClass({
         return (
             <form className={Styles.colorscalerange} onSubmit={this.updateRange}>
                 <div className={Styles.title}>Color Scale Range </div>
-                <label htmlFor="rangeMin">Minimum: </label>
-                <input className={Styles.field} type='text' name='rangeMin' defaultValue={this.minRange} onChange={this.changeRangeMin} />
                 <label htmlFor="rangeMax">Maximum: </label>
                 <input className={Styles.field} type='text' name='rangeMax' defaultValue={this.maxRange} onChange={this.changeRangeMax} />
+                <label htmlFor="rangeMin">Minimum: </label>
+                <input className={Styles.field} type='text' name='rangeMin' defaultValue={this.minRange} onChange={this.changeRangeMin} />
                 <button type='submit' title="Update Range" className={Styles.btn}>Update Range</button>
             </form>
         );
