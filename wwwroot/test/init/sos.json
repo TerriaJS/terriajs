@@ -18,12 +18,12 @@
                     "startDate": "1980-01-01T00:00:00+10",
                     "procedures": [
                         {
-                            "name": "http://bom.gov.au/waterdata/services/tstypes/Pat7_C_B_1_YearlyMean",  // Year.Mean doesn't seem to have any data
+                            "name": "http://bom.gov.au/waterdata/services/tstypes/Pat7_C_B_1_YearlyMean",
                             "title": "Annual average",
                             "defaultDuration": "40y"
                         },
                         {
-                            "name": "http://bom.gov.au/waterdata/services/tstypes/Pat7_C_B_1_MonthlyMean",  // Month.Mean has no data
+                            "name": "http://bom.gov.au/waterdata/services/tstypes/Pat7_C_B_1_MonthlyMean",
                             "title": "Monthly average",
                             "defaultDuration": "2y"
                         },
@@ -73,12 +73,12 @@
                     "startDate": "1980-01-01T00:00:00+10",
                     "procedures": [
                         {
-                            "name": "http://bom.gov.au/waterdata/services/tstypes/Pat6_C_B_1_YearlyMean",  // Year.Mean doesn't seem to have any data
+                            "name": "http://bom.gov.au/waterdata/services/tstypes/Pat6_C_B_1_YearlyMean",
                             "title": "Annual average",
                             "defaultDuration": "40y"
                         },
                         {
-                            "name": "http://bom.gov.au/waterdata/services/tstypes/Pat6_C_B_1_MonthlyMean",  // Month.Mean has no data
+                            "name": "http://bom.gov.au/waterdata/services/tstypes/Pat6_C_B_1_MonthlyMean",
                             "title": "Monthly average",
                             "defaultDuration": "2y"
                         },
@@ -119,22 +119,18 @@
                     "name": "Water Course Levels",
                     "url": "http://www.bom.gov.au/waterdata/services",
                     "type": "sos",
-                    "tableStyle": {
-                        "scaleByValue": true,
-                        "scale": 2
-                    },
                     "proceduresName": "Frequency",
                     "observablePropertiesName": "Observation type",
                     "startDate": "1980-01-01T00:00:00+10",
                     "endDate": "2016-10-01T00:00:00+10",
                     "procedures": [
                         {
-                            "name": "http://bom.gov.au/waterdata/services/tstypes/Pat3_C_B_1_YearlyMean",  // Year.Mean doesn't seem to have any data
+                            "name": "http://bom.gov.au/waterdata/services/tstypes/Pat3_C_B_1_YearlyMean",
                             "title": "Annual average",
                             "defaultDuration": "40y"
                         },
                         {
-                            "name": "http://bom.gov.au/waterdata/services/tstypes/Pat3_C_B_1_MonthlyMean",  // Month.Mean has no data
+                            "name": "http://bom.gov.au/waterdata/services/tstypes/Pat3_C_B_1_MonthlyMean",
                             "title": "Monthly average",
                             "defaultDuration": "2y"
                         },
@@ -175,21 +171,17 @@
                     "name": "Water Course Discharge",
                     "url": "http://www.bom.gov.au/waterdata/services",
                     "type": "sos",
-                    "tableStyle": {
-                        "scaleByValue": true,
-                        "scale": 2
-                    },
                     "proceduresName": "Frequency",
                     "observablePropertiesName": "Observation type",
                     "startDate": "1980-01-01T00:00:00+10",
                     "procedures": [
                         {
-                            "name": "http://bom.gov.au/waterdata/services/tstypes/Pat4_C_B_1_YearlyMean",  // Year.Mean doesn't seem to have any data
+                            "name": "http://bom.gov.au/waterdata/services/tstypes/Pat4_C_B_1_YearlyMean",
                             "title": "Annual average",
                             "defaultDuration": "40y"
                         },
                         {
-                            "name": "http://bom.gov.au/waterdata/services/tstypes/Pat4_C_B_1_MonthlyMean",  // Month.Mean has no data
+                            "name": "http://bom.gov.au/waterdata/services/tstypes/Pat4_C_B_1_MonthlyMean",
                             "title": "Monthly average",
                             "defaultDuration": "2y"
                         },
@@ -223,6 +215,33 @@
                         {
                             "name": "http://bom.gov.au/waterdata/services/parameters/Water Course Discharge",
                             "title": "Water Course Discharge"
+                        }
+                    ]
+                },
+                {
+                    "name": "Storage Levels (via geojson)",
+                    "url": "http://www.bom.gov.au/waterdata/services",
+                    "type": "sos",
+                    "representAsGeoJson": true,
+                    "proceduresName": "Frequency",
+                    "observablePropertiesName": "Observation type",
+                    "startDate": "2001-01-01T00:00:00+10",
+                    "procedures": [
+                        {
+                            "name": "http://bom.gov.au/waterdata/services/tstypes/Pat7_C_B_1_YearlyMean",
+                            "title": "Annual average",
+                            "defaultDuration": "15y"
+                        },
+                        {
+                            "name": "http://bom.gov.au/waterdata/services/tstypes/Pat7_C_B_1_MonthlyMean",
+                            "title": "Monthly average",
+                            "defaultDuration": "2y"
+                        }
+                    ],
+                    "observableProperties": [
+                        {
+                            "name": "http://bom.gov.au/waterdata/services/parameters/Storage Level",
+                            "title": "Storage Level"
                         }
                     ]
                 },
