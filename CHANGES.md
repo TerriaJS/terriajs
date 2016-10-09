@@ -4,6 +4,8 @@ Change Log
 
 ### 4.5.0
 
+* Added support for end date columns in csv data (automatic with column names containing `end_date`, `end date`, `end_time`, `end time`; or set in json file using `isEndDate` in `tableStyle.columns`.
+* Fixed calculation of end dates for moving-point csv files, which could lead to points disappearing periodically.
 * Fixed a bug that prevented fractional seconds in time-varying WMS periodicity.
 * Added the ability to the workbench UI to select the `style` to use to display a Web Map Service (WMS) layer when multiple styles are available.
 * Improved the error reporting and handling when specifying invalid values for the WMS COLORSCALERANGE parameter in the UI.
@@ -16,6 +18,7 @@ Change Log
 * We now show the feature info panel the first time a dataset is added, containing a suggestion to click the map to learn more about a location.  Also improved the wording for the feature info panel when there is no data.
 * Fixed support for time-varying feature info for vector tile based region mapping.
 * `updateApplicationOnMessageFromParentWindow` now also allows messages from the `opener` window, i.e. the window that opened the page by calling `window.open`.  The parent or opener may now also send a message with an `allowOrigin` property to specify an origin that should be allowed to post messages.
+* Fixed a bug that prevented charts from loading http urls from https.
 
 ### 4.4.1
 
