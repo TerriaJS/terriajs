@@ -4,7 +4,7 @@ import React from 'react';
 import Styles from './search-header.scss';
 
 /** Renders either a loader or a message based off search state. */
-export default React.createClass({
+const SearchHeader = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -22,3 +22,5 @@ export default React.createClass({
         }
     }
 });
+
+module.exports = SearchHeader;
