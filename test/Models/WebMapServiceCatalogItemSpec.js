@@ -491,7 +491,7 @@ describe('WebMapServiceCatalogItem', function() {
         });
     });
 
-    describe('dimensions', function(done) {
+    describe('dimensions', function() {
         it('are loaded from GetCapabilities', function(done) {
             wmsItem.updateFromJson({
                 url: 'http://example.com',
