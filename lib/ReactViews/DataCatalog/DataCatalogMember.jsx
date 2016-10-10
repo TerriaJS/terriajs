@@ -10,6 +10,8 @@ import DataCatalogGroup from './DataCatalogGroup.jsx';
  */
 export default React.createClass({
     mixins: [ObserveModelMixin],
+    
+    displayName: 'DataCatalogMember',
 
     propTypes: {
         member: React.PropTypes.object.isRequired,
