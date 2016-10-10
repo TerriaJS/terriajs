@@ -8,6 +8,7 @@ Change Log
 * Fixed calculation of end dates for moving-point csv files, which could lead to points disappearing periodically.
 * Fixed a bug that prevented fractional seconds in time-varying WMS periodicity.
 * Added the ability to the workbench UI to select the `style` to use to display a Web Map Service (WMS) layer when multiple styles are available.
+* Added the ability to the workbench UI to select from among the available dimensions of a Web Map Service (WMS) layer.
 * Improved the error reporting and handling when specifying invalid values for the WMS COLORSCALERANGE parameter in the UI.
 * Added the ability to drag existing points when creating a `UserDrawing`.
 * Fixed a bug that could cause nonsensical legends for CSV columns with all null values.
