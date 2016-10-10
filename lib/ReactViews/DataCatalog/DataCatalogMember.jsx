@@ -6,9 +6,9 @@ import DataCatalogItem from './DataCatalogItem.jsx';
 import DataCatalogGroup from './DataCatalogGroup.jsx';
 
 /**
- * Component that is either a {@link CatalogItem} or a {@link DataCatalogMember} and encapsulates this choosing logic.
+ * Component that is either a {@link CatalogItem} or a {@link DataCatalogMember} and encapsulated this choosing logic.
  */
-const DataCatalogMember = React.createClass({
+export default React.createClass({
     mixins: [ObserveModelMixin],
     
     displayName: 'DataCatalogMember',
@@ -32,5 +32,3 @@ const DataCatalogMember = React.createClass({
         }
     }
 });
-
-module.exports = DataCatalogMember;
