@@ -34,7 +34,7 @@ const PointParameterEditor = React.createClass({
     },
 
     getValue() {
-        const cartographic = this.props.previewed.parameterValues[this.props.parameter.id];
+        const cartographic = this.props.parameter.value;
         if (defined(cartographic)) {
             return CesiumMath.toDegrees(cartographic.longitude) + ',' + CesiumMath.toDegrees(cartographic.latitude);
         } else {
@@ -45,14 +45,14 @@ const PointParameterEditor = React.createClass({
     setValue(value) {
         const coordinates = value.split(',');
         if (coordinates.length >= 2) {
-            const value = Cartographic.fromDegrees(parseFloat(coordinates[0]), parseFloat(coordinates[1]));
-            this.props.previewed.setParameterValue(this.props.parameter.id, value);
+            this.props.parameter.value = Cartographic.fromDegrees(parseFloat(coordinates[0]), parseFloat(coordinates[1]));
         }
     },
 
     selectPointOnMap() {
         const terria = this.props.previewed.terria;
         const that = this;
+
         // Cancel any feature picking already in progress.
         terria.pickedFeatures = undefined;
 
@@ -68,7 +68,7 @@ const PointParameterEditor = React.createClass({
         knockout.getObservable(pickPointMode, 'pickedFeatures').subscribe(function(pickedFeatures) {
             if (defined(pickedFeatures.pickPosition)) {
                 const value = Ellipsoid.WGS84.cartesianToCartographic(pickedFeatures.pickPosition);
-                that.props.previewed.setParameterValue(that.props.parameter.id, value);
+                that.props.parameter.value = value;
                 terria.mapInteractionModeStack.pop();
                 that.props.viewState.openAddData();
             }

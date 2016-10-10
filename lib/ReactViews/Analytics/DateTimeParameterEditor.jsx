@@ -16,7 +16,7 @@ const DateTimeParameterEditor = React.createClass({
 
     getDateTime() {
         const dateTimeBreakOut = {};
-        const timeDate = this.props.previewed.parameterValues[this.props.parameter.id];
+        const timeDate = this.props.parameter.value;
         if (timeDate !== undefined) {
             const splits = timeDate.split('T');
             dateTimeBreakOut.date = splits[0];
@@ -40,7 +40,7 @@ const DateTimeParameterEditor = React.createClass({
         if (dateTime.date && dateTime.time) {
             value = dateTime.date + 'T' + dateTime.time;
         }
-        this.props.previewed.setParameterValue(this.props.parameter.id, value);
+        this.props.parameter.value = value;
     },
 
     onChangeDate(e) {

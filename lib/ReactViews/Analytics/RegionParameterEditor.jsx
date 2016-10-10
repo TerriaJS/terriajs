@@ -69,7 +69,7 @@ const RegionParameterEditor = React.createClass({
                 }
                 const feature = pickedFeatures.features[0];
                 that._lastRegionFeature = feature.data;
-                that.regionValue = that.props.parameter.findRegionByID(feature.properties[that.regionProvider.regionProp], that.props.previewed.parameterValues);
+                that.regionValue = that.props.parameter.findRegionByID(feature.properties[that.regionProvider.regionProp]);
 
                 if (defined(that._selectedRegionCatalogItem)) {
                     that._selectedRegionCatalogItem.isEnabled = false;
@@ -86,13 +86,13 @@ const RegionParameterEditor = React.createClass({
 
         knockout.defineProperty(this, 'regionValue', {
             get: function() {
-                return this.props.parameter.getValue(this.props.previewed.parameterValues);
+                return this.props.parameter.value;
             },
             set: function(value) {
                 if (defined(value) && defined(value.realRegion)) {
                     value = value.realRegion;
                 }
-                this.props.previewed.setParameterValue(this.props.parameter.id, value);
+                this.props.parameter.value = value;
                 this._displayValue = undefined;
                 this.updateMapFromValue(this);
             }
@@ -100,7 +100,7 @@ const RegionParameterEditor = React.createClass({
 
         knockout.defineProperty(this, 'regionProvider', {
             get: function() {
-                return this.props.parameter.getRegionProvider(this.props.previewed.parameterValues);
+                return this.props.parameter.regionProvider;
             }
         });
 
@@ -230,12 +230,11 @@ const RegionParameterEditor = React.createClass({
 
         const value = this.regionValue;
         const parameter = this.props.parameter;
-        const parameterValues = this.props.previewed.parameterValues;
         const terria = this.props.previewed.terria;
 
         const that = this;
         this.regionProvider.getRegionFeature(terria, value, that._lastRegionFeature).then(function(feature) {
-            if (parameterValues[parameter.id] !== value) {
+            if (parameter.value !== value) {
                 // Value has already changed.
                 return;
             }
@@ -252,7 +251,7 @@ const RegionParameterEditor = React.createClass({
                 that._selectedRegionCatalogItem.zoomTo();
             }
         }).otherwise(function() {
-            if (parameterValues[parameter.id] !== value) {
+            if (parameter.value !== value) {
                 // Value has already changed.
                 return;
             }
