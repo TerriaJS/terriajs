@@ -6,6 +6,7 @@ var WebMapServiceCatalogGroup = require('../../lib/Models/WebMapServiceCatalogGr
 
 var loadWithXhr = require('terriajs-cesium/Source/Core/loadWithXhr');
 var GeographicTilingScheme = require('terriajs-cesium/Source/Core/GeographicTilingScheme');
+var RequestErrorEvent = require('terriajs-cesium/Source/Core/RequestErrorEvent');
 var WebMercatorTilingScheme = require('terriajs-cesium/Source/Core/WebMercatorTilingScheme');
 
 describe('WebMapServiceCatalogGroup', function() {
@@ -77,14 +78,19 @@ describe('WebMapServiceCatalogGroup', function() {
         group.flatten = true;
 
         loadWithXhr.load = function(url, responseType, method, data, headers, deferred, overrideMimeType, preferText) {
-            expect(url).toContain('GetCapabilities');
-            return loadWithXhr.defaultLoad('test/GetCapabilities/GeographicOnly.xml', responseType, method, data, headers, deferred, overrideMimeType, preferText);
+            if (url.indexOf('GetCapabilities') >= 0) {
+                return loadWithXhr.defaultLoad('test/GetCapabilities/GeographicOnly.xml', responseType, method, data, headers, deferred, overrideMimeType, preferText);
+            } else {
+                deferred.reject(new RequestErrorEvent(404, '', []));
+            }
         };
 
         group.load().then(function() {
             expect(group.items.length).toBe(1);
-            expect(group.items[0]._createImageryProvider().tilingScheme instanceof GeographicTilingScheme).toBe(true);
-            done();
-        });
+            var item = group.items[0];
+            return item.load().then(function() {
+                expect(item._createImageryProvider().tilingScheme instanceof GeographicTilingScheme).toBe(true);
+            });
+        }).then(done).otherwise(done.fail);
     });
 });

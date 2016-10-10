@@ -492,7 +492,7 @@ describe('WebMapServiceCatalogItem', function() {
     });
 
     describe('dimensions', function() {
-        it('are loaded from GetCapabilities', function() {
+        it('are loaded from GetCapabilities', function(done) {
             wmsItem.updateFromJson({
                 url: 'http://example.com',
                 metadataUrl: 'test/WMS/styles_and_dimensions.xml',
@@ -501,7 +501,7 @@ describe('WebMapServiceCatalogItem', function() {
 
             wmsItem.load().then(function() {
                 expect(wmsItem.availableDimensions).toBeDefined();
-            });
+            }).then(done).otherwise(done.fail);
         });
     });
 });
