@@ -56,7 +56,7 @@
     "resolve-url-loader": "^1.4.3",
     "sass-loader": "^4.0.1",
     "simple-statistics": "^2.0.0",
-    "string-replace-webpack-plugin": "0.0.3",
+    "string-replace-webpack-plugin": "0.0.4",
     "style-loader": "git://github.com/TerriaJS/style-loader#chromeWorkaround",
     "superagent": "^2.0.0",
     "terriajs-cesium": "1.25.1",
