@@ -7,6 +7,8 @@ import Styles from './search-header.scss';
 const SearchHeader = React.createClass({
     mixins: [ObserveModelMixin],
 
+    displayName: 'SearchHeader',
+
     propTypes: {
         searchProvider: React.PropTypes.object.isRequired,
         isWaitingForSearchToStart: React.PropTypes.bool
