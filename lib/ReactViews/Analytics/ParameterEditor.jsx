@@ -6,7 +6,6 @@ import LineParameterEditor from './LineParameterEditor';
 import RectangleParameterEditor from './RectangleParameterEditor';
 import PolygonParameterEditor from './PolygonParameterEditor';
 import RegionParameterEditor from './RegionParameterEditor';
-import RegionTypeParameterEditor from './RegionTypeParameterEditor';
 import RegionDataParameterEditor from './RegionDataParameterEditor';
 import BooleanParameterEditor from './BooleanParameterEditor';
 import DateTimeParameterEditor from './DateTimeParameterEditor';

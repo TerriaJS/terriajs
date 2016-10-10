@@ -4,7 +4,6 @@ import React from 'react';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import Loader from '../Loader';
 import ObserveModelMixin from '../ObserveModelMixin';
-import React from 'react';
 import Styles from './parameter-editors.scss';
 
 const RegionTypeParameterEditor = React.createClass({

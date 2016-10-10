@@ -25,14 +25,20 @@ const RegionPicker = React.createClass({
 
     propTypes: {
         previewed: React.PropTypes.object,
-        parameter: React.PropTypes.object,
-        feature: React.PropTypes.object
+        parameter: React.PropTypes.object
+    },
+
+    getInitialState() {
+        return {
+            autocompleteVisible: false,
+            autoCompleteOptions: [],
+            displayValue: ""
+        };
     },
 
     componentWillMount() {
         this._loadingRegionProvider = undefined;
         this._selectedRegionCatalogItem = undefined;
-        this._displayValue = '';
         this._regionNames = [];
         this._regionsCatalogItem = undefined;
         this.regionProvider = undefined;
@@ -47,7 +53,7 @@ const RegionPicker = React.createClass({
 
         knockout.defineProperty(this, 'regionProvider', {
             get: function() {
-                return this.props.parameter.getRegionProvider(this.props.previewed.parameterValues);
+                return this.props.parameter.regionProvider;
             }
         });
 
@@ -55,14 +61,16 @@ const RegionPicker = React.createClass({
 
         knockout.defineProperty(this, 'regionValue', {
             get: function() {
-                return this.props.parameter.getValue(this.props.previewed.parameterValues);
+                return this.props.parameter.value;
             },
             set: function(value) {
                 if (defined(value) && defined(value.realRegion)) {
                     value = value.realRegion;
                 }
                 this.props.previewed.setParameterValue(this.props.parameter.id, value);
-                this._displayValue = undefined;
+                this.setState({
+                    displayValue: this.getDisplayValue("")
+                });
             }
         });
 
@@ -79,6 +87,7 @@ const RegionPicker = React.createClass({
             });
         });
 
+        console.log("Add region layer manually");
         this.addRegionLayer();
         this.updateMapFromValue();
     },
@@ -95,17 +104,10 @@ const RegionPicker = React.createClass({
         }
     },
 
-    getInitialState() {
-        return {
-            autocompleteVisible: false,
-            autoCompleteOptions: []
-        };
-    },
-
     updateFeature(feature) {
         this._lastRegionFeature = feature.data;
         const regionId = feature.properties[this.regionProvider.regionProp];
-        this.regionValue = this.props.parameter.findRegionByID(regionId, this.props.previewed.parameterValues);
+        this.regionValue = this.props.parameter.findRegionByID(regionId);
 
         this.addSelectedRegionCatalogItem(feature);
     },
@@ -126,6 +128,7 @@ const RegionPicker = React.createClass({
     },
 
     addRegionLayer() {
+        console.log("Add region layer");
         const that = this;
 
         if (!defined(this.regionProvider)) {
@@ -135,18 +138,20 @@ const RegionPicker = React.createClass({
         this._loadingRegionProvider = this.regionProvider;
 
         when.all([that.regionProvider.loadRegionIDs(), that.regionProvider.loadRegionNames()]).then(function() {
+            console.log("then...");
             if (that.regionProvider !== that._loadingRegionProvider) {
                 return;
             }
             that._regionNames = that.regionProvider.regionNames;
 
             if (defined(that._regionsCatalogItem)) {
+                console.log("REMOVE IT");
                 that._regionsCatalogItem.isEnabled = false;
                 that._regionsCatalogItem = undefined;
             }
 
             that._regionsCatalogItem = new WebMapServiceCatalogItem(that.props.previewed.terria);
-            that._regionsCatalogItem.name = "Available Regions";
+            that._regionsCatalogItem.name = Math.random().toString(36).substring(7);
             that._regionsCatalogItem.url = that.regionProvider.server;
             that._regionsCatalogItem.layers = that.regionProvider.layerName;
             that._regionsCatalogItem.parameters = {
@@ -170,14 +175,13 @@ const RegionPicker = React.createClass({
 
         const value = this.regionValue;
         const parameter = this.props.parameter;
-        const parameterValues = this.props.previewed.parameterValues;
         const terria = this.props.previewed.terria;
 
         const that = this;
         this.regionProvider.getRegionFeature(terria, value, that._lastRegionFeature).then(function(feature) {
             that.addSelectedRegionCatalogItem(feature);
         }).otherwise(function() {
-            if (parameterValues[parameter.id] !== value) {
+            if (this.props.parameter.value !== value) {
                 // Value has already changed.
                 return;
             }
@@ -213,7 +217,7 @@ const RegionPicker = React.createClass({
         if (regions && regions.length > 0) {
             for (let i = 0; i < regions.length; i++) {
                 const name = regionNames[i];
-                if (name && name.toLowerCase().indexOf(e.target.value) >= 0) {
+                if (name && name.toLowerCase().indexOf(e.target.value.toLowerCase()) >= 0) {
                     result.push({
                         name: name,
                         id: regions[i].id,
@@ -226,8 +230,8 @@ const RegionPicker = React.createClass({
                 }
             }
         }
-        this._displayValue = e.target.value;
         this.setState({
+            displayValue: this.getDisplayValue(e.target.value),
             autocompleteVisible: result.length > 0 && result.length <= 100,
             autoCompleteOptions: result
         });
@@ -243,10 +247,10 @@ const RegionPicker = React.createClass({
         this.updateMapFromValue();
     },
 
-    getDisplayValue() {
+    getDisplayValue(displayValue) {
         const region = this.regionValue;
         if (!defined(region)) {
-            return this._displayValue;
+            return displayValue;
         }
         const index = this.regionProvider.regions.indexOf(region);
         if (index >= 0 && this._regionNames[index]) {
@@ -260,14 +264,14 @@ const RegionPicker = React.createClass({
         return (<div className={Styles.parameterEditor}>
                     <RegionTypeParameterEditor
                             previewed={this.props.previewed}
-                            parameter={this.props.parameter.regionProvider}
+                            parameter={this.props.parameter._regionProvider}
                     />
                     <input className={Styles.field}
                            type="text"
                            autoComplete="off"
-                           value={this.getDisplayValue()}
+                           value={this.state.displayValue}
                            onChange={this.textChange}
-                           placeholder="Type a region name or click the map below"
+                           placeholder="Region name"
                     />
                     {this.renderOptions()}
                 </div>);
