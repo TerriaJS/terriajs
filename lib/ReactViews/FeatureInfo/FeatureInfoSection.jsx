@@ -43,6 +43,7 @@ const FeatureInfoSection = React.createClass({
     getInitialState() {
         return {
             clockSubscription: undefined,
+            featureChangedSubscription: undefined,
             timeoutIds: [],
             showRawData: false
         };
@@ -226,6 +227,11 @@ const FeatureInfoSection = React.createClass({
  * @private
  */
 function setSubscriptionsAndTimeouts(featureInfoSection, feature) {
+    featureInfoSection.setState({
+        featureChangedSubscription: feature.definitionChanged.addEventListener(function(blah) {
+            console.log('feature changed', blah);
+        })
+    });
     if (featureInfoSection.isFeatureTimeVarying(feature)) {
         featureInfoSection.setState({
             clockSubscription: featureInfoSection.props.clock.onTick.addEventListener(function(clock) {
