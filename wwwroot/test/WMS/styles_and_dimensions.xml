@@ -569,7 +569,13 @@
                     </EX_GeographicBoundingBox>
                     <BoundingBox CRS="CRS:84" minx="-101.72705559125805" maxx="-53.27557484851556" miny="11.898823436502258" maxy="48.454022604552435"/>
 
+                        <Dimension name="custom" units="A" unitSymbol="B" default="Third thing">
+                            Something,Another thing,Third thing,yeah
+                        </Dimension>
 
+                        <Dimension name="another" units="C" unitSymbol="D" default="Second">
+                            First,Second,Third
+                        </Dimension>
 
                         <Dimension name="time" units="ISO8601" multipleValues="true" current="true" default="2016-09-24T00:00:00.000Z">
 
