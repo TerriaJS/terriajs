@@ -490,4 +490,18 @@ describe('WebMapServiceCatalogItem', function() {
             done();
         });
     });
+
+    describe('dimensions', function() {
+        it('are loaded from GetCapabilities', function() {
+            wmsItem.updateFromJson({
+                url: 'http://example.com',
+                metadataUrl: 'test/WMS/styles_and_dimensions.xml',
+                layers: 'A'
+            });
+
+            wmsItem.load().then(function() {
+                expect(wmsItem.availableDimensions).toBeDefined();
+            });
+        });
+    });
 });
