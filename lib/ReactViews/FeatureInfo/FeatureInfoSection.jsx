@@ -184,15 +184,15 @@ const FeatureInfoSection = React.createClass({
                             <When condition={reactInfo.showRawData || !this.hasTemplate()}>
                                 <If condition={reactInfo.hasRawData}>
                                     {reactInfo.rawData}
-                                    <If condition={reactInfo.timeSeriesChart}>
-                                        <div className={Styles.timeSeriesChart}>
-                                            <h4>{reactInfo.timeSeriesChartTitle}</h4>
-                                            {reactInfo.timeSeriesChart}
-                                        </div>
-                                    </If>
                                 </If>
                                 <If condition={!reactInfo.hasRawData}>
                                     <div ref="no-info" key="no-info">No information available.</div>
+                                </If>
+                                <If condition={reactInfo.timeSeriesChart}>
+                                    <div className={Styles.timeSeriesChart}>
+                                        <h4>{reactInfo.timeSeriesChartTitle}</h4>
+                                        {reactInfo.timeSeriesChart}
+                                    </div>
                                 </If>
                                 <If condition={defined(reactInfo.downloadableData)}>
                                     <FeatureInfoDownload key='download'
@@ -233,8 +233,6 @@ function setSubscriptionsAndTimeouts(featureInfoSection, feature) {
     if (featureInfoSection.isFeatureTimeVarying(feature)) {
         featureInfoSection.setState({
             clockSubscription: featureInfoSection.props.clock.onTick.addEventListener(function(clock) {
-                // TODO: remove
-                console.log(clock.currentTime.constructor.toIso8601(clock.currentTime), featureInfoSection.props.clock.currentTime.constructor.toIso8601(featureInfoSection.props.clock.currentTime));
                 setCurrentFeatureValues(feature, clock);
             })
         });
