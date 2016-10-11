@@ -8,6 +8,9 @@
 .btn {
   composes: btn from '../../../Sass/common/_buttons.scss';
   composes: btn--toggle from '../../../Sass/common/_buttons.scss';
+  width: 20px;
+  height: 15px;
+  fill: #fff;
 }
 
 .is-open {

@@ -1,10 +1,11 @@
-import React from 'react';
+import Loader from '../Loader';
 import ObserveModelMixin from '../ObserveModelMixin';
 import ParameterEditor from './ParameterEditor';
-import when from 'terriajs-cesium/Source/ThirdParty/when';
-import TerriaError from '../../Core/TerriaError';
 import parseCustomMarkdownToReact from '../Custom/parseCustomMarkdownToReact';
+import React from 'react';
 import Styles from './invoke-function.scss';
+import TerriaError from '../../Core/TerriaError';
+import when from 'terriajs-cesium/Source/ThirdParty/when';
 
 const InvokeFunction = React.createClass({
     mixins: [ObserveModelMixin],
@@ -52,6 +53,10 @@ const InvokeFunction = React.createClass({
     );},
 
     render() {
+        if (this.props.previewed.isLoading) {
+            return <Loader />;
+        }
+
         return (<div className={Styles.invokeFunction}>
                     <div className={Styles.content}>
                         <h3>{this.props.previewed.name}</h3>
