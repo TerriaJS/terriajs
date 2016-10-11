@@ -4,6 +4,7 @@ Change Log
 
 ### 4.5.0
 
+* Added support for the Sensor Observation Service format, via the `SensorObservationServiceCatalogItem`.
 * Added support for end date columns in csv data (automatic with column names containing `end_date`, `end date`, `end_time`, `end time`; or set in json file using `isEndDate` in `tableStyle.columns`.
 * Fixed calculation of end dates for moving-point csv files, which could lead to points disappearing periodically.
 * Fixed a bug that prevented fractional seconds in time-varying WMS periodicity.
