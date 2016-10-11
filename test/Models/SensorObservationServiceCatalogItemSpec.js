@@ -166,6 +166,9 @@ describe('SensorObservationServiceCatalogItem', function() {
             item.load().then(function() {
                 // Expect it to show the procedures concepts to the user.
                 expect(item.concepts.length).toEqual(1);
+                // Show the item so the terria clock is shown.
+                item.isShown = true;
+                expect(JulianDate.toIso8601(item.terria.clock.startTime)).toContain('2012-01');
                 // Change the value to Daily average, which loads the data and puts the promise in item._observationDataPromise.
                 item.concepts[0].items[1].toggleActive();
                 return item._observationDataPromise;
