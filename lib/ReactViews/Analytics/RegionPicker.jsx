@@ -135,6 +135,11 @@ const RegionPicker = React.createClass({
             return;
         }
 
+        if (this.regionProvider === this._loadingRegionProvider) {
+            // The region provider hasn't changed.
+            return;
+        }
+
         this._loadingRegionProvider = this.regionProvider;
 
         when.all([that.regionProvider.loadRegionIDs(), that.regionProvider.loadRegionNames()]).then(function() {
