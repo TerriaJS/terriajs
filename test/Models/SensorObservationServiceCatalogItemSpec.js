@@ -1,6 +1,7 @@
 'use strict';
 
 /*global require, fail*/
+var JulianDate = require('terriajs-cesium/Source/Core/JulianDate');
 var loadText = require('terriajs-cesium/Source/Core/loadText');
 var Rectangle = require('terriajs-cesium/Source/Core/Rectangle');
 var when = require('terriajs-cesium/Source/ThirdParty/when');
@@ -71,18 +72,21 @@ describe('SensorObservationServiceCatalogItem', function() {
     });
 
     describe('loading', function() {
-        var getFeatureOfInterestResponse, getObservationResponse;
+        var getFeatureOfInterestResponse, getObservationResponseYearly, getObservationResponseDaily;
         beforeEach(function(done) {
             when.all([
                 loadText('test/sos/GetFeatureOfInterestResponse.xml').then(function(text) { getFeatureOfInterestResponse = text; }),
-                loadText('test/sos/GetObservationResponse.xml').then(function(text) { getObservationResponse = text; })
+                loadText('test/sos/GetObservationResponse_Yearly.xml').then(function(text) { getObservationResponseYearly = text; }),
+                loadText('test/sos/GetObservationResponse_Daily.xml').then(function(text) { getObservationResponseDaily = text; })
             ]).then(function() {
                 jasmine.Ajax.install();
                 jasmine.Ajax.stubRequest(/.*/).andError(); // Fail all requests by default.
-                jasmine.Ajax.stubRequest('http://sos.example.com', /.*\<sos:GetFeatureOfInterest.*/)
+                jasmine.Ajax.stubRequest('http://sos.example.com', /\<sos:GetFeatureOfInterest/)
                     .andReturn({ responseText: getFeatureOfInterestResponse });
-                jasmine.Ajax.stubRequest('http://sos.example.com', /.*\<sos:GetObservation.*/)
-                    .andReturn({ responseText: getObservationResponse });
+                jasmine.Ajax.stubRequest('http://sos.example.com', /\<sos:GetObservation[\s\S]*Yearly/)
+                    .andReturn({ responseText: getObservationResponseYearly });
+                jasmine.Ajax.stubRequest('http://sos.example.com', /\<sos:GetObservation[\s\S]*Daily/)
+                    .andReturn({ responseText: getObservationResponseDaily });
             }).then(done).otherwise(done.fail);
         });
 
@@ -118,14 +122,12 @@ describe('SensorObservationServiceCatalogItem', function() {
                 procedures: [{identifier: "http://sos.example.com/tstypes/Yearly Mean", title: "Annual average"}],
                 observableProperties: [{identifier: "http://sos.example.com/parameters/Storage Level", title: "Storage Level"}],
                 tryToLoadObservationData: true,
-                proceduresName: 'freq',
-                observablePropertiesName: 'thing'
+                proceduresName: 'Frequency',
+                observablePropertiesName: 'Observation'
             });
             item.load().then(function() {
-                // Expect it to have created the right table of data (with no time dimension).
                 var columnNames = item.tableStructure.getColumnNames();
-                expect(columnNames).toEqual(['date', 'Storage Level Annual average', 'identifier', 'freq', 'thing', 'type', 'name', 'id', 'lat', 'lon']);
-                // Test a "slice" of the column's values, to remove knockout stuff.
+                expect(columnNames).toEqual(['date', 'Storage Level Annual average', 'identifier', 'Frequency', 'Observation', 'type', 'name', 'id', 'lat', 'lon']);
                 var values = item.tableStructure.columns.filter(function(column) {return column.id === 'value';})[0].values;
                 var idMapping = item.tableStructure.getIdMapping();
                 function valuesForFeatureIdentifier(identifier) {
@@ -133,13 +135,47 @@ describe('SensorObservationServiceCatalogItem', function() {
                         return values[rowNumber];
                     });
                 }
-                expect(valuesForFeatureIdentifier('http://sos.example.com/stations/1')).toEqual([null, 129.425, null]);
-                expect(valuesForFeatureIdentifier('http://sos.example.com/stations/2')).toEqual([null, null, null]);
-                expect(valuesForFeatureIdentifier('http://sos.example.com/stations/3').length).toEqual(16);
+                expect(valuesForFeatureIdentifier('http://sos.example.com/stations/1')).toEqual([null, 129.425, 123.123]);
+                expect(valuesForFeatureIdentifier('http://sos.example.com/stations/2')).toEqual([14.575, 12.991, null]);
+                expect(valuesForFeatureIdentifier('http://sos.example.com/stations/3')).toEqual([43.066, 42.981, 40.136, 40.088, null]);
                 // Expect a time dimension
                 expect(item.tableStructure.columnsByType[VarType.TIME].length).toEqual(1);
+                // Expect the terria clock to reflect the yearly data time range. This happens only when the item is shown.
+                item.isShown = true;
+                expect(JulianDate.toIso8601(item.terria.clock.startTime)).toContain('2012-01');
                 // Expect it not to show any concepts to the user.
                 expect(item.concepts.length).toEqual(0);
+            }).otherwise(fail).then(done);
+        });
+
+        it('reloads observation data when concept changes', function(done) {
+            item.updateFromJson({
+                name: 'Foo',
+                url: 'http://sos.example.com',
+                procedures: [
+                    {identifier: "http://sos.example.com/tstypes/Yearly Mean", title: "Annual average"},
+                    {identifier: "http://sos.example.com/tstypes/Daily Mean", title: "Daily average"}
+                ],
+                observableProperties: [
+                    {identifier: "http://sos.example.com/parameters/Storage Level", title: "Storage Level"}
+                ],
+                tryToLoadObservationData: true,
+                proceduresName: 'Frequency',
+                observablePropertiesName: 'Observation'
+            });
+            item.load().then(function() {
+                // Expect it to show the procedures concepts to the user.
+                expect(item.concepts.length).toEqual(1);
+                // Change the value to Daily average, which loads the data and puts the promise in item._observationDataPromise.
+                item.concepts[0].items[1].toggleActive();
+                return item._observationDataPromise;
+            }).then(function() {
+                // The new data is now loaded.
+                var columnNames = item.tableStructure.getColumnNames();
+                // The column should now be the daily average.
+                expect(columnNames[1]).toEqual('Storage Level Daily average');
+                // And expect the terria clock to now reflect the new daily data time range.
+                expect(JulianDate.toIso8601(item.terria.clock.startTime)).toContain('2016-08');
             }).otherwise(fail).then(done);
         });
 
