@@ -42,7 +42,6 @@ const FeatureInfoSection = React.createClass({
     getInitialState() {
         return {
             clockSubscription: undefined,
-            featureChangedSubscription: undefined,
             timeoutIds: [],
             showRawData: false
         };
