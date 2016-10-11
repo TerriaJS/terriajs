@@ -22,6 +22,7 @@ import when from 'terriajs-cesium/Source/ThirdParty/when';
 
 import ChartData from '../../../Charts/ChartData';
 import LineChart from '../../../Charts/LineChart';
+import proxyCatalogItemUrl from '../../../Models/proxyCatalogItemUrl';
 import TableStructure from '../../../Map/TableStructure';
 
 import Styles from './chart.scss';
@@ -42,6 +43,7 @@ const Chart = React.createClass({
         styling: React.PropTypes.string,  // nothing, 'feature-info' or 'histogram' -- TODO: improve
         height: React.PropTypes.number,
         axisLabel: React.PropTypes.object,
+        catalogItem: React.PropTypes.object,
         transitionDuration: React.PropTypes.number,
         highlightX: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
         updateCounter: React.PropTypes.any,  // Change this to trigger an update.
@@ -244,6 +246,7 @@ function loadIntoTableStructure(catalogItem, url) {
     }
     // As a fallback, try to load in the data file as csv.
     const tableStructure = new TableStructure('feature info');
+    url = proxyCatalogItemUrl(catalogItem, url, '0d');
     return loadText(url).then(tableStructure.loadFromCsv.bind(tableStructure));
 }
 

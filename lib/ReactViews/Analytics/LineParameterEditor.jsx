@@ -38,7 +38,7 @@ const LineParameterEditor = React.createClass({
     },
 
     getValue() {
-        const pointsLongLats = this.props.previewed.parameterValues[this.props.parameter.id];
+        const pointsLongLats = this.props.parameter.value;
         if (!defined(pointsLongLats) || pointsLongLats.length < 1) {
             return '';
         }
@@ -79,7 +79,7 @@ const LineParameterEditor = React.createClass({
             points.push(CesiumMath.toDegrees(cartographic.latitude));
             pointsLongLats.push(points);
         }
-        this.props.previewed.setParameterValue(this.props.parameter.id, pointsLongLats);
+        this.props.parameter.value = pointsLongLats;
     },
 
     selectLineOnMap() {

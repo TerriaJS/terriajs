@@ -38,6 +38,7 @@ const ChartExpandAndDownloadButtons = React.createClass({
         tableStructure: React.PropTypes.object,
         //
         catalogItem: React.PropTypes.object,
+        title: React.PropTypes.string,
         feature: React.PropTypes.object,
         id: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
         columnNames: React.PropTypes.array,
@@ -156,7 +157,7 @@ function expand(props, sourceIndex) {
     // You can override this with the `pollSeconds` attribute (coming!).
     // If neither is set, it should default to a small duration rather than 2 weeks - say 1 minute.
     newCatalogItem.cacheDuration = defaultValue(props.catalogItem.cacheDuration, '1m');
-    newCatalogItem.name = (props.feature && props.feature.name) || 'Chart';
+    newCatalogItem.name = props.title || (props.feature && props.feature.name) || 'Chart';
     newCatalogItem.id = newCatalogItem.name + (props.id ? (' ' + props.id) : '') + ' (' + props.catalogItem.name + ')';
 
     if (defined(props.pollSeconds)) {
