@@ -67,7 +67,7 @@ const RegionPicker = React.createClass({
                 if (defined(value) && defined(value.realRegion)) {
                     value = value.realRegion;
                 }
-                this.props.previewed.setParameterValue(this.props.parameter.id, value);
+                this.props.parameter.value = value;
                 this.setState({
                     displayValue: this.getDisplayValue("")
                 });
@@ -179,6 +179,9 @@ const RegionPicker = React.createClass({
 
         const that = this;
         this.regionProvider.getRegionFeature(terria, value, that._lastRegionFeature).then(function(feature) {
+            if (!defined(feature)) {
+                return;
+            }
             that.addSelectedRegionCatalogItem(feature);
         }).otherwise(function() {
             if (this.props.parameter.value !== value) {
