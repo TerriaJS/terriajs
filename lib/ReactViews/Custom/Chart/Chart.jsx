@@ -38,7 +38,6 @@ const Chart = React.createClass({
     _tooltipId: undefined,
 
     propTypes: {
-        catalogItem: React.PropTypes.object,
         domain: React.PropTypes.object,
         styling: React.PropTypes.string,  // nothing, 'feature-info' or 'histogram' -- TODO: improve
         height: React.PropTypes.number,
