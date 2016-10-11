@@ -87,7 +87,6 @@ const RegionPicker = React.createClass({
             });
         });
 
-        console.log("Add region layer manually");
         this.addRegionLayer();
         this.updateMapFromValue();
     },
@@ -109,10 +108,6 @@ const RegionPicker = React.createClass({
         const regionId = feature.properties[this.regionProvider.regionProp];
         this.regionValue = this.props.parameter.findRegionByID(regionId);
 
-        this.addSelectedRegionCatalogItem(feature);
-    },
-
-    addSelectedRegionCatalogItem(feature) {
         if (defined(this._selectedRegionCatalogItem)) {
             this._selectedRegionCatalogItem.isEnabled = false;
             this._selectedRegionCatalogItem = undefined;
@@ -128,7 +123,6 @@ const RegionPicker = React.createClass({
     },
 
     addRegionLayer() {
-        console.log("Add region layer");
         const that = this;
 
         if (!defined(this.regionProvider)) {
@@ -143,20 +137,18 @@ const RegionPicker = React.createClass({
         this._loadingRegionProvider = this.regionProvider;
 
         when.all([that.regionProvider.loadRegionIDs(), that.regionProvider.loadRegionNames()]).then(function() {
-            console.log("then...");
             if (that.regionProvider !== that._loadingRegionProvider) {
                 return;
             }
             that._regionNames = that.regionProvider.regionNames;
 
             if (defined(that._regionsCatalogItem)) {
-                console.log("REMOVE IT");
                 that._regionsCatalogItem.isEnabled = false;
                 that._regionsCatalogItem = undefined;
             }
 
             that._regionsCatalogItem = new WebMapServiceCatalogItem(that.props.previewed.terria);
-            that._regionsCatalogItem.name = Math.random().toString(36).substring(7);
+            that._regionsCatalogItem.name = "Available Regions";
             that._regionsCatalogItem.url = that.regionProvider.server;
             that._regionsCatalogItem.layers = that.regionProvider.layerName;
             that._regionsCatalogItem.parameters = {
@@ -187,7 +179,18 @@ const RegionPicker = React.createClass({
             if (!defined(feature)) {
                 return;
             }
-            that.addSelectedRegionCatalogItem(feature);
+            if (defined(that._selectedRegionCatalogItem)) {
+                that._selectedRegionCatalogItem.isEnabled = false;
+                that._selectedRegionCatalogItem = undefined;
+            }
+
+            if (defined(feature) && feature.type === 'Feature') {
+                that._selectedRegionCatalogItem = new GeoJsonCatalogItem(that.props.previewed.terria);
+                that._selectedRegionCatalogItem.name = "Selected Polygon";
+                that._selectedRegionCatalogItem.data = feature;
+                that._selectedRegionCatalogItem.isEnabled = true;
+                that._selectedRegionCatalogItem.zoomTo();
+            }
         }).otherwise(function() {
             if (this.props.parameter.value !== value) {
                 // Value has already changed.
