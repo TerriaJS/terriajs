@@ -314,6 +314,38 @@ describe('CsvCatalogItem with lat and lon', function() {
         }).otherwise(fail).then(done);
     });
 
+    it('supports moving-point csvs with id column by default', function(done) {
+        csvItem.url = 'test/csv/lat_lon_enum_date_id.csv';
+        csvItem.load().then(function() {
+            var features = csvItem.dataSource.entities.values;
+            expect(features.length).toEqual(4); // There are 4 features A, B, C and D; does not equal the 13 rows in the file.
+            var featureA = features.filter(function(feature) { return feature.name === 'feature A'; })[0];
+            // FeatureA has rows for 1,2,4,5,6th of August. But it should still be available on the 3rd.
+            expect(TimeInterval.contains(featureA.availability, JulianDate.fromIso8601('2015-08-02'))).toBe(true);
+            expect(TimeInterval.contains(featureA.availability, JulianDate.fromIso8601('2015-08-03'))).toBe(true);
+            expect(TimeInterval.contains(featureA.availability, JulianDate.fromIso8601('2015-08-04'))).toBe(true);
+            expect(TimeInterval.contains(featureA.availability, JulianDate.fromIso8601('2015-08-08'))).toBe(false);
+        }).otherwise(fail).then(done);
+    });
+
+    it('supports overriding moving-point csvs with id column using null', function(done) {
+        csvItem.url = 'test/csv/lat_lon_enum_date_id.csv';
+        csvItem.idColumns = null;
+        csvItem.load().then(function() {
+            var features = csvItem.dataSource.entities.values;
+            expect(features.length).toEqual(13); // There are 13 rows in the file.
+        }).otherwise(fail).then(done);
+    });
+
+    it('supports overriding moving-point csvs with id column using []', function(done) {
+        csvItem.url = 'test/csv/lat_lon_enum_date_id.csv';
+        csvItem.idColumns = [];
+        csvItem.load().then(function() {
+            var features = csvItem.dataSource.entities.values;
+            expect(features.length).toEqual(13); // There are 13 rows in the file.
+        }).otherwise(fail).then(done);
+    });
+
     it('ignores dates if tableStyle.timeColumn is null', function(done) {
         csvItem.url = 'test/csv/lat_long_enum_moving_date.csv';
         csvItem._tableStyle = new TableStyle({timeColumn: null});

@@ -26,19 +26,19 @@ const RegionDataParameterEditor = React.createClass({
     },
 
     getValue() {
-        return this.props.previewed.parameterValues[this.props.parameter.id];
+        return this.props.parameter.value;
     },
 
     setValue(value) {
-        this.props.previewed.setParameterValue(this.props.parameter.id, value);
+        this.props.parameter.value = value;
     },
 
     regionProvider() {
-        return this.props.parameter.getRegionProvider(this.props.previewed.parameterValues);
+        return this.props.parameter.regionProvider;
     },
 
     catalogItemsWithMatchingRegion() {
-        return this.props.parameter.getEnabledItemsWithMatchingRegionType(this.props.previewed.parameterValues);
+        return this.props.parameter.getEnabledItemsWithMatchingRegionType();
     },
 
     toggleActive(catalogItem, column) {
@@ -152,6 +152,7 @@ const RegionDataParameterEditor = React.createClass({
                     <ul className={Styles.tree}>
                         <For each="catalogItem" index="i" of={this.catalogItemsWithMatchingRegion()}>
                             <CatalogGroup
+                                key={catalogItem.uniqueId}
                                 text={catalogItem.name}
                                 topLevel={false}
                                 open={this.catalogItemIsOpen(catalogItem)}
@@ -182,6 +183,7 @@ const RegionDataParameterEditor = React.createClass({
                     if (column.type === VarType.SCALAR) {
                         return (
                             <CatalogItem
+                                key={column.id}
                                 onTextClick={this.toggleActive.bind(this, catalogItem, column)}
                                 selected={this.isActive(catalogItem, column)}
                                 text={column.name}
