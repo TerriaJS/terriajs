@@ -1,24 +1,13 @@
 "use strict";
 
-import classNames from 'classnames';
 import React from 'react';
 
 import defined from 'terriajs-cesium/Source/Core/defined';
-import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
-import when from 'terriajs-cesium/Source/ThirdParty/when';
-
-import GeoJsonCatalogItem from '../../Models/GeoJsonCatalogItem';
 import ObserveModelMixin from '../ObserveModelMixin';
-import OpenStreetMapCatalogItem from '../../Models/OpenStreetMapCatalogItem';
-import Terria from '../../Models/Terria';
-import TerriaViewer from '../../ViewModels/TerriaViewer';
-import ViewerMode from '../../Models/ViewerMode';
-import WebMapServiceCatalogItem from '../../Models/WebMapServiceCatalogItem';
 
 import RegionPicker from './RegionPicker';
 import MapInteractionMode from '../../Models/MapInteractionMode';
 import Styles from './parameter-editors.scss';
-
 
 const RegionParameterEditor = React.createClass({
     mixins: [ObserveModelMixin],

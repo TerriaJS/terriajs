@@ -9,16 +9,10 @@ import when from 'terriajs-cesium/Source/ThirdParty/when';
 
 import GeoJsonCatalogItem from '../../Models/GeoJsonCatalogItem';
 import ObserveModelMixin from '../ObserveModelMixin';
-import OpenStreetMapCatalogItem from '../../Models/OpenStreetMapCatalogItem';
-import Terria from '../../Models/Terria';
-import TerriaViewer from '../../ViewModels/TerriaViewer';
-import ViewerMode from '../../Models/ViewerMode';
 import WebMapServiceCatalogItem from '../../Models/WebMapServiceCatalogItem';
 
 import RegionTypeParameterEditor from './RegionTypeParameterEditor';
-import MapInteractionMode from '../../Models/MapInteractionMode';
 import Styles from './parameter-editors.scss';
-
 
 const RegionPicker = React.createClass({
     mixins: [ObserveModelMixin],
@@ -45,8 +39,6 @@ const RegionPicker = React.createClass({
         this._subscriptions = [];
         this._lastFeature = undefined;
         this._lastPickedFeatures = undefined;
-
-        const terria = this.props.previewed.terria;
 
         // handle feature picking
         const that = this;
@@ -101,6 +93,7 @@ const RegionPicker = React.createClass({
             this._selectedRegionCatalogItem.isEnabled = false;
             this._selectedRegionCatalogItem = undefined;
         }
+
     },
 
     updateFeature(feature) {
@@ -171,7 +164,6 @@ const RegionPicker = React.createClass({
         }
 
         const value = this.regionValue;
-        const parameter = this.props.parameter;
         const terria = this.props.previewed.terria;
 
         const that = this;
