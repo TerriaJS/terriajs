@@ -11,9 +11,39 @@
                 "isOpen": true,
                 "items": [
                     {
-                        "name": "B08 Ancestry",
+                        "name": "Age",
+                        "type": "sdmx-json",
+                        "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B04",
+                        "aggregatedDimensionIds": ["STATE"]
+                    },
+                    {
+                        "name": "Ancestry",
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B08",
+                        "aggregatedDimensionIds": ["STATE"]
+                    },
+                    {
+                        "name": "Country of birth",
+                        "type": "sdmx-json",
+                        "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B09",
+                        "aggregatedDimensionIds": ["STATE"]
+                    },
+                    {
+                        "name": "Religious affiliation",
+                        "type": "sdmx-json",
+                        "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B14",
+                        "aggregatedDimensionIds": ["STATE"]
+                    },
+                    {
+                        "name": "Occupation",
+                        "type": "sdmx-json",
+                        "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B45",
+                        "aggregatedDimensionIds": ["STATE"]
+                    },
+                    {
+                        "name": "Method of travel to work",
+                        "type": "sdmx-json",
+                        "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B46",
                         "aggregatedDimensionIds": ["STATE"]
                     }
                 ]
