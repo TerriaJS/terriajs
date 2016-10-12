@@ -26,6 +26,8 @@ Change Log
    * `title`: overrides the title that would otherwise be derived from the name of the feature.
    * `hide-buttons`: If `"true"`, the Expand and Download buttons are hidden from the chart.
 * Fixed a bug in embedded `<collapsible>` elements that prevented them from being expandable.
+* Region for CatalogFunctions now selected on map rather than preview map
+* WPS now supports region parameter
 
 ### 4.4.1
 
