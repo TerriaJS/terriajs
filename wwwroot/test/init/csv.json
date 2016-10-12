@@ -15,6 +15,26 @@
                 }
             },
             {
+                "name": "Moving features turned off with []",
+                "type": "csv",
+                "url": "build/TerriaJS/test/csv/lat_lon_enum_date_id.csv",
+                "idColumns": [],
+                "tableStyle": {
+                    "dataVariable": "value",
+                    "scaleByValue": true
+                }
+            },
+            {
+                "name": "Moving features turned off with null",
+                "type": "csv",
+                "url": "build/TerriaJS/test/csv/lat_lon_enum_date_id.csv",
+                "idColumns": null,
+                "tableStyle": {
+                    "dataVariable": "value",
+                    "scaleByValue": true
+                }
+            },
+            {
                 "name": "Moving features (sampled, with info template)",
                 "type": "csv",
                 "url": "build/TerriaJS/test/csv/lat_lon_enum_date_id.csv",
@@ -23,7 +43,7 @@
                     "dataVariable": "value",
                     "scaleByValue": true
                 },
-                "featureInfoTemplate": "<p>Name: {{id}}</p><h2>Time series</h2><p>{{terria.timeSeries.chart}}</p>"
+                "featureInfoTemplate": "<p>Name: {{id}}</p><h2>Time series</h2>{{terria.timeSeries.chart}}"
             },
             {
                 "name": "Moving features (sampled, with manual info template)",
@@ -62,6 +82,12 @@
                 "name": "Melbourne postcodes with time column",
                 "type": "csv",
                 "url": "build/TerriaJS/test/csv/postcode_val_enum_time.csv"
+            },
+            {
+                "name": "WA postcodes with start and end dates",
+                "type": "csv",
+                "url": "build/TerriaJS/test/csv/postcode_val_enum_start_end.csv",
+                "isSampled": false // Suppresses the chart over time in feature info, which looks bad.
             },
             {
                 "name": "Melbourne postcodes with time column and template",
