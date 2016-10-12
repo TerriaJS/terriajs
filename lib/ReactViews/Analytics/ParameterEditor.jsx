@@ -1,3 +1,5 @@
+'use strict';
+
 import React from 'react';
 
 import ObserveModelMixin from '../ObserveModelMixin';
@@ -7,6 +9,7 @@ import RectangleParameterEditor from './RectangleParameterEditor';
 import PolygonParameterEditor from './PolygonParameterEditor';
 import RegionParameterEditor from './RegionParameterEditor';
 import RegionDataParameterEditor from './RegionDataParameterEditor';
+import RegionTypeParameterEditor from './RegionTypeParameterEditor';
 import BooleanParameterEditor from './BooleanParameterEditor';
 import DateTimeParameterEditor from './DateTimeParameterEditor';
 import EnumerationParameterEditor from './EnumerationParameterEditor';
@@ -26,7 +29,7 @@ const ParameterEditor = React.createClass({
     fieldId: new Date().getTime(),
 
     renderLabel() {
-        return (<label className={Styles.label} htmlFor={this.fieldId + this.props.parameter.type}>
+        return (<label key={this.props.parameter.id} className={Styles.label} htmlFor={this.fieldId + this.props.parameter.type}>
                     {this.props.parameter.name}
                     {this.props.parameter.isRequired && <span> (required)</span> }
                 </label>);
@@ -104,7 +107,19 @@ const ParameterEditor = React.createClass({
                         />
                     </div>);
             case 'regionType':
-                return <div className="Placeholder for regionType"/>;
+                return (
+                    <div>
+                        <If condition={this.props.parameter.showInUi}>
+                            {this.renderLabel()}
+                            <RegionTypeParameterEditor
+                                previewed={this.props.previewed}
+                                parameter={this.props.parameter}
+                            />
+                        </If>
+                        <If condition={!this.props.parameter.showInUi}>
+                            <div className="Placeholder for regionType"/>
+                        </If>
+                    </div>);
             case 'regionData':
                 return (
                     <div>
