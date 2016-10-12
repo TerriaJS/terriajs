@@ -469,11 +469,20 @@ describe('WebMapServiceCatalogItem', function() {
         });
         wmsItem.load().then(function() {
             expect(wmsItem.isNcWMS).toBe(true);
-            done();
-        }).otherwise(function(e) {
-            fail(e);
-            done();
+            expect(wmsItem.supportsColorScaleRange).toBe(true);
+        }).then(done).otherwise(done.fail);
+    });
+
+    it('detects ncWMS2 implementation correctly', function(done) {
+        wmsItem.updateFromJson({
+            url: 'http://example.com',
+            metadataUrl: 'test/WMS/ncwms2_service.xml',
+            layers: 'mylayer'
         });
+        wmsItem.load().then(function() {
+            expect(wmsItem.isNcWMS).toBe(true);
+            expect(wmsItem.supportsColorScaleRange).toBe(true);
+        }).then(done).otherwise(done.fail);
     });
 
     it('does not indicate ncWMS on other service', function(done) {
@@ -485,10 +494,18 @@ describe('WebMapServiceCatalogItem', function() {
         wmsItem.load().then(function() {
             expect(wmsItem.isNcWMS).toBe(undefined);
             done();
-        }).otherwise(function(e) {
-            fail(e);
-            done();
+        }).then(done).otherwise(done.fail);
+    });
+
+    it('detects support for COLORSCALERANGE via ExtendedCapabilities (exposed by latest versions of ncWMS2)', function(done) {
+        wmsItem.updateFromJson({
+            url: 'http://example.com',
+            metadataUrl: 'test/WMS/colorscalerange.xml',
+            layers: 'mylayer'
         });
+        wmsItem.load().then(function() {
+            expect(wmsItem.supportsColorScaleRange).toBe(true);
+        }).then(done).otherwise(done.fail);
     });
 
     describe('dimensions', function() {
