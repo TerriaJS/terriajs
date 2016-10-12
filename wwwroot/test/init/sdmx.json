@@ -6,6 +6,20 @@
         "isOpen": true,
         "items": [
             {
+                "name": "ABS",
+                "type": "group",
+                "isOpen": true,
+                "items": [
+                    {
+                        "name": "B08 Ancestry",
+                        "type": "sdmx-json",
+                        "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B08",
+                        "aggregatedDimensionIds": ["STATE"],
+                        //"selectedInitially": {"REGIONTYPE": ["SA4"]}
+                    }
+                ]
+            },
+            {
                 "name": "Local files",
                 "type": "group",
                 "isOpen": true,
@@ -20,6 +34,12 @@
                         "name": "Two dimensions",
                         "type": "sdmx-json",
                         "url": "build/TerriaJS/test/SDMX-JSON/data-foo2-2013.json",
+                        "dataflowUrlComponent": ""
+                    },
+                    {
+                        "name": "Two region types",
+                        "type": "sdmx-json",
+                        "url": "build/TerriaJS/test/SDMX-JSON/data-two-region-types.json",
                         "dataflowUrlComponent": ""
                     },
                     {
