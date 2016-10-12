@@ -438,7 +438,11 @@ describe('WebMapServiceCatalogItem', function() {
             remover();
             done();
         });
-        wmsItem.load();
+        wmsItem.load().then(function() {
+        }).otherwise(function(e) {
+            fail(e);
+            done();
+        });
     });
 
     it('discards invalid layer names as long as at least one layer name is valid', function(done) {
@@ -491,3 +495,4 @@ describe('WebMapServiceCatalogItem', function() {
         });
     });
 });
+
