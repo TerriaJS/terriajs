@@ -33,7 +33,7 @@ const AddData = React.createClass({
             localDataType: localDataType[0], // By default select the first item (auto)
             remoteDataType: remoteDataType[0],
             activeTab: 'local', // By default local data tab is active
-            remoteUrl: undefined // By default there's no remote url
+            remoteUrl: '' // By default there's no remote url
         };
     },
 
@@ -158,7 +158,7 @@ const AddData = React.createClass({
                             service:
                         </label>
                         <form className={Styles.urlInput}>
-                            <input value={this.state.remoteUrl || ''} onChange={this.onRemoteUrlChange}
+                            <input value={this.state.remoteUrl} onChange={this.onRemoteUrlChange}
                                    className={Styles.urlInputTextBox}
                                    type='text'
                                    placeholder='e.g. http://data.gov.au/geoserver/wms'/>
