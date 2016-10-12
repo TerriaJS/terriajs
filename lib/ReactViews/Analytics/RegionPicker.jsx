@@ -40,9 +40,6 @@ const RegionPicker = React.createClass({
         this._lastFeature = undefined;
         this._lastPickedFeatures = undefined;
 
-        // handle feature picking
-        const that = this;
-
         knockout.defineProperty(this, 'regionProvider', {
             get: function() {
                 return this.props.parameter.regionProvider;
@@ -66,6 +63,7 @@ const RegionPicker = React.createClass({
             }
         });
 
+        const that = this;
         knockout.getObservable(this.props.previewed.terria.mapInteractionModeStack[0], 'pickedFeatures').subscribe(function(pickedFeatures) {
             if (!defined(pickedFeatures)) {
                 return;
@@ -116,8 +114,6 @@ const RegionPicker = React.createClass({
     },
 
     addRegionLayer() {
-        const that = this;
-
         if (!defined(this.regionProvider)) {
             return;
         }
@@ -129,6 +125,7 @@ const RegionPicker = React.createClass({
 
         this._loadingRegionProvider = this.regionProvider;
 
+        const that = this;
         when.all([that.regionProvider.loadRegionIDs(), that.regionProvider.loadRegionNames()]).then(function() {
             if (that.regionProvider !== that._loadingRegionProvider) {
                 return;
