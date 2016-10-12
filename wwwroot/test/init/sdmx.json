@@ -14,8 +14,7 @@
                         "name": "B08 Ancestry",
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B08",
-                        "aggregatedDimensionIds": ["STATE"],
-                        //"selectedInitially": {"REGIONTYPE": ["SA4"]}
+                        "aggregatedDimensionIds": ["STATE"]
                     }
                 ]
             },
@@ -36,13 +35,6 @@
                         "url": "build/TerriaJS/test/SDMX-JSON/data-foo2-2013.json",
                         "dataflowUrlComponent": ""
                     },
-                    // // This example is not realistic - would never get two region types mixed together.
-                    // {
-                    //     "name": "Two region types",
-                    //     "type": "sdmx-json",
-                    //     "url": "build/TerriaJS/test/SDMX-JSON/data-two-region-types.json",
-                    //     "dataflowUrlComponent": ""
-                    // },
                     {
                         "name": "Time varying",
                         "type": "sdmx-json",
