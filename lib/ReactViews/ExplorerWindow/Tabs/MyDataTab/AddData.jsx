@@ -157,8 +157,8 @@ const AddData = React.createClass({
                         <label className={Styles.label}><strong>Step 2:</strong> Enter the URL of the data file or web
                             service:
                         </label>
-                        <form className={Styles.urlInput} onSubmit={this.handleUrl}>
-                            <input value={this.state.remoteUrl} onChange={this.onRemoteUrlChange}
+                        <form className={Styles.urlInput}>
+                            <input value={this.state.remoteUrl || ''} onChange={this.onRemoteUrlChange}
                                    className={Styles.urlInputTextBox}
                                    type='text'
                                    placeholder='e.g. http://data.gov.au/geoserver/wms'/>
