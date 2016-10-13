@@ -99,7 +99,7 @@ describe('SensorObservationServiceCatalogItem', function() {
                 name: 'Foo',
                 url: 'http://sos.example.com',
                 procedures: [{identifier: "http://sos.example.com/tstypes/Yearly Mean", title: "Annual average"}],
-                observableProperties: [{identifier: "http://sos.example.com/parameters/Storage Level", title: "Storage Level"}],
+                observableProperties: [{identifier: "http://sos.example.com/parameters/Storage Level", title: "Storage Level", units: "m"}],
                 tryToLoadObservationData: false
             });
             item.load().then(function() {
@@ -120,14 +120,15 @@ describe('SensorObservationServiceCatalogItem', function() {
                 name: 'Foo',
                 url: 'http://sos.example.com',
                 procedures: [{identifier: "http://sos.example.com/tstypes/Yearly Mean", title: "Annual average"}],
-                observableProperties: [{identifier: "http://sos.example.com/parameters/Storage Level", title: "Storage Level"}],
+                observableProperties: [{identifier: "http://sos.example.com/parameters/Storage Level", title: "Storage Level", units: "m"}],
                 tryToLoadObservationData: true,
                 proceduresName: 'Frequency',
                 observablePropertiesName: 'Observation'
             });
             item.load().then(function() {
                 var columnNames = item.tableStructure.getColumnNames();
-                expect(columnNames).toEqual(['date', 'Storage Level Annual average', 'identifier', 'Frequency', 'Observation', 'type', 'name', 'id', 'lat', 'lon']);
+                // This check of the column names is a bit too prescriptive.
+                expect(columnNames).toEqual(['date', 'Storage Level Annual average (m)', 'identifier', 'Frequency', 'Observation', 'type', 'name', 'id', 'lat', 'lon']);
                 var values = item.tableStructure.columns.filter(function(column) {return column.id === 'value';})[0].values;
                 function valuesForFeatureIdentifier(identifier) {
                     return item.tableStructure.getColumnWithNameIdOrIndex('identifier').values.map(function(thisIdentifier, rowNumber) {

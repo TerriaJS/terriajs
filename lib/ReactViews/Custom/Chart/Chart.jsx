@@ -72,6 +72,7 @@ const Chart = React.createClass({
             new ChartData(points, {
                 id: index,
                 name: yColumns[index].name,
+                units: yColumns[index].units,
                 color: defined(this.props.colors) ? this.props.colors[index] : undefined
             })
         );
