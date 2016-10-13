@@ -250,7 +250,11 @@ const RegionPicker = React.createClass({
     getDisplayValue(displayValue) {
         const region = this.regionValue;
         if (!defined(region)) {
-            return displayValue;
+            if (defined(displayValue)) {
+                return displayValue;
+            } else {
+                return "";
+            }
         }
         const index = this.regionProvider.regions.indexOf(region);
         if (index >= 0 && this._regionNames[index]) {

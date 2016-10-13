@@ -27,7 +27,8 @@ Change Log
    * `hide-buttons`: If `"true"`, the Expand and Download buttons are hidden from the chart.
 * Fixed a bug in embedded `<collapsible>` elements that prevented them from being expandable.
 * Region for CatalogFunctions now selected on map rather than preview map
-* WPS now supports region parameter
+* WPS now supports region parameter, which prompts user to select a region on the map and passes the region as a geojson multipolygon.
+* Some regions that were previously not selectable (in Region WPS and Analytics) except via autocomplete are now selectable.
 
 ### 4.4.1
 
