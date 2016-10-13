@@ -129,11 +129,12 @@ describe('SensorObservationServiceCatalogItem', function() {
                 var columnNames = item.tableStructure.getColumnNames();
                 expect(columnNames).toEqual(['date', 'Storage Level Annual average', 'identifier', 'Frequency', 'Observation', 'type', 'name', 'id', 'lat', 'lon']);
                 var values = item.tableStructure.columns.filter(function(column) {return column.id === 'value';})[0].values;
-                var idMapping = item.tableStructure.getIdMapping();
                 function valuesForFeatureIdentifier(identifier) {
-                    return idMapping[identifier].map(function(rowNumber) {
-                        return values[rowNumber];
-                    });
+                    return item.tableStructure.getColumnWithNameIdOrIndex('identifier').values.map(function(thisIdentifier, rowNumber) {
+                        if (identifier === thisIdentifier) {
+                            return values[rowNumber];
+                        }
+                    }).filter(function(x) { return x !== undefined; });
                 }
                 expect(valuesForFeatureIdentifier('http://sos.example.com/stations/1')).toEqual([null, 129.425, 123.123]);
                 expect(valuesForFeatureIdentifier('http://sos.example.com/stations/2')).toEqual([14.575, 12.991, null]);
