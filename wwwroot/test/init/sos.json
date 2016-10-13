@@ -11,7 +11,8 @@
                     "type": "sos",
                     "tableStyle": {
                         "scaleByValue": true,
-                        "scale": 2
+                        "scale": 2,
+                        "minDisplayValue": 0
                     },
                     "proceduresName": "Frequency",
                     "observablePropertiesName": "Observation type",
@@ -69,7 +70,8 @@
                     "type": "sos",
                     "tableStyle": {
                         "scaleByValue": true,
-                        "scale": 2
+                        "scale": 2,
+                        "minDisplayValue": 0
                     },
                     "proceduresName": "Frequency",
                     "observablePropertiesName": "Observation type",
