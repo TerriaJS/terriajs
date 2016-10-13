@@ -12,19 +12,18 @@ const EnumerationParameterEditor = React.createClass({
 
     getInitialState() {
         return {
-            value: this.props.previewed.parameterValues[this.props.parameter.id]
+            value: this.props.parameter.value
         };
     },
 
     onChange(e) {
-        this.props.previewed.setParameterValue(this.props.parameter.id, e.target.value);
+        this.props.parameter.value = e.target.value;
     },
 
     render() {
         return (<select className={Styles.field}
                         onChange={this.onChange}
-                        value={this.props.previewed.parameterValues[this.props.parameter.id]}
-                >
+                        value={this.props.parameter.value}>
                     {this.props.parameter.possibleValues.map((v, i)=>
                         <option value={v} key={i}>{v}</option>)}
                 </select>);

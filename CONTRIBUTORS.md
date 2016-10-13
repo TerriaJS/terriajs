@@ -35,3 +35,5 @@ The following people have contributed to TerriaJS:
    * [Rich Signell](https://github.com/rsignell-usgs)
 * [JCU e-Research](http://eresearch.jcu.edu.au/)
    * [Daniel Baird](https://github.com/DanielBaird)
+* [Jurassic Coast Trust] (http://jurassiccoast.org)
+   * [Geoffrey Rowland] (https://github.com/geoffrowland)

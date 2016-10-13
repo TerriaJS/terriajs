@@ -4,7 +4,7 @@
   position: absolute;
   top: 20px;
   right: $padding;
-  z-index: 20;
+  z-index: 100;
 
   @media print{
     display: none;
