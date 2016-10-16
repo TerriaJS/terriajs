@@ -46,7 +46,7 @@
     "mustache": "^2.2.1",
     "mutationobserver-shim": "^0.3.1",
     "pbf": "^3.0.1",
-    "point-geometry": "^0.0.0",
+    "point-geometry": "^0.1.0",
     "proj4": "^2.3.14",
     "raw-loader": "^0.5.1",
     "react-addons-pure-render-mixin": "15.3.2",
