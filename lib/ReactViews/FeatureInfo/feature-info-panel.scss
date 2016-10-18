@@ -18,6 +18,13 @@
   svg{
     fill: #fff;
   }
+
+  a{
+    color: $color-primary;
+    &:hover, &:focus{
+      text-decoration: underline;
+    }
+  }
   @media screen and (min-width : $md){
     //temp
     max-width: calc(100vw - #{$work-bench-width} - 150px);
