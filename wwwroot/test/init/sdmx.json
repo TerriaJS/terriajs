@@ -6,6 +6,67 @@
         "isOpen": true,
         "items": [
             {
+                "name": "ABS",
+                "type": "group",
+                "isOpen": true,
+                "items": [
+                    {
+                        "name": "Age",
+                        "type": "sdmx-json",
+                        "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B04",
+                        "aggregatedDimensionIds": ["STATE"],
+                        "selectedInitially": {
+                            "REGIONTYPE": ["SA4"]
+                        }
+                    },
+                    {
+                        "name": "Ancestry",
+                        "type": "sdmx-json",
+                        "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B08",
+                        "aggregatedDimensionIds": ["STATE"],
+                        "selectedInitially": {
+                            "REGIONTYPE": ["SA4"]
+                        }
+                    },
+                    {
+                        "name": "Country of birth",
+                        "type": "sdmx-json",
+                        "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B09",
+                        "aggregatedDimensionIds": ["STATE"],
+                        "selectedInitially": {
+                            "REGIONTYPE": ["SA4"]
+                        }
+                    },
+                    {
+                        "name": "Religious affiliation",
+                        "type": "sdmx-json",
+                        "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B14",
+                        "aggregatedDimensionIds": ["STATE"],
+                        "selectedInitially": {
+                            "REGIONTYPE": ["SA4"]
+                        }
+                    },
+                    {
+                        "name": "Occupation",
+                        "type": "sdmx-json",
+                        "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B45",
+                        "aggregatedDimensionIds": ["STATE"],
+                        "selectedInitially": {
+                            "REGIONTYPE": ["SA4"]
+                        }
+                    },
+                    {
+                        "name": "Method of travel to work",
+                        "type": "sdmx-json",
+                        "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B46",
+                        "aggregatedDimensionIds": ["STATE"],
+                        "selectedInitially": {
+                            "REGIONTYPE": ["SA4"]
+                        }
+                    }
+                ]
+            },
+            {
                 "name": "Local files",
                 "type": "group",
                 "isOpen": true,

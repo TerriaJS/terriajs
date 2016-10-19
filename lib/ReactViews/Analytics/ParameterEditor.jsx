@@ -15,6 +15,7 @@ import BooleanParameterEditor from './BooleanParameterEditor';
 import DateTimeParameterEditor from './DateTimeParameterEditor';
 import EnumerationParameterEditor from './EnumerationParameterEditor';
 import GenericParameterEditor from './GenericParameterEditor';
+import defined from 'terriajs-cesium/Source/Core/defined';
 
 import Styles from './parameter-editors.scss';
 
@@ -113,10 +114,15 @@ const ParameterEditor = React.createClass({
                             parameter={this.props.parameter}
                         />
                     </div>);
-            case 'regionType':
+            case 'regionType': {
+                const that = this;
+                const regionParam = this.props.previewed.parameters.find(function(param) {
+                    return (defined(param.regionTypeParameter) &&
+                            param.regionTypeParameter === that.props.parameter);
+                });
                 return (
                     <div>
-                        <If condition={this.props.parameter.showInUi}>
+                        <If condition={regionParam === undefined}>
                             {this.renderLabel()}
                             <RegionTypeParameterEditor
                                 previewed={this.props.previewed}
@@ -127,6 +133,7 @@ const ParameterEditor = React.createClass({
                             <div className="Placeholder for regionType"/>
                         </If>
                     </div>);
+            }
             case 'regionData':
                 return (
                     <div>

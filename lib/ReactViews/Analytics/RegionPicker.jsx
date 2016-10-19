@@ -268,7 +268,7 @@ const RegionPicker = React.createClass({
         return (<div className={Styles.parameterEditor}>
                     <RegionTypeParameterEditor
                             previewed={this.props.previewed}
-                            parameter={this.props.parameter._regionProvider}
+                            parameter={this.props.parameter.regionTypeParameter}
                     />
                     <input className={Styles.field}
                            type="text"

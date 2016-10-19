@@ -8,6 +8,7 @@ Change Log
 * Fixed calculation of end dates for moving-point csv files, which could lead to points disappearing periodically.
 * Fixed a bug that prevented fractional seconds in time-varying WMS periodicity.
 * Added the ability to the workbench UI to select the `style` to use to display a Web Map Service (WMS) layer when multiple styles are available.
+* Added the ability to the workbench UI to select from among the available dimensions of a Web Map Service (WMS) layer.
 * Improved the error reporting and handling when specifying invalid values for the WMS COLORSCALERANGE parameter in the UI.
 * Added the ability to drag existing points when creating a `UserDrawing`.
 * Fixed a bug that could cause nonsensical legends for CSV columns with all null values.
@@ -19,6 +20,7 @@ Change Log
 * Fixed support for time-varying feature info for vector tile based region mapping.
 * `updateApplicationOnMessageFromParentWindow` now also allows messages from the `opener` window, i.e. the window that opened the page by calling `window.open`.  The parent or opener may now also send a message with an `allowOrigin` property to specify an origin that should be allowed to post messages.
 * Fixed a bug that prevented charts from loading http urls from https.
+* The `isNcWMS` property of `WebMapServiceCatalogItem` is now set to true, and the COLORSCALERANGE controls are available in the UI, for ncWMS2 servers.
 * Added the ability to prevent csvs with time and `id` columns from appearing as moving points, by setting `idColumns` to either `null` or `[]`.
 * Fixed a bug that prevented default parameters to `CatalogFunction`s from being shown in the user interface.
 * Fixed a problem that made `BooleanParameter`s show up incorrectly in the user interface.
@@ -27,8 +29,9 @@ Change Log
    * `hide-buttons`: If `"true"`, the Expand and Download buttons are hidden from the chart.
 * Fixed a bug in embedded `<collapsible>` elements that prevented them from being expandable.
 * Region for CatalogFunctions now selected on map rather than preview map
-* WPS now supports region parameter, which prompts user to select a region on the map and passes the region as a geojson multipolygon.
-* Some regions that were previously not selectable (in Region WPS and Analytics) except via autocomplete are now selectable.
+* Some regions that were previously not selectable (in Analytics) except via autocomplete are now selectable.
+* Improved SDMX-JSON support to make it possible to change region type in the UI.
+* Deprecated `RegionMapping.setRegionColumnType` in favour of `RegionMapping.prototype.setRegionColumnType`. `regionDetails[].column` and `.disambigColumn` have also been deprecated.
 
 ### 4.4.1
 

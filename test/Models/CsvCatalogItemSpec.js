@@ -742,7 +742,7 @@ describe('CsvCatalogItem with region mapping', function() {
             var regionDetails = csvItem.regionMapping.regionDetails;
             expect(regionDetails).toBeDefined();
             var regionDetail = regionDetails[0];
-            expect(regionDetail.column.name).toEqual('lga_code');
+            expect(regionDetail.columnName).toEqual('lga_code');
             expect(regionDetail.regionProvider.regionType).toEqual('LGA');
             expect(csvItem.legendUrl).toBeDefined();
         }).otherwise(fail).then(done);
@@ -931,8 +931,7 @@ describe('CsvCatalogItem with region mapping', function() {
             var regionDetails = csvItem.regionMapping.regionDetails;
             expect(regionDetails).toBeDefined();
             var regionDetail = regionDetails[0];
-            expect(regionDetail.disambigColumn).toBeDefined();
-            expect(regionDetail.disambigColumn.name).toEqual('State');
+            expect(regionDetail.disambigColumnName).toEqual('State');
             // The following test is much more rigorous.
         }).otherwise(fail).then(done);
     });
