@@ -183,7 +183,8 @@ describe('ArcGisMapServerCatalogItem', function() {
         item.updateFromJson({url: url});
         spyOn(Legend.prototype, 'drawSvg').and.callFake(function() {
             expect(this.items.length).toBe(2);
-            expect(this.items[1].title).toBe('Wrecks');
+            expect(this.items[0].title).toBe('Wrecks');
+            expect(this.items[1].title).toBe('Offshore Rocks');
             console.log(this);
             return '';
         });

@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+### 4.5.1
+
+* The order of the legend for an `ArcGisMapServerCatalogItem` now matches the order used by ArcGIS itself.
+
 ### 4.5.0
 
 * Added support for the Sensor Observation Service format, via the `SensorObservationServiceCatalogItem`.
