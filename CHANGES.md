@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+### 4.5.2
+
+* Add support for 'Long' type hint to CSV data for specifying longitude.
+
 ### 4.5.1
 
 * The order of the legend for an `ArcGisMapServerCatalogItem` now matches the order used by ArcGIS itself.
