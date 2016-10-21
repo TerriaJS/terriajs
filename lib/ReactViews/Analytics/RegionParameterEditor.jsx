@@ -5,9 +5,9 @@ import React from 'react';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import ObserveModelMixin from '../ObserveModelMixin';
 
-import RegionPicker from './RegionPicker';
-import MapInteractionMode from '../../Models/MapInteractionMode';
 import Styles from './parameter-editors.scss';
+
+import RegionParameterEditorCore from '../../Models/RegionParameterEditorCore';
 
 const RegionParameterEditor = React.createClass({
     mixins: [ObserveModelMixin],
@@ -18,51 +18,34 @@ const RegionParameterEditor = React.createClass({
         parameter: React.PropTypes.object
     },
 
+    componentWillMount() {
+        if (!defined(this.regionParameterEditorCore)) {
+            this.regionParameterEditorCore = new RegionParameterEditorCore(this.props.previewed,
+                                                                         this.props.parameter,
+                                                                         this.props.viewState);
+        }
+        var value = this.regionParameterEditorCore.getValue();
+        this.setState({
+            value: value
+        });
+    },
+
     getInitialState() {
+        var value = "";
+        if (defined(this.regionParameterEditorCore)) {
+            value = this.regionParameterEditorCore.getInitialState();
+        }
         return {
-            value: this.getValue()
+            value: value
         };
     },
 
     getValue() {
-        let value = this.props.parameter.value;
-        const regionProvider = this.props.parameter.regionProvider;
-        if (!defined(regionProvider) || !defined(value)) {
-            return "";
-        }
-        const index = regionProvider.regions.indexOf(value);
-
-        if (index >= 0 && regionProvider.regionNames[index]) {
-            value = regionProvider.regionNames[index];
-        } else {
-            value = value.id;
-        }
-        return regionProvider.regionType + ": " + value;
+        return this.regionParameterEditorCore.getValue();
     },
 
     selectRegionOnMap() {
-        const terria = this.props.previewed.terria;
-        // Cancel any feature picking already in progress.
-        terria.pickedFeatures = undefined;
-
-        const that = this;
-        const pickPointMode = new MapInteractionMode({
-            message: 'Select a region on the map',
-            onCancel: function () {
-                that.props.previewed.terria.mapInteractionModeStack.pop();
-                that.props.viewState.openAddData();
-            },
-            buttonText: "Done",
-            customUi: function() {
-                return (<RegionPicker className={Styles.parameterEditor}
-                            previewed={that.props.previewed}
-                            parameter={that.props.parameter}
-                         />
-                        );
-            }
-        });
-        terria.mapInteractionModeStack.push(pickPointMode);
-        that.props.viewState.explorerPanelIsVisible = false;
+        this.regionParameterEditorCore.selectOnMap();
     },
 
     render() {

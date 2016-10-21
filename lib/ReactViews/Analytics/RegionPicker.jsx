@@ -114,6 +114,7 @@ const RegionPicker = React.createClass({
     },
 
     addRegionLayer() {
+        debugger;
         if (!defined(this.regionProvider)) {
             return;
         }

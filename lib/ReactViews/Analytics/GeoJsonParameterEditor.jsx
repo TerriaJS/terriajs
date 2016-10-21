@@ -1,3 +1,5 @@
+'use strict';
+
 import React from 'react';
 
 import CesiumMath from 'terriajs-cesium/Source/Core/Math';
@@ -8,6 +10,10 @@ import UserDrawing from '../../Models/UserDrawing';
 import ObserveModelMixin from '../ObserveModelMixin';
 import Styles from './parameter-editors.scss';
 
+import PointParameterEditorCore from '../../Models/PointParameterEditorCore';
+import PolygonParameterEditorCore from '../../Models/PolygonParameterEditorCore';
+import RegionParameterEditorCore from '../../Models/RegionParameterEditorCore';
+
 const GeoJsonParameterEditor = React.createClass({
     mixins: [ObserveModelMixin],
 
@@ -17,49 +23,48 @@ const GeoJsonParameterEditor = React.createClass({
         viewState: React.PropTypes.object
     },
 
+    componentWillMount() {
+        var value = this.state.currentEditorCore.getValue();
+        this.setState({
+            value: value
+        });
+    },
+
     getInitialState() {
+        console.log("GET INITIAL STATE");
+        var pointEditorCore = new PointParameterEditorCore(this.props.previewed,
+                                                           this.props.parameter,
+                                                           this.props.viewState);
+        var polygonEditorCore = new PolygonParameterEditorCore(this.props.previewed,
+                                                               this.props.parameter,
+                                                               this.props.viewState);
+        var regionEditorCore = new RegionParameterEditorCore(this.props.previewed,
+                                                             this.props.parameter,
+                                                             this.props.viewState);
+
         return {
-            value: this.getValue(),
-            userDrawing: new UserDrawing(
-                {
-                    terria: this.props.previewed.terria,
-                    onPointClicked: this.onPointClicked,
-                    onCleanUp: this.onCleanUp
-                })
+            value: pointEditorCore.getInitialState(),
+            pointEditorCore: pointEditorCore,
+            polygonEditorCore: polygonEditorCore,
+            regionEditorCore: regionEditorCore
         };
     },
 
     onTextChange(e) {
-        this.setValue(e.target.value);
+        this.state.currentEditorCore.onTextChange(e);
         this.setState({
-            value: e.target.value
+            value: this.state.currentEditorCore.getValue()
         });
     },
 
     getValue() {
-        const rawValue = this.props.previewed.parameterValues[this.props.parameter.id];
-        if (!defined(rawValue) || rawValue.length < 1) {
-            return '';
-        }
-        const pointsLongLats = rawValue[0];
-
-        let polygon = '';
-        for (let i = 0; i < pointsLongLats.length; i++) {
-            polygon += '[' + pointsLongLats[i][0].toFixed(3) + ', ' + pointsLongLats[i][1].toFixed(3) + ']';
-            if (i !== pointsLongLats.length - 1) {
-                polygon += ', ';
-            }
-        }
-        if (polygon.length > 0) {
-            return '[' + polygon + ']';
-        } else {
-            return '';
-        }
+        return this.state.currentEditorCore.getValue();
     },
 
     setValue(value) {
+        this.state.currentEditorCore.setValue(value);
         this.setState({
-            value: value
+            value: this.state.currentEditorCore.getValue()
         });
     },
 
@@ -68,15 +73,30 @@ const GeoJsonParameterEditor = React.createClass({
     },
 
     selectPointOnMap() {
-        console.log("select point on map!");
+        this.setState({
+            currentEditorCore: this.state.pointEditorCore
+        },
+        function() {
+            this.state.currentEditorCore.selectOnMap();
+        });
     },
 
     selectPolygonOnMap() {
-        console.log("select polygon on map!");
+        this.setState({
+            currentEditorCore: this.state.polygonEditorCore
+        },
+        function() {
+            this.state.currentEditorCore.selectOnMap();
+        });
     },
 
     selectRegionOnMap() {
-        console.log("select region on map!");
+        this.setState({
+            currentEditorCore: this.state.regionEditorCore
+        },
+        function() {
+            this.state.currentEditorCore.selectOnMap();
+        });
     },
 
     render() {
