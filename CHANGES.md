@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+### 4.5.2
+
+* Made `WebMapServiceCatalogItem` tolerant of a `GetCapabilities` where a `LegendURL` element does not have an `OnlineResource` or a `Dimension` does not have any values.
+
 ### 4.5.1
 
 * The order of the legend for an `ArcGisMapServerCatalogItem` now matches the order used by ArcGIS itself.
