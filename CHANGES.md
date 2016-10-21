@@ -5,6 +5,7 @@ Change Log
 ### 4.5.2
 
 * Add support for 'Long' type hint to CSV data for specifying longitude.
+* Clamp search results billboard to terrain.
 
 ### 4.5.1
 
