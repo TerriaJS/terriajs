@@ -2,8 +2,10 @@
 Change Log
 ==========
 
-### 4.5.2
+### 4.6.0
 
+* Change in defaults:
+  * The `clipToRectangle` property of raster catalog items (WMS, ArcGIS MapServer, etc.) now defaults to `true`.  It was `false` in previous relases.  Using `false` prevents features (especially point features) right at the edge of the layer's rectangle from being cut off when the server reports too tight a rectangle, but also causes the layer to load much more slowly in many cases.
 * Add support for 'Long' type hint to CSV data for specifying longitude.
 
 ### 4.5.1
