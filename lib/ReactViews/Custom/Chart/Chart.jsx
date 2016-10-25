@@ -72,19 +72,20 @@ const Chart = React.createClass({
             new ChartData(points, {
                 id: index,
                 name: yColumns[index].name,
+                units: yColumns[index].units,
                 color: defined(this.props.colors) ? this.props.colors[index] : undefined
             })
         );
     },
 
-    getChartDataPromise(data, url) {
+    getChartDataPromise(data, url, catalogItem) {
         // Returns a promise that resolves to an array of ChartData.
         const that = this;
         if (defined(data)) {
             // Nothing to do - the data was provided (either as props.data or props.tableStructure).
             return when(data);
         } else if (defined(url)) {
-            return loadIntoTableStructure(that.props.catalogItem, url)
+            return loadIntoTableStructure(catalogItem, url)
                 .then(that.chartDataArrayFromTableStructure)
                 .otherwise(function(e) {
                     // It looks better to create a blank chart than no chart.
@@ -96,7 +97,7 @@ const Chart = React.createClass({
     componentDidMount() {
         const that = this;
         const chartParameters = that.getChartParameters();
-        const promise = that.getChartDataPromise(chartParameters.data, that.props.url);
+        const promise = that.getChartDataPromise(chartParameters.data, that.props.url, that.props.catalogItem);
         promise.then(function(data) {
             chartParameters.data = data;
             LineChart.create(that._element, chartParameters);
@@ -144,7 +145,7 @@ const Chart = React.createClass({
         } else if (this.props.updateCounter > 0) {
             // The risk here is if it's a time-varying csv with <chart> polling as well.
             const url = this.props.pollUrl || this.props.url;
-            const promise = this.getChartDataPromise(chartParameters.data, url);
+            const promise = this.getChartDataPromise(chartParameters.data, url, this.props.catalogItem);
             promise.then(function(data) {
                 chartParameters.data = data;
                 LineChart.update(element, chartParameters);
@@ -240,7 +241,10 @@ const Chart = React.createClass({
  * @return {Promise} A promise which resolves to a table structure.
  */
 function loadIntoTableStructure(catalogItem, url) {
-    // Load in the data file as a TableStructure. Currently only understands csv.
+    if (defined(catalogItem) && defined(catalogItem.loadIntoTableStructure)) {
+        return catalogItem.loadIntoTableStructure(url);
+    }
+    // As a fallback, try to load in the data file as csv.
     const tableStructure = new TableStructure('feature info');
     url = proxyCatalogItemUrl(catalogItem, url, '0d');
     return loadText(url).then(tableStructure.loadFromCsv.bind(tableStructure));

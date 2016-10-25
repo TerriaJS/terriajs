@@ -16,7 +16,6 @@ import Icon from '../Icon.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
 import propertyGetTimeValues from '../../Core/propertyGetTimeValues';
 import parseCustomMarkdownToReact from '../Custom/parseCustomMarkdownToReact';
-import VarType from '../../Map/VarType';
 
 import Styles from './feature-info-section.scss';
 
@@ -83,7 +82,7 @@ const FeatureInfoSection = React.createClass({
                     longitude: CesiumMath.toDegrees(latLngInRadians.longitude)
                 };
             }
-            propertyData.terria.timeSeries = getTimeSeriesChartContext(this.props.catalogItem, this.props.feature, propertyData._terria_getChartData);
+            propertyData.terria.timeSeries = getTimeSeriesChartContext(this.props.catalogItem, this.props.feature, propertyData._terria_getChartDetails);
         }
         return propertyData;
     },
@@ -184,15 +183,15 @@ const FeatureInfoSection = React.createClass({
                             <When condition={reactInfo.showRawData || !this.hasTemplate()}>
                                 <If condition={reactInfo.hasRawData}>
                                     {reactInfo.rawData}
-                                    <If condition={reactInfo.timeSeriesChart}>
-                                        <div className={Styles.timeSeriesChart}>
-                                            <h4>{reactInfo.timeSeriesChartTitle}</h4>
-                                            {reactInfo.timeSeriesChart}
-                                        </div>
-                                    </If>
                                 </If>
                                 <If condition={!reactInfo.hasRawData}>
                                     <div ref="no-info" key="no-info">No information available.</div>
+                                </If>
+                                <If condition={reactInfo.timeSeriesChart}>
+                                    <div className={Styles.timeSeriesChart}>
+                                        <h4>{reactInfo.timeSeriesChartTitle}</h4>
+                                        {reactInfo.timeSeriesChart}
+                                    </div>
                                 </If>
                                 <If condition={defined(reactInfo.downloadableData)}>
                                     <FeatureInfoDownload key='download'
@@ -215,14 +214,18 @@ const FeatureInfoSection = React.createClass({
 
 /**
  * Do we need to dynamically update this feature info over time?
- * There are two situations in which we would:
+ * There are three situations in which we would:
  * 1. When the feature description or properties are time-varying.
  * 2. When a custom component self-updates.
  *    Eg. <chart poll-seconds="60" src="xyz.csv"> must reload data from xyz.csv every 60 seconds.
+ * 3. When a catalog item changes a feature's properties, eg. changing from a daily view to a monthly view.
  *
- * For (1), use a event listener to update the feature's currentProperties/currentDescription directly.
+ * For (1), use an event listener on the (terria) clock to update the feature's currentProperties/currentDescription directly.
  * For (2), use a regular javascript setTimeout to update a counter in feature's currentProperties.
- * For simplicity, we do not currently support both at once.
+ * For (3), this is handled by the catalog item itself changing as well, which should be knockout tracked.
+ * Since the catalogItem is also a prop, this will trigger a rerender.
+ *
+ * For simplicity, we do not currently support (1) and (2) at the same time.
  * @private
  */
 function setSubscriptionsAndTimeouts(featureInfoSection, feature) {
@@ -430,29 +433,25 @@ function describeFromProperties(properties, time) {
  * Get parameters that should be exposed to the template, to help show a timeseries chart of the feature data.
  * @private
  */
-function getTimeSeriesChartContext(catalogItem, feature, getChartData) {
-    if (defined(getChartData) && defined(catalogItem) && CustomComponents.isRegistered('chart')) {
-        const table = catalogItem.tableStructure;
-        const timeSeriesData = getChartData();
-        if (timeSeriesData) {
-            // Only show it as a line chart if the data is sampled (so a line chart makes sense), and the active column is a scalar.
-            const yColumn = table.getActiveColumns()[0];
-            if (catalogItem.isSampled && yColumn.type === VarType.SCALAR) {
-                const result = {
-                    xName: table.activeTimeColumn.name,
-                    yName: yColumn.name,
-                    title: table.getActiveColumns()[0].name,
-                    id: feature.id,
-                    data: timeSeriesData.replace(/\\n/g, '\\n'),
-                    units: table.columns.map(column => column.units || '').join(',')
-                };
-                const xAttribute = 'x-column="' + result.xName + '" ';
-                const yAttribute = 'y-column="' + result.yName + '" ';
-                const idAttribute = 'id="' + result.id + '" ';
-                const unitsAttribute = 'column-units = "' + result.units + '" ';
-                result.chart = '<chart ' + xAttribute + yAttribute + unitsAttribute + idAttribute + '>' + result.data + '</chart>';
-                return result;
-            }
+function getTimeSeriesChartContext(catalogItem, feature, getChartDetails) {
+    // Only show it as a line chart if the details are available, the data is sampled (so a line chart makes sense), and charts are available.
+    if (defined(getChartDetails) && defined(catalogItem) && catalogItem.isSampled && CustomComponents.isRegistered('chart')) {
+        const chartDetails = getChartDetails();
+        if (chartDetails) {
+            const result = {
+                xName: chartDetails.xName,
+                yName: chartDetails.yName,
+                title: chartDetails.yName,
+                id: feature.id,
+                data: chartDetails.csvData.replace(/\\n/g, '\\n'),
+                units: chartDetails.units.join(',')
+            };
+            const xAttribute = 'x-column="' + result.xName + '" ';
+            const yAttribute = 'y-column="' + result.yName + '" ';
+            const idAttribute = 'id="' + result.id + '" ';
+            const unitsAttribute = 'column-units = "' + result.units + '" ';
+            result.chart = '<chart ' + xAttribute + yAttribute + unitsAttribute + idAttribute + '>' + result.data + '</chart>';
+            return result;
         }
     }
 }
@@ -482,7 +481,7 @@ function getInfoAsReactComponent(that) {
     let timeSeriesChartTitle;
 
     if (defined(templateData)) {
-        const timeSeriesChartContext = getTimeSeriesChartContext(that.props.catalogItem, that.props.feature, templateData._terria_getChartData);
+        const timeSeriesChartContext = getTimeSeriesChartContext(that.props.catalogItem, that.props.feature, templateData._terria_getChartDetails);
         if (defined(timeSeriesChartContext)) {
             timeSeriesChart = parseCustomMarkdownToReact(timeSeriesChartContext.chart, context);
             timeSeriesChartTitle = timeSeriesChartContext.title;

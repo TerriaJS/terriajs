@@ -130,7 +130,7 @@ const FeatureInfoPanel = React.createClass({
                 className={panelClassName}
                 aria-hidden={!viewState.featureInfoPanelIsVisible}>
                 <div className={Styles.header}>
-                    <button type='button' onClick={ this.toggleCollapsed } className={Styles.btn}>
+                    <button type='button' onClick={ this.toggleCollapsed } className={Styles.btnPanelHeading}>
                         Feature Information
                     </button>
                     <button type='button' onClick={ this.close } className={Styles.btnCloseFeature}
