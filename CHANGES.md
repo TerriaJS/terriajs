@@ -5,6 +5,7 @@ Change Log
 ### 4.5.2
 
 * Made `WebMapServiceCatalogItem` tolerant of a `GetCapabilities` where a `LegendURL` element does not have an `OnlineResource` or a `Dimension` does not have any values.
+* Add support for 'Long' type hint to CSV data for specifying longitude.
 
 ### 4.5.1
 
