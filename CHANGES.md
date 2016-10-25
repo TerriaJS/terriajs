@@ -2,10 +2,12 @@
 Change Log
 ==========
 
-### 4.5.2
+### 4.6.0
 
 * Add support for 'Long' type hint to CSV data for specifying longitude.
 * Clamp search results billboard to terrain.
+* Region for CatalogFunctions now selected on map rather than preview map
+* Some regions that were previously not selectable (in Analytics) except via autocomplete are now selectable.
 
 ### 4.5.1
 

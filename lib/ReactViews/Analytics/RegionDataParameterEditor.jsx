@@ -166,12 +166,13 @@ const RegionDataParameterEditor = React.createClass({
             );
         }
         return (
+            // Don't break the lines around the link to csv-geo-au, or whitespace stripping will ruin the formatting in
+            // the rendered version.
             <div className={Styles.parameterEditorImportantNote}>
                 No characteristics are available because you have not added any data to the map for this region
                 type, {this.regionProvider() ? this.regionProvider().regionType : 'None'}.
-                You may use your own data with this analysis by creating a CSV following the
-                <a target="_blank" href="https://github.com/NICTA/nationalmap/wiki/csv-geo-au">csv-geo-au</a>
-                guidelines and dragging and dropping it onto the map.
+                You may use your own data with this analysis by creating a CSV following the <a target="_blank" href="https://github.com/NICTA/nationalmap/wiki/csv-geo-au">csv-geo-au</a> guidelines
+                and dragging and dropping it onto the map.
             </div>
         );
     },

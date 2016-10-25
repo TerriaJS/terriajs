@@ -1,3 +1,5 @@
+'use strict';
+
 import React from 'react';
 
 import ObserveModelMixin from '../ObserveModelMixin';
@@ -12,6 +14,7 @@ import BooleanParameterEditor from './BooleanParameterEditor';
 import DateTimeParameterEditor from './DateTimeParameterEditor';
 import EnumerationParameterEditor from './EnumerationParameterEditor';
 import GenericParameterEditor from './GenericParameterEditor';
+import defined from 'terriajs-cesium/Source/Core/defined';
 
 import Styles from './parameter-editors.scss';
 
@@ -26,85 +29,139 @@ const ParameterEditor = React.createClass({
 
     fieldId: new Date().getTime(),
 
+    renderLabel() {
+        return (<label key={this.props.parameter.id} className={Styles.label} htmlFor={this.fieldId + this.props.parameter.type}>
+                    {this.props.parameter.name}
+                    {this.props.parameter.isRequired && <span> (required)</span> }
+                </label>);
+    },
+
     renderEditor() {
         switch (this.props.parameter.type) {
             case 'point':
-                return (<PointParameterEditor
-                    previewed={this.props.previewed}
-                    viewState={this.props.viewState}
-                    parameter={this.props.parameter}
-                />);
+                return (
+                    <div>
+                        {this.renderLabel()}
+                        <PointParameterEditor
+                            previewed={this.props.previewed}
+                            viewState={this.props.viewState}
+                            parameter={this.props.parameter}
+                        />
+                    </div>);
             case 'line':
-                return <LineParameterEditor
-                    previewed={this.props.previewed}
-                    viewState={this.props.viewState}
-                    parameter={this.props.parameter}
-                />;
+                return (
+                    <div>
+                        {this.renderLabel()}
+                        <LineParameterEditor
+                            previewed={this.props.previewed}
+                            viewState={this.props.viewState}
+                            parameter={this.props.parameter}
+                        />
+                    </div>);
             case 'rectangle':
-                return <RectangleParameterEditor
-                    previewed={this.props.previewed}
-                    viewState={this.props.viewState}
-                    parameter={this.props.parameter}
-                />;
+                return (
+                    <div>
+                        {this.renderLabel()}
+                        <RectangleParameterEditor
+                            previewed={this.props.previewed}
+                            viewState={this.props.viewState}
+                            parameter={this.props.parameter}
+                        />
+                    </div>);
             case 'polygon':
-                return <PolygonParameterEditor
-                    previewed={this.props.previewed}
-                    viewState={this.props.viewState}
-                    parameter={this.props.parameter}
-                />;
+                return (
+                    <div>
+                        {this.renderLabel()}
+                        <PolygonParameterEditor
+                            previewed={this.props.previewed}
+                            viewState={this.props.viewState}
+                            parameter={this.props.parameter}
+                        />
+                    </div>);
             case 'enumeration':
-                return <EnumerationParameterEditor
-                    previewed={this.props.previewed}
-                    viewState={this.props.viewState}
-                    parameter={this.props.parameter}
-                />;
+                return (
+                    <div>
+                        {this.renderLabel()}
+                        <EnumerationParameterEditor
+                            previewed={this.props.previewed}
+                            viewState={this.props.viewState}
+                            parameter={this.props.parameter}
+                        />
+                    </div>);
             case 'dateTime':
-                return <DateTimeParameterEditor
-                    previewed={this.props.previewed}
-                    parameter={this.props.parameter}
-                />;
+                return (
+                    <div>
+                        {this.renderLabel()}
+                        <DateTimeParameterEditor
+                            previewed={this.props.previewed}
+                            parameter={this.props.parameter}
+                        />
+                    </div>);
             case 'region':
-                return <RegionParameterEditor
-                    previewed={this.props.previewed}
-                    parameter={this.props.parameter}
-                />;
-            case 'regionType':
-                return <RegionTypeParameterEditor
-                    previewed={this.props.previewed}
-                    parameter={this.props.parameter}
-                />;
+                return (
+                    <div>
+                        {this.renderLabel()}
+                        <RegionParameterEditor
+                            previewed={this.props.previewed}
+                            viewState={this.props.viewState}
+                            parameter={this.props.parameter}
+                        />
+                    </div>);
+            case 'regionType': {
+                const that = this;
+                const regionParam = this.props.previewed.parameters.find(function(param) {
+                    return (defined(param.regionTypeParameter) &&
+                            param.regionTypeParameter === that.props.parameter);
+                });
+                return (
+                    <div>
+                        <If condition={regionParam === undefined}>
+                            {this.renderLabel()}
+                            <RegionTypeParameterEditor
+                                previewed={this.props.previewed}
+                                parameter={this.props.parameter}
+                            />
+                        </If>
+                        <If condition={!this.props.parameter.showInUi}>
+                            <div className="Placeholder for regionType"/>
+                        </If>
+                    </div>);
+            }
             case 'regionData':
-                return <RegionDataParameterEditor
-                    previewed={this.props.previewed}
-                    parameter={this.props.parameter}
-                />;
+                return (
+                    <div>
+                        {this.renderLabel()}
+                        <RegionDataParameterEditor
+                            previewed={this.props.previewed}
+                            parameter={this.props.parameter}
+                        />
+                    </div>);
             case 'boolean':
-                return <BooleanParameterEditor
-                    previewed={this.props.previewed}
-                    parameter={this.props.parameter}
-                />;
+                return (
+                    <div>
+                        {this.renderLabel()}
+                        <BooleanParameterEditor
+                            previewed={this.props.previewed}
+                            parameter={this.props.parameter}
+                        />
+                    </div>);
             default:
-                return <GenericParameterEditor
-                    previewed={this.props.previewed}
-                    parameter={this.props.parameter}
-                />;
+                return (
+                    <div>
+                        {this.renderLabel()}
+                        <GenericParameterEditor
+                            previewed={this.props.previewed}
+                            parameter={this.props.parameter}
+                        />
+                    </div>);
         }
     },
 
     render() {
         return (
-            <form>
-                <label className={Styles.label}
-                       htmlFor={this.fieldId + this.props.parameter.type}>
-                    {this.props.parameter.name}
-                    {this.props.parameter.isRequired &&
-                    <span> (required)</span>
-                    }
-                </label>
-                <div id={this.fieldId + this.props.parameter.type} className={Styles.fieldParameterEditor}>
-                    {this.renderEditor()}
-                </div>
-            </form>
+            <div id={this.fieldId + this.props.parameter.type} className={Styles.fieldParameterEditor}>
+                {this.renderEditor()}
+            </div>
         );
     }
 });
