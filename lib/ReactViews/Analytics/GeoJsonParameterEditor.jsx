@@ -2,6 +2,8 @@
 
 import React from 'react';
 
+import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
+
 import CesiumMath from 'terriajs-cesium/Source/Core/Math';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
@@ -24,14 +26,18 @@ const GeoJsonParameterEditor = React.createClass({
     },
 
     componentWillMount() {
-        var value = this.state.currentEditorCore.getValue();
-        this.setState({
-            value: value
-        });
+        var that = this;
+        knockout.getObservable(this.props.parameter, '_value').subscribe(that.updateProcessedValue);
+    },
+
+    updateProcessedValue() {
+        if (defined(this.state.currentEditorCore)) {
+            var promiseOrValue = this.state.currentEditorCore.formatValueForUrl(this.props.parameter.value);
+            this.props.parameter.processedValue = promiseOrValue;
+        }
     },
 
     getInitialState() {
-        console.log("GET INITIAL STATE");
         var pointEditorCore = new PointParameterEditorCore(this.props.previewed,
                                                            this.props.parameter,
                                                            this.props.viewState);
@@ -43,7 +49,6 @@ const GeoJsonParameterEditor = React.createClass({
                                                              this.props.viewState);
 
         return {
-            value: pointEditorCore.getInitialState(),
             pointEditorCore: pointEditorCore,
             polygonEditorCore: polygonEditorCore,
             regionEditorCore: regionEditorCore
@@ -52,9 +57,6 @@ const GeoJsonParameterEditor = React.createClass({
 
     onTextChange(e) {
         this.state.currentEditorCore.onTextChange(e);
-        this.setState({
-            value: this.state.currentEditorCore.getValue()
-        });
     },
 
     getValue() {
@@ -63,9 +65,6 @@ const GeoJsonParameterEditor = React.createClass({
 
     setValue(value) {
         this.state.currentEditorCore.setValue(value);
-        this.setState({
-            value: this.state.currentEditorCore.getValue()
-        });
     },
 
     onCleanUp() {
@@ -130,7 +129,7 @@ const GeoJsonParameterEditor = React.createClass({
                 <input className={Styles.field}
                        type="text"
                        onChange={this.onTextChange}
-                       value={this.state.value}/>
+                       value={this.props.parameter.displayValue}/>
             </div>
         );
     }

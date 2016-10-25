@@ -42,7 +42,7 @@ const RegionPicker = React.createClass({
 
         knockout.defineProperty(this, 'regionProvider', {
             get: function() {
-                return this.props.parameter.regionProvider;
+                return this.props.parameter.regionParameter.regionProvider;
             }
         });
 
@@ -57,6 +57,7 @@ const RegionPicker = React.createClass({
                     value = value.realRegion;
                 }
                 this.props.parameter.value = value;
+                this.props.parameter.displayValue = this.getDisplayValue("");
                 this.setState({
                     displayValue: this.getDisplayValue("")
                 });
@@ -97,7 +98,7 @@ const RegionPicker = React.createClass({
     updateFeature(feature) {
         this._lastRegionFeature = feature.data;
         const regionId = feature.properties[this.regionProvider.regionProp];
-        this.regionValue = this.props.parameter.findRegionByID(regionId);
+        this.regionValue = this.props.parameter.regionParameter.findRegionByID(regionId);
 
         if (defined(this._selectedRegionCatalogItem)) {
             this._selectedRegionCatalogItem.isEnabled = false;
@@ -114,7 +115,6 @@ const RegionPicker = React.createClass({
     },
 
     addRegionLayer() {
-        debugger;
         if (!defined(this.regionProvider)) {
             return;
         }
@@ -182,7 +182,7 @@ const RegionPicker = React.createClass({
                 that._selectedRegionCatalogItem.zoomTo();
             }
         }).otherwise(function() {
-            if (this.props.parameter.value !== value) {
+            if (that.props.parameter.value !== value) {
                 // Value has already changed.
                 return;
             }
@@ -257,19 +257,21 @@ const RegionPicker = React.createClass({
                 return "";
             }
         }
+        let val = "";
         const index = this.regionProvider.regions.indexOf(region);
         if (index >= 0 && this._regionNames[index]) {
-            return this._regionNames[index];
+            val = this._regionNames[index];
         } else {
-            return region.id;
+            val = region.id;
         }
+        return this.regionProvider.regionType + ": " + val;
     },
 
     render() {
         return (<div className={Styles.parameterEditor}>
                     <RegionTypeParameterEditor
                             previewed={this.props.previewed}
-                            parameter={this.props.parameter.regionTypeParameter}
+                            parameter={this.props.parameter.regionParameter.regionTypeParameter}
                     />
                     <input className={Styles.field}
                            type="text"
