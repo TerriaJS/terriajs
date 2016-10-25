@@ -2,9 +2,11 @@
 Change Log
 ==========
 
-### 4.5.2
+### 4.6.0
 
 * Add support for 'Long' type hint to CSV data for specifying longitude.
+* Region for CatalogFunctions now selected on map rather than preview map
+* Some regions that were previously not selectable (in Analytics) except via autocomplete are now selectable.
 
 ### 4.5.1
 
@@ -40,8 +42,6 @@ Change Log
    * `title`: overrides the title that would otherwise be derived from the name of the feature.
    * `hide-buttons`: If `"true"`, the Expand and Download buttons are hidden from the chart.
 * Fixed a bug in embedded `<collapsible>` elements that prevented them from being expandable.
-* Region for CatalogFunctions now selected on map rather than preview map
-* Some regions that were previously not selectable (in Analytics) except via autocomplete are now selectable.
 * Improved SDMX-JSON support to make it possible to change region type in the UI.
 * Deprecated `RegionMapping.setRegionColumnType` in favour of `RegionMapping.prototype.setRegionColumnType`. `regionDetails[].column` and `.disambigColumn` have also been deprecated.
 
