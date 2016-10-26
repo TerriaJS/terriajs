@@ -9,7 +9,7 @@ import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
 import ObserveModelMixin from '../ObserveModelMixin';
 import Styles from './parameter-editors.scss';
 
-import PolygonParameterEditorCore from '../../Models/PolygonParameterEditorCore';
+import PolygonParameterEditorCore from './PolygonParameterEditorCore';
 
 const PolygonParameterEditor = React.createClass({
     mixins: [ObserveModelMixin],

@@ -7,7 +7,7 @@ import ObserveModelMixin from '../ObserveModelMixin';
 
 import Styles from './parameter-editors.scss';
 
-import RegionParameterEditorCore from '../../Models/RegionParameterEditorCore';
+import RegionParameterEditorCore from './RegionParameterEditorCore';
 
 const RegionParameterEditor = React.createClass({
     mixins: [ObserveModelMixin],

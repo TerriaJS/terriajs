@@ -8,7 +8,7 @@ import defined from 'terriajs-cesium/Source/Core/defined';
 import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 
-import PointParameterEditorCore from '../../Models/PointParameterEditorCore';
+import PointParameterEditorCore from './PointParameterEditorCore';
 import ObserveModelMixin from '../ObserveModelMixin';
 
 import Styles from './parameter-editors.scss';
