@@ -2,10 +2,25 @@
 Change Log
 ==========
 
+### 4.6.0
+
+* Add support for 'Long' type hint to CSV data for specifying longitude.
+* The marker indicating the location of a search result is now placed correctly on the terrain surface.
+* Region for CatalogFunctions now selected on map rather than preview map
+* Some regions that were previously not selectable (in Analytics) except via autocomplete are now selectable.
+
+### 4.5.1
+
+* The order of the legend for an `ArcGisMapServerCatalogItem` now matches the order used by ArcGIS itself.
+* Large legends are now scaled down to fit within the width of the workbench panel.
+* Improved the styling of links inside the Feature Information panel.
+* Fixed a bug that could cause the Feature Information panel's close button to initially appear in the wrong place, and then jump to the right place when moving the mouse near it.
+
 ### 4.5.0
 
-* Added support for end date columns in csv data (automatic with column names containing `end_date`, `end date`, `end_time`, `end time`; or set in json file using `isEndDate` in `tableStyle.columns`.
-* Fixed calculation of end dates for moving-point csv files, which could lead to points disappearing periodically.
+* Added support for the Sensor Observation Service format, via the `SensorObservationServiceCatalogItem`.
+* Added support for end date columns in CSV data (automatic with column names containing `end_date`, `end date`, `end_time`, `end time`; or set in json file using `isEndDate` in `tableStyle.columns`.
+* Fixed calculation of end dates for moving-point CSV files, which could lead to points disappearing periodically.
 * Fixed a bug that prevented fractional seconds in time-varying WMS periodicity.
 * Added the ability to the workbench UI to select the `style` to use to display a Web Map Service (WMS) layer when multiple styles are available.
 * Added the ability to the workbench UI to select from among the available dimensions of a Web Map Service (WMS) layer.
@@ -14,22 +29,20 @@ Change Log
 * Fixed a bug that could cause nonsensical legends for CSV columns with all null values.
 * Fixed a bug that prevented the Share panel from being used at all if the URL shortening service encountered an error.
 * Fixed a bug that could cause an error when adding multiple catalog items to the map quickly.
-* Tweaked the z-order of the window that appear when hovering over a chart series so that it does not appear on top of the Feature Information panel.
+* Tweaked the z-order of the window that appears when hovering over a chart series, so that it does not appear on top of the Feature Information panel.
 * Fixed a bug that could lead to incorrect colors in a legend for a CSV file with explicit `colorBins` and cut off at a minimum and maximum.
 * We now show the feature info panel the first time a dataset is added, containing a suggestion to click the map to learn more about a location.  Also improved the wording for the feature info panel when there is no data.
 * Fixed support for time-varying feature info for vector tile based region mapping.
 * `updateApplicationOnMessageFromParentWindow` now also allows messages from the `opener` window, i.e. the window that opened the page by calling `window.open`.  The parent or opener may now also send a message with an `allowOrigin` property to specify an origin that should be allowed to post messages.
 * Fixed a bug that prevented charts from loading http urls from https.
 * The `isNcWMS` property of `WebMapServiceCatalogItem` is now set to true, and the COLORSCALERANGE controls are available in the UI, for ncWMS2 servers.
-* Added the ability to prevent csvs with time and `id` columns from appearing as moving points, by setting `idColumns` to either `null` or `[]`.
+* Added the ability to prevent CSVs with time and `id` columns from appearing as moving points, by setting `idColumns` to either `null` or `[]`.
 * Fixed a bug that prevented default parameters to `CatalogFunction`s from being shown in the user interface.
 * Fixed a problem that made `BooleanParameter`s show up incorrectly in the user interface.
 * Embedded `<chart>` elements now support two new optional attributes:
    * `title`: overrides the title that would otherwise be derived from the name of the feature.
    * `hide-buttons`: If `"true"`, the Expand and Download buttons are hidden from the chart.
 * Fixed a bug in embedded `<collapsible>` elements that prevented them from being expandable.
-* Region for CatalogFunctions now selected on map rather than preview map
-* Some regions that were previously not selectable (in Analytics) except via autocomplete are now selectable.
 * Improved SDMX-JSON support to make it possible to change region type in the UI.
 * Deprecated `RegionMapping.setRegionColumnType` in favour of `RegionMapping.prototype.setRegionColumnType`. `regionDetails[].column` and `.disambigColumn` have also been deprecated.
 
