@@ -24,14 +24,14 @@ const RegionParameterEditor = React.createClass({
                                                                          this.props.parameter,
                                                                          this.props.viewState);
         }
-        var value = this.regionParameterEditorCore.getValue();
+        const value = this.regionParameterEditorCore.getValue();
         this.setState({
             value: value
         });
     },
 
     getInitialState() {
-        var value = "";
+        let value = "";
         if (defined(this.regionParameterEditorCore)) {
             value = this.regionParameterEditorCore.getInitialState();
         }

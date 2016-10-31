@@ -2,9 +2,7 @@
 
 import React from 'react';
 
-import CesiumMath from 'terriajs-cesium/Source/Core/Math';
 import defined from 'terriajs-cesium/Source/Core/defined';
-import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
 
 import ObserveModelMixin from '../ObserveModelMixin';
 import Styles from './parameter-editors.scss';
@@ -26,14 +24,14 @@ const PolygonParameterEditor = React.createClass({
                                                                          this.props.parameter,
                                                                          this.props.viewState);
         }
-        var value = this.polygonParameterEditorCore.getValue();
+        const value = this.polygonParameterEditorCore.getValue();
         this.setState({
             value: value
         });
     },
 
     getInitialState() {
-        var value = "";
+        let value = "";
         if (defined(this.polygonParameterEditorCore)) {
             value = this.polygonParameterEditorCore.getInitialState();
         }

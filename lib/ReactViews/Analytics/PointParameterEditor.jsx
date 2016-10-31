@@ -2,11 +2,7 @@
 
 import React from 'react';
 
-import Cartographic from 'terriajs-cesium/Source/Core/Cartographic';
-import CesiumMath from 'terriajs-cesium/Source/Core/Math';
 import defined from 'terriajs-cesium/Source/Core/defined';
-import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
-import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 
 import PointParameterEditorCore from './PointParameterEditorCore';
 import ObserveModelMixin from '../ObserveModelMixin';
@@ -28,14 +24,14 @@ const PointParameterEditor = React.createClass({
                                                                          this.props.parameter,
                                                                          this.props.viewState);
         }
-        var value = this.pointParameterEditorCore.getValue();
+        const value = this.pointParameterEditorCore.getValue();
         this.setState({
             value: value
         });
     },
 
     getInitialState() {
-        var value = "";
+        let value = "";
         if (defined(this.pointParameterEditorCore)) {
             value = this.pointParameterEditorCore.getInitialState();
         }

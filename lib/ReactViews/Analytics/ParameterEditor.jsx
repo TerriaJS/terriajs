@@ -137,9 +137,8 @@ const ParameterEditor = React.createClass({
             parameterTypeToDiv: function(type, parameterEditor) {
                 if (type === this.id) {
                     const regionParam = parameterEditor.props.previewed.parameters.find(function(param) {
-                        return (defined(param.regionTypeParameter) &&
-                                param.regionTypeParameter === parameterEditor.props.parameter);
-                        });
+                        return (defined(param.regionTypeParameter) && param.regionTypeParameter === parameterEditor.props.parameter);
+                    });
                     return (<div>
                                 <If condition={regionParam === undefined}>
                                     {this.renderLabel()}
@@ -209,14 +208,14 @@ const ParameterEditor = React.createClass({
     },
 
     renderEditor() {
-        for (var i = 0; i < this.parameterTypeConverters.length; ++i) {
-            var converter = this.parameterTypeConverters[i];
-            var editor = converter.parameterTypeToDiv(this.props.parameter.type, this);
+        for (let i = 0; i < this.parameterTypeConverters.length; ++i) {
+            const converter = this.parameterTypeConverters[i];
+            const editor = converter.parameterTypeToDiv(this.props.parameter.type, this);
             if (defined(editor)) {
                 return editor;
             }
         }
-        var genericEditor = this.parameterTypeConverters.find(function(item) { return item.id === 'generic'; });
+        const genericEditor = this.parameterTypeConverters.find(function(item) { return item.id === 'generic'; });
         return genericEditor.parameterTypeToDiv('generic', this);
     },
 
