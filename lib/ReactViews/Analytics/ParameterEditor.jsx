@@ -30,7 +30,7 @@ const ParameterEditor = React.createClass({
     parameterTypeConverters: [
         {
             id: 'point',
-            parameterTypeToDiv: function(type, parameterEditor) {
+            parameterTypeToDiv: function ParameterTypeToDiv(type, parameterEditor) {
                 if (type === this.id) {
                     return (<div>
                                 {parameterEditor.renderLabel()}
@@ -45,7 +45,7 @@ const ParameterEditor = React.createClass({
         },
         {
             id: 'line',
-            parameterTypeToDiv: function(type, parameterEditor) {
+            parameterTypeToDiv: function ParameterTypeToDiv(type, parameterEditor) {
                 if (type === this.id) {
                     return (<div>
                                 {parameterEditor.renderLabel()}
@@ -60,7 +60,7 @@ const ParameterEditor = React.createClass({
         },
         {
             id: 'rectangle',
-            parameterTypeToDiv: function(type, parameterEditor) {
+            parameterTypeToDiv: function ParameterTypeToDiv(type, parameterEditor) {
                 if (type === this.id) {
                     return (<div>
                                 {parameterEditor.renderLabel()}
@@ -75,7 +75,7 @@ const ParameterEditor = React.createClass({
         },
         {
             id: 'polygon',
-            parameterTypeToDiv: function(type, parameterEditor) {
+            parameterTypeToDiv: function ParameterTypeToDiv(type, parameterEditor) {
                 if (type === this.id) {
                     return (<div>
                                 {parameterEditor.renderLabel()}
@@ -90,7 +90,7 @@ const ParameterEditor = React.createClass({
         },
         {
             id: 'enumeration',
-            parameterTypeToDiv: function(type, parameterEditor) {
+            parameterTypeToDiv: function ParameterTypeToDiv(type, parameterEditor) {
                 if (type === this.id) {
                     return (<div>
                                 {parameterEditor.renderLabel()}
@@ -105,7 +105,7 @@ const ParameterEditor = React.createClass({
         },
         {
             id: 'dateTime',
-            parameterTypeToDiv: function(type, parameterEditor) {
+            parameterTypeToDiv: function ParameterTypeToDiv(type, parameterEditor) {
                 if (type === this.id) {
                     return (<div>
                                 {parameterEditor.renderLabel()}
@@ -119,7 +119,7 @@ const ParameterEditor = React.createClass({
         },
         {
             id: 'region',
-            parameterTypeToDiv: function(type, parameterEditor) {
+            parameterTypeToDiv: function ParameterTypeToDiv(type, parameterEditor) {
                 if (type === this.id) {
                     return (<div>
                                 {parameterEditor.renderLabel()}
@@ -134,7 +134,7 @@ const ParameterEditor = React.createClass({
         },
         {
             id: 'regionType',
-            parameterTypeToDiv: function(type, parameterEditor) {
+            parameterTypeToDiv: function ParameterTypeToDiv(type, parameterEditor) {
                 if (type === this.id) {
                     const regionParam = parameterEditor.props.previewed.parameters.find(function(param) {
                         return (defined(param.regionTypeParameter) && param.regionTypeParameter === parameterEditor.props.parameter);
@@ -156,7 +156,7 @@ const ParameterEditor = React.createClass({
         },
         {
             id: 'regionData',
-            parameterTypeToDiv: function(type, parameterEditor) {
+            parameterTypeToDiv: function ParameterTypeToDiv(type, parameterEditor) {
                 if (type === this.id) {
                     return (<div>
                                 {this.renderLabel()}
@@ -170,7 +170,7 @@ const ParameterEditor = React.createClass({
         },
         {
             id: 'boolean',
-            parameterTypeToDiv: function(type, parameterEditor) {
+            parameterTypeToDiv: function ParameterTypeToDiv(type, parameterEditor) {
                 if (type === this.id) {
                     return (<div>
                                 {this.renderLabel()}
@@ -184,7 +184,7 @@ const ParameterEditor = React.createClass({
         },
         {
             id: 'generic',
-            parameterTypeToDiv: function(type, parameterEditor) {
+            parameterTypeToDiv: function ParameterTypeToDiv(type, parameterEditor) {
                 if (type === this.id) {
                     return (<div>
                             {parameterEditor.renderLabel()}
