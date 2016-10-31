@@ -141,7 +141,7 @@ const ParameterEditor = React.createClass({
                     });
                     return (<div>
                                 <If condition={regionParam === undefined}>
-                                    {this.renderLabel()}
+                                    {parameterEditor.renderLabel()}
                                     <RegionTypeParameterEditor
                                         previewed={parameterEditor.props.previewed}
                                         parameter={parameterEditor.props.parameter}
@@ -159,10 +159,10 @@ const ParameterEditor = React.createClass({
             parameterTypeToDiv: function ParameterTypeToDiv(type, parameterEditor) {
                 if (type === this.id) {
                     return (<div>
-                                {this.renderLabel()}
+                                {parameterEditor.renderLabel()}
                                 <RegionDataParameterEditor
-                                    previewed={this.props.previewed}
-                                    parameter={this.props.parameter}
+                                    previewed={parameterEditor.props.previewed}
+                                    parameter={parameterEditor.props.parameter}
                                 />
                             </div>);
                 }
@@ -173,10 +173,10 @@ const ParameterEditor = React.createClass({
             parameterTypeToDiv: function ParameterTypeToDiv(type, parameterEditor) {
                 if (type === this.id) {
                     return (<div>
-                                {this.renderLabel()}
+                                {parameterEditor.renderLabel()}
                                 <BooleanParameterEditor
-                                    previewed={this.props.previewed}
-                                    parameter={this.props.parameter}
+                                    previewed={parameterEditor.props.previewed}
+                                    parameter={parameterEditor.props.parameter}
                                 />
                             </div>);
                 }

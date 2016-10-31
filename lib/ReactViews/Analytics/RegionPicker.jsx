@@ -42,7 +42,11 @@ const RegionPicker = React.createClass({
 
         knockout.defineProperty(this, 'regionProvider', {
             get: function() {
-                return this.props.parameter.regionParameter.regionProvider;
+                if (defined(this.props.parameter.regionParameter)) {
+                    return this.props.parameter.regionParameter.regionProvider;
+                } else {
+                    return this.props.parameter.regionProvider;
+                }
             }
         });
 
@@ -98,7 +102,11 @@ const RegionPicker = React.createClass({
     updateFeature(feature) {
         this._lastRegionFeature = feature.data;
         const regionId = feature.properties[this.regionProvider.regionProp];
-        this.regionValue = this.props.parameter.regionParameter.findRegionByID(regionId);
+        if (defined(this.props.parameter.regionParameter)) {
+            this.regionValue = this.props.parameter.regionParameter.findRegionByID(regionId);
+        } else {
+            this.regionValue = this.props.parameter.findRegionByID(regionId);
+        }
 
         if (defined(this._selectedRegionCatalogItem)) {
             this._selectedRegionCatalogItem.isEnabled = false;
@@ -268,10 +276,16 @@ const RegionPicker = React.createClass({
     },
 
     render() {
+        let param;
+        if (defined(this.props.parameter.regionParameter)) {
+            param = this.props.parameter.regionParameter.regionTypeParameter;
+        } else {
+            param = this.props.parameter.regionTypeParameter;
+        }
         return (<div className={Styles.parameterEditor}>
                     <RegionTypeParameterEditor
                             previewed={this.props.previewed}
-                            parameter={this.props.parameter.regionParameter.regionTypeParameter}
+                            parameter={param}
                     />
                     <input className={Styles.field}
                            type="text"
