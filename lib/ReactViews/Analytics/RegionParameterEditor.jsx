@@ -58,7 +58,7 @@ const RegionParameterEditor = React.createClass({
                             previewed={that.props.previewed}
                             parameter={that.props.parameter}
                          />
-                        );
+                );
             }
         });
         terria.mapInteractionModeStack.push(pickPointMode);
