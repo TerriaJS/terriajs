@@ -86,6 +86,19 @@ const ZoomControl = React.createClass({
             const direction = Cartesian3.subtract(focus, camera.position, cartesian3Scratch);
             const movementVector = Cartesian3.multiplyByScalar(direction, 2.0 / 3.0, cartesian3Scratch);
             const endPosition = Cartesian3.add(camera.position, movementVector, cartesian3Scratch);
+
+            // make sure that we don't crush the terrain through
+            const pickRay = new Ray(scene.camera.positionWC, scene.camera.directionWC);
+            const globe = scene.globe;
+            const surfacePosition = globe.pick(pickRay, scene);
+
+            const surfacePositionCartographic = globe.ellipsoid.cartesianToCartographic(surfacePosition);
+            const endPositionCartographic = globe.ellipsoid.cartesianToCartographic(endPosition);
+
+            if (endPositionCartographic.height - surfacePositionCartographic.height < 25.0) {
+                return;
+            }
+
             this.flyToPosition(scene, endPosition);
         }
 
