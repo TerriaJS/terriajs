@@ -40,7 +40,7 @@ describe('GnafApi', function() {
         gnafApi = new GnafApi(corsProxy, UNPROXIED_URL, loadWithXhr);
     });
 
-    it('should pass searchTerm through to elasticsearch', function() {
+    it('should pass searchTerm through to lucene', function() {
         gnafApi.geoCode(SEARCH_TERM);
 
         expect(getXhrArgs().query.match.d61Address.query).toBe(SEARCH_TERM);
@@ -162,13 +162,13 @@ describe('GnafApi', function() {
     });
 
     describe('location', function() {
-        it('should not be passed to elasticsearch if not passed to geoCode()', function() {
+        it('should not be passed to lucene if not passed to geoCode()', function() {
             gnafApi.geoCode(SEARCH_TERM);
 
             expect(getXhrArgs().filter).toBeUndefined();
         });
 
-        it('should be passed to elasticsearch if present as arg to geoCode()', function() {
+        it('should be passed to lucene if present as arg to geoCode()', function() {
             gnafApi.geoCode(SEARCH_TERM, RECTANGLE);
 
             var location = getXhrArgs().filter.geo_bounding_box.location;
