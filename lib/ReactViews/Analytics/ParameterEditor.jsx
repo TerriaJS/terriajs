@@ -27,10 +27,40 @@ const ParameterEditor = React.createClass({
         previewed: React.PropTypes.object
     },
 
-    parameterTypeConverters: [
+    fieldId: new Date().getTime(),
+
+    renderLabel() {
+        return (<label key={this.props.parameter.id} className={Styles.label} htmlFor={this.fieldId + this.props.parameter.type}>
+                    {this.props.parameter.name}
+                    {this.props.parameter.isRequired && <span> (required)</span> }
+                </label>);
+    },
+
+    renderEditor() {
+        for (let i = 0; i < ParameterEditor.parameterTypeConverters.length; ++i) {
+            const converter = ParameterEditor.parameterTypeConverters[i];
+            const editor = converter.parameterTypeToDiv(this.props.parameter.type, this);
+            if (defined(editor)) {
+                return editor;
+            }
+        }
+        const genericEditor = ParameterEditor.parameterTypeConverters.filter(function(item) { return item.id === 'generic'; })[0];
+        return genericEditor.parameterTypeToDiv('generic', this);
+    },
+
+    render() {
+        return (
+            <div id={this.fieldId + this.props.parameter.type} className={Styles.fieldParameterEditor}>
+                {this.renderEditor()}
+            </div>
+        );
+    }
+});
+
+ParameterEditor.parameterTypeConverters = [
         {
             id: 'point',
-            parameterTypeToDiv: function ParameterTypeToDiv(type, parameterEditor) {
+            parameterTypeToDiv: function PointParameterToDiv(type, parameterEditor) {
                 if (type === this.id) {
                     return (<div>
                                 {parameterEditor.renderLabel()}
@@ -45,7 +75,7 @@ const ParameterEditor = React.createClass({
         },
         {
             id: 'line',
-            parameterTypeToDiv: function ParameterTypeToDiv(type, parameterEditor) {
+            parameterTypeToDiv: function LineParameterToDiv(type, parameterEditor) {
                 if (type === this.id) {
                     return (<div>
                                 {parameterEditor.renderLabel()}
@@ -60,7 +90,7 @@ const ParameterEditor = React.createClass({
         },
         {
             id: 'rectangle',
-            parameterTypeToDiv: function ParameterTypeToDiv(type, parameterEditor) {
+            parameterTypeToDiv: function RectangleParameterToDiv(type, parameterEditor) {
                 if (type === this.id) {
                     return (<div>
                                 {parameterEditor.renderLabel()}
@@ -75,7 +105,7 @@ const ParameterEditor = React.createClass({
         },
         {
             id: 'polygon',
-            parameterTypeToDiv: function ParameterTypeToDiv(type, parameterEditor) {
+            parameterTypeToDiv: function PolygonParameterToDiv(type, parameterEditor) {
                 if (type === this.id) {
                     return (<div>
                                 {parameterEditor.renderLabel()}
@@ -90,7 +120,7 @@ const ParameterEditor = React.createClass({
         },
         {
             id: 'enumeration',
-            parameterTypeToDiv: function ParameterTypeToDiv(type, parameterEditor) {
+            parameterTypeToDiv: function EnumerationParameterToDiv(type, parameterEditor) {
                 if (type === this.id) {
                     return (<div>
                                 {parameterEditor.renderLabel()}
@@ -105,7 +135,7 @@ const ParameterEditor = React.createClass({
         },
         {
             id: 'dateTime',
-            parameterTypeToDiv: function ParameterTypeToDiv(type, parameterEditor) {
+            parameterTypeToDiv: function DateTimeParameterToDiv(type, parameterEditor) {
                 if (type === this.id) {
                     return (<div>
                                 {parameterEditor.renderLabel()}
@@ -119,7 +149,7 @@ const ParameterEditor = React.createClass({
         },
         {
             id: 'region',
-            parameterTypeToDiv: function ParameterTypeToDiv(type, parameterEditor) {
+            parameterTypeToDiv: function RegionParameterToDiv(type, parameterEditor) {
                 if (type === this.id) {
                     return (<div>
                                 {parameterEditor.renderLabel()}
@@ -134,7 +164,7 @@ const ParameterEditor = React.createClass({
         },
         {
             id: 'regionType',
-            parameterTypeToDiv: function ParameterTypeToDiv(type, parameterEditor) {
+            parameterTypeToDiv: function RegionTypeParameterToDiv(type, parameterEditor) {
                 if (type === this.id) {
                     const regionParam = parameterEditor.props.previewed.parameters.find(function(param) {
                         return (defined(param.regionTypeParameter) && param.regionTypeParameter === parameterEditor.props.parameter);
@@ -156,7 +186,7 @@ const ParameterEditor = React.createClass({
         },
         {
             id: 'regionData',
-            parameterTypeToDiv: function ParameterTypeToDiv(type, parameterEditor) {
+            parameterTypeToDiv: function RegionDataParameterToDiv(type, parameterEditor) {
                 if (type === this.id) {
                     return (<div>
                                 {parameterEditor.renderLabel()}
@@ -170,7 +200,7 @@ const ParameterEditor = React.createClass({
         },
         {
             id: 'boolean',
-            parameterTypeToDiv: function ParameterTypeToDiv(type, parameterEditor) {
+            parameterTypeToDiv: function BooleanParameterToDiv(type, parameterEditor) {
                 if (type === this.id) {
                     return (<div>
                                 {parameterEditor.renderLabel()}
@@ -184,7 +214,7 @@ const ParameterEditor = React.createClass({
         },
         {
             id: 'generic',
-            parameterTypeToDiv: function ParameterTypeToDiv(type, parameterEditor) {
+            parameterTypeToDiv: function GenericParameterToDiv(type, parameterEditor) {
                 if (type === this.id) {
                     return (<div>
                             {parameterEditor.renderLabel()}
@@ -196,36 +226,6 @@ const ParameterEditor = React.createClass({
                 }
             }
         }
-    ],
-
-    fieldId: new Date().getTime(),
-
-    renderLabel() {
-        return (<label key={this.props.parameter.id} className={Styles.label} htmlFor={this.fieldId + this.props.parameter.type}>
-                    {this.props.parameter.name}
-                    {this.props.parameter.isRequired && <span> (required)</span> }
-                </label>);
-    },
-
-    renderEditor() {
-        for (let i = 0; i < this.parameterTypeConverters.length; ++i) {
-            const converter = this.parameterTypeConverters[i];
-            const editor = converter.parameterTypeToDiv(this.props.parameter.type, this);
-            if (defined(editor)) {
-                return editor;
-            }
-        }
-        const genericEditor = this.parameterTypeConverters.find(function(item) { return item.id === 'generic'; });
-        return genericEditor.parameterTypeToDiv('generic', this);
-    },
-
-    render() {
-        return (
-            <div id={this.fieldId + this.props.parameter.type} className={Styles.fieldParameterEditor}>
-                {this.renderEditor()}
-            </div>
-        );
-    }
-});
+];
 
 module.exports = ParameterEditor;
