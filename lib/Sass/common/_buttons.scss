@@ -19,7 +19,7 @@ $btn-setting-size: 35px;
   cursor: pointer;
   line-height: $btn-default-line-height;
   text-decoration: none;
-  font-size: 0.85rem;
+  font-size: $font-size-button;
   font-family: $font-base;
 
   &:focus, &:hover {
@@ -127,7 +127,7 @@ $btn-setting-size: 35px;
 .btn--close-modal {
   @extend .btn--secondary;
 
-  font-size: 0.8rem;
+  font-size: $font-size-small;
   padding: 4px 10px;
   margin: 5px;
   font-weight: bold;
@@ -151,7 +151,7 @@ $btn-setting-size: 35px;
       padding: $padding-small $padding*2.2 $padding-small $padding*1.5;
     }
     top: 0;
-    font-size: 1.1rem;
+    font-size: $font-size-mid-large;
     opacity: 0.5;
   }
   &:before {
@@ -204,7 +204,7 @@ $btn-setting-size: 35px;
   font-family: $font-pop;
   background: $modal-bg;
   color: $modal-text;
-  font-size: 1rem;
+  font-size: $font-size-base;
   padding: $padding $padding*2;
   border-bottom: 2px solid transparent;
   li[aria-selected='true'] & {
@@ -215,7 +215,7 @@ $btn-setting-size: 35px;
 
 
 .btn--map {
-  font-size: 12px;
+  font-size: $font-size-small;
   padding: 5px;
   color: #fff;
   display: block;
@@ -268,5 +268,5 @@ $btn-setting-size: 35px;
 .btn--small, ._buttons__btn-primary.btn--small {
   padding: 4px 9px;
   margin-right: 4px;
-  font-size: 13px;
+  font-size: $font-size-small;
 }

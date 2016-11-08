@@ -3,5 +3,5 @@
 .no-results {
   composes: label from '../../Sass/common/_labels.scss';
   padding-left: $padding;
-  font-size: 0.9rem;
+  font-size: $font-size-mid-small;
 }

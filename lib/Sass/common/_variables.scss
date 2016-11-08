@@ -54,9 +54,14 @@ $mobile-text: #000;
 $mobile-modal-top-height: 40px;
 
 $font-size-large: 1.3rem;
+$font-size-mid-large: 1.1rem;
 $font-size-base: 1rem;
-$font-size-small: 13px;
-$font-size-mini: 10px;
+$font-size-mid-small: 0.9rem;
+$font-size-feature-info: 0.9rem;
+$font-size-button: 0.85rem;
+$font-size-small: 0.8125rem; // 13px;  // Why did we switch from rem to px here?!
+$font-size-mid-mini: 0.7rem;
+$font-size-mini: 0.625rem; // 10px;
 
 $font-weight-bold: 600;
 $font-weight-medium: 500;

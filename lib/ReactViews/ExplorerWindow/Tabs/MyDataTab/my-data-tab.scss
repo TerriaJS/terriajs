@@ -28,7 +28,7 @@
 
 .explanation {
   font-family: $font-base;
-  font-size: 0.9rem;
+  font-size: $font-size-mid-small;
 }
 
 .btn--back-to-my-data{
@@ -55,7 +55,7 @@
 
 .h3 {
   composes: h3 from '../../../../Sass/common/_base.scss';
-  font-size: 1.1rem;
+  font-size: $font-size-mid-large;
 }
 
 
