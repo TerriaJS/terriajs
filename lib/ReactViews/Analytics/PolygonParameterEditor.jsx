@@ -111,7 +111,7 @@ PolygonParameterEditor.formatValueForUrl = function(value, parameter) {
  * @param {FunctionParameter} parameter Parameter.
  */
 PolygonParameterEditor.selectOnMap = function(terria, viewState, parameter) {
-    var userDrawing = new UserDrawing({
+    const userDrawing = new UserDrawing({
         terria: terria,
         onPointClicked: function(pointEntities) {
             const pointEnts = pointEntities.entities.values;
