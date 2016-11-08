@@ -17,13 +17,15 @@ const NotificationWindow = React.createClass({
         onDeny: React.PropTypes.func.isRequired
     },
 
-    confirm() {
+    confirm(e) {
+        e.stopPropagation();
         if (this.props.onConfirm) {
             this.props.onConfirm();
         }
     },
 
-    deny() {
+    deny(e) {
+        e.stopPropagation();
         if (this.props.onDeny) {
             this.props.onDeny();
         }

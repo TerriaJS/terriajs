@@ -12,11 +12,18 @@
   max-width: 95%;
   min-width: 150px;
   max-height: 80vh;
-  z-index: 10;
+  z-index: 99;
   font-family: $font-base;
 
   svg{
     fill: #fff;
+  }
+
+  a{
+    color: $color-primary;
+    &:hover, &:focus{
+      text-decoration: underline;
+    }
   }
   @media screen and (min-width : $md){
     //temp
@@ -53,10 +60,16 @@
 
 .btn {
   composes: btn from '../../Sass/common/_buttons.scss';
-
   padding: 4px 9px;
   margin-right: 4px;
   color: $text-light;
+}
+
+.btnPanelHeading{
+  composes: btn from '../../Sass/common/_buttons.scss';
+  padding: 4px 9px;
+  color: $text-light;
+  width: 100%;
 }
 
 .btn--download {

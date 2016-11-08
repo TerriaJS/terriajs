@@ -4,6 +4,7 @@ import AbsPercentageWorkbenchSection from './Controls/AbsPercentageWorkbenchSect
 import classNames from 'classnames';
 import ConceptViewer from './Controls/ConceptViewer';
 import defined from 'terriajs-cesium/Source/Core/defined';
+import DimensionSelectorSection from './Controls/DimensionSelectorSection';
 import Legend from './Controls/Legend';
 import ObserveModelMixin from './../ObserveModelMixin';
 import OpacitySection from './Controls/OpacitySection';
@@ -11,6 +12,7 @@ import ColorScaleRangeSection from './Controls/ColorScaleRangeSection';
 import React from 'react';
 import ShortReport from './Controls/ShortReport';
 import Styles from './workbench-item.scss';
+import StyleSelectorSection from './Controls/StyleSelectorSection';
 import ViewingControls from './Controls/ViewingControls';
 import Icon from "../Icon.jsx";
 import {sortable} from 'react-anything-sortable';
@@ -86,6 +88,8 @@ const WorkbenchItem = React.createClass({
                     <div className={Styles.inner}>
                         <ViewingControls item={workbenchItem} viewState={this.props.viewState}/>
                         <OpacitySection item={workbenchItem}/>
+                        <DimensionSelectorSection item={workbenchItem}/>
+                        <StyleSelectorSection item={workbenchItem}/>
                         <ColorScaleRangeSection item={workbenchItem}/>
                         <If condition={workbenchItem.type === 'abs-itt'}>
                             <AbsPercentageWorkbenchSection item={workbenchItem}/>

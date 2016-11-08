@@ -121,7 +121,7 @@ const Compass = React.createClass({
               <div className={Styles.innerRing} title='Click and drag to rotate the camera'></div>
               <div className={Styles.rotationMarker} style={rotationMarkerStyle}></div>
             </div>
-            );
+        );
     }
 });
 

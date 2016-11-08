@@ -38,6 +38,7 @@ const ChartExpandAndDownloadButtons = React.createClass({
         tableStructure: React.PropTypes.object,
         //
         catalogItem: React.PropTypes.object,
+        title: React.PropTypes.string,
         feature: React.PropTypes.object,
         id: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
         columnNames: React.PropTypes.array,
@@ -148,15 +149,21 @@ function expand(props, sourceIndex) {
     };
 
     const newCatalogItem = new CsvCatalogItem(terria, url, options);
-    if (!defined(url)) {
-        newCatalogItem.data = props.tableStructure;
+    let tableStructure = props.tableStructure;
+    // For CSV data with a URL, we could just use the usual csvCatalogItem._load to load this from the url.
+    // However, we also want this to work with urls that may be interpreted differently according to CatalogItem.loadIntoTableStructure.
+    // So use the parent catalogItem's loadIntoTableStructure (if available) to do the load.
+    // Note that CsvCatalogItem's _load function checks for data first, and only loads the URL if no data is present, so we won't double up.
+    if (!defined(tableStructure) && defined(props.catalogItem) && defined(props.catalogItem.loadIntoTableStructure)) {
+        tableStructure = props.catalogItem.loadIntoTableStructure(url);
     }
+    newCatalogItem.data = tableStructure;
     // Without this, if the chart data comes via the proxy, it would be cached for the default period of 2 weeks.
     // So, retain the same `cacheDuration` as the parent data file.
     // You can override this with the `pollSeconds` attribute (coming!).
     // If neither is set, it should default to a small duration rather than 2 weeks - say 1 minute.
     newCatalogItem.cacheDuration = defaultValue(props.catalogItem.cacheDuration, '1m');
-    newCatalogItem.name = (props.feature && props.feature.name) || 'Chart';
+    newCatalogItem.name = props.title || (props.feature && props.feature.name) || 'Chart';
     newCatalogItem.id = newCatalogItem.name + (props.id ? (' ' + props.id) : '') + ' (' + props.catalogItem.name + ')';
 
     if (defined(props.pollSeconds)) {

@@ -9,17 +9,17 @@
                 {
                     "name": "What makes this region unique or special?",
                     "type": "why-am-i-special-function",
-                    "url": "http://parlmap.terria.io:31113/jobs"
+                    "url": "http://analytics.terria.io:31113/jobs"
                 },
                 {
                     "name": "Spatial Detailing",
                     "type": "spatial-detailing-function",
-                    "url": "http://parlmap.terria.io:31113/jobs"
+                    "url": "http://analytics.terria.io:31113/jobs"
                 },
                 {
                     "name": "Regions like this",
                     "type": "places-like-me-function",
-                    "url": "http://parlmap.terria.io:31113/jobs"
+                    "url": "http://analytics.terria.io:31113/jobs"
                 },
                 {
                     "name": "Victoria Crime (LGA)",

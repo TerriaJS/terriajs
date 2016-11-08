@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WMS_Capabilities updateSequence="2016-10-11T14:36:53.239-04:00" version="1.3.0" xmlns="http://www.opengis.net/wms" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/wms http://schemas.opengis.net/wms/1.3.0/capabilities_1_3_0.xsd">
+    <Service>
+        <Name>WMS</Name>
+        <Title>ncWMS Server</Title>
+        <Abstract/>
+        <KeywordList>
+            <Keyword/>
+        </KeywordList>
+        <OnlineResource xlink:href="http://www.smast.umassd.edu:8080/ncWMS2/wms" xlink:type="simple"/>
+        <ContactInformation>
+            <ContactPersonPrimary>
+                <ContactPerson/>
+                <ContactOrganization/>
+            </ContactPersonPrimary>
+            <ContactVoiceTelephone/>
+            <ContactElectronicMailAddress/>
+        </ContactInformation>
+        <Fees>none</Fees>
+        <AccessConstraints>none</AccessConstraints>
+        <LayerLimit>1</LayerLimit>
+        <MaxWidth>1024</MaxWidth>
+        <MaxHeight>1024</MaxHeight>
+    </Service>
+    <Capability>
+        <Request>
+            <GetCapabilities>
+                <Format>text/xml</Format>
+                <DCPType>
+                    <HTTP>
+                        <Get>
+                            <OnlineResource xlink:href="http://www.smast.umassd.edu:8080/ncWMS2/wms" xlink:type="simple"/>
+                        </Get>
+                    </HTTP>
+                </DCPType>
+            </GetCapabilities>
+            <GetMap>
+                <Format>image/png</Format>
+                <Format>image/png;mode=32bit</Format>
+                <Format>image/gif</Format>
+                <Format>image/jpeg</Format>
+                <Format>application/vnd.google-earth.kmz</Format>
+                <DCPType>
+                    <HTTP>
+                        <Get>
+                            <OnlineResource xlink:href="http://www.smast.umassd.edu:8080/ncWMS2/wms" xlink:type="simple"/>
+                        </Get>
+                    </HTTP>
+                </DCPType>
+            </GetMap>
+            <GetFeatureInfo>
+                <Format>text/plain</Format>
+                <Format>text/xml</Format>
+                <DCPType>
+                    <HTTP>
+                        <Get>
+                            <OnlineResource xlink:href="http://www.smast.umassd.edu:8080/ncWMS2/wms" xlink:type="simple"/>
+                        </Get>
+                    </HTTP>
+                </DCPType>
+            </GetFeatureInfo>
+        </Request>
+        <Exception>
+            <Format>XML</Format>
+        </Exception>
+        <Layer>
+            <Title>ncWMS Server</Title>
+            <CRS>EPSG:4326</CRS>
+            <CRS>CRS:84</CRS>
+            <CRS>EPSG:41001</CRS>
+            <CRS>EPSG:27700</CRS>
+            <CRS>EPSG:3408</CRS>
+            <CRS>EPSG:3409</CRS>
+            <CRS>EPSG:3857</CRS>
+            <CRS>EPSG:5041</CRS>
+            <CRS>EPSG:5042</CRS>
+            <CRS>EPSG:32661</CRS>
+            <CRS>EPSG:32761</CRS>
+            <Layer>
+                <Title>Some Layer</Title>
+                <Layer queryable="1">
+                    <Name>A queryable layer</Name>
+                    <Title>mylayer</Title>
+                    <Abstract>The layer!</Abstract>
+                    <EX_GeographicBoundingBox>
+                        <westBoundLongitude>-75.68433380126953</westBoundLongitude>
+                        <eastBoundLongitude>-56.850791931152344</eastBoundLongitude>
+                        <southBoundLatitude>35.27653121948242</southBoundLatitude>
+                        <northBoundLatitude>46.14595031738281</northBoundLatitude>
+                    </EX_GeographicBoundingBox>
+                    <BoundingBox CRS="CRS:84" maxx="-56.850791931152344" maxy="46.14595031738281" minx="-75.68433380126953" miny="35.27653121948242"/>
+                    <Style>
+                        <Name>default-scalar/default</Name>
+                        <Title>default-scalar/default</Title>
+                        <Abstract>default-scalar style, using the default palette.  Available palettes are:
+                            default,
+                            default-inv,
+                            div-BrBG,
+                            div-BrBG-inv,
+                            div-BuRd,
+                            div-BuRd-inv,
+                            div-BuRd2,
+                            div-BuRd2-inv,
+                            div-PRGn,
+                            div-PRGn-inv,
+                            div-PiYG,
+                            div-PiYG-inv,
+                            div-PuOr,
+                            div-PuOr-inv,
+                            div-RdBu,
+                            div-RdBu-inv,
+                            div-RdGy,
+                            div-RdGy-inv,
+                            div-RdYlBu,
+                            div-RdYlBu-inv,
+                            div-RdYlGn,
+                            div-RdYlGn-inv,
+                            div-Spectral,
+                            div-Spectral-inv,
+                            psu-inferno,
+                            psu-inferno-inv,
+                            psu-magma,
+                            psu-magma-inv,
+                            psu-plasma,
+                            psu-plasma-inv,
+                            psu-viridis,
+                            psu-viridis-inv,
+                            seq-BkBu,
+                            seq-BkBu-inv,
+                            seq-BkGn,
+                            seq-BkGn-inv,
+                            seq-BkRd,
+                            seq-BkRd-inv,
+                            seq-BkYl,
+                            seq-BkYl-inv,
+                            seq-BlueHeat,
+                            seq-BlueHeat-inv,
+                            seq-Blues,
+                            seq-Blues-inv,
+                            seq-BuGn,
+                            seq-BuGn-inv,
+                            seq-BuPu,
+                            seq-BuPu-inv,
+                            seq-BuYl,
+                            seq-BuYl-inv,
+                            seq-GnBu,
+                            seq-GnBu-inv,
+                            seq-Greens,
+                            seq-Greens-inv,
+                            seq-Greys,
+                            seq-Greys-inv,
+                            seq-GreysRev,
+                            seq-GreysRev-inv,
+                            seq-Heat,
+                            seq-Heat-inv,
+                            seq-OrRd,
+                            seq-OrRd-inv,
+                            seq-Oranges,
+                            seq-Oranges-inv,
+                            seq-PuBu,
+                            seq-PuBu-inv,
+                            seq-PuBuGn,
+                            seq-PuBuGn-inv,
+                            seq-PuRd,
+                            seq-PuRd-inv,
+                            seq-Purples,
+                            seq-Purples-inv,
+                            seq-RdPu,
+                            seq-RdPu-inv,
+                            seq-Reds,
+                            seq-Reds-inv,
+                            seq-YlGn,
+                            seq-YlGn-inv,
+                            seq-YlGnBu,
+                            seq-YlGnBu-inv,
+                            seq-YlOrBr,
+                            seq-YlOrBr-inv,
+                            seq-YlOrRd,
+                            seq-YlOrRd-inv,
+                            seq-cubeYF,
+                            seq-cubeYF-inv,
+                            x-Ncview,
+                            x-Ncview-inv,
+                            x-Occam,
+                            x-Occam-inv,
+                            x-Rainbow,
+                            x-Rainbow-inv,
+                            x-Sst,
+                            x-Sst-inv,
+                        </Abstract>
+                        <LegendURL height="264" width="110">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:href="http://www.smast.umassd.edu:8080/ncWMS2/wms?REQUEST=GetLegendGraphic&amp;PALETTE=default&amp;COLORBARONLY=true&amp;WIDTH=110&amp;HEIGHT=264" xlink:type="simple"/>
+                        </LegendURL>
+                    </Style>
+                    <Style>
+                        <Name>default-scalar/div-RdBu</Name>
+                        <Title>default-scalar/div-RdBu</Title>
+                        <Abstract>default-scalar style, using the div-RdBu palette</Abstract>
+                        <LegendURL height="264" width="110">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:href="http://www.smast.umassd.edu:8080/ncWMS2/wms?REQUEST=GetLegendGraphic&amp;PALETTE=div-RdBu&amp;COLORBARONLY=true&amp;WIDTH=110&amp;HEIGHT=264" xlink:type="simple"/>
+                        </LegendURL>
+                    </Style>
+                    <Style>
+                        <Name>default-scalar/div-RdBu-inv</Name>
+                        <Title>default-scalar/div-RdBu-inv</Title>
+                        <Abstract>default-scalar style, using the div-RdBu-inv palette</Abstract>
+                        <LegendURL height="264" width="110">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:href="http://www.smast.umassd.edu:8080/ncWMS2/wms?REQUEST=GetLegendGraphic&amp;PALETTE=div-RdBu-inv&amp;COLORBARONLY=true&amp;WIDTH=110&amp;HEIGHT=264" xlink:type="simple"/>
+                        </LegendURL>
+                    </Style>
+                    <Style>
+                        <Name>default-scalar/seq-cubeYF</Name>
+                        <Title>default-scalar/seq-cubeYF</Title>
+                        <Abstract>default-scalar style, using the seq-cubeYF palette</Abstract>
+                        <LegendURL height="264" width="110">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:href="http://www.smast.umassd.edu:8080/ncWMS2/wms?REQUEST=GetLegendGraphic&amp;PALETTE=seq-cubeYF&amp;COLORBARONLY=true&amp;WIDTH=110&amp;HEIGHT=264" xlink:type="simple"/>
+                        </LegendURL>
+                    </Style>
+                    <Style>
+                        <Name>contours</Name>
+                        <Title>contours</Title>
+                        <Abstract>contours style</Abstract>
+                    </Style>
+                    <Style>
+                        <Name>raster/default</Name>
+                        <Title>raster/default</Title>
+                        <Abstract>raster style, using the default palette.  Available palettes are:
+                            default,
+                            default-inv,
+                            div-BrBG,
+                            div-BrBG-inv,
+                            div-BuRd,
+                            div-BuRd-inv,
+                            div-BuRd2,
+                            div-BuRd2-inv,
+                            div-PRGn,
+                            div-PRGn-inv,
+                            div-PiYG,
+                            div-PiYG-inv,
+                            div-PuOr,
+                            div-PuOr-inv,
+                            div-RdBu,
+                            div-RdBu-inv,
+                            div-RdGy,
+                            div-RdGy-inv,
+                            div-RdYlBu,
+                            div-RdYlBu-inv,
+                            div-RdYlGn,
+                            div-RdYlGn-inv,
+                            div-Spectral,
+                            div-Spectral-inv,
+                            psu-inferno,
+                            psu-inferno-inv,
+                            psu-magma,
+                            psu-magma-inv,
+                            psu-plasma,
+                            psu-plasma-inv,
+                            psu-viridis,
+                            psu-viridis-inv,
+                            seq-BkBu,
+                            seq-BkBu-inv,
+                            seq-BkGn,
+                            seq-BkGn-inv,
+                            seq-BkRd,
+                            seq-BkRd-inv,
+                            seq-BkYl,
+                            seq-BkYl-inv,
+                            seq-BlueHeat,
+                            seq-BlueHeat-inv,
+                            seq-Blues,
+                            seq-Blues-inv,
+                            seq-BuGn,
+                            seq-BuGn-inv,
+                            seq-BuPu,
+                            seq-BuPu-inv,
+                            seq-BuYl,
+                            seq-BuYl-inv,
+                            seq-GnBu,
+                            seq-GnBu-inv,
+                            seq-Greens,
+                            seq-Greens-inv,
+                            seq-Greys,
+                            seq-Greys-inv,
+                            seq-GreysRev,
+                            seq-GreysRev-inv,
+                            seq-Heat,
+                            seq-Heat-inv,
+                            seq-OrRd,
+                            seq-OrRd-inv,
+                            seq-Oranges,
+                            seq-Oranges-inv,
+                            seq-PuBu,
+                            seq-PuBu-inv,
+                            seq-PuBuGn,
+                            seq-PuBuGn-inv,
+                            seq-PuRd,
+                            seq-PuRd-inv,
+                            seq-Purples,
+                            seq-Purples-inv,
+                            seq-RdPu,
+                            seq-RdPu-inv,
+                            seq-Reds,
+                            seq-Reds-inv,
+                            seq-YlGn,
+                            seq-YlGn-inv,
+                            seq-YlGnBu,
+                            seq-YlGnBu-inv,
+                            seq-YlOrBr,
+                            seq-YlOrBr-inv,
+                            seq-YlOrRd,
+                            seq-YlOrRd-inv,
+                            seq-cubeYF,
+                            seq-cubeYF-inv,
+                            x-Ncview,
+                            x-Ncview-inv,
+                            x-Occam,
+                            x-Occam-inv,
+                            x-Rainbow,
+                            x-Rainbow-inv,
+                            x-Sst,
+                            x-Sst-inv,
+                        </Abstract>
+                        <LegendURL height="264" width="110">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:href="http://www.smast.umassd.edu:8080/ncWMS2/wms?REQUEST=GetLegendGraphic&amp;PALETTE=default&amp;COLORBARONLY=true&amp;WIDTH=110&amp;HEIGHT=264" xlink:type="simple"/>
+                        </LegendURL>
+                    </Style>
+                    <Style>
+                        <Name>raster/div-RdBu</Name>
+                        <Title>raster/div-RdBu</Title>
+                        <Abstract>raster style, using the div-RdBu palette</Abstract>
+                        <LegendURL height="264" width="110">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:href="http://www.smast.umassd.edu:8080/ncWMS2/wms?REQUEST=GetLegendGraphic&amp;PALETTE=div-RdBu&amp;COLORBARONLY=true&amp;WIDTH=110&amp;HEIGHT=264" xlink:type="simple"/>
+                        </LegendURL>
+                    </Style>
+                    <Style>
+                        <Name>raster/div-RdBu-inv</Name>
+                        <Title>raster/div-RdBu-inv</Title>
+                        <Abstract>raster style, using the div-RdBu-inv palette</Abstract>
+                        <LegendURL height="264" width="110">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:href="http://www.smast.umassd.edu:8080/ncWMS2/wms?REQUEST=GetLegendGraphic&amp;PALETTE=div-RdBu-inv&amp;COLORBARONLY=true&amp;WIDTH=110&amp;HEIGHT=264" xlink:type="simple"/>
+                        </LegendURL>
+                    </Style>
+                    <Style>
+                        <Name>raster/seq-cubeYF</Name>
+                        <Title>raster/seq-cubeYF</Title>
+                        <Abstract>raster style, using the seq-cubeYF palette</Abstract>
+                        <LegendURL height="264" width="110">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:href="http://www.smast.umassd.edu:8080/ncWMS2/wms?REQUEST=GetLegendGraphic&amp;PALETTE=seq-cubeYF&amp;COLORBARONLY=true&amp;WIDTH=110&amp;HEIGHT=264" xlink:type="simple"/>
+                        </LegendURL>
+                    </Style>
+                </Layer>
+            </Layer>
+        </Layer>
+    </Capability>
+</WMS_Capabilities>

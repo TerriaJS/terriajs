@@ -73,7 +73,7 @@ describe('WebMapServiceCatalogItem', function() {
                               "foo": "bar" }
             });
             wmsItem.load().then(function() {
-                expect(wmsItem.legendUrl).toEqual(new LegendUrl('http://www.example.com/foo?request=GetLegendGraphic&secondUrl&styles=jet2&foo=bar', 'image/gif'));
+                expect(wmsItem.legendUrl).toEqual(new LegendUrl('http://www.example.com/foo?request=GetLegendGraphic&secondUrl&styles=jet2&foo=bar&srs=EPSG%3A3857', 'image/gif'));
                 done();
             }).otherwise(function(e) {
                 fail(e);
@@ -91,7 +91,7 @@ describe('WebMapServiceCatalogItem', function() {
                               "foo": "bar" }
             });
             wmsItem.load().then(function() {
-                expect(wmsItem.legendUrl.url.indexOf('http://foo.com/bar?service=WMS&version=1.1.0&request=GetLegendGraphic&format=image%2Fpng&transparent=True&layer=single_period&alpha=beta&foo=bar')).toBe(0);
+                expect(wmsItem.legendUrl.url.indexOf('http://foo.com/bar?service=WMS&version=1.1.0&request=GetLegendGraphic&format=image%2Fpng&transparent=True&layer=single_period&alpha=beta&foo=bar&srs=EPSG%3A3857')).toBe(0);
                 done();
             }).otherwise(function(e) {
                 fail(e);
@@ -107,7 +107,7 @@ describe('WebMapServiceCatalogItem', function() {
                 layers: 'single_period'
             });
             wmsItem.load().then(function() {
-                expect(wmsItem.legendUrl).toEqual(new LegendUrl('http://www.example.com/foo?request=GetLegendGraphic&firstUrl', 'image/gif'));
+                expect(wmsItem.legendUrl).toEqual(new LegendUrl('http://www.example.com/foo?request=GetLegendGraphic&firstUrl&srs=EPSG%3A3857', 'image/gif'));
                 done();
             }).otherwise(function(e) {
                 fail(e);
@@ -122,7 +122,7 @@ describe('WebMapServiceCatalogItem', function() {
                 layers: 'single_period'
             });
             wmsItem.load().then(function() {
-                expect(wmsItem.legendUrl).toEqual(new LegendUrl('http://www.example.com/foo?request=GetLegendGraphic&firstUrl', 'image/gif'));
+                expect(wmsItem.legendUrl).toEqual(new LegendUrl('http://www.example.com/foo?request=GetLegendGraphic&firstUrl&srs=EPSG%3A3857', 'image/gif'));
                 done();
             }).otherwise(function(e) {
                 fail(e);
@@ -137,7 +137,7 @@ describe('WebMapServiceCatalogItem', function() {
                 layers: 'single_period'
             });
             wmsItem.load().then(function() {
-                expect(wmsItem.legendUrl).toEqual(new LegendUrl('http://www.example.com/foo?request=GetLegendGraphic&firstUrl', 'image/gif'));
+                expect(wmsItem.legendUrl).toEqual(new LegendUrl('http://www.example.com/foo?request=GetLegendGraphic&firstUrl&srs=EPSG%3A3857', 'image/gif'));
                 done();
             }).otherwise(function(e) {
                 fail(e);
@@ -469,11 +469,20 @@ describe('WebMapServiceCatalogItem', function() {
         });
         wmsItem.load().then(function() {
             expect(wmsItem.isNcWMS).toBe(true);
-            done();
-        }).otherwise(function(e) {
-            fail(e);
-            done();
+            expect(wmsItem.supportsColorScaleRange).toBe(true);
+        }).then(done).otherwise(done.fail);
+    });
+
+    it('detects ncWMS2 implementation correctly', function(done) {
+        wmsItem.updateFromJson({
+            url: 'http://example.com',
+            metadataUrl: 'test/WMS/ncwms2_service.xml',
+            layers: 'mylayer'
         });
+        wmsItem.load().then(function() {
+            expect(wmsItem.isNcWMS).toBe(true);
+            expect(wmsItem.supportsColorScaleRange).toBe(true);
+        }).then(done).otherwise(done.fail);
     });
 
     it('does not indicate ncWMS on other service', function(done) {
@@ -485,9 +494,80 @@ describe('WebMapServiceCatalogItem', function() {
         wmsItem.load().then(function() {
             expect(wmsItem.isNcWMS).toBe(undefined);
             done();
-        }).otherwise(function(e) {
-            fail(e);
-            done();
+        }).then(done).otherwise(done.fail);
+    });
+
+    it('detects support for COLORSCALERANGE via ExtendedCapabilities (exposed by latest versions of ncWMS2)', function(done) {
+        wmsItem.updateFromJson({
+            url: 'http://example.com',
+            metadataUrl: 'test/WMS/colorscalerange.xml',
+            layers: 'mylayer'
+        });
+        wmsItem.load().then(function() {
+            expect(wmsItem.supportsColorScaleRange).toBe(true);
+        }).then(done).otherwise(done.fail);
+    });
+
+    describe('dimensions', function() {
+        it('are loaded from GetCapabilities', function(done) {
+            wmsItem.updateFromJson({
+                url: 'http://example.com',
+                metadataUrl: 'test/WMS/styles_and_dimensions.xml',
+                layers: 'A'
+            });
+
+            wmsItem.load().then(function() {
+                expect(wmsItem.availableDimensions).toBeDefined();
+                expect(wmsItem.availableDimensions.A).toBeDefined();
+                expect(wmsItem.availableDimensions.B).toBeDefined();
+
+                var aDimensions = wmsItem.availableDimensions.A;
+                expect(aDimensions.length).toBe(2);
+
+                expect(aDimensions[0].name).toEqual('elevation');
+                expect(aDimensions[0].units).toEqual('meters');
+                expect(aDimensions[0].unitSymbol).toEqual('m');
+                expect(aDimensions[0].default).toEqual('-0.03125');
+                expect(aDimensions[0].options).toEqual(['-0.96875','-0.90625','-0.84375','-0.78125','-0.71875','-0.65625','-0.59375','-0.53125','-0.46875','-0.40625','-0.34375','-0.28125','-0.21875','-0.15625','-0.09375','-0.03125']);
+
+                expect(aDimensions[1].name).toEqual('custom');
+                expect(aDimensions[1].units).toEqual('A');
+                expect(aDimensions[1].unitSymbol).toEqual('B');
+                expect(aDimensions[1].default).toEqual('Third thing');
+                expect(aDimensions[1].options).toEqual(['Something','Another thing','Third thing','yeah']);
+            }).then(done).otherwise(done.fail);
+        });
+
+        it('elevation is passed to imagery provider constructor', function(done) {
+            wmsItem.updateFromJson({
+                url: 'http://example.com',
+                metadataUrl: 'test/WMS/styles_and_dimensions.xml',
+                layers: 'A',
+                dimensions: {
+                    elevation: '-0.90625'
+                }
+            });
+
+            wmsItem.load().then(function() {
+                var imageryProvider = wmsItem._createImageryProvider();
+                expect(imageryProvider._tileProvider.url).toContain('elevation=-0.90625');
+            }).then(done).otherwise(done.fail);
+        });
+
+        it('custom dimension is passed to imagery provider constructor', function(done) {
+            wmsItem.updateFromJson({
+                url: 'http://example.com',
+                metadataUrl: 'test/WMS/styles_and_dimensions.xml',
+                layers: 'A',
+                dimensions: {
+                    custom: 'Another thing'
+                }
+            });
+
+            wmsItem.load().then(function() {
+                var imageryProvider = wmsItem._createImageryProvider();
+                expect(imageryProvider._tileProvider.url).toContain('dim_custom=Another%20thing');
+            }).then(done).otherwise(done.fail);
         });
     });
 });

@@ -1,0 +1,1013 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+
+
+<WMS_Capabilities
+        version="1.3.0"
+        updateSequence="2016-10-10T00:17:59.958Z"
+        xmlns="http://www.opengis.net/wms"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.opengis.net/wms http://schemas.opengis.net/wms/1.3.0/capabilities_1_3_0.xsd">
+
+    <Service>
+        <Name>WMS</Name>
+        <Title>Initial TDS Installation</Title>
+        <Abstract>Scientific Data</Abstract>
+        <KeywordList>
+
+
+            <Keyword>meteorology</Keyword>
+
+            <Keyword>atmosphere</Keyword>
+
+            <Keyword>climate</Keyword>
+
+            <Keyword>ocean</Keyword>
+
+            <Keyword>earth science</Keyword>
+
+        </KeywordList>
+        <OnlineResource xlink:type="simple" xlink:href="http://www.my.site/"/>
+        <ContactInformation>
+            <ContactPersonPrimary>
+                <ContactPerson>Support</ContactPerson>
+                <ContactOrganization>My Group</ContactOrganization>
+            </ContactPersonPrimary>
+            <ContactVoiceTelephone></ContactVoiceTelephone>
+            <ContactElectronicMailAddress>support@my.group</ContactElectronicMailAddress>
+        </ContactInformation>
+        <Fees>none</Fees>
+        <AccessConstraints>none</AccessConstraints>
+        <LayerLimit>1</LayerLimit>
+        <MaxWidth>2048</MaxWidth>
+        <MaxHeight>2048</MaxHeight>
+    </Service>
+    <Capability>
+        <Request>
+            <GetCapabilities>
+                <Format>text/xml</Format>
+                <DCPType><HTTP><Get><OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd"/></Get></HTTP></DCPType>
+            </GetCapabilities>
+            <GetMap>
+
+                <Format>image/png</Format>
+
+                <Format>image/png;mode=32bit</Format>
+
+                <Format>image/gif</Format>
+
+                <Format>image/jpeg</Format>
+
+                <Format>application/vnd.google-earth.kmz</Format>
+
+                <DCPType><HTTP><Get><OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd"/></Get></HTTP></DCPType>
+            </GetMap>
+            <GetFeatureInfo>
+
+                <Format>image/png</Format>
+
+                <Format>text/xml</Format>
+
+                <DCPType><HTTP><Get><OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd"/></Get></HTTP></DCPType>
+            </GetFeatureInfo>
+        </Request>
+        <Exception>
+            <Format>XML</Format>
+        </Exception>
+        <Layer>
+            <Title>Initial TDS Installation</Title>
+
+            <CRS>EPSG:4326</CRS>
+
+            <CRS>CRS:84</CRS>
+
+            <CRS>EPSG:41001</CRS>
+
+            <CRS>EPSG:27700</CRS>
+
+            <CRS>EPSG:3408</CRS>
+
+            <CRS>EPSG:3409</CRS>
+
+            <CRS>EPSG:3857</CRS>
+
+            <CRS>EPSG:900913</CRS>
+
+            <CRS>EPSG:32661</CRS>
+
+            <CRS>EPSG:32761</CRS>
+
+
+
+            <Layer>
+                <Title>Test of WMS Dimensions</Title>
+
+                <Layer queryable="1">
+                    <Name>A</Name>
+                    <Title>A layer</Title>
+                    <Abstract>This is the first layer.</Abstract>
+
+                    <EX_GeographicBoundingBox>
+                        <westBoundLongitude>-101.73759799032979</westBoundLongitude>
+                        <eastBoundLongitude>-53.264449565158856</eastBoundLongitude>
+                        <southBoundLatitude>11.916600886761035</southBoundLatitude>
+                        <northBoundLatitude>48.4370029038641</northBoundLatitude>
+                    </EX_GeographicBoundingBox>
+                    <BoundingBox CRS="CRS:84" minx="-101.73759799032979" maxx="-53.264449565158856" miny="11.916600886761035" maxy="48.4370029038641"/>
+
+                    <Dimension name="elevation" units="meters" unitSymbol="m" default="-0.03125">
+
+                        -0.96875,-0.90625,-0.84375,-0.78125,-0.71875,-0.65625,-0.59375,-0.53125,-0.46875,-0.40625,-0.34375,-0.28125,-0.21875,-0.15625,-0.09375,-0.03125
+                    </Dimension>
+
+                    <Dimension name="custom" units="A" unitSymbol="B" default="Third thing">
+                        Something,Another thing,Third thing,yeah
+                    </Dimension>
+
+
+
+                        <Dimension name="time" units="ISO8601" multipleValues="true" current="true" default="2016-09-24T00:00:00.000Z">
+
+
+
+
+
+
+                                            2012-06-25T01:00:00.000Z/2012-06-26T00:00:00.000Z/PT1H,2012-06-27T01:00:00.000Z/2012-06-30T00:00:00.000Z/PT1H,2012-07-02T01:00:00.000Z/2012-07-03T00:00:00.000Z/PT1H,2012-07-05T01:00:00.000Z/2012-07-09T00:00:00.000Z/PT1H
+
+
+
+
+
+                        </Dimension>
+
+
+
+
+
+                    <Style>
+                        <Name>areafill/rainbow</Name>
+                        <Title>areafill/rainbow</Title>
+                        <Abstract>areafill style, using the rainbow palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=v&amp;PALETTE=rainbow"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>areafill/occam</Name>
+                        <Title>areafill/occam</Title>
+                        <Abstract>areafill style, using the occam palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=v&amp;PALETTE=occam"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>areafill/redblue</Name>
+                        <Title>areafill/redblue</Title>
+                        <Abstract>areafill style, using the redblue palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=v&amp;PALETTE=redblue"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>areafill/ncview</Name>
+                        <Title>areafill/ncview</Title>
+                        <Abstract>areafill style, using the ncview palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=v&amp;PALETTE=ncview"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>areafill/sst_36</Name>
+                        <Title>areafill/sst_36</Title>
+                        <Abstract>areafill style, using the sst_36 palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=v&amp;PALETTE=sst_36"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>areafill/greyscale</Name>
+                        <Title>areafill/greyscale</Title>
+                        <Abstract>areafill style, using the greyscale palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=v&amp;PALETTE=greyscale"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>areafill/occam_pastel-30</Name>
+                        <Title>areafill/occam_pastel-30</Title>
+                        <Abstract>areafill style, using the occam_pastel-30 palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=v&amp;PALETTE=occam_pastel-30"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>areafill/alg2</Name>
+                        <Title>areafill/alg2</Title>
+                        <Abstract>areafill style, using the alg2 palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=v&amp;PALETTE=alg2"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>areafill/alg</Name>
+                        <Title>areafill/alg</Title>
+                        <Abstract>areafill style, using the alg palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=v&amp;PALETTE=alg"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>areafill/ferret</Name>
+                        <Title>areafill/ferret</Title>
+                        <Abstract>areafill style, using the ferret palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=v&amp;PALETTE=ferret"/>
+                        </LegendURL>
+                    </Style>
+
+
+
+                    <Style>
+                        <Name>shadefill/rainbow</Name>
+                        <Title>shadefill/rainbow</Title>
+                        <Abstract>shadefill style, using the rainbow palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=v&amp;PALETTE=rainbow"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>shadefill/occam</Name>
+                        <Title>shadefill/occam</Title>
+                        <Abstract>shadefill style, using the occam palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=v&amp;PALETTE=occam"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>shadefill/redblue</Name>
+                        <Title>shadefill/redblue</Title>
+                        <Abstract>shadefill style, using the redblue palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=v&amp;PALETTE=redblue"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>shadefill/ncview</Name>
+                        <Title>shadefill/ncview</Title>
+                        <Abstract>shadefill style, using the ncview palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=v&amp;PALETTE=ncview"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>shadefill/sst_36</Name>
+                        <Title>shadefill/sst_36</Title>
+                        <Abstract>shadefill style, using the sst_36 palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=v&amp;PALETTE=sst_36"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>shadefill/greyscale</Name>
+                        <Title>shadefill/greyscale</Title>
+                        <Abstract>shadefill style, using the greyscale palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=v&amp;PALETTE=greyscale"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>shadefill/occam_pastel-30</Name>
+                        <Title>shadefill/occam_pastel-30</Title>
+                        <Abstract>shadefill style, using the occam_pastel-30 palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=v&amp;PALETTE=occam_pastel-30"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>shadefill/alg2</Name>
+                        <Title>shadefill/alg2</Title>
+                        <Abstract>shadefill style, using the alg2 palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=v&amp;PALETTE=alg2"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>shadefill/alg</Name>
+                        <Title>shadefill/alg</Title>
+                        <Abstract>shadefill style, using the alg palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=v&amp;PALETTE=alg"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>shadefill/ferret</Name>
+                        <Title>shadefill/ferret</Title>
+                        <Abstract>shadefill style, using the ferret palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=v&amp;PALETTE=ferret"/>
+                        </LegendURL>
+                    </Style>
+
+
+
+                    <Style>
+                        <Name>boxfill/rainbow</Name>
+                        <Title>boxfill/rainbow</Title>
+                        <Abstract>boxfill style, using the rainbow palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=v&amp;PALETTE=rainbow"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>boxfill/occam</Name>
+                        <Title>boxfill/occam</Title>
+                        <Abstract>boxfill style, using the occam palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=v&amp;PALETTE=occam"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>boxfill/redblue</Name>
+                        <Title>boxfill/redblue</Title>
+                        <Abstract>boxfill style, using the redblue palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=v&amp;PALETTE=redblue"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>boxfill/ncview</Name>
+                        <Title>boxfill/ncview</Title>
+                        <Abstract>boxfill style, using the ncview palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=v&amp;PALETTE=ncview"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>boxfill/sst_36</Name>
+                        <Title>boxfill/sst_36</Title>
+                        <Abstract>boxfill style, using the sst_36 palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=v&amp;PALETTE=sst_36"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>boxfill/greyscale</Name>
+                        <Title>boxfill/greyscale</Title>
+                        <Abstract>boxfill style, using the greyscale palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=v&amp;PALETTE=greyscale"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>boxfill/occam_pastel-30</Name>
+                        <Title>boxfill/occam_pastel-30</Title>
+                        <Abstract>boxfill style, using the occam_pastel-30 palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=v&amp;PALETTE=occam_pastel-30"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>boxfill/alg2</Name>
+                        <Title>boxfill/alg2</Title>
+                        <Abstract>boxfill style, using the alg2 palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=v&amp;PALETTE=alg2"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>boxfill/alg</Name>
+                        <Title>boxfill/alg</Title>
+                        <Abstract>boxfill style, using the alg palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=v&amp;PALETTE=alg"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>boxfill/ferret</Name>
+                        <Title>boxfill/ferret</Title>
+                        <Abstract>boxfill style, using the ferret palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=v&amp;PALETTE=ferret"/>
+                        </LegendURL>
+                    </Style>
+
+
+
+                    <Style>
+                        <Name>contour/rainbow</Name>
+                        <Title>contour/rainbow</Title>
+                        <Abstract>contour style, using the rainbow palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=v&amp;PALETTE=rainbow"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>contour/occam</Name>
+                        <Title>contour/occam</Title>
+                        <Abstract>contour style, using the occam palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=v&amp;PALETTE=occam"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>contour/redblue</Name>
+                        <Title>contour/redblue</Title>
+                        <Abstract>contour style, using the redblue palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=v&amp;PALETTE=redblue"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>contour/ncview</Name>
+                        <Title>contour/ncview</Title>
+                        <Abstract>contour style, using the ncview palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=v&amp;PALETTE=ncview"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>contour/sst_36</Name>
+                        <Title>contour/sst_36</Title>
+                        <Abstract>contour style, using the sst_36 palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=v&amp;PALETTE=sst_36"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>contour/greyscale</Name>
+                        <Title>contour/greyscale</Title>
+                        <Abstract>contour style, using the greyscale palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=v&amp;PALETTE=greyscale"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>contour/occam_pastel-30</Name>
+                        <Title>contour/occam_pastel-30</Title>
+                        <Abstract>contour style, using the occam_pastel-30 palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=v&amp;PALETTE=occam_pastel-30"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>contour/alg2</Name>
+                        <Title>contour/alg2</Title>
+                        <Abstract>contour style, using the alg2 palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=v&amp;PALETTE=alg2"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>contour/alg</Name>
+                        <Title>contour/alg</Title>
+                        <Abstract>contour style, using the alg palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=v&amp;PALETTE=alg"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>contour/ferret</Name>
+                        <Title>contour/ferret</Title>
+                        <Abstract>contour style, using the ferret palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=v&amp;PALETTE=ferret"/>
+                        </LegendURL>
+                    </Style>
+
+
+                </Layer>
+
+                <Layer queryable="1">
+                    <Name>B</Name>
+                    <Title>Second layer</Title>
+                    <Abstract>This is another layer</Abstract>
+
+                    <EX_GeographicBoundingBox>
+                        <westBoundLongitude>-101.72705559125805</westBoundLongitude>
+                        <eastBoundLongitude>-53.27557484851556</eastBoundLongitude>
+                        <southBoundLatitude>11.898823436502258</southBoundLatitude>
+                        <northBoundLatitude>48.454022604552435</northBoundLatitude>
+                    </EX_GeographicBoundingBox>
+                    <BoundingBox CRS="CRS:84" minx="-101.72705559125805" maxx="-53.27557484851556" miny="11.898823436502258" maxy="48.454022604552435"/>
+
+                        <Dimension name="custom" units="A" unitSymbol="B" default="Third thing">
+                            Something,Another thing,Third thing,yeah
+                        </Dimension>
+
+                        <Dimension name="another" units="C" unitSymbol="D" default="Second">
+                            First,Second,Third
+                        </Dimension>
+
+                        <Dimension name="time" units="ISO8601" multipleValues="true" current="true" default="2016-09-24T00:00:00.000Z">
+
+
+
+
+
+
+                                            2012-06-25T01:00:00.000Z/2012-06-26T00:00:00.000Z/PT1H,2012-06-27T01:00:00.000Z/2012-06-30T00:00:00.000Z/PT1H,2012-07-02T01:00:00.000Z/2012-07-03T00:00:00.000Z/PT1H,2012-07-05T01:00:00.000Z/2012-07-09T00:00:00.000Z/PT1H
+
+
+
+
+
+                        </Dimension>
+
+
+
+
+
+                    <Style>
+                        <Name>areafill/rainbow</Name>
+                        <Title>areafill/rainbow</Title>
+                        <Abstract>areafill style, using the rainbow palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=wetdry_mask_u&amp;PALETTE=rainbow"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>areafill/occam</Name>
+                        <Title>areafill/occam</Title>
+                        <Abstract>areafill style, using the occam palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=wetdry_mask_u&amp;PALETTE=occam"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>areafill/redblue</Name>
+                        <Title>areafill/redblue</Title>
+                        <Abstract>areafill style, using the redblue palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=wetdry_mask_u&amp;PALETTE=redblue"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>areafill/ncview</Name>
+                        <Title>areafill/ncview</Title>
+                        <Abstract>areafill style, using the ncview palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=wetdry_mask_u&amp;PALETTE=ncview"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>areafill/sst_36</Name>
+                        <Title>areafill/sst_36</Title>
+                        <Abstract>areafill style, using the sst_36 palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=wetdry_mask_u&amp;PALETTE=sst_36"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>areafill/greyscale</Name>
+                        <Title>areafill/greyscale</Title>
+                        <Abstract>areafill style, using the greyscale palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=wetdry_mask_u&amp;PALETTE=greyscale"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>areafill/occam_pastel-30</Name>
+                        <Title>areafill/occam_pastel-30</Title>
+                        <Abstract>areafill style, using the occam_pastel-30 palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=wetdry_mask_u&amp;PALETTE=occam_pastel-30"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>areafill/alg2</Name>
+                        <Title>areafill/alg2</Title>
+                        <Abstract>areafill style, using the alg2 palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=wetdry_mask_u&amp;PALETTE=alg2"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>areafill/alg</Name>
+                        <Title>areafill/alg</Title>
+                        <Abstract>areafill style, using the alg palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=wetdry_mask_u&amp;PALETTE=alg"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>areafill/ferret</Name>
+                        <Title>areafill/ferret</Title>
+                        <Abstract>areafill style, using the ferret palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=wetdry_mask_u&amp;PALETTE=ferret"/>
+                        </LegendURL>
+                    </Style>
+
+
+
+                    <Style>
+                        <Name>shadefill/rainbow</Name>
+                        <Title>shadefill/rainbow</Title>
+                        <Abstract>shadefill style, using the rainbow palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=wetdry_mask_u&amp;PALETTE=rainbow"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>shadefill/occam</Name>
+                        <Title>shadefill/occam</Title>
+                        <Abstract>shadefill style, using the occam palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=wetdry_mask_u&amp;PALETTE=occam"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>shadefill/redblue</Name>
+                        <Title>shadefill/redblue</Title>
+                        <Abstract>shadefill style, using the redblue palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=wetdry_mask_u&amp;PALETTE=redblue"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>shadefill/ncview</Name>
+                        <Title>shadefill/ncview</Title>
+                        <Abstract>shadefill style, using the ncview palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=wetdry_mask_u&amp;PALETTE=ncview"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>shadefill/sst_36</Name>
+                        <Title>shadefill/sst_36</Title>
+                        <Abstract>shadefill style, using the sst_36 palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=wetdry_mask_u&amp;PALETTE=sst_36"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>shadefill/greyscale</Name>
+                        <Title>shadefill/greyscale</Title>
+                        <Abstract>shadefill style, using the greyscale palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=wetdry_mask_u&amp;PALETTE=greyscale"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>shadefill/occam_pastel-30</Name>
+                        <Title>shadefill/occam_pastel-30</Title>
+                        <Abstract>shadefill style, using the occam_pastel-30 palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=wetdry_mask_u&amp;PALETTE=occam_pastel-30"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>shadefill/alg2</Name>
+                        <Title>shadefill/alg2</Title>
+                        <Abstract>shadefill style, using the alg2 palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=wetdry_mask_u&amp;PALETTE=alg2"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>shadefill/alg</Name>
+                        <Title>shadefill/alg</Title>
+                        <Abstract>shadefill style, using the alg palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=wetdry_mask_u&amp;PALETTE=alg"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>shadefill/ferret</Name>
+                        <Title>shadefill/ferret</Title>
+                        <Abstract>shadefill style, using the ferret palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=wetdry_mask_u&amp;PALETTE=ferret"/>
+                        </LegendURL>
+                    </Style>
+
+
+
+                    <Style>
+                        <Name>boxfill/rainbow</Name>
+                        <Title>boxfill/rainbow</Title>
+                        <Abstract>boxfill style, using the rainbow palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=wetdry_mask_u&amp;PALETTE=rainbow"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>boxfill/occam</Name>
+                        <Title>boxfill/occam</Title>
+                        <Abstract>boxfill style, using the occam palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=wetdry_mask_u&amp;PALETTE=occam"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>boxfill/redblue</Name>
+                        <Title>boxfill/redblue</Title>
+                        <Abstract>boxfill style, using the redblue palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=wetdry_mask_u&amp;PALETTE=redblue"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>boxfill/ncview</Name>
+                        <Title>boxfill/ncview</Title>
+                        <Abstract>boxfill style, using the ncview palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=wetdry_mask_u&amp;PALETTE=ncview"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>boxfill/sst_36</Name>
+                        <Title>boxfill/sst_36</Title>
+                        <Abstract>boxfill style, using the sst_36 palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=wetdry_mask_u&amp;PALETTE=sst_36"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>boxfill/greyscale</Name>
+                        <Title>boxfill/greyscale</Title>
+                        <Abstract>boxfill style, using the greyscale palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=wetdry_mask_u&amp;PALETTE=greyscale"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>boxfill/occam_pastel-30</Name>
+                        <Title>boxfill/occam_pastel-30</Title>
+                        <Abstract>boxfill style, using the occam_pastel-30 palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=wetdry_mask_u&amp;PALETTE=occam_pastel-30"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>boxfill/alg2</Name>
+                        <Title>boxfill/alg2</Title>
+                        <Abstract>boxfill style, using the alg2 palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=wetdry_mask_u&amp;PALETTE=alg2"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>boxfill/alg</Name>
+                        <Title>boxfill/alg</Title>
+                        <Abstract>boxfill style, using the alg palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=wetdry_mask_u&amp;PALETTE=alg"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>boxfill/ferret</Name>
+                        <Title>boxfill/ferret</Title>
+                        <Abstract>boxfill style, using the ferret palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=wetdry_mask_u&amp;PALETTE=ferret"/>
+                        </LegendURL>
+                    </Style>
+
+
+
+                    <Style>
+                        <Name>contour/rainbow</Name>
+                        <Title>contour/rainbow</Title>
+                        <Abstract>contour style, using the rainbow palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=wetdry_mask_u&amp;PALETTE=rainbow"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>contour/occam</Name>
+                        <Title>contour/occam</Title>
+                        <Abstract>contour style, using the occam palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=wetdry_mask_u&amp;PALETTE=occam"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>contour/redblue</Name>
+                        <Title>contour/redblue</Title>
+                        <Abstract>contour style, using the redblue palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=wetdry_mask_u&amp;PALETTE=redblue"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>contour/ncview</Name>
+                        <Title>contour/ncview</Title>
+                        <Abstract>contour style, using the ncview palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=wetdry_mask_u&amp;PALETTE=ncview"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>contour/sst_36</Name>
+                        <Title>contour/sst_36</Title>
+                        <Abstract>contour style, using the sst_36 palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=wetdry_mask_u&amp;PALETTE=sst_36"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>contour/greyscale</Name>
+                        <Title>contour/greyscale</Title>
+                        <Abstract>contour style, using the greyscale palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=wetdry_mask_u&amp;PALETTE=greyscale"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>contour/occam_pastel-30</Name>
+                        <Title>contour/occam_pastel-30</Title>
+                        <Abstract>contour style, using the occam_pastel-30 palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=wetdry_mask_u&amp;PALETTE=occam_pastel-30"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>contour/alg2</Name>
+                        <Title>contour/alg2</Title>
+                        <Abstract>contour style, using the alg2 palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=wetdry_mask_u&amp;PALETTE=alg2"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>contour/alg</Name>
+                        <Title>contour/alg</Title>
+                        <Abstract>contour style, using the alg palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=wetdry_mask_u&amp;PALETTE=alg"/>
+                        </LegendURL>
+                    </Style>
+
+                    <Style>
+                        <Name>contour/ferret</Name>
+                        <Title>contour/ferret</Title>
+                        <Abstract>contour style, using the ferret palette</Abstract>
+                        <LegendURL width="110" height="264">
+                            <Format>image/png</Format>
+                            <OnlineResource xlink:type="simple" xlink:href="http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?REQUEST=GetLegendGraphic&amp;LAYER=wetdry_mask_u&amp;PALETTE=ferret"/>
+                        </LegendURL>
+                    </Style>
+
+
+                </Layer>
+
+            </Layer>
+
+
+        </Layer>
+    </Capability>
+</WMS_Capabilities>

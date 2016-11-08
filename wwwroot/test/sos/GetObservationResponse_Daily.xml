@@ -1,0 +1,196 @@
+<soap12:Envelope xmlns:soap12="http://www.w3.org/2003/05/soap-envelope" xmlns:wml2="http://www.opengis.net/waterml/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:om="http://www.opengis.net/om/2.0" xmlns:sos="http://www.opengis.net/sos/2.0" xmlns:sa="http://www.opengis.net/sampling/2.0" xmlns:sams="http://www.opengis.net/samplingSpatial/2.0" xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:xlink="http://www.w3.org/1999/xlink" xsi:schemaLocation="http://www.w3.org/2003/05/soap-envelope http://www.w3.org/2003/05/soap-envelope/soap-envelope.xsd http://www.opengis.net/sos/2.0 http://schemas.opengis.net/sos/2.0/sos.xsd http://www.opengis.net/waterml/2.0 http://schemas.opengis.net/waterml/2.0/waterml2.xsd">
+<soap12:Header>
+<wsa:To>http://www.w3.org/2005/08/addressing/anonymous</wsa:To>
+<wsa:Action>
+http://www.opengis.net/def/serviceOperation/sos/core/2.0/GetObservationResponse
+</wsa:Action>
+<wsa:RelatesTo>0</wsa:RelatesTo>
+</soap12:Header>
+<soap12:Body>
+<sos:GetObservationResponse>
+<extension xmlns="http://www.opengis.net/swes/2.0">
+<wml2:SOSProfileExtension>
+<wml2:metadata>
+<wml2:DocumentMetadata gml:id="Ki.DocMD.1">
+<wml2:generationDate>2016-08-11T05:28:44.303+00:00</wml2:generationDate>
+<wml2:generationSystem>KISTERS KiWIS</wml2:generationSystem>
+</wml2:DocumentMetadata>
+</wml2:metadata>
+</wml2:SOSProfileExtension>
+</extension>
+<sos:observationData>
+<om:OM_Observation gml:id="Ki.OM_Obs.1">
+<om:phenomenonTime>
+<gml:TimePeriod gml:id="Ki.ObsTime.1">
+<gml:beginPosition>2016-08-09T02:00:00.000+10:00</gml:beginPosition>
+<gml:endPosition>2016-08-11T02:00:00.000+10:00</gml:endPosition>
+</gml:TimePeriod>
+</om:phenomenonTime>
+<om:resultTime>
+<gml:TimeInstant gml:id="Ki.resTime.1">
+<gml:timePosition>2016-08-11T02:00:00.000+10:00</gml:timePosition>
+</gml:TimeInstant>
+</om:resultTime>
+<om:procedure xlink:href="http://sos.example.com/tstypes/Daily Mean" xlink:title="DailyMean.CalYear"/>
+<om:observedProperty xlink:href="http://sos.example.com/parameters/Storage Level" xlink:title="Storage Level"/>
+<om:featureOfInterest xlink:href="http://sos.example.com/stations/1" xlink:title="Sth Feature 1"/>
+<om:result>
+<wml2:MeasurementTimeseries gml:id="Ki.Ts.1">
+<wml2:defaultPointMetadata>
+<wml2:DefaultTVPMeasurementMetadata>
+<wml2:qualifier xlink:href="http://sos.example.com/qualifiers/-7" xlink:title="-7"/>
+<wml2:uom code="m"/>
+<wml2:interpolationType xlink:href="http://www.opengis.net/def/waterml/2.0/interpolationType/ConstSucc" xlink:title="Constant in succeeding interval"/>
+</wml2:DefaultTVPMeasurementMetadata>
+</wml2:defaultPointMetadata>
+<wml2:point>
+<wml2:MeasurementTVP>
+<wml2:time>2016-08-09T02:00:00.000+10:00</wml2:time>
+<wml2:value xsi:nil="true"/>
+</wml2:MeasurementTVP>
+</wml2:point>
+<wml2:point>
+<wml2:MeasurementTVP>
+<wml2:time>2016-08-10T02:00:00.000+10:00</wml2:time>
+<wml2:value>29.425</wml2:value>
+<wml2:metadata>
+<wml2:TVPMeasurementMetadata>
+<wml2:qualifier xlink:href="http://sos.example.com/qualifiers/-6" xlink:title="-6"/>
+</wml2:TVPMeasurementMetadata>
+</wml2:metadata>
+</wml2:MeasurementTVP>
+</wml2:point>
+<wml2:point>
+<wml2:MeasurementTVP>
+<wml2:time>2016-08-11T02:00:00.000+10:00</wml2:time>
+<wml2:value>23.123</wml2:value>
+</wml2:MeasurementTVP>
+</wml2:point>
+</wml2:MeasurementTimeseries>
+</om:result>
+</om:OM_Observation>
+</sos:observationData>
+<sos:observationData>
+<om:OM_Observation gml:id="Ki.OM_Obs.2">
+<om:phenomenonTime>
+<gml:TimePeriod gml:id="Ki.ObsTime.2">
+<gml:beginPosition>2016-08-09T02:00:00.000+10:00</gml:beginPosition>
+<gml:endPosition>2016-08-11T02:00:00.000+10:00</gml:endPosition>
+</gml:TimePeriod>
+</om:phenomenonTime>
+<om:resultTime>
+<gml:TimeInstant gml:id="Ki.resTime.2">
+<gml:timePosition>2016-08-11T02:00:00.000+10:00</gml:timePosition>
+</gml:TimeInstant>
+</om:resultTime>
+<om:procedure xlink:href="http://sos.example.com/tstypes/Daily Mean" xlink:title="DailyMean.CalYear"/>
+<om:observedProperty xlink:href="http://sos.example.com/parameters/Storage Level" xlink:title="Storage Level"/>
+<om:featureOfInterest xlink:href="http://sos.example.com/stations/2" xlink:title="Feature 2"/>
+<om:result>
+<wml2:MeasurementTimeseries gml:id="Ki.Ts.2">
+<wml2:defaultPointMetadata>
+<wml2:DefaultTVPMeasurementMetadata>
+<wml2:qualifier xlink:href="http://sos.example.com/qualifiers/-5" xlink:title="-5"/>
+<wml2:uom code="m"/>
+<wml2:interpolationType xlink:href="http://www.opengis.net/def/waterml/2.0/interpolationType/ConstSucc" xlink:title="Constant in succeeding interval"/>
+</wml2:DefaultTVPMeasurementMetadata>
+</wml2:defaultPointMetadata>
+<wml2:point>
+<wml2:MeasurementTVP>
+<wml2:time>2016-08-09T02:00:00.000+10:00</wml2:time>
+<wml2:value>4.575</wml2:value>
+</wml2:MeasurementTVP>
+</wml2:point>
+<wml2:point>
+<wml2:MeasurementTVP>
+<wml2:time>2016-08-10T02:00:00.000+10:00</wml2:time>
+<wml2:value>2.991</wml2:value>
+</wml2:MeasurementTVP>
+</wml2:point>
+<wml2:point>
+<wml2:MeasurementTVP>
+<wml2:time>2016-08-11T02:00:00.000+10:00</wml2:time>
+<wml2:value xsi:nil="true"/>
+</wml2:MeasurementTVP>
+</wml2:point>
+</wml2:MeasurementTimeseries>
+</om:result>
+</om:OM_Observation>
+</sos:observationData>
+<sos:observationData>
+<om:OM_Observation gml:id="Ki.OM_Obs.3">
+<om:phenomenonTime>
+<gml:TimePeriod gml:id="Ki.ObsTime.3">
+<gml:beginPosition>2016-08-07T00:00:00.000+10:00</gml:beginPosition>
+<gml:endPosition>2016-08-11T00:00:00.000+10:00</gml:endPosition>
+</gml:TimePeriod>
+</om:phenomenonTime>
+<om:resultTime>
+<gml:TimeInstant gml:id="Ki.resTime.3">
+<gml:timePosition>2016-08-11T00:00:00.000+10:00</gml:timePosition>
+</gml:TimeInstant>
+</om:resultTime>
+<om:procedure xlink:href="http://sos.example.com/tstypes/Daily Mean" xlink:title="DailyMean.CalYear"/>
+<om:observedProperty xlink:href="http://sos.example.com/parameters/Storage Level" xlink:title="Storage Level"/>
+<om:featureOfInterest xlink:href="http://sos.example.com/stations/3" xlink:title="Feature 3"/>
+<om:result>
+<wml2:MeasurementTimeseries gml:id="Ki.Ts.3">
+<wml2:defaultPointMetadata>
+<wml2:DefaultTVPMeasurementMetadata>
+<wml2:qualifier xlink:href="http://sos.example.com/qualifiers/-4" xlink:title="-4"/>
+<wml2:uom code="m"/>
+<wml2:interpolationType xlink:href="http://www.opengis.net/def/waterml/2.0/interpolationType/ConstSucc" xlink:title="Constant in succeeding interval"/>
+</wml2:DefaultTVPMeasurementMetadata>
+</wml2:defaultPointMetadata>
+<wml2:point>
+<wml2:MeasurementTVP>
+<wml2:time>2016-08-07T00:00:00.000+10:00</wml2:time>
+<wml2:value>3.066</wml2:value>
+<wml2:metadata>
+<wml2:TVPMeasurementMetadata>
+<wml2:qualifier xlink:href="http://sos.example.com/1" xlink:title="1"/>
+</wml2:TVPMeasurementMetadata>
+</wml2:metadata>
+</wml2:MeasurementTVP>
+</wml2:point>
+<wml2:point>
+<wml2:MeasurementTVP>
+<wml2:time>2016-08-08T00:00:00.000+10:00</wml2:time>
+<wml2:value>2.981</wml2:value>
+<wml2:metadata>
+<wml2:TVPMeasurementMetadata>
+<wml2:qualifier xlink:href="http://sos.example.com/qualifiers/2" xlink:title="2"/>
+</wml2:TVPMeasurementMetadata>
+</wml2:metadata>
+</wml2:MeasurementTVP>
+</wml2:point>
+<wml2:point>
+<wml2:MeasurementTVP>
+<wml2:time>2016-08-09T00:00:00.000+10:00</wml2:time>
+<wml2:value>10.136</wml2:value>
+</wml2:MeasurementTVP>
+</wml2:point>
+<wml2:point>
+<wml2:MeasurementTVP>
+<wml2:time>2016-08-10T00:00:00.000+10:00</wml2:time>
+<wml2:value>10.088</wml2:value>
+</wml2:MeasurementTVP>
+</wml2:point>
+<wml2:point>
+<wml2:MeasurementTVP>
+<wml2:time>2016-08-11T00:00:00.000+10:00</wml2:time>
+<wml2:value xsi:nil="true"/>
+<wml2:metadata>
+<wml2:TVPMeasurementMetadata>
+<wml2:qualifier xlink:href="http://sos.example.com/qualifiers/3" xlink:title="3"/>
+</wml2:TVPMeasurementMetadata>
+</wml2:metadata>
+</wml2:MeasurementTVP>
+</wml2:point>
+</wml2:MeasurementTimeseries>
+</om:result>
+</om:OM_Observation>
+</sos:observationData>
+</sos:GetObservationResponse>
+</soap12:Body>
+</soap12:Envelope>
