@@ -6,8 +6,8 @@ import defined from 'terriajs-cesium/Source/Core/defined';
 import ObserveModelMixin from '../ObserveModelMixin';
 
 import Styles from './parameter-editors.scss';
-
-import RegionParameterEditorCore from './RegionParameterEditorCore';
+import RegionPicker from './RegionPicker';
+import MapInteractionMode from '../../Models/MapInteractionMode';
 
 const RegionParameterEditor = React.createClass({
     mixins: [ObserveModelMixin],
@@ -18,34 +18,8 @@ const RegionParameterEditor = React.createClass({
         parameter: React.PropTypes.object
     },
 
-    componentWillMount() {
-        if (!defined(this.regionParameterEditorCore)) {
-            this.regionParameterEditorCore = new RegionParameterEditorCore(this.props.previewed,
-                                                                         this.props.parameter,
-                                                                         this.props.viewState);
-        }
-        const value = this.regionParameterEditorCore.getValue();
-        this.setState({
-            value: value
-        });
-    },
-
-    getInitialState() {
-        let value = "";
-        if (defined(this.regionParameterEditorCore)) {
-            value = this.regionParameterEditorCore.getInitialState();
-        }
-        return {
-            value: value
-        };
-    },
-
-    getValue() {
-        return this.regionParameterEditorCore.getValue();
-    },
-
     selectRegionOnMap() {
-        this.regionParameterEditorCore.selectOnMap();
+        RegionParameterEditor.selectOnMap(this.props.viewState, this.props.parameter, this.props.previewed);
     },
 
     render() {
@@ -53,12 +27,42 @@ const RegionParameterEditor = React.createClass({
                     <input className={Styles.field}
                            type="text"
                            readOnly
-                           value={this.state.value}/>
+                           value={this.props.parameter.displayValue}/>
                     <button type="button" onClick={this.selectRegionOnMap} className={Styles.btnSelector}>
                         Select region
                     </button>
                 </div>);
     }
 });
+
+/**
+ * Prompt user to select/draw on map in order to define parameter.
+ * @param {Object} viewState ViewState.
+ * @param {FunctionParameter} parameter Parameter.
+ * @param {Object} previewed Previewed.
+ */
+RegionParameterEditor.selectOnMap = function(viewState, parameter, previewed) {
+    const terria = previewed.terria;
+    // Cancel any feature picking already in progress.
+    terria.pickedFeatures = undefined;
+
+    const pickPointMode = new MapInteractionMode({
+        message: 'Select a region on the map',
+        onCancel: function () {
+            terria.mapInteractionModeStack.pop();
+            viewState.openAddData();
+        },
+        buttonText: "Done",
+        customUi: function Done() {
+            return (<RegionPicker className={Styles.parameterEditor}
+                        previewed={previewed}
+                        parameter={parameter}
+                     />
+            );
+        }
+    });
+    terria.mapInteractionModeStack.push(pickPointMode);
+    viewState.explorerPanelIsVisible = false;
+};
 
 module.exports = RegionParameterEditor;

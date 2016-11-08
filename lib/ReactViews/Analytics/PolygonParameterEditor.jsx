@@ -7,7 +7,9 @@ import defined from 'terriajs-cesium/Source/Core/defined';
 import ObserveModelMixin from '../ObserveModelMixin';
 import Styles from './parameter-editors.scss';
 
-import PolygonParameterEditorCore from './PolygonParameterEditorCore';
+import CesiumMath from 'terriajs-cesium/Source/Core/Math';
+import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
+import UserDrawing from '../../Models/UserDrawing';
 
 const PolygonParameterEditor = React.createClass({
     mixins: [ObserveModelMixin],
@@ -18,48 +20,12 @@ const PolygonParameterEditor = React.createClass({
         viewState: React.PropTypes.object
     },
 
-    componentWillMount() {
-        if (!defined(this.polygonParameterEditorCore)) {
-            this.polygonParameterEditorCore = new PolygonParameterEditorCore(this.props.previewed,
-                                                                         this.props.parameter,
-                                                                         this.props.viewState);
-        }
-        const value = this.polygonParameterEditorCore.getValue();
-        this.setState({
-            value: value
-        });
-    },
-
-    getInitialState() {
-        let value = "";
-        if (defined(this.polygonParameterEditorCore)) {
-            value = this.polygonParameterEditorCore.getInitialState();
-        }
-        return {
-            value: value
-        };
-    },
-
-    onTextChange(e) {
-        this.polygonParameterEditorCore.onTextChange(e);
-        this.setState({
-            value: e.target.value
-        });
-    },
-
-    getValue() {
-        return this.polygonParameterEditorCore.getValue();
-    },
-
-    setValue(value) {
-        this.polygonParameterEditorCore.setValue(value);
-        this.setState({
-            value: value
-        });
+    setDisplayValue(e) {
+        PolygonParameterEditor.setDisplayValue(e, this.props.parameter);
     },
 
     selectPolygonOnMap() {
-        this.polygonParameterEditorCore.selectOnMap();
+        PolygonParameterEditor.selectOnMap(this.props.previewed.terria, this.props.viewState, this.props.parameter);
     },
 
     render() {
@@ -67,8 +33,8 @@ const PolygonParameterEditor = React.createClass({
             <div>
                 <input className={Styles.field}
                        type="text"
-                       onChange={this.onTextChange}
-                       value={this.state.value}/>
+                       onChange={this.setDisplayValue}
+                       value={this.props.parameter.displayValue}/>
                 <button type="button"
                         onClick={this.selectPolygonOnMap}
                         className={Styles.btnSelector}>
@@ -78,5 +44,97 @@ const PolygonParameterEditor = React.createClass({
         );
     }
 });
+
+/**
+ * Triggered when user types value directly into field.
+ * @param {String} e Text that user has entered manually.
+ * @param {FunctionParameter} parameter Parameter to set value on.
+ */
+PolygonParameterEditor.setDisplayValue = function(e, parameter) {
+    parameter.value = [JSON.parse(e.target.value)];
+};
+
+/**
+ * Given a value, return it in human readable form for display.
+ * @param {Object} value Native format of parameter value.
+ * @return {String} String for display
+ */
+PolygonParameterEditor.getDisplayValue = function(value) {
+    if (!defined(value) || value.length < 1) {
+        return '';
+    }
+    const pointsLongLats = value[0];
+
+    let polygon = '';
+    for (let i = 0; i < pointsLongLats.length; i++) {
+        polygon += '[' + pointsLongLats[i][0].toFixed(3) + ', ' + pointsLongLats[i][1].toFixed(3) + ']';
+        if (i !== pointsLongLats.length - 1) {
+            polygon += ', ';
+        }
+    }
+    if (polygon.length > 0) {
+        return '[' + polygon + ']';
+    } else {
+        return '';
+    }
+};
+
+/**
+ * Process value so that it can be used in an URL.
+ * @param {String} value Value to use to format.
+ * @param {FunctionParameter} parameter Parameter value belongs to.
+ * @return {String} Stringified JSON that can be used to pass parameter value in URL.
+ */
+PolygonParameterEditor.formatValueForUrl = function(value, parameter) {
+    if (!defined(value) || value === '') {
+        return undefined;
+    }
+
+    return parameter.id + '=' + JSON.stringify({
+        'type': 'FeatureCollection',
+        'features': [
+            {
+                'type': 'Feature',
+                'geometry': {
+                    'type': 'Polygon',
+                    'coordinates': value
+                }
+            }
+        ]
+    });
+};
+
+/**
+ * Prompt user to select/draw on map in order to define parameter.
+ * @param {Terria} terria Terria instance.
+ * @param {Object} viewState ViewState.
+ * @param {FunctionParameter} parameter Parameter.
+ */
+PolygonParameterEditor.selectOnMap = function(terria, viewState, parameter) {
+    var userDrawing = new UserDrawing({
+        terria: terria,
+        onPointClicked: function(pointEntities) {
+            const pointEnts = pointEntities.entities.values;
+            const pointsLongLats = [];
+            for (let i=0; i < pointEnts.length; i++) {
+                const currentPoint = pointEnts[i];
+                const currentPointPos = currentPoint.position.getValue(terria.clock.currentTime);
+                const cartographic = Ellipsoid.WGS84.cartesianToCartographic(currentPointPos);
+                const points = [];
+                points.push(CesiumMath.toDegrees(cartographic.longitude));
+                points.push(CesiumMath.toDegrees(cartographic.latitude));
+                pointsLongLats.push(points);
+            }
+            parameter.value = [pointsLongLats];
+            parameter.displayValue = PolygonParameterEditor.getDisplayValue(parameter.value);
+            parameter.processedValue = PolygonParameterEditor.formatValueForUrl(parameter.value, parameter);
+        },
+        onCleanUp: function() {
+            viewState.openAddData();
+        }
+    });
+    viewState.explorerPanelIsVisible = false;
+    userDrawing.enterDrawMode();
+};
 
 module.exports = PolygonParameterEditor;
