@@ -26,7 +26,7 @@ const RegionParameterEditor = React.createClass({
                     <input className={Styles.field}
                            type="text"
                            readOnly
-                           value={this.props.parameter.displayValue}/>
+                           value={RegionPicker.getDisplayValue(this.props.parameter.value, this.props.parameter)}/>
                     <button type="button" onClick={this.selectRegionOnMap} className={Styles.btnSelector}>
                         Select region
                     </button>

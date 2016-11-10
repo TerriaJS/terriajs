@@ -12,6 +12,7 @@ import ObserveModelMixin from '../ObserveModelMixin';
 import WebMapServiceCatalogItem from '../../Models/WebMapServiceCatalogItem';
 
 import RegionTypeParameterEditor from './RegionTypeParameterEditor';
+import RegionParameterEditor from './RegionParameterEditor';
 import Styles from './parameter-editors.scss';
 
 const RegionPicker = React.createClass({
@@ -42,11 +43,7 @@ const RegionPicker = React.createClass({
 
         knockout.defineProperty(this, 'regionProvider', {
             get: function() {
-                if (defined(this.props.parameter.regionParameter)) {
-                    return this.props.parameter.regionParameter.regionProvider;
-                } else {
-                    return this.props.parameter.regionProvider;
-                }
+                return this.props.parameter.regionProvider;
             }
         });
 
@@ -61,11 +58,7 @@ const RegionPicker = React.createClass({
                     value = value.realRegion;
                 }
                 this.props.parameter.value = value;
-                this.props.parameter.displayValue = this.getDisplayValue("");
                 this.props.parameter.processedValue = this.formatValueForUrl(value);
-                this.setState({
-                    displayValue: this.getDisplayValue("")
-                });
             }
         });
 
@@ -253,7 +246,6 @@ const RegionPicker = React.createClass({
             }
         }
         this.setState({
-            displayValue: this.getDisplayValue(e.target.value),
             autocompleteVisible: result.length > 0 && result.length <= 100,
             autoCompleteOptions: result
         });
@@ -269,25 +261,6 @@ const RegionPicker = React.createClass({
         this.updateMapFromValue();
     },
 
-    getDisplayValue(displayValue) {
-        const region = this.regionValue;
-        if (!defined(region)) {
-            if (defined(displayValue)) {
-                return displayValue;
-            } else {
-                return "";
-            }
-        }
-        let val = "";
-        const index = this.regionProvider.regions.indexOf(region);
-        if (index >= 0 && this._regionNames[index]) {
-            val = this._regionNames[index];
-        } else {
-            val = region.id;
-        }
-        return this.regionProvider.regionType + ": " + val;
-    },
-
     render() {
         return (<div className={Styles.parameterEditor}>
                     <RegionTypeParameterEditor
@@ -297,7 +270,7 @@ const RegionPicker = React.createClass({
                     <input className={Styles.field}
                            type="text"
                            autoComplete="off"
-                           value={this.state.displayValue}
+                           value={RegionPicker.getDisplayValue(this.regionValue, this.props.parameter)}
                            onChange={this.textChange}
                            placeholder="Region name"
                     />
@@ -323,5 +296,29 @@ const RegionPicker = React.createClass({
         );
     }
 });
+
+/**
+ * Given a value, return it in human readable form for display.
+ * @param {Object} value Native format of parameter value.
+ * @return {String} String for display
+ */
+RegionPicker.getDisplayValue = function(region, parameter) {
+    if (!defined(region)) {
+        return '';
+    }
+    const regionProvider = parameter.regionProvider;
+    let val = '';
+    const index = regionProvider.regions.indexOf(region);
+    if (index >= 0 && regionProvider.regionNames[index]) {
+        val = regionProvider.regionNames[index];
+    } else {
+        val = region.id;
+    }
+    if (!defined(val)) {
+        return '';
+    }
+    return regionProvider.regionType + ": " + val;
+
+};
 
 module.exports = RegionPicker;

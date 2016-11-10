@@ -20,8 +20,8 @@ const PolygonParameterEditor = React.createClass({
         viewState: React.PropTypes.object
     },
 
-    setDisplayValue(e) {
-        PolygonParameterEditor.setDisplayValue(e, this.props.parameter);
+    setValueFromText(e) {
+        PolygonParameterEditor.setValueFromText(e, this.props.parameter);
     },
 
     selectPolygonOnMap() {
@@ -33,8 +33,8 @@ const PolygonParameterEditor = React.createClass({
             <div>
                 <input className={Styles.field}
                        type="text"
-                       onChange={this.setDisplayValue}
-                       value={this.props.parameter.displayValue}/>
+                       onChange={this.setValueFromText}
+                       value={PolygonParameterEditor.getDisplayValue(this.props.parameter.value)}/>
                 <button type="button"
                         onClick={this.selectPolygonOnMap}
                         className={Styles.btnSelector}>
@@ -50,7 +50,7 @@ const PolygonParameterEditor = React.createClass({
  * @param {String} e Text that user has entered manually.
  * @param {FunctionParameter} parameter Parameter to set value on.
  */
-PolygonParameterEditor.setDisplayValue = function(e, parameter) {
+PolygonParameterEditor.setValueFromText = function(e, parameter) {
     parameter.value = [JSON.parse(e.target.value)];
 };
 
@@ -126,7 +126,6 @@ PolygonParameterEditor.selectOnMap = function(terria, viewState, parameter) {
                 pointsLongLats.push(points);
             }
             parameter.value = [pointsLongLats];
-            parameter.displayValue = PolygonParameterEditor.getDisplayValue(parameter.value);
             parameter.processedValue = PolygonParameterEditor.formatValueForUrl(parameter.value, parameter);
         },
         onCleanUp: function() {

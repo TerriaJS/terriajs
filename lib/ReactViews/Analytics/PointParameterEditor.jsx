@@ -22,8 +22,8 @@ const PointParameterEditor = React.createClass({
         viewState: React.PropTypes.object
     },
 
-    setDisplayValue(e) {
-        PointParameterEditor.setDisplayValue(e, this.props.parameter);
+    setValueFromText(e) {
+        PointParameterEditor.setValueFromText(e, this.props.parameter);
     },
 
     selectPointOnMap() {
@@ -35,8 +35,8 @@ const PointParameterEditor = React.createClass({
             <div>
                 <input className={Styles.field}
                        type="text"
-                       onChange={this.setDisplayValue}
-                       value={this.props.parameter.displayValue}/>
+                       onChange={this.setValueFromText}
+                       value={PointParameterEditor.getDisplayValue(this.props.parameter.value)}/>
                 <button type="button" onClick={this.selectPointOnMap} className={Styles.btnSelector}>
                     Select location
                 </button>
@@ -50,7 +50,7 @@ const PointParameterEditor = React.createClass({
  * @param {String} e Text that user has entered manually.
  * @param {FunctionParameter} parameter Parameter to set value on.
  */
-PointParameterEditor.setDisplayValue = function(e, parameter) {
+PointParameterEditor.setValueFromText = function(e, parameter) {
     const coordinates = e.target.value.split(',');
     if (coordinates.length >= 2) {
         parameter.value = Cartographic.fromDegrees(parseFloat(coordinates[0]), parseFloat(coordinates[1]));
@@ -128,7 +128,6 @@ PointParameterEditor.selectOnMap = function(terria, viewState, parameter) {
             const value = Ellipsoid.WGS84.cartesianToCartographic(pickedFeatures.pickPosition);
             terria.mapInteractionModeStack.pop();
             parameter.value = value;
-            parameter.displayValue = PointParameterEditor.getDisplayValue(value);
             parameter.processedValue = PointParameterEditor.formatValueForUrl(value, parameter);
             viewState.openAddData();
         }
