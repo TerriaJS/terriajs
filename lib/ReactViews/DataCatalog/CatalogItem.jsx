@@ -2,6 +2,8 @@ import React from 'react';
 import classNames from 'classnames';
 import Icon from "../Icon.jsx";
 
+import defaultValue from 'terriajs-cesium/Source/Core/defaultValue';
+
 import Styles from './data-catalog-item.scss';
 
 const STATE_TO_TITLE = {
@@ -20,6 +22,7 @@ const STATE_TO_ICONS = {
 
 /** Dumb catalog item */
 function CatalogItem(props) {
+    const stateToTitle = defaultValue(props.titleOverrides, STATE_TO_TITLE);
     return (
         <li className={classNames(Styles.root)}>
             <button type='button'
@@ -32,7 +35,7 @@ function CatalogItem(props) {
             </button>
             <button type='button'
                     onClick={props.onBtnClick}
-                    title={STATE_TO_TITLE[props.btnState] || ''}
+                    title={stateToTitle[props.btnState] || ''}
                     className={Styles.btnAction}>
                     {STATE_TO_ICONS[props.btnState]}
             </button>
@@ -45,7 +48,8 @@ CatalogItem.propTypes = {
     selected: React.PropTypes.bool,
     text: React.PropTypes.string,
     onBtnClick: React.PropTypes.func,
-    btnState: React.PropTypes.oneOf(Object.keys(STATE_TO_ICONS))
+    btnState: React.PropTypes.oneOf(Object.keys(STATE_TO_ICONS)),
+    titleOverrides: React.PropTypes.object
 };
 
 export default CatalogItem;

@@ -5,6 +5,12 @@ import ObserveModelMixin from '../ObserveModelMixin';
 import raiseErrorOnRejectedPromise from '../../Models/raiseErrorOnRejectedPromise';
 import CatalogItem from './CatalogItem';
 
+const STATE_TO_TITLE = {
+    loading: 'Loading...',
+    remove: 'Remove this item',
+    add: 'Add this item. Hold down "shift" to keep the data catalog open.'
+};
+
 // Individual dataset
 const DataCatalogItem = React.createClass({
     mixins: [ObserveModelMixin],
@@ -60,6 +66,7 @@ const DataCatalogItem = React.createClass({
                 text={item.name}
                 btnState={this.getState()}
                 onBtnClick={this.onBtnClicked}
+                titleOverrides={STATE_TO_TITLE}
             />
         );
     },
