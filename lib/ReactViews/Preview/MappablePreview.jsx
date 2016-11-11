@@ -1,10 +1,12 @@
 import React from 'react';
 
 import DataPreviewSections from './DataPreviewSections';
-import DataPreviewMap from './DataPreviewMap.jsx';
+import DataPreviewMap from './DataPreviewMap';
+import defined from 'terriajs-cesium/Source/Core/defined';
+import MetadataTable from './MetadataTable';
 import ObserveModelMixin from '../ObserveModelMixin';
-import Styles from './mappable-preview.scss';
 import parseCustomMarkdownToReact from '../Custom/parseCustomMarkdownToReact';
+import Styles from './mappable-preview.scss';
 
 /**
  * CatalogItem preview that is mappable (as opposed to say, an analytics item that can't be displayed on a map without
@@ -99,7 +101,7 @@ const MappablePreview = React.createClass({
                                        onClick={e => e.target.select()} />
 
                                 <Choose>
-                                    <When condition={catalogItem.type === 'wms' || (catalogItem.type === 'esri-mapServer' && typeof catalogItem.layers !== 'undefined')}>
+                                    <When condition={catalogItem.type === 'wms' || (catalogItem.type === 'esri-mapServer' && defined(catalogItem.layers))}>
                                         <p key="wms-layers">
                                             Layer name{catalogItem.layers.split(',').length > 1 ? 's' : ''}: {catalogItem.layers}
                                         </p>
@@ -139,6 +141,17 @@ const MappablePreview = React.createClass({
                                        target="_blank">{catalogItem.dataUrl}</a>
                                 </p>
                             </If>
+
+                            <If condition={defined(catalogItem.metadata) && defined(catalogItem.metadata.dataSourceMetadata)}>
+                                <h4 className={Styles.h4}>Data Source Details</h4>
+                                <MetadataTable metadataItem={catalogItem.metadata.dataSourceMetadata} errorMessage={catalogItem.metadata.dataSourceErrorMessage} />
+                            </If>
+
+                            <If condition={defined(catalogItem.metadata) && defined(catalogItem.metadata.serviceMetadata)}>
+                                <h4 className={Styles.h4}>Data Service Details</h4>
+                                <MetadataTable metadataItem={catalogItem.metadata.serviceMetadata} errorMessage={catalogItem.metadata.serviceErrorMessage} />
+                            </If>
+
                         </If>
                     </div>
                 </div>
