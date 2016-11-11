@@ -1,5 +1,6 @@
 import React from 'react';
 
+import Collapsible from '../Custom/Collapsible/Collapsible';
 import DataPreviewSections from './DataPreviewSections';
 import DataPreviewMap from './DataPreviewMap';
 import defined from 'terriajs-cesium/Source/Core/defined';
@@ -142,14 +143,28 @@ const MappablePreview = React.createClass({
                                 </p>
                             </If>
 
-                            <If condition={defined(catalogItem.metadata) && defined(catalogItem.metadata.dataSourceMetadata)}>
-                                <h4 className={Styles.h4}>Data Source Details</h4>
-                                <MetadataTable metadataItem={catalogItem.metadata.dataSourceMetadata} errorMessage={catalogItem.metadata.dataSourceErrorMessage} />
-                            </If>
+                            <If condition={defined(catalogItem.metadata)}>
+                                <If condition={defined(catalogItem.metadata.dataSourceErrorMessage)}>
+                                    <div className={Styles.error}>
+                                        Error loading data source details: {catalogItem.metadata.dataSourceErrorMessage}
+                                    </div>
+                                </If>
+                                <If condition={defined(catalogItem.metadata.dataSourceMetadata) && catalogItem.metadata.dataSourceMetadata.items.length > 0}>
+                                    <Collapsible title="Data Source Details">
+                                        <MetadataTable metadataItem={catalogItem.metadata.dataSourceMetadata} />
+                                    </Collapsible>
+                                </If>
 
-                            <If condition={defined(catalogItem.metadata) && defined(catalogItem.metadata.serviceMetadata)}>
-                                <h4 className={Styles.h4}>Data Service Details</h4>
-                                <MetadataTable metadataItem={catalogItem.metadata.serviceMetadata} errorMessage={catalogItem.metadata.serviceErrorMessage} />
+                                <If condition={defined(catalogItem.metadata.serviceErrorMessage)}>
+                                    <div className={Styles.error}>
+                                        Error loading data service details: {catalogItem.metadata.serviceErrorMessage}
+                                    </div>
+                                </If>
+                                <If condition={defined(catalogItem.metadata.dataSourceMetadata) && catalogItem.metadata.dataSourceMetadata.items.length > 0}>
+                                    <Collapsible title="Data Service Details">
+                                        <MetadataTable metadataItem={catalogItem.metadata.serviceMetadata} />
+                                    </Collapsible>
+                                </If>
                             </If>
 
                         </If>
