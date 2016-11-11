@@ -24,6 +24,7 @@ function CatalogItem(props) {
         <li className={classNames(Styles.root)}>
             <button type='button'
                     onClick={props.onTextClick}
+                    title={props.title}
                     className={classNames(
                             Styles.btnCatalogItem,
                             {[Styles.btnCatalogItemIsPreviewed]: props.selected}
@@ -44,6 +45,7 @@ CatalogItem.propTypes = {
     onTextClick: React.PropTypes.func,
     selected: React.PropTypes.bool,
     text: React.PropTypes.string,
+    title: React.PropTypes.string,
     onBtnClick: React.PropTypes.func,
     btnState: React.PropTypes.oneOf(Object.keys(STATE_TO_ICONS))
 };

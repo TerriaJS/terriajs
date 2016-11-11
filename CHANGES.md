@@ -11,6 +11,7 @@ Change Log
 * The marker indicating the location of a search result is now placed correctly on the terrain surface.
 * Region for CatalogFunctions now selected on map rather than preview map
 * Some regions that were previously not selectable (in Analytics) except via autocomplete are now selectable.
+* Added hover text that show the position of data catalog search results in the full catalog.
 
 ### 4.5.1
 

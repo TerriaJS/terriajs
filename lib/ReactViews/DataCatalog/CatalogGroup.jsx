@@ -21,6 +21,7 @@ function CatalogGroup(props) {
                             {[Styles.btnIsOpen]: props.open},
                             {[Styles.isPreviewed]: props.selected}
                         )}
+                    title={props.title}
                     onClick={props.onClick}>
                 <If condition={!props.topLevel}>
                  <span className={Styles.folder}>{props.open ? <Icon glyph={Icon.GLYPHS.folderOpen}/> : <Icon glyph={Icon.GLYPHS.folder}/>}</span>
@@ -54,6 +55,7 @@ function CatalogGroup(props) {
 
 CatalogGroup.propTypes = {
     text: React.PropTypes.string,
+    title: React.PropTypes.string,
     topLevel: React.PropTypes.bool,
     open: React.PropTypes.bool,
     loading: React.PropTypes.bool,
