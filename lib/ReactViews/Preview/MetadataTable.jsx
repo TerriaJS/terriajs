@@ -33,7 +33,9 @@ const MetadataTable = React.createClass({
                                                 <MetadataTable metadataItem={item} />
                                             </When>
                                             <When condition={Array.isArray(item.value)}>
-                                                blah
+                                                <If condition={item.value.length > 0 && (isJoinable(item.value))}>
+                                                    {item.value.join(', ')}
+                                                </If>
                                             </When>
                                             <Otherwise>
                                                 {item.value}
@@ -49,6 +51,14 @@ const MetadataTable = React.createClass({
         );
     }
 });
+
+function isStringOrNumber(obj) {
+    return typeof obj === 'string' || obj instanceof String || !isNaN(parseFloat(obj));
+}
+
+function isJoinable(array) {
+    return array.every(isStringOrNumber);
+}
 
 export default MetadataTable;
 
