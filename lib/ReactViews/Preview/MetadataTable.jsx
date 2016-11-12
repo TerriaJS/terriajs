@@ -24,10 +24,10 @@ const MetadataTable = React.createClass({
                         <tbody>
                             <For each="item" index="i" of={metadataItem.items}>
                                 <tr key={i}>
-                                    <th>
+                                    <th className={Styles.name}>
                                         {item.name}
                                     </th>
-                                    <td>
+                                    <td className={Styles.value}>
                                         <Choose>
                                             <When condition={item.items.length > 0}>
                                                 <MetadataTable metadataItem={item} />
