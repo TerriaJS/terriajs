@@ -150,7 +150,7 @@ const MappablePreview = React.createClass({
                                     </div>
                                 </If>
                                 <If condition={defined(catalogItem.metadata.dataSourceMetadata) && catalogItem.metadata.dataSourceMetadata.items.length > 0}>
-                                    <Collapsible title="Data Source Details">
+                                    <Collapsible title="Data Source Details" isInverse={true}>
                                         <MetadataTable metadataItem={catalogItem.metadata.dataSourceMetadata} />
                                     </Collapsible>
                                 </If>
@@ -161,7 +161,7 @@ const MappablePreview = React.createClass({
                                     </div>
                                 </If>
                                 <If condition={defined(catalogItem.metadata.dataSourceMetadata) && catalogItem.metadata.dataSourceMetadata.items.length > 0}>
-                                    <Collapsible title="Data Service Details">
+                                    <Collapsible title="Data Service Details" isInverse={true}>
                                         <MetadataTable metadataItem={catalogItem.metadata.serviceMetadata} />
                                     </Collapsible>
                                 </If>
