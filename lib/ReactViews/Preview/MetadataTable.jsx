@@ -29,8 +29,11 @@ const MetadataTable = React.createClass({
                                     </th>
                                     <td>
                                         <Choose>
-                                            <When condition={Array.isArray(item.values)}>
+                                            <When condition={item.items.length > 0}>
                                                 <MetadataTable metadataItem={item} />
+                                            </When>
+                                            <When condition={Array.isArray(item.value)}>
+                                                blah
                                             </When>
                                             <Otherwise>
                                                 {item.value}
