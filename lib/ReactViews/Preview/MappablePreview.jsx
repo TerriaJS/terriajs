@@ -144,26 +144,35 @@ const MappablePreview = React.createClass({
                             </If>
 
                             <If condition={defined(catalogItem.metadata)}>
+                                {/*
+                                    // By default every catalog item has an error message here, so better to ignore it.
                                 <If condition={defined(catalogItem.metadata.dataSourceErrorMessage)}>
                                     <div className={Styles.error}>
                                         Error loading data source details: {catalogItem.metadata.dataSourceErrorMessage}
                                     </div>
                                 </If>
+                                */}
                                 <If condition={defined(catalogItem.metadata.dataSourceMetadata) && catalogItem.metadata.dataSourceMetadata.items.length > 0}>
-                                    <Collapsible title="Data Source Details" isInverse={true}>
-                                        <MetadataTable metadataItem={catalogItem.metadata.dataSourceMetadata} />
-                                    </Collapsible>
+                                    <div className={Styles.metadata}>
+                                        <Collapsible title="Data Source Details" isInverse={true}>
+                                            <MetadataTable metadataItem={catalogItem.metadata.dataSourceMetadata} />
+                                        </Collapsible>
+                                    </div>
                                 </If>
 
+                                {/*
                                 <If condition={defined(catalogItem.metadata.serviceErrorMessage)}>
                                     <div className={Styles.error}>
                                         Error loading data service details: {catalogItem.metadata.serviceErrorMessage}
                                     </div>
                                 </If>
+                                */}
                                 <If condition={defined(catalogItem.metadata.dataSourceMetadata) && catalogItem.metadata.dataSourceMetadata.items.length > 0}>
-                                    <Collapsible title="Data Service Details" isInverse={true}>
-                                        <MetadataTable metadataItem={catalogItem.metadata.serviceMetadata} />
-                                    </Collapsible>
+                                    <div className={Styles.metadata}>
+                                        <Collapsible title="Data Service Details" isInverse={true}>
+                                            <MetadataTable metadataItem={catalogItem.metadata.serviceMetadata} />
+                                        </Collapsible>
+                                    </div>
                                 </If>
                             </If>
 
