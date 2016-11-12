@@ -3,7 +3,7 @@ import React from 'react';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import ObserveModelMixin from '../ObserveModelMixin';
 import parseCustomMarkdownToReact from '../Custom/parseCustomMarkdownToReact';
-import Styles from './mappable-preview.scss';
+import Styles from './metadata-table.scss';
 
 /**
  * Displays a table showing the name and values of items in a MetadataItem.

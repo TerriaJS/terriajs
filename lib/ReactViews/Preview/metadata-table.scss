@@ -2,5 +2,21 @@
 @import '../../Sass/common/mixins';
 
 .root {
+}
 
+table tr:nth-child(odd) {
+    background-color: darken($faint-bg, 8%);
+}
+table tr:nth-child(even) {
+    background-color: $faint-bg;
+}
+
+th {
+  @extend %unwrap;
+  text-align: left;
+  padding: 0 3px 0 0;
+}
+
+td {
+  padding: 0 3px;
 }
