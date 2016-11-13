@@ -91,14 +91,14 @@ const ZoomControl = React.createClass({
             const pickRay = new Ray(scene.camera.positionWC, scene.camera.directionWC);
             const globe = scene.globe;
             const surfacePosition = globe.pick(pickRay, scene);
+            if (surfacePosition) {
+                const surfacePositionCartographic = globe.ellipsoid.cartesianToCartographic(surfacePosition);
+                const endPositionCartographic = globe.ellipsoid.cartesianToCartographic(endPosition);
 
-            const surfacePositionCartographic = globe.ellipsoid.cartesianToCartographic(surfacePosition);
-            const endPositionCartographic = globe.ellipsoid.cartesianToCartographic(endPosition);
-
-            if (endPositionCartographic.height - surfacePositionCartographic.height < 25.0) {
-                return;
+                if (endPositionCartographic.height - surfacePositionCartographic.height < 25.0) {
+                    return;
+                }
             }
-
             this.flyToPosition(scene, endPosition);
         }
 
