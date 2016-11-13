@@ -1,8 +1,6 @@
 import React from 'react';
 
-import defined from 'terriajs-cesium/Source/Core/defined';
 import ObserveModelMixin from '../ObserveModelMixin';
-import parseCustomMarkdownToReact from '../Custom/parseCustomMarkdownToReact';
 import Styles from './metadata-table.scss';
 
 /**
@@ -52,10 +50,20 @@ const MetadataTable = React.createClass({
     }
 });
 
+/**
+ * @param  {Object}  obj
+ * @return {Boolean} Returns true if the object obj is a string or a number.
+ * @private
+ */
 function isStringOrNumber(obj) {
     return typeof obj === 'string' || obj instanceof String || !isNaN(parseFloat(obj));
 }
 
+/**
+ * @param  {Array} array
+ * @return {Boolean} Returns true if the array only contains objects which can be joined.
+ * @private
+ */
 function isJoinable(array) {
     return array.every(isStringOrNumber);
 }
