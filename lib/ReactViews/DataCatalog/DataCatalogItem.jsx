@@ -8,6 +8,12 @@ import getAncestors from '../../Models/getAncestors';
 import ObserveModelMixin from '../ObserveModelMixin';
 import raiseErrorOnRejectedPromise from '../../Models/raiseErrorOnRejectedPromise';
 
+const STATE_TO_TITLE = {
+    loading: 'Loading...',
+    remove: 'Remove this item',
+    add: 'Add this item. Hold down "shift" to keep the data catalogue open.'
+};
+
 // Individual dataset
 const DataCatalogItem = React.createClass({
     mixins: [ObserveModelMixin],
@@ -64,6 +70,7 @@ const DataCatalogItem = React.createClass({
                 title={getAncestors(item).map(member => member.name).join(' → ')}
                 btnState={this.getState()}
                 onBtnClick={this.onBtnClicked}
+                titleOverrides={STATE_TO_TITLE}
             />
         );
     },
