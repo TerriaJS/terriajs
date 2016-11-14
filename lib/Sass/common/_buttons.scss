@@ -54,7 +54,7 @@ $btn-setting-size: 35px;
   padding: $padding;
 
   &:hover, &--hover {
-    background: $color-primary-hover;
+    background: get-hover-color($color-primary);
   }
 }
 
@@ -86,8 +86,8 @@ $btn-setting-size: 35px;
   border-radius: 4px;
 
   &:hover, &:focus {
-    border: 2px solid $color-primary-hover;
-    color: $color-primary-hover;
+    border: 2px solid get-hover-color($color-primary);
+    color: get-hover-color($color-primary);
   }
 }
 

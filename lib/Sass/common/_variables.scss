@@ -7,7 +7,7 @@ $font-mono: monospace, sans-serif;
 $font : $font-base;
 
 $color-primary: #08ABD5;
-$color-primary-hover: lighten($color-primary, 10%);
+@function get-hover-color($base-color) {@return lighten($base-color, 10%);}
 $color-secondary: #06CCFF;
 
 $animation-fast: 0.1s;
@@ -43,7 +43,7 @@ $modal-text: #000;
 $modal-secondary-bg: #f6f6f7;
 $modal-overlay: rgba(#000,0.7);
 $modal-highlight: $color-primary;
-$modal-selected: $color-primary;
+// $modal-selected: $color-primary;  // optionally define this to override $modal-highlight on the selected tab.
 $modal-border: $grey-lighter;
 $modal-content-height: 70vh;
 $modal-header-height: $btn-default-line-height + $padding*2;
