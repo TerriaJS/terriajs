@@ -106,8 +106,11 @@
 }
 
 %link {
-  color: $color-primary;
-  text-decoration: none;
+  color: $text-link;
+  text-decoration: $link-text-decoration;
+  &:visited {
+    color: $text-visited-link;
+  }
 }
 
 %sm-show, %md-show, %lg-show {

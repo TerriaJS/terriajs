@@ -23,6 +23,8 @@ $overlay: rgba(255, 255, 255, 0.15);
 $text-black: #000;
 $text-dark: #888;
 $text-light: #FFFFFF;
+$text-link: $color-primary;
+$text-visited-link: $color-primary;
 $faint-bg: #f5f5f5;
 $warning: #FF5B6F;
 $info-color: #FFFF00;   // ADDED BY AGS FOR FEATURE INFO PANEL
@@ -76,7 +78,7 @@ $branding-height: 55px;
 $badge-height: $input-height;
 $workbench-header: $input-height*2 + $padding-small*2 + $badge-height + 1px;
 $chart-height: 250px;
-
+$link-text-decoration: none;
 
 
 $border-color: rgba(#fff, 0.15);
