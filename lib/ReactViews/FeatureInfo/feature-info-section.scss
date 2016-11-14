@@ -39,7 +39,7 @@
   // Can't change these to target classes because we're directly styling markup from cesium.
   table {
     @extend %clearfix;
-    font-family: monospace;
+    font-family: $font-feature-info;
     max-width: 100%;
     border-collapse: collapse;
   }
@@ -48,7 +48,6 @@
     position: relative;
     border-collapse: collapse;
     border: 1px solid $dark;
-    font-size: $font-size-feature-info;
     padding: 5px;
   }
 }
