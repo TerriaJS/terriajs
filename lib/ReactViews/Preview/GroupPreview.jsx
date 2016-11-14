@@ -1,5 +1,7 @@
 import React from 'react';
 
+import DataPreviewSections from './DataPreviewSections';
+import DataPreviewUrl from './DataPreviewUrl.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
 import Styles from './mappable-preview.scss';
 import parseCustomMarkdownToReact from '../Custom/parseCustomMarkdownToReact';
@@ -21,6 +23,8 @@ const GroupPreview = React.createClass({
     },
 
     render() {
+        const metadataItem = this.props.previewed.nowViewingCatalogItem || this.props.previewed;
+
         return (
             <div>
                 <h3>{this.props.previewed.name}</h3>
@@ -35,6 +39,19 @@ const GroupPreview = React.createClass({
                                 </div>
                             </When>
                         </Choose>
+
+                        <DataPreviewSections metadataItem={metadataItem}/>
+
+                        <If condition={metadataItem.dataCustodian}>
+                            <div>
+                                <h4 className={Styles.h4}>Data Custodian</h4>
+                                {parseCustomMarkdownToReact(metadataItem.dataCustodian, {catalogItem: metadataItem})}
+                            </div>
+                        </If>
+
+                        <If condition={metadataItem.url && metadataItem.url.length && !metadataItem.hideSource}>
+                            <DataPreviewUrl metadataItem={metadataItem}/>
+                        </If>
                     </div>
                 </div>
             </div>
