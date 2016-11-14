@@ -88,5 +88,9 @@
 
 .btn--selected {
   background: #fff;
-  color: $modal-selected;
+  @if variable-exists(modal-selected) {
+    color: $modal-selected;
+  } @else {
+    color: $modal-highlight;
+  }
 }
