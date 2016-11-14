@@ -107,7 +107,6 @@
 
 %link {
   @if variable-exists(text-link) {
-    font-size: 100px;
     color: $text-link;
   } @else {
     color: $color-primary;  // for backwards compatibility
