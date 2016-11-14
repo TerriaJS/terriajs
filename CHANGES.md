@@ -12,6 +12,7 @@ Change Log
 * Region for CatalogFunctions now selected on map rather than preview map
 * Some regions that were previously not selectable (in Analytics) except via autocomplete are now selectable.
 * Added hover text that show the position of data catalog search results in the full catalog.
+* Widened scrollbars and improve their contrast.
 * Removed the default maximum number of 10 results when searching the data catalog.
 * Allow users to browse for json configuration files when adding "Local Data".
 
