@@ -57,7 +57,7 @@ const SidebarSearch = React.createClass({
                                 <ul className={Styles.btnList}>
                                     <SearchResult clickAction={this.searchInDataCatalog}
                                                   showPin={false}
-                                                  name={`Search ${this.props.viewState.searchState.locationSearchText} in the Data Catalog`}
+                                                  name={`Search ${this.props.viewState.searchState.locationSearchText} in the Data Catalogue`}
                                     />
                                 </ul>
                             </div>
