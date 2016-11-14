@@ -45,8 +45,8 @@ $btn-setting-size: 35px;
 .btn-primary {
   display: block;
   background: $color-primary;
-  font-family: 'Open Sans', sans-serif;
-  color: #fff;
+  font-family: $font-pop;
+  color: $text-light;
   text-align: center;
   width: 100%;
   box-sizing: border-box;
@@ -72,7 +72,7 @@ $btn-setting-size: 35px;
   &.is-active {
     background: $color-primary;
     border-color: $color-primary;
-    color: #fff;
+    color: $text-light;
   }
 }
 
@@ -92,7 +92,7 @@ $btn-setting-size: 35px;
 }
 
 .btn--tertiary {
-  background-color: #FFF;
+  background-color: $modal-bg;
   color: $modal-text;
   border: 2px solid $modal-text;
   border-radius: 4px;
@@ -105,7 +105,7 @@ $btn-setting-size: 35px;
 }
 
 .btn--tertiary-dark {
-  color: #FFF;
+  color: $text-light;
   border: 1px solid rgba(255, 255, 255, 0.6);
   border-radius: 4px;
   padding: 8px 10px;
@@ -166,9 +166,9 @@ $btn-setting-size: 35px;
   &:hover,
   &:focus {
     background: $modal-highlight;
-    color: #fff;
+    color: $text-light;
     .btn--group-indicator {
-      color: #fff;
+      color: $text-light;
     }
   }
 }
@@ -217,7 +217,7 @@ $btn-setting-size: 35px;
 .btn--map {
   font-size: $font-size-small;
   padding: 5px;
-  color: #fff;
+  color: $text-light;
   display: block;
   height: 25px;
   font-family: $font-pop;
@@ -235,7 +235,7 @@ $btn-setting-size: 35px;
   svg{
     height: 15px;
     width: 15px;
-    fill: #fff;
+    fill: $text-light;
     display: inline-block;
   }
 
