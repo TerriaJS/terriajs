@@ -12,6 +12,9 @@ Change Log
 * Region for CatalogFunctions now selected on map rather than preview map
 * Some regions that were previously not selectable (in Analytics) except via autocomplete are now selectable.
 * Added the data source and data service details to the "About this dataset" (preview) panel.
+* Widened scrollbars and improve their contrast.
+* Removed the default maximum number of 10 results when searching the data catalog.
+* Allow users to browse for json configuration files when adding "Local Data".
 
 ### 4.5.1
 

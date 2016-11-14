@@ -21,7 +21,7 @@ const Tabs = React.createClass({
         return {
             tabs: this.props.tabs || [
                 {
-                    name: 'Data Catalog',
+                    name: 'Data Catalogue',
                     title: 'data-catalog',
                     panel: <DataCatalogTab terria={this.props.terria}
                                            viewState={this.props.viewState}

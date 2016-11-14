@@ -49,8 +49,7 @@ const InvokeFunction = React.createClass({
                              parameter={param}
                              viewState={this.props.viewState}
                              previewed={this.props.previewed}
-            />
-        );
+            />);
     },
 
     render() {
