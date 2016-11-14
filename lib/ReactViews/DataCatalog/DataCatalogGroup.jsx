@@ -1,9 +1,10 @@
 import React from 'react';
 
-import DataCatalogMember from './DataCatalogMember';
-import CatalogGroup from './CatalogGroup';
-import ObserveModelMixin from '../ObserveModelMixin';
 import addedByUser from '../../Core/addedByUser';
+import CatalogGroup from './CatalogGroup';
+import DataCatalogMember from './DataCatalogMember';
+import getAncestors from '../../Models/getAncestors';
+import ObserveModelMixin from '../ObserveModelMixin';
 
 const DataCatalogGroup = React.createClass({
     mixins: [ObserveModelMixin],
@@ -71,6 +72,7 @@ const DataCatalogGroup = React.createClass({
         return (
             <CatalogGroup
                 text={group.name}
+                title={getAncestors(group).map(member => member.name).join(' → ')}
                 topLevel={this.isTopLevel()}
                 open={this.isOpen()}
                 loading={group.isLoading}
