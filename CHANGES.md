@@ -15,6 +15,7 @@ Change Log
 * Widened scrollbars and improve their contrast.
 * Removed the default maximum number of 10 results when searching the data catalog.
 * Allow users to browse for json configuration files when adding "Local Data".
+* Made it easier to use custom fonts and colors in applications built on TerriaJS, via new scss variables.
 * Fixed a bug that caused a `CswCatalogGroup` to fail to load if the server had a `references` element without a `protocol`.
 
 ### 4.5.1
