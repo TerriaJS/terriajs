@@ -4,7 +4,7 @@
 .form {
   composes: scrollbars from '../../Sass/common/_base.scss';
   font-family: $font-base;
-  font-size: 0.9rem;
+  font-size: $font-size-mid-small;
   z-index: 1;
   position: fixed;
   background: #fff;
@@ -58,7 +58,9 @@
   margin-left: 10px;
   border-radius: $radius-medium;
   padding: $padding-small $padding*2;
-
+  &:hover {
+    background: $color-primary;
+  }
 }
 
 .field {
@@ -75,6 +77,10 @@
   border: 1px solid $grey;
   border-radius: $radius-medium;
   padding: $padding-small $padding*2;
+  &:hover {
+    border: 1px solid $field-border;
+    color: $grey;
+  }
 }
 
 .btnClose {

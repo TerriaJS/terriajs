@@ -44,7 +44,7 @@
   composes: label from '../../../../Sass/common/_labels.scss';
 
   padding-left: 0;
-  font-size: 0.9rem;
+  font-size: $font-size-mid-small;
 }
 
 .dropdown {

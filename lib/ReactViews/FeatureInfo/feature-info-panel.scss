@@ -111,7 +111,7 @@
   overflow-y: auto;
   overflow-x: auto;
   max-height: calc(80vh - #{$padding*2 + $btn-default-line-height});
-  font-size: 0.9rem;
+  font-size: $font-size-feature-info;
 
   @media print{
     max-height: none;
