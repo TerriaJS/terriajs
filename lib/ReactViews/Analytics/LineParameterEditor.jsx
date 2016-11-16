@@ -74,7 +74,6 @@ const LineParameterEditor = React.createClass({
     }
 });
 
-
 /**
  * Triggered when user types value directly into field.
  * @param {String} e Text that user has entered manually.

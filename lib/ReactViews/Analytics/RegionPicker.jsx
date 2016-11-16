@@ -12,7 +12,6 @@ import ObserveModelMixin from '../ObserveModelMixin';
 import WebMapServiceCatalogItem from '../../Models/WebMapServiceCatalogItem';
 
 import RegionTypeParameterEditor from './RegionTypeParameterEditor';
-import RegionParameterEditor from './RegionParameterEditor';
 import Styles from './parameter-editors.scss';
 
 const RegionPicker = React.createClass({
