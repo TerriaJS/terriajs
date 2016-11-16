@@ -19,7 +19,6 @@ const LineParameterEditor = React.createClass({
 
     getInitialState() {
         return {
-            value: this.getValue(),
             userDrawing: new UserDrawing(
                 {
                     terria: this.props.previewed.terria,
@@ -30,41 +29,12 @@ const LineParameterEditor = React.createClass({
         };
     },
 
-    onTextChange(e) {
-        this.setValue(e.target.value);
-        this.setState({
-            value: e.target.value
-        });
-    },
-
-    getValue() {
-        const pointsLongLats = this.props.parameter.value;
-        if (!defined(pointsLongLats) || pointsLongLats.length < 1) {
-            return '';
-        }
-
-        let line = '';
-        for (let i = 0; i < pointsLongLats.length; i++) {
-            line += '[' + pointsLongLats[i][0].toFixed(3) + ', ' + pointsLongLats[i][1].toFixed(3) + ']';
-            if (i !== pointsLongLats.length - 1) {
-                line += ', ';
-            }
-        }
-        if (line.length > 0) {
-            return line;
-        } else {
-            return '';
-        }
-    },
-
-    setValue(value) {
-        this.setState({
-            value: value
-        });
-    },
-
     onCleanUp() {
         this.props.viewState.openAddData();
+    },
+
+    setValueFromText(e) {
+        LineParameterEditor.setValueFromText(e, this.props.parameter);
     },
 
     onPointClicked(pointEntities) {
@@ -92,8 +62,8 @@ const LineParameterEditor = React.createClass({
             <div>
                 <input className={Styles.field}
                        type="text"
-                       onChange={this.onTextChange}
-                       value={this.state.value}/>
+                       onChange={this.setValueFromText}
+                       value={LineParameterEditor.getDisplayValue(this.props.parameter.value)}/>
                 <button type="button"
                         onClick={this.selectLineOnMap}
                         className={Styles.btnSelector}>
@@ -103,5 +73,53 @@ const LineParameterEditor = React.createClass({
         );
     }
 });
+
+
+/**
+ * Triggered when user types value directly into field.
+ * @param {String} e Text that user has entered manually.
+ * @param {FunctionParameter} parameter Parameter to set value on.
+ */
+LineParameterEditor.setValueFromText = function(e, parameter) {
+    const coordinatePairs = e.target.value.split('], [');
+    const pointsLongLats = [];
+    for (let i=0; i<coordinatePairs.length; i++) {
+        let coordinates = coordinatePairs[i].replace('[', '').replace(']', '');
+        coordinates = coordinates.split(',');
+
+        if (coordinates.length >= 2) {
+            const points = [];
+            points.push(parseFloat(coordinates[0]));
+            points.push(parseFloat(coordinates[1]));
+            pointsLongLats.push(points);
+        }
+    }
+    parameter.value = pointsLongLats;
+};
+
+/**
+ * Given a value, return it in human readable form for display.
+ * @param {Object} value Native format of parameter value.
+ * @return {String} String for display
+ */
+LineParameterEditor.getDisplayValue = function(value) {
+    const pointsLongLats = value;
+    if (!defined(pointsLongLats) || pointsLongLats.length < 1) {
+        return '';
+    }
+
+    let line = '';
+    for (let i = 0; i < pointsLongLats.length; i++) {
+        line += '[' + pointsLongLats[i][0].toFixed(3) + ', ' + pointsLongLats[i][1].toFixed(3) + ']';
+        if (i !== pointsLongLats.length - 1) {
+            line += ', ';
+        }
+    }
+    if (line.length > 0) {
+        return line;
+    } else {
+        return '';
+    }
+};
 
 module.exports = LineParameterEditor;

@@ -71,40 +71,6 @@ PointParameterEditor.getDisplayValue = function(value) {
 };
 
 /**
- * Process value so that it can be used in an URL.
- * @param {String} value Value to use to format.
- * @param {FunctionParameter} parameter Parameter value belongs to.
- * @return {String} Stringified JSON that can be used to pass parameter value in URL.
- */
-PointParameterEditor.formatValueForUrl = function(value, parameter) {
-    if (!defined(value) || value === '') {
-        return undefined;
-    }
-
-    const coordinates = [
-        CesiumMath.toDegrees(value.longitude),
-        CesiumMath.toDegrees(value.latitude),
-    ];
-
-    if (defined(value.height)) {
-        coordinates.push(value.height);
-    }
-
-    return parameter.id + '=' + JSON.stringify({
-        'type': 'FeatureCollection',
-        'features': [
-            {
-                'type': 'Feature',
-                'geometry': {
-                    'type': 'Point',
-                    'coordinates': coordinates
-                }
-            }
-        ]
-    });
-};
-
-/**
  * Prompt user to select/draw on map in order to define parameter.
  * @param {Terria} terria Terria instance.
  * @param {Object} viewState ViewState.
@@ -128,7 +94,6 @@ PointParameterEditor.selectOnMap = function(terria, viewState, parameter) {
             const value = Ellipsoid.WGS84.cartesianToCartographic(pickedFeatures.pickPosition);
             terria.mapInteractionModeStack.pop();
             parameter.value = value;
-            parameter.processedValue = PointParameterEditor.formatValueForUrl(value, parameter);
             viewState.openAddData();
         }
     });

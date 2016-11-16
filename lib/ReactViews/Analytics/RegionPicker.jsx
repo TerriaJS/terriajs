@@ -58,7 +58,6 @@ const RegionPicker = React.createClass({
                     value = value.realRegion;
                 }
                 this.props.parameter.value = value;
-                this.props.parameter.processedValue = this.formatValueForUrl(value);
             }
         });
 
@@ -91,22 +90,6 @@ const RegionPicker = React.createClass({
             this._selectedRegionCatalogItem = undefined;
         }
 
-    },
-
-    formatValueForUrl(value) {
-        const that = this;
-        return this.regionProvider.getRegionFeature(this.props.previewed.terria, value, undefined).then(function(feature) {
-            const regionParameterString = that.props.parameter.id + '=' + JSON.stringify({
-                'type': 'FeatureCollection',
-                'features': [
-                    {
-                        'type': 'Feature',
-                        'geometry': feature.geometry
-                    }
-                ]
-            });
-            return regionParameterString;
-        });
     },
 
     updateFeature(feature) {

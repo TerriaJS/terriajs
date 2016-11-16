@@ -80,31 +80,6 @@ PolygonParameterEditor.getDisplayValue = function(value) {
 };
 
 /**
- * Process value so that it can be used in an URL.
- * @param {String} value Value to use to format.
- * @param {FunctionParameter} parameter Parameter value belongs to.
- * @return {String} Stringified JSON that can be used to pass parameter value in URL.
- */
-PolygonParameterEditor.formatValueForUrl = function(value, parameter) {
-    if (!defined(value) || value === '') {
-        return undefined;
-    }
-
-    return parameter.id + '=' + JSON.stringify({
-        'type': 'FeatureCollection',
-        'features': [
-            {
-                'type': 'Feature',
-                'geometry': {
-                    'type': 'Polygon',
-                    'coordinates': value
-                }
-            }
-        ]
-    });
-};
-
-/**
  * Prompt user to select/draw on map in order to define parameter.
  * @param {Terria} terria Terria instance.
  * @param {Object} viewState ViewState.
@@ -126,7 +101,6 @@ PolygonParameterEditor.selectOnMap = function(terria, viewState, parameter) {
                 pointsLongLats.push(points);
             }
             parameter.value = [pointsLongLats];
-            parameter.processedValue = PolygonParameterEditor.formatValueForUrl(parameter.value, parameter);
         },
         onCleanUp: function() {
             viewState.openAddData();
