@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+### 4.6.1
+
+* Support added for creating custom WPS types, and for reusing `Point`, `Polygon`, and `Region` editors in custom types.
+
 ### 4.6.0
 
 * Change in defaults:
@@ -11,7 +15,6 @@ Change Log
 * The marker indicating the location of a search result is now placed correctly on the terrain surface.
 * Region for CatalogFunctions now selected on map rather than preview map
 * Some regions that were previously not selectable (in Analytics) except via autocomplete are now selectable.
-* Support added for creating custom WPS types, and for reusing Point, Polygon and Region editors in custom types.
 * `CatalogFunction` region parameters are now selected on the main map rather than the preview map.
 * Some regions that were previously not selectable in Analytics, except via autocomplete, are now selectable.
 * Added hover text that shows the position of data catalog search results in the full catalog.
