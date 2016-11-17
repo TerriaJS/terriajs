@@ -13,8 +13,6 @@ Change Log
 * Made `WebMapServiceCatalogItem` tolerant of a `GetCapabilities` where a `LegendURL` element does not have an `OnlineResource` or a `Dimension` does not have any values.
 * Add support for 'Long' type hint to CSV data for specifying longitude.
 * The marker indicating the location of a search result is now placed correctly on the terrain surface.
-* Region for CatalogFunctions now selected on map rather than preview map
-* Some regions that were previously not selectable (in Analytics) except via autocomplete are now selectable.
 * `CatalogFunction` region parameters are now selected on the main map rather than the preview map.
 * Some regions that were previously not selectable in Analytics, except via autocomplete, are now selectable.
 * Added hover text that shows the position of data catalog search results in the full catalog.
