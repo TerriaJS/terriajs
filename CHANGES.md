@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+### 4.6.1
+
+* Support added for creating custom WPS types, and for reusing `Point`, `Polygon`, and `Region` editors in custom types.
+
 ### 4.6.0
 
 * Change in defaults:
