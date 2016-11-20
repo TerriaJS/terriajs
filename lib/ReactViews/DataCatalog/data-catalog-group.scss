@@ -9,7 +9,7 @@
   composes: btn from '../../Sass/common/_buttons.scss';
 
   text-align: left;
-  font-size: 0.8rem;
+  font-size: $font-size-small;
   padding: $padding-small 30px+$padding;
   position: relative;
   width: 100%;
@@ -20,7 +20,7 @@
     display: inline-block;
   }
   @media screen and (max-width: $sm) {
-    font-size: 0.9rem;
+    font-size: $font-size-mid-small;
     padding-top: 10px;
     padding-bottom: 10px;
     border-bottom: 1px solid $grey-lighter;
@@ -95,7 +95,7 @@
 
 .label {
   composes: label from '../../Sass/common/_labels.scss';
-  font-size: 0.8rem;
+  font-size: $font-size-small;
 }
 
 .label--no-results {

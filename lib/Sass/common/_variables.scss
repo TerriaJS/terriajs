@@ -4,9 +4,11 @@
 $font-pop:'Open Sans', sans-serif;
 $font-base: 'Open Sans', sans-serif;
 $font-mono: monospace, sans-serif;
+$font-feature-info: $font-mono;
 $font : $font-base;
 
 $color-primary: #08ABD5;
+@function get-hover-color($base-color) {@return lighten($base-color, 10%);}
 $color-secondary: #06CCFF;
 
 $animation-fast: 0.1s;
@@ -22,6 +24,7 @@ $overlay: rgba(255, 255, 255, 0.15);
 $text-black: #000;
 $text-dark: #888;
 $text-light: #FFFFFF;
+$text-visited-link: $color-primary;
 $faint-bg: #f5f5f5;
 $warning: #FF5B6F;
 $info-color: #FFFF00;   // ADDED BY AGS FOR FEATURE INFO PANEL
@@ -42,6 +45,7 @@ $modal-text: #000;
 $modal-secondary-bg: #f6f6f7;
 $modal-overlay: rgba(#000,0.7);
 $modal-highlight: $color-primary;
+// $modal-selected: $color-primary;  // optionally define this to override $modal-highlight on the selected tab.
 $modal-border: $grey-lighter;
 $modal-content-height: 70vh;
 $modal-header-height: $btn-default-line-height + $padding*2;
@@ -52,9 +56,14 @@ $mobile-text: #000;
 $mobile-modal-top-height: 40px;
 
 $font-size-large: 1.3rem;
+$font-size-mid-large: 1.1rem;
 $font-size-base: 1rem;
-$font-size-small: 13px;
-$font-size-mini: 10px;
+$font-size-mid-small: 0.9rem;
+$font-size-feature-info: 0.9rem;
+$font-size-button: 0.85rem;
+$font-size-small: 0.8125rem; // 13px;  // Why did we switch from rem to px here?!
+$font-size-mid-mini: 0.7rem;
+$font-size-mini: 0.625rem; // 10px;
 
 $font-weight-bold: 600;
 $font-weight-medium: 500;
@@ -69,7 +78,7 @@ $branding-height: 55px;
 $badge-height: $input-height;
 $workbench-header: $input-height*2 + $padding-small*2 + $badge-height + 1px;
 $chart-height: 250px;
-
+$link-text-decoration: none;
 
 
 $border-color: rgba(#fff, 0.15);
