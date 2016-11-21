@@ -1,0 +1,17 @@
+{
+    "catalog": [
+        {
+            "type": "group",
+            "name": "Confidentialisation on the fly",
+            "isOpen": true,
+            "items": [
+                {
+                    "name": "Dummy ACLD (2011)",
+                    "url": "http://flask-env.hnnuy8zpns.ap-southeast-2.elasticbeanstalk.com/v0/tables/unrolled_dummy_ACLD",
+                    "type": "aggregated-data-api",
+                    "keyType": "abs"
+                }
+            ]
+        }
+    ]
+}
