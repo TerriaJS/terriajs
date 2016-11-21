@@ -1,20 +1,21 @@
 import React from 'react';
 import arrayContains from '../../Core/arrayContains';
-import Branding from './../SidePanel/Branding.jsx';
+import Branding from './../SidePanel/Branding';
+import ConceptChooser from './../ConceptChooser/ConceptChooser';
 import DisclaimerHandler from '../../ReactViewModels/DisclaimerHandler';
-import DragDropFile from './../DragDropFile.jsx';
-import ExplorerWindow from './../ExplorerWindow/ExplorerWindow.jsx';
-import FeatureInfoPanel from './../FeatureInfo/FeatureInfoPanel.jsx';
-import FeedbackForm from '../Feedback/FeedbackForm.jsx';
-import MapColumn from './MapColumn.jsx';
-import MapInteractionWindow from './../Notification/MapInteractionWindow.jsx';
-import MapNavigation from './../Map/MapNavigation.jsx';
-import MenuBar from './../Map/MenuBar.jsx';
-import MobileHeader from './../Mobile/MobileHeader.jsx';
-import Notification from './../Notification/Notification.jsx';
+import DragDropFile from './../DragDropFile';
+import ExplorerWindow from './../ExplorerWindow/ExplorerWindow';
+import FeatureInfoPanel from './../FeatureInfo/FeatureInfoPanel';
+import FeedbackForm from '../Feedback/FeedbackForm';
+import MapColumn from './MapColumn';
+import MapInteractionWindow from './../Notification/MapInteractionWindow';
+import MapNavigation from './../Map/MapNavigation';
+import MenuBar from './../Map/MenuBar';
+import MobileHeader from './../Mobile/MobileHeader';
+import Notification from './../Notification/Notification';
 import ObserveModelMixin from './../ObserveModelMixin';
-import ProgressBar from '../Map/ProgressBar.jsx';
-import SidePanel from './../SidePanel/SidePanel.jsx';
+import ProgressBar from '../Map/ProgressBar';
+import SidePanel from './../SidePanel/SidePanel';
 import processCustomElements from './processCustomElements';
 import classNames from 'classnames';
 import 'inobounce';
@@ -123,6 +124,7 @@ const StandardUserInterface = React.createClass({
                             <MapColumn terria={terria} viewState={this.props.viewState} />
                             <main>
                                 <ExplorerWindow terria={terria} viewState={this.props.viewState}/>
+                                <ConceptChooser terria={terria} viewState={this.props.viewState}/>
                             </main>
                         </section>
                     </div>
