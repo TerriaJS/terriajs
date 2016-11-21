@@ -95,7 +95,7 @@ function getPointsLongLats(pointEntities, terria) {
         pointsLongLats.push(points);
     }
     return pointsLongLats;
-};
+}
 
 /**
  * Prompt user to select/draw on map in order to define parameter.
