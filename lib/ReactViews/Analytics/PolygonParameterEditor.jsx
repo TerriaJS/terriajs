@@ -80,6 +80,24 @@ PolygonParameterEditor.getDisplayValue = function(value) {
 };
 
 /**
+ * Helper function for processing clicked/moved points.
+ */
+function getPointsLongLats(pointEntities, terria) {
+    const pointEnts = pointEntities.entities.values;
+    const pointsLongLats = [];
+    for (let i=0; i < pointEnts.length; i++) {
+        const currentPoint = pointEnts[i];
+        const currentPointPos = currentPoint.position.getValue(terria.clock.currentTime);
+        const cartographic = Ellipsoid.WGS84.cartesianToCartographic(currentPointPos);
+        const points = [];
+        points.push(CesiumMath.toDegrees(cartographic.longitude));
+        points.push(CesiumMath.toDegrees(cartographic.latitude));
+        pointsLongLats.push(points);
+    }
+    return pointsLongLats;
+};
+
+/**
  * Prompt user to select/draw on map in order to define parameter.
  * @param {Terria} terria Terria instance.
  * @param {Object} viewState ViewState.
@@ -89,21 +107,13 @@ PolygonParameterEditor.selectOnMap = function(terria, viewState, parameter) {
     const userDrawing = new UserDrawing({
         terria: terria,
         onPointClicked: function(pointEntities) {
-            const pointEnts = pointEntities.entities.values;
-            const pointsLongLats = [];
-            for (let i=0; i < pointEnts.length; i++) {
-                const currentPoint = pointEnts[i];
-                const currentPointPos = currentPoint.position.getValue(terria.clock.currentTime);
-                const cartographic = Ellipsoid.WGS84.cartesianToCartographic(currentPointPos);
-                const points = [];
-                points.push(CesiumMath.toDegrees(cartographic.longitude));
-                points.push(CesiumMath.toDegrees(cartographic.latitude));
-                pointsLongLats.push(points);
-            }
-            parameter.value = [pointsLongLats];
+            parameter.value = [getPointsLongLats(pointEntities, terria)];
         },
         onCleanUp: function() {
             viewState.openAddData();
+        },
+        onPointMoved: function(customDataSource) {
+            parameter.value = [getPointsLongLats(customDataSource, terria)];
         }
     });
     viewState.explorerPanelIsVisible = false;
