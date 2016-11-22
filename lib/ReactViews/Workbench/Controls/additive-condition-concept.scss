@@ -9,3 +9,18 @@
   padding: $padding 0 0 0;
   font-size: $font-size-mid-small;
 }
+
+.controls {
+  float: right;
+}
+
+.btnClose {
+  composes: btn from '../../../Sass/common/_buttons.scss';
+  display: block;
+  // padding: 7px 0px;
+  svg {
+    height: 14px;
+    width: 14px;
+    fill: $text-light;
+  }
+}

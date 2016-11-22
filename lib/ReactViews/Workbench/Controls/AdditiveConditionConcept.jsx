@@ -1,7 +1,7 @@
 'use strict';
 
-// import classNames from 'classnames';
-// import Icon from "../../Icon.jsx";
+import classNames from 'classnames';
+import Icon from "../../Icon.jsx";
 import ObserveModelMixin from '../../ObserveModelMixin';
 import React from 'react';
 import Styles from './additive-condition-concept.scss';
@@ -25,6 +25,11 @@ const AdditiveConditionConcept = React.createClass({
         return (
             <div className={Styles.root}>
                 <For each="group" index="i" of={activeLeafNodesByParent}>
+                    <div className={Styles.controls}>
+                        <button className={Styles.btnClose} onClick ={this.onRemove} title='remove condition'>
+                            <Icon glyph={Icon.GLYPHS.close}/>
+                        </button>
+                    </div>
                     <button type="button"
                             onClick={this.openConceptChooser}
                             className={Styles.btnAdditiveConditionHeading}>
