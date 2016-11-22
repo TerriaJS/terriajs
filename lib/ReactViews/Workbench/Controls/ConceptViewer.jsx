@@ -1,7 +1,8 @@
 'use strict';
 
+import ConceptChoice from "./ConceptChoice";
 import classNames from 'classnames';
-import Icon from "../../Icon.jsx";
+import Icon from "../../Icon";
 import ObserveModelMixin from '../../ObserveModelMixin';
 import React from 'react';
 import Styles from './concept-viewer.scss';
@@ -69,14 +70,7 @@ const Concept = React.createClass({
         return (
             <li style={this.getColorStyle()}>
                 <If condition={concept.useChooser}>
-                    <If condition={concept.isActive}>
-                        <button type='button'
-                                onClick={this.openConceptChooser}
-                                style={this.getColorStyle()}
-                                className={Styles.btnOpenChooser}>
-                            {concept.name}
-                        </button>
-                    </If>
+                    <ConceptChoice concept={concept} viewState={this.props.viewState}/>
                 </If>
                 <If condition={!concept.useChooser}>
                     <If condition={concept.name}>

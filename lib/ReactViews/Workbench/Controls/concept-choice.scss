@@ -1,0 +1,11 @@
+@import '~terriajs-variables';
+@import '../../../Sass/common/mixins';
+
+// concept-choice
+
+.root {
+  color: green;
+  background-color: gray;
+  padding: $padding 0 0 0;
+  font-size: $font-size-mid-small;
+}
