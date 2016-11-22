@@ -67,11 +67,12 @@ const Concept = React.createClass({
     render() {
         const concept = this.props.concept;
 
+        if (concept.useChooser) {
+            return <ConceptChoice concept={concept} viewState={this.props.viewState}/>;
+        }
+
         return (
             <li style={this.getColorStyle()}>
-                <If condition={concept.useChooser}>
-                    <ConceptChoice concept={concept} viewState={this.props.viewState}/>
-                </If>
                 <If condition={!concept.useChooser}>
                     <If condition={concept.name}>
                         <div className={classNames(Styles.header, {[Styles.hasChildren]: concept.hasChildren, [Styles.isSelectable]: concept.isSelectable})}>
