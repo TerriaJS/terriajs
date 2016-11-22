@@ -15,7 +15,7 @@ const ConceptChoice = React.createClass({
     },
 
     openConceptChooser() {
-        this.props.viewState.conceptChooserIsVisible = true;
+        console.log('choosing');
     },
 
     render() {
