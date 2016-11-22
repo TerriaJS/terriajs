@@ -6,11 +6,18 @@
             "isOpen": true,
             "items": [
                 {
-                    "name": "Dummy ACLD (2011)",
+                    "name": "Dummy ACLD (2011, online)",
                     "url": "http://flask-env.hnnuy8zpns.ap-southeast-2.elasticbeanstalk.com/v0/tables/unrolled_dummy_ACLD",
                     "type": "aggregated-data-api",
                     "keyType": "abs"
+                },
+                {
+                    "name": "Dummy ACLD (2011, localhost)",
+                    "url": "http://localhost:8080/v0/tables/unrolled_dummy_ACLD",
+                    "type": "aggregated-data-api",
+                    "keyType": "abs"
                 }
+
             ]
         }
     ]

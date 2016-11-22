@@ -1,6 +1,6 @@
 'use strict';
 
-import ConceptChoice from "./ConceptChoice";
+import AdditiveConditionConcept from "./AdditiveConditionConcept";
 import classNames from 'classnames';
 import Icon from "../../Icon";
 import ObserveModelMixin from '../../ObserveModelMixin';
@@ -67,13 +67,13 @@ const Concept = React.createClass({
     render() {
         const concept = this.props.concept;
 
-        if (concept.useChooser) {
-            return <ConceptChoice concept={concept} viewState={this.props.viewState}/>;
+        if (concept.displayType === 'additive-condition') {
+            return <AdditiveConditionConcept concept={concept} viewState={this.props.viewState}/>;
         }
 
         return (
             <li style={this.getColorStyle()}>
-                <If condition={!concept.useChooser}>
+                <If condition={!concept.displayType}>
                     <If condition={concept.name}>
                         <div className={classNames(Styles.header, {[Styles.hasChildren]: concept.hasChildren, [Styles.isSelectable]: concept.isSelectable})}>
                             <div className={Styles.btnGroup}>

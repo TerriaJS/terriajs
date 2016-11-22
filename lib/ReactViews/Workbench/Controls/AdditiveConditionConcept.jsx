@@ -4,9 +4,9 @@
 // import Icon from "../../Icon.jsx";
 import ObserveModelMixin from '../../ObserveModelMixin';
 import React from 'react';
-import Styles from './concept-choice.scss';
+import Styles from './additive-condition-concept.scss';
 
-const ConceptChoice = React.createClass({
+const AdditiveConditionConcept = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -27,13 +27,13 @@ const ConceptChoice = React.createClass({
                 <For each="group" index="i" of={activeLeafNodesByParent}>
                     <button type="button"
                             onClick={this.openConceptChooser}
-                            className={Styles.btnConceptChoiceHeading}>
+                            className={Styles.btnAdditiveConditionHeading}>
                         {group.parent.name}
                     </button>
                     <For each="child" index="j" of={group.children}>
                         <button type='button'
                                 onClick={this.openConceptChooser}
-                                className={Styles.btnConceptChoice}>
+                                className={Styles.btnAdditiveConditionBody}>
                             {child.name}
                         </button>
                     </For>
@@ -60,5 +60,5 @@ function getNodesByParent(nodes) {
     return Object.keys(results).map(key => results[key]);
 }
 
-module.exports = ConceptChoice;
+module.exports = AdditiveConditionConcept;
 
