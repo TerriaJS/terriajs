@@ -14,7 +14,7 @@
   float: right;
 }
 
-.btnClose {
+.btnRemove {
   composes: btn from '../../../Sass/common/_buttons.scss';
   display: block;
   padding: 9px 4px;
@@ -46,8 +46,17 @@
 }
 
 .btnClose {
-  composes: btnClose;
+  composes: btn from '../../../Sass/common/_buttons.scss';
+  @extend %wrap;
   color: $text-light;
+  font-size: $font-size-mid-mini;
+  padding: 0px 7px;
+  margin: 5px;
+  font-weight: $font-weight-light;
+  border: $border-style;
+  &:focus, &:hover {
+    background: $modal-highlight;
+  }
 }
 
 .section {

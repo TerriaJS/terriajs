@@ -55,9 +55,13 @@ const AdditiveCondition = React.createClass({
         viewState: React.PropTypes.object.isRequired
     },
 
-    openConcept() {
-        const activeLeafNodesWithParent = this.props.activeLeafNodesWithParent;
-        activeLeafNodesWithParent.parent.isOpen = true;
+    open() {
+        this.props.activeLeafNodesWithParent.parent.isOpen = true;
+    },
+
+    close(event) {
+        event.stopPropagation();
+        this.props.activeLeafNodesWithParent.parent.isOpen = false;
     },
 
     remove(event) {
@@ -72,11 +76,11 @@ const AdditiveCondition = React.createClass({
     render() {
         const activeLeafNodesWithParent = this.props.activeLeafNodesWithParent;
         return (
-            <div onClick={this.openConcept} className={Styles.btnOpen}>
+            <div onClick={this.open} className={Styles.btnOpen}>
                 <div className={Styles.section}>
                     <div className={Styles.controls}>
                         <If condition={!activeLeafNodesWithParent.parent.isOpen}>
-                            <button className={Styles.btnClose} onClick={this.remove} title='remove condition'>
+                            <button className={Styles.btnRemove} onClick={this.remove} title='remove condition'>
                                 <Icon glyph={Icon.GLYPHS.close}/>
                             </button>
                         </If>
