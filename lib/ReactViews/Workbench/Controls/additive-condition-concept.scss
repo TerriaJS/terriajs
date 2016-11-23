@@ -4,10 +4,6 @@
 // additive-condition-concept
 
 .root {
-  color: green;
-  background-color: gray;
-  padding: $padding 0 0 0;
-  font-size: $font-size-mid-small;
 }
 
 .controls {
@@ -17,10 +13,48 @@
 .btnClose {
   composes: btn from '../../../Sass/common/_buttons.scss';
   display: block;
-  // padding: 7px 0px;
+  padding: 9px 4px;
   svg {
     height: 14px;
     width: 14px;
     fill: $text-light;
+    &:focus, &:hover {
+      fill: $modal-highlight;
+    }
   }
+}
+
+.btnOpen {
+  composes: btn from '../../../Sass/common/_buttons.scss';
+  @extend %wrap;
+  position: relative;
+  width: 100%;
+  margin-top: $padding;
+  background: $overlay;
+
+  &:focus, &:hover {
+    color: $text-light;
+    background: get-hover-color($overlay);
+    &:before {
+      opacity: 1;
+    }
+  }
+}
+
+.section {
+  position: relative;
+  line-height: 1.4;
+}
+
+.heading {
+  background-color: $overlay;
+  border: $border-style;
+  padding: 5px $padding; // 5px $padding 5px 22px;
+}
+
+.condition {
+  border-left: $border-style;
+  border-right: $border-style;
+  border-bottom: $border-style;
+  padding: 5px $padding; // 5px $padding 5px 22px;
 }

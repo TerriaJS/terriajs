@@ -4,8 +4,11 @@
 // concept-viewer
 
 .root {
-  padding: $padding 0 0 0;
   font-size: $font-size-mid-small;
+}
+
+.section {
+  padding: $padding 0 0 0;
 }
 
 .inner {

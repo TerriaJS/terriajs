@@ -8,7 +8,7 @@ $workbench-margin: $padding-small;
   color: #fff;
   font-family: $font-pop;
   margin: $workbench-margin 0;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid $overlay;
 
   &.workbench-item:global(.ui-sortable-item) {
     cursor: auto;

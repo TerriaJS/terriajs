@@ -16,13 +16,28 @@ const ConceptViewer = React.createClass({
     },
 
     render() {
+        // All non-additive-conditions go in a single section. (If there are none, don't show a <div class=section> so we don't get an extra padding.)
+        // Each additive-condition goes in its own section.
+        const nonAdditiveConditionConcepts = this.props.item.concepts.filter(concept => concept.isVisible && concept.displayType !== 'additive-condition');
         return (
             <div className={Styles.root}>
+                <If condition={nonAdditiveConditionConcepts.length > 0}>
+                    <div className={Styles.section}>
+                        <For each="concept" index="i"
+                             of={nonAdditiveConditionConcepts}>
+                            <div className={Styles.inner} key={i}>
+                                <ul className={Styles.childrenList}>
+                                    <Concept concept={concept} allowMultiple={concept.allowMultiple} viewState={this.props.viewState}/>
+                                </ul>
+                            </div>
+                        </For>
+                    </div>
+                </If>
                 <For each="concept" index="i"
-                     of={this.props.item.concepts.filter(concept => concept.isVisible)}>
-                    <div className={Styles.inner} key={i}>
+                     of={this.props.item.concepts.filter(concept => concept.isVisible && concept.displayType === 'additive-condition')}>
+                    <div className={Styles.section} key={i}>
                         <ul className={Styles.childrenList}>
-                            <Concept concept={concept} allowMultiple={concept.allowMultiple} viewState={this.props.viewState}/>
+                            <AdditiveConditionConcept concept={concept} viewState={this.props.viewState}/>
                         </ul>
                     </div>
                 </For>
@@ -66,11 +81,7 @@ const Concept = React.createClass({
 
     render() {
         const concept = this.props.concept;
-
-        if (concept.displayType === 'additive-condition') {
-            return <AdditiveConditionConcept concept={concept} viewState={this.props.viewState}/>;
-        }
-
+        // Renders the concept as a standard list of radio buttons or checkboxes (ie. not as an additive-condition).
         return (
             <li style={this.getColorStyle()}>
                 <If condition={!concept.displayType}>

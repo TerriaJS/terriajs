@@ -1,6 +1,6 @@
 'use strict';
 
-import classNames from 'classnames';
+// import classNames from 'classnames';
 import Icon from "../../Icon.jsx";
 import ObserveModelMixin from '../../ObserveModelMixin';
 import React from 'react';
@@ -14,8 +14,13 @@ const AdditiveConditionConcept = React.createClass({
         viewState: React.PropTypes.object.isRequired
     },
 
-    openConceptChooser() {
-        console.log('choosing');
+    openConcept(event) {
+        console.log('choosing', event);
+    },
+
+    remove(event) {
+        console.log('removing', event);
+        event.stopPropagation();
     },
 
     render() {
@@ -25,23 +30,24 @@ const AdditiveConditionConcept = React.createClass({
         return (
             <div className={Styles.root}>
                 <For each="group" index="i" of={activeLeafNodesByParent}>
-                    <div className={Styles.controls}>
-                        <button className={Styles.btnClose} onClick ={this.onRemove} title='remove condition'>
-                            <Icon glyph={Icon.GLYPHS.close}/>
-                        </button>
+                    <div key={i} onClick={this.openConcept}
+                         className={Styles.btnOpen}>
+                        <div className={Styles.section}>
+                            <div className={Styles.controls}>
+                                <button className={Styles.btnClose} onClick={this.remove} title='remove condition'>
+                                    <Icon glyph={Icon.GLYPHS.close}/>
+                                </button>
+                            </div>
+                            <div className={Styles.heading}>
+                                {group.parent.name}
+                            </div>
+                            <For each="child" index="j" of={group.children}>
+                                <div className={Styles.condition} key={j}>
+                                    {child.name}
+                                </div>
+                            </For>
+                        </div>
                     </div>
-                    <button type="button"
-                            onClick={this.openConceptChooser}
-                            className={Styles.btnAdditiveConditionHeading}>
-                        {group.parent.name}
-                    </button>
-                    <For each="child" index="j" of={group.children}>
-                        <button type='button'
-                                onClick={this.openConceptChooser}
-                                className={Styles.btnAdditiveConditionBody}>
-                            {child.name}
-                        </button>
-                    </For>
                 </For>
             </div>
         );
