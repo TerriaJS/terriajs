@@ -17,6 +17,7 @@ const FeedbackForm = React.createClass({
     getInitialState() {
         return {
             isSending: false,
+            sendShareURL: true,
             name: '',
             email: '',
             comment: ''
@@ -41,6 +42,7 @@ const FeedbackForm = React.createClass({
                 terria: this.props.viewState.terria,
                 name: this.state.name,
                 email: this.state.email,
+                sendShareURL: this.state.sendShareURL,
                 comment: this.state.comment
             }).then(succeeded => {
                 if (succeeded) {
@@ -66,6 +68,12 @@ const FeedbackForm = React.createClass({
         });
     },
 
+    changeSendShareUrl(e) {
+        this.setState({
+            sendShareURL: !this.state.sendShareURL
+        });
+    },
+
     render() {
         const feedbackFormClassNames = classNames(Styles.form, {
             [Styles.isOpen]: this.props.viewState.feedbackFormIsVisible
@@ -87,6 +95,13 @@ const FeedbackForm = React.createClass({
                       <input type="text" name="email" className={Styles.field} value={this.state.email} onChange={this.handleChange}/>
                       <label>Comment or question</label>
                       <textarea className={Styles.field} name="comment" value={this.state.comment} onChange={this.handleChange}/>
+                      <div className={Styles.shareUrl}>
+                        <button onClick={this.changeSendShareUrl}>
+                          {this.state.sendShareURL ? <Icon glyph={Icon.GLYPHS.checkboxOn}/> : <Icon glyph={Icon.GLYPHS.checkboxOff}/>}
+                          Share my map view with {this.props.viewState.terria.appName} developers<br/>
+                          <small>This helps us to troubleshoot issues by letting us see what you're seeing</small>
+                        </button>
+                      </div>
                       <div className={Styles.action}>
                         <button type="button" className={Styles.btnCancel} onClick ={this.onDismiss}>Cancel</button>
                         <button type="submit" className={Styles.btnSubmit} disabled={this.state.isSending}>{this.state.isSending ? 'Sending...' : 'Send'}</button>
