@@ -42,7 +42,7 @@ const FeedbackForm = React.createClass({
                        ? (shareLink.canShorten(this.props.viewState.terria)
                          ? shareLink.buildShortShareLink(this.props.viewState.terria)
                          : shareLink.buildShareLink(this.props.viewState.terria))
-                      : "Not shared";
+                       : "Not shared";
 
             // submit form
             sendFeedback({
