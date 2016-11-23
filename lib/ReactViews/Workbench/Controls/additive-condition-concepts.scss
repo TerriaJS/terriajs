@@ -14,9 +14,9 @@
   float: right;
 }
 
-.btnRemove {
+.btnRemove, .btnEdit {
   composes: btn from '../../../Sass/common/_buttons.scss';
-  display: block;
+  display: inline-block;
   padding: 9px 4px;
   svg {
     height: 14px;
