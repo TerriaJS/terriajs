@@ -18,7 +18,7 @@
     "babel-preset-react": "^6.5.0",
     "class-list": "^0.1.1",
     "classnames": "^2.2.3",
-    "d3-array": "^1.0.0",
+    "d3-array": "^1.0.2",
     "d3-axis": "^1.0.0",
     "d3-collection": "^1.0.0",
     "d3-scale": "^1.0.1",
