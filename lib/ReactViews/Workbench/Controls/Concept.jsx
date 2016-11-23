@@ -1,7 +1,7 @@
 'use strict';
 
 import classNames from 'classnames';
-import Icon from "../../Icon";
+import Icon from '../../Icon';
 import ObserveModelMixin from '../../ObserveModelMixin';
 import React from 'react';
 import Styles from './concept-viewer.scss';
@@ -11,6 +11,7 @@ const Concept = React.createClass({
 
     propTypes: {
         concept: React.PropTypes.object.isRequired,
+        hideName: React.PropTypes.bool,
         viewState: React.PropTypes.object
     },
 
@@ -40,10 +41,11 @@ const Concept = React.createClass({
 
     render() {
         const concept = this.props.concept;
+        const allowMultiple = concept.parent && concept.parent.allowMultiple;
         // Renders the concept as a standard list of radio buttons or checkboxes (ie. not as an additive-condition).
         return (
             <li style={this.getColorStyle()}>
-                <If condition={concept.name}>
+                <If condition={!this.props.hideName && concept.name}>
                     <div className={classNames(Styles.header, {[Styles.hasChildren]: concept.hasChildren, [Styles.isSelectable]: concept.isSelectable})}>
                         <div className={Styles.btnGroup}>
                             <If condition={concept.hasChildren}>
@@ -61,10 +63,10 @@ const Concept = React.createClass({
                                         style={this.getColorStyle()}
                                         className={Styles.btnToggleActive}
                                         title='select variable'>
-                                        {(concept.isActive && concept.allowMultiple) && <Icon style={this.getFillStyle()} glyph={Icon.GLYPHS.checkboxOn}/>}
-                                        {(!concept.isActive && concept.allowMultiple) && <Icon style={this.getFillStyle()} glyph={Icon.GLYPHS.checkboxOff}/>}
-                                        {(concept.isActive && !concept.allowMultiple) && <Icon style={this.getFillStyle()} glyph={Icon.GLYPHS.radioOn}/>}
-                                        {(!concept.isActive && !concept.allowMultiple) && <Icon style={this.getFillStyle()} glyph={Icon.GLYPHS.radioOff}/>}
+                                        {(concept.isActive && allowMultiple) && <Icon style={this.getFillStyle()} glyph={Icon.GLYPHS.checkboxOn}/>}
+                                        {(!concept.isActive && allowMultiple) && <Icon style={this.getFillStyle()} glyph={Icon.GLYPHS.checkboxOff}/>}
+                                        {(concept.isActive && !allowMultiple) && <Icon style={this.getFillStyle()} glyph={Icon.GLYPHS.radioOn}/>}
+                                        {(!concept.isActive && !allowMultiple) && <Icon style={this.getFillStyle()} glyph={Icon.GLYPHS.radioOff}/>}
                                 </button>
                             </If>
                         </div>

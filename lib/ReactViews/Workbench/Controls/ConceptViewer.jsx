@@ -1,8 +1,8 @@
 'use strict';
 
-import AdditiveConditionConcepts from "./AdditiveConditionConcepts";
-import AdditiveConditionsConcept from "../../../Map/AdditiveConditionsConcept";
-import Concept from "./Concept";
+import AdditiveConditionConcepts from './AdditiveConditionConcepts';
+import AdditiveConditionsConcept from '../../../Map/AdditiveConditionsConcept';
+import Concept from './Concept';
 import ObserveModelMixin from '../../ObserveModelMixin';
 import React from 'react';
 import Styles from './concept-viewer.scss';

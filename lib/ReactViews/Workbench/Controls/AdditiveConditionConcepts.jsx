@@ -1,7 +1,8 @@
 'use strict';
 
 // import classNames from 'classnames';
-import Icon from "../../Icon.jsx";
+import Concept from './Concept';
+import Icon from '../../Icon.jsx';
 import ObserveModelMixin from '../../ObserveModelMixin';
 import React from 'react';
 import Styles from './additive-condition-concepts.scss';
@@ -88,7 +89,11 @@ const AdditiveCondition = React.createClass({
                         </For>
                     </If>
                     <If condition={activeLeafNodesWithParent.parent.isOpen}>
-                        <div>OPEN</div>
+                        <div className={Styles.inner}>
+                            <ul className={Styles.childrenList}>
+                                <Concept hideName={true} concept={activeLeafNodesWithParent.parent} viewState={this.props.viewState}/>
+                            </ul>
+                        </div>
                     </If>
                 </div>
             </div>

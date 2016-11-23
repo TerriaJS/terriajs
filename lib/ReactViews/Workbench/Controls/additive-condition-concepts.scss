@@ -58,3 +58,7 @@
   border-bottom: $border-style;
   padding: 5px $padding; // 5px $padding 5px 22px;
 }
+
+.children-list {
+  composes: children-list from './concept-viewer.scss';
+}
