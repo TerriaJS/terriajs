@@ -18,6 +18,7 @@ const FeedbackForm = React.createClass({
     getInitialState() {
         return {
             isSending: false,
+            sendShareURL: false,
             name: '',
             email: '',
             comment: ''
@@ -37,12 +38,11 @@ const FeedbackForm = React.createClass({
                 isSending: true
             });
 
-            link = "Unknown"
-            if(shareLink.canShorten(this.props.viewState.terria)){
-              link = buildShortShareLink(this.props.viewState.terria);
-            } else {
-              link = buildShareLink(this.props.viewState.terria);
-            }
+            const link = this.sendShareURL
+                       ? (shareLink.canShorten(this.props.viewState.terria)
+                         ? shareLink.buildShortShareLink(this.props.viewState.terria)
+                         : shareLink.buildShareLink(this.props.viewState.terria))
+                      : "Not shared";
 
             // submit form
             sendFeedback({
@@ -55,12 +55,14 @@ const FeedbackForm = React.createClass({
                 if (succeeded) {
                     this.setState({
                         isSending: false,
+                        sendShareURL: false,
                         comment: ''
                     });
                     this.props.viewState.feedbackFormIsVisible = false;
                 } else {
                     this.setState({
-                        isSending: false
+                        isSending: false,
+                        sendShareURL: false
                     });
                 }
             });
@@ -96,6 +98,11 @@ const FeedbackForm = React.createClass({
                       <input type="text" name="email" className={Styles.field} value={this.state.email} onChange={this.handleChange}/>
                       <label>Comment or question</label>
                       <textarea className={Styles.field} name="comment" value={this.state.comment} onChange={this.handleChange}/>
+                      <label>
+                        <input type="checkbox" name="sendShareURL" checked={this.state.sendShareURL}/>
+                          Share my map view with the National Map's developers<br/>
+                        <small>This helps us to troubleshoot issues by letting us see what you're seeing</small>
+                      </label>
                       <div className={Styles.action}>
                         <button type="button" className={Styles.btnCancel} onClick ={this.onDismiss}>Cancel</button>
                         <button type="submit" className={Styles.btnSubmit} disabled={this.state.isSending}>{this.state.isSending ? 'Sending...' : 'Send'}</button>
