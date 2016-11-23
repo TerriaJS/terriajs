@@ -11,8 +11,7 @@ const AdditiveConditionConcepts = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        concept: React.PropTypes.object.isRequired,
-        viewState: React.PropTypes.object.isRequired
+        concept: React.PropTypes.object.isRequired
     },
 
     render() {
@@ -23,8 +22,9 @@ const AdditiveConditionConcepts = React.createClass({
             <div className={Styles.root}>
                 <div className={Styles.title}>{concept.name}:</div>
                 <For each="group" index="i" of={activeLeafNodesByParent}>
-                    <AdditiveCondition key={i} rootConcept={concept} activeLeafNodesWithParent={group} viewState={this.props.viewState}/>
+                    <AdditiveCondition key={i} rootConcept={concept} activeLeafNodesWithParent={group}/>
                 </For>
+                <AddNewCondition rootConcept={concept}/>
             </div>
         );
     }
@@ -52,8 +52,7 @@ const AdditiveCondition = React.createClass({
 
     propTypes: {
         activeLeafNodesWithParent: React.PropTypes.object.isRequired,
-        rootConcept: React.PropTypes.object.isRequired,
-        viewState: React.PropTypes.object.isRequired
+        rootConcept: React.PropTypes.object.isRequired
     },
 
     open() {
@@ -107,11 +106,27 @@ const AdditiveCondition = React.createClass({
                     <If condition={activeLeafNodesWithParent.parent.isOpen}>
                         <div className={Styles.inner}>
                             <ul className={Styles.childrenList}>
-                                <Concept hideName={true} concept={activeLeafNodesWithParent.parent} viewState={this.props.viewState}/>
+                                <Concept hideName={true} concept={activeLeafNodesWithParent.parent}/>
                             </ul>
                         </div>
                     </If>
                 </div>
+            </div>
+        );
+    }
+});
+
+const AddNewCondition = React.createClass({
+    mixins: [ObserveModelMixin],
+
+    propTypes: {
+        rootConcept: React.PropTypes.object.isRequired
+    },
+
+    render() {
+        return (
+            <div onClick={this.open} className={Styles.btnOpen}>
+                Add new condition
             </div>
         );
     }

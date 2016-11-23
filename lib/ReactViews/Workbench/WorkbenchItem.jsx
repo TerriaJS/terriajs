@@ -96,7 +96,7 @@ const WorkbenchItem = React.createClass({
                         </If>
                         <Legend item={workbenchItem}/>
                         <If condition={(defined(workbenchItem.concepts) && workbenchItem.concepts.length > 0)}>
-                            <ConceptViewer item={workbenchItem} viewState={this.props.viewState}/>
+                            <ConceptViewer item={workbenchItem}/>
                         </If>
                         <If condition={workbenchItem.shortReport || (workbenchItem.shortReportSections && workbenchItem.shortReportSections.length)}>
                             <ShortReport item={workbenchItem}/>

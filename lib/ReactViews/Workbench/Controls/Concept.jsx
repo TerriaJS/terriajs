@@ -11,8 +11,7 @@ const Concept = React.createClass({
 
     propTypes: {
         concept: React.PropTypes.object.isRequired,
-        hideName: React.PropTypes.bool,
-        viewState: React.PropTypes.object
+        hideName: React.PropTypes.bool
     },
 
     toggleOpen() {
@@ -21,10 +20,6 @@ const Concept = React.createClass({
 
     toggleActive() {
         this.props.concept.toggleActive();
-    },
-
-    openConceptChooser() {
-        this.props.viewState.conceptChooserIsVisible = true;
     },
 
     getColorStyle() {
@@ -76,7 +71,7 @@ const Concept = React.createClass({
                 <If condition={concept.isOpen}>
                     <ul className={Styles.items}>
                         <For each="child" index="i" of={concept.items.filter(concept => concept.isVisible)}>
-                            <Concept key={i} concept={child} viewState={this.props.viewState}/>
+                            <Concept key={i} concept={child}/>
                         </For>
                     </ul>
                 </If>

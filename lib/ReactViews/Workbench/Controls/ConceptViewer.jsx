@@ -11,8 +11,7 @@ const ConceptViewer = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        item: React.PropTypes.object.isRequired,
-        viewState: React.PropTypes.object
+        item: React.PropTypes.object.isRequired
     },
 
     render() {
@@ -27,7 +26,7 @@ const ConceptViewer = React.createClass({
                              of={nonAdditiveConditionConcepts}>
                             <div className={Styles.inner} key={i}>
                                 <ul className={Styles.childrenList}>
-                                    <Concept concept={concept} viewState={this.props.viewState}/>
+                                    <Concept concept={concept}/>
                                 </ul>
                             </div>
                         </For>
@@ -37,7 +36,7 @@ const ConceptViewer = React.createClass({
                      of={this.props.item.concepts.filter(concept => concept.isVisible && AdditiveConditionsConcept.prototype.isPrototypeOf(concept))}>
                     <div className={Styles.section} key={i}>
                         <ul className={Styles.childrenList}>
-                            <AdditiveConditionConcepts concept={concept} viewState={this.props.viewState}/>
+                            <AdditiveConditionConcepts concept={concept}/>
                         </ul>
                     </div>
                 </For>
