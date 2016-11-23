@@ -4,9 +4,9 @@
 import Icon from "../../Icon.jsx";
 import ObserveModelMixin from '../../ObserveModelMixin';
 import React from 'react';
-import Styles from './additive-condition-concept.scss';
+import Styles from './additive-condition-concepts.scss';
 
-const AdditiveConditionConcept = React.createClass({
+const AdditiveConditionConcepts = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -71,5 +71,5 @@ function getNodesByParent(nodes) {
     return Object.keys(results).map(key => results[key]);
 }
 
-module.exports = AdditiveConditionConcept;
+module.exports = AdditiveConditionConcepts;
 

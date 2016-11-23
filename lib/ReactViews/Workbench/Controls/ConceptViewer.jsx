@@ -1,6 +1,6 @@
 'use strict';
 
-import AdditiveConditionConcept from "./AdditiveConditionConcept";
+import AdditiveConditionConcepts from "./AdditiveConditionConcepts";
 import classNames from 'classnames';
 import Icon from "../../Icon";
 import ObserveModelMixin from '../../ObserveModelMixin';
@@ -37,7 +37,7 @@ const ConceptViewer = React.createClass({
                      of={this.props.item.concepts.filter(concept => concept.isVisible && concept.displayType === 'additive-condition')}>
                     <div className={Styles.section} key={i}>
                         <ul className={Styles.childrenList}>
-                            <AdditiveConditionConcept concept={concept} viewState={this.props.viewState}/>
+                            <AdditiveConditionConcepts concept={concept} viewState={this.props.viewState}/>
                         </ul>
                     </div>
                 </For>
