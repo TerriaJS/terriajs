@@ -65,7 +65,7 @@
 }
 
 .heading {
-  background-color: $overlay;
+  background: $overlay;
   border: $border-style;
   padding: 5px $padding; // 5px $padding 5px 22px;
 }
@@ -80,4 +80,24 @@
 
 .children-list {
   composes: children-list from './concept-viewer.scss';
+}
+
+.btnAddNew {
+  composes: btnOpen;
+  composes: heading;
+  svg {
+    height: 35px;
+    width: 35px;
+    fill: $text-light;
+    position: absolute;
+    left: 0;
+    top: -2px;
+  }
+  .text {
+    padding-left: 26px;
+  }
+  &:focus, &:hover {
+    background: $modal-highlight;
+  }
+
 }

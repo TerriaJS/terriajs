@@ -123,11 +123,16 @@ const AddNewCondition = React.createClass({
         rootConcept: React.PropTypes.object.isRequired
     },
 
+    addNew() {
+        console.log('Add new condition');
+    },
+
     render() {
         return (
-            <div onClick={this.open} className={Styles.btnOpen}>
-                Add new condition
-            </div>
+            <button onClick={this.addNew} className={Styles.btnAddNew}>
+                <Icon glyph={Icon.GLYPHS.add}/>
+                <span className={Styles.text}>Add new condition</span>
+            </button>
         );
     }
 });
