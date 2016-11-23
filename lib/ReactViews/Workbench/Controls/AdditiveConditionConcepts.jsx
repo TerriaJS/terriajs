@@ -14,15 +14,6 @@ const AdditiveConditionConcepts = React.createClass({
         viewState: React.PropTypes.object.isRequired
     },
 
-    openConcept(event) {
-        console.log('choosing', event);
-    },
-
-    remove(event) {
-        console.log('removing', event);
-        event.stopPropagation();
-    },
-
     render() {
         const concept = this.props.concept;
         const activeLeafNodes = concept.leafNodes.filter(concept => concept.isActive);
@@ -30,24 +21,7 @@ const AdditiveConditionConcepts = React.createClass({
         return (
             <div className={Styles.root}>
                 <For each="group" index="i" of={activeLeafNodesByParent}>
-                    <div key={i} onClick={this.openConcept}
-                         className={Styles.btnOpen}>
-                        <div className={Styles.section}>
-                            <div className={Styles.controls}>
-                                <button className={Styles.btnClose} onClick={this.remove} title='remove condition'>
-                                    <Icon glyph={Icon.GLYPHS.close}/>
-                                </button>
-                            </div>
-                            <div className={Styles.heading}>
-                                {group.parent.name}
-                            </div>
-                            <For each="child" index="j" of={group.children}>
-                                <div className={Styles.condition} key={j}>
-                                    {child.name}
-                                </div>
-                            </For>
-                        </div>
-                    </div>
+                    <AdditiveCondition key={i} activeLeafNodesWithParent={group} viewState={this.props.viewState}/>
                 </For>
             </div>
         );
@@ -70,6 +44,47 @@ function getNodesByParent(nodes) {
     });
     return Object.keys(results).map(key => results[key]);
 }
+
+const AdditiveCondition = React.createClass({
+    mixins: [ObserveModelMixin],
+
+    propTypes: {
+        activeLeafNodesWithParent: React.PropTypes.object.isRequired,
+        viewState: React.PropTypes.object.isRequired
+    },
+
+    openConcept() {
+        console.log('choosing', this);
+    },
+
+    remove(event) {
+        console.log('removing', this);
+        event.stopPropagation();
+    },
+
+    render() {
+        const activeLeafNodesWithParent = this.props.activeLeafNodesWithParent;
+        return (
+            <div onClick={this.openConcept} className={Styles.btnOpen}>
+                <div className={Styles.section}>
+                    <div className={Styles.controls}>
+                        <button className={Styles.btnClose} onClick={this.remove} title='remove condition'>
+                            <Icon glyph={Icon.GLYPHS.close}/>
+                        </button>
+                    </div>
+                    <div className={Styles.heading}>
+                        {activeLeafNodesWithParent.parent.name}
+                    </div>
+                    <For each="child" index="j" of={activeLeafNodesWithParent.children}>
+                        <div className={Styles.condition} key={j}>
+                            {child.name}
+                        </div>
+                    </For>
+                </div>
+            </div>
+        );
+    }
+});
 
 module.exports = AdditiveConditionConcepts;
 
