@@ -1,9 +1,9 @@
 'use strict';
 
 // import classNames from 'classnames';
-import Concept from './Concept';
-import Icon from '../../Icon.jsx';
-import ObserveModelMixin from '../../ObserveModelMixin';
+import Concept from '../Concept';
+import Icon from '../../../Icon.jsx';
+import ObserveModelMixin from '../../../ObserveModelMixin';
 import React from 'react';
 import Styles from './additive-condition-concepts.scss';
 

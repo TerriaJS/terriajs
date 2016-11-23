@@ -1,6 +1,6 @@
 'use strict';
 
-import AdditiveConditionConcepts from './AdditiveConditionConcepts';
+import AdditiveConditionConcepts from './AdditiveConditions/AdditiveConditionConcepts';
 import AdditiveConditionsConcept from '../../../Map/AdditiveConditionsConcept';
 import Concept from './Concept';
 import ObserveModelMixin from '../../ObserveModelMixin';

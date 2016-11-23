@@ -1,5 +1,5 @@
 @import '~terriajs-variables';
-@import '../../../Sass/common/mixins';
+@import '../../../../Sass/common/mixins';
 
 // additive-condition-concepts
 
@@ -16,7 +16,7 @@
 }
 
 .btnRemove, .btnEdit {
-  composes: btn from '../../../Sass/common/_buttons.scss';
+  composes: btn from '../../../../Sass/common/_buttons.scss';
   display: inline-block;
   padding: 8px 4px;
   svg {
@@ -36,7 +36,7 @@
 }
 
 .btnOpen, .btnAddOpen {
-  composes: btn from '../../../Sass/common/_buttons.scss';
+  composes: btn from '../../../../Sass/common/_buttons.scss';
   @extend %wrap;
   width: 100%;
   &:focus, &:hover {
@@ -58,7 +58,7 @@
 }
 
 .btnClose {
-  composes: btn from '../../../Sass/common/_buttons.scss';
+  composes: btn from '../../../../Sass/common/_buttons.scss';
   @extend %wrap;
   color: $text-light;
   font-size: $font-size-mid-mini;
@@ -87,7 +87,7 @@
 }
 
 .children-list {
-  composes: children-list from './concept-viewer.scss';
+  composes: children-list from '../concept-viewer.scss';
   li {
     clear: both;
   }
