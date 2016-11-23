@@ -4,6 +4,7 @@
 // additive-condition-concepts
 
 .root {
+  line-height: 1.4;
 }
 
 .title {
@@ -17,10 +18,10 @@
 .btnRemove, .btnEdit {
   composes: btn from '../../../Sass/common/_buttons.scss';
   display: inline-block;
-  padding: 9px 4px;
+  padding: 8px 4px;
   svg {
-    height: 14px;
-    width: 14px;
+    height: 16px;
+    width: 16px;
     fill: $text-light;
     &:focus, &:hover {
       fill: $modal-highlight;
@@ -28,14 +29,16 @@
   }
 }
 
+.section {
+  position: relative;
+  margin-top: $padding;
+  background: $overlay;
+}
+
 .btnOpen {
   composes: btn from '../../../Sass/common/_buttons.scss';
   @extend %wrap;
-  position: relative;
   width: 100%;
-  margin-top: $padding;
-  background: $overlay;
-
   &:focus, &:hover {
     color: $text-light;
     background: get-hover-color($overlay);
@@ -59,15 +62,11 @@
   }
 }
 
-.section {
-  position: relative;
-  line-height: 1.4;
-}
-
 .heading {
   background: $overlay;
   border: $border-style;
   padding: 5px $padding; // 5px $padding 5px 22px;
+  font-weight: $font-weight-normal;
 }
 
 .condition {

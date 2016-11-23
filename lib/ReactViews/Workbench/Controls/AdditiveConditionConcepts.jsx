@@ -7,6 +7,8 @@ import ObserveModelMixin from '../../ObserveModelMixin';
 import React from 'react';
 import Styles from './additive-condition-concepts.scss';
 
+const ADD_TEXT = 'Add new condition';
+
 const AdditiveConditionConcepts = React.createClass({
     mixins: [ObserveModelMixin],
 
@@ -26,6 +28,7 @@ const AdditiveConditionConcepts = React.createClass({
                     <AdditiveCondition key={i} rootConcept={concept} activeLeafNodesWithParent={group}/>
                 </For>
                 <If condition={isAddingNewCondition}>
+                    <AddingCondition rootConcept={concept}/>
                 </If>
                 <If condition={!isAddingNewCondition}>
                     <AddNewCondition rootConcept={concept}/>
@@ -84,8 +87,8 @@ const AdditiveCondition = React.createClass({
     render() {
         const activeLeafNodesWithParent = this.props.activeLeafNodesWithParent;
         return (
-            <div onClick={this.open} className={Styles.btnOpen}>
-                <div className={Styles.section}>
+            <div className={Styles.section}>
+                <div className={Styles.btnOpen} onClick={this.open}>
                     <div className={Styles.controls}>
                         <If condition={!activeLeafNodesWithParent.parent.isOpen}>
                             <button className={Styles.btnEdit} title='Edit condition'>
@@ -132,18 +135,53 @@ const AddNewCondition = React.createClass({
     },
 
     addNew() {
-        console.log('Add new condition');
+        this.props.rootConcept.isOpen = true;
     },
 
     render() {
         return (
-            <button onClick={this.addNew} className={Styles.btnAddNew}>
-                <Icon glyph={Icon.GLYPHS.add}/>
-                <span className={Styles.text}>Add new condition</span>
-            </button>
+            <div className={Styles.section}>
+                <button onClick={this.addNew} className={Styles.btnAddNew}>
+                    <Icon glyph={Icon.GLYPHS.add}/>
+                    <span className={Styles.text}>{ADD_TEXT}</span>
+                </button>
+            </div>
         );
     }
 });
 
+const AddingCondition = React.createClass({
+    mixins: [ObserveModelMixin],
+
+    propTypes: {
+        rootConcept: React.PropTypes.object.isRequired
+    },
+
+    close() {
+        this.props.rootConcept.isOpen = false;
+    },
+
+    render() {
+        return (
+            <div className={Styles.section}>
+                <div className={Styles.adding}>
+                    <div className={Styles.controls}>
+                        <button className={Styles.btnClose} onClick={this.close}>
+                            Cancel
+                        </button>
+                    </div>
+                    <div className={Styles.heading}>
+                        {ADD_TEXT}
+                    </div>
+                    <div className={Styles.inner}>
+                        <ul className={Styles.childrenList}>
+                            <Concept hideName={true} concept={this.props.rootConcept}/>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+});
 module.exports = AdditiveConditionConcepts;
 
