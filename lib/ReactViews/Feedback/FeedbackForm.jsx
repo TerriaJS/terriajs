@@ -95,7 +95,7 @@ const FeedbackForm = React.createClass({
                       <input type="text" name="email" className={Styles.field} value={this.state.email} onChange={this.handleChange}/>
                       <label>Comment or question</label>
                       <textarea className={Styles.field} name="comment" value={this.state.comment} onChange={this.handleChange}/>
-                      <div className={classNames(Styles.shareUrl)}>
+                      <div className={Styles.shareUrl}>
                         <button onClick={this.changeSendShareUrl}>
                           {this.state.sendShareURL ? <Icon glyph={Icon.GLYPHS.checkboxOn}/> : <Icon glyph={Icon.GLYPHS.checkboxOff}/>}
                           Share my map view with {this.props.viewState.terria.appName} developers<br/>
