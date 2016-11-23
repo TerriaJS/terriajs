@@ -3,7 +3,6 @@
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
 import sendFeedback from '../../Models/sendFeedback.js';
-import shareLink from '../Map/Panels/SharePanel/BuildShareLink.js';
 import Styles from './feedback-form.scss';
 import Icon from "../Icon.jsx";
 import classNames from "classnames";
@@ -38,18 +37,12 @@ const FeedbackForm = React.createClass({
                 isSending: true
             });
 
-            const link = this.sendShareURL
-                       ? (shareLink.canShorten(this.props.viewState.terria)
-                         ? shareLink.buildShortShareLink(this.props.viewState.terria)
-                         : shareLink.buildShareLink(this.props.viewState.terria))
-                       : "Not shared";
-
             // submit form
             sendFeedback({
                 terria: this.props.viewState.terria,
                 name: this.state.name,
                 email: this.state.email,
-                shareLink: link,
+                sendShareURL: this.state.sendShareURL,
                 comment: this.state.comment
             }).then(succeeded => {
                 if (succeeded) {
