@@ -18,7 +18,7 @@ const FeedbackForm = React.createClass({
     getInitialState() {
         return {
             isSending: false,
-            sendShareURL: false,
+            sendShareURL: true,
             name: '',
             email: '',
             comment: ''
@@ -55,14 +55,12 @@ const FeedbackForm = React.createClass({
                 if (succeeded) {
                     this.setState({
                         isSending: false,
-                        sendShareURL: false,
                         comment: ''
                     });
                     this.props.viewState.feedbackFormIsVisible = false;
                 } else {
                     this.setState({
                         isSending: false,
-                        sendShareURL: false
                     });
                 }
             });
