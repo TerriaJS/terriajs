@@ -11,7 +11,6 @@ const Concept = React.createClass({
 
     propTypes: {
         concept: React.PropTypes.object.isRequired,
-        allowMultiple: React.PropTypes.bool,
         viewState: React.PropTypes.object
     },
 
@@ -62,10 +61,10 @@ const Concept = React.createClass({
                                         style={this.getColorStyle()}
                                         className={Styles.btnToggleActive}
                                         title='select variable'>
-                                        {(concept.isActive && this.props.allowMultiple) && <Icon style={this.getFillStyle()} glyph={Icon.GLYPHS.checkboxOn}/>}
-                                        {(!concept.isActive && this.props.allowMultiple) && <Icon style={this.getFillStyle()} glyph={Icon.GLYPHS.checkboxOff}/>}
-                                        {(concept.isActive && !this.props.allowMultiple) && <Icon style={this.getFillStyle()} glyph={Icon.GLYPHS.radioOn}/>}
-                                        {(!concept.isActive && !this.props.allowMultiple) && <Icon style={this.getFillStyle()} glyph={Icon.GLYPHS.radioOff}/>}
+                                        {(concept.isActive && concept.allowMultiple) && <Icon style={this.getFillStyle()} glyph={Icon.GLYPHS.checkboxOn}/>}
+                                        {(!concept.isActive && concept.allowMultiple) && <Icon style={this.getFillStyle()} glyph={Icon.GLYPHS.checkboxOff}/>}
+                                        {(concept.isActive && !concept.allowMultiple) && <Icon style={this.getFillStyle()} glyph={Icon.GLYPHS.radioOn}/>}
+                                        {(!concept.isActive && !concept.allowMultiple) && <Icon style={this.getFillStyle()} glyph={Icon.GLYPHS.radioOff}/>}
                                 </button>
                             </If>
                         </div>
@@ -75,7 +74,7 @@ const Concept = React.createClass({
                 <If condition={concept.isOpen}>
                     <ul className={Styles.items}>
                         <For each="child" index="i" of={concept.items.filter(concept => concept.isVisible)}>
-                            <Concept key={i} concept={child} allowMultiple={concept.allowMultiple} viewState={this.props.viewState}/>
+                            <Concept key={i} concept={child} viewState={this.props.viewState}/>
                         </For>
                     </ul>
                 </If>

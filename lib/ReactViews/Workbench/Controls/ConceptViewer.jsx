@@ -27,7 +27,7 @@ const ConceptViewer = React.createClass({
                              of={nonAdditiveConditionConcepts}>
                             <div className={Styles.inner} key={i}>
                                 <ul className={Styles.childrenList}>
-                                    <Concept concept={concept} allowMultiple={concept.allowMultiple} viewState={this.props.viewState}/>
+                                    <Concept concept={concept} viewState={this.props.viewState}/>
                                 </ul>
                             </div>
                         </For>
