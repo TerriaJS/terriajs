@@ -58,8 +58,12 @@ const AdditiveCondition = React.createClass({
     },
 
     remove(event) {
-        console.log('removing', this);
         event.stopPropagation();
+        const activeLeafNodesWithParent = this.props.activeLeafNodesWithParent;
+        // The parent must be a DisplayVariablesConcept, so it has a toggleActiveItem method.
+        // This method de-activates all items other than the one passed in. We pass null here, so it deactivates all its items.
+        // TODO: this triggers a change in active items - and hence a load - for each one. Urg!
+        activeLeafNodesWithParent.parent.toggleActiveItem(null);
     },
 
     render() {
