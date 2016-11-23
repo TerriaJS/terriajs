@@ -23,7 +23,7 @@ const AdditiveConditionConcepts = React.createClass({
             <div className={Styles.root}>
                 <div className={Styles.title}>{concept.name}:</div>
                 <For each="group" index="i" of={activeLeafNodesByParent}>
-                    <AdditiveCondition key={i} activeLeafNodesWithParent={group} viewState={this.props.viewState}/>
+                    <AdditiveCondition key={i} rootConcept={concept} activeLeafNodesWithParent={group} viewState={this.props.viewState}/>
                 </For>
             </div>
         );
@@ -52,10 +52,14 @@ const AdditiveCondition = React.createClass({
 
     propTypes: {
         activeLeafNodesWithParent: React.PropTypes.object.isRequired,
+        rootConcept: React.PropTypes.object.isRequired,
         viewState: React.PropTypes.object.isRequired
     },
 
     open() {
+        // Close all others.
+        this.props.rootConcept.closeDescendants();
+        // And open this one's parent.
         this.props.activeLeafNodesWithParent.parent.isOpen = true;
     },
 
