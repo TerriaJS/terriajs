@@ -6,6 +6,10 @@
 .root {
 }
 
+.title {
+  margin-bottom: -$padding/2;
+}
+
 .controls {
   float: right;
 }
@@ -41,6 +45,11 @@
   }
 }
 
+.btnClose {
+  composes: btnClose;
+  color: $text-light;
+}
+
 .section {
   position: relative;
   line-height: 1.4;
@@ -57,6 +66,7 @@
   border-right: $border-style;
   border-bottom: $border-style;
   padding: 5px $padding; // 5px $padding 5px 22px;
+  font-weight: $font-weight-light;
 }
 
 .children-list {

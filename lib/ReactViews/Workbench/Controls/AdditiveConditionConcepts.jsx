@@ -21,6 +21,7 @@ const AdditiveConditionConcepts = React.createClass({
         const activeLeafNodesByParent = getNodesByParent(activeLeafNodes);
         return (
             <div className={Styles.root}>
+                <div className={Styles.title}>{concept.name}:</div>
                 <For each="group" index="i" of={activeLeafNodesByParent}>
                     <AdditiveCondition key={i} activeLeafNodesWithParent={group} viewState={this.props.viewState}/>
                 </For>
@@ -74,9 +75,16 @@ const AdditiveCondition = React.createClass({
             <div onClick={this.openConcept} className={Styles.btnOpen}>
                 <div className={Styles.section}>
                     <div className={Styles.controls}>
-                        <button className={Styles.btnClose} onClick={this.remove} title='remove condition'>
-                            <Icon glyph={Icon.GLYPHS.close}/>
-                        </button>
+                        <If condition={!activeLeafNodesWithParent.parent.isOpen}>
+                            <button className={Styles.btnClose} onClick={this.remove} title='remove condition'>
+                                <Icon glyph={Icon.GLYPHS.close}/>
+                            </button>
+                        </If>
+                        <If condition={activeLeafNodesWithParent.parent.isOpen}>
+                            <button className={Styles.btnClose} onClick={this.close}>
+                                Cancel
+                            </button>
+                        </If>
                     </div>
                     <div className={Styles.heading}>
                         {activeLeafNodesWithParent.parent.name}

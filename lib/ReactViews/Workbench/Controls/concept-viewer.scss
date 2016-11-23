@@ -19,6 +19,7 @@
 .children-list {
   composes: list-reset from '../../../Sass/common/_base.scss';
   composes: clearfix from '../../../Sass/common/_base.scss';
+  font-weight: $font-weight-light;
 }
 
 .header {
