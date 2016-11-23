@@ -15,7 +15,7 @@
   float: right;
 }
 
-.btnRemove, .btnEdit {
+.btnRemove, .btnEdit, .btnAddOpen {
   composes: btn from '../../../Sass/common/_buttons.scss';
   display: inline-block;
   padding: 8px 4px;
@@ -79,6 +79,9 @@
 
 .children-list {
   composes: children-list from './concept-viewer.scss';
+  li {
+    clear: both;
+  }
 }
 
 .btnAddNew {

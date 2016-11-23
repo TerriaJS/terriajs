@@ -8,6 +8,7 @@ import React from 'react';
 import Styles from './additive-condition-concepts.scss';
 
 const ADD_TEXT = 'Add new condition';
+const NEW_TEXT = 'New condition';
 
 const AdditiveConditionConcepts = React.createClass({
     mixins: [ObserveModelMixin],
@@ -161,6 +162,10 @@ const AddingCondition = React.createClass({
         this.props.rootConcept.isOpen = false;
     },
 
+    open() {
+        console.log('add open');
+    },
+
     render() {
         return (
             <div className={Styles.section}>
@@ -171,11 +176,22 @@ const AddingCondition = React.createClass({
                         </button>
                     </div>
                     <div className={Styles.heading}>
-                        {ADD_TEXT}
+                        {NEW_TEXT}
                     </div>
                     <div className={Styles.inner}>
                         <ul className={Styles.childrenList}>
-                            <Concept hideName={true} concept={this.props.rootConcept}/>
+                            <For each="child" index="i" of={this.props.rootConcept.items}>
+                                <li key={i}>
+                                    <div className={Styles.controls}>
+                                        <button className={Styles.btnAddOpen} onClick={this.open}>
+                                            <Icon glyph={Icon.GLYPHS.closed}/>
+                                        </button>
+                                    </div>
+                                    <div className={Styles.condition}>
+                                        {child.name}
+                                    </div>
+                                </li>
+                            </For>
                         </ul>
                     </div>
                 </div>
