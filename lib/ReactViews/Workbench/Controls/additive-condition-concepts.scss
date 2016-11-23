@@ -15,7 +15,7 @@
   float: right;
 }
 
-.btnRemove, .btnEdit, .btnAddOpen {
+.btnRemove, .btnEdit {
   composes: btn from '../../../Sass/common/_buttons.scss';
   display: inline-block;
   padding: 8px 4px;
@@ -35,7 +35,7 @@
   background: $overlay;
 }
 
-.btnOpen {
+.btnOpen, .btnAddOpen {
   composes: btn from '../../../Sass/common/_buttons.scss';
   @extend %wrap;
   width: 100%;
@@ -45,6 +45,15 @@
     &:before {
       opacity: 1;
     }
+  }
+}
+
+.btnAddOpen {
+  svg {
+    height: 16px;
+    width: 16px;
+    padding: 7px 5px;
+    fill: $text-light;
   }
 }
 

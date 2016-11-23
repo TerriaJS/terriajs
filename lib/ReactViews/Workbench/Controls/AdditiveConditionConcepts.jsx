@@ -182,13 +182,13 @@ const AddingCondition = React.createClass({
                         <ul className={Styles.childrenList}>
                             <For each="child" index="i" of={this.props.rootConcept.items}>
                                 <li key={i}>
-                                    <div className={Styles.controls}>
-                                        <button className={Styles.btnAddOpen} onClick={this.open}>
+                                    <div className={Styles.btnAddOpen} onClick={this.open}>
+                                        <div className={Styles.controls}>
                                             <Icon glyph={Icon.GLYPHS.closed}/>
-                                        </button>
-                                    </div>
-                                    <div className={Styles.condition}>
-                                        {child.name}
+                                        </div>
+                                        <div className={Styles.condition}>
+                                            {child.name}
+                                        </div>
                                     </div>
                                 </li>
                             </For>
