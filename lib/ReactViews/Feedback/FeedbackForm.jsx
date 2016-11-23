@@ -53,7 +53,7 @@ const FeedbackForm = React.createClass({
                     this.props.viewState.feedbackFormIsVisible = false;
                 } else {
                     this.setState({
-                        isSending: false,
+                        isSending: false
                     });
                 }
             });
