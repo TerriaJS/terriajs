@@ -54,7 +54,8 @@ const AdditiveCondition = React.createClass({
     },
 
     openConcept() {
-        console.log('choosing', this);
+        const activeLeafNodesWithParent = this.props.activeLeafNodesWithParent;
+        activeLeafNodesWithParent.parent.isOpen = true;
     },
 
     remove(event) {
@@ -79,11 +80,16 @@ const AdditiveCondition = React.createClass({
                     <div className={Styles.heading}>
                         {activeLeafNodesWithParent.parent.name}
                     </div>
-                    <For each="child" index="j" of={activeLeafNodesWithParent.children}>
-                        <div className={Styles.condition} key={j}>
-                            {child.name}
-                        </div>
-                    </For>
+                    <If condition={!activeLeafNodesWithParent.parent.isOpen}>
+                        <For each="child" index="j" of={activeLeafNodesWithParent.children}>
+                            <div className={Styles.condition} key={j}>
+                                {child.name}
+                            </div>
+                        </For>
+                    </If>
+                    <If condition={activeLeafNodesWithParent.parent.isOpen}>
+                        <div>OPEN</div>
+                    </If>
                 </div>
             </div>
         );
