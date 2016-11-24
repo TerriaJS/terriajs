@@ -10,14 +10,16 @@
                     "url": "http://flask-env.hnnuy8zpns.ap-southeast-2.elasticbeanstalk.com/v0/tables/unrolled_dummy_ACLD",
                     "type": "aggregated-data-api",
                     "showWarnings": false,
-                    "keyType": "abs"
+                    "keyType": "abs",
+                    "cacheDuration": "1d"
                 },
                 {
                     "name": "Dummy ACLD (2011, localhost)",
                     "url": "http://localhost:8080/v0/tables/unrolled_dummy_ACLD",
                     "type": "aggregated-data-api",
                     "showWarnings": false,
-                    "keyType": "abs"
+                    "keyType": "abs",
+                    "cacheDuration": "0d"
                 }
 
             ]
