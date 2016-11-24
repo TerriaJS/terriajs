@@ -14,15 +14,10 @@ const AddingCondition = React.createClass({
 
     propTypes: {
         rootConcept: React.PropTypes.object.isRequired,
-        openConcept: React.PropTypes.object.isRequired,
+        openConcept: React.PropTypes.object.isRequired
     },
 
     cancel() {
-        this.props.openConcept.isOpen = false;
-    },
-
-    open() {
-        this.props.openConcept.items[0].isOpen = true;
         this.props.openConcept.isOpen = false;
     },
 
@@ -54,16 +49,7 @@ const AddingCondition = React.createClass({
                 </div>
                 <ul className={Styles.childrenList}>
                     <For each="child" index="i" of={this.props.openConcept.items}>
-                        <li key={i}>
-                            <div className={Styles.btnAddOpen} onClick={this.open}>
-                                <div className={Styles.controls}>
-                                    <Icon glyph={Icon.GLYPHS.closed}/>
-                                </div>
-                                <div className={Styles.condition}>
-                                    {child.name}
-                                </div>
-                            </div>
-                        </li>
+                        <AdditiveConditionParent concept={child} key={i}/>
                     </For>
                 </ul>
             </div>
@@ -71,8 +57,33 @@ const AddingCondition = React.createClass({
     }
 });
 
-function getOpenConcept(concept) {
+const AdditiveConditionParent = React.createClass({
+    mixins: [ObserveModelMixin],
 
-}
+    propTypes: {
+        concept: React.PropTypes.object.isRequired
+    },
+
+    open() {
+        this.props.concept.isOpen = true;
+        this.props.concept.parent.isOpen = false;
+    },
+
+    render() {
+        return (
+            <li>
+                <div className={Styles.btnAddOpen} onClick={this.open}>
+                    <div className={Styles.controls}>
+                        <Icon glyph={Icon.GLYPHS.closed}/>
+                    </div>
+                    <div className={Styles.condition}>
+                        {this.props.concept.name}
+                    </div>
+                </div>
+            </li>
+        );
+    }
+});
+
 
 module.exports = AddingCondition;
