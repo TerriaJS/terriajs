@@ -67,11 +67,9 @@ const AdditiveCondition = React.createClass({
                         </For>
                     </If>
                     <If condition={activeLeafNodesWithParent.parent.isOpen}>
-                        <div className={Styles.inner}>
-                            <ul className={Styles.childrenList}>
-                                <Concept hideName={true} concept={activeLeafNodesWithParent.parent}/>
-                            </ul>
-                        </div>
+                        <ul className={Styles.childrenList}>
+                            <Concept hideName={true} concept={activeLeafNodesWithParent.parent}/>
+                        </ul>
                     </If>
                 </div>
             </div>

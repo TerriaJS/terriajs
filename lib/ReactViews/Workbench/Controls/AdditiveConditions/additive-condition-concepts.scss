@@ -104,6 +104,24 @@
   }
 }
 
+.indented {
+  padding-left: 30px;
+}
+
+.btnBack {
+  position: absolute;
+  composes: btn from '../../../../Sass/common/_buttons.scss';
+  margin-top: -2px;
+  svg {
+    height: 24px;
+    width: 24px;
+    fill: $text-light;
+    &:focus, &:hover {
+      background: $modal-highlight;
+    }
+  }
+}
+
 // Used by AddNewCondition.
 
 .btnAddNew {
