@@ -9,10 +9,12 @@ import Styles from './summarised-concept.scss';
 
 /*
  * ActiveConcept takes a root concept and a single parent's active leaf nodes,
- * and displays a single panel which summarises the active nodes.
- * It has a header with the parent name, and edit & remove controls;
- * and a body that lists out each active node.
+ * and displays a single panel which either:
+ * a) lists only the active child nodes (if the parent is closed), or
+ * b) shows a more traditional list of checkboxes with concept names (if parent is open).
+ * It has a header with the parent name, and edit & remove controls.
  * When it is clicked, parent.isOpen is set to True.
+ * (The condition can only be "removed" if rootConcept.allowMultiple is true.)
  */
 const ActiveConcept = React.createClass({
     mixins: [ObserveModelMixin],
@@ -53,9 +55,11 @@ const ActiveConcept = React.createClass({
                             <button className={Styles.btnEdit} title='Edit condition'>
                                 <Icon glyph={Icon.GLYPHS.settings}/>
                             </button>
-                            <button className={Styles.btnRemove} onClick={this.remove} title='Remove condition'>
-                                <Icon glyph={Icon.GLYPHS.close}/>
-                            </button>
+                            <If condition={this.props.rootConcept.allowMultiple}>
+                                <button className={Styles.btnRemove} onClick={this.remove} title='Remove condition'>
+                                    <Icon glyph={Icon.GLYPHS.close}/>
+                                </button>
+                            </If>
                         </If>
                         <If condition={activeLeafNodesWithParent.parent.isOpen}>
                             <button className={Styles.btnClose} onClick={this.close}>

@@ -21,7 +21,7 @@
   background: $overlay;
 }
 
-// Used by ActiveConcept and OpenConcept.
+// Used by ActiveConcept and OpenInactiveConcept.
 
 .controls {
   float: right;
@@ -92,7 +92,7 @@
   }
 }
 
-// Used by OpenConcept.
+// Used by OpenInactiveConcept.
 
 .btnAddOpen {
   composes: btnOpen;

@@ -2,7 +2,7 @@
 
 // import classNames from 'classnames';
 import ActiveConcept from './ActiveConcept';
-import OpenConcept from './OpenConcept';
+import OpenInactiveConcept from './OpenInactiveConcept';
 import Icon from '../../../Icon.jsx';
 import ObserveModelMixin from '../../../ObserveModelMixin';
 import React from 'react';
@@ -13,9 +13,16 @@ const ADD_TEXT = 'Add new condition';
 /*
  * SummarisedConcept displays all the active and open nodes under a given
  * SummaryConcept.
- * Active nodes are shown via <./ActiveConcept>.
- * Open nodes where a user has are shown via <./OpenConcept>.
- * If summaryConcept.allowMultiple is true, then an <./AddButton> is also shown.
+ * Parents containing 1 or more active nodes are shown via <./ActiveConcept>.
+ *    (They may be open or closed, and ActiveConcept handles the difference.)
+ * Open nodes not containing any active nodes are shown via <./OpenInactiveConcept>.
+ *    (This is typically the case when a user has pressed the AddButton but yet to
+ *    activate any leaf nodes.)
+ * If summaryConcept.allowMultiple is true, then an <./AddButton> is also shown,
+ *    which simply opens the root concept, at which point OpenInactiveConcept takes over.
+ *
+ * This design would need revision to handle concepts whose direct children are a mix of
+ * both leaf nodes and parent nodes.
  */
 const SummarisedConcept = React.createClass({
     mixins: [ObserveModelMixin],
@@ -36,9 +43,9 @@ const SummarisedConcept = React.createClass({
                     <ActiveConcept key={i} rootConcept={concept} activeLeafNodesWithParent={group}/>
                 </For>
                 <If condition={openParentsWithoutParentsOfActive.length > 0}>
-                    <OpenConcept rootConcept={concept} openConcept={openParentsWithoutParentsOfActive[0]}/>
+                    <OpenInactiveConcept rootConcept={concept} OpenInactiveConcept={openParentsWithoutParentsOfActive[0]}/>
                 </If>
-                <If condition={openParentsWithoutParentsOfActive.length === 0}>
+                <If condition={concept.allowMultiple && openParentsWithoutParentsOfActive.length === 0}>
                     <AddButton rootConcept={concept}/>
                 </If>
             </div>
@@ -71,6 +78,7 @@ const AddButton = React.createClass({
     },
 
     addNew() {
+        this.props.rootConcept.closeDescendants();
         this.props.rootConcept.isOpen = true;
     },
 

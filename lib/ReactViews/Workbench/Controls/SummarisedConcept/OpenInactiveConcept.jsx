@@ -10,21 +10,21 @@ import Styles from './summarised-concept.scss';
 
 const NEW_TEXT = 'New condition';
 
-const OpenConcept = React.createClass({
+const OpenInactiveConcept = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
         rootConcept: React.PropTypes.object.isRequired,
-        openConcept: React.PropTypes.object.isRequired
+        OpenInactiveConcept: React.PropTypes.object.isRequired
     },
 
     cancel() {
-        this.props.openConcept.isOpen = false;
+        this.props.OpenInactiveConcept.isOpen = false;
     },
 
     back() {
-        this.props.openConcept.isOpen = false;
-        this.props.openConcept.parent.isOpen = true;
+        this.props.OpenInactiveConcept.isOpen = false;
+        this.props.OpenInactiveConcept.parent.isOpen = true;
     },
 
     render() {
@@ -36,20 +36,20 @@ const OpenConcept = React.createClass({
                     </button>
                 </div>
                 <div className={Styles.heading}>
-                    <If condition={this.props.rootConcept !== this.props.openConcept}>
+                    <If condition={this.props.rootConcept !== this.props.OpenInactiveConcept}>
                         <button className={Styles.btnBack} onClick={this.back}>
                             <Icon glyph={Icon.GLYPHS.left}/>
                         </button>
                         <div className={Styles.indented}>
-                            {this.props.openConcept.name}
+                            {this.props.OpenInactiveConcept.name}
                         </div>
                     </If>
-                    <If condition={this.props.rootConcept === this.props.openConcept}>
+                    <If condition={this.props.rootConcept === this.props.OpenInactiveConcept}>
                         {NEW_TEXT}
                     </If>
                 </div>
                 <ul className={Styles.childrenList}>
-                    <For each="child" index="i" of={this.props.openConcept.items}>
+                    <For each="child" index="i" of={this.props.OpenInactiveConcept.items}>
                         <If condition={child.items && child.items.length > 0}>
                             <ActiveConceptParent concept={child} key={i}/>
                         </If>
@@ -93,4 +93,4 @@ const ActiveConceptParent = React.createClass({
     }
 });
 
-module.exports = OpenConcept;
+module.exports = OpenInactiveConcept;
