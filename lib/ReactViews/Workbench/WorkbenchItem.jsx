@@ -94,8 +94,11 @@ const WorkbenchItem = React.createClass({
                         <If condition={workbenchItem.type === 'abs-itt'}>
                             <AbsPercentageWorkbenchSection item={workbenchItem}/>
                         </If>
+                        <If condition={(defined(workbenchItem.concepts) && workbenchItem.concepts.length > 0) && workbenchItem.displayConceptsBeforeLegend}>
+                            <ConceptViewer item={workbenchItem}/>
+                        </If>
                         <Legend item={workbenchItem}/>
-                        <If condition={(defined(workbenchItem.concepts) && workbenchItem.concepts.length > 0)}>
+                        <If condition={(defined(workbenchItem.concepts) && workbenchItem.concepts.length > 0) && !workbenchItem.displayConceptsBeforeLegend}>
                             <ConceptViewer item={workbenchItem}/>
                         </If>
                         <If condition={workbenchItem.shortReport || (workbenchItem.shortReportSections && workbenchItem.shortReportSections.length)}>
