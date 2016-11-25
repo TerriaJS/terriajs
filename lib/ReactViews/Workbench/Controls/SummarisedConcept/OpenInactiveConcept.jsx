@@ -55,7 +55,9 @@ const OpenInactiveConcept = React.createClass({
                         </If>
                         <If condition={!child.items || child.items.length === 0}>
                             <li className={Styles.items}>
-                                <Concept concept={child} key={i}/>
+                                <ul className={Styles.listReset}>
+                                    <Concept concept={child} key={i}/>
+                                </ul>
                             </li>
                         </If>
                     </For>

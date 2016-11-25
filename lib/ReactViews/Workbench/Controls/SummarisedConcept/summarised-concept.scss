@@ -126,6 +126,9 @@
   composes: items from '../concept-viewer.scss';
 }
 
+.list-reset {
+  composes: list-reset from '../../../../Sass/common/_base.scss';
+}
 
 // Used by AddButton.
 
