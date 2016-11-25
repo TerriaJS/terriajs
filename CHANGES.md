@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+### 4.7.0
+
+* Add the ability for users to share their view of the map when providing feedback.
+
 ### 4.6.1
 
 * Support added for creating custom WPS types, and for reusing `Point`, `Polygon`, and `Region` editors in custom types.
