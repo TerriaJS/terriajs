@@ -1,9 +1,9 @@
 @import '~terriajs-variables';
 @import '../../../../Sass/common/mixins';
 
-// additive-condition-concepts
+// summarised-concept
 
-// Used only by AdditiveConditionConcepts.
+// Used only by SummarisedConcept.
 
 .root {
   line-height: 1.4;
@@ -21,7 +21,7 @@
   background: $overlay;
 }
 
-// Used by AdditiveCondition and AddingCondition.
+// Used by ActiveConcept and OpenConcept.
 
 .controls {
   float: right;
@@ -63,7 +63,7 @@
   }
 }
 
-// Used by AdditiveCondition.
+// Used by ActiveConcept.
 
 .btnRemove, .btnEdit {
   composes: btn from '../../../../Sass/common/_buttons.scss';
@@ -92,7 +92,7 @@
   }
 }
 
-// Used by AddingCondition.
+// Used by OpenConcept.
 
 .btnAddOpen {
   composes: btnOpen;
@@ -127,7 +127,7 @@
 }
 
 
-// Used by AddNewCondition.
+// Used by AddButton.
 
 .btnAddNew {
   composes: btnOpen;

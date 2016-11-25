@@ -1,20 +1,27 @@
 'use strict';
 
 // import classNames from 'classnames';
-import AdditiveCondition from './AdditiveCondition';
-import AddingCondition from './AddingCondition';
+import ActiveConcept from './ActiveConcept';
+import OpenConcept from './OpenConcept';
 import Icon from '../../../Icon.jsx';
 import ObserveModelMixin from '../../../ObserveModelMixin';
 import React from 'react';
-import Styles from './additive-condition-concepts.scss';
+import Styles from './summarised-concept.scss';
 
 const ADD_TEXT = 'Add new condition';
 
-const AdditiveConditionConcepts = React.createClass({
+/*
+ * SummarisedConcept displays all the active and open nodes under a given
+ * SummaryConcept.
+ * Active nodes are shown via <./ActiveConcept>.
+ * Open nodes where a user has are shown via <./OpenConcept>.
+ * If summaryConcept.allowMultiple is true, then an <./AddButton> is also shown.
+ */
+const SummarisedConcept = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        concept: React.PropTypes.object.isRequired
+        concept: React.PropTypes.object.isRequired  // Must be a SummaryConcept.
     },
 
     render() {
@@ -26,13 +33,13 @@ const AdditiveConditionConcepts = React.createClass({
             <div className={Styles.root}>
                 <div className={Styles.title}>{concept.name}:</div>
                 <For each="group" index="i" of={activeLeafNodesByParent}>
-                    <AdditiveCondition key={i} rootConcept={concept} activeLeafNodesWithParent={group}/>
+                    <ActiveConcept key={i} rootConcept={concept} activeLeafNodesWithParent={group}/>
                 </For>
                 <If condition={openParentsWithoutParentsOfActive.length > 0}>
-                    <AddingCondition rootConcept={concept} openConcept={openParentsWithoutParentsOfActive[0]}/>
+                    <OpenConcept rootConcept={concept} openConcept={openParentsWithoutParentsOfActive[0]}/>
                 </If>
                 <If condition={openParentsWithoutParentsOfActive.length === 0}>
-                    <AddNewCondition rootConcept={concept}/>
+                    <AddButton rootConcept={concept}/>
                 </If>
             </div>
         );
@@ -56,7 +63,7 @@ function getNodesByParent(nodes) {
     return Object.keys(results).map(key => results[key]);
 }
 
-const AddNewCondition = React.createClass({
+const AddButton = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -79,5 +86,5 @@ const AddNewCondition = React.createClass({
     }
 });
 
-module.exports = AdditiveConditionConcepts;
+module.exports = SummarisedConcept;
 

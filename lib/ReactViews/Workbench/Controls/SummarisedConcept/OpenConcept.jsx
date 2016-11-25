@@ -1,16 +1,16 @@
 'use strict';
 
 // import classNames from 'classnames';
-import AdditiveCondition from './AdditiveCondition';
+// import ActiveConcept from './ActiveConcept';
 import Concept from '../Concept';
 import Icon from '../../../Icon.jsx';
 import ObserveModelMixin from '../../../ObserveModelMixin';
 import React from 'react';
-import Styles from './additive-condition-concepts.scss';
+import Styles from './summarised-concept.scss';
 
 const NEW_TEXT = 'New condition';
 
-const AddingCondition = React.createClass({
+const OpenConcept = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -51,7 +51,7 @@ const AddingCondition = React.createClass({
                 <ul className={Styles.childrenList}>
                     <For each="child" index="i" of={this.props.openConcept.items}>
                         <If condition={child.items && child.items.length > 0}>
-                            <AdditiveConditionParent concept={child} key={i}/>
+                            <ActiveConceptParent concept={child} key={i}/>
                         </If>
                         <If condition={!child.items || child.items.length === 0}>
                             <li className={Styles.items}>
@@ -65,7 +65,7 @@ const AddingCondition = React.createClass({
     }
 });
 
-const AdditiveConditionParent = React.createClass({
+const ActiveConceptParent = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -93,5 +93,4 @@ const AdditiveConditionParent = React.createClass({
     }
 });
 
-
-module.exports = AddingCondition;
+module.exports = OpenConcept;

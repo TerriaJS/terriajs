@@ -5,9 +5,16 @@ import Concept from '../Concept';
 import Icon from '../../../Icon.jsx';
 import ObserveModelMixin from '../../../ObserveModelMixin';
 import React from 'react';
-import Styles from './additive-condition-concepts.scss';
+import Styles from './summarised-concept.scss';
 
-const AdditiveCondition = React.createClass({
+/*
+ * ActiveConcept takes a root concept and a single parent's active leaf nodes,
+ * and displays a single panel which summarises the active nodes.
+ * It has a header with the parent name, and edit & remove controls;
+ * and a body that lists out each active node.
+ * When it is clicked, parent.isOpen is set to True.
+ */
+const ActiveConcept = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -30,7 +37,7 @@ const AdditiveCondition = React.createClass({
     remove(event) {
         event.stopPropagation();
         const activeLeafNodesWithParent = this.props.activeLeafNodesWithParent;
-        // The parent must be a DisplayVariablesConcept, so it has a toggleActiveItem method.
+        // The parent must be a DisplayVariablesConcept or subclass, so it has a toggleActiveItem method.
         // This method de-activates all items other than the one passed in. We pass null here, so it deactivates all its items.
         // TODO: this triggers a change in active items - and hence a load - for each one. Urg!
         activeLeafNodesWithParent.parent.toggleActiveItem(null);
@@ -77,4 +84,4 @@ const AdditiveCondition = React.createClass({
     }
 });
 
-module.exports = AdditiveCondition;
+module.exports = ActiveConcept;
