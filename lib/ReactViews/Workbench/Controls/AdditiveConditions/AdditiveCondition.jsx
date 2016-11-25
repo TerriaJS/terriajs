@@ -1,6 +1,6 @@
 'use strict';
 
-// import classNames from 'classnames';
+import classNames from 'classnames';
 import Concept from '../Concept';
 import Icon from '../../../Icon.jsx';
 import ObserveModelMixin from '../../../ObserveModelMixin';
@@ -40,7 +40,7 @@ const AdditiveCondition = React.createClass({
         const activeLeafNodesWithParent = this.props.activeLeafNodesWithParent;
         return (
             <div className={Styles.section}>
-                <div className={Styles.btnOpen} onClick={this.open}>
+                <div className={classNames({[Styles.btnOpen]: !activeLeafNodesWithParent.parent.isOpen})} onClick={this.open}>
                     <div className={Styles.controls}>
                         <If condition={!activeLeafNodesWithParent.parent.isOpen}>
                             <button className={Styles.btnEdit} title='Edit condition'>
@@ -52,7 +52,7 @@ const AdditiveCondition = React.createClass({
                         </If>
                         <If condition={activeLeafNodesWithParent.parent.isOpen}>
                             <button className={Styles.btnClose} onClick={this.close}>
-                                Cancel
+                                Close
                             </button>
                         </If>
                     </div>

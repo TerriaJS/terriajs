@@ -21,17 +21,17 @@ const AdditiveConditionConcepts = React.createClass({
         const concept = this.props.concept;
         const activeLeafNodes = concept.leafNodes.filter(concept => concept.isActive);
         const activeLeafNodesByParent = getNodesByParent(activeLeafNodes);
-        const openParentsBeforeLast = concept.getOpenParentsBeforeLastParents();
+        const openParentsWithoutParentsOfActive = concept.getOpenParentsWithoutParentsOfActive();
         return (
             <div className={Styles.root}>
                 <div className={Styles.title}>{concept.name}:</div>
                 <For each="group" index="i" of={activeLeafNodesByParent}>
                     <AdditiveCondition key={i} rootConcept={concept} activeLeafNodesWithParent={group}/>
                 </For>
-                <If condition={openParentsBeforeLast.length > 0}>
-                    <AddingCondition rootConcept={concept} openConcept={openParentsBeforeLast[0]}/>
+                <If condition={openParentsWithoutParentsOfActive.length > 0}>
+                    <AddingCondition rootConcept={concept} openConcept={openParentsWithoutParentsOfActive[0]}/>
                 </If>
-                <If condition={openParentsBeforeLast.length === 0}>
+                <If condition={openParentsWithoutParentsOfActive.length === 0}>
                     <AddNewCondition rootConcept={concept}/>
                 </If>
             </div>

@@ -2,6 +2,7 @@
 
 // import classNames from 'classnames';
 import AdditiveCondition from './AdditiveCondition';
+import Concept from '../Concept';
 import Icon from '../../../Icon.jsx';
 import ObserveModelMixin from '../../../ObserveModelMixin';
 import React from 'react';
@@ -49,7 +50,14 @@ const AddingCondition = React.createClass({
                 </div>
                 <ul className={Styles.childrenList}>
                     <For each="child" index="i" of={this.props.openConcept.items}>
-                        <AdditiveConditionParent concept={child} key={i}/>
+                        <If condition={child.items && child.items.length > 0}>
+                            <AdditiveConditionParent concept={child} key={i}/>
+                        </If>
+                        <If condition={!child.items || child.items.length === 0}>
+                            <li className={Styles.items}>
+                                <Concept concept={child} key={i}/>
+                            </li>
+                        </If>
                     </For>
                 </ul>
             </div>
