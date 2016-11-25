@@ -23,6 +23,12 @@ const ADD_TEXT = 'Add new condition';
  *
  * This design would need revision to handle concepts whose direct children are a mix of
  * both leaf nodes and parent nodes.
+ *
+ * This component cheekily uses the active concepts' isActive flag -
+ * which is by rights the boolean true - to instead store an integer (>0) giving
+ * the display order of the concepts. Since javascript identifies integers > 0 as truthy,
+ * no one else should notice this trick.
+ * (The other alternative would be to add a new property to VariableConcept.)
  */
 const SummarisedConcept = React.createClass({
     mixins: [ObserveModelMixin],
@@ -34,7 +40,7 @@ const SummarisedConcept = React.createClass({
     render() {
         const concept = this.props.concept;
         const activeLeafNodes = concept.leafNodes.filter(concept => concept.isActive);
-        const activeLeafNodesByParent = getNodesByParent(activeLeafNodes);
+        const activeLeafNodesByParent = groupAndSortByParent(activeLeafNodes);
         const openParentsWithoutParentsOfActive = concept.getOpenParentsWithoutParentsOfActive();
         return (
             <div className={Styles.root}>
@@ -43,7 +49,7 @@ const SummarisedConcept = React.createClass({
                     <ActiveConcept key={i} rootConcept={concept} activeLeafNodesWithParent={group}/>
                 </For>
                 <If condition={openParentsWithoutParentsOfActive.length > 0}>
-                    <OpenInactiveConcept rootConcept={concept} OpenInactiveConcept={openParentsWithoutParentsOfActive[0]}/>
+                    <OpenInactiveConcept rootConcept={concept} openInactiveConcept={openParentsWithoutParentsOfActive[0]}/>
                 </If>
                 <If condition={concept.allowMultiple && openParentsWithoutParentsOfActive.length === 0}>
                     <AddButton rootConcept={concept}/>
@@ -55,20 +61,47 @@ const SummarisedConcept = React.createClass({
 
 /**
  * Returns an array which groups all the nodes with the same parent id into one.
+ * Cheekily sorts by the active concepts' isActive value - which is normally a boolean - if the first one isn't a boolean.
+ * We do this so when you add a new condition (which starts out in <OpenInactiveConcept>, under all the active concepts),
+ * it doesn't suddenly change position when you select your first concept (at which point it shows in <ActiveConcept>).
  * @param  {Concept[]} nodes [description]
  * @return {Object[]} An array of {parent: Concept, children: Concept[]} objects.
  * @private
  */
-function getNodesByParent(nodes) {
+function groupAndSortByParent(nodes) {
+    const nodesByParent = groupByParentId(nodes, parent => parent.id);
+    if (nodesByParent.length > 0 && nodesByParent[0].children[0].isActive !== true) {
+        nodesByParent.sort((a, b) => a.children[0].isActive - b.children[0].isActive);
+    }
+    return nodesByParent;
+}
+
+/**
+ * Returns an array which groups all the nodes with the same parent id into separate sub-arrays.
+ * @param  {Object[]} nodes An array of objects with a 'parent' property.
+ * @param  {groupByParentId~idFunction} idFunction A function which gets the id of a parent.
+ * @return {Object[]} An array of objects with keys parent, children.
+ * @private
+ */
+function groupByParentId(nodes, idFunction) {
     const results = {};
     nodes.forEach(node => {
-        if (!results[node.parent.id]) {
-            results[node.parent.id] = {parent: node.parent, children: []};
+        const id = idFunction(node.parent);
+        if (!results[id]) {
+            results[id] = {parent: node.parent, children: []};
         }
-        results[node.parent.id].children.push(node);
+        results[id].children.push(node);
     });
     return Object.keys(results).map(key => results[key]);
 }
+
+/**
+* Function that is called to find the id of a parent.
+* Eg. parent => parent.id.
+* @callback groupByParentId~idFunction
+* @param  {Object} parent A parent.
+* @return {String} The parent id.
+*/
 
 const AddButton = React.createClass({
     mixins: [ObserveModelMixin],

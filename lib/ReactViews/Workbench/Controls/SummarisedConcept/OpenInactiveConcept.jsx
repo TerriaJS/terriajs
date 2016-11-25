@@ -15,16 +15,16 @@ const OpenInactiveConcept = React.createClass({
 
     propTypes: {
         rootConcept: React.PropTypes.object.isRequired,
-        OpenInactiveConcept: React.PropTypes.object.isRequired
+        openInactiveConcept: React.PropTypes.object.isRequired
     },
 
     cancel() {
-        this.props.OpenInactiveConcept.isOpen = false;
+        this.props.openInactiveConcept.isOpen = false;
     },
 
     back() {
-        this.props.OpenInactiveConcept.isOpen = false;
-        this.props.OpenInactiveConcept.parent.isOpen = true;
+        this.props.openInactiveConcept.isOpen = false;
+        this.props.openInactiveConcept.parent.isOpen = true;
     },
 
     render() {
@@ -36,22 +36,22 @@ const OpenInactiveConcept = React.createClass({
                     </button>
                 </div>
                 <div className={Styles.heading}>
-                    <If condition={this.props.rootConcept !== this.props.OpenInactiveConcept}>
+                    <If condition={this.props.rootConcept !== this.props.openInactiveConcept}>
                         <button className={Styles.btnBack} onClick={this.back}>
                             <Icon glyph={Icon.GLYPHS.left}/>
                         </button>
                         <div className={Styles.indented}>
-                            {this.props.OpenInactiveConcept.name}
+                            {this.props.openInactiveConcept.name}
                         </div>
                     </If>
-                    <If condition={this.props.rootConcept === this.props.OpenInactiveConcept}>
+                    <If condition={this.props.rootConcept === this.props.openInactiveConcept}>
                         {NEW_TEXT}
                     </If>
                 </div>
                 <ul className={Styles.childrenList}>
-                    <For each="child" index="i" of={this.props.OpenInactiveConcept.items}>
+                    <For each="child" index="i" of={this.props.openInactiveConcept.items}>
                         <If condition={child.items && child.items.length > 0}>
-                            <ActiveConceptParent concept={child} key={i}/>
+                            <ConceptParent concept={child} key={i}/>
                         </If>
                         <If condition={!child.items || child.items.length === 0}>
                             <li className={Styles.items}>
@@ -67,7 +67,7 @@ const OpenInactiveConcept = React.createClass({
     }
 });
 
-const ActiveConceptParent = React.createClass({
+const ConceptParent = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
