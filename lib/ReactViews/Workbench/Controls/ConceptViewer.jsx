@@ -23,11 +23,10 @@ const ConceptViewer = React.createClass({
             <div className={Styles.root}>
                 <If condition={nonSummarisedConcept.length > 0}>
                     <div className={Styles.section}>
-                        <For each="concept" index="i"
-                             of={nonSummarisedConcept}>
+                        <For each="concept" index="i" of={nonSummarisedConcept}>
                             <div className={Styles.inner} key={i}>
                                 <ul className={Styles.childrenList}>
-                                    <Concept concept={concept}/>
+                                    <Concept concept={concept} isLoading={this.props.item.isLoading}/>
                                 </ul>
                             </div>
                         </For>
@@ -37,7 +36,7 @@ const ConceptViewer = React.createClass({
                      of={this.props.item.concepts.filter(concept => concept.isVisible && SummaryConcept.prototype.isPrototypeOf(concept))}>
                     <div className={Styles.section} key={i}>
                         <ul className={Styles.childrenList}>
-                            <SummarisedConcept concept={concept}/>
+                            <SummarisedConcept concept={concept} isLoading={this.props.item.isLoading}/>
                         </ul>
                     </div>
                 </For>

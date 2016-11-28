@@ -21,7 +21,8 @@ const ActiveConcept = React.createClass({
 
     propTypes: {
         activeLeafNodesWithParent: React.PropTypes.object.isRequired,
-        rootConcept: React.PropTypes.object.isRequired
+        rootConcept: React.PropTypes.object.isRequired,
+        isLoading: React.PropTypes.bool
     },
 
     open() {
@@ -79,7 +80,7 @@ const ActiveConcept = React.createClass({
                     </If>
                     <If condition={activeLeafNodesWithParent.parent.isOpen}>
                         <ul className={Styles.childrenList}>
-                            <Concept hideName={true} concept={activeLeafNodesWithParent.parent}/>
+                            <Concept hideName={true} concept={activeLeafNodesWithParent.parent} isLoading={this.props.isLoading}/>
                         </ul>
                     </If>
                 </div>

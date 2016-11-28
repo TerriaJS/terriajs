@@ -5,7 +5,7 @@ $workbench-margin: $padding-small;
 
 .workbench-item {
   background: $dark-with-overlay;
-  color: #fff;
+  color: $text-light;
   font-family: $font-pop;
   margin: $workbench-margin 0;
   border: 1px solid $overlay;

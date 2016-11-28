@@ -34,7 +34,8 @@ const SummarisedConcept = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        concept: React.PropTypes.object.isRequired  // Must be a SummaryConcept.
+        concept: React.PropTypes.object.isRequired,  // Must be a SummaryConcept.
+        isLoading: React.PropTypes.bool
     },
 
     render() {
@@ -42,13 +43,14 @@ const SummarisedConcept = React.createClass({
         const activeLeafNodes = concept.leafNodes.filter(concept => concept.isActive);
         const activeLeafNodesByParent = groupAndSortByParent(activeLeafNodes);
         const openParentsWithoutParentsOfActive = concept.getOpenParentsWithoutParentsOfActive();
+        const isLoading = this.props.isLoading;
         return (
             <div className={Styles.root}>
                 <div className={Styles.title}>{concept.name}:</div>
                 <For each="group" index="i" of={activeLeafNodesByParent}>
-                    <ActiveConcept key={i} rootConcept={concept} activeLeafNodesWithParent={group}/>
+                    <ActiveConcept key={i} rootConcept={concept} activeLeafNodesWithParent={group} isLoading={isLoading}/>
                 </For>
-                <If condition={openParentsWithoutParentsOfActive.length > 0}>
+                <If condition={openParentsWithoutParentsOfActive.length > 0 && !isLoading}>
                     <OpenInactiveConcept rootConcept={concept} openInactiveConcept={openParentsWithoutParentsOfActive[0]}/>
                 </If>
                 <If condition={concept.allowMultiple && openParentsWithoutParentsOfActive.length === 0}>

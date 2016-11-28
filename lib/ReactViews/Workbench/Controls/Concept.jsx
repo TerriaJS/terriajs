@@ -11,7 +11,8 @@ const Concept = React.createClass({
 
     propTypes: {
         concept: React.PropTypes.object.isRequired,
-        hideName: React.PropTypes.bool
+        hideName: React.PropTypes.bool,
+        isLoading: React.PropTypes.bool
     },
 
     toggleOpen() {
@@ -37,11 +38,16 @@ const Concept = React.createClass({
     render() {
         const concept = this.props.concept;
         const allowMultiple = concept.parent && concept.parent.allowMultiple;
+        const classes = classNames(Styles.header, {
+            [Styles.hasChildren]: concept.hasChildren,
+            [Styles.isSelectable]: concept.isSelectable,
+            [Styles.isLoading]: this.props.isLoading
+        });
         // Renders the concept as a standard list of radio buttons or checkboxes (ie. not as an additive-condition).
         return (
             <li style={this.getColorStyle()}>
                 <If condition={!this.props.hideName && concept.name}>
-                    <div className={classNames(Styles.header, {[Styles.hasChildren]: concept.hasChildren, [Styles.isSelectable]: concept.isSelectable})}>
+                    <div className={classes}>
                         <div className={Styles.btnGroup}>
                             <If condition={concept.hasChildren}>
                                 <button type='button'
@@ -71,7 +77,7 @@ const Concept = React.createClass({
                 <If condition={concept.isOpen}>
                     <ul className={Styles.items}>
                         <For each="child" index="i" of={concept.items.filter(concept => concept.isVisible)}>
-                            <Concept key={i} concept={child}/>
+                            <Concept key={i} concept={child} isLoading={this.props.isLoading}/>
                         </For>
                     </ul>
                 </If>
