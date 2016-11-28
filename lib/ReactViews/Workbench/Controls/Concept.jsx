@@ -77,7 +77,7 @@ const Concept = React.createClass({
                 <If condition={concept.isOpen}>
                     <ul className={Styles.items}>
                         <For each="child" index="i" of={concept.items.filter(concept => concept.isVisible)}>
-                            <Concept key={i} concept={child} isLoading={this.props.isLoading}/>
+                            <Concept key={i} concept={child} allowMultiple={concept.allowMultiple} isLoading={this.props.isLoading}/>
                         </For>
                     </ul>
                 </If>
