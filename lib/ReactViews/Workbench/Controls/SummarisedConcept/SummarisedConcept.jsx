@@ -116,7 +116,7 @@ const AddButton = React.createClass({
 
     propTypes: {
         rootConcept: React.PropTypes.object.isRequired,
-        numberOfExisting: React.PropTypes.bool
+        numberOfExisting: React.PropTypes.number
     },
 
     addNew() {

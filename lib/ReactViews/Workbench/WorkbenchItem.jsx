@@ -88,15 +88,13 @@ const WorkbenchItem = React.createClass({
                     <div className={Styles.inner}>
                         <ViewingControls item={workbenchItem} viewState={this.props.viewState}/>
                         <OpacitySection item={workbenchItem}/>
-                        <DimensionSelectorSection item={workbenchItem}/>
-                        <StyleSelectorSection item={workbenchItem}/>
-                        <ColorScaleRangeSection item={workbenchItem}/>
-                        <If condition={workbenchItem.type === 'abs-itt'}>
-                            <AbsPercentageWorkbenchSection item={workbenchItem}/>
-                        </If>
                         <If condition={(defined(workbenchItem.concepts) && workbenchItem.concepts.length > 0) && workbenchItem.displayConceptsBeforeLegend}>
                             <ConceptViewer item={workbenchItem}/>
                         </If>
+                        <DimensionSelectorSection item={workbenchItem}/>
+                        <StyleSelectorSection item={workbenchItem}/>
+                        <ColorScaleRangeSection item={workbenchItem}/>
+                        <AbsPercentageWorkbenchSection item={workbenchItem}/>
                         <Legend item={workbenchItem}/>
                         <If condition={(defined(workbenchItem.concepts) && workbenchItem.concepts.length > 0) && !workbenchItem.displayConceptsBeforeLegend}>
                             <ConceptViewer item={workbenchItem}/>
