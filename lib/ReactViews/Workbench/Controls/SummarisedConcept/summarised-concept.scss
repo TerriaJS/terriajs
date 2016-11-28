@@ -92,6 +92,11 @@
   }
 }
 
+.no-conditions {
+  composes: heading;
+  margin-top: $padding;
+}
+
 // Used by OpenInactiveConcept.
 
 .btnAddOpen {
@@ -146,8 +151,9 @@
   .text {
     padding-left: 26px;
   }
+  background: $color-primary;
   &:focus, &:hover {
-    background: $modal-highlight;
+    background: get-hover-color($color-primary);
   }
 
 }

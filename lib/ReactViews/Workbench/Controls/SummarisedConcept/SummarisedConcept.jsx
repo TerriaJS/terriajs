@@ -8,7 +8,8 @@ import ObserveModelMixin from '../../../ObserveModelMixin';
 import React from 'react';
 import Styles from './summarised-concept.scss';
 
-const ADD_TEXT = 'Add new condition';
+const ADD_FIRST_TEXT = 'Add a condition';
+const ADD_MORE_TEXT = 'Add new condition';
 
 /*
  * SummarisedConcept displays all the active and open nodes under a given
@@ -50,11 +51,16 @@ const SummarisedConcept = React.createClass({
                 <For each="group" index="i" of={activeLeafNodesByParent}>
                     <ActiveConcept key={i} rootConcept={concept} activeLeafNodesWithParent={group} isLoading={isLoading}/>
                 </For>
+                <If condition={activeLeafNodesByParent.length === 0}>
+                    <div className={Styles.noConditions}>
+                        None
+                    </div>
+                </If>
                 <If condition={openParentsWithoutParentsOfActive.length > 0 && !isLoading}>
                     <OpenInactiveConcept rootConcept={concept} openInactiveConcept={openParentsWithoutParentsOfActive[0]}/>
                 </If>
                 <If condition={concept.allowMultiple && openParentsWithoutParentsOfActive.length === 0}>
-                    <AddButton rootConcept={concept}/>
+                    <AddButton rootConcept={concept} numberOfExisting={activeLeafNodesByParent.length}/>
                 </If>
             </div>
         );
@@ -109,7 +115,8 @@ const AddButton = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        rootConcept: React.PropTypes.object.isRequired
+        rootConcept: React.PropTypes.object.isRequired,
+        numberOfExisting: React.PropTypes.bool
     },
 
     addNew() {
@@ -118,11 +125,12 @@ const AddButton = React.createClass({
     },
 
     render() {
+        const addText = (this.props.numberOfExisting > 0) ? ADD_MORE_TEXT : ADD_FIRST_TEXT;
         return (
             <div className={Styles.section}>
                 <button onClick={this.addNew} className={Styles.btnAddNew}>
                     <Icon glyph={Icon.GLYPHS.add}/>
-                    <span className={Styles.text}>{ADD_TEXT}</span>
+                    <span className={Styles.text}>{addText}</span>
                 </button>
             </div>
         );
