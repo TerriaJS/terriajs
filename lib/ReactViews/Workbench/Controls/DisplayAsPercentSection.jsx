@@ -4,9 +4,9 @@ import classNames from 'classnames';
 import ObserveModelMixin from '../../ObserveModelMixin';
 import React from 'react';
 import Icon from "../../Icon.jsx";
-import Styles from './abs-percentage.scss';
+import Styles from './display-as-percent.scss';
 
-const AbsPercentageWorkbenchSection = React.createClass({
+const DisplayAsPercentSection = React.createClass({
     mixins: [ObserveModelMixin],
     propTypes: {
         item: React.PropTypes.object
@@ -40,4 +40,4 @@ const AbsPercentageWorkbenchSection = React.createClass({
         );
     }
 });
-module.exports = AbsPercentageWorkbenchSection;
+module.exports = DisplayAsPercentSection;
