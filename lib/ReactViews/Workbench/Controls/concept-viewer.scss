@@ -88,6 +88,7 @@
 .is-loading {
   color: $text-light-dimmed;
   button {
+    cursor: not-allowed;
     svg{
       fill: $text-light-dimmed;
     }
