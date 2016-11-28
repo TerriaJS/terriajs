@@ -20,7 +20,7 @@ const ConceptViewer = React.createClass({
                      of={this.props.item.concepts.filter(concept => concept.isVisible)}>
                     <div className={Styles.inner} key={i}>
                         <ul className={Styles.childrenList}>
-                            <Concept concept={concept}/>
+                            <Concept concept={concept} isLoading={this.props.item.isLoading}/>
                         </ul>
                     </div>
                 </For>

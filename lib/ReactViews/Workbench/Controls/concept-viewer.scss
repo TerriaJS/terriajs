@@ -29,7 +29,7 @@
 
   button {
     svg{
-      fill: #fff;
+      fill: $text-light;
     }
   }
 
@@ -85,4 +85,11 @@
   font-weight: $font-weight-light;
 }
 
-
+.is-loading {
+  color: $text-light-dimmed;
+  button {
+    svg{
+      fill: $text-light-dimmed;
+    }
+  }
+}
