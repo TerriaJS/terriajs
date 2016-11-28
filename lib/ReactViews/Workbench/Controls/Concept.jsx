@@ -20,7 +20,9 @@ const Concept = React.createClass({
     },
 
     toggleActive() {
-        this.props.concept.toggleActive();
+        if (!this.props.isLoading) {
+            this.props.concept.toggleActive();
+        }
     },
 
     getColorStyle() {
