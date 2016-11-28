@@ -34,7 +34,8 @@ const Concept = React.createClass({
 
     propTypes: {
         concept: React.PropTypes.object.isRequired,
-        allowMultiple: React.PropTypes.bool
+        allowMultiple: React.PropTypes.bool,
+        isLoading: React.PropTypes.bool
     },
 
     toggleOpen() {
@@ -59,11 +60,16 @@ const Concept = React.createClass({
 
     render() {
         const concept = this.props.concept;
-
+        const classes = classNames(Styles.header, {
+            [Styles.hasChildren]: concept.hasChildren,
+            [Styles.isSelectable]: concept.isSelectable,
+            [Styles.isLoading]: this.props.isLoading
+        });
+        // Renders the concept as a standard list of radio buttons or checkboxes (ie. not as an additive-condition).
         return (
             <li style={this.getColorStyle()}>
                 <If condition={concept.name}>
-                    <div className={classNames(Styles.header, {[Styles.hasChildren]: concept.hasChildren, [Styles.isSelectable]: concept.isSelectable})}>
+                    <div className={classes}>
                         <div className={Styles.btnGroup}>
                             <If condition={concept.hasChildren}>
                                 <button type='button'
