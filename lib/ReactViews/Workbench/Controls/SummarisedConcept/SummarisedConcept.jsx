@@ -51,7 +51,7 @@ const SummarisedConcept = React.createClass({
                 <For each="group" index="i" of={activeLeafNodesByParent}>
                     <ActiveConcept key={i} rootConcept={concept} activeLeafNodesWithParent={group} isLoading={isLoading}/>
                 </For>
-                <If condition={activeLeafNodesByParent.length === 0}>
+                <If condition={activeLeafNodesByParent.length === 0 && openParentsWithoutParentsOfActive.length === 0}>
                     <div className={Styles.noConditions}>
                         None
                     </div>
