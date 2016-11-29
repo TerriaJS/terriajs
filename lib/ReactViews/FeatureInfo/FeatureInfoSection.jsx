@@ -204,6 +204,10 @@ const FeatureInfoSection = React.createClass({
                                 {reactInfo.info}
                             </Otherwise>
                         </Choose>
+                        <For each="ExtraComponent" index="i"
+                             of={FeatureInfoSection.extraComponents}>
+                             <ExtraComponent key={i} viewState={this.props.viewState}/>
+                        </For>
                     </div>
                     </section>
                 </If>
@@ -543,5 +547,10 @@ function setTimeoutForUpdatingCustomComponent(that, reactComponent, updateSecond
     const timeoutIds = that.state.timeoutIds;
     that.setState({timeoutIds: timeoutIds.concat(timeoutId)});
 }
+
+/**
+ * Add your own react components to have them rendered in a FeatureInfoSection. ViewState will be passed as a prop.
+ */
+FeatureInfoSection.extraComponents = [];
 
 module.exports = FeatureInfoSection;

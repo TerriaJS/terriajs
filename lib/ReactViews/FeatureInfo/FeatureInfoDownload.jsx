@@ -55,7 +55,7 @@ const FeatureInfoDownload = React.createClass({
                       textProperty="label"
                       theme={{dropdown: Styles.download, list: Styles.dropdownList, button: Styles.dropdownButton}}
                       buttonClassName={Styles.btn}>
-                <span className={Styles.iconDownload}><Icon glyph={Icon.GLYPHS.download}/></span> Download Data&nbsp;▾
+                <span className={Styles.iconDownload}><Icon glyph={Icon.GLYPHS.download}/></span> Download Data for this Feature&nbsp;▾
             </Dropdown>
         );
     }
