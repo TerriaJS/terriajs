@@ -24,7 +24,7 @@
 input[type=text].searchField {
   padding-left: $input-height;
   padding-right: $input-height;
-  color: $color-primary;
+  color: $text-dark;
   width: 100%;
   overflow: hidden;
   @include placeholder{

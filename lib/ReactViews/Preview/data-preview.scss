@@ -5,7 +5,7 @@
   height: 100%;
   overflow: hidden;
   font-family: $font-base;
-  font-size: 0.9rem;
+  font-size: $font-size-mid-small;
 
   @media screen and (max-width: $sm) {
     height: calc(100% - #{$mobile-modal-top-height});
@@ -23,7 +23,7 @@
 .btn--back-to-map {
   composes: btn from '../../Sass/common/_buttons.scss';
   composes: btn--tertiary from '../../Sass/common/_buttons.scss';
-  font-size: 0.9rem;
+  font-size: $font-size-mid-small;
 }
 
 .preview__inner {
@@ -53,7 +53,7 @@
 .h4 {
   composes: h4 from '../../Sass/common/_base.scss';
 
-  font-size: 0.9rem;
+  font-size: $font-size-mid-small;
 }
 
 .h3 {

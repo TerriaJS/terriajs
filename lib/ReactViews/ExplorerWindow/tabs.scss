@@ -73,7 +73,7 @@
   font-family: $font-pop;
   background: $modal-bg;
   color: $modal-text;
-  font-size: 0.9rem;
+  font-size: $font-size-mid-small;
   padding: $padding $padding*2;
 
   &.btn--tab {
@@ -88,5 +88,9 @@
 
 .btn--selected {
   background: #fff;
-  color: $modal-highlight;
+  @if variable-exists(modal-selected) {
+    color: $modal-selected;
+  } @else {
+    color: $modal-highlight;
+  }
 }

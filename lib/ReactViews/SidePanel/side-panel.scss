@@ -6,7 +6,7 @@
 }
 .workbenchEmpty{
   color: $text-light;
-  font-size: 0.85rem;
+  font-size: $font-size-mid-small;
   padding: $padding;
   background: $overlay;
   border: dashed 1px rgba(255, 255, 255, 0.5);
@@ -48,7 +48,7 @@
   composes: btn-primary from '../../Sass/common/_buttons.scss';
 
   line-height: $input-height;
-  font-size: 0.9rem;
+  font-size: $font-size-mid-small;
   padding: 0;
 
   svg{

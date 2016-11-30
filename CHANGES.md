@@ -2,6 +2,15 @@
 Change Log
 ==========
 
+### 4.7.0
+
+* Add the ability for users to share their view of the map when providing feedback.
+
+### 4.6.1
+
+* Support added for creating custom WPS types, and for reusing `Point`, `Polygon`, and `Region` editors in custom types.
+* Fixed a bug that caused the legend to be missing for WMS catalog items where the legend came from GetCapabilities but the URL did not contain `GetLegendGraphic`.
+
 ### 4.6.0
 
 * Change in defaults:
@@ -12,6 +21,14 @@ Change Log
 * Region for CatalogFunctions now selected on map rather than preview map
 * Some regions that were previously not selectable (in Analytics) except via autocomplete are now selectable.
 * GNAF API updated to new Lucene-based backend, which should improve performance.
+* `CatalogFunction` region parameters are now selected on the main map rather than the preview map.
+* Some regions that were previously not selectable in Analytics, except via autocomplete, are now selectable.
+* Added hover text that shows the position of data catalog search results in the full catalog.
+* Widened scrollbars and improve their contrast.
+* Removed the default maximum number of 10 results when searching the data catalog.
+* Allow users to browse for JSON configuration files when adding "Local Data".
+* Made it easier to use custom fonts and colors in applications built on TerriaJS, via new SCSS variables.
+* Fixed a bug that caused a `CswCatalogGroup` to fail to load if the server had a `references` element without a `protocol`.
 
 ### 4.5.1
 

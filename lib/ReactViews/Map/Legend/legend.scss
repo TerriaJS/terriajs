@@ -3,14 +3,14 @@
 
 $distance-bg: rgba($dark, 0.9);
 
-.baseLegend, .distanceLegend {
+.baseLegend {
   box-sizing: border-box;
   font-family: $font-base;
   float: left;
   background-color: #fff;
   color: $text-dark;
   padding: $padding-small $padding-small;
-  font-size: 0.7rem;
+  font-size: $font-size-mid-mini;
   text-align: center;
   line-height: 1;
   border: 0;
@@ -29,8 +29,15 @@ $distance-bg: rgba($dark, 0.9);
   }
 }
 
-.locationBar{
+.locationBar, .distanceLegend{
   composes: baseLegend;
+  // Adjust colors to match btn--map.
+  background-color: $charcoal-grey;
+  color: $text-light;
+  &:hover{
+    background: $color-primary;
+  }
+  //
   margin-right: $padding-small;
   span{
     padding: 0 $padding-small;
@@ -56,5 +63,9 @@ $distance-bg: rgba($dark, 0.9);
 }
 
 .distanceLegend{
+  &:hover{
+    background: $charcoal-grey;
+  }
+
   width: 110px;
 }

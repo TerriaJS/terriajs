@@ -60,7 +60,7 @@
   composes: btn-transparent from '../../Sass/common/_buttons.scss';
   composes: btn--secondary from '../../Sass/common/_buttons.scss';
 
-  font-size: 0.7rem;
+  font-size: $font-size-mid-mini;
   padding: 4px 10px;
   margin: 5px;
   font-weight: bold;
