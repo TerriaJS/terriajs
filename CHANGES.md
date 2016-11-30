@@ -5,6 +5,7 @@ Change Log
 ### 4.7.0
 
 * Add the ability for users to share their view of the map when providing feedback.
+* GNAF API updated to new Lucene-based backend, which should improve performance.
 
 ### 4.6.1
 
@@ -20,7 +21,6 @@ Change Log
 * The marker indicating the location of a search result is now placed correctly on the terrain surface.
 * Region for CatalogFunctions now selected on map rather than preview map
 * Some regions that were previously not selectable (in Analytics) except via autocomplete are now selectable.
-* GNAF API updated to new Lucene-based backend, which should improve performance.
 * `CatalogFunction` region parameters are now selected on the main map rather than the preview map.
 * Some regions that were previously not selectable in Analytics, except via autocomplete, are now selectable.
 * Added hover text that shows the position of data catalog search results in the full catalog.
