@@ -1,6 +1,6 @@
 'use strict';
 
-import AbsPercentageWorkbenchSection from './Controls/AbsPercentageWorkbenchSection';
+import DisplayAsPercentSection from './Controls/DisplayAsPercentSection';
 import classNames from 'classnames';
 import ConceptViewer from './Controls/ConceptViewer';
 import defined from 'terriajs-cesium/Source/Core/defined';
@@ -91,9 +91,7 @@ const WorkbenchItem = React.createClass({
                         <DimensionSelectorSection item={workbenchItem}/>
                         <StyleSelectorSection item={workbenchItem}/>
                         <ColorScaleRangeSection item={workbenchItem}/>
-                        <If condition={workbenchItem.type === 'abs-itt'}>
-                            <AbsPercentageWorkbenchSection item={workbenchItem}/>
-                        </If>
+                        <DisplayAsPercentSection item={workbenchItem}/>
                         <Legend item={workbenchItem}/>
                         <If condition={(defined(workbenchItem.concepts) && workbenchItem.concepts.length > 0)}>
                             <ConceptViewer item={workbenchItem}/>
