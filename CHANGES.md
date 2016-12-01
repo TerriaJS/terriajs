@@ -5,6 +5,8 @@ Change Log
 ### 4.7.0
 
 * Add the ability for users to share their view of the map when providing feedback.
+* Extra components can now be added to FeatureInfoSection.
+* "Download Data" in FeatureInfoSection now "Download Data for this Feature".
 * Fixed the color of visited links in client apps with their own css variables.
 
 ### 4.6.1
