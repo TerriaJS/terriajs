@@ -24,10 +24,11 @@ $overlay: rgba(255, 255, 255, 0.15);
 $text-black: #000;
 $text-dark: #888;
 $text-light: #FFFFFF;
-$text-visited-link: $color-primary;
+$text-light-dimmed: #BBBBBB;
+// $text-visited-link: $color-primary;  // optionally define this to override $color-primary for the color of visited links.
 $faint-bg: #f5f5f5;
 $warning: #FF5B6F;
-$info-color: #FFFF00;   // ADDED BY AGS FOR FEATURE INFO PANEL
+$info-color: #FFFF00;
 
 $padding: 10px;
 $padding-small: 5px;
@@ -68,6 +69,7 @@ $font-size-mini: 0.625rem; // 10px;
 $font-weight-bold: 600;
 $font-weight-medium: 500;
 $font-weight-normal: 400;
+$font-weight-light: 100;
 
 $work-bench-width : 350px;
 $setting-panel: 300px;

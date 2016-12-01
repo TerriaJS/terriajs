@@ -113,7 +113,11 @@
   }
   text-decoration: $link-text-decoration;
   &:visited {
-    color: $text-visited-link;
+    @if variable-exists(text-visited-link) {
+      color: $text-visited-link;
+    } @else {
+      color: $color-primary;
+    }
   }
 }
 
