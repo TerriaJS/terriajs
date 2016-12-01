@@ -164,8 +164,6 @@ const FeatureInfoSection = React.createClass({
         const catalogItemName = (this.props.catalogItem && this.props.catalogItem.name) || '';
         const fullName = (catalogItemName ? (catalogItemName + ' - ') : '') + this.renderDataTitle();
         const reactInfo = getInfoAsReactComponent(this);
-        // Silence lint
-        const ExtraComponent = "";
 
         return (
             <li className={classNames(Styles.section)}>
@@ -207,7 +205,14 @@ const FeatureInfoSection = React.createClass({
                             </Otherwise>
                         </Choose>
                         <For each="ExtraComponent" index="i" of={FeatureInfoSection.extraComponents}>
-                            <ExtraComponent key={i} viewState={this.props.viewState}/>
+                            <ExtraComponent key={i} viewState={this.props.viewState} // eslint-disable-line react/jsx-no-undef
+                                                    template={this.props.template}
+                                                    feature={this.props.feature}
+                                                    position={this.props.position}
+                                                    clock={this.props.clock}
+                                                    catalogItem={this.props.catalogItem}
+                                                    isOpen={this.props.isOpen}
+                                                    onClickHeader={this.props.onClickHeader}/>
                         </For>
                     </div>
                     </section>
