@@ -24,7 +24,7 @@
     "d3-scale": "^1.0.1",
     "d3-selection": "^1.0.0",
     "d3-shape": "^1.0.0",
-    "d3-transition": "^1.0.0",
+    "d3-transition": "^1.0.2",
     "dateformat": "^1.0.12",
     "dompurify": "^0.8.3",
     "extract-text-webpack-plugin": "git://github.com/TerriaJS/extract-text-webpack-plugin#order-undefined-error",
