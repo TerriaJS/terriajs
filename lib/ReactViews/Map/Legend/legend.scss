@@ -25,9 +25,7 @@ $distance-bg: rgba($dark, 0.9);
   .bar{
     background: $text-dark;
     margin: 0 auto;
-    width: 110px;
-    top: '-5px';
-    position: relative;
+    display: block;
     @include transition(all 0.5s ease-in-out);
   }
 }
@@ -69,6 +67,6 @@ $distance-bg: rgba($dark, 0.9);
   &:hover{
     background: $charcoal-grey;
   }
-
+  text-align: center;
   width: 110px;
 }
