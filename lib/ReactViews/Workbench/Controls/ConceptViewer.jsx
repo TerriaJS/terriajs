@@ -20,7 +20,7 @@ const ConceptViewer = React.createClass({
                      of={this.props.item.concepts.filter(concept => concept.isVisible)}>
                     <div className={Styles.inner} key={i}>
                         <ul className={Styles.childrenList}>
-                            <Concept concept={concept}/>
+                            <Concept concept={concept} isLoading={this.props.item.isLoading}/>
                         </ul>
                     </div>
                 </For>
@@ -34,7 +34,8 @@ const Concept = React.createClass({
 
     propTypes: {
         concept: React.PropTypes.object.isRequired,
-        allowMultiple: React.PropTypes.bool
+        allowMultiple: React.PropTypes.bool,
+        isLoading: React.PropTypes.bool
     },
 
     toggleOpen() {
@@ -59,11 +60,16 @@ const Concept = React.createClass({
 
     render() {
         const concept = this.props.concept;
-
+        const classes = classNames(Styles.header, {
+            [Styles.hasChildren]: concept.hasChildren,
+            [Styles.isSelectable]: concept.isSelectable,
+            [Styles.isLoading]: this.props.isLoading
+        });
+        // Renders the concept as a standard list of radio buttons or checkboxes (ie. not as an additive-condition).
         return (
             <li style={this.getColorStyle()}>
                 <If condition={concept.name}>
-                    <div className={classNames(Styles.header, {[Styles.hasChildren]: concept.hasChildren, [Styles.isSelectable]: concept.isSelectable})}>
+                    <div className={classes}>
                         <div className={Styles.btnGroup}>
                             <If condition={concept.hasChildren}>
                                 <button type='button'
@@ -93,7 +99,7 @@ const Concept = React.createClass({
                 <If condition={concept.isOpen}>
                     <ul className={Styles.items}>
                         <For each="child" index="i" of={concept.items.filter(concept => concept.isVisible)}>
-                            <Concept key={i} concept={child} allowMultiple={concept.allowMultiple}/>
+                            <Concept key={i} concept={child} allowMultiple={concept.allowMultiple} isLoading={this.props.isLoading}/>
                         </For>
                     </ul>
                 </If>
