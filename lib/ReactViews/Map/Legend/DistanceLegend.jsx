@@ -166,7 +166,6 @@ const DistanceLegend = React.createClass({
     render() {
         const barStyle = {
             width: this.state.barWidth + 'px',
-            left: (5 + (125 - this.state.barWidth) / 2) + 'px',
             height: '2px'
         };
 
