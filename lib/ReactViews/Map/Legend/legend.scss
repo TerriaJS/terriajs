@@ -23,7 +23,7 @@ $distance-bg: rgba($dark, 0.9);
   }
 
   .bar{
-    background: $text-dark;
+    background: #fff;
     margin: 0 auto;
     display: block;
     @include transition(all 0.5s ease-in-out);
