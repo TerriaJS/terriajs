@@ -8,6 +8,7 @@ Change Log
 * Extra components can now be added to FeatureInfoSection.
 * "Download Data" in FeatureInfoSection now "Download Data for this Feature".
 * Fixed the color of visited links in client apps with their own css variables.
+* Fixed a bug that prevented the scale bar from displaying correctly.
 
 ### 4.6.1
 
