@@ -2,6 +2,11 @@
 Change Log
 ==========
 
+### 4.7.1
+
+* Fixed a bug where providing feedback did not properly share the map view.
+* Updated to terriajs-server 2.6.2.
+
 ### 4.7.0
 
 * Add the ability for users to share their view of the map when providing feedback.
