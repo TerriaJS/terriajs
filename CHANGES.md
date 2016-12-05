@@ -6,6 +6,7 @@ Change Log
 
 * Fixed a bug where providing feedback did not properly share the map view.
 * Updated to terriajs-server 2.6.2.
+* Fixed a bug leading to oversized graphics being displayed from WPS calls.
 
 ### 4.7.0
 
