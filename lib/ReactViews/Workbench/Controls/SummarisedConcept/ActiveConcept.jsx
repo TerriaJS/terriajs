@@ -50,7 +50,7 @@ const ActiveConcept = React.createClass({
         const activeLeafNodesWithParent = this.props.activeLeafNodesWithParent;
         return (
             <div className={Styles.section}>
-                <div className={classNames({[Styles.btnOpen]: !activeLeafNodesWithParent.parent.isOpen})} onClick={this.open}>
+                <div className={classNames({[Styles.btnOpen]: !activeLeafNodesWithParent.parent.isOpen, [Styles.isLoading]: this.props.isLoading})} onClick={this.open}>
                     <div className={Styles.controls}>
                         <If condition={!activeLeafNodesWithParent.parent.isOpen}>
                             <button className={Styles.btnEdit} title='Edit condition'>

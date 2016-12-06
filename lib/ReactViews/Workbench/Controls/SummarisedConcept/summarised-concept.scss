@@ -27,6 +27,16 @@
   float: right;
 }
 
+.is-loading .controls {
+  color: $text-light-dimmed;
+  button {
+    cursor: not-allowed;
+    svg{
+      fill: $text-light-dimmed;
+    }
+  }
+}
+
 .heading {
   background: $overlay;
   border: $border-style;
