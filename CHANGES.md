@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+### 4.7.2
+
+* GNAF API updated to new Lucene-based backend, which should improve performance.
+
 ### 4.7.1
 
 * Fixed a bug where providing feedback did not properly share the map view.
@@ -11,7 +15,6 @@ Change Log
 ### 4.7.0
 
 * Add the ability for users to share their view of the map when providing feedback.
-* GNAF API updated to new Lucene-based backend, which should improve performance.
 * Extra components can now be added to FeatureInfoSection.
 * "Download Data" in FeatureInfoSection now "Download Data for this Feature".
 * Fixed the color of visited links in client apps with their own css variables.
