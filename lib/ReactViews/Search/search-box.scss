@@ -28,7 +28,6 @@ input[type=text].searchField {
   width: 100%;
   overflow: hidden;
   @include placeholder{
-    // font-size: $font-size-small;
     text-align: center;
     @include transition(all, 0.25s, linear);
   }
