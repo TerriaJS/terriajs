@@ -204,6 +204,16 @@ const FeatureInfoSection = React.createClass({
                                 {reactInfo.info}
                             </Otherwise>
                         </Choose>
+                        <For each="ExtraComponent" index="i" of={FeatureInfoSection.extraComponents}>
+                            <ExtraComponent key={i} viewState={this.props.viewState} // eslint-disable-line react/jsx-no-undef
+                                                    template={this.props.template}
+                                                    feature={this.props.feature}
+                                                    position={this.props.position}
+                                                    clock={this.props.clock}
+                                                    catalogItem={this.props.catalogItem}
+                                                    isOpen={this.props.isOpen}
+                                                    onClickHeader={this.props.onClickHeader}/>
+                        </For>
                     </div>
                     </section>
                 </If>
@@ -543,5 +553,10 @@ function setTimeoutForUpdatingCustomComponent(that, reactComponent, updateSecond
     const timeoutIds = that.state.timeoutIds;
     that.setState({timeoutIds: timeoutIds.concat(timeoutId)});
 }
+
+/**
+ * Add your own react components to have them rendered in a FeatureInfoSection. ViewState will be passed as a prop.
+ */
+FeatureInfoSection.extraComponents = [];
 
 module.exports = FeatureInfoSection;

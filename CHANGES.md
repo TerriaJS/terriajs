@@ -2,9 +2,19 @@
 Change Log
 ==========
 
+### 4.7.1
+
+* Fixed a bug where providing feedback did not properly share the map view.
+* Updated to terriajs-server 2.6.2.
+* Fixed a bug leading to oversized graphics being displayed from WPS calls.
+
 ### 4.7.0
 
 * Add the ability for users to share their view of the map when providing feedback.
+* Extra components can now be added to FeatureInfoSection.
+* "Download Data" in FeatureInfoSection now "Download Data for this Feature".
+* Fixed the color of visited links in client apps with their own css variables.
+* Fixed a bug that prevented the scale bar from displaying correctly.
 
 ### 4.6.1
 
