@@ -7,6 +7,7 @@
   composes: list-reset from '../../Sass/common/_base.scss';
   composes: clearfix from '../../Sass/common/_base.scss';
   padding-right: 100px;
+  background: $modal-tab-bg;
 }
 
 .tab-list__item {
@@ -71,7 +72,7 @@
   composes: btn from '../../Sass/common/_buttons.scss';
 
   font-family: $font-pop;
-  background: $modal-bg;
+  background: $modal-tab-bg;
   color: $modal-text;
   font-size: $font-size-mid-small;
   padding: $padding $padding*2;
