@@ -82,13 +82,17 @@
   }
 
   &:hover, &:focus {
-    background: #fff;
-    color: $modal-highlight;
+    background: $modal-selected-tab-bg;
+    @if variable-exists(modal-selected) {
+      color: $modal-selected;
+    } @else {
+      color: $modal-highlight;
+    }
   }
 }
 
 .btn--selected {
-  background: #fff;
+  background: $modal-selected-tab-bg;
   @if variable-exists(modal-selected) {
     color: $modal-selected;
   } @else {
