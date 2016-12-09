@@ -8,6 +8,7 @@ Change Log
 * `colors` attribute in charts can also be passed through from a WPS ComplexData response.
 * Made "Search" and "Add Data" font sizes consistent.
 * Made Feature Info Panel styling more flexible.
+* Updated styling of Give Feedback form.
 
 ### 4.7.1
 
