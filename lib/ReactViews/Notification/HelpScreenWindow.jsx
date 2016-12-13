@@ -36,7 +36,7 @@ const HelpScreenWindow = React.createClass({
                   <strong>{helpScreen && helpScreen.currentScreenNumber + '/' + helpScreen.totalNumberOfScreens}</strong>
               </div>
               <div className={Styles.nextButton}>
-                  <button type='button' onClick={helpScreen && helpScreen.onCancel}
+                  <button type='button' onClick={helpScreen && helpScreen.onNext}
                       className={Styles.btn}><strong>{buttonText}</strong></button>
               </div>
             </div>);
