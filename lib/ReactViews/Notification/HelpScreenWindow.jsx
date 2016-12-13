@@ -15,7 +15,7 @@ const HelpScreenWindow = React.createClass({
     },
 
     render() {
-        const helpScreen = this.props.terria.helpScreen && this.props.terria.helpScreen[this.props.terria.helpScreen.length - 1];
+        const helpScreen = this.props.terria.helpScreens && this.props.terria.helpScreens[this.props.terria.helpScreens.length - 1];
         const windowClass = classNames(Styles.window, {
             [Styles.isActive]: helpScreen
         });
