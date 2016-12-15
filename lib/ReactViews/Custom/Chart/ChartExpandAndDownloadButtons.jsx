@@ -39,6 +39,7 @@ const ChartExpandAndDownloadButtons = React.createClass({
         //
         catalogItem: React.PropTypes.object,
         title: React.PropTypes.string,
+        colors: React.PropTypes.array,
         feature: React.PropTypes.object,
         id: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
         columnNames: React.PropTypes.array,
@@ -150,6 +151,10 @@ function expand(props, sourceIndex) {
 
     const newCatalogItem = new CsvCatalogItem(terria, url, options);
     let tableStructure = props.tableStructure;
+    if (defined(props.colors) && props.colors.length >= tableStructure.columns.length) {
+        newCatalogItem.getNextColor = index => props.colors[index];
+    }
+
     // For CSV data with a URL, we could just use the usual csvCatalogItem._load to load this from the url.
     // However, we also want this to work with urls that may be interpreted differently according to CatalogItem.loadIntoTableStructure.
     // So use the parent catalogItem's loadIntoTableStructure (if available) to do the load.
@@ -213,7 +218,7 @@ function expand(props, sourceIndex) {
             newCatalogItem.setChartable();
             // If we set the active columns already, getNextColor won't be triggered. So set any missing colors manually.
             tableStructure.columns.filter(column => column.isActive && !defined(column.color)).forEach((column) => {
-                column.color = tableStructure.getColorCallback();
+                column.color = tableStructure.getColorCallback(tableStructure.getColumnIndex(column.id));
             });
         } catch(e) {
             // This does not actually make it to the user.

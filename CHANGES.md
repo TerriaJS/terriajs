@@ -5,6 +5,8 @@ Change Log
 ### 4.7.2
 
 * GNAF API updated to new Lucene-based backend, which should improve performance.
+* Can now specify `colors` attribute in charts as comma separated per column css strings, allowing user to customize chart colors.
+* `colors` attribute in charts can also be passed through from a WPS ComplexData response.
 
 ### 4.7.1
 
