@@ -25,7 +25,7 @@
       position: absolute;
       bottom: 23px;
       left: 1rem;
-      font-size: 0.5rem;
+      font-size: $font-size-credits;
       color: rgba(#fff, 0.8);
       font-family: $font-base;
       @extend %sm-show;
