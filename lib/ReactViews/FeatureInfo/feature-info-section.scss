@@ -4,7 +4,7 @@
 
 .section {
   composes: clearfix from '../../Sass/common/_base.scss';
-  background: $feature-info-bg;
+  background: $overlay;
   border-top: 1px solid $dark-lighter;
 }
 
@@ -12,7 +12,7 @@
   composes: btn from './feature-info-panel.scss';
   position: relative;
   width: 100%;
-  background: $feature-info-header-bg;
+  background: $dark;
   min-height: 40px;
   margin: 0;
   padding-right: 30px;
@@ -41,23 +41,14 @@
     @extend %clearfix;
     font-family: $font-feature-info;
     max-width: 100%;
-    @if variable-exists(feature-info-table-width) {
-      width: $feature-info-table-width;
-    }
     border-collapse: collapse;
   }
 
   td {
     position: relative;
     border-collapse: collapse;
-    border: $feature-info-table-border-style;
+    border: 1px solid $dark;
     padding: 5px;
-  }
-
-  tr:nth-child(odd) {
-    @if variable-exists(feature-info-table-odd-row-bg) {
-      background-color: $feature-info-table-odd-row-bg;
-    }
   }
 }
 

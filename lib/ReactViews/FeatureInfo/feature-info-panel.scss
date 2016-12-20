@@ -2,8 +2,8 @@
 @import '../../Sass/common/mixins';
 
 .panel{
-  background: $feature-info-bg;
-  color: $feature-info-color;
+  background:rgba($dark, 0.95);
+  color: #fff;
   border-radius: $radius-small;
   display: none;
   position: fixed;
@@ -16,11 +16,14 @@
   font-family: $font-base;
 
   svg{
-    fill: $feature-info-btn-color;
+    fill: #fff;
   }
 
   a{
-    @extend %link;
+    color: $color-primary;
+    &:hover, &:focus{
+      text-decoration: underline;
+    }
   }
   @media screen and (min-width : $md){
     //temp
@@ -50,7 +53,7 @@
 }
 
 .header{
-  background: $feature-info-header-bg;
+  background: $dark;
   padding-right: $input-height;
   line-height: $modal-header-height;
 }
@@ -59,13 +62,13 @@
   composes: btn from '../../Sass/common/_buttons.scss';
   padding: 4px 9px;
   margin-right: 4px;
-  color: $feature-info-btn-color;
+  color: $text-light;
 }
 
 .btnPanelHeading{
   composes: btn from '../../Sass/common/_buttons.scss';
   padding: 4px 9px;
-  color: $feature-info-btn-color;
+  color: $text-light;
   width: 100%;
 }
 
@@ -87,7 +90,7 @@
   svg{
     height: 23px;
     width: 23px;
-    fill: $feature-info-btn-color;
+    fill: #ffffff;
     position: relative;
     left: 10px;
   }
