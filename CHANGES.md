@@ -11,6 +11,7 @@ Change Log
 * Made "Search" and "Add Data" font sizes consistent.
 * Made Feature Info Panel styling more flexible.
 * Fixed a bug that could cause an extra `/` to be added to end of URLs by `ArcGisMapServerCatalogItem`, causing some servers to reject the request.
+* Added the data source and data service details to the "About this dataset" (preview) panel.
 
 ### 4.7.1
 
@@ -40,7 +41,6 @@ Change Log
 * The marker indicating the location of a search result is now placed correctly on the terrain surface.
 * Region for CatalogFunctions now selected on map rather than preview map
 * Some regions that were previously not selectable (in Analytics) except via autocomplete are now selectable.
-* Added the data source and data service details to the "About this dataset" (preview) panel.
 * `CatalogFunction` region parameters are now selected on the main map rather than the preview map.
 * Some regions that were previously not selectable in Analytics, except via autocomplete, are now selectable.
 * Added hover text that shows the position of data catalog search results in the full catalog.
