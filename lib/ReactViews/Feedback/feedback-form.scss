@@ -37,8 +37,8 @@
 
 .header {
   position: relative;
-  background: $faint-bg;
-  border-bottom: 1px solid $grey-lighter;
+  background: $dark-lighter;
+  color: $text-light;
   padding: $padding;
 }
 
@@ -53,13 +53,13 @@
 
 .btnSubmit {
   composes: btn from '../../Sass/common/_buttons.scss';
-  background: $dark;
-  color: #fff;
+  background: $color-primary;
+  color: $text-light;
   margin-left: 10px;
   border-radius: $radius-medium;
   padding: $padding-small $padding*2;
-  &:hover {
-    background: $color-primary;
+  &:hover, &--hover {
+    background: get-hover-color($color-primary);
   }
 }
 
@@ -78,8 +78,8 @@
   border-radius: $radius-medium;
   padding: $padding-small $padding*2;
   &:hover {
-    border: 1px solid $field-border;
-    color: $grey;
+    border: 1px solid $color-primary;
+    color: $color-primary;
   }
 }
 
@@ -89,8 +89,12 @@
   right: 0;
   top: 5px;
   svg {
+    fill: $text-light;
     height: 30px;
     width: 30px;
+    &:hover {
+      fill: $color-primary;
+    }
   }
 }
 
@@ -105,5 +109,6 @@
     padding-right: 5px;
     height: 14px;
     width: 14px;
+    fill: $color-primary;
   }
 }

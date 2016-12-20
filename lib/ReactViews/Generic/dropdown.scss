@@ -39,7 +39,7 @@
   color: $text-black;
 
   &:hover, &:focus {
-    color: orange;
+    color: $dropdown-hover-color;
   }
 
   &.is-selected {
