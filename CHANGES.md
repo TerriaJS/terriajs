@@ -11,6 +11,7 @@ Change Log
 * Made "Search" and "Add Data" font sizes consistent.
 * Made Feature Info Panel styling more flexible.
 * Fixed a bug that could cause an extra `/` to be added to end of URLs by `ArcGisMapServerCatalogItem`, causing some servers to reject the request.
+* Canceled pending tile requests when removing a layer from the 2D map.  This should drastically improve the responsiveness when dragging the time slider of a time-dynamic layer in 2D mode.
 
 ### 4.7.1
 
