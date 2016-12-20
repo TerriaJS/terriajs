@@ -44,12 +44,12 @@
 .h3 {
   composes: h3 from '../../Sass/common/_base.scss';
 
-  font-size: 1.1rem;
+  font-size: $font-size-mid-large;
 }
 .h4 {
   composes: h4 from '../../Sass/common/_base.scss';
 
-  font-size: 0.9rem;
+  font-size: $font-size-mid-small;
 }
 
 .error {

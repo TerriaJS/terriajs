@@ -112,8 +112,19 @@
 }
 
 %link {
-  color: $color-primary;
-  text-decoration: none;
+  @if variable-exists(text-link) {
+    color: $text-link;
+  } @else {
+    color: $color-primary;  // for backwards compatibility
+  }
+  text-decoration: $link-text-decoration;
+  &:visited {
+    @if variable-exists(text-visited-link) {
+      color: $text-visited-link;
+    } @else {
+      color: $color-primary;
+    }
+  }
 }
 
 %sm-show, %md-show, %lg-show {

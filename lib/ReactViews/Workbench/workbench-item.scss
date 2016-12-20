@@ -5,10 +5,10 @@ $workbench-margin: $padding-small;
 
 .workbench-item {
   background: $dark-with-overlay;
-  color: #fff;
+  color: $text-light;
   font-family: $font-pop;
   margin: $workbench-margin 0;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid $overlay;
 
   &.workbench-item:global(.ui-sortable-item) {
     cursor: auto;
@@ -32,6 +32,10 @@ $workbench-margin: $padding-small;
   composes: clearfix from '../../Sass/common/_base.scss';
   padding: $padding;
   border-top: 1px solid $border-color;
+  img{
+    max-width: 100%;
+    height: auto;
+  }
 }
 
 .header {
@@ -101,6 +105,6 @@ $workbench-margin: $padding-small;
 }
 
 .draggable {
-  font-size: 0.9rem;
+  font-size: $font-size-mid-small;
   cursor: move;
 }

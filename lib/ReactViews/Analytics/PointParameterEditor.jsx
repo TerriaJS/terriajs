@@ -1,3 +1,5 @@
+'use strict';
+
 import React from 'react';
 
 import Cartographic from 'terriajs-cesium/Source/Core/Cartographic';
@@ -20,61 +22,12 @@ const PointParameterEditor = React.createClass({
         viewState: React.PropTypes.object
     },
 
-    getInitialState() {
-        return {
-            value: this.getValue()
-        };
-    },
-
-    onTextChange(e) {
-        this.setValue(e.target.value);
-        this.setState({
-            value: e.target.value
-        });
-    },
-
-    getValue() {
-        const cartographic = this.props.parameter.value;
-        if (defined(cartographic)) {
-            return CesiumMath.toDegrees(cartographic.longitude) + ',' + CesiumMath.toDegrees(cartographic.latitude);
-        } else {
-            return '';
-        }
-    },
-
-    setValue(value) {
-        const coordinates = value.split(',');
-        if (coordinates.length >= 2) {
-            this.props.parameter.value = Cartographic.fromDegrees(parseFloat(coordinates[0]), parseFloat(coordinates[1]));
-        }
+    setValueFromText(e) {
+        PointParameterEditor.setValueFromText(e, this.props.parameter);
     },
 
     selectPointOnMap() {
-        const terria = this.props.previewed.terria;
-        const that = this;
-
-        // Cancel any feature picking already in progress.
-        terria.pickedFeatures = undefined;
-
-        const pickPointMode = new MapInteractionMode({
-            message: 'Select a point by clicking on the map.',
-            onCancel: function () {
-                terria.mapInteractionModeStack.pop();
-                that.props.viewState.openAddData();
-            }
-        });
-        terria.mapInteractionModeStack.push(pickPointMode);
-
-        knockout.getObservable(pickPointMode, 'pickedFeatures').subscribe(function(pickedFeatures) {
-            if (defined(pickedFeatures.pickPosition)) {
-                const value = Ellipsoid.WGS84.cartesianToCartographic(pickedFeatures.pickPosition);
-                that.props.parameter.value = value;
-                terria.mapInteractionModeStack.pop();
-                that.props.viewState.openAddData();
-            }
-        });
-
-        that.props.viewState.explorerPanelIsVisible = false;
+        PointParameterEditor.selectOnMap(this.props.previewed.terria, this.props.viewState, this.props.parameter);
     },
 
     render() {
@@ -82,8 +35,8 @@ const PointParameterEditor = React.createClass({
             <div>
                 <input className={Styles.field}
                        type="text"
-                       onChange={this.onTextChange}
-                       value={this.state.value}/>
+                       onChange={this.setValueFromText}
+                       value={PointParameterEditor.getDisplayValue(this.props.parameter.value)}/>
                 <button type="button" onClick={this.selectPointOnMap} className={Styles.btnSelector}>
                     Select location
                 </button>
@@ -91,5 +44,61 @@ const PointParameterEditor = React.createClass({
         );
     }
 });
+
+/**
+ * Triggered when user types value directly into field.
+ * @param {String} e Text that user has entered manually.
+ * @param {FunctionParameter} parameter Parameter to set value on.
+ */
+PointParameterEditor.setValueFromText = function(e, parameter) {
+    const coordinates = e.target.value.split(',');
+    if (coordinates.length >= 2) {
+        parameter.value = Cartographic.fromDegrees(parseFloat(coordinates[0]), parseFloat(coordinates[1]));
+    }
+};
+
+/**
+ * Given a value, return it in human readable form for display.
+ * @param {Object} value Native format of parameter value.
+ * @return {String} String for display
+ */
+PointParameterEditor.getDisplayValue = function(value) {
+    if (defined(value)) {
+        return CesiumMath.toDegrees(value.longitude) + ',' + CesiumMath.toDegrees(value.latitude);
+    } else {
+        return '';
+    }
+};
+
+/**
+ * Prompt user to select/draw on map in order to define parameter.
+ * @param {Terria} terria Terria instance.
+ * @param {Object} viewState ViewState.
+ * @param {FunctionParameter} parameter Parameter.
+ */
+PointParameterEditor.selectOnMap = function(terria, viewState, parameter) {
+    // Cancel any feature picking already in progress.
+    terria.pickedFeatures = undefined;
+
+    const pickPointMode = new MapInteractionMode({
+        message: 'Select a point by clicking on the map.',
+        onCancel: function () {
+            terria.mapInteractionModeStack.pop();
+            viewState.openAddData();
+        }
+    });
+    terria.mapInteractionModeStack.push(pickPointMode);
+
+    knockout.getObservable(pickPointMode, 'pickedFeatures').subscribe(function(pickedFeatures) {
+        if (defined(pickedFeatures.pickPosition)) {
+            const value = Ellipsoid.WGS84.cartesianToCartographic(pickedFeatures.pickPosition);
+            terria.mapInteractionModeStack.pop();
+            parameter.value = value;
+            viewState.openAddData();
+        }
+    });
+
+    viewState.explorerPanelIsVisible = false;
+};
 
 module.exports = PointParameterEditor;

@@ -37,124 +37,15 @@ const ParameterEditor = React.createClass({
     },
 
     renderEditor() {
-        switch (this.props.parameter.type) {
-            case 'point':
-                return (
-                    <div>
-                        {this.renderLabel()}
-                        <PointParameterEditor
-                            previewed={this.props.previewed}
-                            viewState={this.props.viewState}
-                            parameter={this.props.parameter}
-                        />
-                    </div>);
-            case 'line':
-                return (
-                    <div>
-                        {this.renderLabel()}
-                        <LineParameterEditor
-                            previewed={this.props.previewed}
-                            viewState={this.props.viewState}
-                            parameter={this.props.parameter}
-                        />
-                    </div>);
-            case 'rectangle':
-                return (
-                    <div>
-                        {this.renderLabel()}
-                        <RectangleParameterEditor
-                            previewed={this.props.previewed}
-                            viewState={this.props.viewState}
-                            parameter={this.props.parameter}
-                        />
-                    </div>);
-            case 'polygon':
-                return (
-                    <div>
-                        {this.renderLabel()}
-                        <PolygonParameterEditor
-                            previewed={this.props.previewed}
-                            viewState={this.props.viewState}
-                            parameter={this.props.parameter}
-                        />
-                    </div>);
-            case 'enumeration':
-                return (
-                    <div>
-                        {this.renderLabel()}
-                        <EnumerationParameterEditor
-                            previewed={this.props.previewed}
-                            viewState={this.props.viewState}
-                            parameter={this.props.parameter}
-                        />
-                    </div>);
-            case 'dateTime':
-                return (
-                    <div>
-                        {this.renderLabel()}
-                        <DateTimeParameterEditor
-                            previewed={this.props.previewed}
-                            parameter={this.props.parameter}
-                        />
-                    </div>);
-            case 'region':
-                return (
-                    <div>
-                        {this.renderLabel()}
-                        <RegionParameterEditor
-                            previewed={this.props.previewed}
-                            viewState={this.props.viewState}
-                            parameter={this.props.parameter}
-                        />
-                    </div>);
-            case 'regionType': {
-                const that = this;
-                const regionParam = this.props.previewed.parameters.find(function(param) {
-                    return (defined(param.regionTypeParameter) &&
-                            param.regionTypeParameter === that.props.parameter);
-                });
-                return (
-                    <div>
-                        <If condition={regionParam === undefined}>
-                            {this.renderLabel()}
-                            <RegionTypeParameterEditor
-                                previewed={this.props.previewed}
-                                parameter={this.props.parameter}
-                            />
-                        </If>
-                        <If condition={!this.props.parameter.showInUi}>
-                            <div className="Placeholder for regionType"/>
-                        </If>
-                    </div>);
+        for (let i = 0; i < ParameterEditor.parameterTypeConverters.length; ++i) {
+            const converter = ParameterEditor.parameterTypeConverters[i];
+            const editor = converter.parameterTypeToDiv(this.props.parameter.type, this);
+            if (defined(editor)) {
+                return editor;
             }
-            case 'regionData':
-                return (
-                    <div>
-                        {this.renderLabel()}
-                        <RegionDataParameterEditor
-                            previewed={this.props.previewed}
-                            parameter={this.props.parameter}
-                        />
-                    </div>);
-            case 'boolean':
-                return (
-                    <div>
-                        {this.renderLabel()}
-                        <BooleanParameterEditor
-                            previewed={this.props.previewed}
-                            parameter={this.props.parameter}
-                        />
-                    </div>);
-            default:
-                return (
-                    <div>
-                        {this.renderLabel()}
-                        <GenericParameterEditor
-                            previewed={this.props.previewed}
-                            parameter={this.props.parameter}
-                        />
-                    </div>);
         }
+        const genericEditor = ParameterEditor.parameterTypeConverters.filter(function(item) { return item.id === 'generic'; })[0];
+        return genericEditor.parameterTypeToDiv('generic', this);
     },
 
     render() {
@@ -165,5 +56,176 @@ const ParameterEditor = React.createClass({
         );
     }
 });
+
+ParameterEditor.parameterTypeConverters = [
+    {
+        id: 'point',
+        parameterTypeToDiv: function PointParameterToDiv(type, parameterEditor) {
+            if (type === this.id) {
+                return (<div>
+                                {parameterEditor.renderLabel()}
+                                <PointParameterEditor
+                                    previewed={parameterEditor.props.previewed}
+                                    viewState={parameterEditor.props.viewState}
+                                    parameter={parameterEditor.props.parameter}
+                                />
+                            </div>);
+            }
+        }
+    },
+    {
+        id: 'line',
+        parameterTypeToDiv: function LineParameterToDiv(type, parameterEditor) {
+            if (type === this.id) {
+                return (<div>
+                                {parameterEditor.renderLabel()}
+                                <LineParameterEditor
+                                    previewed={parameterEditor.props.previewed}
+                                    viewState={parameterEditor.props.viewState}
+                                    parameter={parameterEditor.props.parameter}
+                                />
+                            </div>);
+            }
+        }
+    },
+    {
+        id: 'rectangle',
+        parameterTypeToDiv: function RectangleParameterToDiv(type, parameterEditor) {
+            if (type === this.id) {
+                return (<div>
+                                {parameterEditor.renderLabel()}
+                                <RectangleParameterEditor
+                                    previewed={parameterEditor.props.previewed}
+                                    viewState={parameterEditor.props.viewState}
+                                    parameter={parameterEditor.props.parameter}
+                                />
+                            </div>);
+            }
+        }
+    },
+    {
+        id: 'polygon',
+        parameterTypeToDiv: function PolygonParameterToDiv(type, parameterEditor) {
+            if (type === this.id) {
+                return (<div>
+                                {parameterEditor.renderLabel()}
+                                <PolygonParameterEditor
+                                    previewed={parameterEditor.props.previewed}
+                                    viewState={parameterEditor.props.viewState}
+                                    parameter={parameterEditor.props.parameter}
+                                />
+                            </div>);
+            }
+        }
+    },
+    {
+        id: 'enumeration',
+        parameterTypeToDiv: function EnumerationParameterToDiv(type, parameterEditor) {
+            if (type === this.id) {
+                return (<div>
+                                {parameterEditor.renderLabel()}
+                                <EnumerationParameterEditor
+                                    previewed={parameterEditor.props.previewed}
+                                    viewState={parameterEditor.props.viewState}
+                                    parameter={parameterEditor.props.parameter}
+                                />
+                            </div>);
+            }
+        }
+    },
+    {
+        id: 'dateTime',
+        parameterTypeToDiv: function DateTimeParameterToDiv(type, parameterEditor) {
+            if (type === this.id) {
+                return (<div>
+                                {parameterEditor.renderLabel()}
+                                <DateTimeParameterEditor
+                                    previewed={parameterEditor.props.previewed}
+                                    parameter={parameterEditor.props.parameter}
+                                />
+                            </div>);
+            }
+        }
+    },
+    {
+        id: 'region',
+        parameterTypeToDiv: function RegionParameterToDiv(type, parameterEditor) {
+            if (type === this.id) {
+                return (<div>
+                                {parameterEditor.renderLabel()}
+                                <RegionParameterEditor
+                                    previewed={parameterEditor.props.previewed}
+                                    viewState={parameterEditor.props.viewState}
+                                    parameter={parameterEditor.props.parameter}
+                                />
+                            </div>);
+            }
+        }
+    },
+    {
+        id: 'regionType',
+        parameterTypeToDiv: function RegionTypeParameterToDiv(type, parameterEditor) {
+            if (type === this.id) {
+                const regionParam = parameterEditor.props.previewed.parameters.find(function(param) {
+                    return (defined(param.regionTypeParameter) && param.regionTypeParameter === parameterEditor.props.parameter);
+                });
+                return (<div>
+                                <If condition={regionParam === undefined}>
+                                    {parameterEditor.renderLabel()}
+                                    <RegionTypeParameterEditor
+                                        previewed={parameterEditor.props.previewed}
+                                        parameter={parameterEditor.props.parameter}
+                                    />
+                                </If>
+                                <If condition={!parameterEditor.props.parameter.showInUi}>
+                                    <div className="Placeholder for regionType"/>
+                                </If>
+                            </div>);
+            }
+        }
+    },
+    {
+        id: 'regionData',
+        parameterTypeToDiv: function RegionDataParameterToDiv(type, parameterEditor) {
+            if (type === this.id) {
+                return (<div>
+                                {parameterEditor.renderLabel()}
+                                <RegionDataParameterEditor
+                                    previewed={parameterEditor.props.previewed}
+                                    parameter={parameterEditor.props.parameter}
+                                />
+                            </div>);
+            }
+        }
+    },
+    {
+        id: 'boolean',
+        parameterTypeToDiv: function BooleanParameterToDiv(type, parameterEditor) {
+            if (type === this.id) {
+                return (<div>
+                                {parameterEditor.renderLabel()}
+                                <BooleanParameterEditor
+                                    previewed={parameterEditor.props.previewed}
+                                    parameter={parameterEditor.props.parameter}
+                                />
+                            </div>);
+            }
+        }
+    },
+    {
+        id: 'generic',
+        parameterTypeToDiv: function GenericParameterToDiv(type, parameterEditor) {
+            if (type === this.id) {
+                return (<div>
+                            {parameterEditor.renderLabel()}
+                            <GenericParameterEditor
+                                previewed={parameterEditor.props.previewed}
+                                parameter={parameterEditor.props.parameter}
+                            />
+                        </div>);
+            }
+        }
+    }
+];
 
 module.exports = ParameterEditor;

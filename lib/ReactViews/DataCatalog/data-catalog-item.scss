@@ -9,7 +9,7 @@
 }
 
 .btn-catalog-item {
-  font-size: 0.8rem;
+  font-size: $font-size-small;
   composes: btn from '../../Sass/common/_buttons.scss';
   @extend %wrap;
   position: relative;
@@ -32,7 +32,7 @@
   }
 
   @media screen and (max-width: $sm) {
-    font-size: 0.9rem;
+    font-size: $font-size-mid-small;
     padding-top: 10px;
     padding-bottom: 10px;
     border-bottom: 1px solid $grey-lighter;
@@ -59,7 +59,7 @@
 
   &:hover, &:focus{
     svg{
-      fill: $turquoise-blue;
+      fill: $modal-highlight;
     }
   }
 

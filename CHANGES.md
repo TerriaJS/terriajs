@@ -2,6 +2,35 @@
 Change Log
 ==========
 
+### 4.7.2
+
+* GNAF API updated to new Lucene-based backend, which should improve performance.
+* Can now specify `colors` attribute in charts as comma separated per column css strings, allowing user to customize chart colors.
+* `colors` attribute in charts can also be passed through from a WPS ComplexData response.
+* Updated styling of Give Feedback form.
+* Made "Search" and "Add Data" font sizes consistent.
+* Made Feature Info Panel styling more flexible.
+* Fixed a bug that could cause an extra `/` to be added to end of URLs by `ArcGisMapServerCatalogItem`, causing some servers to reject the request.
+
+### 4.7.1
+
+* Fixed a bug where providing feedback did not properly share the map view.
+* Updated to terriajs-server 2.6.2.
+* Fixed a bug leading to oversized graphics being displayed from WPS calls.
+
+### 4.7.0
+
+* Add the ability for users to share their view of the map when providing feedback.
+* Extra components can now be added to FeatureInfoSection.
+* "Download Data" in FeatureInfoSection now "Download Data for this Feature".
+* Fixed the color of visited links in client apps with their own css variables.
+* Fixed a bug that prevented the scale bar from displaying correctly.
+
+### 4.6.1
+
+* Support added for creating custom WPS types, and for reusing `Point`, `Polygon`, and `Region` editors in custom types.
+* Fixed a bug that caused the legend to be missing for WMS catalog items where the legend came from GetCapabilities but the URL did not contain `GetLegendGraphic`.
+
 ### 4.6.0
 
 * Change in defaults:
@@ -12,9 +41,14 @@ Change Log
 * Region for CatalogFunctions now selected on map rather than preview map
 * Some regions that were previously not selectable (in Analytics) except via autocomplete are now selectable.
 * Added the data source and data service details to the "About this dataset" (preview) panel.
+* `CatalogFunction` region parameters are now selected on the main map rather than the preview map.
+* Some regions that were previously not selectable in Analytics, except via autocomplete, are now selectable.
+* Added hover text that shows the position of data catalog search results in the full catalog.
 * Widened scrollbars and improve their contrast.
 * Removed the default maximum number of 10 results when searching the data catalog.
-* Allow users to browse for json configuration files when adding "Local Data".
+* Allow users to browse for JSON configuration files when adding "Local Data".
+* Made it easier to use custom fonts and colors in applications built on TerriaJS, via new SCSS variables.
+* Fixed a bug that caused a `CswCatalogGroup` to fail to load if the server had a `references` element without a `protocol`.
 
 ### 4.5.1
 

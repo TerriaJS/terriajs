@@ -1,0 +1,195 @@
+<csw:GetRecordsResponse version="2.0.2" xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml" xmlns:ows="http://www.opengis.net/ows" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
+	<csw:SearchStatus timestamp="2016-11-14T02:28:18Z"/>
+	<csw:SearchResults elementSet="full" nextRecord="0" numberOfRecordsMatched="5" numberOfRecordsReturned="5" recordSchema="http://www.opengis.net/cat/csw/2.0.2">
+		<csw:Record>
+			<dc:identifier>57f2aa95e4b0bc0bec001f03</dc:identifier>
+			<dc:title>Marsh Condition Change Map (Radar and optical mapping of surge persistence and marsh dieback along the New Jersey Mid-Atlantic coast after Hurricane Sandy, April 2016)</dc:title>
+			<dc:type>dataset</dc:type>
+			<dc:subject>marsh condition</dc:subject>
+			<dc:subject>storm surge</dc:subject>
+			<dc:subject>GeoTiff</dc:subject>
+			<dc:subject>Hurricane Sandy</dc:subject>
+			<dc:subject>New Jersey Coastal Marshes</dc:subject>
+			<dc:subject>CMG_Portal</dc:subject>
+			<dct:references scheme="WWW:LINK-1.0-http--link">https://www.sciencebase.gov/catalog/item/57f2aa95e4b0bc0bec001f03</dct:references>
+			<dct:references scheme="KML">https://www.sciencebase.gov/catalogMaps/mapping/ows/57f2aa95e4b0bc0bec001f03?mode=download&amp;request=kml&amp;service=wms&amp;layers=SPOTMarshCondChangeMap</dct:references>
+			<dct:references scheme="OGC:WMS">https://www.sciencebase.gov/catalogMaps/mapping/ows/57f2aa95e4b0bc0bec001f03?service=wms&amp;request=getcapabilities&amp;version=1.3.0</dct:references>
+			<dct:references scheme="OGC:WCS">https://www.sciencebase.gov/catalogMaps/mapping/ows/57f2aa95e4b0bc0bec001f03?service=wcs&amp;request=getcapabilities&amp;version=1.0.0</dct:references>
+			<dct:references scheme="WWW:LINK-1.0-http--link">https://www.sciencebase.gov/catalog/file/get/57f2aa95e4b0bc0bec001f03</dct:references>
+			<dct:references scheme="None">https://www.sciencebase.gov/catalogMaps/mapping/ows/57f2aa95e4b0bc0bec001f03?version=1.3.0&amp;service=wms&amp;request=GetCapabilities</dct:references>
+			<dct:references scheme="None">https://www.sciencebase.gov/catalogMaps/mapping/ows/57f2aa95e4b0bc0bec001f03?version=1.3.0&amp;service=wms&amp;request=GetMap</dct:references>
+			<dct:references scheme="None">https://www.sciencebase.gov/catalogMaps/mapping/ows/57f2aa95e4b0bc0bec001f03?version=1.3.0&amp;service=wms&amp;request=GetFeatureInfo</dct:references>
+			<dct:references scheme="None">https://www.sciencebase.gov/catalogMaps/mapping/ows/57f2aa95e4b0bc0bec001f03?version=1.1.0&amp;service=wcs&amp;request=GetCapabilities</dct:references>
+			<dct:references scheme="None">https://www.sciencebase.gov/catalogMaps/mapping/ows/57f2aa95e4b0bc0bec001f03?version=1.1.0&amp;service=wcs&amp;request=DescribeCoverage</dct:references>
+			<dct:references scheme="None">https://www.sciencebase.gov/catalogMaps/mapping/ows/57f2aa95e4b0bc0bec001f03?version=1.1.0&amp;service=wcs&amp;request=GetCoverage</dct:references>
+			<dct:modified>2016-10-11T15:03:16Z</dct:modified>
+			<dct:abstract>Marsh condition change (i.e. loss of green marsh vegetation) was assessed from optical satellite images (Satellite Pour l’Observation de la Terre and Moderate Resolution Imaging Spectroradiometer) collected before and after Hurricane Sandy.</dct:abstract>
+			<dc:date>2016-10-11T15:03:16Z</dc:date>
+			<ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2">
+				<ows:LowerCorner>41.33 -73.87</ows:LowerCorner>
+				<ows:UpperCorner>41.38 -73.85</ows:UpperCorner>
+			</ows:BoundingBox>
+		</csw:Record>
+		<csw:Record>
+			<dc:identifier>COAWST.Barnegat_Bay.Spring2012</dc:identifier>
+			<dc:title>COAWST Hindcast:Barnegat Bay:ADCIRC tides, real rivers, plume, lowpass Espresso bdry, NAM, new bathy</dc:title>
+			<dc:type>dataset</dc:type>
+			<dc:subject>CMG_Portal</dc:subject>
+			<dc:subject>Sandy_Portal</dc:subject>
+			<dc:subject>Zafer Defne</dc:subject>
+			<dc:subject>sea_surface_height_above_datum</dc:subject>
+			<dc:subject>barotropic_x_sea_water_velocity</dc:subject>
+			<dc:subject>barotropic_y_sea_water_velocity</dc:subject>
+			<dc:subject>sea_water_potential_temperature</dc:subject>
+			<dc:subject>sea_water_salinity</dc:subject>
+			<dc:subject>ocean_s_coordinate_g1</dc:subject>
+			<dc:subject>ocean_s_coordinate_g1</dc:subject>
+			<dc:subject>longitude</dc:subject>
+			<dc:subject>latitude</dc:subject>
+			<dc:subject>longitude</dc:subject>
+			<dc:subject>latitude</dc:subject>
+			<dc:subject>longitude</dc:subject>
+			<dc:subject>latitude</dc:subject>
+			<dc:subject>longitude</dc:subject>
+			<dc:subject>latitude</dc:subject>
+			<dc:subject>time</dc:subject>
+			<dc:subject scheme="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_TopicCategoryCode">climatologyMeteorologyAtmosphere</dc:subject>
+			<dct:references scheme="WWW:LINK">http://geoport-dev.whoi.edu/thredds/dodsC/usgs/data0/bbleh/spring2012/00_dir_roms.ncml.html</dct:references>
+			<dct:references scheme="WWW:LINK">http://www.ncdc.noaa.gov/oa/wct/wct-jnlp-beta.php?singlefile=http://geoport-dev.whoi.edu/thredds/dodsC/usgs/data0/bbleh/spring2012/00_dir_roms.ncml</dct:references>
+			<dct:references scheme="OPeNDAP:OPeNDAP">http://geoport-dev.whoi.edu/thredds/dodsC/usgs/data0/bbleh/spring2012/00_dir_roms.ncml</dct:references>
+			<dct:references scheme="OGC:WMS">http://geoport-dev.whoi.edu/thredds/wms/usgs/data0/bbleh/spring2012/00_dir_roms.ncml?service=WMS&amp;version=1.3.0&amp;request=GetCapabilities</dct:references>
+			<dct:references scheme="UNIDATA:NCSS">http://geoport-dev.whoi.edu/thredds/ncss/usgs/data0/bbleh/spring2012/00_dir_roms.ncml/dataset.html</dct:references>
+			<dct:references scheme="file">http://geoport-dev.whoi.edu/thredds/fileServer/usgs/data0/bbleh/spring2012/00_dir_roms.ncml</dct:references>
+			<dc:relation/>
+			<dct:modified>2016-11-03</dct:modified>
+			<dct:abstract>Barnegat Bay run driven by ADCIRC tides on the boundaries, realistic river forcing with low-passed elevation from Espresso on the boundaries. Atmospheric forcing is from the NAM model, using the new bathymetry.</dct:abstract>
+			<dc:date>2016-11-03</dc:date>
+			<ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2">
+				<ows:LowerCorner>39.44 -74.44</ows:LowerCorner>
+				<ows:UpperCorner>40.14 -74.0</ows:UpperCorner>
+			</ows:BoundingBox>
+		</csw:Record>
+		<csw:Record>
+			<dc:identifier>gov.usgs.cmgp:COAWST.USEAST.Forecast</dc:identifier>
+			<dc:title>COAWST Forecast System : USGS : US East Coast and Gulf of Mexico (Experimental)</dc:title>
+			<dc:type>dataset</dc:type>
+			<dc:subject>CMG_Portal</dc:subject>
+			<dc:subject>OM/WHSC/USGS</dc:subject>
+			<dc:subject>sea_floor_depth</dc:subject>
+			<dc:subject>water_surface_height_above_reference_datum</dc:subject>
+			<dc:subject>barotropic_x_sea_water_velocity</dc:subject>
+			<dc:subject>barotropic_y_sea_water_velocity</dc:subject>
+			<dc:subject>x_sea_water_velocity</dc:subject>
+			<dc:subject>y_sea_water_velocity</dc:subject>
+			<dc:subject>sea_water_potential_temperature</dc:subject>
+			<dc:subject>sea_water_salinity</dc:subject>
+			<dc:subject>sea_surface_wave_significant_height</dc:subject>
+			<dc:subject>sea_surface_mean_wave_from_direction</dc:subject>
+			<dc:subject>forecast_period</dc:subject>
+			<dc:subject>ocean_s_coordinate_g1</dc:subject>
+			<dc:subject>ocean_s_coordinate_g1</dc:subject>
+			<dc:subject>longitude</dc:subject>
+			<dc:subject>latitude</dc:subject>
+			<dc:subject>longitude</dc:subject>
+			<dc:subject>latitude</dc:subject>
+			<dc:subject>longitude</dc:subject>
+			<dc:subject>latitude</dc:subject>
+			<dc:subject>longitude</dc:subject>
+			<dc:subject>latitude</dc:subject>
+			<dc:subject>ocean_sigma_coordinate</dc:subject>
+			<dc:subject>time</dc:subject>
+			<dc:subject>forecast_reference_time</dc:subject>
+			<dc:subject scheme="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_TopicCategoryCode">climatologyMeteorologyAtmosphere</dc:subject>
+			<dct:references scheme="WWW:LINK">http://geoport-dev.whoi.edu/thredds/dodsC/coawst_4/use/fmrc/coawst_4_use_best.ncd.html</dct:references>
+			<dct:references scheme="WWW:LINK">http://www.ncdc.noaa.gov/oa/wct/wct-jnlp-beta.php?singlefile=http://geoport-dev.whoi.edu/thredds/dodsC/coawst_4/use/fmrc/coawst_4_use_best.ncd</dct:references>
+			<dct:references scheme="OPeNDAP:OPeNDAP">http://geoport-dev.whoi.edu/thredds/dodsC/coawst_4/use/fmrc/coawst_4_use_best.ncd</dct:references>
+			<dct:references scheme="OGC:WMS">http://geoport-dev.whoi.edu/thredds/wms/coawst_4/use/fmrc/coawst_4_use_best.ncd?service=WMS&amp;version=1.3.0&amp;request=GetCapabilities</dct:references>
+			<dct:references scheme="UNIDATA:NCSS">http://geoport-dev.whoi.edu/thredds/ncss/grid/coawst_4/use/fmrc/coawst_4_use_best.ncd/dataset.html</dct:references>
+			<dc:relation/>
+			<dct:modified>2016-11-03</dct:modified>
+			<dct:abstract>Experimental forecast model product from the USGS Coupled Ocean Atmosphere Wave Sediment-Transport (COAWST) modeling system. Data required to drive the modeling system include parametric wave parameters derived from Wave Watch III, wind and atmospheric surface inputs derived from the National Centers for Environmental Prediction (NCEP) North American Mesoscale and Global Forecasting System models, and climatology fields obtained from the Florida State University Center for Ocean-Atmospheric Predictions Studies (COAPS)  HYCOM model. The COAWST model above is run on a 5km (336x896) grid which encompasses the US East Coast and the Gulf of Mexico.</dct:abstract>
+			<dc:date>2016-11-03</dc:date>
+			<ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2">
+				<ows:LowerCorner>11.89 -101.75</ows:LowerCorner>
+				<ows:UpperCorner>48.46 -53.25</ows:UpperCorner>
+			</ows:BoundingBox>
+		</csw:Record>
+		<csw:Record>
+			<dc:identifier>gov.usgs.cmg:HudJBay_Sandy</dc:identifier>
+			<dc:title>Hudson River and Jamaica Bay Model for Hurricane Sandy</dc:title>
+			<dc:type>dataset</dc:type>
+			<dc:subject>CMG_Portal</dc:subject>
+			<dc:subject>Sandy_Portal</dc:subject>
+			<dc:subject>Rich Signell</dc:subject>
+			<dc:subject>sea_surface_height_above_datum</dc:subject>
+			<dc:subject>barotropic_x_sea_water_velocity</dc:subject>
+			<dc:subject>barotropic_y_sea_water_velocity</dc:subject>
+			<dc:subject>x_sea_water_velocity</dc:subject>
+			<dc:subject>y_sea_water_velocity</dc:subject>
+			<dc:subject>sea_water_potential_temperature</dc:subject>
+			<dc:subject>sea_water_salinity</dc:subject>
+			<dc:subject>sea_surface_wave_significant_height</dc:subject>
+			<dc:subject>ocean_s_coordinate_g1</dc:subject>
+			<dc:subject>ocean_s_coordinate_g1</dc:subject>
+			<dc:subject>longitude</dc:subject>
+			<dc:subject>latitude</dc:subject>
+			<dc:subject>longitude</dc:subject>
+			<dc:subject>latitude</dc:subject>
+			<dc:subject>longitude</dc:subject>
+			<dc:subject>latitude</dc:subject>
+			<dc:subject>longitude</dc:subject>
+			<dc:subject>latitude</dc:subject>
+			<dc:subject>time</dc:subject>
+			<dc:subject>ocean_sigma_coordinate</dc:subject>
+			<dc:subject scheme="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_TopicCategoryCode">climatologyMeteorologyAtmosphere</dc:subject>
+			<dct:references scheme="WWW:LINK">http://clancy.whoi.edu/thredds/dodsC/data1/dralston/hudson/sandy/sandy009/00_dir_roms.ncml.html</dct:references>
+			<dct:references scheme="WWW:LINK">http://www.ncdc.noaa.gov/oa/wct/wct-jnlp-beta.php?singlefile=http://clancy.whoi.edu/thredds/dodsC/data1/dralston/hudson/sandy/sandy009/00_dir_roms.ncml</dct:references>
+			<dct:references scheme="OPeNDAP:OPeNDAP">http://clancy.whoi.edu/thredds/dodsC/data1/dralston/hudson/sandy/sandy009/00_dir_roms.ncml</dct:references>
+			<dct:references scheme="OGC:WCS">http://clancy.whoi.edu/thredds/wcs/data1/dralston/hudson/sandy/sandy009/00_dir_roms.ncml?service=WCS&amp;version=1.0.0&amp;request=GetCapabilities</dct:references>
+			<dct:references scheme="OGC:WMS">http://clancy.whoi.edu/thredds/wms/data1/dralston/hudson/sandy/sandy009/00_dir_roms.ncml?service=WMS&amp;version=1.3.0&amp;request=GetCapabilities</dct:references>
+			<dct:references scheme="UNIDATA:NCSS">http://clancy.whoi.edu/thredds/ncss/grid/data1/dralston/hudson/sandy/sandy009/00_dir_roms.ncml/dataset.html</dct:references>
+			<dct:references scheme="file">http://clancy.whoi.edu/thredds/fileServer/data1/dralston/hudson/sandy/sandy009/00_dir_roms.ncml</dct:references>
+			<dc:relation/>
+			<dct:modified>2016-11-03</dct:modified>
+			<dct:abstract>Simulation of hydrodynamics and sediment transport in the Hudson River and Jamaica Bay during Hurricane Sandy using the COAWST modeling system.</dct:abstract>
+			<dc:date>2016-11-03</dc:date>
+			<ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2">
+				<ows:LowerCorner>40.33 -74.43</ows:LowerCorner>
+				<ows:UpperCorner>42.75 -73.62</ows:UpperCorner>
+			</ows:BoundingBox>
+		</csw:Record>
+		<csw:Record>
+			<dc:identifier>COAWST.MVCO.CBLAST.spatial_7_ar0fd</dc:identifier>
+			<dc:title>COAWST Hindcast:MVCO/CBlast 2007:ripples with SWAN-40m res</dc:title>
+			<dc:type>dataset</dc:type>
+			<dc:subject>CMG_Portal</dc:subject>
+			<dc:subject>Neil Ganju</dc:subject>
+			<dc:subject>sea_surface_height_above_datum</dc:subject>
+			<dc:subject>barotropic_x_sea_water_velocity</dc:subject>
+			<dc:subject>barotropic_y_sea_water_velocity</dc:subject>
+			<dc:subject>x_sea_water_velocity</dc:subject>
+			<dc:subject>y_sea_water_velocity</dc:subject>
+			<dc:subject>sea_water_potential_temperature</dc:subject>
+			<dc:subject>sea_water_salinity</dc:subject>
+			<dc:subject>sea_surface_wave_significant_height</dc:subject>
+			<dc:subject>ocean_s_coordinate</dc:subject>
+			<dc:subject>ocean_s_coordinate</dc:subject>
+			<dc:subject>time</dc:subject>
+			<dc:subject scheme="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_TopicCategoryCode">climatologyMeteorologyAtmosphere</dc:subject>
+			<dct:references scheme="WWW:LINK">http://geoport-dev.whoi.edu/thredds/dodsC/usgs/data0/mvco_ce/mvco_output/spatial_7_ar0fd/00_dir_roms.ncml.html</dct:references>
+			<dct:references scheme="WWW:LINK">http://www.ncdc.noaa.gov/oa/wct/wct-jnlp-beta.php?singlefile=http://geoport-dev.whoi.edu/thredds/dodsC/usgs/data0/mvco_ce/mvco_output/spatial_7_ar0fd/00_dir_roms.ncml</dct:references>
+			<dct:references scheme="OPeNDAP:OPeNDAP">http://geoport-dev.whoi.edu/thredds/dodsC/usgs/data0/mvco_ce/mvco_output/spatial_7_ar0fd/00_dir_roms.ncml</dct:references>
+			<dct:references scheme="OGC:WMS">http://geoport-dev.whoi.edu/thredds/wms/usgs/data0/mvco_ce/mvco_output/spatial_7_ar0fd/00_dir_roms.ncml?service=WMS&amp;version=1.3.0&amp;request=GetCapabilities</dct:references>
+			<dct:references scheme="UNIDATA:NCSS">http://geoport-dev.whoi.edu/thredds/ncss/usgs/data0/mvco_ce/mvco_output/spatial_7_ar0fd/00_dir_roms.ncml/dataset.html</dct:references>
+			<dct:references scheme="file">http://geoport-dev.whoi.edu/thredds/fileServer/usgs/data0/mvco_ce/mvco_output/spatial_7_ar0fd/00_dir_roms.ncml</dct:references>
+			<dc:relation/>
+			<dct:modified>2016-11-03</dct:modified>
+			<dct:abstract>COAWST simulation of CBLAST 2007 region south of Marthas Vineyard , including the Martha's Vineyard Coastal Observatory Region. This simulation is CASE07_AR0FD.  Ripple formulation with SWAN-40m resolution wave forcing.</dct:abstract>
+			<dc:date>2016-11-03</dc:date>
+			<ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2">
+				<ows:LowerCorner>41.29 -70.61</ows:LowerCorner>
+				<ows:UpperCorner>41.35 -70.5</ows:UpperCorner>
+			</ows:BoundingBox>
+		</csw:Record>
+	</csw:SearchResults>
+</csw:GetRecordsResponse>

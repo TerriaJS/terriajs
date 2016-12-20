@@ -57,9 +57,6 @@ const RegionPicker = React.createClass({
                     value = value.realRegion;
                 }
                 this.props.parameter.value = value;
-                this.setState({
-                    displayValue: this.getDisplayValue("")
-                });
             }
         });
 
@@ -181,7 +178,7 @@ const RegionPicker = React.createClass({
                 that._selectedRegionCatalogItem.zoomTo();
             }
         }).otherwise(function() {
-            if (this.props.parameter.value !== value) {
+            if (that.props.parameter.value !== value) {
                 // Value has already changed.
                 return;
             }
@@ -231,7 +228,6 @@ const RegionPicker = React.createClass({
             }
         }
         this.setState({
-            displayValue: this.getDisplayValue(e.target.value),
             autocompleteVisible: result.length > 0 && result.length <= 100,
             autoCompleteOptions: result
         });
@@ -247,23 +243,6 @@ const RegionPicker = React.createClass({
         this.updateMapFromValue();
     },
 
-    getDisplayValue(displayValue) {
-        const region = this.regionValue;
-        if (!defined(region)) {
-            if (defined(displayValue)) {
-                return displayValue;
-            } else {
-                return "";
-            }
-        }
-        const index = this.regionProvider.regions.indexOf(region);
-        if (index >= 0 && this._regionNames[index]) {
-            return this._regionNames[index];
-        } else {
-            return region.id;
-        }
-    },
-
     render() {
         return (<div className={Styles.parameterEditor}>
                     <RegionTypeParameterEditor
@@ -273,7 +252,7 @@ const RegionPicker = React.createClass({
                     <input className={Styles.field}
                            type="text"
                            autoComplete="off"
-                           value={this.state.displayValue}
+                           value={RegionPicker.getDisplayValue(this.regionValue, this.props.parameter)}
                            onChange={this.textChange}
                            placeholder="Region name"
                     />
@@ -299,5 +278,29 @@ const RegionPicker = React.createClass({
         );
     }
 });
+
+/**
+ * Given a value, return it in human readable form for display.
+ * @param {Object} value Native format of parameter value.
+ * @return {String} String for display
+ */
+RegionPicker.getDisplayValue = function(region, parameter) {
+    if (!defined(region)) {
+        return '';
+    }
+    const regionProvider = parameter.regionProvider;
+    let val = '';
+    const index = regionProvider.regions.indexOf(region);
+    if (index >= 0 && regionProvider.regionNames[index]) {
+        val = regionProvider.regionNames[index];
+    } else {
+        val = region.id;
+    }
+    if (!defined(val)) {
+        return '';
+    }
+    return regionProvider.regionType + ": " + val;
+
+};
 
 module.exports = RegionPicker;

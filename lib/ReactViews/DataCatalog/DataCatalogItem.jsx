@@ -1,9 +1,18 @@
 import React from 'react';
-import addedByUser from '../../Core/addedByUser';
+
 import defined from 'terriajs-cesium/Source/Core/defined';
+
+import addedByUser from '../../Core/addedByUser';
+import CatalogItem from './CatalogItem';
+import getAncestors from '../../Models/getAncestors';
 import ObserveModelMixin from '../ObserveModelMixin';
 import raiseErrorOnRejectedPromise from '../../Models/raiseErrorOnRejectedPromise';
-import CatalogItem from './CatalogItem';
+
+const STATE_TO_TITLE = {
+    loading: 'Loading...',
+    remove: 'Remove this item',
+    add: 'Add this item. Hold down "shift" to keep the data catalogue open.'
+};
 
 // Individual dataset
 const DataCatalogItem = React.createClass({
@@ -58,8 +67,10 @@ const DataCatalogItem = React.createClass({
                 onTextClick={this.setPreviewedItem}
                 selected={this.isSelected()}
                 text={item.name}
+                title={getAncestors(item).map(member => member.name).join(' → ')}
                 btnState={this.getState()}
                 onBtnClick={this.onBtnClicked}
+                titleOverrides={STATE_TO_TITLE}
             />
         );
     },
