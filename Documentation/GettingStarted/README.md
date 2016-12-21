@@ -10,8 +10,11 @@ If you've done this sort of thing before, you'll find it easy to clone and build
 
 ```bash
 git clone https://github.com/TerriaJS/TerriaMap.git
+
 cd TerriaMap
+
 npm install && npm run build && npm start
+
 # Open at http://localhost:3001
 ```
 
