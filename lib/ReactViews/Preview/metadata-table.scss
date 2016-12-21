@@ -12,12 +12,13 @@ table tr:nth-child(even) {
     background-color: $faint-bg;
 }
 
-th {
+.root th {
   @extend %unwrap;
   text-align: left;
-  padding: 0 3px 0 0;
+  padding: 3px;
 }
 
-.value {
-  padding: 0 3px;
+.root .value {
+  @extend %unwrap;
+  padding: 3px;
 }
