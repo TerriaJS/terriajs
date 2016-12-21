@@ -69,4 +69,3 @@ function isJoinable(array) {
 }
 
 export default MetadataTable;
-

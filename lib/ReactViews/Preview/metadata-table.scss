@@ -1,8 +1,8 @@
 @import '~terriajs-variables';
 @import '../../Sass/common/mixins';
 
-.root {
-
+.root table{
+  overflow-x: auto;
 }
 
 table tr:nth-child(odd) {
