@@ -78,3 +78,12 @@ npm run build watch
 The full set of `gulp` tasks can be found on the [Development Environment](../Contributors/Development-environment.md#gulp-tasks) page.
 
 ### Keeping up with Updates
+
+If you're building an application by using TerriaMap as a starting point, you will want to keep in sync as TerriaMap is improved and updated to use new versions of TerriaJS.  Forking the TerriaMap repo and using git to keep it in sync is outside the scope of this document, but GitHub has a [nice explanation](https://help.github.com/articles/fork-a-repo/).
+
+After pulling new changes, you will need to run `npm install` again to pick up any changed dependencies and then build TerriaMap.  If you have problems building or running, it is sometimes helpful to remove and reinstall the dependencies from npm:
+
+```bash
+rm -rf node_modules
+npm install
+```
