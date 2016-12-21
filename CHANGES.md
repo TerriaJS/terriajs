@@ -4,12 +4,11 @@ Change Log
 
 ### 4.7.2
 
-* GNAF API updated to new Lucene-based backend, which should improve performance.
-* Can now specify `colors` attribute in charts as comma separated per column css strings, allowing user to customize chart colors.
-* `colors` attribute in charts can also be passed through from a WPS ComplexData response.
+* Updated GNAF API to new Lucene-based backend, which should improve performance.
+* Updated custom `<chart>` tag to allow a `colors` attribute, containing comma separated css strings (one per column), allowing users to customize chart colors. The `colors` attribute in charts can also be passed through from a WPS ComplexData response.
 * Updated styling of Give Feedback form.
-* Made "Search" and "Add Data" font sizes consistent.
-* Made Feature Info Panel styling more flexible.
+* Improved consistency of "Search" and "Add Data" font sizes.
+* Improved flexibility of Feature Info Panel styling.
 * Fixed a bug that could cause an extra `/` to be added to end of URLs by `ArcGisMapServerCatalogItem`, causing some servers to reject the request.
 * Added a workaround for a bug in Internet Explorer 11 on Windows 7 that could cause the user interface to hang.
 
@@ -21,23 +20,23 @@ Change Log
 
 ### 4.7.0
 
-* Add the ability for users to share their view of the map when providing feedback.
+* Added the ability for users to share their view of the map when providing feedback.
 * Extra components can now be added to FeatureInfoSection.
-* "Download Data" in FeatureInfoSection now "Download Data for this Feature".
+* Updated "Download Data" in FeatureInfoSection to "Download Data for this Feature".
 * Fixed the color of visited links in client apps with their own css variables.
 * Fixed a bug that prevented the scale bar from displaying correctly.
 
 ### 4.6.1
 
-* Support added for creating custom WPS types, and for reusing `Point`, `Polygon`, and `Region` editors in custom types.
+* Added support for creating custom WPS types, and for reusing `Point`, `Polygon`, and `Region` editors in custom types.
 * Fixed a bug that caused the legend to be missing for WMS catalog items where the legend came from GetCapabilities but the URL did not contain `GetLegendGraphic`.
 
 ### 4.6.0
 
-* Change in defaults:
+* Changed defaults:
   * The `clipToRectangle` property of raster catalog items (`WebMapServiceCatalogItem`, `ArcGisMapServerCatalogItem`, etc.) now defaults to `true`.  It was `false` in previous releases.  Using `false` prevents features (especially point features) right at the edge of the layer's rectangle from being cut off when the server reports too tight a rectangle, but also causes the layer to load much more slowly in many cases.  Starting in this version, we favour performance and the much more common case that the rectangle can be trusted.
 * Made `WebMapServiceCatalogItem` tolerant of a `GetCapabilities` where a `LegendURL` element does not have an `OnlineResource` or a `Dimension` does not have any values.
-* Add support for 'Long' type hint to CSV data for specifying longitude.
+* Added support for 'Long' type hint to CSV data for specifying longitude.
 * The marker indicating the location of a search result is now placed correctly on the terrain surface.
 * `CatalogFunction` region parameters are now selected on the main map rather than the preview map.
 * Some regions that were previously not selectable in Analytics, except via autocomplete, are now selectable.
