@@ -2,7 +2,7 @@
 
 For all contributors:
 
-* [CONTRIBUTING.md](/CONTRIBUTING.md): how to submit a pull request. Please read! :)
+* [CONTRIBUTING.md](https://github.com/TerriaJS/terriajs/blob/master/CONTRIBUTING.md): how to submit a pull request. Please read! :)
 * [Setting up a development environment](Development-environment.md)
 * [Working with TerriaJS and Cesium](Contributing-to-TerriaJS.md)
 

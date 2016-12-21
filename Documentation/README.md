@@ -1,5 +1,3 @@
-## TerriaJS Documentation
-
 * [Getting Started](GettingStarted): quick start guide to building your first TerriaJS application.
 * [Deployment](Deployment): getting started with deploying Terria and optional support services. For developers, sysadmins and hackers.
 * [Customizing](Customizing): How to configure and tweak Terria, including skinning, URL parameters and advanced uses.

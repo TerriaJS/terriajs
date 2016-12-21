@@ -204,7 +204,7 @@ gulp.task('user-doc', function() {
         }
     });
 
-    var result = spawnSync('mkdocs', ['build', '--clean', /*'--strict',*/ '--config-file', 'mkdocs.yml'], {
+    var result = spawnSync('mkdocs', ['build', '--clean', '--config-file', 'mkdocs.yml'], {
         cwd: 'build',
         stdio: 'inherit',
         shell: false
