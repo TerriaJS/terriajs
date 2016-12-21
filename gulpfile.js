@@ -179,7 +179,7 @@ function runKarma(configFile, done) {
     });
 }
 
-gulp.task('user-doc', function() {
+gulp.task('user-guide', function() {
     var fse = require('fs-extra');
     var gutil = require('gulp-util');
     var path = require('path');
