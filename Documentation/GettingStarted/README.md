@@ -87,3 +87,7 @@ After pulling new changes, you will need to run `npm install` again to pick up a
 rm -rf node_modules
 npm install
 ```
+
+### Next Steps
+
+Now that you have a working local build of TerriaMap, you may want to [customize it](../Customizing) or [deploy it](../Deployment) for others to use.
