@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+### 4.7.3
+
+* Canceled pending tile requests when removing a layer from the 2D map.  This should drastically improve the responsiveness when dragging the time slider of a time-dynamic layer in 2D mode.
+
 ### 4.7.2
 
 * Updated GNAF API to new Lucene-based backend, which should improve performance.
@@ -10,7 +14,6 @@ Change Log
 * Improved consistency of "Search" and "Add Data" font sizes.
 * Improved flexibility of Feature Info Panel styling.
 * Fixed a bug that could cause an extra `/` to be added to end of URLs by `ArcGisMapServerCatalogItem`, causing some servers to reject the request.
-* Canceled pending tile requests when removing a layer from the 2D map.  This should drastically improve the responsiveness when dragging the time slider of a time-dynamic layer in 2D mode.
 * Added the data source and data service details to the "About this dataset" (preview) panel.
 * Added a workaround for a bug in Internet Explorer 11 on Windows 7 that could cause the user interface to hang.
 
