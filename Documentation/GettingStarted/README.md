@@ -75,6 +75,6 @@ npm run build watch
 
 `npm run build` simply runs `gulp`, so you can use that directly if you prefer.
 
-The full set of `gulp` tasks can be found on the [Development Environment](../Contributors/Development-environment#gulp-tasks) page.
+The full set of `gulp` tasks can be found on the [Development Environment](../Contributors/Development-environment.md#gulp-tasks) page.
 
 ### Keeping up with Updates
