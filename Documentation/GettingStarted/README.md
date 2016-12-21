@@ -4,6 +4,19 @@ The easiest way to get started with TerriaJS is to use [TerriaMap](https://githu
 
 This guide explains how to build and run TerriaMap locally.  See [Deployment](../Deployment) to learn how to deploy it for use by others.
 
+### Quick Start
+
+If you've done this sort of thing before, you'll find it easy to clone and build TerriaMap with these quick instructions:
+
+```bash
+git clone https://github.com/TerriaJS/TerriaMap.git
+cd TerriaMap
+npm install && npm run build && npm start
+# Open at http://localhost:3001
+```
+
+If you run into trouble or want more explanation, read on.
+
 ### Prerequisites
 
 TerriaJS can be built and run on almost any macOS, Linux, or Windows system.  The following are required to build TerriaJS:
