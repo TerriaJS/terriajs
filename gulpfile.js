@@ -178,3 +178,38 @@ function runKarma(configFile, done) {
         return done(e);
     });
 }
+
+gulp.task('user-doc', function() {
+    var fse = require('fs-extra');
+    var gutil = require('gulp-util');
+    var path = require('path');
+    var spawnSync = require('child_process').spawnSync;
+
+    fse.copySync('Documentation/mkdocs.yml', 'build/mkdocs.yml');
+    fse.copySync('Documentation', 'build/Documentation');
+
+    var files = fse.walkSync('build/Documentation');
+    var markdown = files.filter(name => path.extname(name) === '.md');
+    var readmes = markdown.filter(name => name.indexOf('README.md') === name.length - 'README.md'.length);
+
+    // Rename all README.md to index.md
+    readmes.forEach(readme => fse.renameSync(readme, path.join(path.dirname(readme), 'index.md')));
+
+    // Replace links to README.md with links to index.md
+    markdown.forEach(function(name) {
+        var content = fse.readFileSync(name.replace(/README.md/, 'index.md'), 'UTF-8');
+        var replaced = content.replace(/README\.md/g, 'index.md');
+        if (content !== replaced) {
+            fse.writeFileSync(name, replaced, 'UTF-8');
+        }
+    });
+
+    var result = spawnSync('mkdocs', ['build', '--clean', /*'--strict',*/ '--config-file', 'mkdocs.yml'], {
+        cwd: 'build',
+        stdio: 'inherit',
+        shell: false
+    });
+    if (result.status !== 0) {
+        throw new gutil.PluginError('user-doc', 'External module exited with an error.', { showStack: false });
+    }
+});
