@@ -5,10 +5,10 @@ docs_dir: 'Documentation'
 site_dir: '../wwwroot/user-guide'
 strict: true
 pages:
-- Home: 'index.md'
-- Getting Started: 'GettingStarted/index.md'
+- Home: 'README.md'
+- Getting Started: 'GettingStarted/README.md'
 - Catalog Management:
-    - Overview: 'CatalogManagement/index.md'
+    - Overview: 'CatalogManagement/README.md'
     - CKAN: 'CatalogManagement/CKAN.md'
     - GeoJSON: 'CatalogManagement/GeoJSON.md'
     - Web Map Service (WMS): 'CatalogManagement/Web-Map-Service.md'
@@ -17,7 +17,7 @@ pages:
     - Initialization File: 'CatalogManagement/Initialization-File.md'
     - Format Conversion Service: 'CatalogManagement/Format-Conversion-Service.md'
 - Customizing:
-    - Overview: 'Customizing/index.md'
+    - Overview: 'Customizing/README.md'
     - Config JSON: 'Customizing/Config-JSON.md'
     - Skinning: 'Customizing/How-to-skin-a-Terria-Map.md'
     - URL Parameters: 'Customizing/TerriaJS-URL-parameters.md'
@@ -26,7 +26,7 @@ pages:
     - CKAN Previewer: 'Customizing/CKAN-previewer.md'
     - WPS Parameters: 'Customizing/WPS-parameters-guide.md'
 - Deployment:
-    - Overview: 'Deployment/index.md'
+    - Overview: 'Deployment/README.md'
     - Deploying TerriaMap: 'Deployment/Deploying-Terria-Map.md'
     - Deploying and Building: 'Deployment/Deploying-and-building-TerriaJS.md'
     - Overall System Architecture: 'Deployment/Overall-system-architecture.md'
@@ -35,7 +35,7 @@ pages:
     - Using a Vector Tile Source: 'Deployment/Using-a-vector-tile-source-for-region-mapping.md'
     - WMS Services: 'Deployment/WMS-Services.md'
 - Contributors:
-    - Overview: 'Contributors/index.md'
+    - Overview: 'Contributors/README.md'
     - Development Environment: 'Contributors/Development-environment.md'
     - Working with TerriaJS and Cesium: 'Contributors/Contributing-to-TerriaJS.md'
     - Setting up Saucelabs: 'Contributors/Setting-up-Saucelabs-Locally.md'

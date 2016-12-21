@@ -204,6 +204,10 @@ gulp.task('user-guide', function() {
         }
     });
 
+    // Replace README.md with index.md in mkdocs.yml
+    var mkdocsyml = fse.readFileSync('build/mkdocs.yml', 'UTF-8');
+    fse.writeFileSync('build/mkdocs.yml', mkdocsyml.replace(/README.md/g, 'index.md'), 'UTF-8');
+
     var result = spawnSync('mkdocs', ['build', '--clean', '--config-file', 'mkdocs.yml'], {
         cwd: 'build',
         stdio: 'inherit',
