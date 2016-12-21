@@ -33,6 +33,16 @@ The following components are optional:
 
 ### Cloning TerriaMap
 
+The latest version of TerriaMap is on [GitHub](https://github.com), and the preferred way to get it is by using `git`:
+
+```bash
+git clone https://github.com/TerriaJS/TerriaMap.git
+
+cd TerriaMap
+```
+
+If you're unable to use git, you can also [download a ZIP file](https://github.com/TerriaJS/TerriaMap/archive/master.zip) and extract it somewhere on your system.  We recommend using git, though, because it makes it much easier to update to later versions in the future.
+
 ### Setting up your environment
 
 ### Building TerriaMap
