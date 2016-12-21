@@ -11,6 +11,7 @@ Change Log
 * Made "Search" and "Add Data" font sizes consistent.
 * Made Feature Info Panel styling more flexible.
 * Fixed a bug that could cause an extra `/` to be added to end of URLs by `ArcGisMapServerCatalogItem`, causing some servers to reject the request.
+* Added a workaround for a bug in Internet Explorer 11 on Windows 7 that could cause the user interface to hang.
 
 ### 4.7.1
 
