@@ -5,10 +5,10 @@
   overflow-x: auto;
 }
 
-table tr:nth-child(odd) {
+.root table tr:nth-child(odd) {
     background-color: darken($faint-bg, 8%);
 }
-table tr:nth-child(even) {
+.root table tr:nth-child(even) {
     background-color: $faint-bg;
 }
 

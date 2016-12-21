@@ -58,7 +58,8 @@ $dropdown-hover-color: orange;
 
 $data-catalog-color: $text-black;
 
-$feature-info-bg: $overlay;
+$feature-info-bg: rgba($dark, 0.95);
+$feature-info-section-bg: $overlay;
 $feature-info-color: $text-light;
 $feature-info-header-bg: $dark;
 $feature-info-btn-color: $text-light;
