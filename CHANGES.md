@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+### 4.7.3
+
+* Canceled pending tile requests when removing a layer from the 2D map.  This should drastically improve the responsiveness when dragging the time slider of a time-dynamic layer in 2D mode.
+
 ### 4.7.2
 
 * Updated GNAF API to new Lucene-based backend, which should improve performance.
