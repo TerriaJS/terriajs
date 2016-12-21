@@ -43,8 +43,39 @@ cd TerriaMap
 
 If you're unable to use git, you can also [download a ZIP file](https://github.com/TerriaJS/TerriaMap/archive/master.zip) and extract it somewhere on your system.  We recommend using git, though, because it makes it much easier to update to later versions in the future.
 
-### Setting up your environment
+### Installing Dependencies
+
+All of the dependencies required to build and run TerriaMap, other than the prerequisites listed above, are installed using `npm`:
+
+```bash
+npm install
+```
+
+The dependencies are installed in the `node_modules` subdirectory.  No global changes are made to your system.
 
 ### Building TerriaMap
+
+Do a standard build of TerriaMap with:
+
+```bash
+npm run build
+```
+
+Or, you can create a minified release build with:
+
+```bash
+npm run build release
+```
+
+To watch for changes and automatically do an incremental build when any are detected, use:
+
+```bash
+npm run build watch
+```
+
+`npm run build` simply runs `gulp`, so you can use that directly if you prefer.
+
+The full set of `gulp` tasks can be found here:
+[../Contributors/Development-environment/#gulp-tasks]
 
 ### Keeping up with Updates
