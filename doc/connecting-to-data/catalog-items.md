@@ -14,7 +14,7 @@ A Catalog Item is a dataset or service that can be enabled for display on the ma
 | GeoJSON | `geojson` | |
 | GPX | `gpx` | |
 | Keyhole Markup Language (KML) | `kml` | |
-| [OGR Format Conversion Service](format-conversion-service.md) | `ogr` | |
+| [Format Conversion Service (based on OGR)](catalog-type-details/format-conversion-service.md) | `ogr` | |
 | OpenStreetMap | `open-street-map` | |
 | SDMX-JSON | `sdmx-json` | |
 | Sensor Observation Service (SOS) | `sos` | |
