@@ -191,6 +191,9 @@
                         },
                         "whitelist": {
                             "AGE": ["A[0-9]+", "T.*", "O.*"]
+                        },
+                        "exclusiveValues": {
+                            "AGE": ["TT", "TOT", "O15"]
                         }
                     },
                     {
