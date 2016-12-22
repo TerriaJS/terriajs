@@ -1,6 +1,4 @@
-## Catalog (init) files
-
-A catalog in Terria is defined in one or more catalog files (also known as "init files"). Each is a [JSON file](https://en.wikipedia.org/wiki/JSON) with this basic structure:
+A catalog in TerriaJS is defined in one or more "initialization files" (or init files). Each is a [JSON file](https://en.wikipedia.org/wiki/JSON) with this basic structure:
 
 ```
 {
@@ -27,46 +25,43 @@ A catalog in Terria is defined in one or more catalog files (also known as "init
 
 Key points:
 
-* `catalog` is an array
-* Every element of that array must have a `type` (corresponding to a value recognised by TerriaJS) and a `name`
+* `catalog` is an array.
+* Every element of that array must have a `type` (corresponding to a value recognised by TerriaJS) and a `name`.
 * The three major categories of catalog member types are:
-    - `group`: a manually defined grouping of layers
-    - item types such as `geojson`, `wms`, `wfs` and `esri-mapServer`, which refer to one single layer
-    - group types such as `ckan`, `wms-getCapabilities` and `esri-mapServer-group`
+    - [Catalog Group](../connecting-to-data/catalog-groups.md): A group (folder) of items.  Different group types allow the contents to be manually specified or to be automatically determined by querying various types of server.
+    - [Catalog Item](../connecting-to-data/catalog-items.md): Actual geospatial or chart data from a file or service, in various formats.
+    - [Catalog Function](../connecting-to-data/catalog-functions.md): A parameterized service, such as a Web Processing Service (WPS).  The user supplies the parameters and gets back some result.
 
-Most of the other properties of each layer depend on the specific type. We're working on generating documentation for each type. Meanwhile, you can look at the source code in Terria's [/Models](/Models) folder.
+Most of the other properties of each layer depend on the specific type.  See the links above for details of each type.
 
 ### Using a catalog file
 
-There are four ways to load a catalog file into Terria:
+There are four ways to load a catalog file into a TerriaJS application:
 
-1. Store it in Terria's `wwwroot/init` directory, and refer to it in the `initializationUrls` section of the [`config.json`](../Customizing/Config-JSON.md) file. It is loaded automatically when you visit the webpage.
-2. Store it in Terria's `wwwroot/init` directory, without adding it to config.json. Add the catalog file name (without `.json`) to the URL after `#`. For instance, `example.com/terria#mycatalog`. See [TerriaJS URL parameters](../Customizing/TerriaJS-URL-parameters.md) for more information. This method is useful when developing catalog services which are not quite ready for public access, but for showing to interested stakeholders.
-3. Store it anywhere on the web (on a CORS-enabled server). Add the complete URL (including `.json`) to the URL, after `#`. For instance, `nationalmap.gov.au/#http://example.com/mycatalog.json`. This method is useful when developing services for a Terria instance which you don't directly control, and for rapidly previewing changes which you can also share with people.
-4. Store it locally, then drag and drop it into the Terria window.
+1. Store it in Terria Map's `wwwroot/init` directory, and refer to it in the `initializationUrls` section of the [`config.json`](../customizing/client-side-config.md) file. It is loaded automatically when you visit the webpage.
+2. Store it in Terria Maps's `wwwroot/init` directory, without adding it to config.json. Add the catalog file name (without `.json`) to the URL after `#`. For instance, `example.com/terria#mycatalog`. See [Controlling with URL Parameters](../deploying/controlling-with-url-parameters.md) for more information. This method is useful when developing a catalog that is not quite ready for public access, but it is helpful to show it to interested stakeholders.
+3. Store it anywhere on the web (on a [CORS-enabled](../connecting-to-data/cross-origin-resource-sharing.md) server). Add the complete URL (including `.json`) to the URL, after `#`. For instance, `http://nationalmap.gov.au/#http://example.com/mycatalog.json`. This method is useful when developing services for a TerriaJS instance which you don't directly control, and for rapidly previewing changes which you can also share with people.
+4. Store it locally, then drag and drop it into the Terria Map window.
 
-If using method 3, please note:
-
-- Files on Github, including Gist files, are not served with CORS. However, you can access them through a third-party service, rawgit.com. For instance, https://github.com/TerriaJS/terriajs/blob/master/wwwroot/test/init/test-tablestyle.json can be accessed as https://rawgit.com/TerriaJS/terriajs/master/wwwroot/test/init/test-tablestyle.json.
-
-All catalog files, however loaded, are merged together in Terria. Any two items with the same name and place in the tree are combined. This means that if two catalog files each define a group called "Water", there will be only one "Water" group in Terria, containing the two sets of group members merged together.
+All catalog files, however loaded, are merged together in TerriaJS. Any two items with the same name and place in the tree are combined. This means that if two catalog files each define a group called "Water", there will be only one "Water" group in Terria, containing the two sets of group members merged together.
 
 ### Editing catalog files
 
 Catalog files can be edited three ways:
 
-1. Using a desktop text editor. Be very careful to ensure that your file is valid JSON. This is more restrictive format than simple JavaScript, for instance. You can use http://jsonlint.com/ .
-2. Using a JSON-specific editor, such as http://www.jsoneditoronline.org/. This has the advantage that your file will be valid JSON.
-3. Using the Terria Catalog Editor, currently available in a preview version at http://nationalmap.gov.au/editor/ . This editor is not yet considered reliable, and may cause data corruption.
+1. Using a desktop text editor. Be very careful to ensure that your file is valid JSON. This is more restrictive format than simple JavaScript, for instance. You can use [http://jsonlint.com/](http://jsonlint.com/).
+2. Using a JSON-specific editor, such as [http://www.jsoneditoronline.org/](http://www.jsoneditoronline.org/). This has the advantage that your file will be valid JSON.
+3. Using the TerriaJS Catalog Editor, currently available in a preview version at [http://terria.io/DataSourceEditor/](http://terria.io/DataSourceEditor/). This editor is not yet considered reliable, and may cause data corruption.
 
 ## Catalog file properties
 
 ### `corsDomains`
 
-By default, Terria proxies all requests within TerriaJS-Server's whitelist, making the assumption that the servers do not support CORS. You can add hosts that are known to support CORS to this property to avoid proxying them.
+By default, TerriaJS proxies all requests within the proxy whitelist specified in the [Server-side Config](server-side-config.md), making the assumption that the servers do not support CORS. You can add hosts that are known to support CORS to this property to avoid proxying them.
 
 `"corsDomains": [ "myserver.gov.au" ]`
 
+See [Cross-Origin Resource Sharing](../connecting-to-data/cross-origin-resource-sharing.md) for more information.
 
 ### `homeCamera` and `initialCamera`
 
@@ -77,9 +72,7 @@ Maps have two camera positions, `homeCamera` and `initialCamera`. They are speci
 
 #### Option 1: `north`, `south`, `east`, `west`
 
-The bounding box method uses `north`, `east `,`south`, and `west`, in lat/lng decimal degrees.  The camera will be positioned
-in the centre point of those bounds, looking toward the Earth's
-centre, zoomed back enough to see to the edges of the bounds.
+The bounding box method uses `north`, `east `,`south`, and `west`, in lat/lng decimal degrees.  The camera will be positioned in the center point of those bounds, looking toward the Earth's center, zoomed back enough to see to the edges of the bounds.
 
 This is the only mode supported in 2D mode (Leaflet). Therefore, you should always include a bounding box, even if you also use another mode.
 
@@ -110,7 +103,7 @@ equator intersects with 0 degrees longitude, and positive Y points at
 * `direction`: where the camera is looking
 * `up`: which way is "up", which determines how the camera is rotated
 
-For most purposed positioning this way is difficult for normal
+For most purposes positioning this way is difficult for normal
 humans. To see an example, move the camera to some location, click the "share" button (and choose to not use the
 URL shortner), then URL-decode the URL you get.
 
@@ -172,12 +165,12 @@ map, and overrides Options 1, 2, and 3.
 
 It has these attributes:
 
- - `targetLongitude`:
- - `targetLatitude`:
- - `targetHeight`:, in metres from sealevel (positive is up)
+ - `targetLongitude`: The longitude to look at
+ - `targetLatitude`: The latitude to look at
+ - `targetHeight`: in meters above the WGS84 ellipsoid (positive is up)
  - `heading`: in degrees clockwise from north
  - `pitch`: in degrees down from horizontal (so negative values mean you're looking at the sky)
- - `range`: in metres from the thing you're looking at
+ - `range`: in meters from the thing you're looking at
 
 ```
 "homeCamera": {

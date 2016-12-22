@@ -2,6 +2,8 @@ The easiest way to get started with TerriaJS is to use [TerriaMap](https://githu
 
 This guide explains how to build and run TerriaMap locally.  See [Deployment](Deployment) to learn how to deploy it for use by others.
 
+You may also be interested in how to [make your own map without writing any code](http://stevebennett.me/2015/07/02/your-own-personal-national-map-with-terriajs-no-coding-and-nothing-to-deploy/).
+
 ### Quick Start
 
 If you've done this sort of thing before, you'll find it easy to clone and build TerriaMap with these quick instructions:
