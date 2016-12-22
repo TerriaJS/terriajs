@@ -11,7 +11,7 @@ A Catalog Item is a dataset or service that can be enabled for display on the ma
 | Cesium Language (CZML) | `czml` | |
 | ArcGIS FeatureServer | `esri-featureServer` | |
 | ArcGIS MapServer | `esri-mapServer` | |
-| GeoJSON | `geojson` | |
+| [GeoJSON](catalog-type-details/geojson.md) | `geojson` | |
 | GPX | `gpx` | |
 | Keyhole Markup Language (KML) | `kml` | |
 | [Format Conversion Service (based on OGR)](catalog-type-details/format-conversion-service.md) | `ogr` | |
@@ -20,4 +20,4 @@ A Catalog Item is a dataset or service that can be enabled for display on the ma
 | Sensor Observation Service (SOS) | `sos` | |
 | URL Template | `url-template` | |
 | Web Feature Service (WFS) | `wfs` | |
-| Web Map Service (WMS) | `wms` | |
+| [Web Map Service (WMS)](catalog-type-details/web-map-service.md) | `wms` | |
