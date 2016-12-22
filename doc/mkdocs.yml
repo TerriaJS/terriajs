@@ -1,0 +1,51 @@
+site_name: TerriaJS
+#cosmo|cyborg|readthedocs|yeti|journal|bootstrap|readable|united|simplex|flatly|spacelab|amelia|cerulean|slate|mkdocs
+theme: readthedocs
+docs_dir: 'doc'
+site_dir: '../wwwroot/user-guide'
+#strict: true
+pages:
+- Home: 'README.md'
+- Getting Started: 'getting-started.md'
+- Customizing:
+    - Overview: 'customizing/README.md'
+    - Client-side Config: 'customizing/client-side-config.md'
+    - Initialization Files: 'customizing/initialization-files.md'
+    - Server-side Config: 'customizing/server-side-config.md'
+    - Skinning: 'customizing/skinning.md'
+- Connecting to Data:
+    - Overview: 'connecting-to-data/README.md'
+    - Cross-Origin Resource Sharing: 'connecting-to-data/cross-origin-resource-sharing.md'
+    - Catalog Groups: 'connecting-to-data/catalog-groups.md'
+    - Catalog Items: 'connecting-to-data/catalog-items.md'
+    - Catalog Functions: 'connecting-to-data/catalog-functions.md'
+    - Catalog Type Details:
+        - CKAN: 'connecting-to-data/catalog-type-details/CKAN.md'
+        - GeoJSON: 'connecting-to-data/catalog-type-details/GeoJSON.md'
+        - Web Map Service (WMS): 'connecting-to-data/catalog-type-details/Web-Map-Service.md'
+        - Web Processing Service (WPS): 'connecting-to-data/catalog-type-details/Web-Processing-Service.md'
+        - Format Conversion Service: 'connecting-to-data/catalog-type-details/Format-Conversion-Service.md'
+- Deploying:
+    - Overview: 'deploying/README.md'
+    - Deploying TerriaMap: 'deploying/deploying-terriamap.md'
+    - Deploying to AWS: 'deploying/deploying-to-aws.md'
+    - Deploying with Docker: 'deploying/deploying-with-docker.md'
+    - Setting Up a Region Mapping Server: 'deploying/setting-up-a-region-mapping-server.md'
+    - Setting Up Geoserver: 'deploying/setting-up-geoserver.md'
+    - Using as a CKAN Previewer: 'deploying/using-as-a-ckan-previewer.md'
+    - Controlling with URL Parameters: 'deploying/controlling-with-url-parameters.md'
+    - Controlling in an &lt;iframe&gt; or Popup: 'deploying/controlling-in-an-iframe-or-popup.md'
+- Contributing:
+    - Overview: 'contributing/README.md'
+    - Development Environment: 'contributing/development-environment.md'
+    - Using a Custom Version of Cesium: 'contributing/using-a-custom-version-of-cesium.md'
+    - Setting up Saucelabs: 'contributing/setting-up-saucelabs.md'
+    - Problems and Solutions: 'contributing/problems-and-solutions.md'
+
+
+# Delete:
+#         - Performance Testing: 'CatalogManagement/Performance-testing.md'
+#     - Extending TerriaJS: 'Customizing/Extending-TerriaJS.md'
+
+
+# Move system architecture info to Home

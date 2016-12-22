@@ -186,10 +186,10 @@ gulp.task('user-guide', function() {
     var path = require('path');
     var spawnSync = require('child_process').spawnSync;
 
-    fse.copySync('Documentation/mkdocs.yml', 'build/mkdocs.yml');
-    fse.copySync('Documentation', 'build/Documentation');
+    fse.copySync('doc/mkdocs.yml', 'build/mkdocs.yml');
+    fse.copySync('doc', 'build/doc');
 
-    var files = fse.walkSync('build/Documentation');
+    var files = fse.walkSync('build/doc');
     var markdown = files.filter(name => path.extname(name) === '.md');
     var readmes = markdown.filter(name => name.indexOf('README.md') === name.length - 'README.md'.length);
 

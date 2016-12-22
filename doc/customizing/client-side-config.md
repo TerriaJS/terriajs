@@ -1,6 +1,4 @@
-# Config.json
-
-The file `wwwroot/config.json` contains client-side configuration parameters.
+The file `wwwroot/config.json` in TerriaMap contains client-side configuration parameters.
 
 It has this structure:
 

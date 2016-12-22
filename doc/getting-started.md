@@ -1,5 +1,3 @@
-## Getting Started
-
 The easiest way to get started with TerriaJS is to use [TerriaMap](https://github.com/TerriaJS/TerriaMap).  TerriaMap is a full-featured application built on TerriaJS, ready to be customized with your own branding and catalog.  It is also a great starting point for more in-depth customization.
 
 This guide explains how to build and run TerriaMap locally.  See [Deployment](Deployment) to learn how to deploy it for use by others.
@@ -76,6 +74,16 @@ npm run build watch
 `npm run build` simply runs `gulp`, so you can use that directly if you prefer.
 
 The full set of `gulp` tasks can be found on the [Development Environment](../Contributors/Development-environment.md#gulp-tasks) page.
+
+### Running TerriaMap
+
+TerriaMap includes a simple Node.js-based web server, called [terriajs-server](https://github.com/TerriaJS/terriajs-server).  To start it, run:
+
+```bash
+npm start
+```
+
+Then, open a web browser on `http://localhost:3001` to use TerriaMap.
 
 ### Keeping up with Updates
 
