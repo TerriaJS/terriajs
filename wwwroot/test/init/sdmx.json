@@ -170,6 +170,9 @@
                         "aggregatedDimensionIds": ["STATE"],
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
+                        },
+                        "whitelist": {
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -178,7 +181,8 @@
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B04_LGA",
                         "aggregatedDimensionIds": ["STATE"],
                         "whitelist": {
-                            "REGIONTYPE": ["LGA2011"]
+                            "REGIONTYPE": ["LGA2011"],
+                            "AGE": ["A[0-9]+", "T.*"]
                         }
                     },
                     {
@@ -188,6 +192,9 @@
                         "aggregatedDimensionIds": ["STATE"],
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
+                        },
+                        "whitelist": {
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -197,6 +204,9 @@
                         "aggregatedDimensionIds": ["STATE"],
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
+                        },
+                        "whitelist": {
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -205,7 +215,8 @@
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B05_LGA",
                         "aggregatedDimensionIds": ["STATE"],
                         "whitelist": {
-                            "REGIONTYPE": ["LGA2011"]
+                            "REGIONTYPE": ["LGA2011"],
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -215,6 +226,9 @@
                         "aggregatedDimensionIds": ["STATE"],
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
+                        },
+                        "whitelist": {
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -224,6 +238,9 @@
                         "aggregatedDimensionIds": ["STATE"],
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
+                        },
+                        "whitelist": {
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -232,7 +249,8 @@
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B06_LGA",
                         "aggregatedDimensionIds": ["STATE"],
                         "whitelist": {
-                            "REGIONTYPE": ["LGA2011"]
+                            "REGIONTYPE": ["LGA2011"],
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -242,6 +260,9 @@
                         "aggregatedDimensionIds": ["STATE"],
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
+                        },
+                        "whitelist": {
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -251,6 +272,9 @@
                         "aggregatedDimensionIds": ["STATE"],
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
+                        },
+                        "whitelist": {
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -259,7 +283,8 @@
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B07_LGA",
                         "aggregatedDimensionIds": ["STATE"],
                         "whitelist": {
-                            "REGIONTYPE": ["LGA2011"]
+                            "REGIONTYPE": ["LGA2011"],
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -269,6 +294,9 @@
                         "aggregatedDimensionIds": ["STATE"],
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
+                        },
+                        "whitelist": {
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -494,6 +522,9 @@
                         "aggregatedDimensionIds": ["STATE"],
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
+                        },
+                        "whitelist": {
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -502,7 +533,8 @@
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B16_LGA",
                         "aggregatedDimensionIds": ["STATE"],
                         "whitelist": {
-                            "REGIONTYPE": ["LGA2011"]
+                            "REGIONTYPE": ["LGA2011"],
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -512,6 +544,9 @@
                         "aggregatedDimensionIds": ["STATE"],
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
+                        },
+                        "whitelist": {
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -521,6 +556,9 @@
                         "aggregatedDimensionIds": ["STATE"],
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
+                        },
+                        "whitelist": {
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -529,7 +567,8 @@
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B17_LGA",
                         "aggregatedDimensionIds": ["STATE"],
                         "whitelist": {
-                            "REGIONTYPE": ["LGA2011"]
+                            "REGIONTYPE": ["LGA2011"],
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -539,6 +578,9 @@
                         "aggregatedDimensionIds": ["STATE"],
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
+                        },
+                        "whitelist": {
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -548,6 +590,9 @@
                         "aggregatedDimensionIds": ["STATE"],
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
+                        },
+                        "whitelist": {
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -556,7 +601,8 @@
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B18_LGA",
                         "aggregatedDimensionIds": ["STATE"],
                         "whitelist": {
-                            "REGIONTYPE": ["LGA2011"]
+                            "REGIONTYPE": ["LGA2011"],
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -566,6 +612,9 @@
                         "aggregatedDimensionIds": ["STATE"],
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
+                        },
+                        "whitelist": {
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -575,6 +624,9 @@
                         "aggregatedDimensionIds": ["STATE"],
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
+                        },
+                        "whitelist": {
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -583,7 +635,8 @@
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B19_LGA",
                         "aggregatedDimensionIds": ["STATE"],
                         "whitelist": {
-                            "REGIONTYPE": ["LGA2011"]
+                            "REGIONTYPE": ["LGA2011"],
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -593,6 +646,9 @@
                         "aggregatedDimensionIds": ["STATE"],
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
+                        },
+                        "whitelist": {
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -602,6 +658,9 @@
                         "aggregatedDimensionIds": ["STATE"],
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
+                        },
+                        "whitelist": {
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -610,7 +669,8 @@
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B20_LGA",
                         "aggregatedDimensionIds": ["STATE"],
                         "whitelist": {
-                            "REGIONTYPE": ["LGA2011"]
+                            "REGIONTYPE": ["LGA2011"],
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -620,6 +680,9 @@
                         "aggregatedDimensionIds": ["STATE"],
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
+                        },
+                        "whitelist": {
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -629,6 +692,9 @@
                         "aggregatedDimensionIds": ["STATE"],
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
+                        },
+                        "whitelist": {
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -637,7 +703,8 @@
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B21_LGA",
                         "aggregatedDimensionIds": ["STATE"],
                         "whitelist": {
-                            "REGIONTYPE": ["LGA2011"]
+                            "REGIONTYPE": ["LGA2011"],
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -647,6 +714,9 @@
                         "aggregatedDimensionIds": ["STATE"],
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
+                        },
+                        "whitelist": {
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -656,6 +726,9 @@
                         "aggregatedDimensionIds": ["STATE"],
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
+                        },
+                        "whitelist": {
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -665,6 +738,9 @@
                         "aggregatedDimensionIds": ["STATE"],
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
+                        },
+                        "whitelist": {
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -674,6 +750,9 @@
                         "aggregatedDimensionIds": ["STATE"],
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
+                        },
+                        "whitelist": {
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -683,6 +762,9 @@
                         "aggregatedDimensionIds": ["STATE"],
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
+                        },
+                        "whitelist": {
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -691,7 +773,8 @@
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B23_LGA",
                         "aggregatedDimensionIds": ["STATE"],
                         "whitelist": {
-                            "REGIONTYPE": ["LGA2011"]
+                            "REGIONTYPE": ["LGA2011"],
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -701,6 +784,9 @@
                         "aggregatedDimensionIds": ["STATE"],
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
+                        },
+                        "whitelist": {
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -710,6 +796,9 @@
                         "aggregatedDimensionIds": ["STATE"],
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
+                        },
+                        "whitelist": {
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -1142,6 +1231,9 @@
                         "aggregatedDimensionIds": ["STATE"],
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
+                        },
+                        "whitelist": {
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -1150,7 +1242,8 @@
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B40_LGA",
                         "aggregatedDimensionIds": ["STATE"],
                         "whitelist": {
-                            "REGIONTYPE": ["LGA2011"]
+                            "REGIONTYPE": ["LGA2011"],
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -1160,6 +1253,9 @@
                         "aggregatedDimensionIds": ["STATE"],
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
+                        },
+                        "whitelist": {
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -1169,6 +1265,9 @@
                         "aggregatedDimensionIds": ["STATE"],
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
+                        },
+                        "whitelist": {
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -1177,7 +1276,8 @@
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B41_LGA",
                         "aggregatedDimensionIds": ["STATE"],
                         "whitelist": {
-                            "REGIONTYPE": ["LGA2011"]
+                            "REGIONTYPE": ["LGA2011"],
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -1187,6 +1287,9 @@
                         "aggregatedDimensionIds": ["STATE"],
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
+                        },
+                        "whitelist": {
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -1196,6 +1299,9 @@
                         "aggregatedDimensionIds": ["STATE"],
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
+                        },
+                        "whitelist": {
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -1205,6 +1311,9 @@
                         "aggregatedDimensionIds": ["STATE"],
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
+                        },
+                        "whitelist": {
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -1214,6 +1323,9 @@
                         "aggregatedDimensionIds": ["STATE"],
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
+                        },
+                        "whitelist": {
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -1223,6 +1335,9 @@
                         "aggregatedDimensionIds": ["STATE"],
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
+                        },
+                        "whitelist": {
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -1231,7 +1346,8 @@
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B43_LGA",
                         "aggregatedDimensionIds": ["STATE"],
                         "whitelist": {
-                            "REGIONTYPE": ["LGA2011"]
+                            "REGIONTYPE": ["LGA2011"],
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -1241,6 +1357,9 @@
                         "aggregatedDimensionIds": ["STATE"],
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
+                        },
+                        "whitelist": {
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -1277,6 +1396,9 @@
                         "aggregatedDimensionIds": ["STATE"],
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
+                        },
+                        "whitelist": {
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -1285,7 +1407,8 @@
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B45_LGA",
                         "aggregatedDimensionIds": ["STATE"],
                         "whitelist": {
-                            "REGIONTYPE": ["LGA2011"]
+                            "REGIONTYPE": ["LGA2011"],
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -1295,6 +1418,9 @@
                         "aggregatedDimensionIds": ["STATE"],
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
+                        },
+                        "whitelist": {
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -2036,6 +2162,9 @@
                         "aggregatedDimensionIds": ["STATE"],
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
+                        },
+                        "whitelist": {
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -2044,7 +2173,8 @@
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T03_LGA",
                         "aggregatedDimensionIds": ["STATE"],
                         "whitelist": {
-                            "REGIONTYPE": ["LGA2011"]
+                            "REGIONTYPE": ["LGA2011"],
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -2054,6 +2184,9 @@
                         "aggregatedDimensionIds": ["STATE"],
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
+                        },
+                        "whitelist": {
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -2062,7 +2195,8 @@
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T04_LGA",
                         "aggregatedDimensionIds": ["STATE"],
                         "whitelist": {
-                            "REGIONTYPE": ["LGA2011"]
+                            "REGIONTYPE": ["LGA2011"],
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -2072,6 +2206,9 @@
                         "aggregatedDimensionIds": ["STATE"],
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
+                        },
+                        "whitelist": {
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -2080,7 +2217,8 @@
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T05_LGA",
                         "aggregatedDimensionIds": ["STATE"],
                         "whitelist": {
-                            "REGIONTYPE": ["LGA2011"]
+                            "REGIONTYPE": ["LGA2011"],
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -2090,6 +2228,9 @@
                         "aggregatedDimensionIds": ["STATE"],
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
+                        },
+                        "whitelist": {
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -2098,7 +2239,8 @@
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T06_LGA",
                         "aggregatedDimensionIds": ["STATE"],
                         "whitelist": {
-                            "REGIONTYPE": ["LGA2011"]
+                            "REGIONTYPE": ["LGA2011"],
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -2108,6 +2250,9 @@
                         "aggregatedDimensionIds": ["STATE"],
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
+                        },
+                        "whitelist": {
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -2116,7 +2261,8 @@
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T07_LGA",
                         "aggregatedDimensionIds": ["STATE"],
                         "whitelist": {
-                            "REGIONTYPE": ["LGA2011"]
+                            "REGIONTYPE": ["LGA2011"],
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -2522,6 +2668,9 @@
                         "aggregatedDimensionIds": ["STATE"],
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
+                        },
+                        "whitelist": {
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -2530,7 +2679,8 @@
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T30_LGA",
                         "aggregatedDimensionIds": ["STATE"],
                         "whitelist": {
-                            "REGIONTYPE": ["LGA2011"]
+                            "REGIONTYPE": ["LGA2011"],
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -2540,6 +2690,9 @@
                         "aggregatedDimensionIds": ["STATE"],
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
+                        },
+                        "whitelist": {
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -2548,7 +2701,8 @@
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T31_LGA",
                         "aggregatedDimensionIds": ["STATE"],
                         "whitelist": {
-                            "REGIONTYPE": ["LGA2011"]
+                            "REGIONTYPE": ["LGA2011"],
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -2558,6 +2712,9 @@
                         "aggregatedDimensionIds": ["STATE"],
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
+                        },
+                        "whitelist": {
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
@@ -2566,7 +2723,8 @@
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T32_LGA",
                         "aggregatedDimensionIds": ["STATE"],
                         "whitelist": {
-                            "REGIONTYPE": ["LGA2011"]
+                            "REGIONTYPE": ["LGA2011"],
+                            "AGE": ["A[0-9]+", "T.*"] // Only shows five-year ranges and totals, not individual years.
                         }
                     },
                     {
