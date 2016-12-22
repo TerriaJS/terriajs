@@ -1,6 +1,6 @@
 # Setting up a TerriaJS development environment
 
-First, [deploy and build your instance](/Documentation/Deployment/Deploying-Terria-Map.md).
+First, [deploy and build your instance](../Deployment/Deploying-Terria-Map.md).
 
 ## Updating Build
 

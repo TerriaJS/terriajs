@@ -32,4 +32,4 @@ npm start
 
 ## Making changes
 
-Want to start tweaking? Proceed to [Customizing Terria](/Documentation/Customizing/README.md).
+Want to start tweaking? Proceed to [Customizing Terria](../Customizing/README.md).

@@ -11,6 +11,9 @@
     "type": "git",
     "url": "http://github.com/TerriaJS/terriajs"
   },
+  "config": {
+    "docRepo": "git@github.com:TerriaJS/Documentation.git"
+  },
   "dependencies": {
     "babel-core": "^6.7.4",
     "babel-loader": "^6.2.4",
@@ -75,6 +78,7 @@
     "eslint": "^3.10.0",
     "eslint-plugin-jsx-control-statements": "2.1.1",
     "eslint-plugin-react": "^6.5.0",
+    "fs-extra": "^1.0.0",
     "generate-terriajs-schema": "^1.3.0",
     "glob-all": "^3.0.1",
     "gulp-ruby-sass": "^2.0.5",
@@ -117,6 +121,7 @@
     "make-schema": "gulp make-schema",
     "start": "bash ./node_modules/terriajs-server/run_server.sh --port 3002",
     "dev": "webpack-dev-server --inline --config buildprocess/webpack.config.dev.js --host 0.0.0.0",
-    "hot": "webpack-dev-server --inline --config buildprocess/webpack.config.hot.js --hot --host 0.0.0.0"
+    "hot": "webpack-dev-server --inline --config buildprocess/webpack.config.hot.js --hot --host 0.0.0.0",
+    "publish-doc": "bash -c \"rm -rf wwwroot/user-guide && gulp user-guide && cd wwwroot/user-guide && git init && git remote add origin $npm_package_config_docRepo && git add . && git commit -m 'Generate Documentation' && git push -f origin HEAD:gh-pages\""
   }
 }

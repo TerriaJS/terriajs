@@ -1,0 +1,42 @@
+site_name: TerriaJS
+#cosmo|cyborg|readthedocs|yeti|journal|bootstrap|readable|united|simplex|flatly|spacelab|amelia|cerulean|slate|mkdocs
+theme: readthedocs
+docs_dir: 'Documentation'
+site_dir: '../wwwroot/user-guide'
+strict: true
+pages:
+- Home: 'README.md'
+- Getting Started: 'GettingStarted/README.md'
+- Catalog Management:
+    - Overview: 'CatalogManagement/README.md'
+    - CKAN: 'CatalogManagement/CKAN.md'
+    - GeoJSON: 'CatalogManagement/GeoJSON.md'
+    - Web Map Service (WMS): 'CatalogManagement/Web-Map-Service.md'
+    - Performance Testing: 'CatalogManagement/Performance-testing.md'
+    - Issues with CORS: 'CatalogManagement/Handling-CORS.md'
+    - Initialization File: 'CatalogManagement/Initialization-File.md'
+    - Format Conversion Service: 'CatalogManagement/Format-Conversion-Service.md'
+- Customizing:
+    - Overview: 'Customizing/README.md'
+    - Config JSON: 'Customizing/Config-JSON.md'
+    - Skinning: 'Customizing/How-to-skin-a-Terria-Map.md'
+    - URL Parameters: 'Customizing/TerriaJS-URL-parameters.md'
+    - Controlling in an iframe: 'Customizing/TerriaJS-in-iframe.md'
+    - Extending TerriaJS: 'Customizing/Extending-TerriaJS.md'
+    - CKAN Previewer: 'Customizing/CKAN-previewer.md'
+    - WPS Parameters: 'Customizing/WPS-parameters-guide.md'
+- Deployment:
+    - Overview: 'Deployment/README.md'
+    - Deploying TerriaMap: 'Deployment/Deploying-Terria-Map.md'
+    - Deploying and Building: 'Deployment/Deploying-and-building-TerriaJS.md'
+    - Overall System Architecture: 'Deployment/Overall-system-architecture.md'
+    - Problems and Solutions: 'Deployment/Problems-and-Solutions.md'
+    - Setting up a Region Mapping Server: 'Deployment/Setting-up-a-region-mapping-server.md'
+    - Using a Vector Tile Source: 'Deployment/Using-a-vector-tile-source-for-region-mapping.md'
+    - WMS Services: 'Deployment/WMS-Services.md'
+- Contributors:
+    - Overview: 'Contributors/README.md'
+    - Development Environment: 'Contributors/Development-environment.md'
+    - Working with TerriaJS and Cesium: 'Contributors/Contributing-to-TerriaJS.md'
+    - Setting up Saucelabs: 'Contributors/Setting-up-Saucelabs-Locally.md'
+    - Using Docker: 'Contributors/Using-Docker.md'

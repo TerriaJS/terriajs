@@ -119,7 +119,9 @@ gulp.task('build-libs', function(done) {
     runWebpack(webpack, webpackConfig, done);
 });
 
-gulp.task('docs', function() {
+gulp.task('docs', ['user-guide', 'reference-guide']);
+
+gulp.task('reference-guide', function() {
     var runExternalModule = require('./buildprocess/runExternalModule');
 
     runExternalModule('jsdoc/jsdoc.js', [
@@ -127,7 +129,6 @@ gulp.task('docs', function() {
         '-c', './buildprocess/jsdoc.json'
     ]);
 });
-
 
 gulp.task('copy-cesium-assets', function() {
     var path = require('path');
@@ -178,3 +179,43 @@ function runKarma(configFile, done) {
         return done(e);
     });
 }
+
+gulp.task('user-guide', function() {
+    var fse = require('fs-extra');
+    var gutil = require('gulp-util');
+    var path = require('path');
+    var spawnSync = require('child_process').spawnSync;
+
+    fse.copySync('Documentation/mkdocs.yml', 'build/mkdocs.yml');
+    fse.copySync('Documentation', 'build/Documentation');
+
+    var files = fse.walkSync('build/Documentation');
+    var markdown = files.filter(name => path.extname(name) === '.md');
+    var readmes = markdown.filter(name => name.indexOf('README.md') === name.length - 'README.md'.length);
+
+    // Rename all README.md to index.md
+    readmes.forEach(readme => fse.renameSync(readme, path.join(path.dirname(readme), 'index.md')));
+
+    // Replace links to README.md with links to index.md
+    markdown.forEach(function(name) {
+        name = name.replace(/README\.md/, 'index.md');
+        var content = fse.readFileSync(name, 'UTF-8');
+        var replaced = content.replace(/README\.md/g, 'index.md');
+        if (content !== replaced) {
+            fse.writeFileSync(name, replaced, 'UTF-8');
+        }
+    });
+
+    // Replace README.md with index.md in mkdocs.yml
+    var mkdocsyml = fse.readFileSync('build/mkdocs.yml', 'UTF-8');
+    fse.writeFileSync('build/mkdocs.yml', mkdocsyml.replace(/README\.md/g, 'index.md'), 'UTF-8');
+
+    var result = spawnSync('mkdocs', ['build', '--clean', '--config-file', 'mkdocs.yml'], {
+        cwd: 'build',
+        stdio: 'inherit',
+        shell: false
+    });
+    if (result.status !== 0) {
+        throw new gutil.PluginError('user-doc', 'External module exited with an error.', { showStack: false });
+    }
+});
