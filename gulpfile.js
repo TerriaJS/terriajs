@@ -198,7 +198,8 @@ gulp.task('user-guide', function() {
 
     // Replace links to README.md with links to index.md
     markdown.forEach(function(name) {
-        var content = fse.readFileSync(name.replace(/README.md/, 'index.md'), 'UTF-8');
+        name = name.replace(/README\.md/, 'index.md');
+        var content = fse.readFileSync(name, 'UTF-8');
         var replaced = content.replace(/README\.md/g, 'index.md');
         if (content !== replaced) {
             fse.writeFileSync(name, replaced, 'UTF-8');
@@ -207,7 +208,7 @@ gulp.task('user-guide', function() {
 
     // Replace README.md with index.md in mkdocs.yml
     var mkdocsyml = fse.readFileSync('build/mkdocs.yml', 'UTF-8');
-    fse.writeFileSync('build/mkdocs.yml', mkdocsyml.replace(/README.md/g, 'index.md'), 'UTF-8');
+    fse.writeFileSync('build/mkdocs.yml', mkdocsyml.replace(/README\.md/g, 'index.md'), 'UTF-8');
 
     var result = spawnSync('mkdocs', ['build', '--clean', '--config-file', 'mkdocs.yml'], {
         cwd: 'build',
