@@ -97,7 +97,7 @@
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B01_LGA",
                         "aggregatedDimensionIds": ["STATE"],
                         "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -124,7 +124,7 @@
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B02_LGA",
                         "aggregatedDimensionIds": ["STATE"],
                         "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -151,7 +151,7 @@
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B03_LGA",
                         "aggregatedDimensionIds": ["STATE"],
                         "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -177,8 +177,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B04_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -204,8 +204,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B05_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -231,8 +231,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B06_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -258,8 +258,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B07_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -285,8 +285,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B08_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -312,8 +312,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B09_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -339,8 +339,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B10_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -366,8 +366,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B11_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -393,8 +393,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B12_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -420,8 +420,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B13_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -447,8 +447,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B14_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -474,8 +474,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B15_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -501,8 +501,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B16_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -528,8 +528,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B17_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -555,8 +555,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B18_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -582,8 +582,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B19_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -609,8 +609,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B20_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -636,8 +636,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B21_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -663,8 +663,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B22_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -690,8 +690,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B23_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -717,8 +717,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B24_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -744,8 +744,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B25_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -771,8 +771,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B26_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -798,8 +798,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B27_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -825,8 +825,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B28_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -852,8 +852,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B29_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -879,8 +879,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B30_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -906,8 +906,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B31_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -933,8 +933,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B32_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -960,8 +960,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B33_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -987,8 +987,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B34_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -1014,8 +1014,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B35_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -1041,8 +1041,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B36_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -1068,8 +1068,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B37_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -1095,8 +1095,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B38_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -1122,8 +1122,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B39_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -1149,8 +1149,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B40_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -1176,8 +1176,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B41_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -1203,8 +1203,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B42_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -1230,8 +1230,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B43_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -1257,8 +1257,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B44_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -1284,8 +1284,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B45_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -1311,8 +1311,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B46_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -1437,8 +1437,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_ANNUAL_ERP_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -1446,8 +1446,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_ERP_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -1890,8 +1890,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_REGIONAL_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -1944,8 +1944,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_SEIFA_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -2007,8 +2007,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T01_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -2025,8 +2025,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T02_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -2043,8 +2043,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T03_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -2061,8 +2061,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T04_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -2079,8 +2079,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T05_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -2097,8 +2097,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T06_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -2115,8 +2115,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T07_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -2133,8 +2133,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T08_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -2151,8 +2151,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T09_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -2169,8 +2169,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T10_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -2187,8 +2187,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T11_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -2205,8 +2205,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T12_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -2223,8 +2223,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T13_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -2241,8 +2241,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T14_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -2259,8 +2259,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T15_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -2277,8 +2277,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T16_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -2295,8 +2295,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T17_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -2313,8 +2313,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T18_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -2331,8 +2331,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T19_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -2349,8 +2349,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T20_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -2367,8 +2367,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T21_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -2385,8 +2385,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T22_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -2403,8 +2403,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T23_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -2421,8 +2421,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T24_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -2439,8 +2439,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T25_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -2457,8 +2457,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T26_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -2475,8 +2475,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T27_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -2493,8 +2493,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T28_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -2511,8 +2511,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T29_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -2529,8 +2529,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T30_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -2547,8 +2547,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T31_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -2565,8 +2565,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T32_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -2583,8 +2583,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T33_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
@@ -2601,8 +2601,8 @@
                         "type": "sdmx-json",
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T34_LGA",
                         "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
+                        "whitelist": {
+                            "REGIONTYPE": ["LGA2011"]
                         }
                     },
                     {
