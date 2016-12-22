@@ -10,92 +10,128 @@
                 "type": "group",
                 "isOpen": true,
                 "items": [
-                    {
-                        "name": "Aboriginal and Torres Strait Islander Population Projections by Indigenous  Regions (ABS_ABORIGINAL_POPPROJ_INDREGION)",
-                        "type": "sdmx-json",
-                        "sortValues": true,
-                        "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_ABORIGINAL_POPPROJ_INDREGION",
-                        "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
-                        }
-                    },
-                    {
-                        "name": "Aboriginal and Torres Strait Islander Population Projections, Remoteness Area (ABORIGINAL_POP_PROJ_REMOTE)",
-                        "type": "sdmx-json",
-                        "sortValues": true,
-                        "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABORIGINAL_POP_PROJ_REMOTE",
-                        "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
-                        }
-                    },
-                    {
-                        "name": "Aboriginal and Torres Strait Islander Population Projections, State/Territory (ABORIGINAL_POP_PROJ)",
-                        "type": "sdmx-json",
-                        "sortValues": true,
-                        "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABORIGINAL_POP_PROJ",
-                        "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
-                        }
-                    },
-                    {
-                        "name": "Apparent Consumption of Alcohol, Australia (ALC)",
-                        "type": "sdmx-json",
-                        "sortValues": true,
-                        "url": "http://stat.data.abs.gov.au/sdmx-json/data/ALC",
-                        "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
-                        }
-                    },
-                    {
-                        "name": "Australian Census Longitudinal Dataset (ACLD): Labour force status, 2006-2011 (ABS_ACLD_LFSTATUS)",
-                        "type": "sdmx-json",
-                        "sortValues": true,
-                        "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_ACLD_LFSTATUS",
-                        "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
-                        }
-                    },
-                    {
-                        "name": "Australian Census Longitudinal Dataset (ACLD): Tenure and landlord type, 2006-2011 (ABS_ACLD_TENURE)",
-                        "type": "sdmx-json",
-                        "sortValues": true,
-                        "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_ACLD_TENURE",
-                        "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
-                        }
-                    },
-                    {
-                        "name": "Australian Census Longitudinal Dataset (ACLD): Unpaid assistance to a person with disability, 2006-2011 (ABS_ACLD_UNPAIDASST)",
-                        "type": "sdmx-json",
-                        "sortValues": true,
-                        "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_ACLD_UNPAIDASST",
-                        "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
-                        }
-                    },
-                    {
-                        "name": "Australian Census Longitudinal Dataset (ACLD): Voluntary work for an organisation or group, 2006-2011 (ABS_ACLD_VOLWORK)",
-                        "type": "sdmx-json",
-                        "sortValues": true,
-                        "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_ACLD_VOLWORK",
-                        "aggregatedDimensionIds": ["STATE"],
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
-                        }
-                    },
+                    // {
+                    //     "name": "Aboriginal and Torres Strait Islander Population Projections by Indigenous  Regions (ABS_ABORIGINAL_POPPROJ_INDREGION)",
+                    //     "type": "sdmx-json",
+                    //     "sortValues": true,
+                    //     "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_ABORIGINAL_POPPROJ_INDREGION",
+                    //     "aggregatedDimensionIds": ["STATE"],
+                        // "exclusiveValues": {
+                        //     "*": ["TOT"],
+                        //     "AGE": ["TT", "O15"]
+                        // },
+                    //     "selectedInitially": {
+                    //         "REGIONTYPE": ["SA4"]
+                    //     }
+                    // },
+                    // {
+                    //     "name": "Aboriginal and Torres Strait Islander Population Projections, Remoteness Area (ABORIGINAL_POP_PROJ_REMOTE)",
+                    //     "type": "sdmx-json",
+                    //     "sortValues": true,
+                    //     "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABORIGINAL_POP_PROJ_REMOTE",
+                    //     "aggregatedDimensionIds": ["STATE"],
+                        // "exclusiveValues": {
+                        //     "*": ["TOT"],
+                        //     "AGE": ["TT", "O15"]
+                        // },
+                    //     "selectedInitially": {
+                    //         "REGIONTYPE": ["SA4"]
+                    //     }
+                    // },
+                    // {
+                    //     "name": "Aboriginal and Torres Strait Islander Population Projections, State/Territory (ABORIGINAL_POP_PROJ)",
+                    //     "type": "sdmx-json",
+                    //     "sortValues": true,
+                    //     "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABORIGINAL_POP_PROJ",
+                    //     "aggregatedDimensionIds": ["STATE"],
+                        // "exclusiveValues": {
+                        //     "*": ["TOT"],
+                        //     "AGE": ["TT", "O15"]
+                        // },
+                    //     "selectedInitially": {
+                    //         "REGIONTYPE": ["SA4"]
+                    //     }
+                    // },
+                    // {
+                    //     "name": "Apparent Consumption of Alcohol, Australia (ALC)",
+                    //     "type": "sdmx-json",
+                    //     "sortValues": true,
+                    //     "url": "http://stat.data.abs.gov.au/sdmx-json/data/ALC",
+                    //     "aggregatedDimensionIds": ["STATE"],
+                        // "exclusiveValues": {
+                        //     "*": ["TOT"],
+                        //     "AGE": ["TT", "O15"]
+                        // },
+                    //     "selectedInitially": {
+                    //         "REGIONTYPE": ["SA4"]
+                    //     }
+                    // },
+                    // {
+                    //     "name": "Australian Census Longitudinal Dataset (ACLD): Labour force status, 2006-2011 (ABS_ACLD_LFSTATUS)",
+                    //     "type": "sdmx-json",
+                    //     "sortValues": true,
+                    //     "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_ACLD_LFSTATUS",
+                    //     "aggregatedDimensionIds": ["STATE"],
+                        // "exclusiveValues": {
+                        //     "*": ["TOT"],
+                        //     "AGE": ["TT", "O15"]
+                        // },
+                    //     "selectedInitially": {
+                    //         "REGIONTYPE": ["SA4"]
+                    //     }
+                    // },
+                    // {
+                    //     "name": "Australian Census Longitudinal Dataset (ACLD): Tenure and landlord type, 2006-2011 (ABS_ACLD_TENURE)",
+                    //     "type": "sdmx-json",
+                    //     "sortValues": true,
+                    //     "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_ACLD_TENURE",
+                    //     "aggregatedDimensionIds": ["STATE"],
+                        // "exclusiveValues": {
+                        //     "*": ["TOT"],
+                        //     "AGE": ["TT", "O15"]
+                        // },
+                    //     "selectedInitially": {
+                    //         "REGIONTYPE": ["SA4"]
+                    //     }
+                    // },
+                    // {
+                    //     "name": "Australian Census Longitudinal Dataset (ACLD): Unpaid assistance to a person with disability, 2006-2011 (ABS_ACLD_UNPAIDASST)",
+                    //     "type": "sdmx-json",
+                    //     "sortValues": true,
+                    //     "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_ACLD_UNPAIDASST",
+                    //     "aggregatedDimensionIds": ["STATE"],
+                        // "exclusiveValues": {
+                        //     "*": ["TOT"],
+                        //     "AGE": ["TT", "O15"]
+                        // },
+                    //     "selectedInitially": {
+                    //         "REGIONTYPE": ["SA4"]
+                    //     }
+                    // },
+                    // {
+                    //     "name": "Australian Census Longitudinal Dataset (ACLD): Voluntary work for an organisation or group, 2006-2011 (ABS_ACLD_VOLWORK)",
+                    //     "type": "sdmx-json",
+                    //     "sortValues": true,
+                    //     "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_ACLD_VOLWORK",
+                    //     "aggregatedDimensionIds": ["STATE"],
+                        // "exclusiveValues": {
+                        //     "*": ["TOT"],
+                        //     "AGE": ["TT", "O15"]
+                        // },
+                    //     "selectedInitially": {
+                    //         "REGIONTYPE": ["SA4"]
+                    //     }
+                    // },
                     {
                         "name": "Selected Person Characteristics (ABS_CENSUS2011_B01)",
                         "type": "sdmx-json",
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B01",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -106,6 +142,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B01_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -116,6 +156,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B01_SA1_SA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -126,6 +170,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B02",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -136,6 +184,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B02_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -146,6 +198,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B02_SA1_SA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -156,6 +212,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B03",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -166,6 +227,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B03_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -176,6 +242,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B03_SA1_SA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -186,14 +257,16 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B04",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         },
                         "whitelist": {
                             "AGE": ["A[0-9]+", "T.*", "O.*"]
-                        },
-                        "exclusiveValues": {
-                            "AGE": ["TT", "TOT", "O15"]
                         }
                     },
                     {
@@ -202,6 +275,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B04_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"],
                             "AGE": ["A[0-9]+", "T.*", "O.*"]
@@ -213,6 +291,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B04_SA1_SA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         },
@@ -226,6 +309,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B05",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         },
@@ -239,6 +327,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B05_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"],
                             "AGE": ["A[0-9]+", "T.*", "O.*"] // Only shows five-year ranges and totals, not individual years.
@@ -250,6 +343,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B05_SA1_SA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         },
@@ -263,6 +361,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B06",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         },
@@ -276,6 +379,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B06_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"],
                             "AGE": ["A[0-9]+", "T.*", "O.*"] // Only shows five-year ranges and totals, not individual years.
@@ -287,6 +395,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B06_SA1_SA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         },
@@ -300,6 +413,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B07",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         },
@@ -313,6 +431,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B07_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"],
                             "AGE": ["A[0-9]+", "T.*", "O.*"] // Only shows five-year ranges and totals, not individual years.
@@ -324,6 +447,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B07_SA1_SA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         },
@@ -337,6 +465,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B08",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -347,6 +479,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B08_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -357,6 +493,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B08_SA1_SA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -367,6 +507,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B09",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -377,6 +522,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B09_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -387,6 +537,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B09_SA1_SA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -397,6 +552,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B10",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -407,6 +566,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B10_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -417,6 +580,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B10_SA1_SA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -427,6 +594,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B11",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -437,6 +609,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B11_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -447,6 +624,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B11_SA1_SA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -457,6 +639,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B12",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -467,6 +653,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B12_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -477,6 +667,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B12_SA1_SA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -487,6 +681,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B13",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -497,6 +696,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B13_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -507,6 +711,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B13_SA1_SA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -517,6 +726,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B14",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -527,6 +741,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B14_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -537,6 +756,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B14_SA1_SA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -547,6 +771,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B15",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -557,6 +786,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B15_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -567,6 +801,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B15_SA1_SA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -577,6 +816,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B16",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         },
@@ -590,6 +834,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B16_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"],
                             "AGE": ["A[0-9]+", "T.*", "O.*"] // Only shows five-year ranges and totals, not individual years.
@@ -601,6 +850,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B16_SA1_SA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         },
@@ -614,6 +868,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B17",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         },
@@ -627,6 +886,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B17_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"],
                             "AGE": ["A[0-9]+", "T.*", "O.*"] // Only shows five-year ranges and totals, not individual years.
@@ -638,6 +902,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B17_SA1_SA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         },
@@ -651,6 +920,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B18",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         },
@@ -664,6 +938,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B18_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"],
                             "AGE": ["A[0-9]+", "T.*", "O.*"] // Only shows five-year ranges and totals, not individual years.
@@ -675,6 +954,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B18_SA1_SA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         },
@@ -688,6 +972,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B19",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         },
@@ -701,6 +990,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B19_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"],
                             "AGE": ["A[0-9]+", "T.*", "O.*"] // Only shows five-year ranges and totals, not individual years.
@@ -712,6 +1006,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B19_SA1_SA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         },
@@ -725,6 +1024,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B20",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         },
@@ -738,6 +1042,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B20_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"],
                             "AGE": ["A[0-9]+", "T.*", "O.*"] // Only shows five-year ranges and totals, not individual years.
@@ -749,6 +1058,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B20_SA1_SA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         },
@@ -762,6 +1076,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B21",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         },
@@ -775,6 +1094,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B21_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"],
                             "AGE": ["A[0-9]+", "T.*", "O.*"] // Only shows five-year ranges and totals, not individual years.
@@ -786,6 +1110,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B21_SA1_SA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         },
@@ -799,6 +1128,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B22",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         },
@@ -812,6 +1146,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B22_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         },
@@ -825,6 +1164,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B22_SA1_SA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         },
@@ -838,6 +1182,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B23",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         },
@@ -851,6 +1200,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B23_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"],
                             "AGE": ["A[0-9]+", "T.*", "O.*"] // Only shows five-year ranges and totals, not individual years.
@@ -862,6 +1216,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B23_SA1_SA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         },
@@ -875,6 +1234,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B24",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         },
@@ -888,6 +1251,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B24_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -898,6 +1266,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B24_SA1_SA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -908,6 +1281,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B25",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -918,6 +1295,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B25_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -928,6 +1309,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B25_SA1_SA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -938,6 +1323,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B26",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -948,6 +1337,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B26_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -958,6 +1351,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B26_SA1_SA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -968,6 +1365,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B27",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -978,6 +1379,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B27_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -988,6 +1393,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B27_SA1_SA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -998,6 +1407,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B28",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1008,6 +1421,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B28_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -1018,6 +1435,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B28_SA1_SA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1028,6 +1449,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B29",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1038,6 +1463,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B29_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -1048,6 +1477,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B29_SA1_SA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1058,6 +1491,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B30",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1068,6 +1505,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B30_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -1078,6 +1519,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B30_SA1_SA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1088,6 +1533,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B31",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1098,6 +1547,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B31_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -1108,6 +1561,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B31_SA1_SA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1118,6 +1575,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B32",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1128,6 +1589,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B32_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -1138,6 +1603,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B32_SA1_SA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1148,6 +1617,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B33",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1158,6 +1631,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B33_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -1168,6 +1645,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B33_SA1_SA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1178,6 +1659,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B34",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1188,6 +1673,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B34_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -1198,6 +1687,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B34_SA1_SA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1208,6 +1701,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B35",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1218,6 +1715,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B35_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -1228,6 +1729,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B35_SA1_SA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1238,6 +1743,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B36",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["OPD"], // OPD is Total occupied private dwellings
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1248,6 +1758,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B36_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["OPD"], // OPD is Total occupied private dwellings
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -1258,6 +1773,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B36_SA1_SA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["OPD"], // OPD is Total occupied private dwellings
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1268,6 +1788,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B37",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1278,6 +1803,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B37_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -1288,6 +1818,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B37_SA1_SA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1298,6 +1833,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B38",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1308,6 +1848,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B38_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -1318,6 +1863,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B38_SA1_SA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1328,6 +1878,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B39",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1338,6 +1893,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B39_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -1348,6 +1908,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B39_SA1_SA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1358,6 +1923,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B40",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         },
@@ -1371,6 +1941,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B40_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"],
                             "AGE": ["A[0-9]+", "T.*", "O.*"] // Only shows five-year ranges and totals, not individual years.
@@ -1382,6 +1957,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B40_SA1_SA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         },
@@ -1395,6 +1975,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B41",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         },
@@ -1408,6 +1993,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B41_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"],
                             "AGE": ["A[0-9]+", "T.*", "O.*"] // Only shows five-year ranges and totals, not individual years.
@@ -1419,6 +2009,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B41_SA1_SA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         },
@@ -1432,6 +2027,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B42",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         },
@@ -1445,6 +2045,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B42_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         },
@@ -1458,6 +2063,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B42_SA1_SA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         },
@@ -1471,6 +2081,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B43",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         },
@@ -1484,6 +2099,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B43_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"],
                             "AGE": ["A[0-9]+", "T.*", "O.*"] // Only shows five-year ranges and totals, not individual years.
@@ -1495,6 +2115,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B43_SA1_SA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         },
@@ -1508,6 +2133,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B44",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1518,6 +2147,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B44_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -1528,6 +2161,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B44_SA1_SA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1538,6 +2175,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B45",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         },
@@ -1551,6 +2193,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B45_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"],
                             "AGE": ["A[0-9]+", "T.*", "O.*"] // Only shows five-year ranges and totals, not individual years.
@@ -1562,6 +2209,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B45_SA1_SA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         },
@@ -1575,6 +2227,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B46",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1585,6 +2242,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B46_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -1595,6 +2257,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B46_SA1_SA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1605,6 +2272,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/BOP",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1615,6 +2286,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/BA_GCCSA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1635,6 +2310,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/QBIS",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1645,6 +2324,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/CPI",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1655,6 +2338,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/DEATHS_MONTHOCCURENCE",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1665,6 +2353,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/DEATHS_AGESPECIFIC_OCCURENCEYEAR",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1675,6 +2368,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/DEATHS_AGESPECIFIC_REGISTRATIONYEAR",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1685,6 +2383,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/DEATHS_INDIGENOUS",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1695,6 +2398,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/DEATHS_INDIGENOUS_SUMMARY",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1705,6 +2413,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/DEATHS_MARITAL_STATUS",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1715,6 +2428,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/DEATHS_SUMMARY",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1725,6 +2443,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_ANNUAL_ERP_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -1735,6 +2457,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_ERP_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -1745,6 +2472,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_ANNUAL_ERP_LGA2014",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1755,6 +2486,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_ERP_LGA2014",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1765,6 +2501,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_ERP_LGA2015",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1775,6 +2515,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_ANNUAL_ERP_LGA2015",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1785,6 +2530,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_ERP_ASGS",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1795,6 +2545,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_ANNUAL_ERP_ASGS",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1805,6 +2559,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ERP_COB",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1815,6 +2573,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_ERP_COB_MAG_SEXRATIO",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1825,6 +2587,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_ERP_COB_STATE",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1835,6 +2601,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ITPI_EXPORT",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1845,6 +2615,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_FAMILY_PROJ",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1855,6 +2629,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_HH_PROV",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1865,6 +2643,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/HF",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1875,6 +2657,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ITPI_IMPORT",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1885,6 +2671,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/INFANTDEATHS_REGISTRATIONYEAR",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1895,6 +2685,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/INFANTDEATHS_YEAROCCURENCE",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1905,6 +2699,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/IIP_DSID5671",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1915,6 +2713,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_DEM_QIM",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1925,6 +2727,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/LF",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1935,6 +2741,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_LAND_COVER",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1952,6 +2762,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_LAND_USE",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1962,6 +2776,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/LENDING_INDUSTRY",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1972,6 +2790,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/LENDING_BY_PURPOSE",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1982,6 +2804,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/LENDING_FINANCE_SUMMARY",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -1992,6 +2818,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/MERCH_EXP",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -2002,6 +2832,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/MERCH_IMP",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -2012,6 +2846,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/MINING_EXPLORATION",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -2022,6 +2860,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_MONETARY_ACCOUNT",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -2071,6 +2913,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_PERSONS_PROJ",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -2081,6 +2927,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/PETROLEUM_EXPLORATION",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -2091,6 +2941,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_PHYSICAL_ACCOUNT_LC",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -2101,6 +2955,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_PHYSICAL_ACCOUNT_LU",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -2111,6 +2969,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/POPULATION_CLOCK_FY",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -2121,6 +2983,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/POP_PROJ_REGION_2012_2061",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -2131,6 +2997,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/POP_PROJ_2011",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -2141,6 +3011,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/CAPEX",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -2151,6 +3025,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/PPI_SOP",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -2161,6 +3039,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/PPI_1",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -2171,6 +3053,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ERP_QUARTERLY",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -2181,6 +3067,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/RIME_LGA2011",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -2191,6 +3081,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/RIME_REGION",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -2201,6 +3095,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/RIN_SA34_GCCSA_STE",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -2211,6 +3109,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/RIM_SA4_GCCSA_STE_H",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -2221,6 +3123,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_REGIONAL_ASGS",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -2231,6 +3137,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_REGIONAL_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -2241,6 +3151,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/RES_DWELL",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -2251,6 +3165,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/RES_DWEL_ST",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -2261,6 +3179,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/RES_PROP_INDEX",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -2271,6 +3193,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/RT",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -2281,6 +3207,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/NEWMVSALES",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -2291,6 +3221,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_SEIFA_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -2301,6 +3235,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/SEIFA_POA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -2311,6 +3249,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/SEIFA_SSC",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -2321,6 +3263,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/SEIFA_SA1",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -2331,6 +3277,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_SEIFA_SA2",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -2341,6 +3291,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_SEIFA_SLA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -2351,6 +3305,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T01",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -2361,6 +3319,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T01_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -2371,6 +3333,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T02",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -2381,6 +3347,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T02_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -2391,6 +3361,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T03",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         },
@@ -2404,6 +3379,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T03_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"],
                             "AGE": ["A[0-9]+", "T.*", "O.*"] // Only shows five-year ranges and totals, not individual years.
@@ -2415,6 +3395,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T04",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         },
@@ -2428,6 +3413,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T04_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"],
                             "AGE": ["A[0-9]+", "T.*", "O.*"] // Only shows five-year ranges and totals, not individual years.
@@ -2439,6 +3429,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T05",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         },
@@ -2452,6 +3447,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T05_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"],
                             "AGE": ["A[0-9]+", "T.*", "O.*"] // Only shows five-year ranges and totals, not individual years.
@@ -2463,6 +3463,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T06",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         },
@@ -2476,6 +3481,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T06_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"],
                             "AGE": ["A[0-9]+", "T.*", "O.*"] // Only shows five-year ranges and totals, not individual years.
@@ -2487,6 +3497,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T07",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         },
@@ -2500,6 +3514,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T07_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"],
                             "AGE": ["A[0-9]+", "T.*", "O.*"] // Only shows five-year ranges and totals, not individual years.
@@ -2511,6 +3529,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T08",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -2521,6 +3544,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T08_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -2531,6 +3559,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T09",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -2541,6 +3573,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T09_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -2551,6 +3587,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T10",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -2561,6 +3602,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T10_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -2571,6 +3617,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T11",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -2581,6 +3631,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T11_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -2591,6 +3645,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T12",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -2601,6 +3659,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T12_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -2611,6 +3673,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T13",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -2621,6 +3688,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T13_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -2631,6 +3703,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T14",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "STRD_BEDRD": ["1_TOT", "2_TOT", "3_TOT", "4_TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -2641,6 +3718,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T14_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "STRD_BEDRD": ["1_TOT", "2_TOT", "3_TOT", "4_TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -2651,6 +3733,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T15",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "STRD_BEDRD": ["1_TOT", "2_TOT", "3_TOT", "4_TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -2661,6 +3748,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T15_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "STRD_BEDRD": ["1_TOT", "2_TOT", "3_TOT", "4_TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -2671,6 +3763,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T16",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "STRD_BEDRD": ["1_TOT", "2_TOT", "3_TOT", "4_TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -2681,6 +3778,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T16_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "STRD_BEDRD": ["1_TOT", "2_TOT", "3_TOT", "4_TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -2691,6 +3793,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T17",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "STRD_BEDRD": ["1_TOT", "2_TOT", "3_TOT", "4_TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -2701,6 +3808,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T17_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "STRD_BEDRD": ["1_TOT", "2_TOT", "3_TOT", "4_TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -2711,6 +3823,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T18",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -2721,6 +3837,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T18_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -2731,6 +3851,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T19",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -2741,6 +3865,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T19_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -2751,6 +3879,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T20",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -2761,6 +3893,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T20_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -2771,6 +3907,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T21",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -2781,6 +3921,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T21_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -2791,6 +3935,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T22",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -2801,6 +3949,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T22_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -2811,6 +3963,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T23",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -2821,6 +3977,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T23_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -2831,6 +3991,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T24",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -2841,6 +4005,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T24_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -2851,6 +4019,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T25",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -2861,6 +4033,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T25_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -2871,6 +4047,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T26",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -2881,6 +4061,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T26_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -2891,6 +4075,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T27",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -2901,6 +4089,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T27_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -2911,6 +4103,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T28",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -2921,6 +4117,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T28_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -2931,6 +4131,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T29",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -2941,6 +4145,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T29_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -2951,6 +4159,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T30",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         },
@@ -2964,6 +4177,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T30_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"],
                             "AGE": ["A[0-9]+", "T.*", "O.*"] // Only shows five-year ranges and totals, not individual years.
@@ -2975,6 +4193,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T31",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         },
@@ -2988,6 +4211,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T31_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"],
                             "AGE": ["A[0-9]+", "T.*", "O.*"] // Only shows five-year ranges and totals, not individual years.
@@ -2999,6 +4227,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T32",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         },
@@ -3012,6 +4245,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T32_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"],
                             "AGE": ["A[0-9]+", "T.*", "O.*"] // Only shows five-year ranges and totals, not individual years.
@@ -3023,6 +4261,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T33",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -3033,6 +4276,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T33_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -3043,6 +4291,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T34",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -3053,6 +4306,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T34_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
+                            "AGE": ["TT", "O15"]
+                        },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
@@ -3063,6 +4321,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/LABOUR_PRICE_INDEX",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -3080,6 +4342,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B04",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -3090,6 +4356,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B08",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -3100,6 +4370,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B09",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -3110,6 +4384,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B14",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -3120,6 +4398,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B45",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -3130,6 +4412,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B46",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
@@ -3175,6 +4461,10 @@
                         "sortValues": true,
                         "url": "build/TerriaJS/test/SDMX-JSON/data-as-obs-repeated-dim.json",
                         "aggregatedDimensionIds": ["STATE"],
+                        "exclusiveValues": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"]
+                        },
                         "dataflowUrlComponent": ""
                     },
                     {
