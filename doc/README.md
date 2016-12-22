@@ -1,11 +1,13 @@
-* [Getting Started](GettingStarted): quick start guide to building your first TerriaJS application.
-* [Deployment](Deployment): getting started with deploying Terria and optional support services. For developers, sysadmins and hackers.
-* [Customizing](Customizing): How to configure and tweak Terria, including skinning, URL parameters and advanced uses.
-* [Catalog Management](CatalogManagement): tips for data providers and catalog managers about working with specific data source types and managing catalog files, dealing with servers that don't support CORS.
-* [Contributors](Contributors): How to add new features to Terria, be part of the TerriaJS development team, how to set up a development environment, how to write tests and perform code reviews.
+[TerriaJS](http://terria.io) is an open-source framework for web-based geospatial catalog explorers.
 
-Looking for help using a Terria-based site? Try [how to access data through NationalMap](http://nationalmap.gov.au/help/howto.html).
+* [Getting Started](getting-started.md): Quick start guide to building your first TerriaJS application.
+* [Customizing](customizing/README.md): Configure and tweak a TerriaJS application, including skinning and setting up the catalog.
+* [Connecting to Data](connecting-to-data/README.md): Connect TerriaJS to your servers and data.
+* [Deploying](deploying/README.md): Deploy a TerriaJS application in simple and advanced scenarios.
+* [Contributing](contributing/README.md): Add new features to TerriaJS, be part of the TerriaJS development team, set up a development environment, write tests, and perform code reviews.
 
-This documentation is maintained at [github.com/TerriaJS/TerriaJS/tree/master/Documentation](https://github.com/TerriaJS/TerriaJS/tree/master/Documentation).
+Looking for help using a TerriaJS-based site? Try the [NationalMap user documentation](http://nationalmap.gov.au/help/help.html).
+
+This documentation is maintained at [github.com/TerriaJS/TerriaJS/tree/master/doc](https://github.com/TerriaJS/TerriaJS/tree/master/doc).
 
 It can be viewed at [terria.io/Documentation](http://terria.io/Documentation).

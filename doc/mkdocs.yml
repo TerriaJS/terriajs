@@ -20,11 +20,11 @@ pages:
     - Catalog Items: 'connecting-to-data/catalog-items.md'
     - Catalog Functions: 'connecting-to-data/catalog-functions.md'
     - Catalog Type Details:
-        - CKAN: 'connecting-to-data/catalog-type-details/CKAN.md'
-        - GeoJSON: 'connecting-to-data/catalog-type-details/GeoJSON.md'
-        - Web Map Service (WMS): 'connecting-to-data/catalog-type-details/Web-Map-Service.md'
-        - Web Processing Service (WPS): 'connecting-to-data/catalog-type-details/Web-Processing-Service.md'
-        - Format Conversion Service: 'connecting-to-data/catalog-type-details/Format-Conversion-Service.md'
+        - CKAN: 'connecting-to-data/catalog-type-details/ckan.md'
+        - GeoJSON: 'connecting-to-data/catalog-type-details/geojson.md'
+        - Web Map Service (WMS): 'connecting-to-data/catalog-type-details/web-map-service.md'
+        - Web Processing Service (WPS): 'connecting-to-data/catalog-type-details/web-processing-service.md'
+        - Format Conversion Service: 'connecting-to-data/catalog-type-details/format-conversion-service.md'
 - Deploying:
     - Overview: 'deploying/README.md'
     - Deploying TerriaMap: 'deploying/deploying-terriamap.md'
