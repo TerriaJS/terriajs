@@ -5,6 +5,8 @@ Change Log
 ### 4.7.3
 
 * Canceled pending tile requests when removing a layer from the 2D map.  This should drastically improve the responsiveness when dragging the time slider of a time-dynamic layer in 2D mode.
+* Added the data source and data service details to the "About this dataset" (preview) panel.
+* Fixed a bug introduced in 4.7.2 which made the Feature Info panel background too pale.
 
 ### 4.7.2
 
@@ -14,7 +16,6 @@ Change Log
 * Improved consistency of "Search" and "Add Data" font sizes.
 * Improved flexibility of Feature Info Panel styling.
 * Fixed a bug that could cause an extra `/` to be added to end of URLs by `ArcGisMapServerCatalogItem`, causing some servers to reject the request.
-* Added the data source and data service details to the "About this dataset" (preview) panel.
 * Added a workaround for a bug in Internet Explorer 11 on Windows 7 that could cause the user interface to hang.
 
 ### 4.7.1
@@ -43,8 +44,6 @@ Change Log
 * Made `WebMapServiceCatalogItem` tolerant of a `GetCapabilities` where a `LegendURL` element does not have an `OnlineResource` or a `Dimension` does not have any values.
 * Added support for 'Long' type hint to CSV data for specifying longitude.
 * The marker indicating the location of a search result is now placed correctly on the terrain surface.
-* Region for CatalogFunctions now selected on map rather than preview map
-* Some regions that were previously not selectable (in Analytics) except via autocomplete are now selectable.
 * `CatalogFunction` region parameters are now selected on the main map rather than the preview map.
 * Some regions that were previously not selectable in Analytics, except via autocomplete, are now selectable.
 * Added hover text that shows the position of data catalog search results in the full catalog.
