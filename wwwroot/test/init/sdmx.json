@@ -128,8 +128,11 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B01",
                         "aggregatedDimensionIds": ["STATE"],
+                        "singleValuedDimensionIds": ["SPC"],
                         "exclusiveValues": {
                             "*": ["TOT"],
+                            "MEASURE": ["3"],
+                            "SPC": ["TT"],  // Not needed with singleValuedDimensionIds, but brings Total to the top.
                             "AGE": ["TT", "O15"]
                         },
                         "selectedInitially": {
@@ -142,8 +145,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B01_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "singleValuedDimensionIds": ["SPC"],
                         "exclusiveValues": {
                             "*": ["TOT"],
+                            "SPC": ["TT"],  // Not needed with singleValuedDimensionIds, but brings Total to the top.
                             "AGE": ["TT", "O15"]
                         },
                         "selectedInitially": {
@@ -156,8 +161,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B01_SA1_SA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "singleValuedDimensionIds": ["SPC"],
                         "exclusiveValues": {
                             "*": ["TOT"],
+                            "SPC": ["TT"],  // Not needed with singleValuedDimensionIds, but brings Total to the top.
                             "AGE": ["TT", "O15"]
                         },
                         "selectedInitially": {
@@ -3305,8 +3312,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T01",
                         "aggregatedDimensionIds": ["STATE"],
+                        "singleValuedDimensionIds": ["SPC"],
                         "exclusiveValues": {
                             "*": ["TOT"],
+                            "SPC": ["TT"],  // Not needed with singleValuedDimensionIds, but brings Total to the top.
                             "AGE": ["TT", "O15"]
                         },
                         "selectedInitially": {
@@ -3319,8 +3328,10 @@
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_T01_LGA",
                         "aggregatedDimensionIds": ["STATE"],
+                        "singleValuedDimensionIds": ["SPC"],
                         "exclusiveValues": {
                             "*": ["TOT"],
+                            "SPC": ["TT"],  // Not needed with singleValuedDimensionIds, but brings Total to the top.
                             "AGE": ["TT", "O15"]
                         },
                         "whitelist": {
