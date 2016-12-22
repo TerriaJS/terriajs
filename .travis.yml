@@ -2,7 +2,7 @@ language: node_js
 node_js:
 - '5'
 script:
-- pip install mkdocs
+- pip install --user mkdocs
 - gulp lint docs release
 - gulp test-travis
 env:
