@@ -119,7 +119,9 @@ gulp.task('build-libs', function(done) {
     runWebpack(webpack, webpackConfig, done);
 });
 
-gulp.task('docs', function() {
+gulp.task('docs', ['user-guide', 'reference-guide']);
+
+gulp.task('reference-guide', function() {
     var runExternalModule = require('./buildprocess/runExternalModule');
 
     runExternalModule('jsdoc/jsdoc.js', [
@@ -127,7 +129,6 @@ gulp.task('docs', function() {
         '-c', './buildprocess/jsdoc.json'
     ]);
 });
-
 
 gulp.task('copy-cesium-assets', function() {
     var path = require('path');
