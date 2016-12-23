@@ -2187,8 +2187,8 @@
                         "aggregatedDimensionIds": ["STATE"],
                         "totalValueIds": {
                             "*": ["TOT"],
-                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
-                            "AGE": ["TT", "O15"]
+                            "SEX": ["3"], // 1=Males, 2=Females, 3=Persons.
+                            "MEASURE": ["O15"]  // Unusually, B45 puts AGE in MEASURE, and SEX in SEX.
                         },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
@@ -2205,8 +2205,8 @@
                         "aggregatedDimensionIds": ["STATE"],
                         "totalValueIds": {
                             "*": ["TOT"],
-                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
-                            "AGE": ["TT", "O15"]
+                            "SEX": ["3"], // 1=Males, 2=Females, 3=Persons.
+                            "MEASURE": ["O15"]  // Unusually, B45 puts AGE in MEASURE, and SEX in SEX.
                         },
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"],
@@ -2221,8 +2221,8 @@
                         "aggregatedDimensionIds": ["STATE"],
                         "totalValueIds": {
                             "*": ["TOT"],
-                            "MEASURE": ["3"], // When measure is sex: 1=Males, 2=Females, 3=Persons.
-                            "AGE": ["TT", "O15"]
+                            "SEX": ["3"], // 1=Males, 2=Females, 3=Persons.
+                            "MEASURE": ["O15"]  // Unusually, B45 puts AGE in MEASURE, and SEX in SEX.
                         },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
@@ -4358,6 +4358,7 @@
                         "aggregatedDimensionIds": ["STATE"],
                         "totalValueIds": {
                             "*": ["TOT"],
+                            "MEASURE": ["3"],
                             "AGE": ["TT", "O15"]
                         },
                         "selectedInitially": {
@@ -4387,6 +4388,7 @@
                         "aggregatedDimensionIds": ["STATE"],
                         "totalValueIds": {
                             "*": ["TOT"],
+                            "MEASURE": ["3"],
                             "AGE": ["TT", "O15"]
                         },
                         "selectedInitially": {
@@ -4401,6 +4403,7 @@
                         "aggregatedDimensionIds": ["STATE"],
                         "totalValueIds": {
                             "*": ["TOT"],
+                            "MEASURE": ["3"],
                             "AGE": ["TT", "O15"]
                         },
                         "selectedInitially": {
@@ -4415,7 +4418,8 @@
                         "aggregatedDimensionIds": ["STATE"],
                         "totalValueIds": {
                             "*": ["TOT"],
-                            "AGE": ["TT", "O15"]
+                            "SEX": ["3"], // 1=Males, 2=Females, 3=Persons.
+                            "MEASURE": ["O15"]  // Unusually, B45 puts AGE in MEASURE, and SEX in SEX.
                         },
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
@@ -4429,6 +4433,7 @@
                         "aggregatedDimensionIds": ["STATE"],
                         "totalValueIds": {
                             "*": ["TOT"],
+                            "MEASURE": ["3"],
                             "AGE": ["TT", "O15"]
                         },
                         "selectedInitially": {
