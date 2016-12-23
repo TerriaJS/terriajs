@@ -1,4 +1,6 @@
-A catalog in TerriaJS is defined in one or more "initialization files" (or init files). Each is a [JSON file](https://en.wikipedia.org/wiki/JSON) with this basic structure:
+A catalog in TerriaJS is defined in one or more "initialization files" (or init files).  In a default TerriaMap installation, the main init file is found in `wwwroot/init/terria.json`.
+
+An init file is a [JSON file](https://en.wikipedia.org/wiki/JSON) with this basic structure:
 
 ```
 {
@@ -38,7 +40,7 @@ Most of the other properties of each layer depend on the specific type.  See the
 
 There are four ways to load a catalog file into a TerriaJS application:
 
-1. Store it in Terria Map's `wwwroot/init` directory, and refer to it in the `initializationUrls` section of the [`config.json`](../customizing/client-side-config.md) file. It is loaded automatically when you visit the webpage.
+1. Store it in Terria Map's `wwwroot/init` directory, and refer to it in the `initializationUrls` section of the [`config.json`](../customizing/client-side-config.md) file. It is loaded automatically when you visit the webpage.  This is how `wwwroot/init/terria.json` is loaded in the default TerriaMap setup.
 2. Store it in Terria Maps's `wwwroot/init` directory, without adding it to config.json. Add the catalog file name (without `.json`) to the URL after `#`. For instance, `example.com/terria#mycatalog`. See [Controlling with URL Parameters](../deploying/controlling-with-url-parameters.md) for more information. This method is useful when developing a catalog that is not quite ready for public access, but it is helpful to show it to interested stakeholders.
 3. Store it anywhere on the web (on a [CORS-enabled](../connecting-to-data/cross-origin-resource-sharing.md) server). Add the complete URL (including `.json`) to the URL, after `#`. For instance, `http://nationalmap.gov.au/#http://example.com/mycatalog.json`. This method is useful when developing services for a TerriaJS instance which you don't directly control, and for rapidly previewing changes which you can also share with people.
 4. Store it locally, then drag and drop it into the Terria Map window.

@@ -1,46 +1,60 @@
-## How to skin a Terria Map
+Once you have TerriaMap up and running, you will want to make some changes to logos, labels, and colors to give your application a distinct appearance.
 
-After deploying and building, you will want to make some changes to make various labels and logos visually identify your project.
+Here are some TerriaMap files you may want to tweak.
 
-## index.js
+`wwwroot/index.html`
 
-Warning: this section is out of date!
+Change the `<title>` and the `<meta>` elements (e.g. `description`, `copyright`) to reflect your application.  You may also want to change the favicon.
 
+`wwwroot/config.json`
+
+Change the `appName`, `brandBarElements`, etc.  See [Client-side Config](client-side-config.md) for more information.
+
+`lib/Styles/variables.scss`
+
+Uncomment and tweak the SASS variables to set the main colors and fonts used throughout the application.  You will need to [rebuild TerriaMap](../getting-started.md#building-terriamap) after changing this file.
+
+`lib/Views/global.scss`
+
+In this file, you can override any of TerriaJS's CSS.  It contains some commented-out examples of some things you might like to change.  You can also use your browser's DOM inspector to look at elements in the TerriaJS UI and which CSS classes they use, and then override those classes as desired in this file.  You will need to [rebuild TerriaMap](../getting-started.md#building-terriamap) after changing this file.
+
+`lib/Views/UserInterface.jsx`
+
+This file creates the main user interface, using [React](https://facebook.github.io/react/).  In this file you can add extra menu items across the top of the screen, or add extra buttons to the navigation controls area on the right side of the screen.
+
+For example, here's a version that includes an extra menu that links to terria.io, and adds the measure tool to the navigation area:
+
+```javascript
+import React from 'react';
+
+import version from '../../version';
+
+import StandardUserInterface from 'terriajs/lib/ReactViews/StandardUserInterface/StandardUserInterface.jsx';
+import MenuItem from 'terriajs/lib/ReactViews/StandardUserInterface/customizable/MenuItem';
+import RelatedMaps from './RelatedMaps';
+import { Menu, Nav } from 'terriajs/lib/ReactViews/StandardUserInterface/customizable/Groups';
+import MeasureTool from 'terriajs/lib/ReactViews/Map/Navigation/MeasureTool';
+
+import './global.scss';
+
+export default function UserInterface(props) {
+    return (
+        <StandardUserInterface {... props} version={version}>
+            <Menu>
+                <RelatedMaps viewState={props.viewState} />
+                <MenuItem caption="About" href="about.html" key="about-link"/>
+                <MenuItem caption="TerriaJS" href="http://terria.io" key="terria-link"/>
+            </Menu>
+            <Nav>
+                <MeasureTool terria={props.viewState.terria} key="measure-tool"/>
+            </Nav>
+        </StandardUserInterface>
+    );
+}
 ```
-var terria = new Terria({
-    appName: 'My first TerriaMap',
-    supportEmail: 'nospam@example.com',
-```
 
-`terria.appName` is used in many places, such as dialog prompts.
+You will need to [rebuild TerriaMap](../getting-started.md#building-terriamap) after changing this file.
 
-```
-     BrandBarViewModel.create({
-         container: ui,
-         elements: [
-            '<a target="_blank" href="about.html"><img src="images/NationalMap_Logo_RGB72dpi_REV_Blue text_BETA.png" height="50" alt="National Map" title="Version: ' + version + '" /></a>',
-            '<a target="_blank" href="http://www.gov.au/"><img src="images/AG-Rvsd-Stacked-Press.png" height="45" alt="Australian Government" /></a>'
-```
+`index.js`
 
-This controls the banner at the top of the left hand pane. The last item is right-aligned. Logos should generally go in `wwwroot/images`. Use `<span class="brand-bar-name">` for text without a logo.
-
-`<title>My first Terria Map</title>`
-
-##Catalog
-
-1. Create a new catalog file, "myproject.json" in `wwwroot/init`
-2. Modify config.json:
-
-```
-    "initializationUrls" : [
-        "myproject"
-    ],
-```
-
-##Styling
-
-Add override styles to `index.less`.
-
-##Build
-
-Run `gulp watch` to continually rebuild in response to your changes.
+It's not usually necessary to change this file, but it is the main entry point for TerriaMap, so you can add any extra initialization that your application needs here.  You will need to [rebuild TerriaMap](../getting-started.md#building-terriamap) after changing this file.
