@@ -34,7 +34,7 @@ const DisplayAsPercentSection = React.createClass({
                         )}
                 >
                     {this.props.item.displayPercent ? <Icon glyph={Icon.GLYPHS.checkboxOn}/> :<Icon glyph={Icon.GLYPHS.checkboxOff}/>}
-                    <span>Display as a percentage of region population</span>
+                    <span>Display as a percentage of regional totals</span>
                 </button>
             </label>
         );
