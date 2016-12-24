@@ -180,7 +180,7 @@ function runKarma(configFile, done) {
     });
 }
 
-gulp.task('user-guide', function() {
+gulp.task('user-guide', ['make-schema'], function() {
     var fse = require('fs-extra');
     var gutil = require('gulp-util');
     var path = require('path');
@@ -210,6 +210,8 @@ gulp.task('user-guide', function() {
     var mkdocsyml = fse.readFileSync('build/mkdocs.yml', 'UTF-8');
     fse.writeFileSync('build/mkdocs.yml', mkdocsyml.replace(/README\.md/g, 'index.md'), 'UTF-8');
 
+    generateCatalogMemberPages('wwwroot/schema', 'build/doc/connecting-to-data/catalog-type-details');
+
     var result = spawnSync('mkdocs', ['build', '--clean', '--config-file', 'mkdocs.yml'], {
         cwd: 'build',
         stdio: 'inherit',
@@ -219,3 +221,51 @@ gulp.task('user-guide', function() {
         throw new gutil.PluginError('user-doc', 'External module exited with an error.', { showStack: false });
     }
 });
+
+function generateCatalogMemberPages(schemaPath, outputPath) {
+    var fse = require('fs-extra');
+    var path = require('path');
+
+    var schemaFiles = fse.walkSync(schemaPath);
+    var typeFiles = schemaFiles.filter(name => name.endsWith('_type.json'));
+
+    typeFiles.forEach(function(typeFile) {
+        var json = JSON.parse(fse.readFileSync(typeFile, 'UTF-8'));
+        var type = json.properties.type.enum[0];
+        var file = path.join(outputPath, type + '.md');
+        var propertiesFile = typeFile.replace(/_type\.json/, '.json');
+
+        var properties = {};
+        addProperties(propertiesFile, properties);
+
+        var content = json.description + '\r\r';
+        content += '## [Initialization File](../../customizing/initialization-files.md) properties:\r\r';
+        content += '`"type": "' + type + '"`\r\r';
+
+        var propertyKeys = Object.keys(properties);
+        propertyKeys.sort().forEach(function(property) {
+            var details = properties[property];
+            content += '`' + property + '`\r\r';
+            content += details.description + '\r\r';
+        });
+
+        fse.writeFileSync(file, content, 'UTF-8');
+    });
+}
+
+function addProperties(file, result) {
+    var fse = require('fs-extra');
+    var path = require('path');
+
+    var propertiesJson = JSON.parse(fse.readFileSync(file, 'UTF-8'));
+
+    if (propertiesJson.allOf) {
+        propertiesJson.allOf.forEach(function(allOf) {
+            addProperties(path.join(path.dirname(file), allOf['$ref']), result);
+        });
+    }
+
+    for (var property in propertiesJson.properties) {
+        result[property] = propertiesJson.properties[property];
+    }
+}

@@ -20,11 +20,25 @@ pages:
     - Catalog Items: 'connecting-to-data/catalog-items.md'
     - Catalog Functions: 'connecting-to-data/catalog-functions.md'
     - Catalog Type Details:
-        - CKAN: 'connecting-to-data/catalog-type-details/ckan.md'
+        - ABS ITT: 'connecting-to-data/catalog-type-details/abs-itt.md'
+        - Bing Maps: 'connecting-to-data/catalog-type-details/bing-maps.md'
+        - CKAN Resource: 'connecting-to-data/catalog-type-details/ckan-resource.md'
+        # - Composite: 'connecting-to-data/catalog-type-details/composite.md'
+        - Comma-Separated Values (CSV): 'connecting-to-data/catalog-type-details/csv.md'
+        - Cesium Terrain: 'connecting-to-data/catalog-type-details/cesium-terrain.md'
+        - Cesium Language (CZML): 'connecting-to-data/catalog-type-details/czml.md'
+        - ArcGIS FeatureServer: 'connecting-to-data/catalog-type-details/esri-featureServer.md'
+        - ArcGIS MapServer: 'connecting-to-data/catalog-type-details/esri-mapServer.md'
         - GeoJSON: 'connecting-to-data/catalog-type-details/geojson.md'
-        - Web Map Service (WMS): 'connecting-to-data/catalog-type-details/web-map-service.md'
-        - Web Processing Service (WPS): 'connecting-to-data/catalog-type-details/web-processing-service.md'
-        - Format Conversion Service: 'connecting-to-data/catalog-type-details/format-conversion-service.md'
+        - GPX: 'connecting-to-data/catalog-type-details/gpx.md'
+        - Keyhole Markup Language (KML): 'connecting-to-data/catalog-type-details/kml.md'
+        - Format Conversion Service (based on OGR): 'connecting-to-data/catalog-type-details/ogr.md'
+        - OpenStreetMap: 'connecting-to-data/catalog-type-details/open-street-map.md'
+        - SDMX-JSON: 'connecting-to-data/catalog-type-details/sdmx-json.md'
+        - Sensor Observation Service (SOS): 'connecting-to-data/catalog-type-details/sos.md'
+        - URL Template: 'connecting-to-data/catalog-type-details/url-template.md'
+        - Web Feature Service (WFS): 'connecting-to-data/catalog-type-details/wfs.md'
+        - Web Map Service (WMS): 'connecting-to-data/catalog-type-details/wms.md'
 - Deploying:
     - Overview: 'deploying/README.md'
     - Deploying TerriaMap: 'deploying/deploying-terriamap.md'
@@ -41,11 +55,3 @@ pages:
     - Using a Custom Version of Cesium: 'contributing/using-a-custom-version-of-cesium.md'
     - Setting up Saucelabs: 'contributing/setting-up-saucelabs.md'
     - Problems and Solutions: 'contributing/problems-and-solutions.md'
-
-
-# Delete:
-#         - Performance Testing: 'CatalogManagement/Performance-testing.md'
-#     - Extending TerriaJS: 'Customizing/Extending-TerriaJS.md'
-
-
-# Move system architecture info to Home
