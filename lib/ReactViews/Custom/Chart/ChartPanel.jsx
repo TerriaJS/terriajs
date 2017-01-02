@@ -78,7 +78,6 @@ const ChartPanel = React.createClass({
         if (isLoading) {
             loader = <Loader className={Styles.loader}/>;
         }
-        debugger;
         if (data.length > 0) {
             // TODO: use a calculation for the 34 pixels taken off...
             chart = (
@@ -123,11 +122,9 @@ function getXColumn(item) {
  *
  * @param item The item to create a chart for
  * @param yColumns Columns that can be used for the y index of the chart.
- * @param yColumnNumbers TODO: What is this?
  * @returns {Function} that returns a {@link ChartData}
  */
 function chartDataFunctionFromPoints(item, yColumns, yColumnNumbers) {
-
     return (points, index)=>
         new ChartData(points, {
             id: item.uniqueId + '-' + yColumnNumbers[index],
@@ -135,8 +132,8 @@ function chartDataFunctionFromPoints(item, yColumns, yColumnNumbers) {
             categoryName: item.name,
             units: yColumns[index].units,
             color: yColumns[index].color,
-            axisMin: yColumns[index].axisMin,
-            axisMax: yColumns[index].axisMax
+            yAxisMin: yColumns[index].yAxisMin,
+            yAxisMax: yColumns[index].yAxisMax
         });
 }
 
