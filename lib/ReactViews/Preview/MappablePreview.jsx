@@ -1,10 +1,13 @@
 import React from 'react';
 
+import Collapsible from '../Custom/Collapsible/Collapsible';
 import DataPreviewSections from './DataPreviewSections';
-import DataPreviewMap from './DataPreviewMap.jsx';
+import DataPreviewMap from './DataPreviewMap';
+import defined from 'terriajs-cesium/Source/Core/defined';
+import MetadataTable from './MetadataTable';
 import ObserveModelMixin from '../ObserveModelMixin';
-import Styles from './mappable-preview.scss';
 import parseCustomMarkdownToReact from '../Custom/parseCustomMarkdownToReact';
+import Styles from './mappable-preview.scss';
 
 /**
  * CatalogItem preview that is mappable (as opposed to say, an analytics item that can't be displayed on a map without
@@ -99,7 +102,7 @@ const MappablePreview = React.createClass({
                                        onClick={e => e.target.select()} />
 
                                 <Choose>
-                                    <When condition={catalogItem.type === 'wms' || (catalogItem.type === 'esri-mapServer' && typeof catalogItem.layers !== 'undefined')}>
+                                    <When condition={catalogItem.type === 'wms' || (catalogItem.type === 'esri-mapServer' && defined(catalogItem.layers))}>
                                         <p key="wms-layers">
                                             Layer name{catalogItem.layers.split(',').length > 1 ? 's' : ''}: {catalogItem.layers}
                                         </p>
@@ -139,6 +142,40 @@ const MappablePreview = React.createClass({
                                        target="_blank">{catalogItem.dataUrl}</a>
                                 </p>
                             </If>
+
+                            <If condition={defined(catalogItem.metadata)}>
+                                {/*
+                                    // By default every catalog item has an error message here, so better to ignore it.
+                                <If condition={defined(catalogItem.metadata.dataSourceErrorMessage)}>
+                                    <div className={Styles.error}>
+                                        Error loading data source details: {catalogItem.metadata.dataSourceErrorMessage}
+                                    </div>
+                                </If>
+                                */}
+                                <If condition={defined(catalogItem.metadata.dataSourceMetadata) && catalogItem.metadata.dataSourceMetadata.items.length > 0}>
+                                    <div className={Styles.metadata}>
+                                        <Collapsible title="Data Source Details" isInverse={true}>
+                                            <MetadataTable metadataItem={catalogItem.metadata.dataSourceMetadata} />
+                                        </Collapsible>
+                                    </div>
+                                </If>
+
+                                {/*
+                                <If condition={defined(catalogItem.metadata.serviceErrorMessage)}>
+                                    <div className={Styles.error}>
+                                        Error loading data service details: {catalogItem.metadata.serviceErrorMessage}
+                                    </div>
+                                </If>
+                                */}
+                                <If condition={defined(catalogItem.metadata.dataSourceMetadata) && catalogItem.metadata.dataSourceMetadata.items.length > 0}>
+                                    <div className={Styles.metadata}>
+                                        <Collapsible title="Data Service Details" isInverse={true}>
+                                            <MetadataTable metadataItem={catalogItem.metadata.serviceMetadata} />
+                                        </Collapsible>
+                                    </div>
+                                </If>
+                            </If>
+
                         </If>
                     </div>
                 </div>

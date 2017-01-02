@@ -40,6 +40,9 @@
     opacity: 1;
     @include transform(none);
   }
+  a{
+    @extend %link;
+  }
 }
 
 .modal-overlay {
