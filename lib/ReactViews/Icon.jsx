@@ -41,6 +41,7 @@ const GLYPHS = {
     right: require('../../wwwroot/images/icons/right.svg'),
     search: require('../../wwwroot/images/icons/search.svg'),
     selected: require('../../wwwroot/images/icons/selected.svg'),
+    settings: require('../../wwwroot/images/icons/settings.svg'),
     share: require('../../wwwroot/images/icons/share.svg'),
     showLess: require('../../wwwroot/images/icons/show-less.svg'),
     showMore: require('../../wwwroot/images/icons/show-more.svg'),
