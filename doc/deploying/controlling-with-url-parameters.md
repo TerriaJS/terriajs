@@ -18,8 +18,7 @@ Parameter      | Meaning
 `mode=preview`   | Operate in "preview mode", which mostly means not showing a warning if the screen is `small`  
 `share=`...      | Load a map view previously saved using the "Share" function with URL shortening.
 `start=`...      | Load a map view previously saved without URL shortening. The argument is a URL-encoded JSON structure defined using an internal format described below.
-\<initfile\>     | Load catalog file as described below.
-`tools=1`        | Enable the secret tools panel (an additional button at the top), which has features like timing the response times of WMS layers and exporting the current view as JSON.
+`<initfile>`     | Load catalog file as described below.
 
 ### Catalog files (init files)
 

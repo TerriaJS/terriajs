@@ -1,35 +1,48 @@
-# Deploying a Terria Map
+TerriaMap can be deployed in almost any environment.
 
-If you run into problems, check [TerriaJS's Problems and Solutions](https://github.com/TerriaJS/terriajs/wiki/Problems-and-Solutions).
-
-Instructions are given for Ubuntu. Steps will be slightly different on other platforms.
-
-Note: NodeJS version 0.10.x is **not supported**.
-
-Command | Comment
---------|--------
-`sudo apt-get install -y git-core`|Install Git, so you can get the code.
-`sudo apt-get install -y gdal-bin`|(Optional) Install GDAL, a large geospatial conversion library used to provide server-side support for a wider range of files types.
-`curl -sL https://deb.nodesource.com/setup_5.x | sudo -E bash -` | (Required for Ubuntu) Prepare to install NodeJS, used to build Terria. The default NodeJS available with Ubuntu 14.04 is too old. On Windows, download and install the MSI from the npm web site. On Mac OS X, install it via Homebrew.
-`sudo apt-get install -y nodejs npm` | Install NodeJS (run this on all versions of Linux, including Ubuntu).
-`sudo npm install -g gulp`| Install Gulp, which is the actual build tool. Install it system-wide, as administrator (Windows 8+) or sudo (Ubuntu / Mac OS X). See also: [Install npm packages globally without sudo on OS X and Linux](https://github.com/sindresorhus/guides/blob/master/npm-global-without-sudo.md).
-`git clone https://github.com/TerriaJS/TerriaMap.git` | Get the code
-`cd TerriaMap`|
-`npm install` | Install the dependencies. This may take a while. [TerriaJS-Server](https://github.com/TerriaJS/terriajs-server) is installed to `node_modules/terriajs-server`.
-`gulp` | Build it, using Gulp. This compiles all the code into just a couple of big JavaScript files and moves other assets into `wwwroot/`.
-`npm start` | Start the server.
-
-You can access your instance at [[http://localhost:3001]] in a web browser.
-
-The condensed form of all of the above:
+First, you may want to build a minified version of TerriaMap by running:
 
 ```
-sudo apt-get install -y git-core gdal-bin nodejs-legacy npm && sudo npm install -g gulp
-git clone https://github.com/TerriaJS/TerriaMap.git && cd TerriaMap && npm install
-gulp
-npm start
+npm run build release
 ```
 
-## Making changes
+The normal build (`npm run build`) can be deployed as well, but the release version is smaller and faster.
 
-Want to start tweaking? Proceed to [Customizing Terria](../Customizing/README.md).
+Then, you can host your TerriaMap using either the included Node.js-based web server, or by using any web server of your choosing.
+
+### Using the included Node.js-based web server
+
+The easiest way to deploy your TerriaMap is to use the included Node.js-based web server, called [terriajs-server](https://github.com/TerriaJS/terriajs-server).  You'll need Node.js 4.0+ installed on the server in order to run terriajs-server.  
+
+!!! note
+
+    Node.js 5.0+ is required to _build_ TerriaMap, but only 4.0+ is required to _run_ it.
+
+Then, copy the following files and directories from your local system where you built TerriaMap onto the server:
+
+* `wwwroot`
+* `node_modules`
+* `devserverconfig.json`
+
+And on the server, change to the directory where you copied those files and directories and run:
+
+```
+./node_modules/terriajs-server/run_server.sh --config-file devserverconfig.json
+```
+
+The server will start on port 3001.  You can specify a different port by adding `--port 1234` to the command-line above.
+
+It is usually a good idea to run another web server, such as [nginx](https://nginx.org/en/) or [Varnish](https://varnish-cache.org/) on port 80 and then reverse-proxy to the Node.js server, rather than running terriajs-server on port 80 directly.   You will find configuration files for Varnish with the TerriaMap source code in the [varnish directory](https://github.com/TerriaJS/TerriaMap/tree/master/varnish).  In addition to acting as a reverse proxy for the Node.js server, the supplied Varnish configuration also caches requests to proxied map data in order to improve performance.
+
+### Using any web server
+
+[terriajs-server](https://github.com/TerriaJS/terriajs-server), described above, only does a few things:
+
+1. It serves up the static HTML, JavaScript, and CSS that make up the application.
+2. It includes a simple service at `/proxy` that allows TerriaJS to access geospatial data servers that don't support [CORS](../connecting-to-data/cross-origin-resource-sharing.md).  If this service is not available, TerriaJS won't be able to access any datasets that are on other servers and that don't support CORS.
+3. It includes another service at `/convert` that uses [GDAL](http://www.gdal.org/) and OGR to transform otherwise unsupported geospatial vector data (e.g. shapefiles) to GeoJSON for display by the TerriaJS client.  If this service is not available, these data formats will not be supported.  However, all the [formats that TerriaJS supports directly](../connecting-to-data/catalog-items.md) will work just fine.
+* When configured correctly, it persists blobs of JSON for use in the sharing feature.  If this service is not available, the JSON can be stored in the share URL, instead.  However, this makes for some extremely long URLs.
+
+If these limitations are acceptable, you can run your TerriaMap on virtually any web server by simply copying the TerriaMap `wwwroot` onto the server!
+
+You can also incrementally add these services to your own server, as necessary, by porting the code in [terriajs-server](https://github.com/TerriaJS/terriajs-server) to your environment.

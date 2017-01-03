@@ -1,15 +1,18 @@
-#### Information for system administrators and developers
+This section explains how to deploy and maintain production (and production-ish) versions of TerriaJS applications like TerriaMap.  Before tackling this section, read [Getting Started](../getting-started.md) to learn how to build and run TerriaMap locally.
 
+Deploying TerriaMap itself:
 
-* [Deploying your own Terria Map.md](Deploying-Terria-Map.md): The quick start guide.
-* [Deploying and building](Deploying-and-building-TerriaJS.md): The more detailed version.
-* [Overall system architecture](Overall-system-architecture.md): How the bits fit together.
-* [Problems and solutions](Problems-and-Solutions.md): Go here if something bad happens.
+* [Deploying TerriaMap.md](deploying-terriamap.md): General instructions for deploying TerriaMap in almost any environment.
+* [Deploying to AWS](deploying-to-aws.md): Deploy TerriaMap to [Amazon Web Services (AWS)](https://aws.amazon.com/).
+* [Deploying with Docker](deploying-with-docker.md): Deploy TerriaMap using [Docker](https://www.docker.com/).
 
-Once you're up and running, see [Customizing](/Documentation/Customizing) for tweaking, configuring and skinning information.
+Deploying other services for use with TerriaJS:
 
-In addition to deploying Terria itself, you may want to install support services:
+* [Setting Up a Region Mapping Server](setting-up-a-region-mapping-server.md): Set up a server for use with TerriaJS's region mapping feature.
+* [Setting Up Geoserver](setting-up-geoserver.md): Configure [GeoServer](http://geoserver.org/) for effective use with TerriaJS.
 
-* [Setting up a region mapping server](Setting-up-a-region-mapping-server.md): to add additional region mapping types, or to avoid depending on Data61 infrastructure.
-* [Using a vector tile source](Using-a-vector-tile-source-for-region-mapping.md): setting up a vector tile source for region mapping. This is an experimental feature that is still in development.
-* [WMS Services](WMS-Services.md): how to set up your own GeoServer to provide WMS services.
+Using a TerriaMap in other applications:
+
+* [Using as a CKAN Previewer](using-as-a-ckan-previewer.md): Use TerriaJS as a previewer for geospatial data in a [CKAN](http://ckan.org/) site.
+* [Controlling with URL Parameters](controlling-with-url-parameters.md): Control a TerriaJS application by passing it URL parameters.  This is powerful because it enables another site to launch or embed a customized map with little or no code to write.
+* [Controlling in an &lt;iframe&gt; or Popup](controlling-in-an-iframe-or-popup.md): Embed a TerriaJS application in iframe or pop it up in a separate window, and control it by posting it cross-window messages.

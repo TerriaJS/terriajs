@@ -1,4 +1,6 @@
-## Docker
+!!! warning
+
+	We haven't used Docker for TerriaMap deployments in quite some time, so the instructions below are likely to be incorrect or outdated.  If you try it, we'd like to hear about your experiences on the [forum](https://groups.google.com/forum/#!forum/terriajs)
 
 If you intend to deploy using docker, Dockerfiles have been provided for nationalmap and varnish. There are currently no hosted builds of these images. To build and deploy these docker images locally:
 

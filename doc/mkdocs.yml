@@ -3,6 +3,8 @@ site_name: TerriaJS
 theme: readthedocs
 docs_dir: 'doc'
 site_dir: '../wwwroot/doc/guide'
+markdown_extensions:
+  - markdown.extensions.admonition
 #strict: true
 pages:
 - Home: 'README.md'
