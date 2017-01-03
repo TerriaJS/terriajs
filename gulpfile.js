@@ -13,7 +13,7 @@ var gulp = require('gulp');
 
 gulp.task('default', ['lint', 'build']);
 gulp.task('build', ['build-specs', 'copy-cesium-assets']);
-gulp.task('release', ['release-specs', 'copy-cesium-assets', 'make-schema']);
+gulp.task('release', ['release-specs', 'copy-cesium-assets']);
 gulp.task('watch', ['watch-specs', 'copy-cesium-assets']);
 gulp.task('post-npm-install', ['copy-cesium-assets']);
 
@@ -43,16 +43,10 @@ gulp.task('watch-specs', function(done) {
 
 gulp.task('make-schema', function() {
     var genSchema = require('generate-terriajs-schema');
+    var schemaSourceGlob = require('./buildprocess/schemaSourceGlob');
 
     return genSchema({
-        sourceGlob: [
-            './lib/Models/*CatalogItem.js',
-            './lib/Models/*CatalogGroup.js',
-            './lib/Models/*CatalogMember.js',
-            './lib/Models/*CatalogFunction.js',
-            '!./lib/Models/addUserCatalogMember.js',
-            '!./lib/Models/AsyncFunctionResultCatalogItem.js'
-        ],
+        sourceGlob: schemaSourceGlob,
         dest: 'wwwroot/schema',
         noversionsubdir: true,
         quiet: true

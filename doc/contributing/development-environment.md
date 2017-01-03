@@ -62,7 +62,7 @@ npmgitdev install
 
 Now, we can edit TerriaJS in `node_modules/terriajs` with the benefit of a full-feature git repo.
 
-To switch National Map back to using the npm version of TerriaJS (instead of the git repo), do:
+To switch TerriaMap back to using the npm version of TerriaJS (instead of the git repo), do:
 
 ```
 # warning: make sure you don't need any of your changes to TerriaJS first!
@@ -72,7 +72,7 @@ npmgitdev install
 
 ## Committing modifications
 
-If you make changes to TerriaJS and National Map together, here's the process for getting them to production.
+If you make changes to TerriaJS and TerriaMap together, here's the process for getting them to production.
 
 First, commit your TerriaJS changes to a branch and open a pull request to merge that branch to master. Simultaneously, you may want to make a branch of TerriaMap that uses your modified version of TerriaJS.  To do that, modify TerriaMap's `package.json`.  Where it has a line like:
 
@@ -118,21 +118,31 @@ npm start
 
 The test suite is run by opening a web browser on [http://localhost:3002/SpecRunner.html](http://localhost:3002/SpecRunner.html).  The source code for the specs is found in the `test/` directory.
 
-## Gulp Tasks
+## TerriaJS Gulp Tasks
 
-Run any of these tasks with `npm run gulp <task name>`:
-
-TODO: separate TerriaMap tasks from TerriaJS tasks.
+Run any of these tasks with `npm run gulp <task name>` from within the TerriaJS directory:
 
 * default - Invoked by running gulp without any arguments, this task invokes the `build` and `lint` tasks.
-* `build` - Builds a non-minified version of National Map AND Cesium, together in one JS file (called `public/build/ausglobe.js`). Only the parts of Cesium that we use (directly or indirectly) are pulled in. This task builds both the application and the specs.  This task may take 10 seconds or more, which is the main reason for the next task.
-* `watch` - Starts the same as `build` but then it stays running and watches for changes to any National Map, spec, or Cesium source file that was pulled in to `ausglobe.js`. When a change to any of these files is detected, a fast incremental build is automatically kicked off.  The incremental build is much faster than the full rebuild because dependencies between source files are cached.
-* `release` - The same as `build` except that it also minifies `ausglobe.js`.  This task should be used when building for production.
-* `build-app` - The same as `build`, except it builds just the app, not the specs.
-* `build-specs` - The same as `build`, except it builds just the specs, not the app.  Note that the specs do not actually depending on the app, so there is no need to `build-app` if you're just iterating on the specs, even if you change app source files.
-* `watch-app` - Watches just the app for changes.
-* `watch-specs` - Watches just the specs for changes.
-* `release-app` - Does a release build of just the app.
-* `release-specs` - Does a release build of just the specs.
-* `lint` - Runs jshint on the files in the `src` folder and reports any problems.  Our [.jshintrc](https://github.com/NICTA/nationalmap/blob/master/src/.jshintrc) file is mostly just copied from Cesium at the moment, so suggested changes are welcome.
+* `build` - Builds a non-minified version of the TerriaJS tests.  This task may take 10 seconds or more, which is the main reason for the next task.
+* `watch` - Starts the same as `build` but then it stays running and watches for changes to any TerriaJS or Cesium source file that was pulled in to the build. When a change to any of these files is detected, a fast incremental build is automatically kicked off.  The incremental build is much faster than the full rebuild because dependencies between source files are cached.
+* `release` - The same as `build` except that it also minifies the build tests.
+* `lint` - Runs ESLint on the files in the `lib` folder and reports any problems.  The ESLint rules are defined in the `.eslintrc` file in the root directory of TerriaJS.  A stricter set of rules is also find in the `.eslintrc` file in `lib/ReactViews`.
+* `docs` - Generates the user guide and reference documentation.  The user guide is served at `http://localhost:3002/doc/guide/` and the reference documentation is at `http://localhost:3002/doc/reference/`.
+* `make-schema` - Generates JSONSchema for the TerriaJS [Initialization Files](../customizing/initialization-files.md) from the source code.  The schema is written to `wwwroot/schema`.
+* `test` - Detects browsers available on the local system and launches the test suite in each.  The results are reported on the command line.
+* `test-electron` - Runs the tests in Electron, a headless (no UI) Chrome-like browser.
+* `test-saucelabs` - Runs the tests on a bunch of browsers on [Sauce Labs](https://saucelabs.com/).  You will need to [Set up Sauce Labs](setting-up-saucelabs.md).
+* `test-browserstack` - Runs the tests on a bunch of browsers on [BrowserStack](https://www.browserstack.com/).  You will need to set up a BrowserStack account.
+
+See `gulpfile.js` for more gulp tasks.
+
+## TerriaMap Gulp Tasks
+
+Run any of these tasks with `npm run gulp <task name>` from within the TerriaMap directory:
+
+* default - Invoked by running gulp without any arguments, this task invokes the `build` and `lint` tasks.
+* `build` - Builds a non-minified version of TerriaMap, TerriaJS, Cesium, and all other dependencies, together in one JS file (called `wwwroot/build/TerriaMap.js`). Only the parts of TerriaJS and Cesium that we use (directly or indirectly) are pulled in.  Web Workers, CSS, and other resources are also built by this task.  This task may take 10 seconds or more, which is the main reason for the next task.
+* `watch` - Starts the same as `build` but then it stays running and watches for changes to any TerriaMap, TerriaJS, or Cesium resource. When a change to any of these files is detected, a fast incremental build is automatically kicked off.  The incremental build is much faster than the full rebuild because dependencies between source files are cached.
+* `release` - The same as `build` except that it also minifies the built JavaScript files.  This task should be used when building for production.
+* `lint` - Runs ESLint on `index.js` and the files in the `lib` folder and reports any problems.  The ESLint rules are defined in the `.eslintrc` file in the root directory of TerriaMap.
 * `docs` - Generates reference documentation for the files in the `src` folder.
