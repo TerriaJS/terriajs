@@ -132,20 +132,16 @@ const MappablePreview = React.createClass({
                                             {catalogItem.dataUrlType.indexOf('wfs') === 0 && <a href="http://docs.geoserver.org/latest/en/user/services/wfs/reference.html" target="_blank" key="wfs">Web Feature Service (WFS) documentation</a>}
                                             {catalogItem.dataUrlType.indexOf('wcs') === 0 && <a href="http://docs.geoserver.org/latest/en/user/services/wcs/reference.html" target="_blank" key="wms">Web Coverage Service (WCS) documentation</a>}
                                             {' '} for more information on customising URL query parameters.
+                                            <br/>
+                                            <Link url={catalogItem.dataUrl} text={catalogItem.dataUrl}/>
+                                        </When>
+                                        <When condition={catalogItem.dataUrlType === 'data-uri'}>
+                                            <Link url={catalogItem.dataUrl} text="Download the currently selected data as csv"/>
                                         </When>
                                         <Otherwise>
                                             Use the link below to download data directly.
-                                        </Otherwise>
-                                    </Choose>
-                                    <br/>
-                                    <Choose>
-                                        <When condition={catalogItem.dataUrlType === 'data-uri'}>
-                                            <a href={catalogItem.dataUrl} key={catalogItem.dataUrl} className={Styles.link}
-                                               target="_blank">Download as csv</a>
-                                        </When>
-                                        <Otherwise>
-                                            <a href={catalogItem.dataUrl} key={catalogItem.dataUrl} className={Styles.link}
-                                               target="_blank">{catalogItem.dataUrl}</a>
+                                            <br/>
+                                            <Link url={catalogItem.dataUrl} text={catalogItem.dataUrl}/>
                                         </Otherwise>
                                     </Choose>
                                 </p>
@@ -188,6 +184,22 @@ const MappablePreview = React.createClass({
                     </div>
                 </div>
             </div>
+        );
+    }
+});
+
+const Link = React.createClass({
+    mixins: [ObserveModelMixin],
+
+    propTypes: {
+        url: React.PropTypes.string.isRequired,
+        text: React.PropTypes.string.isRequired
+    },
+
+    render() {
+        return (
+            <a href={this.props.url} key={this.props.url} className={Styles.link}
+                target="_blank">{this.props.text}</a>
         );
     }
 });
