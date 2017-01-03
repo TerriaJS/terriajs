@@ -44,6 +44,7 @@ const Concept = React.createClass({
             [Styles.hasChildren]: concept.hasChildren,
             [Styles.isSelectable]: concept.isSelectable,
             [Styles.isLoading]: this.props.isLoading
+            // [Styles.unSelectable]: concept.isActive && !allowMultiple
         });
         // Renders the concept as a standard list of radio buttons or checkboxes (ie. not as an additive-condition).
         return (
