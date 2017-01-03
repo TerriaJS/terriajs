@@ -1,6 +1,7 @@
 'use strict';
 
 // import classNames from 'classnames';
+import flattenNested from '../../../../Core/flattenNested';
 import ActiveConcept from './ActiveConcept';
 import OpenInactiveConcept from './OpenInactiveConcept';
 import Icon from '../../../Icon.jsx';
@@ -41,9 +42,11 @@ const SummarisedConcept = React.createClass({
 
     render() {
         const concept = this.props.concept;
-        const activeLeafNodes = concept.leafNodes.filter(concept => concept.isActive);
+        // Leaf nodes have either an undefined or a 0-length `items` array.
+        const isLeafNode = concept => (!concept.items || concept.items.length === 0);
+        const activeLeafNodes = concept.getNodes(isLeafNode).filter(concept => concept.isActive);
         const activeLeafNodesByParent = groupAndSortByParent(activeLeafNodes);
-        const openParentsWithoutParentsOfActive = concept.getOpenParentsWithoutParentsOfActive();
+        const openDescendantsWithoutActiveChildren = getOpenDescendantsWithoutActiveChildren(concept);
         const isLoading = this.props.isLoading;
         return (
             <div className={Styles.root}>
@@ -51,21 +54,57 @@ const SummarisedConcept = React.createClass({
                 <For each="group" index="i" of={activeLeafNodesByParent}>
                     <ActiveConcept key={i} rootConcept={concept} activeLeafNodesWithParent={group} isLoading={isLoading}/>
                 </For>
-                <If condition={activeLeafNodesByParent.length === 0 && openParentsWithoutParentsOfActive.length === 0}>
+                <If condition={activeLeafNodesByParent.length === 0 && openDescendantsWithoutActiveChildren.length === 0}>
                     <div className={Styles.noConditions}>
                         None
                     </div>
                 </If>
-                <If condition={openParentsWithoutParentsOfActive.length > 0 && !isLoading}>
-                    <OpenInactiveConcept rootConcept={concept} openInactiveConcept={openParentsWithoutParentsOfActive[0]}/>
+                <If condition={openDescendantsWithoutActiveChildren.length > 0 && !isLoading}>
+                    <OpenInactiveConcept rootConcept={concept} openInactiveConcept={openDescendantsWithoutActiveChildren[0]}/>
                 </If>
-                <If condition={concept.allowMultiple && openParentsWithoutParentsOfActive.length === 0}>
+                <If condition={concept.allowMultiple && openDescendantsWithoutActiveChildren.length === 0}>
                     <AddButton rootConcept={concept} numberOfExisting={activeLeafNodesByParent.length}/>
                 </If>
             </div>
         );
     }
 });
+
+/**
+ * We only want to show an <OpenInactiveConcept> if there is an open item without any active items in it.
+ * This will return a flat array of any such concepts.
+ * @param  {Concept} concept [description]
+ * @return {Array} A nested array of open concepts.
+ */
+function getOpenDescendantsWithoutActiveChildren(concept) {
+    const openDescendants = getOpenDescendants(concept);
+    const flattenedOpenDescendants = flattenNested(openDescendants);
+    return flattenedOpenDescendants.filter(hasNoActiveChildren);
+}
+
+/**
+ * Returns a nested array of the open descendants of this concept (including itself).
+ * If an open concept itself has open descendants, they are ignored.
+ * @param  {Concept} concept [description]
+ * @return {Array} A nested array of open concepts.
+ */
+function getOpenDescendants(concept) {
+    if (concept.isOpen) {
+        return [concept];
+    }
+    if (!concept.items) {
+        return [];
+    }
+    return concept.items.map(child => getOpenDescendants(child));
+}
+
+/**
+ * @param  {Concept} concept.
+ * @return {Boolean} Does this concept have no active children?
+ */
+function hasNoActiveChildren(concept) {
+    return !concept.items || concept.items.every(child => !child.isActive);
+}
 
 /**
  * Returns an array which groups all the nodes with the same parent id into one.
