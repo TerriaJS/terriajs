@@ -1,7 +1,6 @@
 'use strict';
 
-// import classNames from 'classnames';
-// import ActiveConcept from './ActiveConcept';
+import classNames from 'classnames';
 import Concept from '../Concept';
 import Icon from '../../../Icon.jsx';
 import ObserveModelMixin from '../../../ObserveModelMixin';
@@ -28,19 +27,24 @@ const OpenInactiveConcept = React.createClass({
     },
 
     render() {
+        const showControls = this.props.rootConcept.allowMultiple;
         return (
             <div className={Styles.section}>
                 <div className={Styles.controls}>
-                    <button className={Styles.btnClose} onClick={this.cancel}>
-                        Cancel
-                    </button>
+                    <If condition={showControls}>
+                        <button className={Styles.btnClose} onClick={this.cancel}>
+                            Cancel
+                        </button>
+                    </If>
                 </div>
                 <div className={Styles.heading}>
                     <If condition={this.props.rootConcept !== this.props.openInactiveConcept}>
-                        <button className={Styles.btnBack} onClick={this.back}>
-                            <Icon glyph={Icon.GLYPHS.left}/>
-                        </button>
-                        <div className={Styles.indented}>
+                        <If condition={showControls}>
+                            <button className={Styles.btnBack} onClick={this.back}>
+                                <Icon glyph={Icon.GLYPHS.left}/>
+                            </button>
+                        </If>
+                        <div className={classNames({[Styles.indented]: showControls})}>
                             {this.props.openInactiveConcept.name}
                         </div>
                     </If>
