@@ -139,7 +139,7 @@ const MappablePreview = React.createClass({
                                             <Link url={catalogItem.dataUrl} text="Download the currently selected data as csv"/>
                                         </When>
                                         <Otherwise>
-                                            Use the link below to download data directly.
+                                            Use the link below to download the data directly.
                                             <br/>
                                             <Link url={catalogItem.dataUrl} text={catalogItem.dataUrl}/>
                                         </Otherwise>
