@@ -138,8 +138,16 @@ const MappablePreview = React.createClass({
                                         </Otherwise>
                                     </Choose>
                                     <br/>
-                                    <a href={catalogItem.dataUrl} key={catalogItem.dataUrl} className={Styles.link}
-                                       target="_blank">{catalogItem.dataUrl}</a>
+                                    <Choose>
+                                        <When condition={catalogItem.dataUrlType === 'data-uri'}>
+                                            <a href={catalogItem.dataUrl} key={catalogItem.dataUrl} className={Styles.link}
+                                               target="_blank">Download as csv</a>
+                                        </When>
+                                        <Otherwise>
+                                            <a href={catalogItem.dataUrl} key={catalogItem.dataUrl} className={Styles.link}
+                                               target="_blank">{catalogItem.dataUrl}</a>
+                                        </Otherwise>
+                                    </Choose>
                                 </p>
                             </If>
 
