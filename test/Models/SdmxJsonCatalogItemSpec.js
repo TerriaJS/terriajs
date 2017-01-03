@@ -151,9 +151,10 @@ describe('SdmxJsonCatalogItem', function() {
                 expect(item.tableStructure.columns[5].values.slice()).toEqual([1140, 1035, 579, 1512, 2138]);
                 expect(item.tableStructure.columns[6].values.slice()).toEqual([1140, 535, 79, 12, 38]);
                 // Expect it to show 2 concepts to the user, each with 2 sub items.
-                expect(item.concepts.length).toEqual(2);
-                expect(item.concepts[0].items.length).toEqual(2);
-                expect(item.concepts[1].items.length).toEqual(2);
+                var conceptItems = item.concepts[0].items;
+                expect(conceptItems.length).toEqual(2);
+                expect(conceptItems[0].items.length).toEqual(2);
+                expect(conceptItems[1].items.length).toEqual(2);
             }).otherwise(fail).then(done);
         });
 
@@ -177,7 +178,8 @@ describe('SdmxJsonCatalogItem', function() {
                 expect(item.tableStructure.columns[2].values.slice()).toEqual([1140, 535, 79, 12, 38]);
                 expect(item.tableStructure.columns[3].values.slice()).toEqual(item.tableStructure.columns[2].values.slice());
                 // Expect it to show the birth/death concept to the user.
-                expect(item.concepts.length).toEqual(1);
+                var conceptItems = item.concepts[0].items;
+                expect(conceptItems.length).toEqual(1);
             }).otherwise(fail).then(done);
         });
 
@@ -205,7 +207,8 @@ describe('SdmxJsonCatalogItem', function() {
                 expect(item.tableStructure.columns[3].values.slice()).toEqual([140, 235, 279, 812, 338]);
                 expect(item.tableStructure.columns[4].values.slice()).toEqual([1280, 770, 358, 824, 376]);
                 // Expect it to show the birth/death concept to the user.
-                expect(item.concepts.length).toEqual(1);
+                var conceptItems = item.concepts[0].items;
+                expect(conceptItems.length).toEqual(1);
             }).otherwise(fail).then(done);
         });
 
@@ -244,7 +247,8 @@ describe('SdmxJsonCatalogItem', function() {
                 expect(columnNames.length).toEqual(2 + 5 * 2 * 2); // one for each value, plus date and total columns.
                 expect(item.tableStructure.columns[0].values.length).toEqual(3); // 3 dates.
                 // Expect it to show 3 concepts to the user.
-                expect(item.concepts.length).toEqual(3);
+                var conceptItems = item.concepts[0].items;
+                expect(conceptItems.length).toEqual(3);
             }).otherwise(fail).then(done);
         });
 
