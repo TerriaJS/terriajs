@@ -13,7 +13,7 @@ git clone https://github.com/TerriaJS/TerriaMap.git
 
 cd TerriaMap
 
-npm install && npm run build && npm start
+npm install && npm run gulp && npm start
 
 # Open at http://localhost:3001
 ```
@@ -58,22 +58,22 @@ The dependencies are installed in the `node_modules` subdirectory.  No global ch
 Do a standard build of TerriaMap with:
 
 ```bash
-npm run build
+npm run gulp
 ```
 
 Or, you can create a minified release build with:
 
 ```bash
-npm run build release
+npm run gulp release
 ```
 
 To watch for changes and automatically do an incremental build when any are detected, use:
 
 ```bash
-npm run build watch
+npm run gulp watch
 ```
 
-`npm run build` simply runs `gulp`, so you can use that directly if you prefer.
+`npm run gulp` simply runs `gulp`, so you can use that directly if you prefer (run `npm install -g gulp` to install it globally).
 
 The full set of `gulp` tasks can be found on the [Development Environment](contributing/development-environment.md#gulp-tasks) page.
 

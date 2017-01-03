@@ -1,70 +1,83 @@
-# Setting up a TerriaJS development environment
-
 First, read [Getting Started](../getting-started.md).
 
-## Updating Build
-
-The following commands are what you would normally run to pull changes from GitHub and build them:
-
-```
-git pull --rebase
-npm install
-gulp
-npm start
-```
-
-## Building a Terria based site against a modified TerriaJS
+## Building a TerriaMap against a modified TerriaJS
 
 What if you need to make changes to [TerriaJS](https://github.com/TerriaJS/terriajs) while working on a site that depends on it?
 
-In the process above, the [TerriaJS package](https://www.npmjs.com/package/terriajs) is installed to the `node_modules` directory by `npm install`.  Please do not edit TerriaJS directly in the `node_modules` directory, because changes will be clobbered the next time you run `npm install`.  Instead, follow these instructions.
+In the process described in [Getting Started](../getting-started.md), the [TerriaJS package](https://www.npmjs.com/package/terriajs) is installed to the `node_modules` directory by `npm install`.  Please do not edit TerriaJS directly in the `node_modules` directory, because changes will be clobbered the next time you run `npm install`.
 
-First, set up a TerriaJS dev environment on your system by following the [instructions](https://github.com/TerriaJS/terriajs/wiki/Developers%27-Handbook).  Then, checkout an appropriate version of TerriaJS.  To use the exact version that National Map is expecting, do:
+Instead, we want to clone TerriaJS from its [GitHub repo](https://github.com/TerriaJS/terriajs) and use that in our TerriaMap build.  Traditionally, `npm link` is the way to do this.  However, we do not recommend use of `npm link` because it frequently leads to multiple copies of some libraries being installed, which in turn leads to all sorts of frustrating build problems.  Instead, we recommend [npmgitdev](https://www.npmjs.com/package/npmgitdev).  `npmgitdev` lets us safely clone a git repo into our `node_modules` directory and use it pretty much as if npm had put it there itself.
 
-```bash
-cd nationalmap
+First, install `npmgitdev` globally:
+
+```
+npm install -g npmgitdev
+```
+
+Then, in your TerriaMap directory, remove the existing `terriajs` package, and clone the terriajs repo there instead.
+
+```
+cd node_modules
+rm -rf terriajs
+git clone https://github.com/TerriaJS/terriajs.git
+cd ..
+```
+
+This will give you the `master` branch of TerriaJS.  While we strive to keep `master` stable and usable at all times, you must be aware that `master` is less tested than actual releases, and it may not be commpatible with the `master` branch of TerriaMap.  So, you may want to check out the actual version of TerriaJS that you're using before you start making changes.  To do that:
+
+```
 grep terriajs package.json
-# will print something like: "terriajs": "0.0.23"
-cd ../terriajs
-git checkout 0.0.23 # version from above
-
-# Create a new branch to hold your changes.
-git checkout -b someBranchName
+# will print something like: "terriajs": "^4.5.0"
+cd node_modules/terriajs
+git checkout 4.5.0
+cd ../..
 ```
 
-If you're planning to upgrade National Map's version of TerriaJS, you may choose to use `master` instead of the precise version listed in `package.json`.
-
-Next, link your local version of TerriaJS into the global npm package repository:
+Now, if you run `npm install`, `npm` will fail with an error like this:
 
 ```
-cd terriajs
-npm link
+npm ERR! git C:\github\TerriaMap\node_modules\terriajs: Appears to be a git repo or submodule.
+npm ERR! git     C:\github\TerriaMap\node_modules\terriajs
+npm ERR! git Refusing to remove it. Update manually,
+npm ERR! git or move it out of the way first.
 ```
 
-Then, link the now global `terriajs` package into National Map:
+This is _good_!  It means `npm` recognizes that your `terriajs` directory is now a git repo, and it is refusing to touch it out of fear of making you lose your work.  This is where `npmgitdev` comes in:
 
 ```
-cd nationalmap
-npm link terriajs
+npmgitdev install
 ```
 
-This process essentially makes National Map's `node_modules/terriajs` into a symlink to your `terriajs` directory cloned from git.  Any changes you make to TerriaJS will be automatically picked up by National Map.  Don't forget to run `npm install` in TerriaJS after pulling new changes or modifying `package.json`.  You will also need to build TerriaJS (by running `gulp`) if you modify any Cesium shaders or make changes to Cesium code that could affect Cesium's WebWorkers.
+`npmgitdev` is a wrapper around `npm` that, for each git repo in `node_modules`:
 
-To switch National Map back to using the npm version of TerriaJS, do:
+* Makes sure your working directory is clean (i.e. you have no uncommitted changes).
+* Moves the `.git` directory out of the way so that `npm` can't see it or clobber it.
+* Copies all the `devDependencies` in `package.json` into `dependencies`.  This way npm will install all your dev-time stuff too.
+* Runs `npm` normally.
+* Moves the `.git` directory back.
+
+!!! note
+
+	If you hit CTRL-C while `npmgitdev` is running, it will be unable to clean up after itself automatically.  Look for a `npmgitdev-XXXXX` directory.  The `mappings.json` file in that directory contains a record of the changes that `npmgitdev` made so that you can undo them manually.  Usually this just means moving the `.git` directory back.
+
+Now, we can edit TerriaJS in `node_modules/terriajs` with the benefit of a full-feature git repo.
+
+To switch National Map back to using the npm version of TerriaJS (instead of the git repo), do:
 
 ```
-npm unlink terriajs
-npm install
+# warning: make sure you don't need any of your changes to TerriaJS first!
+rm -rf node_modules/terriajs
+npmgitdev install
 ```
 
 ## Committing modifications
 
 If you make changes to TerriaJS and National Map together, here's the process for getting them to production.
 
-First, commit your TerriaJS changes to a branch and open a pull request to merge that branch to master. Simultaneously, you may want to make a branch of National Map that uses your modified version of TerriaJS.  To do that, modify National Map's `package.json`.  Where it has a line like:
+First, commit your TerriaJS changes to a branch and open a pull request to merge that branch to master. Simultaneously, you may want to make a branch of TerriaMap that uses your modified version of TerriaJS.  To do that, modify TerriaMap's `package.json`.  Where it has a line like:
 
 ```
-"terriajs": "^0.0.27",
+"terriajs": "^4.5.0",
 ```
 
 Change it to:
@@ -77,32 +90,39 @@ Replace `branchName` with the name of the TerriaJS branch you want to use.  You 
 
 Once your TerriaJS pull request has been merged and a new version of the `terriajs` npm module has been published, please remember to update `package.json` to point to an official `terriajs` version instead of a branch in a GitHub repo.
 
-When at all possible, the `package.json` in the `master` branch should point to official releases of `terriajs` on npm, NOT GitHub branches.
-
-## Release Build
-
-If you want to make a minified release build use the commands:
-
-```
-npm install
-gulp release
-npm start
-```
+The `package.json` in the `master` branch of TerriaMap should point to official releases of `terriajs` on npm, NOT GitHub branches.
 
 ## Documentation
 
-Documentation is automatically generated from the source via jdocs.  It will be placed in the public/doc folder.  
+Documentation is automatically generated from the source via JSDoc (reference) and MkDocs (user guide) by running:
 
-It is still very early stages, so the documentation is rather minimal and referencing the source code is probably a better way to determine the best way to use the existing functionality.
+```
+npm run gulp docs
+```
 
-You can click [here](http://nationalmap.gov.au/build/TerriaJS/doc/) to reference the documentation on the National Map site.
+It will be placed in the `wwwroot/doc` folder.  
 
 ## Tests / Specs
 
-The test suite is run by opening a web browser on [http://localhost:3001/SpecRunner.html](http://localhost:3001/SpecRunner.html).  The specs themselves are found in the `test/` directory.
+We use [Jasmine](https://jasmine.github.io/) for the TerriaJS tests, called specs in Jasmine parlance.  To run the specs, you first need to build them by running this in the TerriaJS  (not TerriaMap!) directory:
 
+```
+npm run gulp
+```
+
+And start the development web server by running:
+
+```
+npm start
+```
+
+The test suite is run by opening a web browser on [http://localhost:3002/SpecRunner.html](http://localhost:3002/SpecRunner.html).  The source code for the specs is found in the `test/` directory.
 
 ## Gulp Tasks
+
+Run any of these tasks with `npm run gulp <task name>`:
+
+TODO: separate TerriaMap tasks from TerriaJS tasks.
 
 * default - Invoked by running gulp without any arguments, this task invokes the `build` and `lint` tasks.
 * `build` - Builds a non-minified version of National Map AND Cesium, together in one JS file (called `public/build/ausglobe.js`). Only the parts of Cesium that we use (directly or indirectly) are pulled in. This task builds both the application and the specs.  This task may take 10 seconds or more, which is the main reason for the next task.

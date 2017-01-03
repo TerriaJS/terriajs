@@ -1,4 +1,4 @@
-We're thrilled to have you as a contributor!  This section explains how to set up a development environment for modifying TerriaJS and using that modified version in a TerriaMap.  It also has suggestions for contributing.
+We're thrilled to have you as a contributor!  This section explains how to set up a development environment for modifying TerriaJS, and how to use that modified version in a TerriaMap.  It also has suggestions for contributing.
 
 For all contributors:
 
