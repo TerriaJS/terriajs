@@ -1,14 +1,11 @@
-## TerriaJS Contributor's Guide
+We're thrilled to have you as a contributor!  This section explains how to set up a development environment for modifying TerriaJS and using that modified version in a TerriaMap.  It also has suggestions for contributing.
 
 For all contributors:
 
+* [Setting up a development environment](development-environment.md)
 * [CONTRIBUTING.md](https://github.com/TerriaJS/terriajs/blob/master/CONTRIBUTING.md): how to submit a pull request. Please read! :)
-* [Setting up a development environment](Development-environment.md)
-* [Working with TerriaJS and Cesium](Contributing-to-TerriaJS.md)
 
 Special cases:
 
-* [Setting up Saucelabs](Setting-up-Saucelabs-Locally.md): Creating a local Saucelabs instance for cross-browser testing.
-* [Using Docker](Using-Docker.md): How to use Docker for development and deployment.
-
-
+* [Setting up Saucelabs](setting-up-saucelabs.md): Creating a local Saucelabs instance for cross-browser testing.
+* [Using a Custom Version of Cesium](using-a-custom-version-of-cesium.md)
