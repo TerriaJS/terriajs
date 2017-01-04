@@ -1166,7 +1166,14 @@
                         "whitelist": {
                             "AGE": ["A[0-9]+", "T.*", "O.*"] // Only shows five-year ranges and totals, not individual years.
                         }
-                    },
+                    }
+                ]
+            },
+            {
+                "name": "Family",
+                "type": "group",
+                "isOpen": false,
+                "items": [
                     {
                         "name": "Number of Children Ever Born by Age of Parent (ABS_CENSUS2011_B24)",
                         "type": "sdmx-json",
@@ -3148,7 +3155,7 @@
                 ]
             },
             {
-                "name": "Dwellings (need work)",
+                "name": "Dwelling",
                 "type": "group",
                 "isOpen": false,
                 "items": [
@@ -3157,42 +3164,36 @@
                         "type": "sdmx-json",
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/RES_DWELL",
-                        "aggregatedDimensionIds": ["STATE"],
                         "totalValueIds": {
-                            "*": ["TOT"],
-                            "AGE": ["TT", "O15"]
+                            "*": ["TOT"]
                         },
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
-                        }
+                        "singleValuedDimensionIds": ["MEASURE"],
+                        "regionDimensionId": "ASGS_2011",
+                        "regionType": "STE"
                     },
                     {
                         "name": "Residential Dwellings: Values, Mean Price and Number by State and Territories (RES_DWEL_ST)",
                         "type": "sdmx-json",
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/RES_DWEL_ST",
-                        "aggregatedDimensionIds": ["STATE"],
                         "totalValueIds": {
-                            "*": ["TOT"],
-                            "AGE": ["TT", "O15"]
+                            "*": ["TOT"]
                         },
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
-                        }
+                        "singleValuedDimensionIds": ["MEASURE"],
+                        "regionDimensionId": "ASGS_2011",
+                        "regionType": "STE"
                     },
                     {
                         "name": "Residential Property Price Indexes, All Series by GCCSA (RES_PROP_INDEX)",
                         "type": "sdmx-json",
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/RES_PROP_INDEX",
-                        "aggregatedDimensionIds": ["STATE"],
                         "totalValueIds": {
-                            "*": ["TOT"],
-                            "AGE": ["TT", "O15"]
+                            "*": ["TOT"]
                         },
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
-                        }
+                        "singleValuedDimensionIds": ["MEASURE"],
+                        "regionDimensionId": "ASGS_2011",
+                        "regionType": "STE"
                     }
                 ]
             },
@@ -3529,7 +3530,14 @@
                             "REGIONTYPE": ["LGA2011"],
                             "AGE": ["A[0-9]+", "T.*", "O.*"] // Only shows five-year ranges and totals, not individual years.
                         }
-                    },
+                    }
+                ]
+            },
+            {
+                "name": "Family",
+                "type": "group",
+                "isOpen": false,
+                "items": [
                     {
                         "name": "Number of Children Ever Born by Age of Parent (ABS_CENSUS2011_T07)",
                         "type": "sdmx-json",
