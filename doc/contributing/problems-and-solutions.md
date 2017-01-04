@@ -1,5 +1,3 @@
-## Cannot find module 'terriajs-cesium/wwwroot'
-
 ### `npm run hot` hangs, or other crazy things happen
 
 This is usually caused by having two copies of a package, such as a Webpack loader, in different places in your application.  For example, you might have `MyApp/node_modules/sass-loader` and also `MyApp/node_modules/terriajs/node_modules/sass_loader`.
