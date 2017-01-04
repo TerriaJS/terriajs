@@ -1,0 +1,6 @@
+<table class="cesium-infoBox-defaultTable">
+  <tr>
+    <td style="vertical-align: middle">Path Elevation</td>
+    <td><chart data="{{distanceVsElevationCsv}}" styling: "feature-info" {{chartOptions}}></td>
+  </tr>
+</table>

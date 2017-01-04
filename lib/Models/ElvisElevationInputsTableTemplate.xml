@@ -1,0 +1,14 @@
+<table class="cesium-infoBox-defaultTable">
+  <tr>
+    <td style="vertical-align: middle">line</td>
+    <td style="padding-left: 4px">{{lineString}}</td>
+  </tr>
+  <tr>
+    <td style="vertical-align: middle">count</td>
+    <td style="padding-left: 4px">{{count}}</td>
+  </tr>
+  <tr>
+    <td style="vertical-align: middle">distance</td>
+    <td style="padding-left: 4px">{{distance}}</td>
+  </tr>
+</table>
