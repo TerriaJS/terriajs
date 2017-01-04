@@ -2276,72 +2276,71 @@
                             "REGIONTYPE": ["SA4"]
                         }
                     },
-                    {
-                        "name": "Balance of Payments (BOP)",
-                        "type": "sdmx-json",
-                        "sortValues": true,
-                        "url": "http://stat.data.abs.gov.au/sdmx-json/data/BOP",
-                        "aggregatedDimensionIds": ["STATE"],
-                        "totalValueIds": {
-                            "*": ["TOT"],
-                            "AGE": ["TT", "O15"]
-                        },
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
-                        }
-                    },
-                    {
-                        "name": "Building Approvals by Greater Capital Cities Statistical Area (GCCSA) and above (BA_GCCSA)",
-                        "type": "sdmx-json",
-                        "sortValues": true,
-                        "url": "http://stat.data.abs.gov.au/sdmx-json/data/BA_GCCSA",
-                        "aggregatedDimensionIds": ["STATE"],
-                        "totalValueIds": {
-                            "*": ["TOT"],
-                            "AGE": ["TT", "O15"]
-                        },
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
-                        }
-                    },
-                    {
-                        "name": "Building Approvals by Statistical Area (SA2 and above) (ABS_BA_SA2)",
-                        "type": "sdmx-json",
-                        "sortValues": true,
-                        "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_BA_SA2",
-                        "regionTypeDimensionId": "GEOGRAPHY_LEVEL",
-                        "selectedInitially": {
-                            "GEOGRAPHY_LEVEL": ["SA4"]
-                        }
-                    },
-                    {
-                        "name": "Business Indicators (QBIS)",
-                        "type": "sdmx-json",
-                        "sortValues": true,
-                        "url": "http://stat.data.abs.gov.au/sdmx-json/data/QBIS",
-                        "aggregatedDimensionIds": ["STATE"],
-                        "totalValueIds": {
-                            "*": ["TOT"],
-                            "AGE": ["TT", "O15"]
-                        },
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
-                        }
-                    },
-                    {
-                        "name": "Consumer Price Index (CPI) 16th Series (CPI)",
-                        "type": "sdmx-json",
-                        "sortValues": true,
-                        "url": "http://stat.data.abs.gov.au/sdmx-json/data/CPI",
-                        "aggregatedDimensionIds": ["STATE"],
-                        "totalValueIds": {
-                            "*": ["TOT"],
-                            "AGE": ["TT", "O15"]
-                        },
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
-                        }
-                    },
+                    // {
+                    //     "name": "Balance of Payments (BOP)",
+                    //     "type": "sdmx-json",
+                    //     "sortValues": true,
+                    //     "url": "http://stat.data.abs.gov.au/sdmx-json/data/BOP",
+                    //     "aggregatedDimensionIds": ["STATE"],
+                    //     "totalValueIds": {
+                    //         "*": ["TOT"],
+                    //         "AGE": ["TT", "O15"]
+                    //     },
+                    //     "selectedInitially": {
+                    //         "REGIONTYPE": ["SA4"]
+                    //     }
+                    // },
+                    // {
+                    //     "name": "Building Approvals by Greater Capital Cities Statistical Area (GCCSA) and above (BA_GCCSA)",
+                    //     "type": "sdmx-json",
+                    //     "sortValues": true,
+                    //     "url": "http://stat.data.abs.gov.au/sdmx-json/data/BA_GCCSA",
+                    //     "totalValueIds": {
+                    //         "*": ["TOT"],
+                    //         "AGE": ["TT", "O15"]
+                    //     },
+                    //     "selectedInitially": {
+                    //         "REGIONTYPE": ["SA4"]
+                    //     }
+                    // },
+                    // {
+                    //     "name": "Building Approvals by Statistical Area (SA2 and above) (ABS_BA_SA2)",
+                    //     "type": "sdmx-json",
+                    //     "sortValues": true,
+                    //     "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_BA_SA2",
+                    //     "regionTypeDimensionId": "GEOGRAPHY_LEVEL",
+                    //     "selectedInitially": {
+                    //         "GEOGRAPHY_LEVEL": ["SA4"]
+                    //     }
+                    // },
+                    // {
+                    //     "name": "Business Indicators (QBIS)",
+                    //     "type": "sdmx-json",
+                    //     "sortValues": true,
+                    //     "url": "http://stat.data.abs.gov.au/sdmx-json/data/QBIS",
+                    //     "aggregatedDimensionIds": ["STATE"],
+                    //     "totalValueIds": {
+                    //         "*": ["TOT"],
+                    //         "AGE": ["TT", "O15"]
+                    //     },
+                    //     "selectedInitially": {
+                    //         "REGIONTYPE": ["SA4"]
+                    //     }
+                    // },
+                    // {
+                    //     "name": "Consumer Price Index (CPI) 16th Series (CPI)",
+                    //     "type": "sdmx-json",
+                    //     "sortValues": true,
+                    //     "url": "http://stat.data.abs.gov.au/sdmx-json/data/CPI",
+                    //     "aggregatedDimensionIds": ["STATE"],
+                    //     "totalValueIds": {
+                    //         "*": ["TOT"],
+                    //         "AGE": ["TT", "O15"]
+                    //     },
+                    //     "selectedInitially": {
+                    //         "REGIONTYPE": ["SA4"]
+                    //     }
+                    // },
                     {
                         "name": "Deaths and Infant deaths, Year and month of occurrence, Sex, States, Territories and Australia (DEATHS_MONTHOCCURENCE)",
                         "type": "sdmx-json",
@@ -4452,6 +4451,13 @@
                         "type": "sdmx-json",
                         "sortValues": true,
                         "url": "build/TerriaJS/test/SDMX-JSON/data-foo-2013.json",
+                        "dataflowUrlComponent": ""
+                    },
+                    {
+                        "name": "Example with no choices",
+                        "type": "sdmx-json",
+                        "sortValues": true,
+                        "url": "build/TerriaJS/test/SDMX-JSON/data-no-concepts-2013.json",
                         "dataflowUrlComponent": ""
                     },
                     {
