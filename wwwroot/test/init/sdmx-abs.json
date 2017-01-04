@@ -1,13 +1,13 @@
 {
     "catalog": [{
-        "name": "Australian Bureau of Statistics",
+        "name": "Australian Bureau of Statistics (SDMX-JSON trial)",
         "type": "group",
         "isOpen": true,
         "items": [
             {
-                "name": "SDMX-JSON trial",
+                "name": "Selected Person Characteristics",
                 "type": "group",
-                "isOpen": true,
+                "isOpen": false,
                 "items": [
                     {
                         "name": "Selected Person Characteristics (ABS_CENSUS2011_B01)",
@@ -99,7 +99,14 @@
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
-                    },
+                    }
+                ]
+            },
+            {
+                "name": "Residence",
+                "type": "group",
+                "isOpen": false,
+                "items": [
                     {
                         "name": "Place of Usual Residence on Census Night by Sex (ABS_CENSUS2011_B03)",
                         "type": "sdmx-json",
@@ -144,7 +151,14 @@
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
-                    },
+                    }
+                ]
+            },
+            {
+                "name": "By age and sex",
+                "type": "group",
+                "isOpen": false,
+                "items": [
                     {
                         "name": "Age by Sex (ABS_CENSUS2011_B04)",
                         "type": "sdmx-json",
@@ -352,7 +366,14 @@
                         "whitelist": {
                             "AGE": ["A[0-9]+", "T.*", "O.*"] // Only shows five-year ranges and totals, not individual years.
                         }
-                    },
+                    }
+                ]
+            },
+            {
+                "name": "Ancestry, Religion and Language",
+                "type": "group",
+                "isOpen": false,
+                "items": [
                     {
                         "name": "Ancestry by Birthplace of Parents (ABS_CENSUS2011_B08)",
                         "type": "sdmx-json",
@@ -661,7 +682,14 @@
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
-                    },
+                    }
+                ]
+            },
+            {
+                "name": "Education",
+                "type": "group",
+                "isOpen": false,
+                "items": [
                     {
                         "name": "Type of Educational Institution Attending (Full/Part-Time Student Status by Age) by Sex (ABS_CENSUS2011_B15)",
                         "type": "sdmx-json",
@@ -758,7 +786,14 @@
                         "whitelist": {
                             "AGE": ["A[0-9]+", "T.*", "O.*"] // Only shows five-year ranges and totals, not individual years.
                         }
-                    },
+                    }
+                ]
+            },
+            {
+                "name": "Income",
+                "type": "group",
+                "isOpen": false,
+                "items": [
                     {
                         "name": "Total Personal Income (weekly) by Age by Sex (ABS_CENSUS2011_B17)",
                         "type": "sdmx-json",
@@ -810,7 +845,14 @@
                         "whitelist": {
                             "AGE": ["A[0-9]+", "T.*", "O.*"] // Only shows five-year ranges and totals, not individual years.
                         }
-                    },
+                    }
+                ]
+            },
+            {
+                "name": "By age and sex",
+                "type": "group",
+                "isOpen": false,
+                "items": [
                     {
                         "name": "Core Activity Need for Assistance by Age by Sex (ABS_CENSUS2011_B18)",
                         "type": "sdmx-json",
@@ -1171,7 +1213,14 @@
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
-                    },
+                    }
+                ]
+            },
+            {
+                "name": "Family",
+                "type": "group",
+                "isOpen": false,
+                "items": [
                     {
                         "name": "Family Composition (ABS_CENSUS2011_B25)",
                         "type": "sdmx-json",
@@ -1297,7 +1346,14 @@
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
-                    },
+                    }
+                ]
+            },
+            {
+                "name": "Income",
+                "type": "group",
+                "isOpen": false,
+                "items": [
                     {
                         "name": "Total Household Income (weekly) by Household Composition (ABS_CENSUS2011_B28)",
                         "type": "sdmx-json",
@@ -1339,7 +1395,14 @@
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
-                    },
+                    }
+                ]
+            },
+            {
+                "name": "Dwelling",
+                "type": "group",
+                "isOpen": false,
+                "items": [
                     {
                         "name": "Number of Motor Vehicles by Dwellings (ABS_CENSUS2011_B29)",
                         "type": "sdmx-json",
@@ -1381,7 +1444,15 @@
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
-                    },
+                    }
+                ]
+            },
+            {
+                "name": "Household",
+                "type": "group",
+                "isOpen": false,
+                "items": [
+
                     {
                         "name": "Household Composition by Number of Persons Usually Resident (ABS_CENSUS2011_B30)",
                         "type": "sdmx-json",
@@ -1423,7 +1494,14 @@
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
-                    },
+                    }
+                ]
+            },
+            {
+                "name": "Dwelling",
+                "type": "group",
+                "isOpen": false,
+                "items": [
                     {
                         "name": "Dwelling Structure (ABS_CENSUS2011_B31)",
                         "type": "sdmx-json",
@@ -1678,7 +1756,14 @@
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
-                    },
+                    }
+                ]
+            },
+            {
+                "name": "By sex",
+                "type": "group",
+                "isOpen": false,
+                "items": [
                     {
                         "name": "Selected Labour Force, Education and Migration Characteristics by Sex (ABS_CENSUS2011_B37)",
                         "type": "sdmx-json",
@@ -1813,7 +1898,14 @@
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
-                    },
+                    }
+                ]
+            },
+            {
+                "name": "By age and sex",
+                "type": "group",
+                "isOpen": false,
+                "items": [
                     {
                         "name": "Non-School Qualification: Level of Education by Age by Sex (ABS_CENSUS2011_B40)",
                         "type": "sdmx-json",
@@ -1917,7 +2009,14 @@
                         "whitelist": {
                             "AGE": ["A[0-9]+", "T.*", "O.*"] // Only shows five-year ranges and totals, not individual years.
                         }
-                    },
+                    }
+                ]
+            },
+            {
+                "name": "Occupation",
+                "type": "group",
+                "isOpen": false,
+                "items": [
                     {
                         "name": "Labour Force Status by Age by Sex (ABS_CENSUS2011_B42)",
                         "type": "sdmx-json",
@@ -2023,7 +2122,14 @@
                         "whitelist": {
                             "AGE": ["A[0-9]+", "T.*", "O.*"] // Only shows five-year ranges and totals, not individual years.
                         }
-                    },
+                    }
+                ]
+            },
+            {
+                "name": "Occupation",
+                "type": "group",
+                "isOpen": false,
+                "items": [
                     {
                         "name": "Industry of Employment by Occupation (ABS_CENSUS2011_B44)",
                         "type": "sdmx-json",
@@ -2162,7 +2268,14 @@
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
-                    },
+                    }
+                ]
+            },
+            {
+                "name": "Deaths",
+                "type": "group",
+                "isOpen": false,
+                "items": [
                     {
                         "name": "Deaths and Infant deaths, Year and month of occurrence, Sex, States, Territories and Australia (DEATHS_MONTHOCCURENCE)",
                         "type": "sdmx-json",
@@ -2266,7 +2379,14 @@
                         "regionDimensionId": "ASGS_2011",
                         "regionType": "STATE",
                         "singleValuedDimensionIds": ["MEASURE"]
-                    },
+                    }
+                ]
+            },
+            {
+                "name": "Estimated Resident Population",
+                "type": "group",
+                "isOpen": false,
+                "items": [
                     {
                         "name": "ERP by LGA (ASGS 2013), 1991 to 2013 (ABS_ANNUAL_ERP_LGA)",
                         "type": "sdmx-json",
@@ -2424,7 +2544,14 @@
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
-                    },
+                    }
+                ]
+            },
+            {
+                "name": "To be classified",
+                "type": "group",
+                "isOpen": false,
+                "items": [
                     {
                         "name": "Export Price Index (ITPI_EXPORT)",
                         "type": "sdmx-json",
@@ -2494,7 +2621,14 @@
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
-                    },
+                    }
+                ]
+            },
+            {
+                "name": "Deaths",
+                "type": "group",
+                "isOpen": false,
+                "items": [
                     {
                         "name": "Infant deaths and Infant mortality rates, Year of registration, Age at death, Sex, States, Territories and Australia (INFANTDEATHS_REGISTRATIONYEAR)",
                         "type": "sdmx-json",
@@ -2522,7 +2656,14 @@
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
-                    },
+                    }
+                ]
+            },
+            {
+                "name": "To be classified",
+                "type": "group",
+                "isOpen": false,
+                "items": [
                     {
                         "name": "International Investment Position (IIP_DSID5671)",
                         "type": "sdmx-json",
@@ -2536,7 +2677,14 @@
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
-                    },
+                    }
+                ]
+            },
+            {
+                "name": "By sex",
+                "type": "group",
+                "isOpen": false,
+                "items": [
                     {
                         "name": "Interstate Migration by States and Territories of Arrival and Departure by Sex (ABS_DEM_QIM)",
                         "type": "sdmx-json",
@@ -2550,7 +2698,15 @@
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
-                    },
+                    }
+                ]
+            },
+            {
+                "name": "To be classified",
+                "type": "group",
+                "isOpen": false,
+                "items": [
+
                     {
                         "name": "Labour Force (LF)",
                         "type": "sdmx-json",
@@ -2890,7 +3046,14 @@
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
-                    },
+                    }
+                ]
+            },
+            {
+                "name": "Migration",
+                "type": "group",
+                "isOpen": false,
+                "items": [
                     {
                         "name": "Regional Internal Migration Estimates by LGA2011, 2006-07 to 2014-15  (RIME_LGA2011)",
                         "type": "sdmx-json",
@@ -2946,7 +3109,14 @@
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
-                    },
+                    }
+                ]
+            },
+            {
+                "name": "Regional Statistics",
+                "type": "group",
+                "isOpen": false,
+                "items": [
                     {
                         "name": "Regional Statistics by ASGS, 2010-2014 (ABS_REGIONAL_ASGS)",
                         "type": "sdmx-json",
@@ -2974,7 +3144,14 @@
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
-                    },
+                    }
+                ]
+            },
+            {
+                "name": "Dwellings (need work)",
+                "type": "group",
+                "isOpen": false,
+                "items": [
                     {
                         "name": "Residential Dwellings: Unstratified Medians and Counts by Dwelling Type by GCCSA (RES_DWELL)",
                         "type": "sdmx-json",
@@ -3016,7 +3193,14 @@
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
-                    },
+                    }
+                ]
+            },
+            {
+                "name": "To be classified",
+                "type": "group",
+                "isOpen": false,
+                "items": [
                     {
                         "name": "Retail Trade (RT)",
                         "type": "sdmx-json",
@@ -3044,7 +3228,14 @@
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
-                    },
+                    }
+                ]
+            },
+            {
+                "name": "SEIFA",
+                "type": "group",
+                "isOpen": false,
+                "items": [
                     {
                         "name": "SEIFA by Local Government Area (LGA) (ABS_SEIFA_LGA)",
                         "type": "sdmx-json",
@@ -3128,7 +3319,14 @@
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
-                    },
+                    }
+                ]
+            },
+            {
+                "name": "Selected Person Characteristics",
+                "type": "group",
+                "isOpen": false,
+                "items": [
                     {
                         "name": "Selected Person Characteristics (ABS_CENSUS2011_T01)",
                         "type": "sdmx-json",
@@ -3188,7 +3386,14 @@
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
-                    },
+                    }
+                ]
+            },
+            {
+                "name": "By age and sex",
+                "type": "group",
+                "isOpen": false,
+                "items": [
                     {
                         "name": "Age by Sex (ABS_CENSUS2011_T03)",
                         "type": "sdmx-json",
@@ -3356,7 +3561,14 @@
                             "REGIONTYPE": ["LGA2011"],
                             "AGE": ["A[0-9]+", "T.*", "O.*"] // Only shows five-year ranges and totals, not individual years.
                         }
-                    },
+                    }
+                ]
+            },
+            {
+                "name": "Ancestry, Religion and Language",
+                "type": "group",
+                "isOpen": false,
+                "items": [
                     {
                         "name": "Country of Birth of Person by Sex (ABS_CENSUS2011_T08)",
                         "type": "sdmx-json",
@@ -3500,7 +3712,14 @@
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
-                    },
+                    }
+                ]
+            },
+            {
+                "name": "Education",
+                "type": "group",
+                "isOpen": false,
+                "items": [
                     {
                         "name": "Type of Educational Institution Attending by Sex (ABS_CENSUS2011_T13)",
                         "type": "sdmx-json",
@@ -3530,7 +3749,14 @@
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
-                    },
+                    }
+                ]
+            },
+            {
+                "name": "Dwelling",
+                "type": "group",
+                "isOpen": false,
+                "items": [
                     {
                         "name": "Dwelling Structure by Household Composition and Family Composition (ABS_CENSUS2011_T14)",
                         "type": "sdmx-json",
@@ -3762,7 +3988,14 @@
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
-                    },
+                    }
+                ]
+            },
+            {
+                "name": "Income",
+                "type": "group",
+                "isOpen": false,
+                "items": [
                     {
                         "name": "Total Family Income (weekly) by Number of Children for Couple Families (ABS_CENSUS2011_T22)",
                         "type": "sdmx-json",
@@ -3846,7 +4079,14 @@
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
-                    },
+                    }
+                ]
+            },
+            {
+                "name": "Family",
+                "type": "group",
+                "isOpen": false,
+                "items": [
                     {
                         "name": "Family Composition by Mortgage Repayment (ABS_CENSUS2011_T25)",
                         "type": "sdmx-json",
@@ -3930,7 +4170,14 @@
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
-                    },
+                    }
+                ]
+            },
+            {
+                "name": "To be classified",
+                "type": "group",
+                "isOpen": false,
+                "items": [
                     {
                         "name": "Selected Labour Force, Education and Migration Characteristics (ABS_CENSUS2011_T28)",
                         "type": "sdmx-json",
@@ -3986,7 +4233,14 @@
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
-                    },
+                    }
+                ]
+            },
+            {
+                "name": "Education",
+                "type": "group",
+                "isOpen": false,
+                "items": [
                     {
                         "name": "Non-School Qualification: Level of Education by Age by Sex (ABS_CENSUS2011_T30)",
                         "type": "sdmx-json",
@@ -4054,7 +4308,14 @@
                             "REGIONTYPE": ["LGA2011"],
                             "AGE": ["A[0-9]+", "T.*", "O.*"] // Only shows five-year ranges and totals, not individual years.
                         }
-                    },
+                    }
+                ]
+            },
+            {
+                "name": "Occupation",
+                "type": "group",
+                "isOpen": false,
+                "items": [
                     {
                         "name": "Labour Force Status by Age by Sex (ABS_CENSUS2011_T32)",
                         "type": "sdmx-json",
@@ -4148,7 +4409,14 @@
                         "whitelist": {
                             "REGIONTYPE": ["LGA2011"]
                         }
-                    },
+                    }
+                ]
+            },
+            {
+                "name": "To be classified",
+                "type": "group",
+                "isOpen": false,
+                "items": [
                     {
                         "name": "Wage Price Index (LABOUR_PRICE_INDEX)",
                         "type": "sdmx-json",
