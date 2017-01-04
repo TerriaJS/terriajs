@@ -101,7 +101,7 @@
     "react-addons-test-utils": "15.4.1",
     "react-dom": "15.4.1",
     "react-shallow-testutils": "^2.0.0",
-    "svg-sprite-loader": "0.1.1",
+    "svg-sprite-loader": "0.1.2",
     "terriajs-jasmine-ajax": "^3.2.1",
     "terriajs-server": "^2.6.2",
     "webpack-dev-server": "^1.14.1"
