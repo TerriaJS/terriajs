@@ -6,6 +6,8 @@ docs_dir: 'doc'
 site_dir: '../wwwroot/doc/guide'
 markdown_extensions:
   - markdown.extensions.admonition
+extra:
+  logo: 'terria.png'
 strict: true
 pages:
 - Home: 'README.md'
