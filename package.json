@@ -99,6 +99,7 @@
     "karma-sauce-launcher": "^1.0.0",
     "karma-spec-reporter": "^0.0.26",
     "kss": "^2.1.1",
+    "mkdocs-material": "git://github.com/squidfunk/mkdocs-material#1.0.0-rc.2",
     "node-notifier": "^4.5.0",
     "node-sass": "^4.0.0",
     "react": "15.4.1",
