@@ -1,10 +1,10 @@
-Many aspects of TerriaJS (and hence NationalMap) can be configured by the end user by passing URL parameters. Combine them like this: 
+Many aspects of TerriaJS (and hence TerriaMap, NationalMap, and others) can be configured by the end user by passing URL parameters. Combine them like this:
 
 * The base URL, then a `#`
 * Then the first parameter
 * Then repeatedly: a `&`, and the next parameter
 
-For example: `nationalmap.gov.au#test&map=2d`
+For example: [http://nationalmap.gov.au#test&map=2d](http://nationalmap.gov.au#test&map=2d)
 
 
 ### Display parameters
@@ -24,7 +24,7 @@ Parameter      | Meaning
 
 Any unrecognised parameter (eg `foo`) is treated as the name of a catalog file, loaded from the directory `wwwroot/init/foo.json`). Multiple catalog files can be loaded this way, and will be combined. Later files can override earlier ones.
 
-Example: http://nationalmap.gov.au#test
+Example: [http://nationalmap.gov.au#test](http://nationalmap.gov.au#test)
 
 ### Start data
 

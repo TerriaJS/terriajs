@@ -1,4 +1,4 @@
-- Get an account from https://saucelabs.com/opensauce/. I set it to my fork of Terria but I'm not sure if this is necessary.
+- Get an account from [https://saucelabs.com/open-source](https://saucelabs.com/open-source).
 - DON'T bother installing any tunnels or any of that nonsense that it tells you to do. This is actually automatically handled by sauce's npm module which is pretty sweet.
 - Go to "My Account" in saucelabs (bottom left menu) and copy your access key (middle of the page roughly).
 - Set env variables for SAUCE_USERNAME and SAUCE_ACCESS_KEY using your OS's method for doing that (`export` in bash) with your sauce username and the access key you just copied.
