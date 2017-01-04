@@ -6,13 +6,13 @@ import OpenInactiveConcept from './OpenInactiveConcept';
 import Icon from '../../../Icon.jsx';
 import ObserveModelMixin from '../../../ObserveModelMixin';
 import React from 'react';
-import Styles from './summarised-concept.scss';
+import Styles from './summary-concept.scss';
 
 const ADD_FIRST_TEXT = 'Add a condition';
 const ADD_MORE_TEXT = 'Add new condition';
 
 /*
- * SummarisedConcept displays all the active and open nodes under a given
+ * SummaryConcept displays all the active and open nodes under a given
  * SummaryConcept.
  * It has two "modes":
  *   When summaryConcept.allowMultiple is false, it can be substituted directly for
@@ -39,7 +39,7 @@ const ADD_MORE_TEXT = 'Add new condition';
  * no one else should notice this trick.
  * (The other alternative would be to add a new property to VariableConcept.)
  */
-const SummarisedConcept = React.createClass({
+const SummaryConcept = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -183,5 +183,5 @@ const AddButton = React.createClass({
     }
 });
 
-module.exports = SummarisedConcept;
+module.exports = SummaryConcept;
 

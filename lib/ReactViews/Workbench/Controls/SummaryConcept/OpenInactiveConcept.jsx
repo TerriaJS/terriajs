@@ -5,7 +5,7 @@ import Concept from '../Concept';
 import Icon from '../../../Icon.jsx';
 import ObserveModelMixin from '../../../ObserveModelMixin';
 import React from 'react';
-import Styles from './summarised-concept.scss';
+import Styles from './summary-concept.scss';
 
 const NEW_TEXT = 'New condition';
 
