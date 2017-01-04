@@ -128,7 +128,7 @@ Run any of these tasks with `npm run gulp <task name>` from within the TerriaJS 
 * `release` - The same as `build` except that it also minifies the build tests.
 * `lint` - Runs ESLint on the files in the `lib` folder and reports any problems.  The ESLint rules are defined in the `.eslintrc` file in the root directory of TerriaJS.  A stricter set of rules is also find in the `.eslintrc` file in `lib/ReactViews`.
 * `docs` - Generates the user guide and reference documentation.  The user guide is served at `http://localhost:3002/doc/guide/` and the reference documentation is at `http://localhost:3002/doc/reference/`.
-* `make-schema` - Generates JSONSchema for the TerriaJS [Initialization Files](../customizing/initialization-files.md) from the source code.  The schema is written to `wwwroot/schema`.
+* `make-schema` - Generates [JSON Schema](http://json-schema.org/) for the TerriaJS [Initialization Files](../customizing/initialization-files.md) from the source code.  The schema is written to `wwwroot/schema`.
 * `test` - Detects browsers available on the local system and launches the test suite in each.  The results are reported on the command line.
 * `test-electron` - Runs the tests in Electron, a headless (no UI) Chrome-like browser.
 * `test-saucelabs` - Runs the tests on a bunch of browsers on [Sauce Labs](https://saucelabs.com/).  You will need to [Set up Sauce Labs](setting-up-saucelabs.md).
@@ -145,4 +145,13 @@ Run any of these tasks with `npm run gulp <task name>` from within the TerriaMap
 * `watch` - Starts the same as `build` but then it stays running and watches for changes to any TerriaMap, TerriaJS, or Cesium resource. When a change to any of these files is detected, a fast incremental build is automatically kicked off.  The incremental build is much faster than the full rebuild because dependencies between source files are cached.
 * `release` - The same as `build` except that it also minifies the built JavaScript files.  This task should be used when building for production.
 * `lint` - Runs ESLint on `index.js` and the files in the `lib` folder and reports any problems.  The ESLint rules are defined in the `.eslintrc` file in the root directory of TerriaMap.
-* `docs` - Generates reference documentation for the files in the `src` folder.
+* `make-package` - Creates a `.tar.gz` package in `deploy/packages` from the current build.  This package can be copied to another machine to run the application there.  The arguments are:
+
+| Argument | Description |
+|----------|-------------|
+| `--packageName <name>` | The name of the package.  If not specified, the name is `<npm_package_name>-<git_describe>`, where `<npm_package_name>` is the value of the `npm_package_name` environment variable and `<git_describe>` is the output of running `git describe`.  If you invoke this task using `npm run gulp make-package` instead of simply `gulp make-package`, the `npm_package_name` environment variable will be automatically set to the name of the project in `package.json`. |
+| `--serverConfigOverride <file>` | The path to a file with overrides of the `devserverconfig.json` file.  If not specified, `devserverconfig.json` is used unmodified. |
+| `--clientConfigOverride <file>` | The path to a file with overrides of the `wwwroot/config.json` file.  If not specified, `wwwroot/config.json` is used unmodified. |
+
+* `clean` - Removes the `wwwroot/build` directory.
+* `sync-terriajs-dependencies` - For all npm packages used by both TerriaMap and TerriaJS, updates TerriaMap's `package.json` to use the same version as TerriaJS.  This avoids build problems (errors, hangs) caused by package version conflicts.

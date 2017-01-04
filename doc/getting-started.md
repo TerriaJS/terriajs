@@ -75,7 +75,7 @@ npm run gulp watch
 
 `npm run gulp` simply runs `gulp`, so you can use that directly if you prefer (run `npm install -g gulp` to install it globally).
 
-The full set of `gulp` tasks can be found on the [Development Environment](contributing/development-environment.md#gulp-tasks) page.
+The full set of `gulp` tasks can be found on the [Development Environment](contributing/development-environment.md#terriamap-gulp-tasks) page.
 
 ### Running TerriaMap
 
