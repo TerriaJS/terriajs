@@ -13,6 +13,12 @@ cd ..
 
 It is important that you use the `terriajs` branch of [TerriaJS/cesium](https://github.com/TerriaJS/cesium) because it contains important changes to Cesium that are necessary for it to work with TerriaJS.  If you need to use a different branch of Cesium, you will need to merge that branch with the changes in the `terriajs` branch.
 
+If you run `npmgitdev install`, make sure that npm hasn't installed a separate version of `terriajs-cesium` under terriajs:
+
+```
+rm -rf node_modules/terriajs/node_modules/terriajs-cesium
+```
+
 ## Committing modifications
 
 If you make changes to Cesium and TerriaJS together, here's the process for getting them to production.
