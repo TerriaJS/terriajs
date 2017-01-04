@@ -136,7 +136,7 @@ const MappablePreview = React.createClass({
                                             <Link url={catalogItem.dataUrl} text={catalogItem.dataUrl}/>
                                         </When>
                                         <When condition={catalogItem.dataUrlType === 'data-uri'}>
-                                            <Link url={catalogItem.dataUrl} text="Download the currently selected data as csv"/>
+                                            <Link url={catalogItem.dataUrl} text="Download the currently selected data as csv" download="data.csv"/>
                                         </When>
                                         <Otherwise>
                                             Use the link below to download the data directly.
