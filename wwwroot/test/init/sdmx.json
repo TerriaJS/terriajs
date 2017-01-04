@@ -144,6 +144,106 @@
                         "regionType": "ISO3"
                     }
                 ]
+            },
+            {
+                "name": "ABS examples",
+                 "type": "group",
+                 "isOpen": true,
+                 "items": [
+                     {
+                        "name": "Age",
+                        "type": "sdmx-json",
+                        "sortValues": true,
+                        "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B04",
+                        "aggregatedDimensionIds": ["STATE"],
+                        "totalValueIds": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"],
+                            "AGE": ["TT", "O15"]
+                        },
+                        "selectedInitially": {
+                            "REGIONTYPE": ["SA4"]
+                        },
+                        "whitelist": {
+                            "AGE": ["A[0-9]+", "T.*", "O.*"] // Only shows five-year ranges and totals, not individual years.
+                        }
+                    },
+                    {
+                        "name": "Ancestry",
+                        "type": "sdmx-json",
+                        "sortValues": true,
+                        "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B08",
+                        "aggregatedDimensionIds": ["STATE"],
+                        "totalValueIds": {
+                            "*": ["TOT"],
+                            "ANCP": ["TOTP"],
+                            "AGE": ["TT", "O15"]
+                        },
+                        "selectedInitially": {
+                            "REGIONTYPE": ["SA4"]
+                        }
+                    },
+                    {
+                        "name": "Country of birth",
+                        "type": "sdmx-json",
+                        "sortValues": true,
+                        "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B09",
+                        "aggregatedDimensionIds": ["STATE"],
+                        "totalValueIds": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"],
+                            "AGE": ["TT", "O15"]
+                        },
+                        "selectedInitially": {
+                            "REGIONTYPE": ["SA4"]
+                        }
+                    },
+                    {
+                        "name": "Religious affiliation",
+                        "type": "sdmx-json",
+                        "sortValues": true,
+                        "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B14",
+                        "aggregatedDimensionIds": ["STATE"],
+                        "totalValueIds": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"],
+                            "AGE": ["TT", "O15"]
+                        },
+                        "selectedInitially": {
+                            "REGIONTYPE": ["SA4"]
+                        }
+                    },
+                    {
+                        "name": "Occupation",
+                         "type": "sdmx-json",
+                         "sortValues": true,
+                        "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B45",
+                        "aggregatedDimensionIds": ["STATE"],
+                        "totalValueIds": {
+                            "*": ["TOT"],
+                            "SEX": ["3"], // 1=Males, 2=Females, 3=Persons.
+                            "MEASURE": ["O15"]  // Unusually, B45 puts AGE in MEASURE, and SEX in SEX.
+                        },
+                        "selectedInitially": {
+                            "REGIONTYPE": ["SA4"]
+                        }
+                     },
+                     {
+                        "name": "Method of travel to work",
+                        "type": "sdmx-json",
+                        "sortValues": true,
+                        "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B46",
+                        "aggregatedDimensionIds": ["STATE"],
+                        "totalValueIds": {
+                            "*": ["TOT"],
+                            "MEASURE": ["3"],
+                            "AGE": ["TT", "O15"]
+                        },
+                        "selectedInitially": {
+                            "REGIONTYPE": ["SA4"]
+                        }
+                    }
+                ]
             }
         ]
     }]
