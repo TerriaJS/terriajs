@@ -7,6 +7,7 @@ Change Log
 * Canceled pending tile requests when removing a layer from the 2D map.  This should drastically improve the responsiveness when dragging the time slider of a time-dynamic layer in 2D mode.
 * Added the data source and data service details to the "About this dataset" (preview) panel.
 * Fixed a bug introduced in 4.7.2 which made the Feature Info panel background too pale.
+* Fixed incorrect tooltip text for the Share button.
 
 ### 4.7.2
 
