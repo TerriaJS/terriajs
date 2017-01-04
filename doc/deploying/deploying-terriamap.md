@@ -3,10 +3,10 @@ TerriaMap can be deployed in almost any environment.
 First, you may want to build a minified version of TerriaMap by running:
 
 ```
-npm run build release
+npm run gulp release
 ```
 
-The normal build (`npm run build`) can be deployed as well, but the release version is smaller and faster.
+The normal build (`npm run gulp`) can be deployed as well, but the release version is smaller and faster.
 
 Then, you can host your TerriaMap using either the included Node.js-based web server, or by using any web server of your choosing.
 
