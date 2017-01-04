@@ -193,13 +193,13 @@ const Link = React.createClass({
 
     propTypes: {
         url: React.PropTypes.string.isRequired,
-        text: React.PropTypes.string.isRequired
+        text: React.PropTypes.string.isRequired,
+        download: React.PropTypes.string
     },
 
     render() {
         return (
-            <a href={this.props.url} key={this.props.url} className={Styles.link}
-                target="_blank">{this.props.text}</a>
+            <a href={this.props.url} className={Styles.link} download={this.props.download} target="_blank">{this.props.text}</a>
         );
     }
 });
