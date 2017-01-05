@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+### 4.7.5
+
+* Added the ability to read dates in the format "2017-Q2".
+
 ### 4.7.4
 
 * Renamed `SpatialDetailingFunction`, `WhyAmISpecialFunction`, and `PlacesLikeMeFunction` to `SpatialDetailingCatalogFunction`, `WhyAmISpecialCatalogFunction`, and `PlacesLikeMeCatalogFunction`, respectively.  The old names will be removed in a future release.
