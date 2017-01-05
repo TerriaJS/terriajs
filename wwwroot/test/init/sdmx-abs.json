@@ -1,6 +1,6 @@
 {
     "catalog": [{
-        "name": "Australian Bureau of Statistics (SDMX-JSON trial)",
+        "name": "ABS SDMX-JSON for testing only",
         "type": "group",
         "isOpen": true,
         "items": [
