@@ -22,7 +22,7 @@
     "opts": {
         "recurse": true,
         "encoding": "utf8",
-        "destination": "./wwwroot/doc/",
+        "destination": "./wwwroot/doc/reference/",
         "tutorials": "./tutorials/"
     }
  }

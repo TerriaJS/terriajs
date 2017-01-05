@@ -7,6 +7,7 @@ const Collapsible = React.createClass({
     propTypes: {
         title: React.PropTypes.string,
         startsOpen: React.PropTypes.bool,
+        isInverse: React.PropTypes.bool,
         children: React.PropTypes.any
     },
 
@@ -28,12 +29,16 @@ const Collapsible = React.createClass({
                 </div>
             );
         }
+        const classObject = {
+            [Styles.isOpen]: this.state.isOpen,
+            [Styles.isInverse]: this.props.isInverse
+        };
         return (
             <div className={Styles.root}>
                 <div className={Styles.header}>
                     <button type='button'
                             onClick={this.toggleOpen}
-                            className={classNames(Styles.btn, {[Styles.isOpen]: this.state.isOpen})}>
+                            className={classNames(Styles.btn, classObject)}>
                         <Icon glyph={this.state.isOpen ? Icon.GLYPHS.opened : Icon.GLYPHS.closed} />
                     </button>
                     <span>{this.props.title}</span>

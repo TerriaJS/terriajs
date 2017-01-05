@@ -2,6 +2,36 @@
 Change Log
 ==========
 
+### 4.7.5
+
+* Changed the default opacity of table data to 0.8 from 0.6.
+* Added the ability to read dates in the format "2017-Q2".
+* Improved support for SDMX-JSON, including showing values as a percent of regional totals, showing the selected conditions in a more concise format, and fixing some bugs.
+* Updated `TableCatalogItem`s to show a download URL in About This Dataset, which downloads the entire dataset as csv, even if the original data was more complex (eg. from an API).
+* The icon specified to the `MenuPanel` / `DropdownPanel` theme can now be either the identifier of an icon from `Icon.GLYPHS` or an actual SVG `require`'d via the `svg-sprite-loader`.
+
+### 4.7.4
+
+* Renamed `SpatialDetailingFunction`, `WhyAmISpecialFunction`, and `PlacesLikeMeFunction` to `SpatialDetailingCatalogFunction`, `WhyAmISpecialCatalogFunction`, and `PlacesLikeMeCatalogFunction`, respectively.  The old names will be removed in a future release.
+* Fixed incorrect tooltip text for the Share button.
+* Improved the build process and content of the user guide documentation.
+
+### 4.7.3
+
+* Canceled pending tile requests when removing a layer from the 2D map.  This should drastically improve the responsiveness when dragging the time slider of a time-dynamic layer in 2D mode.
+* Added the data source and data service details to the "About this dataset" (preview) panel.
+* Fixed a bug introduced in 4.7.2 which made the Feature Info panel background too pale.
+
+### 4.7.2
+
+* Updated GNAF API to new Lucene-based backend, which should improve performance.
+* Updated custom `<chart>` tag to allow a `colors` attribute, containing comma separated css strings (one per column), allowing users to customize chart colors. The `colors` attribute in charts can also be passed through from a WPS ComplexData response.
+* Updated styling of Give Feedback form.
+* Improved consistency of "Search" and "Add Data" font sizes.
+* Improved flexibility of Feature Info Panel styling.
+* Fixed a bug that could cause an extra `/` to be added to end of URLs by `ArcGisMapServerCatalogItem`, causing some servers to reject the request.
+* Added a workaround for a bug in Internet Explorer 11 on Windows 7 that could cause the user interface to hang.
+
 ### 4.7.1
 
 * Fixed a bug where providing feedback did not properly share the map view.
@@ -10,23 +40,23 @@ Change Log
 
 ### 4.7.0
 
-* Add the ability for users to share their view of the map when providing feedback.
+* Added the ability for users to share their view of the map when providing feedback.
 * Extra components can now be added to FeatureInfoSection.
-* "Download Data" in FeatureInfoSection now "Download Data for this Feature".
+* Updated "Download Data" in FeatureInfoSection to "Download Data for this Feature".
 * Fixed the color of visited links in client apps with their own css variables.
 * Fixed a bug that prevented the scale bar from displaying correctly.
 
 ### 4.6.1
 
-* Support added for creating custom WPS types, and for reusing `Point`, `Polygon`, and `Region` editors in custom types.
+* Added support for creating custom WPS types, and for reusing `Point`, `Polygon`, and `Region` editors in custom types.
 * Fixed a bug that caused the legend to be missing for WMS catalog items where the legend came from GetCapabilities but the URL did not contain `GetLegendGraphic`.
 
 ### 4.6.0
 
-* Change in defaults:
+* Changed defaults:
   * The `clipToRectangle` property of raster catalog items (`WebMapServiceCatalogItem`, `ArcGisMapServerCatalogItem`, etc.) now defaults to `true`.  It was `false` in previous releases.  Using `false` prevents features (especially point features) right at the edge of the layer's rectangle from being cut off when the server reports too tight a rectangle, but also causes the layer to load much more slowly in many cases.  Starting in this version, we favour performance and the much more common case that the rectangle can be trusted.
 * Made `WebMapServiceCatalogItem` tolerant of a `GetCapabilities` where a `LegendURL` element does not have an `OnlineResource` or a `Dimension` does not have any values.
-* Add support for 'Long' type hint to CSV data for specifying longitude.
+* Added support for 'Long' type hint to CSV data for specifying longitude.
 * The marker indicating the location of a search result is now placed correctly on the terrain surface.
 * `CatalogFunction` region parameters are now selected on the main map rather than the preview map.
 * Some regions that were previously not selectable in Analytics, except via autocomplete, are now selectable.

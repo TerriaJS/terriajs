@@ -58,6 +58,14 @@
           "featureInfoTemplate" : {
             "template": "<p>Chart with inline data</p><chart>x,y\n1,3\n5,10\n8,-2\n10,{{value}}\n</chart>"
           }
+        },
+        {
+          "name": "Chart with colors specified",
+          "type": "csv",
+          "url": "build/TerriaJS/test/csv/lat_lon_name_value.csv",
+          "featureInfoTemplate" : {
+            "template": "<p>Chart with colors specified</p><chart colors=\"#8A2BE2,#DC143C\">x,y\n1,3\n5,10\n8,-2\n10,{{value}}\n</chart>"
+          }
         }
       ]
     }

@@ -96,7 +96,7 @@ const StandardUserInterface = React.createClass({
         const terria = this.props.terria;
         const allBaseMaps = this.props.allBaseMaps;
         return (
-            <div ref={(w) => this._wrapper = w}>
+            <div className={Styles.uiRoot} ref={(w) => this._wrapper = w}>
                 <div className={Styles.ui}>
                     <div className={Styles.uiInner}>
                         <If condition={!this.props.viewState.isMapFullScreen && !this.props.viewState.hideMapUi()}>

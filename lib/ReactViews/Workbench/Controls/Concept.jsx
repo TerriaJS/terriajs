@@ -43,7 +43,8 @@ const Concept = React.createClass({
         const classes = classNames(Styles.header, {
             [Styles.hasChildren]: concept.hasChildren,
             [Styles.isSelectable]: concept.isSelectable,
-            [Styles.isLoading]: this.props.isLoading
+            [Styles.isLoading]: this.props.isLoading,
+            [Styles.unSelectable]: concept.parent && concept.parent.requireSomeActive && isOnlyActiveSibling(concept)
         });
         // Renders the concept as a standard list of radio buttons or checkboxes (ie. not as an additive-condition).
         return (
@@ -87,5 +88,14 @@ const Concept = React.createClass({
         );
     }
 });
+
+/**
+ * @param  {Concept} concept A concept.
+ * @return {Boolean} Is this the only active child of its parent?
+ * @private
+ */
+function isOnlyActiveSibling(concept) {
+    return concept.parent.items.every(child => child === concept ? child.isActive : !child.isActive);
+}
 
 module.exports = Concept;
