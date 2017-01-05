@@ -3160,18 +3160,6 @@
                 "isOpen": false,
                 "items": [
                     {
-                        "name": "Residential Dwellings: Unstratified Medians and Counts by Dwelling Type by GCCSA (RES_DWELL)",
-                        "type": "sdmx-json",
-                        "sortValues": true,
-                        "url": "http://stat.data.abs.gov.au/sdmx-json/data/RES_DWELL",
-                        "totalValueIds": {
-                            "*": ["TOT"]
-                        },
-                        "singleValuedDimensionIds": ["MEASURE"],
-                        "regionDimensionId": "ASGS_2011",
-                        "regionType": "STE"
-                    },
-                    {
                         "name": "Residential Dwellings: Values, Mean Price and Number by State and Territories (RES_DWEL_ST)",
                         "type": "sdmx-json",
                         "sortValues": true,
