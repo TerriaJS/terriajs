@@ -1767,7 +1767,7 @@
                 ]
             },
             {
-                "name": "By sex",
+                "name": "Occupation",
                 "type": "group",
                 "isOpen": false,
                 "items": [
@@ -1815,7 +1815,14 @@
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
-                    },
+                    }
+                ]
+            },
+            {
+                "name": "Residence",
+                "type": "group",
+                "isOpen": false,
+                "items": [
                     {
                         "name": "Place of Usual Residence 1 Year Ago by Sex (ABS_CENSUS2011_B38)",
                         "type": "sdmx-json",
@@ -2688,7 +2695,7 @@
                 ]
             },
             {
-                "name": "By sex",
+                "name": "Migration",
                 "type": "group",
                 "isOpen": false,
                 "items": [
@@ -3218,84 +3225,72 @@
                         "type": "sdmx-json",
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_SEIFA_LGA",
-                        "aggregatedDimensionIds": ["STATE"],
                         "totalValueIds": {
                             "*": ["TOT"],
                             "AGE": ["TT", "O15"]
                         },
-                        "whitelist": {
-                            "REGIONTYPE": ["LGA2011"]
-                        }
+                        "regionDimensionId": "LGA_2011",
+                        "regionType": "LGA"
                     },
                     {
                         "name": "SEIFA by Postal Area Code (POA) (SEIFA_POA)",
                         "type": "sdmx-json",
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/SEIFA_POA",
-                        "aggregatedDimensionIds": ["STATE"],
                         "totalValueIds": {
                             "*": ["TOT"],
                             "AGE": ["TT", "O15"]
                         },
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
-                        }
+                        "regionDimensionId": "POA",
+                        "regionType": "POA"
                     },
                     {
                         "name": "SEIFA by State Suburb Code (SSC) (SEIFA_SSC)",
                         "type": "sdmx-json",
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/SEIFA_SSC",
-                        "aggregatedDimensionIds": ["STATE"],
                         "totalValueIds": {
                             "*": ["TOT"],
                             "AGE": ["TT", "O15"]
                         },
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
-                        }
+                        "regionDimensionId": "SSC",
+                        "regionType": "SSC"
                     },
                     {
                         "name": "SEIFA by Statistical Area 1 (SA1) (SEIFA_SA1)",
                         "type": "sdmx-json",
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/SEIFA_SA1",
-                        "aggregatedDimensionIds": ["STATE"],
                         "totalValueIds": {
                             "*": ["TOT"],
                             "AGE": ["TT", "O15"]
                         },
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
-                        }
+                        "regionDimensionId": "SA1_7DIGIT",
+                        "regionType": "SA1"
                     },
                     {
                         "name": "SEIFA by Statistical Area 2 (SA2) (ABS_SEIFA_SA2)",
                         "type": "sdmx-json",
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_SEIFA_SA2",
-                        "aggregatedDimensionIds": ["STATE"],
                         "totalValueIds": {
                             "*": ["TOT"],
                             "AGE": ["TT", "O15"]
                         },
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
-                        }
+                        "regionDimensionId": "ASGS_2011",
+                        "regionType": "SA2"
                     },
                     {
                         "name": "SEIFA by Statistical Local Area (SLA) (ABS_SEIFA_SLA)",
                         "type": "sdmx-json",
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_SEIFA_SLA",
-                        "aggregatedDimensionIds": ["STATE"],
                         "totalValueIds": {
                             "*": ["TOT"],
                             "AGE": ["TT", "O15"]
                         },
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
-                        }
+                        "regionDimensionId": "ASGS_2011",
+                        "regionType": "LGA"
                     }
                 ]
             },
