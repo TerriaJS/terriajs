@@ -3170,18 +3170,6 @@
                         "singleValuedDimensionIds": ["MEASURE"],
                         "regionDimensionId": "ASGS_2011",
                         "regionType": "STE"
-                    },
-                    {
-                        "name": "Residential Property Price Indexes, All Series by GCCSA (RES_PROP_INDEX)",
-                        "type": "sdmx-json",
-                        "sortValues": true,
-                        "url": "http://stat.data.abs.gov.au/sdmx-json/data/RES_PROP_INDEX",
-                        "totalValueIds": {
-                            "*": ["TOT"]
-                        },
-                        "singleValuedDimensionIds": ["MEASURE"],
-                        "regionDimensionId": "ASGS_2011",
-                        "regionType": "STE"
                     }
                 ]
             },
