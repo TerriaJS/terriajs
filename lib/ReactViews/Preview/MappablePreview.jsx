@@ -142,7 +142,7 @@ const MappablePreview = React.createClass({
                                         </When>
                                         <When condition={catalogItem.dataUrlType === 'data-uri'}>
                                             <If condition={hasDataUriCapability}>
-                                                <Link url={catalogItem.dataUrl} text="Download the currently selected data as csv" download="data.csv"/>
+                                                <Link url={catalogItem.dataUrl} text="Download the currently selected data in CSV format" download="data.csv"/>
                                             </If>
                                             <If condition={!hasDataUriCapability}>
                                                 Unfortunately your browser does not support the functionality needed to download this data as a file.
