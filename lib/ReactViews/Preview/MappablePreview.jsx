@@ -1,9 +1,11 @@
 import React from 'react';
 
+import defined from 'terriajs-cesium/Source/Core/defined';
+
 import Collapsible from '../Custom/Collapsible/Collapsible';
 import DataPreviewSections from './DataPreviewSections';
 import DataPreviewMap from './DataPreviewMap';
-import defined from 'terriajs-cesium/Source/Core/defined';
+import DataUri from '../../Core/DataUri';
 import MetadataTable from './MetadataTable';
 import ObserveModelMixin from '../ObserveModelMixin';
 import parseCustomMarkdownToReact from '../Custom/parseCustomMarkdownToReact';
@@ -36,7 +38,10 @@ const MappablePreview = React.createClass({
 
     render() {
         const catalogItem = this.props.previewed.nowViewingCatalogItem || this.props.previewed;
-
+        let hasDataUriCapability;
+        if (catalogItem.dataUrlType === 'data-uri') {
+            hasDataUriCapability = DataUri.checkCompatibility();
+        }
         return (
             <div className={Styles.root}>
                 <If condition={catalogItem.isMappable}>
@@ -136,7 +141,13 @@ const MappablePreview = React.createClass({
                                             <Link url={catalogItem.dataUrl} text={catalogItem.dataUrl}/>
                                         </When>
                                         <When condition={catalogItem.dataUrlType === 'data-uri'}>
-                                            <Link url={catalogItem.dataUrl} text="Download the currently selected data as csv" download="data.csv"/>
+                                            <If condition={hasDataUriCapability}>
+                                                <Link url={catalogItem.dataUrl} text="Download the currently selected data as csv" download="data.csv"/>
+                                            </If>
+                                            <If condition={!hasDataUriCapability}>
+                                                Unfortunately your browser does not support the functionality needed to download this data as a file.
+                                                Please use Chrome, Firefox or Safari to download this data.
+                                            </If>
                                         </When>
                                         <Otherwise>
                                             Use the link below to download the data directly.
