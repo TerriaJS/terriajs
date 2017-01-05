@@ -2562,7 +2562,7 @@
                 ]
             },
             {
-                "name": "To be classified",
+                "name": "To be classified (not working yet)",
                 "type": "group",
                 "isOpen": false,
                 "items": [
@@ -2674,7 +2674,7 @@
                 ]
             },
             {
-                "name": "To be classified",
+                "name": "To be classified (not working yet)",
                 "type": "group",
                 "isOpen": false,
                 "items": [
@@ -2695,7 +2695,7 @@
                 ]
             },
             {
-                "name": "Migration",
+                "name": "Migration (not working yet)",
                 "type": "group",
                 "isOpen": false,
                 "items": [
@@ -2704,19 +2704,18 @@
                         "type": "sdmx-json",
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_DEM_QIM",
-                        "aggregatedDimensionIds": ["STATE"],
                         "totalValueIds": {
                             "*": ["TOT"],
-                            "AGE": ["TT", "O15"]
+                            "AGE": ["TT", "O15"],
+                            "SEX_ABS": ["3"]
                         },
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
-                        }
+                        "regionDimensionId": "STATE",
+                        "regionType": "STE"
                     }
                 ]
             },
             {
-                "name": "To be classified",
+                "name": "To be classified (not working yet)",
                 "type": "group",
                 "isOpen": false,
                 "items": [
@@ -2867,12 +2866,26 @@
                         "selectedInitially": {
                             "REGIONTYPE": ["SA4"]
                         }
-                    },
+                    }
+                ]
+            },
+            {
+                "name": "Migration (not working yet)",
+                "type": "group",
+                "isOpen": false,
+                "items": [
                     {
                         "name": "Net Interstate Migration, Calendar years 1997 to 2015 (INTERSTATEMIGRATION_CY)",
                         "type": "sdmx-json",
                         "sortValues": true,
-                        "url": "http://stat.data.abs.gov.au/sdmx-json/data/INTERSTATEMIGRATION_CY"
+                        "url": "http://stat.data.abs.gov.au/sdmx-json/data/INTERSTATEMIGRATION_CY",
+                        "totalValueIds": {
+                            "*": ["TOT"],
+                            "AGE": ["TT", "O15"],
+                            "MEASURE": ["3"]
+                        },
+                        "regionDimensionId": "ASGS_2011",
+                        "regionType": "STE"
                     },
                     {
                         "name": "Net Interstate Migration, Financial years 1996-97 to 2014-15 (INTERSTATEMIGRATION_FY)",
@@ -2906,7 +2919,14 @@
                         "type": "sdmx-json",
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_NOM_VISA_CY"
-                    },
+                    }
+                ]
+            },
+            {
+                "name": "To be classified (not working yet)",
+                "type": "group",
+                "isOpen": false,
+                "items": [
                     {
                         "name": "Persons Projections, Australia, 2011 to 2036 (ABS_PERSONS_PROJ)",
                         "type": "sdmx-json",
@@ -3064,7 +3084,7 @@
                 ]
             },
             {
-                "name": "Migration",
+                "name": "Migration (not working yet)",
                 "type": "group",
                 "isOpen": false,
                 "items": [
@@ -3073,14 +3093,10 @@
                         "type": "sdmx-json",
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/RIME_LGA2011",
-                        "aggregatedDimensionIds": ["STATE"],
                         "totalValueIds": {
-                            "*": ["TOT"],
-                            "AGE": ["TT", "O15"]
+                            "RIM": ["3"]
                         },
-                        "selectedInitially": {
-                            "REGIONTYPE": ["SA4"]
-                        }
+                        "regionDimensionId": "LGA_2011"
                     },
                     {
                         "name": "Regional Internal Migration Estimates by Region (SA2 and above), 2006-07 to 2014-15 (RIME_REGION)",
@@ -3181,7 +3197,7 @@
                 ]
             },
             {
-                "name": "To be classified",
+                "name": "To be classified (not working yet)",
                 "type": "group",
                 "isOpen": false,
                 "items": [
@@ -3279,18 +3295,6 @@
                         },
                         "regionDimensionId": "ASGS_2011",
                         "regionType": "SA2"
-                    },
-                    {
-                        "name": "SEIFA by Statistical Local Area (SLA) (ABS_SEIFA_SLA)",
-                        "type": "sdmx-json",
-                        "sortValues": true,
-                        "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_SEIFA_SLA",
-                        "totalValueIds": {
-                            "*": ["TOT"],
-                            "AGE": ["TT", "O15"]
-                        },
-                        "regionDimensionId": "ASGS_2011",
-                        "regionType": "LGA"
                     }
                 ]
             },
@@ -4153,7 +4157,7 @@
                 ]
             },
             {
-                "name": "To be classified",
+                "name": "To be classified (not working yet)",
                 "type": "group",
                 "isOpen": false,
                 "items": [
@@ -4392,7 +4396,7 @@
                 ]
             },
             {
-                "name": "To be classified",
+                "name": "To be classified (not working yet)",
                 "type": "group",
                 "isOpen": false,
                 "items": [
