@@ -22,19 +22,6 @@ const FeatureInfoDownload = React.createClass({
         };
     },
 
-    checkDataUriCompatibility(event) {
-        if (!this.props.canUseDataUri) {
-            event.preventDefault();
-
-            this.props.viewState.notifications.push({
-                title: 'Browser Does Not Support Data Download',
-                message: 'Unfortunately Microsoft browsers (including all versions of Internet Explorer and Edge) do not ' +
-                'support the data uri functionality needed to download data as a file. To download, copy the following uri ' +
-                'into another browser such as Chrome, Firefox or Safari: ' + event.currentTarget.getAttribute('href')
-            });
-        }
-    },
-
     getLinks() {
         return [
             {
@@ -53,14 +40,16 @@ const FeatureInfoDownload = React.createClass({
     render() {
         const links = this.getLinks();
 
-        return (
-            <Dropdown options={links}
-                      textProperty="label"
-                      theme={{dropdown: Styles.download, list: Styles.dropdownList, button: Styles.dropdownButton}}
-                      buttonClassName={Styles.btn}>
-                <span className={Styles.iconDownload}><Icon glyph={Icon.GLYPHS.download}/></span> Download this Table&nbsp;▾
-            </Dropdown>
-        );
+        if (DataUri.checkCompatability()) {
+            return (
+                <Dropdown options={links}
+                          textProperty="label"
+                          theme={{dropdown: Styles.download, list: Styles.dropdownList, button: Styles.dropdownButton}}
+                          buttonClassName={Styles.btn}>
+                    <span className={Styles.iconDownload}><Icon glyph={Icon.GLYPHS.download}/></span> Download this Table&nbsp;▾
+                </Dropdown>
+            );
+        }
     }
 });
 
