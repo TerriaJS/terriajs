@@ -94,3 +94,9 @@
     }
   }
 }
+
+.unSelectable {
+  button {
+    cursor: not-allowed;
+  }
+}

@@ -35,36 +35,6 @@
                 "observations": {
                     "0": [38.0, null]
                 }
-            },
-            "1:0:0:0": {
-                "attributes": [0],
-                "observations": {
-                    "0": [140.0, null]
-                }
-            },
-            "1:0:1:0": {
-                "attributes": [0],
-                "observations": {
-                    "0": [235.0, null]
-                }
-            },
-            "1:0:2:0": {
-                "attributes": [0],
-                "observations": {
-                    "0": [279.0, null]
-                }
-            },
-            "1:0:3:0": {
-                "attributes": [0],
-                "observations": {
-                    "0": [812.0, null]
-                }
-            },
-            "1:0:4:0": {
-                "attributes": [0],
-                "observations": {
-                    "0": [338.0, null]
-                }
             }
         }
     }],
@@ -79,9 +49,6 @@
                 "values": [{
                     "id": "BD_2",
                     "name": "Births"
-                }, {
-                    "id": "BD_4",
-                    "name": "Deaths"
                 }]
             }, {
                 "keyPosition": 1,
