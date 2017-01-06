@@ -2,7 +2,7 @@
 Change Log
 ==========
 
-### 4.7.5
+### 4.8.0
 
 * Fixed a bug which prevented downloading data from the chart panel if the map was started in 2D mode.
 * Changed the default opacity of table data to 0.8 from 0.6.
@@ -10,6 +10,7 @@ Change Log
 * Improved support for SDMX-JSON, including showing values as a percent of regional totals, showing the selected conditions in a more concise format, and fixing some bugs.
 * Updated `TableCatalogItem`s to show a download URL in About This Dataset, which downloads the entire dataset as csv, even if the original data was more complex (eg. from an API).
 * The icon specified to the `MenuPanel` / `DropdownPanel` theme can now be either the identifier of an icon from `Icon.GLYPHS` or an actual SVG `require`'d via the `svg-sprite-loader`.
+* Fixed a bug that caused time-varying points from a CSV file to leave a trail on the 2D map.
 
 ### 4.7.4
 
