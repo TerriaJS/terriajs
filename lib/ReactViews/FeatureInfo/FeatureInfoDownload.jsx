@@ -40,7 +40,7 @@ const FeatureInfoDownload = React.createClass({
     render() {
         const links = this.getLinks();
 
-        if (DataUri.checkCompatability()) {
+        if (DataUri.checkCompatibility()) {
             return (
                 <Dropdown options={links}
                           textProperty="label"
@@ -49,6 +49,8 @@ const FeatureInfoDownload = React.createClass({
                     <span className={Styles.iconDownload}><Icon glyph={Icon.GLYPHS.download}/></span> Download this Table&nbsp;▾
                 </Dropdown>
             );
+        } else {
+            return null;
         }
     }
 });
