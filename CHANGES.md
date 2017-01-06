@@ -2,9 +2,10 @@
 Change Log
 ==========
 
-### 4.7.5
+### 4.8.0
 
 * The icon specified to the `MenuPanel` / `DropdownPanel` theme can now be either the identifier of an icon from `Icon.GLYPHS` or an actual SVG `require`'d via the `svg-sprite-loader`.
+* Upgraded to [Cesium 1.29](https://github.com/AnalyticalGraphicsInc/cesium/blob/1.29/CHANGES.md).
 
 ### 4.7.4
 
