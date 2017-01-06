@@ -110,14 +110,20 @@ const ChartPanelDownloadButton = React.createClass({
 
     render() {
         if (this.state.href) {
-            const checkCompatibility = DataUri.checkCompatibility.bind(null, this.props.errorEvent, this.state.href, false);
-            return (
-                <a className={Styles.btnDownload}
-                   download='chart data.csv'
-                   href={this.state.href}
-                   onClick={checkCompatibility}>
-                <Icon glyph={Icon.GLYPHS.download}/>Download</a>
-            );
+            if (DataUri.checkCompatibility()) {
+                return (
+                    <a className={Styles.btnDownload}
+                       download='chart data.csv'
+                       href={this.state.href}>
+                    <Icon glyph={Icon.GLYPHS.download}/>Download</a>
+                );
+            } else {
+                return (
+                    <span className={Styles.btnDownload}
+                          onClick={DataUri.checkCompatibility.bind(null, this.props.errorEvent, this.state.href)}>
+                    <Icon glyph={Icon.GLYPHS.download}/>Download</span>
+                );
+            }
         }
         return null;
     }
