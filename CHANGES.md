@@ -2,9 +2,10 @@
 Change Log
 ==========
 
-### 4.7.5
+### 4.8.0
 
 * The icon specified to the `MenuPanel` / `DropdownPanel` theme can now be either the identifier of an icon from `Icon.GLYPHS` or an actual SVG `require`'d via the `svg-sprite-loader`.
+* Fixed a bug that caused time-varying points from a CSV file to leave a trail on the 2D map.
 
 ### 4.7.4
 
