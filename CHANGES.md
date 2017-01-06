@@ -4,6 +4,7 @@ Change Log
 
 ### 4.7.5
 
+* Fixed a bug which prevented downloading data from the chart panel if the map was started in 2D mode.
 * The icon specified to the `MenuPanel` / `DropdownPanel` theme can now be either the identifier of an icon from `Icon.GLYPHS` or an actual SVG `require`'d via the `svg-sprite-loader`.
 
 ### 4.7.4
