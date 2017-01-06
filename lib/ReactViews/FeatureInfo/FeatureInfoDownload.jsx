@@ -1,7 +1,10 @@
 import React from 'react';
-import Dropdown from '../Generic/Dropdown';
+
 import FeatureDetection from 'terriajs-cesium/Source/Core/FeatureDetection';
-import Icon from "../Icon.jsx";
+
+import DataUri from '../../Core/DataUri';
+import Dropdown from '../Generic/Dropdown';
+import Icon from '../Icon.jsx';
 
 import Styles from './feature-info-download.scss';
 
@@ -35,12 +38,12 @@ const FeatureInfoDownload = React.createClass({
     getLinks() {
         return [
             {
-                href: makeDataUri('csv', generateCsvData(this.props.data)),
+                href: DataUri.make('csv', generateCsvData(this.props.data)),
                 download: `${this.props.name}.csv`,
                 label: 'CSV'
             },
             {
-                href: makeDataUri('json', JSON.stringify(this.props.data)),
+                href: DataUri.make('json', JSON.stringify(this.props.data)),
                 download: `${this.props.name}.json`,
                 label: 'JSON'
             }
@@ -55,23 +58,11 @@ const FeatureInfoDownload = React.createClass({
                       textProperty="label"
                       theme={{dropdown: Styles.download, list: Styles.dropdownList, button: Styles.dropdownButton}}
                       buttonClassName={Styles.btn}>
-                <span className={Styles.iconDownload}><Icon glyph={Icon.GLYPHS.download}/></span> Download this Data&nbsp;▾
+                <span className={Styles.iconDownload}><Icon glyph={Icon.GLYPHS.download}/></span> Download this Table&nbsp;▾
             </Dropdown>
         );
     }
 });
-
-/**
- * Turns a file with the supplied type and stringified data into a data uri that can be set as the href of an anchor tag.
- */
-function makeDataUri(type, dataString) {
-    if (dataString) {
-        // Using attachment/* mime type makes safari download as attachment.
-        return 'data:attachment/' + type + ',' + encodeURIComponent(dataString);
-    } else {
-        return undefined;
-    }
-}
 
 /**
  * Turns a 2-dimensional javascript object into a CSV string, with the first row being the property names and the second
