@@ -58,8 +58,9 @@ const TerriaViewerWrapper = React.createClass({
             <aside id="cesiumContainer"
                    className={Styles.cesiumContainer}
                    ref={element => {this.mapElement = element;}}
-                   onMouseMove={this.onMouseMove}
-             />
+                   onMouseMove={this.onMouseMove}>
+                <div className={Styles.mapPlaceholder}>Loading the map, please wait!</div>
+            </aside>
         );
     }
 });
