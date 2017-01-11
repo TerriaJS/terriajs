@@ -2,6 +2,11 @@
 Change Log
 ==========
 
+### 4.8.1
+
+* `CkanCatalogGroup` now automatically adds the type of the resource (e.g. `(WMS)`) after the name when a dataset contains multiple resources that can be turned into catalog items and `useResourceName` is false.
+* Added support for ArcGIS FeatureServers to `CkanCatalogGroup` and `CkanCatalogItem`.  In order for `CkanCatalogGroup` to include FeatureServers, `includeEsriFeatureServer` must be set to true.
+
 ### 4.8.0
 
 * Fixed a bug that prevented downloading data from the chart panel if the map was started in 2D mode.
