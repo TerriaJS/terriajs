@@ -2,6 +2,10 @@
 Change Log
 ==========
 
+### 4.8.2
+
+* Adding a JSON init file by dropping it on the map or selecting it from the My Data tab no longer adds an entry to the Workbench and User-Added Data catalog.
+
 ### 4.8.1
 
 * `CkanCatalogGroup` now automatically adds the type of the resource (e.g. `(WMS)`) after the name when a dataset contains multiple resources that can be turned into catalog items and `useResourceName` is false.
