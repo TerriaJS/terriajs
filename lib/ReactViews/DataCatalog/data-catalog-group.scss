@@ -3,6 +3,7 @@
 
 .root {
   font-family: $font-base;
+  color: $data-catalog-color;
 }
 
 .btn--catalog {
@@ -39,7 +40,7 @@
 }
 
 .isPreviewed{
-  background: $color-primary;
+  background: $modal-highlight;
   color: #ffffff;
 }
 

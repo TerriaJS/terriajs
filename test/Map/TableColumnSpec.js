@@ -182,6 +182,16 @@ describe('TableColumn', function() {
         expect(tableColumn.dates[1].getSeconds()).toEqual(45);
     });
 
+    it('can detect time type from yyyy-Qx', function() {
+        var data = ['2010-Q1', '2010-Q2', '2010-Q3', '2010-Q4'];
+        var tableColumn = new TableColumn('date', data.slice());
+        expect(tableColumn.type).toEqual(VarType.TIME);
+        expect(tableColumn.values.slice()).toEqual(data);
+        expect(tableColumn.dates[1].getDate()).toEqual(1);
+        expect(tableColumn.dates[1].getMonth()).toEqual(3); // January is month 0
+        expect(tableColumn.dates[1].getFullYear()).toEqual(2010);
+    });
+
     it('can detect year subtype using year title', function() {
         var data = ['1066', '1776', '1788', '1901', '2220'];
         var tableColumn = new TableColumn('year', data.slice());
