@@ -5,6 +5,7 @@ Change Log
 ### 4.8.2
 
 * Adding a JSON init file by dropping it on the map or selecting it from the My Data tab no longer adds an entry to the Workbench and User-Added Data catalog.
+* WPS return type can now be `application/vnd.terriajs.catalog-member+json` which allows a json catalog member to be returned in WPS along with the usual attributes to control display.
 
 ### 4.8.1
 
