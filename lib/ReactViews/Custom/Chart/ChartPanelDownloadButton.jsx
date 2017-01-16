@@ -5,7 +5,6 @@ import React from 'react';
 import debounce from 'lodash.debounce';
 
 import defined from 'terriajs-cesium/Source/Core/defined';
-import TaskProcessor from 'terriajs-cesium/Source/Core/TaskProcessor';
 import when from 'terriajs-cesium/Source/ThirdParty/when';
 
 import DataUri from '../../../Core/DataUri';
@@ -14,8 +13,6 @@ import VarType from '../../../Map/VarType';
 import Icon from "../../Icon.jsx";
 
 import Styles from './chart-panel-download-button.scss';
-
-// const hrefProcessor = new TaskProcessor('lib/ReactViews/Chart/downloadHrefWorker');
 
 const RUN_WORKER_DEBOUNCE = 100; // Wait 100ms for initial setup changes to be completed.
 const TIME_COLUMN_DEFAULT_NAME = 'date';
@@ -52,30 +49,22 @@ const ChartPanelDownloadButton = React.createClass({
         const that = this;
 
         if (window.Worker && (typeof Float32Array !== 'undefined')) {
-            when(TaskProcessor._canTransferArrayBuffer, function(canTransferArrayBuffer) {
-                if (!canTransferArrayBuffer) {
-                    // Don't try it if the browser can't handle transferring typed arrays.
-                    return;
-                }
-                that.setState({href: undefined});
+            that.setState({href: undefined});
 
-                const loadingPromises = newValue.map(item => item.load());
-                when.all(loadingPromises).then(() => {
-                    const synthesized = that.synthesizeNameAndValueArrays(newValue);
-                    // Could implement this using TaskProcessor, but requires webpack magic.
-                    const HrefWorker = require('worker!./downloadHrefWorker');
-                    const worker = new HrefWorker;
-                    // console.log('names and value arrays', synthesized.names, synthesized.values);
-                    if (synthesized.values && synthesized.values.length > 0) {
-                        worker.postMessage(synthesized);
-                        worker.onmessage = function(event) {
-                            // console.log('got worker message', event.data.slice(0, 60), '...');
-                            that.setState({href: event.data});
-                        };
-                    }
-                }).otherwise((error) => {
-                    console.error(error);
-                });
+            const loadingPromises = newValue.map(item => item.load());
+            when.all(loadingPromises).then(() => {
+                const synthesized = that.synthesizeNameAndValueArrays(newValue);
+                // Could implement this using TaskProcessor, but requires webpack magic.
+                const HrefWorker = require('worker!./downloadHrefWorker');
+                const worker = new HrefWorker;
+                // console.log('names and value arrays', synthesized.names, synthesized.values);
+                if (synthesized.values && synthesized.values.length > 0) {
+                    worker.postMessage(synthesized);
+                    worker.onmessage = function(event) {
+                        // console.log('got worker message', event.data.slice(0, 60), '...');
+                        that.setState({href: event.data});
+                    };
+                }
             });
         }
         // Currently no fallback for IE9-10 - just can't download.
@@ -121,14 +110,20 @@ const ChartPanelDownloadButton = React.createClass({
 
     render() {
         if (this.state.href) {
-            const checkCompatibility = DataUri.checkCompatibility.bind(null, this.props.errorEvent, this.state.href, false);
-            return (
-                <a className={Styles.btnDownload}
-                   download='chart data.csv'
-                   href={this.state.href}
-                   onClick={checkCompatibility}>
-                <Icon glyph={Icon.GLYPHS.download}/>Download</a>
-            );
+            if (DataUri.checkCompatibility()) {
+                return (
+                    <a className={Styles.btnDownload}
+                       download='chart data.csv'
+                       href={this.state.href}>
+                    <Icon glyph={Icon.GLYPHS.download}/>Download</a>
+                );
+            } else {
+                return (
+                    <span className={Styles.btnDownload}
+                          onClick={DataUri.checkCompatibility.bind(null, this.props.errorEvent, this.state.href)}>
+                    <Icon glyph={Icon.GLYPHS.download}/>Download</span>
+                );
+            }
         }
         return null;
     }

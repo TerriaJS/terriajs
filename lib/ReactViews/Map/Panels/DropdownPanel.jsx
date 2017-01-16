@@ -1,3 +1,5 @@
+'use strict';
+
 // proptypes are in mixin
 /* eslint react/prop-types:0*/
 
@@ -8,6 +10,8 @@ import InnerPanel from './InnerPanel';
 import BaseOuterPanel from './BaseOuterPanel';
 
 import Styles from './panel.scss';
+
+import defined from 'terriajs-cesium/Source/Core/defined';
 
 const DropdownPanel = React.createClass({
     mixins: [BaseOuterPanel],
@@ -34,7 +38,20 @@ const DropdownPanel = React.createClass({
         }
     },
 
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.forceClosed) {
+            this.onDismissed();
+        }
+    },
+
     render() {
+        let iconGlyph;
+        if (defined(Icon.GLYPHS[this.props.theme.icon])) {
+            iconGlyph = Icon.GLYPHS[this.props.theme.icon];
+        } else {
+            iconGlyph = this.props.theme.icon;
+        }
+
         return (
             <div className={classNames(Styles.panel, this.props.theme.outer)}>
                 <button onClick={this.openPanel}
@@ -43,7 +60,7 @@ const DropdownPanel = React.createClass({
                         title={this.props.btnTitle}
                         ref={element => this.buttonElement = element}>
                     <If condition={this.props.theme.icon}>
-                        <Icon glyph={Icon.GLYPHS[this.props.theme.icon]}/>
+                        <Icon glyph={iconGlyph}/>
                     </If>
                     <span>{this.props.btnText}</span>
                 </button>

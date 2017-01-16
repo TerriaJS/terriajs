@@ -1,0 +1,24 @@
+@import '~terriajs-variables';
+@import '../../Sass/common/mixins';
+
+.root table{
+  overflow-x: auto;
+}
+
+.root table tr:nth-child(odd) {
+    background-color: darken($faint-bg, 8%);
+}
+.root table tr:nth-child(even) {
+    background-color: $faint-bg;
+}
+
+.root th {
+  @extend %unwrap;
+  text-align: left;
+  padding: 3px;
+}
+
+.root .value {
+  @extend %unwrap;
+  padding: 3px;
+}
