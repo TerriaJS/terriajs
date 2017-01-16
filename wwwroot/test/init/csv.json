@@ -201,10 +201,10 @@
                  "tableStyle": {
                      "columns" : {
                          "PV": {
-                             "color": "#00b050"
+                             "chartLineColor": "#00b050"
                          },
                          "NPV": {
-                             "color": "#0070c0"
+                             "chartLineColor": "#0070c0"
                          }
                      }
                  }

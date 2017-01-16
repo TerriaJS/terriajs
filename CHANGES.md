@@ -5,6 +5,7 @@ Change Log
 ### 4.8.2
 
 * Adding a JSON init file by dropping it on the map or selecting it from the My Data tab no longer adds an entry to the Workbench and User-Added Data catalog.
+* `chartLineColor` tableStyle attribute added, allowing per column specification of chart line color.
 
 ### 4.8.1
 
