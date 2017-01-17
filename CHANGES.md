@@ -6,6 +6,7 @@ Change Log
 
 * Fixed a bug that prevented a `shareUrl` specified in `config.json` from actually being used by the `ShareDataService`.
 * Adding a JSON init file by dropping it on the map or selecting it from the My Data tab no longer adds an entry to the Workbench and User-Added Data catalog.
+* Fix a bug that prevented drawing the marker and zooming to the point when searching for a location in 2D.
 
 ### 4.8.1
 
