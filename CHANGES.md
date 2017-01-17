@@ -7,6 +7,7 @@ Change Log
 * Fixed a bug that prevented a `shareUrl` specified in `config.json` from actually being used by the `ShareDataService`.
 * Adding a JSON init file by dropping it on the map or selecting it from the My Data tab no longer adds an entry to the Workbench and User-Added Data catalog.
 * Fix a bug that prevented drawing the marker and zooming to the point when searching for a location in 2D.
+* Add HelpScreens. If used, this adds a button to the top right titled help, which drops down a list of available help sequences, such as how to add data or how to change map settings. When a dropdown item is clicked, a sequence of help screens appears leading the user through a task. Help sequences must be defined by instance using TerriaJ.
 
 ### 4.8.1
 
