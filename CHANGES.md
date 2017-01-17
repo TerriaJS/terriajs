@@ -4,6 +4,7 @@ Change Log
 
 ### 4.8.2
 
+* Fixed a bug that prevented a `shareUrl` specified in `config.json` from actually being used by the `ShareDataService`.
 * Adding a JSON init file by dropping it on the map or selecting it from the My Data tab no longer adds an entry to the Workbench and User-Added Data catalog.
 
 ### 4.8.1
