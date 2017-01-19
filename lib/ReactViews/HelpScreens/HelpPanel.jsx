@@ -18,58 +18,14 @@ const HelpPanel = React.createClass({
         helpSequences: React.PropTypes.object
     },
 
-    componentWillMount() {
-        const that = this;
-        setInterval(function() {
-            if (!defined(that.state.screens)) {
-                return;
-            }
-            if (that.props.helpSequences.cancel) {
-                // Has been cancelled from somewhere else. Abort!
-                that.cancel();
-            }
-            const i = that.state.index;
-            const currentScreen = that.state.screens[i];
-            if (defined(that.state.previousRectangle) && that.state.previousRectangle === that.state.currentRectangle) {
-                // Rectangle hasn't changed so we don't want to redraw everything, but update rectangle in case it has changed now.
-                updateCurrentRectangle(that, currentScreen);
-                return;
-            }
-
-            // If we get here, we have a new rectangle.
-            if (typeof currentScreen.preDisplayHook === 'function') {
-                currentScreen.preDisplayHook(that.props.viewState);
-            }
-            updateCurrentRectangle(that, currentScreen);
-
-            if (defined(that.state.currentRectangle)) {
-                currentScreen.rectangle = that.state.currentRectangle;
-                currentScreen.currentScreenNumber = i+1;
-                currentScreen.totalNumberOfScreens = that.state.screens.length;
-                currentScreen.onNext = function() {
-                    if (typeof currentScreen.postDisplayHook === 'function') {
-                        currentScreen.postDisplayHook(that.props.viewState);
-                    }
-                    if ((i+1) >= that.state.screens.length) {
-                        that.cancel();
-                    } else {
-                        that.help(that.state.screens, i+1);
-                    }
-                };
-                that.props.helpSequences.currentScreen = currentScreen;
-                // Processed current rectangle, set as previous.
-                that.setState({previousRectangle: that.state.currentRectangle});
-            }
-        }, 10);
-    },
-
     getInitialState() {
         return {
             isOpen: false,
             screens: undefined,
             index: undefined,
             currentRectangle: undefined,
-            previousRectangle: undefined
+            previousRectangle: undefined,
+            setIntervalId: undefined
         };
     },
 
@@ -80,6 +36,7 @@ const HelpPanel = React.createClass({
     },
 
     cancel() {
+        clearInterval(this.state.setIntervalId);
         this.props.helpSequences.currentScreen = undefined;
         this.setState({
             screens: undefined,
@@ -90,6 +47,51 @@ const HelpPanel = React.createClass({
     },
 
     help(screens, i) {
+        if (i === 0) {
+            // If this is the first help screen in a sequence, locate the highlighted element and track the rectangle
+            // to make sure the overlay and help screen move with the element.
+            const that = this;
+            const setIntervalId = setInterval(function() {
+                if (!defined(that.state.screens)) {
+                    return;
+                }
+                if (that.props.helpSequences.cancel) {
+                    // Has been cancelled from somewhere else. Abort!
+                    that.cancel();
+                }
+                const i = that.state.index;
+                const currentScreen = that.state && that.state.screens && that.state.screens[i];
+                if (currentScreen && typeof currentScreen.preDisplayHook === 'function') {
+                    currentScreen.preDisplayHook(that.props.viewState);
+                }
+                updateCurrentRectangle(that, currentScreen);
+                if (defined(that.state) && defined(that.state.previousRectangle) && that.state.previousRectangle === that.state.currentRectangle) {
+                    return;
+                }
+
+                if (defined(that.state) && defined(that.state.currentRectangle)) {
+                    currentScreen.rectangle = that.state.currentRectangle;
+                    currentScreen.currentScreenNumber = i+1;
+                    currentScreen.totalNumberOfScreens = that.state.screens.length;
+                    currentScreen.onNext = function() {
+                        if (typeof currentScreen.postDisplayHook === 'function') {
+                            currentScreen.postDisplayHook(that.props.viewState);
+                        }
+                        if ((i+1) >= that.state.screens.length) {
+                            that.cancel();
+                        } else {
+                            that.help(that.state.screens, i+1);
+                        }
+                    };
+                    that.props.helpSequences.currentScreen = currentScreen;
+                    // Processed current rectangle, set as previous.
+                    that.setState({previousRectangle: that.state.currentRectangle});
+                }
+            }, 10);
+            this.setState({
+                setIntervalId: setIntervalId
+            });
+        }
         this.props.helpSequences.cancel = false;
         this.setState({
             screens: screens,
@@ -97,7 +99,6 @@ const HelpPanel = React.createClass({
             currentRectangle: undefined,
             previousRectangle: undefined
         });
-
     },
 
     render() {
@@ -141,6 +142,9 @@ const HelpPanel = React.createClass({
 * @private
 */
 function updateCurrentRectangle(component, currentScreen) {
+    if (!defined(currentScreen)) {
+        return;
+    }
     const highlightedElement = document.getElementsByClassName(currentScreen.highlightedComponentId);
     if (defined(highlightedElement[0])) {
         const screenRect = highlightedElement[0].getBoundingClientRect();
