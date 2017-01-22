@@ -65,7 +65,8 @@ const HelpPanel = React.createClass({
                     currentScreen.preDisplayHook(that.props.viewState);
                 }
                 updateCurrentRectangle(that, currentScreen);
-                if (defined(that.state) && defined(that.state.previousRectangle) && that.state.previousRectangle === that.state.currentRectangle) {
+
+                if (!that.props.helpSequences.advance && defined(that.state) && defined(that.state.previousRectangle) && that.state.previousRectangle === that.state.currentRectangle) {
                     return;
                 }
 
@@ -86,6 +87,12 @@ const HelpPanel = React.createClass({
                     that.props.helpSequences.currentScreen = currentScreen;
                     // Processed current rectangle, set as previous.
                     that.setState({previousRectangle: that.state.currentRectangle});
+                }
+
+                if (that.props.helpSequences.advance) {
+                    // Has been manually advanced from somewhere else. Next screen!
+                    that.props.helpSequences.advance = false;
+                    currentScreen.onNext();
                 }
             }, 10);
             this.setState({

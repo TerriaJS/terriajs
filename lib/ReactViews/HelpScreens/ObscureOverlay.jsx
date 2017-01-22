@@ -22,6 +22,10 @@ const ObscureOverlay = React.createClass({
         this.props.helpSequences.cancel = true;
     },
 
+    advance() {
+        this.props.helpSequences.advance = true;
+    },
+
     render() {
         const helpScreen = this.props.helpSequences.currentScreen;
         if (!defined(helpScreen)) {
@@ -61,7 +65,7 @@ const ObscureOverlay = React.createClass({
                 <div className={Styles.leftOverlay} style={{left: leftOverlayPositionLeft, top: leftOverlayPositionTop, width: leftOverlayWidth, height: leftOverlayHeight }} onClick={this.cancel}></div>
                 <div className={Styles.rightOverlay} style={{left: rightOverlayPositionLeft, top: rightOverlayPositionTop, width: rightOverlayWidth, height: rightOverlayHeight }} onClick={this.cancel}></div>
                 <div className={Styles.bottomOverlay} style={{left: bottomOverlayPositionLeft, top: bottomOverlayPositionTop, width: bottomOverlayWidth, height: bottomOverlayHeight }} onClick={this.cancel}></div>
-                <div className={Styles.clearOverlay} onClick={this.cancel}></div>
+                <div className={Styles.clearOverlay} onClick={this.advance}></div>
             </div>);
     }
 });
