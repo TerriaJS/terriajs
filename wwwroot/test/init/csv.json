@@ -195,6 +195,40 @@
                 }
             },
             {
+                 "name":"CSV with explicit per column color",
+                 "type": "csv",
+                 "data": "Date,PV,NPV,BS\n2000-01-01T00:00:00.000Z,80,2,45\n2000-01-09T00:00:00.000Z,59,14,43\n2000-01-17T00:00:00.000Z,97,39,49\n2000-01-25T00:00:00.000Z,40,75,91\n",
+                 "tableStyle": {
+                     "columns" : {
+                         "PV": {
+                             "chartLineColor": "#00b050"
+                         },
+                         "NPV": {
+                             "chartLineColor": "#0070c0"
+                         }
+                     }
+                 }
+            },
+            {
+                 "name":"CSV with explicit per column y axis extents",
+                 "type": "csv",
+                 "data": "Date,PV,NPV,BS\n2000-01-01T00:00:00.000Z,80,2,45\n2000-01-09T00:00:00.000Z,59,14,43\n2000-01-17T00:00:00.000Z,97,39,49\n2000-01-25T00:00:00.000Z,40,75,91\n",
+                 "tableStyle": {
+                     "columns" : {
+                         "PV": {
+                             "units": "%",
+                             "yAxisMin": 30,
+                             "yAxisMax": 100
+                         },
+                         "NPV": {
+                             "units": "mm",
+                             "yAxisMin": 0,
+                             "yAxisMax": 200
+                         }
+                     }
+                 }
+            },
+            {
                 "name": "Lat/lon CSV with duration of 1 hour",
                 "type": "csv",
                 "url": "build/TerriaJS/test/csv/lat_lon_date_value.csv",
