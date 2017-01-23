@@ -11,6 +11,7 @@ Change Log
 * Fixed a bug that caused a `WebMapServiceCatalogItem` inside a `WebMapServiceCatalogGroup` to revert to defaults from GetCapabilities instead of using shared properties.
 * Fix a bug that prevented drawing the marker and zooming to the point when searching for a location in 2D.
 * Fixed a bug where `WebMapTileServiceCatalogItem` would incorrectly interpret a bounding box and return only the lower left corner causing Cesium to crash on render.
+* Fixed a bug that caused the feedback form to be submitted when unchecking "Share my map view".
 
 ### 4.8.1
 
