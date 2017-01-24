@@ -91,15 +91,15 @@ const FeedbackForm = React.createClass({
                       <div className={Styles.description}>We would love to hear from you!</div>
                       <label>Your name (optional)</label>
                       <input type="text" name="name" className={Styles.field} value={this.state.name} onChange={this.handleChange}/>
-                      <label>Email address (optional)<br/><em>We can't follow up without it!</em></label>
+                      <label>Email address (optional)<br/><em>We can&#39;t follow up without it!</em></label>
                       <input type="text" name="email" className={Styles.field} value={this.state.email} onChange={this.handleChange}/>
                       <label>Comment or question</label>
                       <textarea className={Styles.field} name="comment" value={this.state.comment} onChange={this.handleChange}/>
                       <div className={Styles.shareUrl}>
-                        <button onClick={this.changeSendShareUrl}>
+                        <button onClick={this.changeSendShareUrl} type='button'>
                           {this.state.sendShareURL ? <Icon glyph={Icon.GLYPHS.checkboxOn}/> : <Icon glyph={Icon.GLYPHS.checkboxOff}/>}
                           Share my map view with {this.props.viewState.terria.appName} developers<br/>
-                          <small>This helps us to troubleshoot issues by letting us see what you're seeing</small>
+                          <small>This helps us to troubleshoot issues by letting us see what you&#39;re seeing</small>
                         </button>
                       </div>
                       <div className={Styles.action}>
