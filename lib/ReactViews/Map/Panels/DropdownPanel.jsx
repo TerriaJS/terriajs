@@ -1,3 +1,5 @@
+'use strict';
+
 // proptypes are in mixin
 /* eslint react/prop-types:0*/
 
@@ -33,6 +35,12 @@ const DropdownPanel = React.createClass({
                 caretOffset: undefined,
                 dropdownOffset: undefined
             });
+        }
+    },
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.forceClosed) {
+            this.onDismissed();
         }
     },
 

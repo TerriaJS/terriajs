@@ -32,12 +32,6 @@ const ADD_MORE_TEXT = 'Add new condition';
  *
  * This design would need revision to handle concepts whose direct children are a mix of
  * both leaf nodes and parent nodes.
- *
- * This component cheekily uses the active concepts' isActive flag -
- * which is by rights the boolean true - to instead store an integer (>0) giving
- * the display order of the concepts. Since javascript identifies integers > 0 as truthy,
- * no one else should notice this trick.
- * (The other alternative would be to add a new property to VariableConcept.)
  */
 const SummaryConcept = React.createClass({
     mixins: [ObserveModelMixin],
@@ -52,7 +46,7 @@ const SummaryConcept = React.createClass({
         // Leaf nodes have either an undefined or a 0-length `items` array.
         const isLeafNode = concept => (!concept.items || concept.items.length === 0);
         const activeLeafNodes = concept.getNodes(isLeafNode).filter(concept => concept.isActive);
-        const activeLeafNodesByParent = groupAndSortByParent(activeLeafNodes);
+        const activeLeafNodesByParent = groupByParentId(activeLeafNodes, parent => parent.id);
         const openDescendantsWithoutActiveChildren = getOpenDescendantsWithoutActiveChildren(concept);
         const isLoading = this.props.isLoading;
         return (
@@ -111,23 +105,6 @@ function getOpenDescendants(concept) {
  */
 function hasNoActiveChildren(concept) {
     return !concept.items || concept.items.every(child => !child.isActive);
-}
-
-/**
- * Returns an array which groups all the nodes with the same parent id into one.
- * Cheekily sorts by the active concepts' isActive value - which is normally a boolean - if the first one isn't a boolean.
- * We do this so when you add a new condition (which starts out in <OpenInactiveConcept>, under all the active concepts),
- * it doesn't suddenly change position when you select your first concept (at which point it shows in <ActiveConcept>).
- * @param  {Concept[]} nodes [description]
- * @return {Object[]} An array of {parent: Concept, children: Concept[]} objects.
- * @private
- */
-function groupAndSortByParent(nodes) {
-    const nodesByParent = groupByParentId(nodes, parent => parent.id);
-    if (nodesByParent.length > 0 && nodesByParent[0].children[0].isActive !== true) {
-        nodesByParent.sort((a, b) => a.children[0].isActive - b.children[0].isActive);
-    }
-    return nodesByParent;
 }
 
 /**

@@ -2300,6 +2300,7 @@
                             "SEX_ABS": ["3"], // Note unusual naming of the SEX dimension.
                             "AGE": ["TT", "O15"]
                         },
+                        "singleValuedDimensionIds": ["MEASURE"],
                         "regionDimensionId": "ASGS_2011",
                         "regionType": "STATE"
                     },
@@ -2313,6 +2314,7 @@
                             "SEX_ABS": ["3"], // Note unusual naming of the SEX dimension.
                             "AGE": ["TT", "O15"]
                         },
+                        "singleValuedDimensionIds": ["MEASURE"],
                         "regionDimensionId": "ASGS_2011",
                         "regionType": "STATE",
                         "whitelist": {
@@ -2329,6 +2331,7 @@
                             "SEX_ABS": ["3"], // Note unusual naming of the SEX dimension.
                             "AGE": ["TT", "O15"]
                         },
+                        "singleValuedDimensionIds": ["MEASURE"],
                         "regionDimensionId": "ASGS_2011",
                         "regionType": "STATE",
                         "whitelist": {
@@ -2345,6 +2348,7 @@
                             "SEX_ABS": ["3"], // Note unusual naming of the SEX dimension.
                             "AGE": ["TT", "O15"]
                         },
+                        "singleValuedDimensionIds": ["MEASURE"],
                         "regionDimensionId": "REGION_DEATHS",  // Very unusual naming...
                         "regionType": "STATE",
                         "whitelist": {
@@ -2361,6 +2365,7 @@
                             "SEX_ABS": ["3"], // Note unusual naming of the SEX dimension.
                             "AGE": ["TT", "O15"]
                         },
+                        "singleValuedDimensionIds": ["MEASURE"],
                         "regionDimensionId": "REGION",
                         "regionType": "STATE"
                     },
@@ -2374,6 +2379,7 @@
                             // "SEX_ABS": ["3"], // Note unusual naming of the SEX dimension.  // There is no data for the sex totals.
                             "AGE": ["TT", "O15"]
                         },
+                        "singleValuedDimensionIds": ["MEASURE"],
                         "regionDimensionId": "ASGS_2011",
                         "regionType": "AUS",
                         "whitelist": {
@@ -2390,9 +2396,9 @@
                             "SEX_ABS": ["3"], // Note unusual naming of the SEX dimension.
                             "AGE": ["TT", "O15"]
                         },
+                        "singleValuedDimensionIds": ["MEASURE"],
                         "regionDimensionId": "ASGS_2011",
-                        "regionType": "STATE",
-                        "singleValuedDimensionIds": ["MEASURE"]
+                        "regionType": "STATE"
                     }
                 ]
             },
