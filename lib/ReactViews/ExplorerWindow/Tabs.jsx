@@ -17,38 +17,38 @@ const Tabs = React.createClass({
     },
 
     getInitialState() {
-        let tabs = [];
+        const tabs = [];
         tabs.push({
-                    name: this.props.terria.catalog.name,
-                    title: 'data-catalog',
-                    id: 'data-catalog',
-                    panel: <DataCatalogTab terria={this.props.terria}
+            name: this.props.terria.catalog.name,
+            title: 'data-catalog',
+            id: 'data-catalog',
+            panel: <DataCatalogTab terria={this.props.terria}
                                            viewState={this.props.viewState}
                                            content={this.props.terria.catalog}
                     />
-                 });
+        });
         tabs.push({
-                    name: 'My Data',
-                    title: 'my-data',
-                    id: 'my-data',
-                    panel: <MyDataTab terria={this.props.terria}
+            name: 'My Data',
+            title: 'my-data',
+            id: 'my-data',
+            panel: <MyDataTab terria={this.props.terria}
                                       viewState={this.props.viewState}
                     />
-                  });
+        });
         for (let i=0; i<this.props.terria.additionalCatalogs.length; i++) {
             const content = this.props.terria.additionalCatalogs[i];
             tabs.push({
-                        name: content.name,
-                        title: 'data-catalog',
-                        id: content.id,
-                        panel: <DataCatalogTab terria={this.props.terria}
+                name: content.name,
+                title: 'data-catalog',
+                id: content.id,
+                panel: <DataCatalogTab terria={this.props.terria}
                                                viewState={this.props.viewState}
                                                content={content}
                         />
-                     });
+            });
         }
         return {tabs: tabs,
-                activeTabIndex: 0};
+            activeTabIndex: 0};
     },
 
     activateTab(i) {
@@ -59,7 +59,7 @@ const Tabs = React.createClass({
     },
 
     render() {
-        var that = this;
+        const that = this;
         const item = this.state.tabs.filter(function(tab) { return tab.id === that.props.viewState.activeTab; })[0];
         const index = this.state.tabs.indexOf(item);
 
