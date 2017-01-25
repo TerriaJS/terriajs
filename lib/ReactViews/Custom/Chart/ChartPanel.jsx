@@ -122,7 +122,6 @@ function getXColumn(item) {
  *
  * @param item The item to create a chart for
  * @param yColumns Columns that can be used for the y index of the chart.
- * @param yColumnNumbers TODO: What is this?
  * @returns {Function} that returns a {@link ChartData}
  */
 function chartDataFunctionFromPoints(item, yColumns, yColumnNumbers) {
@@ -132,7 +131,9 @@ function chartDataFunctionFromPoints(item, yColumns, yColumnNumbers) {
             name: yColumns[index].name,
             categoryName: item.name,
             units: yColumns[index].units,
-            color: yColumns[index].color
+            color: yColumns[index].color,
+            yAxisMin: yColumns[index].yAxisMin,
+            yAxisMax: yColumns[index].yAxisMax
         });
 }
 

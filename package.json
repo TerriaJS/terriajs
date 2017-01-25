@@ -1,6 +1,6 @@
 {
   "name": "terriajs",
-  "version": "4.8.1",
+  "version": "4.8.2",
   "description": "Geospatial data visualization platform.",
   "license": "Apache-2.0",
   "engines": {
@@ -50,7 +50,7 @@
     "mutationobserver-shim": "^0.3.1",
     "pbf": "^3.0.1",
     "point-geometry": "^0.1.0",
-    "proj4": "^2.3.14",
+    "proj4": "^2.3.16",
     "raw-loader": "^0.5.1",
     "react-addons-pure-render-mixin": "15.4.2",
     "react-anything-sortable": "^1.5.2",
