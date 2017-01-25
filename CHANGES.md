@@ -2,13 +2,16 @@
 Change Log
 ==========
 
+### 4.8.3
+
+* Add HelpScreens. If used, this adds a button to the top right titled help, which drops down a list of available help sequences, such as how to add data or how to change map settings. When a dropdown item is clicked, a sequence of help screens appears leading the user through a task. Help sequences must be defined by instance using TerriaJS.
+
 ### 4.8.2
 
 * Fixed a bug that prevented a `shareUrl` specified in `config.json` from actually being used by the `ShareDataService`.
 * Adding a JSON init file by dropping it on the map or selecting it from the My Data tab no longer adds an entry to the Workbench and User-Added Data catalog.
 * Fixed a bug that caused a `WebMapServiceCatalogItem` inside a `WebMapServiceCatalogGroup` to revert to defaults from GetCapabilities instead of using shared properties.
 * Fix a bug that prevented drawing the marker and zooming to the point when searching for a location in 2D.
-* Add HelpScreens. If used, this adds a button to the top right titled help, which drops down a list of available help sequences, such as how to add data or how to change map settings. When a dropdown item is clicked, a sequence of help screens appears leading the user through a task. Help sequences must be defined by instance using TerriaJS.
 * Fixed a bug where `WebMapTileServiceCatalogItem` would incorrectly interpret a bounding box and return only the lower left corner causing Cesium to crash on render.
 
 ### 4.8.1
