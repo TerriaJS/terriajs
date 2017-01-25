@@ -13,18 +13,18 @@ const DataCatalog = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        terria: React.PropTypes.object,
-        viewState: React.PropTypes.object
+        viewState: React.PropTypes.object,
+        content: React.PropTypes.object
     },
 
     render() {
-        const terria = this.props.terria;
+        const content = this.props.content;
         const searchState = this.props.viewState.searchState;
         const isSearching = searchState.catalogSearchText.length > 0;
         const items = (
             isSearching ?
                 searchState.catalogSearchProvider.searchResults.map(result => result.catalogItem) :
-                terria.catalog.group.items
+                content.group.items
         ).filter(defined);
 
         return (
@@ -35,7 +35,7 @@ const DataCatalog = React.createClass({
                                   isWaitingForSearchToStart={searchState.isWaitingToStartCatalogSearch}/>
                 </If>
                 <For each="item" of={items}>
-                    {item !== this.props.terria.catalog.userAddedDataGroup &&
+                    {item !== this.props.content.userAddedDataGroup &&
                         <DataCatalogMember viewState={this.props.viewState}
                                            member={item}
                                            manageIsOpenLocally={isSearching}
