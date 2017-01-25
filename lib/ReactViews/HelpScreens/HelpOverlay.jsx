@@ -3,47 +3,38 @@
 import React from 'react';
 import ObserveModelMixin from '../ObserveModelMixin';
 import defined from 'terriajs-cesium/Source/Core/defined';
-import classNames from 'classnames';
-import MenuPanel from '../StandardUserInterface/customizable/MenuPanel.jsx';
 
-import Styles from './help-panel.scss';
-import DropdownStyles from '../Map/Panels/panel.scss';
-import helpIcon from '../../../wwwroot/images/icons/help.svg';
+import HelpScreenWindow from './HelpScreenWindow.jsx';
+import ObscureOverlay from './ObscureOverlay.jsx';
 
-const HelpPanel = React.createClass({
+const HelpOverlay = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        viewState: React.PropTypes.object.isRequired,
-        helpSequences: React.PropTypes.object
+        helpViewState: React.PropTypes.object.isRequired,
+        viewState: React.PropTypes.object.isRequired
     },
 
     getInitialState() {
         return {
-            isOpen: false,
             screens: undefined,
             index: undefined,
             currentRectangle: undefined,
-            previousRectangle: undefined,
-            setIntervalId: undefined
+            previousRectangle: undefined
         };
     },
 
-    onOpenChanged(open) {
-        this.setState({
-            isOpen: open
-        });
-    },
-
     cancel() {
-        clearInterval(this.state.setIntervalId);
-        this.props.helpSequences.currentScreen = undefined;
+        if (defined(this.setIntervalId)) {
+            clearInterval(this.setIntervalId);
+        }
         this.setState({
             screens: undefined,
             index: undefined,
             currentRectangle: undefined,
             previousRectangle: undefined
         });
+        this.props.helpViewState.currentScreen = undefined;
     },
 
     help(screens, i) {
@@ -51,11 +42,11 @@ const HelpPanel = React.createClass({
             // If this is the first help screen in a sequence, locate the highlighted element and track the rectangle
             // to make sure the overlay and help screen move with the element.
             const that = this;
-            const setIntervalId = setInterval(function() {
+            this.setIntervalId = setInterval(function() {
                 if (!defined(that.state.screens)) {
                     return;
                 }
-                if (that.props.helpSequences.cancel) {
+                if (that.props.helpViewState.cancel) {
                     // Has been cancelled from somewhere else. Abort!
                     that.cancel();
                 }
@@ -66,7 +57,7 @@ const HelpPanel = React.createClass({
                 }
                 updateCurrentRectangle(that, currentScreen);
 
-                if (!that.props.helpSequences.advance && defined(that.state) && defined(that.state.previousRectangle) && that.state.previousRectangle === that.state.currentRectangle) {
+                if (!that.props.helpViewState.advance && defined(that.state) && defined(that.state.previousRectangle) && that.state.previousRectangle === that.state.currentRectangle) {
                     return;
                 }
 
@@ -84,22 +75,19 @@ const HelpPanel = React.createClass({
                             that.help(that.state.screens, i+1);
                         }
                     };
-                    that.props.helpSequences.currentScreen = currentScreen;
+                    that.props.helpViewState.currentScreen = currentScreen;
                     // Processed current rectangle, set as previous.
                     that.setState({previousRectangle: that.state.currentRectangle});
                 }
 
-                if (that.props.helpSequences.advance) {
+                if (that.props.helpViewState.advance) {
                     // Has been manually advanced from somewhere else. Next screen!
-                    that.props.helpSequences.advance = false;
+                    that.props.helpViewState.advance = false;
                     currentScreen.onNext();
                 }
             }, 10);
-            this.setState({
-                setIntervalId: setIntervalId
-            });
         }
-        this.props.helpSequences.cancel = false;
+        this.props.helpViewState.cancel = false;
         this.setState({
             screens: screens,
             index: i,
@@ -108,38 +96,31 @@ const HelpPanel = React.createClass({
         });
     },
 
-    render() {
-        const dropdownTheme = {
-            btn: Styles.btnShare,
-            outer: Styles.sharePanel,
-            inner: Styles.dropdownInner,
-            icon: helpIcon
-        };
+    executeSequence() {
+        if (defined(this.props.helpViewState.currentSequence)) {
+            if (defined(this.setIntervalId)) {
+                clearInterval(this.setIntervalId);
+            }
+            this.help(this.props.helpViewState.currentSequence.screens, 0);
+            // To prevent executeSequence from triggering again before we start a new sequence.
+            this.props.helpViewState.currentSequence = undefined;
+        }
+    },
 
+    componentDidMount() {
+        this.executeSequence();
+    },
+
+    componentDidUpdate() {
+        this.executeSequence();
+    },
+
+    render() {
         return (
-            <MenuPanel theme={dropdownTheme}
-                       btnText="Help"
-                       viewState={this.props.viewState}
-                       btnTitle="get help"
-                       onOpenChanged={this.onOpenChanged}
-                       forceClosed={defined(this.props.helpSequences.currentScreen)}
-                       smallScreen={this.props.viewState.useSmallScreenInterface}>
-                <If condition={this.state.isOpen}>
-                    <div className={classNames(Styles.viewer, DropdownStyles.section)}>
-                        <label className={DropdownStyles.heading}>{this.props.helpSequences.menuTitle}</label>
-                        <ul className={Styles.viewerSelector}>
-                            <For each="sequence" index="i" of={this.props.helpSequences.sequences}>
-                                <li key={i} className={Styles.listItem}>
-                                    <button onClick={this.help.bind(this, {sequence}.sequence.screens, 0)}
-                                            className={Styles.btnViewer}>
-                                        {sequence.title}
-                                    </button>
-                                </li>
-                            </For>
-                        </ul>
-                    </div>
-                </If>
-            </MenuPanel>
+            <div aria-hidden={ !this.props.helpViewState.currentSequence }>
+                <ObscureOverlay helpViewState={this.props.helpViewState}/>
+                <HelpScreenWindow helpViewState={this.props.helpViewState}/>
+            </div>
         );
     }
 });
@@ -159,4 +140,4 @@ function updateCurrentRectangle(component, currentScreen) {
     }
 }
 
-export default HelpPanel;
+export default HelpOverlay;

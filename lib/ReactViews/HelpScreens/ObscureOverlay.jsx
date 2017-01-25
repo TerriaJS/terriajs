@@ -15,20 +15,20 @@ const ObscureOverlay = React.createClass({
     mixins: [ObserverModelMixin],
 
     propTypes: {
-        helpSequences: React.PropTypes.object
+        helpViewState: React.PropTypes.object
     },
 
     cancel() {
-        this.props.helpSequences.cancel = true;
+        this.props.helpViewState.cancel = true;
     },
 
     advance() {
-        this.props.helpSequences.advance = true;
+        this.props.helpViewState.advance = true;
     },
 
     render() {
-        const helpScreen = this.props.helpSequences.currentScreen;
-        if (!defined(helpScreen)) {
+        const helpScreen = this.props.helpViewState.currentScreen;
+        if (!defined(helpScreen) || !defined(helpScreen.rectangle)) {
             return false;
         }
 
