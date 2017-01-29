@@ -98,6 +98,7 @@
     "karma-safari-launcher": "^1.0.0",
     "karma-sauce-launcher": "^1.0.0",
     "karma-spec-reporter": "^0.0.26",
+    "klaw-sync": "^1.1.0",
     "kss": "^2.1.1",
     "mkdocs-material": "squidfunk/mkdocs-material#1.0.3",
     "node-notifier": "^4.5.0",

@@ -178,13 +178,14 @@ function runKarma(configFile, done) {
 gulp.task('user-guide', ['make-schema'], function() {
     var fse = require('fs-extra');
     var gutil = require('gulp-util');
+    var klawSync = require('klaw-sync');
     var path = require('path');
     var spawnSync = require('child_process').spawnSync;
 
     fse.copySync('doc/mkdocs.yml', 'build/mkdocs.yml');
     fse.copySync('doc', 'build/doc');
 
-    var files = fse.walkSync('build/doc');
+    var files = klawSync('build/doc');
     var markdown = files.filter(name => path.extname(name) === '.md');
     var readmes = markdown.filter(name => name.indexOf('README.md') === name.length - 'README.md'.length);
 
@@ -219,9 +220,10 @@ gulp.task('user-guide', ['make-schema'], function() {
 
 function generateCatalogMemberPages(schemaPath, outputPath) {
     var fse = require('fs-extra');
+    var klawSync = require('klaw-sync');
     var path = require('path');
 
-    var schemaFiles = fse.walkSync(schemaPath);
+    var schemaFiles = klawSync(schemaPath);
     var typeFiles = schemaFiles.filter(name => name.endsWith('_type.json'));
 
     typeFiles.forEach(function(typeFile) {
