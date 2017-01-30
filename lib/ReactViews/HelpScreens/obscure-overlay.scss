@@ -1,0 +1,61 @@
+@import '~terriajs-variables';
+@import '../../Sass/common/_mixins';
+
+.topOverlay {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  display: block;
+  background: rgba(121,121,130,0.7);
+  z-index: 1000;
+}
+
+.leftOverlay {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  display: block;
+  background: rgba(121,121,130,0.7);
+  z-index: 1000;
+}
+
+.rightOverlay {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  display: block;
+  background: rgba(121,121,130,0.7);
+  z-index: 1000;
+}
+
+.bottomOverlay {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  display: block;
+  background: rgba(121,121,130,0.7);
+  z-index: 1000;
+}
+
+.clearOverlay {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  display: block;
+  background: rgba(0,0,0,0);
+  z-index: 999;
+}
+
+.isActive {
+  display: block;
+}
