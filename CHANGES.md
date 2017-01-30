@@ -1,10 +1,12 @@
 
+
 Change Log
 ==========
 
 ### 4.8.3
 
 * Add HelpScreens. If used, this adds a button to the top right titled help, which drops down a list of available help sequences, such as how to add data or how to change map settings. When a dropdown item is clicked, a sequence of help screens appears leading the user through a task. Help sequences must be defined by instance using TerriaJS.
+* Fixed a bug with calculating bounding rectangles in `ArcGisCatalogItem` caused by changes to `proj4` package.
 
 ### 4.8.2
 
