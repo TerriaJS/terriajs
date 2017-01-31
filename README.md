@@ -85,7 +85,7 @@ More information: [Deploying your own Terria Map](https://github.com/NICTA/natio
 
 Documentation about working with Terria and developing it is at http://terria.io/Documentation
 
-JavaScript documentation is at http://nationalmap.gov.au/build/TerriaJS/doc
+JavaScript documentation is at http://nationalmap.gov.au/build/TerriaJS/doc/reference
 
 ### Components and naming
 
