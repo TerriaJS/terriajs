@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### 4.9.1
+
+* Some support for adding additional catalogs, bearing in mind that additional catalogs are not fully supported and won't, for example, appear in share links.
+
 ### 4.9.0
 
 * Added a help overlay system. A TerriaJS application can define a set of help sequences that interactively walk the user through a task, such as adding data to the map or changing map settings. The help sequences usually appear as a drop-down Help menu in the top-right corner.
