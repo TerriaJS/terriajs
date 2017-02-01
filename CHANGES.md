@@ -1,4 +1,5 @@
 
+
 Change Log
 ==========
 
@@ -7,8 +8,12 @@ Change Log
 * If useKvp is set to false in the catalog item in the json init file for a WPS process, the WPS Execute request will become a POST request with parameters encoded in the XML payload. Otherwise, parameters will be encoded in the GET request as key value pairs (KVP) as usual. This allows massive polygons such as Australia to be sent without worrying about URL length limits.
 
 ### 4.8.3
+### 4.9.0
 
-* Add HelpScreens. If used, this adds a button to the top right titled help, which drops down a list of available help sequences, such as how to add data or how to change map settings. When a dropdown item is clicked, a sequence of help screens appears leading the user through a task. Help sequences must be defined by instance using TerriaJS.
+* Added a help overlay system. A TerriaJS application can define a set of help sequences that interactively walk the user through a task, such as adding data to the map or changing map settings. The help sequences usually appear as a drop-down Help menu in the top-right corner.
+* Fixed a bug with calculating bounding rectangles in `ArcGisCatalogItem` caused by changes to `proj4` package.
+* Fixed a bug preventing chart axis labels from being visible on a white background.
+* Fixed a bug that caused the Feedback panel to appear below the chart panel, making it difficult to use.
 
 ### 4.8.2
 

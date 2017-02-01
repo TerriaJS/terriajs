@@ -30,7 +30,8 @@ export function findAllWithPropsChildEqualTo(reactElement, text) {
         if (!(element && element.props && element.props.children)) {
             return;
         }
-        return element.props.children.indexOf(text) >= 0 || (element.props.children.some && element.props.children.some(x => x && x.length && x.indexOf(text) >= 0));
+        return (element.props.children.indexOf && element.props.children.indexOf(text) >= 0) ||
+               (element.props.children.some && element.props.children.some(x => x && x.length && x.indexOf(text) >= 0));
     });
 }
 

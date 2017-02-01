@@ -114,7 +114,10 @@ gulp.task('build-libs', function(done) {
     runWebpack(webpack, webpackConfig, done);
 });
 
-gulp.task('docs', ['user-guide', 'reference-guide']);
+gulp.task('docs', ['user-guide', 'reference-guide'], function() {
+    var fse = require('fs-extra');
+    fse.copySync('doc/index-built.html', 'wwwroot/doc/index.html');
+});
 
 gulp.task('reference-guide', function() {
     var runExternalModule = require('./buildprocess/runExternalModule');
@@ -178,13 +181,14 @@ function runKarma(configFile, done) {
 gulp.task('user-guide', ['make-schema'], function() {
     var fse = require('fs-extra');
     var gutil = require('gulp-util');
+    var klawSync = require('klaw-sync');
     var path = require('path');
     var spawnSync = require('child_process').spawnSync;
 
     fse.copySync('doc/mkdocs.yml', 'build/mkdocs.yml');
     fse.copySync('doc', 'build/doc');
 
-    var files = fse.walkSync('build/doc');
+    var files = klawSync('build/doc').map(o => o.path);
     var markdown = files.filter(name => path.extname(name) === '.md');
     var readmes = markdown.filter(name => name.indexOf('README.md') === name.length - 'README.md'.length);
 
@@ -201,9 +205,12 @@ gulp.task('user-guide', ['make-schema'], function() {
         }
     });
 
-    // Replace README.md with index.md in mkdocs.yml
+    // Replace README.md with index.md in mkdocs.yml.
+    // Also replace swap in the actual path to mkdocs-material in node_modules.
     var mkdocsyml = fse.readFileSync('build/mkdocs.yml', 'UTF-8');
-    fse.writeFileSync('build/mkdocs.yml', mkdocsyml.replace(/README\.md/g, 'index.md'), 'UTF-8');
+    mkdocsyml = mkdocsyml.replace(/README\.md/g, 'index.md');
+    mkdocsyml = mkdocsyml.replace(/mkdocs-material\/material/, path.dirname(require.resolve('mkdocs-material/material/base.html')));
+    fse.writeFileSync('build/mkdocs.yml', mkdocsyml, 'UTF-8');
 
     generateCatalogMemberPages('wwwroot/schema', 'build/doc/connecting-to-data/catalog-type-details');
 
@@ -219,9 +226,10 @@ gulp.task('user-guide', ['make-schema'], function() {
 
 function generateCatalogMemberPages(schemaPath, outputPath) {
     var fse = require('fs-extra');
+    var klawSync = require('klaw-sync');
     var path = require('path');
 
-    var schemaFiles = fse.walkSync(schemaPath);
+    var schemaFiles = klawSync(schemaPath).map(o => o.path);
     var typeFiles = schemaFiles.filter(name => name.endsWith('_type.json'));
 
     typeFiles.forEach(function(typeFile) {
