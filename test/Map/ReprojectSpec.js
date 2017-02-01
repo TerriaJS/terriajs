@@ -22,6 +22,6 @@ describe('Reproject', function() {
     });
 
     it('function reprojectPoint reprojects a point from one CRS to another', function() {
-        expect(Reproject.reprojectPoint([319180,6399862], "EPSG:3006","EPSG:4326")).toEqual([11.965261843967307,57.70450563085531]);
+        expect(Reproject.reprojectPoint([319180,6399862], "EPSG:3006","EPSG:4326")).toEqual([11.965261850080005, 57.70450563701629]);
     });
 });

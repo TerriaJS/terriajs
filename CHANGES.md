@@ -1,12 +1,25 @@
 
+
 Change Log
 ==========
+
+### 4.9.0
+
+* Added a help overlay system. A TerriaJS application can define a set of help sequences that interactively walk the user through a task, such as adding data to the map or changing map settings. The help sequences usually appear as a drop-down Help menu in the top-right corner.
+* Fixed a bug with calculating bounding rectangles in `ArcGisCatalogItem` caused by changes to `proj4` package.
+* Fixed a bug preventing chart axis labels from being visible on a white background.
+* Fixed a bug that caused the Feedback panel to appear below the chart panel, making it difficult to use.
 
 ### 4.8.2
 
 * Fixed a bug that prevented a `shareUrl` specified in `config.json` from actually being used by the `ShareDataService`.
 * Adding a JSON init file by dropping it on the map or selecting it from the My Data tab no longer adds an entry to the Workbench and User-Added Data catalog.
+* WPS return type can now be `application/vnd.terriajs.catalog-member+json` which allows a json catalog member to be returned in WPS along with the usual attributes to control display.
+* `chartLineColor` tableStyle attribute added, allowing per column specification of chart line color.
+* Fixed a bug that caused a `WebMapServiceCatalogItem` inside a `WebMapServiceCatalogGroup` to revert to defaults from GetCapabilities instead of using shared properties.
 * Fix a bug that prevented drawing the marker and zooming to the point when searching for a location in 2D.
+* Fixed a bug where `WebMapTileServiceCatalogItem` would incorrectly interpret a bounding box and return only the lower left corner causing Cesium to crash on render.
+* Fixed a bug that caused the feedback form to be submitted when unchecking "Share my map view".
 
 ### 4.8.1
 
