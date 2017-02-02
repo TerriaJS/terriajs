@@ -3,9 +3,10 @@
 Change Log
 ==========
 
-### 4.9.1
+### 4.10.0
 
-* If useKvp is set to false in the catalog item in the json init file for a WPS process, the WPS Execute request will become a POST request with parameters encoded in the XML payload. Otherwise, parameters will be encoded in the GET request as key value pairs (KVP) as usual. This allows massive polygons such as Australia to be sent without worrying about URL length limits.
+* If executeWithHttpGet is set to true in the catalog item in the json init file for a WPS process, the WPS Execute request will become a GET request with parameters encoded as key value pairs (KVP). Otherwise, a POST request with parameters encoded in the XML payload will be sent. This allows massive polygons such as Australia to be sent without worrying about URL length limits.
+* executeWithHttpGet is false by default, meaning as of this release, WPS Execute is a POST (with XML) rather than a GET (with KVP) request.
 
 ### 4.9.0
 
