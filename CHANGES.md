@@ -5,8 +5,8 @@ Change Log
 
 ### 4.10.0
 
-* If executeWithHttpGet is set to true in the catalog item in the json init file for a WPS process, the WPS Execute request will become a GET request with parameters encoded as key value pairs (KVP). Otherwise, a POST request with parameters encoded in the XML payload will be sent. This allows massive polygons such as Australia to be sent without worrying about URL length limits.
-* executeWithHttpGet is false by default, meaning as of this release, WPS Execute is a POST (with XML) rather than a GET (with KVP) request.
+* Changed defaults:
+  * `WebProcessingServiceCatalogFunction` now defaults to invoking the `Execute` service via an HTTP POST with XML encoding rather than an HTTP GET with KVP encoding.  This is a more sensible default because the WPS specification requires that servers support POST/XML while GET/KVP is optional.  Plus, POST/XML allows large input parameters, such as a polygon descibing all of Australia, to be successfully passed to the WPS process.  To force use of GET/KVP, set the `executeWithHttpGet` property to `true`.
 
 ### 4.9.0
 
