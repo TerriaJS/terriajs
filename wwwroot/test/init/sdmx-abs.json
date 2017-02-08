@@ -14,6 +14,7 @@
                         "type": "sdmx-json",
                         "sortValues": true,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B01",
+                        "description": "You can view this data, along with additional information about the meaning of terms, on the ABS.Stat website at http://stat.data.abs.gov.au/Index.aspx?DatasetCode=ABS_CENSUS2011_B01",
                         "aggregatedDimensionIds": ["STATE"],
                         "singleValuedDimensionIds": ["SPC"],
                         "totalValueIds": {
