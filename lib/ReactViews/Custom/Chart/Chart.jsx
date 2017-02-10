@@ -21,7 +21,7 @@ import loadText from 'terriajs-cesium/Source/Core/loadText';
 import when from 'terriajs-cesium/Source/ThirdParty/when';
 
 import ChartData from '../../../Charts/ChartData';
-import LineChart from '../../../Charts/LineChart';
+import ChartRenderer from '../../../Charts/ChartRenderer';
 import proxyCatalogItemUrl from '../../../Models/proxyCatalogItemUrl';
 import TableStructure from '../../../Map/TableStructure';
 
@@ -49,6 +49,7 @@ const Chart = React.createClass({
         pollSeconds: React.PropTypes.any, // This is not used by Chart. It is used internally by registerCustomComponentTypes.
         // You can provide the data directly via props.data (ChartData[]):
         data: React.PropTypes.array,
+        chartType: React.PropTypes.object,
         // Or, provide a URL to the data, along with optional xColumn, yColumns, colors
         url: React.PropTypes.string,
         xColumn: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
@@ -99,7 +100,7 @@ const Chart = React.createClass({
         const promise = that.getChartDataPromise(chartParameters.data, that.props.url, that.props.catalogItem);
         promise.then(function(data) {
             chartParameters.data = data;
-            LineChart.create(that._element, chartParameters);
+            ChartRenderer.create(that._element, chartParameters);
         });
         that._promise = promise.then(function() {
             // that.rnd = Math.random();
@@ -113,7 +114,7 @@ const Chart = React.createClass({
                     const localChartParameters = that.getChartParameters();
                     if (defined(chartParameters.data)) {
                         localChartParameters.transitionDuration = 1;
-                        LineChart.update(that._element, localChartParameters);
+                        ChartRenderer.update(that._element, localChartParameters);
                     }
                 } else {
                     // This would happen if event listeners were not properly removed (ie. if you get this error, a bug was introduced to this code).
@@ -140,14 +141,14 @@ const Chart = React.createClass({
         const element = this._element;
         const chartParameters = this.getChartParameters();
         if (defined(chartParameters.data)) {
-            LineChart.update(element, chartParameters);
+            ChartRenderer.update(element, chartParameters);
         } else if (this.props.updateCounter > 0) {
             // The risk here is if it's a time-varying csv with <chart> polling as well.
             const url = this.props.pollUrl || this.props.url;
             const promise = this.getChartDataPromise(chartParameters.data, url, this.props.catalogItem);
             promise.then(function(data) {
                 chartParameters.data = data;
-                LineChart.update(element, chartParameters);
+                ChartRenderer.update(element, chartParameters);
             });
         }
     },
@@ -157,7 +158,7 @@ const Chart = React.createClass({
         this._promise.then(function(listener) {
             window.removeEventListener('resize', listener);
             // console.log('Removed resize listener for', that.props.url, that.rnd, listener);
-            LineChart.destroy(that._element, that.getChartParameters());
+            ChartRenderer.destroy(that._element, that.getChartParameters());
             that._element = undefined;
         });
         this._promise = undefined;
