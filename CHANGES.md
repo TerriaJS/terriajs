@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### 4.10.1
+
+* Improved the SDMX-JSON catalog item to handle huge dimensions, allow a blacklist, handle bad responses better, and more.
+
 ### 4.10.0
 
 * Changed defaults:
