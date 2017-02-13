@@ -23,6 +23,7 @@
 
 .chart {
   color: $text-light;
+  background: $dark;
 
   :global {
     .line-chart .axis path.domain {
@@ -85,7 +86,7 @@
 
 .btn--close-chart-panel {
   composes: btn from '../../../Sass/common/_buttons.scss';
-  position: absolute;
+  float: right;
   right: 0;
   top: 0;
   padding: 8px;

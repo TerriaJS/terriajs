@@ -7,6 +7,7 @@ import defined from 'terriajs-cesium/Source/Core/defined';
 import Chart from './Chart.jsx';
 import ChartData from '../../../Charts/ChartData';
 import ChartPanelDownloadButton from './ChartPanelDownloadButton';
+import ChartPanelSaveImageButton from './ChartPanelSaveImageButton';
 import Loader from '../../Loader.jsx';
 import ObserveModelMixin from '../../ObserveModelMixin';
 import VarType from '../../../Map/VarType';
@@ -92,10 +93,11 @@ const ChartPanel = React.createClass({
                         <div className={Styles.body}>
                             <div className={Styles.header}>
                                 <label className={Styles.sectionLabel}>{loader || 'Charts'}</label>
-                                <ChartPanelDownloadButton chartableItems={this.props.terria.catalog.chartableItems} errorEvent={this.props.terria.error} />
                                 <button type='button' className={Styles.btnCloseChartPanel} onClick={this.closePanel}>
                                     <Icon glyph={Icon.GLYPHS.close}/>
                                 </button>
+                                <ChartPanelDownloadButton chartableItems={this.props.terria.catalog.chartableItems} errorEvent={this.props.terria.error} />
+                                <ChartPanelSaveImageButton chart={chart} errorEvent={this.props.terria.error} />
                             </div>
                             <div className={Styles.chart}>
                                 {chart}
