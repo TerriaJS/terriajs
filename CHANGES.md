@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### 4.10.1
+
+* Added link to re-download local files, noting that TerriaJS may have done additional processing (eg. geocoding).
+
 ### 4.10.0
 
 * Changed defaults:
