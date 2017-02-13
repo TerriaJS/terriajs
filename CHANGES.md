@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### 4.10.1
+
+* Fixed a bug that prevented the proxy from being used for loading legends, even in situations where it is necessary such as an `http` legend accessed from an `https` site.
+
 ### 4.10.0
 
 * Changed defaults:
