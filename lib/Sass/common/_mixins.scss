@@ -111,6 +111,7 @@
   .#{$module-name} { /*!*/ }
 }
 
+// %link is deprecated. Instead of @extend %link;, use @include link($bg-color);
 %link {
   @if variable-exists(text-link) {
     color: $text-link;
@@ -124,6 +125,14 @@
     } @else {
       color: $color-primary;
     }
+  }
+}
+
+@mixin link($bg-color) {
+  text-decoration: $link-text-decoration;
+  color: get-link-color($bg-color);
+  &:visited {
+    color: get-visited-link-color($bg-color)
   }
 }
 
