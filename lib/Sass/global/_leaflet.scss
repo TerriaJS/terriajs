@@ -207,7 +207,7 @@
     outline: 0;
   }
   .leaflet-container a {
-    @extend %link;
+    @include link(#fff);
   }
   .leaflet-container a.leaflet-active {
     outline: 2px solid orange;
