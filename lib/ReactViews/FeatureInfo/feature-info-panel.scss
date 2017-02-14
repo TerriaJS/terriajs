@@ -20,7 +20,7 @@
   }
 
   a{
-    @extend %link;
+    @include link($feature-info-bg);
   }
   @media screen and (min-width : $md){
     //temp

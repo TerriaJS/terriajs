@@ -6,11 +6,13 @@ Change Log
 ### 4.10.1
 
 * Improved the SDMX-JSON catalog item to handle huge dimensions, allow a blacklist, handle bad responses better, and more.
+* Added link to re-download local files, noting that TerriaJS may have done additional processing (eg. geocoding).
 
 ### 4.10.0
 
 * Changed defaults:
   * `WebProcessingServiceCatalogFunction` now defaults to invoking the `Execute` service via an HTTP POST with XML encoding rather than an HTTP GET with KVP encoding.  This is a more sensible default because the WPS specification requires that servers support POST/XML while GET/KVP is optional.  Plus, POST/XML allows large input parameters, such as a polygon descibing all of Australia, to be successfully passed to the WPS process.  To force use of GET/KVP, set the `executeWithHttpGet` property to `true`.
+* Fixed problems with third-party dependencies causing `npm install` and `npm run gulp` to fail.
 
 ### 4.9.0
 
