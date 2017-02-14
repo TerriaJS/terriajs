@@ -17,7 +17,7 @@
 @include empty-module('link-wrapper');
 
 .link {
-  composes: link from '../../Sass/common/_base.scss';
+  @include link($overlay);
 }
 
 .viewer-selector,
