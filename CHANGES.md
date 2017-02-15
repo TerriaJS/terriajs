@@ -5,6 +5,7 @@ Change Log
 
 ### 4.10.1
 
+* Improved the SDMX-JSON catalog item to handle huge dimensions, allow a blacklist, handle bad responses better, and more.
 * Fixed a bug that prevented the proxy from being used for loading legends, even in situations where it is necessary such as an `http` legend accessed from an `https` site.
 * Added link to re-download local files, noting that TerriaJS may have done additional processing (eg. geocoding).
 
