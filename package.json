@@ -56,7 +56,7 @@
     "react-anything-sortable": "^1.5.2",
     "react-rangeslider": "1.0.9",
     "resolve": "^1.1.7",
-    "resolve-url-loader": "^1.4.3",
+    "resolve-url-loader": "^2.0.0",
     "sass-loader": "^4.0.1",
     "simple-statistics": "^2.0.0",
     "string-replace-webpack-plugin": "0.0.5",
