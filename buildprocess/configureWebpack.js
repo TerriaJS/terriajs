@@ -5,11 +5,11 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
     const cesiumDir = path.dirname(require.resolve('terriajs-cesium/package.json'));
 
     config.resolve = config.resolve || {};
-    config.resolve.extensions = config.resolve.extensions || ['', '.webpack.js', '.web.js', '.js'];
+    config.resolve.extensions = config.resolve.extensions || ['*', '.webpack.js', '.web.js', '.js'];
     config.resolve.extensions.push('.jsx');
     config.resolve.alias = config.resolve.alias || {};
-    config.resolve.root = config.resolve.root || [];
-    config.resolve.root.push(path.resolve(terriaJSBasePath, 'wwwroot'));
+    config.resolve.modules = config.resolve.modules || [];
+    config.resolve.modules.push(path.resolve(terriaJSBasePath, 'wwwroot'));
 
     config.module = config.module || {};
     config.module.loaders = config.module.loaders || [];
@@ -201,14 +201,12 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
             exclude: path.resolve(terriaJSBasePath, 'lib', 'Sass'),
             include: path.resolve(terriaJSBasePath, 'lib'),
             test: /\.scss$/,
-            loader: ExtractTextPlugin.extract(
-                require.resolve('css-loader') + '?sourceMap&modules&camelCase&localIdentName=tjs-[name]__[local]&importLoaders=2!' +
-                require.resolve('resolve-url-loader') + '?sourceMap!' +
-                require.resolve('sass-loader') + '?sourceMap',
-                {
-                    publicPath: ''
-                }
-            )
+            loader: ExtractTextPlugin.extract({
+                fallback: require.resolve('css-loader') + '?sourceMap&modules&camelCase&localIdentName=tjs-[name]__[local]&importLoaders=2!' +
+                          require.resolve('resolve-url-loader') + '?sourceMap!' +
+                          require.resolve('sass-loader') + '?sourceMap',
+                publicPath: ''
+            })
         });
     }
 
