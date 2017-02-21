@@ -25,8 +25,29 @@ $text-black: #000;
 $text-dark: #888;
 $text-light: #FFFFFF;
 $text-light-dimmed: #BBBBBB;
-// $text-link: $color-primary;  // Optionally define this to override $color-primary for the default color of links.
-// $text-visited-link: $color-primary;  // Optionally define this to override $color-primary for the color of visited links.
+
+// You can override these functions to change the link color depending on the background, eg.
+// @function get-link-color($bg-color) {
+//   @if (lightness($bg-color) > 50) {
+//     @return $text-dark; // Dark color needed on a light background
+//   } @else {
+//     @return $text-light; // Light color needed on a dark background
+//   }
+// }
+// It would make sense to extend this approach to all text and button coloring.
+@function get-link-color($bg-color) {
+  @if variable-exists(text-link) {
+  	@return $text-link;
+  }
+  @return $color-primary;
+}
+@function get-visited-link-color($bg-color) {
+  @if variable-exists(text-visited-link) {
+  	@return $text-visited-link;
+  }
+  @return get-link-color($bg-color);
+}
+
 $faint-bg: #f5f5f5;
 $warning: #FF5B6F;
 $info-color: #FFFF00;
@@ -122,6 +143,7 @@ $chart-axis-color: #fff;
 $chart-grid-color: rgba(#fff, 0.085);
 $chart-text-color: #fff;
 $chart-line-color: #ccc;
+$chart-preview-line-color: $chart-line-color;
 $chart-darker: darken($dark, 8%);
 
 

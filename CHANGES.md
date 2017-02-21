@@ -1,6 +1,26 @@
 
+
 Change Log
 ==========
+
+### 4.10.1
+
+* Improved the SDMX-JSON catalog item to handle huge dimensions, allow a blacklist, handle bad responses better, and more.
+* Fixed a bug that prevented the proxy from being used for loading legends, even in situations where it is necessary such as an `http` legend accessed from an `https` site.
+* Added link to re-download local files, noting that TerriaJS may have done additional processing (eg. geocoding).
+
+### 4.10.0
+
+* Changed defaults:
+  * `WebProcessingServiceCatalogFunction` now defaults to invoking the `Execute` service via an HTTP POST with XML encoding rather than an HTTP GET with KVP encoding.  This is a more sensible default because the WPS specification requires that servers support POST/XML while GET/KVP is optional.  Plus, POST/XML allows large input parameters, such as a polygon descibing all of Australia, to be successfully passed to the WPS process.  To force use of GET/KVP, set the `executeWithHttpGet` property to `true`.
+* Fixed problems with third-party dependencies causing `npm install` and `npm run gulp` to fail.
+
+### 4.9.0
+
+* Added a help overlay system. A TerriaJS application can define a set of help sequences that interactively walk the user through a task, such as adding data to the map or changing map settings. The help sequences usually appear as a drop-down Help menu in the top-right corner.
+* Fixed a bug with calculating bounding rectangles in `ArcGisCatalogItem` caused by changes to `proj4` package.
+* Fixed a bug preventing chart axis labels from being visible on a white background.
+* Fixed a bug that caused the Feedback panel to appear below the chart panel, making it difficult to use.
 
 ### 4.8.2
 

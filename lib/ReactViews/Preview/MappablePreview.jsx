@@ -38,14 +38,17 @@ const MappablePreview = React.createClass({
 
     render() {
         const catalogItem = this.props.previewed.nowViewingCatalogItem || this.props.previewed;
+        const dataUrlType = catalogItem.dataUrlType;
         let hasDataUriCapability;
         let dataUri;
         let dataUriFormat;
-        if (catalogItem.dataUrlType === 'data-uri') {
+        if (dataUrlType === 'data-uri' || dataUrlType === 'local') {
             hasDataUriCapability = DataUri.checkCompatibility();
             if (hasDataUriCapability) {
                 dataUri = catalogItem.dataUrl;
-                dataUriFormat = getDataUriFormat(dataUri);
+                if (dataUri) {
+                    dataUriFormat = getDataUriFormat(dataUri);
+                }
             }
         }
         return (
@@ -146,9 +149,9 @@ const MappablePreview = React.createClass({
                                             <br/>
                                             <Link url={catalogItem.dataUrl} text={catalogItem.dataUrl}/>
                                         </When>
-                                        <When condition={catalogItem.dataUrlType === 'data-uri'}>
+                                        <When condition={dataUrlType === 'data-uri' || dataUrlType === 'local'}>
                                             <If condition={hasDataUriCapability}>
-                                                <Link url={dataUri} text={"Download the currently selected data in " + dataUriFormat.toUpperCase() + " format"} download={catalogItem.name + "." + dataUriFormat}/>
+                                                <Link url={dataUri} text={"Download the currently selected data in " + dataUriFormat.toUpperCase() + " format"} download={getBetterFileName(dataUrlType, catalogItem.name, dataUriFormat)}/>
                                             </If>
                                             <If condition={!hasDataUriCapability}>
                                                 Unfortunately your browser does not support the functionality needed to download this data as a file.
@@ -219,6 +222,24 @@ function getDataUriFormat(dataUri) {
             return dataUri.slice(slashIndex + 1, commaIndex);
         }
     }
+}
+
+/**
+ * Return a nicer filename for this file.
+ * @private
+ */
+function getBetterFileName(dataUrlType, itemName, format) {
+    let name = itemName;
+    const extension = "." + format;
+    // Only add the extension if it's not already there.
+    if (name.indexOf(extension) !== name.length - extension.length) {
+        name = name + extension;
+    }
+    // For local files, the file already exists on the user's computer with the original name, so give it a modified name.
+    if (dataUrlType === 'local') {
+        name = "processed " + name;
+    }
+    return name;
 }
 
 const Link = React.createClass({
