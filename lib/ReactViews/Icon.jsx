@@ -5,6 +5,9 @@ import Styles from './icon.scss';
 // icon.jsx
 const GLYPHS = {
     add: require('../../wwwroot/images/icons/add.svg'),
+    arOff: require('../../wwwroot/images/icons/ar-off.svg'),
+    arOn: require('../../wwwroot/images/icons/ar-on.svg'),
+    arRecalibrate: require('../../wwwroot/images/icons/ar-recalibrate.svg'),
     backToStart: require('../../wwwroot/images/icons/back-to-start.svg'),
     backward: require('../../wwwroot/images/icons/backward.svg'),
     barChart: require('../../wwwroot/images/icons/bar-chart.svg'),
