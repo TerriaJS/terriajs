@@ -105,5 +105,5 @@ describe('CatalogMember', function () {
                 expect(member.info[1].content).toBe('Another value');
             }).then(done).otherwise(done.fail);
         });
-    })
+    });
 });
