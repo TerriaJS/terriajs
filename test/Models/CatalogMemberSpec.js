@@ -70,4 +70,40 @@ describe('CatalogMember', function () {
             expect(member.infoWithoutSources).toEqual(info);
         });
     });
+
+    describe('updateFromJson', function() {
+        it('merges the info property', function(done) {
+            member.updateFromJson({
+                info: [
+                    {
+                        name: 'Test',
+                        content: 'test!!'
+                    },
+                    {
+                        name: 'Another Field',
+                        content: 'Another value'
+                    }
+                ]
+            }).then(function() {
+                expect(member.info[0].name).toBe('Test');
+                expect(member.info[0].content).toBe('test!!');
+                expect(member.info[1].name).toBe('Another Field');
+                expect(member.info[1].content).toBe('Another value');
+
+                return member.updateFromJson({
+                    info: [
+                        {
+                            name: 'Test',
+                            content: 'New Value!'
+                        }
+                    ]
+                });
+            }).then(function() {
+                expect(member.info[0].name).toBe('Test');
+                expect(member.info[0].content).toBe('New Value!');
+                expect(member.info[1].name).toBe('Another Field');
+                expect(member.info[1].content).toBe('Another value');
+            }).then(done).otherwise(done.fail);
+        });
+    });
 });
