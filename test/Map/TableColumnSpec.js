@@ -74,7 +74,7 @@ describe('TableColumn', function() {
     });
 
     it('can detect time type from yyyy-mm-dd', function() {
-        var data = ['2016-01-03', '2016-01-04'];
+        var data = ['2016-01-03', null, '2016-01-04'];
         var tableColumn = new TableColumn('date', data.slice());
         expect(tableColumn.type).toEqual(VarType.TIME);
         expect(tableColumn.values.slice()).toEqual(data);
@@ -86,7 +86,7 @@ describe('TableColumn', function() {
     });
 
     it('can detect time type from dd-mm-yyyy', function() {
-        var data = ['31-12-2015', '04-01-2016'];
+        var data = ['31-12-2015', '04-01-2016', null];
         var tableColumn = new TableColumn('date', data.slice());
         expect(tableColumn.type).toEqual(VarType.TIME);
         expect(tableColumn.values.slice()).toEqual(data);
@@ -96,7 +96,7 @@ describe('TableColumn', function() {
     });
 
     it('can detect time type from mm-dd-yyyy', function() {
-        var data = ['12-31-2015', '01-04-2016'];
+        var data = ['12-31-2015', '01-04-2016', null];
         var tableColumn = new TableColumn('date', data.slice());
         expect(tableColumn.type).toEqual(VarType.TIME);
         expect(tableColumn.values.slice()).toEqual(data);
@@ -106,7 +106,7 @@ describe('TableColumn', function() {
     });
 
     it('can detect ISO8601 UTC time type', function() {
-        var data = ['2016-01-03T12:15:59.1234Z', '2016-01-03T12:25:00Z'];
+        var data = ['2016-01-03T12:15:59.1234Z', null, '2016-01-03T12:25:00Z'];
         var tableColumn = new TableColumn('date', data.slice());
         expect(tableColumn.type).toEqual(VarType.TIME);
         expect(tableColumn.values.slice()).toEqual(data);
@@ -120,7 +120,7 @@ describe('TableColumn', function() {
     });
 
     it('can detect time type and year subtype from yyyy', function() {
-        var data = ['2010', '2011', '2012', '2013'];
+        var data = ['2010', '2011', '2012', null, '2013'];
         var tableColumn = new TableColumn('date', data.slice());
         expect(tableColumn.type).toEqual(VarType.TIME);
         expect(tableColumn.subtype).toEqual(VarSubType.YEAR);
@@ -133,7 +133,7 @@ describe('TableColumn', function() {
     });
 
     it('can detect time type from yyyy-mm', function() {
-        var data = ['2010-01', '2010-02', '2010-03', '2010-04'];
+        var data = ['2010-01', '2010-02', '2010-03', null, '2010-04'];
         var tableColumn = new TableColumn('date', data.slice());
         expect(tableColumn.type).toEqual(VarType.TIME);
         expect(tableColumn.values.slice()).toEqual(data);
@@ -157,7 +157,7 @@ describe('TableColumn', function() {
     // });
 
     it('can detect time type from yyyy-mm-dd h:mm', function() {
-        var data = ['2010-02-12 12:34', '2010-02-13 1:23'];
+        var data = ['2010-02-12 12:34', '2010-02-13 1:23', null];
         var tableColumn = new TableColumn('date', data.slice());
         expect(tableColumn.type).toEqual(VarType.TIME);
         expect(tableColumn.values.slice()).toEqual(data);
@@ -170,7 +170,7 @@ describe('TableColumn', function() {
     });
 
     it('can detect time type from yyyy-mm-dd h:mm:ss', function() {
-        var data = ['2010-02-12 12:34:56', '2010-02-13 1:23:45'];
+        var data = ['2010-02-12 12:34:56', '2010-02-13 1:23:45', null];
         var tableColumn = new TableColumn('date', data.slice());
         expect(tableColumn.type).toEqual(VarType.TIME);
         expect(tableColumn.values.slice()).toEqual(data);
@@ -183,7 +183,7 @@ describe('TableColumn', function() {
     });
 
     it('can detect time type from yyyy-Qx', function() {
-        var data = ['2010-Q1', '2010-Q2', '2010-Q3', '2010-Q4'];
+        var data = ['2010-Q1', '2010-Q2', '2010-Q3', null, '2010-Q4'];
         var tableColumn = new TableColumn('date', data.slice());
         expect(tableColumn.type).toEqual(VarType.TIME);
         expect(tableColumn.values.slice()).toEqual(data);
@@ -193,14 +193,14 @@ describe('TableColumn', function() {
     });
 
     it('can detect year subtype using year title', function() {
-        var data = ['1066', '1776', '1788', '1901', '2220'];
+        var data = ['1066', '1776', '1788', '1901', null, '2220'];
         var tableColumn = new TableColumn('year', data.slice());
         expect(tableColumn.type).toEqual(VarType.TIME);
         expect(tableColumn.subtype).toEqual(VarSubType.YEAR);
     });
 
     it('detects years from numerical data in a column named time', function() {
-        var data = [730, 1230, 130];
+        var data = [730, 1230, null, 130];
         var tableColumn = new TableColumn('date', data.slice());
         expect(tableColumn.type).toEqual(VarType.TIME);
         expect(tableColumn.subtype).toEqual(VarSubType.YEAR);
@@ -208,7 +208,7 @@ describe('TableColumn', function() {
     });
 
     it('can handle missing times', function() {
-        var data = ['2016-01-03T12:15:59.1234Z', '-', '2016-01-04T12:25:00Z'];
+        var data = ['2016-01-03T12:15:59.1234Z', '-', '2016-01-04T12:25:00Z', null];
         var tableColumn = new TableColumn('date', data.slice());
         expect(tableColumn.type).toEqual(VarType.TIME);
         expect(tableColumn.dates[0].getUTCDate()).toEqual(3);
@@ -217,7 +217,7 @@ describe('TableColumn', function() {
     });
 
     it('treats numerical data >= 9999 in a column named time as scalars', function() {
-        var data = [9999, 1230, 130];
+        var data = [9999, 1230, null, 130];
         var tableColumn = new TableColumn('date', data.slice());
         expect(tableColumn.type).toEqual(VarType.SCALAR);
         expect(tableColumn.values.slice()).toEqual(data);
