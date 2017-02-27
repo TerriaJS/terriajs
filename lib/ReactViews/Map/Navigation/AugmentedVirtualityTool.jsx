@@ -4,6 +4,7 @@ import React from 'react';
 import ObserveModelMixin from '../../ObserveModelMixin';
 import Styles from './augmented_virtuality_tool.scss';
 import Icon from "../../Icon.jsx";
+import ViewerMode from '../../../Models/ViewerMode';
 
 const AugmentedVirtuality = require('../../../Models/AugmentedVirtuality.js');
 
@@ -53,7 +54,7 @@ const AugmentedVirtualityTool = React.createClass({
             image = Icon.GLYPHS.arOn;
         }
 
-        return <div>
+        return <div key="enable">
                    <button type='button' className={Styles.btn}
                            title='ar tool todo better description'
                            onClick={this.handleClickAVTool}>
@@ -71,7 +72,7 @@ const AugmentedVirtualityTool = React.createClass({
             paused_image = Icon.GLYPHS.play;
         }
 
-        return <div>
+        return <div key="submenu">
                    <button type='button' className={Styles.btn}
                            title='toggle hover todo better description'
                            onClick={this.handleClickHover}>
@@ -93,20 +94,16 @@ const AugmentedVirtualityTool = React.createClass({
     },
 
     render() {
-// todo only do the following if  === > react-if (viewmode == 3d)
-
         const enabled = this.state.augmented_virtuality.enabled;
 
-        let content = null;
-        if (!enabled) {
-            content = <div> {this.enableButton()} </div>;
-        }
-        else
-        {
-            content = <div> {this.enableButton()} {this.subMenuButtons()} </div>;
-        }
-
-        return <div className={Styles.augmentedVirtualityTool}> {content} </div> ;
+        return <If condition={(this.props.terria.viewerMode !== ViewerMode.Leaflet) && (this.state.augmented_virtuality.suitableBrowser())}>
+                   <div className={Styles.augmentedVirtualityTool}>
+                       {this.enableButton()}
+                       <If condition={enabled}>
+                           {this.subMenuButtons()}
+                       </If>
+                   </div>
+               </If>;
     }
 });
 
