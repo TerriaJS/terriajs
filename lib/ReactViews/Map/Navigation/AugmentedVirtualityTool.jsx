@@ -17,40 +17,39 @@ const AugmentedVirtualityTool = React.createClass({
 
     getInitialState() {
         return {
-             augmented_virtuality : new AugmentedVirtuality(this.props.terria),
+            augmentedVirtuality: new AugmentedVirtuality(this.props.terria),
         };
     },
 
     handleClickAVTool() {
         console.log("handleClickAVTool()");
 
-        this.state.augmented_virtuality.toggleEnabled();
+        this.state.augmentedVirtuality.toggleEnabled();
     },
 
     handleClickRealign() {
         console.log("handleClickRealign()");
 
-        this.state.augmented_virtuality.toggleManualAlignment();
+        this.state.augmentedVirtuality.toggleManualAlignment();
     },
 
     handleClickResetRealign() {
         console.log("handleClickHover()");
 
-        this.state.augmented_virtuality.resetAlignment();
+        this.state.augmentedVirtuality.resetAlignment();
     },
 
     handleClickHover() {
         console.log("handleClickHover()");
 
-        this.state.augmented_virtuality.toggleHoverHeight();
+        this.state.augmentedVirtuality.toggleHoverHeight();
     },
 
     enableButton() {
-        const enabled = this.state.augmented_virtuality.enabled;
+        const enabled = this.state.augmentedVirtuality.enabled;
 
         let image = Icon.GLYPHS.arOff;
-        if (enabled)
-        {
+        if (enabled) {
             image = Icon.GLYPHS.arOn;
         }
 
@@ -64,12 +63,11 @@ const AugmentedVirtualityTool = React.createClass({
     },
 
     subMenuButtons() {
-        const paused = this.state.augmented_virtuality.manualAlignment;
+        const paused = this.state.augmentedVirtuality.manualAlignment;
 
-        let paused_image = Icon.GLYPHS.pause;
-        if (paused)
-        {
-            paused_image = Icon.GLYPHS.play;
+        let pausedImage = Icon.GLYPHS.pause;
+        if (paused) {
+            pausedImage = Icon.GLYPHS.play;
         }
 
         return <div key="submenu">
@@ -82,7 +80,7 @@ const AugmentedVirtualityTool = React.createClass({
                    <button type='button' className={Styles.btn}
                            title='realignment tool todo better description'
                            onClick={this.handleClickRealign}>
-                           <Icon glyph={paused_image}/>
+                           <Icon glyph={pausedImage}/>
                    </button>
 
                    <button type='button' className={Styles.btn}
@@ -94,9 +92,9 @@ const AugmentedVirtualityTool = React.createClass({
     },
 
     render() {
-        const enabled = this.state.augmented_virtuality.enabled;
+        const enabled = this.state.augmentedVirtuality.enabled;
 
-        return <If condition={(this.props.terria.viewerMode !== ViewerMode.Leaflet) && (this.state.augmented_virtuality.suitableBrowser())}>
+        return <If condition={(this.props.terria.viewerMode !== ViewerMode.Leaflet) && (this.state.augmentedVirtuality.suitableBrowser())}>
                    <div className={Styles.augmentedVirtualityTool}>
                        {this.enableButton()}
                        <If condition={enabled}>
