@@ -82,7 +82,7 @@ const AugmentedVirtualityTool = React.createClass({
 
         return <div key="enable">
                    <button type='button' className={Styles.btn}
-                           title='ar tool todo better description'
+                           title='augmented reality tool'
                            onClick={this.handleClickAVTool}>
                            <Icon glyph={image}/>
                    </button>
@@ -99,20 +99,20 @@ const AugmentedVirtualityTool = React.createClass({
 
         return <div key="submenu">
                    <button type='button' className={Styles.btn}
-                           title='toggle hover todo better description'
+                           title='toggle hover height'
                            onClick={this.handleClickHover}>
                            <Icon glyph={Icon.GLYPHS.download}/>
                    </button>
 
                    <button type='button' className={Styles.btn}
-                           title='realignment tool todo better description'
+                           title='toggle manual alignment'
                            onClick={this.handleClickRealign}>
                            <Icon glyph={pausedImage}/>
                    </button>
 
                    <If condition={(this.state.augmentedVirtuality.manualAlignmentSet)}>
                        <button type='button' className={Styles.btn}
-                               title='reset realignment tool todo better description'
+                               title='reset manual alignment'
                                onClick={this.handleClickResetRealign}>
                                <Icon glyph={Icon.GLYPHS.arRecalibrate}/>
                        </button>
