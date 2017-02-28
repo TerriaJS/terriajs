@@ -22,25 +22,25 @@ const AugmentedVirtualityTool = React.createClass({
     },
 
     handleClickAVTool() {
-        console.log("handleClickAVTool()");
+        // console.log("handleClickAVTool()");
 
         this.state.augmentedVirtuality.toggleEnabled();
     },
 
     handleClickRealign() {
-        console.log("handleClickRealign()");
+        // console.log("handleClickRealign()");
 
         this.state.augmentedVirtuality.toggleManualAlignment();
     },
 
     handleClickResetRealign() {
-        console.log("handleClickHover()");
+        // console.log("handleClickHover()");
 
         this.state.augmentedVirtuality.resetAlignment();
     },
 
     handleClickHover() {
-        console.log("handleClickHover()");
+        // console.log("handleClickHover()");
 
         this.state.augmentedVirtuality.toggleHoverHeight();
     },
