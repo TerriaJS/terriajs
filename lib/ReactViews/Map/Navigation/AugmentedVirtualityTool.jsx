@@ -12,12 +12,15 @@ const AugmentedVirtualityTool = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        terria: React.PropTypes.object
+        terria: React.PropTypes.object.isRequired,
+        viewState: React.PropTypes.object.isRequired
     },
 
     getInitialState() {
         return {
             augmentedVirtuality: new AugmentedVirtuality(this.props.terria),
+            realignHelpShown: false,
+            resetRealignHelpShown: false
         };
     },
 
@@ -30,11 +33,35 @@ const AugmentedVirtualityTool = React.createClass({
     handleClickRealign() {
         // console.log("handleClickRealign()");
 
+        if (!this.state.realignHelpShown) {
+            this.setState({realignHelpShown: true});
+
+            this.props.viewState.notifications.push({
+                title: "Alignment Tool Help",
+                message: "Align your mobile device so that it corresponds with the maps current alignment, then click play."
+                         + " If no landmark is currently visible on the map, click play move the device till a landmark is visible then click pause before aligning the device."
+                         + "<br \> <br \> [TODO Insert Alignment Image].",
+                confirmText: "Got it"
+            });
+        }
+
         this.state.augmentedVirtuality.toggleManualAlignment();
     },
 
     handleClickResetRealign() {
         // console.log("handleClickHover()");
+
+        if (!this.state.resetRealignHelpShown) {
+            this.setState({resetRealignHelpShown: true});
+
+            this.props.viewState.notifications.push({
+                title: "Reset Alignment Info",
+                message: "Resetting to global alignment. If the alignment doesn't match with the real world try waving"
+                         + " your device in a figgure 8 motion as shown to recalibrate device. This can be done at any time."
+                         + "<br \> <br \> [TODO Insert Figrue 8 Alignment Image].",
+                confirmText: "Got it"
+            });
+        }
 
         this.state.augmentedVirtuality.resetAlignment();
     },
