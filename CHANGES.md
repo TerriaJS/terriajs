@@ -3,6 +3,11 @@
 Change Log
 ==========
 
+### 4.10.2
+
+* New sections are now merged info `CatalogMember.info` when `updateFromJson` is called multiple times, rather than the later `info` completely replacing the earlier one.  This is most useful when using `itemProperties` to override some of the info sections in a child catalog item.
+* Fixed a bug where csv files with a date column would sometimes fail if a date is missing.
+
 ### 4.10.1
 
 * Improved the SDMX-JSON catalog item to handle huge dimensions, allow a blacklist, handle bad responses better, and more.
