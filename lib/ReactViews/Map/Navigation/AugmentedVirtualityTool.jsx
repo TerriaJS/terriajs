@@ -39,7 +39,8 @@ const AugmentedVirtualityTool = React.createClass({
             this.props.viewState.notifications.push({
                 title: "Alignment Tool Help",
                 message: "Align your mobile device so that it corresponds with the maps current alignment, then click play."
-                         + " If no landmark is currently visible on the map, click play move the device till a landmark is visible then click pause before aligning the device."
+                         + " If no landmark is currently visible on the map, click play, move the device till a landmark"
+                         + " is visible on the map, then click pause before aligning the device with the map."
                          + "<br \> <br \> [TODO Insert Alignment Image].",
                 confirmText: "Got it"
             });
