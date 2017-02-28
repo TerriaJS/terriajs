@@ -74,62 +74,47 @@ const AugmentedVirtualityTool = React.createClass({
         this.state.augmentedVirtuality.toggleHoverHeight();
     },
 
-    enableButton() {
+    render() {
         const enabled = this.state.augmentedVirtuality.enabled;
-
         let image = Icon.GLYPHS.arOff;
         if (enabled) {
             image = Icon.GLYPHS.arOn;
         }
 
-        return <div key="enable">
-                   <button type='button' className={Styles.btn}
-                           title='augmented reality tool'
-                           onClick={this.handleClickAVTool}>
-                           <Icon glyph={image}/>
-                   </button>
-               </div>;
-    },
-
-    subMenuButtons() {
         const paused = this.state.augmentedVirtuality.manualAlignment;
-
         let pausedImage = Icon.GLYPHS.pause;
         if (paused) {
             pausedImage = Icon.GLYPHS.play;
         }
 
-        return <div key="submenu">
-                   <button type='button' className={Styles.btn}
-                           title='toggle hover height'
-                           onClick={this.handleClickHover}>
-                           <Icon glyph={Icon.GLYPHS.download}/>
-                   </button>
-
-                   <button type='button' className={Styles.btn}
-                           title='toggle manual alignment'
-                           onClick={this.handleClickRealign}>
-                           <Icon glyph={pausedImage}/>
-                   </button>
-
-                   <If condition={(this.state.augmentedVirtuality.manualAlignmentSet)}>
-                       <button type='button' className={Styles.btn}
-                               title='reset manual alignment'
-                               onClick={this.handleClickResetRealign}>
-                               <Icon glyph={Icon.GLYPHS.arRecalibrate}/>
-                       </button>
-                   </If>
-               </div>;
-    },
-
-    render() {
-        const enabled = this.state.augmentedVirtuality.enabled;
-
         return <If condition={(this.props.terria.viewerMode !== ViewerMode.Leaflet) && (this.state.augmentedVirtuality.suitableBrowser())}>
                    <div className={Styles.augmentedVirtualityTool}>
-                       {this.enableButton()}
+                       <button type='button' className={Styles.btn}
+                               title='augmented reality tool'
+                               onClick={this.handleClickAVTool}>
+                               <Icon glyph={image}/>
+                       </button>
+
                        <If condition={enabled}>
-                           {this.subMenuButtons()}
+                           <button type='button' className={Styles.btn}
+                                   title='toggle hover height'
+                                   onClick={this.handleClickHover}>
+                                   <Icon glyph={Icon.GLYPHS.download}/>
+                           </button>
+
+                           <button type='button' className={Styles.btn}
+                                   title='toggle manual alignment'
+                                   onClick={this.handleClickRealign}>
+                                   <Icon glyph={pausedImage}/>
+                           </button>
+
+                           <If condition={(this.state.augmentedVirtuality.manualAlignmentSet)}>
+                               <button type='button' className={Styles.btn}
+                                       title='reset manual alignment'
+                                       onClick={this.handleClickResetRealign}>
+                                       <Icon glyph={Icon.GLYPHS.arRecalibrate}/>
+                               </button>
+                           </If>
                        </If>
                    </div>
                </If>;
