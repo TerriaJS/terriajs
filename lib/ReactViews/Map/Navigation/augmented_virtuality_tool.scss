@@ -3,6 +3,7 @@
 
 .augmentedVirtualityTool{
   display: inline-block;
+  float: left;
 
   @media print{
     display: none;
@@ -14,12 +15,14 @@
 
     border-radius: 50%;
     display: block;
+    float: inherit;
     background: #fff;
     color: $dark;
     height: 40px;
     width: 40px;
-    margin: 20px;   /* todo remove - hack in margin for now for debugging for fat fingers on phones when multiple in one element */
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.15);
+    margin-right: 15px;
+
     svg{
       height: 24px;
       width: 24px;
@@ -36,4 +39,4 @@
         width: 20px;
       }
     }
-  }
+}
