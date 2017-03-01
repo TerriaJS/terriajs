@@ -9,3 +9,5 @@
 export function Menu() {}
 /** No-op grouping element for elements that should be added to the nav*/
 export function Nav() {}
+/** No-op grouping element for elements that should be added to the experimental features*/
+export function Experimental() {}
