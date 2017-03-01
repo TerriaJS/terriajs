@@ -40,7 +40,7 @@ const AugmentedVirtualityTool = React.createClass({
                 title: "Manual Alignment",
                 message: "Align your mobile device so that it corresponds with the maps current alignment, then click play."
                          + " If no landmarks to align with are currently visible on the map, you can move the map using"
-                         + " drag and pinch actions until a recognisable landmark is visable before aligning the device with the map."
+                         + " drag and pinch actions until a recognisable landmark is visible before aligning the device with the map."
                          + "<br \> <br \>[TODO: Insert alignment image: Side-by-side map and realworld image.]."
                          + "<br \> <br \>Tip: The sun or moon are often good landmarks to align with (be careful not to look at the sun - it can hurt your eyes).",
                 confirmText: "Got it"
@@ -59,7 +59,7 @@ const AugmentedVirtualityTool = React.createClass({
             this.props.viewState.notifications.push({
                 title: "Reset Alignment",
                 message: "Resetting to compass alignment. If the alignment doesn't match the real world try waving"
-                         + " your device in a figgure 8 motion to recalibrate device. This can be done at any time."
+                         + " your device in a figure 8 motion to recalibrate device. This can be done at any time."
                          + "<br \> <br \>Avoid locations with magnetic fields or metal objects as these may disorient the devices compass.",
                 confirmText: "Got it"
             });
