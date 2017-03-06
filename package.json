@@ -50,7 +50,7 @@
     "mutationobserver-shim": "^0.3.1",
     "pbf": "^3.0.1",
     "point-geometry": "^0.1.0",
-    "proj4": "^2.3.16",
+    "proj4": "2.3.16",
     "raw-loader": "^0.5.1",
     "react-addons-pure-render-mixin": "15.4.2",
     "react-anything-sortable": "^1.5.2",
