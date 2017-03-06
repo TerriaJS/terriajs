@@ -3,6 +3,11 @@
 Change Log
 ==========
 
+### 4.10.4
+
+* Added the ability for `CkanCatalogGroup` to receive results in pages, rather than all in one request.  This will happen automatically when the server returns partial results.
+* Improved the performance of the catalog UI by not creating React elements for the contents of a group until that group is opened.
+
 ### 4.10.3
 
 * Locked third-party dependency proj4 to v2.3.x because v2.4.0 breaks our build.
