@@ -81,10 +81,10 @@ const AugmentedVirtualityTool = React.createClass({
             image = Icon.GLYPHS.arOn;
         }
 
-        const paused = this.state.augmentedVirtuality.manualAlignment;
-        let pausedImage = Icon.GLYPHS.pause;
-        if (paused) {
-            pausedImage = Icon.GLYPHS.play;
+        const realignment = this.state.augmentedVirtuality.manualAlignment;
+        let realignmentImage = Icon.GLYPHS.arRealignStart;
+        if (realignment) {
+            realignmentImage = Icon.GLYPHS.arRealignEnd;
         }
 
         return <If condition={(this.props.terria.viewerMode !== ViewerMode.Leaflet) && (this.state.augmentedVirtuality.suitableBrowser())}>
@@ -99,13 +99,13 @@ const AugmentedVirtualityTool = React.createClass({
                            <button type='button' className={Styles.btn}
                                    title='toggle hover height'
                                    onClick={this.handleClickHover}>
-                                   <Icon glyph={Icon.GLYPHS.download}/>
+                                   <Icon glyph={Icon.GLYPHS.arHover}/>
                            </button>
 
                            <button type='button' className={Styles.btn}
                                    title='toggle manual alignment'
                                    onClick={this.handleClickRealign}>
-                                   <Icon glyph={pausedImage}/>
+                                   <Icon glyph={realignmentImage}/>
                            </button>
 
                            <If condition={(this.state.augmentedVirtuality.manualAlignmentSet)}>

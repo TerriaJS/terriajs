@@ -5,8 +5,11 @@ import Styles from './icon.scss';
 // icon.jsx
 const GLYPHS = {
     add: require('../../wwwroot/images/icons/add.svg'),
+    arHover: require('../../wwwroot/images/icons/ar-hover.svg'),
     arOff: require('../../wwwroot/images/icons/ar-off.svg'),
     arOn: require('../../wwwroot/images/icons/ar-on.svg'),
+    arRealignEnd: require('../../wwwroot/images/icons/ar-realign-end.svg'),
+    arRealignStart: require('../../wwwroot/images/icons/ar-realign-start.svg'),
     arRecalibrate: require('../../wwwroot/images/icons/ar-recalibrate.svg'),
     backToStart: require('../../wwwroot/images/icons/back-to-start.svg'),
     backward: require('../../wwwroot/images/icons/backward.svg'),
