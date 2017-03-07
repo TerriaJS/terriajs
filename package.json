@@ -59,7 +59,7 @@
     "resolve-url-loader": "^1.4.3",
     "sass-loader": "^4.0.1",
     "simple-statistics": "^2.0.0",
-    "string-replace-webpack-plugin": "0.0.5",
+    "string-replace-webpack-plugin": "0.1.2",
     "style-loader": "^0.13.1",
     "terriajs-cesium": "1.29.2",
     "togeojson": "^0.16.0",
