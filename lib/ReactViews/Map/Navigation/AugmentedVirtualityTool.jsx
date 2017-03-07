@@ -108,7 +108,7 @@ const AugmentedVirtualityTool = React.createClass({
                                    <Icon glyph={realignmentImage}/>
                            </button>
 
-                           <If condition={(this.state.augmentedVirtuality.manualAlignmentSet)}>
+                           <If condition={(this.state.augmentedVirtuality.manualAlignmentSet) && !realignment}>
                                <button type='button' className={Styles.btn}
                                        title='reset manual alignment'
                                        onClick={this.handleClickResetRealign}>
