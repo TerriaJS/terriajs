@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### 4.10.4
+
+* Close polygons used as input to a `CatalogFunction` by making the last position the same as the first one.
+
 ### 4.10.3
 
 * Locked third-party dependency proj4 to v2.3.x because v2.4.0 breaks our build.
