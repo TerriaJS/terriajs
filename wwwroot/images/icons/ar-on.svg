@@ -1,49 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="57" height="60" viewBox="0 0 57 60" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <defs>
-    <linearGradient id="d" x1="50%" x2="50%" y1="0%" y2="99.021%">
-      <stop stop-color="#000000" stop-opacity="0" offset="0%"/>
-      <stop stop-color="#000000" stop-opacity=".02" offset="80%"/>
-      <stop stop-color="#000000" stop-opacity=".04" offset="100%"/>
-    </linearGradient>
-    <linearGradient id="f" x1="50%" x2="50%" y1="0%" y2="100%">
-      <stop stop-color="#FFFFFF" stop-opacity=".12" offset="0%"/>
-      <stop stop-color="#FFFFFF" stop-opacity=".06" offset="20%"/>
-      <stop stop-color="#FFFFFF" stop-opacity="0" offset="100%"/>
-    </linearGradient>
-    <circle id="a" cx="25.067" cy="25.067" r="25.067"/>
-    <filter id="c" width="200%" height="200%" x="-50%" y="-50%" filterUnits="objectBoundingBox">
-      <feOffset dy="3" in="SourceAlpha" result="shadowOffsetOuter1"/>
-      <feGaussianBlur stdDeviation="1.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"/>
-      <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"/>
-      <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.12 0" in="shadowBlurOuter1" result="shadowMatrixOuter1"/>
-      <feOffset in="SourceAlpha" result="shadowOffsetOuter2"/>
-      <feGaussianBlur stdDeviation="1.5" in="shadowOffsetOuter2" result="shadowBlurOuter2"/>
-      <feComposite in="shadowBlurOuter2" in2="SourceAlpha" operator="out" result="shadowBlurOuter2"/>
-      <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.06 0" in="shadowBlurOuter2" result="shadowMatrixOuter2"/>
-      <feMerge>
-        <feMergeNode in="shadowMatrixOuter1"/>
-        <feMergeNode in="shadowMatrixOuter2"/>
-      </feMerge>
-    </filter>
-    <mask id="e" width="50.135" height="50.135" x="0" y="0" fill="white">
-      <use xlink:href="#a"/>
-    </mask>
-    <mask id="g" width="50.135" height="50.135" x="0" y="0" fill="white">
-      <use xlink:href="#a"/>
-    </mask>
-    <rect id="b" width="23.928" height="15.952" rx="7.976"/>
-    <mask id="h" width="23.928" height="15.952" x="0" y="0" fill="white">
-      <use xlink:href="#b"/>
-    </mask>
-  </defs>
-  <g fill="none" fill-rule="evenodd" transform="translate(3.091 3.06)">
-    <use fill="black" filter="url(#c)" xlink:href="#a"/>
-    <use fill="#08ABD5" stroke="url(#d)" stroke-width="1.139" mask="url(#e)" xlink:href="#a"/>
-    <use stroke="url(#f)" stroke-width="1.139" mask="url(#g)" xlink:href="#a"/>
-    <path fill="#FFFFFF" d="M23.3025717,20.2872812 L22.3656471,18.1200513 L18.1422795,18.1200513 L17.2053549,20.2872812 L14.8125937,20.2872812 L19.1656894,10.2548726 L21.3422372,10.2548726 L25.6953329,20.2872812 L23.3025717,20.2872812 Z M20.2611704,13.2401959 L18.9927187,16.1537566 L21.5152079,16.1537566 L20.2611704,13.2401959 Z M34.688113,13.5846562 C34.688113,15.1921461 34.0490888,16.230301 32.7710212,16.6991522 L35.3223388,20.2872812 L32.5548078,20.2872812 L30.3206031,17.0866701 L28.7638669,17.0866701 L28.7638669,20.2872812 L26.5152479,20.2872812 L26.5152479,10.2548726 L30.3350173,10.2548726 C31.9013708,10.2548726 33.018462,10.5179994 33.6863244,11.0442609 C34.3541868,11.5705225 34.688113,12.4173125 34.688113,13.5846562 Z M31.9782388,14.7759151 C32.2569152,14.5271369 32.3962513,14.1324466 32.3962513,13.5918325 C32.3962513,13.0512184 32.2521105,12.6804488 31.9638246,12.4795125 C31.6755387,12.2785763 31.1710459,12.1781097 30.4503311,12.1781097 L28.7638669,12.1781097 L28.7638669,15.1490805 L30.4070884,15.1490805 C31.1758509,15.1490805 31.6995624,15.0246932 31.9782388,14.7759151 Z"/>
-    <g transform="translate(13.103 23.928)">
-      <use fill="#FFFFFF" stroke="#FFFFFF" stroke-width="3.418" mask="url(#h)" xlink:href="#b"/>
-      <circle cx="17.091" cy="7.976" r="4.786" fill="#08ABD5"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="100px" height="100px" viewBox="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 42 (36781) - http://www.bohemiancoding.com/sketch -->
+    <title>ar-on</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="ar-on">
+            <rect id="bounds" x="0" y="0" width="100" height="100"></rect>
+            <path d="M46.5501167,40.7037264 L44.7186869,36.4890022 L36.4631651,36.4890022 L34.6317353,40.7037264 L29.9545455,40.7037264 L38.4636499,21.1931818 L42.7182021,21.1931818 L51.2273065,40.7037264 L46.5501167,40.7037264 Z M40.6050139,26.9988947 L38.1255398,32.6650471 L43.0563122,32.6650471 L40.6050139,26.9988947 Z M68.8057175,27.6687846 C68.8057175,30.7949533 67.5566009,32.813907 65.0583304,33.7257062 L70.0454545,40.7037264 L64.6356928,40.7037264 L60.2684372,34.4793324 L57.2254462,34.4793324 L57.2254462,40.7037264 L52.8300148,40.7037264 L52.8300148,21.1931818 L60.296613,21.1931818 C63.3584032,21.1931818 65.5420092,21.7048982 66.8474964,22.7283463 C68.1529837,23.7517944 68.8057175,25.3985907 68.8057175,27.6687846 Z M63.5086591,29.9854873 C64.0533948,29.5016755 64.3257585,28.734101 64.3257585,27.6827406 C64.3257585,26.6313803 64.0440029,25.9103255 63.4804832,25.5195544 C62.9169636,25.1287833 61.9308189,24.9334007 60.5220198,24.9334007 L57.2254462,24.9334007 L57.2254462,30.7112014 L60.4374923,30.7112014 C61.9402114,30.7112014 62.9639234,30.4692992 63.5086591,29.9854873 Z" id="AR" fill="#000000"></path>
+            <g id="Group-5" transform="translate(26.613636, 47.784091)" fill="#000000">
+                <path d="M0,15.5113636 C0,6.94467405 6.95184469,0 15.5096735,0 L31.2630538,0 C39.8288099,0 46.7727273,6.94279047 46.7727273,15.5113636 C46.7727273,24.0780532 39.8208826,31.0227273 31.2630538,31.0227273 L15.5096735,31.0227273 C6.94391735,31.0227273 0,24.0799368 0,15.5113636 Z M31.5909091,24.8181818 C36.7572819,24.8181818 40.9454545,20.6513774 40.9454545,15.5113636 C40.9454545,10.3713499 36.7572819,6.20454545 31.5909091,6.20454545 C26.4245363,6.20454545 22.2363636,10.3713499 22.2363636,15.5113636 C22.2363636,20.6513774 26.4245363,24.8181818 31.5909091,24.8181818 Z" id="switch"></path>
+            </g>
+        </g>
     </g>
-  </g>
 </svg>

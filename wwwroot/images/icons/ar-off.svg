@@ -1,49 +1,17 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="50" height="53" viewBox="0 0 50 53" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <defs>
-    <linearGradient id="d" x1="50%" x2="50%" y1="0%" y2="99.021%">
-      <stop stop-color="#000000" stop-opacity="0" offset="0%"/>
-      <stop stop-color="#000000" stop-opacity=".02" offset="80%"/>
-      <stop stop-color="#000000" stop-opacity=".04" offset="100%"/>
-    </linearGradient>
-    <linearGradient id="f" x1="50%" x2="50%" y1="0%" y2="100%">
-      <stop stop-color="#FFFFFF" stop-opacity=".12" offset="0%"/>
-      <stop stop-color="#FFFFFF" stop-opacity=".06" offset="20%"/>
-      <stop stop-color="#FFFFFF" stop-opacity="0" offset="100%"/>
-    </linearGradient>
-    <circle id="a" cx="22" cy="22" r="22"/>
-    <filter id="c" width="200%" height="200%" x="-50%" y="-50%" filterUnits="objectBoundingBox">
-      <feOffset dy="3" in="SourceAlpha" result="shadowOffsetOuter1"/>
-      <feGaussianBlur stdDeviation="1.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"/>
-      <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"/>
-      <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.12 0" in="shadowBlurOuter1" result="shadowMatrixOuter1"/>
-      <feOffset in="SourceAlpha" result="shadowOffsetOuter2"/>
-      <feGaussianBlur stdDeviation="1.5" in="shadowOffsetOuter2" result="shadowBlurOuter2"/>
-      <feComposite in="shadowBlurOuter2" in2="SourceAlpha" operator="out" result="shadowBlurOuter2"/>
-      <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.06 0" in="shadowBlurOuter2" result="shadowMatrixOuter2"/>
-      <feMerge>
-        <feMergeNode in="shadowMatrixOuter1"/>
-        <feMergeNode in="shadowMatrixOuter2"/>
-      </feMerge>
-    </filter>
-    <mask id="e" width="44" height="44" x="0" y="0" fill="white">
-      <use xlink:href="#a"/>
-    </mask>
-    <mask id="g" width="44" height="44" x="0" y="0" fill="white">
-      <use xlink:href="#a"/>
-    </mask>
-    <rect id="b" width="21" height="14" rx="7"/>
-    <mask id="h" width="21" height="14" x="0" y="0" fill="white">
-      <use xlink:href="#b"/>
-    </mask>
-  </defs>
-  <g fill="none" fill-rule="evenodd" transform="translate(3 3)">
-    <use fill="black" filter="url(#c)" xlink:href="#a"/>
-    <use fill="#FFFFFF" stroke="url(#d)" mask="url(#e)" xlink:href="#a"/>
-    <use stroke="url(#f)" mask="url(#g)" xlink:href="#a"/>
-    <path fill="#08ABD5" d="M20.4510728,17.8047586 L19.6287982,15.9027292 L15.9222374,15.9027292 L15.0999628,17.8047586 L13,17.8047586 L16.8204142,9 L18.7306214,9 L22.5510356,17.8047586 L20.4510728,17.8047586 Z M17.781843,11.620014 L16.6686097,14.1770469 L18.8824259,14.1770469 L17.781843,11.620014 Z M30.4433834,11.9223233 C30.4433834,13.3331071 29.8825555,14.2442247 28.760883,14.6557033 L31,17.8047586 L28.5711274,17.8047586 L26.6103187,14.9958013 L25.2440779,14.9958013 L25.2440779,17.8047586 L23.2706189,17.8047586 L23.2706189,9 L26.6229691,9 C27.9976504,9 28.9780449,9.23092841 29.5641821,9.69279216 C30.1503192,10.1546559 30.4433834,10.8978255 30.4433834,11.9223233 Z M28.0651122,12.9678097 C28.3096874,12.7494741 28.4319732,12.4030815 28.4319732,11.9286214 C28.4319732,11.4541614 28.3054707,11.1287623 28.0524619,10.9524143 C27.799453,10.7760663 27.3566942,10.6878936 26.7241721,10.6878936 L25.2440779,10.6878936 L25.2440779,13.2953114 L26.686221,13.2953114 C27.3609112,13.2953114 27.820537,13.1861453 28.0651122,12.9678097 Z"/>
-    <g transform="translate(11.5 21)">
-      <use stroke="#08ABD5" stroke-width="3" mask="url(#h)" xlink:href="#b"/>
-      <circle cx="7" cy="7" r="4.2" fill="#08ABD5"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="100px" height="100px" viewBox="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 42 (36781) - http://www.bohemiancoding.com/sketch -->
+    <title>ar-off</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="ar-off">
+            <rect id="bounds" x="0" y="0" width="100" height="100"></rect>
+            <path d="M46.5501167,40.7037264 L44.7186869,36.4890022 L36.4631651,36.4890022 L34.6317353,40.7037264 L29.9545455,40.7037264 L38.4636499,21.1931818 L42.7182021,21.1931818 L51.2273065,40.7037264 L46.5501167,40.7037264 Z M40.6050139,26.9988947 L38.1255398,32.6650471 L43.0563122,32.6650471 L40.6050139,26.9988947 Z M68.8057175,27.6687846 C68.8057175,30.7949533 67.5566009,32.813907 65.0583304,33.7257062 L70.0454545,40.7037264 L64.6356928,40.7037264 L60.2684372,34.4793324 L57.2254462,34.4793324 L57.2254462,40.7037264 L52.8300148,40.7037264 L52.8300148,21.1931818 L60.296613,21.1931818 C63.3584032,21.1931818 65.5420092,21.7048982 66.8474964,22.7283463 C68.1529837,23.7517944 68.8057175,25.3985907 68.8057175,27.6687846 Z M63.5086591,29.9854873 C64.0533948,29.5016755 64.3257585,28.734101 64.3257585,27.6827406 C64.3257585,26.6313803 64.0440029,25.9103255 63.4804832,25.5195544 C62.9169636,25.1287833 61.9308189,24.9334007 60.5220198,24.9334007 L57.2254462,24.9334007 L57.2254462,30.7112014 L60.4374923,30.7112014 C61.9402114,30.7112014 62.9639234,30.4692992 63.5086591,29.9854873 Z" id="AR" fill="#000000"></path>
+            <g id="switch" transform="translate(26.000000, 47.000000)" fill="#000000">
+                <path d="M3.9375,16.2954545 C3.9375,23.0276766 9.39264106,28.4829545 16.1233099,28.4829545 L31.8766901,28.4829545 C38.6017192,28.4829545 44.0625,23.0235061 44.0625,16.2954545 C44.0625,9.56323245 38.6073589,4.10795455 31.8766901,4.10795455 L16.1233099,4.10795455 C9.39828082,4.10795455 3.9375,9.56740296 3.9375,16.2954545 Z M0.613636364,16.2954545 C0.613636364,7.72876496 7.56548105,0.784090909 16.1233099,0.784090909 L31.8766901,0.784090909 C40.4424463,0.784090909 47.3863636,7.72688138 47.3863636,16.2954545 C47.3863636,24.8621441 40.434519,31.8068182 31.8766901,31.8068182 L16.1233099,31.8068182 C7.55755371,31.8068182 0.613636364,24.8640277 0.613636364,16.2954545 Z" id="Rectangle" fill-rule="nonzero"></path>
+                <ellipse id="Oval-5-Copy-2" cx="16.2045455" cy="16.2954545" rx="9.35454545" ry="9.30681818"></ellipse>
+            </g>
+        </g>
     </g>
-  </g>
 </svg>

@@ -1,44 +1,15 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="57" height="60" viewBox="0 0 57 60" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <defs>
-    <linearGradient id="c" x1="50%" x2="50%" y1="0%" y2="99.021%">
-      <stop stop-color="#000000" stop-opacity="0" offset="0%"/>
-      <stop stop-color="#000000" stop-opacity=".02" offset="80%"/>
-      <stop stop-color="#000000" stop-opacity=".04" offset="100%"/>
-    </linearGradient>
-    <linearGradient id="e" x1="50%" x2="50%" y1="0%" y2="100%">
-      <stop stop-color="#FFFFFF" stop-opacity=".12" offset="0%"/>
-      <stop stop-color="#FFFFFF" stop-opacity=".06" offset="20%"/>
-      <stop stop-color="#FFFFFF" stop-opacity="0" offset="100%"/>
-    </linearGradient>
-    <circle id="a" cx="25.067" cy="25.067" r="25.067"/>
-    <filter id="b" width="200%" height="200%" x="-50%" y="-50%" filterUnits="objectBoundingBox">
-      <feOffset dy="3" in="SourceAlpha" result="shadowOffsetOuter1"/>
-      <feGaussianBlur stdDeviation="1.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"/>
-      <feComposite in="shadowBlurOuter1" in2="SourceAlpha" operator="out" result="shadowBlurOuter1"/>
-      <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.12 0" in="shadowBlurOuter1" result="shadowMatrixOuter1"/>
-      <feOffset in="SourceAlpha" result="shadowOffsetOuter2"/>
-      <feGaussianBlur stdDeviation="1.5" in="shadowOffsetOuter2" result="shadowBlurOuter2"/>
-      <feComposite in="shadowBlurOuter2" in2="SourceAlpha" operator="out" result="shadowBlurOuter2"/>
-      <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.06 0" in="shadowBlurOuter2" result="shadowMatrixOuter2"/>
-      <feMerge>
-        <feMergeNode in="shadowMatrixOuter1"/>
-        <feMergeNode in="shadowMatrixOuter2"/>
-      </feMerge>
-    </filter>
-    <mask id="d" width="50.135" height="50.135" x="0" y="0" fill="white">
-      <use xlink:href="#a"/>
-    </mask>
-    <mask id="f" width="50.135" height="50.135" x="0" y="0" fill="white">
-      <use xlink:href="#a"/>
-    </mask>
-  </defs>
-  <g fill="none" fill-rule="evenodd" transform="translate(3.62 3.06)">
-    <use fill="black" filter="url(#b)" xlink:href="#a"/>
-    <use fill="#FFFFFF" stroke="url(#c)" stroke-width="1.139" mask="url(#d)" xlink:href="#a"/>
-    <use stroke="url(#e)" stroke-width="1.139" mask="url(#f)" xlink:href="#a"/>
-    <g transform="rotate(45 8.839 40.905)">
-      <path fill="#08ABD5" d="M10.1730185,2.0382475 C9.61284515,0.912554488 8.70455185,0.9040724 8.13477098,2.0382475 L0.512038399,17.2116485 C0.2292474,17.774557 0.226396951,18.6815381 0.512038399,19.2501206 L8.13477098,34.4235216 C8.70029066,35.5492146 9.61484151,35.5452028 10.1730185,34.4235216 L17.7236869,19.2501206 C18.0038044,18.6872121 18.0066279,17.780231 17.7236869,17.2116485 L10.1730185,2.0382475 Z"/>
-      <circle cx="9.115" cy="18.231" r="3.988" fill="#FFFFFF"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="100px" height="100px" viewBox="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 42 (36781) - http://www.bohemiancoding.com/sketch -->
+    <title>ar-recalibrate</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="ar-recalibrate">
+            <rect id="bounds" x="0" y="0" width="100" height="100"></rect>
+            <g id="Group-5-Copy-2" transform="translate(20.000000, 20.000000)" fill="#000000">
+                <path d="M59.1957934,4.38407843 L46.2944036,42.8443123 C45.8109586,44.2855063 44.2711245,45.815783 42.8443123,46.2944036 L4.38407843,59.1957934 C1.50926879,60.1601412 -0.0137198311,58.6084409 0.934367287,55.7460823 L13.7137893,17.1638806 C14.1926638,15.7181161 15.7325436,14.1878851 17.1638806,13.7137893 L55.7460823,0.934367287 C58.6300087,-0.0208636607 60.1529291,1.53076846 59.1957934,4.38407843 Z M23.2503444,36.7496556 C26.9780762,40.4773875 33.0219238,40.4773875 36.7496556,36.7496556 C40.4773875,33.0219238 40.4773875,26.9780762 36.7496556,23.2503444 C33.0219238,19.5226125 26.9780762,19.5226125 23.2503444,23.2503444 C19.5226125,26.9780762 19.5226125,33.0219238 23.2503444,36.7496556 Z" id="Combined-Shape"></path>
+            </g>
+        </g>
     </g>
-  </g>
 </svg>
