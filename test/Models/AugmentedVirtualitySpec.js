@@ -33,7 +33,7 @@ describe('AugmentedVirtuality', function() {
         expect(av.manualAlignment).toEqual(false);
         expect(av.maximumUpdatesPerSecond).toEqual(10.0);
         expect(av.manualAlignment).toEqual(false);
-        expect(av.hoverLevel).toEqual(0);
+        expect(av.hoverLevel).toEqual(2);
     });
     
     it('check changing enabled', function() {
@@ -140,15 +140,15 @@ describe('AugmentedVirtuality', function() {
         av.enabled = true;
         // Verify inital state for test sanity.
         expect(av.enabled).toEqual(true);
-        expect(av.hoverLevel).toEqual(0);
+        expect(av.hoverLevel).toEqual(2);
 
         // Toggle through hover levels and expect the hover level to change.
+        av.toggleHoverHeight();
+        expect(av.hoverLevel).toEqual(0);
         av.toggleHoverHeight();
         expect(av.hoverLevel).toEqual(1);
         av.toggleHoverHeight();
         expect(av.hoverLevel).toEqual(2);
-        av.toggleHoverHeight();
-        expect(av.hoverLevel).toEqual(0);
     });
 
     it('check normalise radians', function() {

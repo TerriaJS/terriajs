@@ -106,16 +106,17 @@ const AugmentedVirtualityTool = React.createClass({
 
         const hover_level = this.state.augmentedVirtuality.hoverLevel;
         let hoverImage = Icon.GLYPHS.arHover2;
+        // Note: We use the image of the next level that we will be changing to, not the level the we are currently at.
         switch (hover_level)
         {
         case 0:
-            hoverImage = Icon.GLYPHS.arHover0;
-            break;
-        case 1:
             hoverImage = Icon.GLYPHS.arHover1;
             break;
-        case 2:
+        case 1:
             hoverImage = Icon.GLYPHS.arHover2;
+            break;
+        case 2:
+            hoverImage = Icon.GLYPHS.arHover0;
             break;
         }
 
