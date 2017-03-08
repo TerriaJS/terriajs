@@ -18,9 +18,9 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
         test: /\.js?$/,
         include: path.dirname(require.resolve('terriajs-cesium')),
         exclude: [
-            'terriajs-cesium/Source/ThirdParty/zip',
-            'terriajs-cesium/Source/Core/buildModuleUrl',
-            'terriajs-cesium/Source/Core/TaskProcessor'
+            require.resolve('terriajs-cesium/Source/ThirdParty/zip'),
+            require.resolve('terriajs-cesium/Source/Core/buildModuleUrl'),
+            require.resolve('terriajs-cesium/Source/Core/TaskProcessor')
         ],
         loader: StringReplacePlugin.replace({
             replacements: [
@@ -112,12 +112,12 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
     config.module.loaders.push({
         test: /\.js$/,
         include: path.resolve(path.dirname(require.resolve('terriajs-cesium/package.json')), 'Source'),
-        loader: './removeCesiumDebugPragmas'
+        loader: require.resolve('./removeCesiumDebugPragmas')
     });
 
     // Don't let Cesium's `buildModuleUrl` and `TaskProcessor` see require - only the AMD version is relevant.
     config.module.loaders.push({
-        test: 'terriajs-cesium/Source/Core/buildModuleUrl',
+        test: require.resolve('terriajs-cesium/Source/Core/buildModuleUrl'),
         loader: 'imports-loader?require=>false'
     });
 
