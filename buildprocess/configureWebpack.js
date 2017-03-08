@@ -115,10 +115,16 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
         loader: require.resolve('./removeCesiumDebugPragmas')
     });
 
-    // Don't let Cesium's `buildModuleUrl` and `TaskProcessor` see require - only the AMD version is relevant.
+    // Don't let Cesium's `buildModuleUrl` see require - only the AMD version is relevant.
     config.module.loaders.push({
         test: require.resolve('terriajs-cesium/Source/Core/buildModuleUrl'),
         loader: 'imports-loader?require=>false'
+    });
+
+    // Don't let Cesium's `crunch.js` see require - only the AMD version is relevant.
+    config.module.loaders.push({
+        test: require.resolve('terriajs-cesium/Source/ThirdParty/crunch'),
+        loader: require.resolve('imports-loader') + '?require=>false'
     });
 
     config.module.loaders.push({
