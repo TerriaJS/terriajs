@@ -5,6 +5,7 @@ import ObserveModelMixin from '../../ObserveModelMixin';
 import Styles from './augmented_virtuality_tool.scss';
 import Icon from "../../Icon.jsx";
 import ViewerMode from '../../../Models/ViewerMode';
+import defined from 'terriajs-cesium/Source/Core/defined';
 
 const AugmentedVirtuality = require('../../../Models/AugmentedVirtuality.js');
 
@@ -13,12 +14,14 @@ const AugmentedVirtualityTool = React.createClass({
 
     propTypes: {
         terria: React.PropTypes.object.isRequired,
-        viewState: React.PropTypes.object.isRequired
+        viewState: React.PropTypes.object.isRequired,
+        experimentalWarning: React.PropTypes.bool
     },
 
     getInitialState() {
         return {
             augmentedVirtuality: new AugmentedVirtuality(this.props.terria),
+            experimentalWarningShown: false,
             realignHelpShown: false,
             resetRealignHelpShown: false
         };
@@ -26,6 +29,20 @@ const AugmentedVirtualityTool = React.createClass({
 
     handleClickAVTool() {
         // console.log("handleClickAVTool()");
+
+        if (defined(this.props.experimentalWarning) &&
+            (this.props.experimentalWarning !== false) &&
+            !this.state.experimentalWarningShown)
+        {
+            this.setState({experimentalWarningShown: true});
+
+            this.props.viewState.notifications.push({
+                title: "Experimental Feature: Augmented Reality",
+                message: "Augmented Reality mode is currently in beta. "
+                         + "This mode is only designed for use on the latest high end phones.",
+                confirmText: "Got it"
+            });
+        }
 
         this.state.augmentedVirtuality.toggleEnabled();
     },
