@@ -33,6 +33,7 @@ describe('AugmentedVirtuality', function() {
         expect(av.manualAlignment).toEqual(false);
         expect(av.maximumUpdatesPerSecond).toEqual(10.0);
         expect(av.manualAlignment).toEqual(false);
+        expect(av.hoverLevel).toEqual(0);
     });
     
     it('check changing enabled', function() {
@@ -115,7 +116,7 @@ describe('AugmentedVirtuality', function() {
 
     it('check updaing fps', function() {
         var av = new AugmentedVirtuality(terria);
-        
+
         // Set inital state for test sanity.
         av.enabled = true;
         // Verify inital state for test sanity.
@@ -130,6 +131,24 @@ describe('AugmentedVirtuality', function() {
         av.enabled = false;
         av.maximumUpdatesPerSecond = 7.5;
         expect(av.maximumUpdatesPerSecond).toEqual(7.5);
+    });
+
+    it('check toggle hover level state change', function() {
+        var av = new AugmentedVirtuality(terria);
+
+        // Set inital state for test sanity.
+        av.enabled = true;
+        // Verify inital state for test sanity.
+        expect(av.enabled).toEqual(true);
+        expect(av.hoverLevel).toEqual(0);
+
+        // Toggle through hover levels and expect the hover level to change.
+        av.toggleHoverHeight();
+        expect(av.hoverLevel).toEqual(1);
+        av.toggleHoverHeight();
+        expect(av.hoverLevel).toEqual(2);
+        av.toggleHoverHeight();
+        expect(av.hoverLevel).toEqual(0);
     });
 
     it('check normalise radians', function() {

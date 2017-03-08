@@ -104,6 +104,21 @@ const AugmentedVirtualityTool = React.createClass({
             realignmentImage = Icon.GLYPHS.arRealignEnd;
         }
 
+        const hover_level = this.state.augmentedVirtuality.hoverLevel;
+        let hoverImage = Icon.GLYPHS.arHover2;
+        switch (hover_level)
+        {
+        case 0:
+            hoverImage = Icon.GLYPHS.arHover0;
+            break;
+        case 1:
+            hoverImage = Icon.GLYPHS.arHover1;
+            break;
+        case 2:
+            hoverImage = Icon.GLYPHS.arHover2;
+            break;
+        }
+
         return <If condition={(this.props.terria.viewerMode !== ViewerMode.Leaflet) && (this.state.augmentedVirtuality.suitableBrowser())}>
                    <div className={Styles.augmentedVirtualityTool}>
                        <button type='button' className={Styles.btn}
@@ -116,7 +131,7 @@ const AugmentedVirtualityTool = React.createClass({
                            <button type='button' className={Styles.btn}
                                    title='toggle hover height'
                                    onClick={this.handleClickHover}>
-                                   <Icon glyph={Icon.GLYPHS.arHover}/>
+                                   <Icon glyph={hoverImage}/>
                            </button>
 
                            <button type='button' className={Styles.btn}
