@@ -83,6 +83,12 @@ A second method is to use `terria.formatNumber` directly in the template. This a
 
               "featureInfoTemplate": "template": "Pixel colour: <b>Red={{#terria.formatNumber}}{maximumFractionDigits:3}{{Red}}{{/terria.formatNumber}}</b>."
 
+## URL-encoding strings
+
+To URL-encode a value in a template, use `terria.urlEncodeComponent`.  For example:
+
+    Test: {{#terria.urlEncodeComponent}}W/HOE#1{{/terria.urlEncodeComponent}}
+
 ## Other supporting data
 
 In the template, the clicked point's latitude and longitude are also available as `{{terria.coords.latitude}}` and `{{terria.coords.longitude}}`.
