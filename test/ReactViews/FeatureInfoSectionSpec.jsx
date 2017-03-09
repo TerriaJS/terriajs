@@ -318,6 +318,13 @@ describe('FeatureInfoSection', function() {
             expect(findAllEqualTo(result, 'Test: text').length).toEqual(1);
         });
 
+        it('url encodes sections of text', function() {
+            const template = 'Test: {{#terria.urlEncodeComponent}}W/HOE#1{{/terria.urlEncodeComponent}}';
+            const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template} viewState={viewState} />;
+            const result = getShallowRenderedOutput(section);
+            expect(findAllEqualTo(result, 'Test: W%2FHOE%231').length).toEqual(1);
+        });
+
         it('does not escape ampersand as &amp;', function() {
             const template = {template: 'Ampersand: {{ampersand}}'};
             const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template} viewState={viewState} />;

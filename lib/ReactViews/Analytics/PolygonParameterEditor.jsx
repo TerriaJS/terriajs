@@ -94,6 +94,12 @@ function getPointsLongLats(pointEntities, terria) {
         points.push(CesiumMath.toDegrees(cartographic.latitude));
         pointsLongLats.push(points);
     }
+
+    // Close the polygon.
+    if (pointsLongLats.length > 0) {
+        pointsLongLats.push(pointsLongLats[0]);
+    }
+
     return pointsLongLats;
 }
 
