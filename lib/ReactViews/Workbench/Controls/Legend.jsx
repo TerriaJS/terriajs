@@ -51,6 +51,7 @@ const Legend = React.createClass({
                     <li key={proxiedUrl} className={classNames({[Styles.legendImagehasError]: this.doesLegendHaveError(legendUrl)})}>
                         <a onError={this.onImageError.bind(this, legendUrl)}
                            href={proxiedUrl}
+                           className={Styles.imageAnchor}
                            target="_blank">
                             <img src={proxiedUrl}/>
                         </a>
