@@ -71,8 +71,8 @@ const DataCatalogGroup = React.createClass({
         const group = this.props.group;
         return (
             <CatalogGroup
-                text={group.name}
-                title={getAncestors(group).map(member => member.name).join(' → ')}
+                text={group.nameInCatalog}
+                title={getAncestors(group).map(member => member.nameInCatalog).join(' → ')}
                 topLevel={this.isTopLevel()}
                 open={this.isOpen()}
                 loading={group.isLoading}
