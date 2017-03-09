@@ -1,21 +1,25 @@
 'use strict';
 
-import DisplayAsPercentSection from './Controls/DisplayAsPercentSection';
 import classNames from 'classnames';
-import ConceptViewer from './Controls/ConceptViewer';
+import React from 'react';
+import {sortable} from 'react-anything-sortable';
+
 import defined from 'terriajs-cesium/Source/Core/defined';
+
+import DisplayAsPercentSection from './Controls/DisplayAsPercentSection';
+import ConceptViewer from './Controls/ConceptViewer';
 import DimensionSelectorSection from './Controls/DimensionSelectorSection';
+import getAncestors from '../../Models/getAncestors';
 import Legend from './Controls/Legend';
 import ObserveModelMixin from './../ObserveModelMixin';
 import OpacitySection from './Controls/OpacitySection';
 import ColorScaleRangeSection from './Controls/ColorScaleRangeSection';
-import React from 'react';
 import ShortReport from './Controls/ShortReport';
-import Styles from './workbench-item.scss';
 import StyleSelectorSection from './Controls/StyleSelectorSection';
 import ViewingControls from './Controls/ViewingControls';
-import Icon from "../Icon.jsx";
-import {sortable} from 'react-anything-sortable';
+
+import Styles from './workbench-item.scss';
+import Icon from '../Icon.jsx';
 
 const WorkbenchItem = React.createClass({
     mixins: [ObserveModelMixin],
@@ -67,7 +71,8 @@ const WorkbenchItem = React.createClass({
                         <div
                             onMouseDown={this.props.onMouseDown}
                             onTouchStart={this.props.onTouchStart}
-                            className={Styles.draggable}>
+                            className={Styles.draggable}
+                            title={getAncestors(workbenchItem).map(member => member.nameInCatalog).concat(workbenchItem.nameInCatalog).join(' → ')}>
                             <If condition={!workbenchItem.isMappable}>
                                 <span className={Styles.iconLineChart}><Icon glyph={Icon.GLYPHS.lineChart}/></span>
                             </If>

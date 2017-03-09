@@ -6,6 +6,7 @@ Change Log
 ### 4.10.4
 
 * Close polygons used as input to a `CatalogFunction` by making the last position the same as the first one.
+* Added support for a new `nameInCatalog` property on all catalog members which overrides `name` when displayed in the catalog, if present.
 
 ### 4.10.3
 
