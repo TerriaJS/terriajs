@@ -5,6 +5,8 @@ Change Log
 
 ### 4.10.4
 
+* Added the ability for `CkanCatalogGroup` to receive results in pages, rather than all in one request.  This will happen automatically when the server returns partial results.
+* Improved the performance of the catalog UI by not creating React elements for the contents of a group until that group is opened.
 * Close polygons used as input to a `CatalogFunction` by making the last position the same as the first one.
 * Added support for a new `nameInCatalog` property on all catalog members which overrides `name` when displayed in the catalog, if present.
 * Added `terria.urlEncodeComponent` function for use in feature info templates.
