@@ -10,6 +10,7 @@ Change Log
 * Close polygons used as input to a `CatalogFunction` by making the last position the same as the first one.
 * Added support for a new `nameInCatalog` property on all catalog members which overrides `name` when displayed in the catalog, if present.
 * Added `terria.urlEncodeComponent` function for use in feature info templates.
+* `yAxisMin` and `yAxisMax` are now honored when multiple charts are active, by using the minimum `yAxisMin` and the maximum `yAxisMax` of all charts.
 
 ### 4.10.3
 
