@@ -71,23 +71,25 @@ const DataCatalogGroup = React.createClass({
         const group = this.props.group;
         return (
             <CatalogGroup
-                text={group.name}
-                title={getAncestors(group).map(member => member.name).join(' → ')}
+                text={group.nameInCatalog}
+                title={getAncestors(group).map(member => member.nameInCatalog).join(' → ')}
                 topLevel={this.isTopLevel()}
                 open={this.isOpen()}
                 loading={group.isLoading}
                 emptyMessage="This group is empty"
                 onClick={this.clickGroup}
                 selected ={this.isSelected()}>
-                <For each="item" of={group.items}>
-                    <DataCatalogMember
-                        key={item.uniqueId}
-                        member={item}
-                        viewState={this.props.viewState}
-                        userData={this.props.userData}
-                        overrideOpen={this.props.manageIsOpenLocally}
-                    />
-                </For>
+                <If condition={this.isOpen()}>
+                    <For each="item" of={group.items}>
+                        <DataCatalogMember
+                            key={item.uniqueId}
+                            member={item}
+                            viewState={this.props.viewState}
+                            userData={this.props.userData}
+                            overrideOpen={this.props.manageIsOpenLocally}
+                        />
+                    </For>
+                </If>
             </CatalogGroup>
         );
     }

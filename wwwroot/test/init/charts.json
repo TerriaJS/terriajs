@@ -38,6 +38,19 @@
           "url": "build/TerriaJS/test/csv_nongeo/xy.csv"
         },
         {
+          "name": "XY Plot with units and yAxisMax",
+          "type": "csv",
+          "url": "build/TerriaJS/test/csv_nongeo/xy.csv",
+          "tableStyle": {
+              "columns": {
+                  "y": {
+                      "yAxisMax": 6,
+                      "units": "km/hr"
+                  }
+              }
+          },
+        },
+        {
           "name": "Time series",
           "type": "csv",
           "url": "build/TerriaJS/test/csv_nongeo/time_series.csv"
