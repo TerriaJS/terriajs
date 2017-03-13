@@ -13,6 +13,7 @@ import CustomComponents from '../Custom/CustomComponents';
 import FeatureInfoDownload from './FeatureInfoDownload';
 import formatNumberForLocale from '../../Core/formatNumberForLocale';
 import Icon from '../Icon.jsx';
+import markdownToHtml from '../../Core/markdownToHtml';
 import ObserveModelMixin from '../ObserveModelMixin';
 import propertyGetTimeValues from '../../Core/propertyGetTimeValues';
 import parseCustomMarkdownToReact from '../Custom/parseCustomMarkdownToReact';
@@ -74,6 +75,7 @@ const FeatureInfoSection = React.createClass({
 
             propertyData.terria = {
                 formatNumber: mustacheFormatNumberFunction,
+                markdown: mustacheMarkdownFunction,
                 urlEncodeComponent: mustacheURLEncodeTextComponent
             };
             if (this.props.position) {
@@ -406,6 +408,21 @@ function mustacheFormatNumberFunction() {
 function mustacheURLEncodeTextComponent() {
     return function(text, render) {
         return encodeURIComponent(render(text));
+    };
+}
+
+/**
+ * Returns a function which implements markdown parsing in Mustache templates.
+ * This is useful to parse a supplied variable as markdown, eg. if it may contain URLs.
+ *
+ * Eg. if myString is 'See info at www.example.com/1 and www.example.com/2.',
+ * {{#terria.markdown}}{{mystring}}{{/terria.markdown}}
+ *   -> 'See info at <a href="www.example.com/1">www.example.com/1</a> and <a href="www.example.com/2">www.example.com/2</a>.'
+ * @private
+ */
+function mustacheMarkdownFunction() {
+    return function(text, render) {
+        return markdownToHtml(render(text));
     };
 }
 
