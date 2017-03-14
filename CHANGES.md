@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### 4.10.5
+
+* When searching locations, the button to search the catalog instead is now above the results instead of below them.
+
 ### 4.10.4
 
 * Added the ability for `CkanCatalogGroup` to receive results in pages, rather than all in one request.  This will happen automatically when the server returns partial results.
