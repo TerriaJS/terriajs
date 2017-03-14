@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### 4.10.5
+
+* Changed "go to full screen mode" tooltip to "Hide the workbench", and "Exit Full Screen" button to "Show the Workbench".  The term "full screen" was misleading.
+
 ### 4.10.4
 
 * Added the ability for `CkanCatalogGroup` to receive results in pages, rather than all in one request.  This will happen automatically when the server returns partial results.
