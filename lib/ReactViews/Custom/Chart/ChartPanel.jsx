@@ -5,11 +5,9 @@ import React from 'react';
 import defined from 'terriajs-cesium/Source/Core/defined';
 
 import Chart from './Chart.jsx';
-import ChartData from '../../../Charts/ChartData';
 import ChartPanelDownloadButton from './ChartPanelDownloadButton';
 import Loader from '../../Loader.jsx';
 import ObserveModelMixin from '../../ObserveModelMixin';
-import VarType from '../../../Map/VarType';
 import Icon from "../../Icon.jsx";
 
 import Styles from './chart-panel.scss';
@@ -51,16 +49,10 @@ const ChartPanel = React.createClass({
         for (let i = chartableItems.length - 1; i >= 0; i--) {
             const item = chartableItems[i];
             if (item.isEnabled && defined(item.tableStructure)) {
-                const xColumn = item.xAxis;
-                if (defined(xColumn)) {
-                    const yColumns = item.tableStructure.columnsByType[VarType.SCALAR].filter(column => column.isActive);
-                    if (yColumns.length > 0) {
-                        const yColumnNumbers = yColumns.map(yColumn => item.tableStructure.columns.indexOf(yColumn));
-                        const pointArrays = item.tableStructure.toPointArrays(xColumn, yColumns);
-                        const thisData = pointArrays.map(chartDataFunctionFromPoints(item, yColumns, yColumnNumbers));
-                        data = data.concat(thisData);
-                        xUnits = defined(xUnits) ? xUnits : xColumn.units;
-                    }
+                const thisData = item.chartData();
+                if (defined(thisData)) {
+                    data = data.concat(thisData);
+                    xUnits = defined(xUnits) ? xUnits : item.xAxis.units;
                 }
             }
         }
@@ -107,25 +99,5 @@ const ChartPanel = React.createClass({
         );
     }
 });
-
-/**
- * Returns a function that will create a {@link ChartData} object for a let of points and a column index.
- *
- * @param item The item to create a chart for
- * @param yColumns Columns that can be used for the y index of the chart.
- * @returns {Function} that returns a {@link ChartData}
- */
-function chartDataFunctionFromPoints(item, yColumns, yColumnNumbers) {
-    return (points, index)=>
-        new ChartData(points, {
-            id: item.uniqueId + '-' + yColumnNumbers[index],
-            name: yColumns[index].name,
-            categoryName: item.name,
-            units: yColumns[index].units,
-            color: yColumns[index].color,
-            yAxisMin: yColumns[index].yAxisMin,
-            yAxisMax: yColumns[index].yAxisMax
-        });
-}
 
 module.exports = ChartPanel;
