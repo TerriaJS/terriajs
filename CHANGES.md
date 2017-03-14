@@ -6,6 +6,7 @@ Change Log
 ### 4.10.5
 
 * Fixed a bug where a chartable (non-geo-spatial) csv file with a column that includes the text "height" would not let the user choose the "height" column as the y-axis of a chart.
+* Added support for non-default x-axes for charts via `<chart x-column="x">` and the new `tableStyle.xAxis` parameter.
 
 ### 4.10.4
 
