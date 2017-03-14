@@ -29,6 +29,7 @@ import VarType from '../../../Map/VarType';
 import Styles from './chart.scss';
 
 const defaultHeight = 100;
+const defaultColor = undefined; // Allows the line color to be set by the css, esp. in the feature info panel.
 
 const Chart = React.createClass({
     // this._element is updated by the ref callback attribute, https://facebook.github.io/react/docs/more-about-refs.html
@@ -77,11 +78,13 @@ const Chart = React.createClass({
         const pointArrays = table.toPointArrays(xColumn, yColumns);
         // The data id should be set to something unique, eg. its source id + column index.
         // If we're here, the data was downloaded from a single file or table, so the column index is unique by itself.
+        const colors = this.props.colors;
         return pointArrays.map((points, index) =>
             new ChartData(points, {
                 id: index,
                 name: yColumns[index].name,
-                units: yColumns[index].units
+                units: yColumns[index].units,
+                color: (colors && colors.length > 0) ? colors[index % colors.length] : defaultColor
             })
         );
     },
