@@ -24,6 +24,7 @@ import ChartData from '../../../Charts/ChartData';
 import LineChart from '../../../Charts/LineChart';
 import proxyCatalogItemUrl from '../../../Models/proxyCatalogItemUrl';
 import TableStructure from '../../../Map/TableStructure';
+import VarType from '../../../Map/VarType';
 
 import Styles from './chart.scss';
 
@@ -61,9 +62,17 @@ const Chart = React.createClass({
 
     chartDataArrayFromTableStructure(table) {
         const xColumn = table.getColumnWithNameIdOrIndex(this.props.xColumn || 0);
-        let yColumns = [table.columns[1]];
+        let yColumns = [];
         if (defined(this.props.yColumns)) {
-            yColumns = this.props.yColumns.map(yCol => table.getColumnWithNameIdOrIndex(yCol));
+            yColumns = this.props.yColumns.map(column => table.getColumnWithNameIdOrIndex(column));
+        } else {
+            // Fall back to the first scalar that isn't the x column.
+            yColumns = table.columns.filter(column => (column !== xColumn) && column.type === VarType.SCALAR);
+            if (yColumns.length > 0) {
+                yColumns = [yColumns[0]];
+            } else {
+                throw new DeveloperError('No y-column available.');
+            }
         }
         const pointArrays = table.toPointArrays(xColumn, yColumns);
         // The data id should be set to something unique, eg. its source id + column index.

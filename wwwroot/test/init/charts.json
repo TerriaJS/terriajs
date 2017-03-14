@@ -70,7 +70,7 @@
           "url": "build/TerriaJS/test/csv/lat_lon_nullvalue.csv",
           "featureInfoTemplate" : {
             "name": "Number {{value}}",
-            "template": "<p>All train stations have the same x-y plot.</p><chart src='build/TerriaJS/test/csv_nongeo/x_height.csv' x-column='z'></chart>"
+            "template": "<p>All train stations have the same x-y plot.</p><chart src='build/TerriaJS/test/csv_nongeo/x_height.csv' x-column='z' y-columns='plant height'></chart>"
           }
         },
         {
@@ -78,7 +78,7 @@
           "type": "csv",
           "url": "build/TerriaJS/test/csv/lat_lon_name_value.csv",
           "featureInfoTemplate" : {
-            "template": "<p>Chart with inline data</p><chart>x,y\n1,3\n5,10\n8,-2\n10,{{value}}\n</chart>"
+            "template": "<p>Chart with inline data</p><chart x-column='x'>x,plant height,z\n1,3,10\n5,10,5\n8,-2,3\n10,{{value}},7\n</chart>"
           }
         },
         {
