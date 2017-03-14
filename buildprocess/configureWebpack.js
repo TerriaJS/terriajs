@@ -92,23 +92,6 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
         loader: 'file-loader'
     });
 
-    // var externalModulesWithJson = ['proj4/package.json', 'entities', 'html-to-react', 'ent', 'htmlparser2/package.json']
-    //     .map(function(module) {
-    //        try {
-    //            return path.dirname(require.resolve(module));
-    //        } catch (e) {
-    //            console.warn('Could not resolve module "' + module + ". Possibly this is no longer a dep of the project?");
-    //        }
-    //     }).filter(function(resolvedModule) {
-    //         return !!resolvedModule;
-    //     });
-
-    // config.module.loaders.push({
-    //     test: /\.json$/,
-    //     include: externalModulesWithJson,
-    //     loader: require.resolve('json-loader')
-    // });
-
     config.module.loaders.push({
         test: /\.js$/,
         include: path.resolve(path.dirname(require.resolve('terriajs-cesium/package.json')), 'Source'),
@@ -124,7 +107,7 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
     // Don't let Cesium's `crunch.js` see require - only the AMD version is relevant.
     config.module.loaders.push({
         test: require.resolve('terriajs-cesium/Source/ThirdParty/crunch'),
-        loader: require.resolve('imports-loader') + '?require=>false'
+        loader: 'imports-loader?require=>false'
     });
 
     config.module.loaders.push({
@@ -197,7 +180,16 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
             test: /\.scss$/,
             loaders: [
                 'style-loader',
-                'css-loader?sourceMap&modules&camelCase&localIdentName=tjs-[name]__[local]&importLoaders=2',
+                {
+                    loader: 'css-loader',
+                    options: {
+                        sourceMap: true,
+                        modules: true,
+                        camelCase: true,
+                        localIdentName: 'tjs-[name]__[local]',
+                        importLoaders: 2
+                    }
+                },
                 'resolve-url-loader?sourceMap',
                 'sass-loader?sourceMap'
             ]
@@ -209,7 +201,16 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
             test: /\.scss$/,
             loader: ExtractTextPlugin.extract({
                 use: [
-                    'css-loader?sourceMap&modules&camelCase&localIdentName=tjs-[name]__[local]&importLoaders=2',
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            sourceMap: true,
+                            modules: true,
+                            camelCase: true,
+                            localIdentName: 'tjs-[name]__[local]',
+                            importLoaders: 2
+                        }
+                    },
                     'resolve-url-loader?sourceMap',
                     'sass-loader?sourceMap'
                 ],
