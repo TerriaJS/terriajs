@@ -1,6 +1,7 @@
 'use strict';
 
 import Chart from '../Custom/Chart/Chart';
+import Description from './Description';
 import GroupPreview from './GroupPreview';
 import InvokeFunction from '../Analytics/InvokeFunction';
 import MappablePreview from './MappablePreview';
@@ -46,6 +47,7 @@ const DataPreview = React.createClass({
                             <div className={Styles.previewChart}>
                                 <Chart data={chartData} axisLabel={{x: previewed.xAxis.units, y: undefined}} height={250 - 34}/>
                             </div>
+                            <Description item={previewed} />
                         </div>
                     </When>
                     <When condition={previewed && typeof previewed.invoke !== 'undefined'}>
