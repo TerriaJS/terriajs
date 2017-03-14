@@ -31,36 +31,6 @@ if (typeof Intl === 'object' && typeof Intl.NumberFormat === 'function') {
 
 const contentClass = Styles.content;
 
-// function getShallowRenderedOutput(jsx) {
-//     const renderer = ReactTestUtils.createRenderer();
-//     renderer.render(jsx);
-//     return renderer.getRenderOutput();
-// }
-
-// function findAllEqualTo(reactElement, text) {
-//     return findAll(reactElement, (element) => element && element === text);
-// }
-
-// function findAllWithPropsChildEqualTo(reactElement, text) {
-//     // Returns elements with element.props.children[i] or element.props.children[i][j] equal to text, for any i or j.
-//     return findAll(reactElement, (element) => {
-//         if (!(element && element.props && element.props.children)) {
-//             return;
-//         }
-//         return element.props.children.indexOf(text) >= 0 || (element.props.children.some && element.props.children.some(x => x && x.length && x.indexOf(text) >= 0));
-//     });
-// }
-
-// function getContentAndDescription(renderedResult) {
-//     const content = findAllWithClass(renderedResult, contentClass)[0];
-//     const descriptionElement = content.props.children.props.children[1][0]; // I have no idea why it's in this position, and don't want to test that it always is.
-//     const descriptionText = descriptionElement.props.children[1][0]; // Ditto.
-//     return {
-//         content: renderedResult.props.children[1],
-//         descriptionElement: descriptionElement,
-//         descriptionText: descriptionText
-//     };
-// }
 
 describe('FeatureInfoSection', function() {
 
@@ -85,7 +55,8 @@ describe('FeatureInfoSection', function() {
             'owner_html': 'Jay<br>Smith',
             'ampersand': 'A & B',
             'lessThan': 'A < B',
-            'unsafe': 'ok!<script>alert("gotcha")</script>'
+            'unsafe': 'ok!<script>alert("gotcha")</script>',
+            'description': 'Check out www.example.com/1 and www.example.com/2.'
         };
         feature = new Entity({
             name: 'Bar',
@@ -318,11 +289,18 @@ describe('FeatureInfoSection', function() {
             expect(findAllEqualTo(result, 'Test: text').length).toEqual(1);
         });
 
-        it('url encodes sections of text', function() {
+        it('can use terria.urlEncodeComponent to url-encode sections of text', function() {
             const template = 'Test: {{#terria.urlEncodeComponent}}W/HOE#1{{/terria.urlEncodeComponent}}';
             const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template} viewState={viewState} />;
             const result = getShallowRenderedOutput(section);
             expect(findAllEqualTo(result, 'Test: W%2FHOE%231').length).toEqual(1);
+        });
+
+        it('can use terria.markdown to parse markdown on fields', function() {
+            const template = '<div>Description: {{#terria.markdown}}{{description}}{{/terria.markdown}}</div>';
+            const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template} viewState={viewState}/>;
+            const result = getShallowRenderedOutput(section);
+            expect(findAllWithType(result, 'a').length).toEqual(2);  // The description has two links which markdown should turn into anchor tags.
         });
 
         it('does not escape ampersand as &amp;', function() {

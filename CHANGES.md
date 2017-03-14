@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### 4.10.5
+
+* Added support for the `terria.markdown` function in feature info templates, so that markdown-formatted data fields can be displayed.
+
 ### 4.10.4
 
 * Added the ability for `CkanCatalogGroup` to receive results in pages, rather than all in one request.  This will happen automatically when the server returns partial results.
