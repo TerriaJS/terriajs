@@ -132,6 +132,9 @@ function expand(props, sourceIndex) {
         if (defined(props.columnUnits) && props.columnUnits[columnNumber]) {
             tableStyleOptions.columns[columnNumber].units = props.columnUnits[columnNumber];
         }
+        if (defined(props.xColumn)) {
+            tableStyleOptions.xAxis = props.xColumn;
+        }
     }
     // Set the active columns via tableStyle too.
     // This is a bit inconsistent with the above, since above we index with column number
@@ -216,10 +219,6 @@ function expand(props, sourceIndex) {
                 });
             }
             newCatalogItem.setChartable();
-            // If we set the active columns already, getNextColor won't be triggered. So set any missing colors manually.
-            tableStructure.columns.filter(column => column.isActive && !defined(column.color)).forEach((column) => {
-                column.color = tableStructure.getColorCallback(tableStructure.getColumnIndex(column.id));
-            });
         } catch(e) {
             // This does not actually make it to the user.
             return raiseErrorToUser(terria, e);

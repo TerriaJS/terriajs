@@ -51,7 +51,7 @@ const ChartPanel = React.createClass({
         for (let i = chartableItems.length - 1; i >= 0; i--) {
             const item = chartableItems[i];
             if (item.isEnabled && defined(item.tableStructure)) {
-                const xColumn = getXColumn(item);
+                const xColumn = item.xAxis;
                 if (defined(xColumn)) {
                     const yColumns = item.tableStructure.columnsByType[VarType.SCALAR].filter(column => column.isActive);
                     if (yColumns.length > 0) {
@@ -107,15 +107,6 @@ const ChartPanel = React.createClass({
         );
     }
 });
-
-/**
- * Gets the column that will be used for the X axis of the chart.
- *
- * @returns {TableColumn}
- */
-function getXColumn(item) {
-    return item.timeColumn || (item.tableStructure && item.tableStructure.columnsByType[VarType.SCALAR][0]);
-}
 
 /**
  * Returns a function that will create a {@link ChartData} object for a let of points and a column index.
