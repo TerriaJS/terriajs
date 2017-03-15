@@ -6,6 +6,10 @@ Change Log
 ### 4.10.5
 
 * Improved error message when accessing the user's location under http with Chrome.
+* When searching locations, the button to search the catalog instead is now above the results instead of below them.
+* Changed "go to full screen mode" tooltip to "Hide the workbench", and "Exit Full Screen" button to "Show the Workbench".  The term "full screen" was misleading.
+* Fixed a bug where a chartable (non-geo-spatial) csv file with a column that includes the text "height" would not let the user choose the "height" column as the y-axis of a chart.
+* Added support for non-default x-axes for charts via `<chart x-column="x">` and the new `tableStyle.xAxis` parameter.
 
 ### 4.10.4
 
