@@ -461,12 +461,14 @@ function getTimeSeriesChartContext(catalogItem, feature, getChartDetails) {
     // Only show it as a line chart if the details are available, the data is sampled (so a line chart makes sense), and charts are available.
     if (defined(getChartDetails) && defined(catalogItem) && catalogItem.isSampled && CustomComponents.isRegistered('chart')) {
         const chartDetails = getChartDetails();
+        const distinguishingId = catalogItem.idToDistinguishChartsOfTheSameFeature;
+        const featureId = defined(distinguishingId) ? (distinguishingId + '--' + feature.id) : feature.id;
         if (chartDetails) {
             const result = {
                 xName: chartDetails.xName,
                 yName: chartDetails.yName,
                 title: chartDetails.yName,
-                id: feature.id,
+                id: featureId,
                 data: chartDetails.csvData.replace(/\\n/g, '\\n'),
                 units: chartDetails.units.join(',')
             };

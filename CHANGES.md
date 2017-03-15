@@ -6,6 +6,7 @@ Change Log
 ### 4.10.6
 
 * Changed "no value" colour of region-mapped data to fully transparent, not black.
+* Fixed an issue where expanding a chart from an SDMX-JSON or SOS feature twice, with different data choices selected, would overwrite the previous chart.
 
 ### 4.10.5
 
