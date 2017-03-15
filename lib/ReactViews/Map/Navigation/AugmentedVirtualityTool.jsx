@@ -55,7 +55,7 @@ const AugmentedVirtualityTool = React.createClass({
 
             this.props.viewState.notifications.push({
                 title: "Manual Alignment",
-                message: "Align your mobile device so that it corresponds with the maps current alignment, then click play."
+                message: "Align your mobile device so that it corresponds with the maps current alignment, then click the blinking compass."
                          + " If no landmarks to align with are currently visible on the map, you can move the map using"
                          + " drag and pinch actions until a recognisable landmark is visible before aligning the device with the map."
                          + "<br /><div><img src='./build/TerriaJS/images/ar-alignment.png'/></div>"
@@ -101,9 +101,9 @@ const AugmentedVirtualityTool = React.createClass({
         }
 
         const realignment = this.state.augmentedVirtuality.manualAlignment;
-        let realignmentImage = Icon.GLYPHS.arRealign;
+        let realignment_style = Styles.btn;
         if (realignment) {
-            realignmentImage = Icon.GLYPHS.arRealignEnd;
+            realignment_style = Styles.btnBlink;
         }
 
         const hover_level = this.state.augmentedVirtuality.hoverLevel;
@@ -138,10 +138,10 @@ const AugmentedVirtualityTool = React.createClass({
                            </button>
 
                            <If condition={!this.state.augmentedVirtuality.manualAlignmentSet}>
-                               <button type='button' className={Styles.btn}
+                               <button type='button' className={realignment_style}
                                        title='toggle manual alignment'
                                        onClick={this.handleClickRealign}>
-                                       <Icon glyph={realignmentImage}/>
+                                       <Icon glyph={Icon.GLYPHS.arRealign}/>
                                </button>
                            </If>
 

@@ -11,7 +11,6 @@ const GLYPHS = {
     arOff: require('../../wwwroot/images/icons/ar-off.svg'),
     arOn: require('../../wwwroot/images/icons/ar-on.svg'),
     arRealign: require('../../wwwroot/images/icons/ar-realign.svg'),
-    arRealignEnd: require('../../wwwroot/images/icons/ar-realign-end.svg'),
     arResetAlignment: require('../../wwwroot/images/icons/ar-reset-alignment.svg'),
     backToStart: require('../../wwwroot/images/icons/back-to-start.svg'),
     backward: require('../../wwwroot/images/icons/backward.svg'),
