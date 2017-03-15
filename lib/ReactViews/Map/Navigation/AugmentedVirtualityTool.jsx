@@ -99,7 +99,7 @@ const AugmentedVirtualityTool = React.createClass({
         }
 
         const realignment = this.state.augmentedVirtuality.manualAlignment;
-        let realignmentImage = Icon.GLYPHS.arRealignStart;
+        let realignmentImage = Icon.GLYPHS.arRealign;
         if (realignment) {
             realignmentImage = Icon.GLYPHS.arRealignEnd;
         }
@@ -143,9 +143,9 @@ const AugmentedVirtualityTool = React.createClass({
 
                            <If condition={(this.state.augmentedVirtuality.manualAlignmentSet) && !realignment}>
                                <button type='button' className={Styles.btn}
-                                       title='reset manual alignment'
+                                       title='reset compass alignment'
                                        onClick={this.handleClickResetRealign}>
-                                       <Icon glyph={Icon.GLYPHS.arRecalibrate}/>
+                                       <Icon glyph={Icon.GLYPHS.arResetAlignment}/>
                                </button>
                            </If>
                        </If>
