@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### 4.10.5
+
+* Improved error message when accessing the user's location under http with Chrome.
+
 ### 4.10.4
 
 * Added the ability for `CkanCatalogGroup` to receive results in pages, rather than all in one request.  This will happen automatically when the server returns partial results.
