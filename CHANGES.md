@@ -10,6 +10,7 @@ Change Log
 * Changed "go to full screen mode" tooltip to "Hide workbench", and "Exit Full Screen" button to "Show Workbench".  The term "full screen" was misleading.
 * Fixed a bug where a chartable (non-geo-spatial) CSV file with a column including the text "height" would not let the user choose the "height" column as the y-axis of a chart.
 * Added support for non-default x-axes for charts via `<chart x-column="x">` and the new `tableStyle.xAxis` parameter.
+* Added support for a `charSet` parameter on CSV catalog items, which overrides the server's mime-type if present.
 
 ### 4.10.4
 
