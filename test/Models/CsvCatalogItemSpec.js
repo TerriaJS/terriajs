@@ -1318,3 +1318,31 @@ describe('CsvCatalogItem with region mapping', function() {
 
 });
 
+describe('CsvCatalogItem with no geo', function() {
+
+    var terria;
+    var csvItem;
+    beforeEach(function() {
+        terria = new Terria({
+            baseUrl: './'
+        });
+        csvItem = new CsvCatalogItem(terria);
+    });
+
+    it('is not mappable', function(done) {
+        csvItem.url = 'test/csv_nongeo/xy.csv';
+        csvItem.load().then(function() {
+            expect(csvItem.isMappable).toEqual(false);
+            expect(csvItem.regionMapping).toBeUndefined();
+        }).otherwise(fail).then(done);
+    });
+
+    it('interprets height column as non-geo', function(done) {
+        csvItem.url = 'test/csv_nongeo/x_height.csv';
+        csvItem.load().then(function() {
+            expect(csvItem.isMappable).toBe(false);
+            expect(csvItem.tableStructure.columnsByType[VarType.ALT].length).toEqual(0);
+        }).otherwise(fail).then(done);
+    });
+
+});
