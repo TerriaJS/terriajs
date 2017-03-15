@@ -6,6 +6,7 @@ Change Log
 ### 4.10.5
 
 * Changed "go to full screen mode" tooltip to "Hide the workbench", and "Exit Full Screen" button to "Show the Workbench".  The term "full screen" was misleading.
+* Fixed a bug where a chartable (non-geo-spatial) csv file with a column that includes the text "height" would not let the user choose the "height" column as the y-axis of a chart.
 
 ### 4.10.4
 
