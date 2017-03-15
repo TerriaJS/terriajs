@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### 4.10.6
+
+* Changed "no value" colour of region-mapped data to fully transparent, not black.
+
 ### 4.10.5
 
 * Improved error message when accessing the user's location under http with Chrome.
