@@ -40,3 +40,13 @@
       }
     }
 }
+
+.btn-primary {
+  @extend .btn;
+  background: $color-primary;
+  color: $text-light;
+
+  &:hover, &--hover {
+    background: get-hover-color($color-primary);
+  }
+}

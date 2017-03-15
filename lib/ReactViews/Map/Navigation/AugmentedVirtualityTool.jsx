@@ -93,9 +93,11 @@ const AugmentedVirtualityTool = React.createClass({
 
     render() {
         const enabled = this.state.augmentedVirtuality.enabled;
-        let image = Icon.GLYPHS.arOff;
+        let toggle_image = Icon.GLYPHS.arOff;
+        let toggle_style = Styles.btn;
         if (enabled) {
-            image = Icon.GLYPHS.arOn;
+            toggle_image = Icon.GLYPHS.arOn;
+            toggle_style = Styles.btnPrimary;
         }
 
         const realignment = this.state.augmentedVirtuality.manualAlignment;
@@ -122,10 +124,10 @@ const AugmentedVirtualityTool = React.createClass({
 
         return <If condition={(this.props.terria.viewerMode !== ViewerMode.Leaflet) && (this.state.augmentedVirtuality.suitableBrowser())}>
                    <div className={Styles.augmentedVirtualityTool}>
-                       <button type='button' className={Styles.btn}
+                       <button type='button' className={toggle_style}
                                title='augmented reality tool'
                                onClick={this.handleClickAVTool}>
-                               <Icon glyph={image}/>
+                               <Icon glyph={toggle_image}/>
                        </button>
 
                        <If condition={enabled}>
