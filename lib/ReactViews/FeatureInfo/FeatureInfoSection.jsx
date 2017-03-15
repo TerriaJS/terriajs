@@ -465,12 +465,12 @@ function getTimeSeriesChartContext(catalogItem, feature, getChartDetails) {
         const featureId = defined(distinguishingId) ? (distinguishingId + '--' + feature.id) : feature.id;
         if (chartDetails) {
             const result = {
-                xName: chartDetails.xName,
-                yName: chartDetails.yName,
+                xName: chartDetails.xName.replace(/\"/g, ''),
+                yName: chartDetails.yName.replace(/\"/g, ''),
                 title: chartDetails.yName,
-                id: featureId,
+                id: featureId.replace(/\"/g, ''),
                 data: chartDetails.csvData.replace(/\\n/g, '\\n'),
-                units: chartDetails.units.join(',')
+                units: chartDetails.units.join(',').replace(/\"/g, '')
             };
             const xAttribute = 'x-column="' + result.xName + '" ';
             const yAttribute = 'y-column="' + result.yName + '" ';
