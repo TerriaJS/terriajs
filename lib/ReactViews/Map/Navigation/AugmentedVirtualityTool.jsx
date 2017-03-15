@@ -137,11 +137,13 @@ const AugmentedVirtualityTool = React.createClass({
                                    <Icon glyph={hoverImage}/>
                            </button>
 
-                           <button type='button' className={Styles.btn}
-                                   title='toggle manual alignment'
-                                   onClick={this.handleClickRealign}>
-                                   <Icon glyph={realignmentImage}/>
-                           </button>
+                           <If condition={!this.state.augmentedVirtuality.manualAlignmentSet}>
+                               <button type='button' className={Styles.btn}
+                                       title='toggle manual alignment'
+                                       onClick={this.handleClickRealign}>
+                                       <Icon glyph={realignmentImage}/>
+                               </button>
+                           </If>
 
                            <If condition={(this.state.augmentedVirtuality.manualAlignmentSet) && !realignment}>
                                <button type='button' className={Styles.btn}
