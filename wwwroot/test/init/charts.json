@@ -51,6 +51,11 @@
           },
         },
         {
+          "name": "XY Plot with plant height column",
+          "type": "csv",
+          "data": "x,y,plant height\n1,2,3\n4,5,6\n7,8,9\n10,4,2\n"
+        },
+        {
           "name": "Time series",
           "type": "csv",
           "url": "build/TerriaJS/test/csv_nongeo/time_series.csv"
@@ -61,7 +66,7 @@
           "url": "build/TerriaJS/test/csv/lat_lon_nullvalue.csv",
           "featureInfoTemplate" : {
             "name": "Number {{value}}",
-            "template": "<p>All train stations have the same x-y plot.</p><chart src='build/TerriaJS/test/csv_nongeo/xy.csv'></chart>"
+            "template": "<p>All train stations have the same x-y plot.</p><chart src='build/TerriaJS/test/csv_nongeo/x_height.csv'></chart>"
           }
         },
         {

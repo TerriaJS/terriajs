@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### 4.10.5
+
+* Fixed a bug where a chartable (non-geo-spatial) csv file with a column that includes the text "height" would not let the user choose the "height" column as the y-axis of a chart.
+
 ### 4.10.4
 
 * Added the ability for `CkanCatalogGroup` to receive results in pages, rather than all in one request.  This will happen automatically when the server returns partial results.
