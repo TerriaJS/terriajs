@@ -44,7 +44,12 @@
 .btn-primary {
   @extend .btn;
   background: $color-primary;
-  color: $text-light;
+
+  svg {
+    path {
+       fill: #000;
+    }
+  }
 
   &:hover, &--hover {
     background: get-hover-color($color-primary);
