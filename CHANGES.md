@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### 4.10.6
+
+* Improved SDMX-JSON items to still show properly, even if the `selectedInitially` property is invalid.
+
 ### 4.10.5
 
 * Improved error message when accessing the user's location under http with Chrome.
