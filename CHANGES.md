@@ -6,6 +6,8 @@ Change Log
 ### 5.0.0
 
 * Fixed a bug in `WebMapServiceCatalogItem` that prevented TerriaJS from correctly determining the projections supported by a WMS layer when supported projections are inherited from parent layers.
+* Changed "no value" colour of region-mapped data to fully transparent, not black.
+* Fixed an issue where expanding a chart from an SDMX-JSON or SOS feature twice, with different data choices selected, would overwrite the previous chart.
 
 ### 4.10.5
 
