@@ -10,7 +10,7 @@ describeIfSupported('EarthGravityModel1996', function() {
     var egm96;
 
     beforeAll(function() {
-        egm96 = new EarthGravityModel1996(require('file!../../wwwroot/data/WW15MGH.DAC'));
+        egm96 = new EarthGravityModel1996(require('file-loader!../../wwwroot/data/WW15MGH.DAC'));
     });
 
     // NGA calculator is here: http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm96/intpt.html

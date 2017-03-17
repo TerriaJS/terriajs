@@ -55,7 +55,7 @@ const ChartPanelDownloadButton = React.createClass({
             when.all(loadingPromises).then(() => {
                 const synthesized = that.synthesizeNameAndValueArrays(newValue);
                 // Could implement this using TaskProcessor, but requires webpack magic.
-                const HrefWorker = require('worker!./downloadHrefWorker');
+                const HrefWorker = require('worker-loader!./downloadHrefWorker');
                 const worker = new HrefWorker;
                 // console.log('names and value arrays', synthesized.names, synthesized.values);
                 if (synthesized.values && synthesized.values.length > 0) {
