@@ -9,6 +9,7 @@ Change Log
 * Changed "no value" colour of region-mapped data to fully transparent, not black.
 * Fixed an issue where expanding a chart from an SDMX-JSON or SOS feature twice, with different data choices selected, would overwrite the previous chart.
 * Improved SDMX-JSON items to still show properly, even if the `selectedInitially` property is invalid.
+* Added `Score` column to `GNAFAddressGeocoder` to indicate relative quality, which maps as default variable.
 
 ### 4.10.5
 
