@@ -137,6 +137,9 @@ function expand(props, sourceIndex) {
     // This is a bit inconsistent with the above, since above we index with column number
     // and here we may be indexing with number or id or name.
     // But it works. (TableStyle.columns may have multiple references to the same column.)
+    if (defined(props.xColumn)) {
+        tableStyleOptions.xAxis = props.xColumn;
+    }
     if (defined(props.yColumns)) {
         props.yColumns.forEach(nameOrIndex => {
             if (!defined(tableStyleOptions.columns[nameOrIndex])) {
@@ -216,10 +219,6 @@ function expand(props, sourceIndex) {
                 });
             }
             newCatalogItem.setChartable();
-            // If we set the active columns already, getNextColor won't be triggered. So set any missing colors manually.
-            tableStructure.columns.filter(column => column.isActive && !defined(column.color)).forEach((column) => {
-                column.color = tableStructure.getColorCallback(tableStructure.getColumnIndex(column.id));
-            });
         } catch(e) {
             // This does not actually make it to the user.
             return raiseErrorToUser(terria, e);

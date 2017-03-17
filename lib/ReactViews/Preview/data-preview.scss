@@ -46,6 +46,12 @@
   }
 }
 
+.preview-chart {
+  padding-top: 10px;
+  margin: 20px 0;
+  background: $modal-secondary-bg;
+}
+
 .field {
   composes: field from '../../Sass/common/_form.scss';
 }

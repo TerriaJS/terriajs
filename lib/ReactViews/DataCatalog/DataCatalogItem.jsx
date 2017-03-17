@@ -66,8 +66,8 @@ const DataCatalogItem = React.createClass({
             <CatalogItem
                 onTextClick={this.setPreviewedItem}
                 selected={this.isSelected()}
-                text={item.name}
-                title={getAncestors(item).map(member => member.name).join(' → ')}
+                text={item.nameInCatalog}
+                title={getAncestors(item).map(member => member.nameInCatalog).join(' → ')}
                 btnState={this.getState()}
                 onBtnClick={this.onBtnClicked}
                 titleOverrides={STATE_TO_TITLE}

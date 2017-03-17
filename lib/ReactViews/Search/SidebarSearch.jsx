@@ -41,6 +41,16 @@ const SidebarSearch = React.createClass({
                         </button>
                     </BadgeBar>
                     <div className={Styles.resultsContent}>
+                        <If condition={this.props.viewState.searchState.locationSearchText.length > 0}>
+                            <div className={Styles.providerResult}>
+                                <ul className={Styles.btnList}>
+                                    <SearchResult clickAction={this.searchInDataCatalog}
+                                                  showPin={false}
+                                                  name={`Search for "${this.props.viewState.searchState.locationSearchText}" in the Data Catalogue`}
+                                    />
+                                </ul>
+                            </div>
+                        </If>
                         <For each="search" of={this.props.viewState.searchState.locationSearchProviders}>
                             <LocationSearchResults key={search.name}
                                                    terria={this.props.terria}
@@ -51,17 +61,6 @@ const SidebarSearch = React.createClass({
 
                             />
                         </For>
-                        <If condition={this.props.viewState.searchState.locationSearchText.length > 0}>
-                            <div className={Styles.providerResult}>
-                                <h4 className={Styles.heading}>Data Catalog</h4>
-                                <ul className={Styles.btnList}>
-                                    <SearchResult clickAction={this.searchInDataCatalog}
-                                                  showPin={false}
-                                                  name={`Search ${this.props.viewState.searchState.locationSearchText} in the Data Catalogue`}
-                                    />
-                                </ul>
-                            </div>
-                        </If>
                     </div>
                 </div>
             </div>
