@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### 4.10.6
+
+* Added `Score` column to `GNAFAddressGeocoder` to indicate relative quality, which maps as default variable.
+
 ### 4.10.5
 
 * Improved error message when accessing the user's location under http with Chrome.
