@@ -78,7 +78,7 @@ describeIfSupported('KmlCatalogItem', function() {
     });
 
     it('can load a KMZ file by URL', function(done) {
-        kml.url = require('file!../../wwwroot/test/KML/vic_police.kmz');
+        kml.url = require('file-loader!../../wwwroot/test/KML/vic_police.kmz');
         kml.load().then(function() {
             expect(kml.dataSource.entities.values.length).toBeGreaterThan(0);
         }).then(done).otherwise(done.fail);
