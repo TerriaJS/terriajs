@@ -31,6 +31,12 @@ const ModalPopup = React.createClass({
         this.onVisibilityChange(this.props.isVisible);
     },
 
+    componentDidUpdate(prevProps, prevState) {
+        if (prevProps.isVisible !== this.props.isVisible) {
+            this.onVisibilityChange(this.props.isVisible);
+        }
+    },
+
     componentDidMount() {
         this.escKeyListener = e => {
             if (e.keyCode === 27) {
@@ -101,7 +107,7 @@ const ModalPopup = React.createClass({
                      aria-describedby="modalDescription"
                      role="dialog">
                     <button type='button'
-                            onClick={this.close}
+                            onClick={this.props.onClose}
                             className={Styles.btnCloseModal}
                             title="Close data panel"
                             data-target="close-modal">
