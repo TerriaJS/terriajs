@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### 5.0.0
+
+* Fixed a bug in `WebMapServiceCatalogItem` that prevented TerriaJS from correctly determining the projections supported by a WMS layer when supported projections are inherited from parent layers.
+
 ### 4.10.5
 
 * Improved error message when accessing the user's location under http with Chrome.
