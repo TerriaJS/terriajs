@@ -3,6 +3,19 @@
 Change Log
 ==========
 
+### 5.0.0
+
+* Breaking changes:
+  * Starting with this release, TerriaJS is meant to be built with Webpack 2.  The best way to upgrade your application is to merge from [TerriaMap](https://github.com/TerriaJS/TerriaMap).  If you run into trouble, post a message on the [TerriaJS forum](https://groups.google.com/forum/#!forum/terriajs).
+  * Removed the following previously-deprecated modules: `registerKnockoutBindings`, `AsyncFunctionResultCatalogItem`, `PlacesLikeMeFunction`, `SpatialDetailingFunction`, and `WhyAmISpecialFunction`.
+  * Removed `lib/Sass/StandardUserInterface.scss`.
+  * Removed the previously-deprecated third pararameter, `getColorCallback`, of `DisplayVariablesConcept`.
+  * Removed the following previously-deprecated properties from `TableColumn`: `indicesIntoUniqueValues`, `indicesOrValues`, `indicesOrNumericalValues`, and `usesIndicesIntoUniqueValues`.
+  * Removed the previously-deprecated `dataSetID` property from `AbsIttCatalogItem`.
+  * Removed the previously-deprecated `allowGroups` property from `CkanCatalogItem`.
+  * Removed the previously-deprecated `setRegionColumnType` function from `RegionMapping`.
+  * Removed the previously-deprecated `options.regionMappingDefinitionsUrl` parameter from the `Terria` constructor.
+
 ### 4.10.5
 
 * Improved error message when accessing the user's location under http with Chrome.
