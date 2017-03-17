@@ -73,7 +73,8 @@ const FeatureInfoSection = React.createClass({
         if (defined(propertyData)) {
 
             propertyData.terria = {
-                formatNumber: mustacheFormatNumberFunction
+                formatNumber: mustacheFormatNumberFunction,
+                urlEncodeComponent: mustacheURLEncodeTextComponent
             };
             if (this.props.position) {
                 const latLngInRadians = Ellipsoid.WGS84.cartesianToCartographic(this.props.position);
@@ -392,6 +393,19 @@ function mustacheFormatNumberFunction() {
         const jsonOptions = components[1].replace(quoteReg, '$1"$3":');
         const options = JSON.parse(jsonOptions);
         return formatNumberForLocale(render(components[2]), options);
+    };
+}
+
+/**
+ * URL Encodes provided text: {{#terria.urlEncodeComponent}}{{value}}{{/terria.urlEncodeComponent}}.
+ * See encodeURIComponent for details.
+ * 
+ * {{#terria.urlEncodeComponent}}W/HOE#1{{/terria.urlEncodeComponent}} -> W%2FHOE%231
+ * @private
+ */
+function mustacheURLEncodeTextComponent() {
+    return function(text, render) {
+        return encodeURIComponent(render(text));
     };
 }
 

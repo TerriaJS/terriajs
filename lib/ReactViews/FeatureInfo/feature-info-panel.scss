@@ -16,11 +16,11 @@
   font-family: $font-base;
 
   svg{
-    fill: $feature-info-bg;
+    fill: $feature-info-color;
   }
 
   a{
-    @extend %link;
+    @include link($feature-info-bg);
   }
   @media screen and (min-width : $md){
     //temp

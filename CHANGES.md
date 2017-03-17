@@ -3,6 +3,39 @@
 Change Log
 ==========
 
+### 4.10.5
+
+* Improved error message when accessing the user's location under http with Chrome.
+* When searching locations, the button to instead search the catalog is now above the results instead of below them.
+* Changed "go to full screen mode" tooltip to "Hide workbench", and "Exit Full Screen" button to "Show Workbench".  The term "full screen" was misleading.
+* Fixed a bug where a chartable (non-geo-spatial) CSV file with a column including the text "height" would not let the user choose the "height" column as the y-axis of a chart.
+* Added support for non-default x-axes for charts via `<chart x-column="x">` and the new `tableStyle.xAxis` parameter.
+* Added support for a `charSet` parameter on CSV catalog items, which overrides the server's mime-type if present.
+
+### 4.10.4
+
+* Added the ability for `CkanCatalogGroup` to receive results in pages, rather than all in one request.  This will happen automatically when the server returns partial results.
+* Improved the performance of the catalog UI by not creating React elements for the contents of a group until that group is opened.
+* Close polygons used as input to a `CatalogFunction` by making the last position the same as the first one.
+* Added support for a new `nameInCatalog` property on all catalog members which overrides `name` when displayed in the catalog, if present.
+* Added `terria.urlEncodeComponent` function for use in feature info templates.
+* `yAxisMin` and `yAxisMax` are now honored when multiple charts are active, by using the minimum `yAxisMin` and the maximum `yAxisMax` of all charts.
+
+### 4.10.3
+
+* Locked third-party dependency proj4 to v2.3.x because v2.4.0 breaks our build.
+
+### 4.10.2
+
+* New sections are now merged info `CatalogMember.info` when `updateFromJson` is called multiple times, rather than the later `info` completely replacing the earlier one.  This is most useful when using `itemProperties` to override some of the info sections in a child catalog item.
+* Fixed a bug where csv files with a date column would sometimes fail if a date is missing.
+
+### 4.10.1
+
+* Improved the SDMX-JSON catalog item to handle huge dimensions, allow a blacklist, handle bad responses better, and more.
+* Fixed a bug that prevented the proxy from being used for loading legends, even in situations where it is necessary such as an `http` legend accessed from an `https` site.
+* Added link to re-download local files, noting that TerriaJS may have done additional processing (eg. geocoding).
+
 ### 4.10.0
 
 * Changed defaults:

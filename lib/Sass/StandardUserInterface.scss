@@ -11,5 +11,5 @@ body {
 }
 
 a {
-  @extend %link;
+  @include link($overlay); // Arbitrarily use the workbench's background as the default.
 }

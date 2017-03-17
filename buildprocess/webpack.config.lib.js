@@ -13,7 +13,7 @@ var config = {
     },
     devtool: 'source-map',
     plugins: [
-        new ExtractTextPlugin("terria.css", {ignoreOrder: true})
+        new ExtractTextPlugin({filename: "terria.css", ignoreOrder: true})
     ]
 };
 

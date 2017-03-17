@@ -41,7 +41,7 @@
     @include transform(none);
   }
   a{
-    @extend %link;
+    @include link($modal-bg);
   }
 }
 

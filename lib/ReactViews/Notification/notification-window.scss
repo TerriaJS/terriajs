@@ -15,7 +15,7 @@
   justify-content: center;
 
   a {
-    @extend %link;
+    @include link($dark);
   }
   pre{
       display: block;
