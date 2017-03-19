@@ -428,26 +428,6 @@ describeIfSupportsWebGL('AugmentedVirtuality tests that require WebGL', function
         av.resetAlignment();
         expect(av.manualAlignmentSet).toEqual(false);
     });
-
-    it('check set hover height', function() {
-        // todo.
-
-        // set to known location.
-        // set a specific height (offset) and then check that the actual height set matches.
-
-        // set another location.
-        // set a specific height (offset) and then check that the actual height set matches.
-    });
-
-    it('check toggle hover height', function() {
-        // todo.
-
-        // set to known location.
-        // toggle though a range of heights and check that they match the expected heights.
-
-        // set another location.
-        // toggle though a range of heights and check that they match the expected heights.
-    });
 });
 
 
