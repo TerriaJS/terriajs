@@ -11,34 +11,34 @@
 }
 
 .btn{
-    composes: btn from '../../../Sass/common/_buttons.scss';
+  composes: btn from '../../../Sass/common/_buttons.scss';
 
-    border-radius: 50%;
-    display: block;
-    float: inherit;
-    background: #FFF;
-    color: $dark;
-    height: 40px;
-    width: 40px;
-    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.15);
-    margin-right: 15px;
+  border-radius: 50%;
+  display: block;
+  float: inherit;
+  background: #FFF;
+  color: $dark;
+  height: 40px;
+  width: 40px;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.15);
+  margin-right: 15px;
 
-    svg{
-      height: 24px;
-      width: 24px;
-      margin: 0 auto;
-      vertical-align: middle;
+  svg{
+    height: 24px;
+    width: 24px;
+    margin: 0 auto;
+    vertical-align: middle;
+  }
+
+  @media screen and (min-width: $sm) {
+    height: 31px;
+    width: 30px;
+
+    svg {
+      height: 20px;
+      width: 20px;
     }
-
-    @media screen and (min-width: $sm) {
-      height: 31px;
-      width: 30px;
-
-      svg {
-        height: 20px;
-        width: 20px;
-      }
-    }
+  }
 }
 
 .btn-primary {
