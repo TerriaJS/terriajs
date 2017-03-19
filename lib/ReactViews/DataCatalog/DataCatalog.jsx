@@ -14,7 +14,9 @@ const DataCatalog = React.createClass({
 
     propTypes: {
         terria: React.PropTypes.object,
-        viewState: React.PropTypes.object
+        viewState: React.PropTypes.object,
+        overrideState: React.PropTypes.string,
+        onActionButtonClicked: React.PropTypes.func
     },
 
     render() {
@@ -40,6 +42,8 @@ const DataCatalog = React.createClass({
                                            member={item}
                                            manageIsOpenLocally={isSearching}
                                            key={item.uniqueId}
+                                           overrideState={this.props.overrideState}
+                                           onActionButtonClicked={this.props.onActionButtonClicked}
                     />}
                 </For>
             </ul>

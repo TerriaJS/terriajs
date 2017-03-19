@@ -14,7 +14,9 @@ const DataCatalogGroup = React.createClass({
         viewState: React.PropTypes.object.isRequired,
         /** Overrides whether to get the open state of the group from the group model or manage it internally */
         manageIsOpenLocally: React.PropTypes.bool,
-        userData: React.PropTypes.bool
+        userData: React.PropTypes.bool,
+        overrideState: React.PropTypes.string,
+        onActionButtonClicked: React.PropTypes.func
     },
 
     getDefaultProps() {
@@ -87,6 +89,8 @@ const DataCatalogGroup = React.createClass({
                             viewState={this.props.viewState}
                             userData={this.props.userData}
                             overrideOpen={this.props.manageIsOpenLocally}
+                            overrideState={this.props.overrideState}
+                            onActionButtonClicked={this.props.onActionButtonClicked}
                         />
                     </For>
                 </If>

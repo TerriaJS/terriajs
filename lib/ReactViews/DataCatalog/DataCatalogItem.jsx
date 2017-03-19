@@ -20,10 +20,17 @@ const DataCatalogItem = React.createClass({
 
     propTypes: {
         item: React.PropTypes.object.isRequired,
-        viewState: React.PropTypes.object.isRequired
+        viewState: React.PropTypes.object.isRequired,
+        overrideState: React.PropTypes.string,
+        onActionButtonClicked: React.PropTypes.func
     },
 
     onBtnClicked(event) {
+        if (this.props.onActionButtonClicked) {
+            this.props.onActionButtonClicked(this.props.item);
+            return;
+        }
+
         if (defined(this.props.item.invoke) || this.props.viewState.useSmallScreenInterface) {
             this.setPreviewedItem();
         } else {
@@ -76,7 +83,9 @@ const DataCatalogItem = React.createClass({
     },
 
     getState() {
-        if (this.props.item.isLoading) {
+        if (this.props.overrideState) {
+            return this.props.overrideState;
+        } else if (this.props.item.isLoading) {
             return 'loading';
         } else if (this.props.viewState.useSmallScreenInterface) {
             return 'preview';

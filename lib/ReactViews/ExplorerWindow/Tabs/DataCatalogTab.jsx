@@ -16,7 +16,9 @@ const DataCatalogTab = React.createClass({
 
     propTypes: {
         terria: React.PropTypes.object,
-        viewState: React.PropTypes.object
+        viewState: React.PropTypes.object,
+        overrideState: React.PropTypes.string,
+        onActionButtonClicked: React.PropTypes.func
     },
 
     changeSearchText(newText) {
@@ -36,42 +38,15 @@ const DataCatalogTab = React.createClass({
                                onSearchTextChanged={this.changeSearchText}
                                onDoSearch={this.search}/>
                     <DataCatalog terria={this.props.terria}
-                                 viewState={this.props.viewState} />
+                                 viewState={this.props.viewState}
+                                 overrideState={this.props.overrideState}
+                                 onActionButtonClicked={this.props.onActionButtonClicked} />
                 </div>
                 <DataPreview terria={terria}
                              viewState={this.props.viewState}
                              previewed={this.props.viewState.previewedItem}
                 />
             </div>
-        );
-    },
-
-    renderDataCatalog() {
-        const terria = this.props.terria;
-        const searchState = this.props.viewState.searchState;
-        const isSearching = searchState.catalogSearchText.length > 0;
-        const items = (
-            isSearching ?
-                searchState.catalogSearchProvider.searchResults.map(result => result.catalogItem) :
-                terria.catalog.group.items
-        ).filter(defined);
-
-        return (
-            <ul className={Styles.dataCatalog}>
-                <If condition={isSearching}>
-                    <label className={Styles.label}>Search results</label>
-                    <SearchHeader searchProvider={searchState.catalogSearchProvider}
-                                  isWaitingForSearchToStart={searchState.isWaitingToStartCatalogSearch}/>
-                </If>
-                <For each="item" of={items}>
-                    {item !== this.props.terria.catalog.userAddedDataGroup &&
-                        <DataCatalogMember viewState={this.props.viewState}
-                                           member={item}
-                                           manageIsOpenLocally={isSearching}
-                                           key={item.uniqueId}
-                    />}
-                </For>
-            </ul>
         );
     }
 });
