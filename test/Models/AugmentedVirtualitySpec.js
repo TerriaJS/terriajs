@@ -467,42 +467,42 @@ var customMatchers = {
             compare: function(actual, expected) {
                 var result = {};
                 result.pass = true;
-                result.message = "";
+                result.message = '';
 
                 if (!defined(actual.orientation)) {
                     result.pass = false;
-                    result.message += "Expected " + actual + " to contain .orientation. ";
+                    result.message += 'Expected ' + actual + ' to contain .orientation. ';
                 }
                 if (!defined(expected.orientation)) {
                     result.pass = false;
-                    result.message += "Expected " + expected + " to contain .orientation. ";
+                    result.message += 'Expected ' + expected + ' to contain .orientation. ';
                 }
 
                 if (result.pass) {
                     if (!defined(actual.orientation.roll)) {
                         result.pass = false;
-                        result.message += "Expected " + actual + " to contain .orientation.roll. ";
+                        result.message += 'Expected ' + actual + ' to contain .orientation.roll. ';
                     }
                     if (!defined(actual.orientation.pitch)) {
                         result.pass = false;
-                        result.message += "Expected " + actual + " to contain .orientation.pitch. ";
+                        result.message += 'Expected ' + actual + ' to contain .orientation.pitch. ';
                     }
                     if (!defined(actual.orientation.heading)) {
                         result.pass = false;
-                        result.message += "Expected " + actual + " to contain .orientation.heading. ";
+                        result.message += 'Expected ' + actual + ' to contain .orientation.heading. ';
                     }
 
                     if (!defined(expected.orientation.roll)) {
                         result.pass = false;
-                        result.message += "Expected " + expected + " to contain .orientation.roll. ";
+                        result.message += 'Expected ' + expected + ' to contain .orientation.roll. ';
                     }
                     if (!defined(expected.orientation.pitch)) {
                         result.pass = false;
-                        result.message += "Expected " + expected + " to contain .orientation.pitch. ";
+                        result.message += 'Expected ' + expected + ' to contain .orientation.pitch. ';
                     }
                     if (!defined(expected.orientation.heading)) {
                         result.pass = false;
-                        result.message += "Expected " + expected + " to contain .orientation.heading. ";
+                        result.message += 'Expected ' + expected + ' to contain .orientation.heading. ';
                     }
                 }
 
@@ -529,9 +529,9 @@ var customMatchers = {
                         if (!similarRadians(actualValue, expectedValue, 0.001)) {
                             result.pass = false;
                             const difference = normaliseRadians(expectedValue - actualValue);
-                            result.message += "Expected roll value " + actualValue + " to be " + expectedValue +
-                                              " (difference was " + difference + " radians, " +
-                                              CesiumMath.toDegrees(difference) + " degrees). ";
+                            result.message += 'Expected roll value ' + actualValue + ' to be ' + expectedValue +
+                                              ' (difference was ' + difference + ' radians, ' +
+                                              CesiumMath.toDegrees(difference) + ' degrees). ';
                         }
                     }
                 }

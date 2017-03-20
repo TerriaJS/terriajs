@@ -3,7 +3,7 @@
 import React from 'react';
 import ObserveModelMixin from '../../ObserveModelMixin';
 import Styles from './augmented_virtuality_tool.scss';
-import Icon from "../../Icon.jsx";
+import Icon from '../../Icon.jsx';
 import ViewerMode from '../../../Models/ViewerMode';
 import defined from 'terriajs-cesium/Source/Core/defined';
 
@@ -28,7 +28,7 @@ const AugmentedVirtualityTool = React.createClass({
     },
 
     handleClickAVTool() {
-        // console.log("handleClickAVTool()");
+        // console.log('handleClickAVTool()');
 
         if (defined(this.props.experimentalWarning) &&
             (this.props.experimentalWarning !== false) &&
@@ -37,10 +37,10 @@ const AugmentedVirtualityTool = React.createClass({
             this.setState({experimentalWarningShown: true});
 
             this.props.viewState.notifications.push({
-                title: "Experimental Feature: Augmented Reality",
-                message: "Augmented Reality mode is currently in beta. "
-                         + "This mode is only designed for use on the latest high end mobile devices.",
-                confirmText: "Got it"
+                title: 'Experimental Feature: Augmented Reality',
+                message: 'Augmented Reality mode is currently in beta. '
+                         + 'This mode is only designed for use on the latest high end mobile devices.',
+                confirmText: 'Got it'
             });
         }
 
@@ -48,19 +48,19 @@ const AugmentedVirtualityTool = React.createClass({
     },
 
     handleClickRealign() {
-        // console.log("handleClickRealign()");
+        // console.log('handleClickRealign()');
 
         if (!this.state.realignHelpShown) {
             this.setState({realignHelpShown: true});
 
             this.props.viewState.notifications.push({
-                title: "Manual Alignment",
-                message: "Align your mobile device so that it corresponds with the maps current alignment, then click the blinking compass."
-                         + " If no landmarks to align with are currently visible on the map, you can move the map using"
-                         + " drag and pinch actions until a recognisable landmark is visible before aligning the device with the map."
-                         + "<br /><div><img src='./build/TerriaJS/images/ar-alignment.png'/></div>"
-                         + "<br />Tip: The sun or moon are often good landmarks to align with (be careful not to look at the sun - it can hurt your eyes).",
-                confirmText: "Got it"
+                title: 'Manual Alignment',
+                message: 'Align your mobile device so that it corresponds with the maps current alignment, then click the blinking compass.'
+                         + ' If no landmarks to align with are currently visible on the map, you can move the map using'
+                         + ' drag and pinch actions until a recognisable landmark is visible before aligning the device with the map.'
+                         + '<br /><div><img src=\x27./build/TerriaJS/images/ar-alignment.png\x27 /></div>'
+                         + '<br />Tip: The sun or moon are often good landmarks to align with (be careful not to look at the sun - it can hurt your eyes).',
+                confirmText: 'Got it'
             });
         }
 
@@ -68,17 +68,17 @@ const AugmentedVirtualityTool = React.createClass({
     },
 
     handleClickResetRealign() {
-        // console.log("handleClickHover()");
+        // console.log('handleClickHover()');
 
         if (!this.state.resetRealignHelpShown) {
             this.setState({resetRealignHelpShown: true});
 
             this.props.viewState.notifications.push({
-                title: "Reset Alignment",
-                message: "Resetting to compass alignment. If the alignment doesn't match the real world try waving"
-                         + " your device in a figure 8 motion to recalibrate device. This can be done at any time."
-                         + "<br /> <br />Avoid locations with magnetic fields or metal objects as these may disorient the devices compass.",
-                confirmText: "Got it"
+                title: 'Reset Alignment',
+                message: 'Resetting to compass alignment. If the alignment doesn\x27t match the real world try waving'
+                         + ' your device in a figure 8 motion to recalibrate device. This can be done at any time.'
+                         + '<br /> <br />Avoid locations with magnetic fields or metal objects as these may disorient the devices compass.',
+                confirmText: 'Got it'
             });
         }
 
@@ -86,7 +86,7 @@ const AugmentedVirtualityTool = React.createClass({
     },
 
     handleClickHover() {
-        // console.log("handleClickHover()");
+        // console.log('handleClickHover()');
 
         this.state.augmentedVirtuality.toggleHoverHeight();
     },
