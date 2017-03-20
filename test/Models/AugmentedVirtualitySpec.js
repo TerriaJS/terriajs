@@ -508,28 +508,28 @@ var customMatchers = {
 
                 if (result.pass) {
                     for (let i = 0; i < 3; i++) {
-                        let expected_value;
-                        let actual_value;
+                        let expectedValue;
+                        let actualValue;
 
                         switch (i) {
                             case 0:
-                                expected_value = expected.orientation.roll;
-                                actual_value = actual.orientation.roll;
+                                expectedValue = expected.orientation.roll;
+                                actualValue = actual.orientation.roll;
                                 break;
                             case 1:
-                                expected_value = expected.orientation.pitch;
-                                actual_value = actual.orientation.pitch;
+                                expectedValue = expected.orientation.pitch;
+                                actualValue = actual.orientation.pitch;
                                 break;
                             case 2:
-                                expected_value = expected.orientation.heading;
-                                actual_value = actual.orientation.heading;
+                                expectedValue = expected.orientation.heading;
+                                actualValue = actual.orientation.heading;
                                 break;
                         }
 
-                        if (!similarRadians(actual_value, expected_value, 0.001)) {
+                        if (!similarRadians(actualValue, expectedValue, 0.001)) {
                             result.pass = false;
-                            const difference = normaliseRadians(expected_value - actual_value);
-                            result.message += "Expected roll value " + actual_value + " to be " + expected_value +
+                            const difference = normaliseRadians(expectedValue - actualValue);
+                            result.message += "Expected roll value " + actualValue + " to be " + expectedValue +
                                               " (difference was " + difference + " radians, " +
                                               CesiumMath.toDegrees(difference) + " degrees). ";
                         }
