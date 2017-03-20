@@ -199,7 +199,7 @@ describe('AugmentedVirtuality', function() {
 
         expect(similarRadians(2*Math.PI,  0,      0.001)).toBeTruthy();
         expect(similarRadians(2*Math.PI,  0.000999, 0.001)).toBeTruthy();
-        expect(similarRadians(2*Math.PI, -0.000999, 0.001)).toBeTruthy();;
+        expect(similarRadians(2*Math.PI, -0.000999, 0.001)).toBeTruthy();
         expect(similarRadians(2*Math.PI,  0.001001, 0.001)).toBeFalsy();
         expect(similarRadians(2*Math.PI, -0.001001, 0.001)).toBeFalsy();
 
@@ -446,18 +446,13 @@ function similarRadians(expected, actual, eps)
            (normaliseRadians(expected - actual) >= 2*Math.PI-eps);
 }
 
-// Build Orientation.
-function bo(roll, pitch, heading) {
-    return {orientation:{roll:roll, pitch:pitch, heading:heading}};
-};
-
 // Build orientation from Degrees.
 function bod(roll, pitch, heading) {
     roll = CesiumMath.toRadians(roll);
     pitch = CesiumMath.toRadians(pitch);
     heading = CesiumMath.toRadians(heading);
     return {orientation:{roll:roll, pitch:pitch, heading:heading}};
-};
+}
 
 // Determines whether two orientations (object with .orientation.roll, .orientation.pitch and .orientation.heading) with
 // angles specified as radians are silimar or not.
@@ -534,7 +529,7 @@ var customMatchers = {
 
                         if (!similarRadians(actual_value, expected_value, 0.001)) {
                             result.pass = false;
-                            let difference = normaliseRadians(expected_value - actual_value);
+                            const difference = normaliseRadians(expected_value - actual_value);
                             result.message += "Expected roll value " + actual_value + " to be " + expected_value +
                                               " (difference was " + difference + " radians, " +
                                               CesiumMath.toDegrees(difference) + " degrees). ";

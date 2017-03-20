@@ -32,8 +32,8 @@ const AugmentedVirtualityTool = React.createClass({
 
         if (defined(this.props.experimentalWarning) &&
             (this.props.experimentalWarning !== false) &&
-            !this.state.experimentalWarningShown)
-        {
+            !this.state.experimentalWarningShown) {
+
             this.setState({experimentalWarningShown: true});
 
             this.props.viewState.notifications.push({
@@ -93,41 +93,40 @@ const AugmentedVirtualityTool = React.createClass({
 
     render() {
         const enabled = this.state.augmentedVirtuality.enabled;
-        let toggle_image = Icon.GLYPHS.arOff;
-        let toggle_style = Styles.btn;
+        let toggleImage = Icon.GLYPHS.arOff;
+        let toggleStyle = Styles.btn;
         if (enabled) {
-            toggle_image = Icon.GLYPHS.arOn;
-            toggle_style = Styles.btnPrimary;
+            toggleImage = Icon.GLYPHS.arOn;
+            toggleStyle = Styles.btnPrimary;
         }
 
         const realignment = this.state.augmentedVirtuality.manualAlignment;
-        let realignment_style = Styles.btn;
+        let realignmentStyle = Styles.btn;
         if (realignment) {
-            realignment_style = Styles.btnBlink;
+            realignmentStyle = Styles.btnBlink;
         }
 
-        const hover_level = this.state.augmentedVirtuality.hoverLevel;
+        const hoverLevel = this.state.augmentedVirtuality.hoverLevel;
         let hoverImage = Icon.GLYPHS.arHover0;
         // Note: We use the image of the next level that we will be changing to, not the level the we are currently at.
-        switch (hover_level)
-        {
-        case 0:
-            hoverImage = Icon.GLYPHS.arHover0;
-            break;
-        case 1:
-            hoverImage = Icon.GLYPHS.arHover1;
-            break;
-        case 2:
-            hoverImage = Icon.GLYPHS.arHover2;
-            break;
+        switch (hoverLevel) {
+            case 0:
+                hoverImage = Icon.GLYPHS.arHover0;
+                break;
+            case 1:
+                hoverImage = Icon.GLYPHS.arHover1;
+                break;
+            case 2:
+                hoverImage = Icon.GLYPHS.arHover2;
+                break;
         }
 
         return <If condition={(this.props.terria.viewerMode !== ViewerMode.Leaflet) && (this.state.augmentedVirtuality.suitableBrowser())}>
                    <div className={Styles.augmentedVirtualityTool}>
-                       <button type='button' className={toggle_style}
+                       <button type='button' className={toggleStyle}
                                title='augmented reality tool'
                                onClick={this.handleClickAVTool}>
-                               <Icon glyph={toggle_image}/>
+                               <Icon glyph={toggleImage}/>
                        </button>
 
                        <If condition={enabled}>
@@ -138,7 +137,7 @@ const AugmentedVirtualityTool = React.createClass({
                            </button>
 
                            <If condition={!this.state.augmentedVirtuality.manualAlignmentSet}>
-                               <button type='button' className={realignment_style}
+                               <button type='button' className={realignmentStyle}
                                        title='toggle manual alignment'
                                        onClick={this.handleClickRealign}>
                                        <Icon glyph={Icon.GLYPHS.arRealign}/>
