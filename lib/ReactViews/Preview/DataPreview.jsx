@@ -1,5 +1,7 @@
 'use strict';
 
+import Chart from '../Custom/Chart/Chart';
+import Description from './Description';
 import GroupPreview from './GroupPreview';
 import InvokeFunction from '../Analytics/InvokeFunction';
 import MappablePreview from './MappablePreview';
@@ -25,6 +27,10 @@ const DataPreview = React.createClass({
 
     render() {
         const previewed = this.props.previewed;
+        let chartData;
+        if (previewed && !previewed.isMappable && previewed.tableStructure) {
+            chartData = previewed.chartData();
+        }
         return (
             <div className={Styles.preview}>
                 <Choose>
@@ -32,6 +38,16 @@ const DataPreview = React.createClass({
                         <div className={Styles.previewInner}>
                             <MappablePreview previewed={previewed} terria={this.props.terria}
                                              viewState={this.props.viewState}/>
+                        </div>
+                    </When>
+                    <When condition={chartData}>
+                        <div className={Styles.previewInner}>
+                            <h3 className={Styles.h3}>{previewed.name}</h3>
+                            <p>This file does not contain geospatial data.</p>
+                            <div className={Styles.previewChart}>
+                                <Chart data={chartData} axisLabel={{x: previewed.xAxis.units, y: undefined}} height={250 - 34}/>
+                            </div>
+                            <Description item={previewed} />
                         </div>
                     </When>
                     <When condition={previewed && typeof previewed.invoke !== 'undefined'}>

@@ -212,6 +212,28 @@ describe('SdmxJsonCatalogItem', function() {
             }).otherwise(fail).then(done);
         });
 
+        it('works with invalid selectedInitially', function(done) {
+            item.updateFromJson({
+                name: 'Foo',
+                url: 'http://sdmx.example.com/sdmx-json/data/FOO',
+                startTime: '2013',
+                endTime: '2013',
+                selectedInitially: {
+                    'MEASURE': ['NO_THERE', 'NOT_HERE_EITHER']
+                }
+            });
+            item.load().then(function() {
+                // Expect it to have realised this is regional data.
+                var regionDetails = item.regionMapping.regionDetails;
+                expect(regionDetails).toBeDefined();
+                // Expect it to have created the right table of data (with a time dimension).
+                var columnNames = item.tableStructure.getColumnNames();
+                expect(columnNames.length).toEqual(4); // Region, only one BD and a total.
+                // Expect the bad selectedInitially setting to be wiped out.
+                expect(item.selectedInitially.MEASURE).not.toBeDefined();
+            }).otherwise(fail).then(done);
+        });
+
         it('works with a time-varying file', function(done) {
             item.updateFromJson({
                 name: 'Foo',

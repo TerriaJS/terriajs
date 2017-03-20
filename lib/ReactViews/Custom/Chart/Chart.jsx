@@ -24,10 +24,12 @@ import ChartData from '../../../Charts/ChartData';
 import LineChart from '../../../Charts/LineChart';
 import proxyCatalogItemUrl from '../../../Models/proxyCatalogItemUrl';
 import TableStructure from '../../../Map/TableStructure';
+import VarType from '../../../Map/VarType';
 
 import Styles from './chart.scss';
 
 const defaultHeight = 100;
+const defaultColor = undefined; // Allows the line color to be set by the css, esp. in the feature info panel.
 
 const Chart = React.createClass({
     // this._element is updated by the ref callback attribute, https://facebook.github.io/react/docs/more-about-refs.html
@@ -61,18 +63,28 @@ const Chart = React.createClass({
 
     chartDataArrayFromTableStructure(table) {
         const xColumn = table.getColumnWithNameIdOrIndex(this.props.xColumn || 0);
-        let yColumns = [table.columns[1]];
+        let yColumns = [];
         if (defined(this.props.yColumns)) {
-            yColumns = this.props.yColumns.map(yCol => table.getColumnWithNameIdOrIndex(yCol));
+            yColumns = this.props.yColumns.map(column => table.getColumnWithNameIdOrIndex(column));
+        } else {
+            // Fall back to the first scalar that isn't the x column.
+            yColumns = table.columns.filter(column => (column !== xColumn) && column.type === VarType.SCALAR);
+            if (yColumns.length > 0) {
+                yColumns = [yColumns[0]];
+            } else {
+                throw new DeveloperError('No y-column available.');
+            }
         }
         const pointArrays = table.toPointArrays(xColumn, yColumns);
         // The data id should be set to something unique, eg. its source id + column index.
         // If we're here, the data was downloaded from a single file or table, so the column index is unique by itself.
+        const colors = this.props.colors;
         return pointArrays.map((points, index) =>
             new ChartData(points, {
                 id: index,
                 name: yColumns[index].name,
-                units: yColumns[index].units
+                units: yColumns[index].units,
+                color: (colors && colors.length > 0) ? colors[index % colors.length] : defaultColor
             })
         );
     },
