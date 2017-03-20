@@ -507,8 +507,7 @@ var customMatchers = {
                 }
 
                 if (result.pass) {
-                    for (let i = 0; i < 3; i++)
-                    {
+                    for (let i = 0; i < 3; i++) {
                         let expected_value;
                         let actual_value;
 
