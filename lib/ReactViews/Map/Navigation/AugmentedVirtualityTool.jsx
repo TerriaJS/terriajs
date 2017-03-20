@@ -7,7 +7,7 @@ import Icon from '../../Icon.jsx';
 import ViewerMode from '../../../Models/ViewerMode';
 import defined from 'terriajs-cesium/Source/Core/defined';
 
-const AugmentedVirtuality = require('../../../Models/AugmentedVirtuality.js');
+import AugmentedVirtuality from '../../../Models/AugmentedVirtuality.js';
 
 const AugmentedVirtualityTool = React.createClass({
     mixins: [ObserveModelMixin],

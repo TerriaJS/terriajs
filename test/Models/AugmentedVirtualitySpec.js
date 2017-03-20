@@ -1,13 +1,13 @@
 'use strict';
 
-var defined = require('terriajs-cesium/Source/Core/defined');
-var Terria = require('../../lib/Models/Terria');
-var Cesium = require('../../lib/Models/Cesium');
-var CesiumWidget = require('terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget');
-var TileCoordinatesImageryProvider = require('terriajs-cesium/Source/Scene/TileCoordinatesImageryProvider');
-var CesiumMath = require('terriajs-cesium/Source/Core/Math');
-var supportsWebGL = require('../../lib/Core/supportsWebGL');
-var AugmentedVirtuality = require('../../lib/Models/AugmentedVirtuality.js');
+import defined from 'terriajs-cesium/Source/Core/defined';
+import Terria from '../../lib/Models/Terria';
+import Cesium from '../../lib/Models/Cesium';
+import CesiumWidget from 'terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget';
+import TileCoordinatesImageryProvider from 'terriajs-cesium/Source/Scene/TileCoordinatesImageryProvider';
+import CesiumMath from 'terriajs-cesium/Source/Core/Math';
+import supportsWebGL from '../../lib/Core/supportsWebGL';
+import AugmentedVirtuality from '../../lib/Models/AugmentedVirtuality.js';
 
 var describeIfSupportsWebGL = supportsWebGL() ? describe : xdescribe;
 
