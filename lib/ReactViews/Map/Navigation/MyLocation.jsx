@@ -4,7 +4,9 @@ import ObserveModelMixin from '../../ObserveModelMixin';
 import Rectangle from 'terriajs-cesium/Source/Core/Rectangle';
 import Styles from './my_location.scss';
 import TerriaError from '../../../Core/TerriaError';
+import CesiumCartographic from 'terriajs-cesium/Source/Core/Cartographic.js';
 import Icon from "../../Icon.jsx";
+import defined from 'terriajs-cesium/Source/Core/defined';
 
 const GeoJsonCatalogItem = require('../../../Models/GeoJsonCatalogItem');
 
@@ -51,9 +53,16 @@ const MyLocation = React.createClass({
     zoomToMyLocation(position) {
         const longitude = position.coords.longitude;
         const latitude = position.coords.latitude;
-        // west, south, east, north, result
-        const rectangle = Rectangle.fromDegrees(longitude - 0.1, latitude - 0.1, longitude + 0.1, latitude + 0.1);
-        this.props.terria.currentViewer.zoomTo(rectangle);
+
+        if (defined(this.props.terria.augmentedVirtuality) &&
+            this.props.terria.augmentedVirtuality.enabled) {
+
+            this.props.terria.augmentedVirtuality.moveTo(CesiumCartographic.fromDegrees(longitude, latitude));
+        } else {
+            // west, south, east, north, result
+            const rectangle = Rectangle.fromDegrees(longitude - 0.1, latitude - 0.1, longitude + 0.1, latitude + 0.1);
+            this.props.terria.currentViewer.zoomTo(rectangle);
+        }
 
         this._marker.name = 'My Location';
         this._marker.data = {

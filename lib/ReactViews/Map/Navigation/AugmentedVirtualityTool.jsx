@@ -30,6 +30,9 @@ const AugmentedVirtualityTool = React.createClass({
     handleClickAVTool() {
         // console.log('handleClickAVTool()');
 
+        // Make the AugmentedVirtuality module avaliable elsewhere.
+        this.props.terria.augmentedVirtuality = this.state.augmentedVirtuality;
+
         if (defined(this.props.experimentalWarning) &&
             (this.props.experimentalWarning !== false) &&
             !this.state.experimentalWarningShown) {
