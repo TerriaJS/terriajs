@@ -39,7 +39,7 @@ const AugmentedVirtualityTool = React.createClass({
             this.props.viewState.notifications.push({
                 title: "Experimental Feature: Augmented Reality",
                 message: "Augmented Reality mode is currently in beta. "
-                         + "This mode is only designed for use on the latest high end phones.",
+                         + "This mode is only designed for use on the latest high end mobile devices.",
                 confirmText: "Got it"
             });
         }
