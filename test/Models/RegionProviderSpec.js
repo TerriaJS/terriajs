@@ -16,9 +16,9 @@ var CorsProxy = require('../../lib/Core/CorsProxy');
 
 //     beforeEach(function() {
 //             terria = new Terria({
-//                 baseUrl: './',
-//                 regionMappingDefinitionsUrl: 'test/csv/regionMapping.json'
+//                 baseUrl: './'
 //             });
+//             terria.configParameters.regionMappingDefinitionsUrl = 'test/csv/regionMapping.json';
 //             regionProviderList = new RegionProviderList(terria);
 //             regionProvider = new RegionProvider('CED');
 //     });
