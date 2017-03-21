@@ -3,7 +3,7 @@
 Change Log
 ==========
 
-### 5.0.0
+### 5.0.1
 
 * Breaking changes:
   * Starting with this release, TerriaJS is meant to be built with Webpack 2.  The best way to upgrade your application is to merge from [TerriaMap](https://github.com/TerriaJS/TerriaMap).  If you run into trouble, post a message on the [TerriaJS forum](https://groups.google.com/forum/#!forum/terriajs).
