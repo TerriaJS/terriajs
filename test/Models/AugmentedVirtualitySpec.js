@@ -28,17 +28,17 @@ describe('AugmentedVirtuality', function() {
 
     it('check default values', function() {
         var av = new AugmentedVirtuality(terria);
-        
+
         expect(av.enabled).toEqual(false);
         expect(av.manualAlignment).toEqual(false);
         expect(av.maximumUpdatesPerSecond).toEqual(10.0);
         expect(av.manualAlignment).toEqual(false);
         expect(av.hoverLevel).toEqual(2);
     });
-    
+
     it('check changing enabled', function() {
         var av = new AugmentedVirtuality(terria);
-        
+
         // Verify inital state for test sanity.
         expect(av.enabled).toEqual(false);
 
@@ -52,7 +52,7 @@ describe('AugmentedVirtuality', function() {
 
     it('check toggle enabled', function() {
         var av = new AugmentedVirtuality(terria);
-        
+
         // Verify inital state for test sanity.
         expect(av.enabled).toEqual(false);
 
@@ -63,10 +63,10 @@ describe('AugmentedVirtuality', function() {
         av.toggleEnabled();
         expect(av.enabled).toEqual(false);
     });
-    
+
     it('check manual align', function() {
         var av = new AugmentedVirtuality(terria);
-        
+
         // Set inital state for test sanity.
         av.enabled = true;
         // Verify inital state for test sanity.
@@ -99,7 +99,7 @@ describe('AugmentedVirtuality', function() {
 
     it('check toggle manual align', function() {
         var av = new AugmentedVirtuality(terria);
-        
+
         // Set inital state for test sanity.
         av.enabled = true;
         // Verify inital state for test sanity.
