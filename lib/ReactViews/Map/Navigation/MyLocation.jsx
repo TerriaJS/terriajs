@@ -58,7 +58,7 @@ const MyLocation = React.createClass({
             this.props.terria.augmentedVirtuality.enabled) {
 
             // Note: Specifiying the value of 27500m here enables this function to approximately mimic the behaviour of
-            //       the else option from initalisation and when the viewer zooms out further.
+            //       the else case from the cameras inital view and when the viewer pan/zooms out to much.
             this.props.terria.augmentedVirtuality.moveTo(CesiumCartographic.fromDegrees(longitude, latitude), 27500);
         } else {
             // west, south, east, north, result
