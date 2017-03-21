@@ -127,7 +127,7 @@ const StandardUserInterface = React.createClass({
                                 <If condition={this.props.terria.configParameters.experimentalFeatures && !this.props.viewState.hideMapUi()}>
                                     <ExperimentalFeatures terria={terria}
                                                           viewState={this.props.viewState}
-                                                          experimentalItems={customElements.experimental}
+                                                          experimentalItems={customElements.experimentalMenu}
                                     />
                                 </If>
                             </main>
