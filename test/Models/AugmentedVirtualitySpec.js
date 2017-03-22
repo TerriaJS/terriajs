@@ -32,7 +32,7 @@ describe('AugmentedVirtuality', function() {
         expect(av.enabled).toEqual(false);
         expect(av.manualAlignment).toEqual(false);
         expect(av.maximumUpdatesPerSecond).toEqual(10.0);
-        expect(av.manualAlignment).toEqual(false);
+        expect(av.manualAlignmentSet).toEqual(false);
         expect(av.hoverLevel).toEqual(2);
     });
 
@@ -42,10 +42,10 @@ describe('AugmentedVirtuality', function() {
         // Verify inital state for test sanity.
         expect(av.enabled).toEqual(false);
 
-        // Change the state & and check true.
+        // Change the state and check true.
         av.enabled = true;
         expect(av.enabled).toEqual(true);
-        // Change the state & and check false.
+        // Change the state and check false.
         av.enabled = false;
         expect(av.enabled).toEqual(false);
     });
