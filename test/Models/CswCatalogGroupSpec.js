@@ -118,4 +118,31 @@ describe('CswCatalogGroup', function() {
             });
         }).then(done).otherwise(done.fail);
     });
+
+    it('honors itemProperties', function(done) {
+        loadText('test/csw/ReferencesWithoutProtocol.xml').then(function(xml) {
+            jasmine.Ajax.install();
+            jasmine.Ajax.stubRequest(/.*/).andError();
+            jasmine.Ajax.stubRequest('http://gamone.whoi.edu/csw').andReturn({
+                contentType: 'text/xml',
+                responseText: xml
+            });
+
+            var group = new CswCatalogGroup(terria);
+
+            group.updateFromJson({
+              "name": "USGS Woods Hole pycsw",
+              "type": "csw",
+              "url": "http://gamone.whoi.edu/csw",
+              "getRecordsTemplate": "<csw:GetRecords xmlns:csw=\"http://www.opengis.net/cat/csw/2.0.2\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:ogc=\"http://www.opengis.net/ogc\" xmlns:gml=\"http://www.opengis.net/gml\" outputSchema=\"http://www.opengis.net/cat/csw/2.0.2\" outputFormat=\"application/xml\" version=\"2.0.2\" service=\"CSW\" resultType=\"results\" maxRecords=\"1000\" xsi:schemaLocation=\"http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd\"> <csw:Query typeNames=\"csw:Record\"> <csw:ElementSetName>full</csw:ElementSetName> <csw:Constraint version=\"1.1.0\"> <ogc:Filter> <ogc:And> <ogc:BBOX> <ogc:PropertyName>ows:BoundingBox</ogc:PropertyName> <gml:Envelope srsName=\"urn:ogc:def:crs:OGC:1.3:CRS84\"> <gml:lowerCorner> -158.4 20.7</gml:lowerCorner> <gml:upperCorner> -60.2 50.6</gml:upperCorner> </gml:Envelope> </ogc:BBOX> <ogc:PropertyIsLike wildCard=\"*\" singleChar=\"?\" escapeChar=\"\\\"> <ogc:PropertyName>apiso:AnyText</ogc:PropertyName> <ogc:Literal>*CMG_Portal*</ogc:Literal> </ogc:PropertyIsLike> <ogc:PropertyIsLike wildCard=\"*\" singleChar=\"?\" escapeChar=\"\\\"> <ogc:PropertyName>apiso:ServiceType</ogc:PropertyName> <ogc:Literal>*WMS*</ogc:Literal> </ogc:PropertyIsLike> </ogc:And> </ogc:Filter> </csw:Constraint> </csw:Query> </csw:GetRecords>",
+              "itemProperties": {
+                  "titleField": "name"
+              }
+            });
+
+            return group.load().then(function() {
+                expect(group.items[0].titleField).toBe("name");
+            });
+        }).then(done).otherwise(done.fail);
+    });
 });
