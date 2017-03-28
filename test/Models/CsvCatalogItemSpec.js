@@ -707,9 +707,9 @@ describe('CsvCatalogItem with region mapping', function() {
     var csvItem;
     beforeEach(function() {
         terria = new Terria({
-            baseUrl: './',
-            regionMappingDefinitionsUrl: 'test/csv/regionMapping.json'
+            baseUrl: './'
         });
+        terria.configParameters.regionMappingDefinitionsUrl = 'test/csv/regionMapping.json';
         csvItem = new CsvCatalogItem(terria);
 
         // Instead of directly inspecting the recoloring function (which is a private and inaccessible variable),
@@ -720,6 +720,10 @@ describe('CsvCatalogItem with region mapping', function() {
         // Also, for feature detection, spy on this call; the second argument is the regionImageryProvider.
         // This unfortunately makes the test depend on an implementation detail.
         spyOn(ImageryLayerCatalogItem, 'enableLayer');
+
+        // loadAndStubTextResources(done, [
+        //     terria.configParameters.regionMappingDefinitionsUrl
+        // ]).then(done).otherwise(done.fail);
     });
 
     it('does not think a lat-lon csv has regions', function(done) {
@@ -1131,7 +1135,7 @@ describe('CsvCatalogItem with region mapping', function() {
                 csvFile,
                 terria.configParameters.regionMappingDefinitionsUrl,
                 'data/regionids/region_map-FID_LGA_2011_AUST_LGA_NAME11.json',
-                'data/regionids/region_map-FID_LGA_2011_AUST_STE_NAME11.json'
+                'data/regionids/region_map-FID_LGA_2011_AUST_STE_NAME11.json',
             ]).then(function(resources) {
                 jasmine.Ajax.stubRequest('http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows?transparent=true&format=image%2Fpng&exceptions=application%2Fvnd.ogc.se_xml&styles=&tiled=true&service=WMS&version=1.1.1&request=GetFeatureInfo&layers=region_map%3AFID_LGA_2011_AUST&srs=EPSG%3A3857&bbox=16143500.373829227%2C-4559315.8631541915%2C16153284.31344973%2C-4549531.923533689&width=256&height=256&query_layers=region_map%3AFID_LGA_2011_AUST&x=217&y=199&info_format=application%2Fjson').andReturn({
                     responseText: JSON.stringify({
@@ -1183,10 +1187,12 @@ describe('CsvCatalogItem with region mapping', function() {
 
         it('works with disambiguated LGA names like Wellington, VIC', function(done) {
             var csvFile = 'test/csv/lga_state_disambig.csv';
-
             loadAndStubTextResources(done, [
                 csvFile,
-                terria.configParameters.regionMappingDefinitionsUrl
+                terria.configParameters.regionMappingDefinitionsUrl,
+                'data/regionids/region_map-FID_LGA_2011_AUST_LGA_NAME11.json',
+                'data/regionids/region_map-FID_LGA_2011_AUST_STE_NAME11.json',
+                'data/regionids/region_map-FID_STE_2011_AUST_STE_NAME11.json'
             ]).then(function(resources) {
                 jasmine.Ajax.stubRequest('http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows?transparent=true&format=image%2Fpng&exceptions=application%2Fvnd.ogc.se_xml&styles=&tiled=true&service=WMS&version=1.1.1&request=GetFeatureInfo&layers=region_map%3AFID_LGA_2011_AUST&srs=EPSG%3A3857&bbox=16437018.562444303%2C-3913575.8482010253%2C16593561.59637234%2C-3757032.814272985&width=256&height=256&query_layers=region_map%3AFID_LGA_2011_AUST&x=249&y=135&info_format=application%2Fjson').andReturn({
                     responseText: JSON.stringify({
@@ -1318,3 +1324,31 @@ describe('CsvCatalogItem with region mapping', function() {
 
 });
 
+describe('CsvCatalogItem with no geo', function() {
+
+    var terria;
+    var csvItem;
+    beforeEach(function() {
+        terria = new Terria({
+            baseUrl: './'
+        });
+        csvItem = new CsvCatalogItem(terria);
+    });
+
+    it('is not mappable', function(done) {
+        csvItem.url = 'test/csv_nongeo/xy.csv';
+        csvItem.load().then(function() {
+            expect(csvItem.isMappable).toEqual(false);
+            expect(csvItem.regionMapping).toBeUndefined();
+        }).otherwise(fail).then(done);
+    });
+
+    it('interprets height column as non-geo', function(done) {
+        csvItem.url = 'test/csv_nongeo/x_height.csv';
+        csvItem.load().then(function() {
+            expect(csvItem.isMappable).toBe(false);
+            expect(csvItem.tableStructure.columnsByType[VarType.ALT].length).toEqual(0);
+        }).otherwise(fail).then(done);
+    });
+
+});
