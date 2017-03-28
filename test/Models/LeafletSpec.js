@@ -77,7 +77,7 @@ describe('Leaflet Model', function() {
             1: {loaded: undefined},
             2: {loaded: undefined},
             a: {loaded: +new Date()}, // This is how Leaflet marks loaded tiles
-            b: {loaded: false}
+            b: {loaded: undefined}
         };
         layers[1]._tiles = {
             3: {loaded: +new Date()},
@@ -88,20 +88,7 @@ describe('Leaflet Model', function() {
 
         layers[1].fire('tileload');
 
-        // We're looking for 6 because Leaflet decrements _tilesToLoad AFTER the event fires.
         expect(terria.tileLoadProgressEvent.raiseEvent).toHaveBeenCalledWith(5, 5);
-    });
-
-    it('shouldn\'t trigger anything if the _tiles private API gets removed', function() {
-        map.on('layeradd', function(evt) {
-            delete evt.layer._tiles;
-        });
-
-        initLeaflet();
-
-        layers[1].fire('tileload');
-
-        expect(terria.tileLoadProgressEvent.raiseEvent).not.toHaveBeenCalled();
     });
 
     describe('should change the max', function() {
