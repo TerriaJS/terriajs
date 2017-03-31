@@ -526,7 +526,7 @@ describe('WebMapServiceCatalogItem', function() {
                 expect(wmsItem.availableDimensions.B).toBeDefined();
 
                 var aDimensions = wmsItem.availableDimensions.A;
-                expect(aDimensions.length).toBe(2);
+                expect(aDimensions.length).toBe(3);
 
                 expect(aDimensions[0].name).toEqual('elevation');
                 expect(aDimensions[0].units).toEqual('meters');
@@ -539,6 +539,12 @@ describe('WebMapServiceCatalogItem', function() {
                 expect(aDimensions[1].unitSymbol).toEqual('B');
                 expect(aDimensions[1].default).toEqual('Third thing');
                 expect(aDimensions[1].options).toEqual(['Something','Another thing','Third thing','yeah']);
+
+                expect(aDimensions[2].name).toEqual('time');
+                expect(aDimensions[2].units).toEqual('ISO8601');
+                expect(aDimensions[2].unitSymbol).not.toBeDefined();
+                expect(aDimensions[2].default).toEqual('2016-09-24T00:00:00.000Z');
+                expect(aDimensions[2].options).toEqual(['2012-06-25T01:00:00.000Z/2012-06-26T00:00:00.000Z/PT1H','2012-06-27T01:00:00.000Z/2012-06-30T00:00:00.000Z/PT1H','2012-07-02T01:00:00.000Z/2012-07-03T00:00:00.000Z/PT1H','2012-07-05T01:00:00.000Z/2012-07-09T00:00:00.000Z/PT1H']);
             }).then(done).otherwise(done.fail);
         });
 
