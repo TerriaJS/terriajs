@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### 5.0.2
+
+* Fixed a bug that prevented `WebMapServiceCatalogItem` from acting as a time-dynamic layer when the time dimension was inherited from a parent layer.
+
 ### 5.0.1
 
 * Breaking changes:
