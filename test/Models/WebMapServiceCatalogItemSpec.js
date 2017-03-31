@@ -384,6 +384,19 @@ describe('WebMapServiceCatalogItem', function() {
         }).then(done).otherwise(done.fail);
     });
 
+    it('supports multiple units in a single period', function(done) {
+        // <Dimension name="time" units="ISO8601" />
+        //   <Extent name="time">2015-04-27T16:00:00/2015-04-27T16:15:00/PT1M57S</Extent>
+        wmsItem.updateFromJson({
+            url: 'http://example.com',
+            metadataUrl: 'test/WMS/period_datetimes_multiple_units.xml',
+            layers: 'single_period'
+        });
+        wmsItem.load().then(function() {
+            expect(wmsItem.intervals.length).toEqual(8);
+        }).then(done).otherwise(done.fail);
+    });
+
     it('ignores leap seconds when evaluating period', function(done) {
         // <Dimension name="time" units="ISO8601" />
         //   <Extent name="time">2015-06-30T20:00:00Z/2015-07-01T01:00:00Z/PT15M</Extent>
