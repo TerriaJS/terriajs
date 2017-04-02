@@ -15,7 +15,7 @@
                 },
                 {
                     "name": "Dummy Census Data (2011)",
-                    "url": "http://localhost:8080/v0/tables/unrolled_dummy_ACLD",
+                    "url": "http://localhost:8082/v0/tables/DUMMY_ACLD",
                     "type": "aggregated-data-api",
                     "showWarnings": false,
                     "keyType": "abs",
