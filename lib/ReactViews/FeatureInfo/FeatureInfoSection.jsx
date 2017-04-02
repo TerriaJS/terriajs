@@ -73,7 +73,8 @@ const FeatureInfoSection = React.createClass({
         if (defined(propertyData)) {
 
             propertyData.terria = {
-                formatNumber: mustacheFormatNumberFunction
+                formatNumber: mustacheFormatNumberFunction,
+                urlEncodeComponent: mustacheURLEncodeTextComponent
             };
             if (this.props.position) {
                 const latLngInRadians = Ellipsoid.WGS84.cartesianToCartographic(this.props.position);
@@ -395,6 +396,19 @@ function mustacheFormatNumberFunction() {
     };
 }
 
+/**
+ * URL Encodes provided text: {{#terria.urlEncodeComponent}}{{value}}{{/terria.urlEncodeComponent}}.
+ * See encodeURIComponent for details.
+ * 
+ * {{#terria.urlEncodeComponent}}W/HOE#1{{/terria.urlEncodeComponent}} -> W%2FHOE%231
+ * @private
+ */
+function mustacheURLEncodeTextComponent() {
+    return function(text, render) {
+        return encodeURIComponent(render(text));
+    };
+}
+
 const simpleStyleIdentifiers = ['title', 'description',
     'marker-size', 'marker-symbol', 'marker-color', 'stroke',
     'stroke-opacity', 'stroke-width', 'fill', 'fill-opacity'];
@@ -447,14 +461,16 @@ function getTimeSeriesChartContext(catalogItem, feature, getChartDetails) {
     // Only show it as a line chart if the details are available, the data is sampled (so a line chart makes sense), and charts are available.
     if (defined(getChartDetails) && defined(catalogItem) && catalogItem.isSampled && CustomComponents.isRegistered('chart')) {
         const chartDetails = getChartDetails();
+        const distinguishingId = catalogItem.dataViewId;
+        const featureId = defined(distinguishingId) ? (distinguishingId + '--' + feature.id) : feature.id;
         if (chartDetails) {
             const result = {
-                xName: chartDetails.xName,
-                yName: chartDetails.yName,
+                xName: chartDetails.xName.replace(/\"/g, ''),
+                yName: chartDetails.yName.replace(/\"/g, ''),
                 title: chartDetails.yName,
-                id: feature.id,
+                id: featureId.replace(/\"/g, ''),
                 data: chartDetails.csvData.replace(/\\n/g, '\\n'),
-                units: chartDetails.units.join(',')
+                units: chartDetails.units.join(',').replace(/\"/g, '')
             };
             const xAttribute = 'x-column="' + result.xName + '" ';
             const yAttribute = 'y-column="' + result.yName + '" ';

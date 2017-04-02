@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="52px"
+   height="52px"
+   viewBox="0 0 52 52"
+   version="1.1"
+   id="svg4795"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="help.svg">
+  <metadata
+     id="metadata4809">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>sphere</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs4807" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1871"
+     inkscape:window-height="1062"
+     id="namedview4805"
+     showgrid="false"
+     inkscape:zoom="12.836708"
+     inkscape:cx="24.459493"
+     inkscape:cy="24.43175"
+     inkscape:window-x="49"
+     inkscape:window-y="18"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg4795" />
+  <!-- Generator: Sketch 3.4.3 (16044) - http://www.bohemiancoding.com/sketch -->
+  <title
+     id="title4797">sphere</title>
+  <path
+     d="m 26.064536,48.427159 0,0 c 12.378796,0 22.413789,-10.034997 22.413789,-22.413793 0,-12.378796 -10.034993,-22.4137937 -22.413789,-22.4137937 -12.378796,0 -22.4137931,10.0349977 -22.4137931,22.4137937 0,12.378796 10.0349971,22.413793 22.4137931,22.413793 z m 0,3.586207 0,0 c -14.359404,0 -26.00000006,-11.640597 -26.00000006,-26 0,-14.359405 11.64059606,-26.00000065 26.00000006,-26.00000065 14.359403,0 25.999999,11.64059565 25.999999,26.00000065 0,14.359403 -11.640596,26 -25.999999,26 z"
+     id="remove"
+     inkscape:connector-curvature="0"
+     sodipodi:nodetypes="ccsssccccssscc" />
+  <circle
+     style="fill-opacity:1;stroke:none;stroke-width:4.5;stroke-miterlimit:4;stroke-dasharray:none"
+     id="path4298"
+     cx="25.740215"
+     cy="36.824184"
+     r="3.1891892" />
+  <path
+     style="fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     d="m 18.659131,18.175528 c 0.601025,0.638387 1.511652,0.849604 2.594594,0.432432 1.082943,-0.417172 1.409473,-1.491804 2.378379,-2.270269 1.021933,-0.82107 3.868146,-0.95938 4.864864,0.324324 1.39,1.790223 1.166137,3.97138 2e-6,5.297297 -1.482596,1.685739 -2.601058,2.755827 -4.000001,3.783783 -0.949453,0.697667 -1.824439,2.142058 -1.405406,3.243244 0.395645,1.039725 2.035115,1.909062 3.027028,1.405405 1.511309,-0.767387 6.023337,-4.965326 7.459459,-8.432432 0.676995,-1.63441 0.842511,-3.60582 0.324324,-5.297298 -0.519368,-1.695334 -1.74852,-3.262432 -3.243243,-4.216216 -1.525583,-0.973477 -3.493027,-1.329422 -5.297298,-1.18919 -1.467768,0.114078 -2.906792,0.770624 -4.108108,1.621623 -1.167366,0.826948 -2.381751,1.87851 -2.810811,3.243243 -0.206484,0.656774 -0.255714,1.552787 0.216217,2.054054 z"
+     id="path4302"
+     inkscape:connector-curvature="0"
+     sodipodi:nodetypes="azssssasaaaaaaa" />
+</svg>

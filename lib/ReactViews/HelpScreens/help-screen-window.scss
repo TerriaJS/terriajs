@@ -1,0 +1,58 @@
+@import '~terriajs-variables';
+@import '../../Sass/common/_mixins';
+
+
+.window {
+  display: none;
+  position: fixed;
+  left: 50%;
+  background: #fff;
+  width: 300px;
+  top: 50px;
+  z-index: 2500;
+  color: $text-black;
+  border-radius: $radius-small;
+  box-shadow: 2px 2px 5px #888888;
+  font-size: $font-size-small !important;
+}
+
+.isActive {
+  display: block;
+}
+
+.content {
+  z-index: 2500;
+  padding: $padding;
+  position: relative;
+}
+
+.next-button {
+  font-size: $font-size-small !important;
+}
+
+.caret {
+  content: '';
+  display: block;
+  height: 20px;
+  width: 20px;
+  background: #fff;
+  position: absolute;
+  z-index: 2400;
+  @include transform(rotate(45deg));
+}
+
+.screen-count {
+  position: absolute;
+  z-index: 2501;
+  color: white;
+  padding: 6px;
+  font-size: $font-size-small !important;
+}
+
+.btn {
+  composes: btn from '../../Sass/common/_buttons.scss';
+  composes: btn-primary from '../../Sass/common/_buttons.scss';
+  padding: 5px !important;
+  font-size: $font-size-small !important;
+  color: white !important;
+}

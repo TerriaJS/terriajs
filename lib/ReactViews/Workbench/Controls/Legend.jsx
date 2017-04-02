@@ -36,7 +36,7 @@ const Legend = React.createClass({
         const isImage = legendUrl.isImage();
         const insertDirectly = !!legendUrl.safeSvgContent; // we only insert content we generated ourselves, not arbitrary SVG from init files.
         const safeSvgContent = {__html: legendUrl.safeSvgContent};
-        const proxiedUrl = proxyCatalogItemUrl(this.catalogMember, legendUrl.url);
+        const proxiedUrl = proxyCatalogItemUrl(this.props.item, legendUrl.url);
 
         return (
             <Choose>
@@ -51,6 +51,7 @@ const Legend = React.createClass({
                     <li key={proxiedUrl} className={classNames({[Styles.legendImagehasError]: this.doesLegendHaveError(legendUrl)})}>
                         <a onError={this.onImageError.bind(this, legendUrl)}
                            href={proxiedUrl}
+                           className={Styles.imageAnchor}
                            target="_blank">
                             <img src={proxiedUrl}/>
                         </a>

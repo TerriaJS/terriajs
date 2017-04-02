@@ -1,12 +1,34 @@
 @import '~terriajs-variables';
 @import '../../../Sass/common/mixins';
 
-.chart {
-  padding: 0;
+.chart-td {
+  background: $feature-info-bg;
 }
 
 .preview-chart-wrapper {
   position: relative;
+  padding: 0;
+
+  :global {
+
+    .line-chart text {
+      fill: $feature-info-color;
+      // font-family: monospace;
+    }
+
+    .units-label-shadow {
+      stroke: $feature-info-bg;
+      stroke-width: 2.5px;
+      opacity: 0.9;
+    }
+
+    .line-chart .line {
+      fill: none;
+      stroke: $chart-preview-line-color;
+      stroke-width: 1;
+    }
+
+  }
 }
 
 .chart-title-from-table {

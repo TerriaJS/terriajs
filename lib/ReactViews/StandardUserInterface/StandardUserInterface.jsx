@@ -151,7 +151,7 @@ const StandardUserInterface = React.createClass({
                     </aside>
                 </If>
 
-                <div className = {classNames({[Styles.explorerPanelIsVisible]: this.props.viewState.explorerPanelIsVisible})}>
+                <div className={Styles.featureInfo}>
                     <FeatureInfoPanel terria={terria}
                                       viewState={this.props.viewState}
                     />
