@@ -3,6 +3,9 @@
 Change Log
 ==========
 
+### 5.0.2
+* Added configuration option to specify default view mode when running on a mobile platform.
+
 ### 5.0.1
 
 * Breaking changes:
