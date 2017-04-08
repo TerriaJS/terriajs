@@ -113,7 +113,7 @@
     "webpack-dev-server": "^2.4.1"
   },
   "peerDependencies": {
-    "react": "^15.2.0",
+    "react": "^15.5.0",
     "react-dom": "^15.2.0"
   },
   "scripts": {
