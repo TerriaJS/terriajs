@@ -104,7 +104,7 @@
     "node-notifier": "^5.1.2",
     "node-sass": "^4.0.0",
     "react": "15.4.2",
-    "react-addons-test-utils": "15.4.2",
+    "react-addons-test-utils": "15.5.0",
     "react-dom": "15.4.2",
     "react-shallow-testutils": "^2.0.0",
     "svg-sprite-loader": "^0.3.0",
