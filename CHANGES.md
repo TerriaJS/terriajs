@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### 5.0.2
+
+* Added option to specify `mobileDefaultViewerMode` in the `parameters` section of `config.json` to specify the default view mode when running on a mobile platform.
+
 ### 5.0.1
 
 * Breaking changes:
