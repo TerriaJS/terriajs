@@ -110,7 +110,7 @@ We use [Jasmine](https://jasmine.github.io/) for the TerriaJS tests, called spec
 npm run gulp
 ```
 
-And start the development web server by running:
+And start the development web server by running (also from the TerriaJS and not TerriaMap! directory):
 
 ```
 npm start
