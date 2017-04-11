@@ -17,7 +17,7 @@
                         "minDisplayValue": 0
                     },
                     "description": "Storage level, as defined under categories 3a and 3e of the Water Regulations 2008 – refer to Definitions – Subcategories of Water Information. This data is shown as provided to the Bureau of Meteorology by data owner organisations and is subject to their terms and conditions of use. Please refer to Copyright on the Water Data Online website, and Disclaimer statements relating to the use of Bureau of Meteorology material.\n\nPlease note that storage levels made available on this website may be measured using local rather than Australian Height Datum (AHD). For this reason they may differ to the Storage Level provided on the Bureau of Meteorology's Water Storages website.",
-                    "featureInfoTemplate": "# {{name}}\n\n|||\n|-------|-------|\n|Observation Date |{{date}}|\n|Storage Level|{{value}} metres|\n|Series Type|{{#terria.urlEncode}}{{Frequency}}{{/terria.urlEncode}}|\n|Parameter|{{#terria.urlEncode}}{{Observation type}}{{/terria.urlEncode}}|\n|Feature Type|{{type}}|\n|ID|{{id}}|\n|Latitude|{{lat}}|\n|Longitude|{{lon}}|\n<div>{{terria.timeSeries.chart}}</div>",
+                    "featureInfoTemplate": "# {{name}}\n\n|||\n|-------|-------|\n|Station name|{{name}}|\n|Observation Date |{{date}}|\n|Storage Level|{{value}} metres|\n|Time Series Type|{{#terria.urlEncode}}{{Frequency}}{{/terria.urlEncode}}|\n|Parameter|{{#terria.urlEncode}}{{Observation type}}{{/terria.urlEncode}}|\n|SOS2 Feature Type|{{type}}|\n|SOS2 ID|{{id}}|\n|Latitude|{{lat}}|\n|Longitude|{{lon}}|\n<div>{{terria.timeSeries.chart}}</div>",
                     "proceduresName": "Frequency",
                     "observablePropertiesName": "Observation type",
                     "startDate": "1980-01-01T00:00:00+10",
@@ -78,7 +78,7 @@
                         "minDisplayValue": 0
                     },
                     "description": "Storage volume, as defined under category 3b of the Water Regulations 2008 – refer to Definitions – Subcategories of Water Information. This data is shown as provided to the Bureau of Meteorology by data owner organisations and is subject to their terms and conditions of use. Please refer to Copyright on the Water Data Online website, and Disclaimer statements relating to the use of Bureau of Meteorology material.\n\nPlease note that storage volumes made available on this website are usually total rather than accessible volume, depending on how they are supplied by the data owner. For this reason they may differ to the Storage Volume provided on the Bureau of Meteorology's Water Storages website and mobile app.",
-                    "featureInfoTemplate": "# {{name}}\n\n|||\n|-------|-------|\n|Observation Date |{{date}}|\n|Storage Volume|{{value}} MegaLitres|\n|Series Type|{{#terria.urlEncode}}{{Frequency}}{{/terria.urlEncode}}|\n|Parameter|{{#terria.urlEncode}}{{Observation type}}{{/terria.urlEncode}}|\n|Feature Type|{{type}}|\n|ID|{{id}}|\n|Latitude|{{lat}}|\n|Longitude|{{lon}}|\n<div>{{terria.timeSeries.chart}}</div>",
+                    "featureInfoTemplate": "# {{name}}\n\n|||\n|-------|-------|\n|Station name|{{name}}|\n|Observation Date |{{date}}|\n|Storage Volume|{{value}} MegaLitres|\n|Time Series Type|{{#terria.urlEncode}}{{Frequency}}{{/terria.urlEncode}}|\n|Parameter|{{#terria.urlEncode}}{{Observation type}}{{/terria.urlEncode}}|\n|SOS2 Feature Type|{{type}}|\n|SOS2 ID|{{id}}|\n|Latitude|{{lat}}|\n|Longitude|{{lon}}|\n<div>{{terria.timeSeries.chart}}</div>",
                     "proceduresName": "Frequency",
                     "observablePropertiesName": "Observation type",
                     "startDate": "1980-01-01T00:00:00+10",
@@ -135,7 +135,7 @@
                     "type": "sos",
                     "proceduresName": "Frequency",
                     "description": "Watercourse levels, as defined under category 1a of the Water Regulations 2008 – refer to Definitions – Subcategories of Water Information. This data is shown as provided to the Bureau of Meteorology by data owner organisations, and is subject to their terms and conditions of use. Please refer to Copyright on the Water Data Online website, and Disclaimer statements relating to the use of Bureau of Meteorology material.",
-                    "featureInfoTemplate": "# {{name}}\n\n|||\n|-------|-------|\n|Feature Type|{{type}}|\n|ID|{{id}}|\n|Latitude|{{lat}}|\n|Longitude|{{lon}}|\n\n{{chart}}",
+                    "featureInfoTemplate": "# {{name}}\n\n|||\n|-------|-------|\n|Station name|{{name}}|\n|SOS2 Feature Type|{{type}}|\n|SOS2 ID|{{id}}|\n|Latitude|{{lat}}|\n|Longitude|{{lon}}|\n\n{{chart}}",
                     "observablePropertiesName": "Observation type",
                     "startDate": "1980-01-01T00:00:00+10",
                     "endDate": "2016-10-01T00:00:00+10",
@@ -190,7 +190,7 @@
                     "type": "sos",
                     "proceduresName": "Frequency",
                     "description": "Watercourse discharge, as defined under category 1b of the Water Regulations 2008 – refer to Definitions – Subcategories of Water Information. This data is shown as provided to the Bureau of Meteorology by data owner organisations, and is subject to their terms and conditions of use. Please refer to Copyright on the Water Data Online website, and Disclaimer statements relating to the use of Bureau of Meteorology material.",
-                    "featureInfoTemplate": "# {{name}}\n\n|||\n|-------|-------|\n|Feature Type|{{type}}|\n|ID|{{id}}|\n|Latitude|{{lat}}|\n|Longitude|{{lon}}|\n\n{{chart}}",
+                    "featureInfoTemplate": "# {{name}}\n\n|||\n|-------|-------|\n|Station name|{{name}}|\n|SOS2 Feature Type|{{type}}|\n|SOS2 ID|{{id}}|\n|Latitude|{{lat}}|\n|Longitude|{{lon}}|\n\n{{chart}}",
                     "observablePropertiesName": "Observation type",
                     "startDate": "1980-01-01T00:00:00+10",
                     "procedures": [
