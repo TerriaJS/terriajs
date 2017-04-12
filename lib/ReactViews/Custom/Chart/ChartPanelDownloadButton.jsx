@@ -21,8 +21,8 @@ const ChartPanelDownloadButton = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        chartableItems: React.PropTypes.array.isRequired,
-        errorEvent: React.PropTypes.object.isRequired
+        chartableItems: PropTypes.array.isRequired,
+        errorEvent: PropTypes.object.isRequired
     },
 
     _subscription: undefined,
