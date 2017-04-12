@@ -1,5 +1,7 @@
 import React from 'react';
 
+import PropTypes from 'prop-types';
+
 import DataCatalogGroup from '../../../DataCatalog/DataCatalogGroup.jsx';
 import DataPreview from '../../../Preview/DataPreview.jsx';
 import AddData from './AddData.jsx';
@@ -12,8 +14,8 @@ const MyDataTab = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        terria: React.PropTypes.object,
-        viewState: React.PropTypes.object
+        terria: PropTypes.object,
+        viewState: PropTypes.object
     },
 
     onBackButtonClicked() {

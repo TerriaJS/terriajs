@@ -2,6 +2,7 @@
 
 import ObserverModelMixin from '../ObserveModelMixin';
 import React from 'react';
+import PropTypes from 'prop-types';
 import Styles from './obscure-overlay.scss';
 import classNames from 'classnames';
 import defined from 'terriajs-cesium/Source/Core/defined';
@@ -15,7 +16,7 @@ const ObscureOverlay = React.createClass({
     mixins: [ObserverModelMixin],
 
     propTypes: {
-        helpViewState: React.PropTypes.object
+        helpViewState: PropTypes.object
     },
 
     cancel() {

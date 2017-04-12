@@ -18,7 +18,7 @@ const MeasureTool = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        terria: React.PropTypes.object
+        terria: PropTypes.object
     },
 
     getInitialState() {

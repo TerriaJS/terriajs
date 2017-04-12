@@ -2,6 +2,8 @@
 
 import React from 'react';
 
+import PropTypes from 'prop-types';
+
 import Cartographic from 'terriajs-cesium/Source/Core/Cartographic';
 import CesiumMath from 'terriajs-cesium/Source/Core/Math';
 import defined from 'terriajs-cesium/Source/Core/defined';
@@ -17,9 +19,9 @@ const PointParameterEditor = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        previewed: React.PropTypes.object,
-        parameter: React.PropTypes.object,
-        viewState: React.PropTypes.object
+        previewed: PropTypes.object,
+        parameter: PropTypes.object,
+        viewState: PropTypes.object
     },
 
     setValueFromText(e) {

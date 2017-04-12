@@ -2,6 +2,7 @@
 
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
+import PropTypes from 'prop-types';
 import parseCustomHtmlToReact from '../Custom/parseCustomHtmlToReact';
 import Styles from './map-interaction-window.scss';
 import classNames from 'classnames';
@@ -11,8 +12,8 @@ const MapInteractionWindow = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        terria: React.PropTypes.object,
-        viewState: React.PropTypes.object
+        terria: PropTypes.object,
+        viewState: PropTypes.object
     },
 
     componentWillUnmount() {

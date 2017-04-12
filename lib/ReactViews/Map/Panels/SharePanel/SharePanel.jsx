@@ -1,6 +1,7 @@
 'use strict';
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import {buildShareLink, buildShortShareLink, canShorten} from './BuildShareLink';
 import ObserverModelMixin from '../../../ObserveModelMixin';
 import defined from 'terriajs-cesium/Source/Core/defined';
@@ -15,11 +16,11 @@ const SharePanel = React.createClass({
     mixins: [ObserverModelMixin],
 
     propTypes: {
-        terria: React.PropTypes.object,
-        userPropWhiteList: React.PropTypes.array,
-        isOpen: React.PropTypes.bool,
-        shortenUrls: React.PropTypes.bool,
-        viewState: React.PropTypes.object.isRequired
+        terria: PropTypes.object,
+        userPropWhiteList: PropTypes.array,
+        isOpen: PropTypes.bool,
+        shortenUrls: PropTypes.bool,
+        viewState: PropTypes.object.isRequired
     },
 
     getDefaultProps() {

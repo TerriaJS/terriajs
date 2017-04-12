@@ -3,6 +3,8 @@
 import classNames from 'classnames';
 import React from 'react';
 
+import PropTypes from 'prop-types';
+
 import defined from 'terriajs-cesium/Source/Core/defined';
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 import when from 'terriajs-cesium/Source/ThirdParty/when';
@@ -18,8 +20,8 @@ const RegionPicker = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        previewed: React.PropTypes.object,
-        parameter: React.PropTypes.object
+        previewed: PropTypes.object,
+        parameter: PropTypes.object
     },
 
     getInitialState() {

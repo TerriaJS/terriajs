@@ -5,6 +5,7 @@ import Concept from '../Concept';
 import Icon from '../../../Icon.jsx';
 import ObserveModelMixin from '../../../ObserveModelMixin';
 import React from 'react';
+import PropTypes from 'prop-types';
 import Styles from './summary-concept.scss';
 
 /*
@@ -20,9 +21,9 @@ const ActiveConcept = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        activeLeafNodesWithParent: React.PropTypes.object.isRequired,
-        rootConcept: React.PropTypes.object.isRequired,
-        isLoading: React.PropTypes.bool
+        activeLeafNodesWithParent: PropTypes.object.isRequired,
+        rootConcept: PropTypes.object.isRequired,
+        isLoading: PropTypes.bool
     },
 
     open() {

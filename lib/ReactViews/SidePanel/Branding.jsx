@@ -2,13 +2,14 @@
 import defined from 'terriajs-cesium/Source/Core/defined';
 import parseCustomHtmlToReact from '../Custom/parseCustomHtmlToReact';
 import React from 'react';
+import PropTypes from 'prop-types';
 import Styles from './branding.scss';
 
 const Branding = React.createClass({
     propTypes: {
-        terria: React.PropTypes.object.isRequired,
-        version: React.PropTypes.string,
-        onClick: React.PropTypes.func
+        terria: PropTypes.object.isRequired,
+        version: PropTypes.string,
+        onClick: PropTypes.func
     },
 
     render() {

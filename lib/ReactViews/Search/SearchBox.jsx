@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import debounce from 'lodash.debounce';
 import Icon from "../Icon.jsx";
 
@@ -15,18 +16,18 @@ export default React.createClass({
     displayName: 'SearchBox',
     propTypes: {
         /** Called when the search changes, after a debounce of {@link DEBOUNCE_INTERVAL} ms */
-        onSearchTextChanged: React.PropTypes.func.isRequired,
+        onSearchTextChanged: PropTypes.func.isRequired,
         /** Called when an actual search is triggered, either by clicking the button or pressing Enter */
-        onDoSearch: React.PropTypes.func.isRequired,
+        onDoSearch: PropTypes.func.isRequired,
         /** The search text to display in the search box */
-        searchText: React.PropTypes.string.isRequired,
+        searchText: PropTypes.string.isRequired,
         /** Called when the search box receives focus */
-        onFocus: React.PropTypes.func,
+        onFocus: PropTypes.func,
 
-        placeholder: React.PropTypes.string,
-        onClear: React.PropTypes.func,
-        alwaysShowClear: React.PropTypes.bool,
-        autoFocus: React.PropTypes.bool
+        placeholder: PropTypes.string,
+        onClear: PropTypes.func,
+        alwaysShowClear: PropTypes.bool,
+        autoFocus: PropTypes.bool
     },
 
     getDefaultProps() {

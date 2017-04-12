@@ -1,5 +1,7 @@
 import React from 'react';
 
+import PropTypes from 'prop-types';
+
 import ObserveModelMixin from '../ObserveModelMixin';
 import Styles from './data-preview.scss';
 /**
@@ -9,7 +11,7 @@ const DataPreviewUrl = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        metadataItem: React.PropTypes.object.isRequired
+        metadataItem: PropTypes.object.isRequired
     },
 
     selectUrl(e) {

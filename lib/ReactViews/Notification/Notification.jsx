@@ -2,13 +2,14 @@
 
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
+import PropTypes from 'prop-types';
 import NotificationWindow from './NotificationWindow';
 
 const Notification = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        viewState: React.PropTypes.object
+        viewState: PropTypes.object
     },
 
     confirm() {

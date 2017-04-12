@@ -1,5 +1,7 @@
 import React from 'react';
 
+import PropTypes from 'prop-types';
+
 import DataPreviewMap from './DataPreviewMap';
 import Description from './Description';
 import ObserveModelMixin from '../ObserveModelMixin';
@@ -13,9 +15,9 @@ const MappablePreview = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        previewed: React.PropTypes.object.isRequired,
-        terria: React.PropTypes.object.isRequired,
-        viewState: React.PropTypes.object.isRequired
+        previewed: PropTypes.object.isRequired,
+        terria: PropTypes.object.isRequired,
+        viewState: PropTypes.object.isRequired
     },
 
     toggleOnMap(event) {

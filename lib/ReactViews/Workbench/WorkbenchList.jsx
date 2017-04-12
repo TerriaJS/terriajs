@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Sortable from 'react-anything-sortable';
 
 import WorkbenchItem from './WorkbenchItem.jsx';
@@ -12,8 +13,8 @@ const WorkbenchList = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        terria: React.PropTypes.object.isRequired,
-        viewState: React.PropTypes.object.isRequired
+        terria: PropTypes.object.isRequired,
+        viewState: PropTypes.object.isRequired
     },
 
     onSort(sortedArray, currentDraggingSortData, currentDraggingIndex) {

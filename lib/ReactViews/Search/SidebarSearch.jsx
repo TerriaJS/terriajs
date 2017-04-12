@@ -1,5 +1,6 @@
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
+import PropTypes from 'prop-types';
 import SearchResult from './SearchResult.jsx';
 import BadgeBar from '../BadgeBar.jsx';
 import Styles from './sidebar-search.scss';
@@ -12,9 +13,9 @@ const SidebarSearch = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        viewState: React.PropTypes.object.isRequired,
-        isWaitingForSearchToStart: React.PropTypes.bool,
-        terria: React.PropTypes.object.isRequired
+        viewState: PropTypes.object.isRequired,
+        isWaitingForSearchToStart: PropTypes.bool,
+        terria: PropTypes.object.isRequired
     },
 
     searchInDataCatalog() {

@@ -1,6 +1,7 @@
 'use strict';
 import ObserveModelMixin from './ObserveModelMixin';
 import React from 'react';
+import PropTypes from 'prop-types';
 import Icon from "./Icon.jsx";
 
 import Styles from './loader.scss';
@@ -16,8 +17,8 @@ const Loader = React.createClass({
     },
 
     propTypes: {
-        message: React.PropTypes.string,
-        className: React.PropTypes.string
+        message: PropTypes.string,
+        className: PropTypes.string
     },
 
     render() {

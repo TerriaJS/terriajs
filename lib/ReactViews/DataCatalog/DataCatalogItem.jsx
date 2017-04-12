@@ -1,5 +1,7 @@
 import React from 'react';
 
+import PropTypes from 'prop-types';
+
 import defined from 'terriajs-cesium/Source/Core/defined';
 
 import addedByUser from '../../Core/addedByUser';
@@ -19,8 +21,8 @@ const DataCatalogItem = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        item: React.PropTypes.object.isRequired,
-        viewState: React.PropTypes.object.isRequired
+        item: PropTypes.object.isRequired,
+        viewState: PropTypes.object.isRequired
     },
 
     onBtnClicked(event) {

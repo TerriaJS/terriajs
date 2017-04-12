@@ -1,6 +1,7 @@
 'use strict';
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import URI from 'urijs';
 
 import Rectangle from 'terriajs-cesium/Source/Core/Rectangle';
@@ -15,7 +16,7 @@ const MyLocation = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        terria: React.PropTypes.object.isRequired
+        terria: PropTypes.object.isRequired
     },
 
     _marker: undefined,

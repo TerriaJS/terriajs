@@ -1,6 +1,7 @@
 "use strict";
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import ObserveModelMixin from '../ObserveModelMixin';
 import DataCatalogItem from './DataCatalogItem.jsx';
 import DataCatalogGroup from './DataCatalogGroup.jsx';
@@ -14,9 +15,9 @@ export default React.createClass({
     displayName: 'DataCatalogMember',
 
     propTypes: {
-        member: React.PropTypes.object.isRequired,
-        viewState: React.PropTypes.object.isRequired,
-        manageIsOpenLocally: React.PropTypes.bool
+        member: PropTypes.object.isRequired,
+        viewState: PropTypes.object.isRequired,
+        manageIsOpenLocally: PropTypes.bool
     },
 
     render() {

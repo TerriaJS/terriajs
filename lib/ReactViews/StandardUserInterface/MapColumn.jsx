@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import 'mutationobserver-shim';
 
 import TerriaViewerWrapper from '../Map/TerriaViewerWrapper.jsx';
@@ -25,8 +26,8 @@ const MapColumn = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        terria: React.PropTypes.object.isRequired,
-        viewState: React.PropTypes.object.isRequired,
+        terria: PropTypes.object.isRequired,
+        viewState: PropTypes.object.isRequired,
     },
 
     getInitialState() {

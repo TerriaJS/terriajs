@@ -1,6 +1,7 @@
 'use strict';
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import ChartPanel from '../Custom/Chart/ChartPanel.jsx';
 import Timeline from './Timeline/Timeline.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
@@ -12,9 +13,9 @@ const BottomDock = React.createClass({
     displayName: 'BottomDock',
 
     propTypes: {
-        terria: React.PropTypes.object.isRequired,
-        viewState: React.PropTypes.object.isRequired,
-        domElementRef: React.PropTypes.func
+        terria: PropTypes.object.isRequired,
+        viewState: PropTypes.object.isRequired,
+        domElementRef: PropTypes.func
     },
 
     render() {

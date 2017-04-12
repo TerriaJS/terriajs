@@ -7,12 +7,13 @@ import Loader from '../../Loader.jsx';
 import ObserveModelMixin from '../../ObserveModelMixin';
 import proxyCatalogItemUrl from '../../../Models/proxyCatalogItemUrl';
 import React from 'react';
+import PropTypes from 'prop-types';
 import Styles from './legend.scss';
 
 const Legend = React.createClass({
     mixins: [ObserveModelMixin],
     propTypes: {
-        item: React.PropTypes.object
+        item: PropTypes.object
     },
 
     componentWillMount() {

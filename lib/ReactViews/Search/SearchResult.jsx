@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Icon from "../Icon.jsx";
 import Styles from './search-result.scss';
 import classNames from 'classnames';
@@ -6,10 +7,10 @@ import classNames from 'classnames';
 // A Location item when doing Bing map searvh or Gazetter search
 const SearchResult = React.createClass({
     propTypes: {
-        name: React.PropTypes.string.isRequired,
-        clickAction: React.PropTypes.func.isRequired,
-        showPin: React.PropTypes.bool,
-        theme: React.PropTypes.string
+        name: PropTypes.string.isRequired,
+        clickAction: PropTypes.func.isRequired,
+        showPin: PropTypes.bool,
+        theme: PropTypes.string
     },
 
     getDefaultProps() {

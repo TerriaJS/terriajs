@@ -1,5 +1,7 @@
 import React from 'react';
 
+import PropTypes from 'prop-types';
+
 import SettingPanel from './Panels/SettingPanel.jsx';
 import SharePanel from './Panels/SharePanel/SharePanel.jsx';
 
@@ -12,10 +14,10 @@ import Styles from './menu-bar.scss';
 const MenuBar = React.createClass({
     mixins: [ObserveModelMixin],
     propTypes: {
-        terria: React.PropTypes.object,
-        viewState: React.PropTypes.object.isRequired,
-        allBaseMaps: React.PropTypes.array,
-        menuItems: React.PropTypes.arrayOf(React.PropTypes.element)
+        terria: PropTypes.object,
+        viewState: PropTypes.object.isRequired,
+        allBaseMaps: PropTypes.array,
+        menuItems: PropTypes.arrayOf(PropTypes.element)
     },
 
     getDefaultProps() {

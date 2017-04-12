@@ -1,5 +1,7 @@
 import React from 'react';
 
+import PropTypes from 'prop-types';
+
 import defined from 'terriajs-cesium/Source/Core/defined';
 import DataCatalog from '../../DataCatalog/DataCatalog.jsx';
 import DataCatalogMember from '../../DataCatalog/DataCatalogMember.jsx';
@@ -15,8 +17,8 @@ const DataCatalogTab = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        terria: React.PropTypes.object,
-        viewState: React.PropTypes.object
+        terria: PropTypes.object,
+        viewState: PropTypes.object
     },
 
     changeSearchText(newText) {

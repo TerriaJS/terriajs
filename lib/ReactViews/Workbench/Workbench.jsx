@@ -2,6 +2,7 @@ import BadgeBar from '../BadgeBar.jsx';
 import Icon from "../Icon.jsx";
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
+import PropTypes from 'prop-types';
 import WorkbenchList from './WorkbenchList.jsx';
 
 import Styles from './workbench.scss';
@@ -10,8 +11,8 @@ const Workbench = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        terria: React.PropTypes.object.isRequired,
-        viewState: React.PropTypes.object.isRequired
+        terria: PropTypes.object.isRequired,
+        viewState: PropTypes.object.isRequired
     },
 
     removeAll() {

@@ -1,5 +1,7 @@
 import React from 'react';
 
+import PropTypes from 'prop-types';
+
 import {addMarker} from '../Search/SearchMarkerUtils';
 import ObserveModelMixin from '../ObserveModelMixin';
 import LocationSearchResults from '../Search/LocationSearchResults.jsx';
@@ -10,8 +12,8 @@ const MobileSearch = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        viewState: React.PropTypes.object,
-        terria: React.PropTypes.object
+        viewState: PropTypes.object,
+        terria: PropTypes.object
     },
 
     onLocationClick(result) {

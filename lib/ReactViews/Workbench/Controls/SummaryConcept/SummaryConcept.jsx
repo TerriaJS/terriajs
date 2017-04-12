@@ -6,6 +6,7 @@ import OpenInactiveConcept from './OpenInactiveConcept';
 import Icon from '../../../Icon.jsx';
 import ObserveModelMixin from '../../../ObserveModelMixin';
 import React from 'react';
+import PropTypes from 'prop-types';
 import Styles from './summary-concept.scss';
 
 const ADD_FIRST_TEXT = 'Add a condition';
@@ -37,8 +38,8 @@ const SummaryConcept = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        concept: React.PropTypes.object.isRequired,  // Must be a SummaryConcept.
-        isLoading: React.PropTypes.bool
+        concept: PropTypes.object.isRequired,  // Must be a SummaryConcept.
+        isLoading: PropTypes.bool
     },
 
     render() {
@@ -138,8 +139,8 @@ const AddButton = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        rootConcept: React.PropTypes.object.isRequired,
-        numberOfExisting: React.PropTypes.number
+        rootConcept: PropTypes.object.isRequired,
+        numberOfExisting: PropTypes.number
     },
 
     addNew() {

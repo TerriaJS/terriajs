@@ -2,6 +2,7 @@
 
 import ObserveModelMixin from '../../ObserveModelMixin';
 import React from 'react';
+import PropTypes from 'prop-types';
 import parseCustomMarkdownToReact from '../../Custom/parseCustomMarkdownToReact';
 import Styles from './short-report.scss';
 
@@ -9,7 +10,7 @@ const ShortReport = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        item: React.PropTypes.object.isRequired
+        item: PropTypes.object.isRequired
     },
 
     render() {

@@ -3,6 +3,7 @@ import ObserveModelMixin from '../ObserveModelMixin';
 import ParameterEditor from './ParameterEditor';
 import parseCustomMarkdownToReact from '../Custom/parseCustomMarkdownToReact';
 import React from 'react';
+import PropTypes from 'prop-types';
 import Styles from './invoke-function.scss';
 import TerriaError from '../../Core/TerriaError';
 import when from 'terriajs-cesium/Source/ThirdParty/when';
@@ -11,9 +12,9 @@ const InvokeFunction = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        terria: React.PropTypes.object,
-        previewed: React.PropTypes.object,
-        viewState: React.PropTypes.object
+        terria: PropTypes.object,
+        previewed: PropTypes.object,
+        viewState: PropTypes.object
     },
 
     submit() {

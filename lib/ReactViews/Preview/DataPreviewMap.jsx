@@ -7,6 +7,7 @@ const GeoJsonCatalogItem = require('../../Models/GeoJsonCatalogItem');
 const ObserveModelMixin = require('../ObserveModelMixin');
 const OpenStreetMapCatalogItem = require('../../Models/OpenStreetMapCatalogItem');
 const React = require('react');
+const PropTypes = require('prop-types');
 const Terria = require('../../Models/Terria');
 const TerriaViewer = require('../../ViewModels/TerriaViewer.js');
 const ViewerMode = require('../../Models/ViewerMode');
@@ -22,9 +23,9 @@ const DataPreviewMap = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        terria: React.PropTypes.object.isRequired,
-        previewedCatalogItem: React.PropTypes.object,
-        showMap: React.PropTypes.bool
+        terria: PropTypes.object.isRequired,
+        previewedCatalogItem: PropTypes.object,
+        showMap: PropTypes.bool
     },
 
     getInitialState() {

@@ -2,6 +2,8 @@
 
 import React from 'react';
 
+import PropTypes from 'prop-types';
+
 import ObserveModelMixin from '../ObserveModelMixin';
 import PointParameterEditor from './PointParameterEditor';
 import LineParameterEditor from './LineParameterEditor';
@@ -22,9 +24,9 @@ const ParameterEditor = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        parameter: React.PropTypes.object,
-        viewState: React.PropTypes.object,
-        previewed: React.PropTypes.object
+        parameter: PropTypes.object,
+        viewState: PropTypes.object,
+        previewed: PropTypes.object
     },
 
     fieldId: new Date().getTime(),

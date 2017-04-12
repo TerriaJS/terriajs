@@ -1,6 +1,7 @@
 'use strict';
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import ObserveModelMixin from '../ObserveModelMixin';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import classNames from 'classnames';
@@ -14,9 +15,9 @@ const HelpMenuPanel = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        helpViewState: React.PropTypes.object.isRequired,
-        helpSequences: React.PropTypes.object.isRequired,
-        viewState: React.PropTypes.object.isRequired
+        helpViewState: PropTypes.object.isRequired,
+        helpSequences: PropTypes.object.isRequired,
+        viewState: PropTypes.object.isRequired
     },
 
     getInitialState() {

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import DataCatalogTab from './Tabs/DataCatalogTab.jsx';
@@ -11,9 +12,9 @@ const Tabs = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        terria: React.PropTypes.object.isRequired,
-        viewState: React.PropTypes.object.isRequired,
-        tabs: React.PropTypes.array
+        terria: PropTypes.object.isRequired,
+        viewState: PropTypes.object.isRequired,
+        tabs: PropTypes.array
     },
 
     getInitialState() {

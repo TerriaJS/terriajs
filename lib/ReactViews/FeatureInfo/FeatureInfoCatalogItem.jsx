@@ -3,6 +3,8 @@ import FeatureInfoSection from './FeatureInfoSection.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
 
+import PropTypes from 'prop-types';
+
 import Styles from './feature-info-catalog-item.scss';
 
 // Any Catalog in a feature-info-panel
@@ -10,11 +12,11 @@ const FeatureInfoCatalogItem = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        features: React.PropTypes.array,
-        catalogItem: React.PropTypes.object,
-        terria: React.PropTypes.object.isRequired,
-        viewState: React.PropTypes.object.isRequired,
-        onToggleOpen: React.PropTypes.func.isRequired
+        features: PropTypes.array,
+        catalogItem: PropTypes.object,
+        terria: PropTypes.object.isRequired,
+        viewState: PropTypes.object.isRequired,
+        onToggleOpen: PropTypes.func.isRequired
     },
 
     render() {

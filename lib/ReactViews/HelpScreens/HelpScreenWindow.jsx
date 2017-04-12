@@ -2,6 +2,7 @@
 
 import ObserverModelMixin from '../ObserveModelMixin';
 import React from 'react';
+import PropTypes from 'prop-types';
 import parseCustomHtmlToReact from '../Custom/parseCustomHtmlToReact';
 import Styles from './help-screen-window.scss';
 import classNames from 'classnames';
@@ -12,7 +13,7 @@ const HelpScreenWindow = React.createClass({
     mixins: [ObserverModelMixin],
 
     propTypes: {
-        helpViewState: React.PropTypes.object
+        helpViewState: PropTypes.object
     },
 
     render() {

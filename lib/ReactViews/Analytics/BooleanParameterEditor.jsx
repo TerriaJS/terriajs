@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Icon from '../Icon.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
 
@@ -7,8 +8,8 @@ import Styles from './parameter-editors.scss';
 const BooleanParameterEditor = React.createClass({
     mixins: [ObserveModelMixin],
     propTypes: {
-        previewed: React.PropTypes.object,
-        parameter: React.PropTypes.object
+        previewed: PropTypes.object,
+        parameter: PropTypes.object
     },
 
     onClick() {

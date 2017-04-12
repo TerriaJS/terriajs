@@ -2,6 +2,7 @@
 
 import RangeSlider from 'react-rangeslider';
 import React from 'react';
+import PropTypes from 'prop-types';
 import ObserveModelMixin from '../../ObserveModelMixin';
 
 import Styles from './opacity-section.scss';
@@ -10,7 +11,7 @@ const OpacitySection = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        item: React.PropTypes.object.isRequired
+        item: PropTypes.object.isRequired
     },
 
     changeOpacity(value) {

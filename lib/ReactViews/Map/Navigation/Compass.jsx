@@ -1,5 +1,6 @@
 'use strict';
 const React = require('react');
+const PropTypes = require('prop-types');
 const CameraFlightPath = require('terriajs-cesium/Source/Scene/CameraFlightPath');
 const Cartesian2 = require('terriajs-cesium/Source/Core/Cartesian2');
 const Cartesian3 = require('terriajs-cesium/Source/Core/Cartesian3');
@@ -15,7 +16,7 @@ import Styles from './compass.scss';
 // the compass on map
 const Compass = React.createClass({
     propTypes: {
-        terria: React.PropTypes.object
+        terria: PropTypes.object
     },
 
     getInitialState() {

@@ -5,6 +5,7 @@ import FeatureInfoCatalogItem from './FeatureInfoCatalogItem.jsx';
 import Loader from '../Loader.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
+import PropTypes from 'prop-types';
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 import Entity from 'terriajs-cesium/Source/DataSources/Entity';
 import Icon from "../Icon.jsx";
@@ -16,8 +17,8 @@ import classNames from 'classnames';
 const FeatureInfoPanel = React.createClass({
     mixins: [ObserveModelMixin],
     propTypes: {
-        terria: React.PropTypes.object.isRequired,
-        viewState: React.PropTypes.object.isRequired
+        terria: PropTypes.object.isRequired,
+        viewState: PropTypes.object.isRequired
     },
 
     componentDidMount() {

@@ -1,6 +1,7 @@
 'use strict';
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import Loader from '../Loader';
 import ObserveModelMixin from '../ObserveModelMixin';
@@ -9,8 +10,8 @@ import Styles from './parameter-editors.scss';
 const RegionTypeParameterEditor = React.createClass({
     mixins: [ObserveModelMixin],
     propTypes: {
-        previewed: React.PropTypes.object,
-        parameter: React.PropTypes.object
+        previewed: PropTypes.object,
+        parameter: PropTypes.object
     },
 
     onChange(e) {

@@ -1,5 +1,7 @@
 import React from 'react';
 
+import PropTypes from 'prop-types';
+
 import naturalSort from 'javascript-natural-sort';
 import parseCustomMarkdownToReact from '../Custom/parseCustomMarkdownToReact';
 import ObserveModelMixin from '../ObserveModelMixin';
@@ -28,7 +30,7 @@ const DataPreviewSections = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        metadataItem: React.PropTypes.object.isRequired
+        metadataItem: PropTypes.object.isRequired
     },
 
     sortInfoSections(items) {

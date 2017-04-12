@@ -3,13 +3,14 @@
 import classNames from 'classnames';
 import ObserveModelMixin from '../../ObserveModelMixin';
 import React from 'react';
+import PropTypes from 'prop-types';
 import Icon from "../../Icon.jsx";
 import Styles from './display-as-percent.scss';
 
 const DisplayAsPercentSection = React.createClass({
     mixins: [ObserveModelMixin],
     propTypes: {
-        item: React.PropTypes.object
+        item: PropTypes.object
     },
 
     togglePercentage() {

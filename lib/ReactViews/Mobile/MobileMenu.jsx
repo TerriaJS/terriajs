@@ -1,5 +1,7 @@
 import React from 'react';
 
+import PropTypes from 'prop-types';
+
 import ObserveModelMixin from '../ObserveModelMixin';
 import classNames from 'classnames';
 import MobileMenuItem from './MobileMenuItem';
@@ -15,11 +17,11 @@ const MobileMenu = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        menuItems: React.PropTypes.arrayOf(React.PropTypes.element),
-        viewState: React.PropTypes.instanceOf(ViewState).isRequired,
-        showFeedback: React.PropTypes.bool,
-        terria: React.PropTypes.instanceOf(Terria).isRequired,
-        allBaseMaps: React.PropTypes.array.isRequired
+        menuItems: PropTypes.arrayOf(PropTypes.element),
+        viewState: PropTypes.instanceOf(ViewState).isRequired,
+        showFeedback: PropTypes.bool,
+        terria: PropTypes.instanceOf(Terria).isRequired,
+        allBaseMaps: PropTypes.array.isRequired
     },
 
     getDefaultProps() {

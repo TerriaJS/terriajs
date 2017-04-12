@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import ObserveModelMixin from './ObserveModelMixin';
@@ -10,8 +11,8 @@ const DragDropFile = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        terria: React.PropTypes.object,
-        viewState: React.PropTypes.object,
+        terria: PropTypes.object,
+        viewState: PropTypes.object,
     },
 
     handleDrop(e) {

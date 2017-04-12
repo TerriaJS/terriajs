@@ -1,6 +1,7 @@
 'use strict';
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import ViewerMode from '../../../Models/ViewerMode';
@@ -16,10 +17,10 @@ const SettingPanel = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        terria: React.PropTypes.object.isRequired,
-        viewerModes: React.PropTypes.array,
-        allBaseMaps: React.PropTypes.array.isRequired,
-        viewState: React.PropTypes.object.isRequired
+        terria: PropTypes.object.isRequired,
+        viewerModes: PropTypes.array,
+        allBaseMaps: PropTypes.array.isRequired,
+        viewState: PropTypes.object.isRequired
     },
 
     getDefaultProps() {

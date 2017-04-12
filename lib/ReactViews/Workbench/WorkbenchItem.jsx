@@ -2,6 +2,7 @@
 
 import classNames from 'classnames';
 import React from 'react';
+import PropTypes from 'prop-types';
 import {sortable} from 'react-anything-sortable';
 
 import defined from 'terriajs-cesium/Source/Core/defined';
@@ -25,13 +26,13 @@ const WorkbenchItem = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        style: React.PropTypes.object,
-        className: React.PropTypes.string,
-        onMouseDown: React.PropTypes.func.isRequired,
-        onTouchStart: React.PropTypes.func.isRequired,
-        item: React.PropTypes.object.isRequired,
-        viewState: React.PropTypes.object.isRequired,
-        setWrapperState: React.PropTypes.func
+        style: PropTypes.object,
+        className: PropTypes.string,
+        onMouseDown: PropTypes.func.isRequired,
+        onTouchStart: PropTypes.func.isRequired,
+        item: PropTypes.object.isRequired,
+        viewState: PropTypes.object.isRequired,
+        setWrapperState: PropTypes.func
     },
 
     toggleDisplay() {

@@ -1,6 +1,7 @@
 'use strict';
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import classNames from 'classnames';
 
@@ -10,13 +11,13 @@ import Styles from './dropdown.scss';
 // Uses the contents of the element as the name of the dropdown if none selected.
 const Dropdown = React.createClass({
     propTypes: {
-        theme: React.PropTypes.object,
-        options: React.PropTypes.array, // Must be an array of objects with name properties. Uses <a> when there is an href property, else <button type='button'>.
-        selected: React.PropTypes.object,
-        selectOption: React.PropTypes.func, // The callback function; its arguments are the chosen object and its index.
-        textProperty: React.PropTypes.string, // property to display as text
-        matchWidth: React.PropTypes.bool,
-        children: React.PropTypes.any
+        theme: PropTypes.object,
+        options: PropTypes.array, // Must be an array of objects with name properties. Uses <a> when there is an href property, else <button type='button'>.
+        selected: PropTypes.object,
+        selectOption: PropTypes.func, // The callback function; its arguments are the chosen object and its index.
+        textProperty: PropTypes.string, // property to display as text
+        matchWidth: PropTypes.bool,
+        children: PropTypes.any
     },
 
     getDefaultProps() {

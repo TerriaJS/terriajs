@@ -1,6 +1,7 @@
 'use strict';
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import ObserveModelMixin from '../ObserveModelMixin';
 import defined from 'terriajs-cesium/Source/Core/defined';
 
@@ -11,8 +12,8 @@ const HelpOverlay = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        helpViewState: React.PropTypes.object.isRequired,
-        viewState: React.PropTypes.object.isRequired
+        helpViewState: PropTypes.object.isRequired,
+        viewState: PropTypes.object.isRequired
     },
 
     getInitialState() {

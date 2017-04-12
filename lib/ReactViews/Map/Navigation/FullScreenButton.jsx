@@ -1,5 +1,6 @@
 'use strict';
 const React = require('react');
+const PropTypes = require('prop-types');
 import ObserveModelMixin from '../../ObserveModelMixin';
 import triggerResize from '../../../Core/triggerResize';
 import Styles from './full_screen_button.scss';
@@ -11,9 +12,9 @@ const FullScreenButton = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        terria: React.PropTypes.object,
-        viewState: React.PropTypes.object.isRequired,
-        animationDuration: React.PropTypes.number // Defaults to 1 millisecond.
+        terria: PropTypes.object,
+        viewState: PropTypes.object.isRequired,
+        animationDuration: PropTypes.number // Defaults to 1 millisecond.
     },
 
     getInitialState() {

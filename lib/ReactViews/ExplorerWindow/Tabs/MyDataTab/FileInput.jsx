@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import Styles from './file-input.scss';
@@ -7,8 +8,8 @@ import Styles from './file-input.scss';
 // use an button element to have consistent stylying
 const FileInput = React.createClass({
     propTypes: {
-        onChange: React.PropTypes.func,
-        accept: React.PropTypes.string
+        onChange: PropTypes.func,
+        accept: PropTypes.string
     },
 
     getInitialState() {

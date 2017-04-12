@@ -6,13 +6,14 @@ import ObserveModelMixin from '../../ObserveModelMixin';
 import SummaryConceptModel from '../../../Map/SummaryConcept';
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import Styles from './concept-viewer.scss';
 
 const ConceptViewer = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        item: React.PropTypes.object.isRequired
+        item: PropTypes.object.isRequired
     },
 
     render() {

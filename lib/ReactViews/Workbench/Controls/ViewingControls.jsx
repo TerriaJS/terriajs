@@ -6,6 +6,7 @@ import Icon from "../../Icon.jsx";
 import ObserveModelMixin from '../../ObserveModelMixin';
 import PickedFeatures from '../../../Map/PickedFeatures';
 import React from 'react';
+import PropTypes from 'prop-types';
 import Rectangle from 'terriajs-cesium/Source/Core/Rectangle';
 import when from 'terriajs-cesium/Source/ThirdParty/when';
 import classNames from 'classnames';
@@ -15,8 +16,8 @@ const ViewingControls = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        item: React.PropTypes.object.isRequired,
-        viewState: React.PropTypes.object.isRequired
+        item: PropTypes.object.isRequired,
+        viewState: PropTypes.object.isRequired
     },
 
     removeFromMap() {

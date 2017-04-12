@@ -1,5 +1,7 @@
 import React from 'react';
 
+import PropTypes from 'prop-types';
+
 import Compass from './Navigation/Compass.jsx';
 import MyLocation from './Navigation/MyLocation.jsx';
 import ZoomControl from './Navigation/ZoomControl.jsx';
@@ -13,9 +15,9 @@ const MapNavigation = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        terria: React.PropTypes.object.isRequired,
-        viewState: React.PropTypes.object.isRequired,
-        navItems: React.PropTypes.arrayOf(React.PropTypes.element)
+        terria: PropTypes.object.isRequired,
+        viewState: PropTypes.object.isRequired,
+        navItems: PropTypes.arrayOf(PropTypes.element)
     },
 
     getDefaultProps() {

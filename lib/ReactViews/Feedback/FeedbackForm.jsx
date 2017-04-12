@@ -2,6 +2,7 @@
 
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
+import PropTypes from 'prop-types';
 import sendFeedback from '../../Models/sendFeedback.js';
 import Styles from './feedback-form.scss';
 import Icon from "../Icon.jsx";
@@ -11,7 +12,7 @@ const FeedbackForm = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        viewState: React.PropTypes.object.isRequired
+        viewState: PropTypes.object.isRequired
     },
 
     getInitialState() {

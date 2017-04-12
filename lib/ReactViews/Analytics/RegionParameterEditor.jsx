@@ -2,6 +2,8 @@
 
 import React from 'react';
 
+import PropTypes from 'prop-types';
+
 import ObserveModelMixin from '../ObserveModelMixin';
 
 import Styles from './parameter-editors.scss';
@@ -12,9 +14,9 @@ const RegionParameterEditor = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        previewed: React.PropTypes.object,
-        viewState: React.PropTypes.object,
-        parameter: React.PropTypes.object
+        previewed: PropTypes.object,
+        viewState: PropTypes.object,
+        parameter: PropTypes.object
     },
 
     selectRegionOnMap() {

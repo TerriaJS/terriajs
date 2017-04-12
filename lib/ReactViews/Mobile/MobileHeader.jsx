@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import SearchBox from '../Search/SearchBox.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
 import MobileModalWindow from './MobileModalWindow';
@@ -13,11 +14,11 @@ const MobileHeader = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        terria: React.PropTypes.object,
-        viewState: React.PropTypes.object.isRequired,
-        allBaseMaps: React.PropTypes.array.isRequired,
-        version: React.PropTypes.string,
-        menuItems: React.PropTypes.array
+        terria: PropTypes.object,
+        viewState: PropTypes.object.isRequired,
+        allBaseMaps: PropTypes.array.isRequired,
+        version: PropTypes.string,
+        menuItems: PropTypes.array
     },
 
     getInitialState() {

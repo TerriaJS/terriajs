@@ -50,9 +50,9 @@ const GLYPHS = {
 
 const Icon = React.createClass({
     propTypes: {
-        glyph: React.PropTypes.string,
-        style: React.PropTypes.object,
-        className: React.PropTypes.string
+        glyph: PropTypes.string,
+        style: PropTypes.object,
+        className: PropTypes.string
     },
     render() {
         const glyph = this.props.glyph;

@@ -1,14 +1,15 @@
 import classNames from 'classnames';
 import React from 'react';
+import PropTypes from 'prop-types';
 import Icon from '../../Icon';
 import Styles from './collapsible.scss';
 
 const Collapsible = React.createClass({
     propTypes: {
-        title: React.PropTypes.string,
-        startsOpen: React.PropTypes.bool,
-        isInverse: React.PropTypes.bool,
-        children: React.PropTypes.any
+        title: PropTypes.string,
+        startsOpen: PropTypes.bool,
+        isInverse: PropTypes.bool,
+        children: PropTypes.any
     },
 
     getInitialState: function() {

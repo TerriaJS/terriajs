@@ -2,6 +2,7 @@
 
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
+import PropTypes from 'prop-types';
 import Styles from './feedback-button.scss';
 import Icon from "../Icon.jsx";
 
@@ -9,7 +10,7 @@ const FeedbackButton = React.createClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        viewState: React.PropTypes.object.isRequired
+        viewState: PropTypes.object.isRequired
     },
 
     onClick() {
