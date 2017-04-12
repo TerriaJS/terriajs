@@ -100,7 +100,9 @@ Documentation is automatically generated from the source via JSDoc (reference) a
 npm run gulp docs
 ```
 
-It will be placed in the `wwwroot/doc` folder.  
+It will be placed in the `wwwroot/doc` folder.
+
+You need a standalone install of MkDocs in order to build the user guide, see [http://www.mkdocs.org/#installation](http://www.mkdocs.org/#installation) for details.
 
 ## Tests / Specs
 
@@ -110,7 +112,7 @@ We use [Jasmine](https://jasmine.github.io/) for the TerriaJS tests, called spec
 npm run gulp
 ```
 
-And start the development web server by running:
+And start the development web server by running (also from the TerriaJS and not TerriaMap! directory):
 
 ```
 npm start
