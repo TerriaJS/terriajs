@@ -70,7 +70,7 @@ const BooleanParameterEditor = createReactClass({
                 {this.props.parameter.hasNamedStates && <div>{this.renderRadio(true)}{this.renderRadio(false)}</div>}
             </div>
         );
-    },
+    }
 });
 
 module.exports = BooleanParameterEditor;
