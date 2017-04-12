@@ -74,7 +74,8 @@ const FeatureInfoSection = React.createClass({
 
             propertyData.terria = {
                 formatNumber: mustacheFormatNumberFunction,
-                urlEncodeComponent: mustacheURLEncodeTextComponent
+                urlEncodeComponent: mustacheURLEncodeTextComponent,
+                urlEncode: mustacheURLEncodeText
             };
             if (this.props.position) {
                 const latLngInRadians = Ellipsoid.WGS84.cartesianToCartographic(this.props.position);
@@ -400,12 +401,25 @@ function mustacheFormatNumberFunction() {
  * URL Encodes provided text: {{#terria.urlEncodeComponent}}{{value}}{{/terria.urlEncodeComponent}}.
  * See encodeURIComponent for details.
  * 
- * {{#terria.urlEncodeComponent}}W/HOE#1{{/terria.urlEncodeComponent}} -> W%2FHOE%231
+ * {{#terria.urlEncodeComponent}}W/HO:E#1{{/terria.urlEncodeComponent}} -> W%2FHO%3AE%231
  * @private
  */
 function mustacheURLEncodeTextComponent() {
     return function(text, render) {
         return encodeURIComponent(render(text));
+    };
+}
+
+/**
+ * URL Encodes provided text: {{#terria.urlEncode}}{{value}}{{/terria.urlEncode}}.
+ * See encodeURI for details.
+ *
+ * {{#terria.urlEncode}}http://example.com/a b{{/terria.urlEncode}} -> http://example.com/a%20b
+ * @private
+ */
+function mustacheURLEncodeText() {
+    return function(text, render) {
+        return encodeURI(render(text));
     };
 }
 
