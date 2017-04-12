@@ -2,13 +2,14 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
+import createReactClass from 'create-react-class';
 import EventHelper from 'terriajs-cesium/Source/Core/EventHelper';
 import classNames from 'classnames';
 
 import Styles from './progress-bar.scss';
 
 // The map navigation region
-const ProgressBar = React.createClass({
+const ProgressBar = createReactClass({
     propTypes: {
         terria: PropTypes.object.isRequired
     },

@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import createReactClass from 'create-react-class';
 import Styles from './badge-bar.scss';
 
-const BadgeBar = React.createClass({
+const BadgeBar = createReactClass({
     propTypes: {
         label: PropTypes.string,
         badge: PropTypes.number,
