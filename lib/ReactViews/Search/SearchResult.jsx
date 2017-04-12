@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import createReactClass from 'create-react-class';
 import Icon from "../Icon.jsx";
 import Styles from './search-result.scss';
 import classNames from 'classnames';
 
 // A Location item when doing Bing map searvh or Gazetter search
-const SearchResult = React.createClass({
+const SearchResult = createReactClass({
     propTypes: {
         name: PropTypes.string.isRequired,
         clickAction: PropTypes.func.isRequired,

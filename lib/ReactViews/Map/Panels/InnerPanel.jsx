@@ -1,12 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import createReactClass from 'create-react-class';
 import classNames from 'classnames';
 
 import defined from 'terriajs-cesium/Source/Core/defined';
 
 import Styles from './panel.scss';
 
-const InnerPanel = React.createClass({
+const InnerPanel = createReactClass({
     propTypes: {
         /**
          * A property that will be looked for on window click events - if it's set, the click event will not cause the

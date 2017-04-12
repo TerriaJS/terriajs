@@ -1,12 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import createReactClass from 'create-react-class';
 import classNames from 'classnames';
 
 import Styles from './file-input.scss';
 
 // When uploading a file
 // use an button element to have consistent stylying
-const FileInput = React.createClass({
+const FileInput = createReactClass({
     propTypes: {
         onChange: PropTypes.func,
         accept: PropTypes.string

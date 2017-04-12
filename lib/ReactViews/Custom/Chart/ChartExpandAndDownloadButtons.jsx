@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import React from 'react';
 
 import PropTypes from 'prop-types';
+import createReactClass from 'create-react-class';
 
 import defaultValue from 'terriajs-cesium/Source/Core/defaultValue';
 import defined from 'terriajs-cesium/Source/Core/defined';
@@ -22,7 +23,7 @@ import Styles from './chart-expand-and-download-buttons.scss';
 // This displays both an "expand" button, which enables a new catalog item based on the chart data,
 // and a "download" button, which downloads the data.
 //
-const ChartExpandAndDownloadButtons = React.createClass({
+const ChartExpandAndDownloadButtons = createReactClass({
 
     propTypes: {
         terria: PropTypes.object.isRequired,

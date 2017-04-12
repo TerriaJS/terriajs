@@ -15,6 +15,7 @@
 import React from 'react';
 
 import PropTypes from 'prop-types';
+import createReactClass from 'create-react-class';
 
 import defined from 'terriajs-cesium/Source/Core/defined';
 import defaultValue from 'terriajs-cesium/Source/Core/defaultValue';
@@ -33,7 +34,7 @@ import Styles from './chart.scss';
 const defaultHeight = 100;
 const defaultColor = undefined; // Allows the line color to be set by the css, esp. in the feature info panel.
 
-const Chart = React.createClass({
+const Chart = createReactClass({
     // this._element is updated by the ref callback attribute, https://facebook.github.io/react/docs/more-about-refs.html
     _element: undefined,
 

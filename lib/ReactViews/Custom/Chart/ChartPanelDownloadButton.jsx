@@ -2,6 +2,7 @@
 /* global Float32Array */
 /* eslint new-parens: 0 */
 import React from 'react';
+import PropTypes from 'prop-types';
 import createReactClass from 'create-react-class';
 import debounce from 'lodash.debounce';
 

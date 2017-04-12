@@ -1,10 +1,11 @@
 import classNames from 'classnames';
 import React from 'react';
 import PropTypes from 'prop-types';
+import createReactClass from 'create-react-class';
 import Icon from '../../Icon';
 import Styles from './collapsible.scss';
 
-const Collapsible = React.createClass({
+const Collapsible = createReactClass({
     propTypes: {
         title: PropTypes.string,
         startsOpen: PropTypes.bool,

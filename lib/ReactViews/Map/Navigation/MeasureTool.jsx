@@ -1,5 +1,6 @@
 'use strict';
 import React from 'react';
+import PropTypes from 'prop-types';
 import createReactClass from 'create-react-class';
 import ObserveModelMixin from '../../ObserveModelMixin';
 import Styles from './measure_tool.scss';
