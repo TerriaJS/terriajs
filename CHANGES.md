@@ -13,6 +13,7 @@ Change Log
 * Added option to specify `mobileDefaultViewerMode` in the `parameters` section of `config.json` to specify the default view mode when running on a mobile platform.
 * Added support for `itemProperties` to `CswCatalogGroup`.
 * Fixed a layout problem that caused the coordinates on the location bar to be displayed below the bar itself in Internet Explorer 11.
+* Updated syntax to remove deprecation warnings with React version 15.5.
 
 ### 5.0.1
 
