@@ -2,17 +2,20 @@
 
 import React from 'react';
 
+import PropTypes from 'prop-types';
+import createReactClass from 'create-react-class';
+
 import ClockRange from 'terriajs-cesium/Source/Core/ClockRange';
 import classnames from 'classnames';
 import Styles from './timeline-controls.scss';
 import Icon from "../../Icon.jsx";
 
-const TimelineControls = React.createClass({
+const TimelineControls = createReactClass({
     propTypes: {
-        clock: React.PropTypes.object.isRequired,
-        analytics: React.PropTypes.object.isRequired,
-        currentViewer: React.PropTypes.object.isRequired,
-        locale: React.PropTypes.object
+        clock: PropTypes.object.isRequired,
+        analytics: PropTypes.object.isRequired,
+        currentViewer: PropTypes.object.isRequired,
+        locale: PropTypes.object
     },
 
     getInitialState() {

@@ -14,6 +14,7 @@ Change Log
 * Added support for `itemProperties` to `CswCatalogGroup`.
 * Added `terria.urlEncode` function for use in feature info templates.
 * Fixed a layout problem that caused the coordinates on the location bar to be displayed below the bar itself in Internet Explorer 11.
+* Updated syntax to remove deprecation warnings with React version 15.5.
 
 ### 5.0.1
 

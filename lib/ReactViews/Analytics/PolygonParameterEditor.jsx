@@ -2,6 +2,10 @@
 
 import React from 'react';
 
+import createReactClass from 'create-react-class';
+
+import PropTypes from 'prop-types';
+
 import defined from 'terriajs-cesium/Source/Core/defined';
 
 import ObserveModelMixin from '../ObserveModelMixin';
@@ -11,13 +15,14 @@ import CesiumMath from 'terriajs-cesium/Source/Core/Math';
 import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
 import UserDrawing from '../../Models/UserDrawing';
 
-const PolygonParameterEditor = React.createClass({
+const PolygonParameterEditor = createReactClass({
+    displayName: 'PolygonParameterEditor',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        previewed: React.PropTypes.object,
-        parameter: React.PropTypes.object,
-        viewState: React.PropTypes.object
+        previewed: PropTypes.object,
+        parameter: PropTypes.object,
+        viewState: PropTypes.object
     },
 
     setValueFromText(e) {
@@ -42,7 +47,7 @@ const PolygonParameterEditor = React.createClass({
                 </button>
             </div>
         );
-    }
+    },
 });
 
 /**

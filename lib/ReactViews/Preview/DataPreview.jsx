@@ -7,18 +7,21 @@ import InvokeFunction from '../Analytics/InvokeFunction';
 import MappablePreview from './MappablePreview';
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
+import createReactClass from 'create-react-class';
+import PropTypes from 'prop-types';
 import Styles from './data-preview.scss';
 
 /**
  * Data preview section, for the preview map see DataPreviewMap
  */
-const DataPreview = React.createClass({
+const DataPreview = createReactClass({
+    displayName: 'DataPreview',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        terria: React.PropTypes.object.isRequired,
-        viewState: React.PropTypes.object,
-        previewed: React.PropTypes.object
+        terria: PropTypes.object.isRequired,
+        viewState: PropTypes.object,
+        previewed: PropTypes.object
     },
 
     backToMap() {
@@ -72,7 +75,7 @@ const DataPreview = React.createClass({
                 </Choose>
             </div>
         );
-    }
+    },
 });
 
 module.exports = DataPreview;

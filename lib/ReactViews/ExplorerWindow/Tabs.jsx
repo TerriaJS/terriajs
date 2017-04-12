@@ -1,4 +1,6 @@
 import React from 'react';
+import createReactClass from 'create-react-class';
+import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import DataCatalogTab from './Tabs/DataCatalogTab.jsx';
@@ -7,13 +9,14 @@ import ObserveModelMixin from '../ObserveModelMixin';
 
 import Styles from './tabs.scss';
 
-const Tabs = React.createClass({
+const Tabs = createReactClass({
+    displayName: 'Tabs',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        terria: React.PropTypes.object.isRequired,
-        viewState: React.PropTypes.object.isRequired,
-        tabs: React.PropTypes.array
+        terria: PropTypes.object.isRequired,
+        viewState: PropTypes.object.isRequired,
+        tabs: PropTypes.array
     },
 
     getInitialState() {
@@ -76,7 +79,7 @@ const Tabs = React.createClass({
                 </section>
             </div>
         );
-    }
+    },
 });
 
 module.exports = Tabs;

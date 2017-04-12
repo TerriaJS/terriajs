@@ -3,6 +3,10 @@
 import Mustache from 'mustache';
 import React from 'react';
 
+import createReactClass from 'create-react-class';
+
+import PropTypes from 'prop-types';
+
 import CesiumMath from 'terriajs-cesium/Source/Core/Math';
 import classNames from 'classnames';
 import defined from 'terriajs-cesium/Source/Core/defined';
@@ -25,18 +29,19 @@ Mustache.escape = function(string) {
 };
 
 // Individual feature info section
-const FeatureInfoSection = React.createClass({
+const FeatureInfoSection = createReactClass({
+    displayName: 'FeatureInfoSection',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        viewState: React.PropTypes.object.isRequired,
-        template: React.PropTypes.oneOfType([React.PropTypes.object, React.PropTypes.string]),
-        feature: React.PropTypes.object,
-        position: React.PropTypes.object,
-        clock: React.PropTypes.object,
-        catalogItem: React.PropTypes.object,  // Note this may not be known (eg. WFS).
-        isOpen: React.PropTypes.bool,
-        onClickHeader: React.PropTypes.func
+        viewState: PropTypes.object.isRequired,
+        template: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
+        feature: PropTypes.object,
+        position: PropTypes.object,
+        clock: PropTypes.object,
+        catalogItem: PropTypes.object,  // Note this may not be known (eg. WFS).
+        isOpen: PropTypes.bool,
+        onClickHeader: PropTypes.func
     },
 
     getInitialState() {
@@ -221,7 +226,7 @@ const FeatureInfoSection = React.createClass({
                 </If>
             </li>
         );
-    }
+    },
 });
 
 /**

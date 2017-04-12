@@ -1,6 +1,8 @@
 'use strict';
 
 import React from 'react';
+import createReactClass from 'create-react-class';
+import PropTypes from 'prop-types';
 import URI from 'urijs';
 
 import Rectangle from 'terriajs-cesium/Source/Core/Rectangle';
@@ -11,11 +13,12 @@ import Styles from './my_location.scss';
 import TerriaError from '../../../Core/TerriaError';
 import Icon from "../../Icon.jsx";
 
-const MyLocation = React.createClass({
+const MyLocation = createReactClass({
+    displayName: 'MyLocation',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        terria: React.PropTypes.object.isRequired
+        terria: PropTypes.object.isRequired
     },
 
     _marker: undefined,
@@ -91,6 +94,7 @@ const MyLocation = React.createClass({
     handleCick() {
         this.getLocation();
     },
+
     render() {
         return <div className={Styles.myLocation}>
                   <button type='button' className={Styles.btn}
@@ -99,7 +103,7 @@ const MyLocation = React.createClass({
                           <Icon glyph={Icon.GLYPHS.geolocation}/>
                   </button>
                </div>;
-    }
+    },
 });
 
 export default MyLocation;

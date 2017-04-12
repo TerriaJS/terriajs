@@ -1,5 +1,8 @@
 import React from 'react';
 
+import PropTypes from 'prop-types';
+import createReactClass from 'create-react-class';
+
 import FeatureDetection from 'terriajs-cesium/Source/Core/FeatureDetection';
 
 import DataUri from '../../Core/DataUri';
@@ -8,12 +11,12 @@ import Icon from '../Icon.jsx';
 
 import Styles from './feature-info-download.scss';
 
-const FeatureInfoDownload = React.createClass({
+const FeatureInfoDownload = createReactClass({
     propTypes: {
-        data: React.PropTypes.object.isRequired,
-        name: React.PropTypes.string.isRequired,
-        viewState: React.PropTypes.object.isRequired,
-        canUseDataUri: React.PropTypes.bool
+        data: PropTypes.object.isRequired,
+        name: PropTypes.string.isRequired,
+        viewState: PropTypes.object.isRequired,
+        canUseDataUri: PropTypes.bool
     },
 
     getDefaultProps() {

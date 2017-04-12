@@ -1,5 +1,7 @@
 'use strict';
 import React from 'react';
+import createReactClass from 'create-react-class';
+import PropTypes from 'prop-types';
 import L from 'leaflet';
 import Cartesian2 from 'terriajs-cesium/Source/Core/Cartesian2';
 import defined from 'terriajs-cesium/Source/Core/defined';
@@ -20,11 +22,12 @@ const distances = [
     1000000, 2000000, 3000000, 5000000,
     10000000, 20000000, 30000000, 50000000];
 
-const DistanceLegend = React.createClass({
+const DistanceLegend = createReactClass({
+    displayName: 'DistanceLegend',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        terria: React.PropTypes.object,
+        terria: PropTypes.object,
     },
 
     getInitialState() {
@@ -177,6 +180,6 @@ const DistanceLegend = React.createClass({
                  </div>) : null;
 
         return distanceLabel;
-    }
+    },
 });
 module.exports = DistanceLegend;
