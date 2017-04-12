@@ -1,5 +1,7 @@
 import React from 'react';
 
+import createReactClass from 'create-react-class';
+
 import PropTypes from 'prop-types';
 
 import ObserveModelMixin from '../ObserveModelMixin';
@@ -7,7 +9,8 @@ import Styles from './data-preview.scss';
 /**
  * URL section of the preview.
  */
-const DataPreviewUrl = React.createClass({
+const DataPreviewUrl = createReactClass({
+    displayName: 'DataPreviewUrl',
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -48,7 +51,7 @@ const DataPreviewUrl = React.createClass({
                 </If>
             </div>
         );
-    }
+    },
 });
 
 export default DataPreviewUrl;

@@ -1,5 +1,7 @@
 import React from 'react';
 
+import createReactClass from 'create-react-class';
+
 import PropTypes from 'prop-types';
 
 import DataPreviewSections from './DataPreviewSections';
@@ -11,7 +13,8 @@ import parseCustomMarkdownToReact from '../Custom/parseCustomMarkdownToReact';
 /**
  * A "preview" for CatalogGroup.
  */
-const GroupPreview = React.createClass({
+const GroupPreview = createReactClass({
+    displayName: 'GroupPreview',
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -58,7 +61,7 @@ const GroupPreview = React.createClass({
                 </div>
             </div>
         );
-    }
+    },
 });
 
 export default GroupPreview;

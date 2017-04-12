@@ -1,5 +1,6 @@
 'use strict';
 import React from 'react';
+import createReactClass from 'create-react-class';
 import ObserveModelMixin from '../../ObserveModelMixin';
 import Styles from './measure_tool.scss';
 import Icon from "../../Icon.jsx";
@@ -14,7 +15,8 @@ const PolygonHierarchy = require('terriajs-cesium/Source/Core/PolygonHierarchy.j
 const Cartesian3 = require('terriajs-cesium/Source/Core/Cartesian3.js');
 const VertexFormat = require('terriajs-cesium/Source/Core/VertexFormat.js');
 
-const MeasureTool = React.createClass({
+const MeasureTool = createReactClass({
+    displayName: 'MeasureTool',
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -192,7 +194,7 @@ const MeasureTool = React.createClass({
                           <Icon glyph={Icon.GLYPHS.measure}/>
                   </button>
                </div>;
-    }
+    },
 });
 
 export default MeasureTool;

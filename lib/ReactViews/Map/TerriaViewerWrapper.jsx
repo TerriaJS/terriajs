@@ -1,13 +1,17 @@
 import React from 'react';
+import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import TerriaViewer from '../../ViewModels/TerriaViewer';
 import Cartesian2 from 'terriajs-cesium/Source/Core/Cartesian2';
 import Styles from './terria-viewer-wrapper.scss';
 
-const TerriaViewerWrapper = React.createClass({
+const TerriaViewerWrapper = createReactClass({
+    displayName: 'TerriaViewerWrapper',
+
     // mixins: [ObserveModelMixin],
 
     lastMouseX: -1,
+
     lastMouseY: -1,
 
     propTypes: {
@@ -63,6 +67,6 @@ const TerriaViewerWrapper = React.createClass({
                 <div className={Styles.mapPlaceholder}>Loading the map, please wait!</div>
             </aside>
         );
-    }
+    },
 });
 module.exports = TerriaViewerWrapper;

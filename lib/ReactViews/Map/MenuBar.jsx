@@ -1,5 +1,7 @@
 import React from 'react';
 
+import createReactClass from 'create-react-class';
+
 import PropTypes from 'prop-types';
 
 import SettingPanel from './Panels/SettingPanel.jsx';
@@ -11,8 +13,10 @@ import ObserveModelMixin from '../ObserveModelMixin';
 import Styles from './menu-bar.scss';
 
 // The map navigation region
-const MenuBar = React.createClass({
+const MenuBar = createReactClass({
+    displayName: 'MenuBar',
     mixins: [ObserveModelMixin],
+
     propTypes: {
         terria: PropTypes.object,
         viewState: PropTypes.object.isRequired,
@@ -52,7 +56,7 @@ const MenuBar = React.createClass({
                 </ul>
             </div>
         );
-    }
+    },
 });
 
 export default MenuBar;

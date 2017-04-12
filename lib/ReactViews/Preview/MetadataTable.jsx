@@ -1,5 +1,7 @@
 import React from 'react';
 
+import createReactClass from 'create-react-class';
+
 import PropTypes from 'prop-types';
 
 import ObserveModelMixin from '../ObserveModelMixin';
@@ -8,7 +10,8 @@ import Styles from './metadata-table.scss';
 /**
  * Displays a table showing the name and values of items in a MetadataItem.
  */
-const MetadataTable = React.createClass({
+const MetadataTable = createReactClass({
+    displayName: 'MetadataTable',
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -49,7 +52,7 @@ const MetadataTable = React.createClass({
                 </If>
             </div>
         );
-    }
+    },
 });
 
 /**

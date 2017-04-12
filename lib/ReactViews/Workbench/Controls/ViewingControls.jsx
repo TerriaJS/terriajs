@@ -6,13 +6,15 @@ import Icon from "../../Icon.jsx";
 import ObserveModelMixin from '../../ObserveModelMixin';
 import PickedFeatures from '../../../Map/PickedFeatures';
 import React from 'react';
+import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import Rectangle from 'terriajs-cesium/Source/Core/Rectangle';
 import when from 'terriajs-cesium/Source/ThirdParty/when';
 import classNames from 'classnames';
 import Styles from './viewing-controls.scss';
 
-const ViewingControls = React.createClass({
+const ViewingControls = createReactClass({
+    displayName: 'ViewingControls',
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -23,6 +25,7 @@ const ViewingControls = React.createClass({
     removeFromMap() {
         this.props.item.isEnabled = false;
     },
+
     zoomTo() {
         this.props.item.zoomToAndUseClock();
     },
@@ -84,6 +87,6 @@ const ViewingControls = React.createClass({
                 </li>
             </ul>
         );
-    }
+    },
 });
 module.exports = ViewingControls;

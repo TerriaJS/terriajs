@@ -2,11 +2,13 @@
 
 import ObserveModelMixin from '../../ObserveModelMixin';
 import React from 'react';
+import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import parseCustomMarkdownToReact from '../../Custom/parseCustomMarkdownToReact';
 import Styles from './short-report.scss';
 
-const ShortReport = React.createClass({
+const ShortReport = createReactClass({
+    displayName: 'ShortReport',
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -29,7 +31,7 @@ const ShortReport = React.createClass({
                 </If>
             </div>
         );
-    }
+    },
 });
 
 module.exports = ShortReport;

@@ -1,5 +1,7 @@
 import React from 'react';
 
+import createReactClass from 'create-react-class';
+
 import PropTypes from 'prop-types';
 
 import naturalSort from 'javascript-natural-sort';
@@ -26,7 +28,8 @@ const DEFAULT_SECTION_ORDER = [
  * CatalogItem-defined sections that sit within the preview description. These are ordered according to the catalog item's
  * order if available.
  */
-const DataPreviewSections = React.createClass({
+const DataPreviewSections = createReactClass({
+    displayName: 'DataPreviewSections',
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -68,7 +71,7 @@ const DataPreviewSections = React.createClass({
                 </For>
             </div>
         );
-    }
+    },
 });
 
 export default DataPreviewSections;

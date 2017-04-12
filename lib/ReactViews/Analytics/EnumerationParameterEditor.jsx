@@ -1,11 +1,14 @@
 import React from 'react';
+import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import ObserveModelMixin from '../ObserveModelMixin';
 
 import Styles from './parameter-editors.scss';
 
-const EnumerationParameterEditor = React.createClass({
+const EnumerationParameterEditor = createReactClass({
+    displayName: 'EnumerationParameterEditor',
     mixins: [ObserveModelMixin],
+
     propTypes: {
         previewed: PropTypes.object,
         parameter: PropTypes.object
@@ -28,7 +31,7 @@ const EnumerationParameterEditor = React.createClass({
                     {this.props.parameter.possibleValues.map((v, i)=>
                         <option value={v} key={i}>{v}</option>)}
                 </select>);
-    }
+    },
 });
 
 module.exports = EnumerationParameterEditor;

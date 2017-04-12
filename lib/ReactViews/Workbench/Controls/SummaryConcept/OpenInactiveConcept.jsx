@@ -5,12 +5,14 @@ import Concept from '../Concept';
 import Icon from '../../../Icon.jsx';
 import ObserveModelMixin from '../../../ObserveModelMixin';
 import React from 'react';
+import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import Styles from './summary-concept.scss';
 
 const NEW_TEXT = 'New condition';
 
-const OpenInactiveConcept = React.createClass({
+const OpenInactiveConcept = createReactClass({
+    displayName: 'OpenInactiveConcept',
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -69,10 +71,11 @@ const OpenInactiveConcept = React.createClass({
                 </ul>
             </div>
         );
-    }
+    },
 });
 
-const ConceptParent = React.createClass({
+const ConceptParent = createReactClass({
+    displayName: 'ConceptParent',
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -97,7 +100,7 @@ const ConceptParent = React.createClass({
                 </div>
             </li>
         );
-    }
+    },
 });
 
 module.exports = OpenInactiveConcept;

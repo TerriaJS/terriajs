@@ -1,5 +1,7 @@
 import React from 'react';
 
+import createReactClass from 'create-react-class';
+
 import PropTypes from 'prop-types';
 
 import DataCatalogGroup from '../../../DataCatalog/DataCatalogGroup.jsx';
@@ -10,7 +12,8 @@ import ObserveModelMixin from '../../../ObserveModelMixin';
 import Styles from './my-data-tab.scss';
 
 // My data tab include Add data section and preview section
-const MyDataTab = React.createClass({
+const MyDataTab = createReactClass({
+    displayName: 'MyDataTab',
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -72,7 +75,7 @@ const MyDataTab = React.createClass({
                 />
             </div>
         );
-    }
+    },
 });
 
 module.exports = MyDataTab;

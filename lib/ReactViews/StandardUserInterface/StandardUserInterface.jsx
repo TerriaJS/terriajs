@@ -1,4 +1,5 @@
 import React from 'react';
+import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import arrayContains from '../../Core/arrayContains';
 import Branding from './../SidePanel/Branding.jsx';
@@ -23,7 +24,8 @@ import 'inobounce';
 import Styles from './standard-user-interface.scss';
 
 /** blah */
-const StandardUserInterface = React.createClass({
+const StandardUserInterface = createReactClass({
+    displayName: 'StandardUserInterface',
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -162,7 +164,7 @@ const StandardUserInterface = React.createClass({
                 />
             </div>
         );
-    }
+    },
 });
 
 module.exports = StandardUserInterface;

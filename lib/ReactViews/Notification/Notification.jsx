@@ -2,10 +2,12 @@
 
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
+import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import NotificationWindow from './NotificationWindow';
 
-const Notification = React.createClass({
+const Notification = createReactClass({
+    displayName: 'Notification',
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -41,7 +43,7 @@ const Notification = React.createClass({
                 onConfirm={this.confirm}
                 onDeny={this.deny}
             />);
-    }
+    },
 });
 
 module.exports = Notification;

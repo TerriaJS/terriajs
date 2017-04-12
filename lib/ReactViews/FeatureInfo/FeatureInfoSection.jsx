@@ -3,6 +3,8 @@
 import Mustache from 'mustache';
 import React from 'react';
 
+import createReactClass from 'create-react-class';
+
 import PropTypes from 'prop-types';
 
 import CesiumMath from 'terriajs-cesium/Source/Core/Math';
@@ -27,7 +29,8 @@ Mustache.escape = function(string) {
 };
 
 // Individual feature info section
-const FeatureInfoSection = React.createClass({
+const FeatureInfoSection = createReactClass({
+    displayName: 'FeatureInfoSection',
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -222,7 +225,7 @@ const FeatureInfoSection = React.createClass({
                 </If>
             </li>
         );
-    }
+    },
 });
 
 /**

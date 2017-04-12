@@ -1,4 +1,5 @@
 import React from 'react';
+import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
@@ -8,7 +9,8 @@ import ObserveModelMixin from '../ObserveModelMixin';
 
 import Styles from './tabs.scss';
 
-const Tabs = React.createClass({
+const Tabs = createReactClass({
+    displayName: 'Tabs',
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -77,7 +79,7 @@ const Tabs = React.createClass({
                 </section>
             </div>
         );
-    }
+    },
 });
 
 module.exports = Tabs;

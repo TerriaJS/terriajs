@@ -1,4 +1,5 @@
 import React from 'react';
+import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
@@ -21,7 +22,8 @@ const localDataType = getDataType().localDataType;
 /**
  * Add data panel in modal window -> My data tab
  */
-const AddData = React.createClass({
+const AddData = createReactClass({
+    displayName: 'AddData',
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -180,7 +182,7 @@ const AddData = React.createClass({
                 {this.renderPanels()}
             </div>
         );
-    }
+    },
 });
 
 /**

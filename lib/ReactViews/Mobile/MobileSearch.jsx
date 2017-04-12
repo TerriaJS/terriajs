@@ -1,5 +1,7 @@
 import React from 'react';
 
+import createReactClass from 'create-react-class';
+
 import PropTypes from 'prop-types';
 
 import {addMarker} from '../Search/SearchMarkerUtils';
@@ -8,7 +10,8 @@ import LocationSearchResults from '../Search/LocationSearchResults.jsx';
 import Styles from './mobile-search.scss';
 
 // A Location item when doing Bing map searvh or Gazetter search
-const MobileSearch = React.createClass({
+const MobileSearch = createReactClass({
+    displayName: 'MobileSearch',
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -52,7 +55,7 @@ const MobileSearch = React.createClass({
 
                 />
             );
-    }
+    },
 });
 
 module.exports = MobileSearch;

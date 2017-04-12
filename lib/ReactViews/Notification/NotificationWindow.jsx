@@ -2,11 +2,13 @@
 
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
+import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import parseCustomMarkdownToReact from '../Custom/parseCustomMarkdownToReact';
 import Styles from './notification-window.scss';
 
-const NotificationWindow = React.createClass({
+const NotificationWindow = createReactClass({
+    displayName: 'NotificationWindow',
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -57,7 +59,7 @@ const NotificationWindow = React.createClass({
                 </div>
             </div>
         );
-    }
+    },
 });
 
 module.exports = NotificationWindow;

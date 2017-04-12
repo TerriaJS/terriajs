@@ -2,6 +2,8 @@
 
 import React from 'react';
 
+import createReactClass from 'create-react-class';
+
 import PropTypes from 'prop-types';
 
 import defined from 'terriajs-cesium/Source/Core/defined';
@@ -16,7 +18,8 @@ import Styles from './chart-panel.scss';
 
 const height = 250;
 
-const ChartPanel = React.createClass({
+const ChartPanel = createReactClass({
+    displayName: 'ChartPanel',
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -99,7 +102,7 @@ const ChartPanel = React.createClass({
                 </div>
             </div>
         );
-    }
+    },
 });
 
 module.exports = ChartPanel;

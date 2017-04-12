@@ -1,5 +1,7 @@
 import React from 'react';
 
+import createReactClass from 'create-react-class';
+
 import PropTypes from 'prop-types';
 
 import addedByUser from '../../Core/addedByUser';
@@ -8,7 +10,8 @@ import DataCatalogMember from './DataCatalogMember';
 import getAncestors from '../../Models/getAncestors';
 import ObserveModelMixin from '../ObserveModelMixin';
 
-const DataCatalogGroup = React.createClass({
+const DataCatalogGroup = createReactClass({
+    displayName: 'DataCatalogGroup',
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -94,7 +97,7 @@ const DataCatalogGroup = React.createClass({
                 </If>
             </CatalogGroup>
         );
-    }
+    },
 });
 
 module.exports = DataCatalogGroup;

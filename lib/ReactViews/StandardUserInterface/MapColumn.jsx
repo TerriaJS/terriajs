@@ -1,4 +1,5 @@
 import React from 'react';
+import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import 'mutationobserver-shim';
 
@@ -22,7 +23,8 @@ const isIE = FeatureDetection.isInternetExplorer();
  * Note that because IE9-11 is terrible the pure-CSS layout that is used in nice browsers doesn't work, so for IE only
  * we use a (usually polyfilled) MutationObserver to watch the bottom dock and resize when it changes.
  */
-const MapColumn = React.createClass({
+const MapColumn = createReactClass({
+    displayName: 'MapColumn',
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -114,7 +116,7 @@ const MapColumn = React.createClass({
                 </If>
             </div>
         );
-    }
+    },
 });
 
 export default MapColumn;

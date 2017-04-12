@@ -1,11 +1,14 @@
 import React from 'react';
+import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import ObserveModelMixin from '../ObserveModelMixin';
 
 import Styles from './parameter-editors.scss';
 
-const DateTimeParameterEditor = React.createClass({
+const DateTimeParameterEditor = createReactClass({
+    displayName: 'DateTimeParameterEditor',
     mixins: [ObserveModelMixin],
+
     propTypes: {
         previewed: PropTypes.object,
         parameter: PropTypes.object
@@ -71,7 +74,7 @@ const DateTimeParameterEditor = React.createClass({
                    onChange={this.onChangeTime}
                    value={this.state.time}/>
         </div>);
-    }
+    },
 });
 
 module.exports = DateTimeParameterEditor;

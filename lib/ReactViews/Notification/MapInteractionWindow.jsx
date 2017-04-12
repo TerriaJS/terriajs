@@ -2,13 +2,15 @@
 
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
+import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import parseCustomHtmlToReact from '../Custom/parseCustomHtmlToReact';
 import Styles from './map-interaction-window.scss';
 import classNames from 'classnames';
 import defined from 'terriajs-cesium/Source/Core/defined';
 
-const MapInteractionWindow = React.createClass({
+const MapInteractionWindow = createReactClass({
+    displayName: 'MapInteractionWindow',
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -58,7 +60,7 @@ const MapInteractionWindow = React.createClass({
               <button type='button' onClick={interactionMode && interactionMode.onCancel}
                   className={Styles.btn}>{interactionMode && interactionMode.buttonText}</button>
             </div>);
-    }
+    },
 });
 
 module.exports = MapInteractionWindow;

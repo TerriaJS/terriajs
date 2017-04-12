@@ -2,6 +2,7 @@
 
 import ObserverModelMixin from '../ObserveModelMixin';
 import React from 'react';
+import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import parseCustomHtmlToReact from '../Custom/parseCustomHtmlToReact';
 import Styles from './help-screen-window.scss';
@@ -9,7 +10,8 @@ import classNames from 'classnames';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import HelpViewState from '../../ReactViewModels/HelpViewState';
 
-const HelpScreenWindow = React.createClass({
+const HelpScreenWindow = createReactClass({
+    displayName: 'HelpScreenWindow',
     mixins: [ObserverModelMixin],
 
     propTypes: {
@@ -47,7 +49,7 @@ const HelpScreenWindow = React.createClass({
                       className={Styles.btn}><strong>{buttonText}</strong></button>
               </div>
             </div>);
-    }
+    },
 });
 
 /**

@@ -2,10 +2,12 @@
 import classNames from "classnames";
 import ObserveModelMixin from '../../ObserveModelMixin';
 import React from 'react';
+import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import Styles from './legend.scss';
 
-const LocationBar = React.createClass({
+const LocationBar = createReactClass({
+    displayName: 'LocationBar',
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -44,7 +46,7 @@ const LocationBar = React.createClass({
                 </div>
             </button>
         );
-    }
+    },
 });
 
 module.exports = LocationBar;

@@ -3,6 +3,8 @@
 import classNames from 'classnames';
 import React from 'react';
 
+import createReactClass from 'create-react-class';
+
 import PropTypes from 'prop-types';
 
 import defined from 'terriajs-cesium/Source/Core/defined';
@@ -16,7 +18,8 @@ import WebMapServiceCatalogItem from '../../Models/WebMapServiceCatalogItem';
 import RegionTypeParameterEditor from './RegionTypeParameterEditor';
 import Styles from './parameter-editors.scss';
 
-const RegionPicker = React.createClass({
+const RegionPicker = createReactClass({
+    displayName: 'RegionPicker',
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -278,7 +281,7 @@ const RegionPicker = React.createClass({
                 )}
             </ul>
         );
-    }
+    },
 });
 
 /**

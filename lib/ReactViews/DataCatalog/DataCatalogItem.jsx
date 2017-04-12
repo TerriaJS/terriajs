@@ -1,5 +1,7 @@
 import React from 'react';
 
+import createReactClass from 'create-react-class';
+
 import PropTypes from 'prop-types';
 
 import defined from 'terriajs-cesium/Source/Core/defined';
@@ -17,7 +19,8 @@ const STATE_TO_TITLE = {
 };
 
 // Individual dataset
-const DataCatalogItem = React.createClass({
+const DataCatalogItem = createReactClass({
+    displayName: 'DataCatalogItem',
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -89,7 +92,7 @@ const DataCatalogItem = React.createClass({
         } else {
             return 'stats';
         }
-    }
+    },
 });
 
 module.exports = DataCatalogItem;

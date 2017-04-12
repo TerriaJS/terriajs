@@ -2,6 +2,8 @@
 
 import React from 'react';
 
+import createReactClass from 'create-react-class';
+
 import PropTypes from 'prop-types';
 
 import ObserveModelMixin from '../ObserveModelMixin';
@@ -20,7 +22,8 @@ import defined from 'terriajs-cesium/Source/Core/defined';
 
 import Styles from './parameter-editors.scss';
 
-const ParameterEditor = React.createClass({
+const ParameterEditor = createReactClass({
+    displayName: 'ParameterEditor',
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -56,7 +59,7 @@ const ParameterEditor = React.createClass({
                 {this.renderEditor()}
             </div>
         );
-    }
+    },
 });
 
 ParameterEditor.parameterTypeConverters = [

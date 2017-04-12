@@ -2,6 +2,7 @@
 
 import classNames from 'classnames';
 import React from 'react';
+import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import {sortable} from 'react-anything-sortable';
 
@@ -22,7 +23,8 @@ import ViewingControls from './Controls/ViewingControls';
 import Styles from './workbench-item.scss';
 import Icon from '../Icon.jsx';
 
-const WorkbenchItem = React.createClass({
+const WorkbenchItem = createReactClass({
+    displayName: 'WorkbenchItem',
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -112,7 +114,7 @@ const WorkbenchItem = React.createClass({
                 </If>
             </li>
         );
-    }
+    },
 });
 
 module.exports = sortable(WorkbenchItem);

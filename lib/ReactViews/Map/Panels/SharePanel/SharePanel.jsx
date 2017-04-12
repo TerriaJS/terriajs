@@ -1,6 +1,7 @@
 'use strict';
 
 import React from 'react';
+import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import {buildShareLink, buildShortShareLink, canShorten} from './BuildShareLink';
 import ObserverModelMixin from '../../../ObserveModelMixin';
@@ -12,7 +13,8 @@ import Styles from './share-panel.scss';
 import DropdownStyles from '../panel.scss';
 import Icon from "../../../Icon.jsx";
 
-const SharePanel = React.createClass({
+const SharePanel = createReactClass({
+    displayName: 'SharePanel',
     mixins: [ObserverModelMixin],
 
     propTypes: {
@@ -158,7 +160,7 @@ const SharePanel = React.createClass({
                 </If>
             </MenuPanel>
         );
-    }
+    },
 });
 
 export default SharePanel;

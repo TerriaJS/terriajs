@@ -1,4 +1,5 @@
 import React from 'react';
+import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
@@ -7,7 +8,8 @@ import addUserFiles from '../Models/addUserFiles';
 
 import Styles from './drag-drop-file.scss';
 
-const DragDropFile = React.createClass({
+const DragDropFile = createReactClass({
+    displayName: 'DragDropFile',
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -66,7 +68,7 @@ const DragDropFile = React.createClass({
                 </If>
             </div>
         );
-    }
+    },
 });
 
 module.exports = DragDropFile;

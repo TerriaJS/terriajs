@@ -4,10 +4,12 @@ import classNames from 'classnames';
 import Icon from '../../Icon';
 import ObserveModelMixin from '../../ObserveModelMixin';
 import React from 'react';
+import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import Styles from './concept-viewer.scss';
 
-const Concept = React.createClass({
+const Concept = createReactClass({
+    displayName: 'Concept',
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -87,7 +89,7 @@ const Concept = React.createClass({
                 </If>
             </li>
         );
-    }
+    },
 });
 
 /**

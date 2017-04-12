@@ -1,5 +1,7 @@
 import React from 'react';
 
+import createReactClass from 'create-react-class';
+
 import PropTypes from 'prop-types';
 
 import DataPreviewMap from './DataPreviewMap';
@@ -11,7 +13,8 @@ import Styles from './mappable-preview.scss';
  * CatalogItem preview that is mappable (as opposed to say, an analytics item that can't be displayed on a map without
  * configuration of other parameters.
  */
-const MappablePreview = React.createClass({
+const MappablePreview = createReactClass({
+    displayName: 'MappablePreview',
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -51,7 +54,7 @@ const MappablePreview = React.createClass({
                 </div>
             </div>
         );
-    }
+    },
 });
 
 export default MappablePreview;

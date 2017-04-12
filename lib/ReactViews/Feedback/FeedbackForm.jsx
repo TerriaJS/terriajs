@@ -2,13 +2,15 @@
 
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
+import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import sendFeedback from '../../Models/sendFeedback.js';
 import Styles from './feedback-form.scss';
 import Icon from "../Icon.jsx";
 import classNames from "classnames";
 
-const FeedbackForm = React.createClass({
+const FeedbackForm = createReactClass({
+    displayName: 'FeedbackForm',
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -111,7 +113,7 @@ const FeedbackForm = React.createClass({
                 </div>
             </div>
         );
-    }
+    },
 });
 
 module.exports = FeedbackForm;

@@ -1,6 +1,7 @@
 'use strict';
 
 import React from 'react';
+import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
@@ -13,7 +14,8 @@ import Styles from './setting-panel.scss';
 import DropdownStyles from './panel.scss';
 
 // The basemap and viewer setting panel
-const SettingPanel = React.createClass({
+const SettingPanel = createReactClass({
+    displayName: 'SettingPanel',
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -123,7 +125,7 @@ const SettingPanel = React.createClass({
                 </div>
             </MenuPanel>
         );
-    }
+    },
 });
 
 module.exports = SettingPanel;

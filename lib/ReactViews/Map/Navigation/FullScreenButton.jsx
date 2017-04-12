@@ -1,5 +1,6 @@
 'use strict';
 const React = require('react');
+const createReactClass = require('create-react-class');
 const PropTypes = require('prop-types');
 import ObserveModelMixin from '../../ObserveModelMixin';
 import triggerResize from '../../../Core/triggerResize';
@@ -8,7 +9,8 @@ import classNames from "classnames";
 import Icon from "../../Icon.jsx";
 
 // The button to make the map full screen and hide the workbench.
-const FullScreenButton = React.createClass({
+const FullScreenButton = createReactClass({
+    displayName: 'FullScreenButton',
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -22,6 +24,7 @@ const FullScreenButton = React.createClass({
             isActive: false
         };
     },
+
     toggleFullScreen() {
         this.props.viewState.isMapFullScreen = !this.props.viewState.isMapFullScreen;
 
@@ -51,6 +54,6 @@ const FullScreenButton = React.createClass({
                         className={btnClassName}><span>{this.renderButtonText()}</span></button>
             </div>
         );
-    }
+    },
 });
 module.exports = FullScreenButton;

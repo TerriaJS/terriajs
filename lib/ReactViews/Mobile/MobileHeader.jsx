@@ -1,4 +1,5 @@
 import React from 'react';
+import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import SearchBox from '../Search/SearchBox.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
@@ -10,7 +11,8 @@ import MobileMenu from './MobileMenu';
 import classNames from 'classnames';
 import { removeMarker } from '../Search/SearchMarkerUtils';
 
-const MobileHeader = React.createClass({
+const MobileHeader = createReactClass({
+    displayName: 'MobileHeader',
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -185,6 +187,6 @@ const MobileHeader = React.createClass({
                 />
             </div>
         );
-    }
+    },
 });
 module.exports = MobileHeader;

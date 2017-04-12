@@ -6,6 +6,7 @@ import OpenInactiveConcept from './OpenInactiveConcept';
 import Icon from '../../../Icon.jsx';
 import ObserveModelMixin from '../../../ObserveModelMixin';
 import React from 'react';
+import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import Styles from './summary-concept.scss';
 
@@ -34,7 +35,8 @@ const ADD_MORE_TEXT = 'Add new condition';
  * This design would need revision to handle concepts whose direct children are a mix of
  * both leaf nodes and parent nodes.
  */
-const SummaryConcept = React.createClass({
+const SummaryConcept = createReactClass({
+    displayName: 'SummaryConcept',
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -69,7 +71,7 @@ const SummaryConcept = React.createClass({
                 </If>
             </div>
         );
-    }
+    },
 });
 
 /**
@@ -135,7 +137,8 @@ function groupByParentId(nodes, idFunction) {
 * @return {String} The parent id.
 */
 
-const AddButton = React.createClass({
+const AddButton = createReactClass({
+    displayName: 'AddButton',
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -158,7 +161,7 @@ const AddButton = React.createClass({
                 </button>
             </div>
         );
-    }
+    },
 });
 
 module.exports = SummaryConcept;

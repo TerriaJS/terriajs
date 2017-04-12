@@ -1,5 +1,7 @@
 import React from 'react';
 
+import createReactClass from 'create-react-class';
+
 import PropTypes from 'prop-types';
 
 import ObserveModelMixin from '../ObserveModelMixin';
@@ -13,7 +15,8 @@ import ViewState from '../../ReactViewModels/ViewState';
 
 import Styles from './mobile-menu.scss';
 
-const MobileMenu = React.createClass({
+const MobileMenu = createReactClass({
+    displayName: 'MobileMenu',
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -80,7 +83,7 @@ const MobileMenu = React.createClass({
                 </div>
             </div>
         );
-    }
+    },
 });
 
 export default MobileMenu;

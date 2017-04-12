@@ -1,5 +1,7 @@
 import React from 'react';
 
+import createReactClass from 'create-react-class';
+
 import PropTypes from 'prop-types';
 
 import defined from 'terriajs-cesium/Source/Core/defined';
@@ -13,7 +15,8 @@ import SearchBox from '../../Search/SearchBox.jsx';
 import Styles from './data-catalog-tab.scss';
 
 // The DataCatalog Tab
-const DataCatalogTab = React.createClass({
+const DataCatalogTab = createReactClass({
+    displayName: 'DataCatalogTab',
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -75,7 +78,7 @@ const DataCatalogTab = React.createClass({
                 </For>
             </ul>
         );
-    }
+    },
 });
 
 module.exports = DataCatalogTab;

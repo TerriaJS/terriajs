@@ -1,5 +1,7 @@
 import React from 'react';
 
+import createReactClass from 'create-react-class';
+
 import PropTypes from 'prop-types';
 
 import Cartographic from 'terriajs-cesium/Source/Core/Cartographic';
@@ -13,7 +15,8 @@ import ObserveModelMixin from '../ObserveModelMixin';
 
 import Styles from './parameter-editors.scss';
 
-const RectangleParameterEditor = React.createClass({
+const RectangleParameterEditor = createReactClass({
+    displayName: 'RectangleParameterEditor',
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -104,7 +107,7 @@ const RectangleParameterEditor = React.createClass({
                 </button>
             </div>
         );
-    }
+    },
 });
 
 module.exports = RectangleParameterEditor;

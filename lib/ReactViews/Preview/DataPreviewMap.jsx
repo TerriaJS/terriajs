@@ -7,6 +7,7 @@ const GeoJsonCatalogItem = require('../../Models/GeoJsonCatalogItem');
 const ObserveModelMixin = require('../ObserveModelMixin');
 const OpenStreetMapCatalogItem = require('../../Models/OpenStreetMapCatalogItem');
 const React = require('react');
+const createReactClass = require('create-react-class');
 const PropTypes = require('prop-types');
 const Terria = require('../../Models/Terria');
 const TerriaViewer = require('../../ViewModels/TerriaViewer.js');
@@ -19,7 +20,8 @@ import Styles from './data-preview-map.scss';
 /**
  * Leaflet-based preview map that sits within the preview.
  */
-const DataPreviewMap = React.createClass({
+const DataPreviewMap = createReactClass({
+    displayName: 'DataPreviewMap',
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -317,6 +319,6 @@ const DataPreviewMap = React.createClass({
                 <label className={Styles.badge}>{this.state.previewBadgeText}</label>
             </div>
         );
-    }
+    },
 });
 module.exports = DataPreviewMap;

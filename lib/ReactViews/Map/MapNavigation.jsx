@@ -1,5 +1,7 @@
 import React from 'react';
 
+import createReactClass from 'create-react-class';
+
 import PropTypes from 'prop-types';
 
 import Compass from './Navigation/Compass.jsx';
@@ -11,7 +13,8 @@ import ViewerMode from '../../Models/ViewerMode';
 import Styles from './map-navigation.scss';
 
 // The map navigation region
-const MapNavigation = React.createClass({
+const MapNavigation = createReactClass({
+    displayName: 'MapNavigation',
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -47,7 +50,7 @@ const MapNavigation = React.createClass({
                 </For>
             </div>
         );
-    }
+    },
 });
 
 export default MapNavigation;

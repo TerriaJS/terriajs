@@ -1,12 +1,15 @@
 import React from 'react';
+import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import Icon from '../Icon.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
 
 import Styles from './parameter-editors.scss';
 
-const BooleanParameterEditor = React.createClass({
+const BooleanParameterEditor = createReactClass({
+    displayName: 'BooleanParameterEditor',
     mixins: [ObserveModelMixin],
+
     propTypes: {
         previewed: PropTypes.object,
         parameter: PropTypes.object
@@ -67,7 +70,7 @@ const BooleanParameterEditor = React.createClass({
                 {this.props.parameter.hasNamedStates && <div>{this.renderRadio(true)}{this.renderRadio(false)}</div>}
             </div>
         );
-    }
+    },
 });
 
 module.exports = BooleanParameterEditor;
