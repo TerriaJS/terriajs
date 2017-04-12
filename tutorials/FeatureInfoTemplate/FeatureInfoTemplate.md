@@ -110,7 +110,7 @@ So you could reconstruct the chart manually as:
 <chart x-column="{{terria.timeSeries.xName}}"
        y-column="{{terria.timeSeries.yName}}"
        id="{{terria.timeSeries.id}}"
-       units="{{terria.timeSeries.column-units}}">
+       column-units="{{terria.timeSeries.units}}">
     {{terria.timeSeries.data}}
 </chart>
 ```
