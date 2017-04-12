@@ -1,5 +1,6 @@
 var path = require('path');
 var StringReplacePlugin = require("string-replace-webpack-plugin");
+var webpack = require('webpack');
 
 function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlugin, disableStyleLoader) {
     const cesiumDir = path.dirname(require.resolve('terriajs-cesium/package.json'));
@@ -61,7 +62,7 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
             path.resolve(terriaJSBasePath, 'lib'),
             path.resolve(terriaJSBasePath, 'test')
         ],
-        loader: 'babel-loader',
+        loader: require.resolve('babel-loader'),
         query: {
             sourceMap: false, // generated sourcemaps are currently bad, see https://phabricator.babeljs.io/T7257
             presets: ['es2015', 'react'],
@@ -76,20 +77,20 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
     config.module.loaders.push({
         test: /\.html$/,
         include: path.resolve(terriaJSBasePath, 'lib', 'Views'),
-        loader: 'raw-loader'
+        loader: require.resolve('raw-loader')
     });
 
     // Allow XML in the models directory to be required-in as a raw text.
     config.module.loaders.push({
         test: /\.xml$/,
         include: path.resolve(terriaJSBasePath, 'lib', 'Models'),
-        loader: 'raw-loader'
+        loader: require.resolve('raw-loader')
     });
 
     config.module.loaders.push({
         test: /\.json|xml$/,
         include: path.resolve(cesiumDir, 'Source', 'Assets'),
-        loader: 'file-loader'
+        loader: require.resolve('file-loader')
     });
 
     config.module.loaders.push({
@@ -120,7 +121,7 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
             path.resolve(terriaJSBasePath, 'wwwroot', 'images', 'icons'),
             path.resolve(terriaJSBasePath, 'wwwroot', 'fonts')
         ],
-        loader: 'url-loader',
+        loader: require.resolve('url-loader'),
         query: {
             limit: 8192
         }
@@ -129,7 +130,7 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
     config.module.loaders.push({
         test: /\.woff(2)?(\?.+)?$/,
         include: path.resolve(terriaJSBasePath, 'wwwroot', 'fonts'),
-        loader: 'url-loader',
+        loader: require.resolve('url-loader'),
         query: {
             limit: 10000,
             mimetype: 'application/font-woff'
@@ -139,13 +140,13 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
     config.module.loaders.push({
         test: /\.(ttf|eot|svg)(\?.+)?$/,
         include: path.resolve(terriaJSBasePath, 'wwwroot', 'fonts'),
-        loader: 'file-loader'
+        loader: require.resolve('file-loader')
     });
 
     config.module.loaders.push({
         test: /\.svg$/,
         include: path.resolve(terriaJSBasePath, 'wwwroot', 'images', 'icons'),
-        loader: 'svg-sprite-loader'
+        loader: require.resolve('svg-sprite-loader')
     });
 
     config.devServer = config.devServer || {
@@ -171,7 +172,8 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
     };
 
     config.plugins = (config.plugins || []).concat([
-        new StringReplacePlugin()
+        new StringReplacePlugin(),
+        new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
     ]);
 
     if (hot && !disableStyleLoader) {
@@ -179,9 +181,9 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
             include: path.resolve(terriaJSBasePath),
             test: /\.scss$/,
             loaders: [
-                'style-loader',
+                require.resolve('style-loader'),
                 {
-                    loader: 'css-loader',
+                    loader: require.resolve('css-loader'),
                     options: {
                         sourceMap: true,
                         modules: true,
@@ -202,7 +204,7 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
             loader: ExtractTextPlugin.extract({
                 use: [
                     {
-                        loader: 'css-loader',
+                        loader: require.resolve('css-loader'),
                         options: {
                             sourceMap: true,
                             modules: true,
