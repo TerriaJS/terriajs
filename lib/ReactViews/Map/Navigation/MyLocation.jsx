@@ -26,6 +26,10 @@ const MyLocation = React.createClass({
         this._marker = new GeoJsonCatalogItem(this.props.terria);
     },
 
+    getInitialState() {
+        return {};
+    },
+
     getLocation() {
         if (navigator.geolocation) {
             const options = {
@@ -48,18 +52,20 @@ const MyLocation = React.createClass({
                     message: message
                 }));
             };
-            if (true) {
+            if (!this.augmentedVirtualityAvaliable()) {
                 navigator.geolocation.getCurrentPosition(
                     this.zoomToMyLocation,
                     error,
                     options
                 );
             } else {
-                navigator.geolocation.watchPosition(
+                const watchId = navigator.geolocation.watchPosition(
                     this.zoomToMyLocation,
                     error,
                     options
                 );
+
+                this.setState({watchId: watchId});
             }
         } else {
             this.props.terria.error.raiseEvent(new TerriaError({
@@ -77,6 +83,7 @@ const MyLocation = React.createClass({
         if (this.augmentedVirtualityAvaliable()) {
             // Note: Specifiying the value of 27500m here enables this function to approximately mimic the behaviour of
             //       the else case from the cameras inital view and when the viewer pan/zooms out to much.
+            // TODO: After the first update just jump to rather then moving to.
             this.props.terria.augmentedVirtuality.moveTo(CesiumCartographic.fromDegrees(longitude, latitude), 27500);
         } else {
             // west, south, east, north, result
@@ -109,17 +116,43 @@ const MyLocation = React.createClass({
 
     augmentedVirtualityAvaliable() {
         return defined(this.props.terria.augmentedVirtuality) && this.props.terria.augmentedVirtuality.enabled;
-    }
+    },
+
+    followMeEnabled() {
+        if (defined(this.state.watchId)) {
+            return true;
+        }
+
+        return false;
+    },
+
+    disableFollowMe() {
+        if (defined(this.state.watchId)) {
+            navigator.geolocation.clearWatch(this.state.watchId);
+            this.setState({watchId: undefined});
+        }
+    },
 
     handleCick() {
-        this.getLocation();
+        if (this.followMeEnabled()) {
+            this.disableFollowMe();
+        }
+        else {
+            this.getLocation();
+        }
     },
+
     render() {
+        let revertStub = Icon.GLYPHS.geolocation;
+        if (this.followMeEnabled()) {
+            revertStub = Icon.GLYPHS.stop;
+        }
+
         return <div className={Styles.myLocation}>
                   <button type='button' className={Styles.btn}
                           title='go to my location'
                           onClick={this.handleCick}>
-                          <Icon glyph={Icon.GLYPHS.geolocation}/>
+                          <Icon glyph={revertStub}/>
                   </button>
                </div>;
     }
