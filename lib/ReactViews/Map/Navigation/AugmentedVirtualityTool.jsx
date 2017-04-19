@@ -7,8 +7,6 @@ import Icon from '../../Icon.jsx';
 import ViewerMode from '../../../Models/ViewerMode';
 import defined from 'terriajs-cesium/Source/Core/defined';
 
-import AugmentedVirtuality from '../../../Models/AugmentedVirtuality.js';
-
 const AugmentedVirtualityTool = React.createClass({
     mixins: [ObserveModelMixin],
 
@@ -18,13 +16,41 @@ const AugmentedVirtualityTool = React.createClass({
         experimentalWarning: React.PropTypes.bool
     },
 
+    componentDidMount() {
+        if (this.isSuitableBrowser()) {
+            require.ensure('../../../Models/AugmentedVirtuality.js', () => {
+                const AugmentedVirtuality = require('../../../Models/AugmentedVirtuality.js');
+                this.setState({augmentedVirtuality: new AugmentedVirtuality()});
+            }, 'AugmentedVirtuality');
+        }
+    },
+
+    /**
+     * Gets whether the current platform is supported for enabling Augmented Virtuality mode (currently only Android and Apple).
+     *
+     * At the moment we have severely reduced the number of platforms supported to just android and mobile apple devices.
+     * This is probably an artifical limitation in so much as this probably works just as nicely on other platforms, but
+     * this gives us an opertunity for a softer launch and only enabling platforms that we have explicitly been able to
+     * test on. Hopefully though these two platforms being the dominant players should give us enough exposure to start
+     * with and we can always add more later. Note: This check is not robust and the agent could spoof the data here to
+     * allow this to work on other platforms, but if they go to this length then its probably the sort of user that can
+     * deal with any fallout.
+     *
+     * In future this function can be replaced with: {@link isCommonMobilePlatform}.
+     *
+     * @return Whether the plaftorm is supported (true) or not (false).
+     */
     getInitialState() {
         return {
-            augmentedVirtuality: new AugmentedVirtuality(this.props.terria),
+            augmentedVirtuality: null,
             experimentalWarningShown: false,
             realignHelpShown: false,
             resetRealignHelpShown: false
         };
+    },
+
+    isSuitableBrowser() {
+        return Boolean(navigator.userAgent.match(/Android|iPhone|iPad/i));
     },
 
     handleClickAVTool() {
@@ -97,6 +123,9 @@ const AugmentedVirtualityTool = React.createClass({
     },
 
     render() {
+        if (!defined(this.state.augmentedVirtuality)) {
+            return null;
+        }
         const enabled = this.state.augmentedVirtuality.enabled;
         let toggleImage = Icon.GLYPHS.arOff;
         let toggleStyle = Styles.btn;
@@ -126,39 +155,41 @@ const AugmentedVirtualityTool = React.createClass({
                 break;
         }
 
-        return <If condition={(this.props.terria.viewerMode !== ViewerMode.Leaflet) && (this.state.augmentedVirtuality.suitableBrowser())}>
-                   <div className={Styles.augmentedVirtualityTool}>
-                       <button type='button' className={toggleStyle}
-                               title='augmented reality tool'
-                               onClick={this.handleClickAVTool}>
-                               <Icon glyph={toggleImage}/>
-                       </button>
+        return (
+            <If condition={this.props.terria.viewerMode !== ViewerMode.Leaflet}>
+                <div className={Styles.augmentedVirtualityTool}>
+                    <button type='button' className={toggleStyle}
+                            title='augmented reality tool'
+                            onClick={this.handleClickAVTool}>
+                            <Icon glyph={toggleImage}/>
+                    </button>
 
-                       <If condition={enabled}>
-                           <button type='button' className={Styles.btn}
-                                   title='toggle hover height'
-                                   onClick={this.handleClickHover}>
-                                   <Icon glyph={hoverImage}/>
-                           </button>
+                    <If condition={enabled}>
+                        <button type='button' className={Styles.btn}
+                                title='toggle hover height'
+                                onClick={this.handleClickHover}>
+                                <Icon glyph={hoverImage}/>
+                        </button>
 
-                           <If condition={!this.state.augmentedVirtuality.manualAlignmentSet}>
-                               <button type='button' className={realignmentStyle}
-                                       title='toggle manual alignment'
-                                       onClick={this.handleClickRealign}>
-                                       <Icon glyph={Icon.GLYPHS.arRealign}/>
-                               </button>
-                           </If>
+                        <If condition={!this.state.augmentedVirtuality.manualAlignmentSet}>
+                            <button type='button' className={realignmentStyle}
+                                    title='toggle manual alignment'
+                                    onClick={this.handleClickRealign}>
+                                    <Icon glyph={Icon.GLYPHS.arRealign}/>
+                            </button>
+                        </If>
 
-                           <If condition={(this.state.augmentedVirtuality.manualAlignmentSet) && !realignment}>
-                               <button type='button' className={Styles.btn}
-                                       title='reset compass alignment'
-                                       onClick={this.handleClickResetRealign}>
-                                       <Icon glyph={Icon.GLYPHS.arResetAlignment}/>
-                               </button>
-                           </If>
-                       </If>
-                   </div>
-               </If>;
+                        <If condition={(this.state.augmentedVirtuality.manualAlignmentSet) && !realignment}>
+                            <button type='button' className={Styles.btn}
+                                    title='reset compass alignment'
+                                    onClick={this.handleClickResetRealign}>
+                                    <Icon glyph={Icon.GLYPHS.arResetAlignment}/>
+                            </button>
+                        </If>
+                    </If>
+                </div>
+            </If>
+        );
     }
 });
 
