@@ -145,16 +145,16 @@ const MyLocation = React.createClass({
     },
 
     render() {
-        let revertStub = Icon.GLYPHS.geolocation;
+        let toggleStyle = Styles.btn;
         if (this.followMeEnabled()) {
-            revertStub = Icon.GLYPHS.stop;
+            toggleStyle = Styles.btnPrimary;
         }
 
         return <div className={Styles.myLocation}>
-                  <button type='button' className={Styles.btn}
+                  <button type='button' className={toggleStyle}
                           title='go to my location'
                           onClick={this.handleCick}>
-                          <Icon glyph={revertStub}/>
+                          <Icon glyph={Icon.GLYPHS.geolocation}/>
                   </button>
                </div>;
     }
