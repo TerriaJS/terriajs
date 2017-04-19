@@ -2,15 +2,18 @@
 
 import defined from 'terriajs-cesium/Source/Core/defined';
 import React from 'react';
+import createReactClass from 'create-react-class';
+import PropTypes from 'prop-types';
 import ObserveModelMixin from '../../ObserveModelMixin';
 
 import Styles from './dimension-selector-section.scss';
 
-const DimensionSelectorSection = React.createClass({
+const DimensionSelectorSection = createReactClass({
+    displayName: 'DimensionSelectorSection',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        item: React.PropTypes.object.isRequired
+        item: PropTypes.object.isRequired
     },
 
     changeDimension(dimension, event) {
@@ -35,6 +38,11 @@ const DimensionSelectorSection = React.createClass({
         item.layers.split(',').forEach(layerName => {
             const layerDimensions = item.availableDimensions[layerName];
             layerDimensions.forEach(layerDimension => {
+                // Don't include the time dimension; it is handled specially
+                if (layerDimension.name.toLowerCase() === 'time') {
+                    return;
+                }
+
                 // Only use the first dimension we find with each name.
                 const existingDimension = dimensions.filter(dimension => dimension.name === layerDimension.name)[0];
                 if (!defined(existingDimension)) {
@@ -71,7 +79,7 @@ const DimensionSelectorSection = React.createClass({
                 </select>
             </div>
         );
-    }
+    },
 });
 
 module.exports = DimensionSelectorSection;

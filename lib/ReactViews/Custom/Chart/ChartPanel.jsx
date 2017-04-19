@@ -2,6 +2,10 @@
 
 import React from 'react';
 
+import createReactClass from 'create-react-class';
+
+import PropTypes from 'prop-types';
+
 import defined from 'terriajs-cesium/Source/Core/defined';
 
 import Chart from './Chart.jsx';
@@ -14,14 +18,15 @@ import Styles from './chart-panel.scss';
 
 const height = 250;
 
-const ChartPanel = React.createClass({
+const ChartPanel = createReactClass({
+    displayName: 'ChartPanel',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        terria: React.PropTypes.object.isRequired,
-        onHeightChange: React.PropTypes.func,
-        viewState: React.PropTypes.object.isRequired,
-        animationDuration: React.PropTypes.number
+        terria: PropTypes.object.isRequired,
+        onHeightChange: PropTypes.func,
+        viewState: PropTypes.object.isRequired,
+        animationDuration: PropTypes.number
     },
 
     closePanel() {
@@ -97,7 +102,7 @@ const ChartPanel = React.createClass({
                 </div>
             </div>
         );
-    }
+    },
 });
 
 module.exports = ChartPanel;

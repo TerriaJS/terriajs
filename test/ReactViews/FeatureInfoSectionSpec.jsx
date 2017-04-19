@@ -4,7 +4,7 @@
 // import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 import React from 'react';
 import ReactTestUtils from 'react-addons-test-utils';
-import {findAllWithType, findAllWithClass, findWithRef} from 'react-shallow-testutils';
+import {findAll, findAllWithType, findAllWithClass, findWithRef} from 'react-shallow-testutils';
 import {getShallowRenderedOutput, findAllEqualTo, findAllWithPropsChildEqualTo} from './MoreShallowTools';
 
 import Cartographic from 'terriajs-cesium/Source/Core/Cartographic';
@@ -31,36 +31,9 @@ if (typeof Intl === 'object' && typeof Intl.NumberFormat === 'function') {
 
 const contentClass = Styles.content;
 
-// function getShallowRenderedOutput(jsx) {
-//     const renderer = ReactTestUtils.createRenderer();
-//     renderer.render(jsx);
-//     return renderer.getRenderOutput();
-// }
-
-// function findAllEqualTo(reactElement, text) {
-//     return findAll(reactElement, (element) => element && element === text);
-// }
-
-// function findAllWithPropsChildEqualTo(reactElement, text) {
-//     // Returns elements with element.props.children[i] or element.props.children[i][j] equal to text, for any i or j.
-//     return findAll(reactElement, (element) => {
-//         if (!(element && element.props && element.props.children)) {
-//             return;
-//         }
-//         return element.props.children.indexOf(text) >= 0 || (element.props.children.some && element.props.children.some(x => x && x.length && x.indexOf(text) >= 0));
-//     });
-// }
-
-// function getContentAndDescription(renderedResult) {
-//     const content = findAllWithClass(renderedResult, contentClass)[0];
-//     const descriptionElement = content.props.children.props.children[1][0]; // I have no idea why it's in this position, and don't want to test that it always is.
-//     const descriptionText = descriptionElement.props.children[1][0]; // Ditto.
-//     return {
-//         content: renderedResult.props.children[1],
-//         descriptionElement: descriptionElement,
-//         descriptionText: descriptionText
-//     };
-// }
+function findAllWithHref(reactElement, text) {
+    return findAll(reactElement, (element) => element && element.props && element.props.href === text);
+}
 
 describe('FeatureInfoSection', function() {
 
@@ -318,11 +291,18 @@ describe('FeatureInfoSection', function() {
             expect(findAllEqualTo(result, 'Test: text').length).toEqual(1);
         });
 
-        it('url encodes sections of text', function() {
-            const template = 'Test: {{#terria.urlEncodeComponent}}W/HOE#1{{/terria.urlEncodeComponent}}';
+        it('url encodes text components', function() {
+            const template = 'Test: {{#terria.urlEncodeComponent}}W/HO:E#1{{/terria.urlEncodeComponent}}';
             const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template} viewState={viewState} />;
             const result = getShallowRenderedOutput(section);
-            expect(findAllEqualTo(result, 'Test: W%2FHOE%231').length).toEqual(1);
+            expect(findAllEqualTo(result, 'Test: W%2FHO%3AE%231').length).toEqual(1);
+        });
+
+        it('url encodes sections of text', function() {
+            const template = 'Test: {{#terria.urlEncode}}http://example.com/a b{{/terria.urlEncode}}';
+            const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template} viewState={viewState} />;
+            const result = getShallowRenderedOutput(section);
+            expect(findAllWithHref(result, 'http://example.com/a%20b').length).toEqual(1);
         });
 
         it('does not escape ampersand as &amp;', function() {

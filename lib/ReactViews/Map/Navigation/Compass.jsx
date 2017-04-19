@@ -1,5 +1,7 @@
 'use strict';
 const React = require('react');
+const PropTypes = require('prop-types');
+import createReactClass from 'create-react-class';
 const CameraFlightPath = require('terriajs-cesium/Source/Scene/CameraFlightPath');
 const Cartesian2 = require('terriajs-cesium/Source/Core/Cartesian2');
 const Cartesian3 = require('terriajs-cesium/Source/Core/Cartesian3');
@@ -13,9 +15,9 @@ const Transforms = require('terriajs-cesium/Source/Core/Transforms');
 import Styles from './compass.scss';
 
 // the compass on map
-const Compass = React.createClass({
+const Compass = createReactClass({
     propTypes: {
-        terria: React.PropTypes.object
+        terria: PropTypes.object
     },
 
     getInitialState() {
@@ -27,6 +29,7 @@ const Compass = React.createClass({
     },
 
     componentDidMount() {
+        this._unsubscribeFromViewerChange = this.props.terria.afterViewerChanged.addEventListener(() => viewerChange(this));
         viewerChange(this);
     },
 
@@ -35,6 +38,7 @@ const Compass = React.createClass({
         document.removeEventListener('mouseup', this.orbitMouseUpFunction, false);
         this._unsubscribeFromClockTick && this._unsubscribeFromClockTick();
         this._unsubscribeFromPostRender && this._unsubscribeFromPostRender();
+        this._unsubscribeFromViewerChange && this._unsubscribeFromViewerChange();
     },
 
     handleMouseDown(e) {
@@ -132,9 +136,6 @@ const centerScratch = new Cartesian3();
 const windowPositionScratch = new Cartesian2();
 const pickRayScratch = new Ray();
 
-/**
- * TODO: What does this do?
- */
 function rotate(viewModel, compassElement, cursorVector) {
     // Remove existing event handlers, if any.
     document.removeEventListener('mousemove', viewModel.rotateMouseMoveFunction, false);
@@ -202,9 +203,6 @@ function rotate(viewModel, compassElement, cursorVector) {
     document.addEventListener('mouseup', viewModel.rotateMouseUpFunction, false);
 }
 
-/**
- * TODO: What does this do?
- */
 function orbit(viewModel, compassElement, cursorVector) {
     // Remove existing event handlers, if any.
     document.removeEventListener('mousemove', viewModel.orbitMouseMoveFunction, false);
@@ -270,9 +268,6 @@ function orbit(viewModel, compassElement, cursorVector) {
         viewModel.orbitLastTimestamp = timestamp;
     };
 
-    /**
-     * TODO: What does this do?
-     */
     function updateAngleAndOpacity(vector, compassWidth) {
         const angle = Math.atan2(-vector.y, vector.x);
         viewModel.setState({
@@ -321,9 +316,6 @@ function orbit(viewModel, compassElement, cursorVector) {
     updateAngleAndOpacity(cursorVector, compassElement.getBoundingClientRect().width);
 }
 
-/**
- * TODO: What does this do?
- */
 function viewerChange(viewModel) {
     if (defined(viewModel.props.terria.cesium)) {
         if (viewModel._unsubscribeFromPostRender) {

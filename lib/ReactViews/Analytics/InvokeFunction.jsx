@@ -3,17 +3,20 @@ import ObserveModelMixin from '../ObserveModelMixin';
 import ParameterEditor from './ParameterEditor';
 import parseCustomMarkdownToReact from '../Custom/parseCustomMarkdownToReact';
 import React from 'react';
+import createReactClass from 'create-react-class';
+import PropTypes from 'prop-types';
 import Styles from './invoke-function.scss';
 import TerriaError from '../../Core/TerriaError';
 import when from 'terriajs-cesium/Source/ThirdParty/when';
 
-const InvokeFunction = React.createClass({
+const InvokeFunction = createReactClass({
+    displayName: 'InvokeFunction',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        terria: React.PropTypes.object,
-        previewed: React.PropTypes.object,
-        viewState: React.PropTypes.object
+        terria: PropTypes.object,
+        previewed: PropTypes.object,
+        viewState: PropTypes.object
     },
 
     submit() {
@@ -67,7 +70,7 @@ const InvokeFunction = React.createClass({
                         <button type='button' className={Styles.btn} onClick={this.submit}>Run Analysis</button>
                     </div>
                 </div>);
-    }
+    },
 });
 
 module.exports = InvokeFunction;

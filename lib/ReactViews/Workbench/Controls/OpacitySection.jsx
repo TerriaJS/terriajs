@@ -2,15 +2,18 @@
 
 import RangeSlider from 'react-rangeslider';
 import React from 'react';
+import createReactClass from 'create-react-class';
+import PropTypes from 'prop-types';
 import ObserveModelMixin from '../../ObserveModelMixin';
 
 import Styles from './opacity-section.scss';
 
-const OpacitySection = React.createClass({
+const OpacitySection = createReactClass({
+    displayName: 'OpacitySection',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        item: React.PropTypes.object.isRequired
+        item: PropTypes.object.isRequired
     },
 
     changeOpacity(value) {
@@ -28,6 +31,6 @@ const OpacitySection = React.createClass({
                 <RangeSlider className={Styles.rangeSlider} name='opacity' min={0} max={100} step={1} value={item.opacity * 100 | 0} onChange={this.changeOpacity}/>
             </div>
         );
-    }
+    },
 });
 module.exports = OpacitySection;

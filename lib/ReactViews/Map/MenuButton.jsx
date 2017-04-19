@@ -1,5 +1,7 @@
 import React from 'react';
 
+import PropTypes from 'prop-types';
+
 import Styles from './menu-button.scss';
 
 /**
@@ -25,8 +27,8 @@ MenuButton.defaultProps = {
 };
 
 MenuButton.propTypes = {
-    href: React.PropTypes.string,
-    caption: React.PropTypes.string.isRequired
+    href: PropTypes.string,
+    caption: PropTypes.string.isRequired
 };
 
 export default MenuButton;

@@ -1,5 +1,9 @@
 import React from 'react';
 
+import createReactClass from 'create-react-class';
+
+import PropTypes from 'prop-types';
+
 import defined from 'terriajs-cesium/Source/Core/defined';
 
 import addedByUser from '../../Core/addedByUser';
@@ -15,12 +19,13 @@ const STATE_TO_TITLE = {
 };
 
 // Individual dataset
-const DataCatalogItem = React.createClass({
+const DataCatalogItem = createReactClass({
+    displayName: 'DataCatalogItem',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        item: React.PropTypes.object.isRequired,
-        viewState: React.PropTypes.object.isRequired
+        item: PropTypes.object.isRequired,
+        viewState: PropTypes.object.isRequired
     },
 
     onBtnClicked(event) {
@@ -87,7 +92,7 @@ const DataCatalogItem = React.createClass({
         } else {
             return 'stats';
         }
-    }
+    },
 });
 
 module.exports = DataCatalogItem;

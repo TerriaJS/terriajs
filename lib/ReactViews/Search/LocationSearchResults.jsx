@@ -1,20 +1,24 @@
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
+import createReactClass from 'create-react-class';
+import PropTypes from 'prop-types';
 import SearchHeader from './SearchHeader.jsx';
 import SearchResult from './SearchResult.jsx';
 import classNames from 'classnames';
 import Icon from "../Icon.jsx";
 import Styles from './location-search-result.scss';
 
-const LocationSearchResults = React.createClass({
+const LocationSearchResults = createReactClass({
+    displayName: 'LocationSearchResults',
     mixins: [ObserveModelMixin],
+
     propTypes: {
-        viewState: React.PropTypes.object.isRequired,
-        isWaitingForSearchToStart: React.PropTypes.bool,
-        terria: React.PropTypes.object.isRequired,
-        search: React.PropTypes.object.isRequired,
-        onLocationClick: React.PropTypes.func.isRequired,
-        theme: React.PropTypes.string
+        viewState: PropTypes.object.isRequired,
+        isWaitingForSearchToStart: PropTypes.bool,
+        terria: PropTypes.object.isRequired,
+        search: PropTypes.object.isRequired,
+        onLocationClick: PropTypes.func.isRequired,
+        theme: PropTypes.string
     },
 
     getInitialState() {
@@ -54,7 +58,7 @@ const LocationSearchResults = React.createClass({
                         ))}
                     </ul>
                 </div>);
-    }
+    },
 });
 
 module.exports = LocationSearchResults;

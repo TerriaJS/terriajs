@@ -3,6 +3,10 @@
 import Mustache from 'mustache';
 import React from 'react';
 
+import createReactClass from 'create-react-class';
+
+import PropTypes from 'prop-types';
+
 import CesiumMath from 'terriajs-cesium/Source/Core/Math';
 import classNames from 'classnames';
 import defined from 'terriajs-cesium/Source/Core/defined';
@@ -25,18 +29,19 @@ Mustache.escape = function(string) {
 };
 
 // Individual feature info section
-const FeatureInfoSection = React.createClass({
+const FeatureInfoSection = createReactClass({
+    displayName: 'FeatureInfoSection',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        viewState: React.PropTypes.object.isRequired,
-        template: React.PropTypes.oneOfType([React.PropTypes.object, React.PropTypes.string]),
-        feature: React.PropTypes.object,
-        position: React.PropTypes.object,
-        clock: React.PropTypes.object,
-        catalogItem: React.PropTypes.object,  // Note this may not be known (eg. WFS).
-        isOpen: React.PropTypes.bool,
-        onClickHeader: React.PropTypes.func
+        viewState: PropTypes.object.isRequired,
+        template: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
+        feature: PropTypes.object,
+        position: PropTypes.object,
+        clock: PropTypes.object,
+        catalogItem: PropTypes.object,  // Note this may not be known (eg. WFS).
+        isOpen: PropTypes.bool,
+        onClickHeader: PropTypes.func
     },
 
     getInitialState() {
@@ -74,7 +79,8 @@ const FeatureInfoSection = React.createClass({
 
             propertyData.terria = {
                 formatNumber: mustacheFormatNumberFunction,
-                urlEncodeComponent: mustacheURLEncodeTextComponent
+                urlEncodeComponent: mustacheURLEncodeTextComponent,
+                urlEncode: mustacheURLEncodeText
             };
             if (this.props.position) {
                 const latLngInRadians = Ellipsoid.WGS84.cartesianToCartographic(this.props.position);
@@ -220,7 +226,7 @@ const FeatureInfoSection = React.createClass({
                 </If>
             </li>
         );
-    }
+    },
 });
 
 /**
@@ -400,12 +406,25 @@ function mustacheFormatNumberFunction() {
  * URL Encodes provided text: {{#terria.urlEncodeComponent}}{{value}}{{/terria.urlEncodeComponent}}.
  * See encodeURIComponent for details.
  * 
- * {{#terria.urlEncodeComponent}}W/HOE#1{{/terria.urlEncodeComponent}} -> W%2FHOE%231
+ * {{#terria.urlEncodeComponent}}W/HO:E#1{{/terria.urlEncodeComponent}} -> W%2FHO%3AE%231
  * @private
  */
 function mustacheURLEncodeTextComponent() {
     return function(text, render) {
         return encodeURIComponent(render(text));
+    };
+}
+
+/**
+ * URL Encodes provided text: {{#terria.urlEncode}}{{value}}{{/terria.urlEncode}}.
+ * See encodeURI for details.
+ *
+ * {{#terria.urlEncode}}http://example.com/a b{{/terria.urlEncode}} -> http://example.com/a%20b
+ * @private
+ */
+function mustacheURLEncodeText() {
+    return function(text, render) {
+        return encodeURI(render(text));
     };
 }
 

@@ -1,20 +1,25 @@
 import React from 'react';
 
+import createReactClass from 'create-react-class';
+
+import PropTypes from 'prop-types';
+
 import addedByUser from '../../Core/addedByUser';
 import CatalogGroup from './CatalogGroup';
 import DataCatalogMember from './DataCatalogMember';
 import getAncestors from '../../Models/getAncestors';
 import ObserveModelMixin from '../ObserveModelMixin';
 
-const DataCatalogGroup = React.createClass({
+const DataCatalogGroup = createReactClass({
+    displayName: 'DataCatalogGroup',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        group: React.PropTypes.object.isRequired,
-        viewState: React.PropTypes.object.isRequired,
+        group: PropTypes.object.isRequired,
+        viewState: PropTypes.object.isRequired,
         /** Overrides whether to get the open state of the group from the group model or manage it internally */
-        manageIsOpenLocally: React.PropTypes.bool,
-        userData: React.PropTypes.bool
+        manageIsOpenLocally: PropTypes.bool,
+        userData: PropTypes.bool
     },
 
     getDefaultProps() {
@@ -92,7 +97,7 @@ const DataCatalogGroup = React.createClass({
                 </If>
             </CatalogGroup>
         );
-    }
+    },
 });
 
 module.exports = DataCatalogGroup;

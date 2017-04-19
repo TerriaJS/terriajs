@@ -14,6 +14,9 @@
 
 import React from 'react';
 
+import PropTypes from 'prop-types';
+import createReactClass from 'create-react-class';
+
 import defined from 'terriajs-cesium/Source/Core/defined';
 import defaultValue from 'terriajs-cesium/Source/Core/defaultValue';
 import DeveloperError from 'terriajs-cesium/Source/Core/DeveloperError';
@@ -31,7 +34,7 @@ import Styles from './chart.scss';
 const defaultHeight = 100;
 const defaultColor = undefined; // Allows the line color to be set by the css, esp. in the feature info panel.
 
-const Chart = React.createClass({
+const Chart = createReactClass({
     // this._element is updated by the ref callback attribute, https://facebook.github.io/react/docs/more-about-refs.html
     _element: undefined,
 
@@ -40,25 +43,25 @@ const Chart = React.createClass({
     _tooltipId: undefined,
 
     propTypes: {
-        domain: React.PropTypes.object,
-        styling: React.PropTypes.string,  // nothing, 'feature-info' or 'histogram' -- TODO: improve
-        height: React.PropTypes.number,
-        axisLabel: React.PropTypes.object,
-        catalogItem: React.PropTypes.object,
-        transitionDuration: React.PropTypes.number,
-        highlightX: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
-        updateCounter: React.PropTypes.any,  // Change this to trigger an update.
-        pollSeconds: React.PropTypes.any, // This is not used by Chart. It is used internally by registerCustomComponentTypes.
+        domain: PropTypes.object,
+        styling: PropTypes.string,  // nothing, 'feature-info' or 'histogram' -- TODO: improve
+        height: PropTypes.number,
+        axisLabel: PropTypes.object,
+        catalogItem: PropTypes.object,
+        transitionDuration: PropTypes.number,
+        highlightX: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+        updateCounter: PropTypes.any,  // Change this to trigger an update.
+        pollSeconds: PropTypes.any, // This is not used by Chart. It is used internally by registerCustomComponentTypes.
         // You can provide the data directly via props.data (ChartData[]):
-        data: React.PropTypes.array,
+        data: PropTypes.array,
         // Or, provide a URL to the data, along with optional xColumn, yColumns, colors
-        url: React.PropTypes.string,
-        xColumn: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
-        yColumns: React.PropTypes.array,
-        colors: React.PropTypes.array,
-        pollUrl: React.PropTypes.string,
+        url: PropTypes.string,
+        xColumn: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+        yColumns: PropTypes.array,
+        colors: PropTypes.array,
+        pollUrl: PropTypes.string,
         // Or, provide a tableStructure directly.
-        tableStructure: React.PropTypes.object
+        tableStructure: PropTypes.object
     },
 
     chartDataArrayFromTableStructure(table) {

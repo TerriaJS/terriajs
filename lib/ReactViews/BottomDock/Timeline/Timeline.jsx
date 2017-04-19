@@ -1,6 +1,8 @@
 'use strict';
 
 import React from 'react';
+import PropTypes from 'prop-types';
+import createReactClass from 'create-react-class';
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 import TimelineControls from './TimelineControls';
 import CesiumTimeline from './CesiumTimeline';
@@ -11,11 +13,11 @@ import Styles from './timeline.scss';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import dateFormat from 'dateformat';
 
-const Timeline = React.createClass({
+const Timeline = createReactClass({
     propTypes: {
-        terria: React.PropTypes.object.isRequired,
-        autoPlay: React.PropTypes.bool,
-        locale: React.PropTypes.object
+        terria: PropTypes.object.isRequired,
+        autoPlay: PropTypes.bool,
+        locale: PropTypes.object
     },
 
     getDefaultProps() {
