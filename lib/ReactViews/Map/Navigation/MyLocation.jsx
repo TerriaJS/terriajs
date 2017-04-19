@@ -84,7 +84,8 @@ const MyLocation = React.createClass({
             // Note: Specifiying the value of 27500m here enables this function to approximately mimic the behaviour of
             //       the else case from the cameras inital view and when the viewer pan/zooms out to much.
             // TODO: After the first update just jump to rather then moving to.
-            this.props.terria.augmentedVirtuality.moveTo(CesiumCartographic.fromDegrees(longitude, latitude), 27500);
+            this.props.terria.augmentedVirtuality.moveTo(CesiumCartographic.fromDegrees(longitude, latitude), 27500, !defined(this.state.flown));
+            this.setState({flown: true});
         } else {
             // west, south, east, north, result
             const rectangle = Rectangle.fromDegrees(longitude - 0.1, latitude - 0.1, longitude + 0.1, latitude + 0.1);
@@ -130,6 +131,7 @@ const MyLocation = React.createClass({
         if (defined(this.state.watchId)) {
             navigator.geolocation.clearWatch(this.state.watchId);
             this.setState({watchId: undefined});
+            this.setState({flown: undefined});
         }
     },
 
