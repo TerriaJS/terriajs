@@ -96,6 +96,7 @@ const MyLocation = React.createClass({
             'stroke': '#ffffff',
             'stroke-width': 3
         };
+        this._marker.isEnabled = false; // Force toggling isEnabled so that the marker location will visually update after the first call.
         this._marker.isEnabled = true;
     },
 
