@@ -74,9 +74,7 @@ const MyLocation = React.createClass({
         const longitude = position.coords.longitude;
         const latitude = position.coords.latitude;
 
-        if (defined(this.props.terria.augmentedVirtuality) &&
-            this.props.terria.augmentedVirtuality.enabled) {
-
+        if (this.augmentedVirtualityAvaliable()) {
             // Note: Specifiying the value of 27500m here enables this function to approximately mimic the behaviour of
             //       the else case from the cameras inital view and when the viewer pan/zooms out to much.
             this.props.terria.augmentedVirtuality.moveTo(CesiumCartographic.fromDegrees(longitude, latitude), 27500);
@@ -108,6 +106,10 @@ const MyLocation = React.createClass({
         this._marker.isEnabled = false; // Force toggling isEnabled so that the marker location will visually update after the first call.
         this._marker.isEnabled = true;
     },
+
+    augmentedVirtualityAvaliable() {
+        return defined(this.props.terria.augmentedVirtuality) && this.props.terria.augmentedVirtuality.enabled;
+    }
 
     handleCick() {
         this.getLocation();
