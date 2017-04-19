@@ -37,7 +37,7 @@ const MyLocation = React.createClass({
                 timeout: 5000,
                 maximumAge: 0
             };
-            const handleError = err => {
+            function handleError(err) {
                 let message = err.message;
                 if (message && message.indexOf('Only secure origins are allowed') === 0) {
                     // This is actually the recommended way to check for this error.
