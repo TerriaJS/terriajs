@@ -25,6 +25,15 @@ const AugmentedVirtualityTool = React.createClass({
         }
     },
 
+    getInitialState() {
+        return {
+            augmentedVirtuality: null,
+            experimentalWarningShown: false,
+            realignHelpShown: false,
+            resetRealignHelpShown: false
+        };
+    },
+
     /**
      * Gets whether the current platform is supported for enabling Augmented Virtuality mode (currently only Android and Apple).
      *
@@ -40,15 +49,6 @@ const AugmentedVirtualityTool = React.createClass({
      *
      * @return Whether the plaftorm is supported (true) or not (false).
      */
-    getInitialState() {
-        return {
-            augmentedVirtuality: null,
-            experimentalWarningShown: false,
-            realignHelpShown: false,
-            resetRealignHelpShown: false
-        };
-    },
-
     isSuitableBrowser() {
         return Boolean(navigator.userAgent.match(/Android|iPhone|iPad/i));
     },
