@@ -54,8 +54,6 @@ const AugmentedVirtualityTool = React.createClass({
     },
 
     handleClickAVTool() {
-        // console.log('handleClickAVTool()');
-
         // Make the AugmentedVirtuality module avaliable elsewhere.
         this.props.terria.augmentedVirtuality = this.state.augmentedVirtuality;
 
@@ -79,8 +77,6 @@ const AugmentedVirtualityTool = React.createClass({
     },
 
     handleClickRealign() {
-        // console.log('handleClickRealign()');
-
         if (!this.state.realignHelpShown) {
             this.setState({realignHelpShown: true});
 
@@ -99,8 +95,6 @@ const AugmentedVirtualityTool = React.createClass({
     },
 
     handleClickResetRealign() {
-        // console.log('handleClickHover()');
-
         if (!this.state.resetRealignHelpShown) {
             this.setState({resetRealignHelpShown: true});
 
@@ -117,8 +111,6 @@ const AugmentedVirtualityTool = React.createClass({
     },
 
     handleClickHover() {
-        // console.log('handleClickHover()');
-
         this.state.augmentedVirtuality.toggleHoverHeight();
     },
 
