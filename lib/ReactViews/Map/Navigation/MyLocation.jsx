@@ -37,7 +37,7 @@ const MyLocation = React.createClass({
                 timeout: 5000,
                 maximumAge: 0
             };
-            let error = err => {
+            const handleError = err => {
                 let message = err.message;
                 if (message && message.indexOf('Only secure origins are allowed') === 0) {
                     // This is actually the recommended way to check for this error.
@@ -52,16 +52,18 @@ const MyLocation = React.createClass({
                     message: message
                 }));
             };
-            if (!this.augmentedVirtualityAvaliable()) {
+            if (!this.augmentedVirtualityEnabled()) {
+                // When Augmented Virtuality is not enabled then just get a single position update.
                 navigator.geolocation.getCurrentPosition(
                     this.zoomToMyLocation,
-                    error,
+                    handleError,
                     options
                 );
             } else {
+                // When Augmented Virtuality is enabled then we effectively toggle into watch mode and the position is repeatedly updated.
                 const watchId = navigator.geolocation.watchPosition(
                     this.zoomToMyLocation,
-                    error,
+                    handleError,
                     options
                 );
 
@@ -80,10 +82,12 @@ const MyLocation = React.createClass({
         const longitude = position.coords.longitude;
         const latitude = position.coords.latitude;
 
-        if (this.augmentedVirtualityAvaliable()) {
+        if (this.augmentedVirtualityEnabled()) {
             // Note: Specifiying the value of 27500m here enables this function to approximately mimic the behaviour of
             //       the else case from the cameras inital view and when the viewer pan/zooms out to much.
-            // TODO: After the first update just jump to rather then moving to.
+            // We use the flag variable flown so that the user is flown to the current location when this function is
+            // first fired, but subsuquently the updates are jump location moves, since we assume that the movements are
+            // small and flyTo performs badly when the increments are small (slow and unresponsive).
             this.props.terria.augmentedVirtuality.moveTo(CesiumCartographic.fromDegrees(longitude, latitude), 27500, !defined(this.state.flown));
             this.setState({flown: true});
         } else {
@@ -115,7 +119,7 @@ const MyLocation = React.createClass({
         this._marker.isEnabled = true;
     },
 
-    augmentedVirtualityAvaliable() {
+    augmentedVirtualityEnabled() {
         return defined(this.props.terria.augmentedVirtuality) && this.props.terria.augmentedVirtuality.enabled;
     },
 
