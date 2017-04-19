@@ -126,6 +126,7 @@ const AugmentedVirtualityTool = React.createClass({
         if (!defined(this.state.augmentedVirtuality)) {
             return null;
         }
+
         const enabled = this.state.augmentedVirtuality.enabled;
         let toggleImage = Icon.GLYPHS.arOff;
         let toggleStyle = Styles.btn;
