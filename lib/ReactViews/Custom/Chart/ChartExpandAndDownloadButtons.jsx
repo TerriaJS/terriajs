@@ -85,7 +85,7 @@ const ChartExpandAndDownloadButtons = createReactClass({
             const nameAndHrefObjects = downloadNames.map((name, i) => { return {name: name, href: downloads[i]}; });
             if (this.props.canDownload) {
                 const downloadDropdownTheme = clone(dropdownTheme);
-                downloadDropdownTheme.button = classNames(Styles.btnSmall, Styles.btnDownload);YPHS.download}/>;
+                downloadDropdownTheme.button = classNames(Styles.btnSmall, Styles.btnDownload);
                 downloadButton = <Dropdown selectOption={this.downloadDropdown} options={nameAndHrefObjects} theme={downloadDropdownTheme}>Download&nbsp;▾</Dropdown>;
             }
 
