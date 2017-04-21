@@ -50,7 +50,7 @@
     "moment": "^2.18.1",
     "mustache": "^2.2.1",
     "mutationobserver-shim": "^0.3.1",
-    "pbf": "^3.0.1",
+    "pbf": "^3.0.4",
     "point-geometry": "^0.1.0",
     "proj4": "~2.3.16",
     "raw-loader": "^0.5.1",
