@@ -1,19 +1,22 @@
 'use strict';
 
 import React from 'react';
+import createReactClass from 'create-react-class';
+import PropTypes from 'prop-types';
 import ObserveModelMixin from '../../ObserveModelMixin';
 import Styles from './augmented_virtuality_tool.scss';
 import Icon from '../../Icon.jsx';
 import ViewerMode from '../../../Models/ViewerMode';
 import defined from 'terriajs-cesium/Source/Core/defined';
 
-const AugmentedVirtualityTool = React.createClass({
+const AugmentedVirtualityTool = createReactClass({
+    displayName: 'AugmentedVirtualityTool',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        terria: React.PropTypes.object.isRequired,
-        viewState: React.PropTypes.object.isRequired,
-        experimentalWarning: React.PropTypes.bool
+        terria: PropTypes.object.isRequired,
+        viewState: PropTypes.object.isRequired,
+        experimentalWarning: PropTypes.bool
     },
 
     componentDidMount() {
