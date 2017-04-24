@@ -37,33 +37,18 @@ const MyLocation = React.createClass({
                 timeout: 5000,
                 maximumAge: 0
             };
-            function handleError(err) {
-                let message = err.message;
-                if (message && message.indexOf('Only secure origins are allowed') === 0) {
-                    // This is actually the recommended way to check for this error.
-                    // https://developers.google.com/web/updates/2016/04/geolocation-on-secure-contexts-only
-                    const uri = new URI(window.location);
-                    const secureUrl = uri.protocol('https').toString();
-                    message = 'Your browser can only provide your location when using https. You may be able to use ' + secureUrl + ' instead.';
-                }
-                this.props.terria.error.raiseEvent(new TerriaError({
-                    sender: this,
-                    title: 'Error getting location',
-                    message: message
-                }));
-            };
             if (!this.augmentedVirtualityEnabled()) {
                 // When Augmented Virtuality is not enabled then just get a single position update.
                 navigator.geolocation.getCurrentPosition(
                     this.zoomToMyLocation,
-                    handleError,
+                    this.handleLocationError,
                     options
                 );
             } else {
                 // When Augmented Virtuality is enabled then we effectively toggle into watch mode and the position is repeatedly updated.
                 const watchId = navigator.geolocation.watchPosition(
                     this.zoomToMyLocation,
-                    handleError,
+                    this.handleLocationError,
                     options
                 );
 
@@ -119,6 +104,22 @@ const MyLocation = React.createClass({
         this._marker.isEnabled = true;
     },
 
+    handleLocationError(err) {
+        let message = err.message;
+        if (message && message.indexOf('Only secure origins are allowed') === 0) {
+            // This is actually the recommended way to check for this error.
+            // https://developers.google.com/web/updates/2016/04/geolocation-on-secure-contexts-only
+            const uri = new URI(window.location);
+            const secureUrl = uri.protocol('https').toString();
+            message = 'Your browser can only provide your location when using https. You may be able to use ' + secureUrl + ' instead.';
+        }
+        this.props.terria.error.raiseEvent(new TerriaError({
+            sender: this,
+            title: 'Error getting location',
+            message: message
+        }));
+    },
+
     augmentedVirtualityEnabled() {
         return defined(this.props.terria.augmentedVirtuality) && this.props.terria.augmentedVirtuality.enabled;
     },
@@ -142,8 +143,7 @@ const MyLocation = React.createClass({
     handleCick() {
         if (this.followMeEnabled()) {
             this.disableFollowMe();
-        }
-        else {
+        } else {
             this.getLocation();
         }
     },
