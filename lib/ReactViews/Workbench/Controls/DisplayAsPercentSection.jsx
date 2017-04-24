@@ -3,13 +3,17 @@
 import classNames from 'classnames';
 import ObserveModelMixin from '../../ObserveModelMixin';
 import React from 'react';
+import createReactClass from 'create-react-class';
+import PropTypes from 'prop-types';
 import Icon from "../../Icon.jsx";
 import Styles from './display-as-percent.scss';
 
-const DisplayAsPercentSection = React.createClass({
+const DisplayAsPercentSection = createReactClass({
+    displayName: 'DisplayAsPercentSection',
     mixins: [ObserveModelMixin],
+
     propTypes: {
-        item: React.PropTypes.object
+        item: PropTypes.object
     },
 
     togglePercentage() {
@@ -38,6 +42,6 @@ const DisplayAsPercentSection = React.createClass({
                 </button>
             </label>
         );
-    }
+    },
 });
 module.exports = DisplayAsPercentSection;

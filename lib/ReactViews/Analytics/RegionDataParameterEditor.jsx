@@ -1,5 +1,9 @@
 import React from 'react';
 
+import createReactClass from 'create-react-class';
+
+import PropTypes from 'prop-types';
+
 import defined from 'terriajs-cesium/Source/Core/defined';
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 import VarType from '../../Map/VarType';
@@ -9,12 +13,13 @@ import CatalogGroup from '../DataCatalog/CatalogGroup';
 
 import Styles from './parameter-editors.scss';
 
-const RegionDataParameterEditor = React.createClass({
+const RegionDataParameterEditor = createReactClass({
+    displayName: 'RegionDataParameterEditor',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        previewed: React.PropTypes.object,
-        parameter: React.PropTypes.object
+        previewed: PropTypes.object,
+        parameter: PropTypes.object
     },
 
     componentWillMount() {
@@ -196,6 +201,6 @@ const RegionDataParameterEditor = React.createClass({
                 })}
             </ul>
         );
-    }
+    },
 });
 module.exports = RegionDataParameterEditor;

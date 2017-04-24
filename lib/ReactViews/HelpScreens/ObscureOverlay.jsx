@@ -2,6 +2,8 @@
 
 import ObserverModelMixin from '../ObserveModelMixin';
 import React from 'react';
+import createReactClass from 'create-react-class';
+import PropTypes from 'prop-types';
 import Styles from './obscure-overlay.scss';
 import classNames from 'classnames';
 import defined from 'terriajs-cesium/Source/Core/defined';
@@ -11,11 +13,12 @@ import defined from 'terriajs-cesium/Source/Core/defined';
 * to grey out the rest of the screen. A fifth panel, which is clear, covers the whole screen to prevent the highlighted
 * element from being selectable.
 */
-const ObscureOverlay = React.createClass({
+const ObscureOverlay = createReactClass({
+    displayName: 'ObscureOverlay',
     mixins: [ObserverModelMixin],
 
     propTypes: {
-        helpViewState: React.PropTypes.object
+        helpViewState: PropTypes.object
     },
 
     cancel() {
@@ -67,7 +70,7 @@ const ObscureOverlay = React.createClass({
                 <div className={Styles.bottomOverlay} style={{left: bottomOverlayPositionLeft, top: bottomOverlayPositionTop, width: bottomOverlayWidth, height: bottomOverlayHeight }} onClick={this.cancel}></div>
                 <div className={Styles.clearOverlay} onClick={this.advance}></div>
             </div>);
-    }
+    },
 });
 
 module.exports = ObscureOverlay;

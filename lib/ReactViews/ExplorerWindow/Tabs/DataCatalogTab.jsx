@@ -1,5 +1,9 @@
 import React from 'react';
 
+import createReactClass from 'create-react-class';
+
+import PropTypes from 'prop-types';
+
 import defined from 'terriajs-cesium/Source/Core/defined';
 import DataCatalog from '../../DataCatalog/DataCatalog.jsx';
 import DataCatalogMember from '../../DataCatalog/DataCatalogMember.jsx';
@@ -11,12 +15,13 @@ import SearchBox from '../../Search/SearchBox.jsx';
 import Styles from './data-catalog-tab.scss';
 
 // The DataCatalog Tab
-const DataCatalogTab = React.createClass({
+const DataCatalogTab = createReactClass({
+    displayName: 'DataCatalogTab',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        terria: React.PropTypes.object,
-        viewState: React.PropTypes.object
+        terria: PropTypes.object,
+        viewState: PropTypes.object
     },
 
     changeSearchText(newText) {
@@ -73,7 +78,7 @@ const DataCatalogTab = React.createClass({
                 </For>
             </ul>
         );
-    }
+    },
 });
 
 module.exports = DataCatalogTab;

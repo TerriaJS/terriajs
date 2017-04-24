@@ -3,6 +3,9 @@
 import classNames from 'classnames';
 import React from 'react';
 
+import PropTypes from 'prop-types';
+import createReactClass from 'create-react-class';
+
 import defaultValue from 'terriajs-cesium/Source/Core/defaultValue';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import clone from 'terriajs-cesium/Source/Core/clone';
@@ -20,34 +23,34 @@ import Styles from './chart-expand-and-download-buttons.scss';
 // This displays both an "expand" button, which enables a new catalog item based on the chart data,
 // and a "download" button, which downloads the data.
 //
-const ChartExpandAndDownloadButtons = React.createClass({
+const ChartExpandAndDownloadButtons = createReactClass({
 
     propTypes: {
-        terria: React.PropTypes.object.isRequired,
+        terria: PropTypes.object.isRequired,
         // Either provide URLs to the expanded data.
-        sources: React.PropTypes.array,
-        sourceNames: React.PropTypes.array,
-        downloads: React.PropTypes.array,
-        downloadNames: React.PropTypes.array,
+        sources: PropTypes.array,
+        sourceNames: PropTypes.array,
+        downloads: PropTypes.array,
+        downloadNames: PropTypes.array,
         // Optional polling info that would need to be transferred to any standalone catalog item.
-        pollSources: React.PropTypes.array,
-        pollSeconds: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
-        pollReplace: React.PropTypes.bool,
-        updateCounter: React.PropTypes.any,  // Change this to trigger an update.
+        pollSources: PropTypes.array,
+        pollSeconds: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+        pollReplace: PropTypes.bool,
+        updateCounter: PropTypes.any,  // Change this to trigger an update.
         // Or, provide a tableStructure directly.
-        tableStructure: React.PropTypes.object,
+        tableStructure: PropTypes.object,
         //
-        catalogItem: React.PropTypes.object,
-        title: React.PropTypes.string,
-        colors: React.PropTypes.array,
-        feature: React.PropTypes.object,
-        id: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
-        columnNames: React.PropTypes.array,
-        columnUnits: React.PropTypes.array,
-        xColumn: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
-        yColumns: React.PropTypes.array,
-        canDownload: React.PropTypes.bool,
-        raiseToTitle: React.PropTypes.bool
+        catalogItem: PropTypes.object,
+        title: PropTypes.string,
+        colors: PropTypes.array,
+        feature: PropTypes.object,
+        id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+        columnNames: PropTypes.array,
+        columnUnits: PropTypes.array,
+        xColumn: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+        yColumns: PropTypes.array,
+        canDownload: PropTypes.bool,
+        raiseToTitle: PropTypes.bool
     },
 
     expandButton() {

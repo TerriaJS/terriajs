@@ -1,15 +1,18 @@
 'use strict';
 
 import React from 'react';
+import createReactClass from 'create-react-class';
+import PropTypes from 'prop-types';
 import ObserveModelMixin from '../../ObserveModelMixin';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import Styles from './colorscalerange-section.scss';
 
-const ColorScaleRangeSection = React.createClass({
+const ColorScaleRangeSection = createReactClass({
+    displayName: 'ColorScaleRangeSection',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        item: React.PropTypes.object.isRequired
+        item: PropTypes.object.isRequired
     },
 
     minRange: -50,
@@ -79,6 +82,6 @@ const ColorScaleRangeSection = React.createClass({
                 <button type='submit' title="Update Range" className={Styles.btn}>Update Range</button>
             </form>
         );
-    }
+    },
 });
 module.exports = ColorScaleRangeSection;

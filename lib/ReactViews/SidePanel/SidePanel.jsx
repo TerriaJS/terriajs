@@ -1,5 +1,9 @@
 import React from 'react';
 
+import createReactClass from 'create-react-class';
+
+import PropTypes from 'prop-types';
+
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 
 import ObserveModelMixin from '../ObserveModelMixin';
@@ -11,12 +15,13 @@ import { removeMarker } from '../Search/SearchMarkerUtils';
 
 import Styles from './side-panel.scss';
 
-const SidePanel = React.createClass({
+const SidePanel = createReactClass({
+    displayName: 'SidePanel',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        terria: React.PropTypes.object.isRequired,
-        viewState: React.PropTypes.object.isRequired
+        terria: PropTypes.object.isRequired,
+        viewState: PropTypes.object.isRequired
     },
 
     componentDidMount() {

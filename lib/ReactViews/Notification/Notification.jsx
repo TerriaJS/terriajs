@@ -2,13 +2,16 @@
 
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
+import createReactClass from 'create-react-class';
+import PropTypes from 'prop-types';
 import NotificationWindow from './NotificationWindow';
 
-const Notification = React.createClass({
+const Notification = createReactClass({
+    displayName: 'Notification',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        viewState: React.PropTypes.object
+        viewState: PropTypes.object
     },
 
     confirm() {
@@ -40,7 +43,7 @@ const Notification = React.createClass({
                 onConfirm={this.confirm}
                 onDeny={this.deny}
             />);
-    }
+    },
 });
 
 module.exports = Notification;

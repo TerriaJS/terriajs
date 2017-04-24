@@ -4,15 +4,18 @@ import classNames from 'classnames';
 import Icon from '../../Icon';
 import ObserveModelMixin from '../../ObserveModelMixin';
 import React from 'react';
+import createReactClass from 'create-react-class';
+import PropTypes from 'prop-types';
 import Styles from './concept-viewer.scss';
 
-const Concept = React.createClass({
+const Concept = createReactClass({
+    displayName: 'Concept',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        concept: React.PropTypes.object.isRequired,
-        hideName: React.PropTypes.bool,
-        isLoading: React.PropTypes.bool
+        concept: PropTypes.object.isRequired,
+        hideName: PropTypes.bool,
+        isLoading: PropTypes.bool
     },
 
     toggleOpen() {
@@ -86,7 +89,7 @@ const Concept = React.createClass({
                 </If>
             </li>
         );
-    }
+    },
 });
 
 /**

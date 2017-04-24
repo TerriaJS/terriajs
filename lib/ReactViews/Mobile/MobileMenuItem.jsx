@@ -1,5 +1,7 @@
 import React from 'react';
 
+import PropTypes from 'prop-types';
+
 import Styles from './mobile-menu-item.scss';
 
 /** A simple text item in the mobile menu */
@@ -20,9 +22,9 @@ export default function MobileMenuItem(props) {
 }
 
 MobileMenuItem.propTypes = {
-    href: React.PropTypes.string,
-    onClick: React.PropTypes.func,
-    caption: React.PropTypes.string
+    href: PropTypes.string,
+    onClick: PropTypes.func,
+    caption: PropTypes.string
 };
 
 MobileMenuItem.defaultProps = {

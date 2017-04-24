@@ -1,4 +1,6 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import createReactClass from 'create-react-class';
 import classNames from 'classnames';
 import Styles from './icon.scss';
 
@@ -55,11 +57,11 @@ const GLYPHS = {
     sphere: require('../../wwwroot/images/icons/sphere.svg'),
 };
 
-const Icon = React.createClass({
+const Icon = createReactClass({
     propTypes: {
-        glyph: React.PropTypes.string,
-        style: React.PropTypes.object,
-        className: React.PropTypes.string
+        glyph: PropTypes.string,
+        style: PropTypes.object,
+        className: PropTypes.string
     },
     render() {
         const glyph = this.props.glyph;
