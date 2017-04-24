@@ -20,7 +20,7 @@ const AugmentedVirtualityTool = React.createClass({
         if (this.isSuitableBrowser()) {
             require.ensure('../../../Models/AugmentedVirtuality.js', () => {
                 const AugmentedVirtuality = require('../../../Models/AugmentedVirtuality.js');
-                this.setState({augmentedVirtuality: new AugmentedVirtuality()});
+                this.setState({augmentedVirtuality: new AugmentedVirtuality(this.props.terria)});
             }, 'AugmentedVirtuality');
         }
     },
