@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### 5.1.1
+
+* Added `AugmentedVirtuality` (user facing feature name Augmented Reality) to allow users to use mobile device to set the camera view.
+
 ### 5.1.0
 
 * Fixed a bug that prevented `WebMapServiceCatalogItem` from acting as a time-dynamic layer when the time dimension was inherited from a parent layer.

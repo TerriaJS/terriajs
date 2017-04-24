@@ -12,6 +12,7 @@ import MapColumn from './MapColumn.jsx';
 import MapInteractionWindow from './../Notification/MapInteractionWindow.jsx';
 import MapNavigation from './../Map/MapNavigation.jsx';
 import MenuBar from './../Map/MenuBar.jsx';
+import ExperimentalFeatures from './../Map/ExperimentalFeatures.jsx';
 import MobileHeader from './../Mobile/MobileHeader.jsx';
 import Notification from './../Notification/Notification.jsx';
 import ObserveModelMixin from './../ObserveModelMixin';
@@ -126,6 +127,12 @@ const StandardUserInterface = createReactClass({
                             <MapColumn terria={terria} viewState={this.props.viewState} />
                             <main>
                                 <ExplorerWindow terria={terria} viewState={this.props.viewState}/>
+                                <If condition={this.props.terria.configParameters.experimentalFeatures && !this.props.viewState.hideMapUi()}>
+                                    <ExperimentalFeatures terria={terria}
+                                                          viewState={this.props.viewState}
+                                                          experimentalItems={customElements.experimentalMenu}
+                                    />
+                                </If>
                             </main>
                         </section>
                     </div>
