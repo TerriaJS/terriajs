@@ -396,6 +396,11 @@ describeIfSupportsWebGL('AugmentedVirtuality tests that require WebGL', function
         // Check stop manual alignment.
         av.resetAlignment();
         expect(av.manualAlignmentSet).toEqual(false);
+
+
+        // Set enabled to false so that when the widget is torn down there are not errors in other components.
+        // Detail: Currently CesiumWidget.camera returns this._scene.camera without checking ._scene is defined, which it is not during tear down, and so results in "Uncaught TypeError: Cannot read property 'camera' of undefined".
+        av.enabled = false;
     });
 });
 
