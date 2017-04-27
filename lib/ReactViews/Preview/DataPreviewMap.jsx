@@ -1,6 +1,7 @@
 'use strict';
 
 const CesiumMath = require('terriajs-cesium/Source/Core/Math');
+const ConsoleAnalytics = require('../../Core/ConsoleAnalytics');
 const defaultValue = require('terriajs-cesium/Source/Core/defaultValue');
 const defined = require('terriajs-cesium/Source/Core/defined');
 const GeoJsonCatalogItem = require('../../Models/GeoJsonCatalogItem');
@@ -43,7 +44,8 @@ const DataPreviewMap = createReactClass({
             appName: terria.appName + ' preview',
             supportEmail: terria.supportEmail,
             baseUrl: terria.baseUrl,
-            cesiumBaseUrl: terria.cesiumBaseUrl
+            cesiumBaseUrl: terria.cesiumBaseUrl,
+            analytics: new ConsoleAnalytics()
         });
 
         this.terriaPreview.viewerMode = ViewerMode.Leaflet;
@@ -94,6 +96,10 @@ const DataPreviewMap = createReactClass({
     updatePreview(previewedCatalogItem) {
         if (this.lastPreviewedCatalogItem === previewedCatalogItem) {
             return;
+        }
+
+        if (previewedCatalogItem) {
+            this.props.terria.analytics.logEvent('dataSource', 'preview', previewedCatalogItem.name);
         }
 
         this.lastPreviewedCatalogItem = previewedCatalogItem;
