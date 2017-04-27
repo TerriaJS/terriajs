@@ -3,6 +3,11 @@
 Change Log
 ==========
 
+### 5.1.1
+
+* Fixed a bug that caused an 'added' and a 'shown' event for "Unnamed Item" to be logged to Google Analytics when previewing an item in the catalog.
+* Added a 'preview' Google Analytics event when a catalog item is shown on the preview map in the catalog.
+
 ### 5.1.0
 
 * Fixed a bug that prevented `WebMapServiceCatalogItem` from acting as a time-dynamic layer when the time dimension was inherited from a parent layer.
