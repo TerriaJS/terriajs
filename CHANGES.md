@@ -7,6 +7,7 @@ Change Log
 
 * Fixed a bug that caused an 'added' and a 'shown' event for "Unnamed Item" to be logged to Google Analytics when previewing an item in the catalog.
 * Added a 'preview' Google Analytics event when a catalog item is shown on the preview map in the catalog.
+* Improved the appearance of charts where all the y-values are null. (It now shows "No preview available".)
 
 ### 5.1.0
 
