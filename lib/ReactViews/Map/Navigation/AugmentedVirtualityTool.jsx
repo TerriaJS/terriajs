@@ -5,9 +5,11 @@ import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import ObserveModelMixin from '../../ObserveModelMixin';
 import Styles from './augmented_virtuality_tool.scss';
-import Icon from '../../Icon.jsx';
+import Icon from '../../Icon';
 import ViewerMode from '../../../Models/ViewerMode';
 import defined from 'terriajs-cesium/Source/Core/defined';
+
+import AugmentedVirtuality from '../../../Models/AugmentedVirtuality';
 
 const AugmentedVirtualityTool = createReactClass({
     displayName: 'AugmentedVirtualityTool',
@@ -19,41 +21,13 @@ const AugmentedVirtualityTool = createReactClass({
         experimentalWarning: PropTypes.bool
     },
 
-    componentDidMount() {
-        if (this.isSuitableBrowser()) {
-            require.ensure('../../../Models/AugmentedVirtuality.js', () => {
-                const AugmentedVirtuality = require('../../../Models/AugmentedVirtuality.js');
-                this.setState({augmentedVirtuality: new AugmentedVirtuality(this.props.terria)});
-            }, 'AugmentedVirtuality');
-        }
-    },
-
     getInitialState() {
         return {
-            augmentedVirtuality: null,
+            augmentedVirtuality: new AugmentedVirtuality(this.props.terria),
             experimentalWarningShown: false,
             realignHelpShown: false,
             resetRealignHelpShown: false
         };
-    },
-
-    /**
-     * Gets whether the current platform is supported for enabling Augmented Virtuality mode (currently only Android and Apple).
-     *
-     * At the moment we have severely reduced the number of platforms supported to just android and mobile apple devices.
-     * This is probably an artifical limitation in so much as this probably works just as nicely on other platforms, but
-     * this gives us an opertunity for a softer launch and only enabling platforms that we have explicitly been able to
-     * test on. Hopefully though these two platforms being the dominant players should give us enough exposure to start
-     * with and we can always add more later. Note: This check is not robust and the agent could spoof the data here to
-     * allow this to work on other platforms, but if they go to this length then its probably the sort of user that can
-     * deal with any fallout.
-     *
-     * In future this function can be replaced with: {@link isCommonMobilePlatform}.
-     *
-     * @return Whether the plaftorm is supported (true) or not (false).
-     */
-    isSuitableBrowser() {
-        return Boolean(navigator.userAgent.match(/Android|iPhone|iPad/i));
     },
 
     handleClickAVTool() {
@@ -118,10 +92,6 @@ const AugmentedVirtualityTool = createReactClass({
     },
 
     render() {
-        if (!defined(this.state.augmentedVirtuality)) {
-            return null;
-        }
-
         const enabled = this.state.augmentedVirtuality.enabled;
         let toggleImage = Icon.GLYPHS.arOff;
         let toggleStyle = Styles.btn;
@@ -189,4 +159,4 @@ const AugmentedVirtualityTool = createReactClass({
     }
 });
 
-export default AugmentedVirtualityTool;
+module.exports = AugmentedVirtualityTool;
