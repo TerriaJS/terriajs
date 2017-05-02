@@ -32,7 +32,7 @@
                         {
                             "identifier": "http://bom.gov.au/waterdata/services/tstypes/Pat7_C_B_1_MonthlyMean",
                             "title": "Monthly average",
-                            "defaultDuration": "2y"
+                            "defaultDuration": "3y"
                         },
                         {
                             "identifier": "http://bom.gov.au/waterdata/services/tstypes/Pat7_C_B_1_DailyMean",
@@ -52,7 +52,7 @@
                         {
                             "identifier": "http://bom.gov.au/waterdata/services/tstypes/Pat7_C_B_1_HourlyMean",
                             "title": "Hourly average",
-                            "defaultDuration": "28h"
+                            "defaultDuration": "48h"
                         // },
                         // {
                         //     "identifier": "http://bom.gov.au/waterdata/services/tstypes/Pat7_C_B_1",
@@ -93,7 +93,7 @@
                         {
                             "identifier": "http://bom.gov.au/waterdata/services/tstypes/Pat6_C_B_1_MonthlyMean",
                             "title": "Monthly average",
-                            "defaultDuration": "2y"
+                            "defaultDuration": "3y"
                         },
                         {
                             "identifier": "http://bom.gov.au/waterdata/services/tstypes/Pat6_C_B_1_DailyMean",
@@ -113,7 +113,7 @@
                         {
                             "identifier": "http://bom.gov.au/waterdata/services/tstypes/Pat6_C_B_1_HourlyMean",
                             "title": "Hourly average",
-                            "defaultDuration": "28h"
+                            "defaultDuration": "48h"
                         // },
                         // {
                         //     "identifier": "http://bom.gov.au/waterdata/services/tstypes/Pat6_C_B_1",
@@ -148,7 +148,7 @@
                         {
                             "identifier": "http://bom.gov.au/waterdata/services/tstypes/Pat3_C_B_1_MonthlyMean",
                             "title": "Monthly average",
-                            "defaultDuration": "2y"
+                            "defaultDuration": "3y"
                         },
                         {
                             "identifier": "http://bom.gov.au/waterdata/services/tstypes/Pat3_C_B_1_DailyMean",
@@ -168,7 +168,7 @@
                         {
                             "identifier": "http://bom.gov.au/waterdata/services/tstypes/Pat3_C_B_1_HourlyMean",
                             "title": "Hourly average",
-                            "defaultDuration": "28h"
+                            "defaultDuration": "48h"
                         // },
                         // {
                         //     "identifier": "http://bom.gov.au/waterdata/services/tstypes/Pat3_C_B_1",
@@ -202,7 +202,7 @@
                         {
                             "identifier": "http://bom.gov.au/waterdata/services/tstypes/Pat4_C_B_1_MonthlyMean",
                             "title": "Monthly average",
-                            "defaultDuration": "2y"
+                            "defaultDuration": "3y"
                         },
                         {
                             "identifier": "http://bom.gov.au/waterdata/services/tstypes/Pat4_C_B_1_DailyMean",
@@ -222,7 +222,7 @@
                         {
                             "identifier": "http://bom.gov.au/waterdata/services/tstypes/Pat4_C_B_1_HourlyMean",
                             "title": "Hourly average",
-                            "defaultDuration": "28h"
+                            "defaultDuration": "48h"
                         // },
                         // {
                         //     "identifier": "http://bom.gov.au/waterdata/services/tstypes/Pat4_C_B_1",
