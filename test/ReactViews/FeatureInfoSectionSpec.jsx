@@ -8,7 +8,6 @@ import {findAll, findAllWithType, findAllWithClass, findWithRef} from 'react-sha
 import {getShallowRenderedOutput, findAllEqualTo, findAllWithPropsChildEqualTo} from './MoreShallowTools';
 
 import Cartographic from 'terriajs-cesium/Source/Core/Cartographic';
-import ConstantProperty from 'terriajs-cesium/Source/DataSources/ConstantProperty';
 import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
 import Entity from 'terriajs-cesium/Source/DataSources/Entity';
 import JulianDate from 'terriajs-cesium/Source/Core/JulianDate';
