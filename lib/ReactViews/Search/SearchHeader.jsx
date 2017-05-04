@@ -1,15 +1,19 @@
 import Loader from '../Loader.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
+import createReactClass from 'create-react-class';
+import PropTypes from 'prop-types';
 import Styles from './search-header.scss';
 
 /** Renders either a loader or a message based off search state. */
-export default React.createClass({
+export default createReactClass({
     mixins: [ObserveModelMixin],
 
+    displayName: 'SearchHeader',
+
     propTypes: {
-        searchProvider: React.PropTypes.object.isRequired,
-        isWaitingForSearchToStart: React.PropTypes.bool
+        searchProvider: PropTypes.object.isRequired,
+        isWaitingForSearchToStart: PropTypes.bool
     },
 
     render() {

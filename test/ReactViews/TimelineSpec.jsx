@@ -3,7 +3,7 @@
 /*global require,expect*/
 // import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 import React from 'react';
-import ReactTestUtils from 'react-addons-test-utils';
+import {getMountedInstance} from './MoreShallowTools';
 
 const Terria = require('../../lib/Models/Terria');
 
@@ -11,12 +11,6 @@ const ImageryLayerCatalogItem = require('../../lib/Models/ImageryLayerCatalogIte
 import Timeline from '../../lib/ReactViews/BottomDock/Timeline/Timeline';
 import JulianDate from 'terriajs-cesium/Source/Core/JulianDate';
 const DataSourceClock = require('terriajs-cesium/Source/DataSources/DataSourceClock');
-
-function getMounted(jsx) {
-    const renderer = ReactTestUtils.createRenderer();
-    renderer.render(jsx);
-    return renderer.getMountedInstance(renderer);
-}
 
 describe('Timeline', function() {
     describe('dateTime format', function() {
@@ -39,7 +33,7 @@ describe('Timeline', function() {
             terria.clock.currentTime = JulianDate.fromIso8601('2016-01-01');
             terria.clock.onTick.raiseEvent(terria.clock);
 
-            const result = getMounted(timeline);
+            const result = getMountedInstance(timeline);
             expect(result.state.currentTimeString).toBe('Jan');
         });
 
@@ -49,7 +43,7 @@ describe('Timeline', function() {
             terria.clock.currentTime = JulianDate.fromIso8601('2016-01-01');
             terria.clock.onTick.raiseEvent(terria.clock);
 
-            const result = getMounted(timeline);
+            const result = getMountedInstance(timeline);
             expect(result.state.currentTimeString).toBe('01/01/2016, 00:00:00');
         });
     });

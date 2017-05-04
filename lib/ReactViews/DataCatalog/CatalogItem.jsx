@@ -1,6 +1,9 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import Icon from "../Icon.jsx";
+
+import defaultValue from 'terriajs-cesium/Source/Core/defaultValue';
 
 import Styles from './data-catalog-item.scss';
 
@@ -20,10 +23,12 @@ const STATE_TO_ICONS = {
 
 /** Dumb catalog item */
 function CatalogItem(props) {
+    const stateToTitle = defaultValue(props.titleOverrides, STATE_TO_TITLE);
     return (
         <li className={classNames(Styles.root)}>
             <button type='button'
                     onClick={props.onTextClick}
+                    title={props.title}
                     className={classNames(
                             Styles.btnCatalogItem,
                             {[Styles.btnCatalogItemIsPreviewed]: props.selected}
@@ -32,7 +37,7 @@ function CatalogItem(props) {
             </button>
             <button type='button'
                     onClick={props.onBtnClick}
-                    title={STATE_TO_TITLE[props.btnState] || ''}
+                    title={stateToTitle[props.btnState] || ''}
                     className={Styles.btnAction}>
                     {STATE_TO_ICONS[props.btnState]}
             </button>
@@ -41,11 +46,13 @@ function CatalogItem(props) {
 }
 
 CatalogItem.propTypes = {
-    onTextClick: React.PropTypes.func,
-    selected: React.PropTypes.bool,
-    text: React.PropTypes.string,
-    onBtnClick: React.PropTypes.func,
-    btnState: React.PropTypes.oneOf(Object.keys(STATE_TO_ICONS))
+    onTextClick: PropTypes.func,
+    selected: PropTypes.bool,
+    text: PropTypes.string,
+    title: PropTypes.string,
+    onBtnClick: PropTypes.func,
+    btnState: PropTypes.oneOf(Object.keys(STATE_TO_ICONS)),
+    titleOverrides: PropTypes.object
 };
 
 export default CatalogItem;

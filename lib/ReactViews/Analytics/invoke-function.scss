@@ -4,11 +4,9 @@
 .invoke-function {
   padding: $padding-small;
   position: relative;
-  height: 100%;
-
-  @media screen and (min-width : $sm){
-    padding: 0;
-    margin-right: -5px;
+  height: calc(100% - #{$padding-small*2});
+  a{
+    color: $color-primary;
   }
 }
 
@@ -24,14 +22,10 @@
 
 .content{
   composes: scrollbars from '../../Sass/common/_base.scss';
-
-  @media screen and (min-width : $sm){
-    //max-height: calc(#{$modal-content-height} - #{$padding*2});
-  }
-  max-height: 100%;
   overflow-y: auto;
-  padding-bottom: $input-height + $padding;
+  height: calc(100% - #{$input-height});
   padding-right: $padding;
+  padding-left: $padding;
   h3{
     margin-top: 0;
   }

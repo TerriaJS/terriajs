@@ -38,6 +38,28 @@
           "url": "build/TerriaJS/test/csv_nongeo/xy.csv"
         },
         {
+          "name": "XY Plot with units and yAxisMax",
+          "type": "csv",
+          "url": "build/TerriaJS/test/csv_nongeo/xy.csv",
+          "tableStyle": {
+              "columns": {
+                  "y": {
+                      "yAxisMax": 6,
+                      "units": "km/hr"
+                  }
+              }
+          },
+        },
+        {
+          "name": "XY Plot of plant height",
+          "type": "csv",
+          "tableStyle": {
+            "xAxis": "z",
+            "dataVariable": "plant height"
+          },
+          "data": "y,z,plant height\n1,2,3\n4,5,6\n7,8,9\n10,12,2\n"
+        },
+        {
           "name": "Time series",
           "type": "csv",
           "url": "build/TerriaJS/test/csv_nongeo/time_series.csv"
@@ -48,7 +70,7 @@
           "url": "build/TerriaJS/test/csv/lat_lon_nullvalue.csv",
           "featureInfoTemplate" : {
             "name": "Number {{value}}",
-            "template": "<p>All train stations have the same x-y plot.</p><chart src='build/TerriaJS/test/csv_nongeo/xy.csv'></chart>"
+            "template": "<p>All train stations have the same x-y plot.</p><chart src='build/TerriaJS/test/csv_nongeo/x_height.csv' x-column='z' y-columns='plant height'></chart>"
           }
         },
         {
@@ -56,7 +78,15 @@
           "type": "csv",
           "url": "build/TerriaJS/test/csv/lat_lon_name_value.csv",
           "featureInfoTemplate" : {
-            "template": "<p>Chart with inline data</p><chart>x,y\n1,3\n5,10\n8,-2\n10,{{value}}\n</chart>"
+            "template": "<p>Chart with inline data</p><chart x-column='x'>x,plant height,z\n1,3,10\n5,10,5\n8,-2,3\n10,{{value}},7\n</chart>"
+          }
+        },
+        {
+          "name": "Chart with colors specified",
+          "type": "csv",
+          "url": "build/TerriaJS/test/csv/lat_lon_name_value.csv",
+          "featureInfoTemplate" : {
+            "template": "<p>Chart with colors specified</p><chart colors=\"#8A2BE2,#DC143C\">x,y\n1,3\n5,10\n8,-2\n10,{{value}}\n</chart>"
           }
         }
       ]

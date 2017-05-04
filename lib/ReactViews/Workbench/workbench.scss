@@ -6,7 +6,7 @@
 .remove-button {
   composes: btn from '../../Sass/common/_buttons.scss';
   color: $text-light;
-  font-size: 0.7rem;
+  font-size: $font-size-mid-mini;
   padding: 0;
   svg{
     height: 20px;

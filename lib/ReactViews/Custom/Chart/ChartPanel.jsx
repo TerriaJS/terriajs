@@ -2,28 +2,31 @@
 
 import React from 'react';
 
+import createReactClass from 'create-react-class';
+
+import PropTypes from 'prop-types';
+
 import defined from 'terriajs-cesium/Source/Core/defined';
 
 import Chart from './Chart.jsx';
-import ChartData from '../../../Charts/ChartData';
 import ChartPanelDownloadButton from './ChartPanelDownloadButton';
 import Loader from '../../Loader.jsx';
 import ObserveModelMixin from '../../ObserveModelMixin';
-import VarType from '../../../Map/VarType';
 import Icon from "../../Icon.jsx";
 
 import Styles from './chart-panel.scss';
 
 const height = 250;
 
-const ChartPanel = React.createClass({
+const ChartPanel = createReactClass({
+    displayName: 'ChartPanel',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        terria: React.PropTypes.object.isRequired,
-        onHeightChange: React.PropTypes.func,
-        viewState: React.PropTypes.object.isRequired,
-        animationDuration: React.PropTypes.number
+        terria: PropTypes.object.isRequired,
+        onHeightChange: PropTypes.func,
+        viewState: PropTypes.object.isRequired,
+        animationDuration: PropTypes.number
     },
 
     closePanel() {
@@ -51,16 +54,10 @@ const ChartPanel = React.createClass({
         for (let i = chartableItems.length - 1; i >= 0; i--) {
             const item = chartableItems[i];
             if (item.isEnabled && defined(item.tableStructure)) {
-                const xColumn = getXColumn(item);
-                if (defined(xColumn)) {
-                    const yColumns = item.tableStructure.columnsByType[VarType.SCALAR].filter(column => column.isActive);
-                    if (yColumns.length > 0) {
-                        const yColumnNumbers = yColumns.map(yColumn => item.tableStructure.columns.indexOf(yColumn));
-                        const pointArrays = item.tableStructure.toPointArrays(xColumn, yColumns);
-                        const thisData = pointArrays.map(chartDataFunctionFromPoints(item, yColumns, yColumnNumbers));
-                        data = data.concat(thisData);
-                        xUnits = defined(xUnits) ? xUnits : xColumn.units;
-                    }
+                const thisData = item.chartData();
+                if (defined(thisData)) {
+                    data = data.concat(thisData);
+                    xUnits = defined(xUnits) ? xUnits : item.xAxis.units;
                 }
             }
         }
@@ -105,35 +102,7 @@ const ChartPanel = React.createClass({
                 </div>
             </div>
         );
-    }
+    },
 });
-
-/**
- * Gets the column that will be used for the X axis of the chart.
- *
- * @returns {TableColumn}
- */
-function getXColumn(item) {
-    return item.timeColumn || (item.tableStructure && item.tableStructure.columnsByType[VarType.SCALAR][0]);
-}
-
-/**
- * Returns a function that will create a {@link ChartData} object for a let of points and a column index.
- *
- * @param item The item to create a chart for
- * @param yColumns Columns that can be used for the y index of the chart.
- * @param yColumnNumbers TODO: What is this?
- * @returns {Function} that returns a {@link ChartData}
- */
-function chartDataFunctionFromPoints(item, yColumns, yColumnNumbers) {
-    return (points, index)=>
-        new ChartData(points, {
-            id: item.uniqueId + '-' + yColumnNumbers[index],
-            name: yColumns[index].name,
-            categoryName: item.name,
-            units: yColumns[index].units,
-            color: yColumns[index].color
-        });
-}
 
 module.exports = ChartPanel;

@@ -1,13 +1,17 @@
 import React from 'react';
+import createReactClass from 'create-react-class';
+import PropTypes from 'prop-types';
 import ObserveModelMixin from '../ObserveModelMixin';
 
 import Styles from './parameter-editors.scss';
 
-const DateTimeParameterEditor = React.createClass({
+const DateTimeParameterEditor = createReactClass({
+    displayName: 'DateTimeParameterEditor',
     mixins: [ObserveModelMixin],
+
     propTypes: {
-        previewed: React.PropTypes.object,
-        parameter: React.PropTypes.object
+        previewed: PropTypes.object,
+        parameter: PropTypes.object
     },
 
     getInitialState() {
@@ -16,7 +20,7 @@ const DateTimeParameterEditor = React.createClass({
 
     getDateTime() {
         const dateTimeBreakOut = {};
-        const timeDate = this.props.previewed.parameterValues[this.props.parameter.id];
+        const timeDate = this.props.parameter.value;
         if (timeDate !== undefined) {
             const splits = timeDate.split('T');
             dateTimeBreakOut.date = splits[0];
@@ -40,7 +44,7 @@ const DateTimeParameterEditor = React.createClass({
         if (dateTime.date && dateTime.time) {
             value = dateTime.date + 'T' + dateTime.time;
         }
-        this.props.previewed.setParameterValue(this.props.parameter.id, value);
+        this.props.parameter.value = value;
     },
 
     onChangeDate(e) {
@@ -70,7 +74,7 @@ const DateTimeParameterEditor = React.createClass({
                    onChange={this.onChangeTime}
                    value={this.state.time}/>
         </div>);
-    }
+    },
 });
 
 module.exports = DateTimeParameterEditor;

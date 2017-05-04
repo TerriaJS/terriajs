@@ -1,0 +1,58 @@
+<soap12:Envelope xmlns:soap12="http://www.w3.org/2003/05/soap-envelope" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:sos="http://www.opengis.net/sos/2.0" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:fes="http://www.opengis.net/fes/2.0" xmlns:swe="http://www.opengis.net/swe/2.0" xmlns:swes="http://www.opengis.net/swes/2.0" xmlns:sams="http://www.opengis.net/samplingSpatial/2.0" xmlns:sf="http://www.opengis.net/sampling/2.0" xmlns:wml2="http://www.opengis.net/waterml/2.0" xmlns:xlink="http://www.w3.org/1999/xlink" xsi:schemaLocation="http://www.w3.org/2003/05/soap-envelope http://www.w3.org/2003/05/soap-envelope/soap-envelope.xsd http://www.opengis.net/sos/2.0 http://schemas.opengis.net/sos/2.0/sos.xsd http://www.opengis.net/samplingSpatial/2.0 http://schemas.opengis.net/samplingSpatial/2.0/spatialSamplingFeature.xsd http://www.opengis.net/waterml/2.0 http://schemas.opengis.net/waterml/2.0/waterml2.xsd">
+<soap12:Header>
+<wsa:To>http://www.w3.org/2005/08/addressing/anonymous</wsa:To>
+<wsa:Action>
+http://www.opengis.net/def/serviceOperation/sos/foiRetrieval/2.0/GetFeatureOfInterestResponse
+</wsa:Action>
+<wsa:RelatesTo>0</wsa:RelatesTo>
+</soap12:Header>
+<soap12:Body>
+<sos:GetFeatureOfInterestResponse>
+<sos:featureMember>
+<wml2:MonitoringPoint gml:id="Ki.FM.1">
+<gml:identifier codeSpace="http://www.opengis.net/def/nil/OGC/0/unknown">
+http://sos.example.com/stations/1
+</gml:identifier>
+<gml:name>Feature 1</gml:name>
+<sf:type xlink:href="http://www.opengis.net/def/samplingFeatureType/OGC-OM/2.0/SF_SamplingPoint"/>
+<sf:sampledFeature xsi:nil="true"/>
+<sams:shape>
+<gml:Point gml:id="Ki.P.1">
+<gml:pos srsName="http://www.opengis.net/def/crs/EPSG/0/4326">-36.0 139.0</gml:pos>
+</gml:Point>
+</sams:shape>
+</wml2:MonitoringPoint>
+</sos:featureMember>
+<sos:featureMember>
+<wml2:MonitoringPoint gml:id="Ki.FM.2">
+<gml:identifier codeSpace="http://www.opengis.net/def/nil/OGC/0/unknown">
+http://sos.example.com/stations/2
+</gml:identifier>
+<gml:name>Feature 2</gml:name>
+<sf:type xlink:href="http://www.opengis.net/def/samplingFeatureType/OGC-OM/2.0/SF_SamplingPoint"/>
+<sf:sampledFeature xsi:nil="true"/>
+<sams:shape>
+<gml:Point gml:id="Ki.P.2">
+<gml:pos srsName="http://www.opengis.net/def/crs/EPSG/0/4326">-32.0 126.0</gml:pos>
+</gml:Point>
+</sams:shape>
+</wml2:MonitoringPoint>
+</sos:featureMember>
+<sos:featureMember>
+<wml2:MonitoringPoint gml:id="Ki.FM.3">
+<gml:identifier codeSpace="http://www.opengis.net/def/nil/OGC/0/unknown">
+http://sos.example.com/stations/3
+</gml:identifier>
+<gml:name>Feature 3</gml:name>
+<sf:type xlink:href="http://www.opengis.net/def/samplingFeatureType/OGC-OM/2.0/SF_SamplingPoint"/>
+<sf:sampledFeature xsi:nil="true"/>
+<sams:shape>
+<gml:Point gml:id="Ki.P.3">
+<gml:pos srsName="http://www.opengis.net/def/crs/EPSG/0/4326">-34.0 132.0</gml:pos>
+</gml:Point>
+</sams:shape>
+</wml2:MonitoringPoint>
+</sos:featureMember>
+</sos:GetFeatureOfInterestResponse>
+</soap12:Body>
+</soap12:Envelope>

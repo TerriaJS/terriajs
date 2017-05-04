@@ -7,6 +7,7 @@
   composes: list-reset from '../../Sass/common/_base.scss';
   composes: clearfix from '../../Sass/common/_base.scss';
   padding-right: 100px;
+  background: $modal-tab-bg;
 }
 
 .tab-list__item {
@@ -28,7 +29,6 @@
   position: relative;
   background: $modal-bg;
   color: $modal-text;
-  padding: $padding;
   border-top: 1px solid $grey-lighter;
   height: 100%;
   overflow: hidden;
@@ -39,6 +39,11 @@
     width: 40%;
     float: left;
     height: 100%;
+    padding: 0 $padding-small;
+    background: $modal-secondary-bg;
+    form{
+      margin: $padding 0;
+    }
   }
 }
 
@@ -67,9 +72,9 @@
   composes: btn from '../../Sass/common/_buttons.scss';
 
   font-family: $font-pop;
-  background: $modal-bg;
+  background: $modal-tab-bg;
   color: $modal-text;
-  font-size: 0.9rem;
+  font-size: $font-size-mid-small;
   padding: $padding $padding*2;
 
   &.btn--tab {
@@ -77,12 +82,20 @@
   }
 
   &:hover, &:focus {
-    background: #fff;
-    color: $modal-highlight;
+    background: $modal-selected-tab-bg;
+    @if variable-exists(modal-selected) {
+      color: $modal-selected;
+    } @else {
+      color: $modal-highlight;
+    }
   }
 }
 
 .btn--selected {
-  background: #fff;
-  color: $modal-highlight;
+  background: $modal-selected-tab-bg;
+  @if variable-exists(modal-selected) {
+    color: $modal-selected;
+  } @else {
+    color: $modal-highlight;
+  }
 }

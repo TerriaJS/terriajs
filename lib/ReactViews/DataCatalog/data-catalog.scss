@@ -5,9 +5,7 @@
   composes: list-reset from '../../Sass/common/_base.scss';
   composes: scrollbars from '../../Sass/common/_base.scss';
 
-  font-size: 0.9rem;
-
-  background: $modal-secondary-bg;
+  font-size: $font-size-mid-small;
   overflow-y: auto;
   overflow-x: hidden;
   box-sizing: border-box;
@@ -19,14 +17,13 @@
   top: $modal-header-height;
 
   @media screen and (min-width: $sm) {
-    padding-right: $padding;
-    margin-top: $padding;
-    height: calc(100% - #{$input-height});
+    padding-right: $padding-small;
+    height: calc(100% - #{$input-height + $padding*3});
     position: static;
   }
 }
 
 .label {
   composes: label from '../../Sass/common/_labels.scss';
-  font-size: 0.8rem;
+  font-size: $font-size-small;
 }

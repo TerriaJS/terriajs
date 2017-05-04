@@ -2,8 +2,8 @@
 @import '../../Sass/common/mixins';
 
 .panel{
-  background:rgba($dark, 0.95);
-  color: #fff;
+  background: $feature-info-bg;
+  color: $feature-info-color;
   border-radius: $radius-small;
   display: none;
   position: fixed;
@@ -12,11 +12,15 @@
   max-width: 95%;
   min-width: 150px;
   max-height: 80vh;
-  z-index: 10;
+  z-index: 99;
   font-family: $font-base;
 
   svg{
-    fill: #fff;
+    fill: $feature-info-color;
+  }
+
+  a{
+    @include link($feature-info-bg);
   }
   @media screen and (min-width : $md){
     //temp
@@ -46,17 +50,23 @@
 }
 
 .header{
-  background: $dark;
+  background: $feature-info-header-bg;
   padding-right: $input-height;
   line-height: $modal-header-height;
 }
 
 .btn {
   composes: btn from '../../Sass/common/_buttons.scss';
-
   padding: 4px 9px;
   margin-right: 4px;
-  color: $text-light;
+  color: $feature-info-btn-color;
+}
+
+.btnPanelHeading{
+  composes: btn from '../../Sass/common/_buttons.scss';
+  padding: 4px 9px;
+  color: $feature-info-btn-color;
+  width: 100%;
 }
 
 .btn--download {
@@ -77,7 +87,7 @@
   svg{
     height: 23px;
     width: 23px;
-    fill: #ffffff;
+    fill: $feature-info-btn-color;
     position: relative;
     left: 10px;
   }
@@ -98,7 +108,7 @@
   overflow-y: auto;
   overflow-x: auto;
   max-height: calc(80vh - #{$padding*2 + $btn-default-line-height});
-  font-size: 0.9rem;
+  font-size: $font-size-feature-info;
 
   @media print{
     max-height: none;

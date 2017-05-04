@@ -1,0 +1,119 @@
+{
+    "header": {
+        "id": "foo",
+        "test": true
+    },
+    "dataSets": [{
+        "action": "Information",
+        "series": {
+            "0:0:0:0": {
+                "attributes": [0],
+                "observations": {
+                    "0": [1140.0, null]
+                }
+            },
+            "0:0:1:0": {
+                "attributes": [0],
+                "observations": {
+                    "0": [535.0, null]
+                }
+            },
+            "0:0:2:0": {
+                "attributes": [0],
+                "observations": {
+                    "0": [79.0, null]
+                }
+            },
+            "0:0:3:0": {
+                "attributes": [0],
+                "observations": {
+                    "0": [12.0, null]
+                }
+            },
+            "0:0:4:0": {
+                "attributes": [0],
+                "observations": {
+                    "0": [38.0, null]
+                }
+            }
+        }
+    }],
+    "structure": {
+        "name": "foo",
+        "description": "Foo Example",
+        "dimensions": {
+            "series": [{
+                "keyPosition": 0,
+                "id": "MEASURE",
+                "name": "Data Item",
+                "values": [{
+                    "id": "BD_2",
+                    "name": "Births"
+                }]
+            }, {
+                "keyPosition": 1,
+                "id": "REGIONTYPE",
+                "name": "Region Type",
+                "values": [{
+                    "id": "LGA_2013",
+                    "name": "Local Government Areas (2013)"
+                }]
+            }, {
+                "keyPosition": 2,
+                "id": "REGION",
+                "name": "Region",
+                "values": [{
+                    "id": "17100",
+                    "name": "Strathfield (A)"
+                }, {
+                    "id": "56520",
+                    "name": "Narrogin (T)"
+                }, {
+                    "id": "54970",
+                    "name": "Laverton (S)"
+                }, {
+                    "id": "10300",
+                    "name": "Balranald (A)"
+                }, {
+                    "id": "29399",
+                    "name": "Unincorporated Vic"
+                }]
+            }, {
+                "keyPosition": 3,
+                "id": "FREQUENCY",
+                "name": "Frequency",
+                "values": [{
+                    "id": "A",
+                    "name": "Annual"
+                }],
+                "role": "FREQ"
+            }],
+            "observation": [{
+                "id": "TIME_PERIOD",
+                "name": "Time",
+                "values": [{
+                    "id": "2013",
+                    "name": "2013"
+                }],
+                "role": "TIME_PERIOD"
+            }]
+        },
+        "attributes": {
+            "dataSet": [],
+            "series": [{
+                "id": "TIME_FORMAT",
+                "name": "Time Format",
+                "values": [{
+                    "id": "P1Y",
+                    "name": "Annual"
+                }]
+            }],
+            "observation": [{
+                "id": "OBS_STATUS",
+                "name": "Observation Status",
+                "values": []
+            }]
+        },
+        "annotations": []
+    }
+}

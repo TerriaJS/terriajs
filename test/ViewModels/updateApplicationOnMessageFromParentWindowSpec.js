@@ -32,7 +32,7 @@ describe('updateApplicationOnMessageFromParentWindow', function() {
         expect(fakeWindow.parent.postMessage.calls.first().args).toEqual(['ready', '*']);
     });
 
-    it('updates the model when it receives a message', function() {
+    it('updates the model when it receives a message from the parent', function() {
         var messageEventHandler;
         fakeWindow.addEventListener.and.callFake(function(eventName, callback) {
             messageEventHandler = callback;
@@ -60,7 +60,35 @@ describe('updateApplicationOnMessageFromParentWindow', function() {
         expect(fooGroup.type).toBe('group');
     });
 
-    it('ignores messages that are not from its parent window', function() {
+    it('updates the model when it receives a message from the opener', function() {
+        var messageEventHandler;
+        fakeWindow.addEventListener.and.callFake(function(eventName, callback) {
+            messageEventHandler = callback;
+        });
+        updateApplicationOnMessageFromParentWindow(terria, fakeWindow);
+
+        messageEventHandler({
+            opener: fakeWindow.parent,
+            data: {
+                initSources: [
+                    {
+                        catalog: [
+                            {
+                                name: "Foo",
+                                type: "group"
+                            }
+                        ]
+                    }
+                ]
+            }
+        });
+
+        var fooGroup = terria.catalog.group.findFirstItemByName('Foo');
+        expect(fooGroup).toBeDefined();
+        expect(fooGroup.type).toBe('group');
+    });
+
+    it('ignores messages that are not from its parent or opener window', function() {
         var messageEventHandler;
         fakeWindow.addEventListener.and.callFake(function(eventName, callback) {
             messageEventHandler = callback;

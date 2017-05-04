@@ -4,10 +4,20 @@
 import ReactTestUtils from 'react-addons-test-utils';
 import {findAll} from 'react-shallow-testutils';
 
-export function getShallowRenderedOutput(jsx) {
+export function getRenderedRenderer(jsx) {
     const renderer = ReactTestUtils.createRenderer();
     renderer.render(jsx);
+    return renderer;
+}
+
+export function getShallowRenderedOutput(jsx) {
+    const renderer = getRenderedRenderer(jsx);
     return renderer.getRenderOutput();
+}
+
+export function getMountedInstance(jsx) {
+    const renderer = getRenderedRenderer(jsx);
+    return renderer.getMountedInstance(renderer);
 }
 
 export function findAllEqualTo(reactElement, text) {
@@ -20,7 +30,8 @@ export function findAllWithPropsChildEqualTo(reactElement, text) {
         if (!(element && element.props && element.props.children)) {
             return;
         }
-        return element.props.children.indexOf(text) >= 0 || (element.props.children.some && element.props.children.some(x => x && x.length && x.indexOf(text) >= 0));
+        return (element.props.children.indexOf && element.props.children.indexOf(text) >= 0) ||
+               (element.props.children.some && element.props.children.some(x => x && x.length && x.indexOf(text) >= 0));
     });
 }
 

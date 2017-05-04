@@ -3,33 +3,43 @@
 
 $distance-bg: rgba($dark, 0.9);
 
-.baseLegend, .distanceLegend {
+.baseLegend {
   box-sizing: border-box;
   font-family: $font-base;
   float: left;
   background-color: #fff;
   color: $text-dark;
-  border-radius: $radius-medium;
-  padding: $padding-small $padding;
-  font-size: 0.7rem;
-  height: 29px;
+  padding: $padding-small $padding-small;
+  font-size: $font-size-mid-mini;
   text-align: center;
-  line-height: 16px;
+  line-height: 1;
   border: 0;
   outline: 0;
+  font-family: $font-mono;
+  max-height: 21px;
+  margin-top: 5px;
   &:hover{
     background: $faint-bg;
   }
 
   .bar{
-    background: $text-dark;
+    background: #fff;
+    margin: 0 auto;
+    display: block;
+    @include transition(all 0.5s ease-in-out);
   }
 }
 
-.locationBar{
+.locationBar, .distanceLegend{
   composes: baseLegend;
-  margin-right: $padding;
-
+  // Adjust colors to match btn--map.
+  background-color: $charcoal-grey;
+  color: $text-light;
+  &:hover{
+    background: $color-primary;
+  }
+  //
+  margin-right: $padding-small;
   span{
     padding: 0 $padding-small;
   }
@@ -37,5 +47,26 @@ $distance-bg: rgba($dark, 0.9);
   li, div{
     display: inline-block;
     padding: 0 $padding-small;
+    text-align: left;
   }
+
+  .section-long{
+    width: 130px;
+  }
+
+  .section{
+    width: 112px;
+  }
+
+  .section-short{
+    width: 70px;
+  }
+}
+
+.distanceLegend{
+  &:hover{
+    background: $charcoal-grey;
+  }
+  text-align: center;
+  width: 110px;
 }

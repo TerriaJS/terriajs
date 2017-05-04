@@ -1,6 +1,8 @@
 'use strict';
 
 import React from 'react';
+import createReactClass from 'create-react-class';
+import PropTypes from 'prop-types';
 import {buildShareLink, buildShortShareLink, canShorten} from './BuildShareLink';
 import ObserverModelMixin from '../../../ObserveModelMixin';
 import defined from 'terriajs-cesium/Source/Core/defined';
@@ -11,15 +13,16 @@ import Styles from './share-panel.scss';
 import DropdownStyles from '../panel.scss';
 import Icon from "../../../Icon.jsx";
 
-const SharePanel = React.createClass({
+const SharePanel = createReactClass({
+    displayName: 'SharePanel',
     mixins: [ObserverModelMixin],
 
     propTypes: {
-        terria: React.PropTypes.object,
-        userPropWhiteList: React.PropTypes.array,
-        isOpen: React.PropTypes.bool,
-        shortenUrls: React.PropTypes.bool,
-        viewState: React.PropTypes.object.isRequired
+        terria: PropTypes.object,
+        userPropWhiteList: PropTypes.array,
+        isOpen: PropTypes.bool,
+        shortenUrls: PropTypes.bool,
+        viewState: PropTypes.object.isRequired
     },
 
     getDefaultProps() {
@@ -124,7 +127,7 @@ const SharePanel = React.createClass({
             <MenuPanel theme={dropdownTheme}
                        btnText="Share"
                        viewState={this.props.viewState}
-                       btnTitle="change settings"
+                       btnTitle="Share your map with others"
                        onOpenChanged={this.onOpenChanged}
                        smallScreen={this.props.viewState.useSmallScreenInterface}>
                 <If condition={this.state.isOpen}>
@@ -157,7 +160,7 @@ const SharePanel = React.createClass({
                 </If>
             </MenuPanel>
         );
-    }
+    },
 });
 
 export default SharePanel;

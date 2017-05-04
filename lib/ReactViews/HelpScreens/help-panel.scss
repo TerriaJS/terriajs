@@ -1,0 +1,80 @@
+@import '~terriajs-variables';
+@import '../../Sass/common/_mixins';
+
+.share-panel {
+  font-size: $font-size-mid-small;
+}
+
+.dropdown-inner {
+  width: $share-panel-width;
+  @include transform-origin(50%, top);
+}
+
+.heading-label {
+
+}
+
+@include empty-module('link-wrapper');
+
+.link {
+  @include link($overlay);
+}
+
+.viewer-selector,
+.base-map-selector {
+  composes: clearfix from '../../Sass/common/_base.scss';
+  composes: list-reset from '../../Sass/common/_base.scss';
+
+  margin: 0 -$padding-mini;
+}
+
+.list-item {
+  padding: $padding-mini;
+}
+
+.btn--viewer {
+  composes: btn from '../../Sass/common/_buttons.scss';
+  composes: btn-grey from '../../Sass/common/_buttons.scss';
+
+  font-size: 0.8rem !important;
+  text-align: left !important;
+  line-height: 2 !important;
+
+  padding-top: 2px !important;
+  padding-bottom: 2px !important;
+  padding-left: 4px !important;
+  padding-right: 4px !important;
+
+  color: $text-light;
+
+  &.is-active{
+    border: 1px solid rgba(255, 255, 255, 0.5);
+  }
+}
+
+.paragraph {
+  margin: $padding 0;
+  display: block;
+}
+
+.field {
+  composes: field from '../../Sass/common/_form.scss';
+
+  color: #ddd;
+  background: $overlay;
+}
+
+.shorten-url {
+  button {
+    text-align: left;
+    border: 0px;
+    background: transparent;
+  }
+  svg{
+    display: inline;
+    padding-right: 5px;
+    fill: #fff;
+    height: 14px;
+    width: 14px;
+  }
+}

@@ -220,6 +220,16 @@ describe('CsvCatalogItem with lat and lon', function() {
         }).otherwise(fail).then(done);
     });
 
+    it('does not set an active variable to dataVariable if null', function(done) {
+        csvItem.url = 'test/csv/lat_lon_enum_val.csv';
+        csvItem._tableStyle = new TableStyle({
+            dataVariable: null
+        });
+        csvItem.load().then(function() {
+            expect(csvItem.dataSource.tableStructure.activeItems.length).toEqual(0);
+        }).otherwise(fail).then(done);
+    });
+
     it('colors enum fields the same (only) when the value is the same', function(done) {
         csvItem.url = 'test/csv/lat_lon_enum.csv';
         csvItem.load().then(function() {
@@ -301,6 +311,38 @@ describe('CsvCatalogItem with lat and lon', function() {
             var durationInSeconds = JulianDate.secondsDifference(earlyFeature.availability.stop, earlyFeature.availability.start);
             expect(durationInSeconds).toBeGreaterThan(23 * 3600);  // more than 23 hours
             expect(durationInSeconds).toBeLessThan(24 * 3600);  // but less than 24 hours
+        }).otherwise(fail).then(done);
+    });
+
+    it('supports moving-point csvs with id column by default', function(done) {
+        csvItem.url = 'test/csv/lat_lon_enum_date_id.csv';
+        csvItem.load().then(function() {
+            var features = csvItem.dataSource.entities.values;
+            expect(features.length).toEqual(4); // There are 4 features A, B, C and D; does not equal the 13 rows in the file.
+            var featureA = features.filter(function(feature) { return feature.name === 'feature A'; })[0];
+            // FeatureA has rows for 1,2,4,5,6th of August. But it should still be available on the 3rd.
+            expect(TimeInterval.contains(featureA.availability, JulianDate.fromIso8601('2015-08-02'))).toBe(true);
+            expect(TimeInterval.contains(featureA.availability, JulianDate.fromIso8601('2015-08-03'))).toBe(true);
+            expect(TimeInterval.contains(featureA.availability, JulianDate.fromIso8601('2015-08-04'))).toBe(true);
+            expect(TimeInterval.contains(featureA.availability, JulianDate.fromIso8601('2015-08-08'))).toBe(false);
+        }).otherwise(fail).then(done);
+    });
+
+    it('supports overriding moving-point csvs with id column using null', function(done) {
+        csvItem.url = 'test/csv/lat_lon_enum_date_id.csv';
+        csvItem.idColumns = null;
+        csvItem.load().then(function() {
+            var features = csvItem.dataSource.entities.values;
+            expect(features.length).toEqual(13); // There are 13 rows in the file.
+        }).otherwise(fail).then(done);
+    });
+
+    it('supports overriding moving-point csvs with id column using []', function(done) {
+        csvItem.url = 'test/csv/lat_lon_enum_date_id.csv';
+        csvItem.idColumns = [];
+        csvItem.load().then(function() {
+            var features = csvItem.dataSource.entities.values;
+            expect(features.length).toEqual(13); // There are 13 rows in the file.
         }).otherwise(fail).then(done);
     });
 
@@ -473,6 +515,18 @@ describe('CsvCatalogItem with lat and lon', function() {
             // This next expectation checks that zeros and null values are differently colored, and that
             // null values do not lead to coloring getting out of sync with values.
             expect(featureColor(csvItem, 2)).not.toEqual(nullColor);
+        }).otherwise(fail).then(done);
+    });
+
+    it('when no column selected, colors with non-null color', function(done) {
+        csvItem.url = 'test/csv/lat_lon_enum_val.csv';
+        csvItem._tableStyle = new TableStyle({
+            dataVariable: null,
+            nullColor: '#000000'
+        });
+        var nullColor = new Color(0, 0, 0, 1);
+        csvItem.load().then(function() {
+            expect(featureColor(csvItem, 1)).not.toEqual(nullColor);
         }).otherwise(fail).then(done);
     });
 
@@ -653,9 +707,9 @@ describe('CsvCatalogItem with region mapping', function() {
     var csvItem;
     beforeEach(function() {
         terria = new Terria({
-            baseUrl: './',
-            regionMappingDefinitionsUrl: 'test/csv/regionMapping.json'
+            baseUrl: './'
         });
+        terria.configParameters.regionMappingDefinitionsUrl = 'test/csv/regionMapping.json';
         csvItem = new CsvCatalogItem(terria);
 
         // Instead of directly inspecting the recoloring function (which is a private and inaccessible variable),
@@ -666,6 +720,10 @@ describe('CsvCatalogItem with region mapping', function() {
         // Also, for feature detection, spy on this call; the second argument is the regionImageryProvider.
         // This unfortunately makes the test depend on an implementation detail.
         spyOn(ImageryLayerCatalogItem, 'enableLayer');
+
+        // loadAndStubTextResources(done, [
+        //     terria.configParameters.regionMappingDefinitionsUrl
+        // ]).then(done).otherwise(done.fail);
     });
 
     it('does not think a lat-lon csv has regions', function(done) {
@@ -688,7 +746,7 @@ describe('CsvCatalogItem with region mapping', function() {
             var regionDetails = csvItem.regionMapping.regionDetails;
             expect(regionDetails).toBeDefined();
             var regionDetail = regionDetails[0];
-            expect(regionDetail.column.name).toEqual('lga_code');
+            expect(regionDetail.columnName).toEqual('lga_code');
             expect(regionDetail.regionProvider.regionType).toEqual('LGA');
             expect(csvItem.legendUrl).toBeDefined();
         }).otherwise(fail).then(done);
@@ -877,8 +935,7 @@ describe('CsvCatalogItem with region mapping', function() {
             var regionDetails = csvItem.regionMapping.regionDetails;
             expect(regionDetails).toBeDefined();
             var regionDetail = regionDetails[0];
-            expect(regionDetail.disambigColumn).toBeDefined();
-            expect(regionDetail.disambigColumn.name).toEqual('State');
+            expect(regionDetail.disambigColumnName).toEqual('State');
             // The following test is much more rigorous.
         }).otherwise(fail).then(done);
     });
@@ -1078,7 +1135,7 @@ describe('CsvCatalogItem with region mapping', function() {
                 csvFile,
                 terria.configParameters.regionMappingDefinitionsUrl,
                 'data/regionids/region_map-FID_LGA_2011_AUST_LGA_NAME11.json',
-                'data/regionids/region_map-FID_LGA_2011_AUST_STE_NAME11.json'
+                'data/regionids/region_map-FID_LGA_2011_AUST_STE_NAME11.json',
             ]).then(function(resources) {
                 jasmine.Ajax.stubRequest('http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows?transparent=true&format=image%2Fpng&exceptions=application%2Fvnd.ogc.se_xml&styles=&tiled=true&service=WMS&version=1.1.1&request=GetFeatureInfo&layers=region_map%3AFID_LGA_2011_AUST&srs=EPSG%3A3857&bbox=16143500.373829227%2C-4559315.8631541915%2C16153284.31344973%2C-4549531.923533689&width=256&height=256&query_layers=region_map%3AFID_LGA_2011_AUST&x=217&y=199&info_format=application%2Fjson').andReturn({
                     responseText: JSON.stringify({
@@ -1130,10 +1187,12 @@ describe('CsvCatalogItem with region mapping', function() {
 
         it('works with disambiguated LGA names like Wellington, VIC', function(done) {
             var csvFile = 'test/csv/lga_state_disambig.csv';
-
             loadAndStubTextResources(done, [
                 csvFile,
-                terria.configParameters.regionMappingDefinitionsUrl
+                terria.configParameters.regionMappingDefinitionsUrl,
+                'data/regionids/region_map-FID_LGA_2011_AUST_LGA_NAME11.json',
+                'data/regionids/region_map-FID_LGA_2011_AUST_STE_NAME11.json',
+                'data/regionids/region_map-FID_STE_2011_AUST_STE_NAME11.json'
             ]).then(function(resources) {
                 jasmine.Ajax.stubRequest('http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows?transparent=true&format=image%2Fpng&exceptions=application%2Fvnd.ogc.se_xml&styles=&tiled=true&service=WMS&version=1.1.1&request=GetFeatureInfo&layers=region_map%3AFID_LGA_2011_AUST&srs=EPSG%3A3857&bbox=16437018.562444303%2C-3913575.8482010253%2C16593561.59637234%2C-3757032.814272985&width=256&height=256&query_layers=region_map%3AFID_LGA_2011_AUST&x=249&y=135&info_format=application%2Fjson').andReturn({
                     responseText: JSON.stringify({
@@ -1265,3 +1324,31 @@ describe('CsvCatalogItem with region mapping', function() {
 
 });
 
+describe('CsvCatalogItem with no geo', function() {
+
+    var terria;
+    var csvItem;
+    beforeEach(function() {
+        terria = new Terria({
+            baseUrl: './'
+        });
+        csvItem = new CsvCatalogItem(terria);
+    });
+
+    it('is not mappable', function(done) {
+        csvItem.url = 'test/csv_nongeo/xy.csv';
+        csvItem.load().then(function() {
+            expect(csvItem.isMappable).toEqual(false);
+            expect(csvItem.regionMapping).toBeUndefined();
+        }).otherwise(fail).then(done);
+    });
+
+    it('interprets height column as non-geo', function(done) {
+        csvItem.url = 'test/csv_nongeo/x_height.csv';
+        csvItem.load().then(function() {
+            expect(csvItem.isMappable).toBe(false);
+            expect(csvItem.tableStructure.columnsByType[VarType.ALT].length).toEqual(0);
+        }).otherwise(fail).then(done);
+    });
+
+});

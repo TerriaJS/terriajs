@@ -17,7 +17,8 @@
   box-sizing: border-box;
   position: relative;
   background-color: $chart-darker;
-  font-size: 13px;
+  font-size: $font-size-mid-small;
+  fill: #fff;
 }
 
 .chart {
@@ -40,9 +41,24 @@
       fill: $chart-area-color;
     }
 
+    .units-label-shadow {
+      stroke: $chart-darker;
+      stroke-width: 2.5px;
+      opacity: 0.9;
+    }
+
     .line-chart text {
+      fill: $chart-text-color;
+      font-family: monospace;
       font-size: 110%;
     }
+
+    .line-chart .line {
+      fill: none;
+      stroke: $chart-line-color;
+      stroke-width: 1;
+    }
+
   }
 }
 

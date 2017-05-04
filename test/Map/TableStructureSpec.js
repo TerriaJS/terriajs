@@ -3,12 +3,14 @@
 /*global require,describe,it,expect*/
 var JulianDate = require('terriajs-cesium/Source/Core/JulianDate');
 var TableStructure = require('../../lib/Map/TableStructure');
-// var TableColumn = require('../../lib/Map/TableColumn');
+var TimeInterval = require('terriajs-cesium/Source/Core/TimeInterval');
 var VarType = require('../../lib/Map/VarType');
 
 var separator = ',';
+var decimalPoint = '.';
 if (typeof Intl === 'object' && typeof Intl.NumberFormat === 'function') {
     separator = (Intl.NumberFormat().format(1000)[1]);
+    decimalPoint = Intl.NumberFormat().format(0.5)[1];
 }
 
 describe('TableStructure', function() {
@@ -118,6 +120,20 @@ describe('TableStructure', function() {
         expect(rowObjects[0]).toEqual({x: '1', y: '5.12345'});
         expect(rowObjects[1]).toEqual({x: '3', y: '8'});
         expect(rowObjects[2]).toEqual({x: '4', y: '-3'});
+    });
+
+    it('can convert to string and number row objects', function() {
+        var data = [['x', 'y'], [1.678, -9.883], [54321, 12345], [4, -3]];
+        var options = {columnOptions: {
+            x: {format: {maximumFractionDigits: 0}},
+            y: {name: 'newy', format: {useGrouping: true, maximumFractionDigits: 1}}
+        }};
+        var tableStructure = new TableStructure('foo', options);
+        tableStructure = tableStructure.loadFromJson(data);
+        var rowObjects = tableStructure.toStringAndNumberRowObjects();
+        expect(rowObjects.length).toEqual(3);
+        expect(rowObjects[0]).toEqual({string: {x: '2', newy: '-9' + decimalPoint + '9'}, number: {x: 1.678, newy: -9.883}});
+        expect(rowObjects[1]).toEqual({string: {x: '54321', newy: '12' + separator + '345'}, number: {x: 54321, newy: 12345}});
     });
 
     it('can convert to point arrays', function() {
@@ -252,6 +268,15 @@ describe('TableStructure', function() {
         expect(map['B']).toEqual([1, 3]);
     });
 
+    it('can handle idColumnNames = []', function() {
+        var data = [['year', 'id', 'lat', 'lon'], [1970, 'A', 16.8, 5.2], [1971, 'B', 16.2, 5.2], [1971, 'A', 67.8, 1.2], [1972, 'B', 68.2, 2.2]];
+        var options = {idColumnNames: []};
+        var tableStructure = new TableStructure('foo', options);
+        tableStructure = tableStructure.loadFromJson(data);
+        var map = tableStructure.getIdMapping();
+        expect(map).toEqual({});
+    });
+
     it('can append a table', function() {
         var data = [['year', 'id', 'lat', 'lon'], [1970, 'A', 16.8, 5.2], [1971, 'B', 16.2, 5.2]];
         var dat2 = [['year', 'id', 'lat', 'lon'], [1980, 'C', 16.8, 5.2], [1981, 'D', 16.2, 5.2]];
@@ -296,7 +321,7 @@ describe('TableStructure', function() {
         var table2 = new TableStructure('bar');  // Only uses idColumnNames on table1.
         table1 = table1.loadFromJson(data);
         table2 = table2.loadFromJson(dat2);
-        table1.activeTimeColumn = table1.columns[0];
+        table1.setActiveTimeColumn(0);
         table1.columns[1].isActive = true;
         table1.columns[1].color = 'blue';
         table1.merge(table2);
@@ -353,11 +378,73 @@ describe('TableStructure', function() {
         expect(tableStructure.getColumnWithName('z').values.slice()).toEqual(['b', 'a', 'c']);
     });
 
-    it('can sort columns by date', function() {
+    it('can sort columns by date, even with null dates', function() {
         // Note the last date occurs before the first, but a string compare would disagree.
-        var data = [['date', 'v'], ['2010-06-20T10:00:00.0+1000', 'a'], ['2010-06-19T10:00:00.0+1000', 'b'], ['2010-06-20T10:00:00.0+1100', 'c']];
+        var data = [['date', 'v'], ['2010-06-20T10:00:00.0+1000', 'a'], ['2010-06-19T10:00:00.0+1000', 'b'], [null, 'n'], ['2010-06-20T10:00:00.0+1100', 'c']];
         var tableStructure = TableStructure.fromJson(data);
         tableStructure.sortBy(tableStructure.columns[0]);
-        expect(tableStructure.columns[1].values.slice()).toEqual(['b', 'c', 'a']);
+        expect(tableStructure.columns[1].values.slice()).toEqual(['b', 'c', 'a', 'n']);
     });
+
+    it('can calculate finish dates', function() {
+        var data = [['date'], ['2016-01-03T12:15:00Z'], ['2016-01-03T12:15:30Z']];
+        var tableStructure = TableStructure.fromJson(data);
+        tableStructure.setActiveTimeColumn();
+        expect(tableStructure.finishJulianDates).toEqual([
+            JulianDate.fromIso8601('2016-01-03T12:15:29Z'),
+            JulianDate.fromIso8601('2016-01-03T12:16:00Z') // Final one should have the average spacing, 30 sec.
+        ]);
+    });
+
+    it('can calculate sub-second finish dates', function() {
+        var data = [['date'], ['2016-01-03T12:15:00Z'], ['2016-01-03T12:15:00.4Z'], ['2016-01-03T12:15:01Z']];
+        var tableStructure = TableStructure.fromJson(data);
+        tableStructure.setActiveTimeColumn();
+        expect(tableStructure.finishJulianDates).toEqual([
+            JulianDate.fromIso8601('2016-01-03T12:15:00.38Z'), // Shaves off 5% of 0.4, ie. 0.02.
+            JulianDate.fromIso8601('2016-01-03T12:15:00.97Z'), // Shaves off 5% of 0.6, ie. 0.03.
+            JulianDate.fromIso8601('2016-01-03T12:15:01.5Z') // Average spacing is 0.5 second.
+        ]);
+    });
+
+    it('supports displayDuration', function() {
+        var data = [['date'], ['2016-01-03'], ['2016-01-04'], ['2016-01-05']];
+        var sevenDaysInMinutes = 60 * 24 * 7;
+        var tableStructure = new TableStructure('test', {displayDuration: sevenDaysInMinutes});
+        TableStructure.fromJson(data, tableStructure);
+        tableStructure.setActiveTimeColumn();
+        var interval = tableStructure.timeIntervals[0];
+        expect(TimeInterval.contains(interval, JulianDate.fromIso8601('2016-01-09'))).toBe(true);
+        expect(TimeInterval.contains(interval, JulianDate.fromIso8601('2016-01-11'))).toBe(false);
+        var durationInSeconds = JulianDate.secondsDifference(interval.stop, interval.start);
+        expect(durationInSeconds).toEqual(sevenDaysInMinutes * 60);
+    });
+
+    it('uses start_date and end_date', function() {
+        // Note these end dates overlap (12:15:00-12:16:10, 12:15:30-12:16:40).
+        var data = [['start_date', 'end_date'], ['2016-01-03T12:15:00Z', '2016-01-03T12:16:10Z'], ['2016-01-03T12:15:30Z', '2016-01-03T12:16:40Z']];
+        var tableStructure = TableStructure.fromJson(data);
+        tableStructure.setActiveTimeColumn();
+        expect(tableStructure.finishJulianDates).toEqual([
+            JulianDate.fromIso8601('2016-01-03T12:16:10Z'),
+            JulianDate.fromIso8601('2016-01-03T12:16:40Z')
+        ]);
+    });
+
+    it('calculates id-specific date periods', function() {
+        // A and B both have two two-day observations, but they are interspersed.
+        // Without an id column, they would have one-day observations.
+        var data = [['date', 'id'], ['2016-01-01T00:00:00Z', 'A'], ['2016-01-02T00:00:00Z', 'B'], ['2016-01-03T00:00:00Z', 'A'], ['2016-01-04T00:00:00Z', 'B']];
+        var tableStructure = TableStructure.fromJson(data);
+        tableStructure.idColumnNames = ['id'];
+        tableStructure.shaveSeconds = 0;
+        tableStructure.setActiveTimeColumn();
+        expect(tableStructure.finishJulianDates).toEqual([
+            JulianDate.fromIso8601('2016-01-03T00:00:00Z'),
+            JulianDate.fromIso8601('2016-01-04T00:00:00Z'),
+            JulianDate.fromIso8601('2016-01-05T00:00:00Z'),
+            JulianDate.fromIso8601('2016-01-06T00:00:00Z')
+        ]);
+    });
+
 });

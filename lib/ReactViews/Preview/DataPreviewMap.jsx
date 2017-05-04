@@ -1,12 +1,15 @@
 'use strict';
 
 const CesiumMath = require('terriajs-cesium/Source/Core/Math');
+const ConsoleAnalytics = require('../../Core/ConsoleAnalytics');
 const defaultValue = require('terriajs-cesium/Source/Core/defaultValue');
 const defined = require('terriajs-cesium/Source/Core/defined');
 const GeoJsonCatalogItem = require('../../Models/GeoJsonCatalogItem');
 const ObserveModelMixin = require('../ObserveModelMixin');
 const OpenStreetMapCatalogItem = require('../../Models/OpenStreetMapCatalogItem');
 const React = require('react');
+const createReactClass = require('create-react-class');
+const PropTypes = require('prop-types');
 const Terria = require('../../Models/Terria');
 const TerriaViewer = require('../../ViewModels/TerriaViewer.js');
 const ViewerMode = require('../../Models/ViewerMode');
@@ -18,13 +21,14 @@ import Styles from './data-preview-map.scss';
 /**
  * Leaflet-based preview map that sits within the preview.
  */
-const DataPreviewMap = React.createClass({
+const DataPreviewMap = createReactClass({
+    displayName: 'DataPreviewMap',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        terria: React.PropTypes.object.isRequired,
-        previewedCatalogItem: React.PropTypes.object,
-        showMap: React.PropTypes.bool
+        terria: PropTypes.object.isRequired,
+        previewedCatalogItem: PropTypes.object,
+        showMap: PropTypes.bool
     },
 
     getInitialState() {
@@ -40,7 +44,8 @@ const DataPreviewMap = React.createClass({
             appName: terria.appName + ' preview',
             supportEmail: terria.supportEmail,
             baseUrl: terria.baseUrl,
-            cesiumBaseUrl: terria.cesiumBaseUrl
+            cesiumBaseUrl: terria.cesiumBaseUrl,
+            analytics: new ConsoleAnalytics()
         });
 
         this.terriaPreview.viewerMode = ViewerMode.Leaflet;
@@ -91,6 +96,10 @@ const DataPreviewMap = React.createClass({
     updatePreview(previewedCatalogItem) {
         if (this.lastPreviewedCatalogItem === previewedCatalogItem) {
             return;
+        }
+
+        if (previewedCatalogItem) {
+            this.props.terria.analytics.logEvent('dataSource', 'preview', previewedCatalogItem.name);
         }
 
         this.lastPreviewedCatalogItem = previewedCatalogItem;
@@ -160,7 +169,7 @@ const DataPreviewMap = React.createClass({
                         });
                     }
 
-                    that.updateBoundingRectangle();
+                    that.updateBoundingRectangle(previewed);
                 });
             }).otherwise((err) => {
                 console.error(err);
@@ -188,16 +197,15 @@ const DataPreviewMap = React.createClass({
             this.terriaPreview.currentViewer.zoomTo(this.terriaPreview.homeView);
         }
 
-        this.updateBoundingRectangle();
+        this.updateBoundingRectangle(this.props.previewedCatalogItem);
     },
 
-    updateBoundingRectangle() {
+    updateBoundingRectangle(catalogItem) {
         if (defined(this.rectangleCatalogItem)) {
             this.rectangleCatalogItem.isEnabled = false;
             this.rectangleCatalogItem = undefined;
         }
 
-        let catalogItem = this.props.previewedCatalogItem;
         catalogItem = defaultValue(catalogItem.nowViewingCatalogItem, catalogItem);
 
         if (!defined(catalogItem) || !defined(catalogItem.rectangle)) {
@@ -317,6 +325,6 @@ const DataPreviewMap = React.createClass({
                 <label className={Styles.badge}>{this.state.previewBadgeText}</label>
             </div>
         );
-    }
+    },
 });
 module.exports = DataPreviewMap;

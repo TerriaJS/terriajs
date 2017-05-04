@@ -58,14 +58,14 @@
     display: block;
   }
   position: absolute;
-  bottom: 35px;
-  right: $padding*2;
+  bottom: 2px;
+  right: 3px;
   z-index: 1;
 }
 
 .feedback-button-wrapper {
   position: absolute;
-  bottom: 75px;
+  bottom: 100px;
   right: $padding*2;
   z-index: 0;
 }

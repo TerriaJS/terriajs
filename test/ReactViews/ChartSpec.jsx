@@ -2,7 +2,7 @@
 
 /*global expect,fail*/
 import React from 'react';
-import ReactTestUtils from 'react-addons-test-utils';
+import {getMountedInstance} from './MoreShallowTools';
 
 import Chart  from '../../lib/ReactViews/Custom/Chart/Chart';
 import ChartData  from '../../lib/Charts/ChartData';
@@ -28,9 +28,7 @@ describe('Chart', function() {
         //     transitionDuration: 300
         // });
         const chart = <Chart url='test/csv_nongeo/time_series.csv'/>;
-        const renderer = ReactTestUtils.createRenderer();
-        renderer.render(chart);
-        const instance = renderer.getMountedInstance(renderer);
+        const instance = getMountedInstance(chart);
         instance.getChartDataPromise(undefined, instance.props.url).then(function(data) {
             expect(data.length).toEqual(1);
             expect(data[0].points.length).toEqual(8);
@@ -41,9 +39,7 @@ describe('Chart', function() {
         const csvString = 'x,y\r\n1,5\r\n3,8\r\n4,-3\r\n';
         const tableStructure = TableStructure.fromCsv(csvString);
         const chart = <Chart tableStructure={tableStructure} />;
-        const renderer = ReactTestUtils.createRenderer();
-        renderer.render(chart);
-        const instance = renderer.getMountedInstance(renderer);
+        const instance = getMountedInstance(chart);
         instance.getChartDataPromise(instance.getChartParameters().data).then(function(data) {
             expect(data.length).toEqual(1);
             expect(data[0].name).toEqual('y');
@@ -54,9 +50,7 @@ describe('Chart', function() {
     it('can have an array of ChartData passed directly', function(done) {
         const chartData = new ChartData([{x: 2, y: 5}, {x: 6, y: 2}], {name: 'foo'});
         const chart = <Chart data={[chartData]} />;
-        const renderer = ReactTestUtils.createRenderer();
-        renderer.render(chart);
-        const instance = renderer.getMountedInstance(renderer);
+        const instance = getMountedInstance(chart);
         instance.getChartDataPromise(instance.getChartParameters().data).then(function(data) {
             expect(data.length).toEqual(1);
             expect(data[0].name).toEqual('foo');

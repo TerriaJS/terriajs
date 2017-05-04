@@ -3,6 +3,10 @@
 import Mustache from 'mustache';
 import React from 'react';
 
+import createReactClass from 'create-react-class';
+
+import PropTypes from 'prop-types';
+
 import CesiumMath from 'terriajs-cesium/Source/Core/Math';
 import classNames from 'classnames';
 import defined from 'terriajs-cesium/Source/Core/defined';
@@ -16,7 +20,6 @@ import Icon from '../Icon.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
 import propertyGetTimeValues from '../../Core/propertyGetTimeValues';
 import parseCustomMarkdownToReact from '../Custom/parseCustomMarkdownToReact';
-import VarType from '../../Map/VarType';
 
 import Styles from './feature-info-section.scss';
 
@@ -26,18 +29,19 @@ Mustache.escape = function(string) {
 };
 
 // Individual feature info section
-const FeatureInfoSection = React.createClass({
+const FeatureInfoSection = createReactClass({
+    displayName: 'FeatureInfoSection',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        viewState: React.PropTypes.object.isRequired,
-        template: React.PropTypes.oneOfType([React.PropTypes.object, React.PropTypes.string]),
-        feature: React.PropTypes.object,
-        position: React.PropTypes.object,
-        clock: React.PropTypes.object,
-        catalogItem: React.PropTypes.object,  // Note this may not be known (eg. WFS).
-        isOpen: React.PropTypes.bool,
-        onClickHeader: React.PropTypes.func
+        viewState: PropTypes.object.isRequired,
+        template: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
+        feature: PropTypes.object,
+        position: PropTypes.object,
+        clock: PropTypes.object,
+        catalogItem: PropTypes.object,  // Note this may not be known (eg. WFS).
+        isOpen: PropTypes.bool,
+        onClickHeader: PropTypes.func
     },
 
     getInitialState() {
@@ -74,7 +78,9 @@ const FeatureInfoSection = React.createClass({
         if (defined(propertyData)) {
 
             propertyData.terria = {
-                formatNumber: mustacheFormatNumberFunction
+                formatNumber: mustacheFormatNumberFunction,
+                urlEncodeComponent: mustacheURLEncodeTextComponent,
+                urlEncode: mustacheURLEncodeText
             };
             if (this.props.position) {
                 const latLngInRadians = Ellipsoid.WGS84.cartesianToCartographic(this.props.position);
@@ -83,7 +89,7 @@ const FeatureInfoSection = React.createClass({
                     longitude: CesiumMath.toDegrees(latLngInRadians.longitude)
                 };
             }
-            propertyData.terria.timeSeries = getTimeSeriesChartContext(this.props.catalogItem, this.props.feature, propertyData._terria_getChartData);
+            propertyData.terria.timeSeries = getTimeSeriesChartContext(this.props.catalogItem, this.props.feature, propertyData._terria_getChartDetails);
         }
         return propertyData;
     },
@@ -101,6 +107,13 @@ const FeatureInfoSection = React.createClass({
     descriptionFromTemplate() {
         const template = this.props.template;
         const templateData = this.getTemplateData();
+        // If property names were changed, let the template access the original property names too.
+        if (defined(templateData) && defined(templateData._terria_columnAliases)) {
+            for (let i = 0; i < templateData._terria_columnAliases.length; i++) {
+                const alias = templateData._terria_columnAliases[i];
+                templateData[alias.id] = templateData[alias.name];
+            }
+        }
         return typeof template === 'string' ?
             Mustache.render(template, templateData) :
             Mustache.render(template.template, templateData, template.partials);
@@ -177,20 +190,20 @@ const FeatureInfoSection = React.createClass({
                             <When condition={reactInfo.showRawData || !this.hasTemplate()}>
                                 <If condition={reactInfo.hasRawData}>
                                     {reactInfo.rawData}
-                                    <If condition={reactInfo.timeSeriesChart}>
-                                        <div className={Styles.timeSeriesChart}>
-                                            <h4>{reactInfo.timeSeriesChartTitle}</h4>
-                                            {reactInfo.timeSeriesChart}
-                                        </div>
-                                    </If>
                                 </If>
                                 <If condition={!reactInfo.hasRawData}>
                                     <div ref="no-info" key="no-info">No information available.</div>
                                 </If>
-                                <If condition={defined(reactInfo.templateData)}>
+                                <If condition={reactInfo.timeSeriesChart}>
+                                    <div className={Styles.timeSeriesChart}>
+                                        <h4>{reactInfo.timeSeriesChartTitle}</h4>
+                                        {reactInfo.timeSeriesChart}
+                                    </div>
+                                </If>
+                                <If condition={defined(reactInfo.downloadableData)}>
                                     <FeatureInfoDownload key='download'
                                         viewState={this.props.viewState}
-                                        data={reactInfo.templateData}
+                                        data={reactInfo.downloadableData}
                                         name={catalogItemName} />
                                 </If>
                             </When>
@@ -198,24 +211,38 @@ const FeatureInfoSection = React.createClass({
                                 {reactInfo.info}
                             </Otherwise>
                         </Choose>
+                        <For each="ExtraComponent" index="i" of={FeatureInfoSection.extraComponents}>
+                            <ExtraComponent key={i} viewState={this.props.viewState} // eslint-disable-line react/jsx-no-undef
+                                                    template={this.props.template}
+                                                    feature={this.props.feature}
+                                                    position={this.props.position}
+                                                    clock={this.props.clock}
+                                                    catalogItem={this.props.catalogItem}
+                                                    isOpen={this.props.isOpen}
+                                                    onClickHeader={this.props.onClickHeader}/>
+                        </For>
                     </div>
                     </section>
                 </If>
             </li>
         );
-    }
+    },
 });
 
 /**
  * Do we need to dynamically update this feature info over time?
- * There are two situations in which we would:
+ * There are three situations in which we would:
  * 1. When the feature description or properties are time-varying.
  * 2. When a custom component self-updates.
  *    Eg. <chart poll-seconds="60" src="xyz.csv"> must reload data from xyz.csv every 60 seconds.
+ * 3. When a catalog item changes a feature's properties, eg. changing from a daily view to a monthly view.
  *
- * For (1), use a event listener to update the feature's currentProperties/currentDescription directly.
+ * For (1), use an event listener on the (terria) clock to update the feature's currentProperties/currentDescription directly.
  * For (2), use a regular javascript setTimeout to update a counter in feature's currentProperties.
- * For simplicity, we do not currently support both at once.
+ * For (3), this is handled by the catalog item itself changing as well, which should be knockout tracked.
+ * Since the catalogItem is also a prop, this will trigger a rerender.
+ *
+ * For simplicity, we do not currently support (1) and (2) at the same time.
  * @private
  */
 function setSubscriptionsAndTimeouts(featureInfoSection, feature) {
@@ -375,6 +402,32 @@ function mustacheFormatNumberFunction() {
     };
 }
 
+/**
+ * URL Encodes provided text: {{#terria.urlEncodeComponent}}{{value}}{{/terria.urlEncodeComponent}}.
+ * See encodeURIComponent for details.
+ * 
+ * {{#terria.urlEncodeComponent}}W/HO:E#1{{/terria.urlEncodeComponent}} -> W%2FHO%3AE%231
+ * @private
+ */
+function mustacheURLEncodeTextComponent() {
+    return function(text, render) {
+        return encodeURIComponent(render(text));
+    };
+}
+
+/**
+ * URL Encodes provided text: {{#terria.urlEncode}}{{value}}{{/terria.urlEncode}}.
+ * See encodeURI for details.
+ *
+ * {{#terria.urlEncode}}http://example.com/a b{{/terria.urlEncode}} -> http://example.com/a%20b
+ * @private
+ */
+function mustacheURLEncodeText() {
+    return function(text, render) {
+        return encodeURI(render(text));
+    };
+}
+
 const simpleStyleIdentifiers = ['title', 'description',
     'marker-size', 'marker-symbol', 'marker-color', 'stroke',
     'stroke-opacity', 'stroke-width', 'fill', 'fill-opacity'];
@@ -386,25 +439,33 @@ const simpleStyleIdentifiers = ['title', 'description',
  */
 function describeFromProperties(properties, time) {
     let html = '';
-    for (const key in properties) {
-        if (properties.hasOwnProperty(key)) {
-            if (simpleStyleIdentifiers.indexOf(key) !== -1) {
-                continue;
-            }
-            let value = properties[key];
-            if (defined(value)) {
-                if (defined(value.getValue)) {
-                    value = value.getValue(time);
+    if (typeof properties.getValue === 'function') {
+        properties = properties.getValue(time);
+    }
+    if (typeof properties === 'object') {
+        for (const key in properties) {
+            if (properties.hasOwnProperty(key)) {
+                if (simpleStyleIdentifiers.indexOf(key) !== -1) {
+                    continue;
                 }
-                if (Array.isArray(properties)) {
-                    html += '<tr><td>' + describeFromProperties(value, time) + '</td></tr>';
-                } else if (typeof value === 'object') {
-                    html += '<tr><th>' + key + '</th><td>' + describeFromProperties(value, time) + '</td></tr>';
-                } else {
-                    html += '<tr><th>' + key + '</th><td>' + value + '</td></tr>';
+                let value = properties[key];
+                if (defined(value)) {
+                    if (typeof value.getValue === 'function') {
+                        value = value.getValue(time);
+                    }
+                    if (Array.isArray(properties)) {
+                        html += '<tr><td>' + describeFromProperties(value, time) + '</td></tr>';
+                    } else if (typeof value === 'object') {
+                        html += '<tr><th>' + key + '</th><td>' + describeFromProperties(value, time) + '</td></tr>';
+                    } else {
+                        html += '<tr><th>' + key + '</th><td>' + value + '</td></tr>';
+                    }
                 }
             }
         }
+    } else {
+        // properties is only a single value.
+        html += '<tr><th>' + '</th><td>' + properties + '</td></tr>';
     }
     if (html.length > 0) {
         html = '<table class="cesium-infoBox-defaultTable"><tbody>' + html + '</tbody></table>';
@@ -416,29 +477,27 @@ function describeFromProperties(properties, time) {
  * Get parameters that should be exposed to the template, to help show a timeseries chart of the feature data.
  * @private
  */
-function getTimeSeriesChartContext(catalogItem, feature, getChartData) {
-    if (defined(getChartData) && defined(catalogItem) && CustomComponents.isRegistered('chart')) {
-        const table = catalogItem.tableStructure;
-        const timeSeriesData = getChartData();
-        if (timeSeriesData) {
-            // Only show it as a line chart if the data is sampled (so a line chart makes sense), and the active column is a scalar.
-            const yColumn = table.getActiveColumns()[0];
-            if (catalogItem.isSampled && yColumn.type === VarType.SCALAR) {
-                const result = {
-                    xName: table.activeTimeColumn.name,
-                    yName: yColumn.name,
-                    title: table.getActiveColumns()[0].name,
-                    id: feature.id,
-                    data: timeSeriesData.replace(/\\n/g, '\\n'),
-                    units: table.columns.map(column => column.units || '').join(',')
-                };
-                const xAttribute = 'x-column="' + result.xName + '" ';
-                const yAttribute = 'y-column="' + result.yName + '" ';
-                const idAttribute = 'id="' + result.id + '" ';
-                const unitsAttribute = 'column-units = "' + result.units + '" ';
-                result.chart = '<chart ' + xAttribute + yAttribute + unitsAttribute + idAttribute + '>' + result.data + '</chart>';
-                return result;
-            }
+function getTimeSeriesChartContext(catalogItem, feature, getChartDetails) {
+    // Only show it as a line chart if the details are available, the data is sampled (so a line chart makes sense), and charts are available.
+    if (defined(getChartDetails) && defined(catalogItem) && catalogItem.isSampled && CustomComponents.isRegistered('chart')) {
+        const chartDetails = getChartDetails();
+        const distinguishingId = catalogItem.dataViewId;
+        const featureId = defined(distinguishingId) ? (distinguishingId + '--' + feature.id) : feature.id;
+        if (chartDetails) {
+            const result = {
+                xName: chartDetails.xName.replace(/\"/g, ''),
+                yName: chartDetails.yName.replace(/\"/g, ''),
+                title: chartDetails.yName,
+                id: featureId.replace(/\"/g, ''),
+                data: chartDetails.csvData.replace(/\\n/g, '\\n'),
+                units: chartDetails.units.join(',').replace(/\"/g, '')
+            };
+            const xAttribute = 'x-column="' + result.xName + '" ';
+            const yAttribute = 'y-column="' + result.yName + '" ';
+            const idAttribute = 'id="' + result.id + '" ';
+            const unitsAttribute = 'column-units = "' + result.units + '" ';
+            result.chart = '<chart ' + xAttribute + yAttribute + unitsAttribute + idAttribute + '>' + result.data + '</chart>';
+            return result;
         }
     }
 }
@@ -447,16 +506,17 @@ function getTimeSeriesChartContext(catalogItem, feature, getChartData) {
  * Wrangle the provided feature data into more convenient forms.
  * @private
  * @param  {ReactClass} that The FeatureInfoSection.
- * @return {Object} Returns {templateData, info, rawData, showRawData, hasRawData}.
- *                  templateData is the object passed to the templating engine.
+ * @return {Object} Returns {info, rawData, showRawData, hasRawData, ...}.
  *                  info is the main body of the info section, as a react component.
  *                  rawData is the same for the raw data, if it needs to be shown.
  *                  showRawData is whether to show the rawData.
  *                  hasRawData is whether there is any rawData to show.
- *                  timeSeriesData - if the feature has timeseries data that could be shown in chart, this is it.
+ *                  timeSeriesChart - if the feature has timeseries data that could be shown in chart, this is the chart.
+ *                  downloadableData is the same as template data, but numerical.
  */
 function getInfoAsReactComponent(that) {
     const templateData = that.getPropertyValues();
+    const downloadableData = defined(templateData) ? (templateData._terria_numericalProperties || templateData) : undefined;
     const updateCounters = that.props.feature.updateCounters;
     const context = {
         catalogItem: that.props.catalogItem,
@@ -467,13 +527,11 @@ function getInfoAsReactComponent(that) {
     let timeSeriesChartTitle;
 
     if (defined(templateData)) {
-        const timeSeriesChartContext = getTimeSeriesChartContext(that.props.catalogItem, that.props.feature, templateData._terria_getChartData);
+        const timeSeriesChartContext = getTimeSeriesChartContext(that.props.catalogItem, that.props.feature, templateData._terria_getChartDetails);
         if (defined(timeSeriesChartContext)) {
             timeSeriesChart = parseCustomMarkdownToReact(timeSeriesChartContext.chart, context);
             timeSeriesChartTitle = timeSeriesChartContext.title;
         }
-        delete templateData._terria_columnAliases;
-        delete templateData._terria_getChartData;
     }
     const showRawData = !that.hasTemplate() || that.state.showRawData;
     let rawDataHtml;
@@ -503,13 +561,13 @@ function getInfoAsReactComponent(that) {
         }
     }
     return {
-        templateData: templateData,
         info: that.hasTemplate() ? parseCustomMarkdownToReact(that.descriptionFromTemplate(), context) : rawData,
         rawData: rawData,
         showRawData: showRawData,
         hasRawData: !!rawDataHtml,
         timeSeriesChartTitle: timeSeriesChartTitle,
-        timeSeriesChart: timeSeriesChart
+        timeSeriesChart: timeSeriesChart,
+        downloadableData: downloadableData
     };
 }
 
@@ -549,5 +607,10 @@ function setTimeoutForUpdatingCustomComponent(that, reactComponent, updateSecond
     const timeoutIds = that.state.timeoutIds;
     that.setState({timeoutIds: timeoutIds.concat(timeoutId)});
 }
+
+/**
+ * Add your own react components to have them rendered in a FeatureInfoSection. ViewState will be passed as a prop.
+ */
+FeatureInfoSection.extraComponents = [];
 
 module.exports = FeatureInfoSection;

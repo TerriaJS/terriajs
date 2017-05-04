@@ -4,8 +4,11 @@
 // concept-viewer
 
 .root {
+  font-size: $font-size-mid-small;
+}
+
+.section {
   padding: $padding 0 0 0;
-  font-size: 0.9rem;
 }
 
 .inner {
@@ -16,6 +19,7 @@
 .children-list {
   composes: list-reset from '../../../Sass/common/_base.scss';
   composes: clearfix from '../../../Sass/common/_base.scss';
+  font-weight: $font-weight-light;
 }
 
 .header {
@@ -25,7 +29,7 @@
 
   button {
     svg{
-      fill: #fff;
+      fill: $text-light;
     }
   }
 
@@ -78,7 +82,21 @@
 .items {
   composes: list-reset from '../../../Sass/common/_base.scss';
   margin-left: 18px;
-  font-weight: 300;
+  font-weight: $font-weight-light;
 }
 
+.is-loading {
+  color: $text-light-dimmed;
+  button {
+    cursor: not-allowed;
+    svg{
+      fill: $text-light-dimmed;
+    }
+  }
+}
 
+.unSelectable {
+  button {
+    cursor: not-allowed;
+  }
+}

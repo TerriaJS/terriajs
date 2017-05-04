@@ -3,13 +3,14 @@
 
 .root {
   font-family: $font-base;
+  color: $data-catalog-color;
 }
 
 .btn--catalog {
   composes: btn from '../../Sass/common/_buttons.scss';
 
   text-align: left;
-  font-size: 0.8rem;
+  font-size: $font-size-small;
   padding: $padding-small 30px+$padding;
   position: relative;
   width: 100%;
@@ -20,7 +21,7 @@
     display: inline-block;
   }
   @media screen and (max-width: $sm) {
-    font-size: 0.9rem;
+    font-size: $font-size-mid-small;
     padding-top: 10px;
     padding-bottom: 10px;
     border-bottom: 1px solid $grey-lighter;
@@ -39,14 +40,14 @@
 }
 
 .isPreviewed{
-  background: $color-primary;
+  background: $modal-highlight;
   color: #ffffff;
 }
 
 
 .folder {
   position: absolute;
-  left: 0;
+  left: 8px;
   top: 5px;
   opacity: 0.5;
   svg{
@@ -88,14 +89,14 @@
   padding-left: $padding;
   padding-top: $padding / 2;
   &--lower-level {
-    margin-left: 7px;
+    margin-left: 20px;
     border-left: 1px solid $grey-lighter;
   }
 }
 
 .label {
   composes: label from '../../Sass/common/_labels.scss';
-  font-size: 0.8rem;
+  font-size: $font-size-small;
 }
 
 .label--no-results {

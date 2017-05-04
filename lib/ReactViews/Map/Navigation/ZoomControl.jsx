@@ -1,5 +1,7 @@
 'use strict';
 const React = require('react');
+const PropTypes = require('prop-types');
+import createReactClass from 'create-react-class';
 const defined = require('terriajs-cesium/Source/Core/defined');
 const Ray = require('terriajs-cesium/Source/Core/Ray');
 const IntersectionTests = require('terriajs-cesium/Source/Core/IntersectionTests');
@@ -11,10 +13,10 @@ import Icon from "../../Icon.jsx";
 import Styles from './zoom_control.scss';
 
 // Map zoom control
-const ZoomControl = React.createClass({
+const ZoomControl = createReactClass({
 
     propTypes: {
-        terria: React.PropTypes.object
+        terria: PropTypes.object
     },
 
     flyToPosition(scene, position, durationMilliseconds) {

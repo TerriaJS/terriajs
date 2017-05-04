@@ -8,7 +8,7 @@
 
 .tab-list{
   composes: tab-list from '../../tabs.scss';
-
+  background: $modal-secondary-bg;
   padding-right: 0;
 
   &__item {
@@ -44,7 +44,7 @@
   composes: label from '../../../../Sass/common/_labels.scss';
 
   padding-left: 0;
-  font-size: 0.9rem;
+  font-size: $font-size-mid-small;
 }
 
 .dropdown {
@@ -77,6 +77,7 @@
     composes: field from '../../../../Sass/common/_form.scss';
     width: calc(100% - 50px);
     float: left;
+    font-family: $font-base;
   }
 
   &__btn {

@@ -2,7 +2,7 @@
 @import '../Sass/common/mixins';
 
 .loader{
-  padding: $padding $padding $padding 30px;
+  padding: 0 0 0 30px;
   position: relative;
   display: inline-block;
   font-family: $font-base;
@@ -12,9 +12,10 @@
     display: line-block;
     position: absolute;
     left: 0;
-    top: $padding;
+    top: 0;
     -webkit-animation: spin 2s infinite linear;
     animation: spin 2s infinite linear;
+    fill: inherit;
   }
   span{
     line-height: 1.8;

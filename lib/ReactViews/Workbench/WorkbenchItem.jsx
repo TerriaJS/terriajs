@@ -1,31 +1,40 @@
 'use strict';
 
-import AbsPercentageWorkbenchSection from './Controls/AbsPercentageWorkbenchSection';
 import classNames from 'classnames';
-import ConceptViewer from './Controls/ConceptViewer';
+import React from 'react';
+import createReactClass from 'create-react-class';
+import PropTypes from 'prop-types';
+import {sortable} from 'react-anything-sortable';
+
 import defined from 'terriajs-cesium/Source/Core/defined';
+
+import DisplayAsPercentSection from './Controls/DisplayAsPercentSection';
+import ConceptViewer from './Controls/ConceptViewer';
+import DimensionSelectorSection from './Controls/DimensionSelectorSection';
+import getAncestors from '../../Models/getAncestors';
 import Legend from './Controls/Legend';
 import ObserveModelMixin from './../ObserveModelMixin';
 import OpacitySection from './Controls/OpacitySection';
 import ColorScaleRangeSection from './Controls/ColorScaleRangeSection';
-import React from 'react';
 import ShortReport from './Controls/ShortReport';
-import Styles from './workbench-item.scss';
+import StyleSelectorSection from './Controls/StyleSelectorSection';
 import ViewingControls from './Controls/ViewingControls';
-import Icon from "../Icon.jsx";
-import {sortable} from 'react-anything-sortable';
 
-const WorkbenchItem = React.createClass({
+import Styles from './workbench-item.scss';
+import Icon from '../Icon.jsx';
+
+const WorkbenchItem = createReactClass({
+    displayName: 'WorkbenchItem',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        style: React.PropTypes.object,
-        className: React.PropTypes.string,
-        onMouseDown: React.PropTypes.func.isRequired,
-        onTouchStart: React.PropTypes.func.isRequired,
-        item: React.PropTypes.object.isRequired,
-        viewState: React.PropTypes.object.isRequired,
-        setWrapperState: React.PropTypes.func
+        style: PropTypes.object,
+        className: PropTypes.string,
+        onMouseDown: PropTypes.func.isRequired,
+        onTouchStart: PropTypes.func.isRequired,
+        item: PropTypes.object.isRequired,
+        viewState: PropTypes.object.isRequired,
+        setWrapperState: PropTypes.func
     },
 
     toggleDisplay() {
@@ -65,7 +74,8 @@ const WorkbenchItem = React.createClass({
                         <div
                             onMouseDown={this.props.onMouseDown}
                             onTouchStart={this.props.onTouchStart}
-                            className={Styles.draggable}>
+                            className={Styles.draggable}
+                            title={getAncestors(workbenchItem).map(member => member.nameInCatalog).concat(workbenchItem.nameInCatalog).join(' → ')}>
                             <If condition={!workbenchItem.isMappable}>
                                 <span className={Styles.iconLineChart}><Icon glyph={Icon.GLYPHS.lineChart}/></span>
                             </If>
@@ -86,12 +96,15 @@ const WorkbenchItem = React.createClass({
                     <div className={Styles.inner}>
                         <ViewingControls item={workbenchItem} viewState={this.props.viewState}/>
                         <OpacitySection item={workbenchItem}/>
-                        <ColorScaleRangeSection item={workbenchItem}/>
-                        <If condition={workbenchItem.type === 'abs-itt'}>
-                            <AbsPercentageWorkbenchSection item={workbenchItem}/>
+                        <If condition={(defined(workbenchItem.concepts) && workbenchItem.concepts.length > 0) && workbenchItem.displayChoicesBeforeLegend}>
+                            <ConceptViewer item={workbenchItem}/>
                         </If>
+                        <DimensionSelectorSection item={workbenchItem}/>
+                        <StyleSelectorSection item={workbenchItem}/>
+                        <ColorScaleRangeSection item={workbenchItem}/>
+                        <DisplayAsPercentSection item={workbenchItem}/>
                         <Legend item={workbenchItem}/>
-                        <If condition={(defined(workbenchItem.concepts) && workbenchItem.concepts.length > 0)}>
+                        <If condition={(defined(workbenchItem.concepts) && workbenchItem.concepts.length > 0) && !workbenchItem.displayChoicesBeforeLegend}>
                             <ConceptViewer item={workbenchItem}/>
                         </If>
                         <If condition={workbenchItem.shortReport || (workbenchItem.shortReportSections && workbenchItem.shortReportSections.length)}>
@@ -101,7 +114,7 @@ const WorkbenchItem = React.createClass({
                 </If>
             </li>
         );
-    }
+    },
 });
 
 module.exports = sortable(WorkbenchItem);

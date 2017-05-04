@@ -15,7 +15,11 @@
   justify-content: center;
 
   a {
-    @extend %link;
+    @include link($dark);
+  }
+  pre{
+      display: block;
+      line-height: 2;
   }
 }
 
@@ -26,6 +30,23 @@
   z-index: 300;
   width: 500px;
   height: auto;
+  pre{
+    // copy over scrollbar css because I can't compose within
+    -webkit-overflow-scrolling: touch;
+
+    &::-webkit-scrollbar {
+      width: 5px; /* for vertical scrollbars */
+      height: 5px; /* for horizontal scrollbars */
+    }
+
+    &::-webkit-scrollbar-track {
+      background: rgba(#000, 0.1);
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: rgba(#000, 0.3);
+    }
+  }
 }
 
 .title {
@@ -34,12 +55,13 @@
 
 .inner {
   composes: scrollbars from '../../Sass/common/_base.scss';
-
   padding: $padding $padding*2;
   height: 100%;
   max-height: calc(100vh - #{$input-height*3});
   overflow-y: auto;
 }
+
+
 
 .footer {
   display: block;

@@ -19,7 +19,7 @@ $btn-setting-size: 35px;
   cursor: pointer;
   line-height: $btn-default-line-height;
   text-decoration: none;
-  font-size: 0.85rem;
+  font-size: $font-size-button;
   font-family: $font-base;
 
   &:focus, &:hover {
@@ -45,8 +45,8 @@ $btn-setting-size: 35px;
 .btn-primary {
   display: block;
   background: $color-primary;
-  font-family: 'Open Sans', sans-serif;
-  color: #fff;
+  font-family: $font-pop;
+  color: $text-light;
   text-align: center;
   width: 100%;
   box-sizing: border-box;
@@ -54,7 +54,7 @@ $btn-setting-size: 35px;
   padding: $padding;
 
   &:hover, &--hover {
-    background: lighten($color-primary, 10%);
+    background: get-hover-color($color-primary);
   }
 }
 
@@ -72,7 +72,7 @@ $btn-setting-size: 35px;
   &.is-active {
     background: $color-primary;
     border-color: $color-primary;
-    color: #fff;
+    color: $text-light;
   }
 }
 
@@ -86,13 +86,13 @@ $btn-setting-size: 35px;
   border-radius: 4px;
 
   &:hover, &:focus {
-    border: 2px solid lighten($color-primary, 10%);
-    color: lighten($color-primary, 10%);
+    border: 2px solid get-hover-color($color-primary);
+    color: get-hover-color($color-primary);
   }
 }
 
 .btn--tertiary {
-  background-color: #FFF;
+  background-color: $modal-bg;
   color: $modal-text;
   border: 2px solid $modal-text;
   border-radius: 4px;
@@ -105,7 +105,7 @@ $btn-setting-size: 35px;
 }
 
 .btn--tertiary-dark {
-  color: #FFF;
+  color: $text-light;
   border: 1px solid rgba(255, 255, 255, 0.6);
   border-radius: 4px;
   padding: 8px 10px;
@@ -127,7 +127,7 @@ $btn-setting-size: 35px;
 .btn--close-modal {
   @extend .btn--secondary;
 
-  font-size: 0.8rem;
+  font-size: $font-size-small;
   padding: 4px 10px;
   margin: 5px;
   font-weight: bold;
@@ -151,7 +151,7 @@ $btn-setting-size: 35px;
       padding: $padding-small $padding*2.2 $padding-small $padding*1.5;
     }
     top: 0;
-    font-size: 1.1rem;
+    font-size: $font-size-mid-large;
     opacity: 0.5;
   }
   &:before {
@@ -166,9 +166,9 @@ $btn-setting-size: 35px;
   &:hover,
   &:focus {
     background: $modal-highlight;
-    color: #fff;
+    color: $text-light;
     .btn--group-indicator {
-      color: #fff;
+      color: $text-light;
     }
   }
 }
@@ -204,7 +204,7 @@ $btn-setting-size: 35px;
   font-family: $font-pop;
   background: $modal-bg;
   color: $modal-text;
-  font-size: 1rem;
+  font-size: $font-size-base;
   padding: $padding $padding*2;
   border-bottom: 2px solid transparent;
   li[aria-selected='true'] & {
@@ -215,11 +215,11 @@ $btn-setting-size: 35px;
 
 
 .btn--map {
-  font-size: 12px;
+  font-size: $font-size-small;
   padding: 5px;
-  color: #fff;
+  color: $text-light;
   display: block;
-  height: 25px;
+  min-height: 28px;
   font-family: $font-pop;
   opacity: 0.95;
   background-color: $charcoal-grey;
@@ -235,7 +235,7 @@ $btn-setting-size: 35px;
   svg{
     height: 15px;
     width: 15px;
-    fill: #fff;
+    fill: $text-light;
     display: inline-block;
   }
 
@@ -268,5 +268,5 @@ $btn-setting-size: 35px;
 .btn--small, ._buttons__btn-primary.btn--small {
   padding: 4px 9px;
   margin-right: 4px;
-  font-size: 13px;
+  font-size: $font-size-small;
 }

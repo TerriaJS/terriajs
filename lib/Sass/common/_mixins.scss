@@ -88,6 +88,12 @@
   word-wrap: break-word;
   word-break: break-word;
 }
+// Use this to override wrap
+%unwrap{
+  overflow-wrap: normal;
+  word-wrap: normal;
+  word-break: normal;
+}
 // currently not used, but just in case we need it
 %url{
   word-break: break-all;
@@ -105,9 +111,29 @@
   .#{$module-name} { /*!*/ }
 }
 
+// %link is deprecated. Instead of @extend %link;, use @include link($bg-color);
 %link {
-  color: $color-primary;
-  text-decoration: none;
+  @if variable-exists(text-link) {
+    color: $text-link;
+  } @else {
+    color: $color-primary;  // for backwards compatibility
+  }
+  text-decoration: $link-text-decoration;
+  &:visited {
+    @if variable-exists(text-visited-link) {
+      color: $text-visited-link;
+    } @else {
+      color: $color-primary;
+    }
+  }
+}
+
+@mixin link($bg-color) {
+  text-decoration: $link-text-decoration;
+  color: get-link-color($bg-color);
+  &:visited {
+    color: get-visited-link-color($bg-color)
+  }
 }
 
 %sm-show, %md-show, %lg-show {

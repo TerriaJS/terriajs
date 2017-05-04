@@ -25,6 +25,7 @@
 
 .field {
   composes: field from '../../Sass/common/_form.scss';
+  margin-bottom: $padding;
 }
 
 .field--parameter-editor {
@@ -112,24 +113,23 @@
   }
 }
 
+.embeddedMap{
+  position: relative;
+  height: 200px;
+}
+
 @include empty-module("radio");
 
 .btn-radio {
   composes: btn from '../../Sass/common/_buttons.scss';
 
   padding: 5px;
+  fill: #08abd5;
 
-  &:before {
-    color: #08abd5;
-    display: inline-block;
-    padding: 5px 5px 5px 0;
+  svg {
+    width: 20px;
+    height: 20px;
+    float: left;
+    padding-right: 5px;
   }
-}
-
-.btn-radio--off {
-  composes: btn--radio-off from '../../Sass/common/_buttons.scss';
-}
-
-.btn-radio--on {
-  composes: btn--radio-on from '../../Sass/common/_buttons.scss';
 }

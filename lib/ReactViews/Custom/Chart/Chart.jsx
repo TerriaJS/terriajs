@@ -14,6 +14,9 @@
 
 import React from 'react';
 
+import PropTypes from 'prop-types';
+import createReactClass from 'create-react-class';
+
 import defined from 'terriajs-cesium/Source/Core/defined';
 import defaultValue from 'terriajs-cesium/Source/Core/defaultValue';
 import DeveloperError from 'terriajs-cesium/Source/Core/DeveloperError';
@@ -22,13 +25,16 @@ import when from 'terriajs-cesium/Source/ThirdParty/when';
 
 import ChartData from '../../../Charts/ChartData';
 import LineChart from '../../../Charts/LineChart';
+import proxyCatalogItemUrl from '../../../Models/proxyCatalogItemUrl';
 import TableStructure from '../../../Map/TableStructure';
+import VarType from '../../../Map/VarType';
 
 import Styles from './chart.scss';
 
 const defaultHeight = 100;
+const defaultColor = undefined; // Allows the line color to be set by the css, esp. in the feature info panel.
 
-const Chart = React.createClass({
+const Chart = createReactClass({
     // this._element is updated by the ref callback attribute, https://facebook.github.io/react/docs/more-about-refs.html
     _element: undefined,
 
@@ -37,68 +43,75 @@ const Chart = React.createClass({
     _tooltipId: undefined,
 
     propTypes: {
-        domain: React.PropTypes.object,
-        styling: React.PropTypes.string,  // nothing, 'feature-info' or 'histogram' -- TODO: improve
-        height: React.PropTypes.number,
-        axisLabel: React.PropTypes.object,
-        transitionDuration: React.PropTypes.number,
-        highlightX: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
-        updateCounter: React.PropTypes.any,  // Change this to trigger an update.
-        pollSeconds: React.PropTypes.any, // This is not used by Chart. It is used internally by registerCustomComponentTypes.
+        domain: PropTypes.object,
+        styling: PropTypes.string,  // nothing, 'feature-info' or 'histogram' -- TODO: improve
+        height: PropTypes.number,
+        axisLabel: PropTypes.object,
+        catalogItem: PropTypes.object,
+        transitionDuration: PropTypes.number,
+        highlightX: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+        updateCounter: PropTypes.any,  // Change this to trigger an update.
+        pollSeconds: PropTypes.any, // This is not used by Chart. It is used internally by registerCustomComponentTypes.
         // You can provide the data directly via props.data (ChartData[]):
-        data: React.PropTypes.array,
+        data: PropTypes.array,
         // Or, provide a URL to the data, along with optional xColumn, yColumns, colors
-        url: React.PropTypes.string,
-        xColumn: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
-        yColumns: React.PropTypes.array,
-        colors: React.PropTypes.array,
-        pollUrl: React.PropTypes.string,
+        url: PropTypes.string,
+        xColumn: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+        yColumns: PropTypes.array,
+        colors: PropTypes.array,
+        pollUrl: PropTypes.string,
         // Or, provide a tableStructure directly.
-        tableStructure: React.PropTypes.object
+        tableStructure: PropTypes.object
     },
 
     chartDataArrayFromTableStructure(table) {
         const xColumn = table.getColumnWithNameIdOrIndex(this.props.xColumn || 0);
-        let yColumns = [table.columns[1]];
+        let yColumns = [];
         if (defined(this.props.yColumns)) {
-            yColumns = this.props.yColumns.map(yCol => table.getColumnWithNameIdOrIndex(yCol));
+            yColumns = this.props.yColumns.map(column => table.getColumnWithNameIdOrIndex(column));
+        } else {
+            // Fall back to the first scalar that isn't the x column.
+            yColumns = table.columns.filter(column => (column !== xColumn) && column.type === VarType.SCALAR);
+            if (yColumns.length > 0) {
+                yColumns = [yColumns[0]];
+            } else {
+                throw new DeveloperError('No y-column available.');
+            }
         }
         const pointArrays = table.toPointArrays(xColumn, yColumns);
         // The data id should be set to something unique, eg. its source id + column index.
         // If we're here, the data was downloaded from a single file or table, so the column index is unique by itself.
+        const colors = this.props.colors;
         return pointArrays.map((points, index) =>
             new ChartData(points, {
                 id: index,
                 name: yColumns[index].name,
-                color: defined(this.props.colors) ? this.props.colors[index] : undefined
+                units: yColumns[index].units,
+                color: (colors && colors.length > 0) ? colors[index % colors.length] : defaultColor
             })
         );
     },
 
-    getChartDataPromise(data, url) {
+    getChartDataPromise(data, url, catalogItem) {
         // Returns a promise that resolves to an array of ChartData.
         const that = this;
         if (defined(data)) {
-            // Nothing to do - the data was provided.
+            // Nothing to do - the data was provided (either as props.data or props.tableStructure).
             return when(data);
         } else if (defined(url)) {
-            return loadIntoTableStructure(url)
+            return loadIntoTableStructure(catalogItem, url)
                 .then(that.chartDataArrayFromTableStructure)
                 .otherwise(function(e) {
                     // It looks better to create a blank chart than no chart.
                     return [];
                 });
-        } else if (defined(that.props.tableStructure)) {
-            // We were given a tableStructure, just convert it to a chartDataArray.
-            const chartDataArray = that.chartDataArrayFromTableStructure(that.props.tableStructure);
-            return when(chartDataArray);
         }
     },
 
     componentDidMount() {
         const that = this;
         const chartParameters = that.getChartParameters();
-        const promise = that.getChartDataPromise(chartParameters.data, that.props.url);
+        const promise = that.getChartDataPromise(chartParameters.data, that.props.url, that.props.catalogItem);
         promise.then(function(data) {
             chartParameters.data = data;
             LineChart.create(that._element, chartParameters);
@@ -129,7 +142,7 @@ const Chart = React.createClass({
     },
 
     componentDidUpdate() {
-        // Update the chart with props.data, if present.
+        // Update the chart with props.data or props.tableStructure, if present.
         // If the data came from a URL, there are three possibilities:
         // 1. The URL has changed.
         // 2. The URL is the same and therefore we do not want to reload it.
@@ -146,7 +159,7 @@ const Chart = React.createClass({
         } else if (this.props.updateCounter > 0) {
             // The risk here is if it's a time-varying csv with <chart> polling as well.
             const url = this.props.pollUrl || this.props.url;
-            const promise = this.getChartDataPromise(chartParameters.data, url);
+            const promise = this.getChartDataPromise(chartParameters.data, url, this.props.catalogItem);
             promise.then(function(data) {
                 chartParameters.data = data;
                 LineChart.update(element, chartParameters);
@@ -206,8 +219,15 @@ const Chart = React.createClass({
             margin = {top: 0, right: 0, bottom: 0, left: 0};
         }
 
+        let chartData;
+        if (defined(this.props.data)) {
+            chartData = this.props.data;
+        } else if (defined(this.props.tableStructure)) {
+            chartData = this.chartDataArrayFromTableStructure(this.props.tableStructure);
+        }
+
         return {
-            data: this.props.data,
+            data: chartData,
             domain: this.props.domain,
             width: '100%',
             height: defaultValue(this.props.height, defaultHeight),
@@ -234,9 +254,13 @@ const Chart = React.createClass({
  * @param  {String} url The URL.
  * @return {Promise} A promise which resolves to a table structure.
  */
-function loadIntoTableStructure(url) {
-    // Load in the data file as a TableStructure. Currently only understands csv.
+function loadIntoTableStructure(catalogItem, url) {
+    if (defined(catalogItem) && defined(catalogItem.loadIntoTableStructure)) {
+        return catalogItem.loadIntoTableStructure(url);
+    }
+    // As a fallback, try to load in the data file as csv.
     const tableStructure = new TableStructure('feature info');
+    url = proxyCatalogItemUrl(catalogItem, url, '0d');
     return loadText(url).then(tableStructure.loadFromCsv.bind(tableStructure));
 }
 

@@ -81,6 +81,39 @@ describe('LegendHelper', function() {
         expect(legendHelper._binColors.length).toEqual(4); // Ranges are 1-2, 2-4, 4-7, 7-9.
     });
 
+    it('retains colorMap when filtering array of colorBins', function() {
+        // Ensure both TableColumns assign the same colour to equal values
+        var tableStyle = new TableStyle({colorBins: [-30, -10, 0, 2, 4, 7, 10, 14, 16], colorMap: "white-red-orange-yellow-green-blue-indigo-violet-grey-black"});
+        var legendHelper1 = new LegendHelper(tableColumn, tableStyle);
+        var tableColumn2 = new TableColumn('foo', [15, 9, 5, 1, -25]);
+        var legendHelper2 = new LegendHelper(tableColumn2, tableStyle);
+        expect(legendHelper1).toBeDefined();
+        expect(legendHelper1.legendUrl()).toBeDefined();  // Do this for its side-effects. Hmmm.
+        expect(legendHelper2.legendUrl()).toBeDefined();  // Do this for its side-effects. Hmmm.
+        [1,5,9].forEach(function(val) {
+            expect(legendHelper1.getColorArrayFromValue(val)).toEqual(legendHelper2.getColorArrayFromValue(val));
+        });
+
+    });
+
+    it('handles array of colorBins for enum values', function() {
+        var enumTableColumn = new TableColumn('foo', ['A', 'B', 'A']);
+        var tableStyle = new TableStyle({colorBins: [{value: 'A', color: 'red'}, {value: 'B', color: 'blue'}]});
+        var legendHelper = new LegendHelper(enumTableColumn, tableStyle);
+        expect(legendHelper).toBeDefined();
+        expect(legendHelper.legendUrl()).toBeDefined();  // Do this for its side-effects. Hmmm.
+        expect(Object.keys(legendHelper._binColors).length).toEqual(2); // For values 'A' and 'B'
+    });
+
+    it('filters array of colorBins if enum values are not present', function() {
+        var enumTableColumn = new TableColumn('foo', ['A', 'A']);
+        var tableStyle = new TableStyle({colorBins: [{value: 'A', color: 'red'}, {value: 'B', color: 'blue'}]});
+        var legendHelper = new LegendHelper(enumTableColumn, tableStyle);
+        expect(legendHelper).toBeDefined();
+        expect(legendHelper.legendUrl()).toBeDefined();  // Do this for its side-effects. Hmmm.
+        expect(Object.keys(legendHelper._binColors).length).toEqual(1); // For value 'A' only
+    });
+
     it('colors points via a color gradient when colorBins is 0', function() {
         // This tests the implementation of the color gradient code, which may not be desirable.
         jasmine.addMatchers(CustomMatchers);

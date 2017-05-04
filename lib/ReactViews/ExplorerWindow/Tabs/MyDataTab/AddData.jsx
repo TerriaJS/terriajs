@@ -1,4 +1,6 @@
 import React from 'react';
+import createReactClass from 'create-react-class';
+import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import addUserCatalogMember from '../../../../Models/addUserCatalogMember';
@@ -20,12 +22,13 @@ const localDataType = getDataType().localDataType;
 /**
  * Add data panel in modal window -> My data tab
  */
-const AddData = React.createClass({
+const AddData = createReactClass({
+    displayName: 'AddData',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        terria: React.PropTypes.object,
-        viewState: React.PropTypes.object
+        terria: PropTypes.object,
+        viewState: PropTypes.object
     },
 
     getInitialState() {
@@ -33,7 +36,7 @@ const AddData = React.createClass({
             localDataType: localDataType[0], // By default select the first item (auto)
             remoteDataType: remoteDataType[0],
             activeTab: 'local', // By default local data tab is active
-            remoteUrl: undefined // By default there's no remote url
+            remoteUrl: '' // By default there's no remote url
         };
     },
 
@@ -59,7 +62,7 @@ const AddData = React.createClass({
         addUserFiles(e.target.files, this.props.terria, this.props.viewState, this.state.localDataType)
             .then(addedCatalogItems => {
                 if (addedCatalogItems.length > 0) {
-                    this.props.viewState.myDataIsUploadView = false;
+                    this.onFileAddFinished(addedCatalogItems[0]);
                 }
             });
 
@@ -83,19 +86,20 @@ const AddData = React.createClass({
         }
         addUserCatalogMember(this.props.terria, promise).then(addedItem => {
             if (addedItem && !(addedItem instanceof TerriaError)) {
-                this.props.viewState.myDataIsUploadView = false;
+                this.onFileAddFinished(addedItem);
             }
         });
+    },
+
+    onFileAddFinished(fileToSelect) {
+        this.props.viewState.myDataIsUploadView = false;
+        this.props.viewState.viewCatalogItem(fileToSelect);
     },
 
     onRemoteUrlChange(event) {
         this.setState({
             remoteUrl: event.target.value
         });
-    },
-
-    onFinishDroppingFile() {
-        this.props.viewState.isDraggingDroppingFile = false;
     },
 
     renderTabs() {
@@ -156,7 +160,7 @@ const AddData = React.createClass({
                         <label className={Styles.label}><strong>Step 2:</strong> Enter the URL of the data file or web
                             service:
                         </label>
-                        <form className={Styles.urlInput} onSubmit={this.handleUrl}>
+                        <form className={Styles.urlInput}>
                             <input value={this.state.remoteUrl} onChange={this.onRemoteUrlChange}
                                    className={Styles.urlInputTextBox}
                                    type='text'
@@ -178,7 +182,7 @@ const AddData = React.createClass({
                 {this.renderPanels()}
             </div>
         );
-    }
+    },
 });
 
 /**

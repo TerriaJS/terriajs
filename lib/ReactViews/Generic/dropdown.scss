@@ -8,20 +8,19 @@
 .list {
   composes: list-reset from '../../Sass/common/_base.scss';
 
-  @include transform (scaleY(0) translateZ(0));
-  @include transition($animation-fast transform cubic-bezier(0.19, 1, 0.22, 1));
-  @include transition(transform, $animation-fast);
+  @include transform (scaleY(0));
+  @include transition(transform $animation-fast cubic-bezier(0.19, 1, 0.22, 1));
   @include transform-origin(center, top);
 
-  overflow: hidden;
   position: fixed;
+  overflow: hidden;
   z-index: 9999;
   box-sizing: border-box;
   background: #fff;
   border-radius: $radius-small;
 
   &.is-open {
-    transform: scaleY(1) translateY(0);
+    transform: scaleY(1);
   }
 }
 
@@ -40,7 +39,7 @@
   color: $text-black;
 
   &:hover, &:focus {
-    color: orange;
+    color: $dropdown-hover-color;
   }
 
   &.is-selected {

@@ -1,16 +1,22 @@
 import React from 'react';
-import Dropdown from '../Generic/Dropdown';
+
+import PropTypes from 'prop-types';
+import createReactClass from 'create-react-class';
+
 import FeatureDetection from 'terriajs-cesium/Source/Core/FeatureDetection';
-import Icon from "../Icon.jsx";
+
+import DataUri from '../../Core/DataUri';
+import Dropdown from '../Generic/Dropdown';
+import Icon from '../Icon.jsx';
 
 import Styles from './feature-info-download.scss';
 
-const FeatureInfoDownload = React.createClass({
+const FeatureInfoDownload = createReactClass({
     propTypes: {
-        data: React.PropTypes.object.isRequired,
-        name: React.PropTypes.string.isRequired,
-        viewState: React.PropTypes.object.isRequired,
-        canUseDataUri: React.PropTypes.bool
+        data: PropTypes.object.isRequired,
+        name: PropTypes.string.isRequired,
+        viewState: PropTypes.object.isRequired,
+        canUseDataUri: PropTypes.bool
     },
 
     getDefaultProps() {
@@ -19,28 +25,15 @@ const FeatureInfoDownload = React.createClass({
         };
     },
 
-    checkDataUriCompatibility(event) {
-        if (!this.props.canUseDataUri) {
-            event.preventDefault();
-
-            this.props.viewState.notifications.push({
-                title: 'Browser Does Not Support Data Download',
-                message: 'Unfortunately Microsoft browsers (including all versions of Internet Explorer and Edge) do not ' +
-                'support the data uri functionality needed to download data as a file. To download, copy the following uri ' +
-                'into another browser such as Chrome, Firefox or Safari: ' + event.currentTarget.getAttribute('href')
-            });
-        }
-    },
-
     getLinks() {
         return [
             {
-                href: makeDataUri('csv', generateCsvData(this.props.data)),
+                href: DataUri.make('csv', generateCsvData(this.props.data)),
                 download: `${this.props.name}.csv`,
                 label: 'CSV'
             },
             {
-                href: makeDataUri('json', JSON.stringify(this.props.data)),
+                href: DataUri.make('json', JSON.stringify(this.props.data)),
                 download: `${this.props.name}.json`,
                 label: 'JSON'
             }
@@ -50,28 +43,20 @@ const FeatureInfoDownload = React.createClass({
     render() {
         const links = this.getLinks();
 
-        return (
-            <Dropdown options={links}
-                      textProperty="label"
-                      theme={{dropdown: Styles.download, list: Styles.dropdownList, button: Styles.dropdownButton}}
-                      buttonClassName={Styles.btn}>
-                <span className={Styles.iconDownload}><Icon glyph={Icon.GLYPHS.download}/></span> Download Data&nbsp;▾
-            </Dropdown>
-        );
+        if (DataUri.checkCompatibility()) {
+            return (
+                <Dropdown options={links}
+                          textProperty="label"
+                          theme={{dropdown: Styles.download, list: Styles.dropdownList, button: Styles.dropdownButton}}
+                          buttonClassName={Styles.btn}>
+                    <span className={Styles.iconDownload}><Icon glyph={Icon.GLYPHS.download}/></span> Download this Table&nbsp;▾
+                </Dropdown>
+            );
+        } else {
+            return null;
+        }
     }
 });
-
-/**
- * Turns a file with the supplied type and stringified data into a data uri that can be set as the href of an anchor tag.
- */
-function makeDataUri(type, dataString) {
-    if (dataString) {
-        // Using attachment/* mime type makes safari download as attachment.
-        return 'data:attachment/' + type + ',' + encodeURIComponent(dataString);
-    } else {
-        return undefined;
-    }
-}
 
 /**
  * Turns a 2-dimensional javascript object into a CSV string, with the first row being the property names and the second

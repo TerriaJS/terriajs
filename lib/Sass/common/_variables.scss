@@ -4,9 +4,11 @@
 $font-pop:'Open Sans', sans-serif;
 $font-base: 'Open Sans', sans-serif;
 $font-mono: monospace, sans-serif;
+$font-feature-info: $font-mono;
 $font : $font-base;
 
 $color-primary: #08ABD5;
+@function get-hover-color($base-color) {@return lighten($base-color, 10%);}
 $color-secondary: #06CCFF;
 
 $animation-fast: 0.1s;
@@ -22,9 +24,34 @@ $overlay: rgba(255, 255, 255, 0.15);
 $text-black: #000;
 $text-dark: #888;
 $text-light: #FFFFFF;
+$text-light-dimmed: #BBBBBB;
+
+// You can override these functions to change the link color depending on the background, eg.
+// @function get-link-color($bg-color) {
+//   @if (lightness($bg-color) > 50) {
+//     @return $text-dark; // Dark color needed on a light background
+//   } @else {
+//     @return $text-light; // Light color needed on a dark background
+//   }
+// }
+// It would make sense to extend this approach to all text and button coloring.
+@function get-link-color($bg-color) {
+  @if variable-exists(text-link) {
+  	@return $text-link;
+  }
+  @return $color-primary;
+}
+@function get-visited-link-color($bg-color) {
+  @if variable-exists(text-visited-link) {
+  	@return $text-visited-link;
+  }
+  @return get-link-color($bg-color);
+}
+
 $faint-bg: #f5f5f5;
 $warning: #FF5B6F;
-$info-color: #FFFF00;   // ADDED BY AGS FOR FEATURE INFO PANEL
+$info-color: #FFFF00;
+$link-text-decoration: none;
 
 $padding: 10px;
 $padding-small: 5px;
@@ -37,14 +64,29 @@ $sm-logo-height: $input-height;
 $logo-height: 70px;
 $mobile-header-height: 50px;
 
-$modal-bg: $faint-bg;
+$modal-bg: #fff;
+$modal-tab-bg: $modal-bg;
+$modal-selected-tab-bg: $modal-tab-bg;
 $modal-text: #000;
-$modal-secondary-bg: rgba($dark-lighter, 0.05);
+$modal-secondary-bg: #f6f6f7;
 $modal-overlay: rgba(#000,0.7);
 $modal-highlight: $color-primary;
+// $modal-selected: $color-primary;  // Optionally define this to override $modal-highlight on the selected tab.
 $modal-border: $grey-lighter;
 $modal-content-height: 70vh;
 $modal-header-height: $btn-default-line-height + $padding*2;
+$dropdown-hover-color: orange;
+
+$data-catalog-color: $text-black;
+
+$feature-info-bg: rgba($dark, 0.95);
+$feature-info-section-bg: $overlay;
+$feature-info-color: $text-light;
+$feature-info-header-bg: $dark;
+$feature-info-btn-color: $text-light;
+// $feature-info-table-odd-row-bg: lighten($feature-info-bg, 5%); // Optionally define for stripy tables.
+$feature-info-table-border-style: 1px solid $dark;
+// $feature-info-table-width: 100%; // Optionally define to force tables to the full width of the feature info panel.
 
 $mobile-main-bg: #ffffff;
 $mobile-text: #000;
@@ -52,13 +94,20 @@ $mobile-text: #000;
 $mobile-modal-top-height: 40px;
 
 $font-size-large: 1.3rem;
+$font-size-mid-large: 1.1rem;
 $font-size-base: 1rem;
-$font-size-small: 13px;
-$font-size-mini: 10px;
+$font-size-mid-small: 0.9rem;
+$font-size-feature-info: 0.9rem;
+$font-size-button: 0.85rem;
+$font-size-small: 0.8125rem;
+$font-size-mid-mini: 0.7rem;
+$font-size-mini: 0.625rem;
+$font-size-credits: 0.5rem;
 
 $font-weight-bold: 600;
 $font-weight-medium: 500;
 $font-weight-normal: 400;
+$font-weight-light: 100;
 
 $work-bench-width : 350px;
 $setting-panel: 300px;
@@ -69,7 +118,6 @@ $branding-height: 55px;
 $badge-height: $input-height;
 $workbench-header: $input-height*2 + $padding-small*2 + $badge-height + 1px;
 $chart-height: 250px;
-
 
 
 $border-color: rgba(#fff, 0.15);
@@ -95,6 +143,7 @@ $chart-axis-color: #fff;
 $chart-grid-color: rgba(#fff, 0.085);
 $chart-text-color: #fff;
 $chart-line-color: #ccc;
+$chart-preview-line-color: $chart-line-color;
 $chart-darker: darken($dark, 8%);
 
 

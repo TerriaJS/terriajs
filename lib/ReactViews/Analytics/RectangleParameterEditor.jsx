@@ -1,5 +1,9 @@
 import React from 'react';
 
+import createReactClass from 'create-react-class';
+
+import PropTypes from 'prop-types';
+
 import Cartographic from 'terriajs-cesium/Source/Core/Cartographic';
 import CesiumMath from 'terriajs-cesium/Source/Core/Math';
 import defined from 'terriajs-cesium/Source/Core/defined';
@@ -11,13 +15,14 @@ import ObserveModelMixin from '../ObserveModelMixin';
 
 import Styles from './parameter-editors.scss';
 
-const RectangleParameterEditor = React.createClass({
+const RectangleParameterEditor = createReactClass({
+    displayName: 'RectangleParameterEditor',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        previewed: React.PropTypes.object,
-        parameter: React.PropTypes.object,
-        viewState: React.PropTypes.object
+        previewed: PropTypes.object,
+        parameter: PropTypes.object,
+        viewState: PropTypes.object
     },
 
     getInitialState() {
@@ -34,7 +39,7 @@ const RectangleParameterEditor = React.createClass({
     },
 
     getValue() {
-        const rect = this.props.previewed.parameterValues[this.props.parameter.id];
+        const rect = this.props.parameter.value;
         if (defined(rect)) {
             return this.outputDegrees(Rectangle.southwest(rect).longitude) + ',' + this.outputDegrees(Rectangle.southwest(rect).latitude) + ' ' + this.outputDegrees(Rectangle.northeast(rect).longitude) + ',' + this.outputDegrees(Rectangle.northeast(rect).latitude);
         } else {
@@ -55,7 +60,7 @@ const RectangleParameterEditor = React.createClass({
                 coords.push(Cartographic.fromDegrees(parseFloat(coordinates[0]), parseFloat(coordinates[1])));
             }
         }
-        this.props.previewed.setParameterValue(this.props.parameter.id, Rectangle.fromCartographicArray(coords));
+        this.props.parameter.value = Rectangle.fromCartographicArray(coords);
     },
 
     selectRectangleOnMap() {
@@ -78,7 +83,7 @@ const RectangleParameterEditor = React.createClass({
 
         knockout.getObservable(pickPointMode, 'pickedFeatures').subscribe(function(pickedFeatures) {
             if (pickedFeatures instanceof Rectangle) {
-                that.props.previewed.setParameterValue(that.props.parameter.id, pickedFeatures);
+                that.props.parameter.value = pickedFeatures;
                 terria.mapInteractionModeStack.pop();
                 terria.selectBox = false;
                 that.props.viewState.openAddData();
@@ -91,7 +96,7 @@ const RectangleParameterEditor = React.createClass({
     render() {
         return (
             <div>
-                <input className={Styles.parameterEditor}
+                <input className={Styles.field}
                        type="text"
                        onChange={this.onTextChange}
                        value={this.state.value}/>
@@ -102,7 +107,7 @@ const RectangleParameterEditor = React.createClass({
                 </button>
             </div>
         );
-    }
+    },
 });
 
 module.exports = RectangleParameterEditor;

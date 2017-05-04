@@ -1,0 +1,78 @@
+site_name: TerriaJS
+#cosmo|cyborg|readthedocs|yeti|journal|bootstrap|readable|united|simplex|flatly|spacelab|amelia|cerulean|slate|mkdocs
+#theme: readthedocs
+theme_dir: mkdocs-material/material
+docs_dir: 'doc'
+site_dir: '../wwwroot/doc/guide'
+markdown_extensions:
+  - markdown.extensions.admonition
+extra:
+  logo: 'terria.png'
+strict: true
+pages:
+- Home: 'README.md'
+- Getting Started: 'getting-started.md'
+- Customizing:
+    - Overview: 'customizing/README.md'
+    - Client-side Config: 'customizing/client-side-config.md'
+    - Initialization Files: 'customizing/initialization-files.md'
+    - Server-side Config: 'customizing/server-side-config.md'
+    - Skinning: 'customizing/skinning.md'
+- Connecting to Data:
+    - Overview: 'connecting-to-data/README.md'
+    - Cross-Origin Resource Sharing: 'connecting-to-data/cross-origin-resource-sharing.md'
+    - Catalog Groups: 'connecting-to-data/catalog-groups.md'
+    - Catalog Items: 'connecting-to-data/catalog-items.md'
+    - Catalog Functions: 'connecting-to-data/catalog-functions.md'
+    - Catalog Type Details:
+        - ABS ITT (group): 'connecting-to-data/catalog-type-details/abs-itt-dataset-list.md'
+        - ABS ITT (item): 'connecting-to-data/catalog-type-details/abs-itt.md'
+        - ArcGIS FeatureServer (group): 'connecting-to-data/catalog-type-details/esri-featureServer-group.md'
+        - ArcGIS FeatureServer (item): 'connecting-to-data/catalog-type-details/esri-featureServer.md'
+        - ArcGIS MapServer (group): 'connecting-to-data/catalog-type-details/esri-mapServer-group.md'
+        - ArcGIS MapServer (item): 'connecting-to-data/catalog-type-details/esri-mapServer.md'
+        - ArcGIS Server (group): 'connecting-to-data/catalog-type-details/esri-group.md'
+        - Bing Maps (item): 'connecting-to-data/catalog-type-details/bing-maps.md'
+        - Catalog Service for the Web (CSW) (group): 'connecting-to-data/catalog-type-details/csw.md'
+        - Cesium Language (CZML) (item): 'connecting-to-data/catalog-type-details/czml.md'
+        - Cesium Terrain (item): 'connecting-to-data/catalog-type-details/cesium-terrain.md'
+        - CKAN (group): 'connecting-to-data/catalog-type-details/ckan.md'
+        - CKAN Resource (item): 'connecting-to-data/catalog-type-details/ckan-resource.md'
+        - Comma-Separated Values (CSV) (item): 'connecting-to-data/catalog-type-details/csv.md'
+        - Composite (item): 'connecting-to-data/catalog-type-details/composite.md'
+        - Format Conversion Service (based on OGR) (item): 'connecting-to-data/catalog-type-details/ogr.md'
+        - GeoJSON (item): 'connecting-to-data/catalog-type-details/geojson.md'
+        - GPX (item): 'connecting-to-data/catalog-type-details/gpx.md'
+        - Group (Manual) (group): 'connecting-to-data/catalog-type-details/group.md'
+        - Keyhole Markup Language (KML) (item): 'connecting-to-data/catalog-type-details/kml.md'
+        - OpenStreetMap (item): 'connecting-to-data/catalog-type-details/open-street-map.md'
+        - Places Like Me (function): 'connecting-to-data/catalog-type-details/places-like-me-function.md'
+        - SDMX-JSON (item): 'connecting-to-data/catalog-type-details/sdmx-json.md'
+        - Sensor Observation Service (SOS) (item): 'connecting-to-data/catalog-type-details/sos.md'
+        - Socrata (group): 'connecting-to-data/catalog-type-details/socrata.md'
+        - Spatial Detailing (function): 'connecting-to-data/catalog-type-details/spatial-detailing-function.md'
+        - URL Template (item): 'connecting-to-data/catalog-type-details/url-template.md'
+        - Web Feature Service (WFS) (group): 'connecting-to-data/catalog-type-details/wfs-getCapabilities.md'
+        - Web Feature Service (WFS) (item): 'connecting-to-data/catalog-type-details/wfs.md'
+        - Web Map Service (WMS) (group): 'connecting-to-data/catalog-type-details/wms-getCapabilities.md'
+        - Web Map Service (WMS) (item): 'connecting-to-data/catalog-type-details/wms.md'
+        - Web Processing Service (WPS) (function): 'connecting-to-data/catalog-type-details/wps.md'
+        - Web Processing Service (WPS) (group): 'connecting-to-data/catalog-type-details/wps-getCapabilities.md'
+        - WFS Features (group): 'connecting-to-data/catalog-type-details/wfs-features-group.md'
+        - Why Am I Special (function): 'connecting-to-data/catalog-type-details/why-am-i-special-function.md'
+- Deploying:
+    - Overview: 'deploying/README.md'
+    - Deploying TerriaMap: 'deploying/deploying-terriamap.md'
+    - Deploying to AWS: 'deploying/deploying-to-aws.md'
+    - Deploying with Docker: 'deploying/deploying-with-docker.md'
+    - Setting Up a Region Mapping Server: 'deploying/setting-up-a-region-mapping-server.md'
+    - Setting Up Geoserver: 'deploying/setting-up-geoserver.md'
+    - Using as a CKAN Previewer: 'deploying/using-as-a-ckan-previewer.md'
+    - Controlling with URL Parameters: 'deploying/controlling-with-url-parameters.md'
+    - Controlling in an &lt;iframe&gt; or Popup: 'deploying/controlling-in-an-iframe-or-popup.md'
+- Contributing:
+    - Overview: 'contributing/README.md'
+    - Development Environment: 'contributing/development-environment.md'
+    - Using a Custom Version of Cesium: 'contributing/using-a-custom-version-of-cesium.md'
+    - Setting up Saucelabs: 'contributing/setting-up-saucelabs.md'
+    - Problems and Solutions: 'contributing/problems-and-solutions.md'

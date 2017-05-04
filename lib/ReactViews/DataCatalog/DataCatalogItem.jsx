@@ -1,17 +1,31 @@
 import React from 'react';
-import addedByUser from '../../Core/addedByUser';
+
+import createReactClass from 'create-react-class';
+
+import PropTypes from 'prop-types';
+
 import defined from 'terriajs-cesium/Source/Core/defined';
+
+import addedByUser from '../../Core/addedByUser';
+import CatalogItem from './CatalogItem';
+import getAncestors from '../../Models/getAncestors';
 import ObserveModelMixin from '../ObserveModelMixin';
 import raiseErrorOnRejectedPromise from '../../Models/raiseErrorOnRejectedPromise';
-import CatalogItem from './CatalogItem';
+
+const STATE_TO_TITLE = {
+    loading: 'Loading...',
+    remove: 'Remove this item',
+    add: 'Add this item. Hold down "shift" to keep the data catalogue open.'
+};
 
 // Individual dataset
-const DataCatalogItem = React.createClass({
+const DataCatalogItem = createReactClass({
+    displayName: 'DataCatalogItem',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        item: React.PropTypes.object.isRequired,
-        viewState: React.PropTypes.object.isRequired
+        item: PropTypes.object.isRequired,
+        viewState: PropTypes.object.isRequired
     },
 
     onBtnClicked(event) {
@@ -32,6 +46,9 @@ const DataCatalogItem = React.createClass({
             // close modal window
             this.props.viewState.explorerPanelIsVisible = false;
             this.props.viewState.mobileView = null;
+            if (this.props.viewState.firstTimeAddingData) {
+                this.props.viewState.featureInfoPanelIsVisible = true;
+            }
         }
     },
 
@@ -54,9 +71,11 @@ const DataCatalogItem = React.createClass({
             <CatalogItem
                 onTextClick={this.setPreviewedItem}
                 selected={this.isSelected()}
-                text={item.name}
+                text={item.nameInCatalog}
+                title={getAncestors(item).map(member => member.nameInCatalog).join(' → ')}
                 btnState={this.getState()}
                 onBtnClick={this.onBtnClicked}
+                titleOverrides={STATE_TO_TITLE}
             />
         );
     },
@@ -73,7 +92,7 @@ const DataCatalogItem = React.createClass({
         } else {
             return 'stats';
         }
-    }
+    },
 });
 
 module.exports = DataCatalogItem;

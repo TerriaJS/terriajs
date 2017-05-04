@@ -23,9 +23,9 @@
 
     .cesium-widget-credits{
       position: absolute;
-      bottom: 0;
+      bottom: 23px;
       left: 1rem;
-      font-size: 0.5rem;
+      font-size: $font-size-credits;
       color: rgba(#fff, 0.8);
       font-family: $font-base;
       @extend %sm-show;
@@ -52,6 +52,23 @@
       width: 100%;
       height: 100%;
       touch-action: none;
+    }
+  }
+
+  .mapPlaceholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    color: black;
+    text-align: center;
+    width: 100%;
+    height: 25%;
+    margin: auto;
+
+    @media screen and (min-width: $sm) {
+      color: white;
     }
   }
 }

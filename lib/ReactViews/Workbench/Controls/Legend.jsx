@@ -7,12 +7,16 @@ import Loader from '../../Loader.jsx';
 import ObserveModelMixin from '../../ObserveModelMixin';
 import proxyCatalogItemUrl from '../../../Models/proxyCatalogItemUrl';
 import React from 'react';
+import createReactClass from 'create-react-class';
+import PropTypes from 'prop-types';
 import Styles from './legend.scss';
 
-const Legend = React.createClass({
+const Legend = createReactClass({
+    displayName: 'Legend',
     mixins: [ObserveModelMixin],
+
     propTypes: {
-        item: React.PropTypes.object
+        item: PropTypes.object
     },
 
     componentWillMount() {
@@ -36,7 +40,7 @@ const Legend = React.createClass({
         const isImage = legendUrl.isImage();
         const insertDirectly = !!legendUrl.safeSvgContent; // we only insert content we generated ourselves, not arbitrary SVG from init files.
         const safeSvgContent = {__html: legendUrl.safeSvgContent};
-        const proxiedUrl = proxyCatalogItemUrl(this.catalogMember, legendUrl.url);
+        const proxiedUrl = proxyCatalogItemUrl(this.props.item, legendUrl.url);
 
         return (
             <Choose>
@@ -51,6 +55,7 @@ const Legend = React.createClass({
                     <li key={proxiedUrl} className={classNames({[Styles.legendImagehasError]: this.doesLegendHaveError(legendUrl)})}>
                         <a onError={this.onImageError.bind(this, legendUrl)}
                            href={proxiedUrl}
+                           className={Styles.imageAnchor}
                            target="_blank">
                             <img src={proxiedUrl}/>
                         </a>
@@ -75,7 +80,7 @@ const Legend = React.createClass({
                             <li className={Styles.loader}><Loader message={this.props.item.loadingMessage}/></li>
                         </When>
                         <Otherwise>
-                            <For each="legend" index="i" of={this.props.item.legendUrls}>
+                            <For each="legend" index="i" of={this.props.item.legendUrls || []}>
                                 {this.renderLegend(legend, i)}
                             </For>
                         </Otherwise>
@@ -83,6 +88,6 @@ const Legend = React.createClass({
                 </div>
             </ul>
         );
-    }
+    },
 });
 module.exports = Legend;

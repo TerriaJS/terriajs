@@ -1,99 +1,45 @@
+'use strict';
+
 import React from 'react';
 
-import CesiumMath from 'terriajs-cesium/Source/Core/Math';
-import defined from 'terriajs-cesium/Source/Core/defined';
-import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
+import createReactClass from 'create-react-class';
 
-import UserDrawing from '../../Models/UserDrawing';
+import PropTypes from 'prop-types';
+
+import defined from 'terriajs-cesium/Source/Core/defined';
+
 import ObserveModelMixin from '../ObserveModelMixin';
 import Styles from './parameter-editors.scss';
 
-const PolygonParameterEditor = React.createClass({
+import CesiumMath from 'terriajs-cesium/Source/Core/Math';
+import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
+import UserDrawing from '../../Models/UserDrawing';
+
+const PolygonParameterEditor = createReactClass({
+    displayName: 'PolygonParameterEditor',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        previewed: React.PropTypes.object,
-        parameter: React.PropTypes.object,
-        viewState: React.PropTypes.object
+        previewed: PropTypes.object,
+        parameter: PropTypes.object,
+        viewState: PropTypes.object
     },
 
-    getInitialState() {
-        return {
-            value: this.getValue(),
-            userDrawing: new UserDrawing(
-                {
-                    terria: this.props.previewed.terria,
-                    onPointClicked: this.onPointClicked,
-                    onCleanUp: this.onCleanUp
-                })
-        };
-    },
-
-    onTextChange(e) {
-        this.setValue(e.target.value);
-        this.setState({
-            value: e.target.value
-        });
-    },
-
-    getValue() {
-        const rawValue = this.props.previewed.parameterValues[this.props.parameter.id];
-        if (!defined(rawValue) || rawValue.length < 1) {
-            return '';
-        }
-        const pointsLongLats = rawValue[0];
-
-        let polygon = '';
-        for (let i = 0; i < pointsLongLats.length; i++) {
-            polygon += '[' + pointsLongLats[i][0].toFixed(3) + ', ' + pointsLongLats[i][1].toFixed(3) + ']';
-            if (i !== pointsLongLats.length - 1) {
-                polygon += ', ';
-            }
-        }
-        if (polygon.length > 0) {
-            return '[' + polygon + ']';
-        } else {
-            return '';
-        }
-    },
-
-    setValue(value) {
-        this.setState({
-            value: value
-        });
-    },
-
-    onCleanUp() {
-        this.props.viewState.openAddData();
-    },
-
-    onPointClicked(pointEntities) {
-        const pointEnts = pointEntities.entities.values;
-        const pointsLongLats = [];
-        for (let i=0; i < pointEnts.length; i++) {
-            const currentPoint = pointEnts[i];
-            const currentPointPos = currentPoint.position.getValue(this.props.previewed.terria.clock.currentTime);
-            const cartographic = Ellipsoid.WGS84.cartesianToCartographic(currentPointPos);
-            const points = [];
-            points.push(CesiumMath.toDegrees(cartographic.longitude));
-            points.push(CesiumMath.toDegrees(cartographic.latitude));
-            pointsLongLats.push(points);
-        }
-        this.props.previewed.setParameterValue(this.props.parameter.id, [pointsLongLats]);
+    setValueFromText(e) {
+        PolygonParameterEditor.setValueFromText(e, this.props.parameter);
     },
 
     selectPolygonOnMap() {
-        this.state.userDrawing.enterDrawMode();
-        this.props.viewState.explorerPanelIsVisible = false;
+        PolygonParameterEditor.selectOnMap(this.props.previewed.terria, this.props.viewState, this.props.parameter);
     },
 
     render() {
         return (
             <div>
-                <input className={Styles.parameterEditor}
+                <input className={Styles.field}
                        type="text"
-                       onChange={this.onTextChange}
-                       value={this.state.value}/>
+                       onChange={this.setValueFromText}
+                       value={PolygonParameterEditor.getDisplayValue(this.props.parameter.value)}/>
                 <button type="button"
                         onClick={this.selectPolygonOnMap}
                         className={Styles.btnSelector}>
@@ -101,7 +47,88 @@ const PolygonParameterEditor = React.createClass({
                 </button>
             </div>
         );
-    }
+    },
 });
+
+/**
+ * Triggered when user types value directly into field.
+ * @param {String} e Text that user has entered manually.
+ * @param {FunctionParameter} parameter Parameter to set value on.
+ */
+PolygonParameterEditor.setValueFromText = function(e, parameter) {
+    parameter.value = [JSON.parse(e.target.value)];
+};
+
+/**
+ * Given a value, return it in human readable form for display.
+ * @param {Object} value Native format of parameter value.
+ * @return {String} String for display
+ */
+PolygonParameterEditor.getDisplayValue = function(value) {
+    if (!defined(value) || value.length < 1) {
+        return '';
+    }
+    const pointsLongLats = value[0];
+
+    let polygon = '';
+    for (let i = 0; i < pointsLongLats.length; i++) {
+        polygon += '[' + pointsLongLats[i][0].toFixed(3) + ', ' + pointsLongLats[i][1].toFixed(3) + ']';
+        if (i !== pointsLongLats.length - 1) {
+            polygon += ', ';
+        }
+    }
+    if (polygon.length > 0) {
+        return '[' + polygon + ']';
+    } else {
+        return '';
+    }
+};
+
+/**
+ * Helper function for processing clicked/moved points.
+ */
+function getPointsLongLats(pointEntities, terria) {
+    const pointEnts = pointEntities.entities.values;
+    const pointsLongLats = [];
+    for (let i=0; i < pointEnts.length; i++) {
+        const currentPoint = pointEnts[i];
+        const currentPointPos = currentPoint.position.getValue(terria.clock.currentTime);
+        const cartographic = Ellipsoid.WGS84.cartesianToCartographic(currentPointPos);
+        const points = [];
+        points.push(CesiumMath.toDegrees(cartographic.longitude));
+        points.push(CesiumMath.toDegrees(cartographic.latitude));
+        pointsLongLats.push(points);
+    }
+
+    // Close the polygon.
+    if (pointsLongLats.length > 0) {
+        pointsLongLats.push(pointsLongLats[0]);
+    }
+
+    return pointsLongLats;
+}
+
+/**
+ * Prompt user to select/draw on map in order to define parameter.
+ * @param {Terria} terria Terria instance.
+ * @param {Object} viewState ViewState.
+ * @param {FunctionParameter} parameter Parameter.
+ */
+PolygonParameterEditor.selectOnMap = function(terria, viewState, parameter) {
+    const userDrawing = new UserDrawing({
+        terria: terria,
+        onPointClicked: function(pointEntities) {
+            parameter.value = [getPointsLongLats(pointEntities, terria)];
+        },
+        onCleanUp: function() {
+            viewState.openAddData();
+        },
+        onPointMoved: function(customDataSource) {
+            parameter.value = [getPointsLongLats(customDataSource, terria)];
+        }
+    });
+    viewState.explorerPanelIsVisible = false;
+    userDrawing.enterDrawMode();
+};
 
 module.exports = PolygonParameterEditor;

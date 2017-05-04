@@ -1,54 +1,61 @@
-import React from 'react';
-import defined from 'terriajs-cesium/Source/Core/defined';
-import ObserveModelMixin from '../ObserveModelMixin';
+'use strict';
 
+import React from 'react';
+import createReactClass from 'create-react-class';
+import PropTypes from 'prop-types';
+import defined from 'terriajs-cesium/Source/Core/defined';
+import Loader from '../Loader';
+import ObserveModelMixin from '../ObserveModelMixin';
 import Styles from './parameter-editors.scss';
 
-const RegionTypeParameterEditor = React.createClass({
+const RegionTypeParameterEditor = createReactClass({
+    displayName: 'RegionTypeParameterEditor',
     mixins: [ObserveModelMixin],
+
     propTypes: {
-        previewed: React.PropTypes.object,
-        parameter: React.PropTypes.object
-    },
-
-    getInitialState() {
-        return {
-            regionProviders: []
-        };
-    },
-
-    componentWillMount() {
-        this.getAllOptions();
+        previewed: PropTypes.object,
+        parameter: PropTypes.object
     },
 
     onChange(e) {
-        const value = this.state.regionProviders.filter(r=> r.regionType === e.target.value)[0];
-        this.props.previewed.setParameterValue(this.props.parameter.id, value);
+        const regionProviders = this.getRegionProviders();
+        if (!regionProviders) {
+            return;
+        }
+
+        const value = regionProviders.filter(r => r.regionType === e.target.value)[0];
+        this.props.parameter.value = value;
     },
 
-    getAllOptions() {
-        const that = this;
-        this.props.parameter.getAllRegionTypes().then(function(_regionProviders) {
-            that.setState({
-                regionProviders: _regionProviders
-            });
+    getRegionProviders() {
+        let regionProviders;
+
+        // We expect this promise to resolve immediately because the parameter
+        // should already be loaded before we display this React component.
+        this.props.parameter.getAllRegionTypes().then(rp => {
+            regionProviders = rp;
         });
+
+        return regionProviders;
     },
 
     render() {
-        let rawValue = this.props.previewed.parameterValues[this.props.parameter.id];
-        if (!defined(rawValue)) {
-            rawValue = this.props.parameter.defaultValue;
+        const value = this.props.parameter.value;
+        const regionProviders = this.getRegionProviders();
+
+        if (!regionProviders) {
+            return <Loader />;
         }
+
         return <select className={Styles.field}
                        onChange={this.onChange}
-                       value={defined(rawValue) ? rawValue.regionType : ''}>
-                       {this.state.regionProviders.map((r, i)=>
+                       value={defined(value) ? value.regionType : ''}>
+                       {regionProviders.map((r, i)=>
                         (<option value={r.regionType}
                                  key={i}
                          >{r.regionType}</option>))}
                 </select>;
-    }
+    },
 });
 
 module.exports = RegionTypeParameterEditor;

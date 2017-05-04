@@ -92,6 +92,16 @@ describe('parseCustomHtmlToReact and registerCustomComponentTypes', function() {
         expect(chart.props.tableStructure.columns[2].values.length).toEqual(4);
     });
 
+    it('decodes HTML entities in text nodes and in attributes', function() {
+        const result = parseCustomHtmlToReact('<a href="https://programs.communications.gov.au/geoserver/ows?service=WMS&amp;version=1.3.0&amp;request=GetCapabilities">https://programs.communications.gov.au/geoserver/ows?service=WMS&amp;version=1.3.0&amp;request=GetCapabilities</a>');
+
+        expect(result.props.href).toEqual('https://programs.communications.gov.au/geoserver/ows?service=WMS&version=1.3.0&request=GetCapabilities');
+
+        const text = findAllEqualTo(result, 'https://programs.communications.gov.au/geoserver/ows?service=WMS&version=1.3.0&request=GetCapabilities');
+        expect(text).toBeDefined();
+        expect(text).not.toBeNull();
+    });
+
     // TODO: add tests for badly formed data strings.
 
 });

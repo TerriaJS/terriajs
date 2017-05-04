@@ -1,5 +1,7 @@
 'use strict';
 import React from 'react';
+import PropTypes from 'prop-types';
+import createReactClass from 'create-react-class';
 import ObserveModelMixin from '../../ObserveModelMixin';
 import Styles from './measure_tool.scss';
 import Icon from "../../Icon.jsx";
@@ -14,11 +16,12 @@ const PolygonHierarchy = require('terriajs-cesium/Source/Core/PolygonHierarchy.j
 const Cartesian3 = require('terriajs-cesium/Source/Core/Cartesian3.js');
 const VertexFormat = require('terriajs-cesium/Source/Core/VertexFormat.js');
 
-const MeasureTool = React.createClass({
+const MeasureTool = createReactClass({
+    displayName: 'MeasureTool',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        terria: React.PropTypes.object
+        terria: PropTypes.object
     },
 
     getInitialState() {
@@ -31,6 +34,7 @@ const MeasureTool = React.createClass({
                     messageHeader: "Measure Tool",
                     allowPolygon: false,
                     onPointClicked: this.onPointClicked,
+                    onPointMoved: this.onPointMoved,
                     onCleanUp: this.onCleanUp,
                     onMakeDialogMessage: this.onMakeDialogMessage
                 })
@@ -165,6 +169,11 @@ const MeasureTool = React.createClass({
         this.updateArea(pointEntities);
     },
 
+    onPointMoved(pointEntities) {
+        // This is no different to clicking a point.
+        this.onPointClicked(pointEntities);
+    },
+
     onMakeDialogMessage() {
         const distance = this.prettifyNumber(this.state.totalDistanceMetres, false);
         let message = distance;
@@ -186,7 +195,7 @@ const MeasureTool = React.createClass({
                           <Icon glyph={Icon.GLYPHS.measure}/>
                   </button>
                </div>;
-    }
+    },
 });
 
 export default MeasureTool;

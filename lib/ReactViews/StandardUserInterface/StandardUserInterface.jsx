@@ -1,4 +1,6 @@
 import React from 'react';
+import createReactClass from 'create-react-class';
+import PropTypes from 'prop-types';
 import arrayContains from '../../Core/arrayContains';
 import Branding from './../SidePanel/Branding.jsx';
 import DisclaimerHandler from '../../ReactViewModels/DisclaimerHandler';
@@ -22,22 +24,23 @@ import 'inobounce';
 import Styles from './standard-user-interface.scss';
 
 /** blah */
-const StandardUserInterface = React.createClass({
+const StandardUserInterface = createReactClass({
+    displayName: 'StandardUserInterface',
     mixins: [ObserveModelMixin],
 
     propTypes: {
         /**
          * Terria instance
          */
-        terria: React.PropTypes.object.isRequired,
+        terria: PropTypes.object.isRequired,
         /**
          * All the base maps.
          */
-        allBaseMaps: React.PropTypes.array,
-        viewState: React.PropTypes.object.isRequired,
-        minimumLargeScreenWidth: React.PropTypes.number,
-        version: React.PropTypes.string,
-        children: React.PropTypes.oneOfType([React.PropTypes.arrayOf(React.PropTypes.element), React.PropTypes.element])
+        allBaseMaps: PropTypes.array,
+        viewState: PropTypes.object.isRequired,
+        minimumLargeScreenWidth: PropTypes.number,
+        version: PropTypes.string,
+        children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.element), PropTypes.element])
     },
 
     getDefaultProps() {
@@ -96,7 +99,7 @@ const StandardUserInterface = React.createClass({
         const terria = this.props.terria;
         const allBaseMaps = this.props.allBaseMaps;
         return (
-            <div ref={(w) => this._wrapper = w}>
+            <div className={Styles.uiRoot} ref={(w) => this._wrapper = w}>
                 <div className={Styles.ui}>
                     <div className={Styles.uiInner}>
                         <If condition={!this.props.viewState.isMapFullScreen && !this.props.viewState.hideMapUi()}>
@@ -143,7 +146,7 @@ const StandardUserInterface = React.createClass({
                 </If>
 
                 <Notification viewState={this.props.viewState}/>
-                <MapInteractionWindow terria={terria}/>
+                <MapInteractionWindow terria={terria} viewState={this.props.viewState}/>
 
                 <If condition={this.props.terria.configParameters.feedbackUrl && !this.props.viewState.hideMapUi()}>
                     <aside className={Styles.feedback}>
@@ -151,7 +154,7 @@ const StandardUserInterface = React.createClass({
                     </aside>
                 </If>
 
-                <div className = {classNames({[Styles.explorerPanelIsVisible]: this.props.viewState.explorerPanelIsVisible})}>
+                <div className={Styles.featureInfo}>
                     <FeatureInfoPanel terria={terria}
                                       viewState={this.props.viewState}
                     />
@@ -161,7 +164,7 @@ const StandardUserInterface = React.createClass({
                 />
             </div>
         );
-    }
+    },
 });
 
 module.exports = StandardUserInterface;

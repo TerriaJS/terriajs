@@ -4,7 +4,7 @@
 
 .section {
   composes: clearfix from '../../Sass/common/_base.scss';
-  background: $overlay;
+  background: $feature-info-section-bg;
   border-top: 1px solid $dark-lighter;
 }
 
@@ -12,14 +12,14 @@
   composes: btn from './feature-info-panel.scss';
   position: relative;
   width: 100%;
-  background: $dark;
+  background: $feature-info-header-bg;
   min-height: 40px;
   margin: 0;
   padding-right: 30px;
   span{
     display: block;
     font-weight: 300;
-    font-size: 13px;
+    font-size: $font-size-mid-small;
   }
   svg{
     height: 20px;
@@ -39,17 +39,25 @@
   // Can't change these to target classes because we're directly styling markup from cesium.
   table {
     @extend %clearfix;
-    font-family: monospace;
+    font-family: $font-feature-info;
     max-width: 100%;
+    @if variable-exists(feature-info-table-width) {
+      width: $feature-info-table-width;
+    }
     border-collapse: collapse;
   }
 
   td {
     position: relative;
     border-collapse: collapse;
-    border: 1px solid $dark;
-    font-size: 13px;
+    border: $feature-info-table-border-style;
     padding: 5px;
+  }
+
+  tr:nth-child(odd) {
+    @if variable-exists(feature-info-table-odd-row-bg) {
+      background-color: $feature-info-table-odd-row-bg;
+    }
   }
 }
 

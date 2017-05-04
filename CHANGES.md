@@ -1,17 +1,260 @@
 
+
 Change Log
 ==========
 
+### 5.2.0
+
+* Upgraded to Leaflet 1.0.3 for the 2D and preview maps.
+
+### 5.1.1
+
+* Fixed a bug that caused an 'added' and a 'shown' event for "Unnamed Item" to be logged to Google Analytics when previewing an item in the catalog.
+* Added a 'preview' Google Analytics event when a catalog item is shown on the preview map in the catalog.
+* Fixed a bug that could cause an error when adding a layer without previewing it first.
+
+### 5.1.0
+
+* Fixed a bug that prevented `WebMapServiceCatalogItem` from acting as a time-dynamic layer when the time dimension was inherited from a parent layer.
+* `WebMapServiceCatalogItem` now supports WMS 1.1.1 style dimensions (with an `Extent` element) in addition to the 1.3.0 style (`Dimension` only).
+* `WebMapServiceCatalogItem` now passes dates only (rather than dates and times) to the server when the TIME dimension uses the `start/stop/period` form, `start` is a date only, and `period` does not include hours, minutes, or seconds.
+* `WebMapServiceCatalogItem` now supports years and months (in addition to days, hours, minutes, and seconds) in the period specified of a TIME dimension.
+* `WebMapServiceCatalogItem` now ignores [leap seconds](https://en.wikipedia.org/wiki/Leap_second) when evaluating ISO8601 periods in a time dimension.  As a result, 2 hours after `2016-06-30T23:00:00Z` is now `2016-07-01T01:00:00Z` instead of `2016-07-01T00:59:59Z` even though a leap second at the end of June 2016 makes that technically 2 hours and 1 second.  We expect that this is more likely to align with the expectations of WMS server software.
+* Added option to specify `mobileDefaultViewerMode` in the `parameters` section of `config.json` to specify the default view mode when running on a mobile platform.
+* Added support for `itemProperties` to `CswCatalogGroup`.
+* Added `terria.urlEncode` function for use in feature info templates.
+* Fixed a layout problem that caused the coordinates on the location bar to be displayed below the bar itself in Internet Explorer 11.
+* Updated syntax to remove deprecation warnings with React version 15.5.
+
+### 5.0.1
+
+* Breaking changes:
+  * Starting with this release, TerriaJS is meant to be built with Webpack 2.  The best way to upgrade your application is to merge from [TerriaMap](https://github.com/TerriaJS/TerriaMap).  If you run into trouble, post a message on the [TerriaJS forum](https://groups.google.com/forum/#!forum/terriajs).
+  * Removed the following previously-deprecated modules: `registerKnockoutBindings` (no replacement), `AsyncFunctionResultCatalogItem` (now `ResultPendingCatalogItem`), `PlacesLikeMeFunction` (now `PlacesLikeMeCatalogFunction`), `SpatialDetailingFunction` (now `SpatialDetailingCatalogFunction`), and `WhyAmISpecialFunction` (now `WhyAmISpecialCatalogFunction`).
+  * Removed `lib/Sass/StandardUserInterface.scss`.  It is no longer necessary to include this in your application.
+  * Removed the previously-deprecated third pararameter, `getColorCallback`, of `DisplayVariablesConcept`.  Pass it inside the `options` parameter instead.
+  * Removed the following previously-deprecated properties from `TableColumn`: `indicesIntoUniqueValues` (use `uniqueValues`), `indicesOrValues` (use `values`), `indicesOrNumericalValues` (use `uniqueValues` or `numericalValues`), and `usesIndicesIntoUniqueValues` (use `isEnum`).
+  * Removed the previously-deprecated `dataSetID` property from `AbsIttCatalogItem`.  Use `datasetId` instead.
+  * Removed the previously-deprecated `allowGroups` property from `CkanCatalogItem`.   Use `allowWmsGroups` or `allowWfsGroups` instead.
+  * Removed the previously-deprecated `RegionMapping.setRegionColumnType` function.  Use the `setRegionColumnType` on an _instance_ of `RegionMapping` instead.
+  * Removed the previously-deprecated `regionMapping.regionDetails[].column` and `.disambigColumn`. Use `.columnName` and `.disambigColumnName` instead.
+  * Removed the previously-deprecated `options.regionMappingDefinitionsUrl` parameter from the `Terria` constructor.  Set the `regionMappingDefinitionsUrl` inside `parameters` in `config.json` instead.
+* Fixed a bug in `WebMapServiceCatalogItem` that prevented TerriaJS from correctly determining the projections supported by a WMS layer when supported projections are inherited from parent layers.
+* Changed "no value" colour of region-mapped data to fully transparent, not black.
+* Fixed an issue where expanding a chart from an SDMX-JSON or SOS feature twice, with different data choices selected, would overwrite the previous chart.
+* Improved SDMX-JSON items to still show properly, even if the `selectedInitially` property is invalid.
+* Added `Score` column to `GNAFAddressGeocoder` to indicate relative quality, which maps as default variable.
+
+### 4.10.5
+
+* Improved error message when accessing the user's location under http with Chrome.
+* When searching locations, the button to instead search the catalog is now above the results instead of below them.
+* Changed "go to full screen mode" tooltip to "Hide workbench", and "Exit Full Screen" button to "Show Workbench".  The term "full screen" was misleading.
+* Fixed a bug where a chartable (non-geo-spatial) CSV file with a column including the text "height" would not let the user choose the "height" column as the y-axis of a chart.
+* Added support for non-default x-axes for charts via `<chart x-column="x">` and the new `tableStyle.xAxis` parameter.
+* Added support for a `charSet` parameter on CSV catalog items, which overrides the server's mime-type if present.
+
+### 4.10.4
+
+* Added the ability for `CkanCatalogGroup` to receive results in pages, rather than all in one request.  This will happen automatically when the server returns partial results.
+* Improved the performance of the catalog UI by not creating React elements for the contents of a group until that group is opened.
+* Close polygons used as input to a `CatalogFunction` by making the last position the same as the first one.
+* Added support for a new `nameInCatalog` property on all catalog members which overrides `name` when displayed in the catalog, if present.
+* Added `terria.urlEncodeComponent` function for use in feature info templates.
+* `yAxisMin` and `yAxisMax` are now honored when multiple charts are active, by using the minimum `yAxisMin` and the maximum `yAxisMax` of all charts.
+
+### 4.10.3
+
+* Locked third-party dependency proj4 to v2.3.x because v2.4.0 breaks our build.
+
+### 4.10.2
+
+* New sections are now merged info `CatalogMember.info` when `updateFromJson` is called multiple times, rather than the later `info` completely replacing the earlier one.  This is most useful when using `itemProperties` to override some of the info sections in a child catalog item.
+* Fixed a bug where csv files with a date column would sometimes fail if a date is missing.
+
+### 4.10.1
+
+* Improved the SDMX-JSON catalog item to handle huge dimensions, allow a blacklist, handle bad responses better, and more.
+* Fixed a bug that prevented the proxy from being used for loading legends, even in situations where it is necessary such as an `http` legend accessed from an `https` site.
+* Added link to re-download local files, noting that TerriaJS may have done additional processing (eg. geocoding).
+
+### 4.10.0
+
+* Changed defaults:
+  * `WebProcessingServiceCatalogFunction` now defaults to invoking the `Execute` service via an HTTP POST with XML encoding rather than an HTTP GET with KVP encoding.  This is a more sensible default because the WPS specification requires that servers support POST/XML while GET/KVP is optional.  Plus, POST/XML allows large input parameters, such as a polygon descibing all of Australia, to be successfully passed to the WPS process.  To force use of GET/KVP, set the `executeWithHttpGet` property to `true`.
+* Fixed problems with third-party dependencies causing `npm install` and `npm run gulp` to fail.
+
+### 4.9.0
+
+* Added a help overlay system. A TerriaJS application can define a set of help sequences that interactively walk the user through a task, such as adding data to the map or changing map settings. The help sequences usually appear as a drop-down Help menu in the top-right corner.
+* Fixed a bug with calculating bounding rectangles in `ArcGisCatalogItem` caused by changes to `proj4` package.
+* Fixed a bug preventing chart axis labels from being visible on a white background.
+* Fixed a bug that caused the Feedback panel to appear below the chart panel, making it difficult to use.
+
+### 4.8.2
+
+* Fixed a bug that prevented a `shareUrl` specified in `config.json` from actually being used by the `ShareDataService`.
+* Adding a JSON init file by dropping it on the map or selecting it from the My Data tab no longer adds an entry to the Workbench and User-Added Data catalog.
+* WPS return type can now be `application/vnd.terriajs.catalog-member+json` which allows a json catalog member to be returned in WPS along with the usual attributes to control display.
+* `chartLineColor` tableStyle attribute added, allowing per column specification of chart line color.
+* Fixed a bug that caused a `WebMapServiceCatalogItem` inside a `WebMapServiceCatalogGroup` to revert to defaults from GetCapabilities instead of using shared properties.
+* Fix a bug that prevented drawing the marker and zooming to the point when searching for a location in 2D.
+* Fixed a bug where `WebMapTileServiceCatalogItem` would incorrectly interpret a bounding box and return only the lower left corner causing Cesium to crash on render.
+* Fixed a bug that caused the feedback form to be submitted when unchecking "Share my map view".
+
+### 4.8.1
+
+* `CkanCatalogGroup` now automatically adds the type of the resource (e.g. `(WMS)`) after the name when a dataset contains multiple resources that can be turned into catalog items and `useResourceName` is false.
+* Added support for ArcGIS FeatureServers to `CkanCatalogGroup` and `CkanCatalogItem`.  In order for `CkanCatalogGroup` to include FeatureServers, `includeEsriFeatureServer` must be set to true.
+* Changed default URL for the share service from `/share` to `share` and made it configurable by specifying `shareUrl` in config.json.  This helps with deployments in subdirectories.
+
+### 4.8.0
+
+* Fixed a bug that prevented downloading data from the chart panel if the map was started in 2D mode.
+* Changed the default opacity of table data to 0.8 from 0.6.
+* Added the ability to read dates in the format "2017-Q2".
+* Improved support for SDMX-JSON, including showing values as a percent of regional totals, showing the selected conditions in a more concise format, and fixing some bugs.
+* Updated `TableCatalogItem`s to show a download URL in About This Dataset, which downloads the entire dataset as csv, even if the original data was more complex (eg. from an API).
+* The icon specified to the `MenuPanel` / `DropdownPanel` theme can now be either the identifier of an icon from `Icon.GLYPHS` or an actual SVG `require`'d via the `svg-sprite-loader`.
+* Fixed a bug that caused time-varying points from a CSV file to leave a trail on the 2D map.
+* Add `Terria.filterStartDataCallback`.  This callback gives an application the opportunity to modify start (share) data supplied in a URL before TerriaJS loads it.
+* Reduced the size of the initial TerriaJS JavaScript code by about 30% when starting in 2D mode.
+* Upgraded to [Cesium 1.29](https://github.com/AnalyticalGraphicsInc/cesium/blob/1.29/CHANGES.md).
+
+### 4.7.4
+
+* Renamed `SpatialDetailingFunction`, `WhyAmISpecialFunction`, and `PlacesLikeMeFunction` to `SpatialDetailingCatalogFunction`, `WhyAmISpecialCatalogFunction`, and `PlacesLikeMeCatalogFunction`, respectively.  The old names will be removed in a future release.
+* Fixed incorrect tooltip text for the Share button.
+* Improved the build process and content of the user guide documentation.
+
+### 4.7.3
+
+* Canceled pending tile requests when removing a layer from the 2D map.  This should drastically improve the responsiveness when dragging the time slider of a time-dynamic layer in 2D mode.
+* Added the data source and data service details to the "About this dataset" (preview) panel.
+* Fixed a bug introduced in 4.7.2 which made the Feature Info panel background too pale.
+
+### 4.7.2
+
+* Updated GNAF API to new Lucene-based backend, which should improve performance.
+* Updated custom `<chart>` tag to allow a `colors` attribute, containing comma separated css strings (one per column), allowing users to customize chart colors. The `colors` attribute in charts can also be passed through from a WPS ComplexData response.
+* Updated styling of Give Feedback form.
+* Improved consistency of "Search" and "Add Data" font sizes.
+* Improved flexibility of Feature Info Panel styling.
+* Fixed a bug that could cause an extra `/` to be added to end of URLs by `ArcGisMapServerCatalogItem`, causing some servers to reject the request.
+* Added a workaround for a bug in Internet Explorer 11 on Windows 7 that could cause the user interface to hang.
+
+### 4.7.1
+
+* Fixed a bug where providing feedback did not properly share the map view.
+* Updated to terriajs-server 2.6.2.
+* Fixed a bug leading to oversized graphics being displayed from WPS calls.
+
+### 4.7.0
+
+* Added the ability for users to share their view of the map when providing feedback.
+* Extra components can now be added to FeatureInfoSection.
+* Updated "Download Data" in FeatureInfoSection to "Download Data for this Feature".
+* Fixed the color of visited links in client apps with their own css variables.
+* Fixed a bug that prevented the scale bar from displaying correctly.
+
+### 4.6.1
+
+* Added support for creating custom WPS types, and for reusing `Point`, `Polygon`, and `Region` editors in custom types.
+* Fixed a bug that caused the legend to be missing for WMS catalog items where the legend came from GetCapabilities but the URL did not contain `GetLegendGraphic`.
+
+### 4.6.0
+
+* Changed defaults:
+  * The `clipToRectangle` property of raster catalog items (`WebMapServiceCatalogItem`, `ArcGisMapServerCatalogItem`, etc.) now defaults to `true`.  It was `false` in previous releases.  Using `false` prevents features (especially point features) right at the edge of the layer's rectangle from being cut off when the server reports too tight a rectangle, but also causes the layer to load much more slowly in many cases.  Starting in this version, we favour performance and the much more common case that the rectangle can be trusted.
+* Made `WebMapServiceCatalogItem` tolerant of a `GetCapabilities` where a `LegendURL` element does not have an `OnlineResource` or a `Dimension` does not have any values.
+* Added support for 'Long' type hint to CSV data for specifying longitude.
+* The marker indicating the location of a search result is now placed correctly on the terrain surface.
+* `CatalogFunction` region parameters are now selected on the main map rather than the preview map.
+* Some regions that were previously not selectable in Analytics, except via autocomplete, are now selectable.
+* Added hover text that shows the position of data catalog search results in the full catalog.
+* Widened scrollbars and improve their contrast.
+* Removed the default maximum number of 10 results when searching the data catalog.
+* Allow users to browse for JSON configuration files when adding "Local Data".
+* Made it easier to use custom fonts and colors in applications built on TerriaJS, via new SCSS variables.
+* Fixed a bug that caused a `CswCatalogGroup` to fail to load if the server had a `references` element without a `protocol`.
+
+### 4.5.1
+
+* The order of the legend for an `ArcGisMapServerCatalogItem` now matches the order used by ArcGIS itself.
+* Large legends are now scaled down to fit within the width of the workbench panel.
+* Improved the styling of links inside the Feature Information panel.
+* Fixed a bug that could cause the Feature Information panel's close button to initially appear in the wrong place, and then jump to the right place when moving the mouse near it.
+
+### 4.5.0
+
+* Added support for the Sensor Observation Service format, via the `SensorObservationServiceCatalogItem`.
+* Added support for end date columns in CSV data (automatic with column names containing `end_date`, `end date`, `end_time`, `end time`; or set in json file using `isEndDate` in `tableStyle.columns`.
+* Fixed calculation of end dates for moving-point CSV files, which could lead to points disappearing periodically.
+* Fixed a bug that prevented fractional seconds in time-varying WMS periodicity.
+* Added the ability to the workbench UI to select the `style` to use to display a Web Map Service (WMS) layer when multiple styles are available.
+* Added the ability to the workbench UI to select from among the available dimensions of a Web Map Service (WMS) layer.
+* Improved the error reporting and handling when specifying invalid values for the WMS COLORSCALERANGE parameter in the UI.
+* Added the ability to drag existing points when creating a `UserDrawing`.
+* Fixed a bug that could cause nonsensical legends for CSV columns with all null values.
+* Fixed a bug that prevented the Share panel from being used at all if the URL shortening service encountered an error.
+* Fixed a bug that could cause an error when adding multiple catalog items to the map quickly.
+* Tweaked the z-order of the window that appears when hovering over a chart series, so that it does not appear on top of the Feature Information panel.
+* Fixed a bug that could lead to incorrect colors in a legend for a CSV file with explicit `colorBins` and cut off at a minimum and maximum.
+* We now show the feature info panel the first time a dataset is added, containing a suggestion to click the map to learn more about a location.  Also improved the wording for the feature info panel when there is no data.
+* Fixed support for time-varying feature info for vector tile based region mapping.
+* `updateApplicationOnMessageFromParentWindow` now also allows messages from the `opener` window, i.e. the window that opened the page by calling `window.open`.  The parent or opener may now also send a message with an `allowOrigin` property to specify an origin that should be allowed to post messages.
+* Fixed a bug that prevented charts from loading http urls from https.
+* The `isNcWMS` property of `WebMapServiceCatalogItem` is now set to true, and the COLORSCALERANGE controls are available in the UI, for ncWMS2 servers.
+* Added the ability to prevent CSVs with time and `id` columns from appearing as moving points, by setting `idColumns` to either `null` or `[]`.
+* Fixed a bug that prevented default parameters to `CatalogFunction`s from being shown in the user interface.
+* Fixed a problem that made `BooleanParameter`s show up incorrectly in the user interface.
+* Embedded `<chart>` elements now support two new optional attributes:
+   * `title`: overrides the title that would otherwise be derived from the name of the feature.
+   * `hide-buttons`: If `"true"`, the Expand and Download buttons are hidden from the chart.
+* Fixed a bug in embedded `<collapsible>` elements that prevented them from being expandable.
+* Improved SDMX-JSON support to make it possible to change region type in the UI.
+* Deprecated `RegionMapping.setRegionColumnType` in favour of `RegionMapping.prototype.setRegionColumnType`. `regionDetails[].column` and `.disambigColumn` have also been deprecated.
+
+### 4.4.1
+
+* Improved feature info display of time-varying region-mapped csvs, so that chart is still shown at times with no data.
+* Fix visual hierarchy of groups and items in the catalog.
+
 ### 4.4.0
 
-* Fixed a bug which caused Cesium to crash when plotting a CSV with non-numerical data in the depth column.
+* Fixed a bug that caused Cesium (3D view) to crash when plotting a CSV with non-numerical data in the depth column.
 * Added automatic time-series charts of attributes to the feature info of time-varying region-mapped csvs.
 * Refactored Csv, AbsItt and Sdmx-Json catalog items to depend on a common `TableCatalogItem`. Deprecated `CsvCatalogItem.setActiveTimeColumn` in favour of `tableStructure.setActiveTimeColumn`.
 * Error in geocoding addresses in csv files now shows in dialog box.
-* Fixed css styling of the timeline and added padding to the feature info panel.
+* Fixed CSS styling of the timeline and added padding to the feature info panel.
+* Enhanced JSON support to recognise JSON5 format for user-added files.
+* Deprecated `indicesIntoUniqueValues`, `indicesOrValues`, `indicesOrNumericalValues` and `usesIndicesIntoUniqueValues` in `TableColumn` (`isEnum` replaces `usesIndicesIntoUniqueValues`).
+* Added support for explicitly colouring enum columns using a `tableStyle.colorBins` array of `{"value":v, "color":c}` objects
 * Improved rendering speed when changing the display variable for large lat/lon csv files.
-* Default to moving feature csvs if a time, lat, lon and a column named `id` are present.
-* Fixed a bug so units flow through to charts of moving csv features.
+* Default to moving feature CSVs if a time, latitude, longitude and a column named `id` are present.
+* Fixed a bug so units flow through to charts of moving CSV features.
+* Fixed a bug that prevented the `contextItem` of a `CatalogFunction` from showing during location selection.
+* Fixed a bug that caused `&amp;` to appear in some URLs instead of simply `&`, leading to an error when visiting the link.
+* Added the ability to pass a LineString to a Web Processing Service.
+* Fixed a bug that prevented `tableStyle.dataVariable` = `null` from working.
+* Uses a smarter default column for CSV files.
+* Fixed a bug that caused an error message to appear repeatedly when there was an error downloading tiles for a base map.
+* Fixed a bug that caused WMS layer names and WFS type names to not be displayed on the dataset info page.
+* We now preserve the state of the feature information panel when sharing.  This was lost in the transition to the new user interface in 4.0.0.
+* Added a popup message when using region mapping on old browsers without an `ArrayBuffer` type (such as Internet Explorer 9).  These browsers won't support vector tile based region mapping.
+* Fixed bug where generic parameters such as strings were not passed through to WPS services.
+* Fixed a bug where the chart panel did not update with polled data files.
+* Removed the Australian Hydrography layer from `createAustraliaBaseMapOptions`, as the source is no longer available.
+* Fixed a bug that caused the GetCapabilities URL of a WMS catalog item to be shown even when `hideSource` was set to true.
+* Newly-added user data is now automatically selected for the preview map.
+* Fixed a bug where selecting a new column on a moving point CSV file did not update the chart in the feature info panel.
+* Fixed dropdowns dropping from the bounds of the screen in Safari.
+* Fixed a bug that prevented the feature info panel from updating with polled lat/lon csvs.
+* Improved handing of missing data in charts, so that it is ignored instead of shown as 0.
+
+### 4.3.3
+
+* Use react-rangeslider 1.0.4 because 1.0.5 was published incorrectly.
 
 ### 4.3.2
 
@@ -37,7 +280,7 @@ Change Log
 ### 4.2.0
 
 * There is a known bug in this version which prevents the user from being able to choose a region for some Analytics functions.
-* Added support for ArcGis FeatureServers, using the new catalog types `esri-featureServer` and `esri-featureServer-group`. Catalog type `esri-group` can load REST service, MapServer and FeatureServer endpoints. (For backwards compatability, catalog type `esri-mapServer-group` continues to work for REST service as well as MapServer endpoints.)
+* Added support for ArcGis FeatureServers, using the new catalog types `esri-featureServer` and `esri-featureServer-group`. Catalog type `esri-group` can load REST service, MapServer and FeatureServer endpoints. (For backwards compatibility, catalog type `esri-mapServer-group` continues to work for REST service as well as MapServer endpoints.)
 * Enumeration parameter now defaults to what is shown in UI, and if parameter is optional, '' is default.
 * Adds bulk geocoding capability for Australian addresses. So GnafAPI can be used with batches of addresses, if configured.
 * Fixed a bug that caused the selection indicator to get small when near the right edge of the map and to overlap the side panel when past the left edge.
@@ -58,6 +301,7 @@ Change Log
 * Added support for polling csv files with a partial update, and by using `idColumns` to identify features across updates.
 * Added a time series chart to the Feature Info Panel for sampled, moving features.
 * Fixed a bug which sometimes prevented feature info from appearing when two region-mapped csv files were displayed.
+* Fixed the preview map extent being one item behind what was actually selected.
 
 ### 4.1.2
 

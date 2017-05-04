@@ -1,41 +1,62 @@
 import React from 'react';
+import createReactClass from 'create-react-class';
+import PropTypes from 'prop-types';
+import Icon from '../Icon.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
 
 import Styles from './parameter-editors.scss';
 
-const BooleanParameterEditor = React.createClass({
+const BooleanParameterEditor = createReactClass({
+    displayName: 'BooleanParameterEditor',
     mixins: [ObserveModelMixin],
+
     propTypes: {
-        previewed: React.PropTypes.object,
-        parameter: React.PropTypes.object
+        previewed: PropTypes.object,
+        parameter: PropTypes.object
     },
 
     onClick() {
-        const value = this.props.previewed.parameterValues[this.props.parameter.id];
-        this.props.previewed.setParameterValue(this.props.parameter.id, !value);
+        this.props.parameter.value = !this.props.parameter.value;
+    },
+
+    renderCheckbox() {
+        const value = this.props.parameter.value;
+        const name = this.props.parameter.name;
+        const description = this.props.parameter.description;
+
+        return (
+            <div>
+                <button type='button'
+                        className={Styles.btnRadio}
+                        title={description}
+                        onClick={this.onClick}>
+                    {value && <Icon glyph={Icon.GLYPHS.checkboxOn}/>}
+                    {!value && <Icon glyph={Icon.GLYPHS.checkboxOff}/>}
+                    {name}
+                </button>
+            </div>
+        );
     },
 
     renderRadio(state) {
         let name;
         let description;
-        let classNames;
-        const value = this.props.previewed.parameterValues[this.props.parameter.id];
+        const value = this.props.parameter.value === state;
         if (state === true) {
             name = this.props.parameter.trueName || this.props.parameter.name;
             description = this.props.parameter.trueDescription || this.props.parameter.description;
-            classNames = value && value === true ? Styles.btnRadioOn : Styles.btnRadioOff;
         } else {
             name = this.props.parameter.falseName || this.props.parameter.name;
             description = this.props.parameter.falseDescription || this.props.parameter.description;
-            classNames = value && value === true ? Styles.btnRadioOff : Styles.btnRadioOn;
-
         }
         return (
-            <div className={Styles.radio}>
+            <div>
                 <button type='button'
-                        className={`${Styles.btnRadio} ${classNames}`}
+                        className={Styles.btnRadio}
                         title={description}
                         onClick={this.onClick}>
+                    {value && <Icon glyph={Icon.GLYPHS.radioOn}/>}
+                    {!value && <Icon glyph={Icon.GLYPHS.radioOff}/>}
                     {name}
                 </button>
             </div>
@@ -45,7 +66,7 @@ const BooleanParameterEditor = React.createClass({
     render() {
         return (
             <div>
-                {!this.props.parameter.hasNamedStates && this.renderRadio(true)}
+                {!this.props.parameter.hasNamedStates && this.renderCheckbox()}
                 {this.props.parameter.hasNamedStates && <div>{this.renderRadio(true)}{this.renderRadio(false)}</div>}
             </div>
         );

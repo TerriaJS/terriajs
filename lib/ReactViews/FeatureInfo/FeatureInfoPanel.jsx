@@ -5,6 +5,8 @@ import FeatureInfoCatalogItem from './FeatureInfoCatalogItem.jsx';
 import Loader from '../Loader.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
+import createReactClass from 'create-react-class';
+import PropTypes from 'prop-types';
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 import Entity from 'terriajs-cesium/Source/DataSources/Entity';
 import Icon from "../Icon.jsx";
@@ -13,11 +15,13 @@ import { SEARCH_MARKER_DATA_SOURCE_NAME } from '../Search/SearchMarkerUtils';
 import Styles from './feature-info-panel.scss';
 import classNames from 'classnames';
 
-const FeatureInfoPanel = React.createClass({
+const FeatureInfoPanel = createReactClass({
+    displayName: 'FeatureInfoPanel',
     mixins: [ObserveModelMixin],
+
     propTypes: {
-        terria: React.PropTypes.object.isRequired,
-        viewState: React.PropTypes.object.isRequired
+        terria: PropTypes.object.isRequired,
+        viewState: PropTypes.object.isRequired
     },
 
     componentDidMount() {
@@ -101,6 +105,20 @@ const FeatureInfoPanel = React.createClass({
         }
     },
 
+    getMessageForNoResults() {
+        if (this.props.terria.nowViewing.hasItems) {
+            // feature info shows up becuase data has been added for the first time
+            if (this.props.viewState.firstTimeAddingData) {
+                this.props.viewState.firstTimeAddingData = false;
+                return "Click on the map to learn more about a location";
+            }
+            // if clicking on somewhere that has no data
+            return "No data is available here - try another location.";
+        } else {
+            return "Click 'Add Data' to add data to the map.";
+        }
+    },
+
     render() {
         const terria = this.props.terria;
         const viewState = this.props.viewState;
@@ -111,11 +129,12 @@ const FeatureInfoPanel = React.createClass({
             [Styles.isVisible]: viewState.featureInfoPanelIsVisible
         });
         return (
+
             <div
                 className={panelClassName}
                 aria-hidden={!viewState.featureInfoPanelIsVisible}>
                 <div className={Styles.header}>
-                    <button type='button' onClick={ this.toggleCollapsed } className={Styles.btn}>
+                    <button type='button' onClick={ this.toggleCollapsed } className={Styles.btnPanelHeading}>
                         Feature Information
                     </button>
                     <button type='button' onClick={ this.close } className={Styles.btnCloseFeature}
@@ -131,7 +150,7 @@ const FeatureInfoPanel = React.createClass({
                             <li><Loader/></li>
                         </When>
                         <When condition={!featureInfoCatalogItems || featureInfoCatalogItems.length === 0}>
-                            <li className={Styles.noResults}>No results</li>
+                            <li className={Styles.noResults}>{this.getMessageForNoResults()}</li>
                         </When>
                         <Otherwise>
                             {featureInfoCatalogItems}
@@ -140,7 +159,7 @@ const FeatureInfoPanel = React.createClass({
                 </ul>
             </div>
         );
-    }
+    },
 });
 
 /**

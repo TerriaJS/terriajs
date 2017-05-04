@@ -1,5 +1,9 @@
 import React from 'react';
 
+import createReactClass from 'create-react-class';
+
+import PropTypes from 'prop-types';
+
 import defined from 'terriajs-cesium/Source/Core/defined';
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 import VarType from '../../Map/VarType';
@@ -9,12 +13,13 @@ import CatalogGroup from '../DataCatalog/CatalogGroup';
 
 import Styles from './parameter-editors.scss';
 
-const RegionDataParameterEditor = React.createClass({
+const RegionDataParameterEditor = createReactClass({
+    displayName: 'RegionDataParameterEditor',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        previewed: React.PropTypes.object,
-        parameter: React.PropTypes.object
+        previewed: PropTypes.object,
+        parameter: PropTypes.object
     },
 
     componentWillMount() {
@@ -26,19 +31,19 @@ const RegionDataParameterEditor = React.createClass({
     },
 
     getValue() {
-        return this.props.previewed.parameterValues[this.props.parameter.id];
+        return this.props.parameter.value;
     },
 
     setValue(value) {
-        this.props.previewed.setParameterValue(this.props.parameter.id, value);
+        this.props.parameter.value = value;
     },
 
     regionProvider() {
-        return this.props.parameter.getRegionProvider(this.props.previewed.parameterValues);
+        return this.props.parameter.regionProvider;
     },
 
     catalogItemsWithMatchingRegion() {
-        return this.props.parameter.getEnabledItemsWithMatchingRegionType(this.props.previewed.parameterValues);
+        return this.props.parameter.getEnabledItemsWithMatchingRegionType();
     },
 
     toggleActive(catalogItem, column) {
@@ -152,6 +157,7 @@ const RegionDataParameterEditor = React.createClass({
                     <ul className={Styles.tree}>
                         <For each="catalogItem" index="i" of={this.catalogItemsWithMatchingRegion()}>
                             <CatalogGroup
+                                key={catalogItem.uniqueId}
                                 text={catalogItem.name}
                                 topLevel={false}
                                 open={this.catalogItemIsOpen(catalogItem)}
@@ -165,12 +171,13 @@ const RegionDataParameterEditor = React.createClass({
             );
         }
         return (
+            // Don't break the lines around the link to csv-geo-au, or whitespace stripping will ruin the formatting in
+            // the rendered version.
             <div className={Styles.parameterEditorImportantNote}>
                 No characteristics are available because you have not added any data to the map for this region
                 type, {this.regionProvider() ? this.regionProvider().regionType : 'None'}.
-                You may use your own data with this analysis by creating a CSV following the
-                <a target="_blank" href="https://github.com/NICTA/nationalmap/wiki/csv-geo-au">csv-geo-au</a>
-                guidelines and dragging and dropping it onto the map.
+                You may use your own data with this analysis by creating a CSV following the <a target="_blank" href="https://github.com/NICTA/nationalmap/wiki/csv-geo-au">csv-geo-au</a> guidelines
+                and dragging and dropping it onto the map.
             </div>
         );
     },
@@ -182,6 +189,7 @@ const RegionDataParameterEditor = React.createClass({
                     if (column.type === VarType.SCALAR) {
                         return (
                             <CatalogItem
+                                key={column.id}
                                 onTextClick={this.toggleActive.bind(this, catalogItem, column)}
                                 selected={this.isActive(catalogItem, column)}
                                 text={column.name}
@@ -193,6 +201,6 @@ const RegionDataParameterEditor = React.createClass({
                 })}
             </ul>
         );
-    }
+    },
 });
 module.exports = RegionDataParameterEditor;

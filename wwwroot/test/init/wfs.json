@@ -27,6 +27,30 @@
           }
         },
         {
+          "name": "Commonwealth Electoral Divisions (hidden source)",
+          "type": "wfs-features-group",
+          "url": "http://geoserver.nationalmap.nicta.com.au/admin_bnds_abs/ows",
+          "typeNames": "admin_bnds:COM20111216_ELB_region",
+          "nameProperty": "ELECT_DIV",
+          "groupByProperty": "STATE",
+          "hideSource": true,
+          "itemProperties": {
+            "description": "Commonwealth Electoral Divisions\n\n© Commonwealth of Australia (Australian Electoral Commission)2015",
+            "info": [
+              {
+                "name": "Licence",
+                "content": "[Australian Electoral Commission Data download licence](http://www.aec.gov.au/Electorates/gis/GIS_Data_Download_Data_Licence.htm)"
+              }
+            ],
+            "dataCustodian": "[Australian Electoral Commission](http://www.aec.gov.au/)",
+            "hideSource": true,
+            "style": {
+              "fill": "#aaaa00",
+              "stroke": "#aaaa00"
+            }
+          }
+        },
+        {
           "name": "Postal Areas (group from features)",
           "type": "wfs-features-group",
           "url": "http://geoserver.nationalmap.nicta.com.au/admin_bnds_abs/ows",

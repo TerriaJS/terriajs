@@ -1,18 +1,24 @@
 'use strict';
+
 import React from 'react';
-import ObserveModelMixin from '../../ObserveModelMixin';
+import createReactClass from 'create-react-class';
+import PropTypes from 'prop-types';
+import URI from 'urijs';
+
 import Rectangle from 'terriajs-cesium/Source/Core/Rectangle';
+
+import GeoJsonCatalogItem from '../../../Models/GeoJsonCatalogItem';
+import ObserveModelMixin from '../../ObserveModelMixin';
 import Styles from './my_location.scss';
 import TerriaError from '../../../Core/TerriaError';
 import Icon from "../../Icon.jsx";
 
-const GeoJsonCatalogItem = require('../../../Models/GeoJsonCatalogItem');
-
-const MyLocation = React.createClass({
+const MyLocation = createReactClass({
+    displayName: 'MyLocation',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        terria: React.PropTypes.object.isRequired
+        terria: PropTypes.object.isRequired
     },
 
     _marker: undefined,
@@ -22,7 +28,7 @@ const MyLocation = React.createClass({
     },
 
     getLocation() {
-        if(navigator.geolocation) {
+        if (navigator.geolocation) {
             const options = {
                 enableHighAccuracy: true,
                 timeout: 5000,
@@ -30,11 +36,19 @@ const MyLocation = React.createClass({
             };
             navigator.geolocation.getCurrentPosition(
                 this.zoomToMyLocation,
-                (err)=>{
+                err => {
+                    let message = err.message;
+                    if (message && message.indexOf('Only secure origins are allowed') === 0) {
+                        // This is actually the recommended way to check for this error.
+                        // https://developers.google.com/web/updates/2016/04/geolocation-on-secure-contexts-only
+                        const uri = new URI(window.location);
+                        const secureUrl = uri.protocol('https').toString();
+                        message = 'Your browser can only provide your location when using https. You may be able to use ' + secureUrl + ' instead.';
+                    }
                     this.props.terria.error.raiseEvent(new TerriaError({
                         sender: this,
                         title: 'Error getting location',
-                        message: err.message
+                        message: message
                     }));
                 },
                 options
@@ -43,7 +57,7 @@ const MyLocation = React.createClass({
             this.props.terria.error.raiseEvent(new TerriaError({
                 sender: this,
                 title: 'Error getting location',
-                message: 'Your browser does not support location.'
+                message: 'Your browser cannot provide your location.'
             }));
         }
     },
@@ -80,6 +94,7 @@ const MyLocation = React.createClass({
     handleCick() {
         this.getLocation();
     },
+
     render() {
         return <div className={Styles.myLocation}>
                   <button type='button' className={Styles.btn}
@@ -88,7 +103,7 @@ const MyLocation = React.createClass({
                           <Icon glyph={Icon.GLYPHS.geolocation}/>
                   </button>
                </div>;
-    }
+    },
 });
 
 export default MyLocation;

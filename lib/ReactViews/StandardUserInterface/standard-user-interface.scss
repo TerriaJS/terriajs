@@ -6,6 +6,14 @@
 // reason - you can change pretty much other file to do another hot-reload and get your globe back, or just zoom
 // back in.
 
+.ui-root {
+  // This is a workaround for a bug in IE11 on Windows 7.
+  // https://connect.microsoft.com/IE/feedback/details/796745/mouse-events-are-not-delivered-at-all-anymore-when-inside-an-svg-a-use-is-removed-from-the-dom
+  svg use {
+    pointer-events: none;
+  }
+}
+
 .ui {
   @media screen{
     overflow: hidden;
@@ -45,6 +53,16 @@
     height: auto;
     page-break-after: always;
   }
+}
+
+.feedback{
+  position: relative;
+  z-index: $front-component-z-index - 10;
+}
+
+.featureInfo{
+  z-index: $front-component-z-index - 20;
+  position: relative;
 }
 
 @media screen and (min-width: $sm) {

@@ -2,7 +2,6 @@ docs/
 node_modules/
 .idea/
 build/
-doc/
 error.log
 output.log
 npm-debug.log
@@ -10,6 +9,6 @@ npm-debug.log
 terria.lib.js
 terriajs-server.log
 terriajs.pid
-
-# added by GitSavvy
+/wwwroot/doc/
 /wwwroot/schema/
+/wwwroot/user-guide/

@@ -1,33 +1,22 @@
-import React from 'react';
+import Loader from '../Loader';
 import ObserveModelMixin from '../ObserveModelMixin';
 import ParameterEditor from './ParameterEditor';
-import when from 'terriajs-cesium/Source/ThirdParty/when';
-import TerriaError from '../../Core/TerriaError';
 import parseCustomMarkdownToReact from '../Custom/parseCustomMarkdownToReact';
-import defined from 'terriajs-cesium/Source/Core/defined';
+import React from 'react';
+import createReactClass from 'create-react-class';
+import PropTypes from 'prop-types';
 import Styles from './invoke-function.scss';
+import TerriaError from '../../Core/TerriaError';
+import when from 'terriajs-cesium/Source/ThirdParty/when';
 
-const InvokeFunction = React.createClass({
+const InvokeFunction = createReactClass({
+    displayName: 'InvokeFunction',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        terria: React.PropTypes.object,
-        previewed: React.PropTypes.object,
-        viewState: React.PropTypes.object
-    },
-
-    componentWillMount() {
-        this.enableContextItem(this.props);
-    },
-
-    componentWillUnmount() {
-        this.removeContextItem();
-    },
-
-    componentWillReceiveProps(nextProps) {
-        // This will be called when component is already mounted but props change, for example if you go from one WPS
-        // item to another.
-        this.enableContextItem(nextProps);
+        terria: PropTypes.object,
+        previewed: PropTypes.object,
+        viewState: PropTypes.object
     },
 
     submit() {
@@ -54,34 +43,23 @@ const InvokeFunction = React.createClass({
         }
     },
 
-    enableContextItem(props) {
-        this.removeContextItem();
-        if (defined(props.previewed.contextItem)) {
-            props.previewed.contextItem.isEnabled = true;
-            this._lastContextItem = props.previewed.contextItem;
-        }
-    },
-
-    removeContextItem() {
-        if (defined(this._lastContextItem)) {
-            this._lastContextItem.isEnabled = false;
-            this._lastContextItem = undefined;
-        }
-    },
-
     getParams() {
         // Key should include the previewed item identifier so that
         // components are refreshed when different previewed items are
         // displayed
         return this.props.previewed.parameters.map((param, i)=>
-        <ParameterEditor key={param.id + this.props.previewed.uniqueId}
-                         parameter={param}
-                         viewState={this.props.viewState}
-                         previewed={this.props.previewed}
-        />
-    );},
+            <ParameterEditor key={param.id + this.props.previewed.uniqueId}
+                             parameter={param}
+                             viewState={this.props.viewState}
+                             previewed={this.props.previewed}
+            />);
+    },
 
     render() {
+        if (this.props.previewed.isLoading) {
+            return <Loader />;
+        }
+
         return (<div className={Styles.invokeFunction}>
                     <div className={Styles.content}>
                         <h3>{this.props.previewed.name}</h3>
@@ -92,7 +70,7 @@ const InvokeFunction = React.createClass({
                         <button type='button' className={Styles.btn} onClick={this.submit}>Run Analysis</button>
                     </div>
                 </div>);
-    }
+    },
 });
 
 module.exports = InvokeFunction;

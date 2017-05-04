@@ -8,8 +8,15 @@
 .btn {
   composes: btn from '../../../Sass/common/_buttons.scss';
   composes: btn--toggle from '../../../Sass/common/_buttons.scss';
+  width: 20px;
+  height: 15px;
+  fill: $text-light;
 }
 
 .is-open {
   composes: is-open from '../../../Sass/common/_buttons.scss';
+}
+
+.is-inverse {
+	fill: $text-dark;
 }

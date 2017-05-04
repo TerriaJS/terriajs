@@ -1,0 +1,169 @@
+@import '~terriajs-variables';
+@import '../../../../Sass/common/mixins';
+
+// summary-concept
+
+// Used only by SummaryConcept.
+
+.root {
+  line-height: 1.4;
+}
+
+.title {
+  margin-bottom: -$padding/2;
+}
+
+// Used by all descendants.
+
+.section {
+  position: relative;
+  margin-top: $padding;
+  background: $overlay;
+}
+
+// Used by ActiveConcept and OpenInactiveConcept.
+
+.controls {
+  float: right;
+}
+
+.is-loading .controls {
+  color: $text-light-dimmed;
+  button {
+    cursor: not-allowed;
+    svg{
+      fill: $text-light-dimmed;
+    }
+  }
+}
+
+.heading {
+  background: $overlay;
+  border: $border-style;
+  padding: 5px $padding; // 5px $padding 5px 22px;
+  font-weight: $font-weight-normal;
+}
+
+.condition {
+  border-left: $border-style;
+  border-right: $border-style;
+  border-bottom: $border-style;
+  padding: 5px $padding; // 5px $padding 5px 22px;
+  font-weight: $font-weight-light;
+}
+
+.children-list {
+  composes: children-list from '../concept-viewer.scss';
+  li {
+    clear: both;
+  }
+}
+
+.btnClose {
+  composes: btn from '../../../../Sass/common/_buttons.scss';
+  @extend %wrap;
+  color: $text-light;
+  font-size: $font-size-mid-mini;
+  padding: 0px 7px;
+  margin: 5px;
+  font-weight: $font-weight-light;
+  border: $border-style;
+  &:focus, &:hover {
+    background: $modal-highlight;
+  }
+}
+
+// Used by ActiveConcept.
+
+.btnRemove, .btnEdit {
+  composes: btn from '../../../../Sass/common/_buttons.scss';
+  display: inline-block;
+  padding: 8px 4px;
+  svg {
+    height: 16px;
+    width: 16px;
+    fill: $text-light;
+    &:focus, &:hover {
+      fill: $modal-highlight;
+    }
+  }
+}
+
+.btnOpen {
+  composes: btn from '../../../../Sass/common/_buttons.scss';
+  @extend %wrap;
+  width: 100%;
+  &:focus, &:hover {
+    color: $text-light;
+    background: get-hover-color($overlay);
+    &:before {
+      opacity: 1;
+    }
+  }
+}
+
+.no-conditions {
+  composes: heading;
+  margin-top: $padding;
+}
+
+// Used by OpenInactiveConcept.
+
+.btnAddOpen {
+  composes: btnOpen;
+  svg {
+    height: 16px;
+    width: 16px;
+    padding: 7px 5px;
+    fill: $text-light;
+  }
+}
+
+.indented {
+  padding-left: 30px;
+}
+
+.btnBack {
+  position: absolute;
+  composes: btn from '../../../../Sass/common/_buttons.scss';
+  margin-top: -2px;
+  svg {
+    height: 24px;
+    width: 24px;
+    fill: $text-light;
+    &:focus, &:hover {
+      background: $modal-highlight;
+    }
+  }
+}
+
+.items {
+  composes: items from '../concept-viewer.scss';
+}
+
+.list-reset {
+  composes: list-reset from '../../../../Sass/common/_base.scss';
+}
+
+// Used by AddButton.
+
+.btnAddNew {
+  composes: btnOpen;
+  composes: heading;
+  svg {
+    height: 35px;
+    width: 35px;
+    fill: $text-light;
+    position: absolute;
+    left: 0;
+    top: -2px;
+  }
+  .text {
+    padding-left: 26px;
+  }
+  background: $color-primary;
+  &:focus, &:hover {
+    background: get-hover-color($color-primary);
+  }
+
+}
