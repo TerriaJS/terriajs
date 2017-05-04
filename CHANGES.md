@@ -3,9 +3,12 @@
 Change Log
 ==========
 
-### 5.1.1
+### 5.2.0
 
 * Upgraded to Leaflet 1.0.3 for the 2D and preview maps.
+
+### 5.1.1
+
 * Fixed a bug that caused an 'added' and a 'shown' event for "Unnamed Item" to be logged to Google Analytics when previewing an item in the catalog.
 * Added a 'preview' Google Analytics event when a catalog item is shown on the preview map in the catalog.
 * Fixed a bug that could cause an error when adding a layer without previewing it first.
