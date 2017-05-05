@@ -3,7 +3,6 @@ import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import arrayContains from '../../Core/arrayContains';
 import Branding from './../SidePanel/Branding.jsx';
-import DisclaimerHandler from '../../ReactViewModels/DisclaimerHandler';
 import DragDropFile from './../DragDropFile.jsx';
 import ExplorerWindow from './../ExplorerWindow/ExplorerWindow.jsx';
 import FeatureInfoPanel from './../FeatureInfo/FeatureInfoPanel.jsx';
@@ -68,7 +67,6 @@ const StandardUserInterface = createReactClass({
         window.addEventListener('resize', this.resizeListener, false);
 
         this.resizeListener();
-        this.disclaimerHandler = new DisclaimerHandler(this.props.terria, this.props.viewState);
     },
 
     componentDidMount() {
@@ -78,7 +76,6 @@ const StandardUserInterface = createReactClass({
     componentWillUnmount() {
         window.removeEventListener('resize', this.resizeListener, false);
         document.removeEventListener('dragover', this.dragOverListener, false);
-        this.disclaimerHandler.dispose();
     },
 
     acceptDragDropFile() {
