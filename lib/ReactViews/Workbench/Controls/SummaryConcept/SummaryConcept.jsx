@@ -54,12 +54,7 @@ const SummaryConcept = createReactClass({
         const isLoading = this.props.isLoading;
         return (
             <div className={Styles.root}>
-                <If condition={concept.meta_name}>
-                    <div className={Styles.title} title={`${concept.name}: ${concept.meta_definition}`}>{concept.meta_name}:</div>
-                </If>
-                <If condition={!concept.meta_name}>
-                    <div className={Styles.title}>{concept.name}:</div>
-                </If>
+                <div className={Styles.title} title={concept.id + (concept.description ? ': ' + concept.description : '')}>{concept.name}:</div>
 
                 <For each="group" index="i" of={activeLeafNodesByParent}>
                     <ActiveConcept key={i} rootConcept={concept} activeLeafNodesWithParent={group} isLoading={isLoading}/>

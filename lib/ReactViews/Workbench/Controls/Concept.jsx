@@ -77,7 +77,7 @@ const Concept = createReactClass({
                                 </button>
                             </If>
                         </div>
-                        {concept.name}
+                        <div title={concept.id + (concept.description ? ': ' + concept.description : '')}>{concept.name}</div>
                     </div>
                 </If>
                 <If condition={concept.isOpen}>
