@@ -7,6 +7,7 @@ Change Log
 
 * Upgraded to Leaflet 1.0.3 for the 2D and preview maps.
 * Fixed a bug that caused layer disclaimers to fail to appear when the layer was enabled via a share link.  Since the user was unable to accept the disclaimer, the layer also failed to appear.
+* Fixed a bug which prevented preview charts in the feature info panel from updating when the user changed the Sensor Observation Service frequency.
 
 ### 5.1.1
 
