@@ -239,13 +239,18 @@ const FeatureInfoSection = createReactClass({
  *
  * For (1), use an event listener on the (terria) clock to update the feature's currentProperties/currentDescription directly.
  * For (2), use a regular javascript setTimeout to update a counter in feature's currentProperties.
- * For (3), this is handled by the catalog item itself changing as well, which should be knockout tracked.
+ * For (3), use an event listener on the Feature's underlying Entity's "definitionChanged" event.
+ *   Conceivably it could also be handled by the catalog item itself changing, if its change is knockout tracked, and the
+ *   change leads to a change in what is rendered (unlikely).
  * Since the catalogItem is also a prop, this will trigger a rerender.
  *
  * For simplicity, we do not currently support (1) and (2) at the same time.
  * @private
  */
 function setSubscriptionsAndTimeouts(featureInfoSection, feature) {
+    feature.definitionChanged.addEventListener(function(changedFeature) {
+        setCurrentFeatureValues(changedFeature, featureInfoSection.props.clock);
+    });
     if (featureInfoSection.isFeatureTimeVarying(feature)) {
         featureInfoSection.setState({
             clockSubscription: featureInfoSection.props.clock.onTick.addEventListener(function(clock) {

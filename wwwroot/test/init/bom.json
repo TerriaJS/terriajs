@@ -135,7 +135,6 @@
                     "type": "sos",
                     "proceduresName": "Frequency",
                     "description": "Watercourse levels, as defined under category 1a of the Water Regulations 2008 – refer to Definitions – Subcategories of Water Information. This data is shown as provided to the Bureau of Meteorology by data owner organisations, and is subject to their terms and conditions of use. Please refer to Copyright on the Water Data Online website, and Disclaimer statements relating to the use of Bureau of Meteorology material.",
-                    "featureInfoTemplate": "# {{name}}\n\n|||\n|-------|-------|\n|Station name|{{name}}|\n|SOS2 Feature Type|{{type}}|\n|SOS2 ID|{{id}}|\n|Latitude|{{lat}}|\n|Longitude|{{lon}}|\n\n{{chart}}",
                     "observablePropertiesName": "Observation type",
                     "startDate": "1980-01-01T00:00:00+10",
                     "endDate": "2016-10-01T00:00:00+10",
