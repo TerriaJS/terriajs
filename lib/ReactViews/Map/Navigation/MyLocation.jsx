@@ -101,17 +101,9 @@ const MyLocation = React.createClass({
             'stroke-width': 3
         };
 
+        this._marker.load();
         if (this._marker.isEnabled !== true) {
             this._marker.isEnabled = true;
-        }
-
-        if (this._marker.isShown) {
-            // Toggle the state of .isShown()  to force the marker to visually update.
-            // Despite .data being one of the ._getValuesThatInfluenceLoad() it does not seem sufficent to update the data value to get the element to reload so this hack is in place to get the element to visually update.
-            // Force the exiting source to be removed from the list.
-            this._marker.isShown = false;
-            // Reload the data and then reshow the element when done loading.
-            this._marker.load().then(() => { this._marker.isShown = true });
         }
     },
 
