@@ -120,6 +120,8 @@ const FeatureInfoSection = createReactClass({
             return typeof template === 'string' ?
                 Mustache.render(template, templateData) :
                 Mustache.render(template.template, templateData, template.partials);
+        } else {
+            return 'No information available';
         }
     },
 
