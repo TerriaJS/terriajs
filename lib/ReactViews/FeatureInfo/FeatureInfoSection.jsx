@@ -114,9 +114,13 @@ const FeatureInfoSection = createReactClass({
                 templateData[alias.id] = templateData[alias.name];
             }
         }
-        return typeof template === 'string' ?
-            Mustache.render(template, templateData) :
-            Mustache.render(template.template, templateData, template.partials);
+        // templateData may not be defined if a re-render gets triggered in the middle of a feature updating.
+        // (Recall we re-render whenever feature.definitionChanged triggers.)
+        if (defined(templateData)) {
+            return typeof template === 'string' ?
+                Mustache.render(template, templateData) :
+                Mustache.render(template.template, templateData, template.partials);
+        }
     },
 
     descriptionFromFeature() {
