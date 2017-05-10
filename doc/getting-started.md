@@ -1,6 +1,6 @@
 The easiest way to get started with TerriaJS is to use [TerriaMap](https://github.com/TerriaJS/TerriaMap).  TerriaMap is a full-featured application built on TerriaJS, ready to be customized with your own branding and catalog.  It is also a great starting point for more in-depth customization.
 
-This guide explains how to build and run TerriaMap locally.  See [Deployment](Deployment) to learn how to deploy it for use by others.
+This guide explains how to build and run TerriaMap locally.  See [Deploying](deploying) to learn how to deploy it for use by others.
 
 You may also be interested in how to [make your own map without writing any code](http://stevebennett.me/2015/07/02/your-own-personal-national-map-with-terriajs-no-coding-and-nothing-to-deploy/).
 
