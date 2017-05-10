@@ -37,6 +37,10 @@ const DimensionSelectorSection = createReactClass({
         const dimensions = [];
         item.layers.split(',').forEach(layerName => {
             const layerDimensions = item.availableDimensions[layerName];
+            if (!layerDimensions) {
+                return;
+            }
+
             layerDimensions.forEach(layerDimension => {
                 // Don't include the time dimension; it is handled specially
                 if (layerDimension.name.toLowerCase() === 'time') {

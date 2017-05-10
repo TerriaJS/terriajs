@@ -1,0 +1,26 @@
+@import '~terriajs-variables';
+
+.experimental-features{
+  position: absolute;
+  left: 25px;
+  bottom: 25px;
+  z-index: 1;
+
+  @media print{
+    display: none;
+  }
+
+  @media screen and (min-width: $sm) {
+    top: auto;
+    bottom: 100px;
+  }
+}
+
+.control {
+  margin: 15px 0;
+  text-align: center;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
