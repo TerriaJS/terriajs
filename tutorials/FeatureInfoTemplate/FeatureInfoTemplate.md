@@ -85,11 +85,37 @@ A second method is to use `terria.formatNumber` directly in the template. This a
 
 ## URL-encoding strings
 
-To URL-encode a value in a template, use `terria.urlEncodeComponent`.  For example:
+To URL-encode a value in a template, use `terria.urlEncode` or `terria.urlEncodeComponent`.  For example:
 
+    Test: {{#terria.urlEncode}}http://example.com/a b{{/terria.urlEncode}}
     Test: {{#terria.urlEncodeComponent}}W/HOE#1{{/terria.urlEncodeComponent}}
+
+## Time-series charts
+
+For features with time-varying table-based data structures (eg. CSV, SOS2, SDMX-JSON, if there is a time column), the feature info panel also includes a chart of the data over time, eg.
+
+<img src="../static/feature_info_with_time_series.png">
+
+You can place this chart in your template using `{{terria.timeSeries.chart}}`.  Alternatively, you can access the following component information:
+- `{{terria.timeSeries.xName}}` - the x-column name, with any double-quotes removed.
+- `{{terria.timeSeries.yName}}` - the y-column name, with any double-quotes removed.
+- `{{terria.timeSeries.title}}`
+- `{{terria.timeSeries.id}}`
+- `{{terria.timeSeries.units}}` - the column units as a comma-separated string.
+- `{{terria.timeSeries.data}}` - the data as a comma-separated string.
+
+So you could reconstruct the chart manually as:
+```
+<h4>{{terria.timeSeries.title}}</h4>
+<chart x-column="{{terria.timeSeries.xName}}"
+       y-column="{{terria.timeSeries.yName}}"
+       id="{{terria.timeSeries.id}}"
+       column-units="{{terria.timeSeries.units}}">
+    {{terria.timeSeries.data}}
+</chart>
+```
+or use this as a basis to customise the chart.
 
 ## Other supporting data
 
-In the template, the clicked point's latitude and longitude are also available as `{{terria.coords.latitude}}` and `{{terria.coords.longitude}}`.
-
+The clicked point's latitude and longitude are also available as `{{terria.coords.latitude}}` and `{{terria.coords.longitude}}`.

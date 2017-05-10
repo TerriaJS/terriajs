@@ -1,4 +1,6 @@
 import React from 'react';
+import createReactClass from 'create-react-class';
+import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import DataCatalog from '../DataCatalog/DataCatalog.jsx';
@@ -10,12 +12,13 @@ import Icon from '../Icon';
 
 import Styles from './mobile-modal-window.scss';
 
-const MobileModalWindow = React.createClass({
+const MobileModalWindow = createReactClass({
+    displayName: 'MobileModalWindow',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        terria: React.PropTypes.object,
-        viewState: React.PropTypes.object.isRequired
+        terria: PropTypes.object,
+        viewState: PropTypes.object.isRequired
     },
 
     renderModalContent() {
@@ -103,6 +106,6 @@ const MobileModalWindow = React.createClass({
                 </div>
             </div>
         );
-    }
+    },
 });
 module.exports = MobileModalWindow;

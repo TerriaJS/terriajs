@@ -1,5 +1,9 @@
 import React from 'react';
 
+import createReactClass from 'create-react-class';
+
+import PropTypes from 'prop-types';
+
 import CesiumMath from 'terriajs-cesium/Source/Core/Math';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
@@ -8,13 +12,14 @@ import UserDrawing from '../../Models/UserDrawing';
 import ObserveModelMixin from '../ObserveModelMixin';
 import Styles from './parameter-editors.scss';
 
-const LineParameterEditor = React.createClass({
+const LineParameterEditor = createReactClass({
+    displayName: 'LineParameterEditor',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        previewed: React.PropTypes.object,
-        parameter: React.PropTypes.object,
-        viewState: React.PropTypes.object
+        previewed: PropTypes.object,
+        parameter: PropTypes.object,
+        viewState: PropTypes.object
     },
 
     getInitialState() {
@@ -71,7 +76,7 @@ const LineParameterEditor = React.createClass({
                 </button>
             </div>
         );
-    }
+    },
 });
 
 /**

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import Loader from '../Loader.jsx';
@@ -54,18 +55,18 @@ function CatalogGroup(props) {
 }
 
 CatalogGroup.propTypes = {
-    text: React.PropTypes.string,
-    title: React.PropTypes.string,
-    topLevel: React.PropTypes.bool,
-    open: React.PropTypes.bool,
-    loading: React.PropTypes.bool,
-    emptyMessage: React.PropTypes.string,
-    onClick: React.PropTypes.func,
-    children: React.PropTypes.oneOfType([
-        React.PropTypes.element,
-        React.PropTypes.arrayOf(React.PropTypes.element)
+    text: PropTypes.string,
+    title: PropTypes.string,
+    topLevel: PropTypes.bool,
+    open: PropTypes.bool,
+    loading: PropTypes.bool,
+    emptyMessage: PropTypes.string,
+    onClick: PropTypes.func,
+    children: PropTypes.oneOfType([
+        PropTypes.element,
+        PropTypes.arrayOf(PropTypes.element)
     ]),
-    selected: React.PropTypes.bool
+    selected: PropTypes.bool
 };
 
 export default CatalogGroup;

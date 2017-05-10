@@ -1,5 +1,7 @@
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
+import createReactClass from 'create-react-class';
+import PropTypes from 'prop-types';
 import SearchResult from './SearchResult.jsx';
 import BadgeBar from '../BadgeBar.jsx';
 import Styles from './sidebar-search.scss';
@@ -8,13 +10,14 @@ import LocationSearchResults from './LocationSearchResults.jsx';
 import {addMarker} from './SearchMarkerUtils';
 
 // Handle any of the three kinds of search based on the props
-const SidebarSearch = React.createClass({
+const SidebarSearch = createReactClass({
+    displayName: 'SidebarSearch',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        viewState: React.PropTypes.object.isRequired,
-        isWaitingForSearchToStart: React.PropTypes.bool,
-        terria: React.PropTypes.object.isRequired
+        viewState: PropTypes.object.isRequired,
+        isWaitingForSearchToStart: PropTypes.bool,
+        terria: PropTypes.object.isRequired
     },
 
     searchInDataCatalog() {
@@ -65,7 +68,7 @@ const SidebarSearch = React.createClass({
                 </div>
             </div>
         );
-    }
+    },
 });
 
 module.exports = SidebarSearch;

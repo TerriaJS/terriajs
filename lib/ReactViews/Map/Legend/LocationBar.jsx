@@ -2,15 +2,18 @@
 import classNames from "classnames";
 import ObserveModelMixin from '../../ObserveModelMixin';
 import React from 'react';
+import createReactClass from 'create-react-class';
+import PropTypes from 'prop-types';
 import Styles from './legend.scss';
 
-const LocationBar = React.createClass({
+const LocationBar = createReactClass({
+    displayName: 'LocationBar',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        terria: React.PropTypes.object,
-        showUtmZone: React.PropTypes.bool,
-        mouseCoords: React.PropTypes.object.isRequired
+        terria: PropTypes.object,
+        showUtmZone: PropTypes.bool,
+        mouseCoords: PropTypes.object.isRequired
     },
 
     getDefaultProps: function() {
@@ -43,7 +46,7 @@ const LocationBar = React.createClass({
                 </div>
             </button>
         );
-    }
+    },
 });
 
 module.exports = LocationBar;

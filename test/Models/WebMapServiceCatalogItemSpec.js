@@ -2,15 +2,15 @@
 
 /*global require,describe,it,expect,beforeEach,fail*/
 
-var ImageryProvider = require('terriajs-cesium/Source/Scene/ImageryProvider');
-var Terria = require('../../lib/Models/Terria');
-var LegendUrl = require('../../lib/Map/LegendUrl');
+var Credit = require('terriajs-cesium/Source/Core/Credit');
 var ImageryLayerCatalogItem = require('../../lib/Models/ImageryLayerCatalogItem');
+var ImageryProvider = require('terriajs-cesium/Source/Scene/ImageryProvider');
+var JulianDate = require('terriajs-cesium/Source/Core/JulianDate');
+var LegendUrl = require('../../lib/Map/LegendUrl');
+var Rectangle = require('terriajs-cesium/Source/Core/Rectangle');
+var Terria = require('../../lib/Models/Terria');
 var WebMapServiceCatalogItem = require('../../lib/Models/WebMapServiceCatalogItem');
 var WebMercatorTilingScheme = require('terriajs-cesium/Source/Core/WebMercatorTilingScheme');
-
-var Rectangle = require('terriajs-cesium/Source/Core/Rectangle');
-var Credit = require('terriajs-cesium/Source/Core/Credit');
 
 var terria;
 var wmsItem;
@@ -57,11 +57,7 @@ describe('WebMapServiceCatalogItem', function() {
             });
             wmsItem.load().then(function() {
                 expect(wmsItem.legendUrl.url.indexOf('http://foo.com/bar')).toBe(0);
-                done();
-            }).otherwise(function(e) {
-                fail(e);
-                done();
-            });
+            }).then(done).otherwise(done.fail);
         });
 
         it('incorporates parameters if legendUrl comes from style', function(done) {
@@ -74,12 +70,7 @@ describe('WebMapServiceCatalogItem', function() {
             });
             wmsItem.load().then(function() {
                 expect(wmsItem.legendUrl).toEqual(new LegendUrl('http://www.example.com/foo?request=GetLegendGraphic&secondUrl&styles=jet2&foo=bar&srs=EPSG%3A3857', 'image/gif'));
-                done();
-            }).otherwise(function(e) {
-                fail(e);
-                done();
-            });
-
+            }).then(done).otherwise(done.fail);
         });
 
         it('incorporates parameters if legendUrl is created from scratch', function(done) {
@@ -92,11 +83,7 @@ describe('WebMapServiceCatalogItem', function() {
             });
             wmsItem.load().then(function() {
                 expect(wmsItem.legendUrl.url.indexOf('http://foo.com/bar?service=WMS&version=1.1.0&request=GetLegendGraphic&format=image%2Fpng&transparent=True&layer=single_period&alpha=beta&foo=bar&srs=EPSG%3A3857')).toBe(0);
-                done();
-            }).otherwise(function(e) {
-                fail(e);
-                done();
-            });
+            }).then(done).otherwise(done.fail);
 
         });
 
@@ -108,11 +95,7 @@ describe('WebMapServiceCatalogItem', function() {
             });
             wmsItem.load().then(function() {
                 expect(wmsItem.legendUrl).toEqual(new LegendUrl('http://www.example.com/foo?request=GetLegendGraphic&firstUrl&srs=EPSG%3A3857', 'image/gif'));
-                done();
-            }).otherwise(function(e) {
-                fail(e);
-                done();
-            });
+            }).then(done).otherwise(done.fail);
         });
 
         it('is read from the first style tag when XML specifies multiple styles for a layer, provided style is unspecified', function(done) {
@@ -123,11 +106,7 @@ describe('WebMapServiceCatalogItem', function() {
             });
             wmsItem.load().then(function() {
                 expect(wmsItem.legendUrl).toEqual(new LegendUrl('http://www.example.com/foo?request=GetLegendGraphic&firstUrl&srs=EPSG%3A3857', 'image/gif'));
-                done();
-            }).otherwise(function(e) {
-                fail(e);
-                done();
-            });
+            }).then(done).otherwise(done.fail);
         });
 
         it('is read from the first LegendURL tag when XML specifies multiple LegendURL tags for a style', function(done) {
@@ -138,11 +117,7 @@ describe('WebMapServiceCatalogItem', function() {
             });
             wmsItem.load().then(function() {
                 expect(wmsItem.legendUrl).toEqual(new LegendUrl('http://www.example.com/foo?request=GetLegendGraphic&firstUrl&srs=EPSG%3A3857', 'image/gif'));
-                done();
-            }).otherwise(function(e) {
-                fail(e);
-                done();
-            });
+            }).then(done).otherwise(done.fail);
         });
 
 
@@ -157,11 +132,7 @@ describe('WebMapServiceCatalogItem', function() {
 
             wmsItem.load().then(function() {
                 expect(wmsItem.legendUrl).toEqual(new LegendUrl('http://www.example.com/blahFace'));
-                done();
-            }).otherwise(function(e) {
-                fail(e);
-                done();
-            });
+            }).then(done).otherwise(done.fail);
         });
     });
 
@@ -382,13 +353,8 @@ describe('WebMapServiceCatalogItem', function() {
         });
         wmsItem.load().then(function() {
             expect(wmsItem.intervals.length).toEqual(13);
-            done();
-        }).otherwise(function() {
-            fail();
-            done();
-        });
+        }).then(done).otherwise(done.fail);
     });
-
 
     it('can understand two-part period datetimes', function(done) {
         // <Dimension name="time" units="ISO8601" />
@@ -400,11 +366,7 @@ describe('WebMapServiceCatalogItem', function() {
         });
         wmsItem.load().then(function() {
             expect(wmsItem.intervals.length).toEqual(1);
-            done();
-        }).otherwise(function(e) {
-            fail(e);
-            done();
-        });
+        }).then(done).otherwise(done.fail);
 
     });
 
@@ -418,11 +380,35 @@ describe('WebMapServiceCatalogItem', function() {
         });
         wmsItem.load().then(function() {
             expect(wmsItem.intervals.length).toEqual(11);
-            done();
-        }).otherwise(function(e) {
-            fail(e);
-            done();
+        }).then(done).otherwise(done.fail);
+    });
+
+    it('supports multiple units in a single period', function(done) {
+        // <Dimension name="time" units="ISO8601" />
+        //   <Extent name="time">2015-04-27T16:00:00/2015-04-27T16:15:00/PT1M57S</Extent>
+        wmsItem.updateFromJson({
+            url: 'http://example.com',
+            metadataUrl: 'test/WMS/period_datetimes_multiple_units.xml',
+            layers: 'single_period'
         });
+        wmsItem.load().then(function() {
+            expect(wmsItem.intervals.length).toEqual(8);
+        }).then(done).otherwise(done.fail);
+    });
+
+    it('ignores leap seconds when evaluating period', function(done) {
+        // <Dimension name="time" units="ISO8601" />
+        //   <Extent name="time">2015-06-30T20:00:00Z/2015-07-01T01:00:00Z/PT15M</Extent>
+        wmsItem.updateFromJson({
+            url: 'http://example.com',
+            metadataUrl: 'test/WMS/period_datetimes_crossing_leap_second.xml',
+            layers: 'single_period'
+        });
+        wmsItem.load().then(function() {
+            expect(wmsItem.intervals.length).toEqual(9);
+            expect(wmsItem.intervals.get(8).start).toEqual(JulianDate.fromIso8601('2015-07-01T01:00:00Z'));
+            expect(wmsItem.intervals.get(8).stop).toEqual(JulianDate.fromIso8601('2015-07-01T01:15:00Z'));
+        }).then(done).otherwise(done.fail);
     });
 
     it('warns on bad periodicity in datetimes', function(done) {
@@ -439,6 +425,24 @@ describe('WebMapServiceCatalogItem', function() {
             done();
         });
         wmsItem.load();
+    });
+
+    it('uses time dimension inherited from parent', function(done) {
+        // <Dimension name="time" units="ISO8601" multipleValues="true" current="true" default="2014-01-01T00:00:00.000Z">
+        // 2002-01-01T00:00:00.000Z,2003-01-01T00:00:00.000Z,2004-01-01T00:00:00.000Z,
+        // 2005-01-01T00:00:00.000Z,2006-01-01T00:00:00.000Z,2007-01-01T00:00:00.000Z,
+        // 2008-01-01T00:00:00.000Z,2009-01-01T00:00:00.000Z,2010-01-01T00:00:00.000Z,
+        // 2011-01-01T00:00:00.000Z,2012-01-01T00:00:00.000Z,2013-01-01T00:00:00.000Z,
+        // 2014-01-01T00:00:00.000Z
+        // </Dimension>
+        wmsItem.updateFromJson({
+            url: 'http://example.com',
+            metadataUrl: 'test/WMS/comma_sep_datetimes_inherited.xml',
+            layers: '13_intervals'
+        });
+        wmsItem.load().then(function() {
+            expect(wmsItem.intervals.length).toEqual(13);
+        }).then(done).otherwise(done.fail);
     });
 
     it('discards invalid layer names as long as at least one layer name is valid', function(done) {
@@ -522,7 +526,7 @@ describe('WebMapServiceCatalogItem', function() {
                 expect(wmsItem.availableDimensions.B).toBeDefined();
 
                 var aDimensions = wmsItem.availableDimensions.A;
-                expect(aDimensions.length).toBe(2);
+                expect(aDimensions.length).toBe(3);
 
                 expect(aDimensions[0].name).toEqual('elevation');
                 expect(aDimensions[0].units).toEqual('meters');
@@ -535,6 +539,12 @@ describe('WebMapServiceCatalogItem', function() {
                 expect(aDimensions[1].unitSymbol).toEqual('B');
                 expect(aDimensions[1].default).toEqual('Third thing');
                 expect(aDimensions[1].options).toEqual(['Something','Another thing','Third thing','yeah']);
+
+                expect(aDimensions[2].name).toEqual('time');
+                expect(aDimensions[2].units).toEqual('ISO8601');
+                expect(aDimensions[2].unitSymbol).not.toBeDefined();
+                expect(aDimensions[2].default).toEqual('2016-09-24T00:00:00.000Z');
+                expect(aDimensions[2].options).toEqual(['2012-06-25T01:00:00.000Z/2012-06-26T00:00:00.000Z/PT1H','2012-06-27T01:00:00.000Z/2012-06-30T00:00:00.000Z/PT1H','2012-07-02T01:00:00.000Z/2012-07-03T00:00:00.000Z/PT1H','2012-07-05T01:00:00.000Z/2012-07-09T00:00:00.000Z/PT1H']);
             }).then(done).otherwise(done.fail);
         });
 

@@ -5,6 +5,8 @@ import Concept from '../Concept';
 import Icon from '../../../Icon.jsx';
 import ObserveModelMixin from '../../../ObserveModelMixin';
 import React from 'react';
+import createReactClass from 'create-react-class';
+import PropTypes from 'prop-types';
 import Styles from './summary-concept.scss';
 
 /*
@@ -16,13 +18,14 @@ import Styles from './summary-concept.scss';
  * When it is clicked, parent.isOpen is set to True.
  * (The condition can only be "removed" if rootConcept.allowMultiple is true.)
  */
-const ActiveConcept = React.createClass({
+const ActiveConcept = createReactClass({
+    displayName: 'ActiveConcept',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        activeLeafNodesWithParent: React.PropTypes.object.isRequired,
-        rootConcept: React.PropTypes.object.isRequired,
-        isLoading: React.PropTypes.bool
+        activeLeafNodesWithParent: PropTypes.object.isRequired,
+        rootConcept: PropTypes.object.isRequired,
+        isLoading: PropTypes.bool
     },
 
     open() {
@@ -86,7 +89,7 @@ const ActiveConcept = React.createClass({
                 </div>
             </div>
         );
-    }
+    },
 });
 
 module.exports = ActiveConcept;

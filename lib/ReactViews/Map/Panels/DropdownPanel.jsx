@@ -4,6 +4,7 @@
 /* eslint react/prop-types:0*/
 
 import React from 'react';
+import createReactClass from 'create-react-class';
 import classNames from 'classnames';
 import Icon from "../../Icon.jsx";
 import InnerPanel from './InnerPanel';
@@ -13,7 +14,8 @@ import Styles from './panel.scss';
 
 import defined from 'terriajs-cesium/Source/Core/defined';
 
-const DropdownPanel = React.createClass({
+const DropdownPanel = createReactClass({
+    displayName: 'DropdownPanel',
     mixins: [BaseOuterPanel],
 
     onInnerMounted(innerElement) {
@@ -77,7 +79,7 @@ const DropdownPanel = React.createClass({
                 </If>
             </div>
         );
-    }
+    },
 });
 
 export default DropdownPanel;

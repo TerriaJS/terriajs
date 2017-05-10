@@ -3,13 +3,16 @@
 
 import React from 'react';
 
+import createReactClass from 'create-react-class';
+
 import MobileMenuItem from '../../Mobile/MobileMenuItem';
 import BaseOuterPanel from './BaseOuterPanel';
 import InnerPanel from './InnerPanel';
 
 import Styles from './panel.scss';
 
-const MobilePanel = React.createClass({
+const MobilePanel = createReactClass({
+    displayName: 'MobilePanel',
     mixins: [BaseOuterPanel],
 
     render() {
@@ -29,7 +32,7 @@ const MobilePanel = React.createClass({
                 </If>
             </div>
         );
-    }
+    },
 });
 
 export default MobilePanel;

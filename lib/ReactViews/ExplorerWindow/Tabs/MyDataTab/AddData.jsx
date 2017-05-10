@@ -1,4 +1,6 @@
 import React from 'react';
+import createReactClass from 'create-react-class';
+import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import addUserCatalogMember from '../../../../Models/addUserCatalogMember';
@@ -20,12 +22,13 @@ const localDataType = getDataType().localDataType;
 /**
  * Add data panel in modal window -> My data tab
  */
-const AddData = React.createClass({
+const AddData = createReactClass({
+    displayName: 'AddData',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        terria: React.PropTypes.object,
-        viewState: React.PropTypes.object
+        terria: PropTypes.object,
+        viewState: PropTypes.object
     },
 
     getInitialState() {
@@ -179,7 +182,7 @@ const AddData = React.createClass({
                 {this.renderPanels()}
             </div>
         );
-    }
+    },
 });
 
 /**

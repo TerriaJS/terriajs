@@ -1,6 +1,8 @@
 'use strict';
 
 import React from 'react';
+import createReactClass from 'create-react-class';
+import PropTypes from 'prop-types';
 import ObserveModelMixin from '../ObserveModelMixin';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import classNames from 'classnames';
@@ -10,13 +12,14 @@ import Styles from './help-panel.scss';
 import DropdownStyles from '../Map/Panels/panel.scss';
 import helpIcon from '../../../wwwroot/images/icons/help.svg';
 
-const HelpMenuPanel = React.createClass({
+const HelpMenuPanel = createReactClass({
+    displayName: 'HelpMenuPanel',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        helpViewState: React.PropTypes.object.isRequired,
-        helpSequences: React.PropTypes.object.isRequired,
-        viewState: React.PropTypes.object.isRequired
+        helpViewState: PropTypes.object.isRequired,
+        helpSequences: PropTypes.object.isRequired,
+        viewState: PropTypes.object.isRequired
     },
 
     getInitialState() {
@@ -68,7 +71,7 @@ const HelpMenuPanel = React.createClass({
                 </If>
             </MenuPanel>
         );
-    }
+    },
 });
 
 export default HelpMenuPanel;

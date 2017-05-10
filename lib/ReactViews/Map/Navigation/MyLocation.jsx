@@ -1,6 +1,8 @@
 'use strict';
 
 import React from 'react';
+import createReactClass from 'create-react-class';
+import PropTypes from 'prop-types';
 import URI from 'urijs';
 
 import Rectangle from 'terriajs-cesium/Source/Core/Rectangle';
@@ -9,13 +11,16 @@ import GeoJsonCatalogItem from '../../../Models/GeoJsonCatalogItem';
 import ObserveModelMixin from '../../ObserveModelMixin';
 import Styles from './my_location.scss';
 import TerriaError from '../../../Core/TerriaError';
+import CesiumCartographic from 'terriajs-cesium/Source/Core/Cartographic.js';
 import Icon from "../../Icon.jsx";
+import defined from 'terriajs-cesium/Source/Core/defined';
 
-const MyLocation = React.createClass({
+const MyLocation = createReactClass({
+    displayName: 'MyLocation',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        terria: React.PropTypes.object.isRequired
+        terria: PropTypes.object.isRequired
     },
 
     _marker: undefined,
@@ -62,9 +67,18 @@ const MyLocation = React.createClass({
     zoomToMyLocation(position) {
         const longitude = position.coords.longitude;
         const latitude = position.coords.latitude;
-        // west, south, east, north, result
-        const rectangle = Rectangle.fromDegrees(longitude - 0.1, latitude - 0.1, longitude + 0.1, latitude + 0.1);
-        this.props.terria.currentViewer.zoomTo(rectangle);
+
+        if (defined(this.props.terria.augmentedVirtuality) &&
+            this.props.terria.augmentedVirtuality.enabled) {
+
+            // Note: Specifiying the value of 27500m here enables this function to approximately mimic the behaviour of
+            //       the else case from the cameras inital view and when the viewer pan/zooms out to much.
+            this.props.terria.augmentedVirtuality.moveTo(CesiumCartographic.fromDegrees(longitude, latitude), 27500);
+        } else {
+            // west, south, east, north, result
+            const rectangle = Rectangle.fromDegrees(longitude - 0.1, latitude - 0.1, longitude + 0.1, latitude + 0.1);
+            this.props.terria.currentViewer.zoomTo(rectangle);
+        }
 
         this._marker.name = 'My Location';
         this._marker.data = {
@@ -91,6 +105,7 @@ const MyLocation = React.createClass({
     handleCick() {
         this.getLocation();
     },
+
     render() {
         return <div className={Styles.myLocation}>
                   <button type='button' className={Styles.btn}
@@ -99,7 +114,7 @@ const MyLocation = React.createClass({
                           <Icon glyph={Icon.GLYPHS.geolocation}/>
                   </button>
                </div>;
-    }
+    },
 });
 
 export default MyLocation;

@@ -40,6 +40,7 @@ Option                      | Meaning
 `"googleAnalyticsOptions"`  | Additional options that will be passed to the Google Analytics call.
 `"printDisclaimer": {`<span><br/>&nbsp;&nbsp;`"text": "",`<br/>&nbsp;&nbsp;`"url": ""`<br/>`}`</span> | Same as `disclaimer`, except only shown in printed views.
 `"supportEmail"`            | The email address shown when things go wrong.
+`"mobileDefaultViewerMode"` | A string specifying the default view mode to load when running on a mobile platform. Options are: `"3DTerrain"`, `"3DSmooth"`, `"2D"`. (Default: `"2D"`)
 
 ## Advanced options
 
