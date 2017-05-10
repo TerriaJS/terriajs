@@ -3,13 +3,11 @@
 Change Log
 ==========
 
-### 5.1.1
-
-* Added `AugmentedVirtuality` (user facing feature name Augmented Reality) to allow users to use mobile device to set the camera view.
 ### 5.2.0
 
 * Upgraded to Leaflet 1.0.3 for the 2D and preview maps.
 * Fixed a bug that caused layer disclaimers to fail to appear when the layer was enabled via a share link.  Since the user was unable to accept the disclaimer, the layer also failed to appear.
+* Added `AugmentedVirtuality` (user facing feature name Augmented Reality) to allow users to use their mobile device's orientation to set the camera view.
 
 ### 5.1.1
 
