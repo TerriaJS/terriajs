@@ -325,10 +325,10 @@ describe('TableStructure', function() {
         table1.columns[1].isActive = true;
         table1.columns[1].color = 'blue';
         table1.merge(table2);
-        expect(table1.columns[0].values.slice()).toEqual([1970, 1971, 1975, 1971]);
+        expect(table1.columns[0].values.slice()).toEqual([1970, 1971, 1971, 1975]);  // Note it also sorts by date.
         expect(table1.activeTimeColumn.dates.length).toEqual(4); // ie. activeTimeColumn updates too.
-        expect(table1.columns[1].values.slice()).toEqual(['A', 'B', 'C', 'A']);
-        expect(table1.columns[2].values.slice()).toEqual([12, 16.2, 15, 13]);
+        expect(table1.columns[1].values.slice()).toEqual(['A', 'B', 'A', 'C']);
+        expect(table1.columns[2].values.slice()).toEqual([12, 16.2, 13, 15]);
         expect(table1.columns[1].isActive).toBe(true); // ie. Don't lose options on the columns.
         expect(table1.columns[1].color).toEqual('blue');
     });
@@ -444,6 +444,29 @@ describe('TableStructure', function() {
             JulianDate.fromIso8601('2016-01-04T00:00:00Z'),
             JulianDate.fromIso8601('2016-01-05T00:00:00Z'),
             JulianDate.fromIso8601('2016-01-06T00:00:00Z')
+        ]);
+    });
+
+    it('can add feature rows at start and end dates', function() {
+        var data = [['date', 'id', 'value'],
+                    ['2016-01-01T00:00:00Z', 'A', 10],
+                    ['2016-01-02T00:00:00Z', 'B', 15],
+                    ['2016-01-03T00:00:00Z', 'A', 12],
+                    ['2016-01-04T00:00:00Z', 'B', 17]
+                   ];
+        var tableStructure = TableStructure.fromJson(data);
+        tableStructure.idColumnNames = ['id'];
+        tableStructure.setActiveTimeColumn();
+        tableStructure.addFeatureRowsAtStartAndEndDates('value');
+        expect(tableStructure.columns[1].values.slice()).toEqual(['A', 'B', 'B', 'A', 'B', 'A']);
+        expect(tableStructure.columns[2].values.slice()).toEqual([10, null, 15, 12, 17, null]);
+        expect(tableStructure.activeTimeColumn.julianDates).toEqual([
+            JulianDate.fromIso8601('2016-01-01T00:00:00Z'),  // A, 10
+            JulianDate.fromIso8601('2016-01-01T00:00:00Z'),  // The new B, null
+            JulianDate.fromIso8601('2016-01-02T00:00:00Z'),  // B, 15
+            JulianDate.fromIso8601('2016-01-03T00:00:00Z'),  // A, 12
+            JulianDate.fromIso8601('2016-01-04T00:00:00Z'),  // B, 17
+            JulianDate.fromIso8601('2016-01-04T00:00:00Z')   // The new A, null
         ]);
     });
 
