@@ -23,6 +23,7 @@
                     "startDate": "1980-01-01T00:00:00+10",
                     "requestSizeLimit": 225,
                     "requestNumberLimit": 3,
+                    "showFeaturesAtAllTimes": true,
                     "procedures": [
                         {
                             "identifier": "http://bom.gov.au/waterdata/services/tstypes/Pat7_C_B_1_YearlyMean",
@@ -84,6 +85,7 @@
                     "startDate": "1980-01-01T00:00:00+10",
                     "requestSizeLimit": 225,
                     "requestNumberLimit": 3,
+                    "showFeaturesAtAllTimes": true,
                     "procedures": [
                         {
                             "identifier": "http://bom.gov.au/waterdata/services/tstypes/Pat6_C_B_1_YearlyMean",
