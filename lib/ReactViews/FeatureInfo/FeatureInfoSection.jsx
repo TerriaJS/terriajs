@@ -440,11 +440,9 @@ const simpleStyleIdentifiers = ['title', 'description',
 function describeFromProperties(properties, time) {
     let html = '';
     if (typeof properties.getValue === 'function') {
-        const singleValue = properties.getValue(time);
-        if (defined(singleValue)) {
-            html = '<tr><th>' + '</th><td>' + singleValue + '</td></tr>';
-        }
-    } else {
+        properties = properties.getValue(time);
+    }
+    if (typeof properties === 'object') {
         for (const key in properties) {
             if (properties.hasOwnProperty(key)) {
                 if (simpleStyleIdentifiers.indexOf(key) !== -1) {
@@ -465,6 +463,9 @@ function describeFromProperties(properties, time) {
                 }
             }
         }
+    } else {
+        // properties is only a single value.
+        html += '<tr><th>' + '</th><td>' + properties + '</td></tr>';
     }
     if (html.length > 0) {
         html = '<table class="cesium-infoBox-defaultTable"><tbody>' + html + '</tbody></table>';
