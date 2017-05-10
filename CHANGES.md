@@ -3,6 +3,9 @@
 Change Log
 ==========
 
+### 5.1.1
+
+* Added `AugmentedVirtuality` (user facing feature name Augmented Reality) to allow users to use mobile device to set the camera view.
 ### 5.2.0
 
 * Upgraded to Leaflet 1.0.3 for the 2D and preview maps.
