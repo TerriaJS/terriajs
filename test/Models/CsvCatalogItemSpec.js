@@ -693,7 +693,7 @@ describe('CsvCatalogItem with lat and lon', function() {
 
 // eg. use as entities.map(getPropertiesDate) to just get the dates of the entities.
 function getPropertiesDate(obj) {
-    return obj.properties.date;
+    return obj.properties.date.getValue();
 }
 
 // eg. use as regions.map(getId) to just get the ids of the regions.

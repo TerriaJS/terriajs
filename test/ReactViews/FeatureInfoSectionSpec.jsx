@@ -375,10 +375,12 @@ describe('FeatureInfoSection', function() {
                     show_children: '{{#children}}<li>{{name}}<ul>{{>show_children}}</ul></li>{{/children}}'
                 }
             };
-            feature.properties.children = [
-                {name: 'Alice', children: [{name: 'Bailey', children: null}, {name: 'Beatrix', children: null}]},
-                {name: 'Xavier', children: [{name: 'Yann', children: null}, {name: 'Yvette', children: null}]}
-            ];
+            feature.properties.merge({
+                children: [
+                    {name: 'Alice', children: [{name: 'Bailey', children: null}, {name: 'Beatrix', children: null}]},
+                    {name: 'Xavier', children: [{name: 'Yann', children: null}, {name: 'Yvette', children: null}]}
+                ]
+            });
             // const recursedHtml = ''
             //     + '<ul>'
             //     +   '<li>Alice'
