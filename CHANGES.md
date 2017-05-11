@@ -7,9 +7,11 @@ Change Log
 
 * Upgraded to Leaflet 1.0.3 for the 2D and preview maps.
 * Fixed a bug that caused layer disclaimers to fail to appear when the layer was enabled via a share link.  Since the user was unable to accept the disclaimer, the layer also failed to appear.
+* Added `AugmentedVirtuality` (user facing feature name Augmented Reality) to allow users to use their mobile device's orientation to set the camera view.
+* Added the `showFeaturesAtAllTimes` option to Sensor Observation Service items. This improves the user experience if the server returns
+  some features starting in 1990, say, and some starting in 1995, so that the latter still appear (as grey points with no data) in 1990.
 * Fixed a bug which prevented preview charts in the feature info panel from updating when the user changed the Sensor Observation Service frequency.
 * Fixed a bug which allowed the user to de-select all the display choices for Sensor Observation Service items.
-* Added `AugmentedVirtuality` (user facing feature name Augmented Reality) to allow users to use their mobile device's orientation to set the camera view.
 * Improved the appearance of charts where all the y-values are null. (It now shows "No preview available".)
 
 ### 5.1.1

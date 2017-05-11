@@ -447,4 +447,27 @@ describe('TableStructure', function() {
         ]);
     });
 
+    it('can add feature rows at start and end dates', function() {
+        var data = [['date', 'id', 'value'],
+                    ['2016-01-01T00:00:00Z', 'A', 10],
+                    ['2016-01-02T00:00:00Z', 'B', 15],
+                    ['2016-01-03T00:00:00Z', 'A', 12],
+                    ['2016-01-04T00:00:00Z', 'B', 17]
+                   ];
+        var tableStructure = TableStructure.fromJson(data);
+        tableStructure.idColumnNames = ['id'];
+        tableStructure.columns = tableStructure.getColumnsWithFeatureRowsAtStartAndEndDates('date', 'value');
+        tableStructure.setActiveTimeColumn();
+        expect(tableStructure.columns[1].values.slice()).toEqual(['A', 'B', 'B', 'A', 'B', 'A']);
+        expect(tableStructure.columns[2].values.slice()).toEqual([10, null, 15, 12, 17, null]);
+        expect(tableStructure.activeTimeColumn.julianDates).toEqual([
+            JulianDate.fromIso8601('2016-01-01T00:00:00Z'),  // A, 10
+            JulianDate.fromIso8601('2016-01-01T00:00:00Z'),  // The new B, null
+            JulianDate.fromIso8601('2016-01-02T00:00:00Z'),  // B, 15
+            JulianDate.fromIso8601('2016-01-03T00:00:00Z'),  // A, 12
+            JulianDate.fromIso8601('2016-01-04T00:00:00Z'),  // B, 17
+            JulianDate.fromIso8601('2016-01-04T00:00:00Z')   // The new A, null
+        ]);
+    });
+
 });
