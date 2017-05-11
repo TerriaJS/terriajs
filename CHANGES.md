@@ -12,7 +12,6 @@ Change Log
   some features starting in 1990, say, and some starting in 1995, so that the latter still appear (as grey points with no data) in 1990.
 * Fixed a bug which prevented preview charts in the feature info panel from updating when the user changed the Sensor Observation Service frequency.
 * Fixed a bug which allowed the user to de-select all the display choices for Sensor Observation Service items.
-* Added `AugmentedVirtuality` (user facing feature name Augmented Reality) to allow users to use their mobile device's orientation to set the camera view.
 * Improved the appearance of charts where all the y-values are null. (It now shows "No preview available".)
 
 ### 5.1.1
@@ -21,7 +20,6 @@ Change Log
 * Added a 'preview' Google Analytics event when a catalog item is shown on the preview map in the catalog.
 * Fixed a bug that prevented csv files with missing dates from loading.
 * Fixed a bug that could cause an error when adding a layer without previewing it first.
-* Improved the appearance of charts where all the y-values are null. (It now shows "No preview available".)
 
 ### 5.1.0
 
