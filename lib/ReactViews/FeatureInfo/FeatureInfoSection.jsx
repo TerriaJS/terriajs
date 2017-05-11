@@ -114,9 +114,15 @@ const FeatureInfoSection = createReactClass({
                 templateData[alias.id] = templateData[alias.name];
             }
         }
-        return typeof template === 'string' ?
-            Mustache.render(template, templateData) :
-            Mustache.render(template.template, templateData, template.partials);
+        // templateData may not be defined if a re-render gets triggered in the middle of a feature updating.
+        // (Recall we re-render whenever feature.definitionChanged triggers.)
+        if (defined(templateData)) {
+            return typeof template === 'string' ?
+                Mustache.render(template, templateData) :
+                Mustache.render(template.template, templateData, template.partials);
+        } else {
+            return 'No information available';
+        }
     },
 
     descriptionFromFeature() {
@@ -239,13 +245,18 @@ const FeatureInfoSection = createReactClass({
  *
  * For (1), use an event listener on the (terria) clock to update the feature's currentProperties/currentDescription directly.
  * For (2), use a regular javascript setTimeout to update a counter in feature's currentProperties.
- * For (3), this is handled by the catalog item itself changing as well, which should be knockout tracked.
+ * For (3), use an event listener on the Feature's underlying Entity's "definitionChanged" event.
+ *   Conceivably it could also be handled by the catalog item itself changing, if its change is knockout tracked, and the
+ *   change leads to a change in what is rendered (unlikely).
  * Since the catalogItem is also a prop, this will trigger a rerender.
  *
  * For simplicity, we do not currently support (1) and (2) at the same time.
  * @private
  */
 function setSubscriptionsAndTimeouts(featureInfoSection, feature) {
+    feature.definitionChanged.addEventListener(function(changedFeature) {
+        setCurrentFeatureValues(changedFeature, featureInfoSection.props.clock);
+    });
     if (featureInfoSection.isFeatureTimeVarying(feature)) {
         featureInfoSection.setState({
             clockSubscription: featureInfoSection.props.clock.onTick.addEventListener(function(clock) {
@@ -440,11 +451,9 @@ const simpleStyleIdentifiers = ['title', 'description',
 function describeFromProperties(properties, time) {
     let html = '';
     if (typeof properties.getValue === 'function') {
-        const singleValue = properties.getValue(time);
-        if (defined(singleValue)) {
-            html = '<tr><th>' + '</th><td>' + singleValue + '</td></tr>';
-        }
-    } else {
+        properties = properties.getValue(time);
+    }
+    if (typeof properties === 'object') {
         for (const key in properties) {
             if (properties.hasOwnProperty(key)) {
                 if (simpleStyleIdentifiers.indexOf(key) !== -1) {
@@ -465,6 +474,9 @@ function describeFromProperties(properties, time) {
                 }
             }
         }
+    } else {
+        // properties is only a single value.
+        html += '<tr><th>' + '</th><td>' + properties + '</td></tr>';
     }
     if (html.length > 0) {
         html = '<table class="cesium-infoBox-defaultTable"><tbody>' + html + '</tbody></table>';

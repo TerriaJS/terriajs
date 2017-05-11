@@ -2,10 +2,17 @@
 @import '../../../Sass/common/mixins';
 @import 'nav';
 
-.myLocation {
+.augmentedVirtualityTool{
   display: inline-block;
+  float: left;
 
-  @media print {
+  @media print{
     display: none;
   }
+}
+
+.btn {
+  composes: btn from './nav.scss';
+
+  margin-right: 15px;
 }
