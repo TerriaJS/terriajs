@@ -104,6 +104,20 @@ describe('TableStructure', function() {
         expect(rows).toEqual(target);
     });
 
+    it('can convert to ArrayOfRows with formatting and quotes if containing quotes', function() {
+        var data = [['x', 'y'], [1.678, 9.883], [54321, 12345], [4, -3]];
+        var options = {columnOptions: {
+            x: {format: {maximumFractionDigits: 0}},
+            y: {name: 'new y ("000")', format: {useGrouping: true, maximumFractionDigits: 1}}
+        }};
+        var target = [['x', '"new y (\"\"000)\"\"'], ['2', '9.9'], ['54321', '"12' + separator + '345"'], ['4', '-3']];
+        var tableStructure = new TableStructure('foo', options);
+        tableStructure = tableStructure.loadFromJson(data);
+        var rows = tableStructure.toArrayOfRows(undefined, undefined, true, true); // 4th argument requests the quotes.
+        expect(rows.length).toEqual(4);
+        expect(rows).toEqual(target);
+    });
+
     it('can convert to csv', function() {
         var data = [['x', 'y'], [1.678, 9.883], [54321, 12345], [4, -3]];
         var tableStructure = new TableStructure();
