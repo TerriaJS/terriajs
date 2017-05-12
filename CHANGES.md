@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### 5.2.3
+
+* Fixed bug in 5.2.2 which prevented some table-based datasets from loading.
+
 ### 5.2.2
 
 * Fixed download of selected dataset (as csv) so that quotes are handled in accordance with https://tools.ietf.org/html/rfc4180. As a result, more such downloads can be directly re-loaded in Terria by dragging and dropping them.
