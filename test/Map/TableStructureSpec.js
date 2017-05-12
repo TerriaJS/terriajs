@@ -110,7 +110,7 @@ describe('TableStructure', function() {
             x: {format: {maximumFractionDigits: 0}},
             y: {name: 'new y ("000")', format: {useGrouping: true, maximumFractionDigits: 1}}
         }};
-        var target = [['x', '"new y (\"\"000)\"\"'], ['2', '9.9'], ['54321', '"12' + separator + '345"'], ['4', '-3']];
+        var target = [['x', '"new y (\"\"000\"\")'], ['2', '9.9'], ['54321', '"12' + separator + '345"'], ['4', '-3']];
         var tableStructure = new TableStructure('foo', options);
         tableStructure = tableStructure.loadFromJson(data);
         var rows = tableStructure.toArrayOfRows(undefined, undefined, true, true); // 4th argument requests the quotes.
