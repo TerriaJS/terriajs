@@ -99,6 +99,7 @@ const MyLocation = createReactClass({
             'stroke': '#ffffff',
             'stroke-width': 3
         };
+        this._marker.load();
         this._marker.isEnabled = true;
     },
 

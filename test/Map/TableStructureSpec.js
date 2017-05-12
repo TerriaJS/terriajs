@@ -104,6 +104,20 @@ describe('TableStructure', function() {
         expect(rows).toEqual(target);
     });
 
+    it('can convert to ArrayOfRows with formatting and quotes if containing quotes', function() {
+        var data = [['x', 'y'], [1.678, 9.883], [54321, 12345], [4, -3]];
+        var options = {columnOptions: {
+            x: {format: {maximumFractionDigits: 0}},
+            y: {name: 'new y ("000")', format: {useGrouping: true, maximumFractionDigits: 1}}
+        }};
+        var target = [['x', '"new y (\"\"000\"\")"'], ['2', '9.9'], ['54321', '"12' + separator + '345"'], ['4', '-3']];
+        var tableStructure = new TableStructure('foo', options);
+        tableStructure = tableStructure.loadFromJson(data);
+        var rows = tableStructure.toArrayOfRows(undefined, undefined, true, true); // 4th argument requests the quotes.
+        expect(rows.length).toEqual(4);
+        expect(rows).toEqual(target);
+    });
+
     it('can convert to csv', function() {
         var data = [['x', 'y'], [1.678, 9.883], [54321, 12345], [4, -3]];
         var tableStructure = new TableStructure();
@@ -444,6 +458,29 @@ describe('TableStructure', function() {
             JulianDate.fromIso8601('2016-01-04T00:00:00Z'),
             JulianDate.fromIso8601('2016-01-05T00:00:00Z'),
             JulianDate.fromIso8601('2016-01-06T00:00:00Z')
+        ]);
+    });
+
+    it('can add feature rows at start and end dates', function() {
+        var data = [['date', 'id', 'value'],
+                    ['2016-01-01T00:00:00Z', 'A', 10],
+                    ['2016-01-02T00:00:00Z', 'B', 15],
+                    ['2016-01-03T00:00:00Z', 'A', 12],
+                    ['2016-01-04T00:00:00Z', 'B', 17]
+                   ];
+        var tableStructure = TableStructure.fromJson(data);
+        tableStructure.idColumnNames = ['id'];
+        tableStructure.columns = tableStructure.getColumnsWithFeatureRowsAtStartAndEndDates('date', 'value');
+        tableStructure.setActiveTimeColumn();
+        expect(tableStructure.columns[1].values.slice()).toEqual(['A', 'B', 'B', 'A', 'B', 'A']);
+        expect(tableStructure.columns[2].values.slice()).toEqual([10, null, 15, 12, 17, null]);
+        expect(tableStructure.activeTimeColumn.julianDates).toEqual([
+            JulianDate.fromIso8601('2016-01-01T00:00:00Z'),  // A, 10
+            JulianDate.fromIso8601('2016-01-01T00:00:00Z'),  // The new B, null
+            JulianDate.fromIso8601('2016-01-02T00:00:00Z'),  // B, 15
+            JulianDate.fromIso8601('2016-01-03T00:00:00Z'),  // A, 12
+            JulianDate.fromIso8601('2016-01-04T00:00:00Z'),  // B, 17
+            JulianDate.fromIso8601('2016-01-04T00:00:00Z')   // The new A, null
         ]);
     });
 
