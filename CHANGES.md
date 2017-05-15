@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### 5.2.5
+
+* Changed the LocateMe button so that it toggles and continueously updates the location when Augmented Reality is enabled.
+
 ### 5.2.4
 
 * Fixed a bug that prevented error messages, such as when a dataset fails to load, from being shown to the user. Instead, the errors were silently ignored.
