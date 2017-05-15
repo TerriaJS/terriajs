@@ -5,7 +5,8 @@ Change Log
 
 ### 5.2.3
 
-* Fixed a bug which gave expanded Sensor Observation Service charts poor names.
+* Fixed a bug that gave expanded Sensor Observation Service charts poor names.
+* Fixed a bug that prevented some table-based datasets from loading.
 
 ### 5.2.2
 
