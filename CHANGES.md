@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### 5.2.4
+
+* Fixed a bug that prevented error messages, such as when a dataset fails to load, from being shown to the user. Instead, the errors were silently ignored.
+
 ### 5.2.3
 
 * Fixed a bug that gave expanded Sensor Observation Service charts poor names.
