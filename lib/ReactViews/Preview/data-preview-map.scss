@@ -17,6 +17,7 @@
 //Preview map
 .terria-preview {
   &:global(.leaflet-container) {
+    z-index: 0;
     height: 200px;
     overflow: hidden;
     position: relative;

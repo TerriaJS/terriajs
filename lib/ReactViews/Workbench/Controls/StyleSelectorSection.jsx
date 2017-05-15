@@ -2,15 +2,18 @@
 
 import defined from 'terriajs-cesium/Source/Core/defined';
 import React from 'react';
+import createReactClass from 'create-react-class';
+import PropTypes from 'prop-types';
 import ObserveModelMixin from '../../ObserveModelMixin';
 
 import Styles from './style-selector-section.scss';
 
-const StyleSelectorSection = React.createClass({
+const StyleSelectorSection = createReactClass({
+    displayName: 'StyleSelectorSection',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        item: React.PropTypes.object.isRequired
+        item: PropTypes.object.isRequired
     },
 
     changeStyle(layer, event) {
@@ -69,6 +72,6 @@ const StyleSelectorSection = React.createClass({
                 </select>
             </div>
         );
-    }
+    },
 });
 module.exports = StyleSelectorSection;

@@ -3,6 +3,10 @@
 import Mustache from 'mustache';
 import React from 'react';
 
+import createReactClass from 'create-react-class';
+
+import PropTypes from 'prop-types';
+
 import CesiumMath from 'terriajs-cesium/Source/Core/Math';
 import classNames from 'classnames';
 import defined from 'terriajs-cesium/Source/Core/defined';
@@ -25,18 +29,19 @@ Mustache.escape = function(string) {
 };
 
 // Individual feature info section
-const FeatureInfoSection = React.createClass({
+const FeatureInfoSection = createReactClass({
+    displayName: 'FeatureInfoSection',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        viewState: React.PropTypes.object.isRequired,
-        template: React.PropTypes.oneOfType([React.PropTypes.object, React.PropTypes.string]),
-        feature: React.PropTypes.object,
-        position: React.PropTypes.object,
-        clock: React.PropTypes.object,
-        catalogItem: React.PropTypes.object,  // Note this may not be known (eg. WFS).
-        isOpen: React.PropTypes.bool,
-        onClickHeader: React.PropTypes.func
+        viewState: PropTypes.object.isRequired,
+        template: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
+        feature: PropTypes.object,
+        position: PropTypes.object,
+        clock: PropTypes.object,
+        catalogItem: PropTypes.object,  // Note this may not be known (eg. WFS).
+        isOpen: PropTypes.bool,
+        onClickHeader: PropTypes.func
     },
 
     getInitialState() {
@@ -74,7 +79,8 @@ const FeatureInfoSection = React.createClass({
 
             propertyData.terria = {
                 formatNumber: mustacheFormatNumberFunction,
-                urlEncodeComponent: mustacheURLEncodeTextComponent
+                urlEncodeComponent: mustacheURLEncodeTextComponent,
+                urlEncode: mustacheURLEncodeText
             };
             if (this.props.position) {
                 const latLngInRadians = Ellipsoid.WGS84.cartesianToCartographic(this.props.position);
@@ -108,9 +114,15 @@ const FeatureInfoSection = React.createClass({
                 templateData[alias.id] = templateData[alias.name];
             }
         }
-        return typeof template === 'string' ?
-            Mustache.render(template, templateData) :
-            Mustache.render(template.template, templateData, template.partials);
+        // templateData may not be defined if a re-render gets triggered in the middle of a feature updating.
+        // (Recall we re-render whenever feature.definitionChanged triggers.)
+        if (defined(templateData)) {
+            return typeof template === 'string' ?
+                Mustache.render(template, templateData) :
+                Mustache.render(template.template, templateData, template.partials);
+        } else {
+            return 'No information available';
+        }
     },
 
     descriptionFromFeature() {
@@ -220,7 +232,7 @@ const FeatureInfoSection = React.createClass({
                 </If>
             </li>
         );
-    }
+    },
 });
 
 /**
@@ -233,13 +245,18 @@ const FeatureInfoSection = React.createClass({
  *
  * For (1), use an event listener on the (terria) clock to update the feature's currentProperties/currentDescription directly.
  * For (2), use a regular javascript setTimeout to update a counter in feature's currentProperties.
- * For (3), this is handled by the catalog item itself changing as well, which should be knockout tracked.
+ * For (3), use an event listener on the Feature's underlying Entity's "definitionChanged" event.
+ *   Conceivably it could also be handled by the catalog item itself changing, if its change is knockout tracked, and the
+ *   change leads to a change in what is rendered (unlikely).
  * Since the catalogItem is also a prop, this will trigger a rerender.
  *
  * For simplicity, we do not currently support (1) and (2) at the same time.
  * @private
  */
 function setSubscriptionsAndTimeouts(featureInfoSection, feature) {
+    feature.definitionChanged.addEventListener(function(changedFeature) {
+        setCurrentFeatureValues(changedFeature, featureInfoSection.props.clock);
+    });
     if (featureInfoSection.isFeatureTimeVarying(feature)) {
         featureInfoSection.setState({
             clockSubscription: featureInfoSection.props.clock.onTick.addEventListener(function(clock) {
@@ -400,12 +417,25 @@ function mustacheFormatNumberFunction() {
  * URL Encodes provided text: {{#terria.urlEncodeComponent}}{{value}}{{/terria.urlEncodeComponent}}.
  * See encodeURIComponent for details.
  * 
- * {{#terria.urlEncodeComponent}}W/HOE#1{{/terria.urlEncodeComponent}} -> W%2FHOE%231
+ * {{#terria.urlEncodeComponent}}W/HO:E#1{{/terria.urlEncodeComponent}} -> W%2FHO%3AE%231
  * @private
  */
 function mustacheURLEncodeTextComponent() {
     return function(text, render) {
         return encodeURIComponent(render(text));
+    };
+}
+
+/**
+ * URL Encodes provided text: {{#terria.urlEncode}}{{value}}{{/terria.urlEncode}}.
+ * See encodeURI for details.
+ *
+ * {{#terria.urlEncode}}http://example.com/a b{{/terria.urlEncode}} -> http://example.com/a%20b
+ * @private
+ */
+function mustacheURLEncodeText() {
+    return function(text, render) {
+        return encodeURI(render(text));
     };
 }
 
@@ -421,11 +451,9 @@ const simpleStyleIdentifiers = ['title', 'description',
 function describeFromProperties(properties, time) {
     let html = '';
     if (typeof properties.getValue === 'function') {
-        const singleValue = properties.getValue(time);
-        if (defined(singleValue)) {
-            html = '<tr><th>' + '</th><td>' + singleValue + '</td></tr>';
-        }
-    } else {
+        properties = properties.getValue(time);
+    }
+    if (typeof properties === 'object') {
         for (const key in properties) {
             if (properties.hasOwnProperty(key)) {
                 if (simpleStyleIdentifiers.indexOf(key) !== -1) {
@@ -446,6 +474,9 @@ function describeFromProperties(properties, time) {
                 }
             }
         }
+    } else {
+        // properties is only a single value.
+        html += '<tr><th>' + '</th><td>' + properties + '</td></tr>';
     }
     if (html.length > 0) {
         html = '<table class="cesium-infoBox-defaultTable"><tbody>' + html + '</tbody></table>';

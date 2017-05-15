@@ -1,21 +1,24 @@
 'use strict';
 
 import React from 'react';
+import createReactClass from 'create-react-class';
+import PropTypes from 'prop-types';
 import ObserveModelMixin from '../../ObserveModelMixin';
 import Styles from './augmented_virtuality_tool.scss';
-import Icon from '../../Icon.jsx';
+import Icon from '../../Icon';
 import ViewerMode from '../../../Models/ViewerMode';
 import defined from 'terriajs-cesium/Source/Core/defined';
 
-import AugmentedVirtuality from '../../../Models/AugmentedVirtuality.js';
+import AugmentedVirtuality from '../../../Models/AugmentedVirtuality';
 
-const AugmentedVirtualityTool = React.createClass({
+const AugmentedVirtualityTool = createReactClass({
+    displayName: 'AugmentedVirtualityTool',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        terria: React.PropTypes.object.isRequired,
-        viewState: React.PropTypes.object.isRequired,
-        experimentalWarning: React.PropTypes.bool
+        terria: PropTypes.object.isRequired,
+        viewState: PropTypes.object.isRequired,
+        experimentalWarning: PropTypes.bool
     },
 
     getInitialState() {
@@ -28,8 +31,6 @@ const AugmentedVirtualityTool = React.createClass({
     },
 
     handleClickAVTool() {
-        // console.log('handleClickAVTool()');
-
         // Make the AugmentedVirtuality module avaliable elsewhere.
         this.props.terria.augmentedVirtuality = this.state.augmentedVirtuality;
 
@@ -53,8 +54,6 @@ const AugmentedVirtualityTool = React.createClass({
     },
 
     handleClickRealign() {
-        // console.log('handleClickRealign()');
-
         if (!this.state.realignHelpShown) {
             this.setState({realignHelpShown: true});
 
@@ -73,8 +72,6 @@ const AugmentedVirtualityTool = React.createClass({
     },
 
     handleClickResetRealign() {
-        // console.log('handleClickHover()');
-
         if (!this.state.resetRealignHelpShown) {
             this.setState({resetRealignHelpShown: true});
 
@@ -91,8 +88,6 @@ const AugmentedVirtualityTool = React.createClass({
     },
 
     handleClickHover() {
-        // console.log('handleClickHover()');
-
         this.state.augmentedVirtuality.toggleHoverHeight();
     },
 
@@ -126,40 +121,42 @@ const AugmentedVirtualityTool = React.createClass({
                 break;
         }
 
-        return <If condition={(this.props.terria.viewerMode !== ViewerMode.Leaflet) && (this.state.augmentedVirtuality.suitableBrowser())}>
-                   <div className={Styles.augmentedVirtualityTool}>
-                       <button type='button' className={toggleStyle}
-                               title='augmented reality tool'
-                               onClick={this.handleClickAVTool}>
-                               <Icon glyph={toggleImage}/>
-                       </button>
+        return (
+            <If condition={this.props.terria.viewerMode !== ViewerMode.Leaflet}>
+                <div className={Styles.augmentedVirtualityTool}>
+                    <button type='button' className={toggleStyle}
+                            title='augmented reality tool'
+                            onClick={this.handleClickAVTool}>
+                            <Icon glyph={toggleImage}/>
+                    </button>
 
-                       <If condition={enabled}>
-                           <button type='button' className={Styles.btn}
-                                   title='toggle hover height'
-                                   onClick={this.handleClickHover}>
-                                   <Icon glyph={hoverImage}/>
-                           </button>
+                    <If condition={enabled}>
+                        <button type='button' className={Styles.btn}
+                                title='toggle hover height'
+                                onClick={this.handleClickHover}>
+                                <Icon glyph={hoverImage}/>
+                        </button>
 
-                           <If condition={!this.state.augmentedVirtuality.manualAlignmentSet}>
-                               <button type='button' className={realignmentStyle}
-                                       title='toggle manual alignment'
-                                       onClick={this.handleClickRealign}>
-                                       <Icon glyph={Icon.GLYPHS.arRealign}/>
-                               </button>
-                           </If>
+                        <If condition={!this.state.augmentedVirtuality.manualAlignmentSet}>
+                            <button type='button' className={realignmentStyle}
+                                    title='toggle manual alignment'
+                                    onClick={this.handleClickRealign}>
+                                    <Icon glyph={Icon.GLYPHS.arRealign}/>
+                            </button>
+                        </If>
 
-                           <If condition={(this.state.augmentedVirtuality.manualAlignmentSet) && !realignment}>
-                               <button type='button' className={Styles.btn}
-                                       title='reset compass alignment'
-                                       onClick={this.handleClickResetRealign}>
-                                       <Icon glyph={Icon.GLYPHS.arResetAlignment}/>
-                               </button>
-                           </If>
-                       </If>
-                   </div>
-               </If>;
+                        <If condition={(this.state.augmentedVirtuality.manualAlignmentSet) && !realignment}>
+                            <button type='button' className={Styles.btn}
+                                    title='reset compass alignment'
+                                    onClick={this.handleClickResetRealign}>
+                                    <Icon glyph={Icon.GLYPHS.arResetAlignment}/>
+                            </button>
+                        </If>
+                    </If>
+                </div>
+            </If>
+        );
     }
 });
 
-export default AugmentedVirtualityTool;
+module.exports = AugmentedVirtualityTool;

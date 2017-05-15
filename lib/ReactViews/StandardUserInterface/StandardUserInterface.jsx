@@ -1,7 +1,8 @@
 import React from 'react';
+import createReactClass from 'create-react-class';
+import PropTypes from 'prop-types';
 import arrayContains from '../../Core/arrayContains';
 import Branding from './../SidePanel/Branding.jsx';
-import DisclaimerHandler from '../../ReactViewModels/DisclaimerHandler';
 import DragDropFile from './../DragDropFile.jsx';
 import ExplorerWindow from './../ExplorerWindow/ExplorerWindow.jsx';
 import FeatureInfoPanel from './../FeatureInfo/FeatureInfoPanel.jsx';
@@ -23,22 +24,23 @@ import 'inobounce';
 import Styles from './standard-user-interface.scss';
 
 /** blah */
-const StandardUserInterface = React.createClass({
+const StandardUserInterface = createReactClass({
+    displayName: 'StandardUserInterface',
     mixins: [ObserveModelMixin],
 
     propTypes: {
         /**
          * Terria instance
          */
-        terria: React.PropTypes.object.isRequired,
+        terria: PropTypes.object.isRequired,
         /**
          * All the base maps.
          */
-        allBaseMaps: React.PropTypes.array,
-        viewState: React.PropTypes.object.isRequired,
-        minimumLargeScreenWidth: React.PropTypes.number,
-        version: React.PropTypes.string,
-        children: React.PropTypes.oneOfType([React.PropTypes.arrayOf(React.PropTypes.element), React.PropTypes.element])
+        allBaseMaps: PropTypes.array,
+        viewState: PropTypes.object.isRequired,
+        minimumLargeScreenWidth: PropTypes.number,
+        version: PropTypes.string,
+        children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.element), PropTypes.element])
     },
 
     getDefaultProps() {
@@ -66,7 +68,6 @@ const StandardUserInterface = React.createClass({
         window.addEventListener('resize', this.resizeListener, false);
 
         this.resizeListener();
-        this.disclaimerHandler = new DisclaimerHandler(this.props.terria, this.props.viewState);
     },
 
     componentDidMount() {
@@ -76,7 +77,6 @@ const StandardUserInterface = React.createClass({
     componentWillUnmount() {
         window.removeEventListener('resize', this.resizeListener, false);
         document.removeEventListener('dragover', this.dragOverListener, false);
-        this.disclaimerHandler.dispose();
     },
 
     acceptDragDropFile() {
@@ -168,7 +168,7 @@ const StandardUserInterface = React.createClass({
                 />
             </div>
         );
-    }
+    },
 });
 
 module.exports = StandardUserInterface;

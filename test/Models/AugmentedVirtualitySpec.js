@@ -151,43 +151,12 @@ describe('AugmentedVirtuality', function() {
         expect(av.hoverLevel).toEqual(2);
     });
 
-    it('check normalise radians', function() {
-        expect(Math.abs(normaliseRadians(CesiumMath.toRadians(   0)) - CesiumMath.toRadians(   0)) <= 1e-12).toBeTruthy();
-        expect(Math.abs(normaliseRadians(CesiumMath.toRadians(   1)) - CesiumMath.toRadians(   1)) <= 1e-12).toBeTruthy();
-        expect(Math.abs(normaliseRadians(CesiumMath.toRadians(  89)) - CesiumMath.toRadians(  89)) <= 1e-12).toBeTruthy();
-        expect(Math.abs(normaliseRadians(CesiumMath.toRadians(  90)) - CesiumMath.toRadians(  90)) <= 1e-12).toBeTruthy();
-        expect(Math.abs(normaliseRadians(CesiumMath.toRadians(  91)) - CesiumMath.toRadians(  91)) <= 1e-12).toBeTruthy();
-        expect(Math.abs(normaliseRadians(CesiumMath.toRadians( 179)) - CesiumMath.toRadians( 179)) <= 1e-12).toBeTruthy();
-        expect(Math.abs(normaliseRadians(CesiumMath.toRadians( 180)) - CesiumMath.toRadians( 180)) <= 1e-12).toBeTruthy();
-        expect(Math.abs(normaliseRadians(CesiumMath.toRadians( 181)) - CesiumMath.toRadians( 181)) <= 1e-12).toBeTruthy();
-        expect(Math.abs(normaliseRadians(CesiumMath.toRadians( 359)) - CesiumMath.toRadians( 359)) <= 1e-12).toBeTruthy();
-        expect(Math.abs(normaliseRadians(CesiumMath.toRadians( 360)) - CesiumMath.toRadians(   0)) <= 1e-12).toBeTruthy();
-        expect(Math.abs(normaliseRadians(CesiumMath.toRadians( 361)) - CesiumMath.toRadians(   1)) <= 1e-12).toBeTruthy();
-        expect(Math.abs(normaliseRadians(CesiumMath.toRadians( 719)) - CesiumMath.toRadians( 359)) <= 1e-12).toBeTruthy();
-        expect(Math.abs(normaliseRadians(CesiumMath.toRadians( 720)) - CesiumMath.toRadians(   0)) <= 1e-12).toBeTruthy();
-        expect(Math.abs(normaliseRadians(CesiumMath.toRadians( 721)) - CesiumMath.toRadians(   1)) <= 1e-12).toBeTruthy();
-
-        expect(Math.abs(normaliseRadians(CesiumMath.toRadians(  -1)) - CesiumMath.toRadians( 359)) <= 1e-12).toBeTruthy();
-        expect(Math.abs(normaliseRadians(CesiumMath.toRadians( -89)) - CesiumMath.toRadians( 271)) <= 1e-12).toBeTruthy();
-        expect(Math.abs(normaliseRadians(CesiumMath.toRadians( -90)) - CesiumMath.toRadians( 270)) <= 1e-12).toBeTruthy();
-        expect(Math.abs(normaliseRadians(CesiumMath.toRadians( -91)) - CesiumMath.toRadians( 269)) <= 1e-12).toBeTruthy();
-        expect(Math.abs(normaliseRadians(CesiumMath.toRadians(-179)) - CesiumMath.toRadians( 181)) <= 1e-12).toBeTruthy();
-        expect(Math.abs(normaliseRadians(CesiumMath.toRadians(-180)) - CesiumMath.toRadians( 180)) <= 1e-12).toBeTruthy();
-        expect(Math.abs(normaliseRadians(CesiumMath.toRadians(-181)) - CesiumMath.toRadians( 179)) <= 1e-12).toBeTruthy();
-        expect(Math.abs(normaliseRadians(CesiumMath.toRadians(-359)) - CesiumMath.toRadians(   1)) <= 1e-12).toBeTruthy();
-        expect(Math.abs(normaliseRadians(CesiumMath.toRadians(-360)) - CesiumMath.toRadians(   0)) <= 1e-12).toBeTruthy();
-        expect(Math.abs(normaliseRadians(CesiumMath.toRadians(-361)) - CesiumMath.toRadians( 359)) <= 1e-12).toBeTruthy();
-        expect(Math.abs(normaliseRadians(CesiumMath.toRadians(-719)) - CesiumMath.toRadians(   1)) <= 1e-12).toBeTruthy();
-        expect(Math.abs(normaliseRadians(CesiumMath.toRadians(-720)) - CesiumMath.toRadians(   0)) <= 1e-12).toBeTruthy();
-        expect(Math.abs(normaliseRadians(CesiumMath.toRadians(-721)) - CesiumMath.toRadians( 359)) <= 1e-12).toBeTruthy();
-    });
-
     it('check similar radians', function() {
         expect(similarRadians(0,  0,      0.001)).toBeTruthy();
         expect(similarRadians(0,  0.000999, 0.001)).toBeTruthy();
-        //expect(similarRadians(0,  0.001,  0.001)).toBeTruthy();  // Due to compounded errors we aren't this precise. (This is good enough for the tests we are doing).
+        expect(similarRadians(0,  0.001,  0.001)).toBeTruthy();
         expect(similarRadians(0, -0.000999, 0.001)).toBeTruthy();
-        //expect(similarRadians(0, -0.001,  0.001)).toBeTruthy();  // Due to compounded errors we aren't this precise. (This is good enough for the tests we are doing).
+        expect(similarRadians(0, -0.001,  0.001)).toBeTruthy();
         expect(similarRadians(0,  0.001001, 0.001)).toBeFalsy();
         expect(similarRadians(0, -0.001001, 0.001)).toBeFalsy();
 
@@ -427,23 +396,20 @@ describeIfSupportsWebGL('AugmentedVirtuality tests that require WebGL', function
         // Check stop manual alignment.
         av.resetAlignment();
         expect(av.manualAlignmentSet).toEqual(false);
+
+
+        // Set enabled to false so that when the widget is torn down there are not errors in other components.
+        // Detail: Currently CesiumWidget.camera returns this._scene.camera without checking ._scene is defined, which it is not during tear down, and so results in "Uncaught TypeError: Cannot read property 'camera' of undefined".
+        av.enabled = false;
     });
 });
 
 
 
-// Returns a value between 0 and 2*PI.
-function normaliseRadians(radians)
-{
-    // I'm sure this can be simplified...but I can't think of what it is right now and this works for now.
-    return ((radians%(2*Math.PI)+(2*Math.PI))%(2*Math.PI));
-}
-
 // Determines whether the values are within eps of each other ignoring cyclic shifts (mod 2*PI). Expects values to be in radians.
 function similarRadians(expected, actual, eps)
 {
-    return (normaliseRadians(expected - actual) <= eps) ||
-           (normaliseRadians(expected - actual) >= 2*Math.PI-eps);
+    return (Math.abs(CesiumMath.negativePiToPi(expected - actual)) <= eps);
 }
 
 // Build orientation from Degrees.
@@ -528,7 +494,7 @@ var customMatchers = {
 
                         if (!similarRadians(actualValue, expectedValue, 0.001)) {
                             result.pass = false;
-                            const difference = normaliseRadians(expectedValue - actualValue);
+                            const difference = CesiumMath.negativePiToPi(expectedValue - actualValue);
                             result.message += 'Expected roll value ' + actualValue + ' to be ' + expectedValue +
                                               ' (difference was ' + difference + ' radians, ' +
                                               CesiumMath.toDegrees(difference) + ' degrees). ';

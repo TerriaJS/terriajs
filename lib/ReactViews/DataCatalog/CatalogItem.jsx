@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import Icon from "../Icon.jsx";
 
@@ -45,13 +46,13 @@ function CatalogItem(props) {
 }
 
 CatalogItem.propTypes = {
-    onTextClick: React.PropTypes.func,
-    selected: React.PropTypes.bool,
-    text: React.PropTypes.string,
-    title: React.PropTypes.string,
-    onBtnClick: React.PropTypes.func,
-    btnState: React.PropTypes.oneOf(Object.keys(STATE_TO_ICONS)),
-    titleOverrides: React.PropTypes.object
+    onTextClick: PropTypes.func,
+    selected: PropTypes.bool,
+    text: PropTypes.string,
+    title: PropTypes.string,
+    onBtnClick: PropTypes.func,
+    btnState: PropTypes.oneOf(Object.keys(STATE_TO_ICONS)),
+    titleOverrides: PropTypes.object
 };
 
 export default CatalogItem;

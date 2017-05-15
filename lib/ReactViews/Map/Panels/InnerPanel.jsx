@@ -1,29 +1,31 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import createReactClass from 'create-react-class';
 import classNames from 'classnames';
 
 import defined from 'terriajs-cesium/Source/Core/defined';
 
 import Styles from './panel.scss';
 
-const InnerPanel = React.createClass({
+const InnerPanel = createReactClass({
     propTypes: {
         /**
          * A property that will be looked for on window click events - if it's set, the click event will not cause the
          * panel to close.
          */
-        doNotCloseFlag: React.PropTypes.string,
+        doNotCloseFlag: PropTypes.string,
         /** Will be called when the panel has finished hiding */
-        onDismissed: React.PropTypes.func,
+        onDismissed: PropTypes.func,
         /** Theme to style components */
-        theme: React.PropTypes.object,
+        theme: PropTypes.object,
         /** How far the caret at the top of the panel should be from its left, as CSS (so #px or #% are both valid) */
-        caretOffset: React.PropTypes.string,
+        caretOffset: PropTypes.string,
         /** Will be passed as "ref" to the outermost element */
-        innerRef: React.PropTypes.oneOfType([React.PropTypes.func, React.PropTypes.string]),
+        innerRef: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
         /** How far the dropdown should be offset from the left of the container. */
-        dropdownOffset: React.PropTypes.string,
+        dropdownOffset: PropTypes.string,
 
-        children: React.PropTypes.oneOfType([React.PropTypes.arrayOf(React.PropTypes.element), React.PropTypes.element])
+        children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.element), PropTypes.element])
     },
 
     getDefaultProps() {

@@ -693,7 +693,7 @@ describe('CsvCatalogItem with lat and lon', function() {
 
 // eg. use as entities.map(getPropertiesDate) to just get the dates of the entities.
 function getPropertiesDate(obj) {
-    return obj.properties.date;
+    return obj.properties.date.getValue();
 }
 
 // eg. use as regions.map(getId) to just get the ids of the regions.
@@ -962,6 +962,34 @@ describe('CsvCatalogItem with region mapping', function() {
 
             expect(recolorFunction(regionNames.indexOf('3121'))).toBeDefined();
             expect(recolorFunction(regionNames.indexOf('3122'))).toBeDefined();
+            expect(recolorFunction(regionNames.indexOf('3123'))).not.toBeDefined();
+            expect(recolorFunction(regionNames.indexOf('3124'))).not.toBeDefined();
+            expect(csvItem.legendUrl).toBeDefined();
+        }).otherwise(fail).then(done);
+    });
+
+    it('supports region-mapped files with missing dates', function(done) {
+        csvItem.updateFromJson({
+            url: 'test/csv/postcode_date_value_missing_date.csv'
+        });
+        csvItem.load().then(function() {
+            var regionMapping = csvItem.regionMapping;
+            var j = JulianDate.fromIso8601;
+            regionMapping._catalogItem.terria.clock.currentTime = j('2015-08-08');
+            csvItem.isEnabled = true;
+            var regionDetails = regionMapping.regionDetails;
+            expect(regionDetails).toBeDefined();
+            var regionDetail = regionDetails[0];
+            expect(csvItem.tableStructure.columns[0].values.length).toEqual(10);
+            expect(csvItem.tableStructure.columnsByType[VarType.TIME].length).toEqual(1);
+            expect(csvItem.tableStructure.columnsByType[VarType.TIME][0].julianDates[0]).toEqual(j('2015-08-07'));
+            // Test that the right regions have been colored (since the datasource doesn't expose the entities).
+            // On 2015-08-07, only postcodes 3121 and 3122 have values. On neighboring dates, so do 3123 and 3124.
+            var recolorFunction = ImageryProviderHooks.addRecolorFunc.calls.argsFor(0)[1];
+            var regionNames = regionDetail.regionProvider.regions.map(getId);
+
+            expect(recolorFunction(regionNames.indexOf('3121'))).toBeDefined();
+            expect(recolorFunction(regionNames.indexOf('3122'))).not.toBeDefined();  // This one was eliminated.
             expect(recolorFunction(regionNames.indexOf('3123'))).not.toBeDefined();
             expect(recolorFunction(regionNames.indexOf('3124'))).not.toBeDefined();
             expect(csvItem.legendUrl).toBeDefined();
