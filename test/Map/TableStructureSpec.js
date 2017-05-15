@@ -134,7 +134,7 @@ describe('TableStructure', function() {
         var uri = tableStructure.toDataUri();
         expect(uri).toEqual('data:attachment/csv,lat%2Cy%0A1.6%2C-9.8');
         // From csv
-        var csvString = 'lat,y\n1.6\n-9.8';
+        var csvString = 'lat,y\n1.6,-9.8';
         tableStructure.loadFromCsv(csvString);
         uri = tableStructure.toDataUri();
         expect(uri).toEqual('data:attachment/csv,lat%2Cy%0A1.6%2C-9.8');
