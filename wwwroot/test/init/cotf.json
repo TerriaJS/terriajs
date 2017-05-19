@@ -20,6 +20,14 @@
                     "showWarnings": false,
                     "keyType": "abs",
                     "cacheDuration": "0d"
+                },
+                {
+                    "name": "Demo sample data",
+                    "url": "http://localhost:8080/v0/tables/sample",
+                    "type": "aggregated-data-api",
+                    "showWarnings": false,
+                    "keyType": "abs",
+                    "cacheDuration": "0d"
                 }
 
             ]
