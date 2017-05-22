@@ -1,4 +1,4 @@
-# Customizing Tabular Data Appearance
+# Tabular Data
 
 ## Overview
 
@@ -39,8 +39,7 @@ To remove the invalid region name warning, just add this to the json (at the sam
 ```
 			"showWarnings": false,
 ```
-
-Let's go into more detail now.
+This same option can be used with any tabular data type, eg. Sensor Observation Service and SDMX-JSON items as well.
 
 Please note this documentation is still being developed, and does not cover everything
 that is possible.
@@ -52,18 +51,16 @@ The definitive source of what you can do with `tableStyle` is this pair:
 
 ## Referencing your data
 
-You’ll need to either provide a URL to the csv data in that file, or embed the csv data directly in the json.
-An example with embedded data is here:
-https://github.com/TerriaJS/terriajs/blob/5.2.4/wwwroot/test/init/csv.json#L96-L101
+As you can see in the example above, you need to provide a URL to the csv data in the json file. If your data can be made accessible publicly, [github gists](https://gist.github.com/) are a convenient way to do this.
+
+For small data files, you can embed the data directly in the json too, eg. instead of `"url"`, use:
+```
+            "data": "longitude,latitude,value\n134.384,-26.716,5\n121.659,-33.592,10"
+```
 
 ## Color bins, maps and palettes
 
-## More examples
-
-Some examples are here: https://github.com/TerriaJS/terriajs/blob/master/wwwroot/test/init/test-tablestyle.json
-
-You can add this directly to your catalog by appending `#build/TerriaJS/test/init/test-tablestyle.json` to the URL to your map, eg. `http://localhost:3001/#build/TerriaJS/test/init/test-tablestyle.json`.
-
+TODO
 
 The other colouring options are listed in  and include colorBins, colorBinMethod, colorMap and colorPalette:
 
@@ -75,4 +72,12 @@ The other colouring options are listed in  and include colorBins, colorBinMethod
  *                 and the colors are evenly spaced over the range of values.  For example, "red-white-hsl(240,50%,50%)".
  * @param {String} [options.colorPalette] Gets or sets the [ColorBrewer](http://colorbrewer2.org/) palette to use when mapping values to colors.  Setting this
  *                 property sets colorMap to undefined.  This property is ignored if colorMap is defined.
+
+## More examples
+
+Some examples are here: https://github.com/TerriaJS/terriajs/blob/master/wwwroot/test/init/test-tablestyle.json
+
+You can add this directly to your catalog by appending `#build/TerriaJS/test/init/test-tablestyle.json` to the URL to your map, eg. `http://localhost:3001/#build/TerriaJS/test/init/test-tablestyle.json`.
+
+
 
