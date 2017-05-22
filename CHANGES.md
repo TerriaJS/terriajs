@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### 5.2.5
+
+* Added documentation for customizing data appearance, and folded in existing but orphaned documentation for creating feature info templates.
+
 ### 5.2.4
 
 * Fixed a bug that prevented error messages, such as when a dataset fails to load, from being shown to the user. Instead, the errors were silently ignored.
