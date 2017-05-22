@@ -58,7 +58,9 @@ For small data files, you can embed the data directly in the json too, eg. inste
             "data": "lon,lat,value\n134.384,-26.716,5\n121.659,-33.592,10"
 ```
 
-## Color maps, bins and palettes
+## Coloring
+
+Use the following settings to adjust how points and regions are colored.
 
 ### colorMap
 
@@ -67,6 +69,26 @@ In the example above we specified the two ends of the color spectrum to use via 
 
 ```
                 "colorMap": "red-white-hsl(240,50%,50%)"
+```
+
+If you want more control what fraction of the range each color should apply,
+you can use this alternative syntax:
+
+```
+                "colorMap": [
+                    {
+                        "color": "rgba(0,0,200,1.0)",
+                        "offset": 0
+                    },
+                    {
+                        "color": "rgba(200,200,200,1.00)",
+                        "offset": 0.6
+                    },
+                    {
+                        "color": "rgba(200,0,0,1.00)",
+                        "offset": 1
+                    }
+                ],
 ```
 
 ### colorBins
@@ -82,7 +104,7 @@ or, if you have specific boundaries in mind, you can list them, eg.
 
 ### colorPalette
 
-To simplify the settings, you can just specify a [ColorBrewer](http://colorbrewer2.org/)
+To simplify the settings, you can specify a [ColorBrewer](http://colorbrewer2.org/)
 palette directly, eg.
 
 ```
@@ -95,24 +117,65 @@ palette directly, eg.
 
 This property is ignored if colorMap is defined.
 
+
+### colorBinMethod
+
+Use this to force a particular method for quantizing colors.
+The alternatives are "auto" (the default), "ckmeans", "quantile" or "none"
+(equivalent to `"colorBins": 0`).
+
+### imageUrl
+
+For lat/lon datasets, if you want to use a particular image instead of a circle,
+you can specify its url as the `imageUrl`, eg. in [test.json](https://raw.githubusercontent.com/TerriaJS/nationalmap/2017-05-15/wwwroot/init/test.json):
+
+```
+            "imageUrl": "test/images/pow32.png",
+```
+
+## Sizing
+
+### scale
+
+The size of each point (or image), eg.
+
+```
+            "tableStyle": {
+                "scale": 2
+            }
+```
+
+### scaleByValue
+
+A Boolean for whether points should be scaled by the value of the variable (default false).
+
+```
+            "tableStyle": {
+                "scale": 2,
+                "scaleByValue": true
+            }
+```
+
+### minDisplayValue
+
+All data values less than or equal to this are considered equal for the purpose of display.
+
+### maxDisplayValue
+
+All data values greater than or equal to this are considered equal for the purpose of display.
+
+### clampDisplayValue
+
+A Boolean - if true, display values that fall outside the display range show as min and max colors.
+
 ## Other settings
 
-TODO
-
-The other colouring options are listed in  and include colorBins, colorBinMethod, colorMap and colorPalette:
-
- * @param {Integer|Number[]} [options.colorBins] Either the number of discrete colours that a color gradient should be quantised into (ie. an integer), or
- *                 an array of values specifying the boundaries between the color bins.
- * @param {String} [options.colorBinMethod] The method for quantising colors: "auto" (default), "ckmeans", "quantile" or "none" (equivalent to colorBins: 0).
- * @param {String|Array} [options.colorMap] Gets or sets a string or {@link ColorMap} array, specifying how to map values to colors.  Setting this property sets
- *                 colorPalette to undefined.  If this property is a string, it specifies a list of CSS colors separated by hyphens (-),
- *                 and the colors are evenly spaced over the range of values.  For example, "red-white-hsl(240,50%,50%)".
- * @param {String} [options.colorPalette] Gets or sets the [ColorBrewer](http://colorbrewer2.org/) palette to use when mapping values to colors.  Setting this
- *                 property sets colorMap to undefined.  This property is ignored if colorMap is defined.
+For a full list of the available settings, see the `TableStyle` and `TableColumnStyle` models mentioned earlier.
 
 ## More examples
 
-Some examples are here: https://github.com/TerriaJS/terriajs/blob/master/wwwroot/test/init/test-tablestyle.json
+Some examples are here:
+[https://github.com/TerriaJS/terriajs/blob/master/wwwroot/test/init/test-tablestyle.json](https://github.com/TerriaJS/terriajs/blob/master/wwwroot/test/init/test-tablestyle.json)
 
 You can add this directly to your catalog by appending `#build/TerriaJS/test/init/test-tablestyle.json` to the URL to your map, eg. `http://localhost:3001/#build/TerriaJS/test/init/test-tablestyle.json`.
 
