@@ -55,10 +55,47 @@ As you can see in the example above, you need to provide a URL to the csv data i
 
 For small data files, you can embed the data directly in the json too, eg. instead of `"url"`, use:
 ```
-            "data": "longitude,latitude,value\n134.384,-26.716,5\n121.659,-33.592,10"
+            "data": "lon,lat,value\n134.384,-26.716,5\n121.659,-33.592,10"
 ```
 
-## Color bins, maps and palettes
+## Color maps, bins and palettes
+
+### colorMap
+
+In the example above we specified the two ends of the color spectrum to use via the setting
+`"colorMap": "green-orange"`, where `green` and `orange` are two colors in CSS format. In fact you can specify as many colors as you like, separated by hyphens, and the colors are evenly spaced over the range of values, eg.
+
+```
+                "colorMap": "red-white-hsl(240,50%,50%)"
+```
+
+### colorBins
+
+You can explicitly state how many colors (color "bins") you want to divide the data into, eg.
+```
+                "colorBins": 16
+```
+or, if you have specific boundaries in mind, you can list them, eg.
+```
+                "colorBins": [3000, 3100, 3800, 3850, 3950, 4000]
+```
+
+### colorPalette
+
+To simplify the settings, you can just specify a [ColorBrewer](http://colorbrewer2.org/)
+palette directly, eg.
+
+```
+            "tableStyle": {
+                "colorPalette": "10-class Set3",
+                "colorBins": 10
+            }
+```
+`"10-class BrBG"` is also a valid choice.
+
+This property is ignored if colorMap is defined.
+
+## Other settings
 
 TODO
 
