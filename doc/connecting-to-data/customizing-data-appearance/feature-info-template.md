@@ -126,6 +126,6 @@ The clicked point's latitude and longitude are also available as `{{terria.coord
 ## More examples
 
 
-Some examples are here: https://github.com/TerriaJS/terriajs/blob/master/wwwroot/test/init/csv.json, and charts.json.
+Some examples are here: [https://github.com/TerriaJS/terriajs/blob/master/wwwroot/test/init/csv.json](https://github.com/TerriaJS/terriajs/blob/master/wwwroot/test/init/csv.json), and [charts.json](https://github.com/TerriaJS/terriajs/blob/master/wwwroot/test/init/charts.json).
 
 You can add this directly to your catalog by appending `#build/TerriaJS/test/init/csv.json` to the URL to your map, eg. `http://localhost:3001/#build/TerriaJS/test/init/csv.json`.
