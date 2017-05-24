@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### 5.2.5
+
+* Fixed a bug with `forceProxy: true` which meant that vector tiles would try, and fail, to load over the proxy.
+
 ### 5.2.4
 
 * Fixed a bug that prevented error messages, such as when a dataset fails to load, from being shown to the user. Instead, the errors were silently ignored.
