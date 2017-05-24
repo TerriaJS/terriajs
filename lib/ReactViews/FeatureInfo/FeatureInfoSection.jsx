@@ -175,6 +175,13 @@ const FeatureInfoSection = createReactClass({
 
     render() {
         const catalogItemName = (this.props.catalogItem && this.props.catalogItem.name) || '';
+        let baseFilename = catalogItemName;
+        if (this.props.position) {
+             const position = Ellipsoid.WGS84.cartesianToCartographic(this.props.position);
+             const latitude = CesiumMath.toDegrees(position.latitude).toFixed(5);
+             const longitude = CesiumMath.toDegrees(position.longitude).toFixed(5);
+             baseFilename += ' - Lat ' + latitude + ' Lon ' + longitude;
+        }
         const fullName = (catalogItemName ? (catalogItemName + ' - ') : '') + this.renderDataTitle();
         const reactInfo = getInfoAsReactComponent(this);
 
@@ -210,7 +217,7 @@ const FeatureInfoSection = createReactClass({
                                     <FeatureInfoDownload key='download'
                                         viewState={this.props.viewState}
                                         data={reactInfo.downloadableData}
-                                        name={catalogItemName} />
+                                        baseFilename={baseFilename} />
                                 </If>
                             </When>
                             <Otherwise>

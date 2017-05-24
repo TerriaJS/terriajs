@@ -14,7 +14,7 @@ import Styles from './feature-info-download.scss';
 const FeatureInfoDownload = createReactClass({
     propTypes: {
         data: PropTypes.object.isRequired,
-        name: PropTypes.string.isRequired,
+        baseFilename: PropTypes.string.isRequired,
         viewState: PropTypes.object.isRequired,
         canUseDataUri: PropTypes.bool
     },
@@ -29,12 +29,12 @@ const FeatureInfoDownload = createReactClass({
         return [
             {
                 href: DataUri.make('csv', generateCsvData(this.props.data)),
-                download: `${this.props.name}.csv`,
+                download: `${this.props.baseFilename}.csv`,
                 label: 'CSV'
             },
             {
                 href: DataUri.make('json', JSON.stringify(this.props.data)),
-                download: `${this.props.name}.json`,
+                download: `${this.props.baseFilename}.json`,
                 label: 'JSON'
             }
         ].filter(download => !!download.href);
