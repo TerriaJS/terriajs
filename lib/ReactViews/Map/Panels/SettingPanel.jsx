@@ -61,19 +61,25 @@ const SettingPanel = createReactClass({
 
     selectViewer(viewer, event) {
         event.stopPropagation();
+
+        let newViewerMode;
         switch (viewer) {
             case 0:
-                this.props.terria.viewerMode = ViewerMode.CesiumTerrain;
+                newViewerMode = ViewerMode.CesiumTerrain;
                 break;
             case 1:
-                this.props.terria.viewerMode = ViewerMode.CesiumEllipsoid;
+                newViewerMode = ViewerMode.CesiumEllipsoid;
                 break;
             case 2:
-                this.props.terria.viewerMode = ViewerMode.Leaflet;
+                newViewerMode = ViewerMode.Leaflet;
                 break;
             default:
                 return;
         }
+        this.props.terria.viewerMode = newViewerMode;
+
+        // We store the user's chosen viewer mode for future use.
+        this.props.terria.setLocalProperty('viewermode', newViewerMode);
     },
 
     render() {
