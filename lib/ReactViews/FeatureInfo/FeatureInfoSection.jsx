@@ -177,13 +177,13 @@ const FeatureInfoSection = createReactClass({
         const catalogItemName = (this.props.catalogItem && this.props.catalogItem.name) || '';
         let baseFilename = catalogItemName;
         if (this.props.position) {
-             const position = Ellipsoid.WGS84.cartesianToCartographic(this.props.position);
-             const latitude = CesiumMath.toDegrees(position.latitude).toFixed(5);
-             const longitude = CesiumMath.toDegrees(position.longitude).toFixed(5);
-             // Check that the catalogItemName doesn't already contain the lat lon with the same or more precision.
-             if ((typeof baseFilename !== 'string') || (baseFilename.indexOf(latitude) === -1) || (baseFilename.indexOf(longitude) === -1)) {
-                 baseFilename += ' - Lat ' + latitude + ' Lon ' + longitude;
-             }
+            const position = Ellipsoid.WGS84.cartesianToCartographic(this.props.position);
+            const latitude = CesiumMath.toDegrees(position.latitude).toFixed(5);
+            const longitude = CesiumMath.toDegrees(position.longitude).toFixed(5);
+            // Check that the catalogItemName doesn't already contain the lat lon with the same or more precision.
+            if ((typeof baseFilename !== 'string') || (baseFilename.indexOf(latitude) === -1) || (baseFilename.indexOf(longitude) === -1)) {
+                baseFilename += ' - Lat ' + latitude + ' Lon ' + longitude;
+            }
         }
         const fullName = (catalogItemName ? (catalogItemName + ' - ') : '') + this.renderDataTitle();
         const reactInfo = getInfoAsReactComponent(this);
