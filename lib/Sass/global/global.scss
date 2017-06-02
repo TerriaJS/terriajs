@@ -1,2 +1,9 @@
 @import './leaflet';
 @import './normalize';
+
+:global {
+    .elementIsHighlighted {
+      z-index: 1500;
+      position: relative;
+    }
+}

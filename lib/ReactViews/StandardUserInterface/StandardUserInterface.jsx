@@ -9,6 +9,7 @@ import FeatureInfoPanel from './../FeatureInfo/FeatureInfoPanel.jsx';
 import FeedbackForm from '../Feedback/FeedbackForm.jsx';
 import MapColumn from './MapColumn.jsx';
 import MapInteractionWindow from './../Notification/MapInteractionWindow.jsx';
+import HelpScreenWindow from './../Notification/HelpScreenWindow.jsx';
 import MapNavigation from './../Map/MapNavigation.jsx';
 import MenuBar from './../Map/MenuBar.jsx';
 import ExperimentalFeatures from './../Map/ExperimentalFeatures.jsx';
@@ -151,6 +152,7 @@ const StandardUserInterface = createReactClass({
 
                 <Notification viewState={this.props.viewState}/>
                 <MapInteractionWindow terria={terria} viewState={this.props.viewState}/>
+                <HelpScreenWindow terria={terria} viewState={this.props.viewState}/>
 
                 <If condition={this.props.terria.configParameters.feedbackUrl && !this.props.viewState.hideMapUi()}>
                     <aside className={Styles.feedback}>

@@ -5,6 +5,7 @@ import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
+import classNames from 'classnames';
 
 import ObserveModelMixin from '../ObserveModelMixin';
 import SearchBox from '../Search/SearchBox.jsx';
@@ -74,7 +75,6 @@ const SidePanel = createReactClass({
 
     render() {
         const searchState = this.props.viewState.searchState;
-
         return (
             <div className={Styles.workBench}>
                 <div className={Styles.header}>
@@ -82,13 +82,13 @@ const SidePanel = createReactClass({
                                onDoSearch={this.search}
                                onFocus={this.startLocationSearch}
                                searchText={searchState.locationSearchText} />
-                    <div className={Styles.addData}>
-                        <button type='button' onClick={this.onAddDataClicked} className={Styles.button}>
+                    <div className={classNames(Styles.addData, {'elementIsHighlighted': this.props.viewState.highlightedComponentId === 'addData'})}>
+                        <button ref={(highlightedComponent) => { this.props.viewState.highlightedComponents['addData'] = highlightedComponent; }} type='button' onClick={this.onAddDataClicked} className={Styles.button}>
                             <Icon glyph={Icon.GLYPHS.add}/>Add data
                         </button>
                     </div>
                 </div>
-                <div className={Styles.body}>
+                <div ref={(highlightedComponent) => { this.props.viewState.highlightedComponents['dataSets'] = highlightedComponent; }} className={classNames(Styles.body, {'elementIsHighlighted': this.props.viewState.highlightedComponentId === 'dataSets'})} >
                     <Choose>
                         <When condition={searchState.locationSearchText.length > 0 && searchState.showLocationSearchResults}>
                             <SidebarSearch

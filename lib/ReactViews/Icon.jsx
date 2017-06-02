@@ -31,6 +31,7 @@ const GLYPHS = {
     folderOpen: require('../../wwwroot/images/icons/folder-open.svg'),
     forward: require('../../wwwroot/images/icons/forward.svg'),
     geolocation: require('../../wwwroot/images/icons/geolocation.svg'),
+    help: require('../../wwwroot/images/icons/help.svg'),
     increase: require('../../wwwroot/images/icons/increase.svg'),
     left: require('../../wwwroot/images/icons/left.svg'),
     lineChart: require('../../wwwroot/images/icons/line-chart.svg'),
