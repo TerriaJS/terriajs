@@ -489,6 +489,11 @@ Change Log
 * Warn user when the requested WMS layer doesn't exist, and try to provide a suggestion.
 * Fixed the calculation of a CSV file's extent so that missing latitudes and longitudes are ignored, not treated as zero.
 * Improved the user experience around uploading files in a format not directly supported by TerriaJS and optionally using the conversion service.
+* Upgraded to terriajs-cesium 1.18.0.
+* Fixed an error when adding a csv with one line of data.
+* Fixed error when adding a csv file with numeric column names.
+* Fixed error choosing the fill colour of GeoJSON catalog items.
+* Made GeoJSON catalog items a lighter shade, and with a thicker border for better visibility of adjoining polygons.
 * Improved performance of large CSV files, especially the loading time, and the time taken to change the display variable of region-mapped files.
 * Added support for CSV files with only location (lat/lon or region) columns, and no value columns, using a file-specific color. Revised GeoJSON display to draw from the same palette of colors.
 * Fixed a bug that prevented GeoJSON styles from being applied correctly in some cases.
