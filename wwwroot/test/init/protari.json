@@ -15,7 +15,7 @@
                     "cacheDuration": "1d"
                 },
                 {
-                    "name": "Dummy Census Data (2011)",
+                    "name": "Test Data",
                     "url": "http://localhost:8080/v0/tables/DUMMY_ACLD",
                     "type": "aggregated-data-api",
                     "forceProxy": true,
