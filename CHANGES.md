@@ -6,6 +6,7 @@ Change Log
 ### 5.2.5
 
 * Fixed a bug with `forceProxy: true` which meant that vector tiles would try, and fail, to load over the proxy.
+* Added the ability to set SDMX-JSON region names from a region type dimension, using a Mustache template. This was required so regions can be mapped to specific years, even if not specified by the SDMX-JSON server.
 
 ### 5.2.4
 
