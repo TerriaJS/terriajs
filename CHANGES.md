@@ -6,6 +6,7 @@ Change Log
 ### 5.2.5
 
 * Fixed a bug with `forceProxy: true` which meant that vector tiles would try, and fail, to load over the proxy.
+* Added documentation for customizing data appearance, and folded in existing but orphaned documentation for creating feature info templates.
 
 ### 5.2.4
 
