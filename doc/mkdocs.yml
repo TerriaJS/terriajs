@@ -23,6 +23,10 @@ pages:
     - Cross-Origin Resource Sharing: 'connecting-to-data/cross-origin-resource-sharing.md'
     - Catalog Groups: 'connecting-to-data/catalog-groups.md'
     - Catalog Items: 'connecting-to-data/catalog-items.md'
+    - Customizing Data Appearance:
+        - Overview: 'connecting-to-data/customizing-data-appearance/overview.md'
+        - Tabular Data: 'connecting-to-data/customizing-data-appearance/tabular-data.md'
+        - Feature Information Template: 'connecting-to-data/customizing-data-appearance/feature-info-template.md'
     - Catalog Functions: 'connecting-to-data/catalog-functions.md'
     - Catalog Type Details:
         - ABS ITT (group): 'connecting-to-data/catalog-type-details/abs-itt-dataset-list.md'
