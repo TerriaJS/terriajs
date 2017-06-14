@@ -2,9 +2,6 @@
 
 Change Log
 ==========
-### 5.2.6
-
-* Add `viewermode` to the users persistant local storage to remember the last `ViewerMode` used.
 
 ### 5.2.5
 
@@ -12,6 +9,7 @@ Change Log
 * Added documentation for customizing data appearance, and folded in existing but orphaned documentation for creating feature info templates.
 * Changed the LocateMe button so that it toggles and continuously updates the location when Augmented Reality is enabled.
 * Added the ability to set SDMX-JSON region names from a region type dimension, using a Mustache template. This was required so regions can be mapped to specific years, even if not specified by the SDMX-JSON server.
+* Added `viewermode` to the users persistent local storage to remember the last `ViewerMode` used.
 
 ### 5.2.4
 
