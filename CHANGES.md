@@ -2,6 +2,9 @@
 
 Change Log
 ==========
+### 5.2.6
+
+* Add `viewermode` to the users persistant local storage to remember the last `ViewerMode` used.
 
 ### 5.2.5
 
