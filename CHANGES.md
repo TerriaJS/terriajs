@@ -10,6 +10,7 @@ Change Log
 * Changed the LocateMe button so that it toggles and continuously updates the location when Augmented Reality is enabled.
 * Added the ability to set SDMX-JSON region names from a region type dimension, using a Mustache template. This was required so regions can be mapped to specific years, even if not specified by the SDMX-JSON server.
 * Added `viewermode` to the users persistent local storage to remember the last `ViewerMode` used.
+* Added the ability to customize the preamble text on the feedback form ("We would love to hear from you!") by setting `feedbackPreamble` in the `parameters` section of `config.json`.
 
 ### 5.2.4
 
