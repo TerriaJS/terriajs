@@ -30,7 +30,10 @@
                     "forceProxy": true,
                     "showWarnings": false,
                     "keyType": "abs",
-                    "cacheDuration": "0d"
+                    "cacheDuration": "0d",
+                    "tableStyle": {
+                        "replaceWithNullValues": ["suppressed"]
+                    }
                 }
 
             ]
