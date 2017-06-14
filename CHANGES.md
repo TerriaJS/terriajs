@@ -5,7 +5,9 @@ Change Log
 
 ### 5.2.5
 
-* Changed the LocateMe button so that it toggles and continueously updates the location when Augmented Reality is enabled.
+* Fixed a bug with `forceProxy: true` which meant that vector tiles would try, and fail, to load over the proxy.
+* Added documentation for customizing data appearance, and folded in existing but orphaned documentation for creating feature info templates.
+* Changed the LocateMe button so that it toggles and continuously updates the location when Augmented Reality is enabled.
 
 ### 5.2.4
 

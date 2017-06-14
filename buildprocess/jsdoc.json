@@ -10,19 +10,9 @@
     "plugins": [
         "plugins/markdown"
     ],
-    "templates": {
-        "cleverLinks": false,
-        "monospaceLinks": false,
-        "default": {
-            "staticFiles": {
-                "paths": ["tutorials/static/"]
-            }
-        }
-    },
     "opts": {
         "recurse": true,
         "encoding": "utf8",
-        "destination": "./wwwroot/doc/reference/",
-        "tutorials": "./tutorials/"
+        "destination": "./wwwroot/doc/reference/"
     }
  }
