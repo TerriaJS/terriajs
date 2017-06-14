@@ -3,6 +3,7 @@
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
 import createReactClass from 'create-react-class';
+import parseCustomMarkdownToReact from '../Custom/parseCustomMarkdownToReact';
 import PropTypes from 'prop-types';
 import sendFeedback from '../../Models/sendFeedback.js';
 import Styles from './feedback-form.scss';
@@ -78,6 +79,7 @@ const FeedbackForm = createReactClass({
     },
 
     render() {
+        const preamble = parseCustomMarkdownToReact(this.props.viewState.terria.configParameters.feedbackPreamble || 'We would love to hear from you!');
         const feedbackFormClassNames = classNames(Styles.form, {
             [Styles.isOpen]: this.props.viewState.feedbackFormIsVisible
         });
@@ -91,7 +93,7 @@ const FeedbackForm = createReactClass({
                         </button>
                     </div>
                     <form onSubmit={this.onSubmit}>
-                        <div className={Styles.description}>We would love to hear from you!</div>
+                        <div className={Styles.description}>{preamble}</div>
                         <label className={Styles.label}>Your name (optional)</label>
                         <input type="text" name="name" className={Styles.field} value={this.state.name} onChange={this.handleChange} />
                         <label className={Styles.label}>Email address (optional)<br /><em>We can&#39;t follow up without it!</em></label>
