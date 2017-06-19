@@ -8,6 +8,7 @@ import {sortable} from 'react-anything-sortable';
 
 import defined from 'terriajs-cesium/Source/Core/defined';
 
+import CrossSectionSection from './Controls/CrossSectionSection';
 import DisplayAsPercentSection from './Controls/DisplayAsPercentSection';
 import ConceptViewer from './Controls/ConceptViewer';
 import DimensionSelectorSection from './Controls/DimensionSelectorSection';
@@ -96,6 +97,7 @@ const WorkbenchItem = createReactClass({
                     <div className={Styles.inner}>
                         <ViewingControls item={workbenchItem} viewState={this.props.viewState}/>
                         <OpacitySection item={workbenchItem}/>
+                        <CrossSectionSection item={workbenchItem}/>
                         <If condition={(defined(workbenchItem.concepts) && workbenchItem.concepts.length > 0) && workbenchItem.displayChoicesBeforeLegend}>
                             <ConceptViewer item={workbenchItem}/>
                         </If>
