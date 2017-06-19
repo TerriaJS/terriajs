@@ -34,6 +34,18 @@
                     "tableStyle": {
                         "replaceWithNullValues": ["suppressed"]
                     }
+                },
+                {
+                    "name": "Demo SURF data",
+                    "url": "http://localhost:8080/v0/tables/synthpop",
+                    "type": "aggregated-data-api",
+                    "forceProxy": true,
+                    "showWarnings": false,
+                    "keyType": "abs",
+                    "cacheDuration": "0d",
+                    "tableStyle": {
+                        "replaceWithNullValues": ["suppressed"]
+                    }
                 }
 
             ]
