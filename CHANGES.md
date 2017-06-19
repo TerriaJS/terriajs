@@ -3,6 +3,33 @@
 Change Log
 ==========
 
+### 5.2.5
+
+* Fixed a bug with `forceProxy: true` which meant that vector tiles would try, and fail, to load over the proxy.
+* Added documentation for customizing data appearance, and folded in existing but orphaned documentation for creating feature info templates.
+* Changed the LocateMe button so that it toggles and continuously updates the location when Augmented Reality is enabled.
+* Added the ability to set SDMX-JSON region names from a region type dimension, using a Mustache template. This was required so regions can be mapped to specific years, even if not specified by the SDMX-JSON server.
+* Added `viewermode` to the users persistent local storage to remember the last `ViewerMode` used.
+* Added the ability to customize the preamble text on the feedback form ("We would love to hear from you!") by setting `feedbackPreamble` in the `parameters` section of `config.json`.
+
+### 5.2.4
+
+* Fixed a bug that prevented error messages, such as when a dataset fails to load, from being shown to the user. Instead, the errors were silently ignored.
+
+### 5.2.3
+
+* Fixed a bug that gave expanded Sensor Observation Service charts poor names.
+* Fixed a bug that prevented some table-based datasets from loading.
+
+### 5.2.2
+
+* Fixed download of selected dataset (as csv) so that quotes are handled in accordance with https://tools.ietf.org/html/rfc4180. As a result, more such downloads can be directly re-loaded in Terria by dragging and dropping them.
+
+### 5.2.1
+
+* Changed the default opacity for points from CSV files without a value column to 1.0 (previously it was 0.6).  This is a workaround for a Cesium bug (https://github.com/AnalyticalGraphicsInc/cesium/issues/5307) but really a better choice anyway.
+* Fixed a bug which meant non-standard properties of some table data sources (eg. csv, SOS, SDMX-JSON) were missing in the feature info panel, because of a breaking change in Cesium 1.33.
+
 ### 5.2.0
 
 * Fixed a bug that caused layer disclaimers to fail to appear when the layer was enabled via a share link.  Since the user was unable to accept the disclaimer, the layer also failed to appear.

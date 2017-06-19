@@ -104,22 +104,52 @@ describe('TableStructure', function() {
         expect(rows).toEqual(target);
     });
 
-    it('can convert to csv', function() {
+    it('can convert to ArrayOfRows with formatting and quotes if containing quotes', function() {
         var data = [['x', 'y'], [1.678, 9.883], [54321, 12345], [4, -3]];
+        var options = {columnOptions: {
+            x: {format: {maximumFractionDigits: 0}},
+            y: {name: 'new y ("000")', format: {useGrouping: true, maximumFractionDigits: 1}}
+        }};
+        var target = [['x', '"new y (\"\"000\"\")"'], ['2', '9.9'], ['54321', '"12' + separator + '345"'], ['4', '-3']];
+        var tableStructure = new TableStructure('foo', options);
+        tableStructure = tableStructure.loadFromJson(data);
+        var rows = tableStructure.toArrayOfRows(undefined, undefined, true, true); // 4th argument requests the quotes.
+        expect(rows.length).toEqual(4);
+        expect(rows).toEqual(target);
+    });
+
+    it('can convert to csv', function() {
+        var data = [['lat', 'y'], [1.678, 9.883], [54321, 12345], [4, -3]];
         var tableStructure = new TableStructure();
         tableStructure = tableStructure.loadFromJson(data);
         var csvString = tableStructure.toCsvString();
-        expect(csvString).toEqual('x,y\n1.678,9.883\n54321,12345\n4,-3');
+        expect(csvString).toEqual('lat,y\n1.678,9.883\n54321,12345\n4,-3');
+    });
+
+    it('can create a data URI', function() {
+        var data = [['lat', 'y'], [1.6, -9.8]];
+        var tableStructure = new TableStructure();
+        // From json
+        tableStructure = tableStructure.loadFromJson(data);
+        var uri = tableStructure.toDataUri();
+        expect(uri).toEqual('data:attachment/csv,lat%2Cy%0A1.6%2C-9.8');
+        // From csv
+        var csvString = 'lat,y\n1.6,-9.8';
+        tableStructure.loadFromCsv(csvString);
+        uri = tableStructure.toDataUri();
+        expect(uri).toEqual('data:attachment/csv,lat%2Cy%0A1.6%2C-9.8');
     });
 
     it('can convert to row objects', function() {
-        var data = [['x', 'y'], [1, 5.12345], [3, 8], [4, -3]];
+        var data = [['lat', 'y'], [1, 5.12345], [3, 8], [4, -3]];
         var tableStructure = TableStructure.fromJson(data);
         var rowObjects = tableStructure.toRowObjects();
         expect(rowObjects.length).toEqual(3);
-        expect(rowObjects[0]).toEqual({x: '1', y: '5.12345'});
-        expect(rowObjects[1]).toEqual({x: '3', y: '8'});
-        expect(rowObjects[2]).toEqual({x: '4', y: '-3'});
+        // Scalar fields are converted to strings using formatNumberForLocale, but not lat/lon.
+        // We could convert lat/lons too, if there's a reason to do it.
+        expect(rowObjects[0]).toEqual({lat: 1, y: '5.12345'});
+        expect(rowObjects[1]).toEqual({lat: 3, y: '8'});
+        expect(rowObjects[2]).toEqual({lat: 4, y: '-3'});
     });
 
     it('can convert to string and number row objects', function() {
@@ -146,9 +176,9 @@ describe('TableStructure', function() {
     });
 
     it('can get column names', function() {
-        var data = [['x', 'y'], [1, 5], [3, 8], [4, -3]];
+        var data = [['lat', 'y'], [1, 5], [3, 8], [4, -3]];
         var tableStructure = TableStructure.fromJson(data);
-        expect(tableStructure.getColumnNames()).toEqual(['x', 'y']);
+        expect(tableStructure.getColumnNames()).toEqual(['lat', 'y']);
     });
 
     it('can get column with name', function() {

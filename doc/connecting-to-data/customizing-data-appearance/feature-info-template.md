@@ -1,4 +1,6 @@
-Add a `featureInfoTemplate` to the items in your catalog `json` file, like so:
+# Feature Information Template
+
+You can add a `featureInfoTemplate` to the items in your catalog `json` file like so:
 
     {
       "catalog": [
@@ -26,11 +28,11 @@ The template will replace all occurrences of `{{property}}` with the value of th
 
 The result is:
 
-<img src="../static/template.png">
+<img src="../img/template.png">
 
 instead of:
 
-<img src="../static/no_template.png">
+<img src="../img/no_template.png">
 
 You can provide a template to use for the name of the collapsible section (eg. to replace `RGB` in the example above), like so:
 
@@ -94,9 +96,10 @@ To URL-encode a value in a template, use `terria.urlEncode` or `terria.urlEncode
 
 For features with time-varying table-based data structures (eg. CSV, SOS2, SDMX-JSON, if there is a time column), the feature info panel also includes a chart of the data over time, eg.
 
-<img src="../static/feature_info_with_time_series.png">
+<img src="../img/feature_info_with_time_series.png">
 
 You can place this chart in your template using `{{terria.timeSeries.chart}}`.  Alternatively, you can access the following component information:
+
 - `{{terria.timeSeries.xName}}` - the x-column name, with any double-quotes removed.
 - `{{terria.timeSeries.yName}}` - the y-column name, with any double-quotes removed.
 - `{{terria.timeSeries.title}}`
@@ -119,3 +122,10 @@ or use this as a basis to customise the chart.
 ## Other supporting data
 
 The clicked point's latitude and longitude are also available as `{{terria.coords.latitude}}` and `{{terria.coords.longitude}}`.
+
+## More examples
+
+
+Some examples are here: [https://github.com/TerriaJS/terriajs/blob/master/wwwroot/test/init/csv.json](https://github.com/TerriaJS/terriajs/blob/master/wwwroot/test/init/csv.json), and [charts.json](https://github.com/TerriaJS/terriajs/blob/master/wwwroot/test/init/charts.json).
+
+You can add this directly to your catalog by appending `#build/TerriaJS/test/init/csv.json` to the URL to your map, eg. `http://localhost:3001/#build/TerriaJS/test/init/csv.json`.
