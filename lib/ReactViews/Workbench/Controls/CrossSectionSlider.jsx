@@ -6,7 +6,7 @@ import ObserveModelMixin from '../../ObserveModelMixin';
 import PropTypes from 'prop-types';
 import RangeSlider from 'react-rangeslider';
 import React from 'react';
-import Styles from './opacity-section.scss';
+import Styles from './cross-section-section.scss';
 
 const CrossSectionSlider = createReactClass({
     displayName: 'CrossSectionSlider',
@@ -44,7 +44,7 @@ const CrossSectionSlider = createReactClass({
         const label = this.props.isMinimum ? 'Minimum' : 'Maximum';
 
         return (
-            <div>
+            <div className={Styles.slider}>
                 <label htmlFor={label + element}>{label} {element.toUpperCase()}:</label>
                 <RangeSlider className={Styles.rangeSlider} name={label + element} min={item.modelMinimums[element]} max={item.modelMaximums[element]} value={current[element]} onChange={this.change}/>
             </div>

@@ -6,7 +6,7 @@ import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import ObserveModelMixin from '../../ObserveModelMixin';
 
-import Styles from './opacity-section.scss';
+import Styles from './cross-section-section.scss';
 
 const CrossSectionSection = createReactClass({
     displayName: 'CrossSectionSection',
@@ -23,7 +23,7 @@ const CrossSectionSection = createReactClass({
         }
 
         return (
-            <div className={Styles.opacity}>
+            <div className={Styles.crossSection}>
                 <CrossSectionSlider item={item} isMinimum={true} element={'x'} />
                 <CrossSectionSlider item={item} isMinimum={false} element={'x'} />
                 <CrossSectionSlider item={item} isMinimum={true} element={'y'} />
