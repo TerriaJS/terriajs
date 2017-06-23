@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### 5.2.6
+
+* Added the time to the timeline labels, when zoomed in to a single day (previously the label sometimes only showed the date).
+
 ### 5.2.5
 
 * Fixed a bug with `forceProxy: true` which meant that vector tiles would try, and fail, to load over the proxy.
