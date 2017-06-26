@@ -7,7 +7,7 @@
             "items": [
                 {
                     "name": "Dummy Census Data Online (2011)",
-                    "url": "http://flask-env.hnnuy8zpns.ap-southeast-2.elasticbeanstalk.com/v0/tables/unrolled_dummy_ACLD",
+                    "url": "http://flask-env.hnnuy8zpns.ap-southeast-2.elasticbeanstalk.com/v0/tables/DUMMY_ACLD",
                     "type": "aggregated-data-api",
                     "forceProxy": true,
                     "showWarnings": false,
