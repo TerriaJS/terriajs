@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### 5.2.6
+
+* Added the ability to disable the conversion service so that no user data is sent outside of the client by setting `conversionServiceBaseUrl` to `false` in the `parameters` section of `config.json`.
+
 ### 5.2.5
 
 * Fixed a bug with `forceProxy: true` which meant that vector tiles would try, and fail, to load over the proxy.
