@@ -5,7 +5,6 @@ import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 
 import Compass from './Navigation/Compass.jsx';
-import MyLocation from './Navigation/MyLocation.jsx';
 import ZoomControl from './Navigation/ZoomControl.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
 import ViewerMode from '../../Models/ViewerMode';
@@ -39,9 +38,6 @@ const MapNavigation = createReactClass({
                 </If>
                 <div className={Styles.control}>
                     <ZoomControl terria={this.props.terria}/>
-                </div>
-                <div className={Styles.control}>
-                    <MyLocation terria={this.props.terria}/>
                 </div>
                 <For each="item" of={this.props.navItems} index="i">
                     <div className={Styles.control} key={i}>
