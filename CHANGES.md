@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### 5.X.X
+
+* Added the Latitude and Longitude to the filename for the Feature Information file download.
+
 ### 5.2.4
 
 * Fixed a bug that prevented error messages, such as when a dataset fails to load, from being shown to the user. Instead, the errors were silently ignored.
