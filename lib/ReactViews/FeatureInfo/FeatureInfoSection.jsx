@@ -220,7 +220,7 @@ const FeatureInfoSection = createReactClass({
                                     <FeatureInfoDownload key='download'
                                         viewState={this.props.viewState}
                                         data={reactInfo.downloadableData}
-                                        baseFilename={baseFilename} />
+                                        name={baseFilename} />
                                 </If>
                             </When>
                             <Otherwise>
