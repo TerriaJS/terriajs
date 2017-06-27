@@ -437,7 +437,7 @@ function mustacheFormatNumberFunction() {
 /**
  * URL Encodes provided text: {{#terria.urlEncodeComponent}}{{value}}{{/terria.urlEncodeComponent}}.
  * See encodeURIComponent for details.
- * 
+ *
  * {{#terria.urlEncodeComponent}}W/HO:E#1{{/terria.urlEncodeComponent}} -> W%2FHO%3AE%231
  * @private
  */
