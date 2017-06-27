@@ -176,13 +176,24 @@ const FeatureInfoSection = createReactClass({
     render() {
         const catalogItemName = (this.props.catalogItem && this.props.catalogItem.name) || '';
         let baseFilename = catalogItemName;
+        // Add the Lat, Lon to the baseFilename if it is possible and not already present.
         if (this.props.position) {
             const position = Ellipsoid.WGS84.cartesianToCartographic(this.props.position);
-            const latitude = CesiumMath.toDegrees(position.latitude).toFixed(5);
-            const longitude = CesiumMath.toDegrees(position.longitude).toFixed(5);
-            // Check that the catalogItemName doesn't already contain the lat lon with the same or more precision.
-            if ((typeof baseFilename !== 'string') || (baseFilename.indexOf(latitude) === -1) || (baseFilename.indexOf(longitude) === -1)) {
-                baseFilename += ' - Lat ' + latitude + ' Lon ' + longitude;
+            const latitude = CesiumMath.toDegrees(position.latitude);
+            const longitude = CesiumMath.toDegrees(position.longitude);
+            const precision = 5;
+            // See if text contains the number (to a precision number of digits (after the dp) either fixed up or down on the last digit).
+            function contains(text, number) {
+                // Take Math.ceil or Math.floor and use it to calculate the number with a precision number of digits (after the dp).
+                function fixed(round, number) {
+                    const scale = Math.pow(10, precision);
+                    return (round(number*scale)/scale).toFixed(precision);
+                }
+                return (text.indexOf(fixed(Math.floor, number)) !== -1) || (text.indexOf(fixed(Math.ceil, number)) !== -1)
+            }
+            // Check that baseFilename doesn't already contain the lat, lon with the similar or better precision.
+            if ((typeof baseFilename !== 'string') || !contains(baseFilename, latitude) || !contains(baseFilename, longitude)) {
+                baseFilename += ' - Lat ' + latitude.toFixed(precision) + ' Lon ' + longitude.toFixed(precision);
             }
         }
         const fullName = (catalogItemName ? (catalogItemName + ' - ') : '') + this.renderDataTitle();
