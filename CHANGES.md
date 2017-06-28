@@ -6,6 +6,7 @@ Change Log
 ### 5.2.6
 
 * Added the ability to disable the conversion service so that no user data is sent outside of the client by setting `conversionServiceBaseUrl` to `false` in the `parameters` section of `config.json`.
+* Added the ability to disable the location button by setting `disableMyLocation` to `true` in the `parameters` section of `config.json`.
 
 ### 5.2.5
 
