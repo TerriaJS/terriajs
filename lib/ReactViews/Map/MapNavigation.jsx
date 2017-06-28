@@ -41,7 +41,9 @@ const MapNavigation = createReactClass({
                     <ZoomControl terria={this.props.terria}/>
                 </div>
                 <div className={Styles.control}>
-                    <MyLocation terria={this.props.terria}/>
+                    <If condition={!this.props.terria.configParameters.disableMyLocation}>
+                        <MyLocation terria={this.props.terria}/>
+                    </If>
                 </div>
                 <For each="item" of={this.props.navItems} index="i">
                     <div className={Styles.control} key={i}>
