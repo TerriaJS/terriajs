@@ -7,6 +7,7 @@ Change Log
 
 * Added the ability to disable the conversion service so that no user data is sent outside of the client by setting `conversionServiceBaseUrl` to `false` in the `parameters` section of `config.json`.
 * Added the ability to disable the location button by setting `disableMyLocation` to `true` in the `parameters` section of `config.json`.
+* Fixed a bug which caused the share functionality to fail (both screenshot and share link) in 2d mode.
 
 ### 5.2.5
 
