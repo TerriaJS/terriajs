@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### 5.#.#
+
+* Fixed a bug which caused the selected column in a csv to be the second column when a time column is present.
+
 ### 5.2.6
 
 * Added the ability to disable the conversion service so that no user data is sent outside of the client by setting `conversionServiceBaseUrl` to `false` in the `parameters` section of `config.json`.
