@@ -3,9 +3,25 @@
 Change Log
 ==========
 
+### 5.#.#
+
+* Fixed a bug which caused the selected column in a csv to be the second column when a time column is present.
+
+### 5.2.6
+
+* Added the ability to disable the conversion service so that no user data is sent outside of the client by setting `conversionServiceBaseUrl` to `false` in the `parameters` section of `config.json`.
+* Added the ability to disable the location button by setting `disableMyLocation` to `true` in the `parameters` section of `config.json`.
+* Fixed a bug which caused the share functionality to fail (both screenshot and share link) in 2d mode.
+* Fixed a bug with explicitly styled enum columns in IE.
+
 ### 5.2.5
 
 * Fixed a bug with `forceProxy: true` which meant that vector tiles would try, and fail, to load over the proxy.
+* Added documentation for customizing data appearance, and folded in existing but orphaned documentation for creating feature info templates.
+* Changed the LocateMe button so that it toggles and continuously updates the location when Augmented Reality is enabled.
+* Added the ability to set SDMX-JSON region names from a region type dimension, using a Mustache template. This was required so regions can be mapped to specific years, even if not specified by the SDMX-JSON server.
+* Added `viewermode` to the users persistent local storage to remember the last `ViewerMode` used.
+* Added the ability to customize the preamble text on the feedback form ("We would love to hear from you!") by setting `feedbackPreamble` in the `parameters` section of `config.json`.
 
 ### 5.2.4
 

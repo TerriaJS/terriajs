@@ -48,7 +48,7 @@ module.exports = function(config) {
         },
 
         // start these browsers
-        browsers: ['sl_chrome', 'sl_safari', 'sl_firefox', 'sl_firefox_esr', 'sl_ie9', 'sl_ie10', 'sl_ie11'],
+        browsers: ['sl_chrome', /*'sl_safari',*/ 'sl_firefox', 'sl_firefox_esr', 'sl_ie9', 'sl_ie10', 'sl_ie11'],
 
         sauceLabels: {
             testName: 'TerriaJS Unit Tests',
