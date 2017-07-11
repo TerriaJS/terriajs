@@ -21,6 +21,7 @@ const SharePanel = createReactClass({
         terria: PropTypes.object,
         userPropWhiteList: PropTypes.array,
         isOpen: PropTypes.bool,
+        advancedIsOpen: PropTypes.bool,
         shortenUrls: PropTypes.bool,
         viewState: PropTypes.object.isRequired
     },
@@ -28,6 +29,7 @@ const SharePanel = createReactClass({
     getDefaultProps() {
         return {
             isOpen: false,
+            advancedIsOpen: false,
             shortenUrls: false
         };
     },
@@ -77,6 +79,24 @@ const SharePanel = createReactClass({
         const localStoragePref = this.props.terria.getLocalProperty('shortenShareUrls');
 
         return this.isUrlShortenable() && (localStoragePref || !defined(localStoragePref));
+    },
+
+    advancedOptions() {
+        return this.state.advancedIsOpen;
+    },
+
+    toggleAdvancedOptions(e) {
+        if (this.advancedOptions()) {
+            this.setState({
+                advancedIsOpen: false
+            });
+        } else {
+            this.setState({
+                advancedIsOpen: true
+            });
+        }
+
+        this.forceUpdate();
     },
 
     onShortenClicked(e) {
@@ -143,20 +163,30 @@ const SharePanel = createReactClass({
                                    placeholder={this.state.placeholder} readOnly
                                    onClick={e => e.target.select()}/>
                         </div>
-                        <div className={DropdownStyles.section}>
-                            <p className={Styles.paragraph}>To embed, copy this code to embed this map into an HTML page:</p>
-                            <input className={Styles.field} type="text" readOnly placeholder={this.state.placeholder}
-                                   value={iframeCode}
-                                   onClick={e => e.target.select()}/>
-                        </div>
-                        <If condition={this.isUrlShortenable()}>
-                            <div className={classNames(DropdownStyles.section, Styles.shortenUrl)}>
-                                <button onClick={this.onShortenClicked}>
-                                    {this.shouldShorten() ? <Icon glyph={Icon.GLYPHS.checkboxOn}/> : <Icon glyph={Icon.GLYPHS.checkboxOff}/>}
-                                    Shorten the share URL using a web service
+                        <div className={classNames(DropdownStyles.section, Styles.shortenUrl)}>
+                            <div className={Styles.btnWrapper}>
+                                <button type='button' onClick={this.toggleAdvancedOptions} className={Styles.btnAdvanced}>
+                                    <span>Advanced options</span>
+                                    {this.advancedOptions()? <Icon glyph={Icon.GLYPHS.opened}/> : <Icon glyph={Icon.GLYPHS.closed}/>}
                                 </button>
                             </div>
-                        </If>
+                            <If condition={this.advancedOptions()}>
+                                <div className={DropdownStyles.section}>
+                                    <p className={Styles.paragraph}>To embed, copy this code to embed this map into an HTML page:</p>
+                                    <input className={Styles.field} type="text" readOnly placeholder={this.state.placeholder}
+                                        value={iframeCode}
+                                        onClick={e => e.target.select()}/>
+                                </div>
+                                <If condition={this.isUrlShortenable()}>
+                                    <div className={classNames(DropdownStyles.section, Styles.shortenUrl)}>
+                                        <button onClick={this.onShortenClicked}>
+                                            {this.shouldShorten() ? <Icon glyph={Icon.GLYPHS.checkboxOn}/> : <Icon glyph={Icon.GLYPHS.checkboxOff}/>}
+                                            Shorten the share URL using a web service
+                                        </button>
+                                    </div>
+                                </If>
+                            </If>
+                        </div>
                 </If>
             </MenuPanel>
         );
