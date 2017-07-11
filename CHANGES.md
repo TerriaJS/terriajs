@@ -5,6 +5,7 @@ Change Log
 
 ### 5.#.#
 
+* Added option to expand the HTML embed code and toggle URL shorting for the share link.
 * Fixed a bug which caused the selected column in a csv to be the second column when a time column is present.
 
 ### 5.2.6
