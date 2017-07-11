@@ -42,6 +42,24 @@ const SharePanel = createReactClass({
         };
     },
 
+    advancedOptions() {
+        return this.state.advancedIsOpen;
+    },
+
+    toggleAdvancedOptions(e) {
+        if (this.advancedOptions()) {
+            this.setState({
+                advancedIsOpen: false
+            });
+        } else {
+            this.setState({
+                advancedIsOpen: true
+            });
+        }
+
+        this.forceUpdate();
+    },
+
     updateForShortening() {
         this.setState({
             shareUrl: ''
@@ -79,24 +97,6 @@ const SharePanel = createReactClass({
         const localStoragePref = this.props.terria.getLocalProperty('shortenShareUrls');
 
         return this.isUrlShortenable() && (localStoragePref || !defined(localStoragePref));
-    },
-
-    advancedOptions() {
-        return this.state.advancedIsOpen;
-    },
-
-    toggleAdvancedOptions(e) {
-        if (this.advancedOptions()) {
-            this.setState({
-                advancedIsOpen: false
-            });
-        } else {
-            this.setState({
-                advancedIsOpen: true
-            });
-        }
-
-        this.forceUpdate();
     },
 
     onShortenClicked(e) {
