@@ -3,16 +3,13 @@
 Change Log
 ==========
 
-### 5.#.#
-
-* Fixed a bug which caused the selected column in a csv to be the second column when a time column is present.
-
 ### 5.2.6
 
 * Added the ability to disable the conversion service so that no user data is sent outside of the client by setting `conversionServiceBaseUrl` to `false` in the `parameters` section of `config.json`.
 * Added the ability to disable the location button by setting `disableMyLocation` to `true` in the `parameters` section of `config.json`.
-* Fixed a bug which caused the share functionality to fail (both screenshot and share link) in 2d mode.
-* Fixed a bug with explicitly styled enum columns in IE.
+* Fixed a bug that caused the share functionality to fail (both screenshot and share link) in 2d mode.
+* Fixed a bug with explicitly styled enum columns in Internet Explorer.
+* Fixed a bug that caused the selected column in a csv to be the second column when a time column is present.
 
 ### 5.2.5
 
