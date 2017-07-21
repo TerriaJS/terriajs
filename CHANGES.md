@@ -6,6 +6,10 @@ Change Log
 ### 5.X.X
 
 * Added the Latitude and Longitude to the filename for the Feature Information file download.
+### 5.2.7
+
+* Added the Latitude and Longitude to the filename for the Feature Information file download.
+
 ### 5.2.6
 
 * Added the time to the timeline labels, when zoomed in to a single day (previously the label sometimes only showed the date).
