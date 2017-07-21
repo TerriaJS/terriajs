@@ -297,6 +297,23 @@ describe('SdmxJsonCatalogItem', function() {
             }).otherwise(fail).then(done);
         });
 
+        it('can apply a template to the region column name', function(done) {
+            // This is the same data as the previous spec, but now we add `regionNameTemplate: "{{name}}_code_2016"`
+            item.updateFromJson({
+                name: 'Foo',
+                regionNameTemplate: "{{name}}_code_2011",
+                url: 'http://sdmx.example.com/sdmx-json/data/FOO-OBS/./all'
+            });
+            item.load().then(function() {
+                // Expect it to have realised this is regional data.
+                var regionDetails = item.regionMapping.regionDetails;
+                expect(regionDetails).toBeDefined();
+                // Expect it to have appended to regionYear to the region column, per csv-geo-au.
+                var columnNames = item.tableStructure.getColumnNames();
+                expect(columnNames[1]).toEqual('STE_code_2011');
+            }).otherwise(fail).then(done);
+        });
+
         it('works with an aggregated dimension', function(done) {
             item.updateFromJson({
                 name: 'Foo',

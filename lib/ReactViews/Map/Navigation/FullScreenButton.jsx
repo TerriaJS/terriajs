@@ -48,9 +48,10 @@ const FullScreenButton = createReactClass({
         const btnClassName = classNames(Styles.btn, {
             [Styles.isActive]: this.props.viewState.isMapFullScreen
         });
+        const btnTitle = this.props.viewState.isMapFullScreen? "Show workbench": "Hide workbench";
         return (
             <div className={Styles.fullScreen}>
-                <button type='button' onClick={this.toggleFullScreen} title='Hide workbench'
+                <button type='button' onClick={this.toggleFullScreen} title={btnTitle}
                         className={btnClassName}><span>{this.renderButtonText()}</span></button>
             </div>
         );
