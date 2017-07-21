@@ -182,17 +182,8 @@ const FeatureInfoSection = createReactClass({
             const latitude = CesiumMath.toDegrees(position.latitude);
             const longitude = CesiumMath.toDegrees(position.longitude);
             const precision = 5;
-            // See if text contains the number (to a precision number of digits (after the dp) either fixed up or down on the last digit).
-            function contains(text, number) {
-                // Take Math.ceil or Math.floor and use it to calculate the number with a precision number of digits (after the dp).
-                function fixed(round, number) {
-                    const scale = Math.pow(10, precision);
-                    return (round(number*scale)/scale).toFixed(precision);
-                }
-                return (text.indexOf(fixed(Math.floor, number)) !== -1) || (text.indexOf(fixed(Math.ceil, number)) !== -1)
-            }
             // Check that baseFilename doesn't already contain the lat, lon with the similar or better precision.
-            if ((typeof baseFilename !== 'string') || !contains(baseFilename, latitude) || !contains(baseFilename, longitude)) {
+            if ((typeof baseFilename !== 'string') || !contains(baseFilename, latitude, precision) || !contains(baseFilename, longitude)) {
                 baseFilename += ' - Lat ' + latitude.toFixed(precision) + ' Lon ' + longitude.toFixed(precision);
             }
         }
@@ -620,6 +611,16 @@ function setTimeoutForUpdatingCustomComponent(that, reactComponent, updateSecond
     }, updateSeconds * 1000);
     const timeoutIds = that.state.timeoutIds;
     that.setState({timeoutIds: timeoutIds.concat(timeoutId)});
+}
+
+// See if text contains the number (to a precision number of digits (after the dp) either fixed up or down on the last digit).
+function contains(text, number, precision) {
+    // Take Math.ceil or Math.floor and use it to calculate the number with a precision number of digits (after the dp).
+    function fixed(round, number, precision) {
+        const scale = Math.pow(10, precision);
+        return (round(number*scale)/scale).toFixed(precision);
+    }
+    return (text.indexOf(fixed(Math.floor, number, precision)) !== -1) || (text.indexOf(fixed(Math.ceil, number, precision)) !== -1);
 }
 
 /**
