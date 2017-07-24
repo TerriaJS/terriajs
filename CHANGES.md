@@ -5,7 +5,8 @@ Change Log
 
 ### 5.2.8
 
-* Added the ability to share the timeline's current position.
+* Added option to expand the HTML embed code and toggle URL shorting for the share link.
+* The Share feature now includes the current time selected on the timeline, so that anyone visiting a share link will see the map at the intended time.
 
 ### 5.2.7
 
