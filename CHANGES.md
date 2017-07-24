@@ -3,9 +3,10 @@
 Change Log
 ==========
 
-### 5.2.6
+### 5.2.8
 
-* Added the ability to share the timelines current position.
+* Added the ability to share the timeline's current position.
+
 ### 5.2.7
 
 * Added the Latitude and Longitude to the filename for the Feature Information file download.
