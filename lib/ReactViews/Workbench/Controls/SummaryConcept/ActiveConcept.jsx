@@ -51,9 +51,15 @@ const ActiveConcept = createReactClass({
 
     render() {
         const activeLeafNodesWithParent = this.props.activeLeafNodesWithParent;
+        const showBack = !this.props.rootConcept.canAddAndRemove && activeLeafNodesWithParent.parent.isOpen;
         return (
             <div className={Styles.section}>
                 <div className={classNames({[Styles.btnOpen]: !activeLeafNodesWithParent.parent.isOpen, [Styles.isLoading]: this.props.isLoading})} onClick={this.open}>
+                    <If condition={showBack}>
+                        <button className={Styles.btnBack} onClick={this.back}>
+                            <Icon glyph={Icon.GLYPHS.left}/>
+                        </button>
+                    </If>
                     <div className={Styles.controls}>
                         <If condition={!activeLeafNodesWithParent.parent.isOpen}>
                             <button className={Styles.btnEdit} title='Edit condition'>
@@ -72,7 +78,14 @@ const ActiveConcept = createReactClass({
                         </If>
                     </div>
                     <div className={Styles.heading}>
-                        {activeLeafNodesWithParent.parent.name}
+                        <If condition={showBack}>
+                            <div className={classNames({[Styles.indented]: showBack})}>
+                                {activeLeafNodesWithParent.parent.parent.name}
+                            </div>
+                        </If>
+                        <If condition={!showBack}>
+                            {activeLeafNodesWithParent.parent.name}
+                        </If>
                     </div>
                     <If condition={!activeLeafNodesWithParent.parent.isOpen}>
                         <For each="child" index="j" of={activeLeafNodesWithParent.children}>
