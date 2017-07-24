@@ -14,13 +14,12 @@ const ADD_FIRST_TEXT = 'Add a condition';
 const ADD_MORE_TEXT = 'Add new condition';
 
 /*
- * SummaryConcept displays all the active and open nodes under a given
- * SummaryConcept.
- * It has two "modes":
- *   When summaryConcept.allowMultiple is false, it can be substituted directly for
+ * SummaryConcept displays all the active and open nodes under it.
+ * It has two modes:
+ *   When summaryConcept.canAddAndRemove is false, it can be substituted directly for
  *   a regular displayVariableConcept (or array of concepts). Each child can have
- *   zero, one or more items selected or not selected (depending on their allowMultiple setting).
- *   When summaryConcept.allowMultiple is true, it treats the child concepts as
+ *   zero, one or more items selected or not selected (depending on their canAddAndRemove setting).
+ *   When summaryConcept.canAddAndRemove is true, it treats the child concepts as
  *   "conditions", any number of which can be added or removed.
  *
  * Parents containing 1 or more active nodes are shown via <./ActiveConcept>.
@@ -28,8 +27,8 @@ const ADD_MORE_TEXT = 'Add new condition';
  * Open nodes not containing any active nodes are shown via <./OpenInactiveConcept>.
  *    (This is typically the case when a user has pressed the AddButton but yet to
  *    activate any leaf nodes.)
- *    (If summaryConcept.allowMultiple is false, you cannot 'cancel' or 'go back' on this.)
- * If summaryConcept.allowMultiple is true, then an <./AddButton> is also shown,
+ *    (If summaryConcept.canAddAndRemove is false, you cannot 'cancel' or 'go back' on this.)
+ * If summaryConcept.canAddAndRemove is true, then an <./AddButton> is also shown,
  *    which simply opens the root concept, at which point OpenInactiveConcept takes over.
  *
  * This design would need revision to handle concepts whose direct children are a mix of
@@ -66,7 +65,7 @@ const SummaryConcept = createReactClass({
                 <If condition={openDescendantsWithoutActiveChildren.length > 0 && !isLoading}>
                     <OpenInactiveConcept rootConcept={concept} openInactiveConcept={openDescendantsWithoutActiveChildren[0]}/>
                 </If>
-                <If condition={concept.allowMultiple && openDescendantsWithoutActiveChildren.length === 0}>
+                <If condition={concept.canAddAndRemove && openDescendantsWithoutActiveChildren.length === 0}>
                     <AddButton rootConcept={concept} numberOfExisting={activeLeafNodesByParent.length}/>
                 </If>
             </div>

@@ -16,7 +16,7 @@ import Styles from './summary-concept.scss';
  * b) shows a more traditional list of checkboxes with concept names (if parent is open).
  * It has a header with the parent name, and edit & remove controls.
  * When it is clicked, parent.isOpen is set to True.
- * (The condition can only be "removed" if rootConcept.allowMultiple is true.)
+ * (The condition can only be "removed" if rootConcept.canAddAndRemove is true.)
  */
 const ActiveConcept = createReactClass({
     displayName: 'ActiveConcept',
@@ -59,7 +59,7 @@ const ActiveConcept = createReactClass({
                             <button className={Styles.btnEdit} title='Edit condition'>
                                 <Icon glyph={Icon.GLYPHS.settings}/>
                             </button>
-                            <If condition={this.props.rootConcept.allowMultiple}>
+                            <If condition={this.props.rootConcept.canAddAndRemove}>
                                 <button className={Styles.btnRemove} onClick={this.remove} title='Remove condition'>
                                     <Icon glyph={Icon.GLYPHS.close}/>
                                 </button>

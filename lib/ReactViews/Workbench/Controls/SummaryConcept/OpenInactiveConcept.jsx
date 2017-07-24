@@ -30,7 +30,7 @@ const OpenInactiveConcept = createReactClass({
     },
 
     render() {
-        const showControls = this.props.rootConcept.allowMultiple;
+        const showControls = this.props.rootConcept.canAddAndRemove;
         return (
             <div className={Styles.section}>
                 <div className={Styles.controls}>
