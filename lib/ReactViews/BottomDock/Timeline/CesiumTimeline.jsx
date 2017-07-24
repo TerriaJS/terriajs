@@ -28,8 +28,11 @@ const CesiumTimeline = createReactClass({
                     return dateFormat(JulianDate.toDate(time), layer.dateFormat.timelineTic);
                 }
             }
-
-            const totalDays = JulianDate.daysDifference(this.props.terria.clock.stopTime, this.props.terria.clock.startTime);
+            // Adjust the label format as you zoom by using the visible timeline's start and end
+            // (not the fixed this.props.terria.clock.startTime and stopTime).
+            const startJulian = this.cesiumTimeline._startJulian;
+            const endJulian = this.cesiumTimeline._endJulian;
+            const totalDays = JulianDate.daysDifference(endJulian, startJulian);
             if (totalDays > 14) {
                 return formatDate(JulianDate.toDate(time), this.locale);
             } else if (totalDays < 1) {

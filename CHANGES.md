@@ -6,6 +6,18 @@ Change Log
 ### 5.2.6
 
 * Added the ability to share the timelines current position.
+### 5.2.7
+
+* Added the Latitude and Longitude to the filename for the Feature Information file download.
+* Added the time to the timeline labels when zoomed in to a single day. Previously, the label sometimes only showed the date.
+
+### 5.2.6
+
+* Added the ability to disable the conversion service so that no user data is sent outside of the client by setting `conversionServiceBaseUrl` to `false` in the `parameters` section of `config.json`.
+* Added the ability to disable the location button by setting `disableMyLocation` to `true` in the `parameters` section of `config.json`.
+* Fixed a bug that caused the share functionality to fail (both screenshot and share link) in 2d mode.
+* Fixed a bug with explicitly styled enum columns in Internet Explorer.
+* Fixed a bug that caused the selected column in a csv to be the second column when a time column is present.
 
 ### 5.2.5
 
