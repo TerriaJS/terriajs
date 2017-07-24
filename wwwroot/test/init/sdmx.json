@@ -150,7 +150,7 @@
                  "type": "group",
                  "isOpen": true,
                  "items": [
-                     {
+                    {
                         "name": "Age",
                         "type": "sdmx-json",
                         "sortValues": true,
@@ -166,6 +166,93 @@
                         },
                         "whitelist": {
                             "AGE": ["A[0-9]+", "T.*", "O.*"] // Only shows five-year ranges and totals, not individual years.
+                        }
+                    },
+                    {
+                        "name": "Age (hierarchical)",
+                        "type": "sdmx-json",
+                        "sortValues": true,
+                        "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B04",
+                        "aggregatedDimensionIds": ["STATE"],
+                        "hierarchicalValues": {
+                            "MEASURE": [{
+                                "id": "3",
+                                "children": [
+                                    {"id": "1"},
+                                    {"id": "2"}
+                                ]
+                            }],
+                            "AGE": [{
+                                "id": "TT",
+                                "children": [{
+                                    "id": "A04",
+                                    "children": [
+                                        {"id": "0"},
+                                        {"id": "1"},
+                                        {"id": "2"},
+                                        {"id": "3"},
+                                        {"id": "4"},
+                                    ]
+                                }, {
+                                    "id": "A59",
+                                    "children": [
+                                        {"id": "5"},
+                                        {"id": "6"},
+                                        {"id": "7"},
+                                        {"id": "8"},
+                                        {"id": "9"},
+                                    ]
+                                }, {
+                                    "id": "A10",
+                                    "children": [
+                                        {"id": "10"},
+                                        {"id": "11"},
+                                        {"id": "12"},
+                                        {"id": "13"},
+                                        {"id": "14"},
+                                    ]
+                                }, {
+                                    "id": "A15",
+                                    "children": [
+                                        {"id": "15"},
+                                        {"id": "16"},
+                                        {"id": "17"},
+                                        {"id": "18"},
+                                        {"id": "19"},
+                                    ]
+                                }, {
+                                    "id": "A20",
+                                    "children": [
+                                        {"id": "20"},
+                                        {"id": "21"},
+                                        {"id": "22"},
+                                        {"id": "23"},
+                                        {"id": "24"},
+                                    ]
+                                }, {
+                                    "id": "A25",
+                                    "children": [
+                                        {"id": "25"},
+                                        {"id": "26"},
+                                        {"id": "27"},
+                                        {"id": "28"},
+                                        {"id": "29"},
+                                    ]
+                                }, {
+                                    "id": "A80"
+                                }, {
+                                    "id": "A85"
+                                }, {
+                                    "id": "A90"
+                                }, {
+                                    "id": "A95"
+                                }, {
+                                    "id": "A100"
+                                }]
+                            }]
+                        },
+                        "selectedInitially": {
+                            "REGIONTYPE": ["SA4"]
                         }
                     },
                     {
