@@ -172,6 +172,7 @@
                         "name": "Age (hierarchical)",
                         "type": "sdmx-json",
                         "sortValues": true,
+                        "showWarnings": false,
                         "url": "http://stat.data.abs.gov.au/sdmx-json/data/ABS_CENSUS2011_B04",
                         "aggregatedDimensionIds": ["STATE"],
                         "hierarchicalValues": {
