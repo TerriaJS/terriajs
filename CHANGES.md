@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### 5.2.8
+
+* Improved the conversion of Esri polygons to GeoJSON by `featureDataToGeoJson`.  It now correctly handles polygons with holes and with multiple outer rings.
+
 ### 5.2.7
 
 * Added the Latitude and Longitude to the filename for the Feature Information file download.
