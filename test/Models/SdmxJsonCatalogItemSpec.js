@@ -73,10 +73,11 @@ describe('SdmxJsonCatalogItem', function() {
 
     describe('loading', function() {
         var regionMappingJson, lgaData, steData;
-        var dataflowFoo, dataFoo, dataFooBD2, dataFooBD2t, dataFoo2, dataNonSpatial, dataAsObs, dataAsObsRepeated;
+        var dataflowFoo, dataflowFooTotal, dataFoo, dataFooBD2, dataFooBD2t, dataFoo2, dataNonSpatial, dataAsObs, dataAsObsRepeated;
         beforeEach(function(done) {
             when.all([
                 loadText('test/SDMX-JSON/dataflow-foo.json').then(function(text) { dataflowFoo = text; }),
+                loadText('test/SDMX-JSON/dataflow-foo-with-total.json').then(function(text) { dataflowFooTotal = text; }),
                 loadText('test/SDMX-JSON/data-foo-2013.json').then(function(text) { dataFoo = text; }),
                 loadText('test/SDMX-JSON/data-foo-BD2-2013.json').then(function(text) { dataFooBD2 = text; }),
                 loadText('test/SDMX-JSON/data-foo-BD2-2011_2013.json').then(function(text) { dataFooBD2t = text; }),
@@ -91,7 +92,9 @@ describe('SdmxJsonCatalogItem', function() {
                 jasmine.Ajax.install();
                 jasmine.Ajax.stubRequest(/.*/).andError(); // Fail all requests by default.
                 jasmine.Ajax.stubRequest('http://sdmx.example.com/sdmx-json/dataflow/FOO').andReturn({ responseText: dataflowFoo });
+                jasmine.Ajax.stubRequest('http://sdmx.example.com/sdmx-json/dataflow/FOO-TOT').andReturn({ responseText: dataflowFooTotal });
                 jasmine.Ajax.stubRequest('http://sdmx.example.com/sdmx-json/data/FOO/BD_2+BD_4.LGA_2013..A/all?startTime=2013&endTime=2013').andReturn({ responseText: dataFoo });
+                jasmine.Ajax.stubRequest('http://sdmx.example.com/sdmx-json/data/FOO-TOT/BD_2+BD_4.LGA_2013..A/all?startTime=2013&endTime=2013').andReturn({ responseText: dataFoo });
                 jasmine.Ajax.stubRequest('http://sdmx.example.com/sdmx-json/data/FOO/BD_2.LGA_2013..A/all?startTime=2013&endTime=2013').andReturn({ responseText: dataFooBD2 });
                 jasmine.Ajax.stubRequest('http://sdmx.example.com/sdmx-json/data/FOO/BD_2.LGA_2013..A/all?startTime=2011&endTime=2013').andReturn({ responseText: dataFooBD2t });
                 jasmine.Ajax.stubRequest('http://sdmx.example.com/sdmx-json/data/FOO2/BD_2+BD_4..A../all?startTime=2013&endTime=2013').andReturn({ responseText: dataFoo2 });
@@ -335,6 +338,36 @@ describe('SdmxJsonCatalogItem', function() {
                 expect(item.tableStructure.columns[2].values.slice()).toEqual([17658, 14042, 9739, 6572, 2970, 4940, null, 1945, 13001]);
                 // Expect it not to show any concepts to the user.
                 expect(item.concepts.length).toEqual(0);
+            }).otherwise(fail).then(done);
+        });
+
+        it('works with dimensions with supplied hierarchical dimensionValues', function(done) {
+            item.updateFromJson({
+                name: 'Foo',
+                url: 'http://sdmx.example.com/sdmx-json/data/FOO-TOT/BD_2+BD_4.LGA_2013..A/all?startTime=2013&endTime=2013',
+                hierarchicalValues: {
+                    'MEASURE': [{
+                        id: 'TOT',
+                        children: [{
+                            id: 'BD_2'
+                        }, {
+                            id: 'BD_4'
+                        }]
+                    }]
+                }
+            });
+            item.load().then(function() {
+                // Expect it to have created the right-sized table of data.
+                var columnNames = item.tableStructure.getColumnNames();
+                expect(columnNames.length).toEqual(5);
+                // Expect it to show 1 concept to the user, with the same hierarchical structure as we supplied.
+                expect(item.concepts.length).toEqual(1);  // The overall Conditions concept.
+                expect(item.concepts[0].items[0].length).toEqual(1);  // The MEASURE concept.
+                var measureConcept = item.concepts[0].items[0];
+                expect(measureConcept.items.length).toEqual(1);  // One item, "TOT".
+                expect(measureConcept.items[0].id).toEqual('TOT');
+                expect(measureConcept.items[0].items.length).toEqual(2);  // BD_2 and BD_4.
+                expect(measureConcept.items[0].items.map(i => i.id)).toEqual(['BD_2', 'BD_4']);
             }).otherwise(fail).then(done);
         });
 
