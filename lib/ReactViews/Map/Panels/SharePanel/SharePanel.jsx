@@ -47,17 +47,9 @@ const SharePanel = createReactClass({
     },
 
     toggleAdvancedOptions(e) {
-        if (this.advancedOptions()) {
-            this.setState({
-                advancedIsOpen: false
-            });
-        } else {
-            this.setState({
-                advancedIsOpen: true
-            });
-        }
-
-        this.forceUpdate();
+        this.setState((prevState) => ({
+            advancedIsOpen: !prevState.advancedIsOpen
+        }));
     },
 
     updateForShortening() {
