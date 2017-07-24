@@ -52,6 +52,7 @@
     "mutationobserver-shim": "^0.3.1",
     "pbf": "^3.0.1",
     "point-geometry": "^0.1.0",
+    "point-in-polygon": "^1.0.1",
     "proj4": "~2.3.16",
     "raw-loader": "^0.5.1",
     "react": "^15.5.4",
