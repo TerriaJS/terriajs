@@ -6,8 +6,7 @@ Change Log
 ### 5.2.8
 
 * Added option to expand the HTML embed code and toggle URL shorting for the share link.
-* Fixed a bug which caused the selected column in a csv to be the second column when a time column is present.
-* Added the ability to share the timeline's current position.
+* The Share feature now includes the current time selected on the timeline, so that anyone visiting a share link will see the map at the intended time.
 
 ### 5.2.7
 
