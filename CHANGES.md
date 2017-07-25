@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### 5.2.9
+
+* Fixed a bug that caused the default cache duration to be used always rather then the catalogItem's cacheDuration if it was specified.
+
 ### 5.2.8
 
 * Added option to expand the HTML embed code and toggle URL shorting for the share link.
