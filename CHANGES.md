@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### 5.2.9
+
+* A catalog item's `cacheDuration` property now takes precedence over the cache duration specified by the code.  Previously, the `cacheDuration` would only override the default duration (2 weeks).
+
 ### 5.2.8
 
 * Added option to expand the HTML embed code and toggle URL shorting for the share link.
