@@ -3,9 +3,18 @@
 Change Log
 ==========
 
-### 5.2.8
+### 5.2.10
 
 * Improved the conversion of Esri polygons to GeoJSON by `featureDataToGeoJson`.  It now correctly handles polygons with holes and with multiple outer rings.
+
+### 5.2.9
+
+* A catalog item's `cacheDuration` property now takes precedence over the cache duration specified by the code.  Previously, the `cacheDuration` would only override the default duration (2 weeks).
+
+### 5.2.8
+
+* Added option to expand the HTML embed code and toggle URL shorting for the share link.
+* The Share feature now includes the current time selected on the timeline, so that anyone visiting a share link will see the map at the intended time.
 
 ### 5.2.7
 
