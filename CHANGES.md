@@ -5,7 +5,7 @@ Change Log
 
 ### 5.2.9
 
-* Fixed a bug that caused the default cache duration to be used always rather then the catalogItem's cacheDuration if it was specified.
+* A catalog item's `cacheDuration` property now takes precedence over the default cache duration specified by the code.  Previously, the `cacheDuration` would only override the default duration (2 weeks).
 
 ### 5.2.8
 
