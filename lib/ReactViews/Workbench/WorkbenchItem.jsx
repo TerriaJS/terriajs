@@ -8,9 +8,10 @@ import {sortable} from 'react-anything-sortable';
 
 import defined from 'terriajs-cesium/Source/Core/defined';
 
-import DisplayAsPercentSection from './Controls/DisplayAsPercentSection';
 import ConceptViewer from './Controls/ConceptViewer';
+import DateTimeSelectorSection from './Controls/DateTimeSelectorSection';
 import DimensionSelectorSection from './Controls/DimensionSelectorSection';
+import DisplayAsPercentSection from './Controls/DisplayAsPercentSection';
 import getAncestors from '../../Models/getAncestors';
 import Legend from './Controls/Legend';
 import ObserveModelMixin from './../ObserveModelMixin';
@@ -100,6 +101,7 @@ const WorkbenchItem = createReactClass({
                             <ConceptViewer item={workbenchItem}/>
                         </If>
                         <DimensionSelectorSection item={workbenchItem}/>
+                        <DateTimeSelectorSection item={workbenchItem}/>
                         <StyleSelectorSection item={workbenchItem}/>
                         <ColorScaleRangeSection item={workbenchItem}/>
                         <DisplayAsPercentSection item={workbenchItem}/>
