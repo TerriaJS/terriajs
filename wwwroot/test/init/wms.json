@@ -30,6 +30,7 @@
 				  "url": "http://gis.aremi.nationalmap.gov.au/bom/wms",
 				  "type": "wms",
 				  "showDatetimePicker": true,
+				  "useOwnClock": true,
 				  "maxRefreshIntervals": 9000,
 				  "featureInfoTemplate": {
 				    "name":"{{GRAY_INDEX}} W/m2"
