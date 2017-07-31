@@ -27,3 +27,21 @@
   display: table-row;
 }
 
+.style-selector {
+  font-size: 0.9rem;
+  label {
+    margin-right: $padding-small;
+  }
+}
+
+.title {
+  display: block;
+  margin-top: 10px;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.field {
+  composes: field from '../../../Sass/common/_form.scss';
+  color: black;
+}

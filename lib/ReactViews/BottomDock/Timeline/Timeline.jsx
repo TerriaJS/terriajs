@@ -1,17 +1,21 @@
 'use strict';
 
+import createReactClass from 'create-react-class';
+import dateFormat from 'dateformat';
 import React from 'react';
 import PropTypes from 'prop-types';
-import createReactClass from 'create-react-class';
+
+import defined from 'terriajs-cesium/Source/Core/defined';
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
+import ClockRange from 'terriajs-cesium/Source/Core/ClockRange';
+import JulianDate from 'terriajs-cesium/Source/Core/JulianDate';
+
 import TimelineControls from './TimelineControls';
 import CesiumTimeline from './CesiumTimeline';
-import ClockRange from 'terriajs-cesium/Source/Core/ClockRange';
+import DateTimePicker from './DateTimePicker';
 import {formatDateTime} from './DateFormats';
-import JulianDate from 'terriajs-cesium/Source/Core/JulianDate';
+
 import Styles from './timeline.scss';
-import defined from 'terriajs-cesium/Source/Core/defined';
-import dateFormat from 'dateformat';
 
 const Timeline = createReactClass({
     propTypes: {
@@ -81,15 +85,28 @@ const Timeline = createReactClass({
         });
     },
 
+    changeDateTime(event) {
+        const item = this.props.terria.timeSeriesStack.topLayer;
+        this.props.terria.clock.currentTime = item.intervals.get(event.target.value).start;
+    },
+
     render() {
         const terria = this.props.terria;
-        const layerName = terria.timeSeriesStack.topLayer && terria.timeSeriesStack.topLayer.name;
+        const catalogItem = terria.timeSeriesStack.topLayer;
+        const layerName = defined(catalogItem) && catalogItem.name;
+        const availableTimeStrings = defined(catalogItem) && defined(catalogItem.getAvailableTimeStrings) && catalogItem.getAvailableTimeStrings();
+        const currentIntervalIndex = defined(catalogItem) && catalogItem.intervals.indexOf(catalogItem.clock.currentTime);
 
         return (
             <div className={Styles.timeline}>
                 <div className={Styles.textRow}>
-                    <div className={Styles.textCell + ' ' + Styles.time} title="Current Time (tz info et al)">{this.state.currentTimeString}</div>
-                    <div className={Styles.textCell} title="Current Layer">{layerName}</div>
+                    <If condition={availableTimeStrings}>
+                        <DateTimePicker name={layerName} value={currentIntervalIndex} availableTimeStrings={availableTimeStrings} onChange={this.changeDateTime} />
+                    </If>
+                    <If condition={!availableTimeStrings}>
+                        <div className={Styles.textCell + ' ' + Styles.time} title="Selected date and time">{this.state.currentTimeString}</div>
+                    </If>
+                    <div className={Styles.textCell} title="Name of the dataset whose time range is shown">{layerName}</div>
                 </div>
                 <div className={Styles.controlsRow}>
                     <TimelineControls clock={terria.clock} analytics={terria.analytics} currentViewer={terria.currentViewer} />
