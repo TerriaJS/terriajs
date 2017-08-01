@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### 5.2.11
+
+* Added the ability to split the screen into a left-side and right-side, and show imagery layers on only one side of the splitter.
+
 ### 5.2.10
 
 * Improved the conversion of Esri polygons to GeoJSON by `featureDataToGeoJson`.  It now correctly handles polygons with holes and with multiple outer rings.

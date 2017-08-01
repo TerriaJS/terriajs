@@ -12,6 +12,7 @@ import DisplayAsPercentSection from './Controls/DisplayAsPercentSection';
 import ConceptViewer from './Controls/ConceptViewer';
 import DimensionSelectorSection from './Controls/DimensionSelectorSection';
 import getAncestors from '../../Models/getAncestors';
+import LeftRightSection from './Controls/LeftRightSection';
 import Legend from './Controls/Legend';
 import ObserveModelMixin from './../ObserveModelMixin';
 import OpacitySection from './Controls/OpacitySection';
@@ -96,6 +97,7 @@ const WorkbenchItem = createReactClass({
                     <div className={Styles.inner}>
                         <ViewingControls item={workbenchItem} viewState={this.props.viewState}/>
                         <OpacitySection item={workbenchItem}/>
+                        <LeftRightSection item={workbenchItem}/>
                         <If condition={(defined(workbenchItem.concepts) && workbenchItem.concepts.length > 0) && workbenchItem.displayChoicesBeforeLegend}>
                             <ConceptViewer item={workbenchItem}/>
                         </If>
