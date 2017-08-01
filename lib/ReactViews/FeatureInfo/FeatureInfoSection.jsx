@@ -306,9 +306,28 @@ function getPropertyValuesForFeature(feature, clock, formats) {
     // If they have bad keys, fix them.
     // If they have formatting, apply it.
     const properties = feature.currentProperties || propertyGetTimeValues(feature.properties, clock);
-    const result = replaceBadKeyCharacters(properties);
+    // Try JSON.parse on values that look like JSON arrays or objects
+    let result = parseValues(properties);
+    result = replaceBadKeyCharacters(result);
     if (defined(formats)) {
         applyFormatsInPlace(result, formats);
+    }
+    return result;
+}
+
+function parseValues(properties) {
+    // JSON.parse property values that look like arrays or objects
+    const result = {};
+    for (const key in properties) {
+        if (properties.hasOwnProperty(key)) {
+            let val = properties[key];
+            if (val && /^\s*[[{]/.test(val)) {
+                try {
+                    val = JSON.parse(val);
+                } catch (e) {}
+            }
+            result[key] = val;
+        }
     }
     return result;
 }
