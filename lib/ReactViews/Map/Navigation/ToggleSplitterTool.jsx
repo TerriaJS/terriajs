@@ -19,11 +19,12 @@ const ToggleSplitterTool = createReactClass({
     },
 
     handleClick() {
-        this.props.terria.currentViewer.toggleSplitter();
+        const viewer = this.props.terria.currentViewer;
+        viewer.showSplitter = !viewer.showSplitter;
     },
 
     render() {
-        if (!defined(this.props.terria.currentViewer.toggleSplitter)) {
+        if (!this.props.terria.currentViewer.canSplit) {
             return null;
         }
         return <div className={Styles.toggle_splitter_tool}>
