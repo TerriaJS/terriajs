@@ -1,0 +1,11 @@
+@import '~terriajs-variables';
+@import '../../../Sass/common/mixins';
+@import 'nav';
+
+.toggle-splitter-tool{
+  display: inline-block;
+
+  @media print{
+    display: none;
+  }
+}
