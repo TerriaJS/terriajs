@@ -1,6 +1,6 @@
 'use strict';
 
-// import classNames from 'classnames';
+import classNames from 'classnames';
 import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -34,14 +34,15 @@ const LeftRightSection = createReactClass({
 
     render() {
         const item = this.props.item;
-        if (!defined(item.splitDirection) || !item.terria.currentViewer.showSplitter) {
+        const splitDirection = item.splitDirection;
+        if (!defined(splitDirection) || !item.terria.showSplitter) {
             return null;
         }
         return (
             <div className={Styles.leftRightSection}>
-                <button type='button' onClick={this.goLeft} className={Styles.goLeft} title='Show on the left side'>Left</button>
-                <button type='button' onClick={this.goBoth} className={Styles.goBoth} title='Show on both sides'>Both</button>
-                <button type='button' onClick={this.goRight} className={Styles.goRight} title='Show on the right side'>Right</button>
+                <button type='button' onClick={this.goLeft} className={classNames(Styles.goLeft, {[Styles.isActive]: splitDirection === ImagerySplitDirection.LEFT})} title='Show on the left side'>Left</button>
+                <button type='button' onClick={this.goBoth} className={classNames(Styles.goBoth, {[Styles.isActive]: splitDirection === ImagerySplitDirection.NONE})} title='Show on both sides'>Both</button>
+                <button type='button' onClick={this.goRight} className={classNames(Styles.goRight, {[Styles.isActive]: splitDirection === ImagerySplitDirection.RIGHT})} title='Show on the right side'>Right</button>
             </div>
         );
     }

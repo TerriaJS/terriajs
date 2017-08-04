@@ -19,19 +19,19 @@ const ToggleSplitterTool = createReactClass({
     },
 
     handleClick() {
-        const viewer = this.props.terria.currentViewer;
-        viewer.showSplitter = !viewer.showSplitter;
+        const terria = this.props.terria;
+        terria.showSplitter = !terria.showSplitter;
     },
 
     render() {
-        if (!this.props.terria.currentViewer.canSplit) {
+        if (!this.props.terria.currentViewer.canShowSplitter) {
             return null;
         }
         return <div className={Styles.toggle_splitter_tool}>
                   <button type='button' className={Styles.btn}
                           title='Toggle splitter control'
                           onClick={this.handleClick}>
-                          <Icon glyph={this.props.terria.currentViewer.showSplitter ? Icon.GLYPHS.checkboxOn : Icon.GLYPHS.checkboxOff}/>
+                          <Icon glyph={this.props.terria.showSplitter ? Icon.GLYPHS.checkboxOn : Icon.GLYPHS.checkboxOff}/>
                   </button>
                </div>;
     },
