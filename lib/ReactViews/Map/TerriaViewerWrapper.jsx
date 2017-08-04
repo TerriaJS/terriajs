@@ -5,17 +5,15 @@ import PropTypes from 'prop-types';
 import Cartesian2 from 'terriajs-cesium/Source/Core/Cartesian2';
 import Styles from './terria-viewer-wrapper.scss';
 
+import ObserveModelMixin from '../ObserveModelMixin';
 import TerriaViewer from '../../ViewModels/TerriaViewer';
 import ViewerMode from '../../Models/ViewerMode';
 
-
 const TerriaViewerWrapper = createReactClass({
     displayName: 'TerriaViewerWrapper',
-
-    // mixins: [ObserveModelMixin],
+    mixins: [ObserveModelMixin],
 
     lastMouseX: -1,
-
     lastMouseY: -1,
 
     propTypes: {
@@ -24,7 +22,8 @@ const TerriaViewerWrapper = createReactClass({
     },
 
     getInitialState: function() {
-        return {value: 0.5};
+        const scene = this.props.terria.currentViewer.scene;
+        return {value: scene ? scene.imagerySplitPosition : 0.5};
     },
 
     componentDidMount() {
@@ -35,10 +34,6 @@ const TerriaViewerWrapper = createReactClass({
                 link: 'http://www.csiro.au/en/Research/D61'
             }
         });
-    },
-
-    shouldComponentUpdate() {
-        return false;
     },
 
     componentWillUnmount() {
@@ -67,7 +62,7 @@ const TerriaViewerWrapper = createReactClass({
     },
 
     onSliderMove(event) {
-        console.log(event.target.value);
+        this.setState({value: event.target.value});
         this.props.terria.currentViewer.scene.imagerySplitPosition = event.target.value;
     },
 
@@ -81,8 +76,8 @@ const TerriaViewerWrapper = createReactClass({
                 <div className={Styles.mapPlaceholder}>Loading the map, please wait!</div>
                 <If condition={terria.viewerMode === ViewerMode.CesiumTerrain || terria.viewerMode === ViewerMode.CesiumEllipsoid}>
                     <div className="cesiumSplitter">
-                        <div className="leaflet-sbs-divider"></div>
-                        <input className="leaflet-sbs-range" type="range" min="0" max="1" step="any" defaultValue={terria.currentViewer.scene && terria.currentViewer.scene.imagerySplitPosition} onChange={this.onSliderMove}/>
+                        <div className="leaflet-sbs-divider" style={{left: this.state.value*100 + "%"}}></div>
+                        <input className="leaflet-sbs-range" type="range" min="0" max="1" step="any" value={this.state.value} onChange={this.onSliderMove}/>
                     </div>
                 </If>
             </aside>
