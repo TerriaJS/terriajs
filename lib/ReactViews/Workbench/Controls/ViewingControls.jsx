@@ -59,10 +59,8 @@ const ViewingControls = createReactClass({
     },
 
     splitItem() {
-        // TODO: split the item
         const item = this.props.item;
         item.splitDirection = ImagerySplitDirection.LEFT;
-        item.preventDuplication = true;
         const serializedItem = item.serializeToJson();
         serializedItem.name = serializedItem.name + ' (copy)';
         serializedItem.splitDirection = ImagerySplitDirection.RIGHT;
@@ -70,6 +68,8 @@ const ViewingControls = createReactClass({
 
         const newItem = createCatalogMemberFromType(item.type, item.terria);
         newItem.updateFromJson(serializedItem);
+        item.duplicateItemUniqueId = newItem.uniqueId;
+        newItem.duplicateItemUniqueId = item.uniqueId;
 
         item.terria.showSplitter = true;
     },
