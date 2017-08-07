@@ -1,0 +1,12 @@
+@import '~terriajs-variables';
+
+// The divider wrapper is necessary so the divider can be positioned with left=x%.
+// Because the range thumb control has a width, when it is at 0%, its left edge is at 0, not its center.
+// So this wrapper needs a left margin equal to the half the that width, and a width equal to 100% minus that width.
+
+.divider-wrapper {
+  margin-left: $splitter-thumb-width / 2;
+  position: absolute;
+  width: calc(100% - #{$splitter-thumb-width});
+  height: 100vh;
+}

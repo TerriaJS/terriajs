@@ -1,0 +1,14 @@
+@import '~terriajs-variables';
+
+// This lets you override the leaflet side-by-side defaults.
+:global {
+  #cesiumContainer .leaflet-sbs-range::-webkit-slider-thumb {
+    width: $splitter-thumb-width;
+  }
+  #cesiumContainer .leaflet-sbs-range::-ms-thumb {
+    width: $splitter-thumb-width;
+  }
+  #cesiumContainer .leaflet-sbs-range::-moz-range-thumb {
+    width: $splitter-thumb-width;
+  }
+}
