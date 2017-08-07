@@ -3,12 +3,9 @@ import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import defined from 'terriajs-cesium/Source/Core/defined';
-
 import Icon from "../../Icon.jsx";
 import ObserveModelMixin from '../../ObserveModelMixin';
 import Styles from './toggle_splitter_tool.scss';
-
 
 const ToggleSplitterTool = createReactClass({
     displayName: 'ToggleSplitterTool',
