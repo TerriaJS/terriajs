@@ -321,7 +321,7 @@ function parseValues(properties) {
     for (const key in properties) {
         if (properties.hasOwnProperty(key)) {
             let val = properties[key];
-            if (val && /^\s*[[{]/.test(val)) {
+            if (val && (/^\s*[[{]/).test(val)) {
                 try {
                     val = JSON.parse(val);
                 } catch (e) {}
