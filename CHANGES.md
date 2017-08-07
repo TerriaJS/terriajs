@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### next release (5.2.11)
+
+* Added the ability to use the analytics region picker with vector tile region mapping by specifiying a WMS server & layer for analytics only.
+
 ### 5.2.10
 
 * Improved the conversion of Esri polygons to GeoJSON by `featureDataToGeoJson`.  It now correctly handles polygons with holes and with multiple outer rings.
