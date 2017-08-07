@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import Styles from './cesium-splitter.scss';
 
 import ObserveModelMixin from '../ObserveModelMixin';
-import TerriaViewer from '../../ViewModels/TerriaViewer';
 import ViewerMode from '../../Models/ViewerMode';
 
 // When the range slider has value 0, the left edge of the thumb is at the left edge of the screen,
@@ -27,11 +26,13 @@ const CesiumSplitter = createReactClass({
     },
 
     onSliderMove(event) {
-        const scene = this.props.terria.currentViewer.scene;
-        const thumbWidth = this.props.terria.currentViewer.splitterThumbWidth;
-        const canvasWidth = scene.canvas.clientWidth;
+        const terria = this.props.terria;
+        const viewer = terria.currentViewer;
+        const thumbWidth = viewer.splitterThumbWidth;
+        const canvasWidth = viewer.scene.canvas.clientWidth;
         this.setState({value: event.target.value});
-        this.props.terria.currentViewer.scene.imagerySplitPosition = (event.target.value * (canvasWidth - thumbWidth) + thumbWidth / 2) / canvasWidth;
+        viewer.scene.imagerySplitPosition = (event.target.value * (canvasWidth - thumbWidth) + thumbWidth / 2) / canvasWidth;
+        viewer.notifyRepaintRequired();
     },
 
     render() {
