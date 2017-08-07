@@ -62,6 +62,7 @@ const ViewingControls = createReactClass({
         // TODO: split the item
         const item = this.props.item;
         item.splitDirection = ImagerySplitDirection.LEFT;
+        item.preventDuplication = true;
         const serializedItem = item.serializeToJson();
         serializedItem.name = serializedItem.name + ' (copy)';
         serializedItem.splitDirection = ImagerySplitDirection.RIGHT;
@@ -88,7 +89,7 @@ const ViewingControls = createReactClass({
     render() {
         const item = this.props.item;
         const canZoom = item.isMappable || (item.tableStructure && item.tableStructure.sourceFeature);
-        const canSplit = defined(item.splitDirection);
+        const canSplit = defined(item.splitDirection) && item.terria.currentViewer.canShowSplitter && !item.preventDuplication;
         const classList = {[Styles.noZoom]: !canZoom, [Styles.noSplit]: !canSplit, [Styles.noInfo]: !item.showsInfo};
         return (
             <ul className={Styles.control}>
