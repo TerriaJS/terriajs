@@ -2,14 +2,16 @@
 
 /*global require,beforeEach*/
 var JulianDate = require('terriajs-cesium/Source/Core/JulianDate');
-var Terria = require('../../lib/Models/Terria');
-
-var ImageryLayerCatalogItem = require('../../lib/Models/ImageryLayerCatalogItem');
 var TimeIntervalCollection = require('terriajs-cesium/Source/Core/TimeIntervalCollection');
 var TimeInterval = require('terriajs-cesium/Source/Core/TimeInterval');
 
+var Terria = require('../../lib/Models/Terria');
+var ImageryLayerCatalogItem = require('../../lib/Models/ImageryLayerCatalogItem');
+
 describe('ImageryLayerCatalogItem', function() {
+
     describe('Time slider initial time as specified by initialTimeSource ', function() {
+
         var terria;
         var catalogItem;
 
@@ -17,7 +19,6 @@ describe('ImageryLayerCatalogItem', function() {
             terria = new Terria({
                 baseUrl: './'
             });
-
             catalogItem = new ImageryLayerCatalogItem(terria);
         });
 
@@ -30,7 +31,7 @@ describe('ImageryLayerCatalogItem', function() {
                     })
             ]);
             var dateNow = (new Date()).toISOString();
-            var currentTime = JulianDate.toIso8601(catalogItem._clock.currentTime, 3);
+            var currentTime = JulianDate.toIso8601(catalogItem.clock.currentTime, 3);
             // Do not compare time, because on some systems the second could have ticked over between getting the two times.
             dateNow = dateNow.substr(0, 10);
             currentTime = currentTime.substr(0, 10);
@@ -45,7 +46,7 @@ describe('ImageryLayerCatalogItem', function() {
                         stop: JulianDate.fromIso8601('2015-08-09T00:00:00.00Z')
                     })
             ]);
-            var currentTime = JulianDate.toIso8601(catalogItem._clock.currentTime, 3);
+            var currentTime = JulianDate.toIso8601(catalogItem.clock.currentTime, 3);
             // Do not compare time, because on some systems the second could have ticked over between getting the two times.
             currentTime = currentTime.substr(0, 10);
             expect(currentTime).toBe('2013-08-07');
@@ -59,7 +60,7 @@ describe('ImageryLayerCatalogItem', function() {
                         stop: JulianDate.fromIso8601('2015-08-09T00:00:00.00Z')
                     })
             ]);
-            var currentTime = JulianDate.toIso8601(catalogItem._clock.currentTime, 3);
+            var currentTime = JulianDate.toIso8601(catalogItem.clock.currentTime, 3);
             // Do not compare time, because on some systems the second could have ticked over between getting the two times.
             currentTime = currentTime.substr(0, 10);
             expect(currentTime).toBe('2013-08-07');
@@ -74,7 +75,7 @@ describe('ImageryLayerCatalogItem', function() {
                     })
             ]);
             var dateNow = (new Date()).toISOString();
-            var currentTime = JulianDate.toIso8601(catalogItem._clock.currentTime, 3);
+            var currentTime = JulianDate.toIso8601(catalogItem.clock.currentTime, 3);
             // Do not compare time, because on some systems the second could have ticked over between getting the two times.
             dateNow = dateNow.substr(0, 10);
             currentTime = currentTime.substr(0, 10);
@@ -89,7 +90,7 @@ describe('ImageryLayerCatalogItem', function() {
                         stop: JulianDate.fromIso8601('2015-08-09T00:00:00.00Z')
                     })
             ]);
-            var currentTime = JulianDate.toIso8601(catalogItem._clock.currentTime, 3);
+            var currentTime = JulianDate.toIso8601(catalogItem.clock.currentTime, 3);
             // Do not compare time, because on some systems the second could have ticked over between getting the two times.
             currentTime = currentTime.substr(0, 10);
             expect(currentTime).toBe('2015-08-09');
@@ -103,7 +104,7 @@ describe('ImageryLayerCatalogItem', function() {
                         stop: JulianDate.fromIso8601('2015-08-09T00:00:00.00Z')
                     })
             ]);
-            var currentTime = JulianDate.toIso8601(catalogItem._clock.currentTime, 3);
+            var currentTime = JulianDate.toIso8601(catalogItem.clock.currentTime, 3);
             // Do not compare time, because on some systems the second could have ticked over between getting the two times.
             currentTime = currentTime.substr(0, 10);
             expect(currentTime).toBe('2015-08-09');
@@ -117,7 +118,7 @@ describe('ImageryLayerCatalogItem', function() {
                         stop: JulianDate.fromIso8601('2015-08-11T00:00:00.00Z')
                     })
             ]);
-            var currentTime = JulianDate.toIso8601(catalogItem._clock.currentTime, 3);
+            var currentTime = JulianDate.toIso8601(catalogItem.clock.currentTime, 3);
             // Do not compare time, because on some systems the second could have ticked over between getting the two times.
             currentTime = currentTime.substr(0, 10);
             expect(currentTime).toBe('2015-08-08');
@@ -131,10 +132,28 @@ describe('ImageryLayerCatalogItem', function() {
                         stop: JulianDate.fromIso8601('2015-08-09T00:00:00.00Z')
                     })
             ]);
-            var currentTime = JulianDate.toIso8601(catalogItem._clock.currentTime, 3);
+            var currentTime = JulianDate.toIso8601(catalogItem.clock.currentTime, 3);
             // Do not compare time, because on some systems the second could have ticked over between getting the two times.
             currentTime = currentTime.substr(0, 10);
             expect(currentTime).toBe('2015-08-07');
+        });
+
+        it('should be set to start if date specified is before time range, with two intervals', function() {
+            catalogItem.initialTimeSource = '2012-01-01T12:00:00Z';
+            catalogItem.intervals = new TimeIntervalCollection([
+                new TimeInterval({
+                    start: JulianDate.fromIso8601('2013-08-01T15:00:00Z'),
+                    stop: JulianDate.fromIso8601('2013-08-01T18:00:00Z')
+                }),
+                new TimeInterval({
+                    start: JulianDate.fromIso8601('2013-09-01T11:00:00Z'),
+                    stop: JulianDate.fromIso8601('2013-09-03T13:00:00Z')
+                })
+            ]);
+            var currentTime = JulianDate.toIso8601(catalogItem.clock.currentTime, 3);
+            // Do not compare time, because on some systems the second could have ticked over between getting the two times.
+            currentTime = currentTime.substr(0, 10);
+            expect(currentTime).toBe('2013-08-01');
         });
 
         it('should be set to end if date specified is after time range', function() {
@@ -145,7 +164,7 @@ describe('ImageryLayerCatalogItem', function() {
                         stop: JulianDate.fromIso8601('2015-08-09T00:00:00.00Z')
                     })
             ]);
-            var currentTime = JulianDate.toIso8601(catalogItem._clock.currentTime, 3);
+            var currentTime = JulianDate.toIso8601(catalogItem.clock.currentTime, 3);
             // Do not compare time, because on some systems the second could have ticked over between getting the two times.
             currentTime = currentTime.substr(0, 10);
             expect(currentTime).toBe('2015-08-09');
@@ -164,4 +183,5 @@ describe('ImageryLayerCatalogItem', function() {
             }).toThrow();
         });
     });
+
 });
