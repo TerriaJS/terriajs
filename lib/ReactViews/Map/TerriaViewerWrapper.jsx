@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import Cartesian2 from 'terriajs-cesium/Source/Core/Cartesian2';
 import Styles from './terria-viewer-wrapper.scss';
 
-import CesiumSplitter from './CesiumSplitter';
+import CesiumSplitterIfNeeded from './CesiumSplitterIfNeeded';
 import ObserveModelMixin from '../ObserveModelMixin';
 import TerriaViewer from '../../ViewModels/TerriaViewer';
 
@@ -63,7 +63,7 @@ const TerriaViewerWrapper = createReactClass({
                    ref={element => {this.mapElement = element;}}
                    onMouseMove={this.onMouseMove}>
                 <div className={Styles.mapPlaceholder}>Loading the map, please wait!</div>
-                <CesiumSplitter terria={this.props.terria} />
+                <CesiumSplitterIfNeeded terria={this.props.terria} />
             </aside>
         );
     },
