@@ -5,7 +5,8 @@ import PropTypes from 'prop-types';
 import Styles from './cesium-splitter.scss';
 
 import ObserveModelMixin from '../ObserveModelMixin';
-import ViewerMode from '../../Models/ViewerMode';
+import Cesium from '../../Models/Cesium';
+// import ViewerMode from '../../Models/ViewerMode';
 
 // When the range slider has value 0, the left edge of the thumb is at the left edge of the screen,
 // However, the divider is at the _center_ of the thumb, which is thumbWidth/2 pixels (say 20px).
@@ -40,7 +41,8 @@ const CesiumSplitter = createReactClass({
         if (!terria.showSplitter) {
             return null;
         }
-        if (terria.viewerMode === ViewerMode.CesiumTerrain || terria.viewerMode === ViewerMode.CesiumEllipsoid) {
+        if (terria.currentViewer.constructor === Cesium) {
+//        if (terria.viewerMode === ViewerMode.CesiumTerrain || terria.viewerMode === ViewerMode.CesiumEllipsoid) {
             return (
                 <div className="cesiumSplitter">
                     <div className={Styles.dividerWrapper}>
