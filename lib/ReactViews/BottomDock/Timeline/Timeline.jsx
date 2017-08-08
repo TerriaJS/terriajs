@@ -14,6 +14,7 @@ import TimelineControls from './TimelineControls';
 import CesiumTimeline from './CesiumTimeline';
 import DateTimePicker from './DateTimePicker';
 import {formatDateTime} from './DateFormats';
+import parseDates from '../../../Core/parseDates';
 
 import Styles from './timeline.scss';
 
@@ -96,12 +97,12 @@ const Timeline = createReactClass({
         const layerName = defined(catalogItem) && catalogItem.name;
         const availableTimeObjects = defined(catalogItem) && defined(catalogItem.getAvailableTimeObjects) && catalogItem.getAvailableTimeObjects();
         const currentIntervalIndex = defined(catalogItem) && catalogItem.intervals.indexOf(catalogItem.clock.currentTime);
-
+        const dates = availableTimeObjects && parseDates(availableTimeObjects);
         return (
             <div className={Styles.timeline}>
                 <div className={Styles.textRow}>
                     <If condition={availableTimeObjects}>
-                        <DateTimePicker name={layerName} value={currentIntervalIndex} availableTimeObjects={availableTimeObjects} onChange={this.changeDateTime} />
+                        <DateTimePicker name={layerName} value={currentIntervalIndex} dates={dates} onChange={this.changeDateTime} />
                     </If>
                     <If condition={!availableTimeObjects}>
                         <div className={Styles.textCell + ' ' + Styles.time} title="Selected date and time">{this.state.currentTimeString}</div>

@@ -1,3 +1,4 @@
+@import '../../../Sass/common/mixins';
 @import '~terriajs-variables';
 
 .timeline {
@@ -44,4 +45,81 @@
 .field {
   composes: field from '../../../Sass/common/_form.scss';
   color: black;
+}
+
+.datePicker{
+  width: 250px;
+  border: 1px solid $overlay;
+  border-radius: 5px;
+  padding: 5px;
+  position: absolute;
+  left: 10px;
+  bottom: 70px;
+  background: $dark;
+}
+
+.backbutton{
+  composes: btn from '../../../Sass/common/_buttons.scss';
+  composes: btn-transparent from '../../../Sass/common/_buttons.scss';
+  display: inline-block;
+
+}
+
+.grid{
+  display: block;
+  width: 100%;
+  margin: 0 auto;
+  color: #fff;
+  padding: 15px;
+  border-radius: 3px;
+}
+
+.gridRow{
+  padding-top: 4px;
+}
+
+.gridRow:hover{
+  background: $overlay;
+  cursor: pointer;
+}
+
+.gridLabel{
+  float: left;
+  display: inline-block;
+  width: 35px;
+  font-size: 10px;
+  padding-left: 3px;
+}
+
+
+.gridRowInner{
+  display: table-row;
+  padding: 3px;
+  border-radius: 3px;
+}
+
+
+.gridRowInner span{
+  display: inline-block;
+  height: 20px;
+  width: 2px;
+  margin: 1px 2px 1px 1px;
+  background: $color-primary;
+
+}
+
+.activeGrid{
+  opacity: 0.9;
+}
+
+.gridHeading{
+  text-align: center;
+}
+
+.hourview{
+  color: $dark;
+}
+
+.summary{
+  font-size: 10px;
 }

@@ -1,0 +1,37 @@
+@import '~terriajs-variables';
+// added
+:global {
+  .react-datepicker{
+    font-family: 'Open Sans', sans-serif !important;
+  }
+
+  .react-datepicker .react-datepicker__day{
+    color: #fff;
+    border: 1px solid #3498db;
+    border-radius: 3px;
+  }
+
+  .react-datepicker .react-datepicker__day:hover{
+    background: $color-primary;
+    color: #fff;
+  }
+
+  .react-datepicker .react-datepicker__day--disabled, .react-datepicker .react-datepicker__day--disabled:hover{
+    background: $overlay;
+    color: $dark;
+    border: 1px solid $overlay;
+  }
+
+  .Select{
+    color: #000;
+  }
+
+
+  .terria .react-datepicker__header, .terria .react-datepicker{
+    background: $dark;
+  }
+
+  .terria .react-datepicker__current-month, .terria .react-datepicker__day-name{
+    color: #fff;
+  }
+}
