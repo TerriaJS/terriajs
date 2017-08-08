@@ -94,16 +94,16 @@ const Timeline = createReactClass({
         const terria = this.props.terria;
         const catalogItem = terria.timeSeriesStack.topLayer;
         const layerName = defined(catalogItem) && catalogItem.name;
-        const availableTimeStrings = defined(catalogItem) && defined(catalogItem.getAvailableTimeStrings) && catalogItem.getAvailableTimeStrings();
+        const availableTimeObjects = defined(catalogItem) && defined(catalogItem.getAvailableTimeObjects) && catalogItem.getAvailableTimeObjects();
         const currentIntervalIndex = defined(catalogItem) && catalogItem.intervals.indexOf(catalogItem.clock.currentTime);
 
         return (
             <div className={Styles.timeline}>
                 <div className={Styles.textRow}>
-                    <If condition={availableTimeStrings}>
-                        <DateTimePicker name={layerName} value={currentIntervalIndex} availableTimeStrings={availableTimeStrings} onChange={this.changeDateTime} />
+                    <If condition={availableTimeObjects}>
+                        <DateTimePicker name={layerName} value={currentIntervalIndex} availableTimeObjects={availableTimeObjects} onChange={this.changeDateTime} />
                     </If>
-                    <If condition={!availableTimeStrings}>
+                    <If condition={!availableTimeObjects}>
                         <div className={Styles.textCell + ' ' + Styles.time} title="Selected date and time">{this.state.currentTimeString}</div>
                     </If>
                     <div className={Styles.textCell} title="Name of the dataset whose time range is shown">{layerName}</div>
