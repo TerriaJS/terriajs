@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### 5.#.#
+
+* Updated the client side validation to use the server provided file size limit when drag droping a file requireing the conversion service.
+
 ### 5.2.10
 
 * Improved the conversion of Esri polygons to GeoJSON by `featureDataToGeoJson`.  It now correctly handles polygons with holes and with multiple outer rings.
