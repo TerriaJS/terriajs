@@ -25,6 +25,17 @@
                     "layers": "temp"
                 },
 				{
+                  "name": "Total Vegetation Cover (PV + NPV)",
+                  "type": "wms",
+                  "url": "http://gsky.nci.org.au/ows",
+                  "cacheDuration": "2h",
+                  "layers": "global:totalcover",
+                  "opacity": 1,
+                  "initialTimeSource": "end",
+                  "ignoreUnknownTileErrors": true,
+                  "getFeatureInfoFormats": [{"type": "none"}]
+                },
+				{
 					"name": "Solar Satellite DNI & GHI",
 					"layers": "Solar_Satellite_DNI_2014",
 					"url": "http://gis.aremi.nationalmap.gov.au/bom/wms",
