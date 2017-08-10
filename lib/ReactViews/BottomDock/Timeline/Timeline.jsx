@@ -96,13 +96,13 @@ const Timeline = createReactClass({
         const catalogItem = terria.timeSeriesStack.topLayer;
         const layerName = defined(catalogItem) && catalogItem.name;
         const availableTimeObjects = defined(catalogItem) && defined(catalogItem.getAvailableTimeObjects) && catalogItem.getAvailableTimeObjects();
-        const currentIntervalIndex = defined(catalogItem) && catalogItem.intervals.indexOf(catalogItem.clock.currentTime);
+        const currentTime = defined(catalogItem) && JulianDate.toDate(catalogItem.clock.currentTime);
         const dates = availableTimeObjects && parseDates(availableTimeObjects);
         return (
             <div className={Styles.timeline}>
                 <div className={Styles.textRow}>
                     <If condition={availableTimeObjects}>
-                        <DateTimePicker name={layerName} value={currentIntervalIndex} dates={dates} onChange={this.changeDateTime} />
+                        <DateTimePicker name={layerName} value={currentTime} dates={dates} onChange={this.changeDateTime} />
                     </If>
                     <If condition={!availableTimeObjects}>
                         <div className={Styles.textCell + ' ' + Styles.time} title="Selected date and time">{this.state.currentTimeString}</div>
