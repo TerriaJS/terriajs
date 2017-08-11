@@ -105,9 +105,9 @@ const CesiumSplitter = createReactClass({
         return (
             <div className="cesiumSplitter">
                 <div className={Styles.dividerWrapper}>
-                    <div className="leaflet-sbs-divider" style={{left: this.getPosition() + 'px'}}></div>
+                    <div className={Styles.divider} style={{left: this.getPosition() + 'px'}}></div>
                 </div>
-                <div className="leaflet-sbs-range" style={style} onMouseDown={this.startDrag}>&#x2980;</div>
+                <div className={Styles.thumb} style={style} onMouseDown={this.startDrag}>&#x2980;</div>
             </div>
         );
     }

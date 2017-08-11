@@ -115,8 +115,7 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
         test: /\.(png|jpg|svg|gif)$/,
         include: [
             path.resolve(terriaJSBasePath),
-            path.resolve(cesiumDir),
-            path.dirname(require.resolve('leaflet-side-by-side'))
+            path.resolve(cesiumDir)
         ],
         exclude: [
             path.resolve(terriaJSBasePath, 'wwwroot', 'images', 'icons'),
@@ -221,14 +220,6 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
             })
         });
     }
-
-    config.module.loaders.push(
-      {
-        test: /\.css$/,
-        include: path.dirname(require.resolve('leaflet-side-by-side')),
-        use: [ 'style-loader', 'css-loader' ]
-      }
-    );
 
     config.resolve = config.resolve || {};
     config.resolve.alias = config.resolve.alias || {};
