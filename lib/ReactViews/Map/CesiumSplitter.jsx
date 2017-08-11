@@ -24,9 +24,8 @@ const CesiumSplitter = createReactClass({
     },
 
     getInitialState() {
-        const scene = this.props.terria.currentViewer.scene;
         return {
-            value: scene ? scene.imagerySplitPosition : 0.5
+            value: this.props.terria.splitPosition
         };
     },
 
@@ -35,25 +34,23 @@ const CesiumSplitter = createReactClass({
     },
 
     startDrag(event) {
+        const viewer = this.props.terria.currentViewer;
+        viewer.pauseMapInteraction();
+
         // While dragging is in progress, subscribe to document-level movement and up events.
         document.addEventListener('mousemove', this.drag, false);
         document.addEventListener('mouseup', this.stopDrag, false);
+
         event.preventDefault();
+        event.stopPropagation();
+        return false;
     },
 
     drag(event) {
-        const terria = this.props.terria;
-        const viewer = terria.currentViewer;
-        if (!viewer || !viewer.scene) {
-            return;
-        }
+        const viewer = this.props.terria.currentViewer;
 
-        const canvas = viewer.scene.canvas;
-        if (!canvas) {
-            return;
-        }
-
-        const mapRect = canvas.getBoundingClientRect();
+        const container = viewer.getContainer();
+        const mapRect = container.getBoundingClientRect();
 
         const width = mapRect.right - mapRect.left;
         const fraction = (event.clientX - mapRect.left) / width;
@@ -69,12 +66,16 @@ const CesiumSplitter = createReactClass({
             value: splitFraction
         });
 
-        viewer.scene.imagerySplitPosition = splitFraction;
-        viewer.notifyRepaintRequired();
+        this.props.terria.splitPosition = splitFraction;
+
+        event.preventDefault();
     },
 
     stopDrag(event) {
         this.unsubscribe();
+
+        const viewer = this.props.terria.currentViewer;
+        viewer.resumeMapInteraction();
     },
 
     unsubscribe() {
@@ -83,18 +84,7 @@ const CesiumSplitter = createReactClass({
     },
 
     getPosition() {
-        const terria = this.props.terria;
-        const viewer = terria.currentViewer;
-        if (!viewer || !viewer.scene) {
-            return 50;
-        }
-
-        const canvas = viewer.scene.canvas;
-        if (!canvas) {
-            return 50;
-        }
-
-        const canvasWidth = canvas.clientWidth;
+        const canvasWidth = this.props.terria.currentViewer.getContainer().clientWidth;
         return this.state.value * canvasWidth;
     },
 

@@ -23,13 +23,9 @@ const CesiumSplitterIfNeeded = createReactClass({
         if (!terria.showSplitter) {
             return null;
         }
-        if (terria.currentViewer.constructor === Cesium) {
-            return (
-                <CesiumSplitter terria={terria} />
-            );
-        } else {
-            return null;
-        }
+        return (
+            <CesiumSplitter terria={terria} />
+        );
     }
 });
 
