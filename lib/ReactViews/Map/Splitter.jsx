@@ -6,8 +6,8 @@ import Styles from './cesium-splitter.scss';
 
 import ObserveModelMixin from '../ObserveModelMixin';
 
-const CesiumSplitter = createReactClass({
-    displayName: 'CesiumSplitter',
+const Splitter = createReactClass({
+    displayName: 'Splitter',
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -20,12 +20,6 @@ const CesiumSplitter = createReactClass({
         return {
             thumbSize: 42,
             padding: 0
-        };
-    },
-
-    getInitialState() {
-        return {
-            value: this.props.terria.splitPosition
         };
     },
 
@@ -62,10 +56,6 @@ const CesiumSplitter = createReactClass({
 
         const splitFraction = Math.min(maxFraction, Math.max(minFraction, fraction));
 
-        this.setState({
-            value: splitFraction
-        });
-
         this.props.terria.splitPosition = splitFraction;
 
         event.preventDefault();
@@ -85,15 +75,19 @@ const CesiumSplitter = createReactClass({
 
     getPosition() {
         const canvasWidth = this.props.terria.currentViewer.getContainer().clientWidth;
-        return this.state.value * canvasWidth;
+        return this.props.terria.splitPosition * canvasWidth;
     },
 
     render() {
+        if (!this.props.terria.showSplitter) {
+            return null;
+        }
+
         const thumbWidth = this.props.thumbSize;
 
         const dividerStyle = {
             left: this.getPosition() + 'px',
-            'background-color': this.props.terria.baseMapContrastColor
+            backgroundColor: this.props.terria.baseMapContrastColor
         };
 
         const thumbStyle = {
@@ -108,7 +102,7 @@ const CesiumSplitter = createReactClass({
         };
 
         return (
-            <div className="cesiumSplitter">
+            <div>
                 <div className={Styles.dividerWrapper}>
                     <div className={Styles.divider} style={dividerStyle}></div>
                 </div>
@@ -118,4 +112,4 @@ const CesiumSplitter = createReactClass({
     }
 });
 
-module.exports = CesiumSplitter;
+module.exports = Splitter;
