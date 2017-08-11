@@ -91,7 +91,12 @@ const CesiumSplitter = createReactClass({
     render() {
         const thumbWidth = this.props.thumbSize;
 
-        const style = {
+        const dividerStyle = {
+            left: this.getPosition() + 'px',
+            'background-color': this.props.terria.baseMapContrastColor
+        };
+
+        const thumbStyle = {
             left: this.getPosition() + 'px',
             width: thumbWidth + 'px',
             height: thumbWidth + 'px',
@@ -105,9 +110,9 @@ const CesiumSplitter = createReactClass({
         return (
             <div className="cesiumSplitter">
                 <div className={Styles.dividerWrapper}>
-                    <div className={Styles.divider} style={{left: this.getPosition() + 'px'}}></div>
+                    <div className={Styles.divider} style={dividerStyle}></div>
                 </div>
-                <div className={Styles.thumb} style={style} onMouseDown={this.startDrag}>&#x2980;</div>
+                <div className={Styles.thumb} style={thumbStyle} onMouseDown={this.startDrag}>&#x2980;</div>
             </div>
         );
     }
