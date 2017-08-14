@@ -6,6 +6,21 @@ import Styles from './cesium-splitter.scss';
 
 import ObserveModelMixin from '../ObserveModelMixin';
 
+let passiveSupported = false;
+
+try {
+    const options = Object.defineProperty({}, 'passive', {
+        get: function () {
+            passiveSupported = true;
+        }
+    });
+
+    window.addEventListener('test', null, options);
+    window.removeEventListener('test', null, options);
+} catch (err) { }
+
+const notPassive = passiveSupported ? { passive: false } : false;
+
 const Splitter = createReactClass({
     displayName: 'Splitter',
     mixins: [ObserveModelMixin],
@@ -32,22 +47,28 @@ const Splitter = createReactClass({
         viewer.pauseMapInteraction();
 
         // While dragging is in progress, subscribe to document-level movement and up events.
-        document.addEventListener('mousemove', this.drag, false);
-        document.addEventListener('mouseup', this.stopDrag, false);
+        document.addEventListener('mousemove', this.drag, notPassive);
+        document.addEventListener('touchmove', this.drag, notPassive);
+        document.addEventListener('mouseup', this.stopDrag, notPassive);
+        document.addEventListener('touchend', this.stopDrag, notPassive);
 
         event.preventDefault();
         event.stopPropagation();
-        return false;
     },
 
     drag(event) {
+        let clientX = event.clientX;
+        if (event.targetTouches && event.targetTouches.length > 0) {
+            clientX = event.targetTouches.item(0).clientX;
+        }
+
         const viewer = this.props.terria.currentViewer;
 
         const container = viewer.getContainer();
         const mapRect = container.getBoundingClientRect();
 
         const width = mapRect.right - mapRect.left;
-        const fraction = (event.clientX - mapRect.left) / width;
+        const fraction = (clientX - mapRect.left) / width;
 
         const min = mapRect.left + this.props.padding + (this.props.thumbSize * 0.5);
         const max = mapRect.right - this.props.padding - (this.props.thumbSize * 0.5);
@@ -59,6 +80,7 @@ const Splitter = createReactClass({
         this.props.terria.splitPosition = splitFraction;
 
         event.preventDefault();
+        event.stopPropagation();
     },
 
     stopDrag(event) {
@@ -66,11 +88,16 @@ const Splitter = createReactClass({
 
         const viewer = this.props.terria.currentViewer;
         viewer.resumeMapInteraction();
+
+        event.preventDefault();
+        event.stopPropagation();
     },
 
     unsubscribe() {
-        document.removeEventListener('mousemove', this.drag, false);
-        document.removeEventListener('mouseup', this.stopDrag, false);
+        document.removeEventListener('mousemove', this.drag, notPassive);
+        document.removeEventListener('touchmove', this.drag, notPassive);
+        document.removeEventListener('mouseup', this.stopDrag, notPassive);
+        document.removeEventListener('touchend', this.stopDrag, notPassive);
     },
 
     getPosition() {
@@ -106,7 +133,7 @@ const Splitter = createReactClass({
                 <div className={Styles.dividerWrapper}>
                     <div className={Styles.divider} style={dividerStyle}></div>
                 </div>
-                <div className={Styles.thumb} style={thumbStyle} onMouseDown={this.startDrag}>&#x2980;</div>
+                <div className={Styles.thumb} style={thumbStyle} onMouseDown={this.startDrag} onTouchStart={this.startDrag}>&#x2980;</div>
             </div>
         );
     }
