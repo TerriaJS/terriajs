@@ -48,7 +48,8 @@
 }
 
 .datePicker{
-  width: 250px;
+  width: 240px;
+  height: 290px;
   border: 1px solid $overlay;
   border-radius: 5px;
   padding: 5px;
@@ -70,12 +71,9 @@
   width: 100%;
   margin: 0 auto;
   color: #fff;
-  padding: 15px;
+  padding: 0px 5px;
   border-radius: 3px;
-}
-
-.gridRow{
-  padding-top: 4px;
+  margin-top: -20px;
 }
 
 .gridRow:hover{
@@ -92,24 +90,35 @@
 }
 
 
-.gridRowInner{
+.gridRowInner12, .gridRowInner31{
   display: table-row;
   padding: 3px;
   border-radius: 3px;
 }
 
 
-.gridRowInner span{
-  display: inline-block;
-  height: 20px;
-  width: 2px;
-  margin: 1px 2px 1px 1px;
-  background: $color-primary;
 
+
+.gridRowInner12 span, .gridRowInner31 span, {
+  display: inline-block;
+  height: 10px;
+  width: 2px;
+  background: $overlay;
+  margin-top: 1px;
+}
+
+.gridRowInner12 span{
+  margin-right: 11px;
+}
+
+
+.gridRowInner31 span{
+  margin-right: 3px;
 }
 
 .activeGrid{
   opacity: 0.9;
+  background: $color-primary!important;
 }
 
 .gridHeading{
