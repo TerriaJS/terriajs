@@ -97,10 +97,6 @@ const TimelineControls = createReactClass({
                 <button type='button' className={Styles.timelineControl} onClick={this.playFaster} title="Play Faster">
                     <Icon glyph={Icon.GLYPHS.forward}/>
                 </button>
-                <button type='button' className={classnames(Styles.timelineControl, {[Styles.isActive]: this.isLooping()})}
-                        onClick={this.toggleLoop} title="Loop at the end">
-                    <Icon glyph={Icon.GLYPHS.loop}/>
-                </button>
             </div>
         );
     }

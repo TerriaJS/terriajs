@@ -101,16 +101,13 @@ const Timeline = createReactClass({
         return (
             <div className={Styles.timeline}>
                 <div className={Styles.textRow}>
-                    <If condition={availableTimeObjects}>
-                        <DateTimePicker name={layerName} value={currentIntervalIndex} dates={dates} onChange={this.changeDateTime} />
-                    </If>
-                    <If condition={!availableTimeObjects}>
-                        <div className={Styles.textCell + ' ' + Styles.time} title="Selected date and time">{this.state.currentTimeString}</div>
-                    </If>
                     <div className={Styles.textCell} title="Name of the dataset whose time range is shown">{layerName}</div>
                 </div>
                 <div className={Styles.controlsRow}>
                     <TimelineControls clock={terria.clock} analytics={terria.analytics} currentViewer={terria.currentViewer} />
+                    <If condition={availableTimeObjects}>
+                        <DateTimePicker name={layerName} value={currentIntervalIndex} dates={dates} onChange={this.changeDateTime} />
+                    </If>
                     <CesiumTimeline terria={terria} />
                 </div>
             </div>
