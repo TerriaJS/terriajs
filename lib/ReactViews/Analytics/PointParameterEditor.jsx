@@ -27,6 +27,10 @@ const PointParameterEditor = createReactClass({
         viewState: PropTypes.object
     },
 
+    setCartographicValueFromText(e) {
+        PointParameterEditor.setCartographicValueFromText(e, this.props.parameter);
+    },
+
     setValueFromText(e) {
         PointParameterEditor.setValueFromText(e, this.props.parameter);
     },
@@ -41,6 +45,7 @@ const PointParameterEditor = createReactClass({
                 <input className={Styles.field}
                        type="text"
                        onChange={this.setValueFromText}
+                       onBlur={this.setCartographicValueFromText}
                        value={PointParameterEditor.getDisplayValue(this.props.parameter.value)}/>
                 <button type="button" onClick={this.selectPointOnMap} className={Styles.btnSelector}>
                     Select location
@@ -51,15 +56,26 @@ const PointParameterEditor = createReactClass({
 });
 
 /**
+ * Triggered when user leaves the field, updates the parameter as a Cartographic.
+ * @param {String} e Text that user has entered manually.
+ * @param {FunctionParameter} parameter Parameter to set value on.
+ */
+PointParameterEditor.setCartographicValueFromText = function(e, parameter) {
+    const coordinates = e.target.value.split(',');
+    if (coordinates.length >= 2) {
+        parameter.value = Cartographic.fromDegrees(parseFloat(coordinates[0]), parseFloat(coordinates[1]));
+    } else {
+        parameter.value = undefined;
+    }
+};
+
+/**
  * Triggered when user types value directly into field.
  * @param {String} e Text that user has entered manually.
  * @param {FunctionParameter} parameter Parameter to set value on.
  */
 PointParameterEditor.setValueFromText = function(e, parameter) {
-    const coordinates = e.target.value.split(',');
-    if (coordinates.length >= 2) {
-        parameter.value = Cartographic.fromDegrees(parseFloat(coordinates[0]), parseFloat(coordinates[1]));
-    }
+    parameter.value = e.target.value;
 };
 
 /**
@@ -69,7 +85,11 @@ PointParameterEditor.setValueFromText = function(e, parameter) {
  */
 PointParameterEditor.getDisplayValue = function(value) {
     if (defined(value)) {
-        return CesiumMath.toDegrees(value.longitude) + ',' + CesiumMath.toDegrees(value.latitude);
+        if (value instanceof Cartographic) {
+            return CesiumMath.toDegrees(value.longitude) + ',' + CesiumMath.toDegrees(value.latitude);
+        } else {
+            return value;
+        }
     } else {
         return '';
     }
