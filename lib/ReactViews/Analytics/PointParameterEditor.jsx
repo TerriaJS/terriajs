@@ -46,7 +46,8 @@ const PointParameterEditor = createReactClass({
                        type="text"
                        onChange={this.setValueFromText}
                        onBlur={this.setCartographicValueFromText}
-                       value={PointParameterEditor.getDisplayValue(this.props.parameter.value)}/>
+                       value={PointParameterEditor.getDisplayValue(this.props.parameter.value)}
+                       placeholder="131.036111, -25.345"/>
                 <button type="button" onClick={this.selectPointOnMap} className={Styles.btnSelector}>
                     Select location
                 </button>
