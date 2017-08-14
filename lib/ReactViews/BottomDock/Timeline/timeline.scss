@@ -10,10 +10,15 @@
 }
 
 .text-row {
-  display: table-row;
+  display: block;
   color: #fff;
   font-family: $font-base;
   font-size: $font-size-mid-small;
+  position: absolute;
+  bottom: 44px;
+  left: 0px;
+  background: $dark;
+  padding: 3px 5px;
 }
 
 .text-cell {
@@ -50,7 +55,7 @@
 
 .timeLineDatePicker{
   display: table-cell;
-  width: 20px;
+  width: 29px;
   color: #fff;
 }
 
@@ -66,19 +71,26 @@
   background: $dark;
 }
 
-.backbutton{
+.backbutton, .togglebutton{
   composes: btn from '../../../Sass/common/_buttons.scss';
   composes: btn-transparent from '../../../Sass/common/_buttons.scss';
   display: inline-block;
+  z-index: 99;
 
   svg{
     height: 20px;
-    width: 20px;
+    width: 25px;
     fill: #ffffff;
     display: inline-block;
     vertical-align: bottom;
   }
 }
+
+
+.togglebutton{
+    margin-top: 5px;
+}
+
 
 .grid{
   display: block;
@@ -145,4 +157,8 @@
 
 .summary{
   font-size: 10px;
+}
+
+.open{
+
 }

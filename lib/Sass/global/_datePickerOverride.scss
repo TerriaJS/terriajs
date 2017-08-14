@@ -1,8 +1,14 @@
 @import '~terriajs-variables';
 // added
 :global {
-  .react-datepicker{
+  .terria .react-datepicker{
     font-family: 'Open Sans', sans-serif !important;
+    border: none;
+    margin: 0 auto;
+    background: none;
+    border: none;
+    color: #000;
+    margin-top: -10px;
   }
 
   .react-datepicker .react-datepicker__day{
