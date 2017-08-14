@@ -76,6 +76,7 @@
   composes: btn-transparent from '../../../Sass/common/_buttons.scss';
   display: inline-block;
   z-index: 99;
+  position: relative;
 
   svg{
     height: 20px;
