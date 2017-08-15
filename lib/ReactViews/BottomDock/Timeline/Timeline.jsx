@@ -86,9 +86,8 @@ const Timeline = createReactClass({
         });
     },
 
-    changeDateTime(index) {
-        const item = this.props.terria.timeSeriesStack.topLayer;
-        this.props.terria.clock.currentTime = item.intervals.get(index).start;
+    changeDateTime(time) {
+        this.props.terria.clock.currentTime = time;
     },
 
     render() {
