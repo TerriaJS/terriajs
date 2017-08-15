@@ -6,6 +6,7 @@ Change Log
 ### 5.3.0
 
 * Improved the conversion of Esri polygons to GeoJSON by `featureDataToGeoJson`.  It now correctly handles polygons with holes and with multiple outer rings.
+* Fixed a bug that could cause some layers, especially the Bing Maps basemap, to occasionally be missing from the 2D map.
 * Fixed a bug that could cause the selected time to move to the end time when sharing a map with a time-dynamic layer.
 * Added some fields to the dataset info page for `CkanCatalogItem`.
 
