@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### 5.2.11
+
+* Pinned `urijs` to v1.18.10 to work around a breaking change in v1.18.11.
+
 ### 5.2.10
 
 * Improved the conversion of Esri polygons to GeoJSON by `featureDataToGeoJson`.  It now correctly handles polygons with holes and with multiple outer rings.
