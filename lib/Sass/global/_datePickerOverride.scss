@@ -41,4 +41,8 @@
   .terria .react-datepicker__current-month, .terria .react-datepicker__day-name{
     color: #fff;
   }
+
+  .terria .react-datepicker__current-month{
+    display: none;
+  }
 }

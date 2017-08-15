@@ -71,7 +71,12 @@
   background: $dark;
 }
 
-.backbutton, .togglebutton{
+.dayPicker{
+  text-align: center;
+  margin-top: -10px;
+}
+
+.backbutton, .togglebutton, .backbtn{
   composes: btn from '../../../Sass/common/_buttons.scss';
   composes: btn-transparent from '../../../Sass/common/_buttons.scss';
   display: inline-block;
@@ -87,6 +92,10 @@
   }
 }
 
+.backbtn{
+  padding-bottom: 5px;
+  padding-right: 5px;
+}
 
 .togglebutton{
     margin-top: 5px;
