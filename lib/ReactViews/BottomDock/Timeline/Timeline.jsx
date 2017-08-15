@@ -98,6 +98,7 @@ const Timeline = createReactClass({
         const availableTimeObjects = defined(catalogItem) && defined(catalogItem.getAvailableTimeObjects) && catalogItem.getAvailableTimeObjects();
         const currentIntervalIndex = defined(catalogItem) && catalogItem.intervals.indexOf(catalogItem.clock.currentTime);
         const dates = availableTimeObjects && parseDates(availableTimeObjects);
+        const currentDate = availableTimeObjects[currentIntervalIndex];
         return (
             <div className={Styles.timeline}>
                 <div className={Styles.textRow}>
@@ -106,7 +107,7 @@ const Timeline = createReactClass({
                 <div className={Styles.controlsRow}>
                     <TimelineControls clock={terria.clock} analytics={terria.analytics} currentViewer={terria.currentViewer} />
                     <If condition={availableTimeObjects}>
-                        <DateTimePicker name={layerName} value={currentIntervalIndex} dates={dates} onChange={this.changeDateTime} />
+                        <DateTimePicker name={layerName} currentDate={currentDate} dates={dates} onChange={this.changeDateTime} />
                     </If>
                     <CesiumTimeline terria={terria} />
                 </div>
