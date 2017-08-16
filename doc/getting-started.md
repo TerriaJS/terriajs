@@ -24,8 +24,8 @@ If you run into trouble or want more explanation, read on.
 
 TerriaJS can be built and run on almost any macOS, Linux, or Windows system.  The following are required to build TerriaJS:
 
-* [Node.js](https://nodejs.org) v5.10 or later.  v6.x and v7.x are also known to work, and later major versions are likely to work as well.  You can check your node version by running `node --version` on the command-line.
-* [npm](https://www.npmjs.com/) v3.0 or later.  This is usually installed automatically alongside the above.  You can check your npm version by running `npm --version`.
+* [Node.js](https://nodejs.org) v6.0 or later.  v7.x is also known to work.  We currently recommend that you avoid using v8.x because v8.x includes npm v5.x which causes problems with some of our dependencies.  You can check your node version by running `node --version` on the command-line.
+* [npm](https://www.npmjs.com/) v3.0 or later.  We currently recommend that you avoid using v5.x.  npm is usually installed automatically alongside the above.  You can check your npm version by running `npm --version`.
 
 The following components are optional:
 
