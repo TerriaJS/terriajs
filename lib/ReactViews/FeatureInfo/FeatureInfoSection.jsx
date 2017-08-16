@@ -175,6 +175,18 @@ const FeatureInfoSection = createReactClass({
 
     render() {
         const catalogItemName = (this.props.catalogItem && this.props.catalogItem.name) || '';
+        let baseFilename = catalogItemName;
+        // Add the Lat, Lon to the baseFilename if it is possible and not already present.
+        if (this.props.position) {
+            const position = Ellipsoid.WGS84.cartesianToCartographic(this.props.position);
+            const latitude = CesiumMath.toDegrees(position.latitude);
+            const longitude = CesiumMath.toDegrees(position.longitude);
+            const precision = 5;
+            // Check that baseFilename doesn't already contain the lat, lon with the similar or better precision.
+            if ((typeof baseFilename !== 'string') || !contains(baseFilename, latitude, precision) || !contains(baseFilename, longitude, precision)) {
+                baseFilename += ' - Lat ' + latitude.toFixed(precision) + ' Lon ' + longitude.toFixed(precision);
+            }
+        }
         const fullName = (catalogItemName ? (catalogItemName + ' - ') : '') + this.renderDataTitle();
         const reactInfo = getInfoAsReactComponent(this);
 
@@ -210,7 +222,7 @@ const FeatureInfoSection = createReactClass({
                                     <FeatureInfoDownload key='download'
                                         viewState={this.props.viewState}
                                         data={reactInfo.downloadableData}
-                                        name={catalogItemName} />
+                                        name={baseFilename} />
                                 </If>
                             </When>
                             <Otherwise>
@@ -416,7 +428,7 @@ function mustacheFormatNumberFunction() {
 /**
  * URL Encodes provided text: {{#terria.urlEncodeComponent}}{{value}}{{/terria.urlEncodeComponent}}.
  * See encodeURIComponent for details.
- * 
+ *
  * {{#terria.urlEncodeComponent}}W/HO:E#1{{/terria.urlEncodeComponent}} -> W%2FHO%3AE%231
  * @private
  */
@@ -599,6 +611,16 @@ function setTimeoutForUpdatingCustomComponent(that, reactComponent, updateSecond
     }, updateSeconds * 1000);
     const timeoutIds = that.state.timeoutIds;
     that.setState({timeoutIds: timeoutIds.concat(timeoutId)});
+}
+
+// See if text contains the number (to a precision number of digits (after the dp) either fixed up or down on the last digit).
+function contains(text, number, precision) {
+    // Take Math.ceil or Math.floor and use it to calculate the number with a precision number of digits (after the dp).
+    function fixed(round, number) {
+        const scale = Math.pow(10, precision);
+        return (round(number*scale)/scale).toFixed(precision);
+    }
+    return (text.indexOf(fixed(Math.floor, number)) !== -1) || (text.indexOf(fixed(Math.ceil, number)) !== -1);
 }
 
 /**
