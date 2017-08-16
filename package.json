@@ -56,7 +56,7 @@
     "proj4": "~2.3.16",
     "raw-loader": "^0.5.1",
     "react": "^15.5.4",
-    "react-addons-pure-render-mixin": "15.5.2",
+    "react-addons-pure-render-mixin": "^15.6.0",
     "react-anything-sortable": "^1.5.2",
     "react-dom": "^15.5.4",
     "react-rangeslider": "^2.0.0",
