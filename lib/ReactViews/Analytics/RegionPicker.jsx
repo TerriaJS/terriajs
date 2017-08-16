@@ -141,8 +141,8 @@ const RegionPicker = createReactClass({
 
             that._regionsCatalogItem = new WebMapServiceCatalogItem(that.props.previewed.terria);
             that._regionsCatalogItem.name = "Available Regions";
-            that._regionsCatalogItem.url = that.regionProvider.server;
-            that._regionsCatalogItem.layers = that.regionProvider.layerName;
+            that._regionsCatalogItem.url = that.regionProvider.analyticsWmsServer;
+            that._regionsCatalogItem.layers = that.regionProvider.analyticsWmsLayerName;
             that._regionsCatalogItem.parameters = {
                 styles: 'border_black_fill_aqua'
             };
