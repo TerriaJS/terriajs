@@ -3,7 +3,7 @@
 Change Log
 ==========
 
-### next release (5.2.11)
+### 5.2.12
 
 * Added the ability to use the analytics region picker with vector tile region mapping by specifiying a WMS server & layer for analytics only.
 
