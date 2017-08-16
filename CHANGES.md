@@ -3,16 +3,42 @@
 Change Log
 ==========
 
-### 5.#.#
+### 5.2.12
 
-* Fixed a bug which caused the selected column in a csv to be the second column when a time column is present.
+* Added the ability to use the analytics region picker with vector tile region mapping by specifiying a WMS server & layer for analytics only.
+
+### 5.2.11
+
+* Pinned `urijs` to v1.18.10 to work around a breaking change in v1.18.11.
+
+### 5.2.10
+
+* Improved the conversion of Esri polygons to GeoJSON by `featureDataToGeoJson`.  It now correctly handles polygons with holes and with multiple outer rings.
+* Added some fields to the dataset info page for `CkanCatalogItem`.
+* Fixed a bug that could cause some layers, especially the Bing Maps basemap, to occasionally be missing from the 2D map.
+* Fixed a bug that could cause the selected time to move to the end time when sharing a map with a time-dynamic layer.
+
+### 5.2.9
+
+* A catalog item's `cacheDuration` property now takes precedence over the cache duration specified by the code.  Previously, the `cacheDuration` would only override the default duration (2 weeks).
+
+### 5.2.8
+
+* Added option to expand the HTML embed code and toggle URL shorting for the share link.
+* The Share feature now includes the current time selected on the timeline, so that anyone visiting a share link will see the map at the intended time.
+
+### 5.2.7
+
+* Added the Latitude and Longitude to the filename for the Feature Information file download.
+* Added the time to the timeline labels when zoomed in to a single day. Previously, the label sometimes only showed the date.
 
 ### 5.2.6
 
 * Added the ability to disable the conversion service so that no user data is sent outside of the client by setting `conversionServiceBaseUrl` to `false` in the `parameters` section of `config.json`.
 * Added the ability to disable the location button by setting `disableMyLocation` to `true` in the `parameters` section of `config.json`.
-* Fixed a bug which caused the share functionality to fail (both screenshot and share link) in 2d mode.
-* Fixed a bug with explicitly styled enum columns in IE.
+* Fixed a bug that caused the share functionality to fail (both screenshot and share link) in 2d mode.
+* Fixed a bug with explicitly styled enum columns in Internet Explorer.
+* Fixed a bug that caused the selected column in a csv to be the second column when a time column is present.
 
 ### 5.2.5
 

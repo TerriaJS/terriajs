@@ -176,7 +176,7 @@ const RegionDataParameterEditor = createReactClass({
             <div className={Styles.parameterEditorImportantNote}>
                 No characteristics are available because you have not added any data to the map for this region
                 type, {this.regionProvider() ? this.regionProvider().regionType : 'None'}.
-                You may use your own data with this analysis by creating a CSV following the <a target="_blank" href="https://github.com/TerriaJS/nationalmap/wiki/csv-geo-au">csv-geo-au</a> guidelines
+                You may use your own data with this analysis by creating a CSV following the <a target="_blank" rel="noopener noreferrer" href="https://github.com/TerriaJS/nationalmap/wiki/csv-geo-au">csv-geo-au</a> guidelines
                 and dragging and dropping it onto the map.
             </div>
         );
