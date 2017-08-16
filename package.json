@@ -31,7 +31,7 @@
     "d3-transition": "^1.0.0",
     "dateformat": "^2.0.0",
     "dompurify": "^1.0.0",
-    "extract-text-webpack-plugin": "^2.1.0",
+    "extract-text-webpack-plugin": "^3.0.0",
     "file-loader": "^0.11.1",
     "gulp": "^3.9.1",
     "hammerjs": "^2.0.6",
@@ -72,7 +72,7 @@
     "url-loader": "^0.5.7",
     "urthecast": "^1.0.0",
     "vector-tile": "^1.3.0",
-    "webpack": "^2.2.1",
+    "webpack": "^3.0.0",
     "worker-loader": "^0.8.0"
   },
   "devDependencies": {
