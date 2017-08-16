@@ -30,7 +30,7 @@ const FeedbackForm = createReactClass({
 
     onDismiss() {
         this.props.viewState.feedbackFormIsVisible = false;
-        this.state = this.getInitialState();
+        this.setState(this.getInitialState());
     },
 
     onSubmit(evt) {
