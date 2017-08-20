@@ -42,7 +42,7 @@
     "javascript-natural-sort": "^0.7.1",
     "json-loader": "^0.5.4",
     "json5": "^0.5.0",
-    "jsx-control-statements": "3.2.5",
+    "jsx-control-statements": "3.2.6",
     "leaflet": "1.0.3",
     "linkify-it": "^2.0.0",
     "lodash.debounce": "^4.0.6",
