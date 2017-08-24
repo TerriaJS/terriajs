@@ -1,7 +1,9 @@
 @import '~terriajs-variables';
+// @import '../../../Sass/common/mixins';
 
 .left-right-section {
   font-size: 90%;
+  margin-top: 10px;
 }
 
 .go-left {
@@ -20,6 +22,15 @@
 }
 
 .isActive {
-  background-color: #AAA;
+  background-color: $color-primary;
   color: #444;
+}
+
+.go-left, .go-right, .go-both{
+  width: 33%;
+  float: left;
+  padding: 5px;
+  color: #fff;
+  composes: btn from '../../../Sass/common/_buttons.scss';
+  composes: btn-primary from '../../../Sass/common/_buttons.scss';
 }
