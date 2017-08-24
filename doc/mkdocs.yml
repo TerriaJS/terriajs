@@ -25,6 +25,7 @@ pages:
     - Catalog Items: 'connecting-to-data/catalog-items.md'
     - Customizing Data Appearance:
         - Overview: 'connecting-to-data/customizing-data-appearance/overview.md'
+        - Imagery Data: 'connecting-to-data/customizing-data-appearance/imagery-data.md'
         - Tabular Data: 'connecting-to-data/customizing-data-appearance/tabular-data.md'
         - Feature Information Template: 'connecting-to-data/customizing-data-appearance/feature-info-template.md'
     - Catalog Functions: 'connecting-to-data/catalog-functions.md'

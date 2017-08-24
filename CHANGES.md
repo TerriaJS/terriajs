@@ -10,6 +10,7 @@ Change Log
 
 ### 5.2.11
 
+* Added the ability to split the screen into a left-side and right-side, and show imagery layers on only one side of the splitter.
 * Pinned `urijs` to v1.18.10 to work around a breaking change in v1.18.11.
 
 ### 5.2.10

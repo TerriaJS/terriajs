@@ -1,0 +1,25 @@
+@import '~terriajs-variables';
+
+.left-right-section {
+  font-size: 90%;
+}
+
+.go-left {
+  float: left;
+  background-color: #444;
+}
+
+.go-both {
+  float: left;
+  background-color: #444;
+}
+
+.go-right {
+  float: left;
+  background-color: #444;
+}
+
+.isActive {
+  background-color: #AAA;
+  color: #444;
+}

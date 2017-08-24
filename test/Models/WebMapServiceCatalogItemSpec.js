@@ -3,14 +3,17 @@
 /*global require,describe,it,expect,beforeEach,fail*/
 
 var Credit = require('terriajs-cesium/Source/Core/Credit');
-var ImageryLayerCatalogItem = require('../../lib/Models/ImageryLayerCatalogItem');
 var ImageryProvider = require('terriajs-cesium/Source/Scene/ImageryProvider');
 var JulianDate = require('terriajs-cesium/Source/Core/JulianDate');
-var LegendUrl = require('../../lib/Map/LegendUrl');
 var Rectangle = require('terriajs-cesium/Source/Core/Rectangle');
+var TimeInterval = require('terriajs-cesium/Source/Core/TimeInterval');
+var TimeIntervalCollection = require('terriajs-cesium/Source/Core/TimeIntervalCollection');
+var WebMercatorTilingScheme = require('terriajs-cesium/Source/Core/WebMercatorTilingScheme');
+
+var ImageryLayerCatalogItem = require('../../lib/Models/ImageryLayerCatalogItem');
+var LegendUrl = require('../../lib/Map/LegendUrl');
 var Terria = require('../../lib/Models/Terria');
 var WebMapServiceCatalogItem = require('../../lib/Models/WebMapServiceCatalogItem');
-var WebMercatorTilingScheme = require('terriajs-cesium/Source/Core/WebMercatorTilingScheme');
 
 var terria;
 var wmsItem;
@@ -298,6 +301,18 @@ describe('WebMapServiceCatalogItem', function() {
             awesome: 'maybe'
         };
         wmsItem.getFeatureInfoFormats = [];
+        wmsItem.intervals = new TimeIntervalCollection([
+            new TimeInterval({
+                start: JulianDate.fromIso8601('2013-08-01T15:00:00Z'),
+                stop: JulianDate.fromIso8601('2013-08-01T18:00:00Z')
+            }),
+            new TimeInterval({
+                start: JulianDate.fromIso8601('2013-09-01T11:00:00Z'),
+                stop: JulianDate.fromIso8601('2013-09-03T13:00:00Z')
+            })
+        ]);
+        // This initialTime is before any interval, so internally it will be changed to the first start date.
+        wmsItem.initialTimeSource = '2012-01-01T12:00:00Z';
 
         var json = wmsItem.serializeToJson();
 
@@ -318,6 +333,10 @@ describe('WebMapServiceCatalogItem', function() {
         expect(reconstructed.layers).toBe(wmsItem.layers);
         expect(reconstructed.parameters).toBe(wmsItem.parameters);
         expect(reconstructed.getFeatureInfoFormats).toEqual(wmsItem.getFeatureInfoFormats);
+        // Do not compare time, because on some systems the second could have ticked over between getting the two times.
+        var initialTimeSource = reconstructed.initialTimeSource.substr(0, 10);
+        expect(initialTimeSource).toEqual('2013-08-01');
+        expect(reconstructed.intervals.length).toEqual(wmsItem.intervals.length);
     });
 
     it('can get handle plain text in textAttribution', function() {

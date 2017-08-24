@@ -1,0 +1,20 @@
+@import '~terriajs-variables';
+
+.datetime-selector {
+  clear: both;
+  font-size: 0.9rem;
+  label {
+    margin-right: $padding-small;
+  }
+}
+
+.title {
+  display: block;
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+
+.field {
+  composes: field from '../../../Sass/common/_form.scss';
+  color: black;
+}

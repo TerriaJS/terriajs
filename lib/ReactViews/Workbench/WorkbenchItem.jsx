@@ -8,10 +8,12 @@ import {sortable} from 'react-anything-sortable';
 
 import defined from 'terriajs-cesium/Source/Core/defined';
 
-import DisplayAsPercentSection from './Controls/DisplayAsPercentSection';
 import ConceptViewer from './Controls/ConceptViewer';
+import DateTimeSelectorSection from './Controls/DateTimeSelectorSection';
 import DimensionSelectorSection from './Controls/DimensionSelectorSection';
+import DisplayAsPercentSection from './Controls/DisplayAsPercentSection';
 import getAncestors from '../../Models/getAncestors';
+import LeftRightSection from './Controls/LeftRightSection';
 import Legend from './Controls/Legend';
 import ObserveModelMixin from './../ObserveModelMixin';
 import OpacitySection from './Controls/OpacitySection';
@@ -96,10 +98,12 @@ const WorkbenchItem = createReactClass({
                     <div className={Styles.inner}>
                         <ViewingControls item={workbenchItem} viewState={this.props.viewState}/>
                         <OpacitySection item={workbenchItem}/>
+                        <LeftRightSection item={workbenchItem}/>
                         <If condition={(defined(workbenchItem.concepts) && workbenchItem.concepts.length > 0) && workbenchItem.displayChoicesBeforeLegend}>
                             <ConceptViewer item={workbenchItem}/>
                         </If>
                         <DimensionSelectorSection item={workbenchItem}/>
+                        <DateTimeSelectorSection item={workbenchItem}/>
                         <StyleSelectorSection item={workbenchItem}/>
                         <ColorScaleRangeSection item={workbenchItem}/>
                         <DisplayAsPercentSection item={workbenchItem}/>
