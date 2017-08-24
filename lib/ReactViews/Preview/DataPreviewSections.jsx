@@ -21,7 +21,12 @@ const DEFAULT_SECTION_ORDER = [
     'Service Description',
     'Resource Description',
     'Licence',
-    'Access Constraints'
+    'Access Constraints',
+    'Author',
+    'Contact',
+    'Created',
+    'Modified',
+    'Update Frequency'
 ];
 
 /**
