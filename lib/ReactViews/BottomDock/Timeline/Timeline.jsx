@@ -86,9 +86,8 @@ const Timeline = createReactClass({
         });
     },
 
-    changeDateTime(index) {
-        const item = this.props.terria.timeSeriesStack.topLayer;
-        this.props.terria.clock.currentTime = item.intervals.get(index).start;
+    changeDateTime(time) {
+        this.props.terria.clock.currentTime = JulianDate.fromDate(new Date(time));
     },
 
     render() {
@@ -98,19 +97,17 @@ const Timeline = createReactClass({
         const availableTimeObjects = defined(catalogItem) && defined(catalogItem.getAvailableTimeObjects) && catalogItem.getAvailableTimeObjects();
         const currentIntervalIndex = defined(catalogItem) && catalogItem.intervals.indexOf(catalogItem.clock.currentTime);
         const dates = availableTimeObjects && parseDates(availableTimeObjects);
+        const currentDate = availableTimeObjects[currentIntervalIndex];
         return (
             <div className={Styles.timeline}>
                 <div className={Styles.textRow}>
-                    <If condition={availableTimeObjects}>
-                        <DateTimePicker name={layerName} value={currentIntervalIndex} dates={dates} onChange={this.changeDateTime} />
-                    </If>
-                    <If condition={!availableTimeObjects}>
-                        <div className={Styles.textCell + ' ' + Styles.time} title="Selected date and time">{this.state.currentTimeString}</div>
-                    </If>
                     <div className={Styles.textCell} title="Name of the dataset whose time range is shown">{layerName}</div>
                 </div>
                 <div className={Styles.controlsRow}>
                     <TimelineControls clock={terria.clock} analytics={terria.analytics} currentViewer={terria.currentViewer} />
+                    <If condition={availableTimeObjects}>
+                        <DateTimePicker name={layerName} currentDate={currentDate} dates={dates} onChange={this.changeDateTime} />
+                    </If>
                     <CesiumTimeline terria={terria} />
                 </div>
             </div>
