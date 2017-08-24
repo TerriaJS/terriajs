@@ -1,7 +1,7 @@
 import React from 'react';
 import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
-
+import Icon from '../Icon.jsx';
 import Styles from './splitter.scss';
 
 import ObserveModelMixin from '../ObserveModelMixin';
@@ -133,7 +133,7 @@ const Splitter = createReactClass({
                 <div className={Styles.dividerWrapper}>
                     <div className={Styles.divider} style={dividerStyle}></div>
                 </div>
-                <div className={Styles.thumb} style={thumbStyle} onMouseDown={this.startDrag} onTouchStart={this.startDrag}>&#x2980;</div>
+                <div className={Styles.thumb} style={thumbStyle} onMouseDown={this.startDrag} onTouchStart={this.startDrag}><Icon glyph={Icon.GLYPHS.splitter}/></div>
             </div>
         );
     }

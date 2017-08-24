@@ -56,6 +56,7 @@ const GLYPHS = {
     showLess: require('../../wwwroot/images/icons/show-less.svg'),
     showMore: require('../../wwwroot/images/icons/show-more.svg'),
     sphere: require('../../wwwroot/images/icons/sphere.svg'),
+    splitter: require('../../wwwroot/images/icons/splitter.svg'),
 };
 
 const Icon = createReactClass({
