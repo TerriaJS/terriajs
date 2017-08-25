@@ -3,6 +3,11 @@
 Change Log
 ==========
 
+### 5.2.12
+
+* Added the ability to use the analytics region picker with vector tile region mapping by specifiying a WMS server & layer for analytics only.
+* Updated the client side validation to use the server provided file size limit when drag/dropping a file requiring the conversion service.
+
 ### 5.2.11
 
 * Added the ability to split the screen into a left-side and right-side, and show imagery layers on only one side of the splitter.
