@@ -6,7 +6,6 @@ import PropTypes from 'prop-types';
 import createReactClass from 'create-react-class';
 
 import ClockRange from 'terriajs-cesium/Source/Core/ClockRange';
-import classnames from 'classnames';
 import Styles from './timeline-controls.scss';
 import Icon from "../../Icon.jsx";
 
