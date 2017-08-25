@@ -58,6 +58,7 @@
     "react": "^15.5.4",
     "react-addons-pure-render-mixin": "^15.6.0",
     "react-anything-sortable": "^1.5.2",
+    "react-datepicker": "0.53.0",
     "react-dom": "^15.5.4",
     "react-rangeslider": "^2.0.0",
     "resolve": "^1.1.7",
