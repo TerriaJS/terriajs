@@ -124,7 +124,7 @@
   overflow: auto;
 }
 
-.gridRow:hover{
+.activeGridRow.gridRow:hover{
   background: $overlay;
   cursor: pointer;
 }
