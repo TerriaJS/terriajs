@@ -14,7 +14,7 @@ import TimelineControls from './TimelineControls';
 import CesiumTimeline from './CesiumTimeline';
 import DateTimePicker from './DateTimePicker';
 import {formatDateTime} from './DateFormats';
-import parseDates from '../../../Core/parseDates';
+import objectifyDates from '../../../Core/objectifyDates';
 
 import Styles from './timeline.scss';
 
@@ -93,20 +93,29 @@ const Timeline = createReactClass({
     render() {
         const terria = this.props.terria;
         const catalogItem = terria.timeSeriesStack.topLayer;
-        const layerName = defined(catalogItem) && catalogItem.name;
-        const availableTimeObjects = defined(catalogItem) && defined(catalogItem.getAvailableTimeObjects) && catalogItem.getAvailableTimeObjects();
-        const currentIntervalIndex = defined(catalogItem) && catalogItem.intervals.indexOf(catalogItem.clock.currentTime);
-        const dates = availableTimeObjects && parseDates(availableTimeObjects);
-        const currentDate = availableTimeObjects[currentIntervalIndex];
+        let objectifiedDates;
+        let currentDate;
+        if (!defined(catalogItem)) {
+            return null;
+        }
+        if (defined(catalogItem.intervals) && defined(catalogItem.getAvailableDates)) {
+            const availableDates = catalogItem.getAvailableDates();
+            if (defined(availableDates)) {
+                const currentIntervalIndex = catalogItem.intervals.indexOf(catalogItem.clock.currentTime);
+                objectifiedDates = objectifyDates(availableDates);
+                currentDate = availableDates[currentIntervalIndex];
+            }
+        }
+        
         return (
             <div className={Styles.timeline}>
                 <div className={Styles.textRow}>
-                    <div className={Styles.textCell} title="Name of the dataset whose time range is shown">{layerName}</div>
+                    <div className={Styles.textCell} title="Name of the dataset whose time range is shown">{catalogItem.name}</div>
                 </div>
                 <div className={Styles.controlsRow}>
                     <TimelineControls clock={terria.clock} analytics={terria.analytics} currentViewer={terria.currentViewer} />
-                    <If condition={availableTimeObjects}>
-                        <DateTimePicker name={layerName} currentDate={currentDate} dates={dates} onChange={this.changeDateTime} />
+                    <If condition={objectifiedDates}>
+                        <DateTimePicker name={catalogItem.name} currentDate={currentDate} objectifiedDates={objectifiedDates} onChange={this.changeDateTime} />
                     </If>
                     <CesiumTimeline terria={terria} />
                 </div>
