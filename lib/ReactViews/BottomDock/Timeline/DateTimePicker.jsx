@@ -189,7 +189,7 @@ const DateTimePicker = createReactClass({
       if (this.props.dates) {
         const objectifiedDates = objectifyDates(this.props.dates);
         return (
-            <div className={Styles.timeLineDatePicker} onClick={(event) => { event.stopPropagation(); }}>
+            <div className={Styles.timelineDatePicker} onClick={(event) => { event.stopPropagation(); }}>
               <button className={Styles.togglebutton} onClick={() => { this.toggleDatePicker(); }}>
               {this.state.time ? this.renderDateSummary(this.state.time) : <Icon glyph={Icon.GLYPHS.calendar}/>}</button>
               {this.state.isOpen && <div className={Styles.datePicker}>
