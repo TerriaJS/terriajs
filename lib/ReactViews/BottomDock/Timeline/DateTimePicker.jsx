@@ -194,7 +194,7 @@ const DateTimePicker = createReactClass({
               <button className={Styles.togglebutton} onClick={() => { this.toggleDatePicker(); }}>
               {this.state.time ? this.renderDateSummary(this.state.time) : <Icon glyph={Icon.GLYPHS.calendar}/>}</button>
               {this.state.isOpen && <div className={Styles.datePicker}>
-              <button className={Styles.backbutton} type='button' onClick={() => this.goBack()}><Icon glyph={Icon.GLYPHS.left}/></button>
+              <button className={Styles.backbutton} disabled={!this.state.year} type='button' onClick={() => this.goBack()}><Icon glyph={Icon.GLYPHS.left}/></button>
                 {!defined(this.state.year) && this.renderYearGrid(objectifiedDates)}
                 {defined(this.state.year) && !defined(this.state.month) && this.renderMonthGrid(objectifiedDates)}
                 {(defined(this.state.year) && defined(this.state.month)) && this.renderDayView(objectifiedDates)}
