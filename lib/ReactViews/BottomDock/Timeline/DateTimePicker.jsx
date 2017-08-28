@@ -59,9 +59,10 @@ const DateTimePicker = createReactClass({
       return (
         <div className={Styles.grid}>
           <div className={Styles.gridHeading}>Select a year</div>
-          {years.map(y => <div className={Styles.gridRow} key={y} onClick={() => this.setState({year: y, month: null, day: null, time: null})}>
+          <div className={Styles.gridBody}>{years.map(y => <div className={Styles.gridRow} key={y} onClick={() => this.setState({year: y, month: null, day: null, time: null})}>
           <span className={Styles.gridLabel}>{y}</span>
           <span className={Styles.gridRowInner12}>{monthOfYear.map(m => <span className={objectifiedDates[y][m] ? Styles.activeGrid : ''} key={m} ></span>)}</span></div>)}
+        </div>
         </div>
       );
     },
@@ -73,9 +74,10 @@ const DateTimePicker = createReactClass({
           <div className={Styles.gridHeading}>
             <button className={Styles.backbtn} onClick={()=>{this.setState({year: null, month: null, day: null, time: null});}}>{this.state.year}</button>
           </div>
-          {monthNames.map((m, i) => <div className={Styles.gridRow} key={m} onClick={() => defined(objectifiedDates[year][i]) && this.setState({month: i, day: null, time: null})}>
+          <div className={Styles.gridBody}>{monthNames.map((m, i) => <div className={Styles.gridRow} key={m} onClick={() => defined(objectifiedDates[year][i]) && this.setState({month: i, day: null, time: null})}>
           <span className={Styles.gridLabel}>{m}</span>
           <span className={Styles.gridRowInner31}>{daysInMonth(i + 1, year).map(d => <span className={ defined(objectifiedDates[year][i]) && defined(objectifiedDates[year][i][d + 1]) ? Styles.activeGrid : ''} key={d} ></span>)}</span></div>)}
+        </div>
         </div>
       );
     },
