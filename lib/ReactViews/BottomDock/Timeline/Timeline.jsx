@@ -14,7 +14,6 @@ import TimelineControls from './TimelineControls';
 import CesiumTimeline from './CesiumTimeline';
 import DateTimePicker from './DateTimePicker';
 import {formatDateTime} from './DateFormats';
-import objectifyDates from '../../../Core/objectifyDates';
 
 import Styles from './timeline.scss';
 
@@ -93,17 +92,15 @@ const Timeline = createReactClass({
     render() {
         const terria = this.props.terria;
         const catalogItem = terria.timeSeriesStack.topLayer;
-        let objectifiedDates;
+        let availableDates;
         let currentDate;
         if (!defined(catalogItem)) {
             return null;
         }
         if (defined(catalogItem.intervals) && defined(catalogItem.getAvailableDates)) {
-            const availableDates = catalogItem.getAvailableDates();
+            availableDates = catalogItem.getAvailableDates();
             if (defined(availableDates)) {
-                const currentIntervalIndex = catalogItem.intervals.indexOf(catalogItem.clock.currentTime);
-                objectifiedDates = objectifyDates(availableDates);
-                currentDate = availableDates[currentIntervalIndex];
+                currentDate = availableDates[catalogItem.intervals.indexOf(catalogItem.clock.currentTime)];
             }
         }
         
@@ -114,8 +111,8 @@ const Timeline = createReactClass({
                 </div>
                 <div className={Styles.controlsRow}>
                     <TimelineControls clock={terria.clock} analytics={terria.analytics} currentViewer={terria.currentViewer} />
-                    <If condition={objectifiedDates}>
-                        <DateTimePicker name={catalogItem.name} currentDate={currentDate} objectifiedDates={objectifiedDates} onChange={this.changeDateTime} />
+                    <If condition={availableDates}>
+                        <DateTimePicker name={catalogItem.name} currentDate={currentDate} dates={availableDates} onChange={this.changeDateTime} />
                     </If>
                     <CesiumTimeline terria={terria} />
                 </div>
