@@ -41,8 +41,6 @@ const DateTimePicker = createReactClass({
         };
     },
 
-
-
     componentWillMount() {
       const currentDate = this.props.currentDate;
       if (currentDate) {
@@ -53,15 +51,15 @@ const DateTimePicker = createReactClass({
           time: currentDate
         });
       }
-      window.addEventListener('click', this.closePicker)
+      window.addEventListener('click', this.closePicker);
     },
 
     componentWillUnmount: function() {
     window.removeEventListener('click', this.closePicker);
    },
 
-    closePicker(){
-      this.setState({isOpen: false})
+    closePicker() {
+      this.setState({isOpen: false});
     },
 
     renderYearGrid(objectifiedDates) {
@@ -85,7 +83,7 @@ const DateTimePicker = createReactClass({
           <div className={Styles.gridHeading}>
             <button className={Styles.backbtn} onClick={()=>{this.setState({year: null, month: null, day: null, time: null});}}>{this.state.year}</button>
           </div>
-          <div className={Styles.gridBody}>{monthNames.map((m, i) => <div className={classNames(Styles.gridRow, {[Styles.activeGridRow] :objectifiedDates[year][i]})} key={m} onClick={() => defined(objectifiedDates[year][i]) && this.setState({month: i, day: null, time: null})}>
+          <div className={Styles.gridBody}>{monthNames.map((m, i) => <div className={classNames(Styles.gridRow, {[Styles.activeGridRow]: objectifiedDates[year][i]})} key={m} onClick={() => defined(objectifiedDates[year][i]) && this.setState({month: i, day: null, time: null})}>
           <span className={Styles.gridLabel}>{m}</span>
           <span className={Styles.gridRowInner31}>{daysInMonth(i + 1, year).map(d => <span className={ defined(objectifiedDates[year][i]) && defined(objectifiedDates[year][i][d + 1]) ? Styles.activeGrid : ''} key={d} ></span>)}</span></div>)}
         </div>
@@ -191,7 +189,7 @@ const DateTimePicker = createReactClass({
       if (this.props.dates) {
         const objectifiedDates = objectifyDates(this.props.dates);
         return (
-            <div className={Styles.timeLineDatePicker} onClick={(event)=>{event.stopPropagation()}}>
+            <div className={Styles.timeLineDatePicker} onClick={(event) => { event.stopPropagation(); }}>
               <button className={Styles.togglebutton} onClick={() => { this.toggleDatePicker(); }}>
               {this.state.time ? this.renderDateSummary(this.state.time) : <Icon glyph={Icon.GLYPHS.calendar}/>}</button>
               {this.state.isOpen && <div className={Styles.datePicker}>
