@@ -61,6 +61,9 @@ const ViewingControls = createReactClass({
     splitItem() {
         const item = this.props.item;
         item.splitDirection = ImagerySplitDirection.LEFT;
+        if (item.canUseOwnClock) {
+            item.useOwnClock = true;
+        }
         const serializedItem = item.serializeToJson();
         serializedItem.name = serializedItem.name + ' (copy)';
         serializedItem.splitDirection = ImagerySplitDirection.RIGHT;
