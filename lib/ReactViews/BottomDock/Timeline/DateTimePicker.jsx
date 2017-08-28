@@ -53,12 +53,6 @@ const DateTimePicker = createReactClass({
       }
     },
 
-    onChange(event) {
-        // const index = this.props.availableTimeObjects.findIndex(s=>moment(s).format() === event.format());
-        // this.setState({value: index});
-        // this.props.onChange(index);
-    },
-
     renderYearGrid(objectifiedDates) {
       const years = Object.keys(objectifiedDates);
       const monthOfYear = Array.apply(null, {length: 12}).map(Number.call, Number);
