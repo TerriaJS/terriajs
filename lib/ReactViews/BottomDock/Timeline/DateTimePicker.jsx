@@ -41,6 +41,8 @@ const DateTimePicker = createReactClass({
         };
     },
 
+
+
     componentWillMount() {
       const currentDate = this.props.currentDate;
       if (currentDate) {
@@ -51,6 +53,15 @@ const DateTimePicker = createReactClass({
           time: currentDate
         });
       }
+      window.addEventListener('click', this.closePicker)
+    },
+
+    componentWillUnmount: function() {
+    window.removeEventListener('click', this.closePicker);
+   },
+
+    closePicker(){
+      this.setState({isOpen: false})
     },
 
     renderYearGrid(objectifiedDates) {
@@ -180,7 +191,7 @@ const DateTimePicker = createReactClass({
       if (this.props.dates) {
         const objectifiedDates = objectifyDates(this.props.dates);
         return (
-            <div className={Styles.timeLineDatePicker}>
+            <div className={Styles.timeLineDatePicker} onClick={(event)=>{event.stopPropagation()}}>
               <button className={Styles.togglebutton} onClick={() => { this.toggleDatePicker(); }}>
               {this.state.time ? this.renderDateSummary(this.state.time) : <Icon glyph={Icon.GLYPHS.calendar}/>}</button>
               {this.state.isOpen && <div className={Styles.datePicker}>
