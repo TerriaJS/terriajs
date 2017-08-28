@@ -90,12 +90,18 @@
     display: inline-block;
     vertical-align: bottom;
   }
+
+  &[disabled], &:disabled{
+    opacity: 0.1
+  }
 }
 
 .backbtn{
   padding-bottom: 5px;
   padding-right: 5px;
 }
+
+
 
 .togglebutton{
     margin-top: 5px;
@@ -118,7 +124,7 @@
   overflow: auto;
 }
 
-.gridRow:hover{
+.activeGridRow.gridRow:hover{
   background: $overlay;
   cursor: pointer;
 }
