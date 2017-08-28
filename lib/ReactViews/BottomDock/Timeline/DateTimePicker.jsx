@@ -170,7 +170,7 @@ const DateTimePicker = createReactClass({
       });
     },
 
-    renderDateSummray(time) {
+    renderDateSummary(time) {
       const m = new Date(time);
         return (
           <span>
@@ -186,7 +186,7 @@ const DateTimePicker = createReactClass({
         return (
             <div className={Styles.timeLineDatePicker}>
               <button className={Styles.togglebutton} onClick={() => { this.toggleDatePicker(); }}>
-              {this.state.time ? this.renderDateSummray(this.state.time) : <Icon glyph={Icon.GLYPHS.calendar}/>}</button>
+              {this.state.time ? this.renderDateSummary(this.state.time) : <Icon glyph={Icon.GLYPHS.calendar}/>}</button>
               {this.state.isOpen && <div className={Styles.datePicker}>
               <button className={Styles.backbutton} type='button' onClick={() => this.goBack()}><Icon glyph={Icon.GLYPHS.left}/></button>
                 {!defined(this.state.year) && this.renderYearGrid(objectifiedDates)}

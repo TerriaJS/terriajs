@@ -99,9 +99,7 @@ const Timeline = createReactClass({
         }
         if (defined(catalogItem.intervals) && defined(catalogItem.getAvailableDates)) {
             availableDates = catalogItem.getAvailableDates();
-            if (defined(availableDates)) {
-                currentDate = availableDates[catalogItem.intervals.indexOf(catalogItem.clock.currentTime)];
-            }
+            currentDate = availableDates[catalogItem.intervals.indexOf(catalogItem.clock.currentTime)];
         }
         
         return (
