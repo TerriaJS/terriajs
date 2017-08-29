@@ -130,7 +130,6 @@ const DateTimePicker = createReactClass({
       return (
         <div className={Styles.hourview}>
           <select onChange={(event) => {this.setState({time: event.target.value}); this.props.onChange(event.target.value); }} value={this.state.time ? this.state.time: ''}>
-            <option value=''>Select a time</option>
             {timeOptions.map(t => <option key={t.label} value={t.value}>{t.label}</option>)}
           </select>
         </div>
