@@ -28,7 +28,6 @@ const DateTimePicker = createReactClass({
         name: PropTypes.string,
         dates: PropTypes.array,
         currentDate: PropTypes.object,
-        availableTimeObjects: PropTypes.array,
         onChange: PropTypes.func
     },
 
