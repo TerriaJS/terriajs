@@ -501,42 +501,35 @@ describe('TableStructure', function() {
     });
 
     describe('Time slider initial time as specified by initialTimeSource ', function() {
-        var terria;
-        var catalogItem;
+        var tableStructure
 
         beforeEach(function() {
-            terria = new Terria({
-                baseUrl: './'
-            });
-
-            catalogItem = new ImageryLayerCatalogItem(terria);
+            tableStructure = new TableStructure();
         });
 
-        // Future developers take note: some of these tests will stop working in August 3015.
+        // Future developers take note: some of these tests will stop working sometime after August 3015.
         it('should be start if "start" set', function() {
-            catalogItem.initialTimeSource = 'start';
-            catalogItem.intervals = new TimeIntervalCollection([
-                    new TimeInterval({
-                        start: JulianDate.fromIso8601('2013-08-07T00:00:00.00Z'),
-                        stop: JulianDate.fromIso8601('2015-08-09T00:00:00.00Z')
-                    })
-            ]);
-            var currentTime = JulianDate.toIso8601(catalogItem._clock.currentTime, 3);
+            var tableStructure = new TableStructure('test', {initialTimeSource: 'start'});
+            // Note: Specifying the time in this way means that the end date will be after 2015-08-09, but since we don't care particularly about the end date this is enough precision for this test.
+            var data = [['date'], ['2013-08-07T00:00:00.00Z'], ['2015-08-09T00:00:00.00Z']];
+            TableStructure.fromJson(data, tableStructure);
+            tableStructure.setActiveTimeColumn();
+
+            var currentTime = JulianDate.toIso8601(tableStructure.clock.currentTime, 3);
             // Do not compare time, because on some systems the second could have ticked over between getting the two times.
             currentTime = currentTime.substr(0, 10);
             expect(currentTime).toBe('2013-08-07');
         });
 
         it('should be current time if "present" set', function() {
-            catalogItem.initialTimeSource = 'present';
-            catalogItem.intervals = new TimeIntervalCollection([
-                    new TimeInterval({
-                        start: JulianDate.fromIso8601('2013-08-07T00:00:00.00Z'),
-                        stop: JulianDate.fromIso8601('3115-08-09T00:00:00.00Z')
-                    })
-            ]);
+            var tableStructure = new TableStructure('test', {initialTimeSource: 'present'});
+            // Note: Specifying the time in this way means that the end date will be after 2015-08-09, but since we don't care particularly about the end date this is enough precision for this test.
+            var data = [['date'], ['2013-08-07T00:00:00.00Z'], ['3115-08-09T00:00:00.00Z']];
+            TableStructure.fromJson(data, tableStructure);
+            tableStructure.setActiveTimeColumn();
+
             var dateNow = (new Date()).toISOString();
-            var currentTime = JulianDate.toIso8601(catalogItem._clock.currentTime, 3);
+            var currentTime = JulianDate.toIso8601(tableStructure.clock.currentTime, 3);
             // Do not compare time, because on some systems the second could have ticked over between getting the two times.
             dateNow = dateNow.substr(0, 10);
             currentTime = currentTime.substr(0, 10);
@@ -544,43 +537,37 @@ describe('TableStructure', function() {
         });
 
         it('should be last time if "end" set', function() {
-            catalogItem.initialTimeSource = 'end';
-            catalogItem.intervals = new TimeIntervalCollection([
-                    new TimeInterval({
-                        start: JulianDate.fromIso8601('2013-08-07T00:00:00.00Z'),
-                        stop: JulianDate.fromIso8601('2015-08-09T00:00:00.00Z')
-                    })
-            ]);
-            var currentTime = JulianDate.toIso8601(catalogItem._clock.currentTime, 3);
+            var tableStructure = new TableStructure('test', {initialTimeSource: 'end', finalEndJulianDate: JulianDate.fromIso8601('2015-08-09T00:00:00.00Z')});
+            var data = [['date'], ['2013-08-07T00:00:00.00Z']];
+            TableStructure.fromJson(data, tableStructure);
+            tableStructure.setActiveTimeColumn();
+
+            var currentTime = JulianDate.toIso8601(tableStructure.clock.currentTime, 3);
             // Do not compare time, because on some systems the second could have ticked over between getting the two times.
             currentTime = currentTime.substr(0, 10);
             expect(currentTime).toBe('2015-08-09');
         });
 
         it('should be set to date specified if date is specified', function() {
-            catalogItem.initialTimeSource = '2015-08-08T00:00:00.00Z';
-            catalogItem.intervals = new TimeIntervalCollection([
-                    new TimeInterval({
-                        start: JulianDate.fromIso8601('2013-08-07T00:00:00.00Z'),
-                        stop: JulianDate.fromIso8601('2015-08-11T00:00:00.00Z')
-                    })
-            ]);
-            var currentTime = JulianDate.toIso8601(catalogItem._clock.currentTime, 3);
+            var tableStructure = new TableStructure('test', {initialTimeSource: '2015-08-08T00:00:00.00Z'});
+            // Note: Specifying the time in this way means that the end date will be after 2015-08-11, but since we don't care particularly about the end date this is enough precision for this test.
+            var data = [['date'], ['2013-08-07T00:00:00.00Z'], ['2015-08-11T00:00:00.00Z']];
+            TableStructure.fromJson(data, tableStructure);
+            tableStructure.setActiveTimeColumn();
+
+            var currentTime = JulianDate.toIso8601(tableStructure.clock.currentTime, 3);
             // Do not compare time, because on some systems the second could have ticked over between getting the two times.
             currentTime = currentTime.substr(0, 10);
             expect(currentTime).toBe('2015-08-08');
         });
 
         it('should throw if a rubbish string is specified', function() {
-            catalogItem.initialTimeSource = '2015z08-08';
+            var tableStructure = new TableStructure('test', {initialTimeSource: '2015z08-08'});
+            var data = [['date'], ['2013-08-07T00:00:00.00Z'], ['2015-08-11T00:00:00.00Z']];
+            TableStructure.fromJson(data, tableStructure);
 
             expect(function() {
-                catalogItem.intervals = new TimeIntervalCollection([
-                        new TimeInterval({
-                            start: JulianDate.fromIso8601('2013-08-07T00:00:00.00Z'),
-                            stop: JulianDate.fromIso8601('2115-08-09T00:00:00.00Z')
-                        })
-                ]);
+                tableStructure.setActiveTimeColumn();
             }).toThrow();
         });
     });
