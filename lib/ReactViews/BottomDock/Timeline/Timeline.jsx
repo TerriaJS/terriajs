@@ -86,7 +86,6 @@ const Timeline = createReactClass({
     },
 
     changeDateTime(time) {
-        console.log(time);
         this.props.terria.clock.currentTime = JulianDate.fromDate(new Date(time));
     },
 

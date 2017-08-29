@@ -55,8 +55,8 @@ const DateTimePicker = createReactClass({
     },
 
     componentWillUnmount: function() {
-    window.removeEventListener('click', this.closePicker);
-   },
+      window.removeEventListener('click', this.closePicker);
+    },
 
     closePicker() {
       this.setState({isOpen: false});

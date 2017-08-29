@@ -57,6 +57,8 @@ const WorkbenchItem = createReactClass({
 
     render() {
         const workbenchItem = this.props.item;
+        // Do not show the legend if this item is a duplicate, and this duplicate has the higher id (ie. just show it on one of the copies).
+        const showLegend = workbenchItem.duplicateItemUniqueId ? (workbenchItem.duplicateItemUniqueId < workbenchItem.uniqueId) : true;
         return (
             <li
                 style={this.props.style}
@@ -107,7 +109,9 @@ const WorkbenchItem = createReactClass({
                         <StyleSelectorSection item={workbenchItem}/>
                         <ColorScaleRangeSection item={workbenchItem}/>
                         <DisplayAsPercentSection item={workbenchItem}/>
-                        <Legend item={workbenchItem}/>
+                        <If condition={showLegend}>
+                            <Legend item={workbenchItem}/>
+                        </If>
                         <If condition={(defined(workbenchItem.concepts) && workbenchItem.concepts.length > 0) && !workbenchItem.displayChoicesBeforeLegend}>
                             <ConceptViewer item={workbenchItem}/>
                         </If>
