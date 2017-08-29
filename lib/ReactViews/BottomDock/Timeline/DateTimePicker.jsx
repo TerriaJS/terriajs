@@ -101,6 +101,8 @@ const DateTimePicker = createReactClass({
       // const monthObject = this.props.objectifiedDates[this.state.year][this.state.month];
       // const daysToDisplay = Object.keys(monthObject).map(dayNumber => monthObject[dayNumber][0]);
       // const selected = defined(this.state.day) ? this.props.objectifiedDates[this.state.year][this.state.month][this.state.day][0] : null;
+
+
       return (
         <div className={Styles.dayPicker}>
           <div>
@@ -109,12 +111,18 @@ const DateTimePicker = createReactClass({
           </div>
             <DatePicker
                 inline
-                onChange={(value) => this.setState({day: value.date(), time: objectifiedDates[this.state.year][this.state.month][value.date()][0]})}
+                onChange={this.selectDay.bind(this, objectifiedDates)}
                 includeDates={daysToDisplay}
                 selected={selected}
             />
         </div>
       );
+    },
+
+    selectDay(objectifiedDates, value){
+      const selectedTime = objectifiedDates[this.state.year][this.state.month][value.date()][0];
+      this.setState({day: value.date(), time:selectedTime});
+      this.props.onChange(selectedTime)
     },
 
     utsTimeDisplay(m) {
@@ -186,7 +194,6 @@ const DateTimePicker = createReactClass({
     },
 
     render() {
-      console.log(this.state.time);
       if (this.props.dates) {
         const objectifiedDates = objectifyDates(this.props.dates);
         return (
