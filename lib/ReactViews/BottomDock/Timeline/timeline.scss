@@ -68,6 +68,11 @@
   left: 10px;
   bottom: 70px;
   background: $dark;
+
+  &.openBelow{
+    top: 40px;
+    left: 0;
+  }
 }
 
 .dayPicker {
