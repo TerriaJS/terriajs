@@ -9,3 +9,40 @@
   margin-top: 5px;
   margin-bottom: 5px;
 }
+
+.datetimeAndPicker {
+	// TODO: rewrite this properly.
+	width: 200px;
+	height: 30px;
+	background-color: #555;
+	border: #777 0.5px solid;
+}
+
+.time {
+	padding-left: 5px;
+}
+
+.timeline-button {
+  composes: btn from '../../../Sass/common/_buttons.scss';
+  composes: btn--secondary from '../../../Sass/common/_buttons.scss';
+
+  // TODO: fix.
+  float: right;
+
+  // line-height: $input-height;
+  // font-size: $font-size-mid-small;
+  // padding: 0;
+  // svg{
+  //   position: absolute;
+  //   left: $padding-small;
+  //   height: $input-height;
+  //   width: $input-height;
+  //   display: block;
+  //   fill: #ffffff;
+  // }
+}
+
+.timeline-active {
+	// TODO: fix.
+	background-color: green;
+}
