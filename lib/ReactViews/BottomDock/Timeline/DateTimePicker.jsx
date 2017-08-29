@@ -109,7 +109,7 @@ const DateTimePicker = createReactClass({
           </div>
             <DatePicker
                 inline
-                onChange={(value) => this.setState({day: value.date(), time: null})}
+                onChange={(value) => this.setState({day: value.date(), time: objectifiedDates[this.state.year][this.state.month][value.date()][0]})}
                 includeDates={daysToDisplay}
                 selected={selected}
             />
@@ -186,12 +186,12 @@ const DateTimePicker = createReactClass({
     },
 
     render() {
+      console.log(this.state.time);
       if (this.props.dates) {
         const objectifiedDates = objectifyDates(this.props.dates);
         return (
             <div className={Styles.timelineDatePicker} onClick={(event) => { event.stopPropagation(); }}>
-              <button className={Styles.togglebutton} onClick={() => { this.toggleDatePicker(); }}>
-              {this.state.time ? this.renderDateSummary(this.state.time) : <Icon glyph={Icon.GLYPHS.calendar}/>}</button>
+              <button className={Styles.togglebutton} onClick={() => { this.toggleDatePicker(); }}><Icon glyph={Icon.GLYPHS.calendar}/></button>
               {this.state.isOpen && <div className={Styles.datePicker}>
               <button className={Styles.backbutton} disabled={!this.state.year} type='button' onClick={() => this.goBack()}><Icon glyph={Icon.GLYPHS.left}/></button>
                 {!defined(this.state.year) && this.renderYearGrid(objectifiedDates)}
