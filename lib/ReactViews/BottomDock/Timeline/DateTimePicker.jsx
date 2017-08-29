@@ -11,6 +11,7 @@ import defined from 'terriajs-cesium/Source/Core/defined';
 import ObserveModelMixin from '../../ObserveModelMixin';
 import Styles from './timeline.scss';
 import Icon from '../../Icon.jsx';
+import {formatDateTime} from './DateFormats';
 
 function daysInMonth(month,year) {
   const n = new Date(year, month, 0).getDate();
@@ -125,17 +126,11 @@ const DateTimePicker = createReactClass({
       this.props.onChange(selectedTime)
     },
 
-    utsTimeDisplay(m) {
-      const hour = m.getUTCHours() < 10 ? `0${m.getUTCHours()}` : m.getUTCHours();
-      const minute = m.getUTCMinutes() < 10 ? `0${m.getUTCMinutes()}` : m.getUTCMinutes();
-      const second = m.getUTCSeconds() < 10 ? `0${m.getUTCSeconds()}` : m.getUTCSeconds();
-      return `${hour}:${minute}:${second}`;
-    },
 
     renderHourView(objectifiedDates) {
       const timeOptions = objectifiedDates[this.state.year][this.state.month][this.state.day].map((m) => ({
         value: m,
-        label: this.utsTimeDisplay(m)
+        label: formatDateTime(m)
       }));
 
       return (
@@ -183,7 +178,7 @@ const DateTimePicker = createReactClass({
       });
     },
 
-    
+
 
     render() {
       if (this.props.dates) {

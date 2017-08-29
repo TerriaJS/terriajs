@@ -86,6 +86,7 @@ const Timeline = createReactClass({
     },
 
     changeDateTime(time) {
+        console.log(time);
         this.props.terria.clock.currentTime = JulianDate.fromDate(new Date(time));
     },
 
@@ -94,23 +95,21 @@ const Timeline = createReactClass({
         const terria = this.props.terria;
         const catalogItem = terria.timeSeriesStack.topLayer;
         let availableDates;
-        let currentDate;
         if (!defined(catalogItem)) {
             return null;
         }
         if (defined(catalogItem.intervals) && defined(catalogItem.getAvailableDates)) {
             availableDates = catalogItem.getAvailableDates();
-            currentDate = availableDates[catalogItem.intervals.indexOf(catalogItem.clock.currentTime)];
         }
         return (
             <div className={Styles.timeline}>
                 <div className={Styles.textRow}>
-                    <div className={Styles.textCell} title="Name of the dataset whose time range is shown">{catalogItem.name} {currentDate && currentDate.toISOString().substr(0,19).replace(/T/g, ' ')}</div>
+                    <div className={Styles.textCell} title="Name of the dataset whose time range is shown">{catalogItem.name} {this.state.currentTimeString}</div>
                 </div>
                 <div className={Styles.controlsRow}>
                     <TimelineControls clock={terria.clock} analytics={terria.analytics} currentViewer={terria.currentViewer} />
                     <If condition={availableDates}>
-                        <DateTimePicker name={catalogItem.name} currentDate={currentDate} dates={availableDates} onChange={this.changeDateTime} />
+                        <DateTimePicker name={catalogItem.name} dates={availableDates} onChange={this.changeDateTime} />
                     </If>
                     <CesiumTimeline terria={terria} />
                 </div>
