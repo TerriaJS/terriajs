@@ -3,11 +3,8 @@ import createReactClass from 'create-react-class';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import uniq from 'lodash.uniq';
 import classNames from 'classnames';
-
 import defined from 'terriajs-cesium/Source/Core/defined';
-
 import ObserveModelMixin from '../../ObserveModelMixin';
 import Styles from './timeline.scss';
 import Icon from '../../Icon.jsx';
@@ -195,7 +192,5 @@ const DateTimePicker = createReactClass({
       }
     }
 });
-
-
 
 module.exports = DateTimePicker;

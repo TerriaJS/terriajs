@@ -1,24 +1,9 @@
 import React from 'react';
 import createReactClass from 'create-react-class';
-import DatePicker from 'react-datepicker';
-import moment from 'moment';
 import PropTypes from 'prop-types';
-import uniq from 'lodash.uniq';
-import classNames from 'classnames';
-
-import defined from 'terriajs-cesium/Source/Core/defined';
-
 import ObserveModelMixin from '../../ObserveModelMixin';
-import Icon from '../../Icon.jsx';
-import {formatDateTime} from './DateFormats';
 import DateTimePicker from './DateTimePicker';
-
-function daysInMonth(month,year) {
-  const n = new Date(year, month, 0).getDate();
-  return Array.apply(null, {length: n}).map(Number.call, Number);
-}
-
-const monthNames = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
+import uniq from 'lodash.uniq';
 
 const CatalogItemDateTimePicker = createReactClass({
     displayName: 'CatalogItemDateTimePicker',
@@ -26,12 +11,13 @@ const CatalogItemDateTimePicker = createReactClass({
 
     propTypes: {
         item: PropTypes.object,
+        onChange: PropTypes.func
     },
 
     render() {
       const availableDates = this.props.item.getAvailableDates();
       const currentDate = availableDates[this.props.item.intervals.indexOf(this.props.item.clockForDisplay.currentTime)];
-      return <DateTimePicker name={this.props.item.name} currentDate={currentDate} dates={objectifyDates(availableDates)} onChange={this.props.onChange}/>
+      return <DateTimePicker name={this.props.item.name} currentDate={currentDate} dates={objectifyDates(availableDates)} onChange={this.props.onChange}/>;
     }
 });
 
