@@ -12,7 +12,7 @@ import JulianDate from 'terriajs-cesium/Source/Core/JulianDate';
 
 import TimelineControls from './TimelineControls';
 import CesiumTimeline from './CesiumTimeline';
-import DateTimePicker from './DateTimePicker';
+import CatalogItemDateTimePicker from './CatalogItemDateTimePicker';
 import {formatDateTime} from './DateFormats';
 
 import Styles from './timeline.scss';
@@ -108,7 +108,7 @@ const Timeline = createReactClass({
                 <div className={Styles.controlsRow}>
                     <TimelineControls clock={terria.clock} analytics={terria.analytics} currentViewer={terria.currentViewer} />
                     <If condition={availableDates}>
-                        <DateTimePicker name={catalogItem.name} dates={availableDates} onChange={this.changeDateTime} />
+                        <CatalogItemDateTimePicker item={catalogItem} onChange={this.changeDateTime}/>
                     </If>
                     <CesiumTimeline terria={terria} />
                 </div>
