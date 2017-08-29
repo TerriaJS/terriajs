@@ -89,6 +89,7 @@ const Timeline = createReactClass({
         this.props.terria.clock.currentTime = JulianDate.fromDate(new Date(time));
     },
 
+
     render() {
         const terria = this.props.terria;
         const catalogItem = terria.timeSeriesStack.topLayer;
@@ -101,11 +102,10 @@ const Timeline = createReactClass({
             availableDates = catalogItem.getAvailableDates();
             currentDate = availableDates[catalogItem.intervals.indexOf(catalogItem.clock.currentTime)];
         }
-        
         return (
             <div className={Styles.timeline}>
                 <div className={Styles.textRow}>
-                    <div className={Styles.textCell} title="Name of the dataset whose time range is shown">{catalogItem.name}</div>
+                    <div className={Styles.textCell} title="Name of the dataset whose time range is shown">{catalogItem.name} {currentDate && currentDate.toISOString().substr(0,19).replace(/T/g, ' ')}</div>
                 </div>
                 <div className={Styles.controlsRow}>
                     <TimelineControls clock={terria.clock} analytics={terria.analytics} currentViewer={terria.currentViewer} />

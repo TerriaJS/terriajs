@@ -120,9 +120,15 @@
   overflow: auto;
 }
 
-.activeGridRow.gridRow:hover {
+.gridRow:hover {
   background: $overlay;
   cursor: pointer;
+}
+
+
+.inactiveGridRow:hover{
+  background: transparent;
+  cursor: default;
 }
 
 .gridLabel {

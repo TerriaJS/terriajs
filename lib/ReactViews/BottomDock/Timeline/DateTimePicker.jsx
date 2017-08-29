@@ -83,7 +83,7 @@ const DateTimePicker = createReactClass({
           <div className={Styles.gridHeading}>
             <button className={Styles.backbtn} onClick={()=>{this.setState({year: null, month: null, day: null, time: null});}}>{this.state.year}</button>
           </div>
-          <div className={Styles.gridBody}>{monthNames.map((m, i) => <div className={classNames(Styles.gridRow, {[Styles.activeGridRow]: objectifiedDates[year][i]})} key={m} onClick={() => defined(objectifiedDates[year][i]) && this.setState({month: i, day: null, time: null})}>
+          <div className={Styles.gridBody}>{monthNames.map((m, i) => <div className={classNames(Styles.gridRow, {[Styles.inactiveGridRow]: !defined(objectifiedDates[year][i])})} key={m} onClick={() => defined(objectifiedDates[year][i]) && this.setState({month: i, day: null, time: null})}>
           <span className={Styles.gridLabel}>{m}</span>
           <span className={Styles.gridRowInner31}>{daysInMonth(i + 1, year).map(d => <span className={ defined(objectifiedDates[year][i]) && defined(objectifiedDates[year][i][d + 1]) ? Styles.activeGrid : ''} key={d} ></span>)}</span></div>)}
         </div>
@@ -183,15 +183,7 @@ const DateTimePicker = createReactClass({
       });
     },
 
-    renderDateSummary(time) {
-      const m = new Date(time);
-        return (
-          <span>
-            <span>{m.getUTCFullYear()} / {m.getUTCMonth() + 1} / {m.getUTCDate()}</span>
-            <span>{this.utsTimeDisplay(m)}</span>
-          </span>
-        );
-    },
+    
 
     render() {
       if (this.props.dates) {
