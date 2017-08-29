@@ -11,13 +11,14 @@ const CatalogItemDateTimePicker = createReactClass({
 
     propTypes: {
         item: PropTypes.object,
-        onChange: PropTypes.func
+        onChange: PropTypes.func,
+        openDirection: PropTypes.string
     },
 
     render() {
       const availableDates = this.props.item.getAvailableDates();
       const currentDate = availableDates[this.props.item.intervals.indexOf(this.props.item.clockForDisplay.currentTime)];
-      return <DateTimePicker name={this.props.item.name} currentDate={currentDate} dates={objectifyDates(availableDates)} onChange={this.props.onChange}/>;
+      return <DateTimePicker name={this.props.item.name} currentDate={currentDate} dates={objectifyDates(availableDates)} onChange={this.props.onChange} openDirection={this.props.openDirection}/>;
     }
 });
 

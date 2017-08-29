@@ -25,7 +25,8 @@ const DateTimePicker = createReactClass({
         name: PropTypes.string,
         dates: PropTypes.object,
         currentDate: PropTypes.object,
-        onChange: PropTypes.func
+        onChange: PropTypes.func,
+        openDirection: PropTypes.string, 
     },
 
     getInitialState() {
@@ -177,7 +178,7 @@ const DateTimePicker = createReactClass({
         return (
             <div className={Styles.timelineDatePicker} onClick={(event) => { event.stopPropagation(); }}>
               <button className={Styles.togglebutton} onClick={() => { this.toggleDatePicker(); }}><Icon glyph={Icon.GLYPHS.calendar}/></button>
-              {this.state.isOpen && <div className={Styles.datePicker}>
+              {this.state.isOpen && <div className={classNames(Styles.datePicker,{[Styles.openBelow]: this.props.openDirection === 'down'})}>
               <button className={Styles.backbutton} disabled={!this.state.year} type='button' onClick={() => this.goBack()}><Icon glyph={Icon.GLYPHS.left}/></button>
                 {!defined(this.state.year) && this.renderYearGrid(dates)}
                 {defined(this.state.year) && !defined(this.state.month) && this.renderMonthGrid(dates)}
