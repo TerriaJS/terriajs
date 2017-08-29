@@ -17,6 +17,7 @@
 	height: 30px;
 	background-color: #555;
 	border: #777 0.5px solid;
+  padding: 0px 5px;
 }
 
 .picker {
@@ -50,5 +51,13 @@
 
 .timeline-active {
 	// TODO: fix.
-	background-color: #DDD;
+	background-color: $color-primary;
+  color: #fff;
+  &:hover, &:focus{
+    color: #fff;
+  }
+}
+
+.currentDate{
+  line-height: 2.5;
 }
