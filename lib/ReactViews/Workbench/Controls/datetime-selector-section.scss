@@ -11,11 +11,16 @@
 }
 
 .datetimeAndPicker {
+	float: left;
 	// TODO: rewrite this properly.
 	width: 200px;
 	height: 30px;
 	background-color: #555;
 	border: #777 0.5px solid;
+}
+
+.picker {
+	float: right;
 }
 
 .time {
@@ -28,6 +33,7 @@
 
   // TODO: fix.
   float: right;
+  padding: 4px;
 
   // line-height: $input-height;
   // font-size: $font-size-mid-small;
@@ -44,5 +50,5 @@
 
 .timeline-active {
 	// TODO: fix.
-	background-color: green;
+	background-color: #DDD;
 }

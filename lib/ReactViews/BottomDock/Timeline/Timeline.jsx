@@ -90,7 +90,6 @@ const Timeline = createReactClass({
         this.props.terria.clock.currentTime = JulianDate.fromDate(new Date(time));
     },
 
-
     render() {
         const terria = this.props.terria;
         const catalogItem = terria.timeSeriesStack.topLayer;

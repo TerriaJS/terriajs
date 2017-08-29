@@ -70,9 +70,9 @@ const DateTimePicker = createReactClass({
         <div className={Styles.grid}>
           <div className={Styles.gridHeading}>Select a year</div>
           <div className={Styles.gridBody}>{years.map(y => <div className={Styles.gridRow} key={y} onClick={() => this.setState({year: y, month: null, day: null, time: null})}>
-          <span className={Styles.gridLabel}>{y}</span>
-          <span className={Styles.gridRowInner12}>{monthOfYear.map(m => <span className={objectifiedDates[y][m] ? Styles.activeGrid : ''} key={m} ></span>)}</span></div>)}
-        </div>
+            <span className={Styles.gridLabel}>{y}</span>
+            <span className={Styles.gridRowInner12}>{monthOfYear.map(m => <span className={objectifiedDates[y][m] ? Styles.activeGrid : ''} key={m} ></span>)}</span></div>)}
+          </div>
         </div>
       );
     },
@@ -85,9 +85,9 @@ const DateTimePicker = createReactClass({
             <button className={Styles.backbtn} onClick={()=>{this.setState({year: null, month: null, day: null, time: null});}}>{this.state.year}</button>
           </div>
           <div className={Styles.gridBody}>{monthNames.map((m, i) => <div className={classNames(Styles.gridRow, {[Styles.inactiveGridRow]: !defined(objectifiedDates[year][i])})} key={m} onClick={() => defined(objectifiedDates[year][i]) && this.setState({month: i, day: null, time: null})}>
-          <span className={Styles.gridLabel}>{m}</span>
-          <span className={Styles.gridRowInner31}>{daysInMonth(i + 1, year).map(d => <span className={ defined(objectifiedDates[year][i]) && defined(objectifiedDates[year][i][d + 1]) ? Styles.activeGrid : ''} key={d} ></span>)}</span></div>)}
-        </div>
+            <span className={Styles.gridLabel}>{m}</span>
+            <span className={Styles.gridRowInner31}>{daysInMonth(i + 1, year).map(d => <span className={ defined(objectifiedDates[year][i]) && defined(objectifiedDates[year][i][d + 1]) ? Styles.activeGrid : ''} key={d} ></span>)}</span></div>)}
+          </div>
         </div>
       );
     },
@@ -102,7 +102,6 @@ const DateTimePicker = createReactClass({
       // const monthObject = this.props.objectifiedDates[this.state.year][this.state.month];
       // const daysToDisplay = Object.keys(monthObject).map(dayNumber => monthObject[dayNumber][0]);
       // const selected = defined(this.state.day) ? this.props.objectifiedDates[this.state.year][this.state.month][this.state.day][0] : null;
-
 
       return (
         <div className={Styles.dayPicker}>
@@ -120,12 +119,11 @@ const DateTimePicker = createReactClass({
       );
     },
 
-    selectDay(objectifiedDates, value){
+    selectDay(objectifiedDates, value) {
       const selectedTime = objectifiedDates[this.state.year][this.state.month][value.date()][0];
-      this.setState({day: value.date(), time:selectedTime});
-      this.props.onChange(selectedTime)
+      this.setState({day: value.date(), time: selectedTime});
+      this.props.onChange(selectedTime);
     },
-
 
     renderHourView(objectifiedDates) {
       const timeOptions = objectifiedDates[this.state.year][this.state.month][this.state.day].map((m) => ({
@@ -177,8 +175,6 @@ const DateTimePicker = createReactClass({
         isOpen: !this.state.isOpen
       });
     },
-
-
 
     render() {
       if (this.props.dates) {
