@@ -123,6 +123,7 @@
 .gridBody {
   max-height: calc(100% - 30px);
   overflow: auto;
+  composes: scrollbars from '../../../Sass/common/_base.scss';
 }
 
 .gridRow:hover {
@@ -178,6 +179,7 @@
 
 .hourview {
   color: $dark;
+  text-align: center;
 }
 
 .summary {
