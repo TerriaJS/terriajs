@@ -63,7 +63,18 @@
 					"featureInfoTemplate": {
 						"name":"{{GRAY_INDEX}} W/m2"
 					}
-				}
+				},
+				{
+					"name": "Climate change data",
+					"layers": "air_temperature_anomaly",
+					"url": "http://tds.gisclimatechange.ucar.edu/thredds/wms/products/products_best.ncd",
+					"type": "wms",
+					"maxRefreshIntervals": 9000,
+					"initialTimeSource": "2016-12-12T12:00:00.000Z",
+					"featureInfoTemplate": {
+						"name":"{{GRAY_INDEX}} W/m2"
+					}
+				},
 			]
 		}
 	]

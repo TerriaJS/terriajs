@@ -256,6 +256,14 @@ function objectifyDates(dates) {
   const years = uniq(dates.map(d => d.getUTCFullYear()));
   const result = {};
 
+  if(years.length > 50 && years[years.length-1] - years[0] >100){
+    // more than 50 year data and spans between at least two centuries
+    const centuries = uniq(years.map(d=>Math.floor(d/100)));
+    console.log(centuries);
+  }
+
+
+
   years.forEach(y => {
     const yearData = getOneYear(y, dates);
     const monthInYear = {};
