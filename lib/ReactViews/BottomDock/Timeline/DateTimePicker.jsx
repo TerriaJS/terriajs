@@ -262,8 +262,6 @@ function objectifyDates(dates) {
     console.log(centuries);
   }
 
-
-
   years.forEach(y => {
     const yearData = getOneYear(y, dates);
     const monthInYear = {};
