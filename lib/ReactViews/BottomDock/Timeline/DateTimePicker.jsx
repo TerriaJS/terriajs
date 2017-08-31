@@ -29,7 +29,7 @@ const DateTimePicker = createReactClass({
         dates: PropTypes.array,
         currentDate: PropTypes.object,
         onChange: PropTypes.func,
-        openDirection: PropTypes.string, 
+        openDirection: PropTypes.string,
     },
 
     getInitialState() {
@@ -43,9 +43,10 @@ const DateTimePicker = createReactClass({
     },
 
     componentWillMount() {
-      const currentDate = this.props.currentDate;
       if (currentDate) {
         this.setState({
+          datesObject: objectifyDates(this.props.dates),
+          currentDate: this.props.currentDate,
           year: currentDate.getUTCFullYear(),
           month: currentDate.getUTCMonth(),
           day: currentDate.getUTCDate(),
@@ -177,7 +178,7 @@ const DateTimePicker = createReactClass({
 
     render() {
       if (this.props.dates) {
-        const datesObject = objectifyDates(this.props.dates);
+        const datesObject = this.state.datesObject;
         return (
             <div className={Styles.timelineDatePicker} onClick={(event) => { event.stopPropagation(); }}>
               <button className={Styles.togglebutton} onClick={() => { this.toggleDatePicker(); }}><Icon glyph={Icon.GLYPHS.calendar}/></button>
