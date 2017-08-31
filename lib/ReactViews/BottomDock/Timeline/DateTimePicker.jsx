@@ -43,16 +43,40 @@ const DateTimePicker = createReactClass({
     },
 
     componentWillMount() {
-      if (currentDate) {
-        this.setState({
-          datesObject: objectifyDates(this.props.dates),
-          currentDate: this.props.currentDate,
-          year: currentDate.getUTCFullYear(),
-          month: currentDate.getUTCMonth(),
-          day: currentDate.getUTCDate(),
-          time: currentDate
-        });
+      const datesObject = objectifyDates(this.props.dates);
+      let defaultYear = null;
+      let defaultMonth = null;
+      let defaultDay = null;
+
+
+      if(Object.keys(datesObject).length === 1){
+        //only one year, check if this year has only one month
+        let soleYear = Object.keys(datesObject)[0];
+        const dataFromThisYear = datesObject[soleYear];
+        defaultYear = soleYear;
+
+        if(Object.keys(dataFromThisYear).length === 1){
+          // only one month data from this one year, need to check day then
+          const soleMonth = Object.keys(dataFromThisYear)[0];
+          const dataFromThisMonth = dataFromThisYear[soleMonth];
+          defaultMonth = soleMonth;
+
+          if(Object.keys(dataFromThisMonth).length === 1){
+            // only one day has data
+            defaultDay = soleDay;
+          }
+        }
       }
+
+      this.setState({
+        datesObject: datesObject,
+        year: defaultYear,
+        month: defaultMonth,
+        day: defaultDay,
+        time: currentDate
+      });
+      const currentDate = this.props.currentDate;
+
       window.addEventListener('click', this.closePicker);
     },
 

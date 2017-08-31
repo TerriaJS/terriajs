@@ -3,6 +3,7 @@
 .datetime-selector {
   clear: both;
   font-size: 0.9rem;
+  composes: clearfix from '../../../Sass/common/_base.scss';
 }
 
 .title {
