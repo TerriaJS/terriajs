@@ -35,6 +35,7 @@ const DateTimePicker = createReactClass({
     getInitialState() {
         return {
           isOpen: false,
+          century: null,
           year: null,
           month: null,
           day: null,
@@ -44,32 +45,39 @@ const DateTimePicker = createReactClass({
 
     componentWillMount() {
       const datesObject = objectifyDates(this.props.dates);
+      let defaultCentury = null;
       let defaultYear = null;
       let defaultMonth = null;
       let defaultDay = null;
 
-
       if(Object.keys(datesObject).length === 1){
-        //only one year, check if this year has only one month
-        let soleYear = Object.keys(datesObject)[0];
-        const dataFromThisYear = datesObject[soleYear];
-        defaultYear = soleYear;
+        //only one century
+        const soleCentury = Object.keys(datesObject)[0];
+        const dataFromThisCentury = datesObject[soleCentury];
+        defaultCentury = soleCentury;
 
-        if(Object.keys(dataFromThisYear).length === 1){
-          // only one month data from this one year, need to check day then
-          const soleMonth = Object.keys(dataFromThisYear)[0];
-          const dataFromThisMonth = dataFromThisYear[soleMonth];
-          defaultMonth = soleMonth;
+        if(Object.keys(dataFromThisCentury).length === 1){
+          //only one year, check if this year has only one month
+          let soleYear = Object.keys(dataFromThisCentury)[0];
+          const dataFromThisYear = dataFromThisCentury[soleYear];
+          defaultYear = soleYear;
 
-          if(Object.keys(dataFromThisMonth).length === 1){
-            // only one day has data
-            defaultDay = soleDay;
+          if(Object.keys(dataFromThisYear).length === 1){
+            // only one month data from this one year, need to check day then
+            const soleMonth = Object.keys(dataFromThisYear)[0];
+            const dataFromThisMonth = dataFromThisYear[soleMonth];
+            defaultMonth = soleMonth;
+
+            if(Object.keys(dataFromThisMonth).length === 1){
+              // only one day has data
+              defaultDay = soleDay;
+            }
           }
         }
       }
-
       this.setState({
         datesObject: datesObject,
+        century: defaultCentury,
         year: defaultYear,
         month: defaultMonth,
         day: defaultDay,
@@ -86,6 +94,16 @@ const DateTimePicker = createReactClass({
 
     closePicker() {
       this.setState({isOpen: false});
+    },
+
+    renderCenturyGrid(datesObject){
+      const centuries = Object.keys(datesObject);
+      return (
+        <div className={Styles.grid}>
+          <div className={Styles.gridHeading}>Select a century</div>
+          {centuries.map(c=> <button key={c} className={Styles.centuryBtn} onClick={()=>this.setState({century: c})}>{c}00</button>)}
+        </div>
+      );
     },
 
     renderYearGrid(datesObject) {
@@ -208,10 +226,11 @@ const DateTimePicker = createReactClass({
               <button className={Styles.togglebutton} onClick={() => { this.toggleDatePicker(); }}><Icon glyph={Icon.GLYPHS.calendar}/></button>
               {this.state.isOpen && <div className={classNames(Styles.datePicker,{[Styles.openBelow]: this.props.openDirection === 'down'})}>
               <button className={Styles.backbutton} disabled={!this.state.year} type='button' onClick={() => this.goBack()}><Icon glyph={Icon.GLYPHS.left}/></button>
-                {!defined(this.state.year) && this.renderYearGrid(datesObject)}
-                {defined(this.state.year) && !defined(this.state.month) && this.renderMonthGrid(datesObject)}
-                {(defined(this.state.year) && defined(this.state.month)) && this.renderDayView(datesObject)}
-                {(defined(this.state.year) && defined(this.state.month) && defined(this.state.day)) && this.renderHourView(datesObject)}
+                {!defined(this.state.century) && this.renderCenturyGrid(datesObject)}
+                {defined(this.state.century) && !defined(this.state.year) && this.renderYearGrid(datesObject[this.state.century])}
+                {defined(this.state.year) && !defined(this.state.month) && this.renderMonthGrid(datesObject[this.state.century])}
+                {(defined(this.state.year) && defined(this.state.month)) && this.renderDayView(datesObject[this.state.century])}
+                {(defined(this.state.year) && defined(this.state.month) && defined(this.state.day)) && this.renderHourView(datesObject[this.state.century])}
               </div>}
             </div>
           );
@@ -254,16 +273,8 @@ function getDaysForMonth(monthData) {
  */
 function objectifyDates(dates) {
   const years = uniq(dates.map(d => d.getUTCFullYear()));
-
-  const result = years.reduce((accumulator, currentValue)=>Object.assign({}, accumulator, objectifyYearData(currentValue, dates)), {});
-
-  if(years.length > 50 && years[years.length-1] - years[0] >100){
-    // more than 50 year data and spans between at least two centuries
-    const centuries = uniq(years.map(d=>Math.floor(d/100)));
-    const test = centuries.reduce((accumulator, currentValue)=>Object.assign({}, accumulator, objectifyCenturyData(currentValue, dates, years)), {})
-    console.log(test);
-  }
-
+  const centuries = uniq(years.map(d=>Math.floor(d/100)));
+  const result = centuries.reduce((accumulator, currentValue)=>Object.assign({}, accumulator, objectifyCenturyData(currentValue, dates, years)), {});
   return result;
 }
 
