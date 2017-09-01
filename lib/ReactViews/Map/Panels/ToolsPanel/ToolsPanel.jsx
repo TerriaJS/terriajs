@@ -1,4 +1,4 @@
-ToolsPanel'use strict';
+'use strict';
 
 import React from 'react';
 import createReactClass from 'create-react-class';
@@ -7,8 +7,9 @@ import ObserverModelMixin from '../../../ObserveModelMixin';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import classNames from 'classnames';
 import MenuPanel from '../../../StandardUserInterface/customizable/MenuPanel.jsx';
+import TestingSection from './TestingSection';
 
-import Styles from './share-panel.scss';
+import Styles from './tools-panel.scss';
 import DropdownStyles from '../panel.scss';
 import Icon from "../../../Icon.jsx";
 
@@ -18,18 +19,14 @@ const ToolsPanel = createReactClass({
 
     propTypes: {
         terria: PropTypes.object,
-        userPropWhiteList: PropTypes.array,
-        isOpen: PropTypes.bool,
         viewState: PropTypes.object.isRequired
     },
 
-    getDefaultProps() {
+    getInitialState() {
         return {
             isOpen: false,
         };
     },
-
-
 
     onOpenChanged(open) {
         this.setState({
@@ -42,7 +39,7 @@ const ToolsPanel = createReactClass({
             btn: Styles.btnShare,
             outer: Styles.ToolsPanel,
             inner: Styles.dropdownInner,
-            icon: 'share'
+            icon: 'settings'
         };
 
         return (
@@ -54,7 +51,7 @@ const ToolsPanel = createReactClass({
                        smallScreen={this.props.viewState.useSmallScreenInterface}>
                 <If condition={this.state.isOpen}>
                         <div className={DropdownStyles.section}>
-                            <div>advanced toolbox</div>
+                            <TestingSection terria={this.props.terria} viewState={this.props.viewState}/>
                         </div>
                 </If>
             </MenuPanel>
