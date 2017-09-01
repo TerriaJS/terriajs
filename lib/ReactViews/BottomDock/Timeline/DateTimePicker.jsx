@@ -254,29 +254,38 @@ function getDaysForMonth(monthData) {
  */
 function objectifyDates(dates) {
   const years = uniq(dates.map(d => d.getUTCFullYear()));
-  const result = {};
+
+  const result = years.reduce((accumulator, currentValue)=>Object.assign({}, accumulator, objectifyYearData(currentValue, dates)), {});
 
   if(years.length > 50 && years[years.length-1] - years[0] >100){
     // more than 50 year data and spans between at least two centuries
     const centuries = uniq(years.map(d=>Math.floor(d/100)));
-    console.log(centuries);
+    const test = centuries.reduce((accumulator, currentValue)=>Object.assign({}, accumulator, objectifyCenturyData(currentValue, dates, years)), {})
+    console.log(test);
   }
 
-  years.forEach(y => {
-    const yearData = getOneYear(y, dates);
-    const monthInYear = {};
-    getMonthForYear(yearData).forEach(monthIndex => {
-      const monthData = getOneMonth(yearData, monthIndex);
-      const daysInMonth = {};
-
-      getDaysForMonth(monthData).forEach(dayIndex => {
-        daysInMonth[dayIndex] = getOneDay(monthData, dayIndex);
-      });
-      monthInYear[monthIndex] = daysInMonth;
-    });
-    result[y] = monthInYear;
-  });
   return result;
+}
+
+function objectifyCenturyData(c, dates, years){
+  const yearsInThisCentury = years.filter(y=> Math.floor(y/100) === c);
+  return {[c]: yearsInThisCentury.reduce((accumulator, currentValue)=>Object.assign({}, accumulator, objectifyYearData(currentValue, dates, years)), {})}
+}
+
+function objectifyYearData(y, dates){
+  const yearData = getOneYear(y, dates);
+  const monthInYear = {};
+  getMonthForYear(yearData).forEach(monthIndex => {
+    const monthData = getOneMonth(yearData, monthIndex);
+    const daysInMonth = {};
+
+    getDaysForMonth(monthData).forEach(dayIndex => {
+      daysInMonth[dayIndex] = getOneDay(monthData, dayIndex);
+    });
+    monthInYear[monthIndex] = daysInMonth;
+  });
+
+  return {[y]: monthInYear}
 }
 
 module.exports = DateTimePicker;
