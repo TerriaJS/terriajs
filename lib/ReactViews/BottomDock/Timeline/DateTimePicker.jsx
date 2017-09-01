@@ -39,7 +39,8 @@ const DateTimePicker = createReactClass({
           year: null,
           month: null,
           day: null,
-          time: null
+          time: null,
+          granularity: null
         };
     },
 
@@ -49,24 +50,29 @@ const DateTimePicker = createReactClass({
       let defaultYear = null;
       let defaultMonth = null;
       let defaultDay = null;
+      let defaultGranularity = 'century';
+
 
       if(Object.keys(datesObject).length === 1){
         //only one century
         const soleCentury = Object.keys(datesObject)[0];
         const dataFromThisCentury = datesObject[soleCentury];
         defaultCentury = soleCentury;
+        defaultGranularity = 'year';
 
         if(Object.keys(dataFromThisCentury).length === 1){
           //only one year, check if this year has only one month
           let soleYear = Object.keys(dataFromThisCentury)[0];
           const dataFromThisYear = dataFromThisCentury[soleYear];
           defaultYear = soleYear;
+          defaultGranularity = 'month';
 
           if(Object.keys(dataFromThisYear).length === 1){
             // only one month data from this one year, need to check day then
             const soleMonth = Object.keys(dataFromThisYear)[0];
             const dataFromThisMonth = dataFromThisYear[soleMonth];
             defaultMonth = soleMonth;
+            defaultGranularity = 'day';
 
             if(Object.keys(dataFromThisMonth).length === 1){
               // only one day has data
@@ -81,7 +87,8 @@ const DateTimePicker = createReactClass({
         year: defaultYear,
         month: defaultMonth,
         day: defaultDay,
-        time: currentDate
+        time: currentDate,
+        granularity: defaultGranularity
       });
       const currentDate = this.props.currentDate;
 
@@ -220,6 +227,7 @@ const DateTimePicker = createReactClass({
 
     render() {
       if (this.props.dates) {
+        console.log(this.state.granularity);
         const datesObject = this.state.datesObject;
         return (
             <div className={Styles.timelineDatePicker} onClick={(event) => { event.stopPropagation(); }}>
