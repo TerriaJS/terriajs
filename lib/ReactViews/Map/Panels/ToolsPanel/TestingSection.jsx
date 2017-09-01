@@ -48,7 +48,6 @@ const TestingSection = createReactClass({
                   <input className={Styles.numberInput} type="number" />
                   <input className={Styles.numberInput} type="number" />
                 </label>
-                <div>
                   <label className={Styles.checkbox}>
                       <input type="checkbox"/>
                       Use WMS tile cache
@@ -57,13 +56,10 @@ const TestingSection = createReactClass({
                       <input type="checkbox"/>
                       Show more imagery layer info
                   </label>
-                </div>
-                <div>
                   <label className={Styles.checkbox}>
                       <input type="checkbox"/>
                         Use proxy cache
                   </label>
-                </div>
                 <button className={Styles.submit} type="button" value="Request Tiles">Request Tiles</button>
             </form>
         );
