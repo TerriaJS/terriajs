@@ -235,7 +235,6 @@ const DateTimePicker = createReactClass({
 
     render() {
       if (this.props.dates) {
-        console.log(this.state.granularity);
         const datesObject = this.state.datesObject;
         return (
             <div className={Styles.timelineDatePicker} onClick={(event) => { event.stopPropagation(); }}>
