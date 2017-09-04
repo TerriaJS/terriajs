@@ -52,31 +52,30 @@ const DateTimePicker = createReactClass({
       let defaultDay = null;
       let defaultGranularity = 'century';
 
-
-      if(Object.keys(datesObject).length === 1){
-        //only one century
+      if (Object.keys(datesObject).length === 1) {
+        // only one century
         const soleCentury = Object.keys(datesObject)[0];
         const dataFromThisCentury = datesObject[soleCentury];
         defaultCentury = soleCentury;
         defaultGranularity = 'year';
 
-        if(Object.keys(dataFromThisCentury).length === 1){
-          //only one year, check if this year has only one month
-          let soleYear = Object.keys(dataFromThisCentury)[0];
+        if (Object.keys(dataFromThisCentury).length === 1) {
+          // only one year, check if this year has only one month
+          const soleYear = Object.keys(dataFromThisCentury)[0];
           const dataFromThisYear = dataFromThisCentury[soleYear];
           defaultYear = soleYear;
           defaultGranularity = 'month';
 
-          if(Object.keys(dataFromThisYear).length === 1){
+          if (Object.keys(dataFromThisYear).length === 1) {
             // only one month data from this one year, need to check day then
             const soleMonth = Object.keys(dataFromThisYear)[0];
             const dataFromThisMonth = dataFromThisYear[soleMonth];
             defaultMonth = soleMonth;
             defaultGranularity = 'day';
 
-            if(Object.keys(dataFromThisMonth).length === 1){
+            if (Object.keys(dataFromThisMonth).length === 1) {
               // only one day has data
-              defaultDay = soleDay;
+              defaultDay = Object.keys(dataFromThisMonth)[0];
             }
           }
         }
@@ -103,7 +102,7 @@ const DateTimePicker = createReactClass({
       this.setState({isOpen: false});
     },
 
-    renderCenturyGrid(datesObject){
+    renderCenturyGrid(datesObject) {
       const centuries = Object.keys(datesObject);
       return (
         <div className={Styles.grid}>
@@ -293,12 +292,12 @@ function objectifyDates(dates) {
   return result;
 }
 
-function objectifyCenturyData(c, dates, years){
+function objectifyCenturyData(c, dates, years) {
   const yearsInThisCentury = years.filter(y=> Math.floor(y/100) === c);
-  return {[c]: yearsInThisCentury.reduce((accumulator, currentValue)=>Object.assign({}, accumulator, objectifyYearData(currentValue, dates, years)), {})}
+  return {[c]: yearsInThisCentury.reduce((accumulator, currentValue)=>Object.assign({}, accumulator, objectifyYearData(currentValue, dates, years)), {})};
 }
 
-function objectifyYearData(y, dates){
+function objectifyYearData(y, dates) {
   const yearData = getOneYear(y, dates);
   const monthInYear = {};
   getMonthForYear(yearData).forEach(monthIndex => {
@@ -311,7 +310,7 @@ function objectifyYearData(y, dates){
     monthInYear[monthIndex] = daysInMonth;
   });
 
-  return {[y]: monthInYear}
+  return {[y]: monthInYear};
 }
 
 module.exports = DateTimePicker;
