@@ -1,3 +1,25 @@
+@import '~terriajs-variables';
+.toolsPanel{
+
+}
+
 .checkbox{
   display: block;
+  margin: 5px 0;
+  input{
+    margin-right: 10px;
+  }
+}
+
+.select{
+  color: $dark;
+}
+
+.submit{
+  composes: btn from '../../../../Sass/common/_buttons.scss';
+  composes: btn-primary from '../../../../Sass/common/_buttons.scss';
+}
+
+.zoomRange{
+  display: flex;
 }

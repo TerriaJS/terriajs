@@ -51,7 +51,9 @@ const ToolsPanel = createReactClass({
                        smallScreen={this.props.viewState.useSmallScreenInterface}>
                 <If condition={this.state.isOpen}>
                         <div className={DropdownStyles.section}>
-                            <TestingSection terria={this.props.terria} viewState={this.props.viewState}/>
+                            <div className={Styles.toolsPanel}>
+                              <TestingSection terria={this.props.terria} viewState={this.props.viewState}/>
+                            </div>
                         </div>
                 </If>
             </MenuPanel>

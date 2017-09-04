@@ -36,7 +36,7 @@ const TestingSection = createReactClass({
               <h3>Dataset Testing</h3>
                 <label>
                   <div>Select the dataset to test</div>
-                  <select>
+                  <select className={Styles.select}>
                     <option value="all-opened">All Opened</option>
                     <option value="all-enabled">All Enabled</option>
                     <option value="all">All</option>
@@ -44,8 +44,9 @@ const TestingSection = createReactClass({
                 </label>
 
                 <label>
-                  <div>Measure speed of tiles in zoom range:</div>
+                  <div className={Styles.zoomRange}>Measure speed of tiles in zoom range:</div>
                   <input className={Styles.numberInput} type="number" />
+                  <span> to </span>
                   <input className={Styles.numberInput} type="number" />
                 </label>
                   <label className={Styles.checkbox}>
