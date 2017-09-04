@@ -23,7 +23,7 @@ const CatalogShortcut = createReactClass({
 
     handleCick() {
         if (defined(this.props.catalogMember)) {
-            this.props.viewState.viewCatalogItem(this.props.catalogMember);
+            this.props.viewState.viewCatalogMember(this.props.catalogMember);
         }
     },
 

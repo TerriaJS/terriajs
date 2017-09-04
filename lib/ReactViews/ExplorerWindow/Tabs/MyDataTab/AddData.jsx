@@ -93,7 +93,7 @@ const AddData = createReactClass({
 
     onFileAddFinished(fileToSelect) {
         this.props.viewState.myDataIsUploadView = false;
-        this.props.viewState.viewCatalogItem(fileToSelect);
+        this.props.viewState.viewCatalogMember(fileToSelect);
     },
 
     onRemoteUrlChange(event) {
