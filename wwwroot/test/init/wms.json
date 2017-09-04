@@ -43,18 +43,7 @@
 					"getFeatureInfoFormats": [{"type": "none"}]
                 },
 				{
-					"name": "Solar Satellite DNI & GHI with own clock",
-					"layers": "Solar_Satellite_DNI_2014",
-					"url": "http://gis.aremi.nationalmap.gov.au/bom/wms",
-					"type": "wms",
-					"maxRefreshIntervals": 9000,
-					"useOwnClock": true,
-					"featureInfoTemplate": {
-						"name":"{{GRAY_INDEX}} W/m2"
-					}
-				},
-				{
-					"name": "Solar Satellite DNI & GHI with initialTimeSource",
+					"name": "Solar Satellite DNI & GHI, with initialTimeSource",
 					"layers": "Solar_Satellite_DNI_2014",
 					"url": "http://gis.aremi.nationalmap.gov.au/bom/wms",
 					"type": "wms",
@@ -75,6 +64,11 @@
 						"name":"{{GRAY_INDEX}} W/m2"
 					}
 				},
+				{
+					"name": "US Monthly Temperature and Precipitation",
+					"type": "wms",
+					"url": "http://geoport.whoi.edu/thredds/wms/prism3/monthly"
+				}
 			]
 		}
 	]
