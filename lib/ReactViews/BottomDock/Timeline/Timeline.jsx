@@ -96,8 +96,8 @@ const Timeline = createReactClass({
         if (!defined(catalogItem)) {
             return null;
         }
-        if (defined(catalogItem.intervals) && defined(catalogItem.getAvailableDates)) {
-            availableDates = catalogItem.getAvailableDates();
+        if (defined(catalogItem.intervals)) {
+            availableDates = catalogItem.availableDates;
         }
         return (
             <div className={Styles.timeline}>

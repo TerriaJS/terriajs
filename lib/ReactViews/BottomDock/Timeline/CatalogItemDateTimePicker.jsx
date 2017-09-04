@@ -16,7 +16,7 @@ const CatalogItemDateTimePicker = createReactClass({
     },
 
     render() {
-      const availableDates = this.props.item.getAvailableDates();
+      const availableDates = this.props.item.availableDates;
       const currentDate = availableDates[this.props.item.intervals.indexOf(this.props.item.clockForDisplay.currentTime)];
       return <DateTimePicker name={this.props.item.name} currentDate={currentDate} dates={availableDates} onChange={this.props.onChange} openDirection={this.props.openDirection}/>;
     }
