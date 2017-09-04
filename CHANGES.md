@@ -3,6 +3,11 @@
 Change Log
 ==========
 
+### 5.#.#
+
+* Added `CatalogShortcut` for creating tool items for linking to a `CatalogItem`.
+* Renamed ViewState.viewCatalogItem() to ViewState.viewCatalogMember() to reflect that it can be used for all catalogMembers, not just catlogItems.
+
 ### 5.2.12
 
 * Added the ability to use the analytics region picker with vector tile region mapping by specifiying a WMS server & layer for analytics only.
