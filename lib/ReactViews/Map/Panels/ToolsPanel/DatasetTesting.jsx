@@ -6,12 +6,11 @@ import PropTypes from 'prop-types';
 import ObserverModelMixin from '../../../ObserveModelMixin';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import classNames from 'classnames';
-import MenuPanel from '../../../StandardUserInterface/customizable/MenuPanel.jsx';
 
 import Styles from './tools-panel.scss';
 
-const TestingSection = createReactClass({
-    displayName: 'TestingSection',
+const DatasetTesting = createReactClass({
+    displayName: 'DatasetTesting',
     mixins: [ObserverModelMixin],
 
     propTypes: {
@@ -33,7 +32,7 @@ const TestingSection = createReactClass({
     render() {
         return (
             <form>
-              <h3>Dataset Testing</h3>
+              <h3>Dataset DatasetTesting</h3>
                 <label>
                   <div>Select the dataset to test</div>
                   <select className={Styles.select}>
@@ -67,4 +66,4 @@ const TestingSection = createReactClass({
     },
 });
 
-export default TestingSection;
+export default DatasetTesting;

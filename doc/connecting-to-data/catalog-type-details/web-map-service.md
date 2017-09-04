@@ -1,6 +1,6 @@
 To get quick performance in Terria, your server [must be configured with cached map tiles](http://docs.geoserver.org/latest/en/user/geowebcache/using.html). Ensure the cache is populated for every layer.
 
-Map tiles should be served in 50ms or less, with 400ms considered the absolute maximum for acceptable user experience. To measure the speed, use the Dataset Testing tool:
+Map tiles should be served in 50ms or less, with 400ms considered the absolute maximum for acceptable user experience. To measure the speed, use the Dataset DatasetTesting tool:
 
 1. Add `#tools=1` to the end of your Terria URL (for instance, `http://nationalmap.gov.au/#tools=1`)
 2. Open the group you wish to test

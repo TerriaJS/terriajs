@@ -7,7 +7,8 @@ import ObserverModelMixin from '../../../ObserveModelMixin';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import classNames from 'classnames';
 import MenuPanel from '../../../StandardUserInterface/customizable/MenuPanel.jsx';
-import TestingSection from './TestingSection';
+import DatasetTesting from './DatasetTesting';
+import CountDatasets from './CountDatasets';
 
 import Styles from './tools-panel.scss';
 import DropdownStyles from '../panel.scss';
@@ -52,7 +53,8 @@ const ToolsPanel = createReactClass({
                 <If condition={this.state.isOpen}>
                         <div className={DropdownStyles.section}>
                             <div className={Styles.toolsPanel}>
-                              <TestingSection terria={this.props.terria} viewState={this.props.viewState}/>
+                              <DatasetTesting terria={this.props.terria} viewState={this.props.viewState}/>
+                              <CountDatasets terria={this.props.terria} viewState={this.props.viewState}/>
                             </div>
                         </div>
                 </If>
