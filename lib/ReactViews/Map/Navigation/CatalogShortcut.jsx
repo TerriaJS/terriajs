@@ -16,14 +16,14 @@ const CatalogShortcut = createReactClass({
     propTypes: {
         terria: PropTypes.object.isRequired,
         viewState: PropTypes.object.isRequired,
-        catalogItem: PropTypes.object.isRequired,
+        catalogMember: PropTypes.object.isRequired,
         glyph: PropTypes.string.isRequired,
         title: PropTypes.string
     },
 
     handleCick() {
-        if (defined(this.props.catalogItem)) {
-            this.props.viewState.viewCatalogItem(this.props.catalogItem);
+        if (defined(this.props.catalogMember)) {
+            this.props.viewState.viewCatalogItem(this.props.catalogMember);
         }
     },
 
@@ -31,8 +31,8 @@ const CatalogShortcut = createReactClass({
         var title = "";
         if (defined(this.props.title)) {
             title = this.props.title;
-        } else if (defined(this.props.catalogItem.name)) {
-            title = this.props.catalogItem.name;
+        } else if (defined(this.props.catalogMember.name)) {
+            title = this.props.catalogMember.name;
         }
 
         return <div className={Styles.toolButton}>
