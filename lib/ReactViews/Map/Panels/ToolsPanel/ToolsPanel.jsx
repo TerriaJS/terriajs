@@ -9,6 +9,7 @@ import classNames from 'classnames';
 import MenuPanel from '../../../StandardUserInterface/customizable/MenuPanel.jsx';
 import DatasetTesting from './DatasetTesting';
 import CountDatasets from './CountDatasets';
+import OpenDatasets from './OpenDatasets';
 
 import Styles from './tools-panel.scss';
 import DropdownStyles from '../panel.scss';
@@ -55,6 +56,7 @@ const ToolsPanel = createReactClass({
                             <div className={Styles.toolsPanel}>
                               <DatasetTesting terria={this.props.terria} viewState={this.props.viewState}/>
                               <CountDatasets terria={this.props.terria} viewState={this.props.viewState}/>
+                              <OpenDatasets terria={this.props.terria} viewState={this.props.viewState}/>
                             </div>
                         </div>
                 </If>

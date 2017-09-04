@@ -9,8 +9,8 @@ import classNames from 'classnames';
 
 import Styles from './tools-panel.scss';
 
-const CountDatasets = createReactClass({
-    displayName: 'CountDatasets',
+const OpenDatasets = createReactClass({
+    displayName: 'OpenDatasets',
     mixins: [ObserverModelMixin],
 
     propTypes: {
@@ -27,10 +27,10 @@ const CountDatasets = createReactClass({
     render() {
         return (
             <form>
-                <button className={Styles.submit} type="button" value="Count datasets">Count Datasets</button>
+                <button className={Styles.submit} type="button" value="Open All Items in Open Groups">Open all items in open groups</button>
             </form>
         );
     },
 });
 
-export default CountDatasets;
+export default OpenDatasets;
