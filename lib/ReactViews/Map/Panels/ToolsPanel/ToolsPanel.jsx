@@ -18,6 +18,10 @@ import DropdownStyles from '../panel.scss';
 import Icon from "../../../Icon.jsx";
 import CatalogGroup from '../../../../Models/CatalogGroup';
 import when from 'terriajs-cesium/Source/ThirdParty/when';
+
+
+let countValue = 1;
+
 const ToolsPanel = createReactClass({
     displayName: 'ToolsPanel',
     mixins: [ObserverModelMixin],
@@ -41,6 +45,101 @@ const ToolsPanel = createReactClass({
         });
     },
 
+    countDatasets() {
+        const totals = {
+            name: undefined,
+            groups: 0,
+            items: 0,
+            messages: [],
+            subTotals: []
+        };
+
+        function counter(group, stats, path) {
+            stats.name = group.name;
+
+            let promises = [];
+
+
+            for (var i = 0; i < group.items.length; ++i) {
+                var item = group.items[i];
+                if (item.countValue === countValue) {
+                    continue;
+                }
+                item.countValue = countValue;
+                if (typeof item.items !== 'undefined') {
+                    var childStats = {
+                        name: undefined,
+                        groups: 0,
+                        items: 0,
+                        messages: [],
+                        subTotals: []
+                    };
+
+                    path.push(item.name);
+
+                    var loadPromise = item.load();
+                    if (defined(loadPromise) && item.isLoading) {
+                        promises.push(loadPromise.then(recurseAndUpdateTotals.bind(undefined, item, stats, childStats, path.slice())).otherwise(reportLoadError.bind(undefined, item, stats, path.slice())));
+                    } else {
+                        promises.push(recurseAndUpdateTotals(item, stats, childStats, path));
+                    }
+
+                    path.pop();
+                } else {
+                    ++stats.items;
+                }
+            }
+
+            return when.all(promises);
+        }
+
+        function recurseAndUpdateTotals(item, stats, childStats, path) {
+            const promise = counter(item, childStats, path).then(function() {
+                stats.groups += childStats.groups + 1;
+                stats.items += childStats.items;
+                stats.messages.push.apply(stats.messages, childStats.messages);
+                stats.subTotals.push(childStats);
+            });
+            return promise;
+        }
+
+        function reportLoadError(item, stats, path) {
+            stats.messages.push(path.join(' -> ') + ' failed to load.');
+        }
+
+        this.setState({
+          resultsTitle: 'Dataset Count',
+          resultsMessage: 'Loading and counting, please wait...'
+        })
+
+
+        ++countValue;
+
+        const root = this.props.terria.catalog.group;
+        const that = this;
+
+        counter(root, totals, []).then(function() {
+            let info = '<div>The catalog contains ' + totals.items + ' items in ' + totals.groups + ' groups.</div>';
+
+            let i;
+            let subTotals = totals.subTotals;
+            for (i = 0; i < subTotals.length; ++i) {
+                info += '<div>' + subTotals[i].name + ': ' + subTotals[i].items + ' items / ' + subTotals[i].groups + ' groups</div>';
+            }
+
+            info += '<div>&nbsp;</div>';
+
+            const messages = totals.messages;
+            for (i = 0; i < messages.length; ++i) {
+                info += '<div>' + messages[i] + '</div>';
+            }
+            console.log(info)
+            that.setState({
+              resultsMessage: info
+            })
+        });
+    },
+
     render() {
         const dropdownTheme = {
             btn: Styles.btnShare,
@@ -60,13 +159,14 @@ const ToolsPanel = createReactClass({
                         <div className={DropdownStyles.section}>
                             <div className={Styles.toolsPanel}>
                               <DatasetTesting terria={this.props.terria} viewState={this.props.viewState} requestTiles={requestTiles} getAllRequests={getAllRequests}/>
-                              <CountDatasets terria={this.props.terria} viewState={this.props.viewState}/>
+                              <CountDatasets terria={this.props.terria} viewState={this.props.viewState} countDatasets={this.countDatasets}/>
                               <OpenDatasets terria={this.props.terria} viewState={this.props.viewState}/>
                             </div>
                         </div>
                 </If>
                 <div className={Styles.results}>
-                  {this.state.resultsMessage}
+                  <h3>{this.state.resultsTitle}</h3>
+                  <div dangerouslySetInnerHTML={{__html: this.state.resultsMessage}} />
                 </div>
             </MenuPanel>
         );

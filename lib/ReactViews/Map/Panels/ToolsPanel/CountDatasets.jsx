@@ -27,7 +27,7 @@ const CountDatasets = createReactClass({
     render() {
         return (
             <form>
-                <button className={Styles.submit} type="button" value="Count datasets">Count Datasets</button>
+                <button className={Styles.submit} onClick={this.props.countDatasets} type="button" value="Count datasets">Count Datasets</button>
             </form>
         );
     },
