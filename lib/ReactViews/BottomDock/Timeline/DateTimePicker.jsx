@@ -25,9 +25,8 @@ const DateTimePicker = createReactClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        name: PropTypes.string,
-        dates: PropTypes.array,
-        currentDate: PropTypes.object,
+        dates: PropTypes.array,         // Array of JS Date objects.
+        currentDate: PropTypes.object,  // JS Date object - must be an element of props.dates, or null/undefined.
         onChange: PropTypes.func,
         openDirection: PropTypes.string,
     },
@@ -107,7 +106,7 @@ const DateTimePicker = createReactClass({
       return (
         <div className={Styles.grid}>
           <div className={Styles.gridHeading}>Select a century</div>
-          {centuries.map(c=> <button key={c} className={Styles.centuryBtn} onClick={()=>this.setState({century: c})}>{c}00</button>)}
+          {centuries.map(c => <button key={c} className={Styles.centuryBtn} onClick={() => this.setState({century: c})}>{c}00</button>)}
         </div>
       );
     },
@@ -169,6 +168,9 @@ const DateTimePicker = createReactClass({
     },
 
     selectDay(datesObject, value) {
+      // Note value is a momentjs date, not a JS date - it has been returned by DatePicker in the onChange event.
+      // Hence use value.date() here, but m.getUTCDate() when building the datesObject. I think...
+      // See https://momentjs.com/docs/
       const selectedTime = datesObject[this.state.year][this.state.month][value.date()][0];
       this.setState({day: value.date(), time: selectedTime});
       this.props.onChange(selectedTime);
@@ -227,6 +229,20 @@ const DateTimePicker = createReactClass({
     },
 
     toggleDatePicker() {
+      if (!this.state.isOpen) {
+        // When the date picker is opened, we should update the old state with the new currentDate, but to the same granularity.
+        // The current date must be one of the available item.dates, or null/undefined.
+        const currentDate = this.props.currentDate;
+        if (defined(currentDate)) {
+          const newState = {
+            day: defined(this.state.day) ? currentDate.getUTCDate() : null,
+            month: defined(this.state.month) ? currentDate.getUTCMonth() : null,
+            year: defined(this.state.year) ? currentDate.getUTCFullYear() : null,
+            century: defined(this.state.century) ? Math.floor(currentDate.getUTCFullYear() / 100) : null
+          };
+          this.setState(newState);
+        }
+      }
       this.setState({
         isOpen: !this.state.isOpen
       });
@@ -255,12 +271,12 @@ const DateTimePicker = createReactClass({
 });
 
 function getOneYear(year, dates) {
-  // al data from a given year
+  // All data from a given year.
   return dates.filter(d => d.getUTCFullYear() === year);
 }
 
 function getOneMonth(yearData, monthIndex) {
-  // all data from certain month of that year
+  // All data from certain month of that year.
   return yearData.filter(y => y.getUTCMonth() === monthIndex);
 }
 
@@ -274,8 +290,8 @@ function getMonthForYear(yearData) {
 }
 
 function getDaysForMonth(monthData) {
-  // get all available days given a month in a year
-  // start from 1, so we need to change to 0 based
+  // Get all available days given a month in a year.
+  // Start from 1, so we need to change to 0 based.
   return uniq(monthData.map(m => m.getUTCDate()));
 }
 
@@ -286,15 +302,15 @@ function getDaysForMonth(monthData) {
  *   whose values are objects whose keys are days, whose values are arrays of all the datetimes on that day.
  */
 function objectifyDates(dates) {
-  const years = uniq(dates.map(d => d.getUTCFullYear()));
-  const centuries = uniq(years.map(d => Math.floor(d / 100)));
+  const years = uniq(dates.map(date => date.getUTCFullYear()));
+  const centuries = uniq(years.map(year => Math.floor(year / 100)));
   const result = centuries.reduce((accumulator, currentValue) => Object.assign({}, accumulator, objectifyCenturyData(currentValue, dates, years)), {});
   return result;
 }
 
 function objectifyCenturyData(century, dates, years) {
   // century is a number like 18, 19 or 20.
-  const yearsInThisCentury = years.filter(y => Math.floor(y / 100) === century);
+  const yearsInThisCentury = years.filter(year => Math.floor(year / 100) === century);
   return {[century]: yearsInThisCentury.reduce((accumulator, currentValue) => Object.assign({}, accumulator, objectifyYearData(currentValue, dates, years)), {})};
 }
 
