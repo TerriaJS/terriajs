@@ -13,12 +13,12 @@ import Icon from '../../Icon.jsx';
 import ObserveModelMixin from '../../ObserveModelMixin';
 import Styles from './timeline.scss';
 
-function daysInMonth(month,year) {
+function daysInMonth(month, year) {
   const n = new Date(year, month, 0).getDate();
   return Array.apply(null, {length: n}).map(Number.call, Number);
 }
 
-const monthNames = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
+const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 const DateTimePicker = createReactClass({
     displayName: 'DateTimePicker',
@@ -287,18 +287,19 @@ function getDaysForMonth(monthData) {
  */
 function objectifyDates(dates) {
   const years = uniq(dates.map(d => d.getUTCFullYear()));
-  const centuries = uniq(years.map(d=>Math.floor(d/100)));
-  const result = centuries.reduce((accumulator, currentValue)=>Object.assign({}, accumulator, objectifyCenturyData(currentValue, dates, years)), {});
+  const centuries = uniq(years.map(d => Math.floor(d / 100)));
+  const result = centuries.reduce((accumulator, currentValue) => Object.assign({}, accumulator, objectifyCenturyData(currentValue, dates, years)), {});
   return result;
 }
 
-function objectifyCenturyData(c, dates, years) {
-  const yearsInThisCentury = years.filter(y=> Math.floor(y/100) === c);
-  return {[c]: yearsInThisCentury.reduce((accumulator, currentValue)=>Object.assign({}, accumulator, objectifyYearData(currentValue, dates, years)), {})};
+function objectifyCenturyData(century, dates, years) {
+  // century is a number like 18, 19 or 20.
+  const yearsInThisCentury = years.filter(y => Math.floor(y / 100) === century);
+  return {[century]: yearsInThisCentury.reduce((accumulator, currentValue) => Object.assign({}, accumulator, objectifyYearData(currentValue, dates, years)), {})};
 }
 
-function objectifyYearData(y, dates) {
-  const yearData = getOneYear(y, dates);
+function objectifyYearData(year, dates) {
+  const yearData = getOneYear(year, dates);
   const monthInYear = {};
   getMonthForYear(yearData).forEach(monthIndex => {
     const monthData = getOneMonth(yearData, monthIndex);
@@ -310,7 +311,7 @@ function objectifyYearData(y, dates) {
     monthInYear[monthIndex] = daysInMonth;
   });
 
-  return {[y]: monthInYear};
+  return {[year]: monthInYear};
 }
 
 module.exports = DateTimePicker;
