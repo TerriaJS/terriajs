@@ -7,6 +7,7 @@ Change Log
 ### 5.x.x
 
 * Added `initialTimeSource` property to `CsvCatalogItem` so it is possible to specify the value of the animation timeline at start from init files.
+* Added to documentation for customizing data appearance.
 
 ### 5.2.12
 
