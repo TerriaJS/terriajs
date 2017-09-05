@@ -14,6 +14,7 @@ import classNames from 'classnames';
 import Styles from './viewing-controls.scss';
 
 import createCatalogMemberFromType from '../../../Models/createCatalogMemberFromType';
+import addUserCatalogMember from '../../../Models/addUserCatalogMember';
 import ImagerySplitDirection from 'terriajs-cesium/Source/Scene/ImagerySplitDirection';
 
 const ViewingControls = createReactClass({
@@ -60,19 +61,22 @@ const ViewingControls = createReactClass({
 
     splitItem() {
         const item = this.props.item;
-        item.splitDirection = ImagerySplitDirection.LEFT;
+        item.splitDirection = ImagerySplitDirection.RIGHT;
         if (item.canUseOwnClock) {
             item.useOwnClock = true;
         }
         const serializedItem = item.serializeToJson();
         serializedItem.name = serializedItem.name + ' (copy)';
-        serializedItem.splitDirection = ImagerySplitDirection.RIGHT;
+        serializedItem.splitDirection = ImagerySplitDirection.LEFT;
         delete serializedItem.id;
 
         const newItem = createCatalogMemberFromType(item.type, item.terria);
         newItem.updateFromJson(serializedItem);
         item.duplicateItemUniqueId = newItem.uniqueId;
         newItem.duplicateItemUniqueId = item.uniqueId;
+        // newItem is added to terria.nowViewing automatically by the "isEnabled" observable on CatalogItem (see isEnabledChanged).
+        // However, nothing adds it to terria.catalog automatically, which is required so the new item can be shared.
+        addUserCatalogMember(item.terria, newItem, {open: false, zoomTo: false});
 
         item.terria.showSplitter = true;
     },
