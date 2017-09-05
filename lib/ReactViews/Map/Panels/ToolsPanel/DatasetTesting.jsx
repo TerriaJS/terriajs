@@ -30,14 +30,14 @@ const DatasetTesting = createReactClass({
     },
 
     cacheTiles(){
-      var requests = [];
-      var promises = [];
+      let requests = [];
+      let promises = [];
       this.props.getAllRequests(['wms', 'esri-mapServer'], this.state .cacheFilter, requests, this.props.terria.catalog.group, promises);
 
-      var that = this;
+      let that = this;
       when.all(promises, function() {
           console.log('Requesting tiles in zoom range ' + that.state.minZoomLevel + '-' + that.state.maxZoomLevel + ' from ' + requests.length + ' data sources.');
-          that.props.requestTiles(that, requests, Number(that.state.minZoomLevel), Number(that.state.maxZoomLevel));
+          that.props.requestTiles(requests, Number(that.state.minZoomLevel), Number(that.state.maxZoomLevel));
       });
     },
 
