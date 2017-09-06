@@ -42,7 +42,6 @@ const Splitter = createReactClass({
     componentDidMount() {
         var that = this;
         window.addEventListener('resize', function() {that.resize();});
-        window.addEventListener('resize', this.resize);
     },
 
     componentWillUnmount() {
