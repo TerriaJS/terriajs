@@ -501,11 +501,6 @@ describe('TableStructure', function() {
     });
 
     describe('Time slider initial time as specified by initialTimeSource ', function() {
-        var tableStructure
-
-        beforeEach(function() {
-            tableStructure = new TableStructure();
-        });
 
         // Future developers take note: some of these tests will stop working sometime after August 3015.
         it('should be start if "start" set', function() {
