@@ -40,7 +40,7 @@ const Splitter = createReactClass({
     },
 
     componentDidMount() {
-        var that = this;
+        const that = this;
         window.addEventListener('resize', function() {that.resize();});
     },
 

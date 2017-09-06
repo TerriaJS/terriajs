@@ -68,6 +68,7 @@
   left: 10px;
   bottom: 70px;
   background: $dark;
+  z-index: 100;
 
   &.openBelow{
     top: 40px;
