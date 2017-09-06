@@ -6,8 +6,9 @@ import Styles from './splitter.scss';
 
 import ObserveModelMixin from '../ObserveModelMixin';
 
+// Feature detect support for passive: true in event subscriptions.
+// See https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#Safely_detecting_option_support
 let passiveSupported = false;
-
 try {
     const options = Object.defineProperty({}, 'passive', {
         get: function () {
@@ -38,8 +39,19 @@ const Splitter = createReactClass({
         };
     },
 
+    componentDidMount() {
+        var that = this;
+        window.addEventListener('resize', function() {that.resize();});
+        window.addEventListener('resize', this.resize);
+    },
+
     componentWillUnmount() {
         this.unsubscribe();
+    },
+
+    resize() {
+        const smallChange = (this.props.terria.splitPosition < 0.5) ? 0.0001 : -0.0001; // Make sure never <0 or >1.
+        this.props.terria.splitPosition += smallChange;
     },
 
     startDrag(event) {
@@ -98,6 +110,7 @@ const Splitter = createReactClass({
         document.removeEventListener('touchmove', this.drag, notPassive);
         document.removeEventListener('mouseup', this.stopDrag, notPassive);
         document.removeEventListener('touchend', this.stopDrag, notPassive);
+        window.removeEventListener('resize', this.resize);
     },
 
     getPosition() {
