@@ -57,8 +57,8 @@ const WorkbenchItem = createReactClass({
 
     render() {
         const workbenchItem = this.props.item;
-        // Do not show the legend if this item is a duplicate, and this duplicate has the higher id (ie. just show it on one of the copies).
-        const showLegend = workbenchItem.duplicateItemUniqueId ? (workbenchItem.duplicateItemUniqueId < workbenchItem.uniqueId) : true;
+        // Do not show the legend if this item is a copy.
+        const showLegend = !defined(workbenchItem.copiedFromUniqueId);
         return (
             <li
                 style={this.props.style}

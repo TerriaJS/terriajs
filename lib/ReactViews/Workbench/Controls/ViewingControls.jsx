@@ -72,8 +72,7 @@ const ViewingControls = createReactClass({
 
         const newItem = createCatalogMemberFromType(item.type, item.terria);
         newItem.updateFromJson(serializedItem);
-        item.duplicateItemUniqueId = newItem.uniqueId;
-        newItem.duplicateItemUniqueId = item.uniqueId;
+        newItem.copiedFromUniqueId = item.uniqueId;
         // newItem is added to terria.nowViewing automatically by the "isEnabled" observable on CatalogItem (see isEnabledChanged).
         // However, nothing adds it to terria.catalog automatically, which is required so the new item can be shared.
         addUserCatalogMember(item.terria, newItem, {open: false, zoomTo: false});
@@ -96,7 +95,7 @@ const ViewingControls = createReactClass({
     render() {
         const item = this.props.item;
         const canZoom = item.isMappable || (item.tableStructure && item.tableStructure.sourceFeature);
-        const canSplit = defined(item.splitDirection) && item.terria.currentViewer.canShowSplitter && defined(item.clock) && !defined(item.duplicateItemUniqueId);
+        const canSplit = defined(item.splitDirection) && item.terria.currentViewer.canShowSplitter && defined(item.clock) && !defined(item.copiedFromUniqueId);
         const classList = {[Styles.noZoom]: !canZoom, [Styles.noSplit]: !canSplit, [Styles.noInfo]: !item.showsInfo};
         return (
             <ul className={Styles.control}>
