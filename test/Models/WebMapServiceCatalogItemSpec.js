@@ -287,7 +287,7 @@ describe('WebMapServiceCatalogItem', function() {
     it('can be round-tripped with serializeToJson and updateFromJson', function() {
         wmsItem.name = 'Name';
         wmsItem.id = 'Id';
-        wmsItem.description = 'Description';
+        // wmsItem.description = 'Description';
         wmsItem.rectangle = Rectangle.fromDegrees(-10, 10, -20, 20);
         wmsItem.legendUrl = new LegendUrl('http://legend.com', 'image/png');
         wmsItem.dataUrlType = 'wfs';
@@ -321,7 +321,8 @@ describe('WebMapServiceCatalogItem', function() {
 
         // We'll check for these later in toEqual but this makes it a bit easier to see what's different.
         expect(reconstructed.name).toBe(wmsItem.name);
-        expect(reconstructed.description).toBe(wmsItem.description);
+        // We do not serialize the description, to keep the serialization shorter.
+        // expect(reconstructed.description).toBe(wmsItem.description);
         expect(reconstructed.rectangle).toEqual(wmsItem.rectangle);
         expect(reconstructed.legendUrl).toEqual(wmsItem.legendUrl);
         expect(reconstructed.legendUrls).toEqual(wmsItem.legendUrls);
@@ -336,7 +337,8 @@ describe('WebMapServiceCatalogItem', function() {
         // Do not compare time, because on some systems the second could have ticked over between getting the two times.
         var initialTimeSource = reconstructed.initialTimeSource.substr(0, 10);
         expect(initialTimeSource).toEqual('2013-08-01');
-        expect(reconstructed.intervals.length).toEqual(wmsItem.intervals.length);
+        // We do not serialize the intervals, to keep the serialization shorter.
+        // expect(reconstructed.intervals.length).toEqual(wmsItem.intervals.length);
     });
 
     it('can get handle plain text in textAttribution', function() {
