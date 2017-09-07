@@ -28,7 +28,7 @@ const CatalogShortcut = createReactClass({
     },
 
     render() {
-        var title = "";
+        let title = "";
         if (defined(this.props.title)) {
             title = this.props.title;
         } else if (defined(this.props.catalogMember.name)) {
