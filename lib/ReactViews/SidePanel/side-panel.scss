@@ -54,8 +54,9 @@
   svg{
     position: absolute;
     left: $padding-small;
-    height: $input-height;
-    width: $input-height;
+    height: $input-glyph-height;
+    width: $input-glyph-height;
+    margin: $input-glyph-margin;
     display: block;
     fill: #ffffff;
   }
