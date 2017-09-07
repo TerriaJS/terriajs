@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### 5.#.#
+
+* Added `CatalogShortcut` for creating tool items for linking to a `CatalogItem`.
+* Renamed ViewState.viewCatalogItem() to ViewState.viewCatalogMember() to reflect that it can be used for all catalogMembers, not just catlogItems.
 
 ### 5.x.x
 
