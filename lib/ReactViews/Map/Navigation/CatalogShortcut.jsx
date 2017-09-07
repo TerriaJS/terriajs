@@ -21,7 +21,7 @@ const CatalogShortcut = createReactClass({
         title: PropTypes.string
     },
 
-    handleCick() {
+    handleClick() {
         if (defined(this.props.catalogMember)) {
             this.props.viewState.viewCatalogMember(this.props.catalogMember);
         }
@@ -38,7 +38,7 @@ const CatalogShortcut = createReactClass({
         return <div className={Styles.toolButton}>
                   <button type='button' className={Styles.btn}
                           title={title}
-                          onClick={this.handleCick}>
+                          onClick={this.handleClick}>
                           <Icon glyph={this.props.glyph}/>
                   </button>
                </div>;
