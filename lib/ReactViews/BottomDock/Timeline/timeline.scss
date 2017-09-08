@@ -122,7 +122,7 @@
 }
 
 .gridBody {
-  max-height: calc(100% - 30px);
+  height: calc(100% - 30px);
   overflow: auto;
   composes: scrollbars from '../../../Sass/common/_base.scss';
 }

@@ -1,3 +1,4 @@
+import'es6-shim';
 import React from 'react';
 import createReactClass from 'create-react-class';
 import DatePicker from 'react-datepicker';
@@ -5,9 +6,7 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import uniq from 'lodash.uniq';
-
 import defined from 'terriajs-cesium/Source/Core/defined';
-
 import {formatDateTime} from './DateFormats';
 import Icon from '../../Icon.jsx';
 import ObserveModelMixin from '../../ObserveModelMixin';
