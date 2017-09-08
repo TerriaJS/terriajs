@@ -130,17 +130,17 @@ const DateTimePicker = createReactClass({
 
     renderMonthGrid(datesObject) {
       const year = this.state.year;
-      return (
-        <div className={Styles.grid}>
-          <div className={Styles.gridHeading}>
-            <button className={Styles.backbtn} onClick={()=>{this.setState({year: null, month: null, day: null, time: null});}}>{this.state.year}</button>
+        return (
+          <div className={Styles.grid}>
+            <div className={Styles.gridHeading}>
+              <button className={Styles.backbtn} onClick={()=>{this.setState({year: null, month: null, day: null, time: null});}}>{this.state.year}</button>
+            </div>
+            <div className={Styles.gridBody}>{monthNames.map((m, i) => <div className={classNames(Styles.gridRow, {[Styles.inactiveGridRow]: !defined(datesObject[year][i])})} key={m} onClick={() => defined(datesObject[year][i]) && this.setState({month: i, day: null, time: null})}>
+              <span className={Styles.gridLabel}>{m}</span>
+              <span className={Styles.gridRowInner31}>{daysInMonth(i + 1, year).map(d => <span className={ defined(datesObject[year][i]) && defined(datesObject[year][i][d + 1]) ? Styles.activeGrid : ''} key={d} ></span>)}</span></div>)}
+            </div>
           </div>
-          <div className={Styles.gridBody}>{monthNames.map((m, i) => <div className={classNames(Styles.gridRow, {[Styles.inactiveGridRow]: !defined(datesObject[year][i])})} key={m} onClick={() => defined(datesObject[year][i]) && this.setState({month: i, day: null, time: null})}>
-            <span className={Styles.gridLabel}>{m}</span>
-            <span className={Styles.gridRowInner31}>{daysInMonth(i + 1, year).map(d => <span className={ defined(datesObject[year][i]) && defined(datesObject[year][i][d + 1]) ? Styles.activeGrid : ''} key={d} ></span>)}</span></div>)}
-          </div>
-        </div>
-      );
+        );
     },
 
     renderDayView(datesObject) {
@@ -262,6 +262,7 @@ const DateTimePicker = createReactClass({
       if (this.props.dates) {
         const datesObject = this.state.datesObject;
         return (
+
             <div className={Styles.timelineDatePicker} onClick={(event) => { event.stopPropagation(); }}>
               <button className={Styles.togglebutton} onClick={() => { this.toggleDatePicker(); }}><Icon glyph={Icon.GLYPHS.calendar}/></button>
               {this.state.isOpen && <div className={classNames(Styles.datePicker,{[Styles.openBelow]: this.props.openDirection === 'down'})}>
@@ -282,27 +283,31 @@ const DateTimePicker = createReactClass({
 
 function getOneYear(year, dates) {
   // All data from a given year.
-  return dates.filter(d => d.getUTCFullYear() === year);
+  return dates.filter(d => d.getFullYear() === year);
 }
 
 function getOneMonth(yearData, monthIndex) {
   // All data from certain month of that year.
-  return yearData.filter(y => y.getUTCMonth() === monthIndex);
+  return yearData.filter(y => y.getMonth() === monthIndex);
 }
 
 function getOneDay(monthData, dayIndex) {
-  return monthData.filter(m => m.getUTCDate() === dayIndex);
+  return monthData.filter(m => m.getDate() === dayIndex);
 }
 
 function getMonthForYear(yearData) {
   // get available months for a given year
-  return uniq(yearData.map(d => d.getUTCMonth()));
+  return uniq(yearData.map(d => d.getMonth()));
 }
 
 function getDaysForMonth(monthData) {
   // Get all available days given a month in a year.
   // Start from 1, so we need to change to 0 based.
-  return uniq(monthData.map(m => m.getUTCDate()));
+  return uniq(monthData.map(m => m.getDate()));
+}
+
+function getOneCentury(century, dates){
+  return dates.filter(d=>Math.floor(d.getFullYear()/100) == century);
 }
 
 /**
@@ -321,15 +326,20 @@ function objectifyDates(dates) {
 function objectifyCenturyData(century, dates, years) {
   // century is a number like 18, 19 or 20.
   const yearsInThisCentury = years.filter(year => Math.floor(year / 100) === century);
-  return {[century]: yearsInThisCentury.reduce((accumulator, currentValue) => combine(accumulator, objectifyYearData(currentValue, dates, years)), {})};
+  const centuryData = getOneCentury(century, dates);
+  if(centuryData.length <=20){
+    return {
+      [century]: {
+        dates: centuryData
+      }
+    }
+  } else{
+    return {[century]: yearsInThisCentury.reduce((accumulator, currentValue) => combine(accumulator, objectifyYearData(currentValue, dates, years)), {})};
+  }
 }
 
 function objectifyYearData(year, dates) {
   const yearData = getOneYear(year, dates);
-  if(yearData.length <= 12) {
-    // no need to show month list, just display dates
-    return {dates: yearData};
-  }
   const monthInYear = {};
   getMonthForYear(yearData).forEach(monthIndex => {
     const monthData = getOneMonth(yearData, monthIndex);
