@@ -59,6 +59,8 @@ $padding-mini: 3px;
 
 $btn-default-line-height: 20px;
 $input-height: 40px;
+$input-glyph-height: 24px; // This value should be $input-height * 0.6
+$input-glyph-margin: 8px;  // This value should be $input-height * 0.2
 
 $sm-logo-height: $input-height;
 $logo-height: 70px;

@@ -54,7 +54,7 @@ const DataCatalogItem = createReactClass({
 
     setPreviewedItem() {
         raiseErrorOnRejectedPromise(this.props.item.terria, this.props.item.load());
-        this.props.viewState.viewCatalogItem(this.props.item);
+        this.props.viewState.viewCatalogMember(this.props.item);
         // mobile switch to nowvewing
         this.props.viewState.switchMobileView(this.props.viewState.mobileViewOptions.preview);
     },

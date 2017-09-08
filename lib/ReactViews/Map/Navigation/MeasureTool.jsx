@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import createReactClass from 'create-react-class';
 import ObserveModelMixin from '../../ObserveModelMixin';
-import Styles from './measure_tool.scss';
+import Styles from './tool_button.scss';
 import Icon from "../../Icon.jsx";
 
 const UserDrawing = require('../../../Models/UserDrawing');
@@ -188,7 +188,7 @@ const MeasureTool = createReactClass({
     },
 
     render() {
-        return <div className={Styles.measureTool}>
+        return <div className={Styles.toolButton}>
                   <button type='button' className={Styles.btn}
                           title='measure distance between two points'
                           onClick={this.handleClick}>
