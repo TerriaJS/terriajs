@@ -81,7 +81,6 @@
     "css-loader": "^0.28.0",
     "electron": "^1.4.10",
     "enzyme": "^2.4.1",
-    "es6-shim": "^0.35.3",
     "eslint": "^4.4.1",
     "eslint-plugin-jsx-control-statements": "^2.2.0",
     "eslint-plugin-react": "^7.2.1",

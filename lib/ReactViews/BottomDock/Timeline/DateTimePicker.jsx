@@ -1,4 +1,3 @@
-import'es6-shim';
 import React from 'react';
 import createReactClass from 'create-react-class';
 import DatePicker from 'react-datepicker';
@@ -11,6 +10,7 @@ import {formatDateTime} from './DateFormats';
 import Icon from '../../Icon.jsx';
 import ObserveModelMixin from '../../ObserveModelMixin';
 import Styles from './timeline.scss';
+import combine from'terriajs-cesium/Source/Core/combine';
 
 function daysInMonth(month, year) {
   const n = new Date(year, month, 0).getDate();
@@ -314,14 +314,14 @@ function getDaysForMonth(monthData) {
 function objectifyDates(dates) {
   const years = uniq(dates.map(date => date.getUTCFullYear()));
   const centuries = uniq(years.map(year => Math.floor(year / 100)));
-  const result = centuries.reduce((accumulator, currentValue) => Object.assign({}, accumulator, objectifyCenturyData(currentValue, dates, years)), {});
+  const result = centuries.reduce((accumulator, currentValue) => combine(accumulator, objectifyCenturyData(currentValue, dates, years)), {});
   return result;
 }
 
 function objectifyCenturyData(century, dates, years) {
   // century is a number like 18, 19 or 20.
   const yearsInThisCentury = years.filter(year => Math.floor(year / 100) === century);
-  return {[century]: yearsInThisCentury.reduce((accumulator, currentValue) => Object.assign({}, accumulator, objectifyYearData(currentValue, dates, years)), {})};
+  return {[century]: yearsInThisCentury.reduce((accumulator, currentValue) => combine(accumulator, objectifyYearData(currentValue, dates, years)), {})};
 }
 
 function objectifyYearData(year, dates) {
