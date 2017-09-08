@@ -88,7 +88,7 @@ const ViewingControls = createReactClass({
         }
         // Open up all the parents (doesn't matter that this sets it to enabled as well because it already is).
         item.enableWithParents();
-        this.props.viewState.viewCatalogItem(item);
+        this.props.viewState.viewCatalogMember(item);
         this.props.viewState.switchMobileView(this.props.viewState.mobileViewOptions.preview);
     },
 

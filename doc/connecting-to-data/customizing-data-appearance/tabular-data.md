@@ -37,7 +37,7 @@ have appeared using the default shades of red.
 
 To remove the invalid region name warning, just add this to the json (at the same level as "name" and "type"):
 ```
-			"showWarnings": false,
+            "showWarnings": false,
 ```
 This same option can be used with any tabular data type, eg. Sensor Observation Service and SDMX-JSON items as well.
 
@@ -57,6 +57,82 @@ For small data files, you can embed the data directly in the json too, eg. inste
 ```
             "data": "lon,lat,value\n134.384,-26.716,5\n121.659,-33.592,10"
 ```
+
+## Manipulating time
+
+### timeColumn
+
+You can set which column controls the time slider by setting `timeColumn`:
+
+```
+            "tableStyle": {
+                "timeColumn": "name-or-index-of-column"
+            }
+```
+
+Use `"timeColumn": null` to remove the time slider altogether for this dataset.
+
+### idColumns
+
+If you have data that shows particular features over time, you can have a time-series plot of the
+chosen column values to appear in the feature info panel when you click on a feature, so long
+as you tell TerriaJS how to track individual features over time.
+
+If your table has a time column and a column named `id`, this will happen automatically.
+
+Otherwise, you can tell TerriaJS which column or columns to use for the feature ids, by setting
+`idColumns` (this is on at the same level as the dataset's name or type, not inside `tableStyle`).
+This should be an array of column names or indexes, eg.
+
+```
+        "idColumns": ["feature name"],
+```
+
+If your features have fixed lat/lon positions, you could use:
+
+```
+        "idColumns": ["lat", "lon"],
+```
+
+## Controlling how table columns appear in the workbench
+
+### dataVariable
+
+If you want the dataset to start with a different column selected, use `dataVariable`:
+
+```
+            "tableStyle": {
+                "dataVariable": "name-or-index-of-column"
+            }
+```
+
+### columns
+
+If you want to change the appearance of individual columns, use `tableStyle`'s `columns` property, eg:
+
+```
+          "tableStyle": {
+            "columns": {
+              "original name": {
+                "name": "better name",
+                "format": {
+                  "maximumFractionDigits": 0
+                }
+              },
+              "bad": {
+                  "type": "hidden"
+              }
+            }
+          },
+```
+
+This example shows a few possibilities:
+
+- A column called "original name" is displayed with the name "better name".
+- The legend for that column is shown without any decimal places (`maximumFractionDigits` 0).
+- A column in the original data called "bad" is hidden from the workbench.
+
+The full list of options is in [TableColumnStyle](https://github.com/TerriaJS/terriajs/blob/master/lib/Models/TableColumnStyle.js).
 
 ## Coloring
 
@@ -167,6 +243,7 @@ All data values greater than or equal to this are considered equal for the purpo
 ### clampDisplayValue
 
 A Boolean - if true, display values that fall outside the display range show as min and max colors.
+
 
 ## Other settings
 

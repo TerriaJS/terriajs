@@ -22,7 +22,7 @@ describe('DataCatalogItem', () => {
         item = new CatalogItem(terria);
         item.isEnabled = false;
 
-        spyOn(viewState, 'viewCatalogItem');
+        spyOn(viewState, 'viewCatalogMember');
         spyOn(viewState, 'switchMobileView');
     });
 
@@ -173,7 +173,7 @@ describe('DataCatalogItem', () => {
 
     function assertPreviewed() {
         it('sets preview item', () => {
-            expect(viewState.viewCatalogItem).toHaveBeenCalledWith(item);
+            expect(viewState.viewCatalogMember).toHaveBeenCalledWith(item);
         });
 
         it('switches mobile view to preview', () => {
