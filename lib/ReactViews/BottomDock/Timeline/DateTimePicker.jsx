@@ -112,18 +112,23 @@ const DateTimePicker = createReactClass({
     },
 
     renderYearGrid(datesObject) {
-      const years = Object.keys(datesObject);
-      const monthOfYear = Array.apply(null, {length: 12}).map(Number.call, Number);
-      return (
-        <div className={Styles.grid}>
-          <div className={Styles.gridHeading}>Select a year</div>
-          <div className={Styles.gridBody}>{years.map(y => <div className={Styles.gridRow} key={y} onClick={() => this.setState({year: y, month: null, day: null, time: null})}>
-            <span className={Styles.gridLabel}>{y}</span>
-            <span className={Styles.gridRowInner12}>{monthOfYear.map(m => <span className={datesObject[y][m] ? Styles.activeGrid : ''} key={m} ></span>)}</span></div>)}
-          </div>
-        </div>
-      );
-    },
+      if(!defined(datesObject.dates)){
+          const years = Object.keys(datesObject);
+          const monthOfYear = Array.apply(null, {length: 12}).map(Number.call, Number);
+          return (
+            <div className={Styles.grid}>
+              <div className={Styles.gridHeading}>Select a year</div>
+              <div className={Styles.gridBody}>{years.map(y => <div className={Styles.gridRow} key={y} onClick={() => this.setState({year: y, month: null, day: null, time: null})}>
+                <span className={Styles.gridLabel}>{y}</span>
+                <span className={Styles.gridRowInner12}>{monthOfYear.map(m => <span className={datesObject[y][m] ? Styles.activeGrid : ''} key={m} ></span>)}</span></div>)}
+              </div>
+            </div>
+          );
+        } else {
+          return this.renderList(datesObject.dates);
+        }
+      },
+
 
     renderMonthGrid(datesObject) {
       const year = this.state.year;
@@ -165,6 +170,13 @@ const DateTimePicker = createReactClass({
             />
         </div>
       );
+    },
+
+    renderList(items){
+      return <div className={Styles.grid}>
+        <div className={Styles.gridHeading}>Select a time</div>
+        <div className={Styles.gridBody}>{items.map(item => <button key={formatDateTime(item)} className={Styles.dateBtn} onClick={() => {this.setState({time: item}); this.props.onChange(item)}}>{formatDateTime(item)}</button>)}</div>
+      </div>
     },
 
     selectDay(datesObject, value) {
@@ -316,6 +328,10 @@ function objectifyCenturyData(century, dates, years) {
 
 function objectifyYearData(year, dates) {
   const yearData = getOneYear(year, dates);
+  if(yearData.length <= 12){
+    // no need to show month list, just display dates
+    return {dates: yearData}
+  }
   const monthInYear = {};
   getMonthForYear(yearData).forEach(monthIndex => {
     const monthData = getOneMonth(yearData, monthIndex);

@@ -191,10 +191,14 @@
 
 }
 
-.centuryBtn{
+.centuryBtn, .dateBtn{
   composes: btn from '../../../Sass/common/_buttons.scss';
   composes: btn-primary from '../../../Sass/common/_buttons.scss';
+  width: calc(100% - 20px);
+  margin: 5px;
+}
+
+.centuryBtn{
   display: inline-block;
   width: 40%;
-  margin: 5px;
 }

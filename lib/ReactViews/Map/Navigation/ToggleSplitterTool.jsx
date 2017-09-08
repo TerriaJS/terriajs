@@ -28,7 +28,7 @@ const ToggleSplitterTool = createReactClass({
                   <button type='button' className={Styles.btn}
                           title='Toggle splitter control'
                           onClick={this.handleClick}>
-                          <Icon glyph={this.props.terria.showSplitter ? Icon.GLYPHS.checkboxOn : Icon.GLYPHS.checkboxOff}/>
+                          <Icon glyph={this.props.terria.showSplitter ? Icon.GLYPHS.splitterOn : Icon.GLYPHS.splitterOff}/>
                   </button>
                </div>;
     },
