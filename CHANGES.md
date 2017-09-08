@@ -5,6 +5,7 @@ Change Log
 
 ### 5.2.12
 
+* Added the ability to split the screen into a left-side and right-side, and show imagery layers on only one side of the splitter.
 * Added the ability to use the analytics region picker with vector tile region mapping by specifiying a WMS server & layer for analytics only.
 * Updated the client side validation to use the server provided file size limit when drag/dropping a file requiring the conversion service.
 * `zoomOnEnable` now works even for a catalog item that is initially enabled in the catalog.  Previously, it only worked for catalog items enabled via the user interface or otherwise outside of the load process.
@@ -16,7 +17,6 @@ Change Log
 
 ### 5.2.11
 
-* Added the ability to split the screen into a left-side and right-side, and show imagery layers on only one side of the splitter.
 * Pinned `urijs` to v1.18.10 to work around a breaking change in v1.18.11.
 
 ### 5.2.10
