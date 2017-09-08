@@ -26,11 +26,6 @@
   &:hover {
     border: 1px solid #FFF;
   }
-
-  svg {
-    height: 30px;
-    width: 30px;
-  }
 }
 
 .location-icon {
@@ -47,8 +42,9 @@
   top: 5px;
   bottom: 0;
   right: 1px;
-  height: 35px;
-  width: 30px;
+  height: 21px;
+  width: 18px;
+  margin: 7px 6px 7px 6px;
 
   svg {
     fill-opacity: 0;
