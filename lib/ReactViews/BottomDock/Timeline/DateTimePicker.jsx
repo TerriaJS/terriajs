@@ -175,7 +175,7 @@ const DateTimePicker = createReactClass({
     renderList(items){
       return <div className={Styles.grid}>
         <div className={Styles.gridHeading}>Select a time</div>
-        <div className={Styles.gridBody}>{items.map(item => <button key={formatDateTime(item)} className={Styles.dateBtn} onClick={() => {this.setState({time: item}); this.props.onChange(item)}}>{formatDateTime(item)}</button>)}</div>
+        <div className={Styles.gridBody}>{items.map(item => <button key={formatDateTime(item)} className={Styles.dateBtn} onClick={() => {this.setState({time: item, isOpen: false}); this.props.onChange(item)}}>{formatDateTime(item)}</button>)}</div>
       </div>
     },
 
@@ -184,7 +184,7 @@ const DateTimePicker = createReactClass({
       // Hence use value.date() here, but m.getUTCDate() when building the datesObject. I think...
       // See https://momentjs.com/docs/
       const selectedTime = datesObject[this.state.year][this.state.month][value.date()][0];
-      this.setState({day: value.date(), time: selectedTime});
+      this.setState({day: value.date(), time: selectedTime, isOpen: false});
       this.props.onChange(selectedTime);
     },
 
@@ -196,7 +196,7 @@ const DateTimePicker = createReactClass({
 
       return (
         <div className={Styles.hourview}>
-          <select onChange={(event) => {this.setState({time: event.target.value}); this.props.onChange(event.target.value); }} value={this.state.time ? this.state.time: ''}>
+          <select onChange={(event) => {this.setState({time: event.target.value, isOpen: false}); this.props.onChange(event.target.value); }} value={this.state.time ? this.state.time: ''}>
             {timeOptions.map(t => <option key={t.label} value={t.value}>{t.label}</option>)}
           </select>
         </div>
