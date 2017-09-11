@@ -51,7 +51,8 @@ const ToolsPanel = createReactClass({
             groups: 0,
             items: 0,
             messages: [],
-            subTotals: []
+            subTotals: [],
+            showResults: false
         };
 
         function counter(group, stats, path) {
@@ -108,6 +109,7 @@ const ToolsPanel = createReactClass({
         }
 
         this.setState({
+          showResults: true,
           resultsTitle: 'Dataset Count',
           resultsMessage: 'Loading and counting, please wait...'
         })
@@ -133,7 +135,6 @@ const ToolsPanel = createReactClass({
             for (i = 0; i < messages.length; ++i) {
                 info += '<div>' + messages[i] + '</div>';
             }
-            console.log(info)
             that.setState({
               resultsMessage: info
             })
@@ -142,7 +143,7 @@ const ToolsPanel = createReactClass({
     requestTiles(requests, minLevel, maxLevel) {
         const app = this.props.terria;
 
-        let  urls = [];
+        let urls = [];
         let names = [];
         let blacklistGroups = [];
         let stats = [];
@@ -166,6 +167,7 @@ const ToolsPanel = createReactClass({
         throttleRequestByServer.maximumRequestsPerServer = Number.MAX_VALUE;
 
         this.setState({
+          showResults: true,
           resultsTitle: 'Dataset Testing',
           resultsMessage: ''
         })
@@ -488,10 +490,13 @@ const ToolsPanel = createReactClass({
                             </div>
                         </div>
                 </If>
-                <div className={Styles.results}>
-                  <h3>{this.state.resultsTitle}</h3>
+                {this.state.showResults && <div className={Styles.results}>
+                  <div className={Styles.resultsHeader}>
+                    <h3>{this.state.resultsTitle}</h3>
+                    <button className={Styles.closeResultsBtn} onClick={()=>this.setState({showResults: false})}><Icon glyph={Icon.GLYPHS.close}/></button>
+                  </div>
                   <div dangerouslySetInnerHTML={{__html: this.state.resultsMessage}} />
-                </div>
+                </div>}
             </MenuPanel>
         );
     },
