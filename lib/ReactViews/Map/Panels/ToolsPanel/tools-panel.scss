@@ -18,22 +18,3 @@
 .results{
   padding: 7px;
 }
-
-.resultsHeader{
-  display: flex;
-  justify-content: space-between;
-}
-
-.closeResultsBtn{
-  composes: btn from '../../../../Sass/common/_buttons.scss';
-  composes: btn--secondary from '../../../../Sass/common/_buttons.scss';
-  svg{
-    height: 20px;
-    width: 20px;
-    fill: $text-light;
-  }
-}
-
-.numberInput{
-  color: $text-black;
-}
