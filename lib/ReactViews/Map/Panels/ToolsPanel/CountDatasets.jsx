@@ -24,7 +24,7 @@ const CountDatasets = createReactClass({
     getInitialState() {
       return {
         btnText: 'Start'
-      }
+      };
     },
 
     countDatasets() {
@@ -40,17 +40,16 @@ const CountDatasets = createReactClass({
         function counter(group, stats, path) {
             stats.name = group.name;
 
-            let promises = [];
+            const promises = [];
 
-
-            for (var i = 0; i < group.items.length; ++i) {
-                var item = group.items[i];
+            for (let i = 0; i < group.items.length; ++i) {
+                const item = group.items[i];
                 if (item.countValue === countValue) {
                     continue;
                 }
                 item.countValue = countValue;
                 if (typeof item.items !== 'undefined') {
-                    var childStats = {
+                    const childStats = {
                         name: undefined,
                         groups: 0,
                         items: 0,
@@ -60,7 +59,7 @@ const CountDatasets = createReactClass({
 
                     path.push(item.name);
 
-                    var loadPromise = item.load();
+                    const loadPromise = item.load();
                     if (defined(loadPromise) && item.isLoading) {
                         promises.push(loadPromise.then(recurseAndUpdateTotals.bind(undefined, item, stats, childStats, path.slice())).otherwise(reportLoadError.bind(undefined, item, stats, path.slice())));
                     } else {
@@ -92,8 +91,7 @@ const CountDatasets = createReactClass({
 
         this.setState({
           btnText: <Loader message='Counting, please wait...'/>
-        })
-
+        });
 
         ++countValue;
 
@@ -104,7 +102,7 @@ const CountDatasets = createReactClass({
             let info = '<div>The catalog contains ' + totals.items + ' items in ' + totals.groups + ' groups.</div>';
             that.props.updateResults(info);
             let i;
-            let subTotals = totals.subTotals;
+            const subTotals = totals.subTotals;
             for (i = 0; i < subTotals.length; ++i) {
                 info += '<div>' + subTotals[i].name + ': ' + subTotals[i].items + ' items / ' + subTotals[i].groups + ' groups</div>';
             }

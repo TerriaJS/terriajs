@@ -4,13 +4,10 @@ import React from 'react';
 import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import ObserverModelMixin from '../../../ObserveModelMixin';
-import defined from 'terriajs-cesium/Source/Core/defined';
 import MenuPanel from '../../../StandardUserInterface/customizable/MenuPanel.jsx';
 import CountDatasets from './CountDatasets';
 import Styles from './tools-panel.scss';
 import DropdownStyles from '../panel.scss';
-import Icon from "../../../Icon.jsx";
-
 
 const ToolsPanel = createReactClass({
     displayName: 'ToolsPanel',
@@ -34,10 +31,10 @@ const ToolsPanel = createReactClass({
         });
     },
 
-    updateResults(results){
+    updateResults(results) {
       this.setState({
         resultsMessage: results
-      })
+      });
     },
 
     render() {
