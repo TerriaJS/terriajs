@@ -107,7 +107,6 @@ const CountDatasets = createReactClass({
             let subTotals = totals.subTotals;
             for (i = 0; i < subTotals.length; ++i) {
                 info += '<div>' + subTotals[i].name + ': ' + subTotals[i].items + ' items / ' + subTotals[i].groups + ' groups</div>';
-                that.props.updateResults(info);
             }
 
             info += '<div>&nbsp;</div>';
@@ -115,7 +114,6 @@ const CountDatasets = createReactClass({
             const messages = totals.messages;
             for (i = 0; i < messages.length; ++i) {
                 info += '<div>' + messages[i] + '</div>';
-                that.props.updateResults(info);
             }
             that.setState({
               btnText: 'Recount'

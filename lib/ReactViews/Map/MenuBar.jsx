@@ -47,10 +47,10 @@ const MenuBar = createReactClass({
                         <SharePanel terria={this.props.terria}
                                     viewState={this.props.viewState}/>
                     </li>
-                    <li className={Styles.menuItem}>
+                    {this.props.terria.userProperties.tools == 1  && <li className={Styles.menuItem}>
                         <ToolsPanel terria={this.props.terria}
                                     viewState={this.props.viewState}/>
-                    </li>
+                    </li>}
                     <If condition={!this.props.viewState.useSmallScreenInterface}>
                         <For each="element" of={this.props.menuItems} index="i">
                             <li className={Styles.menuItem} key={i}>
