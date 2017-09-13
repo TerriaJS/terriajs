@@ -13,6 +13,7 @@ Change Log
 * Added `CatalogShortcut` for creating tool items for linking to a `CatalogItem`.
 * Renamed ViewState.viewCatalogItem() to ViewState.viewCatalogMember() to reflect that it can be used for all catalogMembers, not just catlogItems.
 * Fixed a bug that could crash a crash when switching to 2D when the `initialView` was just a `Rectangle` instead of a `CameraView`.
+* Fixed a bug that caused multiple layers with generated, gradient legends to all show the same legend on the Workbench.
 
 ### 5.2.11
 
