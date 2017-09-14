@@ -211,11 +211,18 @@ const DateTimePicker = createReactClass({
 
     goBack() {
         if (defined(this.state.time)) {
+          if(!defined(this.state.month)){
             this.setState({
-                month: null,
-                time: null,
-                day: null
+                year: null,
             });
+          }
+
+          this.setState({
+              month: null,
+              time: null,
+              day: null
+          });
+
         } else if (defined(this.state.day)) {
             this.setState({
                 month: null,
