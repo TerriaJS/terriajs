@@ -152,8 +152,9 @@ const DateTimePicker = createReactClass({
     },
 
     renderDayView(datesObject) {
+      if(datesObject[this.state.year][this.state.month].dates.length > 12){
         // Create one date object per day, using an arbitrary time. This does it via Object.keys and moment().
-        const days = Object.keys(datesObject[this.state.year][this.state.month]);
+        const days = datesObject[this.state.year][this.state.month].indice;
         const daysToDisplay = days.map(d => moment().date(d).month(this.state.month).year(this.state.year));
         const selected = defined(this.state.day) ? moment().date(this.state.day).month(this.state.month).year(this.state.year) : null;
         // Aside: You might think this implementation is clearer - use the first date available on each day.
@@ -161,7 +162,6 @@ const DateTimePicker = createReactClass({
         // const monthObject = this.props.datesObject[this.state.year][this.state.month];
         // const daysToDisplay = Object.keys(monthObject).map(dayNumber => monthObject[dayNumber][0]);
         // const selected = defined(this.state.day) ? this.props.datesObject[this.state.year][this.state.month][this.state.day][0] : null;
-
         return (
             <div className={Styles.dayPicker}>
                 <div>
@@ -176,6 +176,9 @@ const DateTimePicker = createReactClass({
                 />
             </div>
         );
+      } else {
+        return this.renderList(datesObject[this.state.year][this.state.month].dates);
+      }
     },
 
     renderList(items) {
@@ -263,7 +266,8 @@ const DateTimePicker = createReactClass({
                     day: defined(this.state.day) ? currentDate.getUTCDate() : null,
                     month: defined(this.state.month) ? currentDate.getUTCMonth() : null,
                     year: defined(this.state.year) ? currentDate.getUTCFullYear() : null,
-                    century: defined(this.state.century) ? Math.floor(currentDate.getUTCFullYear() / 100) : null
+                    century: defined(this.state.century) ? Math.floor(currentDate.getUTCFullYear() / 100) : null,
+                    time: defined(this.state.time) ? currentDate : null
                 };
                 this.setState(newState);
             }
