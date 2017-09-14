@@ -2,13 +2,12 @@
 TerriaJS
 ============
 
+[![Join the chat at https://gitter.im/TerriaJS/terriajs](https://badges.gitter.im/TerriaJS/terriajs.svg)](https://gitter.im/TerriaJS/terriajs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Docs](https://img.shields.io/badge/docs-online-blue.svg)](http://terria.io/Documentation)
 [![Greenkeeper badge](https://badges.greenkeeper.io/TerriaJS/terriajs.svg)](https://greenkeeper.io/)
-
-[![Join the chat at https://gitter.im/TerriaJS/terriajs](https://badges.gitter.im/TerriaJS/terriajs.svg)](https://gitter.im/TerriaJS/terriajs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Build Status](https://travis-ci.org/TerriaJS/terriajs.svg?branch=master)](https://travis-ci.org/TerriaJS/terriajs) [![Docs](https://img.shields.io/badge/docs-online-blue.svg)](http://terria.io/Documentation)
 
 ![Terria logo](terria-logo.png "Terria logo")
 
-TerriaJS is a library for building rich, web-based geospatial data explorers, used to drive [National Map](http://nationalmap.gov.au), [AREMI](http://nationalmap.gov.au/renewables) and [NEII Viewer](neiiviewer.nicta.com.au).  It uses [Cesium](https://cesiumjs.org) and WebGL for a full 3D globe in the browser with no plugins.  It gracefully falls back to 2D with [Leaflet](http://leafletjs.com/) on systems that can't run Cesium. It can handle catalogs of thousands of layers, with dozens of geospatial file and web service types supported. It is almost entirely JavaScript in the browser, meaning it can even be deployed as a static website, making it simple and cheap to host.
+TerriaJS is a library for building rich, web-based geospatial data explorers, used to drive [National Map](http://nationalmap.gov.au), [AREMI](http://nationalmap.gov.au/renewables) and [NEII Viewer](http://neii.gov.au/viewer/).  It uses [Cesium](https://cesiumjs.org) and WebGL for a full 3D globe in the browser with no plugins.  It gracefully falls back to 2D with [Leaflet](http://leafletjs.com/) on systems that can't run Cesium. It can handle catalogs of thousands of layers, with dozens of geospatial file and web service types supported. It is almost entirely JavaScript in the browser, meaning it can even be deployed as a static website, making it simple and cheap to host.
 
 ### Features
 
@@ -18,10 +17,10 @@ TerriaJS is a library for building rich, web-based geospatial data explorers, us
 * Supports querying WMS, WFS, Esri MapServer, CSW, CKAN and Socrata services for groups of items.
 * 3D globe (Cesium) or 2D mode (Leaflet). 3D objects supported in CZML format.
 * Time dimensions supported for CSV, CZML, WMS. Automatically animate layers, or slide the time control forward and backward.
-* Drag-and-drop files from your desktop the browser, for instant visualisation (no file upload to server required).
+* Drag-and-drop files from your desktop to the browser, for instant visualisation (no file upload to server required).
 * Wider range of file types supported through server-side OGR2OGR service (requires upload).
 * All ASGS (Australian Statistical Geographic Standard) region types (LGA, SA2, commonwealth electoral district etc) supported for [CSV region mapping](https://github.com/TerriaJS/nationalmap/wiki/csv-geo-au), plus several others: Primary Health Networks, Statistical Local Areas, ISO 3 letter country codes, etc.
-* Users can generate a reusable URL link of their current map view, to quickly share mashups of web-hosted data. Google's URL shortener is optionally used.
+* Users can generate a reusable URL link of their current map view, to quickly share mashups of web-hosted data.
 
 ![Terria screenshot](terria-screenshot.png "Terria screenshot")
 
@@ -34,7 +33,7 @@ TerriaJS is a library for building rich, web-based geospatial data explorers, us
 * [Northern Australia Investment Map](http://nationalmap.gov.au/northernaustralia)
 * [NEII Viewer](http://neii.org.au/viewer)
 * [Global Risk Map](http://globalriskmap.nicta.com.au)
-* [Ground Water Visualisation System](http://groundwater-vis.research.nicta.com.au/)
+* [Ground Water Visualisation System](https://groundwater.data61.csiro.au)
 
 #### Prototypes and sites in development
 
