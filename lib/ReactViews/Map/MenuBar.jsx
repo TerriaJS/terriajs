@@ -32,6 +32,8 @@ const MenuBar = createReactClass({
     },
 
     render() {
+        const enableTools = this.props.terria.getUserProperty('tools') === '1';
+
         return (
             <div className={Styles.menuArea}>
                 <ul className={Styles.menu}>
@@ -47,7 +49,7 @@ const MenuBar = createReactClass({
                         <SharePanel terria={this.props.terria}
                                     viewState={this.props.viewState}/>
                     </li>
-                    {+this.props.terria.userProperties.tools === 1  && <li className={Styles.menuItem}>
+                    {enableTools && <li className={Styles.menuItem}>
                         <ToolsPanel terria={this.props.terria}
                                     viewState={this.props.viewState}/>
                     </li>}
