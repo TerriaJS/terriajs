@@ -75,4 +75,3 @@ const Icon = createReactClass({
 
 module.exports = Icon;
 module.exports.GLYPHS = GLYPHS;
-

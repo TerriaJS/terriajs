@@ -5,10 +5,18 @@ Change Log
 
 
 ### 5.2.12
+### 5.3.0
 
 * Added `initialTimeSource` property to `CsvCatalogItem` so it is possible to specify the value of the animation timeline at start from init files.
 * Added the ability to use the analytics region picker with vector tile region mapping by specifiying a WMS server & layer for analytics only.
-* Updated the client side validation to use the server provided file size limit when drag/dropping a file requiring the conversion service.
+* Updated the client side validation to use the server-provided file size limit when drag/dropping a file requiring the conversion service.
+* `zoomOnEnable` now works even for a catalog item that is initially enabled in the catalog.  Previously, it only worked for catalog items enabled via the user interface or otherwise outside of the load process.
+* Added `initialTimeSource` property to `CsvCatalogItem` so it is possible to specify the value of the animation timeline at start from init files.
+* Added to documentation for customizing data appearance.
+* Added `CatalogShortcut` for creating tool items for linking to a `CatalogItem`.
+* Renamed `ViewState.viewCatalogItem()` to `viewCatalogMember` to reflect that it can be used for all `CatalogMembers`, not just `CatalogItems`.
+* Fixed a bug that could cause a crash when switching to 2D when the `initialView` was just a `Rectangle` instead of a `CameraView`.
+* Fixed a bug that caused multiple layers with generated, gradient legends to all show the same legend on the Workbench.
 
 ### 5.2.11
 

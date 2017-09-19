@@ -58,7 +58,7 @@ const DataCatalogGroup = createReactClass({
 
     clickGroup() {
         this.toggleOpen();
-        this.props.viewState.viewCatalogItem(this.props.group);
+        this.props.viewState.viewCatalogMember(this.props.group);
     },
 
     isTopLevel() {
