@@ -152,7 +152,7 @@ const DateTimePicker = createReactClass({
     },
 
     renderDayView(datesObject) {
-      if(datesObject[this.state.year][this.state.month].dates.length > 12){
+      if(datesObject[this.state.year][this.state.month].dates.length > 12) {
         // Create one date object per day, using an arbitrary time. This does it via Object.keys and moment().
         const days = datesObject[this.state.year][this.state.month].indice;
         const daysToDisplay = days.map(d => moment().date(d).month(this.state.month).year(this.state.year));
@@ -214,7 +214,7 @@ const DateTimePicker = createReactClass({
 
     goBack() {
         if (defined(this.state.time)) {
-          if(!defined(this.state.month)){
+          if(!defined(this.state.month)) {
             this.setState({
                 year: null,
             });
