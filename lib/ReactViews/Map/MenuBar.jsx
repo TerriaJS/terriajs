@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 
 import SettingPanel from './Panels/SettingPanel.jsx';
 import SharePanel from './Panels/SharePanel/SharePanel.jsx';
+import ToolsPanel from './Panels/ToolsPanel/ToolsPanel.jsx';
 
 import FullScreenButton from './Navigation/FullScreenButton.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
@@ -31,6 +32,8 @@ const MenuBar = createReactClass({
     },
 
     render() {
+        const enableTools = this.props.terria.getUserProperty('tools') === '1';
+
         return (
             <div className={Styles.menuArea}>
                 <ul className={Styles.menu}>
@@ -46,6 +49,10 @@ const MenuBar = createReactClass({
                         <SharePanel terria={this.props.terria}
                                     viewState={this.props.viewState}/>
                     </li>
+                    {enableTools && <li className={Styles.menuItem}>
+                        <ToolsPanel terria={this.props.terria}
+                                    viewState={this.props.viewState}/>
+                    </li>}
                     <If condition={!this.props.viewState.useSmallScreenInterface}>
                         <For each="element" of={this.props.menuItems} index="i">
                             <li className={Styles.menuItem} key={i}>
