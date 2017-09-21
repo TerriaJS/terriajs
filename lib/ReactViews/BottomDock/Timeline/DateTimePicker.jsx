@@ -218,7 +218,6 @@ const DateTimePicker = createReactClass({
           }
 
           this.setState({
-              month: null,
               time: null,
               day: null
           });
