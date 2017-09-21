@@ -223,30 +223,48 @@ const DateTimePicker = createReactClass({
             });
           }
 
-          this.setState({
-              time: null,
-              day: null,
-              hour: null,
-          });
+          if(!defined(this.state.hour)) {
+            this.setState({
+                day: null,
+            });
+          }
 
-        } else if (defined(this.state.day)) {
+          if(!defined(this.state.day)) {
             this.setState({
                 month: null,
+            });
+          }
+
+          this.setState({
+              hour: null,
+              time: null,
+          });
+
+        } else if (defined(this.state.hour)) {
+            this.setState({
+                hour: null,
                 time: null,
-                day: null
+            });
+        }else if (defined(this.state.day)) {
+            this.setState({
+                day: null,
+                time: null,
+                hour: null,
             });
         } else if (defined(this.state.month)) {
             this.setState({
                 month: null,
                 time: null,
-                day: null
+                day: null,
+                hour: null,
             });
         } else if (defined(this.state.year)) {
             this.setState({
                 year: null,
                 month: null,
                 time: null,
-                day: null
+                day: null,
+                hour: null,
             });
         } else if (defined(this.state.century)) {
             this.setState({
@@ -254,7 +272,8 @@ const DateTimePicker = createReactClass({
                 year: null,
                 month: null,
                 time: null,
-                day: null
+                day: null,
+                hour: null,
             });
         }
     },
