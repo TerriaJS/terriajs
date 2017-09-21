@@ -188,14 +188,13 @@ const DateTimePicker = createReactClass({
         </div>;
     },
 
-
     renderHourView(datesObject) {
         const timeOptions = datesObject[this.state.year][this.state.month][this.state.day].map((m) => ({
             value: m,
             label: formatDateTime(m)
         }));
 
-        if(timeOptions.length > 50){
+        if(timeOptions.length > 50) {
           return (
               <div className={Styles.hourview}>
                   <select onChange={(event) => { this.setState({ time: event.target.value, isOpen: false }); this.props.onChange(event.target.value); }} value={this.state.time ? this.state.time : ''}>
