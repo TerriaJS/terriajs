@@ -38,6 +38,7 @@ const DateTimePicker = createReactClass({
             month: null,
             day: null,
             time: null,
+            hour: null,
             granularity: null
         };
     },
@@ -48,6 +49,7 @@ const DateTimePicker = createReactClass({
         let defaultYear = null;
         let defaultMonth = null;
         let defaultDay = null;
+        let defaultHour = null;
         let defaultGranularity = 'century';
 
         if (datesObject.indice.length === 1) {
@@ -83,6 +85,7 @@ const DateTimePicker = createReactClass({
             year: defaultYear,
             month: defaultMonth,
             day: defaultDay,
+            hour: defaultHour,
             time: currentDate,
             granularity: defaultGranularity
         });
@@ -152,7 +155,7 @@ const DateTimePicker = createReactClass({
     },
 
     renderDayView(datesObject) {
-      if (datesObject[this.state.year][this.state.month].dates && datesObject[this.state.year][this.state.month].dates.length > 12) {
+      if (datesObject[this.state.year][this.state.month].dates && datesObject[this.state.year][this.state.month].dates.length > 31) {
         // Create one date object per day, using an arbitrary time. This does it via Object.keys and moment().
         const days = datesObject[this.state.year][this.state.month].indice;
         const daysToDisplay = days.map(d => moment().date(d).month(this.state.month).year(this.state.year));
@@ -193,23 +196,27 @@ const DateTimePicker = createReactClass({
     },
 
     renderHourView(datesObject) {
-        const timeOptions = datesObject[this.state.year][this.state.month][this.state.day].map((m) => ({
+        const timeOptions = datesObject[this.state.year][this.state.month][this.state.day].dates.map((m) => ({
             value: m,
             label: formatDateTime(m)
         }));
 
-        if (timeOptions.length > 50) {
+        if (timeOptions.length > 24) {
           return (
-              <div className={Styles.hourview}>
-                  <select onChange={(event) => { this.setState({ time: event.target.value, isOpen: false }); this.props.onChange(event.target.value); }} value={this.state.time ? this.state.time : ''}>
-                      {timeOptions.map(t => <option key={t.label} value={t.value}>{t.label}</option>)}
-                  </select>
+              <div className={Styles.grid}>
+                  <div className={Styles.gridHeading}>{`Select a hour on ${this.state.year} ${monthNames[this.state.month + 1]} ${this.state.day}`} </div>
+                  <div className={Styles.gridBody}>{datesObject[this.state.year][this.state.month][this.state.day].indice.map(item => <button key={item} className={Styles.dateBtn} onClick={() => { this.setState({hour: item})}}>{item} : 00</button>)}</div>
               </div>
           );
         } else {
-          return this.renderList(datesObject[this.state.year][this.state.month][this.state.day]);
+          return this.renderList(datesObject[this.state.year][this.state.month][this.state.day].dates);
         }
 
+    },
+
+    renderMinutesView(datesObject){
+        const options = datesObject[this.state.year][this.state.month][this.state.day][this.state.hour];
+        return this.renderList(options);
     },
 
     goBack() {
@@ -222,7 +229,8 @@ const DateTimePicker = createReactClass({
 
           this.setState({
               time: null,
-              day: null
+              day: null,
+              hour: null,
           });
 
         } else if (defined(this.state.day)) {
@@ -289,7 +297,8 @@ const DateTimePicker = createReactClass({
                         {defined(this.state.century) && !defined(this.state.year) && this.renderYearGrid(datesObject[this.state.century])}
                         {defined(this.state.year) && !defined(this.state.month) && this.renderMonthGrid(datesObject[this.state.century])}
                         {(defined(this.state.year) && defined(this.state.month) && !defined(this.state.day)) && this.renderDayView(datesObject[this.state.century])}
-                        {(defined(this.state.year) && defined(this.state.month) && defined(this.state.day)) && this.renderHourView(datesObject[this.state.century])}
+                        {(defined(this.state.year) && defined(this.state.month) && defined(this.state.day) && !defined(this.state.hour)) && this.renderHourView(datesObject[this.state.century])}
+                        {(defined(this.state.year) && defined(this.state.month) && defined(this.state.day) && defined(this.state.hour)) && this.renderMinutesView(datesObject[this.state.century])}
                     </div>}
                 </div>
             );
@@ -324,6 +333,15 @@ function getDaysForMonth(monthData) {
     return uniq(monthData.map(m => m.getDate()));
 }
 
+function getOneHour(dayData, hourIndex){
+  // All data from certain month of that year.
+  return dayData.filter(y => y.getHours() === hourIndex);
+}
+
+function getHoursForDay(dayData){
+  return uniq(dayData.map(m => m.getHours()));
+}
+
 function getOneCentury(century, dates) {
     return dates.filter(d => Math.floor(d.getFullYear() / 100) === century);
 }
@@ -353,6 +371,8 @@ function objectifyCenturyData(century, dates, years) {
     return centuryDates;
 }
 
+
+
 function objectifyYearData(year, dates) {
     const yearData = getOneYear(year, dates);
     const monthInYear = {};
@@ -361,9 +381,17 @@ function objectifyYearData(year, dates) {
         const daysInMonth = {};
 
         getDaysForMonth(monthData).forEach(dayIndex => {
-            daysInMonth[dayIndex] = getOneDay(monthData, dayIndex);
             daysInMonth.dates = monthData;
             daysInMonth.indice = getDaysForMonth(monthData);
+            const hoursInDay ={};
+            const dayData = getOneDay(monthData, dayIndex);
+            getHoursForDay(dayData).forEach(hourIndex =>{
+              hoursInDay[hourIndex] = getOneHour(dayData, hourIndex);
+              hoursInDay.dates = dayData;
+              hoursInDay.indice = getHoursForDay(dayData);
+            });
+
+            daysInMonth[dayIndex] = hoursInDay;
         });
         monthInYear[monthIndex] = daysInMonth;
         monthInYear.indice = getMonthForYear(yearData);
