@@ -191,7 +191,6 @@ const DateTimePicker = createReactClass({
         </div>;
     },
 
-
     renderHourView(datesObject) {
         const timeOptions = datesObject[this.state.year][this.state.month][this.state.day].dates.map((m) => ({
             value: m,
