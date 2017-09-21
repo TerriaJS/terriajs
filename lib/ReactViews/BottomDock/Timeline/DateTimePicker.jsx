@@ -104,7 +104,7 @@ const DateTimePicker = createReactClass({
 
     renderCenturyGrid(datesObject) {
         const centuries = datesObject.indice;
-        if (datesObject.dates.length >= 12) {
+        if (datesObject.dates && datesObject.dates.length >= 12) {
             return (
                 <div className={Styles.grid}>
                     <div className={Styles.gridHeading}>Select a century</div>
@@ -117,7 +117,7 @@ const DateTimePicker = createReactClass({
     },
 
     renderYearGrid(datesObject) {
-        if (datesObject.dates.length > 12) {
+        if (datesObject.dates && datesObject.dates.length > 12) {
             const years = datesObject.indice;
             const monthOfYear = Array.apply(null, { length: 12 }).map(Number.call, Number);
             return (
@@ -136,7 +136,7 @@ const DateTimePicker = createReactClass({
 
     renderMonthGrid(datesObject) {
         const year = this.state.year;
-        if (datesObject[year].dates.length > 12) {
+        if (datesObject[year].dates && datesObject[year].dates.length > 12) {
             return (
                 <div className={Styles.grid}>
                     <div className={Styles.gridHeading}>
@@ -155,7 +155,7 @@ const DateTimePicker = createReactClass({
     },
 
     renderDayView(datesObject) {
-      if(datesObject[this.state.year][this.state.month].dates.length > 31) {
+      if (datesObject[this.state.year][this.state.month].dates && datesObject[this.state.year][this.state.month].dates.length > 31) {
         // Create one date object per day, using an arbitrary time. This does it via Object.keys and moment().
         const days = datesObject[this.state.year][this.state.month].indice;
         const daysToDisplay = days.map(d => moment().date(d).month(this.state.month).year(this.state.year));
@@ -185,10 +185,14 @@ const DateTimePicker = createReactClass({
     },
 
     renderList(items) {
-        return <div className={Styles.grid}>
-            <div className={Styles.gridHeading}>Select a time</div>
-            <div className={Styles.gridBody}>{items.map(item => <button key={formatDateTime(item)} className={Styles.dateBtn} onClick={() => { this.setState({ time: item, isOpen: false}); this.props.onChange(item); }}>{formatDateTime(item)}</button>)}</div>
-        </div>;
+        if (defined(items)) {
+            return (
+                <div className={Styles.grid}>
+                    <div className={Styles.gridHeading}>Select a time</div>
+                    <div className={Styles.gridBody}>{items.map(item => <button key={formatDateTime(item)} className={Styles.dateBtn} onClick={() => { this.setState({ time: item, isOpen: false}); this.props.onChange(item); }}>{formatDateTime(item)}</button>)}</div>
+                </div>
+            );
+        }
     },
 
     renderHourView(datesObject) {
@@ -197,7 +201,7 @@ const DateTimePicker = createReactClass({
             label: formatDateTime(m)
         }));
 
-        if(timeOptions.length > 24){
+        if (timeOptions.length > 24) {
           return (
               <div className={Styles.grid}>
                   <div className={Styles.gridHeading}>{`Select a hour on ${this.state.year} ${monthNames[this.state.month + 1]} ${this.state.day}`} </div>
@@ -217,7 +221,7 @@ const DateTimePicker = createReactClass({
 
     goBack() {
         if (defined(this.state.time)) {
-          if(!defined(this.state.month)) {
+          if (!defined(this.state.month)) {
             this.setState({
                 year: null,
             });
