@@ -203,7 +203,7 @@ const DateTimePicker = createReactClass({
           return (
               <div className={Styles.grid}>
                   <div className={Styles.gridHeading}>{`Select a hour on ${this.state.year} ${monthNames[this.state.month + 1]} ${this.state.day}`} </div>
-                  <div className={Styles.gridBody}>{datesObject[this.state.year][this.state.month][this.state.day].indice.map(item => <button key={item} className={Styles.dateBtn} onClick={()=>this.setState({hour: item})}>{item} : 00</button>)}</div>
+                  <div className={Styles.gridBody}>{datesObject[this.state.year][this.state.month][this.state.day].indice.map(item => <button key={item} className={Styles.dateBtn} onClick={()=>this.setState({hour: item})}><span>{item} : 00</span> <span>({datesObject[this.state.year][this.state.month][this.state.day][item].length} options )</span></button>)}</div>
               </div>
           );
         } else {
