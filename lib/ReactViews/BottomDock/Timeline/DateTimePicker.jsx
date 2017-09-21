@@ -171,7 +171,7 @@ const DateTimePicker = createReactClass({
                 </div>
                 <DatePicker
                     inline
-                    onChange={()=>this.setState({ day: selected+1})}
+                    onChange={(momentDateObj)=>this.setState({ day: momentDateObj.date()})}
                     includeDates={daysToDisplay}
                     selected={selected}
                 />
@@ -346,7 +346,6 @@ function getMonthForYear(yearData) {
 
 function getDaysForMonth(monthData) {
     // Get all available days given a month in a year.
-    // Start from 1, so we need to change to 0 based.
     return uniq(monthData.map(m => m.getDate()));
 }
 
