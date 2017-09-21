@@ -57,8 +57,6 @@ const WorkbenchItem = createReactClass({
 
     render() {
         const workbenchItem = this.props.item;
-        // Do not show the legend if this item is a copy.
-        const showLegend = !defined(workbenchItem.copiedFromUniqueId);
         return (
             <li
                 style={this.props.style}
@@ -109,9 +107,7 @@ const WorkbenchItem = createReactClass({
                         <StyleSelectorSection item={workbenchItem}/>
                         <ColorScaleRangeSection item={workbenchItem}/>
                         <DisplayAsPercentSection item={workbenchItem}/>
-                        <If condition={showLegend}>
-                            <Legend item={workbenchItem}/>
-                        </If>
+                        <Legend item={workbenchItem}/>
                         <If condition={(defined(workbenchItem.concepts) && workbenchItem.concepts.length > 0) && !workbenchItem.displayChoicesBeforeLegend}>
                             <ConceptViewer item={workbenchItem}/>
                         </If>
