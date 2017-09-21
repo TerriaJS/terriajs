@@ -49,7 +49,6 @@ const DateTimePicker = createReactClass({
         let defaultYear = null;
         let defaultMonth = null;
         let defaultDay = null;
-        let defaultHour = null;
         let defaultGranularity = 'century';
 
         if (datesObject.indice.length === 1) {
@@ -85,7 +84,6 @@ const DateTimePicker = createReactClass({
             year: defaultYear,
             month: defaultMonth,
             day: defaultDay,
-            hour: defaultHour,
             time: currentDate,
             granularity: defaultGranularity
         });
@@ -205,7 +203,7 @@ const DateTimePicker = createReactClass({
           return (
               <div className={Styles.grid}>
                   <div className={Styles.gridHeading}>{`Select a hour on ${this.state.year} ${monthNames[this.state.month + 1]} ${this.state.day}`} </div>
-                  <div className={Styles.gridBody}>{datesObject[this.state.year][this.state.month][this.state.day].indice.map(item => <button key={item} className={Styles.dateBtn} onClick={() => { this.setState({hour: item})}}>{item} : 00</button>)}</div>
+                  <div className={Styles.gridBody}>{datesObject[this.state.year][this.state.month][this.state.day].indice.map(item => <button key={item} className={Styles.dateBtn} onClick={()=>this.setState({hour: item})}>{item} : 00</button>)}</div>
               </div>
           );
         } else {
@@ -214,7 +212,7 @@ const DateTimePicker = createReactClass({
 
     },
 
-    renderMinutesView(datesObject){
+    renderMinutesView(datesObject) {
         const options = datesObject[this.state.year][this.state.month][this.state.day][this.state.hour];
         return this.renderList(options);
     },
@@ -352,12 +350,12 @@ function getDaysForMonth(monthData) {
     return uniq(monthData.map(m => m.getDate()));
 }
 
-function getOneHour(dayData, hourIndex){
+function getOneHour(dayData, hourIndex) {
   // All data from certain month of that year.
   return dayData.filter(y => y.getHours() === hourIndex);
 }
 
-function getHoursForDay(dayData){
+function getHoursForDay(dayData) {
   return uniq(dayData.map(m => m.getHours()));
 }
 
@@ -389,8 +387,6 @@ function objectifyCenturyData(century, dates, years) {
     centuryDates[century].indice = yearsInThisCentury;
     return centuryDates;
 }
-
-
 
 function objectifyYearData(year, dates) {
     const yearData = getOneYear(year, dates);
