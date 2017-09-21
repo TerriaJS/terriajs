@@ -170,7 +170,7 @@ const DateTimePicker = createReactClass({
                 </div>
                 <DatePicker
                     inline
-                    onChange={this.selectDay.bind(this, datesObject)}
+                    onChange={()=>this.setState({ day: selected+1})}
                     includeDates={daysToDisplay}
                     selected={selected}
                 />
@@ -184,18 +184,10 @@ const DateTimePicker = createReactClass({
     renderList(items) {
         return <div className={Styles.grid}>
             <div className={Styles.gridHeading}>Select a time</div>
-            <div className={Styles.gridBody}>{items.map(item => <button key={formatDateTime(item)} className={Styles.dateBtn} onClick={() => { this.setState({ time: item, isOpen: false, day: item.date()+1}); this.props.onChange(item); }}>{formatDateTime(item)}</button>)}</div>
+            <div className={Styles.gridBody}>{items.map(item => <button key={formatDateTime(item)} className={Styles.dateBtn} onClick={() => { this.setState({ time: item, isOpen: false}); this.props.onChange(item); }}>{formatDateTime(item)}</button>)}</div>
         </div>;
     },
 
-    selectDay(datesObject, value) {
-        // Note value is a momentjs date, not a JS date - it has been returned by DatePicker in the onChange event.
-        // Hence use value.date() here, but m.getUTCDate() when building the datesObject. I think...
-        // See https://momentjs.com/docs/
-        const selectedTime = datesObject[this.state.year][this.state.month][value.date()][0];
-        this.setState({ day: value.date()+1, time: selectedTime, isOpen: false });
-        this.props.onChange(selectedTime);
-    },
 
     renderHourView(datesObject) {
         const timeOptions = datesObject[this.state.year][this.state.month][this.state.day].map((m) => ({
@@ -203,13 +195,18 @@ const DateTimePicker = createReactClass({
             label: formatDateTime(m)
         }));
 
-        return (
-            <div className={Styles.hourview}>
-                <select onChange={(event) => { this.setState({ time: event.target.value, isOpen: false }); this.props.onChange(event.target.value); }} value={this.state.time ? this.state.time : ''}>
-                    {timeOptions.map(t => <option key={t.label} value={t.value}>{t.label}</option>)}
-                </select>
-            </div>
-        );
+        if(timeOptions.length > 50){
+          return (
+              <div className={Styles.hourview}>
+                  <select onChange={(event) => { this.setState({ time: event.target.value, isOpen: false }); this.props.onChange(event.target.value); }} value={this.state.time ? this.state.time : ''}>
+                      {timeOptions.map(t => <option key={t.label} value={t.value}>{t.label}</option>)}
+                  </select>
+              </div>
+          );
+        } else {
+          return this.renderList(datesObject[this.state.year][this.state.month][this.state.day]);
+        }
+
     },
 
     goBack() {
@@ -289,7 +286,7 @@ const DateTimePicker = createReactClass({
                         {!defined(this.state.century) && this.renderCenturyGrid(datesObject)}
                         {defined(this.state.century) && !defined(this.state.year) && this.renderYearGrid(datesObject[this.state.century])}
                         {defined(this.state.year) && !defined(this.state.month) && this.renderMonthGrid(datesObject[this.state.century])}
-                        {(defined(this.state.year) && defined(this.state.month)) && this.renderDayView(datesObject[this.state.century])}
+                        {(defined(this.state.year) && defined(this.state.month) && !defined(this.state.day)) && this.renderDayView(datesObject[this.state.century])}
                         {(defined(this.state.year) && defined(this.state.month) && defined(this.state.day)) && this.renderHourView(datesObject[this.state.century])}
                     </div>}
                 </div>
