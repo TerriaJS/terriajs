@@ -287,10 +287,10 @@ const DateTimePicker = createReactClass({
             const currentDate = this.props.currentDate;
             if (defined(currentDate)) {
                 const newState = {
-                    day: defined(this.state.day) ? currentDate.getUTCDate() : null,
-                    month: defined(this.state.month) ? currentDate.getUTCMonth() : null,
-                    year: defined(this.state.year) ? currentDate.getUTCFullYear() : null,
-                    century: defined(this.state.century) ? Math.floor(currentDate.getUTCFullYear() / 100) : null,
+                    day: defined(this.state.day) ? currentDate.getDate() : null,
+                    month: defined(this.state.month) ? currentDate.getMonth() : null,
+                    year: defined(this.state.year) ? currentDate.getFullYear() : null,
+                    century: defined(this.state.century) ? Math.floor(currentDate.getFullYear() / 100) : null,
                     time: defined(this.state.time) ? currentDate : null
                 };
                 this.setState(newState);
@@ -369,7 +369,7 @@ function getOneCentury(century, dates) {
  *   whose values are objects whose keys are days, whose values are arrays of all the datetimes on that day.
  */
 function objectifyDates(dates) {
-    const years = uniq(dates.map(date => date.getUTCFullYear()));
+    const years = uniq(dates.map(date => date.getFullYear()));
     const centuries = uniq(years.map(year => Math.floor(year / 100)));
     const result = centuries.reduce((accumulator, currentValue) => combine(accumulator, objectifyCenturyData(currentValue, dates, years)), {});
     result.dates = dates;
