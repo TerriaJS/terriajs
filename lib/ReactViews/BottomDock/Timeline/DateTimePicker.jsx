@@ -222,6 +222,8 @@ const DateTimePicker = createReactClass({
           if (!defined(this.state.month)) {
             this.setState({
                 year: null,
+                month: null,
+                day: null,
             });
           }
 
@@ -234,6 +236,7 @@ const DateTimePicker = createReactClass({
           if(!defined(this.state.day)) {
             this.setState({
                 month: null,
+                day: null,
             });
           }
 
