@@ -13,6 +13,7 @@ const CatalogItemDateTimePicker = createReactClass({
 
     propTypes: {
         item: PropTypes.object,
+        currentTime: PropTypes.object,  // pass this if you are using the item's own clock.
         onChange: PropTypes.func,
         openDirection: PropTypes.string
     },
@@ -48,8 +49,8 @@ const CatalogItemDateTimePicker = createReactClass({
       const availableDates = item.availableDates;
       // The initial state often has currentTime: undefined, even though item.clockForDisplay.currentTime is available.
       // If the item is using its own clock, then the state is irrelevant - it's only set by the terria clock.
-      const currentTime = item.useOwnClock ? item.clockForDisplay.currentTime : (this.state.currentTime || item.clockForDisplay.currentTime);
-      const currentDate = availableDates[this.props.item.intervals.indexOf(currentTime)];
+      const currentTime = this.props.currentTime || this.state.currentTime || item.clockForDisplay.currentTime;
+      const currentDate = availableDates[item.intervals.indexOf(currentTime)];
       return <DateTimePicker currentDate={currentDate} dates={availableDates} onChange={this.props.onChange} openDirection={this.props.openDirection}/>;
     }
 });
