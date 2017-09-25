@@ -19,7 +19,8 @@ const DataCatalog = createReactClass({
 
     propTypes: {
         terria: PropTypes.object,
-        viewState: PropTypes.object
+        viewState: PropTypes.object,
+        items: PropTypes.object
     },
 
     render() {
@@ -29,7 +30,7 @@ const DataCatalog = createReactClass({
         const items = (
             isSearching ?
                 searchState.catalogSearchProvider.searchResults.map(result => result.catalogItem) :
-                terria.catalog.group.items
+                this.props.items
         ).filter(defined);
 
         return (

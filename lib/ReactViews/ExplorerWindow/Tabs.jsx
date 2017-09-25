@@ -21,15 +21,24 @@ const Tabs = createReactClass({
 
     getInitialState() {
         // This can be passed in as prop
+        const dataTabs = this.props.terria.configParameters.tabbedCatalog ? this.props.terria.catalog.group.map((member, i) => ({
+            name: member.nameInCatalog,
+            title: `data-catalog-${i}`,
+            panel: <DataCatalogTab terria={this.props.terria}
+                                   viewState={this.props.viewState}
+                                   items={(member && member !== this.props.terria.catalog.userAddedDataGroup) ? (member.items || [member]) : []}
+            />
+        })): [{
+            name: 'Data Catalogue',
+            title: 'data-catalog',
+            panel: <DataCatalogTab terria={this.props.terria}
+                                   viewState={this.props.viewState}
+                                   items={this.props.terria.catalog.group.items}
+            />
+        }];
         return {
             tabs: this.props.tabs || [
-                {
-                    name: 'Data Catalogue',
-                    title: 'data-catalog',
-                    panel: <DataCatalogTab terria={this.props.terria}
-                                           viewState={this.props.viewState}
-                    />
-                },
+                ...dataTabs,
                 {
                     name: 'My Data',
                     title: 'my-data',
