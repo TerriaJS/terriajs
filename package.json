@@ -89,7 +89,7 @@
     "gulp-ruby-sass": "^2.0.5",
     "gulp-util": "^3.0.7",
     "jasmine-core": "^2.4.1",
-    "jasmine-enzyme": "^3.0.0",
+    "jasmine-enzyme": "^4.0.0",
     "jsdoc": "^3.4.0",
     "karma": "^1.1.0",
     "karma-browserstack-launcher": "^1.0.1",
