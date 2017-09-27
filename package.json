@@ -110,7 +110,7 @@
     "node-sass": "^4.0.0",
     "react-addons-test-utils": "^15.5.1",
     "react-shallow-testutils": "^3.0.0",
-    "react-test-renderer": "^15.5.4",
+    "react-test-renderer": "^16.0.0",
     "svg-sprite-loader": "^0.3.0",
     "terriajs-jasmine-ajax": "^3.2.1",
     "terriajs-server": "^2.6.2",
