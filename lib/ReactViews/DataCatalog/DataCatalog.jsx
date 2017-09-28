@@ -20,7 +20,7 @@ const DataCatalog = createReactClass({
     propTypes: {
         terria: PropTypes.object,
         viewState: PropTypes.object,
-        items: PropTypes.object
+        items: PropTypes.array
     },
 
     render() {
