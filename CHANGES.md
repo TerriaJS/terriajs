@@ -3,6 +3,9 @@
 Change Log
 ==========
 
+### 5.3.1
+* Catalog group items are now sorted by their in-catalog name
+
 ### 5.3.0
 
 * Added the ability to use the analytics region picker with vector tile region mapping by specifiying a WMS server & layer for analytics only.
