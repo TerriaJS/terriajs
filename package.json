@@ -47,7 +47,7 @@
     "linkify-it": "^2.0.0",
     "lodash.debounce": "^4.0.6",
     "markdown-it": "^8.0.0",
-    "moment": "^2.18.1",
+    "moment": "2.18.1",
     "mustache": "^2.2.1",
     "mutationobserver-shim": "^0.3.1",
     "pbf": "^3.0.1",
