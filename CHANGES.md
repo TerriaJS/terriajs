@@ -5,6 +5,9 @@ Change Log
 
 
 ### 5.2.12
+### 5.3.1
+* Catalog group items are now sorted by their in-catalog name
+
 ### 5.3.0
 
 * Added `initialTimeSource` property to `CsvCatalogItem` so it is possible to specify the value of the animation timeline at start from init files.
