@@ -90,10 +90,10 @@ const Tabs = createReactClass({
                             className={Styles.tabListItem}
                             role="tab"
                             aria-controls={'panel--' + item.title}
-                            aria-selected={this.props.viewState.modalTabIndex === i}>
+                            aria-selected={item === currentTab}>
                             <button type='button'
                                     onClick={this.activateTab.bind(this, item.category, item.idInCategory)}
-                                    className={classNames(Styles.btnTab, {[Styles.btnSelected]: this.props.viewState.modalTabIndex === i})}>
+                                    className={classNames(Styles.btnTab, {[Styles.btnSelected]: item === currentTab})}>
                                 {item.name}
                             </button>
                         </li>
