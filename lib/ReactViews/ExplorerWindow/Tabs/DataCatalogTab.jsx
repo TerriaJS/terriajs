@@ -22,7 +22,14 @@ const DataCatalogTab = createReactClass({
     propTypes: {
         terria: PropTypes.object,
         viewState: PropTypes.object,
-        items: PropTypes.array
+        items: PropTypes.array,
+        searchPlaceholder: PropTypes.string
+    },
+
+    getDefaultProps() {
+        return {
+            searchPlaceholder: undefined // Let SearchBox set the default placeholder
+        };
     },
 
     changeSearchText(newText) {
@@ -40,7 +47,8 @@ const DataCatalogTab = createReactClass({
                 <div className={Styles.dataExplorer}>
                     <SearchBox searchText={this.props.viewState.searchState.catalogSearchText}
                                onSearchTextChanged={this.changeSearchText}
-                               onDoSearch={this.search}/>
+                               onDoSearch={this.search}
+                               placeholder={this.props.searchPlaceholder}/>
                     <DataCatalog terria={this.props.terria}
                                  viewState={this.props.viewState}
                                  items={this.props.items} />
