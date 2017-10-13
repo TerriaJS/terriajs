@@ -6,6 +6,8 @@ Change Log
 ### 5.#.#
 
 * Added the ability to use tokens from terriajs-server for layers requiring ESRI tokens.
+### 5.3.1
+* Catalog group items are now sorted by their in-catalog name
 
 ### 5.3.0
 
