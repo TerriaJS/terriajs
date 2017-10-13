@@ -6,6 +6,7 @@ import classNames from 'classnames';
 import DataCatalogTab from './Tabs/DataCatalogTab.jsx';
 import MyDataTab from './Tabs/MyDataTab/MyDataTab.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
+import defined from 'terriajs-cesium/Source/Core/defined';
 
 import Styles from './tabs.scss';
 
@@ -69,8 +70,11 @@ const Tabs = createReactClass({
             if (category === 'data-catalog') {
                 const member = this.props.terria.catalog.group.items.find(m => m.name === idInCategory);
                 // If member was found and member can be opened, open it (causes CkanCatalogGroups to fetch etc.)
-                if (member && member.toggleOpen) {
-                    member.isOpen = true;
+                if (defined(member)) {
+                    if (member.toggleOpen) {
+                        member.isOpen = true;
+                    }
+                    this.props.viewState.previewedItem = member;
                 }
             }
         }
