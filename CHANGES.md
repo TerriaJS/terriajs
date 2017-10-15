@@ -5,11 +5,9 @@ Change Log
 
 ### 5.4.0
 
-* Breaking changes (that are very unlikely to affect you):
-  * Removed `KnockoutHammerBinding` and `KnockoutMarkdownBinding` in `Core`.
-  * Removed `PopupMessageConfirmationViewModel`, `PopupMessageViewModel`, and `PopupViewModel` in `ViewModels`.
-* Catalog group items are now sorted by their in-catalog name
+* Breaking change: removed some old types that haven't been used since the new React-based user interface in v4.0.0, specifically `KnockoutHammerBinding`, `KnockoutMarkdownBinding`, `PopupMessageConfirmationViewModel`, `PopupMessageViewModel`, and `PopupViewModel`.
 * Added the ability to use tokens from terriajs-server for layers requiring ESRI tokens.
+* Catalog group items are now sorted by their in-catalog name
 
 ### 5.3.0
 
