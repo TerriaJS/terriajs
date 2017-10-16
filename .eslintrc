@@ -1,6 +1,9 @@
 {
     "extends": ["eslint:recommended", "plugin:react/recommended", "plugin:jsx-control-statements/recommended"],
     "parser": "babel-eslint",
+    "parserOptions": {
+        "sourceType": "module"
+    },
     "env": {
         "browser": true,
         "commonjs": true
