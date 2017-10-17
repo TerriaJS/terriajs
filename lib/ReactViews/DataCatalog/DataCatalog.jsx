@@ -24,7 +24,6 @@ const DataCatalog = createReactClass({
     },
 
     render() {
-        const terria = this.props.terria;
         const searchState = this.props.viewState.searchState;
         const isSearching = searchState.catalogSearchText.length > 0;
         const items = (

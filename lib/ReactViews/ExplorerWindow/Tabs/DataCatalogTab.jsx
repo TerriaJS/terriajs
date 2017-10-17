@@ -4,12 +4,9 @@ import createReactClass from 'create-react-class';
 
 import PropTypes from 'prop-types';
 
-import defined from 'terriajs-cesium/Source/Core/defined';
 import DataCatalog from '../../DataCatalog/DataCatalog.jsx';
-import DataCatalogMember from '../../DataCatalog/DataCatalogMember.jsx';
 import DataPreview from '../../Preview/DataPreview.jsx';
 import ObserveModelMixin from '../../ObserveModelMixin';
-import SearchHeader from '../../Search/SearchHeader.jsx';
 import SearchBox from '../../Search/SearchBox.jsx';
 
 import Styles from './data-catalog-tab.scss';

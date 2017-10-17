@@ -46,7 +46,7 @@ const Tabs = createReactClass({
                                        items={member.items || [member]}
                                        searchPlaceholder="Search whole catalogue"
                 />
-            })), [myDataTab])
+            })), [myDataTab]);
         } else {
             return [
                 {
