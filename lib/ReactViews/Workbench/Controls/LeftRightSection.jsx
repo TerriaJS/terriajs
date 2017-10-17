@@ -35,7 +35,7 @@ const LeftRightSection = createReactClass({
     render() {
         const item = this.props.item;
         const splitDirection = item.splitDirection;
-        if (!defined(splitDirection) || !item.terria.showSplitter) {
+        if (!item.supportsSplitting || !defined(splitDirection) || !item.terria.showSplitter) {
             return null;
         }
         return (
