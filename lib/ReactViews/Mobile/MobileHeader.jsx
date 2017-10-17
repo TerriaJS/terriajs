@@ -44,6 +44,7 @@ const MobileHeader = createReactClass({
         this.props.viewState.searchState.showMobileLocationSearch = false;
         this.props.viewState.explorerPanelIsVisible = false;
         this.props.viewState.switchMobileView(null);
+        this.props.terria.currentViewer.notifyRepaintRequired();
     },
 
     closeCatalogSearch() {
