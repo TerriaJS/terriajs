@@ -18,6 +18,7 @@ The following people have contributed to TerriaJS:
    * [Arthur Street](https://github.com/racingtadpole)
    * [Mats Henrikson](https://github.com/meh9)
    * [Stephen Davies](https://github.com/steve9164)
+   * [Alex Gilleran](https://github.com/AlexGilleran)
    * [Rebecca Dengate](https://github.com/rdengate)
    * [Ashley Stacey](https://github.com/a-stacey)
 * [Geoscience Australia](http://www.ga.gov.au/)
@@ -41,3 +42,4 @@ The following people have contributed to TerriaJS:
 * [Department of the Prime Minister and Cabinet](https://www.dpmc.gov.au/)
    * [Toby Bellwood](https://github.com/tobybellwood)
 * [Matt Fullerton](https://github.com/mattfullerton)
+* [Sander Kalcina](https://github.com/sanderkal)

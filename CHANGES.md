@@ -6,6 +6,9 @@ Change Log
 ### 5.4.0
 
 * Fixed a bug in `WebMapServiceCatalogItem` that could cause a WMS time time dimension to be interpreted incorrectly if it was specified only using dates (not times) and with a periodicity of less than a day.
+* Breaking change: removed some old types that haven't been used since the new React-based user interface in v4.0.0, specifically `KnockoutHammerBinding`, `KnockoutMarkdownBinding`, `PopupMessageConfirmationViewModel`, `PopupMessageViewModel`, and `PopupViewModel`.
+* Added the ability to use tokens from terriajs-server for layers requiring ESRI tokens.
+* Catalog group items are now sorted by their in-catalog name
 
 ### 5.3.0
 
