@@ -3,16 +3,19 @@
 Change Log
 ==========
 
+### 5.5.0
+
+* Added the ability to split the screen into a left-side and right-side, and show imagery layers on only one side of the splitter.
+* Fixed a bug in `WebMapServiceCatalogItem` that could cause a WMS time time dimension to be interpreted incorrectly if it was specified only using dates (not times) and with a periodicity of less than a day.
+
 ### 5.4.0
 
-* Fixed a bug in `WebMapServiceCatalogItem` that could cause a WMS time time dimension to be interpreted incorrectly if it was specified only using dates (not times) and with a periodicity of less than a day.
 * Breaking change: removed some old types that haven't been used since the new React-based user interface in v4.0.0, specifically `KnockoutHammerBinding`, `KnockoutMarkdownBinding`, `PopupMessageConfirmationViewModel`, `PopupMessageViewModel`, and `PopupViewModel`.
 * Added the ability to use tokens from terriajs-server for layers requiring ESRI tokens.
 * Catalog group items are now sorted by their in-catalog name
 
 ### 5.3.0
 
-* Added the ability to split the screen into a left-side and right-side, and show imagery layers on only one side of the splitter.
 * Added the ability to use the analytics region picker with vector tile region mapping by specifiying a WMS server & layer for analytics only.
 * Updated the client side validation to use the server-provided file size limit when drag/dropping a file requiring the conversion service.
 * `zoomOnEnable` now works even for a catalog item that is initially enabled in the catalog.  Previously, it only worked for catalog items enabled via the user interface or otherwise outside of the load process.
