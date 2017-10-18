@@ -6,6 +6,7 @@ import Styles from './icon.scss';
 
 // icon.jsx
 const GLYPHS = {
+    calendar: require('../../wwwroot/images/icons/calendar.svg'),
     add: require('../../wwwroot/images/icons/add.svg'),
     arHover0: require('../../wwwroot/images/icons/ar-hover0.svg'),
     arHover1: require('../../wwwroot/images/icons/ar-hover1.svg'),
@@ -55,6 +56,9 @@ const GLYPHS = {
     showLess: require('../../wwwroot/images/icons/show-less.svg'),
     showMore: require('../../wwwroot/images/icons/show-more.svg'),
     sphere: require('../../wwwroot/images/icons/sphere.svg'),
+    splitter: require('../../wwwroot/images/icons/splitter.svg'),
+    splitterOn: require('../../wwwroot/images/icons/splitterOn.svg'),
+    splitterOff: require('../../wwwroot/images/icons/splitterOff.svg'),
 };
 
 const Icon = createReactClass({

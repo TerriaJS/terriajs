@@ -1,3 +1,4 @@
+@import '../../../Sass/common/mixins';
 @import '~terriajs-variables';
 
 .timeline {
@@ -9,10 +10,15 @@
 }
 
 .text-row {
-  display: table-row;
+  display: block;
   color: #fff;
   font-family: $font-base;
   font-size: $font-size-mid-small;
+  position: absolute;
+  bottom: 44px;
+  left: 0px;
+  background: $dark;
+  padding: 3px 5px;
 }
 
 .text-cell {
@@ -27,3 +33,172 @@
   display: table-row;
 }
 
+.style-selector {
+  font-size: 0.9rem;
+  label {
+    margin-right: $padding-small;
+  }
+}
+
+.title {
+  display: block;
+  margin-top: 10px;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.field {
+  composes: field from '../../../Sass/common/_form.scss';
+  color: black;
+}
+
+.timelineDatePicker {
+  display: table-cell;
+  width: 29px;
+  color: #fff;
+}
+
+.datePicker {
+  width: 230px;
+  height: 300px;
+  border: 1px solid $overlay;
+  border-radius: 5px;
+  padding: 5px;
+  position: absolute;
+  left: 10px;
+  bottom: 70px;
+  background: $dark;
+  z-index: 100;
+
+  &.openBelow{
+    top: 40px;
+    left: 0;
+  }
+}
+
+.dayPicker {
+  text-align: center;
+  margin-top: -10px;
+}
+
+.backbutton, .togglebutton, .backbtn {
+  composes: btn from '../../../Sass/common/_buttons.scss';
+  composes: btn-transparent from '../../../Sass/common/_buttons.scss';
+  display: inline-block;
+  z-index: 99;
+  position: relative;
+
+  svg{
+    height: 20px;
+    width: 25px;
+    fill: #ffffff;
+    display: inline-block;
+    vertical-align: bottom;
+  }
+
+  &[disabled], &:disabled {
+    opacity: 0.1
+  }
+}
+
+.backbtn {
+  padding-bottom: 5px;
+  padding-right: 5px;
+}
+
+.togglebutton {
+    margin-top: 5px;
+}
+
+.grid {
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+  color: #fff;
+  padding: 0px 5px;
+  border-radius: 3px;
+  margin-top: -20px;
+}
+
+.gridBody {
+  height: calc(100% - 30px);
+  overflow: auto;
+  composes: scrollbars from '../../../Sass/common/_base.scss';
+}
+
+.gridRow:hover {
+  background: $overlay;
+  cursor: pointer;
+}
+
+
+.inactiveGridRow:hover{
+  background: transparent;
+  cursor: default;
+}
+
+.gridLabel {
+  float: left;
+  display: inline-block;
+  width: 35px;
+  font-size: 10px;
+  padding-left: 3px;
+}
+
+.gridRowInner12, .gridRowInner31 {
+  display: table-row;
+  padding: 3px;
+  border-radius: 3px;
+}
+
+.gridRowInner12 span, .gridRowInner31 span {
+  display: inline-block;
+  height: 10px;
+  width: 2px;
+  background: $overlay;
+  margin-top: 1px;
+}
+
+.gridRowInner12 span {
+  margin-right: 11px;
+}
+
+
+.gridRowInner31 span {
+  margin-right: 3px;
+}
+
+.activeGrid {
+  opacity: 0.9;
+  background: $color-primary!important;
+}
+
+.gridHeading {
+  text-align: center;
+  color: #fff;
+  font-size: 12px;
+}
+
+.hourview {
+}
+
+.summary {
+  font-size: 10px;
+}
+
+.open {
+
+}
+
+.centuryBtn, .dateBtn{
+  composes: btn from '../../../Sass/common/_buttons.scss';
+  composes: btn-primary from '../../../Sass/common/_buttons.scss';
+  width: calc(100% - 20px);
+  margin: 5px;
+}
+
+.centuryBtn{
+  display: inline-block;
+  width: 40%;
+}
