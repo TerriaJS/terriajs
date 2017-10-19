@@ -267,10 +267,9 @@ describe('CsvCatalogItem with lat and lon', function() {
             // The date '2015-08-01' appears to be interpreted as starting at midnight in the local time zone (at least on Chrome).
             // Eg. in Sydney summer, JulianDate.toIso8601(earlyFeature.availability.start) returns "2015-07-31T14:00:00Z".
             expect(TimeInterval.contains(earlyFeature.availability, JulianDate.fromIso8601('2015-08-01'))).toBe(true);
-            // Also test the duration of the interval is just under one day (the time between input rows).
+            // Also test the duration of the interval is one day (the time between input rows).
             var durationInSeconds = JulianDate.secondsDifference(earlyFeature.availability.stop, earlyFeature.availability.start);
-            expect(durationInSeconds).toBeGreaterThan(23 * 3600);  // more than 23 hours
-            expect(durationInSeconds).toBeLessThan(24 * 3600);  // but less than 24 hours
+            expect(durationInSeconds).toBe(24 * 3600);  // 24 hours
         }).otherwise(fail).then(done);
     });
 
@@ -307,10 +306,9 @@ describe('CsvCatalogItem with lat and lon', function() {
             // The date '2015-08-01' appears to be interpreted as starting at midnight in the local time zone (at least on Chrome).
             // Eg. in Sydney summer, JulianDate.toIso8601(earlyFeature.availability.start) returns "2015-07-31T14:00:00Z".
             expect(TimeInterval.contains(earlyFeature.availability, JulianDate.fromIso8601('2015-08-01'))).toBe(true);
-            // Also test the duration of the interval is just under one day (the time between input rows).
+            // Also test the duration of the interval is one day (the time between input rows).
             var durationInSeconds = JulianDate.secondsDifference(earlyFeature.availability.stop, earlyFeature.availability.start);
-            expect(durationInSeconds).toBeGreaterThan(23 * 3600);  // more than 23 hours
-            expect(durationInSeconds).toBeLessThan(24 * 3600);  // but less than 24 hours
+            expect(durationInSeconds).toBe(24 * 3600);  // 24 hours
         }).otherwise(fail).then(done);
     });
 
