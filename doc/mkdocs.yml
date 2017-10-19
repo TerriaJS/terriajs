@@ -25,6 +25,7 @@ pages:
     - Catalog Items: 'connecting-to-data/catalog-items.md'
     - Customizing Data Appearance:
         - Overview: 'connecting-to-data/customizing-data-appearance/overview.md'
+        - Imagery Data: 'connecting-to-data/customizing-data-appearance/imagery-data.md'
         - Tabular Data: 'connecting-to-data/customizing-data-appearance/tabular-data.md'
         - Feature Information Template: 'connecting-to-data/customizing-data-appearance/feature-info-template.md'
     - Catalog Functions: 'connecting-to-data/catalog-functions.md'
@@ -77,6 +78,7 @@ pages:
 - Contributing:
     - Overview: 'contributing/README.md'
     - Development Environment: 'contributing/development-environment.md'
+    - Architecture: 'contributing/architecture.md'
     - Using a Custom Version of Cesium: 'contributing/using-a-custom-version-of-cesium.md'
     - Setting up Saucelabs: 'contributing/setting-up-saucelabs.md'
     - Problems and Solutions: 'contributing/problems-and-solutions.md'

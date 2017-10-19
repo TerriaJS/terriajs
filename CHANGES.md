@@ -3,9 +3,18 @@
 Change Log
 ==========
 
+### 5.5.0
 
-### 5.2.12
-### 5.3.1
+* Added the ability to split the screen into a left-side and right-side, and show raster and region mapped layers on only one side of the splitter.
+* Fixed a bug in `WebMapServiceCatalogItem` that could cause a WMS time time dimension to be interpreted incorrectly if it was specified only using dates (not times) and with a periodicity of less than a day.
+* Added the ability to use vector tile properties in feature info templates when using region mapping (data row attributes will overwrite vector tile properties with the same name)
+* Properties available in feature info templates are now JSON parsed and replaced by their javascript object if they start with `[` or `{` and parse successfully
+* Decreased flickering of time-varying region mapped layers by pre-rendering the next time interval
+
+### 5.4.0
+
+* Breaking change: removed some old types that haven't been used since the new React-based user interface in v4.0.0, specifically `KnockoutHammerBinding`, `KnockoutMarkdownBinding`, `PopupMessageConfirmationViewModel`, `PopupMessageViewModel`, and `PopupViewModel`.
+* Added the ability to use tokens from terriajs-server for layers requiring ESRI tokens.
 * Catalog group items are now sorted by their in-catalog name
 
 ### 5.3.0
