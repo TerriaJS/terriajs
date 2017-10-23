@@ -63,7 +63,7 @@ const GLYPHS = {
 
 const Icon = createReactClass({
     propTypes: {
-        glyph: PropTypes.string,
+        glyph: PropTypes.object,
         style: PropTypes.object,
         className: PropTypes.string
     },
@@ -71,7 +71,7 @@ const Icon = createReactClass({
         const glyph = this.props.glyph;
         return (
             <svg viewBox="0 0 100 100" className={classNames('icon', this.props.className, Styles.svg)} style={this.props.style}>
-                <use xlinkHref={glyph}></use>
+                <use xlinkHref={'#' + glyph.id}></use>
             </svg>
         );
     }
