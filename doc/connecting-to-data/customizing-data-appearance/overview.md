@@ -8,9 +8,9 @@ legend, and how to display feature information in the "feature info panel".
 In fact the json is exactly the same as the initialization file,
 and can be included there too.
 
-This section explains two uses for such a file which cut across many different data type:
+This section explains how you can use such a file to improve the look of your data:
 
 - [Customizing the Appearance of Tabular Data](./tabular-data.md)
+- [Customizing the Appearance of Imagery Data](./imagery-data.md)
 - [Customizing the Feature Info Template](./feature-info-template.md)
-
 

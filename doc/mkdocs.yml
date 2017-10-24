@@ -1,7 +1,9 @@
 site_name: TerriaJS
 #cosmo|cyborg|readthedocs|yeti|journal|bootstrap|readable|united|simplex|flatly|spacelab|amelia|cerulean|slate|mkdocs
 #theme: readthedocs
-theme_dir: mkdocs-material/material
+theme:
+    name: null
+    custom_dir: mkdocs-material/material
 docs_dir: 'doc'
 site_dir: '../wwwroot/doc/guide'
 markdown_extensions:
@@ -25,6 +27,7 @@ pages:
     - Catalog Items: 'connecting-to-data/catalog-items.md'
     - Customizing Data Appearance:
         - Overview: 'connecting-to-data/customizing-data-appearance/overview.md'
+        - Imagery Data: 'connecting-to-data/customizing-data-appearance/imagery-data.md'
         - Tabular Data: 'connecting-to-data/customizing-data-appearance/tabular-data.md'
         - Feature Information Template: 'connecting-to-data/customizing-data-appearance/feature-info-template.md'
     - Catalog Functions: 'connecting-to-data/catalog-functions.md'
