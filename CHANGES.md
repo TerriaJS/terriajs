@@ -6,6 +6,7 @@ Change Log
 ### 5.4.1
 
 * Fixed a bug when sharing SDMX-JSON catalog items.
+* Improved display of "Add Data" panel on small screens when Feedback and Feature Info panels are open.
 
 ### 5.4.0
 
