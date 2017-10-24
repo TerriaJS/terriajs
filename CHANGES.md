@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### 5.4.1
+
+* Fixed a bug when sharing SDMX-JSON catalog items.
+
 ### 5.4.0
 
 * Breaking change: removed some old types that haven't been used since the new React-based user interface in v4.0.0, specifically `KnockoutHammerBinding`, `KnockoutMarkdownBinding`, `PopupMessageConfirmationViewModel`, `PopupMessageViewModel`, and `PopupViewModel`.
