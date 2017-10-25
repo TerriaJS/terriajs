@@ -7,6 +7,7 @@ Change Log
 
 * Fixed a bug when sharing SDMX-JSON catalog items.
 * Improved display of "Add Data" panel on small screens when Feedback and Feature Info panels are open.
+* Added "search in data catalog" link to mobile search.
 
 ### 5.4.0
 
