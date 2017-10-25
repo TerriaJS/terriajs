@@ -31,4 +31,16 @@
   }
 }
 
+.provider-result {
+  margin-top: $padding-small;
+  .items{
+    display: none;
+  }
+}
+
+.btnList{
+  composes: clearfix from '../../Sass/common/_base.scss';
+  composes: list-reset from '../../Sass/common/_base.scss';
+}
+
 @include empty-module("data")

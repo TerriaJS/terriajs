@@ -9,6 +9,7 @@ Change Log
 * Fixed a bug in `WebMapServiceCatalogItem` that could cause a WMS time time dimension to be interpreted incorrectly if it was specified only using dates (not times) and with a periodicity of less than a day.
 * Fixed a bug when sharing SDMX-JSON catalog items.
 * Improved display of "Add Data" panel on small screens when Feedback and Feature Info panels are open.
+* Added "search in data catalog" link to mobile search.
 
 ### 5.4.0
 
