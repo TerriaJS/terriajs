@@ -10,6 +10,9 @@ Change Log
 * Added the ability to use vector tile properties in feature info templates when using region mapping (data row attributes will overwrite vector tile properties with the same name)
 * Properties available in feature info templates are now JSON parsed and replaced by their javascript object if they start with `[` or `{` and parse successfully
 * Decreased flickering of time-varying region mapped layers by pre-rendering the next time interval
+* Fixed a bug when sharing SDMX-JSON catalog items.
+* Improved display of "Add Data" panel on small screens when Feedback and Feature Info panels are open.
+* Added "search in data catalog" link to mobile search.
 
 ### 5.4.0
 

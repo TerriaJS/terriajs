@@ -6,7 +6,8 @@ import PropTypes from 'prop-types';
 
 import {addMarker} from '../Search/SearchMarkerUtils';
 import ObserveModelMixin from '../ObserveModelMixin';
-import LocationSearchResults from '../Search/LocationSearchResults.jsx';
+import LocationSearchResults from '../Search/LocationSearchResults';
+import SearchResult from '../Search/SearchResult';
 import Styles from './mobile-search.scss';
 
 // A Location item when doing Bing map searvh or Gazetter search
@@ -29,19 +30,45 @@ const MobileSearch = createReactClass({
         this.props.viewState.searchState.showMobileLocationSearch = false;
     },
 
+    searchInDataCatalog() {
+        const viewname = this.props.viewState.mobileViewOptions.data;
+        this.props.viewState.explorerPanelIsVisible = true;
+        this.props.viewState.switchMobileView(viewname);
+        this.props.viewState.searchInCatalog(this.props.viewState.searchState.locationSearchText);
+    },
+
     render() {
+        const theme = 'light';
         return (
             <div className={Styles.mobileSearch}>
+                <div>
+                    {this.renderSearchInCatalogLink(theme)}
+                </div>
                 <div className={Styles.location}>
-                    {this.renderLocationResult()}
+                    {this.renderLocationResult(theme)}
                 </div>
             </div>
         );
     },
 
-    renderLocationResult() {
+    renderSearchInCatalogLink(theme) {
+        return (
+            <If condition={this.props.viewState.searchState.locationSearchText.length > 0}>
+                <div className={Styles.providerResult}>
+                    <ul className={Styles.btnList}>
+                        <SearchResult clickAction={this.searchInDataCatalog}
+                                      showPin={false}
+                                      name={`Search for "${this.props.viewState.searchState.locationSearchText}" in the Data Catalogue`}
+                                      theme={theme}
+                        />
+                    </ul>
+                </div>
+            </If>
+        );
+    },
+
+    renderLocationResult(theme) {
         const searchState = this.props.viewState.searchState;
-        const theme = 'light';
         return searchState.locationSearchProviders
             .filter(search => search.isSearching || (search.searchResults && search.searchResults.length))
             .map(search =>
@@ -52,7 +79,6 @@ const MobileSearch = createReactClass({
                                        onLocationClick={this.onLocationClick}
                                        isWaitingForSearchToStart={searchState.isWaitingForSearchToStart}
                                        theme={theme}
-
                 />
             );
     },
