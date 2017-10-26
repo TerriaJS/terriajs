@@ -1,17 +1,19 @@
 import clipboard from 'clipboard';
-import React, {Component} from 'react';
+import React from 'react';
 import Styles from './clipboard.scss';
 import classNames from 'classnames';
+import PropTypes from 'prop-types';
 
-export default class Clipboard extends React.Component{
+export default class Clipboard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       tooltip: null
-    }
+    };
     this.resetTooltip = this.resetTooltip.bind(this);
   }
-  componentDidMount(){
+
+  componentDidMount() {
     const that = this;
     this.clipboardBtn = new clipboard(`.btn-copy-${this.props.id}`);
     this.clipboardBtn.on('success', _=>
@@ -25,19 +27,19 @@ export default class Clipboard extends React.Component{
     window.setTimeout(that.resetTooltip, 3000);
   }
 
-  componentWillUnmount(){
+  componentWillUnmount() {
     const that = this;
     this.clipboardBtn.destroy();
     window.clearTimeout(that.resetTooltip);
   }
 
-  resetTooltip(){
+  resetTooltip() {
     this.setState({
       tooltip: null
-    })
+    });
   }
 
-  render(){
+  render() {
     return (
       <div className={Styles.clipboard}>
         <div>Share URL</div>
@@ -49,6 +51,11 @@ export default class Clipboard extends React.Component{
         </div>
         {this.state.tooltip && <span className={Styles.tooltip}>{this.state.tooltip}</span>}
       </div>
-      )
+    );
   }
 }
+
+Clipboard.propTypes = {
+   id: PropTypes.string.isRequired,
+   source: PropTypes.object.isRequired,
+};

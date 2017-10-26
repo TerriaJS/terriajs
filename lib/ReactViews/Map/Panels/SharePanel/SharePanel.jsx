@@ -138,7 +138,7 @@ const SharePanel = createReactClass({
 
         const shareUrlTextBox = <input className={Styles.shareUrlfield} type="text" value={this.state.shareUrl}
                placeholder={this.state.placeholder} readOnly
-               onClick={e => e.target.select()} id='share-url'/>
+               onClick={e => e.target.select()} id='share-url'/>;
 
         return (
             <MenuPanel theme={dropdownTheme}
