@@ -121,7 +121,7 @@ const SharePanel = createReactClass({
         }
     },
 
-    renderSmallScreen(iframeCode, shareImgStyle, shareUrlTextBox){
+    renderSmallScreen(iframeCode, shareImgStyle, shareUrlTextBox) {
       return (<div>
         <div className={Styles.clipboard}><Clipboard source={shareUrlTextBox} id='share-url'/></div>
         <div className={DropdownStyles.section}>
@@ -139,7 +139,7 @@ const SharePanel = createReactClass({
       </div>);
     },
 
-    renderNormal(iframeCode, shareImgStyle, shareUrlTextBox){
+    renderNormal(iframeCode, shareImgStyle, shareUrlTextBox) {
       return (
         <div>
           <div className={DropdownStyles.section}>
