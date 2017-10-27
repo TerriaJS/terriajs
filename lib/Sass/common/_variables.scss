@@ -90,8 +90,8 @@ $feature-info-btn-color: $text-light;
 $feature-info-table-border-style: 1px solid $dark;
 // $feature-info-table-width: 100%; // Optionally define to force tables to the full width of the feature info panel.
 
-$mobile-main-bg: #ffffff;
-$mobile-text: #000;
+$mobile-main-bg: $dark;
+$mobile-text: #fff;
 
 $mobile-modal-top-height: 40px;
 

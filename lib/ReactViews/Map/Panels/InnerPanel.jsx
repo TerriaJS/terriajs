@@ -70,6 +70,7 @@ const InnerPanel = createReactClass({
             <div className={classNames(
                     Styles.inner,
                     this.props.theme.inner,
+                    {[Styles.mobilePanelInner]: this.props.smallScreen},
                     {[Styles.isOpen]: this.state.isOpenCss}
                  )}
                  ref={this.props.innerRef}

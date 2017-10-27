@@ -63,19 +63,13 @@ const MobileMenu = createReactClass({
                         Styles.mobileNav,
                         {[Styles.mobileNavHidden]: !this.props.viewState.mobileMenuVisible}
                     )}>
-                    <div onClick={this.hideMenu}>
-                        <SettingPanel terria={this.props.terria}
-                                      allBaseMaps={this.props.allBaseMaps}
-                                      viewState={this.props.viewState}/>
-                    </div>
-                    <div onClick={this.hideMenu}>
-                        <SharePanel terria={this.props.terria}
-                                    viewState={this.props.viewState}/>
-                    </div>
+                    <SettingPanel terria={this.props.terria}
+                                  allBaseMaps={this.props.allBaseMaps}
+                                  viewState={this.props.viewState}/>
+                    <SharePanel terria={this.props.terria}
+                                viewState={this.props.viewState}/>
                     <For each="menuItem" of={this.props.menuItems}>
-                        <div onClick={this.hideMenu} key={menuItem.key}>
                             {menuItem}
-                        </div>
                     </For>
                     <If condition={this.props.showFeedback}>
                         <MobileMenuItem onClick={this.onFeedbackFormClick} caption="Give Feedback"/>

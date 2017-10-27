@@ -17,16 +17,17 @@ const MobilePanel = createReactClass({
 
     render() {
         return (
-            <div>
+            <div className={Styles.mobilePanel}>
                 <MobileMenuItem onClick={this.openPanel} caption={this.props.btnText}/>
                 <If condition={this.state.isOpen}>
                     {/* The overlay doesn't actually need to do anything except block clicks, as InnerPanel will listen to the window */}
                     <div className={Styles.overlay}/>
 
                     <InnerPanel theme={this.props.theme}
-                                caretOffset="15px"
+                                caretOffset={null}
                                 doNotCloseFlag={this.getDoNotCloseFlag()}
-                                onDismissed={this.onDismissed}>
+                                onDismissed={this.onDismissed}
+                                smallScreen={true}>
                         {this.props.children}
                     </InnerPanel>
                 </If>
