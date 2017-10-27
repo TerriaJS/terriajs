@@ -121,6 +121,61 @@ const SharePanel = createReactClass({
         }
     },
 
+    renderSmallScreen(iframeCode, shareImgStyle, shareUrlTextBox){
+      return (<div>
+        <div className={Styles.clipboard}><Clipboard source={shareUrlTextBox} id='share-url'/></div>
+        <div className={DropdownStyles.section}>
+              <div className={Styles.mobileHeader}>Preview <span><i>tab to view full image</i></span></div>
+              <a className={Styles.link} href={this.state.imageUrl} target='_blank'><div className={Styles.imgShare} style={shareImgStyle}></div></a>
+        </div>
+        <If condition={this.isUrlShortenable()}>
+            <div className={classNames(DropdownStyles.section, Styles.shortenUrl)}>
+                <button onClick={this.onShortenClicked}>
+                    {this.shouldShorten() ? <Icon glyph={Icon.GLYPHS.checkboxOn}/> : <Icon glyph={Icon.GLYPHS.checkboxOff}/>}
+                    Shorten the share URL
+                </button>
+            </div>
+        </If>
+      </div>);
+    },
+
+    renderNormal(iframeCode, shareImgStyle, shareUrlTextBox){
+      return (
+        <div>
+          <div className={DropdownStyles.section}>
+              <a className={Styles.link} href={this.state.imageUrl} target='_blank'><div className={Styles.imgShare} style={shareImgStyle}></div></a>
+              <div className={Styles.linkWrapper}>
+                  <a className={Styles.link} href={this.state.imageUrl} target='_blank'>View full size image</a>
+              </div>
+          </div>
+          <div className={Styles.clipboard}><Clipboard source={shareUrlTextBox} id='share-url'/></div>
+          <div className={classNames(DropdownStyles.section, Styles.shortenUrl)}>
+              <div className={Styles.btnWrapper}>
+                  <button type='button' onClick={this.toggleAdvancedOptions} className={Styles.btnAdvanced}>
+                      <span>Advanced options</span>
+                      {this.advancedOptions()? <Icon glyph={Icon.GLYPHS.opened}/> : <Icon glyph={Icon.GLYPHS.closed}/>}
+                  </button>
+              </div>
+              <If condition={this.advancedOptions()}>
+                <div className={DropdownStyles.section}>
+                    <p className={Styles.paragraph}>To embed, copy this code to embed this map into an HTML page:</p>
+                    <input className={Styles.field} type="text" readOnly placeholder={this.state.placeholder}
+                        value={iframeCode}
+                        onClick={e => e.target.select()}/>
+                </div>
+                <If condition={this.isUrlShortenable()}>
+                    <div className={classNames(DropdownStyles.section, Styles.shortenUrl)}>
+                        <button onClick={this.onShortenClicked}>
+                            {this.shouldShorten() ? <Icon glyph={Icon.GLYPHS.checkboxOn}/> : <Icon glyph={Icon.GLYPHS.checkboxOff}/>}
+                            Shorten the share URL using a web service
+                        </button>
+                    </div>
+                </If>
+              </If>
+          </div>
+        </div>);
+    },
+
     render() {
         const dropdownTheme = {
             btn: Styles.btnShare,
@@ -148,58 +203,14 @@ const SharePanel = createReactClass({
                        onOpenChanged={this.onOpenChanged}
                        smallScreen={this.props.viewState.useSmallScreenInterface}>
                 <If condition={this.state.isOpen}>
-                        <If condition={this.props.viewState.useSmallScreenInterface}>
-                          <div className={Styles.clipboard}><Clipboard source={shareUrlTextBox} id='share-url'/></div>
-                        </If>
-
-                        <div className={DropdownStyles.section}>
-                            <If condition={this.props.viewState.useSmallScreenInterface}>
-                              <div className={Styles.mobileHeader}>Preview <span><i>tab to view full image</i></span></div>
-                            </If>
-                            <a className={Styles.link} href={this.state.imageUrl} target='_blank'><div className={Styles.imgShare} style={shareImgStyle}></div></a>
-                            <If condition={!this.props.viewState.useSmallScreenInterface}>
-                              <div className={Styles.linkWrapper}>
-                                  <a className={Styles.link} href={this.state.imageUrl} target='_blank'>View full size image</a>
-                              </div>
-                            </If>
-                        </div>
-                        <If condition={this.isUrlShortenable() && this.props.viewState.useSmallScreenInterface}>
-                            <div className={classNames(DropdownStyles.section, Styles.shortenUrl)}>
-                                <button onClick={this.onShortenClicked}>
-                                    {this.shouldShorten() ? <Icon glyph={Icon.GLYPHS.checkboxOn}/> : <Icon glyph={Icon.GLYPHS.checkboxOff}/>}
-                                    Shorten the share URL
-                                </button>
-                            </div>
-                        </If>
-                        <If condition={!this.props.viewState.useSmallScreenInterface}>
-                          <div className={Styles.clipboard}><Clipboard source={shareUrlTextBox} id='share-url'/></div>
-                        </If>
-                        <div className={classNames(DropdownStyles.section, Styles.shortenUrl)}>
-                            <If condition={!this.props.viewState.useSmallScreenInterface}>
-                                <div className={Styles.btnWrapper}>
-                                    <button type='button' onClick={this.toggleAdvancedOptions} className={Styles.btnAdvanced}>
-                                        <span>Advanced options</span>
-                                        {this.advancedOptions()? <Icon glyph={Icon.GLYPHS.opened}/> : <Icon glyph={Icon.GLYPHS.closed}/>}
-                                    </button>
-                                </div>
-                                <If condition={this.advancedOptions()}>
-                                  <div className={DropdownStyles.section}>
-                                      <p className={Styles.paragraph}>To embed, copy this code to embed this map into an HTML page:</p>
-                                      <input className={Styles.field} type="text" readOnly placeholder={this.state.placeholder}
-                                          value={iframeCode}
-                                          onClick={e => e.target.select()}/>
-                                  </div>
-                                  <If condition={this.isUrlShortenable()}>
-                                      <div className={classNames(DropdownStyles.section, Styles.shortenUrl)}>
-                                          <button onClick={this.onShortenClicked}>
-                                              {this.shouldShorten() ? <Icon glyph={Icon.GLYPHS.checkboxOn}/> : <Icon glyph={Icon.GLYPHS.checkboxOff}/>}
-                                              Shorten the share URL using a web service
-                                          </button>
-                                      </div>
-                                  </If>
-                                </If>
-                            </If>
-                        </div>
+                  <Choose>
+                    <When condition={this.props.viewState.useSmallScreenInterface}>
+                      {this.renderSmallScreen(iframeCode, shareImgStyle, shareUrlTextBox)}
+                    </When>
+                    <Otherwise>
+                      {this.renderNormal(iframeCode, shareImgStyle, shareUrlTextBox)}
+                    </Otherwise>
+                  </Choose>
                 </If>
             </MenuPanel>
         );
