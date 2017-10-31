@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### 5.4.3
+
+* Fixed a build problem on case-sensitive file systems (e.g. most Linux systems).
+
 ### 5.4.2
 
 * We no longer show the Zoom To button on the workbench when there is no rectangle to zoom to.
