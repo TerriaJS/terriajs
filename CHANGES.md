@@ -11,6 +11,7 @@ Change Log
 * Improved display of "Add Data" panel on small screens when Feedback and Feature Info panels are open.
 * Added "search in data catalog" link to mobile search.
 * Added a button to automatically copy share url into clipboard in share panel.
+* Modified `CkanCatalogItem` to exclude files that advertise themselves as KML files but have the file extension .ZIP.
 
 ### 5.4.0
 
