@@ -69,18 +69,21 @@ const ViewingControls = createReactClass({
 
     render() {
         const item = this.props.item;
+        const canZoom = item.canZoomTo || (item.tableStructure && item.tableStructure.sourceFeature);
+        const canSplit = item.supportsSplitting && defined(item.splitDirection) && item.terria.currentViewer.canShowSplitter;
+        const classList = {[Styles.noZoom]: !canZoom, [Styles.noSplit]: !canSplit, [Styles.noInfo]: !item.showsInfo};
         return (
-            <ul className={classNames(Styles.control, {[Styles.hasZoom]: item.isMappable || item.tableStructure && item.tableStructure.sourceFeature})}>
-                <If condition={item.isMappable && item.canZoomTo()}>
-                    <li className={Styles.zoom}><button type='button' onClick={this.zoomTo} title="Zoom to data" className={Styles.btn}>Zoom To Extent</button></li>
+            <ul className={Styles.control}>
+                <If condition={item.canZoomTo}>
+                    <li className={classNames(Styles.zoom, classList)}><button type='button' onClick={this.zoomTo} title="Zoom to extent" className={Styles.btn}>Zoom To Extent</button></li>
                 </If>
                 <If condition={item.tableStructure && item.tableStructure.sourceFeature}>
-                    <li className={Styles.zoom}><button type='button' onClick={this.openFeature} title="Zoom to data" className={Styles.btn}>Zoom To</button></li>
+                    <li className={classNames(Styles.zoom, classList)}><button type='button' onClick={this.openFeature} title="Zoom to data" className={Styles.btn}>Zoom To</button></li>
                 </If>
                 <If condition={item.showsInfo}>
-                    <li className={Styles.info}><button type='button' onClick={this.previewItem} className={Styles.btn} title='info'>About This Data Set</button></li>
+                    <li className={classNames(Styles.info, classList)}><button type='button' onClick={this.previewItem} className={Styles.btn} title='info'>About This Data</button></li>
                 </If>
-                <li className={Styles.remove}>
+                <li className={classNames(Styles.remove, classList)}>
                     <button type='button' onClick={this.removeFromMap} title="Remove this data" className={Styles.btn}>
                         Remove <Icon glyph={Icon.GLYPHS.remove}/>
                     </button>
