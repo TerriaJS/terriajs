@@ -10,6 +10,7 @@ Change Log
 * Added "search in data catalog" link to mobile search.
 * Added a button to automatically copy share url into clipboard in share panel.
 * Added `initFragmentPaths` property to the `parameters` section of `config.json`.  It can be used to specify an array of base paths for resolving init fragments in the URL.
+* Modified `CkanCatalogItem` to exclude files that advertise themselves as KML files but have the file extension .ZIP.
 
 ### 5.4.0
 
