@@ -23,7 +23,7 @@ const MobileSearch = createReactClass({
     onLocationClick(result) {
         result.clickAction();
 
-        addMarker(this.props.terria, this.props.viewState, result);
+        addMarker(this.props.terria, result);
 
         // Close modal window
         this.props.viewState.switchMobileView(null);

@@ -29,7 +29,7 @@ const SidebarSearch = createReactClass({
     },
 
     onLocationClick(result) {
-        addMarker(this.props.terria, this.props.viewState, result);
+        addMarker(this.props.terria, result);
         result.clickAction();
     },
 

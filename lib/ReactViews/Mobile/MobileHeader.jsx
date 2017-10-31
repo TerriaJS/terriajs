@@ -63,7 +63,7 @@ const MobileHeader = createReactClass({
         this.props.viewState.searchState.locationSearchText = newText;
 
         if (newText.length === 0) {
-            removeMarker(this.props.terria, this.props.viewState);
+            removeMarker(this.props.terria);
         }
 
         this.showLocationSearchResults();
