@@ -19,7 +19,6 @@ Change Log
 * Added the ability to use tokens from terriajs-server for layers requiring ESRI tokens.
 * Catalog group items are now sorted by their in-catalog name
 
-
 ### 5.3.0
 
 * Added the ability to use the analytics region picker with vector tile region mapping by specifiying a WMS server & layer for analytics only.
