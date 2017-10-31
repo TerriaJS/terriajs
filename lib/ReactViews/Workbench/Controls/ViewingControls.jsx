@@ -71,7 +71,7 @@ const ViewingControls = createReactClass({
         const item = this.props.item;
         return (
             <ul className={classNames(Styles.control, {[Styles.hasZoom]: item.isMappable || item.tableStructure && item.tableStructure.sourceFeature})}>
-                <If condition={item.isMappable}>
+                <If condition={item.isMappable && item.canZoomTo()}>
                     <li className={Styles.zoom}><button type='button' onClick={this.zoomTo} title="Zoom to data" className={Styles.btn}>Zoom To Extent</button></li>
                 </If>
                 <If condition={item.tableStructure && item.tableStructure.sourceFeature}>
