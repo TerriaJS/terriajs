@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 import Entity from 'terriajs-cesium/Source/DataSources/Entity';
 import Icon from "../Icon.jsx";
-import { SEARCH_MARKER_DATA_SOURCE_NAME } from '../../Models/LocationMarkerUtils';
+import { LOCATION_MARKER_DATA_SOURCE_NAME } from '../../Models/LocationMarkerUtils';
 
 import Styles from './feature-info-panel.scss';
 import classNames from 'classnames';
@@ -216,9 +216,9 @@ function determineCatalogItem(nowViewing, feature) {
     if (defined(feature.entityCollection) && defined(feature.entityCollection.owner)) {
         const dataSource = feature.entityCollection.owner;
 
-        if (dataSource.name === SEARCH_MARKER_DATA_SOURCE_NAME) {
+        if (dataSource.name === LOCATION_MARKER_DATA_SOURCE_NAME) {
             return {
-                name: 'Search Marker'
+                name: 'Location Marker'
             };
         }
 
