@@ -41,6 +41,7 @@ Option                      | Meaning
 `"printDisclaimer": {`<span><br/>&nbsp;&nbsp;`"text": "",`<br/>&nbsp;&nbsp;`"url": ""`<br/>`}`</span> | Same as `disclaimer`, except only shown in printed views.
 `"supportEmail"`            | The email address shown when things go wrong.
 `"mobileDefaultViewerMode"` | A string specifying the default view mode to load when running on a mobile platform. Options are: `"3DTerrain"`, `"3DSmooth"`, `"2D"`. (Default: `"2D"`)
+`"initFragmentPaths"`       | An array of base paths to use to try to use to resolve init fragments in the URL.  For example, if this property is `[ "init/", "http://example.com/init/"]`, then a URL with `#test` will first try to load `init/test.json` and, if that fails, next try to load `http://example.com/init/test.json`.  If not specified, this property defaults to `[ "init/" ]`.
 
 ## Advanced options
 
