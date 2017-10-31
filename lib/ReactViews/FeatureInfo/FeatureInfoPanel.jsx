@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 import Entity from 'terriajs-cesium/Source/DataSources/Entity';
 import Icon from "../Icon.jsx";
-import { SEARCH_MARKER_DATA_SOURCE_NAME } from '../Search/SearchMarkerUtils';
+import { SEARCH_MARKER_DATA_SOURCE_NAME } from '../../Models/SearchMarkerUtils';
 
 import Styles from './feature-info-panel.scss';
 import classNames from 'classnames';

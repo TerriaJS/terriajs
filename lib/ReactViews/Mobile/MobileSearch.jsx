@@ -4,7 +4,7 @@ import createReactClass from 'create-react-class';
 
 import PropTypes from 'prop-types';
 
-import {addMarker} from '../Search/SearchMarkerUtils';
+import {addMarker} from '../../Models/SearchMarkerUtils';
 import ObserveModelMixin from '../ObserveModelMixin';
 import LocationSearchResults from '../Search/LocationSearchResults';
 import SearchResult from '../Search/SearchResult';

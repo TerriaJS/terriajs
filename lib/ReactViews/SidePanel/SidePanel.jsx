@@ -11,7 +11,7 @@ import SearchBox from '../Search/SearchBox.jsx';
 import SidebarSearch from '../Search/SidebarSearch.jsx';
 import Workbench from '../Workbench/Workbench.jsx';
 import Icon from "../Icon.jsx";
-import { removeMarker } from '../Search/SearchMarkerUtils';
+import { removeMarker } from '../../Models/SearchMarkerUtils';
 
 import Styles from './side-panel.scss';
 
