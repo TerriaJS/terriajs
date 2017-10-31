@@ -37,7 +37,6 @@
 
 .field {
   composes: input;
-
   border-style: solid;
   border-width: 1px;
   border-color: $field-border;
@@ -62,5 +61,3 @@
 .field.is-read-only {
   background-color: rgba(0, 0, 0, .125);
 }
-
-
