@@ -93,13 +93,13 @@ const ViewingControls = createReactClass({
 
     render() {
         const item = this.props.item;
-        const canZoom = item.isMappable || (item.tableStructure && item.tableStructure.sourceFeature);
+        const canZoom = item.canZoomTo() || (item.tableStructure && item.tableStructure.sourceFeature);
         const canSplit = item.supportsSplitting && defined(item.splitDirection) && item.terria.currentViewer.canShowSplitter;
         const classList = {[Styles.noZoom]: !canZoom, [Styles.noSplit]: !canSplit, [Styles.noInfo]: !item.showsInfo};
         return (
             <ul className={Styles.control}>
-                <If condition={item.isMappable}>
-                    <li className={classNames(Styles.zoom, classList)}><button type='button' onClick={this.zoomTo} title="Zoom to data" className={Styles.btn}>Zoom To Extent</button></li>
+                <If condition={item.canZoomTo()}>
+                    <li className={classNames(Styles.zoom, classList)}><button type='button' onClick={this.zoomTo} title="Zoom to extent" className={Styles.btn}>Zoom To Extent</button></li>
                 </If>
                 <If condition={item.tableStructure && item.tableStructure.sourceFeature}>
                     <li className={classNames(Styles.zoom, classList)}><button type='button' onClick={this.openFeature} title="Zoom to data" className={Styles.btn}>Zoom To</button></li>
