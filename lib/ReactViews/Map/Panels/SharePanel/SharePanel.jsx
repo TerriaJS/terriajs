@@ -125,7 +125,6 @@ const SharePanel = createReactClass({
       return (<div>
         <div className={Styles.clipboard}><Clipboard source={shareUrlTextBox} id='share-url'/></div>
         <div className={DropdownStyles.section}>
-              <div className={Styles.mobileHeader}>Preview <span><i>tab to view full image</i></span></div>
               <a className={Styles.link} href={this.state.imageUrl} target='_blank'><div className={Styles.imgShare} style={shareImgStyle}></div></a>
         </div>
         <If condition={this.isUrlShortenable()}>
@@ -144,9 +143,6 @@ const SharePanel = createReactClass({
         <div>
           <div className={DropdownStyles.section}>
               <a className={Styles.link} href={this.state.imageUrl} target='_blank'><div className={Styles.imgShare} style={shareImgStyle}></div></a>
-              <div className={Styles.linkWrapper}>
-                  <a className={Styles.link} href={this.state.imageUrl} target='_blank'>View full size image</a>
-              </div>
           </div>
           <div className={Styles.clipboard}><Clipboard source={shareUrlTextBox} id='share-url'/></div>
           <div className={classNames(DropdownStyles.section, Styles.shortenUrl)}>
