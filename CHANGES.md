@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### 5.4.2
+
+* We no longer show the Zoom To button on the workbench when there is no rectangle to zoom to.
+
 ### 5.4.1
 
 * Fixed a bug when sharing SDMX-JSON catalog items.
