@@ -29,6 +29,8 @@ Change Log
 
 * Renamed search marker to location marker.
 * Added location marker to share state.
+* Added selected coordinate to feature info panel.
+
 ### 5.4.0
 
 * Breaking change: removed some old types that haven't been used since the new React-based user interface in v4.0.0, specifically `KnockoutHammerBinding`, `KnockoutMarkdownBinding`, `PopupMessageConfirmationViewModel`, `PopupMessageViewModel`, and `PopupViewModel`.
