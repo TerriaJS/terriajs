@@ -1,6 +1,8 @@
 'use strict';
 
 import defined from 'terriajs-cesium/Source/Core/defined';
+import CesiumMath from 'terriajs-cesium/Source/Core/Math';
+import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
 import FeatureInfoCatalogItem from './FeatureInfoCatalogItem.jsx';
 import Loader from '../Loader.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
@@ -10,7 +12,8 @@ import PropTypes from 'prop-types';
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 import Entity from 'terriajs-cesium/Source/DataSources/Entity';
 import Icon from "../Icon.jsx";
-import { LOCATION_MARKER_DATA_SOURCE_NAME } from '../../Models/LocationMarkerUtils';
+import { LOCATION_MARKER_DATA_SOURCE_NAME, addMarker, removeMarker, markerVisible } from '../../Models/LocationMarkerUtils';
+import { prettifyCoordinates } from '../../Models/prettyCoordinates';
 
 import Styles from './feature-info-panel.scss';
 import classNames from 'classnames';
@@ -119,6 +122,58 @@ const FeatureInfoPanel = createReactClass({
         }
     },
 
+    addManualMarker(latitude, longitude) {
+        addMarker(this.props.terria, {
+            name: "User Selection",
+            location: {
+                latitude: latitude,
+                longitude: longitude
+            }
+        });
+    },
+
+    pinClicked(latitude, longitude) {
+        if (!markerVisible(this.props.terria)) {
+            this.addManualMarker(latitude, longitude);
+        } else {
+            removeMarker(this.props.terria);
+        }
+    },
+
+    locationUpdated(latitude, longitude) {
+        if (defined(latitude) && defined (longitude) && markerVisible(this.props.terria)) {
+            removeMarker(this.props.terria);
+            this.addManualMarker(latitude, longitude);
+        }
+    },
+
+    locationItem(cartesianPosition) {
+        var catographic = Ellipsoid.WGS84.cartesianToCartographic(cartesianPosition);
+        var latitude = CesiumMath.toDegrees(catographic.latitude);
+        var longitude = CesiumMath.toDegrees(catographic.longitude);
+        var pretty = prettifyCoordinates(latitude, longitude);
+        this.locationUpdated(latitude, longitude);
+
+        var that = this;
+        var pinClicked = function() {
+            that.pinClicked(latitude, longitude);
+        };
+
+        var locationButtonStyle = markerVisible(this.props.terria) ? Styles.btnLocationSelected : Styles.btnLocation;
+
+        return (
+            <div className={Styles.location}>
+                <span>Lat / Lon </span>
+                <span>
+                    {pretty.latitude + ", " + pretty.longitude}
+                    <button type='button' onClick={pinClicked}  className={locationButtonStyle}>
+                        <Icon glyph={Icon.GLYPHS.location}/>
+                    </button>
+                </span>
+            </div>
+        );
+    },
+
     render() {
         const terria = this.props.terria;
         const viewState = this.props.viewState;
@@ -129,7 +184,6 @@ const FeatureInfoPanel = createReactClass({
             [Styles.isVisible]: viewState.featureInfoPanelIsVisible
         });
         return (
-
             <div
                 className={panelClassName}
                 aria-hidden={!viewState.featureInfoPanelIsVisible}>
@@ -156,6 +210,9 @@ const FeatureInfoPanel = createReactClass({
                             {featureInfoCatalogItems}
                         </Otherwise>
                     </Choose>
+                    <If condition={defined(terria.pickedFeatures) && defined(terria.pickedFeatures.pickPosition)}>
+                        <li>{this.locationItem(terria.pickedFeatures.pickPosition)}</li>
+                    </If>
                 </ul>
             </div>
         );
