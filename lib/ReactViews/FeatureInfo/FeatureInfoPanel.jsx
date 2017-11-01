@@ -148,18 +148,18 @@ const FeatureInfoPanel = createReactClass({
     },
 
     locationItem(cartesianPosition) {
-        var catographic = Ellipsoid.WGS84.cartesianToCartographic(cartesianPosition);
-        var latitude = CesiumMath.toDegrees(catographic.latitude);
-        var longitude = CesiumMath.toDegrees(catographic.longitude);
-        var pretty = prettifyCoordinates(latitude, longitude);
+        const catographic = Ellipsoid.WGS84.cartesianToCartographic(cartesianPosition);
+        const latitude = CesiumMath.toDegrees(catographic.latitude);
+        const longitude = CesiumMath.toDegrees(catographic.longitude);
+        const pretty = prettifyCoordinates(latitude, longitude);
         this.locationUpdated(latitude, longitude);
 
-        var that = this;
-        var pinClicked = function() {
+        const that = this;
+        const pinClicked = function() {
             that.pinClicked(latitude, longitude);
         };
 
-        var locationButtonStyle = markerVisible(this.props.terria) ? Styles.btnLocationSelected : Styles.btnLocation;
+        const locationButtonStyle = markerVisible(this.props.terria) ? Styles.btnLocationSelected : Styles.btnLocation;
 
         return (
             <div className={Styles.location}>
