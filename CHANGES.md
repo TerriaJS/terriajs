@@ -25,6 +25,10 @@ Change Log
 * Modified `CkanCatalogItem` to exclude files that advertise themselves as KML files but have the file extension .ZIP.
 * Removed "View full size image" link on the share panel.  Chrome 60 removed the ability to navigate to a data URI, and other browsers are expected to follow this lead.
 
+### 5.#.#
+
+* Renamed search marker to location marker.
+* Added location marker to share state.
 ### 5.4.0
 
 * Breaking change: removed some old types that haven't been used since the new React-based user interface in v4.0.0, specifically `KnockoutHammerBinding`, `KnockoutMarkdownBinding`, `PopupMessageConfirmationViewModel`, `PopupMessageViewModel`, and `PopupViewModel`.
