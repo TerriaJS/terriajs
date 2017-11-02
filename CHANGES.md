@@ -10,6 +10,14 @@ Change Log
 * Added the ability to use vector tile properties in feature info templates when using region mapping (data row attributes will overwrite vector tile properties with the same name)
 * Properties available in feature info templates are now JSON parsed and replaced by their javascript object if they start with `[` or `{` and parse successfully
 * Decreased flickering of time-varying region mapped layers by pre-rendering the next time interval
+### 5.4.3
+
+* Fixed a build problem on case-sensitive file systems (e.g. most Linux systems).
+
+### 5.4.2
+
+* We no longer show the Zoom To button on the workbench when there is no rectangle to zoom to.
+
 ### 5.4.1
 
 * Fixed a bug when sharing SDMX-JSON catalog items.
@@ -25,7 +33,6 @@ Change Log
 * Breaking change: removed some old types that haven't been used since the new React-based user interface in v4.0.0, specifically `KnockoutHammerBinding`, `KnockoutMarkdownBinding`, `PopupMessageConfirmationViewModel`, `PopupMessageViewModel`, and `PopupViewModel`.
 * Added the ability to use tokens from terriajs-server for layers requiring ESRI tokens.
 * Catalog group items are now sorted by their in-catalog name
-
 
 ### 5.3.0
 
