@@ -35,9 +35,11 @@ const MobileModalWindow = createReactClass({
 
         switch (viewState.mobileView) {
             case viewState.mobileViewOptions.data:
+                // No multiple catalogue tabs in mobile
                 return (
                     <DataCatalog terria={this.props.terria}
-                                 viewState={this.props.viewState} />
+                                 viewState={this.props.viewState}
+                                 items={this.props.terria.catalog.group.items}/>
                 );
             case viewState.mobileViewOptions.preview:
                 return (
