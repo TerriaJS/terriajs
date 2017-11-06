@@ -38,7 +38,7 @@ describe('WebMapServiceCatalogItem', function() {
         expect(wmsItem).toBeDefined();
     });
 
-    it('is derived from ImageryLayerDataItemViewModel', function() {
+    it('is derived from ImageryLayerCatalogItem', function() {
         expect(wmsItem instanceof ImageryLayerCatalogItem).toBe(true);
     });
 
@@ -463,6 +463,17 @@ describe('WebMapServiceCatalogItem', function() {
             layers: 'foo,bar'
         });
         wmsItem.load().then(done.fail).otherwise(done);
+    });
+
+    it('supports a namespaced layer name', function(done) {
+        wmsItem.updateFromJson({
+            url: 'http://example.com',
+            metadataUrl: 'test/WMS/single_style_legend_url.xml',
+            layers: 'namespace:single_period'
+        });
+        wmsItem.load().then(function() {
+            expect(wmsItem.layers).toBe('single_period');
+        }).then(done).otherwise(done.fail);
     });
 
     it('detects ncWMS implementation correctly', function(done) {
