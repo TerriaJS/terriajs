@@ -28,6 +28,7 @@ const Splitter = createReactClass({
 
     propTypes: {
         terria: PropTypes.object.isRequired,
+        viewState: PropTypes.object.isRequired,
         thumbSize: PropTypes.number,
         padding: PropTypes.number
     },
@@ -113,6 +114,10 @@ const Splitter = createReactClass({
     },
 
     getPosition() {
+        // Use the viewState properties from here (dummy call - as changes in these values will effect .clientWidth)
+        // the so that it will cause the component to be refreshed if these values are updated.
+        const viewState = !this.props.viewState.isMapFullScreen && !this.props.viewState.hideMapUi();
+
         const canvasWidth = this.props.terria.currentViewer.getContainer().clientWidth;
         return this.props.terria.splitPosition * canvasWidth;
     },
