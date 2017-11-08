@@ -982,7 +982,7 @@ describe('CsvCatalogItem with region mapping', function() {
             expect(csvItem.tableStructure.columnsByType[VarType.TIME].length).toEqual(1);
             expect(csvItem.tableStructure.columnsByType[VarType.TIME][0].julianDates[0]).toEqual(j('2015-08-07'));
             // Test that the right regions have been colored (since the datasource doesn't expose the entities).
-            // On 2015-08-07, only postcodes 3121 and 3122 have values. On neighboring dates, so do 3123 and 3124.
+            // On 2015-08-08, only postcodes 3121 and 3122 have values. On neighboring dates, so do 3123 and 3124.
             var recolorFunction = ImageryProviderHooks.addRecolorFunc.calls.argsFor(0)[1];
             var regionNames = regionDetail.regionProvider.regions.map(getId);
 
