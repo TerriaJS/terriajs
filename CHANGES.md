@@ -12,9 +12,6 @@ Change Log
 ### 5.4.4
 
 * Added support for specifying namespaced layer names in the `WebMapServiceCatalogItem` `layers` property.
-### 5.4.4
-
-* Added support for specifying namespaced layer names in the `WebMapServiceCatalogItem` `layers` property.
 * Made TerriaJS tolerant of XML/HTML inside WMS GetCapabilities elements without being properly wrapped in `CDATA`.
 
 ### 5.4.3
