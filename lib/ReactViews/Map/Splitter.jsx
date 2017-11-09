@@ -118,7 +118,7 @@ const Splitter = createReactClass({
     },
 
     render() {
-        if (!this.props.terria.showSplitter || !this.props.terria.currentViewer.canShowSplitter) {
+        if (!this.props.terria.showSplitter || !this.props.terria.currentViewer.canShowSplitter || !this.props.terria.currentViewer.getContainer()) {
             return null;
         }
 
