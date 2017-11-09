@@ -19,17 +19,17 @@ const DataCatalog = createReactClass({
 
     propTypes: {
         terria: PropTypes.object,
-        viewState: PropTypes.object
+        viewState: PropTypes.object,
+        items: PropTypes.array
     },
 
     render() {
-        const terria = this.props.terria;
         const searchState = this.props.viewState.searchState;
         const isSearching = searchState.catalogSearchText.length > 0;
         const items = (
             isSearching ?
                 searchState.catalogSearchProvider.searchResults.map(result => result.catalogItem) :
-                terria.catalog.group.items
+                this.props.items
         ).filter(defined);
 
         return (
