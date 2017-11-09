@@ -5,8 +5,15 @@ Change Log
 
 ### 5.5.0
 
+* Added the ability to use a tabbed catalog in the explorer panel on desktop site. Setting `tabbedCatalog` parameter to `true` in `config.json` causes top-level groups in the catalog to list items in separate explorer panel tabs.
 * Added the ability to split the screen into a left-side and right-side, and show raster and region mapped layers on only one side of the splitter.
 * Fixed a bug in `WebMapServiceCatalogItem` that could cause a WMS time time dimension to be interpreted incorrectly if it was specified only using dates (not times) and with a periodicity of less than a day.
+
+### 5.4.4
+
+* Added support for specifying namespaced layer names in the `WebMapServiceCatalogItem` `layers` property.
+* Made TerriaJS tolerant of XML/HTML inside WMS GetCapabilities elements without being properly wrapped in `CDATA`.
+
 ### 5.4.3
 
 * Fixed a build problem on case-sensitive file systems (e.g. most Linux systems).
