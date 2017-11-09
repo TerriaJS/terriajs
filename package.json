@@ -57,6 +57,7 @@
     "pbf": "^3.0.1",
     "point-in-polygon": "^1.0.1",
     "proj4": "~2.3.16",
+    "prop-types": "^15.6.0",
     "raw-loader": "^0.5.1",
     "react": "^15.5.4",
     "react-addons-pure-render-mixin": "^15.6.0",
