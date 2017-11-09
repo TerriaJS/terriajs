@@ -1,16 +1,13 @@
-import React from 'react';
-
-import createReactClass from 'create-react-class';
-
-import PropTypes from 'prop-types';
-
 import Compass from './Navigation/Compass.jsx';
+import createReactClass from 'create-react-class';
 import MyLocation from './Navigation/MyLocation.jsx';
-import ZoomControl from './Navigation/ZoomControl.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
-import ViewerMode from '../../Models/ViewerMode';
-
+import PropTypes from 'prop-types';
+import React from 'react';
 import Styles from './map-navigation.scss';
+import ToggleSplitterTool from './Navigation/ToggleSplitterTool';
+import ViewerMode from '../../Models/ViewerMode';
+import ZoomControl from './Navigation/ZoomControl.jsx';
 
 // The map navigation region
 const MapNavigation = createReactClass({
@@ -43,6 +40,11 @@ const MapNavigation = createReactClass({
                 <If condition={!this.props.terria.configParameters.disableMyLocation}>
                     <div className={Styles.control}>
                         <MyLocation terria={this.props.terria}/>
+                    </div>
+                </If>
+                <If condition={!this.props.terria.configParameters.disableSplitter}>
+                    <div className={Styles.control}>
+                        <ToggleSplitterTool terria={this.props.viewState.terria}/>
                     </div>
                 </If>
                 <For each="item" of={this.props.navItems} index="i">

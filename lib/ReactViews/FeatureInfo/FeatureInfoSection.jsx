@@ -46,7 +46,7 @@ const FeatureInfoSection = createReactClass({
 
     getInitialState() {
         return {
-            clockSubscription: undefined,
+            removeClockSubscription: undefined,
             timeoutIds: [],
             showRawData: false
         };
@@ -270,11 +270,17 @@ function setSubscriptionsAndTimeouts(featureInfoSection, feature) {
         setCurrentFeatureValues(changedFeature, featureInfoSection.props.clock);
     });
     if (featureInfoSection.isFeatureTimeVarying(feature)) {
-        featureInfoSection.setState({
-            clockSubscription: featureInfoSection.props.clock.onTick.addEventListener(function(clock) {
-                setCurrentFeatureValues(feature, clock);
-            })
-        });
+        if (defined(featureInfoSection.props.clock.onTick)) {
+            featureInfoSection.setState({
+                removeClockSubscription: featureInfoSection.props.clock.onTick.addEventListener(function(clock) {
+                    setCurrentFeatureValues(feature, clock);
+                })
+            });
+        } else {
+            // This is probably a DataSourceClock because the catalog item is using its own clock.
+            // But we currently have no way of subscribing to changes to it.
+            // See https://github.com/TerriaJS/terriajs/issues/2736
+        }
     } else {
         setTimeoutsForUpdatingCustomComponents(featureInfoSection);
     }
@@ -285,8 +291,8 @@ function setSubscriptionsAndTimeouts(featureInfoSection, feature) {
  * @private
  */
 function removeSubscriptionsAndTimeouts(featureInfoSection) {
-    if (defined(featureInfoSection.state.clockSubscription)) {
-        featureInfoSection.state.clockSubscription();
+    if (defined(featureInfoSection.state.removeClockSubscription)) {
+        featureInfoSection.state.removeClockSubscription();
     }
     featureInfoSection.state.timeoutIds.forEach(id => {
         clearTimeout(id);
@@ -306,9 +312,28 @@ function getPropertyValuesForFeature(feature, clock, formats) {
     // If they have bad keys, fix them.
     // If they have formatting, apply it.
     const properties = feature.currentProperties || propertyGetTimeValues(feature.properties, clock);
-    const result = replaceBadKeyCharacters(properties);
+    // Try JSON.parse on values that look like JSON arrays or objects
+    let result = parseValues(properties);
+    result = replaceBadKeyCharacters(result);
     if (defined(formats)) {
         applyFormatsInPlace(result, formats);
+    }
+    return result;
+}
+
+function parseValues(properties) {
+    // JSON.parse property values that look like arrays or objects
+    const result = {};
+    for (const key in properties) {
+        if (properties.hasOwnProperty(key)) {
+            let val = properties[key];
+            if (val && (typeof val === 'string' || val instanceof String) && (/^\s*[[{]/).test(val)) {
+                try {
+                    val = JSON.parse(val);
+                } catch (e) {}
+            }
+            result[key] = val;
+        }
     }
     return result;
 }
