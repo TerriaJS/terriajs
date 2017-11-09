@@ -94,7 +94,7 @@ const ViewingControls = createReactClass({
     render() {
         const item = this.props.item;
         const canZoom = item.canZoomTo || (item.tableStructure && item.tableStructure.sourceFeature);
-        const canSplit = item.supportsSplitting && defined(item.splitDirection) && item.terria.currentViewer.canShowSplitter;
+        const canSplit = !item.terria.configParameters.disableSplitter && item.supportsSplitting && defined(item.splitDirection) && item.terria.currentViewer.canShowSplitter;
         const classList = {[Styles.noZoom]: !canZoom, [Styles.noSplit]: !canSplit, [Styles.noInfo]: !item.showsInfo};
         return (
             <ul className={Styles.control}>
