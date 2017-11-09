@@ -21,7 +21,7 @@ const Notification = createReactClass({
             notification.confirmAction();
         }
 
-        this.close();
+        this.close(notification);
     },
 
     deny() {
