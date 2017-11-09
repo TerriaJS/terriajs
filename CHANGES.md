@@ -13,6 +13,7 @@ Change Log
 
 * Added support for specifying namespaced layer names in the `WebMapServiceCatalogItem` `layers` property.
 * Made TerriaJS tolerant of XML/HTML inside text elements in WMS GetCapabilities without being properly wrapped in `CDATA`.
+* Improved behaviour of SDMX-JSON items when no data is available.
 
 ### 5.4.3
 
