@@ -10,7 +10,7 @@ Change Log
 * Fixed a bug in `WebMapServiceCatalogItem` that could cause a WMS time time dimension to be interpreted incorrectly if it was specified only using dates (not times) and with a periodicity of less than a day.
 * Added the ability to use vector tile properties in feature info templates when using region mapping (data row attributes will overwrite vector tile properties with the same name)
 * Properties available in feature info templates are now JSON parsed and replaced by their javascript object if they start with `[` or `{` and parse successfully
-* Decreased flickering of time-varying region mapped layers by pre-rendering the next time interval
+* Decreased flickering of time-varying region mapped layers by pre-rendering the next time interval.
 
 ### 5.4.4
 
