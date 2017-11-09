@@ -63,7 +63,7 @@ const TerriaViewerWrapper = createReactClass({
                    ref={element => {this.mapElement = element;}}
                    onMouseMove={this.onMouseMove}>
                 <div className={Styles.mapPlaceholder}>Loading the map, please wait!</div>
-                <Splitter terria={this.props.terria} viewState={this.props.viewState}/>
+                <Splitter terria={this.props.terria} />
             </aside>
         );
     },
