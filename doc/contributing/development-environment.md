@@ -6,19 +6,30 @@ What if you need to make changes to [TerriaJS](https://github.com/TerriaJS/terri
 
 In the process described in [Getting Started](../getting-started.md), the [TerriaJS package](https://www.npmjs.com/package/terriajs) is installed to the `node_modules` directory by `npm install`.  Please do not edit TerriaJS directly in the `node_modules` directory, because changes will be clobbered the next time you run `npm install`.
 
-Instead, we want to clone TerriaJS from its [GitHub repo](https://github.com/TerriaJS/terriajs) and use that in our TerriaMap build.  Traditionally, `npm link` is the way to do this.  However, we do not recommend use of `npm link` because it frequently leads to multiple copies of some libraries being installed, which in turn leads to all sorts of frustrating build problems.  Instead, we recommend [npmgitdev](https://www.npmjs.com/package/npmgitdev).  `npmgitdev` lets us safely clone a git repo into our `node_modules` directory and use it pretty much as if npm had put it there itself.
+Instead, we want to clone TerriaJS from its [GitHub repo](https://github.com/TerriaJS/terriajs) and use that in our TerriaMap build.  Traditionally, `npm link` is the way to do this.  However, we do not recommend use of `npm link` because it frequently leads to multiple copies of some libraries being installed, which in turn leads to all sorts of frustrating build problems.  Instead, we recommend [yarn](https://yarnpkg.com) and its [workspaces](https://yarnpkg.com/lang/en/docs/workspaces/) feature.  `yarn` workspaces let us safely clone a git repo into the `packages` directory and wire it into any other packages that use it.
 
-First, install `npmgitdev` globally:
-
-```
-npm install -g npmgitdev
-```
-
-Then, in your TerriaMap directory, remove the existing `terriajs` package, and clone the terriajs repo there instead.
+First, install `yarn` globally:
 
 ```
-cd node_modules
-rm -rf terriajs
+npm install -g yarn
+```
+
+Then, enable workspaces by editing the TerriaMap `package.json` file, adding these lines to the top, just after the opening `{`:
+
+```json
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+```
+
+Do _not_ commit this change.
+
+Now, you can clone any package (such as `terriajs` or `terriajs-cesium`) into the `packages` directory:
+
+```
+mkdir packages
+cd packages
 git clone https://github.com/TerriaJS/terriajs.git
 cd ..
 ```
@@ -28,46 +39,33 @@ This will give you the `master` branch of TerriaJS.  While we strive to keep `ma
 ```
 grep terriajs package.json
 # will print something like: "terriajs": "^4.5.0"
-cd node_modules/terriajs
+cd packages/terriajs
 git checkout 4.5.0
-cd ../..
+cd ..
 ```
 
-Now, if you run `npm install`, `npm` will fail with an error like this:
+Then, in the TerriaMap directory, run:
 
 ```
-npm ERR! git C:\github\TerriaMap\node_modules\terriajs: Appears to be a git repo or submodule.
-npm ERR! git     C:\github\TerriaMap\node_modules\terriajs
-npm ERR! git Refusing to remove it. Update manually,
-npm ERR! git or move it out of the way first.
+yarn install
 ```
 
-This is _good_!  It means `npm` recognizes that your `terriajs` directory is now a git repo, and it is refusing to touch it out of fear of making you lose your work.  This is where `npmgitdev` comes in:
+Yarn will:
+* Install all dependencies for both TerriaMap and any packages in your `packages` directory.
+* Install the `devDependencies` for packages in the `packages` directory so you can actually develop on them.
+* Create sym-links so that everything works.
+* De-duplicate semver-compatible packages and bubble them up to the root `node_modules` directory.
 
-```
-npmgitdev install
-```
+Now, we can edit TerriaJS in `packages/terriajs` with the benefit of a full-featured git repo.
 
-`npmgitdev` is a wrapper around `npm` that, for each git repo in `node_modules`:
-
-* Makes sure your working directory is clean (i.e. you have no uncommitted changes).
-* Moves the `.git` directory out of the way so that `npm` can't see it or clobber it.
-* Copies all the `devDependencies` in `package.json` into `dependencies`.  This way npm will install all your dev-time stuff too.
-* Runs `npm` normally.
-* Moves the `.git` directory back.
-
-!!! note
-
-	If you hit CTRL-C while `npmgitdev` is running, it will be unable to clean up after itself automatically.  Look for a `npmgitdev-XXXXX` directory.  The `mappings.json` file in that directory contains a record of the changes that `npmgitdev` made so that you can undo them manually.  Usually this just means moving the `.git` directory back.
-
-Now, we can edit TerriaJS in `node_modules/terriajs` with the benefit of a full-feature git repo.
+| *Note*: Running `yarn install` with workspaces configured will change yarn.lock.  Please do not commit the changes. |
 
 To switch TerriaMap back to using the npm version of TerriaJS (instead of the git repo), do:
 
 ```
 # warning: make sure you don't need any of your changes to TerriaJS first!
-rm -rf node_modules/terriajs
-npmgitdev install
+rm -rf packages/terriajs
+yarn install
 ```
 
 ## Committing modifications
