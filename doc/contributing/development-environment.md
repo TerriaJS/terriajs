@@ -58,7 +58,9 @@ Yarn will:
 
 Now, we can edit TerriaJS in `packages/terriajs` with the benefit of a full-featured git repo.
 
-| *Note*: Running `yarn install` with workspaces configured will change yarn.lock.  Please do not commit the changes. |
+!!! note
+
+	Running `yarn install` with workspaces configured will change `yarn.lock`.  Please do not commit the changes.
 
 To switch TerriaMap back to using the npm version of TerriaJS (instead of the git repo), do:
 
