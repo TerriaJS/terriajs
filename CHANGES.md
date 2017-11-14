@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### 5.5.1
+
+* Added `cannotDisplayPercentMap` to SDMX-JSON catalog items, to optionally turn off the "display as a percentage of regional total" checkbox when the data is not a count (eg. a rate or an average).
+
 ### 5.5.0
 
 * Added the ability to split the screen into a left-side and right-side, and show raster and region mapped layers on only one side of the splitter.
