@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### 5.4.6
+
+* Added `cannotDisplayPercentMap` to SDMX-JSON catalog items, to optionally turn off the "display as a percentage of regional total" checkbox when the data is not a count (eg. a rate or an average).
+
 ### 5.4.5
 
 * Improved behaviour of SDMX-JSON items when no data is available.
