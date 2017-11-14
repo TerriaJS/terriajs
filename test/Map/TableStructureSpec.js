@@ -421,7 +421,7 @@ describe('TableStructure', function() {
         var tableStructure = TableStructure.fromJson(data);
         tableStructure.setActiveTimeColumn();
         expect(tableStructure.finishJulianDates).toEqual([
-            JulianDate.fromIso8601('2016-01-03T12:15:29Z'),
+            JulianDate.fromIso8601('2016-01-03T12:15:30Z'),
             JulianDate.fromIso8601('2016-01-03T12:16:00Z') // Final one should have the average spacing, 30 sec.
         ]);
     });
@@ -431,8 +431,8 @@ describe('TableStructure', function() {
         var tableStructure = TableStructure.fromJson(data);
         tableStructure.setActiveTimeColumn();
         expect(tableStructure.finishJulianDates).toEqual([
-            JulianDate.fromIso8601('2016-01-03T12:15:00.38Z'), // Shaves off 5% of 0.4, ie. 0.02.
-            JulianDate.fromIso8601('2016-01-03T12:15:00.97Z'), // Shaves off 5% of 0.6, ie. 0.03.
+            JulianDate.fromIso8601('2016-01-03T12:15:00.40Z'),
+            JulianDate.fromIso8601('2016-01-03T12:15:01Z'),
             JulianDate.fromIso8601('2016-01-03T12:15:01.5Z') // Average spacing is 0.5 second.
         ]);
     });

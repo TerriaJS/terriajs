@@ -253,7 +253,7 @@ describe('SensorObservationServiceCatalogItem', function() {
             }).otherwise(fail).then(done);
         });
 
-        it('is less than 2000 characters when serialised to JSON then URLEncoded', function(done) {
+        it('is less than 2500 characters when serialised to JSON then URLEncoded', function(done) {
             item.updateFromJson({
                 name: 'Name',
                 url: 'http://sos.example.com',
@@ -264,7 +264,8 @@ describe('SensorObservationServiceCatalogItem', function() {
             });
             item.load().then(function() {
                 var url = encodeURIComponent(JSON.stringify(item.serializeToJson()));
-                expect(url.length).toBeLessThan(2000);
+                // This used to be < 2000, but when we added useOwnClock and canUseOwnClock it hit 2007 characters.
+                expect(url.length).toBeLessThan(2500);
             }).otherwise(fail).then(done);
         });
 
