@@ -3,6 +3,11 @@
 Change Log
 ==========
 
+### 5.4.7
+
+* Deprecated SDMX-JSON catalog items' `cannotDisplayPercentMap` in favour of `cannotBeSummed`.
+* Updated `cannotBeSummed` so that it prevents all concepts from having multiple values (which would be totalled).  It can be either a mapping of concept ids to the values that prevent summing, or simply `true` to prevent summing always.
+
 ### 5.4.6
 
 * Added `cannotDisplayPercentMap` to SDMX-JSON catalog items, to optionally turn off the "display as a percentage of regional total" checkbox when the data is not a count (eg. a rate or an average).
