@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### 5.5.2
+
+* Fixed a bug that caused an error when Splitting a layer that does not have a `clock`.
+
 ### 5.5.1
 
 * Added `cannotDisplayPercentMap` to SDMX-JSON catalog items, to optionally turn off the "display as a percentage of regional total" checkbox when the data is not a count (eg. a rate or an average).
