@@ -2,13 +2,13 @@
 
 .controls {
   display: table-cell;
-  width: 180px;
+  width: 120px;
   vertical-align: middle;
 }
 
 .timeline__control {
   height: 29px;
-  width: 34px;
+  width: 29px;
   composes: btn from '../../../Sass/common/_buttons.scss';
   svg{
     height: 25px;
@@ -22,5 +22,3 @@
     }
   }
 }
-
-

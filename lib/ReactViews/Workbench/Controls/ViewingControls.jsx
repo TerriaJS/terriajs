@@ -13,6 +13,10 @@ import when from 'terriajs-cesium/Source/ThirdParty/when';
 import classNames from 'classnames';
 import Styles from './viewing-controls.scss';
 
+import createCatalogMemberFromType from '../../../Models/createCatalogMemberFromType';
+import addUserCatalogMember from '../../../Models/addUserCatalogMember';
+import ImagerySplitDirection from 'terriajs-cesium/Source/Scene/ImagerySplitDirection';
+
 const ViewingControls = createReactClass({
     displayName: 'ViewingControls',
     mixins: [ObserveModelMixin],
@@ -55,6 +59,26 @@ const ViewingControls = createReactClass({
         }, 50);
     },
 
+    splitItem() {
+        const item = this.props.item;
+        item.splitDirection = ImagerySplitDirection.RIGHT;
+        if (item.canUseOwnClock) {
+            item.useOwnClock = true;
+        }
+        const serializedItem = item.serializeToJson();
+        serializedItem.name = serializedItem.name + ' (copy)';
+        serializedItem.splitDirection = ImagerySplitDirection.LEFT;
+        delete serializedItem.id;
+
+        const newItem = createCatalogMemberFromType(item.type, item.terria);
+        newItem.updateFromJson(serializedItem);
+        // newItem is added to terria.nowViewing automatically by the "isEnabled" observable on CatalogItem (see isEnabledChanged).
+        // However, nothing adds it to terria.catalog automatically, which is required so the new item can be shared.
+        addUserCatalogMember(item.terria, newItem, {open: false, zoomTo: false});
+
+        item.terria.showSplitter = true;
+    },
+
     previewItem() {
         let item = this.props.item;
         // If this is a chartable item opened from another catalog item, get the info of the original item.
@@ -70,7 +94,7 @@ const ViewingControls = createReactClass({
     render() {
         const item = this.props.item;
         const canZoom = item.canZoomTo || (item.tableStructure && item.tableStructure.sourceFeature);
-        const canSplit = item.supportsSplitting && defined(item.splitDirection) && item.terria.currentViewer.canShowSplitter;
+        const canSplit = !item.terria.configParameters.disableSplitter && item.supportsSplitting && defined(item.splitDirection) && item.terria.currentViewer.canShowSplitter;
         const classList = {[Styles.noZoom]: !canZoom, [Styles.noSplit]: !canSplit, [Styles.noInfo]: !item.showsInfo};
         return (
             <ul className={Styles.control}>
@@ -82,6 +106,9 @@ const ViewingControls = createReactClass({
                 </If>
                 <If condition={item.showsInfo}>
                     <li className={classNames(Styles.info, classList)}><button type='button' onClick={this.previewItem} className={Styles.btn} title='info'>About This Data</button></li>
+                </If>
+                <If condition={canSplit}>
+                    <li className={classNames(Styles.split, classList)}><button type='button' onClick={this.splitItem} title="Duplicate and show splitter" className={Styles.btn}>Split</button></li>
                 </If>
                 <li className={classNames(Styles.remove, classList)}>
                     <button type='button' onClick={this.removeFromMap} title="Remove this data" className={Styles.btn}>
