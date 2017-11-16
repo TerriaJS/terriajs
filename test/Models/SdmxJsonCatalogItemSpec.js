@@ -236,6 +236,31 @@ describe('SdmxJsonCatalogItem', function() {
             }).otherwise(fail).then(done);
         });
 
+        it('works with cannotSum', function(done) {
+            item.updateFromJson({
+                name: 'Foo',
+                url: 'http://sdmx.example.com/sdmx-json/data/FOO',
+                startTime: '2013',
+                endTime: '2013',
+                selectedInitially: {
+                    'MEASURE': ['BD_2', 'BD_4']
+                },
+                cannotSum: {
+                    'MEASURE': ['BD_2']
+                }
+            });
+            item.load().then(function() {
+                // Expect it to have realised this is regional data.
+                var regionDetails = item.regionMapping.regionDetails;
+                expect(regionDetails).toBeDefined();
+                // Expect it to have created the right table of data (with a time dimension).
+                var columnNames = item.tableStructure.getColumnNames();
+                expect(columnNames.length).toEqual(4); // Region, only one BD and a total.
+                // Expect selectedInitially to have been overridden with only one.
+                expect(item.selectedInitially.MEASURE).toEqual(['BD_2']);
+            }).otherwise(fail).then(done);
+        });
+
         it('works with a time-varying file', function(done) {
             item.updateFromJson({
                 name: 'Foo',
