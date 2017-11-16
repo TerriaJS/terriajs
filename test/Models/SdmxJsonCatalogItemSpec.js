@@ -253,11 +253,9 @@ describe('SdmxJsonCatalogItem', function() {
                 // Expect it to have realised this is regional data.
                 var regionDetails = item.regionMapping.regionDetails;
                 expect(regionDetails).toBeDefined();
-                // Expect it to have created the right table of data (with a time dimension).
+                // Expect it to have created the right table of data (with a time dimension) - crucially, without a total.
                 var columnNames = item.tableStructure.getColumnNames();
-                expect(columnNames.length).toEqual(4); // Region, only one BD and a total.
-                // Expect selectedInitially to have been overridden with only one.
-                expect(item.selectedInitially.MEASURE).toEqual(['BD_2']);
+                expect(columnNames.slice()).toEqual(['date', 'LGA_code_2013', 'Births', 'Deaths']);  // No total.
             }).otherwise(fail).then(done);
         });
 
