@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### 5.5.3
+
+* Fixed a bug in SDMX-JSON when using `cannotSum`.
+
 ### 5.5.2
 
 * Deprecated SDMX-JSON catalog items' `cannotDisplayPercentMap` in favour of `cannotSum`.
