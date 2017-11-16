@@ -72,7 +72,7 @@ describe('SdmxJsonCatalogItem', function() {
     });
 
     describe('loading', function() {
-        var regionMappingJson, lgaData, lga13Data, steData;
+        var regionMappingJson, lga13Data, steData;
         var dataflowFoo, dataFoo, dataFooBD2, dataFooBD2t, dataFoo2, dataNonSpatial, dataAsObs, dataAsObsRepeated, dataNoSteYear;
         beforeEach(function(done) {
             when.all([
@@ -87,7 +87,6 @@ describe('SdmxJsonCatalogItem', function() {
                 loadText('test/SDMX-JSON/data-as-obs-repeated-dim.json').then(function(text) { dataAsObsRepeated = text; }),
                 loadText('data/regionMapping.json').then(function(text) { regionMappingJson = text; }),
                 loadText('data/regionids/region_map-FID_LGA_2013_AUST_LGA_CODE13.json').then(function(text) { lga13Data = text; }),
-                loadText('data/regionids/region_map-FID_LGA_2015_AUST_LGA_CODE15.json').then(function(text) { lgaData = text; }),
                 loadText('data/regionids/region_map-FID_STE_2011_AUST_STE_CODE11.json').then(function(text) { steData = text; })
             ]).then(function() {
                 jasmine.Ajax.install();
@@ -103,7 +102,6 @@ describe('SdmxJsonCatalogItem', function() {
                 jasmine.Ajax.stubRequest('http://sdmx.example.com/sdmx-json/data/FOO-OBS-RPT/./all').andReturn({ responseText: dataAsObsRepeated });
                 jasmine.Ajax.stubRequest('data/regionMapping.json').andReturn({ responseText: regionMappingJson });
                 jasmine.Ajax.stubRequest('data/regionids/region_map-FID_LGA_2013_AUST_LGA_CODE13.json').andReturn({ responseText: lga13Data });
-                jasmine.Ajax.stubRequest('data/regionids/region_map-FID_LGA_2015_AUST_LGA_CODE15.json').andReturn({ responseText: lgaData });
                 jasmine.Ajax.stubRequest('data/regionids/region_map-FID_STE_2011_AUST_STE_CODE11.json').andReturn({ responseText: steData });
             }).then(done).otherwise(done.fail);
         });
