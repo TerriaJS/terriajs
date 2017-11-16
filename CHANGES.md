@@ -5,6 +5,8 @@ Change Log
 
 ### 5.5.2
 
+* Deprecated SDMX-JSON catalog items' `cannotDisplayPercentMap` in favour of `cannotSum`.
+* Updated `cannotSum` so that it does not display a total in some cases, as well as suppressing the regional-percentage checkbox.  `cannotSum` can be either a mapping of concept ids to the values that prevent summing, or simply `true` to always prevent summing.
 * Fixed a bug that caused an error when Splitting a layer that does not have a `clock`.
 
 ### 5.5.1
