@@ -208,4 +208,12 @@ describe('CatalogItem', function () {
             });
         });
     });
+
+    describe('clockForDisplay', function() {
+        it('returns terria.clock if its own clock is undefined', function() {
+            item.useOwnClock = true;
+            item.clock = undefined;
+            expect(item.clockForDisplay).toBe(item.terria.clock);
+        });
+    });
 });
