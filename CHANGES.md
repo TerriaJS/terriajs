@@ -7,6 +7,7 @@ Change Log
 
 * Deprecated SDMX-JSON catalog items' `cannotDisplayPercentMap` in favour of `cannotBeSummed`.
 * Updated `cannotBeSummed` so that it prevents all concepts from having multiple values (which would be totalled).  It can be either a mapping of concept ids to the values that prevent summing, or simply `true` to prevent summing always.
+* Fixed a bug that caused an error when Splitting a layer that does not have a `clock`.
 
 ### 5.5.1
 
