@@ -68,7 +68,7 @@ const Tabs = createReactClass({
         if (this.props.terria.configParameters.tabbedCatalog) {
             this.props.viewState.activeTabIdInCategory = idInCategory;
             if (category === 'data-catalog') {
-                const member = this.props.terria.catalog.group.items.find(m => m.name === idInCategory);
+                const member = this.props.terria.catalog.group.items.filter(m => m.name === idInCategory)[0];
                 // If member was found and member can be opened, open it (causes CkanCatalogGroups to fetch etc.)
                 if (defined(member)) {
                     if (member.toggleOpen) {
@@ -83,7 +83,7 @@ const Tabs = createReactClass({
     render() {
         const tabs = this.getTabs();
         const sameCategory = tabs.filter(t => t.category === this.props.viewState.activeTabCategory);
-        const currentTab = sameCategory.find(t => t.idInCategory === this.props.viewState.activeTabIdInCategory) || sameCategory[0] || tabs[0];
+        const currentTab = sameCategory.filter(t => t.idInCategory === this.props.viewState.activeTabIdInCategory)[0] || sameCategory[0] || tabs[0];
 
         return (
             <div className={Styles.tabs}>
