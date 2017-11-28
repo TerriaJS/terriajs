@@ -171,9 +171,9 @@ ParameterEditor.parameterTypeConverters = [
         id: 'regionType',
         parameterTypeToDiv: function RegionTypeParameterToDiv(type, parameterEditor) {
             if (type === this.id) {
-                const regionParam = parameterEditor.props.previewed.parameters.find(function(param) {
+                const regionParam = parameterEditor.props.previewed.parameters.filter(function(param) {
                     return (defined(param.regionTypeParameter) && param.regionTypeParameter === parameterEditor.props.parameter);
-                });
+                })[0];
                 return (<div>
                                 <If condition={regionParam === undefined}>
                                     {parameterEditor.renderLabel()}

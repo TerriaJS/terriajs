@@ -94,7 +94,7 @@ describe('DataCatalogItem', () => {
 
     describe('renders', () => {
         it('a single <CatalogItem />', () => {
-            expect(renderShallow().find(CatalogItemComponent).length).toBe(1);
+            expect(renderShallow().filter(CatalogItemComponent)[0].length).toBe(1);
         });
 
         describe('btnState prop as', () => {
@@ -194,7 +194,7 @@ describe('DataCatalogItem', () => {
     }
 
     function getRenderedProp(propName) {
-        return renderShallow().find(CatalogItemComponent).first().prop(propName);
+        return renderShallow().filter(CatalogItemComponent)[0].first().prop(propName);
     }
 
     function renderShallow() {
