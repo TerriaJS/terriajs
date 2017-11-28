@@ -603,7 +603,7 @@ function getInfoAsReactComponent(that) {
 
 function setTimeoutsForUpdatingCustomComponents(that) { // eslint-disable-line require-jsdoc
     const {info} = getInfoAsReactComponent(that);
-    const foundCustomComponents = CustomComponents.filter(info)[0];
+    const foundCustomComponents = CustomComponents.find(info);
     foundCustomComponents.forEach((match, componentNumber) => {
         const updateSeconds = match.type.selfUpdateSeconds(match.reactComponent);
         if (updateSeconds > 0) {
