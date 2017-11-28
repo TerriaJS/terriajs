@@ -30,7 +30,8 @@ const RegionPicker = createReactClass({
     getInitialState() {
         return {
             autocompleteVisible: false,
-            autoCompleteOptions: [],
+            autocompleteOptions: [],
+            autocompleteText: undefined,
             displayValue: ""
         };
     },
@@ -98,7 +99,9 @@ const RegionPicker = createReactClass({
 
     updateFeature(feature) {
         this._lastRegionFeature = feature.data;
-        const regionId = feature.properties[this.regionProvider.regionProp];
+        const regionProperty = feature.properties[this.regionProvider.regionProp];
+        const regionId = typeof regionProperty === 'object' ? regionProperty.getValue() : regionProperty;
+
         this.regionValue = this.props.parameter.findRegionByID(regionId);
 
         if (defined(this._selectedRegionCatalogItem)) {
@@ -113,6 +116,12 @@ const RegionPicker = createReactClass({
             this._selectedRegionCatalogItem.isEnabled = true;
             this._selectedRegionCatalogItem.zoomTo();
         }
+
+        this.setState({
+            autocompleteVisible: false,
+            autocompleteOptions: [],
+            autocompleteText: undefined
+        });
     },
 
     addRegionLayer() {
@@ -207,7 +216,8 @@ const RegionPicker = createReactClass({
         if (!defined(e.target.value)) {
             this.setState({
                 autocompleteVisible: false,
-                autoCompleteOptions: []
+                autocompleteOptions: [],
+                autocompleteText: undefined
             });
             return;
         }
@@ -234,7 +244,8 @@ const RegionPicker = createReactClass({
         }
         this.setState({
             autocompleteVisible: result.length > 0 && result.length <= 100,
-            autoCompleteOptions: result
+            autocompleteOptions: result,
+            autocompleteText: e.target.value
         });
     },
 
@@ -243,7 +254,8 @@ const RegionPicker = createReactClass({
         // After choosing a region from auto complete
         this.setState({
             autocompleteVisible: false,
-            autoCompleteOptions: []
+            autocompleteOptions: [],
+            autocompleteText: undefined
         });
         this.updateMapFromValue();
     },
@@ -257,7 +269,7 @@ const RegionPicker = createReactClass({
                     <input className={Styles.field}
                            type="text"
                            autoComplete="off"
-                           value={RegionPicker.getDisplayValue(this.regionValue, this.props.parameter)}
+                           value={this.state.autocompleteText || RegionPicker.getDisplayValue(this.regionValue, this.props.parameter)}
                            onChange={this.textChange}
                            placeholder="Region name"
                     />
@@ -273,7 +285,7 @@ const RegionPicker = createReactClass({
 
         return (
             <ul className={className}>
-                {this.state.autoCompleteOptions.map((op, i)=>
+                {this.state.autocompleteOptions.map((op, i)=>
                     <li key={i}>
                         <button type='button' className={Styles.autocompleteItem}
                                 onClick={this.selectRegion.bind(this, op)}>{op.name}</button>

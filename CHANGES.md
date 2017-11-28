@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### 5.5.4
+
+* Fixed some problems with the Terria Spatial Analytics `CatalogFunctions`.
+
 ### 5.5.3
 
 * Fixed a bug in SDMX-JSON when using `cannotSum`.
