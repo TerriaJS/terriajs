@@ -90,7 +90,7 @@ Replace `branchName` with the name of the TerriaJS branch you want to use.  You 
 
 Once your TerriaJS pull request has been merged and a new version of the `terriajs` npm module has been published, please remember to update `package.json` to point to an official `terriajs` version instead of a branch in a GitHub repo.
 
-The `package.json` in the `master` branch of TerriaMap should point to official releases of `terriajs` on npm, NOT GitHub branches.
+The `package.json` in the `master` branch of TerriaMap should point to official releases of `terriajs` on npm, NOT GitHub branches.  In other words, it is ok to commit a package.json with a git URL to a branch, but do _not_ merge it to master.
 
 ## Documentation
 
