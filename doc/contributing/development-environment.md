@@ -14,6 +14,8 @@ First, install `yarn` globally:
 npm install -g yarn
 ```
 
+If you already have yarn installed, make sure it is at least v1.0 (we recommend using the latest version).  Older versions do not support the workspace feature.
+
 Then, enable workspaces by editing the TerriaMap `package.json` file, adding these lines to the top, just after the opening `{`:
 
 ```json
