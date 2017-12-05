@@ -22,9 +22,10 @@
   a{
     @include link($feature-info-bg);
   }
-  @media screen and (min-width : $md){
+
+  @media screen and (min-width : $sm){
     //temp
-    max-width: calc(100vw - #{$work-bench-width} - 150px);
+    max-width: 432px;
     right: 105px;
   }
   @media print{
