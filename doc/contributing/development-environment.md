@@ -62,6 +62,8 @@ Yarn will:
 
 Now, we can edit TerriaJS in `packages/terriajs` with the benefit of a full-featured git repo.
 
+Confirm that yarn has configured TerriaMap to use the copy of TerriaJS in `packages/terriajs` by verifying that `node_modules/terriajs` is a symlink to `packages/terriajs`.  If it's not, you probably have a version conflict.  See the note above.
+
 !!! note
 
 	Running `yarn install` with workspaces configured will change `yarn.lock`.  Please do not commit the changes.
