@@ -36,7 +36,7 @@ const Tabs = createReactClass({
         };
 
         if (this.props.terria.configParameters.tabbedCatalog) {
-            return [].concat(this.props.terria.catalog.group.items.filter(member => !member.isUserSupplied).map((member, i) => ({
+            return [].concat(this.props.terria.catalog.group.items.filter(member => member !== this.props.terria.catalog.userAddedDataGroup).map((member, i) => ({
                 name: member.nameInCatalog,
                 title: `data-catalog-${member.name}`,
                 category: 'data-catalog',
