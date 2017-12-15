@@ -105,7 +105,7 @@
     "karma-opera-launcher": "^1.0.0",
     "karma-safari-launcher": "^1.0.0",
     "karma-sauce-launcher": "^1.0.0",
-    "karma-spec-reporter": "^0.0.31",
+    "karma-spec-reporter": "^0.0.32",
     "klaw-sync": "^3.0.0",
     "kss": "^2.1.1",
     "mkdocs-material": "terriajs/mkdocs-material#1.0.3",
