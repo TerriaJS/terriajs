@@ -70,7 +70,7 @@ const FeatureInfoCatalogItem = createReactClass({
                     <If condition={hiddenNumber > 1}>
                       <li className={Styles.messageItem}>
                         <strong>{totalFeaturesCount} {catalogItem.name} features were found.</strong><br/>
-                        The first {maximumShownFeatureInfos} are shown below..
+                        The first {maximumShownFeatureInfos} are shown below.
                       </li>
                     </If>
                     
