@@ -111,7 +111,11 @@ npm run gulp docs
 
 It will be placed in the `wwwroot/doc` folder.
 
-You need a standalone install of MkDocs in order to build the user guide, see [http://www.mkdocs.org/#installation](http://www.mkdocs.org/#installation) for details.
+You need a standalone install of MkDocs in order to build the user guide, see [http://www.mkdocs.org/#installation](http://www.mkdocs.org/#installation) for details. You will also need to install the `mkdocs-material` theme:
+
+```
+pip install mkdocs-material
+```
 
 ## Tests / Specs
 

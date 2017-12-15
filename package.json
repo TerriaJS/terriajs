@@ -108,7 +108,6 @@
     "karma-spec-reporter": "^0.0.31",
     "klaw-sync": "^3.0.0",
     "kss": "^2.1.1",
-    "mkdocs-material": "terriajs/mkdocs-material#1.0.3",
     "node-notifier": "^5.1.2",
     "node-sass": "^4.0.0",
     "react-addons-test-utils": "^15.5.1",
