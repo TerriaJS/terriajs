@@ -46,7 +46,7 @@ const NotificationWindow = createReactClass({
                     <div className={Styles.inner}>
                         <h3 className='title'>{title}</h3>
                         {window.location.host === 'localhost:3001' && title.toLowerCase().indexOf('error') >= 0 &&
-                            <div><img src='./build/TerriaJS/images/feature.gif'/></div>
+                            <div><img src='./build/TerriaJS/images/error.jpg'/></div>
                         }
                         <div className={Styles.body}>{parseCustomMarkdownToReact(message)}</div>
                     </div>
