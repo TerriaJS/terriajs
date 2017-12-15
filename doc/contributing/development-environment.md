@@ -57,6 +57,7 @@ yarn install
 ```
 
 Yarn will:
+
 * Install all dependencies for both TerriaMap and any packages in your `packages` directory.
 * Install the `devDependencies` for packages in the `packages` directory so you can actually develop on them.
 * Create sym-links so that everything works.
