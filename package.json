@@ -56,7 +56,7 @@
     "mutationobserver-shim": "^0.3.1",
     "pbf": "^3.0.1",
     "point-in-polygon": "^1.0.1",
-    "proj4": "~2.3.16",
+    "proj4": "^2.4.4",
     "prop-types": "^15.6.0",
     "raw-loader": "^0.5.1",
     "react": "^15.5.4",
@@ -124,7 +124,7 @@
     "postinstall": "gulp post-npm-install",
     "gulp": "gulp",
     "make-schema": "gulp make-schema",
-    "start": "bash -c \"./node_modules/terriajs-server/run_server.sh --port 3002 || ../terriajs-server/run_server.sh --port 3002\"",
+    "start": "bash -c \"./node_modules/terriajs-server/run_server.sh --port 3002 || ../terriajs-server/run_server.sh --port 3002 || ../../node_modules/terriajs-server/run_server.sh --port 3002\"",
     "dev": "webpack-dev-server --inline --config buildprocess/webpack.config.dev.js --host 0.0.0.0",
     "hot": "webpack-dev-server --inline --config buildprocess/webpack.config.hot.js --hot --host 0.0.0.0",
     "publish-doc": "bash -c \"rm -rf wwwroot/doc && mkdir wwwroot/doc && cp doc/index-built.html wwwroot/doc/index.html && gulp docs && cd wwwroot/doc && git init && git remote add origin $npm_package_config_docRepo && git add . && git commit -m 'Generate Documentation' && git push -f origin HEAD:gh-pages\""
