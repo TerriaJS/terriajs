@@ -4,7 +4,7 @@ Change Log
 ==========
 
 ### 5.5.4
-
+* Fixed a bug which breaks the feature info when clicking on a location marker
 * Fixed a serious bug that prevented opening the Data Catalog in Internet Explorer.
 * Fixed some problems with the Terria Spatial Analytics `CatalogFunctions`.
 
