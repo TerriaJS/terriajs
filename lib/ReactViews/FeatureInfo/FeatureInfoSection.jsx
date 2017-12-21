@@ -133,7 +133,7 @@ const FeatureInfoSection = createReactClass({
         //     parseCustomHtmlToReact (which calls htmlToReactParser).
         // Note that there is an unnecessary HTML encoding and decoding in this combination which would be good to remove.
         let description = null;
-        if(this.props.clock){
+        if (this.props.clock) {
           description = feature.currentDescription || getCurrentDescription(feature, this.props.clock.currentTime);
           if (!defined(description) && defined(feature.properties)) {
               description = describeFromProperties(feature.properties, this.props.clock.currentTime);
