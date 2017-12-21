@@ -132,9 +132,12 @@ const FeatureInfoSection = createReactClass({
         //     markdownToHtml (which applies MarkdownIt.render and DOMPurify.sanitize), and then
         //     parseCustomHtmlToReact (which calls htmlToReactParser).
         // Note that there is an unnecessary HTML encoding and decoding in this combination which would be good to remove.
-        let description = feature.currentDescription || getCurrentDescription(feature, this.props.clock.currentTime);
-        if (!defined(description) && defined(feature.properties)) {
-            description = describeFromProperties(feature.properties, this.props.clock.currentTime);
+        let description = null;
+        if(this.props.clock){
+          description = feature.currentDescription || getCurrentDescription(feature, this.props.clock.currentTime);
+          if (!defined(description) && defined(feature.properties)) {
+              description = describeFromProperties(feature.properties, this.props.clock.currentTime);
+          }
         }
         return description;
     },
