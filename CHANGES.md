@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### 5.#.#
+
+* Added ability to move the splitter thumb position vertically so that users can move it to prevent occlusions.
+
 ### 5.5.4
 
 * Fixed a serious bug that prevented opening the Data Catalog in Internet Explorer.

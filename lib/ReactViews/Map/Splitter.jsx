@@ -69,8 +69,10 @@ const Splitter = createReactClass({
 
     drag(event) {
         let clientX = event.clientX;
+        let clientY = event.clientY;
         if (event.targetTouches && event.targetTouches.length > 0) {
             clientX = event.targetTouches.item(0).clientX;
+            clientY = event.targetTouches.item(0).clientY;
         }
 
         const viewer = this.props.terria.currentViewer;
@@ -78,17 +80,24 @@ const Splitter = createReactClass({
         const container = viewer.getContainer();
         const mapRect = container.getBoundingClientRect();
 
-        const width = mapRect.right - mapRect.left;
-        const fraction = (clientX - mapRect.left) / width;
+        var that = this;
+        function computeSplitFraction(startBound, endBound, position)
+        {
+            const difference = endBound - startBound;
+            const fraction = (position - startBound) / difference;
 
-        const min = mapRect.left + this.props.padding + (this.props.thumbSize * 0.5);
-        const max = mapRect.right - this.props.padding - (this.props.thumbSize * 0.5);
-        const minFraction = (min - mapRect.left) / width;
-        const maxFraction = (max - mapRect.left) / width;
+            const min = startBound + that.props.padding + (that.props.thumbSize * 0.5);
+            const max = endBound - that.props.padding - (that.props.thumbSize * 0.5);
+            const minFraction = (min - startBound) / difference;
+            const maxFraction = (max - startBound) / difference;
 
-        const splitFraction = Math.min(maxFraction, Math.max(minFraction, fraction));
+            return Math.min(maxFraction, Math.max(minFraction, fraction));
+        }
+        const splitFractionX = computeSplitFraction(mapRect.left, mapRect.right, clientX);
+        const splitFractionY = computeSplitFraction(mapRect.top, mapRect.bottom, clientY);
 
-        this.props.terria.splitPosition = splitFraction;
+        this.props.terria.splitPosition = splitFractionX;
+        this.props.terria.splitPositionVertical = splitFractionY;
 
         event.preventDefault();
         event.stopPropagation();
@@ -114,7 +123,9 @@ const Splitter = createReactClass({
 
     getPosition() {
         const canvasWidth = this.props.terria.currentViewer.getContainer().clientWidth;
-        return this.props.terria.splitPosition * canvasWidth;
+        const canvasHeight = this.props.terria.currentViewer.getContainer().clientHeight;
+        return {x: this.props.terria.splitPosition * canvasWidth,
+                y: this.props.terria.splitPositionVertical * canvasHeight};
     },
 
     render() {
@@ -123,14 +134,16 @@ const Splitter = createReactClass({
         }
 
         const thumbWidth = this.props.thumbSize;
+        const position = this.getPosition();
 
         const dividerStyle = {
-            left: this.getPosition() + 'px',
+            left: position.x + 'px',
             backgroundColor: this.props.terria.baseMapContrastColor
         };
 
         const thumbStyle = {
-            left: this.getPosition() + 'px',
+            left: position.x + 'px',
+            top: position.y + 'px',
             width: thumbWidth + 'px',
             height: thumbWidth + 'px',
             marginLeft: '-' + (thumbWidth * 0.5) + 'px',
