@@ -183,6 +183,18 @@ const FeatureInfoPanel = createReactClass({
             [Styles.isCollapsed]: viewState.featureInfoPanelIsCollapsed,
             [Styles.isVisible]: viewState.featureInfoPanelIsVisible
         });
+
+        var position;
+        if (defined(terria.selectedFeature) && defined(terria.selectedFeature.position)) {
+            // If there is a selected feature then use the feature location.
+            position = terria.selectedFeature.position.getValue(terria.clock.currentTime);
+        } else {
+            // Otherwise use the location picked.
+            if (defined(terria.pickedFeatures) && defined(terria.pickedFeatures.pickPosition)) {
+                position = terria.pickedFeatures.pickPosition;
+            }
+        }
+
         return (
             <div
                 className={panelClassName}
@@ -210,8 +222,8 @@ const FeatureInfoPanel = createReactClass({
                             {featureInfoCatalogItems}
                         </Otherwise>
                     </Choose>
-                    <If condition={defined(terria.pickedFeatures) && defined(terria.pickedFeatures.pickPosition)}>
-                        <li>{this.locationItem(terria.pickedFeatures.pickPosition)}</li>
+                    <If condition={position}>
+                        <li>{this.locationItem(position)}</li>
                     </If>
                 </ul>
             </div>
