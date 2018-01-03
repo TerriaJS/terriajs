@@ -79,6 +79,7 @@ const FeatureInfoSection = createReactClass({
 
             propertyData.terria = {
                 formatNumber: mustacheFormatNumberFunction,
+                formatDateTime: mustacheFormatDateTime,
                 urlEncodeComponent: mustacheURLEncodeTextComponent,
                 urlEncode: mustacheURLEncodeText
             };
@@ -450,6 +451,17 @@ function mustacheFormatNumberFunction() {
         const jsonOptions = components[1].replace(quoteReg, '$1"$3":');
         const options = JSON.parse(jsonOptions);
         return formatNumberForLocale(render(components[2]), options);
+    };
+}
+
+/**
+ * Returns a function which implements date/time formatting in Mustache templates, using this syntax:
+ * {{#terria.formatDateTime}}{{value}}{{/terria.formatDateTime}}
+ * @private
+ */
+function mustacheFormatDateTime() {
+    return function (text, render) {
+
     };
 }
 
