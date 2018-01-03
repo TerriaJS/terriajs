@@ -89,6 +89,9 @@ const FeatureInfoSection = createReactClass({
                     longitude: CesiumMath.toDegrees(latLngInRadians.longitude)
                 };
             }
+            if (this.props.clock.currentTime) {
+                propertyData.terria.currentTime = this.props.clock.currentTime;
+            }
             propertyData.terria.timeSeries = getTimeSeriesChartContext(this.props.catalogItem, this.props.feature, propertyData._terria_getChartDetails);
         }
         return propertyData;
