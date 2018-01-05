@@ -8,6 +8,7 @@ import {findAll, findAllWithType, findAllWithClass, findWithRef} from 'react-sha
 import {getShallowRenderedOutput, findAllEqualTo, findAllWithPropsChildEqualTo} from './MoreShallowTools';
 
 import Cartographic from 'terriajs-cesium/Source/Core/Cartographic';
+import Clock from 'terriajs-cesium/Source/Core/Clock';
 import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
 import Entity from 'terriajs-cesium/Source/DataSources/Entity';
 import JulianDate from 'terriajs-cesium/Source/Core/JulianDate';
@@ -34,6 +35,10 @@ const contentClass = Styles.content;
 function findAllWithHref(reactElement, text) {
     return findAll(reactElement, (element) => element && element.props && element.props.href === text);
 }
+
+function pad2(value) {
+    return ((Math.abs(value) < 10) ? "0" : "") + Math.abs(value);
+};
 
 describe('FeatureInfoSection', function() {
 
@@ -291,6 +296,35 @@ describe('FeatureInfoSection', function() {
             expect(findAllEqualTo(result, 'Test: text').length).toEqual(1);
         });
 
+        it('can use a dateFormatString when it is specified in terria.formatDateTime', function() {
+            const template = 'Test: {{#terria.formatDateTime}}{"dateFormatString": "dd-mm-yyyy HH:MM:ss"}2017-11-23T08:47:53Z{{/terria.formatDateTime}}';
+            const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template} viewState={viewState} />;
+            const result = getShallowRenderedOutput(section);
+            const date = new Date(Date.UTC(2017, 11, 23, 8, 47, 53));
+            const formattedDate = pad2(date.getDate()) + "-" + pad2(date.getMonth()) + "-" + date.getFullYear() + " " + pad2(date.getHours()) + ":" + pad2(date.getMinutes()) + ":" + pad2(date.getSeconds()); // E.g. "23-11-2017 19:47:53"
+            expect(findAllEqualTo(result, 'Test: ' + formattedDate).length).toEqual(1);
+        });
+
+        it('defaults dateFormatString to isoDateTime when it is not specified in terria.formatDateTime', function() {
+            const template = 'Test: {{#terria.formatDateTime}}2017-11-23T08:47:53Z{{/terria.formatDateTime}}';
+            const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template} viewState={viewState} />;
+            const result = getShallowRenderedOutput(section);
+            const date = new Date(Date.UTC(2017, 11, 23, 8, 47, 53));
+            const offset = -date.getTimezoneOffset();
+            const offsetMinute = offset%60;
+            const offsetHour = (offset-offsetMinute)/60;
+            const timeZone = ((offset >= 0) ? "+" : "-") + pad2(offsetHour) + "" + pad2(offsetMinute);
+            const formattedDate = date.getFullYear() + "-" + pad2(date.getMonth()) + "-" + pad2(date.getDate()) + "T" + pad2(date.getHours()) + ":" + pad2(date.getMinutes()) + ":" + pad2(date.getSeconds()) + timeZone; // E.g. "2017-11-23T19:47:53+1100"
+            expect(findAllEqualTo(result, 'Test: ' + formattedDate).length).toEqual(1);
+        });
+
+        it('handles non-numbers in terria.formatDateTime', function() {
+            const template = 'Test: {{#terria.formatDateTime}}text{{/terria.formatDateTime}}';
+            const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template} viewState={viewState} />;
+            const result = getShallowRenderedOutput(section);
+            expect(findAllEqualTo(result, 'Test: text').length).toEqual(1);
+        });
+
         it('url encodes text components', function() {
             const template = 'Test: {{#terria.urlEncodeComponent}}W/HO:E#1{{/terria.urlEncodeComponent}}';
             const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template} viewState={viewState} />;
@@ -366,6 +400,15 @@ describe('FeatureInfoSection', function() {
             const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template} viewState={viewState} position={position}/>;
             const result = getShallowRenderedOutput(section);
             expect(findAllEqualTo(result, 'Clicked 44, 77').length).toEqual(1);
+        });
+
+        it('can access the current time', function() {
+            const template = '<div>{{terria.currentTime}}</div>';
+            const date = JulianDate.fromIso8601("2017-11-23T19:47:53+11:00");
+            const clock = new Clock({currentTime: date});
+            const section = <FeatureInfoSection feature={feature} isOpen={true} clock={clock} template={template} viewState={viewState}/>;
+            const result = getShallowRenderedOutput(section);
+            expect(findAllEqualTo(result, '2017-11-23T08:47:53Z').length).toEqual(1);
         });
 
         it('can render a recursive featureInfoTemplate', function() {
