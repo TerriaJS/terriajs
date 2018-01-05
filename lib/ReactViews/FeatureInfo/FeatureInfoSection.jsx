@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 
 import CesiumMath from 'terriajs-cesium/Source/Core/Math';
 import classNames from 'classnames';
+import dateFormat from 'dateformat';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
 import isArray from 'terriajs-cesium/Source/Core/isArray';
@@ -461,20 +462,34 @@ function mustacheJsonSubOptions(customProcessing) {
  * @private
  */
 function mustacheFormatNumberFunction() {
-    return mustacheJSONSubOptions((text, options) => {
+    return mustacheJsonSubOptions((text, options) => {
         return formatNumberForLocale(text, options);
     });
 }
 
 /**
  * Returns a function which implements date/time formatting in Mustache templates, using this syntax:
- * {{#terria.formatDateTime}}{{value}}{{/terria.formatDateTime}}
+ * {{#terria.formatDateTime}}{dateFormatString: "npm dateFormat string"}Date_Expression{{/terria.formatDateTime}}
+ * dateFormatString If present, will override the default date format (see https://www.npmjs.com/package/dateformat)
+ * Eg. "isoDateTime" or "dd-mm-yyyy HH:MM:ss".
+ * If the Date_Expression can't be parsed using Date.parse() it will be used(returned) unmodified by the terria.formatDateTime section expression.
+ * If no valid date formatting options are present in the terria.formatDateTime section isoDateTime will be used.
  * @private
  */
 function mustacheFormatDateTime() {
-    return function (text, render) {
+    return mustacheJsonSubOptions((text, options) => {
+        var date = Date.parse(text);
 
-    };
+        if (!defined(date) || isNaN(date)){
+            return text;
+        }
+
+        if (defined(options) && defined(options.dateFormatString)) {
+           return dateFormat(date, options.dateFormatString);
+        }
+
+        return dateFormat(date, "isoDateTime");
+    });
 }
 
 /**
