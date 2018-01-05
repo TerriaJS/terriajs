@@ -429,11 +429,12 @@ function setCurrentFeatureValues(feature, clock) {
 }
 
 /**
- * Returns a function which implements number formatting in Mustache templates, using this syntax:
- * {{#terria.formatNumber}}{useGrouping: true}{{value}}{{/terria.formatNumber}}
+ * Returns a function which extracts JSON elements from the content of a Mustache section template and calls the
+ * supplied customProcessing function with the extracted JSON options, example syntax processed:
+ * {optionKey: optionValue}{{value}}
  * @private
  */
-function mustacheFormatNumberFunction() {
+function mustacheJsonSubOptions(customProcessing) {
     return function(text, render) {
         // Eg. "{foo:1}hi there".match(optionReg) = ["{foo:1}hi there", "{foo:1}", "hi there"].
         // Note this won't work with nested objects in the options (but these aren't used yet).
@@ -444,14 +445,25 @@ function mustacheFormatNumberFunction() {
         const startsWithdoubleBraces = (text.length > 4) && (text[0] === '{') && (text[1] === '{');
         if (!components || startsWithdoubleBraces) {
             // If no options were provided, just use the defaults.
-            return formatNumberForLocale(render(text));
+            return customProcessing(render(text));
         }
         // Allow {foo: 1} by converting it to {"foo": 1} for JSON.parse.
         const quoteReg = /([{,])(\s*)([A-Za-z0-9_\-]+?)\s*:/g;
         const jsonOptions = components[1].replace(quoteReg, '$1"$3":');
         const options = JSON.parse(jsonOptions);
-        return formatNumberForLocale(render(components[2]), options);
+        return customProcessing(render(components[2]), options);
     };
+}
+
+/**
+ * Returns a function which implements number formatting in Mustache templates, using this syntax:
+ * {{#terria.formatNumber}}{useGrouping: true}{{value}}{{/terria.formatNumber}}
+ * @private
+ */
+function mustacheFormatNumberFunction() {
+    return mustacheJSONSubOptions((text, options) => {
+        return formatNumberForLocale(text, options);
+    });
 }
 
 /**
