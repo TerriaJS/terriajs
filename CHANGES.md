@@ -3,6 +3,11 @@
 Change Log
 ==========
 
+### 5.#.#
+
+* Added `{{terria.currentTime}}` to feature info template.
+* Added a way to format times form the feature info tempate. E.g. `{{#terria.formatDateTime}}{"dateFormatString": "dd-mm-yyyy HH:MM:ss"}{{terria.currentTime}}{{/terria.formatDateTime}}`.
+
 ### 5.5.4
 
 * Fixed a serious bug that prevented opening the Data Catalog in Internet Explorer.
