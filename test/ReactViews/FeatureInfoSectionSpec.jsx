@@ -36,7 +36,8 @@ function findAllWithHref(reactElement, text) {
     return findAll(reactElement, (element) => element && element.props && element.props.href === text);
 }
 
-function pad2(value) {
+// Takes the absolute value of the value and pads it to 2 digits i.e. 7->07, 17->17, -3->3, -13->13. It is expected that value is an integer is in the range [-99, 99].
+function absPad2(value) {
     return ((Math.abs(value) < 10) ? "0" : "") + Math.abs(value);
 };
 
@@ -301,7 +302,7 @@ describe('FeatureInfoSection', function() {
             const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template} viewState={viewState} />;
             const result = getShallowRenderedOutput(section);
             const date = new Date(Date.UTC(2017, 11, 23, 8, 47, 53));
-            const formattedDate = pad2(date.getDate()) + "-" + pad2(date.getMonth()) + "-" + date.getFullYear() + " " + pad2(date.getHours()) + ":" + pad2(date.getMinutes()) + ":" + pad2(date.getSeconds()); // E.g. "23-11-2017 19:47:53"
+            const formattedDate = absPad2(date.getDate()) + "-" + absPad2(date.getMonth()) + "-" + date.getFullYear() + " " + absPad2(date.getHours()) + ":" + absPad2(date.getMinutes()) + ":" + absPad2(date.getSeconds()); // E.g. "23-11-2017 19:47:53"
             expect(findAllEqualTo(result, 'Test: ' + formattedDate).length).toEqual(1);
         });
 
@@ -313,8 +314,8 @@ describe('FeatureInfoSection', function() {
             const offset = -date.getTimezoneOffset();
             const offsetMinute = offset%60;
             const offsetHour = (offset-offsetMinute)/60;
-            const timeZone = ((offset >= 0) ? "+" : "-") + pad2(offsetHour) + "" + pad2(offsetMinute);
-            const formattedDate = date.getFullYear() + "-" + pad2(date.getMonth()) + "-" + pad2(date.getDate()) + "T" + pad2(date.getHours()) + ":" + pad2(date.getMinutes()) + ":" + pad2(date.getSeconds()) + timeZone; // E.g. "2017-11-23T19:47:53+1100"
+            const timeZone = ((offset >= 0) ? "+" : "-") + absPad2(offsetHour) + "" + absPad2(offsetMinute);
+            const formattedDate = date.getFullYear() + "-" + absPad2(date.getMonth()) + "-" + absPad2(date.getDate()) + "T" + absPad2(date.getHours()) + ":" + absPad2(date.getMinutes()) + ":" + absPad2(date.getSeconds()) + timeZone; // E.g. "2017-11-23T19:47:53+1100"
             expect(findAllEqualTo(result, 'Test: ' + formattedDate).length).toEqual(1);
         });
 
