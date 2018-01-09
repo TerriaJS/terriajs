@@ -12,6 +12,7 @@ import classNames from 'classnames';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
 import isArray from 'terriajs-cesium/Source/Core/isArray';
+import JulianDate from 'terriajs-cesium/Source/Core/JulianDate';
 
 import CustomComponents from '../Custom/CustomComponents';
 import FeatureInfoDownload from './FeatureInfoDownload';
@@ -132,9 +133,10 @@ const FeatureInfoSection = createReactClass({
         //     markdownToHtml (which applies MarkdownIt.render and DOMPurify.sanitize), and then
         //     parseCustomHtmlToReact (which calls htmlToReactParser).
         // Note that there is an unnecessary HTML encoding and decoding in this combination which would be good to remove.
-        let description = feature.currentDescription || getCurrentDescription(feature, this.props.clock.currentTime);
+        const currentTime = this.props.clock ? this.props.clock.currentTime : JulianDate.now();
+        let description = feature.currentDescription || getCurrentDescription(feature, currentTime);
         if (!defined(description) && defined(feature.properties)) {
-            description = describeFromProperties(feature.properties, this.props.clock.currentTime);
+            description = describeFromProperties(feature.properties, currentTime);
         }
         return description;
     },

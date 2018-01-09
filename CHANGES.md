@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### 5.5.5
+
+* Fixed a bug that caused the feature info panel to stop working after clicking on a location search marker.
+
 ### 5.5.4
 
 * Fixed a serious bug that prevented opening the Data Catalog in Internet Explorer.
