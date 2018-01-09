@@ -482,7 +482,7 @@ function mustacheFormatDateTime() {
     return mustacheJsonSubOptions((text, options) => {
         var date = Date.parse(text);
 
-        if (!defined(date) || isNaN(date)){
+        if (!defined(date) || isNaN(date)) {
             return text;
         }
 
