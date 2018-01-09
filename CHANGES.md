@@ -3,12 +3,10 @@
 Change Log
 ==========
 
-### 5.#.#
-
-* Added ability to move the splitter thumb position vertically so that users can move it to prevent occlusions.
 ### 5.5.5
 
 * Fixed a bug that caused the feature info panel to stop working after clicking on a location search marker.
+* Added ability to move the splitter thumb position vertically so that users can move it to prevent occlusions.
 
 ### 5.5.4
 
