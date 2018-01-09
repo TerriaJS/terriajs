@@ -2,14 +2,12 @@ site_name: TerriaJS
 #cosmo|cyborg|readthedocs|yeti|journal|bootstrap|readable|united|simplex|flatly|spacelab|amelia|cerulean|slate|mkdocs
 #theme: readthedocs
 theme:
-    name: null
-    custom_dir: mkdocs-material/material
+    name: 'material'
+    logo: 'terria.png'
 docs_dir: 'doc'
 site_dir: '../wwwroot/doc/guide'
 markdown_extensions:
   - markdown.extensions.admonition
-extra:
-  logo: 'terria.png'
 strict: true
 pages:
 - Home: 'README.md'
