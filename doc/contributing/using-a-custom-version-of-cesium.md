@@ -2,21 +2,20 @@
 
 What if you need to make changes to [Cesium](https://github.com/AnalyticalGraphicsInc/cesium) while working on TerriaJS?
 
-The process of using a custom version of Cesium is much the same as using a custom version of TerriaJS.  See the [Development Environment](development-environment.md#building-a-terriamap-against-a-modified-terriajs) for information on setting up and using `npmgitdev`.  To clone Cesium, do:
+The process of using a custom version of Cesium is much the same as using a custom version of TerriaJS.  See the [Development Environment](development-environment.md#building-a-terriamap-against-a-modified-terriajs) for information on setting up and using `yarn`.  To clone Cesium, do:
 
 ```
-cd node_modules
-rm -rf terriajs-cesium
-git clone -b terriajs https://github.com/TerriaJS/cesium.git terriajs-cesium
+cd packages
+git clone -b terriajs https://github.com/TerriaJS/cesium.git
 cd ..
 ```
 
 It is important that you use the `terriajs` branch of [TerriaJS/cesium](https://github.com/TerriaJS/cesium) because it contains important changes to Cesium that are necessary for it to work with TerriaJS.  If you need to use a different branch of Cesium, you will need to merge that branch with the changes in the `terriajs` branch.
 
-If you run `npmgitdev install`, make sure that npm hasn't installed a separate version of `terriajs-cesium` under terriajs:
+And then run:
 
 ```
-rm -rf node_modules/terriajs/node_modules/terriajs-cesium
+yarn install
 ```
 
 ## Committing modifications

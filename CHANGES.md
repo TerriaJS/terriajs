@@ -7,6 +7,9 @@ Change Log
 
 * Added `{{terria.currentTime}}` to feature info template.
 * Added a way to format times form the feature info tempate. E.g. `{{#terria.formatDateTime}}{"dateFormatString": "dd-mm-yyyy HH:MM:ss"}{{terria.currentTime}}{{/terria.formatDateTime}}`.
+### 5.5.5
+
+* Fixed a bug that caused the feature info panel to stop working after clicking on a location search marker.
 
 ### 5.5.4
 
