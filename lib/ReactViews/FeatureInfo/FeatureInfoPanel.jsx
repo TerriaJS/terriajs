@@ -184,7 +184,7 @@ const FeatureInfoPanel = createReactClass({
             [Styles.isVisible]: viewState.featureInfoPanelIsVisible
         });
 
-        var position;
+        let position;
         if (defined(terria.selectedFeature) && defined(terria.selectedFeature.position)) {
             // If there is a selected feature then use the feature location.
             position = terria.selectedFeature.position.getValue(terria.clock.currentTime);
