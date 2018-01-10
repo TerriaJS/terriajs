@@ -6,6 +6,8 @@ Change Log
 ### 5.5.5
 
 * Fixed a bug that caused the feature info panel to stop working after clicking on a location search marker.
+* Added support for ArcGIS tokens on the 2D map. Previously, tokens only worked reliably in 3D.
+* Improved handling of tile errors, making it more consistent between 2D and 3D.
 
 ### 5.5.4
 
