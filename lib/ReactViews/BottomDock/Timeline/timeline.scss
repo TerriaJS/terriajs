@@ -7,12 +7,12 @@
   padding-top: 5px;
   padding-bottom: 5px;
   padding-right: 5px;
+  font-family: $font-base;
 }
 
 .text-row {
   display: block;
   color: #fff;
-  font-family: $font-base;
   font-size: $font-size-mid-small;
   position: absolute;
   bottom: 44px;
@@ -59,9 +59,9 @@
 }
 
 .datePicker {
-  width: 230px;
+  width: 260px;
   height: 300px;
-  border: 1px solid $overlay;
+  border: 1px solid $grey;
   border-radius: 5px;
   padding: 5px;
   position: absolute;

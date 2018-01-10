@@ -131,7 +131,7 @@
                     "name": "Region Type",
                     "values": [
                         {
-                            "id": "STE_2011",
+                            "id": "STE",
                             "name": "States and Territories"
                         }
                     ]

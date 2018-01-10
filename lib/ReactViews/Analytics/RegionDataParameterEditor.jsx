@@ -53,7 +53,7 @@ const RegionDataParameterEditor = createReactClass({
         if (newValue) {
             value[column.name] = {
                 regionProvider: this.regionProvider(),
-                regionColumn: catalogItem.regionMapping.regionDetails[0].column,
+                regionColumn: catalogItem.regionMapping.tableStructure.getColumnWithNameOrId(catalogItem.regionMapping.regionDetails[0].columnName),
                 valueColumn: column
             };
 
@@ -86,7 +86,7 @@ const RegionDataParameterEditor = createReactClass({
             if (!this.props.parameter.singleSelect || Object.keys(value).length === 1) {
                 value[column.name] = {
                     regionProvider: this.regionProvider(),
-                    regionColumn: catalogItem.regionMapping.regionDetails[0].column,
+                    regionColumn: catalogItem.regionMapping.tableStructure.getColumnWithNameOrId(catalogItem.regionMapping.regionDetails[0].columnName),
                     valueColumn: column
                 };
             }
@@ -94,7 +94,7 @@ const RegionDataParameterEditor = createReactClass({
 
         return defined(value[column.name]) &&
             value[column.name] &&
-            value[column.name].regionColumn === catalogItem.regionMapping.regionDetails[0].column &&
+            value[column.name].regionColumn === catalogItem.regionMapping.tableStructure.getColumnWithNameOrId(catalogItem.regionMapping.regionDetails[0].columnName) &&
             value[column.name].valueColumn === column;
     },
 

@@ -3,16 +3,48 @@
 Change Log
 ==========
 
+### 5.5.5
+
+* Fixed a bug that caused the feature info panel to stop working after clicking on a location search marker.
+* Added support for ArcGIS tokens on the 2D map. Previously, tokens only worked reliably in 3D.
+* Improved handling of tile errors, making it more consistent between 2D and 3D.
+
+### 5.5.4
+
+* Fixed a serious bug that prevented opening the Data Catalog in Internet Explorer.
+* Fixed some problems with the Terria Spatial Analytics `CatalogFunctions`.
+
+### 5.5.3
+
+* Fixed a bug in SDMX-JSON when using `cannotSum`.
+
+### 5.5.2
+
+* Deprecated SDMX-JSON catalog items' `cannotDisplayPercentMap` in favour of `cannotSum`.
+* Updated `cannotSum` so that it does not display a total in some cases, as well as suppressing the regional-percentage checkbox.  `cannotSum` can be either a mapping of concept ids to the values that prevent summing, or simply `true` to always prevent summing.
+* Fixed a bug that caused an error when Splitting a layer that does not have a `clock`.
+
+### 5.5.1
+
+* Added `cannotDisplayPercentMap` to SDMX-JSON catalog items, to optionally turn off the "display as a percentage of regional total" checkbox when the data is not a count (eg. a rate or an average).
+
 ### 5.5.0
 
-* Added the ability to use a tabbed catalog in the explorer panel on desktop site. Setting `tabbedCatalog` parameter to `true` in `config.json` causes top-level groups in the catalog to list items in separate explorer panel tabs.
 * Added the ability to split the screen into a left-side and right-side, and show raster and region mapped layers on only one side of the splitter.
+* Added the ability to use a tabbed catalog in the explorer panel on desktop site. Setting `tabbedCatalog` parameter to `true` in `config.json` causes top-level groups in the catalog to list items in separate explorer panel tabs.
+* Added the ability to use vector tile properties in feature info templates when using region mapping (data row attributes will overwrite vector tile properties with the same name)
+* Properties available in feature info templates are now JSON parsed and replaced by their javascript object if they start with `[` or `{` and parse successfully
+* Decreased flickering of time-varying region mapped layers by pre-rendering the next time interval.
 * Fixed a bug in `WebMapServiceCatalogItem` that could cause a WMS time time dimension to be interpreted incorrectly if it was specified only using dates (not times) and with a periodicity of less than a day.
+
+### 5.4.5
+
+* Improved behaviour of SDMX-JSON items when no data is available.
 
 ### 5.4.4
 
 * Added support for specifying namespaced layer names in the `WebMapServiceCatalogItem` `layers` property.
-* Made TerriaJS tolerant of XML/HTML inside WMS GetCapabilities elements without being properly wrapped in `CDATA`.
+* Made TerriaJS tolerant of XML/HTML inside text elements in WMS GetCapabilities without being properly wrapped in `CDATA`.
 
 ### 5.4.3
 
