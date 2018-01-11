@@ -147,7 +147,7 @@ const FeatureInfoPanel = createReactClass({
         }
     },
 
-    locationItem(cartesianPosition) {
+    renderLocationItem(cartesianPosition) {
         const catographic = Ellipsoid.WGS84.cartesianToCartographic(cartesianPosition);
         const latitude = CesiumMath.toDegrees(catographic.latitude);
         const longitude = CesiumMath.toDegrees(catographic.longitude);
@@ -223,7 +223,7 @@ const FeatureInfoPanel = createReactClass({
                         </Otherwise>
                     </Choose>
                     <If condition={position}>
-                        <li>{this.locationItem(position)}</li>
+                        <li>{this.renderLocationItem(position)}</li>
                     </If>
                 </ul>
             </div>
