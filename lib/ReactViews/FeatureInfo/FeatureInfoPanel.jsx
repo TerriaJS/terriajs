@@ -163,7 +163,7 @@ const FeatureInfoPanel = createReactClass({
 
         return (
             <div className={Styles.location}>
-                <span>Lat / Lon </span>
+                <span>Lat / Lon&nbsp;</span>
                 <span>
                     {pretty.latitude + ", " + pretty.longitude}
                     <button type='button' onClick={pinClicked}  className={locationButtonStyle}>
