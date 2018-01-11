@@ -151,7 +151,7 @@ const FeatureInfoPanel = createReactClass({
         const catographic = Ellipsoid.WGS84.cartesianToCartographic(cartesianPosition);
         const latitude = CesiumMath.toDegrees(catographic.latitude);
         const longitude = CesiumMath.toDegrees(catographic.longitude);
-        const pretty = prettifyCoordinates(latitude, longitude);
+        const pretty = prettifyCoordinates(longitude, latitude);
         this.locationUpdated(latitude, longitude);
 
         const that = this;
