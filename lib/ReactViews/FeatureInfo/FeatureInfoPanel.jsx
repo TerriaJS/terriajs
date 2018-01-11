@@ -122,7 +122,7 @@ const FeatureInfoPanel = createReactClass({
         }
     },
 
-    addManualMarker(latitude, longitude) {
+    addManualMarker(longitude, latitude) {
         addMarker(this.props.terria, {
             name: "User Selection",
             location: {
@@ -132,18 +132,18 @@ const FeatureInfoPanel = createReactClass({
         });
     },
 
-    pinClicked(latitude, longitude) {
+    pinClicked(longitude, latitude) {
         if (!markerVisible(this.props.terria)) {
-            this.addManualMarker(latitude, longitude);
+            this.addManualMarker(longitude, latitude);
         } else {
             removeMarker(this.props.terria);
         }
     },
 
-    locationUpdated(latitude, longitude) {
+    locationUpdated(longitude, latitude) {
         if (defined(latitude) && defined (longitude) && markerVisible(this.props.terria)) {
             removeMarker(this.props.terria);
-            this.addManualMarker(latitude, longitude);
+            this.addManualMarker(longitude, latitude);
         }
     },
 
@@ -152,11 +152,11 @@ const FeatureInfoPanel = createReactClass({
         const latitude = CesiumMath.toDegrees(catographic.latitude);
         const longitude = CesiumMath.toDegrees(catographic.longitude);
         const pretty = prettifyCoordinates(longitude, latitude);
-        this.locationUpdated(latitude, longitude);
+        this.locationUpdated(longitude, latitude);
 
         const that = this;
         const pinClicked = function() {
-            that.pinClicked(latitude, longitude);
+            that.pinClicked(longitude, latitude);
         };
 
         const locationButtonStyle = markerVisible(this.props.terria) ? Styles.btnLocationSelected : Styles.btnLocation;
