@@ -15,11 +15,10 @@
 
 .remove {
   text-align: right;
-  border-left: 1px solid $border-color;
-  width: 30%;
   svg{
-    height: 20px;
-    width: 20px;
+    height: 12px;
+    width: 12px;
+    margin: 4px;
     fill: #fff;
     vertical-align: bottom;
     display: inline-block;
@@ -36,18 +35,75 @@
   }
 }
 
-.zoom{
+.zoom, .info, .split {
+  text-align: center;
   border-right: 1px solid $border-color;
-  width: 30%;
+}
+
+.zoom {
+  width: 29%;  // We have zoom, info, split and remove.
+  text-align: left;  // Always first.
+  &.no-info {
+    width: 40%;  // We have zoom, split and remove.
+  }
+  &.no-split {
+    width: 30%;  // We have zoom, info and remove.
+  }
+  &.no-info.no-split {
+    width: 50%;  // We have zoom and remove.
+  }
 }
 
 .info {
-  text-align: left;
-  width: 40%;
+  width: 32%;  // We have zoom, info, split and remove.
+  &.no-zoom {
+    width: 40%;  // We have info, split and remove.
+    text-align: left;
+  }
+  &.no-split {
+    width: 40%;  // We have zoom, info and remove.
+  }
+  &.no-zoom.no-split {
+    width: 50%;  // We have info and remove.
+    text-align: left;
+  }
 }
 
-.hasZoom{
-  .info{
-    text-align: center;
+.split {
+  width: 17%;  // We have zoom, info, split and remove.
+  &.no-info {
+    width: 30%;  // We have zoom, split and remove.
+  }
+  &.no-zoom {
+    width: 30%;  // We have info, split and remove.
+  }
+  &.has-info.can-zoom {
+    width: 50%;  // We have split and remove.
+    text-align: left;
+  }
+}
+
+.remove {
+  width: 22%;  // We have zoom, info, split and remove. 29 + 32 + 17 + 22 = 100.
+  &.no-zoom {
+    width: 30%;  // We have info, split and remove.  40 + 30 + 30 = 100.
+  }
+  &.no-info {
+    width: 30%;  // We have zoom, split and remove.  40 + 30 + 30 = 100
+  }
+  &.no-split {
+    width: 30%;  // We have zoom, info and remove.  30 + 40 + 30 = 100
+  }
+  &.no-zoom.no-info {
+    width: 50%;  // We have split and remove.
+  }
+  &.no-zoom.no-split {
+    width: 50%;  // We have info and remove.
+  }
+  &.no-info.no-split {
+    width: 50%;  // We have zoom and remove.
+  }
+  &.no-info.no-zoom.no-split {
+    width: 100%;  // We have remove only.
   }
 }

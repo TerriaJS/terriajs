@@ -1,15 +1,20 @@
 import React from 'react';
 
+import createReactClass from 'create-react-class';
+
+import PropTypes from 'prop-types';
+
 import ObserveModelMixin from '../ObserveModelMixin';
 import Styles from './data-preview.scss';
 /**
  * URL section of the preview.
  */
-const DataPreviewUrl = React.createClass({
+const DataPreviewUrl = createReactClass({
+    displayName: 'DataPreviewUrl',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        metadataItem: React.PropTypes.object.isRequired
+        metadataItem: PropTypes.object.isRequired
     },
 
     selectUrl(e) {
@@ -22,14 +27,14 @@ const DataPreviewUrl = React.createClass({
                 <h4 className={Styles.h4}>{this.props.metadataItem.typeName} URL</h4>
                 <If condition={this.props.metadataItem.type === 'wms'}>
                     <p>
-                        This is a <a href="https://en.wikipedia.org/wiki/Web_Map_Service" target="_blank">WMS
+                        This is a <a href="https://en.wikipedia.org/wiki/Web_Map_Service" target="_blank" rel="noopener noreferrer">WMS
                         service</a>, which generates map images on request. It can be used in GIS software with this
                         URL:
                     </p>
                 </If>
                 <If condition={this.props.metadataItem.type === 'wfs'}>
                     <p>
-                        This is a <a href="https://en.wikipedia.org/wiki/Web_Feature_Service" target="_blank">WFS
+                        This is a <a href="https://en.wikipedia.org/wiki/Web_Feature_Service" target="_blank" rel="noopener noreferrer">WFS
                         service</a>, which transfers raw spatial data on request. It can be used in GIS software
                         with this URL:
                     </p>
@@ -46,7 +51,7 @@ const DataPreviewUrl = React.createClass({
                 </If>
             </div>
         );
-    }
+    },
 });
 
 export default DataPreviewUrl;

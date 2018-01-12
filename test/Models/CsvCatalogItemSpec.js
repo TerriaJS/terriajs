@@ -267,10 +267,9 @@ describe('CsvCatalogItem with lat and lon', function() {
             // The date '2015-08-01' appears to be interpreted as starting at midnight in the local time zone (at least on Chrome).
             // Eg. in Sydney summer, JulianDate.toIso8601(earlyFeature.availability.start) returns "2015-07-31T14:00:00Z".
             expect(TimeInterval.contains(earlyFeature.availability, JulianDate.fromIso8601('2015-08-01'))).toBe(true);
-            // Also test the duration of the interval is just under one day (the time between input rows).
+            // Also test the duration of the interval is one day (the time between input rows).
             var durationInSeconds = JulianDate.secondsDifference(earlyFeature.availability.stop, earlyFeature.availability.start);
-            expect(durationInSeconds).toBeGreaterThan(23 * 3600);  // more than 23 hours
-            expect(durationInSeconds).toBeLessThan(24 * 3600);  // but less than 24 hours
+            expect(durationInSeconds).toBe(24 * 3600);  // 24 hours
         }).otherwise(fail).then(done);
     });
 
@@ -307,10 +306,9 @@ describe('CsvCatalogItem with lat and lon', function() {
             // The date '2015-08-01' appears to be interpreted as starting at midnight in the local time zone (at least on Chrome).
             // Eg. in Sydney summer, JulianDate.toIso8601(earlyFeature.availability.start) returns "2015-07-31T14:00:00Z".
             expect(TimeInterval.contains(earlyFeature.availability, JulianDate.fromIso8601('2015-08-01'))).toBe(true);
-            // Also test the duration of the interval is just under one day (the time between input rows).
+            // Also test the duration of the interval is one day (the time between input rows).
             var durationInSeconds = JulianDate.secondsDifference(earlyFeature.availability.stop, earlyFeature.availability.start);
-            expect(durationInSeconds).toBeGreaterThan(23 * 3600);  // more than 23 hours
-            expect(durationInSeconds).toBeLessThan(24 * 3600);  // but less than 24 hours
+            expect(durationInSeconds).toBe(24 * 3600);  // 24 hours
         }).otherwise(fail).then(done);
     });
 
@@ -693,7 +691,7 @@ describe('CsvCatalogItem with lat and lon', function() {
 
 // eg. use as entities.map(getPropertiesDate) to just get the dates of the entities.
 function getPropertiesDate(obj) {
-    return obj.properties.date;
+    return obj.properties.date.getValue();
 }
 
 // eg. use as regions.map(getId) to just get the ids of the regions.
@@ -707,9 +705,9 @@ describe('CsvCatalogItem with region mapping', function() {
     var csvItem;
     beforeEach(function() {
         terria = new Terria({
-            baseUrl: './',
-            regionMappingDefinitionsUrl: 'test/csv/regionMapping.json'
+            baseUrl: './'
         });
+        terria.configParameters.regionMappingDefinitionsUrl = 'test/csv/regionMapping.json';
         csvItem = new CsvCatalogItem(terria);
 
         // Instead of directly inspecting the recoloring function (which is a private and inaccessible variable),
@@ -720,6 +718,10 @@ describe('CsvCatalogItem with region mapping', function() {
         // Also, for feature detection, spy on this call; the second argument is the regionImageryProvider.
         // This unfortunately makes the test depend on an implementation detail.
         spyOn(ImageryLayerCatalogItem, 'enableLayer');
+
+        // loadAndStubTextResources(done, [
+        //     terria.configParameters.regionMappingDefinitionsUrl
+        // ]).then(done).otherwise(done.fail);
     });
 
     it('does not think a lat-lon csv has regions', function(done) {
@@ -952,12 +954,40 @@ describe('CsvCatalogItem with region mapping', function() {
             expect(csvItem.tableStructure.columnsByType[VarType.TIME].length).toEqual(1);
             expect(csvItem.tableStructure.columnsByType[VarType.TIME][0].julianDates[0]).toEqual(j('2015-08-07'));
             // Test that the right regions have been colored (since the datasource doesn't expose the entities).
-            // On 2015-08-07, only postcodes 3121 and 3122 have values. On neighboring dates, so do 3123 and 3124.
+            // On 2015-08-08, only postcodes 3121 and 3122 have values. On neighboring dates, so do 3123 and 3124.
             var recolorFunction = ImageryProviderHooks.addRecolorFunc.calls.argsFor(0)[1];
             var regionNames = regionDetail.regionProvider.regions.map(getId);
 
             expect(recolorFunction(regionNames.indexOf('3121'))).toBeDefined();
             expect(recolorFunction(regionNames.indexOf('3122'))).toBeDefined();
+            expect(recolorFunction(regionNames.indexOf('3123'))).not.toBeDefined();
+            expect(recolorFunction(regionNames.indexOf('3124'))).not.toBeDefined();
+            expect(csvItem.legendUrl).toBeDefined();
+        }).otherwise(fail).then(done);
+    });
+
+    it('supports region-mapped files with missing dates', function(done) {
+        csvItem.updateFromJson({
+            url: 'test/csv/postcode_date_value_missing_date.csv'
+        });
+        csvItem.load().then(function() {
+            var regionMapping = csvItem.regionMapping;
+            var j = JulianDate.fromIso8601;
+            regionMapping._catalogItem.terria.clock.currentTime = j('2015-08-08');
+            csvItem.isEnabled = true;
+            var regionDetails = regionMapping.regionDetails;
+            expect(regionDetails).toBeDefined();
+            var regionDetail = regionDetails[0];
+            expect(csvItem.tableStructure.columns[0].values.length).toEqual(10);
+            expect(csvItem.tableStructure.columnsByType[VarType.TIME].length).toEqual(1);
+            expect(csvItem.tableStructure.columnsByType[VarType.TIME][0].julianDates[0]).toEqual(j('2015-08-07'));
+            // Test that the right regions have been colored (since the datasource doesn't expose the entities).
+            // On 2015-08-08, only postcodes 3121 and 3122 have values. On neighboring dates, so do 3123 and 3124.
+            var recolorFunction = ImageryProviderHooks.addRecolorFunc.calls.argsFor(0)[1];
+            var regionNames = regionDetail.regionProvider.regions.map(getId);
+
+            expect(recolorFunction(regionNames.indexOf('3121'))).toBeDefined();
+            expect(recolorFunction(regionNames.indexOf('3122'))).not.toBeDefined();  // This one was eliminated.
             expect(recolorFunction(regionNames.indexOf('3123'))).not.toBeDefined();
             expect(recolorFunction(regionNames.indexOf('3124'))).not.toBeDefined();
             expect(csvItem.legendUrl).toBeDefined();
@@ -1131,7 +1161,7 @@ describe('CsvCatalogItem with region mapping', function() {
                 csvFile,
                 terria.configParameters.regionMappingDefinitionsUrl,
                 'data/regionids/region_map-FID_LGA_2011_AUST_LGA_NAME11.json',
-                'data/regionids/region_map-FID_LGA_2011_AUST_STE_NAME11.json'
+                'data/regionids/region_map-FID_LGA_2011_AUST_STE_NAME11.json',
             ]).then(function(resources) {
                 jasmine.Ajax.stubRequest('http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows?transparent=true&format=image%2Fpng&exceptions=application%2Fvnd.ogc.se_xml&styles=&tiled=true&service=WMS&version=1.1.1&request=GetFeatureInfo&layers=region_map%3AFID_LGA_2011_AUST&srs=EPSG%3A3857&bbox=16143500.373829227%2C-4559315.8631541915%2C16153284.31344973%2C-4549531.923533689&width=256&height=256&query_layers=region_map%3AFID_LGA_2011_AUST&x=217&y=199&info_format=application%2Fjson').andReturn({
                     responseText: JSON.stringify({
@@ -1183,10 +1213,12 @@ describe('CsvCatalogItem with region mapping', function() {
 
         it('works with disambiguated LGA names like Wellington, VIC', function(done) {
             var csvFile = 'test/csv/lga_state_disambig.csv';
-
             loadAndStubTextResources(done, [
                 csvFile,
-                terria.configParameters.regionMappingDefinitionsUrl
+                terria.configParameters.regionMappingDefinitionsUrl,
+                'data/regionids/region_map-FID_LGA_2011_AUST_LGA_NAME11.json',
+                'data/regionids/region_map-FID_LGA_2011_AUST_STE_NAME11.json',
+                'data/regionids/region_map-FID_STE_2011_AUST_STE_NAME11.json'
             ]).then(function(resources) {
                 jasmine.Ajax.stubRequest('http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows?transparent=true&format=image%2Fpng&exceptions=application%2Fvnd.ogc.se_xml&styles=&tiled=true&service=WMS&version=1.1.1&request=GetFeatureInfo&layers=region_map%3AFID_LGA_2011_AUST&srs=EPSG%3A3857&bbox=16437018.562444303%2C-3913575.8482010253%2C16593561.59637234%2C-3757032.814272985&width=256&height=256&query_layers=region_map%3AFID_LGA_2011_AUST&x=249&y=135&info_format=application%2Fjson').andReturn({
                     responseText: JSON.stringify({

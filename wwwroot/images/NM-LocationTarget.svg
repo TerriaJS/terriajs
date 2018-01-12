@@ -23,11 +23,11 @@
             </feMerge>
         </filter>
     </defs>
-    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
-        <g id="Artboard-1" sketch:type="MSArtboardGroup" transform="translate(-691.000000, -498.000000)" stroke-linecap="round" stroke="#FFFFFF">
-            <g id="LocationTarget-+-Path" sketch:type="MSLayerGroup" transform="translate(699.000000, 506.000000)">
-                <path d="M80,144 C115.346224,144 144,115.346224 144,80 C144,44.653776 115.346224,16 80,16 C44.653776,16 16,44.653776 16,80 C16,115.346224 44.653776,144 80,144 Z M160,80 L144,80 M16,80 L0,80 M79.6,-0.4 L79.6,15.6 M78.8,144 L78.8,160" id="LocationTarget" stroke-width="7" filter="url(#filter-1)" sketch:type="MSShapeGroup"></path>
-                <circle id="Path" stroke-width="2" opacity="0.252215485" filter="url(#filter-2)" sketch:type="MSShapeGroup" cx="80" cy="80" r="6"></circle>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-1" transform="translate(-691.000000, -498.000000)" stroke-linecap="round" stroke="#FFFFFF">
+            <g id="LocationTarget-+-Path" transform="translate(699.000000, 506.000000)">
+                <path d="M80,144 C115.346224,144 144,115.346224 144,80 C144,44.653776 115.346224,16 80,16 C44.653776,16 16,44.653776 16,80 C16,115.346224 44.653776,144 80,144 Z M160,80 L144,80 M16,80 L0,80 M79.6,-0.4 L79.6,15.6 M78.8,144 L78.8,160" id="LocationTarget" stroke-width="7" filter="url(#filter-1)"></path>
+                <circle id="Path" stroke-width="2" opacity="0.252215485" filter="url(#filter-2)" cx="80" cy="80" r="6"></circle>
             </g>
         </g>
     </g>

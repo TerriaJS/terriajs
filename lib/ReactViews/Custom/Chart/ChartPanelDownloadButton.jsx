@@ -2,6 +2,8 @@
 /* global Float32Array */
 /* eslint new-parens: 0 */
 import React from 'react';
+import PropTypes from 'prop-types';
+import createReactClass from 'create-react-class';
 import debounce from 'lodash.debounce';
 
 import defined from 'terriajs-cesium/Source/Core/defined';
@@ -17,12 +19,13 @@ import Styles from './chart-panel-download-button.scss';
 const RUN_WORKER_DEBOUNCE = 100; // Wait 100ms for initial setup changes to be completed.
 const TIME_COLUMN_DEFAULT_NAME = 'date';
 
-const ChartPanelDownloadButton = React.createClass({
+const ChartPanelDownloadButton = createReactClass({
+    displayName: 'ChartPanelDownloadButton',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        chartableItems: React.PropTypes.array.isRequired,
-        errorEvent: React.PropTypes.object.isRequired
+        chartableItems: PropTypes.array.isRequired,
+        errorEvent: PropTypes.object.isRequired
     },
 
     _subscription: undefined,
@@ -55,7 +58,7 @@ const ChartPanelDownloadButton = React.createClass({
             when.all(loadingPromises).then(() => {
                 const synthesized = that.synthesizeNameAndValueArrays(newValue);
                 // Could implement this using TaskProcessor, but requires webpack magic.
-                const HrefWorker = require('worker!./downloadHrefWorker');
+                const HrefWorker = require('worker-loader!./downloadHrefWorker');
                 const worker = new HrefWorker;
                 // console.log('names and value arrays', synthesized.names, synthesized.values);
                 if (synthesized.values && synthesized.values.length > 0) {
@@ -126,7 +129,7 @@ const ChartPanelDownloadButton = React.createClass({
             }
         }
         return null;
-    }
+    },
 });
 
 /**

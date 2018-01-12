@@ -1,16 +1,19 @@
 import React from 'react';
+import createReactClass from 'create-react-class';
+import PropTypes from 'prop-types';
 import ko from 'terriajs-cesium/Source/ThirdParty/knockout';
 
 import ObserveModelMixin from '../ObserveModelMixin';
 import ModalPopup from './ModalPopup';
 import Tabs from './Tabs.jsx';
 
-const ExplorerWindow = React.createClass({
+const ExplorerWindow = createReactClass({
+    displayName: 'ExplorerWindow',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        terria: React.PropTypes.object.isRequired,
-        viewState: React.PropTypes.object.isRequired
+        terria: PropTypes.object.isRequired,
+        viewState: PropTypes.object.isRequired
     },
 
     getInitialState() {

@@ -1,6 +1,6 @@
 The easiest way to get started with TerriaJS is to use [TerriaMap](https://github.com/TerriaJS/TerriaMap).  TerriaMap is a full-featured application built on TerriaJS, ready to be customized with your own branding and catalog.  It is also a great starting point for more in-depth customization.
 
-This guide explains how to build and run TerriaMap locally.  See [Deployment](Deployment) to learn how to deploy it for use by others.
+This guide explains how to build and run TerriaMap locally.  See [Deploying](deploying) to learn how to deploy it for use by others.
 
 You may also be interested in how to [make your own map without writing any code](http://stevebennett.me/2015/07/02/your-own-personal-national-map-with-terriajs-no-coding-and-nothing-to-deploy/).
 
@@ -24,8 +24,8 @@ If you run into trouble or want more explanation, read on.
 
 TerriaJS can be built and run on almost any macOS, Linux, or Windows system.  The following are required to build TerriaJS:
 
-* [Node.js](https://nodejs.org) v5.10 or later.  v6.x and v7.x are also known to work, and later major versions are likely to work as well.  You can check your node version by running `node --version` on the command-line.
-* [npm](https://www.npmjs.com/) v3.0 or later.  This is usually installed automatically alongside the above.  You can check your npm version by running `npm --version`.
+* [Node.js](https://nodejs.org) v6.0 or later.  v7.x and v8.x are also known to work.  You can check your node version by running `node --version` on the command-line.
+* [npm](https://www.npmjs.com/) v3.0 or later.  v4.x and v5.x are also known to work.  npm is usually installed automatically alongside the above.  You can check your npm version by running `npm --version`.
 
 The following components are optional:
 
@@ -100,4 +100,4 @@ npm install
 
 ### Next Steps
 
-Now that you have a working local build of TerriaMap, you may want to [customize it](Customizing) or [deploy it](Deployment) for others to use.
+Now that you have a working local build of TerriaMap, you may want to [customize it](customizing) or [deploy it](deploying) for others to use.

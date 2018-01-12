@@ -6,22 +6,30 @@ import Icon from "../../Icon.jsx";
 import ObserveModelMixin from '../../ObserveModelMixin';
 import PickedFeatures from '../../../Map/PickedFeatures';
 import React from 'react';
+import createReactClass from 'create-react-class';
+import PropTypes from 'prop-types';
 import Rectangle from 'terriajs-cesium/Source/Core/Rectangle';
 import when from 'terriajs-cesium/Source/ThirdParty/when';
 import classNames from 'classnames';
 import Styles from './viewing-controls.scss';
 
-const ViewingControls = React.createClass({
+import createCatalogMemberFromType from '../../../Models/createCatalogMemberFromType';
+import addUserCatalogMember from '../../../Models/addUserCatalogMember';
+import ImagerySplitDirection from 'terriajs-cesium/Source/Scene/ImagerySplitDirection';
+
+const ViewingControls = createReactClass({
+    displayName: 'ViewingControls',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        item: React.PropTypes.object.isRequired,
-        viewState: React.PropTypes.object.isRequired
+        item: PropTypes.object.isRequired,
+        viewState: PropTypes.object.isRequired
     },
 
     removeFromMap() {
         this.props.item.isEnabled = false;
     },
+
     zoomTo() {
         this.props.item.zoomToAndUseClock();
     },
@@ -51,6 +59,26 @@ const ViewingControls = React.createClass({
         }, 50);
     },
 
+    splitItem() {
+        const item = this.props.item;
+        item.splitDirection = ImagerySplitDirection.RIGHT;
+        if (item.canUseOwnClock) {
+            item.useOwnClock = true;
+        }
+        const serializedItem = item.serializeToJson();
+        serializedItem.name = serializedItem.name + ' (copy)';
+        serializedItem.splitDirection = ImagerySplitDirection.LEFT;
+        delete serializedItem.id;
+
+        const newItem = createCatalogMemberFromType(item.type, item.terria);
+        newItem.updateFromJson(serializedItem);
+        // newItem is added to terria.nowViewing automatically by the "isEnabled" observable on CatalogItem (see isEnabledChanged).
+        // However, nothing adds it to terria.catalog automatically, which is required so the new item can be shared.
+        addUserCatalogMember(item.terria, newItem, {open: false, zoomTo: false});
+
+        item.terria.showSplitter = true;
+    },
+
     previewItem() {
         let item = this.props.item;
         // If this is a chartable item opened from another catalog item, get the info of the original item.
@@ -59,30 +87,36 @@ const ViewingControls = React.createClass({
         }
         // Open up all the parents (doesn't matter that this sets it to enabled as well because it already is).
         item.enableWithParents();
-        this.props.viewState.viewCatalogItem(item);
+        this.props.viewState.viewCatalogMember(item);
         this.props.viewState.switchMobileView(this.props.viewState.mobileViewOptions.preview);
     },
 
     render() {
         const item = this.props.item;
+        const canZoom = item.canZoomTo || (item.tableStructure && item.tableStructure.sourceFeature);
+        const canSplit = !item.terria.configParameters.disableSplitter && item.supportsSplitting && defined(item.splitDirection) && item.terria.currentViewer.canShowSplitter;
+        const classList = {[Styles.noZoom]: !canZoom, [Styles.noSplit]: !canSplit, [Styles.noInfo]: !item.showsInfo};
         return (
-            <ul className={classNames(Styles.control, {[Styles.hasZoom]: item.isMappable || item.tableStructure && item.tableStructure.sourceFeature})}>
-                <If condition={item.isMappable}>
-                    <li className={Styles.zoom}><button type='button' onClick={this.zoomTo} title="Zoom to data" className={Styles.btn}>Zoom To Extent</button></li>
+            <ul className={Styles.control}>
+                <If condition={item.canZoomTo}>
+                    <li className={classNames(Styles.zoom, classList)}><button type='button' onClick={this.zoomTo} title="Zoom to extent" className={Styles.btn}>Zoom To Extent</button></li>
                 </If>
                 <If condition={item.tableStructure && item.tableStructure.sourceFeature}>
-                    <li className={Styles.zoom}><button type='button' onClick={this.openFeature} title="Zoom to data" className={Styles.btn}>Zoom To</button></li>
+                    <li className={classNames(Styles.zoom, classList)}><button type='button' onClick={this.openFeature} title="Zoom to data" className={Styles.btn}>Zoom To</button></li>
                 </If>
                 <If condition={item.showsInfo}>
-                    <li className={Styles.info}><button type='button' onClick={this.previewItem} className={Styles.btn} title='info'>About This Data Set</button></li>
+                    <li className={classNames(Styles.info, classList)}><button type='button' onClick={this.previewItem} className={Styles.btn} title='info'>About This Data</button></li>
                 </If>
-                <li className={Styles.remove}>
+                <If condition={canSplit}>
+                    <li className={classNames(Styles.split, classList)}><button type='button' onClick={this.splitItem} title="Duplicate and show splitter" className={Styles.btn}>Split</button></li>
+                </If>
+                <li className={classNames(Styles.remove, classList)}>
                     <button type='button' onClick={this.removeFromMap} title="Remove this data" className={Styles.btn}>
                         Remove <Icon glyph={Icon.GLYPHS.remove}/>
                     </button>
                 </li>
             </ul>
         );
-    }
+    },
 });
 module.exports = ViewingControls;

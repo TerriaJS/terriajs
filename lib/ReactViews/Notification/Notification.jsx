@@ -2,13 +2,17 @@
 
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
+import createReactClass from 'create-react-class';
+import PropTypes from 'prop-types';
 import NotificationWindow from './NotificationWindow';
+import triggerResize from '../../Core/triggerResize';
 
-const Notification = React.createClass({
+const Notification = createReactClass({
+    displayName: 'Notification',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        viewState: React.PropTypes.object
+        viewState: PropTypes.object
     },
 
     confirm() {
@@ -17,7 +21,7 @@ const Notification = React.createClass({
             notification.confirmAction();
         }
 
-        this.props.viewState.notifications.splice(0, 1);
+        this.close(notification);
     },
 
     deny() {
@@ -26,7 +30,17 @@ const Notification = React.createClass({
             notification.denyAction();
         }
 
+        this.close(notification);
+    },
+
+    close (notification) {
         this.props.viewState.notifications.splice(0, 1);
+
+        // Force refresh once the notification is dispached if .hideUi is set since once all the .hideUi's
+        // have been dispatched the UI will no longer be suppressed causing a change in the view state.
+        if (notification && notification.hideUi) {
+            triggerResize();
+        }
     },
 
     render() {
@@ -40,7 +54,7 @@ const Notification = React.createClass({
                 onConfirm={this.confirm}
                 onDeny={this.deny}
             />);
-    }
+    },
 });
 
 module.exports = Notification;

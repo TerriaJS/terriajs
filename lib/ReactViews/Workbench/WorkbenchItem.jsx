@@ -2,14 +2,18 @@
 
 import classNames from 'classnames';
 import React from 'react';
+import createReactClass from 'create-react-class';
+import PropTypes from 'prop-types';
 import {sortable} from 'react-anything-sortable';
 
 import defined from 'terriajs-cesium/Source/Core/defined';
 
-import DisplayAsPercentSection from './Controls/DisplayAsPercentSection';
 import ConceptViewer from './Controls/ConceptViewer';
+import DateTimeSelectorSection from './Controls/DateTimeSelectorSection';
 import DimensionSelectorSection from './Controls/DimensionSelectorSection';
+import DisplayAsPercentSection from './Controls/DisplayAsPercentSection';
 import getAncestors from '../../Models/getAncestors';
+import LeftRightSection from './Controls/LeftRightSection';
 import Legend from './Controls/Legend';
 import ObserveModelMixin from './../ObserveModelMixin';
 import OpacitySection from './Controls/OpacitySection';
@@ -21,17 +25,18 @@ import ViewingControls from './Controls/ViewingControls';
 import Styles from './workbench-item.scss';
 import Icon from '../Icon.jsx';
 
-const WorkbenchItem = React.createClass({
+const WorkbenchItem = createReactClass({
+    displayName: 'WorkbenchItem',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        style: React.PropTypes.object,
-        className: React.PropTypes.string,
-        onMouseDown: React.PropTypes.func.isRequired,
-        onTouchStart: React.PropTypes.func.isRequired,
-        item: React.PropTypes.object.isRequired,
-        viewState: React.PropTypes.object.isRequired,
-        setWrapperState: React.PropTypes.func
+        style: PropTypes.object,
+        className: PropTypes.string,
+        onMouseDown: PropTypes.func.isRequired,
+        onTouchStart: PropTypes.func.isRequired,
+        item: PropTypes.object.isRequired,
+        viewState: PropTypes.object.isRequired,
+        setWrapperState: PropTypes.func
     },
 
     toggleDisplay() {
@@ -93,10 +98,12 @@ const WorkbenchItem = React.createClass({
                     <div className={Styles.inner}>
                         <ViewingControls item={workbenchItem} viewState={this.props.viewState}/>
                         <OpacitySection item={workbenchItem}/>
+                        <LeftRightSection item={workbenchItem}/>
                         <If condition={(defined(workbenchItem.concepts) && workbenchItem.concepts.length > 0) && workbenchItem.displayChoicesBeforeLegend}>
                             <ConceptViewer item={workbenchItem}/>
                         </If>
                         <DimensionSelectorSection item={workbenchItem}/>
+                        <DateTimeSelectorSection item={workbenchItem}/>
                         <StyleSelectorSection item={workbenchItem}/>
                         <ColorScaleRangeSection item={workbenchItem}/>
                         <DisplayAsPercentSection item={workbenchItem}/>
@@ -111,7 +118,7 @@ const WorkbenchItem = React.createClass({
                 </If>
             </li>
         );
-    }
+    },
 });
 
 module.exports = sortable(WorkbenchItem);

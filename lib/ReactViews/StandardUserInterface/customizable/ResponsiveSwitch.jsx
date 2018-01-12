@@ -1,5 +1,7 @@
 import React from 'react';
 
+import PropTypes from 'prop-types';
+
 /**
  * Higher-order component that either shows a one element or the other, depending on whether the "smallScreen" prop
  * passed to it is true or false.
@@ -20,7 +22,7 @@ export default (LargeScreenComponent, SmallScreenComponent) => {
     }
 
     ResponsiveSwitch.propTypes = {
-        smallScreen: React.PropTypes.bool
+        smallScreen: PropTypes.bool
     };
 
     return ResponsiveSwitch;

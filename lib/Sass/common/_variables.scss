@@ -59,6 +59,8 @@ $padding-mini: 3px;
 
 $btn-default-line-height: 20px;
 $input-height: 40px;
+$input-glyph-height: 24px; // This value should be $input-height * 0.6
+$input-glyph-margin: 8px;  // This value should be $input-height * 0.2
 
 $sm-logo-height: $input-height;
 $logo-height: 70px;
@@ -111,7 +113,7 @@ $font-weight-light: 100;
 
 $work-bench-width : 350px;
 $setting-panel: 300px;
-$share-panel-width: $setting-panel;
+$share-panel-width: 450px;
 $share-panel-caret-left: 215px;
 $feature-info-panel-width: 500px;
 $branding-height: 55px;
@@ -146,8 +148,8 @@ $chart-line-color: #ccc;
 $chart-preview-line-color: $chart-line-color;
 $chart-darker: darken($dark, 8%);
 
-
-
 $charcoal-grey: #3f4854;
 $turquoise-blue: #08abd5;
 
+// Splitter
+$splitter-thumb-width: 40px;

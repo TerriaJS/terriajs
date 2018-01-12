@@ -1,7 +1,9 @@
 'use strict';
 import React from 'react';
+import PropTypes from 'prop-types';
+import createReactClass from 'create-react-class';
 import ObserveModelMixin from '../../ObserveModelMixin';
-import Styles from './measure_tool.scss';
+import Styles from './tool_button.scss';
 import Icon from "../../Icon.jsx";
 
 const UserDrawing = require('../../../Models/UserDrawing');
@@ -14,11 +16,12 @@ const PolygonHierarchy = require('terriajs-cesium/Source/Core/PolygonHierarchy.j
 const Cartesian3 = require('terriajs-cesium/Source/Core/Cartesian3.js');
 const VertexFormat = require('terriajs-cesium/Source/Core/VertexFormat.js');
 
-const MeasureTool = React.createClass({
+const MeasureTool = createReactClass({
+    displayName: 'MeasureTool',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        terria: React.PropTypes.object
+        terria: PropTypes.object
     },
 
     getInitialState() {
@@ -185,14 +188,14 @@ const MeasureTool = React.createClass({
     },
 
     render() {
-        return <div className={Styles.measureTool}>
+        return <div className={Styles.toolButton}>
                   <button type='button' className={Styles.btn}
                           title='measure distance between two points'
                           onClick={this.handleClick}>
                           <Icon glyph={Icon.GLYPHS.measure}/>
                   </button>
                </div>;
-    }
+    },
 });
 
 export default MeasureTool;

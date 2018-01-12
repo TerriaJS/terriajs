@@ -1,4 +1,6 @@
 import React from 'react';
+import createReactClass from 'create-react-class';
+import PropTypes from 'prop-types';
 import Sortable from 'react-anything-sortable';
 
 import WorkbenchItem from './WorkbenchItem.jsx';
@@ -8,12 +10,13 @@ import Styles from './workbench-list.scss';
 import '!!style-loader!css-loader?sourceMap!react-anything-sortable/sortable.css';
 import '!!style-loader!css-loader?sourceMap!./sortable.css';
 
-const WorkbenchList = React.createClass({
+const WorkbenchList = createReactClass({
+    displayName: 'WorkbenchList',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        terria: React.PropTypes.object.isRequired,
-        viewState: React.PropTypes.object.isRequired
+        terria: PropTypes.object.isRequired,
+        viewState: PropTypes.object.isRequired
     },
 
     onSort(sortedArray, currentDraggingSortData, currentDraggingIndex) {
@@ -45,7 +48,7 @@ const WorkbenchList = React.createClass({
                 </Sortable>
             </ul>
         );
-    }
+    },
 });
 
 module.exports = WorkbenchList;

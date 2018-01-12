@@ -1,5 +1,9 @@
 import React from 'react';
 
+import createReactClass from 'create-react-class';
+
+import PropTypes from 'prop-types';
+
 import DataPreviewMap from './DataPreviewMap';
 import Description from './Description';
 import ObserveModelMixin from '../ObserveModelMixin';
@@ -9,13 +13,14 @@ import Styles from './mappable-preview.scss';
  * CatalogItem preview that is mappable (as opposed to say, an analytics item that can't be displayed on a map without
  * configuration of other parameters.
  */
-const MappablePreview = React.createClass({
+const MappablePreview = createReactClass({
+    displayName: 'MappablePreview',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        previewed: React.PropTypes.object.isRequired,
-        terria: React.PropTypes.object.isRequired,
-        viewState: React.PropTypes.object.isRequired
+        previewed: PropTypes.object.isRequired,
+        terria: PropTypes.object.isRequired,
+        viewState: PropTypes.object.isRequired
     },
 
     toggleOnMap(event) {
@@ -49,7 +54,7 @@ const MappablePreview = React.createClass({
                 </div>
             </div>
         );
-    }
+    },
 });
 
 export default MappablePreview;

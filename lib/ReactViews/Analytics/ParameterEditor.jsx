@@ -2,6 +2,10 @@
 
 import React from 'react';
 
+import createReactClass from 'create-react-class';
+
+import PropTypes from 'prop-types';
+
 import ObserveModelMixin from '../ObserveModelMixin';
 import PointParameterEditor from './PointParameterEditor';
 import LineParameterEditor from './LineParameterEditor';
@@ -18,13 +22,14 @@ import defined from 'terriajs-cesium/Source/Core/defined';
 
 import Styles from './parameter-editors.scss';
 
-const ParameterEditor = React.createClass({
+const ParameterEditor = createReactClass({
+    displayName: 'ParameterEditor',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        parameter: React.PropTypes.object,
-        viewState: React.PropTypes.object,
-        previewed: React.PropTypes.object
+        parameter: PropTypes.object,
+        viewState: PropTypes.object,
+        previewed: PropTypes.object
     },
 
     fieldId: new Date().getTime(),
@@ -54,7 +59,7 @@ const ParameterEditor = React.createClass({
                 {this.renderEditor()}
             </div>
         );
-    }
+    },
 });
 
 ParameterEditor.parameterTypeConverters = [
@@ -166,9 +171,9 @@ ParameterEditor.parameterTypeConverters = [
         id: 'regionType',
         parameterTypeToDiv: function RegionTypeParameterToDiv(type, parameterEditor) {
             if (type === this.id) {
-                const regionParam = parameterEditor.props.previewed.parameters.find(function(param) {
+                const regionParam = parameterEditor.props.previewed.parameters.filter(function(param) {
                     return (defined(param.regionTypeParameter) && param.regionTypeParameter === parameterEditor.props.parameter);
-                });
+                })[0];
                 return (<div>
                                 <If condition={regionParam === undefined}>
                                     {parameterEditor.renderLabel()}

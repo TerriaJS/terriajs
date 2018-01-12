@@ -1,17 +1,24 @@
 import React from 'react';
-import TerriaViewer from '../../ViewModels/TerriaViewer';
+import createReactClass from 'create-react-class';
+import PropTypes from 'prop-types';
+
 import Cartesian2 from 'terriajs-cesium/Source/Core/Cartesian2';
 import Styles from './terria-viewer-wrapper.scss';
 
-const TerriaViewerWrapper = React.createClass({
-    // mixins: [ObserveModelMixin],
+import Splitter from './Splitter';
+import ObserveModelMixin from '../ObserveModelMixin';
+import TerriaViewer from '../../ViewModels/TerriaViewer';
+
+const TerriaViewerWrapper = createReactClass({
+    displayName: 'TerriaViewerWrapper',
+    mixins: [ObserveModelMixin],
 
     lastMouseX: -1,
     lastMouseY: -1,
 
     propTypes: {
-        terria: React.PropTypes.object.isRequired,
-        viewState: React.PropTypes.object.isRequired
+        terria: PropTypes.object.isRequired,
+        viewState: PropTypes.object.isRequired
     },
 
     componentDidMount() {
@@ -22,10 +29,6 @@ const TerriaViewerWrapper = React.createClass({
                 link: 'http://www.csiro.au/en/Research/D61'
             }
         });
-    },
-
-    shouldComponentUpdate() {
-        return false;
     },
 
     componentWillUnmount() {
@@ -60,8 +63,9 @@ const TerriaViewerWrapper = React.createClass({
                    ref={element => {this.mapElement = element;}}
                    onMouseMove={this.onMouseMove}>
                 <div className={Styles.mapPlaceholder}>Loading the map, please wait!</div>
+                <Splitter terria={this.props.terria} />
             </aside>
         );
-    }
+    },
 });
 module.exports = TerriaViewerWrapper;

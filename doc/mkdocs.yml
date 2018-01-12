@@ -1,13 +1,13 @@
 site_name: TerriaJS
 #cosmo|cyborg|readthedocs|yeti|journal|bootstrap|readable|united|simplex|flatly|spacelab|amelia|cerulean|slate|mkdocs
 #theme: readthedocs
-theme_dir: mkdocs-material/material
+theme:
+    name: 'material'
+    logo: 'terria.png'
 docs_dir: 'doc'
 site_dir: '../wwwroot/doc/guide'
 markdown_extensions:
   - markdown.extensions.admonition
-extra:
-  logo: 'terria.png'
 strict: true
 pages:
 - Home: 'README.md'
@@ -23,6 +23,11 @@ pages:
     - Cross-Origin Resource Sharing: 'connecting-to-data/cross-origin-resource-sharing.md'
     - Catalog Groups: 'connecting-to-data/catalog-groups.md'
     - Catalog Items: 'connecting-to-data/catalog-items.md'
+    - Customizing Data Appearance:
+        - Overview: 'connecting-to-data/customizing-data-appearance/overview.md'
+        - Imagery Data: 'connecting-to-data/customizing-data-appearance/imagery-data.md'
+        - Tabular Data: 'connecting-to-data/customizing-data-appearance/tabular-data.md'
+        - Feature Information Template: 'connecting-to-data/customizing-data-appearance/feature-info-template.md'
     - Catalog Functions: 'connecting-to-data/catalog-functions.md'
     - Catalog Type Details:
         - ABS ITT (group): 'connecting-to-data/catalog-type-details/abs-itt-dataset-list.md'
@@ -73,6 +78,7 @@ pages:
 - Contributing:
     - Overview: 'contributing/README.md'
     - Development Environment: 'contributing/development-environment.md'
+    - Architecture: 'contributing/architecture.md'
     - Using a Custom Version of Cesium: 'contributing/using-a-custom-version-of-cesium.md'
     - Setting up Saucelabs: 'contributing/setting-up-saucelabs.md'
     - Problems and Solutions: 'contributing/problems-and-solutions.md'

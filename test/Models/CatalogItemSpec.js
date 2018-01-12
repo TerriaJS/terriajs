@@ -1,6 +1,8 @@
 'use strict';
 
 /*global require*/
+var Rectangle = require('terriajs-cesium/Source/Core/Rectangle');
+
 var CatalogItem = require('../../lib/Models/CatalogItem');
 var CatalogGroup = require('../../lib/Models/CatalogGroup');
 var Catalog = require('../../lib/Models/Catalog');
@@ -42,6 +44,13 @@ describe('CatalogItem', function () {
         item.url = 'http://hello.there';
         expect(item.dataUrl).toBe('http://something.else');
         expect(item.dataUrlType).toBe('wfs');
+    });
+
+    it('can zoom to only if rectangle is defined', function () {
+        expect(item.canZoomTo).toBe(false);
+        // When a rectangle is defined, it can be zoomed-to.
+        item.rectangle = Rectangle.fromDegrees(1, 2, 3, 4);
+        expect(item.canZoomTo).toBe(true);
     });
 
     describe('time series data: ', function() {
@@ -197,6 +206,14 @@ describe('CatalogItem', function () {
                     expect(item.nowViewingCatalogItem.isEnabled).toBe(true);
                 }).then(done).otherwise(fail);
             });
+        });
+    });
+
+    describe('clockForDisplay', function() {
+        it('returns terria.clock if its own clock is undefined', function() {
+            item.useOwnClock = true;
+            item.clock = undefined;
+            expect(item.clockForDisplay).toBe(item.terria.clock);
         });
     });
 });

@@ -1,6 +1,8 @@
 'use strict';
 
 import React from 'react';
+import PropTypes from 'prop-types';
+import createReactClass from 'create-react-class';
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 
 import WrappedTimeline from 'terriajs-cesium/Source/Widgets/Timeline/Timeline';
@@ -10,10 +12,10 @@ import Styles from '!style-loader!css-loader?modules&sourceMap!sass-loader?sourc
 import defined from 'terriajs-cesium/Source/Core/defined';
 import dateFormat from 'dateformat';
 
-const CesiumTimeline = React.createClass({
+const CesiumTimeline = createReactClass({
     propTypes: {
-        terria: React.PropTypes.object.isRequired,
-        autoPlay: React.PropTypes.bool
+        terria: PropTypes.object.isRequired,
+        autoPlay: PropTypes.bool
     },
 
     componentDidMount() {
@@ -26,8 +28,11 @@ const CesiumTimeline = React.createClass({
                     return dateFormat(JulianDate.toDate(time), layer.dateFormat.timelineTic);
                 }
             }
-
-            const totalDays = JulianDate.daysDifference(this.props.terria.clock.stopTime, this.props.terria.clock.startTime);
+            // Adjust the label format as you zoom by using the visible timeline's start and end
+            // (not the fixed this.props.terria.clock.startTime and stopTime).
+            const startJulian = this.cesiumTimeline._startJulian;
+            const endJulian = this.cesiumTimeline._endJulian;
+            const totalDays = JulianDate.daysDifference(endJulian, startJulian);
             if (totalDays > 14) {
                 return formatDate(JulianDate.toDate(time), this.locale);
             } else if (totalDays < 1) {

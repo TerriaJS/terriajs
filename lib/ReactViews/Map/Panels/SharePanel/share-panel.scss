@@ -14,6 +14,14 @@
 
 }
 
+.btn--wrapper {
+  text-align: right;
+}
+
+.btn--advanced {
+  outline: 0;
+}
+
 .btn--share {
   composes: btn--share from '../../../../Sass/common/_buttons.scss';
 }
@@ -40,9 +48,29 @@
 
 .field {
   composes: field from '../../../../Sass/common/_form.scss';
-
   color: #ddd;
   background: $overlay;
+}
+.clipboard{
+  margin: 10px 0 0 0;
+}
+
+.shareUrlfield{
+  composes: field from '../../../../Sass/common/_form.scss';
+  background: $overlay;
+  color: #fff!important;
+  &::selection {
+    background: $color-primary;; /* WebKit/Blink Browsers */
+    color: #fff;
+  }
+  &::-moz-selection {
+    background: $color-primary;; /* Gecko Browsers */
+    color: #fff;
+  }
+}
+
+.mobileHeader{
+  margin-bottom: 10px;
 }
 
 .shorten-url {
@@ -50,6 +78,7 @@
     text-align: left;
     border: 0px;
     background: transparent;
+    outline: 0;
   }
   svg{
     display: inline;

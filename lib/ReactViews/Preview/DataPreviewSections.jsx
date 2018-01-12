@@ -1,5 +1,9 @@
 import React from 'react';
 
+import createReactClass from 'create-react-class';
+
+import PropTypes from 'prop-types';
+
 import naturalSort from 'javascript-natural-sort';
 import parseCustomMarkdownToReact from '../Custom/parseCustomMarkdownToReact';
 import ObserveModelMixin from '../ObserveModelMixin';
@@ -17,18 +21,24 @@ const DEFAULT_SECTION_ORDER = [
     'Service Description',
     'Resource Description',
     'Licence',
-    'Access Constraints'
+    'Access Constraints',
+    'Author',
+    'Contact',
+    'Created',
+    'Modified',
+    'Update Frequency'
 ];
 
 /**
  * CatalogItem-defined sections that sit within the preview description. These are ordered according to the catalog item's
  * order if available.
  */
-const DataPreviewSections = React.createClass({
+const DataPreviewSections = createReactClass({
+    displayName: 'DataPreviewSections',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        metadataItem: React.PropTypes.object.isRequired
+        metadataItem: PropTypes.object.isRequired
     },
 
     sortInfoSections(items) {
@@ -66,7 +76,7 @@ const DataPreviewSections = React.createClass({
                 </For>
             </div>
         );
-    }
+    },
 });
 
 export default DataPreviewSections;

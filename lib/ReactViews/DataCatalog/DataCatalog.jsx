@@ -1,5 +1,9 @@
 import React from 'react';
 
+import createReactClass from 'create-react-class';
+
+import PropTypes from 'prop-types';
+
 import defined from 'terriajs-cesium/Source/Core/defined';
 
 import DataCatalogMember from './DataCatalogMember.jsx';
@@ -9,24 +13,25 @@ import SearchHeader from '../Search/SearchHeader.jsx';
 import Styles from './data-catalog.scss';
 
 // Displays the data catalog.
-const DataCatalog = React.createClass({
+const DataCatalog = createReactClass({
+    displayName: 'DataCatalog',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        terria: React.PropTypes.object,
-        viewState: React.PropTypes.object,
-        overrideState: React.PropTypes.string,
-        onActionButtonClicked: React.PropTypes.func
+        terria: PropTypes.object,
+        viewState: PropTypes.object,
+        items: PropTypes.array,
+        overrideState: PropTypes.string,
+        onActionButtonClicked: PropTypes.func
     },
 
     render() {
-        const terria = this.props.terria;
         const searchState = this.props.viewState.searchState;
         const isSearching = searchState.catalogSearchText.length > 0;
         const items = (
             isSearching ?
                 searchState.catalogSearchProvider.searchResults.map(result => result.catalogItem) :
-                terria.catalog.group.items
+                this.props.items
         ).filter(defined);
 
         return (
@@ -48,7 +53,7 @@ const DataCatalog = React.createClass({
                 </For>
             </ul>
         );
-    }
+    },
 });
 
 module.exports = DataCatalog;

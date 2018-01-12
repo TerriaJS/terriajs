@@ -1,22 +1,27 @@
 import React from 'react';
 
+import createReactClass from 'create-react-class';
+
+import PropTypes from 'prop-types';
+
 import addedByUser from '../../Core/addedByUser';
 import CatalogGroup from './CatalogGroup';
 import DataCatalogMember from './DataCatalogMember';
 import getAncestors from '../../Models/getAncestors';
 import ObserveModelMixin from '../ObserveModelMixin';
 
-const DataCatalogGroup = React.createClass({
+const DataCatalogGroup = createReactClass({
+    displayName: 'DataCatalogGroup',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        group: React.PropTypes.object.isRequired,
-        viewState: React.PropTypes.object.isRequired,
+        group: PropTypes.object.isRequired,
+        viewState: PropTypes.object.isRequired,
         /** Overrides whether to get the open state of the group from the group model or manage it internally */
-        manageIsOpenLocally: React.PropTypes.bool,
-        userData: React.PropTypes.bool,
-        overrideState: React.PropTypes.string,
-        onActionButtonClicked: React.PropTypes.func
+        manageIsOpenLocally: PropTypes.bool,
+        userData: PropTypes.bool,
+        overrideState: PropTypes.string,
+        onActionButtonClicked: PropTypes.func
     },
 
     getDefaultProps() {
@@ -55,7 +60,7 @@ const DataCatalogGroup = React.createClass({
 
     clickGroup() {
         this.toggleOpen();
-        this.props.viewState.viewCatalogItem(this.props.group);
+        this.props.viewState.viewCatalogMember(this.props.group);
     },
 
     isTopLevel() {
@@ -96,7 +101,7 @@ const DataCatalogGroup = React.createClass({
                 </If>
             </CatalogGroup>
         );
-    }
+    },
 });
 
 module.exports = DataCatalogGroup;

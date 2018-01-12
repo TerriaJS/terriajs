@@ -10,7 +10,7 @@ module.exports = function(hot, dev) {
     var config = {
         entry: glob.sync(testGlob),
         output: {
-            path: 'wwwroot/build',
+            path: path.resolve(__dirname, '..', 'wwwroot', 'build'),
             filename: 'TerriaJS-specs.js',
             publicPath: 'build/'
         },
@@ -21,7 +21,7 @@ module.exports = function(hot, dev) {
                     // Don't let jasmine-ajax detect require and import jasmine-core, because we bring
                     // in Jasmine via a script tag instead.
                     test: require.resolve('terriajs-jasmine-ajax'),
-                    loader: 'imports?require=>false'
+                    loader: 'imports-loader?require=>false'
                 }
             ]
         },
@@ -35,17 +35,19 @@ module.exports = function(hot, dev) {
             'react/addons': true,
             'react/lib/ExecutionEnvironment': true,
             'react/lib/ReactContext': true
+        },
+        resolve: {
+            alias: {},
+            modules: ['node_modules']
         }
     };
 
     if (!dev) {
         config.plugins = [
-            new webpack.optimize.UglifyJsPlugin(),
-            new webpack.optimize.DedupePlugin(),
-            new webpack.optimize.OccurrenceOrderPlugin()
+            new webpack.optimize.UglifyJsPlugin()
         ];
     }
-    config.plugins = [new ExtractTextPlugin("nationalmap.css", {disable: false, ignoreOrder: true})];
+    config.plugins = [new ExtractTextPlugin({filename: "nationalmap.css", disable: false, ignoreOrder: true})];
 
     return configureWebpack(path.resolve(__dirname, '../'), config, hot, hot, ExtractTextPlugin, true);
 };

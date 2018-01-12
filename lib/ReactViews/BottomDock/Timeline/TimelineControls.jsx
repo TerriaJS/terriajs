@@ -2,17 +2,19 @@
 
 import React from 'react';
 
+import PropTypes from 'prop-types';
+import createReactClass from 'create-react-class';
+
 import ClockRange from 'terriajs-cesium/Source/Core/ClockRange';
-import classnames from 'classnames';
 import Styles from './timeline-controls.scss';
 import Icon from "../../Icon.jsx";
 
-const TimelineControls = React.createClass({
+const TimelineControls = createReactClass({
     propTypes: {
-        clock: React.PropTypes.object.isRequired,
-        analytics: React.PropTypes.object.isRequired,
-        currentViewer: React.PropTypes.object.isRequired,
-        locale: React.PropTypes.object
+        clock: PropTypes.object.isRequired,
+        analytics: PropTypes.object.isRequired,
+        currentViewer: PropTypes.object.isRequired,
+        locale: PropTypes.object
     },
 
     getInitialState() {
@@ -93,10 +95,6 @@ const TimelineControls = React.createClass({
                 </button>
                 <button type='button' className={Styles.timelineControl} onClick={this.playFaster} title="Play Faster">
                     <Icon glyph={Icon.GLYPHS.forward}/>
-                </button>
-                <button type='button' className={classnames(Styles.timelineControl, {[Styles.isActive]: this.isLooping()})}
-                        onClick={this.toggleLoop} title="Loop at the end">
-                    <Icon glyph={Icon.GLYPHS.loop}/>
                 </button>
             </div>
         );

@@ -1,5 +1,7 @@
 'use strict';
 const React = require('react');
+const createReactClass = require('create-react-class');
+const PropTypes = require('prop-types');
 import ObserveModelMixin from '../../ObserveModelMixin';
 import triggerResize from '../../../Core/triggerResize';
 import Styles from './full_screen_button.scss';
@@ -7,13 +9,14 @@ import classNames from "classnames";
 import Icon from "../../Icon.jsx";
 
 // The button to make the map full screen and hide the workbench.
-const FullScreenButton = React.createClass({
+const FullScreenButton = createReactClass({
+    displayName: 'FullScreenButton',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        terria: React.PropTypes.object,
-        viewState: React.PropTypes.object.isRequired,
-        animationDuration: React.PropTypes.number // Defaults to 1 millisecond.
+        terria: PropTypes.object,
+        viewState: PropTypes.object.isRequired,
+        animationDuration: PropTypes.number // Defaults to 1 millisecond.
     },
 
     getInitialState() {
@@ -21,6 +24,7 @@ const FullScreenButton = React.createClass({
             isActive: false
         };
     },
+
     toggleFullScreen() {
         this.props.viewState.isMapFullScreen = !this.props.viewState.isMapFullScreen;
 
@@ -44,12 +48,13 @@ const FullScreenButton = React.createClass({
         const btnClassName = classNames(Styles.btn, {
             [Styles.isActive]: this.props.viewState.isMapFullScreen
         });
+        const btnTitle = this.props.viewState.isMapFullScreen? "Show workbench": "Hide workbench";
         return (
             <div className={Styles.fullScreen}>
-                <button type='button' onClick={this.toggleFullScreen} title='Hide workbench'
+                <button type='button' onClick={this.toggleFullScreen} title={btnTitle}
                         className={btnClassName}><span>{this.renderButtonText()}</span></button>
             </div>
         );
-    }
+    },
 });
 module.exports = FullScreenButton;

@@ -72,8 +72,8 @@ describe('SdmxJsonCatalogItem', function() {
     });
 
     describe('loading', function() {
-        var regionMappingJson, lgaData, steData;
-        var dataflowFoo, dataFoo, dataFooBD2, dataFooBD2t, dataFoo2, dataNonSpatial, dataAsObs, dataAsObsRepeated;
+        var regionMappingJson, lga13Data, steData;
+        var dataflowFoo, dataFoo, dataFooBD2, dataFooBD2t, dataFoo2, dataNonSpatial, dataAsObs, dataAsObsRepeated, dataNoSteYear;
         beforeEach(function(done) {
             when.all([
                 loadText('test/SDMX-JSON/dataflow-foo.json').then(function(text) { dataflowFoo = text; }),
@@ -83,9 +83,10 @@ describe('SdmxJsonCatalogItem', function() {
                 loadText('test/SDMX-JSON/data-foo2-2013.json').then(function(text) { dataFoo2 = text; }),
                 loadText('test/SDMX-JSON/data-nonspatial.json').then(function(text) { dataNonSpatial = text; }),
                 loadText('test/SDMX-JSON/data-as-observations.json').then(function(text) { dataAsObs = text; }),
+                loadText('test/SDMX-JSON/data-ste-no-year.json').then(function(text) { dataNoSteYear = text; }),
                 loadText('test/SDMX-JSON/data-as-obs-repeated-dim.json').then(function(text) { dataAsObsRepeated = text; }),
                 loadText('data/regionMapping.json').then(function(text) { regionMappingJson = text; }),
-                loadText('data/regionids/region_map-FID_LGA_2015_AUST_LGA_CODE15.json').then(function(text) { lgaData = text; }),
+                loadText('data/regionids/region_map-FID_LGA_2013_AUST_LGA_CODE13.json').then(function(text) { lga13Data = text; }),
                 loadText('data/regionids/region_map-FID_STE_2011_AUST_STE_CODE11.json').then(function(text) { steData = text; })
             ]).then(function() {
                 jasmine.Ajax.install();
@@ -97,9 +98,10 @@ describe('SdmxJsonCatalogItem', function() {
                 jasmine.Ajax.stubRequest('http://sdmx.example.com/sdmx-json/data/FOO2/BD_2+BD_4..A../all?startTime=2013&endTime=2013').andReturn({ responseText: dataFoo2 });
                 jasmine.Ajax.stubRequest('http://sdmx.example.com/sdmx-json/data/NONSPATIAL/all/all').andReturn({ responseText: dataNonSpatial });
                 jasmine.Ajax.stubRequest('http://sdmx.example.com/sdmx-json/data/FOO-OBS/./all').andReturn({ responseText: dataAsObs });
+                jasmine.Ajax.stubRequest('http://sdmx.example.com/sdmx-json/data/FOO-STE-NO-YEAR/./all').andReturn({ responseText: dataNoSteYear });
                 jasmine.Ajax.stubRequest('http://sdmx.example.com/sdmx-json/data/FOO-OBS-RPT/./all').andReturn({ responseText: dataAsObsRepeated });
                 jasmine.Ajax.stubRequest('data/regionMapping.json').andReturn({ responseText: regionMappingJson });
-                jasmine.Ajax.stubRequest('data/regionids/region_map-FID_LGA_2015_AUST_LGA_CODE15.json').andReturn({ responseText: lgaData });
+                jasmine.Ajax.stubRequest('data/regionids/region_map-FID_LGA_2013_AUST_LGA_CODE13.json').andReturn({ responseText: lga13Data });
                 jasmine.Ajax.stubRequest('data/regionids/region_map-FID_STE_2011_AUST_STE_CODE11.json').andReturn({ responseText: steData });
             }).then(done).otherwise(done.fail);
         });
@@ -212,6 +214,51 @@ describe('SdmxJsonCatalogItem', function() {
             }).otherwise(fail).then(done);
         });
 
+        it('works with invalid selectedInitially', function(done) {
+            item.updateFromJson({
+                name: 'Foo',
+                url: 'http://sdmx.example.com/sdmx-json/data/FOO',
+                startTime: '2013',
+                endTime: '2013',
+                selectedInitially: {
+                    'MEASURE': ['NO_THERE', 'NOT_HERE_EITHER']
+                }
+            });
+            item.load().then(function() {
+                // Expect it to have realised this is regional data.
+                var regionDetails = item.regionMapping.regionDetails;
+                expect(regionDetails).toBeDefined();
+                // Expect it to have created the right table of data (with a time dimension).
+                var columnNames = item.tableStructure.getColumnNames();
+                expect(columnNames.length).toEqual(4); // Region, only one BD and a total.
+                // Expect the bad selectedInitially setting to be wiped out.
+                expect(item.selectedInitially.MEASURE).not.toBeDefined();
+            }).otherwise(fail).then(done);
+        });
+
+        it('works with cannotSum', function(done) {
+            item.updateFromJson({
+                name: 'Foo',
+                url: 'http://sdmx.example.com/sdmx-json/data/FOO',
+                startTime: '2013',
+                endTime: '2013',
+                selectedInitially: {
+                    'MEASURE': ['BD_2', 'BD_4']
+                },
+                cannotSum: {
+                    'MEASURE': ['BD_2']
+                }
+            });
+            item.load().then(function() {
+                // Expect it to have realised this is regional data.
+                var regionDetails = item.regionMapping.regionDetails;
+                expect(regionDetails).toBeDefined();
+                // Expect it to have created the right table of data (with a time dimension) - crucially, without a total.
+                var columnNames = item.tableStructure.getColumnNames();
+                expect(columnNames.slice()).toEqual(['date', 'LGA_code_2013', 'Births', 'Deaths']);  // No total.
+            }).otherwise(fail).then(done);
+        });
+
         it('works with a time-varying file', function(done) {
             item.updateFromJson({
                 name: 'Foo',
@@ -266,12 +313,29 @@ describe('SdmxJsonCatalogItem', function() {
                 var columnNames = item.tableStructure.getColumnNames();
                 expect(columnNames.length).toEqual(3);
                 expect(columnNames[0]).toEqual('date');
-                expect(columnNames[1]).toEqual('STE_code');
+                expect(columnNames[1]).toEqual('STE_code_2011');
                 expect(item.tableStructure.columns[0].values.slice()).toEqual(['2001', '2001', '2001', '2001', '2001', '2001', '2001', '2001', '2001']);
                 expect(item.tableStructure.columns[1].values.slice()).toEqual(['1', '2', '3', '4', '5', '6', '7', '8', '9']);
                 expect(item.tableStructure.columns[2].values.slice()).toEqual([17658, 14042, 9739, 6572, 2970, 4940, 945, 7222, 13001]);
                 // Expect it not to show any concepts to the user.
                 expect(item.concepts.length).toEqual(0);
+            }).otherwise(fail).then(done);
+        });
+
+        it('can apply a template to the region column name', function(done) {
+            // This is the same data as the previous spec, but now we add `regionNameTemplate: "{{name}}_code_2016"`
+            item.updateFromJson({
+                name: 'Foo',
+                regionNameTemplate: "{{name}}_code_2011",
+                url: 'http://sdmx.example.com/sdmx-json/data/FOO-STE-NO-YEAR/./all'
+            });
+            item.load().then(function() {
+                // Expect it to have realised this is regional data.
+                var regionDetails = item.regionMapping.regionDetails;
+                expect(regionDetails).toBeDefined();
+                // Expect it to have appended to regionYear to the region column, per csv-geo-au.
+                var columnNames = item.tableStructure.getColumnNames();
+                expect(columnNames[1]).toEqual('STE_code_2011');
             }).otherwise(fail).then(done);
         });
 
@@ -289,7 +353,7 @@ describe('SdmxJsonCatalogItem', function() {
                 var columnNames = item.tableStructure.getColumnNames();
                 expect(columnNames.length).toEqual(3);
                 expect(columnNames[0]).toEqual('date');
-                expect(columnNames[1]).toEqual('STE_code');
+                expect(columnNames[1]).toEqual('STE_code_2011');
                 expect(item.tableStructure.columns[0].values.slice()).toEqual(['2001', '2001', '2001', '2001', '2001', '2001', '2001', '2001', '2001']);
                 expect(item.tableStructure.columns[1].values.slice()).toEqual(['1', '2', '3', '4', '5', '6', '7', '8', '9']);
                 // Expect it to have aggregated up the data across the STATE dimension.

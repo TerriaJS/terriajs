@@ -1,15 +1,16 @@
 var path = require('path');
 var StringReplacePlugin = require("string-replace-webpack-plugin");
+var webpack = require('webpack');
 
 function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlugin, disableStyleLoader) {
     const cesiumDir = path.dirname(require.resolve('terriajs-cesium/package.json'));
 
     config.resolve = config.resolve || {};
-    config.resolve.extensions = config.resolve.extensions || ['', '.webpack.js', '.web.js', '.js'];
+    config.resolve.extensions = config.resolve.extensions || ['*', '.webpack.js', '.web.js', '.js'];
     config.resolve.extensions.push('.jsx');
     config.resolve.alias = config.resolve.alias || {};
-    config.resolve.root = config.resolve.root || [];
-    config.resolve.root.push(path.resolve(terriaJSBasePath, 'wwwroot'));
+    config.resolve.modules = config.resolve.modules || [];
+    config.resolve.modules.push(path.resolve(terriaJSBasePath, 'wwwroot'));
 
     config.module = config.module || {};
     config.module.loaders = config.module.loaders || [];
@@ -64,9 +65,9 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
         loader: require.resolve('babel-loader'),
         query: {
             sourceMap: false, // generated sourcemaps are currently bad, see https://phabricator.babeljs.io/T7257
-            presets: ['es2015', 'react'],
+            presets: ['env', 'react'],
             plugins: [
-                require.resolve('jsx-control-statements')
+                'jsx-control-statements'
             ]
         }
     });
@@ -88,25 +89,8 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
 
     config.module.loaders.push({
         test: /\.json|xml$/,
-        loader: require.resolve('file-loader'),
-        include: path.resolve(cesiumDir, 'Source', 'Assets')
-    });
-
-    var externalModulesWithJson = ['proj4/package.json', 'entities', 'html-to-react', 'ent', 'htmlparser2/package.json']
-        .map(function(module) {
-           try {
-               return path.dirname(require.resolve(module));
-           } catch (e) {
-               console.warn('Could not resolve module "' + module + ". Possibly this is no longer a dep of the project?");
-           }
-        }).filter(function(resolvedModule) {
-            return !!resolvedModule;
-        });
-
-    config.module.loaders.push({
-        test: /\.json$/,
-        include: externalModulesWithJson,
-        loader: require.resolve('json-loader')
+        include: path.resolve(cesiumDir, 'Source', 'Assets'),
+        loader: require.resolve('file-loader')
     });
 
     config.module.loaders.push({
@@ -118,13 +102,13 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
     // Don't let Cesium's `buildModuleUrl` see require - only the AMD version is relevant.
     config.module.loaders.push({
         test: require.resolve('terriajs-cesium/Source/Core/buildModuleUrl'),
-        loader: require.resolve('imports-loader') + '?require=>false'
+        loader: 'imports-loader?require=>false'
     });
 
     // Don't let Cesium's `crunch.js` see require - only the AMD version is relevant.
     config.module.loaders.push({
         test: require.resolve('terriajs-cesium/Source/ThirdParty/crunch'),
-        loader: require.resolve('imports-loader') + '?require=>false'
+        loader: 'imports-loader?require=>false'
     });
 
     config.module.loaders.push({
@@ -162,7 +146,10 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
     config.module.loaders.push({
         test: /\.svg$/,
         include: path.resolve(terriaJSBasePath, 'wwwroot', 'images', 'icons'),
-        loader: require.resolve('svg-sprite-loader')
+        loader: require.resolve('svg-sprite-loader'),
+        options: {
+            esModule: false
+        }
     });
 
     config.devServer = config.devServer || {
@@ -188,7 +175,8 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
     };
 
     config.plugins = (config.plugins || []).concat([
-        new StringReplacePlugin()
+        new StringReplacePlugin(),
+        new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
     ]);
 
     if (hot && !disableStyleLoader) {
@@ -197,9 +185,18 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
             test: /\.scss$/,
             loaders: [
                 require.resolve('style-loader'),
-                require.resolve('css-loader') + '?sourceMap&modules&camelCase&localIdentName=tjs-[name]__[local]&importLoaders=2',
-                require.resolve('resolve-url-loader') + '?sourceMap',
-                require.resolve('sass-loader') + '?sourceMap'
+                {
+                    loader: require.resolve('css-loader'),
+                    options: {
+                        sourceMap: true,
+                        modules: true,
+                        camelCase: true,
+                        localIdentName: 'tjs-[name]__[local]',
+                        importLoaders: 2
+                    }
+                },
+                'resolve-url-loader?sourceMap',
+                'sass-loader?sourceMap'
             ]
         });
     } else if (ExtractTextPlugin) {
@@ -207,14 +204,23 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
             exclude: path.resolve(terriaJSBasePath, 'lib', 'Sass'),
             include: path.resolve(terriaJSBasePath, 'lib'),
             test: /\.scss$/,
-            loader: ExtractTextPlugin.extract(
-                require.resolve('css-loader') + '?sourceMap&modules&camelCase&localIdentName=tjs-[name]__[local]&importLoaders=2!' +
-                require.resolve('resolve-url-loader') + '?sourceMap!' +
-                require.resolve('sass-loader') + '?sourceMap',
-                {
-                    publicPath: ''
-                }
-            )
+            loader: ExtractTextPlugin.extract({
+                use: [
+                    {
+                        loader: require.resolve('css-loader'),
+                        options: {
+                            sourceMap: true,
+                            modules: true,
+                            camelCase: true,
+                            localIdentName: 'tjs-[name]__[local]',
+                            importLoaders: 2
+                        }
+                    },
+                    'resolve-url-loader?sourceMap',
+                    'sass-loader?sourceMap'
+                ],
+                publicPath: ''
+            })
         });
     }
 

@@ -22,13 +22,13 @@ http://www.opengis.net/def/serviceOperation/sos/core/2.0/GetObservationResponse
 <om:OM_Observation gml:id="Ki.OM_Obs.1">
 <om:phenomenonTime>
 <gml:TimePeriod gml:id="Ki.ObsTime.1">
-<gml:beginPosition>2014-01-03T02:00:00.000+10:00</gml:beginPosition>
-<gml:endPosition>2016-01-03T02:00:00.000+10:00</gml:endPosition>
+<gml:beginPosition>2015-01-03T02:00:00.000+10:00</gml:beginPosition>
+<gml:endPosition>2017-01-03T02:00:00.000+10:00</gml:endPosition>
 </gml:TimePeriod>
 </om:phenomenonTime>
 <om:resultTime>
 <gml:TimeInstant gml:id="Ki.resTime.1">
-<gml:timePosition>2016-01-03T02:00:00.000+10:00</gml:timePosition>
+<gml:timePosition>2017-01-03T02:00:00.000+10:00</gml:timePosition>
 </gml:TimeInstant>
 </om:resultTime>
 <om:procedure xlink:href="http://sos.example.com/tstypes/Yearly Mean" xlink:title="YearlyMean.CalYear"/>
@@ -45,13 +45,13 @@ http://www.opengis.net/def/serviceOperation/sos/core/2.0/GetObservationResponse
 </wml2:defaultPointMetadata>
 <wml2:point>
 <wml2:MeasurementTVP>
-<wml2:time>2014-01-03T02:00:00.000+10:00</wml2:time>
+<wml2:time>2015-01-03T02:00:00.000+10:00</wml2:time>
 <wml2:value xsi:nil="true"/>
 </wml2:MeasurementTVP>
 </wml2:point>
 <wml2:point>
 <wml2:MeasurementTVP>
-<wml2:time>2015-01-03T02:00:00.000+10:00</wml2:time>
+<wml2:time>2016-01-03T02:00:00.000+10:00</wml2:time>
 <wml2:value>129.425</wml2:value>
 <wml2:metadata>
 <wml2:TVPMeasurementMetadata>
@@ -62,7 +62,7 @@ http://www.opengis.net/def/serviceOperation/sos/core/2.0/GetObservationResponse
 </wml2:point>
 <wml2:point>
 <wml2:MeasurementTVP>
-<wml2:time>2016-01-03T02:00:00.000+10:00</wml2:time>
+<wml2:time>2017-01-03T02:00:00.000+10:00</wml2:time>
 <wml2:value>123.123</wml2:value>
 </wml2:MeasurementTVP>
 </wml2:point>
@@ -121,13 +121,13 @@ http://www.opengis.net/def/serviceOperation/sos/core/2.0/GetObservationResponse
 <om:OM_Observation gml:id="Ki.OM_Obs.3">
 <om:phenomenonTime>
 <gml:TimePeriod gml:id="Ki.ObsTime.3">
-<gml:beginPosition>2012-01-03T00:00:00.000+10:00</gml:beginPosition>
-<gml:endPosition>2016-01-03T00:00:00.000+10:00</gml:endPosition>
+<gml:beginPosition>2012-01-03T02:00:00.000+10:00</gml:beginPosition>
+<gml:endPosition>2016-01-03T02:00:00.000+10:00</gml:endPosition>
 </gml:TimePeriod>
 </om:phenomenonTime>
 <om:resultTime>
 <gml:TimeInstant gml:id="Ki.resTime.3">
-<gml:timePosition>2016-01-03T00:00:00.000+10:00</gml:timePosition>
+<gml:timePosition>2016-01-03T02:00:00.000+10:00</gml:timePosition>
 </gml:TimeInstant>
 </om:resultTime>
 <om:procedure xlink:href="http://sos.example.com/tstypes/Yearly Mean" xlink:title="YearlyMean.CalYear"/>
@@ -144,7 +144,7 @@ http://www.opengis.net/def/serviceOperation/sos/core/2.0/GetObservationResponse
 </wml2:defaultPointMetadata>
 <wml2:point>
 <wml2:MeasurementTVP>
-<wml2:time>2012-01-03T00:00:00.000+10:00</wml2:time>
+<wml2:time>2012-01-03T02:00:00.000+10:00</wml2:time>
 <wml2:value>43.066</wml2:value>
 <wml2:metadata>
 <wml2:TVPMeasurementMetadata>
@@ -155,7 +155,7 @@ http://www.opengis.net/def/serviceOperation/sos/core/2.0/GetObservationResponse
 </wml2:point>
 <wml2:point>
 <wml2:MeasurementTVP>
-<wml2:time>2013-01-03T00:00:00.000+10:00</wml2:time>
+<wml2:time>2013-01-03T02:00:00.000+10:00</wml2:time>
 <wml2:value>42.981</wml2:value>
 <wml2:metadata>
 <wml2:TVPMeasurementMetadata>
@@ -166,19 +166,19 @@ http://www.opengis.net/def/serviceOperation/sos/core/2.0/GetObservationResponse
 </wml2:point>
 <wml2:point>
 <wml2:MeasurementTVP>
-<wml2:time>2014-01-03T00:00:00.000+10:00</wml2:time>
+<wml2:time>2014-01-03T02:00:00.000+10:00</wml2:time>
 <wml2:value>40.136</wml2:value>
 </wml2:MeasurementTVP>
 </wml2:point>
 <wml2:point>
 <wml2:MeasurementTVP>
-<wml2:time>2015-01-03T00:00:00.000+10:00</wml2:time>
+<wml2:time>2015-01-03T02:00:00.000+10:00</wml2:time>
 <wml2:value>40.088</wml2:value>
 </wml2:MeasurementTVP>
 </wml2:point>
 <wml2:point>
 <wml2:MeasurementTVP>
-<wml2:time>2016-01-03T00:00:00.000+10:00</wml2:time>
+<wml2:time>2016-01-03T02:00:00.000+10:00</wml2:time>
 <wml2:value xsi:nil="true"/>
 <wml2:metadata>
 <wml2:TVPMeasurementMetadata>

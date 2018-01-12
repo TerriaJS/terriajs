@@ -3,11 +3,16 @@
 import Mustache from 'mustache';
 import React from 'react';
 
+import createReactClass from 'create-react-class';
+
+import PropTypes from 'prop-types';
+
 import CesiumMath from 'terriajs-cesium/Source/Core/Math';
 import classNames from 'classnames';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
 import isArray from 'terriajs-cesium/Source/Core/isArray';
+import JulianDate from 'terriajs-cesium/Source/Core/JulianDate';
 
 import CustomComponents from '../Custom/CustomComponents';
 import FeatureInfoDownload from './FeatureInfoDownload';
@@ -25,23 +30,24 @@ Mustache.escape = function(string) {
 };
 
 // Individual feature info section
-const FeatureInfoSection = React.createClass({
+const FeatureInfoSection = createReactClass({
+    displayName: 'FeatureInfoSection',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        viewState: React.PropTypes.object.isRequired,
-        template: React.PropTypes.oneOfType([React.PropTypes.object, React.PropTypes.string]),
-        feature: React.PropTypes.object,
-        position: React.PropTypes.object,
-        clock: React.PropTypes.object,
-        catalogItem: React.PropTypes.object,  // Note this may not be known (eg. WFS).
-        isOpen: React.PropTypes.bool,
-        onClickHeader: React.PropTypes.func
+        viewState: PropTypes.object.isRequired,
+        template: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
+        feature: PropTypes.object,
+        position: PropTypes.object,
+        clock: PropTypes.object,
+        catalogItem: PropTypes.object,  // Note this may not be known (eg. WFS).
+        isOpen: PropTypes.bool,
+        onClickHeader: PropTypes.func
     },
 
     getInitialState() {
         return {
-            clockSubscription: undefined,
+            removeClockSubscription: undefined,
             timeoutIds: [],
             showRawData: false
         };
@@ -74,7 +80,8 @@ const FeatureInfoSection = React.createClass({
 
             propertyData.terria = {
                 formatNumber: mustacheFormatNumberFunction,
-                urlEncodeComponent: mustacheURLEncodeTextComponent
+                urlEncodeComponent: mustacheURLEncodeTextComponent,
+                urlEncode: mustacheURLEncodeText
             };
             if (this.props.position) {
                 const latLngInRadians = Ellipsoid.WGS84.cartesianToCartographic(this.props.position);
@@ -108,9 +115,15 @@ const FeatureInfoSection = React.createClass({
                 templateData[alias.id] = templateData[alias.name];
             }
         }
-        return typeof template === 'string' ?
-            Mustache.render(template, templateData) :
-            Mustache.render(template.template, templateData, template.partials);
+        // templateData may not be defined if a re-render gets triggered in the middle of a feature updating.
+        // (Recall we re-render whenever feature.definitionChanged triggers.)
+        if (defined(templateData)) {
+            return typeof template === 'string' ?
+                Mustache.render(template, templateData) :
+                Mustache.render(template.template, templateData, template.partials);
+        } else {
+            return 'No information available';
+        }
     },
 
     descriptionFromFeature() {
@@ -120,9 +133,10 @@ const FeatureInfoSection = React.createClass({
         //     markdownToHtml (which applies MarkdownIt.render and DOMPurify.sanitize), and then
         //     parseCustomHtmlToReact (which calls htmlToReactParser).
         // Note that there is an unnecessary HTML encoding and decoding in this combination which would be good to remove.
-        let description = feature.currentDescription || getCurrentDescription(feature, this.props.clock.currentTime);
+        const currentTime = this.props.clock ? this.props.clock.currentTime : JulianDate.now();
+        let description = feature.currentDescription || getCurrentDescription(feature, currentTime);
         if (!defined(description) && defined(feature.properties)) {
-            description = describeFromProperties(feature.properties, this.props.clock.currentTime);
+            description = describeFromProperties(feature.properties, currentTime);
         }
         return description;
     },
@@ -163,6 +177,18 @@ const FeatureInfoSection = React.createClass({
 
     render() {
         const catalogItemName = (this.props.catalogItem && this.props.catalogItem.name) || '';
+        let baseFilename = catalogItemName;
+        // Add the Lat, Lon to the baseFilename if it is possible and not already present.
+        if (this.props.position) {
+            const position = Ellipsoid.WGS84.cartesianToCartographic(this.props.position);
+            const latitude = CesiumMath.toDegrees(position.latitude);
+            const longitude = CesiumMath.toDegrees(position.longitude);
+            const precision = 5;
+            // Check that baseFilename doesn't already contain the lat, lon with the similar or better precision.
+            if ((typeof baseFilename !== 'string') || !contains(baseFilename, latitude, precision) || !contains(baseFilename, longitude, precision)) {
+                baseFilename += ' - Lat ' + latitude.toFixed(precision) + ' Lon ' + longitude.toFixed(precision);
+            }
+        }
         const fullName = (catalogItemName ? (catalogItemName + ' - ') : '') + this.renderDataTitle();
         const reactInfo = getInfoAsReactComponent(this);
 
@@ -198,7 +224,7 @@ const FeatureInfoSection = React.createClass({
                                     <FeatureInfoDownload key='download'
                                         viewState={this.props.viewState}
                                         data={reactInfo.downloadableData}
-                                        name={catalogItemName} />
+                                        name={baseFilename} />
                                 </If>
                             </When>
                             <Otherwise>
@@ -220,7 +246,7 @@ const FeatureInfoSection = React.createClass({
                 </If>
             </li>
         );
-    }
+    },
 });
 
 /**
@@ -233,19 +259,30 @@ const FeatureInfoSection = React.createClass({
  *
  * For (1), use an event listener on the (terria) clock to update the feature's currentProperties/currentDescription directly.
  * For (2), use a regular javascript setTimeout to update a counter in feature's currentProperties.
- * For (3), this is handled by the catalog item itself changing as well, which should be knockout tracked.
+ * For (3), use an event listener on the Feature's underlying Entity's "definitionChanged" event.
+ *   Conceivably it could also be handled by the catalog item itself changing, if its change is knockout tracked, and the
+ *   change leads to a change in what is rendered (unlikely).
  * Since the catalogItem is also a prop, this will trigger a rerender.
  *
  * For simplicity, we do not currently support (1) and (2) at the same time.
  * @private
  */
 function setSubscriptionsAndTimeouts(featureInfoSection, feature) {
+    feature.definitionChanged.addEventListener(function(changedFeature) {
+        setCurrentFeatureValues(changedFeature, featureInfoSection.props.clock);
+    });
     if (featureInfoSection.isFeatureTimeVarying(feature)) {
-        featureInfoSection.setState({
-            clockSubscription: featureInfoSection.props.clock.onTick.addEventListener(function(clock) {
-                setCurrentFeatureValues(feature, clock);
-            })
-        });
+        if (defined(featureInfoSection.props.clock.onTick)) {
+            featureInfoSection.setState({
+                removeClockSubscription: featureInfoSection.props.clock.onTick.addEventListener(function(clock) {
+                    setCurrentFeatureValues(feature, clock);
+                })
+            });
+        } else {
+            // This is probably a DataSourceClock because the catalog item is using its own clock.
+            // But we currently have no way of subscribing to changes to it.
+            // See https://github.com/TerriaJS/terriajs/issues/2736
+        }
     } else {
         setTimeoutsForUpdatingCustomComponents(featureInfoSection);
     }
@@ -256,8 +293,8 @@ function setSubscriptionsAndTimeouts(featureInfoSection, feature) {
  * @private
  */
 function removeSubscriptionsAndTimeouts(featureInfoSection) {
-    if (defined(featureInfoSection.state.clockSubscription)) {
-        featureInfoSection.state.clockSubscription();
+    if (defined(featureInfoSection.state.removeClockSubscription)) {
+        featureInfoSection.state.removeClockSubscription();
     }
     featureInfoSection.state.timeoutIds.forEach(id => {
         clearTimeout(id);
@@ -277,9 +314,28 @@ function getPropertyValuesForFeature(feature, clock, formats) {
     // If they have bad keys, fix them.
     // If they have formatting, apply it.
     const properties = feature.currentProperties || propertyGetTimeValues(feature.properties, clock);
-    const result = replaceBadKeyCharacters(properties);
+    // Try JSON.parse on values that look like JSON arrays or objects
+    let result = parseValues(properties);
+    result = replaceBadKeyCharacters(result);
     if (defined(formats)) {
         applyFormatsInPlace(result, formats);
+    }
+    return result;
+}
+
+function parseValues(properties) {
+    // JSON.parse property values that look like arrays or objects
+    const result = {};
+    for (const key in properties) {
+        if (properties.hasOwnProperty(key)) {
+            let val = properties[key];
+            if (val && (typeof val === 'string' || val instanceof String) && (/^\s*[[{]/).test(val)) {
+                try {
+                    val = JSON.parse(val);
+                } catch (e) {}
+            }
+            result[key] = val;
+        }
     }
     return result;
 }
@@ -399,13 +455,26 @@ function mustacheFormatNumberFunction() {
 /**
  * URL Encodes provided text: {{#terria.urlEncodeComponent}}{{value}}{{/terria.urlEncodeComponent}}.
  * See encodeURIComponent for details.
- * 
- * {{#terria.urlEncodeComponent}}W/HOE#1{{/terria.urlEncodeComponent}} -> W%2FHOE%231
+ *
+ * {{#terria.urlEncodeComponent}}W/HO:E#1{{/terria.urlEncodeComponent}} -> W%2FHO%3AE%231
  * @private
  */
 function mustacheURLEncodeTextComponent() {
     return function(text, render) {
         return encodeURIComponent(render(text));
+    };
+}
+
+/**
+ * URL Encodes provided text: {{#terria.urlEncode}}{{value}}{{/terria.urlEncode}}.
+ * See encodeURI for details.
+ *
+ * {{#terria.urlEncode}}http://example.com/a b{{/terria.urlEncode}} -> http://example.com/a%20b
+ * @private
+ */
+function mustacheURLEncodeText() {
+    return function(text, render) {
+        return encodeURI(render(text));
     };
 }
 
@@ -421,11 +490,9 @@ const simpleStyleIdentifiers = ['title', 'description',
 function describeFromProperties(properties, time) {
     let html = '';
     if (typeof properties.getValue === 'function') {
-        const singleValue = properties.getValue(time);
-        if (defined(singleValue)) {
-            html = '<tr><th>' + '</th><td>' + singleValue + '</td></tr>';
-        }
-    } else {
+        properties = properties.getValue(time);
+    }
+    if (typeof properties === 'object') {
         for (const key in properties) {
             if (properties.hasOwnProperty(key)) {
                 if (simpleStyleIdentifiers.indexOf(key) !== -1) {
@@ -446,6 +513,9 @@ function describeFromProperties(properties, time) {
                 }
             }
         }
+    } else {
+        // properties is only a single value.
+        html += '<tr><th>' + '</th><td>' + properties + '</td></tr>';
     }
     if (html.length > 0) {
         html = '<table class="cesium-infoBox-defaultTable"><tbody>' + html + '</tbody></table>';
@@ -461,14 +531,16 @@ function getTimeSeriesChartContext(catalogItem, feature, getChartDetails) {
     // Only show it as a line chart if the details are available, the data is sampled (so a line chart makes sense), and charts are available.
     if (defined(getChartDetails) && defined(catalogItem) && catalogItem.isSampled && CustomComponents.isRegistered('chart')) {
         const chartDetails = getChartDetails();
+        const distinguishingId = catalogItem.dataViewId;
+        const featureId = defined(distinguishingId) ? (distinguishingId + '--' + feature.id) : feature.id;
         if (chartDetails) {
             const result = {
-                xName: chartDetails.xName,
-                yName: chartDetails.yName,
+                xName: chartDetails.xName.replace(/\"/g, ''),
+                yName: chartDetails.yName.replace(/\"/g, ''),
                 title: chartDetails.yName,
-                id: feature.id,
+                id: featureId.replace(/\"/g, ''),
                 data: chartDetails.csvData.replace(/\\n/g, '\\n'),
-                units: chartDetails.units.join(',')
+                units: chartDetails.units.join(',').replace(/\"/g, '')
             };
             const xAttribute = 'x-column="' + result.xName + '" ';
             const yAttribute = 'y-column="' + result.yName + '" ';
@@ -566,6 +638,16 @@ function setTimeoutForUpdatingCustomComponent(that, reactComponent, updateSecond
     }, updateSeconds * 1000);
     const timeoutIds = that.state.timeoutIds;
     that.setState({timeoutIds: timeoutIds.concat(timeoutId)});
+}
+
+// See if text contains the number (to a precision number of digits (after the dp) either fixed up or down on the last digit).
+function contains(text, number, precision) {
+    // Take Math.ceil or Math.floor and use it to calculate the number with a precision number of digits (after the dp).
+    function fixed(round, number) {
+        const scale = Math.pow(10, precision);
+        return (round(number*scale)/scale).toFixed(precision);
+    }
+    return (text.indexOf(fixed(Math.floor, number)) !== -1) || (text.indexOf(fixed(Math.ceil, number)) !== -1);
 }
 
 /**

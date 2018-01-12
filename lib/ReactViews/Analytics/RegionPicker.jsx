@@ -3,6 +3,10 @@
 import classNames from 'classnames';
 import React from 'react';
 
+import createReactClass from 'create-react-class';
+
+import PropTypes from 'prop-types';
+
 import defined from 'terriajs-cesium/Source/Core/defined';
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 import when from 'terriajs-cesium/Source/ThirdParty/when';
@@ -14,18 +18,20 @@ import WebMapServiceCatalogItem from '../../Models/WebMapServiceCatalogItem';
 import RegionTypeParameterEditor from './RegionTypeParameterEditor';
 import Styles from './parameter-editors.scss';
 
-const RegionPicker = React.createClass({
+const RegionPicker = createReactClass({
+    displayName: 'RegionPicker',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        previewed: React.PropTypes.object,
-        parameter: React.PropTypes.object
+        previewed: PropTypes.object,
+        parameter: PropTypes.object
     },
 
     getInitialState() {
         return {
             autocompleteVisible: false,
-            autoCompleteOptions: [],
+            autocompleteOptions: [],
+            autocompleteText: undefined,
             displayValue: ""
         };
     },
@@ -93,7 +99,9 @@ const RegionPicker = React.createClass({
 
     updateFeature(feature) {
         this._lastRegionFeature = feature.data;
-        const regionId = feature.properties[this.regionProvider.regionProp];
+        const regionProperty = feature.properties[this.regionProvider.regionProp];
+        const regionId = typeof regionProperty === 'object' ? regionProperty.getValue() : regionProperty;
+
         this.regionValue = this.props.parameter.findRegionByID(regionId);
 
         if (defined(this._selectedRegionCatalogItem)) {
@@ -108,6 +116,12 @@ const RegionPicker = React.createClass({
             this._selectedRegionCatalogItem.isEnabled = true;
             this._selectedRegionCatalogItem.zoomTo();
         }
+
+        this.setState({
+            autocompleteVisible: false,
+            autocompleteOptions: [],
+            autocompleteText: undefined
+        });
     },
 
     addRegionLayer() {
@@ -136,8 +150,8 @@ const RegionPicker = React.createClass({
 
             that._regionsCatalogItem = new WebMapServiceCatalogItem(that.props.previewed.terria);
             that._regionsCatalogItem.name = "Available Regions";
-            that._regionsCatalogItem.url = that.regionProvider.server;
-            that._regionsCatalogItem.layers = that.regionProvider.layerName;
+            that._regionsCatalogItem.url = that.regionProvider.analyticsWmsServer;
+            that._regionsCatalogItem.layers = that.regionProvider.analyticsWmsLayerName;
             that._regionsCatalogItem.parameters = {
                 styles: 'border_black_fill_aqua'
             };
@@ -202,7 +216,8 @@ const RegionPicker = React.createClass({
         if (!defined(e.target.value)) {
             this.setState({
                 autocompleteVisible: false,
-                autoCompleteOptions: []
+                autocompleteOptions: [],
+                autocompleteText: undefined
             });
             return;
         }
@@ -229,7 +244,8 @@ const RegionPicker = React.createClass({
         }
         this.setState({
             autocompleteVisible: result.length > 0 && result.length <= 100,
-            autoCompleteOptions: result
+            autocompleteOptions: result,
+            autocompleteText: e.target.value
         });
     },
 
@@ -238,7 +254,8 @@ const RegionPicker = React.createClass({
         // After choosing a region from auto complete
         this.setState({
             autocompleteVisible: false,
-            autoCompleteOptions: []
+            autocompleteOptions: [],
+            autocompleteText: undefined
         });
         this.updateMapFromValue();
     },
@@ -252,7 +269,7 @@ const RegionPicker = React.createClass({
                     <input className={Styles.field}
                            type="text"
                            autoComplete="off"
-                           value={RegionPicker.getDisplayValue(this.regionValue, this.props.parameter)}
+                           value={this.state.autocompleteText || RegionPicker.getDisplayValue(this.regionValue, this.props.parameter)}
                            onChange={this.textChange}
                            placeholder="Region name"
                     />
@@ -268,7 +285,7 @@ const RegionPicker = React.createClass({
 
         return (
             <ul className={className}>
-                {this.state.autoCompleteOptions.map((op, i)=>
+                {this.state.autocompleteOptions.map((op, i)=>
                     <li key={i}>
                         <button type='button' className={Styles.autocompleteItem}
                                 onClick={this.selectRegion.bind(this, op)}>{op.name}</button>
@@ -276,7 +293,7 @@ const RegionPicker = React.createClass({
                 )}
             </ul>
         );
-    }
+    },
 });
 
 /**

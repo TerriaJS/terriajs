@@ -371,7 +371,9 @@ describeIfSupported('Cesium Model', function() {
 
                 featureInfo.name = 'name1';
                 featureInfo.description = 'a description';
-                featureInfo.properties = {};
+                featureInfo.properties = {
+                    foo: 'bar'
+                };
                 featureInfo.position = Cartographic.fromDegrees(LONG_DEGREES, LAT_DEGREES, HEIGHT);
                 featureInfo.coords = {x: 1, y: 2, level: 3};
 
@@ -383,7 +385,7 @@ describeIfSupported('Cesium Model', function() {
 
                     expect(entity.id).toBe('name1');
                     expect(entity.name).toBe('name1');
-                    expect(entity.properties).toBe(featureInfo.properties);
+                    expect(entity.properties.getValue().foo).toBe('bar');
                     expect(entity.imageryLayer).toBe(imageryLayers[0]);
                     expect(entity.position._value).toEqual(EXPECTED_POS);
                     expect(entity.coords).toEqual({x: 1, y: 2, level: 3});

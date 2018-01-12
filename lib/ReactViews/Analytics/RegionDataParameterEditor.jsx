@@ -1,5 +1,9 @@
 import React from 'react';
 
+import createReactClass from 'create-react-class';
+
+import PropTypes from 'prop-types';
+
 import defined from 'terriajs-cesium/Source/Core/defined';
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 import VarType from '../../Map/VarType';
@@ -9,12 +13,13 @@ import CatalogGroup from '../DataCatalog/CatalogGroup';
 
 import Styles from './parameter-editors.scss';
 
-const RegionDataParameterEditor = React.createClass({
+const RegionDataParameterEditor = createReactClass({
+    displayName: 'RegionDataParameterEditor',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        previewed: React.PropTypes.object,
-        parameter: React.PropTypes.object
+        previewed: PropTypes.object,
+        parameter: PropTypes.object
     },
 
     componentWillMount() {
@@ -48,7 +53,7 @@ const RegionDataParameterEditor = React.createClass({
         if (newValue) {
             value[column.name] = {
                 regionProvider: this.regionProvider(),
-                regionColumn: catalogItem.regionMapping.regionDetails[0].column,
+                regionColumn: catalogItem.regionMapping.tableStructure.getColumnWithNameOrId(catalogItem.regionMapping.regionDetails[0].columnName),
                 valueColumn: column
             };
 
@@ -81,7 +86,7 @@ const RegionDataParameterEditor = React.createClass({
             if (!this.props.parameter.singleSelect || Object.keys(value).length === 1) {
                 value[column.name] = {
                     regionProvider: this.regionProvider(),
-                    regionColumn: catalogItem.regionMapping.regionDetails[0].column,
+                    regionColumn: catalogItem.regionMapping.tableStructure.getColumnWithNameOrId(catalogItem.regionMapping.regionDetails[0].columnName),
                     valueColumn: column
                 };
             }
@@ -89,7 +94,7 @@ const RegionDataParameterEditor = React.createClass({
 
         return defined(value[column.name]) &&
             value[column.name] &&
-            value[column.name].regionColumn === catalogItem.regionMapping.regionDetails[0].column &&
+            value[column.name].regionColumn === catalogItem.regionMapping.tableStructure.getColumnWithNameOrId(catalogItem.regionMapping.regionDetails[0].columnName) &&
             value[column.name].valueColumn === column;
     },
 
@@ -171,7 +176,7 @@ const RegionDataParameterEditor = React.createClass({
             <div className={Styles.parameterEditorImportantNote}>
                 No characteristics are available because you have not added any data to the map for this region
                 type, {this.regionProvider() ? this.regionProvider().regionType : 'None'}.
-                You may use your own data with this analysis by creating a CSV following the <a target="_blank" href="https://github.com/NICTA/nationalmap/wiki/csv-geo-au">csv-geo-au</a> guidelines
+                You may use your own data with this analysis by creating a CSV following the <a target="_blank" rel="noopener noreferrer" href="https://github.com/TerriaJS/nationalmap/wiki/csv-geo-au">csv-geo-au</a> guidelines
                 and dragging and dropping it onto the map.
             </div>
         );
@@ -196,6 +201,6 @@ const RegionDataParameterEditor = React.createClass({
                 })}
             </ul>
         );
-    }
+    },
 });
 module.exports = RegionDataParameterEditor;

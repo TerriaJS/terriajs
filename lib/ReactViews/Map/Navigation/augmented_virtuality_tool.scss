@@ -1,0 +1,15 @@
+@import '~terriajs-variables';
+@import '../../../Sass/common/mixins';
+@import 'nav';
+@import 'tool_button';
+
+.augmentedVirtualityTool {
+  composes: toolButton from './tool_button.scss';
+  float: left;
+}
+
+.btn {
+  composes: btn from './nav.scss';
+
+  margin-right: 15px;
+}

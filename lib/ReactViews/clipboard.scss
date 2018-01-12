@@ -1,0 +1,39 @@
+@import '~terriajs-variables';
+
+.clipboard{
+  padding: 5px;
+  position: relative;
+}
+.clipboardBody{
+  display: flex;
+  margin: 10px 0 0 0;
+}
+
+.copyBtn{
+  composes: btn from '../Sass/common/_buttons.scss';
+  composes: btn-primary from '../Sass/common/_buttons.scss';
+  width: 60px;
+}
+
+.tooltip{
+  position: absolute;
+  background: #fff;
+  color: #000;
+  display: block;
+  right: 0;
+  padding: 6px 5px;
+  border-radius: 5px;
+  top: 80px;
+  &:before {
+    content: '';
+    display: block;
+    height: 10px;
+    width: 10px;
+    background: #fff;
+    position: absolute;
+    top: -5px;
+    z-index: -1;
+    transform: rotate(45deg);
+    left: 25px;
+  }
+}

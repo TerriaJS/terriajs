@@ -10,6 +10,8 @@ var SensorObservationServiceCatalogItem = require('../../lib/Models/SensorObserv
 var Terria = require('../../lib/Models/Terria');
 var VarType = require('../../lib/Map/VarType');
 
+var j = JulianDate.fromIso8601;
+
 describe('SensorObservationServiceCatalogItem', function() {
     var terria;
     var item;
@@ -150,6 +152,73 @@ describe('SensorObservationServiceCatalogItem', function() {
             }).otherwise(fail).then(done);
         });
 
+        it('works with showFeaturesAtAllTimes false', function(done) {
+            item.updateFromJson({
+                name: 'Foo',
+                url: 'http://sos.example.com',
+                procedures: [{identifier: "http://sos.example.com/tstypes/Yearly Mean", title: "Annual average"}],
+                observableProperties: [{identifier: "http://sos.example.com/parameters/Storage Level", title: "Storage Level", units: "m"}],
+                showFeaturesAtAllTimes: false,
+                proceduresName: 'Frequency',
+                observablePropertiesName: 'Observation'
+            });
+            item.load().then(function() {
+                expect(item.tableStructure.columnsByType[VarType.TIME].length).toEqual(1);
+                var dates = item.tableStructure.columnsByType[VarType.TIME][0].julianDates;
+                function datesForFeatureIdentifier(identifier) {
+                    return item.tableStructure.getColumnWithNameIdOrIndex('identifier').values.map(function(thisIdentifier, rowNumber) {
+                        if (identifier === thisIdentifier) {
+                            return dates[rowNumber];
+                        }
+                    }).filter(function(x) { return x !== undefined; });
+                }
+                var d2012 = j('2012-01-03T02:00+10:00');
+                var d2013 = j('2013-01-03T02:00+10:00');
+                var d2014 = j('2014-01-03T02:00+10:00');
+                var d2015 = j('2015-01-03T02:00+10:00');
+                var d2016 = j('2016-01-03T02:00+10:00');
+                var d2017 = j('2017-01-03T02:00+10:00');
+                expect(datesForFeatureIdentifier('http://sos.example.com/stations/1')).toEqual([d2015, d2016, d2017]);
+                expect(datesForFeatureIdentifier('http://sos.example.com/stations/2')).toEqual([d2014, d2015, d2016]);
+                expect(datesForFeatureIdentifier('http://sos.example.com/stations/3')).toEqual([d2012, d2013, d2014, d2015, d2016]);
+            }).otherwise(fail).then(done);
+        });
+
+
+        it('works with showFeaturesAtAllTimes true', function(done) {
+            // showFeaturesAtAllTimes adds in artificial rows for each feature at the start and end of the total date range,
+            // if not already present.
+            item.updateFromJson({
+                name: 'Foo',
+                url: 'http://sos.example.com',
+                procedures: [{identifier: "http://sos.example.com/tstypes/Yearly Mean", title: "Annual average"}],
+                observableProperties: [{identifier: "http://sos.example.com/parameters/Storage Level", title: "Storage Level", units: "m"}],
+                showFeaturesAtAllTimes: true,
+                proceduresName: 'Frequency',
+                observablePropertiesName: 'Observation'
+            });
+            item.load().then(function() {
+                expect(item.tableStructure.columnsByType[VarType.TIME].length).toEqual(1);
+                var dates = item.tableStructure.columnsByType[VarType.TIME][0].julianDates;
+                function datesForFeatureIdentifier(identifier) {
+                    return item.tableStructure.getColumnWithNameIdOrIndex('identifier').values.map(function(thisIdentifier, rowNumber) {
+                        if (identifier === thisIdentifier) {
+                            return dates[rowNumber];
+                        }
+                    }).filter(function(x) { return x !== undefined; });
+                }
+                var d2012 = j('2012-01-03T02:00+10:00');
+                var d2013 = j('2013-01-03T02:00+10:00');
+                var d2014 = j('2014-01-03T02:00+10:00');
+                var d2015 = j('2015-01-03T02:00+10:00');
+                var d2016 = j('2016-01-03T02:00+10:00');
+                var d2017 = j('2017-01-03T02:00+10:00');
+                expect(datesForFeatureIdentifier('http://sos.example.com/stations/1')).toEqual([d2012, d2015, d2016, d2017]);
+                expect(datesForFeatureIdentifier('http://sos.example.com/stations/2')).toEqual([d2012, d2014, d2015, d2016, d2017]);
+                expect(datesForFeatureIdentifier('http://sos.example.com/stations/3')).toEqual([d2012, d2013, d2014, d2015, d2016, d2017]);
+            }).otherwise(fail).then(done);
+        });
+
         it('reloads observation data when concept changes', function(done) {
             item.updateFromJson({
                 name: 'Foo',
@@ -184,7 +253,7 @@ describe('SensorObservationServiceCatalogItem', function() {
             }).otherwise(fail).then(done);
         });
 
-        it('is less than 2000 characters when serialised to JSON then URLEncoded', function(done) {
+        it('is less than 2500 characters when serialised to JSON then URLEncoded', function(done) {
             item.updateFromJson({
                 name: 'Name',
                 url: 'http://sos.example.com',
@@ -195,7 +264,8 @@ describe('SensorObservationServiceCatalogItem', function() {
             });
             item.load().then(function() {
                 var url = encodeURIComponent(JSON.stringify(item.serializeToJson()));
-                expect(url.length).toBeLessThan(2000);
+                // This used to be < 2000, but when we added useOwnClock and canUseOwnClock it hit 2007 characters.
+                expect(url.length).toBeLessThan(2500);
             }).otherwise(fail).then(done);
         });
 

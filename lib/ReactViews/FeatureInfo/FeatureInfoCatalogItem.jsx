@@ -3,18 +3,23 @@ import FeatureInfoSection from './FeatureInfoSection.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
 
+import createReactClass from 'create-react-class';
+
+import PropTypes from 'prop-types';
+
 import Styles from './feature-info-catalog-item.scss';
 
 // Any Catalog in a feature-info-panel
-const FeatureInfoCatalogItem = React.createClass({
+const FeatureInfoCatalogItem = createReactClass({
+    displayName: 'FeatureInfoCatalogItem',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        features: React.PropTypes.array,
-        catalogItem: React.PropTypes.object,
-        terria: React.PropTypes.object.isRequired,
-        viewState: React.PropTypes.object.isRequired,
-        onToggleOpen: React.PropTypes.func.isRequired
+        features: PropTypes.array,
+        catalogItem: PropTypes.object,
+        terria: PropTypes.object.isRequired,
+        viewState: PropTypes.object.isRequired,
+        onToggleOpen: PropTypes.func.isRequired
     },
 
     render() {
@@ -43,7 +48,7 @@ const FeatureInfoCatalogItem = React.createClass({
                         catalogItem={catalogItem}
                         feature={feature}
                         position={terria.pickedFeatures && terria.pickedFeatures.pickPosition}
-                        clock={terria.clock}
+                        clock={catalogItem.clockForDisplay}
                         template={featureInfoTemplate}
                         isOpen={feature === terria.selectedFeature}
                         onClickHeader={this.props.onToggleOpen}
@@ -70,7 +75,7 @@ const FeatureInfoCatalogItem = React.createClass({
                 </ul>
             </li>
         );
-    }
+    },
 });
 
 module.exports = FeatureInfoCatalogItem;

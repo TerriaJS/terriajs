@@ -1,24 +1,34 @@
 import React from 'react';
 
-import defined from 'terriajs-cesium/Source/Core/defined';
+import createReactClass from 'create-react-class';
+
+import PropTypes from 'prop-types';
+
 import DataCatalog from '../../DataCatalog/DataCatalog.jsx';
-import DataCatalogMember from '../../DataCatalog/DataCatalogMember.jsx';
 import DataPreview from '../../Preview/DataPreview.jsx';
 import ObserveModelMixin from '../../ObserveModelMixin';
-import SearchHeader from '../../Search/SearchHeader.jsx';
 import SearchBox from '../../Search/SearchBox.jsx';
 
 import Styles from './data-catalog-tab.scss';
 
 // The DataCatalog Tab
-const DataCatalogTab = React.createClass({
+const DataCatalogTab = createReactClass({
+    displayName: 'DataCatalogTab',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        terria: React.PropTypes.object,
-        viewState: React.PropTypes.object,
-        overrideState: React.PropTypes.string,
-        onActionButtonClicked: React.PropTypes.func
+        terria: PropTypes.object,
+        viewState: PropTypes.object,
+        items: PropTypes.array,
+        searchPlaceholder: PropTypes.string,
+        overrideState: PropTypes.string,
+        onActionButtonClicked: PropTypes.func
+    },
+
+    getDefaultProps() {
+        return {
+            searchPlaceholder: undefined // Let SearchBox set the default placeholder
+        };
     },
 
     changeSearchText(newText) {
@@ -36,11 +46,13 @@ const DataCatalogTab = React.createClass({
                 <div className={Styles.dataExplorer}>
                     <SearchBox searchText={this.props.viewState.searchState.catalogSearchText}
                                onSearchTextChanged={this.changeSearchText}
-                               onDoSearch={this.search}/>
+                               onDoSearch={this.search}
+                               placeholder={this.props.searchPlaceholder}/>
                     <DataCatalog terria={this.props.terria}
                                  viewState={this.props.viewState}
                                  overrideState={this.props.overrideState}
-                                 onActionButtonClicked={this.props.onActionButtonClicked} />
+                                 onActionButtonClicked={this.props.onActionButtonClicked}
+                                 items={this.props.items} />
                 </div>
                 <DataPreview terria={terria}
                              viewState={this.props.viewState}

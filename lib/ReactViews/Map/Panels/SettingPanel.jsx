@@ -1,6 +1,8 @@
 'use strict';
 
 import React from 'react';
+import createReactClass from 'create-react-class';
+import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 import ViewerMode from '../../../Models/ViewerMode';
@@ -12,14 +14,15 @@ import Styles from './setting-panel.scss';
 import DropdownStyles from './panel.scss';
 
 // The basemap and viewer setting panel
-const SettingPanel = React.createClass({
+const SettingPanel = createReactClass({
+    displayName: 'SettingPanel',
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        terria: React.PropTypes.object.isRequired,
-        viewerModes: React.PropTypes.array,
-        allBaseMaps: React.PropTypes.array.isRequired,
-        viewState: React.PropTypes.object.isRequired
+        terria: PropTypes.object.isRequired,
+        viewerModes: PropTypes.array,
+        allBaseMaps: PropTypes.array.isRequired,
+        viewState: PropTypes.object.isRequired
     },
 
     getDefaultProps() {
@@ -58,19 +61,25 @@ const SettingPanel = React.createClass({
 
     selectViewer(viewer, event) {
         event.stopPropagation();
+
+        let newViewerMode;
         switch (viewer) {
             case 0:
-                this.props.terria.viewerMode = ViewerMode.CesiumTerrain;
+                newViewerMode = ViewerMode.CesiumTerrain;
                 break;
             case 1:
-                this.props.terria.viewerMode = ViewerMode.CesiumEllipsoid;
+                newViewerMode = ViewerMode.CesiumEllipsoid;
                 break;
             case 2:
-                this.props.terria.viewerMode = ViewerMode.Leaflet;
+                newViewerMode = ViewerMode.Leaflet;
                 break;
             default:
                 return;
         }
+        this.props.terria.viewerMode = newViewerMode;
+
+        // We store the user's chosen viewer mode for future use.
+        this.props.terria.setLocalProperty('viewermode', newViewerMode);
     },
 
     render() {
@@ -122,7 +131,7 @@ const SettingPanel = React.createClass({
                 </div>
             </MenuPanel>
         );
-    }
+    },
 });
 
 module.exports = SettingPanel;
