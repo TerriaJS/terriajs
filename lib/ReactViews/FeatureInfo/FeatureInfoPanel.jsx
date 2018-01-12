@@ -13,7 +13,7 @@ import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 import Entity from 'terriajs-cesium/Source/DataSources/Entity';
 import Icon from "../Icon.jsx";
 import { LOCATION_MARKER_DATA_SOURCE_NAME, addMarker, removeMarker, markerVisible } from '../../Models/LocationMarkerUtils';
-import prettifyCoordinates from '../../Models/prettifyCoordinates';
+import prettifyCoordinates from '../../Map/prettifyCoordinates';
 
 import Styles from './feature-info-panel.scss';
 import classNames from 'classnames';
