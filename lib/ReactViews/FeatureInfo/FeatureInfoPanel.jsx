@@ -186,9 +186,22 @@ const FeatureInfoPanel = createReactClass({
 
         let position;
         if (defined(terria.selectedFeature) && defined(terria.selectedFeature.position)) {
+            // If the clock is avaliable then use it, otherwise don't.
+            let clock;
+            if (defined(terria.clock)) {
+                clock = terria.clock.currentTime;
+            }
+
             // If there is a selected feature then use the feature location.
-            position = terria.selectedFeature.position.getValue(terria.clock.currentTime);
-        } else {
+            position = terria.selectedFeature.position.getValue(clock);
+
+            // If position is invalid then don't use it.
+            // This seems to be fixing the symptom rather then the cause, but don't know what is the true cause this ATM.
+            if (isNaN(position.x) || isNaN(position.y) || isNaN(position.z)) {
+                position = undefined;
+            }
+        }
+        if (!defined(position)) {
             // Otherwise use the location picked.
             if (defined(terria.pickedFeatures) && defined(terria.pickedFeatures.pickPosition)) {
                 position = terria.pickedFeatures.pickPosition;
