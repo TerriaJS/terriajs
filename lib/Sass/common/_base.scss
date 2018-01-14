@@ -439,14 +439,14 @@
     left: 0 !important;
     background: red !important;
     content: "There are elements with class undefined on the page! Fix them!" !important;
-    color: yellow !important;
+    color: magenta !important;
     opacity: 1 !important;
     z-index: 100000 !important;
   }
 
   position: relative;
   background: #F00 !important;
-  color: yellow !important;
+  color: magenta !important;
   border: 3px orange dashed !important;
 
   animation-name: flash;
@@ -458,7 +458,7 @@
 @keyframes flash {
   0% {
     background: #F00;
-    color: yellow;
+    color: magenta;
     border: 3px orange dashed;
   }
 

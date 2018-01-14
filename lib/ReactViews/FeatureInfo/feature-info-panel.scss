@@ -1,3 +1,4 @@
+
 @import '~terriajs-variables';
 @import '../../Sass/common/mixins';
 
@@ -22,11 +23,20 @@
   a{
     @include link($feature-info-bg);
   }
-  @media screen and (min-width : $md){
-    //temp
-    max-width: calc(100vw - #{$work-bench-width} - 150px);
+
+  @media screen and (min-width : $lg){
+    max-width: 40%;
+    min-width: calc(#{$sm} * 0.9 - 180px);
     right: 105px;
   }
+
+  @media screen and (min-width : $sm) and (max-width: $lg){
+    max-width: calc(#{$sm} * 0.9 - 180px);
+    right: 105px;
+  }
+
+
+
   @media print{
     position: relative;
     color: #000;
