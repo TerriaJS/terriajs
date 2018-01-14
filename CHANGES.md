@@ -9,6 +9,7 @@ Change Log
 * Added support for ArcGIS tokens on the 2D map. Previously, tokens only worked reliably in 3D.
 * Improved handling of tile errors, making it more consistent between 2D and 3D.
 * Fixed a bug that prevented the Add Data button from working Internet Explorer 9 unless the DevTools were also open.
+* Improved the sizing of the feature info panel so it is less likely to completely obscure the map.
 
 ### 5.5.4
 
