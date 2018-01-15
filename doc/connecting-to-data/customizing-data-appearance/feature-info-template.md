@@ -68,16 +68,21 @@ The preferred way to format numbers is using the `formats` option, eg:
                 "template": "Pixel colour: <b>Red={{Red}} Blue={{Blue}} Green={{Green}}</b>.",
                 "formats": {
                   "Red": {
+                    "type": "number",
                     "maximumFractionDigits": 2
                   },
                   "Green": {
+                    "type": "number",
                     "maximumFractionDigits": 2
                   },
                   "Blue": {
+                    "type": "number",
                     "maximumFractionDigits": 2
                   }
                 }
               }
+
+`"type"` specifies the type of formatting that will be applied to the property. Here we are using `"number"` formatting which is also the default formatting if `"type"` is not supplied.
 
 The supported format options are `"maximumFractionDigits": X` (to set the number of decimal places to X), `"useGrouping": true` (to show thousands separators), and `"style": "percent"` (eg. to show 0.15 as 15%).
 
@@ -91,6 +96,26 @@ To URL-encode a value in a template, use `terria.urlEncode` or `terria.urlEncode
 
     Test: {{#terria.urlEncode}}http://example.com/a b{{/terria.urlEncode}}
     Test: {{#terria.urlEncodeComponent}}W/HOE#1{{/terria.urlEncodeComponent}}
+
+## Formatting dates
+
+Similar to formatting numbers you can format dates in the `"formats"` section by suppliying `"dateTime"` in the `"type"` property, eg:
+
+              "featureInfoTemplate": {
+                "template": "Date: {{Date}}",
+                "formats": {
+                  "Date": {
+                    "type": "dateTime";
+                    "format": "dd-mm-yyyy HH:MM:ss";
+                  }
+                }
+              }
+
+The date format style used for the `"format"` property is the style from the [npm dateformat package](https://www.npmjs.com/package/dateformat#usage), e.g. `"dd-mm-yyyy HH:MM:ss"` or `"isoDateTime"`.
+
+As with number you can also use `terria.dateTimeformat` directly in the template. This accepts an initial JSON string describing the same options as above.
+
+              "featureInfoTemplate": "template": "{{#terria.formatDateTime}}{"format": "dd-mm-yyyy HH:MM:ss"}2017-11-23T08:47:53Z{{/terria.formatDateTime}}</b>."
 
 ## Time-series charts
 
@@ -122,6 +147,8 @@ or use this as a basis to customise the chart.
 ## Other supporting data
 
 The clicked point's latitude and longitude are also available as `{{terria.coords.latitude}}` and `{{terria.coords.longitude}}`.
+
+The current time for the layer is avaliable as `{{terria.currentTime}}`.
 
 ## More examples
 
