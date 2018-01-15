@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### 5.5.6
+
+* Tweaked the sizing of feature info panel.
+
 ### 5.5.5
 
 * Fixed a bug that caused the feature info panel to stop working after clicking on a location search marker.
