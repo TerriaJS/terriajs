@@ -17,6 +17,7 @@ import TimeIntervalCollectionProperty from 'terriajs-cesium/Source/DataSources/T
 
 import Catalog from '../../lib/Models/Catalog';
 import createCatalogMemberFromType from '../../lib/Models/createCatalogMemberFromType';
+import CatalogItem from '../../lib/Models/CatalogItem';
 import CatalogGroup from '../../lib/Models/CatalogGroup';
 import CzmlCatalogItem from '../../lib/Models/CzmlCatalogItem';
 import FeatureInfoSection from '../../lib/ReactViews/FeatureInfo/FeatureInfoSection';
@@ -61,6 +62,7 @@ describe('FeatureInfoSection', function() {
             'material.process.#1': 'smelted',
             'size': '12345678.9012',
             'efficiency': '0.2345678',
+            'date': '2017-11-23T08:47:53Z',
             'owner_html': 'Jay<br>Smith',
             'ampersand': 'A & B',
             'lessThan': 'A < B',
@@ -260,6 +262,13 @@ describe('FeatureInfoSection', function() {
         });
 
         it('can format numbers with commas', function() {
+            const template = {template: 'Size: {{size}}', formats: {size: {type: 'number', useGrouping: true}}};
+            const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template} viewState={viewState} />;
+            const result = getShallowRenderedOutput(section);
+            expect(findAllEqualTo(result, 'Size: 12' + separator + '345' + separator + '678.9012').length).toEqual(1);
+        });
+
+        it('formats numbers in the formats section with no type as if type were number', function() {
             const template = {template: 'Size: {{size}}', formats: {size: {useGrouping: true}}};
             const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template} viewState={viewState} />;
             const result = getShallowRenderedOutput(section);
@@ -298,7 +307,7 @@ describe('FeatureInfoSection', function() {
         });
 
         it('can use a dateFormatString when it is specified in terria.formatDateTime', function() {
-            const template = 'Test: {{#terria.formatDateTime}}{"dateFormatString": "dd-mm-yyyy HH:MM:ss"}2017-11-23T08:47:53Z{{/terria.formatDateTime}}';
+            const template = 'Test: {{#terria.formatDateTime}}{"format": "dd-mm-yyyy HH:MM:ss"}2017-11-23T08:47:53Z{{/terria.formatDateTime}}';
             const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template} viewState={viewState} />;
             const result = getShallowRenderedOutput(section);
             const date = new Date(Date.UTC(2017, 11, 23, 8, 47, 53));
@@ -317,6 +326,15 @@ describe('FeatureInfoSection', function() {
             const timeZone = ((offset >= 0) ? "+" : "-") + absPad2(offsetHour) + "" + absPad2(offsetMinute);
             const formattedDate = date.getFullYear() + "-" + absPad2(date.getMonth()) + "-" + absPad2(date.getDate()) + "T" + absPad2(date.getHours()) + ":" + absPad2(date.getMinutes()) + ":" + absPad2(date.getSeconds()) + timeZone; // E.g. "2017-11-23T19:47:53+1100"
             expect(findAllEqualTo(result, 'Test: ' + formattedDate).length).toEqual(1);
+        });
+
+        it('can format dates using the dateTime as the type within the formats section', function() {
+            const template = {template: 'Date: {{date}}', formats: {date: {type: "dateTime", format: 'dd-mm-yyyy HH:MM:ss'}}};
+            const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template} viewState={viewState} />;
+            const result = getShallowRenderedOutput(section);
+            const date = new Date(Date.UTC(2017, 11, 23, 8, 47, 53));
+            const formattedDate = absPad2(date.getDate()) + "-" + absPad2(date.getMonth()) + "-" + date.getFullYear() + " " + absPad2(date.getHours()) + ":" + absPad2(date.getMinutes()) + ":" + absPad2(date.getSeconds()); // E.g. "23-11-2017 19:47:53"
+            expect(findAllEqualTo(result, 'Date: ' + formattedDate).length).toEqual(1);
         });
 
         it('handles non-numbers in terria.formatDateTime', function() {
@@ -407,7 +425,12 @@ describe('FeatureInfoSection', function() {
             const template = '<div>{{terria.currentTime}}</div>';
             const date = JulianDate.fromIso8601("2017-11-23T19:47:53+11:00");
             const clock = new Clock({currentTime: date});
-            const section = <FeatureInfoSection feature={feature} isOpen={true} clock={clock} template={template} viewState={viewState}/>;
+            const catalogItem = new CatalogItem(terria);
+            catalogItem.clock = clock;
+            catalogItem.useOwnClock = true;
+            const incorrectDate = JulianDate.fromIso8601("2001-01-01T01:01:01+01:00");
+            const incorrectClock = new Clock({currentTime: date});
+            const section = <FeatureInfoSection feature={feature} isOpen={true} clock={incorrectClock} template={template} viewState={viewState} catalogItem={catalogItem}/>;
             const result = getShallowRenderedOutput(section);
             expect(findAllEqualTo(result, '2017-11-23T08:47:53Z').length).toEqual(1);
         });
