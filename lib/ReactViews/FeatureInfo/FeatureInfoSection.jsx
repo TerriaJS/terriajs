@@ -355,7 +355,15 @@ function applyFormatsInPlace(properties, formats) {
     // Optionally format each property. Updates properties in place, returning nothing.
     for (const key in formats) {
         if (properties.hasOwnProperty(key)) {
-            properties[key] = formatNumberForLocale(properties[key], formats[key]);
+            // Default type if not provided is number.
+            if (!defined(formats[key].type) || (defined(formats[key].type) && formats[key].type === "number")) {
+                properties[key] = formatNumberForLocale(properties[key], formats[key]);
+            }
+            if (defined(formats[key].type)) {
+                if (formats[key].type === "dateTime") {
+                    properties[key] = formatDateTime(properties[key], formats[key]);
+                }
+            }
         }
     }
 }
@@ -470,6 +478,31 @@ function mustacheFormatNumberFunction() {
 }
 
 /**
+ * Formats the date according to the date format string.
+ * If the date expression can't be parsed using Date.parse() it will be returned unmodified.
+ *
+ * @param {String} text The date to format.
+ * @param {Object} options Object with the following properties:
+ * @param {String} options.dateFormatString If present, will override the default date format using the npm datefromat
+ *                                          package format (see https://www.npmjs.com/package/dateformat).
+ *                                          E.g. "isoDateTime" or "dd-mm-yyyy HH:MM:ss". If not supplied isoDateTime will be used.
+ * @private
+ */
+function formatDateTime(text, options) {
+    var date = Date.parse(text);
+
+    if (!defined(date) || isNaN(date)) {
+        return text;
+    }
+
+    if (defined(options) && defined(options.dateFormatString)) {
+       return dateFormat(date, options.dateFormatString);
+    }
+
+    return dateFormat(date, "isoDateTime");
+}
+
+/**
  * Returns a function which implements date/time formatting in Mustache templates, using this syntax:
  * {{#terria.formatDateTime}}{dateFormatString: "npm dateFormat string"}Date_Expression{{/terria.formatDateTime}}
  * dateFormatString If present, will override the default date format (see https://www.npmjs.com/package/dateformat)
@@ -479,19 +512,7 @@ function mustacheFormatNumberFunction() {
  * @private
  */
 function mustacheFormatDateTime() {
-    return mustacheJsonSubOptions((text, options) => {
-        var date = Date.parse(text);
-
-        if (!defined(date) || isNaN(date)) {
-            return text;
-        }
-
-        if (defined(options) && defined(options.dateFormatString)) {
-           return dateFormat(date, options.dateFormatString);
-        }
-
-        return dateFormat(date, "isoDateTime");
-    });
+    return mustacheJsonSubOptions(formatDateTime);
 }
 
 /**
