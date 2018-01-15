@@ -5,7 +5,7 @@ Change Log
 
 ### 5.5.6
 
-* Tweaked the sizing of feature info panel.
+* Tweaked the sizing of the feature info panel.
 
 ### 5.5.5
 
