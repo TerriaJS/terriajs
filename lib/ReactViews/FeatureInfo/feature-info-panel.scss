@@ -32,7 +32,7 @@
   $feature-info-forty-percent-size: $feature-info-medium-max-size * 100 / 40;
 
   @media screen and (min-width : $sm) and (max-width: $feature-info-forty-percent-size) {
-    max-width: $sm * 0.9 - 52px;
+    max-width: $feature-info-medium-max-size;
     right: $feature-info-right-margin;
   }
 
