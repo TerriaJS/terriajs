@@ -481,9 +481,9 @@ function mustacheFormatNumberFunction() {
  *
  * @param {String} text The date to format.
  * @param {Object} options Object with the following properties:
- * @param {String} options.dateFormatString If present, will override the default date format using the npm datefromat
- *                                          package format (see https://www.npmjs.com/package/dateformat).
- *                                          E.g. "isoDateTime" or "dd-mm-yyyy HH:MM:ss". If not supplied isoDateTime will be used.
+ * @param {String} options.format If present, will override the default date format using the npm datefromat package
+ *                                format (see https://www.npmjs.com/package/dateformat). E.g. "isoDateTime"
+ *                                or "dd-mm-yyyy HH:MM:ss". If not supplied isoDateTime will be used.
  * @private
  */
 function formatDateTime(text, options) {
@@ -493,8 +493,8 @@ function formatDateTime(text, options) {
         return text;
     }
 
-    if (defined(options) && defined(options.dateFormatString)) {
-       return dateFormat(date, options.dateFormatString);
+    if (defined(options) && defined(options.format)) {
+       return dateFormat(date, options.format);
     }
 
     return dateFormat(date, "isoDateTime");
@@ -502,8 +502,8 @@ function formatDateTime(text, options) {
 
 /**
  * Returns a function which implements date/time formatting in Mustache templates, using this syntax:
- * {{#terria.formatDateTime}}{dateFormatString: "npm dateFormat string"}Date_Expression{{/terria.formatDateTime}}
- * dateFormatString If present, will override the default date format (see https://www.npmjs.com/package/dateformat)
+ * {{#terria.formatDateTime}}{format: "npm dateFormat string"}DateExpression{{/terria.formatDateTime}}
+ * format If present, will override the default date format (see https://www.npmjs.com/package/dateformat)
  * Eg. "isoDateTime" or "dd-mm-yyyy HH:MM:ss".
  * If the Date_Expression can't be parsed using Date.parse() it will be used(returned) unmodified by the terria.formatDateTime section expression.
  * If no valid date formatting options are present in the terria.formatDateTime section isoDateTime will be used.
