@@ -6,6 +6,7 @@ Change Log
 ### 5.5.6
 
 * Tweaked the sizing of the feature info panel.
+* Fixed a bug that caused `ArcGisMapServerCatalogItem` to always use the server's single fused map cache, if available. Now, if the `layers` property is specified, we request individual dynamic layers and ignore the fused map cache.
 
 ### 5.5.5
 
