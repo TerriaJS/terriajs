@@ -472,9 +472,7 @@ function mustacheJsonSubOptions(customProcessing) {
  * @private
  */
 function mustacheFormatNumberFunction() {
-    return mustacheJsonSubOptions((text, options) => {
-        return formatNumberForLocale(text, options);
-    });
+    return mustacheJsonSubOptions(formatNumberForLocale);
 }
 
 /**
