@@ -24,18 +24,22 @@
     @include link($feature-info-bg);
   }
 
-  @media screen and (min-width : $lg){
+  // On very large screens, the feature info may be up to 40% of the screen.
+  // On small screens (mobile), it make be up to 90% of the screen.
+  // In between, it may be up to 90% of the largest mobile screen ($sm), minus a bit to leave room
+  // for the map controls on the right.  This is computed in $feature-info-medium-max-size.
+  $feature-info-medium-max-size: $sm * 0.9 - $feature-info-right-margin * 0.5;
+  $feature-info-forty-percent-size: $feature-info-medium-max-size * 100 / 40;
+
+  @media screen and (min-width : $sm) and (max-width: $feature-info-forty-percent-size) {
+    max-width: $feature-info-medium-max-size;
+    right: $feature-info-right-margin;
+  }
+
+  @media screen and (min-width: $feature-info-forty-percent-size) {
     max-width: 40%;
-    min-width: calc(#{$sm} * 0.9 - 180px);
-    right: 105px;
+    right: $feature-info-right-margin;
   }
-
-  @media screen and (min-width : $sm) and (max-width: $lg){
-    max-width: calc(#{$sm} * 0.9 - 180px);
-    right: 105px;
-  }
-
-
 
   @media print{
     position: relative;
