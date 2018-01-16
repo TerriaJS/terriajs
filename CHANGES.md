@@ -3,11 +3,20 @@
 Change Log
 ==========
 
+### 5.5.6
+
+* Tweaked the sizing of the feature info panel.
+* Fixed a bug that caused `ArcGisMapServerCatalogItem` to always use the server's single fused map cache, if available. Now, if the `layers` property is specified, we request individual dynamic layers and ignore the fused map cache.
+
 ### 5.5.5
 
 * Fixed a bug that caused the feature info panel to stop working after clicking on a location search marker.
 * Added `{{terria.currentTime}}` to feature info template.
 * Added a way to format times within a feature info tempate. E.g. `{{#terria.formatDateTime}}{"dateFormatString": "dd-mm-yyyy HH:MM:ss"}{{terria.currentTime}}{{/terria.formatDateTime}}`.
+* Added support for ArcGIS tokens on the 2D map. Previously, tokens only worked reliably in 3D.
+* Improved handling of tile errors, making it more consistent between 2D and 3D.
+* Fixed a bug that prevented the Add Data button from working Internet Explorer 9 unless the DevTools were also open.
+* Improved the sizing of the feature info panel so it is less likely to completely obscure the map.
 
 ### 5.5.4
 
