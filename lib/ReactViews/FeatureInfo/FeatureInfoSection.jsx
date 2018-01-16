@@ -487,7 +487,7 @@ function mustacheFormatNumberFunction() {
  * @private
  */
 function formatDateTime(text, options) {
-    var date = Date.parse(text);
+    let date = Date.parse(text);
 
     if (!defined(date) || isNaN(date)) {
         return text;

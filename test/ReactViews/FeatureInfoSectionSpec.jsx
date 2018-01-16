@@ -40,7 +40,7 @@ function findAllWithHref(reactElement, text) {
 // Takes the absolute value of the value and pads it to 2 digits i.e. 7->07, 17->17, -3->3, -13->13. It is expected that value is an integer is in the range [-99, 99].
 function absPad2(value) {
     return ((Math.abs(value) < 10) ? "0" : "") + Math.abs(value);
-};
+}
 
 describe('FeatureInfoSection', function() {
 
@@ -429,7 +429,7 @@ describe('FeatureInfoSection', function() {
             catalogItem.clock = clock;
             catalogItem.useOwnClock = true;
             const incorrectDate = JulianDate.fromIso8601("2001-01-01T01:01:01+01:00");
-            const incorrectClock = new Clock({currentTime: date});
+            const incorrectClock = new Clock({currentTime: incorrectDate});
             const section = <FeatureInfoSection feature={feature} isOpen={true} clock={incorrectClock} template={template} viewState={viewState} catalogItem={catalogItem}/>;
             const result = getShallowRenderedOutput(section);
             expect(findAllEqualTo(result, '2017-11-23T08:47:53Z').length).toEqual(1);
