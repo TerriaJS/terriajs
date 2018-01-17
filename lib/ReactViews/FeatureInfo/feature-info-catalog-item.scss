@@ -8,6 +8,7 @@
 }
 
 .message-item {
-  margin-left: 10px;
-  color: $info-color;
+  background: $info-color;
+  color: $dark;
+  padding: 5px 8px;
 }
