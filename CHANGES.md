@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### 5.5.7
+
+* Added support for using tokens to access WMS layers, particularly using the WMS interface to ArcGIS servers.
+
 ### 5.5.6
 
 * Tweaked the sizing of the feature info panel.
