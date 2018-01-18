@@ -13,6 +13,7 @@ import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
 import Entity from 'terriajs-cesium/Source/DataSources/Entity';
 import JulianDate from 'terriajs-cesium/Source/Core/JulianDate';
 import TimeInterval from 'terriajs-cesium/Source/Core/TimeInterval';
+import TimeIntervalCollection from 'terriajs-cesium/Source/Core/TimeIntervalCollection';
 import TimeIntervalCollectionProperty from 'terriajs-cesium/Source/DataSources/TimeIntervalCollectionProperty';
 
 import Catalog from '../../lib/Models/Catalog';
@@ -423,16 +424,30 @@ describe('FeatureInfoSection', function() {
 
         it('can access the current time', function() {
             const template = '<div>{{terria.currentTime}}</div>';
-            const date = JulianDate.fromIso8601("2017-11-23T19:47:53+11:00");
-            const clock = new Clock({currentTime: date});
             const catalogItem = new CatalogItem(terria);
+
+            const timeInterval = new TimeInterval({
+                start : JulianDate.fromIso8601('2017-11-23T19:47:53+11:00'),
+                stop : JulianDate.fromIso8601('2018-01-03T07:05:00Z'),
+                isStartIncluded : true,
+                isStopIncluded : false,
+            });
+            const intervals = new TimeIntervalCollection([timeInterval]);
+            const availableDate = JulianDate.toDate(timeInterval.start);
+            catalogItem.intervals = intervals;
+            catalogItem.availableDates = [availableDate];
+
+            const date = JulianDate.fromIso8601("2017-12-19T17:13:11+07:00");
+            const clock = new Clock({currentTime: date});
             catalogItem.clock = clock;
+            catalogItem.canUseOwnClock = true;
             catalogItem.useOwnClock = true;
+
             const incorrectDate = JulianDate.fromIso8601("2001-01-01T01:01:01+01:00");
             const incorrectClock = new Clock({currentTime: incorrectDate});
             const section = <FeatureInfoSection feature={feature} isOpen={true} clock={incorrectClock} template={template} viewState={viewState} catalogItem={catalogItem}/>;
             const result = getShallowRenderedOutput(section);
-            expect(findAllEqualTo(result, '2017-11-23T08:47:53Z').length).toEqual(1);
+            expect(findAllEqualTo(result, availableDate.toString()).length).toEqual(1);
         });
 
         it('can render a recursive featureInfoTemplate', function() {

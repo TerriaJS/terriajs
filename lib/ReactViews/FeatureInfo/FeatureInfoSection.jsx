@@ -92,8 +92,9 @@ const FeatureInfoSection = createReactClass({
                     longitude: CesiumMath.toDegrees(latLngInRadians.longitude)
                 };
             }
-            if (defined(this.props.catalogItem) && defined(this.props.catalogItem.clockForDisplay) && defined(this.props.catalogItem.clockForDisplay.currentTime)) {
-                propertyData.terria.currentTime = this.props.catalogItem.clockForDisplay.currentTime;
+            if (defined(this.props.catalogItem) && defined(this.props.catalogItem.clockForDisplay) && defined(this.props.catalogItem.clockForDisplay.currentTime) &&
+                defined(this.props.catalogItem.availableDates) && defined(this.props.catalogItem.intervals)) {
+                propertyData.terria.currentTime = this.props.catalogItem.availableDates[this.props.catalogItem.intervals.indexOf(this.props.catalogItem.clockForDisplay.currentTime)];
             }
             propertyData.terria.timeSeries = getTimeSeriesChartContext(this.props.catalogItem, this.props.feature, propertyData._terria_getChartDetails);
         }
