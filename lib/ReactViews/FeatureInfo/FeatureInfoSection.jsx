@@ -40,7 +40,6 @@ const FeatureInfoSection = createReactClass({
         template: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
         feature: PropTypes.object,
         position: PropTypes.object,
-        clock: PropTypes.object,
         catalogItem: PropTypes.object,  // Note this may not be known (eg. WFS).
         isOpen: PropTypes.bool,
         onClickHeader: PropTypes.func
@@ -72,7 +71,7 @@ const FeatureInfoSection = createReactClass({
     },
 
     getPropertyValues() {
-        return getPropertyValuesForFeature(this.props.feature, this.props.clock, this.props.template && this.props.template.formats);
+        return getPropertyValuesForFeature(this.props.feature, clockIfAvaliable(this), this.props.template && this.props.template.formats);
     },
 
     getTemplateData() {
@@ -92,9 +91,9 @@ const FeatureInfoSection = createReactClass({
                     longitude: CesiumMath.toDegrees(latLngInRadians.longitude)
                 };
             }
-            if (defined(this.props.catalogItem) && defined(this.props.catalogItem.clockForDisplay) && defined(this.props.catalogItem.clockForDisplay.currentTime) &&
-                defined(this.props.catalogItem.availableDates) && defined(this.props.catalogItem.intervals)) {
-                propertyData.terria.currentTime = this.props.catalogItem.availableDates[this.props.catalogItem.intervals.indexOf(this.props.catalogItem.clockForDisplay.currentTime)];
+            const clock = clockIfAvaliable(this);
+            if (defined(clock) && defined(clock.currentTime) && defined(this.props.catalogItem.availableDates) && defined(this.props.catalogItem.intervals)) {
+                propertyData.terria.currentTime = this.props.catalogItem.availableDates[this.props.catalogItem.intervals.indexOf(clock.currentTime)];
             }
             propertyData.terria.timeSeries = getTimeSeriesChartContext(this.props.catalogItem, this.props.feature, propertyData._terria_getChartDetails);
         }
@@ -139,7 +138,7 @@ const FeatureInfoSection = createReactClass({
         //     markdownToHtml (which applies MarkdownIt.render and DOMPurify.sanitize), and then
         //     parseCustomHtmlToReact (which calls htmlToReactParser).
         // Note that there is an unnecessary HTML encoding and decoding in this combination which would be good to remove.
-        const currentTime = this.props.clock ? this.props.clock.currentTime : JulianDate.now();
+        const currentTime = defined(clockIfAvaliable(this)) ? clockIfAvaliable(this).currentTime : JulianDate.now();
         let description = feature.currentDescription || getCurrentDescription(feature, currentTime);
         if (!defined(description) && defined(feature.properties)) {
             description = describeFromProperties(feature.properties, currentTime);
@@ -198,6 +197,8 @@ const FeatureInfoSection = createReactClass({
         const fullName = (catalogItemName ? (catalogItemName + ' - ') : '') + this.renderDataTitle();
         const reactInfo = getInfoAsReactComponent(this);
 
+        const clock = clockIfAvaliable(this);
+
         return (
             <li className={classNames(Styles.section)}>
                 <button type='button' onClick={this.clickHeader} className={Styles.title}>
@@ -242,7 +243,7 @@ const FeatureInfoSection = createReactClass({
                                                     template={this.props.template}
                                                     feature={this.props.feature}
                                                     position={this.props.position}
-                                                    clock={this.props.clock}
+                                                    clock={clock}
                                                     catalogItem={this.props.catalogItem}
                                                     isOpen={this.props.isOpen}
                                                     onClickHeader={this.props.onClickHeader}/>
@@ -254,6 +255,18 @@ const FeatureInfoSection = createReactClass({
         );
     },
 });
+
+/**
+ * Returns the clockForDisplay for the catalogItem if it is avaliable, otherwise returns undefined.
+ * @private
+ */
+function clockIfAvaliable(featureInfoSection) {
+    if (defined(featureInfoSection.props.catalogItem)) {
+        return featureInfoSection.props.catalogItem.clockForDisplay;
+    }
+
+    return undefined;
+}
 
 /**
  * Do we need to dynamically update this feature info over time?
@@ -274,13 +287,14 @@ const FeatureInfoSection = createReactClass({
  * @private
  */
 function setSubscriptionsAndTimeouts(featureInfoSection, feature) {
+    const clock = clockIfAvaliable(featureInfoSection);
     feature.definitionChanged.addEventListener(function(changedFeature) {
-        setCurrentFeatureValues(changedFeature, featureInfoSection.props.clock);
+        setCurrentFeatureValues(changedFeature, clock);
     });
     if (featureInfoSection.isFeatureTimeVarying(feature)) {
-        if (defined(featureInfoSection.props.clock.onTick)) {
+        if (defined(clock) && defined(clock.onTick)) {
             featureInfoSection.setState({
-                removeClockSubscription: featureInfoSection.props.clock.onTick.addEventListener(function(clock) {
+                removeClockSubscription: clock.onTick.addEventListener(function(clock) {
                     setCurrentFeatureValues(feature, clock);
                 })
             });
