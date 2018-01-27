@@ -16,7 +16,7 @@ var Rectangle = require('terriajs-cesium/Source/Core/Rectangle');
 var SceneTransforms = require('terriajs-cesium/Source/Scene/SceneTransforms');
 var supportsWebGL = require('../../lib/Core/supportsWebGL');
 var Terria = require('../../lib/Models/Terria');
-var TileBoundingBox = require('terriajs-cesium/Source/Scene/TileBoundingBox');
+var TileBoundingRegion = require('terriajs-cesium/Source/Scene/TileBoundingRegion');
 var TileCoordinatesImageryProvider = require('terriajs-cesium/Source/Scene/TileCoordinatesImageryProvider');
 var when = require('terriajs-cesium/Source/ThirdParty/when');
 
@@ -189,7 +189,7 @@ describeIfSupported('Cesium Model', function() {
                 spyOn(cesium.scene.globe, 'pick').and.returnValue(EXPECTED_POS);
                 doClick = cesium.viewer.screenSpaceEventHandler.setInputAction.calls.argsFor(0)[0];
 
-                var tile = new TileBoundingBox({
+                var tile = new TileBoundingRegion({
                     rectangle: RECTANGLE_CONTAINING_EXPECTED_POS
                 });
 
