@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### 5.6.0
+
+* Upgraded to Cesium 1.41.
+
 ### 5.5.7
 
 * Added support for using tokens to access WMS layers, particularly using the WMS interface to ArcGIS servers.
