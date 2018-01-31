@@ -345,7 +345,11 @@ describe('WebMapServiceCatalogItem', function() {
         wmsItem.updateFromJson({
             attribution: "Plain text"
         });
-        expect(wmsItem.attribution).toEqual(new Credit("Plain text", undefined, undefined));
+        expect(wmsItem.attribution).toEqual(new Credit({
+            text: "Plain text",
+            imageUrl: undefined,
+            link: undefined
+        }));
     });
     it('can get handle object in textAttribution', function() {
         var test = {
