@@ -91,7 +91,7 @@
     "glob-all": "^3.0.1",
     "gulp-ruby-sass": "^2.0.5",
     "gulp-util": "^3.0.7",
-    "jasmine-core": "^2.7.0",
+    "jasmine-core": "^3.0.0",
     "jasmine-enzyme": "^3.8.3",
     "jsdoc": "^3.4.0",
     "karma": "^1.1.0",
