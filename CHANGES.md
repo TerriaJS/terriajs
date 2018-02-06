@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### 5.#.#
+
+* Add previous and next buttons to workbench catalog item time picker.
+
 ### 5.6.0
 
 * Upgraded to Cesium 1.41.
