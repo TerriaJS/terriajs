@@ -53,9 +53,10 @@
 }
 
 .timelineDatePicker {
-  display: table-cell;
-  width: 29px;
   color: #fff;
+  display: table-cell;
+  width: 30px;
+  height: 30px;
 }
 
 .datePicker {
@@ -72,7 +73,7 @@
 
   &.openBelow{
     top: 40px;
-    left: 0;
+    left: -170px;
   }
 }
 
@@ -81,7 +82,7 @@
   margin-top: -10px;
 }
 
-.backbutton, .togglebutton, .backbtn {
+.backbutton, .backbtn {
   composes: btn from '../../../Sass/common/_buttons.scss';
   composes: btn-transparent from '../../../Sass/common/_buttons.scss';
   display: inline-block;
@@ -107,7 +108,19 @@
 }
 
 .togglebutton {
-    margin-top: 5px;
+  padding: 0px 5px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 0;
+  height: 30px;
+  width: 30px;
+  margin-right: 5px;
+  svg {
+    width: 18px;
+    height: 18px;
+    float: left;
+    fill: #fff;
+  }
 }
 
 .grid {

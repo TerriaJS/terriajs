@@ -14,16 +14,16 @@
 .datetimeAndPicker {
 	float: left;
   position: relative;
-	// TODO: rewrite this properly.
-	width: 200px;
-	height: 30px;
+	width: 235px;
+	height: 31px;
 	background-color: #555;
-	border: $grey 0.5px solid;
-  padding: 0px 5px;
+  background: rgba(250, 250, 250, 0.2);
 }
 
 .picker {
 	float: right;
+  position: absolute;
+  right: -42px;
 }
 
 .time {
@@ -32,23 +32,19 @@
 
 .timeline-button {
   composes: btn from '../../../Sass/common/_buttons.scss';
-  composes: btn--secondary from '../../../Sass/common/_buttons.scss';
-
-  // TODO: fix.
+  cursor: pointer;
+  background: rgba(250, 250, 250, 0.2);
   float: right;
-  padding: 4px;
-
-  // line-height: $input-height;
-  // font-size: $font-size-mid-small;
-  // padding: 0;
-  // svg{
-  //   position: absolute;
-  //   left: $padding-small;
-  //   height: $input-height;
-  //   width: $input-height;
-  //   display: block;
-  //   fill: #ffffff;
-  // }
+  padding: 0 5px;
+  width: 30px;
+  height: 30px;
+  svg {
+    width: 20px;
+    height: 20px;
+    float: left;
+    padding: 5px 0;
+    fill: #fff;
+  }
 }
 
 .timeline-active {
@@ -61,5 +57,46 @@
 }
 
 .currentDate{
-  line-height: 2.5;
+  line-height: 2.2;
+  left: 0;
+  position: absolute;
+  right: 0;
+  text-align: center;
+  z-index: 0;
+}
+
+.datetimePrev, .datetimeNxt{
+  composes: btn from '../../../Sass/common/_buttons.scss';
+  padding: 5px 10px;
+  fill: #fff;
+  width: 30px;
+  position: absolute;
+  cursor: pointer;
+  background: rgba(250, 250, 250, 0.2);
+  z-index: 10;
+  &:hover{
+    background: rgba(250, 250, 250, 0.4);
+  }
+  &[disabled], &[disabled]:hover, &[disabled]:focus{
+    opacity: 0.4;
+    cursor: default;
+    outline: 0;
+    background: rgba(250, 250, 250, 0.2);
+  }
+  svg {
+    width: 8px;
+    height: 8px;
+    float: left;
+    padding: 6px 0;
+  }
+}
+
+.datetimePrev{
+  left: 0;
+  border-right: 1px solid #fff;
+}
+
+.datetimeNxt{
+  right: 0;
+  border-left: 1px solid #fff;
 }
