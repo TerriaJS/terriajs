@@ -945,7 +945,7 @@ describe('CsvCatalogItem with region mapping', function() {
         csvItem.load().then(function() {
             var regionMapping = csvItem.regionMapping;
             var j = JulianDate.fromIso8601;
-            regionMapping._catalogItem.terria.clock.currentTime = j('2015-08-08');
+            regionMapping._catalogItem.clock.currentTime = j('2015-08-08');
             csvItem.isEnabled = true;
             var regionDetails = regionMapping.regionDetails;
             expect(regionDetails).toBeDefined();
@@ -973,7 +973,7 @@ describe('CsvCatalogItem with region mapping', function() {
         csvItem.load().then(function() {
             var regionMapping = csvItem.regionMapping;
             var j = JulianDate.fromIso8601;
-            regionMapping._catalogItem.terria.clock.currentTime = j('2015-08-08');
+            regionMapping._catalogItem.clock.currentTime = j('2015-08-08');
             csvItem.isEnabled = true;
             var regionDetails = regionMapping.regionDetails;
             expect(regionDetails).toBeDefined();
@@ -1004,7 +1004,7 @@ describe('CsvCatalogItem with region mapping', function() {
             var j = JulianDate.fromIso8601;
             var nineOclock = j('2015-08-08'); // midnight local time
             JulianDate.addHours(nineOclock, 9, nineOclock);
-            regionMapping._catalogItem.terria.clock.currentTime = nineOclock;
+            regionMapping._catalogItem.clock.currentTime = nineOclock;
             csvItem.isEnabled = true;
             var regionDetails = regionMapping.regionDetails;
             expect(regionDetails).toBeDefined();

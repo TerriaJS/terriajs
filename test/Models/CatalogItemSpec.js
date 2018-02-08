@@ -61,8 +61,9 @@ describe('CatalogItem', function () {
 
         describe('when item has clock', function() {
             beforeEach(function() {
-               item.clock = {
-                   getValue: jasmine.createSpy('getValue')
+                item.clock = {
+                    getValue: jasmine.createSpy('getValue'),
+                    definitionChanged: {addEventListener: jasmine.createSpy('addEventListener')}
                };
             });
 
@@ -206,14 +207,6 @@ describe('CatalogItem', function () {
                     expect(item.nowViewingCatalogItem.isEnabled).toBe(true);
                 }).then(done).otherwise(fail);
             });
-        });
-    });
-
-    describe('clockForDisplay', function() {
-        it('returns terria.clock if its own clock is undefined', function() {
-            item.useOwnClock = true;
-            item.clock = undefined;
-            expect(item.clockForDisplay).toBe(item.terria.clock);
         });
     });
 });
