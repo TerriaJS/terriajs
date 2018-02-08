@@ -73,7 +73,7 @@
 
   &.openBelow{
     top: 40px;
-    left: -170px;
+    left: -190px;
   }
 }
 
@@ -108,9 +108,9 @@
 }
 
 .togglebutton {
+  background: transparent;
   padding: 0px 5px;
   border-radius: 2px;
-  background: rgba(255, 255, 255, 0.2);
   border: 0;
   height: 30px;
   width: 30px;
