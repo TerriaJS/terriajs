@@ -10,6 +10,7 @@ import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 import ClockRange from 'terriajs-cesium/Source/Core/ClockRange';
 import JulianDate from 'terriajs-cesium/Source/Core/JulianDate';
 
+import ObserveModelMixin from '../../ObserveModelMixin';
 import TimelineControls from './TimelineControls';
 import CesiumTimeline from './CesiumTimeline';
 import DateTimePicker from './DateTimePicker';
@@ -18,6 +19,9 @@ import {formatDateTime} from './DateFormats';
 import Styles from './timeline.scss';
 
 const Timeline = createReactClass({
+    displayName: 'Timeline',
+    mixins: [ObserveModelMixin],
+
     propTypes: {
         terria: PropTypes.object.isRequired,
         autoPlay: PropTypes.bool,

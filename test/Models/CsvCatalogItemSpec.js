@@ -394,12 +394,12 @@ describe('CsvCatalogItem with lat and lon', function() {
 
             expect(intervals.length).toBe(6); // 13 rows over 6 days
 
-            // interval length is 1 houor
+            // interval length is 1 hour
             expect(intervals.get(0).start).toEqual(JulianDate.fromIso8601('2015-08-01'));
-            expect(intervals.get(0).stop).toEqual(JulianDate.fromIso8601('2015-08-01T01:00'));
+            expect(intervals.get(0).stop).toEqual(JulianDate.fromIso8601('2015-08-01T01:00Z'));
 
             expect(intervals.start).toEqual(JulianDate.fromIso8601('2015-08-01'));
-            expect(intervals.stop).toEqual(JulianDate.fromIso8601('2015-08-06T01:00'));
+            expect(intervals.stop).toEqual(JulianDate.fromIso8601('2015-08-06T01:00Z'));
         }).otherwise(fail).then(done);
     });
 

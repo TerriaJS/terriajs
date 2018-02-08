@@ -3,6 +3,14 @@
 Change Log
 ==========
 
+### 5.6.1
+
+* Fixed a bug that could cause the workbench UI to hang when toggling concepts, particularly for an `SdmxJsonCatalogItem`.
+
+### 5.6.0
+
+* Upgraded to Cesium 1.41.
+
 ### 5.5.7
 
 * Added support for using tokens to access WMS layers, particularly using the WMS interface to ArcGIS servers.
