@@ -107,7 +107,7 @@ const Timeline = createReactClass({
                 </div>
                 <div className={Styles.controlsRow}>
                     <TimelineControls clock={terria.clock} analytics={terria.analytics} currentViewer={terria.currentViewer} />
-                    <If condition={defined(catalogItem.discreteTime) && defined(catalogItem.availableDates)}>
+                    <If condition={defined(catalogItem.availableDates)}>
                         <DateTimePicker currentDate={catalogItem.discreteTime} dates={catalogItem.availableDates} onChange={this.changeDateTime} openDirection='up'/>
                     </If>
                     <CesiumTimeline terria={terria} />
