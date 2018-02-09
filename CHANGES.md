@@ -6,7 +6,7 @@ Change Log
 ### 5.6.1
 
 * Fixed a bug that could cause the workbench UI to hang when toggling concepts, particularly for an `SdmxJsonCatalogItem`.
-* Added previous and next buttons to workbench catalog item time picker.
+* Added previous and next buttons to workbench catalog item date picker.
 
 ### 5.6.0
 
