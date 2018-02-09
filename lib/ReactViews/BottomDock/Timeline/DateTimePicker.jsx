@@ -308,7 +308,6 @@ const DateTimePicker = createReactClass({
         if (this.props.dates) {
             const datesObject = this.state.datesObject;
             return (
-
                 <div className={Styles.timelineDatePicker} onClick={(event) => { event.stopPropagation(); }}>
                     <button className={Styles.togglebutton} onClick={() => { this.toggleDatePicker(); }}><Icon glyph={Icon.GLYPHS.calendar} /></button>
                     {this.state.isOpen && <div className={classNames(Styles.datePicker, { [Styles.openBelow]: this.props.openDirection === 'down' })}>
