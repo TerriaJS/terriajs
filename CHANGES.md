@@ -3,6 +3,12 @@
 Change Log
 ==========
 
+
+### 5.#.#
+
+* Fixed a bug that could cause split WMS layers to show the incorrect layer data for the date shown in the workbench.
+* Refactored current time handling for `CatalogItem` to reduce the complexity and number of duplicated current time states.
+
 ### 5.6.1
 
 * Fixed a bug that could cause the workbench UI to hang when toggling concepts, particularly for an `SdmxJsonCatalogItem`.
