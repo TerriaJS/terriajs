@@ -3,6 +3,12 @@
 Change Log
 ==========
 
+### 5.6.2
+
+* Renamed search marker to location marker.
+* Added the clicked coordinates to the bottom of the feature info panel. Clicking the marker icon will cause the location to be indicated on the map.
+* The location marker is now included in shared map views.
+
 ### 5.6.1
 
 * Fixed a bug that could cause the workbench UI to hang when toggling concepts, particularly for an `SdmxJsonCatalogItem`.
@@ -83,12 +89,6 @@ Change Log
 * Added `initFragmentPaths` property to the `parameters` section of `config.json`.  It can be used to specify an array of base paths for resolving init fragments in the URL.
 * Modified `CkanCatalogItem` to exclude files that advertise themselves as KML files but have the file extension .ZIP.
 * Removed "View full size image" link on the share panel.  Chrome 60 removed the ability to navigate to a data URI, and other browsers are expected to follow this lead.
-
-### 5.#.#
-
-* Renamed search marker to location marker.
-* Added location marker to share state.
-* Added selected coordinate to feature info panel.
 
 ### 5.4.0
 
