@@ -1,6 +1,7 @@
 'use strict';
 
 /*global require,describe,it,expect*/
+var JulianDate = require('terriajs-cesium/Source/Core/JulianDate');
 var TableColumn = require('../../lib/Map/TableColumn');
 var VarType = require('../../lib/Map/VarType');
 var VarSubType = require('../../lib/Map/VarSubType');
@@ -74,18 +75,18 @@ describe('TableColumn', function() {
     });
 
     it('can detect time type from yyyy-mm-dd', function() {
+        // Dates in this format are interpreted as midnight _UTC_ on the date.
         var data = ['2016-01-03', null, '2016-01-04'];
         var tableColumn = new TableColumn('date', data.slice());
         expect(tableColumn.type).toEqual(VarType.TIME);
         expect(tableColumn.values.slice()).toEqual(data);
-        // don't test equality using new Date() because different browsers handle timezones differently
-        // so just check the date is right.
-        expect(tableColumn.dates[0].getDate()).toEqual(3);
-        expect(tableColumn.dates[0].getMonth()).toEqual(0); // January is month 0
-        expect(tableColumn.dates[0].getFullYear()).toEqual(2016);
+
+        var expected = JulianDate.toDate(JulianDate.fromIso8601('2016-01-03'));
+        expect(tableColumn.dates[0]).toEqual(expected);
     });
 
     it('can detect time type from dd-mm-yyyy', function() {
+        // Dates in this format are interpreted as midnight _local time_ on the date.
         var data = ['31-12-2015', '04-01-2016', null];
         var tableColumn = new TableColumn('date', data.slice());
         expect(tableColumn.type).toEqual(VarType.TIME);
@@ -96,6 +97,7 @@ describe('TableColumn', function() {
     });
 
     it('can detect time type from mm-dd-yyyy', function() {
+        // Dates in this format are interpreted as midnight _local time_ on the date.
         var data = ['12-31-2015', '01-04-2016', null];
         var tableColumn = new TableColumn('date', data.slice());
         expect(tableColumn.type).toEqual(VarType.TIME);
@@ -133,13 +135,13 @@ describe('TableColumn', function() {
     });
 
     it('can detect time type from yyyy-mm', function() {
+        // Dates in this format are interpreted as midnight _UTC_ on the date.
         var data = ['2010-01', '2010-02', '2010-03', null, '2010-04'];
         var tableColumn = new TableColumn('date', data.slice());
         expect(tableColumn.type).toEqual(VarType.TIME);
         expect(tableColumn.values.slice()).toEqual(data);
-        expect(tableColumn.dates[1].getDate()).toEqual(1);
-        expect(tableColumn.dates[1].getMonth()).toEqual(1); // January is month 0
-        expect(tableColumn.dates[1].getFullYear()).toEqual(2010);
+        var expected = JulianDate.toDate(JulianDate.fromIso8601('2010-02'));
+        expect(tableColumn.dates[1]).toEqual(expected);
     });
 
     // This format can actually work, but we don't want to encourage it.
