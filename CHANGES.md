@@ -3,6 +3,12 @@
 Change Log
 ==========
 
+### 5.6.2
+
+* Renamed search marker to location marker.
+* Added the clicked coordinates to the bottom of the feature info panel. Clicking the marker icon will cause the location to be indicated on the map.
+* The location marker is now included in shared map views.
+
 ### 5.6.1
 
 * Fixed a bug that could cause the workbench UI to hang when toggling concepts, particularly for an `SdmxJsonCatalogItem`.
