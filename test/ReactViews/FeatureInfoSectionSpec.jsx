@@ -38,7 +38,7 @@ function findAllWithHref(reactElement, text) {
     return findAll(reactElement, (element) => element && element.props && element.props.href === text);
 }
 
-// Takes the absolute value of the value and pads it to 2 digits i.e. 7->07, 17->17, -3->3, -13->13. It is expected that value is an integer is in the range [-99, 99].
+// Takes the absolute value of the value and pads it to 2 digits i.e. 7->07, 17->17, -3->3, -13->13. It is expected that value is an integer is in the range [0, 99].
 function absPad2(value) {
     return ((Math.abs(value) < 10) ? "0" : "") + Math.abs(value);
 }
