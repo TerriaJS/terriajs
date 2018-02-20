@@ -262,7 +262,7 @@ const FeatureInfoSection = createReactClass({
  */
 function clockIfAvaliable(featureInfoSection) {
     if (defined(featureInfoSection.props.catalogItem)) {
-        return featureInfoSection.props.catalogItem.clockForDisplay;
+        return featureInfoSection.props.catalogItem.clock;
     }
 
     return undefined;
@@ -448,7 +448,8 @@ function setCurrentFeatureValues(feature, clock) {
     if (newProperties !== feature.currentProperties) {
         feature.currentProperties = newProperties;
     }
-    const newDescription = getCurrentDescription(feature, clock.currentTime);
+    const currentTime = defined(clock) ? clock.currentTime : undefined;
+    const newDescription = getCurrentDescription(feature, currentTime);
     if (newDescription !== feature.currentDescription) {
         feature.currentDescription = newDescription;
     }

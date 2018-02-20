@@ -35,7 +35,7 @@ Option                      | Meaning
 `"brandBarElements": [ ]`   | An array of strings of HTML that fill up the top left logo space.
 `"defaultMaximumShownFeatureInfos"` | The maximum number of "feature info" boxes that can be displayed when clicking a point. (Default: 100)
 `"disclaimer": {`<span><br/>&nbsp;&nbsp;`"text": "",`<br/>&nbsp;&nbsp;`"url": ""`<br/>`}`</span> | This text will be displayed prominently at the bottom of the map, with a clickable link to the URL.
-`"feedbackUrl"`					| URL of the service used to send feedback.  If not specified, the "Give Feedback" button will not appear. | None 
+`"feedbackUrl"`					| URL of the service used to send feedback.  If not specified, the "Give Feedback" button will not appear. | None
 `"googleAnalyticsKey"`      | A Google API key for [Google Analytics](https://analytics.google.com).  If specified, TerriaJS will send various events about how it's used to Google Analytics.
 `"googleAnalyticsOptions"`  | Additional options that will be passed to the Google Analytics call.
 `"printDisclaimer": {`<span><br/>&nbsp;&nbsp;`"text": "",`<br/>&nbsp;&nbsp;`"url": ""`<br/>`}`</span> | Same as `disclaimer`, except only shown in printed views.
@@ -44,6 +44,7 @@ Option                      | Meaning
 `"initFragmentPaths"`       | An array of base paths to use to try to use to resolve init fragments in the URL.  For example, if this property is `[ "init/", "http://example.com/init/"]`, then a URL with `#test` will first try to load `init/test.json` and, if that fails, next try to load `http://example.com/init/test.json`.  If not specified, this property defaults to `[ "init/" ]`.
 `"disableMyLocation"`       | True to disable the "go to my location" button.
 `"disableSplitter"`         | True to disable the use of the splitter control.
+`"tabbedCatalog"`           | True to create a separate explorer panel tab for each top-level catalog group to list its items in.
 
 ## Advanced options
 

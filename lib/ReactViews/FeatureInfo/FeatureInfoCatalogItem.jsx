@@ -72,7 +72,7 @@ const FeatureInfoCatalogItem = createReactClass({
                         The first {maximumShownFeatureInfos} are shown below.
                       </li>
                     </If>
-                    
+
                     {featureInfoSections}
                 </ul>
             </li>
