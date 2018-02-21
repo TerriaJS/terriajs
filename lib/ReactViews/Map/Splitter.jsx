@@ -80,9 +80,8 @@ const Splitter = createReactClass({
         const container = viewer.getContainer();
         const mapRect = container.getBoundingClientRect();
 
-        var that = this;
-        function computeSplitFraction(startBound, endBound, position)
-        {
+        const that = this;
+        function computeSplitFraction(startBound, endBound, position) {
             const difference = endBound - startBound;
             const fraction = (position - startBound) / difference;
 
