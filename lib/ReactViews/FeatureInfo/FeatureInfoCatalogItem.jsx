@@ -48,7 +48,7 @@ const FeatureInfoCatalogItem = createReactClass({
                         catalogItem={catalogItem}
                         feature={feature}
                         position={terria.pickedFeatures && terria.pickedFeatures.pickPosition}
-                        clock={catalogItem.clockForDisplay}
+                        clock={catalogItem.clock}
                         template={featureInfoTemplate}
                         isOpen={feature === terria.selectedFeature}
                         onClickHeader={this.props.onToggleOpen}
@@ -73,7 +73,7 @@ const FeatureInfoCatalogItem = createReactClass({
                         The first {maximumShownFeatureInfos} are shown below.
                       </li>
                     </If>
-                    
+
                     {featureInfoSections}
                 </ul>
             </li>

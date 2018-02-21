@@ -8,6 +8,8 @@ Change Log
 * Renamed search marker to location marker.
 * Added the clicked coordinates to the bottom of the feature info panel. Clicking the marker icon will cause the location to be indicated on the map.
 * The location marker is now included in shared map views.
+* Fixed a bug that could cause split WMS layers to show the incorrect layer data for the date shown in the workbench.
+* Refactored current time handling for `CatalogItem` to reduce the complexity and number of duplicated current time states.
 
 ### 5.6.1
 

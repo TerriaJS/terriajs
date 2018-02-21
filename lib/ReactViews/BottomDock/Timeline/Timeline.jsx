@@ -13,7 +13,7 @@ import JulianDate from 'terriajs-cesium/Source/Core/JulianDate';
 import ObserveModelMixin from '../../ObserveModelMixin';
 import TimelineControls from './TimelineControls';
 import CesiumTimeline from './CesiumTimeline';
-import CatalogItemDateTimePicker from './CatalogItemDateTimePicker';
+import DateTimePicker from './DateTimePicker';
 import {formatDateTime} from './DateFormats';
 
 import Styles from './timeline.scss';
@@ -97,12 +97,8 @@ const Timeline = createReactClass({
     render() {
         const terria = this.props.terria;
         const catalogItem = terria.timeSeriesStack.topLayer;
-        let availableDates;
         if (!defined(catalogItem)) {
             return null;
-        }
-        if (defined(catalogItem.intervals)) {
-            availableDates = catalogItem.availableDates;
         }
         return (
             <div className={Styles.timeline}>
@@ -111,8 +107,8 @@ const Timeline = createReactClass({
                 </div>
                 <div className={Styles.controlsRow}>
                     <TimelineControls clock={terria.clock} analytics={terria.analytics} currentViewer={terria.currentViewer} />
-                    <If condition={availableDates}>
-                        <CatalogItemDateTimePicker item={catalogItem} onChange={this.changeDateTime} openDirection='up'/>
+                    <If condition={defined(catalogItem.availableDates)}>
+                        <DateTimePicker currentDate={catalogItem.discreteTime} dates={catalogItem.availableDates} onChange={this.changeDateTime} openDirection='up'/>
                     </If>
                     <CesiumTimeline terria={terria} />
                 </div>

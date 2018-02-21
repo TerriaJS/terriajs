@@ -272,7 +272,7 @@ function setSubscriptionsAndTimeouts(featureInfoSection, feature) {
         setCurrentFeatureValues(changedFeature, featureInfoSection.props.clock);
     });
     if (featureInfoSection.isFeatureTimeVarying(feature)) {
-        if (defined(featureInfoSection.props.clock.onTick)) {
+        if (defined(featureInfoSection.props.clock) && defined(featureInfoSection.props.clock.onTick)) {
             featureInfoSection.setState({
                 removeClockSubscription: featureInfoSection.props.clock.onTick.addEventListener(function(clock) {
                     setCurrentFeatureValues(feature, clock);
@@ -420,7 +420,8 @@ function setCurrentFeatureValues(feature, clock) {
     if (newProperties !== feature.currentProperties) {
         feature.currentProperties = newProperties;
     }
-    const newDescription = getCurrentDescription(feature, clock.currentTime);
+    const currentTime = defined(clock) ? clock.currentTime : undefined;
+    const newDescription = getCurrentDescription(feature, currentTime);
     if (newDescription !== feature.currentDescription) {
         feature.currentDescription = newDescription;
     }
