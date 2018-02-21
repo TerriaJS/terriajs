@@ -7,7 +7,7 @@ import BadgeBar from '../BadgeBar.jsx';
 import Styles from './sidebar-search.scss';
 import LocationSearchResults from './LocationSearchResults.jsx';
 
-import {addMarker} from './SearchMarkerUtils';
+import {addMarker} from '../../Models/LocationMarkerUtils';
 
 // Handle any of the three kinds of search based on the props
 const SidebarSearch = createReactClass({
@@ -29,7 +29,7 @@ const SidebarSearch = createReactClass({
     },
 
     onLocationClick(result) {
-        addMarker(this.props.terria, this.props.viewState, result);
+        addMarker(this.props.terria, result);
         result.clickAction();
     },
 

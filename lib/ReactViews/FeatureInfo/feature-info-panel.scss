@@ -128,3 +128,35 @@
     max-height: none;
   }
 }
+
+.location {
+  margin: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.btn-location {
+  composes: btn from '../../Sass/common/_buttons.scss';
+  vertical-align: bottom;
+  margin-left: 5px;
+
+  &:hover {
+    svg{
+      fill: $color-primary;
+    }
+  }
+  svg{
+    height: 18px;
+    width: 18px;
+    fill: $feature-info-btn-color;
+  }
+}
+
+.btn-location-selected {
+  composes: btn-location;
+
+  svg{
+    fill: $color-primary;
+  }
+}

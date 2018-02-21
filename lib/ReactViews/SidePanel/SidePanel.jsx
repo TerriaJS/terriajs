@@ -11,7 +11,7 @@ import SearchBox from '../Search/SearchBox.jsx';
 import SidebarSearch from '../Search/SidebarSearch.jsx';
 import Workbench from '../Workbench/Workbench.jsx';
 import Icon from "../Icon.jsx";
-import { removeMarker } from '../Search/SearchMarkerUtils';
+import { removeMarker } from '../../Models/LocationMarkerUtils';
 
 import Styles from './side-panel.scss';
 
@@ -60,7 +60,7 @@ const SidePanel = createReactClass({
         this.props.viewState.searchState.locationSearchText = newText;
 
         if (newText.length === 0) {
-            removeMarker(this.props.terria, this.props.viewState);
+            removeMarker(this.props.terria);
         }
     },
 

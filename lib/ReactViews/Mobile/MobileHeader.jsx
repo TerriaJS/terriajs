@@ -9,7 +9,7 @@ import Styles from './mobile-header.scss';
 import Icon from "../Icon.jsx";
 import MobileMenu from './MobileMenu';
 import classNames from 'classnames';
-import { removeMarker } from '../Search/SearchMarkerUtils';
+import { removeMarker } from '../../Models/LocationMarkerUtils';
 
 const MobileHeader = createReactClass({
     displayName: 'MobileHeader',
@@ -63,7 +63,7 @@ const MobileHeader = createReactClass({
         this.props.viewState.searchState.locationSearchText = newText;
 
         if (newText.length === 0) {
-            removeMarker(this.props.terria, this.props.viewState);
+            removeMarker(this.props.terria);
         }
 
         this.showLocationSearchResults();
