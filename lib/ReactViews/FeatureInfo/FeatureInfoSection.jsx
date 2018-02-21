@@ -291,7 +291,7 @@ function setSubscriptionsAndTimeouts(featureInfoSection, feature) {
 function removeSubscriptionsAndTimeouts(featureInfoSection) {
     if (defined(featureInfoSection.state.removeClockSubscription)) {
         featureInfoSection.state.removeClockSubscription();
-        featureInfoSection.setState({removeClockSubscription: undefined})
+        featureInfoSection.setState({removeClockSubscription: undefined});
     }
     featureInfoSection.state.timeoutIds.forEach(id => {
         clearTimeout(id);
