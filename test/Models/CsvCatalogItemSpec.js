@@ -394,12 +394,12 @@ describe('CsvCatalogItem with lat and lon', function() {
 
             expect(intervals.length).toBe(6); // 13 rows over 6 days
 
-            // interval length is 1 houor
+            // interval length is 1 hour
             expect(intervals.get(0).start).toEqual(JulianDate.fromIso8601('2015-08-01'));
-            expect(intervals.get(0).stop).toEqual(JulianDate.fromIso8601('2015-08-01T01:00'));
+            expect(intervals.get(0).stop).toEqual(JulianDate.fromIso8601('2015-08-01T01:00Z'));
 
             expect(intervals.start).toEqual(JulianDate.fromIso8601('2015-08-01'));
-            expect(intervals.stop).toEqual(JulianDate.fromIso8601('2015-08-06T01:00'));
+            expect(intervals.stop).toEqual(JulianDate.fromIso8601('2015-08-06T01:00Z'));
         }).otherwise(fail).then(done);
     });
 
@@ -945,7 +945,7 @@ describe('CsvCatalogItem with region mapping', function() {
         csvItem.load().then(function() {
             var regionMapping = csvItem.regionMapping;
             var j = JulianDate.fromIso8601;
-            regionMapping._catalogItem.terria.clock.currentTime = j('2015-08-08');
+            regionMapping._catalogItem.clock.currentTime = j('2015-08-08');
             csvItem.isEnabled = true;
             var regionDetails = regionMapping.regionDetails;
             expect(regionDetails).toBeDefined();
@@ -973,7 +973,7 @@ describe('CsvCatalogItem with region mapping', function() {
         csvItem.load().then(function() {
             var regionMapping = csvItem.regionMapping;
             var j = JulianDate.fromIso8601;
-            regionMapping._catalogItem.terria.clock.currentTime = j('2015-08-08');
+            regionMapping._catalogItem.clock.currentTime = j('2015-08-08');
             csvItem.isEnabled = true;
             var regionDetails = regionMapping.regionDetails;
             expect(regionDetails).toBeDefined();
@@ -1004,7 +1004,7 @@ describe('CsvCatalogItem with region mapping', function() {
             var j = JulianDate.fromIso8601;
             var nineOclock = j('2015-08-08'); // midnight local time
             JulianDate.addHours(nineOclock, 9, nineOclock);
-            regionMapping._catalogItem.terria.clock.currentTime = nineOclock;
+            regionMapping._catalogItem.clock.currentTime = nineOclock;
             csvItem.isEnabled = true;
             var regionDetails = regionMapping.regionDetails;
             expect(regionDetails).toBeDefined();
