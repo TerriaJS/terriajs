@@ -94,7 +94,9 @@ const Splitter = createReactClass({
             return Math.min(maxFraction, Math.max(minFraction, fraction));
         }
         const splitFractionX = computeSplitFraction(mapRect.left, mapRect.right, clientX);
-        const splitFractionY = computeSplitFraction(mapRect.top, mapRect.bottom, clientY);
+        let splitFractionY = computeSplitFraction(mapRect.top, mapRect.bottom, clientY);
+        // Resctrict to within +/-35% of the center.
+        splitFractionY = Math.min(0.85, Math.max(0.15, splitFractionY));
 
         this.props.terria.splitPosition = splitFractionX;
         this.props.terria.splitPositionVertical = splitFractionY;
