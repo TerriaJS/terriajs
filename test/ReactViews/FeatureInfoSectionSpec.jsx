@@ -11,6 +11,7 @@ import Cartographic from 'terriajs-cesium/Source/Core/Cartographic';
 import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
 import Entity from 'terriajs-cesium/Source/DataSources/Entity';
 import JulianDate from 'terriajs-cesium/Source/Core/JulianDate';
+import loadJson from 'terriajs-cesium/Source/Core/loadJson';
 import TimeInterval from 'terriajs-cesium/Source/Core/TimeInterval';
 import TimeIntervalCollectionProperty from 'terriajs-cesium/Source/DataSources/TimeIntervalCollectionProperty';
 
@@ -19,9 +20,7 @@ import createCatalogMemberFromType from '../../lib/Models/createCatalogMemberFro
 import CatalogGroup from '../../lib/Models/CatalogGroup';
 import CzmlCatalogItem from '../../lib/Models/CzmlCatalogItem';
 import FeatureInfoSection from '../../lib/ReactViews/FeatureInfo/FeatureInfoSection';
-import loadJson from 'terriajs-cesium/Source/Core/loadJson';
 import Terria from '../../lib/Models/Terria';
-
 import Styles from '../../lib/ReactViews/FeatureInfo/feature-info-section.scss';
 
 let separator = ',';
