@@ -257,7 +257,7 @@ const FeatureInfoSection = createReactClass({
  *    Eg. <chart poll-seconds="60" src="xyz.csv"> must reload data from xyz.csv every 60 seconds.
  * 3. When a catalog item changes a feature's properties, eg. changing from a daily view to a monthly view.
  *
- * For (1), use an event listener on the (terria) clock to update the feature's currentProperties/currentDescription directly.
+ * For (1), use an event listener on the clock to update the feature's currentProperties/currentDescription directly.
  * For (2), use a regular javascript setTimeout to update a counter in feature's currentProperties.
  * For (3), use an event listener on the Feature's underlying Entity's "definitionChanged" event.
  *   Conceivably it could also be handled by the catalog item itself changing, if its change is knockout tracked, and the
@@ -272,16 +272,12 @@ function setSubscriptionsAndTimeouts(featureInfoSection, feature) {
         setCurrentFeatureValues(changedFeature, featureInfoSection.props.clock);
     });
     if (featureInfoSection.isFeatureTimeVarying(feature)) {
-        if (defined(featureInfoSection.props.clock) && defined(featureInfoSection.props.clock.onTick)) {
+        if (defined(featureInfoSection.props.clock) && defined(featureInfoSection.props.clock.definitionChanged)) {
             featureInfoSection.setState({
-                removeClockSubscription: featureInfoSection.props.clock.onTick.addEventListener(function(clock) {
+                removeClockSubscription: featureInfoSection.props.clock.definitionChanged.addEventListener(function(clock) {
                     setCurrentFeatureValues(feature, clock);
                 })
             });
-        } else {
-            // This is probably a DataSourceClock because the catalog item is using its own clock.
-            // But we currently have no way of subscribing to changes to it.
-            // See https://github.com/TerriaJS/terriajs/issues/2736
         }
     } else {
         setTimeoutsForUpdatingCustomComponents(featureInfoSection);
@@ -295,6 +291,7 @@ function setSubscriptionsAndTimeouts(featureInfoSection, feature) {
 function removeSubscriptionsAndTimeouts(featureInfoSection) {
     if (defined(featureInfoSection.state.removeClockSubscription)) {
         featureInfoSection.state.removeClockSubscription();
+        featureInfoSection.setState({removeClockSubscription: undefined});
     }
     featureInfoSection.state.timeoutIds.forEach(id => {
         clearTimeout(id);

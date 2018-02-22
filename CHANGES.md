@@ -10,6 +10,7 @@ Change Log
 * The location marker is now included in shared map views.
 * Fixed a bug that could cause split WMS layers to show the incorrect layer data for the date shown in the workbench.
 * Refactored current time handling for `CatalogItem` to reduce the complexity and number of duplicated current time states.
+* Fixed feature info updating when the time is changed from the workbench for `TableCatalogItem`.
 
 ### 5.6.1
 
