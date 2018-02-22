@@ -8,6 +8,7 @@ import {findAll, findAllWithType, findAllWithClass, findWithRef} from 'react-sha
 import {getShallowRenderedOutput, findAllEqualTo, findAllWithPropsChildEqualTo} from './MoreShallowTools';
 
 import Cartographic from 'terriajs-cesium/Source/Core/Cartographic';
+import DataSourceClock from 'terriajs-cesium/Source/DataSources/DataSourceClock';
 import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
 import Entity from 'terriajs-cesium/Source/DataSources/Entity';
 import JulianDate from 'terriajs-cesium/Source/Core/JulianDate';
@@ -40,12 +41,15 @@ describe('FeatureInfoSection', function() {
     let feature;
     let viewState;
     let initialSubscribers;
+    let clock;
 
     beforeEach(function() {
         terria = new Terria({
             baseUrl: './'
         });
-        initialSubscribers = terria.clock.onTick.numberOfListeners;
+        clock = new DataSourceClock();
+        clock.currentTime = JulianDate.now();
+        initialSubscribers = clock.definitionChanged.numberOfListeners;
         viewState = {}; // Not important for tests, but is a required prop.
         const properties = {
             'name': 'Kay',
@@ -70,7 +74,7 @@ describe('FeatureInfoSection', function() {
             getValue: function() { return '<p>hi!</p>'; },
             isConstant: true
         };
-        const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} viewState={viewState} />;
+        const section = <FeatureInfoSection feature={feature} isOpen={true} viewState={viewState} />;
         const result = getShallowRenderedOutput(section);
         expect(findAllWithType(result, 'p').length).toEqual(1);
         expect(findAllEqualTo(result, 'hi!').length).toEqual(1);
@@ -81,7 +85,7 @@ describe('FeatureInfoSection', function() {
             getValue: function() { return '<script>alert("gotcha")</script><p>hi!</p>'; },
             isConstant: true
         };
-        const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} viewState={viewState} />;
+        const section = <FeatureInfoSection feature={feature} isOpen={true} viewState={viewState} />;
         const result = getShallowRenderedOutput(section);
         expect(findAllWithType(result, 'script').length).toEqual(0);
         expect(findAllEqualTo(result, 'alert("gotcha")').length).toEqual(0);
@@ -98,14 +102,14 @@ describe('FeatureInfoSection', function() {
 
     it('renders a time-varying description', function() {
         feature.description = timeVaryingDescription();
-        terria.clock.currentTime = JulianDate.fromDate(new Date('2011-06-30'));
-        const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} viewState={viewState} />;
+        clock.currentTime = JulianDate.fromDate(new Date('2011-06-30'));
+        const section = <FeatureInfoSection feature={feature} isOpen={true} clock={clock} viewState={viewState} />;
         const result = getShallowRenderedOutput(section);
         expect(findAllEqualTo(result, 'hi').length).toEqual(0);
         expect(findAllEqualTo(result, 'bye').length).toEqual(1);
 
-        terria.clock.currentTime = JulianDate.fromDate(new Date('2010-06-30'));
-        const section2 = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} viewState={viewState} />;
+        clock.currentTime = JulianDate.fromDate(new Date('2010-06-30'));
+        const section2 = <FeatureInfoSection feature={feature} isOpen={true} clock={clock} viewState={viewState} />;
         const result2 = getShallowRenderedOutput(section2);
         expect(findAllEqualTo(result2, 'hi').length).toEqual(1);
         expect(findAllEqualTo(result2, 'bye').length).toEqual(0);
@@ -114,11 +118,11 @@ describe('FeatureInfoSection', function() {
     it('removes any clock event listeners', function() {
         feature.description = timeVaryingDescription();
         const renderer = ReactTestUtils.createRenderer();
-        const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} viewState={viewState} />;
+        const section = <FeatureInfoSection feature={feature} isOpen={true} clock={clock} viewState={viewState} />;
         renderer.render(section);
-        expect(terria.clock.onTick.numberOfListeners).toEqual(initialSubscribers + 1);  // This implementation is not required, but while we have it, keep this test so we know the next one is meaningful.
+        expect(clock.definitionChanged.numberOfListeners).toEqual(initialSubscribers + 1);  // This implementation is not required, but while we have it, keep this test so we know the next one is meaningful.
         renderer.unmount();
-        expect(terria.clock.onTick.numberOfListeners).toEqual(initialSubscribers);  // we do want to be sure that if this is the implementation, we tidy up after ourselves.
+        expect(clock.definitionChanged.numberOfListeners).toEqual(initialSubscribers);  // we do want to be sure that if this is the implementation, we tidy up after ourselves.
     });
 
     it('does not set a clock event listener if no description or properties', function() {
@@ -126,16 +130,16 @@ describe('FeatureInfoSection', function() {
             name: 'Empty'
         });
         const renderer = ReactTestUtils.createRenderer();
-        const section = <FeatureInfoSection feature={emptyFeature} isOpen={true} clock={terria.clock} viewState={viewState} />;
+        const section = <FeatureInfoSection feature={emptyFeature} isOpen={true} clock={clock} viewState={viewState} />;
         renderer.render(section);
-        expect(terria.clock.onTick.numberOfListeners).toEqual(initialSubscribers);
+        expect(clock.definitionChanged.numberOfListeners).toEqual(initialSubscribers);
     });
 
     it('does not set a clock event listener if no description and constant properties', function() {
         const renderer = ReactTestUtils.createRenderer();
-        const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} viewState={viewState} />;
+        const section = <FeatureInfoSection feature={feature} isOpen={true} clock={clock} viewState={viewState} />;
         renderer.render(section);
-        expect(terria.clock.onTick.numberOfListeners).toEqual(initialSubscribers);
+        expect(clock.definitionChanged.numberOfListeners).toEqual(initialSubscribers);
     });
 
     it('handles features with no properties', function() {
@@ -143,7 +147,7 @@ describe('FeatureInfoSection', function() {
             name: 'Foot',
             description: 'bart'
         });
-        const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} viewState={viewState} />;
+        const section = <FeatureInfoSection feature={feature} isOpen={true} viewState={viewState} />;
         const result = getShallowRenderedOutput(section);
         expect(findAllEqualTo(result, 'Foot').length).toEqual(1);
         expect(findAllEqualTo(result, 'bart').length).toEqual(1);
@@ -154,7 +158,7 @@ describe('FeatureInfoSection', function() {
             name: 'Foo',
             description: '<html><head><title>GetFeatureInfo</title></head><body><table><tr><th>thing</th></tr><tr><td>BAR</td></tr></table><br/></body></html>'
         });
-        const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} viewState={viewState} />;
+        const section = <FeatureInfoSection feature={feature} isOpen={true} viewState={viewState} />;
         const result = getShallowRenderedOutput(section);
         expect(findAllEqualTo(result, 'Foo').length).toEqual(1);
         expect(findAllEqualTo(result, 'BAR').length).toEqual(1);
@@ -166,7 +170,7 @@ describe('FeatureInfoSection', function() {
             description: '<html><head><title>GetFeatureInfo</title></head><body><table>\n\n    <tr>\n\n<th>thing</th></tr><tr><td>BAR</td></tr></table><br/></body></html>'
         });
         // Markdown applied to this description would pull out the lonely <tr> and make it <pre><code><tr>\n</code></pre> , so check this doesn't happen.
-        const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} viewState={viewState} />;
+        const section = <FeatureInfoSection feature={feature} isOpen={true} viewState={viewState} />;
         const result = getShallowRenderedOutput(section);
         expect(findAllEqualTo(result, '<tr>\n').length).toEqual(0);
         expect(findAllEqualTo(result, '&lt;\n').length).toEqual(0);  // Also cover the possibility that it might be encoded.
@@ -177,7 +181,7 @@ describe('FeatureInfoSection', function() {
             name: 'Foo',
             description: '<div style="background:rgb(170, 187, 204)">countdown</div>'
         });
-        const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} viewState={viewState} />;
+        const section = <FeatureInfoSection feature={feature} isOpen={true} viewState={viewState} />;
         const result = getShallowRenderedOutput(section);
         const divs = findAllWithPropsChildEqualTo(result, 'countdown');
         expect(divs.length).toEqual(1);
@@ -191,7 +195,7 @@ describe('FeatureInfoSection', function() {
             name: 'Foo',
             description: '<html><head><title>GetFeatureInfo</title></head><style>table.info tr {background:#fff;}</style><body><table class="info"><tr><th>thing</th></tr><tr><td>BAR</td></tr></table><br/></body></html>'
         });
-        const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} viewState={viewState} />;
+        const section = <FeatureInfoSection feature={feature} isOpen={true} viewState={viewState} />;
         const result = getShallowRenderedOutput(section);
         expect(findAllEqualTo(result, 'Foo').length).toEqual(1);
         expect(findAllEqualTo(result, 'BAR').length).toEqual(1);
@@ -201,7 +205,7 @@ describe('FeatureInfoSection', function() {
         feature = new Entity({
             name: 'Vapid'
         });
-        const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} viewState={viewState} />;
+        const section = <FeatureInfoSection feature={feature} isOpen={true} viewState={viewState} />;
         const result = getShallowRenderedOutput(section);
         expect(findAllEqualTo(result, 'Vapid').length).toEqual(1);
         expect(findWithRef(result, 'no-info')).toBeDefined();
@@ -220,7 +224,7 @@ describe('FeatureInfoSection', function() {
                 }
             }
         });
-        const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} viewState={viewState} />;
+        const section = <FeatureInfoSection feature={feature} isOpen={true} viewState={viewState} />;
         const result = getShallowRenderedOutput(section);
         expect(findAllEqualTo(result, 'Meals').length).toEqual(1);
         expect(findAllEqualTo(result, 'lunch').length).toEqual(1);
@@ -233,28 +237,28 @@ describe('FeatureInfoSection', function() {
 
         it('uses and completes a string-form featureInfoTemplate if present', function() {
             const template = 'This is a {{material}} {{foo}}.';
-            const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template} viewState={viewState} />;
+            const section = <FeatureInfoSection feature={feature} isOpen={true} template={template} viewState={viewState} />;
             const result = getShallowRenderedOutput(section);
             expect(findAllEqualTo(result, 'This is a steel bar.').length).toEqual(1);
         });
 
         it('can use _ to refer to . and # in property keys in the featureInfoTemplate', function() {
             const template = 'Made from {{material_process__1}} {{material}}.';
-            const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template} viewState={viewState} />;
+            const section = <FeatureInfoSection feature={feature} isOpen={true}  template={template} viewState={viewState} />;
             const result = getShallowRenderedOutput(section);
             expect(findAllEqualTo(result, 'Made from smelted steel.').length).toEqual(1);
         });
 
         it('formats large numbers without commas', function() {
             const template = 'Size: {{size}}';
-            const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template} viewState={viewState} />;
+            const section = <FeatureInfoSection feature={feature} isOpen={true} template={template} viewState={viewState} />;
             const result = getShallowRenderedOutput(section);
             expect(findAllEqualTo(result, 'Size: 12345678.9012').length).toEqual(1);
         });
 
         it('can format numbers with commas', function() {
             const template = {template: 'Size: {{size}}', formats: {size: {useGrouping: true}}};
-            const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template} viewState={viewState} />;
+            const section = <FeatureInfoSection feature={feature} isOpen={true} template={template} viewState={viewState} />;
             const result = getShallowRenderedOutput(section);
             expect(findAllEqualTo(result, 'Size: 12' + separator + '345' + separator + '678.9012').length).toEqual(1);
         });
@@ -263,7 +267,7 @@ describe('FeatureInfoSection', function() {
             let template = 'Base: {{#terria.formatNumber}}{{size}}{{/terria.formatNumber}}';
             template += '  Sep: {{#terria.formatNumber}}{"useGrouping":true, "maximumFractionDigits":3}{{size}}{{/terria.formatNumber}}';
             template += '  DP: {{#terria.formatNumber}}{"maximumFractionDigits":3}{{efficiency}}{{/terria.formatNumber}}';
-            const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template} viewState={viewState} />;
+            const section = <FeatureInfoSection feature={feature} isOpen={true} template={template} viewState={viewState} />;
             const result = getShallowRenderedOutput(section);
             expect(findAllEqualTo(result, 'Base: 12345678.9012  Sep: 12' + separator + '345' + separator + '678.901  DP: 0.235').length).toEqual(1);
         });
@@ -271,42 +275,42 @@ describe('FeatureInfoSection', function() {
         it('can format numbers using terria.formatNumber without quotes', function() {
             let template = 'Sep: {{#terria.formatNumber}}{useGrouping:true, maximumFractionDigits:3}{{size}}{{/terria.formatNumber}}';
             template += '  DP: {{#terria.formatNumber}}{maximumFractionDigits:3}{{efficiency}}{{/terria.formatNumber}}';
-            const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template} viewState={viewState} />;
+            const section = <FeatureInfoSection feature={feature} isOpen={true} template={template} viewState={viewState} />;
             const result = getShallowRenderedOutput(section);
             expect(findAllEqualTo(result, 'Sep: 12' + separator + '345' + separator + '678.901  DP: 0.235').length).toEqual(1);
         });
 
         it('can handle white text in terria.formatNumber', function() {
             const template = 'Sep: {{#terria.formatNumber}}{"useGrouping":true, "maximumFractionDigits":3} \n {{size}}{{/terria.formatNumber}}';
-            const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template} viewState={viewState} />;
+            const section = <FeatureInfoSection feature={feature} isOpen={true} template={template} viewState={viewState} />;
             const result = getShallowRenderedOutput(section);
             expect(findAllEqualTo(result, 'Sep: 12' + separator + '345' + separator + '678.901').length).toEqual(1);
         });
 
         it('handles non-numbers terria.formatNumber', function() {
             const template = 'Test: {{#terria.formatNumber}}text{{/terria.formatNumber}}';
-            const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template} viewState={viewState} />;
+            const section = <FeatureInfoSection feature={feature} isOpen={true} template={template} viewState={viewState} />;
             const result = getShallowRenderedOutput(section);
             expect(findAllEqualTo(result, 'Test: text').length).toEqual(1);
         });
 
         it('url encodes text components', function() {
             const template = 'Test: {{#terria.urlEncodeComponent}}W/HO:E#1{{/terria.urlEncodeComponent}}';
-            const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template} viewState={viewState} />;
+            const section = <FeatureInfoSection feature={feature} isOpen={true} template={template} viewState={viewState} />;
             const result = getShallowRenderedOutput(section);
             expect(findAllEqualTo(result, 'Test: W%2FHO%3AE%231').length).toEqual(1);
         });
 
         it('url encodes sections of text', function() {
             const template = 'Test: {{#terria.urlEncode}}http://example.com/a b{{/terria.urlEncode}}';
-            const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template} viewState={viewState} />;
+            const section = <FeatureInfoSection feature={feature} isOpen={true} template={template} viewState={viewState} />;
             const result = getShallowRenderedOutput(section);
             expect(findAllWithHref(result, 'http://example.com/a%20b').length).toEqual(1);
         });
 
         it('does not escape ampersand as &amp;', function() {
             const template = {template: 'Ampersand: {{ampersand}}'};
-            const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template} viewState={viewState} />;
+            const section = <FeatureInfoSection feature={feature} isOpen={true} template={template} viewState={viewState} />;
             const result = getShallowRenderedOutput(section);
             expect(findAllEqualTo(result, 'Ampersand: A & B').length).toEqual(1);
             expect(findAllEqualTo(result, '&amp;').length).toEqual(0);
@@ -314,7 +318,7 @@ describe('FeatureInfoSection', function() {
 
         it('does not escape < as &lt;', function() {
             const template = {template: 'Less than: {{lessThan}}'};
-            const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template} viewState={viewState} />;
+            const section = <FeatureInfoSection feature={feature} isOpen={true} template={template} viewState={viewState} />;
             const result = getShallowRenderedOutput(section);
             expect(findAllEqualTo(result, 'Less than: A < B').length).toEqual(1);
             expect(findAllEqualTo(result, '&lt;').length).toEqual(0);
@@ -322,7 +326,7 @@ describe('FeatureInfoSection', function() {
 
         it('can embed safe html in template', function() {
             const template = '<div>Hello {{owner_html}}.</div>';
-            const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template} viewState={viewState} />;
+            const section = <FeatureInfoSection feature={feature} isOpen={true} template={template} viewState={viewState} />;
             const result = getShallowRenderedOutput(section);
             expect(findAllEqualTo(result, 'Hello Jay').length).toEqual(1);
             expect(findAllWithType(result, 'br').length).toEqual(1);
@@ -331,7 +335,7 @@ describe('FeatureInfoSection', function() {
 
         it('cannot embed unsafe html in template', function() {
             const template = '<div>Hello {{unsafe}}</div>';
-            const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template} viewState={viewState} />;
+            const section = <FeatureInfoSection feature={feature} isOpen={true} template={template} viewState={viewState} />;
             const result = getShallowRenderedOutput(section);
             expect(findAllEqualTo(result, 'Hello ok!').length).toEqual(1);
             expect(findAllWithType(result, 'script').length).toEqual(0);
@@ -340,7 +344,7 @@ describe('FeatureInfoSection', function() {
 
         it('can use a json featureInfoTemplate with partials', function() {
             const template = {template: '<div class="jj">test {{>boldfoo}}</div>', partials: {boldfoo: '<b>{{foo}}</b>'}};
-            const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template} viewState={viewState} />;
+            const section = <FeatureInfoSection feature={feature} isOpen={true} template={template} viewState={viewState} />;
             const result = getShallowRenderedOutput(section);
             expect(findAllWithClass(result, 'jk').length).toEqual(0); // just to be sure the null case gives 0.
             expect(findAllWithClass(result, 'jj').length).toEqual(1);
@@ -351,7 +355,7 @@ describe('FeatureInfoSection', function() {
 
         it('sets the name from featureInfoTemplate', function() {
             const template = {name: '{{name}} {{foo}}'};
-            const section = <FeatureInfoSection feature={feature} isOpen={false} clock={terria.clock} template={template} viewState={viewState} />;
+            const section = <FeatureInfoSection feature={feature} isOpen={false}  template={template} viewState={viewState} />;
             const result = getShallowRenderedOutput(section);
             const nameElement = findAllWithClass(result, Styles.title)[0];
             const nameSpan = nameElement.props.children[0];
@@ -362,7 +366,7 @@ describe('FeatureInfoSection', function() {
         it('can access clicked lat and long', function() {
             const template = '<div>Clicked {{#terria.formatNumber}}{maximumFractionDigits:0}{{terria.coords.latitude}}{{/terria.formatNumber}}, {{#terria.formatNumber}}{maximumFractionDigits:0}{{terria.coords.longitude}}{{/terria.formatNumber}}</div>';
             const position = Ellipsoid.WGS84.cartographicToCartesian(Cartographic.fromDegrees(77, 44, 6));
-            const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template} viewState={viewState} position={position}/>;
+            const section = <FeatureInfoSection feature={feature} isOpen={true} template={template} viewState={viewState} position={position}/>;
             const result = getShallowRenderedOutput(section);
             expect(findAllEqualTo(result, 'Clicked 44, 77').length).toEqual(1);
         });
@@ -395,7 +399,7 @@ describe('FeatureInfoSection', function() {
             //     +       '</ul>'
             //     +   '</li>'
             //     + '</ul>';
-            const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} template={template} viewState={viewState} />;
+            const section = <FeatureInfoSection feature={feature} isOpen={true} template={template} viewState={viewState} />;
             const result = getShallowRenderedOutput(section);
             const content = findAllWithClass(result, contentClass)[0];
             expect(findAllWithType(content, 'ul').length).toEqual(7);
@@ -414,7 +418,7 @@ describe('FeatureInfoSection', function() {
         });
 
         it('does not appear if no template', function() {
-            const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} viewState={viewState} />;
+            const section = <FeatureInfoSection feature={feature} isOpen={true} viewState={viewState} />;
             const result = getShallowRenderedOutput(section);
             expect(findAllEqualTo(result, 'Show Curated Data').length).toEqual(0);
             expect(findAllEqualTo(result, 'Show Raw Data').length).toEqual(0);
@@ -422,7 +426,7 @@ describe('FeatureInfoSection', function() {
 
         it('shows "Show Raw Data" if template', function() {
             const template = 'Test';
-            const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} viewState={viewState} template={template} />;
+            const section = <FeatureInfoSection feature={feature} isOpen={true} viewState={viewState} template={template} />;
             const result = getShallowRenderedOutput(section);
             expect(findAllEqualTo(result, 'Show Curated Data').length).toEqual(0);
             expect(findAllEqualTo(result, 'Show Raw Data').length).toEqual(1);
@@ -452,7 +456,7 @@ describe('FeatureInfoSection', function() {
             return item.load().then(function() {
                 expect(item.dataSource.entities.values.length).toBeGreaterThan(0);
                 const feature = item.dataSource.entities.values[0];
-                const section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} viewState={viewState} template={item.featureInfoTemplate} />;
+                const section = <FeatureInfoSection feature={feature} isOpen={true} viewState={viewState} template={item.featureInfoTemplate} />;
                 const result = getShallowRenderedOutput(section);
                 expect(findAllEqualTo(result, 'ABC').length).toEqual(1);
                 expect(findAllEqualTo(result, '2010').length).toEqual(1);
@@ -472,20 +476,20 @@ describe('FeatureInfoSection', function() {
             return timeVaryingItem.load().then(function() {
                 expect(timeVaryingItem.dataSource.entities.values.length).toBeGreaterThan(0);
                 const feature = timeVaryingItem.dataSource.entities.values[0];
-                terria.clock.currentTime = JulianDate.fromIso8601('2010-02-02');
-                let section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} viewState={viewState} template={timeVaryingItem.featureInfoTemplate} />;
+                clock.currentTime = JulianDate.fromIso8601('2010-02-02');
+                let section = <FeatureInfoSection feature={feature} isOpen={true} clock={clock} viewState={viewState} template={timeVaryingItem.featureInfoTemplate} />;
                 let result = getShallowRenderedOutput(section);
                 expect(findAllEqualTo(result, 'ABC').length).toEqual(0);
                 expect(findAllEqualTo(result, 'DEF').length).toEqual(0);
 
-                terria.clock.currentTime = JulianDate.fromIso8601('2012-02-02');
-                section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} viewState={viewState} template={timeVaryingItem.featureInfoTemplate} />;
+                clock.currentTime = JulianDate.fromIso8601('2012-02-02');
+                section = <FeatureInfoSection feature={feature} isOpen={true} clock={clock} viewState={viewState} template={timeVaryingItem.featureInfoTemplate} />;
                 result = getShallowRenderedOutput(section);
                 expect(findAllEqualTo(result, 'ABC').length).toEqual(1);
                 expect(findAllEqualTo(result, 'DEF').length).toEqual(0);
 
-                terria.clock.currentTime = JulianDate.fromIso8601('2014-02-02');
-                section = <FeatureInfoSection feature={feature} isOpen={true} clock={terria.clock} viewState={viewState} template={timeVaryingItem.featureInfoTemplate} />;
+                clock.currentTime = JulianDate.fromIso8601('2014-02-02');
+                section = <FeatureInfoSection feature={feature} isOpen={true} clock={clock} viewState={viewState} template={timeVaryingItem.featureInfoTemplate} />;
                 result = getShallowRenderedOutput(section);
                 expect(findAllEqualTo(result, 'ABC').length).toEqual(0);
                 expect(findAllEqualTo(result, 'DEF').length).toEqual(1);
