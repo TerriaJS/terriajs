@@ -32,6 +32,7 @@ const FeatureInfoCatalogItem = createReactClass({
         let totalFeaturesCount = 0;
         let hiddenNumber;
         let maximumShownFeatureInfos = terria.configParameters.defaultMaximumShownFeatureInfos;
+        let clock;
 
         if (defined(features)) {
             // Display no more than defined number of feature infos
@@ -39,6 +40,7 @@ const FeatureInfoCatalogItem = createReactClass({
             if (defined(catalogItem)) {
                 maximumShownFeatureInfos = catalogItem.maximumShownFeatureInfos;
                 featureInfoTemplate = catalogItem.featureInfoTemplate;
+                clock = catalogItem.clock;
             }
             hiddenNumber = totalFeaturesCount - maximumShownFeatureInfos;  // A positive hiddenNumber => some are hidden; negative means none are.
             featureInfoSections = features.slice(0, maximumShownFeatureInfos).map((feature, i) => {
@@ -48,7 +50,7 @@ const FeatureInfoCatalogItem = createReactClass({
                         catalogItem={catalogItem}
                         feature={feature}
                         position={terria.pickedFeatures && terria.pickedFeatures.pickPosition}
-                        clock={catalogItem.clock}
+                        clock={clock}
                         template={featureInfoTemplate}
                         isOpen={feature === terria.selectedFeature}
                         onClickHeader={this.props.onToggleOpen}
