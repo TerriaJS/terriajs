@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### 5.#.#
+
+* Added `{{terria.currentTime}}` to feature info template.
+* Added a way to format times within a feature info tempate. E.g. `{{#terria.formatDateTime}}{"format": "dd-mm-yyyy HH:MM:ss"}{{terria.currentTime}}{{/terria.formatDateTime}}`.
 ### 5.6.2
 
 * Renamed search marker to location marker.

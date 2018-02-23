@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 
 import CesiumMath from 'terriajs-cesium/Source/Core/Math';
 import classNames from 'classnames';
+import dateFormat from 'dateformat';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
 import isArray from 'terriajs-cesium/Source/Core/isArray';
@@ -39,7 +40,6 @@ const FeatureInfoSection = createReactClass({
         template: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
         feature: PropTypes.object,
         position: PropTypes.object,
-        clock: PropTypes.object,
         catalogItem: PropTypes.object,  // Note this may not be known (eg. WFS).
         isOpen: PropTypes.bool,
         onClickHeader: PropTypes.func
@@ -71,7 +71,7 @@ const FeatureInfoSection = createReactClass({
     },
 
     getPropertyValues() {
-        return getPropertyValuesForFeature(this.props.feature, this.props.clock, this.props.template && this.props.template.formats);
+        return getPropertyValuesForFeature(this.props.feature, clockIfAvaliable(this), this.props.template && this.props.template.formats);
     },
 
     getTemplateData() {
@@ -80,6 +80,7 @@ const FeatureInfoSection = createReactClass({
 
             propertyData.terria = {
                 formatNumber: mustacheFormatNumberFunction,
+                formatDateTime: mustacheFormatDateTime,
                 urlEncodeComponent: mustacheURLEncodeTextComponent,
                 urlEncode: mustacheURLEncodeText
             };
@@ -89,6 +90,10 @@ const FeatureInfoSection = createReactClass({
                     latitude: CesiumMath.toDegrees(latLngInRadians.latitude),
                     longitude: CesiumMath.toDegrees(latLngInRadians.longitude)
                 };
+            }
+            const clock = clockIfAvaliable(this);
+            if (defined(clock) && defined(clock.currentTime) && defined(this.props.catalogItem.availableDates) && defined(this.props.catalogItem.intervals)) {
+                propertyData.terria.currentTime = this.props.catalogItem.availableDates[this.props.catalogItem.intervals.indexOf(clock.currentTime)];
             }
             propertyData.terria.timeSeries = getTimeSeriesChartContext(this.props.catalogItem, this.props.feature, propertyData._terria_getChartDetails);
         }
@@ -133,7 +138,7 @@ const FeatureInfoSection = createReactClass({
         //     markdownToHtml (which applies MarkdownIt.render and DOMPurify.sanitize), and then
         //     parseCustomHtmlToReact (which calls htmlToReactParser).
         // Note that there is an unnecessary HTML encoding and decoding in this combination which would be good to remove.
-        const currentTime = this.props.clock ? this.props.clock.currentTime : JulianDate.now();
+        const currentTime = defined(clockIfAvaliable(this)) ? clockIfAvaliable(this).currentTime : JulianDate.now();
         let description = feature.currentDescription || getCurrentDescription(feature, currentTime);
         if (!defined(description) && defined(feature.properties)) {
             description = describeFromProperties(feature.properties, currentTime);
@@ -192,6 +197,8 @@ const FeatureInfoSection = createReactClass({
         const fullName = (catalogItemName ? (catalogItemName + ' - ') : '') + this.renderDataTitle();
         const reactInfo = getInfoAsReactComponent(this);
 
+        const clock = clockIfAvaliable(this);
+
         return (
             <li className={classNames(Styles.section)}>
                 <button type='button' onClick={this.clickHeader} className={Styles.title}>
@@ -236,7 +243,7 @@ const FeatureInfoSection = createReactClass({
                                                     template={this.props.template}
                                                     feature={this.props.feature}
                                                     position={this.props.position}
-                                                    clock={this.props.clock}
+                                                    clock={clock}
                                                     catalogItem={this.props.catalogItem}
                                                     isOpen={this.props.isOpen}
                                                     onClickHeader={this.props.onClickHeader}/>
@@ -248,6 +255,18 @@ const FeatureInfoSection = createReactClass({
         );
     },
 });
+
+/**
+ * Returns the clockForDisplay for the catalogItem if it is avaliable, otherwise returns undefined.
+ * @private
+ */
+function clockIfAvaliable(featureInfoSection) {
+    if (defined(featureInfoSection.props.catalogItem)) {
+        return featureInfoSection.props.catalogItem.clock;
+    }
+
+    return undefined;
+}
 
 /**
  * Do we need to dynamically update this feature info over time?
@@ -268,13 +287,14 @@ const FeatureInfoSection = createReactClass({
  * @private
  */
 function setSubscriptionsAndTimeouts(featureInfoSection, feature) {
+    const clock = clockIfAvaliable(featureInfoSection);
     feature.definitionChanged.addEventListener(function(changedFeature) {
-        setCurrentFeatureValues(changedFeature, featureInfoSection.props.clock);
+        setCurrentFeatureValues(changedFeature, clock);
     });
     if (featureInfoSection.isFeatureTimeVarying(feature)) {
-        if (defined(featureInfoSection.props.clock) && defined(featureInfoSection.props.clock.definitionChanged)) {
+        if (defined(clock) && defined(clock.definitionChanged)) {
             featureInfoSection.setState({
-                removeClockSubscription: featureInfoSection.props.clock.definitionChanged.addEventListener(function(clock) {
+                removeClockSubscription: clock.definitionChanged.addEventListener(function(clock) {
                     setCurrentFeatureValues(feature, clock);
                 })
             });
@@ -347,7 +367,15 @@ function applyFormatsInPlace(properties, formats) {
     // Optionally format each property. Updates properties in place, returning nothing.
     for (const key in formats) {
         if (properties.hasOwnProperty(key)) {
-            properties[key] = formatNumberForLocale(properties[key], formats[key]);
+            // Default type if not provided is number.
+            if (!defined(formats[key].type) || (defined(formats[key].type) && formats[key].type === "number")) {
+                properties[key] = formatNumberForLocale(properties[key], formats[key]);
+            }
+            if (defined(formats[key].type)) {
+                if (formats[key].type === "dateTime") {
+                    properties[key] = formatDateTime(properties[key], formats[key]);
+                }
+            }
         }
     }
 }
@@ -425,11 +453,12 @@ function setCurrentFeatureValues(feature, clock) {
 }
 
 /**
- * Returns a function which implements number formatting in Mustache templates, using this syntax:
- * {{#terria.formatNumber}}{useGrouping: true}{{value}}{{/terria.formatNumber}}
+ * Returns a function which extracts JSON elements from the content of a Mustache section template and calls the
+ * supplied customProcessing function with the extracted JSON options, example syntax processed:
+ * {optionKey: optionValue}{{value}}
  * @private
  */
-function mustacheFormatNumberFunction() {
+function mustacheJsonSubOptions(customProcessing) {
     return function(text, render) {
         // Eg. "{foo:1}hi there".match(optionReg) = ["{foo:1}hi there", "{foo:1}", "hi there"].
         // Note this won't work with nested objects in the options (but these aren't used yet).
@@ -440,14 +469,61 @@ function mustacheFormatNumberFunction() {
         const startsWithdoubleBraces = (text.length > 4) && (text[0] === '{') && (text[1] === '{');
         if (!components || startsWithdoubleBraces) {
             // If no options were provided, just use the defaults.
-            return formatNumberForLocale(render(text));
+            return customProcessing(render(text));
         }
         // Allow {foo: 1} by converting it to {"foo": 1} for JSON.parse.
         const quoteReg = /([{,])(\s*)([A-Za-z0-9_\-]+?)\s*:/g;
         const jsonOptions = components[1].replace(quoteReg, '$1"$3":');
         const options = JSON.parse(jsonOptions);
-        return formatNumberForLocale(render(components[2]), options);
+        return customProcessing(render(components[2]), options);
     };
+}
+
+/**
+ * Returns a function which implements number formatting in Mustache templates, using this syntax:
+ * {{#terria.formatNumber}}{useGrouping: true}{{value}}{{/terria.formatNumber}}
+ * @private
+ */
+function mustacheFormatNumberFunction() {
+    return mustacheJsonSubOptions(formatNumberForLocale);
+}
+
+/**
+ * Formats the date according to the date format string.
+ * If the date expression can't be parsed using Date.parse() it will be returned unmodified.
+ *
+ * @param {String} text The date to format.
+ * @param {Object} options Object with the following properties:
+ * @param {String} options.format If present, will override the default date format using the npm datefromat package
+ *                                format (see https://www.npmjs.com/package/dateformat). E.g. "isoDateTime"
+ *                                or "dd-mm-yyyy HH:MM:ss". If not supplied isoDateTime will be used.
+ * @private
+ */
+function formatDateTime(text, options) {
+    const date = Date.parse(text);
+
+    if (!defined(date) || isNaN(date)) {
+        return text;
+    }
+
+    if (defined(options) && defined(options.format)) {
+       return dateFormat(date, options.format);
+    }
+
+    return dateFormat(date, "isoDateTime");
+}
+
+/**
+ * Returns a function which implements date/time formatting in Mustache templates, using this syntax:
+ * {{#terria.formatDateTime}}{format: "npm dateFormat string"}DateExpression{{/terria.formatDateTime}}
+ * format If present, will override the default date format (see https://www.npmjs.com/package/dateformat)
+ * Eg. "isoDateTime" or "dd-mm-yyyy HH:MM:ss".
+ * If the Date_Expression can't be parsed using Date.parse() it will be used(returned) unmodified by the terria.formatDateTime section expression.
+ * If no valid date formatting options are present in the terria.formatDateTime section isoDateTime will be used.
+ * @private
+ */
+function mustacheFormatDateTime() {
+    return mustacheJsonSubOptions(formatDateTime);
 }
 
 /**

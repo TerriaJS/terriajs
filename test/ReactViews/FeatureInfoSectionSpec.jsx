@@ -9,19 +9,23 @@ import {getShallowRenderedOutput, findAllEqualTo, findAllWithPropsChildEqualTo} 
 
 import Cartographic from 'terriajs-cesium/Source/Core/Cartographic';
 import DataSourceClock from 'terriajs-cesium/Source/DataSources/DataSourceClock';
+import Clock from 'terriajs-cesium/Source/Core/Clock';
 import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
 import Entity from 'terriajs-cesium/Source/DataSources/Entity';
 import JulianDate from 'terriajs-cesium/Source/Core/JulianDate';
 import loadJson from 'terriajs-cesium/Source/Core/loadJson';
 import TimeInterval from 'terriajs-cesium/Source/Core/TimeInterval';
+import TimeIntervalCollection from 'terriajs-cesium/Source/Core/TimeIntervalCollection';
 import TimeIntervalCollectionProperty from 'terriajs-cesium/Source/DataSources/TimeIntervalCollectionProperty';
 
 import Catalog from '../../lib/Models/Catalog';
 import createCatalogMemberFromType from '../../lib/Models/createCatalogMemberFromType';
+import CatalogItem from '../../lib/Models/CatalogItem';
 import CatalogGroup from '../../lib/Models/CatalogGroup';
 import CzmlCatalogItem from '../../lib/Models/CzmlCatalogItem';
 import FeatureInfoSection from '../../lib/ReactViews/FeatureInfo/FeatureInfoSection';
 import Terria from '../../lib/Models/Terria';
+
 import Styles from '../../lib/ReactViews/FeatureInfo/feature-info-section.scss';
 
 let separator = ',';
@@ -35,21 +39,29 @@ function findAllWithHref(reactElement, text) {
     return findAll(reactElement, (element) => element && element.props && element.props.href === text);
 }
 
+// Takes the absolute value of the value and pads it to 2 digits i.e. 7->07, 17->17, -3->3, -13->13. It is expected that value is an integer is in the range [0, 99].
+function absPad2(value) {
+    return ((Math.abs(value) < 10) ? "0" : "") + Math.abs(value);
+}
+
 describe('FeatureInfoSection', function() {
 
     let terria;
     let feature;
     let viewState;
     let initialSubscribers;
-    let clock;
+    let catalogItem;
 
     beforeEach(function() {
         terria = new Terria({
             baseUrl: './'
         });
-        clock = new DataSourceClock();
-        clock.currentTime = JulianDate.now();
-        initialSubscribers = clock.definitionChanged.numberOfListeners;
+        catalogItem = new CatalogItem(terria);
+        catalogItem.clock = new DataSourceClock();
+        catalogItem.clock.currentTime = JulianDate.now();
+        catalogItem.name = "";
+        initialSubscribers = catalogItem.clock.definitionChanged.numberOfListeners;
+
         viewState = {}; // Not important for tests, but is a required prop.
         const properties = {
             'name': 'Kay',
@@ -58,6 +70,7 @@ describe('FeatureInfoSection', function() {
             'material.process.#1': 'smelted',
             'size': '12345678.9012',
             'efficiency': '0.2345678',
+            'date': '2017-11-23T08:47:53Z',
             'owner_html': 'Jay<br>Smith',
             'ampersand': 'A & B',
             'lessThan': 'A < B',
@@ -102,14 +115,14 @@ describe('FeatureInfoSection', function() {
 
     it('renders a time-varying description', function() {
         feature.description = timeVaryingDescription();
-        clock.currentTime = JulianDate.fromDate(new Date('2011-06-30'));
-        const section = <FeatureInfoSection feature={feature} isOpen={true} clock={clock} viewState={viewState} />;
+        catalogItem.clock.currentTime = JulianDate.fromDate(new Date('2011-06-30'));
+        const section = <FeatureInfoSection feature={feature} isOpen={true} catalogItem={catalogItem} viewState={viewState} />;
         const result = getShallowRenderedOutput(section);
         expect(findAllEqualTo(result, 'hi').length).toEqual(0);
         expect(findAllEqualTo(result, 'bye').length).toEqual(1);
 
-        clock.currentTime = JulianDate.fromDate(new Date('2010-06-30'));
-        const section2 = <FeatureInfoSection feature={feature} isOpen={true} clock={clock} viewState={viewState} />;
+        catalogItem.clock.currentTime = JulianDate.fromDate(new Date('2010-06-30'));
+        const section2 = <FeatureInfoSection feature={feature} isOpen={true} catalogItem={catalogItem} viewState={viewState} />;
         const result2 = getShallowRenderedOutput(section2);
         expect(findAllEqualTo(result2, 'hi').length).toEqual(1);
         expect(findAllEqualTo(result2, 'bye').length).toEqual(0);
@@ -118,11 +131,11 @@ describe('FeatureInfoSection', function() {
     it('removes any clock event listeners', function() {
         feature.description = timeVaryingDescription();
         const renderer = ReactTestUtils.createRenderer();
-        const section = <FeatureInfoSection feature={feature} isOpen={true} clock={clock} viewState={viewState} />;
+        const section = <FeatureInfoSection feature={feature} isOpen={true} catalogItem={catalogItem} viewState={viewState} />;
         renderer.render(section);
-        expect(clock.definitionChanged.numberOfListeners).toEqual(initialSubscribers + 1);  // This implementation is not required, but while we have it, keep this test so we know the next one is meaningful.
+        expect(catalogItem.clock.definitionChanged.numberOfListeners).toEqual(initialSubscribers + 1);  // This implementation is not required, but while we have it, keep this test so we know the next one is meaningful.
         renderer.unmount();
-        expect(clock.definitionChanged.numberOfListeners).toEqual(initialSubscribers);  // we do want to be sure that if this is the implementation, we tidy up after ourselves.
+        expect(catalogItem.clock.definitionChanged.numberOfListeners).toEqual(initialSubscribers);  // we do want to be sure that if this is the implementation, we tidy up after ourselves.
     });
 
     it('does not set a clock event listener if no description or properties', function() {
@@ -130,16 +143,16 @@ describe('FeatureInfoSection', function() {
             name: 'Empty'
         });
         const renderer = ReactTestUtils.createRenderer();
-        const section = <FeatureInfoSection feature={emptyFeature} isOpen={true} clock={clock} viewState={viewState} />;
+        const section = <FeatureInfoSection feature={emptyFeature} isOpen={true} catalogItem={catalogItem} viewState={viewState} />;
         renderer.render(section);
-        expect(clock.definitionChanged.numberOfListeners).toEqual(initialSubscribers);
+        expect(catalogItem.clock.definitionChanged.numberOfListeners).toEqual(initialSubscribers);
     });
 
     it('does not set a clock event listener if no description and constant properties', function() {
         const renderer = ReactTestUtils.createRenderer();
-        const section = <FeatureInfoSection feature={feature} isOpen={true} clock={clock} viewState={viewState} />;
+        const section = <FeatureInfoSection feature={feature} isOpen={true} catalogItem={catalogItem} viewState={viewState} />;
         renderer.render(section);
-        expect(clock.definitionChanged.numberOfListeners).toEqual(initialSubscribers);
+        expect(catalogItem.clock.definitionChanged.numberOfListeners).toEqual(initialSubscribers);
     });
 
     it('handles features with no properties', function() {
@@ -244,7 +257,7 @@ describe('FeatureInfoSection', function() {
 
         it('can use _ to refer to . and # in property keys in the featureInfoTemplate', function() {
             const template = 'Made from {{material_process__1}} {{material}}.';
-            const section = <FeatureInfoSection feature={feature} isOpen={true}  template={template} viewState={viewState} />;
+            const section = <FeatureInfoSection feature={feature} isOpen={true} template={template} viewState={viewState} />;
             const result = getShallowRenderedOutput(section);
             expect(findAllEqualTo(result, 'Made from smelted steel.').length).toEqual(1);
         });
@@ -257,6 +270,13 @@ describe('FeatureInfoSection', function() {
         });
 
         it('can format numbers with commas', function() {
+            const template = {template: 'Size: {{size}}', formats: {size: {type: 'number', useGrouping: true}}};
+            const section = <FeatureInfoSection feature={feature} isOpen={true} template={template} viewState={viewState} />;
+            const result = getShallowRenderedOutput(section);
+            expect(findAllEqualTo(result, 'Size: 12' + separator + '345' + separator + '678.9012').length).toEqual(1);
+        });
+
+        it('formats numbers in the formats section with no type as if type were number', function() {
             const template = {template: 'Size: {{size}}', formats: {size: {useGrouping: true}}};
             const section = <FeatureInfoSection feature={feature} isOpen={true} template={template} viewState={viewState} />;
             const result = getShallowRenderedOutput(section);
@@ -289,6 +309,44 @@ describe('FeatureInfoSection', function() {
 
         it('handles non-numbers terria.formatNumber', function() {
             const template = 'Test: {{#terria.formatNumber}}text{{/terria.formatNumber}}';
+            const section = <FeatureInfoSection feature={feature} isOpen={true} template={template} viewState={viewState} />;
+            const result = getShallowRenderedOutput(section);
+            expect(findAllEqualTo(result, 'Test: text').length).toEqual(1);
+        });
+
+        it('can use a dateFormatString when it is specified in terria.formatDateTime', function() {
+            const template = 'Test: {{#terria.formatDateTime}}{"format": "dd-mm-yyyy HH:MM:ss"}2017-11-23T08:47:53Z{{/terria.formatDateTime}}';
+            const section = <FeatureInfoSection feature={feature} isOpen={true} template={template} viewState={viewState} />;
+            const result = getShallowRenderedOutput(section);
+            const date = new Date(Date.UTC(2017, 11, 23, 8, 47, 53));
+            const formattedDate = absPad2(date.getDate()) + "-" + absPad2(date.getMonth()) + "-" + date.getFullYear() + " " + absPad2(date.getHours()) + ":" + absPad2(date.getMinutes()) + ":" + absPad2(date.getSeconds()); // E.g. "23-11-2017 19:47:53"
+            expect(findAllEqualTo(result, 'Test: ' + formattedDate).length).toEqual(1);
+        });
+
+        it('defaults dateFormatString to isoDateTime when it is not specified in terria.formatDateTime', function() {
+            const template = 'Test: {{#terria.formatDateTime}}2017-11-23T08:47:53Z{{/terria.formatDateTime}}';
+            const section = <FeatureInfoSection feature={feature} isOpen={true} template={template} viewState={viewState} />;
+            const result = getShallowRenderedOutput(section);
+            const date = new Date(Date.UTC(2017, 11, 23, 8, 47, 53));
+            const offset = -date.getTimezoneOffset();
+            const offsetMinute = offset%60;
+            const offsetHour = (offset-offsetMinute)/60;
+            const timeZone = ((offset >= 0) ? "+" : "-") + absPad2(offsetHour) + "" + absPad2(offsetMinute);
+            const formattedDate = date.getFullYear() + "-" + absPad2(date.getMonth()) + "-" + absPad2(date.getDate()) + "T" + absPad2(date.getHours()) + ":" + absPad2(date.getMinutes()) + ":" + absPad2(date.getSeconds()) + timeZone; // E.g. "2017-11-23T19:47:53+1100"
+            expect(findAllEqualTo(result, 'Test: ' + formattedDate).length).toEqual(1);
+        });
+
+        it('can format dates using the dateTime as the type within the formats section', function() {
+            const template = {template: 'Date: {{date}}', formats: {date: {type: "dateTime", format: 'dd-mm-yyyy HH:MM:ss'}}};
+            const section = <FeatureInfoSection feature={feature} isOpen={true} catalogItem={catalogItem} template={template} viewState={viewState} />;
+            const result = getShallowRenderedOutput(section);
+            const date = new Date(Date.UTC(2017, 11, 23, 8, 47, 53));
+            const formattedDate = absPad2(date.getDate()) + "-" + absPad2(date.getMonth()) + "-" + date.getFullYear() + " " + absPad2(date.getHours()) + ":" + absPad2(date.getMinutes()) + ":" + absPad2(date.getSeconds()); // E.g. "23-11-2017 19:47:53"
+            expect(findAllEqualTo(result, 'Date: ' + formattedDate).length).toEqual(1);
+        });
+
+        it('handles non-numbers in terria.formatDateTime', function() {
+            const template = 'Test: {{#terria.formatDateTime}}text{{/terria.formatDateTime}}';
             const section = <FeatureInfoSection feature={feature} isOpen={true} template={template} viewState={viewState} />;
             const result = getShallowRenderedOutput(section);
             expect(findAllEqualTo(result, 'Test: text').length).toEqual(1);
@@ -369,6 +427,29 @@ describe('FeatureInfoSection', function() {
             const section = <FeatureInfoSection feature={feature} isOpen={true} template={template} viewState={viewState} position={position}/>;
             const result = getShallowRenderedOutput(section);
             expect(findAllEqualTo(result, 'Clicked 44, 77').length).toEqual(1);
+        });
+
+        it('can access the current time', function() {
+            const template = '<div>{{terria.currentTime}}</div>';
+
+            const timeInterval = new TimeInterval({
+                start : JulianDate.fromIso8601('2017-11-23T19:47:53+11:00'),
+                stop : JulianDate.fromIso8601('2018-01-03T07:05:00Z'),
+                isStartIncluded : true,
+                isStopIncluded : false,
+            });
+            const intervals = new TimeIntervalCollection([timeInterval]);
+            const availableDate = JulianDate.toDate(timeInterval.start);
+            catalogItem.intervals = intervals;
+            catalogItem.availableDates = [availableDate];
+
+            catalogItem.canUseOwnClock = true;
+            catalogItem.useOwnClock = true;
+            catalogItem.clock.currentTime = JulianDate.fromIso8601("2017-12-19T17:13:11+07:00");
+            terria.clock.currentTime = JulianDate.fromIso8601("2001-01-01T01:01:01+01:00"); // An decoy date to make sure that we are indeed using the catalog items clock and not terria.clock.
+            const section = <FeatureInfoSection feature={feature} isOpen={true} template={template} viewState={viewState} catalogItem={catalogItem}/>;
+            const result = getShallowRenderedOutput(section);
+            expect(findAllEqualTo(result, availableDate.toString()).length).toEqual(1);
         });
 
         it('can render a recursive featureInfoTemplate', function() {
@@ -476,20 +557,20 @@ describe('FeatureInfoSection', function() {
             return timeVaryingItem.load().then(function() {
                 expect(timeVaryingItem.dataSource.entities.values.length).toBeGreaterThan(0);
                 const feature = timeVaryingItem.dataSource.entities.values[0];
-                clock.currentTime = JulianDate.fromIso8601('2010-02-02');
-                let section = <FeatureInfoSection feature={feature} isOpen={true} clock={clock} viewState={viewState} template={timeVaryingItem.featureInfoTemplate} />;
+                catalogItem.clock.currentTime = JulianDate.fromIso8601('2010-02-02');
+                let section = <FeatureInfoSection feature={feature} isOpen={true} catalogItem={catalogItem} viewState={viewState} template={timeVaryingItem.featureInfoTemplate} />;
                 let result = getShallowRenderedOutput(section);
                 expect(findAllEqualTo(result, 'ABC').length).toEqual(0);
                 expect(findAllEqualTo(result, 'DEF').length).toEqual(0);
 
-                clock.currentTime = JulianDate.fromIso8601('2012-02-02');
-                section = <FeatureInfoSection feature={feature} isOpen={true} clock={clock} viewState={viewState} template={timeVaryingItem.featureInfoTemplate} />;
+                catalogItem.clock.currentTime = JulianDate.fromIso8601('2012-02-02');
+                section = <FeatureInfoSection feature={feature} isOpen={true} catalogItem={catalogItem} viewState={viewState} template={timeVaryingItem.featureInfoTemplate} />;
                 result = getShallowRenderedOutput(section);
                 expect(findAllEqualTo(result, 'ABC').length).toEqual(1);
                 expect(findAllEqualTo(result, 'DEF').length).toEqual(0);
 
-                clock.currentTime = JulianDate.fromIso8601('2014-02-02');
-                section = <FeatureInfoSection feature={feature} isOpen={true} clock={clock} viewState={viewState} template={timeVaryingItem.featureInfoTemplate} />;
+                catalogItem.clock.currentTime = JulianDate.fromIso8601('2014-02-02');
+                section = <FeatureInfoSection feature={feature} isOpen={true} catalogItem={catalogItem} viewState={viewState} template={timeVaryingItem.featureInfoTemplate} />;
                 result = getShallowRenderedOutput(section);
                 expect(findAllEqualTo(result, 'ABC').length).toEqual(0);
                 expect(findAllEqualTo(result, 'DEF').length).toEqual(1);

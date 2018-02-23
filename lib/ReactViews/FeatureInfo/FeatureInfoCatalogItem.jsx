@@ -50,7 +50,6 @@ const FeatureInfoCatalogItem = createReactClass({
                         catalogItem={catalogItem}
                         feature={feature}
                         position={terria.pickedFeatures && terria.pickedFeatures.pickPosition}
-                        clock={clock}
                         template={featureInfoTemplate}
                         isOpen={feature === terria.selectedFeature}
                         onClickHeader={this.props.onToggleOpen}
