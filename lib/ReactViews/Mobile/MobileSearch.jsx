@@ -4,7 +4,7 @@ import createReactClass from 'create-react-class';
 
 import PropTypes from 'prop-types';
 
-import {addMarker} from '../Search/SearchMarkerUtils';
+import {addMarker} from '../../Models/LocationMarkerUtils';
 import ObserveModelMixin from '../ObserveModelMixin';
 import LocationSearchResults from '../Search/LocationSearchResults';
 import SearchResult from '../Search/SearchResult';
@@ -23,7 +23,7 @@ const MobileSearch = createReactClass({
     onLocationClick(result) {
         result.clickAction();
 
-        addMarker(this.props.terria, this.props.viewState, result);
+        addMarker(this.props.terria, result);
 
         // Close modal window
         this.props.viewState.switchMobileView(null);
