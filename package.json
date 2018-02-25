@@ -75,7 +75,7 @@
     "urijs": "^1.18.12",
     "url-loader": "^0.5.7",
     "urthecast": "^1.0.0",
-    "webpack": "^3.8.1",
+    "webpack": "^4.0.0",
     "worker-loader": "^1.0.0"
   },
   "devDependencies": {
