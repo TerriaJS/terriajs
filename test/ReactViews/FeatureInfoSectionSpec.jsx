@@ -9,7 +9,6 @@ import {getShallowRenderedOutput, findAllEqualTo, findAllWithPropsChildEqualTo} 
 
 import Cartographic from 'terriajs-cesium/Source/Core/Cartographic';
 import DataSourceClock from 'terriajs-cesium/Source/DataSources/DataSourceClock';
-import Clock from 'terriajs-cesium/Source/Core/Clock';
 import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
 import Entity from 'terriajs-cesium/Source/DataSources/Entity';
 import JulianDate from 'terriajs-cesium/Source/Core/JulianDate';
