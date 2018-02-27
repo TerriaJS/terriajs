@@ -293,17 +293,16 @@ function currentTimeIfAvailable(featureInfoSection) {
  *   Conceivably it could also be handled by the catalog item itself changing, if its change is knockout tracked, and the
  *   change leads to a change in what is rendered (unlikely).
  * Since the catalogItem is also a prop, this will trigger a rerender.
- *
- * For simplicity, we do not currently support (1) and (2) at the same time.
  * @private
  */
 function setSubscriptionsAndTimeouts(featureInfoSection, feature) {
-    feature.definitionChanged.addEventListener(function(changedFeature) {
-        setCurrentFeatureValues(changedFeature, currentTimeIfAvailable(featureInfoSection));
+    featureInfoSection.setState({
+        removeFeatureChangedSubscription: feature.definitionChanged.addEventListener(function(changedFeature) {
+            setCurrentFeatureValues(changedFeature, currentTimeIfAvailable(featureInfoSection));
+        })
     });
-    if (!featureInfoSection.isFeatureTimeVarying(feature)) {
-        setTimeoutsForUpdatingCustomComponents(featureInfoSection);
-    }
+
+    setTimeoutsForUpdatingCustomComponents(featureInfoSection);
 }
 
 /**
@@ -311,6 +310,10 @@ function setSubscriptionsAndTimeouts(featureInfoSection, feature) {
  * @private
  */
 function removeSubscriptionsAndTimeouts(featureInfoSection) {
+    if (defined(featureInfoSection.state.removeFeatureChangedSubscription)) {
+        featureInfoSection.state.removeFeatureChangedSubscription();
+        featureInfoSection.setState({removeFeatureChangedSubscription: undefined});
+    }
     featureInfoSection.state.timeoutIds.forEach(id => {
         clearTimeout(id);
     });
