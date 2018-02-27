@@ -3,7 +3,6 @@
 /*global require,expect*/
 // import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 import React from 'react';
-import ReactTestUtils from 'react-addons-test-utils';
 import {findAll, findAllWithType, findAllWithClass, findWithRef} from 'react-shallow-testutils';
 import {getShallowRenderedOutput, findAllEqualTo, findAllWithPropsChildEqualTo} from './MoreShallowTools';
 
@@ -48,7 +47,6 @@ describe('FeatureInfoSection', function() {
     let terria;
     let feature;
     let viewState;
-    let initialSubscribers;
     let catalogItem;
 
     beforeEach(function() {
@@ -59,7 +57,6 @@ describe('FeatureInfoSection', function() {
         catalogItem.clock = new DataSourceClock();
         catalogItem.clock.currentTime = JulianDate.now();
         catalogItem.name = "";
-        initialSubscribers = catalogItem.clock.definitionChanged.numberOfListeners;
 
         viewState = {}; // Not important for tests, but is a required prop.
         const properties = {
