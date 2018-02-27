@@ -68,6 +68,10 @@ const SidePanel = createReactClass({
         this.props.viewState.searchState.searchLocations();
     },
 
+    searchClear() {
+        this.props.terria.currentViewer.notifyRepaintRequired();
+    },
+
     startLocationSearch() {
         this.props.viewState.searchState.showLocationSearchResults = true;
     },
@@ -81,6 +85,7 @@ const SidePanel = createReactClass({
                     <SearchBox onSearchTextChanged={this.changeSearchText}
                                onDoSearch={this.search}
                                onFocus={this.startLocationSearch}
+                               onClear={this.searchClear}
                                searchText={searchState.locationSearchText} />
                     <div className={Styles.addData}>
                         <button type='button' onClick={this.onAddDataClicked} className={Styles.button}>
