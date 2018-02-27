@@ -127,33 +127,6 @@ describe('FeatureInfoSection', function() {
         expect(findAllEqualTo(result2, 'bye').length).toEqual(0);
     });
 
-    it('removes any clock event listeners', function() {
-        feature.description = timeVaryingDescription();
-        const renderer = ReactTestUtils.createRenderer();
-        const section = <FeatureInfoSection feature={feature} isOpen={true} catalogItem={catalogItem} viewState={viewState} />;
-        renderer.render(section);
-        expect(catalogItem.clock.definitionChanged.numberOfListeners).toEqual(initialSubscribers + 1);  // This implementation is not required, but while we have it, keep this test so we know the next one is meaningful.
-        renderer.unmount();
-        expect(catalogItem.clock.definitionChanged.numberOfListeners).toEqual(initialSubscribers);  // we do want to be sure that if this is the implementation, we tidy up after ourselves.
-    });
-
-    it('does not set a clock event listener if no description or properties', function() {
-        const emptyFeature = new Entity({
-            name: 'Empty'
-        });
-        const renderer = ReactTestUtils.createRenderer();
-        const section = <FeatureInfoSection feature={emptyFeature} isOpen={true} catalogItem={catalogItem} viewState={viewState} />;
-        renderer.render(section);
-        expect(catalogItem.clock.definitionChanged.numberOfListeners).toEqual(initialSubscribers);
-    });
-
-    it('does not set a clock event listener if no description and constant properties', function() {
-        const renderer = ReactTestUtils.createRenderer();
-        const section = <FeatureInfoSection feature={feature} isOpen={true} catalogItem={catalogItem} viewState={viewState} />;
-        renderer.render(section);
-        expect(catalogItem.clock.definitionChanged.numberOfListeners).toEqual(initialSubscribers);
-    });
-
     it('handles features with no properties', function() {
         feature = new Entity({
             name: 'Foot',

@@ -71,7 +71,7 @@ const FeatureInfoSection = createReactClass({
     },
 
     getPropertyValues() {
-        return getPropertyValuesForFeature(this.props.feature, clockIfAvaliable(this), this.props.template && this.props.template.formats);
+        return getPropertyValuesForFeature(this.props.feature, currentTimeIfAvailable(this), this.props.template && this.props.template.formats);
     },
 
     getTemplateData() {
@@ -137,7 +137,7 @@ const FeatureInfoSection = createReactClass({
         //     markdownToHtml (which applies MarkdownIt.render and DOMPurify.sanitize), and then
         //     parseCustomHtmlToReact (which calls htmlToReactParser).
         // Note that there is an unnecessary HTML encoding and decoding in this combination which would be good to remove.
-        const currentTime = defined(clockIfAvaliable(this)) ? clockIfAvaliable(this).currentTime : JulianDate.now();
+        const currentTime = currentTimeIfAvailable(this) ? currentTimeIfAvailable(this) : JulianDate.now();
         let description = feature.currentDescription || getCurrentDescription(feature, currentTime);
         if (!defined(description) && defined(feature.properties)) {
             description = describeFromProperties(feature.properties, currentTime);
@@ -196,8 +196,6 @@ const FeatureInfoSection = createReactClass({
         const fullName = (catalogItemName ? (catalogItemName + ' - ') : '') + this.renderDataTitle();
         const reactInfo = getInfoAsReactComponent(this);
 
-        const clock = clockIfAvaliable(this);
-
         return (
             <li className={classNames(Styles.section)}>
                 <button type='button' onClick={this.clickHeader} className={Styles.title}>
@@ -242,7 +240,9 @@ const FeatureInfoSection = createReactClass({
                                                     template={this.props.template}
                                                     feature={this.props.feature}
                                                     position={this.props.position}
-                                                    clock={clock}
+                                                    // We should deprecate clock here and remove it alltogether, but currently leaving so don't break API.
+                                                    // Clients can and should use catalogItem.clock and catalogItem.currentTime.
+                                                    clock={clockIfAvailable(this)}
                                                     catalogItem={this.props.catalogItem}
                                                     isOpen={this.props.isOpen}
                                                     onClickHeader={this.props.onClickHeader}/>
@@ -259,9 +259,21 @@ const FeatureInfoSection = createReactClass({
  * Returns the clockForDisplay for the catalogItem if it is avaliable, otherwise returns undefined.
  * @private
  */
-function clockIfAvaliable(featureInfoSection) {
+function clockIfAvailable(featureInfoSection) {
     if (defined(featureInfoSection.props.catalogItem)) {
         return featureInfoSection.props.catalogItem.clock;
+    }
+
+    return undefined;
+}
+
+/**
+ * Returns the currentTime for the catalogItem if it is avaliable, otherwise returns undefined.
+ * @private
+ */
+function currentTimeIfAvailable(featureInfoSection) {
+    if (defined(featureInfoSection.props.catalogItem)) {
+        return featureInfoSection.props.catalogItem.currentTime;
     }
 
     return undefined;
@@ -275,7 +287,7 @@ function clockIfAvaliable(featureInfoSection) {
  *    Eg. <chart poll-seconds="60" src="xyz.csv"> must reload data from xyz.csv every 60 seconds.
  * 3. When a catalog item changes a feature's properties, eg. changing from a daily view to a monthly view.
  *
- * For (1), use an event listener on the clock to update the feature's currentProperties/currentDescription directly.
+ * For (1), use catalogItem.clock.currentTime knockout observable so don't need to do anything specific here.
  * For (2), use a regular javascript setTimeout to update a counter in feature's currentProperties.
  * For (3), use an event listener on the Feature's underlying Entity's "definitionChanged" event.
  *   Conceivably it could also be handled by the catalog item itself changing, if its change is knockout tracked, and the
@@ -286,19 +298,10 @@ function clockIfAvaliable(featureInfoSection) {
  * @private
  */
 function setSubscriptionsAndTimeouts(featureInfoSection, feature) {
-    const clock = clockIfAvaliable(featureInfoSection);
     feature.definitionChanged.addEventListener(function(changedFeature) {
-        setCurrentFeatureValues(changedFeature, clock);
+        setCurrentFeatureValues(changedFeature, currentTimeIfAvailable(featureInfoSection));
     });
-    if (featureInfoSection.isFeatureTimeVarying(feature)) {
-        if (defined(clock) && defined(clock.definitionChanged)) {
-            featureInfoSection.setState({
-                removeClockSubscription: clock.definitionChanged.addEventListener(function(clock) {
-                    setCurrentFeatureValues(feature, clock);
-                })
-            });
-        }
-    } else {
+    if (!featureInfoSection.isFeatureTimeVarying(feature)) {
         setTimeoutsForUpdatingCustomComponents(featureInfoSection);
     }
 }
@@ -308,28 +311,24 @@ function setSubscriptionsAndTimeouts(featureInfoSection, feature) {
  * @private
  */
 function removeSubscriptionsAndTimeouts(featureInfoSection) {
-    if (defined(featureInfoSection.state.removeClockSubscription)) {
-        featureInfoSection.state.removeClockSubscription();
-        featureInfoSection.setState({removeClockSubscription: undefined});
-    }
     featureInfoSection.state.timeoutIds.forEach(id => {
         clearTimeout(id);
     });
 }
 
 /**
- * Gets a map of property labels to property values for a feature at the provided clock's time.
+ * Gets a map of property labels to property values for a feature at the provided current time.
  * @private
  * @param {Entity} feature A feature to get values for.
- * @param {Clock} clock A clock to get the time from.
+ * @param {JulianDate} currentTime A knockout observable containing the currentTime.
  * @param {Object} [formats] A map of property labels to the number formats that should be applied for them.
  */
-function getPropertyValuesForFeature(feature, clock, formats) {
+function getPropertyValuesForFeature(feature, currentTime, formats) {
     // Manipulate the properties before templating them.
     // If they require .getValue, apply that.
     // If they have bad keys, fix them.
     // If they have formatting, apply it.
-    const properties = feature.currentProperties || propertyGetTimeValues(feature.properties, clock);
+    const properties = feature.currentProperties || propertyGetTimeValues(feature.properties, currentTime);
     // Try JSON.parse on values that look like JSON arrays or objects
     let result = parseValues(properties);
     result = replaceBadKeyCharacters(result);
@@ -439,12 +438,11 @@ function getCurrentDescription(feature, currentTime) {
  * @param {Entity} feature
  * @param {JulianDate} currentTime
  */
-function setCurrentFeatureValues(feature, clock) {
-    const newProperties = propertyGetTimeValues(feature.properties, clock);
+function setCurrentFeatureValues(feature, currentTime) {
+    const newProperties = propertyGetTimeValues(feature.properties, currentTime);
     if (newProperties !== feature.currentProperties) {
         feature.currentProperties = newProperties;
     }
-    const currentTime = defined(clock) ? clock.currentTime : undefined;
     const newDescription = getCurrentDescription(feature, currentTime);
     if (newDescription !== feature.currentDescription) {
         feature.currentDescription = newDescription;
