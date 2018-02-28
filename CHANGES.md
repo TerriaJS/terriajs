@@ -3,10 +3,6 @@
 Change Log
 ==========
 
-### 5.#.#
-
-* Added `{{terria.currentTime}}` to feature info template.
-* Added a way to format times within a feature info tempate. E.g. `{{#terria.formatDateTime}}{"format": "dd-mm-yyyy HH:MM:ss"}{{terria.currentTime}}{{/terria.formatDateTime}}`.
 ### 5.6.2
 
 * Renamed search marker to location marker.
@@ -17,6 +13,8 @@ Change Log
 * Fixed feature info updating when the time is changed from the workbench for `TableCatalogItem`.
 * Change the workbench catalog item date picker so that updating the date does not disable the timeslider.
 * Fix a bug that meant that, when the current time was updated on an `ImageryCatalogItem` while the layer wasn't shown, the old time was still shown when the layer was re-enabled.
+* Added `{{terria.currentTime}}` to feature info template.
+* Added a way to format times within a feature info tempate. E.g. `{{#terria.formatDateTime}}{"format": "dd-mm-yyyy HH:MM:ss"}{{terria.currentTime}}{{/terria.formatDateTime}}`.
 
 ### 5.6.1
 
