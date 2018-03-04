@@ -46,10 +46,13 @@ const FeatureInfoPanel = createReactClass({
                 }
                 if (defined(pickedFeatures.allFeaturesAvailablePromise)) {
                     pickedFeatures.allFeaturesAvailablePromise.then(() => {
-                        terria.selectedFeature = pickedFeatures.features.filter(featureHasInfo)[0];
-                        if (!defined(terria.selectedFeature) && (pickedFeatures.features.length > 0)) {
+                        // We only show features that are associated with a catalog item, so make sure the one we select to be
+                        // open initially is one we're actually going to show.
+                        const featuresShownAtAll = pickedFeatures.features.filter(x => defined(determineCatalogItem(terria.nowViewing, x)));
+                        terria.selectedFeature = featuresShownAtAll.filter(featureHasInfo)[0];
+                        if (!defined(terria.selectedFeature) && (featuresShownAtAll.length > 0)) {
                             // Handles the case when no features have info - still want something to be open.
-                            terria.selectedFeature = pickedFeatures.features[0];
+                            terria.selectedFeature = featuresShownAtAll[0];
                         }
                     });
                 }
