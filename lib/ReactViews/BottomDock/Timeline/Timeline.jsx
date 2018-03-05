@@ -30,7 +30,7 @@ const Timeline = createReactClass({
 
     getDefaultProps() {
         return {
-            autoPlay: true
+            autoPlay: false
         };
     },
 
