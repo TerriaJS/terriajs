@@ -44,7 +44,7 @@ const Timeline = createReactClass({
         this.resizeListener = () => this.timeline && this.timeline.resize();
         window.addEventListener('resize', this.resizeListener, false);
 
-        this.removeTickEvent = this.props.terria.clock.onTick.addEventListener(clock => {
+        const updateCurrentTimeString = clock => {
             const time = clock.currentTime;
             let currentTime;
             if (defined(this.props.terria.timeSeriesStack.topLayer) && defined(this.props.terria.timeSeriesStack.topLayer.dateFormat.currentTime)) {
@@ -56,7 +56,11 @@ const Timeline = createReactClass({
             this.setState({
                 currentTimeString: currentTime
             });
-        });
+        };
+
+        this.removeTickEvent = this.props.terria.clock.onTick.addEventListener(updateCurrentTimeString);
+
+        updateCurrentTimeString(this.props.terria.clock);
 
         this.topLayerSubscription = knockout.getObservable(this.props.terria.timeSeriesStack, 'topLayer').subscribe(() => this.updateForNewTopLayer());
         this.updateForNewTopLayer();
