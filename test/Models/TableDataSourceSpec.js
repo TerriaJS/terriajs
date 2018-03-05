@@ -4,6 +4,7 @@
 var loadText = require('terriajs-cesium/Source/Core/loadText');
 var TableDataSource = require('../../lib/Models/TableDataSource');
 var TableStyle = require('../../lib/Models/TableStyle');
+var Terria = require('../Models/Terria');
 
 
 describe('TableDataSource', function() {
@@ -11,7 +12,8 @@ describe('TableDataSource', function() {
     var tableDataSource;
 
     beforeEach(function() {
-        tableDataSource = new TableDataSource();
+        var terria = new Terria();
+        tableDataSource = new TableDataSource(terria);
     });
 
     it('can be constructed', function() {
