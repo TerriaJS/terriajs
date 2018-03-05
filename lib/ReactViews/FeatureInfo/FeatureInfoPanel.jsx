@@ -2,6 +2,7 @@
 
 import defined from 'terriajs-cesium/Source/Core/defined';
 import CesiumMath from 'terriajs-cesium/Source/Core/Math';
+import ConstantProperty from 'terriajs-cesium/Source/DataSources/ConstantProperty';
 import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
 import FeatureInfoCatalogItem from './FeatureInfoCatalogItem.jsx';
 import Loader from '../Loader.jsx';
@@ -39,7 +40,7 @@ const FeatureInfoPanel = createReactClass({
                     const fakeFeature = new Entity({
                         id: 'Pick Location'
                     });
-                    fakeFeature.position = pickedFeatures.pickPosition;
+                    fakeFeature.position = new ConstantProperty(Ellipsoid.WGS84.cartographicToCartesian(pickedFeatures.pickPosition));
                     terria.selectedFeature = fakeFeature;
                 } else {
                     terria.selectedFeature = undefined;
