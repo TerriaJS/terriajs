@@ -16,6 +16,7 @@ Change Log
 * Added `{{terria.currentTime}}` to feature info template.
 * Added a way to format times within a feature info tempate. E.g. `{{#terria.formatDateTime}}{"format": "dd-mm-yyyy HH:MM:ss"}{{terria.currentTime}}{{/terria.formatDateTime}}`.
 * Fixed a bug that caused a region to be selected even when clicking on a hole in that region.
+* We now default to `autoPlay: false` if it's not specified in `config.json`.
 
 ### 5.6.1
 
