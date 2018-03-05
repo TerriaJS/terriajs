@@ -12,7 +12,9 @@ describe('TableDataSource', function() {
     var tableDataSource;
 
     beforeEach(function() {
-        var terria = new Terria();
+        var terria = new Terria({
+            baseUrl: './'
+        });
         tableDataSource = new TableDataSource(terria);
     });
 
