@@ -56,7 +56,7 @@ const Timeline = createReactClass({
             this.setState({
                 currentTimeString: currentTime
             });
-        }
+        };
 
         this.removeTickEvent = this.props.terria.clock.onTick.addEventListener(updateCurrentTimeString);
 
