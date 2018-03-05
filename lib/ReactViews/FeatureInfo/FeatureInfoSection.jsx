@@ -111,7 +111,7 @@ const FeatureInfoSection = createReactClass({
 
     descriptionFromTemplate() {
         const template = this.props.template;
-        const safeGuardRegex = /=(\s*{{.+?}})/g;
+        const safeGuardRegex = new RegExp("=(\\s*{{.+?}})","g");
         const templateData = this.getTemplateData();
         // If property names were changed, let the template access the original property names too.
         if (defined(templateData) && defined(templateData._terria_columnAliases)) {
