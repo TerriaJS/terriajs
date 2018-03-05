@@ -111,6 +111,7 @@ const FeatureInfoSection = createReactClass({
 
     descriptionFromTemplate() {
         const template = this.props.template;
+        const safeGuardRegex = /=(\s*{{.+?}})/g;
         const templateData = this.getTemplateData();
         // If property names were changed, let the template access the original property names too.
         if (defined(templateData) && defined(templateData._terria_columnAliases)) {
@@ -123,8 +124,8 @@ const FeatureInfoSection = createReactClass({
         // (Recall we re-render whenever feature.definitionChanged triggers.)
         if (defined(templateData)) {
             return typeof template === 'string' ?
-                Mustache.render(template, templateData) :
-                Mustache.render(template.template, templateData, template.partials);
+            Mustache.render(template.replace(safeGuardRegex,'="$1"'), templateData) :
+            Mustache.render(template.template.replace(safeGuardRegex,'="$1"'), templateData, template.partials);
         } else {
             return 'No information available';
         }
