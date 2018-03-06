@@ -2,7 +2,7 @@ language: node_js
 node_js:
 - '6'
 script:
-- pyenv shell 2.7
+- pyenv shell 3
 - pip install --user mkdocs mkdocs-material
 - gulp lint docs release
 - gulp test-travis
