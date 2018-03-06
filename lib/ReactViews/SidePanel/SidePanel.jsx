@@ -81,7 +81,8 @@ const SidePanel = createReactClass({
                     <SearchBox onSearchTextChanged={this.changeSearchText}
                                onDoSearch={this.search}
                                onFocus={this.startLocationSearch}
-                               searchText={searchState.locationSearchText} />
+                               searchText={searchState.locationSearchText}
+                               placeholder="Search for locations" />
                     <div className={Styles.addData}>
                         <button type='button' onClick={this.onAddDataClicked} className={Styles.button}>
                             <Icon glyph={Icon.GLYPHS.add}/>Add data

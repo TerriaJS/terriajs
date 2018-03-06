@@ -48,9 +48,9 @@ const LocationSearchResults = createReactClass({
 
     renderResultsFooter() {
       if(this.state.isExpanded) {
-        return `View more ${this.props.search.name} results`;
+        return `View less ${this.props.search.name} results`;
       }
-      return `View less ${this.props.search.name} results`;
+      return `View more ${this.props.search.name} results`;
     },
 
     render() {
