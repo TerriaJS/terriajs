@@ -16,5 +16,5 @@ deploy:
   provider: script
   script: bash buildprocess/ci-deploy.sh
   on:
-    tags: true
+    repo: TerriaJS/terriajs
     all_branches: true
