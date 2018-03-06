@@ -24,7 +24,7 @@ const SearchResult = createReactClass({
     render() {
         return (
             <li className={classNames(Styles.searchResult, {[Styles.dark]: this.props.theme === 'dark', [Styles.light]: this.props.theme === 'light'})}>
-                <button type='button' onClick={this.props.clickAction} className={classNames(Styles.btn, {[Styles.btnLocationName]: this.props.showPin})}>
+                <button type='button' onClick={this.props.clickAction} className={Styles.btn}>
                     {this.props.icon && <span className={Styles.icon}><Icon glyph={Icon.GLYPHS[this.props.icon]}/></span>}
                     <span className={Styles.resultName}>{this.props.name}</span>
                     <span className={Styles.arrowIcon}><Icon glyph={Icon.GLYPHS.right}/></span>

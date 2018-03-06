@@ -40,17 +40,17 @@ const LocationSearchResults = createReactClass({
         });
     },
 
-    toggleExpand(){
+    toggleExpand() {
       this.setState({
           isExpanded: !this.state.isExpanded
       });
     },
 
-    renderResultsFooter(){
-      if(this.state.isExpanded){
-        return `View more ${this.props.search.name} results`
+    renderResultsFooter() {
+      if(this.state.isExpanded) {
+        return `View more ${this.props.search.name} results`;
       }
-      return `View less ${this.props.search.name} results`
+      return `View less ${this.props.search.name} results`;
     },
 
     render() {

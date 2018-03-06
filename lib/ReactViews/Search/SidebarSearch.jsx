@@ -2,7 +2,6 @@ import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
 import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
-import SearchResult from './SearchResult.jsx';
 import BadgeBar from '../BadgeBar.jsx';
 import Styles from './sidebar-search.scss';
 import LocationSearchResults from './LocationSearchResults.jsx';
@@ -21,8 +20,6 @@ const SidebarSearch = createReactClass({
         terria: PropTypes.object.isRequired
     },
 
-
-
     backToNowViewing() {
         this.props.viewState.searchState.showLocationSearchResults = false;
     },
@@ -33,7 +30,6 @@ const SidebarSearch = createReactClass({
     },
 
     render() {
-        const searchResultCount = this.props.viewState.searchState.locationSearchProviders.reduce((count, result) => count + result.searchResults.length, 0);
         return (
             <div className={Styles.search}>
                 <div className={Styles.results}>
