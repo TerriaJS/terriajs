@@ -1,18 +1,30 @@
 #!/bin/sh
-curl https://sdk.cloud.google.com | bash;
-openssl aes-256-cbc -K $encrypted_6be5b7f756e4_key -iv $encrypted_6be5b7f756e4_iv -in TerriaJS\ Automated\ Deployment-76d5f7d6b644.json.enc -out TerriaJS\ Automated\ Deployment-76d5f7d6b644.json -d
-gcloud auth activate-service-account --key-file TerriaJS\ Automated\ Deployment-76d5f7d6b644.json
 
+# Install gcloud, kubectl, and helm
 mkdir bin
 cd bin
-curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
-chmod a+x kubectl
+
+curl -LO https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-191.0.0-linux-x86_64.tar.gz
+tar xzf google-cloud-sdk-191.0.0-linux-x86_64.tar.gz
+source ./google-cloud-sdk/path.bash.inc
+gcloud init
+
+#curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+#chmod a+x kubectl
+
 curl -LO https://storage.googleapis.com/kubernetes-helm/helm-v2.8.1-linux-amd64.tar.gz
 tar xzf helm-v2.8.1-linux-amd64.tar.gz
 mv linux-amd64/helm helm
+
 export PATH=$PATH:$PWD
 cd ..
 
+# Authorize use of gcloud and our cluster
+openssl aes-256-cbc -K $encrypted_6be5b7f756e4_key -iv $encrypted_6be5b7f756e4_iv -in TerriaJS\ Automated\ Deployment-76d5f7d6b644.json.enc -out TerriaJS\ Automated\ Deployment-76d5f7d6b644.json -d
+gcloud auth activate-service-account --key-file TerriaJS\ Automated\ Deployment-76d5f7d6b644.json
+gcloud container clusters get-credentials terriajs-ci --zone australia-southeast1-a --project terriajs-automated-deployment
+
+# Clone and build TerriaMap, using this version of TerriaJS
 git clone -b include-release-name https://github.com/TerriaJS/TerriaMap.git
 cd TerriaMap
 sed -i -e 's@"terriajs": ".*"@"terriajs": "'$TRAVIS_REPO_SLUG'#'$TRAVIS_BRANCH'"@g' package.json
