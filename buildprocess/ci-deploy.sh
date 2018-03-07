@@ -1,4 +1,8 @@
 #!/bin/sh
+curl https://sdk.cloud.google.com | bash;
+openssl aes-256-cbc -K $encrypted_6be5b7f756e4_key -iv $encrypted_6be5b7f756e4_iv -in TerriaJS\ Automated\ Deployment-76d5f7d6b644.json.enc -out TerriaJS\ Automated\ Deployment-76d5f7d6b644.json -d
+gcloud auth activate-service-account --key-file TerriaJS\ Automated\ Deployment-76d5f7d6b644.json
+
 mkdir bin
 cd bin
 curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
