@@ -21,7 +21,7 @@ cd ..
 # Authorize use of gcloud and our cluster
 openssl aes-256-cbc -K $encrypted_2ae4d6eff2fd_key -iv $encrypted_2ae4d6eff2fd_iv -in buildprocess/ci-google-cloud-key.json.enc -out buildprocess/ci-google-cloud-key.json -d
 gcloud auth activate-service-account --key-file buildprocess/ci-google-cloud-key.json
-gcloud components install kubectl
+#gcloud components install kubectl
 gcloud container clusters get-credentials terriajs-ci --zone australia-southeast1-a --project terriajs-automated-deployment
 
 # Clone and build TerriaMap, using this version of TerriaJS
