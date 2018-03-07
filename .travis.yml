@@ -19,5 +19,6 @@ matrix:
     - language: node_js
       node_js:
       - '6'
+      install: true
       script:
       - bash buildprocess/ci-deploy.sh
