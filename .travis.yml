@@ -6,8 +6,8 @@ matrix:
     node_js:
     - '6'
     script:
-    - pyenv shell 3.6
-    - pip install --user mkdocs mkdocs-material
+    - pyenv shell 2.7
+    - pip install -r doc/requirements.txt
     - gulp lint docs release
     - gulp test-travis
     env:
