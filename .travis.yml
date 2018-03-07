@@ -11,7 +11,6 @@ matrix:
     - gulp lint docs release
     - gulp test-travis
     env:
-      global:
       - secure: ONX4S6726nQH107YhcYsTJzH4uQDGTpSjPb33hzYT6Jv+9FBo81mcae20+zt+7AuresNXN2e/Mx6kkEooAPIa0DvMHfGu+7SPnG1yeAJVZzIJvanvYqnyMEcLbJgy09aqP8FqrW+EZAFoE5Oh1zxQqr59e/u1i3hvLdIbGE7AWM=
       - secure: Og26Aq8tfmpvZAXPdPYFLa8bGSttCI3bJTwLcJgbjwBNdX9lwNO4XTshyNM6Vp2h6JScQY2oq1gwu5ufcDOVbj9qzbkpgrGsm0MlX1FkSTPVlIrXNdU3/S7a8GXLxpmOSxiBxS/yZd8ReoY9B9rayW2HY4ffCVAM96XbptngZ98=
       - secure: C3MD7bL3aPhBQga5DfUV9f2fH5oqYd6sP9NasqYuEYAP6zFdKBtXNzpC97RNWjihB+LIizq+NKWYN5H3vNXxW79CGdEOeTluD56VtlmY0jF9doHuEQZb/lnRyrwFypgxsK+MD5XIVgPTs3s49ETdTcsFuKM7N/51pDE75NkAbSY=
