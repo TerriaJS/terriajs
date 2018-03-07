@@ -7,7 +7,6 @@ cd bin
 curl -LO https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-191.0.0-linux-x86_64.tar.gz
 tar xzf google-cloud-sdk-191.0.0-linux-x86_64.tar.gz
 source ./google-cloud-sdk/path.bash.inc
-gcloud init
 
 #curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
 #chmod a+x kubectl
