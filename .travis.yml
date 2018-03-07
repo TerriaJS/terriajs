@@ -20,5 +20,8 @@ matrix:
       node_js:
       - '6'
       install: true
+      sudo: required
+      services:
+      - docker
       script:
       - bash buildprocess/ci-deploy.sh

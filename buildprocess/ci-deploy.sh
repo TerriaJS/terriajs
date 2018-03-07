@@ -6,8 +6,8 @@ chmod a+x kubectl
 curl -LO https://storage.googleapis.com/kubernetes-helm/helm-v2.8.1-linux-amd64.tar.gz
 tar xzf helm-v2.8.1-linux-amd64.tar.gz
 mv linux-amd64/helm helm
+export PATH=$PATH:$PWD
 cd ..
-export $PATH=$PATH:$PWD/bin
 
 git clone -b include-release-name https://github.com/TerriaJS/TerriaMap.git
 cd TerriaMap
@@ -15,4 +15,4 @@ sed -i -e 's@"terriajs": ".*"@"terriajs": "'$TRAVIS_REPO_SLUG'#'$TRAVIS_BRANCH'"
 npm install
 npm run gulp
 npm run "--terriajs-map:docker_name=terriajs-$TRAVIS_BRANCH" docker-build-local
-helm upgrade --install -f deploy/helm/example-prod.yml "terriajs-$TRAVIS_BRANCH" deploy/helm/terria
+helm upgrade --install --recreate-pods -f deploy/helm/example-prod.yml "terriajs-$TRAVIS_BRANCH" deploy/helm/terria
