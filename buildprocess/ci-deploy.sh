@@ -31,5 +31,5 @@ sed -i -e 's@"terriajs": ".*"@"terriajs": "'$TRAVIS_REPO_SLUG'#'$TRAVIS_BRANCH'"
 npm install
 npm run gulp
 npm run "--terriajs-map:docker_name=terriajs-ci" docker-build-ci -- --tag "asia.gcr.io/terriajs-automated-deployment/terria-ci:$TRAVIS_BRANCH"
-gcloud docker -- push "asia.gcr.io/terriajs-automated-deployment/terriajs-ci:$TRAVIS_BRANCH"
+gcloud docker -- push "asia.gcr.io/terriajs-automated-deployment/terria-ci:$TRAVIS_BRANCH"
 helm upgrade --install --recreate-pods -f deploy/helm/example-prod.yml --set "terriamap.image.full=asia.gcr.io/terriajs-automated-deployment/terria-ci:$TRAVIS_BRANCH" "terriajs-$TRAVIS_BRANCH" deploy/helm/terria
