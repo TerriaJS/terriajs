@@ -19,7 +19,7 @@ export PATH=$PATH:$PWD
 cd ..
 
 # Authorize use of gcloud and our cluster
-openssl aes-256-cbc -K $encrypted_6be5b7f756e4_key -iv $encrypted_6be5b7f756e4_iv -in ci-google-cloud-key.json.enc -out buildprocess/ci-google-cloud-key.json -d
+openssl aes-256-cbc -K $encrypted_6be5b7f756e4_key -iv $encrypted_6be5b7f756e4_iv -in buildprocess/ci-google-cloud-key.json.enc -out buildprocess/ci-google-cloud-key.json -d
 gcloud auth activate-service-account --key-file buildprocess/ci-google-cloud-key.json
 gcloud container clusters get-credentials terriajs-ci --zone australia-southeast1-a --project terriajs-automated-deployment
 
