@@ -3,7 +3,7 @@ node_js:
 - '6'
 script:
 - pyenv shell 2.7
-- pip install --user mkdocs mkdocs-material
+- pip install -r doc/requirements.txt
 - gulp lint docs release
 - gulp test-travis
 env:
