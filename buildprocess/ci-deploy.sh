@@ -23,8 +23,11 @@ gcloud container clusters get-credentials terriajs-ci --zone australia-southeast
 
 # Clone and build TerriaMap, using this version of TerriaJS
 git clone -b include-release-name https://github.com/TerriaJS/TerriaMap.git
+COMMIT_HASH=$(git rev-parse HEAD)
 cd TerriaMap
 sed -i -e 's@"terriajs": ".*"@"terriajs": "'$TRAVIS_REPO_SLUG'#'$TRAVIS_BRANCH'"@g' package.json
+git commit -a -m 'temporary commit' # so the version doesn't indicat local modifications
+git tag -a TerriaJS-commit-$COMMIT_HASH -m 'temporary tag'
 npm install
 npm run gulp build
 git describe
