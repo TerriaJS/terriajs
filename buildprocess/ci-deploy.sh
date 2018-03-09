@@ -30,9 +30,6 @@ git commit -a -m 'temporary commit' # so the version doesn't indicate local modi
 git tag -a TerriaJS-Commit-$TERRIAJS_COMMIT_HASH -m 'temporary tag'
 npm install
 npm run gulp build
-git describe
-cat version.js
-
 
 # A version of the branch name that can be used as a DNS name once we prepend and append some stuff.
 SAFE_BRANCH_NAME=$(printf '%s' "${TRAVIS_BRANCH,,:0:40}" | sed 's/[^-a-z0-9]/-/g')
