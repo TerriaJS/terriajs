@@ -24,8 +24,8 @@ gcloud container clusters get-credentials terriajs-ci --zone australia-southeast
 # Clone and build TerriaMap, using this version of TerriaJS
 TERRIAJS_COMMIT_HASH=$(git rev-parse HEAD)
 git clone -b include-release-name https://github.com/TerriaJS/TerriaMap.git
-TERRIAMAP_COMMIT_HASH=$(git rev-parse HEAD)
 cd TerriaMap
+TERRIAMAP_COMMIT_HASH=$(git rev-parse HEAD)
 sed -i -e 's@"terriajs": ".*"@"terriajs": "'$TRAVIS_REPO_SLUG'#'$TRAVIS_BRANCH'"@g' package.json
 git commit -a -m 'temporary commit' # so the version doesn't indicate local modifications
 git tag -a "TerriaMap-$TERRIAMAP_COMMIT_HASH--TerriaJS-$TERRIAJS_COMMIT_HASH" -m 'temporary tag'
