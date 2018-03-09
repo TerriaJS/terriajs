@@ -18,6 +18,7 @@ Change Log
 * Fixed a bug that caused a region to be selected even when clicking on a hole in that region.
 * Fixed a bug that caused Leaflet to stop rendering further points in a layer and throw errors when calculating extent when one point had invalid characters in the latitude or longitude field.
 * We now default to `autoPlay: false` if it's not specified in `config.json`.
+* Changed search box placeholders to more precisely reflect their functionality.
 
 ### 5.6.1
 
