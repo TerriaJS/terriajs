@@ -24,8 +24,8 @@ gcloud container clusters get-credentials terriajs-ci --zone australia-southeast
 # Clone and build TerriaMap, using this version of TerriaJS
 TERRIAJS_COMMIT_HASH=$(git rev-parse HEAD)
 git clone -b include-release-name https://github.com/TerriaJS/TerriaMap.git
-TERRIAMAP_COMMIT_HASH=$(git rev-parse HEAD)
 cd TerriaMap
+TERRIAMAP_COMMIT_HASH=$(git rev-parse HEAD)
 sed -i -e 's@"terriajs": ".*"@"terriajs": "'$TRAVIS_REPO_SLUG'#'$TRAVIS_BRANCH'"@g' package.json
 git commit -a -m 'temporary commit' # so the version doesn't indicate local modifications
 git tag -a "TerriaMap-$TERRIAMAP_COMMIT_HASH--TerriaJS-$TERRIAJS_COMMIT_HASH" -m 'temporary tag'
@@ -37,7 +37,7 @@ SAFE_BRANCH_NAME=$(printf '%s' "${TRAVIS_BRANCH,,:0:40}" | sed 's/[^-a-z0-9]/-/g
 
 npm run "--terriajs-map:docker_name=terriajs-ci" docker-build-ci -- --tag "asia.gcr.io/terriajs-automated-deployment/terria-ci:$SAFE_BRANCH_NAME"
 gcloud docker -- push "asia.gcr.io/terriajs-automated-deployment/terria-ci:$SAFE_BRANCH_NAME"
-helm upgrade --install --recreate-pods --set global.exposeNodePorts=true --set "terriamap.image.full=asia.gcr.io/terriajs-automated-deployment/terria-ci$SAFE_BRANCH_NAME" "terriajs-$SAFE_BRANCH_NAME" deploy/helm/terria
+helm upgrade --install --recreate-pods --set global.exposeNodePorts=true --set "terriamap.image.full=asia.gcr.io/terriajs-automated-deployment/terria-ci:$SAFE_BRANCH_NAME" "terriajs-$SAFE_BRANCH_NAME" deploy/helm/terria
 
 cd ..
 npm install request@^2.83.0
