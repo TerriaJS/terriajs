@@ -91,10 +91,27 @@ function createIngress(branches) {
 }
 
 getAllBranches('TerriaJS/terriajs').then(branches => {
+    // Update the ingress resource
     const ingress = createIngress(branches);
     fs.writeFileSync('ingress.json', JSON.stringify(ingress, undefined, '  '), 'utf8');
-    const result = childProcess.spawnSync('kubectl', ['apply', '-f', 'ingress.json'], {
+    const kubectlResult = childProcess.spawnSync('kubectl', ['apply', '-f', 'ingress.json'], {
         stdio: 'inherit'
     });
-    console.log(result.status);
+    console.log('kubectl status: ' + kubectlResult.status);
+
+    // Delete helm releases for branches that no longer exist.
+    const helmLsResult = childProcess.spawnSync('helm', ['ls', '-q', '-a']);
+    console.log('helm ls status: ' + helmLsResult.status);
+
+    const releases = helmLsResult.stdout.toString().split(/[\r\n]/).filter(l => l.indexOf('terriajs-') === 0);
+    releases.forEach(release => {
+        const branchName = release.substring(9);
+        if (!branches.find(b => b.name === branchName)) {
+            console.log('Deleting old release ' + release);
+            const helmDeleteResult = childProcess.spawnSync('helm', ['delete', '--purge', release], {
+                stdio: 'inherit'
+            });
+            console.log('helm delete status: ' + helmDeleteResult.status);
+        }
+    });
 });
