@@ -26,10 +26,17 @@ git clone -b include-release-name https://github.com/TerriaJS/TerriaMap.git
 cd TerriaMap
 sed -i -e 's@"terriajs": ".*"@"terriajs": "'$TRAVIS_REPO_SLUG'#'$TRAVIS_BRANCH'"@g' package.json
 npm install
-npm run gulp
-npm run "--terriajs-map:docker_name=terriajs-ci" docker-build-ci -- --tag "asia.gcr.io/terriajs-automated-deployment/terria-ci:${TRAVIS_BRANCH,,}"
-gcloud docker -- push "asia.gcr.io/terriajs-automated-deployment/terria-ci:${TRAVIS_BRANCH,,}"
-helm upgrade --install --recreate-pods --set global.exposeNodePorts=true --set "terriamap.image.full=asia.gcr.io/terriajs-automated-deployment/terria-ci:${TRAVIS_BRANCH,,}" "terriajs-${TRAVIS_BRANCH,,}" deploy/helm/terria
+npm run gulp build
+git describe
+cat version.js
+
+
+# A version of the branch name that can be used as a DNS name once we prepend and append some stuff.
+SAFE_BRANCH_NAME=$(printf '%s' "${TRAVIS_BRANCH,,:0:40}" | sed 's/[^-a-z0-9]/-/g')
+
+npm run "--terriajs-map:docker_name=terriajs-ci" docker-build-ci -- --tag "asia.gcr.io/terriajs-automated-deployment/terria-ci:$SAFE_BRANCH_NAME"
+gcloud docker -- push "asia.gcr.io/terriajs-automated-deployment/terria-ci:$SAFE_BRANCH_NAME"
+helm upgrade --install --recreate-pods --set global.exposeNodePorts=true --set "terriamap.image.full=asia.gcr.io/terriajs-automated-deployment/terria-ci$SAFE_BRANCH_NAME" "terriajs-$SAFE_BRANCH_NAME" deploy/helm/terria
 
 cd ..
 npm install request@^2.83.0

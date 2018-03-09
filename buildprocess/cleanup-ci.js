@@ -48,18 +48,11 @@ function getAllBranches(repo) {
     return getNextPage().then(() => result);
 }
 
+function makeSafeName(name) {
+    return name.toLowerCase().replace(/[^-a-z0-9]/g, '-').substring(0, 40);
+}
+
 function createIngress(branches) {
-    const dnsNameRegex = /^[-a-z0-9]+$/i;
-    const branchesWithValidNames = branches.filter(branch => dnsNameRegex.test(branch.name));
-    const branchesWithInvalidNames = branches.filter(branch => !dnsNameRegex.test(branch.name));
-
-    if (branchesWithInvalidNames.length > 0) {
-        console.log('The following branches have invalid names and will be ignored:');
-        branchesWithInvalidNames.forEach(branch => {
-            console.log('  ' + branch.name);
-        });
-    }
-
     return {
         apiVersion: 'extensions/v1beta',
         kind: 'Ingress',
@@ -76,10 +69,10 @@ function createIngress(branches) {
             rules: [
                 {
                     http: {
-                        paths: branchesWithValidNames.map(branch => ({
+                        paths: branches.map(branch => ({
                             path: '/' + branch.name + '/',
                             backend: {
-                                serviceName: 'terriajs-' + branch.name.toLowerCase() + '-terriamap',
+                                serviceName: 'terriajs-' + makeSafeName(branch.name) + '-terriamap',
                                 servicePort: 'http'
                             }
                         }))
