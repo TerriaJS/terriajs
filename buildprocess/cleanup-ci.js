@@ -22,8 +22,16 @@ function getAllBranches(repo) {
 
     function getNextPage() {
         ++page;
+
+        let url = baseUrl + '?page=' + page;
+        if (process.env.GITHUB_CLIENT_ID) {
+            url += '&client_id=' + process.env.GITHUB_CLIENT_ID;
+        }
+        if (process.env.GITHUB_CLIENT_SECRET) {
+            url += '&client_secret=' + process.env.GITHUB_CLIENT_SECRET;
+        }
         return requestPromise({
-            url: baseUrl + '?page=' + page,
+            url: url,
             headers: {
                 'User-Agent': 'TerriaJS CI'
             }
@@ -41,8 +49,9 @@ function getAllBranches(repo) {
 }
 
 function createIngress(branches) {
-    const branchesWithValidNames = branches.filter(branch => /^[a-z]([-a-z0-9]*[a-z0-9])?$/.test(branch.name));
-    const branchesWithInvalidNames = branches.filter(branch => !/^[a-z]([-a-z0-9]*[a-z0-9])?$/.test(branch.name));
+    const dnsNameRegex = /^[-a-z0-9]+$/i;
+    const branchesWithValidNames = branches.filter(branch => dnsNameRegex.test(branch.name));
+    const branchesWithInvalidNames = branches.filter(branch => !dnsNameRegex.test(branch.name));
 
     if (branchesWithInvalidNames.length > 0) {
         console.log('The following branches have invalid names and will be ignored:');
@@ -70,7 +79,7 @@ function createIngress(branches) {
                         paths: branchesWithValidNames.map(branch => ({
                             path: '/' + branch.name + '/',
                             backend: {
-                                serviceName: 'terriajs-' + branch.name + '-terriamap',
+                                serviceName: 'terriajs-' + branch.name.toLowerCase() + '-terriamap',
                                 servicePort: 'http'
                             }
                         }))
