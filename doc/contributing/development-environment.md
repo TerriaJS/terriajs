@@ -47,7 +47,7 @@ cd ..
 ```
 
 !!! note
-    
+
     The version of TerriaJS in your `packages/terriajs` directory must be semver-compatible with the version specification in TerriaMap's `package.json`. If it's not, yarn will install a separate semver-compatible version of TerriaJS in `node_modules` instead of using the one you've put in `packages/terriajs`. The version numbers are _usually_ already aligned, but if not, change the `"terriajs": "x.y.z"` dependency in TerriaMap's `package.json` to be the exact `"version"` property in TerriaJS's `package.json`. You will generally not want to commit this change.
 
 Then, in the TerriaMap directory, run:
@@ -111,10 +111,10 @@ npm run gulp docs
 
 It will be placed in the `wwwroot/doc` folder.
 
-You need a standalone install of MkDocs in order to build the user guide, see [http://www.mkdocs.org/#installation](http://www.mkdocs.org/#installation) for details. You will also need to install the `mkdocs-material` theme:
+You need a standalone install of MkDocs and the `mkdocs-material` theme in order to build the user guide. Install these by running:
 
 ```
-pip install mkdocs-material
+pip install -r doc/requirements.txt
 ```
 
 ## Tests / Specs
