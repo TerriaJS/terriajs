@@ -122,9 +122,9 @@ getAllBranches('TerriaJS/terriajs').then(branches => {
         if (!image.tags.some(tag => branches.find(b => b.name === tag))) {
             console.log('Deleting old docker image ' + image.digest);
             const deleteResult = childProcess.spawnSync('gcloud', [
-                'images', 'delete',
+                'container', 'images', 'delete',
                 '-q', '--force-delete-tags',
-                'asia.gcr.io/terriajs-automated-deployment/terria-ci@' + image.digest.substring(7)
+                'asia.gcr.io/terriajs-automated-deployment/terria-ci@' + image.digest
             ], { stdio: 'inherit' });
             console.log('delete status: ' + deleteResult.status);
         }
