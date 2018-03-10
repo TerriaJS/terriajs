@@ -107,4 +107,29 @@ getAllBranches('TerriaJS/terriajs').then(branches => {
             console.log('helm delete status: ' + helmDeleteResult.status);
         }
     });
+
+    // Delete old images that are no longer tagged with valid branches
+    const imagesResult = childProcess.spawnSync('gcloud', [
+        'container', 'images', 'list-tags',
+        'asia.gcr.io/terriajs-automated-deployment/terria-ci',
+        '--limit', '999',
+        '--format=json'
+    ]);
+    console.log('images list status: ' + imagesResult.status);
+    const images = JSON.parse(imagesResult.stdout.toString());
+
+    images.forEach(image => {
+        if (!image.tags.some(tag => branches.find(b => b.name === tag))) {
+            console.log('Deleting old docker image ' + image.digest);
+            const deleteResult = childProcess.spawnSync('gcloud', [
+                'images', 'delete',
+                '-q', '--force-delete-tags',
+                'asia.gcr.io/terriajs-automated-deployment/terria-ci@' + image.digest
+            ]);
+            console.log('delete status: ' + deleteResult.status);
+        }
+    });
+    // gcloud container images list-tags asia.gcr.io/terriajs-automated-deployment/terria-ci --limit 999 --format=json
+
+
 });
