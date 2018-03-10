@@ -124,8 +124,8 @@ getAllBranches('TerriaJS/terriajs').then(branches => {
             const deleteResult = childProcess.spawnSync('gcloud', [
                 'images', 'delete',
                 '-q', '--force-delete-tags',
-                'asia.gcr.io/terriajs-automated-deployment/terria-ci@' + image.digest
-            ]);
+                'asia.gcr.io/terriajs-automated-deployment/terria-ci@' + image.digest.substring(7)
+            ], { stdio: 'inherit' });
             console.log('delete status: ' + deleteResult.status);
         }
     });
