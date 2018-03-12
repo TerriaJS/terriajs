@@ -30,10 +30,8 @@ TERRIAJS_COMMIT_HASH=$(git rev-parse HEAD)
 git clone -b include-release-name https://github.com/TerriaJS/TerriaMap.git
 cd TerriaMap
 TERRIAMAP_COMMIT_HASH=$(git rev-parse HEAD)
-echo start sed
 sed -i -e 's@"terriajs": ".*"@"terriajs": "'$TRAVIS_REPO_SLUG'#'$TRAVIS_BRANCH'"@g' package.json
-echo start sync
-sync-dependencies --source terriajs --from ../package.json
+sync-dependencies --source terriajs
 git commit -a -m 'temporary commit' # so the version doesn't indicate local modifications
 git tag -a "TerriaMap-$TERRIAMAP_COMMIT_HASH--TerriaJS-$TERRIAJS_COMMIT_HASH" -m 'temporary tag'
 npm install
