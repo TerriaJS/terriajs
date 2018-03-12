@@ -21,12 +21,17 @@ gcloud auth activate-service-account --key-file buildprocess/ci-google-cloud-key
 gcloud components install kubectl --quiet
 gcloud container clusters get-credentials terriajs-ci --zone australia-southeast1-a --project terriajs-automated-deployment
 
+# Install some tools we need from npm
+npm install -g sync-dependencies
+npm install request@^2.83.0
+
 # Clone and build TerriaMap, using this version of TerriaJS
 TERRIAJS_COMMIT_HASH=$(git rev-parse HEAD)
 git clone -b include-release-name https://github.com/TerriaJS/TerriaMap.git
 cd TerriaMap
 TERRIAMAP_COMMIT_HASH=$(git rev-parse HEAD)
 sed -i -e 's@"terriajs": ".*"@"terriajs": "'$TRAVIS_REPO_SLUG'#'$TRAVIS_BRANCH'"@g' package.json
+sync-dependencies --source terriajs --from ../package.json
 git commit -a -m 'temporary commit' # so the version doesn't indicate local modifications
 git tag -a "TerriaMap-$TERRIAMAP_COMMIT_HASH--TerriaJS-$TERRIAJS_COMMIT_HASH" -m 'temporary tag'
 npm install
@@ -40,5 +45,4 @@ gcloud docker -- push "asia.gcr.io/terriajs-automated-deployment/terria-ci:$SAFE
 helm upgrade --install --recreate-pods --set global.exposeNodePorts=true --set "terriamap.image.full=asia.gcr.io/terriajs-automated-deployment/terria-ci:$SAFE_BRANCH_NAME" "terriajs-$SAFE_BRANCH_NAME" deploy/helm/terria
 
 cd ..
-npm install request@^2.83.0
 node buildprocess/cleanup-ci.js
