@@ -15,9 +15,13 @@ Change Log
 * Fix a bug that meant that, when the current time was updated on an `ImageryCatalogItem` while the layer wasn't shown, the old time was still shown when the layer was re-enabled.
 * Added `{{terria.currentTime}}` to feature info template.
 * Added a way to format times within a feature info tempate. E.g. `{{#terria.formatDateTime}}{"format": "dd-mm-yyyy HH:MM:ss"}{{terria.currentTime}}{{/terria.formatDateTime}}`.
+* Fixed a bug that caused the selection indicator to float strangely when visiting a share link with a selected feature.
 * Fixed a bug that caused a region to be selected even when clicking on a hole in that region.
+* Fixed a bug that prevented the selection indicator from following moving features on the 2D map.
 * Fixed a bug that caused Leaflet to stop rendering further points in a layer and throw errors when calculating extent when one point had invalid characters in the latitude or longitude field.
 * We now default to `autoPlay: false` if it's not specified in `config.json`.
+* Changed search box placeholders to more precisely reflect their functionality.
+* CartoDB basemaps are now always loaded over HTTPS.
 
 ### 5.6.1
 
