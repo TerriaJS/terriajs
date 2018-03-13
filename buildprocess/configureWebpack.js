@@ -65,7 +65,7 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
         loader: require.resolve('babel-loader'),
         query: {
             sourceMap: false, // generated sourcemaps are currently bad, see https://phabricator.babeljs.io/T7257
-            presets: ['es2015', 'react'],
+            presets: ['env', 'react'],
             plugins: [
                 'jsx-control-statements'
             ]
@@ -146,7 +146,10 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
     config.module.loaders.push({
         test: /\.svg$/,
         include: path.resolve(terriaJSBasePath, 'wwwroot', 'images', 'icons'),
-        loader: require.resolve('svg-sprite-loader')
+        loader: require.resolve('svg-sprite-loader'),
+        options: {
+            esModule: false
+        }
     });
 
     config.devServer = config.devServer || {

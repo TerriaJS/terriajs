@@ -50,7 +50,7 @@ $text-light-dimmed: #BBBBBB;
 
 $faint-bg: #f5f5f5;
 $warning: #FF5B6F;
-$info-color: #FFFF00;
+$info-color: #FED17F;
 $link-text-decoration: none;
 
 $padding: 10px;
@@ -89,6 +89,7 @@ $feature-info-btn-color: $text-light;
 // $feature-info-table-odd-row-bg: lighten($feature-info-bg, 5%); // Optionally define for stripy tables.
 $feature-info-table-border-style: 1px solid $dark;
 // $feature-info-table-width: 100%; // Optionally define to force tables to the full width of the feature info panel.
+$feature-info-right-margin: 105px;
 
 $mobile-main-bg: #ffffff;
 $mobile-text: #000;
@@ -136,7 +137,7 @@ $compass-width: 55px;
 //screen sizes
 $sm : 768px;
 $md: 992px;
-$lg: 1200px;
+$lg: 1300px;
 
 $front-component-z-index: 99;
 
@@ -148,8 +149,8 @@ $chart-line-color: #ccc;
 $chart-preview-line-color: $chart-line-color;
 $chart-darker: darken($dark, 8%);
 
-
-
 $charcoal-grey: #3f4854;
 $turquoise-blue: #08abd5;
 
+// Splitter
+$splitter-thumb-width: 40px;

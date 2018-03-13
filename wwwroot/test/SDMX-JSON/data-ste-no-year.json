@@ -1,0 +1,186 @@
+{
+    "header": {
+        "id": "data-as-observations",
+        "test": true
+    },
+    "dataSets": [
+        {
+            "action": "Information",
+            "observations": {
+                "0:0:0:0:0:0": [
+                    17658,
+                    0,
+                    null
+                ],
+                "0:0:1:0:0:0": [
+                    14042,
+                    0,
+                    null
+                ],
+                "0:0:2:0:0:0": [
+                    9739,
+                    0,
+                    null
+                ],
+                "0:0:3:0:0:0": [
+                    6572,
+                    0,
+                    null
+                ],
+                "0:0:4:0:0:0": [
+                    2970,
+                    0,
+                    null
+                ],
+                "0:0:5:0:0:0": [
+                    4940,
+                    0,
+                    null
+                ],
+                "0:0:6:0:0:0": [
+                    945,
+                    0,
+                    null
+                ],
+                "0:0:7:0:0:0": [
+                    7222,
+                    0,
+                    null
+                ],
+                "0:0:8:0:0:0": [
+                    13001,
+                    0,
+                    null
+                ]
+            }
+        }
+    ],
+    "structure": {
+        "name": "observation data",
+        "description": "Observation data",
+        "dimensions": {
+            "observation": [
+                {
+                    "keyPosition": 0,
+                    "id": "MEASURE",
+                    "name": "Sex",
+                    "values": [
+                        {
+                            "id": "3",
+                            "name": "Persons"
+                        }
+                    ]
+                },
+                {
+                    "keyPosition": 1,
+                    "id": "SPC",
+                    "name": "Selected Person Characteristics",
+                    "values": [
+                        {
+                            "id": "TT",
+                            "name": "Total persons"
+                        }
+                    ]
+                },
+                {
+                    "keyPosition": 2,
+                    "id": "REGION",
+                    "name": "Region",
+                    "values": [
+                        {
+                            "id": "1",
+                            "name": "New South Wales"
+                        },
+                        {
+                            "id": "2",
+                            "name": "Victoria"
+                        },
+                        {
+                            "id": "3",
+                            "name": "Queensland"
+                        },
+                        {
+                            "id": "4",
+                            "name": "South Australia"
+                        },
+                        {
+                            "id": "5",
+                            "name": "Western Australia"
+                        },
+                        {
+                            "id": "6",
+                            "name": "Tasmania"
+                        },
+                        {
+                            "id": "7",
+                            "name": "Northern Territory"
+                        },
+                        {
+                            "id": "8",
+                            "name": "Australian Capital Territory"
+                        },
+                        {
+                            "id": "9",
+                            "name": "Other Territories"
+                        }
+                    ]
+                },
+                {
+                    "keyPosition": 3,
+                    "id": "REGIONTYPE",
+                    "name": "Region Type",
+                    "values": [
+                        {
+                            "id": "STE",
+                            "name": "States and Territories"
+                        }
+                    ]
+                },
+                {
+                    "keyPosition": 4,
+                    "id": "FREQUENCY",
+                    "name": "Frequency",
+                    "values": [
+                        {
+                            "id": "A",
+                            "name": "Annual"
+                        }
+                    ],
+                    "role": "FREQ"
+                },
+                {
+                    "id": "TIME_PERIOD",
+                    "name": "Time",
+                    "values": [
+                        {
+                            "id": "2001",
+                            "name": "2001"
+                        }
+                    ],
+                    "role": "TIME_PERIOD"
+                }
+            ]
+        },
+        "attributes": {
+            "dataSet": [],
+            "series": [],
+            "observation": [
+                {
+                    "id": "TIME_FORMAT",
+                    "name": "Time Format",
+                    "values": [
+                        {
+                            "id": "P1Y",
+                            "name": "Annual"
+                        }
+                    ]
+                },
+                {
+                    "id": "OBS_STATUS",
+                    "name": "Observation Status",
+                    "values": []
+                }
+            ]
+        }
+    }
+}

@@ -3,14 +3,17 @@
 /*global require,describe,it,expect,beforeEach,fail*/
 
 var Credit = require('terriajs-cesium/Source/Core/Credit');
-var ImageryLayerCatalogItem = require('../../lib/Models/ImageryLayerCatalogItem');
 var ImageryProvider = require('terriajs-cesium/Source/Scene/ImageryProvider');
 var JulianDate = require('terriajs-cesium/Source/Core/JulianDate');
-var LegendUrl = require('../../lib/Map/LegendUrl');
 var Rectangle = require('terriajs-cesium/Source/Core/Rectangle');
+var TimeInterval = require('terriajs-cesium/Source/Core/TimeInterval');
+var TimeIntervalCollection = require('terriajs-cesium/Source/Core/TimeIntervalCollection');
+var WebMercatorTilingScheme = require('terriajs-cesium/Source/Core/WebMercatorTilingScheme');
+
+var ImageryLayerCatalogItem = require('../../lib/Models/ImageryLayerCatalogItem');
+var LegendUrl = require('../../lib/Map/LegendUrl');
 var Terria = require('../../lib/Models/Terria');
 var WebMapServiceCatalogItem = require('../../lib/Models/WebMapServiceCatalogItem');
-var WebMercatorTilingScheme = require('terriajs-cesium/Source/Core/WebMercatorTilingScheme');
 
 var terria;
 var wmsItem;
@@ -38,7 +41,7 @@ describe('WebMapServiceCatalogItem', function() {
         expect(wmsItem).toBeDefined();
     });
 
-    it('is derived from ImageryLayerDataItemViewModel', function() {
+    it('is derived from ImageryLayerCatalogItem', function() {
         expect(wmsItem instanceof ImageryLayerCatalogItem).toBe(true);
     });
 
@@ -284,7 +287,7 @@ describe('WebMapServiceCatalogItem', function() {
     it('can be round-tripped with serializeToJson and updateFromJson', function() {
         wmsItem.name = 'Name';
         wmsItem.id = 'Id';
-        wmsItem.description = 'Description';
+        // wmsItem.description = 'Description';
         wmsItem.rectangle = Rectangle.fromDegrees(-10, 10, -20, 20);
         wmsItem.legendUrl = new LegendUrl('http://legend.com', 'image/png');
         wmsItem.dataUrlType = 'wfs';
@@ -298,6 +301,18 @@ describe('WebMapServiceCatalogItem', function() {
             awesome: 'maybe'
         };
         wmsItem.getFeatureInfoFormats = [];
+        wmsItem.intervals = new TimeIntervalCollection([
+            new TimeInterval({
+                start: JulianDate.fromIso8601('2013-08-01T15:00:00Z'),
+                stop: JulianDate.fromIso8601('2013-08-01T18:00:00Z')
+            }),
+            new TimeInterval({
+                start: JulianDate.fromIso8601('2013-09-01T11:00:00Z'),
+                stop: JulianDate.fromIso8601('2013-09-03T13:00:00Z')
+            })
+        ]);
+        // This initialTime is before any interval, so internally it will be changed to the first start date.
+        wmsItem.initialTimeSource = '2012-01-01T12:00:00Z';
 
         var json = wmsItem.serializeToJson();
 
@@ -306,7 +321,8 @@ describe('WebMapServiceCatalogItem', function() {
 
         // We'll check for these later in toEqual but this makes it a bit easier to see what's different.
         expect(reconstructed.name).toBe(wmsItem.name);
-        expect(reconstructed.description).toBe(wmsItem.description);
+        // We do not serialize the description, to keep the serialization shorter.
+        // expect(reconstructed.description).toBe(wmsItem.description);
         expect(reconstructed.rectangle).toEqual(wmsItem.rectangle);
         expect(reconstructed.legendUrl).toEqual(wmsItem.legendUrl);
         expect(reconstructed.legendUrls).toEqual(wmsItem.legendUrls);
@@ -318,13 +334,22 @@ describe('WebMapServiceCatalogItem', function() {
         expect(reconstructed.layers).toBe(wmsItem.layers);
         expect(reconstructed.parameters).toBe(wmsItem.parameters);
         expect(reconstructed.getFeatureInfoFormats).toEqual(wmsItem.getFeatureInfoFormats);
+        // Do not compare time, because on some systems the second could have ticked over between getting the two times.
+        var initialTimeSource = reconstructed.initialTimeSource.substr(0, 10);
+        expect(initialTimeSource).toEqual('2013-08-01');
+        // We do not serialize the intervals, to keep the serialization shorter.
+        // expect(reconstructed.intervals.length).toEqual(wmsItem.intervals.length);
     });
 
     it('can get handle plain text in textAttribution', function() {
         wmsItem.updateFromJson({
             attribution: "Plain text"
         });
-        expect(wmsItem.attribution).toEqual(new Credit("Plain text", undefined, undefined));
+        expect(wmsItem.attribution).toEqual(new Credit({
+            text: "Plain text",
+            imageUrl: undefined,
+            link: undefined
+        }));
     });
     it('can get handle object in textAttribution', function() {
         var test = {
@@ -463,6 +488,17 @@ describe('WebMapServiceCatalogItem', function() {
             layers: 'foo,bar'
         });
         wmsItem.load().then(done.fail).otherwise(done);
+    });
+
+    it('supports a namespaced layer name', function(done) {
+        wmsItem.updateFromJson({
+            url: 'http://example.com',
+            metadataUrl: 'test/WMS/single_style_legend_url.xml',
+            layers: 'namespace:single_period'
+        });
+        wmsItem.load().then(function() {
+            expect(wmsItem.layers).toBe('single_period');
+        }).then(done).otherwise(done.fail);
     });
 
     it('detects ncWMS implementation correctly', function(done) {

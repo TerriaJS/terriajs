@@ -8,12 +8,11 @@
 
 .tab-list{
   composes: tab-list from '../../tabs.scss';
-  background: $modal-secondary-bg;
-  padding-right: 0;
+  background: $modal-secondary-bg!important;
+  padding-right: 0!important;
 
   &__item {
     composes: tab-list__item from '../../tabs.scss';
-
     margin-right: 3px;
   }
 

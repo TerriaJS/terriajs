@@ -48,7 +48,6 @@ const FeatureInfoCatalogItem = createReactClass({
                         catalogItem={catalogItem}
                         feature={feature}
                         position={terria.pickedFeatures && terria.pickedFeatures.pickPosition}
-                        clock={terria.clock}
                         template={featureInfoTemplate}
                         isOpen={feature === terria.selectedFeature}
                         onClickHeader={this.props.onToggleOpen}
@@ -62,15 +61,18 @@ const FeatureInfoCatalogItem = createReactClass({
             <li className={Styles.group}>
                 <ul className={Styles.sections}>
                     <If condition={hiddenNumber === 1}>
-                        <li className={Styles.messageItem}>
-                            More than {maximumShownFeatureInfos} {catalogItem.name} features were found. The first {maximumShownFeatureInfos} are shown below.
-                        </li>
+                      <li className={Styles.messageItem}>
+                        <strong>More than {maximumShownFeatureInfos} {catalogItem.name} features were found.</strong><br/>
+                        The first {maximumShownFeatureInfos} are shown below.
+                      </li>
                     </If>
                     <If condition={hiddenNumber > 1}>
-                        <li className={Styles.messageItem}>
-                            {totalFeaturesCount} {catalogItem.name} features were found. The first {maximumShownFeatureInfos} are shown below.
-                        </li>
+                      <li className={Styles.messageItem}>
+                        <strong>{totalFeaturesCount} {catalogItem.name} features were found.</strong><br/>
+                        The first {maximumShownFeatureInfos} are shown below.
+                      </li>
                     </If>
+
                     {featureInfoSections}
                 </ul>
             </li>
