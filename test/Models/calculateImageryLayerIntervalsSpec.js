@@ -2,23 +2,13 @@
 
 /*global require,describe,it,expect,beforeEach,fail*/
 
-var CatalogItem = require('../../lib/Models/CatalogItem');
 var JulianDate = require('terriajs-cesium/Source/Core/JulianDate');
-var RegionMapping = require('../../lib/Models/RegionMapping');
-var Terria = require('../../lib/Models/Terria');
+var calculateImageryLayerIntervals = require('../../lib/Models/calculateImageryLayerIntervals');
 var TimeInterval = require('terriajs-cesium/Source/Core/TimeInterval');
 
-describe('RegionMapping', function() {
-    let regionMapping;
-    let calculateImageryLayerIntervals;
+describe('calculateImageryLayerIntervals', function() {
 
     beforeEach(function() {
-        const terria = new Terria({
-            baseUrl: './'
-        });
-        const item = new CatalogItem(terria);
-        regionMapping = new RegionMapping(item);
-        calculateImageryLayerIntervals = regionMapping._testCalculateImageryLayerIntervals;
     });
 
     // Syntax shortner, build a TimeInterval from the 4 key values we are using.
@@ -36,7 +26,7 @@ describe('RegionMapping', function() {
         return {currentInterval: current, nextInterval: next};
     }
 
-    it('calculateImageryLayerIntervals works correctly', function() {
+    it('works correctly', function() {
         // We use the math notation () and [] to denote time intervals exclusive of the value and inclusive of the value respectively.
         // Note: This code in this section could be further simplified, but we have left if more verbose for readability and clarity.
 
