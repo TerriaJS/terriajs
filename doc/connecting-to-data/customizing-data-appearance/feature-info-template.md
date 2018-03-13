@@ -125,12 +125,16 @@ For features with time-varying table-based data structures (eg. CSV, SOS2, SDMX-
 
 You can place this chart in your template using `{{terria.timeSeries.chart}}`.  Alternatively, you can access the following component information:
 
-- `{{terria.timeSeries.xName}}` - the x-column name, with any double-quotes removed.
-- `{{terria.timeSeries.yName}}` - the y-column name, with any double-quotes removed.
+- `{{terria.timeSeries.xName}}` - the x-column name
+- `{{terria.timeSeries.yName}}` - the y-column name
 - `{{terria.timeSeries.title}}`
 - `{{terria.timeSeries.id}}`
 - `{{terria.timeSeries.units}}` - the column units as a comma-separated string.
 - `{{terria.timeSeries.data}}` - the data as a comma-separated string.
+
+Please note:
+* If any of the component information above contains double-quotes, double quotes will be removed before TerriaJS processes the template further. 
+* If any of the component information above is used as part of tag attributes, it must be surrounded by double-quotes. e.g. `<chart y-column="{{terria.timeSeries.yName}}"></chart>`
 
 So you could reconstruct the chart manually as:
 ```
