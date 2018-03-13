@@ -99,7 +99,7 @@ getAllBranches('TerriaJS/terriajs').then(branches => {
     const releases = helmLsResult.stdout.toString().split(/[\r\n]/).filter(l => l.indexOf('terriajs-') === 0);
     releases.forEach(release => {
         const branchName = release.substring(9);
-        if (!branches.find(b => b.name === branchName)) {
+        if (!branches.find(b => makeSafeName(b.name) === branchName)) {
             console.log('Deleting old release ' + release);
             const helmDeleteResult = childProcess.spawnSync('helm', ['delete', '--purge', release], {
                 stdio: 'inherit'
@@ -119,7 +119,7 @@ getAllBranches('TerriaJS/terriajs').then(branches => {
     const images = JSON.parse(imagesResult.stdout.toString());
 
     images.forEach(image => {
-        if (!image.tags.some(tag => branches.find(b => b.name === tag))) {
+        if (!image.tags.some(tag => branches.find(b => makeSafeName(b.name) === tag))) {
             console.log('Deleting old docker image ' + image.digest);
             const deleteResult = childProcess.spawnSync('gcloud', [
                 'container', 'images', 'delete',
