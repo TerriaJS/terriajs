@@ -26,5 +26,5 @@ terriamap:
         - "/etc/config/client"
     resources:
         requests:
-            cpu: 0m
-            memory: 0Mi
+            cpu: 10m
+            memory: 10Mi
