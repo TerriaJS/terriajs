@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### Next Release
+
+* Fixed a bug that caused the timeline to appear when changing the time on the workbench for a layer not attached to the timeline.
+
 ### 5.6.2
 
 * Renamed search marker to location marker.
