@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import createReactClass from 'create-react-class';
+import defined from 'terriajs-cesium/Source/Core/defined';
 import Styles from './badge-bar.scss';
 
 const BadgeBar = createReactClass({
@@ -17,9 +18,8 @@ const BadgeBar = createReactClass({
                 <li>
                     <label className={Styles.title}>{this.props.label}</label>
                 </li>
-                <li>
-                    <label className={Styles.labelBadge}>[ {this.props.badge} ]</label>
-                </li>
+                {defined(this.props.badge) &&
+                (<li><label className={Styles.labelBadge}>[ {this.props.badge} ]</label></li>)}
                 <li>
                     {this.props.children}
                 </li>

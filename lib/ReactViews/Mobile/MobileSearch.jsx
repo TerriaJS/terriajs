@@ -57,7 +57,7 @@ const MobileSearch = createReactClass({
                 <div className={Styles.providerResult}>
                     <ul className={Styles.btnList}>
                         <SearchResult clickAction={this.searchInDataCatalog}
-                                      showPin={false}
+                                      icon={null}
                                       name={`Search for "${this.props.viewState.searchState.locationSearchText}" in the Data Catalogue`}
                                       theme={theme}
                         />
