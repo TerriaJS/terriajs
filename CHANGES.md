@@ -6,6 +6,7 @@ Change Log
 ### Next Release
 
 * Fixed a bug that caused the timeline to appear when changing the time on the workbench for a layer not attached to the timeline.
+* The workbench date/time picker is now available for time varying point and region CSVs.
 
 ### 5.6.2
 
