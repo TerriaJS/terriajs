@@ -5,6 +5,7 @@ Change Log
 
 ### Next Release
 
+* Display of Lat Lon changed from 3 deciml places to 5 decimal places - just over 1m precision at equator
 * Fixed a bug that caused the timeline to appear when changing the time on the workbench for a layer not attached to the timeline.
 * The workbench date/time picker is now available for time varying point and region CSVs.
 
