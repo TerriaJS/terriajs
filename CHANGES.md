@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### 5.6.4
+
+* Fixed a bug causing an error message when adding tabular data to the workbench before it was loaded.
+
 ### 5.6.3
 
 * Display of Lat Lon changed from 3 deciml places to 5 decimal places - just over 1m precision at equator.
