@@ -15,9 +15,9 @@
 }
 
 .ui {
-  @media screen{
+  //@media screen{
     overflow: hidden;
-  }
+  //}
   background: $dark;
   width: 100%;
 }
@@ -35,9 +35,9 @@
   h1 {
     margin: 0;
   }
-  @media print{
-    display: block;
-  }
+  // @media print{
+  //   display: block;
+  // }
 }
 
 .map {
@@ -47,12 +47,12 @@
   right: 0;
   top: $mobile-header-height;
   bottom: 0;
-  @media print {
-    position: relative;
-    display: block;
-    height: auto;
-    page-break-after: always;
-  }
+  // @media print {
+  //   position: relative;
+  //   display: block;
+  //   height: auto;
+  //   page-break-after: always;
+  // }
 }
 
 .feedback{
@@ -65,7 +65,7 @@
   position: relative;
 }
 
-@media screen and (min-width: $sm) {
+@media (min-width: $sm) {
   .ui {
     display: table;
   }

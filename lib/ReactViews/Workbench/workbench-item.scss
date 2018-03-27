@@ -15,12 +15,12 @@ $workbench-margin: $padding-small;
     float: none;
   }
 
-  @media print{
-    color: #000;
-  }
+  // @media print{
+  //   color: #000;
+  // }
 
   .is-open {
-    @media screen and (min-width: $sm) {
+    @media (min-width: $sm) {
       .btn--toggle {
         padding-left: 8px;
       }

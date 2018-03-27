@@ -13,11 +13,11 @@
   box-shadow: $box-shadow;
   display: none;
 
-  @media screen and (min-width: $sm) {
+  @media (min-width: $sm) {
     bottom: 75px;
     right: $padding*2;
   }
-  @media screen and (max-width: $sm) {
+  @media (max-width: $sm) {
     right: 0;
     top: $mobile-header-height;
     left: 0;
@@ -30,9 +30,9 @@
   form {
     padding: $padding*2;
   }
-  @media print {
-    display: none;
-  }
+  // @media print {
+  //   display: none;
+  // }
 }
 
 .header {

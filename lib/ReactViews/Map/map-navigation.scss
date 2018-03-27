@@ -6,11 +6,11 @@
   z-index: 1;
   bottom: 25px;
 
-  @media print{
-    display: none;
-  }
+  // @media print{
+  //   display: none;
+  // }
 
-  @media screen and (min-width: $sm) {
+  @media (min-width: $sm) {
     top: 80px;
     bottom: auto;
   }

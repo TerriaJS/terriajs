@@ -12,9 +12,9 @@
   border: dashed 1px rgba(255, 255, 255, 0.5);
   margin: $padding-small;
 
-  @media print{
-    display: none;
-  }
+  // @media print{
+  //   display: none;
+  // }
 
   svg{
     height: 25px;
@@ -27,16 +27,16 @@
 .header {
     padding: 0 $padding-small;
     background: $dark;
-    @media print{
-      display: none;
-    }
+    // @media print{
+    //   display: none;
+    // }
 }
 
 .body {
     overflow: hidden;
-    @media print{
-      height: auto;
-    }
+    // @media print{
+    //   height: auto;
+    // }
 }
 
 .addData {

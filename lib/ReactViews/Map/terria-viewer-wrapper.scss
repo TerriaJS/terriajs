@@ -9,9 +9,9 @@
   position: absolute;
   cursor: auto;
 
-  @media print{
-    position: relative;
-  }
+  // @media print{
+  //   position: relative;
+  // }
 
   :global {
     .selection-indicator{
@@ -45,9 +45,9 @@
     }
 
     .cesium-widget, .cesium-widget canvas {
-      @media print{
-        position: relative;
-      }
+      // @media print{
+      //   position: relative;
+      // }
       position: absolute;
       width: 100%;
       height: 100%;
@@ -67,7 +67,7 @@
     height: 25%;
     margin: auto;
 
-    @media screen and (min-width: $sm) {
+    @media (min-width: $sm) {
       color: white;
     }
   }

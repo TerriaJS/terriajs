@@ -8,9 +8,9 @@
   color: $dark;
   border-radius: 20px;
   box-shadow: $box-shadow;
-  @media print {
-    display: none;
-  }
+  // @media print {
+  //   display: none;
+  // }
 }
 
 .btnFeedback {
@@ -29,8 +29,8 @@
     line-height: 2.2;
   }
 
-  @media print {
-    display: none;
-  }
+  // @media print {
+  //   display: none;
+  // }
 }
 

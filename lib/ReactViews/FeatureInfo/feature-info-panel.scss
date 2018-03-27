@@ -31,26 +31,26 @@
   $feature-info-medium-max-size: $sm * 0.9 - $feature-info-right-margin * 0.5;
   $feature-info-forty-percent-size: $feature-info-medium-max-size * 100 / 40;
 
-  @media screen and (min-width : $sm) and (max-width: $feature-info-forty-percent-size) {
+  @media (min-width : $sm) and (max-width: $feature-info-forty-percent-size) {
     max-width: $feature-info-medium-max-size;
     right: $feature-info-right-margin;
   }
 
-  @media screen and (min-width: $feature-info-forty-percent-size) {
+  @media (min-width: $feature-info-forty-percent-size) {
     max-width: 40%;
     right: $feature-info-right-margin;
   }
 
-  @media print{
-    position: relative;
-    color: #000;
-    margin: 0.5cm;
-    z-index: 999;
-    height: auto;
-    max-height: none;
-    min-height: 0;
-    page-break-after : auto;
-  }
+  // @media print{
+  //   position: relative;
+  //   color: #000;
+  //   margin: 0.5cm;
+  //   z-index: 999;
+  //   height: auto;
+  //   max-height: none;
+  //   min-height: 0;
+  //   page-break-after : auto;
+  // }
 }
 
 .is-collapsed {
@@ -124,9 +124,9 @@
   max-height: calc(80vh - #{$padding*2 + $btn-default-line-height});
   font-size: $font-size-feature-info;
 
-  @media print{
-    max-height: none;
-  }
+  // @media print{
+  //   max-height: none;
+  // }
 }
 
 .location {
