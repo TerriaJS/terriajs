@@ -6,6 +6,7 @@ Change Log
 ### 5.6.4
 
 * Fixed a bug causing an error message when adding tabular data to the workbench before it was loaded.
+* Added `MagdaCatalogItem` support
 
 ### 5.6.3
 
