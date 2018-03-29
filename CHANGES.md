@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### Next Release
+
+* Fixed a bug that could cause a time-dynamic WMS layer to fail to ever show up on the map if the initial time on the timeline was outside the intervals where the layer had data.
+
 ### 5.6.4
 
 * Fixed a bug causing an error message when adding tabular data to the workbench before it was loaded.
