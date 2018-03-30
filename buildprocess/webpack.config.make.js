@@ -4,7 +4,8 @@ var path = require('path');
 var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-var testGlob = ['./test/**/*.js', './test/**/*.jsx', '!./test/Utility/*.js'];
+//var testGlob = ['./test/**/*.js', './test/**/*.jsx', '!./test/Utility/*.js'];
+var testGlob = ['./test/**/*.ts'];
 
 module.exports = function(hot, dev) {
     var config = {

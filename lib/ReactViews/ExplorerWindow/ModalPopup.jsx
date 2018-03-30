@@ -1,23 +1,21 @@
-import React from 'react';
 import classNames from 'classnames';
-import ko from 'terriajs-cesium/Source/ThirdParty/knockout';
-
+import createReactClass from 'create-react-class';
 import ObserveModelMixin from '../ObserveModelMixin';
-import Tabs from './Tabs.jsx';
-
+import PropTypes from 'prop-types';
+import React from 'react';
 import Styles from './explorer-window.scss';
 
 const SLIDE_DURATION = 300;
 
-const ModalPopup = React.createClass({
+const ModalPopup = createReactClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        isVisible: React.PropTypes.bool.isRequired,
-        onClose: React.PropTypes.func.isRequired,
-        onStartAnimatingIn: React.PropTypes.func,
-        onDoneAnimatingIn: React.PropTypes.func,
-        children: React.PropTypes.node.isRequired
+        isVisible: PropTypes.bool.isRequired,
+        onClose: PropTypes.func.isRequired,
+        onStartAnimatingIn: PropTypes.func,
+        onDoneAnimatingIn: PropTypes.func,
+        children: PropTypes.node.isRequired
     },
 
     getInitialState() {

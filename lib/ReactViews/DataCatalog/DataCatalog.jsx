@@ -42,7 +42,7 @@ const DataCatalog = createReactClass({
                                   isWaitingForSearchToStart={searchState.isWaitingToStartCatalogSearch}/>
                 </If>
                 <For each="item" of={items}>
-                    {item !== this.props.terria.catalog.userAddedDataGroup &&
+                    {item !== this.props.terria.catalog.userAddedDataGroupIfItExists &&
                         <DataCatalogMember viewState={this.props.viewState}
                                            member={item}
                                            manageIsOpenLocally={isSearching}

@@ -1,0 +1,40 @@
+import { autorun, configure, runInAction, observable } from 'mobx';
+import autoUpdate from '../../lib/Core/autoUpdate';
+import WebMapServiceCatalogItem from '../../lib/Models/WebMapServiceCatalogItem3';
+
+configure({
+    enforceActions: true,
+    isolateGlobalState: true
+});
+
+describe('NewStuff', function() {
+    it('test', function(done) {
+        const wms = new WebMapServiceCatalogItem();
+        console.log(wms.name);
+        wms.definitionLayer.name = 'test';
+        console.log(wms.name);
+        console.log('here');
+
+        wms.description = 'hello';
+        console.log(wms.description);
+
+        wms.getCapabilitiesUrl = '/test';
+        alert(wms.name);
+
+        autorun(() => {
+            console.log('autorun');
+            console.log('mapItems: ' + wms.mapItems);
+        });
+
+        runInAction(() => {
+            wms.getCapabilitiesUrl = '/another';
+        });
+
+        setTimeout(() => {
+            runInAction(() => {
+                wms.getCapabilitiesUrl = '/third';
+            });
+            done();
+        }, 1000);
+    });
+});

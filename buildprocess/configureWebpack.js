@@ -4,9 +4,13 @@ var webpack = require('webpack');
 
 function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlugin, disableStyleLoader) {
     const cesiumDir = path.dirname(require.resolve('terriajs-cesium/package.json'));
+    const fontAwesomeDir = path.resolve(path.dirname(require.resolve('font-awesome/package.json')));
+    const reactMdeDir = path.resolve(path.dirname(require.resolve('react-mde/package.json')));
+    console.log(fontAwesomeDir);
+    console.log(reactMdeDir);
 
     config.resolve = config.resolve || {};
-    config.resolve.extensions = config.resolve.extensions || ['*', '.webpack.js', '.web.js', '.js'];
+    config.resolve.extensions = config.resolve.extensions || ['*', '.webpack.js', '.web.js', '.js', '.ts', '.tsx'];
     config.resolve.extensions.push('.jsx');
     config.resolve.alias = config.resolve.alias || {};
     config.resolve.modules = config.resolve.modules || [];
@@ -70,6 +74,15 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
                 'jsx-control-statements'
             ]
         }
+    });
+
+    config.module.loaders.push({
+        test: /\.tsx?$/,
+        include: [
+            path.resolve(terriaJSBasePath, 'lib'),
+            path.resolve(terriaJSBasePath, 'test')
+        ],
+        loader: require.resolve('awesome-typescript-loader')
     });
 
     // Use the raw loader for our view HTML.  We don't use the html-loader because it
@@ -140,6 +153,12 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
     config.module.loaders.push({
         test: /\.(ttf|eot|svg)(\?.+)?$/,
         include: path.resolve(terriaJSBasePath, 'wwwroot', 'fonts'),
+        loader: require.resolve('file-loader')
+    });
+
+    config.module.loaders.push({
+        test: /\.(ttf|eot|svg)(\?.+)?$/,
+        include: path.resolve(fontAwesomeDir, 'fonts'),
         loader: require.resolve('file-loader')
     });
 
@@ -221,6 +240,18 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
                 ],
                 publicPath: ''
             })
+        });
+
+        config.module.loaders.push({
+            include: [path.resolve(fontAwesomeDir, 'css'), path.resolve(reactMdeDir, 'lib', 'styles', 'css')],
+            test: /\.css$/,
+            loaders: ['style-loader', 'css-loader']
+        });
+
+        config.module.loaders.push({
+            include: path.resolve(fontAwesomeDir, 'fonts'),
+            test: /\.woff2?/,
+            loader: require.resolve('file-loader')
         });
     }
 
