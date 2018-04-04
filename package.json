@@ -98,7 +98,7 @@
     "karma-browserstack-launcher": "^1.0.1",
     "karma-chrome-launcher": "^2.0.0",
     "karma-detect-browsers": "^2.0.2",
-    "karma-electron": "^5.1.1",
+    "karma-electron": "^6.0.0",
     "karma-firefox-launcher": "^1.0.0",
     "karma-ie-launcher": "^1.0.0",
     "karma-jasmine": "^1.1.0",
