@@ -3,6 +3,7 @@ import { computed, extendObservable, runInAction, trace } from 'mobx';
 export interface LoadableLayerData {
     isLoading: boolean;
     loadPromise: Promise<void>;
+    loadIfNeeded(): Promise<void>;
 }
 
 function isPromise<T>(value: Promise<T> | T): value is Promise<T> {

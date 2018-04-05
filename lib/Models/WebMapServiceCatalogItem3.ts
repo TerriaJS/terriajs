@@ -9,7 +9,7 @@
 //  Solution: think in terms of pipelines with computed observables, document patterns.
 // 4. All code for all catalog item types needs to be loaded before we can do anything.
 
-import { autorun, configure, computed, flow, runInAction, observable, onBecomeUnobserved, onBecomeObserved, trace, decorate } from 'mobx';
+import { autorun, configure, computed, flow, runInAction, observable, onBecomeUnobserved, onBecomeObserved, trace, decorate, createAtom } from 'mobx';
 //import { promisedComputed } from 'computed-async-mobx';
 import { createTransformer, now, fromPromise } from 'mobx-utils';
 import * as fetch from 'node-fetch';
@@ -21,6 +21,7 @@ import WebMapServiceCatalogItemDefinition from '../Definitions/WebMapServiceCata
 import CatalogMember, { CatalogMemberDefinition } from './CatalogMemberNew';
 import { primitiveProperty } from './ModelProperties';
 import { model, definition } from './Decorators';
+import loadableSubset from './loadableSubset';
 
 const properties = WebMapServiceCatalogItemDefinition.properties;
 // const GetCapabilitiesLayerProperties = [
@@ -68,99 +69,6 @@ type UserLayer = Partial<Definition>;
 
 // create<Definition, GetCapabilitiesLayerProperties>((<any>Definition).metadata, GetCapabilitiesLayerProperties);
 
-type Constructor<T> = new() => T;
-type LoadableConstructor<T> = new(load: (T) => Promise<void>) => T;
-
-function subset<T, T1 extends keyof T>(definition: Constructor<T>, first: T1): Constructor<Pick<T, T1>>;
-function subset<T, T1 extends keyof T, T2 extends keyof T>(definition: Constructor<T>, first: T1, second: T2): Constructor<Pick<T, T1 | T2>>;
-function subset(definition, ...properties): any {
-    class Subset {
-        constructor() {
-            properties.forEach(property => {
-                this[property] = undefined;
-            });
-        }
-
-        // TODO: copy metadata for the subset of properties.
-        //static readonly metadata = definition.metadata.filter(property => properties.indexOf(property) >= 0);
-    }
-
-    const decorators: any = {};
-    properties.forEach(property => {
-        decorators[property] = observable;
-    });
-
-    decorate(Subset, decorators);
-
-    return Subset;
-}
-
-function loadableSubset<T, T1 extends keyof T>(definition: Constructor<T>, first: T1): LoadableConstructor<LoadableLayerData & Pick<T, T1>>;
-function loadableSubset<T, T1 extends keyof T, T2 extends keyof T>(definition: Constructor<T>, first: T1, second: T2): LoadableConstructor<LoadableLayerData & Pick<T, T1 | T2>>;
-function loadableSubset(definition, ...properties): any {
-    const valuesTemplate: any = {};
-    properties.forEach(property => {
-        valuesTemplate[property] = undefined;
-    });
-    valuesTemplate.isLoading = false;
-
-    class LoadableSubset {
-        constructor(private readonly loadFunction: (LoadableSubset) => Promise<void>) {
-        }
-
-        @computed private get _privateValues() {
-            const newValues = observable(valuesTemplate);
-
-            runInAction(() => {
-                newValues.isLoading = true;
-            });
-
-            newValues.loadPromise = this.loadFunction(newValues).then(() => {
-                runInAction(() => {
-                    newValues.isLoading = false;
-                });
-            }).catch(e => {
-                runInAction(() => {
-                    newValues.isLoading = false;
-                });
-                throw e;
-            });
-
-            return newValues;
-        }
-
-        @computed get loadPromise(): Promise<void> {
-            return this._privateValues.loadPromise;
-        }
-
-        @computed get isLoading(): boolean {
-            return this._privateValues.isLoading;
-        }
-    }
-
-    properties.forEach(property => {
-        Object.defineProperty(LoadableSubset.prototype, property, {
-            get: function() {
-                return this._privateValues[property];
-            },
-            set: function(newValue) {
-                this._privateValues[property] = newValue;
-            },
-            enumerable: true,
-            configurable: true
-        });
-    });
-
-    const decorators: any = {};
-    properties.forEach(property => {
-        decorators[property] = computed;
-    });
-
-    decorate(LoadableSubset, decorators);
-
-    return LoadableSubset;
-}
-
 const GetCapabilitiesLayer = loadableSubset(Definition, 'description', 'isGeoServer');
 
 interface WebMapServiceCatalogItem extends Definition {}
@@ -190,15 +98,19 @@ class WebMapServiceCatalogItem extends CatalogMember {
 
     @computed
     get mapItems() {
+        trace();
         return [
             this._currentImageryLayer,
-            this._nextImageryLayer
+            //this._nextImageryLayer
         ];
     }
 
 
     private _createImageryLayer(time) {
         // Don't show anything on the map until GetCapabilities finishes loading.
+        // Endless loop because if we return here, no one actually _uses_  any
+        // of the getCapabilitiesLayer properties.
+        this.getCapabilitiesLayer.loadIfNeeded();
         if (this.getCapabilitiesLayer.isLoading) {
             return undefined;
         }
@@ -225,11 +137,13 @@ class WebMapServiceCatalogItem extends CatalogMember {
         layer.alpha = this.opacity;
     })
     private get _currentImageryLayer() {
+        trace();
         return this._createImageryLayer(this.currentDiscreteTime);
     }
 
     @computed
     private get _nextImageryLayer() {
+        trace();
         const layer = this._createImageryLayer(this.nextDiscreteTime);
         if (layer) {
             layer.alpha = 0.0;
@@ -241,7 +155,7 @@ class WebMapServiceCatalogItem extends CatalogMember {
         console.log('fetching ' + this.getCapabilitiesUrl);
         const url = this.getCapabilitiesUrl;
         return fetch(url).then(response => {
-            //console.log('fetched ' + url);
+            console.log('fetched ' + url);
             //const xml = response.xml();
             //const capabilities = xml; // TODO
             const capabilities = {
@@ -253,6 +167,7 @@ class WebMapServiceCatalogItem extends CatalogMember {
             };
 
             runInAction(() => {
+                layer._urlWeLoadedFrom = url;
                 layer.isGeoServer =
                     defined(capabilities) &&
                     defined(capabilities.Service) &&

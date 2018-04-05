@@ -1,4 +1,4 @@
-import { autorun, configure, runInAction, observable } from 'mobx';
+import { autorun, configure, runInAction, observable, decorate, trace } from 'mobx';
 import autoUpdate from '../../lib/Core/autoUpdate';
 import WebMapServiceCatalogItem from '../../lib/Models/WebMapServiceCatalogItem3';
 
@@ -22,6 +22,11 @@ describe('NewStuff', function() {
         alert(wms.name);
 
         autorun(() => {
+            console.log('isLoading: ' + wms.getCapabilitiesLayer.isLoading);
+        });
+
+        autorun(() => {
+            trace();
             console.log('autorun');
             console.log('mapItems: ' + wms.mapItems);
         });
