@@ -2,10 +2,13 @@ import * as defined from 'terriajs-cesium/Source/Core/defined';
 
 type PrimitiveType = 'string' | 'number' | 'boolean';
 
-export interface PrimitivePropertyOptions<T> {
-    type: PrimitiveType;
+export interface ModelPropertyOptions {
     name: string,
     description: string,
+}
+
+export interface PrimitivePropertyOptions<T> extends ModelPropertyOptions {
+    type: PrimitiveType;
     default?: T;
 }
 
@@ -19,23 +22,33 @@ export function primitiveProperty<T>(options: PrimitivePropertyOptions<T>) {
     }
 }
 
-export class PrimitiveProperty<T> {
+export abstract class ModelProperty {
     readonly id: string;
-    readonly type: PrimitiveType;
     readonly name: string;
     readonly description: string;
+
+    constructor(id: string, options: ModelPropertyOptions) {
+        this.id = id;
+        this.name = options.name;
+        this.description = options.description;
+    }
+
+    abstract getValue(model: any): any;
+    abstract setValue(model: any, newValue: any): void;
+}
+
+export class PrimitiveProperty<T> extends ModelProperty {
+    readonly type: PrimitiveType;
     readonly default: T;
 
     constructor(id: string, options: PrimitivePropertyOptions<T>) {
-        this.id = id;
+        super(id, options);
         this.type = options.type;
-        this.name = options.name;
-        this.description = options.description;
         this.default = options.default;
     }
 
     getValue(model: any): T {
-        const layerNames = model.modelLayers;
+        const layerNames = model.modelStrata;
 
         // Starting with the topmost layer, find the first layer with a value that is not undefined.
         for (let i = layerNames.length - 1; i >= 0; --i) {
@@ -47,10 +60,10 @@ export class PrimitiveProperty<T> {
             }
         }
 
-        return undefined;
+        return this.default;
     }
 
     setValue(model: any, newValue: T) {
-        model[model.defaultLayerToModify][this.id] = newValue;
+        model[model.defaultStratumToModify][this.id] = newValue;
     }
 }

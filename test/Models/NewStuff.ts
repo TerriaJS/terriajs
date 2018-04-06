@@ -11,7 +11,7 @@ describe('NewStuff', function() {
     it('test', function(done) {
         const wms = new WebMapServiceCatalogItem();
         console.log(wms.name);
-        wms.definitionLayer.name = 'test';
+        wms.definitionStratum.name = 'test';
         console.log(wms.name);
         console.log('here');
 
@@ -22,7 +22,7 @@ describe('NewStuff', function() {
         alert(wms.name);
 
         autorun(() => {
-            console.log('isLoading: ' + wms.getCapabilitiesLayer.isLoading);
+            console.log('isLoading: ' + wms.getCapabilitiesStratum.isLoading);
         });
 
         autorun(() => {

@@ -1,9 +1,11 @@
-import { primitiveProperty } from './ModelProperties';
+import { primitiveProperty, ModelProperty } from './ModelProperties';
 import { model, definition } from './Decorators';
 import { computed, extendObservable } from 'mobx';
 import * as defaultValue from 'terriajs-cesium/Source/Core/defaultValue';
 
 export class CatalogMemberDefinition {
+    static metadata: ModelProperty[];
+
     @primitiveProperty({
         type: 'string',
         name: 'Name',
@@ -25,6 +27,13 @@ export class CatalogMemberDefinition {
         description: 'The name of the item to be displayed in the catalog, if it is different from the one to display on the workbench.'
     })
     nameInCatalog: string;
+
+    @primitiveProperty({
+        type: 'string',
+        name: 'URL',
+        description: 'The base URL of the WMS server.'
+    })
+    url: string;
 }
 
 export default interface CatalogMember extends CatalogMemberDefinition {}

@@ -10,36 +10,16 @@
 // 4. All code for all catalog item types needs to be loaded before we can do anything.
 
 import { autorun, configure, computed, flow, runInAction, observable, onBecomeUnobserved, onBecomeObserved, trace, decorate, createAtom } from 'mobx';
-//import { promisedComputed } from 'computed-async-mobx';
 import { createTransformer, now, fromPromise } from 'mobx-utils';
 import * as fetch from 'node-fetch';
-import loadableLayer, { LoadableLayerData } from './loadableLayer';
 import autoUpdate from '../Core/autoUpdate';
 import * as defined from 'terriajs-cesium/Source/Core/defined';
-import WebMapServiceCatalogItemDefinition from '../Definitions/WebMapServiceCatalogItemDefinition';
-//import { WebMapServiceCatalogItem } from '../Definitions/WebMapServiceCatalogItemInterface';
 import CatalogMember, { CatalogMemberDefinition } from './CatalogMemberNew';
 import { primitiveProperty } from './ModelProperties';
 import { model, definition } from './Decorators';
-import loadableSubset from './loadableSubset';
-
-const properties = WebMapServiceCatalogItemDefinition.properties;
-// const GetCapabilitiesLayerProperties = [
-//     properties.availableStyles,
-//     properties.isGeoServer,
-//     properties.isEsri,
-//     properties.availableDimensions,
-//     properties.isNcWms,
-//     properties.supportsColorScaleRange,
-//     properties.info,
-//     properties.minScaleDenominator,
-//     properties.getFeatureInfoFormats,
-//     properties.rectangle,
-//     properties.intervals,
-//     properties.tilingScheme,
-//     properties.colorScaleMinimum,
-//     properties.colorScaleMaximum
-// ];
+import defineLoadableStratum from './defineLoadableStratum';
+import defineStratum from './defineStratum';
+import * as JulianDate from 'terriajs-cesium/Source/Core/JulianDate';
 
 class ImageryLayer {
 }
@@ -54,64 +34,96 @@ export class Definition extends CatalogMemberDefinition {
         description: 'True if this WMS is a GeoServer; otherwise, false.',
         default: false
     })
-    isGeoServer?: boolean;
+    isGeoServer: boolean;
+
+    @primitiveProperty({
+        type: 'string',
+        name: 'GetCapabilities URL',
+        description: 'The URL at which to access to the WMS GetCapabilities.'
+    })
+    getCapabilitiesUrl: string;
+
+    intervals: any; // TODO
 }
 
-type DefinitionLayer = Partial<Definition>;
-type UserLayer = Partial<Definition>;
-
-// type GetCapabilitiesLayerProperties =
-//     'description' | 'isGeoServer';
-
-// function create<T, E extends keyof T>(metadata: any[], e: any): Pick<T, E> {
-//     return undefined;
-// }
-
-// create<Definition, GetCapabilitiesLayerProperties>((<any>Definition).metadata, GetCapabilitiesLayerProperties);
-
-const GetCapabilitiesLayer = loadableSubset(Definition, 'description', 'isGeoServer');
+const GetCapabilitiesStratum = defineLoadableStratum(Definition, 'description', 'isGeoServer');
+const FullStratum = defineStratum(Definition);
 
 interface WebMapServiceCatalogItem extends Definition {}
+
 @model(Definition)
 class WebMapServiceCatalogItem extends CatalogMember {
-    @observable modelLayers = ['getCapabilitiesLayer', /*'describeLayerLayer',*/ 'definitionLayer', 'userLayer'];
-    @observable defaultLayerToModify = 'userLayer';
+    readonly flattened: Definition;
+
+    @observable modelStrata = ['getCapabilitiesStratum', /*'describeLayerLayer',*/ 'definitionStratum', 'userStratum'];
+    @observable defaultStratumToModify = 'userStratum';
+
+    readonly getCapabilitiesStratum  = new GetCapabilitiesStratum(layer => this._loadGetCapabilitiesStratum(layer));
+    readonly definitionStratum = new FullStratum();
+    readonly userStratum = new FullStratum();
 
     @computed
-    get getCapabilitiesLayer() {
-        trace();
-        return new GetCapabilitiesLayer(layer => this._loadGetCapabilitiesLayer(layer));
+    get getCapabilitiesUrl(): string {
+        const getCapabilitiesUrl = this.flattened.getCapabilitiesUrl;
+        if (getCapabilitiesUrl) {
+            return getCapabilitiesUrl;
+        } else if (this.url) {
+            return this.url + 'GETCAPABILITIES'; // TODO
+        } else {
+            return undefined;
+        }
+    }
+    set getCapabilitiesUrl(value: string) {
+        this.flattened.getCapabilitiesUrl = value;
     }
 
-    @observable definitionLayer: DefinitionLayer = {};
+    @computed
+    get currentDiscreteTime(): string {
+        return undefined; // TODO
+    }
 
-    @observable userLayer: UserLayer = {};
-
-    @observable
-    getCapabilitiesUrl = 'http://www.example.com'
-
-    @observable
-    currentDiscreteTime = '2018-01-01T00:00:00Z'
-
-    @observable
-    nextDiscreteTime = '2018-01-02T00:00:00Z'
+    @computed
+    get nextDiscreteTime(): string {
+        return undefined; // TODO
+    }
 
     @computed
     get mapItems() {
         trace();
         return [
             this._currentImageryLayer,
-            //this._nextImageryLayer
+            this._nextImageryLayer
         ];
     }
 
+    @computed
+    @autoUpdate(layer => {
+        layer.alpha = this.opacity;
+    })
+    private get _currentImageryLayer() {
+        trace();
+        return this._createImageryLayer(this.currentDiscreteTime);
+    }
+
+    @computed
+    private get _nextImageryLayer() {
+        trace();
+        if (this.nextDiscreteTime) {
+            const layer = this._createImageryLayer(this.nextDiscreteTime);
+            if (layer) {
+                layer.alpha = 0.0;
+            }
+            return layer;
+        } else {
+            return undefined;
+        }
+    }
 
     private _createImageryLayer(time) {
         // Don't show anything on the map until GetCapabilities finishes loading.
-        // Endless loop because if we return here, no one actually _uses_  any
-        // of the getCapabilitiesLayer properties.
-        this.getCapabilitiesLayer.loadIfNeeded();
-        if (this.getCapabilitiesLayer.isLoading) {
+        // But do trigger loading so that we can eventually show something!
+        this.getCapabilitiesStratum.loadIfNeeded();
+        if (this.getCapabilitiesStratum.isLoading) {
             return undefined;
         }
 
@@ -132,26 +144,16 @@ class WebMapServiceCatalogItem extends CatalogMember {
         // });
     }
 
-    @computed
-    @autoUpdate(layer => {
-        layer.alpha = this.opacity;
-    })
-    private get _currentImageryLayer() {
-        trace();
-        return this._createImageryLayer(this.currentDiscreteTime);
-    }
+    private _loadGetCapabilitiesStratum(values: typeof GetCapabilitiesStratum.TLoadValue): Promise<void> {
+        // How do we avoid loading GetCapabilities if it's already been loaded?
+        // For example, if this catalog item was created by a group, we don't want
+        // to load the same GetCapabilities for every item in the group.
+        // Maybe extract GetCapabilities loading and parsing into a pipeline
+        // of createTransformer functions.
+        // e.g. one function takes a URL and returns a representation object of
+        // GetCapabilities. A function on that object takes a layer name
+        // and returns the details for that layer.
 
-    @computed
-    private get _nextImageryLayer() {
-        trace();
-        const layer = this._createImageryLayer(this.nextDiscreteTime);
-        if (layer) {
-            layer.alpha = 0.0;
-        }
-        return layer;
-    }
-
-    private _loadGetCapabilitiesLayer(layer) {
         console.log('fetching ' + this.getCapabilitiesUrl);
         const url = this.getCapabilitiesUrl;
         return fetch(url).then(response => {
@@ -167,8 +169,7 @@ class WebMapServiceCatalogItem extends CatalogMember {
             };
 
             runInAction(() => {
-                layer._urlWeLoadedFrom = url;
-                layer.isGeoServer =
+                values.isGeoServer =
                     defined(capabilities) &&
                     defined(capabilities.Service) &&
                     defined(capabilities.Service.KeywordList) &&
@@ -176,13 +177,10 @@ class WebMapServiceCatalogItem extends CatalogMember {
                     capabilities.Service.KeywordList.Keyword.indexOf('GEOSERVER') >= 0;
             });
 
-            return layer;
+            return values;
         });
     }
-
 }
-
-//mixCatalogMember(WebMapServiceCatalogItem);
 
 export default WebMapServiceCatalogItem;
 
@@ -210,21 +208,3 @@ class Cesium {
         });
     }
 }
-
-// runInAction(() => {
-//     wms.getCapabilitiesUrl = 'http://www.example.com/something';
-// });
-
-// autorun(() => {
-//     console.log('mapItems: ' + wms.mapItems);
-// });
-
-// setTimeout(() => {
-//     runInAction(() => {
-//         wms.getCapabilitiesUrl = 'http://www.example.com/another';
-//     });
-// });
-
-
-
-//console.log(wms.getCapabilitiesLayer.get('isGeoServer'));
