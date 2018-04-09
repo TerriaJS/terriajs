@@ -3,10 +3,11 @@
 Change Log
 ==========
 
-### Next Release
+### 5.6.5
 
 * Fixed a bug that could cause a time-dynamic WMS layer to fail to ever show up on the map if the initial time on the timeline was outside the intervals where the layer had data.
 * Generic rest discussed https://groups.google.com/forum/#!topic/terriajs/mdJkZlNCRvo which allows for WPS-like input forms for arbitrary rest services that wrap responses in TerriaJS's catalog JSON.
+* Generic rest discussed https://groups.google.com/forum/#!topic/terriajs/mdJkZlNCRvo which loads TerriaJS's catalog JSON
 
 ### 5.6.4
 
