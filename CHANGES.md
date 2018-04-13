@@ -6,6 +6,7 @@ Change Log
 ### Next Release
 
 * Fixed a bug that could cause a time-dynamic WMS layer to fail to ever show up on the map if the initial time on the timeline was outside the intervals where the layer had data.
+* Fixed a bug which could cause a crash during load from share link when the layer default is to not `useOwnClock` but the share link has `useOwnClock` set.
 
 ### 5.6.4
 
