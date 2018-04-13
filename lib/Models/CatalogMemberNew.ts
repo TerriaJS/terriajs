@@ -2,6 +2,7 @@ import { primitiveProperty, ModelProperty } from './ModelProperties';
 import { model, definition } from './Decorators';
 import { computed, extendObservable } from 'mobx';
 import * as defaultValue from 'terriajs-cesium/Source/Core/defaultValue';
+import * as URI from 'urijs';
 
 export class CatalogMemberDefinition {
     static metadata: ModelProperty[];
@@ -34,6 +35,13 @@ export class CatalogMemberDefinition {
         description: 'The base URL of the WMS server.'
     })
     url: string;
+
+    @primitiveProperty({
+        type: 'string',
+        name: 'Info',
+        description: 'Human-readable information about this dataset.'
+    })
+    info: any;
 }
 
 export default interface CatalogMember extends CatalogMemberDefinition {}
@@ -59,5 +67,13 @@ export default abstract class CatalogMember {
                 return part.trim().toLowerCase();
             }
         });
+    }
+
+    @computed
+    get uri(): URI {
+        if (this.url === undefined) {
+            return undefined;
+        }
+        return new URI(this.url);
     }
 }

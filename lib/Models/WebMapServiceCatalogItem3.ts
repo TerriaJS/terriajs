@@ -1,6 +1,5 @@
 // const mobx = require('mobx');
 // const mobxUtils = require('mobx-utils');
-
 // Problems in current architecture:
 // 1. After loading, can't tell what user actually set versus what came from e.g. GetCapabilities.
 //  Solution: layering
@@ -8,18 +7,22 @@
 // 3. Observable spaghetti
 //  Solution: think in terms of pipelines with computed observables, document patterns.
 // 4. All code for all catalog item types needs to be loaded before we can do anything.
-
-import { autorun, configure, computed, flow, runInAction, observable, onBecomeUnobserved, onBecomeObserved, trace, decorate, createAtom } from 'mobx';
-import { createTransformer, now, fromPromise } from 'mobx-utils';
+import { autorun, computed, decorate, extendObservable, observable, runInAction, trace } from 'mobx';
+import { createTransformer } from 'mobx-utils';
 import * as fetch from 'node-fetch';
-import autoUpdate from '../Core/autoUpdate';
 import * as defined from 'terriajs-cesium/Source/Core/defined';
+import * as loadXML from 'terriajs-cesium/Source/Core/loadXML';
+import autoUpdate from '../Core/autoUpdate';
 import CatalogMember, { CatalogMemberDefinition } from './CatalogMemberNew';
+import { model } from './Decorators';
 import { primitiveProperty } from './ModelProperties';
-import { model, definition } from './Decorators';
 import defineLoadableStratum from './defineLoadableStratum';
 import defineStratum from './defineStratum';
-import * as JulianDate from 'terriajs-cesium/Source/Core/JulianDate';
+import * as xml2json from '../ThirdParty/xml2json';
+import * as TerriaError from '../Core/TerriaError';
+import * as proxyCatalogItemUrl from './proxyCatalogItemUrl';
+import WebMapServiceCapabilities, { CapabilitiesLayer, CapabilitiesStyle } from './WebMapServiceCapabilities';
+import * as URI from 'urijs';
 
 class ImageryLayer {
 }
@@ -43,10 +46,133 @@ export class Definition extends CatalogMemberDefinition {
     })
     getCapabilitiesUrl: string;
 
+    @primitiveProperty({
+        type: 'string',
+        name: 'Intervals',
+        description: 'Intervals'
+    })
     intervals: any; // TODO
+
+    @primitiveProperty({
+        type: 'string',
+        name: 'GetCapabilities Cache Duration',
+        description: 'The amount of time to cache GetCapabilities responses.',
+        default: '1d'
+    })
+    getCapabilitiesCacheDuration: string;
+
+    @primitiveProperty({
+        type: 'string',
+        name: 'Layer(s)',
+        description: 'The layer or layers to display.'
+    })
+    layers: string;
+
+    @primitiveProperty({
+        type: 'string',
+        name: 'Available Styles',
+        description: 'The available styles.' // TODO
+    })
+    availableStyles: any; // TODO
 }
 
-const GetCapabilitiesStratum = defineLoadableStratum(Definition, 'description', 'isGeoServer');
+interface LegendUrl {
+    url: string;
+    mimeType: string;
+}
+
+interface WebMapServiceStyle {
+    name: string;
+    title: string;
+    abstract: string;
+    legendUrl: LegendUrl;
+}
+
+interface ArrayConstructor {
+    isArray(arg: ReadonlyArray<any> | any): arg is ReadonlyArray<any>
+}
+
+function isReadOnlyArray<T>(value: T | ReadonlyArray<T>): value is ReadonlyArray<T> {
+    return Array.isArray(value);
+}
+
+class GetCapabilitiesValue {
+    catalogItem: WebMapServiceCatalogItem;
+
+    @observable
+    capabilities: WebMapServiceCapabilities;
+
+    @computed
+    get capabilitiesLayers(): ReadonlyMap<string, CapabilitiesLayer> {
+        const lookup: (name: string) => [string, CapabilitiesLayer] = name => [name, this.capabilities.findLayer(name)];
+        return new Map(this.catalogItem.layersArray.map(lookup));
+    }
+
+    @computed
+    get availableStyles(): ReadonlyMap<string, ReadonlyArray<WebMapServiceStyle>> {
+        const result = new Map<string, ReadonlyArray<WebMapServiceStyle>>();
+
+        const capabilitiesLayers = this.capabilitiesLayers;
+
+        for (const layerTuple of capabilitiesLayers) {
+            const layerName = layerTuple[0];
+            const layer = layerTuple[1];
+
+            result[layerName] = this.capabilities.getInheritedValues(layer, 'Style').map(style => {
+                var wmsLegendUrl = isReadOnlyArray(style.LegendURL) ? style.LegendURL[0] : style.LegendURL;
+
+                var legendUri, legendMimeType;
+                if (wmsLegendUrl && wmsLegendUrl.OnlineResource && wmsLegendUrl.OnlineResource['xlink:href']) {
+                    legendUri = new URI(decodeURIComponent(wmsLegendUrl.OnlineResource['xlink:href']));
+                    legendMimeType = wmsLegendUrl.Format;
+                }
+
+                const legendUrl = !legendUri ? undefined : {
+                    url: legendUri.toString(),
+                    mimetype: legendMimeType
+                };
+
+                return {
+                    name: style.Name,
+                    title: style.Title,
+                    abstract: style.Abstract,
+                    legendUrl: legendUrl
+                };
+            });
+        }
+
+        return result;
+    }
+
+    @computed
+    get info(): any {
+        // if (!containsAny(thisLayer.Abstract, WebMapServiceCatalogItem.abstractsToIgnore)) {
+        //     updateInfoSection(wmsItem, overwrite, 'Data Description', thisLayer.Abstract);
+        // }
+        return [];
+    }
+
+    @computed
+    get isGeoServer(): boolean {
+        if (!this.capabilities.Service ||
+            !this.capabilities.Service.KeywordList ||
+            !this.capabilities.Service.KeywordList.Keyword)
+        {
+            return false;
+        }
+
+        const keyword = this.capabilities.Service.KeywordList.Keyword;
+        if (isReadOnlyArray(keyword)) {
+            return keyword.indexOf('GEOSERVER') >= 0;
+        } else {
+            return keyword === 'GEOSERVER';
+        }
+    }
+
+    @observable intervals: any;
+}
+
+const GetCapabilitiesStratum = defineLoadableStratum(Definition, GetCapabilitiesValue, 'info', 'isGeoServer', 'intervals', 'availableStyles');
 const FullStratum = defineStratum(Definition);
 
 interface WebMapServiceCatalogItem extends Definition {}
@@ -63,12 +189,27 @@ class WebMapServiceCatalogItem extends CatalogMember {
     readonly userStratum = new FullStratum();
 
     @computed
+    get layersArray(): ReadonlyArray<string> {
+        if (Array.isArray(this.layers)) {
+            return this.layers;
+        } else if (this.layers) {
+            return this.layers.split(',');
+        } else {
+            return [];
+        }
+    }
+
+    @computed
     get getCapabilitiesUrl(): string {
         const getCapabilitiesUrl = this.flattened.getCapabilitiesUrl;
         if (getCapabilitiesUrl) {
             return getCapabilitiesUrl;
-        } else if (this.url) {
-            return this.url + 'GETCAPABILITIES'; // TODO
+        } else if (this.uri) {
+            return this.uri.clone().setSearch({
+                service: 'WMS',
+                version: '1.3.0',
+                request: 'GetCapabilities'
+            }).toString();
         } else {
             return undefined;
         }
@@ -145,6 +286,8 @@ class WebMapServiceCatalogItem extends CatalogMember {
     }
 
     private _loadGetCapabilitiesStratum(values: typeof GetCapabilitiesStratum.TLoadValue): Promise<void> {
+        values.catalogItem = this;
+
         // How do we avoid loading GetCapabilities if it's already been loaded?
         // For example, if this catalog item was created by a group, we don't want
         // to load the same GetCapabilities for every item in the group.
@@ -154,31 +297,36 @@ class WebMapServiceCatalogItem extends CatalogMember {
         // GetCapabilities. A function on that object takes a layer name
         // and returns the details for that layer.
 
-        console.log('fetching ' + this.getCapabilitiesUrl);
-        const url = this.getCapabilitiesUrl;
-        return fetch(url).then(response => {
-            console.log('fetched ' + url);
-            //const xml = response.xml();
-            //const capabilities = xml; // TODO
-            const capabilities = {
-                Service: {
-                    KeywordList: {
-                        Keyword: ['GEOSERVER']
-                    }
-                }
-            };
-
-            runInAction(() => {
-                values.isGeoServer =
-                    defined(capabilities) &&
-                    defined(capabilities.Service) &&
-                    defined(capabilities.Service.KeywordList) &&
-                    defined(capabilities.Service.KeywordList.Keyword) &&
-                    capabilities.Service.KeywordList.Keyword.indexOf('GEOSERVER') >= 0;
-            });
-
-            return values;
+        const proxiedUrl = proxyCatalogItemUrl(this, this.getCapabilitiesUrl, this.getCapabilitiesCacheDuration);
+        return WebMapServiceCapabilities.fromUrl(proxiedUrl).then(capabilities => {
+            values.capabilities = capabilities;
         });
+
+        // console.log('fetching ' + this.getCapabilitiesUrl);
+        // const url = this.getCapabilitiesUrl;
+        // return fetch(url).then(response => {
+        //     console.log('fetched ' + url);
+        //     //const xml = response.xml();
+        //     //const capabilities = xml; // TODO
+        //     const capabilities = {
+        //         Service: {
+        //             KeywordList: {
+        //                 Keyword: ['GEOSERVER']
+        //             }
+        //         }
+        //     };
+
+        //     runInAction(() => {
+        //         values.isGeoServer =
+        //             defined(capabilities) &&
+        //             defined(capabilities.Service) &&
+        //             defined(capabilities.Service.KeywordList) &&
+        //             defined(capabilities.Service.KeywordList.Keyword) &&
+        //             capabilities.Service.KeywordList.Keyword.indexOf('GEOSERVER') >= 0;
+        //     });
+
+        //     return values;
+        // });
     }
 }
 

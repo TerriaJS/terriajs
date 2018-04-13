@@ -28,20 +28,20 @@ describe('defineLoadableStratum', function() {
     }
 
     it('has isLoading and loadPromise properties', function() {
-        const Stratum = defineLoadableStratum(TestDefinition, 'foo', 'baz');
+        const Stratum = defineLoadableStratum(TestDefinition, undefined, 'foo', 'baz');
         const stratum = new Stratum(values => Promise.resolve());
         expect('isLoading' in stratum).toBe(true);
         expect('loadPromise' in stratum).toBe(true);
     });
 
     it('initially is not loading', function() {
-        const Stratum = defineLoadableStratum(TestDefinition, 'foo', 'baz');
+        const Stratum = defineLoadableStratum(TestDefinition, undefined, 'foo', 'baz');
         const stratum = new Stratum(values => Promise.resolve());
         expect(stratum.isLoading).toBe(false);
     });
 
     it('checking isLoading does not trigger load', function() {
-        const Stratum = defineLoadableStratum(TestDefinition, 'foo', 'baz');
+        const Stratum = defineLoadableStratum(TestDefinition, undefined, 'foo', 'baz');
         const stratum = new Stratum(values => {
             fail('load was called unexpectedly.');
             return Promise.resolve();
@@ -50,7 +50,7 @@ describe('defineLoadableStratum', function() {
     });
 
     it('has only the specified properties', function() {
-        const Stratum = defineLoadableStratum(TestDefinition, 'foo', 'baz');
+        const Stratum = defineLoadableStratum(TestDefinition, undefined, 'foo', 'baz');
         const stratum = new Stratum(values => Promise.resolve());
         expect('foo' in stratum).toBe(true);
         expect('baz' in stratum).toBe(true);
@@ -58,31 +58,28 @@ describe('defineLoadableStratum', function() {
     });
 
     it('has all properties if none are specified', function() {
-        const Stratum = defineLoadableStratum(TestDefinition);
+        const Stratum = defineLoadableStratum(TestDefinition, undefined);
         const stratum = new Stratum(values => Promise.resolve());
         expect('foo' in stratum).toBe(true);
         expect('baz' in stratum).toBe(true);
         expect('bar' in stratum).toBe(true);
     });
 
-    it('loads when the loadPromise is accessed.', function() {
-        const Stratum = defineLoadableStratum(TestDefinition);
+    it('checking loadPromise does not trigger load', function() {
+        const Stratum = defineLoadableStratum(TestDefinition, undefined);
 
-        let loadCalled = false;
         const stratum = new Stratum(values => {
-            loadCalled = true;
+            fail('load was called unexpectedly.');
             return Promise.resolve();
         });
 
         autorun(() => {
-            expect(stratum.loadPromise).toBeDefined();
+            expect(stratum.loadPromise).toBeUndefined();
         })();
-
-        expect(loadCalled).toBe(true);
     });
 
     it('loads when loadIfNeeded is called.', function() {
-        const Stratum = defineLoadableStratum(TestDefinition);
+        const Stratum = defineLoadableStratum(TestDefinition, undefined);
 
         let loadCalled = false;
         const stratum = new Stratum(values => {
@@ -99,7 +96,7 @@ describe('defineLoadableStratum', function() {
 
 
     it('loads when a property is accessed.', function() {
-        const Stratum = defineLoadableStratum(TestDefinition);
+        const Stratum = defineLoadableStratum(TestDefinition, undefined);
 
         let loadCalled = false;
         const stratum = new Stratum(values => {
@@ -115,7 +112,7 @@ describe('defineLoadableStratum', function() {
     });
 
     it('loads only once even if loadIfNeeded is called twice.', function() {
-        const Stratum = defineLoadableStratum(TestDefinition);
+        const Stratum = defineLoadableStratum(TestDefinition, undefined);
 
         let loads = 0;
         const stratum = new Stratum(values => {
@@ -132,7 +129,7 @@ describe('defineLoadableStratum', function() {
     });
 
     it('does not call load multiple times even if loadPromise and multiple other properties are accessed.', function() {
-        const Stratum = defineLoadableStratum(TestDefinition);
+        const Stratum = defineLoadableStratum(TestDefinition, undefined);
 
         let loads = 0;
         const stratum = new Stratum(values => {
@@ -141,16 +138,17 @@ describe('defineLoadableStratum', function() {
         });
 
         autorun(() => {
-            expect(stratum.loadPromise).toBeDefined();
+            expect(stratum.loadPromise).toBeUndefined();
             expect(stratum.foo).toBeUndefined();
             expect(stratum.bar).toBeUndefined();
+            stratum.loadIfNeeded();
         })();
 
         expect(loads).toBe(1);
     });
 
     it('reloads if an observable property changes', function() {
-        const Stratum = defineLoadableStratum(TestDefinition);
+        const Stratum = defineLoadableStratum(TestDefinition, undefined);
 
         const test = observable({
             url: 'first'
@@ -181,7 +179,7 @@ describe('defineLoadableStratum', function() {
     if (process.env.NODE_ENV !== "production") {
         // In a production environment, MobX doesn't check invariants.
         it('cannot trigger load outside a reactive context', function() {
-            const Stratum = defineLoadableStratum(TestDefinition);
+            const Stratum = defineLoadableStratum(TestDefinition, undefined);
             const stratum = new Stratum(values => Promise.resolve());
             expect(function() {
                 stratum.loadIfNeeded();

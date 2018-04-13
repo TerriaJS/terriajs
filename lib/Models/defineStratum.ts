@@ -1,4 +1,5 @@
 import { computed, createAtom, decorate, observable, runInAction } from 'mobx';
+import * as DeveloperError from 'terriajs-cesium/Source/Core/DeveloperError';
 
 //>>includeStart('debug', pragmas.debug);
 import { onBecomeUnobserved } from 'mobx';
@@ -104,6 +105,14 @@ export default function defineStratum<TDefinition>(definition: DefinitionConstru
     if (!properties || properties.length === 0) {
         properties = Object.keys(definition.metadata);
     }
+
+    //>>includeStart('debug', pragmas.debug);
+    properties.forEach(property => {
+        if (!(property in definition.metadata)) {
+            throw new DeveloperError(`Property "${property}" does not exist or is not decorated as a ModelProperty.`);
+        }
+    })
+    //>>includeEnd('debug');
 
     class Subset {
         static TInstance: any;
