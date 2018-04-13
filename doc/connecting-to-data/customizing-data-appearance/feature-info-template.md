@@ -84,7 +84,12 @@ The preferred way to format numbers is using the `formats` option, eg:
 
 `"type"` specifies the type of formatting that will be applied to the property. Here we are using `"number"` formatting which is also the default formatting if `"type"` is not supplied.
 
-The supported format options are `"maximumFractionDigits": X` (to reduce the number of decimal places to a maximum of X digits), `"minimumFractionDigits": X` (to increase the number of decimal places to a minimum of X digits), `"useGrouping": true` (to show thousands separators), and `"style": "percent"` (eg. to show 0.15 as 15%).
+The supported format options are:
+
+- `"maximumFractionDigits": X`: To reduce the number of decimal places to a maximum of X digits.
+- `"minimumFractionDigits": X`: To increase the number of decimal places to a minimum of X digits.
+- `"useGrouping": true`: To show thousands separators.
+- `"style": "percent"`: To show 0.15 as 15%.
 
 A second method is to use `terria.formatNumber` directly in the template. This accepts an initial JSON string describing the same options as above. To simplify the notation, the quotes around the keys are optional here.
 
