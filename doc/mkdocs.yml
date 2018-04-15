@@ -56,6 +56,7 @@ pages:
         - Sensor Observation Service (SOS) (item): 'connecting-to-data/catalog-type-details/sos.md'
         - Socrata (group): 'connecting-to-data/catalog-type-details/socrata.md'
         - Spatial Detailing (function): 'connecting-to-data/catalog-type-details/spatial-detailing-function.md'
+        - TerriaJS JSON (function): 'connecting-to-data/catalog-type-details/terria-json.md'
         - URL Template (item): 'connecting-to-data/catalog-type-details/url-template.md'
         - Web Feature Service (WFS) (group): 'connecting-to-data/catalog-type-details/wfs-getCapabilities.md'
         - Web Feature Service (WFS) (item): 'connecting-to-data/catalog-type-details/wfs.md'
