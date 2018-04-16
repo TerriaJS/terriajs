@@ -10,6 +10,7 @@ Change Log
 ### 5.6.4
 
 * Fixed a bug causing an error message when adding tabular data to the workbench before it was loaded.
+* Fixed an issue that caused a 'This data source is already shown' error in particular cirumstances.
 
 ### 5.6.3
 
