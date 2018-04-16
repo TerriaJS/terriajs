@@ -21,6 +21,7 @@ The following people have contributed to TerriaJS:
    * [Alex Gilleran](https://github.com/AlexGilleran)
    * [Rebecca Dengate](https://github.com/rdengate)
    * [Ashley Stacey](https://github.com/a-stacey)
+   * [Jacky Jiang](https://github.com/t83714)
 * [Geoscience Australia](http://www.ga.gov.au/)
    * [Darren Reid](https://github.com/Layoric)
 * [Propeller Aerobotics](http://www.propelleraero.com.au/)
