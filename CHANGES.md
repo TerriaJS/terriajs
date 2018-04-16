@@ -3,10 +3,15 @@
 Change Log
 ==========
 
+### Next Release
+
+* Fixed a bug that could cause a time-dynamic WMS layer to fail to ever show up on the map if the initial time on the timeline was outside the intervals where the layer had data.
+* Added `MagdaCatalogItem` support.
+* Fixed an issue that caused a 'This data source is already shown' error in particular cirumstances.
+
 ### 5.6.4
 
 * Fixed a bug causing an error message when adding tabular data to the workbench before it was loaded.
-* Added `MagdaCatalogItem` support
 
 ### 5.6.3
 
