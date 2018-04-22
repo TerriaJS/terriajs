@@ -41,7 +41,7 @@
     "gulp": "^3.9.1",
     "hammerjs": "^2.0.6",
     "html-to-react": "1.2.12",
-    "html2canvas": "0.5.0-beta4",
+    "html2canvas": "1.0.0-alpha.12",
     "imports-loader": "^0.7.0",
     "inobounce": "^0.1.2",
     "javascript-natural-sort": "^0.7.1",
