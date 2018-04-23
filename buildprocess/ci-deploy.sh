@@ -1,5 +1,10 @@
 #!/bin/sh
 
+# Don't run for greenkeeper branches; there are too many!
+if [[ $TRAVIS_BRANCH =~ ^greenkeeper/ ]]; then
+    exit 0
+fi
+
 # Install gcloud, kubectl, and helm
 mkdir bin
 cd bin
