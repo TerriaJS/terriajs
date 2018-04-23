@@ -121,11 +121,15 @@ const SharePanel = createReactClass({
         }
     },
 
-    renderSmallScreen(iframeCode, shareImgStyle, shareUrlTextBox) {
+    renderSmallScreen(iframeCode, shareUrlTextBox) {
       return (<div>
         <div className={Styles.clipboard}><Clipboard source={shareUrlTextBox} id='share-url'/></div>
         <div className={DropdownStyles.section}>
-              <a className={Styles.link} href={this.state.imageUrl} target='_blank'><div className={Styles.imgShare} style={shareImgStyle}></div></a>
+              <a className={Styles.link} href={this.state.imageUrl} target='_blank'>
+              <div className={Styles.imgShare}>
+                <img src={this.state.imageUrl} alt="Map snapshot" />
+              </div>
+              </a>
         </div>
         <If condition={this.isUrlShortenable()}>
             <div className={classNames(DropdownStyles.section, Styles.shortenUrl)}>
@@ -138,11 +142,15 @@ const SharePanel = createReactClass({
       </div>);
     },
 
-    renderNormal(iframeCode, shareImgStyle, shareUrlTextBox) {
+    renderNormal(iframeCode, shareUrlTextBox) {
       return (
         <div>
           <div className={DropdownStyles.section}>
-              <a className={Styles.link} href={this.state.imageUrl} target='_blank'><div className={Styles.imgShare} style={shareImgStyle}></div></a>
+              <a className={Styles.link} href={this.state.imageUrl} target='_blank'>
+                <div className={Styles.imgShare}>
+                    <img src={this.state.imageUrl} alt="Map snapshot" />
+                </div>
+              </a>
           </div>
           <div className={Styles.clipboard}><Clipboard source={shareUrlTextBox} id='share-url'/></div>
           <div className={classNames(DropdownStyles.section, Styles.shortenUrl)}>
@@ -183,9 +191,6 @@ const SharePanel = createReactClass({
         const iframeCode = this.state.shareUrl.length ?
             `<iframe style="width: 720px; height: 600px; border: none;" src="${this.state.shareUrl}" allowFullScreen mozAllowFullScreen webkitAllowFullScreen></iframe>`
             : '';
-        const shareImgStyle = {
-            backgroundImage: 'url(' + this.state.imageUrl + ')'
-        };
 
         const shareUrlTextBox = <input className={Styles.shareUrlfield} type="text" value={this.state.shareUrl}
                placeholder={this.state.placeholder} readOnly
@@ -201,10 +206,10 @@ const SharePanel = createReactClass({
                 <If condition={this.state.isOpen}>
                   <Choose>
                     <When condition={this.props.viewState.useSmallScreenInterface}>
-                      {this.renderSmallScreen(iframeCode, shareImgStyle, shareUrlTextBox)}
+                      {this.renderSmallScreen(iframeCode, shareUrlTextBox)}
                     </When>
                     <Otherwise>
-                      {this.renderNormal(iframeCode, shareImgStyle, shareUrlTextBox)}
+                      {this.renderNormal(iframeCode, shareUrlTextBox)}
                     </Otherwise>
                   </Choose>
                 </If>
