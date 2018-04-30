@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### Next Release
+
+* Fixed some problems with the map image on the Share panel, including unnecessary cropping to a 4/3 aspect ratio and some vector features missing in the 2D view.
+
 ### 5.7.0
 
 * Added `MagdaCatalogItem` to load details of a catalog item from [Magda](https://github.com/TerriaJS/magda).
