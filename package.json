@@ -81,7 +81,7 @@
   "devDependencies": {
     "babel-eslint": "^7.0.0",
     "css-loader": "^0.28.0",
-    "electron": "^1.4.10",
+    "electron": "^2.0.0",
     "enzyme": "^2.4.1",
     "eslint": "^4.9.0",
     "eslint-plugin-jsx-control-statements": "^2.2.0",
