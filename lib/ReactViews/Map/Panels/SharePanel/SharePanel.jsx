@@ -127,7 +127,10 @@ const SharePanel = createReactClass({
         const printWindow = window.open();
 
         printWindow.document.title = `${this.props.terria.appName} Print View`;
-        printWindow.document.head.innerHTML = `<style>${PrintView.Styles}</style>`;
+        printWindow.document.head.innerHTML = `
+            <title>${this.props.terria.appName} Print View</title>
+            <style>${PrintView.Styles}</style>
+            `;
         printWindow.document.body.innerHTML = '<div id="print"></div>';
 
         const that = this;

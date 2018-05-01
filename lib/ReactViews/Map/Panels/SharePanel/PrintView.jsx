@@ -30,19 +30,10 @@ const PrintView = createReactClass({
     },
 
     render() {
-        const mapImageStyle = {
-            'max-width': '95vw',
-            'max-height': '95vh'
-        };
-
-        const legendListStyle = {
-            'list-style': 'none'
-        };
-
         return (
             <div>
                 <p>
-                    <img style={mapImageStyle} src={this.state.mapImageUrl} alt="Map snapshot" />
+                    <img className="map-image" src={this.state.mapImageUrl} alt="Map snapshot" />
                 </p>
                 <h2>Legends</h2>
                 {this.props.terria.nowViewing.items.map(this.renderLegend)}
@@ -50,10 +41,12 @@ const PrintView = createReactClass({
                 <ul>
                     {this.props.terria.currentViewer.getAllAttribution().map(this.renderAttribution)}
                 </ul>
-                <h2>Print Disclaimer</h2>
-                <p>
-                    <div>{this.props.terria.configParameters.printDisclaimer.text}</div>
-                </p>
+                <If condition={this.props.terria.configParameters.printDisclaimer}>
+                    <h2>Print Disclaimer</h2>
+                    <p>
+                        <div>{this.props.terria.configParameters.printDisclaimer.text}</div>
+                    </p>
+                </If>
             </div>
         );
     },
@@ -64,8 +57,8 @@ const PrintView = createReactClass({
 
     renderLegend(catalogItem) {
         return (
-            <div>
-                <div>{catalogItem.name}</div>
+            <div className="layer-legends">
+                <div className="layer-title">{catalogItem.name}</div>
                 <Legend item={catalogItem} />
             </div>
         );
@@ -82,6 +75,26 @@ PrintView.Styles = `
     rect.background {
         width: 100%;
         fill-opacity: 0;
+    }
+
+    .map-image {
+        max-width: 95vw;
+        max-height: 95vh;
+    }
+
+    .layer-legends {
+        display: inline;
+        float: left;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .layer-title {
+        font-weight: bold;
+    }
+
+    h2 {
+        clear: both;
     }
 `;
 
