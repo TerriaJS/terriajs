@@ -1,6 +1,7 @@
 'use strict';
 
 import React from 'react';
+import ReactDOM from 'react-dom';
 import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import {buildShareLink, buildShortShareLink, canShorten} from './BuildShareLink';
@@ -9,7 +10,7 @@ import defined from 'terriajs-cesium/Source/Core/defined';
 import classNames from 'classnames';
 import MenuPanel from '../../../StandardUserInterface/customizable/MenuPanel.jsx';
 import Clipboard from '../../../Clipboard';
-
+import PrintView from './PrintView';
 import Styles from './share-panel.scss';
 import DropdownStyles from '../panel.scss';
 import Icon from "../../../Icon.jsx";
@@ -39,7 +40,8 @@ const SharePanel = createReactClass({
         return {
             shortenUrls: this.props.shortenUrls && this.props.terria.getLocalProperty('shortenShareUrls'),
             imageUrl: '',
-            shareUrl: ''
+            shareUrl: '',
+            print: false
         };
     },
 
@@ -121,38 +123,79 @@ const SharePanel = createReactClass({
         }
     },
 
-    renderSmallScreen(iframeCode, shareUrlTextBox) {
-      return (<div>
-        <div className={Styles.clipboard}><Clipboard source={shareUrlTextBox} id='share-url'/></div>
-        <div className={DropdownStyles.section}>
-              <a className={Styles.link} href={this.state.imageUrl} target='_blank'>
-              <div className={Styles.imgShare}>
-                <img src={this.state.imageUrl} alt="Map snapshot" />
-              </div>
-              </a>
-        </div>
-        <If condition={this.isUrlShortenable()}>
-            <div className={classNames(DropdownStyles.section, Styles.shortenUrl)}>
-                <button onClick={this.onShortenClicked}>
-                    {this.shouldShorten() ? <Icon glyph={Icon.GLYPHS.checkboxOn}/> : <Icon glyph={Icon.GLYPHS.checkboxOff}/>}
-                    Shorten the share URL
-                </button>
-            </div>
-        </If>
-      </div>);
+    openPrintView() {
+        const printWindow = window.open();
+
+        printWindow.document.title = `${this.props.terria.appName} Print View`;
+        printWindow.document.head.innerHTML = `<style>${PrintView.Styles}</style>`;
+        printWindow.document.body.innerHTML = '<div id="print"></div>';
+
+        const that = this;
+        let rendered = false;
+        function render() {
+            if (!rendered) {
+                const printView = <PrintView terria={that.props.terria} viewState={that.props.viewState} onClose={that.closePrintView} />;
+                ReactDOM.render(printView, printWindow.document.getElementById('print'));
+                rendered = true;
+            }
+        }
+
+        // printWindow.document.onreadystatechange = printWindow.onload = function() {
+        //     if (printWindow.document.readyState === 'complete') {
+        //         render();
+        //     }
+        // };
+
+        // if (printWindow.location.href.indexOf('print.html') >= 0 && printWindow.document.readyState === 'complete') {
+        //     render();
+        // }
+
+        render();
     },
 
-    renderNormal(iframeCode, shareUrlTextBox) {
+    closePrintView() {
+        this.setState({
+            print: false
+        });
+    },
+
+    renderContent(iframeCode, shareUrlTextBox) {
+      const supportedFormats = [
+        {
+            name: 'Web Page (HTML)'
+        },
+        {
+            name: 'Microsoft Word (DOCX)'
+        },
+        {
+            name: 'Adobe Acrobat (PDF)'
+        }
+      ];
+
       return (
         <div>
-          <div className={DropdownStyles.section}>
+          <div className={Styles.clipboard}><Clipboard source={shareUrlTextBox} id='share-url'/></div>
+          {/* <div className={DropdownStyles.section}>
               <a className={Styles.link} href={this.state.imageUrl} target='_blank'>
                 <div className={Styles.imgShare}>
                     <img src={this.state.imageUrl} alt="Map snapshot" />
                 </div>
               </a>
+          </div> */}
+          <div className={DropdownStyles.section}>
+            <div>Download Map</div>
+            <div className={Styles.explanation}>Download the map image, legends and dataset descriptions.</div>
+            <div>
+                {supportedFormats.map(this.renderDownloadFormatButton)}
+            </div>
           </div>
-          <div className={Styles.clipboard}><Clipboard source={shareUrlTextBox} id='share-url'/></div>
+          <div className={DropdownStyles.section}>
+            <div>Print Map</div>
+            <div className={Styles.explanation}>Open a printable version of this map.</div>
+            <div>
+                <button className={Styles.printButton} onClick={this.openPrintView}>Print</button>
+            </div>
+          </div>
           <div className={classNames(DropdownStyles.section, Styles.shortenUrl)}>
               <div className={Styles.btnWrapper}>
                   <button type='button' onClick={this.toggleAdvancedOptions} className={Styles.btnAdvanced}>
@@ -180,6 +223,12 @@ const SharePanel = createReactClass({
         </div>);
     },
 
+    renderDownloadFormatButton(format) {
+        return (
+            <button className={Styles.formatButton}>{format.name}</button>
+        );
+    },
+
     render() {
         const dropdownTheme = {
             btn: Styles.btnShare,
@@ -197,23 +246,21 @@ const SharePanel = createReactClass({
                onClick={e => e.target.select()} id='share-url'/>;
 
         return (
-            <MenuPanel theme={dropdownTheme}
-                       btnText="Share"
-                       viewState={this.props.viewState}
-                       btnTitle="Share your map with others"
-                       onOpenChanged={this.onOpenChanged}
-                       smallScreen={this.props.viewState.useSmallScreenInterface}>
-                <If condition={this.state.isOpen}>
-                  <Choose>
-                    <When condition={this.props.viewState.useSmallScreenInterface}>
-                      {this.renderSmallScreen(iframeCode, shareUrlTextBox)}
-                    </When>
-                    <Otherwise>
-                      {this.renderNormal(iframeCode, shareUrlTextBox)}
-                    </Otherwise>
-                  </Choose>
+            <div>
+                <MenuPanel theme={dropdownTheme}
+                        btnText="Share"
+                        viewState={this.props.viewState}
+                        btnTitle="Share your map with others"
+                        onOpenChanged={this.onOpenChanged}
+                        smallScreen={this.props.viewState.useSmallScreenInterface}>
+                    <If condition={this.state.isOpen}>
+                        {this.renderContent(iframeCode, shareUrlTextBox)}
+                    </If>
+                </MenuPanel>
+                <If condition={this.state.print}>
+                    <PrintView terria={this.props.terria} viewState={this.props.viewState} onClose={this.closePrintView} />
                 </If>
-            </MenuPanel>
+            </div>
         );
     },
 });

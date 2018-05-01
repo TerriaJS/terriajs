@@ -93,3 +93,17 @@
     width: 14px;
   }
 }
+
+.explanation {
+  font-size: smaller;
+  font-weight: lighter;
+  color: $text-light-dimmed;
+}
+
+.format-button, .print-button {
+  composes: btn from '../../../../Sass/common/_buttons.scss';
+  composes: btn-primary from '../../../../Sass/common/_buttons.scss';
+  width: auto;
+  display: inline;
+  margin: 2px;
+}
