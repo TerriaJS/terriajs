@@ -39,9 +39,7 @@ const SharePanel = createReactClass({
     getInitialState() {
         return {
             shortenUrls: this.props.shortenUrls && this.props.terria.getLocalProperty('shortenShareUrls'),
-            imageUrl: '',
-            shareUrl: '',
-            print: false
+            shareUrl: ''
         };
     },
 
@@ -113,12 +111,6 @@ const SharePanel = createReactClass({
         });
 
         if (open) {
-            this.props.terria.currentViewer.captureScreenshot().then(dataUrl => {
-                this.setState({
-                    imageUrl: dataUrl
-                });
-            });
-
             this.updateForShortening();
         }
     },
@@ -143,23 +135,7 @@ const SharePanel = createReactClass({
             }
         }
 
-        // printWindow.document.onreadystatechange = printWindow.onload = function() {
-        //     if (printWindow.document.readyState === 'complete') {
-        //         render();
-        //     }
-        // };
-
-        // if (printWindow.location.href.indexOf('print.html') >= 0 && printWindow.document.readyState === 'complete') {
-        //     render();
-        // }
-
         render();
-    },
-
-    closePrintView() {
-        this.setState({
-            print: false
-        });
     },
 
     renderContent(iframeCode, shareUrlTextBox) {
@@ -178,13 +154,6 @@ const SharePanel = createReactClass({
       return (
         <div>
           <div className={Styles.clipboard}><Clipboard source={shareUrlTextBox} id='share-url'/></div>
-          {/* <div className={DropdownStyles.section}>
-              <a className={Styles.link} href={this.state.imageUrl} target='_blank'>
-                <div className={Styles.imgShare}>
-                    <img src={this.state.imageUrl} alt="Map snapshot" />
-                </div>
-              </a>
-          </div> */}
           <div className={DropdownStyles.section}>
             <div>Download Map</div>
             <div className={Styles.explanation}>Download the map image, legends and dataset descriptions.</div>
