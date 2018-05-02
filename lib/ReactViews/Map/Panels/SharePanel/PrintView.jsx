@@ -24,26 +24,28 @@ const PrintView = createReactClass({
     },
 
     componentDidMount() {
-        // We need to periodically check whether all images are loaded.
-        // We can do theoretically do that either with a setInterval on the original TerriaJS window,
-        // or on the print view window. But:
-        //    * Chrome (as of v66.0.3359.139 anyway) seems to aggressively suspend setInterval calls in background
-        // tabs, so only a setInterval on the print view window works reliably.
-        //    * Internet Explorer 11 does not seem to allow a cross-window setInterval call. So only a setInterval
-        // on the original TerriaJS window works reliably.
-        // So, we'll do both.
-
-        const printWindow = this.props.window;
-        const printWindowIntervalId = printWindow.setInterval(this.checkForImagesReady, 200);
-        const mainWindowIntervalId = setInterval(this.checkForImagesReady, 200);
-
-        this._stopCheckingForImages = () => {
-            printWindow.clearInterval(printWindowIntervalId);
-            clearInterval(mainWindowIntervalId);
-            this._stopCheckingForImages = undefined;
-        };
-
         return this.props.terria.currentViewer.captureScreenshot().then(mapImageDataUrl => {
+            // We need to periodically check whether all images are loaded.
+            // We can theoretically do that either with a setInterval on the original TerriaJS window,
+            // or on the print view window. But:
+            //    * Chrome (as of v66.0.3359.139 anyway) seems to aggressively suspend setInterval calls in background
+            // tabs, so only a setInterval on the print view window works reliably.
+            //    * Internet Explorer 11 does not seem to allow a cross-window setInterval call, so only a setInterval
+            // on the original TerriaJS window works reliably.
+            // So, we'll do both.
+
+            const printWindow = this.props.window;
+            const mainWindow = window;
+
+            const printWindowIntervalId = printWindow.setInterval(this.checkForImagesReady, 200);
+            const mainWindowIntervalId = mainWindow.setInterval(this.checkForImagesReady, 200);
+
+            this._stopCheckingForImages = () => {
+                printWindow.clearInterval(printWindowIntervalId);
+                mainWindow.clearInterval(mainWindowIntervalId);
+                this._stopCheckingForImages = undefined;
+            };
+
             this.setState({
                 mapImageDataUrl: mapImageDataUrl
             });
@@ -71,10 +73,6 @@ const PrintView = createReactClass({
 
     checkForImagesReady() {
         const imageTags = this.props.window.document.getElementsByTagName('img');
-        if (imageTags.length === 0) {
-            // There must be at least one image, the map.
-            return;
-        }
 
         let allImagesReady = true;
         for (let i = 0; allImagesReady && i < imageTags.length; ++i) {
@@ -179,18 +177,6 @@ PrintView.create = function(terria) {
         <style>${PrintView.Styles}</style>
         `;
     printWindow.document.body.innerHTML = '<div id="print"></div>';
-
-    printWindow.onbeforeprint = function() {
-        console.log('beginprint');
-    };
-
-    printWindow.onload = function() {
-        console.log('load');
-    };
-
-    printWindow.document.onreadystatechange = function() {
-        console.log('readyState: ' + printWindow.document.readyState);
-    };
 
     const printView = <PrintView terria={terria} window={printWindow} />;
     ReactDOM.render(printView, printWindow.document.getElementById('print'));
