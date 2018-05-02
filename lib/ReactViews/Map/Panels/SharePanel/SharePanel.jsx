@@ -177,7 +177,7 @@ const SharePanel = createReactClass({
 
     renderDownloadFormatButton(format) {
         return (
-            <button className={Styles.formatButton}>{format.name}</button>
+            <button key={format.name} className={Styles.formatButton}>{format.name}</button>
         );
     },
 

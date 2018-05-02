@@ -1,11 +1,11 @@
 'use strict';
 
+import createReactClass from 'create-react-class';
+import DOMPurify from 'dompurify/dist/purify';
+import Legend from '../../../Workbench/Controls/Legend';
+import PropTypes from 'prop-types';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import createReactClass from 'create-react-class';
-import PropTypes from 'prop-types';
-import parseCustomHtmlToReact from '../../../Custom/parseCustomHtmlToReact';
-import Legend from '../../../Workbench/Controls/Legend';
 
 const PrintView = createReactClass({
     displayName: 'PrintView',
@@ -62,21 +62,23 @@ const PrintView = createReactClass({
                 </ul>
                 <If condition={this.props.terria.configParameters.printDisclaimer}>
                     <h2>Print Disclaimer</h2>
-                    <p>
-                        <div>{this.props.terria.configParameters.printDisclaimer.text}</div>
-                    </p>
+                    <p>{this.props.terria.configParameters.printDisclaimer.text}</p>
                 </If>
             </div>
         );
     },
 
     renderAttribution(attribution) {
-        return (<li>{parseCustomHtmlToReact(attribution)}</li>);
+        // For reasons I don't entirely understanding, using parseCustomHtmlToReact instead
+        // of dangerouslySetInnerHTML here doesn't work in IE11 or Edge. All elements after
+        // the first attribution end up just completely missing from the DOM.
+        const html = { __html: DOMPurify.sanitize(attribution) };
+        return (<li key={attribution} dangerouslySetInnerHTML={html}></li>);
     },
 
     renderLegend(catalogItem) {
         return (
-            <div className="layer-legends">
+            <div key={catalogItem.uniqueId} className="layer-legends">
                 <div className="layer-title">{catalogItem.name}</div>
                 <Legend item={catalogItem} />
             </div>
