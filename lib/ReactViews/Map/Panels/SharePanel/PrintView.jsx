@@ -18,10 +18,31 @@ const PrintView = createReactClass({
     getInitialState() {
         return {
             mapImageDataUrl: undefined,
+            ready: false,
+            printingStarted: false
         };
     },
 
     componentDidMount() {
+        // We need to periodically check whether all images are loaded.
+        // We can do theoretically do that either with a setInterval on the original TerriaJS window,
+        // or on the print view window. But:
+        //    * Chrome (as of v66.0.3359.139 anyway) seems to aggressively suspend setInterval calls in background
+        // tabs, so only a setInterval on the print view window works reliably.
+        //    * Internet Explorer 11 does not seem to allow a cross-window setInterval call. So only a setInterval
+        // on the original TerriaJS window works reliably.
+        // So, we'll do both.
+
+        const printWindow = this.props.window;
+        const printWindowIntervalId = printWindow.setInterval(this.checkForImagesReady, 200);
+        const mainWindowIntervalId = setInterval(this.checkForImagesReady, 200);
+
+        this._stopCheckingForImages = () => {
+            printWindow.clearInterval(printWindowIntervalId);
+            clearInterval(mainWindowIntervalId);
+            this._stopCheckingForImages = undefined;
+        };
+
         return this.props.terria.currentViewer.captureScreenshot().then(mapImageDataUrl => {
             this.setState({
                 mapImageDataUrl: mapImageDataUrl
@@ -29,8 +50,31 @@ const PrintView = createReactClass({
         });
     },
 
-    mapImageLoaded() {
+    componentWillUnmount() {
+        this.stopCheckingForImages();
+    },
+
+    componentDidUpdate() {
+        if (this.state.ready && !this.state.printingStarted) {
+            this.props.window.print();
+            this.setState({
+                printingStarted: true
+            });
+        }
+    },
+
+    stopCheckingForImages() {
+        if (this._stopCheckingForImages) {
+            this._stopCheckingForImages();
+        }
+    },
+
+    checkForImagesReady() {
         const imageTags = this.props.window.document.getElementsByTagName('img');
+        if (imageTags.length === 0) {
+            // There must be at least one image, the map.
+            return;
+        }
 
         let allImagesReady = true;
         for (let i = 0; allImagesReady && i < imageTags.length; ++i) {
@@ -38,9 +82,10 @@ const PrintView = createReactClass({
         }
 
         if (allImagesReady) {
-            this.props.window.print();
-        } else {
-            this.props.window.setTimeout(this.mapImageLoaded, 200);
+            this.stopCheckingForImages();
+            this.setState({
+                ready: allImagesReady
+            });
         }
     },
 
@@ -52,7 +97,7 @@ const PrintView = createReactClass({
         return (
             <div>
                 <p>
-                    <img className="map-image" src={this.state.mapImageDataUrl} alt="Map snapshot" onLoad={this.mapImageLoaded} />
+                    <img className="map-image" src={this.state.mapImageDataUrl} alt="Map snapshot" />
                 </p>
                 <h2>Legends</h2>
                 {this.props.terria.nowViewing.items.map(this.renderLegend)}
