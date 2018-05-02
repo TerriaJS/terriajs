@@ -1,7 +1,6 @@
 'use strict';
 
 import React from 'react';
-import ReactDOM from 'react-dom';
 import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import {buildShareLink, buildShortShareLink, canShorten} from './BuildShareLink';
@@ -116,26 +115,7 @@ const SharePanel = createReactClass({
     },
 
     openPrintView() {
-        const printWindow = window.open();
-
-        printWindow.document.title = `${this.props.terria.appName} Print View`;
-        printWindow.document.head.innerHTML = `
-            <title>${this.props.terria.appName} Print View</title>
-            <style>${PrintView.Styles}</style>
-            `;
-        printWindow.document.body.innerHTML = '<div id="print"></div>';
-
-        const that = this;
-        let rendered = false;
-        function render() {
-            if (!rendered) {
-                const printView = <PrintView terria={that.props.terria} viewState={that.props.viewState} onClose={that.closePrintView} />;
-                ReactDOM.render(printView, printWindow.document.getElementById('print'));
-                rendered = true;
-            }
-        }
-
-        render();
+        PrintView.create(this.props.terria);
     },
 
     renderContent(iframeCode, shareUrlTextBox) {

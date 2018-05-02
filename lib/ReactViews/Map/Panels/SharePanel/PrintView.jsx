@@ -1,6 +1,7 @@
 'use strict';
 
 import React from 'react';
+import ReactDOM from 'react-dom';
 import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import parseCustomHtmlToReact from '../../../Custom/parseCustomHtmlToReact';
@@ -11,29 +12,47 @@ const PrintView = createReactClass({
 
     propTypes: {
         terria: PropTypes.object,
-        viewState: PropTypes.object.isRequired,
-        onClose: PropTypes.func.isRequired
+        window: PropTypes.object
     },
 
     getInitialState() {
         return {
-            mapImageUrl: '',
+            mapImageDataUrl: undefined,
         };
     },
 
-    componentWillMount() {
-        this.props.terria.currentViewer.captureScreenshot().then(dataUrl => {
+    componentDidMount() {
+        return this.props.terria.currentViewer.captureScreenshot().then(mapImageDataUrl => {
             this.setState({
-                mapImageUrl: dataUrl
+                mapImageDataUrl: mapImageDataUrl
             });
         });
     },
 
+    mapImageLoaded() {
+        const imageTags = this.props.window.document.getElementsByTagName('img');
+
+        let allImagesReady = true;
+        for (let i = 0; allImagesReady && i < imageTags.length; ++i) {
+            allImagesReady = imageTags[i].complete;
+        }
+
+        if (allImagesReady) {
+            this.props.window.print();
+        } else {
+            this.props.window.setTimeout(this.mapImageLoaded, 200);
+        }
+    },
+
     render() {
+        if (!this.state.mapImageDataUrl) {
+            return <div>Creating print view...</div>;
+        }
+
         return (
             <div>
                 <p>
-                    <img className="map-image" src={this.state.mapImageUrl} alt="Map snapshot" />
+                    <img className="map-image" src={this.state.mapImageDataUrl} alt="Map snapshot" onLoad={this.mapImageLoaded} />
                 </p>
                 <h2>Legends</h2>
                 {this.props.terria.nowViewing.items.map(this.renderLegend)}
@@ -97,5 +116,37 @@ PrintView.Styles = `
         clear: both;
     }
 `;
+
+/**
+ * Creates a new printable view.
+ *
+ * @param {Terria} terria The Terria instance.
+ * @returns {Promise} A promise that resolves when the print view has been created.
+ */
+PrintView.create = function(terria) {
+    const printWindow = window.open();
+
+    printWindow.document.title = `${terria.appName} Print View`;
+    printWindow.document.head.innerHTML = `
+        <title>${terria.appName} Print View</title>
+        <style>${PrintView.Styles}</style>
+        `;
+    printWindow.document.body.innerHTML = '<div id="print"></div>';
+
+    printWindow.onbeforeprint = function() {
+        console.log('beginprint');
+    };
+
+    printWindow.onload = function() {
+        console.log('load');
+    };
+
+    printWindow.document.onreadystatechange = function() {
+        console.log('readyState: ' + printWindow.document.readyState);
+    };
+
+    const printView = <PrintView terria={terria} window={printWindow} />;
+    ReactDOM.render(printView, printWindow.document.getElementById('print'));
+};
 
 module.exports = PrintView;
