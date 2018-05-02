@@ -13,6 +13,8 @@ import PrintView from './PrintView';
 import Styles from './share-panel.scss';
 import DropdownStyles from '../panel.scss';
 import Icon from "../../../Icon.jsx";
+import FileSaver from 'file-saver';
+import zip from 'terriajs-cesium/Source/ThirdParty/zip';
 
 const SharePanel = createReactClass({
     displayName: 'SharePanel',
@@ -115,7 +117,30 @@ const SharePanel = createReactClass({
     },
 
     openPrintView() {
-        PrintView.create(this.props.terria);
+        PrintView.create(this.props.terria, undefined, printWindow => {
+            printWindow.print();
+        });
+    },
+
+    download() {
+        PrintView.create(this.props.terria, undefined, printWindow => {
+            const html = printWindow.document.documentElement.outerHTML;
+            const writer = new zip.BlobWriter();
+            zip.createWriter(writer, function(zipWriter) {
+                zipWriter.add('print.html', new zip.TextReader(html), function() {
+                    zipWriter.close(function(blob) {
+                        FileSaver.saveAs(blob, "print.zip");
+                    });
+                });
+            }, message => {
+                alert(message);
+            });
+
+            // const blob = new Blob([html], {
+            //     type: "text/html;charset=utf-8"
+            // });
+            // FileSaver.saveAs(blob, "print.html");
+        });
     },
 
     renderContent(iframeCode, shareUrlTextBox) {
@@ -177,7 +202,7 @@ const SharePanel = createReactClass({
 
     renderDownloadFormatButton(format) {
         return (
-            <button key={format.name} className={Styles.formatButton}>{format.name}</button>
+            <button key={format.name} className={Styles.formatButton} onClick={this.download}>{format.name}</button>
         );
     },
 

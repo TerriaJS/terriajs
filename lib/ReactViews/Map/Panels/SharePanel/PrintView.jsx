@@ -12,7 +12,8 @@ const PrintView = createReactClass({
 
     propTypes: {
         terria: PropTypes.object,
-        window: PropTypes.object
+        window: PropTypes.object,
+        readyCallback: PropTypes.func
     },
 
     getInitialState() {
@@ -58,7 +59,9 @@ const PrintView = createReactClass({
 
     componentDidUpdate() {
         if (this.state.ready && !this.state.printingStarted) {
-            this.props.window.print();
+            if (this.props.readyCallback) {
+                this.props.readyCallback(this.props.window);
+            }
             this.setState({
                 printingStarted: true
             });
@@ -72,6 +75,10 @@ const PrintView = createReactClass({
     },
 
     checkForImagesReady() {
+        if (this.state.ready) {
+            return;
+        }
+
         const imageTags = this.props.window.document.getElementsByTagName('img');
 
         let allImagesReady = true;
@@ -166,10 +173,14 @@ PrintView.Styles = `
  * Creates a new printable view.
  *
  * @param {Terria} terria The Terria instance.
+ * @param {Window} [printWindow] The window in which to create the print view. This is usually a new window created with
+ *                 `window.open()` or an iframe's `contentWindow`. If undefined, a new window (tab) will be created.
+ * @param {Function} [readyCallback] A function that is called when the print view is ready to be used. The function is
+ *                   given the print view window as its only parameter.
  * @returns {Promise} A promise that resolves when the print view has been created.
  */
-PrintView.create = function(terria) {
-    const printWindow = window.open();
+PrintView.create = function(terria, printWindow, readyCallback) {
+    printWindow = printWindow || window.open();
 
     printWindow.document.title = `${terria.appName} Print View`;
     printWindow.document.head.innerHTML = `
@@ -178,7 +189,7 @@ PrintView.create = function(terria) {
         `;
     printWindow.document.body.innerHTML = '<div id="print"></div>';
 
-    const printView = <PrintView terria={terria} window={printWindow} />;
+    const printView = <PrintView terria={terria} window={printWindow} readyCallback={readyCallback} />;
     ReactDOM.render(printView, printWindow.document.getElementById('print'));
 };
 
