@@ -135,8 +135,9 @@ const SharePanel = createReactClass({
                 document.body.removeChild(iframe);
             };
 
-            const result = printWindow.document.execCommand('print', false, null);
-
+            // First try printing with execCommand, because, in IE11, `printWindow.print()`
+            // prints the entire page instead of just the embedded iframe.
+            const result = printWindow.document.execCommand('print', true, null);
             if (!result) {
                 printWindow.print();
             }
