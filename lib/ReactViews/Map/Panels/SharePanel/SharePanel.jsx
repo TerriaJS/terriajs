@@ -15,6 +15,7 @@ import DropdownStyles from '../panel.scss';
 import Icon from "../../../Icon.jsx";
 import FileSaver from 'file-saver';
 import zip from 'terriajs-cesium/Source/ThirdParty/zip';
+import Loader from '../../../Loader';
 
 const SharePanel = createReactClass({
     displayName: 'SharePanel',
@@ -40,7 +41,8 @@ const SharePanel = createReactClass({
     getInitialState() {
         return {
             shortenUrls: this.props.shortenUrls && this.props.terria.getLocalProperty('shortenShareUrls'),
-            shareUrl: ''
+            shareUrl: '',
+            creatingPrintView: false
         };
     },
 
@@ -117,14 +119,38 @@ const SharePanel = createReactClass({
     },
 
     openPrintView() {
-        PrintView.create(this.props.terria, undefined, printWindow => {
-            printWindow.print();
+        this.setState({
+            creatingPrintView: true
+        });
+
+        const iframe = document.createElement('iframe');
+        document.body.appendChild(iframe);
+
+        PrintView.create(this.props.terria, iframe.contentWindow, printWindow => {
+            this.setState({
+                creatingPrintView: false
+            });
+
+            printWindow.onafterprint = function() {
+                document.body.removeChild(iframe);
+            };
+
+            const result = printWindow.document.execCommand('print', false, null);
+
+            if (!result) {
+                printWindow.print();
+            }
         });
     },
 
     download() {
-        PrintView.create(this.props.terria, undefined, printWindow => {
+        const iframe = document.createElement('iframe');
+        document.body.appendChild(iframe);
+        PrintView.create(this.props.terria, iframe.contentWindow, printWindow => {
             const html = printWindow.document.documentElement.outerHTML;
+            // const mapImage = printWindow.document.getElementsByTagName('img')[0];
+            // const canvas = docu
+
             const writer = new zip.BlobWriter();
             zip.createWriter(writer, function(zipWriter) {
                 zipWriter.add('print.html', new zip.TextReader(html), function() {
@@ -170,7 +196,7 @@ const SharePanel = createReactClass({
             <div>Print Map</div>
             <div className={Styles.explanation}>Open a printable version of this map.</div>
             <div>
-                <button className={Styles.printButton} onClick={this.openPrintView}>Print</button>
+                <button className={Styles.printButton} onClick={this.openPrintView} disabled={this.state.creatingPrintView}>{!this.state.creatingPrintView && 'Print'}{this.state.creatingPrintView && <Loader message="Creating print view..." />}</button>
             </div>
           </div>
           <div className={classNames(DropdownStyles.section, Styles.shortenUrl)}>
