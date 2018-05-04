@@ -9,6 +9,7 @@ import createReactClass from 'create-react-class';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import DropdownStyles from '../panel.scss';
 import FileSaver from 'file-saver';
+import flatten from '../../../../Core/flatten';
 import Icon from "../../../Icon.jsx";
 import Loader from '../../../Loader';
 import loadImage from 'terriajs-cesium/Source/Core/loadImage';
@@ -198,10 +199,10 @@ const SharePanel = createReactClass({
                 return anyImageToPngBlob(image).then(blob => {
                     const name = getUniqueImageName(image) + '.png';
                     image.src = name;
-                    return {
+                    return [{
                         name: name,
                         reader: new zip.BlobReader(blob)
-                    };
+                    }];
                 }).otherwise(e => {
                     // Could not create a blob for this image. Some possible reasons:
                     //    * It is a cross-origin image without CORS support so drawing it to a canvas tainted the canvas.
@@ -212,54 +213,56 @@ const SharePanel = createReactClass({
             });
 
             const svgs = printWindow.document.getElementsByTagName('svg');
-            const svgTextPromises = Array.prototype.map.call(svgs, function(svg) {
+            const svgPromises = Array.prototype.map.call(svgs, function(svg) {
                 // Embed stlyes in the SVG. TODO: we should make our legend SVGs self-contained.
                 const svgStyle = printWindow.document.createElement('style');
                 svgStyle.innerHTML = PrintView.Styles;
                 svg.appendChild(svgStyle);
-
-                const name = getUniqueImageName(svg) + '.svg';
                 const svgText = new XMLSerializer().serializeToString(svg);
-                return {
-                    name: name,
-                    reader: new zip.TextReader(svgText)
-                };
+                const url = 'data:image/svg+xml,' + encodeURIComponent(svgText);
+                return loadImage(url).then(image => {
+                    return anyImageToPngBlob(image).then(blob => {
+                        const uniqueName = getUniqueImageName(svg);
+
+                        // Replace the SVG with the image
+                        svg.parentNode.replaceChild(image, svg);
+                        const pngName = uniqueName + '.png';
+                        image.src = pngName;
+
+                        // Add both the SVG and the generated PNG to the ZIP.
+                        return [{
+                            name: uniqueName + '.svg',
+                            reader: new zip.TextReader(svgText)
+                        }, {
+                            name: pngName,
+                            reader: new zip.BlobReader(blob)
+                        }];
+                    });
+                });
             });
-            // const svgBlobPromises = Array.prototype.map.call(svgs, function(svg) {
-            //     const data = encodeURIComponent(svg.outerHTML);
-            //     const url = 'data:image/svg+xml,' + data;
-            //     return loadImage(url).then(anyImageToPngBlob).then(blob => {
-            //         const name = svg.alt + '.png';
-            //         image.src = name;
-            //         return {
-            //             name: name,
-            //             reader: new zip.BlobReader(blob)
-            //         };
-            //     });
-            // });
 
-            const blobPromises = imageBlobPromises.concat(svgTextPromises);
+            const resourcePromises = imageBlobPromises.concat(svgPromises);
 
-            when.all(blobPromises).then(imageResources => {
+            when.all(resourcePromises).then(resources => {
                 const writer = new zip.BlobWriter();
                 zip.createWriter(writer, function(zipWriter) {
                     // Collect all the resources we'll be adding to the ZIP file.
                     const html = printWindow.document.documentElement.outerHTML;
-                    const resources = [{
+                    const allResources = [{
                         name: 'index.html',
                         reader: new zip.TextReader(html)
-                    }, ...imageResources.filter(imageResource => imageResource !== undefined)];
+                    }, ...flatten(resources).filter(imageResource => imageResource !== undefined)];
 
                     // And add them.
                     let resourceIndex = 0;
 
                     function addNextResource() {
-                        if (resourceIndex >= resources.length) {
+                        if (resourceIndex >= allResources.length) {
                             zipWriter.close(function(blob) {
                                 FileSaver.saveAs(blob, "print.zip"); // TODO: better filename
                             });
                         } else {
-                            const resource = resources[resourceIndex];
+                            const resource = allResources[resourceIndex];
                             ++resourceIndex;
                             zipWriter.add(resource.name, resource.reader, addNextResource);
                         }
