@@ -1,21 +1,25 @@
 'use strict';
 
-import React from 'react';
-import createReactClass from 'create-react-class';
-import PropTypes from 'prop-types';
-import {buildShareLink, buildShortShareLink, canShorten} from './BuildShareLink';
-import ObserverModelMixin from '../../../ObserveModelMixin';
-import defined from 'terriajs-cesium/Source/Core/defined';
+import { buildShareLink, buildShortShareLink, canShorten } from './BuildShareLink';
+import anyImageToPngBlob from '../../../../Map/anyImageToPngBlob';
 import classNames from 'classnames';
-import MenuPanel from '../../../StandardUserInterface/customizable/MenuPanel.jsx';
 import Clipboard from '../../../Clipboard';
-import PrintView from './PrintView';
-import Styles from './share-panel.scss';
+import createGuid from 'terriajs-cesium/Source/Core/createGuid';
+import createReactClass from 'create-react-class';
+import defined from 'terriajs-cesium/Source/Core/defined';
 import DropdownStyles from '../panel.scss';
-import Icon from "../../../Icon.jsx";
 import FileSaver from 'file-saver';
-import zip from 'terriajs-cesium/Source/ThirdParty/zip';
+import Icon from "../../../Icon.jsx";
 import Loader from '../../../Loader';
+import loadImage from 'terriajs-cesium/Source/Core/loadImage';
+import MenuPanel from '../../../StandardUserInterface/customizable/MenuPanel.jsx';
+import ObserverModelMixin from '../../../ObserveModelMixin';
+import PrintView from './PrintView';
+import PropTypes from 'prop-types';
+import React from 'react';
+import Styles from './share-panel.scss';
+import when from 'terriajs-cesium/Source/ThirdParty/when';
+import zip from 'terriajs-cesium/Source/ThirdParty/zip';
 
 const SharePanel = createReactClass({
     displayName: 'SharePanel',
@@ -145,28 +149,127 @@ const SharePanel = createReactClass({
     },
 
     download() {
+        const imageNames = {};
+        function getUniqueImageName(image) {
+            let name = image.alt;
+            if (!name || name.length === 0) {
+                // Find a parent element with the 'layer-title' class.
+                let node = image.parentNode;
+                while (node) {
+                    const titleNode = node.getElementsByClassName('layer-title')[0];
+                    if (titleNode) {
+                        name = titleNode.textContent.trim();
+                        break;
+                    }
+                    node = node.parentNode;
+                }
+            }
+
+            if (!name || name.length === 0) {
+                name = 'image';
+            }
+
+            if (imageNames[name] && imageNames[name] !== image) {
+                // Name already exists, add a number to make it unique.
+                for (let i = 1; i < 100; ++i) {
+                    const candidate = name + '-' + i;
+                    if (!imageNames[candidate] || imageNames[candidate] === image) {
+                        name = candidate;
+                        break;
+                    }
+                }
+
+                if (imageNames[name] && imageNames[name] !== image) {
+                    // Give up and use a guid
+                    name = createGuid();
+                }
+            }
+
+            imageNames[name] = image;
+
+            return name;
+        }
+
         const iframe = document.createElement('iframe');
         document.body.appendChild(iframe);
         PrintView.create(this.props.terria, iframe.contentWindow, printWindow => {
-            const html = printWindow.document.documentElement.outerHTML;
-            // const mapImage = printWindow.document.getElementsByTagName('img')[0];
-            // const canvas = docu
-
-            const writer = new zip.BlobWriter();
-            zip.createWriter(writer, function(zipWriter) {
-                zipWriter.add('print.html', new zip.TextReader(html), function() {
-                    zipWriter.close(function(blob) {
-                        FileSaver.saveAs(blob, "print.zip");
-                    });
+            const images = printWindow.document.getElementsByTagName('img');
+            const imageBlobPromises = Array.prototype.map.call(images, function(image) {
+                return anyImageToPngBlob(image).then(blob => {
+                    const name = getUniqueImageName(image) + '.png';
+                    image.src = name;
+                    return {
+                        name: name,
+                        reader: new zip.BlobReader(blob)
+                    };
+                }).otherwise(e => {
+                    // Could not create a blob for this image. Some possible reasons:
+                    //    * It is a cross-origin image without CORS support so drawing it to a canvas tainted the canvas.
+                    //    * The web browser doesn't support HTMLCanvasElement.toBlob or msToBlob
+                    // So leave the image src as-is and hope for the best.
+                    return undefined;
                 });
-            }, message => {
-                alert(message);
             });
 
-            // const blob = new Blob([html], {
-            //     type: "text/html;charset=utf-8"
+            const svgs = printWindow.document.getElementsByTagName('svg');
+            const svgTextPromises = Array.prototype.map.call(svgs, function(svg) {
+                // Embed stlyes in the SVG. TODO: we should make our legend SVGs self-contained.
+                const svgStyle = printWindow.document.createElement('style');
+                svgStyle.innerHTML = PrintView.Styles;
+                svg.appendChild(svgStyle);
+
+                const name = getUniqueImageName(svg) + '.svg';
+                const svgText = new XMLSerializer().serializeToString(svg);
+                return {
+                    name: name,
+                    reader: new zip.TextReader(svgText)
+                };
+            });
+            // const svgBlobPromises = Array.prototype.map.call(svgs, function(svg) {
+            //     const data = encodeURIComponent(svg.outerHTML);
+            //     const url = 'data:image/svg+xml,' + data;
+            //     return loadImage(url).then(anyImageToPngBlob).then(blob => {
+            //         const name = svg.alt + '.png';
+            //         image.src = name;
+            //         return {
+            //             name: name,
+            //             reader: new zip.BlobReader(blob)
+            //         };
+            //     });
             // });
-            // FileSaver.saveAs(blob, "print.html");
+
+            const blobPromises = imageBlobPromises.concat(svgTextPromises);
+
+            when.all(blobPromises).then(imageResources => {
+                const writer = new zip.BlobWriter();
+                zip.createWriter(writer, function(zipWriter) {
+                    // Collect all the resources we'll be adding to the ZIP file.
+                    const html = printWindow.document.documentElement.outerHTML;
+                    const resources = [{
+                        name: 'index.html',
+                        reader: new zip.TextReader(html)
+                    }, ...imageResources.filter(imageResource => imageResource !== undefined)];
+
+                    // And add them.
+                    let resourceIndex = 0;
+
+                    function addNextResource() {
+                        if (resourceIndex >= resources.length) {
+                            zipWriter.close(function(blob) {
+                                FileSaver.saveAs(blob, "print.zip"); // TODO: better filename
+                            });
+                        } else {
+                            const resource = resources[resourceIndex];
+                            ++resourceIndex;
+                            zipWriter.add(resource.name, resource.reader, addNextResource);
+                        }
+                    }
+
+                    addNextResource();
+                }, message => {
+                    alert(message);
+                });
+            });
         });
     },
 
