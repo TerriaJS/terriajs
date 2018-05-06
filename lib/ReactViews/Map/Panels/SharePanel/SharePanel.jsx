@@ -219,7 +219,7 @@ const SharePanel = createReactClass({
                 svgStyle.innerHTML = PrintView.Styles;
                 svg.appendChild(svgStyle);
                 const svgText = new XMLSerializer().serializeToString(svg);
-                const url = 'data:image/svg+xml,' + encodeURIComponent(svgText);
+                const url = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgText);
                 return loadImage(url).then(image => {
                     return anyImageToPngBlob(image).then(blob => {
                         const uniqueName = getUniqueImageName(svg);
