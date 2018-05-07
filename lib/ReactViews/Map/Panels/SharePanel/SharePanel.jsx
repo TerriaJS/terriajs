@@ -6,7 +6,7 @@ import classNames from 'classnames';
 import Clipboard from '../../../Clipboard';
 import createGuid from 'terriajs-cesium/Source/Core/createGuid';
 import createReactClass from 'create-react-class';
-import dateFormat from 'dateFormat';
+import dateformat from 'dateformat';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import DropdownStyles from '../panel.scss';
 import FileSaver from 'file-saver';
@@ -145,10 +145,6 @@ const SharePanel = createReactClass({
         }
 
         PrintView.create(this.props.terria, iframe ? iframe.contentWindow : undefined, printWindow => {
-            this.setState({
-                creatingPrintView: false
-            });
-
             if (iframe) {
                 // Remove the hidden iframe after printing.
                 // Note that if printAutomatically is false, this will never be invoked
@@ -166,6 +162,10 @@ const SharePanel = createReactClass({
                     printWindow.print();
                 }
             }
+        }, printWindow => {
+            this.setState({
+                creatingPrintView: false
+            });
         });
     },
 
@@ -282,7 +282,7 @@ const SharePanel = createReactClass({
                     const addNextResource = () => {
                         if (resourceIndex >= allResources.length) {
                             zipWriter.close(blob => {
-                                FileSaver.saveAs(blob, this.props.terria.appName + ' ' + dateFormat(new Date(), 'yyyymmdd\'T\'HHMMss') + '.zip');
+                                FileSaver.saveAs(blob, this.props.terria.appName + ' ' + dateformat(new Date(), 'yyyymmdd\'T\'HHMMss') + '.zip');
                                 this.setState({
                                     creatingDownload: false
                                 });

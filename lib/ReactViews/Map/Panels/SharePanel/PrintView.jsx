@@ -177,10 +177,18 @@ PrintView.Styles = `
  *                 `window.open()` or an iframe's `contentWindow`. If undefined, a new window (tab) will be created.
  * @param {Function} [readyCallback] A function that is called when the print view is ready to be used. The function is
  *                   given the print view window as its only parameter.
+ * @param {Function} [closeCallback] A function that is called when the print view is closed. The function is given
+ *                   the print view window as its only parameter.
  * @returns {Promise} A promise that resolves when the print view has been created.
  */
-PrintView.create = function(terria, printWindow, readyCallback) {
+PrintView.create = function(terria, printWindow, readyCallback, closeCallback) {
     printWindow = printWindow || window.open();
+
+    if (closeCallback) {
+        printWindow.addEventListener('unload', () => {
+            closeCallback(printWindow);
+        });
+    }
 
     printWindow.document.title = `${terria.appName} Print View`;
     printWindow.document.head.innerHTML = `
