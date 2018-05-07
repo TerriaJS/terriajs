@@ -222,6 +222,14 @@ const SharePanel = createReactClass({
             const imageBlobPromises = Array.prototype.map.call(images, function(image) {
                 return anyImageToPngBlob(image).then(blob => {
                     const name = getUniqueImageName(image) + '.png';
+
+                    // Squirrel away the original dimensions, because setting src with an inaccessible image
+                    // (in this context) will cause the dimensions to change in some browsers.
+                    image._originalDimensions = {
+                        naturalWidth: image.naturalWidth,
+                        naturalHeight: image.naturalHeight
+                    };
+
                     image.src = name;
                     return [{
                         name: name,
@@ -269,11 +277,25 @@ const SharePanel = createReactClass({
             when.all(resourcePromises).then(resources => {
                 const writer = new zip.BlobWriter();
                 zip.createWriter(writer, zipWriter => {
-                    // Collect all the resources we'll be adding to the ZIP file.
                     const html = printWindow.document.documentElement.outerHTML;
+
+                    // Create a tweaked version of the HTML for MS Word, which has terrible CSS support
+                    const images = printWindow.document.getElementsByTagName('img');
+                    Array.prototype.forEach.call(images, function(image) {
+                        if (image._originalDimensions && image._originalDimensions.naturalWidth > 560) {
+                            image.height = image._originalDimensions.naturalHeight * 560 / image._originalDimensions.naturalWidth;
+                            image.width = 560;
+                        }
+                    });
+                    const wordHtml = printWindow.document.documentElement.outerHTML;
+
+                    // Collect all the resources we'll be adding to the ZIP file.
                     const allResources = [{
                         name: 'index.html',
                         reader: new zip.TextReader(html)
+                    }, {
+                        name: 'index.doc',
+                        reader: new zip.TextReader(wordHtml)
                     }, ...flatten(resources).filter(imageResource => imageResource !== undefined)];
 
                     // And add them.
