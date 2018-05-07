@@ -47,7 +47,8 @@ const SharePanel = createReactClass({
         return {
             shortenUrls: this.props.shortenUrls && this.props.terria.getLocalProperty('shortenShareUrls'),
             shareUrl: '',
-            creatingPrintView: false
+            creatingPrintView: false,
+            creatingDownload: false
         };
     },
 
@@ -209,6 +210,10 @@ const SharePanel = createReactClass({
             return name;
         }
 
+        this.setState({
+            creatingDownload: true
+        });
+
         const iframe = document.createElement('iframe');
         document.body.appendChild(iframe);
         PrintView.create(this.props.terria, iframe.contentWindow, printWindow => {
@@ -235,7 +240,7 @@ const SharePanel = createReactClass({
                 // Embed stlyes in the SVG. TODO: we should make our legend SVGs self-contained.
                 const svgStyle = printWindow.document.createElement('style');
                 svgStyle.innerHTML = PrintView.Styles;
-                svg.appendChild(svgStyle);
+                svg.insertBefore(svgStyle, svg.childNodes[0]);
                 const svgText = new XMLSerializer().serializeToString(svg);
                 const url = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgText);
                 return loadImage(url).then(image => {
@@ -263,7 +268,7 @@ const SharePanel = createReactClass({
 
             when.all(resourcePromises).then(resources => {
                 const writer = new zip.BlobWriter();
-                zip.createWriter(writer, function(zipWriter) {
+                zip.createWriter(writer, zipWriter => {
                     // Collect all the resources we'll be adding to the ZIP file.
                     const html = printWindow.document.documentElement.outerHTML;
                     const allResources = [{
@@ -274,17 +279,20 @@ const SharePanel = createReactClass({
                     // And add them.
                     let resourceIndex = 0;
 
-                    function addNextResource() {
+                    const addNextResource = () => {
                         if (resourceIndex >= allResources.length) {
-                            zipWriter.close(function(blob) {
+                            zipWriter.close(blob => {
                                 FileSaver.saveAs(blob, "print.zip"); // TODO: better filename
+                                this.setState({
+                                    creatingDownload: false
+                                });
                             });
                         } else {
                             const resource = allResources[resourceIndex];
                             ++resourceIndex;
                             zipWriter.add(resource.name, resource.reader, addNextResource);
                         }
-                    }
+                    };
 
                     addNextResource();
                 }, message => {
@@ -297,13 +305,7 @@ const SharePanel = createReactClass({
     renderContent(iframeCode, shareUrlTextBox) {
       const supportedFormats = [
         {
-            name: 'Web Page (HTML)'
-        },
-        {
-            name: 'Microsoft Word (DOCX)'
-        },
-        {
-            name: 'Adobe Acrobat (PDF)'
+            name: 'Download (ZIP)'
         }
       ];
 
@@ -315,6 +317,9 @@ const SharePanel = createReactClass({
             <div className={Styles.explanation}>Download the map image, legends and dataset descriptions.</div>
             <div>
                 {supportedFormats.map(this.renderDownloadFormatButton)}
+            </div>
+            <div className={Styles.printViewLoader}>
+                {this.state.creatingDownload && <Loader message="Creating download..." />}
             </div>
           </div>
           <div className={DropdownStyles.section}>
@@ -357,7 +362,7 @@ const SharePanel = createReactClass({
 
     renderDownloadFormatButton(format) {
         return (
-            <button key={format.name} className={Styles.formatButton} onClick={this.download}>{format.name}</button>
+            <button key={format.name} className={Styles.formatButton} onClick={this.download} disabled={this.state.creatingDownload}>{format.name}</button>
         );
     },
 
@@ -389,9 +394,6 @@ const SharePanel = createReactClass({
                         {this.renderContent(iframeCode, shareUrlTextBox)}
                     </If>
                 </MenuPanel>
-                <If condition={this.state.print}>
-                    <PrintView terria={this.props.terria} viewState={this.props.viewState} onClose={this.closePrintView} />
-                </If>
             </div>
         );
     },

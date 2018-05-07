@@ -143,9 +143,9 @@ PrintView.Styles = `
         margin: 0;
     }
 
-    rect.background {
+    .background {
         width: 100%;
-        fill-opacity: 0;
+        fill: rgba(255, 255, 255, 1.0);
     }
 
     .map-image {
