@@ -149,6 +149,15 @@ const SharePanel = createReactClass({
                 // Remove the hidden iframe after printing.
                 // Note that if printAutomatically is false, this will never be invoked
                 // so the hidden iframe will hang around in the DOM forever.
+                // Detect the end of printing using multiple techniques because no one
+                // technique works across all browsers.
+                if (printWindow.matchMedia) {
+                    printWindow.matchMedia('print').addListener(function(evt) {
+                        if (!evt.matches) {
+                            document.body.removeChild(iframe);
+                        }
+                    });
+                }
                 printWindow.onafterprint = function() {
                     document.body.removeChild(iframe);
                 };
