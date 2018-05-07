@@ -23,6 +23,7 @@
     "babel-plugin-jsx-control-statements": "^3.2.8",
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.5.0",
+    "canvg": "TerriaJS/canvg#terriajs",
     "class-list": "^0.1.1",
     "classnames": "^2.2.3",
     "clipboard": "^1.7.1",
@@ -80,7 +81,6 @@
   },
   "devDependencies": {
     "babel-eslint": "^7.0.0",
-    "canvg": "TerriaJS/canvg#terriajs",
     "css-loader": "^0.28.0",
     "electron": "^1.4.10",
     "enzyme": "^2.4.1",
