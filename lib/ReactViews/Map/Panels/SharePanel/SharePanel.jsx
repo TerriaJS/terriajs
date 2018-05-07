@@ -123,28 +123,46 @@ const SharePanel = createReactClass({
         }
     },
 
-    openPrintView() {
+    print() {
+        this.createPrintView(true, true);
+    },
+
+    showPrintView() {
+        this.createPrintView(false, false);
+    },
+
+    createPrintView(hidden, printAutomatically) {
         this.setState({
             creatingPrintView: true
         });
 
-        const iframe = document.createElement('iframe');
-        document.body.appendChild(iframe);
+        let iframe;
+        if (hidden) {
+            iframe = document.createElement('iframe');
+            document.body.appendChild(iframe);
+        }
 
-        PrintView.create(this.props.terria, iframe.contentWindow, printWindow => {
+        PrintView.create(this.props.terria, iframe ? iframe.contentWindow : undefined, printWindow => {
             this.setState({
                 creatingPrintView: false
             });
 
-            printWindow.onafterprint = function() {
-                document.body.removeChild(iframe);
-            };
+            if (iframe) {
+                // Remove the hidden iframe after printing.
+                // Note that if printAutomatically is false, this will never be invoked
+                // so the hidden iframe will hang around in the DOM forever.
+                printWindow.onafterprint = function() {
+                    document.body.removeChild(iframe);
+                };
+            }
 
-            // First try printing with execCommand, because, in IE11, `printWindow.print()`
-            // prints the entire page instead of just the embedded iframe.
-            const result = printWindow.document.execCommand('print', true, null);
-            if (!result) {
-                printWindow.print();
+            if (printAutomatically) {
+                // First try printing with execCommand, because, in IE11, `printWindow.print()`
+                // prints the entire page instead of just the embedded iframe.
+                const result = printWindow.document.execCommand('print', true, null);
+                if (!result) {
+                    printWindow.print();
+                }
             }
         });
     },
@@ -303,7 +321,11 @@ const SharePanel = createReactClass({
             <div>Print Map</div>
             <div className={Styles.explanation}>Open a printable version of this map.</div>
             <div>
-                <button className={Styles.printButton} onClick={this.openPrintView} disabled={this.state.creatingPrintView}>{!this.state.creatingPrintView && 'Print'}{this.state.creatingPrintView && <Loader message="Creating print view..." />}</button>
+                <button className={Styles.printButton} onClick={this.print} disabled={this.state.creatingPrintView}>Print</button>
+                <button className={Styles.printButton} onClick={this.showPrintView} disabled={this.state.creatingPrintView}>Show Print View</button>
+                <div className={Styles.printViewLoader}>
+                    {this.state.creatingPrintView && <Loader message="Creating print view..." />}
+                </div>
             </div>
           </div>
           <div className={classNames(DropdownStyles.section, Styles.shortenUrl)}>
