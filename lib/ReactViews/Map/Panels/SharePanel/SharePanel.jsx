@@ -6,6 +6,7 @@ import classNames from 'classnames';
 import Clipboard from '../../../Clipboard';
 import createGuid from 'terriajs-cesium/Source/Core/createGuid';
 import createReactClass from 'create-react-class';
+import dateFormat from 'dateFormat';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import DropdownStyles from '../panel.scss';
 import FileSaver from 'file-saver';
@@ -237,7 +238,6 @@ const SharePanel = createReactClass({
 
             const svgs = printWindow.document.getElementsByTagName('svg');
             const svgPromises = Array.prototype.map.call(svgs, function(svg) {
-                // Embed stlyes in the SVG. TODO: we should make our legend SVGs self-contained.
                 const svgStyle = printWindow.document.createElement('style');
                 svgStyle.innerHTML = PrintView.Styles;
                 svg.insertBefore(svgStyle, svg.childNodes[0]);
@@ -282,7 +282,7 @@ const SharePanel = createReactClass({
                     const addNextResource = () => {
                         if (resourceIndex >= allResources.length) {
                             zipWriter.close(blob => {
-                                FileSaver.saveAs(blob, "print.zip"); // TODO: better filename
+                                FileSaver.saveAs(blob, this.props.terria.appName + ' ' + dateFormat(new Date(), 'yyyymmdd\'T\'HHMMss') + '.zip');
                                 this.setState({
                                     creatingDownload: false
                                 });
@@ -296,7 +296,13 @@ const SharePanel = createReactClass({
 
                     addNextResource();
                 }, message => {
-                    alert(message);
+                    this.setState({
+                        creatingDownload: false
+                    });
+                    this.props.terria.error.raiseEvent({
+                        title: 'Error creating ZIP file',
+                        message: 'An error occurred while creating a ZIP file for download.  Technical details, if any, are below:\n<pre>\n' + message + '\n</pre>'
+                    });
                 });
             });
         });
