@@ -97,7 +97,12 @@ const Legend = createReactClass({
 });
 
 function makeAbsolute(url) {
-    return new URI(url).absoluteTo(window.location.href).toString();
+    const uri = new URI(url);
+    if (uri.protocol() !== 'http' && uri.protocol() !== 'https') {
+        return url;
+    } else {
+        return uri.absoluteTo(window.location.href).toString();
+    }
 }
 
 module.exports = Legend;
