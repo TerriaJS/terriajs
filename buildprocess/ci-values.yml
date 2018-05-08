@@ -24,7 +24,7 @@ terriamap:
         ]
         initPaths:
         - "/etc/config/client"
-        newShareUrlPrefix: "s",
+        newShareUrlPrefix: "s"
         shareUrlPrefixes:
             s:
                 service: "s3"
