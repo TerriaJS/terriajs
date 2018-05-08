@@ -6,6 +6,7 @@ Change Log
 ### Next Release
 
 * Fixed some problems with the map image on the Share panel, including unnecessary cropping to a 4/3 aspect ratio and some vector features missing in the 2D view.
+* Updated `MagdaCatalogItem` to match Magda project
 
 ### 5.7.0
 
