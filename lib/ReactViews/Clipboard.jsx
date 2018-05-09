@@ -24,13 +24,12 @@ export default class Clipboard extends React.Component {
         that.setState({
           tooltip: "copy unsuccessful!"
         }));
-    window.setTimeout(that.resetTooltip, 3000);
+    this._timerID = window.setTimeout(that.resetTooltip, 3000);
   }
 
   componentWillUnmount() {
-    const that = this;
     this.clipboardBtn.destroy();
-    window.clearTimeout(that.resetTooltip);
+    window.clearTimeout(this._timerID);
   }
 
   resetTooltip() {
