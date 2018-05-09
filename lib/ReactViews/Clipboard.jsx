@@ -59,7 +59,7 @@ export default class Clipboard extends React.Component {
                     {this.props.source}
                     <button className={classNames(`btn-copy-${this.props.id}`, Styles.copyBtn)} data-clipboard-target={`#${this.props.id}`}>
                         Copy
-          </button>
+                    </button>
                 </div>
                 {this.state.tooltip && <span className={Styles.tooltip}>{this.state.tooltip}</span>}
             </div>
