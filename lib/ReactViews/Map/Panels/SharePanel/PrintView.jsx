@@ -192,6 +192,7 @@ PrintView.create = function(terria, printWindow, readyCallback, closeCallback) {
 
     printWindow.document.title = `${terria.appName} Print View`;
     printWindow.document.head.innerHTML = `
+        <meta charset="UTF-8">
         <title>${terria.appName} Print View</title>
         <style>${PrintView.Styles}</style>
         `;
