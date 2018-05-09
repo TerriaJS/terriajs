@@ -30,7 +30,6 @@ const SharePanel = createReactClass({
     propTypes: {
         terria: PropTypes.object,
         userPropWhiteList: PropTypes.array,
-        isOpen: PropTypes.bool,
         advancedIsOpen: PropTypes.bool,
         shortenUrls: PropTypes.bool,
         viewState: PropTypes.object.isRequired
@@ -38,7 +37,6 @@ const SharePanel = createReactClass({
 
     getDefaultProps() {
         return {
-            isOpen: false,
             advancedIsOpen: false,
             shortenUrls: false
         };
@@ -46,11 +44,54 @@ const SharePanel = createReactClass({
 
     getInitialState() {
         return {
+            isOpen: false,
             shortenUrls: this.props.shortenUrls && this.props.terria.getLocalProperty('shortenShareUrls'),
             shareUrl: '',
             creatingPrintView: false,
             creatingDownload: false
         };
+    },
+
+    componentDidMount() {
+        window.addEventListener('beforeprint', this.beforeBrowserPrint, false);
+        window.addEventListener('afterprint', this.afterBrowserPrint, false);
+
+        const handlePrintMediaChange = evt => {
+            if (evt.matches) {
+                this.beforeBrowserPrint();
+            } else {
+                this.afterBrowserPrint();
+            }
+        };
+
+        const matcher = window.matchMedia('print');
+        matcher.addListener(handlePrintMediaChange);
+        this._unsubscribeFromPrintMediaChange = function () {
+            matcher.removeListener(handlePrintMediaChange);
+        };
+    },
+
+    componentWillUnmount() {
+        window.removeEventListener('beforeprint', this.beforeBrowserPrint, false);
+        window.removeEventListener('afterprint', this.afterBrowserPrint, false);
+        if (this._unsubscribeFromPrintMediaChange) {
+            this._unsubscribeFromPrintMediaChange();
+        }
+    },
+
+    beforeBrowserPrint() {
+        this.afterBrowserPrint();
+        this._message = document.createElement('div');
+        this._message.innerText = 'For better printed results, please use ' + this.props.terria.appName + '\'s Print button instead of your web browser\'s print feature.';
+        window.document.body.insertBefore(this._message, window.document.body.childNodes[0]);
+    },
+
+    afterBrowserPrint() {
+        if (this._message) {
+            window.document.body.removeChild(this._message);
+            this._message = undefined;
+        }
+        this.changeOpenState(true);
     },
 
     advancedOptions() {
@@ -74,7 +115,7 @@ const SharePanel = createReactClass({
             });
 
             buildShortShareLink(this.props.terria)
-                .then(shareUrl => this.setState({shareUrl}))
+                .then(shareUrl => this.setState({ shareUrl }))
                 .otherwise(() => {
                     this.setUnshortenedUrl();
                     this.setState({
@@ -115,7 +156,7 @@ const SharePanel = createReactClass({
         this.forceUpdate();
     },
 
-    onOpenChanged(open) {
+    changeOpenState(open) {
         this.setState({
             isOpen: open
         });
@@ -152,13 +193,13 @@ const SharePanel = createReactClass({
                 // Detect the end of printing using multiple techniques because no one
                 // technique works across all browsers.
                 if (printWindow.matchMedia) {
-                    printWindow.matchMedia('print').addListener(function(evt) {
+                    printWindow.matchMedia('print').addListener(function (evt) {
                         if (!evt.matches) {
                             document.body.removeChild(iframe);
                         }
                     });
                 }
-                printWindow.onafterprint = function() {
+                printWindow.onafterprint = function () {
                     document.body.removeChild(iframe);
                 };
             }
@@ -228,7 +269,7 @@ const SharePanel = createReactClass({
         document.body.appendChild(iframe);
         PrintView.create(this.props.terria, iframe.contentWindow, printWindow => {
             const images = printWindow.document.getElementsByTagName('img');
-            const imageBlobPromises = Array.prototype.map.call(images, function(image) {
+            const imageBlobPromises = Array.prototype.map.call(images, function (image) {
                 return anyImageToPngBlob(image).then(blob => {
                     const name = getUniqueImageName(image) + '.png';
 
@@ -254,7 +295,7 @@ const SharePanel = createReactClass({
             });
 
             const svgs = printWindow.document.getElementsByTagName('svg');
-            const svgPromises = Array.prototype.map.call(svgs, function(svg) {
+            const svgPromises = Array.prototype.map.call(svgs, function (svg) {
                 const svgStyle = printWindow.document.createElement('style');
                 svgStyle.innerHTML = PrintView.Styles;
                 svg.insertBefore(svgStyle, svg.childNodes[0]);
@@ -290,7 +331,7 @@ const SharePanel = createReactClass({
 
                     // Create a tweaked version of the HTML for MS Word, which has terrible CSS support
                     const images = printWindow.document.getElementsByTagName('img');
-                    Array.prototype.forEach.call(images, function(image) {
+                    Array.prototype.forEach.call(images, function (image) {
                         if (image._originalDimensions && image._originalDimensions.naturalWidth > 560) {
                             image.height = image._originalDimensions.naturalHeight * 560 / image._originalDimensions.naturalWidth;
                             image.width = 560;
@@ -339,62 +380,70 @@ const SharePanel = createReactClass({
         });
     },
 
-    renderContent(iframeCode, shareUrlTextBox) {
-      const supportedFormats = [
-        {
-            name: 'Download (ZIP)'
-        }
-      ];
+    renderContent() {
+        const supportedFormats = [
+            {
+                name: 'Download (ZIP)'
+            }
+        ];
 
-      return (
-        <div>
-          <div className={Styles.clipboard}><Clipboard source={shareUrlTextBox} id='share-url'/></div>
-          <div className={DropdownStyles.section}>
-            <div>Download Map</div>
-            <div className={Styles.explanation}>Download the map image, legends and dataset descriptions.</div>
+        const iframeCode = this.state.shareUrl.length ?
+            `<iframe style="width: 720px; height: 600px; border: none;" src="${this.state.shareUrl}" allowFullScreen mozAllowFullScreen webkitAllowFullScreen></iframe>`
+            : '';
+
+        const shareUrlTextBox = <input className={Styles.shareUrlfield} type="text" value={this.state.shareUrl}
+            placeholder={this.state.placeholder} readOnly
+            onClick={e => e.target.select()} id='share-url' />;
+
+        return (
             <div>
-                {supportedFormats.map(this.renderDownloadFormatButton)}
-            </div>
-            <div className={Styles.printViewLoader}>
-                {this.state.creatingDownload && <Loader message="Creating download..." />}
-            </div>
-          </div>
-          <div className={DropdownStyles.section}>
-            <div>Print Map</div>
-            <div className={Styles.explanation}>Open a printable version of this map.</div>
-            <div>
-                <button className={Styles.printButton} onClick={this.print} disabled={this.state.creatingPrintView}>Print</button>
-                <button className={Styles.printButton} onClick={this.showPrintView} disabled={this.state.creatingPrintView}>Show Print View</button>
-                <div className={Styles.printViewLoader}>
-                    {this.state.creatingPrintView && <Loader message="Creating print view..." />}
-                </div>
-            </div>
-          </div>
-          <div className={classNames(DropdownStyles.section, Styles.shortenUrl)}>
-              <div className={Styles.btnWrapper}>
-                  <button type='button' onClick={this.toggleAdvancedOptions} className={Styles.btnAdvanced}>
-                      <span>Advanced options</span>
-                      {this.advancedOptions()? <Icon glyph={Icon.GLYPHS.opened}/> : <Icon glyph={Icon.GLYPHS.closed}/>}
-                  </button>
-              </div>
-              <If condition={this.advancedOptions()}>
+                <div className={Styles.clipboard}><Clipboard source={shareUrlTextBox} id='share-url' /></div>
                 <div className={DropdownStyles.section}>
-                    <p className={Styles.paragraph}>To embed, copy this code to embed this map into an HTML page:</p>
-                    <input className={Styles.field} type="text" readOnly placeholder={this.state.placeholder}
-                        value={iframeCode}
-                        onClick={e => e.target.select()}/>
+                    <div>Download Map</div>
+                    <div className={Styles.explanation}>Download the map image, legends and dataset descriptions.</div>
+                    <div>
+                        {supportedFormats.map(this.renderDownloadFormatButton)}
+                    </div>
+                    <div className={Styles.printViewLoader}>
+                        {this.state.creatingDownload && <Loader message="Creating download..." />}
+                    </div>
                 </div>
-                <If condition={this.isUrlShortenable()}>
-                    <div className={classNames(DropdownStyles.section, Styles.shortenUrl)}>
-                        <button onClick={this.onShortenClicked}>
-                            {this.shouldShorten() ? <Icon glyph={Icon.GLYPHS.checkboxOn}/> : <Icon glyph={Icon.GLYPHS.checkboxOff}/>}
-                            Shorten the share URL using a web service
+                <div className={DropdownStyles.section}>
+                    <div>Print Map</div>
+                    <div className={Styles.explanation}>Open a printable version of this map.</div>
+                    <div>
+                        <button className={Styles.printButton} onClick={this.print} disabled={this.state.creatingPrintView}>Print</button>
+                        <button className={Styles.printButton} onClick={this.showPrintView} disabled={this.state.creatingPrintView}>Show Print View</button>
+                        <div className={Styles.printViewLoader}>
+                            {this.state.creatingPrintView && <Loader message="Creating print view..." />}
+                        </div>
+                    </div>
+                </div>
+                <div className={classNames(DropdownStyles.section, Styles.shortenUrl)}>
+                    <div className={Styles.btnWrapper}>
+                        <button type='button' onClick={this.toggleAdvancedOptions} className={Styles.btnAdvanced}>
+                            <span>Advanced options</span>
+                            {this.advancedOptions() ? <Icon glyph={Icon.GLYPHS.opened} /> : <Icon glyph={Icon.GLYPHS.closed} />}
                         </button>
                     </div>
-                </If>
-              </If>
-          </div>
-        </div>);
+                    <If condition={this.advancedOptions()}>
+                        <div className={DropdownStyles.section}>
+                            <p className={Styles.paragraph}>To embed, copy this code to embed this map into an HTML page:</p>
+                            <input className={Styles.field} type="text" readOnly placeholder={this.state.placeholder}
+                                value={iframeCode}
+                                onClick={e => e.target.select()} />
+                        </div>
+                        <If condition={this.isUrlShortenable()}>
+                            <div className={classNames(DropdownStyles.section, Styles.shortenUrl)}>
+                                <button onClick={this.onShortenClicked}>
+                                    {this.shouldShorten() ? <Icon glyph={Icon.GLYPHS.checkboxOn} /> : <Icon glyph={Icon.GLYPHS.checkboxOff} />}
+                                    Shorten the share URL using a web service
+                        </button>
+                            </div>
+                        </If>
+                    </If>
+                </div>
+            </div>);
     },
 
     renderDownloadFormatButton(format) {
@@ -411,24 +460,17 @@ const SharePanel = createReactClass({
             icon: 'share'
         };
 
-        const iframeCode = this.state.shareUrl.length ?
-            `<iframe style="width: 720px; height: 600px; border: none;" src="${this.state.shareUrl}" allowFullScreen mozAllowFullScreen webkitAllowFullScreen></iframe>`
-            : '';
-
-        const shareUrlTextBox = <input className={Styles.shareUrlfield} type="text" value={this.state.shareUrl}
-               placeholder={this.state.placeholder} readOnly
-               onClick={e => e.target.select()} id='share-url'/>;
-
         return (
             <div>
                 <MenuPanel theme={dropdownTheme}
-                        btnText="Share"
-                        viewState={this.props.viewState}
-                        btnTitle="Share your map with others"
-                        onOpenChanged={this.onOpenChanged}
-                        smallScreen={this.props.viewState.useSmallScreenInterface}>
+                    btnText="Share"
+                    viewState={this.props.viewState}
+                    btnTitle="Share your map with others"
+                    isOpen={this.state.isOpen}
+                    onOpenChanged={this.changeOpenState}
+                    smallScreen={this.props.viewState.useSmallScreenInterface}>
                     <If condition={this.state.isOpen}>
-                        {this.renderContent(iframeCode, shareUrlTextBox)}
+                        {this.renderContent()}
                     </If>
                 </MenuPanel>
             </div>
