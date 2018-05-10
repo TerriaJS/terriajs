@@ -20,6 +20,7 @@ const DropdownPanel = createReactClass({
 
     getInitialState() {
         return {
+            localIsOpen: false,
             caretOffset: undefined,
             dropdownOffset: undefined
         }
@@ -73,7 +74,7 @@ const DropdownPanel = createReactClass({
                     </If>
                     <span>{this.props.btnText}</span>
                 </button>
-                <If condition={this.props.isOpen}>
+                <If condition={this.isOpen()}>
                     <InnerPanel
                         onDismissed={this.onDismissed}
                         innerRef={this.onInnerMounted}
