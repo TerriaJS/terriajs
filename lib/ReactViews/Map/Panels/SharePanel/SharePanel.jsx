@@ -213,10 +213,18 @@ const SharePanel = createReactClass({
                 }
             }
         }, printWindow => {
+            if (hidden) {
+                this.setState({
+                    creatingPrintView: false
+                });
+            }
+        });
+
+        if (!hidden) {
             this.setState({
                 creatingPrintView: false
             });
-        });
+        }
     },
 
     download() {
