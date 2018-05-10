@@ -5,6 +5,7 @@ import anyImageToPngBlob from '../../../../Map/anyImageToPngBlob';
 import classNames from 'classnames';
 import Clipboard from '../../../Clipboard';
 import createGuid from 'terriajs-cesium/Source/Core/createGuid';
+import createPdf from '../../../../Models/createPdf';
 import createReactClass from 'create-react-class';
 import dateformat from 'dateformat';
 import defined from 'terriajs-cesium/Source/Core/defined';
@@ -331,6 +332,15 @@ const SharePanel = createReactClass({
             });
 
             const resourcePromises = imageBlobPromises.concat(svgPromises);
+            resourcePromises.push(createPdf({
+                terria: this.props.terria,
+                size: 'A4'
+            }).then(function(blob) {
+                return {
+                    name: 'index.pdf',
+                    reader: new zip.BlobReader(blob)
+                }
+            }));
 
             when.all(resourcePromises).then(resources => {
                 const writer = new zip.BlobWriter();

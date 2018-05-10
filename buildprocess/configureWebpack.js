@@ -152,6 +152,18 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
         }
     });
 
+    // node_modules\/(pdfkit|brotli|fontkit|linebreak|png-js|unicode-properties)
+    config.module.loaders.push({
+        test: /\.js$/,
+        include: [ 'pdfkit', 'brotli', 'fontkit', 'linebreak', 'png-js', 'unicode-properties' ].map(function(name) {
+            return path.resolve(require.resolve(name + '/package.json'), '..');
+        }),
+        loader: require.resolve('transform-loader'),
+        options: {
+            brfs: true
+        }
+    });
+
     config.devServer = config.devServer || {
         stats: 'minimal',
         port: 3003,
