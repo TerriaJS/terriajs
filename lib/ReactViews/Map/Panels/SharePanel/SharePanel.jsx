@@ -345,6 +345,16 @@ const SharePanel = createReactClass({
                             image.width = 560;
                         }
                     });
+
+                    const missingImagesMessage = printWindow.document.createElement('div');
+                    missingImagesMessage.innerHTML =
+                        '<p>Is the map image below missing? You need to:</p>' +
+                        '<ul>' +
+                        '  <li>Make sure you extracted all of the files from the ZIP file on to your local system. Simply double-clicking the .doc file will not work.</li>' +
+                        '  <li>Click the "Enable Editing" button above.</li>' +
+                        '</ul>';
+                    printWindow.document.body.insertBefore(missingImagesMessage, printWindow.document.body.childNodes[0]);
+
                     const wordHtml = printWindow.document.documentElement.outerHTML;
 
                     // Collect all the resources we'll be adding to the ZIP file.
