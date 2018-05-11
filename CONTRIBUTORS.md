@@ -42,5 +42,7 @@ The following people have contributed to TerriaJS:
    * [Geoffrey Rowland](https://github.com/geoffrowland)
 * [Department of the Prime Minister and Cabinet](https://www.dpmc.gov.au/)
    * [Toby Bellwood](https://github.com/tobybellwood)
+* [Infoxchange](https://www.infoxchange.org/)
+   * [Michael Adams](https://github.com/michaeladams)
 * [Matt Fullerton](https://github.com/mattfullerton)
 * [Sander Kalcina](https://github.com/sanderkal)
