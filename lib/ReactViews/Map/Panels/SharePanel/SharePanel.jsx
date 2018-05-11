@@ -11,6 +11,7 @@ import Loader from '../../../Loader';
 import MenuPanel from '../../../StandardUserInterface/customizable/MenuPanel.jsx';
 import ObserverModelMixin from '../../../ObserveModelMixin';
 import PrintView from './PrintView';
+import printWindow from '../../../../Core/printWindow';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Styles from './share-panel.scss';
@@ -177,34 +178,17 @@ const SharePanel = createReactClass({
             document.body.appendChild(iframe);
         }
 
-        PrintView.create(this.props.terria, iframe ? iframe.contentWindow : undefined, printWindow => {
-            if (iframe) {
-                // Remove the hidden iframe after printing.
-                // Note that if printAutomatically is false, this will never be invoked
-                // so the hidden iframe will hang around in the DOM forever.
-                // Detect the end of printing using multiple techniques because no one
-                // technique works across all browsers.
-                if (printWindow.matchMedia) {
-                    printWindow.matchMedia('print').addListener(function (evt) {
-                        if (!evt.matches) {
-                            document.body.removeChild(iframe);
-                        }
-                    });
-                }
-                printWindow.onafterprint = function () {
-                    document.body.removeChild(iframe);
-                };
-            }
-
+        PrintView.create(this.props.terria, iframe ? iframe.contentWindow : undefined, windowToPrint => {
             if (printAutomatically) {
-                // First try printing with execCommand, because, in IE11, `printWindow.print()`
-                // prints the entire page instead of just the embedded iframe.
-                const result = printWindow.document.execCommand('print', true, null);
-                if (!result) {
-                    printWindow.print();
-                }
+                printWindow(windowToPrint).then(() => {
+                    if (iframe) {
+                        document.body.removeChild(iframe);
+                    }
+                }).otherwise(e => {
+                    this.props.terria.error.raiseEvent(e);
+                });
             }
-        }, printWindow => {
+        }, windowToPrint => {
             if (hidden) {
                 this.setState({
                     creatingPrintView: false
@@ -220,12 +204,6 @@ const SharePanel = createReactClass({
     },
 
     renderContent() {
-        const supportedFormats = [
-            {
-                name: 'Download (ZIP)'
-            }
-        ];
-
         const iframeCode = this.state.shareUrl.length ?
             `<iframe style="width: 720px; height: 600px; border: none;" src="${this.state.shareUrl}" allowFullScreen mozAllowFullScreen webkitAllowFullScreen></iframe>`
             : '';
