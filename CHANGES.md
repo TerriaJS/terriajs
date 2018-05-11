@@ -3,16 +3,15 @@
 Change Log
 ==========
 
-### 5.6.5
+### Next Release
 
 * Fixed some problems with the map image on the Share panel, including unnecessary cropping to a 4/3 aspect ratio and some vector features missing in the 2D view.
+* Added `TerriaJsonCatalogFunction`. This catalog function allows an arbitrary HTTP GET to be invoked with user-provided parameters and return TerriaJS catalog JSON.
 
 ### 5.7.0
 
 * Added `MagdaCatalogItem` to load details of a catalog item from [Magda](https://github.com/TerriaJS/magda).
 * Fixed a bug that could cause a time-dynamic WMS layer to fail to ever show up on the map if the initial time on the timeline was outside the intervals where the layer had data.
-* Generic rest discussed https://groups.google.com/forum/#!topic/terriajs/mdJkZlNCRvo which allows for WPS-like input forms for arbitrary rest services that wrap responses in TerriaJS's catalog JSON.
-* Generic rest discussed https://groups.google.com/forum/#!topic/terriajs/mdJkZlNCRvo which loads TerriaJS's catalog JSON
 * Fixed a bug which could cause a crash during load from share link when the layer default is to not `useOwnClock` but the share link has `useOwnClock` set.
 * Fixed an issue that caused a 'This data source is already shown' error in particular circumstances.
 
