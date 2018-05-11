@@ -18,6 +18,14 @@ const DropdownPanel = createReactClass({
     displayName: 'DropdownPanel',
     mixins: [BaseOuterPanel],
 
+    getInitialState() {
+        return {
+            localIsOpen: false,
+            caretOffset: undefined,
+            dropdownOffset: undefined
+        }
+    },
+
     onInnerMounted(innerElement) {
         if (innerElement) {
             // how much further right the panel is from the button
@@ -66,7 +74,7 @@ const DropdownPanel = createReactClass({
                     </If>
                     <span>{this.props.btnText}</span>
                 </button>
-                <If condition={this.state.isOpen}>
+                <If condition={this.isOpen()}>
                     <InnerPanel
                         onDismissed={this.onDismissed}
                         innerRef={this.onInnerMounted}

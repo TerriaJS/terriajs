@@ -9,6 +9,7 @@ import proxyCatalogItemUrl from '../../../Models/proxyCatalogItemUrl';
 import React from 'react';
 import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
+import URI from 'urijs';
 import Styles from './legend.scss';
 
 const Legend = createReactClass({
@@ -40,7 +41,11 @@ const Legend = createReactClass({
         const isImage = legendUrl.isImage();
         const insertDirectly = !!legendUrl.safeSvgContent; // we only insert content we generated ourselves, not arbitrary SVG from init files.
         const safeSvgContent = {__html: legendUrl.safeSvgContent};
-        const proxiedUrl = proxyCatalogItemUrl(this.props.item, legendUrl.url);
+
+        // We proxy the legend so it's cached, and so that the Print/Export feature works with non-CORS servers.
+        // We make it absolute because the print view is opened on a different domain (about:blank) so relative
+        // URLs will not work.
+        const proxiedUrl = makeAbsolute(proxyCatalogItemUrl(this.props.item, legendUrl.url));
 
         return (
             <Choose>
@@ -90,4 +95,14 @@ const Legend = createReactClass({
         );
     },
 });
+
+function makeAbsolute(url) {
+    const uri = new URI(url);
+    if (uri.protocol() !== 'http' && uri.protocol() !== 'https') {
+        return url;
+    } else {
+        return uri.absoluteTo(window.location.href).toString();
+    }
+}
+
 module.exports = Legend;
