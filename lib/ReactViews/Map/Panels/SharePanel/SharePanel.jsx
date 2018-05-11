@@ -95,7 +95,7 @@ const SharePanel = createReactClass({
         this.changeOpenState(true);
     },
 
-    advancedOptions() {
+    advancedIsOpen() {
         return this.state.advancedIsOpen;
     },
 
@@ -451,10 +451,10 @@ const SharePanel = createReactClass({
                     <div className={Styles.btnWrapper}>
                         <button type='button' onClick={this.toggleAdvancedOptions} className={Styles.btnAdvanced}>
                             <span>Advanced options</span>
-                            {this.advancedOptions() ? <Icon glyph={Icon.GLYPHS.opened} /> : <Icon glyph={Icon.GLYPHS.closed} />}
+                            {this.advancedIsOpen() ? <Icon glyph={Icon.GLYPHS.opened} /> : <Icon glyph={Icon.GLYPHS.closed} />}
                         </button>
                     </div>
-                    <If condition={this.advancedOptions()}>
+                    <If condition={this.advancedIsOpen()}>
                         <div className={DropdownStyles.section}>
                             <p className={Styles.paragraph}>To embed, copy this code to embed this map into an HTML page:</p>
                             <input className={Styles.field} type="text" readOnly placeholder={this.state.placeholder}
