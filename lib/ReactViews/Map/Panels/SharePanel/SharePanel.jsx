@@ -180,12 +180,17 @@ const SharePanel = createReactClass({
 
         PrintView.create(this.props.terria, iframe ? iframe.contentWindow : undefined, windowToPrint => {
             if (printAutomatically) {
-                printWindow(windowToPrint).then(() => {
+                printWindow(windowToPrint).otherwise(e => {
+                    this.props.terria.error.raiseEvent(e);
+                }).always(() => {
                     if (iframe) {
                         document.body.removeChild(iframe);
                     }
-                }).otherwise(e => {
-                    this.props.terria.error.raiseEvent(e);
+                    if (hidden) {
+                        this.setState({
+                            creatingPrintView: false
+                        });
+                    }
                 });
             }
         }, windowToPrint => {

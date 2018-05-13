@@ -80,6 +80,9 @@ const PrintView = createReactClass({
         }
 
         const imageTags = this.props.window.document.getElementsByTagName('img');
+        if (imageTags.length === 0) {
+            return;
+        }
 
         let allImagesReady = true;
         for (let i = 0; allImagesReady && i < imageTags.length; ++i) {
@@ -190,7 +193,18 @@ PrintView.create = function(terria, printWindow, readyCallback, closeCallback) {
         });
     }
 
-    printWindow.document.title = `${terria.appName} Print View`;
+    // Open and immediately close the document. This works around a problem in Firefox that is
+    // captured here: https://bugzilla.mozilla.org/show_bug.cgi?id=667227.
+    // Essentially, when we first create an iframe, it has no document loaded and asynchronously
+    // starts a load of "about:blank". If we access the document object and start manipulating it
+    // before that async load completes, a new document will be automatically created. But then
+    // when the async load completes, the original, automatically-created document gets unloaded
+    // and the new "about:blank" gets swapped in. End result: everything we add to the DOM before
+    // the async load complete gets lost and Firefox ends up printing a blank page.
+    // Explicitly opening and then closing a new document _seems_ to avoid this.
+    printWindow.document.open();
+    printWindow.document.close();
+
     printWindow.document.head.innerHTML = `
         <meta charset="UTF-8">
         <title>${terria.appName} Print View</title>
