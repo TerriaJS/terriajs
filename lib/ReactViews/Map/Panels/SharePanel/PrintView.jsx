@@ -113,7 +113,7 @@ const PrintView = createReactClass({
                 </p>
                 <h1>Legends</h1>
                 {this.props.terria.nowViewing.items.map(this.renderLegend)}
-                {this.props.viewState.featureInfoPanelIsVisible && this.renderFeatureInfo()}
+                {this.renderFeatureInfo()}
                 <h1>Dataset Details</h1>
                 {this.props.terria.nowViewing.items.map(this.renderDetails)}
                 <h1>Map Credits</h1>
@@ -165,6 +165,11 @@ const PrintView = createReactClass({
     },
 
     renderFeatureInfo() {
+        if (!this.props.viewState.featureInfoPanelIsVisible || !this.props.terria.pickedFeatures ||
+            !this.props.terria.pickedFeatures.features || this.props.terria.pickedFeatures.features.length === 0) {
+            return null;
+        }
+
         return (
             <div className="feature-info">
                 <h1>Feature Information</h1>
