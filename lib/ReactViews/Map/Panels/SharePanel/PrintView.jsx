@@ -1,5 +1,6 @@
 'use strict';
 
+import { formatDateTime } from '../../../BottomDock/Timeline/DateFormats';
 import createReactClass from 'create-react-class';
 import DOMPurify from 'dompurify/dist/purify';
 import Legend from '../../../Workbench/Controls/Legend';
@@ -133,6 +134,7 @@ const PrintView = createReactClass({
         return (
             <div key={catalogItem.uniqueId} className="layer-legends">
                 <div className="layer-title">{catalogItem.name}</div>
+                {catalogItem.discreteTime && <div className="layer-time">Time: {formatDateTime(catalogItem.discreteTime)}</div>}
                 <Legend item={catalogItem} />
             </div>
         );
