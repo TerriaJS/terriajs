@@ -92,10 +92,22 @@ const Splitter = createReactClass({
 
             return Math.min(maxFraction, Math.max(minFraction, fraction));
         }
-        const splitFractionX = computeSplitFraction(mapRect.left, mapRect.right, clientX);
+        let splitFractionX = computeSplitFraction(mapRect.left, mapRect.right, clientX);
         let splitFractionY = computeSplitFraction(mapRect.top, mapRect.bottom, clientY);
-        // Resctrict to within +/-35% of the center.
-        splitFractionY = Math.min(0.85, Math.max(0.15, splitFractionY));
+
+        // We compute the maximum and minium windows bounds as a percentage so that we can always apply the bounds
+        // restriction as a percentage for consistency (we currently use absolute values for X and percentage values for
+        // Y, but always apply the constraint as a percentage).
+        // We use absolute pixel values for horizontal restriction because of the fixed UI elements which occupy an
+        // absolute amount of screen relestate and 100 px seems like a fine amount for the current UI.
+        const minX = computeSplitFraction(mapRect.left, mapRect.right, mapRect.left  + 100);
+        const maxX = computeSplitFraction(mapRect.left, mapRect.right, mapRect.right - 100);
+        // Resctrict to within +/-30% of the center vertically (so we don't run into the top and bottom UI elements).
+        const minY = 0.20;
+        const maxY = 0.80;
+
+        splitFractionX = Math.min(maxX, Math.max(minX, splitFractionX));
+        splitFractionY = Math.min(maxY, Math.max(minY, splitFractionY));
 
         this.props.terria.splitPosition = splitFractionX;
         this.props.terria.splitPositionVertical = splitFractionY;
