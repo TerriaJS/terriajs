@@ -3,6 +3,28 @@
 Change Log
 ==========
 
+### Next Release
+
+* Fixed some problems with the map image on the Share panel, including unnecessary cropping to a 4/3 aspect ratio and some vector features missing in the 2D view.
+
+### 5.7.0
+
+* Added `MagdaCatalogItem` to load details of a catalog item from [Magda](https://github.com/TerriaJS/magda).
+* Fixed a bug that could cause a time-dynamic WMS layer to fail to ever show up on the map if the initial time on the timeline was outside the intervals where the layer had data.
+* Fixed a bug which could cause a crash during load from share link when the layer default is to not `useOwnClock` but the share link has `useOwnClock` set.
+* Fixed an issue that caused a 'This data source is already shown' error in particular circumstances.
+
+### 5.6.4
+
+* Fixed a bug causing an error message when adding tabular data to the workbench before it was loaded.
+
+### 5.6.3
+
+* Display of Lat Lon changed from 3 deciml places to 5 decimal places - just over 1m precision at equator.
+* Fixed a bug that caused the timeline to appear when changing the time on the workbench for a layer not attached to the timeline.
+* The workbench date/time picker is now available for time varying point and region CSVs.
+* Fixed a bug that caused the workbench date picker controls to disappear when the item was attached to the timeline and the timeline's current time was outside the valid range for the item.
+
 ### 5.6.2
 
 * Renamed search marker to location marker.
@@ -10,6 +32,18 @@ Change Log
 * The location marker is now included in shared map views.
 * Fixed a bug that could cause split WMS layers to show the incorrect layer data for the date shown in the workbench.
 * Refactored current time handling for `CatalogItem` to reduce the complexity and number of duplicated current time states.
+* Fixed feature info updating when the time is changed from the workbench for `TableCatalogItem`.
+* Change the workbench catalog item date picker so that updating the date does not disable the timeslider.
+* Fix a bug that meant that, when the current time was updated on an `ImageryCatalogItem` while the layer wasn't shown, the old time was still shown when the layer was re-enabled.
+* Added `{{terria.currentTime}}` to feature info template.
+* Added a way to format times within a feature info tempate. E.g. `{{#terria.formatDateTime}}{"format": "dd-mm-yyyy HH:MM:ss"}{{terria.currentTime}}{{/terria.formatDateTime}}`.
+* Fixed a bug that caused the selection indicator to float strangely when visiting a share link with a selected feature.
+* Fixed a bug that caused a region to be selected even when clicking on a hole in that region.
+* Fixed a bug that prevented the selection indicator from following moving features on the 2D map.
+* Fixed a bug that caused Leaflet to stop rendering further points in a layer and throw errors when calculating extent when one point had invalid characters in the latitude or longitude field.
+* We now default to `autoPlay: false` if it's not specified in `config.json`.
+* Changed search box placeholders to more precisely reflect their functionality.
+* CartoDB basemaps are now always loaded over HTTPS.
 
 ### 5.6.1
 

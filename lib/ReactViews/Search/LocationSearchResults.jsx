@@ -23,7 +23,8 @@ const LocationSearchResults = createReactClass({
 
     getInitialState() {
         return {
-            isOpen: true
+            isOpen: true,
+            isExpanded: false
         };
     },
 
@@ -39,8 +40,22 @@ const LocationSearchResults = createReactClass({
         });
     },
 
+    toggleExpand() {
+      this.setState({
+          isExpanded: !this.state.isExpanded
+      });
+    },
+
+    renderResultsFooter() {
+      if(this.state.isExpanded) {
+        return `View less ${this.props.search.name} results`;
+      }
+      return `View more ${this.props.search.name} results`;
+    },
+
     render() {
         const search = this.props.search;
+        const results = search.searchResults.length > 5 ? (this.state.isExpanded ? search.searchResults : search.searchResults.slice(0, 5)) : search.searchResults;
         return (<div key={search.name}
                      className={classNames(Styles.providerResult, {[Styles.isOpen]: this.state.isOpen, [Styles.dark]: this.props.theme === 'dark', [Styles.light]: this.props.theme === 'light'})}>
                     <button onClick={this.toggleGroup} className={Styles.heading}>
@@ -50,12 +65,14 @@ const LocationSearchResults = createReactClass({
                     <SearchHeader searchProvider={search}
                                   isWaitingForSearchToStart={this.props.isWaitingForSearchToStart}/>
                     <ul className={Styles.items}>
-                        {search.searchResults.map((result, i) => (
+                        {results.map((result, i) => (
                             <SearchResult key={i}
                                           clickAction={this.props.onLocationClick.bind(null, result)}
                                           name={result.name}
+                                          icon='location'
                                           theme={this.props.theme}/>
                         ))}
+                        {search.searchResults.length > 5  && <button className={Styles.footer} onClick={this.toggleExpand}>{this.renderResultsFooter()}<Icon glyph={this.state.isExpanded ? Icon.GLYPHS.opened : Icon.GLYPHS.closed}/></button>}
                     </ul>
                 </div>);
     },

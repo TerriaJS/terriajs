@@ -2,10 +2,10 @@ import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
 import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
-import SearchResult from './SearchResult.jsx';
 import BadgeBar from '../BadgeBar.jsx';
 import Styles from './sidebar-search.scss';
 import LocationSearchResults from './LocationSearchResults.jsx';
+import SideBarDatasetSearchResults from './SideBarDatasetSearchResults.jsx';
 
 import {addMarker} from '../../Models/LocationMarkerUtils';
 
@@ -20,10 +20,6 @@ const SidebarSearch = createReactClass({
         terria: PropTypes.object.isRequired
     },
 
-    searchInDataCatalog() {
-        this.props.viewState.searchInCatalog(this.props.viewState.searchState.locationSearchText);
-    },
-
     backToNowViewing() {
         this.props.viewState.searchState.showLocationSearchResults = false;
     },
@@ -34,25 +30,19 @@ const SidebarSearch = createReactClass({
     },
 
     render() {
-        const searchResultCount = this.props.viewState.searchState.locationSearchProviders.reduce((count, result) => count + result.searchResults.length, 0);
         return (
             <div className={Styles.search}>
                 <div className={Styles.results}>
-                    <BadgeBar label="Search Results" badge={searchResultCount}>
+                    <BadgeBar label="Search Results">
                         <button type='button' onClick={this.backToNowViewing}
                                 className={Styles.btnDone}>Done
                         </button>
                     </BadgeBar>
                     <div className={Styles.resultsContent}>
                         <If condition={this.props.viewState.searchState.locationSearchText.length > 0}>
-                            <div className={Styles.providerResult}>
-                                <ul className={Styles.btnList}>
-                                    <SearchResult clickAction={this.searchInDataCatalog}
-                                                  showPin={false}
-                                                  name={`Search for "${this.props.viewState.searchState.locationSearchText}" in the Data Catalogue`}
-                                    />
-                                </ul>
-                            </div>
+                            <SideBarDatasetSearchResults terria={this.props.terria}
+                                                         viewState={this.props.viewState}
+                                                         />
                         </If>
                         <For each="search" of={this.props.viewState.searchState.locationSearchProviders}>
                             <LocationSearchResults key={search.name}
@@ -72,4 +62,3 @@ const SidebarSearch = createReactClass({
 });
 
 module.exports = SidebarSearch;
-

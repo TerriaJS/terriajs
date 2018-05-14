@@ -28,11 +28,16 @@
 
 .img--share {
   width: 100%;
-  height: $share-panel-width / 4*3;
+  height: auto;
   overflow: hidden;
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
+  position: relative;
+
+  img {
+    width: 100%;
+  }
 }
 
 @include empty-module('link-wrapper');

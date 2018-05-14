@@ -79,7 +79,6 @@ const DateTimePicker = createReactClass({
             }
         }
         this.setState({
-            datesObject: datesObject,
             century: defaultCentury,
             year: defaultYear,
             month: defaultMonth,
@@ -306,7 +305,7 @@ const DateTimePicker = createReactClass({
 
     render() {
         if (this.props.dates) {
-            const datesObject = this.state.datesObject;
+            const datesObject = objectifyDates(this.props.dates);
             return (
                 <div className={Styles.timelineDatePicker} onClick={(event) => { event.stopPropagation(); }}>
                     <button className={Styles.togglebutton} onClick={() => { this.toggleDatePicker(); }}><Icon glyph={Icon.GLYPHS.calendar} /></button>
