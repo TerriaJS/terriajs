@@ -4,6 +4,7 @@ import { formatDateTime } from '../../../BottomDock/Timeline/DateFormats';
 import createReactClass from 'create-react-class';
 import Description from '../../../Preview/Description';
 import DOMPurify from 'dompurify/dist/purify';
+import FeatureInfoPanel from '../../../FeatureInfo/FeatureInfoPanel';
 import Legend from '../../../Workbench/Controls/Legend';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -14,6 +15,7 @@ const PrintView = createReactClass({
 
     propTypes: {
         terria: PropTypes.object,
+        viewState: PropTypes.object,
         window: PropTypes.object,
         readyCallback: PropTypes.func
     },
@@ -111,6 +113,7 @@ const PrintView = createReactClass({
                 </p>
                 <h1>Legends</h1>
                 {this.props.terria.nowViewing.items.map(this.renderLegend)}
+                {this.props.viewState.featureInfoPanelIsVisible && this.renderFeatureInfo()}
                 <h1>Dataset Details</h1>
                 {this.props.terria.nowViewing.items.map(this.renderDetails)}
                 <h1>Map Credits</h1>
@@ -159,7 +162,15 @@ const PrintView = createReactClass({
                 <Description item={nowViewingItem} printView={true} />
             </div>
         );
+    },
 
+    renderFeatureInfo() {
+        return (
+            <div className="feature-info">
+                <h1>Feature Information</h1>
+                <FeatureInfoPanel terria={this.props.terria} viewState={this.props.viewState} printView={true} />
+            </div>
+        );
     }
 });
 
@@ -203,17 +214,17 @@ PrintView.Styles = `
 /**
  * Creates a new printable view.
  *
- * @param {Terria} terria The Terria instance.
- * @param {Window} [printWindow] The window in which to create the print view. This is usually a new window created with
+ * @param {Terria} options.terria The Terria instance.
+ * @param {ViewState} options.viewState The terria ViewState instance.
+ * @param {Window} [options.printWindow] The window in which to create the print view. This is usually a new window created with
  *                 `window.open()` or an iframe's `contentWindow`. If undefined, a new window (tab) will be created.
- * @param {Function} [readyCallback] A function that is called when the print view is ready to be used. The function is
+ * @param {Function} [options.readyCallback] A function that is called when the print view is ready to be used. The function is
  *                   given the print view window as its only parameter.
- * @param {Function} [closeCallback] A function that is called when the print view is closed. The function is given
+ * @param {Function} [options.closeCallback] A function that is called when the print view is closed. The function is given
  *                   the print view window as its only parameter.
- * @returns {Promise} A promise that resolves when the print view has been created.
  */
-PrintView.create = function(terria, printWindow, readyCallback, closeCallback) {
-    printWindow = printWindow || window.open();
+PrintView.create = function(options) {
+    const { terria, viewState, printWindow = window.open(), readyCallback, closeCallback } = options;
 
     if (closeCallback) {
         printWindow.addEventListener('unload', () => {
@@ -240,7 +251,7 @@ PrintView.create = function(terria, printWindow, readyCallback, closeCallback) {
         `;
     printWindow.document.body.innerHTML = '<div id="print"></div>';
 
-    const printView = <PrintView terria={terria} window={printWindow} readyCallback={readyCallback} />;
+    const printView = <PrintView terria={terria} viewState={viewState} window={printWindow} readyCallback={readyCallback} />;
     ReactDOM.render(printView, printWindow.document.getElementById('print'));
 };
 

@@ -189,28 +189,34 @@ const SharePanel = createReactClass({
             document.body.appendChild(iframe);
         }
 
-        PrintView.create(this.props.terria, iframe ? iframe.contentWindow : undefined, windowToPrint => {
-            if (printAutomatically) {
-                printWindow(windowToPrint).otherwise(e => {
-                    this.props.terria.error.raiseEvent(e);
-                }).always(() => {
-                    if (iframe) {
-                        document.body.removeChild(iframe);
-                    }
-                    if (hidden) {
-                        this.setState({
-                            creatingPrintView: false
-                        });
-                    }
-                });
+        PrintView.create({
+            terria: this.props.terria,
+            viewState: this.props.viewState,
+            printWindow: iframe ? iframe.contentWindow : undefined,
+            readyCallback: windowToPrint => {
+                if (printAutomatically) {
+                    printWindow(windowToPrint).otherwise(e => {
+                        this.props.terria.error.raiseEvent(e);
+                    }).always(() => {
+                        if (iframe) {
+                            document.body.removeChild(iframe);
+                        }
+                        if (hidden) {
+                            this.setState({
+                                creatingPrintView: false
+                            });
+                        }
+                    });
+                }
+            },
+            closeCallback: windowToPrint => {
+                if (hidden) {
+                    this.setState({
+                        creatingPrintView: false
+                    });
+                }
             }
-        }, windowToPrint => {
-            if (hidden) {
-                this.setState({
-                    creatingPrintView: false
-                });
-            }
-        });
+        })
 
         if (!hidden) {
             this.setState({

@@ -24,7 +24,8 @@ const FeatureInfoPanel = createReactClass({
 
     propTypes: {
         terria: PropTypes.object.isRequired,
-        viewState: PropTypes.object.isRequired
+        viewState: PropTypes.object.isRequired,
+        printView: PropTypes.bool
     },
 
     componentDidMount() {
@@ -83,6 +84,7 @@ const FeatureInfoPanel = createReactClass({
                         features={features}
                         terria={this.props.terria}
                         onToggleOpen={this.toggleOpenFeature}
+                        printView={this.props.printView}
                     />
                 );
             });
@@ -169,9 +171,9 @@ const FeatureInfoPanel = createReactClass({
                 <span>Lat / Lon&nbsp;</span>
                 <span>
                     {pretty.latitude + ", " + pretty.longitude}
-                    <button type='button' onClick={pinClicked}  className={locationButtonStyle}>
+                    {!this.props.printView && <button type='button' onClick={pinClicked}  className={locationButtonStyle}>
                         <Icon glyph={Icon.GLYPHS.location}/>
-                    </button>
+                    </button>}
                 </span>
             </div>
         );
@@ -211,11 +213,17 @@ const FeatureInfoPanel = createReactClass({
             }
         }
 
+        const locationElements = (
+            <If condition={position}>
+                <li>{this.renderLocationItem(position)}</li>
+            </If>
+        );
+
         return (
             <div
                 className={panelClassName}
                 aria-hidden={!viewState.featureInfoPanelIsVisible}>
-                <div className={Styles.header}>
+                {!this.props.printView && <div className={Styles.header}>
                     <button type='button' onClick={ this.toggleCollapsed } className={Styles.btnPanelHeading}>
                         Feature Information
                     </button>
@@ -223,8 +231,9 @@ const FeatureInfoPanel = createReactClass({
                             title="Close data panel">
                         <Icon glyph={Icon.GLYPHS.close}/>
                     </button>
-                </div>
+                </div>}
                 <ul className={Styles.body}>
+                    {this.props.printView && locationElements}
                     <Choose>
                         <When condition={viewState.featureInfoPanelIsCollapsed || !viewState.featureInfoPanelIsVisible}>
                         </When>
@@ -238,9 +247,7 @@ const FeatureInfoPanel = createReactClass({
                             {featureInfoCatalogItems}
                         </Otherwise>
                     </Choose>
-                    <If condition={position}>
-                        <li>{this.renderLocationItem(position)}</li>
-                    </If>
+                    {!this.props.printView && locationElements}
                 </ul>
             </div>
         );
