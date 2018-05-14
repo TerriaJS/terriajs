@@ -2,6 +2,7 @@
 
 import { formatDateTime } from '../../../BottomDock/Timeline/DateFormats';
 import createReactClass from 'create-react-class';
+import Description from '../../../Preview/Description';
 import DOMPurify from 'dompurify/dist/purify';
 import Legend from '../../../Workbench/Controls/Legend';
 import PropTypes from 'prop-types';
@@ -108,14 +109,16 @@ const PrintView = createReactClass({
                 <p>
                     <img className="map-image" src={this.state.mapImageDataUrl} alt="Map snapshot" />
                 </p>
-                <h2>Legends</h2>
+                <h1>Legends</h1>
                 {this.props.terria.nowViewing.items.map(this.renderLegend)}
-                <h2>Map Credits</h2>
+                <h1>Dataset Details</h1>
+                {this.props.terria.nowViewing.items.map(this.renderDetails)}
+                <h1>Map Credits</h1>
                 <ul>
                     {this.props.terria.currentViewer.getAllAttribution().map(this.renderAttribution)}
                 </ul>
                 <If condition={this.props.terria.configParameters.printDisclaimer}>
-                    <h2>Print Disclaimer</h2>
+                    <h1>Print Disclaimer</h1>
                     <p>{this.props.terria.configParameters.printDisclaimer.text}</p>
                 </If>
             </div>
@@ -131,6 +134,10 @@ const PrintView = createReactClass({
     },
 
     renderLegend(catalogItem) {
+        if (!catalogItem.isMappable) {
+            return null;
+        }
+
         return (
             <div key={catalogItem.uniqueId} className="layer-legends">
                 <div className="layer-title">{catalogItem.name}</div>
@@ -138,6 +145,21 @@ const PrintView = createReactClass({
                 <Legend item={catalogItem} />
             </div>
         );
+    },
+
+    renderDetails(catalogItem) {
+        if (!catalogItem.isMappable) {
+            return null;
+        }
+
+        const nowViewingItem = catalogItem.nowViewingCatalogItem || catalogItem;
+        return (
+            <div key={catalogItem.uniqueId} className="layer-details">
+                <h2>{catalogItem.name}</h2>
+                <Description item={nowViewingItem} printView={true} />
+            </div>
+        );
+
     }
 });
 
@@ -169,8 +191,12 @@ PrintView.Styles = `
         font-weight: bold;
     }
 
-    h2 {
+    h1, h2, h3 {
         clear: both;
+    }
+
+    .tjs-_form__input {
+        width: 80%;
     }
 `;
 
