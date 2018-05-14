@@ -46,22 +46,29 @@ const SharePanel = createReactClass({
     },
 
     componentDidMount() {
-        window.addEventListener('beforeprint', this.beforeBrowserPrint, false);
-        window.addEventListener('afterprint', this.afterBrowserPrint, false);
+        if (this.props.terria.configParameters.interceptBrowserPrint) {
+            window.addEventListener('beforeprint', this.beforeBrowserPrint, false);
+            window.addEventListener('afterprint', this.afterBrowserPrint, false);
 
-        const handlePrintMediaChange = evt => {
-            if (evt.matches) {
-                this.beforeBrowserPrint();
-            } else {
-                this.afterBrowserPrint();
-            }
-        };
+            const handlePrintMediaChange = evt => {
+                if (evt.matches) {
+                    this.beforeBrowserPrint();
+                } else {
+                    this.afterBrowserPrint();
+                }
+            };
 
-        const matcher = window.matchMedia('print');
-        matcher.addListener(handlePrintMediaChange);
-        this._unsubscribeFromPrintMediaChange = function () {
-            matcher.removeListener(handlePrintMediaChange);
-        };
+            const matcher = window.matchMedia('print');
+            matcher.addListener(handlePrintMediaChange);
+            this._unsubscribeFromPrintMediaChange = function () {
+                matcher.removeListener(handlePrintMediaChange);
+            };
+
+            this._oldPrint = window.print;
+            window.print = () => {
+                this.print();
+            };
+        }
     },
 
     componentWillUnmount() {
@@ -69,6 +76,10 @@ const SharePanel = createReactClass({
         window.removeEventListener('afterprint', this.afterBrowserPrint, false);
         if (this._unsubscribeFromPrintMediaChange) {
             this._unsubscribeFromPrintMediaChange();
+        }
+
+        if (this._oldPrint) {
+            window.print = this._oldPrint;
         }
     },
 
