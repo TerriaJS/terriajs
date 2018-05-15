@@ -56,13 +56,13 @@
 }
 
 .feedback{
-  position: relative;
+  position: absolute;
   z-index: $front-component-z-index - 10;
 }
 
 .featureInfo{
+  position: absolute;
   z-index: $front-component-z-index - 20;
-  position: relative;
 }
 
 @media screen and (min-width: $sm) {
