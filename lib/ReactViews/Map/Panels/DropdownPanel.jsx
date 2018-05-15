@@ -23,7 +23,7 @@ const DropdownPanel = createReactClass({
             localIsOpen: false,
             caretOffset: undefined,
             dropdownOffset: undefined
-        }
+        };
     },
 
     onInnerMounted(innerElement) {

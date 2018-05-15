@@ -218,7 +218,7 @@ const SharePanel = createReactClass({
                     });
                 }
             }
-        })
+        });
 
         if (!hidden) {
             this.setState({
