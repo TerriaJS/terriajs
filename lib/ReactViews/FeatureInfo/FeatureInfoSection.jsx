@@ -54,11 +54,13 @@ const FeatureInfoSection = createReactClass({
         };
     },
 
-    componentWillMount() {
+    /* eslint-disable-next-line camelcase */
+    UNSAFE_componentWillMount() {
         setSubscriptionsAndTimeouts(this, this.props.feature);
     },
 
-    componentWillReceiveProps(nextProps) {
+    /* eslint-disable-next-line camelcase */
+    UNSAFE_componentWillReceiveProps(nextProps) {
         // If the feature changed (without an unmount/mount),
         // change the subscriptions that handle time-varying data.
         if (nextProps.feature !== this.props.feature) {

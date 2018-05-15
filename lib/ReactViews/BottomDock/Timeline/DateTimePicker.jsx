@@ -43,7 +43,8 @@ const DateTimePicker = createReactClass({
         };
     },
 
-    componentWillMount() {
+    /* eslint-disable-next-line camelcase */
+    UNSAFE_componentWillMount() {
         const datesObject = objectifyDates(this.props.dates);
         let defaultCentury = null;
         let defaultYear = null;

@@ -20,7 +20,8 @@ const Legend = createReactClass({
         item: PropTypes.object
     },
 
-    componentWillMount() {
+    /* eslint-disable-next-line camelcase */
+    UNSAFE_componentWillMount() {
         this.legendsWithError = {};
     },
 
