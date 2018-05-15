@@ -24,6 +24,7 @@
   padding: 6px 5px;
   border-radius: 5px;
   top: 80px;
+  z-index: 999;
   &:before {
     content: '';
     display: block;
@@ -36,4 +37,10 @@
     transform: rotate(45deg);
     left: 25px;
   }
+}
+
+.explanation {
+  font-size: smaller;
+  font-weight: lighter;
+  color: $text-light-dimmed;
 }

@@ -136,7 +136,7 @@ $btn-setting-size: 35px;
 
 .btn--catalog {
   padding: $padding 30px+$padding;
-  @media screen and (min-width: $sm){
+  @media (min-width: $sm){
     padding: $padding-small 30px+$padding;
   }
 
@@ -147,7 +147,7 @@ $btn-setting-size: 35px;
     position: absolute;
     left: 0;
     padding: $padding $padding*2.2 $padding $padding*1.5;
-    @media screen and (min-width: $sm){
+    @media (min-width: $sm){
       padding: $padding-small $padding*2.2 $padding-small $padding*1.5;
     }
     top: 0;
@@ -158,7 +158,7 @@ $btn-setting-size: 35px;
     position: absolute;
     right: 5px;
     top: $padding;
-    @media screen and (min-width: $sm){
+    @media (min-width: $sm){
       top: $padding-small;
     }
 

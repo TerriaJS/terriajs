@@ -15,9 +15,7 @@
 }
 
 .ui {
-  @media screen{
-    overflow: hidden;
-  }
+  overflow: hidden;
   background: $dark;
   width: 100%;
 }
@@ -35,9 +33,6 @@
   h1 {
     margin: 0;
   }
-  @media print{
-    display: block;
-  }
 }
 
 .map {
@@ -47,12 +42,6 @@
   right: 0;
   top: $mobile-header-height;
   bottom: 0;
-  @media print {
-    position: relative;
-    display: block;
-    height: auto;
-    page-break-after: always;
-  }
 }
 
 .feedback{
@@ -65,7 +54,7 @@
   z-index: $front-component-z-index - 20;
 }
 
-@media screen and (min-width: $sm) {
+@media (min-width: $sm) {
   .ui {
     display: table;
   }

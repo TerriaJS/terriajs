@@ -40,7 +40,8 @@ const Timeline = createReactClass({
         };
     },
 
-    componentWillMount() {
+    /* eslint-disable-next-line camelcase */
+    UNSAFE_componentWillMount() {
         this.resizeListener = () => this.timeline && this.timeline.resize();
         window.addEventListener('resize', this.resizeListener, false);
 

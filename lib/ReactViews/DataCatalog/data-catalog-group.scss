@@ -20,7 +20,7 @@
   svg{
     display: inline-block;
   }
-  @media screen and (max-width: $sm) {
+  @media (max-width: $sm) {
     font-size: $font-size-mid-small;
     padding-top: 10px;
     padding-bottom: 10px;
@@ -55,7 +55,7 @@
     width: 30px;
     display: block;
   }
-  @media screen and (min-width: $sm) {
+  @media (min-width: $sm) {
     top: 0;
     svg{
       height: 25px;
@@ -74,7 +74,7 @@
     height: 25px;
     width: 25px;
   }
-  @media screen and (min-width: $sm) {
+  @media (min-width: $sm) {
     right: 5px;
     top: 5px;
     svg{

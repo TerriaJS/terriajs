@@ -35,7 +35,7 @@
 }
 
 .tab-left-col {
-  @media screen and (min-width: $sm) {
+  @media (min-width: $sm) {
     width: 40%;
     float: left;
     height: 100%;
@@ -50,7 +50,7 @@
 :global {
   .data-explorer,
   .my-data {
-    @media screen and (min-width: $sm) {
+    @media (min-width: $sm) {
       width: 40%;
       float: left;
       height: 100%;

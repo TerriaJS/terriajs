@@ -18,11 +18,13 @@ const MapInteractionWindow = createReactClass({
         viewState: PropTypes.object
     },
 
-    componentWillUnmount() {
+    /* eslint-disable-next-line camelcase */
+    UNSAFE_componentWillUnmount() {
         this.removeContextItem();
     },
 
-    componentWillReceiveProps(nextProps) {
+    /* eslint-disable-next-line camelcase */
+    UNSAFE_componentWillReceiveProps(nextProps) {
         // Only enable context item if MapInteractionWindow is rendering
         const interactionMode = this.props.terria.mapInteractionModeStack && this.props.terria.mapInteractionModeStack[this.props.terria.mapInteractionModeStack.length - 1];
         if (defined(interactionMode)) {

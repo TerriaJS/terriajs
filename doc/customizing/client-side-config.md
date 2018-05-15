@@ -45,6 +45,7 @@ Option                      | Meaning
 `"disableMyLocation"`       | True to disable the "go to my location" button.
 `"disableSplitter"`         | True to disable the use of the splitter control.
 `"tabbedCatalog"`           | True to create a separate explorer panel tab for each top-level catalog group to list its items in.
+`"interceptBrowserPrint"`   | True (the default) to intercept the browser's print feature and use a custom one accessible through the Share panel.
 
 ## Advanced options
 

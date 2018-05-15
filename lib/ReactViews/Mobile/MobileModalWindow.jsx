@@ -67,7 +67,8 @@ const MobileModalWindow = createReactClass({
         this.props.viewState.searchState.catalogSearchText = '';
     },
 
-    componentWillReceiveProps() {
+    /* eslint-disable-next-line camelcase */
+    UNSAFE_componentWillReceiveProps() {
         if ((this.props.terria.nowViewing.items.length === 0) &&
             (this.props.viewState.mobileView === this.props.viewState.mobileViewOptions.nowViewing)) {
             this.props.viewState.switchMobileView(null);
