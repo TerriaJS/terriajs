@@ -6,6 +6,7 @@ Change Log
 ### Next Release
 
 * Fixed some problems with the map image on the Share panel, including unnecessary cropping to a 4/3 aspect ratio and some vector features missing in the 2D view.
+* Added ability to move the splitter thumb position vertically so that users can move it to prevent occlusions.
 
 ### 5.7.0
 
@@ -66,7 +67,6 @@ Change Log
 ### 5.5.5
 
 * Fixed a bug that caused the feature info panel to stop working after clicking on a location search marker.
-* Added ability to move the splitter thumb position vertically so that users can move it to prevent occlusions.
 * Added support for ArcGIS tokens on the 2D map. Previously, tokens only worked reliably in 3D.
 * Improved handling of tile errors, making it more consistent between 2D and 3D.
 * Fixed a bug that prevented the Add Data button from working Internet Explorer 9 unless the DevTools were also open.
