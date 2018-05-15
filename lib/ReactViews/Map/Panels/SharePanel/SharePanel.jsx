@@ -58,11 +58,13 @@ const SharePanel = createReactClass({
                 }
             };
 
-            const matcher = window.matchMedia('print');
-            matcher.addListener(handlePrintMediaChange);
-            this._unsubscribeFromPrintMediaChange = function () {
-                matcher.removeListener(handlePrintMediaChange);
-            };
+            if (window.matchMedia) {
+                const matcher = window.matchMedia('print');
+                matcher.addListener(handlePrintMediaChange);
+                this._unsubscribeFromPrintMediaChange = function () {
+                    matcher.removeListener(handlePrintMediaChange);
+                };
+            }
 
             this._oldPrint = window.print;
             window.print = () => {
