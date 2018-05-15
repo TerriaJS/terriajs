@@ -31,7 +31,7 @@
     }
   }
 
-  @media screen and (max-width: $sm) {
+  @media (max-width: $sm) {
     font-size: $font-size-mid-small;
     padding-top: 10px;
     padding-bottom: 10px;
@@ -47,7 +47,7 @@
   right: 0;
   top: 0;
 
-  @media screen and (max-width: $sm) {
+  @media (max-width: $sm) {
     top: 5px;
   }
 
