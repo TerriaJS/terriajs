@@ -46,3 +46,5 @@ The following people have contributed to TerriaJS:
    * [Michael Adams](https://github.com/michaeladams)
 * [Matt Fullerton](https://github.com/mattfullerton)
 * [Sander Kalcina](https://github.com/sanderkal)
+* [QUT](http://www.qut.edu.au)
+   * [Jason D'Netto](https://github.com/Jason-DNetto)

@@ -7,6 +7,10 @@ Change Log
 
 * Fixed some problems with the map image on the Share panel, including unnecessary cropping to a 4/3 aspect ratio and some vector features missing in the 2D view.
 * Added ability to move the splitter thumb position vertically so that users can move it to prevent occlusions.
+* Added `TerriaJsonCatalogFunction`. This catalog function allows an arbitrary HTTP GET to be invoked with user-provided parameters and return TerriaJS catalog JSON.
+* Fixed a bug that could cause the feature info panel to sometimes be nearly transparent in Internet Explorer 11.
+* Fixed a bug that caused an expanded preview chart's workbench item to erroneously show the date picker.
+* Updated `MagdaCatalogItem` to match Magda project
 
 ### 5.7.0
 
