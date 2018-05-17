@@ -1,7 +1,10 @@
 'use strict';
 
+import { formatDateTime } from '../../../BottomDock/Timeline/DateFormats';
 import createReactClass from 'create-react-class';
+import Description from '../../../Preview/Description';
 import DOMPurify from 'dompurify/dist/purify';
+import FeatureInfoPanel from '../../../FeatureInfo/FeatureInfoPanel';
 import Legend from '../../../Workbench/Controls/Legend';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -12,6 +15,7 @@ const PrintView = createReactClass({
 
     propTypes: {
         terria: PropTypes.object,
+        viewState: PropTypes.object,
         window: PropTypes.object,
         readyCallback: PropTypes.func
     },
@@ -80,6 +84,9 @@ const PrintView = createReactClass({
         }
 
         const imageTags = this.props.window.document.getElementsByTagName('img');
+        if (imageTags.length === 0) {
+            return;
+        }
 
         let allImagesReady = true;
         for (let i = 0; allImagesReady && i < imageTags.length; ++i) {
@@ -104,14 +111,17 @@ const PrintView = createReactClass({
                 <p>
                     <img className="map-image" src={this.state.mapImageDataUrl} alt="Map snapshot" />
                 </p>
-                <h2>Legends</h2>
+                <h1>Legends</h1>
                 {this.props.terria.nowViewing.items.map(this.renderLegend)}
-                <h2>Map Credits</h2>
+                {this.renderFeatureInfo()}
+                <h1>Dataset Details</h1>
+                {this.props.terria.nowViewing.items.map(this.renderDetails)}
+                <h1>Map Credits</h1>
                 <ul>
                     {this.props.terria.currentViewer.getAllAttribution().map(this.renderAttribution)}
                 </ul>
                 <If condition={this.props.terria.configParameters.printDisclaimer}>
-                    <h2>Print Disclaimer</h2>
+                    <h1>Print Disclaimer</h1>
                     <p>{this.props.terria.configParameters.printDisclaimer.text}</p>
                 </If>
             </div>
@@ -127,10 +137,43 @@ const PrintView = createReactClass({
     },
 
     renderLegend(catalogItem) {
+        if (!catalogItem.isMappable) {
+            return null;
+        }
+
         return (
             <div key={catalogItem.uniqueId} className="layer-legends">
                 <div className="layer-title">{catalogItem.name}</div>
+                {catalogItem.discreteTime && <div className="layer-time">Time: {formatDateTime(catalogItem.discreteTime)}</div>}
                 <Legend item={catalogItem} />
+            </div>
+        );
+    },
+
+    renderDetails(catalogItem) {
+        if (!catalogItem.isMappable) {
+            return null;
+        }
+
+        const nowViewingItem = catalogItem.nowViewingCatalogItem || catalogItem;
+        return (
+            <div key={catalogItem.uniqueId} className="layer-details">
+                <h2>{catalogItem.name}</h2>
+                <Description item={nowViewingItem} printView={true} />
+            </div>
+        );
+    },
+
+    renderFeatureInfo() {
+        if (!this.props.viewState.featureInfoPanelIsVisible || !this.props.terria.pickedFeatures ||
+            !this.props.terria.pickedFeatures.features || this.props.terria.pickedFeatures.features.length === 0) {
+            return null;
+        }
+
+        return (
+            <div className="feature-info">
+                <h1>Feature Information</h1>
+                <FeatureInfoPanel terria={this.props.terria} viewState={this.props.viewState} printView={true} />
             </div>
         );
     }
@@ -164,25 +207,29 @@ PrintView.Styles = `
         font-weight: bold;
     }
 
-    h2 {
+    h1, h2, h3 {
         clear: both;
+    }
+
+    .tjs-_form__input {
+        width: 80%;
     }
 `;
 
 /**
  * Creates a new printable view.
  *
- * @param {Terria} terria The Terria instance.
- * @param {Window} [printWindow] The window in which to create the print view. This is usually a new window created with
+ * @param {Terria} options.terria The Terria instance.
+ * @param {ViewState} options.viewState The terria ViewState instance.
+ * @param {Window} [options.printWindow] The window in which to create the print view. This is usually a new window created with
  *                 `window.open()` or an iframe's `contentWindow`. If undefined, a new window (tab) will be created.
- * @param {Function} [readyCallback] A function that is called when the print view is ready to be used. The function is
+ * @param {Function} [options.readyCallback] A function that is called when the print view is ready to be used. The function is
  *                   given the print view window as its only parameter.
- * @param {Function} [closeCallback] A function that is called when the print view is closed. The function is given
+ * @param {Function} [options.closeCallback] A function that is called when the print view is closed. The function is given
  *                   the print view window as its only parameter.
- * @returns {Promise} A promise that resolves when the print view has been created.
  */
-PrintView.create = function(terria, printWindow, readyCallback, closeCallback) {
-    printWindow = printWindow || window.open();
+PrintView.create = function(options) {
+    const { terria, viewState, printWindow = window.open(), readyCallback, closeCallback } = options;
 
     if (closeCallback) {
         printWindow.addEventListener('unload', () => {
@@ -190,7 +237,18 @@ PrintView.create = function(terria, printWindow, readyCallback, closeCallback) {
         });
     }
 
-    printWindow.document.title = `${terria.appName} Print View`;
+    // Open and immediately close the document. This works around a problem in Firefox that is
+    // captured here: https://bugzilla.mozilla.org/show_bug.cgi?id=667227.
+    // Essentially, when we first create an iframe, it has no document loaded and asynchronously
+    // starts a load of "about:blank". If we access the document object and start manipulating it
+    // before that async load completes, a new document will be automatically created. But then
+    // when the async load completes, the original, automatically-created document gets unloaded
+    // and the new "about:blank" gets swapped in. End result: everything we add to the DOM before
+    // the async load complete gets lost and Firefox ends up printing a blank page.
+    // Explicitly opening and then closing a new document _seems_ to avoid this.
+    printWindow.document.open();
+    printWindow.document.close();
+
     printWindow.document.head.innerHTML = `
         <meta charset="UTF-8">
         <title>${terria.appName} Print View</title>
@@ -198,7 +256,7 @@ PrintView.create = function(terria, printWindow, readyCallback, closeCallback) {
         `;
     printWindow.document.body.innerHTML = '<div id="print"></div>';
 
-    const printView = <PrintView terria={terria} window={printWindow} readyCallback={readyCallback} />;
+    const printView = <PrintView terria={terria} viewState={viewState} window={printWindow} readyCallback={readyCallback} />;
     ReactDOM.render(printView, printWindow.document.getElementById('print'));
 };
 

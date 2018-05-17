@@ -18,6 +18,7 @@ import loadImage from 'terriajs-cesium/Source/Core/loadImage';
 import MenuPanel from '../../../StandardUserInterface/customizable/MenuPanel.jsx';
 import ObserverModelMixin from '../../../ObserveModelMixin';
 import PrintView from './PrintView';
+import printWindow from '../../../../Core/printWindow';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Styles from './share-panel.scss';
@@ -54,22 +55,31 @@ const SharePanel = createReactClass({
     },
 
     componentDidMount() {
-        window.addEventListener('beforeprint', this.beforeBrowserPrint, false);
-        window.addEventListener('afterprint', this.afterBrowserPrint, false);
+        if (this.props.terria.configParameters.interceptBrowserPrint) {
+            window.addEventListener('beforeprint', this.beforeBrowserPrint, false);
+            window.addEventListener('afterprint', this.afterBrowserPrint, false);
 
-        const handlePrintMediaChange = evt => {
-            if (evt.matches) {
-                this.beforeBrowserPrint();
-            } else {
-                this.afterBrowserPrint();
+            const handlePrintMediaChange = evt => {
+                if (evt.matches) {
+                    this.beforeBrowserPrint();
+                } else {
+                    this.afterBrowserPrint();
+                }
+            };
+
+            if (window.matchMedia) {
+                const matcher = window.matchMedia('print');
+                matcher.addListener(handlePrintMediaChange);
+                this._unsubscribeFromPrintMediaChange = function () {
+                    matcher.removeListener(handlePrintMediaChange);
+                };
             }
-        };
 
-        const matcher = window.matchMedia('print');
-        matcher.addListener(handlePrintMediaChange);
-        this._unsubscribeFromPrintMediaChange = function () {
-            matcher.removeListener(handlePrintMediaChange);
-        };
+            this._oldPrint = window.print;
+            window.print = () => {
+                this.print();
+            };
+        }
     },
 
     componentWillUnmount() {
@@ -77,6 +87,10 @@ const SharePanel = createReactClass({
         window.removeEventListener('afterprint', this.afterBrowserPrint, false);
         if (this._unsubscribeFromPrintMediaChange) {
             this._unsubscribeFromPrintMediaChange();
+        }
+
+        if (this._oldPrint) {
+            window.print = this._oldPrint;
         }
     },
 
@@ -186,38 +200,32 @@ const SharePanel = createReactClass({
             document.body.appendChild(iframe);
         }
 
-        PrintView.create(this.props.terria, iframe ? iframe.contentWindow : undefined, printWindow => {
-            if (iframe) {
-                // Remove the hidden iframe after printing.
-                // Note that if printAutomatically is false, this will never be invoked
-                // so the hidden iframe will hang around in the DOM forever.
-                // Detect the end of printing using multiple techniques because no one
-                // technique works across all browsers.
-                if (printWindow.matchMedia) {
-                    printWindow.matchMedia('print').addListener(function (evt) {
-                        if (!evt.matches) {
+        PrintView.create({
+            terria: this.props.terria,
+            viewState: this.props.viewState,
+            printWindow: iframe ? iframe.contentWindow : undefined,
+            readyCallback: windowToPrint => {
+                if (printAutomatically) {
+                    printWindow(windowToPrint).otherwise(e => {
+                        this.props.terria.error.raiseEvent(e);
+                    }).always(() => {
+                        if (iframe) {
                             document.body.removeChild(iframe);
+                        }
+                        if (hidden) {
+                            this.setState({
+                                creatingPrintView: false
+                            });
                         }
                     });
                 }
-                printWindow.onafterprint = function () {
-                    document.body.removeChild(iframe);
-                };
-            }
-
-            if (printAutomatically) {
-                // First try printing with execCommand, because, in IE11, `printWindow.print()`
-                // prints the entire page instead of just the embedded iframe.
-                const result = printWindow.document.execCommand('print', true, null);
-                if (!result) {
-                    printWindow.print();
+            },
+            closeCallback: windowToPrint => {
+                if (hidden) {
+                    this.setState({
+                        creatingPrintView: false
+                    });
                 }
-            }
-        }, printWindow => {
-            if (hidden) {
-                this.setState({
-                    creatingPrintView: false
-                });
             }
         });
 
@@ -409,12 +417,6 @@ const SharePanel = createReactClass({
     },
 
     renderContent() {
-        const supportedFormats = [
-            {
-                name: 'Download (ZIP)'
-            }
-        ];
-
         const iframeCode = this.state.shareUrl.length ?
             `<iframe style="width: 720px; height: 600px; border: none;" src="${this.state.shareUrl}" allowFullScreen mozAllowFullScreen webkitAllowFullScreen></iframe>`
             : '';

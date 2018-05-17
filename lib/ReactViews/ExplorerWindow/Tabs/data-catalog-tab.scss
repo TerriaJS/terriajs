@@ -21,7 +21,7 @@
   -webkit-overflow-scrolling: touch;
   box-sizing: border-box;
 
-  @media screen and (min-width: $sm) {
+  @media (min-width: $sm) {
     padding-right: $padding;
     margin-top: $padding;
     height: calc(100% - #{$input-height});

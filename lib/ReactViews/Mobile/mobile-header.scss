@@ -8,7 +8,7 @@
   width: 100vw;
   height: $mobile-header-height;
   z-index: 102;
-  @media screen and (min-width: $sm) {
+  @media (min-width: $sm) {
     left: -99999px;
   }
 }

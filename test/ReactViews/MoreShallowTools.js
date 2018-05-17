@@ -1,11 +1,11 @@
 'use strict';
 
 //*global require,expect*/
-import ReactTestUtils from 'react-addons-test-utils';
+import { createRenderer } from 'react-test-renderer/shallow';
 import {findAll} from 'react-shallow-testutils';
 
 export function getRenderedRenderer(jsx) {
-    const renderer = ReactTestUtils.createRenderer();
+    const renderer = createRenderer();
     renderer.render(jsx);
     return renderer;
 }

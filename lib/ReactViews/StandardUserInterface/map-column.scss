@@ -24,29 +24,15 @@
   display: table-cell;
   position: relative;
   width: 100%;
-
-  @media print {
-    display: block;
-  }
 }
 
-.map-cell-map{
-  @media print{
-    min-height: 80vh;
-  }
-}
+@include empty-module("map-cell-map");
 
 .map-wrapper {
   position: absolute;
   top: 0;
   width: 100%;
   z-index: 0;
-
-  @media print {
-    div, aside{
-      height: auto !important;
-    }
-  }
 }
 
 @include empty-module("feedback");
@@ -54,7 +40,7 @@
 .location-distance {
   composes: clearfix from '../../Sass/common/_base.scss';
   display: none;
-  @media screen and (min-width: $sm) {
+  @media (min-width: $sm) {
     display: block;
   }
   position: absolute;

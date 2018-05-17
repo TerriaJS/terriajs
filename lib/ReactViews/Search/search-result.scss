@@ -72,7 +72,7 @@
     padding-right: $padding;
     width: 100%;
     border: 1px solid transparent;
-    @media screen and (min-width: $sm) {
+    @media (min-width: $sm) {
       border: 1px solid $grey;
     }
   }

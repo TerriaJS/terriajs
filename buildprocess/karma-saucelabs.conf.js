@@ -16,18 +16,6 @@ module.exports = function(config) {
                 browserName: 'safari',
                 platform: 'OS X 10.11'
             },
-            sl_ie9: {
-                base: 'SauceLabs',
-                browserName: 'internet explorer',
-                platform: 'Windows 7',
-                version: '9.0'
-            },
-            sl_ie10: {
-                base: 'SauceLabs',
-                browserName: 'internet explorer',
-                platform: 'Windows 7',
-                version: '10.0'
-            },
             sl_ie11: {
                 base: 'SauceLabs',
                 browserName: 'internet explorer',
@@ -43,12 +31,12 @@ module.exports = function(config) {
                 base: 'SauceLabs',
                 browserName: 'firefox',
                 platform: 'Windows 7',
-                version: '38.0'
+                version: '52.0'
             }
         },
 
         // start these browsers
-        browsers: ['sl_chrome', /*'sl_safari',*/ 'sl_firefox', 'sl_firefox_esr', 'sl_ie9', 'sl_ie10', 'sl_ie11'],
+        browsers: ['sl_chrome', /*'sl_safari',*/ 'sl_firefox', 'sl_firefox_esr', 'sl_ie11'],
 
         sauceLabels: {
             testName: 'TerriaJS Unit Tests',
