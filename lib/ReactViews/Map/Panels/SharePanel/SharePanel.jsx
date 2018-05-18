@@ -284,139 +284,151 @@ const SharePanel = createReactClass({
 
         const iframe = document.createElement('iframe');
         document.body.appendChild(iframe);
-        PrintView.create(this.props.terria, iframe.contentWindow, printWindow => {
-            const images = printWindow.document.getElementsByTagName('img');
-            const imageBlobPromises = Array.prototype.map.call(images, function (image) {
-                return anyImageToPngBlob(image).then(blob => {
-                    const name = getUniqueImageName(image) + '.png';
 
-                    // Squirrel away the original dimensions, because setting src with an inaccessible image
-                    // (in this context) will cause the dimensions to change in some browsers.
-                    image._originalDimensions = {
-                        naturalWidth: image.naturalWidth,
-                        naturalHeight: image.naturalHeight
-                    };
-
-                    image.src = name;
-                    return [{
-                        name: name,
-                        reader: new zip.BlobReader(blob)
-                    }];
-                }).otherwise(e => {
-                    // Could not create a blob for this image. Some possible reasons:
-                    //    * It is a cross-origin image without CORS support so drawing it to a canvas tainted the canvas.
-                    //    * The web browser doesn't support HTMLCanvasElement.toBlob or msToBlob
-                    // So leave the image src as-is and hope for the best.
-                    return undefined;
-                });
-            });
-
-            const svgs = printWindow.document.getElementsByTagName('svg');
-            const svgPromises = Array.prototype.map.call(svgs, function (svg) {
-                const svgStyle = printWindow.document.createElement('style');
-                svgStyle.innerHTML = PrintView.Styles;
-                svg.insertBefore(svgStyle, svg.childNodes[0]);
-                const svgText = new XMLSerializer().serializeToString(svg);
-                const url = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgText);
-                return loadImage(url).then(image => {
+        PrintView.create({
+            terria: this.props.terria,
+            viewState: this.props.viewState,
+            printWindow: iframe.contentWindow,
+            readyCallback: windowToPrint => {
+                const images = windowToPrint.document.getElementsByTagName('img');
+                const imageBlobPromises = Array.prototype.map.call(images, function (image) {
                     return anyImageToPngBlob(image).then(blob => {
-                        const uniqueName = getUniqueImageName(svg);
+                        const name = getUniqueImageName(image) + '.png';
 
-                        // Replace the SVG with the image
-                        svg.parentNode.replaceChild(image, svg);
-                        const pngName = uniqueName + '.png';
-                        image.src = pngName;
+                        // Squirrel away the original dimensions, because setting src with an inaccessible image
+                        // (in this context) will cause the dimensions to change in some browsers.
+                        image._originalDimensions = {
+                            naturalWidth: image.naturalWidth,
+                            naturalHeight: image.naturalHeight
+                        };
 
-                        // Add both the SVG and the generated PNG to the ZIP.
+                        image.src = name;
                         return [{
-                            name: uniqueName + '.svg',
-                            reader: new zip.TextReader(svgText)
-                        }, {
-                            name: pngName,
+                            name: name,
                             reader: new zip.BlobReader(blob)
                         }];
+                    }).otherwise(e => {
+                        // Could not create a blob for this image. Some possible reasons:
+                        //    * It is a cross-origin image without CORS support so drawing it to a canvas tainted the canvas.
+                        //    * The web browser doesn't support HTMLCanvasElement.toBlob or msToBlob
+                        // So leave the image src as-is and hope for the best.
+                        return undefined;
                     });
                 });
-            });
 
-            const resourcePromises = imageBlobPromises.concat(svgPromises);
-            resourcePromises.push(createPdf({
-                terria: this.props.terria,
-                size: 'A4'
-            }).then(function(blob) {
-                return {
-                    name: 'index.pdf',
-                    reader: new zip.BlobReader(blob)
-                }
-            }));
+                const svgs = windowToPrint.document.getElementsByTagName('svg');
+                const svgPromises = Array.prototype.map.call(svgs, function (svg) {
+                    const svgStyle = windowToPrint.document.createElement('style');
+                    svgStyle.innerHTML = PrintView.Styles;
+                    svg.insertBefore(svgStyle, svg.childNodes[0]);
+                    const svgText = new XMLSerializer().serializeToString(svg);
+                    const url = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgText);
+                    return loadImage(url).then(image => {
+                        return anyImageToPngBlob(image).then(blob => {
+                            const uniqueName = getUniqueImageName(svg);
 
-            when.all(resourcePromises).then(resources => {
-                const writer = new zip.BlobWriter();
-                zip.createWriter(writer, zipWriter => {
-                    const html = printWindow.document.documentElement.outerHTML;
+                            // Replace the SVG with the image
+                            svg.parentNode.replaceChild(image, svg);
+                            const pngName = uniqueName + '.png';
+                            image.src = pngName;
 
-                    // Create a tweaked version of the HTML for MS Word, which has terrible CSS support
-                    const images = printWindow.document.getElementsByTagName('img');
-                    Array.prototype.forEach.call(images, function (image) {
-                        if (image._originalDimensions && image._originalDimensions.naturalWidth > 560) {
-                            image.height = image._originalDimensions.naturalHeight * 560 / image._originalDimensions.naturalWidth;
-                            image.width = 560;
-                        }
+                            // Add both the SVG and the generated PNG to the ZIP.
+                            return [{
+                                name: uniqueName + '.svg',
+                                reader: new zip.TextReader(svgText)
+                            }, {
+                                name: pngName,
+                                reader: new zip.BlobReader(blob)
+                            }];
+                        });
                     });
+                });
 
-                    const missingImagesMessage = printWindow.document.createElement('div');
-                    missingImagesMessage.innerHTML =
-                        '<p>Is the map image below missing? You need to:</p>' +
-                        '<ul>' +
-                        '  <li>Make sure you extracted all of the files from the ZIP file on to your local system. Simply double-clicking the .doc file will not work.</li>' +
-                        '  <li>Click the "Enable Editing" button above.</li>' +
-                        '</ul>';
-                    printWindow.document.body.insertBefore(missingImagesMessage, printWindow.document.body.childNodes[0]);
+                const resourcePromises = imageBlobPromises.concat(svgPromises);
+                resourcePromises.push(createPdf({
+                    terria: this.props.terria,
+                    size: 'A4'
+                }).then(function(blob) {
+                    return {
+                        name: 'index.pdf',
+                        reader: new zip.BlobReader(blob)
+                    }
+                }));
 
-                    const wordHtml = printWindow.document.documentElement.outerHTML;
+                when.all(resourcePromises).then(resources => {
+                    const writer = new zip.BlobWriter();
+                    zip.createWriter(writer, zipWriter => {
+                        const html = windowToPrint.document.documentElement.outerHTML;
 
-                    // Collect all the resources we'll be adding to the ZIP file.
-                    const allResources = [{
-                        name: 'index.html',
-                        reader: new zip.TextReader(html)
-                    }, {
-                        name: 'index.doc',
-                        reader: new zip.TextReader(wordHtml)
-                    }, ...flatten(resources).filter(imageResource => imageResource !== undefined)];
+                        // Create a tweaked version of the HTML for MS Word, which has terrible CSS support
+                        const images = windowToPrint.document.getElementsByTagName('img');
+                        Array.prototype.forEach.call(images, function (image) {
+                            if (image._originalDimensions && image._originalDimensions.naturalWidth > 560) {
+                                image.height = image._originalDimensions.naturalHeight * 560 / image._originalDimensions.naturalWidth;
+                                image.width = 560;
+                            }
+                        });
 
-                    // And add them.
-                    let resourceIndex = 0;
+                        const missingImagesMessage = windowToPrint.document.createElement('div');
+                        missingImagesMessage.innerHTML =
+                            '<p>Is the map image below missing? You need to:</p>' +
+                            '<ul>' +
+                            '  <li>Make sure you extracted all of the files from the ZIP file on to your local system. Simply double-clicking the .doc file will not work.</li>' +
+                            '  <li>Click the "Enable Editing" button above.</li>' +
+                            '</ul>';
+                            windowToPrint.document.body.insertBefore(missingImagesMessage, windowToPrint.document.body.childNodes[0]);
 
-                    const addNextResource = () => {
-                        if (resourceIndex >= allResources.length) {
-                            zipWriter.close(blob => {
-                                FileSaver.saveAs(blob, this.props.terria.appName + ' ' + dateformat(new Date(), 'yyyymmdd\'T\'HHMMss') + '.zip');
-                                this.setState({
-                                    creatingDownload: false
+                        const wordHtml = windowToPrint.document.documentElement.outerHTML;
+
+                        // Collect all the resources we'll be adding to the ZIP file.
+                        const allResources = [{
+                            name: 'index.html',
+                            reader: new zip.TextReader(html)
+                        }, {
+                            name: 'index.doc',
+                            reader: new zip.TextReader(wordHtml)
+                        }, ...flatten(resources).filter(imageResource => imageResource !== undefined)];
+
+                        // And add them.
+                        let resourceIndex = 0;
+
+                        const addNextResource = () => {
+                            if (resourceIndex >= allResources.length) {
+                                zipWriter.close(blob => {
+                                    FileSaver.saveAs(blob, this.props.terria.appName + ' ' + dateformat(new Date(), 'yyyymmdd\'T\'HHMMss') + '.zip');
+                                    this.setState({
+                                        creatingDownload: false
+                                    });
                                 });
-                            });
-                        } else {
-                            const resource = allResources[resourceIndex];
-                            ++resourceIndex;
-                            zipWriter.add(resource.name, resource.reader, addNextResource);
-                        }
-                    };
+                            } else {
+                                const resource = allResources[resourceIndex];
+                                ++resourceIndex;
+                                zipWriter.add(resource.name, resource.reader, addNextResource);
+                            }
+                        };
 
-                    addNextResource();
-                }, message => {
-                    this.setState({
-                        creatingDownload: false
-                    });
-                    this.props.terria.error.raiseEvent({
-                        title: 'Error creating ZIP file',
-                        message: 'An error occurred while creating a ZIP file for download.  Technical details, if any, are below:\n<pre>\n' + message + '\n</pre>'
+                        addNextResource();
+                    }, message => {
+                        this.setState({
+                            creatingDownload: false
+                        });
+                        this.props.terria.error.raiseEvent({
+                            title: 'Error creating ZIP file',
+                            message: 'An error occurred while creating a ZIP file for download.  Technical details, if any, are below:\n<pre>\n' + message + '\n</pre>'
+                        });
                     });
                 });
-            });
+            }
         });
     },
 
     renderContent() {
+        const supportedFormats = [
+            {
+                name: 'Download (ZIP)'
+            }
+        ];
+
         const iframeCode = this.state.shareUrl.length ?
             `<iframe style="width: 720px; height: 600px; border: none;" src="${this.state.shareUrl}" allowFullScreen mozAllowFullScreen webkitAllowFullScreen></iframe>`
             : '';
