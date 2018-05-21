@@ -13,7 +13,7 @@ import * as fetch from 'node-fetch';
 import * as defined from 'terriajs-cesium/Source/Core/defined';
 import * as loadXML from 'terriajs-cesium/Source/Core/loadXML';
 import autoUpdate from '../Core/autoUpdate';
-import CatalogMember, { CatalogMemberDefinition } from './CatalogMemberNew';
+import CatalogMember, { CatalogMemberDefinition, InfoSection } from './CatalogMemberNew';
 import { model } from './Decorators';
 import { primitiveProperty } from './ModelProperties';
 import defineLoadableStratum from './defineLoadableStratum';
@@ -88,8 +88,8 @@ interface WebMapServiceStyle {
     legendUrl: LegendUrl;
 }
 
-interface ArrayConstructor {
-    isArray(arg: ReadonlyArray<any> | any): arg is ReadonlyArray<any>
+interface WebMapServiceStyles {
+    [layerName: string]: WebMapServiceStyle[];
 }
 
 function isReadOnlyArray<T>(value: T | ReadonlyArray<T>): value is ReadonlyArray<T> {
@@ -109,8 +109,8 @@ class GetCapabilitiesValue {
     }
 
     @computed
-    get availableStyles(): ReadonlyMap<string, ReadonlyArray<WebMapServiceStyle>> {
-        const result = new Map<string, ReadonlyArray<WebMapServiceStyle>>();
+    get availableStyles(): WebMapServiceStyles {
+        const result: WebMapServiceStyles = {};
 
         const capabilitiesLayers = this.capabilitiesLayers;
 
@@ -129,7 +129,7 @@ class GetCapabilitiesValue {
 
                 const legendUrl = !legendUri ? undefined : {
                     url: legendUri.toString(),
-                    mimetype: legendMimeType
+                    mimeType: legendMimeType
                 };
 
                 return {
@@ -145,7 +145,7 @@ class GetCapabilitiesValue {
     }
 
     @computed
-    get info(): any {
+    get info(): InfoSection[] {
         // if (!containsAny(thisLayer.Abstract, WebMapServiceCatalogItem.abstractsToIgnore)) {
         //     updateInfoSection(wmsItem, overwrite, 'Data Description', thisLayer.Abstract);
         // }

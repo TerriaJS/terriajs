@@ -1,11 +1,18 @@
-import { primitiveProperty, ModelProperty } from './ModelProperties';
+import { primitiveProperty, modelArrayProperty, ModelProperty } from './ModelProperties';
 import { model, definition } from './Decorators';
-import { computed, extendObservable } from 'mobx';
+import { computed, extendObservable, observable, IObservableArray } from 'mobx';
 import * as defaultValue from 'terriajs-cesium/Source/Core/defaultValue';
 import * as URI from 'urijs';
 
+export interface InfoSection {
+    name: string;
+    content: string;
+}
+
 export class CatalogMemberDefinition {
     static metadata: ModelProperty[];
+
+    type?: string;
 
     @primitiveProperty({
         type: 'string',
@@ -36,12 +43,13 @@ export class CatalogMemberDefinition {
     })
     url: string;
 
-    @primitiveProperty({
-        type: 'string',
+    @modelArrayProperty({
         name: 'Info',
-        description: 'Human-readable information about this dataset.'
+        description: 'Human-readable information about this dataset.',
+        type: InfoSection,
+        key: 'name'
     })
-    info: any;
+    info: InfoSection[];
 }
 
 export default interface CatalogMember extends CatalogMemberDefinition {}
