@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### v6.0.2
+
+* Fixed a bug that prevented interaction with the 3D map when the splitter was active.
+
 ### v6.0.1
 
 * Added `parameters` property to `ArcGisMapServerCatalogItem`, allowing arbitrary parameters to be passed in tile and feature info requests.
