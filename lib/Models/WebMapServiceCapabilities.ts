@@ -24,6 +24,7 @@ export interface CapabilitiesLayer {
     readonly Title: string;
     readonly Abstract?: string;
     readonly Style?: CapabilitiesStyle | ReadonlyArray<CapabilitiesStyle>;
+    readonly Layer?: CapabilitiesLayer | ReadonlyArray<CapabilitiesLayer>;
 }
 
 export interface CapabilitiesService {

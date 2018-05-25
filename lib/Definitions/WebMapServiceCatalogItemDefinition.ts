@@ -1,58 +1,48 @@
-import ModelDefinition from './ModelDefinition';
-import BooleanModelProperty from './BooleanModelProperty';
-import InfoModelProperty from './InfoModelProperty';
-import StringModelProperty from './StringModelProperty';
+import CatalogMemberDefinition from './CatalogMemberDefinition';
+import primitiveProperty from './primitiveProperty';
 
-function property(target: any, propertyKey: string) {
+export default class WebMapServiceCatalogItemDefinition extends CatalogMemberDefinition {
+    @primitiveProperty({
+        type: 'string',
+        name: 'Is GeoServer',
+        description: 'True if this WMS is a GeoServer; otherwise, false.',
+        default: false
+    })
+    isGeoServer: boolean;
 
+    @primitiveProperty({
+        type: 'string',
+        name: 'GetCapabilities URL',
+        description: 'The URL at which to access to the WMS GetCapabilities.'
+    })
+    getCapabilitiesUrl: string;
+
+    @primitiveProperty({
+        type: 'string',
+        name: 'GetCapabilities Cache Duration',
+        description: 'The amount of time to cache GetCapabilities responses.',
+        default: '1d'
+    })
+    getCapabilitiesCacheDuration: string;
+
+    @primitiveProperty({
+        type: 'string',
+        name: 'Intervals',
+        description: 'Intervals'
+    })
+    intervals: any; // TODO
+
+    @primitiveProperty({
+        type: 'string',
+        name: 'Layer(s)',
+        description: 'The layer or layers to display.'
+    })
+    layers: string;
+
+    @primitiveProperty({
+        type: 'string',
+        name: 'Available Styles',
+        description: 'The available styles.' // TODO
+    })
+    availableStyles: any; // TODO
 }
-
-abstract class WebMapServiceCatalogItemInterface {
-    @property foo: string;
-}
-
-const def = new ModelDefinition({
-    type: 'wms',
-    name: 'Web Map Service (WMS)',
-    description: 'One or more layers from a Open Geospatial Consortium (OGC) Web Map Service (WMS) server.'
-});
-
-def.addProperty(new StringModelProperty({
-    id: 'name',
-    name: 'Name',
-    description: 'The name of this catalog item, to be displayed in the catalog and on the workbench.'
-}));
-
-def.addProperty(new StringModelProperty({
-    id: 'description',
-    name: 'Description',
-    description: 'The description of this dataset, displayed to the user while browsing this dataset in the catalog.',
-    markdown: true
-}));
-
-def.addProperty(new InfoModelProperty({
-    id: 'info',
-    name: 'Info',
-    description: 'Additional information to display to the user while browsing this dataset in the catalog.'
-}));
-
-def.addProperty(new StringModelProperty({
-    id: 'url',
-    name: 'URL',
-    description: 'The base URL of the WMS server.'
-}));
-
-def.addProperty(new StringModelProperty({
-    id: 'getCapabilitiesUrl',
-    name: 'GetCapabilities URL',
-    description: 'The URL from which to request the WMS GetCapabilities document.'
-}));
-
-def.addProperty(new BooleanModelProperty({
-    id: 'isGeoServer',
-    name: 'Is GeoServer',
-    description: 'True if the WMS server runs the GeoServer software.'
-}));
-
-const WebMapServiceCatalogItemDefinition = def;
-export default WebMapServiceCatalogItemDefinition;

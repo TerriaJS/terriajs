@@ -68,6 +68,9 @@ export interface LoadableStratumConstructor<T> {
  * While a load is in progress, all properties of the stratum will be undefined, even if a previous load has provided values.
  * All properties are observable.
  *
+ * If you get a compiler error when calling this function saying that your value class is not assignable to `Constructor<Pick<...>>`,
+ * verify that all specified properties actually exist on your value class.
+ *
  * @param TDefinition definition The model definition.
  * @param T1 [property1] The name of a property to include in the subset.
  * @param T2 [property2] The name of a property to include in the subset.
@@ -143,7 +146,8 @@ export default function defineLoadableStratum<TDefinition, TValue>(definition: D
         static TLoadValue: TValue;
         static TInstance: LoadableStratumInstance<any>;
 
-        // We manually use atoms
+        // We manually use atoms to avoid MobX complaining about a
+        // computed modifying an observable.
         private _isLoadingAtom = createAtom('isLoadingAtom', () => {}, () => {});
         private _isLoading = false;
 

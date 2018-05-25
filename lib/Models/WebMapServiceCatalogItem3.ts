@@ -7,74 +7,18 @@
 // 3. Observable spaghetti
 //  Solution: think in terms of pipelines with computed observables, document patterns.
 // 4. All code for all catalog item types needs to be loaded before we can do anything.
-import { autorun, computed, decorate, extendObservable, observable, runInAction, trace } from 'mobx';
-import { createTransformer } from 'mobx-utils';
-import * as fetch from 'node-fetch';
-import * as defined from 'terriajs-cesium/Source/Core/defined';
-import * as loadXML from 'terriajs-cesium/Source/Core/loadXML';
+import { autorun, computed, observable, trace } from 'mobx';
+import * as URI from 'urijs';
 import autoUpdate from '../Core/autoUpdate';
-import CatalogMember, { CatalogMemberDefinition, InfoSection } from './CatalogMemberNew';
-import { model } from './Decorators';
-import { primitiveProperty } from './ModelProperties';
+import isReadOnlyArray from '../Core/isReadOnlyArray';
+import WebMapServiceCatalogItemDefinition from '../Definitions/WebMapServiceCatalogItemDefinition';
+import CatalogMember from './CatalogMemberNew';
+import Model from './Model';
+import WebMapServiceCapabilities, { CapabilitiesLayer } from './WebMapServiceCapabilities';
 import defineLoadableStratum from './defineLoadableStratum';
 import defineStratum from './defineStratum';
-import * as xml2json from '../ThirdParty/xml2json';
-import * as TerriaError from '../Core/TerriaError';
 import * as proxyCatalogItemUrl from './proxyCatalogItemUrl';
-import WebMapServiceCapabilities, { CapabilitiesLayer, CapabilitiesStyle } from './WebMapServiceCapabilities';
-import * as URI from 'urijs';
-
-class ImageryLayer {
-}
-
-class DataSource {
-}
-
-export class Definition extends CatalogMemberDefinition {
-    @primitiveProperty({
-        type: 'string',
-        name: 'Is GeoServer',
-        description: 'True if this WMS is a GeoServer; otherwise, false.',
-        default: false
-    })
-    isGeoServer: boolean;
-
-    @primitiveProperty({
-        type: 'string',
-        name: 'GetCapabilities URL',
-        description: 'The URL at which to access to the WMS GetCapabilities.'
-    })
-    getCapabilitiesUrl: string;
-
-    @primitiveProperty({
-        type: 'string',
-        name: 'Intervals',
-        description: 'Intervals'
-    })
-    intervals: any; // TODO
-
-    @primitiveProperty({
-        type: 'string',
-        name: 'GetCapabilities Cache Duration',
-        description: 'The amount of time to cache GetCapabilities responses.',
-        default: '1d'
-    })
-    getCapabilitiesCacheDuration: string;
-
-    @primitiveProperty({
-        type: 'string',
-        name: 'Layer(s)',
-        description: 'The layer or layers to display.'
-    })
-    layers: string;
-
-    @primitiveProperty({
-        type: 'string',
-        name: 'Available Styles',
-        description: 'The available styles.' // TODO
-    })
-    availableStyles: any; // TODO
-}
+import Mappable from './Mappable';
 
 interface LegendUrl {
     url: string;
@@ -90,10 +34,6 @@ interface WebMapServiceStyle {
 
 interface WebMapServiceStyles {
     [layerName: string]: WebMapServiceStyle[];
-}
-
-function isReadOnlyArray<T>(value: T | ReadonlyArray<T>): value is ReadonlyArray<T> {
-    return Array.isArray(value);
 }
 
 class GetCapabilitiesValue {
@@ -144,13 +84,13 @@ class GetCapabilitiesValue {
         return result;
     }
 
-    @computed
-    get info(): InfoSection[] {
-        // if (!containsAny(thisLayer.Abstract, WebMapServiceCatalogItem.abstractsToIgnore)) {
-        //     updateInfoSection(wmsItem, overwrite, 'Data Description', thisLayer.Abstract);
-        // }
-        return [];
-    }
+    // @computed
+    // get info(): InfoSection[] {
+    //     // if (!containsAny(thisLayer.Abstract, WebMapServiceCatalogItem.abstractsToIgnore)) {
+    //     //     updateInfoSection(wmsItem, overwrite, 'Data Description', thisLayer.Abstract);
+    //     // }
+    //     return [];
+    // }
 
     @computed
     get isGeoServer(): boolean {
@@ -172,14 +112,18 @@ class GetCapabilitiesValue {
     @observable intervals: any;
 }
 
-const GetCapabilitiesStratum = defineLoadableStratum(Definition, GetCapabilitiesValue, 'info', 'isGeoServer', 'intervals', 'availableStyles');
-const FullStratum = defineStratum(Definition);
+const GetCapabilitiesStratum = defineLoadableStratum(WebMapServiceCatalogItemDefinition, GetCapabilitiesValue, 'isGeoServer', 'intervals', 'availableStyles');
+const FullStratum = defineStratum(WebMapServiceCatalogItemDefinition);
 
-interface WebMapServiceCatalogItem extends Definition {}
+interface WebMapServiceCatalogItem extends Model.InterfaceFromDefinition<WebMapServiceCatalogItemDefinition> {}
 
-@model(Definition)
-class WebMapServiceCatalogItem extends CatalogMember {
-    readonly flattened: Definition;
+@Model.definition(WebMapServiceCatalogItemDefinition)
+class WebMapServiceCatalogItem extends CatalogMember implements Mappable {
+    get type() {
+        return 'wms';
+    }
+
+    readonly flattened: Model.InterfaceFromDefinition<WebMapServiceCatalogItemDefinition>;
 
     @observable modelStrata = ['getCapabilitiesStratum', /*'describeLayerLayer',*/ 'definitionStratum', 'userStratum'];
     @observable defaultStratumToModify = 'userStratum';
@@ -213,9 +157,6 @@ class WebMapServiceCatalogItem extends CatalogMember {
         } else {
             return undefined;
         }
-    }
-    set getCapabilitiesUrl(value: string) {
-        this.flattened.getCapabilitiesUrl = value;
     }
 
     @computed
@@ -332,27 +273,27 @@ class WebMapServiceCatalogItem extends CatalogMember {
 
 export default WebMapServiceCatalogItem;
 
-class Cesium {
-    scene: any;
+// class Cesium {
+//     scene: any;
 
-    constructor(terria) {
-        autorun(() => {
-            terria.nowViewing.items.forEach(workbenchItem => {
-                const mapItems = workbenchItem.mapItems;
-                if (!mapItems) {
-                    return;
-                }
+//     constructor(terria) {
+//         autorun(() => {
+//             terria.nowViewing.items.forEach(workbenchItem => {
+//                 const mapItems = workbenchItem.mapItems;
+//                 if (!mapItems) {
+//                     return;
+//                 }
 
-                mapItems.forEach(mapItem => {
-                    // TODO: Look up the type in a map and call the associated function.
-                    //       That way the supported types of map items is extensible.
-                    if (mapItem instanceof ImageryLayer) {
-                        this.scene.imageryLayers.add(mapItem);
-                    } else if (mapItem instanceof DataSource) {
-                        this.scene.dataSources.add(mapItem);
-                    }
-                });
-            });
-        });
-    }
-}
+//                 mapItems.forEach(mapItem => {
+//                     // TODO: Look up the type in a map and call the associated function.
+//                     //       That way the supported types of map items is extensible.
+//                     if (mapItem instanceof ImageryLayer) {
+//                         this.scene.imageryLayers.add(mapItem);
+//                     } else if (mapItem instanceof DataSource) {
+//                         this.scene.dataSources.add(mapItem);
+//                     }
+//                 });
+//             });
+//         });
+//     }
+// }

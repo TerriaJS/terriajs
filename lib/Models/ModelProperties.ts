@@ -1,40 +1,24 @@
 import * as defined from 'terriajs-cesium/Source/Core/defined';
-
-type PrimitiveType = 'string' | 'number' | 'boolean';
+import ModelReference from '../Definitions/ModelReference';
+import { observable } from 'mobx';
 
 export interface ModelPropertyOptions {
     name: string,
     description: string,
 }
 
-export interface PrimitivePropertyOptions<T> extends ModelPropertyOptions {
-    type: PrimitiveType;
-    default?: T;
-}
-
 export interface ModelArrayPropertyOptions<T> extends ModelPropertyOptions {
-    factory: (type: string) => T;
     idProperty: keyof T;
-    typeProperty: keyof T;
 }
 
-export function primitiveProperty<T>(options: PrimitivePropertyOptions<T>) {
+
+export function modelReferenceArrayProperty<T>(options: ModelArrayPropertyOptions<T>) {
     return function(target: any, propertyKey: string) {
         const constructor = target.constructor;
         if (!constructor.metadata) {
             constructor.metadata = {};
         }
-        constructor.metadata[propertyKey] = new PrimitiveProperty(propertyKey, options);
-    }
-}
-
-export function modelArrayProperty<T>(options: ModelArrayPropertyOptions<T>) {
-    return function(target: any, propertyKey: string) {
-        const constructor = target.constructor;
-        if (!constructor.metadata) {
-            constructor.metadata = {};
-        }
-        constructor.metadata[propertyKey] = new ModelArrayProperty(propertyKey, options);
+        constructor.metadata[propertyKey] = new ModelReferenceArrayProperty<T>(propertyKey, options);
     }
 }
 
@@ -50,39 +34,9 @@ export abstract class ModelProperty {
     }
 
     abstract getValue(model: any): any;
-    abstract setValue(model: any, newValue: any): void;
+    // abstract setValue(model: any, newValue: any): void;
 }
 
-export class PrimitiveProperty<T> extends ModelProperty {
-    readonly type: PrimitiveType;
-    readonly default: T;
-
-    constructor(id: string, options: PrimitivePropertyOptions<T>) {
-        super(id, options);
-        this.type = options.type;
-        this.default = options.default;
-    }
-
-    getValue(model: any): T {
-        const layerNames = model.modelStrata;
-
-        // Starting with the topmost layer, find the first layer with a value that is not undefined.
-        for (let i = layerNames.length - 1; i >= 0; --i) {
-            const layerName = layerNames[i];
-            const layer = model[layerName];
-            const value = layer[this.id];
-            if (value !== undefined) {
-                return value;
-            }
-        }
-
-        return this.default;
-    }
-
-    setValue(model: any, newValue: T) {
-        model[model.defaultStratumToModify][this.id] = newValue;
-    }
-}
 
 // CatalogGroup `items` property:
 // 1. Is there an `items` per stratum? Yes.
@@ -108,76 +62,79 @@ export class PrimitiveProperty<T> extends ModelProperty {
 // current value match the specified one. i.e. new model instances are added to the user
 // stratum array, missing model instances are ... marked deleted?
 
-export class ModelArrayProperty<T> extends ModelProperty {
-    readonly key: keyof T;
+export class ModelReferenceArrayProperty<T> extends ModelProperty {
+    readonly idProperty: keyof T;
 
     constructor(id: string, options: ModelArrayPropertyOptions<T>) {
         super(id, options);
-        this.key = options.key;
+        this.idProperty = options.idProperty;
     }
 
-    getValue(model: any): T[] {
-        const layerNames = model.modelStrata;
+    // This can probably be converted to a general array handler.
+    // It takes an optional idProperty. If not specified, the values are themselves IDs.
+    // It ensures that each ID is unique and that the topmost stratum wins for a given ID.
+    // There can even be properties to control relative ordering of items in different strata.
+    getValue(model: any): ReadonlyArray<ModelReference> {
         const result = [];
         const idMap = {};
-        const removedModels = {};
+        const removedIds = {};
 
-        // Create a single array with all the unique model instances.
+        // Create a single array with all the unique model IDs.
+        const layerNames = model.modelStrata;
         for (let i = layerNames.length - 1; i >= 0; --i) {
             const layerName = layerNames[i];
             const layer = model[layerName];
-            const modelArray = layer[this.id];
+            const modelIdArray: ModelReference[] = layer[this.id];
 
-            if (!modelArray) {
-                continue;
-            }
-
-            for (const removedModelId in Object.keys(modelArray._removedModels)) {
-                removedModels[removedModelId] = true;
-            }
-
-            for (let j = 0; j < modelArray.length; ++j) {
-                const modelInstance = modelArray[j];
-                const modelId = modelInstance[this.key];
-                const removed = modelId in removedModels;
-                const alreadyInResult = idMap[modelId] !== undefined;
-
-                if (!removed && !alreadyInResult) {
-                    result.push(modelInstance);
-                    idMap[modelId] = modelInstance;
-                }
+            if (modelIdArray) {
+                modelIdArray.forEach(modelId => {
+                    if (ModelReference.isRemoved(modelId)) {
+                        // This ID is removed in this stratum.
+                        removedIds[modelId.removed] = true;
+                    } else if (removedIds[modelId]) {
+                        // This ID was removed by a stratum above this one, so ignore it.
+                        return;
+                    } else if (!idMap[modelId]) {
+                        // This is the first time we've seen this ID, so add it
+                        idMap[modelId] = true;
+                        result.push(modelId);
+                    }
+                });
             }
         }
 
-        return result;
+        // TODO: only freeze in debug builds?
+        // TODO: can we instead react to modifications of the array?
+        return Object.freeze(result);
     }
 
-    setValue(model: any, newValue: T[]) {
-        const currentModels = this.getValue(model);
+    // setValue(model: any, newValue: T[], stratum: string = model.defaultStratumToModify) {
+    //     // TODO: should we support setting this type of value at all??
+    //     const currentModels = this.getValue(model);
 
-        const oldIdMap: any = {};
-        currentModels.forEach(modelInstance => {
-            const id = modelInstance[this.key];
-            oldIdMap[id] = modelInstance;
-        });
+    //     const oldIdMap: any = {};
+    //     currentModels.forEach(modelInstance => {
+    //         const id = modelInstance[this.key];
+    //         oldIdMap[id] = modelInstance;
+    //     });
 
-        const newIdMap: any = {};
-        newValue.forEach(modelInstance => {
-            const id = modelInstance[this.key];
-            newIdMap[id] = modelInstance;
+    //     const newIdMap: any = {};
+    //     newValue.forEach(modelInstance => {
+    //         const id = modelInstance[this.key];
+    //         newIdMap[id] = modelInstance;
 
-            // If this model doesn't exist yet, add it to the topmost layer.
-            if (oldIdMap[id] === undefined) {
-            }
-        });
+    //         // If this model doesn't exist yet, add it to the topmost layer.
+    //         if (oldIdMap[id] === undefined) {
+    //         }
+    //     });
 
-        // Remove all models that exist in currentModels but not newValue
+    //     // Remove all models that exist in currentModels but not newValue
 
 
-        // Setting the property's value should make modifications to the user stratum to make the
-        // current value match the specified one. i.e. new model instances are added to the user
-        // stratum array, missing model instances are ... marked deleted?
+    //     // Setting the property's value should make modifications to the user stratum to make the
+    //     // current value match the specified one. i.e. new model instances are added to the user
+    //     // stratum array, missing model instances are ... marked deleted?
 
-        model[model.defaultStratumToModify][this.id] = newValue;
-    }
+    //     model[model.defaultStratumToModify][this.id] = newValue;
+    // }
 }

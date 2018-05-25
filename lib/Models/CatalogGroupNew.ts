@@ -1,40 +1,35 @@
-import { primitiveProperty, modelArrayProperty, ModelProperty } from './ModelProperties';
-import CatalogMember, { CatalogMemberDefinition } from './CatalogMemberNew';
+import { modelReferenceArrayProperty, ModelProperty } from './ModelProperties';
+import CatalogMember from './CatalogMemberNew';
 import { computed, extendObservable, observable, IObservableArray } from 'mobx';
+import defineStratum from './defineStratum';
+import ModelReference from '../Definitions/ModelReference';
+import CatalogGroupDefinition from '../Definitions/CatalogGroupDefinition';
+import Model from './Model';
 
-const json = {
-    name: 'Test Group',
-    type: 'group',
-    items: [
-        {
-            name: 'Test WMS',
-            type: 'wms',
-            url: 'https://programs.communications.gov.au/geoserver/ows',
-            layers: 'mybroadband:MyBroadband_ADSL_Availability'
-        }
-    ]
-}
+const FullStratum = defineStratum(CatalogGroupDefinition);
 
-function createCatalogMemberFromType(type: string): CatalogMember {
-    return undefined;
-}
+export default interface CatalogGroup extends Model.InterfaceFromDefinition<CatalogGroupDefinition> {}
 
-export class CatalogGroupDefinition extends CatalogMemberDefinition {
-    @modelArrayProperty({
-        name: 'Members',
-        description: 'The members of this group.',
-        factory: createCatalogMemberFromType,
-        typeProperty: 'type',
-        idProperty: 'name' // TODO: should be 'id' or something
-    })
-    members: CatalogMemberDefinition[];
-}
-
-export default interface CatalogGroup extends CatalogGroupDefinition {}
+@Model.definition(CatalogGroupDefinition)
 export default class CatalogGroup extends CatalogMember {
-    private _members = new Map<string, CatalogMember>();
+    get type() {
+        return 'group';
+    }
 
-    @computed get members(): CatalogMember[] {
-        return undefined;
+    readonly flattened: Model.InterfaceFromDefinition<CatalogGroupDefinition>;
+
+    @observable modelStrata = ['definitionStratum', 'userStratum'];
+
+    @observable definitionStratum = new FullStratum();
+    @observable userStratum = new FullStratum();
+
+    @computed get memberModels(): ReadonlyArray<CatalogMember> {
+        return this.flattened.members.map(id => this.terria.getModelById(CatalogMember, id));
     }
 }
+
+// export class WebMapServiceCatalogGroup extends CatalogGroup {
+//     @observable modelStrata = ['getCapabilitiesStratum', 'definitionStratum', 'userStratum'];
+
+//     readonly getCapabilitiesStratum  = new GetCapabilitiesStratum(layer => this._loadGetCapabilitiesStratum(layer));
+// }
