@@ -25,7 +25,18 @@
 
 .field {
   composes: field from '../../Sass/common/_form.scss';
+
   margin-bottom: $padding;
+}
+
+.field-invalid {
+  composes: field;
+
+  border-color: $warning;
+}
+
+.warning-text {
+  color: $warning;
 }
 
 .field--parameter-editor {

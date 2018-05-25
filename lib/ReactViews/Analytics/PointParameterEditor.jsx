@@ -27,12 +27,41 @@ const PointParameterEditor = createReactClass({
         viewState: PropTypes.object
     },
 
-    setCartographicValueFromText(e) {
-        PointParameterEditor.setCartographicValueFromText(e, this.props.parameter);
+    getInitialState() {
+        return {
+            // A flag indicating whether we will display invalid data errors to the user.
+            allowInvalidDisplay: false
+        };
     },
 
-    setValueFromText(e) {
-        PointParameterEditor.setValueFromText(e, this.props.parameter);
+    inputOnChange(e) {
+        PointParameterEditor.storeValueFromText(e, this.props.parameter);
+
+        if (defined(PointParameterEditor.tryParseCartographicValueFromText(e.target.value))) {
+            // Once the user has entered a valid value in the field always show whether the input is valid.
+            this.setState({allowInvalidDisplay: true});
+        }
+    },
+
+    inputOnBlur(e) {
+        PointParameterEditor.setCartographicValueFromText(e, this.props.parameter);
+
+        // Once the user has left the focus of the field always show whether the input is valid.
+        this.setState({allowInvalidDisplay: true});
+    },
+
+    isParameterValid () {
+        if (defined(this.props.parameter)) {
+            if (this.props.parameter.value instanceof Cartographic) {
+                return true;
+            }
+            else if (PointParameterEditor.tryParseCartographicValueFromText(this.props.parameter.value)) {
+                return true;
+            }
+
+        }
+
+        return false;
     },
 
     selectPointOnMap() {
@@ -40,14 +69,22 @@ const PointParameterEditor = createReactClass({
     },
 
     render() {
+        const invalid = ((this.state.allowInvalidDisplay === true) && (this.isParameterValid() === false));
+        const style = !invalid ? Styles.field : Styles.fieldInvalid;
+
         return (
             <div>
-                <input className={Styles.field}
+                <If condition={invalid}>
+                <div className={Styles.warningText}>
+                    Please enter valid coordinates (e.g. -25.3450, 131.0361).
+                </div>
+                </If>
+                <input className={style}
                        type="text"
-                       onChange={this.setValueFromText}
-                       onBlur={this.setCartographicValueFromText}
+                       onChange={this.inputOnChange}
+                       onBlur={this.inputOnBlur}
                        value={PointParameterEditor.getDisplayValue(this.props.parameter.value)}
-                       placeholder="131.036111, -25.345"/>
+                       placeholder="-25.3450, 131.0361"/>
                 <button type="button" onClick={this.selectPointOnMap} className={Styles.btnSelector}>
                     Select location
                 </button>
@@ -57,25 +94,45 @@ const PointParameterEditor = createReactClass({
 });
 
 /**
- * Triggered when user leaves the field, updates the parameter as a Cartographic.
+ * Triggered when user leaves the field, updates the parameter as a Cartographic if possible otherwise just stores the value.
  * @param {String} e Text that user has entered manually.
  * @param {FunctionParameter} parameter Parameter to set value on.
  */
 PointParameterEditor.setCartographicValueFromText = function(e, parameter) {
-    const coordinates = e.target.value.split(',');
-    if (coordinates.length >= 2) {
-        parameter.value = Cartographic.fromDegrees(parseFloat(coordinates[0]), parseFloat(coordinates[1]));
+    const parsedValue = PointParameterEditor.tryParseCartographicValueFromText(e.target.value)
+    if (defined(parsedValue)) {
+        // Store the value parsed if it is valid.
+        parameter.value = parsedValue
     } else {
-        parameter.value = undefined;
+        // Still keep the value if its invalid, just store it natively so that we don't obliterate the user entered content.
+        parameter.value = e.target.value;
     }
 };
 
 /**
- * Triggered when user types value directly into field.
+ * Parses the value into a Cartographic if it is in a valid format, otherwise returns undefined.
+ * @param {String} value Text that is to be parsed.
+ * @return {Cartographic} The value if it was able to be parsed otherwise undefined.
+ */
+PointParameterEditor.tryParseCartographicValueFromText = function(value) {
+    const coordinates = value.split(',');
+    if (coordinates.length >= 2) {
+        const lon = parseFloat(coordinates[0]);
+        const lat = parseFloat(coordinates[1]);
+        if (!isNaN(lat) && !isNaN(lon)) {
+            return Cartographic.fromDegrees(lon, lat);
+        }
+    }
+
+    return undefined;
+};
+
+/**
+ * Store the value for later use.
  * @param {String} e Text that user has entered manually.
  * @param {FunctionParameter} parameter Parameter to set value on.
  */
-PointParameterEditor.setValueFromText = function(e, parameter) {
+PointParameterEditor.storeValueFromText = function(e, parameter) {
     parameter.value = e.target.value;
 };
 
@@ -94,6 +151,16 @@ PointParameterEditor.getDisplayValue = function(value) {
     } else {
         return '';
     }
+};
+
+PointParameterEditor.isValid = function(value) {
+    if (defined(value)) {
+        if (value instanceof Cartographic) {
+            return true;
+        }
+    }
+
+    return false;
 };
 
 /**
