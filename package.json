@@ -76,7 +76,7 @@
     "url-loader": "^0.5.7",
     "urthecast": "^1.0.0",
     "webpack": "^3.8.1",
-    "worker-loader": "^1.0.0"
+    "worker-loader": "^2.0.0"
   },
   "devDependencies": {
     "babel-eslint": "^7.0.0",
