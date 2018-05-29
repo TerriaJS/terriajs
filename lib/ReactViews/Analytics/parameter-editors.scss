@@ -43,8 +43,15 @@
   }
 }
 
+.field-date-placeholder {
+  composes: field;
+
+  color: $grey !important;
+}
+
 .field-invalid {
   composes: field;
+
   border-color: $warning;
 }
 
