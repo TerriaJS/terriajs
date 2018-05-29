@@ -1,4 +1,5 @@
 import { ModelProperty, ModelPropertyOptions } from '../Models/ModelProperties';
+import { BaseModel } from '../Models/Model';
 
 type PrimitiveType = 'string' | 'number' | 'boolean';
 
@@ -27,23 +28,16 @@ export class PrimitiveProperty<T> extends ModelProperty {
         this.default = options.default;
     }
 
-    getValue(model: any): T {
-        const layerNames = model.modelStrata;
-
-        // Starting with the topmost layer, find the first layer with a value that is not undefined.
-        for (let i = layerNames.length - 1; i >= 0; --i) {
-            const layerName = layerNames[i];
-            const layer = model[layerName];
-            const value = layer[this.id];
+    getValue(model: BaseModel): T {
+        const strata = model.strataTopToBottom;
+        for (let i = 0; i < strata.length; ++i) {
+            const stratum = strata[i];
+            const value = stratum[this.id];
             if (value !== undefined) {
                 return value;
             }
         }
 
-        return this.default;
+        return this.default; // TODO: is it a good idea to have a default?
     }
-
-    // setValue(model: any, newValue: T) {
-    //     model[model.defaultStratumToModify][this.id] = newValue;
-    // }
 }

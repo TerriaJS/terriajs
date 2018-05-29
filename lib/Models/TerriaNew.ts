@@ -1,13 +1,13 @@
 import Class from '../Core/Class';
 import instanceOf from '../Core/instanceOf';
 import ModelReference from '../Definitions/ModelReference';
-import Model from './Model';
+import Model, { BaseModel } from './Model';
 import * as RuntimeError from 'terriajs-cesium/Source/Core/RuntimeError';
 
 export default class Terria {
-    private models = new Map<string, Model>();
+    private models = new Map<string, BaseModel>();
 
-    getModelById<T extends Model>(type: Class<T>, id: ModelReference): T {
+    getModelById<T extends BaseModel>(type: Class<T>, id: ModelReference): T {
         if (ModelReference.isRemoved(id)) {
             return undefined;
         } else {
@@ -21,7 +21,7 @@ export default class Terria {
         }
     }
 
-    addModel(id: ModelReference, model: Model) {
+    addModel(id: ModelReference, model: BaseModel) {
         if (ModelReference.isRemoved(id)) {
             return;
         }

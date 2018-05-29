@@ -1,12 +1,6 @@
-import CatalogMemberDefinition from './CatalogMemberDefinition';
-import { modelReferenceArrayProperty } from '../Models/ModelProperties';
-import ModelReference from './ModelReference';
+import mixGroupDefinition from './mixGroupDefinition';
+import ModelDefinition from './ModelDefinition';
+import mixCatalogMemberDefinition from './mixCatalogMemberDefinition';
 
-export default class CatalogGroupDefinition extends CatalogMemberDefinition {
-    @modelReferenceArrayProperty<CatalogMemberDefinition>({
-        name: 'Members',
-        description: 'The members of this group.',
-        idProperty: 'id'
-    })
-    members: ModelReference[];
+export default class CatalogGroupDefinition extends mixGroupDefinition(mixCatalogMemberDefinition(ModelDefinition)) {
 }

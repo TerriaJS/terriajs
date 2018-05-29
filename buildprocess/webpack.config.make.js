@@ -5,7 +5,7 @@ var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 //var testGlob = ['./test/**/*.js', './test/**/*.jsx', '!./test/Utility/*.js'];
-var testGlob = ['./test/**/*.ts'];
+var testGlob = ['./test/Models/Experiment.ts', './test/Models/StratumOrderSpec.ts', './test/Models/WebMapServiceCatalogItemSpec.ts'];
 
 module.exports = function(hot, dev) {
     var config = {

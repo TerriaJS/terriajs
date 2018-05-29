@@ -1,4 +1,4 @@
-import Model from './Model';
+import Model, { BaseModel } from './Model';
 
 export class ImageryLayer {
 }
@@ -11,7 +11,7 @@ interface Mappable {
 }
 
 namespace Mappable {
-    export function is(model: Model | Mappable): model is Mappable {
+    export function is(model: BaseModel | Mappable): model is Mappable {
         return 'mapItems' in model;
     }
 }

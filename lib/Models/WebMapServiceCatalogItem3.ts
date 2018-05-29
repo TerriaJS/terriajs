@@ -12,13 +12,17 @@ import * as URI from 'urijs';
 import autoUpdate from '../Core/autoUpdate';
 import isReadOnlyArray from '../Core/isReadOnlyArray';
 import WebMapServiceCatalogItemDefinition from '../Definitions/WebMapServiceCatalogItemDefinition';
-import CatalogMember from './CatalogMemberNew';
 import Model from './Model';
 import WebMapServiceCapabilities, { CapabilitiesLayer } from './WebMapServiceCapabilities';
-import defineLoadableStratum from './defineLoadableStratum';
+import defineLoadableStratum, { LoadableStratumState } from './defineLoadableStratum';
 import defineStratum from './defineStratum';
 import * as proxyCatalogItemUrl from './proxyCatalogItemUrl';
 import Mappable from './Mappable';
+import CatalogMemberMixin from '../ModelMixins/CatalogMemberMixin';
+import UrlMixin from '../ModelMixins/UrlMixin';
+import GetCapabilitiesMixin from '../ModelMixins/GetCapabilitiesMixin';
+import StratumOrder from './StratumOrder';
+import Terria from './TerriaNew';
 
 interface LegendUrl {
     url: string;
@@ -44,7 +48,7 @@ class GetCapabilitiesValue {
 
     @computed
     get capabilitiesLayers(): ReadonlyMap<string, CapabilitiesLayer> {
-        const lookup: (name: string) => [string, CapabilitiesLayer] = name => [name, this.capabilities.findLayer(name)];
+        const lookup: (name: string) => [string, CapabilitiesLayer] = name => [name, this.capabilities && this.capabilities.findLayer(name)];
         return new Map(this.catalogItem.layersArray.map(lookup));
     }
 
@@ -115,22 +119,20 @@ class GetCapabilitiesValue {
 const GetCapabilitiesStratum = defineLoadableStratum(WebMapServiceCatalogItemDefinition, GetCapabilitiesValue, 'isGeoServer', 'intervals', 'availableStyles');
 const FullStratum = defineStratum(WebMapServiceCatalogItemDefinition);
 
-interface WebMapServiceCatalogItem extends Model.InterfaceFromDefinition<WebMapServiceCatalogItemDefinition> {}
+interface ModelFromDefinition extends Model.InterfaceFromDefinition<WebMapServiceCatalogItemDefinition> {}
+class ModelFromDefinition extends Model<WebMapServiceCatalogItemDefinition> {}
 
 @Model.definition(WebMapServiceCatalogItemDefinition)
-class WebMapServiceCatalogItem extends CatalogMember implements Mappable {
+class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemberMixin(ModelFromDefinition))) implements Mappable {
     get type() {
         return 'wms';
     }
 
-    readonly flattened: Model.InterfaceFromDefinition<WebMapServiceCatalogItemDefinition>;
-
-    @observable modelStrata = ['getCapabilitiesStratum', /*'describeLayerLayer',*/ 'definitionStratum', 'userStratum'];
-    @observable defaultStratumToModify = 'userStratum';
-
-    readonly getCapabilitiesStratum  = new GetCapabilitiesStratum(layer => this._loadGetCapabilitiesStratum(layer));
-    readonly definitionStratum = new FullStratum();
-    readonly userStratum = new FullStratum();
+    constructor(terria: Terria) {
+        super(terria);
+        console.log('this: ' + this);
+        this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, new GetCapabilitiesStratum(layer => this._loadGetCapabilitiesStratum(layer)));
+    }
 
     @computed
     get layersArray(): ReadonlyArray<string> {
@@ -143,12 +145,8 @@ class WebMapServiceCatalogItem extends CatalogMember implements Mappable {
         }
     }
 
-    @computed
-    get getCapabilitiesUrl(): string {
-        const getCapabilitiesUrl = this.flattened.getCapabilitiesUrl;
-        if (getCapabilitiesUrl) {
-            return getCapabilitiesUrl;
-        } else if (this.uri) {
+    protected get defaultGetCapabilitiesUrl(): string {
+        if (this.uri) {
             return this.uri.clone().setSearch({
                 service: 'WMS',
                 version: '1.3.0',
@@ -204,8 +202,10 @@ class WebMapServiceCatalogItem extends CatalogMember implements Mappable {
     private _createImageryLayer(time) {
         // Don't show anything on the map until GetCapabilities finishes loading.
         // But do trigger loading so that we can eventually show something!
-        this.getCapabilitiesStratum.loadIfNeeded();
-        if (this.getCapabilitiesStratum.isLoading) {
+        // TODO should this be a more general loading check? eliminate the cast?
+        const stratum = <LoadableStratumState>this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName);
+        stratum.loadIfNeeded();
+        if (stratum.isLoading) {
             return undefined;
         }
 

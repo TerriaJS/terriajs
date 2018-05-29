@@ -1,7 +1,10 @@
-import CatalogMemberDefinition from './CatalogMemberDefinition';
+import mixCatalogMemberDefinition from './mixCatalogMemberDefinition';
 import primitiveProperty from './primitiveProperty';
+import ModelDefinition from './ModelDefinition';
+import mixUrlDefinition from './mixUrlDefinition';
+import mixGetCapabilitiesDefinition from './mixGetCapabilitiesDefinition';
 
-export default class WebMapServiceCatalogItemDefinition extends CatalogMemberDefinition {
+export default class WebMapServiceCatalogItemDefinition extends mixGetCapabilitiesDefinition(mixUrlDefinition(mixCatalogMemberDefinition(ModelDefinition))) {
     @primitiveProperty({
         type: 'string',
         name: 'Is GeoServer',
@@ -9,21 +12,6 @@ export default class WebMapServiceCatalogItemDefinition extends CatalogMemberDef
         default: false
     })
     isGeoServer: boolean;
-
-    @primitiveProperty({
-        type: 'string',
-        name: 'GetCapabilities URL',
-        description: 'The URL at which to access to the WMS GetCapabilities.'
-    })
-    getCapabilitiesUrl: string;
-
-    @primitiveProperty({
-        type: 'string',
-        name: 'GetCapabilities Cache Duration',
-        description: 'The amount of time to cache GetCapabilities responses.',
-        default: '1d'
-    })
-    getCapabilitiesCacheDuration: string;
 
     @primitiveProperty({
         type: 'string',

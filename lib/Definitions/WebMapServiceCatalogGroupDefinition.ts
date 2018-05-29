@@ -1,22 +1,11 @@
-import CatalogGroupDefinition from './CatalogGroupDefinition';
+import mixGroupDefinition from './mixGroupDefinition';
+import mixCatalogMemberDefinition from './mixCatalogMemberDefinition';
+import ModelDefinition from './ModelDefinition';
+import mixUrlDefinition from './mixUrlDefinition';
 import primitiveProperty from './primitiveProperty';
+import mixGetCapabilitiesDefinition from './mixGetCapabilitiesDefinition';
 
-export default class WebMapServiceCatalogGroupDefinition extends CatalogGroupDefinition {
-    @primitiveProperty({
-        type: 'string',
-        name: 'GetCapabilities URL',
-        description: 'The URL at which to access to the WMS GetCapabilities.'
-    })
-    getCapabilitiesUrl: string;
-
-    @primitiveProperty({
-        type: 'string',
-        name: 'GetCapabilities Cache Duration',
-        description: 'The amount of time to cache GetCapabilities responses.',
-        default: '1d'
-    })
-    getCapabilitiesCacheDuration: string;
-
+export default class WebMapServiceCatalogGroupDefinition extends mixGetCapabilitiesDefinition(mixGroupDefinition(mixUrlDefinition(mixCatalogMemberDefinition(ModelDefinition)))) {
     @primitiveProperty({
         type: 'boolean',
         name: 'Flatten',

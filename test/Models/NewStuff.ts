@@ -4,7 +4,7 @@ import WebMapServiceCatalogItem from '../../lib/Models/WebMapServiceCatalogItem3
 
 configure({
     enforceActions: true,
-    isolateGlobalState: true
+    computedRequiresReaction: true
 });
 
 describe('NewStuff', function() {

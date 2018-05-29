@@ -1,15 +1,19 @@
 import { computed, observable, runInAction } from 'mobx';
-import WebMapServiceCatalogGroupDefinition from '../Definitions/WebMapServiceCatalogGroupDefinition';
-import CatalogGroup from './CatalogGroupNew';
-import Model from './Model';
-import WebMapServiceCapabilities, { CapabilitiesLayer } from './WebMapServiceCapabilities';
-import defineLoadableStratum from './defineLoadableStratum';
-import defineStratum from './defineStratum';
-import * as proxyCatalogItemUrl from './proxyCatalogItemUrl';
-import WebMapServiceCatalogItem from './WebMapServiceCatalogItem3';
-import ModelReference from '../Definitions/ModelReference';
 import isReadOnlyArray from '../Core/isReadOnlyArray';
-import CatalogMember from './CatalogMemberNew';
+import ModelReference from '../Definitions/ModelReference';
+import WebMapServiceCatalogGroupDefinition from '../Definitions/WebMapServiceCatalogGroupDefinition';
+import CatalogMemberMixin from '../ModelMixins/CatalogMemberMixin';
+import GetCapabilitiesMixin from '../ModelMixins/GetCapabilitiesMixin';
+import GroupMixin from '../ModelMixins/GroupMixin';
+import UrlMixin from '../ModelMixins/UrlMixin';
+import Model from './Model';
+import Terria from './TerriaNew';
+import WebMapServiceCapabilities, { CapabilitiesLayer } from './WebMapServiceCapabilities';
+import WebMapServiceCatalogItem from './WebMapServiceCatalogItem3';
+import defineLoadableStratum from './defineLoadableStratum';
+import * as proxyCatalogItemUrl from './proxyCatalogItemUrl';
+import StratumOrder from './StratumOrder';
+import CommonStrata from './CommonStrata';
 
 class GetCapabilitiesValue {
     catalogGroup: WebMapServiceCatalogGroup;
@@ -38,15 +42,18 @@ class GetCapabilitiesValue {
             let model = this.catalogGroup.terria.getModelById(WebMapServiceCatalogItem, layerId);
             if (!model) {
                 model = new WebMapServiceCatalogItem(this.catalogGroup.terria);
-                model.definitionStratum.id = layerId;
+                // TODO: id should be part of the model, not the definition
+                const stratum = model.addStratum(CommonStrata.inheritedFromParentGroup);
+                stratum.id = layerId;
                 this.catalogGroup.terria.addModel(layerId, model);
             }
 
             // TODO: Should this be a "parentStratum" or "inheritedStratum" or something instead?
-            model.definitionStratum.url = this.catalogGroup.url;
-            model.definitionStratum.getCapabilitiesUrl = this.catalogGroup.getCapabilitiesUrl;
-            model.definitionStratum.getCapabilitiesCacheDuration = this.catalogGroup.getCapabilitiesCacheDuration;
-            model.definitionStratum.layers = layer.Name;
+            const stratum = model.addStratum(CommonStrata.inheritedFromParentGroup);
+            stratum.url = this.catalogGroup.url;
+            stratum.getCapabilitiesUrl = this.catalogGroup.getCapabilitiesUrl;
+            stratum.getCapabilitiesCacheDuration = this.catalogGroup.getCapabilitiesCacheDuration;
+            stratum.layers = layer.Name;
 
             result.push(layerId);
         });
@@ -65,30 +72,23 @@ class GetCapabilitiesValue {
 }
 
 const GetCapabilitiesStratum = defineLoadableStratum(WebMapServiceCatalogGroupDefinition, GetCapabilitiesValue, 'members');
-const FullStratum = defineStratum(WebMapServiceCatalogGroupDefinition);
 
-export default interface WebMapServiceCatalogGroup extends Model.InterfaceFromDefinition<WebMapServiceCatalogGroupDefinition> {}
+interface ModelWithDefinition extends Model.InterfaceFromDefinition<WebMapServiceCatalogGroupDefinition> {}
+class ModelWithDefinition extends Model<WebMapServiceCatalogGroupDefinition> {}
 
 @Model.definition(WebMapServiceCatalogGroupDefinition)
-export default class WebMapServiceCatalogGroup extends CatalogGroup { // TODO: avoid concrete inheritance?
+export default class WebMapServiceCatalogGroup extends GetCapabilitiesMixin(GroupMixin(CatalogMemberMixin(UrlMixin(ModelWithDefinition)))) {
     get type() {
         return 'wms-group';
     }
 
-    readonly flattened: Model.InterfaceFromDefinition<WebMapServiceCatalogGroupDefinition>;
+    constructor(terria: Terria) {
+        super(terria);
+        this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, new GetCapabilitiesStratum(layer => this._loadGetCapabilitiesStratum(layer)));
+    }
 
-    @observable modelStrata = ['getCapabilitiesStratum', 'definitionStratum', 'userStratum'];
-
-    readonly getCapabilitiesStratum  = new GetCapabilitiesStratum(layer => this._loadGetCapabilitiesStratum(layer));
-    readonly definitionStratum = new FullStratum();
-    readonly userStratum = new FullStratum();
-
-    @computed
-    get getCapabilitiesUrl(): string {
-        const getCapabilitiesUrl = this.flattened.getCapabilitiesUrl;
-        if (getCapabilitiesUrl) {
-            return getCapabilitiesUrl;
-        } else if (this.uri) {
+    protected get defaultGetCapabilitiesUrl(): string {
+        if (this.uri) {
             return this.uri.clone().setSearch({
                 service: 'WMS',
                 version: '1.3.0',

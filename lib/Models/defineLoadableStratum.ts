@@ -14,13 +14,13 @@ interface DefinitionConstructor<T> {
     metadata: object;
 }
 
-export interface LoadableLayerData {
-    isLoading: boolean;
-    loadPromise: Promise<void>;
+export interface LoadableStratumState {
+    readonly isLoading: boolean;
+    readonly loadPromise: Promise<void>;
     loadIfNeeded(): Promise<void>;
 }
 
-export type LoadableStratumInstance<T> = LoadableLayerData & T;
+export type LoadableStratumInstance<T> = LoadableStratumState & T;
 
 export interface LoadableStratumConstructor<T> {
     new(load: (value: T) => Promise<void>): LoadableStratumInstance<T>;
@@ -146,6 +146,8 @@ export default function defineLoadableStratum<TDefinition, TValue>(definition: D
         static TLoadValue: TValue;
         static TInstance: LoadableStratumInstance<any>;
 
+        readonly
+
         // We manually use atoms to avoid MobX complaining about a
         // computed modifying an observable.
         private _isLoadingAtom = createAtom('isLoadingAtom', () => {}, () => {});
@@ -231,6 +233,8 @@ export default function defineLoadableStratum<TDefinition, TValue>(definition: D
     properties.forEach(property => {
         Object.defineProperty(LoadableSubset.prototype, property, {
             get: function() {
+                // TODO: Just return undefined if still loading?
+                // That way the properties don't need to be so defensive.
                 return this._privateValues[property];
             },
             enumerable: true,
