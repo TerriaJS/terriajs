@@ -35,9 +35,11 @@ const MobileModalWindow = createReactClass({
 
         switch (viewState.mobileView) {
             case viewState.mobileViewOptions.data:
+                // No multiple catalogue tabs in mobile
                 return (
                     <DataCatalog terria={this.props.terria}
-                                 viewState={this.props.viewState} />
+                                 viewState={this.props.viewState}
+                                 items={this.props.terria.catalog.group.items}/>
                 );
             case viewState.mobileViewOptions.preview:
                 return (
@@ -65,7 +67,8 @@ const MobileModalWindow = createReactClass({
         this.props.viewState.searchState.catalogSearchText = '';
     },
 
-    componentWillReceiveProps() {
+    /* eslint-disable-next-line camelcase */
+    UNSAFE_componentWillReceiveProps() {
         if ((this.props.terria.nowViewing.items.length === 0) &&
             (this.props.viewState.mobileView === this.props.viewState.mobileViewOptions.nowViewing)) {
             this.props.viewState.switchMobileView(null);

@@ -11,7 +11,7 @@ import SearchBox from '../Search/SearchBox.jsx';
 import SidebarSearch from '../Search/SidebarSearch.jsx';
 import Workbench from '../Workbench/Workbench.jsx';
 import Icon from "../Icon.jsx";
-import { removeMarker } from '../Search/SearchMarkerUtils';
+import { removeMarker } from '../../Models/LocationMarkerUtils';
 
 import Styles from './side-panel.scss';
 
@@ -60,7 +60,7 @@ const SidePanel = createReactClass({
         this.props.viewState.searchState.locationSearchText = newText;
 
         if (newText.length === 0) {
-            removeMarker(this.props.terria, this.props.viewState);
+            removeMarker(this.props.terria);
         }
     },
 
@@ -81,7 +81,8 @@ const SidePanel = createReactClass({
                     <SearchBox onSearchTextChanged={this.changeSearchText}
                                onDoSearch={this.search}
                                onFocus={this.startLocationSearch}
-                               searchText={searchState.locationSearchText} />
+                               searchText={searchState.locationSearchText}
+                               placeholder="Search for locations" />
                     <div className={Styles.addData}>
                         <button type='button' onClick={this.onAddDataClicked} className={Styles.button}>
                             <Icon glyph={Icon.GLYPHS.add}/>Add data
@@ -103,7 +104,7 @@ const SidePanel = createReactClass({
                         <Otherwise>
                             <div className={Styles.workbenchEmpty}>
                                 <div>Your workbench is empty</div>
-                                <p><strong>Click 'Add data' above to:</strong></p>
+                                <p><strong>Click &apos;Add data&apos; above to:</strong></p>
                                 <ul>
                                     <li>Browse the Data Catalogue</li>
                                     <li>Load your own data onto the map</li>

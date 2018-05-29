@@ -3,6 +3,165 @@
 Change Log
 ==========
 
+### v6.0.2
+
+* Fixed a bug that prevented interaction with the 3D map when the splitter was active.
+
+### v6.0.1
+
+* Added `parameters` property to `ArcGisMapServerCatalogItem`, allowing arbitrary parameters to be passed in tile and feature info requests.
+
+### v6.0.0
+
+* Breaking Changes:
+   * An application-level polyfill suite is now required for Internet Explorer 9 and 10 compatibility. The easiest approach is to add `<script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>` to the `<head>` element of your application's HTML page.
+   * In TerriaJS v7.0.0 (the _next_ major release), a polyfill suite may be required for Internet Explorer 11 as well. Adopting the approach above now will ensure you don't need to worry about it then.
+* Overhauled support for printing. There is now a Print button on the Share panel that will provide a much better printable form of the map than the browser's built-in print feature. If a user uses the browser's print button instead, a message at the top will suggest using the TerriaJS Print feature and open the Share panel. Calling `window.print` (e.g. on a TerriaJS instance inside an iframe) will invoke the new TerriaJS print feature directly.
+* Fixed a bug that caused `Leaflet.captureScreenshot` to show all layers on both sides even with the splitter active.
+* Fixed a bug that prevented some vector features from appearing in `Leaflet.captureScreenshot`.
+* Added ability to move the splitter thumb position vertically so that users can move it to prevent occlusions.
+* Added `TerriaJsonCatalogFunction`. This catalog function allows an arbitrary HTTP GET to be invoked with user-provided parameters and return TerriaJS catalog JSON.
+* Fixed a bug that could cause the feature info panel to sometimes be nearly transparent in Internet Explorer 11.
+* Fixed a bug that caused an expanded preview chart's workbench item to erroneously show the date picker.
+* Updated `MagdaCatalogItem` to match Magda project
+
+### 5.7.0
+
+* Added `MagdaCatalogItem` to load details of a catalog item from [Magda](https://github.com/TerriaJS/magda).
+* Fixed a bug that could cause a time-dynamic WMS layer to fail to ever show up on the map if the initial time on the timeline was outside the intervals where the layer had data.
+* Fixed a bug which could cause a crash during load from share link when the layer default is to not `useOwnClock` but the share link has `useOwnClock` set.
+* Fixed an issue that caused a 'This data source is already shown' error in particular circumstances.
+
+### 5.6.4
+
+* Fixed a bug causing an error message when adding tabular data to the workbench before it was loaded.
+
+### 5.6.3
+
+* Display of Lat Lon changed from 3 deciml places to 5 decimal places - just over 1m precision at equator.
+* Fixed a bug that caused the timeline to appear when changing the time on the workbench for a layer not attached to the timeline.
+* The workbench date/time picker is now available for time varying point and region CSVs.
+* Fixed a bug that caused the workbench date picker controls to disappear when the item was attached to the timeline and the timeline's current time was outside the valid range for the item.
+
+### 5.6.2
+
+* Renamed search marker to location marker.
+* Added the clicked coordinates to the bottom of the feature info panel. Clicking the marker icon will cause the location to be indicated on the map.
+* The location marker is now included in shared map views.
+* Fixed a bug that could cause split WMS layers to show the incorrect layer data for the date shown in the workbench.
+* Refactored current time handling for `CatalogItem` to reduce the complexity and number of duplicated current time states.
+* Fixed feature info updating when the time is changed from the workbench for `TableCatalogItem`.
+* Change the workbench catalog item date picker so that updating the date does not disable the timeslider.
+* Fix a bug that meant that, when the current time was updated on an `ImageryCatalogItem` while the layer wasn't shown, the old time was still shown when the layer was re-enabled.
+* Added `{{terria.currentTime}}` to feature info template.
+* Added a way to format times within a feature info tempate. E.g. `{{#terria.formatDateTime}}{"format": "dd-mm-yyyy HH:MM:ss"}{{terria.currentTime}}{{/terria.formatDateTime}}`.
+* Fixed a bug that caused the selection indicator to float strangely when visiting a share link with a selected feature.
+* Fixed a bug that caused a region to be selected even when clicking on a hole in that region.
+* Fixed a bug that prevented the selection indicator from following moving features on the 2D map.
+* Fixed a bug that caused Leaflet to stop rendering further points in a layer and throw errors when calculating extent when one point had invalid characters in the latitude or longitude field.
+* We now default to `autoPlay: false` if it's not specified in `config.json`.
+* Changed search box placeholders to more precisely reflect their functionality.
+* CartoDB basemaps are now always loaded over HTTPS.
+
+### 5.6.1
+
+* Fixed a bug that could cause the workbench UI to hang when toggling concepts, particularly for an `SdmxJsonCatalogItem`.
+* Added previous and next buttons to workbench catalog item date picker.
+
+### 5.6.0
+
+* Upgraded to Cesium 1.41.
+
+### 5.5.7
+
+* Added support for using tokens to access WMS layers, particularly using the WMS interface to ArcGIS servers.
+
+### 5.5.6
+
+* Tweaked the sizing of the feature info panel.
+* Fixed a bug that caused `ArcGisMapServerCatalogItem` to always use the server's single fused map cache, if available. Now, if the `layers` property is specified, we request individual dynamic layers and ignore the fused map cache.
+
+### 5.5.5
+
+* Fixed a bug that caused the feature info panel to stop working after clicking on a location search marker.
+* Added support for ArcGIS tokens on the 2D map. Previously, tokens only worked reliably in 3D.
+* Improved handling of tile errors, making it more consistent between 2D and 3D.
+* Fixed a bug that prevented the Add Data button from working Internet Explorer 9 unless the DevTools were also open.
+* Improved the sizing of the feature info panel so it is less likely to completely obscure the map.
+
+### 5.5.4
+
+* Fixed a serious bug that prevented opening the Data Catalog in Internet Explorer.
+* Fixed some problems with the Terria Spatial Analytics `CatalogFunctions`.
+
+### 5.5.3
+
+* Fixed a bug in SDMX-JSON when using `cannotSum`.
+
+### 5.5.2
+
+* Deprecated SDMX-JSON catalog items' `cannotDisplayPercentMap` in favour of `cannotSum`.
+* Updated `cannotSum` so that it does not display a total in some cases, as well as suppressing the regional-percentage checkbox.  `cannotSum` can be either a mapping of concept ids to the values that prevent summing, or simply `true` to always prevent summing.
+* Fixed a bug that caused an error when Splitting a layer that does not have a `clock`.
+
+### 5.5.1
+
+* Added `cannotDisplayPercentMap` to SDMX-JSON catalog items, to optionally turn off the "display as a percentage of regional total" checkbox when the data is not a count (eg. a rate or an average).
+
+### 5.5.0
+
+* Added the ability to split the screen into a left-side and right-side, and show raster and region mapped layers on only one side of the splitter.
+* Added the ability to use a tabbed catalog in the explorer panel on desktop site. Setting `tabbedCatalog` parameter to `true` in `config.json` causes top-level groups in the catalog to list items in separate explorer panel tabs.
+* Added the ability to use vector tile properties in feature info templates when using region mapping (data row attributes will overwrite vector tile properties with the same name)
+* Properties available in feature info templates are now JSON parsed and replaced by their javascript object if they start with `[` or `{` and parse successfully
+* Decreased flickering of time-varying region mapped layers by pre-rendering the next time interval.
+* Fixed a bug in `WebMapServiceCatalogItem` that could cause a WMS time time dimension to be interpreted incorrectly if it was specified only using dates (not times) and with a periodicity of less than a day.
+
+### 5.4.5
+
+* Improved behaviour of SDMX-JSON items when no data is available.
+
+### 5.4.4
+
+* Added support for specifying namespaced layer names in the `WebMapServiceCatalogItem` `layers` property.
+* Made TerriaJS tolerant of XML/HTML inside text elements in WMS GetCapabilities without being properly wrapped in `CDATA`.
+
+### 5.4.3
+
+* Fixed a build problem on case-sensitive file systems (e.g. most Linux systems).
+
+### 5.4.2
+
+* We no longer show the Zoom To button on the workbench when there is no rectangle to zoom to.
+
+### 5.4.1
+
+* Fixed a bug when sharing SDMX-JSON catalog items.
+* Improved display of "Add Data" panel on small screens when Feedback and Feature Info panels are open.
+* Added "search in data catalog" link to mobile search.
+* Added a button to automatically copy share url into clipboard in share panel.
+* Added `initFragmentPaths` property to the `parameters` section of `config.json`.  It can be used to specify an array of base paths for resolving init fragments in the URL.
+* Modified `CkanCatalogItem` to exclude files that advertise themselves as KML files but have the file extension .ZIP.
+* Removed "View full size image" link on the share panel.  Chrome 60 removed the ability to navigate to a data URI, and other browsers are expected to follow this lead.
+
+### 5.4.0
+
+* Breaking change: removed some old types that haven't been used since the new React-based user interface in v4.0.0, specifically `KnockoutHammerBinding`, `KnockoutMarkdownBinding`, `PopupMessageConfirmationViewModel`, `PopupMessageViewModel`, and `PopupViewModel`.
+* Added the ability to use tokens from terriajs-server for layers requiring ESRI tokens.
+* Catalog group items are now sorted by their in-catalog name
+
+### 5.3.0
+
+* Added the ability to use the analytics region picker with vector tile region mapping by specifiying a WMS server & layer for analytics only.
+* Updated the client side validation to use the server-provided file size limit when drag/dropping a file requiring the conversion service.
+* `zoomOnEnable` now works even for a catalog item that is initially enabled in the catalog.  Previously, it only worked for catalog items enabled via the user interface or otherwise outside of the load process.
+* Added `initialTimeSource` property to `CsvCatalogItem` so it is possible to specify the value of the animation timeline at start from init files.
+* Added to documentation for customizing data appearance.
+* Added `CatalogShortcut` for creating tool items for linking to a `CatalogItem`.
+* Renamed `ViewState.viewCatalogItem()` to `viewCatalogMember` to reflect that it can be used for all `CatalogMembers`, not just `CatalogItems`.
+* Fixed a bug that could cause a crash when switching to 2D when the `initialView` was just a `Rectangle` instead of a `CameraView`.
+* Fixed a bug that caused multiple layers with generated, gradient legends to all show the same legend on the Workbench.
+
 ### 5.2.11
 
 * Pinned `urijs` to v1.18.10 to work around a breaking change in v1.18.11.

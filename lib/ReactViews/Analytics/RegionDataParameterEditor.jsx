@@ -22,11 +22,13 @@ const RegionDataParameterEditor = createReactClass({
         parameter: PropTypes.object
     },
 
-    componentWillMount() {
+    /* eslint-disable-next-line camelcase */
+    UNSAFE_componentWillMount() {
         this.catalogItemDetails = {};
     },
 
-    componentWillReceiveProps(nextProps) {
+    /* eslint-disable-next-line camelcase */
+    UNSAFE_componentWillReceiveProps(nextProps) {
         this.catalogItemDetails = {};
     },
 
@@ -53,7 +55,7 @@ const RegionDataParameterEditor = createReactClass({
         if (newValue) {
             value[column.name] = {
                 regionProvider: this.regionProvider(),
-                regionColumn: catalogItem.regionMapping.regionDetails[0].column,
+                regionColumn: catalogItem.regionMapping.tableStructure.getColumnWithNameOrId(catalogItem.regionMapping.regionDetails[0].columnName),
                 valueColumn: column
             };
 
@@ -86,7 +88,7 @@ const RegionDataParameterEditor = createReactClass({
             if (!this.props.parameter.singleSelect || Object.keys(value).length === 1) {
                 value[column.name] = {
                     regionProvider: this.regionProvider(),
-                    regionColumn: catalogItem.regionMapping.regionDetails[0].column,
+                    regionColumn: catalogItem.regionMapping.tableStructure.getColumnWithNameOrId(catalogItem.regionMapping.regionDetails[0].columnName),
                     valueColumn: column
                 };
             }
@@ -94,7 +96,7 @@ const RegionDataParameterEditor = createReactClass({
 
         return defined(value[column.name]) &&
             value[column.name] &&
-            value[column.name].regionColumn === catalogItem.regionMapping.regionDetails[0].column &&
+            value[column.name].regionColumn === catalogItem.regionMapping.tableStructure.getColumnWithNameOrId(catalogItem.regionMapping.regionDetails[0].columnName) &&
             value[column.name].valueColumn === column;
     },
 
@@ -176,7 +178,7 @@ const RegionDataParameterEditor = createReactClass({
             <div className={Styles.parameterEditorImportantNote}>
                 No characteristics are available because you have not added any data to the map for this region
                 type, {this.regionProvider() ? this.regionProvider().regionType : 'None'}.
-                You may use your own data with this analysis by creating a CSV following the <a target="_blank" href="https://github.com/TerriaJS/nationalmap/wiki/csv-geo-au">csv-geo-au</a> guidelines
+                You may use your own data with this analysis by creating a CSV following the <a target="_blank" rel="noopener noreferrer" href="https://github.com/TerriaJS/nationalmap/wiki/csv-geo-au">csv-geo-au</a> guidelines
                 and dragging and dropping it onto the map.
             </div>
         );

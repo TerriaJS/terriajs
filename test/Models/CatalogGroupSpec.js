@@ -98,6 +98,36 @@ describe('CatalogGroup', function() {
         }).then(done).otherwise(done.fail);
     });
 
+    it('sorts correctly when nameInCatalog is provided', function(done) {
+        group.updateFromJson({
+            type: 'group',
+            items: [
+                {
+                    name: '1',
+                    type: 'group',
+                    url: 'http://not.valid'
+                },
+                {
+                    name: '2',
+                    type: 'group',
+                    nameInCatalog:'4',
+                    url: 'http://not.valid.either'
+                },
+                {
+                    name: '3',
+                    type: 'group',
+                    url: 'http://not.valid.either'
+                }
+            ]
+        }).then(function() {
+            expect(group.items.length).toBe(3);
+            expect(group.items[0].name).toBe('1');
+            expect(group.items[1].name).toBe('3');
+            expect(group.items[2].name).toBe('2');
+        }).then(done).otherwise(done.fail);
+    });
+
+
     it('sorts items correctly when there is a number in the middle', function(done) {
         group.updateFromJson({
             type: 'group',

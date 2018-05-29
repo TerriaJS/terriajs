@@ -267,10 +267,9 @@ describe('CsvCatalogItem with lat and lon', function() {
             // The date '2015-08-01' appears to be interpreted as starting at midnight in the local time zone (at least on Chrome).
             // Eg. in Sydney summer, JulianDate.toIso8601(earlyFeature.availability.start) returns "2015-07-31T14:00:00Z".
             expect(TimeInterval.contains(earlyFeature.availability, JulianDate.fromIso8601('2015-08-01'))).toBe(true);
-            // Also test the duration of the interval is just under one day (the time between input rows).
+            // Also test the duration of the interval is one day (the time between input rows).
             var durationInSeconds = JulianDate.secondsDifference(earlyFeature.availability.stop, earlyFeature.availability.start);
-            expect(durationInSeconds).toBeGreaterThan(23 * 3600);  // more than 23 hours
-            expect(durationInSeconds).toBeLessThan(24 * 3600);  // but less than 24 hours
+            expect(durationInSeconds).toBe(24 * 3600);  // 24 hours
         }).otherwise(fail).then(done);
     });
 
@@ -307,10 +306,9 @@ describe('CsvCatalogItem with lat and lon', function() {
             // The date '2015-08-01' appears to be interpreted as starting at midnight in the local time zone (at least on Chrome).
             // Eg. in Sydney summer, JulianDate.toIso8601(earlyFeature.availability.start) returns "2015-07-31T14:00:00Z".
             expect(TimeInterval.contains(earlyFeature.availability, JulianDate.fromIso8601('2015-08-01'))).toBe(true);
-            // Also test the duration of the interval is just under one day (the time between input rows).
+            // Also test the duration of the interval is one day (the time between input rows).
             var durationInSeconds = JulianDate.secondsDifference(earlyFeature.availability.stop, earlyFeature.availability.start);
-            expect(durationInSeconds).toBeGreaterThan(23 * 3600);  // more than 23 hours
-            expect(durationInSeconds).toBeLessThan(24 * 3600);  // but less than 24 hours
+            expect(durationInSeconds).toBe(24 * 3600);  // 24 hours
         }).otherwise(fail).then(done);
     });
 
@@ -396,12 +394,12 @@ describe('CsvCatalogItem with lat and lon', function() {
 
             expect(intervals.length).toBe(6); // 13 rows over 6 days
 
-            // interval length is 1 houor
+            // interval length is 1 hour
             expect(intervals.get(0).start).toEqual(JulianDate.fromIso8601('2015-08-01'));
-            expect(intervals.get(0).stop).toEqual(JulianDate.fromIso8601('2015-08-01T01:00'));
+            expect(intervals.get(0).stop).toEqual(JulianDate.fromIso8601('2015-08-01T01:00Z'));
 
             expect(intervals.start).toEqual(JulianDate.fromIso8601('2015-08-01'));
-            expect(intervals.stop).toEqual(JulianDate.fromIso8601('2015-08-06T01:00'));
+            expect(intervals.stop).toEqual(JulianDate.fromIso8601('2015-08-06T01:00Z'));
         }).otherwise(fail).then(done);
     });
 
@@ -947,7 +945,7 @@ describe('CsvCatalogItem with region mapping', function() {
         csvItem.load().then(function() {
             var regionMapping = csvItem.regionMapping;
             var j = JulianDate.fromIso8601;
-            regionMapping._catalogItem.terria.clock.currentTime = j('2015-08-08');
+            regionMapping._catalogItem.clock.currentTime = j('2015-08-08');
             csvItem.isEnabled = true;
             var regionDetails = regionMapping.regionDetails;
             expect(regionDetails).toBeDefined();
@@ -956,7 +954,7 @@ describe('CsvCatalogItem with region mapping', function() {
             expect(csvItem.tableStructure.columnsByType[VarType.TIME].length).toEqual(1);
             expect(csvItem.tableStructure.columnsByType[VarType.TIME][0].julianDates[0]).toEqual(j('2015-08-07'));
             // Test that the right regions have been colored (since the datasource doesn't expose the entities).
-            // On 2015-08-07, only postcodes 3121 and 3122 have values. On neighboring dates, so do 3123 and 3124.
+            // On 2015-08-08, only postcodes 3121 and 3122 have values. On neighboring dates, so do 3123 and 3124.
             var recolorFunction = ImageryProviderHooks.addRecolorFunc.calls.argsFor(0)[1];
             var regionNames = regionDetail.regionProvider.regions.map(getId);
 
@@ -975,7 +973,7 @@ describe('CsvCatalogItem with region mapping', function() {
         csvItem.load().then(function() {
             var regionMapping = csvItem.regionMapping;
             var j = JulianDate.fromIso8601;
-            regionMapping._catalogItem.terria.clock.currentTime = j('2015-08-08');
+            regionMapping._catalogItem.clock.currentTime = j('2015-08-08');
             csvItem.isEnabled = true;
             var regionDetails = regionMapping.regionDetails;
             expect(regionDetails).toBeDefined();
@@ -984,7 +982,7 @@ describe('CsvCatalogItem with region mapping', function() {
             expect(csvItem.tableStructure.columnsByType[VarType.TIME].length).toEqual(1);
             expect(csvItem.tableStructure.columnsByType[VarType.TIME][0].julianDates[0]).toEqual(j('2015-08-07'));
             // Test that the right regions have been colored (since the datasource doesn't expose the entities).
-            // On 2015-08-07, only postcodes 3121 and 3122 have values. On neighboring dates, so do 3123 and 3124.
+            // On 2015-08-08, only postcodes 3121 and 3122 have values. On neighboring dates, so do 3123 and 3124.
             var recolorFunction = ImageryProviderHooks.addRecolorFunc.calls.argsFor(0)[1];
             var regionNames = regionDetail.regionProvider.regions.map(getId);
 
@@ -1006,7 +1004,7 @@ describe('CsvCatalogItem with region mapping', function() {
             var j = JulianDate.fromIso8601;
             var nineOclock = j('2015-08-08'); // midnight local time
             JulianDate.addHours(nineOclock, 9, nineOclock);
-            regionMapping._catalogItem.terria.clock.currentTime = nineOclock;
+            regionMapping._catalogItem.clock.currentTime = nineOclock;
             csvItem.isEnabled = true;
             var regionDetails = regionMapping.regionDetails;
             expect(regionDetails).toBeDefined();

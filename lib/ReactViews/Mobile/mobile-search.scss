@@ -26,9 +26,21 @@
 .location {
   height: calc(100vh - #{$workbench-header + $logo-height});
 
-  @media screen and (max-width : $sm) {
+  @media (max-width : $sm) {
     height: calc(100vh - #{$mobile-header-height + $modal-header-height});
   }
+}
+
+.provider-result {
+  margin-top: $padding-small;
+  .items{
+    display: none;
+  }
+}
+
+.btnList{
+  composes: clearfix from '../../Sass/common/_base.scss';
+  composes: list-reset from '../../Sass/common/_base.scss';
 }
 
 @include empty-module("data")

@@ -128,8 +128,9 @@
   composes: btn from '../../../../Sass/common/_buttons.scss';
   margin-top: -2px;
   svg {
-    height: 24px;
-    width: 24px;
+    height: 14px;
+    width: 14px;
+    margin: 5px;
     fill: $text-light;
     &:focus, &:hover {
       background: $modal-highlight;
@@ -151,8 +152,9 @@
   composes: btnOpen;
   composes: heading;
   svg {
-    height: 35px;
-    width: 35px;
+    height: 21px;
+    width: 21px;
+    margin: 7px;
     fill: $text-light;
     position: absolute;
     left: 0;

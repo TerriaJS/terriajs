@@ -421,7 +421,7 @@ describe('TableStructure', function() {
         var tableStructure = TableStructure.fromJson(data);
         tableStructure.setActiveTimeColumn();
         expect(tableStructure.finishJulianDates).toEqual([
-            JulianDate.fromIso8601('2016-01-03T12:15:29Z'),
+            JulianDate.fromIso8601('2016-01-03T12:15:30Z'),
             JulianDate.fromIso8601('2016-01-03T12:16:00Z') // Final one should have the average spacing, 30 sec.
         ]);
     });
@@ -431,8 +431,8 @@ describe('TableStructure', function() {
         var tableStructure = TableStructure.fromJson(data);
         tableStructure.setActiveTimeColumn();
         expect(tableStructure.finishJulianDates).toEqual([
-            JulianDate.fromIso8601('2016-01-03T12:15:00.38Z'), // Shaves off 5% of 0.4, ie. 0.02.
-            JulianDate.fromIso8601('2016-01-03T12:15:00.97Z'), // Shaves off 5% of 0.6, ie. 0.03.
+            JulianDate.fromIso8601('2016-01-03T12:15:00.40Z'),
+            JulianDate.fromIso8601('2016-01-03T12:15:01Z'),
             JulianDate.fromIso8601('2016-01-03T12:15:01.5Z') // Average spacing is 0.5 second.
         ]);
     });
@@ -500,4 +500,70 @@ describe('TableStructure', function() {
         ]);
     });
 
+    describe('Time slider initial time as specified by initialTimeSource ', function() {
+
+        // Future developers take note: some of these tests will stop working sometime after August 3015.
+        it('should be start if "start" set', function() {
+            var tableStructure = new TableStructure('test', {initialTimeSource: 'start'});
+            // Note: Specifying the time in this way means that the end date will be after 2015-08-09, but since we don't care particularly about the end date this is enough precision for this test.
+            var data = [['date'], ['2013-08-07T00:00:00.00Z'], ['2015-08-09T00:00:00.00Z']];
+            TableStructure.fromJson(data, tableStructure);
+            tableStructure.setActiveTimeColumn();
+
+            var currentTime = JulianDate.toIso8601(tableStructure.clock.currentTime, 3);
+            // Do not compare time, because on some systems the second could have ticked over between getting the two times.
+            currentTime = currentTime.substr(0, 10);
+            expect(currentTime).toBe('2013-08-07');
+        });
+
+        it('should be current time if "present" set', function() {
+            var tableStructure = new TableStructure('test', {initialTimeSource: 'present'});
+            // Note: Specifying the time in this way means that the end date will be after 2015-08-09, but since we don't care particularly about the end date this is enough precision for this test.
+            var data = [['date'], ['2013-08-07T00:00:00.00Z'], ['3115-08-09T00:00:00.00Z']];
+            TableStructure.fromJson(data, tableStructure);
+            tableStructure.setActiveTimeColumn();
+
+            var dateNow = (new Date()).toISOString();
+            var currentTime = JulianDate.toIso8601(tableStructure.clock.currentTime, 3);
+            // Do not compare time, because on some systems the second could have ticked over between getting the two times.
+            dateNow = dateNow.substr(0, 10);
+            currentTime = currentTime.substr(0, 10);
+            expect(currentTime).toBe(dateNow);
+        });
+
+        it('should be last time if "end" set', function() {
+            var tableStructure = new TableStructure('test', {initialTimeSource: 'end', finalEndJulianDate: JulianDate.fromIso8601('2015-08-09T00:00:00.00Z')});
+            var data = [['date'], ['2013-08-07T00:00:00.00Z']];
+            TableStructure.fromJson(data, tableStructure);
+            tableStructure.setActiveTimeColumn();
+
+            var currentTime = JulianDate.toIso8601(tableStructure.clock.currentTime, 3);
+            // Do not compare time, because on some systems the second could have ticked over between getting the two times.
+            currentTime = currentTime.substr(0, 10);
+            expect(currentTime).toBe('2015-08-09');
+        });
+
+        it('should be set to date specified if date is specified', function() {
+            var tableStructure = new TableStructure('test', {initialTimeSource: '2015-08-08T00:00:00.00Z'});
+            // Note: Specifying the time in this way means that the end date will be after 2015-08-11, but since we don't care particularly about the end date this is enough precision for this test.
+            var data = [['date'], ['2013-08-07T00:00:00.00Z'], ['2015-08-11T00:00:00.00Z']];
+            TableStructure.fromJson(data, tableStructure);
+            tableStructure.setActiveTimeColumn();
+
+            var currentTime = JulianDate.toIso8601(tableStructure.clock.currentTime, 3);
+            // Do not compare time, because on some systems the second could have ticked over between getting the two times.
+            currentTime = currentTime.substr(0, 10);
+            expect(currentTime).toBe('2015-08-08');
+        });
+
+        it('should throw if a rubbish string is specified', function() {
+            var tableStructure = new TableStructure('test', {initialTimeSource: '2015z08-08'});
+            var data = [['date'], ['2013-08-07T00:00:00.00Z'], ['2015-08-11T00:00:00.00Z']];
+            TableStructure.fromJson(data, tableStructure);
+
+            expect(function() {
+                tableStructure.setActiveTimeColumn();
+            }).toThrow();
+        });
+    });
 });

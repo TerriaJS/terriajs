@@ -25,7 +25,7 @@ const DragDropFile = createReactClass({
             .then(addedCatalogItems => {
                 if (addedCatalogItems.length > 0) {
                     this.props.viewState.myDataIsUploadView = false;
-                    this.props.viewState.viewCatalogItem(addedCatalogItems[0]);
+                    this.props.viewState.viewCatalogMember(addedCatalogItems[0]);
                 }
             });
 

@@ -13,13 +13,9 @@
   right: 0;
   left: 0;
 
-  @media screen and (min-width: $md) {
+  @media (min-width: $md) {
     padding-left: 30px + $work-bench-width;
     padding-right: 30px;
-  }
-
-  @media print {
-    display: none;
   }
 }
 

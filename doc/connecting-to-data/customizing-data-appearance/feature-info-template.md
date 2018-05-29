@@ -68,18 +68,28 @@ The preferred way to format numbers is using the `formats` option, eg:
                 "template": "Pixel colour: <b>Red={{Red}} Blue={{Blue}} Green={{Green}}</b>.",
                 "formats": {
                   "Red": {
+                    "type": "number",
                     "maximumFractionDigits": 2
                   },
                   "Green": {
+                    "type": "number",
                     "maximumFractionDigits": 2
                   },
                   "Blue": {
+                    "type": "number",
                     "maximumFractionDigits": 2
                   }
                 }
               }
 
-The supported format options are `"maximumFractionDigits": X` (to set the number of decimal places to X), `"useGrouping": true` (to show thousands separators), and `"style": "percent"` (eg. to show 0.15 as 15%).
+`"type"` specifies the type of formatting that will be applied to the property. Here we are using `"number"` formatting which is also the default formatting if `"type"` is not supplied.
+
+The supported format options are:
+
+- `"maximumFractionDigits": X`: To reduce the number of decimal places to a maximum of X digits.
+- `"minimumFractionDigits": X`: To increase the number of decimal places to a minimum of X digits.
+- `"useGrouping": true`: To show thousands separators.
+- `"style": "percent"`: To show 0.15 as 15%.
 
 A second method is to use `terria.formatNumber` directly in the template. This accepts an initial JSON string describing the same options as above. To simplify the notation, the quotes around the keys are optional here.
 
@@ -92,6 +102,26 @@ To URL-encode a value in a template, use `terria.urlEncode` or `terria.urlEncode
     Test: {{#terria.urlEncode}}http://example.com/a b{{/terria.urlEncode}}
     Test: {{#terria.urlEncodeComponent}}W/HOE#1{{/terria.urlEncodeComponent}}
 
+## Formatting dates
+
+Similar to formatting numbers you can format dates in the `"formats"` section by suppliying `"dateTime"` in the `"type"` property, eg:
+
+              "featureInfoTemplate": {
+                "template": "Date: {{Date}}",
+                "formats": {
+                  "Date": {
+                    "type": "dateTime";
+                    "format": "dd-mm-yyyy HH:MM:ss";
+                  }
+                }
+              }
+
+The date format style used for the `"format"` property is the style from the [npm dateformat package](https://www.npmjs.com/package/dateformat#usage), e.g. `"dd-mm-yyyy HH:MM:ss"` or `"isoDateTime"`.
+
+As with number you can also use `terria.dateTimeformat` directly in the template. This accepts an initial JSON string describing the same options as above.
+
+              "featureInfoTemplate": "template": "{{#terria.formatDateTime}}{"format": "dd-mm-yyyy HH:MM:ss"}2017-11-23T08:47:53Z{{/terria.formatDateTime}}</b>."
+
 ## Time-series charts
 
 For features with time-varying table-based data structures (eg. CSV, SOS2, SDMX-JSON, if there is a time column), the feature info panel also includes a chart of the data over time, eg.
@@ -100,12 +130,16 @@ For features with time-varying table-based data structures (eg. CSV, SOS2, SDMX-
 
 You can place this chart in your template using `{{terria.timeSeries.chart}}`.  Alternatively, you can access the following component information:
 
-- `{{terria.timeSeries.xName}}` - the x-column name, with any double-quotes removed.
-- `{{terria.timeSeries.yName}}` - the y-column name, with any double-quotes removed.
+- `{{terria.timeSeries.xName}}` - the x-column name
+- `{{terria.timeSeries.yName}}` - the y-column name
 - `{{terria.timeSeries.title}}`
 - `{{terria.timeSeries.id}}`
 - `{{terria.timeSeries.units}}` - the column units as a comma-separated string.
 - `{{terria.timeSeries.data}}` - the data as a comma-separated string.
+
+Please note:
+* If any of the component information above contains double-quotes, double quotes will be removed before TerriaJS processes the template further.
+* If any of the component information above is used as part of tag attributes, it must be surrounded by double-quotes. e.g. `<chart y-column="{{terria.timeSeries.yName}}"></chart>`
 
 So you could reconstruct the chart manually as:
 ```
@@ -122,6 +156,8 @@ or use this as a basis to customise the chart.
 ## Other supporting data
 
 The clicked point's latitude and longitude are also available as `{{terria.coords.latitude}}` and `{{terria.coords.longitude}}`.
+
+The current time for the layer is avaliable as `{{terria.currentTime}}`.
 
 ## More examples
 

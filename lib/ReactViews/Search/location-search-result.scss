@@ -1,29 +1,51 @@
 @import '../../Sass/common/mixins';
 @import '~terriajs-variables';
 
-.heading {
+.heading{
   composes: btn from '../../Sass/common/_buttons.scss';
-  padding: $padding-small;
+  padding: $padding;
   position: relative;
   width: 100%;
   text-align: left;
   font-weight: bold;
-
+  &, &:hover, &:focus{
+    box-shadow: inset 0 -1px 0 0 rgba(255,255,255,0.15);
+  }
   @media (min-width: $md) {
     color: $text-light;
   }
-
   svg{
     height: 20px;
     width: 20px;
     position: absolute;
-    right: $padding-small;
-    top: $padding-small;
+    right: $padding;
+    top: $padding;
+  }
+}
+
+.footer {
+  composes: btn from '../../Sass/common/_buttons.scss';
+  padding: $padding;
+  font-size: 12px;
+  position: relative;
+  width: 100%;
+  text-align: left;
+  box-shadow: none;
+  @media (min-width: $md) {
+    color: $text-light;
+  }
+  svg{
+    height: 20px;
+    width: 20px;
+    position: absolute;
+    right: $padding;
+    top: $padding;
   }
 }
 
 .provider-result {
   margin-top: $padding-small;
+  background-color: $dark-with-overlay;
   .items{
     display: none;
   }
@@ -54,5 +76,3 @@
   composes: clearfix from '../../Sass/common/_base.scss';
   composes: list-reset from '../../Sass/common/_base.scss';
 }
-
-

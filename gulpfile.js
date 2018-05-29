@@ -209,7 +209,6 @@ gulp.task('user-guide', ['make-schema'], function() {
     // Also replace swap in the actual path to mkdocs-material in node_modules.
     var mkdocsyml = fse.readFileSync('build/mkdocs.yml', 'UTF-8');
     mkdocsyml = mkdocsyml.replace(/README\.md/g, 'index.md');
-    mkdocsyml = mkdocsyml.replace(/mkdocs-material\/material/, path.dirname(require.resolve('mkdocs-material/material/base.html')));
     fse.writeFileSync('build/mkdocs.yml', mkdocsyml, 'UTF-8');
 
     generateCatalogMemberPages('wwwroot/schema', 'build/doc/connecting-to-data/catalog-type-details');

@@ -9,7 +9,7 @@ import Rectangle from 'terriajs-cesium/Source/Core/Rectangle';
 
 import GeoJsonCatalogItem from '../../../Models/GeoJsonCatalogItem';
 import ObserveModelMixin from '../../ObserveModelMixin';
-import Styles from './my_location.scss';
+import Styles from './tool_button.scss';
 import TerriaError from '../../../Core/TerriaError';
 import CesiumCartographic from 'terriajs-cesium/Source/Core/Cartographic.js';
 import Icon from "../../Icon.jsx";
@@ -25,7 +25,8 @@ const MyLocation = createReactClass({
 
     _marker: undefined,
 
-    componentWillMount() {
+    /* eslint-disable-next-line camelcase */
+    UNSAFE_componentWillMount() {
         this._marker = new GeoJsonCatalogItem(this.props.terria);
     },
 
@@ -160,7 +161,7 @@ const MyLocation = createReactClass({
             toggleStyle = Styles.btnPrimary;
         }
 
-        return <div className={Styles.myLocation}>
+        return <div className={Styles.toolButton}>
                   <button type='button' className={toggleStyle}
                           title='go to my location'
                           onClick={this.handleCick}>

@@ -31,7 +31,8 @@ const ExplorerWindow = createReactClass({
         this.props.viewState.switchMobileView('nowViewing');
     },
 
-    componentWillMount() {
+    /* eslint-disable-next-line camelcase */
+    UNSAFE_componentWillMount() {
         this.props.viewState.explorerPanelAnimating = true;
 
         this._pickedFeaturesSubscription = ko.pureComputed(this.isVisible, this).subscribe(this.onVisibilityChange);

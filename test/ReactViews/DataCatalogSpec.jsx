@@ -29,7 +29,7 @@ describe('DataCatalog', function() {
         anotherGroup.name = 'Another Group';
         terria.catalog.group.add(anotherGroup);
 
-        const tab = <DataCatalog terria={terria} viewState={viewState}/>;
+        const tab = <DataCatalog terria={terria} viewState={viewState} items={terria.catalog.group.items}/>;
         const result = getShallowRenderedOutput(tab);
         const memberComponents = findAllWithType(result, DataCatalogMember);
 

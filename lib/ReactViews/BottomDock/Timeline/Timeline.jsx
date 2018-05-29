@@ -1,19 +1,27 @@
 'use strict';
 
+import createReactClass from 'create-react-class';
+import dateFormat from 'dateformat';
 import React from 'react';
 import PropTypes from 'prop-types';
-import createReactClass from 'create-react-class';
+
+import defined from 'terriajs-cesium/Source/Core/defined';
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
+import ClockRange from 'terriajs-cesium/Source/Core/ClockRange';
+import JulianDate from 'terriajs-cesium/Source/Core/JulianDate';
+
+import ObserveModelMixin from '../../ObserveModelMixin';
 import TimelineControls from './TimelineControls';
 import CesiumTimeline from './CesiumTimeline';
-import ClockRange from 'terriajs-cesium/Source/Core/ClockRange';
+import DateTimePicker from './DateTimePicker';
 import {formatDateTime} from './DateFormats';
-import JulianDate from 'terriajs-cesium/Source/Core/JulianDate';
+
 import Styles from './timeline.scss';
-import defined from 'terriajs-cesium/Source/Core/defined';
-import dateFormat from 'dateformat';
 
 const Timeline = createReactClass({
+    displayName: 'Timeline',
+    mixins: [ObserveModelMixin],
+
     propTypes: {
         terria: PropTypes.object.isRequired,
         autoPlay: PropTypes.bool,
@@ -32,11 +40,12 @@ const Timeline = createReactClass({
         };
     },
 
-    componentWillMount() {
+    /* eslint-disable-next-line camelcase */
+    UNSAFE_componentWillMount() {
         this.resizeListener = () => this.timeline && this.timeline.resize();
         window.addEventListener('resize', this.resizeListener, false);
 
-        this.removeTickEvent = this.props.terria.clock.onTick.addEventListener(clock => {
+        const updateCurrentTimeString = clock => {
             const time = clock.currentTime;
             let currentTime;
             if (defined(this.props.terria.timeSeriesStack.topLayer) && defined(this.props.terria.timeSeriesStack.topLayer.dateFormat.currentTime)) {
@@ -48,7 +57,11 @@ const Timeline = createReactClass({
             this.setState({
                 currentTimeString: currentTime
             });
-        });
+        };
+
+        this.removeTickEvent = this.props.terria.clock.onTick.addEventListener(updateCurrentTimeString);
+
+        updateCurrentTimeString(this.props.terria.clock);
 
         this.topLayerSubscription = knockout.getObservable(this.props.terria.timeSeriesStack, 'topLayer').subscribe(() => this.updateForNewTopLayer());
         this.updateForNewTopLayer();
@@ -81,18 +94,27 @@ const Timeline = createReactClass({
         });
     },
 
+    changeDateTime(time) {
+        this.props.terria.clock.currentTime = JulianDate.fromDate(new Date(time));
+        this.props.terria.currentViewer.notifyRepaintRequired();
+    },
+
     render() {
         const terria = this.props.terria;
-        const layerName = terria.timeSeriesStack.topLayer && terria.timeSeriesStack.topLayer.name;
-
+        const catalogItem = terria.timeSeriesStack.topLayer;
+        if (!defined(catalogItem)) {
+            return null;
+        }
         return (
             <div className={Styles.timeline}>
                 <div className={Styles.textRow}>
-                    <div className={Styles.textCell + ' ' + Styles.time} title="Current Time (tz info et al)">{this.state.currentTimeString}</div>
-                    <div className={Styles.textCell} title="Current Layer">{layerName}</div>
+                    <div className={Styles.textCell} title="Name of the dataset whose time range is shown">{catalogItem.name} {this.state.currentTimeString}</div>
                 </div>
                 <div className={Styles.controlsRow}>
                     <TimelineControls clock={terria.clock} analytics={terria.analytics} currentViewer={terria.currentViewer} />
+                    <If condition={defined(catalogItem.availableDates) && (catalogItem.availableDates.length !== 0)}>
+                        <DateTimePicker currentDate={catalogItem.clampedDiscreteTime} dates={catalogItem.availableDates} onChange={this.changeDateTime} openDirection='up'/>
+                    </If>
                     <CesiumTimeline terria={terria} />
                 </div>
             </div>
