@@ -54,8 +54,7 @@ const PointParameterEditor = createReactClass({
         if (defined(this.props.parameter)) {
             if (this.props.parameter.value instanceof Cartographic) {
                 return true;
-            }
-            else if (PointParameterEditor.tryParseCartographicValueFromText(this.props.parameter.value)) {
+            } else if (PointParameterEditor.tryParseCartographicValueFromText(this.props.parameter.value)) {
                 return true;
             }
 
@@ -99,10 +98,10 @@ const PointParameterEditor = createReactClass({
  * @param {FunctionParameter} parameter Parameter to set value on.
  */
 PointParameterEditor.setCartographicValueFromText = function(e, parameter) {
-    const parsedValue = PointParameterEditor.tryParseCartographicValueFromText(e.target.value)
+    const parsedValue = PointParameterEditor.tryParseCartographicValueFromText(e.target.value);
     if (defined(parsedValue)) {
         // Store the value parsed if it is valid.
-        parameter.value = parsedValue
+        parameter.value = parsedValue;
     } else {
         // Still keep the value if its invalid, just store it natively so that we don't obliterate the user entered content.
         parameter.value = e.target.value;
