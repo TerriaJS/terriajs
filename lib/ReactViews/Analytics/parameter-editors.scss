@@ -26,17 +26,20 @@
 .field {
   composes: field from "../../Sass/common/_form.scss";
   margin-bottom: $padding;
+
+  color: $text-black !important;
+
   &::-webkit-input-placeholder {
-    color: $warning;
+    color: $grey !important;
   }
   &::-moz-placeholder {
-    color: $warning;
+    color: $grey !important;
   }
   &:-ms-input-placeholder {
-    color: $warning;
+    color: $grey !important;
   }
   &:-moz-placeholder {
-    color: $warning;
+    color: $grey !important;
   }
 }
 
