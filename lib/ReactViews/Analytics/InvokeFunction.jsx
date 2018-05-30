@@ -1,3 +1,4 @@
+import defined from 'terriajs-cesium/Source/Core/defined';
 import Loader from '../Loader';
 import ObserveModelMixin from '../ObserveModelMixin';
 import ParameterEditor from './ParameterEditor';
@@ -55,9 +56,27 @@ const InvokeFunction = createReactClass({
             />);
     },
 
+    validateParamter(parameter)
+    {
+        if (defined(parameter.isValid) && (!parameter.isValid())) {
+            return false;
+        }
+
+        // Dummy function to trigger update...
+        if (defined(parameter.value) && (parameter.value === true || parameter.value !== true)) {
+            return true;
+        }
+
+        return true;
+    },
+
     render() {
         if (this.props.previewed.isLoading) {
             return <Loader />;
+        }
+        var invalidParameters = false;
+        if (defined(this.props.previewed.parameters)) {
+            invalidParameters = !this.props.previewed.parameters.every(this.validateParamter);
         }
 
         return (<div className={Styles.invokeFunction}>
@@ -67,7 +86,7 @@ const InvokeFunction = createReactClass({
                         {this.getParams()}
                     </div>
                     <div className={Styles.footer}>
-                        <button type='button' className={Styles.btn} onClick={this.submit}>Run Analysis</button>
+                        <button type='button' className={Styles.btn} onClick={this.submit} disabled={invalidParameters}>Run Analysis</button>
                     </div>
                 </div>);
     },

@@ -8,6 +8,7 @@ $font-feature-info: $font-mono;
 $font : $font-base;
 
 $color-primary: #08ABD5;
+$color-primary-disabled: #595B60;
 @function get-hover-color($base-color) {@return lighten($base-color, 10%);}
 $color-secondary: #06CCFF;
 

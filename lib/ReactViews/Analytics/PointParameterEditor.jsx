@@ -52,6 +52,7 @@ const PointParameterEditor = createReactClass({
 
     isParameterValid () {
         if (defined(this.props.parameter)) {
+
             if (this.props.parameter.value instanceof Cartographic) {
                 return true;
             } else if (PointParameterEditor.tryParseCartographicValueFromText(this.props.parameter.value)) {
@@ -68,6 +69,11 @@ const PointParameterEditor = createReactClass({
     },
 
     render() {
+        const that = this;
+        this.props.parameter.isValid = function () {
+            return that.isParameterValid();
+        }
+
         const invalid = ((this.state.allowInvalidDisplay === true) && (this.isParameterValid() === false));
         const style = !invalid ? Styles.field : Styles.fieldInvalid;
 
