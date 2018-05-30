@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### v6.#.#
+
+* Fixed a bug that prevented users from being able to enter data directly into WPS location fields.
+
 ### v6.0.2
 
 * Fixed a bug that prevented interaction with the 3D map when the splitter was active.
