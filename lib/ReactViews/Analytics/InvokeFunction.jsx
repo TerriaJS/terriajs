@@ -58,13 +58,8 @@ const InvokeFunction = createReactClass({
 
     validateParamter(parameter)
     {
-        if (defined(parameter.isValid) && (!parameter.isValid())) {
+        if (defined(parameter.isValid) && (!parameter.isValid)) {
             return false;
-        }
-
-        // Dummy function to trigger update...
-        if (defined(parameter.value) && (parameter.value === true || parameter.value !== true)) {
-            return true;
         }
 
         return true;

@@ -54,11 +54,11 @@ $btn-setting-size: 35px;
   padding: $padding;
 
   &:disabled {
-    background: $color-primary-disabled;
+    background: $color-primary-disabled !important;
     cursor: not-allowed;
 
     &:hover, &--hover {
-      background: $color-primary-disabled;
+      background: $color-primary-disabled !important;
     }
   }
   &:hover, &--hover {
