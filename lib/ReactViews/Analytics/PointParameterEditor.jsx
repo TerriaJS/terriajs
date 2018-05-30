@@ -112,7 +112,6 @@ const PointParameterEditor = createReactClass({
     },
 });
 
-
 /**
  * Prompt user to select/draw on map in order to define parameter.
  * @param {Terria} terria Terria instance.

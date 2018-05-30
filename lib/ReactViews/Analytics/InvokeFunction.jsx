@@ -56,8 +56,7 @@ const InvokeFunction = createReactClass({
             />);
     },
 
-    validateParamter(parameter)
-    {
+    validateParamter(parameter) {
         if (defined(parameter.isValid) && (!parameter.isValid)) {
             return false;
         }
@@ -69,7 +68,8 @@ const InvokeFunction = createReactClass({
         if (this.props.previewed.isLoading) {
             return <Loader />;
         }
-        var invalidParameters = false;
+
+        let invalidParameters = false;
         if (defined(this.props.previewed.parameters)) {
             invalidParameters = !this.props.previewed.parameters.every(this.validateParamter);
         }
