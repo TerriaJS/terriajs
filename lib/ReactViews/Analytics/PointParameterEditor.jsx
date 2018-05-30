@@ -30,8 +30,11 @@ const PointParameterEditor = createReactClass({
     getInitialState() {
         return {
             // A flag indicating whether we will display invalid data errors to the user.
+            // We set this to false because we only want to see errors once the have attempted to enter data.
             allowInvalidDisplay: false,
-            // A state value to store an persist the user entered text.
+            // A flag which protects overwriting the user text while the user is editing the field.
+            preventTextChange: false,
+            // A state value to store and persist the user entered text.
             text: ""
         };
     },
@@ -45,8 +48,19 @@ const PointParameterEditor = createReactClass({
         }
     },
 
+    inputOnFocus(e) {
+        // Store the text as it is currently formatted, as we will immediately revert to using the text value rather
+        // then using the live parameter value once the preventTextChange flag is set.
+        this.setState({text: this.getDisplayValue()});
+
+        // We prevent updating the text input while the user is entering text so that we don't variances because the
+        // values are stored as floats.
+        this.setState({preventTextChange: true});
+    },
+
     inputOnBlur(e) {
-        this.setCartographicValueFromText(e, this.props.parameter);
+        // Free up so that the live value is now displayed.
+        this.setState({preventTextChange: false});
 
         // Once the user has left the focus of the field always show whether the input is valid.
         this.setState({allowInvalidDisplay: true});
@@ -56,26 +70,17 @@ const PointParameterEditor = createReactClass({
         PointParameterEditor.selectOnMap(this.props.previewed.terria, this.props.viewState, this.props.parameter);
     },
 
-    /**
-     * Triggered when user leaves the field, updates the parameter as a Cartographic if possible otherwise just stores the value.
-     * @param {String} e Text that user has entered manually.
-     * @param {FunctionParameter} parameter Parameter to set value on.
-     */
     setCartographicValueFromText(e, parameter) {
         parameter.parseParameterLonLat(e.target.value);
         this.setState({text: e.target.value});
     },
 
-    /**
-     * Given a value, return it in human readable form for display.
-     * @param {Object} value Native format of parameter value.
-     * @return {String} String for display
-     */
-    getDisplayValue(value) {
-        if (defined(value)) {
-            if (value instanceof Cartographic) {
-                return CesiumMath.toDegrees(value.longitude) + ',' + CesiumMath.toDegrees(value.latitude);
-            }
+    getDisplayValue() {
+        const digits = 5;
+        const value = this.props.parameter.value;
+
+        if ((this.state.preventTextChange !== true) && defined(value) && (value instanceof Cartographic)) {
+            return CesiumMath.toDegrees(value.longitude).toFixed(digits) + ', ' + CesiumMath.toDegrees(value.latitude).toFixed(digits);
         }
 
         return this.state.text;
@@ -96,7 +101,8 @@ const PointParameterEditor = createReactClass({
                        type="text"
                        onChange={this.inputOnChange}
                        onBlur={this.inputOnBlur}
-                       value={this.getDisplayValue(this.props.parameter.value)}
+                       onFocus={this.inputOnFocus}
+                       value={this.getDisplayValue()}
                        placeholder="-25.3450, 131.0361"/>
                 <button type="button" onClick={this.selectPointOnMap} className={Styles.btnSelector}>
                     Select location
