@@ -24,86 +24,65 @@ const PointParameterEditor = createReactClass({
     propTypes: {
         previewed: PropTypes.object,
         parameter: PropTypes.object,
-        viewState: PropTypes.object
+        viewState: PropTypes.object,
+        parameterViewModel: PropTypes.object
     },
 
-    getInitialState() {
-        return {
-            // A flag indicating whether we will display invalid data errors to the user.
-            // We set this to false because we only want to see errors once the have attempted to enter data.
-            allowInvalidDisplay: false,
-            // A flag which protects overwriting the user text while the user is editing the field.
-            preventTextChange: false,
-            // A state value to store and persist the user entered text.
-            text: ""
-        };
-    },
+    // getInitialState() {
+    //     return {
+    //         // A flag indicating whether we will display invalid data errors to the user.
+    //         // We set this to false because we only want to see errors once the have attempted to enter data.
+    //         allowInvalidDisplay: false,
+    //         // A flag which protects overwriting the user text while the user is editing the field.
+    //         preventTextChange: false,
+    //         // A state value to store and persist the user entered text.
+    //         text: ""
+    //     };
+    // },
 
     inputOnChange(e) {
-        this.setCartographicValueFromText(e, this.props.parameter);
-
-        if (defined(this.props.parameter.tryParseCartographicValueFromTextLonLat(e.target.value))) {
-            // Once the user has entered a valid value in the field always show whether the input is valid.
-            this.setState({allowInvalidDisplay: true});
-        }
-    },
-
-    inputOnFocus(e) {
-        // Store the text as it is currently formatted, as we will immediately revert to using the text value rather
-        // then using the live parameter value once the preventTextChange flag is set.
-        this.setState({text: this.getDisplayValue()});
-
-        // We prevent updating the text input while the user is entering text so that we don't variances because the
-        // values are stored as floats.
-        this.setState({preventTextChange: true});
+        const text = e.target.value;
+        this.props.parameterViewModel.userValue = text;
+        this.props.parameterViewModel.isValueValid = PointParameterEditor.setValueFromText(e, this.props.parameter);
     },
 
     inputOnBlur(e) {
-        // Free up so that the live value is now displayed.
-        this.setState({preventTextChange: false});
-
-        // Once the user has left the focus of the field always show whether the input is valid.
-        this.setState({allowInvalidDisplay: true});
+        const isCurrentlyInvalid = !this.props.parameterViewModel.isValueValid;
+        this.props.parameterViewModel.wasEverBlurredWhileInvalid = this.props.parameterViewModel.wasEverBlurredWhileInvalid || isCurrentlyInvalid;
     },
 
     selectPointOnMap() {
         PointParameterEditor.selectOnMap(this.props.previewed.terria, this.props.viewState, this.props.parameter);
     },
 
-    setCartographicValueFromText(e, parameter) {
-        parameter.parseParameterLonLat(e.target.value);
-        this.setState({text: e.target.value});
-    },
-
     getDisplayValue() {
-        const digits = 5;
-        const value = this.props.parameter.value;
-
-        if ((this.state.preventTextChange !== true) && defined(value) && (value instanceof Cartographic)) {
-            return CesiumMath.toDegrees(value.longitude).toFixed(digits) + ', ' + CesiumMath.toDegrees(value.latitude).toFixed(digits);
+        // Show the user's value if they've done any editing.
+        if (defined(this.props.parameterViewModel.userValue)) {
+            return this.props.parameterViewModel.userValue;
         }
 
-        return this.state.text;
+        // Show the parameter's value if there is one.
+        return PointParameterEditor.getDisplayValue(this.props.parameter.value);
     },
 
     render() {
-        const invalid = ((this.state.allowInvalidDisplay === true) && (defined(this.props.parameter)) && (this.props.parameter.isValid === false));
-        const style = !invalid ? Styles.field : Styles.fieldInvalid;
+        const parameterViewModel = this.props.parameterViewModel;
+        const showErrorMessage = !parameterViewModel.isValueValid && parameterViewModel.wasEverBlurredWhileInvalid;
+        const style = showErrorMessage ? Styles.fieldInvalid : Styles.field;
 
         return (
             <div>
-                <If condition={invalid}>
+                <If condition={showErrorMessage}>
                 <div className={Styles.warningText}>
-                    Please enter valid coordinates (e.g. -25.3450, 131.0361).
+                    Please enter valid coordinates (e.g. 131.0361, -25.3450).
                 </div>
                 </If>
                 <input className={style}
                        type="text"
                        onChange={this.inputOnChange}
                        onBlur={this.inputOnBlur}
-                       onFocus={this.inputOnFocus}
                        value={this.getDisplayValue()}
-                       placeholder="-25.3450, 131.0361"/>
+                       placeholder="131.0361, -25.3450"/>
                 <button type="button" onClick={this.selectPointOnMap} className={Styles.btnSelector}>
                     Select location
                 </button>
@@ -111,6 +90,62 @@ const PointParameterEditor = createReactClass({
         );
     },
 });
+
+/**
+ * Triggered when user types value directly into field.
+ * @param {String} e Text that user has entered manually.
+ * @param {FunctionParameter} parameter Parameter to set value on.
+ * @returns {Boolean} True if the value was set successfully; false if the value could not be parsed.
+ */
+PointParameterEditor.setValueFromText = function(e, parameter) {
+    const text = e.target.value;
+
+    if (text.trim().length === 0 && !parameter.isRequired) {
+        parameter.value = undefined;
+        return true;
+    }
+
+    // parseFloat will ignore non-numeric characters at the end of the string.
+    // e.g. "5asdf" will be parsed successfully as "5".
+    // So we reject the text if there are any characters in it other than
+    // 0-9, whitespace, plus, minus, comma, and period.
+    // This isn't perfect - some strings may still parse even though they
+    // don't make sense, like "0..9,1.2.3" - but it will at least eliminate
+    // common errors like trying to specify degrees/minutes/seconds or
+    // specifying W or E rather than using positive or negative numbers
+    // for longitude.
+    if (/[^\d\s\.,+-]/.test(text)) {
+        return false;
+    }
+
+    const coordinates = text.split(',');
+    if (coordinates.length === 2) {
+        const longitude = parseFloat(coordinates[0]);
+        const latitude = parseFloat(coordinates[1]);
+        if (isNaN(longitude) || isNaN(latitude)) {
+            return false;
+        }
+        parameter.value = Cartographic.fromDegrees(parseFloat(coordinates[0]), parseFloat(coordinates[1]));
+        return true;
+    } else {
+        return false;
+    }
+};
+
+/**
+ * Given a value, return it in human readable form for display.
+ * @param {Object} value Native format of parameter value.
+ * @return {String} String for display
+ */
+PointParameterEditor.getDisplayValue = function(value) {
+    const digits = 5;
+
+    if (defined(value)) {
+        return CesiumMath.toDegrees(value.longitude).toFixed(digits) + ',' + CesiumMath.toDegrees(value.latitude).toFixed(digits);
+    } else {
+        return '';
+    }
+};
 
 /**
  * Prompt user to select/draw on map in order to define parameter.
