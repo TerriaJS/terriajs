@@ -28,18 +28,6 @@ const PointParameterEditor = createReactClass({
         parameterViewModel: PropTypes.object
     },
 
-    // getInitialState() {
-    //     return {
-    //         // A flag indicating whether we will display invalid data errors to the user.
-    //         // We set this to false because we only want to see errors once the have attempted to enter data.
-    //         allowInvalidDisplay: false,
-    //         // A flag which protects overwriting the user text while the user is editing the field.
-    //         preventTextChange: false,
-    //         // A state value to store and persist the user entered text.
-    //         text: ""
-    //     };
-    // },
-
     inputOnChange(e) {
         const text = e.target.value;
         this.props.parameterViewModel.userValue = text;
