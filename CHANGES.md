@@ -5,7 +5,7 @@ Change Log
 
 ### v6.#.#
 
-* Fixed a bug that prevented users from being able to enter data directly into WPS location fields.
+* Fixed a bug that prevented users from being able to enter coordinates directly into catalog function point parameter fields.
 
 ### v6.0.2
 
