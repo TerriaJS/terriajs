@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### Next Release
+
+* Fixed a bug that prevented users from being able to enter coordinates directly into catalog function point parameter fields.
+
 ### v6.0.2
 
 * Fixed a bug that prevented interaction with the 3D map when the splitter was active.

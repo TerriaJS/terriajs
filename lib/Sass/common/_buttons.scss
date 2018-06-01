@@ -53,6 +53,14 @@ $btn-setting-size: 35px;
   border-radius: $radius-small;
   padding: $padding;
 
+  &:disabled {
+    background: $color-primary-disabled !important;
+    cursor: not-allowed;
+
+    &:hover, &--hover {
+      background: $color-primary-disabled !important;
+    }
+  }
   &:hover, &--hover {
     background: get-hover-color($color-primary);
   }
