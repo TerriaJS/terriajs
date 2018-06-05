@@ -7,7 +7,7 @@
 // 3. Observable spaghetti
 //  Solution: think in terms of pipelines with computed observables, document patterns.
 // 4. All code for all catalog item types needs to be loaded before we can do anything.
-import { autorun, computed, observable, trace } from 'mobx';
+import { autorun, computed, observable, trace, runInAction } from 'mobx';
 import * as URI from 'urijs';
 import autoUpdate from '../Core/autoUpdate';
 import isReadOnlyArray from '../Core/isReadOnlyArray';
@@ -55,6 +55,10 @@ class GetCapabilitiesValue {
     @computed
     get availableStyles(): WebMapServiceStyles {
         const result: WebMapServiceStyles = {};
+
+        if (!this.capabilities) {
+            return result;
+        }
 
         const capabilitiesLayers = this.capabilitiesLayers;
 
@@ -117,7 +121,6 @@ class GetCapabilitiesValue {
 }
 
 const GetCapabilitiesStratum = defineLoadableStratum(WebMapServiceCatalogItemDefinition, GetCapabilitiesValue, 'isGeoServer', 'intervals', 'availableStyles');
-const FullStratum = defineStratum(WebMapServiceCatalogItemDefinition);
 
 interface ModelFromDefinition extends Model.InterfaceFromDefinition<WebMapServiceCatalogItemDefinition> {}
 class ModelFromDefinition extends Model<WebMapServiceCatalogItemDefinition> {}
@@ -130,7 +133,6 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemb
 
     constructor(terria: Terria) {
         super(terria);
-        console.log('this: ' + this);
         this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, new GetCapabilitiesStratum(layer => this._loadGetCapabilitiesStratum(layer)));
     }
 
@@ -240,7 +242,9 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemb
 
         const proxiedUrl = proxyCatalogItemUrl(this, this.getCapabilitiesUrl, this.getCapabilitiesCacheDuration);
         return WebMapServiceCapabilities.fromUrl(proxiedUrl).then(capabilities => {
-            values.capabilities = capabilities;
+            runInAction(() => {
+                values.capabilities = capabilities;
+            });
         });
 
         // console.log('fetching ' + this.getCapabilitiesUrl);

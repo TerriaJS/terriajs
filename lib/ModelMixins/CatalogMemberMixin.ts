@@ -1,5 +1,6 @@
 import { computed } from 'mobx';
 import Constructor from '../Core/Constructor';
+import { BaseModel } from '../Models/Model';
 
 interface RequiredDefinition {
     nameInCatalog: string;
@@ -10,9 +11,13 @@ interface RequiredInstance {
     name: string;
 }
 
-export default function CatalogMemberMixin<T extends Constructor<RequiredInstance>>(Base: T) {
+function CatalogMemberMixin<T extends Constructor<RequiredInstance>>(Base: T) {
     abstract class CatalogMemberMixin extends Base {
         abstract get type();
+
+        get hasCatalogMemberMixin() {
+            return true;
+        }
 
         @computed
         get nameInCatalog() {
@@ -35,3 +40,11 @@ export default function CatalogMemberMixin<T extends Constructor<RequiredInstanc
 
     return CatalogMemberMixin;
 }
+
+namespace CatalogMemberMixin {
+    export function is(model: any): model is ReturnType<typeof CatalogMemberMixin> {
+        return model && model.hasCatalogMemberMixin;
+    }
+}
+
+export default CatalogMemberMixin;

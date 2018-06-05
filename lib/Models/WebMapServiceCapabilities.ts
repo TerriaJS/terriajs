@@ -160,7 +160,7 @@ export default class WebMapServiceCapabilities {
             const value = c[property];
             if (Array.isArray(value)) {
                 p.push(...value);
-            } else {
+            } else if (value !== undefined) {
                 p.push(<ElementTypeIfArray<CapabilitiesLayer[K]>>value);
             }
             return p;

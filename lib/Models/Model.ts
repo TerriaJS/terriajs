@@ -19,7 +19,7 @@ interface DefinitionClass<T> {
     };
 }
 
-//export interface BaseModel extends Model.InterfaceFromDefinition<ModelDefinition> {}
+export interface BaseModel extends Model.InterfaceFromDefinition<ModelDefinition> {}
 
 export abstract class BaseModel {
     constructor(readonly terria: Terria) {

@@ -1,6 +1,11 @@
-import { configure } from 'mobx';
+import { configure, runInAction, autorun } from 'mobx';
 import CatalogGroup from '../../lib/Models/CatalogGroupNew';
 import Terria from '../../lib/Models/TerriaNew';
+import WebMapServiceCatalogGroup from '../../lib/Models/WebMapServiceCatalogGroupNew';
+import WebMapServiceCatalogItem from '../../lib/Models/WebMapServiceCatalogItem3';
+import CommonStrata from '../../lib/Models/CommonStrata';
+import Mappable from '../../lib/Models/Mappable';
+import CatalogMemberMixin from '../../lib/ModelMixins/CatalogMemberMixin';
 
 configure({
     enforceActions: true,
@@ -10,45 +15,40 @@ configure({
 describe('NewStuff', function() {
     it('test', function() {
         const terria = new Terria();
-        const g = new CatalogGroup(terria);
-        // const b = new Bar();
+        const wms = new WebMapServiceCatalogGroup(terria);
 
-        // autorun(() => {
-        //     b.go();
-        //     console.log(b.foo);
-        //     console.log(b.bar);
-        // });
-        // const terria = new Terria();
-        // const wms = new WebMapServiceCatalogGroup(terria);
+        const wmsItem = new WebMapServiceCatalogItem(terria);
+        const definition = wmsItem.addStratum(CommonStrata.definition);
+        definition.id = 'Taxation Statistics 2011-2012/ckan_95d9e550_8b36_4273_8df7_2b76c140e73a';
+        definition.name = 'Foo';
+        terria.addModel(definition.id, wmsItem);
 
-        // const wmsItem = new WebMapServiceCatalogItem(terria);
-        // wmsItem.definitionStratum.id = 'Taxation Statistics 2011-2012/ckan_95d9e550_8b36_4273_8df7_2b76c140e73a';
-        // wmsItem.definitionStratum.name = 'Foo';
-        // terria.addModel(wmsItem.definitionStratum.id, wmsItem);
+        const wmsItem2 = new WebMapServiceCatalogItem(terria);
+        const definition2 = wmsItem2.addStratum(CommonStrata.definition);
+        definition2.id = 'another';
+        definition2.name = 'Another';
+        definition2.url = 'https://data.gov.au/geoserver/taxation-statistics-2011-12/wms';
+        terria.addModel(definition2.id, wmsItem2);
 
-        // const wmsItem2 = new WebMapServiceCatalogItem(terria);
-        // wmsItem2.definitionStratum.id = 'another';
-        // wmsItem2.definitionStratum.name = 'Another';
-        // wmsItem2.definitionStratum.url = 'https://data.gov.au/geoserver/taxation-statistics-2011-12/wms';
-        // terria.addModel(wmsItem2.definitionStratum.id, wmsItem2);
+        runInAction(() => {
+            const definition = wms.addStratum('definition');
+            definition.members = [definition2.id];
+            definition.id = 'Taxation Statistics 2011-2012';
+            definition.name = 'Taxation Statistics 2011-2012';
+            definition.url = 'https://data.gov.au/geoserver/taxation-statistics-2011-12/wms';
+        });
 
-        // runInAction(() => {
-        //     const definition = wms.strata.get('definition');
-        //     definition.members = [wmsItem2.definitionStratum.id];
-        //     definition.id = 'Taxation Statistics 2011-2012';
-        //     definition.name = 'Taxation Statistics 2011-2012';
-        //     definition.url = 'https://data.gov.au/geoserver/taxation-statistics-2011-12/wms';
-        // });
-
-        // autorun(dispose => {
-        //     console.log('flattened: ' + wms.strata.get('flattened'));
-        //     console.log('Run: ' + wms.memberModels.length);
-        //     wms.memberModels.forEach(model => {
-        //         console.log(`${model.name}: ${model.id}`);
-        //         if (Mappable.is(model)) {
-        //             console.log(model.mapItems);
-        //         }
-        //     });
-        // });
+        autorun(dispose => {
+            console.log('flattened: ' + wms.flattened);
+            console.log('Run: ' + wms.memberModels.length);
+            wms.memberModels.forEach(model => {
+                if (CatalogMemberMixin.is(model)) {
+                    console.log(`${model.name}: ${model.id}`);
+                }
+                if (Mappable.is(model)) {
+                    console.log(model.mapItems);
+                }
+            });
+        });
     });
 });
