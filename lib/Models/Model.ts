@@ -5,6 +5,7 @@ import { ModelProperty } from './ModelProperties';
 import StratumOrder from './StratumOrder';
 import Terria from './TerriaNew';
 import * as DeveloperError from 'terriajs-cesium/Source/Core/DeveloperError';
+import { ModelId } from '../Definitions/ModelReference';
 
 interface MakeModelConcrete {
     readonly type;
@@ -22,7 +23,7 @@ interface DefinitionClass<T> {
 export interface BaseModel extends Model.InterfaceFromDefinition<ModelDefinition> {}
 
 export abstract class BaseModel {
-    constructor(readonly terria: Terria) {
+    constructor(readonly id: ModelId, readonly terria: Terria) {
     }
 
     readonly strata = observable.map<string, Partial<ModelDefinition>>();

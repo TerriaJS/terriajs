@@ -6,12 +6,12 @@ class ModelDefinition {
         [id: string]: ModelProperty;
     }
 
-    @primitiveProperty({
-        type: 'string',
-        name: 'ID',
-        description: 'The unique ID of this model'
-    })
-    id: string;
+    // @primitiveProperty({
+    //     type: 'string',
+    //     name: 'ID',
+    //     description: 'The unique ID of this model'
+    // })
+    // id: string;
 }
 
 namespace ModelDefinition {

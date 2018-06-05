@@ -15,25 +15,22 @@ configure({
 describe('NewStuff', function() {
     it('test', function() {
         const terria = new Terria();
-        const wms = new WebMapServiceCatalogGroup(terria);
+        const wms = new WebMapServiceCatalogGroup('Taxation Statistics 2011-2012', terria);
 
-        const wmsItem = new WebMapServiceCatalogItem(terria);
+        const wmsItem = new WebMapServiceCatalogItem('Taxation Statistics 2011-2012/ckan_95d9e550_8b36_4273_8df7_2b76c140e73a', terria);
         const definition = wmsItem.addStratum(CommonStrata.definition);
-        definition.id = 'Taxation Statistics 2011-2012/ckan_95d9e550_8b36_4273_8df7_2b76c140e73a';
         definition.name = 'Foo';
-        terria.addModel(definition.id, wmsItem);
+        terria.addModel(wmsItem);
 
-        const wmsItem2 = new WebMapServiceCatalogItem(terria);
+        const wmsItem2 = new WebMapServiceCatalogItem('another', terria);
         const definition2 = wmsItem2.addStratum(CommonStrata.definition);
-        definition2.id = 'another';
         definition2.name = 'Another';
         definition2.url = 'https://data.gov.au/geoserver/taxation-statistics-2011-12/wms';
-        terria.addModel(definition2.id, wmsItem2);
+        terria.addModel(wmsItem2);
 
         runInAction(() => {
             const definition = wms.addStratum('definition');
-            definition.members = [definition2.id];
-            definition.id = 'Taxation Statistics 2011-2012';
+            definition.members = [wmsItem2.id];
             definition.name = 'Taxation Statistics 2011-2012';
             definition.url = 'https://data.gov.au/geoserver/taxation-statistics-2011-12/wms';
         });
@@ -42,7 +39,7 @@ describe('NewStuff', function() {
             console.log('flattened: ' + wms.flattened);
             console.log('Run: ' + wms.memberModels.length);
             wms.memberModels.forEach(model => {
-                if (CatalogMemberMixin.is(model)) {
+                if (CatalogMemberMixin.isMixedInto(model)) {
                     console.log(`${model.name}: ${model.id}`);
                 }
                 if (Mappable.is(model)) {

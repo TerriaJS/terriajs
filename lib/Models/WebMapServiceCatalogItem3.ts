@@ -131,8 +131,8 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemb
         return 'wms';
     }
 
-    constructor(terria: Terria) {
-        super(terria);
+    constructor(id: string, terria: Terria) {
+        super(id, terria);
         this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, new GetCapabilitiesStratum(layer => this._loadGetCapabilitiesStratum(layer)));
     }
 

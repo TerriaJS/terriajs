@@ -41,11 +41,9 @@ class GetCapabilitiesValue {
             const layerId = id + '/' + encodeURIComponent(layer.Name);
             let model = this.catalogGroup.terria.getModelById(WebMapServiceCatalogItem, layerId);
             if (!model) {
-                model = new WebMapServiceCatalogItem(this.catalogGroup.terria);
-                // TODO: id should be part of the model, not the definition
+                model = new WebMapServiceCatalogItem(layerId, this.catalogGroup.terria);
                 const stratum = model.addStratum(CommonStrata.inheritedFromParentGroup);
-                stratum.id = layerId;
-                this.catalogGroup.terria.addModel(layerId, model);
+                this.catalogGroup.terria.addModel(model);
             }
 
             // TODO: Should this be a "parentStratum" or "inheritedStratum" or something instead?
@@ -82,8 +80,8 @@ export default class WebMapServiceCatalogGroup extends GetCapabilitiesMixin(Grou
         return 'wms-group';
     }
 
-    constructor(terria: Terria) {
-        super(terria);
+    constructor(id: string, terria: Terria) {
+        super(id, terria);
         this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, new GetCapabilitiesStratum(layer => this._loadGetCapabilitiesStratum(layer)));
     }
 

@@ -21,15 +21,15 @@ export default class Terria {
         }
     }
 
-    addModel(id: ModelReference, model: BaseModel) {
-        if (ModelReference.isRemoved(id)) {
+    addModel(model: BaseModel) {
+        if (ModelReference.isRemoved(model.id)) {
             return;
         }
 
-        if (this.models.has(id)) {
+        if (this.models.has(model.id)) {
             throw new RuntimeError('A model with the specified ID already exists.')
         }
 
-        this.models.set(id, model);
+        this.models.set(model.id, model);
     }
 }

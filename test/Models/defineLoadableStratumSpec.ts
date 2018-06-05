@@ -1,6 +1,6 @@
 import defineLoadableStratum from '../../lib/Models/defineLoadableStratum';
-import ModelDefinition from '../../lib/Models/ModelDefinition';
-import { primitiveProperty } from '../../lib/Models/ModelProperties';
+import ModelDefinition from '../../lib/Definitions/ModelDefinition';
+import primitiveProperty from '../../lib/Definitions/primitiveProperty';
 import { autorun, observable, runInAction } from 'mobx';
 
 describe('defineLoadableStratum', function() {
