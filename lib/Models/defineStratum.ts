@@ -45,7 +45,7 @@ export interface StratumConstructor<T> {
 /**
  * Creates a stratum class containing a subset of the properties in a model's definition.
  * Please note that only properties decorated as a {@link ModelProperty} (e.g. by using
- * `@primitiveProperty({...})` will be included.
+ * `@primitiveTrait({...})` will be included.
  * All properties are observable.
  *
  * @param TDefinition definition The model definition.

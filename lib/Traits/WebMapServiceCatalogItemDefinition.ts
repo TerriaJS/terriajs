@@ -1,11 +1,11 @@
 import mixCatalogMemberDefinition from './mixCatalogMemberDefinition';
-import primitiveProperty from './primitiveProperty';
+import primitiveTrait from './primitiveTrait';
 import ModelDefinition from './ModelDefinition';
 import mixUrlDefinition from './mixUrlDefinition';
 import mixGetCapabilitiesDefinition from './mixGetCapabilitiesDefinition';
 
 export default class WebMapServiceCatalogItemDefinition extends mixGetCapabilitiesDefinition(mixUrlDefinition(mixCatalogMemberDefinition(ModelDefinition))) {
-    @primitiveProperty({
+    @primitiveTrait({
         type: 'string',
         name: 'Is GeoServer',
         description: 'True if this WMS is a GeoServer; otherwise, false.',
@@ -13,21 +13,21 @@ export default class WebMapServiceCatalogItemDefinition extends mixGetCapabiliti
     })
     isGeoServer: boolean;
 
-    @primitiveProperty({
+    @primitiveTrait({
         type: 'string',
         name: 'Intervals',
         description: 'Intervals'
     })
     intervals: any; // TODO
 
-    @primitiveProperty({
+    @primitiveTrait({
         type: 'string',
         name: 'Layer(s)',
         description: 'The layer or layers to display.'
     })
     layers: string;
 
-    @primitiveProperty({
+    @primitiveTrait({
         type: 'string',
         name: 'Available Styles',
         description: 'The available styles.' // TODO

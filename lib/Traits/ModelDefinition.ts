@@ -1,12 +1,12 @@
-import primitiveProperty from './primitiveProperty';
-import DefinitionProperty from './Trait';
+import primitiveTrait from './primitiveTrait';
+import Trait from './Trait';
 
 class ModelDefinition {
     static metadata: {
-        [id: string]: DefinitionProperty;
+        [id: string]: Trait;
     }
 
-    // @primitiveProperty({
+    // @primitiveTrait({
     //     type: 'string',
     //     name: 'ID',
     //     description: 'The unique ID of this model'

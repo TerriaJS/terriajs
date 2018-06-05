@@ -1,28 +1,28 @@
-import DefinitionProperty, { DefinitionPropertyOptions } from './Trait';
+import Trait, { TraitOptions } from './Trait';
 import { BaseModel } from '../Models/Model';
 
 type PrimitiveType = 'string' | 'number' | 'boolean';
 
-export interface PrimitivePropertyOptions<T> extends DefinitionPropertyOptions {
+export interface PrimitiveTraitOptions<T> extends TraitOptions {
     type: PrimitiveType;
     default?: T;
 }
 
-export default function primitiveProperty<T>(options: PrimitivePropertyOptions<T>) {
+export default function primitiveTrait<T>(options: PrimitiveTraitOptions<T>) {
     return function(target: any, propertyKey: string) {
         const constructor = target.constructor;
         if (!constructor.metadata) {
             constructor.metadata = {};
         }
-        constructor.metadata[propertyKey] = new PrimitiveProperty(propertyKey, options);
+        constructor.metadata[propertyKey] = new PrimitiveTrait(propertyKey, options);
     }
 }
 
-export class PrimitiveProperty<T> extends DefinitionProperty {
+export class PrimitiveTrait<T> extends Trait {
     readonly type: PrimitiveType;
     readonly default: T;
 
-    constructor(id: string, options: PrimitivePropertyOptions<T>) {
+    constructor(id: string, options: PrimitiveTraitOptions<T>) {
         super(id, options);
         this.type = options.type;
         this.default = options.default;

@@ -1,16 +1,16 @@
 import ModelDefinition from "./ModelDefinition";
-import primitiveProperty from "./primitiveProperty";
+import primitiveTrait from "./primitiveTrait";
 
 export default function mixGetCapabilitiesDefinition<TBase extends ModelDefinition.Constructor>(Base: TBase) {
     class GetCapabilitiesDefinition extends Base {
-        @primitiveProperty({
+        @primitiveTrait({
             type: 'string',
             name: 'GetCapabilities URL',
             description: 'The URL at which to access to the OGC GetCapabilities service.'
         })
         getCapabilitiesUrl: string;
 
-        @primitiveProperty({
+        @primitiveTrait({
             type: 'string',
             name: 'GetCapabilities Cache Duration',
             description: 'The amount of time to cache GetCapabilities responses.',

@@ -1,5 +1,5 @@
 import ModelDefinition from './ModelDefinition';
-import primitiveProperty from './primitiveProperty';
+import primitiveTrait from './primitiveTrait';
 
 export interface InfoSection {
     name: string;
@@ -8,28 +8,28 @@ export interface InfoSection {
 
 export default function mixCatalogMemberDefinition<TBase extends ModelDefinition.Constructor>(Base: TBase) {
     class CatalogMemberDefinition extends Base {
-        @primitiveProperty({
+        @primitiveTrait({
             type: 'string',
             name: 'Name',
             description: 'The name of the catalog item.'
         })
         name: string;
 
-        @primitiveProperty({
+        @primitiveTrait({
             type: 'string',
             name: 'Description',
             description: 'The description of the catalog item. Markdown and HTML may be used.'
         })
         description: string;
 
-        @primitiveProperty({
+        @primitiveTrait({
             type: 'string',
             name: 'Name in catalog',
             description: 'The name of the item to be displayed in the catalog, if it is different from the one to display in the workbench.'
         })
         nameInCatalog: string;
 
-        @primitiveProperty({
+        @primitiveTrait({
             type: 'string',
             name: 'Name in catalog',
             description: 'The name of the item to be displayed in the workbench, if it is different from the one to display in the catalog.'

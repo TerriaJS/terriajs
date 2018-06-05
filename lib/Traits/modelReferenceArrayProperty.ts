@@ -1,7 +1,7 @@
-import DefinitionProperty, { DefinitionPropertyOptions } from "./Trait";
+import Trait, { TraitOptions } from "./Trait";
 import ModelReference from "./ModelReference";
 
-export interface ModelArrayPropertyOptions extends DefinitionPropertyOptions {
+export interface ModelArrayPropertyOptions extends TraitOptions {
 }
 
 export default function modelReferenceArrayProperty<T>(options: ModelArrayPropertyOptions) {
@@ -14,7 +14,7 @@ export default function modelReferenceArrayProperty<T>(options: ModelArrayProper
     }
 }
 
-export class ModelReferenceArrayProperty extends DefinitionProperty {
+export class ModelReferenceArrayProperty extends Trait {
     constructor(id: string, options: ModelArrayPropertyOptions) {
         super(id, options);
     }

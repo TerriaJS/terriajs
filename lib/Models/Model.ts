@@ -1,7 +1,7 @@
 import { ObservableMap, computed, decorate, observable } from 'mobx';
 import * as DeveloperError from 'terriajs-cesium/Source/Core/DeveloperError';
 import Constructor from '../Core/Constructor';
-import DefinitionProperty from '../Traits/Trait';
+import Trait from '../Traits/Trait';
 import ModelDefinition from '../Traits/ModelDefinition';
 import { ModelId } from '../Traits/ModelReference';
 import StratumOrder from './StratumOrder';
@@ -16,7 +16,7 @@ interface MakeModelConcrete {
 interface DefinitionClass<T> {
     prototype: T;
     metadata: {
-        [id: string]: DefinitionProperty;
+        [id: string]: Trait;
     };
 }
 
