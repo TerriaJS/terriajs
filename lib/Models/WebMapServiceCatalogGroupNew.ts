@@ -1,7 +1,7 @@
 import { computed, observable, runInAction } from 'mobx';
 import isReadOnlyArray from '../Core/isReadOnlyArray';
 import ModelReference from '../Traits/ModelReference';
-import WebMapServiceCatalogGroupDefinition from '../Traits/WebMapServiceCatalogGroupDefinition';
+import WebMapServiceCatalogGroupTraits from '../Traits/WebMapServiceCatalogGroupTraits';
 import CatalogMemberMixin from '../ModelMixins/CatalogMemberMixin';
 import GetCapabilitiesMixin from '../ModelMixins/GetCapabilitiesMixin';
 import GroupMixin from '../ModelMixins/GroupMixin';
@@ -69,12 +69,12 @@ class GetCapabilitiesValue {
     }
 }
 
-const GetCapabilitiesStratum = defineLoadableStratum(WebMapServiceCatalogGroupDefinition, GetCapabilitiesValue, 'members');
+const GetCapabilitiesStratum = defineLoadableStratum(WebMapServiceCatalogGroupTraits, GetCapabilitiesValue, 'members');
 
-interface ModelWithDefinition extends Model.InterfaceFromDefinition<WebMapServiceCatalogGroupDefinition> {}
-class ModelWithDefinition extends Model<WebMapServiceCatalogGroupDefinition> {}
+interface ModelWithDefinition extends Model.InterfaceFromDefinition<WebMapServiceCatalogGroupTraits> {}
+class ModelWithDefinition extends Model<WebMapServiceCatalogGroupTraits> {}
 
-@Model.definition(WebMapServiceCatalogGroupDefinition)
+@Model.definition(WebMapServiceCatalogGroupTraits)
 export default class WebMapServiceCatalogGroup extends GetCapabilitiesMixin(GroupMixin(CatalogMemberMixin(UrlMixin(ModelWithDefinition)))) {
     get type() {
         return 'wms-group';

@@ -11,7 +11,7 @@ import { autorun, computed, observable, trace, runInAction } from 'mobx';
 import * as URI from 'urijs';
 import autoUpdate from '../Core/autoUpdate';
 import isReadOnlyArray from '../Core/isReadOnlyArray';
-import WebMapServiceCatalogItemDefinition from '../Traits/WebMapServiceCatalogItemDefinition';
+import WebMapServiceCatalogItemTraits from '../Traits/WebMapServiceCatalogItemTraits';
 import Model from './Model';
 import WebMapServiceCapabilities, { CapabilitiesLayer } from './WebMapServiceCapabilities';
 import defineLoadableStratum, { LoadableStratumState } from './defineLoadableStratum';
@@ -120,12 +120,12 @@ class GetCapabilitiesValue {
     @observable intervals: any;
 }
 
-const GetCapabilitiesStratum = defineLoadableStratum(WebMapServiceCatalogItemDefinition, GetCapabilitiesValue, 'isGeoServer', 'intervals', 'availableStyles');
+const GetCapabilitiesStratum = defineLoadableStratum(WebMapServiceCatalogItemTraits, GetCapabilitiesValue, 'isGeoServer', 'intervals', 'availableStyles');
 
-interface ModelFromDefinition extends Model.InterfaceFromDefinition<WebMapServiceCatalogItemDefinition> {}
-class ModelFromDefinition extends Model<WebMapServiceCatalogItemDefinition> {}
+interface ModelFromDefinition extends Model.InterfaceFromDefinition<WebMapServiceCatalogItemTraits> {}
+class ModelFromDefinition extends Model<WebMapServiceCatalogItemTraits> {}
 
-@Model.definition(WebMapServiceCatalogItemDefinition)
+@Model.definition(WebMapServiceCatalogItemTraits)
 class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemberMixin(ModelFromDefinition))) implements Mappable {
     get type() {
         return 'wms';

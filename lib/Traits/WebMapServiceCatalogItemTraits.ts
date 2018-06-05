@@ -4,7 +4,7 @@ import ModelTraits from './ModelTraits';
 import mixUrlTraits from './mixUrlTraits';
 import mixGetCapabilitiesTraits from './mixGetCapabilitiesTraits';
 
-export default class WebMapServiceCatalogItemDefinition extends mixGetCapabilitiesTraits(mixUrlTraits(mixCatalogMemberTraits(ModelTraits))) {
+export default class WebMapServiceCatalogItemTraits extends mixGetCapabilitiesTraits(mixUrlTraits(mixCatalogMemberTraits(ModelTraits))) {
     @primitiveTrait({
         type: 'string',
         name: 'Is GeoServer',
