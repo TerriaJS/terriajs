@@ -1,22 +1,22 @@
 import { ObservableMap, computed, decorate, observable } from 'mobx';
+import * as DeveloperError from 'terriajs-cesium/Source/Core/DeveloperError';
 import Constructor from '../Core/Constructor';
+import DefinitionProperty from '../Definitions/DefinitionProperty';
 import ModelDefinition from '../Definitions/ModelDefinition';
-import { ModelProperty } from './ModelProperties';
+import { ModelId } from '../Definitions/ModelReference';
 import StratumOrder from './StratumOrder';
 import Terria from './TerriaNew';
-import * as DeveloperError from 'terriajs-cesium/Source/Core/DeveloperError';
-import { ModelId } from '../Definitions/ModelReference';
 
 interface MakeModelConcrete {
     readonly type;
-    readonly strataTopToBottom: Partial<ModelDefinition>;
-    readonly strataBottomToTop: Partial<ModelDefinition>;
+    readonly strataTopToBottom: Partial<ModelDefinition>[];
+    readonly strataBottomToTop: Partial<ModelDefinition>[];
 }
 
 interface DefinitionClass<T> {
     prototype: T;
     metadata: {
-        [id: string]: ModelProperty;
+        [id: string]: DefinitionProperty;
     };
 }
 

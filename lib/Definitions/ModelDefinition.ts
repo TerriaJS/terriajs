@@ -1,9 +1,9 @@
 import primitiveProperty from './primitiveProperty';
-import { ModelProperty } from '../Models/ModelProperties';
+import DefinitionProperty from './DefinitionProperty';
 
 class ModelDefinition {
     static metadata: {
-        [id: string]: ModelProperty;
+        [id: string]: DefinitionProperty;
     }
 
     // @primitiveProperty({

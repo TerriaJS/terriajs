@@ -1,6 +1,6 @@
-import { modelReferenceArrayProperty } from "../Models/ModelProperties";
 import ModelDefinition from "./ModelDefinition";
 import ModelReference from "./ModelReference";
+import modelReferenceArrayProperty from "./modelReferenceArrayProperty";
 import primitiveProperty from "./primitiveProperty";
 
 export default function mixGroupDefinition<TBase extends ModelDefinition.Constructor>(Base: TBase) {

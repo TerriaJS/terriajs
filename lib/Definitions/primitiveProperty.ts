@@ -1,9 +1,9 @@
-import { ModelProperty, ModelPropertyOptions } from '../Models/ModelProperties';
+import DefinitionProperty, { DefinitionPropertyOptions } from './DefinitionProperty';
 import { BaseModel } from '../Models/Model';
 
 type PrimitiveType = 'string' | 'number' | 'boolean';
 
-export interface PrimitivePropertyOptions<T> extends ModelPropertyOptions {
+export interface PrimitivePropertyOptions<T> extends DefinitionPropertyOptions {
     type: PrimitiveType;
     default?: T;
 }
@@ -18,7 +18,7 @@ export default function primitiveProperty<T>(options: PrimitivePropertyOptions<T
     }
 }
 
-export class PrimitiveProperty<T> extends ModelProperty {
+export class PrimitiveProperty<T> extends DefinitionProperty {
     readonly type: PrimitiveType;
     readonly default: T;
 
