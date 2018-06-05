@@ -1,12 +1,12 @@
-import CatalogGroupDefinition from '../Traits/CatalogGroupTraits';
+import CatalogGroupTraits from '../Traits/CatalogGroupTraits';
 import CatalogMemberMixin from '../ModelMixins/CatalogMemberMixin';
 import GroupMixin from '../ModelMixins/GroupMixin';
 import Model from './Model';
 
-interface ModelWithDefinition extends Model.InterfaceFromDefinition<CatalogGroupDefinition> { }
-class ModelWithDefinition extends Model<CatalogGroupDefinition> { }
+interface ModelWithDefinition extends Model.InterfaceFromDefinition<CatalogGroupTraits> { }
+class ModelWithDefinition extends Model<CatalogGroupTraits> { }
 
-@Model.definition(CatalogGroupDefinition)
+@Model.definition(CatalogGroupTraits)
 export default class CatalogGroup extends GroupMixin(CatalogMemberMixin(ModelWithDefinition))
 {
     get type() {

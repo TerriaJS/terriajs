@@ -1,10 +1,10 @@
-import mixCatalogMemberDefinition from './mixCatalogMemberDefinition';
+import mixCatalogMemberTraits from './mixCatalogMemberTraits';
 import primitiveTrait from './primitiveTrait';
-import ModelDefinition from './ModelDefinition';
-import mixUrlDefinition from './mixUrlDefinition';
-import mixGetCapabilitiesDefinition from './mixGetCapabilitiesDefinition';
+import ModelTraits from './ModelTraits';
+import mixUrlTraits from './mixUrlTraits';
+import mixGetCapabilitiesTraits from './mixGetCapabilitiesTraits';
 
-export default class WebMapServiceCatalogItemDefinition extends mixGetCapabilitiesDefinition(mixUrlDefinition(mixCatalogMemberDefinition(ModelDefinition))) {
+export default class WebMapServiceCatalogItemDefinition extends mixGetCapabilitiesTraits(mixUrlTraits(mixCatalogMemberTraits(ModelTraits))) {
     @primitiveTrait({
         type: 'string',
         name: 'Is GeoServer',

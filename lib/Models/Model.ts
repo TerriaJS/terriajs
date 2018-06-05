@@ -2,48 +2,48 @@ import { ObservableMap, computed, decorate, observable } from 'mobx';
 import * as DeveloperError from 'terriajs-cesium/Source/Core/DeveloperError';
 import Constructor from '../Core/Constructor';
 import Trait from '../Traits/Trait';
-import ModelDefinition from '../Traits/ModelDefinition';
+import ModelTraits from '../Traits/ModelTraits';
 import { ModelId } from '../Traits/ModelReference';
 import StratumOrder from './StratumOrder';
 import Terria from './TerriaNew';
 
 interface MakeModelConcrete {
     readonly type;
-    readonly strataTopToBottom: Partial<ModelDefinition>[];
-    readonly strataBottomToTop: Partial<ModelDefinition>[];
+    readonly strataTopToBottom: Partial<ModelTraits>[];
+    readonly strataBottomToTop: Partial<ModelTraits>[];
 }
 
 interface DefinitionClass<T> {
     prototype: T;
-    metadata: {
+    traits: {
         [id: string]: Trait;
     };
 }
 
-export interface BaseModel extends Model.InterfaceFromDefinition<ModelDefinition> {}
+export interface BaseModel extends Model.InterfaceFromDefinition<ModelTraits> {}
 
 export abstract class BaseModel {
     constructor(readonly id: ModelId, readonly terria: Terria) {
     }
 
-    readonly strata = observable.map<string, Partial<ModelDefinition>>();
+    readonly strata = observable.map<string, Partial<ModelTraits>>();
 
-    abstract get strataTopToBottom(): Partial<ModelDefinition>[];
-    abstract get strataBottomToTop(): Partial<ModelDefinition>[];
+    abstract get strataTopToBottom(): Partial<ModelTraits>[];
+    abstract get strataBottomToTop(): Partial<ModelTraits>[];
 
-    static definition<T extends ModelDefinition>(definition: DefinitionClass<T>): Function {
+    static definition<T extends ModelTraits>(definition: DefinitionClass<T>): Function {
         return function <T extends BaseModel>(target: Constructor<T & MakeModelConcrete>) {
             class UpdatedModel extends (target as Constructor<BaseModel & MakeModelConcrete>) {
-                readonly flattened: ModelDefinition;
+                readonly flattened: ModelTraits;
 
                 constructor(...args: any[]) {
                     super(...args);
                     this.flattened = observable(createFlattenedLayer(this, definition));
                 }
 
-                createDefinitionInstance: () => Partial<ModelDefinition> = () => {
-                    const metadata = definition.metadata;
-                    const propertyNames = Object.keys(metadata);
+                createDefinitionInstance: () => Partial<ModelTraits> = () => {
+                    const traits = definition.traits;
+                    const propertyNames = Object.keys(traits);
                     const reduced: any = propertyNames.reduce((p, c) => ({ ...p, [c]: undefined }), {});
                     return observable(reduced);
                 }
@@ -52,9 +52,9 @@ export abstract class BaseModel {
             const decorators: any = {};
 
             // Add top-level accessors that don't already exist.
-            const metadata = definition.metadata;
-            Object.keys(metadata).forEach(propertyName => {
-                const property = metadata[propertyName];
+            const traits = definition.traits;
+            Object.keys(traits).forEach(propertyName => {
+                const property = traits[propertyName];
 
                 if (!(propertyName in UpdatedModel.prototype)) {
                     Object.defineProperty(UpdatedModel.prototype, propertyName, {
@@ -77,12 +77,12 @@ export abstract class BaseModel {
 }
 
 function createFlattenedLayer(model, definition) {
-    const metadata = definition.metadata;
+    const traits = definition.traits;
 
     const flattened: any = {};
 
-    Object.keys(metadata).forEach(propertyName => {
-        const property = metadata[propertyName];
+    Object.keys(traits).forEach(propertyName => {
+        const property = traits[propertyName];
 
         Object.defineProperty(flattened, propertyName, {
             get: function() {
@@ -95,7 +95,7 @@ function createFlattenedLayer(model, definition) {
     return flattened;
 }
 
-class Model<T extends ModelDefinition> extends BaseModel {
+class Model<T extends ModelTraits> extends BaseModel {
     readonly flattened: Model.MakeReadonly<T>;
     readonly strata: ObservableMap<string, Partial<T>>;
     readonly createDefinitionInstance: () => Partial<T> = function() {
@@ -124,11 +124,11 @@ class Model<T extends ModelDefinition> extends BaseModel {
 }
 
 namespace Model {
-    export type MakeReadonly<TDefinition extends ModelDefinition> = {
+    export type MakeReadonly<TDefinition extends ModelTraits> = {
         readonly [P in keyof TDefinition]: TDefinition[P] extends Array<infer TElement> ? ReadonlyArray<TElement> : TDefinition[P];
     };
 
-    export type InterfaceFromDefinition<TDefinition extends ModelDefinition> = MakeReadonly<TDefinition>;
+    export type InterfaceFromDefinition<TDefinition extends ModelTraits> = MakeReadonly<TDefinition>;
 }
 
 export default Model;

@@ -1,8 +1,8 @@
-import ModelDefinition from "./ModelDefinition";
-import primitiveTrait from "./primitiveTrait";
+import ModelTraits from './ModelTraits';
+import primitiveTrait from './primitiveTrait';
 
-export default function mixGetCapabilitiesDefinition<TBase extends ModelDefinition.Constructor>(Base: TBase) {
-    class GetCapabilitiesDefinition extends Base {
+export default function mixGetCapabilitiesTraits<TBase extends ModelTraits.Constructor>(Base: TBase) {
+    class GetCapabilitiesTraits extends Base {
         @primitiveTrait({
             type: 'string',
             name: 'GetCapabilities URL',
@@ -18,5 +18,5 @@ export default function mixGetCapabilitiesDefinition<TBase extends ModelDefiniti
         })
         getCapabilitiesCacheDuration: string;
     }
-    return GetCapabilitiesDefinition;
+    return GetCapabilitiesTraits;
 }

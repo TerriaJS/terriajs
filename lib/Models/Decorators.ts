@@ -16,17 +16,17 @@ function mixDefinition(definition, mixin) {
     if (!definition) {
         throw new DeveloperError('definition must be defined.');
     }
-    if (!mixin || !mixin.metadata) {
+    if (!mixin || !mixin.traits) {
         throw new DeveloperError('mixin must be defined.');
     }
 
-    if (!definition.metadata) {
-        definition.metadata = {};
+    if (!definition.traits) {
+        definition.traits = {};
     }
 
-    Object.keys(mixin.metadata).forEach(propertyKey => {
-        if (!definition.metadata.hasOwnProperty(propertyKey)) {
-            definition.metadata[propertyKey] = mixin.metadata[propertyKey];
+    Object.keys(mixin.traits).forEach(propertyKey => {
+        if (!definition.traits.hasOwnProperty(propertyKey)) {
+            definition.traits[propertyKey] = mixin.traits[propertyKey];
         }
     });
 }

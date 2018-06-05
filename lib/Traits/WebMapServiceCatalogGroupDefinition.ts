@@ -1,11 +1,11 @@
-import mixGroupDefinition from './mixGroupDefinition';
-import mixCatalogMemberDefinition from './mixCatalogMemberDefinition';
-import ModelDefinition from './ModelDefinition';
-import mixUrlDefinition from './mixUrlDefinition';
+import mixGroupTraits from './mixGroupTraits';
+import mixCatalogMemberTraits from './mixCatalogMemberTraits';
+import ModelTraits from './ModelTraits';
+import mixUrlTraits from './mixUrlTraits';
 import primitiveTrait from './primitiveTrait';
-import mixGetCapabilitiesDefinition from './mixGetCapabilitiesDefinition';
+import mixGetCapabilitiesTraits from './mixGetCapabilitiesTraits';
 
-export default class WebMapServiceCatalogGroupDefinition extends mixGetCapabilitiesDefinition(mixGroupDefinition(mixUrlDefinition(mixCatalogMemberDefinition(ModelDefinition)))) {
+export default class WebMapServiceCatalogGroupDefinition extends mixGetCapabilitiesTraits(mixGroupTraits(mixUrlTraits(mixCatalogMemberTraits(ModelTraits)))) {
     @primitiveTrait({
         type: 'boolean',
         name: 'Flatten',

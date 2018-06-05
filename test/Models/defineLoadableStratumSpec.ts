@@ -1,10 +1,10 @@
 import defineLoadableStratum from '../../lib/Models/defineLoadableStratum';
-import ModelDefinition from '../../lib/Traits/ModelDefinition';
+import ModelTraits from '../../lib/Traits/ModelTraits';
 import primitiveTrait from '../../lib/Traits/primitiveTrait';
 import { autorun, observable, runInAction } from 'mobx';
 
 describe('defineLoadableStratum', function() {
-    class TestDefinition extends ModelDefinition {
+    class TestDefinition extends ModelTraits {
         @primitiveTrait({
             type: 'string',
             name: 'Foo',

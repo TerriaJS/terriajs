@@ -11,7 +11,7 @@ interface Constructor<T> {
 
 interface DefinitionConstructor<T> {
     new(): T;
-    metadata: object;
+    traits: object;
 }
 
 export interface LoadableStratumState {
@@ -126,12 +126,12 @@ export default function defineLoadableStratum<TDefinition, TValue extends Pick<T
 // export default function defineLoadableStratum<TDefinition, T1 extends keyof TDefinition, T2 extends keyof TDefinition, T3 extends keyof TDefinition, T4 extends keyof TDefinition, T5 extends keyof TDefinition, T6 extends keyof TDefinition, T7 extends keyof TDefinition, T8 extends keyof TDefinition, T9 extends keyof TDefinition, T10 extends keyof TDefinition, T11 extends keyof TDefinition, T12 extends keyof TDefinition, T13 extends keyof TDefinition, T14 extends keyof TDefinition, T15 extends keyof TDefinition, T16 extends keyof TDefinition, T17 extends keyof TDefinition, T18 extends keyof TDefinition, T19 extends keyof TDefinition, T20 extends keyof TDefinition, T21 extends keyof TDefinition, T22 extends keyof TDefinition, T23 extends keyof TDefinition, T24 extends keyof TDefinition, T25 extends keyof TDefinition>(definition: DefinitionConstructor<TDefinition>, property1: T1, property2: T2, property3: T3, property4: T4, property5: T5, property6: T6, property7: T7, property8: T8, property9: T9, property10: T10, property11: T11, property12: T12, property13: T13, property14: T14, property15: T15, property16: T16, property17: T17, property18: T18, property19: T19, property20: T20, property21: T21, property22: T22, property23: T23, property24: T24, property25: T25): LoadableStratumConstructor<Pick<TDefinition, T1 | T2 | T3 | T4 | T5 | T6 | T7 | T8 | T9 | T10 | T11 | T12 | T13 | T14 | T15 | T16 | T17 | T18 | T19 | T20 | T21 | T22 | T23 | T24 | T25>>;
 export default function defineLoadableStratum<TDefinition, TValue>(definition: DefinitionConstructor<TDefinition>, value: Constructor<TValue>, ...properties: string[]): LoadableStratumConstructor<any> {
     if (!properties || properties.length === 0) {
-        properties = Object.keys(definition.metadata);
+        properties = Object.keys(definition.traits);
     }
 
     //>>includeStart('debug', pragmas.debug);
     properties.forEach(property => {
-        if (!(property in definition.metadata)) {
+        if (!(property in definition.traits)) {
             throw new DeveloperError(`Property "${property}" does not exist or is not decorated as a ModelProperty.`);
         }
     })

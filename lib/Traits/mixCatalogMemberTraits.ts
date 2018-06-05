@@ -1,4 +1,4 @@
-import ModelDefinition from './ModelDefinition';
+import ModelTraits from './ModelTraits';
 import primitiveTrait from './primitiveTrait';
 
 export interface InfoSection {
@@ -6,8 +6,8 @@ export interface InfoSection {
     content: string;
 }
 
-export default function mixCatalogMemberDefinition<TBase extends ModelDefinition.Constructor>(Base: TBase) {
-    class CatalogMemberDefinition extends Base {
+export default function mixCatalogMemberTraits<TBase extends ModelTraits.Constructor>(Base: TBase) {
+    class CatalogMemberTraits extends Base {
         @primitiveTrait({
             type: 'string',
             name: 'Name',
@@ -44,5 +44,5 @@ export default function mixCatalogMemberDefinition<TBase extends ModelDefinition
         // info: InfoSection[];
     }
 
-    return CatalogMemberDefinition;
+    return CatalogMemberTraits;
 }

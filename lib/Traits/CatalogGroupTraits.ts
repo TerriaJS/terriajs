@@ -1,6 +1,6 @@
-import mixGroupDefinition from './mixGroupDefinition';
-import ModelDefinition from './ModelDefinition';
-import mixCatalogMemberDefinition from './mixCatalogMemberDefinition';
+import mixGroupTraits from './mixGroupTraits';
+import ModelTraits from './ModelTraits';
+import mixCatalogMemberTraits from './mixCatalogMemberTraits';
 
-export default class CatalogGroupDefinition extends mixGroupDefinition(mixCatalogMemberDefinition(ModelDefinition)) {
+export default class CatalogGroupTraits extends mixGroupTraits(mixCatalogMemberTraits(ModelTraits)) {
 }

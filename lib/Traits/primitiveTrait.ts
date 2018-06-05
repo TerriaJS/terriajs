@@ -11,10 +11,10 @@ export interface PrimitiveTraitOptions<T> extends TraitOptions {
 export default function primitiveTrait<T>(options: PrimitiveTraitOptions<T>) {
     return function(target: any, propertyKey: string) {
         const constructor = target.constructor;
-        if (!constructor.metadata) {
-            constructor.metadata = {};
+        if (!constructor.traits) {
+            constructor.traits = {};
         }
-        constructor.metadata[propertyKey] = new PrimitiveTrait(propertyKey, options);
+        constructor.traits[propertyKey] = new PrimitiveTrait(propertyKey, options);
     }
 }
 

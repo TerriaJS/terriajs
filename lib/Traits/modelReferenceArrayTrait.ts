@@ -1,21 +1,21 @@
 import Trait, { TraitOptions } from "./Trait";
 import ModelReference from "./ModelReference";
 
-export interface ModelArrayPropertyOptions extends TraitOptions {
+export interface ModelArrayTraitOptions extends TraitOptions {
 }
 
-export default function modelReferenceArrayProperty<T>(options: ModelArrayPropertyOptions) {
+export default function modelReferenceArrayTrait<T>(options: ModelArrayTraitOptions) {
     return function(target: any, propertyKey: string) {
         const constructor = target.constructor;
-        if (!constructor.metadata) {
-            constructor.metadata = {};
+        if (!constructor.traits) {
+            constructor.traits = {};
         }
-        constructor.metadata[propertyKey] = new ModelReferenceArrayProperty(propertyKey, options);
+        constructor.traits[propertyKey] = new ModelReferenceArrayProperty(propertyKey, options);
     }
 }
 
 export class ModelReferenceArrayProperty extends Trait {
-    constructor(id: string, options: ModelArrayPropertyOptions) {
+    constructor(id: string, options: ModelArrayTraitOptions) {
         super(id, options);
     }
 
