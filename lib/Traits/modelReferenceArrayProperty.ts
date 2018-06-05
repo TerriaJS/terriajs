@@ -1,4 +1,4 @@
-import DefinitionProperty, { DefinitionPropertyOptions } from "./DefinitionProperty";
+import DefinitionProperty, { DefinitionPropertyOptions } from "./Trait";
 import ModelReference from "./ModelReference";
 
 export interface ModelArrayPropertyOptions extends DefinitionPropertyOptions {

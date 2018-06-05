@@ -1,4 +1,4 @@
-import DefinitionProperty, { DefinitionPropertyOptions } from './DefinitionProperty';
+import DefinitionProperty, { DefinitionPropertyOptions } from './Trait';
 import { BaseModel } from '../Models/Model';
 
 type PrimitiveType = 'string' | 'number' | 'boolean';

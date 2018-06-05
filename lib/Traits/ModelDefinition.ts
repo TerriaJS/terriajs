@@ -1,5 +1,5 @@
 import primitiveProperty from './primitiveProperty';
-import DefinitionProperty from './DefinitionProperty';
+import DefinitionProperty from './Trait';
 
 class ModelDefinition {
     static metadata: {
