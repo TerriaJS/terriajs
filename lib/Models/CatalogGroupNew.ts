@@ -1,4 +1,4 @@
-import CatalogGroupDefinition from '../Definitions/CatalogGroupDefinition';
+import CatalogGroupDefinition from '../Traits/CatalogGroupDefinition';
 import CatalogMemberMixin from '../ModelMixins/CatalogMemberMixin';
 import GroupMixin from '../ModelMixins/GroupMixin';
 import Model from './Model';

@@ -1,6 +1,6 @@
 import Class from '../Core/Class';
 import instanceOf from '../Core/instanceOf';
-import ModelReference from '../Definitions/ModelReference';
+import ModelReference from '../Traits/ModelReference';
 import Model, { BaseModel } from './Model';
 import * as RuntimeError from 'terriajs-cesium/Source/Core/RuntimeError';
 

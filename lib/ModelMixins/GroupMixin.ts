@@ -2,7 +2,7 @@ import Constructor from "../Core/Constructor";
 import { computed } from "mobx";
 import Terria from "../Models/TerriaNew";
 import { BaseModel } from "../Models/Model";
-import ModelReference from "../Definitions/ModelReference";
+import ModelReference from "../Traits/ModelReference";
 
 interface RequiredDefinition {
     members: ReadonlyArray<ModelReference>;

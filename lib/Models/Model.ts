@@ -1,9 +1,9 @@
 import { ObservableMap, computed, decorate, observable } from 'mobx';
 import * as DeveloperError from 'terriajs-cesium/Source/Core/DeveloperError';
 import Constructor from '../Core/Constructor';
-import DefinitionProperty from '../Definitions/DefinitionProperty';
-import ModelDefinition from '../Definitions/ModelDefinition';
-import { ModelId } from '../Definitions/ModelReference';
+import DefinitionProperty from '../Traits/DefinitionProperty';
+import ModelDefinition from '../Traits/ModelDefinition';
+import { ModelId } from '../Traits/ModelReference';
 import StratumOrder from './StratumOrder';
 import Terria from './TerriaNew';
 

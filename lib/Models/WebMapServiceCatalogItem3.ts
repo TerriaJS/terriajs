@@ -11,7 +11,7 @@ import { autorun, computed, observable, trace, runInAction } from 'mobx';
 import * as URI from 'urijs';
 import autoUpdate from '../Core/autoUpdate';
 import isReadOnlyArray from '../Core/isReadOnlyArray';
-import WebMapServiceCatalogItemDefinition from '../Definitions/WebMapServiceCatalogItemDefinition';
+import WebMapServiceCatalogItemDefinition from '../Traits/WebMapServiceCatalogItemDefinition';
 import Model from './Model';
 import WebMapServiceCapabilities, { CapabilitiesLayer } from './WebMapServiceCapabilities';
 import defineLoadableStratum, { LoadableStratumState } from './defineLoadableStratum';

@@ -1,7 +1,7 @@
 import { computed, observable, runInAction } from 'mobx';
 import isReadOnlyArray from '../Core/isReadOnlyArray';
-import ModelReference from '../Definitions/ModelReference';
-import WebMapServiceCatalogGroupDefinition from '../Definitions/WebMapServiceCatalogGroupDefinition';
+import ModelReference from '../Traits/ModelReference';
+import WebMapServiceCatalogGroupDefinition from '../Traits/WebMapServiceCatalogGroupDefinition';
 import CatalogMemberMixin from '../ModelMixins/CatalogMemberMixin';
 import GetCapabilitiesMixin from '../ModelMixins/GetCapabilitiesMixin';
 import GroupMixin from '../ModelMixins/GroupMixin';
