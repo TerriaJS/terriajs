@@ -5,6 +5,11 @@ var webpack = require('webpack');
 function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlugin, disableStyleLoader) {
     const cesiumDir = path.dirname(require.resolve('terriajs-cesium/package.json'));
 
+    config.node = config.node || {};
+
+    // Resolve node module use of fs
+    config.node.fs = 'empty';
+
     config.resolve = config.resolve || {};
     config.resolve.extensions = config.resolve.extensions || ['*', '.webpack.js', '.web.js', '.js'];
     config.resolve.extensions.push('.jsx');
@@ -21,7 +26,9 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
         exclude: [
             require.resolve('terriajs-cesium/Source/ThirdParty/zip'),
             require.resolve('terriajs-cesium/Source/Core/buildModuleUrl'),
-            require.resolve('terriajs-cesium/Source/Core/TaskProcessor')
+            require.resolve('terriajs-cesium/Source/Core/TaskProcessor'),
+            require.resolve('terriajs-cesium/Source/ThirdParty/Workers/draco_decoder'),
+            require.resolve('terriajs-cesium/Source/ThirdParty/Workers/draco_wasm_wrapper')
         ],
         loader: StringReplacePlugin.replace({
             replacements: [

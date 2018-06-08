@@ -2,7 +2,7 @@
 
 /*global require, fail*/
 var JulianDate = require('terriajs-cesium/Source/Core/JulianDate');
-var loadText = require('terriajs-cesium/Source/Core/loadText');
+var loadText = require('../../lib/Core/loadText');
 var Rectangle = require('terriajs-cesium/Source/Core/Rectangle');
 var when = require('terriajs-cesium/Source/ThirdParty/when');
 
