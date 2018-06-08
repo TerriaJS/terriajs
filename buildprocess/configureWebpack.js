@@ -26,16 +26,16 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
         exclude: [
             require.resolve('terriajs-cesium/Source/ThirdParty/zip'),
             require.resolve('terriajs-cesium/Source/Core/buildModuleUrl'),
-            require.resolve('terriajs-cesium/Source/Core/TaskProcessor'),
-            require.resolve('terriajs-cesium/Source/ThirdParty/Workers/draco_decoder'),
-            require.resolve('terriajs-cesium/Source/ThirdParty/Workers/draco_wasm_wrapper')
+            require.resolve('terriajs-cesium/Source/Core/TaskProcessor')
         ],
         loader: StringReplacePlugin.replace({
             replacements: [
                 {
                     pattern: /buildModuleUrl\([\'|\"](.*)[\'|\"]\)/ig,
                     replacement: function (match, p1, offset, string) {
-                        return "require('" + cesiumDir.replace(/\\/g, '\\\\') + "/Source/" + p1.replace(/\\/g, '\\\\') + "')";
+                        var replacement = "require('" + cesiumDir.replace(/\\/g, '\\\\') + "/Source/" + p1.replace(/\\/g, '\\\\') + "')";
+                        console.log('Replacing ', match, ' with ', replacement);
+                        return replacement;
                     }
                 }
             ]
