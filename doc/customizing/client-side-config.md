@@ -46,6 +46,8 @@ Option                      | Meaning
 `"disableSplitter"`         | True to disable the use of the splitter control.
 `"tabbedCatalog"`           | True to create a separate explorer panel tab for each top-level catalog group to list its items in.
 `"interceptBrowserPrint"`   | True (the default) to intercept the browser's print feature and use a custom one accessible through the Share panel.
+`"useCesiumIonTerrain"`     | True to use Cesium World Terrain from Cesium ion. False to use STK World Terrain. Currently the default is false, but this will change to true prior to 1 September 2018 when STK World Terrain is deprecated.
+`"cesiumIonAccessToken"`    | The access token to use with Cesium ion.
 
 ## Advanced options
 

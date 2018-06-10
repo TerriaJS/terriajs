@@ -33,9 +33,19 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
                 {
                     pattern: /buildModuleUrl\([\'|\"](.*)[\'|\"]\)/ig,
                     replacement: function (match, p1, offset, string) {
-                        var replacement = "require('" + cesiumDir.replace(/\\/g, '\\\\') + "/Source/" + p1.replace(/\\/g, '\\\\') + "')";
-                        console.log('Replacing ', match, ' with ', replacement);
-                        return replacement;
+                        return "require('" + cesiumDir.replace(/\\/g, '\\\\') + "/Source/" + p1.replace(/\\/g, '\\\\') + "')";
+                    }
+                },
+                {
+                    pattern: /Please assign <i>Cesium.Ion.defaultAccessToken<\/i>/g,
+                    replacement: function() {
+                        return "Please set \"cesiumIonAccessToken\" in config.json";
+                    }
+                },
+                {
+                    pattern: / before making any Cesium API calls/g,
+                    replacement: function() {
+                        return "";
                     }
                 }
             ]
