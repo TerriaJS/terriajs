@@ -1,5 +1,6 @@
 import Trait, { TraitOptions } from './Trait';
 import { BaseModel } from '../Models/Model';
+import ModelTraits from './ModelTraits';
 
 type PrimitiveType = 'string' | 'number' | 'boolean';
 
@@ -28,10 +29,9 @@ export class PrimitiveTrait<T> extends Trait {
         this.default = options.default;
     }
 
-    getValue(model: BaseModel): T {
-        const strata = model.strataTopToBottom;
-        for (let i = 0; i < strata.length; ++i) {
-            const stratum = strata[i];
+    getValue(strataTopToBottom: Partial<ModelTraits>[]): T {
+        for (let i = 0; i < strataTopToBottom.length; ++i) {
+            const stratum = strataTopToBottom[i];
             const value = stratum[this.id];
             if (value !== undefined) {
                 return value;

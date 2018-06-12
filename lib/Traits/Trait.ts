@@ -1,3 +1,5 @@
+import ModelTraits from "./ModelTraits";
+
 export interface TraitOptions {
     name: string,
     description: string,
@@ -14,5 +16,5 @@ export default abstract class Trait {
         this.description = options.description;
     }
 
-    abstract getValue(model: any): any;
+    abstract getValue(strataTopToBottom: Partial<ModelTraits>[]): any;
 }

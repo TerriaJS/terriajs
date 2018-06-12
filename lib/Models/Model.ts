@@ -86,7 +86,7 @@ function createFlattenedLayer(model, definition) {
 
         Object.defineProperty(flattened, propertyName, {
             get: function() {
-                return property.getValue(model);
+                return property.getValue(model.strataTopToBottom);
             },
             enumerable: true
         });
@@ -125,7 +125,11 @@ class Model<T extends ModelTraits> extends BaseModel {
 
 namespace Model {
     export type MakeReadonly<TDefinition extends ModelTraits> = {
-        readonly [P in keyof TDefinition]: TDefinition[P] extends Array<infer TElement> ? ReadonlyArray<TElement> : TDefinition[P];
+        readonly [P in keyof TDefinition]: TDefinition[P] extends Array<infer TElement> ?
+            ReadonlyArray<Readonly<TElement>> :
+            TDefinition[P] extends ModelTraits ?
+                MakeReadonly<TDefinition[P]> :
+                Readonly<TDefinition[P]>;
     };
 
     export type InterfaceFromDefinition<TDefinition extends ModelTraits> = MakeReadonly<TDefinition>;

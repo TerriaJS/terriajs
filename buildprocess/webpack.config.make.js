@@ -5,7 +5,13 @@ var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 //var testGlob = ['./test/**/*.js', './test/**/*.jsx', '!./test/Utility/*.js'];
-var testGlob = ['./test/Models/Experiment.ts', './test/Models/StratumOrderSpec.ts', './test/Models/WebMapServiceCatalogItemSpec.ts'];
+var testGlob = [
+    './test/Models/Experiment.ts',
+    './test/Models/StratumOrderSpec.ts',
+    './test/Models/WebMapServiceCatalogItemSpec.ts',
+    './test/Traits/objectTraitSpec.ts',
+    './test/Traits/objectArrayTraitSpec.ts'
+];
 
 module.exports = function(hot, dev) {
     var config = {

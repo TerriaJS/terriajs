@@ -1,8 +1,21 @@
 import ModelTraits from './ModelTraits';
 import primitiveTrait from './primitiveTrait';
+import objectTrait from './objectTrait';
+import objectArrayTrait from './objectArrayTrait';
 
-export interface InfoSection {
+export class InfoSectionTraits extends ModelTraits {
+    @primitiveTrait({
+        type: 'string',
+        name: 'Name',
+        description: 'The name of the section.'
+    })
     name: string;
+
+    @primitiveTrait({
+        type: 'string',
+        name: 'Content',
+        description: 'The content of the section, in Markdown and HTML format.'
+    })
     content: string;
 }
 
@@ -29,19 +42,20 @@ export default function mixCatalogMemberTraits<TBase extends ModelTraits.Constru
         })
         nameInCatalog: string;
 
-        @primitiveTrait({
-            type: 'string',
-            name: 'Name in catalog',
-            description: 'The name of the item to be displayed in the workbench, if it is different from the one to display in the catalog.'
+        @objectTrait({
+            type: InfoSectionTraits,
+            name: 'Favorite Info Section',
+            description: 'Yay'
         })
-        nameInWorkbench: string;
+        favoriteInfoSection: InfoSectionTraits;
 
-        // @modelReferenceArrayProperty({
-        //     name: 'Info',
-        //     description: 'Human-readable information about this dataset.',
-        //     idProperty: 'name'
-        // })
-        // info: InfoSection[];
+        @objectArrayTrait({
+            type: InfoSectionTraits,
+            name: 'Info',
+            description: 'Human-readable information about this dataset.',
+            idProperty: 'name'
+        })
+        info: InfoSectionTraits[];
     }
 
     return CatalogMemberTraits;

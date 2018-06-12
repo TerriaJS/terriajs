@@ -1,5 +1,6 @@
 import Trait, { TraitOptions } from "./Trait";
 import ModelReference from "./ModelReference";
+import ModelTraits from "./ModelTraits";
 
 export interface ModelArrayTraitOptions extends TraitOptions {
 }
@@ -23,15 +24,14 @@ export class ModelReferenceArrayProperty extends Trait {
     // It takes an optional idProperty. If not specified, the values are themselves IDs.
     // It ensures that each ID is unique and that the topmost stratum wins for a given ID.
     // There can even be properties to control relative ordering of items in different strata.
-    getValue(model: any): ReadonlyArray<ModelReference> {
+    getValue(strataTopToBottom: Partial<ModelTraits>[]): ReadonlyArray<ModelReference> {
         const result = [];
         const idMap = {};
         const removedIds = {};
 
         // Create a single array with all the unique model IDs.
-        const strata = model.strataTopToBottom;
-        for (let i = 0; i < strata.length; ++i) {
-            const stratum = strata[i];
+        for (let i = 0; i < strataTopToBottom.length; ++i) {
+            const stratum = strataTopToBottom[i];
             const modelIdArray: ModelReference[] = stratum[this.id];
 
             if (modelIdArray) {
