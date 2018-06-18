@@ -3,20 +3,20 @@ import Constructor from '../Core/Constructor';
 import StratumOrder from '../Models/StratumOrder';
 
 interface RequiredOnDefinition {
-    getCapabilitiesUrl: string;
+    getCapabilitiesUrl: string | undefined;
 }
 
 interface RequiredOnInstance {
-    url: string;
+    url: string | undefined;
     flattened: RequiredOnDefinition;
 }
 
 function GetCapabilitiesMixin<T extends Constructor<RequiredOnInstance>>(Base: T) {
     abstract class GetCapabilitiesMixin extends Base {
-        protected abstract get defaultGetCapabilitiesUrl();
+        protected abstract get defaultGetCapabilitiesUrl(): string | undefined;
 
         @computed
-        get getCapabilitiesUrl(): string {
+        get getCapabilitiesUrl(): string | undefined {
             const getCapabilitiesUrl = this.flattened.getCapabilitiesUrl;
             if (getCapabilitiesUrl) {
                 return getCapabilitiesUrl;

@@ -7,33 +7,32 @@
 // 3. Observable spaghetti
 //  Solution: think in terms of pipelines with computed observables, document patterns.
 // 4. All code for all catalog item types needs to be loaded before we can do anything.
-import { autorun, computed, observable, trace, runInAction } from 'mobx';
+import { computed, observable, runInAction, trace } from 'mobx';
 import * as URI from 'urijs';
+import * as TerriaError from '../Core/TerriaError';
 import autoUpdate from '../Core/autoUpdate';
 import isReadOnlyArray from '../Core/isReadOnlyArray';
-import WebMapServiceCatalogItemTraits from '../Traits/WebMapServiceCatalogItemTraits';
-import Model from './Model';
-import WebMapServiceCapabilities, { CapabilitiesLayer } from './WebMapServiceCapabilities';
-import defineLoadableStratum, { LoadableStratumState } from './defineLoadableStratum';
-import defineStratum from './defineStratum';
-import * as proxyCatalogItemUrl from './proxyCatalogItemUrl';
-import Mappable from './Mappable';
 import CatalogMemberMixin from '../ModelMixins/CatalogMemberMixin';
-import UrlMixin from '../ModelMixins/UrlMixin';
 import GetCapabilitiesMixin from '../ModelMixins/GetCapabilitiesMixin';
-import StratumOrder from './StratumOrder';
+import UrlMixin from '../ModelMixins/UrlMixin';
+import WebMapServiceCatalogItemTraits from '../Traits/WebMapServiceCatalogItemTraits';
+import Mappable, { ImageryLayer } from './Mappable';
+import Model from './Model';
 import Terria from './TerriaNew';
+import WebMapServiceCapabilities, { CapabilitiesLayer, CapabilitiesStyle } from './WebMapServiceCapabilities';
+import defineLoadableStratum, { LoadableStratumState } from './defineLoadableStratum';
+import * as proxyCatalogItemUrl from './proxyCatalogItemUrl';
 
 interface LegendUrl {
     url: string;
-    mimeType: string;
+    mimeType?: string;
 }
 
 interface WebMapServiceStyle {
     name: string;
     title: string;
-    abstract: string;
-    legendUrl: LegendUrl;
+    abstract?: string;
+    legendUrl?: LegendUrl;
 }
 
 interface WebMapServiceStyles {
@@ -41,14 +40,15 @@ interface WebMapServiceStyles {
 }
 
 class GetCapabilitiesValue {
-    catalogItem: WebMapServiceCatalogItem;
+    constructor(readonly catalogItem: WebMapServiceCatalogItem) {
+    }
 
     @observable
-    capabilities: WebMapServiceCapabilities;
+    capabilities?: WebMapServiceCapabilities;
 
     @computed
-    get capabilitiesLayers(): ReadonlyMap<string, CapabilitiesLayer> {
-        const lookup: (name: string) => [string, CapabilitiesLayer] = name => [name, this.capabilities && this.capabilities.findLayer(name)];
+    get capabilitiesLayers(): ReadonlyMap<string, CapabilitiesLayer | undefined> {
+        const lookup: (name: string) => [string, CapabilitiesLayer | undefined] = name => [name, this.capabilities && this.capabilities.findLayer(name)];
         return new Map(this.catalogItem.layersArray.map(lookup));
     }
 
@@ -66,7 +66,8 @@ class GetCapabilitiesValue {
             const layerName = layerTuple[0];
             const layer = layerTuple[1];
 
-            result[layerName] = this.capabilities.getInheritedValues(layer, 'Style').map(style => {
+            const styles: ReadonlyArray<CapabilitiesStyle> = layer ? this.capabilities.getInheritedValues(layer, 'Style') : [];
+            result[layerName] = styles.map(style => {
                 var wmsLegendUrl = isReadOnlyArray(style.LegendURL) ? style.LegendURL[0] : style.LegendURL;
 
                 var legendUri, legendMimeType;
@@ -102,6 +103,10 @@ class GetCapabilitiesValue {
 
     @computed
     get isGeoServer(): boolean {
+        if (!this.capabilities) {
+            return false;
+        }
+
         if (!this.capabilities.Service ||
             !this.capabilities.Service.KeywordList ||
             !this.capabilities.Service.KeywordList.Keyword)
@@ -133,7 +138,7 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemb
 
     constructor(id: string, terria: Terria) {
         super(id, terria);
-        this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, new GetCapabilitiesStratum(layer => this._loadGetCapabilitiesStratum(layer)));
+        this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, new GetCapabilitiesStratum(this, (layer: typeof GetCapabilitiesStratum.TLoadValue) => this._loadGetCapabilitiesStratum(layer)));
     }
 
     @computed
@@ -147,7 +152,7 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemb
         }
     }
 
-    protected get defaultGetCapabilitiesUrl(): string {
+    protected get defaultGetCapabilitiesUrl(): string | undefined {
         if (this.uri) {
             return this.uri.clone().setSearch({
                 service: 'WMS',
@@ -160,27 +165,39 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemb
     }
 
     @computed
-    get currentDiscreteTime(): string {
+    get currentDiscreteTime(): string | undefined {
         return undefined; // TODO
     }
 
     @computed
-    get nextDiscreteTime(): string {
+    get nextDiscreteTime(): string | undefined {
         return undefined; // TODO
     }
 
     @computed
     get mapItems() {
         trace();
-        return [
-            this._currentImageryLayer,
-            this._nextImageryLayer
-        ];
+        const result = [];
+
+        const current = this._currentImageryLayer;
+        if (current) {
+            result.push(current);
+        }
+
+        const next = this._nextImageryLayer;
+        if (next) {
+            result.push(next);
+        }
+
+        return result;
+
+
+        // .filter(item => item !== undefined);
     }
 
     @computed
-    @autoUpdate(layer => {
-        layer.alpha = this.opacity;
+    @autoUpdate(function(this: WebMapServiceCatalogItem, layer: ImageryLayer) {
+        layer.alpha = this.opacity || 0.8;
     })
     private get _currentImageryLayer() {
         trace();
@@ -201,7 +218,7 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemb
         }
     }
 
-    private _createImageryLayer(time) {
+    private _createImageryLayer(time: string | undefined): ImageryLayer | undefined {
         // Don't show anything on the map until GetCapabilities finishes loading.
         // But do trigger loading so that we can eventually show something!
         // TODO should this be a more general loading check? eliminate the cast?
@@ -213,7 +230,7 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemb
 
         return {
             wms: true,
-            isGeoServer: this.isGeoServer,
+            isGeoServer: this.isGeoServer || false,
             alpha: 1.0
         };
 
@@ -229,7 +246,12 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemb
     }
 
     private _loadGetCapabilitiesStratum(values: typeof GetCapabilitiesStratum.TLoadValue): Promise<void> {
-        values.catalogItem = this;
+        if (this.getCapabilitiesUrl === undefined) {
+            return Promise.reject(new TerriaError({
+                title: 'Unable to load GetCapabilities',
+                message: 'Could not load the Web Map Service (WMS) GetCapabilities document because the catalog item does not have a `url`.'
+            }));
+        }
 
         // How do we avoid loading GetCapabilities if it's already been loaded?
         // For example, if this catalog item was created by a group, we don't want

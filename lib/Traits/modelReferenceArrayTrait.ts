@@ -25,13 +25,15 @@ export class ModelReferenceArrayProperty extends Trait {
     // It ensures that each ID is unique and that the topmost stratum wins for a given ID.
     // There can even be properties to control relative ordering of items in different strata.
     getValue(strataTopToBottom: Partial<ModelTraits>[]): ReadonlyArray<ModelReference> {
-        const result = [];
-        const idMap = {};
-        const removedIds = {};
+        const result: ModelReference[] = [];
+
+        type IdToBool = { [key: string]: boolean };
+        const idMap: IdToBool = {};
+        const removedIds: IdToBool = {};
 
         // Create a single array with all the unique model IDs.
         for (let i = 0; i < strataTopToBottom.length; ++i) {
-            const stratum = strataTopToBottom[i];
+            const stratum: any = strataTopToBottom[i];
             const modelIdArray: ModelReference[] = stratum[this.id];
 
             if (modelIdArray) {

@@ -6,6 +6,7 @@ interface TraitsConstructor<T> {
     traits: {
         [id: string]: Trait;
     };
+    isRemoval?: (instance: T) => boolean;
 }
 
 export interface ObjectArrayTraitOptions<T extends ModelTraits> extends TraitOptions {
@@ -33,24 +34,24 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
         this.idProperty = options.idProperty;
     }
 
-    getValue(strataTopToBottom: Partial<ModelTraits>[]): ReadonlyArray<T> {
-        const objectArrayStrata = strataTopToBottom.map(stratum => stratum[this.id]).filter(stratum => stratum !== undefined);
+    getValue(strataTopToBottom: Partial<ModelTraits>[]): ReadonlyArray<T> | undefined {
+        const objectArrayStrata = strataTopToBottom.map((stratum: any) => stratum[this.id]).filter(stratum => stratum !== undefined);
         if (objectArrayStrata.length === 0) {
             return undefined;
         }
 
-        const result = [];
-        const idMap = {};
-        const removedIds = {};
+        const result: T[][] = [];
+        const idMap: { [id: string ]: T[] } = {};
+        const removedIds: { [id: string]: boolean } = {};
 
         // Find the unique objects and the strata that go into each.
         for (let i = 0; i < objectArrayStrata.length; ++i) {
             const objectArray = objectArrayStrata[i];
 
             if (objectArray) {
-                objectArray.forEach(o => {
-                    const id = o[this.idProperty];
-                    if (o.removed) {
+                objectArray.forEach((o: T) => {
+                    const id = o[this.idProperty].toString();
+                    if (this.type.isRemoval !== undefined && this.type.isRemoval(o)) {
                         // This ID is removed in this stratum.
                         removedIds[id] = true;
                     } else if (removedIds[id]) {
@@ -72,10 +73,11 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
         return result.map(strata => {
             const ResultType = this.type;
             const result = new ResultType();
+            const resultAny: any = result;
 
             const traits = ResultType.traits;
             Object.keys(traits).forEach(traitId => {
-                result[traitId] = traits[traitId].getValue(strata);
+                resultAny[traitId] = traits[traitId].getValue(strata);
             });
 
             return result;

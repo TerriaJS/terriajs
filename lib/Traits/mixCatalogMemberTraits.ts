@@ -9,14 +9,18 @@ export class InfoSectionTraits extends ModelTraits {
         name: 'Name',
         description: 'The name of the section.'
     })
-    name: string;
+    name?: string;
 
     @primitiveTrait({
         type: 'string',
         name: 'Content',
         description: 'The content of the section, in Markdown and HTML format.'
     })
-    content: string;
+    content?: string;
+
+    static isRemoval(infoSection: InfoSectionTraits) {
+        return infoSection.content === null;
+    }
 }
 
 export default function mixCatalogMemberTraits<TBase extends ModelTraits.Constructor>(Base: TBase) {
@@ -26,28 +30,28 @@ export default function mixCatalogMemberTraits<TBase extends ModelTraits.Constru
             name: 'Name',
             description: 'The name of the catalog item.'
         })
-        name: string;
+        name?: string;
 
         @primitiveTrait({
             type: 'string',
             name: 'Description',
             description: 'The description of the catalog item. Markdown and HTML may be used.'
         })
-        description: string;
+        description?: string;
 
         @primitiveTrait({
             type: 'string',
             name: 'Name in catalog',
             description: 'The name of the item to be displayed in the catalog, if it is different from the one to display in the workbench.'
         })
-        nameInCatalog: string;
+        nameInCatalog?: string;
 
         @objectTrait({
             type: InfoSectionTraits,
             name: 'Favorite Info Section',
             description: 'Yay'
         })
-        favoriteInfoSection: InfoSectionTraits;
+        favoriteInfoSection?: InfoSectionTraits;
 
         @objectArrayTrait({
             type: InfoSectionTraits,
@@ -55,7 +59,7 @@ export default function mixCatalogMemberTraits<TBase extends ModelTraits.Constru
             description: 'Human-readable information about this dataset.',
             idProperty: 'name'
         })
-        info: InfoSectionTraits[];
+        info?: InfoSectionTraits[];
     }
 
     return CatalogMemberTraits;

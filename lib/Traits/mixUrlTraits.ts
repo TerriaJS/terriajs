@@ -8,7 +8,7 @@ export default function mixUrlTraits<TBase extends ModelTraits.Constructor>(Base
             name: 'URL',
             description: 'The base URL of the file or service.'
         })
-        url: string;
+        url?: string;
     }
     return UrlTraits;
 }

@@ -31,18 +31,19 @@ export class ObjectTrait<T extends ModelTraits> extends Trait {
         this.type = options.type;
     }
 
-    getValue(strataTopToBottom: Partial<ModelTraits>[]): T {
-        const objectStrata = strataTopToBottom.map(stratum => stratum[this.id]).filter(stratum => stratum !== undefined);
+    getValue(strataTopToBottom: Partial<ModelTraits>[]): T | undefined {
+        const objectStrata = strataTopToBottom.map((stratum: any) => stratum[this.id]).filter(stratum => stratum !== undefined);
         if (objectStrata.length === 0) {
             return undefined;
         }
 
         const ResultType = this.type;
         const result = new ResultType();
+        const resultAny: any = result;
 
         const traits = ResultType.traits;
         Object.keys(traits).forEach(traitId => {
-            result[traitId] = traits[traitId].getValue(objectStrata);
+            resultAny[traitId] = traits[traitId].getValue(objectStrata);
         });
 
         return result;

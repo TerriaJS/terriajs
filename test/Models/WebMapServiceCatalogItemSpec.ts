@@ -8,7 +8,9 @@ describe('WebMapServiceCatalogItem', function() {
         const wms = new WebMapServiceCatalogItem('test', terria);
         const definition = wms.addStratum('definition');
         definition.url = 'http://www.example.com';
-        expect(wms.getCapabilitiesUrl.indexOf(wms.url) === 0).toBe(true);
+        expect(wms.getCapabilitiesUrl).toBeDefined();
+        expect(wms.url).toBeDefined();
+        expect(wms.getCapabilitiesUrl && wms.getCapabilitiesUrl.indexOf(wms.url || 'undefined') === 0).toBe(true);
     });
 
     it('loads', function() {

@@ -86,6 +86,7 @@
     "worker-loader": "^1.0.0"
   },
   "devDependencies": {
+    "@types/urijs": "^1.15.38",
     "amd-loader": "0.0.8",
     "awesome-typescript-loader": "^4.0.1",
     "babel-eslint": "^7.0.0",

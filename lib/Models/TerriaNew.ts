@@ -7,7 +7,7 @@ import * as RuntimeError from 'terriajs-cesium/Source/Core/RuntimeError';
 export default class Terria {
     private models = new Map<string, BaseModel>();
 
-    getModelById<T extends BaseModel>(type: Class<T>, id: ModelReference): T {
+    getModelById<T extends BaseModel>(type: Class<T>, id: ModelReference): T | undefined {
         if (ModelReference.isRemoved(id)) {
             return undefined;
         } else {

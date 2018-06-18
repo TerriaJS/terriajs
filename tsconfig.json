@@ -3,7 +3,9 @@
         "target": "es2015",
         "experimentalDecorators": true,
         "module": "commonjs",
-        "sourceMap": true
+        "sourceMap": true,
+        "strict": true,
+        "allowJs": true
     },
     "include": [
         "./lib/**/*",

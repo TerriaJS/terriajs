@@ -1,12 +1,10 @@
 import { computed, createAtom, decorate, observable, runInAction } from 'mobx';
 import * as DeveloperError from 'terriajs-cesium/Source/Core/DeveloperError';
-
-//>>includeStart('debug', pragmas.debug);
 import { onBecomeUnobserved } from 'mobx';
-//>>includeEnd('debug');
+import { BaseModel } from './Model';
 
-interface Constructor<T> {
-    new(): T;
+interface Constructor<TModel, TValues> {
+    new(model: TModel): TValues;
 }
 
 interface DefinitionConstructor<T> {
@@ -22,20 +20,20 @@ export interface LoadableStratumState {
 
 export type LoadableStratumInstance<T> = LoadableStratumState & T;
 
-export interface LoadableStratumConstructor<T> {
-    new(load: (value: T) => Promise<void>): LoadableStratumInstance<T>;
+export interface LoadableStratumConstructor<TModel, TValues> {
+    new(model: TModel, load: (value: TValues) => Promise<void>): LoadableStratumInstance<TValues>;
 
     /**
      * The value of this property will always be undefined, but it can be used in a TypeScript `typeof`
      * expression to specify the type of the parameter to the load function.
      */
-    TLoadValue: T;
+    TLoadValue: TValues;
 
     /**
      * The value of this property will always be undefined, but it can be used in a TypeScript `typeof`
      * expression to specify the type of the instance returned by `new`ing this type.
      */
-    TInstance: LoadableStratumInstance<T>;
+    TInstance: LoadableStratumInstance<TValues>;
 }
 
 
@@ -98,11 +96,11 @@ export interface LoadableStratumConstructor<T> {
  * @param T24 [property24] The name of a property to include in the subset.
  * @param T25 [property25] The name of a property to include in the subset.
  */
-export default function defineLoadableStratum<TDefinition, TValue extends TDefinition>(definition: DefinitionConstructor<TDefinition>, value: Constructor<TValue>) : LoadableStratumConstructor<TValue>;
-export default function defineLoadableStratum<TDefinition, TValue extends Pick<TDefinition, T1>, T1 extends keyof TDefinition>(definition: DefinitionConstructor<TDefinition>, value: Constructor<TValue>, property1: T1): LoadableStratumConstructor<TValue>;
-export default function defineLoadableStratum<TDefinition, TValue extends Pick<TDefinition, T1 | T2>, T1 extends keyof TDefinition, T2 extends keyof TDefinition>(definition: DefinitionConstructor<TDefinition>, value: Constructor<TValue>, property1: T1, property2: T2): LoadableStratumConstructor<TValue>;
-export default function defineLoadableStratum<TDefinition, TValue extends Pick<TDefinition, T1 | T2 | T3>, T1 extends keyof TDefinition, T2 extends keyof TDefinition, T3 extends keyof TDefinition>(definition: DefinitionConstructor<TDefinition>, value: Constructor<TValue>, property1: T1, property2: T2, property3: T3): LoadableStratumConstructor<TValue>;
-export default function defineLoadableStratum<TDefinition, TValue extends Pick<TDefinition, T1 | T2 | T3 | T4>, T1 extends keyof TDefinition, T2 extends keyof TDefinition, T3 extends keyof TDefinition, T4 extends keyof TDefinition>(definition: DefinitionConstructor<TDefinition>, value: Constructor<TValue>, property1: T1, property2: T2, property3: T3, property4: T4): LoadableStratumConstructor<TValue>;
+export default function defineLoadableStratum<TDefinition, TModel, TValue extends TDefinition>(definition: DefinitionConstructor<TDefinition>, value: Constructor<TModel, TValue>) : LoadableStratumConstructor<TModel, TValue>;
+export default function defineLoadableStratum<TDefinition, TModel, TValue extends Pick<TDefinition, T1>, T1 extends keyof TDefinition>(definition: DefinitionConstructor<TDefinition>, value: Constructor<TModel, TValue>, property1: T1): LoadableStratumConstructor<TModel, TValue>;
+export default function defineLoadableStratum<TDefinition, TModel, TValue extends Pick<TDefinition, T1 | T2>, T1 extends keyof TDefinition, T2 extends keyof TDefinition>(definition: DefinitionConstructor<TDefinition>, value: Constructor<TModel, TValue>, property1: T1, property2: T2): LoadableStratumConstructor<TModel, TValue>;
+export default function defineLoadableStratum<TDefinition, TModel, TValue extends Pick<TDefinition, T1 | T2 | T3>, T1 extends keyof TDefinition, T2 extends keyof TDefinition, T3 extends keyof TDefinition>(definition: DefinitionConstructor<TDefinition>, value: Constructor<TModel, TValue>, property1: T1, property2: T2, property3: T3): LoadableStratumConstructor<TModel, TValue>;
+export default function defineLoadableStratum<TDefinition, TModel, TValue extends Pick<TDefinition, T1 | T2 | T3 | T4>, T1 extends keyof TDefinition, T2 extends keyof TDefinition, T3 extends keyof TDefinition, T4 extends keyof TDefinition>(definition: DefinitionConstructor<TDefinition>, value: Constructor<TModel, TValue>, property1: T1, property2: T2, property3: T3, property4: T4): LoadableStratumConstructor<TModel, TValue>;
 // export default function defineLoadableStratum<TDefinition, T1 extends keyof TDefinition, T2 extends keyof TDefinition, T3 extends keyof TDefinition, T4 extends keyof TDefinition, T5 extends keyof TDefinition>(definition: DefinitionConstructor<TDefinition>, property1: T1, property2: T2, property3: T3, property4: T4, property5: T5): LoadableStratumConstructor<Pick<TDefinition, T1 | T2 | T3 | T4 | T5>>;
 // export default function defineLoadableStratum<TDefinition, T1 extends keyof TDefinition, T2 extends keyof TDefinition, T3 extends keyof TDefinition, T4 extends keyof TDefinition, T5 extends keyof TDefinition, T6 extends keyof TDefinition>(definition: DefinitionConstructor<TDefinition>, property1: T1, property2: T2, property3: T3, property4: T4, property5: T5, property6: T6): LoadableStratumConstructor<Pick<TDefinition, T1 | T2 | T3 | T4 | T5 | T6>>;
 // export default function defineLoadableStratum<TDefinition, T1 extends keyof TDefinition, T2 extends keyof TDefinition, T3 extends keyof TDefinition, T4 extends keyof TDefinition, T5 extends keyof TDefinition, T6 extends keyof TDefinition, T7 extends keyof TDefinition>(definition: DefinitionConstructor<TDefinition>, property1: T1, property2: T2, property3: T3, property4: T4, property5: T5, property6: T6, property7: T7): LoadableStratumConstructor<Pick<TDefinition, T1 | T2 | T3 | T4 | T5 | T6 | T7>>;
@@ -124,7 +122,7 @@ export default function defineLoadableStratum<TDefinition, TValue extends Pick<T
 // export default function defineLoadableStratum<TDefinition, T1 extends keyof TDefinition, T2 extends keyof TDefinition, T3 extends keyof TDefinition, T4 extends keyof TDefinition, T5 extends keyof TDefinition, T6 extends keyof TDefinition, T7 extends keyof TDefinition, T8 extends keyof TDefinition, T9 extends keyof TDefinition, T10 extends keyof TDefinition, T11 extends keyof TDefinition, T12 extends keyof TDefinition, T13 extends keyof TDefinition, T14 extends keyof TDefinition, T15 extends keyof TDefinition, T16 extends keyof TDefinition, T17 extends keyof TDefinition, T18 extends keyof TDefinition, T19 extends keyof TDefinition, T20 extends keyof TDefinition, T21 extends keyof TDefinition, T22 extends keyof TDefinition, T23 extends keyof TDefinition>(definition: DefinitionConstructor<TDefinition>, property1: T1, property2: T2, property3: T3, property4: T4, property5: T5, property6: T6, property7: T7, property8: T8, property9: T9, property10: T10, property11: T11, property12: T12, property13: T13, property14: T14, property15: T15, property16: T16, property17: T17, property18: T18, property19: T19, property20: T20, property21: T21, property22: T22, property23: T23): LoadableStratumConstructor<Pick<TDefinition, T1 | T2 | T3 | T4 | T5 | T6 | T7 | T8 | T9 | T10 | T11 | T12 | T13 | T14 | T15 | T16 | T17 | T18 | T19 | T20 | T21 | T22 | T23>>;
 // export default function defineLoadableStratum<TDefinition, T1 extends keyof TDefinition, T2 extends keyof TDefinition, T3 extends keyof TDefinition, T4 extends keyof TDefinition, T5 extends keyof TDefinition, T6 extends keyof TDefinition, T7 extends keyof TDefinition, T8 extends keyof TDefinition, T9 extends keyof TDefinition, T10 extends keyof TDefinition, T11 extends keyof TDefinition, T12 extends keyof TDefinition, T13 extends keyof TDefinition, T14 extends keyof TDefinition, T15 extends keyof TDefinition, T16 extends keyof TDefinition, T17 extends keyof TDefinition, T18 extends keyof TDefinition, T19 extends keyof TDefinition, T20 extends keyof TDefinition, T21 extends keyof TDefinition, T22 extends keyof TDefinition, T23 extends keyof TDefinition, T24 extends keyof TDefinition>(definition: DefinitionConstructor<TDefinition>, property1: T1, property2: T2, property3: T3, property4: T4, property5: T5, property6: T6, property7: T7, property8: T8, property9: T9, property10: T10, property11: T11, property12: T12, property13: T13, property14: T14, property15: T15, property16: T16, property17: T17, property18: T18, property19: T19, property20: T20, property21: T21, property22: T22, property23: T23, property24: T24): LoadableStratumConstructor<Pick<TDefinition, T1 | T2 | T3 | T4 | T5 | T6 | T7 | T8 | T9 | T10 | T11 | T12 | T13 | T14 | T15 | T16 | T17 | T18 | T19 | T20 | T21 | T22 | T23 | T24>>;
 // export default function defineLoadableStratum<TDefinition, T1 extends keyof TDefinition, T2 extends keyof TDefinition, T3 extends keyof TDefinition, T4 extends keyof TDefinition, T5 extends keyof TDefinition, T6 extends keyof TDefinition, T7 extends keyof TDefinition, T8 extends keyof TDefinition, T9 extends keyof TDefinition, T10 extends keyof TDefinition, T11 extends keyof TDefinition, T12 extends keyof TDefinition, T13 extends keyof TDefinition, T14 extends keyof TDefinition, T15 extends keyof TDefinition, T16 extends keyof TDefinition, T17 extends keyof TDefinition, T18 extends keyof TDefinition, T19 extends keyof TDefinition, T20 extends keyof TDefinition, T21 extends keyof TDefinition, T22 extends keyof TDefinition, T23 extends keyof TDefinition, T24 extends keyof TDefinition, T25 extends keyof TDefinition>(definition: DefinitionConstructor<TDefinition>, property1: T1, property2: T2, property3: T3, property4: T4, property5: T5, property6: T6, property7: T7, property8: T8, property9: T9, property10: T10, property11: T11, property12: T12, property13: T13, property14: T14, property15: T15, property16: T16, property17: T17, property18: T18, property19: T19, property20: T20, property21: T21, property22: T22, property23: T23, property24: T24, property25: T25): LoadableStratumConstructor<Pick<TDefinition, T1 | T2 | T3 | T4 | T5 | T6 | T7 | T8 | T9 | T10 | T11 | T12 | T13 | T14 | T15 | T16 | T17 | T18 | T19 | T20 | T21 | T22 | T23 | T24 | T25>>;
-export default function defineLoadableStratum<TDefinition, TValue>(definition: DefinitionConstructor<TDefinition>, value: Constructor<TValue>, ...properties: string[]): LoadableStratumConstructor<any> {
+export default function defineLoadableStratum<TDefinition, TModel, TValue>(definition: DefinitionConstructor<TDefinition>, value: Constructor<TModel, TValue> | undefined, ...properties: string[]): LoadableStratumConstructor<TModel, any> {
     if (!properties || properties.length === 0) {
         properties = Object.keys(definition.traits);
     }
@@ -146,17 +144,15 @@ export default function defineLoadableStratum<TDefinition, TValue>(definition: D
         static TLoadValue: TValue;
         static TInstance: LoadableStratumInstance<any>;
 
-        readonly
-
         // We manually use atoms to avoid MobX complaining about a
         // computed modifying an observable.
         private _isLoadingAtom = createAtom('isLoadingAtom', () => {}, () => {});
         private _isLoading = false;
 
         private _loadPromiseAtom = createAtom('loadPromise', () => {}, () => {});
-        private _loadPromise: Promise<void> = undefined;
+        private _loadPromise: Promise<void> | undefined = undefined;
 
-        constructor(private readonly loadFunction: (LoadableSubset) => Promise<void>) {
+        constructor(private readonly model: any, private readonly loadFunction: (subset: LoadableSubset) => Promise<void>) {
             //>>includeStart('debug', pragmas.debug);
             onBecomeUnobserved(this, '_privateValues', () => {
                 console.info('A loaded subset is no longer being observed by anyone, which means that the previously-loaded values have been lost.');
@@ -168,7 +164,7 @@ export default function defineLoadableStratum<TDefinition, TValue>(definition: D
             requiresReaction: true
         })
         private get _privateValues() {
-            const newValues = observable(value ? new value() : valuesTemplate);
+            const newValues = observable(value ? new value(this.model) : valuesTemplate);
 
             runInAction(() => {
                 if (!this._isLoading) {
@@ -212,7 +208,7 @@ export default function defineLoadableStratum<TDefinition, TValue>(definition: D
          */
         get loadPromise(): Promise<void> {
             this._loadPromiseAtom.reportObserved();
-            return this._loadPromise;
+            return <Promise<void>>this._loadPromise;
         }
 
         /**
@@ -232,7 +228,7 @@ export default function defineLoadableStratum<TDefinition, TValue>(definition: D
 
     properties.forEach(property => {
         Object.defineProperty(LoadableSubset.prototype, property, {
-            get: function() {
+            get: function(this: any) {
                 // TODO: Just return undefined if still loading?
                 // That way the properties don't need to be so defensive.
                 return this._privateValues[property];

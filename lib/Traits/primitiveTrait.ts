@@ -21,7 +21,7 @@ export default function primitiveTrait<T>(options: PrimitiveTraitOptions<T>) {
 
 export class PrimitiveTrait<T> extends Trait {
     readonly type: PrimitiveType;
-    readonly default: T;
+    readonly default?: T;
 
     constructor(id: string, options: PrimitiveTraitOptions<T>) {
         super(id, options);
@@ -29,9 +29,9 @@ export class PrimitiveTrait<T> extends Trait {
         this.default = options.default;
     }
 
-    getValue(strataTopToBottom: Partial<ModelTraits>[]): T {
+    getValue(strataTopToBottom: Partial<ModelTraits>[]): T | undefined {
         for (let i = 0; i < strataTopToBottom.length; ++i) {
-            const stratum = strataTopToBottom[i];
+            const stratum: any = strataTopToBottom[i];
             const value = stratum[this.id];
             if (value !== undefined) {
                 return value;

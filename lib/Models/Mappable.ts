@@ -1,9 +1,13 @@
 import Model, { BaseModel } from './Model';
 
-export class ImageryLayer {
+export interface ImageryLayer {
+    // TODO
+    alpha: number;
+    wms: boolean;
+    isGeoServer: boolean;
 }
 
-export class DataSource {
+export interface DataSource {
 }
 
 interface Mappable {

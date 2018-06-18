@@ -60,24 +60,24 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
         })
     });
     // Use Babel to compile our JavaScript files.
-    config.module.loaders.push({
-        test: /\.jsx?$/,
-        include: [
-            path.resolve(terriaJSBasePath, 'lib'),
-            path.resolve(terriaJSBasePath, 'test')
-        ],
-        loader: require.resolve('babel-loader'),
-        query: {
-            sourceMap: false, // generated sourcemaps are currently bad, see https://phabricator.babeljs.io/T7257
-            presets: ['env', 'react'],
-            plugins: [
-                'jsx-control-statements'
-            ]
-        }
-    });
+    // config.module.loaders.push({
+    //     test: /\.jsx?$/,
+    //     include: [
+    //         path.resolve(terriaJSBasePath, 'lib'),
+    //         path.resolve(terriaJSBasePath, 'test')
+    //     ],
+    //     loader: require.resolve('babel-loader'),
+    //     query: {
+    //         sourceMap: false, // generated sourcemaps are currently bad, see https://phabricator.babeljs.io/T7257
+    //         presets: ['env', 'react'],
+    //         plugins: [
+    //             'jsx-control-statements'
+    //         ]
+    //     }
+    // });
 
     config.module.loaders.push({
-        test: /\.tsx?$/,
+        test: /\.(ts|js)x?$/,
         include: [
             path.resolve(terriaJSBasePath, 'lib'),
             path.resolve(terriaJSBasePath, 'test')

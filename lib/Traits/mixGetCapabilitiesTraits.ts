@@ -8,7 +8,7 @@ export default function mixGetCapabilitiesTraits<TBase extends ModelTraits.Const
             name: 'GetCapabilities URL',
             description: 'The URL at which to access to the OGC GetCapabilities service.'
         })
-        getCapabilitiesUrl: string;
+        getCapabilitiesUrl?: string;
 
         @primitiveTrait({
             type: 'string',
@@ -16,7 +16,7 @@ export default function mixGetCapabilitiesTraits<TBase extends ModelTraits.Const
             description: 'The amount of time to cache GetCapabilities responses.',
             default: '1d'
         })
-        getCapabilitiesCacheDuration: string;
+        getCapabilitiesCacheDuration?: string;
     }
     return GetCapabilitiesTraits;
 }

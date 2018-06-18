@@ -10,7 +10,7 @@ function isPromise<T>(value: Promise<T> | T): value is Promise<T> {
     return value && typeof (<Promise<T>>value).then !== 'undefined'
 }
 
-export default function loadableLayer<T extends LoadableLayerData>(createInitialValue: () => T, load: (T) => Promise<void>): T {
+export default function loadableLayer<T extends LoadableLayerData>(createInitialValue: () => T, load: (values: T) => Promise<void>): T {
     const value = createInitialValue();
 
     runInAction(() => {

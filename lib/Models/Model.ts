@@ -8,7 +8,7 @@ import StratumOrder from './StratumOrder';
 import Terria from './TerriaNew';
 
 interface MakeModelConcrete {
-    readonly type;
+    readonly type: string;
     readonly strataTopToBottom: Partial<ModelTraits>[];
     readonly strataBottomToTop: Partial<ModelTraits>[];
 }
@@ -26,6 +26,7 @@ export abstract class BaseModel {
     constructor(readonly id: ModelId, readonly terria: Terria) {
     }
 
+    readonly flattened: any;
     readonly strata = observable.map<string, Partial<ModelTraits>>();
 
     abstract get strataTopToBottom(): Partial<ModelTraits>[];
@@ -34,7 +35,7 @@ export abstract class BaseModel {
     static definition<T extends ModelTraits>(definition: DefinitionClass<T>): Function {
         return function <T extends BaseModel>(target: Constructor<T & MakeModelConcrete>) {
             class UpdatedModel extends (target as Constructor<BaseModel & MakeModelConcrete>) {
-                readonly flattened: ModelTraits;
+                readonly flattened: any;
 
                 constructor(...args: any[]) {
                     super(...args);
@@ -58,7 +59,7 @@ export abstract class BaseModel {
 
                 if (!(propertyName in UpdatedModel.prototype)) {
                     Object.defineProperty(UpdatedModel.prototype, propertyName, {
-                        get: function() {
+                        get: function(this: UpdatedModel) {
                             return this.flattened[propertyName];
                         },
                         enumerable: true,
@@ -76,7 +77,7 @@ export abstract class BaseModel {
     }
 }
 
-function createFlattenedLayer(model, definition) {
+function createFlattenedLayer<T>(model: BaseModel, definition: DefinitionClass<T>) {
     const traits = definition.traits;
 
     const flattened: any = {};
@@ -95,13 +96,20 @@ function createFlattenedLayer(model, definition) {
     return flattened;
 }
 
-class Model<T extends ModelTraits> extends BaseModel {
+interface Model<T extends ModelTraits> extends BaseModel {
     readonly flattened: Model.MakeReadonly<T>;
     readonly strata: ObservableMap<string, Partial<T>>;
+}
+
+class Model<T extends ModelTraits> extends BaseModel {
     readonly createDefinitionInstance: () => Partial<T> = function() {
         // This implementation will be replaced by the `definition` decorator.
         throw new DeveloperError('Definition instances cannot be created until the model\'s constructor finishes executing.');
     };
+
+    constructor(readonly id: ModelId, readonly terria: Terria) {
+        super(id, terria);
+    }
 
     addStratum(id: string): Partial<T> {
         let result = this.strata.get(id);
@@ -125,14 +133,22 @@ class Model<T extends ModelTraits> extends BaseModel {
 
 namespace Model {
     export type MakeReadonly<TDefinition extends ModelTraits> = {
-        readonly [P in keyof TDefinition]: TDefinition[P] extends Array<infer TElement> ?
+        readonly [P in keyof TDefinition]-?: (Exclude<TDefinition[P], undefined> extends Array<infer TElement> ?
             ReadonlyArray<Readonly<TElement>> :
             TDefinition[P] extends ModelTraits ?
                 MakeReadonly<TDefinition[P]> :
-                Readonly<TDefinition[P]>;
+                Readonly<TDefinition[P]>) | undefined | undefined;
     };
 
-    export type InterfaceFromDefinition<TDefinition extends ModelTraits> = MakeReadonly<TDefinition>;
+    // This is almost like Partial<T>, except it uses `| undefined` instead of
+    // `[P in keyof T]?`, which is subtly different. The former requires that the
+    // property exist but its value may be undefined, while the latter does
+    // not require that the property exist at all.
+    type OrUndefined<T> = {
+        [P in keyof T]: T[P] | undefined;
+    }
+
+    export type InterfaceFromDefinition<TDefinition extends ModelTraits> = OrUndefined<MakeReadonly<TDefinition>>;
 }
 
 export default Model;

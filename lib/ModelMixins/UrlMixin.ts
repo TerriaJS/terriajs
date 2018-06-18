@@ -3,13 +3,13 @@ import * as URI from 'urijs';
 import Constructor from '../Core/Constructor';
 
 interface RequiredOnInstance {
-    url: string;
+    url: string | undefined;
 }
 
 export default function UrlMixin<T extends Constructor<RequiredOnInstance>>(Base: T) {
     class UrlMixin extends Base {
         @computed
-        get uri(): URI {
+        get uri(): uri.URI | undefined {
             if (this.url === undefined) {
                 return undefined;
             }

@@ -1,25 +1,26 @@
 import { computed, observable, runInAction } from 'mobx';
+import * as TerriaError from '../Core/TerriaError';
 import isReadOnlyArray from '../Core/isReadOnlyArray';
-import ModelReference from '../Traits/ModelReference';
-import WebMapServiceCatalogGroupTraits from '../Traits/WebMapServiceCatalogGroupTraits';
 import CatalogMemberMixin from '../ModelMixins/CatalogMemberMixin';
 import GetCapabilitiesMixin from '../ModelMixins/GetCapabilitiesMixin';
 import GroupMixin from '../ModelMixins/GroupMixin';
 import UrlMixin from '../ModelMixins/UrlMixin';
+import ModelReference from '../Traits/ModelReference';
+import WebMapServiceCatalogGroupTraits from '../Traits/WebMapServiceCatalogGroupTraits';
+import CommonStrata from './CommonStrata';
 import Model from './Model';
 import Terria from './TerriaNew';
 import WebMapServiceCapabilities, { CapabilitiesLayer } from './WebMapServiceCapabilities';
 import WebMapServiceCatalogItem from './WebMapServiceCatalogItem3';
 import defineLoadableStratum from './defineLoadableStratum';
 import * as proxyCatalogItemUrl from './proxyCatalogItemUrl';
-import StratumOrder from './StratumOrder';
-import CommonStrata from './CommonStrata';
 
 class GetCapabilitiesValue {
-    catalogGroup: WebMapServiceCatalogGroup;
+    constructor(readonly catalogGroup: WebMapServiceCatalogGroup) {
+    }
 
     @observable
-    capabilities: WebMapServiceCapabilities;
+    capabilities?: WebMapServiceCapabilities;
 
     @computed
     get members(): ModelReference[] {
@@ -32,7 +33,7 @@ class GetCapabilitiesValue {
         const id = this.catalogGroup.id;
 
         // Create a model for each Layer at this level.
-        const result = [];
+        const result: ModelReference[] = [];
         layers.forEach(layer => {
             if (!layer.Name) {
                 return;
@@ -62,6 +63,9 @@ class GetCapabilitiesValue {
     private getTopLevelLayers(rootLayers: CapabilitiesLayer[]): ReadonlyArray<CapabilitiesLayer> {
         if (rootLayers.length === 1) {
             const subLayers = rootLayers[0].Layer;
+            if (subLayers === undefined) {
+                return [];
+            }
             return isReadOnlyArray(subLayers) ? subLayers : [subLayers];
         } else {
             return rootLayers;
@@ -82,10 +86,10 @@ export default class WebMapServiceCatalogGroup extends GetCapabilitiesMixin(Grou
 
     constructor(id: string, terria: Terria) {
         super(id, terria);
-        this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, new GetCapabilitiesStratum(layer => this._loadGetCapabilitiesStratum(layer)));
+        this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, new GetCapabilitiesStratum(this, layer => this._loadGetCapabilitiesStratum(layer)));
     }
 
-    protected get defaultGetCapabilitiesUrl(): string {
+    protected get defaultGetCapabilitiesUrl(): string | undefined {
         if (this.uri) {
             return this.uri.clone().setSearch({
                 service: 'WMS',
@@ -98,7 +102,12 @@ export default class WebMapServiceCatalogGroup extends GetCapabilitiesMixin(Grou
     }
 
     private _loadGetCapabilitiesStratum(values: typeof GetCapabilitiesStratum.TLoadValue): Promise<void> {
-        values.catalogGroup = this;
+        if (this.getCapabilitiesUrl === undefined) {
+            return Promise.reject(new TerriaError({
+                title: 'Unable to load GetCapabilities',
+                message: 'Could not load the Web Map Service (WMS) GetCapabilities document because the catalog item does not have a `url`.'
+            }));
+        }
 
         const proxiedUrl = proxyCatalogItemUrl(this, this.getCapabilitiesUrl, this.getCapabilitiesCacheDuration);
         return WebMapServiceCapabilities.fromUrl(proxiedUrl).then(capabilities => {

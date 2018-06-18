@@ -11,5 +11,5 @@ export default class WebMapServiceCatalogGroupTraits extends mixGetCapabilitiesT
         name: 'Flatten',
         description: 'True to flatten the layers into a single list; false to use the layer hierarchy.'
     })
-    flatten: boolean;
+    flatten?: boolean;
 }

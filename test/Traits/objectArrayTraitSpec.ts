@@ -12,28 +12,30 @@ configure({
 });
 
 class InnerTraits extends ModelTraits {
-    removed: boolean;
-
     @primitiveTrait({
         type: 'string',
         name: 'Foo',
         description: 'Foo'
     })
-    foo: string;
+    foo?: string;
 
     @primitiveTrait({
         type: 'number',
         name: 'Bar',
         description: 'Bar'
     })
-    bar: number;
+    bar?: number;
 
     @primitiveTrait({
         type: 'boolean',
         name: 'Baz',
         description: 'Baz'
     })
-    baz: boolean;
+    baz?: boolean;
+
+    static isRemoval(traits: InnerTraits) {
+        return traits.bar === 42;
+    }
 }
 
 class OuterTraits extends ModelTraits {
@@ -43,7 +45,7 @@ class OuterTraits extends ModelTraits {
         description: 'Inner',
         idProperty: 'foo'
     })
-    inner: InnerTraits[];
+    inner?: InnerTraits[];
 }
 
 interface TestModel extends Model.InterfaceFromDefinition<OuterTraits> {}
@@ -83,21 +85,24 @@ describe('objectArrayTrait', function() {
         user.inner[1].foo = 'c';
         user.inner[1].bar = 3;
 
-        expect(model.inner.length).toEqual(3);
+        expect(model.inner).toBeDefined();
+        if (model.inner !== undefined) {
+            expect(model.inner.length).toEqual(3);
 
-        const a = model.inner.filter(x => x.foo === 'a')[0];
-        const b = model.inner.filter(x => x.foo === 'b')[0];
-        const c = model.inner.filter(x => x.foo === 'c')[0];
-        expect(a).toBeDefined();
-        expect(b).toBeDefined();
-        expect(c).toBeDefined();
+            const a = model.inner.filter(x => x.foo === 'a')[0];
+            const b = model.inner.filter(x => x.foo === 'b')[0];
+            const c = model.inner.filter(x => x.foo === 'c')[0];
+            expect(a).toBeDefined();
+            expect(b).toBeDefined();
+            expect(c).toBeDefined();
 
-        expect(a.bar).toEqual(1);
-        expect(a.baz).toBeUndefined();
-        expect(b.bar).toEqual(2);
-        expect(b.baz).toEqual(false);
-        expect(c.bar).toEqual(3);
-        expect(c.baz).toBeUndefined();
+            expect(a.bar).toEqual(1);
+            expect(a.baz).toBeUndefined();
+            expect(b.bar).toEqual(2);
+            expect(b.baz).toEqual(false);
+            expect(c.bar).toEqual(3);
+            expect(c.baz).toBeUndefined();
+        }
     });
 
     it('updates to reflect array elements added after evaluation', function() {
@@ -122,19 +127,23 @@ describe('objectArrayTrait', function() {
         user.inner[1].foo = 'c';
         user.inner[1].bar = 3;
 
-        expect(model.inner.length).toEqual(3);
+        expect(model.inner).toBeDefined();
 
-        const newOne = new InnerTraits();
-        definition.inner.push(newOne);
-        newOne.foo = 'c';
-        newOne.bar = 4;
-        newOne.baz = true;
+        if (model.inner !== undefined) {
+            expect(model.inner.length).toEqual(3);
 
-        expect(model.inner.length).toEqual(3);
+            const newOne = new InnerTraits();
+            definition.inner.push(newOne);
+            newOne.foo = 'c';
+            newOne.bar = 4;
+            newOne.baz = true;
 
-        const c = model.inner.filter(x => x.foo === 'c')[0];
-        expect(c.bar).toEqual(3);
-        expect(c.baz).toEqual(true);
+            expect(model.inner.length).toEqual(3);
+
+            const c = model.inner.filter(x => x.foo === 'c')[0];
+            expect(c.bar).toEqual(3);
+            expect(c.baz).toEqual(true);
+        }
     });
 
     it('allows strata to remove elements', function() {
@@ -155,7 +164,7 @@ describe('objectArrayTrait', function() {
 
         user.inner = [ new InnerTraits(), new InnerTraits() ];
         user.inner[0].foo = 'b';
-        user.inner[0].removed = true;
+        user.inner[0].bar = 42; // indicates removed, according to InnerTraits.isRemoval.
         user.inner[1].foo = 'c';
         user.inner[1].bar = 3;
 

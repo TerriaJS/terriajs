@@ -10,13 +10,13 @@ export default function mixGroupTraits<TBase extends ModelTraits.Constructor>(Ba
             description: 'True if this group is open and its contents are visible; otherwise, false.',
             type: 'boolean'
         })
-        isOpen: boolean;
+        isOpen?: boolean;
 
         @modelReferenceArrayTrait({
             name: 'Members',
             description: 'The members of this group.'
         })
-        members: ModelReference[];
+        members?: ModelReference[];
     }
 
     return GroupTraits;

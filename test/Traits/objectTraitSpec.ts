@@ -16,25 +16,21 @@ class InnerTraits extends ModelTraits {
         name: 'Foo',
         description: 'Foo'
     })
-    foo: string;
+    foo?: string;
 
     @primitiveTrait({
         type: 'number',
         name: 'Bar',
         description: 'Bar'
     })
-    bar: number;
+    bar?: number;
 
     @primitiveTrait({
         type: 'boolean',
         name: 'Baz',
         description: 'Baz'
     })
-    baz: boolean;
-
-    test: {
-        a: string;
-    };
+    baz?: boolean;
 }
 
 class OuterTraits extends ModelTraits {
@@ -43,7 +39,7 @@ class OuterTraits extends ModelTraits {
         name: 'Inner',
         description: 'Inner'
     })
-    inner: InnerTraits;
+    inner?: InnerTraits;
 }
 
 interface TestModel extends Model.InterfaceFromDefinition<OuterTraits> {}
@@ -78,9 +74,13 @@ describe('objectTrait', function() {
         user.inner.bar = 2;
         user.inner.baz = true;
 
-        expect(model.inner.foo).toEqual('a');
-        expect(model.inner.bar).toEqual(2);
-        expect(model.inner.baz).toEqual(true);
+        expect(model.inner).toBeDefined();
+
+        if (model.inner !== undefined) {
+            expect(model.inner.foo).toEqual('a');
+            expect(model.inner.bar).toEqual(2);
+            expect(model.inner.baz).toEqual(true);
+        }
     });
 
     it('updates to reflect properties added after evaluation', function() {
@@ -98,14 +98,21 @@ describe('objectTrait', function() {
 
         user.inner = new InnerTraits();
 
-        expect(model.inner.foo).toEqual('a');
-        expect(model.inner.bar).toEqual(1);
-        expect(model.inner.baz).toBeUndefined();
+        expect(model.inner).toBeDefined();
 
-        runInAction(() => {
-           user.inner.bar = 2;
-        });
+        if (model.inner !== undefined) {
+            expect(model.inner.foo).toEqual('a');
+            expect(model.inner.bar).toEqual(1);
+            expect(model.inner.baz).toBeUndefined();
 
-        expect(model.inner.bar).toEqual(2);
+            runInAction(() => {
+                expect(user.inner).toBeDefined();
+                if (user.inner !== undefined) {
+                    user.inner.bar = 2;
+                }
+            });
+
+            expect(model.inner.bar).toEqual(2);
+        }
     });
 });

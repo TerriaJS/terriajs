@@ -3,9 +3,15 @@ import * as defined from 'terriajs-cesium/Source/Core/defined';
 import * as xml2json from '../ThirdParty/xml2json';
 import * as loadXML from 'terriajs-cesium/Source/Core/loadXML';
 import * as TerriaError from '../Core/TerriaError';
+import isReadOnlyArray from '../Core/isReadOnlyArray';
+
+export interface OnlineResource {
+    'xlink:type': string;
+    'xlink:href': string;
+}
 
 export interface CapabilitiesLegend {
-    readonly OnlineResource?: string;
+    readonly OnlineResource?: OnlineResource;
     readonly Format?: string;
     readonly width?: number;
     readonly height?: number;
@@ -37,6 +43,10 @@ export interface CapabilitiesKeywordList {
 
 type ElementTypeIfArray<T> = T extends ReadonlyArray<infer U> ? U : T;
 
+type Mutable<T> = {
+    -readonly [P in keyof T]: T[P];
+};
+
 export default class WebMapServiceCapabilities {
     static fromUrl: (url: string) => Promise<WebMapServiceCapabilities> = createTransformer((url: string) => {
         return Promise.resolve(loadXML(url)).then(function(capabilitiesXml) {
@@ -67,12 +77,17 @@ export default class WebMapServiceCapabilities {
     }
 
     private constructor(readonly xml: XMLDocument, readonly json: any) {
-        const allLayers = this.allLayers = [];
-        const rootLayers = this.rootLayers = [];
-        const layersByName = this.layersByName = {};
-        const layersByTitle = this.layersByTitle = {};
+        this.allLayers = [];
+        this.rootLayers = [];
+        this.layersByName = {};
+        this.layersByTitle = {};
 
-        function traverseLayer(layer, parent) {
+        const allLayers = this.allLayers;
+        const rootLayers = this.rootLayers;
+        const layersByName: { [name: string]: CapabilitiesLayer } = this.layersByName;
+        const layersByTitle: { [name: string]: CapabilitiesLayer } = this.layersByTitle;
+
+        function traverseLayer(layer: Mutable<CapabilitiesLayer>, parent?: CapabilitiesLayer | undefined) {
             allLayers.push(layer);
             if (layer.Name) {
                 layersByName[layer.Name] = layer;
@@ -85,11 +100,11 @@ export default class WebMapServiceCapabilities {
 
             const layers = layer.Layer;
 
-            if (layers instanceof Array) {
+            if (isReadOnlyArray(layers)) {
                 for (let i = 0; i < layers.length; ++i) {
                     traverseLayer(layers[i], layer);
                 }
-            } else if (defined(layers)) {
+            } else if (layers !== undefined) {
                 traverseLayer(layers, layer);
             }
         }
@@ -102,7 +117,7 @@ export default class WebMapServiceCapabilities {
                 rootLayers.push(layerElements);
             }
 
-            rootLayers.forEach(traverseLayer);
+            rootLayers.forEach(layer => traverseLayer(layer));
         }
     }
 
@@ -144,7 +159,7 @@ export default class WebMapServiceCapabilities {
      * @param layer The layer for which to obtain ancestry.
      * @returns The ancestry of the layer.
      */
-    getLayerAncestry(layer: CapabilitiesLayer): ReadonlyArray<CapabilitiesLayer> {
+    getLayerAncestry(layer: CapabilitiesLayer | undefined): ReadonlyArray<CapabilitiesLayer> {
         const result = [];
         while (layer) {
             result.push(layer);
@@ -153,19 +168,20 @@ export default class WebMapServiceCapabilities {
         return result;
     }
 
-    getInheritedValues<K extends keyof CapabilitiesLayer>(layer: CapabilitiesLayer, property: K): ReadonlyArray<ElementTypeIfArray<CapabilitiesLayer[K]>> {
-        type TResultArray = ElementTypeIfArray<CapabilitiesLayer[K]>[];
+    getInheritedValues<K extends keyof CapabilitiesLayer>(layer: CapabilitiesLayer, property: K): ReadonlyArray<ElementTypeIfArray<Exclude<CapabilitiesLayer[K], undefined>>> {
+        type TResultElement = ElementTypeIfArray<Exclude<CapabilitiesLayer[K], undefined>>;
+        type TResultArray = TResultElement[];
 
-        const foo = this.getLayerAncestry(layer).reduce((p: TResultArray, c) => {
+        const values = this.getLayerAncestry(layer).reduce((p: TResultArray, c) => {
             const value = c[property];
             if (Array.isArray(value)) {
                 p.push(...value);
             } else if (value !== undefined) {
-                p.push(<ElementTypeIfArray<CapabilitiesLayer[K]>>value);
+                p.push(<TResultElement>value);
             }
             return p;
         }, []);
-        return foo;
+        return values;
     }
 }
 
