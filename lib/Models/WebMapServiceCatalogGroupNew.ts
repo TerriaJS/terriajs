@@ -75,11 +75,7 @@ class GetCapabilitiesValue {
 
 const GetCapabilitiesStratum = defineLoadableStratum(WebMapServiceCatalogGroupTraits, GetCapabilitiesValue, 'members');
 
-interface ModelWithDefinition extends Model.InterfaceFromDefinition<WebMapServiceCatalogGroupTraits> {}
-class ModelWithDefinition extends Model<WebMapServiceCatalogGroupTraits> {}
-
-@Model.definition(WebMapServiceCatalogGroupTraits)
-export default class WebMapServiceCatalogGroup extends GetCapabilitiesMixin(GroupMixin(CatalogMemberMixin(UrlMixin(ModelWithDefinition)))) {
+export default class WebMapServiceCatalogGroup extends GetCapabilitiesMixin(GroupMixin(CatalogMemberMixin(UrlMixin(Model(WebMapServiceCatalogGroupTraits))))) {
     get type() {
         return 'wms-group';
     }

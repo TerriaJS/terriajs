@@ -1,11 +1,10 @@
-import { configure, runInAction, autorun } from 'mobx';
-import CatalogGroup from '../../lib/Models/CatalogGroupNew';
+import { autorun, configure, runInAction } from 'mobx';
+import CatalogMemberMixin from '../../lib/ModelMixins/CatalogMemberMixin';
+import CommonStrata from '../../lib/Models/CommonStrata';
+import Mappable from '../../lib/Models/Mappable';
 import Terria from '../../lib/Models/TerriaNew';
 import WebMapServiceCatalogGroup from '../../lib/Models/WebMapServiceCatalogGroupNew';
 import WebMapServiceCatalogItem from '../../lib/Models/WebMapServiceCatalogItem3';
-import CommonStrata from '../../lib/Models/CommonStrata';
-import Mappable from '../../lib/Models/Mappable';
-import CatalogMemberMixin from '../../lib/ModelMixins/CatalogMemberMixin';
 
 configure({
     enforceActions: true,

@@ -127,11 +127,7 @@ class GetCapabilitiesValue {
 
 const GetCapabilitiesStratum = defineLoadableStratum(WebMapServiceCatalogItemTraits, GetCapabilitiesValue, 'isGeoServer', 'intervals', 'availableStyles');
 
-interface ModelFromDefinition extends Model.InterfaceFromDefinition<WebMapServiceCatalogItemTraits> {}
-class ModelFromDefinition extends Model<WebMapServiceCatalogItemTraits> {}
-
-@Model.definition(WebMapServiceCatalogItemTraits)
-class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemberMixin(ModelFromDefinition))) implements Mappable {
+class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemberMixin(Model(WebMapServiceCatalogItemTraits)))) implements Mappable {
     get type() {
         return 'wms';
     }

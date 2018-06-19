@@ -42,9 +42,7 @@ class OuterTraits extends ModelTraits {
     inner?: InnerTraits;
 }
 
-interface TestModel extends Model.InterfaceFromDefinition<OuterTraits> {}
-@Model.definition(OuterTraits)
-class TestModel extends Model<OuterTraits> {
+class TestModel extends Model(OuterTraits) {
 
 }
 

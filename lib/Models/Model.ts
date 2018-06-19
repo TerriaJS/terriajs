@@ -7,128 +7,114 @@ import { ModelId } from '../Traits/ModelReference';
 import StratumOrder from './StratumOrder';
 import Terria from './TerriaNew';
 
-interface MakeModelConcrete {
-    readonly type: string;
-    readonly strataTopToBottom: Partial<ModelTraits>[];
-    readonly strataBottomToTop: Partial<ModelTraits>[];
-}
-
-interface DefinitionClass<T> {
+export interface TraitsConstructor<T extends ModelTraits> {
+    new(...args: any[]): T;
     prototype: T;
     traits: {
-        [id: string]: Trait;
-    };
+        [key: string]: Trait;
+    }
 }
 
-export interface BaseModel extends Model.InterfaceFromDefinition<ModelTraits> {}
+export interface ModelConstructor<T> {
+    new(id: string, terria: Terria): T;
+    prototype: T;
+}
 
-export abstract class BaseModel {
+export class BaseModel {
     constructor(readonly id: ModelId, readonly terria: Terria) {
     }
-
-    readonly flattened: any;
-    readonly strata = observable.map<string, Partial<ModelTraits>>();
-
-    abstract get strataTopToBottom(): Partial<ModelTraits>[];
-    abstract get strataBottomToTop(): Partial<ModelTraits>[];
-
-    static definition<T extends ModelTraits>(definition: DefinitionClass<T>): Function {
-        return function <T extends BaseModel>(target: Constructor<T & MakeModelConcrete>) {
-            class UpdatedModel extends (target as Constructor<BaseModel & MakeModelConcrete>) {
-                readonly flattened: any;
-
-                constructor(...args: any[]) {
-                    super(...args);
-                    this.flattened = observable(createFlattenedLayer(this, definition));
-                }
-
-                createDefinitionInstance: () => Partial<ModelTraits> = () => {
-                    const traits = definition.traits;
-                    const propertyNames = Object.keys(traits);
-                    const reduced: any = propertyNames.reduce((p, c) => ({ ...p, [c]: undefined }), {});
-                    return observable(reduced);
-                }
-            }
-
-            const decorators: any = {};
-
-            // Add top-level accessors that don't already exist.
-            const traits = definition.traits;
-            Object.keys(traits).forEach(propertyName => {
-                const property = traits[propertyName];
-
-                if (!(propertyName in UpdatedModel.prototype)) {
-                    Object.defineProperty(UpdatedModel.prototype, propertyName, {
-                        get: function(this: UpdatedModel) {
-                            return this.flattened[propertyName];
-                        },
-                        enumerable: true,
-                        configurable: true
-                    });
-
-                    decorators[propertyName] = computed;
-                }
-            });
-
-            decorate(UpdatedModel, decorators);
-
-            return UpdatedModel;
-        }
-    }
 }
 
-function createFlattenedLayer<T>(model: BaseModel, definition: DefinitionClass<T>) {
-    const traits = definition.traits;
-
-    const flattened: any = {};
-
-    Object.keys(traits).forEach(propertyName => {
-        const property = traits[propertyName];
-
-        Object.defineProperty(flattened, propertyName, {
-            get: function() {
-                return property.getValue(model.strataTopToBottom);
-            },
-            enumerable: true
-        });
-    });
-
-    return flattened;
-}
-
-interface Model<T extends ModelTraits> extends BaseModel {
+export interface ModelInterface<T> {
     readonly flattened: Model.MakeReadonly<T>;
     readonly strata: ObservableMap<string, Partial<T>>;
+    readonly terria: Terria;
+    readonly id: string;
+
+    addStratum(id: string): Partial<T>;
+
+    readonly strataTopToBottom: Partial<T>[];
+    readonly strataBottomToTop: Partial<T>[];
+    createTraitsInstance(): Partial<T>;
 }
 
-class Model<T extends ModelTraits> extends BaseModel {
-    readonly createDefinitionInstance: () => Partial<T> = function() {
-        // This implementation will be replaced by the `definition` decorator.
-        throw new DeveloperError('Definition instances cannot be created until the model\'s constructor finishes executing.');
-    };
+function Model<T extends TraitsConstructor<ModelTraits>>(Traits: T): ModelConstructor<ModelInterface<InstanceType<T>> & Model.InterfaceFromTraits<InstanceType<T>>> {
+    class Model extends BaseModel implements ModelInterface<T> {
+        readonly flattened: Model.MakeReadonly<T>;
+        readonly strata = observable.map<string, Partial<T>>();
 
-    constructor(readonly id: ModelId, readonly terria: Terria) {
-        super(id, terria);
-    }
-
-    addStratum(id: string): Partial<T> {
-        let result = this.strata.get(id);
-        if (!result) {
-            result = <Partial<T>>this.createDefinitionInstance();
-            this.strata.set(id, result);
+        constructor(readonly id: ModelId, readonly terria: Terria) {
+            super(id, terria);
+            this.flattened = observable(createFlattenedLayer(this, Traits));
         }
-        return result;
+
+        addStratum(id: string): Partial<T> {
+            let result = this.strata.get(id);
+            if (!result) {
+                result = this.createTraitsInstance();
+                this.strata.set(id, result);
+            }
+            return result;
+        }
+
+        @computed
+        get strataTopToBottom() {
+            return StratumOrder.sortTopToBottom(this.strata);
+        }
+
+        @computed
+        get strataBottomToTop() {
+            return StratumOrder.sortBottomToTop(this.strata);
+        }
+
+        createTraitsInstance(): Partial<T> {
+            const traits = Traits.traits;
+            const propertyNames = Object.keys(traits);
+            const reduced: any = propertyNames.reduce((p, c) => ({ ...p, [c]: undefined }), {});
+            return observable(reduced);
+        }
     }
 
-    @computed
-    get strataTopToBottom() {
-        return StratumOrder.sortTopToBottom(this.strata);
+    const decorators: any = {};
+
+    // Add top-level accessors that don't already exist.
+    const traits = Traits.traits;
+    Object.keys(traits).forEach(propertyName => {
+        if (!(propertyName in Model.prototype)) {
+            Object.defineProperty(Model.prototype, propertyName, {
+                get: function(this: Model) {
+                    return (<any>this.flattened)[propertyName];
+                },
+                enumerable: true,
+                configurable: true
+            });
+
+            decorators[propertyName] = computed;
+        }
+    });
+
+    decorate(Model, decorators);
+
+    function createFlattenedLayer<T extends TraitsConstructor<ModelTraits>>(model: Model, Traits: T) {
+        const traits = Traits.traits;
+
+        const flattened: any = {};
+
+        Object.keys(traits).forEach(propertyName => {
+            const property = traits[propertyName];
+
+            Object.defineProperty(flattened, propertyName, {
+                get: function() {
+                    return property.getValue(model.strataTopToBottom);
+                },
+                enumerable: true
+            });
+        });
+
+        return flattened;
     }
 
-    @computed
-    get strataBottomToTop() {
-        return StratumOrder.sortBottomToTop(this.strata);
-    }
+    return <any>Model;
 }
 
 namespace Model {
@@ -148,7 +134,7 @@ namespace Model {
         [P in keyof T]: T[P] | undefined;
     }
 
-    export type InterfaceFromDefinition<TDefinition extends ModelTraits> = OrUndefined<MakeReadonly<TDefinition>>;
+    export type InterfaceFromTraits<TDefinition extends ModelTraits> = OrUndefined<MakeReadonly<TDefinition>>;
 }
 
 export default Model;
