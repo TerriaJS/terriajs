@@ -1,4 +1,4 @@
-import Loader from '../Loader.jsx';
+import Loader from '../Loader';
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
 import createReactClass from 'create-react-class';

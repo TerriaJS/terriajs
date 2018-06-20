@@ -5,7 +5,7 @@ import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 
 import DataPreviewSections from './DataPreviewSections';
-import DataPreviewUrl from './DataPreviewUrl.jsx';
+import DataPreviewUrl from './DataPreviewUrl';
 import ObserveModelMixin from '../ObserveModelMixin';
 import Styles from './mappable-preview.scss';
 import parseCustomMarkdownToReact from '../Custom/parseCustomMarkdownToReact';

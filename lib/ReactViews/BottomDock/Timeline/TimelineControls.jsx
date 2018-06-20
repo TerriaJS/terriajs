@@ -7,7 +7,7 @@ import createReactClass from 'create-react-class';
 
 import ClockRange from 'terriajs-cesium/Source/Core/ClockRange';
 import Styles from './timeline-controls.scss';
-import Icon from "../../Icon.jsx";
+import Icon from "../../Icon";
 
 const TimelineControls = createReactClass({
     propTypes: {

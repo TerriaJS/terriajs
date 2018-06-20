@@ -7,7 +7,7 @@ import FeatureDetection from 'terriajs-cesium/Source/Core/FeatureDetection';
 
 import DataUri from '../../Core/DataUri';
 import Dropdown from '../Generic/Dropdown';
-import Icon from '../Icon.jsx';
+import Icon from '../Icon';
 
 import Styles from './feature-info-download.scss';
 

@@ -7,7 +7,7 @@ import classNames from 'classnames';
 import uniq from 'lodash.uniq';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import { formatDateTime } from './DateFormats';
-import Icon from '../../Icon.jsx';
+import Icon from '../../Icon';
 import ObserveModelMixin from '../../ObserveModelMixin';
 import Styles from './timeline.scss';
 import combine from 'terriajs-cesium/Source/Core/combine';

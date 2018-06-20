@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import ObserverModelMixin from '../../../ObserveModelMixin';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import when from 'terriajs-cesium/Source/ThirdParty/when';
-import Loader from "../../../Loader.jsx";
+import Loader from "../../../Loader";
 
 import Styles from './tools-panel.scss';
 

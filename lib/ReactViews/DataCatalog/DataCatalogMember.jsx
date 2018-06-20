@@ -4,8 +4,8 @@ import React from 'react';
 import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import ObserveModelMixin from '../ObserveModelMixin';
-import DataCatalogItem from './DataCatalogItem.jsx';
-import DataCatalogGroup from './DataCatalogGroup.jsx';
+import DataCatalogItem from './DataCatalogItem';
+import DataCatalogGroup from './DataCatalogGroup';
 
 /**
  * Component that is either a {@link CatalogItem} or a {@link DataCatalogMember} and encapsulated this choosing logic.

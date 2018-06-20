@@ -1,5 +1,5 @@
 type DoneCallback = () => void;
-type TestFunction = (done?: DoneCallback) => void;
+type TestFunction = (done: DoneCallback) => void;
 
 declare const describe: any;
 declare const it: (name: string, f: TestFunction) => void;

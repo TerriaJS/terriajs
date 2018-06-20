@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-import Loader from '../Loader.jsx';
-import Icon from "../Icon.jsx";
+import Loader from '../Loader';
+import Icon from "../Icon";
 
 import Styles from './data-catalog-group.scss';
 

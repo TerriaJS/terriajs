@@ -12,7 +12,7 @@ import when from 'terriajs-cesium/Source/ThirdParty/when';
 import DataUri from '../../../Core/DataUri';
 import ObserveModelMixin from '../../ObserveModelMixin';
 import VarType from '../../../Map/VarType';
-import Icon from "../../Icon.jsx";
+import Icon from "../../Icon";
 
 import Styles from './chart-panel-download-button.scss';
 

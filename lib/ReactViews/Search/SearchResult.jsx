@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import createReactClass from 'create-react-class';
-import Icon from "../Icon.jsx";
+import Icon from "../Icon";
 import Styles from './search-result.scss';
 import classNames from 'classnames';
 

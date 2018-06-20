@@ -2,10 +2,10 @@ import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
 import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
-import SearchResult from './SearchResult.jsx';
-import BadgeBar from '../BadgeBar.jsx';
+import SearchResult from './SearchResult';
+import BadgeBar from '../BadgeBar';
 import Styles from './sidebar-search.scss';
-import LocationSearchResults from './LocationSearchResults.jsx';
+import LocationSearchResults from './LocationSearchResults';
 
 import {addMarker} from './SearchMarkerUtils';
 

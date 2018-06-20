@@ -1,13 +1,13 @@
-import Compass from './Navigation/Compass.jsx';
+import Compass from './Navigation/Compass';
 import createReactClass from 'create-react-class';
-import MyLocation from './Navigation/MyLocation.jsx';
+import MyLocation from './Navigation/MyLocation';
 import ObserveModelMixin from '../ObserveModelMixin';
 import PropTypes from 'prop-types';
 import React from 'react';
 import Styles from './map-navigation.scss';
 import ToggleSplitterTool from './Navigation/ToggleSplitterTool';
 import ViewerMode from '../../Models/ViewerMode';
-import ZoomControl from './Navigation/ZoomControl.jsx';
+import ZoomControl from './Navigation/ZoomControl';
 
 // The map navigation region
 const MapNavigation = createReactClass({

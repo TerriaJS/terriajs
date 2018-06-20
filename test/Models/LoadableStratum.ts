@@ -33,7 +33,9 @@ export default abstract class LoadableStratum {
         return this.loadPromiseAndTriggerLoad;
     }
 
-    @computed
+    @computed({
+        requiresReaction: true
+    })
     private get loadPromiseAndTriggerLoad() {
         runInAction(() => {
             if (!this._isLoading) {

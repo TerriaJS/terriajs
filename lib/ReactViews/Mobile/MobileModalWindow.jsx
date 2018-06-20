@@ -3,10 +3,10 @@ import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-import DataCatalog from '../DataCatalog/DataCatalog.jsx';
-import DataPreview from '../Preview/DataPreview.jsx';
-import MobileSearch from './MobileSearch.jsx';
-import WorkbenchList from '../Workbench/WorkbenchList.jsx';
+import DataCatalog from '../DataCatalog/DataCatalog';
+import DataPreview from '../Preview/DataPreview';
+import MobileSearch from './MobileSearch';
+import WorkbenchList from '../Workbench/WorkbenchList';
 import ObserveModelMixin from '../ObserveModelMixin';
 import Icon from '../Icon';
 

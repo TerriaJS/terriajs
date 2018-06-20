@@ -7,7 +7,7 @@ import CesiumWidget from 'terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidg
 import TileCoordinatesImageryProvider from 'terriajs-cesium/Source/Scene/TileCoordinatesImageryProvider';
 import CesiumMath from 'terriajs-cesium/Source/Core/Math';
 import supportsWebGL from '../../lib/Core/supportsWebGL';
-import AugmentedVirtuality from '../../lib/Models/AugmentedVirtuality.js';
+import AugmentedVirtuality from '../../lib/Models/AugmentedVirtuality';
 
 var describeIfSupportsWebGL = supportsWebGL() ? describe : xdescribe;
 

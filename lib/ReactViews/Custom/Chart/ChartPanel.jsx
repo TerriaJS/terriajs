@@ -8,11 +8,11 @@ import PropTypes from 'prop-types';
 
 import defined from 'terriajs-cesium/Source/Core/defined';
 
-import Chart from './Chart.jsx';
+import Chart from './Chart';
 import ChartPanelDownloadButton from './ChartPanelDownloadButton';
-import Loader from '../../Loader.jsx';
+import Loader from '../../Loader';
 import ObserveModelMixin from '../../ObserveModelMixin';
-import Icon from "../../Icon.jsx";
+import Icon from "../../Icon";
 
 import Styles from './chart-panel.scss';
 

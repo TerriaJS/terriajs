@@ -6,7 +6,7 @@ import ObserveModelMixin from '../../ObserveModelMixin';
 import triggerResize from '../../../Core/triggerResize';
 import Styles from './full_screen_button.scss';
 import classNames from "classnames";
-import Icon from "../../Icon.jsx";
+import Icon from "../../Icon";
 
 // The button to make the map full screen and hide the workbench.
 const FullScreenButton = createReactClass({

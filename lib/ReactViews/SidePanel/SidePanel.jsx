@@ -7,10 +7,10 @@ import PropTypes from 'prop-types';
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 
 import ObserveModelMixin from '../ObserveModelMixin';
-import SearchBox from '../Search/SearchBox.jsx';
-import SidebarSearch from '../Search/SidebarSearch.jsx';
-import Workbench from '../Workbench/Workbench.jsx';
-import Icon from "../Icon.jsx";
+import SearchBox from '../Search/SearchBox';
+import SidebarSearch from '../Search/SidebarSearch';
+import Workbench from '../Workbench/Workbench';
+import Icon from "../Icon";
 import { removeMarker } from '../Search/SearchMarkerUtils';
 
 import Styles from './side-panel.scss';

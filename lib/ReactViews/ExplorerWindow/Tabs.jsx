@@ -3,8 +3,8 @@ import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-import DataCatalogTab from './Tabs/DataCatalogTab.jsx';
-import MyDataTab from './Tabs/MyDataTab/MyDataTab.jsx';
+import DataCatalogTab from './Tabs/DataCatalogTab';
+import MyDataTab from './Tabs/MyDataTab/MyDataTab';
 import ObserveModelMixin from '../ObserveModelMixin';
 import defined from 'terriajs-cesium/Source/Core/defined';
 

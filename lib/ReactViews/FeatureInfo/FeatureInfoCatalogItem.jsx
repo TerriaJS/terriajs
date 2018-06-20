@@ -1,5 +1,5 @@
 import defined from 'terriajs-cesium/Source/Core/defined';
-import FeatureInfoSection from './FeatureInfoSection.jsx';
+import FeatureInfoSection from './FeatureInfoSection';
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
 

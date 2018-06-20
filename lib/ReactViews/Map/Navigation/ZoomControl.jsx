@@ -9,7 +9,7 @@ const Ellipsoid = require('terriajs-cesium/Source/Core/Ellipsoid');
 const Tween = require('terriajs-cesium/Source/ThirdParty/Tween');
 const CesiumMath = require('terriajs-cesium/Source/Core/Math');
 const Cartesian3 = require('terriajs-cesium/Source/Core/Cartesian3');
-import Icon from "../../Icon.jsx";
+import Icon from "../../Icon";
 import Styles from './zoom_control.scss';
 
 // Map zoom control

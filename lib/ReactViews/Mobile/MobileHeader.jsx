@@ -1,12 +1,12 @@
 import React from 'react';
 import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
-import SearchBox from '../Search/SearchBox.jsx';
+import SearchBox from '../Search/SearchBox';
 import ObserveModelMixin from '../ObserveModelMixin';
 import MobileModalWindow from './MobileModalWindow';
-import Branding from '../SidePanel/Branding.jsx';
+import Branding from '../SidePanel/Branding';
 import Styles from './mobile-header.scss';
-import Icon from "../Icon.jsx";
+import Icon from "../Icon";
 import MobileMenu from './MobileMenu';
 import classNames from 'classnames';
 import { removeMarker } from '../Search/SearchMarkerUtils';

@@ -3,12 +3,12 @@ import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import 'mutationobserver-shim';
 
-import TerriaViewerWrapper from '../Map/TerriaViewerWrapper.jsx';
-import LocationBar from '../Map/Legend/LocationBar.jsx';
-import DistanceLegend from '../Map/Legend/DistanceLegend.jsx';
-import FeedbackButton from '../Feedback/FeedbackButton.jsx';
-import ObserveModelMixin from './../ObserveModelMixin';
-import BottomDock from './../BottomDock/BottomDock.jsx';
+import TerriaViewerWrapper from '../Map/TerriaViewerWrapper';
+import LocationBar from '../Map/Legend/LocationBar';
+import DistanceLegend from '../Map/Legend/DistanceLegend';
+import FeedbackButton from '../Feedback/FeedbackButton';
+import ObserveModelMixin from '../ObserveModelMixin';
+import BottomDock from '../BottomDock/BottomDock';
 import FeatureDetection from 'terriajs-cesium/Source/Core/FeatureDetection';
 import classNames from "classnames";
 

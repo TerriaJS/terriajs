@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import ObserveModelMixin from '../ObserveModelMixin';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import classNames from 'classnames';
-import MenuPanel from '../StandardUserInterface/customizable/MenuPanel.jsx';
+import MenuPanel from '../StandardUserInterface/customizable/MenuPanel';
 
 import Styles from './help-panel.scss';
 import DropdownStyles from '../Map/Panels/panel.scss';

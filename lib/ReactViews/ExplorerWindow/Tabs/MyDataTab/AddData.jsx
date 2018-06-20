@@ -7,7 +7,7 @@ import addUserCatalogMember from '../../../../Models/addUserCatalogMember';
 import createCatalogItemFromFileOrUrl from '../../../../Models/createCatalogItemFromFileOrUrl';
 import createCatalogMemberFromType from '../../../../Models/createCatalogMemberFromType';
 import Dropdown from '../../../Generic/Dropdown';
-import FileInput from './FileInput.jsx';
+import FileInput from './FileInput';
 import getDataType from '../../../../Core/getDataType';
 import ObserveModelMixin from '../../../ObserveModelMixin';
 import TerriaError from '../../../../Core/TerriaError';

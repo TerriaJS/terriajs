@@ -6,9 +6,9 @@ import PropTypes from 'prop-types';
 
 import defined from 'terriajs-cesium/Source/Core/defined';
 
-import DataCatalogMember from './DataCatalogMember.jsx';
+import DataCatalogMember from './DataCatalogMember';
 import ObserveModelMixin from '../ObserveModelMixin';
-import SearchHeader from '../Search/SearchHeader.jsx';
+import SearchHeader from '../Search/SearchHeader';
 
 import Styles from './data-catalog.scss';
 

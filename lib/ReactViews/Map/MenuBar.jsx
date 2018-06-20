@@ -4,11 +4,11 @@ import createReactClass from 'create-react-class';
 
 import PropTypes from 'prop-types';
 
-import SettingPanel from './Panels/SettingPanel.jsx';
-import SharePanel from './Panels/SharePanel/SharePanel.jsx';
-import ToolsPanel from './Panels/ToolsPanel/ToolsPanel.jsx';
+import SettingPanel from './Panels/SettingPanel';
+import SharePanel from './Panels/SharePanel/SharePanel';
+import ToolsPanel from './Panels/ToolsPanel/ToolsPanel';
 
-import FullScreenButton from './Navigation/FullScreenButton.jsx';
+import FullScreenButton from './Navigation/FullScreenButton';
 import ObserveModelMixin from '../ObserveModelMixin';
 
 import Styles from './menu-bar.scss';

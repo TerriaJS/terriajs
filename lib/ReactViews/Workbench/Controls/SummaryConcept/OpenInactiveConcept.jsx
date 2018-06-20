@@ -2,7 +2,7 @@
 
 import classNames from 'classnames';
 import Concept from '../Concept';
-import Icon from '../../../Icon.jsx';
+import Icon from '../../../Icon';
 import ObserveModelMixin from '../../../ObserveModelMixin';
 import React from 'react';
 import createReactClass from 'create-react-class';

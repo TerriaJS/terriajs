@@ -5,9 +5,9 @@ import React from 'react';
 import createReactClass from 'create-react-class';
 import parseCustomMarkdownToReact from '../Custom/parseCustomMarkdownToReact';
 import PropTypes from 'prop-types';
-import sendFeedback from '../../Models/sendFeedback.js';
+import sendFeedback from '../../Models/sendFeedback';
 import Styles from './feedback-form.scss';
-import Icon from "../Icon.jsx";
+import Icon from "../Icon";
 import classNames from "classnames";
 
 const FeedbackForm = createReactClass({

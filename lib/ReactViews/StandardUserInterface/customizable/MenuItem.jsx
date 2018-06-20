@@ -1,6 +1,6 @@
-import MenuButton from '../../Map/MenuButton.jsx';
+import MenuButton from '../../Map/MenuButton';
 import responsiveSwitch from './ResponsiveSwitch';
-import MobileMenuItem from './../../Mobile/MobileMenuItem';
+import MobileMenuItem from '../../Mobile/MobileMenuItem';
 
 const MenuItem = responsiveSwitch(MenuButton, MobileMenuItem);
 

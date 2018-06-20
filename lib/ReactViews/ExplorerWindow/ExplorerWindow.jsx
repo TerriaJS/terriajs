@@ -5,7 +5,7 @@ import ko from 'terriajs-cesium/Source/ThirdParty/knockout';
 
 import ObserveModelMixin from '../ObserveModelMixin';
 import ModalPopup from './ModalPopup';
-import Tabs from './Tabs.jsx';
+import Tabs from './Tabs';
 
 const ExplorerWindow = createReactClass({
     displayName: 'ExplorerWindow',

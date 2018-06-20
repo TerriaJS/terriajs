@@ -12,7 +12,7 @@ import ObserveModelMixin from '../../ObserveModelMixin';
 import Styles from './tool_button.scss';
 import TerriaError from '../../../Core/TerriaError';
 import CesiumCartographic from 'terriajs-cesium/Source/Core/Cartographic.js';
-import Icon from "../../Icon.jsx";
+import Icon from "../../Icon";
 import defined from 'terriajs-cesium/Source/Core/defined';
 
 const MyLocation = createReactClass({

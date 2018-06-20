@@ -11,7 +11,7 @@ const React = require('react');
 const createReactClass = require('create-react-class');
 const PropTypes = require('prop-types');
 const Terria = require('../../Models/Terria');
-const TerriaViewer = require('../../ViewModels/TerriaViewer.js');
+const TerriaViewer = require('../../ViewModels/TerriaViewer');
 const ViewerMode = require('../../Models/ViewerMode');
 const when = require('terriajs-cesium/Source/ThirdParty/when');
 import classNames from 'classnames';

@@ -4,10 +4,10 @@ import createReactClass from 'create-react-class';
 
 import PropTypes from 'prop-types';
 
-import DataCatalog from '../../DataCatalog/DataCatalog.jsx';
-import DataPreview from '../../Preview/DataPreview.jsx';
+import DataCatalog from '../../DataCatalog/DataCatalog';
+import DataPreview from '../../Preview/DataPreview';
 import ObserveModelMixin from '../../ObserveModelMixin';
-import SearchBox from '../../Search/SearchBox.jsx';
+import SearchBox from '../../Search/SearchBox';
 
 import Styles from './data-catalog-tab.scss';
 

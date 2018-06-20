@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import createReactClass from 'create-react-class';
 import debounce from 'lodash.debounce';
-import Icon from "../Icon.jsx";
+import Icon from "../Icon";
 
 import Styles from './search-box.scss';
 

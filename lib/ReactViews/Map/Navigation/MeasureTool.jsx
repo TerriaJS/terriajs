@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import createReactClass from 'create-react-class';
 import ObserveModelMixin from '../../ObserveModelMixin';
 import Styles from './tool_button.scss';
-import Icon from "../../Icon.jsx";
+import Icon from "../../Icon";
 
 const UserDrawing = require('../../../Models/UserDrawing');
 const EllipsoidGeodesic = require('terriajs-cesium/Source/Core/EllipsoidGeodesic.js');

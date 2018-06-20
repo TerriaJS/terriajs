@@ -4,7 +4,7 @@ import React from 'react';
 import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import ObserverModelMixin from '../../../ObserveModelMixin';
-import MenuPanel from '../../../StandardUserInterface/customizable/MenuPanel.jsx';
+import MenuPanel from '../../../StandardUserInterface/customizable/MenuPanel';
 import CountDatasets from './CountDatasets';
 import Styles from './tools-panel.scss';
 import DropdownStyles from '../panel.scss';

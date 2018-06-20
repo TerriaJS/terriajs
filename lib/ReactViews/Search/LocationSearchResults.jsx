@@ -2,10 +2,10 @@ import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
 import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
-import SearchHeader from './SearchHeader.jsx';
-import SearchResult from './SearchResult.jsx';
+import SearchHeader from './SearchHeader';
+import SearchResult from './SearchResult';
 import classNames from 'classnames';
-import Icon from "../Icon.jsx";
+import Icon from "../Icon";
 import Styles from './location-search-result.scss';
 
 const LocationSearchResults = createReactClass({

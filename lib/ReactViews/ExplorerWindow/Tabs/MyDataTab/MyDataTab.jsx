@@ -4,9 +4,9 @@ import createReactClass from 'create-react-class';
 
 import PropTypes from 'prop-types';
 
-import DataCatalogGroup from '../../../DataCatalog/DataCatalogGroup.jsx';
-import DataPreview from '../../../Preview/DataPreview.jsx';
-import AddData from './AddData.jsx';
+import DataCatalogGroup from '../../../DataCatalog/DataCatalogGroup';
+import DataPreview from '../../../Preview/DataPreview';
+import AddData from './AddData';
 import ObserveModelMixin from '../../../ObserveModelMixin';
 
 import Styles from './my-data-tab.scss';

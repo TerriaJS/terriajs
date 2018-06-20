@@ -5,7 +5,7 @@ import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import ObserveModelMixin from '../../ObserveModelMixin';
 import Styles from './tool_button.scss';
-import Icon from "../../Icon.jsx";
+import Icon from "../../Icon";
 
 import defined from 'terriajs-cesium/Source/Core/defined';
 

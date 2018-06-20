@@ -4,7 +4,7 @@
 
 var RegionProviderList = require('../../lib/Map/RegionProviderList');
 var RegionProvider = require('../../lib/Map/RegionProvider');
-var TableStructure = require('../../lib/Map/TableStructure.js');
+var TableStructure = require('../../lib/Map/TableStructure');
 var CorsProxy = require('../../lib/Core/CorsProxy');
 
 describe('RegionProviderList', function() {

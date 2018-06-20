@@ -1,15 +1,15 @@
 'use strict';
 
 import defined from 'terriajs-cesium/Source/Core/defined';
-import FeatureInfoCatalogItem from './FeatureInfoCatalogItem.jsx';
-import Loader from '../Loader.jsx';
+import FeatureInfoCatalogItem from './FeatureInfoCatalogItem';
+import Loader from '../Loader';
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
 import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 import Entity from 'terriajs-cesium/Source/DataSources/Entity';
-import Icon from "../Icon.jsx";
+import Icon from "../Icon";
 import { SEARCH_MARKER_DATA_SOURCE_NAME } from '../Search/SearchMarkerUtils';
 
 import Styles from './feature-info-panel.scss';

@@ -3,8 +3,8 @@ import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import Sortable from 'react-anything-sortable';
 
-import WorkbenchItem from './WorkbenchItem.jsx';
-import ObserveModelMixin from './../ObserveModelMixin';
+import WorkbenchItem from './WorkbenchItem';
+import ObserveModelMixin from '../ObserveModelMixin';
 
 import Styles from './workbench-list.scss';
 import '!!style-loader!css-loader?sourceMap!react-anything-sortable/sortable.css';

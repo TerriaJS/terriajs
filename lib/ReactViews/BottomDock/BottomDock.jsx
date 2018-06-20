@@ -3,8 +3,8 @@
 import React from 'react';
 import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
-import ChartPanel from '../Custom/Chart/ChartPanel.jsx';
-import Timeline from './Timeline/Timeline.jsx';
+import ChartPanel from '../Custom/Chart/ChartPanel';
+import Timeline from './Timeline/Timeline';
 import ObserveModelMixin from '../ObserveModelMixin';
 import Styles from './bottom-dock.scss';
 

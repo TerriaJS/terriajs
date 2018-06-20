@@ -7,12 +7,12 @@ import {buildShareLink, buildShortShareLink, canShorten} from './BuildShareLink'
 import ObserverModelMixin from '../../../ObserveModelMixin';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import classNames from 'classnames';
-import MenuPanel from '../../../StandardUserInterface/customizable/MenuPanel.jsx';
+import MenuPanel from '../../../StandardUserInterface/customizable/MenuPanel';
 import Clipboard from '../../../Clipboard';
 
 import Styles from './share-panel.scss';
 import DropdownStyles from '../panel.scss';
-import Icon from "../../../Icon.jsx";
+import Icon from "../../../Icon";
 
 const SharePanel = createReactClass({
     displayName: 'SharePanel',
