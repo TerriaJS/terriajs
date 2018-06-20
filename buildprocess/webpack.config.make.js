@@ -9,6 +9,7 @@ var testGlob = [
     './test/Models/Experiment.ts',
     './test/Models/StratumOrderSpec.ts',
     './test/Models/WebMapServiceCatalogItemSpec.ts',
+    './test/Models/WebMapServiceCatalogGroupSpec.ts',
     './test/Traits/objectTraitSpec.ts',
     './test/Traits/objectArrayTraitSpec.ts'
 ];
