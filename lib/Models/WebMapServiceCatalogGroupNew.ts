@@ -1,4 +1,5 @@
-import { computed, createAtom, observable, runInAction } from 'mobx';
+import { computed, observable, runInAction } from 'mobx';
+import LoadableStratum from '../../test/Models/LoadableStratum';
 import isReadOnlyArray from '../Core/isReadOnlyArray';
 import * as TerriaError from '../Core/TerriaError';
 import CatalogMemberMixin from '../ModelMixins/CatalogMemberMixin';
@@ -13,55 +14,6 @@ import * as proxyCatalogItemUrl from './proxyCatalogItemUrl';
 import Terria from './TerriaNew';
 import WebMapServiceCapabilities, { CapabilitiesLayer } from './WebMapServiceCapabilities';
 import WebMapServiceCatalogItem from './WebMapServiceCatalogItem3';
-
-abstract class LoadableStratum {
-    // We manually use atoms to avoid MobX complaining about a
-    // computed modifying an observable.
-    private _isLoadingAtom = createAtom('isLoadingAtom', () => {}, () => {});
-    private _isLoading = false;
-
-    private _loadPromiseAtom = createAtom('loadPromise', () => {}, () => {});
-    private _loadPromise: Promise<void> | undefined = undefined;
-
-    abstract load(): Promise<void>;
-
-    @computed
-    private get loadPromise(): Promise<void> {
-        runInAction(() => {
-            if (!this._isLoading) {
-                this._isLoading = true;
-                this._isLoadingAtom.reportChanged();
-            }
-        });
-
-        this._loadPromise = this.load().then(() => {
-            runInAction(() => {
-                if (this._isLoading) {
-                    this._isLoading = false;
-                    this._isLoadingAtom.reportChanged();
-                }
-            });
-        }).catch(e => {
-            runInAction(() => {
-                if (this._isLoading) {
-                    this._isLoading = false;
-                    this._isLoadingAtom.reportChanged();
-                }
-            });
-            throw e;
-        });
-
-        runInAction(() => {
-            this._loadPromiseAtom.reportChanged();
-        });
-
-        return this._loadPromise;
-    }
-
-    ensureLoaded(): Promise<void> {
-        return this.loadPromise;
-    }
-}
 
 class GetCapabilitiesStratum extends LoadableStratum implements WebMapServiceCatalogGroupTraits {
     constructor(readonly catalogGroup: WebMapServiceCatalogGroup) {
@@ -91,7 +43,7 @@ class GetCapabilitiesStratum extends LoadableStratum implements WebMapServiceCat
 
     @computed
     get capabilities(): WebMapServiceCapabilities | undefined {
-        this.ensureLoaded();
+        this.loadIfNeeded();
         return this._capabilities;
     }
 

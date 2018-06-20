@@ -9,19 +9,20 @@
 // 4. All code for all catalog item types needs to be loaded before we can do anything.
 import { computed, observable, runInAction, trace } from 'mobx';
 import * as URI from 'urijs';
-import * as TerriaError from '../Core/TerriaError';
+import LoadableStratum from '../../test/Models/LoadableStratum';
 import autoUpdate from '../Core/autoUpdate';
 import isReadOnlyArray from '../Core/isReadOnlyArray';
+import * as TerriaError from '../Core/TerriaError';
 import CatalogMemberMixin from '../ModelMixins/CatalogMemberMixin';
 import GetCapabilitiesMixin from '../ModelMixins/GetCapabilitiesMixin';
 import UrlMixin from '../ModelMixins/UrlMixin';
 import WebMapServiceCatalogItemTraits from '../Traits/WebMapServiceCatalogItemTraits';
+import { LoadableStratumState } from './defineLoadableStratum';
 import Mappable, { ImageryLayer } from './Mappable';
 import Model from './Model';
+import * as proxyCatalogItemUrl from './proxyCatalogItemUrl';
 import Terria from './TerriaNew';
 import WebMapServiceCapabilities, { CapabilitiesLayer, CapabilitiesStyle } from './WebMapServiceCapabilities';
-import defineLoadableStratum, { LoadableStratumState } from './defineLoadableStratum';
-import * as proxyCatalogItemUrl from './proxyCatalogItemUrl';
 
 interface LegendUrl {
     url: string;
@@ -39,12 +40,37 @@ interface WebMapServiceStyles {
     [layerName: string]: WebMapServiceStyle[];
 }
 
-class GetCapabilitiesValue {
+class GetCapabilitiesStratum extends LoadableStratum implements WebMapServiceCatalogItemTraits {
     constructor(readonly catalogItem: WebMapServiceCatalogItem) {
+        super();
     }
 
     @observable
-    capabilities?: WebMapServiceCapabilities;
+    private _capabilities: WebMapServiceCapabilities | undefined;
+
+    load(): Promise<void> {
+        this._capabilities = undefined;
+
+        if (this.catalogItem.getCapabilitiesUrl === undefined) {
+            return Promise.reject(new TerriaError({
+                title: 'Unable to load GetCapabilities',
+                message: 'Could not load the Web Map Service (WMS) GetCapabilities document because the catalog item does not have a `url`.'
+            }));
+        }
+
+        const proxiedUrl = proxyCatalogItemUrl(this.catalogItem, this.catalogItem.getCapabilitiesUrl, this.catalogItem.getCapabilitiesCacheDuration);
+        return WebMapServiceCapabilities.fromUrl(proxiedUrl).then(capabilities => {
+            runInAction(() => {
+                this._capabilities = capabilities;
+            });
+        });
+    }
+
+    @computed
+    get capabilities(): WebMapServiceCapabilities | undefined {
+        this.loadIfNeeded();
+        return this._capabilities;
+    }
 
     @computed
     get capabilitiesLayers(): ReadonlyMap<string, CapabilitiesLayer | undefined> {
@@ -125,8 +151,6 @@ class GetCapabilitiesValue {
     @observable intervals: any;
 }
 
-const GetCapabilitiesStratum = defineLoadableStratum(WebMapServiceCatalogItemTraits, GetCapabilitiesValue, 'isGeoServer', 'intervals', 'availableStyles');
-
 class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemberMixin(Model(WebMapServiceCatalogItemTraits)))) implements Mappable {
     get type() {
         return 'wms';
@@ -134,7 +158,7 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemb
 
     constructor(id: string, terria: Terria) {
         super(id, terria);
-        this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, new GetCapabilitiesStratum(this, (layer: typeof GetCapabilitiesStratum.TLoadValue) => this._loadGetCapabilitiesStratum(layer)));
+        this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, new GetCapabilitiesStratum(this));
     }
 
     @computed
@@ -218,7 +242,7 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemb
         // Don't show anything on the map until GetCapabilities finishes loading.
         // But do trigger loading so that we can eventually show something!
         // TODO should this be a more general loading check? eliminate the cast?
-        const stratum = <LoadableStratumState>this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName);
+        const stratum = <GetCapabilitiesStratum>this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName);
         stratum.loadIfNeeded();
         if (stratum.isLoading) {
             return undefined;
@@ -238,57 +262,6 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemb
         //     getFeatureInfoParameters: parameters,
         //     tilingScheme: defined(this.tilingScheme) ? this.tilingScheme : new WebMercatorTilingScheme(),
         //     maximumLevel: maximumLevel
-        // });
-    }
-
-    private _loadGetCapabilitiesStratum(values: typeof GetCapabilitiesStratum.TLoadValue): Promise<void> {
-        if (this.getCapabilitiesUrl === undefined) {
-            return Promise.reject(new TerriaError({
-                title: 'Unable to load GetCapabilities',
-                message: 'Could not load the Web Map Service (WMS) GetCapabilities document because the catalog item does not have a `url`.'
-            }));
-        }
-
-        // How do we avoid loading GetCapabilities if it's already been loaded?
-        // For example, if this catalog item was created by a group, we don't want
-        // to load the same GetCapabilities for every item in the group.
-        // Maybe extract GetCapabilities loading and parsing into a pipeline
-        // of createTransformer functions.
-        // e.g. one function takes a URL and returns a representation object of
-        // GetCapabilities. A function on that object takes a layer name
-        // and returns the details for that layer.
-
-        const proxiedUrl = proxyCatalogItemUrl(this, this.getCapabilitiesUrl, this.getCapabilitiesCacheDuration);
-        return WebMapServiceCapabilities.fromUrl(proxiedUrl).then(capabilities => {
-            runInAction(() => {
-                values.capabilities = capabilities;
-            });
-        });
-
-        // console.log('fetching ' + this.getCapabilitiesUrl);
-        // const url = this.getCapabilitiesUrl;
-        // return fetch(url).then(response => {
-        //     console.log('fetched ' + url);
-        //     //const xml = response.xml();
-        //     //const capabilities = xml; // TODO
-        //     const capabilities = {
-        //         Service: {
-        //             KeywordList: {
-        //                 Keyword: ['GEOSERVER']
-        //             }
-        //         }
-        //     };
-
-        //     runInAction(() => {
-        //         values.isGeoServer =
-        //             defined(capabilities) &&
-        //             defined(capabilities.Service) &&
-        //             defined(capabilities.Service.KeywordList) &&
-        //             defined(capabilities.Service.KeywordList.Keyword) &&
-        //             capabilities.Service.KeywordList.Keyword.indexOf('GEOSERVER') >= 0;
-        //     });
-
-        //     return values;
         // });
     }
 }
