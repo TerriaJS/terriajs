@@ -17,7 +17,6 @@ import CatalogMemberMixin from '../ModelMixins/CatalogMemberMixin';
 import GetCapabilitiesMixin from '../ModelMixins/GetCapabilitiesMixin';
 import UrlMixin from '../ModelMixins/UrlMixin';
 import WebMapServiceCatalogItemTraits from '../Traits/WebMapServiceCatalogItemTraits';
-import { LoadableStratumState } from './defineLoadableStratum';
 import Mappable, { ImageryLayer } from './Mappable';
 import Model from './Model';
 import * as proxyCatalogItemUrl from './proxyCatalogItemUrl';
