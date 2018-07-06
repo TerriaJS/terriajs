@@ -3,7 +3,7 @@
 Change Log
 ==========
 
-### Next Release
+### v6.0.3
 
 * Fixed a bug that prevented users from being able to enter coordinates directly into catalog function point parameter fields.
 
