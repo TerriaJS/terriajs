@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### v6.0.#
+
+* Promoted Data Custodian to the top of the Data Catalogue Preview (with the exception of disclaimer which will take priority if present) to make the data set author more discoverable.
+
 ### v6.0.3
 
 * Fixed a bug that prevented users from being able to enter coordinates directly into catalog function point parameter fields.
