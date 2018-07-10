@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### v6.0.4
+
+* Changed `CesiumSelectionIndicator` to no longer use Knockout binding. This will avoid a problem in some environments, such as when a Content Security Policy (CSP) is in place.
+
 ### v6.0.3
 
 * Fixed a bug that prevented users from being able to enter coordinates directly into catalog function point parameter fields.
