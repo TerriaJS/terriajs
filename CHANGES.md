@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### v6.0.#
+
+* Fixed two bugs so that original now viewing order on the Workbench is preserved in share links.
+
 ### v6.0.3
 
 * Fixed a bug that prevented users from being able to enter coordinates directly into catalog function point parameter fields.
