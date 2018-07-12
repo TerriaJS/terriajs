@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### Next Version
+
+* Added `rel="noreferrer noopener"` to all `target="_blank"` links. This prevents the target page from being able to navigate the source tab to a new page.
+
 ### v6.0.4
 
 * Changed `CesiumSelectionIndicator` to no longer use Knockout binding. This will avoid a problem in some environments, such as when a Content Security Policy (CSP) is in place.
