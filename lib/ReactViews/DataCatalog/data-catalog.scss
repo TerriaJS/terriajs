@@ -16,7 +16,7 @@
   bottom: 0;
   top: $modal-header-height;
 
-  @media screen and (min-width: $sm) {
+  @media (min-width: $sm) {
     padding-right: $padding-small;
     height: calc(100% - #{$input-height + $padding*3});
     position: static;

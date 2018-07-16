@@ -58,12 +58,15 @@ const TerriaViewerWrapper = createReactClass({
 
     render() {
         return (
-            <aside id="cesiumContainer"
-                   className={Styles.cesiumContainer}
-                   ref={element => {this.mapElement = element;}}
-                   onMouseMove={this.onMouseMove}>
-                <div className={Styles.mapPlaceholder}>Loading the map, please wait!</div>
+            <aside className={Styles.container}>
+                <div className={Styles.mapPlaceholder}>Loading the map, please wait...</div>
                 <Splitter terria={this.props.terria} />
+                <div
+                    id="cesiumContainer"
+                    className={Styles.cesiumContainer}
+                    ref={element => {this.mapElement = element;}}
+                    onMouseMove={this.onMouseMove}>
+                </div>
             </aside>
         );
     },

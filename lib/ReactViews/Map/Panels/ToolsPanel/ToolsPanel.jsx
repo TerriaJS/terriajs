@@ -51,6 +51,7 @@ const ToolsPanel = createReactClass({
                        viewState={this.props.viewState}
                        btnTitle="Advanced toolbox"
                        onOpenChanged={this.onOpenChanged}
+                       isOpen={this.state.isOpen}
                        smallScreen={this.props.viewState.useSmallScreenInterface}>
                 <If condition={this.state.isOpen}>
                         <div className={DropdownStyles.section}>

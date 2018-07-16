@@ -4,8 +4,4 @@
 
 .toolButton {
   display: inline-block;
-
-  @media print {
-    display: none;
-  }
 }

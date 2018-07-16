@@ -59,6 +59,10 @@ const GLYPHS = {
     splitter: require('../../wwwroot/images/icons/splitter.svg'),
     splitterOn: require('../../wwwroot/images/icons/splitterOn.svg'),
     splitterOff: require('../../wwwroot/images/icons/splitterOff.svg'),
+    previous: require('../../wwwroot/images/icons/previous.svg'),
+    next: require('../../wwwroot/images/icons/next.svg'),
+    timeline: require('../../wwwroot/images/icons/timeline.svg'),
+    data: require('../../wwwroot/images/icons/data.svg'),
 };
 
 const Icon = createReactClass({

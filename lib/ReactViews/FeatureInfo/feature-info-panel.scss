@@ -31,25 +31,14 @@
   $feature-info-medium-max-size: $sm * 0.9 - $feature-info-right-margin * 0.5;
   $feature-info-forty-percent-size: $feature-info-medium-max-size * 100 / 40;
 
-  @media screen and (min-width : $sm) and (max-width: $feature-info-forty-percent-size) {
+  @media (min-width : $sm) and (max-width: $feature-info-forty-percent-size) {
     max-width: $feature-info-medium-max-size;
     right: $feature-info-right-margin;
   }
 
-  @media screen and (min-width: $feature-info-forty-percent-size) {
+  @media (min-width: $feature-info-forty-percent-size) {
     max-width: 40%;
     right: $feature-info-right-margin;
-  }
-
-  @media print{
-    position: relative;
-    color: #000;
-    margin: 0.5cm;
-    z-index: 999;
-    height: auto;
-    max-height: none;
-    min-height: 0;
-    page-break-after : auto;
   }
 }
 
@@ -123,8 +112,36 @@
   overflow-x: auto;
   max-height: calc(80vh - #{$padding*2 + $btn-default-line-height});
   font-size: $font-size-feature-info;
+}
 
-  @media print{
-    max-height: none;
+.location {
+  margin: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.btn-location {
+  composes: btn from '../../Sass/common/_buttons.scss';
+  vertical-align: bottom;
+  margin-left: 5px;
+
+  &:hover {
+    svg{
+      fill: $color-primary;
+    }
+  }
+  svg{
+    height: 18px;
+    width: 18px;
+    fill: $feature-info-btn-color;
+  }
+}
+
+.btn-location-selected {
+  composes: btn-location;
+
+  svg{
+    fill: $color-primary;
   }
 }

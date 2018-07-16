@@ -56,6 +56,7 @@ const Tabs = createReactClass({
                     panel: <DataCatalogTab terria={this.props.terria}
                                         viewState={this.props.viewState}
                                         items={this.props.terria.catalog.group.items}
+                                        searchPlaceholder="Search the catalogue"
                     />
                 },
                 myDataTab

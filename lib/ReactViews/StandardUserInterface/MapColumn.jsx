@@ -36,7 +36,8 @@ const MapColumn = createReactClass({
         return {};
     },
 
-    componentWillMount() {
+    /* eslint-disable-next-line camelcase */
+    UNSAFE_componentWillMount() {
         if (isIE) {
             this.observer = new MutationObserver(this.resizeMapCell);
             window.addEventListener('resize', this.resizeMapCell, false);

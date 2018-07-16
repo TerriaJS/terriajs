@@ -36,7 +36,8 @@ const RegionPicker = createReactClass({
         };
     },
 
-    componentWillMount() {
+    /* eslint-disable-next-line camelcase */
+    UNSAFE_componentWillMount() {
         this._loadingRegionProvider = undefined;
         this._selectedRegionCatalogItem = undefined;
         this._regionNames = [];

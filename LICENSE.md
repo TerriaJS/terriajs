@@ -1,6 +1,6 @@
 
 
-Copyright(c) 2012-2015 National ICT Australia Limited (NICTA).
+Copyright(c) 2012-2018 CSIRO Data61 and TerriaJS Contributors.
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
 
@@ -19,7 +19,7 @@ TerriaJS includes the following third-party code.
 
 http://cesiumjs.org/
 
-> Copyright 2011-2014 Cesium Contributors
+> Copyright 2011-2018 Cesium Contributors
 >
 > Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
 >

@@ -43,7 +43,8 @@ const DateTimePicker = createReactClass({
         };
     },
 
-    componentWillMount() {
+    /* eslint-disable-next-line camelcase */
+    UNSAFE_componentWillMount() {
         const datesObject = objectifyDates(this.props.dates);
         let defaultCentury = null;
         let defaultYear = null;
@@ -79,7 +80,6 @@ const DateTimePicker = createReactClass({
             }
         }
         this.setState({
-            datesObject: datesObject,
             century: defaultCentury,
             year: defaultYear,
             month: defaultMonth,
@@ -306,9 +306,8 @@ const DateTimePicker = createReactClass({
 
     render() {
         if (this.props.dates) {
-            const datesObject = this.state.datesObject;
+            const datesObject = objectifyDates(this.props.dates);
             return (
-
                 <div className={Styles.timelineDatePicker} onClick={(event) => { event.stopPropagation(); }}>
                     <button className={Styles.togglebutton} onClick={() => { this.toggleDatePicker(); }}><Icon glyph={Icon.GLYPHS.calendar} /></button>
                     {this.state.isOpen && <div className={classNames(Styles.datePicker, { [Styles.openBelow]: this.props.openDirection === 'down' })}>

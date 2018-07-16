@@ -29,7 +29,8 @@ const ParameterEditor = createReactClass({
     propTypes: {
         parameter: PropTypes.object,
         viewState: PropTypes.object,
-        previewed: PropTypes.object
+        previewed: PropTypes.object,
+        parameterViewModel: PropTypes.object
     },
 
     fieldId: new Date().getTime(),
@@ -73,6 +74,7 @@ ParameterEditor.parameterTypeConverters = [
                                     previewed={parameterEditor.props.previewed}
                                     viewState={parameterEditor.props.viewState}
                                     parameter={parameterEditor.props.parameter}
+                                    parameterViewModel={parameterEditor.props.parameterViewModel}
                                 />
                             </div>);
             }
@@ -88,6 +90,7 @@ ParameterEditor.parameterTypeConverters = [
                                     previewed={parameterEditor.props.previewed}
                                     viewState={parameterEditor.props.viewState}
                                     parameter={parameterEditor.props.parameter}
+                                    parameterViewModel={parameterEditor.props.parameterViewModel}
                                 />
                             </div>);
             }
@@ -103,6 +106,7 @@ ParameterEditor.parameterTypeConverters = [
                                     previewed={parameterEditor.props.previewed}
                                     viewState={parameterEditor.props.viewState}
                                     parameter={parameterEditor.props.parameter}
+                                    parameterViewModel={parameterEditor.props.parameterViewModel}
                                 />
                             </div>);
             }
@@ -118,6 +122,7 @@ ParameterEditor.parameterTypeConverters = [
                                     previewed={parameterEditor.props.previewed}
                                     viewState={parameterEditor.props.viewState}
                                     parameter={parameterEditor.props.parameter}
+                                    parameterViewModel={parameterEditor.props.parameterViewModel}
                                 />
                             </div>);
             }
@@ -133,6 +138,7 @@ ParameterEditor.parameterTypeConverters = [
                                     previewed={parameterEditor.props.previewed}
                                     viewState={parameterEditor.props.viewState}
                                     parameter={parameterEditor.props.parameter}
+                                    parameterViewModel={parameterEditor.props.parameterViewModel}
                                 />
                             </div>);
             }
@@ -147,6 +153,7 @@ ParameterEditor.parameterTypeConverters = [
                                 <DateTimeParameterEditor
                                     previewed={parameterEditor.props.previewed}
                                     parameter={parameterEditor.props.parameter}
+                                    parameterViewModel={parameterEditor.props.parameterViewModel}
                                 />
                             </div>);
             }
@@ -162,6 +169,7 @@ ParameterEditor.parameterTypeConverters = [
                                     previewed={parameterEditor.props.previewed}
                                     viewState={parameterEditor.props.viewState}
                                     parameter={parameterEditor.props.parameter}
+                                    parameterViewModel={parameterEditor.props.parameterViewModel}
                                 />
                             </div>);
             }
@@ -180,6 +188,7 @@ ParameterEditor.parameterTypeConverters = [
                                     <RegionTypeParameterEditor
                                         previewed={parameterEditor.props.previewed}
                                         parameter={parameterEditor.props.parameter}
+                                        parameterViewModel={parameterEditor.props.parameterViewModel}
                                     />
                                 </If>
                                 <If condition={!parameterEditor.props.parameter.showInUi}>
@@ -198,6 +207,7 @@ ParameterEditor.parameterTypeConverters = [
                                 <RegionDataParameterEditor
                                     previewed={parameterEditor.props.previewed}
                                     parameter={parameterEditor.props.parameter}
+                                    parameterViewModel={parameterEditor.props.parameterViewModel}
                                 />
                             </div>);
             }
@@ -212,6 +222,7 @@ ParameterEditor.parameterTypeConverters = [
                                 <BooleanParameterEditor
                                     previewed={parameterEditor.props.previewed}
                                     parameter={parameterEditor.props.parameter}
+                                    parameterViewModel={parameterEditor.props.parameterViewModel}
                                 />
                             </div>);
             }
@@ -226,6 +237,7 @@ ParameterEditor.parameterTypeConverters = [
                             <GenericParameterEditor
                                 previewed={parameterEditor.props.previewed}
                                 parameter={parameterEditor.props.parameter}
+                                parameterViewModel={parameterEditor.props.parameterViewModel}
                             />
                         </div>);
             }

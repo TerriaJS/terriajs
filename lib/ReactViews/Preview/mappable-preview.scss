@@ -12,7 +12,7 @@
   padding: 10px;
 
   // toggle-enable data-preview__add-to-map
-  @media screen and (min-width: $sm){
+  @media (min-width: $sm){
       display: inline-block;
       width: inherit;
       position: absolute;

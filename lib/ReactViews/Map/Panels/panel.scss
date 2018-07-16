@@ -32,7 +32,7 @@
   left: 0;
   margin: 14px 5px 5px 5px;
 
-  @media screen and (min-width: $sm) {
+  @media (min-width: $sm) {
     position: absolute;
     right: $padding*2;
     top: auto;

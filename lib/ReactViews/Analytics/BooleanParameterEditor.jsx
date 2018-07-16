@@ -20,7 +20,7 @@ const BooleanParameterEditor = createReactClass({
     },
 
     renderCheckbox() {
-        const value = this.props.parameter.value;
+        const value = this.props.parameter.value !== undefined ? this.props.parameter.value : this.props.parameter.defaultValue;
         const name = this.props.parameter.name;
         const description = this.props.parameter.description;
 

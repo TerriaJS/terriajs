@@ -37,7 +37,8 @@ const DistanceLegend = createReactClass({
         };
     },
 
-    componentWillMount() {
+    /* eslint-disable-next-line camelcase */
+    UNSAFE_componentWillMount() {
         this.viewerSubscriptions = [];
         this.removeUpdateSubscription = undefined;
 

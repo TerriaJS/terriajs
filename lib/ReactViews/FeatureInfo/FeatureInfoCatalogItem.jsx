@@ -19,7 +19,8 @@ const FeatureInfoCatalogItem = createReactClass({
         catalogItem: PropTypes.object,
         terria: PropTypes.object.isRequired,
         viewState: PropTypes.object.isRequired,
-        onToggleOpen: PropTypes.func.isRequired
+        onToggleOpen: PropTypes.func.isRequired,
+        printView: PropTypes.bool
     },
 
     render() {
@@ -48,10 +49,10 @@ const FeatureInfoCatalogItem = createReactClass({
                         catalogItem={catalogItem}
                         feature={feature}
                         position={terria.pickedFeatures && terria.pickedFeatures.pickPosition}
-                        clock={catalogItem.clockForDisplay}
                         template={featureInfoTemplate}
-                        isOpen={feature === terria.selectedFeature}
+                        isOpen={feature === terria.selectedFeature || this.props.printView}
                         onClickHeader={this.props.onToggleOpen}
+                        printView={this.props.printView}
                     />
                 );
             });
@@ -73,7 +74,7 @@ const FeatureInfoCatalogItem = createReactClass({
                         The first {maximumShownFeatureInfos} are shown below.
                       </li>
                     </If>
-                    
+
                     {featureInfoSections}
                 </ul>
             </li>

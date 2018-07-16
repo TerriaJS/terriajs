@@ -37,7 +37,8 @@ const DataPreviewMap = createReactClass({
         };
     },
 
-    componentWillMount() {
+    /* eslint-disable-next-line camelcase */
+    UNSAFE_componentWillMount() {
         const terria = this.props.terria;
 
         this.terriaPreview = new Terria({
@@ -85,7 +86,8 @@ const DataPreviewMap = createReactClass({
         }
     },
 
-    componentWillReceiveProps(newProps) {
+    /* eslint-disable-next-line camelcase */
+    UNSAFE_componentWillReceiveProps(newProps) {
         if (newProps.showMap && !this.props.showMap) {
             this.initMap(newProps.previewedCatalogItem);
         } else {

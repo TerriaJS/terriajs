@@ -25,7 +25,8 @@ const MyLocation = createReactClass({
 
     _marker: undefined,
 
-    componentWillMount() {
+    /* eslint-disable-next-line camelcase */
+    UNSAFE_componentWillMount() {
         this._marker = new GeoJsonCatalogItem(this.props.terria);
     },
 

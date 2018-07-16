@@ -35,7 +35,7 @@ const ExplorerWindow = createReactClass({
         this.props.viewState.explorerPanelAnimating = false;
     },
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this._pickedFeaturesSubscription = ko.pureComputed(this.isVisible, this).subscribe(this.onVisibilityChange);
     },
 

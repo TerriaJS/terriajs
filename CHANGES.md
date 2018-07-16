@@ -3,6 +3,92 @@
 Change Log
 ==========
 
+### Next Version
+
+* Added `rel="noreferrer noopener"` to all `target="_blank"` links. This prevents the target page from being able to navigate the source tab to a new page.
+* Fixed a bug that caused the order of items on the Workbench to change when visiting a share link.
+
+### v6.0.4
+
+* Changed `CesiumSelectionIndicator` to no longer use Knockout binding. This will avoid a problem in some environments, such as when a Content Security Policy (CSP) is in place.
+
+### v6.0.3
+
+* Fixed a bug that prevented users from being able to enter coordinates directly into catalog function point parameter fields.
+
+### v6.0.2
+
+* Fixed a bug that prevented interaction with the 3D map when the splitter was active.
+
+### v6.0.1
+
+* Added `parameters` property to `ArcGisMapServerCatalogItem`, allowing arbitrary parameters to be passed in tile and feature info requests.
+
+### v6.0.0
+
+* Breaking Changes:
+   * An application-level polyfill suite is now required for Internet Explorer 9 and 10 compatibility. The easiest approach is to add `<script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>` to the `<head>` element of your application's HTML page.
+   * In TerriaJS v7.0.0 (the _next_ major release), a polyfill suite may be required for Internet Explorer 11 as well. Adopting the approach above now will ensure you don't need to worry about it then.
+* Overhauled support for printing. There is now a Print button on the Share panel that will provide a much better printable form of the map than the browser's built-in print feature. If a user uses the browser's print button instead, a message at the top will suggest using the TerriaJS Print feature and open the Share panel. Calling `window.print` (e.g. on a TerriaJS instance inside an iframe) will invoke the new TerriaJS print feature directly.
+* Fixed a bug that caused `Leaflet.captureScreenshot` to show all layers on both sides even with the splitter active.
+* Fixed a bug that prevented some vector features from appearing in `Leaflet.captureScreenshot`.
+* Added ability to move the splitter thumb position vertically so that users can move it to prevent occlusions.
+* Added `TerriaJsonCatalogFunction`. This catalog function allows an arbitrary HTTP GET to be invoked with user-provided parameters and return TerriaJS catalog JSON.
+* Fixed a bug that could cause the feature info panel to sometimes be nearly transparent in Internet Explorer 11.
+* Fixed a bug that caused an expanded preview chart's workbench item to erroneously show the date picker.
+* Updated `MagdaCatalogItem` to match Magda project
+
+### 5.7.0
+
+* Added `MagdaCatalogItem` to load details of a catalog item from [Magda](https://github.com/TerriaJS/magda).
+* Fixed a bug that could cause a time-dynamic WMS layer to fail to ever show up on the map if the initial time on the timeline was outside the intervals where the layer had data.
+* Fixed a bug which could cause a crash during load from share link when the layer default is to not `useOwnClock` but the share link has `useOwnClock` set.
+* Fixed an issue that caused a 'This data source is already shown' error in particular circumstances.
+
+### 5.6.4
+
+* Fixed a bug causing an error message when adding tabular data to the workbench before it was loaded.
+
+### 5.6.3
+
+* Display of Lat Lon changed from 3 deciml places to 5 decimal places - just over 1m precision at equator.
+* Fixed a bug that caused the timeline to appear when changing the time on the workbench for a layer not attached to the timeline.
+* The workbench date/time picker is now available for time varying point and region CSVs.
+* Fixed a bug that caused the workbench date picker controls to disappear when the item was attached to the timeline and the timeline's current time was outside the valid range for the item.
+
+### 5.6.2
+
+* Renamed search marker to location marker.
+* Added the clicked coordinates to the bottom of the feature info panel. Clicking the marker icon will cause the location to be indicated on the map.
+* The location marker is now included in shared map views.
+* Fixed a bug that could cause split WMS layers to show the incorrect layer data for the date shown in the workbench.
+* Refactored current time handling for `CatalogItem` to reduce the complexity and number of duplicated current time states.
+* Fixed feature info updating when the time is changed from the workbench for `TableCatalogItem`.
+* Change the workbench catalog item date picker so that updating the date does not disable the timeslider.
+* Fix a bug that meant that, when the current time was updated on an `ImageryCatalogItem` while the layer wasn't shown, the old time was still shown when the layer was re-enabled.
+* Added `{{terria.currentTime}}` to feature info template.
+* Added a way to format times within a feature info tempate. E.g. `{{#terria.formatDateTime}}{"format": "dd-mm-yyyy HH:MM:ss"}{{terria.currentTime}}{{/terria.formatDateTime}}`.
+* Fixed a bug that caused the selection indicator to float strangely when visiting a share link with a selected feature.
+* Fixed a bug that caused a region to be selected even when clicking on a hole in that region.
+* Fixed a bug that prevented the selection indicator from following moving features on the 2D map.
+* Fixed a bug that caused Leaflet to stop rendering further points in a layer and throw errors when calculating extent when one point had invalid characters in the latitude or longitude field.
+* We now default to `autoPlay: false` if it's not specified in `config.json`.
+* Changed search box placeholders to more precisely reflect their functionality.
+* CartoDB basemaps are now always loaded over HTTPS.
+
+### 5.6.1
+
+* Fixed a bug that could cause the workbench UI to hang when toggling concepts, particularly for an `SdmxJsonCatalogItem`.
+* Added previous and next buttons to workbench catalog item date picker.
+
+### 5.6.0
+
+* Upgraded to Cesium 1.41.
+
+### 5.5.7
+
+* Added support for using tokens to access WMS layers, particularly using the WMS interface to ArcGIS servers.
+
 ### 5.5.6
 
 * Tweaked the sizing of the feature info panel.

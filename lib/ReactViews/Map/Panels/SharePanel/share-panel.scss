@@ -28,11 +28,16 @@
 
 .img--share {
   width: 100%;
-  height: $share-panel-width / 4*3;
+  height: auto;
   overflow: hidden;
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
+  position: relative;
+
+  img {
+    width: 100%;
+  }
 }
 
 @include empty-module('link-wrapper');
@@ -87,4 +92,22 @@
     height: 14px;
     width: 14px;
   }
+}
+
+.explanation {
+  font-size: smaller;
+  font-weight: lighter;
+  color: $text-light-dimmed;
+}
+
+.format-button, .print-button {
+  composes: btn from '../../../../Sass/common/_buttons.scss';
+  composes: btn-primary from '../../../../Sass/common/_buttons.scss';
+  width: auto;
+  display: inline;
+  margin: 2px;
+}
+
+.print-view-loader {
+  fill: $text-light;
 }
