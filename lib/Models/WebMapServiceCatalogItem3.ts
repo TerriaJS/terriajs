@@ -7,7 +7,7 @@
 // 3. Observable spaghetti
 //  Solution: think in terms of pipelines with computed observables, document patterns.
 // 4. All code for all catalog item types needs to be loaded before we can do anything.
-import { computed, observable, runInAction, trace } from 'mobx';
+import { computed, observable, runInAction, trace, autorun } from 'mobx';
 import * as URI from 'urijs';
 import LoadableStratum from '../../test/Models/LoadableStratum';
 import autoUpdate from '../Core/autoUpdate';
@@ -22,6 +22,8 @@ import Model from './Model';
 import * as proxyCatalogItemUrl from './proxyCatalogItemUrl';
 import Terria from './TerriaNew';
 import WebMapServiceCapabilities, { CapabilitiesLayer, CapabilitiesStyle } from './WebMapServiceCapabilities';
+import { InfoSectionTraits } from '../Traits/mixCatalogMemberTraits';
+import * as containsAny from '../Core/containsAny';
 
 interface LegendUrl {
     url: string;
@@ -118,13 +120,48 @@ class GetCapabilitiesStratum extends LoadableStratum implements WebMapServiceCat
         return result;
     }
 
-    // @computed
-    // get info(): InfoSection[] {
-    //     // if (!containsAny(thisLayer.Abstract, WebMapServiceCatalogItem.abstractsToIgnore)) {
-    //     //     updateInfoSection(wmsItem, overwrite, 'Data Description', thisLayer.Abstract);
-    //     // }
-    //     return [];
-    // }
+    @computed
+    get info(): InfoSectionTraits[] {
+        const result: InfoSectionTraits[] = [];
+
+        let firstDataDescription: string | undefined;
+        for (const layer of this.capabilitiesLayers.values()) {
+            if (!layer || !layer.Abstract || containsAny(layer.Abstract, WebMapServiceCatalogItem.abstractsToIgnore)) {
+                continue;
+            }
+
+            const suffix = this.capabilitiesLayers.size === 1 ? '' : ` - ${layer.Title}`;
+            const name = `Data Description${suffix}`;
+
+            const traits = new InfoSectionTraits();
+            traits.name = name;
+            traits.content = layer.Abstract;
+            result.push(traits);
+
+            firstDataDescription = firstDataDescription || layer.Abstract;
+        }
+
+        // Show the service abstract if there is one and if it isn't the Geoserver default "A compliant implementation..."
+        const service = this.capabilities && this.capabilities.Service;
+        if (service) {
+            if (service && service.Abstract && !containsAny(service.Abstract, WebMapServiceCatalogItem.abstractsToIgnore) && service.Abstract !== firstDataDescription) {
+                const traits = new InfoSectionTraits();
+                traits.name = 'Service Description';
+                traits.content = service.Abstract;
+                result.push(traits);
+            }
+
+            // Show the Access Constraints if it isn't "none" (because that's the default, and usually a lie).
+            if (service.AccessConstraints && !/^none$/i.test(service.AccessConstraints)) {
+                const traits = new InfoSectionTraits();
+                traits.name = 'Access Constraints';
+                traits.content = service.AccessConstraints;
+                result.push(traits);
+            }
+        }
+
+        return result;
+    }
 
     @computed
     get isGeoServer(): boolean {
@@ -151,6 +188,15 @@ class GetCapabilitiesStratum extends LoadableStratum implements WebMapServiceCat
 }
 
 class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemberMixin(Model(WebMapServiceCatalogItemTraits)))) implements Mappable {
+    /**
+     * The collection of strings that indicate an Abstract property should be ignored.  If these strings occur anywhere
+     * in the Abstract, the Abstract will not be used.  This makes it easy to filter out placeholder data like
+     * Geoserver's "A compliant implementation of WMS..." stock abstract.
+     */
+    static abstractsToIgnore = [
+        'A compliant implementation of WMS'
+    ];
+
     get type() {
         return 'wms';
     }

@@ -123,7 +123,7 @@ namespace Model {
             ReadonlyArray<Readonly<TElement>> :
             TDefinition[P] extends ModelTraits ?
                 MakeReadonly<TDefinition[P]> :
-                Readonly<TDefinition[P]>) | undefined | undefined;
+                Readonly<TDefinition[P]>) | undefined;
     };
 
     // This is almost like Partial<T>, except it uses `| undefined` instead of

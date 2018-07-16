@@ -68,12 +68,11 @@ class GetCapabilitiesStratum extends LoadableStratum implements WebMapServiceCat
             let model = this.catalogGroup.terria.getModelById(WebMapServiceCatalogItem, layerId);
             if (!model) {
                 model = new WebMapServiceCatalogItem(layerId, this.catalogGroup.terria);
-                const stratum = model.addStratum(CommonStrata.inheritedFromParentGroup);
                 this.catalogGroup.terria.addModel(model);
             }
 
-            // TODO: Should this be a "parentStratum" or "inheritedStratum" or something instead?
             const stratum = model.addStratum(CommonStrata.inheritedFromParentGroup);
+            stratum.name = layer.Title;
             stratum.url = this.catalogGroup.url;
             stratum.getCapabilitiesUrl = this.catalogGroup.getCapabilitiesUrl;
             stratum.getCapabilitiesCacheDuration = this.catalogGroup.getCapabilitiesCacheDuration;

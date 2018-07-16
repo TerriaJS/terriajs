@@ -34,6 +34,8 @@ export interface CapabilitiesLayer {
 }
 
 export interface CapabilitiesService {
+    readonly Abstract?: string;
+    readonly AccessConstraints?: string;
     readonly KeywordList: CapabilitiesKeywordList;
 }
 
