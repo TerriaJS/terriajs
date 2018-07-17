@@ -1,3 +1,4 @@
+import * as TerriaError from '../Core/TerriaError';
 import ModelTraits from './ModelTraits';
 import Trait, { TraitOptions } from './Trait';
 
@@ -78,6 +79,41 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
             const traits = ResultType.traits;
             Object.keys(traits).forEach(traitId => {
                 resultAny[traitId] = traits[traitId].getValue(strata);
+            });
+
+            return result;
+        });
+    }
+
+    fromJson(jsonValue: any): ReadonlyArray<T> {
+        // TODO: support removals
+
+        if (!Array.isArray(jsonValue)) {
+            throw new TerriaError({
+                title: 'Invalid property',
+                message: `Property ${this.id} is expected to be an array but instead it is of type ${typeof jsonValue}.`
+            });
+        }
+
+        return jsonValue.map(jsonElement => {
+            const ResultType = this.type;
+            const result: any = new ResultType();
+
+            Object.keys(jsonElement).forEach(propertyName => {
+                const trait = ResultType.traits[propertyName];
+                if (trait === undefined) {
+                    throw new TerriaError({
+                        title: 'Unknown property',
+                        message: `${propertyName} is not a valid sub-property of elements of ${this.id}.`
+                    });
+                }
+
+                const subJsonValue = jsonElement[propertyName];
+                if (subJsonValue === undefined) {
+                    result[propertyName] = subJsonValue;
+                } else {
+                    result[propertyName] = trait.fromJson(subJsonValue);
+                }
             });
 
             return result;

@@ -26,6 +26,10 @@ export class BaseModel {
 }
 
 export interface ModelInterface<T> {
+    readonly type: string;
+    readonly traits: {
+        [id: string]: Trait;
+    };
     readonly flattened: Model.MakeReadonly<T>;
     readonly strata: ObservableMap<string, Partial<T>>;
     readonly terria: Terria;
@@ -39,7 +43,9 @@ export interface ModelInterface<T> {
 }
 
 function Model<T extends TraitsConstructor<ModelTraits>>(Traits: T): ModelConstructor<ModelInterface<InstanceType<T>> & Model.InterfaceFromTraits<InstanceType<T>>> {
-    class Model extends BaseModel implements ModelInterface<T> {
+    abstract class Model extends BaseModel implements ModelInterface<T> {
+        abstract get type(): string;
+        readonly traits = Traits.traits;
         readonly flattened: Model.MakeReadonly<T>;
         readonly strata = observable.map<string, Partial<T>>();
 

@@ -1,6 +1,7 @@
 import Trait, { TraitOptions } from './Trait';
-import { BaseModel } from '../Models/Model';
+import { BaseModel, ModelInterface } from '../Models/Model';
 import ModelTraits from './ModelTraits';
+import * as TerriaError from '../Core/TerriaError';
 
 type PrimitiveType = 'string' | 'number' | 'boolean';
 
@@ -39,5 +40,16 @@ export class PrimitiveTrait<T> extends Trait {
         }
 
         return this.default; // TODO: is it a good idea to have a default?
+    }
+
+    fromJson(jsonValue: any): T {
+        if (typeof jsonValue !== this.type) {
+            throw new TerriaError({
+                title: 'Invalid property',
+                message: `Property ${this.id} is expected to be of type ${this.type} but instead it is of type ${typeof jsonValue}.`
+            });
+        }
+
+        return jsonValue;
     }
 }

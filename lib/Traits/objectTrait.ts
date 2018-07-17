@@ -1,6 +1,6 @@
-import Trait, { TraitOptions } from './Trait';
-import { BaseModel } from '../Models/Model';
+import * as TerriaError from '../Core/TerriaError';
 import ModelTraits from './ModelTraits';
+import Trait, { TraitOptions } from './Trait';
 
 interface TraitsConstructor<T> {
     new(): T;
@@ -44,6 +44,30 @@ export class ObjectTrait<T extends ModelTraits> extends Trait {
         const traits = ResultType.traits;
         Object.keys(traits).forEach(traitId => {
             resultAny[traitId] = traits[traitId].getValue(objectStrata);
+        });
+
+        return result;
+    }
+
+    fromJson(jsonValue: any): T {
+        const ResultType = this.type;
+        const result: any = new ResultType();
+
+        Object.keys(jsonValue).forEach(propertyName => {
+            const trait = ResultType.traits[propertyName];
+            if (trait === undefined) {
+                throw new TerriaError({
+                    title: 'Unknown property',
+                    message: `${propertyName} is not a valid sub-property of ${this.id}.`
+                });
+            }
+
+            const subJsonValue = jsonValue[propertyName];
+            if (subJsonValue === undefined) {
+                result[propertyName] = undefined;
+            } else {
+                result[propertyName] = trait.fromJson(subJsonValue);
+            }
         });
 
         return result;

@@ -1,4 +1,5 @@
 import ModelTraits from "./ModelTraits";
+import { ModelInterface } from "../Models/Model";
 
 export interface TraitOptions {
     name: string,
@@ -17,4 +18,6 @@ export default abstract class Trait {
     }
 
     abstract getValue(strataTopToBottom: Partial<ModelTraits>[]): any;
+
+    abstract fromJson(jsonValue: any): any;
 }

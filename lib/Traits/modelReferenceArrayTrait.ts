@@ -1,3 +1,4 @@
+import * as TerriaError from '../Core/TerriaError';
 import Trait, { TraitOptions } from "./Trait";
 import ModelReference from "./ModelReference";
 import ModelTraits from "./ModelTraits";
@@ -56,5 +57,32 @@ export class ModelReferenceArrayProperty extends Trait {
         // TODO: only freeze in debug builds?
         // TODO: can we instead react to modifications of the array?
         return Object.freeze(result);
+    }
+
+    fromJson(jsonValue: any): ReadonlyArray<ModelReference> {
+        // TODO: support removals
+
+        if (!Array.isArray(jsonValue)) {
+            throw new TerriaError({
+                title: 'Invalid property',
+                message: `Property ${this.id} is expected to be an array but instead it is of type ${typeof jsonValue}.`
+            });
+        }
+
+        const result = jsonValue.map(jsonElement => {
+            if (typeof jsonElement === 'string') {
+                return jsonElement;
+            } else if (typeof jsonElement === 'object') {
+                // TODO: we need a Model factory, and we need to know a "path" so we can create IDs.
+                return '';
+            } else {
+                throw new TerriaError({
+                    title: 'Invalid property',
+                    message: `Elements of ${this.id} are expected to be strings or objects but instead are of type ${typeof jsonElement}.`
+                });
+            }
+        });
+
+        return result;
     }
 }
