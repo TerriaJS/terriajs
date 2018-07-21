@@ -20,12 +20,25 @@ export interface ModelConstructor<T> {
     prototype: T;
 }
 
-export class BaseModel {
+export abstract class BaseModel {
+    abstract get type(): string;
+    abstract get traits(): {
+        [id: string]: Trait;
+    };
+    abstract get flattened(): Partial<ModelTraits>;
+    abstract get strata(): ObservableMap<string, Partial<ModelTraits>>;
+
     constructor(readonly id: ModelId, readonly terria: Terria) {
     }
+
+    abstract addStratum(id: string): Partial<ModelTraits>;
+
+    abstract get strataTopToBottom(): Partial<ModelTraits>[];
+    abstract get strataBottomToTop(): Partial<ModelTraits>[];
+    abstract createTraitsInstance(): Partial<ModelTraits>;
 }
 
-export interface ModelInterface<T> {
+export interface ModelInterface<T extends ModelTraits> {
     readonly type: string;
     readonly traits: {
         [id: string]: Trait;
@@ -49,7 +62,7 @@ function Model<T extends TraitsConstructor<ModelTraits>>(Traits: T): ModelConstr
         readonly flattened: Model.MakeReadonly<T>;
         readonly strata = observable.map<string, Partial<T>>();
 
-        constructor(readonly id: ModelId, readonly terria: Terria) {
+        constructor(id: ModelId, terria: Terria) {
             super(id, terria);
             this.flattened = observable(createFlattenedLayer(this, Traits));
         }

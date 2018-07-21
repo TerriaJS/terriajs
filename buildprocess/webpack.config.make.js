@@ -12,7 +12,8 @@ var testGlob = [
     './test/Models/WebMapServiceCatalogGroupSpec.ts',
     './test/Traits/objectTraitSpec.ts',
     './test/Traits/objectArrayTraitSpec.ts',
-    './test/Models/LoadableStratumSpec.ts'
+    './test/Models/LoadableStratumSpec.ts',
+    './test/Models/upsertModelFromJsonSpec.ts'
 ];
 
 module.exports = function(hot, dev) {

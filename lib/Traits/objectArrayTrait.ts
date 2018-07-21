@@ -1,6 +1,7 @@
 import * as TerriaError from '../Core/TerriaError';
 import ModelTraits from './ModelTraits';
 import Trait, { TraitOptions } from './Trait';
+import { ModelInterface } from '../Models/Model';
 
 interface TraitsConstructor<T> {
     new(): T;
@@ -85,7 +86,7 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
         });
     }
 
-    fromJson(jsonValue: any): ReadonlyArray<T> {
+    fromJson<TTraits extends ModelTraits>(model: ModelInterface<TTraits>, stratumName: string, jsonValue: any): ReadonlyArray<T> {
         // TODO: support removals
 
         if (!Array.isArray(jsonValue)) {
@@ -112,7 +113,7 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
                 if (subJsonValue === undefined) {
                     result[propertyName] = subJsonValue;
                 } else {
-                    result[propertyName] = trait.fromJson(subJsonValue);
+                    result[propertyName] = trait.fromJson(model, stratumName, subJsonValue);
                 }
             });
 

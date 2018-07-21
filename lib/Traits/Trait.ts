@@ -19,5 +19,5 @@ export default abstract class Trait {
 
     abstract getValue(strataTopToBottom: Partial<ModelTraits>[]): any;
 
-    abstract fromJson(jsonValue: any): any;
+    abstract fromJson<TTraits extends ModelTraits>(model: ModelInterface<TTraits>, stratumName: string, jsonValue: any): any;
 }

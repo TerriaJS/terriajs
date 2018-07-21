@@ -1,12 +1,15 @@
-import { ModelInterface } from "./Model";
-import ModelTraits from "../Traits/ModelTraits";
+import { BaseModel } from "./Model";
 import * as TerriaError from '../Core/TerriaError';
 
-export default function loadModel<TTraits extends ModelTraits>(model: ModelInterface<TTraits>, stratumName: string, json: any) {
+export default function updateModelFromJson(model: BaseModel, stratumName: string, json: any) {
     const traits = model.traits;
     const stratum: any = model.addStratum(stratumName);
 
     Object.keys(json).forEach(propertyName => {
+        if (propertyName === 'id' || propertyName === 'type' || propertyName === 'localId') {
+            return;
+        }
+
         const trait = traits[propertyName];
         if (trait === undefined) {
             throw new TerriaError({
@@ -19,7 +22,7 @@ export default function loadModel<TTraits extends ModelTraits>(model: ModelInter
         if (jsonValue === undefined) {
             stratum[propertyName] = undefined;
         } else {
-            stratum[propertyName] = trait.fromJson(jsonValue);
+            stratum[propertyName] = trait.fromJson(model, stratumName, jsonValue);
         }
     })
 }

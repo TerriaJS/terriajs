@@ -197,8 +197,10 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemb
         'A compliant implementation of WMS'
     ];
 
+    static readonly type = 'wms';
+
     get type() {
-        return 'wms';
+        return WebMapServiceCatalogItem.type;
     }
 
     constructor(id: string, terria: Terria) {

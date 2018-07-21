@@ -1,6 +1,7 @@
 import * as TerriaError from '../Core/TerriaError';
 import ModelTraits from './ModelTraits';
 import Trait, { TraitOptions } from './Trait';
+import { ModelInterface } from '../Models/Model';
 
 interface TraitsConstructor<T> {
     new(): T;
@@ -49,7 +50,7 @@ export class ObjectTrait<T extends ModelTraits> extends Trait {
         return result;
     }
 
-    fromJson(jsonValue: any): T {
+    fromJson<TTraits extends ModelTraits>(model: ModelInterface<TTraits>, stratumName: string, jsonValue: any): T {
         const ResultType = this.type;
         const result: any = new ResultType();
 
@@ -66,7 +67,7 @@ export class ObjectTrait<T extends ModelTraits> extends Trait {
             if (subJsonValue === undefined) {
                 result[propertyName] = undefined;
             } else {
-                result[propertyName] = trait.fromJson(subJsonValue);
+                result[propertyName] = trait.fromJson(model, stratumName, subJsonValue);
             }
         });
 

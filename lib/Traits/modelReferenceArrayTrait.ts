@@ -2,8 +2,14 @@ import * as TerriaError from '../Core/TerriaError';
 import Trait, { TraitOptions } from "./Trait";
 import ModelReference from "./ModelReference";
 import ModelTraits from "./ModelTraits";
+import { ModelInterface, BaseModel } from '../Models/Model';
+import updateModelFromJson from '../Models/updateModelFromJson';
+import ModelFactory from '../Models/ModelFactory';
+import upsertModelFromJson from '../Models/upsertModelFromJson';
+import Terria from '../Models/TerriaNew';
 
 export interface ModelArrayTraitOptions extends TraitOptions {
+    factory?: ModelFactory;
 }
 
 export default function modelReferenceArrayTrait<T>(options: ModelArrayTraitOptions) {
@@ -17,8 +23,11 @@ export default function modelReferenceArrayTrait<T>(options: ModelArrayTraitOpti
 }
 
 export class ModelReferenceArrayProperty extends Trait {
+    private factory: ModelFactory | undefined;
+
     constructor(id: string, options: ModelArrayTraitOptions) {
         super(id, options);
+        this.factory = options.factory;
     }
 
     // This can probably be converted to a general array handler.
@@ -59,7 +68,7 @@ export class ModelReferenceArrayProperty extends Trait {
         return Object.freeze(result);
     }
 
-    fromJson(jsonValue: any): ReadonlyArray<ModelReference> {
+    fromJson<TTraits extends ModelTraits>(model: ModelInterface<TTraits>, stratumName: string, jsonValue: any): ReadonlyArray<ModelReference> {
         // TODO: support removals
 
         if (!Array.isArray(jsonValue)) {
@@ -73,8 +82,15 @@ export class ModelReferenceArrayProperty extends Trait {
             if (typeof jsonElement === 'string') {
                 return jsonElement;
             } else if (typeof jsonElement === 'object') {
-                // TODO: we need a Model factory, and we need to know a "path" so we can create IDs.
-                return '';
+                if (this.factory === undefined) {
+                    throw new TerriaError({
+                        title: 'Cannot create Model',
+                        message: 'A modelReferenceArrayTrait does not have a factory but it contains an embedded model that does not yet exist.'
+                    });
+                }
+
+                const nestedModel = upsertModelFromJson(this.factory, model.terria, model.id, undefined, stratumName, jsonElement);
+                return nestedModel.id;
             } else {
                 throw new TerriaError({
                     title: 'Invalid property',

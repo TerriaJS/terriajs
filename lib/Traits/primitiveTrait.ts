@@ -42,7 +42,7 @@ export class PrimitiveTrait<T> extends Trait {
         return this.default; // TODO: is it a good idea to have a default?
     }
 
-    fromJson(jsonValue: any): T {
+    fromJson<TTraits extends ModelTraits>(model: ModelInterface<TTraits>, stratumName: string, jsonValue: any): T {
         if (typeof jsonValue !== this.type) {
             throw new TerriaError({
                 title: 'Invalid property',
