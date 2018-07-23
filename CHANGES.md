@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### v6.0.6
+* Ability for clicking 'Remove' on a ResultPendingCatalogItem Workbench Item's 'Remove' button to abort any xhr requests related to that item in progress and mark the relevant cesium request object as cancelled, instead of ignoring returned data. Fully implemented in TerriaJsonCatalogItem
+* cesium Resource.createIfNeeded only accepted one argument, which meant the optional arguments in lib/Core/loadJson, etc, did not get passed on. changed calls to this to check if it was passes a resource object, otherwise manually create the resource with the optional arguments.
+
 ### v6.0.5
 
 * Added `rel="noreferrer noopener"` to all `target="_blank"` links. This prevents the target page from being able to navigate the source tab to a new page.
