@@ -10,7 +10,7 @@ export default function MobileMenuItem(props) {
         <div className={Styles.root}>
             <Choose>
                 <When condition={props.href}>
-                    <a href={props.href} target="_blank" onClick={props.onClick}
+                    <a href={props.href} target="_blank" rel="noopener noreferrer" onClick={props.onClick}
                        className={Styles.link}>{props.caption}</a>
                 </When>
                 <Otherwise>

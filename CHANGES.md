@@ -3,7 +3,16 @@
 Change Log
 ==========
 
-### Next Release
+### v6.0.5
+
+* Added `rel="noreferrer noopener"` to all `target="_blank"` links. This prevents the target page from being able to navigate the source tab to a new page.
+* Fixed a bug that caused the order of items on the Workbench to change when visiting a share link.
+
+### v6.0.4
+
+* Changed `CesiumSelectionIndicator` to no longer use Knockout binding. This will avoid a problem in some environments, such as when a Content Security Policy (CSP) is in place.
+
+### v6.0.3
 
 * Fixed a bug that prevented users from being able to enter coordinates directly into catalog function point parameter fields.
 
