@@ -13,8 +13,8 @@ describe('StratumOrder', function() {
         so.addUserStratum('userTest');
         so.addLoadStratum('loadTest');
 
-        expect(so.priorities.get('loadTest')).toBeLessThan(so.priorities.get('definitionTest'));
-        expect(so.priorities.get('definitionTest')).toBeLessThan(so.priorities.get('userTest'));
+        expect(so.priorities.get('loadTest')).toBeLessThan(<number>so.priorities.get('definitionTest'));
+        expect(so.priorities.get('definitionTest')).toBeLessThan(<number>so.priorities.get('userTest'));
     });
 
     it('strata of the same type get unique priorities', function() {

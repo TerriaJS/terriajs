@@ -1,4 +1,4 @@
-import { autorun, computed, configure, observable, runInAction } from 'mobx';
+import { autorun, computed, configure, observable, runInAction, action } from 'mobx';
 import LoadableStratum from './LoadableStratum';
 
 configure({
@@ -7,24 +7,32 @@ configure({
 });
 
 describe('LoadableStratum', function() {
-    class TestStratum extends LoadableStratum {
+    interface LoadResult {
+        fooSource: string;
+    }
+
+    class TestStratum extends LoadableStratum<LoadResult> {
         callsToLoad: number = 0;
 
-        load(): Promise<void> {
+        load(): Promise<LoadResult> {
             ++this.callsToLoad;
 
             const fooSource = this.fooSource;
 
             return new Promise((resolve, reject) => {
                 setTimeout(() => {
-                    runInAction(() => {
-                        this.foo = fooSource;
-                        this.bar = 42;
-                        this.baz = 'loaded';
+                    resolve({
+                        fooSource
                     });
-                    resolve();
                 }, 1);
             });
+        }
+
+        //@action
+        applyLoad(loadResult: LoadResult) {
+            this.foo = loadResult.fooSource;
+            this.bar = 42;
+            this.baz = 'loaded';
         }
 
         @observable
@@ -146,7 +154,7 @@ describe('LoadableStratum', function() {
                     });
                     break;
                 default:
-                    expect.fail('Too many runs');
+                    fail('Too many runs');
             }
             ++iteration;
         });

@@ -24,5 +24,5 @@ export default function updateModelFromJson(model: BaseModel, stratumName: strin
         } else {
             stratum[propertyName] = trait.fromJson(model, stratumName, jsonValue);
         }
-    })
+    });
 }

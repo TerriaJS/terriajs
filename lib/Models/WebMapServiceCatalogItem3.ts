@@ -7,7 +7,7 @@
 // 3. Observable spaghetti
 //  Solution: think in terms of pipelines with computed observables, document patterns.
 // 4. All code for all catalog item types needs to be loaded before we can do anything.
-import { computed, observable, runInAction, trace, autorun } from 'mobx';
+import { computed, observable, trace, action } from 'mobx';
 import * as URI from 'urijs';
 import LoadableStratum from '../../test/Models/LoadableStratum';
 import autoUpdate from '../Core/autoUpdate';
@@ -41,7 +41,7 @@ interface WebMapServiceStyles {
     [layerName: string]: WebMapServiceStyle[];
 }
 
-class GetCapabilitiesStratum extends LoadableStratum implements WebMapServiceCatalogItemTraits {
+class GetCapabilitiesStratum extends LoadableStratum<WebMapServiceCapabilities> implements WebMapServiceCatalogItemTraits {
     constructor(readonly catalogItem: WebMapServiceCatalogItem) {
         super();
     }
@@ -49,7 +49,7 @@ class GetCapabilitiesStratum extends LoadableStratum implements WebMapServiceCat
     @observable
     private _capabilities: WebMapServiceCapabilities | undefined;
 
-    load(): Promise<void> {
+    load(): Promise<WebMapServiceCapabilities> {
         this._capabilities = undefined;
 
         if (this.catalogItem.getCapabilitiesUrl === undefined) {
@@ -60,11 +60,12 @@ class GetCapabilitiesStratum extends LoadableStratum implements WebMapServiceCat
         }
 
         const proxiedUrl = proxyCatalogItemUrl(this.catalogItem, this.catalogItem.getCapabilitiesUrl, this.catalogItem.getCapabilitiesCacheDuration);
-        return WebMapServiceCapabilities.fromUrl(proxiedUrl).then(capabilities => {
-            runInAction(() => {
-                this._capabilities = capabilities;
-            });
-        });
+        return WebMapServiceCapabilities.fromUrl(proxiedUrl);
+    }
+
+    @action
+    applyLoad(capabilities: WebMapServiceCapabilities) {
+        this._capabilities = capabilities;
     }
 
     @computed
@@ -164,9 +165,9 @@ class GetCapabilitiesStratum extends LoadableStratum implements WebMapServiceCat
     }
 
     @computed
-    get isGeoServer(): boolean {
+    get isGeoServer(): boolean | undefined {
         if (!this.capabilities) {
-            return false;
+            return undefined;
         }
 
         if (!this.capabilities.Service ||

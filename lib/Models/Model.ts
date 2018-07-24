@@ -1,4 +1,4 @@
-import { ObservableMap, computed, decorate, observable } from 'mobx';
+import { ObservableMap, computed, decorate, observable, trace } from 'mobx';
 import * as DeveloperError from 'terriajs-cesium/Source/Core/DeveloperError';
 import Constructor from '../Core/Constructor';
 import Trait from '../Traits/Trait';
@@ -6,6 +6,7 @@ import ModelTraits from '../Traits/ModelTraits';
 import { ModelId } from '../Traits/ModelReference';
 import StratumOrder from './StratumOrder';
 import Terria from './TerriaNew';
+import LoadableStratum from '../../test/Models/LoadableStratum';
 
 export interface TraitsConstructor<T extends ModelTraits> {
     new(...args: any[]): T;
@@ -27,6 +28,8 @@ export abstract class BaseModel {
     };
     abstract get flattened(): Partial<ModelTraits>;
     abstract get strata(): ObservableMap<string, Partial<ModelTraits>>;
+    abstract get isLoading(): boolean;
+    abstract get loadPromise(): Promise<{}>;
 
     constructor(readonly id: ModelId, readonly terria: Terria) {
     }
@@ -47,6 +50,8 @@ export interface ModelInterface<T extends ModelTraits> {
     readonly strata: ObservableMap<string, Partial<T>>;
     readonly terria: Terria;
     readonly id: string;
+    readonly isLoading: boolean;
+    readonly loadPromise: Promise<{}>;
 
     addStratum(id: string): Partial<T>;
 
@@ -78,12 +83,37 @@ function Model<T extends TraitsConstructor<ModelTraits>>(Traits: T): ModelConstr
 
         @computed
         get strataTopToBottom() {
+            trace();
             return StratumOrder.sortTopToBottom(this.strata);
         }
 
         @computed
         get strataBottomToTop() {
             return StratumOrder.sortBottomToTop(this.strata);
+        }
+
+        get isLoading(): boolean {
+            for (const stratum of this.strata.values()) {
+                if (stratum instanceof LoadableStratum && stratum.isLoading) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        get loadPromise(): Promise<{}> {
+            const promises = [];
+
+            for (const stratum of this.strata.values()) {
+                if (stratum instanceof LoadableStratum) {
+                    const loadPromise = stratum.loadPromise;
+                    if (loadPromise !== undefined) {
+                        promises.push(loadPromise);
+                    }
+                }
+            }
+
+            return Promise.all(promises);
         }
 
         createTraitsInstance(): Partial<T> {
@@ -117,7 +147,9 @@ function Model<T extends TraitsConstructor<ModelTraits>>(Traits: T): ModelConstr
     function createFlattenedLayer<T extends TraitsConstructor<ModelTraits>>(model: Model, Traits: T) {
         const traits = Traits.traits;
 
-        const flattened: any = {};
+        const flattened: any = {
+            id: model.id + ':flattened'
+        };
 
         Object.keys(traits).forEach(propertyName => {
             const property = traits[propertyName];

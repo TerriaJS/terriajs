@@ -19,15 +19,18 @@ export default function upsertModelFromJson(factory: ModelFactory, terria: Terri
             id = parentId + '/' + localId;
         }
 
-        model = factory.create(json.type, id, terria);
+        model = terria.getModelById(BaseModel, id);
         if (model === undefined) {
-            throw new TerriaError({
-                title: 'Unknown type',
-                message: `Could not create unknown model type ${json.type}.`
-            });
-        }
+            model = factory.create(json.type, id, terria);
+            if (model === undefined) {
+                throw new TerriaError({
+                    title: 'Unknown type',
+                    message: `Could not create unknown model type ${json.type}.`
+                });
+            }
 
-        model.terria.addModel(model);
+            model.terria.addModel(model);
+        }
     }
 
     updateModelFromJson(model, stratumName, json);

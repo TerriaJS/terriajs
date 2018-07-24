@@ -1,4 +1,4 @@
-import { computed, observable, runInAction } from 'mobx';
+import { computed, observable, runInAction, trace, action } from 'mobx';
 import LoadableStratum from '../../test/Models/LoadableStratum';
 import isReadOnlyArray from '../Core/isReadOnlyArray';
 import * as TerriaError from '../Core/TerriaError';
@@ -15,7 +15,7 @@ import Terria from './TerriaNew';
 import WebMapServiceCapabilities, { CapabilitiesLayer } from './WebMapServiceCapabilities';
 import WebMapServiceCatalogItem from './WebMapServiceCatalogItem3';
 
-class GetCapabilitiesStratum extends LoadableStratum implements WebMapServiceCatalogGroupTraits {
+class GetCapabilitiesStratum extends LoadableStratum<WebMapServiceCapabilities> implements WebMapServiceCatalogGroupTraits {
     constructor(readonly catalogGroup: WebMapServiceCatalogGroup) {
         super();
     }
@@ -23,7 +23,9 @@ class GetCapabilitiesStratum extends LoadableStratum implements WebMapServiceCat
     @observable
     private _capabilities: WebMapServiceCapabilities | undefined;
 
-    load(): Promise<void> {
+    protected load(): Promise<WebMapServiceCapabilities> {
+        trace(true);
+
         this._capabilities = undefined;
 
         if (this.catalogGroup.getCapabilitiesUrl === undefined) {
@@ -34,11 +36,12 @@ class GetCapabilitiesStratum extends LoadableStratum implements WebMapServiceCat
         }
 
         const proxiedUrl = proxyCatalogItemUrl(this.catalogGroup, this.catalogGroup.getCapabilitiesUrl, this.catalogGroup.getCapabilitiesCacheDuration);
-        return WebMapServiceCapabilities.fromUrl(proxiedUrl).then(capabilities => {
-            runInAction(() => {
-                this._capabilities = capabilities;
-            });
-        });
+        return WebMapServiceCapabilities.fromUrl(proxiedUrl);
+    }
+
+    @action
+    protected applyLoad(capabilities: WebMapServiceCapabilities) {
+        this._capabilities = capabilities;
     }
 
     @computed
@@ -98,8 +101,10 @@ class GetCapabilitiesStratum extends LoadableStratum implements WebMapServiceCat
 }
 
 export default class WebMapServiceCatalogGroup extends GetCapabilitiesMixin(GroupMixin(CatalogMemberMixin(UrlMixin(Model(WebMapServiceCatalogGroupTraits))))) {
+    static readonly type = 'wms-group';
+
     get type() {
-        return 'wms-group';
+        return WebMapServiceCatalogGroup.type;
     }
 
     constructor(id: string, terria: Terria) {

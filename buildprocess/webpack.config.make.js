@@ -6,6 +6,7 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 //var testGlob = ['./test/**/*.js', './test/**/*.jsx', '!./test/Utility/*.js'];
 var testGlob = [
+    './test/SpecMain.ts',
     './test/Models/Experiment.ts',
     './test/Models/StratumOrderSpec.ts',
     './test/Models/WebMapServiceCatalogItemSpec.ts',
