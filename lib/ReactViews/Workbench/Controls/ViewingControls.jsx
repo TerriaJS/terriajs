@@ -88,6 +88,11 @@ const ViewingControls = createReactClass({
         this.props.viewState.switchMobileView(this.props.viewState.mobileViewOptions.preview);
     },
 
+    exportData() {
+        const item = this.props.item;
+        item.exportData();
+    },
+
     render() {
         const item = this.props.item;
         const canZoom = item.canZoomTo || (item.tableStructure && item.tableStructure.sourceFeature);
@@ -106,6 +111,10 @@ const ViewingControls = createReactClass({
                 </If>
                 <If condition={canSplit}>
                     <li className={classNames(Styles.split, classList)}><button type='button' onClick={this.splitItem} title="Duplicate and show splitter" className={Styles.btn}>Split</button></li>
+                </If>
+                <If condition={defined(item.linkedWcsURL)}>
+                {/* WIP: Fix styles */}
+                <li className={classNames(Styles.info, classList)}><button type='button' onClick={this.exportData} className={Styles.btn} title='Export map data'>Export</button></li>
                 </If>
                 <li className={classNames(Styles.remove, classList)}>
                     <button type='button' onClick={this.removeFromMap} title="Remove this data" className={Styles.btn}>
