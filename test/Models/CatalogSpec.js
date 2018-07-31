@@ -2,7 +2,7 @@
 
 /*global require,describe,it,expect,beforeEach*/
 var Terria = require('../../lib/Models/Terria');
-var loadJson = require('terriajs-cesium/Source/Core/loadJson');
+var loadJson = require('../../lib/Core/loadJson');
 
 var Catalog = require('../../lib/Models/Catalog');
 var CatalogItem = require('../../lib/Models/CatalogItem');

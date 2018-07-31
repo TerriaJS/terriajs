@@ -2,7 +2,7 @@
 
 var when = require('terriajs-cesium/Source/ThirdParty/when');
 var Rectangle = require('terriajs-cesium/Source/Core/Rectangle');
-var loadWithXhr = require('terriajs-cesium/Source/Core/loadWithXhr');
+var loadWithXhr = require('../../lib/Core/loadWithXhr');
 
 var GnafApi = require('../../lib/Models/GnafApi');
 var CorsProxy = require('../../lib/Core/CorsProxy');
