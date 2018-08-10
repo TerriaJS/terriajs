@@ -13,6 +13,7 @@ configure({
     computedRequiresReaction: true
 });
 
+// Fail the test if a MobX computed property throws an exception.
 spy(event => {
     if (event.type === 'error') {
         fail(event.message);
