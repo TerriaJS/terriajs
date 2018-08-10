@@ -223,7 +223,7 @@ The size of each point (or image), eg.
 
 ### scaleByValue
 
-A Boolean for whether points should be scaled by the value of the variable (default false).
+A Boolean for whether points should be scaled by the value of the selected `dataVariable`. Defaults to `false`.
 
 ```
             "tableStyle": {
