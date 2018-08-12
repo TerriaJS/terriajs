@@ -2,8 +2,8 @@
 /// <reference types="jasmine" />
 require('terriajs-jasmine-ajax');
 import * as Enzyme from 'enzyme';
-import * as jasmineEnzyme from 'jasmine-enzyme';
-import * as Adapter from 'enzyme-adapter-react-16';
+import jasmineEnzyme from 'jasmine-enzyme';
+import Adapter from 'enzyme-adapter-react-16';
 import { configure, spy } from "mobx";
 
 Enzyme.configure({ adapter: new Adapter() });

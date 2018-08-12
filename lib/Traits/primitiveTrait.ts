@@ -1,7 +1,7 @@
 import Trait, { TraitOptions } from './Trait';
 import { BaseModel, ModelInterface } from '../Models/Model';
 import ModelTraits from './ModelTraits';
-import * as TerriaError from '../Core/TerriaError';
+import TerriaError from '../Core/TerriaError';
 
 type PrimitiveType = 'string' | 'number' | 'boolean';
 

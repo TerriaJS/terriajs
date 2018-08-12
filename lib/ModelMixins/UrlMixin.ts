@@ -1,5 +1,5 @@
 import { computed } from 'mobx';
-import * as URI from 'urijs';
+import URI from 'urijs';
 import Constructor from '../Core/Constructor';
 
 interface RequiredOnInstance {

@@ -1,7 +1,7 @@
 import ModelFactory from "./ModelFactory";
 import { BaseModel } from "./Model";
 import Terria from "./TerriaNew";
-import * as TerriaError from "../Core/TerriaError";
+import TerriaError from "../Core/TerriaError";
 import updateModelFromJson from "./updateModelFromJson";
 
 export default function upsertModelFromJson(factory: ModelFactory, terria: Terria, parentId: string, model: BaseModel | undefined, stratumName: string, json: any): BaseModel {

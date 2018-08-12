@@ -90,7 +90,6 @@
     "@types/jasmine": "^2.8.8",
     "@types/urijs": "^1.15.38",
     "amd-loader": "0.0.8",
-    "awesome-typescript-loader": "^4.0.1",
     "babel-eslint": "^7.0.0",
     "css-loader": "^0.28.0",
     "electron": "^2.0.0",
@@ -129,6 +128,7 @@
     "svg-sprite-loader": "^3.4.0",
     "terriajs-jasmine-ajax": "^3.2.1",
     "terriajs-server": "^2.7.3",
+    "ts-loader": "^3.0.0",
     "webpack-dev-server": "^2.9.2"
   },
   "scripts": {

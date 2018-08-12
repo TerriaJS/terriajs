@@ -1,4 +1,4 @@
-import * as TerriaError from '../Core/TerriaError';
+import TerriaError from '../Core/TerriaError';
 import ModelTraits from './ModelTraits';
 import Trait, { TraitOptions } from './Trait';
 import { ModelInterface } from '../Models/Model';

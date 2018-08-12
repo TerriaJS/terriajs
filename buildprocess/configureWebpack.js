@@ -4,10 +4,10 @@ var webpack = require('webpack');
 
 function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlugin, disableStyleLoader) {
     const cesiumDir = path.dirname(require.resolve('terriajs-cesium/package.json'));
-    const fontAwesomeDir = path.resolve(path.dirname(require.resolve('font-awesome/package.json')));
-    const reactMdeDir = path.resolve(path.dirname(require.resolve('react-mde/package.json')));
-    console.log(fontAwesomeDir);
-    console.log(reactMdeDir);
+    // const fontAwesomeDir = path.resolve(path.dirname(require.resolve('font-awesome/package.json')));
+    // const reactMdeDir = path.resolve(path.dirname(require.resolve('react-mde/package.json')));
+    // console.log(fontAwesomeDir);
+    // console.log(reactMdeDir);
 
     config.resolve = config.resolve || {};
     config.resolve.extensions = config.resolve.extensions || ['*', '.webpack.js', '.web.js', '.js', '.ts', '.tsx'];
@@ -76,14 +76,36 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
     //     }
     // });
 
+
+
     config.module.loaders.push({
         test: /\.(ts|js)x?$/,
         include: [
             path.resolve(terriaJSBasePath, 'lib'),
             path.resolve(terriaJSBasePath, 'test')
         ],
-        loader: require.resolve('awesome-typescript-loader')
+        use: [
+            {
+                loader: 'babel-loader',
+                options: {
+                    presets: ['env', 'react'],
+                    plugins: [
+                        'jsx-control-statements'
+                    ]
+                }
+            },
+            'ts-loader'
+        ]
     });
+
+    // config.module.loaders.push({
+    //     test: /\.(ts|js)$/,
+    //     include: [
+    //         path.resolve(terriaJSBasePath, 'lib'),
+    //         path.resolve(terriaJSBasePath, 'test')
+    //     ],
+    //     loader: require.resolve('ts-loader')
+    // });
 
     // Use the raw loader for our view HTML.  We don't use the html-loader because it
     // will doing things with images that we don't (currently) want.
@@ -156,11 +178,11 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
         loader: require.resolve('file-loader')
     });
 
-    config.module.loaders.push({
-        test: /\.(ttf|eot|svg)(\?.+)?$/,
-        include: path.resolve(fontAwesomeDir, 'fonts'),
-        loader: require.resolve('file-loader')
-    });
+    // config.module.loaders.push({
+    //     test: /\.(ttf|eot|svg)(\?.+)?$/,
+    //     include: path.resolve(fontAwesomeDir, 'fonts'),
+    //     loader: require.resolve('file-loader')
+    // });
 
     config.module.loaders.push({
         test: /\.svg$/,
@@ -242,17 +264,17 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
             })
         });
 
-        config.module.loaders.push({
-            include: [path.resolve(fontAwesomeDir, 'css'), path.resolve(reactMdeDir, 'lib', 'styles', 'css')],
-            test: /\.css$/,
-            loaders: ['style-loader', 'css-loader']
-        });
+        // config.module.loaders.push({
+        //     include: [path.resolve(fontAwesomeDir, 'css'), path.resolve(reactMdeDir, 'lib', 'styles', 'css')],
+        //     test: /\.css$/,
+        //     loaders: ['style-loader', 'css-loader']
+        // });
 
-        config.module.loaders.push({
-            include: path.resolve(fontAwesomeDir, 'fonts'),
-            test: /\.woff2?/,
-            loader: require.resolve('file-loader')
-        });
+        // config.module.loaders.push({
+        //     include: path.resolve(fontAwesomeDir, 'fonts'),
+        //     test: /\.woff2?/,
+        //     loader: require.resolve('file-loader')
+        // });
     }
 
     config.resolve = config.resolve || {};

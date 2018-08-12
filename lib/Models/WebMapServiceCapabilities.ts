@@ -1,8 +1,8 @@
 import { createTransformer } from 'mobx-utils';
-import * as defined from 'terriajs-cesium/Source/Core/defined';
-import * as xml2json from '../ThirdParty/xml2json';
-import * as loadXML from 'terriajs-cesium/Source/Core/loadXML';
-import * as TerriaError from '../Core/TerriaError';
+import defined from 'terriajs-cesium/Source/Core/defined';
+import xml2json from '../ThirdParty/xml2json';
+import loadXML from 'terriajs-cesium/Source/Core/loadXML';
+import TerriaError from '../Core/TerriaError';
 import isReadOnlyArray from '../Core/isReadOnlyArray';
 
 export interface OnlineResource {

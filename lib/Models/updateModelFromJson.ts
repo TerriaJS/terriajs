@@ -1,5 +1,5 @@
 import { BaseModel } from "./Model";
-import * as TerriaError from '../Core/TerriaError';
+import TerriaError from '../Core/TerriaError';
 
 export default function updateModelFromJson(model: BaseModel, stratumName: string, json: any) {
     const traits = model.traits;

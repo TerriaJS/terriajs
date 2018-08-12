@@ -1,5 +1,5 @@
 import { ObservableMap, computed, decorate, observable, trace } from 'mobx';
-import * as DeveloperError from 'terriajs-cesium/Source/Core/DeveloperError';
+import DeveloperError from 'terriajs-cesium/Source/Core/DeveloperError';
 import Constructor from '../Core/Constructor';
 import Trait from '../Traits/Trait';
 import ModelTraits from '../Traits/ModelTraits';

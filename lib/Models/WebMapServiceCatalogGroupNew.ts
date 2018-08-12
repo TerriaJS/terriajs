@@ -1,7 +1,7 @@
 import { computed, observable, runInAction, trace, action } from 'mobx';
 import LoadableStratum from '../../test/Models/LoadableStratum';
 import isReadOnlyArray from '../Core/isReadOnlyArray';
-import * as TerriaError from '../Core/TerriaError';
+import TerriaError from '../Core/TerriaError';
 import CatalogMemberMixin from '../ModelMixins/CatalogMemberMixin';
 import GetCapabilitiesMixin from '../ModelMixins/GetCapabilitiesMixin';
 import GroupMixin from '../ModelMixins/GroupMixin';
@@ -10,7 +10,7 @@ import ModelReference from '../Traits/ModelReference';
 import WebMapServiceCatalogGroupTraits from '../Traits/WebMapServiceCatalogGroupTraits';
 import CommonStrata from './CommonStrata';
 import Model from './Model';
-import * as proxyCatalogItemUrl from './proxyCatalogItemUrl';
+import proxyCatalogItemUrl from './proxyCatalogItemUrl';
 import Terria from './TerriaNew';
 import WebMapServiceCapabilities, { CapabilitiesLayer } from './WebMapServiceCapabilities';
 import WebMapServiceCatalogItem from './WebMapServiceCatalogItem3';

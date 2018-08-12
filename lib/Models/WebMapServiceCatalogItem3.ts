@@ -8,22 +8,22 @@
 //  Solution: think in terms of pipelines with computed observables, document patterns.
 // 4. All code for all catalog item types needs to be loaded before we can do anything.
 import { computed, observable, trace, action } from 'mobx';
-import * as URI from 'urijs';
+import URI from 'urijs';
 import LoadableStratum from '../../test/Models/LoadableStratum';
 import autoUpdate from '../Core/autoUpdate';
 import isReadOnlyArray from '../Core/isReadOnlyArray';
-import * as TerriaError from '../Core/TerriaError';
+import TerriaError from '../Core/TerriaError';
 import CatalogMemberMixin from '../ModelMixins/CatalogMemberMixin';
 import GetCapabilitiesMixin from '../ModelMixins/GetCapabilitiesMixin';
 import UrlMixin from '../ModelMixins/UrlMixin';
 import WebMapServiceCatalogItemTraits from '../Traits/WebMapServiceCatalogItemTraits';
 import Mappable, { ImageryLayer } from './Mappable';
 import Model from './Model';
-import * as proxyCatalogItemUrl from './proxyCatalogItemUrl';
+import proxyCatalogItemUrl from './proxyCatalogItemUrl';
 import Terria from './TerriaNew';
 import WebMapServiceCapabilities, { CapabilitiesLayer, CapabilitiesStyle } from './WebMapServiceCapabilities';
 import { InfoSectionTraits } from '../Traits/mixCatalogMemberTraits';
-import * as containsAny from '../Core/containsAny';
+import containsAny from '../Core/containsAny';
 
 interface LegendUrl {
     url: string;
