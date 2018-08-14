@@ -28,11 +28,10 @@ const DataCatalog = createReactClass({
     render() {
         const searchState = this.props.viewState.searchState;
         const isSearching = searchState.catalogSearchText.length > 0;
-        const items = (
-            isSearching ?
-                searchState.catalogSearchProvider.searchResults.map(result => result.catalogItem) :
-                this.props.items
-        ).filter(defined);
+        const unfilteredItems = isSearching ?
+            searchState.catalogSearchProvider.searchResults.map(result => result.catalogItem) :
+            this.props.items;
+        const items = (unfilteredItems || []).filter(defined);
 
         return (
             <ul className={Styles.dataCatalog}>
@@ -46,7 +45,7 @@ const DataCatalog = createReactClass({
                         <DataCatalogMember viewState={this.props.viewState}
                                            member={item}
                                            manageIsOpenLocally={isSearching}
-                                           key={item.uniqueId}
+                                           key={item.id}
                                            overrideState={this.props.overrideState}
                                            onActionButtonClicked={this.props.onActionButtonClicked}
                     />}

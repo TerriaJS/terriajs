@@ -14,6 +14,7 @@ import Icon from "../Icon";
 import { removeMarker } from '../../Models/LocationMarkerUtils';
 
 import Styles from './side-panel.scss';
+import { reaction } from 'mobx';
 
 const SidePanel = createReactClass({
     displayName: 'SidePanel',
@@ -40,14 +41,14 @@ const SidePanel = createReactClass({
         this.unsubscribeFromProps();
 
         // Close the search results when the Now Viewing changes (so that it's visible).
-        this._nowViewingChangeSubscription = knockout.getObservable(this.props.terria.nowViewing, 'items').subscribe(() => {
+        this._nowViewingChangeSubscription = reaction(() => this.props.terria.workbench.items, () => {
             this.props.viewState.searchState.showLocationSearchResults = false;
         });
     },
 
     unsubscribeFromProps() {
         if (this._nowViewingChangeSubscription) {
-            this._nowViewingChangeSubscription.dispose();
+            this._nowViewingChangeSubscription();
             this._nowViewingChangeSubscription = undefined;
         }
     },
@@ -78,11 +79,11 @@ const SidePanel = createReactClass({
         return (
             <div className={Styles.workBench}>
                 <div className={Styles.header}>
-                    <SearchBox onSearchTextChanged={this.changeSearchText}
+                    {/* <SearchBox onSearchTextChanged={this.changeSearchText}
                                onDoSearch={this.search}
                                onFocus={this.startLocationSearch}
                                searchText={searchState.locationSearchText}
-                               placeholder="Search for locations" />
+                               placeholder="Search for locations" /> */}
                     <div className={Styles.addData}>
                         <button type='button' onClick={this.onAddDataClicked} className={Styles.button}>
                             <Icon glyph={Icon.GLYPHS.add}/>Add data
@@ -91,14 +92,14 @@ const SidePanel = createReactClass({
                 </div>
                 <div className={Styles.body}>
                     <Choose>
-                        <When condition={searchState.locationSearchText.length > 0 && searchState.showLocationSearchResults}>
+                        {/* <When condition={searchState.locationSearchText.length > 0 && searchState.showLocationSearchResults}>
                             <SidebarSearch
                                 terria={this.props.terria}
                                 viewState={this.props.viewState}
                                 isWaitingForSearchToStart={searchState.isWaitingToStartLocationSearch} />
-                        </When>
+                        </When> */}
                         <When
-                            condition={this.props.terria.nowViewing.items && this.props.terria.nowViewing.items.length > 0}>
+                            condition={this.props.terria.workbench.items && this.props.terria.workbench.items.length > 0}>
                             <Workbench viewState={this.props.viewState} terria={this.props.terria} />
                         </When>
                         <Otherwise>

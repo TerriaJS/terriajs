@@ -83,14 +83,14 @@ const MapColumn = createReactClass({
                     <div className={classNames(Styles.mapCell, Styles.mapCellMap)} ref={this.newMapCell}>
                         <div className={Styles.mapWrapper}
                              style={{height: this.state.height || (isIE ? '100vh' : '100%')}}>
-                            <TerriaViewerWrapper terria={this.props.terria}
-                                                 viewState={this.props.viewState}/>
+                            {/* <TerriaViewerWrapper terria={this.props.terria}
+                                                 viewState={this.props.viewState}/> */}
                         </div>
                         <If condition={!this.props.viewState.hideMapUi()}>
                             <div className={Styles.locationDistance}>
-                                <LocationBar terria={this.props.terria}
+                                {/* <LocationBar terria={this.props.terria}
                                              mouseCoords={this.props.viewState.mouseCoords}/>
-                                <DistanceLegend terria={this.props.terria}/>
+                                <DistanceLegend terria={this.props.terria}/> */}
                             </div>
                         </If>
                         <If condition={!this.props.viewState.useSmallScreenInterface && this.props.terria.configParameters.feedbackUrl && !this.props.viewState.hideMapUi()}>
@@ -110,8 +110,8 @@ const MapColumn = createReactClass({
                 <If condition={!this.props.viewState.hideMapUi()}>
                     <div className={Styles.mapRow}>
                         <div className={Styles.mapCell}>
-                            <BottomDock terria={this.props.terria} viewState={this.props.viewState}
-                                        domElementRef={this.addBottomDock}/>
+                            {/* <BottomDock terria={this.props.terria} viewState={this.props.viewState}
+                                        domElementRef={this.addBottomDock}/> */}
                         </div>
                     </div>
                 </If>

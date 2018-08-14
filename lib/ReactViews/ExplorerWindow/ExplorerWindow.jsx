@@ -2,14 +2,15 @@ import React from 'react';
 import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import ko from 'terriajs-cesium/Source/ThirdParty/knockout';
+import { observer } from 'mobx-react';
 
 import ObserveModelMixin from '../ObserveModelMixin';
 import ModalPopup from './ModalPopup';
 import Tabs from './Tabs';
 
-const ExplorerWindow = createReactClass({
+const ExplorerWindow = observer(createReactClass({
     displayName: 'ExplorerWindow',
-    mixins: [ObserveModelMixin],
+    //mixins: [ObserveModelMixin],
 
     propTypes: {
         terria: PropTypes.object.isRequired,
@@ -57,6 +58,6 @@ const ExplorerWindow = createReactClass({
             </ModalPopup>
         );
     }
-});
+}));
 
 module.exports = ExplorerWindow;

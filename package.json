@@ -51,6 +51,7 @@
     "lodash.debounce": "^4.0.6",
     "markdown-it": "^8.0.0",
     "mobx": "^4.3.0",
+    "mobx-react": "^5.2.5",
     "mobx-utils": "^4.0.0",
     "moment": "^2.21.0",
     "mustache": "^2.2.1",

@@ -104,12 +104,12 @@ const StandardUserInterface = createReactClass({
                         <If condition={!this.props.viewState.isMapFullScreen && !this.props.viewState.hideMapUi()}>
                             <Choose>
                                 <When condition={this.props.viewState.useSmallScreenInterface}>
-                                    <MobileHeader terria={terria}
+                                    {/* <MobileHeader terria={terria}
                                                   menuItems={customElements.menu}
                                                   viewState={this.props.viewState}
                                                   version={this.props.version}
                                                   allBaseMaps={allBaseMaps}
-                                    />
+                                    /> */}
                                 </When>
                                 <Otherwise>
                                     <div className={Styles.sidePanel}>
@@ -121,7 +121,7 @@ const StandardUserInterface = createReactClass({
                         </If>
 
                         <section className={Styles.map}>
-                            <ProgressBar terria={terria}/>
+                            {/* <ProgressBar terria={terria}/> */}
                             <MapColumn terria={terria} viewState={this.props.viewState} />
                             <main>
                                 <ExplorerWindow terria={terria} viewState={this.props.viewState}/>
@@ -138,11 +138,11 @@ const StandardUserInterface = createReactClass({
 
                 <If condition={!this.props.viewState.hideMapUi()}>
                     <div className = {classNames({[Styles.explorerPanelIsVisible]: this.props.viewState.explorerPanelIsVisible})}>
-                        <MenuBar terria={terria}
+                        {/* <MenuBar terria={terria}
                                  viewState={this.props.viewState}
                                  allBaseMaps={allBaseMaps}
                                  menuItems={customElements.menu}
-                        />
+                        /> */}
                         <MapNavigation terria={terria}
                                        viewState={this.props.viewState}
                                        navItems={customElements.nav}
@@ -160,9 +160,9 @@ const StandardUserInterface = createReactClass({
                 </If>
 
                 <div className={Styles.featureInfo}>
-                    <FeatureInfoPanel terria={terria}
+                    {/* <FeatureInfoPanel terria={terria}
                                       viewState={this.props.viewState}
-                    />
+                    /> */}
                 </div>
                 <DragDropFile terria={this.props.terria}
                               viewState={this.props.viewState}

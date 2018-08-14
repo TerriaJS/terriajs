@@ -1,4 +1,5 @@
 import React from 'react';
+import { observer } from 'mobx-react';
 
 import createReactClass from 'create-react-class';
 
@@ -12,9 +13,9 @@ import SearchBox from '../../Search/SearchBox';
 import Styles from './data-catalog-tab.scss';
 
 // The DataCatalog Tab
-const DataCatalogTab = createReactClass({
+const DataCatalogTab = observer(createReactClass({
     displayName: 'DataCatalogTab',
-    mixins: [ObserveModelMixin],
+    //mixins: [ObserveModelMixin],
 
     propTypes: {
         terria: PropTypes.object,
@@ -61,6 +62,6 @@ const DataCatalogTab = createReactClass({
             </div>
         );
     }
-});
+}));
 
 module.exports = DataCatalogTab;

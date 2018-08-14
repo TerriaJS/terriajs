@@ -36,14 +36,14 @@ const Tabs = createReactClass({
         };
 
         if (this.props.terria.configParameters.tabbedCatalog) {
-            return [].concat(this.props.terria.catalog.group.items.filter(member => member !== this.props.terria.catalog.userAddedDataGroup).map((member, i) => ({
+            return [].concat(this.props.terria.catalog.group.memberModels.filter(member => member !== this.props.terria.catalog.userAddedDataGroup).map((member, i) => ({
                 name: member.nameInCatalog,
                 title: `data-catalog-${member.name}`,
                 category: 'data-catalog',
                 idInCategory: member.name,
                 panel: <DataCatalogTab terria={this.props.terria}
                                        viewState={this.props.viewState}
-                                       items={member.items || [member]}
+                                       items={member.memberModels || [member]}
                                        searchPlaceholder="Search whole catalogue"
                 />
             })), [myDataTab]);
@@ -55,7 +55,7 @@ const Tabs = createReactClass({
                     category: 'data-catalog',
                     panel: <DataCatalogTab terria={this.props.terria}
                                         viewState={this.props.viewState}
-                                        items={this.props.terria.catalog.group.items}
+                                        items={this.props.terria.catalog.group.memberModels}
                                         searchPlaceholder="Search the catalogue"
                     />
                 },
@@ -69,7 +69,7 @@ const Tabs = createReactClass({
         if (this.props.terria.configParameters.tabbedCatalog) {
             this.props.viewState.activeTabIdInCategory = idInCategory;
             if (category === 'data-catalog') {
-                const member = this.props.terria.catalog.group.items.filter(m => m.name === idInCategory)[0];
+                const member = this.props.terria.catalog.group.memberModels.filter(m => m.name === idInCategory)[0];
                 // If member was found and member can be opened, open it (causes CkanCatalogGroups to fetch etc.)
                 if (defined(member)) {
                     if (member.toggleOpen) {
