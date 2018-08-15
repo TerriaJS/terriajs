@@ -62,7 +62,7 @@ const Legend = createReactClass({
                         <a onError={this.onImageError.bind(this, legendUrl)}
                            href={proxiedUrl}
                            className={Styles.imageAnchor}
-                           target="_blank">
+                           target="_blank" rel="noreferrer noopener">
                             <img src={proxiedUrl}/>
                         </a>
                     </li>
@@ -70,7 +70,7 @@ const Legend = createReactClass({
                 <Otherwise>
                     <li key={proxiedUrl}>
                         <a href={proxiedUrl}
-                           target="_blank">Open legend in a separate tab
+                           target="_blank" rel="noreferrer noopener">Open legend in a separate tab
                         </a>
                     </li>
                 </Otherwise>
