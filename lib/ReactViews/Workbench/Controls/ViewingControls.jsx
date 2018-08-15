@@ -113,8 +113,8 @@ const ViewingControls = createReactClass({
                     <li className={classNames(Styles.split, classList)}><button type='button' onClick={this.splitItem} title="Duplicate and show splitter" className={Styles.btn}>Split</button></li>
                 </If>
                 <If condition={defined(item.linkedWcsURL)}>
-                {/* WIP: Fix styles */}
-                <li className={classNames(Styles.info, classList)}><button type='button' onClick={this.exportData} className={Styles.btn} title='Export map data'>Export</button></li>
+                    {/* WIP: Fix styles */}
+                    <li className={classNames(Styles.info, classList)}><button type='button' onClick={this.exportData} className={Styles.btn} title='Export map data'>Export</button></li>
                 </If>
                 <li className={classNames(Styles.remove, classList)}>
                     <button type='button' onClick={this.removeFromMap} title="Remove this data" className={Styles.btn}>
