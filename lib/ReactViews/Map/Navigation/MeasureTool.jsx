@@ -113,7 +113,7 @@ const MeasureTool = createReactClass({
 
         // Request the triangles that make up the polygon from Cesium.
         const tangentPlane = EllipsoidTangentPlane.fromPoints(positions, Ellipsoid.WGS84);
-        const polygons = PolygonGeometryLibrary.polygonsFromHierarchy(new PolygonHierarchy(positions), perPositionHeight, tangentPlane, Ellipsoid.WGS84);
+        const polygons = PolygonGeometryLibrary.polygonsFromHierarchy(new PolygonHierarchy(positions), tangentPlane.projectPointsOntoPlane.bind(tangentPlane), !perPositionHeight, Ellipsoid.WGS84);
 
         const geom = PolygonGeometryLibrary.createGeometryFromPositions(Ellipsoid.WGS84,
                                                                         polygons.polygons[0],

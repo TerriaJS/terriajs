@@ -347,7 +347,7 @@ describe('WebMapServiceCatalogItem', function() {
         });
         expect(wmsItem.attribution).toEqual(new Credit('Plain text'));
     });
-    it('can get handle object in textAttribution', function() {
+    it('can handle object in textAttribution', function() {
         var test = {
             text: "test",
             link: "link"
@@ -355,8 +355,8 @@ describe('WebMapServiceCatalogItem', function() {
         wmsItem.updateFromJson({
             attribution: test
         });
-        expect(wmsItem.attribution.text).toEqual("test");
-        expect(wmsItem.attribution.link).toEqual("link");
+        expect(wmsItem.attribution.html).toContain("test");
+        expect(wmsItem.attribution.html).toContain("link");
     });
 
     it('can understand comma-separated datetimes', function(done) {

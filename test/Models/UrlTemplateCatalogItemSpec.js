@@ -45,7 +45,7 @@ describe('UrlTemplateCatalogItem', function() {
             expect(provider.url).toBe('{s}.tiles.example.com/mylayer/{z}/{x}/{y}.png');
             expect(provider.minimumLevel).toBe(1);
             expect(provider.maximumLevel).toBe(5);
-            expect(provider.credit.text).toBe('Thanks to the awesome data provider!');
+            expect(provider.credit.html).toBe('Thanks to the awesome data provider!');
             expect(provider._subdomains).toEqual(['a', 'd']);
             expect(provider.tileDiscardPolicy instanceof NeverTileDiscardPolicy).toBe(true);
         }).then(done).otherwise(done.fail);
