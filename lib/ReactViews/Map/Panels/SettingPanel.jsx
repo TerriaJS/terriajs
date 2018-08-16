@@ -20,15 +20,8 @@ const SettingPanel = createReactClass({
 
     propTypes: {
         terria: PropTypes.object.isRequired,
-        viewerModes: PropTypes.array,
         allBaseMaps: PropTypes.array.isRequired,
         viewState: PropTypes.object.isRequired
-    },
-
-    getDefaultProps() {
-        return {
-            viewerModes: ['3D Terrain', '3D Smooth', '2D']
-        };
     },
 
     getInitialState() {
@@ -94,13 +87,21 @@ const SettingPanel = createReactClass({
             icon: 'sphere'
         };
 
+        const viewerModes = [];
+
+        if (this.props.terria.configParameters.useCesiumIonTerrain || this.props.terria.configParameters.cesiumTerrainUrl) {
+            viewerModes.push('3D Terrain');
+        }
+
+        viewerModes.push('3D Smooth', '2D');
+
         return (
             <MenuPanel theme={dropdownTheme} btnTitle="Change view" btnText="Map" viewState={this.props.viewState}
                        smallScreen={this.props.viewState.useSmallScreenInterface}>
                 <div className={classNames(Styles.viewer, DropdownStyles.section)}>
                     <label className={DropdownStyles.heading}> Map View </label>
                     <ul className={Styles.viewerSelector}>
-                        <For each="viewerMode" of={this.props.viewerModes} index="i">
+                        <For each="viewerMode" of={viewerModes} index="i">
                             <li key={i} className={Styles.listItem}>
                                 <button onClick={that.selectViewer.bind(this, i)}
                                         className={classNames(Styles.btnViewer, {[Styles.isActive]: i === currentViewer})}>
