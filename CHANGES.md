@@ -7,6 +7,7 @@ Change Log
 
 * The previous default terrain provider, STK World Terrain, has been deprecated by its provider. *To continue using terrain in your deployed applications, you _must_ obtain a Cesium Ion key and add it to `config.json`*. See https://cesium.com/ to create an Ion account. New options are available in `config.json` to configure terrain from Cesium Ion or from another source. See https://terria.io/Documentation/guide/customizing/client-side-config/#parameters for configuration details.
 * Upgraded to Cesium v1.48.
+* Fixed a bug that could cause legends to be missing from `WebMapServiceCatalogItems` that had `isEnabled` set to true.
 
 ### v6.0.5
 
