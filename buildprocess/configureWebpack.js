@@ -5,6 +5,11 @@ var webpack = require('webpack');
 function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlugin, disableStyleLoader) {
     const cesiumDir = path.dirname(require.resolve('terriajs-cesium/package.json'));
 
+    config.node = config.node || {};
+
+    // Resolve node module use of fs
+    config.node.fs = 'empty';
+
     config.resolve = config.resolve || {};
     config.resolve.extensions = config.resolve.extensions || ['*', '.webpack.js', '.web.js', '.js'];
     config.resolve.extensions.push('.jsx');
@@ -29,6 +34,18 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
                     pattern: /buildModuleUrl\([\'|\"](.*)[\'|\"]\)/ig,
                     replacement: function (match, p1, offset, string) {
                         return "require('" + cesiumDir.replace(/\\/g, '\\\\') + "/Source/" + p1.replace(/\\/g, '\\\\') + "')";
+                    }
+                },
+                {
+                    pattern: /Please assign <i>Cesium.Ion.defaultAccessToken<\/i>/g,
+                    replacement: function() {
+                        return "Please set \"cesiumIonAccessToken\" in config.json";
+                    }
+                },
+                {
+                    pattern: / before making any Cesium API calls/g,
+                    replacement: function() {
+                        return "";
                     }
                 }
             ]
