@@ -1,0 +1,19 @@
+{
+    "catalog": [
+        {
+            "name": "Cesium 3D Tiles",
+            "type": "group",
+            "items": [
+                {
+                    "name": "Brisbane 3D city model (aero3Dpro)",
+                    "type": "3d-tiles",
+                    "url": "https://sample.aero3dpro.com.au/BrisbaneCBD/Scene/recon_h_3DTiles.json",
+                    "options": {
+                        "maximumScreenSpaceError": 1,
+                        "maximumNumberOfLoadedTiles": 1000
+                    }
+                }
+            ]
+        }
+    ]
+}
