@@ -82,7 +82,7 @@
     "babel-eslint": "^7.0.0",
     "css-loader": "^0.28.0",
     "electron": "^2.0.0",
-    "enzyme": "^3.3.0",
+    "enzyme": "^3.4.4",
     "enzyme-adapter-react-16": "^1.1.1",
     "eslint": "^4.9.0",
     "eslint-plugin-jsx-control-statements": "^2.2.0",
