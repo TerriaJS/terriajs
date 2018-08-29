@@ -35,6 +35,13 @@ const FullScreenButton = createReactClass({
         setTimeout(function() {
             triggerResize();
         }, this.props.animationDuration || 1);
+
+        // log a GA event
+        this.props.terria.analytics.logEvent(
+            "toggle full screen",
+            this.props.viewState.isMapFullScreen ? "exit" : "enter",
+            "fullScreen"
+        );
     },
 
     renderButtonText() {
