@@ -1,31 +1,33 @@
-import React from 'react';
-import createReactClass from 'create-react-class';
-import PropTypes from 'prop-types';
-import arrayContains from '../../Core/arrayContains';
-import Branding from './../SidePanel/Branding.jsx';
-import DragDropFile from './../DragDropFile.jsx';
-import ExplorerWindow from './../ExplorerWindow/ExplorerWindow.jsx';
-import FeatureInfoPanel from './../FeatureInfo/FeatureInfoPanel.jsx';
-import FeedbackForm from '../Feedback/FeedbackForm.jsx';
-import MapColumn from './MapColumn.jsx';
-import MapInteractionWindow from './../Notification/MapInteractionWindow.jsx';
-import MapNavigation from './../Map/MapNavigation.jsx';
-import MenuBar from './../Map/MenuBar.jsx';
-import ExperimentalFeatures from './../Map/ExperimentalFeatures.jsx';
-import MobileHeader from './../Mobile/MobileHeader.jsx';
-import Notification from './../Notification/Notification.jsx';
-import ObserveModelMixin from './../ObserveModelMixin';
-import ProgressBar from '../Map/ProgressBar.jsx';
-import SidePanel from './../SidePanel/SidePanel.jsx';
-import processCustomElements from './processCustomElements';
-import classNames from 'classnames';
-import 'inobounce';
+import React from "react";
+import createReactClass from "create-react-class";
+import PropTypes from "prop-types";
+import arrayContains from "../../Core/arrayContains";
+import Branding from "./../SidePanel/Branding.jsx";
+import DragDropFile from "./../DragDropFile.jsx";
+import ExplorerWindow from "./../ExplorerWindow/ExplorerWindow.jsx";
+import FeatureInfoPanel from "./../FeatureInfo/FeatureInfoPanel.jsx";
+import FeedbackForm from "../Feedback/FeedbackForm.jsx";
+import FullScreenButton from "./../SidePanel/FullScreenButton.jsx";
+import MapColumn from "./MapColumn.jsx";
+import MapInteractionWindow from "./../Notification/MapInteractionWindow.jsx";
+import MapNavigation from "./../Map/MapNavigation.jsx";
+import MenuBar from "./../Map/MenuBar.jsx";
+import ExperimentalFeatures from "./../Map/ExperimentalFeatures.jsx";
+import MobileHeader from "./../Mobile/MobileHeader.jsx";
+import Notification from "./../Notification/Notification.jsx";
+import ObserveModelMixin from "./../ObserveModelMixin";
+import ProgressBar from "../Map/ProgressBar.jsx";
+import SidePanel from "./../SidePanel/SidePanel.jsx";
+import processCustomElements from "./processCustomElements";
+import classNames from "classnames";
+import { Small, Medium } from "../Generic/Responsive";
+import "inobounce";
 
-import Styles from './standard-user-interface.scss';
+import Styles from "./standard-user-interface.scss";
 
 /** blah */
 const StandardUserInterface = createReactClass({
-    displayName: 'StandardUserInterface',
+    displayName: "StandardUserInterface",
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -40,7 +42,10 @@ const StandardUserInterface = createReactClass({
         viewState: PropTypes.object.isRequired,
         minimumLargeScreenWidth: PropTypes.number,
         version: PropTypes.string,
-        children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.element), PropTypes.element])
+        children: PropTypes.oneOfType([
+            PropTypes.arrayOf(PropTypes.element),
+            PropTypes.element
+        ])
     },
 
     getDefaultProps() {
@@ -53,40 +58,34 @@ const StandardUserInterface = createReactClass({
     UNSAFE_componentWillMount() {
         const that = this;
         this.dragOverListener = e => {
-            if (!e.dataTransfer.types || !arrayContains(e.dataTransfer.types, 'Files')) {
+            if (
+                !e.dataTransfer.types ||
+                !arrayContains(e.dataTransfer.types, "Files")
+            ) {
                 return;
             }
             e.preventDefault();
             e.stopPropagation();
-            e.dataTransfer.dropEffect = 'copy';
+            e.dataTransfer.dropEffect = "copy";
             that.acceptDragDropFile();
         };
-
-        this.resizeListener = () => {
-            this.props.viewState.useSmallScreenInterface = this.shouldUseMobileInterface();
-        };
-
-        window.addEventListener('resize', this.resizeListener, false);
-
-        this.resizeListener();
     },
 
     componentDidMount() {
-        this._wrapper.addEventListener('dragover', this.dragOverListener, false);
+        this._wrapper.addEventListener(
+            "dragover",
+            this.dragOverListener,
+            false
+        );
     },
 
     componentWillUnmount() {
-        window.removeEventListener('resize', this.resizeListener, false);
-        document.removeEventListener('dragover', this.dragOverListener, false);
+        document.removeEventListener("dragover", this.dragOverListener, false);
     },
 
     acceptDragDropFile() {
         this.props.viewState.openUserData();
         this.props.viewState.isDraggingDroppingFile = true;
-    },
-
-    shouldUseMobileInterface() {
-        return document.body.clientWidth < this.props.minimumLargeScreenWidth;
     },
 
     render() {
@@ -98,37 +97,59 @@ const StandardUserInterface = createReactClass({
         const terria = this.props.terria;
         const allBaseMaps = this.props.allBaseMaps;
         return (
-            <div className={Styles.uiRoot} ref={(w) => this._wrapper = w}>
+            <div className={Styles.uiRoot} ref={w => (this._wrapper = w)}>
                 <div className={Styles.ui}>
                     <div className={Styles.uiInner}>
-                        <If condition={!this.props.viewState.isMapFullScreen && !this.props.viewState.hideMapUi()}>
-                            <Choose>
-                                <When condition={this.props.viewState.useSmallScreenInterface}>
-                                    <MobileHeader terria={terria}
-                                                  menuItems={customElements.menu}
-                                                  viewState={this.props.viewState}
-                                                  version={this.props.version}
-                                                  allBaseMaps={allBaseMaps}
-                                    />
-                                </When>
-                                <Otherwise>
-                                    <div className={Styles.sidePanel}>
-                                        <Branding terria={terria} version={this.props.version}/>
-                                        <SidePanel terria={terria} viewState={this.props.viewState}/>
-                                    </div>
-                                </Otherwise>
-                            </Choose>
-                        </If>
-
+                        <Small maxWidth={this.props.minimumLargeScreenWidth}>
+                            >
+                            <MobileHeader
+                                terria={terria}
+                                menuItems={customElements.menu}
+                                viewState={this.props.viewState}
+                                version={this.props.version}
+                                allBaseMaps={allBaseMaps}
+                            />
+                        </Small>
+                        <Medium minWidth={this.props.minimumLargeScreenWidth}>
+                            <div className={Styles.sidePanel}>
+                                <Branding
+                                    terria={terria}
+                                    version={this.props.version}
+                                />
+                                <SidePanel
+                                    terria={terria}
+                                    viewState={this.props.viewState}
+                                />
+                            </div>
+                        </Medium>
+                        <FullScreenButton
+                            terria={this.props.terria}
+                            viewState={this.props.viewState}
+                        />
                         <section className={Styles.map}>
-                            <ProgressBar terria={terria}/>
-                            <MapColumn terria={terria} viewState={this.props.viewState} />
+                            <ProgressBar terria={terria} />
+                            <MapColumn
+                                terria={terria}
+                                viewState={this.props.viewState}
+                            />
                             <main>
-                                <ExplorerWindow terria={terria} viewState={this.props.viewState}/>
-                                <If condition={this.props.terria.configParameters.experimentalFeatures && !this.props.viewState.hideMapUi()}>
-                                    <ExperimentalFeatures terria={terria}
-                                                          viewState={this.props.viewState}
-                                                          experimentalItems={customElements.experimentalMenu}
+                                <ExplorerWindow
+                                    terria={terria}
+                                    viewState={this.props.viewState}
+                                />
+                                <If
+                                    condition={
+                                        this.props.terria.configParameters
+                                            .experimentalFeatures &&
+                                        !this.props.viewState.hideMapUi()
+                                    }
+                                >
+                                    <ExperimentalFeatures
+                                        terria={terria}
+                                        viewState={this.props.viewState}
+                                        experimentalItems={
+                                            customElements.experimentalMenu
+                                        }
                                     />
                                 </If>
                             </main>
@@ -137,39 +158,56 @@ const StandardUserInterface = createReactClass({
                 </div>
 
                 <If condition={!this.props.viewState.hideMapUi()}>
-                    <div className = {classNames({[Styles.explorerPanelIsVisible]: this.props.viewState.explorerPanelIsVisible})}>
-                        <MenuBar terria={terria}
-                                 viewState={this.props.viewState}
-                                 allBaseMaps={allBaseMaps}
-                                 menuItems={customElements.menu}
+                    <div
+                        className={classNames({
+                            [Styles.explorerPanelIsVisible]: this.props
+                                .viewState.explorerPanelIsVisible
+                        })}
+                    >
+                        <MenuBar
+                            terria={terria}
+                            viewState={this.props.viewState}
+                            allBaseMaps={allBaseMaps}
+                            menuItems={customElements.menu}
                         />
-                        <MapNavigation terria={terria}
-                                       viewState={this.props.viewState}
-                                       navItems={customElements.nav}
+                        <MapNavigation
+                            terria={terria}
+                            viewState={this.props.viewState}
+                            navItems={customElements.nav}
                         />
                     </div>
                 </If>
 
-                <Notification viewState={this.props.viewState}/>
-                <MapInteractionWindow terria={terria} viewState={this.props.viewState}/>
+                <Notification viewState={this.props.viewState} />
+                <MapInteractionWindow
+                    terria={terria}
+                    viewState={this.props.viewState}
+                />
 
-                <If condition={this.props.terria.configParameters.feedbackUrl && !this.props.viewState.hideMapUi()}>
+                <If
+                    condition={
+                        this.props.terria.configParameters.feedbackUrl &&
+                        !this.props.viewState.hideMapUi()
+                    }
+                >
                     <aside className={Styles.feedback}>
-                        <FeedbackForm viewState={this.props.viewState}/>
+                        <FeedbackForm viewState={this.props.viewState} />
                     </aside>
                 </If>
 
                 <div className={Styles.featureInfo}>
-                    <FeatureInfoPanel terria={terria}
-                                      viewState={this.props.viewState}
+                    <FeatureInfoPanel
+                        terria={terria}
+                        viewState={this.props.viewState}
                     />
                 </div>
-                <DragDropFile terria={this.props.terria}
-                              viewState={this.props.viewState}
+                <DragDropFile
+                    terria={this.props.terria}
+                    viewState={this.props.viewState}
                 />
             </div>
         );
-    },
+    }
 });
 
 module.exports = StandardUserInterface;

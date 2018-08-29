@@ -1,0 +1,36 @@
+@import "~terriajs-variables";
+@import "../../Sass/common/mixins";
+
+.full-screen {
+  position: absolute;
+  z-index: 99;
+  // work bench width
+  left: 350px;
+}
+
+.btn {
+  composes: btn from "../../Sass/common/_buttons.scss";
+  composes: btn--map from "../../Sass/common/_buttons.scss";
+  border-radius: $radius-small;
+  &,
+  &:hover,
+  &:focus {
+    border: 0;
+  }
+}
+
+.enter {
+  &:before {
+    font-size: 1.6rem;
+  }
+}
+
+.exit {
+  &:before {
+    font-size: 1.6rem;
+  }
+}
+
+.isActive {
+  background: $color-primary;
+}

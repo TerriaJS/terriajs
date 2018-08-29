@@ -11,9 +11,7 @@ import SearchBox from "../Search/SearchBox.jsx";
 import SidebarSearch from "../Search/SidebarSearch.jsx";
 import Workbench from "../Workbench/Workbench.jsx";
 import Icon from "../Icon.jsx";
-import FullScreenButton from "./FullScreenButton.jsx";
 import { removeMarker } from "../../Models/LocationMarkerUtils";
-
 import Styles from "./side-panel.scss";
 
 const SidePanel = createReactClass({
@@ -81,10 +79,6 @@ const SidePanel = createReactClass({
         return (
             <div className={Styles.workBench}>
                 <div className={Styles.header}>
-                    <FullScreenButton
-                        terria={this.props.terria}
-                        viewState={this.props.viewState}
-                    />
                     <SearchBox
                         onSearchTextChanged={this.changeSearchText}
                         onDoSearch={this.search}
