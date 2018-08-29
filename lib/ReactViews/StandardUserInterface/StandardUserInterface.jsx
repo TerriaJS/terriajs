@@ -127,8 +127,6 @@ const StandardUserInterface = createReactClass({
                                 <div
                                     className={classNames(Styles.sidePanel, {
                                         [Styles.sidePanelHide]: this.props
-                                            .viewState.isMapFullScreen,
-                                        [Styles.sidePanelShow]: !this.props
                                             .viewState.isMapFullScreen
                                     })}
                                 >
