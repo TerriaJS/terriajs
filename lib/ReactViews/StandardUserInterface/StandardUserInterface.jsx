@@ -69,6 +69,14 @@ const StandardUserInterface = createReactClass({
             e.dataTransfer.dropEffect = "copy";
             that.acceptDragDropFile();
         };
+
+        this.resizeListener = () => {
+            this.props.viewState.useSmallScreenInterface = this.shouldUseMobileInterface();
+        };
+
+        window.addEventListener("resize", this.resizeListener, false);
+
+        this.resizeListener();
     },
 
     componentDidMount() {
@@ -80,12 +88,17 @@ const StandardUserInterface = createReactClass({
     },
 
     componentWillUnmount() {
+        window.removeEventListener("resize", this.resizeListener, false);
         document.removeEventListener("dragover", this.dragOverListener, false);
     },
 
     acceptDragDropFile() {
         this.props.viewState.openUserData();
         this.props.viewState.isDraggingDroppingFile = true;
+    },
+
+    shouldUseMobileInterface() {
+        return document.body.clientWidth < this.props.minimumLargeScreenWidth;
     },
 
     render() {
@@ -100,8 +113,7 @@ const StandardUserInterface = createReactClass({
             <div className={Styles.uiRoot} ref={w => (this._wrapper = w)}>
                 <div className={Styles.ui}>
                     <div className={Styles.uiInner}>
-                        <Small maxWidth={this.props.minimumLargeScreenWidth}>
-                            >
+                        <Small>
                             <MobileHeader
                                 terria={terria}
                                 menuItems={customElements.menu}
@@ -110,7 +122,7 @@ const StandardUserInterface = createReactClass({
                                 allBaseMaps={allBaseMaps}
                             />
                         </Small>
-                        <Medium minWidth={this.props.minimumLargeScreenWidth}>
+                        <Medium>
                             <div className={Styles.sidePanel}>
                                 <Branding
                                     terria={terria}
