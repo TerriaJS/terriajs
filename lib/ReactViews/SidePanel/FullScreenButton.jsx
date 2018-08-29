@@ -16,6 +16,8 @@ const FullScreenButton = createReactClass({
     propTypes: {
         terria: PropTypes.object,
         viewState: PropTypes.object.isRequired,
+        btnText: PropTypes.string,
+        minified: PropTypes.bool,
         animationDuration: PropTypes.number // Defaults to 1 millisecond.
     },
 
