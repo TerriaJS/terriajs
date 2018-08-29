@@ -141,21 +141,26 @@ const StandardUserInterface = createReactClass({
                                 </div>
                             </Medium>
                         </If>
-                        <div
-                            className={classNames(Styles.showWorkbenchButton, {
-                                [Styles.showWorkbenchButtonisVisible]: this
-                                    .props.viewState.isMapFullScreen,
-                                [Styles.showWorkbenchButtonisNotVisible]: !this
-                                    .props.viewState.isMapFullScreen
-                            })}
-                        >
-                            <FullScreenButton
-                                terria={this.props.terria}
-                                viewState={this.props.viewState}
-                                minified={false}
-                                btnText="Show workbench"
-                            />
-                        </div>
+                        <Medium>
+                            <div
+                                className={classNames(
+                                    Styles.showWorkbenchButton,
+                                    {
+                                        [Styles.showWorkbenchButtonisVisible]: this
+                                            .props.viewState.isMapFullScreen,
+                                        [Styles.showWorkbenchButtonisNotVisible]: !this
+                                            .props.viewState.isMapFullScreen
+                                    }
+                                )}
+                            >
+                                <FullScreenButton
+                                    terria={this.props.terria}
+                                    viewState={this.props.viewState}
+                                    minified={false}
+                                    btnText="Show workbench"
+                                />
+                            </div>
+                        </Medium>
 
                         <section className={Styles.map}>
                             <ProgressBar terria={terria} />
