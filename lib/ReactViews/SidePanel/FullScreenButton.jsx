@@ -38,33 +38,41 @@ const FullScreenButton = createReactClass({
     },
 
     renderButtonText() {
-        if (this.props.viewState.isMapFullScreen) {
-            return (
-                <span className={Styles.exit}>
-                    Show Workbench<Icon glyph={Icon.GLYPHS.right} />
-                </span>
-            );
-        } else {
-            return <Icon glyph={Icon.GLYPHS.left} />;
+        const btnText = this.props.btnText ? this.props.btnText : null;
+        if (this.props.minified) {
+            if (this.props.viewState.isMapFullScreen) {
+                return <Icon glyph={Icon.GLYPHS.right} />;
+            } else {
+                return <Icon glyph={Icon.GLYPHS.left} />;
+            }
         }
+        return (
+            <span>
+                {btnText}
+                <Icon glyph={Icon.GLYPHS.right} />
+            </span>
+        );
     },
 
     render() {
         const btnClassName = classNames(Styles.btn, {
-            [Styles.isActive]: this.props.viewState.isMapFullScreen
+            [Styles.isActive]: this.props.viewState.isMapFullScreen,
+            [Styles.minified]: this.props.minified
         });
-        const btnTitle = this.props.viewState.isMapFullScreen
-            ? "Show workbench"
-            : "Hide workbench";
+
         return (
-            <div className={Styles.fullScreen}>
+            <div
+                className={classNames(Styles.fullScreen, {
+                    [Styles.minifiedFullscreenBtnWrapper]: this.props.minified
+                })}
+            >
                 <button
                     type="button"
                     onClick={this.toggleFullScreen}
-                    title={btnTitle}
                     className={btnClassName}
+                    title="Toggle full screen"
                 >
-                    <span>{this.renderButtonText()}</span>
+                    {this.renderButtonText()}
                 </button>
             </div>
         );

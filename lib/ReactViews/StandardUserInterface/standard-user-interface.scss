@@ -54,11 +54,47 @@
   z-index: $front-component-z-index - 20;
 }
 
+.sidePanel {
+  transition: all 0.25s;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+  visibility: visible;
+}
+
+.sidePanelHide {
+  display: block;
+  margin-left: -650px;
+  visibility: hidden;
+}
+
+.sidePanelShow {
+  // transition-delay: 0.5s;
+}
+
+.showWorkbenchButton {
+  position: fixed;
+  top: 16px;
+  left: -200px;
+  z-index: 99;
+  width: 200px;
+  transition: all 0.25s;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-delay: 0.5s;
+}
+
+.showWorkbenchButtonisVisible {
+  left: 16px;
+}
+.showWorkbenchButtonisNotVisible {
+  transition-delay: 0s;
+}
+
 @media (min-width: $sm) {
   .ui {
   }
   .uiInner {
     display: flex;
+    overflow: hidden;
   }
   .sidePanel {
     vertical-align: top;

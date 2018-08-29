@@ -7,7 +7,6 @@ import DragDropFile from "./../DragDropFile.jsx";
 import ExplorerWindow from "./../ExplorerWindow/ExplorerWindow.jsx";
 import FeatureInfoPanel from "./../FeatureInfo/FeatureInfoPanel.jsx";
 import FeedbackForm from "../Feedback/FeedbackForm.jsx";
-import FullScreenButton from "./../SidePanel/FullScreenButton.jsx";
 import MapColumn from "./MapColumn.jsx";
 import MapInteractionWindow from "./../Notification/MapInteractionWindow.jsx";
 import MapNavigation from "./../Map/MapNavigation.jsx";
@@ -19,8 +18,9 @@ import ObserveModelMixin from "./../ObserveModelMixin";
 import ProgressBar from "../Map/ProgressBar.jsx";
 import SidePanel from "./../SidePanel/SidePanel.jsx";
 import processCustomElements from "./processCustomElements";
-import classNames from "classnames";
+import FullScreenButton from "./../SidePanel/FullScreenButton.jsx";
 import { Small, Medium } from "../Generic/Responsive";
+import classNames from "classnames";
 import "inobounce";
 
 import Styles from "./standard-user-interface.scss";
@@ -113,31 +113,52 @@ const StandardUserInterface = createReactClass({
             <div className={Styles.uiRoot} ref={w => (this._wrapper = w)}>
                 <div className={Styles.ui}>
                     <div className={Styles.uiInner}>
-                        <Small>
-                            <MobileHeader
-                                terria={terria}
-                                menuItems={customElements.menu}
-                                viewState={this.props.viewState}
-                                version={this.props.version}
-                                allBaseMaps={allBaseMaps}
-                            />
-                        </Small>
-                        <Medium>
-                            <div className={Styles.sidePanel}>
-                                <Branding
+                        <If condition={!this.props.viewState.hideMapUi()}>
+                            <Small>
+                                <MobileHeader
                                     terria={terria}
-                                    version={this.props.version}
-                                />
-                                <SidePanel
-                                    terria={terria}
+                                    menuItems={customElements.menu}
                                     viewState={this.props.viewState}
+                                    version={this.props.version}
+                                    allBaseMaps={allBaseMaps}
                                 />
-                            </div>
-                        </Medium>
-                        <FullScreenButton
-                            terria={this.props.terria}
-                            viewState={this.props.viewState}
-                        />
+                            </Small>
+                            <Medium>
+                                <div
+                                    className={classNames(Styles.sidePanel, {
+                                        [Styles.sidePanelHide]: this.props
+                                            .viewState.isMapFullScreen,
+                                        [Styles.sidePanelShow]: !this.props
+                                            .viewState.isMapFullScreen
+                                    })}
+                                >
+                                    <Branding
+                                        terria={terria}
+                                        version={this.props.version}
+                                    />
+                                    <SidePanel
+                                        terria={terria}
+                                        viewState={this.props.viewState}
+                                    />
+                                </div>
+                            </Medium>
+                        </If>
+                        <div
+                            className={classNames(Styles.showWorkbenchButton, {
+                                [Styles.showWorkbenchButtonisVisible]: this
+                                    .props.viewState.isMapFullScreen,
+                                [Styles.showWorkbenchButtonisNotVisible]: !this
+                                    .props.viewState.isMapFullScreen
+                            })}
+                        >
+                            <FullScreenButton
+                                terria={this.props.terria}
+                                viewState={this.props.viewState}
+                                minified={false}
+                                btnText="Show workbench"
+                            />
+                        </div>
+
                         <section className={Styles.map}>
                             <ProgressBar terria={terria} />
                             <MapColumn

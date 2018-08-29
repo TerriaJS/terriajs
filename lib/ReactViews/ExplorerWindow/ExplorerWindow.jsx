@@ -1,18 +1,18 @@
-import React from "react";
-import createReactClass from "create-react-class";
-import PropTypes from "prop-types";
-import classNames from "classnames";
-import ko from "terriajs-cesium/Source/ThirdParty/knockout";
-import { Small, Medium } from "../Generic/Responsive";
-import ObserveModelMixin from "../ObserveModelMixin";
-import Tabs from "./Tabs.jsx";
+import React from 'react';
+import createReactClass from 'create-react-class';
+import PropTypes from 'prop-types';
+import classNames from 'classnames';
+import ko from 'terriajs-cesium/Source/ThirdParty/knockout';
 
-import Styles from "./explorer-window.scss";
+import ObserveModelMixin from '../ObserveModelMixin';
+import Tabs from './Tabs.jsx';
+
+import Styles from './explorer-window.scss';
 
 const SLIDE_DURATION = 300;
 
 const ExplorerWindow = createReactClass({
-    displayName: "ExplorerWindow",
+    displayName: 'ExplorerWindow',
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -28,16 +28,14 @@ const ExplorerWindow = createReactClass({
 
     close() {
         this.props.viewState.explorerPanelIsVisible = false;
-        this.props.viewState.switchMobileView("nowViewing");
+        this.props.viewState.switchMobileView('nowViewing');
     },
 
     /* eslint-disable-next-line camelcase */
     UNSAFE_componentWillMount() {
         this.props.viewState.explorerPanelAnimating = true;
 
-        this._pickedFeaturesSubscription = ko
-            .pureComputed(this.isVisible, this)
-            .subscribe(this.onVisibilityChange);
+        this._pickedFeaturesSubscription = ko.pureComputed(this.isVisible, this).subscribe(this.onVisibilityChange);
         this.onVisibilityChange(this.isVisible());
     },
 
@@ -47,7 +45,7 @@ const ExplorerWindow = createReactClass({
                 this.close();
             }
         };
-        window.addEventListener("keydown", this.escKeyListener, true);
+        window.addEventListener('keydown', this.escKeyListener, true);
     },
 
     onVisibilityChange(isVisible) {
@@ -69,10 +67,7 @@ const ExplorerWindow = createReactClass({
                 slidIn: true
             });
 
-            setTimeout(
-                () => (this.props.viewState.explorerPanelAnimating = false),
-                SLIDE_DURATION
-            );
+            setTimeout(() => this.props.viewState.explorerPanelAnimating = false, SLIDE_DURATION);
         });
     },
 
@@ -88,63 +83,43 @@ const ExplorerWindow = createReactClass({
     },
 
     componentWillUnmount() {
-        window.removeEventListener("keydown", this.escKeyListener, false);
+        window.removeEventListener('keydown', this.escKeyListener, false);
 
         this._pickedFeaturesSubscription.dispose();
     },
 
     isVisible() {
-        return (
-            !this.props.viewState.hideMapUi() &&
-            this.props.viewState.explorerPanelIsVisible
-        );
+        return !this.props.viewState.useSmallScreenInterface && !this.props.viewState.hideMapUi() && this.props.viewState.explorerPanelIsVisible;
     },
 
     render() {
         const visible = this.state.visible;
 
         return visible ? (
-            <Medium>
-                <div
-                    className={Styles.modalWrapper}
-                    id="explorer-panel-wrapper"
-                    aria-hidden={!visible}
-                >
-                    <div
-                        onClick={this.close}
-                        id="modal-overlay"
-                        className={Styles.modalOverlay}
-                        tabIndex="-1"
-                    />
-                    <div
-                        id="explorer-panel"
-                        className={classNames(
-                            Styles.explorerPanel,
-                            Styles.modalContent,
-                            { [Styles.isMounted]: this.state.slidIn }
-                        )}
-                        aria-labelledby="modalTitle"
-                        aria-describedby="modalDescription"
-                        role="dialog"
-                    >
-                        <button
-                            type="button"
+            <div className={Styles.modalWrapper}
+                 id="explorer-panel-wrapper"
+                 aria-hidden={!visible}>
+                <div onClick={this.close}
+                     id="modal-overlay"
+                     className={Styles.modalOverlay}
+                     tabIndex="-1"/>
+                <div id="explorer-panel"
+                     className={classNames(Styles.explorerPanel, Styles.modalContent, {[Styles.isMounted]: this.state.slidIn})}
+                     aria-labelledby="modalTitle"
+                     aria-describedby="modalDescription"
+                     role="dialog">
+                    <button type='button'
                             onClick={this.close}
                             className={Styles.btnCloseModal}
                             title="Close data panel"
-                            data-target="close-modal"
-                        >
-                            Done
-                        </button>
-                        <Tabs
-                            terria={this.props.terria}
-                            viewState={this.props.viewState}
-                        />
-                    </div>
+                            data-target="close-modal">
+                        Done
+                    </button>
+                    <Tabs terria={this.props.terria} viewState={this.props.viewState}/>
                 </div>
-            </Medium>
+            </div>
         ) : null;
-    }
+    },
 });
 
 module.exports = ExplorerWindow;
