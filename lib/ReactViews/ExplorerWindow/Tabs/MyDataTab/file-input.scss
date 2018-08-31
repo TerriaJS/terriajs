@@ -1,5 +1,5 @@
-@import '~terriajs-variables';
-@import '../../../../Sass/common/mixins';
+@import "~terriajs-variables";
+@import "../../../../Sass/common/mixins";
 
 @include empty-module("file-input");
 
@@ -22,11 +22,14 @@
   cursor: pointer;
 }
 
-.btn {
-  composes: btn from '../../../../Sass/common/_buttons.scss';
-  composes: btn-primary from '../../../../Sass/common/_buttons.scss';
-
+.btnBrowseData {
+  composes: btn from "../../../../Sass/common/_buttons.scss";
+  border: 1px solid #444444;
+  padding: 0.5rem 0.5rem;
+  height: 40px;
+  background: #ffffff;
+  display: block;
   &--hover {
-    composes: btn-primary--hover from '../../../../Sass/common/_buttons.scss';
+    composes: btn-primary--hover from "../../../../Sass/common/_buttons.scss";
   }
 }

@@ -58,6 +58,10 @@ const SidePanel = createReactClass({
         this.props.viewState.openAddData();
     },
 
+    onAddLocalDataClicked() {
+        this.props.viewState.openUserData();
+    },
+
     changeSearchText(newText) {
         this.props.viewState.searchState.locationSearchText = newText;
 
@@ -97,7 +101,7 @@ const SidePanel = createReactClass({
                         </button>
                         <button
                             type="button"
-                            onClick={this.onAddDataClicked}
+                            onClick={this.onAddLocalDataClicked}
                             className={Styles.uploadData}
                         >
                             <Icon glyph={Icon.GLYPHS.add} />
