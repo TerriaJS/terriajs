@@ -137,10 +137,10 @@ const AddData = createReactClass({
                     onChange={this.handleUploadFile}
                 />
 
-                <label className={Styles.label}>
-                    Add hosted file or web service [URL]:
-                </label>
                 <form className={Styles.urlInput}>
+                    <label className={Styles.label}>
+                        Add hosted file or web service [URL]:
+                    </label>
                     <input
                         value={this.state.remoteUrl}
                         onChange={this.onRemoteUrlChange}

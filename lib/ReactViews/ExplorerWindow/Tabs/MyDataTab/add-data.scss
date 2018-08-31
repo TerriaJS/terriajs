@@ -1,18 +1,18 @@
-@import '~terriajs-variables';
-@import '../../../../Sass/common/mixins';
+@import "~terriajs-variables";
+@import "../../../../Sass/common/mixins";
 
 @include empty-module("inner");
 @include empty-module("tab-panels");
 @include empty-module("tab-panel");
 @include empty-module("url-input");
 
-.tab-list{
-  composes: tab-list from '../../tabs.scss';
-  background: $modal-secondary-bg!important;
-  padding-right: 0!important;
+.tab-list {
+  composes: tab-list from "../../tabs.scss";
+  background: $modal-secondary-bg !important;
+  padding-right: 0 !important;
 
   &__item {
-    composes: tab-list__item from '../../tabs.scss';
+    composes: tab-list__item from "../../tabs.scss";
     margin-right: 3px;
   }
 
@@ -23,8 +23,8 @@
   //
   // Style guide: Buttons.btn--add-data-tab
   &__btn {
-    composes: btn from '../../../../Sass/common/_buttons.scss';
-    composes: btn-transparent from '../../../../Sass/common/_buttons.scss';
+    composes: btn from "../../../../Sass/common/_buttons.scss";
+    composes: btn-transparent from "../../../../Sass/common/_buttons.scss";
 
     font-size: $font-size-small;
     font-weight: $font-weight-medium;
@@ -32,17 +32,18 @@
     padding: $padding-small $padding-small $padding-small 0;
     border-bottom: 2px solid $grey;
     color: $grey;
-    &:hover, &:focus, &.is-active {
+    &:hover,
+    &:focus,
+    &.is-active {
       color: $color-primary;
       border-bottom: 2px solid $color-primary;
     }
   }
 }
 
-.label{
-  composes: label from '../../../../Sass/common/_labels.scss';
-
-  padding-left: 0;
+.label {
+  composes: label from "../../../../Sass/common/_labels.scss";
+  padding: 0.5rem 0.5rem;
   font-size: $font-size-mid-small;
 }
 
@@ -54,7 +55,7 @@
     margin-top: $padding-small;
 
     &--is-open {
-      composes: scrollbars from '../../../../Sass/common/_base.scss';
+      composes: scrollbars from "../../../../Sass/common/_base.scss";
       height: 190px;
       overflow-y: auto;
     }
@@ -72,17 +73,18 @@
 // Style guide: 3.3
 //
 .url-input {
+  background: #ffffff;
   &__text-box {
-    composes: field from '../../../../Sass/common/_form.scss';
+    composes: field from "../../../../Sass/common/_form.scss";
     width: calc(100% - 50px);
     float: left;
     font-family: $font-base;
   }
 
   &__btn {
-    composes: btn from '../../../../Sass/common/_buttons.scss';
-    composes: btn-transparent from '../../../../Sass/common/_buttons.scss';
-    composes: btn-primary from '../../../../Sass/common/_buttons.scss';
+    composes: btn from "../../../../Sass/common/_buttons.scss";
+    composes: btn-transparent from "../../../../Sass/common/_buttons.scss";
+    composes: btn-primary from "../../../../Sass/common/_buttons.scss";
 
     width: 50px;
     float: left;
