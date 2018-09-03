@@ -70,8 +70,8 @@ const ViewingControls = createReactClass({
         const newItem = createCatalogMemberFromType(item.type, item.terria);
         newItem.updateFromJson(serializedItem);
 
-        if (newItem.useOwnClock) {
-            newItem.useOwnClock = false;
+        if (newItem.useOwnClock === false) {
+            newItem.useOwnClock = true;
         }
 
         // newItem is added to terria.nowViewing automatically by the "isEnabled" observable on CatalogItem (see isEnabledChanged).
