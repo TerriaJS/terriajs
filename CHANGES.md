@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### Next release
+
+* When clicking a `Split` button on the workbench, the new catalog item will no longer be attached to the timeline even if the original was. This avoids a confusing situation where both catalog items would be locked to the same time.
+
 ### v6.1.2
 
 * Fixed a bug that prevented `BingMapsSearchProviderViewModel` and other uses of `loadJsonp` from working correctly.
