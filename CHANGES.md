@@ -3,6 +3,10 @@
 Change Log
 ==========
 
+### v6.1.2
+
+* Fixed a bug that prevented `BingMapsSearchProviderViewModel` and other uses of `loadJsonp` from working correctly.
+
 ### v6.1.1
 
 * Upgraded to terriajs-server v2.7.4.
