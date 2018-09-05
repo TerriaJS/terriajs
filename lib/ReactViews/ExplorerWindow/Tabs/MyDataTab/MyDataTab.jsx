@@ -104,7 +104,11 @@ const MyDataTab = createReactClass({
                             resetTab={this.resetTab}
                         />
                     </If>
-                    <If condition={this.hasUserAddedData()}>
+                    <If
+                        condition={
+                            this.hasUserAddedData() & !this.state.activeTab
+                        }
+                    >
                         <div className={Styles.addedData}>
                             <p className={Styles.explanation}>
                                 <strong>Note</strong>Data added in this way is
