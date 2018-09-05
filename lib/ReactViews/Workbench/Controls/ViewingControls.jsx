@@ -69,6 +69,11 @@ const ViewingControls = createReactClass({
 
         const newItem = createCatalogMemberFromType(item.type, item.terria);
         newItem.updateFromJson(serializedItem);
+
+        if (newItem.useOwnClock === false) {
+            newItem.useOwnClock = true;
+        }
+
         // newItem is added to terria.nowViewing automatically by the "isEnabled" observable on CatalogItem (see isEnabledChanged).
         // However, nothing adds it to terria.catalog automatically, which is required so the new item can be shared.
         addUserCatalogMember(item.terria, newItem, {open: false, zoomTo: false});
