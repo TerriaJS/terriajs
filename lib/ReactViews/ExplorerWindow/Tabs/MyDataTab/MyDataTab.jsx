@@ -1,7 +1,7 @@
 import React from "react";
 import classNames from "classnames";
 import createReactClass from "create-react-class";
-
+import Icon from "../../../Icon.jsx";
 import PropTypes from "prop-types";
 
 import DataCatalogGroup from "../../../DataCatalog/DataCatalogGroup.jsx";
@@ -55,33 +55,31 @@ const MyDataTab = createReactClass({
             }
         ];
 
+        const tabsContent = (
+            <ul className={Styles.tabList}>
+                <For each="tab" of={tabs}>
+                    <li className={Styles.tabListItem} key={tab.id}>
+                        <button
+                            type="button"
+                            onClick={this.changeTab.bind(null, tab.id)}
+                            className={classNames(Styles.tabListBtn, {
+                                [Styles.isActive]:
+                                    this.state.activeTab === tab.id
+                            })}
+                        >
+                            {tab.caption}
+                        </button>
+                    </li>
+                </For>
+            </ul>
+        );
+
         if (this.hasUserAddedData()) {
             return (
                 <div className={Styles.dataTypeTab}>
                     <div className={Styles.dndBox}>
-                        <ul className={Styles.tabList}>
-                            <For each="tab" of={tabs}>
-                                <li className={Styles.tabListItem} key={tab.id}>
-                                    <button
-                                        type="button"
-                                        onClick={this.changeTab.bind(
-                                            null,
-                                            tab.id
-                                        )}
-                                        className={classNames(
-                                            Styles.tabListBtn,
-                                            {
-                                                [Styles.isActive]:
-                                                    this.state.activeTab ===
-                                                    tab.id
-                                            }
-                                        )}
-                                    >
-                                        {tab.caption}
-                                    </button>
-                                </li>
-                            </For>
-                        </ul>
+                        <Icon glyph={Icon.GLYPHS.upload} />
+                        {tabsContent}
                     </div>
                 </div>
             );
@@ -95,23 +93,10 @@ const MyDataTab = createReactClass({
                     </div>
                     <div>(it won’t be saved or uploaded to the internet)</div>
                 </div>
-                <ul className={Styles.tabList}>
-                    <For each="tab" of={tabs}>
-                        <li className={Styles.tabListItem} key={tab.id}>
-                            <button
-                                type="button"
-                                onClick={this.changeTab.bind(null, tab.id)}
-                                className={classNames(Styles.tabListBtn, {
-                                    [Styles.isActive]:
-                                        this.state.activeTab === tab.id
-                                })}
-                            >
-                                {tab.caption}
-                            </button>
-                        </li>
-                    </For>
-                </ul>
-                <div className={Styles.dndBox} />
+                {tabsContent}
+                <div className={Styles.dndBox}>
+                    <Icon glyph={Icon.GLYPHS.upload} />
+                </div>
             </div>
         );
     },
