@@ -72,6 +72,12 @@
   border-radius: 3px;
   margin: 0 auto;
   margin-top: 3vh;
+
+  svg {
+    fill: $grey-lighter;
+    height: 40px;
+    width: 40px;
+  }
 }
 
 .dataTypeTab {
