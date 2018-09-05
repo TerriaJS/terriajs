@@ -55,11 +55,45 @@ const MyDataTab = createReactClass({
             }
         ];
 
+        if (this.hasUserAddedData()) {
+            return (
+                <div className={Styles.dataTypeTab}>
+                    <div className={Styles.dndBox}>
+                        <ul className={Styles.tabList}>
+                            <For each="tab" of={tabs}>
+                                <li className={Styles.tabListItem} key={tab.id}>
+                                    <button
+                                        type="button"
+                                        onClick={this.changeTab.bind(
+                                            null,
+                                            tab.id
+                                        )}
+                                        className={classNames(
+                                            Styles.tabListBtn,
+                                            {
+                                                [Styles.isActive]:
+                                                    this.state.activeTab ===
+                                                    tab.id
+                                            }
+                                        )}
+                                    >
+                                        {tab.caption}
+                                    </button>
+                                </li>
+                            </For>
+                        </ul>
+                    </div>
+                </div>
+            );
+        }
+
         return (
-            <div>
+            <div className={Styles.dataTypeTab}>
                 <div>
-                    Drag and drop a file here to view it locally on the map (it
-                    won’t be saved or uploaded to the internet)
+                    <div>
+                        Drag and drop a file here to view it locally on the map
+                    </div>
+                    <div>(it won’t be saved or uploaded to the internet)</div>
                 </div>
                 <ul className={Styles.tabList}>
                     <For each="tab" of={tabs}>
@@ -77,16 +111,19 @@ const MyDataTab = createReactClass({
                         </li>
                     </For>
                 </ul>
+                <div className={Styles.dndBox} />
             </div>
         );
     },
 
     render() {
+        const showTwoColumn = this.hasUserAddedData() & !this.state.activeTab;
         return (
             <div className={Styles.root}>
                 <div
                     className={classNames({
-                        [Styles.leftCol]: !this.state.activeTab
+                        [Styles.leftCol]: showTwoColumn,
+                        [Styles.oneCol]: !showTwoColumn
                     })}
                 >
                     <If condition={this.state.activeTab}>
@@ -104,14 +141,10 @@ const MyDataTab = createReactClass({
                             resetTab={this.resetTab}
                         />
                     </If>
-                    <If
-                        condition={
-                            this.hasUserAddedData() & !this.state.activeTab
-                        }
-                    >
+                    <If condition={showTwoColumn}>
                         <div className={Styles.addedData}>
                             <p className={Styles.explanation}>
-                                <strong>Note</strong>Data added in this way is
+                                <strong>Note: </strong>Data added in this way is
                                 not saved or made visible to others unless you
                                 explicitly share it by using the Share panel.
                             </p>
@@ -127,12 +160,10 @@ const MyDataTab = createReactClass({
                         </div>
                     </If>
                     <If condition={!this.state.activeTab}>
-                        <div className={Styles.addedData}>
-                            {this.renderTabs()}
-                        </div>
+                        {this.renderTabs()}
                     </If>
                 </div>
-                <If condition={!this.state.activeTab}>
+                <If condition={showTwoColumn}>
                     <DataPreview
                         terria={this.props.terria}
                         viewState={this.props.viewState}

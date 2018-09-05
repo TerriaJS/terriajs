@@ -20,7 +20,7 @@ describe('DataCatalog', function() {
         });
     });
 
-    it('does not show the user-added data group', function() {
+    it('does not show the My Data group', function() {
         const someGroup = new CatalogGroup(terria);
         someGroup.name = 'Some Group';
         terria.catalog.userAddedDataGroup.add(someGroup);
@@ -36,7 +36,7 @@ describe('DataCatalog', function() {
         let foundAnotherGroup = false;
         memberComponents.forEach(member => {
             expect(member.props.member).not.toBe(terria.catalog.userAddedDataGroup);
-            expect(member.props.member.name).not.toEqual('User-Added Data');
+            expect(member.props.member.name).not.toEqual('My Data');
             foundAnotherGroup = foundAnotherGroup || member.props.member === anotherGroup;
         });
 
