@@ -35,7 +35,6 @@ const AddData = createReactClass({
         return {
             localDataType: localDataType[0], // By default select the first item (auto)
             remoteDataType: remoteDataType[0],
-            activeTab: "local", // By default local data tab is active
             remoteUrl: "" // By default there's no remote url
         };
     },
@@ -52,13 +51,9 @@ const AddData = createReactClass({
         });
     },
 
-    changeTab(active) {
-        this.setState({
-            activeTab: active
-        });
-    },
-
     handleUploadFile(e) {
+        // reset active tab when file handling is done
+        this.props.resetTab();
         addUserFiles(
             e.target.files,
             this.props.terria,
@@ -72,6 +67,7 @@ const AddData = createReactClass({
     },
 
     handleUrl(e) {
+        this.props.resetTab();
         const url = this.state.remoteUrl;
         e.preventDefault();
         this.props.terria.analytics.logEvent("addDataUrl", url);
@@ -131,34 +127,11 @@ const AddData = createReactClass({
 
         return (
             <div className={Styles.tabPanels}>
-                <label className={Styles.label}>Add local data file:</label>
-                <FileInput
-                    accept={dataTypes.join(",")}
-                    onChange={this.handleUploadFile}
-                />
-
-                <form className={Styles.urlInput}>
-                    <label className={Styles.label}>
-                        Add hosted file or web service [URL]:
-                    </label>
-                    <input
-                        value={this.state.remoteUrl}
-                        onChange={this.onRemoteUrlChange}
-                        className={Styles.urlInputTextBox}
-                        type="text"
-                        placeholder="e.g. http://data.gov.au/geoserver/wms"
-                    />
-                    <button
-                        type="submit"
-                        onClick={this.handleUrl}
-                        className={Styles.urlInputBtn}
-                    >
-                        Add
-                    </button>
-                </form>
-                <If condition={this.state.activeTab === "local"}>
+                <If condition={this.props.activeTab === "local"}>
                     <section className={Styles.tabPanel}>
-                        <label className={Styles.label}>Settings</label>
+                        <label className={Styles.label}>
+                            <strong>Step 1:</strong> Select type of file to add:{" "}
+                        </label>
                         <Dropdown
                             options={localDataType}
                             selected={this.state.localDataType}
@@ -166,11 +139,21 @@ const AddData = createReactClass({
                             matchWidth={true}
                             theme={dropdownTheme}
                         />
+                        <label className={Styles.label}>
+                            <strong>Step 2:</strong> Select a local data file to
+                            add:
+                        </label>
+                        <FileInput
+                            accept={dataTypes.join(",")}
+                            onChange={this.handleUploadFile}
+                        />
                     </section>
                 </If>
-                <If condition={this.state.activeTab === "web"}>
+                <If condition={this.props.activeTab === "web"}>
                     <section className={Styles.tabPanel}>
-                        <label className={Styles.label}>Settings</label>
+                        <label className={Styles.label}>
+                            <strong>Step 1:</strong> Select type of file to add:{" "}
+                        </label>
                         <Dropdown
                             options={remoteDataType}
                             selected={this.state.remoteDataType}
@@ -178,6 +161,26 @@ const AddData = createReactClass({
                             matchWidth={true}
                             theme={dropdownTheme}
                         />
+                        <label className={Styles.label}>
+                            <strong>Step 2:</strong> Enter the URL of the data
+                            file or web service:
+                        </label>
+                        <form className={Styles.urlInput}>
+                            <input
+                                value={this.state.remoteUrl}
+                                onChange={this.onRemoteUrlChange}
+                                className={Styles.urlInputTextBox}
+                                type="text"
+                                placeholder="e.g. http://data.gov.au/geoserver/wms"
+                            />
+                            <button
+                                type="submit"
+                                onClick={this.handleUrl}
+                                className={Styles.urlInputBtn}
+                            >
+                                Add
+                            </button>
+                        </form>
                     </section>
                 </If>
             </div>

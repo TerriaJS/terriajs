@@ -1,27 +1,25 @@
-@import '~terriajs-variables';
-@import '../../../../Sass/common/mixins';
+@import "~terriajs-variables";
+@import "../../../../Sass/common/mixins";
 
 .root {
   height: 100%;
 }
 
 .data-catalog {
-  composes: list-reset from '../../../../Sass/common/_base.scss';
+  composes: list-reset from "../../../../Sass/common/_base.scss";
 }
 
 .left-col {
-  composes: tab-left-col from '../../tabs.scss';
+  composes: tab-left-col from "../../tabs.scss";
 
   overflow-y: hidden;
 }
 
-.added-data{
-  composes: scrollbars from '../../../../Sass/common/_base.scss';
+.added-data {
+  composes: scrollbars from "../../../../Sass/common/_base.scss";
 
   padding: $padding;
-  height: 100%;
   overflow: hidden;
-  overflow-y: auto;
   background: $modal-secondary-bg;
 }
 
@@ -30,31 +28,29 @@
   font-size: $font-size-mid-small;
 }
 
-.btn--back-to-my-data{
-  composes: btn from '../../../../Sass/common/_buttons.scss';
-  composes: btn-small from '../../../../Sass/common/_buttons.scss';
-  composes: btn--left from '../../../../Sass/common/_buttons.scss';
-  composes: btn-transparent from '../../../../Sass/common/_buttons.scss';
+.btn--back-to-my-data {
+  composes: btn from "../../../../Sass/common/_buttons.scss";
+  composes: btn-small from "../../../../Sass/common/_buttons.scss";
+  composes: btn--left from "../../../../Sass/common/_buttons.scss";
+  composes: btn-transparent from "../../../../Sass/common/_buttons.scss";
 
   position: relative;
-  padding-left: $padding*2;
+  padding-left: $padding * 2;
 
-  &:before{
+  &:before {
     position: absolute;
     left: 0;
   }
 }
 
-.btn--add-more-data{
-  composes: btn from '../../../../Sass/common/_buttons.scss';
-  composes: btn-transparent from '../../../../Sass/common/_buttons.scss';
-  composes: btn-primary from '../../../../Sass/common/_buttons.scss';
+.btn--add-more-data {
+  composes: btn from "../../../../Sass/common/_buttons.scss";
+  composes: btn-transparent from "../../../../Sass/common/_buttons.scss";
+  composes: btn-primary from "../../../../Sass/common/_buttons.scss";
   margin-top: $padding;
 }
 
 .h3 {
-  composes: h3 from '../../../../Sass/common/_base.scss';
+  composes: h3 from "../../../../Sass/common/_base.scss";
   font-size: $font-size-mid-large;
 }
-
-
