@@ -158,6 +158,7 @@ const StandardUserInterface = createReactClass({
                                     viewState={this.props.viewState}
                                     minified={false}
                                     btnText="Show workbench"
+                                    animationDuration={250}
                                 />
                             </div>
                         </Medium>

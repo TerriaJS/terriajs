@@ -85,6 +85,7 @@ const SidePanel = createReactClass({
                         terria={this.props.terria}
                         viewState={this.props.viewState}
                         minified={true}
+                        animationDuration={250}
                     />
                     <SearchBox
                         onSearchTextChanged={this.changeSearchText}
