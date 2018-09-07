@@ -72,11 +72,16 @@
   border-radius: 3px;
   margin: 0 auto;
   margin-top: 3vh;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
 
   svg {
     fill: $grey-lighter;
-    height: 40px;
-    width: 40px;
+    height: 10%;
+    margin: 0 auto;
+    width: 10%;
+    margin: 0 auto;
   }
 }
 
