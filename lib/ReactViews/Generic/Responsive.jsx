@@ -34,14 +34,15 @@ export function ExtraLarge(props) {
 ExtraSmall.propTypes = {
     children: PropTypes.element
 };
-
 Small.propTypes = {
     children: PropTypes.element
 };
-
 Medium.propTypes = {
     children: PropTypes.element
 };
 Large.propTypes = {
+    children: PropTypes.element
+};
+ExtraLarge.propTypes = {
     children: PropTypes.element
 };
