@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 // This should come from some config some where
 const small = 768;
 const medium = 992;
-const large = 1200;
+const large = 1300;
 
 export function ExtraSmall(props) {
     return <MediaQuery maxWidth={small}>{props.children}</MediaQuery>;

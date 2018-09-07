@@ -79,7 +79,7 @@ const FullScreenButton = createReactClass({
                     type="button"
                     onClick={this.toggleFullScreen}
                     className={btnClassName}
-                    title="Toggle full screen"
+                    title={this.props.viewState.isMapFullScreen ? 'Hide full screen' : 'Show full screen'}
                 >
                     {this.renderButtonText()}
                 </button>
