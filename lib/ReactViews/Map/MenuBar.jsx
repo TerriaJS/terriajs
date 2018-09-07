@@ -44,25 +44,15 @@ const MenuBar = createReactClass({
                         />
                     </li>
                     <li className={Styles.menuItem}>
-                        <SharePanel
-                            terria={this.props.terria}
-                            viewState={this.props.viewState}
-                        />
+                        <SharePanel terria={this.props.terria}
+                                    viewState={this.props.viewState}/>
                     </li>
-                    {enableTools && (
-                        <li className={Styles.menuItem}>
-                            <ToolsPanel
-                                terria={this.props.terria}
-                                viewState={this.props.viewState}
-                            />
-                        </li>
-                    )}
-                    <If
-                        condition={
-                            !this.props.viewState.useSmallScreenInterface
-                        }
-                    >
-                        <For each='element' of={this.props.menuItems} index='i'>
+                    {enableTools && <li className={Styles.menuItem}>
+                        <ToolsPanel terria={this.props.terria}
+                                    viewState={this.props.viewState}/>
+                    </li>}
+                    <If condition={!this.props.viewState.useSmallScreenInterface}>
+                        <For each="element" of={this.props.menuItems} index="i">
                             <li className={Styles.menuItem} key={i}>
                                 {element}
                             </li>
