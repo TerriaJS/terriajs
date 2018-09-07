@@ -20,7 +20,8 @@ terriamap:
             "githubusercontent.com",
             "gov",
             "gov.uk",
-            "gov.nz"
+            "gov.nz",
+            "sample.aero3dpro.com.au"
         ]
         initPaths:
         - "/etc/config/client"

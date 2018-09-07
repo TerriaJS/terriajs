@@ -3,10 +3,29 @@
 Change Log
 ==========
 
+### Next release
+
+* When clicking a `Split` button on the workbench, the new catalog item will no longer be attached to the timeline even if the original was. This avoids a confusing situation where both catalog items would be locked to the same time.
+* Added KMZ to the whitelisted formats for `MagdaCatalogItem`.
+* Fixed a bug that caused a crash when switching to 2D with vector data already on the map, including when visiting a share link with vector data when the map ends up being 2D.
+* The "Hide Workbench" button is now attached to the side of the Workbench, instead of on the opposite side of the screen from it.
+
+### v6.1.2
+
+* Fixed a bug that prevented `BingMapsSearchProviderViewModel` and other uses of `loadJsonp` from working correctly.
+
+### v6.1.1
+
+* Upgraded to terriajs-server v2.7.4.
+
 ### v6.1.0
 
 * The previous default terrain provider, STK World Terrain, has been deprecated by its provider. *To continue using terrain in your deployed applications, you _must_ obtain a Cesium Ion key and add it to `config.json`*. See https://cesium.com/ to create an Ion account. New options are available in `config.json` to configure terrain from Cesium Ion or from another source. See https://terria.io/Documentation/guide/customizing/client-side-config/#parameters for configuration details.
 * Upgraded to Cesium v1.48.
+* Added `Cesium3DTilesCatalogItem` for visualizing [Cesium 3D Tiles](https://github.com/AnalyticalGraphicsInc/3d-tiles) datasets.
+* Added `IonImageryCatalogItem` for accessing imagery assets on [Cesium Ion](https://cesium.com/).
+* Added support for Cesium Ion terrain assets to `CesiumTerrainProvider`. To use an asset from Ion, specify the `ionAssetId` and optionally the `ionAccessToken` and `ionServer` properties instead of specifying a `url`.
+* Fixed a bug that could cause legends to be missing from `WebMapServiceCatalogItems` that had `isEnabled` set to true.
 
 ### v6.0.5
 
