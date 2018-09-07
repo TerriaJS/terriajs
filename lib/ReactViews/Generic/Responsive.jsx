@@ -21,9 +21,13 @@ export function Medium(props) {
 
 export function Large(props) {
     return (
-        <MediaQuery minWidth={large} component="div">
-            {props.children}
-        </MediaQuery>
+        <MediaQuery minWidth={medium}>{props.children}</MediaQuery>
+    );
+}
+
+export function ExtraLarge(props) {
+    return (
+        <MediaQuery minWidth={large}>{props.children}</MediaQuery>
     );
 }
 
