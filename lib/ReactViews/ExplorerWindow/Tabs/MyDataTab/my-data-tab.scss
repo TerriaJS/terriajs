@@ -8,11 +8,17 @@
 
 .data-catalog {
   composes: list-reset from "../../../../Sass/common/_base.scss";
+  border-top: 1px solid $grey-lighter;
+  border-bottom: 1px solid $grey-lighter;
 }
 
 .left-col {
   composes: tab-left-col from "../../tabs.scss";
-  overflow-y: hidden;
+  composes: scrollbars from "../../../../Sass/common/_base.scss";
+  overflow-y: auto;
+  background: #ffffff;
+  border-right: 1px solid $grey-lighter;
+  padding-right: 0;
 }
 
 .oneCol {
@@ -66,8 +72,9 @@
 }
 
 .dndBox {
-  border: 2px dashed rgba($dark-lighter, 0.5);
+  border: 2px dashed $grey-lighter;
   flex-grow: 1;
+  min-height: 150px;
   width: 80%;
   border-radius: 3px;
   margin: 0 auto;
@@ -75,26 +82,33 @@
   display: flex;
   justify-content: center;
   flex-direction: column;
+  text-align: center;
+  color: $grey-lighter;
+  background: #f6f6f7;
+
+  div{
+    margin-top: 5%;
+  }
 
   svg {
     fill: $grey-lighter;
-    height: 10%;
-    margin: 0 auto;
-    width: 10%;
-    margin: 0 auto;
+    height: 15%;
+    width: 15%;
+    margin: 5% auto;
   }
 }
 
 .dataTypeTab {
   width: 100%;
-  height: calc(100% - 180px);
   display: flex;
-  flex-direction: column;
+  flex-direction:column;
 }
 
 .explanation {
   font-family: $font-base;
   font-size: $font-size-mid-small;
+  margin: $padding;
+
 }
 
 .btn--back-to-my-data {

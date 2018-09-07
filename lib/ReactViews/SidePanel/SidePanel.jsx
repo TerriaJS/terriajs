@@ -104,7 +104,7 @@ const SidePanel = createReactClass({
                             onClick={this.onAddLocalDataClicked}
                             className={Styles.uploadData}
                         >
-                            <Icon glyph={Icon.GLYPHS.add} />
+                            <Icon glyph={Icon.GLYPHS.upload} />
                         </button>
                     </div>
                 </div>

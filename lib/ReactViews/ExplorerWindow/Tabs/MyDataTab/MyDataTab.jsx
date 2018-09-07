@@ -43,43 +43,44 @@ const MyDataTab = createReactClass({
         });
     },
 
-    renderTabs() {
-        const tabs = [
-            {
-                id: "local",
-                caption: "Add Local Data"
-            },
-            {
-                id: "web",
-                caption: "Add Web Data"
-            }
-        ];
+    renderTabs(){
+      const tabs = [
+          {
+              id: "local",
+              caption: "Add Local Data"
+          },
+          {
+              id: "web",
+              caption: "Add Web Data"
+          }
+      ];
+      return (
+          <ul className={Styles.tabList}>
+              <For each="tab" of={tabs}>
+                  <li className={Styles.tabListItem} key={tab.id}>
+                      <button
+                          type="button"
+                          onClick={this.changeTab.bind(null, tab.id)}
+                          className={classNames(Styles.tabListBtn, {
+                              [Styles.isActive]:
+                                  this.state.activeTab === tab.id
+                          })}
+                      >
+                          {tab.caption}
+                      </button>
+                  </li>
+              </For>
+          </ul>
+      );
+    },
 
-        const tabsContent = (
-            <ul className={Styles.tabList}>
-                <For each="tab" of={tabs}>
-                    <li className={Styles.tabListItem} key={tab.id}>
-                        <button
-                            type="button"
-                            onClick={this.changeTab.bind(null, tab.id)}
-                            className={classNames(Styles.tabListBtn, {
-                                [Styles.isActive]:
-                                    this.state.activeTab === tab.id
-                            })}
-                        >
-                            {tab.caption}
-                        </button>
-                    </li>
-                </For>
-            </ul>
-        );
-
+    renderPromptBox() {
         if (this.hasUserAddedData()) {
             return (
                 <div className={Styles.dataTypeTab}>
                     <div className={Styles.dndBox}>
                         <Icon glyph={Icon.GLYPHS.upload} />
-                        {tabsContent}
+
                     </div>
                 </div>
             );
@@ -93,9 +94,9 @@ const MyDataTab = createReactClass({
                     </div>
                     <div>(it won’t be saved or uploaded to the internet)</div>
                 </div>
-                {tabsContent}
                 <div className={Styles.dndBox}>
                     <Icon glyph={Icon.GLYPHS.upload} />
+                    {this.renderTabs()}
                 </div>
             </div>
         );
@@ -133,6 +134,8 @@ const MyDataTab = createReactClass({
                                 not saved or made visible to others unless you
                                 explicitly share it by using the Share panel.
                             </p>
+                            {this.renderTabs()}
+
                             <ul className={Styles.dataCatalog}>
                                 <DataCatalogGroup
                                     group={
@@ -145,7 +148,7 @@ const MyDataTab = createReactClass({
                         </div>
                     </If>
                     <If condition={!this.state.activeTab}>
-                        {this.renderTabs()}
+                        {this.renderPromptBox()}
                     </If>
                 </div>
                 <If condition={showTwoColumn}>

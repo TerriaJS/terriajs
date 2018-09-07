@@ -31,14 +31,17 @@ const DataCatalogItem = createReactClass({
     onBtnClicked(event) {
         if (defined(this.props.item.invoke) || this.props.viewState.useSmallScreenInterface) {
             this.setPreviewedItem();
+        }
+        if (this.props.item.isUserSupplied) {
+            this.props.item.removeUserAddedData();
         } else {
             this.toggleEnable(event);
         }
     },
 
+
     toggleEnable(event) {
         this.props.item.toggleEnabled();
-
         // set preview as well
         this.setPreviewedItem();
 
@@ -67,6 +70,7 @@ const DataCatalogItem = createReactClass({
 
     render() {
         const item = this.props.item;
+        console.log(this.getState())
         return (
             <CatalogItem
                 onTextClick={this.setPreviewedItem}
@@ -85,10 +89,14 @@ const DataCatalogItem = createReactClass({
             return 'loading';
         } else if (this.props.viewState.useSmallScreenInterface) {
             return 'preview';
+        }else if (this.props.item.isUserSupplied) {
+            return 'trash';
         } else if (this.props.item.isEnabled) {
             return 'remove';
         } else if (!defined(this.props.item.invoke)) {
             return 'add';
+        } else if (!defined(this.props.item.isUserSupplied)) {
+            return 'trash';
         } else {
             return 'stats';
         }
