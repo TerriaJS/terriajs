@@ -1,6 +1,6 @@
-import React from "react";
-import MediaQuery from "react-responsive";
-import PropTypes from "prop-types";
+import React from 'react';
+import MediaQuery from 'react-responsive';
+import PropTypes from 'prop-types';
 
 // This should come from some config some where
 const small = 768;

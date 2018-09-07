@@ -1,16 +1,16 @@
-"use strict";
-const React = require("react");
-const createReactClass = require("create-react-class");
-const PropTypes = require("prop-types");
-import ObserveModelMixin from "../ObserveModelMixin";
-import triggerResize from "../../Core/triggerResize";
-import Styles from "./full_screen_button.scss";
-import classNames from "classnames";
-import Icon from "../Icon.jsx";
+'use strict';
+const React = require('react');
+const createReactClass = require('create-react-class');
+const PropTypes = require('prop-types');
+import ObserveModelMixin from '../ObserveModelMixin';
+import triggerResize from '../../Core/triggerResize';
+import Styles from './full_screen_button.scss';
+import classNames from 'classnames';
+import Icon from '../Icon.jsx';
 
 // The button to make the map full screen and hide the workbench.
 const FullScreenButton = createReactClass({
-    displayName: "FullScreenButton",
+    displayName: 'FullScreenButton',
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -40,9 +40,9 @@ const FullScreenButton = createReactClass({
 
         // log a GA event
         this.props.terria.analytics.logEvent(
-            "toggle full screen",
-            this.props.viewState.isMapFullScreen ? "exit" : "enter",
-            "fullScreen"
+            'toggle full screen',
+            this.props.viewState.isMapFullScreen ? 'exit' : 'enter',
+            'fullScreen'
         );
     },
 
@@ -76,7 +76,7 @@ const FullScreenButton = createReactClass({
                 })}
             >
                 <button
-                    type="button"
+                    type='button'
                     onClick={this.toggleFullScreen}
                     className={btnClassName}
                     title={this.props.viewState.isMapFullScreen ? 'Show Workbench' : 'Hide Workbench'}
