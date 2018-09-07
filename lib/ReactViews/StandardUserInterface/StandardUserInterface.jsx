@@ -1,33 +1,33 @@
-import React from "react";
-import createReactClass from "create-react-class";
-import PropTypes from "prop-types";
-import arrayContains from "../../Core/arrayContains";
-import Branding from "./../SidePanel/Branding.jsx";
-import DragDropFile from "./../DragDropFile.jsx";
-import ExplorerWindow from "./../ExplorerWindow/ExplorerWindow.jsx";
-import FeatureInfoPanel from "./../FeatureInfo/FeatureInfoPanel.jsx";
-import FeedbackForm from "../Feedback/FeedbackForm.jsx";
-import MapColumn from "./MapColumn.jsx";
-import MapInteractionWindow from "./../Notification/MapInteractionWindow.jsx";
-import MapNavigation from "./../Map/MapNavigation.jsx";
-import MenuBar from "./../Map/MenuBar.jsx";
-import ExperimentalFeatures from "./../Map/ExperimentalFeatures.jsx";
-import MobileHeader from "./../Mobile/MobileHeader.jsx";
-import Notification from "./../Notification/Notification.jsx";
-import ObserveModelMixin from "./../ObserveModelMixin";
-import ProgressBar from "../Map/ProgressBar.jsx";
-import SidePanel from "./../SidePanel/SidePanel.jsx";
-import processCustomElements from "./processCustomElements";
-import FullScreenButton from "./../SidePanel/FullScreenButton.jsx";
-import { Small, Medium } from "../Generic/Responsive";
-import classNames from "classnames";
-import "inobounce";
+import React from 'react';
+import createReactClass from 'create-react-class';
+import PropTypes from 'prop-types';
+import arrayContains from '../../Core/arrayContains';
+import Branding from './../SidePanel/Branding.jsx';
+import DragDropFile from './../DragDropFile.jsx';
+import ExplorerWindow from './../ExplorerWindow/ExplorerWindow.jsx';
+import FeatureInfoPanel from './../FeatureInfo/FeatureInfoPanel.jsx';
+import FeedbackForm from '../Feedback/FeedbackForm.jsx';
+import MapColumn from './MapColumn.jsx';
+import MapInteractionWindow from './../Notification/MapInteractionWindow.jsx';
+import MapNavigation from './../Map/MapNavigation.jsx';
+import MenuBar from './../Map/MenuBar.jsx';
+import ExperimentalFeatures from './../Map/ExperimentalFeatures.jsx';
+import MobileHeader from './../Mobile/MobileHeader.jsx';
+import Notification from './../Notification/Notification.jsx';
+import ObserveModelMixin from './../ObserveModelMixin';
+import ProgressBar from '../Map/ProgressBar.jsx';
+import SidePanel from './../SidePanel/SidePanel.jsx';
+import processCustomElements from './processCustomElements';
+import FullScreenButton from './../SidePanel/FullScreenButton.jsx';
+import { Small, Medium } from '../Generic/Responsive';
+import classNames from 'classnames';
+import 'inobounce';
 
-import Styles from "./standard-user-interface.scss";
+import Styles from './standard-user-interface.scss';
 
 /** blah */
 const StandardUserInterface = createReactClass({
-    displayName: "StandardUserInterface",
+    displayName: 'StandardUserInterface',
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -63,7 +63,7 @@ const StandardUserInterface = createReactClass({
             }
             e.preventDefault();
             e.stopPropagation();
-            e.dataTransfer.dropEffect = "copy";
+            e.dataTransfer.dropEffect = 'copy';
             that.acceptDragDropFile();
         };
 
@@ -71,7 +71,7 @@ const StandardUserInterface = createReactClass({
             this.props.viewState.useSmallScreenInterface = this.shouldUseMobileInterface();
         };
 
-        window.addEventListener("resize", this.resizeListener, false);
+        window.addEventListener('resize', this.resizeListener, false);
 
         this.resizeListener();
     },
@@ -81,8 +81,8 @@ const StandardUserInterface = createReactClass({
     },
 
     componentWillUnmount() {
-        window.removeEventListener("resize", this.resizeListener, false);
-        document.removeEventListener("dragover", this.dragOverListener, false);
+        window.removeEventListener('resize', this.resizeListener, false);
+        document.removeEventListener('dragover', this.dragOverListener, false);
     },
 
     acceptDragDropFile() {
@@ -150,7 +150,7 @@ const StandardUserInterface = createReactClass({
                                     terria={this.props.terria}
                                     viewState={this.props.viewState}
                                     minified={false}
-                                    btnText="Show workbench"
+                                    btnText='Show workbench'
                                     animationDuration={250}
                                 />
                             </div>
