@@ -64,6 +64,7 @@
     "react-datepicker": "0.53.0",
     "react-dom": "^16.3.2",
     "react-rangeslider": "^2.0.0",
+    "react-responsive": "^5.0.0",
     "resolve": "^1.1.7",
     "resolve-url-loader": "^2.0.2",
     "sass-loader": "^6.0.3",
