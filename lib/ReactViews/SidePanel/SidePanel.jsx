@@ -41,11 +41,9 @@ const SidePanel = createReactClass({
         this.unsubscribeFromProps();
 
         // Close the search results when the Now Viewing changes (so that it's visible).
-        this._nowViewingChangeSubscription = knockout
-            .getObservable(this.props.terria.nowViewing, 'items')
-            .subscribe(() => {
-                this.props.viewState.searchState.showLocationSearchResults = false;
-            });
+        this._nowViewingChangeSubscription = knockout.getObservable(this.props.terria.nowViewing, 'items').subscribe(() => {
+            this.props.viewState.searchState.showLocationSearchResults = false;
+        });
     },
 
     unsubscribeFromProps() {
@@ -106,30 +104,16 @@ const SidePanel = createReactClass({
                 </div>
                 <div className={Styles.body}>
                     <Choose>
-                        <When
-                            condition={
-                                searchState.locationSearchText.length > 0 &&
-                                searchState.showLocationSearchResults
-                            }
-                        >
+                        <When condition={searchState.locationSearchText.length > 0 && searchState.showLocationSearchResults}>
                             <SidebarSearch
                                 terria={this.props.terria}
                                 viewState={this.props.viewState}
-                                isWaitingForSearchToStart={
-                                    searchState.isWaitingToStartLocationSearch
-                                }
+                                isWaitingForSearchToStart={searchState.isWaitingToStartLocationSearch} />
                             />
                         </When>
                         <When
-                            condition={
-                                this.props.terria.nowViewing.items &&
-                                this.props.terria.nowViewing.items.length > 0
-                            }
-                        >
-                            <Workbench
-                                viewState={this.props.viewState}
-                                terria={this.props.terria}
-                            />
+                        condition={this.props.terria.nowViewing.items && this.props.terria.nowViewing.items.length > 0}>
+                        <Workbench viewState={this.props.viewState} terria={this.props.terria} />
                         </When>
                         <Otherwise>
                             <div className={Styles.workbenchEmpty}>

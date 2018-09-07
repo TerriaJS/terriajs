@@ -58,10 +58,7 @@ const StandardUserInterface = createReactClass({
     UNSAFE_componentWillMount() {
         const that = this;
         this.dragOverListener = e => {
-            if (
-                !e.dataTransfer.types ||
-                !arrayContains(e.dataTransfer.types, "Files")
-            ) {
+            if (!e.dataTransfer.types || !arrayContains(e.dataTransfer.types, 'Files')) {
                 return;
             }
             e.preventDefault();
@@ -80,11 +77,7 @@ const StandardUserInterface = createReactClass({
     },
 
     componentDidMount() {
-        this._wrapper.addEventListener(
-            "dragover",
-            this.dragOverListener,
-            false
-        );
+        this._wrapper.addEventListener('dragover', this.dragOverListener, false);
     },
 
     componentWillUnmount() {
@@ -207,40 +200,29 @@ const StandardUserInterface = createReactClass({
                             allBaseMaps={allBaseMaps}
                             menuItems={customElements.menu}
                         />
-                        <MapNavigation
-                            terria={terria}
-                            viewState={this.props.viewState}
-                            navItems={customElements.nav}
+                        <MapNavigation terria={terria}
+                                       viewState={this.props.viewState}
+                                       navItems={customElements.nav}
                         />
                     </div>
                 </If>
 
-                <Notification viewState={this.props.viewState} />
-                <MapInteractionWindow
-                    terria={terria}
-                    viewState={this.props.viewState}
-                />
+                <Notification viewState={this.props.viewState}/>
+                <MapInteractionWindow terria={terria} viewState={this.props.viewState}/>
 
-                <If
-                    condition={
-                        this.props.terria.configParameters.feedbackUrl &&
-                        !this.props.viewState.hideMapUi()
-                    }
-                >
+                <If condition={this.props.terria.configParameters.feedbackUrl && !this.props.viewState.hideMapUi()}>
                     <aside className={Styles.feedback}>
                         <FeedbackForm viewState={this.props.viewState} />
                     </aside>
                 </If>
 
                 <div className={Styles.featureInfo}>
-                    <FeatureInfoPanel
-                        terria={terria}
-                        viewState={this.props.viewState}
+                    <FeatureInfoPanel terria={terria}
+                                  viewState={this.props.viewState}
                     />
                 </div>
-                <DragDropFile
-                    terria={this.props.terria}
-                    viewState={this.props.viewState}
+                <DragDropFile terria={this.props.terria}
+                              viewState={this.props.viewState}
                 />
             </div>
         );
