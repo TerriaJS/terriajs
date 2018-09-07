@@ -1,5 +1,5 @@
-@import "~terriajs-variables";
-@import "../../Sass/common/mixins";
+@import '~terriajs-variables';
+@import '../../Sass/common/mixins';
 
 .full-screen {
   position: absolute;
@@ -12,8 +12,8 @@
 }
 
 .btn {
-  composes: btn from "../../Sass/common/_buttons.scss";
-  composes: btn--map from "../../Sass/common/_buttons.scss";
+  composes: btn from '../../Sass/common/_buttons.scss';
+  composes: btn--map from '../../Sass/common/_buttons.scss';
   display: flex;
   background: $color-primary;
   border-radius: 3px;

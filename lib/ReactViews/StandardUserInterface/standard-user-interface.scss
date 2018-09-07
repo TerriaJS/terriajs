@@ -1,5 +1,5 @@
-@import "~terriajs-variables";
-@import "../../Sass/common/mixins";
+@import '~terriajs-variables';
+@import '../../Sass/common/mixins';
 
 // NOTE: When changing this file with hot-reloading on you might see the globe in the map disappear. Don't panic! This
 // happens because losing this stylesheet for a second causes Cesium to zoom itself as far out as it can go for some
