@@ -12,11 +12,11 @@ export function ExtraSmall(props) {
 }
 
 export function Small(props) {
-    return <MediaQuery maxWidth={medium - 1}>{props.children}</MediaQuery>;
+    return <MediaQuery maxWidth={small - 1}>{props.children}</MediaQuery>;
 }
 
 export function Medium(props) {
-    return <MediaQuery minWidth={medium}>{props.children}</MediaQuery>;
+    return <MediaQuery minWidth={small}>{props.children}</MediaQuery>;
 }
 
 export function Large(props) {
