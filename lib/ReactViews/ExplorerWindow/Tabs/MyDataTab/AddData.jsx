@@ -1,18 +1,18 @@
-import React from "react";
-import createReactClass from "create-react-class";
-import PropTypes from "prop-types";
-import classNames from "classnames";
-import Icon from "../../../Icon.jsx";
-import addUserCatalogMember from "../../../../Models/addUserCatalogMember";
-import createCatalogItemFromFileOrUrl from "../../../../Models/createCatalogItemFromFileOrUrl";
-import createCatalogMemberFromType from "../../../../Models/createCatalogMemberFromType";
-import Dropdown from "../../../Generic/Dropdown";
-import FileInput from "./FileInput.jsx";
-import getDataType from "../../../../Core/getDataType";
-import ObserveModelMixin from "../../../ObserveModelMixin";
-import TerriaError from "../../../../Core/TerriaError";
-import addUserFiles from "../../../../Models/addUserFiles";
-import Styles from "./add-data.scss";
+import React from 'react';
+import createReactClass from 'create-react-class';
+import PropTypes from 'prop-types';
+import classNames from 'classnames';
+import Icon from '../../../Icon.jsx';
+import addUserCatalogMember from '../../../../Models/addUserCatalogMember';
+import createCatalogItemFromFileOrUrl from '../../../../Models/createCatalogItemFromFileOrUrl';
+import createCatalogMemberFromType from '../../../../Models/createCatalogMemberFromType';
+import Dropdown from '../../../Generic/Dropdown';
+import FileInput from './FileInput.jsx';
+import getDataType from '../../../../Core/getDataType';
+import ObserveModelMixin from '../../../ObserveModelMixin';
+import TerriaError from '../../../../Core/TerriaError';
+import addUserFiles from '../../../../Models/addUserFiles';
+import Styles from './add-data.scss';
 
 // Local and remote data have different dataType options
 const remoteDataType = getDataType().remoteDataType;
@@ -22,7 +22,7 @@ const localDataType = getDataType().localDataType;
  * Add data panel in modal window -> My data tab
  */
 const AddData = createReactClass({
-    displayName: "AddData",
+    displayName: 'AddData',
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -34,7 +34,7 @@ const AddData = createReactClass({
         return {
             localDataType: localDataType[0], // By default select the first item (auto)
             remoteDataType: remoteDataType[0],
-            remoteUrl: "" // By default there's no remote url
+            remoteUrl: '' // By default there's no remote url
         };
     },
 
@@ -69,10 +69,10 @@ const AddData = createReactClass({
         this.props.resetTab();
         const url = this.state.remoteUrl;
         e.preventDefault();
-        this.props.terria.analytics.logEvent("addDataUrl", url);
+        this.props.terria.analytics.logEvent('addDataUrl', url);
         const that = this;
         let promise;
-        if (that.state.remoteDataType.value === "auto") {
+        if (that.state.remoteDataType.value === 'auto') {
             promise = loadFile(that);
         } else {
             const newItem = createCatalogMemberFromType(
@@ -117,7 +117,7 @@ const AddData = createReactClass({
         ) {
             if (currentDataType.extensions) {
                 return result.concat(
-                    currentDataType.extensions.map(extension => "." + extension)
+                    currentDataType.extensions.map(extension => '.' + extension)
                 );
             } else {
                 return result;
@@ -127,7 +127,7 @@ const AddData = createReactClass({
 
         return (
             <div className={Styles.tabPanels}>
-                <If condition={this.props.activeTab === "local"}>
+                <If condition={this.props.activeTab === 'local'}>
                     <div className={Styles.tabHeading}>Add local file</div>
                     <section className={Styles.tabPanel}>
                         <label className={Styles.label}>
@@ -144,12 +144,12 @@ const AddData = createReactClass({
                             <strong>Step 2:</strong> Select file
                         </label>
                         <FileInput
-                            accept={dataTypes.join(",")}
+                            accept={dataTypes.join(',')}
                             onChange={this.handleUploadFile}
                         />
                     </section>
                 </If>
-                <If condition={this.props.activeTab === "web"}>
+                <If condition={this.props.activeTab === 'web'}>
                     <div className={Styles.tabHeading}>Add web data</div>
                     <section className={Styles.tabPanel}>
                         <label className={Styles.label}>
@@ -171,11 +171,11 @@ const AddData = createReactClass({
                                 value={this.state.remoteUrl}
                                 onChange={this.onRemoteUrlChange}
                                 className={Styles.urlInputTextBox}
-                                type="text"
-                                placeholder="e.g. http://data.gov.au/geoserver/wms"
+                                type='text'
+                                placeholder='e.g. http://data.gov.au/geoserver/wms'
                             />
                             <button
-                                type="submit"
+                                type='submit'
                                 onClick={this.handleUrl}
                                 className={Styles.urlInputBtn}
                             >
