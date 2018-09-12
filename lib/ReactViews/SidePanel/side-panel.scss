@@ -39,6 +39,9 @@
   composes: btn-primary from "../../Sass/common/_buttons.scss";
   margin-left: 5px;
   width: 45px;
+  svg{
+    fill: $text-light;
+  }
 }
 
 .button {
