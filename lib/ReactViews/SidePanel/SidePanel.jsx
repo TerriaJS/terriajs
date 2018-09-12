@@ -40,11 +40,9 @@ const SidePanel = createReactClass({
         this.unsubscribeFromProps();
 
         // Close the search results when the Now Viewing changes (so that it's visible).
-        this._nowViewingChangeSubscription = knockout
-            .getObservable(this.props.terria.nowViewing, 'items')
-            .subscribe(() => {
-                this.props.viewState.searchState.showLocationSearchResults = false;
-            });
+        this._nowViewingChangeSubscription = knockout.getObservable(this.props.terria.nowViewing, 'items').subscribe(() => {
+           this.props.viewState.searchState.showLocationSearchResults = false;
+        });
     },
 
     unsubscribeFromProps() {
@@ -101,12 +99,8 @@ const SidePanel = createReactClass({
 
                     />
                     <div className={Styles.addData}>
-                        <button
-                            type='button'
-                            onClick={this.onAddDataClicked}
-                            className={Styles.button}
-                        >
-                            <Icon glyph={Icon.GLYPHS.add} />Add data
+                        <button type='button' onClick={this.onAddDataClicked} className={Styles.button}>
+                            <Icon glyph={Icon.GLYPHS.add}/>Add data
                         </button>
                         <button
                             type='button'
@@ -119,19 +113,11 @@ const SidePanel = createReactClass({
                 </div>
                 <div className={Styles.body}>
                     <Choose>
-                        <When
-                            condition={
-                                searchState.locationSearchText.length > 0 &&
-                                searchState.showLocationSearchResults
-                            }
-                        >
+                        <When condition={searchState.locationSearchText.length > 0 && searchState.showLocationSearchResults}>
                             <SidebarSearch
                                 terria={this.props.terria}
                                 viewState={this.props.viewState}
-                                isWaitingForSearchToStart={
-                                    searchState.isWaitingToStartLocationSearch
-                                }
-                            />
+                                isWaitingForSearchToStart={searchState.isWaitingToStartLocationSearch} />
                         </When>
                         <When condition={this.props.terria.nowViewing.items && this.props.terria.nowViewing.items.length > 0}>
                             <Workbench viewState={this.props.viewState} terria={this.props.terria} />
@@ -148,14 +134,8 @@ const SidePanel = createReactClass({
                                     <li>Browse the Data Catalogue</li>
                                     <li>Load your own data onto the map</li>
                                 </ul>
-                                <p>
-                                    <Icon glyph={Icon.GLYPHS.bulb} />
-                                    <strong>TIP:</strong>{' '}
-                                    <em>
-                                        All your active data sets will be listed
-                                        here
-                                    </em>
-                                </p>
+                                <p><Icon glyph={Icon.GLYPHS.bulb}/><strong>TIP:</strong> <em>All your active data sets will be listed
+                                    here</em></p>
                             </div>
                         </Otherwise>
                     </Choose>

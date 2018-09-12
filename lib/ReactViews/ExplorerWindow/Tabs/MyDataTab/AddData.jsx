@@ -53,16 +53,12 @@ const AddData = createReactClass({
     handleUploadFile(e) {
         // reset active tab when file handling is done
         this.props.resetTab();
-        addUserFiles(
-            e.target.files,
-            this.props.terria,
-            this.props.viewState,
-            this.state.localDataType
-        ).then(addedCatalogItems => {
-            if (addedCatalogItems.length > 0) {
-                this.onFileAddFinished(addedCatalogItems[0]);
-            }
-        });
+        addUserFiles(e.target.files, this.props.terria, this.props.viewState, this.state.localDataType)
+            .then(addedCatalogItems => {
+                if (addedCatalogItems.length > 0) {
+                    this.onFileAddFinished(addedCatalogItems[0]);
+                }
+            });
     },
 
     handleUrl(e) {
@@ -75,10 +71,7 @@ const AddData = createReactClass({
         if (that.state.remoteDataType.value === 'auto') {
             promise = loadFile(that);
         } else {
-            const newItem = createCatalogMemberFromType(
-                that.state.remoteDataType.value,
-                that.props.terria
-            );
+            const newItem = createCatalogMemberFromType(that.state.remoteDataType.value, that.props.terria);
             newItem.name = that.state.remoteUrl;
             newItem.url = that.state.remoteUrl;
             promise = newItem.load().then(function() {
