@@ -1,22 +1,22 @@
-import React from "react";
+import React from 'react';
 
-import createReactClass from "create-react-class";
+import createReactClass from 'create-react-class';
 
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types';
 
-import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
+import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
+import ObserveModelMixin from '../ObserveModelMixin';
+import SearchBox from '../Search/SearchBox.jsx';
+import SidebarSearch from '../Search/SidebarSearch.jsx';
+import Workbench from '../Workbench/Workbench.jsx';
+import Icon from '../Icon.jsx';
+import FullScreenButton from './FullScreenButton.jsx';
+import { removeMarker } from '../../Models/LocationMarkerUtils';
 
-import ObserveModelMixin from "../ObserveModelMixin";
-import SearchBox from "../Search/SearchBox.jsx";
-import SidebarSearch from "../Search/SidebarSearch.jsx";
-import Workbench from "../Workbench/Workbench.jsx";
-import Icon from "../Icon.jsx";
-import { removeMarker } from "../../Models/LocationMarkerUtils";
-
-import Styles from "./side-panel.scss";
+import Styles from './side-panel.scss';
 
 const SidePanel = createReactClass({
-    displayName: "SidePanel",
+    displayName: 'SidePanel',
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -41,7 +41,7 @@ const SidePanel = createReactClass({
 
         // Close the search results when the Now Viewing changes (so that it's visible).
         this._nowViewingChangeSubscription = knockout
-            .getObservable(this.props.terria.nowViewing, "items")
+            .getObservable(this.props.terria.nowViewing, 'items')
             .subscribe(() => {
                 this.props.viewState.searchState.showLocationSearchResults = false;
             });
@@ -84,23 +84,32 @@ const SidePanel = createReactClass({
         return (
             <div className={Styles.workBench}>
                 <div className={Styles.header}>
+
+                    <FullScreenButton
+                        terria={this.props.terria}
+                        viewState={this.props.viewState}
+                        minified={true}
+                        animationDuration={250}
+                    />
+
                     <SearchBox
                         onSearchTextChanged={this.changeSearchText}
                         onDoSearch={this.search}
                         onFocus={this.startLocationSearch}
                         searchText={searchState.locationSearchText}
-                        placeholder="Search for locations"
+                        placeholder='Search for locations'
+
                     />
                     <div className={Styles.addData}>
                         <button
-                            type="button"
+                            type='button'
                             onClick={this.onAddDataClicked}
                             className={Styles.button}
                         >
                             <Icon glyph={Icon.GLYPHS.add} />Add data
                         </button>
                         <button
-                            type="button"
+                            type='button'
                             onClick={this.onAddLocalDataClicked}
                             className={Styles.uploadData}
                         >
@@ -124,16 +133,8 @@ const SidePanel = createReactClass({
                                 }
                             />
                         </When>
-                        <When
-                            condition={
-                                this.props.terria.nowViewing.items &&
-                                this.props.terria.nowViewing.items.length > 0
-                            }
-                        >
-                            <Workbench
-                                viewState={this.props.viewState}
-                                terria={this.props.terria}
-                            />
+                        <When condition={this.props.terria.nowViewing.items && this.props.terria.nowViewing.items.length > 0}>
+                            <Workbench viewState={this.props.viewState} terria={this.props.terria} />
                         </When>
                         <Otherwise>
                             <div className={Styles.workbenchEmpty}>
@@ -149,7 +150,7 @@ const SidePanel = createReactClass({
                                 </ul>
                                 <p>
                                     <Icon glyph={Icon.GLYPHS.bulb} />
-                                    <strong>TIP:</strong>{" "}
+                                    <strong>TIP:</strong>{' '}
                                     <em>
                                         All your active data sets will be listed
                                         here
