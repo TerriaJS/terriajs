@@ -9,6 +9,7 @@ Change Log
 * Added KMZ to the whitelisted formats for `MagdaCatalogItem`.
 * Fixed a bug that caused a crash when switching to 2D with vector data already on the map, including when visiting a share link with vector data when the map ends up being 2D.
 * The "Hide Workbench" button is now attached to the side of the Workbench, instead of on the opposite side of the screen from it.
+* Add simple WCS "clip and ship" functionality for WMS layers with corresponding a WCS endpoint and coverage.
 
 ### v6.1.2
 
