@@ -1,7 +1,6 @@
 import React from 'react';
 import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
 import Icon from '../../../Icon.jsx';
 import addUserCatalogMember from '../../../../Models/addUserCatalogMember';
 import createCatalogItemFromFileOrUrl from '../../../../Models/createCatalogItemFromFileOrUrl';
@@ -28,7 +27,9 @@ const AddData = createReactClass({
 
     propTypes: {
         terria: PropTypes.object,
-        viewState: PropTypes.object
+        viewState: PropTypes.object,
+        resetTab: PropTypes.func,
+        activeTab: PropTypes.string
     },
 
     getInitialState() {
@@ -55,7 +56,7 @@ const AddData = createReactClass({
     handleUploadFile(e) {
         this.setState({
           isLoading: true
-        })
+        });
         addUserFiles(e.target.files, this.props.terria, this.props.viewState, this.state.localDataType)
             .then(addedCatalogItems => {
                 if (addedCatalogItems.length > 0) {
@@ -63,7 +64,7 @@ const AddData = createReactClass({
                 }
                 this.setState({
                   isLoading: false
-                })
+                });
                 // reset active tab when file handling is done
                 this.props.resetTab();
         });
@@ -76,7 +77,7 @@ const AddData = createReactClass({
         const that = this;
         this.setState({
           isLoading: true
-        })
+        });
         let promise;
         if (that.state.remoteDataType.value === 'auto') {
             promise = loadFile(that);
@@ -94,7 +95,7 @@ const AddData = createReactClass({
             }
             this.setState({
               isLoading: false
-            })
+            });
             this.props.resetTab();
         });
     },

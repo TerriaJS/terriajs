@@ -43,7 +43,7 @@ const MyDataTab = createReactClass({
         });
     },
 
-    renderTabs(){
+    renderTabs() {
       const tabs = [
           {
               id: 'local',

@@ -18,7 +18,7 @@ const STATE_TO_ICONS = {
     loading: <Icon glyph={Icon.GLYPHS.loader}/>,
     remove: <Icon glyph={Icon.GLYPHS.remove}/>,
     add: <Icon glyph={Icon.GLYPHS.add}/>,
-    trash:<Icon glyph={Icon.GLYPHS.trashcan}/>,
+    trash: <Icon glyph={Icon.GLYPHS.trashcan}/>,
     stats: <Icon glyph={Icon.GLYPHS.barChart}/>,
     preview: <Icon glyph={Icon.GLYPHS.right}/>
 };

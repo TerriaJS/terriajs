@@ -29,7 +29,7 @@ const DataCatalogItem = createReactClass({
             this.setPreviewedItem();
         }
         if (this.props.item.isUserSupplied) {
-            if(this.props.item.parent){
+            if(this.props.item.parent) {
               const itemIndex = this.props.item.parent.items.indexOf(this.props.item);
               this.props.item.parent.items.splice(itemIndex, 1);
             }
@@ -37,7 +37,6 @@ const DataCatalogItem = createReactClass({
             this.toggleEnable(event);
         }
     },
-
 
     toggleEnable(event) {
         this.props.item.toggleEnabled();
