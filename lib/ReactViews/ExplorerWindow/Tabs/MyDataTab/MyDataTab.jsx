@@ -80,7 +80,6 @@ const MyDataTab = createReactClass({
                 <div className={Styles.dataTypeTab}>
                     <div className={Styles.dndBox}>
                         <Icon glyph={Icon.GLYPHS.upload} />
-
                     </div>
                 </div>
             );
@@ -93,10 +92,11 @@ const MyDataTab = createReactClass({
                         Drag and drop a file here to view it locally on the map
                     </div>
                     <div>(it won’t be saved or uploaded to the internet)</div>
+                    <div className={Styles.tabCenter}>{this.renderTabs()}</div>
                 </div>
                 <div className={Styles.dndBox}>
                     <Icon glyph={Icon.GLYPHS.upload} />
-                    {this.renderTabs()}
+
                 </div>
             </div>
         );
@@ -131,10 +131,9 @@ const MyDataTab = createReactClass({
                         <div className={Styles.addedData}>
                             <p className={Styles.explanation}>
                                 <strong>Note: </strong>Data added in this way is
-                                not saved or made visible to others unless you
-                                explicitly share it by using the Share panel.
+                                not saved or made visible to others.
                             </p>
-                            {this.renderTabs()}
+                            <div className={Styles.tabLeft}>{this.renderTabs()}</div>
 
                             <ul className={Styles.dataCatalog}>
                                 <DataCatalogGroup

@@ -35,15 +35,23 @@
   box-sizing: border-box;
 }
 
-.tab-list {
-  composes: tab-list from "../../tabs.scss";
-  background: $modal-secondary-bg !important;
+.tabCenter{
   text-align: center;
-  padding-right: 0;
+}
+
+.tabLeft{
+  text-align: left;
+  padding: 0 $padding;
+  border-top: 1px solid $grey-lighter;
+}
+
+.tab-list {
+  display: block;
+  padding-left: 0;
+  margin: 0;
   &__item {
-    composes: tab-list__item from "../../tabs.scss";
-    margin: $padding;
-    float: none;
+    display: inline-block;
+    margin-right: 10px;
   }
 
   // My data tab
@@ -61,11 +69,9 @@
     width: 100%;
     padding: $padding-small 0;
     color: $color-primary;
-    border-bottom: 2px solid $color-primary;
     &:hover,
     &:focus,
     &.is-active {
-      border-bottom: 2px solid $grey;
       color: $grey;
     }
   }
