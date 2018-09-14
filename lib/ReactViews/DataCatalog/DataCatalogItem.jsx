@@ -69,7 +69,6 @@ const DataCatalogItem = createReactClass({
 
     render() {
         const item = this.props.item;
-        console.log(this.getState())
         return (
             <CatalogItem
                 onTextClick={this.setPreviewedItem}

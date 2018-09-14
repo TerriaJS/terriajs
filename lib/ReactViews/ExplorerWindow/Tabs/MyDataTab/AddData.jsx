@@ -13,6 +13,7 @@ import ObserveModelMixin from '../../../ObserveModelMixin';
 import TerriaError from '../../../../Core/TerriaError';
 import addUserFiles from '../../../../Models/addUserFiles';
 import Styles from './add-data.scss';
+import Loader from '../../../Loader';
 
 // Local and remote data have different dataType options
 const remoteDataType = getDataType().remoteDataType;
@@ -34,7 +35,8 @@ const AddData = createReactClass({
         return {
             localDataType: localDataType[0], // By default select the first item (auto)
             remoteDataType: remoteDataType[0],
-            remoteUrl: '' // By default there's no remote url
+            remoteUrl: '', // By default there's no remote url
+            isLoading: false
         };
     },
 
@@ -51,22 +53,30 @@ const AddData = createReactClass({
     },
 
     handleUploadFile(e) {
-        // reset active tab when file handling is done
-        this.props.resetTab();
+        this.setState({
+          isLoading: true
+        })
         addUserFiles(e.target.files, this.props.terria, this.props.viewState, this.state.localDataType)
             .then(addedCatalogItems => {
                 if (addedCatalogItems.length > 0) {
                     this.onFileAddFinished(addedCatalogItems[0]);
                 }
-            });
+                this.setState({
+                  isLoading: false
+                })
+                // reset active tab when file handling is done
+                this.props.resetTab();
+        });
     },
 
     handleUrl(e) {
-        this.props.resetTab();
         const url = this.state.remoteUrl;
         e.preventDefault();
         this.props.terria.analytics.logEvent('addDataUrl', url);
         const that = this;
+        this.setState({
+          isLoading: true
+        })
         let promise;
         if (that.state.remoteDataType.value === 'auto') {
             promise = loadFile(that);
@@ -82,6 +92,10 @@ const AddData = createReactClass({
             if (addedItem && !(addedItem instanceof TerriaError)) {
                 this.onFileAddFinished(addedItem);
             }
+            this.setState({
+              isLoading: false
+            })
+            this.props.resetTab();
         });
     },
 
@@ -140,6 +154,7 @@ const AddData = createReactClass({
                             accept={dataTypes.join(',')}
                             onChange={this.handleUploadFile}
                         />
+                      {this.state.isLoading && <Loader/>}
                     </section>
                 </If>
                 <If condition={this.props.activeTab === 'web'}>
@@ -174,6 +189,7 @@ const AddData = createReactClass({
                             >
                                 Add
                             </button>
+                            {this.state.isLoading && <Loader/>}
                         </form>
                     </section>
                 </If>
