@@ -66,7 +66,7 @@ const MyDataTab = createReactClass({
                                   this.state.activeTab === tab.id
                           })}
                       >
-                          {tab.caption}
+                          <Icon glyph={Icon.GLYPHS[tab.id]} />{tab.caption}
                       </button>
                   </li>
               </For>

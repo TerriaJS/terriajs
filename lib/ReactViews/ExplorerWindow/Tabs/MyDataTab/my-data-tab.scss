@@ -51,7 +51,14 @@
   margin: 0;
   &__item {
     display: inline-block;
-    margin-right: 10px;
+    margin-right: 15px;
+    svg{
+      display: inline;
+      width: 15px;
+      fill: $color-primary;
+      padding-right: $padding-small;
+      vertical-align: middle;
+    }
   }
 
   // My data tab
