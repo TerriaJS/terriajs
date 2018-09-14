@@ -136,13 +136,8 @@ const MyDataTab = createReactClass({
                             <div className={Styles.tabLeft}>{this.renderTabs()}</div>
 
                             <ul className={Styles.dataCatalog}>
-                                <DataCatalogGroup
-                                    group={
-                                        this.props.terria.catalog
-                                            .userAddedDataGroup
-                                    }
-                                    viewState={this.props.viewState}
-                                />
+                              <DataCatalogGroup group={this.props.terria.catalog.userAddedDataGroup}
+                                                viewState={this.props.viewState}/>
                             </ul>
                         </div>
                     </If>

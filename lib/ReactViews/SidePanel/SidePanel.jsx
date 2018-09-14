@@ -41,7 +41,7 @@ const SidePanel = createReactClass({
 
         // Close the search results when the Now Viewing changes (so that it's visible).
         this._nowViewingChangeSubscription = knockout.getObservable(this.props.terria.nowViewing, 'items').subscribe(() => {
-           this.props.viewState.searchState.showLocationSearchResults = false;
+            this.props.viewState.searchState.showLocationSearchResults = false;
         });
     },
 
