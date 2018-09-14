@@ -122,7 +122,6 @@ const ViewingControls = createReactClass({
                     <span className={Styles.separator}/>
                 </If>
                 <If condition={defined(item.linkedWcsUrl)}>
-                    {/* WIP: Fix styles */}
                     <li className={classNames(Styles.info, classList)}><button type='button' onClick={this.exportData} className={Styles.btn} title='Export map data'>Export</button></li>
                     <span className={Styles.separator}/>
                 </If>
