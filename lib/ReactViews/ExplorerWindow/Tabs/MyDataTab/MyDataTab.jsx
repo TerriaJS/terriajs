@@ -1,19 +1,19 @@
-import React from "react";
-import classNames from "classnames";
-import createReactClass from "create-react-class";
-import Icon from "../../../Icon.jsx";
-import PropTypes from "prop-types";
+import React from 'react';
+import classNames from 'classnames';
+import createReactClass from 'create-react-class';
+import Icon from '../../../Icon.jsx';
+import PropTypes from 'prop-types';
 
-import DataCatalogGroup from "../../../DataCatalog/DataCatalogGroup.jsx";
-import DataPreview from "../../../Preview/DataPreview.jsx";
-import AddData from "./AddData.jsx";
-import ObserveModelMixin from "../../../ObserveModelMixin";
+import DataCatalogGroup from '../../../DataCatalog/DataCatalogGroup.jsx';
+import DataPreview from '../../../Preview/DataPreview.jsx';
+import AddData from './AddData.jsx';
+import ObserveModelMixin from '../../../ObserveModelMixin';
 
-import Styles from "./my-data-tab.scss";
+import Styles from './my-data-tab.scss';
 
 // My data tab include Add data section and preview section
 const MyDataTab = createReactClass({
-    displayName: "MyDataTab",
+    displayName: 'MyDataTab',
     mixins: [ObserveModelMixin],
 
     propTypes: {
@@ -46,20 +46,20 @@ const MyDataTab = createReactClass({
     renderTabs(){
       const tabs = [
           {
-              id: "local",
-              caption: "Add Local Data"
+              id: 'local',
+              caption: 'Add Local Data'
           },
           {
-              id: "web",
-              caption: "Add Web Data"
+              id: 'web',
+              caption: 'Add Web Data'
           }
       ];
       return (
           <ul className={Styles.tabList}>
-              <For each="tab" of={tabs}>
+              <For each='tab' of={tabs}>
                   <li className={Styles.tabListItem} key={tab.id}>
                       <button
-                          type="button"
+                          type='button'
                           onClick={this.changeTab.bind(null, tab.id)}
                           className={classNames(Styles.tabListBtn, {
                               [Styles.isActive]:
@@ -114,7 +114,7 @@ const MyDataTab = createReactClass({
                 >
                     <If condition={this.state.activeTab}>
                         <button
-                            type="button"
+                            type='button'
                             onClick={this.resetTab}
                             className={Styles.btnBackToMyData}
                         >

@@ -1,9 +1,9 @@
-import React from "react";
-import PropTypes from "prop-types";
-import createReactClass from "create-react-class";
-import classNames from "classnames";
+import React from 'react';
+import PropTypes from 'prop-types';
+import createReactClass from 'create-react-class';
+import classNames from 'classnames';
 
-import Styles from "./file-input.scss";
+import Styles from './file-input.scss';
 
 // When uploading a file
 // use an button element to have consistent stylying
@@ -15,7 +15,7 @@ const FileInput = createReactClass({
 
     getInitialState() {
         return {
-            value: "Browse...",
+            value: 'Browse...',
             hovered: false
         };
     },
@@ -37,7 +37,7 @@ const FileInput = createReactClass({
                 onMouseLeave={() => this.setState({ hovered: false })}
             >
                 <input
-                    type="file"
+                    type='file'
                     onChange={this.handleChange}
                     accept={this.props.accept}
                     className={Styles.input}
@@ -47,7 +47,7 @@ const FileInput = createReactClass({
                         [Styles.btnHover]: this.state.hovered
                     })}
                 >
-                    {this.state.value ? this.state.value : "Browse..."}
+                    {this.state.value ? this.state.value : 'Browse...'}
                 </label>
             </form>
         );
