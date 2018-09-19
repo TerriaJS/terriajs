@@ -61,6 +61,15 @@ const DataCatalogGroup = createReactClass({
         this.props.viewState.viewCatalogMember(this.props.group);
     },
 
+    removeUserAddedGroup(){
+      const parent = this.props.group.parent;
+      // can remove if not root group
+      if(parent && parent.parent){
+        const itemIndex = this.props.group.parent.items.indexOf(this.props.group);
+        this.props.group.parent.items.splice(itemIndex, 1);
+      }
+    },
+
     isTopLevel() {
         const parent = this.props.group.parent;
         return !parent || !parent.parent;
@@ -74,6 +83,9 @@ const DataCatalogGroup = createReactClass({
 
     render() {
         const group = this.props.group;
+        const removable = this.props.group.isUserSupplied &&
+                          this.props.group.parent &&
+                          this.props.group.parent.parent
         return (
             <CatalogGroup
                 text={group.nameInCatalog}
@@ -83,6 +95,8 @@ const DataCatalogGroup = createReactClass({
                 loading={group.isLoading}
                 emptyMessage="This group is empty"
                 onClick={this.clickGroup}
+                removable={removable}
+                removeUserAddedGroup ={this.removeUserAddedGroup}
                 selected ={this.isSelected()}>
                 <If condition={this.isOpen()}>
                     <For each="item" of={group.items}>

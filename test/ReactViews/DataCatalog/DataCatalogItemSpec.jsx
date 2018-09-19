@@ -41,8 +41,10 @@ describe('DataCatalogItem', () => {
                 clickAddButton({});
             });
 
-            assertPreviewed();
-            assertAdded();
+            if(!item.isUserSupplied){
+              assertPreviewed();
+              assertAdded();
+            }
         });
 
         describe('when on mobile', () => {
@@ -61,14 +63,11 @@ describe('DataCatalogItem', () => {
                 };
                 clickAddButton({});
             });
-
-            if(item.isUserSupplied === false){
-              assertPreviewed();
-              assertNotAdded();
-            } else {
-              // user supplied data, remove from here
+            console.log(item)
+            if(!item.isUserSupplied){
               assertNotAdded();
             }
+            assertNotAdded();
 
 
         });

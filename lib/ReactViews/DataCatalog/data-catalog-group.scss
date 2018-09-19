@@ -4,6 +4,24 @@
 .root {
   font-family: $font-base;
   color: $data-catalog-color;
+  position: relative;
+}
+
+.trashGroup{
+  composes: btn from '../../Sass/common/_buttons.scss';
+  position: absolute;
+  color: $color-primary;
+  right: 20px;
+  top: 3px;
+  @media (max-width: $sm) {
+    top: 10px;
+  }
+  svg{
+    height: 14px;
+    width: 14px;
+    margin: 3px;
+    fill: $charcoal-grey;
+  }
 }
 
 .btn--catalog {
@@ -16,6 +34,7 @@
   width: 100%;
   font-weight: bold;
   line-height: normal;
+  position: relative;
 
   svg{
     display: inline-block;
@@ -63,6 +82,8 @@
     }
   }
 }
+
+
 
 .caret {
   position: absolute;
