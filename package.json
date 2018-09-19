@@ -83,7 +83,7 @@
   "devDependencies": {
     "babel-eslint": "^7.0.0",
     "css-loader": "^0.28.0",
-    "electron": "^2.0.0",
+    "electron": "^3.0.0",
     "enzyme": "~3.4.0",
     "enzyme-adapter-react-16": "^1.1.1",
     "eslint": "^4.9.0",
