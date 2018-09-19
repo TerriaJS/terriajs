@@ -29,7 +29,7 @@ const DataCatalogItem = createReactClass({
             this.setPreviewedItem();
         }
         if (this.props.item.isUserSupplied) {
-            this.props.item.isEnabled = false
+            this.props.item.isEnabled = false;
             if(this.props.item.parent) {
               const itemIndex = this.props.item.parent.items.indexOf(this.props.item);
               this.props.item.parent.items.splice(itemIndex, 1);
