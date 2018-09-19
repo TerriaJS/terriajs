@@ -43,9 +43,8 @@ const DragDropFile = createReactClass({
     },
 
     handleDragLeave(e) {
-        if (e.screenX === 0 && e.screenY === 0) {
-            this.props.viewState.isDraggingDroppingFile = false;
-        }
+      // when drag leave, we set the isDraggingDroppingFile to false (remove drag and drop layer)
+      this.props.viewState.isDraggingDroppingFile = false;
     },
 
     handleMouseLeave() {
@@ -72,4 +71,3 @@ const DragDropFile = createReactClass({
 });
 
 module.exports = DragDropFile;
-
