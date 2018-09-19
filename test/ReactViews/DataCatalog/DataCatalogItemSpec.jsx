@@ -62,8 +62,15 @@ describe('DataCatalogItem', () => {
                 clickAddButton({});
             });
 
-            assertPreviewed();
-            assertNotAdded();
+            if(item.isUserSupplied === false){
+              assertPreviewed();
+              assertNotAdded();
+            } else {
+              // user supplied data, remove from here
+              assertNotAdded();
+            }
+
+
         });
 
         it('closes modal', () => {
