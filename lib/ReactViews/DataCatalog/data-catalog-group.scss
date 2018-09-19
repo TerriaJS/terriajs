@@ -12,13 +12,13 @@
   position: absolute;
   color: $color-primary;
   right: 20px;
-  top: 3px;
+  top: 2px;
   @media (max-width: $sm) {
     top: 10px;
   }
   svg{
-    height: 14px;
-    width: 14px;
+    height: 18px;
+    width: 18px;
     margin: 3px;
     fill: $charcoal-grey;
   }
