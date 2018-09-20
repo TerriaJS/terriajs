@@ -3,7 +3,11 @@
 Change Log
 ==========
 
-### Next release
+### Next Release
+
+* Add simple WCS "clip and ship" functionality for WMS layers with corresponding a WCS endpoint and coverage.
+
+### v6.1.3
 
 * When clicking a `Split` button on the workbench, the new catalog item will no longer be attached to the timeline even if the original was. This avoids a confusing situation where both catalog items would be locked to the same time.
 * Added KMZ to the whitelisted formats for `MagdaCatalogItem`.
