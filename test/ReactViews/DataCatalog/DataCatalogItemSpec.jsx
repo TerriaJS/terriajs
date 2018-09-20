@@ -63,7 +63,6 @@ describe('DataCatalogItem', () => {
                 };
                 clickAddButton({});
             });
-            console.log(item)
             if(!item.isUserSupplied){
               assertNotAdded();
             }

@@ -61,10 +61,10 @@ const DataCatalogGroup = createReactClass({
         this.props.viewState.viewCatalogMember(this.props.group);
     },
 
-    removeUserAddedGroup(){
+    removeUserAddedGroup() {
       const parent = this.props.group.parent;
       // can remove if not root group
-      if(parent && parent.parent){
+      if(parent && parent.parent) {
         const itemIndex = this.props.group.parent.items.indexOf(this.props.group);
         this.props.group.parent.items.splice(itemIndex, 1);
       }
@@ -85,7 +85,7 @@ const DataCatalogGroup = createReactClass({
         const group = this.props.group;
         const removable = this.props.group.isUserSupplied &&
                           this.props.group.parent &&
-                          this.props.group.parent.parent
+                          this.props.group.parent.parent;
         return (
             <CatalogGroup
                 text={group.nameInCatalog}

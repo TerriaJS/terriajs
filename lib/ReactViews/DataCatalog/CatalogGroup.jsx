@@ -74,7 +74,9 @@ CatalogGroup.propTypes = {
         PropTypes.element,
         PropTypes.arrayOf(PropTypes.element)
     ]),
-    selected: PropTypes.bool
+    selected: PropTypes.bool,
+    removable: PropTypes.bool,
+    removeUserAddedGroup: PropTypes.func
 };
 
 export default CatalogGroup;
