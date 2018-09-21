@@ -6,6 +6,7 @@ Change Log
 ### Next Release
 
 * Add simple WCS "clip and ship" functionality for WMS layers with corresponding a WCS endpoint and coverage.
+* Fixed a bug that could cause the workbench to appear narrower than expected on some systems, and the map to be off-center when collapsing the workbench on all systems.
 
 ### v6.1.3
 
