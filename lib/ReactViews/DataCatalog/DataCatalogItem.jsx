@@ -3,6 +3,7 @@ import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import addedByUser from '../../Core/addedByUser';
+import canBeDeleted from '../../Core/canBeDeleted';
 import CatalogItem from './CatalogItem';
 import getAncestors from '../../Models/getAncestors';
 import ObserveModelMixin from '../ObserveModelMixin';
@@ -11,7 +12,8 @@ import raiseErrorOnRejectedPromise from '../../Models/raiseErrorOnRejectedPromis
 const STATE_TO_TITLE = {
     loading: 'Loading...',
     remove: 'Remove this item',
-    add: 'Add this item. Hold down "shift" to keep the data catalogue open.'
+    add: 'Add this item. Hold down "shift" to keep the data catalogue open.',
+    trash: 'delete this user-added data.'
 };
 
 // Individual dataset
@@ -27,8 +29,7 @@ const DataCatalogItem = createReactClass({
     onBtnClicked(event) {
         if (defined(this.props.item.invoke) || this.props.viewState.useSmallScreenInterface) {
             this.setPreviewedItem();
-        }
-        if (this.props.item.isUserSupplied) {
+        } else if(this.props.item.isUserSupplied) {
             this.props.item.isEnabled = false;
             if(this.props.item.parent) {
               const itemIndex = this.props.item.parent.items.indexOf(this.props.item);
@@ -87,15 +88,13 @@ const DataCatalogItem = createReactClass({
             return 'loading';
         } else if (this.props.viewState.useSmallScreenInterface) {
             return 'preview';
-        }else if (this.props.item.isUserSupplied) {
+        } else if (canBeDeleted(this.props.item)) {
             return 'trash';
         } else if (this.props.item.isEnabled) {
             return 'remove';
         } else if (!defined(this.props.item.invoke)) {
             return 'add';
-        } else if (!defined(this.props.item.isUserSupplied)) {
-            return 'trash';
-        } else {
+        }  else {
             return 'stats';
         }
     },

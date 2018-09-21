@@ -1,10 +1,8 @@
 import React from 'react';
-
 import createReactClass from 'create-react-class';
-
 import PropTypes from 'prop-types';
-
 import addedByUser from '../../Core/addedByUser';
+import canBeDeleted from '../../Core/canBeDeleted';
 import CatalogGroup from './CatalogGroup';
 import DataCatalogMember from './DataCatalogMember';
 import getAncestors from '../../Models/getAncestors';
@@ -83,9 +81,6 @@ const DataCatalogGroup = createReactClass({
 
     render() {
         const group = this.props.group;
-        const removable = this.props.group.isUserSupplied &&
-                          this.props.group.parent &&
-                          this.props.group.parent.parent;
         return (
             <CatalogGroup
                 text={group.nameInCatalog}
@@ -95,7 +90,7 @@ const DataCatalogGroup = createReactClass({
                 loading={group.isLoading}
                 emptyMessage="This group is empty"
                 onClick={this.clickGroup}
-                removable={removable}
+                removable={canBeDeleted(this.props.group)}
                 removeUserAddedGroup ={this.removeUserAddedGroup}
                 selected ={this.isSelected()}>
                 <If condition={this.isOpen()}>

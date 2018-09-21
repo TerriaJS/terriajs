@@ -6,8 +6,13 @@ import DataCatalogItem from '../../../lib/ReactViews/DataCatalog/DataCatalogItem
 import CatalogItemComponent from '../../../lib/ReactViews/DataCatalog/CatalogItem';
 import ViewState from '../../../lib/ReactViewModels/ViewState';
 import CatalogItem from '../../../lib/Models/CatalogItem';
-
+import CatalogGroup from '../../../lib/Models/CatalogGroup';
 import {USER_ADDED_CATEGORY_NAME} from '../../../lib/Core/addedByUser';
+
+function makeItemUserAdded(item, terria) {
+    item.parent = new CatalogGroup(terria);
+    item.parent.name = USER_ADDED_CATEGORY_NAME;
+}
 
 describe('DataCatalogItem', () => {
     let terria, viewState, item;
@@ -36,20 +41,32 @@ describe('DataCatalogItem', () => {
     });
 
     describe('button click', () => {
-        describe('when not on mobile and with a non-invokeable layer', () => {
+        describe('when not on mobile and with a non-invokeable layer and not user supplied', () => {
             beforeEach(() => {
+                item.isUserSupplied = false;
+                clickAddButton({});
+            });
+            assertPreviewed();
+            assertAdded();
+        });
+
+        describe('when on mobile and not user supplied', () => {
+            beforeEach(() => {
+                viewState.useSmallScreenInterface = true;
+                item.isUserSupplied = false;
                 clickAddButton({});
             });
 
-            if(!item.isUserSupplied){
-              assertPreviewed();
-              assertAdded();
-            }
+            assertPreviewed();
+            assertNotAdded();
         });
 
-        describe('when on mobile', () => {
+        describe('when user supplied but added within a group', () => {
             beforeEach(() => {
-                viewState.useSmallScreenInterface = true;
+                item.isUserSupplied = true;
+                item.parent = new CatalogItem(terria);
+                item.invoke = () => {
+                };
                 clickAddButton({});
             });
 
@@ -59,22 +76,25 @@ describe('DataCatalogItem', () => {
 
         describe('when with an invokeable layer', () => {
             beforeEach(() => {
+                item.isUserSupplied = false;
                 item.invoke = () => {
                 };
                 clickAddButton({});
             });
-            if(!item.isUserSupplied){
-              assertNotAdded();
-            }
+
+            assertPreviewed();
             assertNotAdded();
-
-
         });
 
-        it('closes modal', () => {
-            clickAddButton({});
-            expect(viewState.explorerPanelIsVisible).toBe(false);
-            expect(viewState.mobileView).toBeNull();
+        describe('close modal after added data when not user supplied', () => {
+            beforeEach(() => {
+                item.isUserSupplied = false;
+                clickAddButton({});
+            });
+            afterEach(() => {
+                expect(viewState.explorerPanelIsVisible).toBe(true);
+                expect(viewState.mobileView).not.toBeNull();
+            });
         });
 
         describe('does not close modal', () => {
@@ -106,6 +126,7 @@ describe('DataCatalogItem', () => {
             it('"loading" if item is loading', () => {
                 item.isEnabled = true;
                 item.isLoading = true;
+                item.isUserSupplied = false;
                 viewState.useSmallScreenInterface = true;
                 expect(getRenderedProp('btnState')).toBe('loading');
             });
@@ -120,10 +141,20 @@ describe('DataCatalogItem', () => {
             it('"remove" if item is enabled and not loading and not on mobile', () => {
                 item.isEnabled = true;
                 item.isLoading = false;
+                // user supplied data does not have add/remove button, regardless
+                // if they have trash button
+                item.isUserSupplied = false;
                 expect(getRenderedProp('btnState')).toBe('remove');
             });
 
+            it('"trash" if item is user supplied and not loading and not on mobile', () => {
+                item.isLoading = false;
+                makeItemUserAdded(item, terria);
+                expect(getRenderedProp('btnState')).toBe('trash');
+            });
+
             it('"add" if item is not invokeable, not enabled and not loading and not on mobile', () => {
+                item.isUserSupplied = false;
                 expect(getRenderedProp('btnState')).toBe('add');
             });
 
@@ -137,7 +168,7 @@ describe('DataCatalogItem', () => {
         describe('isSelected prop as', () => {
             describe('true when', () => {
                 it('item is added by user and the current user data previewed item', () => {
-                    makeItemUserAdded();
+                    makeItemUserAdded(item, terria);
                     viewState.userDataPreviewedItem = item;
                 });
 
@@ -156,18 +187,13 @@ describe('DataCatalogItem', () => {
                 });
 
                 it('item is added by user and NOT the current user data previewed item', () => {
-                    makeItemUserAdded();
+                    makeItemUserAdded(item, terria);
                 });
 
                 afterEach(() => {
                     expect(getRenderedProp('selected')).toBe(false);
                 });
             });
-
-            function makeItemUserAdded() {
-                item.parent = new CatalogItem(terria);
-                item.parent.name = USER_ADDED_CATEGORY_NAME;
-            }
         });
 
         it('sets the CatalogItem text as the item name', () => {
