@@ -90,7 +90,7 @@ const DataCatalogItem = createReactClass({
             return 'preview';
         } else if (canBeDeleted(this.props.item)) {
             return 'trash';
-        } else if(this.props.item.isUserSupplied){
+        } else if(this.props.item.isUserSupplied) {
             return null;
         }else if (this.props.item.isEnabled) {
             return 'remove';
