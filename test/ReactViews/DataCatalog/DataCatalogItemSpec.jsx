@@ -147,10 +147,17 @@ describe('DataCatalogItem', () => {
                 expect(getRenderedProp('btnState')).toBe('remove');
             });
 
-            it('"trash" if item is user supplied and not loading and not on mobile', () => {
+            it('"trash" if item is user supplied and is not within a group and not loading and not on mobile', () => {
                 item.isLoading = false;
                 makeItemUserAdded(item, terria);
                 expect(getRenderedProp('btnState')).toBe('trash');
+            });
+
+            it('null is item is user supplied but within a group and not loading and not on mobile', () => {
+                item.isLoading = false;
+                item.isUserSupplied = true;
+                item.parent = new CatalogItem(terria);
+                expect(getRenderedProp('btnState')).toBe(null);
             });
 
             it('"add" if item is not invokeable, not enabled and not loading and not on mobile', () => {
