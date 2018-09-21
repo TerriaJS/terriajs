@@ -57,25 +57,15 @@ const StandardUserInterface = createReactClass({
     /* eslint-disable-next-line camelcase */
     UNSAFE_componentWillMount() {
         const that = this;
-
-        this.dragEnterListener = e => {
-            if (!e.dataTransfer.types || !arrayContains(e.dataTransfer.types, 'Files')) {
-                return;
-            }
-            e.preventDefault();
-            e.stopPropagation();
-            console.log("drag enter")
-            that.acceptDragDropFile();
-        };
-
-        this.dragOverListener = e =>{
+        this.dragOverListener = e => {
             if (!e.dataTransfer.types || !arrayContains(e.dataTransfer.types, 'Files')) {
                 return;
             }
             e.preventDefault();
             e.stopPropagation();
             e.dataTransfer.dropEffect = 'copy';
-        }
+            that.acceptDragDropFile();
+        };
 
         this.resizeListener = () => {
             this.props.viewState.useSmallScreenInterface = this.shouldUseMobileInterface();
@@ -87,13 +77,11 @@ const StandardUserInterface = createReactClass({
     },
 
     componentDidMount() {
-        this._wrapper.addEventListener('dragenter', this.dragEnterListener, false);
         this._wrapper.addEventListener('dragover', this.dragOverListener, false);
     },
 
     componentWillUnmount() {
         window.removeEventListener('resize', this.resizeListener, false);
-        document.removeEventListener('dragenter', this.dragEnterListener, false);
         document.removeEventListener('dragover', this.dragOverListener, false);
     },
 

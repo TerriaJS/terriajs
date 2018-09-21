@@ -17,6 +17,8 @@ const DragDropFile = createReactClass({
         viewState: PropTypes.object,
     },
 
+    target: null,
+
     handleDrop(e) {
         e.preventDefault();
         e.stopPropagation();
@@ -36,6 +38,7 @@ const DragDropFile = createReactClass({
         e.preventDefault();
         e.stopPropagation();
         e.dataTransfer.dropEffect = 'copy';
+        this.lastTarget = e.target;
     },
 
     handleDragOver(e) {
@@ -43,8 +46,14 @@ const DragDropFile = createReactClass({
     },
 
     handleDragLeave(e) {
-      // when drag leave, we set the isDraggingDroppingFile to false (remove drag and drop layer)
-      this.props.viewState.isDraggingDroppingFile = false;
+        e.preventDefault();
+        if (e.screenX === 0 && e.screenY === 0) {
+            this.props.viewState.isDraggingDroppingFile = false;
+        }
+        console.log(e.target)
+         if (e.target === document || e.target === this.lastTarget) {
+             this.props.viewState.isDraggingDroppingFile = false;
+         }
     },
 
     handleMouseLeave() {
