@@ -29,7 +29,7 @@ const DataCatalogItem = createReactClass({
     onBtnClicked(event) {
         if (defined(this.props.item.invoke) || this.props.viewState.useSmallScreenInterface) {
             this.setPreviewedItem();
-        } else if(this.props.item.isUserSupplied) {
+        } else if(canBeDeleted(this.props.item)) {
             this.props.item.isEnabled = false;
             if(this.props.item.parent) {
               const itemIndex = this.props.item.parent.items.indexOf(this.props.item);
@@ -90,7 +90,9 @@ const DataCatalogItem = createReactClass({
             return 'preview';
         } else if (canBeDeleted(this.props.item)) {
             return 'trash';
-        } else if (this.props.item.isEnabled) {
+        } else if(this.props.item.isUserSupplied){
+            return null;
+        }else if (this.props.item.isEnabled) {
             return 'remove';
         } else if (!defined(this.props.item.invoke)) {
             return 'add';
