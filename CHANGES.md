@@ -3,6 +3,11 @@
 Change Log
 ==========
 
+### Next Release
+
+* Add simple WCS "clip and ship" functionality for WMS layers with corresponding a WCS endpoint and coverage.
+* Fixed a bug that could cause the workbench to appear narrower than expected on some systems, and the map to be off-center when collapsing the workbench on all systems.
+
 ### v6.1.3
 
 * When clicking a `Split` button on the workbench, the new catalog item will no longer be attached to the timeline even if the original was. This avoids a confusing situation where both catalog items would be locked to the same time.
