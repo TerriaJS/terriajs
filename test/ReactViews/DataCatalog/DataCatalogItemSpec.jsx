@@ -158,7 +158,8 @@ describe('DataCatalogItem', () => {
                 expect(getRenderedProp('btnState')).toBe('add');
             });
 
-            it('"stats" if item is invokeable, not enabled and not loading and not on mobile', () => {
+            it('"stats" if item is invokeable, not user-supplied, not enabled and not loading and not on mobile', () => {
+                item.isUserSupplied = false;
                 item.invoke = () => {
                 };
                 expect(getRenderedProp('btnState')).toBe('stats');
