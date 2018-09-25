@@ -111,6 +111,12 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
     });
 
     config.module.loaders.push({
+        test: /\.wasm$/,
+        include: path.resolve(cesiumDir, 'Source', 'ThirdParty'),
+        loader: require.resolve('file-loader')
+    });
+
+    config.module.loaders.push({
         test: /\.js$/,
         include: path.resolve(path.dirname(require.resolve('terriajs-cesium/package.json')), 'Source'),
         loader: require.resolve('./removeCesiumDebugPragmas')
