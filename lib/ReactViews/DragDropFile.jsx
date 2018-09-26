@@ -50,7 +50,6 @@ const DragDropFile = createReactClass({
         if (e.screenX === 0 && e.screenY === 0) {
             this.props.viewState.isDraggingDroppingFile = false;
         }
-        console.log(e.target)
          if (e.target === document || e.target === this.lastTarget) {
              this.props.viewState.isDraggingDroppingFile = false;
          }
