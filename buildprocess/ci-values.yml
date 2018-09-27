@@ -33,6 +33,25 @@ terriamap:
                 bucket: "terriajs-ci-sharing"
                 accessKeyId: "secret"
                 secretAccessKey: "secret"
+    clientConfig:
+        initializationUrls:
+        - helm
+        - terria
+        parameters:
+            bingMapsKey: AiGfmTpmtbNIRJER8VKGKZMFZ4mGISCy4XS-Bvzb64IE3D0ILZpYorFHShd2AX8U
+            cesiumIonAccessToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIxZDY5MDE1YS0yNGFlLTQ1MzctYWNkNy0wNDQ1YWNiNTM5MDIiLCJpZCI6Mjk5Miwic2NvcGVzIjpbImFzciIsImdjIl0sImlhdCI6MTUzODAzMzgyNn0.a2uTotdiHUo8FiHsO4MVNZ1KT5pOF0rb7CFdwbRAsOo
+            googleAnalyticsKey:
+            disclaimer:
+                text: "Disclaimer: This map must not be used for navigation or precise spatial analysis"
+                url: "https://terria.io"
+            developerAttribution:
+                text: "CSIRO's Data61"
+                link: "https://www.data61.csiro.au/"
+            appName: "TerriaJS Continuous Integration"
+            brandBarElements: ["", "<a target=\"_blank\" href=\"http://terria.io\"><img src=\"images/terria_logo.png\" height=\"52\" title=\"Version: {{version}}\" /></a>", ""]
+            supportEmail: "info@terria.io"
+            mobileDefaultViewerMode: "2d"
+            experimentalFeatures: true
     resources:
         requests:
             cpu: 10m
