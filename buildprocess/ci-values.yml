@@ -45,8 +45,8 @@ terriamap:
                 text: "Disclaimer: This map must not be used for navigation or precise spatial analysis"
                 url: "https://terria.io"
             developerAttribution:
-                text: "CSIRO's Data61"
-                link: "https://www.data61.csiro.au/"
+                text: "Terria"
+                link: "https://terria.io"
             appName: "TerriaJS Continuous Integration"
             brandBarElements: ["", "<a target=\"_blank\" href=\"http://terria.io\"><img src=\"images/terria_logo.png\" height=\"52\" title=\"Version: {{version}}\" /></a>", ""]
             supportEmail: "info@terria.io"
