@@ -323,6 +323,8 @@ describe('CsvCatalogItem with lat and lon', function() {
             expect(TimeInterval.contains(featureA.availability, JulianDate.fromIso8601('2015-08-03'))).toBe(true);
             expect(TimeInterval.contains(featureA.availability, JulianDate.fromIso8601('2015-08-04'))).toBe(true);
             expect(TimeInterval.contains(featureA.availability, JulianDate.fromIso8601('2015-08-08'))).toBe(false);
+            // Check there is no animation gap at the end of moving point csv
+            expect(JulianDate.equalsEpsilon(csvItem.clock.stopTime, JulianDate.fromIso8601('2015-08-06'), 1)).toBe(true);
         }).otherwise(fail).then(done);
     });
 
