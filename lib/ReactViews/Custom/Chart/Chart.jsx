@@ -28,6 +28,8 @@ import LineChart from '../../../Charts/LineChart';
 import proxyCatalogItemUrl from '../../../Models/proxyCatalogItemUrl';
 import TableStructure from '../../../Map/TableStructure';
 import VarType from '../../../Map/VarType';
+import SummaryConceptModel from '../../../Map/SummaryConcept';
+import Concept from '../../Workbench/Controls/Concept';
 
 import Styles from './chart.scss';
 
@@ -243,8 +245,25 @@ const Chart = createReactClass({
     },
 
     render() {
+        let nonSummaryConcept = [];
+        if(this.props.concepts){
+           nonSummaryConcept = this.props.concepts.filter(concept => concept.isVisible && !SummaryConceptModel.prototype.isPrototypeOf(concept));
+        }
+
         return (
-            <div className={Styles.chart} ref={element=>{this._element = element;}}></div>
+            <div className={Styles.chart} ref={element=>{this._element = element;}}>
+            <If condition={nonSummaryConcept.length > 0}>
+                <div className={Styles.concepts}>
+                    <For each="concept" index="i" of={nonSummaryConcept}>
+                        <div className={Styles.conceptsInner} key={i}>
+                            <ul className={Styles.conceptsList}>
+                                <Concept concept={concept} isLoading={false}/>
+                            </ul>
+                        </div>
+                    </For>
+                </div>
+            </If>
+            </div>
         );
     }
 });

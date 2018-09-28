@@ -105,3 +105,15 @@
   }
 }
 
+.concepts{
+  display: flex;
+}
+.conceptsList{
+  ul{
+    display: flex;
+  }
+  li{
+    display: block;
+    margin-right: 5px;
+  }
+}
