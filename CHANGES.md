@@ -8,6 +8,7 @@ Change Log
 * Add simple WCS "clip and ship" functionality for WMS layers with corresponding a WCS endpoint and coverage.
 * Fixed problems canceling drag-and-drop when using some web browsers.
 * Fixed a bug that created a period where no data is shown at the end of a time-varying CSV.
+* Distinguish between 3D Terrain and 3D Smooth in share links and init files.
 
 ### v6.1.4
 
