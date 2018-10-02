@@ -6,6 +6,7 @@ Change Log
 ### Next Release
 
 * Add simple WCS "clip and ship" functionality for WMS layers with corresponding a WCS endpoint and coverage.
+* Fixed problems canceling drag-and-drop when using some web browsers.
 
 ### v6.1.4
 
