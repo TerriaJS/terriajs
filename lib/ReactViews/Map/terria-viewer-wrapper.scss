@@ -39,8 +39,11 @@
         color: $color-primary;
       }
 
-      .cesium-credit-logoContainer::after {
-        content: "";
+      .cesium-credit-logoContainer{
+        display: none!important;
+      }
+
+      #logo-credit{
         display: block;
       }
     }
