@@ -44,6 +44,11 @@ const Chart = createReactClass({
 
     propTypes: {
         domain: PropTypes.object,
+        // A presentation mode, one of:
+        //   "feature-info": makes a "mini-chart" with no grid, less space, for use in a feature info window
+        //   "histogram": a bit less space
+        //   undefined: default styling
+        //   TODO improve
         styling: PropTypes.string,  // nothing, 'feature-info' or 'histogram' -- TODO: improve
         height: PropTypes.number,
         axisLabel: PropTypes.object,
@@ -178,10 +183,12 @@ const Chart = createReactClass({
         });
         this._promise = undefined;
     },
-
+    
+    /**
+     * Return the initialisation parameters to be passed to LineChart (or other chart type).
+     * If it is not a mini-chart, add tooltip settings (including a unique id for the tooltip DOM element).
+     */
     getChartParameters() {
-        // Return the parameters for LineChart.js (or other chart type).
-        // If it is not a mini-chart, add tooltip settings (including a unique id for the tooltip DOM element).
         let margin;
         let tooltipSettings;
         let titleSettings;
