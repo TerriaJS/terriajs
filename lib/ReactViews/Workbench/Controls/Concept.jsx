@@ -49,9 +49,14 @@ const Concept = createReactClass({
             [Styles.isLoading]: this.props.isLoading,
             [Styles.unSelectable]: concept.parent && concept.parent.requireSomeActive && isOnlyActiveSibling(concept)
         });
+
+        let prefix = "";
+        if(this.props.parentItem){
+          prefix = this.props.parentItem.categoryName;
+        }
         // Renders the concept as a standard list of radio buttons or checkboxes (ie. not as an additive-condition).
         return (
-            <li style={this.getColorStyle()}>
+            <li>
                 <If condition={!this.props.hideName && concept.name}>
                     <div className={classes}>
                         <div className={Styles.btnGroup}>
@@ -77,13 +82,13 @@ const Concept = createReactClass({
                                 </button>
                             </If>
                         </div>
-                        {concept.name}
+                         {prefix}{' '}{concept.name}
                     </div>
                 </If>
                 <If condition={concept.isOpen}>
                     <ul className={Styles.items}>
                         <For each="child" index="i" of={concept.items.filter(concept => concept.isVisible)}>
-                            <Concept key={i} concept={child} allowMultiple={concept.allowMultiple} isLoading={this.props.isLoading}/>
+                            <Concept key={i} parentItem={this.props.parentItem} concept={child} allowMultiple={concept.allowMultiple} isLoading={this.props.isLoading}/>
                         </For>
                     </ul>
                 </If>

@@ -232,7 +232,7 @@ const Chart = createReactClass({
             data: chartData,
             domain: this.props.domain,
             width: '100%',
-            height: defaultValue(this.props.height, defaultHeight),
+            height: defaultValue(this.props.height - 50, defaultHeight),
             axisLabel: this.props.axisLabel,
             mini: this.props.styling === 'feature-info',
             transitionDuration: this.props.transitionDuration,
@@ -244,25 +244,33 @@ const Chart = createReactClass({
         };
     },
 
+    getVisibleConcepts(concepts){
+      let nonSummaryConcept = [];
+      if(concepts && concepts.length){
+         nonSummaryConcept = concepts.filter(concept => concept.isVisible && !SummaryConceptModel.prototype.isPrototypeOf(concept));
+      }
+      return nonSummaryConcept;
+    },
+
     render() {
+
         let nonSummaryConcept = [];
         if(this.props.concepts){
-           nonSummaryConcept = this.props.concepts.filter(concept => concept.isVisible && !SummaryConceptModel.prototype.isPrototypeOf(concept));
+           nonSummaryConcept = this.props.data.filter(concept => concept.isVisible && !SummaryConceptModel.prototype.isPrototypeOf(concept));
         }
 
         return (
-            <div className={Styles.chart} ref={element=>{this._element = element;}}>
-            <If condition={nonSummaryConcept.length > 0}>
-                <div className={Styles.concepts}>
-                    <For each="concept" index="i" of={nonSummaryConcept}>
-                        <div className={Styles.conceptsInner} key={i}>
-                            <ul className={Styles.conceptsList}>
-                                <Concept concept={concept} isLoading={false}/>
-                            </ul>
-                        </div>
-                    </For>
-                </div>
-            </If>
+            <div className={Styles.chart}>
+              <div className={Styles.chartInner} ref={element=>{this._element = element;}}/>
+              <For each="item" index = 'i' of={this.props.data}>
+                <For each="concept" index="j" of={this.getVisibleConcepts(item.concepts)}>
+                    <div className={Styles.conceptsInner} key={i}>
+                        <ul className={Styles.conceptsList}>
+                            <Concept concept={concept} parentItem ={item} isLoading={false}/>
+                        </ul>
+                    </div>
+                </For>
+              </For>
             </div>
         );
     }

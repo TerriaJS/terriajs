@@ -16,7 +16,7 @@ import Icon from "../../Icon.jsx";
 
 import Styles from './chart-panel.scss';
 
-const height = 250;
+const height = 350;
 
 const ChartPanel = createReactClass({
     displayName: 'ChartPanel',
@@ -50,16 +50,16 @@ const ChartPanel = createReactClass({
     render() {
         const chartableItems = this.props.terria.catalog.chartableItems;
         let data = [];
-        let concepts = [];
         let xUnits;
         for (let i = chartableItems.length - 1; i >= 0; i--) {
             const item = chartableItems[i];
             if (item.isEnabled && defined(item.tableStructure)) {
-                const thisData = item.chartData();
-                const thisConcept = item.concepts;
+                let thisData = item.chartData();
+                if(thisData[0]){
+                  thisData[0].concepts = item.concepts;
+                }
                 if (defined(thisData)) {
                     data = data.concat(thisData);
-                    concepts = concepts.concat(thisConcept)
                     xUnits = defined(xUnits) ? xUnits : item.xAxis.units;
                 }
             }
@@ -81,7 +81,7 @@ const ChartPanel = createReactClass({
         if (data.length > 0) {
             // TODO: use a calculation for the 34 pixels taken off...
             chart = (
-                <Chart data={data} concepts ={concepts} axisLabel={{x: xUnits, y: undefined}} height={height - 34}/>
+                <Chart data={data} axisLabel={{x: xUnits, y: undefined}} height={height - 80}/>
             );
         }
         return (
