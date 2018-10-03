@@ -48,7 +48,6 @@ const Chart = createReactClass({
         //   "feature-info": makes a "mini-chart" with no grid, less space, for use in a feature info window
         //   "histogram": a bit less space
         //   undefined: default styling
-        //   TODO improve
         styling: PropTypes.string,  // nothing, 'feature-info' or 'histogram' -- TODO: improve
         height: PropTypes.number,
         axisLabel: PropTypes.object,
@@ -198,22 +197,28 @@ const Chart = createReactClass({
                 // In case there are multiple charts with tooltips. Unlikely to pick the same random number. Remove the initial "0.".
                 this._tooltipId = 'd3-tooltip-' + Math.random().toString().substr(2);
             }
-            margin = {
-                top: 0,  // So the title is flush with the top of the chart panel.
-                right: 20,
-                bottom: 20,
-                left: 0
-            };
             tooltipSettings = {
                 className: Styles.toolTip,
                 id: this._tooltipId,
                 align: 'prefer-right', // With right/left alignment, the offset is relative to the svg, so need to inset.
                 offset: {top: 40, left: 66, right: 30, bottom: 5}
             };
-            titleSettings = {
-                type: 'legend',
-                height: 30
-            };
+            if (this.props.styling === 'histogram') {
+                titleSettings = undefined;
+                margin = {top: 0, right: 0, bottom: 0, left: 0};
+            } else {
+                margin = {
+                    top: 0,  // So the title is flush with the top of the chart panel.
+                    right: 20,
+                    bottom: 20,
+                    left: 0
+                };
+
+                titleSettings = {
+                    type: 'legend',
+                    height: 30
+                };
+            }            
             grid = {
                 x: true,
                 y: true
@@ -221,10 +226,6 @@ const Chart = createReactClass({
         }
         if (defined(this.props.highlightX)) {
             tooltipSettings = undefined;
-        }
-        if (this.props.styling === 'histogram') {
-            titleSettings = undefined;
-            margin = {top: 0, right: 0, bottom: 0, left: 0};
         }
 
         let chartData;
