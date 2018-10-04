@@ -16,6 +16,7 @@ import NoViewer from './NoViewer';
 import updateModelFromJson from './updateModelFromJson';
 import ViewerMode from './ViewerMode';
 import Workbench from './Workbench';
+import PickedFeatures from '../Map/PickedFeatures';
 
 interface ConfigParameters {
     defaultMaximumShownFeatureInfos?: number;
@@ -28,6 +29,7 @@ interface ConfigParameters {
     feedbackUrl?: string;
     initFragmentPaths?: string[];
     interceptBrowserPrint?: boolean;
+    tabbedCatalog?: boolean;
 }
 
 interface StartOptions {
@@ -73,8 +75,15 @@ export default class Terria {
         initFragmentPaths: [
             'init/'
         ],
-        interceptBrowserPrint: true
+        interceptBrowserPrint: true,
+        tabbedCatalog: false
     };
+
+    @observable
+    pickedFeatures: PickedFeatures | undefined;
+
+    @observable
+    readonly userProperties = new Map<string, any>();
 
     constructor(options: TerriaOptions = {}) {
         this.analytics = options.analytics;

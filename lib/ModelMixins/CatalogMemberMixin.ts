@@ -1,6 +1,5 @@
 import { computed } from 'mobx';
 import Constructor from '../Core/Constructor';
-import { BaseModel } from '../Models/Model';
 
 interface RequiredDefinition {
     nameInCatalog: string | undefined;

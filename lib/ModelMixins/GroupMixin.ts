@@ -1,30 +1,51 @@
 import Constructor from "../Core/Constructor";
-import { computed } from "mobx";
+import { computed, action } from "mobx";
 import Terria from "../Models/TerriaNew";
-import { BaseModel } from "../Models/Model";
+import { BaseModel, ModelInterface } from "../Models/Model";
 import ModelReference from "../Traits/ModelReference";
 import filterOutUndefined from "../Core/filterOutUndefined";
 
 interface RequiredDefinition {
     members: ReadonlyArray<ModelReference> | undefined;
+    isOpen: boolean | undefined;
 }
 
 interface RequiredInstance {
-    flattened: RequiredDefinition;
     terria: Terria;
+    topStratum: Partial<RequiredDefinition>
     members: ReadonlyArray<ModelReference> | undefined;
+    isOpen: boolean | undefined;
 }
 
-export default function GroupMixin<T extends Constructor<RequiredInstance>>(Base: T) {
+function GroupMixin<T extends Constructor<RequiredInstance>>(Base: T) {
     class GroupMixin extends Base {
+        get isGroup() {
+            return true;
+        }
+
         @computed get memberModels(): ReadonlyArray<BaseModel> {
-            const members = this.flattened.members;
+            const members = this.members;
             if (members === undefined) {
                 return [];
             }
+            members;
             return filterOutUndefined(members.map(id => this.terria.getModelById(BaseModel, id)));
+        }
+
+        @action
+        toggleOpen() {
+            this.topStratum.isOpen = !this.isOpen;
         }
     }
 
     return GroupMixin;
 }
+
+namespace GroupMixin {
+    interface GroupMixin extends InstanceType<ReturnType<typeof GroupMixin>> {}
+    export function isMixedInto(model: any): model is GroupMixin {
+        return model && model.isGroup;
+    }
+}
+
+export default GroupMixin;

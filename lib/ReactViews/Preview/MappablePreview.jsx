@@ -40,9 +40,9 @@ const MappablePreview = createReactClass({
         return (
             <div className={Styles.root}>
                 <If condition={catalogItem.isMappable}>
-                    <DataPreviewMap terria={this.props.terria}
+                    {/* <DataPreviewMap terria={this.props.terria}
                                     previewedCatalogItem={catalogItem}
-                                    showMap={!this.props.viewState.explorerPanelAnimating || this.props.viewState.useSmallScreenInterface} />
+                                    showMap={!this.props.viewState.explorerPanelAnimating || this.props.viewState.useSmallScreenInterface} /> */}
                 </If>
                 <button type='button' onClick={this.toggleOnMap}
                         className={Styles.btnAdd}>

@@ -57,7 +57,8 @@ export default function mixCatalogMemberTraits<TBase extends ModelTraits.Constru
             type: InfoSectionTraits,
             name: 'Info',
             description: 'Human-readable information about this dataset.',
-            idProperty: 'name'
+            idProperty: 'name',
+            default: []
         })
         info?: InfoSectionTraits[];
     }

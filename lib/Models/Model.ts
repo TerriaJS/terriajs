@@ -28,6 +28,7 @@ export abstract class BaseModel {
     };
     abstract get flattened(): Partial<ModelTraits>;
     abstract get strata(): ObservableMap<string, Partial<ModelTraits>>;
+    abstract get topStratum(): Partial<ModelTraits>;
     abstract get isLoading(): boolean;
     abstract get loadPromise(): Promise<{}>;
 
@@ -57,6 +58,7 @@ export interface ModelInterface<T extends ModelTraits> {
 
     readonly strataTopToBottom: Partial<T>[];
     readonly strataBottomToTop: Partial<T>[];
+    readonly topStratum: Partial<T>;
     createTraitsInstance(): Partial<T>;
 }
 
@@ -90,6 +92,11 @@ function Model<T extends TraitsConstructor<ModelTraits>>(Traits: T): ModelConstr
         @computed
         get strataBottomToTop() {
             return StratumOrder.sortBottomToTop(this.strata);
+        }
+
+        @computed
+        get topStratum() {
+            return this.strataTopToBottom[0];
         }
 
         get isLoading(): boolean {

@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 
 import naturalSort from 'javascript-natural-sort';
 import parseCustomMarkdownToReact from '../Custom/parseCustomMarkdownToReact';
-import ObserveModelMixin from '../ObserveModelMixin';
+import { observer } from 'mobx-react';
 
 import Styles from './data-preview.scss';
 
@@ -33,9 +33,8 @@ const DEFAULT_SECTION_ORDER = [
  * CatalogItem-defined sections that sit within the preview description. These are ordered according to the catalog item's
  * order if available.
  */
-const DataPreviewSections = createReactClass({
+const DataPreviewSections = observer(createReactClass({
     displayName: 'DataPreviewSections',
-    mixins: [ObserveModelMixin],
 
     propTypes: {
         metadataItem: PropTypes.object.isRequired
@@ -77,6 +76,6 @@ const DataPreviewSections = createReactClass({
             </div>
         );
     },
-});
+}));
 
 export default DataPreviewSections;

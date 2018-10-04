@@ -1,18 +1,17 @@
 "use strict";
 
-import React from 'react';
 import createReactClass from 'create-react-class';
+import { observer } from 'mobx-react';
 import PropTypes from 'prop-types';
-import ObserveModelMixin from '../ObserveModelMixin';
-import DataCatalogItem from './DataCatalogItem';
+import React from 'react';
+import GroupMixin from '../../ModelMixins/GroupMixin';
 import DataCatalogGroup from './DataCatalogGroup';
+import DataCatalogItem from './DataCatalogItem';
 
 /**
  * Component that is either a {@link CatalogItem} or a {@link DataCatalogMember} and encapsulated this choosing logic.
  */
-export default createReactClass({
-    mixins: [ObserveModelMixin],
-
+export default observer(createReactClass({
     displayName: 'DataCatalogMember',
 
     propTypes: {
@@ -24,7 +23,7 @@ export default createReactClass({
     },
 
     render() {
-        if (this.props.member.isGroup) {
+        if (GroupMixin.isMixedInto(this.props.member)) {
             return (
                 <DataCatalogGroup group={this.props.member} viewState={this.props.viewState}
                                   manageIsOpenLocally={this.props.manageIsOpenLocally}
@@ -39,4 +38,4 @@ export default createReactClass({
             );
         }
     }
-});
+}));

@@ -5,18 +5,17 @@ import Description from './Description';
 import GroupPreview from './GroupPreview';
 import InvokeFunction from '../Analytics/InvokeFunction';
 import MappablePreview from './MappablePreview';
-import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
 import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import Styles from './data-preview.scss';
+import { observer } from 'mobx-react';
 
 /**
  * Data preview section, for the preview map see DataPreviewMap
  */
-const DataPreview = createReactClass({
+const DataPreview = observer(createReactClass({
     displayName: 'DataPreview',
-    mixins: [ObserveModelMixin],
 
     propTypes: {
         terria: PropTypes.object.isRequired,
@@ -76,6 +75,6 @@ const DataPreview = createReactClass({
             </div>
         );
     },
-});
+}));
 
 module.exports = DataPreview;

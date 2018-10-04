@@ -14,6 +14,7 @@ interface TraitsConstructor<T> {
 export interface ObjectArrayTraitOptions<T extends ModelTraits> extends TraitOptions {
     type: TraitsConstructor<T>;
     idProperty: keyof T;
+    default?: ReadonlyArray<T>;
 }
 
 export default function objectArrayTrait<T extends ModelTraits>(options: ObjectArrayTraitOptions<T>) {
@@ -29,17 +30,19 @@ export default function objectArrayTrait<T extends ModelTraits>(options: ObjectA
 export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
     readonly type: TraitsConstructor<T>;
     readonly idProperty: keyof T;
+    readonly default: ReadonlyArray<T> | undefined;
 
     constructor(id: string, options: ObjectArrayTraitOptions<T>) {
         super(id, options);
         this.type = options.type;
         this.idProperty = options.idProperty;
+        this.default = options.default;
     }
 
     getValue(strataTopToBottom: Partial<ModelTraits>[]): ReadonlyArray<T> | undefined {
         const objectArrayStrata = strataTopToBottom.map((stratum: any) => stratum[this.id]).filter(stratum => stratum !== undefined);
-        if (objectArrayStrata.length === 0) {
-            return undefined;
+        if (objectArrayStrata === undefined) {
+            return this.default;
         }
 
         const result: T[][] = [];

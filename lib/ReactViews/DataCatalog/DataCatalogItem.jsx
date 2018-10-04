@@ -9,8 +9,8 @@ import defined from 'terriajs-cesium/Source/Core/defined';
 import addedByUser from '../../Core/addedByUser';
 import CatalogItem from './CatalogItem';
 import getAncestors from '../../Models/getAncestors';
-import ObserveModelMixin from '../ObserveModelMixin';
 import raiseErrorOnRejectedPromise from '../../Models/raiseErrorOnRejectedPromise';
+import { observer } from 'mobx-react';
 
 const STATE_TO_TITLE = {
     loading: 'Loading...',
@@ -19,9 +19,8 @@ const STATE_TO_TITLE = {
 };
 
 // Individual dataset
-const DataCatalogItem = createReactClass({
+const DataCatalogItem = observer(createReactClass({
     displayName: 'DataCatalogItem',
-    mixins: [ObserveModelMixin],
 
     propTypes: {
         item: PropTypes.object.isRequired,
@@ -60,7 +59,7 @@ const DataCatalogItem = createReactClass({
     },
 
     setPreviewedItem() {
-        raiseErrorOnRejectedPromise(this.props.item.terria, this.props.item.load());
+        //raiseErrorOnRejectedPromise(this.props.item.terria, this.props.item.load());
         this.props.viewState.viewCatalogMember(this.props.item);
         // mobile switch to nowvewing
         this.props.viewState.switchMobileView(this.props.viewState.mobileViewOptions.preview);
@@ -102,6 +101,6 @@ const DataCatalogItem = createReactClass({
             return 'stats';
         }
     },
-});
+}));
 
 module.exports = DataCatalogItem;

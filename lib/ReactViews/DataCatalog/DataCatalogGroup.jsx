@@ -8,11 +8,10 @@ import addedByUser from '../../Core/addedByUser';
 import CatalogGroup from './CatalogGroup';
 import DataCatalogMember from './DataCatalogMember';
 import getAncestors from '../../Models/getAncestors';
-import ObserveModelMixin from '../ObserveModelMixin';
+import { observer } from 'mobx-react';
 
-const DataCatalogGroup = createReactClass({
+const DataCatalogGroup = observer(createReactClass({
     displayName: 'DataCatalogGroup',
-    mixins: [ObserveModelMixin],
 
     propTypes: {
         group: PropTypes.object.isRequired,
@@ -87,9 +86,9 @@ const DataCatalogGroup = createReactClass({
                 onClick={this.clickGroup}
                 selected ={this.isSelected()}>
                 <If condition={this.isOpen()}>
-                    <For each="item" of={group.items}>
+                    <For each="item" of={group.memberModels}>
                         <DataCatalogMember
-                            key={item.uniqueId}
+                            key={item.id}
                             member={item}
                             viewState={this.props.viewState}
                             userData={this.props.userData}
@@ -102,6 +101,6 @@ const DataCatalogGroup = createReactClass({
             </CatalogGroup>
         );
     },
-});
+}));
 
 module.exports = DataCatalogGroup;

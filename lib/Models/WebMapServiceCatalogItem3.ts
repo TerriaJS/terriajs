@@ -204,6 +204,11 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemb
         return WebMapServiceCatalogItem.type;
     }
 
+    // TODO
+    get isMappable() {
+        return true;
+    }
+
     constructor(id: string, terria: Terria) {
         super(id, terria);
         this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, new GetCapabilitiesStratum(this));
