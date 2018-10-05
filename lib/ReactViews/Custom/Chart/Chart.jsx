@@ -24,6 +24,7 @@ import loadText from '../../../Core/loadText';
 import when from 'terriajs-cesium/Source/ThirdParty/when';
 
 import ChartData from '../../../Charts/ChartData';
+import ConceptsSelector from './ConceptsSelector';
 import LineChart from '../../../Charts/LineChart';
 import proxyCatalogItemUrl from '../../../Models/proxyCatalogItemUrl';
 import TableStructure from '../../../Map/TableStructure';
@@ -244,33 +245,13 @@ const Chart = createReactClass({
         };
     },
 
-    getVisibleConcepts(concepts){
-      let nonSummaryConcept = [];
-      if(concepts && concepts.length){
-         nonSummaryConcept = concepts.filter(concept => concept.isVisible && !SummaryConceptModel.prototype.isPrototypeOf(concept));
-      }
-      return nonSummaryConcept;
-    },
+
 
     render() {
-
-        let nonSummaryConcept = [];
-        if(this.props.concepts){
-           nonSummaryConcept = this.props.data.filter(concept => concept.isVisible && !SummaryConceptModel.prototype.isPrototypeOf(concept));
-        }
-
         return (
             <div className={Styles.chart}>
               <div className={Styles.chartInner} ref={element=>{this._element = element;}}/>
-              <For each="item" index = 'i' of={this.props.data}>
-                <For each="concept" index="j" of={this.getVisibleConcepts(item.concepts)}>
-                    <div className={Styles.conceptsInner} key={i}>
-                        <ul className={Styles.conceptsList}>
-                            <Concept concept={concept} parentItem ={item} isLoading={false}/>
-                        </ul>
-                    </div>
-                </For>
-              </For>
+              {this.props.data && <ConceptsSelector data = {this.props.data} />}
             </div>
         );
     }

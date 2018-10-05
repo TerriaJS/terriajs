@@ -55,7 +55,7 @@ const ChartPanel = createReactClass({
             const item = chartableItems[i];
             if (item.isEnabled && defined(item.tableStructure)) {
                 let thisData = item.chartData();
-                if(thisData[0]){
+                if(thisData && thisData[0]){
                   thisData[0].concepts = item.concepts;
                 }
                 if (defined(thisData)) {
