@@ -56,15 +56,18 @@ const Chart = createReactClass({
         highlightX: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
         updateCounter: PropTypes.any,  // Change this to trigger an update.
         pollSeconds: PropTypes.any, // This is not used by Chart. It is used internally by registerCustomComponentTypes.
+        
         // You can provide the data directly via props.data (ChartData[]):
         data: PropTypes.array,
-        chartType: PropTypes.object,
+        // chartType: PropTypes.object, // TODO clarify. ChartData has its own 'type' which can be bar, line, etc.
+        
         // Or, provide a URL to the data, along with optional xColumn, yColumns, colors
         url: PropTypes.string,
         xColumn: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
         yColumns: PropTypes.array,
         colors: PropTypes.array,
         pollUrl: PropTypes.string,
+        
         // Or, provide a tableStructure directly.
         tableStructure: PropTypes.object
     },
