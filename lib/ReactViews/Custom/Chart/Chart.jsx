@@ -29,8 +29,6 @@ import LineChart from '../../../Charts/LineChart';
 import proxyCatalogItemUrl from '../../../Models/proxyCatalogItemUrl';
 import TableStructure from '../../../Map/TableStructure';
 import VarType from '../../../Map/VarType';
-import SummaryConceptModel from '../../../Map/SummaryConcept';
-import Concept from '../../Workbench/Controls/Concept';
 
 import Styles from './chart.scss';
 
@@ -244,8 +242,6 @@ const Chart = createReactClass({
             highlightX: this.props.highlightX
         };
     },
-
-
 
     render() {
         return (
