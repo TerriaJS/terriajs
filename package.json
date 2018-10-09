@@ -117,7 +117,7 @@
     "react-test-renderer": "^16.3.2",
     "svg-sprite-loader": "^3.4.0",
     "terriajs-jasmine-ajax": "^3.2.1",
-    "terriajs-server": "^2.7.4",
+    "terriajs-server": "3.0.0-test-1",
     "webpack-dev-server": "^2.9.2"
   },
   "scripts": {
