@@ -41,7 +41,10 @@ const Legend = createReactClass({
     renderLegend(legendUrl, i) {
         const isImage = legendUrl.isImage();
         const insertDirectly = !!legendUrl.safeSvgContent; // we only insert content we generated ourselves, not arbitrary SVG from init files.
-        const safeSvgContent = {__html: legendUrl.safeSvgContent};
+
+        const svg = legendUrl.safeSvgContent;
+        const processedSvg = svg ? svg.replace(/NS\d+:href/gi, 'xlink:href') : null;
+        const safeSvgContent = {__html: processedSvg};
 
         // We proxy the legend so it's cached, and so that the Print/Export feature works with non-CORS servers.
         // We make it absolute because the print view is opened on a different domain (about:blank) so relative
