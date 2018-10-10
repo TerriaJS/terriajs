@@ -87,7 +87,10 @@ const MapColumn = createReactClass({
                                                  viewState={this.props.viewState}/>
                         </div>
                         <If condition={!this.props.viewState.hideMapUi()}>
-                            <div className={Styles.locationDistance}>
+
+                            <div className={classNames(Styles.locationDistance, {
+                                [Styles.leafletWidget]: this.props.terria.viewerMode
+                            })}>
                                 <LocationBar terria={this.props.terria}
                                              mouseCoords={this.props.viewState.mouseCoords}/>
                                 <DistanceLegend terria={this.props.terria}/>
