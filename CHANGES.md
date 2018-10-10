@@ -9,7 +9,8 @@ Change Log
 * Fixed a bug that could cause endless tile requests with certain types of incorrect server responses.
 * Fixed a bug that could cause endless region tile requests when loading a CSV with a time column where none of the column values could actually be interpreted as a time.
 * Added automatic retry with jittered, exponential backoff for tile requests that result in a 5xx HTTP status code. This is especially useful for servers that return 503 or 504 under load. Previously, TerriaJS would frequently disable the layer and hit the user with an error message when accessing such servers.
-* Update British National Grid transform in `Proj4Definitions` to a more accurate (~2 m) 7 parameter version https://epsg.io/27700.
+* Updated British National Grid transform in `Proj4Definitions` to a more accurate (~2 m) 7 parameter version https://epsg.io/27700.
+* Distinguished between 3D Terrain and 3D Smooth in share links and init files.
 * Upgraded to Cesium v1.50.
 
 ### v6.1.4
