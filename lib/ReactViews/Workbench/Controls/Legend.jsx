@@ -43,6 +43,7 @@ const Legend = createReactClass({
         const insertDirectly = !!legendUrl.safeSvgContent; // we only insert content we generated ourselves, not arbitrary SVG from init files.
 
         const svg = legendUrl.safeSvgContent;
+        // Safari xlink NS issue fix
         const processedSvg = svg ? svg.replace(/NS\d+:href/gi, 'xlink:href') : null;
         const safeSvgContent = {__html: processedSvg};
 
