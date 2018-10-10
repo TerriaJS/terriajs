@@ -1,12 +1,21 @@
 'use strict';
 
 /*global require,beforeEach*/
-var JulianDate = require('terriajs-cesium/Source/Core/JulianDate');
-var TimeIntervalCollection = require('terriajs-cesium/Source/Core/TimeIntervalCollection');
-var TimeInterval = require('terriajs-cesium/Source/Core/TimeInterval');
+const CesiumEvent = require('terriajs-cesium/Source/Core/Event');
+const ImageryLayer = require('terriajs-cesium/Source/Scene/ImageryLayer');
+const ImageryProvider = require('terriajs-cesium/Source/Scene/ImageryProvider');
+const ImageryState = require('terriajs-cesium/Source/Scene/ImageryState');
+const JulianDate = require('terriajs-cesium/Source/Core/JulianDate');
+const pollToPromise = require('../../lib/Core/pollToPromise');
+const RequestErrorEvent = require('terriajs-cesium/Source/Core/RequestErrorEvent');
+const Resource = require('terriajs-cesium/Source/Core/Resource');
+const runLater = require('../../lib/Core/runLater');
+const TimeIntervalCollection = require('terriajs-cesium/Source/Core/TimeIntervalCollection');
+const TimeInterval = require('terriajs-cesium/Source/Core/TimeInterval');
+const when = require('terriajs-cesium/Source/ThirdParty/when');
 
-var Terria = require('../../lib/Models/Terria');
-var ImageryLayerCatalogItem = require('../../lib/Models/ImageryLayerCatalogItem');
+const Terria = require('../../lib/Models/Terria');
+const ImageryLayerCatalogItem = require('../../lib/Models/ImageryLayerCatalogItem');
 
 describe('ImageryLayerCatalogItem', function() {
 
@@ -113,4 +122,215 @@ describe('ImageryLayerCatalogItem', function() {
         });
     });
 
+    describe('tile error handling', function() {
+        const image = document.createElement('img');
+        image.src = 'images/blank.png';
+
+        let terria;
+        let catalogItem;
+        let imageryProvider;
+        let globeOrMap;
+        let imagery;
+        let imageryLayer;
+
+        beforeEach(function() {
+            terria = {
+                error: new CesiumEvent()
+            };
+            catalogItem = {
+                terria: terria
+            };
+            imageryProvider = {
+                requestImage: function(x, y, level) {
+                    return ImageryProvider.loadImage(this, 'images/blank.png');
+                },
+                errorEvent: new CesiumEvent()
+            };
+            globeOrMap = {
+                terria: terria,
+                addImageryProvider: function(options) {
+                    options.imageryProvider.errorEvent.addEventListener(options.onLoadError);
+                    return new ImageryLayer(options.imageryProvider);
+                },
+                isImageryLayerShown: function() {
+                    return true;
+                }
+            };
+            imagery = {
+                level: 0,
+                x: 0,
+                y: 0
+            };
+
+            terria.currentViewer = globeOrMap;
+
+            imageryLayer = ImageryLayerCatalogItem.enableLayer(catalogItem, imageryProvider, 1.0, 0, globeOrMap);
+        });
+
+        function failLoad(statusCode, times) {
+            return spyOn(Resource.prototype, 'fetchImage').and.callFake(function(preferBlob) {
+                if (times > 0) {
+                    --times;
+                    if (preferBlob) {
+                        return when.reject(new RequestErrorEvent(statusCode, 'bad', []));
+                    } else {
+                        return when.reject(image);
+                    }
+                } else {
+                    return when.resolve(image);
+                }
+            });
+        }
+
+        it('ignores errors in disabled layers', function(done) {
+            spyOn(globeOrMap, 'isImageryLayerShown').and.returnValue(false);
+            const fetchImage = failLoad(503, 10);
+
+            imageryLayer._requestImagery(imagery);
+
+            pollToPromise(function() {
+                return imagery.state === ImageryState.FAILED;
+            }).then(function() {
+                expect(fetchImage.calls.count()).toEqual(1);
+            }).then(done).otherwise(done.fail);
+        });
+
+        it('retries images that fail with a 503 error', function(done) {
+            const fetchImage = failLoad(503, 2);
+
+            imageryLayer._requestImagery(imagery);
+
+            pollToPromise(function() {
+                return imagery.state === ImageryState.RECEIVED;
+            }).then(function() {
+                expect(fetchImage.calls.count()).toEqual(4);
+            }).then(done).otherwise(done.fail);
+        });
+
+        it('eventually gives up on a tile that only succeeds when loaded via blob', function(done) {
+            const fetchImage = spyOn(Resource.prototype, 'fetchImage').and.callFake(function(preferBlob) {
+                if (preferBlob) {
+                    return runLater(function() {
+                        return image;
+                    });
+                } else {
+                    return runLater(function() {
+                        return when.reject(image);
+                    });
+                }
+            });
+
+            imageryLayer._requestImagery(imagery);
+
+            pollToPromise(function() {
+                return imagery.state === ImageryState.FAILED;
+            }).then(function() {
+                expect(fetchImage.calls.count()).toBeGreaterThan(5);
+            }).then(done).otherwise(done.fail);
+        });
+
+        it('ignores any number of 404 errors if treat404AsError is false', function(done) {
+            const fetchImage = failLoad(404, 100);
+            catalogItem.treat404AsError = false;
+
+            const tiles = [];
+            for (let i = 0; i < 20; ++i) {
+                tiles[i] = {
+                    level: 20,
+                    x: i,
+                    y: i
+                };
+                imageryLayer._requestImagery(tiles[i]);
+            }
+
+            pollToPromise(function() {
+                let result = true;
+                for (let i = 0; i < tiles.length; ++i) {
+                    result = result && tiles[i].state === ImageryState.FAILED;
+                }
+                return result;
+            }).then(function() {
+                expect(fetchImage.calls.count()).toEqual(tiles.length * 2);
+            }).then(done).otherwise(done.fail);
+        });
+
+        it('ignores any number of 403 errors if treat403AsError is false', function(done) {
+            const fetchImage = failLoad(403, 100);
+            catalogItem.treat403AsError = false;
+
+            const tiles = [];
+            for (let i = 0; i < 20; ++i) {
+                tiles[i] = {
+                    level: 20,
+                    x: i,
+                    y: i
+                };
+                imageryLayer._requestImagery(tiles[i]);
+            }
+
+            pollToPromise(function() {
+                let result = true;
+                for (let i = 0; i < tiles.length; ++i) {
+                    result = result && tiles[i].state === ImageryState.FAILED;
+                }
+                return result;
+            }).then(function() {
+                expect(fetchImage.calls.count()).toEqual(tiles.length * 2);
+            }).then(done).otherwise(done.fail);
+        });
+
+        it('doesn\'t disable the layer after only five 404s if treat404AsError is true', function(done) {
+            const fetchImage = failLoad(404, 100);
+            catalogItem.treat404AsError = true;
+            catalogItem.isShown = true;
+
+            const tiles = [];
+            for (let i = 0; i < 5; ++i) {
+                tiles[i] = {
+                    level: 20,
+                    x: i,
+                    y: i
+                };
+                imageryLayer._requestImagery(tiles[i]);
+            }
+
+            pollToPromise(function() {
+                let result = true;
+                for (let i = 0; i < tiles.length; ++i) {
+                    result = result && tiles[i].state === ImageryState.FAILED;
+                }
+                return result;
+            }).then(function() {
+                expect(fetchImage.calls.count()).toEqual(tiles.length * 2);
+                expect(catalogItem.isShown).toBe(true);
+            }).then(done).otherwise(done.fail);
+        });
+
+        it('disables the layer after six 404s if treat404AsError is true', function(done) {
+            const fetchImage = failLoad(404, 100);
+            catalogItem.treat404AsError = true;
+            catalogItem.isShown = true;
+
+            const tiles = [];
+            for (let i = 0; i < 6; ++i) {
+                tiles[i] = {
+                    level: 20,
+                    x: i,
+                    y: i
+                };
+                imageryLayer._requestImagery(tiles[i]);
+            }
+
+            pollToPromise(function() {
+                let result = true;
+                for (let i = 0; i < tiles.length; ++i) {
+                    result = result && tiles[i].state === ImageryState.FAILED;
+                }
+                return result;
+            }).then(function() {
+                expect(fetchImage.calls.count()).toEqual(tiles.length * 2);
+                expect(catalogItem.isShown).toBe(false);
+            }).then(done).otherwise(done.fail);
+        });
+    });
 });
