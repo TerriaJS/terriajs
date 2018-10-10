@@ -1,9 +1,9 @@
 Change Log
 ==========
 
-### Next Release
+### v6.2.0
 
-* Add simple WCS "clip and ship" functionality for WMS layers with corresponding a WCS endpoint and coverage.
+* Added a simple WCS "clip and ship" functionality for WMS layers with corresponding a WCS endpoint and coverage.
 * Fixed problems canceling drag-and-drop when using some web browsers.
 * Fixed a bug that created a time period where no data is shown at the end of a time-varying CSV.
 * Fixed a bug that could cause endless tile requests with certain types of incorrect server responses.
