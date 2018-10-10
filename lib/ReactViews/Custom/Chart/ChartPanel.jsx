@@ -51,14 +51,11 @@ const ChartPanel = createReactClass({
         const chartableItems = this.props.terria.catalog.chartableItems;
         let data = [];
         let xUnits;
-        for (let i = chartableItems.length - 1; i >= 0; i--) {
-            const item = chartableItems[i];
-            if (item.isEnabled && defined(item.tableStructure)) {
-                const thisData = item.chartData();
-                if (defined(thisData)) {
-                    data = data.concat(thisData);
-                    xUnits = defined(xUnits) ? xUnits : item.xAxis.units;
-                }
+        for (const item of chartableItems) {                
+            const thisData = item.chartData();
+            if (item.isEnabled  && defined(thisData)) {
+                data = [].concat(thisData).concat(data);
+                xUnits = defined(xUnits) ? xUnits : item.xAxis.units;
             }
         }
 
