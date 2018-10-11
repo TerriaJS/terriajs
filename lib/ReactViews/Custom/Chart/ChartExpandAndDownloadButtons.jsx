@@ -154,7 +154,6 @@ function expand(props, sourceIndex) {
     // Create a new CSV catalog item from the data source details we have
     // Side-effect: sets activeConcepts and existingColors
     function makeNewCatalogItem() {
-        const terria = props.terria;
         const url = defined(sourceIndex) ? props.sources[sourceIndex] : undefined;
         const newCatalogItem = new CsvCatalogItem(terria, url, { options: makeTableStyle() });
         let tableStructure = props.tableStructure;
@@ -210,6 +209,7 @@ function expand(props, sourceIndex) {
 
     let existingColors;
     let activeConcepts;
+    const terria = props.terria;
     const newCatalogItem = makeNewCatalogItem();
     // Is there a better way to set up an action to occur once the file has loaded?
     newCatalogItem.load().then(() => {
