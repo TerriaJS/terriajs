@@ -205,7 +205,7 @@ const Chart = createReactClass({
                 className: Styles.toolTip,
                 id: this._tooltipId,
                 align: 'prefer-right', // With right/left alignment, the offset is relative to the svg, so need to inset.
-                offset: {top: 40, left: 66, right: 30, bottom: 5}
+                offset: {top: 40, left: 33, right: 30, bottom: 5}
             };
             if (this.props.styling === 'histogram') {
                 titleSettings = undefined;
@@ -239,11 +239,15 @@ const Chart = createReactClass({
             chartData = this.chartDataArrayFromTableStructure(this.props.tableStructure);
         }
 
+        console.log(this.props.data);
+
+        const footerHeight = 36 * Math.ceil(this.props.data.length /2) + 50;
+
         return {
             data: chartData,
             domain: this.props.domain,
             width: '100%',
-            height: defaultValue(this.props.height - 50, defaultHeight),
+            height: defaultValue(this.props.height - footerHeight, defaultHeight),
             axisLabel: this.props.axisLabel,
             mini: this.props.styling === 'feature-info',
             transitionDuration: this.props.transitionDuration,

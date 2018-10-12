@@ -1,6 +1,11 @@
 @import '~terriajs-variables';
 @import '../../../Sass/common/mixins';
 
+
+.chartInner{
+  background: rgba(#ffffff, 0.1);
+}
+
 // D3 Axis
 .chart {
   :global {

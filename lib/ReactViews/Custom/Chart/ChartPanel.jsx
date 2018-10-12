@@ -81,7 +81,7 @@ const ChartPanel = createReactClass({
         if (data.length > 0) {
             // TODO: use a calculation for the 34 pixels taken off...
             chart = (
-                <Chart data={data} axisLabel={{x: xUnits, y: undefined}} height={height - 80}/>
+                <Chart data={data} axisLabel={{x: xUnits, y: undefined}} height={height}/>
             );
         }
         return (
