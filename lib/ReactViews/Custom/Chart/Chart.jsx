@@ -25,7 +25,7 @@ import when from 'terriajs-cesium/Source/ThirdParty/when';
 
 import ChartData from '../../../Charts/ChartData';
 import ConceptsSelector from './ConceptsSelector';
-import LineChart from '../../../Charts/LineChart';
+import ChartRenderer from '../../../Charts/ChartRenderer';
 import proxyCatalogItemUrl from '../../../Models/proxyCatalogItemUrl';
 import TableStructure from '../../../Map/TableStructure';
 import VarType from '../../../Map/VarType';
@@ -45,6 +45,10 @@ const Chart = createReactClass({
 
     propTypes: {
         domain: PropTypes.object,
+        // A presentation mode, one of:
+        //   "feature-info": makes a "mini-chart" with no grid, less space, for use in a feature info window
+        //   "histogram": a bit less space
+        //   undefined: default styling
         styling: PropTypes.string,  // nothing, 'feature-info' or 'histogram' -- TODO: improve
         height: PropTypes.number,
         axisLabel: PropTypes.object,
@@ -53,14 +57,18 @@ const Chart = createReactClass({
         highlightX: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
         updateCounter: PropTypes.any,  // Change this to trigger an update.
         pollSeconds: PropTypes.any, // This is not used by Chart. It is used internally by registerCustomComponentTypes.
+
         // You can provide the data directly via props.data (ChartData[]):
         data: PropTypes.array,
+        // chartType: PropTypes.object, // TODO clarify. ChartData has its own 'type' which can be bar, line, etc.
+
         // Or, provide a URL to the data, along with optional xColumn, yColumns, colors
         url: PropTypes.string,
         xColumn: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
         yColumns: PropTypes.array,
         colors: PropTypes.array,
         pollUrl: PropTypes.string,
+
         // Or, provide a tableStructure directly.
         tableStructure: PropTypes.object
     },
@@ -115,7 +123,7 @@ const Chart = createReactClass({
         const promise = that.getChartDataPromise(chartParameters.data, that.props.url, that.props.catalogItem);
         promise.then(function(data) {
             chartParameters.data = data;
-            LineChart.create(that._element, chartParameters);
+            ChartRenderer.create(that._element, chartParameters);
         });
         that._promise = promise.then(function() {
             // that.rnd = Math.random();
@@ -129,7 +137,7 @@ const Chart = createReactClass({
                     const localChartParameters = that.getChartParameters();
                     if (defined(chartParameters.data)) {
                         localChartParameters.transitionDuration = 1;
-                        LineChart.update(that._element, localChartParameters);
+                        ChartRenderer.update(that._element, localChartParameters);
                     }
                 } else {
                     // This would happen if event listeners were not properly removed (ie. if you get this error, a bug was introduced to this code).
@@ -156,14 +164,14 @@ const Chart = createReactClass({
         const element = this._element;
         const chartParameters = this.getChartParameters();
         if (defined(chartParameters.data)) {
-            LineChart.update(element, chartParameters);
+            ChartRenderer.update(element, chartParameters);
         } else if (this.props.updateCounter > 0) {
             // The risk here is if it's a time-varying csv with <chart> polling as well.
             const url = this.props.pollUrl || this.props.url;
             const promise = this.getChartDataPromise(chartParameters.data, url, this.props.catalogItem);
             promise.then(function(data) {
                 chartParameters.data = data;
-                LineChart.update(element, chartParameters);
+                ChartRenderer.update(element, chartParameters);
             });
         }
     },
@@ -173,15 +181,17 @@ const Chart = createReactClass({
         this._promise.then(function(listener) {
             window.removeEventListener('resize', listener);
             // console.log('Removed resize listener for', that.props.url, that.rnd, listener);
-            LineChart.destroy(that._element, that.getChartParameters());
+            ChartRenderer.destroy(that._element, that.getChartParameters());
             that._element = undefined;
         });
         this._promise = undefined;
     },
 
+    /**
+     * Return the initialisation parameters to be passed to LineChart (or other chart type).
+     * If it is not a mini-chart, add tooltip settings (including a unique id for the tooltip DOM element).
+     */
     getChartParameters() {
-        // Return the parameters for LineChart.js (or other chart type).
-        // If it is not a mini-chart, add tooltip settings (including a unique id for the tooltip DOM element).
         let margin;
         let tooltipSettings;
         let titleSettings;
@@ -191,22 +201,28 @@ const Chart = createReactClass({
                 // In case there are multiple charts with tooltips. Unlikely to pick the same random number. Remove the initial "0.".
                 this._tooltipId = 'd3-tooltip-' + Math.random().toString().substr(2);
             }
-            margin = {
-                top: 0,  // So the title is flush with the top of the chart panel.
-                right: 20,
-                bottom: 20,
-                left: 0
-            };
             tooltipSettings = {
                 className: Styles.toolTip,
                 id: this._tooltipId,
                 align: 'prefer-right', // With right/left alignment, the offset is relative to the svg, so need to inset.
                 offset: {top: 40, left: 66, right: 30, bottom: 5}
             };
-            titleSettings = {
-                type: 'legend',
-                height: 30
-            };
+            if (this.props.styling === 'histogram') {
+                titleSettings = undefined;
+                margin = {top: 0, right: 0, bottom: 0, left: 0};
+            } else {
+                margin = {
+                    top: 0,  // So the title is flush with the top of the chart panel.
+                    right: 20,
+                    bottom: 20,
+                    left: 0
+                };
+
+                titleSettings = {
+                    type: 'legend',
+                    height: 30
+                };
+            }
             grid = {
                 x: true,
                 y: true
@@ -214,10 +230,6 @@ const Chart = createReactClass({
         }
         if (defined(this.props.highlightX)) {
             tooltipSettings = undefined;
-        }
-        if (this.props.styling === 'histogram') {
-            titleSettings = undefined;
-            margin = {top: 0, right: 0, bottom: 0, left: 0};
         }
 
         let chartData;

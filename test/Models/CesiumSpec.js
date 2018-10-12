@@ -47,7 +47,9 @@ describeIfSupported('Cesium Model', function() {
 
         spyOn(terria.tileLoadProgressEvent, 'raiseEvent');
 
-        var cesiumWidget = new CesiumWidget(container);
+        var cesiumWidget = new CesiumWidget(container, {
+            imageryProvider: new TileCoordinatesImageryProvider()
+        });
 
         spyOn(cesiumWidget.screenSpaceEventHandler, 'setInputAction');
 

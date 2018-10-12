@@ -118,91 +118,99 @@ const ChartExpandAndDownloadButtons = createReactClass({
  * @private
  */
 function expand(props, sourceIndex) {
-    const terria = props.terria;
-    const url = defined(sourceIndex) ? props.sources[sourceIndex] : undefined;
-
-    // Set the table style so that the names and units of the columns appear immediately, not with a delay.
-    const tableStyleOptions = {
-        columns: {}
-    };
-    const maxColumnNamesAndUnits = Math.max(props.columnNames && props.columnNames.length || 0, props.columnUnits && props.columnUnits.length || 0);
-    for (let columnNumber = 0; columnNumber < maxColumnNamesAndUnits; columnNumber++) {
-        tableStyleOptions.columns[columnNumber] = {};
-        if (defined(props.columnNames) && props.columnNames[columnNumber]) {
-            tableStyleOptions.columns[columnNumber].name = props.columnNames[columnNumber];
-        }
-        if (defined(props.columnUnits) && props.columnUnits[columnNumber]) {
-            tableStyleOptions.columns[columnNumber].units = props.columnUnits[columnNumber];
-        }
-    }
-    // Set the active columns via tableStyle too.
-    // This is a bit inconsistent with the above, since above we index with column number
-    // and here we may be indexing with number or id or name.
-    // But it works. (TableStyle.columns may have multiple references to the same column.)
-    if (defined(props.xColumn)) {
-        tableStyleOptions.xAxis = props.xColumn;
-    }
-    if (defined(props.yColumns)) {
-        props.yColumns.forEach(nameOrIndex => {
-            if (!defined(tableStyleOptions.columns[nameOrIndex])) {
-                tableStyleOptions.columns[nameOrIndex] = {};
+    function makeTableStyle() {
+        // Set the table style so that the names and units of the columns appear immediately, not with a delay.
+        const tableStyleOptions = {
+            columns: {}
+        };
+        const maxColumnNamesAndUnits = Math.max(props.columnNames && props.columnNames.length || 0, props.columnUnits && props.columnUnits.length || 0);
+        for (let columnNumber = 0; columnNumber < maxColumnNamesAndUnits; columnNumber++) {
+            tableStyleOptions.columns[columnNumber] = {};
+            if (defined(props.columnNames) && props.columnNames[columnNumber]) {
+                tableStyleOptions.columns[columnNumber].name = props.columnNames[columnNumber];
             }
-            tableStyleOptions.columns[nameOrIndex].active = true;
-        });
+            if (defined(props.columnUnits) && props.columnUnits[columnNumber]) {
+                tableStyleOptions.columns[columnNumber].units = props.columnUnits[columnNumber];
+            }
+        }
+        // Set the active columns via tableStyle too.
+        // This is a bit inconsistent with the above, since above we index with column number
+        // and here we may be indexing with number or id or name.
+        // But it works. (TableStyle.columns may have multiple references to the same column.)
+        if (defined(props.xColumn)) {
+            tableStyleOptions.xAxis = props.xColumn;
+        }
+        if (defined(props.yColumns)) {
+            props.yColumns.forEach(nameOrIndex => {
+                if (!defined(tableStyleOptions.columns[nameOrIndex])) {
+                    tableStyleOptions.columns[nameOrIndex] = {};
+                }
+                tableStyleOptions.columns[nameOrIndex].active = true;
+            });
+        }
+        return new TableStyle(tableStyleOptions);
     }
-    const options = {
-        tableStyle: new TableStyle(tableStyleOptions)
-    };
 
-    const newCatalogItem = new CsvCatalogItem(terria, url, options);
-    let tableStructure = props.tableStructure;
-    if (defined(props.colors) && props.colors.length >= tableStructure.columns.length) {
-        newCatalogItem.getNextColor = index => props.colors[index];
+    // Create a new CSV catalog item from the data source details we have
+    // Side-effect: sets activeConcepts and existingColors
+    function makeNewCatalogItem() {
+        const terria = props.terria;
+        const url = defined(sourceIndex) ? props.sources[sourceIndex] : undefined;
+        const newCatalogItem = new CsvCatalogItem(terria, url, { options: makeTableStyle() });
+        let tableStructure = props.tableStructure;
+        if (defined(props.colors) && props.colors.length >= tableStructure.columns.length) {
+            newCatalogItem.getNextColor = index => props.colors[index];
+        }
+    
+        // For CSV data with a URL, we could just use the usual csvCatalogItem._load to load this from the url.
+        // However, we also want this to work with urls that may be interpreted differently according to CatalogItem.loadIntoTableStructure.
+        // So use the parent catalogItem's loadIntoTableStructure (if available) to do the load.
+        // Note that CsvCatalogItem's _load function checks for data first, and only loads the URL if no data is present, so we won't double up.
+        if (!defined(tableStructure) && defined(props.catalogItem) && defined(props.catalogItem.loadIntoTableStructure)) {
+            tableStructure = props.catalogItem.loadIntoTableStructure(url);
+        }
+        newCatalogItem.data = tableStructure;
+        // Without this, if the chart data comes via the proxy, it would be cached for the default period of 2 weeks.
+        // So, retain the same `cacheDuration` as the parent data file.
+        // You can override this with the `pollSeconds` attribute (coming!).
+        // If neither is set, it should default to a small duration rather than 2 weeks - say 1 minute.
+        newCatalogItem.cacheDuration = defaultValue(props.catalogItem.cacheDuration, '1m');
+        newCatalogItem.name = props.title || (props.feature && props.feature.name) || 'Chart';
+        newCatalogItem.id = newCatalogItem.name + (props.id ? (' ' + props.id) : '') + ' (' + props.catalogItem.name + ')';
+    
+        if (defined(props.pollSeconds)) {
+            const pollSources = props.pollSources;
+            newCatalogItem.polling = new Polling({
+                seconds: props.pollSeconds,
+                url: (defined(sourceIndex) && defined(pollSources)) ? pollSources[Math.min(sourceIndex, pollSources.length - 1)] : undefined,
+                replace: props.pollReplace
+            });
+        }
+        const group = terria.catalog.upsertCatalogGroup(CatalogGroup, 'Chart Data', 'A group for chart data.');
+        group.isOpen = true;
+        const existingIndex =  group.items
+            .map(item => item.uniqueId)
+            .indexOf(newCatalogItem.uniqueId);
+        if (existingIndex >= 0) {
+            // First, keep a copy of the active items and colors used, so we can keep them the same with the new chart.
+            const oldCatalogItem = group.items[existingIndex];
+            activeConcepts = oldCatalogItem.tableStructure.columns.map(column => column.isActive);
+            existingColors = oldCatalogItem.tableStructure.columns.map(column => column.color);
+            oldCatalogItem.isEnabled = false;
+            group.remove(oldCatalogItem);
+        }
+        group.add(newCatalogItem);
+        newCatalogItem.isLoading = true;
+        newCatalogItem.isMappable = false;
+        terria.catalog.chartableItems.push(newCatalogItem);  // Notify the chart panel so it shows "loading".
+        newCatalogItem.isEnabled = true;  // This loads it as well.
+        
+        return newCatalogItem;
     }
 
-    // For CSV data with a URL, we could just use the usual csvCatalogItem._load to load this from the url.
-    // However, we also want this to work with urls that may be interpreted differently according to CatalogItem.loadIntoTableStructure.
-    // So use the parent catalogItem's loadIntoTableStructure (if available) to do the load.
-    // Note that CsvCatalogItem's _load function checks for data first, and only loads the URL if no data is present, so we won't double up.
-    if (!defined(tableStructure) && defined(props.catalogItem) && defined(props.catalogItem.loadIntoTableStructure)) {
-        tableStructure = props.catalogItem.loadIntoTableStructure(url);
-    }
-    newCatalogItem.data = tableStructure;
-    // Without this, if the chart data comes via the proxy, it would be cached for the default period of 2 weeks.
-    // So, retain the same `cacheDuration` as the parent data file.
-    // You can override this with the `pollSeconds` attribute (coming!).
-    // If neither is set, it should default to a small duration rather than 2 weeks - say 1 minute.
-    newCatalogItem.cacheDuration = defaultValue(props.catalogItem.cacheDuration, '1m');
-    newCatalogItem.name = props.title || (props.feature && props.feature.name) || 'Chart';
-    newCatalogItem.id = newCatalogItem.name + (props.id ? (' ' + props.id) : '') + ' (' + props.catalogItem.name + ')';
-
-    if (defined(props.pollSeconds)) {
-        const pollSources = props.pollSources;
-        newCatalogItem.polling = new Polling({
-            seconds: props.pollSeconds,
-            url: (defined(sourceIndex) && defined(pollSources)) ? pollSources[Math.min(sourceIndex, pollSources.length - 1)] : undefined,
-            replace: props.pollReplace
-        });
-    }
-    const group = terria.catalog.upsertCatalogGroup(CatalogGroup, 'Chart Data', 'A group for chart data.');
-    group.isOpen = true;
-    const existingChartItemIds = group.items.map(item => item.uniqueId);
-    const existingIndex = existingChartItemIds.indexOf(newCatalogItem.uniqueId);
     let existingColors;
     let activeConcepts;
-    if (existingIndex >= 0) {
-        // First, keep a copy of the active items and colors used, so we can keep them the same with the new chart.
-        const oldCatalogItem = group.items[existingIndex];
-        activeConcepts = oldCatalogItem.tableStructure.columns.map(column => column.isActive);
-        existingColors = oldCatalogItem.tableStructure.columns.map(column => column.color);
-        oldCatalogItem.isEnabled = false;
-        group.remove(oldCatalogItem);
-    }
-    group.add(newCatalogItem);
-    newCatalogItem.isLoading = true;
-    newCatalogItem.isMappable = false;
-    terria.catalog.chartableItems.push(newCatalogItem);  // Notify the chart panel so it shows "loading".
-    newCatalogItem.isEnabled = true;  // This loads it as well.
+    const newCatalogItem = makeNewCatalogItem();
     // Is there a better way to set up an action to occur once the file has loaded?
     newCatalogItem.load().then(() => {
         // Enclose in try-catch rather than otherwise so that if load itself fails, we don't do this at all.
