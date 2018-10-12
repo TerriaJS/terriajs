@@ -259,7 +259,7 @@ const Chart = createReactClass({
         return (
             <div className={Styles.chart}>
               <div className={Styles.chartInner} ref={element=>{this._element = element;}}/>
-              {this.props.data && <ConceptsSelector data = {this.props.data} />}
+              {this.props.data && <ConceptsSelector categories = {this.props.data} />}
             </div>
         );
     }
