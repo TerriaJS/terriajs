@@ -53,6 +53,10 @@
       }
       .leaflet-control-attribution {
         line-height: 1em;
+        background: none;
+        color: white;
+        position: relative;
+        bottom: 23px;
       }
     }
 
