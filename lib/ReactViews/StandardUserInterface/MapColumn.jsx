@@ -83,8 +83,8 @@ const MapColumn = createReactClass({
                     <div className={classNames(Styles.mapCell, Styles.mapCellMap)} ref={this.newMapCell}>
                         <div className={Styles.mapWrapper}
                              style={{height: this.state.height || (isIE ? '100vh' : '100%')}}>
-                            {/* <TerriaViewerWrapper terria={this.props.terria}
-                                                 viewState={this.props.viewState}/> */}
+                            <TerriaViewerWrapper terria={this.props.terria}
+                                                 viewState={this.props.viewState}/>
                         </div>
                         <If condition={!this.props.viewState.hideMapUi()}>
                             <div className={Styles.locationDistance}>

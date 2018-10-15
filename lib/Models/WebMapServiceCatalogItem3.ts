@@ -24,6 +24,7 @@ import Terria from './TerriaNew';
 import WebMapServiceCapabilities, { CapabilitiesLayer, CapabilitiesStyle } from './WebMapServiceCapabilities';
 import { InfoSectionTraits } from '../Traits/mixCatalogMemberTraits';
 import containsAny from '../Core/containsAny';
+import WebMapServiceCatalogGroup from './WebMapServiceCatalogGroupNew';
 
 interface LegendUrl {
     url: string;
@@ -40,6 +41,7 @@ interface WebMapServiceStyle {
 interface WebMapServiceStyles {
     [layerName: string]: WebMapServiceStyle[];
 }
+
 
 class GetCapabilitiesStratum extends LoadableStratum<WebMapServiceCapabilities> implements WebMapServiceCatalogItemTraits {
     constructor(readonly catalogItem: WebMapServiceCatalogItem) {
@@ -318,6 +320,7 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemb
         // });
     }
 }
+
 
 export default WebMapServiceCatalogItem;
 
