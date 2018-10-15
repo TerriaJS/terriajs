@@ -7,8 +7,8 @@ import TerriaViewerWrapper from '../Map/TerriaViewerWrapper.jsx';
 import LocationBar from '../Map/Legend/LocationBar.jsx';
 import DistanceLegend from '../Map/Legend/DistanceLegend.jsx';
 import FeedbackButton from '../Feedback/FeedbackButton.jsx';
-import ObserveModelMixin from './../ObserveModelMixin';
-import BottomDock from './../BottomDock/BottomDock.jsx';
+import ObserveModelMixin from '../ObserveModelMixin';
+import BottomDock from '../BottomDock/BottomDock.jsx';
 import FeatureDetection from 'terriajs-cesium/Source/Core/FeatureDetection';
 import classNames from "classnames";
 
