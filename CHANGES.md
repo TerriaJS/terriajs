@@ -6,6 +6,7 @@ Change Log
 * We now use Cesium Ion for the Bing Maps basemaps, unless a `bingMapsKey` is provided in [config.json](https://docs.terria.io/guide/customizing/client-side-config/#parameters). You can control this behavior with the `useCesiumIonBingImagery` property. Please note that if a `bingMapsKey` is not provided, the Bing Maps geocoder will always return no results.
 * Added a Terria logo in the lower left of the map. It can be disabled by setting `"hideTerriaLogo": true` in `config.json`.
 * Improved the credits display on the 2D map to be more similar to the 3D credits.
+* Fixed a bug that caused some legends to be missing or incomplete in Apple Safari.
 
 ### v6.2.0
 
