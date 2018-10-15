@@ -136,6 +136,7 @@ export default class Terria {
             }));
 
         });
+
     }
 
     getUserProperty(key: string) {

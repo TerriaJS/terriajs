@@ -1,7 +1,7 @@
 import { createTransformer } from 'mobx-utils';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import xml2json from '../ThirdParty/xml2json';
-import loadXML from 'terriajs-cesium/Source/Core/loadXML';
+import loadXML from '../Core/loadXML';
 import TerriaError from '../Core/TerriaError';
 import isReadOnlyArray from '../Core/isReadOnlyArray';
 

@@ -107,7 +107,7 @@ const SidePanel = createReactClass({
                                 viewState={this.props.viewState}
                                 isWaitingForSearchToStart={searchState.isWaitingToStartLocationSearch} />
                         </When> */ }
-                        <When condition={this.props.terria.nowViewing.items && this.props.terria.nowViewing.items.length > 0}>
+                        <When condition={this.props.terria.workbench.items && this.props.terria.workbench.items.length > 0}>
                             <Workbench viewState={this.props.viewState} terria={this.props.terria} />
                         </When>
                         <Otherwise>

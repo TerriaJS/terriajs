@@ -24,7 +24,12 @@ import Terria from './TerriaNew';
 import WebMapServiceCapabilities, { CapabilitiesLayer, CapabilitiesStyle } from './WebMapServiceCapabilities';
 import { InfoSectionTraits } from '../Traits/mixCatalogMemberTraits';
 import containsAny from '../Core/containsAny';
-import WebMapServiceCatalogGroup from './WebMapServiceCatalogGroupNew';
+
+import WebMapServiceImageryProvider from 'terriajs-cesium/Source/Scene/WebMapServiceImageryProvider';
+import CesiumImageryLayer from 'terriajs-cesium/Source/Scene/ImageryLayer';
+import WebMercatorTilingScheme from 'terriajs-cesium/Source/Core/WebMercatorTilingScheme';
+
+
 
 interface LegendUrl {
     url: string;
@@ -303,21 +308,23 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemb
             return undefined;
         }
 
-        return {
-            wms: true,
-            isGeoServer: this.isGeoServer || false,
-            alpha: 1.0
-        };
+        // return {
+        //     wms: true,
+        //     isGeoServer: this.isGeoServer || false,
+        //     alpha: 1.0
+        // };
 
-        // return new WebMapServiceImageryProvider({
-        //     url: this.url,
-        //     layers: this.layers,
-        //     getFeatureInfoFormats: this.getFeatureInfoFormats,
-        //     parameters: parameters,
-        //     getFeatureInfoParameters: parameters,
-        //     tilingScheme: defined(this.tilingScheme) ? this.tilingScheme : new WebMercatorTilingScheme(),
-        //     maximumLevel: maximumLevel
-        // });
+        const imageryLayer = new CesiumImageryLayer(new WebMapServiceImageryProvider({
+            url: this.url,
+            layers: this.layers,
+            // getFeatureInfoFormats: this.getFeatureInfoFormats,
+            // parameters: parameters,
+            // getFeatureInfoParameters: parameters,
+            tilingScheme: /*defined(this.tilingScheme) ? this.tilingScheme :*/ new WebMercatorTilingScheme(),
+            maximumLevel: 20 //maximumLevel
+        }));
+
+        return imageryLayer;
     }
 }
 

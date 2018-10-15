@@ -5,3 +5,6 @@ declare module 'terriajs-cesium/Source/Core/RuntimeError';
 declare module 'terriajs-cesium/Source/Core/Event';
 declare module 'terriajs-cesium/Source/ThirdParty/when';
 declare module 'terriajs-cesium/Source/Core/clone';
+declare module 'terriajs-cesium/Source/Scene/WebMapServiceImageryProvider';
+declare module 'terriajs-cesium/Source/Core/WebMercatorTilingScheme';
+declare module 'terriajs-cesium/Source/Scene/ImageryLayer';

@@ -43,19 +43,26 @@ const DataCatalogItem = observer(createReactClass({
     },
 
     toggleEnable(event) {
-        this.props.item.toggleEnabled();
-
-        // set preview as well
-        this.setPreviewedItem();
-
-        if (this.props.item.isEnabled === true && !event.shiftKey && !event.ctrlKey) {
-            // close modal window
-            this.props.viewState.explorerPanelIsVisible = false;
-            this.props.viewState.mobileView = null;
-            if (this.props.viewState.firstTimeAddingData) {
-                this.props.viewState.featureInfoPanelIsVisible = true;
-            }
+        const itemWorkbenchIndex = this.props.item.terria.workbench.items.indexOf(this.props.item)
+        if (itemWorkbenchIndex === -1) {
+            this.props.item.terria.workbench.items.push(this.props.item);
+        } else {
+            this.props.item.terria.workbench.items.splice(itemWorkbenchIndex, 1);
         }
+
+        // this.props.item.toggleEnabled();
+
+        // // set preview as well
+        // this.setPreviewedItem();
+
+        // if (this.props.item.isEnabled === true && !event.shiftKey && !event.ctrlKey) {
+        //     // close modal window
+        //     this.props.viewState.explorerPanelIsVisible = false;
+        //     this.props.viewState.mobileView = null;
+        //     if (this.props.viewState.firstTimeAddingData) {
+        //         this.props.viewState.featureInfoPanelIsVisible = true;
+        //     }
+        // }
     },
 
     setPreviewedItem() {
