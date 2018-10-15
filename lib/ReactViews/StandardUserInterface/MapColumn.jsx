@@ -7,9 +7,10 @@ import TerriaViewerWrapper from '../Map/TerriaViewerWrapper.jsx';
 import LocationBar from '../Map/Legend/LocationBar.jsx';
 import DistanceLegend from '../Map/Legend/DistanceLegend.jsx';
 import FeedbackButton from '../Feedback/FeedbackButton.jsx';
-import ObserveModelMixin from './../ObserveModelMixin';
-import BottomDock from './../BottomDock/BottomDock.jsx';
+import ObserveModelMixin from '../ObserveModelMixin';
+import BottomDock from '../BottomDock/BottomDock.jsx';
 import FeatureDetection from 'terriajs-cesium/Source/Core/FeatureDetection';
+import ViewerMode from '../Models/ViewerMode';
 import classNames from "classnames";
 
 import Styles from './map-column.scss';
@@ -87,7 +88,10 @@ const MapColumn = createReactClass({
                                                  viewState={this.props.viewState}/>
                         </div>
                         <If condition={!this.props.viewState.hideMapUi()}>
-                            <div className={Styles.locationDistance}>
+
+                            <div className={classNames(Styles.locationDistance, {
+                                [Styles.leafletWidget]: this.props.terria.viewerMode === ViewerMode.Leaflet
+                            })}>
                                 <LocationBar terria={this.props.terria}
                                              mouseCoords={this.props.viewState.mouseCoords}/>
                                 <DistanceLegend terria={this.props.terria}/>

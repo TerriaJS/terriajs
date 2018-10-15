@@ -47,6 +47,10 @@
   bottom: 2px;
   right: 3px;
   z-index: 1;
+
+  &.leafletWidget{
+    bottom: 30px;
+  }
 }
 
 .feedback-button-wrapper {
