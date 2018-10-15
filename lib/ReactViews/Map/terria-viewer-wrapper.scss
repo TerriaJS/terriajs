@@ -38,30 +38,21 @@
         text-decoration: none;
         color: $color-primary;
       }
-      .cesium-credit-logoContainer{
-        margin-left: 50px;
-      }
 
       .cesium-credit-logoContainer::after {
         content: "";
         display: block;
 
       }
-
-      #terriaLogo{
-        position: absolute;
-        bottom: 30px;
-      }
     }
 
     .leaflet-control-container{
       @extend %sm-show;
-      #terriaLogo{
-        float: left;
-        height: 30px;
+      #terriaLogo {
+        vertical-align: middle;
       }
-      .leaflet-control-attribution{
-        line-height: 3;
+      .leaflet-control-attribution {
+        line-height: 1em;
       }
     }
 
