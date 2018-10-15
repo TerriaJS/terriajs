@@ -18,6 +18,8 @@ import ObserveModelMixin from '../ObserveModelMixin';
 import ProgressBar from '../Map/ProgressBar';
 import SidePanel from '../SidePanel/SidePanel';
 import processCustomElements from './processCustomElements';
+import FullScreenButton from './../SidePanel/FullScreenButton.jsx';
+import { Small, Medium } from '../Generic/Responsive';
 import classNames from 'classnames';
 import 'inobounce';
 
@@ -40,7 +42,10 @@ const StandardUserInterface = createReactClass({
         viewState: PropTypes.object.isRequired,
         minimumLargeScreenWidth: PropTypes.number,
         version: PropTypes.string,
-        children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.element), PropTypes.element])
+        children: PropTypes.oneOfType([
+            PropTypes.arrayOf(PropTypes.element),
+            PropTypes.element
+        ])
     },
 
     getDefaultProps() {
@@ -98,37 +103,80 @@ const StandardUserInterface = createReactClass({
         const terria = this.props.terria;
         const allBaseMaps = this.props.allBaseMaps;
         return (
-            <div className={Styles.uiRoot} ref={(w) => this._wrapper = w}>
+            <div className={Styles.uiRoot} ref={w => (this._wrapper = w)}>
                 <div className={Styles.ui}>
                     <div className={Styles.uiInner}>
-                        <If condition={!this.props.viewState.isMapFullScreen && !this.props.viewState.hideMapUi()}>
-                            <Choose>
-                                <When condition={this.props.viewState.useSmallScreenInterface}>
-                                    {/* <MobileHeader terria={terria}
-                                                  menuItems={customElements.menu}
-                                                  viewState={this.props.viewState}
-                                                  version={this.props.version}
-                                                  allBaseMaps={allBaseMaps}
-                                    /> */}
-                                </When>
-                                <Otherwise>
-                                    <div className={Styles.sidePanel}>
-                                        <Branding terria={terria} version={this.props.version}/>
-                                        <SidePanel terria={terria} viewState={this.props.viewState}/>
-                                    </div>
-                                </Otherwise>
-                            </Choose>
+                        <If condition={!this.props.viewState.hideMapUi()}>
+                            <Small>
+                                {/* <MobileHeader
+                                    terria={terria}
+                                    menuItems={customElements.menu}
+                                    viewState={this.props.viewState}
+                                    version={this.props.version}
+                                    allBaseMaps={allBaseMaps}
+                                /> */}
+                            </Small>
+                            <Medium>
+                                <div
+                                    className={classNames(Styles.sidePanel, {
+                                        [Styles.sidePanelHide]: this.props
+                                            .viewState.isMapFullScreen
+                                    })}
+                                >
+                                    <Branding
+                                        terria={terria}
+                                        version={this.props.version}
+                                    />
+                                    <SidePanel
+                                        terria={terria}
+                                        viewState={this.props.viewState}
+                                    />
+                                </div>
+                            </Medium>
                         </If>
+                        <Medium>
+                            <div
+                                className={classNames(
+                                    Styles.showWorkbenchButton,
+                                    {
+                                        [Styles.showWorkbenchButtonisVisible]: this
+                                            .props.viewState.isMapFullScreen,
+                                        [Styles.showWorkbenchButtonisNotVisible]: !this
+                                            .props.viewState.isMapFullScreen
+                                    }
+                                )}
+                            >
+                                <FullScreenButton
+                                    terria={this.props.terria}
+                                    viewState={this.props.viewState}
+                                    minified={false}
+                                    btnText='Show workbench'
+                                    animationDuration={250}
+                                />
+                            </div>
+                        </Medium>
 
                         <section className={Styles.map}>
                             {/* <ProgressBar terria={terria}/> */}
                             <MapColumn terria={terria} viewState={this.props.viewState} />
                             <main>
-                                <ExplorerWindow terria={terria} viewState={this.props.viewState}/>
-                                <If condition={this.props.terria.configParameters.experimentalFeatures && !this.props.viewState.hideMapUi()}>
-                                    <ExperimentalFeatures terria={terria}
-                                                          viewState={this.props.viewState}
-                                                          experimentalItems={customElements.experimentalMenu}
+                                <ExplorerWindow
+                                    terria={terria}
+                                    viewState={this.props.viewState}
+                                />
+                                <If
+                                    condition={
+                                        this.props.terria.configParameters
+                                            .experimentalFeatures &&
+                                        !this.props.viewState.hideMapUi()
+                                    }
+                                >
+                                    <ExperimentalFeatures
+                                        terria={terria}
+                                        viewState={this.props.viewState}
+                                        experimentalItems={
+                                            customElements.experimentalMenu
+                                        }
                                     />
                                 </If>
                             </main>
@@ -155,7 +203,7 @@ const StandardUserInterface = createReactClass({
 
                 <If condition={this.props.terria.configParameters.feedbackUrl && !this.props.viewState.hideMapUi()}>
                     <aside className={Styles.feedback}>
-                        <FeedbackForm viewState={this.props.viewState}/>
+                        <FeedbackForm viewState={this.props.viewState} />
                     </aside>
                 </If>
 
@@ -169,7 +217,7 @@ const StandardUserInterface = createReactClass({
                 />
             </div>
         );
-    },
+    }
 });
 
 module.exports = StandardUserInterface;

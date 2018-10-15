@@ -20,7 +20,7 @@
   width: 100%;
 }
 
-.explorerPanelIsVisible{
+.explorerPanelIsVisible {
   opacity: 0.3;
 }
 
@@ -28,6 +28,7 @@
   font-family: $font-pop;
   background: $dark;
   width: $work-bench-width;
+  flex-basis: $work-bench-width;
   max-width: $work-bench-width;
   box-sizing: border-box;
   h1 {
@@ -44,29 +45,58 @@
   bottom: 0;
 }
 
-.feedback{
+.feedback {
   position: absolute;
   z-index: $front-component-z-index - 10;
 }
 
-.featureInfo{
+.featureInfo {
   position: absolute;
   z-index: $front-component-z-index - 20;
 }
 
+.sidePanel {
+  transition: all 0.25s;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+  visibility: visible;
+}
+
+.sidePanelHide {
+  display: block;
+  margin-left: 0-$work-bench-width;
+  visibility: hidden;
+}
+
+.showWorkbenchButton {
+  position: fixed;
+  top: 16px;
+  left: -200px;
+  z-index: 99;
+  width: 200px;
+  transition: all 0.25s;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-delay: 0.5s;
+}
+
+.showWorkbenchButtonisVisible {
+  left: 16px;
+}
+.showWorkbenchButtonisNotVisible {
+  transition-delay: 0s;
+}
+
 @media (min-width: $sm) {
   .ui {
-    display: table;
   }
   .uiInner {
-    display: table-row;
+    display: flex;
+    overflow: hidden;
   }
   .sidePanel {
-    display: table-cell;
     vertical-align: top;
   }
   .map {
-    display: table-cell;
     position: relative;
     height: 100vh;
     top: auto;
@@ -74,5 +104,7 @@
     left: auto;
     right: auto;
     overflow: hidden;
+    flex-grow: 1;
+    flex-basis: calc(100% - #{$work-bench-width});
   }
 }

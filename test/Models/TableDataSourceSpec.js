@@ -1,7 +1,7 @@
 'use strict';
 
 /*global require*/
-var loadText = require('terriajs-cesium/Source/Core/loadText');
+var loadText = require('../../lib/Core/loadText');
 var TableDataSource = require('../../lib/Models/TableDataSource');
 var TableStyle = require('../../lib/Models/TableStyle');
 var Terria = require('../../lib/Models/Terria');

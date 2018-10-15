@@ -27,7 +27,7 @@ describe('NominatimSearchProviderViewModel', function() {
     it('find a simple location', function(done) {
         jasmine.Ajax.install();
 
-        jasmine.Ajax.stubRequest(new RegExp('nominatim\\.openstreetmap\\.org/search\\?q=la tour du pin&bounded=1&format=json&countrycodes=fr&limit=2')).andReturn({
+        jasmine.Ajax.stubRequest(new RegExp('nominatim\\.openstreetmap\\.org/search\\?q=la%20tour%20du%20pin&bounded=1&format=json&countrycodes=fr&limit=2')).andReturn({
             responseText: JSON.stringify([{
                 "place_id": "127736185",
                 "licence": "Data © OpenStreetMap contributors, ODbL 1.0. http:\/\/www.openstreetmap.org\/copyright",
@@ -57,7 +57,7 @@ describe('NominatimSearchProviderViewModel', function() {
             }])
         });
 
-        jasmine.Ajax.stubRequest(new RegExp('nominatim\\.openstreetmap\\.org/search\\?q=la tour du pin&format=json&countrycodes=fr&limit=2')).andReturn({
+        jasmine.Ajax.stubRequest(new RegExp('nominatim\\.openstreetmap\\.org/search\\?q=la%20tour%20du%20pin&format=json&countrycodes=fr&limit=2')).andReturn({
             responseText: JSON.stringify([{
                 "place_id": "127736185",
                 "licence": "Data © OpenStreetMap contributors, ODbL 1.0. http:\/\/www.openstreetmap.org\/copyright",

@@ -24,6 +24,7 @@ const TerriaViewerWrapper = createReactClass({
     componentDidMount() {
         // Create the map/globe.
         this.terriaViewer = TerriaViewer.create(this.props.terria, {
+            terrain: this.props.terria.configParameters.cesiumTerrainUrl,
             developerAttribution: {
                 text: 'Data61',
                 link: 'http://www.csiro.au/en/Research/D61'

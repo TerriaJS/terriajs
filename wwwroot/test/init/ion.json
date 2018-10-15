@@ -1,0 +1,20 @@
+{
+    "catalog": [
+        {
+            "name": "Cesium Ion",
+            "type": "group",
+            "items": [
+                {
+                    "name": "PAMap Terrain",
+                    "type": "cesium-terrain",
+                    "ionAssetId": 3957
+                },
+                {
+                    "name": "Earth at Night",
+                    "type": "ion-imagery",
+                    "ionAssetId": 3812
+                }
+            ]
+        }
+    ]
+}

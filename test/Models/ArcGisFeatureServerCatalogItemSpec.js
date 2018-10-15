@@ -3,7 +3,7 @@
 /*global require,describe,it,expect,beforeEach*/
 
 var Terria = require('../../lib/Models/Terria');
-var loadWithXhr = require('terriajs-cesium/Source/Core/loadWithXhr');
+var loadWithXhr = require('../../lib/Core/loadWithXhr');
 var ArcGisFeatureServerCatalogItem = require('../../lib/Models/ArcGisFeatureServerCatalogItem');
 
 describe('ArcGisFeatureServerCatalogItem', function() {

@@ -38,10 +38,11 @@
         text-decoration: none;
         color: $color-primary;
       }
-    }
 
-    .cesium-credit-image{
-      display: none;
+      .cesium-credit-logoContainer::after {
+        content: "";
+        display: block;
+      }
     }
 
     .leaflet-control-container{

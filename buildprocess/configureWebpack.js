@@ -9,6 +9,11 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
     // console.log(fontAwesomeDir);
     // console.log(reactMdeDir);
 
+    config.node = config.node || {};
+
+    // Resolve node module use of fs
+    config.node.fs = 'empty';
+
     config.resolve = config.resolve || {};
     config.resolve.extensions = config.resolve.extensions || ['*', '.webpack.js', '.web.js', '.js', '.ts', '.tsx'];
     config.resolve.extensions.push('.jsx');
@@ -33,6 +38,18 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
                     pattern: /buildModuleUrl\([\'|\"](.*)[\'|\"]\)/ig,
                     replacement: function (match, p1, offset, string) {
                         return "require('" + cesiumDir.replace(/\\/g, '\\\\') + "/Source/" + p1.replace(/\\/g, '\\\\') + "')";
+                    }
+                },
+                {
+                    pattern: /Please assign <i>Cesium.Ion.defaultAccessToken<\/i>/g,
+                    replacement: function() {
+                        return "Please set \"cesiumIonAccessToken\" in config.json";
+                    }
+                },
+                {
+                    pattern: / before making any Cesium API calls/g,
+                    replacement: function() {
+                        return "";
                     }
                 }
             ]
@@ -125,6 +142,12 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
     config.module.loaders.push({
         test: /\.json|xml$/,
         include: path.resolve(cesiumDir, 'Source', 'Assets'),
+        loader: require.resolve('file-loader')
+    });
+
+    config.module.loaders.push({
+        test: /\.wasm$/,
+        include: path.resolve(cesiumDir, 'Source', 'ThirdParty'),
         loader: require.resolve('file-loader')
     });
 
