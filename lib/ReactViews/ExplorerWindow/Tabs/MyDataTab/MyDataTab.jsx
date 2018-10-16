@@ -61,6 +61,7 @@ const MyDataTab = createReactClass({
                       <button
                           type='button'
                           onClick={this.changeTab.bind(null, tab.id)}
+                          title={tab.caption}
                           className={classNames(Styles.tabListBtn, {
                               [Styles.isActive]:
                                   this.state.activeTab === tab.id
