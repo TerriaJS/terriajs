@@ -4,7 +4,7 @@ import createReactClass from 'create-react-class';
 import Icon from '../../../Icon.jsx';
 import PropTypes from 'prop-types';
 
-import DataCatalogGroup from '../../../DataCatalog/DataCatalogGroup.jsx';
+import DataCatalog from '../../../DataCatalog/DataCatalog.jsx';
 import DataPreview from '../../../Preview/DataPreview.jsx';
 import AddData from './AddData.jsx';
 import ObserveModelMixin from '../../../ObserveModelMixin';
@@ -137,8 +137,9 @@ const MyDataTab = createReactClass({
                             <div className={Styles.tabLeft}>{this.renderTabs()}</div>
 
                             <ul className={Styles.dataCatalog}>
-                              <DataCatalogGroup group={this.props.terria.catalog.userAddedDataGroup}
-                                                viewState={this.props.viewState}/>
+                              <DataCatalog items={this.props.terria.catalog.userAddedDataGroup.items}
+                                           viewState={this.props.viewState}
+                                           terria={this.props.terria}/>
                             </ul>
                         </div>
                     </If>
