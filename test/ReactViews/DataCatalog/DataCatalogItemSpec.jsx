@@ -15,7 +15,7 @@ function makeItemUserAdded(item, terria) {
 }
 
 describe('DataCatalogItem', () => {
-    let terria, viewState, item;
+    let terria, viewState, item, removable;
 
     beforeEach(() => {
         terria = new Terria({baseUrl: './'});
@@ -26,6 +26,8 @@ describe('DataCatalogItem', () => {
 
         item = new CatalogItem(terria);
         item.isEnabled = false;
+
+        removable = false;
 
         spyOn(viewState, 'viewCatalogMember');
         spyOn(viewState, 'switchMobileView');
@@ -147,15 +149,16 @@ describe('DataCatalogItem', () => {
                 expect(getRenderedProp('btnState')).toBe('remove');
             });
 
-            it('"trash" if item is user supplied and is not within a group and not loading and not on mobile', () => {
+            it('"trash" if item removable', () => {
                 item.isLoading = false;
-                makeItemUserAdded(item, terria);
+                removable = true;
                 expect(getRenderedProp('btnState')).toBe('trash');
             });
 
             it('null is item is user supplied but within a group and not loading and not on mobile', () => {
                 item.isLoading = false;
                 item.isUserSupplied = true;
+                removable = false;
                 item.parent = new CatalogItem(terria);
                 expect(getRenderedProp('btnState')).toBe(null);
             });
@@ -237,6 +240,6 @@ describe('DataCatalogItem', () => {
     }
 
     function renderShallow() {
-        return shallow(<DataCatalogItem viewState={viewState} item={item}/>);
+        return shallow(<DataCatalogItem viewState={viewState} item={item} removable={removable} terria={terria}/>);
     }
 });

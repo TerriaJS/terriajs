@@ -34,7 +34,7 @@ function CatalogGroup(props) {
                 <button type='button'
                       className={Styles.trashGroup}
                       title="remove this group"
-                      onClick={props.removeUserAddedGroup}>
+                      onClick={props.removeUserAddedData}>
                       <Icon glyph={Icon.GLYPHS.trashcan}/>
                 </button>
             </If>
@@ -76,7 +76,7 @@ CatalogGroup.propTypes = {
     ]),
     selected: PropTypes.bool,
     removable: PropTypes.bool,
-    removeUserAddedGroup: PropTypes.func
+    removeUserAddedData: PropTypes.func
 };
 
 export default CatalogGroup;

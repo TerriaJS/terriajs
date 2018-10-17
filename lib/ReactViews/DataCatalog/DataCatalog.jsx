@@ -47,6 +47,8 @@ const DataCatalog = createReactClass({
                                            manageIsOpenLocally={isSearching}
                                            key={item.uniqueId}
                                            removable = {this.props.removable}
+                                           terria={this.props.terria}
+
                     />}
                 </For>
             </ul>

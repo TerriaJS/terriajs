@@ -2,6 +2,7 @@ import React from 'react';
 import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import addedByUser from '../../Core/addedByUser';
+import removeUserAddedData from '../../Models/removeUserAddedData';
 import CatalogGroup from './CatalogGroup';
 import DataCatalogMember from './DataCatalogMember';
 import getAncestors from '../../Models/getAncestors';
@@ -17,7 +18,8 @@ const DataCatalogGroup = createReactClass({
         /** Overrides whether to get the open state of the group from the group model or manage it internally */
         manageIsOpenLocally: PropTypes.bool,
         userData: PropTypes.bool,
-        removable: PropTypes.bool
+        removable: PropTypes.bool,
+        terria: PropTypes.object
     },
 
     getDefaultProps() {
@@ -59,15 +61,6 @@ const DataCatalogGroup = createReactClass({
         this.props.viewState.viewCatalogMember(this.props.group);
     },
 
-    removeUserAddedGroup() {
-      const parent = this.props.group.parent;
-      // can remove if not root group
-      if(parent && parent.parent) {
-        const itemIndex = this.props.group.parent.items.indexOf(this.props.group);
-        this.props.group.parent.items.splice(itemIndex, 1);
-      }
-    },
-
     isTopLevel() {
         const parent = this.props.group.parent;
         return !parent || !parent.parent;
@@ -91,7 +84,7 @@ const DataCatalogGroup = createReactClass({
                 emptyMessage="This group is empty"
                 onClick={this.clickGroup}
                 removable={this.props.removable}
-                removeUserAddedGroup ={this.removeUserAddedGroup}
+                removeUserAddedData ={removeUserAddedData.bind(this, this.props.terria, this.props.group)}
                 selected ={this.isSelected()}>
                 <If condition={this.isOpen()}>
                     <For each="item" of={group.items}>

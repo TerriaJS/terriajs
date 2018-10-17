@@ -19,7 +19,8 @@ export default createReactClass({
         member: PropTypes.object.isRequired,
         viewState: PropTypes.object.isRequired,
         manageIsOpenLocally: PropTypes.bool,
-        removable: PropTypes.bool
+        removable: PropTypes.bool,
+        terria: PropTypes.object
     },
 
     render() {
@@ -28,11 +29,15 @@ export default createReactClass({
                 <DataCatalogGroup group={this.props.member}
                                   viewState={this.props.viewState}
                                   manageIsOpenLocally={this.props.manageIsOpenLocally}
-                                  removable={this.props.removable}/>
+                                  removable={this.props.removable}
+                                  terria={this.props.terria}/>
             );
         } else {
             return (
-                <DataCatalogItem item={this.props.member} viewState={this.props.viewState} removable={this.props.removable}/>
+                <DataCatalogItem item={this.props.member}
+                                 viewState={this.props.viewState}
+                                 removable={this.props.removable}
+                                 terria={this.props.terria}/>
             );
         }
     }
