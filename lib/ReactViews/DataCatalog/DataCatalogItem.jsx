@@ -3,7 +3,6 @@ import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import addedByUser from '../../Core/addedByUser';
-import canBeDeleted from '../../Core/canBeDeleted';
 import CatalogItem from './CatalogItem';
 import getAncestors from '../../Models/getAncestors';
 import ObserveModelMixin from '../ObserveModelMixin';
@@ -23,13 +22,14 @@ const DataCatalogItem = createReactClass({
 
     propTypes: {
         item: PropTypes.object.isRequired,
-        viewState: PropTypes.object.isRequired
+        viewState: PropTypes.object.isRequired,
+        removable: PropTypes.bool
     },
 
     onBtnClicked(event) {
         if (defined(this.props.item.invoke) || this.props.viewState.useSmallScreenInterface) {
             this.setPreviewedItem();
-        } else if(canBeDeleted(this.props.item)) {
+        } else if(this.props.removable) {
             this.props.item.isEnabled = false;
             if(this.props.item.parent) {
               const itemIndex = this.props.item.parent.items.indexOf(this.props.item);
@@ -88,7 +88,7 @@ const DataCatalogItem = createReactClass({
             return 'loading';
         } else if (this.props.viewState.useSmallScreenInterface) {
             return 'preview';
-        } else if (canBeDeleted(this.props.item)) {
+        } else if (this.props.removable) {
             return 'trash';
         } else if(this.props.item.isUserSupplied) {
             return null;

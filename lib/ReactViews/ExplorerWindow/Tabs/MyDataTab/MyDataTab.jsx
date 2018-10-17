@@ -138,6 +138,7 @@ const MyDataTab = createReactClass({
 
                             <ul className={Styles.dataCatalog}>
                               <DataCatalog items={this.props.terria.catalog.userAddedDataGroup.items}
+                                           removable={true}
                                            viewState={this.props.viewState}
                                            terria={this.props.terria}/>
                             </ul>

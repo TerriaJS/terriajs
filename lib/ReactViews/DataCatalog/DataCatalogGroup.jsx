@@ -2,7 +2,6 @@ import React from 'react';
 import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import addedByUser from '../../Core/addedByUser';
-import canBeDeleted from '../../Core/canBeDeleted';
 import CatalogGroup from './CatalogGroup';
 import DataCatalogMember from './DataCatalogMember';
 import getAncestors from '../../Models/getAncestors';
@@ -17,7 +16,8 @@ const DataCatalogGroup = createReactClass({
         viewState: PropTypes.object.isRequired,
         /** Overrides whether to get the open state of the group from the group model or manage it internally */
         manageIsOpenLocally: PropTypes.bool,
-        userData: PropTypes.bool
+        userData: PropTypes.bool,
+        removable: PropTypes.bool
     },
 
     getDefaultProps() {
@@ -90,7 +90,7 @@ const DataCatalogGroup = createReactClass({
                 loading={group.isLoading}
                 emptyMessage="This group is empty"
                 onClick={this.clickGroup}
-                removable={canBeDeleted(this.props.group)}
+                removable={this.props.removable}
                 removeUserAddedGroup ={this.removeUserAddedGroup}
                 selected ={this.isSelected()}>
                 <If condition={this.isOpen()}>

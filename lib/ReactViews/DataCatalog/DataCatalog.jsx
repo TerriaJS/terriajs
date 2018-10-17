@@ -20,7 +20,8 @@ const DataCatalog = createReactClass({
     propTypes: {
         terria: PropTypes.object,
         viewState: PropTypes.object,
-        items: PropTypes.array
+        items: PropTypes.array,
+        removable: PropTypes.bool
     },
 
     render() {
@@ -45,6 +46,7 @@ const DataCatalog = createReactClass({
                                            member={item}
                                            manageIsOpenLocally={isSearching}
                                            key={item.uniqueId}
+                                           removable = {this.props.removable}
                     />}
                 </For>
             </ul>
