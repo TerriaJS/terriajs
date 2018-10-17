@@ -32,6 +32,9 @@
 .addData {
   margin: $padding-small 0;
   display: flex;
+  button{
+    height: 42px;
+  }
 }
 
 .uploadData {
