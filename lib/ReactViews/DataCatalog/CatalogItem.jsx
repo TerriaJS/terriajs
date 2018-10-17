@@ -11,7 +11,7 @@ const STATE_TO_TITLE = {
     loading: 'Loading...',
     remove: 'Remove',
     add: 'Add',
-    trash: 'remove to trash'
+    trash: 'Remove from catalogue'
 };
 
 const STATE_TO_ICONS = {

@@ -80,7 +80,7 @@ const Icon = createReactClass({
         return (
           <svg viewBox="0 0 100 100" className={classNames('icon', this.props.className, Styles.svg)} style={this.props.style}>
               <use xlinkHref={'#' + glyph.id}/>
-            </svg>
+          </svg>
         );
     }
 });
