@@ -4,6 +4,7 @@ Change Log
 ### Next Release
 
 * Removed the Terria logo from the preview map and made the credit there smaller.
+* Fall back to the style name in the workbench styles dropdown when no title is given for a style in WMS GetCapabilities.
 
 ### v6.2.1
 
