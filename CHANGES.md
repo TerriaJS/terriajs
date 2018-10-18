@@ -1,6 +1,9 @@
 Change Log
 ==========
 
+### next
+* Fallback to style name in workbench styles dropdown when no title is given for a style in GetCapabilities.
+
 ### v6.2.1
 
 * We now use Cesium Ion for the Bing Maps basemaps, unless a `bingMapsKey` is provided in [config.json](https://docs.terria.io/guide/customizing/client-side-config/#parameters). You can control this behavior with the `useCesiumIonBingImagery` property. Please note that if a `bingMapsKey` is not provided, the Bing Maps geocoder will always return no results.
