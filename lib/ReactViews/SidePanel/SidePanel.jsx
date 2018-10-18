@@ -2,6 +2,7 @@ import React from 'react';
 
 import createReactClass from 'create-react-class';
 
+
 import PropTypes from 'prop-types';
 
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
@@ -16,10 +17,11 @@ import { removeMarker } from '../../Models/LocationMarkerUtils';
 
 import Styles from './side-panel.scss';
 import { reaction } from 'mobx';
+import { observer } from 'mobx-react';
 
-const SidePanel = createReactClass({
+const SidePanel = observer(createReactClass({
     displayName: 'SidePanel',
-    mixins: [ObserveModelMixin],
+    //mixins: [ObserveModelMixin],
 
     propTypes: {
         terria: PropTypes.object.isRequired,
@@ -131,6 +133,6 @@ const SidePanel = createReactClass({
             </div>
         );
     }
-});
+}));
 
 module.exports = SidePanel;
