@@ -68,7 +68,7 @@ const StyleSelectorSection = createReactClass({
             <div key={layer.name}>
                 <label className={Styles.title} htmlFor={layer.name}>{label}</label>
                 <select className={Styles.field} name={layer.name} value={layer.style} onChange={this.changeStyle.bind(this, layer)}>
-                    {styles.map(item => <option key={item.name} value={item.name}>{item.title}</option>)}
+                    {styles.map(item => <option key={item.name} value={item.name}>{item.title || item.name}</option>)}
                 </select>
             </div>
         );

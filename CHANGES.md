@@ -1,6 +1,15 @@
 Change Log
 ==========
 
+## Next Release
+
+* Made it possible to configure the compass control's colors using CSS.
+
+### v6.2.2
+
+* Removed the Terria logo from the preview map and made the credit there smaller.
+* Fall back to the style name in the workbench styles dropdown when no title is given for a style in WMS GetCapabilities.
+
 ### v6.2.1
 
 * We now use Cesium Ion for the Bing Maps basemaps, unless a `bingMapsKey` is provided in [config.json](https://docs.terria.io/guide/customizing/client-side-config/#parameters). You can control this behavior with the `useCesiumIonBingImagery` property. Please note that if a `bingMapsKey` is not provided, the Bing Maps geocoder will always return no results.

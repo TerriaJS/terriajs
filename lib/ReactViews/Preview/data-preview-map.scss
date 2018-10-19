@@ -27,8 +27,8 @@
 
   :global {
     .leaflet-control-attribution {
-      font-size: 6px;
-      background: none;
+      font-size: 6px !important;
+      background: none !important;
     }
   }
 }

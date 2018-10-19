@@ -66,7 +66,10 @@ const GLYPHS = {
     upload: require('../../wwwroot/images/icons/upload.svg'),
     trashcan: require('../../wwwroot/images/icons/trashcan.svg'),
     local: require('../../wwwroot/images/icons/localfile.svg'),
-    web: require('../../wwwroot/images/icons/remotefile.svg')
+    web: require('../../wwwroot/images/icons/remotefile.svg'),
+    compassInner: require('../../wwwroot/images/icons/compass-inner.svg'),
+    compassOuter: require('../../wwwroot/images/icons/compass-outer.svg'),
+    compassRotationMarker: require('../../wwwroot/images/icons/compass-rotation-marker.svg')
 };
 
 const Icon = createReactClass({
