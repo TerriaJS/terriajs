@@ -63,6 +63,10 @@ const GLYPHS = {
     next: require('../../wwwroot/images/icons/next.svg'),
     timeline: require('../../wwwroot/images/icons/timeline.svg'),
     data: require('../../wwwroot/images/icons/data.svg'),
+    upload: require('../../wwwroot/images/icons/upload.svg'),
+    trashcan: require('../../wwwroot/images/icons/trashcan.svg'),
+    local: require('../../wwwroot/images/icons/localfile.svg'),
+    web: require('../../wwwroot/images/icons/remotefile.svg'),
     compassInner: require('../../wwwroot/images/icons/compass-inner.svg'),
     compassOuter: require('../../wwwroot/images/icons/compass-outer.svg'),
     compassRotationMarker: require('../../wwwroot/images/icons/compass-rotation-marker.svg')
@@ -77,9 +81,9 @@ const Icon = createReactClass({
     render() {
         const glyph = this.props.glyph;
         return (
-            <svg viewBox="0 0 100 100" className={classNames('icon', this.props.className, Styles.svg)} style={this.props.style}>
-                <use xlinkHref={'#' + glyph.id}></use>
-            </svg>
+          <svg viewBox="0 0 100 100" className={classNames('icon', this.props.className, Styles.svg)} style={this.props.style}>
+              <use xlinkHref={'#' + glyph.id}/>
+          </svg>
         );
     }
 });

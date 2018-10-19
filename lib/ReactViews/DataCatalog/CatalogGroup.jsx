@@ -30,6 +30,14 @@ function CatalogGroup(props) {
                 {props.text}
                 <span className={Styles.caret}>{props.open ? <Icon glyph={Icon.GLYPHS.opened}/> : <Icon glyph={Icon.GLYPHS.closed}/>}</span>
             </button>
+            <If condition={props.removable}>
+                <button type='button'
+                      className={Styles.trashGroup}
+                      title="remove this group"
+                      onClick={props.removeUserAddedData}>
+                      <Icon glyph={Icon.GLYPHS.trashcan}/>
+                </button>
+            </If>
             <If condition={props.open}>
                 <ul className={classNames(
                         Styles.catalogGroup,
@@ -66,7 +74,9 @@ CatalogGroup.propTypes = {
         PropTypes.element,
         PropTypes.arrayOf(PropTypes.element)
     ]),
-    selected: PropTypes.bool
+    selected: PropTypes.bool,
+    removable: PropTypes.bool,
+    removeUserAddedData: PropTypes.func
 };
 
 export default CatalogGroup;
