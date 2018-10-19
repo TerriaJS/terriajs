@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+## Next Release
+
+* Made it possible to configure the compass control's colors using CSS.
+
 ### v6.2.2
 
 * Removed the Terria logo from the preview map and made the credit there smaller.
