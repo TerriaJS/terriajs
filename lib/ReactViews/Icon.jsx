@@ -63,6 +63,9 @@ const GLYPHS = {
     next: require('../../wwwroot/images/icons/next.svg'),
     timeline: require('../../wwwroot/images/icons/timeline.svg'),
     data: require('../../wwwroot/images/icons/data.svg'),
+    compassInner: require('../../wwwroot/images/icons/compass-inner.svg'),
+    compassOuter: require('../../wwwroot/images/icons/compass-outer.svg'),
+    compassRotationMarker: require('../../wwwroot/images/icons/compass-rotation-marker.svg')
 };
 
 const Icon = createReactClass({
