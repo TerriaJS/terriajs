@@ -88,7 +88,7 @@ const DataCatalogItem = createReactClass({
             return 'preview';
         } else if (this.props.removable) {
             return 'trash';
-        } else if(this.props.item.isUserSupplied) {
+        } else if(addedByUser(this.props.item)) {
             return null;
         }else if (this.props.item.isEnabled) {
             return 'remove';
