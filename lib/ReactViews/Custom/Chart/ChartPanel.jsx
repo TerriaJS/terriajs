@@ -48,6 +48,12 @@ const ChartPanel = createReactClass({
     },
 
     render() {
+        const importantChartsPresent = this.props.terria.catalog.chartableItems
+            .filter(ci => !ci.dontChartAlone)
+            .length > 0;
+        if (!importantChartsPresent) {
+            return null;
+        }
         const chartableItems = this.props.terria.catalog.chartableItems;
         let data = [];
         let xUnits;
