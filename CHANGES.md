@@ -1,7 +1,7 @@
 Change Log
 ==========
 
-## Next Release
+## v6.2.3
 
 * Changed the "My Data" interface to be much more intuitive and tweaked the visual style of the catalog.
 * Made it possible to configure the compass control's colors using CSS.
