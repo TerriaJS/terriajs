@@ -1,7 +1,7 @@
 Change Log
 ==========
 
-## Next Release
+## v6.2.3
 
 * Made it possible to configure the compass control's colors using CSS.
 
