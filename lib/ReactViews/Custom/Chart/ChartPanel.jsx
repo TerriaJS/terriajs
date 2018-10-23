@@ -48,13 +48,11 @@ const ChartPanel = createReactClass({
     },
 
     render() {
-        const importantChartsPresent = this.props.terria.catalog.chartableItems
-            .filter(ci => !ci.dontChartAlone)
-            .length > 0;
-        if (!importantChartsPresent) {
+        const chartableItems = this.props.terria.catalog.chartableItems;
+        if (!chartableItems.find(ci => !ci.dontChartAlone)) {
             return null;
         }
-        const chartableItems = this.props.terria.catalog.chartableItems;
+        
         let data = [];
         let xUnits;
         for (const item of chartableItems) {                
@@ -66,10 +64,10 @@ const ChartPanel = createReactClass({
         }
 
         const isLoading = (chartableItems.length > 0) && (chartableItems[chartableItems.length - 1].isLoading);
-        const isVisible = (data.length > 0) || isLoading;
 
         this.props.terria.currentViewer.notifyRepaintRequired();
 
+        const isVisible = (data.length > 0) || isLoading;
         if (!isVisible) {
             return null;
         }
