@@ -45,7 +45,7 @@ const WorkbenchList = observer(createReactClass({
                     <For each="item" of={this.props.terria.workbench.items}>
                         <WorkbenchItem item={item}
                                        sortData={item}
-                                       key={item.uniqueId}
+                                       key={item.id}
                                        viewState={this.props.viewState}
                         />
                     </For>

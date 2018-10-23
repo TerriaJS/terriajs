@@ -21,13 +21,15 @@ import ColorScaleRangeSection from './Controls/ColorScaleRangeSection';
 import ShortReport from './Controls/ShortReport';
 import StyleSelectorSection from './Controls/StyleSelectorSection';
 import ViewingControls from './Controls/ViewingControls';
+import { observer } from 'mobx-react';
+
 
 import Styles from './workbench-item.scss';
 import Icon from '../Icon';
 
-const WorkbenchItem = createReactClass({
+const WorkbenchItem = observer(createReactClass({
     displayName: 'WorkbenchItem',
-    mixins: [ObserveModelMixin],
+    // mixins: [ObserveModelMixin],
 
     propTypes: {
         style: PropTypes.object,
@@ -119,6 +121,6 @@ const WorkbenchItem = createReactClass({
             </li>
         );
     },
-});
+}));
 
 module.exports = sortable(WorkbenchItem);
