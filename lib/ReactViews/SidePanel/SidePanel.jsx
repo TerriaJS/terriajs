@@ -5,7 +5,6 @@ import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
-
 import ObserveModelMixin from '../ObserveModelMixin';
 import SearchBox from '../Search/SearchBox.jsx';
 import SidebarSearch from '../Search/SidebarSearch.jsx';
@@ -57,6 +56,10 @@ const SidePanel = createReactClass({
         this.props.viewState.openAddData();
     },
 
+    onAddLocalDataClicked() {
+        this.props.viewState.openUserData();
+    },
+
     changeSearchText(newText) {
         this.props.viewState.searchState.locationSearchText = newText;
 
@@ -79,22 +82,33 @@ const SidePanel = createReactClass({
         return (
             <div className={Styles.workBench}>
                 <div className={Styles.header}>
+
                     <FullScreenButton
                         terria={this.props.terria}
                         viewState={this.props.viewState}
                         minified={true}
                         animationDuration={250}
                     />
+
                     <SearchBox
                         onSearchTextChanged={this.changeSearchText}
                         onDoSearch={this.search}
                         onFocus={this.startLocationSearch}
                         searchText={searchState.locationSearchText}
                         placeholder='Search for locations'
+
                     />
                     <div className={Styles.addData}>
-                        <button type='button' onClick={this.onAddDataClicked} className={Styles.button}>
+                        <button type='button' onClick={this.onAddDataClicked} className={Styles.button} title='add data'> 
                             <Icon glyph={Icon.GLYPHS.add}/>Add data
+                        </button>
+                        <button
+                            type='button'
+                            onClick={this.onAddLocalDataClicked}
+                            className={Styles.uploadData}
+                            title='upload data'
+                        >
+                            <Icon glyph={Icon.GLYPHS.upload} />
                         </button>
                     </div>
                 </div>

@@ -15,7 +15,7 @@ const FileInput = createReactClass({
 
     getInitialState() {
         return {
-            value: 'Browse for local data',
+            value: 'Browse...',
             hovered: false
         };
     },
@@ -28,16 +28,26 @@ const FileInput = createReactClass({
             this.props.onChange(e);
         }
     },
-    
+
     render() {
         return (
-            <form className={Styles.fileInput}
-                  onMouseEnter={() => this.setState({hovered: true})}
-                  onMouseLeave={() => this.setState({hovered: false})}>
-                <input type='file' onChange={this.handleChange} accept={this.props.accept} className={Styles.input}/>
+            <form
+                className={Styles.fileInput}
+                onMouseEnter={() => this.setState({ hovered: true })}
+                onMouseLeave={() => this.setState({ hovered: false })}
+            >
+                <input
+                    type='file'
+                    onChange={this.handleChange}
+                    accept={this.props.accept}
+                    className={Styles.input}
+                />
                 <label
-                    className={classNames(Styles.btn, {[Styles.btnHover]: this.state.hovered})}>
-                    {this.state.value ? this.state.value : 'Browse for local data'}
+                    className={classNames(Styles.btn, {
+                        [Styles.btnHover]: this.state.hovered
+                    })}
+                >
+                    {this.state.value ? this.state.value : 'Browse...'}
                 </label>
             </form>
         );
