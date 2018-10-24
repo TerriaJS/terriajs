@@ -154,7 +154,6 @@ function expand(props, sourceIndex) {
     // Create a new CSV catalog item from the data source details we have
     // Side-effect: sets activeConcepts and existingColors
     function makeNewCatalogItem() {
-        const terria = props.terria;
         const url = defined(sourceIndex) ? props.sources[sourceIndex] : undefined;
         const newCatalogItem = new CsvCatalogItem(terria, url, { options: makeTableStyle() });
         let tableStructure = props.tableStructure;
@@ -202,7 +201,7 @@ function expand(props, sourceIndex) {
         group.add(newCatalogItem);
         newCatalogItem.isLoading = true;
         newCatalogItem.isMappable = false;
-        terria.catalog.chartableItems.push(newCatalogItem);  // Notify the chart panel so it shows "loading".
+        terria.catalog.addChartableItem(newCatalogItem);  // Notify the chart panel so it shows "loading".
         newCatalogItem.isEnabled = true;  // This loads it as well.
         
         return newCatalogItem;
@@ -210,6 +209,7 @@ function expand(props, sourceIndex) {
 
     let existingColors;
     let activeConcepts;
+    const terria = props.terria;
     const newCatalogItem = makeNewCatalogItem();
     // Is there a better way to set up an action to occur once the file has loaded?
     newCatalogItem.load().then(() => {

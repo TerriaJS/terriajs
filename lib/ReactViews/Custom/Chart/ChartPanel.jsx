@@ -49,27 +49,28 @@ const ChartPanel = createReactClass({
 
     render() {
         const chartableItems = this.props.terria.catalog.chartableItems;
+        if (!chartableItems.find(ci => !ci.dontChartAlone)) {
+            return null;
+        }
+
         let data = [];
         let xUnits;
-        for (let i = chartableItems.length - 1; i >= 0; i--) {
-            const item = chartableItems[i];
-            if (item.isEnabled && defined(item.tableStructure)) {
-                const thisData = item.chartData();
-                if(thisData && thisData[0]) {
-                  thisData[0].concepts = item.concepts;
-                }
-                if (defined(thisData)) {
-                    data = data.concat(thisData);
-                    xUnits = defined(xUnits) ? xUnits : item.xAxis.units;
-                }
+        for (const item of chartableItems) {
+            const thisData = item.chartData();
+            if(thisData){
+                thisData[0].concepts = item.concepts;
+            }
+            if (item.isEnabled  && defined(thisData)) {
+                data = [].concat(thisData).concat(data);
+                xUnits = defined(xUnits) ? xUnits : item.xAxis.units;
             }
         }
 
         const isLoading = (chartableItems.length > 0) && (chartableItems[chartableItems.length - 1].isLoading);
-        const isVisible = (data.length > 0) || isLoading;
 
         this.props.terria.currentViewer.notifyRepaintRequired();
 
+        const isVisible = (data.length > 0) || isLoading;
         if (!isVisible) {
             return null;
         }
