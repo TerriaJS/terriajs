@@ -2,7 +2,7 @@
 @import '../../../Sass/common/mixins';
 
 .concepts{
-  padding: 0 30px;
+  padding: 0 15px;
   display: flex;
   flex-wrap: wrap;
 }
@@ -10,7 +10,7 @@
   composes: btn from '../../../Sass/common/_buttons.scss';
   display: block;
   padding: 7px 0px;
-  width: 45%;
+  width: calc((100% - 10px) /2);
   background: rgba(255, 255, 255, 0.2);
   padding: 5px 10px;
   border-radius: 2px;

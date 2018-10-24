@@ -174,6 +174,7 @@ const Chart = createReactClass({
                 ChartRenderer.update(element, chartParameters);
             });
         }
+        ChartRenderer.update(element, chartParameters);
     },
 
     componentWillUnmount() {
@@ -238,8 +239,6 @@ const Chart = createReactClass({
         } else if (defined(this.props.tableStructure)) {
             chartData = this.chartDataArrayFromTableStructure(this.props.tableStructure);
         }
-
-        console.log(this.props.data);
 
         const footerHeight = 36 * Math.ceil(this.props.data.length /2) + 50;
 
