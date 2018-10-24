@@ -123,7 +123,7 @@ function expand(props, sourceIndex) {
         const tableStyleOptions = {
             columns: {}
         };
-        const maxColumnNamesAndUnits = Math.max(props.columnNames && props.columnNames.length || 0, props.columnUnits && props.columnUnits.length || 0);
+        const maxColumnNamesAndUnits = Math.max((props.columnNames || []).length, (props.columnUnits || []).length);
         for (let columnNumber = 0; columnNumber < maxColumnNamesAndUnits; columnNumber++) {
             tableStyleOptions.columns[columnNumber] = {};
             if (defined(props.columnNames) && props.columnNames[columnNumber]) {
@@ -142,9 +142,7 @@ function expand(props, sourceIndex) {
         }
         if (defined(props.yColumns)) {
             props.yColumns.forEach(nameOrIndex => {
-                if (!defined(tableStyleOptions.columns[nameOrIndex])) {
-                    tableStyleOptions.columns[nameOrIndex] = {};
-                }
+                tableStyleOptions.columns[nameOrIndex] = defaultValue(tableStyleOptions.columns[nameOrIndex], {});
                 tableStyleOptions.columns[nameOrIndex].active = true;
             });
         }
@@ -155,7 +153,7 @@ function expand(props, sourceIndex) {
     // Side-effect: sets activeConcepts and existingColors
     function makeNewCatalogItem() {
         const url = defined(sourceIndex) ? props.sources[sourceIndex] : undefined;
-        const newCatalogItem = new CsvCatalogItem(terria, url, { options: makeTableStyle() });
+        const newCatalogItem = new CsvCatalogItem(terria, url, { tableStyle: makeTableStyle() });
         let tableStructure = props.tableStructure;
         if (defined(props.colors) && props.colors.length >= tableStructure.columns.length) {
             newCatalogItem.getNextColor = index => props.colors[index];
