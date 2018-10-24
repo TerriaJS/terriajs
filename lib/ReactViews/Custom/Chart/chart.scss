@@ -1,6 +1,11 @@
 @import '~terriajs-variables';
 @import '../../../Sass/common/mixins';
 
+
+.chartInner{
+  background: rgba(#ffffff, 0.1);
+}
+
 // D3 Axis
 .chart {
   :global {
@@ -105,3 +110,23 @@
   }
 }
 
+.concepts{
+  display: flex;
+}
+.conceptsList{
+  margin: 0;
+  list-style: none;
+  ul{
+    display: flex;
+
+    li{
+      background: rgba(255, 255, 255, 0.2);
+      padding: 0px 10px;
+      border-radius: 2px;
+      display: block;
+      margin: 0 10px 5px 0;
+      flex-basis: 48%;
+     }
+  }
+
+}

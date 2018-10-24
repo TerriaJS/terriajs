@@ -16,7 +16,7 @@ import Icon from "../../Icon.jsx";
 
 import Styles from './chart-panel.scss';
 
-const height = 250;
+const height = 350;
 
 const ChartPanel = createReactClass({
     displayName: 'ChartPanel',
@@ -52,11 +52,14 @@ const ChartPanel = createReactClass({
         if (!chartableItems.find(ci => !ci.dontChartAlone)) {
             return null;
         }
-        
+
         let data = [];
         let xUnits;
-        for (const item of chartableItems) {                
+        for (const item of chartableItems) {
             const thisData = item.chartData();
+            if(thisData) {
+                thisData[0].concepts = item.concepts;
+            }
             if (item.isEnabled  && defined(thisData)) {
                 data = [].concat(thisData).concat(data);
                 xUnits = defined(xUnits) ? xUnits : item.xAxis.units;
@@ -79,7 +82,7 @@ const ChartPanel = createReactClass({
         if (data.length > 0) {
             // TODO: use a calculation for the 34 pixels taken off...
             chart = (
-                <Chart data={data} axisLabel={{x: xUnits, y: undefined}} height={height - 34}/>
+                <Chart data={data} axisLabel={{x: xUnits, y: undefined}} height={height}/>
             );
         }
         return (

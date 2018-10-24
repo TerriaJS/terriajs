@@ -24,6 +24,7 @@ import loadText from '../../../Core/loadText';
 import when from 'terriajs-cesium/Source/ThirdParty/when';
 
 import ChartData from '../../../Charts/ChartData';
+import ConceptsSelector from './ConceptsSelector';
 import ChartRenderer from '../../../Charts/ChartRenderer';
 import proxyCatalogItemUrl from '../../../Models/proxyCatalogItemUrl';
 import TableStructure from '../../../Map/TableStructure';
@@ -56,18 +57,18 @@ const Chart = createReactClass({
         highlightX: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
         updateCounter: PropTypes.any,  // Change this to trigger an update.
         pollSeconds: PropTypes.any, // This is not used by Chart. It is used internally by registerCustomComponentTypes.
-        
+
         // You can provide the data directly via props.data (ChartData[]):
         data: PropTypes.array,
         // chartType: PropTypes.object, // TODO clarify. ChartData has its own 'type' which can be bar, line, etc.
-        
+
         // Or, provide a URL to the data, along with optional xColumn, yColumns, colors
         url: PropTypes.string,
         xColumn: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
         yColumns: PropTypes.array,
         colors: PropTypes.array,
         pollUrl: PropTypes.string,
-        
+
         // Or, provide a tableStructure directly.
         tableStructure: PropTypes.object
     },
@@ -173,6 +174,7 @@ const Chart = createReactClass({
                 ChartRenderer.update(element, chartParameters);
             });
         }
+        ChartRenderer.update(element, chartParameters);
     },
 
     componentWillUnmount() {
@@ -185,7 +187,7 @@ const Chart = createReactClass({
         });
         this._promise = undefined;
     },
-    
+
     /**
      * Return the initialisation parameters to be passed to LineChart (or other chart type).
      * If it is not a mini-chart, add tooltip settings (including a unique id for the tooltip DOM element).
@@ -204,7 +206,7 @@ const Chart = createReactClass({
                 className: Styles.toolTip,
                 id: this._tooltipId,
                 align: 'prefer-right', // With right/left alignment, the offset is relative to the svg, so need to inset.
-                offset: {top: 40, left: 66, right: 30, bottom: 5}
+                offset: {top: 40, left: 33, right: 30, bottom: 5}
             };
             if (this.props.styling === 'histogram') {
                 titleSettings = undefined;
@@ -221,7 +223,7 @@ const Chart = createReactClass({
                     type: 'legend',
                     height: 30
                 };
-            }            
+            }
             grid = {
                 x: true,
                 y: true
@@ -238,11 +240,13 @@ const Chart = createReactClass({
             chartData = this.chartDataArrayFromTableStructure(this.props.tableStructure);
         }
 
+        const footerHeight = this.props.data ? 36 * Math.ceil(this.props.data.length /2) + 50 : 50;
+
         return {
             data: chartData,
             domain: this.props.domain,
             width: '100%',
-            height: defaultValue(this.props.height, defaultHeight),
+            height: defaultValue(this.props.height - footerHeight, defaultHeight),
             axisLabel: this.props.axisLabel,
             mini: this.props.styling === 'feature-info',
             transitionDuration: this.props.transitionDuration,
@@ -256,7 +260,10 @@ const Chart = createReactClass({
 
     render() {
         return (
-            <div className={Styles.chart} ref={element=>{this._element = element;}}></div>
+            <div className={Styles.chart}>
+              <div className={Styles.chartInner} ref={element=>{this._element = element;}}/>
+              {this.props.data && <ConceptsSelector categories = {this.props.data} />}
+            </div>
         );
     }
 });
