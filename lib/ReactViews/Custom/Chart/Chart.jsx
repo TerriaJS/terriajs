@@ -240,7 +240,8 @@ const Chart = createReactClass({
             chartData = this.chartDataArrayFromTableStructure(this.props.tableStructure);
         }
 
-        const footerHeight = 36 * Math.ceil(this.props.data.length /2) + 50;
+
+        const footerHeight = this.props.data ? 36 * Math.ceil(this.props.data.length /2) + 50 : 50;
 
         return {
             data: chartData,
