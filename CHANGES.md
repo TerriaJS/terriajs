@@ -1,7 +1,7 @@
 Change Log
 ==========
 
-### Next Release
+### v6.3.0
 
 * Changed the "My Data" interface to be much more intuitive and tweaked the visual style of the catalog.
 * Added `CartoMapCatalogItem` to connect to layers using the [Carto Maps API](https://carto.com/developers/maps-api/).
