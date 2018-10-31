@@ -1,9 +1,13 @@
 Change Log
 ==========
 
-## v6.2.3
+### Next Release
 
 * Changed the "My Data" interface to be much more intuitive and tweaked the visual style of the catalog.
+* Added `CartoMapCatalogItem` to connect to layers using the [Carto Maps API](https://carto.com/developers/maps-api/).
+
+## v6.2.3
+
 * Made it possible to configure the compass control's colors using CSS.
 
 ### v6.2.2
