@@ -246,7 +246,7 @@ const Chart = createReactClass({
             data: chartData,
             domain: this.props.domain,
             width: '100%',
-            height: defaultValue(this.props.height - footerHeight, defaultHeight),
+            height: defined(this.props.height) ? this.props.height - footerHeight : defaultHeight,
             axisLabel: this.props.axisLabel,
             mini: this.props.styling === 'feature-info',
             transitionDuration: this.props.transitionDuration,
