@@ -54,14 +54,16 @@ const ChartPanel = createReactClass({
         }
 
         let data = [];
+        let concepts = []
         let xUnits;
         for (const item of chartableItems) {
+            let concept = item.concepts;
+            concept.forEach(c => c.categoryName = item.name)
+            concepts.push(concept);
+
             const thisData = item.chartData();
             if (!defined(thisData)) {
                 continue;
-            }
-            if (thisData[0]) {
-                thisData[0].concepts = item.concepts;
             }
             if (item.isEnabled) {
                 data = [].concat(thisData).concat(data);
@@ -73,7 +75,7 @@ const ChartPanel = createReactClass({
 
         this.props.terria.currentViewer.notifyRepaintRequired();
 
-        const isVisible = (data.length > 0) || isLoading;
+        const isVisible = (data.length > 0) || (concepts.length > 0) || isLoading;
         if (!isVisible) {
             return null;
         }
@@ -82,10 +84,10 @@ const ChartPanel = createReactClass({
         if (isLoading) {
             loader = <Loader className={Styles.loader}/>;
         }
-        if (data.length > 0) {
+        if (data.length > 0 || concepts.length > 0) {
             // TODO: use a calculation for the 34 pixels taken off...
             chart = (
-                <Chart data={data} axisLabel={{x: xUnits, y: undefined}} height={height}/>
+                <Chart data={data} axisLabel={{x: xUnits, y: undefined}} height={height} concepts={concepts}/>
             );
         }
         return (

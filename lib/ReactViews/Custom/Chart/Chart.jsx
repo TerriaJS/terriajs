@@ -16,13 +16,12 @@ import React from 'react';
 
 import PropTypes from 'prop-types';
 import createReactClass from 'create-react-class';
-
 import defined from 'terriajs-cesium/Source/Core/defined';
 import defaultValue from 'terriajs-cesium/Source/Core/defaultValue';
 import DeveloperError from 'terriajs-cesium/Source/Core/DeveloperError';
 import loadText from '../../../Core/loadText';
+import getConceptsForCategory from '../../../Models/getConceptsForCategory';
 import when from 'terriajs-cesium/Source/ThirdParty/when';
-
 import ChartData from '../../../Charts/ChartData';
 import ConceptsSelector from './ConceptsSelector';
 import ChartRenderer from '../../../Charts/ChartRenderer';
@@ -60,6 +59,7 @@ const Chart = createReactClass({
 
         // You can provide the data directly via props.data (ChartData[]):
         data: PropTypes.array,
+        concepts: PropTypes.array,
         // chartType: PropTypes.object, // TODO clarify. ChartData has its own 'type' which can be bar, line, etc.
 
         // Or, provide a URL to the data, along with optional xColumn, yColumns, colors
@@ -239,8 +239,9 @@ const Chart = createReactClass({
         } else if (defined(this.props.tableStructure)) {
             chartData = this.chartDataArrayFromTableStructure(this.props.tableStructure);
         }
+        const displayConcepts = this.props.concepts ? getConceptsForCategory(this.props.concepts) : [];
 
-        const footerHeight = this.props.data ? 36 * Math.ceil(this.props.data.length /2) + 50 : 50;
+        const footerHeight = 36 * Math.ceil(displayConcepts.length /2) + 50;
 
         return {
             data: chartData,
@@ -262,7 +263,7 @@ const Chart = createReactClass({
         return (
             <div className={Styles.chart}>
               <div className={Styles.chartInner} ref={element=>{this._element = element;}}/>
-              {this.props.data && <ConceptsSelector categories = {this.props.data} />}
+              {this.props.concepts && <ConceptsSelector concepts = {this.props.concepts} />}
             </div>
         );
     }
