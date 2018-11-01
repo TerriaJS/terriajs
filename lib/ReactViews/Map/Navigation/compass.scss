@@ -29,12 +29,9 @@
   border-radius: 50%;
   display: block;
   margin: 0 auto;
+  padding: 4px;
+  box-sizing: border-box;
   background: #ffffff;
-  svg{
-    width: 70%;
-    height: auto;
-    padding: 15%;
-  }
 }
 .rotationMarker{
   background-image: url('images/compass-rotation-marker.svg');
