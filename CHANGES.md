@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### v6.3.1
+
+* Fixed a bug that caused the compass control to be misaligned in Internet Explorer 11.
+
 ### v6.3.0
 
 * Changed the "My Data" interface to be much more intuitive and tweaked the visual style of the catalog.
