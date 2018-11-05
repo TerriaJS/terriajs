@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### v6.3.2
+
+* Added "filterByProcedures" property to "sos" item (default: true). When false, the list of procedures is not passed as a filter to GetFeatureOfInterest request, which works better for BoM Water Data Online services.
+
 ### v6.3.1
 
 * Fixed a bug that caused the compass control to be misaligned in Internet Explorer 11.
@@ -13,7 +17,6 @@ Change Log
 ## v6.2.3
 
 * Made it possible to configure the compass control's colors using CSS.
-* Added "filterByProcedures" property to "sos" item (default: true). When false, the list of procedures is not passed as a filter to GetFeatureOfInterest request, which works better for BoM Water Data Online services.
 
 ### v6.2.2
 
