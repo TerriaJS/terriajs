@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### v6.3.3
+
+* Upgraded to Cesium v1.51.
+
 ### v6.3.2
 
 * Added "filterByProcedures" property to "sos" item (default: true). When false, the list of procedures is not passed as a filter to GetFeatureOfInterest request, which works better for BoM Water Data Online services.
