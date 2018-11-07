@@ -18,7 +18,6 @@ import PropTypes from 'prop-types';
 import createReactClass from 'create-react-class';
 
 import defined from 'terriajs-cesium/Source/Core/defined';
-import defaultValue from 'terriajs-cesium/Source/Core/defaultValue';
 import DeveloperError from 'terriajs-cesium/Source/Core/DeveloperError';
 import loadText from '../../../Core/loadText';
 import when from 'terriajs-cesium/Source/ThirdParty/when';
