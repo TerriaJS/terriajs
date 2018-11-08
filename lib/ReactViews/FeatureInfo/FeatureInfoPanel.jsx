@@ -296,6 +296,10 @@ function determineCatalogItem(nowViewing, feature) {
         return undefined;
     }
 
+    if (feature._catalogItem) {
+        return feature._catalogItem;
+    }
+
     // "Data sources" (eg. czml, geojson, kml, csv) have an entity collection defined on the entity
     // (and therefore the feature).
     // Then match up the data source on the feature with a now-viewing item's data source.
