@@ -1,9 +1,25 @@
 Change Log
 ==========
 
-## Next Release
+### v6.3.3
+
+* Upgraded to Cesium v1.51.
+
+### v6.3.2
+
+* Added "filterByProcedures" property to "sos" item (default: true). When false, the list of procedures is not passed as a filter to GetFeatureOfInterest request, which works better for BoM Water Data Online services.
+
+### v6.3.1
+
+* Fixed a bug that caused the compass control to be misaligned in Internet Explorer 11.
+
+### v6.3.0
 
 * Changed the "My Data" interface to be much more intuitive and tweaked the visual style of the catalog.
+* Added `CartoMapCatalogItem` to connect to layers using the [Carto Maps API](https://carto.com/developers/maps-api/).
+
+## v6.2.3
+
 * Made it possible to configure the compass control's colors using CSS.
 * Added "filterByProcedures" property to "sos" item (default: true). When false, the list of procedures is not passed as a filter to GetFeatureOfInterest request, which works better for BoM Water Data Online services.
 * Support displaying availability for imagery layers on charts, by adding `"showOnChart": true".
