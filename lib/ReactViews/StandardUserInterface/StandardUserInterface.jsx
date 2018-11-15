@@ -212,7 +212,8 @@ const StandardUserInterface = createReactClass({
 
                 <If condition={this.props.terria.configParameters.feedbackUrl && !this.props.viewState.hideMapUi()}>
                     <aside className={Styles.feedback}>
-                        <FeedbackForm viewState={this.props.viewState} />
+                        <FeedbackForm viewState={this.props.viewState}
+                                      customFeedback = {customElements.nav}/>
                     </aside>
                 </If>
 
