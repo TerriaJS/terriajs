@@ -28,12 +28,6 @@ const FeedbackForm = createReactClass({
         };
     },
 
-    getDefaultProps() {
-        return {
-            customFeedback: []
-        };
-    },
-
     onDismiss() {
         this.props.viewState.feedbackFormIsVisible = false;
         this.setState(this.getInitialState());
@@ -85,15 +79,6 @@ const FeedbackForm = createReactClass({
     },
 
     render() {
-        if(this.props.customFeedback.length > 0){
-          return (
-            <For each="item" of={this.props.customFeedback} index="i">
-              <div className={Styles.control} key={i}>
-                  {item}
-              </div>
-            </For>)
-        }
-
         const preamble = parseCustomMarkdownToReact(this.props.viewState.terria.configParameters.feedbackPreamble || 'We would love to hear from you!');
         const feedbackFormClassNames = classNames(Styles.form, {
             [Styles.isOpen]: this.props.viewState.feedbackFormIsVisible
