@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### v6.3.4
+
+* Added the ability to add custom components to the feedback area (lower right) of the user interface.
+
 ### v6.3.3
 
 * Upgraded to Cesium v1.51.
