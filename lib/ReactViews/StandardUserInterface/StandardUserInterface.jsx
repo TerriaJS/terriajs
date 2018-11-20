@@ -100,6 +100,8 @@ const StandardUserInterface = createReactClass({
             this.props.children
         );
 
+        console.log(customElements);
+
         const terria = this.props.terria;
         const allBaseMaps = this.props.allBaseMaps;
         return (
@@ -210,7 +212,7 @@ const StandardUserInterface = createReactClass({
                 <Notification viewState={this.props.viewState}/>
                 <MapInteractionWindow terria={terria} viewState={this.props.viewState}/>
 
-                <If condition={customElements.feedback && this.props.terria.configParameters.feedbackUrl && !this.props.viewState.hideMapUi()}>
+                <If condition={customElements.feedback.length && this.props.terria.configParameters.feedbackUrl && !this.props.viewState.hideMapUi()}>
                   <For each="feedbackItem" of={customElements.feedback} index="i">
                       <div key={i}>
                           {feedbackItem}
@@ -218,7 +220,7 @@ const StandardUserInterface = createReactClass({
                   </For>
                 </If>
 
-                <If condition={!customElements.feedback && this.props.terria.configParameters.feedbackUrl && !this.props.viewState.hideMapUi()}>
+                <If condition={!customElements.feedback.length && this.props.terria.configParameters.feedbackUrl && !this.props.viewState.hideMapUi()}>
                     <aside className={Styles.feedback}>
                         <FeedbackForm viewState={this.props.viewState}/>
                     </aside>
