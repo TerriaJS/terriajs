@@ -100,8 +100,6 @@ const StandardUserInterface = createReactClass({
             this.props.children
         );
 
-        console.log(customElements);
-
         const terria = this.props.terria;
         const allBaseMaps = this.props.allBaseMaps;
         return (
