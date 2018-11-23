@@ -35,15 +35,15 @@ const DragDropFile = createReactClass({
         this.props.viewState.isDraggingDroppingFile = false;
     },
 
-    notifyUpload(addedCatalogItems){
+    notifyUpload(addedCatalogItems) {
       // if explorer panel is not open, we show a notification
       // slide in right, wait 3 + 2 seconds (plus transition time), then slide out right
-      if(!this.props.viewState.explorerPanelIsVisible){
+      if(!this.props.viewState.explorerPanelIsVisible) {
         this.props.viewState.recentlyUploadedFiles = addedCatalogItems.map(item => item.data.name);
-        setTimeout(
-            ()=> {
-                this.props.viewState.recentlyUploadedFiles = []
-            },5000);
+        // setTimeout(
+        //     ()=> {
+        //         this.props.viewState.recentlyUploadedFiles = [];
+        //     },5000);
       }
     },
 
@@ -71,7 +71,6 @@ const DragDropFile = createReactClass({
     handleMouseLeave() {
         this.props.viewState.isDraggingDroppingFile = false;
     },
-
 
     render() {
         return (

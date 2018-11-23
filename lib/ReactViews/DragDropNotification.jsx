@@ -15,18 +15,18 @@ const DragDropNotification = createReactClass({
         viewState: PropTypes.object,
     },
 
-    handleClick(){
+    handleClick() {
       this.props.viewState.explorerPanelIsVisible = true;
     },
 
     render() {
-      const fileNames = this.props.viewState.recentlyUploadedFiles.join(',');
+      const fileNames = this.props.viewState.recentlyUploadedFiles.join(', ');
 
       return (
         <button className={classNames(Styles.notification, {[Styles.isActive]: fileNames.length > 0})} onClick={this.handleClick}>
             <div className={Styles.icon}><Icon glyph={Icon.GLYPHS.upload} /></div>
-            <div className={Styles.info}><span className={Styles.filename}>"{`${fileNames.length > 0 ? fileNames : "your files"}`}"</span> has been added to <span className={Styles.action}>My data</span></div>
-        </button>)
+            <div className={Styles.info}><span className={Styles.filename}>{'"'}{`${fileNames.length > 0 ? fileNames : "your files"}`}{'"'}</span> has been added to <span className={Styles.action}>My data</span></div>
+        </button>);
     },
 });
 module.exports = DragDropNotification;
