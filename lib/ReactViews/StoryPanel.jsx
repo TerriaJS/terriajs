@@ -49,6 +49,7 @@ const StoryPanel = createReactClass({
         }));
     },
     activateStory(story) {
+        this.props.terria.nowViewing.removeAll();
         window.location = story.shareUrl;
     },
 
