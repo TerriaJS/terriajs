@@ -6,6 +6,10 @@
 // reason - you can change pretty much other file to do another hot-reload and get your globe back, or just zoom
 // back in.
 
+.story-wrapper {
+  display: flex;
+}
+
 :global{
   body {
     height: 100vh;
@@ -26,6 +30,8 @@
   svg use {
     pointer-events: none;
   }
+  flex-basis: 80%;
+  position: relative;
 }
 
 .ui {
