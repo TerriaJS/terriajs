@@ -40,10 +40,10 @@ const DragDropFile = createReactClass({
       // slide in right, wait 3 + 2 seconds (plus transition time), then slide out right
       if(!this.props.viewState.explorerPanelIsVisible) {
         this.props.viewState.recentlyUploadedFiles = addedCatalogItems.map(item => item.data.name);
-        // setTimeout(
-        //     ()=> {
-        //         this.props.viewState.recentlyUploadedFiles = [];
-        //     },5000);
+        setTimeout(
+            ()=> {
+                this.props.viewState.recentlyUploadedFiles = [];
+            },5000);
       }
     },
 
