@@ -1,0 +1,32 @@
+@import '~terriajs-variables';
+
+.filters {
+  composes: clearfix from '../../../Sass/common/_base.scss';
+  padding: $padding 0;
+  border-bottom: 1px solid $border-color;
+  font-size: $font-size-mini;
+
+  label {
+    margin-right: $padding-small;
+    float: left;
+    width: 80px;
+  }
+  input[type=range] {
+    width: calc(100% - 85px);
+  }
+}
+
+.filter {
+  :global {
+    @import '~rc-slider/assets/index';
+  }
+}
+
+.rangeSlider {
+  height: 2px;
+  border-radius: 5px;
+  background: $border-color;
+  width: calc(100% - 85px);
+  float: left;
+  margin-top: 7px;
+}

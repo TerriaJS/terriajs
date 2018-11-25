@@ -12,6 +12,7 @@ import ConceptViewer from './Controls/ConceptViewer';
 import DateTimeSelectorSection from './Controls/DateTimeSelectorSection';
 import DimensionSelectorSection from './Controls/DimensionSelectorSection';
 import DisplayAsPercentSection from './Controls/DisplayAsPercentSection';
+import FilterSection from './Controls/FilterSection';
 import getAncestors from '../../Models/getAncestors';
 import LeftRightSection from './Controls/LeftRightSection';
 import Legend from './Controls/Legend';
@@ -102,6 +103,7 @@ const WorkbenchItem = createReactClass({
                         <If condition={(defined(workbenchItem.concepts) && workbenchItem.concepts.length > 0) && workbenchItem.displayChoicesBeforeLegend}>
                             <ConceptViewer item={workbenchItem}/>
                         </If>
+                        <FilterSection item={workbenchItem}/>
                         <DimensionSelectorSection item={workbenchItem}/>
                         <DateTimeSelectorSection item={workbenchItem}/>
                         <StyleSelectorSection item={workbenchItem}/>
