@@ -17,10 +17,32 @@
 }
 
 .filter {
+  display: flex;
   :global {
     @import '~rc-slider/assets/index';
+    .rc-slider{
+      margin-right: 5px;
+      margin-top: 5px;
+    }
+    .rc-slider-rail,
+    .rc-slider-track,
+    .rc-slider-step {
+      height: 2px;
+    }
+
+    .rc-slider-handle{
+      margin-top: -6px;
+    }
+    .rc-slider-rail{
+      background-color: rgba(255, 255, 255, 0.15);
+    }
+  }
+
+  label{
+    flex-basis: 100px;
   }
 }
+
 
 .rangeSlider {
   height: 2px;
