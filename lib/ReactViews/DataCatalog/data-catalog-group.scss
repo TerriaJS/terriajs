@@ -11,7 +11,7 @@
   composes: btn from '../../Sass/common/_buttons.scss';
   position: absolute;
   color: $color-primary;
-  right: 20px;
+  right: 2px;
   top: 2px;
   @media (max-width: $sm) {
     top: 10px;
@@ -63,7 +63,6 @@
   color: #ffffff;
 }
 
-
 .folder {
   position: absolute;
   left: 8px;
@@ -102,6 +101,9 @@
       height: 18px;
       width: 18px;
     }
+  }
+  &.offsetRight{
+    right: 20px;
   }
 }
 
