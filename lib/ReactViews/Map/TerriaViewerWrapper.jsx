@@ -58,9 +58,10 @@ const TerriaViewerWrapper = createReactClass({
     },
 
     render() {
+        const globe = require('../../../wwwroot/images/globe.gif');
         return (
             <aside className={Styles.container}>
-                <div className={Styles.mapPlaceholder}>Loading the map, please wait...</div>
+                <div className={Styles.mapPlaceholder}><img src={globe}/></div>
                 <Splitter terria={this.props.terria} />
                 <div
                     id="cesiumContainer"

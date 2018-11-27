@@ -77,15 +77,17 @@
   position: absolute;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
   color: black;
   text-align: center;
   width: 100%;
-  height: 25%;
+  height: 100vh;
   margin: auto;
 
   @media (min-width: $sm) {
     color: white;
+  }
+  img{
+    display: block;
+    margin: calc(50vh - 150px) auto
   }
 }
