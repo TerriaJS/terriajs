@@ -1,6 +1,12 @@
 Change Log
 ==========
 
+### Next Release
+
+* Changed the title text for the new button next to "Add Data" on the workbench to "Load local/web data".
+* Fixed a bug that caused the area to the right of the Terria log on the 2D map to be registered as a click on the logo instead of a click on the map.
+* Fixed a bug that caused the standard "Give Feedback" button to fail to open the feedback panel.
+
 ### v6.3.4
 
 * Added the ability to add custom components to the feedback area (lower right) of the user interface.
