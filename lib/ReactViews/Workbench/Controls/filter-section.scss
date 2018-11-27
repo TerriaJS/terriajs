@@ -1,11 +1,34 @@
 @import '~terriajs-variables';
+:global {
+  @import '~rc-slider/assets/index';
+  .rc-slider{
+    margin-right: 5px;
+    margin-top: 5px;
+  }
+  .rc-slider-rail,
+  .rc-slider-track,
+  .rc-slider-step {
+    height: 2px;
+  }
+
+  .rc-slider-handle{
+    border: 0;
+    width: 12px;
+    height: 12px;
+  }
+  .rc-slider-rail{
+    background-color: rgba(255, 255, 255, 0.15);
+  }
+  .rc-slider-track{
+    background-color: #ffffff;
+  }
+}
 
 .filters {
   composes: clearfix from '../../../Sass/common/_base.scss';
   padding: $padding 0;
   border-bottom: 1px solid $border-color;
   font-size: $font-size-mini;
-
   label {
     margin-right: $padding-small;
     float: left;
@@ -18,42 +41,7 @@
 
 .filter {
   display: flex;
-  :global {
-    @import '~rc-slider/assets/index';
-    .rc-slider{
-      margin-right: 5px;
-      margin-top: 5px;
-    }
-    .rc-slider-rail,
-    .rc-slider-track,
-    .rc-slider-step {
-      height: 2px;
-    }
-
-    .rc-slider-handle{
-      border: 0;
-      width: 12px;
-      height: 12px;
-    }
-    .rc-slider-rail{
-      background-color: rgba(255, 255, 255, 0.15);
-    }
-    .rc-slider-track{
-      background-color: #ffffff;
-    }
-  }
-
   label{
     flex-basis: 100px;
   }
-}
-
-
-.rangeSlider {
-  height: 2px;
-  border-radius: 5px;
-  background: $border-color;
-  width: calc(100% - 85px);
-  float: left;
-  margin-top: 7px;
 }
