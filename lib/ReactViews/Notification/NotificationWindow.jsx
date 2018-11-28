@@ -1,5 +1,6 @@
 'use strict';
 
+import classNames from 'classnames';
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
 import createReactClass from 'create-react-class';
@@ -39,9 +40,9 @@ const NotificationWindow = createReactClass({
         const message = this.props.message;
         const confirmText = this.props.confirmText || 'OK';
         const denyText = this.props.denyText;
-
+        const type = this.props.type;
         return (
-            <div className={Styles.wrapper}>
+            <div className={classNames(Styles.wrapper,`${type}`)}>
                 <div className={Styles.notification}>
                     <div className={Styles.inner}>
                         <h3 className='title'>{title}</h3>
