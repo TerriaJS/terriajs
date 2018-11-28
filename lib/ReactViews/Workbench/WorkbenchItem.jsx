@@ -19,6 +19,7 @@ import Legend from './Controls/Legend';
 import ObserveModelMixin from './../ObserveModelMixin';
 import OpacitySection from './Controls/OpacitySection';
 import ColorScaleRangeSection from './Controls/ColorScaleRangeSection';
+import ShadowSection from './Controls/ShadowSection';
 import ShortReport from './Controls/ShortReport';
 import StyleSelectorSection from './Controls/StyleSelectorSection';
 import ViewingControls from './Controls/ViewingControls';
@@ -104,6 +105,7 @@ const WorkbenchItem = createReactClass({
                             <ConceptViewer item={workbenchItem}/>
                         </If>
                         <FilterSection item={workbenchItem}/>
+                        <ShadowSection item={workbenchItem}/>
                         <DimensionSelectorSection item={workbenchItem}/>
                         <DateTimeSelectorSection item={workbenchItem}/>
                         <StyleSelectorSection item={workbenchItem}/>
