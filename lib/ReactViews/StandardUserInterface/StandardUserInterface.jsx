@@ -90,7 +90,7 @@ const StandardUserInterface = createReactClass({
         this.props.viewState.isDraggingDroppingFile = true;
         // if explorer window is already open, we open my data tab
         if(this.props.viewState.explorerPanelIsVisible) {
-          this.props.viewState.openUserData();
+          this.props.viewState.setPanelToUserData();
         }
     },
 

@@ -27,8 +27,11 @@ const DragDropFile = createReactClass({
             .then(addedCatalogItems => {
                 if (addedCatalogItems.length > 0) {
                     this.props.viewState.myDataIsUploadView = false;
-                    this.props.viewState.viewCatalogMember(addedCatalogItems[0]);
-                    this.notifyUpload(addedCatalogItems);
+                    if(this.props.viewState.explorerPanelIsVisible) {
+                        this.props.viewState.viewCatalogMember(addedCatalogItems[0]);
+                    } else {
+                        this.notifyUpload(addedCatalogItems);
+                    }
                 }
             });
 
@@ -36,15 +39,13 @@ const DragDropFile = createReactClass({
     },
 
     notifyUpload(addedCatalogItems) {
-      // if explorer panel is not open, we show a notification
-      // slide in right, wait 3 + 2 seconds (plus transition time), then slide out right
-      if(!this.props.viewState.explorerPanelIsVisible) {
-        this.props.viewState.recentlyUploadedFiles = addedCatalogItems.map(item => item.data.name);
+        // if explorer panel is not open, we show a notification
+        // slide in right, wait 3 + 2 seconds (plus transition time), then slide out right
+        this.props.viewState.recentlyUploadedFiles = addedCatalogItems.map(item => item.name);
         setTimeout(
             ()=> {
                 this.props.viewState.recentlyUploadedFiles = [];
             },5000);
-      }
     },
 
     handleDragEnter(e) {
