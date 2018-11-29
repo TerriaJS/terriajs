@@ -55,7 +55,7 @@ const DragDropNotification = createReactClass({
                 this.setState({
                     showNotification: false
                 });
-            },5000);
+            },4000);
     },
 
     handleClick() {
