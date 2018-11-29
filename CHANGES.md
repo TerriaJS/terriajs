@@ -1,7 +1,7 @@
 Change Log
 ==========
 
-### Next Release
+### v6.3.5
 
 * Changed the title text for the new button next to "Add Data" on the workbench to "Load local/web data".
 * Fixed a bug that caused the area to the right of the Terria log on the 2D map to be registered as a click on the logo instead of a click on the map.
