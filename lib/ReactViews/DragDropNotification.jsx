@@ -5,10 +5,7 @@ import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import Icon from "./Icon.jsx";
-
 import Styles from './drag-drop-notification.scss';
-
-const notificationDuration = 5000;
 
 const DragDropNotification = createReactClass({
     displayName: 'DragDropNotification',
@@ -26,16 +23,15 @@ const DragDropNotification = createReactClass({
         };
     },
 
-
     UNSAFE_componentWillReceiveProps(newProps) {
-        if(this.props.lastUploadedFiles !== newProps.lastUploadedFiles){
+        if(this.props.lastUploadedFiles !== newProps.lastUploadedFiles) {
             clearTimeout(this.notificationInterval);
             // show notification, restart timer
             this.setState({
                 showNotification: true
             });
             // initialise new time out
-            this.notificationTimeout = setTimeout(
+            this.notificationTimeout = setTimeout (
                 ()=> {
                     this.setState({
                         showNotification: false
@@ -44,17 +40,17 @@ const DragDropNotification = createReactClass({
         }
     },
 
-    componentWillUnmount(){
+    componentWillUnmount() {
         clearTimeout(this.notificationTimeout);
     },
 
-    handleHover(){
-        //reset timer on hover
+    handleHover() {
+        // reset timer on hover
         clearTimeout(this.notificationTimeout);
     },
 
-    handleMouseLeave(){
-        this.notificationTimeout = setTimeout(
+    handleMouseLeave() {
+        this.notificationTimeout = setTimeout (
             ()=> {
                 this.setState({
                     showNotification: false
@@ -71,7 +67,7 @@ const DragDropNotification = createReactClass({
       return (
         <button className={classNames(Styles.notification, {[Styles.isActive]: this.state.showNotification  && fileNames.length > 0})} onMouseEnter={this.handleHover}  onMouseLeave={this.handleMouseLeave} onClick={this.handleClick}>
             <div className={Styles.icon}><Icon glyph={Icon.GLYPHS.upload} /></div>
-            <div className={Styles.info}><span className={Styles.filename}>{'"'}{`${fileNames.length > 0 ? fileNames : "your files"}`}{'"'}</span> {' '}{fileNames.length > 1 ? 'has' : 'have'} {' '} been added to <span className={Styles.action}>My data</span></div>
+            <div className={Styles.info}><span className={Styles.filename}>{'"'}{fileNames}{'"'}</span> {' '}{this.props.lastUploadedFiles.length > 1 ? 'have' : 'has'} {' '} been added to <span className={Styles.action}>My data</span></div>
         </button>);
     },
 });
