@@ -236,7 +236,7 @@ const StandardUserInterface = createReactClass({
                 <DragDropFile terria={this.props.terria}
                               viewState={this.props.viewState}
                 />
-                <DragDropNotification lastUploadedFiles={this.props.viewState.lastUploadedFiles} openUserData={this.props.viewState.openUserData}/>
+                <DragDropNotification lastUploadedFiles={this.props.viewState.lastUploadedFiles} viewState={this.props.viewState}/>
             </div>
         );
     }

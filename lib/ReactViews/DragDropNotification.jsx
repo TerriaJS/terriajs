@@ -11,7 +11,7 @@ const DragDropNotification = createReactClass({
     displayName: 'DragDropNotification',
     mixins: [ObserveModelMixin],
     propTypes: {
-        openUserData: PropTypes.func,
+        viewState: PropTypes.object,
         lastUploadedFiles: PropTypes.array
     },
 
@@ -26,7 +26,7 @@ const DragDropNotification = createReactClass({
     /* eslint-disable-next-line camelcase */
     UNSAFE_componentWillReceiveProps(newProps) {
         if(this.props.lastUploadedFiles !== newProps.lastUploadedFiles) {
-            clearTimeout(this.notificationInterval);
+            clearTimeout(this.notificationTimeout);
             // show notification, restart timer
             this.setState({
                 showNotification: true
@@ -60,7 +60,7 @@ const DragDropNotification = createReactClass({
     },
 
     handleClick() {
-      this.props.openUserData();
+      this.props.viewState.openUserData();
     },
 
     render() {
