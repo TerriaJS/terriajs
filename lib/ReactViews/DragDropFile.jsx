@@ -29,6 +29,7 @@ const DragDropFile = createReactClass({
                     this.props.viewState.myDataIsUploadView = false;
                     if(this.props.viewState.explorerPanelIsVisible) {
                         this.props.viewState.viewCatalogMember(addedCatalogItems[0]);
+                        this.props.viewState.openUserData();
                     } else {
                         this.notifyUpload(addedCatalogItems);
                     }
@@ -39,7 +40,7 @@ const DragDropFile = createReactClass({
     },
 
     notifyUpload(addedCatalogItems) {
-        // clear previous timeout if any
+        // update last batch of uploaded files
         this.props.viewState.lastUploadedFiles = addedCatalogItems.map(item => item.name);
     },
 
