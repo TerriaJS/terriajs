@@ -58,6 +58,8 @@
   height: 100%;
   max-height: calc(100vh - #{$input-height*3});
   overflow-y: auto;
+  max-width: calc(100vw - 20px);
+  box-sizing: border-box;
 }
 
 
