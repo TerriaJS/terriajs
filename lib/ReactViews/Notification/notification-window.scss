@@ -58,8 +58,6 @@
   height: 100%;
   max-height: calc(100vh - #{$input-height*3});
   overflow-y: auto;
-  // a default width when it's not set in jsx
-  width: 500px;
 }
 
 
