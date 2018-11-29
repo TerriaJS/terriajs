@@ -18,7 +18,9 @@ const NotificationWindow = createReactClass({
         confirmText: PropTypes.string,
         denyText: PropTypes.string,
         onConfirm: PropTypes.func.isRequired,
-        onDeny: PropTypes.func.isRequired
+        onDeny: PropTypes.func.isRequired,
+        height: PropTypes.string,
+        width: PropTypes.string
     },
 
     confirm(e) {
@@ -41,7 +43,7 @@ const NotificationWindow = createReactClass({
         const confirmText = this.props.confirmText || 'OK';
         const denyText = this.props.denyText;
 
-        var divStyle = {
+        const divStyle = {
           height: defined(this.props.height) ? this.props.height : 'auto',
           width: defined(this.props.width) ? this.props.width : '500px',
         };
