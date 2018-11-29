@@ -23,6 +23,7 @@ const DragDropNotification = createReactClass({
         };
     },
 
+    /* eslint-disable-next-line camelcase */
     UNSAFE_componentWillReceiveProps(newProps) {
         if(this.props.lastUploadedFiles !== newProps.lastUploadedFiles) {
             clearTimeout(this.notificationInterval);
