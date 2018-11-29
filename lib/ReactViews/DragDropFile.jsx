@@ -39,13 +39,8 @@ const DragDropFile = createReactClass({
     },
 
     notifyUpload(addedCatalogItems) {
-        // if explorer panel is not open, we show a notification
-        // slide in right, wait 3 + 2 seconds (plus transition time), then slide out right
-        this.props.viewState.recentlyUploadedFiles = addedCatalogItems.map(item => item.name);
-        setTimeout(
-            ()=> {
-                this.props.viewState.recentlyUploadedFiles = [];
-            },5000);
+        // clear previous timeout if any
+        this.props.viewState.lastUploadedFiles = addedCatalogItems.map(item => item.name);
     },
 
     handleDragEnter(e) {

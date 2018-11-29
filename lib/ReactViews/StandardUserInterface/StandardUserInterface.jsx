@@ -90,7 +90,7 @@ const StandardUserInterface = createReactClass({
         this.props.viewState.isDraggingDroppingFile = true;
         // if explorer window is already open, we open my data tab
         if(this.props.viewState.explorerPanelIsVisible) {
-          this.props.viewState.setPanelToUserData();
+          this.props.viewState.openUserData();
         }
     },
 
@@ -236,7 +236,7 @@ const StandardUserInterface = createReactClass({
                 <DragDropFile terria={this.props.terria}
                               viewState={this.props.viewState}
                 />
-                <DragDropNotification viewState={this.props.viewState}/>
+                <DragDropNotification lastUploadedFiles={this.props.viewState.lastUploadedFiles} openUserData={this.props.viewState.openUserData}/>
             </div>
         );
     }
