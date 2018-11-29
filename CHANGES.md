@@ -7,6 +7,7 @@ Change Log
 * Fixed a bug that caused the area to the right of the Terria log on the 2D map to be registered as a click on the logo instead of a click on the map.
 * Fixed a bug that caused the standard "Give Feedback" button to fail to open the feedback panel.
 * Swapped the positions of the group expand/collapse icon and the "Remove from catalogue" icon on the My Data panel, for more consistent alignment.
+* Made notifications honor the `width` and `height` properties. Previously, these values were ignored.
 
 ### v6.3.4
 
