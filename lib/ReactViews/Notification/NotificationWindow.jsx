@@ -19,8 +19,8 @@ const NotificationWindow = createReactClass({
         denyText: PropTypes.string,
         onConfirm: PropTypes.func.isRequired,
         onDeny: PropTypes.func.isRequired,
-        height: PropTypes.string,
-        width: PropTypes.string
+        height: PropTypes.oneOfType([PropTypes.string,PropTypes.number]),
+        width: PropTypes.oneOfType([PropTypes.string,PropTypes.number])
     },
 
     confirm(e) {
