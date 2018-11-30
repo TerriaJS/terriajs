@@ -3,9 +3,7 @@
 .btn--about-link {
   composes: btn from '../../Sass/common/_buttons.scss';
   composes: btn--map from '../../Sass/common/_buttons.scss';
-
   border-radius: $radius-small;
-
   &,
   &:hover,
   &:focus {
