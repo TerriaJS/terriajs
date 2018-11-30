@@ -10,4 +10,4 @@ Looking for help using a TerriaJS-based site? Try the [NationalMap user document
 
 This documentation is maintained at [github.com/TerriaJS/TerriaJS/tree/master/doc](https://github.com/TerriaJS/TerriaJS/tree/master/doc).
 
-It can be viewed at [terria.io/Documentation](http://terria.io/Documentation).
+It can be viewed at [docs.terria.io](https://docs.terria.io).
