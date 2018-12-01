@@ -104,13 +104,13 @@ const FeatureInfoPanel = createReactClass({
     },
 
     toggleCollapsed() {
-        if(!this.isDragging){
+        if(!this.isDragging) {
             this.props.viewState.featureInfoPanelIsCollapsed = !this.props.viewState.featureInfoPanelIsCollapsed;
         }
     },
 
     toggleOpenFeature(feature) {
-        if(!this.isDragging){
+        if(!this.isDragging) {
             const terria = this.props.terria;
             if (feature === terria.selectedFeature) {
                 terria.selectedFeature = undefined;
@@ -186,13 +186,13 @@ const FeatureInfoPanel = createReactClass({
         );
     },
 
-    onDrag(){
+    onDrag() {
         console.log(event);
         this.isDragging = true;
     },
 
-    onStop(){
-        setTimeout((obj) => { obj.isDragging = false }, 200, this)
+    onStop() {
+        setTimeout((obj) => { obj.isDragging = false; }, 200, this);
     },
 
     render() {
