@@ -51,8 +51,17 @@
 }
 
 .featureInfo {
-  position: absolute;
   z-index: $front-component-z-index - 20;
+  & > div{
+    position: fixed;
+    top: $mobile-header-height + 10px;
+    right: 10px;
+    max-width: 95%;
+    min-width: 150px;
+    max-height: 80vh;
+    z-index: 99;
+    font-family: $font-base;
+  }
 }
 
 .sidePanel {

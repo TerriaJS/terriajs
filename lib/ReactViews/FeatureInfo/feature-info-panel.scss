@@ -7,14 +7,7 @@
   color: $feature-info-color;
   border-radius: $radius-small;
   display: none;
-  position: fixed;
-  top: $mobile-header-height + 10px;
-  right: 10px;
-  max-width: 95%;
-  min-width: 150px;
-  max-height: 80vh;
-  z-index: 99;
-  font-family: $font-base;
+
 
   svg{
     fill: $feature-info-color;

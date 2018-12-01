@@ -93,7 +93,6 @@ const StandardUserInterface = createReactClass({
     shouldUseMobileInterface() {
         return document.body.clientWidth < this.props.minimumLargeScreenWidth;
     },
-
     render() {
         const customElements = processCustomElements(
             this.props.viewState.useSmallScreenInterface,

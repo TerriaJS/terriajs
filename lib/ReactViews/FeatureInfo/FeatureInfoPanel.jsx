@@ -4,6 +4,7 @@ import defined from 'terriajs-cesium/Source/Core/defined';
 import CesiumMath from 'terriajs-cesium/Source/Core/Math';
 import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
 import FeatureInfoCatalogItem from './FeatureInfoCatalogItem.jsx';
+import Draggable from 'react-draggable';
 import Loader from '../Loader.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
@@ -27,6 +28,8 @@ const FeatureInfoPanel = createReactClass({
         viewState: PropTypes.object.isRequired,
         printView: PropTypes.bool
     },
+
+    isDragging: false,
 
     componentDidMount() {
         const createFakeSelectedFeatureDuringPicking = true;
@@ -101,15 +104,19 @@ const FeatureInfoPanel = createReactClass({
     },
 
     toggleCollapsed() {
-        this.props.viewState.featureInfoPanelIsCollapsed = !this.props.viewState.featureInfoPanelIsCollapsed;
+        if(!this.isDragging){
+            this.props.viewState.featureInfoPanelIsCollapsed = !this.props.viewState.featureInfoPanelIsCollapsed;
+        }
     },
 
     toggleOpenFeature(feature) {
-        const terria = this.props.terria;
-        if (feature === terria.selectedFeature) {
-            terria.selectedFeature = undefined;
-        } else {
-            terria.selectedFeature = feature;
+        if(!this.isDragging){
+            const terria = this.props.terria;
+            if (feature === terria.selectedFeature) {
+                terria.selectedFeature = undefined;
+            } else {
+                terria.selectedFeature = feature;
+            }
         }
     },
 
@@ -179,6 +186,15 @@ const FeatureInfoPanel = createReactClass({
         );
     },
 
+    onDrag(){
+        console.log(event);
+        this.isDragging = true;
+    },
+
+    onStop(){
+        setTimeout((obj) => { obj.isDragging = false }, 200, this)
+    },
+
     render() {
         const terria = this.props.terria;
         const viewState = this.props.viewState;
@@ -220,36 +236,40 @@ const FeatureInfoPanel = createReactClass({
         );
 
         return (
-            <div
-                className={panelClassName}
-                aria-hidden={!viewState.featureInfoPanelIsVisible}>
-                {!this.props.printView && <div className={Styles.header}>
-                    <button type='button' onClick={ this.toggleCollapsed } className={Styles.btnPanelHeading}>
-                        Feature Information
-                    </button>
-                    <button type='button' onClick={ this.close } className={Styles.btnCloseFeature}
-                            title="Close data panel">
-                        <Icon glyph={Icon.GLYPHS.close}/>
-                    </button>
-                </div>}
-                <ul className={Styles.body}>
-                    {this.props.printView && locationElements}
-                    <Choose>
-                        <When condition={viewState.featureInfoPanelIsCollapsed || !viewState.featureInfoPanelIsVisible}>
-                        </When>
-                        <When condition={defined(terria.pickedFeatures) && terria.pickedFeatures.isLoading}>
-                            <li><Loader/></li>
-                        </When>
-                        <When condition={!featureInfoCatalogItems || featureInfoCatalogItems.length === 0}>
-                            <li className={Styles.noResults}>{this.getMessageForNoResults()}</li>
-                        </When>
-                        <Otherwise>
-                            {featureInfoCatalogItems}
-                        </Otherwise>
-                    </Choose>
-                    {!this.props.printView && locationElements}
-                </ul>
-            </div>
+            <Draggable onDrag={this.onDrag} onStop={this.onStop}>
+                <div>
+                    <div
+                        className={panelClassName}
+                        aria-hidden={!viewState.featureInfoPanelIsVisible}>
+                        {!this.props.printView && <div className={Styles.header}>
+                            <button type='button' onClick={ this.toggleCollapsed } className={Styles.btnPanelHeading}>
+                                Feature Information
+                            </button>
+                            <button type='button' onClick={ this.close } className={Styles.btnCloseFeature}
+                                    title="Close data panel">
+                                <Icon glyph={Icon.GLYPHS.close}/>
+                            </button>
+                        </div>}
+                        <ul className={Styles.body}>
+                            {this.props.printView && locationElements}
+                            <Choose>
+                                <When condition={viewState.featureInfoPanelIsCollapsed || !viewState.featureInfoPanelIsVisible}>
+                                </When>
+                                <When condition={defined(terria.pickedFeatures) && terria.pickedFeatures.isLoading}>
+                                    <li><Loader/></li>
+                                </When>
+                                <When condition={!featureInfoCatalogItems || featureInfoCatalogItems.length === 0}>
+                                    <li className={Styles.noResults}>{this.getMessageForNoResults()}</li>
+                                </When>
+                                <Otherwise>
+                                    {featureInfoCatalogItems}
+                                </Otherwise>
+                            </Choose>
+                            {!this.props.printView && locationElements}
+                        </ul>
+                    </div>
+                </div>
+            </Draggable>
         );
     },
 });
