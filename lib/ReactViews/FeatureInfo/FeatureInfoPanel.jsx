@@ -236,7 +236,7 @@ const FeatureInfoPanel = createReactClass({
         );
 
         return (
-            <Draggable onDrag={this.onDrag} onStop={this.onStop}>
+            <Draggable onDrag={this.onDrag} onStop={this.onStop} bounds='body'>
                 <div>
                     <div
                         className={panelClassName}
