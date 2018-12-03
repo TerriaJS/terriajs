@@ -6,6 +6,13 @@
 // reason - you can change pretty much other file to do another hot-reload and get your globe back, or just zoom
 // back in.
 
+:global{
+  body {
+    height: 100vh;
+    width: 100vw;
+  }
+}
+
 .ui-root {
   // This is a workaround for a bug in IE11 on Windows 7.
   // https://connect.microsoft.com/IE/feedback/details/796745/mouse-events-are-not-delivered-at-all-anymore-when-inside-an-svg-a-use-is-removed-from-the-dom
