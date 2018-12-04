@@ -8,6 +8,7 @@ import Draggable from 'react-draggable';
 import Loader from '../Loader.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
+import ReactDOM from 'react-dom';
 import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
@@ -30,6 +31,15 @@ const FeatureInfoPanel = createReactClass({
     },
 
     isDragging: false,
+
+    getInitialState() {
+        return {
+            left: null,
+            right: null,
+            top: null,
+            bottom: null
+        };
+    },
 
     componentDidMount() {
         const createFakeSelectedFeatureDuringPicking = true;
@@ -195,6 +205,43 @@ const FeatureInfoPanel = createReactClass({
         setTimeout((obj) => { obj.isDragging = false; }, 200, this);
     },
 
+    componentDidUpdate(){
+        const rect = ReactDOM.findDOMNode(this) ?
+            ReactDOM.findDOMNode(this).getBoundingClientRect():
+            {left: 778, right: 928, top: 60, width: 150};
+
+        const bounds = {
+            left: 0 - rect.left + 350,
+            right: window.innerWidth - rect.right,
+            top: 0 - rect.top,
+            bottom: window.innerHeight - rect.bottom
+        }
+
+        if (bounds.left !== this.state.left){
+            this.setState({
+                left: bounds.left
+            })
+        }
+
+        if (bounds.top !== this.state.top){
+            this.setState({
+                top: bounds.top
+            })
+        }
+
+        if (bounds.right !== this.state.right){
+            this.setState({
+                right: bounds.right
+            })
+        }
+
+        if (bounds.bottom !== this.state.bottom){
+            this.setState({
+                bottom: bounds.bottom
+            })
+        }
+    },
+
     render() {
         const terria = this.props.terria;
         const viewState = this.props.viewState;
@@ -235,8 +282,15 @@ const FeatureInfoPanel = createReactClass({
             </If>
         );
 
+        const bounds = {
+            top: this.state.top,
+            left: this.state.left,
+            bottom: this.state.bottom,
+            right: this.state.right
+        };
+
         return (
-            <Draggable onDrag={this.onDrag} onStop={this.onStop} bounds='body'>
+            <Draggable onDrag={this.onDrag} onStop={this.onStop} bounds={bounds}>
                 <div>
                     <div
                         className={panelClassName}
