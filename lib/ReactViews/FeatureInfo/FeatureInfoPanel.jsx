@@ -4,7 +4,7 @@ import defined from 'terriajs-cesium/Source/Core/defined';
 import CesiumMath from 'terriajs-cesium/Source/Core/Math';
 import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
 import FeatureInfoCatalogItem from './FeatureInfoCatalogItem.jsx';
-import Draggable from 'react-draggable';
+import DragWrapper from '../DragWrapper.jsx';
 import Loader from '../Loader.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
@@ -30,7 +30,7 @@ const FeatureInfoPanel = createReactClass({
         printView: PropTypes.bool
     },
 
-    isDragging: false,
+    node: null,
 
     getInitialState() {
         return {
@@ -72,6 +72,8 @@ const FeatureInfoPanel = createReactClass({
                 }
             }
         });
+
+        this.node = ReactDOM.findDOMNode(this);
     },
 
     componentWillUnmount() {
@@ -79,6 +81,10 @@ const FeatureInfoPanel = createReactClass({
             this._pickedFeaturesSubscription.dispose();
             this._pickedFeaturesSubscription = undefined;
         }
+    },
+
+    checkDragging(){
+        return +this.node.getAttribute('data-is-dragging');
     },
 
     getFeatureInfoCatalogItems() {
@@ -114,13 +120,13 @@ const FeatureInfoPanel = createReactClass({
     },
 
     toggleCollapsed() {
-        if(!this.isDragging) {
+        if(!this.checkDragging()) {
             this.props.viewState.featureInfoPanelIsCollapsed = !this.props.viewState.featureInfoPanelIsCollapsed;
         }
     },
 
     toggleOpenFeature(feature) {
-        if(!this.isDragging) {
+        if(!this.checkDragging()) {
             const terria = this.props.terria;
             if (feature === terria.selectedFeature) {
                 terria.selectedFeature = undefined;
@@ -196,52 +202,6 @@ const FeatureInfoPanel = createReactClass({
         );
     },
 
-    onDrag() {
-        console.log(event);
-        this.isDragging = true;
-    },
-
-    onStop() {
-        setTimeout((obj) => { obj.isDragging = false; }, 200, this);
-    },
-
-    componentDidUpdate(){
-        const rect = ReactDOM.findDOMNode(this) ?
-            ReactDOM.findDOMNode(this).getBoundingClientRect():
-            {left: 778, right: 928, top: 60, width: 150};
-
-        const bounds = {
-            left: 0 - rect.left + 350,
-            right: window.innerWidth - rect.right,
-            top: 0 - rect.top,
-            bottom: window.innerHeight - rect.bottom
-        }
-
-        if (bounds.left !== this.state.left){
-            this.setState({
-                left: bounds.left
-            })
-        }
-
-        if (bounds.top !== this.state.top){
-            this.setState({
-                top: bounds.top
-            })
-        }
-
-        if (bounds.right !== this.state.right){
-            this.setState({
-                right: bounds.right
-            })
-        }
-
-        if (bounds.bottom !== this.state.bottom){
-            this.setState({
-                bottom: bounds.bottom
-            })
-        }
-    },
-
     render() {
         const terria = this.props.terria;
         const viewState = this.props.viewState;
@@ -281,17 +241,8 @@ const FeatureInfoPanel = createReactClass({
                 <li>{this.renderLocationItem(position)}</li>
             </If>
         );
-
-        const bounds = {
-            top: this.state.top,
-            left: this.state.left,
-            bottom: this.state.bottom,
-            right: this.state.right
-        };
-
         return (
-            <Draggable onDrag={this.onDrag} onStop={this.onStop} bounds={bounds}>
-                <div>
+                <DragWrapper>
                     <div
                         className={panelClassName}
                         aria-hidden={!viewState.featureInfoPanelIsVisible}>
@@ -322,8 +273,7 @@ const FeatureInfoPanel = createReactClass({
                             {!this.props.printView && locationElements}
                         </ul>
                     </div>
-                </div>
-            </Draggable>
+                </DragWrapper>
         );
     },
 });
