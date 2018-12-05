@@ -118,11 +118,11 @@ const StandardUserInterface = createReactClass({
                             <Medium>
                                 <div
                                     className={classNames(Styles.sidePanel,
-                                        this.props.viewState.topElement == 'SidePanel' ? 'top-element': '',
+                                        this.props.viewState.topElement === 'SidePanel' ? 'top-element': '',
                                         {[Styles.sidePanelHide]: this.props.viewState.isMapFullScreen}
                                     )}
                                      tabIndex={0}
-                                     onClick={()=>{this.props.viewState.topElement = 'SidePanel'}}
+                                     onClick={()=> {this.props.viewState.topElement = 'SidePanel';}}
                                 >
                                     <Branding
                                         terria={terria}
@@ -225,9 +225,9 @@ const StandardUserInterface = createReactClass({
                     </aside>
                 </If>
 
-                <div className={classNames(Styles.featureInfo, this.props.viewState.topElement == 'FeatureInfo' ? 'top-element': '', {
+                <div className={classNames(Styles.featureInfo, this.props.viewState.topElement === 'FeatureInfo' ? 'top-element': '', {
                     [Styles.featureInfoFullScreen]: this.props.viewState.isMapFullScreen
-                })} tabIndex={0} onClick={()=>{this.props.viewState.topElement = 'FeatureInfo'}}>
+                })} tabIndex={0} onClick={()=> {this.props.viewState.topElement = 'FeatureInfo';}}>
                     <FeatureInfoPanel terria={terria}
                                   viewState={this.props.viewState}
                     />

@@ -19,8 +19,8 @@ const BottomDock = createReactClass({
         domElementRef: PropTypes.func
     },
 
-    handleClick(){
-        this.props.viewState.topElement = 'BottomDock'
+    handleClick() {
+        this.props.viewState.topElement = 'BottomDock';
     },
 
     render() {

@@ -72,7 +72,7 @@ const FeatureInfoPanel = createReactClass({
                 }
             }
         });
-
+        /* eslint-disable-next-line react/no-find-dom-node */
         this.node = ReactDOM.findDOMNode(this);
     },
 
@@ -83,7 +83,7 @@ const FeatureInfoPanel = createReactClass({
         }
     },
 
-    checkDragging(){
+    checkDragging() {
         return +this.node.getAttribute('data-is-dragging');
     },
 

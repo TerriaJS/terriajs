@@ -80,7 +80,7 @@
   pointer-events:none;
   left: 0;
 
-  @media (min-width : $feature-info-forty-percent-size) {
+  @media (min-width : $md) {
     left: $work-bench-width;
   }
 
