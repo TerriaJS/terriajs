@@ -12,6 +12,9 @@ class DragWrapper extends React.Component {
 
   componentDidMount() {
       const dragMoveListener = (event)=>{
+          this.setState({
+              isDragging: 1
+          })
          const target = event.target,
              // keep the dragged position in the data-x/data-y attributes
              x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
@@ -27,30 +30,31 @@ class DragWrapper extends React.Component {
          target.setAttribute('data-y', y);
       }
 
-      const onstart = ()=>{
-          this.setState({
-              isDragging: 1
-          })
-      }
-
       const onend = ()=>{
-          this.setState({
-              isDragging: 0
-          })
+          setTimeout(()=>{
+              this.setState({
+                  isDragging: 0
+              })
+          }, 2000)
       }
 
-
+      const bounds = {
+          top: 0,
+          right: 100,
+          left: -100,
+          bottom: 0
+      }
       const node = ReactDOM.findDOMNode(this);
       interact(node)
         .draggable({
           inertia: true,
           onmove: dragMoveListener,
-          // enable inertial throwing
-          inertia: true,
           // keep the element within the area of it's parent
           restrict: {
+              restriction: 'parent',
+              endOnly: true,
+              elementRect: { left: 0, right: 1, top: 0, bottom: 1 }
           },
-          onstart: onstart,
           onend: onend
         })
   }

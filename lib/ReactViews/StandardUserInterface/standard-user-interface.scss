@@ -11,6 +11,13 @@
     height: 100vh;
     width: 100vw;
   }
+
+  .top-element{
+    z-index: 99999;
+    &:focus{
+      outline: none;
+    }
+  }
 }
 
 .ui-root {
@@ -58,8 +65,27 @@
 }
 
 .featureInfo {
+  // On very large screens, the feature info may be up to 40% of the screen.
+  // On small screens (mobile), it make be up to 90% of the screen.
+  // In between, it may be up to 90% of the largest mobile screen ($sm), minus a bit to leave room
+  // for the map controls on the right.  This is computed in $feature-info-medium-max-size.
+  $feature-info-medium-max-size: $sm * 0.9 - $feature-info-right-margin * 0.5;
+  $feature-info-forty-percent-size: $feature-info-medium-max-size * 100 / 40;
+
   z-index: $front-component-z-index - 20;
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  pointer-events:none;
+  left: 0;
+
+  @media (min-width : $feature-info-forty-percent-size) {
+    left: $work-bench-width;
+  }
+
   & > div{
+    pointer-events: auto;
     position: fixed;
     top: $mobile-header-height + 10px;
     right: 10px;
@@ -68,12 +94,6 @@
     max-height: 80vh;
     z-index: 99;
     font-family: $font-base;
-    // On very large screens, the feature info may be up to 40% of the screen.
-    // On small screens (mobile), it make be up to 90% of the screen.
-    // In between, it may be up to 90% of the largest mobile screen ($sm), minus a bit to leave room
-    // for the map controls on the right.  This is computed in $feature-info-medium-max-size.
-    $feature-info-medium-max-size: $sm * 0.9 - $feature-info-right-margin * 0.5;
-    $feature-info-forty-percent-size: $feature-info-medium-max-size * 100 / 40;
 
     @media (min-width : $sm) and (max-width: $feature-info-forty-percent-size) {
       max-width: $feature-info-medium-max-size;
@@ -85,6 +105,10 @@
       right: $feature-info-right-margin;
     }
   }
+}
+
+.featureInfoFullScreen{
+  left: 0;
 }
 
 .sidePanel {
