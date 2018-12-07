@@ -30,7 +30,7 @@ const MapColumn = createReactClass({
     propTypes: {
         terria: PropTypes.object.isRequired,
         viewState: PropTypes.object.isRequired,
-        showFeedbackButton: PropTypes.bool.isRequired,
+        customFeedbacks: PropTypes.array.isRequired,
     },
 
     getInitialState() {
