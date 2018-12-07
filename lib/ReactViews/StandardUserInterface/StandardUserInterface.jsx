@@ -161,7 +161,7 @@ const StandardUserInterface = createReactClass({
                             <MapColumn
                                 terria={terria}
                                 viewState={this.props.viewState}
-                                showFeedbackButton={!customElements.feedback.length && this.props.terria.configParameters.feedbackUrl && !this.props.viewState.hideMapUi()}
+                                customFeedbacks = {customElements.feedback}
                             />
                             <main>
                                 <ExplorerWindow
@@ -210,14 +210,6 @@ const StandardUserInterface = createReactClass({
 
                 <Notification viewState={this.props.viewState}/>
                 <MapInteractionWindow terria={terria} viewState={this.props.viewState}/>
-
-                <If condition={customElements.feedback.length && this.props.terria.configParameters.feedbackUrl && !this.props.viewState.hideMapUi()}>
-                  <For each="feedbackItem" of={customElements.feedback} index="i">
-                      <div key={i}>
-                          {feedbackItem}
-                      </div>
-                  </For>
-                </If>
 
                 <If condition={!customElements.feedback.length && this.props.terria.configParameters.feedbackUrl && !this.props.viewState.hideMapUi()}>
                     <aside className={Styles.feedback}>
