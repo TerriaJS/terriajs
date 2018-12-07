@@ -161,6 +161,7 @@ const StandardUserInterface = createReactClass({
                             <MapColumn
                                 terria={terria}
                                 viewState={this.props.viewState}
+                                showFeedbackButton={!customElements.feedback.length && this.props.terria.configParameters.feedbackUrl && !this.props.viewState.hideMapUi()}
                             />
                             <main>
                                 <ExplorerWindow

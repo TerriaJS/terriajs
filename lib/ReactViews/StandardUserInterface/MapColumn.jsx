@@ -30,6 +30,7 @@ const MapColumn = createReactClass({
     propTypes: {
         terria: PropTypes.object.isRequired,
         viewState: PropTypes.object.isRequired,
+        showFeedbackButton: PropTypes.bool.isRequired,
     },
 
     getInitialState() {
@@ -93,7 +94,7 @@ const MapColumn = createReactClass({
                                 <DistanceLegend terria={this.props.terria}/>
                             </div>
                         </If>
-                        <If condition={!this.props.viewState.useSmallScreenInterface && this.props.terria.configParameters.feedbackUrl && !this.props.viewState.hideMapUi()}>
+                        <If condition={this.props.showFeedbackButton}>
                             <div className={Styles.feedbackButtonWrapper}>
                                 <FeedbackButton viewState={this.props.viewState}/>
                             </div>
