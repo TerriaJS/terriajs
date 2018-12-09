@@ -57,11 +57,14 @@
         color: white;
         position: relative;
         bottom: 23px;
-
-        #terriaLogo {
+        #terriaLogoWrapper{
           display: block;
         }
       }
+    }
+
+    #terriaLogoWrapper{
+      display: inline-block;
     }
 
     .cesium-widget, .cesium-widget canvas {

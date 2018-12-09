@@ -1,5 +1,6 @@
 'use strict';
 
+import defined from 'terriajs-cesium/Source/Core/defined';
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
 import createReactClass from 'create-react-class';
@@ -17,7 +18,9 @@ const NotificationWindow = createReactClass({
         confirmText: PropTypes.string,
         denyText: PropTypes.string,
         onConfirm: PropTypes.func.isRequired,
-        onDeny: PropTypes.func.isRequired
+        onDeny: PropTypes.func.isRequired,
+        height: PropTypes.oneOfType([PropTypes.string,PropTypes.number]),
+        width: PropTypes.oneOfType([PropTypes.string,PropTypes.number])
     },
 
     confirm(e) {
@@ -40,10 +43,15 @@ const NotificationWindow = createReactClass({
         const confirmText = this.props.confirmText || 'OK';
         const denyText = this.props.denyText;
 
+        const divStyle = {
+          height: defined(this.props.height) ? this.props.height : 'auto',
+          width: defined(this.props.width) ? this.props.width : '500px',
+        };
+
         return (
             <div className={Styles.wrapper}>
                 <div className={Styles.notification}>
-                    <div className={Styles.inner}>
+                    <div className={Styles.inner} style={divStyle}>
                         <h3 className='title'>{title}</h3>
                         {window.location.host === 'localhost:3001' && title.toLowerCase().indexOf('error') >= 0 &&
                             <div><img src='./build/TerriaJS/images/feature.gif'/></div>

@@ -1,6 +1,14 @@
 Change Log
 ==========
 
+### v6.3.5
+
+* Changed the title text for the new button next to "Add Data" on the workbench to "Load local/web data".
+* Fixed a bug that caused the area to the right of the Terria log on the 2D map to be registered as a click on the logo instead of a click on the map.
+* Fixed a bug that caused the standard "Give Feedback" button to fail to open the feedback panel.
+* Swapped the positions of the group expand/collapse icon and the "Remove from catalogue" icon on the My Data panel, for more consistent alignment.
+* Made notifications honor the `width` and `height` properties. Previously, these values were ignored.
+
 ### v6.3.4
 
 * Added the ability to add custom components to the feedback area (lower right) of the user interface.
