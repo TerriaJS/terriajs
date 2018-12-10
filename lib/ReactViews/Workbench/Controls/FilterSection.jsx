@@ -41,8 +41,6 @@ const FilterSection = createReactClass({
                 <Range value={values} allowCross={false} min={filter.minimumValue} max={filter.maximumValue} onChange={this.change.bind(this, filter)} />
             </div>
         );
-
-        // {/* <RangeSlider className={Styles.rangeSlider} name='opacity' min={0} max={100} step={1} value={item.opacity * 100 | 0} onChange={this.changeOpacity}/> */}
     }
 });
 module.exports = FilterSection;
