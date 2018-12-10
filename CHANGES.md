@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+### Next release
+
+* Support displaying availability for imagery layers on charts, by adding `"showOnChart": true".
+* Support localizedAvailabilityService object for imagery layers, such as for satellite layers where only a thin strip of imagery is available at a given time. This requires a WMS service that provides a /GetFeatureInfo which returns a list of dates for the provided location. See source for more details.
+
 ### v6.3.3
 
 * Upgraded to Cesium v1.51.
@@ -22,8 +27,6 @@ Change Log
 
 * Made it possible to configure the compass control's colors using CSS.
 * Added "filterByProcedures" property to "sos" item (default: true). When false, the list of procedures is not passed as a filter to GetFeatureOfInterest request, which works better for BoM Water Data Online services.
-* Support displaying availability for imagery layers on charts, by adding `"showOnChart": true".
-* Support localizedAvailabilityService object for imagery layers, such as for satellite layers where only a thin strip of imagery is available at a given time. This requires a WMS service that provides a /GetFeatureInfo which returns a list of dates for the provided location. See source for more details.
 
 ### v6.2.2
 
