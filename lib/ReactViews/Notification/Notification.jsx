@@ -55,6 +55,8 @@ const Notification = createReactClass({
                 onConfirm={this.confirm}
                 onDeny={this.deny}
                 type={defined(notification.type) ? notification.type : 'notification'}
+                width={notification.width}
+                height={notification.height}
             />);
     },
 });
