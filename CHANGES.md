@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### Next Release
+
+* Dragging/dropping files now displays a more subtle notification rather than opening the large Add Data / My Data panel.
+
 ### v6.3.5
 
 * Changed the title text for the new button next to "Add Data" on the workbench to "Load local/web data".
