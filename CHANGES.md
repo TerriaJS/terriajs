@@ -5,6 +5,7 @@ Change Log
 
 * Dragging/dropping files now displays a more subtle notification rather than opening the large Add Data / My Data panel.
 * The `sendFeedback` function can now be used to send additional information if the server is configured to receive it (i.e. `devserverconfig.json`).
+* Made custom feedback controls stay in the lower-right corner of the map.
 
 ### v6.3.5
 
