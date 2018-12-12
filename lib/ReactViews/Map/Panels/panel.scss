@@ -85,11 +85,18 @@
 
   border-radius: $radius-small;
   position: relative;
+  border: 0;
 
-  &,
+  svg{
+    fill: #9CA1AA;
+  }
+
   &:hover,
-  &:focus {
+  &:focus{
     border: 0;
+    svg{
+      fill: #ffffff;
+    }
   }
 }
 

@@ -84,7 +84,7 @@ const SettingPanel = createReactClass({
             outer: Styles.settingPanel,
             inner: Styles.dropdownInner,
             btn: Styles.btnDropdown,
-            icon: 'sphere'
+            icon: 'map'
         };
 
         const viewerModes = [];

@@ -15,8 +15,8 @@ function MenuButton(props) {
                href={props.href}
                target={props.href !== '#' ? '_blank' : undefined}
                title={props.caption}>
-                <span>{props.caption}</span>
                 {props.href !== '#' && <Icon glyph={Icon.GLYPHS.externalLink}/>}
+                <span>{props.caption}</span>
             </a>
         </div>
     );
