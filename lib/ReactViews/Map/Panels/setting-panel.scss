@@ -63,8 +63,3 @@
     border: 2px solid $turquoise-blue;
   }
 }
-
-
-.btn--dropdown {
-  composes: btn--sphere from '../../../Sass/common/_buttons.scss';
-}
