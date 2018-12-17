@@ -1,7 +1,7 @@
 Change Log
 ==========
 
-### Next Release
+### v6.3.6
 
 * Dragging/dropping files now displays a more subtle notification rather than opening the large Add Data / My Data panel.
 * The `sendFeedback` function can now be used to send additional information if the server is configured to receive it (i.e. `devserverconfig.json`).
