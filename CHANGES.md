@@ -1,6 +1,9 @@
 Change Log
 ==========
 
+### Next release
+* `wwwroot/data/regionMapping.json` is now the default region mapping file (rather than a file provided by TerriaMap), and needs to be explicitly overridden by a `regionMappingDefinitionsUrl` setting in config.json.
+
 ### v6.3.6
 
 * Dragging/dropping files now displays a more subtle notification rather than opening the large Add Data / My Data panel.
