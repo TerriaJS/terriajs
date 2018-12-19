@@ -17,6 +17,7 @@ import updateModelFromJson from './updateModelFromJson';
 import ViewerMode from './ViewerMode';
 import Workbench from './Workbench';
 import PickedFeatures from '../Map/PickedFeatures';
+import Mappable from './Mappable';
 
 interface ConfigParameters {
     defaultMaximumShownFeatureInfos?: number;
@@ -78,6 +79,9 @@ export default class Terria {
         interceptBrowserPrint: true,
         tabbedCatalog: false
     };
+
+    @observable
+    baseMap: Mappable | undefined;
 
     @observable
     pickedFeatures: PickedFeatures | undefined;
