@@ -1,9 +1,57 @@
 Change Log
 ==========
 
-### Next Release
+### v6.3.6
+
+* Dragging/dropping files now displays a more subtle notification rather than opening the large Add Data / My Data panel.
+* The `sendFeedback` function can now be used to send additional information if the server is configured to receive it (i.e. `devserverconfig.json`).
+* Made custom feedback controls stay in the lower-right corner of the map.
+* Improved the look of the toolbar icons in the top right, and added an icon for the About page.
+
+### v6.3.5
+
+* Changed the title text for the new button next to "Add Data" on the workbench to "Load local/web data".
+* Fixed a bug that caused the area to the right of the Terria log on the 2D map to be registered as a click on the logo instead of a click on the map.
+* Fixed a bug that caused the standard "Give Feedback" button to fail to open the feedback panel.
+* Swapped the positions of the group expand/collapse icon and the "Remove from catalogue" icon on the My Data panel, for more consistent alignment.
+* Made notifications honor the `width` and `height` properties. Previously, these values were ignored.
+
+### v6.3.4
+
+* Added the ability to add custom components to the feedback area (lower right) of the user interface.
+
+### v6.3.3
+
+* Upgraded to Cesium v1.51.
+
+### v6.3.2
+
+* Added "filterByProcedures" property to "sos" item (default: true). When false, the list of procedures is not passed as a filter to GetFeatureOfInterest request, which works better for BoM Water Data Online services.
+
+### v6.3.1
+
+* Fixed a bug that caused the compass control to be misaligned in Internet Explorer 11.
+
+### v6.3.0
+
+* Changed the "My Data" interface to be much more intuitive and tweaked the visual style of the catalog.
+* Added `CartoMapCatalogItem` to connect to layers using the [Carto Maps API](https://carto.com/developers/maps-api/).
+
+## v6.2.3
+
+* Made it possible to configure the compass control's colors using CSS.
+
+### v6.2.2
+
+* Removed the Terria logo from the preview map and made the credit there smaller.
+* Fall back to the style name in the workbench styles dropdown when no title is given for a style in WMS GetCapabilities.
+
+### v6.2.1
 
 * We now use Cesium Ion for the Bing Maps basemaps, unless a `bingMapsKey` is provided in [config.json](https://docs.terria.io/guide/customizing/client-side-config/#parameters). You can control this behavior with the `useCesiumIonBingImagery` property. Please note that if a `bingMapsKey` is not provided, the Bing Maps geocoder will always return no results.
+* Added a Terria logo in the lower left of the map. It can be disabled by setting `"hideTerriaLogo": true` in `config.json`.
+* Improved the credits display on the 2D map to be more similar to the 3D credits.
+* Fixed a bug that caused some legends to be missing or incomplete in Apple Safari.
 
 ### v6.2.0
 
@@ -377,7 +425,7 @@ Change Log
 ### 4.8.2
 
 * Fixed a bug that prevented a `shareUrl` specified in `config.json` from actually being used by the `ShareDataService`.
-* Adding a JSON init file by dropping it on the map or selecting it from the My Data tab no longer adds an entry to the Workbench and User-Added Data catalog.
+* Adding a JSON init file by dropping it on the map or selecting it from the My Data tab no longer adds an entry to the Workbench and My Data catalog.
 * WPS return type can now be `application/vnd.terriajs.catalog-member+json` which allows a json catalog member to be returned in WPS along with the usual attributes to control display.
 * `chartLineColor` tableStyle attribute added, allowing per column specification of chart line color.
 * Fixed a bug that caused a `WebMapServiceCatalogItem` inside a `WebMapServiceCatalogGroup` to revert to defaults from GetCapabilities instead of using shared properties.

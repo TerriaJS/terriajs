@@ -27,11 +27,13 @@ const GLYPHS = {
     download: require('../../wwwroot/images/icons/download.svg'),
     expand: require('../../wwwroot/images/icons/expand.svg'),
     eye: require('../../wwwroot/images/icons/eye.svg'),
+    externalLink: require('../../wwwroot/images/icons/external-link.svg'),
     feedback: require('../../wwwroot/images/icons/feedback.svg'),
     folder: require('../../wwwroot/images/icons/folder.svg'),
     folderOpen: require('../../wwwroot/images/icons/folder-open.svg'),
     forward: require('../../wwwroot/images/icons/forward.svg'),
     geolocation: require('../../wwwroot/images/icons/geolocation.svg'),
+    gallery: require('../../wwwroot/images/icons/gallery.svg'),
     increase: require('../../wwwroot/images/icons/increase.svg'),
     left: require('../../wwwroot/images/icons/left.svg'),
     lineChart: require('../../wwwroot/images/icons/line-chart.svg'),
@@ -56,6 +58,7 @@ const GLYPHS = {
     showLess: require('../../wwwroot/images/icons/show-less.svg'),
     showMore: require('../../wwwroot/images/icons/show-more.svg'),
     sphere: require('../../wwwroot/images/icons/sphere.svg'),
+    map: require('../../wwwroot/images/icons/map.svg'),
     splitter: require('../../wwwroot/images/icons/splitter.svg'),
     splitterOn: require('../../wwwroot/images/icons/splitterOn.svg'),
     splitterOff: require('../../wwwroot/images/icons/splitterOff.svg'),
@@ -63,6 +66,13 @@ const GLYPHS = {
     next: require('../../wwwroot/images/icons/next.svg'),
     timeline: require('../../wwwroot/images/icons/timeline.svg'),
     data: require('../../wwwroot/images/icons/data.svg'),
+    upload: require('../../wwwroot/images/icons/upload.svg'),
+    trashcan: require('../../wwwroot/images/icons/trashcan.svg'),
+    local: require('../../wwwroot/images/icons/localfile.svg'),
+    web: require('../../wwwroot/images/icons/remotefile.svg'),
+    compassInner: require('../../wwwroot/images/icons/compass-inner.svg'),
+    compassOuter: require('../../wwwroot/images/icons/compass-outer.svg'),
+    compassRotationMarker: require('../../wwwroot/images/icons/compass-rotation-marker.svg')
 };
 
 const Icon = createReactClass({
@@ -74,9 +84,9 @@ const Icon = createReactClass({
     render() {
         const glyph = this.props.glyph;
         return (
-            <svg viewBox="0 0 100 100" className={classNames('icon', this.props.className, Styles.svg)} style={this.props.style}>
-                <use xlinkHref={'#' + glyph.id}></use>
-            </svg>
+          <svg viewBox="0 0 100 100" className={classNames('icon', this.props.className, Styles.svg)} style={this.props.style}>
+              <use xlinkHref={'#' + glyph.id}/>
+          </svg>
         );
     }
 });

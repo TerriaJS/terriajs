@@ -1,6 +1,6 @@
 {
   "name": "terriajs",
-  "version": "6.2.0",
+  "version": "6.3.6",
   "description": "Geospatial data visualization platform.",
   "license": "Apache-2.0",
   "engines": {
@@ -78,7 +78,7 @@
     "simple-statistics": "^4.1.0",
     "string-replace-webpack-plugin": "^0.1.3",
     "style-loader": "^0.19.1",
-    "terriajs-cesium": "1.50.1",
+    "terriajs-cesium": "1.51.0",
     "terriajs-html2canvas": "1.0.0-alpha.12-terriajs-1",
     "ts-node": "^5.0.1",
     "typescript": "^2.9.0",
@@ -144,6 +144,6 @@
     "start": "bash -c \"./node_modules/terriajs-server/run_server.sh --port 3002 || ../terriajs-server/run_server.sh --port 3002 || ../../node_modules/terriajs-server/run_server.sh --port 3002\"",
     "dev": "webpack-dev-server --inline --config buildprocess/webpack.config.dev.js --host 0.0.0.0",
     "hot": "webpack-dev-server --inline --config buildprocess/webpack.config.hot.js --hot --host 0.0.0.0",
-    "publish-doc": "bash -c \"rm -rf wwwroot/doc && mkdir wwwroot/doc && cp doc/index-built.html wwwroot/doc/index.html && gulp docs && cd wwwroot/doc && git init && git remote add origin $npm_package_config_docRepo && git add . && git commit -m 'Generate Documentation' && git push -f origin HEAD:gh-pages\""
+    "publish-doc": "bash -c \"rm -rf wwwroot/doc && mkdir wwwroot/doc && cp doc/index-built.html wwwroot/doc/index.html && cp doc/CNAME wwwroot/doc/CNAME && gulp docs && cd wwwroot/doc && git init && git remote add origin $npm_package_config_docRepo && git add . && git commit -m 'Generate Documentation' && git push -f origin HEAD:gh-pages\""
   }
 }

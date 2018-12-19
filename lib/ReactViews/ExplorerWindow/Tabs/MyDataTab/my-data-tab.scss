@@ -1,60 +1,153 @@
-@import '~terriajs-variables';
-@import '../../../../Sass/common/mixins';
+@import "~terriajs-variables";
+@import "../../../../Sass/common/mixins";
 
 .root {
   height: 100%;
+  font-family: $font-base;
 }
 
 .data-catalog {
-  composes: list-reset from '../../../../Sass/common/_base.scss';
+  composes: list-reset from "../../../../Sass/common/_base.scss";
+  border-top: 1px solid $grey-lighter;
+  border-bottom: 1px solid $grey-lighter;
 }
 
 .left-col {
-  composes: tab-left-col from '../../tabs.scss';
-
-  overflow-y: hidden;
+  composes: tab-left-col from "../../tabs.scss";
+  composes: scrollbars from "../../../../Sass/common/_base.scss";
+  overflow-y: auto;
+  background: #ffffff;
+  border-right: 1px solid $grey-lighter;
+  padding-right: 0;
 }
 
-.added-data{
-  composes: scrollbars from '../../../../Sass/common/_base.scss';
-
-  padding: $padding;
-  height: 100%;
+.oneCol {
+  margin: 15px;
+  height: calc(100% - 30px);
+  width: calc(100% - 30px);
   overflow: hidden;
-  overflow-y: auto;
   background: $modal-secondary-bg;
+  text-align: center;
+  color: $dark-lighter;
+  line-height: 2;
+  padding: 3vh;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.tabCenter{
+  text-align: center;
+}
+
+.tabLeft{
+  text-align: left;
+  padding: 0 $padding;
+  border-top: 1px solid $grey-lighter;
+}
+
+.tab-list {
+  display: block;
+  padding-left: 0;
+  margin: 0;
+  &__item {
+    display: inline-block;
+    margin-right: 15px;
+    height: 30px;
+    svg{
+      display: inline;
+      width: 15px;
+      height: 15px;
+      fill: $color-primary;
+      padding-right: $padding-small;
+      vertical-align: middle;
+    }
+  }
+
+  // My data tab
+  //
+  // Markup:
+  // <button class="btn btn--add-data-tab"> Add local data </button>
+  //
+  // Style guide: Buttons.btn--add-data-tab
+  &__btn {
+    composes: btn from "../../../../Sass/common/_buttons.scss";
+    composes: btn-transparent from "../../../../Sass/common/_buttons.scss";
+
+    font-size: $font-size-small;
+    font-weight: $font-weight-medium;
+    width: 100%;
+    padding: $padding-small 0;
+    color: $color-primary;
+    &:hover,
+    &:focus,
+    &.is-active {
+      color: $grey;
+    }
+  }
+}
+
+.dndBox {
+  border: 2px dashed $grey-lighter;
+  flex-grow: 1;
+  min-height: 150px;
+  width: 80%;
+  border-radius: 3px;
+  margin: 0 auto;
+  margin-top: 3vh;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  color: $grey-lighter;
+  background: #f6f6f7;
+
+  div{
+    margin-top: 5%;
+  }
+
+  svg {
+    fill: $grey-lighter;
+    height: 15%;
+    width: 15%;
+    margin: 5% auto;
+  }
+}
+
+.dataTypeTab {
+  width: 100%;
+  display: flex;
+  flex-direction:column;
 }
 
 .explanation {
   font-family: $font-base;
   font-size: $font-size-mid-small;
+  margin: $padding;
+
 }
 
-.btn--back-to-my-data{
-  composes: btn from '../../../../Sass/common/_buttons.scss';
-  composes: btn-small from '../../../../Sass/common/_buttons.scss';
-  composes: btn--left from '../../../../Sass/common/_buttons.scss';
-  composes: btn-transparent from '../../../../Sass/common/_buttons.scss';
-
-  position: relative;
-  padding-left: $padding*2;
-
-  &:before{
-    position: absolute;
-    left: 0;
-  }
+.btn--back-to-my-data {
+  composes: btn from "../../../../Sass/common/_buttons.scss";
+  composes: btn-small from "../../../../Sass/common/_buttons.scss";
+  composes: btn--left from "../../../../Sass/common/_buttons.scss";
+  composes: btn-transparent from "../../../../Sass/common/_buttons.scss";
+  position: absolute;
+  left: 40px;
+  top: 40px;
+  background: #ffffff;
+  border-radius: 2px;
+  padding: 3px 10px;
+  border: 1px solid rgba($dark-lighter, 0.5);
 }
 
-.btn--add-more-data{
-  composes: btn from '../../../../Sass/common/_buttons.scss';
-  composes: btn-transparent from '../../../../Sass/common/_buttons.scss';
-  composes: btn-primary from '../../../../Sass/common/_buttons.scss';
+.btn--add-more-data {
+  composes: btn from "../../../../Sass/common/_buttons.scss";
+  composes: btn-transparent from "../../../../Sass/common/_buttons.scss";
+  composes: btn-primary from "../../../../Sass/common/_buttons.scss";
   margin-top: $padding;
 }
 
 .h3 {
-  composes: h3 from '../../../../Sass/common/_base.scss';
+  composes: h3 from "../../../../Sass/common/_base.scss";
   font-size: $font-size-mid-large;
 }
-
-

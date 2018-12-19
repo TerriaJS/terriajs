@@ -190,7 +190,7 @@ const MeasureTool = createReactClass({
     render() {
         return <div className={Styles.toolButton}>
                   <button type='button' className={Styles.btn}
-                          title='measure distance between two points'
+                          title='Measure distance between locations'
                           onClick={this.handleClick}>
                           <Icon glyph={Icon.GLYPHS.measure}/>
                   </button>

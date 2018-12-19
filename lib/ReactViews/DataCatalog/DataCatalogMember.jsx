@@ -19,7 +19,9 @@ export default observer(createReactClass({
         viewState: PropTypes.object.isRequired,
         manageIsOpenLocally: PropTypes.bool,
         overrideState: PropTypes.string,
-        onActionButtonClicked: PropTypes.func
+        onActionButtonClicked: PropTypes.func,
+        removable: PropTypes.bool,
+        terria: PropTypes.object
     },
 
     render() {
@@ -28,13 +30,17 @@ export default observer(createReactClass({
                 <DataCatalogGroup group={this.props.member} viewState={this.props.viewState}
                                   manageIsOpenLocally={this.props.manageIsOpenLocally}
                                   overrideState={this.props.overrideState}
-                                  onActionButtonClicked={this.props.onActionButtonClicked} />
+                                  onActionButtonClicked={this.props.onActionButtonClicked}
+                                  removable={this.props.removable}
+                                  terria={this.props.terria} />
             );
         } else {
             return (
                 <DataCatalogItem item={this.props.member} viewState={this.props.viewState}
                                  overrideState={this.props.overrideState}
-                                 onActionButtonClicked={this.props.onActionButtonClicked} />
+                                 onActionButtonClicked={this.props.onActionButtonClicked}
+                                 removable={this.props.removable}
+                                 terria={this.props.terria} />
             );
         }
     }

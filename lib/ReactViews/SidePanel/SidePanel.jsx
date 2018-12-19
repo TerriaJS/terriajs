@@ -6,7 +6,6 @@ import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
-
 import ObserveModelMixin from '../ObserveModelMixin';
 import SearchBox from '../Search/SearchBox';
 import SidebarSearch from '../Search/SidebarSearch';
@@ -60,6 +59,10 @@ const SidePanel = observer(createReactClass({
         this.props.viewState.openAddData();
     },
 
+    onAddLocalDataClicked() {
+        this.props.viewState.openUserData();
+    },
+
     changeSearchText(newText) {
         this.props.viewState.searchState.locationSearchText = newText;
 
@@ -82,6 +85,7 @@ const SidePanel = observer(createReactClass({
         return (
             <div className={Styles.workBench}>
                 <div className={Styles.header}>
+
                     <FullScreenButton
                         terria={this.props.terria}
                         viewState={this.props.viewState}
@@ -96,8 +100,16 @@ const SidePanel = observer(createReactClass({
                         placeholder='Search for locations'
                     /> */}
                     <div className={Styles.addData}>
-                        <button type='button' onClick={this.onAddDataClicked} className={Styles.button}>
+                        <button type='button' onClick={this.onAddDataClicked} className={Styles.button} title='Add data'>
                             <Icon glyph={Icon.GLYPHS.add}/>Add data
+                        </button>
+                        <button
+                            type='button'
+                            onClick={this.onAddLocalDataClicked}
+                            className={Styles.uploadData}
+                            title='Load local/web data'
+                        >
+                            <Icon glyph={Icon.GLYPHS.upload} />
                         </button>
                     </div>
                 </div>

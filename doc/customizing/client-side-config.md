@@ -42,7 +42,7 @@ Option                      | Meaning
 `"supportEmail"`            | The email address shown when things go wrong.
 `"mobileDefaultViewerMode"` | A string specifying the default view mode to load when running on a mobile platform. Options are: `"3DTerrain"`, `"3DSmooth"`, `"2D"`. (Default: `"2D"`)
 `"initFragmentPaths"`       | An array of base paths to use to try to use to resolve init fragments in the URL.  For example, if this property is `[ "init/", "http://example.com/init/"]`, then a URL with `#test` will first try to load `init/test.json` and, if that fails, next try to load `http://example.com/init/test.json`.  If not specified, this property defaults to `[ "init/" ]`.
-`"disableMyLocation"`       | True to disable the "go to my location" button.
+`"disableMyLocation"`       | True to disable the "Centre map at your current location" button.
 `"disableSplitter"`         | True to disable the use of the splitter control.
 `"tabbedCatalog"`           | True to create a separate explorer panel tab for each top-level catalog group to list its items in.
 `"interceptBrowserPrint"`   | True (the default) to intercept the browser's print feature and use a custom one accessible through the Share panel.

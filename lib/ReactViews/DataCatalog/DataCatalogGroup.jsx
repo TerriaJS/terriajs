@@ -1,10 +1,8 @@
 import React from 'react';
-
 import createReactClass from 'create-react-class';
-
 import PropTypes from 'prop-types';
-
 import addedByUser from '../../Core/addedByUser';
+import removeUserAddedData from '../../Models/removeUserAddedData';
 import CatalogGroup from './CatalogGroup';
 import DataCatalogMember from './DataCatalogMember';
 import getAncestors from '../../Models/getAncestors';
@@ -20,7 +18,9 @@ const DataCatalogGroup = observer(createReactClass({
         manageIsOpenLocally: PropTypes.bool,
         userData: PropTypes.bool,
         overrideState: PropTypes.string,
-        onActionButtonClicked: PropTypes.func
+        onActionButtonClicked: PropTypes.func,
+        removable: PropTypes.bool,
+        terria: PropTypes.object
     },
 
     getDefaultProps() {
@@ -84,6 +84,8 @@ const DataCatalogGroup = observer(createReactClass({
                 loading={group.isLoading}
                 emptyMessage="This group is empty"
                 onClick={this.clickGroup}
+                removable={this.props.removable}
+                removeUserAddedData ={removeUserAddedData.bind(this, this.props.terria, this.props.group)}
                 selected ={this.isSelected()}>
                 <If condition={this.isOpen()}>
                     <For each="item" of={group.memberModels}>

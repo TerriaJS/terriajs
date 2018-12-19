@@ -22,7 +22,8 @@ const DataCatalog = createReactClass({
         viewState: PropTypes.object,
         items: PropTypes.array,
         overrideState: PropTypes.string,
-        onActionButtonClicked: PropTypes.func
+        onActionButtonClicked: PropTypes.func,
+        removable: PropTypes.bool
     },
 
     render() {
@@ -48,6 +49,8 @@ const DataCatalog = createReactClass({
                                            key={item.id}
                                            overrideState={this.props.overrideState}
                                            onActionButtonClicked={this.props.onActionButtonClicked}
+                                           removable={this.props.removable}
+                                           terria={this.props.terria}
                     />}
                 </For>
             </ul>

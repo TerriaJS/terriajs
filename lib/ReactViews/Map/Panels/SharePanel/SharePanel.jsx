@@ -294,7 +294,7 @@ const SharePanel = createReactClass({
         return (
             <div>
                 <MenuPanel theme={dropdownTheme}
-                    btnText="Share"
+                    btnText="Share / Print"
                     viewState={this.props.viewState}
                     btnTitle="Share your map with others"
                     isOpen={this.state.isOpen}
