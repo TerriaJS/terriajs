@@ -102,9 +102,7 @@ const MapColumn = createReactClass({
 
                         <If condition={this.props.customFeedbacks.length && this.props.terria.configParameters.feedbackUrl && !this.props.viewState.hideMapUi()}>
                           <For each="feedbackItem" of={this.props.customFeedbacks} index="i">
-                              <div key={i}>
                                   {feedbackItem}
-                              </div>
                           </For>
                         </If>
                     </div>
