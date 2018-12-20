@@ -50,11 +50,26 @@
 }
 
 .feedback-button-wrapper {
-    position: absolute;
+    position: fixed;
     left: 0;
-    top: 0;
+    top: $mobile-header-height;
     right: 0;
-    bottom: 0;
+    bottom: 200px;
+    // IE 11
+    width: 100vw;
+    height: calc(100vh - #{$mobile-header-height});
+    pointer-events:none;
+    @media (min-width: $sm) {
+      left: $work-bench-width;
+      top: 0;
+      bottom: 0;
+      // IE11
+      width: calc(100vw - #{$work-bench-width});
+      height: 100vh;
+    }
+    & > div{
+      pointer-events: auto;
+    }
 }
 
 .print-disclaimer {
