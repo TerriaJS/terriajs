@@ -48,7 +48,7 @@
 .tab-list {
   display: block;
   padding-left: 0;
-  margin: 0;
+  margin: 16px auto;
   &__item {
     display: inline-block;
     margin-right: 15px;
@@ -90,9 +90,8 @@
   border: 2px dashed $grey-lighter;
   flex-grow: 1;
   min-height: 150px;
-  width: 80%;
   border-radius: 3px;
-  margin: 0 auto;
+  margin: 0 10px;
   margin-top: 3vh;
   display: flex;
   justify-content: center;
@@ -110,6 +109,7 @@
     height: 15%;
     width: 15%;
     margin: 5% auto;
+    opacity: 0.6;
   }
 }
 
@@ -138,6 +138,20 @@
   border-radius: 2px;
   padding: 3px 10px;
   border: 1px solid rgba($dark-lighter, 0.5);
+  color: $color-primary;
+
+  &:hover, &:focus{
+    border: 1px solid $color-primary;
+  }
+
+  svg{
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    vertical-align: baseline;
+    margin-right: 8px;
+    fill: $color-primary;
+  }
 }
 
 .btn--add-more-data {

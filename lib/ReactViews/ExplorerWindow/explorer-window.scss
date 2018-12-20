@@ -61,7 +61,7 @@
   composes: sm-show from "../../Sass/common/_base.scss";
   composes: btn from "../../Sass/common/_buttons.scss";
   composes: btn-transparent from "../../Sass/common/_buttons.scss";
-  font-size: $font-size-mid-mini;
+  font-size: $font-size-mid-small;
   padding: 4px 10px;
   margin: $padding-small * 1.5 $padding-small;
   font-weight: bold;

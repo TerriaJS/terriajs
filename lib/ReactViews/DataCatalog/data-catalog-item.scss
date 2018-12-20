@@ -14,7 +14,7 @@
   @extend %wrap;
   position: relative;
   width: 100%;
-  padding: $padding-small $padding*2.5 $padding-small $padding*1.5;
+  padding: $padding-small $padding*2.5 $padding-small $padding;
 
   &:focus, &:hover {
     color: $modal-highlight;
