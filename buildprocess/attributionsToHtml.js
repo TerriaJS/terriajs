@@ -1,11 +1,13 @@
 /*
   Converts the output of oss-attribution-generator's licenseInfos.json into a human readable HTML.
 */
-const licenses = require('./licenseInfos.json');
 const fs = require('fs');
 
 function safe(s) {
-    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    return s
+        .replace(/&/g,'&amp;')
+        .replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;');
 }
 
 function infoToHtml(info) {
@@ -34,8 +36,8 @@ module.exports = function(licenseInfos, outName) {
     out.write('<html>\n');
     out.write('<h1>License information</h1>\n');
     out.write('TerriaJS uses these open source components, under the following licences.\n');
-    Object.keys(licenses).forEach(packageName => {
-        out.write(infoToHtml(licenses[packageName]));
+    Object.keys(licenseInfos).forEach(packageName => {
+        out.write(infoToHtml(licenseInfos[packageName]));
     });
     out.write('</html>');
 };
