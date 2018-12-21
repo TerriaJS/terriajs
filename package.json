@@ -114,6 +114,7 @@
     "kss": "^2.1.1",
     "node-notifier": "^5.1.2",
     "node-sass": "^4.0.0",
+    "oss-attribution-generator": "^1.7.1",
     "react-shallow-testutils": "^3.0.0",
     "react-test-renderer": "^16.3.2",
     "svg-sprite-loader": "^3.4.0",
@@ -130,6 +131,6 @@
     "start": "bash -c \"./node_modules/terriajs-server/run_server.sh --port 3002 || ../terriajs-server/run_server.sh --port 3002 || ../../node_modules/terriajs-server/run_server.sh --port 3002\"",
     "dev": "webpack-dev-server --inline --config buildprocess/webpack.config.dev.js --host 0.0.0.0",
     "hot": "webpack-dev-server --inline --config buildprocess/webpack.config.hot.js --hot --host 0.0.0.0",
-    "publish-doc": "bash -c \"rm -rf wwwroot/doc && mkdir wwwroot/doc && cp doc/index-built.html wwwroot/doc/index.html && cp doc/CNAME wwwroot/doc/CNAME && gulp docs && cd wwwroot/doc && git init && git remote add origin $npm_package_config_docRepo && git add . && git commit -m 'Generate Documentation' && git push -f origin HEAD:gh-pages\""
+    "publish-doc": "bash buildprocess/publish-doc.sh ${npm_package_config_docRepo}"
   }
 }

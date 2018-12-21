@@ -178,7 +178,15 @@ function runKarma(configFile, done) {
     });
 }
 
-gulp.task('user-guide', ['make-schema'], function() {
+gulp.task('oss-attribution', function() {
+    var runExternalModule = require('./buildprocess/runExternalModule');
+    runExternalModule('oss-attribution-generator/index.js');
+    var licenseInfos = require('./oss-attribution/licenseInfos.json');
+    require('./buildprocess/attributionsToHtml')(licenseInfos, 'doc/acknowledgements/attributions.html');
+    require('fs-extra').remove('./oss-attribution');
+});
+
+gulp.task('user-guide', ['make-schema', 'oss-attribution'], function() {
     var fse = require('fs-extra');
     var gutil = require('gulp-util');
     var klawSync = require('klaw-sync');
@@ -219,7 +227,7 @@ gulp.task('user-guide', ['make-schema'], function() {
         shell: false
     });
     if (result.status !== 0) {
-        throw new gutil.PluginError('user-doc', 'External module exited with an error.', { showStack: false });
+        throw new gutil.PluginError('user-doc', 'External module exited with an error. Is mkdocs installed? pip install -r doc/requirements.txt', { showStack: false });
     }
 });
 
