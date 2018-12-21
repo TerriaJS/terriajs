@@ -3,19 +3,22 @@
 */
 const fs = require('fs');
 
-function safe(s) {
-    return s
+function makeValuesSafe(info) {
+    const escape = s => s
         .replace(/&/g,'&amp;')
         .replace(/</g,'&lt;')
         .replace(/>/g,'&gt;');
+
+    for (const k of Object.keys(info)) {
+        if (typeof info[k] === 'string') {
+            info[k] = escape(info[k]);
+        }
+    }
 }
 
 function infoToHtml(info) {
-    Object.keys(info).forEach(k => {
-        if (typeof info[k] === 'string') {
-            info[k] = safe(info[k]);
-        }
-    });
+    makeValuesSafe(info);
+    
     let s = '';
     const npm = 'https://www.npmjs.com/package/' + info.name + '/v/' + info.version;
     s += '<h2><a href="' + npm + '">' + info.name + ' ' + info.version + '</a></h2>\n';
