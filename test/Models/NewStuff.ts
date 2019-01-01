@@ -1,6 +1,6 @@
 import { autorun, configure, runInAction, observable, decorate, trace } from 'mobx';
 import autoUpdate from '../../lib/Core/autoUpdate';
-import WebMapServiceCatalogItem from '../../lib/Models/WebMapServiceCatalogItem3';
+import WebMapServiceCatalogItem from '../../lib/Models/WebMapServiceCatalogItem';
 import Terria from '../../lib/Models/TerriaNew';
 
 configure({

@@ -1,4 +1,4 @@
-import WebMapServiceCatalogItem from '../../lib/Models/WebMapServiceCatalogItem3';
+import WebMapServiceCatalogItem from '../../lib/Models/WebMapServiceCatalogItem';
 import { autorun } from 'mobx';
 import Terria from '../../lib/Models/TerriaNew';
 

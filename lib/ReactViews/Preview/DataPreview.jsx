@@ -52,12 +52,12 @@ const DataPreview = observer(createReactClass({
                             <Description item={previewed} />
                         </div>
                     </When>
-                    <When condition={previewed && typeof previewed.invoke !== 'undefined'}>
+                    {/* <When condition={previewed && typeof previewed.invoke !== 'undefined'}>
                         <InvokeFunction previewed={previewed}
                                         terria={this.props.terria}
                                         viewState={this.props.viewState}
                         />
-                    </When>
+                    </When> */}
                     <When condition={previewed && previewed.isGroup}>
                         <div className={Styles.previewInner}>
                             <GroupPreview previewed={previewed} terria={this.props.terria}

@@ -3,8 +3,8 @@ import CatalogMemberFactory from "../../lib/Models/CatalogMemberFactory";
 import { BaseModel } from "../../lib/Models/Model";
 import Terria from "../../lib/Models/TerriaNew";
 import upsertModelFromJson from "../../lib/Models/upsertModelFromJson";
-import WebMapServiceCatalogGroup from "../../lib/Models/WebMapServiceCatalogGroupNew";
-import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem3";
+import WebMapServiceCatalogGroup from "../../lib/Models/WebMapServiceCatalogGroup";
+import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";
 
 describe('upsertModelFromJson', function() {
     it('can create basic WMS item', function() {

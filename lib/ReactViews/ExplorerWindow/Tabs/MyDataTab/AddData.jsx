@@ -3,14 +3,14 @@ import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import Icon from '../../../Icon.jsx';
 import addUserCatalogMember from '../../../../Models/addUserCatalogMember';
-import createCatalogItemFromFileOrUrl from '../../../../Models/createCatalogItemFromFileOrUrl';
-import createCatalogMemberFromType from '../../../../Models/createCatalogMemberFromType';
+// import createCatalogItemFromFileOrUrl from '../../../../Models/createCatalogItemFromFileOrUrl';
+// import createCatalogMemberFromType from '../../../../Models/createCatalogMemberFromType';
 import Dropdown from '../../../Generic/Dropdown';
 import FileInput from './FileInput';
 import getDataType from '../../../../Core/getDataType';
 import ObserveModelMixin from '../../../ObserveModelMixin';
 import TerriaError from '../../../../Core/TerriaError';
-import addUserFiles from '../../../../Models/addUserFiles';
+// import addUserFiles from '../../../../Models/addUserFiles';
 import Styles from './add-data.scss';
 import Loader from '../../../Loader';
 
@@ -54,50 +54,50 @@ const AddData = createReactClass({
     },
 
     handleUploadFile(e) {
-        this.setState({
-          isLoading: true
-        });
-        addUserFiles(e.target.files, this.props.terria, this.props.viewState, this.state.localDataType)
-            .then(addedCatalogItems => {
-                if (addedCatalogItems.length > 0) {
-                    this.onFileAddFinished(addedCatalogItems[0]);
-                }
-                this.setState({
-                  isLoading: false
-                });
-                // reset active tab when file handling is done
-                this.props.resetTab();
-        });
+        // this.setState({
+        //   isLoading: true
+        // });
+        // addUserFiles(e.target.files, this.props.terria, this.props.viewState, this.state.localDataType)
+        //     .then(addedCatalogItems => {
+        //         if (addedCatalogItems.length > 0) {
+        //             this.onFileAddFinished(addedCatalogItems[0]);
+        //         }
+        //         this.setState({
+        //           isLoading: false
+        //         });
+        //         // reset active tab when file handling is done
+        //         this.props.resetTab();
+        // });
     },
 
     handleUrl(e) {
-        const url = this.state.remoteUrl;
-        e.preventDefault();
-        this.props.terria.analytics.logEvent('addDataUrl', url);
-        const that = this;
-        this.setState({
-          isLoading: true
-        });
-        let promise;
-        if (that.state.remoteDataType.value === 'auto') {
-            promise = loadFile(that);
-        } else {
-            const newItem = createCatalogMemberFromType(that.state.remoteDataType.value, that.props.terria);
-            newItem.name = that.state.remoteUrl;
-            newItem.url = that.state.remoteUrl;
-            promise = newItem.load().then(function() {
-                return newItem;
-            });
-        }
-        addUserCatalogMember(this.props.terria, promise).then(addedItem => {
-            if (addedItem && !(addedItem instanceof TerriaError)) {
-                this.onFileAddFinished(addedItem);
-            }
-            this.setState({
-              isLoading: false
-            });
-            this.props.resetTab();
-        });
+        // const url = this.state.remoteUrl;
+        // e.preventDefault();
+        // this.props.terria.analytics.logEvent('addDataUrl', url);
+        // const that = this;
+        // this.setState({
+        //   isLoading: true
+        // });
+        // let promise;
+        // if (that.state.remoteDataType.value === 'auto') {
+        //     promise = loadFile(that);
+        // } else {
+        //     const newItem = createCatalogMemberFromType(that.state.remoteDataType.value, that.props.terria);
+        //     newItem.name = that.state.remoteUrl;
+        //     newItem.url = that.state.remoteUrl;
+        //     promise = newItem.load().then(function() {
+        //         return newItem;
+        //     });
+        // }
+        // addUserCatalogMember(this.props.terria, promise).then(addedItem => {
+        //     if (addedItem && !(addedItem instanceof TerriaError)) {
+        //         this.onFileAddFinished(addedItem);
+        //     }
+        //     this.setState({
+        //       isLoading: false
+        //     });
+        //     this.props.resetTab();
+        // });
     },
 
     onFileAddFinished(fileToSelect) {

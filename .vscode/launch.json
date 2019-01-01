@@ -8,7 +8,7 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Program",
-            "program": "${workspaceFolder}/lib/Models/WebMapServiceCatalogItem3.ts"
+            "program": "${workspaceFolder}/lib/Models/WebMapServiceCatalogItem.ts"
         },
         {
             "name": "Current TS File",

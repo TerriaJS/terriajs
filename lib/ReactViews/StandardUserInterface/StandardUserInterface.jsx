@@ -3,20 +3,20 @@ import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import arrayContains from '../../Core/arrayContains';
 import Branding from '../SidePanel/Branding';
-import DragDropFile from '../DragDropFile';
-import DragDropNotification from './../DragDropNotification';
+// import DragDropFile from '../DragDropFile';
+// import DragDropNotification from './../DragDropNotification';
 import ExplorerWindow from '../ExplorerWindow/ExplorerWindow';
-import FeatureInfoPanel from '../FeatureInfo/FeatureInfoPanel';
-import FeedbackForm from '../Feedback/FeedbackForm';
+// import FeatureInfoPanel from '../FeatureInfo/FeatureInfoPanel';
+// import FeedbackForm from '../Feedback/FeedbackForm';
 import MapColumn from './MapColumn';
 import MapInteractionWindow from '../Notification/MapInteractionWindow';
 import MapNavigation from '../Map/MapNavigation';
-import MenuBar from '../Map/MenuBar';
+// import MenuBar from '../Map/MenuBar';
 import ExperimentalFeatures from '../Map/ExperimentalFeatures';
-import MobileHeader from '../Mobile/MobileHeader';
+// import MobileHeader from '../Mobile/MobileHeader';
 import Notification from '../Notification/Notification';
 import ObserveModelMixin from '../ObserveModelMixin';
-import ProgressBar from '../Map/ProgressBar';
+// import ProgressBar from '../Map/ProgressBar';
 import SidePanel from '../SidePanel/SidePanel';
 import processCustomElements from './processCustomElements';
 import FullScreenButton from './../SidePanel/FullScreenButton.jsx';
@@ -205,21 +205,21 @@ const StandardUserInterface = createReactClass({
                 <Notification viewState={this.props.viewState}/>
                 <MapInteractionWindow terria={terria} viewState={this.props.viewState}/>
 
-                <If condition={!customElements.feedback.length && this.props.terria.configParameters.feedbackUrl && !this.props.viewState.hideMapUi()}>
+                {/* <If condition={!customElements.feedback.length && this.props.terria.configParameters.feedbackUrl && !this.props.viewState.hideMapUi()}>
                     <aside className={Styles.feedback}>
                         <FeedbackForm viewState={this.props.viewState}/>
                     </aside>
-                </If>
+                </If> */}
 
                 <div className={Styles.featureInfo}>
                     {/* <FeatureInfoPanel terria={terria}
                                       viewState={this.props.viewState}
                     /> */}
                 </div>
-                <DragDropFile terria={this.props.terria}
+                {/* <DragDropFile terria={this.props.terria}
                               viewState={this.props.viewState}
                 />
-                <DragDropNotification lastUploadedFiles={this.props.viewState.lastUploadedFiles} viewState={this.props.viewState}/>
+                <DragDropNotification lastUploadedFiles={this.props.viewState.lastUploadedFiles} viewState={this.props.viewState}/> */}
             </div>
         );
     }

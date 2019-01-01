@@ -170,7 +170,7 @@ export default class ViewState {
     }
 
     getNextNotification() {
-        return this.notifications[0];
+        return this.notifications.length && this.notifications[0];
     }
 
     hideMapUi() {

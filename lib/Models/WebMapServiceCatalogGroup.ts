@@ -13,7 +13,7 @@ import Model from './Model';
 import proxyCatalogItemUrl from './proxyCatalogItemUrl';
 import Terria from './TerriaNew';
 import WebMapServiceCapabilities, { CapabilitiesLayer } from './WebMapServiceCapabilities';
-import WebMapServiceCatalogItem from './WebMapServiceCatalogItem3';
+import WebMapServiceCatalogItem from './WebMapServiceCatalogItem';
 
 class GetCapabilitiesStratum extends LoadableStratum<WebMapServiceCapabilities> implements WebMapServiceCatalogGroupTraits {
     constructor(readonly catalogGroup: WebMapServiceCatalogGroup) {
