@@ -37,8 +37,8 @@ const FeedbackButton = createReactClass({
             position: 'absolute',
             bottom: '100px',
             right: '20px',
-            zIndex: 0,
-        }
+            zIndex: 0
+        };
         return (
             <DragWrapper styles={divStyles}>
                 <div className={Styles.feedback}>

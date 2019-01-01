@@ -60,6 +60,7 @@ class DragWrapper extends React.Component {
 
 DragWrapper.propTypes = {
 	children: PropTypes.node.isRequired,
+    styles: PropTypes.object
 };
 
 module.exports = DragWrapper;
