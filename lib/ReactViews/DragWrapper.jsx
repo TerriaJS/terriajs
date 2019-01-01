@@ -35,7 +35,7 @@ class DragWrapper extends React.Component {
               this.setState({
                   isDragging: 0
               });
-          }, 2000);
+          }, 200);
       };
 
       const node = this.node;
