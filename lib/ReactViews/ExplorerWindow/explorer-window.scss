@@ -73,7 +73,7 @@
   &:hover,
   &:focus {
     color: $text-light;
-    border: 2px solid $text-light;
+    border: 2px solid rgba(#ffffff, 0.7);
     border-radius: 3px;
   }
 }

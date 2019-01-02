@@ -14,7 +14,7 @@
   @extend %wrap;
   position: relative;
   width: 100%;
-  padding: $padding-small $padding*2.5 $padding-small $padding;
+  padding: $padding $padding*2.5 $padding $padding;
 
   &:focus, &:hover {
     color: $modal-highlight;
@@ -41,11 +41,10 @@
 
 .btn-action {
   composes: btn from '../../Sass/common/_buttons.scss';
-
   position: absolute;
   color: $color-primary;
   right: 0;
-  top: 0;
+  top: 7px;
 
   @media (max-width: $sm) {
     top: 5px;

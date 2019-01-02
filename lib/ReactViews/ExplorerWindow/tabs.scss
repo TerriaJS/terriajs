@@ -43,6 +43,8 @@
     height: 100%;
     padding: 0 $padding-small;
     background: $modal-secondary-bg;
+    display: flex;
+    flex-direction: column;
     form {
       margin: $padding 0;
     }
