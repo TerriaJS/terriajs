@@ -91,6 +91,7 @@
   background: #f6f6f7;
   width: 100%;
   margin: 6px 0;
+  color: $dark-lighter;
   div{
     margin-top: 5%;
   }
@@ -131,7 +132,7 @@
   background: #ffffff;
   border-radius: 2px;
   padding: 3px 10px;
-  border: 1px solid rgba($dark-lighter, 0.5);
+  border: 1px solid #ddd;
   color: $color-primary;
 
   &:hover, &:focus{
