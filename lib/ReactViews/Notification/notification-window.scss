@@ -4,7 +4,7 @@
 .wrapper {
   composes: flex from '../../Sass/common/_base.scss';
   color: $text-light;
-  font-family: $font-base;
+  
   position: fixed;
   top: 0;
   left: 0;

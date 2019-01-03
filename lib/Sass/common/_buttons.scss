@@ -20,7 +20,7 @@ $btn-setting-size: 35px;
   line-height: $btn-default-line-height;
   text-decoration: none;
   font-size: $font-size-button;
-  font-family: $font-base;
+
 
   &:focus, &:hover {
     box-shadow: none;
@@ -45,7 +45,6 @@ $btn-setting-size: 35px;
 .btn-primary {
   display: block;
   background: $color-primary;
-  font-family: $font-pop;
   color: $text-light;
   text-align: center;
   width: 100%;
@@ -209,7 +208,6 @@ $btn-setting-size: 35px;
 
 .btn.btn--tab {
   border-right: 1px solid $modal-border;
-  font-family: $font-pop;
   background: $modal-bg;
   color: $modal-text;
   font-size: $font-size-base;
@@ -228,7 +226,6 @@ $btn-setting-size: 35px;
   color: $text-light;
   display: block;
   min-height: 28px;
-  font-family: $font-pop;
   opacity: 0.95;
   background-color: $charcoal-grey;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.25);

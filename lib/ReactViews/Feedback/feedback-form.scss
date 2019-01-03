@@ -3,7 +3,7 @@
 
 .form {
   composes: scrollbars from '../../Sass/common/_base.scss';
-  font-family: $font-base;
+  
   font-size: $font-size-mid-small;
   z-index: 1;
   position: fixed;

@@ -17,7 +17,6 @@
   composes: sm-hide from '../../Sass/common/_base.scss';
   composes: clearfix from '../../Sass/common/_base.scss';
   justify-content: space-between;
-  font-family: $font-pop;
   width: 100%;
   background: $dark;
   padding: $padding-small;
