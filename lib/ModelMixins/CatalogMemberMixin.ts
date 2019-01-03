@@ -14,6 +14,8 @@ function CatalogMemberMixin<T extends Constructor<RequiredInstance>>(Base: T) {
     abstract class CatalogMemberMixin extends Base {
         abstract get type(): string;
 
+        abstract loadMetadata(): Promise<void>
+
         get hasCatalogMemberMixin() {
             return true;
         }

@@ -7,7 +7,7 @@
 // 3. Observable spaghetti
 //  Solution: think in terms of pipelines with computed observables, document patterns.
 // 4. All code for all catalog item types needs to be loaded before we can do anything.
-import { computed, observable, trace, action } from 'mobx';
+import { computed, observable, trace, action, runInAction } from 'mobx';
 import URI from 'urijs';
 import LoadableStratum from '../../test/Models/LoadableStratum';
 import autoUpdate from '../Core/autoUpdate';
@@ -48,16 +48,20 @@ interface WebMapServiceStyles {
 }
 
 
-class GetCapabilitiesStratum extends LoadableStratum<WebMapServiceCapabilities> implements WebMapServiceCatalogItemTraits {
-    constructor(readonly catalogItem: WebMapServiceCatalogItem) {
-        super();
-    }
+class GetCapabilitiesStratum implements WebMapServiceCatalogItemTraits {
+    constructor(readonly catalogItem: WebMapServiceCatalogItem) { }
 
     @observable
-    private _capabilities: WebMapServiceCapabilities | undefined;
+    capabilities: WebMapServiceCapabilities | undefined;
 
-    load(): Promise<WebMapServiceCapabilities> {
-        this._capabilities = undefined;
+    @observable
+    isLoading: boolean = false;
+
+    loadCapabilities(): Promise<void> {
+        runInAction(() => {
+            this.isLoading = true;
+            this.capabilities = undefined;
+        });
 
         if (this.catalogItem.getCapabilitiesUrl === undefined) {
             return Promise.reject(new TerriaError({
@@ -67,18 +71,12 @@ class GetCapabilitiesStratum extends LoadableStratum<WebMapServiceCapabilities> 
         }
 
         const proxiedUrl = proxyCatalogItemUrl(this.catalogItem, this.catalogItem.getCapabilitiesUrl, this.catalogItem.getCapabilitiesCacheDuration);
-        return WebMapServiceCapabilities.fromUrl(proxiedUrl);
-    }
-
-    @action
-    applyLoad(capabilities: WebMapServiceCapabilities) {
-        this._capabilities = capabilities;
-    }
-
-    @computed
-    get capabilities(): WebMapServiceCapabilities | undefined {
-        this.loadIfNeeded();
-        return this._capabilities;
+        return WebMapServiceCapabilities.fromUrl(proxiedUrl).then(capabilities => {
+            runInAction(() => {
+                this.capabilities = capabilities;
+                this.isLoading = false;
+            })
+        });
     }
 
     @computed
@@ -221,6 +219,15 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemb
         this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, new GetCapabilitiesStratum(this));
     }
 
+    loadMetadata(): Promise<void> {
+        const getCapabilitiesStratum: GetCapabilitiesStratum = <GetCapabilitiesStratum>this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName);
+        return getCapabilitiesStratum.loadCapabilities();
+    }
+
+    loadData(): Promise<void> {
+        return this.loadMetadata();
+    }
+
     @computed
     get layersArray(): ReadonlyArray<string> {
         if (Array.isArray(this.layers)) {
@@ -300,10 +307,8 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemb
 
     private _createImageryLayer(time: string | undefined): ImageryLayer | undefined {
         // Don't show anything on the map until GetCapabilities finishes loading.
-        // But do trigger loading so that we can eventually show something!
         // TODO should this be a more general loading check? eliminate the cast?
         const stratum = <GetCapabilitiesStratum>this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName);
-        stratum.loadIfNeeded();
         if (stratum.isLoading) {
             return undefined;
         }

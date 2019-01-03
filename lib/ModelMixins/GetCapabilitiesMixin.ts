@@ -24,7 +24,6 @@ function GetCapabilitiesMixin<T extends Constructor<RequiredOnInstance>>(Base: T
                 return this.defaultGetCapabilitiesUrl;
             }
         }
-
     }
     return GetCapabilitiesMixin;
 }

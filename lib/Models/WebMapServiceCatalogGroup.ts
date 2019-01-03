@@ -15,79 +15,101 @@ import Terria from './TerriaNew';
 import WebMapServiceCapabilities, { CapabilitiesLayer } from './WebMapServiceCapabilities';
 import WebMapServiceCatalogItem from './WebMapServiceCatalogItem';
 
-class GetCapabilitiesStratum extends LoadableStratum<WebMapServiceCapabilities> implements WebMapServiceCatalogGroupTraits {
-    constructor(readonly catalogGroup: WebMapServiceCatalogGroup) {
-        super();
-    }
+class GetCapabilitiesStratum implements WebMapServiceCatalogGroupTraits {
+    constructor(readonly catalogGroup: WebMapServiceCatalogGroup) {}
 
     @observable
-    private _capabilities: WebMapServiceCapabilities | undefined;
+    capabilities: WebMapServiceCapabilities | undefined;
 
-    protected load(): Promise<WebMapServiceCapabilities> {
-        trace(true);
+    @observable
+    isLoading: boolean = false;
 
-        this._capabilities = undefined;
-
-        if (this.catalogGroup.getCapabilitiesUrl === undefined) {
-            return Promise.reject(new TerriaError({
-                title: 'Unable to load GetCapabilities',
-                message: 'Could not load the Web Map Service (WMS) GetCapabilities document because the catalog item does not have a `url`.'
-            }));
-        }
-
-        const proxiedUrl = proxyCatalogItemUrl(this.catalogGroup, this.catalogGroup.getCapabilitiesUrl, this.catalogGroup.getCapabilitiesCacheDuration);
-        return WebMapServiceCapabilities.fromUrl(proxiedUrl);
-    }
+    @observable
+    members: ModelReference[] | undefined;
 
     @action
-    protected applyLoad(capabilities: WebMapServiceCapabilities) {
-        this._capabilities = capabilities;
-    }
+    loadCapabilities(): Promise<void> {
+        this.isLoading = true;
+        this.capabilities = undefined;
 
-    @computed
-    get capabilities(): WebMapServiceCapabilities | undefined {
-        this.loadIfNeeded();
-        return this._capabilities;
-    }
-
-    @computed
-    get members(): ModelReference[] | undefined {
-        if (!this.capabilities) {
-            return undefined;
+        if (this.catalogGroup.getCapabilitiesUrl === undefined) {
+            return Promise.reject(
+                new TerriaError({
+                    title: "Unable to load GetCapabilities",
+                    message:
+                        "Could not load the Web Map Service (WMS) GetCapabilities document because the catalog item does not have a `url`."
+                })
+            );
         }
 
-        const layers = this.catalogGroup.flatten ? this.capabilities.allLayers : this.getTopLevelLayers(this.capabilities.rootLayers);
-
-        const id = this.catalogGroup.id;
-
-        // Create a model for each Layer at this level.
-        const result: ModelReference[] = [];
-        layers.forEach(layer => {
-            if (!layer.Name) {
-                return;
-            }
-
-            const layerId = id + '/' + encodeURIComponent(layer.Name);
-            let model = this.catalogGroup.terria.getModelById(WebMapServiceCatalogItem, layerId);
-            if (!model) {
-                model = new WebMapServiceCatalogItem(layerId, this.catalogGroup.terria);
-                this.catalogGroup.terria.addModel(model);
-            }
-
-            const stratum = model.addStratum(CommonStrata.inheritedFromParentGroup);
-            stratum.name = layer.Title;
-            stratum.url = this.catalogGroup.url;
-            stratum.getCapabilitiesUrl = this.catalogGroup.getCapabilitiesUrl;
-            stratum.getCapabilitiesCacheDuration = this.catalogGroup.getCapabilitiesCacheDuration;
-            stratum.layers = layer.Name;
-
-            result.push(layerId);
+        const proxiedUrl = proxyCatalogItemUrl(
+            this.catalogGroup,
+            this.catalogGroup.getCapabilitiesUrl,
+            this.catalogGroup.getCapabilitiesCacheDuration
+        );
+        return WebMapServiceCapabilities.fromUrl(proxiedUrl).then(capabilities => {
+            runInAction(() => {
+                this.capabilities = capabilities;
+                this.isLoading = false;
+            });
         });
-
-        return result;
     }
 
-    private getTopLevelLayers(rootLayers: CapabilitiesLayer[]): ReadonlyArray<CapabilitiesLayer> {
+    createMembers(): Promise<void> {
+        const p = this.capabilities ? Promise.resolve() : this.loadCapabilities();
+        return p.then(() => {
+            if (!this.capabilities) {
+                throw Error("How? Also throwing this makes Typescript happy");
+            }
+
+            const layers = this.catalogGroup.flatten
+            ? this.capabilities.allLayers
+            : this.getTopLevelLayers(this.capabilities.rootLayers);
+
+            const id = this.catalogGroup.id;
+
+            // Create a model for each Layer at this level.
+            const members: ModelReference[] = [];
+            layers.forEach(layer => {
+                if (!layer.Name) {
+                    return;
+                }
+
+                const layerId = id + "/" + encodeURIComponent(layer.Name);
+                let model = this.catalogGroup.terria.getModelById(
+                    WebMapServiceCatalogItem,
+                    layerId
+                );
+                if (!model) {
+                    model = new WebMapServiceCatalogItem(
+                        layerId,
+                        this.catalogGroup.terria
+                    );
+                    this.catalogGroup.terria.addModel(model);
+                }
+
+                const stratum = model.addStratum(
+                    CommonStrata.inheritedFromParentGroup
+                );
+                runInAction(() => {
+                    stratum.name = layer.Title;
+                    stratum.url = this.catalogGroup.url;
+                    stratum.getCapabilitiesUrl = this.catalogGroup.getCapabilitiesUrl;
+                    stratum.getCapabilitiesCacheDuration = this.catalogGroup.getCapabilitiesCacheDuration;
+                    stratum.layers = layer.Name;
+                })
+
+                members.push(layerId);
+            });
+
+            runInAction(() => {this.members = members});
+        });
+
+    }
+
+    private getTopLevelLayers(
+        rootLayers: CapabilitiesLayer[]
+    ): ReadonlyArray<CapabilitiesLayer> {
         if (rootLayers.length === 1) {
             const subLayers = rootLayers[0].Layer;
             if (subLayers === undefined) {
@@ -100,7 +122,7 @@ class GetCapabilitiesStratum extends LoadableStratum<WebMapServiceCapabilities> 
     }
 }
 
-export default class WebMapServiceCatalogGroup extends GetCapabilitiesMixin(GroupMixin(CatalogMemberMixin(UrlMixin(Model(WebMapServiceCatalogGroupTraits))))) {
+export default class WebMapServiceCatalogGroup extends GetCapabilitiesMixin(UrlMixin(GroupMixin(CatalogMemberMixin(Model(WebMapServiceCatalogGroupTraits))))) {
     static readonly type = 'wms-group';
 
     get type() {
@@ -111,6 +133,18 @@ export default class WebMapServiceCatalogGroup extends GetCapabilitiesMixin(Grou
         super(id, terria);
         this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, new GetCapabilitiesStratum(this));
     }
+
+    loadMetadata(): Promise<void> {
+        const getCapabilitiesStratum: GetCapabilitiesStratum = <GetCapabilitiesStratum>this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName);
+        return getCapabilitiesStratum.loadCapabilities();
+    }
+
+    loadMembers(): Promise<void> {
+        const getCapabilitiesStratum: GetCapabilitiesStratum = <GetCapabilitiesStratum>this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName);
+        return getCapabilitiesStratum.createMembers();
+    }
+
+
 
     protected get defaultGetCapabilitiesUrl(): string | undefined {
         if (this.uri) {

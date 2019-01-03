@@ -59,6 +59,7 @@ const DataCatalogGroup = observer(createReactClass({
 
     clickGroup() {
         this.toggleOpen();
+        this.props.group.loadMembers();
         this.props.viewState.viewCatalogMember(this.props.group);
     },
 

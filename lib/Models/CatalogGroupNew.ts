@@ -7,4 +7,8 @@ export default class CatalogGroup extends GroupMixin(CatalogMemberMixin(Model(Ca
     get type() {
         return 'group';
     }
+
+    loadMetadata(): Promise<void> {
+        return Promise.resolve(undefined);
+    }
 }
