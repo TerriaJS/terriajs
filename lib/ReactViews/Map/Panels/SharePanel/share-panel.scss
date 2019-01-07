@@ -22,10 +22,6 @@
   outline: 0;
 }
 
-.btn--share {
-  composes: btn--share from '../../../../Sass/common/_buttons.scss';
-}
-
 .img--share {
   width: 100%;
   height: auto;

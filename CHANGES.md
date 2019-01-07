@@ -1,6 +1,13 @@
 Change Log
 ==========
 
+### v6.3.6
+
+* Dragging/dropping files now displays a more subtle notification rather than opening the large Add Data / My Data panel.
+* The `sendFeedback` function can now be used to send additional information if the server is configured to receive it (i.e. `devserverconfig.json`).
+* Made custom feedback controls stay in the lower-right corner of the map.
+* Improved the look of the toolbar icons in the top right, and added an icon for the About page.
+
 ### v6.3.5
 
 * Changed the title text for the new button next to "Add Data" on the workbench to "Load local/web data".

@@ -27,11 +27,21 @@ const DragDropFile = createReactClass({
             .then(addedCatalogItems => {
                 if (addedCatalogItems.length > 0) {
                     this.props.viewState.myDataIsUploadView = false;
-                    this.props.viewState.viewCatalogMember(addedCatalogItems[0]);
+                    if(this.props.viewState.explorerPanelIsVisible) {
+                        this.props.viewState.viewCatalogMember(addedCatalogItems[0]);
+                        this.props.viewState.openUserData();
+                    } else {
+                        this.notifyUpload(addedCatalogItems);
+                    }
                 }
             });
 
         this.props.viewState.isDraggingDroppingFile = false;
+    },
+
+    notifyUpload(addedCatalogItems) {
+        // update last batch of uploaded files
+        this.props.viewState.lastUploadedFiles = addedCatalogItems.map(item => item.name);
     },
 
     handleDragEnter(e) {
