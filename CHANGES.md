@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### v6.3.7
+
+* Upgraded to Cesium v1.53.
+
 ### v6.3.6
 
 * Dragging/dropping files now displays a more subtle notification rather than opening the large Add Data / My Data panel.
