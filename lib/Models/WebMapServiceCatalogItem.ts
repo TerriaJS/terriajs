@@ -276,6 +276,9 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemb
             result.push(next);
         }
 
+        // For diagnostics only
+        result.forEach(layer => {(<any>layer).fromCatalogItem = this.id;});
+
         return result;
 
 
