@@ -81,10 +81,11 @@
   left: 0;
 
   @media (min-width : $md) {
-    left: $work-bench-width;
+    left: $work-bench-width + 30px;
     top: 60px;
     right: 60px;
     bottom: 30px;
+
   }
 
   & > div{
