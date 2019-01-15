@@ -34,16 +34,8 @@
   line-height: $modal-header-height;
 }
 
-.btn {
-  composes: btn from '../../Sass/common/_buttons.scss';
-  padding: 4px 9px;
-  margin-right: 4px;
-  color: $feature-info-btn-color;
-}
-
 .btnPanelHeading{
-  composes: btn from '../../Sass/common/_buttons.scss';
-  padding: 4px 9px;
+  padding: 0px 8px;
   color: $feature-info-btn-color;
   width: 100%;
 }
@@ -54,9 +46,9 @@
   margin-left: 3px;
 }
 
-.btn--close-feature{
+.btn--close-feature, .btnToggleFeature{
   composes: btn from '../../Sass/common/_buttons.scss';
-
+  vertical-align: middle;
   &:hover,
   &:focus {
     svg{
@@ -66,14 +58,15 @@
   svg{
     height: 23px;
     width: 23px;
+    display: block;
     fill: $feature-info-btn-color;
-    position: relative;
-    left: 10px;
   }
-  position: absolute;
-  right: 0;
-  width: $modal-header-height;
-  height: $modal-header-height;
+}
+
+.btn--close-feature{
+    position: absolute;
+    right: 8px;
+    top: 8px;
 }
 
 .no-results {

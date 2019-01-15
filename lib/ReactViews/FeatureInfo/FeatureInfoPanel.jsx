@@ -247,9 +247,12 @@ const FeatureInfoPanel = createReactClass({
                         className={panelClassName}
                         aria-hidden={!viewState.featureInfoPanelIsVisible}>
                         {!this.props.printView && <div className={Styles.header}>
-                            <button type='button' onClick={ this.toggleCollapsed } className={Styles.btnPanelHeading}>
-                                Feature Information
-                            </button>
+                            <div className={Styles.btnPanelHeading}>
+                                <span>Feature Information</span>
+                                <button type='button' onClick={ this.toggleCollapsed } className={Styles.btnToggleFeature}>
+                                    {this.props.viewState.featureInfoPanelIsCollapsed ? <Icon glyph={Icon.GLYPHS.closed}/> : <Icon glyph={Icon.GLYPHS.opened}/>}
+                                </button>
+                            </div>
                             <button type='button' onClick={ this.close } className={Styles.btnCloseFeature}
                                     title="Close data panel">
                                 <Icon glyph={Icon.GLYPHS.close}/>
