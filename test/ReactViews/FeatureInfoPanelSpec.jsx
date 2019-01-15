@@ -35,13 +35,6 @@ describe('FeatureInfoPanel', function() {
         });
     });
 
-    it('does not have isVisible class when viewState.featureInfoPanelIsVisible not set', function() {
-        const panel = <FeatureInfoPanel terria={terria} viewState={viewState}/>;
-        const result = getShallowRenderedOutput(panel);
-        expect(result.props.className).not.toContain('is-visible');
-    });
-
-
     it('displays loader while asychronously loading feature information', function() {
         var pickedFeatures = new PickedFeatures();
         pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
