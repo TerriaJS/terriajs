@@ -44,6 +44,20 @@ describe('FeatureInfoPanel', function() {
         expect(findWithType(result, Loader)).toBeDefined();
     });
 
+    it('has isVisible class when viewState.featureInfoPanelIsVisible is true', function() {
+        viewState.featureInfoPanelIsVisible = true;
+        const panel = <FeatureInfoPanel terria={terria} viewState={viewState}/>;
+        const result = getShallowRenderedOutput(panel);
+        expect(result.props.children.props.className).toContain('is-visible');
+    });
+
+    it('does not have isVisible class when viewState.featureInfoPanelIsVisible is false', function() {
+        viewState.featureInfoPanelIsVisible = false;
+        const panel = <FeatureInfoPanel terria={terria} viewState={viewState}/>;
+        const result = getShallowRenderedOutput(panel);
+        expect(result.props.children.props.className).not.toContain('is-visible');
+    });
+
     // This test won't work for two reasons:
     //   - the behaviour it tests occurs in ComponentDidMount
     //   - FeatureInfoPanel doesn't have FeatureInfoSections - there is a FeatureInfoCatalogItem layer in between.
