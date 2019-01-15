@@ -2,12 +2,9 @@
 
 /*global require,expect*/
 import React from 'react';
-import {findWithType, findWithClass} from 'react-shallow-testutils';
+import {findWithClass} from 'react-shallow-testutils';
 import {getShallowRenderedOutput} from './MoreShallowTools';
 import StandardUserInterface  from '../../lib/ReactViews/StandardUserInterface/StandardUserInterface';
-import Loader from '../../lib/ReactViews/Loader';
-import PickedFeatures from '../../lib/Map/PickedFeatures';
-import runLater from '../../lib/Core/runLater';
 import Terria from '../../lib/Models/Terria';
 import ViewState from '../../lib/ReactViewModels/ViewState';
 
