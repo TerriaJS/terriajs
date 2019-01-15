@@ -35,15 +35,6 @@ describe('FeatureInfoPanel', function() {
         });
     });
 
-    it('displays loader while asychronously loading feature information', function() {
-        var pickedFeatures = new PickedFeatures();
-        pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
-        terria.pickedFeatures = pickedFeatures;
-        const panel = <FeatureInfoPanel terria={terria} viewState={viewState}/>;
-        const result = getShallowRenderedOutput(panel);
-        expect(findWithType(result, Loader)).toBeDefined();
-    });
-
     it('has isVisible class when viewState.featureInfoPanelIsVisible is true', function() {
         viewState.featureInfoPanelIsVisible = true;
         const panel = <FeatureInfoPanel terria={terria} viewState={viewState}/>;
@@ -56,6 +47,15 @@ describe('FeatureInfoPanel', function() {
         const panel = <FeatureInfoPanel terria={terria} viewState={viewState}/>;
         const result = getShallowRenderedOutput(panel);
         expect(result.props.children.props.className).not.toContain('is-visible');
+    });
+
+    it('displays loader while asychronously loading feature information', function() {
+        var pickedFeatures = new PickedFeatures();
+        pickedFeatures.allFeaturesAvailablePromise = runLater(function() {});
+        terria.pickedFeatures = pickedFeatures;
+        const panel = <FeatureInfoPanel terria={terria} viewState={viewState}/>;
+        const result = getShallowRenderedOutput(panel);
+        expect(findWithType(result, Loader)).toBeDefined();
     });
 
     // This test won't work for two reasons:
