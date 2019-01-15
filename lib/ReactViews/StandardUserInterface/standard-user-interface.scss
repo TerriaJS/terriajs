@@ -81,11 +81,12 @@
   left: 0;
 
   @media (min-width : $md) {
-    left: $work-bench-width + 30px;
-    top: 60px;
-    right: 60px;
-    bottom: 30px;
-
+    left: $work-bench-width + 22px;
+    top: 62px;
+    right: 67px;
+    bottom: 0;
+    // debugger
+    // background: rgba(#ffcc00, 0.5);
   }
 
   & > div{
