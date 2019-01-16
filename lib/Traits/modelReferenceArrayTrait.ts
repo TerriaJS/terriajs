@@ -6,7 +6,7 @@ import { ModelInterface, BaseModel } from '../Models/Model';
 import updateModelFromJson from '../Models/updateModelFromJson';
 import ModelFactory from '../Models/ModelFactory';
 import upsertModelFromJson from '../Models/upsertModelFromJson';
-import Terria from '../Models/TerriaNew';
+import Terria from '../Models/Terria';
 
 export interface ModelArrayTraitOptions extends TraitOptions {
     factory?: ModelFactory;

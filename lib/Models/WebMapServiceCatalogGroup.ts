@@ -11,7 +11,7 @@ import WebMapServiceCatalogGroupTraits from '../Traits/WebMapServiceCatalogGroup
 import CommonStrata from './CommonStrata';
 import Model from './Model';
 import proxyCatalogItemUrl from './proxyCatalogItemUrl';
-import Terria from './TerriaNew';
+import Terria from './Terria';
 import WebMapServiceCapabilities, { CapabilitiesLayer } from './WebMapServiceCapabilities';
 import WebMapServiceCatalogItem from './WebMapServiceCatalogItem';
 

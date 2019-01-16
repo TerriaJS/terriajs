@@ -1,7 +1,7 @@
 import { autorun, configure, runInAction, spy } from "mobx";
 import CatalogMemberFactory from "../../lib/Models/CatalogMemberFactory";
 import { BaseModel } from "../../lib/Models/Model";
-import Terria from "../../lib/Models/TerriaNew";
+import Terria from "../../lib/Models/Terria";
 import upsertModelFromJson from "../../lib/Models/upsertModelFromJson";
 import WebMapServiceCatalogGroup from "../../lib/Models/WebMapServiceCatalogGroup";
 import WebMapServiceCatalogItem from "../../lib/Models/WebMapServiceCatalogItem";

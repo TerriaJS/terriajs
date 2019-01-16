@@ -5,7 +5,7 @@ import Trait from '../Traits/Trait';
 import ModelTraits from '../Traits/ModelTraits';
 import { ModelId } from '../Traits/ModelReference';
 import StratumOrder from './StratumOrder';
-import Terria from './TerriaNew';
+import Terria from './Terria';
 import LoadableStratum from '../../test/Models/LoadableStratum';
 
 export interface TraitsConstructor<T extends ModelTraits> {

@@ -5,7 +5,7 @@ import DisclaimerHandler from './DisclaimerHandler';
 import getAncestors from '../Models/getAncestors';
 import MouseCoords from './MouseCoords';
 import SearchState from './SearchState';
-import Terria from '../Models/TerriaNew';
+import Terria from '../Models/Terria';
 import { observable, reaction, IReactionDisposer } from 'mobx';
 import { BaseModel } from '../Models/Model';
 import PickedFeatures from '../Map/PickedFeatures';

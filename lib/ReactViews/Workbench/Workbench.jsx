@@ -20,7 +20,7 @@ const Workbench = observer(createReactClass({
     },
 
     removeAll() {
-        this.props.terria.nowViewing.removeAll();
+        this.props.terria.workbench.removeAll();
     },
 
     render() {

@@ -3,7 +3,7 @@ import primitiveTrait from '../../lib/Traits/primitiveTrait';
 import objectTrait from '../../lib/Traits/objectTrait';
 import ModelTraits from '../../lib/Traits/ModelTraits';
 import Model from '../../lib/Models/Model';
-import Terria from '../../lib/Models/TerriaNew';
+import Terria from '../../lib/Models/Terria';
 
 configure({
     enforceActions: true,

@@ -1,6 +1,6 @@
 import ModelFactory from "./ModelFactory";
 import { BaseModel } from "./Model";
-import Terria from "./TerriaNew";
+import Terria from "./Terria";
 import TerriaError from "../Core/TerriaError";
 import updateModelFromJson from "./updateModelFromJson";
 

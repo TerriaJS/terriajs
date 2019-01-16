@@ -20,7 +20,7 @@ import WebMapServiceCatalogItemTraits from '../Traits/WebMapServiceCatalogItemTr
 import Mappable, { ImageryLayer } from './Mappable';
 import Model from './Model';
 import proxyCatalogItemUrl from './proxyCatalogItemUrl';
-import Terria from './TerriaNew';
+import Terria from './Terria';
 import WebMapServiceCapabilities, { CapabilitiesLayer, CapabilitiesStyle } from './WebMapServiceCapabilities';
 import { InfoSectionTraits } from '../Traits/mixCatalogMemberTraits';
 import containsAny from '../Core/containsAny';
@@ -290,7 +290,7 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemb
         layer.alpha = this.opacity || 0.8;
     })
     private get _currentImageryLayer() {
-        trace();
+        trace(true);
         return this._createImageryLayer(this.currentDiscreteTime);
     }
 

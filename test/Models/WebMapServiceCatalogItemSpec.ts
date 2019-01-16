@@ -1,6 +1,6 @@
 import WebMapServiceCatalogItem from '../../lib/Models/WebMapServiceCatalogItem';
 import { autorun } from 'mobx';
-import Terria from '../../lib/Models/TerriaNew';
+import Terria from '../../lib/Models/Terria';
 
 describe('WebMapServiceCatalogItem', function() {
     it('derives getCapabilitiesUrl from url if getCapabilitiesUrl is not specified', function() {

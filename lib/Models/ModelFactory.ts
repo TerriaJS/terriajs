@@ -1,5 +1,5 @@
 import { ModelConstructor, BaseModel } from "./Model";
-import Terria from "./TerriaNew";
+import Terria from "./Terria";
 
 // TODO: ideally this would be Promise-based so that we can defer loading Model classes until they're needed.
 

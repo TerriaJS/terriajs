@@ -1,4 +1,4 @@
-import Terria from "./TerriaNew";
+import Terria from "./Terria";
 import CatalogGroup from "./CatalogGroupNew";
 
 export default class Catalog {

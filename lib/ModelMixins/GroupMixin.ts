@@ -1,6 +1,6 @@
 import Constructor from "../Core/Constructor";
 import { computed, action } from "mobx";
-import Terria from "../Models/TerriaNew";
+import Terria from "../Models/Terria";
 import { BaseModel, ModelInterface } from "../Models/Model";
 import ModelReference from "../Traits/ModelReference";
 import filterOutUndefined from "../Core/filterOutUndefined";

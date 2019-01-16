@@ -6,37 +6,27 @@ import Sortable from 'react-anything-sortable';
 import WorkbenchItem from './WorkbenchItem';
 import ObserveModelMixin from '../ObserveModelMixin';
 import { observer } from 'mobx-react';
+import { action } from 'mobx';
 
 
 import Styles from './workbench-list.scss';
 import '!!style-loader!css-loader?sourceMap!react-anything-sortable/sortable.css';
 import '!!style-loader!css-loader?sourceMap!./sortable.css';
 
-const WorkbenchList = observer(createReactClass({
-    displayName: 'WorkbenchList',
-    // mixins: [ObserveModelMixin],
-
-    propTypes: {
+@observer
+class WorkbenchList extends React.Component {
+    static propTypes = {
         terria: PropTypes.object.isRequired,
         viewState: PropTypes.object.isRequired
-    },
+    }
 
+    @action.bound
     onSort(sortedArray, currentDraggingSortData, currentDraggingIndex) {
-        let draggedItemIndex = this.props.terria.workbench.items.indexOf(currentDraggingSortData);
+        const draggedItemIndex = this.props.terria.workbench.items.indexOf(currentDraggingSortData);
         const addAtIndex = currentDraggingIndex;
         this.props.terria.workbench.items.splice(draggedItemIndex, 1);
         this.props.terria.workbench.items.splice(addAtIndex, 0, currentDraggingSortData);
-
-        // while (draggedItemIndex < addAtIndex) {
-        //     this.props.terria.nowViewing.lower(currentDraggingSortData);
-        //     ++draggedItemIndex;
-        // }
-
-        // while (draggedItemIndex > addAtIndex) {
-        //     this.props.terria.nowViewing.raise(currentDraggingSortData);
-        //     --draggedItemIndex;
-        // }
-    },
+    }
 
     render() {
         return (
@@ -52,7 +42,7 @@ const WorkbenchList = observer(createReactClass({
                 </Sortable>
             </ul>
         );
-    },
-}));
+    }
+}
 
 module.exports = WorkbenchList;
