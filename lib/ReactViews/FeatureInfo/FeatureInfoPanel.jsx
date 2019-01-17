@@ -8,7 +8,6 @@ import DragWrapper from '../DragWrapper.jsx';
 import Loader from '../Loader.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
-import ReactDOM from 'react-dom';
 import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
@@ -72,8 +71,6 @@ const FeatureInfoPanel = createReactClass({
                 }
             }
         });
-        /* eslint-disable-next-line react/no-find-dom-node */
-        // this.node = ReactDOM.findDOMNode(this);
     },
 
     componentWillUnmount() {
