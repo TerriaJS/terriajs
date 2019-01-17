@@ -1,0 +1,54 @@
+@import "~terriajs-variables";
+
+/* Settings */
+:root {
+  --columns: 6;
+  --gutter: 1rem;
+  --color: hsla(0,100%,50%, 0.25);
+}
+
+/* Helper variables */
+:root {
+  --line-width: 1px;
+  --column-width: 8px;
+  --background-width: 100vw;
+  --background-columns: repeating-linear-gradient(
+    to right,
+    var(--color),
+    var(--color) var(--line-width),
+    transparent var(--line-width),
+    transparent var(--column-width)
+  );
+
+  --background-row: repeating-linear-gradient(
+    to bottom,
+    var(--color),
+    var(--color) var(--line-width),
+    transparent var(--line-width),
+    transparent var(--column-width)
+  );
+
+}
+
+
+.wrapper{
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 999999;
+  pointer-events: none;
+  background-image: var(--background-columns), var(--background-row);
+  background-size: var(--background-width) 100%;
+}
+
+.toggleBtn{
+  position: absolute;
+  right: 16px;
+  bottom: 32px;
+  z-index: 99999;
+  width: 100px;
+  composes: btn from "../../Sass/common/_buttons.scss";
+  composes: btn-primary from "../../Sass/common/_buttons.scss";
+}

@@ -21,6 +21,7 @@ import SidePanel from './../SidePanel/SidePanel.jsx';
 import processCustomElements from './processCustomElements';
 import FullScreenButton from './../SidePanel/FullScreenButton.jsx';
 import { Small, Medium } from '../Generic/Responsive';
+import GridOverlay from './GridOverlay.jsx';
 import classNames from 'classnames';
 import 'inobounce';
 
@@ -108,6 +109,7 @@ const StandardUserInterface = createReactClass({
         const allBaseMaps = this.props.allBaseMaps;
         return (
             <div className={Styles.uiRoot} ref={w => (this._wrapper = w)}>
+                <GridOverlay />
                 <div className={Styles.ui}>
                     <div className={Styles.uiInner}>
                         <If condition={!this.props.viewState.hideMapUi()}>
