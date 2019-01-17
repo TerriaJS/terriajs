@@ -30,7 +30,7 @@ const FeatureInfoPanel = createReactClass({
         printView: PropTypes.bool
     },
 
-    node: null,
+    ref: null,
 
     getInitialState() {
         return {
@@ -73,7 +73,7 @@ const FeatureInfoPanel = createReactClass({
             }
         });
         /* eslint-disable-next-line react/no-find-dom-node */
-        this.node = ReactDOM.findDOMNode(this);
+        // this.node = ReactDOM.findDOMNode(this);
     },
 
     componentWillUnmount() {
@@ -84,7 +84,8 @@ const FeatureInfoPanel = createReactClass({
     },
 
     checkDragging() {
-        return +this.node.getAttribute('data-is-dragging');
+        console.log(this.ref.current.node.getAttribute('data-is-dragging'));
+        return +this.ref.current.node.getAttribute('data-is-dragging');
     },
 
     getFeatureInfoCatalogItems() {
@@ -241,8 +242,9 @@ const FeatureInfoPanel = createReactClass({
                 <li>{this.renderLocationItem(position)}</li>
             </If>
         );
+        this.ref = React.createRef();
         return (
-                <DragWrapper>
+                <DragWrapper ref={this.ref}>
                     <div
                         className={panelClassName}
                         aria-hidden={!viewState.featureInfoPanelIsVisible}>
