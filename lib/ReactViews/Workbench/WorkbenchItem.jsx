@@ -54,7 +54,7 @@ const WorkbenchItem = observer(createReactClass({
     },
 
     toggleVisibility() {
-        this.props.item.isShown = !this.props.item.isShown;
+        this.props.item.show = this.props.item.show === undefined ? true : !this.props.item.show;
     },
 
     render() {
@@ -64,13 +64,13 @@ const WorkbenchItem = observer(createReactClass({
                 style={this.props.style}
                 className={classNames(this.props.className, Styles.workbenchItem,{[Styles.isOpen]: workbenchItem.isLegendVisible})}>
                 <ul className={Styles.header}>
-                    <If condition={workbenchItem.supportsToggleShown}>
+                    <If condition={true || workbenchItem.supportsToggleShown}>
                         <li className={Styles.visibilityColumn}>
                             <button type='button'
                                     onClick={this.toggleVisibility}
                                     title="Data show/hide"
                                     className={Styles.btnVisibility}>
-                                    {workbenchItem.isShown ? <Icon glyph={Icon.GLYPHS.checkboxOn}/> : <Icon glyph={Icon.GLYPHS.checkboxOff}/>}
+                                    {workbenchItem.show ? <Icon glyph={Icon.GLYPHS.checkboxOn}/> : <Icon glyph={Icon.GLYPHS.checkboxOff}/>}
                             </button>
                         </li>
                     </If>
@@ -96,7 +96,7 @@ const WorkbenchItem = observer(createReactClass({
                     <li className={Styles.headerClearfix} />
                 </ul>
 
-                <If condition={workbenchItem.isLegendVisible}>
+                <If condition={true || workbenchItem.isLegendVisible}>
                     <div className={Styles.inner}>
                         <ViewingControls item={workbenchItem} viewState={this.props.viewState}/>
                         <OpacitySection item={workbenchItem}/>

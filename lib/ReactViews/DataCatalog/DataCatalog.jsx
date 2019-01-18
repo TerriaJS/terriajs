@@ -51,6 +51,7 @@ const DataCatalog = createReactClass({
                                            onActionButtonClicked={this.props.onActionButtonClicked}
                                            removable={this.props.removable}
                                            terria={this.props.terria}
+                                           ancestors={[]}
                     />}
                 </For>
             </ul>

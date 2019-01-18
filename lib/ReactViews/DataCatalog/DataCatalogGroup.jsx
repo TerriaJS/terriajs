@@ -20,7 +20,8 @@ const DataCatalogGroup = observer(createReactClass({
         overrideState: PropTypes.string,
         onActionButtonClicked: PropTypes.func,
         removable: PropTypes.bool,
-        terria: PropTypes.object
+        terria: PropTypes.object,
+        ancestors: PropTypes.array
     },
 
     getDefaultProps() {
@@ -78,7 +79,7 @@ const DataCatalogGroup = observer(createReactClass({
         const group = this.props.group;
         return (
             <CatalogGroup
-                text={group.nameInCatalog}
+                text={group.nameInCatalog + ': ' + this.props.ancestors.map(m => m.nameInCatalog).join(' -> ')}
                 title={getAncestors(group).map(member => member.nameInCatalog).join(' → ')}
                 topLevel={this.isTopLevel()}
                 open={this.isOpen()}
@@ -98,6 +99,7 @@ const DataCatalogGroup = observer(createReactClass({
                             overrideOpen={this.props.manageIsOpenLocally}
                             overrideState={this.props.overrideState}
                             onActionButtonClicked={this.props.onActionButtonClicked}
+                            ancestors={[...this.props.ancestors, group]}
                         />
                     </For>
                 </If>

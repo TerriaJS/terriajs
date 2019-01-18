@@ -5,6 +5,7 @@ export interface ImageryLayer {
     alpha: number;
     wms: boolean;
     isGeoServer: boolean;
+    show: boolean;
 }
 
 export interface DataSource {

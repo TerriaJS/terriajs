@@ -24,10 +24,13 @@ import Terria from './Terria';
 import WebMapServiceCapabilities, { CapabilitiesLayer, CapabilitiesStyle } from './WebMapServiceCapabilities';
 import { InfoSectionTraits } from '../Traits/mixCatalogMemberTraits';
 import containsAny from '../Core/containsAny';
+import GroupMixin from '../ModelMixins/GroupMixin';
 
 import WebMapServiceImageryProvider from 'terriajs-cesium/Source/Scene/WebMapServiceImageryProvider';
 import CesiumImageryLayer from 'terriajs-cesium/Source/Scene/ImageryLayer';
 import WebMercatorTilingScheme from 'terriajs-cesium/Source/Core/WebMercatorTilingScheme';
+import CatalogItem from '../ReactViews/DataCatalog/CatalogItem';
+import CommonStrata from './CommonStrata';
 
 
 
@@ -204,6 +207,14 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemb
     ];
 
     static readonly type = 'wms';
+    readonly canZoomTo = true;
+    readonly showsInfo = true;
+
+    @observable
+    show: boolean | undefined;
+
+    @observable
+    ancestors: (GroupMixin.GroupMixin & CatalogMemberMixin.CatalogMemberMixin)[] | undefined;
 
     get type() {
         return WebMapServiceCatalogItem.type;
@@ -217,6 +228,10 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemb
     constructor(id: string, terria: Terria) {
         super(id, terria);
         this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, new GetCapabilitiesStratum(this));
+        if (this.opacity === undefined) {
+            const stratum = this.addStratum(CommonStrata.user);
+            stratum.opacity = 0.8;
+        }
     }
 
     loadMetadata(): Promise<void> {
@@ -288,6 +303,7 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemb
     @computed
     @autoUpdate(function(this: WebMapServiceCatalogItem, layer: ImageryLayer) {
         layer.alpha = this.opacity || 0.8;
+        layer.show = this.show || false;
     })
     private get _currentImageryLayer() {
         trace(true);

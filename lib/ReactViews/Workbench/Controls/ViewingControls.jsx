@@ -88,7 +88,7 @@ const ViewingControls = createReactClass({
             item = item.sourceCatalogItem;
         }
         // Open up all the parents (doesn't matter that this sets it to enabled as well because it already is).
-        item.enableWithParents();
+        (this.props.item.ancestors || []).forEach(group => {group.topStratum.isOpen = true;});
         this.props.viewState.viewCatalogMember(item);
         this.props.viewState.switchMobileView(this.props.viewState.mobileViewOptions.preview);
     },

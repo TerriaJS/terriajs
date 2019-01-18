@@ -21,7 +21,8 @@ export default observer(createReactClass({
         overrideState: PropTypes.string,
         onActionButtonClicked: PropTypes.func,
         removable: PropTypes.bool,
-        terria: PropTypes.object
+        terria: PropTypes.object,
+        ancestors: PropTypes.array
     },
 
     render() {
@@ -32,7 +33,8 @@ export default observer(createReactClass({
                                   overrideState={this.props.overrideState}
                                   onActionButtonClicked={this.props.onActionButtonClicked}
                                   removable={this.props.removable}
-                                  terria={this.props.terria} />
+                                  terria={this.props.terria}
+                                  ancestors={this.props.ancestors} />
             );
         } else {
             return (
@@ -40,7 +42,8 @@ export default observer(createReactClass({
                                  overrideState={this.props.overrideState}
                                  onActionButtonClicked={this.props.onActionButtonClicked}
                                  removable={this.props.removable}
-                                 terria={this.props.terria} />
+                                 terria={this.props.terria}
+                                 ancestors={this.props.ancestors} />
             );
         }
     }

@@ -26,7 +26,8 @@ const DataCatalogItem = observer(createReactClass({
         overrideState: PropTypes.string,
         onActionButtonClicked: PropTypes.func,
         removable: PropTypes.bool,
-        terria: PropTypes.object
+        terria: PropTypes.object,
+        ancestors: PropTypes.array
     },
 
     onBtnClicked(event) {
@@ -48,8 +49,10 @@ const DataCatalogItem = observer(createReactClass({
         const itemWorkbenchIndex = this.props.item.terria.workbench.items.indexOf(this.props.item)
         if (itemWorkbenchIndex === -1) {
             this.props.item.terria.workbench.items.push(this.props.item);
+            this.props.item.ancestors = this.props.ancestors;
         } else {
             this.props.item.terria.workbench.items.splice(itemWorkbenchIndex, 1);
+            this.props.item.ancestors = undefined;
         }
 
         // this.props.item.toggleEnabled();
@@ -86,7 +89,7 @@ const DataCatalogItem = observer(createReactClass({
             <CatalogItem
                 onTextClick={this.setPreviewedItem}
                 selected={this.isSelected()}
-                text={item.nameInCatalog}
+                text={item.nameInCatalog + ': ' + this.props.ancestors.map(m => m.nameInCatalog).join(' -> ')}
                 title={getAncestors(item).map(member => member.nameInCatalog).join(' → ')}
                 btnState={this.getState()}
                 onBtnClick={this.onBtnClicked}

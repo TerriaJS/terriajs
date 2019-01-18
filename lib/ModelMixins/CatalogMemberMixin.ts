@@ -43,7 +43,7 @@ function CatalogMemberMixin<T extends Constructor<RequiredInstance>>(Base: T) {
 }
 
 namespace CatalogMemberMixin {
-    interface CatalogMemberMixin extends InstanceType<ReturnType<typeof CatalogMemberMixin>> {}
+    export interface CatalogMemberMixin extends InstanceType<ReturnType<typeof CatalogMemberMixin>> {}
     export function isMixedInto(model: any): model is CatalogMemberMixin {
         return model && model.hasCatalogMemberMixin;
     }

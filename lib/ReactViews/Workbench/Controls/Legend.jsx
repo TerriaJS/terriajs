@@ -4,17 +4,16 @@ import classNames from 'classnames';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 import Loader from '../../Loader';
-import ObserveModelMixin from '../../ObserveModelMixin';
 import proxyCatalogItemUrl from '../../../Models/proxyCatalogItemUrl';
 import React from 'react';
 import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import URI from 'urijs';
+import { observer } from 'mobx-react';
 import Styles from './legend.scss';
 
-const Legend = createReactClass({
+const Legend = observer(createReactClass({
     displayName: 'Legend',
-    mixins: [ObserveModelMixin],
 
     propTypes: {
         item: PropTypes.object
@@ -99,7 +98,7 @@ const Legend = createReactClass({
             </ul>
         );
     },
-});
+}));
 
 function makeAbsolute(url) {
     const uri = new URI(url);

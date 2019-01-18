@@ -4,25 +4,24 @@ import RangeSlider from 'react-rangeslider';
 import React from 'react';
 import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
-import ObserveModelMixin from '../../ObserveModelMixin';
+import { observer } from 'mobx-react';
 
 import Styles from './opacity-section.scss';
 
-const OpacitySection = createReactClass({
+const OpacitySection = observer(createReactClass({
     displayName: 'OpacitySection',
-    mixins: [ObserveModelMixin],
 
     propTypes: {
         item: PropTypes.object.isRequired
     },
 
     changeOpacity(value) {
-        this.props.item.opacity = value / 100.0;
+        this.props.item.topStratum.opacity = value / 100.0;
     },
 
     render() {
         const item = this.props.item;
-        if (!item.supportsOpacity) {
+        if (false && !item.supportsOpacity) {
             return null;
         }
         return (
@@ -32,5 +31,5 @@ const OpacitySection = createReactClass({
             </div>
         );
     },
-});
+}));
 module.exports = OpacitySection;
