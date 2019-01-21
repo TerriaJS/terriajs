@@ -1,5 +1,6 @@
 'use strict';
 
+import defined from 'terriajs-cesium/Source/Core/defined';
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
 import createReactClass from 'create-react-class';
@@ -53,6 +54,7 @@ const Notification = createReactClass({
                 denyText={notification.denyText}
                 onConfirm={this.confirm}
                 onDeny={this.deny}
+                type={defined(notification.type) ? notification.type : 'notification'}
                 width={notification.width}
                 height={notification.height}
             />);
