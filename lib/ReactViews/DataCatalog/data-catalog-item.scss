@@ -14,7 +14,8 @@
   @extend %wrap;
   position: relative;
   width: 100%;
-  padding: $padding $padding*2.5 $padding $padding;
+  padding: 8px $padding*2.5 8px $padding;
+  line-height: normal;
 
   &:focus, &:hover {
     color: $modal-highlight;
@@ -44,7 +45,7 @@
   position: absolute;
   color: $color-primary;
   right: 0;
-  top: 7px;
+  top: 4px;
 
   @media (max-width: $sm) {
     top: 5px;
