@@ -3,7 +3,7 @@ import React from 'react';
 import createReactClass from 'create-react-class';
 
 import PropTypes from 'prop-types';
-import classNames from 'classNames';
+import classNames from 'classnames';
 import SettingPanel from './Panels/SettingPanel.jsx';
 import SharePanel from './Panels/SharePanel/SharePanel.jsx';
 import ToolsPanel from './Panels/ToolsPanel/ToolsPanel.jsx';
