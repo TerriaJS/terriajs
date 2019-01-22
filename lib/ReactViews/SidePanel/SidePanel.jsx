@@ -52,8 +52,11 @@ const SidePanel = createReactClass({
         }
     },
 
-    onAddDataClicked() {
+    onAddDataClicked(event) {
+        event.stopPropagation();
+        this.props.viewState.topElement = 'AddData';
         this.props.viewState.openAddData();
+        
     },
 
     onAddLocalDataClicked() {

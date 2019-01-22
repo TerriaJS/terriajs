@@ -52,5 +52,4 @@ describe('StandardUserInterface', function() {
         const featureInfo = findWithClass(result, "tjs-standard-user-interface__featureInfo");
         expect(featureInfo.props.className).not.toContain('top-element');
     });
-
 });
