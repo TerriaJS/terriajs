@@ -4,6 +4,8 @@ import xml2json from '../ThirdParty/xml2json';
 import loadXML from '../Core/loadXML';
 import TerriaError from '../Core/TerriaError';
 import isReadOnlyArray from '../Core/isReadOnlyArray';
+import Rectangle from 'terriajs-cesium/Source/Core/Rectangle';
+
 
 export interface OnlineResource {
     'xlink:type': string;
@@ -24,11 +26,27 @@ export interface CapabilitiesStyle {
     readonly LegendURL?: CapabilitiesLegend | ReadonlyArray<CapabilitiesLegend>;
 }
 
+export interface CapabilitiesGeographicBoundingBox {
+    readonly westBoundLongitude: number;
+    readonly southBoundLatitude: number;
+    readonly eastBoundLongitude: number;
+    readonly northBoundLatitude: number;
+}
+
+export interface CapabilitiesLatLonBoundingBox {
+    readonly minx: number;
+    readonly miny: number;
+    readonly maxx: number;
+    readonly maxy: number;
+}
+
 export interface CapabilitiesLayer {
     readonly _parent?: CapabilitiesLayer;
     readonly Name?: string;
     readonly Title: string;
     readonly Abstract?: string;
+    readonly EX_GeographicBoundingBox?: CapabilitiesGeographicBoundingBox; // WMS 1.3.0
+    readonly LatLonBoundingBox?: CapabilitiesLatLonBoundingBox; // WMS 1.0.0-1.1.1
     readonly Style?: CapabilitiesStyle | ReadonlyArray<CapabilitiesStyle>;
     readonly Layer?: CapabilitiesLayer | ReadonlyArray<CapabilitiesLayer>;
 }
@@ -48,6 +66,21 @@ type ElementTypeIfArray<T> = T extends ReadonlyArray<infer U> ? U : T;
 type Mutable<T> = {
     -readonly [P in keyof T]: T[P];
 };
+
+export function getRectangleFromLayer(layer: CapabilitiesLayer): Rectangle | undefined {
+    var egbb = layer.EX_GeographicBoundingBox; // required in WMS 1.3.0
+    if (egbb) {
+        return Rectangle.fromDegrees(egbb.westBoundLongitude, egbb.southBoundLatitude, egbb.eastBoundLongitude, egbb.northBoundLatitude);
+    } else {
+        var llbb = layer.LatLonBoundingBox; // required in WMS 1.0.0 through 1.1.1
+        if (llbb) {
+            return Rectangle.fromDegrees(llbb.minx, llbb.miny, llbb.maxx, llbb.maxy);
+        }
+    }
+    return undefined;
+}
+
+
 
 export default class WebMapServiceCapabilities {
     static fromUrl: (url: string) => Promise<WebMapServiceCapabilities> = createTransformer((url: string) => {

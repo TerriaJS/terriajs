@@ -33,7 +33,7 @@ const DataCatalogItem = observer(createReactClass({
     onBtnClicked(event) {
         if (this.props.onActionButtonClicked) {
             this.props.onActionButtonClicked(this.props.item);
-            return;
+            return
         }
 
         if (defined(this.props.item.invoke) || this.props.viewState.useSmallScreenInterface) {
@@ -48,6 +48,9 @@ const DataCatalogItem = observer(createReactClass({
     toggleEnable(event) {
         const itemWorkbenchIndex = this.props.item.terria.workbench.items.indexOf(this.props.item)
         if (itemWorkbenchIndex === -1) {
+            if (this.props.item.loadData) {
+                this.props.item.loadData();
+            }
             this.props.item.terria.workbench.items.push(this.props.item);
             this.props.item.ancestors = this.props.ancestors;
         } else {
@@ -72,6 +75,9 @@ const DataCatalogItem = observer(createReactClass({
 
     setPreviewedItem() {
         //raiseErrorOnRejectedPromise(this.props.item.terria, this.props.item.load());
+        if (this.props.item.loadMetadata) {
+            this.props.item.loadMetadata();
+        }
         this.props.viewState.viewCatalogMember(this.props.item);
         // mobile switch to nowvewing
         this.props.viewState.switchMobileView(this.props.viewState.mobileViewOptions.preview);

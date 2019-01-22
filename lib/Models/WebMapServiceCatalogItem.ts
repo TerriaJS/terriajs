@@ -21,7 +21,7 @@ import Mappable, { ImageryLayer } from './Mappable';
 import Model from './Model';
 import proxyCatalogItemUrl from './proxyCatalogItemUrl';
 import Terria from './Terria';
-import WebMapServiceCapabilities, { CapabilitiesLayer, CapabilitiesStyle } from './WebMapServiceCapabilities';
+import WebMapServiceCapabilities, { CapabilitiesLayer, CapabilitiesStyle, getRectangleFromLayer } from './WebMapServiceCapabilities';
 import { InfoSectionTraits } from '../Traits/mixCatalogMemberTraits';
 import containsAny from '../Core/containsAny';
 import GroupMixin from '../ModelMixins/GroupMixin';
@@ -31,6 +31,7 @@ import CesiumImageryLayer from 'terriajs-cesium/Source/Scene/ImageryLayer';
 import WebMercatorTilingScheme from 'terriajs-cesium/Source/Core/WebMercatorTilingScheme';
 import CatalogItem from '../ReactViews/DataCatalog/CatalogItem';
 import CommonStrata from './CommonStrata';
+import Rectangle from 'terriajs-cesium/Source/Core/Rectangle';
 
 
 
@@ -173,6 +174,18 @@ class GetCapabilitiesStratum implements WebMapServiceCatalogItemTraits {
     }
 
     @computed
+    get rectangle(): Rectangle | undefined {
+        const layers: CapabilitiesLayer[] = <any>[...this.capabilitiesLayers.values()].filter(layer => layer !== undefined);
+        // Needs to take union of all layer rectangles
+        return layers.length > 0 ? getRectangleFromLayer(layers[0]) : undefined
+        // if (layers.length === 1) {
+        //     return getRectangleFromLayer(layers[0]);
+        // }
+        // Otherwise get the union of rectangles from all layers
+        // return undefined;
+    }
+
+    @computed
     get isGeoServer(): boolean | undefined {
         if (!this.capabilities) {
             return undefined;
@@ -205,6 +218,14 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemb
     static abstractsToIgnore = [
         'A compliant implementation of WMS'
     ];
+
+    static defaultParameters = {
+        transparent:  true,
+        format: 'image/png',
+        exceptions: 'application/vnd.ogc.se_xml',
+        styles: '',
+        tiled: true
+    };
 
     static readonly type = 'wms';
     readonly canZoomTo = true;
@@ -306,7 +327,7 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemb
         layer.show = this.show || false;
     })
     private get _currentImageryLayer() {
-        trace(true);
+        trace();
         return this._createImageryLayer(this.currentDiscreteTime);
     }
 
@@ -343,10 +364,13 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemb
             layers: this.layers,
             // getFeatureInfoFormats: this.getFeatureInfoFormats,
             // parameters: parameters,
+            parameters: WebMapServiceCatalogItem.defaultParameters,
             // getFeatureInfoParameters: parameters,
             tilingScheme: /*defined(this.tilingScheme) ? this.tilingScheme :*/ new WebMercatorTilingScheme(),
             maximumLevel: 20 //maximumLevel
-        }));
+        }), {
+            rectangle: stratum.rectangle
+        });
 
         return imageryLayer;
     }
