@@ -69,6 +69,10 @@
     top: 8px;
 }
 
+.btnToggleFeature{
+  padding: $padding;
+}
+
 .no-results {
   composes: no-results from '../../Sass/common/_labels.scss';
 }

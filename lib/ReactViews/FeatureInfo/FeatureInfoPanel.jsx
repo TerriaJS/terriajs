@@ -117,7 +117,8 @@ const FeatureInfoPanel = createReactClass({
         }, 200);
     },
 
-    toggleCollapsed() {
+    toggleCollapsed(event) {
+        event.stopPropagation();
         if(!this.checkDragging()) {
             this.props.viewState.featureInfoPanelIsCollapsed = !this.props.viewState.featureInfoPanelIsCollapsed;
         }

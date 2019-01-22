@@ -102,7 +102,8 @@ const FeatureInfoSection = createReactClass({
         return propertyData;
     },
 
-    clickHeader() {
+    clickHeader(event) {
+        event.stopPropagation;
         if (defined(this.props.onClickHeader)) {
             this.props.onClickHeader(this.props.feature);
         }

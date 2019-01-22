@@ -12,11 +12,8 @@ class DragWrapper extends React.Component {
 
   componentDidMount() {
       const dragMoveListener = (event)=>{
-          this.setState({
-              isDragging: 1
-          });
          const target = event.target;
-             // keep the dragged position in the data-x/data-y attributes
+        // keep the dragged position in the data-x/data-y attributes
          const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
          const y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
 
@@ -28,6 +25,12 @@ class DragWrapper extends React.Component {
          // update the posiion attributes
          target.setAttribute('data-x', x);
          target.setAttribute('data-y', y);
+         // set a threashhold for drag -> moving event to stop other interaction
+         if(Math.abs(event.dx) > 5 || Math.abs(event.dy) > 5) {
+            this.setState({
+                isDragging: 1
+            });
+         }
      };
 
       const onend = ()=> {
@@ -35,7 +38,7 @@ class DragWrapper extends React.Component {
               this.setState({
                   isDragging: 0
               });
-          }, 2000);
+          }, 100);
       };
       const node = this.node;
       interact(node)
