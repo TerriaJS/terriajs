@@ -80,8 +80,7 @@ const FeatureInfoPanel = createReactClass({
         }
     },
 
-    checkDragging() {
-        console.log(this.ref.current.node.getAttribute('data-is-dragging'));
+    isDragging() {
         return +this.ref.current.node.getAttribute('data-is-dragging');
     },
 
@@ -118,13 +117,13 @@ const FeatureInfoPanel = createReactClass({
     },
 
     toggleCollapsed(event) {
-        if(!this.checkDragging()) {
+        if(!this.isDragging()) {
             this.props.viewState.featureInfoPanelIsCollapsed = !this.props.viewState.featureInfoPanelIsCollapsed;
         }
     },
 
     toggleOpenFeature(feature) {
-        if(!this.checkDragging()) {
+        if(!this.isDragging()) {
             const terria = this.props.terria;
             if (feature === terria.selectedFeature) {
                 terria.selectedFeature = undefined;
