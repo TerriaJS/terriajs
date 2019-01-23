@@ -12,6 +12,8 @@ class DragWrapper extends React.Component {
 }
 
   componentDidMount() {
+      const node = this.node;
+    
       const dragMoveListener = (event)=>{
          const target = event.target;
         // keep the dragged position in the data-x/data-y attributes
@@ -41,7 +43,6 @@ class DragWrapper extends React.Component {
               });
           }, 100);
       };
-      const node = this.node;
       interact(node)
         .draggable({
           inertia: true,
@@ -55,18 +56,32 @@ class DragWrapper extends React.Component {
           onend: onend
       });
 
-
-      this.resizeListener = ()=>{
-      interact(node).fire('snap')
-
-
-      }
+  this.resizeListener = ()=> {
+        // get current transform
+    const currentTransformX = (parseFloat(node.getAttribute('data-x')) || 0);
+    const currentTransformY = (parseFloat(node.getAttribute('data-y')) || 0);
+    
+    const nodeRect = node.getBoundingClientRect(); 
+    let transformX = currentTransformX;
+    let transformY = currentTransformY;
+console.log(node.offsetLeft, node.offsetRight);
+    // TODO: 
+    // node.offset is the standard/threshhold
+    // need to compare current nodeRectleft - nodeParentRectLeft
+    // if out of bound, need to be set back to offset
+    // check interact restrict for implementation
+    if(node.offsetLeft <= 0 || node.offsetRight <= 0 || node.offsetTop <= 0 || node.offsetBottom <=0) {
       
-      window.addEventListener('resize', this.resizeListener, false);
-  }
+      node.style.webkitTransform = 
+            node.style.transform =
+            'translate(' + transformX  + 'px, ' + transformY + 'px)';
+    }
+  };
+  window.addEventListener('resize', this.resizeListener, false);
+}
   
-componentWillUnmount(){
-    if(interact.isSet(this.node)){
+componentWillUnmount() {
+    if(interact.isSet(this.node)) {
         interact(this.node).unset();
     }
     window.removeEventListener('resize', this.resizeListener, false);     
