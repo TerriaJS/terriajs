@@ -8,6 +8,7 @@ class DragWrapper extends React.Component {
     this.state = {
         isDragging: 0
     };
+    this.resizeListener = null;
 }
 
   componentDidMount() {
@@ -53,7 +54,23 @@ class DragWrapper extends React.Component {
           },
           onend: onend
       });
+
+
+      this.resizeListener = ()=>{
+      interact(node).fire('snap')
+
+
+      }
+      
+      window.addEventListener('resize', this.resizeListener, false);
   }
+  
+componentWillUnmount(){
+    if(interact.isSet(this.node)){
+        interact(this.node).unset();
+    }
+    window.removeEventListener('resize', this.resizeListener, false);     
+}
 
   render() {
       return <div data-is-dragging={this.state.isDragging} ref={node => this.node = node} >{this.props.children}</div>;
