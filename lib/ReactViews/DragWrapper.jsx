@@ -57,25 +57,9 @@ class DragWrapper extends React.Component {
       });
 
   this.resizeListener = ()=> {
-        // get current transform
-    const currentTransformX = (parseFloat(node.getAttribute('data-x')) || 0);
-    const currentTransformY = (parseFloat(node.getAttribute('data-y')) || 0);
-    
-    const nodeRect = node.getBoundingClientRect(); 
-    let transformX = currentTransformX;
-    let transformY = currentTransformY;
-console.log(node.offsetLeft, node.offsetRight);
-    // TODO: 
-    // node.offset is the standard/threshhold
-    // need to compare current nodeRectleft - nodeParentRectLeft
-    // if out of bound, need to be set back to offset
-    // check interact restrict for implementation
-    if(node.offsetLeft <= 0 || node.offsetRight <= 0 || node.offsetTop <= 0 || node.offsetBottom <=0) {
-      
-      node.style.webkitTransform = 
-            node.style.transform =
-            'translate(' + transformX  + 'px, ' + transformY + 'px)';
-    }
+    const draggable = interact(node);
+    const dragEvent = {name: 'drag', axis: 'x'};
+    draggable.reflow(dragEvent);
   };
   window.addEventListener('resize', this.resizeListener, false);
 }
