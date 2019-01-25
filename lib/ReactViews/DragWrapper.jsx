@@ -58,7 +58,7 @@ class DragWrapper extends React.Component {
 
   this.resizeListener = ()=> {
     const draggable = interact(node);
-    const dragEvent = {name: 'drag', axis: 'x'};
+    const dragEvent = {name: 'drag', axis: 'xy'};
     draggable.reflow(dragEvent);
   };
   window.addEventListener('resize', this.resizeListener, false);
