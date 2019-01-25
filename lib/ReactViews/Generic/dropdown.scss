@@ -32,6 +32,7 @@
   background: $text-light;
   color: $dark-lighter;
   border: 1px solid $field-border;
+  position: relative;
   &:hover,
   &:focus {
     background: $text-light;

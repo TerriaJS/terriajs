@@ -19,11 +19,15 @@ const BottomDock = createReactClass({
         domElementRef: PropTypes.func
     },
 
+    handleClick() {
+        this.props.viewState.topElement = 'BottomDock';
+    },
+
     render() {
         const terria = this.props.terria;
 
         return (
-            <div className={Styles.bottomDock} ref={this.props.domElementRef}>
+            <div className={`${Styles.bottomDock} ${this.props.viewState.topElement === 'BottomDock' ? 'top-element': ''}`} ref={this.props.domElementRef} tabIndex={0} onClick={this.handleClick}>
                 <ChartPanel terria={terria} onHeightChange={this.onHeightChange} viewState={this.props.viewState}/>
                 <If condition={terria.timeSeriesStack.topLayer}>
                     <Timeline terria={terria}/>

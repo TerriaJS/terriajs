@@ -35,17 +35,11 @@ describe('FeatureInfoPanel', function() {
         });
     });
 
-    it('does not have isVisible class when viewState.featureInfoPanelIsVisible not set', function() {
-        const panel = <FeatureInfoPanel terria={terria} viewState={viewState}/>;
-        const result = getShallowRenderedOutput(panel);
-        expect(result.props.className).not.toContain('is-visible');
-    });
-
     it('has isVisible class when viewState.featureInfoPanelIsVisible is true', function() {
         viewState.featureInfoPanelIsVisible = true;
         const panel = <FeatureInfoPanel terria={terria} viewState={viewState}/>;
         const result = getShallowRenderedOutput(panel);
-        expect(result.props.className).toContain('is-visible');
+        expect(result.props.children.props.className).toContain('is-visible');
     });
 
     it('displays loader while asychronously loading feature information', function() {
@@ -55,6 +49,13 @@ describe('FeatureInfoPanel', function() {
         const panel = <FeatureInfoPanel terria={terria} viewState={viewState}/>;
         const result = getShallowRenderedOutput(panel);
         expect(findWithType(result, Loader)).toBeDefined();
+    });
+
+    it('does not have isVisible class when viewState.featureInfoPanelIsVisible is false', function() {
+        viewState.featureInfoPanelIsVisible = false;
+        const panel = <FeatureInfoPanel terria={terria} viewState={viewState}/>;
+        const result = getShallowRenderedOutput(panel);
+        expect(result.props.children.props.className).not.toContain('is-visible');
     });
 
     // This test won't work for two reasons:

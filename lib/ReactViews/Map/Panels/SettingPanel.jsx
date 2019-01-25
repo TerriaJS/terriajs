@@ -20,7 +20,7 @@ const SettingPanel = createReactClass({
 
     propTypes: {
         terria: PropTypes.object.isRequired,
-        allBaseMaps: PropTypes.array.isRequired,
+        allBaseMaps: PropTypes.array,
         viewState: PropTypes.object.isRequired
     },
 

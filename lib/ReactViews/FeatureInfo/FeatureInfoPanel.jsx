@@ -4,6 +4,7 @@ import defined from 'terriajs-cesium/Source/Core/defined';
 import CesiumMath from 'terriajs-cesium/Source/Core/Math';
 import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
 import FeatureInfoCatalogItem from './FeatureInfoCatalogItem.jsx';
+import DragWrapper from '../DragWrapper.jsx';
 import Loader from '../Loader.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
@@ -26,6 +27,17 @@ const FeatureInfoPanel = createReactClass({
         terria: PropTypes.object.isRequired,
         viewState: PropTypes.object.isRequired,
         printView: PropTypes.bool
+    },
+
+    ref: null,
+
+    getInitialState() {
+        return {
+            left: null,
+            right: null,
+            top: null,
+            bottom: null
+        };
     },
 
     componentDidMount() {
@@ -68,6 +80,10 @@ const FeatureInfoPanel = createReactClass({
         }
     },
 
+    isDragging() {
+        return +this.ref.current.node.getAttribute('data-is-dragging');
+    },
+
     getFeatureInfoCatalogItems() {
         const {catalogItems, featureCatalogItemPairs} = getFeaturesGroupedByCatalogItems(this.props.terria);
 
@@ -100,16 +116,20 @@ const FeatureInfoPanel = createReactClass({
         }, 200);
     },
 
-    toggleCollapsed() {
-        this.props.viewState.featureInfoPanelIsCollapsed = !this.props.viewState.featureInfoPanelIsCollapsed;
+    toggleCollapsed(event) {
+        if(!this.isDragging()) {
+            this.props.viewState.featureInfoPanelIsCollapsed = !this.props.viewState.featureInfoPanelIsCollapsed;
+        }
     },
 
     toggleOpenFeature(feature) {
-        const terria = this.props.terria;
-        if (feature === terria.selectedFeature) {
-            terria.selectedFeature = undefined;
-        } else {
-            terria.selectedFeature = feature;
+        if(!this.isDragging()) {
+            const terria = this.props.terria;
+            if (feature === terria.selectedFeature) {
+                terria.selectedFeature = undefined;
+            } else {
+                terria.selectedFeature = feature;
+            }
         }
     },
 
@@ -218,38 +238,43 @@ const FeatureInfoPanel = createReactClass({
                 <li>{this.renderLocationItem(position)}</li>
             </If>
         );
-
+        this.ref = React.createRef();
         return (
-            <div
-                className={panelClassName}
-                aria-hidden={!viewState.featureInfoPanelIsVisible}>
-                {!this.props.printView && <div className={Styles.header}>
-                    <button type='button' onClick={ this.toggleCollapsed } className={Styles.btnPanelHeading}>
-                        Feature Information
-                    </button>
-                    <button type='button' onClick={ this.close } className={Styles.btnCloseFeature}
-                            title="Close data panel">
-                        <Icon glyph={Icon.GLYPHS.close}/>
-                    </button>
-                </div>}
-                <ul className={Styles.body}>
-                    {this.props.printView && locationElements}
-                    <Choose>
-                        <When condition={viewState.featureInfoPanelIsCollapsed || !viewState.featureInfoPanelIsVisible}>
-                        </When>
-                        <When condition={defined(terria.pickedFeatures) && terria.pickedFeatures.isLoading}>
-                            <li><Loader/></li>
-                        </When>
-                        <When condition={!featureInfoCatalogItems || featureInfoCatalogItems.length === 0}>
-                            <li className={Styles.noResults}>{this.getMessageForNoResults()}</li>
-                        </When>
-                        <Otherwise>
-                            {featureInfoCatalogItems}
-                        </Otherwise>
-                    </Choose>
-                    {!this.props.printView && locationElements}
-                </ul>
-            </div>
+                <DragWrapper ref={this.ref}>
+                    <div
+                        className={panelClassName}
+                        aria-hidden={!viewState.featureInfoPanelIsVisible}>
+                        {!this.props.printView && <div className={Styles.header}>
+                            <div className={Styles.btnPanelHeading}>
+                                <span>Feature Information</span>
+                                <button type='button' onClick={ this.toggleCollapsed } className={Styles.btnToggleFeature}>
+                                    {this.props.viewState.featureInfoPanelIsCollapsed ? <Icon glyph={Icon.GLYPHS.closed}/> : <Icon glyph={Icon.GLYPHS.opened}/>}
+                                </button>
+                            </div>
+                            <button type='button' onClick={ this.close } className={Styles.btnCloseFeature}
+                                    title="Close data panel">
+                                <Icon glyph={Icon.GLYPHS.close}/>
+                            </button>
+                        </div>}
+                        <ul className={Styles.body}>
+                            {this.props.printView && locationElements}
+                            <Choose>
+                                <When condition={viewState.featureInfoPanelIsCollapsed || !viewState.featureInfoPanelIsVisible}>
+                                </When>
+                                <When condition={defined(terria.pickedFeatures) && terria.pickedFeatures.isLoading}>
+                                    <li><Loader/></li>
+                                </When>
+                                <When condition={!featureInfoCatalogItems || featureInfoCatalogItems.length === 0}>
+                                    <li className={Styles.noResults}>{this.getMessageForNoResults()}</li>
+                                </When>
+                                <Otherwise>
+                                    {featureInfoCatalogItems}
+                                </Otherwise>
+                            </Choose>
+                            {!this.props.printView && locationElements}
+                        </ul>
+                    </div>
+                </DragWrapper>
         );
     },
 });

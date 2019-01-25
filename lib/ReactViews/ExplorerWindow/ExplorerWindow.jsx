@@ -96,7 +96,7 @@ const ExplorerWindow = createReactClass({
         const visible = this.state.visible;
 
         return visible ? (
-            <div className={Styles.modalWrapper}
+            <div className={classNames(Styles.modalWrapper, this.props.viewState.topElement === 'AddData' ? 'top-element': '')}            
                  id="explorer-panel-wrapper"
                  aria-hidden={!visible}>
                 <div onClick={this.close}
