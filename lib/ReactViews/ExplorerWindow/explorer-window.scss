@@ -31,6 +31,8 @@
   box-shadow: 0 0 15px 6px rgba(100, 100, 100, 0.3);
   z-index: $front-component-z-index - 1;
   height: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
 
   @include transform(translateY(20%));
   opacity: 0;
@@ -61,7 +63,7 @@
   composes: sm-show from "../../Sass/common/_base.scss";
   composes: btn from "../../Sass/common/_buttons.scss";
   composes: btn-transparent from "../../Sass/common/_buttons.scss";
-  font-size: $font-size-mid-mini;
+  font-size: $font-size-mid-small;
   padding: 4px 10px;
   margin: $padding-small * 1.5 $padding-small;
   font-weight: bold;
@@ -73,7 +75,7 @@
   &:hover,
   &:focus {
     color: $text-light;
-    border: 2px solid $text-light;
+    border: 2px solid rgba(#ffffff, 0.7);
     border-radius: 3px;
   }
 }
