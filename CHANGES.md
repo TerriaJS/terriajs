@@ -1,6 +1,16 @@
 Change Log
 ==========
 
+### Next Release
+
+* When using a Web Map Service (WMS) catalog item with the `linkedWcsUrl` and `linkedWcsCoverage` properties, we now pass the selected WMS style to the Web Coverage Service (WCS) so that it can optionally return different information based on the selected style.
+* The map tool buttons are now arranged horizontally instead of vertically on small-screen mobile devices.
+* Add `stationIdWhitelist` and `stationIdBlacklist` properties to `SensorObservationServiceCatalogItem` to allow filtering certain monitoring stations in/out.
+
+### v6.3.7
+
+* Upgraded to Cesium v1.53.
+
 ### v6.3.6
 
 * Dragging/dropping files now displays a more subtle notification rather than opening the large Add Data / My Data panel.
