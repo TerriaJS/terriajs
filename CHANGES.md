@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### Next Release
+
+* The map tool buttons are now arranged horizontally instead of vertically on small-screen mobile devices.
+
 ### v6.3.7
 
 * Upgraded to Cesium v1.53.
