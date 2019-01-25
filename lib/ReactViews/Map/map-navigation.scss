@@ -17,10 +17,11 @@
 .control {
   @media(min-width:$sm){
     margin: 7px 0;
+    height: auto;
  }
   margin: 4px 8px;
   text-align: center;
-//ie sizing fix
+  //ie sizing fix
   height: 40px;
 }
 
