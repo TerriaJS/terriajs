@@ -12,6 +12,23 @@ import URI from 'urijs';
 import { observer } from 'mobx-react';
 import Styles from './legend.scss';
 
+
+/* A lookup map for displayable mime types */
+var DISPLAYABLE_MIME_TYPES = ['image/jpeg', 'image/gif', 'image/png', 'image/svg+xml', 'image/bmp', 'image/x-bmp']
+    .reduce(function(acc, mimeType) {
+        acc[mimeType] = true;
+        return acc;
+    }, {});
+var IMAGE_URL_REGEX = /[.\/](png|jpg|jpeg|gif|svg)/i;
+
+function isImage(legendUrl) {
+    if (legendUrl.mimeType) {
+        return !!DISPLAYABLE_MIME_TYPES[legendUrl.mimeType];
+    }
+
+    return !!legendUrl.url.match(IMAGE_URL_REGEX);
+}
+
 const Legend = observer(createReactClass({
     displayName: 'Legend',
 
@@ -38,7 +55,7 @@ const Legend = observer(createReactClass({
     },
 
     renderLegend(legendUrl, i) {
-        const isImage = legendUrl.isImage();
+        const isImage = isImage(legendUrl);
         const insertDirectly = !!legendUrl.safeSvgContent; // we only insert content we generated ourselves, not arbitrary SVG from init files.
 
         const svg = legendUrl.safeSvgContent;

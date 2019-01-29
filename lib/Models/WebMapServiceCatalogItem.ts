@@ -175,7 +175,7 @@ class GetCapabilitiesStratum implements WebMapServiceCatalogItemTraits {
 
     @computed
     get rectangle(): Rectangle | undefined {
-        const layers: CapabilitiesLayer[] = <any>[...this.capabilitiesLayers.values()].filter(layer => layer !== undefined);
+        const layers: CapabilitiesLayer[] = [...this.capabilitiesLayers.values()].filter(layer => layer !== undefined).map(l => l!);
         // Needs to take union of all layer rectangles
         return layers.length > 0 ? getRectangleFromLayer(layers[0]) : undefined
         // if (layers.length === 1) {
@@ -273,6 +273,22 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemb
         } else {
             return [];
         }
+    }
+
+    @computed
+    get legendUrls(): ReadonlyArray<LegendUrl> {
+        function getLegendUrlsForLayer(layer: string, availableStyles: WebMapServiceStyles): LegendUrl[] {
+            const styles = availableStyles[layer];
+            if (styles === undefined) {
+                return [];
+            }
+            const legendUrls: LegendUrl[] = styles.map(style => style.legendUrl).filter(legendUrl => legendUrl !== undefined).map(l => l!);
+            return legendUrls
+        }
+
+        const stratum = <GetCapabilitiesStratum>this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName);
+        const a = this.layersArray.map(layer => getLegendUrlsForLayer(layer, stratum.availableStyles))
+        return ([] as LegendUrl[]).concat(...a);
     }
 
     protected get defaultGetCapabilitiesUrl(): string | undefined {
