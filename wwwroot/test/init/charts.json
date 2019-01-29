@@ -8,8 +8,7 @@
         {
           "name": "Power Stations",
           "type": "csv",
-          "url": "test/powergen_no_time.csv",
-          "description":"<a href=\"\" style=\"display:none\">test</a>"
+          "url": "test/powergen_no_time.csv"
         },
         {
           "name": "Power Stations (with template)",
