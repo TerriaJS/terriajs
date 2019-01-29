@@ -8,7 +8,8 @@
         {
           "name": "Power Stations",
           "type": "csv",
-          "url": "test/powergen_no_time.csv"
+          "url": "test/powergen_no_time.csv",
+          "description":"<a href=\"\" style=\"display:none\">test</a>"
         },
         {
           "name": "Power Stations (with template)",
@@ -35,7 +36,8 @@
         {
           "name": "XY Plot",
           "type": "csv",
-          "url": "build/TerriaJS/test/csv_nongeo/xy.csv"
+          "url": "build/TerriaJS/test/csv_nongeo/xy.csv",
+          "description":"<a href=\"\" style=\"color:blue; background: yellow\">test</a>"
         },
         {
           "name": "XY Plot with units and yAxisMax",
