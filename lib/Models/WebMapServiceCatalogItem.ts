@@ -339,7 +339,7 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemb
 
     @computed
     @autoUpdate(function(this: WebMapServiceCatalogItem, layer: ImageryLayer) {
-        layer.alpha = this.opacity || 0.8;
+        layer.alpha = this.opacity !== undefined ? this.opacity : 0.8;
         layer.show = this.show || false;
     })
     private get _currentImageryLayer() {

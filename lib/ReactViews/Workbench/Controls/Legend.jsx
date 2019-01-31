@@ -21,7 +21,7 @@ var DISPLAYABLE_MIME_TYPES = ['image/jpeg', 'image/gif', 'image/png', 'image/svg
     }, {});
 var IMAGE_URL_REGEX = /[.\/](png|jpg|jpeg|gif|svg)/i;
 
-function isImage(legendUrl) {
+function checkMimeType(legendUrl) {
     if (legendUrl.mimeType) {
         return !!DISPLAYABLE_MIME_TYPES[legendUrl.mimeType];
     }
@@ -55,7 +55,7 @@ const Legend = observer(createReactClass({
     },
 
     renderLegend(legendUrl, i) {
-        const isImage = isImage(legendUrl);
+        const isImage = checkMimeType(legendUrl);
         const insertDirectly = !!legendUrl.safeSvgContent; // we only insert content we generated ourselves, not arbitrary SVG from init files.
 
         const svg = legendUrl.safeSvgContent;
