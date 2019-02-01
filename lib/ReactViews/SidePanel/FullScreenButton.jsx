@@ -75,6 +75,7 @@ const FullScreenButton = createReactClass({
                     [Styles.minifiedFullscreenBtnWrapper]: this.props.minified
                 })}
             >
+               <span className={Styles.hideWorkbench}>Hide</span>
                 <button
                     type='button'
                     onClick={this.toggleFullScreen}
