@@ -179,11 +179,30 @@ function runKarma(configFile, done) {
 }
 
 gulp.task('oss-attribution', function() {
-    var runExternalModule = require('./buildprocess/runExternalModule');
-    runExternalModule('oss-attribution-generator/index.js');
-    var licenseInfos = require('./oss-attribution/licenseInfos.json');
-    require('./buildprocess/attributionsToHtml')(licenseInfos, 'doc/acknowledgements/attributions.html');
-    require('fs-extra').remove('./oss-attribution');
+    const fs = require('fs-extra');
+    const path = require('path');
+    let moved = false;
+    // oss-attribution-generator expects (reasonably) that the node_modules directory contains the packages, 
+    // which isn't the case in our usual dev setup
+    if (path.basename(path.dirname(__dirname)) === 'packages') {
+        if (fs.existsSync('node_modules')) {
+            fs.moveSync('node_modules', '_moved_node_modules');
+            moved = true;
+        }
+        fs.symlinkSync(path.join(__dirname, '../../node_modules'), path.join(__dirname, '/node_modules'));
+    }
+    try {
+        var runExternalModule = require('./buildprocess/runExternalModule');
+        runExternalModule('oss-attribution-generator/index.js');
+        var licenseInfos = require('./oss-attribution/licenseInfos.json');
+        require('./buildprocess/attributionsToHtml')(licenseInfos, 'doc/acknowledgements/attributions.html');
+        fs.remove('./oss-attribution');
+    } finally {
+        if (moved) {
+            fs.removeSync('node_modules');
+            fs.moveSync('_moved_node_modules', 'node_modules');
+        }
+    }
 });
 
 gulp.task('user-guide', ['make-schema', 'oss-attribution'], function() {
