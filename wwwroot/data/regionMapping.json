@@ -600,7 +600,7 @@
             "description": "Local government areas (2016)",
             "regionIdsFile": "build/terriajs/data/regionids/region_map-LGA_2016_AUST_LGA_CODE16.json"
         },
-        "LGA": {
+        "LGA_2015": {
             "layerName": "FID_LGA_2015_AUST",
             "server": "https://vector-tiles.terria.io/FID_LGA_2015_AUST/{z}/{x}/{y}.pbf",
             "analyticsWmsLayerName": "region_map:FID_LGA_2015_AUST",
@@ -608,9 +608,7 @@
             "regionProp": "LGA_CODE15",
             "aliases": [
                 "lga_code_2015",
-                "lga_code_2014",
-                "lga_code_2012",
-                "lga_code_2010"
+                "lga_code_2014"
             ],
             "digits": 5,
             "description": "Local government areas",
@@ -635,7 +633,9 @@
             "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
             "regionProp": "LGA_CODE13",
             "aliases": [
-                "lga_code_2013"
+                "lga_code_2013",
+                "lga_code_2012",
+                "lga_code_2010"
             ],
             "digits": 5,
             "description": "Local government areas",
@@ -660,7 +660,8 @@
             "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
             "regionProp": "LGA_CODE11",
             "aliases": [
-                "lga_code_2011"
+                "lga_code_2011",
+                "lga_code_2010"
             ],
             "digits": 5,
             "description": "Local government areas",
@@ -687,7 +688,6 @@
             "regionProp": "LGA_NAME11",
             "aliases": [
                 "lga_name_2011",
-                "lga_name",
                 "lga name",
                 "lga_name_2015",
                 "lga_name_2014",
@@ -735,8 +735,8 @@
                     " "
                 ]
             ],
-            "disambigProp": "STE_NAME11",
-            "disambigRegionId": "STE_NAME_2011",
+            "disambigProp": "STE_NAME16",
+            "disambigRegionId": "STE_NAME_2016",
             "description": "Local government areas",
             "regionIdsFile": "build/terriajs/data/regionids/region_map-FID_LGA_2011_AUST_LGA_NAME11.json",
             "regionDisambigIdsFile": "build/terriajs/data/regionids/region_map-FID_LGA_2011_AUST_STE_NAME11.json",
