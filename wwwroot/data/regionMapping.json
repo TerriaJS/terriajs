@@ -534,6 +534,50 @@
             "description": "ABS approximations of suburbs (2016)",
             "regionIdsFile": "build/terriajs/data/regionids/region_map-SSC_2016_AUST_SSC_NAME16.json"
         },
+        "LGA_2018": {
+            "layerName": "LGA_2018_AUST",
+            "server": "https://vector-tiles.terria.io/LGA_2018_AUST/{z}/{x}/{y}.pbf",
+            "serverType": "MVT",
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694139400008,
+                -43.74050960205758,
+                167.99803499600011,
+                -9.142175976703571
+            ],
+            "uniqueIdProp": "FID",
+            "regionProp": "LGA_CODE18",
+            "nameProp": "LGA_NAME18",
+            "aliases": [
+                "lga_code_2018",
+                "lga_code",
+                "lga"
+            ],
+            "description": "Local Government Areas 2018 (ABS)",
+            "regionIdsFile": "build/terriajs/data/regionids/region_map-LGA_2018_AUST_LGA_CODE18.json"
+        },
+        "LGA_2017": {
+            "layerName": "LGA_2017_AUST",
+            "server": "https://vector-tiles.terria.io/LGA_2017_AUST/{z}/{x}/{y}.pbf",
+            "serverType": "MVT",
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694139400008,
+                -43.74050960205758,
+                167.99803499600011,
+                -9.142175976703571
+            ],
+            "uniqueIdProp": "FID",
+            "regionProp": "LGA_CODE17",
+            "nameProp": "LGA_NAME17",
+            "aliases": [
+                "lga_code_2017"
+            ],
+            "description": "Local Government Areas 2017 (ABS)",
+            "regionIdsFile": "build/terriajs/data/regionids/region_map-LGA_2017_AUST_LGA_CODE17.json"
+        },
         "LGA_2016": {
             "layerName": "LGA_2016_AUST",
             "server": "https://vector-tiles.terria.io/LGA_2016_AUST/{z}/{x}/{y}.pbf",
@@ -550,9 +594,7 @@
             ],
             "regionProp": "LGA_CODE16",
             "aliases": [
-                "lga_code_2016",
-                "lga_code",
-                "lga"
+                "lga_code_2016"
             ],
             "nameProp": "LGA_NAME16",
             "description": "Local government areas (2016)",
@@ -1389,7 +1431,10 @@
             "aliases": [
                 "ste",
                 "ste_code",
-                "ste_code_2016"
+                "ste_code_2016",
+                "ste_code_2017",
+                "ste_code_2018",
+                "ste_code_2019"
             ],
             "nameProp": "STE_NAME16",
             "description": "States and Territories 2016 (ABS)",
@@ -2186,7 +2231,10 @@
                 "aus",
                 "aus_code",
                 "aus_code_2011",
-                "aus_code_2016"
+                "aus_code_2016",
+                "aus_code_2017",
+                "aus_code_2018",
+                "aus_code_2019"
             ],
             "regionIdsFile": "build/terriajs/data/regionids/region_map-FID_AUS_2011_AUST_AUS_CODE.json",
             "serverType": "MVT",
@@ -2403,6 +2451,27 @@
             ],
             "description": "Stats New Zealand Mesh Blocks 2017",
             "regionIdsFile": "build/terriajs/data/regionids/region_map-NZ_MB2017_HD_Clipped_MB2017.json"
+        },
+        "AEC_FED_2017_AMLS": {
+            "layerName": "AEC_FED_2017_AMLS",
+            "server": "https://vector-tiles.terria.io/AEC_FED_2017_AMLS/{z}/{x}/{y}.pbf",
+            "serverType": "MVT",
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.816941,
+                -43.74051,
+                167.99803499600011,
+                -9.142176
+            ],
+            "uniqueIdProp": "FID",
+            "regionProp": "FED_ABB",
+            "nameProp": "FED_DIV",
+            "aliases": [
+                "fed_code_2017"
+            ],
+            "description": "Australian Electoral Comission Commonwealth Electoral Boundaries for ABS   Australian Marriage Law Survey",
+            "regionIdsFile": "build/terriajs/data/regionids/region_map-AEC_FED_2017_AMLS_FED_ABB.json"
         }
     }
 }
