@@ -85,11 +85,25 @@
 
   border-radius: $radius-small;
   position: relative;
+  border: 0;
 
-  &,
+  svg{
+    fill: #9CA1AA;
+    margin: 0 3px 0 4px;
+    vertical-align: bottom;
+
+  }
+
+  span{
+    line-height: 1.3;
+  }
+
   &:hover,
-  &:focus {
+  &:focus{
     border: 0;
+    svg{
+      fill: #ffffff;
+    }
   }
 }
 

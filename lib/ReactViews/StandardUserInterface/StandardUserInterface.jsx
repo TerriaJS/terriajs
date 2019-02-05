@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import arrayContains from '../../Core/arrayContains';
 import Branding from './../SidePanel/Branding.jsx';
 import DragDropFile from './../DragDropFile.jsx';
+import DragDropNotification from './../DragDropNotification.jsx';
 import ExplorerWindow from './../ExplorerWindow/ExplorerWindow.jsx';
 import FeatureInfoPanel from './../FeatureInfo/FeatureInfoPanel.jsx';
 import FeedbackForm from '../Feedback/FeedbackForm.jsx';
@@ -86,14 +87,16 @@ const StandardUserInterface = createReactClass({
     },
 
     acceptDragDropFile() {
-        this.props.viewState.openUserData();
         this.props.viewState.isDraggingDroppingFile = true;
+        // if explorer window is already open, we open my data tab
+        if(this.props.viewState.explorerPanelIsVisible) {
+          this.props.viewState.openUserData();
+        }
     },
 
     shouldUseMobileInterface() {
         return document.body.clientWidth < this.props.minimumLargeScreenWidth;
     },
-
     render() {
         const customElements = processCustomElements(
             this.props.viewState.useSmallScreenInterface,
@@ -118,10 +121,12 @@ const StandardUserInterface = createReactClass({
                             </Small>
                             <Medium>
                                 <div
-                                    className={classNames(Styles.sidePanel, {
-                                        [Styles.sidePanelHide]: this.props
-                                            .viewState.isMapFullScreen
-                                    })}
+                                    className={classNames(Styles.sidePanel,
+                                        this.props.viewState.topElement === 'SidePanel' ? 'top-element': '',
+                                        {[Styles.sidePanelHide]: this.props.viewState.isMapFullScreen}
+                                    )}
+                                     tabIndex={0}
+                                     onClick={()=> {this.props.viewState.topElement = 'SidePanel';}}
                                 >
                                     <Branding
                                         terria={terria}
@@ -161,6 +166,7 @@ const StandardUserInterface = createReactClass({
                             <MapColumn
                                 terria={terria}
                                 viewState={this.props.viewState}
+                                customFeedbacks = {customElements.feedback}
                             />
                             <main>
                                 <ExplorerWindow
@@ -210,13 +216,15 @@ const StandardUserInterface = createReactClass({
                 <Notification viewState={this.props.viewState}/>
                 <MapInteractionWindow terria={terria} viewState={this.props.viewState}/>
 
-                <If condition={this.props.terria.configParameters.feedbackUrl && !this.props.viewState.hideMapUi()}>
+                <If condition={!customElements.feedback.length && this.props.terria.configParameters.feedbackUrl && !this.props.viewState.hideMapUi()}>
                     <aside className={Styles.feedback}>
-                        <FeedbackForm viewState={this.props.viewState} />
+                        <FeedbackForm viewState={this.props.viewState}/>
                     </aside>
                 </If>
 
-                <div className={Styles.featureInfo}>
+                <div className={classNames(Styles.featureInfo, this.props.viewState.topElement === 'FeatureInfo' ? 'top-element': '', {
+                    [Styles.featureInfoFullScreen]: this.props.viewState.isMapFullScreen
+                })} tabIndex={0} onClick={()=> {this.props.viewState.topElement = 'FeatureInfo';}}>
                     <FeatureInfoPanel terria={terria}
                                   viewState={this.props.viewState}
                     />
@@ -224,6 +232,7 @@ const StandardUserInterface = createReactClass({
                 <DragDropFile terria={this.props.terria}
                               viewState={this.props.viewState}
                 />
+                <DragDropNotification lastUploadedFiles={this.props.viewState.lastUploadedFiles} viewState={this.props.viewState}/>
             </div>
         );
     }

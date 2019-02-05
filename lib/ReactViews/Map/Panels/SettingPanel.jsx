@@ -20,7 +20,7 @@ const SettingPanel = createReactClass({
 
     propTypes: {
         terria: PropTypes.object.isRequired,
-        allBaseMaps: PropTypes.array.isRequired,
+        allBaseMaps: PropTypes.array,
         viewState: PropTypes.object.isRequired
     },
 
@@ -84,7 +84,7 @@ const SettingPanel = createReactClass({
             outer: Styles.settingPanel,
             inner: Styles.dropdownInner,
             btn: Styles.btnDropdown,
-            icon: 'sphere'
+            icon: 'map'
         };
 
         const viewerModes = [];

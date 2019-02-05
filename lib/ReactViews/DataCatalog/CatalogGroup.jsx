@@ -28,7 +28,11 @@ function CatalogGroup(props) {
                  <span className={Styles.folder}>{props.open ? <Icon glyph={Icon.GLYPHS.folderOpen}/> : <Icon glyph={Icon.GLYPHS.folder}/>}</span>
                 </If>
                 {props.text}
-                <span className={Styles.caret}>{props.open ? <Icon glyph={Icon.GLYPHS.opened}/> : <Icon glyph={Icon.GLYPHS.closed}/>}</span>
+                <span className={classNames(
+                    Styles.caret,
+                    {[Styles.offsetRight]: props.removable}
+                  )}>{props.open ? <Icon glyph={Icon.GLYPHS.opened}/> : <Icon glyph={Icon.GLYPHS.closed}/>}
+                </span>
             </button>
             <If condition={props.removable}>
                 <button type='button'

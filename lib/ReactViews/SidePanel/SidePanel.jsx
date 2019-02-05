@@ -52,8 +52,11 @@ const SidePanel = createReactClass({
         }
     },
 
-    onAddDataClicked() {
+    onAddDataClicked(event) {
+        event.stopPropagation();
+        this.props.viewState.topElement = 'AddData';
         this.props.viewState.openAddData();
+        
     },
 
     onAddLocalDataClicked() {
@@ -99,14 +102,14 @@ const SidePanel = createReactClass({
 
                     />
                     <div className={Styles.addData}>
-                        <button type='button' onClick={this.onAddDataClicked} className={Styles.button} title='add data'> 
+                        <button type='button' onClick={this.onAddDataClicked} className={Styles.button} title='Add data'>
                             <Icon glyph={Icon.GLYPHS.add}/>Add data
                         </button>
                         <button
                             type='button'
                             onClick={this.onAddLocalDataClicked}
                             className={Styles.uploadData}
-                            title='upload data'
+                            title='Load local/web data'
                         >
                             <Icon glyph={Icon.GLYPHS.upload} />
                         </button>
