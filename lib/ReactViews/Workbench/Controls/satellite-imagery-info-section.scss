@@ -1,0 +1,10 @@
+@import '~terriajs-variables';
+.wrapper{
+  background: $color-primary;  
+}
+
+.btn{
+    composes: btn-primary from '../../../Sass/common/_buttons.scss';
+    composes: btn from '../../../Sass/common/_buttons.scss';
+
+  }

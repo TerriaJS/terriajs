@@ -1,8 +1,6 @@
 'use strict';
 
 import defined from 'terriajs-cesium/Source/Core/defined';
-import CesiumMath from 'terriajs-cesium/Source/Core/Math';
-import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
 import FeatureInfoCatalogItem from './FeatureInfoCatalogItem.jsx';
 import DragWrapper from '../DragWrapper.jsx';
 import Loader from '../Loader.jsx';
@@ -13,8 +11,7 @@ import PropTypes from 'prop-types';
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 import Entity from 'terriajs-cesium/Source/DataSources/Entity';
 import Icon from "../Icon.jsx";
-import { LOCATION_MARKER_DATA_SOURCE_NAME, addMarker, removeMarker, markerVisible } from '../../Models/LocationMarkerUtils';
-import prettifyCoordinates from '../../Map/prettifyCoordinates';
+import { LOCATION_MARKER_DATA_SOURCE_NAME} from '../../Models/LocationMarkerUtils';
 
 import Styles from './feature-info-panel.scss';
 import classNames from 'classnames';
@@ -147,59 +144,14 @@ const FeatureInfoPanel = createReactClass({
         }
     },
 
-    addManualMarker(longitude, latitude) {
-        addMarker(this.props.terria, {
-            name: "User Selection",
-            location: {
-                latitude: latitude,
-                longitude: longitude
-            }
-        });
+   
+    onClickSntsatelliteSuggestionBtn() {
+      if (true){
+       console.log('active satellite imagery layer');
+      }
     },
 
-    pinClicked(longitude, latitude) {
-        if (!markerVisible(this.props.terria)) {
-            this.addManualMarker(longitude, latitude);
-        } else {
-            removeMarker(this.props.terria);
-        }
-    },
-
-    locationUpdated(longitude, latitude) {
-        if (defined(latitude) && defined (longitude) && markerVisible(this.props.terria)) {
-            removeMarker(this.props.terria);
-            this.addManualMarker(longitude, latitude);
-        }
-    },
-
-    renderLocationItem(cartesianPosition) {
-        const catographic = Ellipsoid.WGS84.cartesianToCartographic(cartesianPosition);
-        const latitude = CesiumMath.toDegrees(catographic.latitude);
-        const longitude = CesiumMath.toDegrees(catographic.longitude);
-        const pretty = prettifyCoordinates(longitude, latitude);
-        this.locationUpdated(longitude, latitude);
-
-        const that = this;
-        const pinClicked = function() {
-            that.pinClicked(longitude, latitude);
-        };
-
-        const locationButtonStyle = markerVisible(this.props.terria) ? Styles.btnLocationSelected : Styles.btnLocation;
-
-        return (
-            <div className={Styles.location}>
-                <span>Lat / Lon&nbsp;</span>
-                <span>
-                    {pretty.latitude + ", " + pretty.longitude}
-                    {!this.props.printView && <button type='button' onClick={pinClicked}  className={locationButtonStyle}>
-                        <Icon glyph={Icon.GLYPHS.location}/>
-                    </button>}
-                </span>
-            </div>
-        );
-    },
-
-    render() {
+        render() {
         const terria = this.props.terria;
         const viewState = this.props.viewState;
 
@@ -209,35 +161,6 @@ const FeatureInfoPanel = createReactClass({
             [Styles.isVisible]: viewState.featureInfoPanelIsVisible
         });
 
-        let position;
-        if (defined(terria.selectedFeature) && defined(terria.selectedFeature.position)) {
-            // If the clock is avaliable then use it, otherwise don't.
-            let clock;
-            if (defined(terria.clock)) {
-                clock = terria.clock.currentTime;
-            }
-
-            // If there is a selected feature then use the feature location.
-            position = terria.selectedFeature.position.getValue(clock);
-
-            // If position is invalid then don't use it.
-            // This seems to be fixing the symptom rather then the cause, but don't know what is the true cause this ATM.
-            if (isNaN(position.x) || isNaN(position.y) || isNaN(position.z)) {
-                position = undefined;
-            }
-        }
-        if (!defined(position)) {
-            // Otherwise use the location picked.
-            if (defined(terria.pickedFeatures) && defined(terria.pickedFeatures.pickPosition)) {
-                position = terria.pickedFeatures.pickPosition;
-            }
-        }
-
-        const locationElements = (
-            <If condition={position}>
-                <li>{this.renderLocationItem(position)}</li>
-            </If>
-        );
         this.ref = React.createRef();
         return (
                 <DragWrapper ref={this.ref}>
@@ -257,7 +180,6 @@ const FeatureInfoPanel = createReactClass({
                             </button>
                         </div>}
                         <ul className={Styles.body}>
-                            {this.props.printView && locationElements}
                             <Choose>
                                 <When condition={viewState.featureInfoPanelIsCollapsed || !viewState.featureInfoPanelIsVisible}>
                                 </When>
@@ -271,7 +193,7 @@ const FeatureInfoPanel = createReactClass({
                                     {featureInfoCatalogItems}
                                 </Otherwise>
                             </Choose>
-                            {!this.props.printView && locationElements}
+                            <button type='button' onClick={this.onClickSntsatelliteSuggestionBtn} className={Styles.satelliteSuggestionBtn}>Show satellite imagery at this location</button>
                         </ul>
                     </div>
                 </DragWrapper>

@@ -22,7 +22,7 @@ import Icon from '../Icon.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
 import propertyGetTimeValues from '../../Core/propertyGetTimeValues';
 import parseCustomMarkdownToReact from '../Custom/parseCustomMarkdownToReact';
-
+import LocationItem from '../LocationItem';
 import Styles from './feature-info-section.scss';
 
 // We use Mustache templates inside React views, where React does the escaping; don't escape twice, or eg. " => &quot;
@@ -197,8 +197,8 @@ const FeatureInfoSection = createReactClass({
             }
         }
         const fullName = (catalogItemName ? (catalogItemName + ' - ') : '') + this.renderDataTitle();
-        const reactInfo = getInfoAsReactComponent(this);
-
+        const reactInfo = getInfoAsReactComponent(this); 
+       
         return (
             <li className={classNames(Styles.section)}>
                 <If condition={this.props.printView}>
@@ -211,6 +211,7 @@ const FeatureInfoSection = createReactClass({
                     </button>
                 </If>
                 <If condition={this.props.isOpen}>
+                    {!this.props.printView && <LocationItem key={fullName} position = {this.props.position}/>}
                     <section className={Styles.content}>
                     <If condition={!this.props.printView && this.hasTemplate()}>
                         <button type="button" className={Styles.rawDataButton} onClick={this.toggleRawData}>

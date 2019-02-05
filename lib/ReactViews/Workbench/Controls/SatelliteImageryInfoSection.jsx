@@ -1,0 +1,24 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+import LocationItem from '../../LocationItem.jsx';
+
+import Styles from './satellite-imagery-info-section.scss';
+
+export default function SatelliteImageryInfoSection(props) {
+  return (
+    <div className={Styles.wrapper}>
+      <div>Only showing available capture times for: </div>
+      <LocationItem position={props.position}/>
+      <div>
+        <button className={Styles.btn}>Remove filter</button>
+        <button className={Styles.btn}>Zoon to</button>
+        <button className={Styles.btn}>New location</button>
+      </div>  
+    </div>
+  );
+}
+
+SatelliteImageryInfoSection.propTypes = {
+  item: PropTypes.object,
+  position: PropTypes.object
+};
