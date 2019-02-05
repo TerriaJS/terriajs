@@ -4,14 +4,8 @@ Change Log
 ### Next release
 
 * Support `stationIdWhitelist` and `stationIdBlacklist` to SensorObservationServiceCatalogItem to allow filtering certain monitoring stations in/out.
-
-### v6.3.6
-
 * Support displaying availability for imagery layers on charts, by adding `"showOnChart": true".
 * Support localizedAvailabilityService object for imagery layers, such as for satellite layers where only a thin strip of imagery is available at a given time. This requires a WMS service that provides a /GetFeatureInfo which returns a list of dates for the provided location. See source for more details.
-
-### Next Release
-
 * When using a Web Map Service (WMS) catalog item with the `linkedWcsUrl` and `linkedWcsCoverage` properties, we now pass the selected WMS style to the Web Coverage Service (WCS) so that it can optionally return different information based on the selected style.
 * The map tool buttons are now arranged horizontally instead of vertically on small-screen mobile devices.
 * Add `stationIdWhitelist` and `stationIdBlacklist` properties to `SensorObservationServiceCatalogItem` to allow filtering certain monitoring stations in/out.
@@ -59,7 +53,6 @@ Change Log
 ## v6.2.3
 
 * Made it possible to configure the compass control's colors using CSS.
-* Added "filterByProcedures" property to "sos" item (default: true). When false, the list of procedures is not passed as a filter to GetFeatureOfInterest request, which works better for BoM Water Data Online services.
 
 ### v6.2.2
 
