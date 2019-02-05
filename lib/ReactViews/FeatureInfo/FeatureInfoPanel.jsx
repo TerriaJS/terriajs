@@ -145,7 +145,7 @@ const FeatureInfoPanel = createReactClass({
     },
 
    
-    onClickSntsatelliteSuggestionBtn() {
+    onClickSatelliteSuggestionBtn() {
       if (true){
        console.log('active satellite imagery layer');
       }
@@ -193,7 +193,7 @@ const FeatureInfoPanel = createReactClass({
                                     {featureInfoCatalogItems}
                                 </Otherwise>
                             </Choose>
-                            <button type='button' onClick={this.onClickSntsatelliteSuggestionBtn} className={Styles.satelliteSuggestionBtn}>Show satellite imagery at this location</button>
+                            <button type='button' onClick={this.onClickSatelliteSuggestionBtn} className={Styles.satelliteSuggestionBtn}>Show satellite imagery at this location</button>
                         </ul>
                     </div>
                 </DragWrapper>
