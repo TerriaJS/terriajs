@@ -1,7 +1,7 @@
 Change Log
 ==========
 
-### Next release
+### Next Release
 
 * Support `stationIdWhitelist` and `stationIdBlacklist` to SensorObservationServiceCatalogItem to allow filtering certain monitoring stations in/out.
 * Support displaying availability for imagery layers on charts, by adding `"showOnChart": true".
