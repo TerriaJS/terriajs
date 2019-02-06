@@ -211,8 +211,8 @@ const Chart = createReactClass({
                 margin = {top: 0, right: 0, bottom: 0, left: 0};
             } else {
                 margin = {
-                    top: 0,  // So the title is flush with the top of the chart panel.
-                    right: 20,
+                    top: 8, 
+                    right: 16,
                     bottom: 20,
                     left: 0
                 };
@@ -237,8 +237,8 @@ const Chart = createReactClass({
         } else if (defined(this.props.tableStructure)) {
             chartData = this.chartDataArrayFromTableStructure(this.props.tableStructure);
         }
-
-        const footerHeight = this.props.data ? 36 * Math.ceil(this.props.data.length /2) + 50 : 50;
+        
+        const footerHeight = 30;
 
         return {
             data: chartData,

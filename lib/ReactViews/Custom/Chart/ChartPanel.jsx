@@ -16,7 +16,7 @@ import Icon from "../../Icon.jsx";
 
 import Styles from './chart-panel.scss';
 
-const height = 350;
+const height = 300;
 
 const ChartPanel = createReactClass({
     displayName: 'ChartPanel',
@@ -80,7 +80,6 @@ const ChartPanel = createReactClass({
             loader = <Loader className={Styles.loader}/>;
         }
         if (data.length > 0) {
-            // TODO: use a calculation for the 34 pixels taken off...
             chart = (
                 <Chart data={data} axisLabel={{x: xUnits, y: undefined}} height={height}/>
             );
