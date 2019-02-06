@@ -7,9 +7,11 @@ import Styles from './satellite-imagery-info-section.scss';
 export default function SatelliteImageryInfoSection(props) {
   return (
     <div className={Styles.wrapper}>
-      <div>Only showing available capture times for: </div>
+      <div className={Styles.infoGroup}>
+      <div>Only showing available capture times for:</div>
       <LocationItem position={props.position}/>
-      <div>
+      </div>
+      <div className={Styles.btnGroup}>
         <button className={Styles.btn}>Remove filter</button>
         <button className={Styles.btn}>Zoon to</button>
         <button className={Styles.btn}>New location</button>

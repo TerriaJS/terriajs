@@ -3,11 +3,12 @@ import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
 import prettifyCoordinates from '../Map/prettifyCoordinates';
 import React from 'React';
 import PropTypes from 'prop-types';
+import Styles from './location-item.scss';
 
 export default function LocationItem(props) {
   let latitude = '';
   let longitude = '';
-  if(props.position){
+  if(props.position) {
     const cartesianPosition = props.position;
     const catographic = Ellipsoid.WGS84.cartesianToCartographic(cartesianPosition);
     const latitudeRaw = CesiumMath.toDegrees(catographic.latitude);
@@ -17,7 +18,7 @@ export default function LocationItem(props) {
     longitude = pretty.longitude;
   }
       return (
-            <div className='LocationItem'>
+            <div className = {Styles.location}>
                 <span>Lat / Lon&nbsp;</span>
                 <span> 
                     {latitude + ", " + longitude}
