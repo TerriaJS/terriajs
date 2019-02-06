@@ -23,7 +23,6 @@ import loadText from '../../../Core/loadText';
 import when from 'terriajs-cesium/Source/ThirdParty/when';
 
 import ChartData from '../../../Charts/ChartData';
-import ConceptsSelector from './ConceptsSelector';
 import ChartRenderer from '../../../Charts/ChartRenderer';
 import proxyCatalogItemUrl from '../../../Models/proxyCatalogItemUrl';
 import TableStructure from '../../../Map/TableStructure';
@@ -261,7 +260,6 @@ const Chart = createReactClass({
         return (
             <div className={Styles.chart}>
               <div className={Styles.chartInner} ref={element=>{this._element = element;}}/>
-              {this.props.data && <ConceptsSelector categories = {this.props.data} />}
             </div>
         );
     }
