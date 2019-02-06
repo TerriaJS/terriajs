@@ -241,7 +241,7 @@ const Chart = createReactClass({
         // for better presentation, we order datasets  so that the ones with units information to
         // display first, so that Yaxis with unit shows up outside yaxis without
         // unit 
-       if(chartData.length > 1) {
+       if(defined(chartData) && chartData.length > 1) {
          chartData = chartData.slice().sort((data1, data2)=> defined(data1.units)  - defined(data2.units));
        }    
         
