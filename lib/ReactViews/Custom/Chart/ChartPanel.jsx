@@ -60,9 +60,6 @@ const ChartPanel = createReactClass({
             if (!defined(thisData)) {
                 continue;
             }
-            if (thisData[0]) {
-                thisData[0].concepts = item.concepts;
-            }
             if (item.isEnabled) {
                 data = [].concat(thisData).concat(data);
                 xUnits = defined(xUnits) ? xUnits : item.xAxis.units;
