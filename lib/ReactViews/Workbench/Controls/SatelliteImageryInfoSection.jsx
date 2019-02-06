@@ -13,7 +13,7 @@ export default function SatelliteImageryInfoSection(props) {
       </div>
       <div className={Styles.btnGroup}>
         <button className={Styles.btn}>Remove filter</button>
-        <button className={Styles.btn}>Zoon to</button>
+        <button className={Styles.btn}>Zoom to</button>
         <button className={Styles.btn}>New location</button>
       </div>  
     </div>

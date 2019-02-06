@@ -143,12 +143,9 @@ const FeatureInfoPanel = createReactClass({
             return "Click 'Add Data' to add data to the map.";
         }
     },
-
    
     onClickSatelliteSuggestionBtn() {
-      if (true){
        console.log('active satellite imagery layer');
-      }
     },
 
         render() {
