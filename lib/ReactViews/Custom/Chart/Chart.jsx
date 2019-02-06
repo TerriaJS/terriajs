@@ -119,7 +119,7 @@ const Chart = createReactClass({
         const that = this;
         const chartParameters = that.getChartParameters();
         const promise = that.getChartDataPromise(chartParameters.data, that.props.url, that.props.catalogItem);
-        promise.then(function(data) {
+        promise.then(function(data) {     
             chartParameters.data = data;
             ChartRenderer.create(that._element, chartParameters);
         });
@@ -237,6 +237,13 @@ const Chart = createReactClass({
         } else if (defined(this.props.tableStructure)) {
             chartData = this.chartDataArrayFromTableStructure(this.props.tableStructure);
         }
+        
+        // for better presentation, we order datasets  so that the ones with units information to
+        // display first, so that Yaxis with unit shows up outside yaxis without
+        // unit 
+       if(chartData.length > 1) {
+         chartData = chartData.slice().sort((data1, data2)=> defined(data1.units)  - defined(data2.units));
+       }    
         
         const footerHeight = 30;
 

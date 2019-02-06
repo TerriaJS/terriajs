@@ -50,15 +50,16 @@
 
     .base-chart-title .color {
       display: inline-block;
-      width: 16px;
-      height: 2px;
-      margin: 0 5px 4px 7px;
-    }
+      width: 10px;
+      height: 10px;
+      margin: 2px;
+  }
 
     .base-chart-title .name {
       margin-right: 7px;
       font-family: monospace;
-      font-size: 110%;
+      font-size: 100%;
+      vertical-align: top;
     }
   }
 }
