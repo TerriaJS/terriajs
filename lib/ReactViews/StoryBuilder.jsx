@@ -29,6 +29,8 @@ function postData(url = '', data = {}) {
 
 let idCounter = 100;
 
+const USE_URL = false;
+
 const StoryBuilder = createReactClass({
     displayName: 'StoryBuilder',
     mixins: [ObserveModelMixin],
@@ -47,21 +49,29 @@ const StoryBuilder = createReactClass({
 
     activateStory(story) {
         this.props.terria.nowViewing.removeAll();
-        window.location = story.shareUrl;
+        if (story.shareData) {
+            this.props.terria.updateFromStartData(story.shareData);
+        } else {
+            window.location = story.shareUrl;
+        }
     },
+    
     removeStory(story) {
         this.props.terria.stories = this.props.terria.stories.filter(st => st !== story);
     },
 
     onSubmit(evt) {
-        const shareUrl = new URI(buildShareLink(this.props.terria, false)).hash();
-
-        this.props.terria.stories = [...(this.props.terria.stories || []), {
+        const story = {};
+        if (USE_URL) {
+            story.shareUrl = new URI(buildShareLink(this.props.terria, false)).hash();
+        } else {
+            story.shareData = getShareData(this.props.terria, false);
+        }
+        this.props.terria.stories = [...(this.props.terria.stories || []), Object.assign(story, {
             id: idCounter++,
             title: this.state.newTitle,
-            text: this.state.newText,
-            shareUrl
-        }];
+            text: this.state.newText
+        })];
         this.setState({
             newTitle: "",
             newText: ""
