@@ -245,7 +245,6 @@ const Chart = createReactClass({
        if(defined(chartData) && chartData.length > 1) {
          chartData = chartData.slice().sort((data1, data2)=> defined(data1.units)  - defined(data2.units));
        }    
-        
 
         return {
             data: chartData,
