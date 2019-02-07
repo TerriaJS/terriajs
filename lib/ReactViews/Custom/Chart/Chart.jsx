@@ -265,9 +265,7 @@ const Chart = createReactClass({
 
     render() {
         return (
-            <div className={Styles.chart}>
-              <div className={Styles.chartInner} ref={element=>{this._element = element;}}/>
-            </div>
+            <div className={Styles.chart} ref={element=>{this._element = element;}}></div>
         );
     }
 });

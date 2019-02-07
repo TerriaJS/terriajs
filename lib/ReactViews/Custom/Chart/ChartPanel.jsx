@@ -16,7 +16,7 @@ import Icon from "../../Icon.jsx";
 
 import Styles from './chart-panel.scss';
 
-const height = 300;
+const height = 250;
 
 const ChartPanel = createReactClass({
     displayName: 'ChartPanel',
