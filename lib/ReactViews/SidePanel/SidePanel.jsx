@@ -91,6 +91,7 @@ const SidePanel = createReactClass({
                         viewState={this.props.viewState}
                         minified={true}
                         animationDuration={250}
+                        btnText='Hide'
                     />
 
                     <SearchBox
