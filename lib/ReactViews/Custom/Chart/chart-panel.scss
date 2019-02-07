@@ -9,7 +9,7 @@
   right: 0;
   z-index: 10;
   background: $dark;
-  padding-bottom: 10px;
+  padding-bottom: 13px;
 }
 
 .header {
@@ -36,6 +36,10 @@
 
     .base-chart .axis .colors line {
       stroke-width: 2;
+    }
+
+    .base-chart .plot-area {
+      fill: $chart-area-color;
     }
 
     .units-label-shadow {

@@ -7,7 +7,7 @@ import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 
 import defined from 'terriajs-cesium/Source/Core/defined';
-
+import findIndex from '../../../Core/findIndex';
 import Chart from './Chart.jsx';
 import ChartPanelDownloadButton from './ChartPanelDownloadButton';
 import Loader from '../../Loader.jsx';
@@ -16,7 +16,7 @@ import Icon from "../../Icon.jsx";
 
 import Styles from './chart-panel.scss';
 
-const height = 350;
+const height = 300;
 
 const ChartPanel = createReactClass({
     displayName: 'ChartPanel',
@@ -49,25 +49,22 @@ const ChartPanel = createReactClass({
 
     render() {
         const chartableItems = this.props.terria.catalog.chartableItems;
-        if (!chartableItems.find(ci => !ci.dontChartAlone)) {
+        if (findIndex(chartableItems, ci => !ci.dontChartAlone)< 0) {
             return null;
         }
 
         let data = [];
         let xUnits;
-        for (const item of chartableItems) {
+        chartableItems.forEach((item)=> {
             const thisData = item.chartData();
             if (!defined(thisData)) {
-                continue;
-            }
-            if (thisData[0]) {
-                thisData[0].concepts = item.concepts;
+                return;
             }
             if (item.isEnabled) {
-                data = [].concat(thisData).concat(data);
+                data = data.concat(thisData);
                 xUnits = defined(xUnits) ? xUnits : item.xAxis.units;
             }
-        }
+        });
 
         const isLoading = (chartableItems.length > 0) && (chartableItems[chartableItems.length - 1].isLoading);
 
@@ -85,7 +82,7 @@ const ChartPanel = createReactClass({
         if (data.length > 0) {
             // TODO: use a calculation for the 34 pixels taken off...
             chart = (
-                <Chart data={data} axisLabel={{x: xUnits, y: undefined}} height={height}/>
+                <Chart data={data} axisLabel={{x: xUnits, y: undefined}} height={height - 34}/>
             );
         }
         return (

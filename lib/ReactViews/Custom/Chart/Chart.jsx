@@ -18,12 +18,12 @@ import PropTypes from 'prop-types';
 import createReactClass from 'create-react-class';
 
 import defined from 'terriajs-cesium/Source/Core/defined';
+import defaultValue from 'terriajs-cesium/Source/Core/defaultValue';
 import DeveloperError from 'terriajs-cesium/Source/Core/DeveloperError';
 import loadText from '../../../Core/loadText';
 import when from 'terriajs-cesium/Source/ThirdParty/when';
 
 import ChartData from '../../../Charts/ChartData';
-import ConceptsSelector from './ConceptsSelector';
 import ChartRenderer from '../../../Charts/ChartRenderer';
 import proxyCatalogItemUrl from '../../../Models/proxyCatalogItemUrl';
 import TableStructure from '../../../Map/TableStructure';
@@ -120,7 +120,7 @@ const Chart = createReactClass({
         const that = this;
         const chartParameters = that.getChartParameters();
         const promise = that.getChartDataPromise(chartParameters.data, that.props.url, that.props.catalogItem);
-        promise.then(function(data) {
+        promise.then(function(data) {     
             chartParameters.data = data;
             ChartRenderer.create(that._element, chartParameters);
         });
@@ -212,8 +212,8 @@ const Chart = createReactClass({
                 margin = {top: 0, right: 0, bottom: 0, left: 0};
             } else {
                 margin = {
-                    top: 0,  // So the title is flush with the top of the chart panel.
-                    right: 20,
+                    top: 8, 
+                    right: 16,
                     bottom: 20,
                     left: 0
                 };
@@ -238,14 +238,19 @@ const Chart = createReactClass({
         } else if (defined(this.props.tableStructure)) {
             chartData = this.chartDataArrayFromTableStructure(this.props.tableStructure);
         }
-
-        const footerHeight = this.props.data ? 36 * Math.ceil(this.props.data.length /2) + 50 : 50;
+        
+        // for better presentation, we order datasets  so that the ones with units information to
+        // display first, so that Yaxis with unit shows up outside yaxis without
+        // unit 
+       if(defined(chartData) && chartData.length > 1) {
+         chartData = chartData.slice().sort((data1, data2)=> defined(data1.units)  - defined(data2.units));
+       }    
 
         return {
             data: chartData,
             domain: this.props.domain,
             width: '100%',
-            height: defined(this.props.height) ? this.props.height - footerHeight : defaultHeight,
+            height: defaultValue(this.props.height, defaultHeight),
             axisLabel: this.props.axisLabel,
             mini: this.props.styling === 'feature-info',
             transitionDuration: this.props.transitionDuration,
@@ -261,7 +266,6 @@ const Chart = createReactClass({
         return (
             <div className={Styles.chart}>
               <div className={Styles.chartInner} ref={element=>{this._element = element;}}/>
-              {this.props.data && <ConceptsSelector categories = {this.props.data} />}
             </div>
         );
     }
