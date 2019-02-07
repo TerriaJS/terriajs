@@ -17,6 +17,10 @@
   width: $compass-width;
   height: $compass-width;
   composes: sm-show from '../../../Sass/common/_base.scss';
+
+  svg{
+    fill: $dark;
+  }
 }
 .innerRing{
   @include vertical-align();
@@ -25,9 +29,9 @@
   border-radius: 50%;
   display: block;
   margin: 0 auto;
-  background-image: url('images/compass-inner.svg');
-  background-repeat: no-repeat;
-  background-size: contain;
+  padding: 4px;
+  box-sizing: border-box;
+  background: #ffffff;
 }
 .rotationMarker{
   background-image: url('images/compass-rotation-marker.svg');
@@ -42,7 +46,6 @@
 }
 
 .outerRing{
-  background-image: url('images/compass-outer.svg');
   height: $compass-width;
   width: $compass-width;
   border-radius: 50%;
@@ -51,5 +54,8 @@
   background-size: contain;
   top: 0;
   left: 0;
+  svg{
+    width: 100%;
+    height: 100%;
+  }
 }
-

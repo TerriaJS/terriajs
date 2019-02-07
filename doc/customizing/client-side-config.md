@@ -42,11 +42,12 @@ Option                      | Meaning
 `"supportEmail"`            | The email address shown when things go wrong.
 `"mobileDefaultViewerMode"` | A string specifying the default view mode to load when running on a mobile platform. Options are: `"3DTerrain"`, `"3DSmooth"`, `"2D"`. (Default: `"2D"`)
 `"initFragmentPaths"`       | An array of base paths to use to try to use to resolve init fragments in the URL.  For example, if this property is `[ "init/", "http://example.com/init/"]`, then a URL with `#test` will first try to load `init/test.json` and, if that fails, next try to load `http://example.com/init/test.json`.  If not specified, this property defaults to `[ "init/" ]`.
-`"disableMyLocation"`       | True to disable the "go to my location" button.
+`"disableMyLocation"`       | True to disable the "Centre map at your current location" button.
 `"disableSplitter"`         | True to disable the use of the splitter control.
 `"tabbedCatalog"`           | True to create a separate explorer panel tab for each top-level catalog group to list its items in.
 `"interceptBrowserPrint"`   | True (the default) to intercept the browser's print feature and use a custom one accessible through the Share panel.
 `"useCesiumIonTerrain"`     | True to use Cesium World Terrain from Cesium ion. False to use terrain from the URL specified with the `"cesiumTerrainUrl"` property. If this property is false and `"cesiumTerrainUrl"` is not specified, the 3D view will use a smooth ellipsoid instead of a terrain surface. Defaults to true.
+`"useCesiumIonBingImagery"` | True to use Bing Maps from Cesium ion (Cesium World Imagery). By default, Ion will be used, unless the `bingMapsKey` property is specified, in which case that will be used instead. To disable the Bing Maps layers entirely, set this property to false and set `bingMapsKey` to null.
 `"cesiumIonAccessToken"`    | The access token to use with Cesium ion. If `"useCesiumIonTerrain"` is true and this property is not specified, the Cesium default Ion key will be used. It is a violation of the Ion terms of use to use the default key in a deployed application.
 `"cesiumTerrainUrl"`        | The URL to use for Cesium terrain in the 3D model. This property is ignored if `"useCesiumIonTerrain"` is set to true.
 

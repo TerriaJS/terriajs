@@ -18,7 +18,7 @@ const MobileHeader = createReactClass({
     propTypes: {
         terria: PropTypes.object,
         viewState: PropTypes.object.isRequired,
-        allBaseMaps: PropTypes.array.isRequired,
+        allBaseMaps: PropTypes.array,
         version: PropTypes.string,
         menuItems: PropTypes.array
     },

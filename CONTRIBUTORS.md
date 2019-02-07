@@ -48,3 +48,5 @@ The following people have contributed to TerriaJS:
 * [Sander Kalcina](https://github.com/sanderkal)
 * [QUT](http://www.qut.edu.au)
    * [Jason D'Netto](https://github.com/Jason-DNetto)
+* [NCI](http://www.nci.org.au)
+   * [Edison Guo](https://github.com/edisonguo)

@@ -1,64 +1,31 @@
-@import '~terriajs-variables';
-@import '../../../../Sass/common/mixins';
-
-@include empty-module("inner");
-@include empty-module("tab-panels");
-@include empty-module("tab-panel");
+@import "~terriajs-variables";
+@import "../../../../Sass/common/mixins";
 @include empty-module("url-input");
+@include empty-module("inner");
 
-.tab-list{
-  composes: tab-list from '../../tabs.scss';
-  background: $modal-secondary-bg!important;
-  padding-right: 0!important;
-
-  &__item {
-    composes: tab-list__item from '../../tabs.scss';
-    margin-right: 3px;
-  }
-
-  // My data tab
-  //
-  // Markup:
-  // <button class="btn btn--add-data-tab"> Add local data </button>
-  //
-  // Style guide: Buttons.btn--add-data-tab
-  &__btn {
-    composes: btn from '../../../../Sass/common/_buttons.scss';
-    composes: btn-transparent from '../../../../Sass/common/_buttons.scss';
-
-    font-size: $font-size-small;
-    font-weight: $font-weight-medium;
-    width: 100%;
-    padding: $padding-small $padding-small $padding-small 0;
-    border-bottom: 2px solid $grey;
-    color: $grey;
-    &:hover, &:focus, &.is-active {
-      color: $color-primary;
-      border-bottom: 2px solid $color-primary;
-    }
-  }
+.tab-panels {
+  width: 50%;
+  max-width: 600px;
+  margin: 3vh auto;
+  text-align: left;
+  padding-top: 10vh;
+}
+.tab-panel {
+  text-align: left;
 }
 
-.label{
-  composes: label from '../../../../Sass/common/_labels.scss';
+.label {
+  composes: label from "../../../../Sass/common/_labels.scss";
 
   padding-left: 0;
   font-size: $font-size-mid-small;
 }
 
-.dropdown {
-  width: 100%;
-
-  &__dropdown-list {
-    box-shadow: $box-shadow;
-    margin-top: $padding-small;
-
-    &--is-open {
-      composes: scrollbars from '../../../../Sass/common/_base.scss';
-      height: 190px;
-      overflow-y: auto;
-    }
-  }
+.tabHeading {
+  font-weight: 500;
+  border-bottom: 1px solid $dark-lighter;
+  margin-bottom: 3vh;
+  display: inline-block;
 }
 
 // Add data from local form
@@ -73,16 +40,16 @@
 //
 .url-input {
   &__text-box {
-    composes: field from '../../../../Sass/common/_form.scss';
+    composes: field from "../../../../Sass/common/_form.scss";
     width: calc(100% - 50px);
     float: left;
     font-family: $font-base;
   }
 
   &__btn {
-    composes: btn from '../../../../Sass/common/_buttons.scss';
-    composes: btn-transparent from '../../../../Sass/common/_buttons.scss';
-    composes: btn-primary from '../../../../Sass/common/_buttons.scss';
+    composes: btn from "../../../../Sass/common/_buttons.scss";
+    composes: btn-transparent from "../../../../Sass/common/_buttons.scss";
+    composes: btn-primary from "../../../../Sass/common/_buttons.scss";
 
     width: 50px;
     float: left;

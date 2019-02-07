@@ -50,10 +50,16 @@
 }
 
 .feedback-button-wrapper {
+  @media(min-width: $sm){
+    bottom: 100px;
+    right: $padding*2;
+    margin: 0;
+  }
   position: absolute;
-  bottom: 100px;
-  right: $padding*2;
   z-index: 0;
+  bottom: 25px;
+  right: 16px;
+  margin: 4px 0;
 }
 
 .print-disclaimer {
