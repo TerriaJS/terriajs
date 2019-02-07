@@ -7,7 +7,7 @@ import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 
 import defined from 'terriajs-cesium/Source/Core/defined';
-
+import findIndex from '../../../Core/findIndex';
 import Chart from './Chart.jsx';
 import ChartPanelDownloadButton from './ChartPanelDownloadButton';
 import Loader from '../../Loader.jsx';
@@ -49,7 +49,7 @@ const ChartPanel = createReactClass({
 
     render() {
         const chartableItems = this.props.terria.catalog.chartableItems;
-        if (!chartableItems.find(ci => !ci.dontChartAlone)) {
+        if (findIndex(chartableItems, ci => !ci.dontChartAlone)< 0) {
             return null;
         }
 
