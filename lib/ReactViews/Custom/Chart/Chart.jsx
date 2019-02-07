@@ -18,6 +18,7 @@ import PropTypes from 'prop-types';
 import createReactClass from 'create-react-class';
 
 import defined from 'terriajs-cesium/Source/Core/defined';
+import defaultValue from 'terriajs-cesium/Source/Core/defaultValue';
 import DeveloperError from 'terriajs-cesium/Source/Core/DeveloperError';
 import loadText from '../../../Core/loadText';
 import when from 'terriajs-cesium/Source/ThirdParty/when';
@@ -245,13 +246,12 @@ const Chart = createReactClass({
          chartData = chartData.slice().sort((data1, data2)=> defined(data1.units)  - defined(data2.units));
        }    
         
-        const footerHeight = 45;
 
         return {
             data: chartData,
             domain: this.props.domain,
             width: '100%',
-            height: defined(this.props.height) ? this.props.height - footerHeight : defaultHeight,
+            height: defaultValue(this.props.height, defaultHeight),
             axisLabel: this.props.axisLabel,
             mini: this.props.styling === 'feature-info',
             transitionDuration: this.props.transitionDuration,
