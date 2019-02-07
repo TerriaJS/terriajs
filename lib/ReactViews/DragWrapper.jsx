@@ -5,9 +5,6 @@ import interact from 'interactjs';
 class DragWrapper extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-        isDragging: 0
-    };
     this.resizeListener = null;
 }
 
@@ -28,23 +25,12 @@ class DragWrapper extends React.Component {
          // update the posiion attributes
          target.setAttribute('data-x', x);
          target.setAttribute('data-y', y);
-         // set a threashhold for drag -> moving event to stop other interaction
-         if(Math.abs(event.dx) > 5 || Math.abs(event.dy) > 5) {
-            this.setState({
-                isDragging: 1
-            });
-         }
-     };
-
-      const onend = ()=> {
-          setTimeout(()=> {
-              this.setState({
-                  isDragging: 0
-              });
-          }, 100);
       };
-      interact(node)
+
+     interact(node)
         .draggable({
+          ignoreFrom: 'button',
+          allowFrom: '.drag-handle',
           inertia: true,
           onmove: dragMoveListener,
           // keep the element within the area of it's parent
@@ -53,7 +39,6 @@ class DragWrapper extends React.Component {
               endOnly: true,
               elementRect: { left: 0, right: 1, top: 0, bottom: 1 }
           },
-          onend: onend
       });
 
   this.resizeListener = ()=> {
@@ -72,7 +57,7 @@ componentWillUnmount() {
 }
 
   render() {
-      return <div data-is-dragging={this.state.isDragging} ref={node => this.node = node} >{this.props.children}</div>;
+      return <div ref={node => this.node = node} >{this.props.children}</div>;
   }
 }
 
