@@ -21,6 +21,8 @@ import SidePanel from './../SidePanel/SidePanel.jsx';
 import processCustomElements from './processCustomElements';
 import FullScreenButton from './../SidePanel/FullScreenButton.jsx';
 import StoryPanel from './../StoryPanel.jsx';
+import StoryBuilder from './../StoryBuilder.jsx';
+
 import { Small, Medium } from '../Generic/Responsive';
 import classNames from 'classnames';
 import 'inobounce';
@@ -236,8 +238,9 @@ const StandardUserInterface = createReactClass({
                                 viewState={this.props.viewState}
                     />
                     <DragDropNotification lastUploadedFiles={this.props.viewState.lastUploadedFiles} viewState={this.props.viewState}/>
+                    <StoryPanel terria={terria} viewState={this.props.viewState}/>
                 </div>
-                <StoryPanel terria={terria}/>
+                <StoryBuilder terria={terria} viewState={this.props.viewState}/>
             </div>
         );
     }
