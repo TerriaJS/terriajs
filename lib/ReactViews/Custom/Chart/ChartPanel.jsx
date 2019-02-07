@@ -55,16 +55,16 @@ const ChartPanel = createReactClass({
 
         let data = [];
         let xUnits;
-        for (const item of chartableItems) {
+        chartableItems.forEach((item)=> {
             const thisData = item.chartData();
             if (!defined(thisData)) {
-                continue;
+                return;
             }
             if (item.isEnabled) {
-                data = [].concat(thisData).concat(data);
+                data = data.concat(thisData);
                 xUnits = defined(xUnits) ? xUnits : item.xAxis.units;
             }
-        }
+        });
 
         const isLoading = (chartableItems.length > 0) && (chartableItems[chartableItems.length - 1].isLoading);
 
