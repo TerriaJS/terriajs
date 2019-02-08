@@ -11,9 +11,8 @@
   @include transform(scaleY(0));
   @include transition(transform $animation-fast cubic-bezier(0.19, 1, 0.22, 1));
   @include transform-origin(center, top);
-  transform-style: preserve-3d;
-
   position: absolute;
+  width: 100%;
   overflow: hidden;
   z-index: 9999;
   box-sizing: border-box;
