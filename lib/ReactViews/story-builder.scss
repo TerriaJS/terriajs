@@ -1,0 +1,16 @@
+@import '~terriajs-variables';
+@import '../Sass/common/mixins';
+
+.story-panel {
+  flex: 1;
+}
+
+.story {
+  padding: 5px;
+  margin: 5px;
+  border: 1px solid black;
+}
+
+.story:hover {
+  background-color: yellow;
+}

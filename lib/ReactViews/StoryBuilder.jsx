@@ -7,7 +7,7 @@ import ObserveModelMixin from './ObserveModelMixin';
 import  FileSaver  from 'file-saver';
 import URI from 'urijs';
 
-import Styles from './story-panel.scss';
+import Styles from './story-builder.scss';
 
 // From MDN
 function postData(url = '', data = {}) {
@@ -47,6 +47,7 @@ const StoryBuilder = createReactClass({
         };
     },
 
+    // This is in StoryPanel and StoryBuilder
     activateStory(story) {
         this.props.terria.nowViewing.removeAll();
         if (story.shareData) {
@@ -55,7 +56,7 @@ const StoryBuilder = createReactClass({
             window.location = story.shareUrl;
         }
     },
-    
+
     removeStory(story) {
         this.props.terria.stories = this.props.terria.stories.filter(st => st !== story);
     },
@@ -65,7 +66,7 @@ const StoryBuilder = createReactClass({
         if (USE_URL) {
             story.shareUrl = new URI(buildShareLink(this.props.terria, false)).hash();
         } else {
-            story.shareData = getShareData(this.props.terria, false);
+            story.shareData = JSON.parse(JSON.stringify(getShareData(this.props.terria, false)));
         }
         this.props.terria.stories = [...(this.props.terria.stories || []), Object.assign(story, {
             id: idCounter++,
@@ -99,9 +100,11 @@ const StoryBuilder = createReactClass({
     },
 
     runStory() {
-        this.props.viewState.storyProgress = 0;
-        this.props.viewState.showStory = true;
-        window.open(`#stories=${encodeURIComponent(this.state.uri)}`);
+        // this.props.viewState.storyProgress = 0;
+        // this.props.viewState.showStory = true;
+        // window.open(`#stories=${encodeURIComponent(this.state.uri)}`);
+        this.props.viewState.storyEnabled = true;
+        this.props.viewState.storyShown = true;
     },
 
     render() {
@@ -124,9 +127,8 @@ const StoryBuilder = createReactClass({
                     </form>
                 </div>
                 <button onClick={this.downloadShareFile}>Download share file</button>
-                <button onClick={this.saveToMyJson}>Save to myjson.com</button>
-                <div>{this.state.uri}</div>
-                {this.state.uri && <button onClick={this.runStory}>Run saved story</button>}
+                {/* <button onClick={this.saveToMyJson}>Save to myjson.com</button> */}
+                <button onClick={this.runStory}>Run story</button>
             </div>
         );
     }

@@ -106,12 +106,13 @@ const StandardUserInterface = createReactClass({
             this.props.viewState.useSmallScreenInterface,
             this.props.children
         );
+        const showStoryBuilder = !(this.props.viewState.storyEnabled && this.props.viewState.storyShown);
 
         const terria = this.props.terria;
         const allBaseMaps = this.props.allBaseMaps;
         return (
             <div className={Styles.storyWrapper}>
-                <div className={Styles.uiRoot} ref={w => (this._wrapper = w)}>
+                <div className={classNames(Styles.uiRoot, {[Styles.withStoryBuilder]: showStoryBuilder})} ref={w => (this._wrapper = w)}>
                     <div className={Styles.ui}>
                         <div className={Styles.uiInner}>
                             <If condition={!this.props.viewState.hideMapUi()}>
@@ -238,9 +239,9 @@ const StandardUserInterface = createReactClass({
                                 viewState={this.props.viewState}
                     />
                     <DragDropNotification lastUploadedFiles={this.props.viewState.lastUploadedFiles} viewState={this.props.viewState}/>
-                    <StoryPanel terria={terria} viewState={this.props.viewState}/>
+                    {this.props.viewState.storyEnabled && <StoryPanel terria={terria} viewState={this.props.viewState}/>}
                 </div>
-                <StoryBuilder terria={terria} viewState={this.props.viewState}/>
+                {showStoryBuilder && <StoryBuilder terria={terria} viewState={this.props.viewState}/>}
             </div>
         );
     }

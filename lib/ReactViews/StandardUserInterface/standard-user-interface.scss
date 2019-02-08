@@ -30,8 +30,11 @@
   svg use {
     pointer-events: none;
   }
-  flex-basis: 80%;
   position: relative;
+  &.with-story-builder {
+    flex-basis: 80%;
+  }
+  flex-basis: 100%;
 }
 
 .ui {
