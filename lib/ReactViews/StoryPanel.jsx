@@ -41,7 +41,9 @@ const StoryPanel = createReactClass({
         const sceneIndex = Math.floor((scrollTop+0.5*clientHeight)/(1.5*clientHeight));
         if (sceneIndex !== this.state.currentScene) {
             this.setState({currentScene: sceneIndex});
-            this.activateStory(this.props.terria.stories[sceneIndex]);
+            if (sceneIndex < (this.props.terria.stories || []).length) {
+                this.activateStory(this.props.terria.stories[sceneIndex]);
+            }
         }
     },
 
