@@ -3,7 +3,7 @@ Change Log
 
 ### Next Release
 
-* Fixed a bug that displace dropdown list on mobile safari
+* Fixed a bug that displaced the chart dropdown list on mobile Safari.
 * The Feature Info panel can now be moved by clicking and dragging it.
 * When using a Web Map Service (WMS) catalog item with the `linkedWcsUrl` and `linkedWcsCoverage` properties, we now pass the selected WMS style to the Web Coverage Service (WCS) so that it can optionally return different information based on the selected style.
 * The map tool buttons are now arranged horizontally instead of vertically on small-screen mobile devices.
