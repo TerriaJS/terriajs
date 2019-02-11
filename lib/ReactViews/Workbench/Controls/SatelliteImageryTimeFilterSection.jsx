@@ -6,6 +6,10 @@ import Styles from './satellite-imagery-time-filter-section.scss';
 
 export default function SatelliteImageryTimeFilterSection(props) {
     const position = undefined; // TODO
+    if (position === undefined) {
+        return null;
+    }
+
     return (
         <div className={Styles.wrapper}>
             <div className={Styles.infoGroup}>
