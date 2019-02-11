@@ -25,19 +25,20 @@
   color: $text-light;
 
   :global {
-    .line-chart .axis path.domain {
+
+    .base-chart .axis path.domain {
       stroke: $chart-axis-color;
     }
 
-    .line-chart .axis .tick line {
+    .base-chart .axis .tick line {
       stroke: $chart-grid-color;
     }
 
-    .line-chart .axis .colors line {
+    .base-chart .axis .colors line {
       stroke-width: 2;
     }
 
-    .line-chart .plot-area {
+    .base-chart .plot-area {
       fill: $chart-area-color;
     }
 
@@ -47,13 +48,13 @@
       opacity: 0.9;
     }
 
-    .line-chart text {
+    .base-chart text {
       fill: $chart-text-color;
       font-family: monospace;
       font-size: 110%;
     }
 
-    .line-chart .line {
+    .base-chart .line {
       fill: none;
       stroke: $chart-line-color;
       stroke-width: 1;

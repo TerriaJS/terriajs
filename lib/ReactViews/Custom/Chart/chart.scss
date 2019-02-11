@@ -4,36 +4,36 @@
 // D3 Axis
 .chart {
   :global {
-    .line-chart .axis path,
-    .line-chart .axis line {
+    .base-chart .axis path,
+    .base-chart .axis line {
       fill: none;
       stroke: none; // Hide the axes if the chart is outside the chart panel.
       stroke-width: 1px;
       shape-rendering: crispEdges;
     }
 
-    .line-chart .selection circle {
+    .base-chart .selection circle {
       fill: white;
       stroke: white;
       stroke-width: 1;
       opacity: 0.65;
     }
 
-    .line-chart .selection line {
+    .base-chart .selection line {
       stroke: white;
       opacity: 0.65;
       stroke-width: 1;
     }
 
-    .line-chart .plot-area {
+    .base-chart .plot-area {
       fill: none;
     }
 
-    .line-chart path.line {
+    .base-chart path.line {
       stroke-width: 2;
     }
 
-    .linechart-title {
+    .base-chart-title {
       left: 0;
       right: 0;
       margin: 0 auto;
@@ -43,17 +43,18 @@
       height: 18px
     }
 
-    .linechart-title .color {
+    .base-chart-title .color {
       display: inline-block;
-      width: 16px;
-      height: 2px;
-      margin: 0 5px 4px 7px;
-    }
+      width: 10px;
+      height: 10px;
+      margin: 2px;
+  }
 
-    .linechart-title .name {
+    .base-chart-title .name {
       margin-right: 7px;
       font-family: monospace;
-      font-size: 110%;
+      font-size: 100%;
+      vertical-align: top;
     }
   }
 }
@@ -105,3 +106,23 @@
   }
 }
 
+.concepts{
+  display: flex;
+}
+.conceptsList{
+  margin: 0;
+  list-style: none;
+  ul{
+    display: flex;
+
+    li{
+      background: rgba(255, 255, 255, 0.2);
+      padding: 0px 10px;
+      border-radius: 2px;
+      display: block;
+      margin: 0 10px 5px 0;
+      flex-basis: 48%;
+     }
+  }
+
+}

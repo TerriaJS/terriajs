@@ -76,11 +76,7 @@ const FeatureInfoPanel = createReactClass({
             this._pickedFeaturesSubscription = undefined;
         }
     },
-
-    isDragging() {
-        return +this.ref.current.node.getAttribute('data-is-dragging');
-    },
-
+   
     getFeatureInfoCatalogItems() {
         const {catalogItems, featureCatalogItemPairs} = getFeaturesGroupedByCatalogItems(this.props.terria);
 
@@ -114,19 +110,15 @@ const FeatureInfoPanel = createReactClass({
     },
 
     toggleCollapsed(event) {
-        if(!this.isDragging()) {
-            this.props.viewState.featureInfoPanelIsCollapsed = !this.props.viewState.featureInfoPanelIsCollapsed;
-        }
+        this.props.viewState.featureInfoPanelIsCollapsed = !this.props.viewState.featureInfoPanelIsCollapsed;
     },
 
     toggleOpenFeature(feature) {
-        if(!this.isDragging()) {
-            const terria = this.props.terria;
-            if (feature === terria.selectedFeature) {
-                terria.selectedFeature = undefined;
-            } else {
-                terria.selectedFeature = feature;
-            }
+        const terria = this.props.terria;
+        if (feature === terria.selectedFeature) {
+            terria.selectedFeature = undefined;
+        } else {
+            terria.selectedFeature = feature;
         }
     },
 
@@ -165,7 +157,7 @@ const FeatureInfoPanel = createReactClass({
                         className={panelClassName}
                         aria-hidden={!viewState.featureInfoPanelIsVisible}>
                         {!this.props.printView && <div className={Styles.header}>
-                            <div className={Styles.btnPanelHeading}>
+                            <div className={classNames('drag-handle', Styles.btnPanelHeading)}>
                                 <span>Feature Information</span>
                                 <button type='button' onClick={ this.toggleCollapsed } className={Styles.btnToggleFeature}>
                                     {this.props.viewState.featureInfoPanelIsCollapsed ? <Icon glyph={Icon.GLYPHS.closed}/> : <Icon glyph={Icon.GLYPHS.opened}/>}
