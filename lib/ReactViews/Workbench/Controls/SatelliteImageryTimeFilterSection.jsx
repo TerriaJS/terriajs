@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import LocationItem from '../../LocationItem.jsx';
 
-import Styles from './satellite-imagery-info-section.scss';
+import Styles from './satellite-imagery-time-filter-section.scss';
 
-export default function SatelliteImageryInfoSection(props) {
+export default function SatelliteImageryTimeFilterSection(props) {
     const position = undefined; // TODO
     return (
         <div className={Styles.wrapper}>
@@ -21,6 +21,6 @@ export default function SatelliteImageryInfoSection(props) {
     );
 }
 
-SatelliteImageryInfoSection.propTypes = {
+SatelliteImageryTimeFilterSection.propTypes = {
     item: PropTypes.object
 };
