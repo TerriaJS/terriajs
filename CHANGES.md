@@ -1,11 +1,13 @@
 Change Log
 ==========
 
-### v6.4.0
+### Next Release
 
 * Support displaying availability for imagery layers on charts, by adding `"showOnChart": true".
 * Support localizedAvailabilityService object for imagery layers, such as for satellite layers where only a thin strip of imagery is available at a given time. This requires a WMS service that provides a /GetFeatureInfo which returns a list of dates for the provided location. See source for more details.
-* Fixed a bug that displaced the chart dropdown list on mobile Safari.
+
+### v6.4.0
+
 * The Feature Info panel can now be moved by clicking and dragging it.
 * The map tool buttons are now arranged horizontally instead of vertically on small-screen mobile devices.
 * When using a Web Map Service (WMS) catalog item with the `linkedWcsUrl` and `linkedWcsCoverage` properties, we now pass the selected WMS style to the Web Coverage Service (WCS) so that it can optionally return different information based on the selected style.
