@@ -57,9 +57,7 @@ const WorkbenchItem = createReactClass({
     },
 
     render() {
-        const terria = this.props.viewState.terria;
         const workbenchItem = this.props.item;
-        const position = terria.pickedFeatures && terria.pickedFeatures.pickPosition;
         return (
             <li
                 style={this.props.style}
@@ -107,8 +105,7 @@ const WorkbenchItem = createReactClass({
                         </If>
                         <DimensionSelectorSection item={workbenchItem}/>
                         <DateTimeSelectorSection item={workbenchItem}/>
-                        {position && <SatelliteImageryInfoSection position={position} item={workbenchItem}/>}
-                        
+                        <SatelliteImageryInfoSection item={workbenchItem}/>
                         <StyleSelectorSection item={workbenchItem}/>
                         <ColorScaleRangeSection item={workbenchItem}/>
                         <DisplayAsPercentSection item={workbenchItem}/>

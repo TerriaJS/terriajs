@@ -6,7 +6,7 @@
   composes: clearfix from '../../Sass/common/_base.scss';
   background: $feature-info-section-bg;
   border-top: 1px solid $dark-lighter;
-  }
+}
 
 .title{
   composes: btn from '../../Sass/common/_buttons.scss';
