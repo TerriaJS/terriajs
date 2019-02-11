@@ -79,7 +79,7 @@ const FeatureInfoPanel = createReactClass({
             this._pickedFeaturesSubscription = undefined;
         }
     },
-   
+
     getFeatureInfoCatalogItems() {
         const {catalogItems, featureCatalogItemPairs} = getFeaturesGroupedByCatalogItems(this.props.terria);
 
@@ -162,6 +162,10 @@ const FeatureInfoPanel = createReactClass({
             removeMarker(this.props.terria);
             this.addManualMarker(longitude, latitude);
         }
+    },
+
+    onClickSatelliteSuggestionBtn() {
+        console.log('active satellite imagery layer');
     },
 
     renderLocationItem(cartesianPosition) {
@@ -264,6 +268,7 @@ const FeatureInfoPanel = createReactClass({
                                 </Otherwise>
                             </Choose>
                             {!this.props.printView && locationElements}
+                            <button type='button' onClick={this.onClickSatelliteSuggestionBtn} className={Styles.satelliteSuggestionBtn}>Show satellite imagery at this location</button>
                         </ul>
                     </div>
                 </DragWrapper>

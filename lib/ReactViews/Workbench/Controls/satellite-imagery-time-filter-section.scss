@@ -1,0 +1,29 @@
+@import '~terriajs-variables';
+.wrapper{
+  background: $color-primary;  
+  font-size: 0.85rem;
+  margin: 8px 0 4px 0;
+  border-radius: 3px;
+  text-align: center;
+}
+
+.infoGroup{
+  padding: 8px;
+  border-bottom: 1px solid rgba(#ffffff, 0.4);
+}
+
+.btn{
+    composes: btn-primary from '../../../Sass/common/_buttons.scss';
+    composes: btn from '../../../Sass/common/_buttons.scss';
+    padding: $padding 4px;
+  }
+
+  .btnGroup{
+    display: flex;
+    button{
+      border-right: 1px solid rgba(255, 255, 255, 0.4)
+    }
+    button:last-child{
+      border-right: none;
+    }
+  }

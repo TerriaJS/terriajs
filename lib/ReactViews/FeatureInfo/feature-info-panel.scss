@@ -118,3 +118,10 @@
     fill: $color-primary;
   }
 }
+
+.satelliteSuggestionBtn{
+   composes: btn from '../../Sass/common/_buttons.scss';
+   composes: btn-primary from '../../Sass/common/_buttons.scss';
+   margin: 8px;
+   width: calc(100% - 16px);
+}
