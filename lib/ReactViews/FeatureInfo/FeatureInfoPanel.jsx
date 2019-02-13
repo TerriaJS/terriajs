@@ -201,7 +201,7 @@ const FeatureInfoPanel = createReactClass({
         });
 
         const filterableCatalogItems = catalogItems
-            .filter(catalogItem => defined(catalogItem.canFilterIntervalsByFeature))
+            .filter(catalogItem => defined(catalogItem) && defined(catalogItem.canFilterIntervalsByFeature))
             .map(catalogItem => {
                 const features = featureCatalogItemPairs.filter(pair => pair.catalogItem === catalogItem && catalogItem.canFilterIntervalsByFeature(pair.feature));
                 return {
