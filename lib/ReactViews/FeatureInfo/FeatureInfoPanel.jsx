@@ -80,9 +80,7 @@ const FeatureInfoPanel = createReactClass({
         }
     },
 
-    getFeatureInfoCatalogItems() {
-        const {catalogItems, featureCatalogItemPairs} = getFeaturesGroupedByCatalogItems(this.props.terria);
-
+    renderFeatureInfoCatalogItems(catalogItems, featureCatalogItemPairs) {
         return catalogItems
             .filter(catalogItem => defined(catalogItem))
             .map((catalogItem, i) => {
@@ -164,10 +162,6 @@ const FeatureInfoPanel = createReactClass({
         }
     },
 
-    onClickSatelliteSuggestionBtn() {
-        console.log('active satellite imagery layer');
-    },
-
     renderLocationItem(cartesianPosition) {
         const catographic = Ellipsoid.WGS84.cartesianToCartographic(cartesianPosition);
         const latitude = CesiumMath.toDegrees(catographic.latitude);
@@ -199,11 +193,23 @@ const FeatureInfoPanel = createReactClass({
         const terria = this.props.terria;
         const viewState = this.props.viewState;
 
-        const featureInfoCatalogItems = this.getFeatureInfoCatalogItems();
+        const {catalogItems, featureCatalogItemPairs} = getFeaturesGroupedByCatalogItems(this.props.terria);
+        const featureInfoCatalogItems = this.renderFeatureInfoCatalogItems(catalogItems, featureCatalogItemPairs);
         const panelClassName = classNames(Styles.panel, {
             [Styles.isCollapsed]: viewState.featureInfoPanelIsCollapsed,
             [Styles.isVisible]: viewState.featureInfoPanelIsVisible
         });
+
+        const filterableCatalogItems = catalogItems
+            .filter(catalogItem => defined(catalogItem.canFilterIntervalsByFeature))
+            .map(catalogItem => {
+                const features = featureCatalogItemPairs.filter(pair => pair.catalogItem === catalogItem && catalogItem.canFilterIntervalsByFeature(pair.feature));
+                return {
+                    catalogItem: catalogItem,
+                    feature: defined(features[0]) ? features[0].feature : undefined
+                };
+            })
+            .filter(pair => defined(pair.feature));
 
         let position;
         if (defined(terria.selectedFeature) && defined(terria.selectedFeature.position)) {
@@ -268,7 +274,14 @@ const FeatureInfoPanel = createReactClass({
                                 </Otherwise>
                             </Choose>
                             {!this.props.printView && locationElements}
-                            <button type='button' onClick={this.onClickSatelliteSuggestionBtn} className={Styles.satelliteSuggestionBtn}>Show satellite imagery at this location</button>
+                            {filterableCatalogItems.map(pair => (
+                                <button key={pair.catalogItem.id}
+                                        type='button'
+                                        onClick={pair.catalogItem.filterIntervalsByFeature.bind(pair.catalogItem, pair.feature)}
+                                        className={Styles.satelliteSuggestionBtn}>
+                                    Show {pair.catalogItem.name} at this location
+                                </button>
+                            ))}
                         </ul>
                     </div>
                 </DragWrapper>
