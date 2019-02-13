@@ -18,24 +18,42 @@ const SatelliteImageryTimeFilterSection = createReactClass({
     },
 
     zoomTo() {
-
+        alert('TODO');
     },
 
     newLocation() {
-
+        alert('TODO');
     },
 
     render() {
-        const feature = this.props.item._intervalFilterFeature;
-        if (feature === undefined) {
+        if (this.props.item.featureTimesProperty === undefined) {
             return null;
         }
 
+        const feature = this.props.item._intervalFilterFeature;
+        if (feature === undefined) {
+            return this.renderNoFeatureSelected();
+        } else {
+            return this.renderFeatureSelected(feature);
+        }
+    },
+
+    renderNoFeatureSelected() {
+        return (
+            <div className={Styles.inactive}>
+                <div className={Styles.btnGroup}>
+                    <button className={Styles.btn} onClick={this.newLocation}>Filter by location</button>
+                </div>
+            </div>
+        );
+    },
+
+    renderFeatureSelected(feature) {
         // TODO: if the feature itself doesn't have a position, we should be able to use the position the user clicked on.
         const position = feature.position !== undefined ? feature.position.getValue(this.props.item.currentTime) : undefined;
 
         return (
-            <div className={Styles.wrapper}>
+            <div className={Styles.active}>
                 <div className={Styles.infoGroup}>
                     <div>Only showing available capture times for:</div>
                     <LocationItem position={position} />
