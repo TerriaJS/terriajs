@@ -7,6 +7,7 @@ import LocationItem from '../../LocationItem.jsx';
 import ObserveModelMixin from '../../ObserveModelMixin';
 import Styles from './satellite-imagery-time-filter-section.scss';
 import Loader from '../../Loader';
+import raiseErrorToUser from '../../../Models/raiseErrorToUser';
 
 const SatelliteImageryTimeFilterSection = createReactClass({
     displayName: 'SatelliteImageryTimeFilterSection',
@@ -17,7 +18,7 @@ const SatelliteImageryTimeFilterSection = createReactClass({
     },
 
     removeFilter() {
-        this.props.item._intervalFilterFeature = undefined;
+        this.props.item.filterIntervalsByFeature(undefined);
     },
 
     zoomTo() {
@@ -27,7 +28,6 @@ const SatelliteImageryTimeFilterSection = createReactClass({
     newLocation() {
         // Cancel any feature picking already in progress.
         const terria = this.props.item.terria;
-        terria.pickedFeatures = undefined;
 
         const pickPointMode = new MapInteractionMode({
             message: 'Select a point by clicking on the map.',
@@ -45,13 +45,22 @@ const SatelliteImageryTimeFilterSection = createReactClass({
             };
 
             pickedFeatures.allFeaturesAvailablePromise.then(() => {
+                if (terria.mapInteractionModeStack[terria.mapInteractionModeStack.length - 1] !== pickPointMode) {
+                    // Already canceled.
+                    return;
+                }
+
                 const item = this.props.item;
                 const thisLayerFeature = pickedFeatures.features.filter(feature => {
-                    return feature.imageryLayer === item.imageryLayer && item.canFilterIntervalsByFeature(feature);
+                    return feature.imageryLayer === item.imageryLayer;
                 })[0];
 
                 if (thisLayerFeature !== undefined) {
-                    item.filterIntervalsByFeature(thisLayerFeature);
+                    try {
+                        item.filterIntervalsByFeature(thisLayerFeature);
+                    } catch (e) {
+                        raiseErrorToUser(terria, e);
+                    }
                 }
 
                 terria.mapInteractionModeStack.pop();
@@ -60,7 +69,7 @@ const SatelliteImageryTimeFilterSection = createReactClass({
     },
 
     render() {
-        if (this.props.item.canFilterIntervalsByFeature === undefined) {
+        if (!this.props.item.canFilterIntervalsByFeature) {
             return null;
         }
 

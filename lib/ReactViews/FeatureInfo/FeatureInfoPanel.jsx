@@ -15,6 +15,7 @@ import Entity from 'terriajs-cesium/Source/DataSources/Entity';
 import Icon from "../Icon.jsx";
 import { LOCATION_MARKER_DATA_SOURCE_NAME, addMarker, removeMarker, markerVisible } from '../../Models/LocationMarkerUtils';
 import prettifyCoordinates from '../../Map/prettifyCoordinates';
+import raiseErrorToUser from '../../Models/raiseErrorToUser';
 
 import Styles from './feature-info-panel.scss';
 import classNames from 'classnames';
@@ -162,6 +163,14 @@ const FeatureInfoPanel = createReactClass({
         }
     },
 
+    filterIntervalsByFeature(catalogItem, feature) {
+        try {
+            catalogItem.filterIntervalsByFeature(feature);
+        } catch (e) {
+            raiseErrorToUser(this.props.terria, e);
+        }
+    },
+
     renderLocationItem(cartesianPosition) {
         const catographic = Ellipsoid.WGS84.cartesianToCartographic(cartesianPosition);
         const latitude = CesiumMath.toDegrees(catographic.latitude);
@@ -201,9 +210,9 @@ const FeatureInfoPanel = createReactClass({
         });
 
         const filterableCatalogItems = catalogItems
-            .filter(catalogItem => defined(catalogItem) && defined(catalogItem.canFilterIntervalsByFeature))
+            .filter(catalogItem => defined(catalogItem) && catalogItem.canFilterIntervalsByFeature)
             .map(catalogItem => {
-                const features = featureCatalogItemPairs.filter(pair => pair.catalogItem === catalogItem && catalogItem.canFilterIntervalsByFeature(pair.feature));
+                const features = featureCatalogItemPairs.filter(pair => pair.catalogItem === catalogItem);
                 return {
                     catalogItem: catalogItem,
                     feature: defined(features[0]) ? features[0].feature : undefined
@@ -277,7 +286,7 @@ const FeatureInfoPanel = createReactClass({
                             {filterableCatalogItems.map(pair => (
                                 <button key={pair.catalogItem.id}
                                         type='button'
-                                        onClick={pair.catalogItem.filterIntervalsByFeature.bind(pair.catalogItem, pair.feature)}
+                                        onClick={this.filterIntervalsByFeature.bind(this, pair.catalogItem, pair.feature)}
                                         className={Styles.satelliteSuggestionBtn}>
                                     Show {pair.catalogItem.name} at this location
                                 </button>
