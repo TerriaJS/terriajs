@@ -1,13 +1,16 @@
 import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import React from 'react';
+import defined from 'terriajs-cesium/Source/Core/defined';
+import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
+import Rectangle from 'terriajs-cesium/Source/Core/Rectangle';
 import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 import MapInteractionMode from '../../../Models/MapInteractionMode';
+import raiseErrorToUser from '../../../Models/raiseErrorToUser';
+import Loader from '../../Loader';
 import LocationItem from '../../LocationItem.jsx';
 import ObserveModelMixin from '../../ObserveModelMixin';
 import Styles from './satellite-imagery-time-filter-section.scss';
-import Loader from '../../Loader';
-import raiseErrorToUser from '../../../Models/raiseErrorToUser';
 
 const SatelliteImageryTimeFilterSection = createReactClass({
     displayName: 'SatelliteImageryTimeFilterSection',
@@ -22,7 +25,12 @@ const SatelliteImageryTimeFilterSection = createReactClass({
     },
 
     zoomTo() {
-        alert('TODO');
+        const feature = this.props.item._intervalFilterFeature;
+        const position = feature !== undefined && feature.position !== undefined ? feature.position.getValue(this.props.item.currentTime) : undefined;
+        if (defined(position)) {
+            const cartographic = Ellipsoid.WGS84.cartesianToCartographic(position);
+            this.props.item.terria.currentViewer.zoomTo(new Rectangle(cartographic.longitude - 0.0005, cartographic.latitude - 0.0005, cartographic.longitude + 0.0005, cartographic.latitude + 0.0005));
+        }
     },
 
     newLocation() {
