@@ -634,8 +634,7 @@
             "regionProp": "LGA_CODE13",
             "aliases": [
                 "lga_code_2013",
-                "lga_code_2012",
-                "lga_code_2010"
+                "lga_code_2012"
             ],
             "digits": 5,
             "description": "Local government areas",
