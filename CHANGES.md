@@ -1,6 +1,9 @@
 Change Log
 ==========
 
+### Next release
+* `wwwroot/data/regionMapping.json` is now the default region mapping file (rather than a file provided by TerriaMap), and needs to be explicitly overridden by a `regionMappingDefinitionsUrl` setting in config.json.
+
 ### v6.4.0
 
 * The Feature Info panel can now be moved by clicking and dragging it.
