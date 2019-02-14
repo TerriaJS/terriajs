@@ -52,8 +52,11 @@ const SidePanel = createReactClass({
         }
     },
 
-    onAddDataClicked() {
+    onAddDataClicked(event) {
+        event.stopPropagation();
+        this.props.viewState.topElement = 'AddData';
         this.props.viewState.openAddData();
+        
     },
 
     onAddLocalDataClicked() {
@@ -88,6 +91,7 @@ const SidePanel = createReactClass({
                         viewState={this.props.viewState}
                         minified={true}
                         animationDuration={250}
+                        btnText='Hide'
                     />
 
                     <SearchBox

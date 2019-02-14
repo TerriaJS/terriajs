@@ -4,6 +4,15 @@ Change Log
 ### Next release
 * `wwwroot/data/regionMapping.json` is now the default region mapping file (rather than a file provided by TerriaMap), and needs to be explicitly overridden by a `regionMappingDefinitionsUrl` setting in config.json.
 
+### v6.4.0
+
+* The Feature Info panel can now be moved by clicking and dragging it.
+* The map tool buttons are now arranged horizontally instead of vertically on small-screen mobile devices.
+* When using a Web Map Service (WMS) catalog item with the `linkedWcsUrl` and `linkedWcsCoverage` properties, we now pass the selected WMS style to the Web Coverage Service (WCS) so that it can optionally return different information based on the selected style.
+* Added `stationIdWhitelist` and `stationIdBlacklist` properties to `SensorObservationServiceCatalogItem` to allow filtering certain monitoring stations in/out.
+* Fixed a bug that caused a crash when attempting to use a `style` attribute on an `<a>` tag in Markdown+HTML strings such as feature info templates.
+* Fixed a bug that displaced the chart dropdown list on mobile Safari.
+
 ### v6.3.7
 
 * Upgraded to Cesium v1.53.

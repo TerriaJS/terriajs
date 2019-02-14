@@ -30,13 +30,14 @@
   text-align: center;
   color: $dark-lighter;
   line-height: 2;
-  padding: 3vh;
+  padding: 3vh 6vh;
   text-align: center;
   box-sizing: border-box;
 }
 
 .tabCenter{
   text-align: center;
+  margin: $padding 0;
 }
 
 .tabLeft{
@@ -52,7 +53,6 @@
   &__item {
     display: inline-block;
     margin-right: 15px;
-    height: 30px;
     svg{
       display: inline;
       width: 15px;
@@ -63,12 +63,6 @@
     }
   }
 
-  // My data tab
-  //
-  // Markup:
-  // <button class="btn btn--add-data-tab"> Add local data </button>
-  //
-  // Style guide: Buttons.btn--add-data-tab
   &__btn {
     composes: btn from "../../../../Sass/common/_buttons.scss";
     composes: btn-transparent from "../../../../Sass/common/_buttons.scss";
@@ -76,7 +70,7 @@
     font-size: $font-size-small;
     font-weight: $font-weight-medium;
     width: 100%;
-    padding: $padding-small 0;
+    padding: $padding 0;
     color: $color-primary;
     &:hover,
     &:focus,
@@ -87,20 +81,17 @@
 }
 
 .dndBox {
-  border: 2px dashed $grey-lighter;
+  border: 2px dashed #ddd;
   flex-grow: 1;
-  min-height: 150px;
-  width: 80%;
   border-radius: 3px;
-  margin: 0 auto;
-  margin-top: 3vh;
   display: flex;
   justify-content: center;
   flex-direction: column;
   text-align: center;
-  color: $grey-lighter;
   background: #f6f6f7;
-
+  width: 100%;
+  margin: 6px 0;
+  color: $dark-lighter;
   div{
     margin-top: 5%;
   }
@@ -110,13 +101,17 @@
     height: 15%;
     width: 15%;
     margin: 5% auto;
+    opacity: 0.6;
   }
 }
 
 .dataTypeTab {
   width: 100%;
   display: flex;
-  flex-direction:column;
+  flex-direction: column;
+  height: 100%;
+  padding: $padding;
+  box-sizing: border-box;
 }
 
 .explanation {
@@ -137,7 +132,21 @@
   background: #ffffff;
   border-radius: 2px;
   padding: 3px 10px;
-  border: 1px solid rgba($dark-lighter, 0.5);
+  border: 1px solid #ddd;
+  color: $color-primary;
+
+  &:hover, &:focus{
+    border: 1px solid $color-primary;
+  }
+
+  svg{
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    vertical-align: baseline;
+    margin-right: 8px;
+    fill: $color-primary;
+  }
 }
 
 .btn--add-more-data {
