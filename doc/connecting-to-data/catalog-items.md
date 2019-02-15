@@ -18,7 +18,8 @@ A Catalog Item is a dataset or service that can be enabled for display on the ma
 | [GPX](catalog-type-details/gpx.md) | `gpx` |
 | [Keyhole Markup Language (KML)](catalog-type-details/kml.md) | `kml` |
 | [MAGDA Distribution](catalog-type-details/magda-distribution.md) | `magda-distribution` |
-| [MapBox Map](catalog-type-details/mapbox-map.md) | `mapbox-map` |
+| [Mapbox Map](catalog-type-details/mapbox-map.md) | `mapbox-map` |
+| [Mapbox Vector Tile](catalog-type-details/mvt.md) | `mvt` |
 | [OpenStreetMap](catalog-type-details/open-street-map.md) | `open-street-map` |
 | [SDMX-JSON](catalog-type-details/sdmx-json.md) | `sdmx-json` |
 | [Sensor Observation Service (SOS)](catalog-type-details/sos.md) | `sos` |
