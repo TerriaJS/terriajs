@@ -49,7 +49,7 @@ const ChartPanel = createReactClass({
 
     render() {
         const chartableItems = this.props.terria.catalog.chartableItems;
-        if (findIndex(chartableItems, ci => !ci.dontChartAlone)< 0) {
+        if (findIndex(chartableItems, ci => !ci.dontChartAlone) < 0) {
             return null;
         }
 
