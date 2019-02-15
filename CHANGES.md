@@ -6,6 +6,9 @@ Change Log
 * Support displaying availability for imagery layers on charts, by adding `"showOnChart": true".
 * Support localizedAvailabilityService object for imagery layers, such as for satellite layers where only a thin strip of imagery is available at a given time. This requires a WMS service that provides a /GetFeatureInfo which returns a list of dates for the provided location. See source for more details.
 
+### Next release
+* `wwwroot/data/regionMapping.json` is now the default region mapping file (rather than a file provided by TerriaMap), and needs to be explicitly overridden by a `regionMappingDefinitionsUrl` setting in config.json.
+
 ### v6.4.0
 
 * The Feature Info panel can now be moved by clicking and dragging it.
