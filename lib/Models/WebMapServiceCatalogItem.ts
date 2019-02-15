@@ -17,7 +17,7 @@ import CatalogMemberMixin from '../ModelMixins/CatalogMemberMixin';
 import GetCapabilitiesMixin from '../ModelMixins/GetCapabilitiesMixin';
 import UrlMixin from '../ModelMixins/UrlMixin';
 import WebMapServiceCatalogItemTraits from '../Traits/WebMapServiceCatalogItemTraits';
-import Mappable, { ImageryLayer } from './Mappable';
+import Mappable, { ImageryParts } from './Mappable';
 import Model from './Model';
 import proxyCatalogItemUrl from './proxyCatalogItemUrl';
 import Terria from './Terria';
@@ -338,7 +338,7 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemb
     }
 
     @computed
-    @autoUpdate(function(this: WebMapServiceCatalogItem, layer: ImageryLayer) {
+    @autoUpdate(function(this: WebMapServiceCatalogItem, layer: ImageryParts) {
         layer.alpha = this.opacity !== undefined ? this.opacity : 0.8;
         layer.show = this.show || false;
     })
@@ -361,7 +361,7 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemb
         }
     }
 
-    private _createImageryLayer(time: string | undefined): ImageryLayer | undefined {
+    private _createImageryLayer(time: string | undefined): ImageryParts | undefined {
         // Don't show anything on the map until GetCapabilities finishes loading.
         // TODO should this be a more general loading check? eliminate the cast?
         const stratum = <GetCapabilitiesStratum>this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName);
