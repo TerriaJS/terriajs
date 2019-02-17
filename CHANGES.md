@@ -6,7 +6,6 @@ Change Log
 * Support displaying availability for imagery layers on charts, by adding `"showOnChart": true".
 * Support localizedAvailabilityService object for imagery layers, such as for satellite layers where only a thin strip of imagery is available at a given time. This requires a WMS service that provides a /GetFeatureInfo which returns a list of dates for the provided location. See source for more details.
 
-### Next release
 ### v6.5.0
 
 * Add support for rendering Mapbox Vector Tiles (MVT) layers. Currently, polygons are the only supported geometry type, and all polygons are drawn with the same outline and fill colors.
