@@ -1,13 +1,13 @@
 import React from 'react';
-import {shallow} from 'enzyme';
-
-import Terria from  '../../../lib/Models/Terria';
-import DataCatalogItem from '../../../lib/ReactViews/DataCatalog/DataCatalogItem';
-import CatalogItemComponent from '../../../lib/ReactViews/DataCatalog/CatalogItem';
-import ViewState from '../../../lib/ReactViewModels/ViewState';
-import CatalogItem from '../../../lib/Models/CatalogItem';
+import { findAllWithType } from 'react-shallow-testutils';
+import { USER_ADDED_CATEGORY_NAME } from '../../../lib/Core/addedByUser';
 import CatalogGroup from '../../../lib/Models/CatalogGroup';
-import {USER_ADDED_CATEGORY_NAME} from '../../../lib/Core/addedByUser';
+import CatalogItem from '../../../lib/Models/CatalogItem';
+import Terria from '../../../lib/Models/Terria';
+import ViewState from '../../../lib/ReactViewModels/ViewState';
+import CatalogItemComponent from '../../../lib/ReactViews/DataCatalog/CatalogItem';
+import DataCatalogItem from '../../../lib/ReactViews/DataCatalog/DataCatalogItem';
+import { getShallowRenderedOutput } from '../MoreShallowTools';
 
 function makeItemUserAdded(item, terria) {
     item.parent = new CatalogGroup(terria);
@@ -121,7 +121,7 @@ describe('DataCatalogItem', () => {
 
     describe('renders', () => {
         it('a single <CatalogItem />', () => {
-            expect(renderShallow().find(CatalogItemComponent).length).toBe(1);
+            expect(findAllWithType(renderShallow(), CatalogItemComponent).length).toBe(1);
         });
 
         describe('btnState prop as', () => {
@@ -234,10 +234,10 @@ describe('DataCatalogItem', () => {
     }
 
     function getRenderedProp(propName) {
-        return renderShallow().find(CatalogItemComponent).first().prop(propName);
+        return findAllWithType(renderShallow(), CatalogItemComponent)[0].props[propName];
     }
 
     function renderShallow() {
-        return shallow(<DataCatalogItem viewState={viewState} item={item} removable={removable} terria={terria}/>);
+        return getShallowRenderedOutput(<DataCatalogItem viewState={viewState} item={item} removable={removable} terria={terria}/>);
     }
 });
