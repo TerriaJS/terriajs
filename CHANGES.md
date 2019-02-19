@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+### Next Release
+
+* Breaking Changes:
+  * Removed `UrthecastCatalogItem`, `UrthecastCatalogGroup`, and `registerUrthcastCatalogItems`. The Urthecast functionality was dependent on an npm package that hasn't been updated in three years and had potential security vulnerabilities.
+
 ### v6.5.0
 
 * Add support for rendering Mapbox Vector Tiles (MVT) layers. Currently, polygons are the only supported geometry type, and all polygons are drawn with the same outline and fill colors.
