@@ -78,7 +78,6 @@
     "terriajs-html2canvas": "1.0.0-alpha.12-terriajs-1",
     "urijs": "^1.18.12",
     "url-loader": "^1.1.2",
-    "urthecast": "^1.0.0",
     "webpack": "^3.8.1",
     "worker-loader": "^1.0.0"
   },
