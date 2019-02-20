@@ -165,7 +165,7 @@ const FeatureInfoPanel = createReactClass({
 
     filterIntervalsByFeature(catalogItem, feature) {
         try {
-            catalogItem.filterIntervalsByFeature(feature);
+            catalogItem.filterIntervalsByFeature(feature, this.props.terria.pickedFeatures);
         } catch (e) {
             raiseErrorToUser(this.props.terria, e);
         }

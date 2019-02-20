@@ -25,7 +25,7 @@ const SatelliteImageryTimeFilterSection = createReactClass({
     },
 
     zoomTo() {
-        const feature = this.props.item._intervalFilterFeature;
+        const feature = this.props.item.intervalFilterFeature;
         const position = feature !== undefined && feature.position !== undefined ? feature.position.getValue(this.props.item.currentTime) : undefined;
         if (defined(position)) {
             const cartographic = Ellipsoid.WGS84.cartesianToCartographic(position);
@@ -65,7 +65,7 @@ const SatelliteImageryTimeFilterSection = createReactClass({
 
                 if (thisLayerFeature !== undefined) {
                     try {
-                        item.filterIntervalsByFeature(thisLayerFeature);
+                        item.filterIntervalsByFeature(thisLayerFeature, pickedFeatures);
                     } catch (e) {
                         raiseErrorToUser(terria, e);
                     }
@@ -81,7 +81,7 @@ const SatelliteImageryTimeFilterSection = createReactClass({
             return null;
         }
 
-        const feature = this.props.item._intervalFilterFeature;
+        const feature = this.props.item.intervalFilterFeature;
         if (feature === undefined) {
             return this.renderNoFeatureSelected();
         } else {
