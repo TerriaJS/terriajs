@@ -1,8 +1,6 @@
 var glob = require('glob-all');
 var configureWebpack = require('./configureWebpack');
 var path = require('path');
-var webpack = require('webpack');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 var testGlob = ['./test/**/*.js', './test/**/*.jsx', '!./test/Utility/*.js'];
