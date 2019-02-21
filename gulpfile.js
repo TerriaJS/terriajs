@@ -173,9 +173,9 @@ function runKarma(configFile, done) {
 
 gulp.task('user-guide', gulp.series('make-schema', function userGuide(done) {
     var fse = require('fs-extra');
-    var gutil = require('gulp-util');
     var klawSync = require('klaw-sync');
     var path = require('path');
+    var PluginError = require('plugin-error');
     var spawnSync = require('child_process').spawnSync;
 
     fse.copySync('doc/mkdocs.yml', 'build/mkdocs.yml');
@@ -212,7 +212,7 @@ gulp.task('user-guide', gulp.series('make-schema', function userGuide(done) {
         shell: false
     });
     if (result.status !== 0) {
-        throw new gutil.PluginError('user-doc', 'External module exited with an error.', { showStack: false });
+        throw new PluginError('user-doc', 'External module exited with an error.', { showStack: false });
     }
 
     done();
