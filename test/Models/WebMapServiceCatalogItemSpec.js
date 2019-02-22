@@ -310,6 +310,10 @@ describe('WebMapServiceCatalogItem', function() {
             awesome: 'maybe'
         };
         wmsItem.getFeatureInfoFormats = [];
+
+        // This initialTime is before any interval, so internally it will be changed to the first start date.
+        wmsItem.initialTimeSource = '2012-01-01T12:00:00Z';
+
         wmsItem.intervals = new TimeIntervalCollection([
             new TimeInterval({
                 start: JulianDate.fromIso8601('2013-08-01T15:00:00Z'),
@@ -320,8 +324,6 @@ describe('WebMapServiceCatalogItem', function() {
                 stop: JulianDate.fromIso8601('2013-09-03T13:00:00Z')
             })
         ]);
-        // This initialTime is before any interval, so internally it will be changed to the first start date.
-        wmsItem.initialTimeSource = '2012-01-01T12:00:00Z';
 
         var json = wmsItem.serializeToJson();
 
