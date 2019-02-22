@@ -5,6 +5,11 @@ if [[ $TRAVIS_BRANCH =~ ^greenkeeper/ ]]; then
     exit 0
 fi
 
+# A version of the branch name that can be used as a DNS name once we prepend and append some stuff.
+SAFE_BRANCH_NAME=$(printf '%s' "${TRAVIS_BRANCH,,:0:40}" | sed 's/[^-a-z0-9]/-/g')
+
+http POST "https://api.github.com/repos/${TRAVIS_REPO_SLUG}/statuses/${TRAVIS_COMMIT}" "Authorization:token ${GITHUB_TOKEN}" status=pending context=deployment "target_url=http://ci.terria.io/${SAFE_BRANCH_NAME}/"
+
 # Install gcloud, kubectl, and helm
 mkdir bin
 cd bin
@@ -42,12 +47,11 @@ git tag -a "TerriaMap-$TERRIAMAP_COMMIT_HASH--TerriaJS-$TERRIAJS_COMMIT_HASH" -m
 npm install
 npm run gulp build
 
-# A version of the branch name that can be used as a DNS name once we prepend and append some stuff.
-SAFE_BRANCH_NAME=$(printf '%s' "${TRAVIS_BRANCH,,:0:40}" | sed 's/[^-a-z0-9]/-/g')
-
 npm run "--terriajs-map:docker_name=terriajs-ci" docker-build-ci -- --tag "asia.gcr.io/terriajs-automated-deployment/terria-ci:$SAFE_BRANCH_NAME"
 gcloud docker -- push "asia.gcr.io/terriajs-automated-deployment/terria-ci:$SAFE_BRANCH_NAME"
 helm upgrade --install --recreate-pods -f ../buildprocess/ci-values.yml --set global.exposeNodePorts=true --set "terriamap.image.full=asia.gcr.io/terriajs-automated-deployment/terria-ci:$SAFE_BRANCH_NAME" --set "terriamap.serverConfig.shareUrlPrefixes.s.accessKeyId=$SHARING_S3_ACCESS_KEY_ID" --set "terriamap.serverConfig.shareUrlPrefixes.s.secretAccessKey=$SHARING_S3_SECRET_ACCESS_KEY" "terriajs-$SAFE_BRANCH_NAME" deploy/helm/terria
 
 cd ..
 node buildprocess/ci-cleanup.js
+
+http POST "https://api.github.com/repos/${TRAVIS_REPO_SLUG}/statuses/${TRAVIS_COMMIT}" "Authorization:token ${GITHUB_TOKEN}" status=success context=deployment "target_url=http://ci.terria.io/${SAFE_BRANCH_NAME}/"
