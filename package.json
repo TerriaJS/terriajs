@@ -11,9 +11,7 @@
     "url": "http://github.com/TerriaJS/terriajs"
   },
   "config": {
-    "docRepo": "git@github.com:TerriaJS/Documentation.git",
-    "testMapRepo": "https://github.com/TerriaJS/TerriaMap.git",
-    "testMapBranch": "audit-fix"
+    "docRepo": "git@github.com:TerriaJS/Documentation.git"
   },
   "dependencies": {
     "@mapbox/point-geometry": "^0.1.0",
