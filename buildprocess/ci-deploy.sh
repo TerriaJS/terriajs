@@ -5,6 +5,7 @@ if [[ $TRAVIS_BRANCH =~ ^greenkeeper/ ]]; then
     exit 0
 fi
 
+set -e
 sudo apt-get update
 sudo apt-get install -y httpie
 

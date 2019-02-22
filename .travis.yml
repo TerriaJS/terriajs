@@ -25,6 +25,8 @@ matrix:
     - docker
     script:
       - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then bash buildprocess/ci-deploy.sh; fi'
+    after_failure:
+      - http POST "https://api.github.com/repos/${TRAVIS_REPO_SLUG}/statuses/${TRAVIS_COMMIT}" "Authorization:token ${GITHUB_TOKEN}" state=failure context=deployment "target_url=https://travis-ci.org/${TRAVIS_REPO_SLUG}/jobs/${TRAVIS_JOB_ID}"
     env:
     - secure: bV2Mb/mIGY5eGXj9CAnimUorNJ7xHqyXK+wn4zWLIRJq1/dkV50r+49LmJH9zVDPe9vByYJJvRf2oqPEqbgcFl4zux+H+lGgVSRcHhngRpi+wLAvYBeYSn4hq/c/uCQme7jViBZQgTXF0l5Aw461AO5NyftyN7Ns+I4JJ9neync=
     - secure: XuhhOSoc2lRvrcen2Fpv/cy7GxhXH0WmnkCb6e/bmUjTrqSaJNdCoOzq4uEX3Ry0A82cf3VmBN0Ukq4w+CQD6rFaONk97XKvjP1ELsU86md1KuwnZkzdeZA1E6R/1tUkUvQ87WPnAsg8GYh/RxUUJtmjJv2b5roXEuIscyUCVKM=
