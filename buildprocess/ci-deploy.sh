@@ -5,10 +5,13 @@ if [[ $TRAVIS_BRANCH =~ ^greenkeeper/ ]]; then
     exit 0
 fi
 
+sudo apt-get update
+sudo apt-get install -y httpie
+
 # A version of the branch name that can be used as a DNS name once we prepend and append some stuff.
 SAFE_BRANCH_NAME=$(printf '%s' "${TRAVIS_BRANCH,,:0:40}" | sed 's/[^-a-z0-9]/-/g')
 
-http POST "https://api.github.com/repos/${TRAVIS_REPO_SLUG}/statuses/${TRAVIS_COMMIT}" "Authorization:token ${GITHUB_TOKEN}" status=pending context=deployment "target_url=http://ci.terria.io/${SAFE_BRANCH_NAME}/"
+http POST "https://api.github.com/repos/${TRAVIS_REPO_SLUG}/statuses/${TRAVIS_COMMIT}" "Authorization:token ${GITHUB_TOKEN}" state=pending context=deployment "target_url=http://ci.terria.io/${SAFE_BRANCH_NAME}/"
 
 # Install gcloud, kubectl, and helm
 mkdir bin
@@ -54,4 +57,4 @@ helm upgrade --install --recreate-pods -f ../buildprocess/ci-values.yml --set gl
 cd ..
 node buildprocess/ci-cleanup.js
 
-http POST "https://api.github.com/repos/${TRAVIS_REPO_SLUG}/statuses/${TRAVIS_COMMIT}" "Authorization:token ${GITHUB_TOKEN}" status=success context=deployment "target_url=http://ci.terria.io/${SAFE_BRANCH_NAME}/"
+http POST "https://api.github.com/repos/${TRAVIS_REPO_SLUG}/statuses/${TRAVIS_COMMIT}" "Authorization:token ${GITHUB_TOKEN}" state=success context=deployment "target_url=http://ci.terria.io/${SAFE_BRANCH_NAME}/"
