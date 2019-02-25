@@ -91,7 +91,6 @@
     "fs-extra": "^7.0.1",
     "generate-terriajs-schema": "^1.4.0",
     "glob-all": "^3.0.1",
-    "jasmine-core": "^2.7.0",
     "jsdoc": "^3.4.0",
     "karma": "^4.0.0",
     "karma-browserstack-launcher": "^1.4.0",
