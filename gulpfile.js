@@ -61,55 +61,6 @@ gulp.task('lint', function(done) {
     done();
 });
 
-// Create a single .js file with all of TerriaJS + Cesium!
-gulp.task('build-libs', function(done) {
-    var fs = require('fs');
-    var glob = require('glob-all');
-    var path = require('path');
-    var runWebpack = require('./buildprocess/runWebpack.js');
-    var webpack = require('webpack');
-    var webpackConfig = require('./buildprocess/webpack.config.lib.js');
-
-    // Build an index.js to export all of the modules.
-    var index = '';
-
-    index += '\'use strict\'\n';
-    index += '\n';
-    index += '/*global require*/\n';
-    index += '\n';
-
-    var modules = glob.sync([
-        './lib/**/*.js',
-        '!./lib/CopyrightModule.js',
-        '!./lib/cesiumWorkerBootstrapper.js',
-        '!./lib/ThirdParty/**',
-        '!./lib/SvgPaths/**'
-    ]);
-
-    var directories = {};
-
-    modules.forEach(function(filename) {
-        var module = filename.substring(0, filename.length - path.extname(filename).length);
-        var moduleName = path.relative('./lib', module);
-        moduleName = moduleName.replace(path.sep, '/');
-        var moduleParts = moduleName.split('/');
-
-        for (var i = 0; i < moduleParts.length - 1; ++i) {
-            var propertyName = moduleParts.slice(0, i + 1).join('.');
-            if (!directories[propertyName]) {
-                directories[propertyName] = true;
-                index += 'exports.' + propertyName + ' = {};\n';
-            }
-        }
-
-        index += 'exports.' + moduleParts.join('.') + ' = require(\'' + module + '\');\n';
-    });
-
-    fs.writeFileSync('terria.lib.js', index);
-
-    runWebpack(webpack, webpackConfig, done);
-});
-
 gulp.task('reference-guide', function(done) {
     var runExternalModule = require('./buildprocess/runExternalModule');
 
