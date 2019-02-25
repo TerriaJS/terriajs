@@ -1,6 +1,14 @@
 Change Log
 ==========
 
+### Next Release
+
+* Breaking Changes:
+  * TerriaJS now requires Node.js v8.0 or later.
+  * TerriaJS now requires Webpack v4.0 or later.
+  * TerriaJS now uses Gulp v4.0. If you have Gulp 3 installed globally, you'll need to use `npm run gulp` to run TerriaJS gulp tasks, or upgrade your global Gulp to v4 with `npm install -g gulp@4`.
+  * Removed `UrthecastCatalogItem`, `UrthecastCatalogGroup`, and `registerUrthcastCatalogItems`. The Urthecast functionality was dependent on an npm package that hadn't been updated in three years and had potential security vulnerabilities.
+
 ### v6.5.0
 
 * Add support for rendering Mapbox Vector Tiles (MVT) layers. Currently, polygons are the only supported geometry type, and all polygons are drawn with the same outline and fill colors.
