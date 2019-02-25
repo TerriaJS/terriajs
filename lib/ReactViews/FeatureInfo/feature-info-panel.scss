@@ -26,6 +26,7 @@
 
 .is-visible {
   display: block;
+  height: 100%;
 }
 
 .header{
@@ -83,8 +84,10 @@
 
   overflow-y: auto;
   overflow-x: auto;
-  max-height: calc(80vh - #{$padding*2 + $btn-default-line-height});
+  height: calc(100% - 40px);
   font-size: $font-size-feature-info;
+  max-height: calc(80vh - #{$padding*2 + $btn-default-line-height});
+  backrgound-color: $feature-info-header-bg;
 }
 
 .location {

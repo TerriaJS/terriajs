@@ -232,7 +232,7 @@ const FeatureInfoPanel = createReactClass({
         );
         this.ref = React.createRef();
         return (
-                <DragWrapper ref={this.ref}>
+                <DragWrapper ref={this.ref} isVisible={viewState.featureInfoPanelIsVisible}>
                     <div
                         className={panelClassName}
                         aria-hidden={!viewState.featureInfoPanelIsVisible}>

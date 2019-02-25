@@ -1,6 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import interact from 'interactjs';
+import classNames from 'classnames';
+import Icon from "./Icon.jsx";
+import Styles from './drag-wrapper.scss';
 
 class DragWrapper extends React.Component {
   constructor(props) {
@@ -26,6 +29,14 @@ class DragWrapper extends React.Component {
          target.setAttribute('data-x', x);
          target.setAttribute('data-y', y);
       };
+      
+    const resizeListener = (event)=>{
+      const target = event.target;
+      // update the element's style
+      target.style.width  = event.rect.width + 'px';
+      target.style.height = event.rect.height + 'px';
+      target.style.maxWidth = '100%';
+    };
 
      interact(node)
         .draggable({
@@ -39,7 +50,22 @@ class DragWrapper extends React.Component {
               endOnly: true,
               elementRect: { left: 0, right: 1, top: 0, bottom: 1 }
           },
-      });
+        })
+        .resizable({
+          inertia: true,
+          edges: { left: true, bottom: true },
+          restrictEdges: {
+            outer: 'parent',
+            endOnly: true
+          },
+          restrictSize: {
+            min: {
+              width: 284.66,
+              height: 121.22
+            }
+          }
+        })
+        .on('resizemove', resizeListener);
 
   this.resizeListener = ()=> {
     const draggable = interact(node);
@@ -57,12 +83,16 @@ componentWillUnmount() {
 }
 
   render() {
-      return <div ref={node => this.node = node} >{this.props.children}</div>;
+    return (<div className={classNames(Styles.interactable, {[Styles.isNotVisible]: !this.props.isVisible})}  ref={node => this.node = node}>
+      {this.props.children}
+      <span className={Styles.resizer}><Icon glyph={Icon.GLYPHS.resize}/></span>
+      </div>);
   }
 }
 
 DragWrapper.propTypes = {
 	children: PropTypes.node.isRequired,
+  isVisible: PropTypes.bool
 };
 
 module.exports = DragWrapper;

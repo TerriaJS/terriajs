@@ -1,0 +1,23 @@
+.interactable{
+       display: block;
+}
+
+.isNotVisible{
+       display: none;
+}
+
+
+
+.resizer{
+    position: absolute;
+    left: 2px;
+    bottom: 2px;
+    z-index: 999;
+    width: 20px;
+    height: 20px;
+    display: block;
+    svg{
+            transform: scaleX(-1);
+            fill: rgba(255, 255, 255, 0.8);
+    }
+  }

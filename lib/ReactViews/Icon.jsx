@@ -72,7 +72,8 @@ const GLYPHS = {
     web: require('../../wwwroot/images/icons/remotefile.svg'),
     compassInner: require('../../wwwroot/images/icons/compass-inner.svg'),
     compassOuter: require('../../wwwroot/images/icons/compass-outer.svg'),
-    compassRotationMarker: require('../../wwwroot/images/icons/compass-rotation-marker.svg')
+    compassRotationMarker: require('../../wwwroot/images/icons/compass-rotation-marker.svg'),
+    resize: require('../../wwwroot/images/icons/resize.svg')
 };
 
 const Icon = createReactClass({
