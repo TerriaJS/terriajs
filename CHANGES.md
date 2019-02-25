@@ -6,6 +6,7 @@ Change Log
 * Breaking Changes:
   * TerriaJS now requires Node.js v8.0 or later.
   * TerriaJS now requires Webpack v4.0 or later.
+  * TerriaJS now uses Gulp v4.0.
   * Removed `UrthecastCatalogItem`, `UrthecastCatalogGroup`, and `registerUrthcastCatalogItems`. The Urthecast functionality was dependent on an npm package that hadn't been updated in three years and had potential security vulnerabilities.
 
 ### v6.5.0
