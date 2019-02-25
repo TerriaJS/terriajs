@@ -22,7 +22,7 @@ describe('ArcGisFeatureServerCatalogItem', function() {
             if (url.match('Wildfire/FeatureServer')) {
                 url = url.replace(/^.*\/FeatureServer/, 'FeatureServer');
                 url = url.replace(/FeatureServer\/query\?f=json&layerDefs=%7B1%3A%22.*%22%7D$/i, '1.json');
-                arguments[0] = require('file-loader!../../wwwroot/test/ArcGisFeatureServer/Wildfire/' + url);
+                arguments[0] = 'test/ArcGisFeatureServer/Wildfire/' + url;
             }
             return realLoadWithXhr.apply(undefined, arguments);
         });
