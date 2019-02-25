@@ -12,6 +12,11 @@
     "globals": {
         "process": true
     },
+    "settings": {
+        "react": {
+            "version": "detect"
+        }
+    },
     "rules": {
         "jsx-control-statements/jsx-use-if-tag": 0,
         "react/jsx-no-undef": 0,
