@@ -1,7 +1,6 @@
 import React from 'react';
-
+import Icon from '../Icon.jsx';
 import PropTypes from 'prop-types';
-
 import Styles from './menu-button.scss';
 
 /**
@@ -16,6 +15,7 @@ function MenuButton(props) {
                href={props.href}
                target={props.href !== '#' ? '_blank' : undefined}
                title={props.caption}>
+                {props.href !== '#' && <Icon glyph={Icon.GLYPHS.externalLink}/>}
                 <span>{props.caption}</span>
             </a>
         </div>

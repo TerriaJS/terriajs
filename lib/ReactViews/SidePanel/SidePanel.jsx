@@ -52,8 +52,11 @@ const SidePanel = createReactClass({
         }
     },
 
-    onAddDataClicked() {
+    onAddDataClicked(event) {
+        event.stopPropagation();
+        this.props.viewState.topElement = 'AddData';
         this.props.viewState.openAddData();
+        
     },
 
     onAddLocalDataClicked() {
@@ -88,6 +91,7 @@ const SidePanel = createReactClass({
                         viewState={this.props.viewState}
                         minified={true}
                         animationDuration={250}
+                        btnText='Hide'
                     />
 
                     <SearchBox
@@ -99,7 +103,7 @@ const SidePanel = createReactClass({
 
                     />
                     <div className={Styles.addData}>
-                        <button type='button' onClick={this.onAddDataClicked} className={Styles.button} title='add data'>
+                        <button type='button' onClick={this.onAddDataClicked} className={Styles.button} title='Add data'>
                             <Icon glyph={Icon.GLYPHS.add}/>Add data
                         </button>
                         <button

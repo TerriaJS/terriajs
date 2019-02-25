@@ -81,6 +81,7 @@ const MyDataTab = createReactClass({
                 <div className={Styles.dataTypeTab}>
                     <div className={Styles.dndBox}>
                         <Icon glyph={Icon.GLYPHS.upload} />
+                        Drag and Drop
                     </div>
                 </div>
             );
@@ -97,7 +98,6 @@ const MyDataTab = createReactClass({
                 </div>
                 <div className={Styles.dndBox}>
                     <Icon glyph={Icon.GLYPHS.upload} />
-
                 </div>
             </div>
         );
@@ -119,6 +119,7 @@ const MyDataTab = createReactClass({
                             onClick={this.resetTab}
                             className={Styles.btnBackToMyData}
                         >
+                            <Icon glyph={Icon.GLYPHS.left}/>
                             Back
                         </button>
                         <AddData

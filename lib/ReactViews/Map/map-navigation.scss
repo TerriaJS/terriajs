@@ -2,22 +2,39 @@
 
 .map-navigation{
   position: absolute;
-  right: 25px;
+  right: 65px;
   z-index: 1;
   bottom: 25px;
 
   @media (min-width: $sm) {
     top: 80px;
     bottom: auto;
+    right: 16px;
   }
 
 }
 
 .control {
-  margin: 15px 0;
+  @media(min-width:$sm){
+    margin: 7px 0;
+    height: auto;
+ }
+  margin: 4px 8px;
   text-align: center;
-
-  &:last-child {
-    margin-bottom: 0;
-  }
+  //ie sizing fix
+  height: 40px;
 }
+
+.navs{
+  display: flex;
+  flex-direction: column;
+}
+
+.controls{
+  display: flex;
+  @media(min-width:$sm){
+    flex-direction: column;
+    margin-right: 0;
+  }
+  flex-direction: row;
+ }

@@ -1,6 +1,31 @@
 Change Log
 ==========
 
+### v6.5.0
+
+* Add support for rendering Mapbox Vector Tiles (MVT) layers. Currently, polygons are the only supported geometry type, and all polygons are drawn with the same outline and fill colors.
+* `wwwroot/data/regionMapping.json` is now the default region mapping file (rather than a file provided by TerriaMap), and needs to be explicitly overridden by a `regionMappingDefinitionsUrl` setting in config.json.
+
+### v6.4.0
+
+* The Feature Info panel can now be moved by clicking and dragging it.
+* The map tool buttons are now arranged horizontally instead of vertically on small-screen mobile devices.
+* When using a Web Map Service (WMS) catalog item with the `linkedWcsUrl` and `linkedWcsCoverage` properties, we now pass the selected WMS style to the Web Coverage Service (WCS) so that it can optionally return different information based on the selected style.
+* Added `stationIdWhitelist` and `stationIdBlacklist` properties to `SensorObservationServiceCatalogItem` to allow filtering certain monitoring stations in/out.
+* Fixed a bug that caused a crash when attempting to use a `style` attribute on an `<a>` tag in Markdown+HTML strings such as feature info templates.
+* Fixed a bug that displaced the chart dropdown list on mobile Safari.
+
+### v6.3.7
+
+* Upgraded to Cesium v1.53.
+
+### v6.3.6
+
+* Dragging/dropping files now displays a more subtle notification rather than opening the large Add Data / My Data panel.
+* The `sendFeedback` function can now be used to send additional information if the server is configured to receive it (i.e. `devserverconfig.json`).
+* Made custom feedback controls stay in the lower-right corner of the map.
+* Improved the look of the toolbar icons in the top right, and added an icon for the About page.
+
 ### v6.3.5
 
 * Changed the title text for the new button next to "Add Data" on the workbench to "Load local/web data".
