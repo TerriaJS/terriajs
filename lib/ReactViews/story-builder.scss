@@ -2,15 +2,51 @@
 @import '../Sass/common/mixins';
 
 .story-panel {
-  flex: 1;
+  font-family: $font-base;
+  flex-basis: 400px;
+  color: $text-light;
+  font-size: $font-size-mid-small;
+  background: $dark;
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .story {
-  padding: 5px;
-  margin: 5px;
-  border: 1px solid black;
-}
+  padding: $padding-small;
+  margin: $padding-small;
+  border: dashed 1px rgba(255, 255, 255, 0.5);
+  h3{
+    font-weight: normal;
+  }
+ }
+
+ .footer{
+   padding: $padding-small;
+ }
+
+ .btnRemove, .btnCapture{
+   margin: $padding 0;
+   composes: btn from "../Sass/common/_buttons.scss";
+   color: $color-primary;
+   border-bottom: 2px solid $color-primary;
+   &:hover, &:focus{
+     color: #ffffff!important;
+     border-bottom: 2px solid #ffffff!important;
+   }
+ }
+ .btn{
+    margin: $padding-small 0;
+    composes: btn from "../Sass/common/_buttons.scss";
+    composes: btn-primary from "../Sass/common/_buttons.scss";
+ }
+
+ .field{
+    composes: field from '../Sass/common/_form.scss';
+    margin-bottom: $padding;
+ }
+ .label{
+   display: block;
+ }
 
 .story:hover {
-  background-color: yellow;
+  background-color: $dark-with-overlay;
 }

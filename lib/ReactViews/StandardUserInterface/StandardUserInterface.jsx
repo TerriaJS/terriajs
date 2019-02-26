@@ -78,6 +78,9 @@ const StandardUserInterface = createReactClass({
         window.addEventListener('resize', this.resizeListener, false);
 
         this.resizeListener();
+
+        this.props.viewState.storyShown = this.props.viewState.useSmallScreenInterface ? this.props.terria.stories && this.props.terria.stories.length : false;
+        this.props.viewState.storyEnabled = this.props.viewState.storyShown; 
     },
 
     componentDidMount() {
@@ -106,10 +109,12 @@ const StandardUserInterface = createReactClass({
             this.props.viewState.useSmallScreenInterface,
             this.props.children
         );
-        const showStoryBuilder = !(this.props.viewState.storyEnabled && this.props.viewState.storyShown);
-
+        
         const terria = this.props.terria;
         const allBaseMaps = this.props.allBaseMaps;
+        
+        const showStoryBuilder = !(this.props.viewState.storyEnabled && this.props.viewState.storyShown) && !this.props.viewState.useSmallScreenInterface;
+
         return (
             <div className={Styles.storyWrapper}>
                 <div className={classNames(Styles.uiRoot, {[Styles.withStoryBuilder]: showStoryBuilder})} ref={w => (this._wrapper = w)}>

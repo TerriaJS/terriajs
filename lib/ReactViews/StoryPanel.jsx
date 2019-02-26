@@ -3,10 +3,9 @@ import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import ObserveModelMixin from './ObserveModelMixin';
-
-
+import { Small, Medium } from './Generic/Responsive';
+import Icon from "./Icon.jsx";
 import Styles from './story-panel.scss';
-
 
 const StoryPanel = createReactClass({
     displayName: 'StoryPanel',
@@ -49,7 +48,7 @@ const StoryPanel = createReactClass({
 
     handleScroll(event) {
         const scrollTop = event.srcElement.scrollTop;
-        this.selectStoryFromScrollPosition(scrollTop)
+        this.selectStoryFromScrollPosition(scrollTop);
     },
 
     // This is in StoryPanel and StoryBuilder
@@ -69,7 +68,12 @@ const StoryPanel = createReactClass({
     render() {
         return (
             <div>
+              <Medium>
                 <button className={Styles.pauseButton} onClick={this.toggleStoryPause}>{this.props.viewState.storyShown ? 'Interact with map' : 'Start/continue story'}</button>
+              </Medium>
+              <Small>
+                <button className={Styles.pauseButton} onClick={this.toggleStoryPause}>{this.props.viewState.storyShown ? <Icon glyph={Icon.GLYPHS.pause}/> : <Icon glyph={Icon.GLYPHS.play}/>}</button>
+              </Small>
                 <div className={classNames(Styles.fullPanel, {[Styles.isHidden]: !this.props.viewState.storyShown})} ref={this.panel}>
                     {(this.props.terria.stories || []).map(scene => (
                         <div className={Styles.storyContainer} key={scene.id}>

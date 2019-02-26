@@ -113,22 +113,21 @@ const StoryBuilder = createReactClass({
                 {(this.props.terria.stories || []).map(story => <div className={Styles.story} key={story.id} onClick={() => this.activateStory(story)}>
                      <h3>{story.title}</h3>
                      <p>{story.text}</p>
-                     <button onClick={(evt) => {this.removeStory(story); evt.stopPropagation();}}>Remove</button>
+                     <button className={Styles.btnRemove} onClick={(evt) => {this.removeStory(story); evt.stopPropagation();}}>Remove</button>
                 </div>)}
                 <div className={Styles.story}>
-                    <form onSubmit={this.onSubmit}>
-                        <label htmlFor="title">Title:</label>
-                        <input type="text" id="title" value={this.state.newTitle} onChange={this.updateTitle}/>
-                        <br/>
-                        <label htmlFor="text">Text:</label>
-                        <input type="text" id="text" value={this.state.newText} onChange={this.updateText}/>
-                        <br/>
-                        <input type="submit" value="Capture scene"/>
+                    <form className={Styles.form} onSubmit={this.onSubmit}>
+                        <label className={Styles.label} htmlFor="title">Title:</label>
+                        <input className={Styles.field} type="text" id="title" value={this.state.newTitle} onChange={this.updateTitle}/>
+                        <label className={Styles.label} htmlFor="text">Text:</label>
+                        <input className={Styles.field} type="text" id="text" value={this.state.newText} onChange={this.updateText}/>
+                        <input className={Styles.btnCapture} type="submit" value="Capture scene"/>
                     </form>
                 </div>
-                <button onClick={this.downloadShareFile}>Download share file</button>
-                {/* <button onClick={this.saveToMyJson}>Save to myjson.com</button> */}
-                <button onClick={this.runStory}>Run story</button>
+                <div className={Styles.footer}>
+                <button className={Styles.btn} onClick={this.downloadShareFile}>Download share file</button>
+                <button className={Styles.btn} onClick={this.runStory}>Run story</button>
+          </div>
             </div>
         );
     }

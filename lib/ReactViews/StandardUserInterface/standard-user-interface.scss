@@ -7,7 +7,9 @@
 // back in.
 
 .story-wrapper {
-  display: flex;
+  @media (min-width : $md) {
+    display: flex;
+  }
 }
 
 :global{
@@ -31,9 +33,6 @@
     pointer-events: none;
   }
   position: relative;
-  &.with-story-builder {
-    flex-basis: 80%;
-  }
   flex-basis: 100%;
 }
 
@@ -41,6 +40,7 @@
   overflow: hidden;
   background: $dark;
   width: 100%;
+  height: 100vh;
 }
 
 .explorerPanelIsVisible {
@@ -82,7 +82,7 @@
   $feature-info-forty-percent-size: $feature-info-medium-max-size * 100 / 40;
 
   z-index: $front-component-z-index - 20;
-  position: fixed;
+  position: absolute;
   right: 0;
   bottom: 0;
   top: 0;
@@ -100,7 +100,7 @@
 
   & > div{
     pointer-events: auto;
-    position: fixed;
+    position: absolute;
     top: $mobile-header-height + 10px;
     right: 10px;
     max-width: 95%;
@@ -111,12 +111,12 @@
 
     @media (min-width : $sm) and (max-width: $feature-info-forty-percent-size) {
       max-width: $feature-info-medium-max-size;
-      right: $feature-info-right-margin;
+      top: 0;
     }
 
     @media (min-width: $feature-info-forty-percent-size) {
-      max-width: 40%;
-      right: $feature-info-right-margin;
+      max-width: 80%;
+      top: 0;
     }
   }
 }
