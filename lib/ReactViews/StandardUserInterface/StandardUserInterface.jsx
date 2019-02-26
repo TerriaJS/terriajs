@@ -45,6 +45,7 @@ const StandardUserInterface = createReactClass({
         allBaseMaps: PropTypes.array,
         viewState: PropTypes.object.isRequired,
         minimumLargeScreenWidth: PropTypes.number,
+        minimumMediumScreenWidth: PropTypes.number,
         version: PropTypes.string,
         children: PropTypes.oneOfType([
             PropTypes.arrayOf(PropTypes.element),
@@ -54,13 +55,15 @@ const StandardUserInterface = createReactClass({
 
     getDefaultProps() {
         return {
-            minimumLargeScreenWidth: 768
+            minimumMediumScreenWidth: 768,
+            minimumLargeScreenWidth: 992,
         };
     },
 
     /* eslint-disable-next-line camelcase */
     UNSAFE_componentWillMount() {
         const that = this;
+        let shouldUseLargeInterface = true;
         this.dragOverListener = e => {
             if (!e.dataTransfer.types || !arrayContains(e.dataTransfer.types, 'Files')) {
                 return;
@@ -73,13 +76,14 @@ const StandardUserInterface = createReactClass({
 
         this.resizeListener = () => {
             this.props.viewState.useSmallScreenInterface = this.shouldUseMobileInterface();
+            shouldUseLargeInterface = this.shouldUseLargeInterface();
         };
 
         window.addEventListener('resize', this.resizeListener, false);
 
         this.resizeListener();
 
-        this.props.viewState.storyShown = this.props.viewState.useSmallScreenInterface ? this.props.terria.stories && this.props.terria.stories.length : false;
+        this.props.viewState.storyShown = shouldUseLargeInterface ? this.props.terria.stories && this.props.terria.stories.length : false;
         this.props.viewState.storyEnabled = this.props.viewState.storyShown; 
     },
 
@@ -102,6 +106,10 @@ const StandardUserInterface = createReactClass({
 
     shouldUseMobileInterface() {
         return document.body.clientWidth < this.props.minimumLargeScreenWidth;
+    },
+    
+    shouldUseLargeInterface(){
+        return document.body.clientWidth > this.props.minimumMediumScreenWidth;
     },
 
     render() {
