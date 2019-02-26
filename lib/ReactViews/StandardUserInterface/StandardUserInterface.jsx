@@ -55,15 +55,16 @@ const StandardUserInterface = createReactClass({
 
     getDefaultProps() {
         return {
-            minimumMediumScreenWidth: 768,
-            minimumLargeScreenWidth: 992,
+            minimumMediumScreenWidth: 992,
+            minimumLargeScreenWidth: 768,
         };
     },
 
     /* eslint-disable-next-line camelcase */
     UNSAFE_componentWillMount() {
         const that = this;
-        let shouldUseLargeInterface = true;
+        // only need to know on initial load
+        let shouldHideStoryBuilder = false;
         this.dragOverListener = e => {
             if (!e.dataTransfer.types || !arrayContains(e.dataTransfer.types, 'Files')) {
                 return;
@@ -76,14 +77,14 @@ const StandardUserInterface = createReactClass({
 
         this.resizeListener = () => {
             this.props.viewState.useSmallScreenInterface = this.shouldUseMobileInterface();
-            shouldUseLargeInterface = this.shouldUseLargeInterface();
+            shouldHideStoryBuilder = this.shouldHideStoryBuilder();
         };
 
         window.addEventListener('resize', this.resizeListener, false);
 
         this.resizeListener();
 
-        this.props.viewState.storyShown = shouldUseLargeInterface ? this.props.terria.stories && this.props.terria.stories.length : false;
+        this.props.viewState.storyShown = shouldHideStoryBuilder? this.props.terria.stories && this.props.terria.stories.length : false;
         this.props.viewState.storyEnabled = this.props.viewState.storyShown; 
     },
 
@@ -108,8 +109,8 @@ const StandardUserInterface = createReactClass({
         return document.body.clientWidth < this.props.minimumLargeScreenWidth;
     },
     
-    shouldUseLargeInterface(){
-        return document.body.clientWidth > this.props.minimumMediumScreenWidth;
+    shouldHideStoryBuilder(){
+        return document.body.clientWidth < this.props.minimumMediumScreenWidth;
     },
 
     render() {
