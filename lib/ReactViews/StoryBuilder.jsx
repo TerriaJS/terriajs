@@ -105,6 +105,7 @@ const StoryBuilder = createReactClass({
         // window.open(`#stories=${encodeURIComponent(this.state.uri)}`);
         this.props.viewState.storyEnabled = true;
         this.props.viewState.storyShown = true;
+        this.props.terria.currentViewer.notifyRepaintRequired();
     },
 
     render() {

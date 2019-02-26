@@ -62,7 +62,8 @@ const StoryPanel = createReactClass({
     },
 
     toggleStoryPause() {
-        this.props.viewState.storyShown = !this.props.viewState.storyShown;
+        this.props.viewState.storyShown = !this.props.viewState.storyShown; 
+        this.props.terria.currentViewer.notifyRepaintRequired();
     },
 
     render() {
