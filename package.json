@@ -104,7 +104,7 @@
     "karma-opera-launcher": "^1.0.0",
     "karma-safari-launcher": "^1.0.0",
     "karma-sauce-launcher": "^1.0.0",
-    "karma-spec-reporter": "0.0.32",
+    "karma-spec-reporter": "^0.0.32",
     "klaw-sync": "^4.0.0",
     "node-notifier": "^5.1.2",
     "node-sass": "^4.11.0",
