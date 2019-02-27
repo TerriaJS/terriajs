@@ -4,6 +4,7 @@ Change Log
 ### Next Release
 
 * Breaking Changes:
+  * An application-level polyfill suite is now highly recommended, and it is required for Internet Explorer 9, 10, and 11 compatibility. The easiest approach is to add `<script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>` to the `<head>` element of your application's HTML page, which will deliver a polyfill suite tailored to the end-user's browser.
   * TerriaJS now requires Node.js v8.0 or later.
   * TerriaJS now requires Webpack v4.0 or later.
   * TerriaJS now uses Gulp v4.0. If you have Gulp 3 installed globally, you'll need to use `npm run gulp` to run TerriaJS gulp tasks, or upgrade your global Gulp to v4 with `npm install -g gulp@4`.
