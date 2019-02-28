@@ -1,7 +1,7 @@
 Change Log
 ==========
 
-### Next Release
+### v7.0.1
 
 * Breaking Changes:
   * TerriaJS no longer supports Internet Explorer 9 or 10.
