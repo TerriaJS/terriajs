@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### Next Release
+
+* Added `disablePreview` option to all catalog items. This is useful when the preview map in the catalog will be slow to load.
+
 ### v7.0.1
 
 * Breaking Changes:
