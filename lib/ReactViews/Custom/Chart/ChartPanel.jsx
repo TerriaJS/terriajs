@@ -65,7 +65,7 @@ const ChartPanel = createReactClass({
         const isLoading = (chartableItems.length > 0) && (chartableItems[chartableItems.length - 1].isLoading);
         const isVisible = (data.length > 0) || isLoading;
 
-        this.props.terria.currentViewer.notifyRepaintRequired();
+        // this.props.terria.currentViewer.notifyRepaintRequired();
 
         if (!isVisible) {
             return null;

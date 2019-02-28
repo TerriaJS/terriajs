@@ -1,3 +1,8 @@
+// Generated from the intersection of:
+// - properties available on Cesium object
+// - files in Source/**/*
+// - typings in @types/cesium/index.d.ts
+
 declare module 'terriajs-cesium/Source/Core/AssociativeArray' {
     export default Cesium.AssociativeArray;
 }
@@ -1064,3 +1069,6 @@ declare module 'terriajs-cesium/Source/Widgets/createCommand' {
 declare module 'terriajs-cesium/Source/Workers/createTaskProcessorWorker' {
     export default Cesium.createTaskProcessorWorker;
 }
+
+// Additional declarations to fix type errors
+declare module 'terriajs-cesium/Source/ThirdParty/when';

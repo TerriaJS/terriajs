@@ -31,14 +31,14 @@ const DateTimeSelectorSection = createReactClass({
 
         // Set the time on the item, set it to use its own clock, update the imagery and repaint.
         item.currentTime = JulianDate.fromDate(new Date(time));
-        item.terria.currentViewer.notifyRepaintRequired();
+        // item.terria.currentViewer.notifyRepaintRequired();
     },
 
     onTimelineButtonClicked() {
         const item = this.props.item;
         item.useOwnClock = !item.useOwnClock;
         item.useClock(); // Adds this item to the timeline.
-        item.terria.currentViewer.notifyRepaintRequired();
+        // item.terria.currentViewer.notifyRepaintRequired();
     },
 
     onPreviousButtonClicked() {
@@ -50,7 +50,7 @@ const DateTimeSelectorSection = createReactClass({
         item.moveToPreviousTime();
 
         // Repaint imagery on layers that don't subscribe to clock changes.
-        item.terria.currentViewer.notifyRepaintRequired();
+        // item.terria.currentViewer.notifyRepaintRequired();
     },
 
     onNextButtonClicked() {
@@ -62,7 +62,7 @@ const DateTimeSelectorSection = createReactClass({
         item.moveToNextTime();
 
         // Repaint imagery on layers that don't subscribe to clock changes.
-        item.terria.currentViewer.notifyRepaintRequired();
+        // item.terria.currentViewer.notifyRepaintRequired();
     },
 
     render() {

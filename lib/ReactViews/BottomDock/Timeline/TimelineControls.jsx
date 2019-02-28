@@ -28,7 +28,7 @@ const TimelineControls = createReactClass({
 
         this.props.clock.currentTime = this.props.clock.startTime;
 
-        this.props.currentViewer.notifyRepaintRequired();
+        // this.props.currentViewer.notifyRepaintRequired();
     },
 
     togglePlay() {
@@ -40,7 +40,7 @@ const TimelineControls = createReactClass({
         }
         this.props.clock.shouldAnimate = !this.props.clock.shouldAnimate;
 
-        this.props.currentViewer.notifyRepaintRequired();
+        // this.props.currentViewer.notifyRepaintRequired();
     },
 
     playSlower() {
@@ -50,7 +50,7 @@ const TimelineControls = createReactClass({
         this.props.clock.multiplier /= 2;
         this.props.clock.shouldAnimate = true;
 
-        this.props.currentViewer.notifyRepaintRequired();
+        // this.props.currentViewer.notifyRepaintRequired();
     },
 
     playFaster() {
@@ -60,7 +60,7 @@ const TimelineControls = createReactClass({
         this.props.clock.multiplier *= 2;
         this.props.clock.shouldAnimate = true;
 
-        this.props.currentViewer.notifyRepaintRequired();
+        // this.props.currentViewer.notifyRepaintRequired();
     },
 
     toggleLoop() {

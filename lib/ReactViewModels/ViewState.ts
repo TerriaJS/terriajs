@@ -94,12 +94,12 @@ export default class ViewState {
         this.terria = terria;
 
         // Show errors to the user as notifications.
-        this._unsubscribeErrorListener = terria.error.addEventListener((e: any) => {
+        this._unsubscribeErrorListener = terria.error.addEventListener(<any>((e: any) => {
             // Only add this error if an identical one doesn't already exist.
             if (this.notifications.filter(item => item.title === e.title && item.message === e.message).length === 0) {
                 this.notifications.push(clone(e));
             }
-        });
+        }));
 
         // When features are picked, show the feature info panel.
         this._pickedFeaturesSubscription = reaction(() => this.terria.pickedFeatures, (pickedFeatures: PickedFeatures | undefined) => {

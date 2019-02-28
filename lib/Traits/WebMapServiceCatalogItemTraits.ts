@@ -37,7 +37,8 @@ export default class WebMapServiceCatalogItemTraits extends mixGetCapabilitiesTr
     @primitiveTrait({
         type: 'number',
         name: 'Opacity',
-        description: 'The opacity of the map layers.'
+        description: 'The opacity of the map layers.',
+        default: 0.8
     })
     opacity?: number;
 }

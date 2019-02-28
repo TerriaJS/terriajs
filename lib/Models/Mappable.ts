@@ -1,17 +1,20 @@
 import Model, { BaseModel } from './Model';
+import 'terriajs-cesium/Source/Scene/ImageryProvider';
 
+// Shouldn't this be a class?
 export interface ImageryParts {
     // TODO
     alpha: number;
-    wms: boolean;
-    isGeoServer: boolean;
+    // wms: boolean;
+    // isGeoServer: boolean;
     show: boolean;
     imageryProvider: Cesium.ImageryProvider;
 }
 
+// This discriminator only discriminates between ImageryParts and DataSource
 export namespace ImageryParts {
-    export function is(object: any): object is ImageryParts {
-        return 'isGeoServer' in object;
+    export function is(object: ImageryParts | DataSource): object is ImageryParts {
+        return 'imageryProvider' in object;
     }
 }
 

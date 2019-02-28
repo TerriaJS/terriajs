@@ -188,7 +188,7 @@ function rotate(viewModel, compassElement, cursorVector) {
         camera.rotateRight(newCameraAngle - currentCameraAngle);
         camera.lookAtTransform(oldTransform);
 
-        viewModel.props.terria.cesium.notifyRepaintRequired();
+        // viewModel.props.terria.cesium.notifyRepaintRequired();
     };
 
     viewModel.rotateMouseUpFunction = function(e) {
@@ -264,7 +264,7 @@ function orbit(viewModel, compassElement, cursorVector) {
 
         camera.lookAtTransform(oldTransform);
 
-        viewModel.props.terria.cesium.notifyRepaintRequired();
+        // viewModel.props.terria.cesium.notifyRepaintRequired();
 
         viewModel.orbitLastTimestamp = timestamp;
     };
@@ -283,7 +283,7 @@ function orbit(viewModel, compassElement, cursorVector) {
             orbitCursorOpacity: easedOpacity
         });
 
-        viewModel.props.terria.cesium.notifyRepaintRequired();
+        // viewModel.props.terria.cesium.notifyRepaintRequired();
     }
 
     viewModel.orbitMouseMoveFunction = function(e) {

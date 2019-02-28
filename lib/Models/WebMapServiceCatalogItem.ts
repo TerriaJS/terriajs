@@ -7,7 +7,8 @@
 // 3. Observable spaghetti
 //  Solution: think in terms of pipelines with computed observables, document patterns.
 // 4. All code for all catalog item types needs to be loaded before we can do anything.
-import { computed, observable, trace, action, runInAction } from 'mobx';
+import { computed, observable, trace, action, runInAction, autorun } from 'mobx';
+import { createTransformer } from 'mobx-utils'
 import URI from 'urijs';
 import LoadableStratum from '../../test/Models/LoadableStratum';
 import autoUpdate from '../Core/autoUpdate';
@@ -250,9 +251,13 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemb
         super(id, terria);
         this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, new GetCapabilitiesStratum(this));
         if (this.opacity === undefined) {
-            const stratum = this.addStratum(CommonStrata.user);
-            stratum.opacity = 0.8;
+            console.log('Whaaaaa... This should have a default of 0.8');
         }
+        this.show = true;
+
+        autorun(() => {
+            console.log(`Opacity changed to ${this.opacity}`);
+        })
     }
 
     loadMetadata(): Promise<void> {
@@ -318,18 +323,15 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemb
         trace();
         const result = [];
 
-        const current = this._currentImageryLayer;
+        const current = this._currentImageryParts;
         if (current) {
             result.push(current);
         }
 
-        const next = this._nextImageryLayer;
+        const next = this._nextImageryParts;
         if (next) {
             result.push(next);
         }
-
-        // For diagnostics only
-        result.forEach(layer => {(<any>layer).fromCatalogItem = this.id;});
 
         return result;
 
@@ -338,30 +340,45 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemb
     }
 
     @computed
-    @autoUpdate(function(this: WebMapServiceCatalogItem, layer: ImageryParts) {
-        layer.alpha = this.opacity !== undefined ? this.opacity : 0.8;
-        layer.show = this.show || false;
-    })
-    private get _currentImageryLayer() {
+    // @autoUpdate(function(this: WebMapServiceCatalogItem, parts: ImageryParts) {
+    //     console.log('Updating ImageryParts');
+    //     parts.alpha = this.opacity!;
+    //     if (this.show) {
+    //         parts.show = this.show;
+    //     }
+    // })
+    private get _currentImageryParts(): ImageryParts | undefined {
         trace();
-        return this._createImageryLayer(this.currentDiscreteTime);
+        const imageryProvider = this._createImageryProvider(this.currentDiscreteTime || 'now');
+        if (imageryProvider === undefined) {
+            return undefined;
+        }
+        return {
+            imageryProvider,
+            alpha: this.opacity!,
+            show: this.show !== undefined ? this.show : true
+        }
     }
 
     @computed
-    private get _nextImageryLayer() {
+    private get _nextImageryParts(): ImageryParts | undefined {
         trace();
         if (this.nextDiscreteTime) {
-            const layer = this._createImageryLayer(this.nextDiscreteTime);
-            if (layer) {
-                layer.alpha = 0.0;
+            const imageryProvider = this._createImageryProvider(this.nextDiscreteTime);
+            if (imageryProvider === undefined) {
+                return undefined;
             }
-            return layer;
+            return {
+                imageryProvider,
+                alpha: 0.0,
+                show: true
+            };
         } else {
             return undefined;
         }
     }
 
-    private _createImageryLayer(time: string | undefined): ImageryParts | undefined {
+    private _createImageryProvider = createTransformer((time: string): Cesium.WebMapServiceImageryProvider | undefined => {
         // Don't show anything on the map until GetCapabilities finishes loading.
         // TODO should this be a more general loading check? eliminate the cast?
         const stratum = <GetCapabilitiesStratum>this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName);
@@ -375,21 +392,23 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemb
         //     alpha: 1.0
         // };
 
-        const imageryLayer = new CesiumImageryLayer(new WebMapServiceImageryProvider({
-            url: this.url,
-            layers: this.layers,
+        console.log(`Creating new ImageryProvider for ${time}`);
+
+        return new WebMapServiceImageryProvider({
+            url: this.url || '',
+            // layers: this.layers || '',
+            // For testing prefetching
+            layers: time !== 'now' ? time : (this.layers || ''),
             // getFeatureInfoFormats: this.getFeatureInfoFormats,
             // parameters: parameters,
             parameters: WebMapServiceCatalogItem.defaultParameters,
             // getFeatureInfoParameters: parameters,
             tilingScheme: /*defined(this.tilingScheme) ? this.tilingScheme :*/ new WebMercatorTilingScheme(),
-            maximumLevel: 20 //maximumLevel
-        }), {
+            maximumLevel: 20,
             rectangle: stratum.rectangle
         });
+    })
 
-        return imageryLayer;
-    }
 }
 
 

@@ -91,7 +91,7 @@ const ZoomControl = createReactClass({
             this.flyToPosition(scene, endPosition);
         }
 
-        this.props.terria.currentViewer.notifyRepaintRequired();
+        // this.props.terria.currentViewer.notifyRepaintRequired();
     },
 
     zoomOut() {
@@ -111,7 +111,7 @@ const ZoomControl = createReactClass({
             const endPosition = Cartesian3.add(camera.position, movementVector, cartesian3Scratch);
             this.flyToPosition(scene, endPosition);
         }
-        this.props.terria.currentViewer.notifyRepaintRequired();
+        // this.props.terria.currentViewer.notifyRepaintRequired();
     },
 
     zoomReset() {

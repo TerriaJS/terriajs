@@ -1,5 +1,5 @@
 import { ObservableMap } from 'mobx';
-import * as DeveloperError from 'terriajs-cesium/Source/Core/DeveloperError';
+import DeveloperError from 'terriajs-cesium/Source/Core/DeveloperError';
 import CommonStrata from './CommonStrata';
 
 const million = 1000000;

@@ -31,7 +31,7 @@ const FullScreenButton = createReactClass({
         this.props.viewState.isMapFullScreen = !this.props.viewState
             .isMapFullScreen;
 
-        this.props.terria.currentViewer.notifyRepaintRequired();
+        // this.props.terria.currentViewer.notifyRepaintRequired();
 
         // Allow any animations to finish, then trigger a resize.
         setTimeout(function() {
