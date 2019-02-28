@@ -1,4 +1,4 @@
-var gutil = require("gulp-util");
+var PluginError = require("plugin-error");
 
 function runWebpack(webpack, config, doneCallback) {
     // webpack is passed as a parameter instead of require-in because otherwise, when TerriaJS is npm link'd,
@@ -20,7 +20,7 @@ function runWebpack(webpack, config, doneCallback) {
                 //require('fs').writeFileSync('./stats.json', JSON.stringify(jsonStats));
 
                 if (jsonStats.errors && jsonStats.errors.length > 0) {
-                    err = new gutil.PluginError('build-specs', 'Build has errors (see above).');
+                    err = new PluginError('build-specs', 'Build has errors (see above).');
                 }
             }
         }

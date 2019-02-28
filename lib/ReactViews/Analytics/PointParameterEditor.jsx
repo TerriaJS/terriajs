@@ -102,7 +102,7 @@ PointParameterEditor.setValueFromText = function(e, parameter) {
     // common errors like trying to specify degrees/minutes/seconds or
     // specifying W or E rather than using positive or negative numbers
     // for longitude.
-    if (/[^\d\s\.,+-]/.test(text)) {
+    if ((/[^\d\s\.,+-]/).test(text)) {
         return false;
     }
 

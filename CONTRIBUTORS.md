@@ -22,6 +22,7 @@ The following people have contributed to TerriaJS:
    * [Rebecca Dengate](https://github.com/rdengate)
    * [Ashley Stacey](https://github.com/a-stacey)
    * [Jacky Jiang](https://github.com/t83714)
+   * [Sajid Anower](https://github.com/sajidanower23)
 * [Geoscience Australia](http://www.ga.gov.au/)
    * [Darren Reid](https://github.com/Layoric)
    * [Andrew Hicks](https://github.com/andrewdhicks)
