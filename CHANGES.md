@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+### Next Release
+
+* Fixed a bug that prevented billboard images from working on the 2D map.
+* Implemented "Zoom To" support for KML, CZML, and other vector data sources.
+
 ### v7.0.1
 
 * Breaking Changes:
