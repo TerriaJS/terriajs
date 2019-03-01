@@ -35,7 +35,8 @@
         {
           "name": "XY Plot",
           "type": "csv",
-          "url": "build/TerriaJS/test/csv_nongeo/xy.csv"
+          "url": "build/TerriaJS/test/csv_nongeo/xy.csv",
+          "description":"<a href=\"\" style=\"color:blue; background: yellow\">test</a>"
         },
         {
           "name": "XY Plot with units and yAxisMax",

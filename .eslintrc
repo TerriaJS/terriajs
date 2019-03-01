@@ -3,7 +3,8 @@
     "parser": "babel-eslint",
     "env": {
         "browser": true,
-        "commonjs": true
+        "commonjs": true,
+        "es6": true
     },
     "plugins": [
         "react",
@@ -11,6 +12,11 @@
     ],
     "globals": {
         "process": true
+    },
+    "settings": {
+        "react": {
+            "version": "detect"
+        }
     },
     "rules": {
         "jsx-control-statements/jsx-use-if-tag": 0,
