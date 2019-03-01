@@ -120,7 +120,7 @@ The date format style used for the `"format"` property is the style from the [np
 
 As with number you can also use `terria.dateTimeformat` directly in the template. This accepts an initial JSON string describing the same options as above.
 
-              "featureInfoTemplate": "template": "{{#terria.formatDateTime}}{"format": "dd-mm-yyyy HH:MM:ss"}2017-11-23T08:47:53Z{{/terria.formatDateTime}}</b>."
+              "featureInfoTemplate": "template": "{{#terria.formatDateTime}}{format: \"dd-mm-yyyy HH:MM:ss\"}2017-11-23T08:47:53Z{{/terria.formatDateTime}}</b>."
 
 ## Time-series charts
 

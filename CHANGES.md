@@ -1,6 +1,26 @@
 Change Log
 ==========
 
+### Next Release
+
+* Fixed a bug that prevented billboard images from working on the 2D map.
+* Implemented "Zoom To" support for KML, CZML, and other vector data sources.
+
+### Next Release
+
+* Added `disablePreview` option to all catalog items. This is useful when the preview map in the catalog will be slow to load.
+
+### v7.0.1
+
+* Breaking Changes:
+  * TerriaJS no longer supports Internet Explorer 9 or 10.
+  * An application-level polyfill suite is now highly recommended, and it is required for Internet Explorer 11 compatibility. The easiest approach is to add `<script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>` to the `<head>` element of your application's HTML page, which will deliver a polyfill suite tailored to the end-user's browser.
+  * TerriaJS now requires Node.js v8.0 or later.
+  * TerriaJS now requires Webpack v4.0 or later.
+  * TerriaJS now uses Gulp v4.0. If you have Gulp 3 installed globally, you'll need to use `npm run gulp` to run TerriaJS gulp tasks, or upgrade your global Gulp to v4 with `npm install -g gulp@4`.
+  * TerriaJS now uses Babel v7.0.
+  * Removed `UrthecastCatalogItem`, `UrthecastCatalogGroup`, and `registerUrthcastCatalogItems`. The Urthecast functionality was dependent on an npm package that hadn't been updated in three years and had potential security vulnerabilities. Please [let us know](https://gitter.im/TerriaJS/terriajs) if you were using this functionality.
+
 ### v6.5.0
 
 * Add support for rendering Mapbox Vector Tiles (MVT) layers. Currently, polygons are the only supported geometry type, and all polygons are drawn with the same outline and fill colors.
