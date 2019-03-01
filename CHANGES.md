@@ -6,6 +6,10 @@ Change Log
 * Fixed a bug that prevented billboard images from working on the 2D map.
 * Implemented "Zoom To" support for KML, CZML, and other vector data sources.
 
+### Next Release
+
+* Added `disablePreview` option to all catalog items. This is useful when the preview map in the catalog will be slow to load.
+
 ### v7.0.1
 
 * Breaking Changes:
