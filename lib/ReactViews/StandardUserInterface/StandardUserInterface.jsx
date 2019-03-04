@@ -77,15 +77,21 @@ const StandardUserInterface = createReactClass({
 
         this.resizeListener = () => {
             this.props.viewState.useSmallScreenInterface = this.shouldUseMobileInterface();
-            shouldHideStoryBuilder = this.shouldHideStoryBuilder();
         };
 
         window.addEventListener('resize', this.resizeListener, false);
 
         this.resizeListener();
-
-        this.props.viewState.storyShown = shouldHideStoryBuilder? this.props.terria.stories && this.props.terria.stories.length : false;
-        this.props.viewState.storyEnabled = this.props.viewState.storyShown; 
+        
+      (this.props.terria.stories && this.props.terria.stories.length) && this.viewState.notifications.push({
+        title: "The map contains a story",
+        message: "would you like to view it now",
+        confirmText: "Yes please",
+        denyText: "Maybe later",
+        onConfirm: this.props.viewState.storyShown = true,
+        onDeny: this.props.viewState.storyShow = false,
+        type: "story"
+      });   
     },
 
     componentDidMount() {
@@ -109,7 +115,7 @@ const StandardUserInterface = createReactClass({
         return document.body.clientWidth < this.props.minimumLargeScreenWidth;
     },
     
-    shouldHideStoryBuilder(){
+    shouldHideStoryBuilder() {
         return document.body.clientWidth < this.props.minimumMediumScreenWidth;
     },
 
@@ -122,7 +128,7 @@ const StandardUserInterface = createReactClass({
         const terria = this.props.terria;
         const allBaseMaps = this.props.allBaseMaps;
         
-        const showStoryBuilder = !(this.props.viewState.storyEnabled && this.props.viewState.storyShown) && !this.props.viewState.useSmallScreenInterface;
+        const showStoryBuilder = !(this.props.viewState.storyEnabled && this.props.viewState.storyShown) && !this.shouldHideStoryBuilder();
 
         return (
             <div className={Styles.storyWrapper}>
