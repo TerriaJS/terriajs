@@ -3,7 +3,7 @@ Change Log
 
 ### Next Release
 
-* Added `GltfCatalogItem`.
+* Added `GltfCatalogItem` for displaying [glTF](https://www.khronos.org/gltf/) models on the 3D scene.
 
 ### v7.0.2
 
