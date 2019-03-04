@@ -61,7 +61,7 @@ const StoryPanel = createReactClass({
         }
     },
 
-    toggleStoryPause() {
+    exitStory() {
         this.props.viewState.storyShown = !this.props.viewState.storyShown; 
         this.props.terria.currentViewer.notifyRepaintRequired();
     },
@@ -69,16 +69,11 @@ const StoryPanel = createReactClass({
     render() {
         return (
             <div>
-              <Medium>
-                <button className={Styles.pauseButton} onClick={this.toggleStoryPause}>{this.props.viewState.storyShown ? 'Interact with map' : 'Start/continue story'}</button>
-              </Medium>
-              <Small>
-                <button className={Styles.pauseButton} onClick={this.toggleStoryPause}>{this.props.viewState.storyShown ? <Icon glyph={Icon.GLYPHS.pause}/> : <Icon glyph={Icon.GLYPHS.play}/>}</button>
-              </Small>
                 <div className={classNames(Styles.fullPanel, {[Styles.isHidden]: !this.props.viewState.storyShown})} ref={this.panel}>
                     {(this.props.terria.stories || []).map(scene => (
                         <div className={Styles.storyContainer} key={scene.id}>
                             <div className={Styles.story}>
+                              <button className={Styles.pauseButton} onClick={this.exitStory}>Exit Story</button>
                                 {scene.title && <h1>{scene.title}</h1>}
                                 {scene.text && <p>{scene.text}</p>}
                             </div>

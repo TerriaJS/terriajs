@@ -25,3 +25,8 @@
     margin-right: 0;
   }
 }
+
+.storyBtn{
+  composes: btn from '../../Sass/common/_buttons.scss';
+  composes: btn--map from '../../Sass/common/_buttons.scss';
+}

@@ -7,7 +7,7 @@ import classNames from 'classnames';
 import SettingPanel from './Panels/SettingPanel.jsx';
 import SharePanel from './Panels/SharePanel/SharePanel.jsx';
 import ToolsPanel from './Panels/ToolsPanel/ToolsPanel.jsx';
-
+import Icon from "../Icon.jsx";
 import ObserveModelMixin from '../ObserveModelMixin';
 
 import Styles from './menu-bar.scss';
@@ -33,6 +33,10 @@ const MenuBar = createReactClass({
     handleClick() {
         this.props.viewState.topElement = 'MenuBar';
     },
+   
+    onStoryButtonClick(){
+      this.props.viewState.storyBuilderShown = !this.props.viewState.storyBuilderShown; 
+    },
 
     render() {
         const enableTools = this.props.terria.getUserProperty('tools') === '1';
@@ -40,6 +44,16 @@ const MenuBar = createReactClass({
             <div className={classNames(Styles.menuArea, this.props.viewState.topElement === 'MenuBar' ? 'top-element': '')}
             onClick={this.handleClick}>
                 <ul className={Styles.menu}>
+                  <If condition = {this.props.viewState.storyEnabled}>
+                    <li className={Styles.menuItem}>
+                        <button 
+                            className={Styles.storyBtn}
+                            type='button'
+                            onClick={this.onStoryButtonClick}>
+                            Story
+                        </button>
+                    </li>
+                  </If>
                     <li className={Styles.menuItem}>
                         <SettingPanel
                             terria={this.props.terria}

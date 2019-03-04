@@ -64,7 +64,6 @@ const StandardUserInterface = createReactClass({
     UNSAFE_componentWillMount() {
         const that = this;
         // only need to know on initial load
-        let shouldHideStoryBuilder = false;
         this.dragOverListener = e => {
             if (!e.dataTransfer.types || !arrayContains(e.dataTransfer.types, 'Files')) {
                 return;
@@ -83,15 +82,17 @@ const StandardUserInterface = createReactClass({
 
         this.resizeListener();
         
-      (this.props.terria.stories && this.props.terria.stories.length) && this.viewState.notifications.push({
-        title: "The map contains a story",
-        message: "would you like to view it now",
-        confirmText: "Yes please",
-        denyText: "Maybe later",
-        onConfirm: this.props.viewState.storyShown = true,
-        onDeny: this.props.viewState.storyShow = false,
-        type: "story"
-      });   
+       if(this.props.terria.stories && this.props.terria.stories.length && this.props.viewState.storyEnabled) {
+        this.props.viewState.notifications.push({
+          title: "The map contains a story",
+          message: "would you like to view it now",
+          confirmText: "Yes please",
+          denyText: "Maybe later",
+          confirmAction: ()=> {this.props.viewState.storyShown = true},
+          denyAction: ()=>{this.props.viewState.storyShown = false},
+          type: "story"
+        }); 
+       }
     },
 
     componentDidMount() {
@@ -128,8 +129,8 @@ const StandardUserInterface = createReactClass({
         const terria = this.props.terria;
         const allBaseMaps = this.props.allBaseMaps;
         
-        const showStoryBuilder = !(this.props.viewState.storyEnabled && this.props.viewState.storyShown) && !this.shouldHideStoryBuilder();
-
+        const showStoryBuilder = this.props.viewState.storyEnabled && this.props.viewState.storyBuilderShown && !this.props.viewState.storyShown &&  !this.shouldHideStoryBuilder();
+        const showStoryPanel = this.props.terria.stories && this.props.terria.stories.length && this.props.viewState.storyShown;
         return (
             <div className={Styles.storyWrapper}>
                 <div className={classNames(Styles.uiRoot, {[Styles.withStoryBuilder]: showStoryBuilder})} ref={w => (this._wrapper = w)}>
@@ -259,7 +260,7 @@ const StandardUserInterface = createReactClass({
                                 viewState={this.props.viewState}
                     />
                     <DragDropNotification lastUploadedFiles={this.props.viewState.lastUploadedFiles} viewState={this.props.viewState}/>
-                    {this.props.viewState.storyEnabled && <StoryPanel terria={terria} viewState={this.props.viewState}/>}
+                    {showStoryPanel && <StoryPanel terria={terria} viewState={this.props.viewState}/>}
                 </div>
                 {showStoryBuilder && <StoryBuilder terria={terria} viewState={this.props.viewState}/>}
             </div>
