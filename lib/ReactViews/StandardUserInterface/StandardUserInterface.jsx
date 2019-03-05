@@ -90,7 +90,8 @@ const StandardUserInterface = createReactClass({
           denyText: "Maybe later",
           confirmAction: ()=> {this.props.viewState.storyShown = true},
           denyAction: ()=>{this.props.viewState.storyShown = false},
-          type: "story"
+          type: "story",
+          width: 300
         }); 
        }
     },

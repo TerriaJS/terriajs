@@ -46,3 +46,28 @@
   display: block;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.15);
  }
+
+ :global{
+   .story.tjs-notification-window__wrapper{
+     .tjs-notification-window__notification{
+       background-color: $color-primary;
+       color: #ffffff;
+       border: 1px solid rgba(#ffffff, 0.1);
+       text-align: center;
+     }
+     h3{
+
+     }
+     .tjs-notification-window__footer{
+       display: flex;
+       border-top: 1px solid rgba(#ffffff, 0.8);
+       button{
+         background-color: transparent;
+         font-weight: bold;
+         &:first-of-type{
+           border-right: 1px solid rgba(#ffffff, 0.8);
+         }
+       }
+     }
+   }
+ }
