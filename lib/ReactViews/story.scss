@@ -14,4 +14,38 @@
   }
  }
 
+ .storyHeader{
+   position: relative;
+ }
+ .toggleBtn{
+   composes: btn from '../Sass/common/_buttons.scss';
+   position: absolute;
+   top: 0;
+   right: 0;
+   svg{
+     width: 20px;
+     height: 20px;
+     fill: #9CA1AA;
+   }
+ }
+ .footer{
+   display: flex;
+ }
+ .removeBtn{
+    composes: btn from "../Sass/common/_buttons.scss";
+    composes: btn--map from "../Sass/common/_buttons.scss";
+    margin-right: $padding;
+    background: #9CA1AA;
+    border-radius: 3px;
+    padding: $padding-small $padding;
+    svg{
+      height: 25px;
+      width: 25px;
+      fill: #ffffff;
+    }
+ }
 
+ .viewBtn{
+   composes: btn from "../Sass/common/_buttons.scss";
+   composes: btn-primary from "../Sass/common/_buttons.scss";
+ }

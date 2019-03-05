@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Styles from './story.scss';
 import Icon from "./Icon.jsx";
 
-class Story extends React.Component {
+export default class Story extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -12,21 +12,22 @@ class Story extends React.Component {
   }
   render() {
     const story = this.props.story;
-     return (<div className={Styles.story} key={story.id} >
+     return (<div className={Styles.story} >
           <div className={Styles.storyHeader}> 
             <h3>{story.title}</h3>
-            <button className={Styles.toggleBtn} onClick={()=>this.setState({isOpen: !this.state.isOpen})}/>
+            <button className={Styles.toggleBtn} onClick={()=>this.setState({isOpen: !this.state.isOpen})}><Icon glyph={Icon.GLYPHS.map}/></button>
           </div>
-          <p>{story.text}</p>
-          <button className={Styles.removeBtn} onClick={(evt) => {this.props.removeStory(story); evt.stopPropagation();}}><Icon glyph={Icon.GLYPHS.trashcan}/></button>
-          <button className={Styles.viewBtn} onClick={this.props.runStory(story)}>View</button>
-       </div>
-     ) 
+          {this.state.isOpen && <div><p>{story.text}</p>
+          <div className={Styles.footer}><button className={Styles.removeBtn} onClick={() => this.props.removeStory(story)}><Icon glyph={Icon.GLYPHS.trashcan}/></button>
+          <button className={Styles.viewBtn} onClick={()=> this.props.runStory(story)}>View this scene</button></div>
+ </div>}
+         </div>
+     ); 
   }
 }
 
 Story.propTypes ={
-  story: PropTypes.array,
+  story: PropTypes.object,
   removeStory: PropTypes.func,
   runStory: PropTypes.func
-}
+};
