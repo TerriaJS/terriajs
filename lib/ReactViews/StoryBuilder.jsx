@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { buildShareLink, getShareData } from './Map/Panels/SharePanel/BuildShareLink';
 import ObserveModelMixin from './ObserveModelMixin';
 
+import Icon from "./Icon.jsx";
 import  FileSaver  from 'file-saver';
 import URI from 'urijs';
 
@@ -41,6 +42,7 @@ const StoryBuilder = createReactClass({
 
     getInitialState() {
         return {
+            editingMode: false,
             newTitle: "",
             newText: "",
             uri: ""
@@ -56,6 +58,10 @@ const StoryBuilder = createReactClass({
             window.location = story.shareUrl;
         }
     },
+    
+  shareStory(){
+
+  },
 
     removeStory(story) {
         this.props.terria.stories = this.props.terria.stories.filter(st => st !== story);
@@ -108,28 +114,51 @@ const StoryBuilder = createReactClass({
         this.props.terria.currentViewer.notifyRepaintRequired();
     },
 
+    renderEditor() {
+       return (<div className={Styles.editor}>
+         <div className={Styles.editorHeader}>
+         {(this.state.newTitle && this.state.newTitle.length > 0) ? this.state.newTitle : "Untitled Scene"}
+         </div>
+           <form className={Styles.form} onSubmit={this.onSubmit}>
+              <label className={Styles.label} htmlFor="title">Title:</label>
+              <input className={Styles.field} type="text" id="title" value={this.state.newTitle} onChange={this.updateTitle}/>
+              <label className={Styles.label} htmlFor="text">Text:</label>
+              <input className={Styles.field} type="text" id="text" value={this.state.newText} onChange={this.updateText}/>
+              <button className={Styles.trashBtn} type='button' title='delete scene' onClick={()=>{this.setState({editingMode: false})}}><Icon glyph={Icon.GLYPHS.trashcan}/></button>
+              <input className={Styles.doneBtn} type="submit" value="Done"/>
+           </form>
+        </div>);
+
+    },
+
+  onClickCapture() {
+    this.setState({
+      editingMode: true
+    });
+  },
+
     render() {
         return (
             <div className={Styles.storyPanel}>
+                <div className={Styles.header}>
+                  <h3>Storybook</h3>
+                  <div className={Styles.actions}>
+                    <button className={Styles.previewBtn} onClick={this.runStory} title="preview stories"><Icon glyph={Icon.GLYPHS.play}/>Preview</button>
+                    <button className={Styles.shareBtn} onClick={this.shareStory} title="share stories"><Icon glyph={Icon.GLYPHS.share}/>Share</button>
+                   </div>
+                </div>
                 {(this.props.terria.stories || []).map(story => <div className={Styles.story} key={story.id} onClick={() => this.activateStory(story)}>
                      <h3>{story.title}</h3>
                      <p>{story.text}</p>
                      <button className={Styles.btnRemove} onClick={(evt) => {this.removeStory(story); evt.stopPropagation();}}>Remove</button>
                 </div>)}
                 <div className={Styles.story}>
-                    <form className={Styles.form} onSubmit={this.onSubmit}>
-                        <label className={Styles.label} htmlFor="title">Title:</label>
-                        <input className={Styles.field} type="text" id="title" value={this.state.newTitle} onChange={this.updateTitle}/>
-                        <label className={Styles.label} htmlFor="text">Text:</label>
-                        <input className={Styles.field} type="text" id="text" value={this.state.newText} onChange={this.updateText}/>
-                        <input className={Styles.btnCapture} type="submit" value="Capture scene"/>
-                    </form>
                 </div>
+                {this.state.editingMode && this.renderEditor()}
                 <div className={Styles.footer}>
-                <button className={Styles.btn} onClick={this.downloadShareFile}>Download share file</button>
-                <button className={Styles.btn} onClick={this.runStory}>Run story</button>
-          </div>
-            </div>
+                  <button className={Styles.capture} title='capture current scene' onClick={this.onClickCapture}> <Icon glyph={Icon.GLYPHS.story}/> Capture current scene </button>
+                </div>
+                 </div>
         );
     }
 });

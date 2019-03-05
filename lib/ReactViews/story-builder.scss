@@ -19,11 +19,37 @@
   }
  }
 
+ .editor{
+  background: $dark-with-overlay;
+  color: $text-light;
+  font-family: $font-pop;
+  margin: $padding-small;
+  border: 1px solid $overlay;
+  .editorHeader{
+    padding: $padding;
+    border-bottom: 1px solid $overlay;
+  }
+  form{
+    padding: $padding;
+  }
+ }
+ 
+ .doneBtn{
+    composes: btn from "../Sass/common/_buttons.scss";
+    composes: btn-primary from "../Sass/common/_buttons.scss";
+ }
+
+ .trashBtn{
+    composes: btn from "../Sass/common/_buttons.scss";
+    composes: btn-secondary from "../Sass/common/_buttons.scss";
+
+ }
+
  .footer{
    padding: $padding-small;
  }
 
- .btnRemove, .btnCapture{
+ .sharebtn, .previewBtn{
    margin: $padding 0;
    composes: btn from "../Sass/common/_buttons.scss";
    color: $color-primary;
