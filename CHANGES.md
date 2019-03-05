@@ -4,7 +4,7 @@ Change Log
 ### Next Release
 
 * Replace `getUniqueValues` with `lodash.uniq`
-* Call `notifyRepaintRequired` when toggling between viewer modes.
+* Fixed a bug where the 3D globe would not immediately refresh when toggling between the "Terrain" and "Smooth" versions.
 
 ### v7.0.2
 
