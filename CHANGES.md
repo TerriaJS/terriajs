@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### Next Release
+
+* Replace `getUniqueValues` with `lodash.uniq`
+
 ### v7.0.2
 
 * Fixed a bug that prevented billboard images from working on the 2D map.
