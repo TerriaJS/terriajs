@@ -4,6 +4,8 @@ Change Log
 ### Next Release
 
 * Added `GltfCatalogItem` for displaying [glTF](https://www.khronos.org/gltf/) models on the 3D scene.
+* Replace `getUniqueValues` with `lodash.uniq`
+* Fixed a bug where the 3D globe would not immediately refresh when toggling between the "Terrain" and "Smooth" viewer modes.
 
 ### v7.0.2
 
