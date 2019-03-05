@@ -3,7 +3,7 @@ import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import { buildShareLink, getShareData } from './Map/Panels/SharePanel/BuildShareLink';
 import ObserveModelMixin from './ObserveModelMixin';
-
+import Clipboard from './Clipboard.jsx';
 import Icon from "./Icon.jsx";
 import  FileSaver  from 'file-saver';
 import URI from 'urijs';
@@ -135,9 +135,14 @@ const StoryBuilder = createReactClass({
 
     },
   
+  renderIntro(){
+    return (<div className={Styles.intro}><Icon glyph={Icon.GLYPHS.story}/> <strong>This is your story editor</strong><div className={Styles.instructions}>
+     <p>1. Capture scenes from your map</p><p>2. Add text and images</p><p>3. Share with others</p></div></div>)
+  },
   renderStories() {
     return <div className={Styles.stories}>{this.props.terria.stories.map(story=><Story key={story.id} story={story} removeStory={this.removeStory} runStory={this.runStory}/>)}</div> 
     },
+
   onClickCapture() {
     this.setState({
       editingMode: true
@@ -145,16 +150,19 @@ const StoryBuilder = createReactClass({
   },
 
     render() {
+        const hasStories = this.props.terria.stories && this.props.terria.stories.length;
+        const shareUrlTextBox = <input type="text" value={ new URI(buildShareLink(this.props.terria, false)).hash()} readOnly id='share-story' />
         return (
             <div className={Styles.storyPanel}>
                 <div className={Styles.header}>
                   <h3>{this.state.editingMode ? "Story Editor" : "StoryBook"}</h3>
                   <div className={Styles.actions}>
-                    <button disabled ={this.state.editingMode} className={Styles.previewBtn} onClick={this.runStory} title="preview stories"><Icon glyph={Icon.GLYPHS.play}/>Preview</button>
-                    <button disabled ={this.state.editingMode} className={Styles.shareBtn} onClick={this.shareStory} title="share stories"><Icon glyph={Icon.GLYPHS.share}/>Share</button>
+                    <button disabled ={this.state.editingMode || !hasStories} className={Styles.previewBtn} onClick={this.runStory} title="preview stories"><Icon glyph={Icon.GLYPHS.play}/>Preview</button>
+                    <Clipboard disabled ={this.state.editingMode || !hasStories} source={ shareUrlTextBox} btnText='Share' id='share-story'><Icon glyph={Icon.GLYPHS.share}/></Clipboard>
                    </div>
                 </div>
-               {!this.state.editingMode && this.props.terria.stories && this.props.terria.stories.length > 0 &&  this.renderStories()}
+               {!hasStories && !this.state.editingMode && this.renderIntro()}
+               {!this.state.editingMode && hasStories &&  this.renderStories()}
                {this.state.editingMode && this.renderEditor()}
                 <div className={Styles.footer}>
                   <button disabled={this.state.editingMode} className={Styles.captureBtn} title='capture current scene' onClick={this.onClickCapture}> <Icon glyph={Icon.GLYPHS.story}/> Capture current scene </button>

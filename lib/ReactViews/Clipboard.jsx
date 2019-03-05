@@ -53,15 +53,18 @@ export default class Clipboard extends React.Component {
     render() {
         return (
             <div className={Styles.clipboard}>
-                <div>Share URL</div>
+                <div className='clipboard'>
+                <div className='clipBoard-lablel'>Share URL</div>
                 <div className={Styles.explanation}>Anyone visiting this URL will see this map view.</div>
                 <div className={Styles.clipboardBody}>
                     {this.props.source}
-                    <button className={classNames(`btn-copy-${this.props.id}`, Styles.copyBtn)} data-clipboard-target={`#${this.props.id}`}>
-                        Copy
+                    <button disabled={this.props.disabled} className={classNames(`btn-copy-${this.props.id}`, Styles.copyBtn)} data-clipboard-target={`#${this.props.id}`}>
+                        {this.props.btnText ? this.props.btnText : 'Copy'}
+                        {this.props.children}
                     </button>
                 </div>
                 {this.state.tooltip && <span className={Styles.tooltip}>{this.state.tooltip}</span>}
+            </div>
             </div>
         );
     }
@@ -70,4 +73,7 @@ export default class Clipboard extends React.Component {
 Clipboard.propTypes = {
     id: PropTypes.string.isRequired,
     source: PropTypes.object.isRequired,
+    btnText: PropTypes.string,
+    children: PropTypes.object,
+    disabled: PropTypes.bool
 };

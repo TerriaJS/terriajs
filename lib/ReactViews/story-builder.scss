@@ -11,18 +11,56 @@
 }
 .header{
   h3{
-    border-bottom: 1px solid overlay;
     margin: 0;
     padding: 10px;
     text-align: center;
     text-transform: uppercase;
-    border-bottom: 1px solid $overlay;
+    font-weight: 500;
   }
   .actions{
     display: flex;
     padding: $padding-small;
+
+    border-top: 1px solid $overlay;
+    border-bottom: 1px solid $overlay;
+    .previewBtn{
+      flex-basis: 50%;
+    }
+    :global{
+      .tjs-clipboard__clipboard{
+        flex-basis: 50%;
+        padding: 0;
+        .tjs-clipboard__clipboardBody{
+          display: block;
+          margin: 0;
+        }
+        .clipBoard-lablel, .tjs-clipboard__explanation{
+          display: none
+        }
+        .tjs-clipboard__clipboardBody input{
+          position: absolute;
+          left: -10000000px;
+        }
+        .btn-copy-share-story{
+          margin: $padding-small;
+          position: relative;
+          padding-left: 40px;
+          width: calc(100% - 10px);
+             svg{
+               width: 25px;
+               height: 25px;
+               fill: #ffffff;
+               position: absolute;
+               left: 15px;
+               top: 8px;
+             }
+        }
+      }
+    }
   }
 }
+
+
 .story {
   padding: $padding-small;
   margin: $padding-small;
@@ -41,7 +79,7 @@
   color: $text-light;
   font-family: $font-pop;
   margin: $padding-small;
-  border: 1px solid $overlay;
+  border-radius: 3px;
   .editorHeader{
     padding: $padding;
     border-bottom: 1px solid $overlay;
@@ -120,4 +158,24 @@
 
 .story:hover {
   background-color: $dark-with-overlay;
+}
+
+.intro{
+  background: $dark-with-overlay;
+  color: $text-light;
+  font-family: $font-pop;
+  margin: $padding $padding 0 $padding;
+  border-radius: 3px;
+  text-align: center;
+  padding: 30px 10px;
+  color: $text-light-dimmed;
+  strong{
+    color: $text-light;
+  }
+  svg{
+    width: 70px;
+    height: 70px;
+    fill: $text-light-dimmed;
+    margin: 20px auto;
+  }
 }

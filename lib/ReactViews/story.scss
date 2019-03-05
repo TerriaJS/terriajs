@@ -2,12 +2,10 @@
 @import '../Sass/common/mixins';
 
 .story {
-  padding: $padding-small;
-  margin: $padding-small;
   background: #667080;
   color: #FFFFFF;
-  margin: $padding;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  margin: $padding $padding 0 $padding;
+  border-radius: 3px;
   h3{
     font-weight: normal;
     margin: 0;
@@ -16,12 +14,18 @@
 
  .storyHeader{
    position: relative;
+   padding: $padding;
+ }
+
+ .body{
+   padding: 0 $padding $padding $padding ; 
+   border-top: 1px solid $overlay;
  }
  .toggleBtn{
    composes: btn from '../Sass/common/_buttons.scss';
    position: absolute;
-   top: 0;
-   right: 0;
+   top: $padding;
+   right: $padding;
    svg{
      width: 20px;
      height: 20px;
