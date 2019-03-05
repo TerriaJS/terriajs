@@ -50,11 +50,11 @@
   font-size: 1rem;
 }
 
-.navBtn, .pauseBtn,  .nextBtn, .prevBtn {
+.navBtn, .pauseBtn,  .nextBtn, .previousBtn {
   z-index: 999;
   composes: btn from '../Sass/common/_buttons.scss';
   display: block;
-  padding: $padding $padding*2;
+  padding: $padding*0.8 $padding*2.2;
   &, &:hover, &:focus{
     border-right: 1px solid $field-border;
   }
@@ -64,7 +64,12 @@
     height: 20px;
   }
  }
-
+ .nextBtn, .previousBtn{
+   svg{
+      width: 15px;
+      height: 15px;
+   }
+ } 
  .pauseBtn {
    &, &:focus, &:hover{
      border-right: 0;
@@ -73,6 +78,13 @@
 
 .navBtn{
   flex-grow: 2;
+  display: flex;
+  justify-content: flex-end;
+  button{
+    background: transparent;
+    border: 0;
+    box-shadow: 0;
+  }
   svg{
     float: right;
     width: 10px;

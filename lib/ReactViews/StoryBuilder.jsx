@@ -69,7 +69,7 @@ const StoryBuilder = createReactClass({
             story.shareData = JSON.parse(JSON.stringify(getShareData(this.props.terria, false)));
         }
         this.props.terria.stories = [...(this.props.terria.stories || []), Object.assign(story, {
-            id: idCounter++,
+          id: (this.props.terria.stories ? this.props.terria.stories.length : 0) + idCounter++,
             title: this.state.newTitle,
             text: this.state.newText
         })];
@@ -103,7 +103,7 @@ const StoryBuilder = createReactClass({
         // this.props.viewState.storyProgress = 0;
         // this.props.viewState.showStory = true;
         // window.open(`#stories=${encodeURIComponent(this.state.uri)}`);
-        this.props.viewState.storyEnabled = true;
+        this.props.viewState.storyBuilderShown = false;
         this.props.viewState.storyShown = true;
         this.props.terria.currentViewer.notifyRepaintRequired();
     },
