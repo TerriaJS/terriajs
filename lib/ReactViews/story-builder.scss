@@ -41,7 +41,12 @@
 
  .trashBtn{
     composes: btn from "../Sass/common/_buttons.scss";
-    composes: btn-secondary from "../Sass/common/_buttons.scss";
+    composes: btn--map from "../Sass/common/_buttons.scss";
+    svg{
+      height: 25px;
+      width: 25px;
+      fill: #ffffff;
+    }
 
  }
 
