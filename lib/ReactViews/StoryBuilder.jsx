@@ -126,7 +126,7 @@ const StoryBuilder = createReactClass({
               <label className={Styles.label} htmlFor="title">Title:</label>
               <input placeholder="Enter a title here" className={Styles.field} type="text" id="title" value={this.state.newTitle} onChange={this.updateTitle}/>
               <label className={Styles.label} htmlFor="text">Text:</label>
-              <input placeholder="Click to add text" className={Styles.field} type="text" id="text" value={this.state.newText} onChange={this.updateText}/>
+              <textarea placeholder="Click to add text" className={Styles.field} type="text" id="text" value={this.state.newText} onChange={this.updateText}/>
               <div className={Styles.editorFooter}>
                 <button className={Styles.trashBtn} type='button' title='delete scene' onClick={()=>{this.setState({editingMode: false})}}><Icon glyph={Icon.GLYPHS.trashcan}/></button>
                 <input disabled={this.state.newTitle.length ===0 && this.state.newText.length === 0} className={Styles.doneBtn} type="submit" value="Done"/>
