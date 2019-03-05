@@ -4,7 +4,7 @@ Change Log
 ### Next Release
 
 * Replace `getUniqueValues` with `lodash.uniq`
-* Fixed a bug where the 3D globe would not immediately refresh when toggling between the "Terrain" and "Smooth" versions.
+* Fixed a bug where the 3D globe would not immediately refresh when toggling between the "Terrain" and "Smooth" viewer modes.
 
 ### v7.0.2
 
