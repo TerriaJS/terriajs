@@ -4,6 +4,7 @@ Change Log
 ### Next Release
 
 * Replace `getUniqueValues` with `lodash.uniq`
+* Call `notifyRepaintRequired` when toggling between viewer modes.
 
 ### v7.0.2
 
