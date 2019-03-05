@@ -72,7 +72,10 @@ const GLYPHS = {
     web: require('../../wwwroot/images/icons/remotefile.svg'),
     compassInner: require('../../wwwroot/images/icons/compass-inner.svg'),
     compassOuter: require('../../wwwroot/images/icons/compass-outer.svg'),
-    compassRotationMarker: require('../../wwwroot/images/icons/compass-rotation-marker.svg')
+    compassRotationMarker: require('../../wwwroot/images/icons/compass-rotation-marker.svg'),
+    circleFull: require('../../wwwroot/images/icons/circlef-full.svg'),
+    circleEmpty: require('../../wwwroot/images/icons/circle-empty.svg'),
+    story: require('../../wwwroot/images/icons/story.svg')
 };
 
 const Icon = createReactClass({

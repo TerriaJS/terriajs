@@ -130,7 +130,7 @@ const StandardUserInterface = createReactClass({
         const terria = this.props.terria;
         const allBaseMaps = this.props.allBaseMaps;
         
-        const showStoryBuilder = this.props.viewState.storyEnabled && this.props.viewState.storyBuilderShown && !this.props.viewState.storyShown &&  !this.shouldHideStoryBuilder();
+        const showStoryBuilder = this.props.viewState.storyEnabled && this.props.viewState.storyBuilderShown &&  !this.shouldHideStoryBuilder();
         const showStoryPanel = this.props.terria.stories && this.props.terria.stories.length && this.props.viewState.storyShown;
         return (
             <div className={Styles.storyWrapper}>

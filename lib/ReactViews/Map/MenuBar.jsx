@@ -50,7 +50,8 @@ const MenuBar = createReactClass({
                             className={Styles.storyBtn}
                             type='button'
                             onClick={this.onStoryButtonClick}>
-                            Story
+                            <Icon glyph={Icon.GLYPHS.story}/>
+                            <span>Story</span>
                         </button>
                     </li>
                   </If>

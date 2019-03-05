@@ -16,39 +16,28 @@ const StoryPanel = createReactClass({
     },
     getInitialState() {
         // Uggh. Side effects in getInitialState. But this is equivalent to the constructor in ES6 code
-        this.panel =  React.createRef();
         return {
             newTitle: "",
             newText: "",
             uri: "",
-            currentScene: null
+            currentScene: 0
         };
     },
 
-    componentDidMount() {
-        this.selectStoryFromScrollPosition(this.panel.current.scrollTop);
-        this.panel.current.addEventListener("scroll", this.handleScroll, false);
-    },
-
-    componentWillUnmount() {
-        this.panel.current.removeEventListener("scroll", this.handleScroll);
-    },
-
-    selectStoryFromScrollPosition(scrollTop) {
-
-        const clientHeight = this.panel.current.clientHeight;
-        const sceneIndex = Math.floor((scrollTop+0.5*clientHeight)/(1.5*clientHeight));
-        if (sceneIndex !== this.state.currentScene) {
-            this.setState({currentScene: sceneIndex});
-            if (sceneIndex < (this.props.terria.stories || []).length) {
-                this.activateStory(this.props.terria.stories[sceneIndex]);
-            }
+    navigateStory(index) {
+        if(index < 0) {
+          index = this.props.terria.stories.length - 1;
+        } else if(index >= this.props.terria.stories.length) {
+          index = 0;
         }
-    },
-
-    handleScroll(event) {
-        const scrollTop = event.srcElement.scrollTop;
-        this.selectStoryFromScrollPosition(scrollTop);
+        if (index !== this.state.currentScene) {
+          this.setState({ 
+            currentScene: index
+          });
+          if (index< (this.props.terria.stories || []).length) {
+              this.activateStory(this.props.terria.stories[index]);
+          }
+      }
     },
 
     // This is in StoryPanel and StoryBuilder
@@ -69,13 +58,19 @@ const StoryPanel = createReactClass({
     render() {
         return (
             <div>
-                <div className={classNames(Styles.fullPanel, {[Styles.isHidden]: !this.props.viewState.storyShown})} ref={this.panel}>
+                <div className={classNames(Styles.fullPanel, {[Styles.isHidden]: !this.props.viewState.storyShown})}>
                     {(this.props.terria.stories || []).map(scene => (
                         <div className={Styles.storyContainer} key={scene.id}>
                             <div className={Styles.story}>
-                              <button className={Styles.pauseButton} onClick={this.exitStory}>Exit Story</button>
-                                {scene.title && <h1>{scene.title}</h1>}
-                                {scene.text && <p>{scene.text}</p>}
+                                <div className={Styles.storyHeader}>
+                                  {scene.title && <h1>{scene.title}</h1>}
+                                  {this.props.terria.stories.map((story, i)=><button title="`go to story ${i}`" type='button' className={Styles.navBtn} key={story.id} onClick={()=>this.navigateStory(i)}> <Icon glyph={ i === this.state.currentScene ? Icon.GLYPHS.circleFull : Icon.GLYPHS.circleEmpty }/></button>)} 
+                                  {this.props.terria.stories.length > 1 &&  <button className={Styles.previousBtn} title="go to previous story" onClick={()=> this.navigateStory(this.state.currentScene - 1)}><Icon glyph={Icon.GLYPHS.previous}/></button>}
+                                  {this.props.terria.stories.length > 1 &&  <button className={Styles.nextBtn} title="go to next story" onClick={()=> this.navigateStory(this.state.currentScene + 1)}><Icon glyph={Icon.GLYPHS.next}/></button>}
+                                  
+                                  <button className={Styles.pauseBtn} title="exit story" onClick={this.exitStory}><Icon glyph={Icon.GLYPHS.close}/></button>
+                                </div>
+                                {scene.text && <div className={Styles.body}>{scene.text}</div>}
                             </div>
                         </div>
                     ))}
