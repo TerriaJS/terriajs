@@ -1,10 +1,11 @@
 Change Log
 ==========
 
-### Next Release
+### v7.0.2
 
 * Fixed a bug that prevented billboard images from working on the 2D map.
 * Implemented "Zoom To" support for KML, CZML, and other vector data sources.
+* Upgraded to Cesium v1.55.
 
 ### v7.0.1
 
