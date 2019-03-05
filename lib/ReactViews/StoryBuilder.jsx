@@ -152,7 +152,7 @@ const StoryBuilder = createReactClass({
 
     render() {
         const hasStories = defined(this.props.terria.stories) && this.props.terria.stories.length > 0;
-        const shareUrlTextBox = <input type="text" value={ new URI(buildShareLink(this.props.terria, false)).hash()} readOnly id='share-story' />
+        const shareUrlTextBox = <input type="text" value={ new URI(buildShareLink(this.props.terria, false))} readOnly id='share-story' />
         return (
             <div className={Styles.storyPanel}>
                 <div className={Styles.header}>
