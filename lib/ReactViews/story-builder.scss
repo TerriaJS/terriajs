@@ -9,13 +9,30 @@
   background: $dark;
   border-left: 1px solid rgba(255, 255, 255, 0.2);
 }
-
+.header{
+  h3{
+    border-bottom: 1px solid overlay;
+    margin: 0;
+    padding: 10px;
+    text-align: center;
+    text-transform: uppercase;
+    border-bottom: 1px solid $overlay;
+  }
+  .actions{
+    display: flex;
+    padding: $padding-small;
+  }
+}
 .story {
   padding: $padding-small;
   margin: $padding-small;
-  border: dashed 1px rgba(255, 255, 255, 0.5);
+  background: #667080;
+  color: #FFFFFF;
+  margin: $padding;
+  border: 1px solid rgba(255, 255, 255, 0.15);
   h3{
     font-weight: normal;
+    margin: 0;
   }
  }
 
@@ -32,6 +49,12 @@
   form{
     padding: $padding;
   }
+  label{
+    margin-bottom: 10px;
+  }
+  .editorFooter{
+    display: flex;
+  }
  }
  
  .doneBtn{
@@ -39,9 +62,13 @@
     composes: btn-primary from "../Sass/common/_buttons.scss";
  }
 
- .trashBtn{
+ .trashBtn, .removeBtn{
     composes: btn from "../Sass/common/_buttons.scss";
     composes: btn--map from "../Sass/common/_buttons.scss";
+    margin-right: $padding;
+    background: #9CA1AA;
+    border-radius: 3px;
+    padding: $padding-small $padding;
     svg{
       height: 25px;
       width: 25px;
@@ -51,18 +78,28 @@
  }
 
  .footer{
-   padding: $padding-small;
+   padding: $padding;
  }
 
- .sharebtn, .previewBtn{
-   margin: $padding 0;
+ .captureBtn, .shareBtn, .previewBtn{
+   margin: $padding-small;
+   position: relative;
+   padding-left: 40px;
    composes: btn from "../Sass/common/_buttons.scss";
-   color: $color-primary;
-   border-bottom: 2px solid $color-primary;
-   &:hover, &:focus{
-     color: #ffffff!important;
-     border-bottom: 2px solid #ffffff!important;
+   composes: btn-primary from "../Sass/common/_buttons.scss";
+   svg{
+     width: 25px;
+     height: 25px;
+     fill: #ffffff;
+     position: absolute;
+     left: 15px;
+     top: 8px;
    }
+ }
+ 
+
+ .captureBtn{
+   margin: 0;
  }
  .btn{
     margin: $padding-small 0;
@@ -72,7 +109,10 @@
 
  .field{
     composes: field from '../Sass/common/_form.scss';
-    margin-bottom: $padding;
+    background: #9CA1AA;
+    border: 0;
+    margin-bottom: 10px;
+    color: #ffffff!important;
  }
  .label{
    display: block;

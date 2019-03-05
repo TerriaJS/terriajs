@@ -1,0 +1,17 @@
+@import '~terriajs-variables';
+@import '../Sass/common/mixins';
+
+.story {
+  padding: $padding-small;
+  margin: $padding-small;
+  background: #667080;
+  color: #FFFFFF;
+  margin: $padding;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  h3{
+    font-weight: normal;
+    margin: 0;
+  }
+ }
+
+
