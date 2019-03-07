@@ -4,6 +4,14 @@ Change Log
 ### Next Release
 
 * Added `disablePreview` option to all catalog items. This is useful when the preview map in the catalog will be slow to load.
+* Replace `getUniqueValues` with `lodash.uniq`
+* Fixed a bug where the 3D globe would not immediately refresh when toggling between the "Terrain" and "Smooth" viewer modes.
+
+### v7.0.2
+
+* Fixed a bug that prevented billboard images from working on the 2D map.
+* Implemented "Zoom To" support for KML, CZML, and other vector data sources.
+* Upgraded to Cesium v1.55.
 
 ### v7.0.1
 
