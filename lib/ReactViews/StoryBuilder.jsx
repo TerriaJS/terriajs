@@ -1,7 +1,7 @@
 import React from 'react';
 import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
-import { buildShareLink, getShareData } from './Map/Panels/SharePanel/BuildShareLink';
+import { buildShareLink, canShorten, getShareData, buildShortShareLink } from './Map/Panels/SharePanel/BuildShareLink';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import ObserveModelMixin from './ObserveModelMixin';
 import Clipboard from './Clipboard.jsx';
@@ -152,7 +152,7 @@ const StoryBuilder = createReactClass({
 
     render() {
         const hasStories = defined(this.props.terria.stories) && this.props.terria.stories.length > 0;
-        const shareUrlTextBox = <input type="text" value={ new URI(buildShareLink(this.props.terria, false))} readOnly id='share-story' />
+        const shareUrlTextBox = <input type="text" value={ new URI(canShorten(this.props.terria) ? buildShortShareLink(this.props.terria,true) : buildShareLink(this.props.terria, true))} readOnly id='share-story' />
         return (
             <div className={Styles.storyPanel}>
                 <div className={Styles.header}>
