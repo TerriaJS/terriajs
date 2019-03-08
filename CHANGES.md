@@ -5,6 +5,7 @@ Change Log
 
 * Support displaying availability for imagery layers on charts, by adding `"showOnChart": true" or clicking a button in the UI.
 * Added a `featureTimesProperty` property to all `ImageryLayerCatalogItem`s. This is useful for datasets that do not have data for all locations at all times, such as daily sensor swaths of near-real-time or historical satellite imagery. The property specifies the name of a property returned by the layer's feature information query that indicates the times when data is available at that particular location. When this property is set, TerriaJS will display an interface on the workbench to allow the user to filter the times to only those times where data is available at a particular location. It will also display a button at the bottom of the Feature Information panel allowing the user to filter for the selected location.
+* Highlight polygon and polyline features.
 * Replace `getUniqueValues` with `lodash.uniq`
 * Fixed a bug where the 3D globe would not immediately refresh when toggling between the "Terrain" and "Smooth" viewer modes.
 
