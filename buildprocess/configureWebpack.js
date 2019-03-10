@@ -103,6 +103,15 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
         ],
         use: [
             {
+                // Replace Babel's super.property getter with one that is MobX aware.
+                loader: require.resolve('string-replace-loader'),
+                options: {
+                    search: 'var _get = function get.*',
+                    replace: 'var _get = _interopRequireDefault(require(\'../Core/superGet\')).default;',
+                    flags: 'g'
+                }
+            },
+            {
                 loader: 'babel-loader',
                 options: {
                     presets: ['env', 'react'],

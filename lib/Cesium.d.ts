@@ -448,6 +448,9 @@ declare module 'terriajs-cesium/Source/Core/combine' {
 declare module 'terriajs-cesium/Source/Core/createWorldTerrain' {
     export default Cesium.createWorldTerrain;
 }
+declare module 'terriajs-cesium/Source/Core/defaultValue' {
+    export default Cesium.defaultValue;
+}
 declare module 'terriajs-cesium/Source/Core/defined' {
     export default Cesium.defined;
 }

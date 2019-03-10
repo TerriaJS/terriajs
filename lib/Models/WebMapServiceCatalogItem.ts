@@ -27,6 +27,7 @@ import { InfoSectionTraits } from '../Traits/mixCatalogMemberTraits';
 import containsAny from '../Core/containsAny';
 import GroupMixin from '../ModelMixins/GroupMixin';
 
+import defaultValue from 'terriajs-cesium/Source/Core/defaultValue';
 import WebMapServiceImageryProvider from 'terriajs-cesium/Source/Scene/WebMapServiceImageryProvider';
 import CesiumImageryLayer from 'terriajs-cesium/Source/Scene/ImageryLayer';
 import WebMercatorTilingScheme from 'terriajs-cesium/Source/Core/WebMercatorTilingScheme';
@@ -308,6 +309,10 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemb
         }
     }
 
+    get opacity(): number {
+        return defaultValue(super.opacity, 0.8);
+    }
+
     @computed
     get currentDiscreteTime(): string | undefined {
         return undefined; // TODO
@@ -355,7 +360,7 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemb
         }
         return {
             imageryProvider,
-            alpha: this.opacity!,
+            alpha: this.opacity,
             show: this.show !== undefined ? this.show : true
         }
     }
