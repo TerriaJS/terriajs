@@ -61,7 +61,7 @@ const StoryPanel = createReactClass({
                         <div className={Styles.storyContainer} key={story.id}>
                             <div className={Styles.story}>
                                 <div className={Styles.storyHeader}>
-                                  {story.title && <h1>{story.title}</h1>}
+                                  {story.title && story.title.length > 0 ? <h3>{story.title}</h3> : <h3> untitled scene </h3>}
                                  <div className={Styles.navBtn}> {this.props.terria.stories.map((story, i)=><button title="`go to story ${i}`" type='button' key={story.id} onClick={()=>this.navigateStory(i)}> <Icon glyph={ i === this.state.currentScene ? Icon.GLYPHS.circleFull : Icon.GLYPHS.circleEmpty }/></button>)}</div> 
                                   {this.props.terria.stories.length > 1 &&  <button className={Styles.previousBtn} title="go to previous story" onClick={()=> this.navigateStory(this.state.currentScene - 1)}><Icon glyph={Icon.GLYPHS.left}/></button>}
                                   {this.props.terria.stories.length > 1 &&  <button className={Styles.nextBtn} title="go to next story" onClick={()=> this.navigateStory(this.state.currentScene + 1)}><Icon glyph={Icon.GLYPHS.right}/></button>}

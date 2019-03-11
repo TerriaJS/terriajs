@@ -45,7 +45,6 @@ const StandardUserInterface = createReactClass({
         allBaseMaps: PropTypes.array,
         viewState: PropTypes.object.isRequired,
         minimumLargeScreenWidth: PropTypes.number,
-        minimumMediumScreenWidth: PropTypes.number,
         version: PropTypes.string,
         children: PropTypes.oneOfType([
             PropTypes.arrayOf(PropTypes.element),
@@ -55,8 +54,6 @@ const StandardUserInterface = createReactClass({
 
     getDefaultProps() {
         return {
-            minimumMediumScreenWidth: 992,
-            minimumLargeScreenWidth: 768,
         };
     },
 
@@ -117,10 +114,6 @@ const StandardUserInterface = createReactClass({
         return document.body.clientWidth < this.props.minimumLargeScreenWidth;
     },
     
-    shouldHideStoryBuilder() {
-        return document.body.clientWidth < this.props.minimumMediumScreenWidth;
-    },
-
     render() {
         const customElements = processCustomElements(
             this.props.viewState.useSmallScreenInterface,
@@ -130,7 +123,7 @@ const StandardUserInterface = createReactClass({
         const terria = this.props.terria;
         const allBaseMaps = this.props.allBaseMaps;
         
-        const showStoryBuilder = this.props.viewState.storyEnabled && this.props.viewState.storyBuilderShown &&  !this.shouldHideStoryBuilder();
+        const showStoryBuilder = this.props.viewState.storyEnabled && this.props.viewState.storyBuilderShown && !this.shouldUseMobileInterface();
         const showStoryPanel = this.props.terria.stories && Array.isArray(this.props.terria.stories) && this.props.terria.stories.length && this.props.viewState.storyShown;
         return (
             <div className={Styles.storyWrapper}>

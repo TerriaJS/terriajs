@@ -6,6 +6,14 @@
     z-index: 9999999!important;
     font-family: $font-base;
   }
+  .medium-editor-element{
+    min-height: 50px;
+    max-height: 80vh;
+    overflow-y: auto;
+    &:focus{
+      outline: none;
+    }
+  }
 }
 .popupEditor{
   position: fixed;

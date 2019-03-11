@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Icon from "./Icon.jsx";
-import { Editor } from 'react-draft-wysiwyg';
+import Editor from 'react-medium-editor';
 import Styles from './story-editor.scss';
 
 export default class StoryEditor extends React.Component {

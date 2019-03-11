@@ -7,7 +7,7 @@
 // back in.
 
 .story-wrapper {
-  @media (min-width : $md) {
+  @media (min-width : $sm) {
     display: flex;
   }
 }
