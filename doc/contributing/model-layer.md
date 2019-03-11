@@ -44,7 +44,7 @@ If a property does have a setter, it should obey these laws:
 
 We need to be more precise about what we mean by "same value" in the laws above. For primitive types (strings, numbers, booleans, null, and undefined), "the same" means that comparing the values with `===` returns `true`. `===` should also return `true` for references to model objects and other mutable, reactive objects. Arrays should be MobX [reactive arrays](https://mobx.js.org/refguide/array.html) where each element in the array follows the rules stated here.
 
-For other types of objects, such as Cesium's mutable `JulianDate`, `Cartographic`, and `Cartesian3` types, "same value" means that the instances should conceptually represent the same value (e.g. using the `equals` function on the two instances should return true), but the instance may be different. In particular, these types of objects should be copied on _set_, and _get_ should return a value as a `Readonly<T>`.
+For other types of objects, such as Cesium's mutable `JulianDate`, `Cartographic`, and `Cartesian3` types, "same value" means that the instances should conceptually represent the same value (e.g. using the `equals` function on the two instances should return true), but the instance may be different. In particular, properties of these types should declare their type as `Readonly<JulianDate>`, `Readonly<Cartographic>`, or `Readonly<Cartesian3>`. The objects should be copied on _set_. Return a frozen object (e.g. `Object.freeze`) from _get_ may help to prevent bugs, particular if some clients of the property are expected to not be using TypeScript.
 
 # Scenarios for avoiding side effects
 
