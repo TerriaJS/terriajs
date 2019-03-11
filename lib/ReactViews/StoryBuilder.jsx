@@ -9,6 +9,8 @@ import Icon from "./Icon.jsx";
 import  FileSaver  from 'file-saver';
 import URI from 'urijs';
 import Story from './Story.jsx';
+import StoryEditor from './StoryEditor.jsx';
+
 import Styles from './story-builder.scss';
 
 // From MDN
@@ -44,49 +46,29 @@ const StoryBuilder = createReactClass({
     getInitialState() {
         return {
             editingMode: false,
-            newTitle: "",
-            newText: "",
-            uri: ""
+            uri: "",
         };
-    },
-
-    // This is in StoryPanel and StoryBuilder
-    activateStory(story) {
-        this.props.terria.nowViewing.removeAll();
-        if (story.shareData) {
-            this.props.terria.updateFromStartData(story.shareData);
-        } else {
-            window.location = story.shareUrl;
-        }
-    },
-    
-    shareStory(){
-
     },
 
     removeStory(story) {
         this.props.terria.stories = this.props.terria.stories.filter(st => st !== story);
     },
 
-    onSubmit(evt) {
-        const story = {};
+    onSave(_story) {
+      const story = {
+        title: _story.title,
+        text: _story.content,
+        id: (this.props.terria.stories ? this.props.terria.stories.length : 0) + idCounter++,
+      };
         if (USE_URL) {
             story.shareUrl = new URI(buildShareLink(this.props.terria, false)).hash();
         } else {
             story.shareData = JSON.parse(JSON.stringify(getShareData(this.props.terria, false)));
         }
-        this.props.terria.stories = [...(this.props.terria.stories || []), Object.assign(story, {
-          id: (this.props.terria.stories ? this.props.terria.stories.length : 0) + idCounter++,
-            title: this.state.newTitle,
-            text: this.state.newText
-        })];
+        this.props.terria.stories = [...(this.props.terria.stories || []), story];
         this.setState({
-            newTitle: "",
-            newText: "",
             editingMode: false
         });
-        evt.preventDefault();
-
     },
 
     updateTitle(evt) {
@@ -109,39 +91,17 @@ const StoryBuilder = createReactClass({
     },
 
     runStory() {
-        // this.props.viewState.storyProgress = 0;
-        // this.props.viewState.showStory = true;
-        // window.open(`#stories=${encodeURIComponent(this.state.uri)}`);
         this.props.viewState.storyBuilderShown = false;
         this.props.viewState.storyShown = true;
         this.props.terria.currentViewer.notifyRepaintRequired();
     },
 
-    renderEditor() {
-       return (<div className={Styles.editor}>
-         <div className={Styles.editorHeader}>
-         {(this.state.newTitle && this.state.newTitle.length > 0) ? this.state.newTitle : "Untitled Scene"}
-         </div>
-           <form className={Styles.form} onSubmit={this.onSubmit}>
-              <label className={Styles.label} htmlFor="title">Title:</label>
-              <input placeholder="Enter a title here" className={Styles.field} type="text" id="title" value={this.state.newTitle} onChange={this.updateTitle}/>
-              <label className={Styles.label} htmlFor="text">Text:</label>
-              <textarea placeholder="Click to add text" className={Styles.field} type="text" id="text" value={this.state.newText} onChange={this.updateText}/>
-              <div className={Styles.editorFooter}>
-                <button className={Styles.trashBtn} type='button' title='delete scene' onClick={()=>{this.setState({editingMode: false})}}><Icon glyph={Icon.GLYPHS.trashcan}/></button>
-                <input disabled={this.state.newTitle.length ===0 && this.state.newText.length === 0} className={Styles.doneBtn} type="submit" value="Done"/>
-              </div>
-           </form>
-        </div>);
-
-    },
-  
-  renderIntro(){
+  renderIntro() {
     return (<div className={Styles.intro}><Icon glyph={Icon.GLYPHS.story}/> <strong>This is your story editor</strong><div className={Styles.instructions}>
-     <p>1. Capture scenes from your map</p><p>2. Add text and images</p><p>3. Share with others</p></div></div>)
+     <p>1. Capture scenes from your map</p><p>2. Add text and images</p><p>3. Share with others</p></div></div>);
   },
   renderStories() {
-    return <div className={Styles.stories}>{this.props.terria.stories.map(story=><Story key={story.id} story={story} removeStory={this.removeStory} runStory={this.runStory}/>)}</div> 
+    return <div className={Styles.stories}>{this.props.terria.stories.map(story=><Story key={story.id} story={story} removeStory={this.removeStory} runStory={this.runStory}/>)}</div>; 
     },
 
   onClickCapture() {
@@ -164,7 +124,7 @@ const StoryBuilder = createReactClass({
                 </div>
                {!hasStories && !this.state.editingMode && this.renderIntro()}
                {!this.state.editingMode && hasStories &&  this.renderStories()}
-               {this.state.editingMode && this.renderEditor()}
+               {this.state.editingMode &&<StoryEditor saveStory ={this.onSave} runStory={this.runStory}/>}
                 <div className={Styles.footer}>
                   <button disabled={this.state.editingMode} className={Styles.captureBtn} title='capture current scene' onClick={this.onClickCapture}> <Icon glyph={Icon.GLYPHS.story}/> Capture current scene </button>
                 </div>

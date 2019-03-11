@@ -1,0 +1,102 @@
+@import '~terriajs-variables';
+@import '../Sass/common/mixins';
+
+:global{
+  .medium-editor-toolbar{
+    z-index: 9999999!important;
+    font-family: $font-base;
+  }
+}
+.popupEditor{
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba($overlay, 0.5);
+  z-index: 999999;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  .inner{
+    width: 800px;
+    height: 200px;
+    background: #ffffff;
+    z-index: 9999;
+    margin: 0 auto;
+    color: $text-dark;
+    box-shadow: 0 0 15px 6px rgba(100, 100, 100, 0.3);
+    border-radius: 3px;
+  }
+  .header{
+    display: flex;
+    border-bottom: 1px solid $field-border;
+    padding: $padding;
+    h3{
+      flex-grow: 1;
+      margin: 0;
+      line-height: 2
+     }
+   }
+  .body{
+    padding: $padding;
+    p{
+      margin-top: 0;
+    }
+  }
+}
+
+.editor{
+  background: $dark-with-overlay;
+  color: $text-light;
+  font-family: $font-pop;
+  margin: $padding-small;
+  border-radius: 3px;
+  .editorHeader{
+    padding: $padding;
+    border-bottom: 1px solid $overlay;
+  }
+  form{
+    padding: $padding;
+  }
+  label{
+    margin-bottom: 10px;
+  }
+ .editorFooter{
+    display: flex;
+  }
+ }
+ 
+ .doneBtni, .saveBtn{
+    composes: btn from "../Sass/common/_buttons.scss";
+    composes: btn-primary from "../Sass/common/_buttons.scss";
+ }
+
+ .saveBtn{
+   width: auto;
+   padding: 5px 15px;
+ }
+ .cancelBtn{
+   composes: btn from '../Sass/common/_buttons.scss';
+   composes: btn--secondary from '../Sass/common/_buttons.scss';
+   padding: 5px 15px;
+   margin-right:$padding;
+   border: 2px solid #ffffff;
+ }
+
+ .trashBtn, .removeBtn{
+    composes: btn from "../Sass/common/_buttons.scss";
+    composes: btn--map from "../Sass/common/_buttons.scss";
+    margin-right: $padding;
+    background: #9CA1AA;
+    border-radius: 3px;
+    padding: $padding-small $padding;
+    svg{
+      height: 25px;
+      width: 25px;
+      fill: #ffffff;
+    }
+
+ }
+
+

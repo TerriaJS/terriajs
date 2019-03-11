@@ -74,35 +74,6 @@
   }
  }
 
- .editor{
-  background: $dark-with-overlay;
-  color: $text-light;
-  font-family: $font-pop;
-  margin: $padding-small;
-  border-radius: 3px;
-  .editorHeader{
-    padding: $padding;
-    border-bottom: 1px solid $overlay;
-  }
-  form{
-    padding: $padding;
-  }
-  label{
-    margin-bottom: 10px;
-  }
-  textarea{
-    margin-bottom: $padding*2;
-  }
-  .editorFooter{
-    display: flex;
-  }
- }
- 
- .doneBtn{
-    composes: btn from "../Sass/common/_buttons.scss";
-    composes: btn-primary from "../Sass/common/_buttons.scss";
- }
-
  .trashBtn, .removeBtn{
     composes: btn from "../Sass/common/_buttons.scss";
     composes: btn--map from "../Sass/common/_buttons.scss";
