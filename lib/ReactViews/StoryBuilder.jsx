@@ -27,12 +27,44 @@ const StoryBuilder = createReactClass({
     getInitialState() {
         return {
             editingMode: false,
-            uri: "",
+            shareUrl: "",
         };
     },
 
     removeStory(story) {
+        this.updateForShortening();
         this.props.terria.stories = this.props.terria.stories.filter(st => st !== story);
+    },
+    shouldShorten() {
+        const localStoragePref = this.props.terria.getLocalProperty('shortenShareUrls');
+
+        return canShorten(this.props.terria) && (localStoragePref || !defined(localStoragePref));
+    },
+
+    updateForShortening() {
+      const hasStories = defined(this.props.terria.stories) && this.props.terria.stories.length > 0;
+      this.setState({
+              shareUrl: ''
+          });
+
+          if (this.shouldShorten()) {
+              buildShortShareLink(this.props.terria, hasStories)
+                  .then(shareUrl => this.setState({ shareUrl }))
+                  .otherwise(() => {
+                      this.setUnshortenedUrl();
+                      this.setState({
+                          errorMessage: 'An error occurred while attempting to shorten the URL.  Please check your internet connection and try again.'
+                      });
+                  });
+          } else {
+              this.setUnshortenedUrl();
+          }
+    },
+    setUnshortenedUrl() {
+      const hasStories = defined(this.props.terria.stories) && this.props.terria.stories.length > 0;
+      this.setState({
+          shareUrl: buildShareLink(this.props.terria, hasStories)
+      });
     },
 
     onSave(_story) {
@@ -47,6 +79,7 @@ const StoryBuilder = createReactClass({
             story.shareData = JSON.parse(JSON.stringify(getShareData(this.props.terria, false)));
         }
         this.props.terria.stories = [...(this.props.terria.stories || []), story];
+        this.updateForShortening();
         this.setState({
             editingMode: false
         });
@@ -74,9 +107,7 @@ const StoryBuilder = createReactClass({
 
     render() {
         const hasStories = defined(this.props.terria.stories) && this.props.terria.stories.length > 0;
-        const shareLink = 
- canShorten(this.props.terria) ? buildShortShareLink(this.props.terria, hasStories) : buildShareLink(this.props.terria,hasStories);
-        const shareUrlTextBox = <input type="text" value={new URI("www.facebook.com")} readOnly id='share-story' />;
+        const shareUrlTextBox = <input type="text" value={new URI(this.state.shareUrl)} readOnly id='share-story' />;
         return (
             <div className={Styles.storyPanel}>
                 <div className={Styles.header}>
