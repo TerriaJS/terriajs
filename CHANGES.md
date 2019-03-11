@@ -1,6 +1,12 @@
 Change Log
 ==========
 
+### Next Release
+
+* Highlight polygon and polyline features.
+* Replace `getUniqueValues` with `lodash.uniq`
+* Fixed a bug where the 3D globe would not immediately refresh when toggling between the "Terrain" and "Smooth" viewer modes.
+
 ### v7.0.2
 
 * Fixed a bug that prevented billboard images from working on the 2D map.
