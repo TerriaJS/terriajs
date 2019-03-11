@@ -34,7 +34,7 @@ const MenuBar = createReactClass({
         this.props.viewState.topElement = 'MenuBar';
     },
    
-    onStoryButtonClick(){
+    onStoryButtonClick() {
       this.props.viewState.storyBuilderShown = !this.props.viewState.storyBuilderShown; 
     },
 

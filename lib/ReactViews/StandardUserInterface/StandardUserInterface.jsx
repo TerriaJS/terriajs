@@ -88,8 +88,8 @@ const StandardUserInterface = createReactClass({
           message: "would you like to view it now",
           confirmText: "Yes please",
           denyText: "Maybe later",
-          confirmAction: ()=> {this.props.viewState.storyShown = true},
-          denyAction: ()=>{this.props.viewState.storyShown = false},
+          confirmAction: ()=> {this.props.viewState.storyShown = true;},
+          denyAction: ()=>{this.props.viewState.storyShown = false;},
           type: "story",
           width: 300
         }); 

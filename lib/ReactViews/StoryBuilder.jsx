@@ -6,30 +6,11 @@ import defined from 'terriajs-cesium/Source/Core/defined';
 import ObserveModelMixin from './ObserveModelMixin';
 import Clipboard from './Clipboard.jsx';
 import Icon from "./Icon.jsx";
-import  FileSaver  from 'file-saver';
 import URI from 'urijs';
 import Story from './Story.jsx';
 import StoryEditor from './StoryEditor.jsx';
 
 import Styles from './story-builder.scss';
-
-// From MDN
-function postData(url = '', data = {}) {
-    // Default options are marked with *
-      return fetch(url, {
-          method: "POST", // *GET, POST, PUT, DELETE, etc.
-          mode: "cors", // no-cors, cors, *same-origin
-          cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-          credentials: "omit", // include, *same-origin, omit
-          headers: {
-              "Content-Type": "application/json",
-          },
-          redirect: "follow", // manual, *follow, error
-          referrer: "no-referrer", // no-referrer, *client
-          body: JSON.stringify(data), // body data type must match "Content-Type" header
-      })
-      .then(response => response.json()); // parses response to JSON
-  }
 
 let idCounter = 100;
 
@@ -71,32 +52,13 @@ const StoryBuilder = createReactClass({
         });
     },
 
-    updateTitle(evt) {
-        this.setState({newTitle: evt.target.value});
-    },
-    updateText(evt) {
-        this.setState({newText: evt.target.value});
-    },
-
-    downloadShareFile() {
-        const blob = new Blob([JSON.stringify({ stories: this.props.terria.stories })], { type: "application/json;charset=utf-8" });
-        FileSaver.saveAs(blob, 'share.json');
-    },
-
-    saveToMyJson() {
-        const {uri} = postData("https://api.myjson.com/bins", { stories: this.props.terria.stories });
-        this.setState({
-            uri
-        });
-    },
-
     runStory() {
         this.props.viewState.storyBuilderShown = false;
         this.props.viewState.storyShown = true;
         this.props.terria.currentViewer.notifyRepaintRequired();
     },
-
-  renderIntro() {
+  
+   renderIntro() {
     return (<div className={Styles.intro}><Icon glyph={Icon.GLYPHS.story}/> <strong>This is your story editor</strong><div className={Styles.instructions}>
      <p>1. Capture scenes from your map</p><p>2. Add text and images</p><p>3. Share with others</p></div></div>);
   },
@@ -112,7 +74,7 @@ const StoryBuilder = createReactClass({
 
     render() {
         const hasStories = defined(this.props.terria.stories) && this.props.terria.stories.length > 0;
-        const shareUrlTextBox = <input type="text" value={ new URI(canShorten(this.props.terria) ? buildShortShareLink(this.props.terria,true) : buildShareLink(this.props.terria, true))} readOnly id='share-story' />
+        const shareUrlTextBox = <input type="text" value={ new URI(canShorten(this.props.terria) ? buildShortShareLink(this.props.terria,true) : buildShareLink(this.props.terria, true))} readOnly id='share-story' />;
         return (
             <div className={Styles.storyPanel}>
                 <div className={Styles.header}>

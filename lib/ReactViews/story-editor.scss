@@ -20,7 +20,6 @@
   justify-content: center;
   .inner{
     width: 800px;
-    height: 200px;
     background: #ffffff;
     z-index: 9999;
     margin: 0 auto;
@@ -30,8 +29,8 @@
   }
   .header{
     display: flex;
-    border-bottom: 1px solid $field-border;
     padding: $padding;
+    border-bottom: 1px solid $field-border;
     h3{
       flex-grow: 1;
       margin: 0;
@@ -39,6 +38,7 @@
      }
    }
   .body{
+    min-height: 150px;
     padding: $padding;
     p{
       margin-top: 0;
@@ -59,15 +59,35 @@
   form{
     padding: $padding;
   }
-  label{
-    margin-bottom: 10px;
-  }
  .editorFooter{
     display: flex;
   }
  }
- 
- .doneBtni, .saveBtn{
+
+ .label{
+    margin-bottom: 10px;
+    composes: label from '../Sass/common/_labels.scss';
+    padding: 0;
+    line-height: 1;
+  }
+
+  .field{
+    composes: field from '../Sass/common/_form.scss';
+    margin-bottom: $padding;
+  }
+
+  .fieldBtn{
+    composes: btn from "../Sass/common/_buttons.scss";
+    composes: btn--map from "../Sass/common/_buttons.scss";
+    background: #9CA1AA;
+    border-radius: 3px;
+    padding: $padding;
+    margin-bottom: $padding + 3px;
+    box-shadow: none;
+    width: 100%;
+  }
+
+ .doneBtn, .saveBtn{
     composes: btn from "../Sass/common/_buttons.scss";
     composes: btn-primary from "../Sass/common/_buttons.scss";
  }

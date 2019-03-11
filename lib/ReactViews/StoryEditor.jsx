@@ -43,11 +43,10 @@ export default class StoryEditor extends React.Component {
   updateTitle(event) {
     this.setState({
       title: event.target.value
-    })
+    });
   }
 
   render() {
-    const story = this.props.story;
      return (<div className={Styles.editor}>
          <div className={Styles.editorHeader}>
          {(this.state.title && this.state.title.length > 0) ? this.state.title: "Untitled Scene"}

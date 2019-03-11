@@ -3,7 +3,6 @@ import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import ObserveModelMixin from './ObserveModelMixin';
-import { Small, Medium } from './Generic/Responsive';
 import parseCustomHtmlToReact from './Custom/parseCustomHtmlToReact';
 import Icon from "./Icon.jsx";
 import Styles from './story-panel.scss';
