@@ -67,6 +67,7 @@
     "react-anything-sortable": "^1.5.2",
     "react-datepicker": "0.53.0",
     "react-dom": "^16.3.2",
+    "react-draft-wysiwyg": "^1.13.2",
     "react-medium-editor": "^1.8.1",
     "react-responsive": "^5.0.0",
     "resolve-url-loader": "^3.0.1",
