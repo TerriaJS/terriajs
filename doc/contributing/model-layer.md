@@ -81,7 +81,7 @@ We want to keep the UI as small and simple as possible, because:
 * The UI is the hardest part of TerriaJS to test with automated tests. If it has lots of complicated logic, we will need to spend a lot of time writing tests for it to ensure that it behaves correctly. A very simple UI is easier to test, and is perhaps so simple that automated tests for it are not needed at all.
 * We would like everything that can be done by a user interacting with the UI to be doable programmatically as well. If the UI encodes complex rules or has its own states, this may not be possible, or doing so may require duplicating complicated "business logic" that already exists in the UI.
 
-Therefore, whenever possible, TerriaJS logic should be in the Model layer instead of in the UI. The UI should be a pure function from Model state to React components, and actions that simple execute functions or change a small number of properties in the Model layer.
+Therefore, whenever possible, TerriaJS logic should be in the Model layer instead of in the UI. The UI should be a pure function from Model state to React components, and actions that simply execute functions or change a small number of properties in the Model layer.
 
 # All settable properties should be Traits
 
