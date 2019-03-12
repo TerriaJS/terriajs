@@ -32,8 +32,8 @@ const StoryBuilder = createReactClass({
     },
 
     removeStory(story) {
-        this.updateForShortening();
         this.props.terria.stories = this.props.terria.stories.filter(st => st !== story);
+        this.updateForShortening();
     },
     shouldShorten() {
         const localStoragePref = this.props.terria.getLocalProperty('shortenShareUrls');
@@ -120,7 +120,7 @@ const StoryBuilder = createReactClass({
                 </div>
                {!hasStories && !this.state.editingMode && this.renderIntro()}
                {!this.state.editingMode && hasStories &&  this.renderStories()}
-               {this.state.editingMode && <StoryEditor exitEditingMode={()=>this.setState({editingMode: false})} saveStory ={this.onSave} runStory={this.runStory}/>}
+               {this.state.editingMode && <StoryEditor exit saveStory ={this.onSave} runStory={this.runStory}/>}
                 <div className={Styles.footer}>
                   <button disabled={this.state.editingMode} className={Styles.captureBtn} title='capture current scene' onClick={this.onClickCapture}> <Icon glyph={Icon.GLYPHS.story}/> Capture current scene </button>
                 </div>
