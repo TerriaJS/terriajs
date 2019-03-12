@@ -47,7 +47,7 @@ export default class StoryEditor extends React.Component {
               <div className={Styles.inner}>
                 <div className={Styles.header}>
                   <h3>{titleText}</h3>
-                  <button className={Styles.cancelBtn} onClick={()=>this.setState({isPopupEditorOpen: false, text: ''})} type='button' title="cancel">Cancel</button>
+                  <button className={Styles.cancelBtn} onClick={()=>this.setState({isPopupEditorOpen: false, text: this.props.story ? this.props.story.text : ''})} type='button' title="cancel">Cancel</button>
                   <button className={Styles.saveBtn} onClick ={this.saveStory} type='button' title='save'>Save</button>
               </div>
               <div className={Styles.body}>
@@ -66,7 +66,6 @@ export default class StoryEditor extends React.Component {
   }
  
   getPlaceHolderText(){
-
     const content = parseCustomHtmlToReact(this.state.text);
     if(!content){
       return "Click to add content";
@@ -114,3 +113,4 @@ StoryEditor.propTypes ={
   saveStory: PropTypes.func,
   exitEditingMode: PropTypes.func
 };
+
