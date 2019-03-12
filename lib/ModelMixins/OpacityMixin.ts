@@ -9,8 +9,8 @@ interface RequiredOnInstance {
     getOrCreateStratum(id: string): Partial<AdjustableOpacityTraits>;
 }
 
-export default function OpacityMixin<T extends Constructor<RequiredOnInstance>>(Base: T) {
-    class OpacityMixin extends Base {
+export default function OpacityMixin<T extends Constructor<RequiredOnInstance>>(Base: T): T & Constructor<AdjustableOpacity> {
+    class OpacityMixin extends Base implements AdjustableOpacity {
         get implementsAdjustableOpacity(): true {
             return true;
         }
