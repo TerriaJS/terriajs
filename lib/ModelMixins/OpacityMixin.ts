@@ -1,12 +1,10 @@
 import defaultValue from 'terriajs-cesium/Source/Core/defaultValue';
 import Constructor from '../Core/Constructor';
 import AdjustableOpacity, { AdjustableOpacityTraits } from '../Interfaces/AdjustableOpacity';
-import { ObservableMap } from 'mobx';
 import WithStrata from '../Interfaces/WithStrata';
 
-interface RequiredOnInstance {
+interface RequiredOnInstance extends WithStrata<AdjustableOpacityTraits> {
     readonly opacity: number | undefined;
-    getOrCreateStratum(id: string): Partial<AdjustableOpacityTraits>;
 }
 
 export default function OpacityMixin<T extends Constructor<RequiredOnInstance>>(Base: T): T & Constructor<AdjustableOpacity> {

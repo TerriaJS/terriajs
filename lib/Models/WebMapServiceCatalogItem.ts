@@ -23,12 +23,12 @@ import OpacityMixin from '../ModelMixins/OpacityMixin';
 import UrlMixin from '../ModelMixins/UrlMixin';
 import { InfoSectionTraits } from '../Traits/mixCatalogMemberTraits';
 import WebMapServiceCatalogItemTraits from '../Traits/WebMapServiceCatalogItemTraits';
+import LoadableStratum from './LoadableStratum';
 import Mappable, { ImageryParts } from './Mappable';
 import Model from './Model';
 import proxyCatalogItemUrl from './proxyCatalogItemUrl';
 import Terria from './Terria';
 import WebMapServiceCapabilities, { CapabilitiesLayer, CapabilitiesStyle, getRectangleFromLayer } from './WebMapServiceCapabilities';
-import WithStrata from '../Interfaces/WithStrata';
 
 interface LegendUrl {
     url: string;
@@ -46,9 +46,10 @@ interface WebMapServiceStyles {
     [layerName: string]: WebMapServiceStyle[];
 }
 
-
-class GetCapabilitiesStratum implements WebMapServiceCatalogItemTraits {
-    constructor(readonly catalogItem: WebMapServiceCatalogItem) { }
+class GetCapabilitiesStratum extends LoadableStratum(WebMapServiceCatalogItemTraits) {
+    constructor(readonly catalogItem: WebMapServiceCatalogItem) {
+        super();
+    }
 
     @observable
     capabilities: WebMapServiceCapabilities | undefined;

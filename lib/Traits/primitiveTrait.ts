@@ -1,7 +1,7 @@
-import Trait, { TraitOptions } from './Trait';
-import { BaseModel, ModelInterface } from '../Models/Model';
-import ModelTraits from './ModelTraits';
 import TerriaError from '../Core/TerriaError';
+import Model, { ModelInterface } from '../Models/Model';
+import ModelTraits from './ModelTraits';
+import Trait, { TraitOptions } from './Trait';
 
 type PrimitiveType = 'string' | 'number' | 'boolean';
 
@@ -30,7 +30,7 @@ export class PrimitiveTrait<T> extends Trait {
         this.default = options.default;
     }
 
-    getValue(strataTopToBottom: Partial<ModelTraits>[]): T | undefined {
+    getValue(strataTopToBottom: Model.StratumFromTraits<ModelTraits>[]): T | undefined {
         for (let i = 0; i < strataTopToBottom.length; ++i) {
             const stratum: any = strataTopToBottom[i];
             const value = stratum[this.id];

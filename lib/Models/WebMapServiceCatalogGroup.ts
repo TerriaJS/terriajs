@@ -1,5 +1,5 @@
 import { computed, observable, runInAction, trace, action } from 'mobx';
-import LoadableStratum from '../../test/Models/LoadableStratum';
+import LoadableStratum from './LoadableStratum';
 import isReadOnlyArray from '../Core/isReadOnlyArray';
 import TerriaError from '../Core/TerriaError';
 import CatalogMemberMixin from '../ModelMixins/CatalogMemberMixin';
@@ -15,8 +15,10 @@ import Terria from './Terria';
 import WebMapServiceCapabilities, { CapabilitiesLayer } from './WebMapServiceCapabilities';
 import WebMapServiceCatalogItem from './WebMapServiceCatalogItem';
 
-class GetCapabilitiesStratum implements WebMapServiceCatalogGroupTraits {
-    constructor(readonly catalogGroup: WebMapServiceCatalogGroup) {}
+class GetCapabilitiesStratum extends LoadableStratum(WebMapServiceCatalogGroupTraits) {
+    constructor(readonly catalogGroup: WebMapServiceCatalogGroup) {
+        super();
+    }
 
     @observable
     capabilities: WebMapServiceCapabilities | undefined;
