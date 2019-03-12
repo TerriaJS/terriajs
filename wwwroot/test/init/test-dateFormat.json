@@ -37,34 +37,34 @@
                         {
                             "name": "Date format in seconds",
                             "type": "csv",
-                            "url": "build/TerriaJS/test/csv_nongeo/time_series3.csv",
+                            "url": "build/TerriaJS/test/csv/lat_lon_timeseries.csv",
                             "dateFormat": {
-                                "timelineTic": "ss",
+                                "timelineTic": "HH:MM",
                                 "currentTime": "ss 'seconds'"
                             }
                         },
                         {
                             "name": "Date format in minutes",
                             "type": "csv",
-                            "url": "build/TerriaJS/test/csv_nongeo/time_series4.csv",
+                            "url": "build/TerriaJS/test/csv/lat_lon_timeseries.csv",
                             "dateFormat": {
-                                "timelineTic": "MM",
+                                "timelineTic": "HH:MM",
                                 "currentTime": "MM 'minutes'"
                             }
                         },
                         {
                             "name": "Date format in minutes and seconds",
                             "type": "csv",
-                            "url": "build/TerriaJS/test/csv_nongeo/time_series4.csv",
+                            "url": "build/TerriaJS/test/csv/lat_lon_timeseries.csv",
                             "dateFormat": {
-                                "timelineTic": "MM",
-                                "currentTime": "MM'min'ss'seconds'"
+                                "timelineTic": "HH:MM",
+                                "currentTime": "MM'm'ss's'"
                             }
                         },
                         {
                             "name": "Date format in hours and minutes",
                             "type": "csv",
-                            "url": "build/TerriaJS/test/csv_nongeo/time_series.csv",
+                            "url": "build/TerriaJS/test/csv/lat_lon_timeseries.csv",
                             "dateFormat": {
                                 "timelineTic": "HH:MM",
                                 "currentTime": "HH:MM"
@@ -73,7 +73,7 @@
                         {
                             "name": "Date format in hours, minutes and seconds",
                             "type": "csv",
-                            "url": "build/TerriaJS/test/csv_nongeo/time_series.csv",
+                            "url": "build/TerriaJS/test/csv/lat_lon_timeseries.csv",
                             "dateFormat": {
                                 "timelineTic": "HH:MM",
                                 "currentTime": "HH:MM:ss"
@@ -89,7 +89,7 @@
                         {
                             "name": "Default date format",
                             "type": "csv",
-                            "url": "build/TerriaJS/test/csv_nongeo/time_series2.csv",
+                            "url": "build/TerriaJS/test/csv/lat_lon_enum_moving_date_unsorted.csv",
                             "dateFormat": {
                                 "timelineTic": "mm/dd",
                                 "currentTime": "default"
