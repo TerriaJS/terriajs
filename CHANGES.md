@@ -5,6 +5,7 @@ Change Log
 
 * Replace `getUniqueValues` with `lodash.uniq`
 * Fixed a bug where the 3D globe would not immediately refresh when toggling between the "Terrain" and "Smooth" viewer modes.
+* Apply `dateFormat`, if specified, to date/time pickers and date/time selectors.
 
 ### v7.0.2
 
