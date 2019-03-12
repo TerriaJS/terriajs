@@ -28,6 +28,7 @@ const StoryBuilder = createReactClass({
         return {
             editingMode: false,
             shareUrl: "",
+            currentStory: null
         };
     },
 
@@ -90,6 +91,15 @@ const StoryBuilder = createReactClass({
         this.props.viewState.storyShown = true;
         this.props.terria.currentViewer.notifyRepaintRequired();
     },
+
+  editStory(story) {
+        this.props.viewState.storyBuilderShow = true;
+        this.props.viewState.storyShown = false;
+        this.setState({
+          editingMode: true,
+          currentStory: story
+        });
+  },
   
    renderIntro() {
       return (<div className={Styles.intro}><Icon glyph={Icon.GLYPHS.story}/> <strong>This is your story editor</strong><div className={Styles.instructions}>
@@ -97,7 +107,7 @@ const StoryBuilder = createReactClass({
     },
 
     renderStories() {
-      return <div className={Styles.stories}>{this.props.terria.stories.map(story=><Story key={story.id} story={story} removeStory={this.removeStory} runStory={this.runStory}/>)}</div>; 
+      return <div className={Styles.stories}>{this.props.terria.stories.map(story=><Story key={story.id} story={story} editStory={this.editStory} removeStory={this.removeStory} runStory={this.runStory}/>)}</div>; 
       },
 
     onClickCapture() {
@@ -120,7 +130,7 @@ const StoryBuilder = createReactClass({
                 </div>
                {!hasStories && !this.state.editingMode && this.renderIntro()}
                {!this.state.editingMode && hasStories &&  this.renderStories()}
-               {this.state.editingMode && <StoryEditor exit saveStory ={this.onSave} runStory={this.runStory}/>}
+               {this.state.editingMode && <StoryEditor exitEditingMode={this.setState({editingMode: false})} story={this.state.currentStory} saveStory ={this.onSave} runStory={this.runStory}/>}
                 <div className={Styles.footer}>
                   <button disabled={this.state.editingMode} className={Styles.captureBtn} title='capture current scene' onClick={this.onClickCapture}> <Icon glyph={Icon.GLYPHS.story}/> Capture current scene </button>
                 </div>

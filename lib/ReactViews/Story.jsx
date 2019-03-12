@@ -16,14 +16,9 @@ export default class Story extends React.Component {
      return (<div className={Styles.story} >
           <div className={Styles.storyHeader}> 
             <h3>{story.title && story.title.length > 0 ? story.title : 'untitled scene'}</h3>
-            <button className={Styles.toggleBtn} onClick={()=>this.setState({isOpen: !this.state.isOpen})}><Icon glyph={Icon.GLYPHS.map}/></button>
+            <button className={Styles.toggleBtn} onClick={()=>this.props.editStory(story)}><Icon glyph={Icon.GLYPHS.map}/></button>
           </div>
-          {this.state.isOpen && <div className={Styles.body}>
-          {parseCustomHtmlToReact(story.text)}
-          <div className={Styles.footer}><button className={Styles.removeBtn} onClick={() => this.props.removeStory(story)}><Icon glyph={Icon.GLYPHS.trashcan}/></button>
-          <button className={Styles.viewBtn} onClick={()=> this.props.runStory(story)}>View this scene</button></div>
- </div>}
-         </div>
+  </div>
      ); 
   }
 }
@@ -31,5 +26,6 @@ export default class Story extends React.Component {
 Story.propTypes ={
   story: PropTypes.object,
   removeStory: PropTypes.func,
-  runStory: PropTypes.func
+  runStory: PropTypes.func,
+  editStory: PropTypes.func
 };
