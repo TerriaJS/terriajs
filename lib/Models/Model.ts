@@ -7,6 +7,7 @@ import { ModelId } from '../Traits/ModelReference';
 import StratumOrder from './StratumOrder';
 import Terria from './Terria';
 import LoadableStratum from '../../test/Models/LoadableStratum';
+import WithStrata from '../Interfaces/WithStrata';
 
 export interface TraitsConstructor<T extends ModelTraits> {
     new(...args: any[]): T;
@@ -35,14 +36,14 @@ export abstract class BaseModel {
     constructor(readonly id: ModelId, readonly terria: Terria) {
     }
 
-    abstract addStratum(id: string): Partial<ModelTraits>;
+    abstract getOrCreateStratum(id: string): Partial<ModelTraits>;
 
     abstract get strataTopToBottom(): Partial<ModelTraits>[];
     abstract get strataBottomToTop(): Partial<ModelTraits>[];
     abstract createTraitsInstance(): Partial<ModelTraits>;
 }
 
-export interface ModelInterface<T extends ModelTraits> {
+export interface ModelInterface<T extends ModelTraits> extends WithStrata<T> {
     readonly type: string;
     readonly traits: {
         [id: string]: Trait;
@@ -54,7 +55,7 @@ export interface ModelInterface<T extends ModelTraits> {
     readonly isLoading: boolean;
     readonly loadPromise: Promise<{}>;
 
-    addStratum(id: string): Partial<T>;
+    getOrCreateStratum(id: string): Partial<T>;
 
     readonly strataTopToBottom: Partial<T>[];
     readonly strataBottomToTop: Partial<T>[];
@@ -65,6 +66,7 @@ export interface ModelInterface<T extends ModelTraits> {
 function Model<T extends TraitsConstructor<ModelTraits>>(Traits: T): ModelConstructor<ModelInterface<InstanceType<T>> & Model.InterfaceFromTraits<InstanceType<T>>> {
     abstract class Model extends BaseModel implements ModelInterface<T> {
         abstract get type(): string;
+        static readonly traits = Traits.traits;
         readonly traits = Traits.traits;
         readonly flattened: Model.MakeReadonly<T>;
         readonly strata = observable.map<string, Partial<T>>();
@@ -74,7 +76,7 @@ function Model<T extends TraitsConstructor<ModelTraits>>(Traits: T): ModelConstr
             this.flattened = observable(createFlattenedLayer(this, Traits));
         }
 
-        addStratum(id: string): Partial<T> {
+        getOrCreateStratum(id: string): Partial<T> {
             let result = this.strata.get(id);
             if (!result) {
                 result = this.createTraitsInstance();

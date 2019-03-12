@@ -17,18 +17,18 @@ describe('NewStuff', function() {
         const wms = new WebMapServiceCatalogGroup('Taxation Statistics 2011-2012', terria);
 
         const wmsItem = new WebMapServiceCatalogItem('Taxation Statistics 2011-2012/ckan_95d9e550_8b36_4273_8df7_2b76c140e73a', terria);
-        const definition = wmsItem.addStratum(CommonStrata.definition);
+        const definition = wmsItem.getOrCreateStratum(CommonStrata.definition);
         definition.name = 'Foo';
         terria.addModel(wmsItem);
 
         const wmsItem2 = new WebMapServiceCatalogItem('another', terria);
-        const definition2 = wmsItem2.addStratum(CommonStrata.definition);
+        const definition2 = wmsItem2.getOrCreateStratum(CommonStrata.definition);
         definition2.name = 'Another';
         definition2.url = 'https://data.gov.au/geoserver/taxation-statistics-2011-12/wms';
         terria.addModel(wmsItem2);
 
         runInAction(() => {
-            const definition = wms.addStratum('definition');
+            const definition = wms.getOrCreateStratum('definition');
             definition.members = [wmsItem2.id];
             definition.name = 'Taxation Statistics 2011-2012';
             definition.url = 'https://data.gov.au/geoserver/taxation-statistics-2011-12/wms';

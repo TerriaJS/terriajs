@@ -1,9 +1,12 @@
-import Constructor from './Constructor';
 import DeveloperError from 'terriajs-cesium/Source/Core/DeveloperError';
 
-type BaseClass<T> = T extends infer TBase ? TBase : never;
-
-//export default function superGet<TClass, TProperty extends keyof TClass>(thisClass: Constructor<TClass>, instance: TClass, propertyName: keyof BaseClass<TClass>): TClass[TProperty] {
+/**
+ * Gets the value of a named property from a superclass of an instance. If the superclass has
+ * MobX decorators, they are ignored, and the property value is retrieved directly.
+ * @param source The first class to search for the named property.
+ * @param propertyName The name of the property to get.
+ * @param instance The instance for which to get the property value.
+ */
 export default function superGet(source: any, propertyName: any, instance: any): any {
     while (source !== undefined) {
         let propertyDescriptor;
@@ -26,6 +29,5 @@ export default function superGet(source: any, propertyName: any, instance: any):
         source = Object.getPrototypeOf(source);
     }
 
-    // TODO: can we fail this at compile time somehow?
     throw new DeveloperError('A property named ' + propertyName + ' was not found in any superclass.');
 }

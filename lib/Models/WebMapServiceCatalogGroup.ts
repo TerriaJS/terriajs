@@ -88,7 +88,7 @@ class GetCapabilitiesStratum implements WebMapServiceCatalogGroupTraits {
                     this.catalogGroup.terria.addModel(model);
                 }
 
-                const stratum = model.addStratum(
+                const stratum = model.getOrCreateStratum(
                     CommonStrata.inheritedFromParentGroup
                 );
                 runInAction(() => {
