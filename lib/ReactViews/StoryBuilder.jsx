@@ -32,8 +32,8 @@ const StoryBuilder = createReactClass({
         };
     },
 
-    removeStory(story) {
-        this.props.terria.stories = this.props.terria.stories.filter(st => st !== story);
+    removeStory(storyId) {
+        this.props.terria.stories = this.props.terria.stories.filter(st => st.id !== storyId);
         this.updateForShortening();
     },
     shouldShorten() {
@@ -71,15 +71,23 @@ const StoryBuilder = createReactClass({
     onSave(_story) {
       const story = {
         title: _story.title,
-        text: _story.content,
-        id: (this.props.terria.stories ? this.props.terria.stories.length : 0) + idCounter++,
+        text: _story.text,
+        id: _story.id ? _story.id : (this.props.terria.stories ? this.props.terria.stories.length : 0) + idCounter++,
       };
         if (USE_URL) {
             story.shareUrl = new URI(buildShareLink(this.props.terria, false)).hash();
         } else {
             story.shareData = JSON.parse(JSON.stringify(getShareData(this.props.terria, false)));
         }
-        this.props.terria.stories = [...(this.props.terria.stories || []), story];
+
+        const storyIndex = (this.props.terria.stories || []).map(story => story.id).indexOf(_story.id);
+      
+        if(storyIndex >= 0) {
+          // replace the old story
+          this.props.terria.stories = [...this.props.terria.stories.slice(0, storyIndex), ...this.props.terria.stories.slice(storyIndex + 1), story];
+        } else {
+          this.props.terria.stories = [...(this.props.terria.stories || []), story];
+        }
         this.updateForShortening();
         this.setState({
             editingMode: false
@@ -107,7 +115,7 @@ const StoryBuilder = createReactClass({
     },
 
     renderStories() {
-      return <div className={Styles.stories}>{this.props.terria.stories.map(story=><Story key={story.id} story={story} editStory={this.editStory} removeStory={this.removeStory} runStory={this.runStory}/>)}</div>; 
+      return <div className={Styles.stories}>{this.props.terria.stories.map(story=><Story key={story.id} story={story} editStory={this.editStory}/>)}</div>; 
       },
 
     onClickCapture() {
@@ -130,7 +138,7 @@ const StoryBuilder = createReactClass({
                 </div>
                {!hasStories && !this.state.editingMode && this.renderIntro()}
                {!this.state.editingMode && hasStories &&  this.renderStories()}
-               {this.state.editingMode && <StoryEditor exitEditingMode={this.setState({editingMode: false})} story={this.state.currentStory} saveStory ={this.onSave} runStory={this.runStory}/>}
+               {this.state.editingMode && <StoryEditor removeStory={this.removeStory} exitEditingMode={()=>this.setState({editingMode: false})} story={this.state.currentStory} saveStory ={this.onSave} runStory={this.runStory}/>}
                 <div className={Styles.footer}>
                   <button disabled={this.state.editingMode} className={Styles.captureBtn} title='capture current scene' onClick={this.onClickCapture}> <Icon glyph={Icon.GLYPHS.story}/> Capture current scene </button>
                 </div>

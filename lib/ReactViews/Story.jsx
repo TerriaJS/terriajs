@@ -5,13 +5,7 @@ import Icon from "./Icon.jsx";
 import parseCustomHtmlToReact from './Custom/parseCustomHtmlToReact';
 
 export default class Story extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isOpen: false,
-    };
-  }
-  render() {
+   render() {
     const story = this.props.story;
      return (<div className={Styles.story} >
           <div className={Styles.storyHeader}> 
@@ -25,7 +19,5 @@ export default class Story extends React.Component {
 
 Story.propTypes ={
   story: PropTypes.object,
-  removeStory: PropTypes.func,
-  runStory: PropTypes.func,
   editStory: PropTypes.func
 };
