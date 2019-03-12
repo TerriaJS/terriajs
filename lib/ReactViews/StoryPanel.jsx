@@ -16,11 +16,12 @@ const StoryPanel = createReactClass({
     },
     getInitialState() {
         return {
-            newTitle: "",
-            newText: "",
-            uri: "",
-            currentScene: 0
+           currentScene: 0
         };
+    },
+
+    UNSAFE_componentWillMount() {
+        this.activateStory();
     },
 
     navigateStory(index) {
@@ -40,14 +41,15 @@ const StoryPanel = createReactClass({
     },
 
     // This is in StoryPanel and StoryBuilder
-    activateStory(story) {
+    activateStory(_story) {
+        const story = _story? _story : this.props.terria.stories[0];
         this.props.terria.nowViewing.removeAll();
-        if (story.shareData) {
-            this.props.terria.updateFromStartData(story.shareData);
-        } else {
-            window.location = story.shareUrl;
-        }
-    },
+         if (story.shareData) {
+              this.props.terria.updateFromStartData(story.shareData);
+          } else {
+              window.location = story.shareUrl;
+          }
+      },
 
     exitStory() {
         this.props.viewState.storyShown = !this.props.viewState.storyShown; 
