@@ -5,99 +5,142 @@
             "type": "group",
             "items": [
                 {
-                    "id": "3aa89fcb",
-                    "name": "Available Distribution Capacity",
-                    "url": "https://network-opportunity-maps.s3-ap-southeast-2.amazonaws.com/constraints/published/available_capacity_timeseries.csv",
-                    "type": "csv",
-                    "cacheDuration": "1h",
-                    "initialTimeSource": "start",
-                    "tableStyle": {
-                        "colorPalette": "9-class RdYlGn",
-                        "colorBins": 0,
-                        "dataVariable": "available_capacity",
-                        "columns": {
-                            "asset_name": {
-                                "type": "HIDDEN"
-                            },
-                            "available_capacity": {
-                                "name": "Available Capacity (MVA)",
-                                "clampDisplayValue": true,
-                                "minDisplayValue": -15,
-                                "maxDisplayValue": 15
-                            },
-                            "capacity": {
-                                "name": "Capacity (MVA)"
-                            },
-                            "load": {
-                                "name": "Load (MVA)"
+                    "name": "Existing date format in AREMI",
+                    "type": "group",
+                    "isOpen": false,
+                    "items": [
+                        {
+                            "name": "Available Distribution Capacity Sample",
+                            "type": "csv",
+                            "url": "build/TerriaJS/test/csv/sample_aremi_available_distribution_capacity.csv",
+                            "dateFormat": {
+                                "timelineTic": "yyyy",
+                                "currentTime": "'Year: 'yyyy"
+                            }
+                        },
+                        {
+                            "name": "Peak Day Available Capacity Sample",
+                            "type": "csv",
+                            "url": "build/TerriaJS/test/csv/sample_aremi_peak_day_capacity.csv",
+                            "dateFormat": {
+                                "timelineTic": "hh tt",
+                                "currentTime": "'Hour of day:' hh tt"
                             }
                         }
-                    },
-                    "dateFormat": {
-                        "currentTime": "'Year: 'yyyy",
-                        "timelineTic": "yyyy"
-                    }
+                    ]
                 },
                 {
-                    "id": "9fe2927c",
-                    "name": "Annual Deferral Value",
-                    "url": "https://network-opportunity-maps.s3-ap-southeast-2.amazonaws.com/constraints/published/deferral_values_timeseries.csv",
-                    "type": "csv",
-                    "cacheDuration": "1h",
-                    "initialTimeSource": "2021",
-                    "tableStyle": {
-                        "dataVariable": "deferral_value",
-                        "colorMap": "rgba(255,255,255,1.0)-rgba(255,255,115,1.0)-rgba(242,198,95,1.0)-rgba(222,112,68,1.0)-rgba(203,40,42,1.0)-rgba(154,31,75,1.0)-rgba(101,31,124,1.0)",
-                        "colorBins": 0,
-                        "clampDisplayValue": true,
-                        "minDisplayValue": 0,
-                        "maxDisplayValue": 500,
-                        "columns": {
-                            "deferral_value": {
-                                "name": "Deferral Value ($/kVAyr)",
-                                "nullColor": "rgba(3,154,206,1)",
-                                "nullLabel": "MVAr support required",
-                                "replaceWithNullValues": [
-                                    "MVAR support required",
-                                    "MVAR support requiredMVAR support required"
-                                ]
+                    "name": "Time-based intervals",
+                    "type": "group",
+                    "isOpen": false,
+                    "items": [
+                        {
+                            "name": "Date format in seconds",
+                            "type": "csv",
+                            "url": "build/TerriaJS/test/csv_nongeo/time_series3.csv",
+                            "dateFormat": {
+                                "timelineTic": "ss",
+                                "currentTime": "ss 'seconds'"
+                            }
+                        },
+                        {
+                            "name": "Date format in minutes",
+                            "type": "csv",
+                            "url": "build/TerriaJS/test/csv_nongeo/time_series4.csv",
+                            "dateFormat": {
+                                "timelineTic": "MM",
+                                "currentTime": "MM 'minutes'"
+                            }
+                        },
+                        {
+                            "name": "Date format in minutes and seconds",
+                            "type": "csv",
+                            "url": "build/TerriaJS/test/csv_nongeo/time_series4.csv",
+                            "dateFormat": {
+                                "timelineTic": "MM",
+                                "currentTime": "MM'min'ss'seconds'"
+                            }
+                        },
+                        {
+                            "name": "Date format in hours and minutes",
+                            "type": "csv",
+                            "url": "build/TerriaJS/test/csv_nongeo/time_series.csv",
+                            "dateFormat": {
+                                "timelineTic": "HH:MM",
+                                "currentTime": "HH:MM"
+                            }
+                        },
+                        {
+                            "name": "Date format in hours, minutes and seconds",
+                            "type": "csv",
+                            "url": "build/TerriaJS/test/csv_nongeo/time_series.csv",
+                            "dateFormat": {
+                                "timelineTic": "HH:MM",
+                                "currentTime": "HH:MM:ss"
                             }
                         }
-                    },
-                    "dateFormat": {
-                        "currentTime": "'Year: 'yyyy",
-                        "timelineTic": "yyyy"
-                    }
+                    ]
                 },
                 {
-                    "id": "e16f1613",
-                    "name": "Peak Day Available Capacity",
-                    "url": "https://network-opportunity-maps.s3-ap-southeast-2.amazonaws.com/constraints/published/peak_day.csv",
-                    "type": "csv",
-                    "cacheDuration": "1h",
-                    "initialTimeSource": "start",
-                    "tableStyle": {
-                        "dataVariable": "percent_available",
-                        "colorMap": "rgba(26,152,80,1.0)-rgba(102,189,99,1.0)-rgba(166,217,106,1.0)-rgba(217,239,139,1.0)-rgba(255,255,191,1.0)-rgba(254,224,139,1.0)-rgba(253,174,97,1.0)-rgba(244,109,67,1.0)-rgba(215,48,39,1.0)",
-                        "colorBins": 0,
-                        "columns": {
-                            "capacity": {
-                                "name": "Capacity (MVA)"
-                            },
-                            "load": {
-                                "name": "Load (MVA)"
-                            },
-                            "percent_available": {
-                                "name": "Percent of capacity (%)",
-                                "minDisplayValue": 0,
-                                "maxDisplayValue": 120
+                    "name": "Date-based intervals (using named formats)",
+                    "type": "group",
+                    "isOpen": false,
+                    "items": [
+                        {
+                            "name": "Default date format",
+                            "type": "csv",
+                            "url": "build/TerriaJS/test/csv_nongeo/time_series2.csv",
+                            "dateFormat": {
+                                "timelineTic": "mm/dd",
+                                "currentTime": "default"
+                            }
+                        },
+                        {
+                            "name": "Short date format",
+                            "type": "csv",
+                            "url": "build/TerriaJS/test/csv/lat_lon_enum_moving_date_unsorted.csv",
+                            "dateFormat": {
+                                "timelineTic": "mm/dd",
+                                "currentTime": "shortDate"
+                            }
+                        },
+                        {
+                            "name": "Medium date format",
+                            "type": "csv",
+                            "url": "build/TerriaJS/test/csv/lat_lon_enum_moving_date_unsorted.csv",
+                            "dateFormat": {
+                                "timelineTic": "mm/dd",
+                                "currentTime": "mediumDate"
+                            }
+                        },
+                        {
+                            "name": "Long date format",
+                            "type": "csv",
+                            "url": "build/TerriaJS/test/csv/lat_lon_enum_moving_date_unsorted.csv",
+                            "dateFormat": {
+                                "timelineTic": "mm/dd",
+                                "currentTime": "longDate"
+                            }
+                        },
+                        {
+                            "name": "Full date format",
+                            "type": "csv",
+                            "url": "build/TerriaJS/test/csv/lat_lon_enum_moving_date_unsorted.csv",
+                            "dateFormat": {
+                                "timelineTic": "mm/dd",
+                                "currentTime": "fullDate"
+                            }
+                        },
+                        {
+                            "name": "ISO date format",
+                            "type": "csv",
+                            "url": "build/TerriaJS/test/csv/lat_lon_enum_moving_date_unsorted.csv",
+                            "dateFormat": {
+                                "timelineTic": "mm/dd",
+                                "currentTime": "isoDate"
                             }
                         }
-                    },
-                    "dateFormat": {
-                        "currentTime": "'Hour of day:' hh tt",
-                        "timelineTic": "hh tt"
-                    }
+                    ]
                 }
             ]
         }

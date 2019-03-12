@@ -2471,27 +2471,6 @@
             ],
             "description": "Australian Electoral Comission Commonwealth Electoral Boundaries for ABS   Australian Marriage Law Survey",
             "regionIdsFile": "build/TerriaJS/data/regionids/region_map-AEC_FED_2017_AMLS_FED_ABB.json"
-        },
-        "AREMI_ISF_combined": {
-            "layerName": "aremi_isf_combined",
-            "server": "https://aremi-vector-tiles2.terria.io/aremi_isf_combined/{z}/{x}/{y}.pbf",
-            "serverType": "MVT",
-            "serverMaxNativeZoom": 12,
-            "serverMaxZoom": 28,
-            "bbox": [
-                132.086814916,
-                -43.4484604171,
-                153.63906769,
-                -14.164452636
-            ],
-            "uniqueIdProp": "FID",
-            "regionProp": "asset_code",
-            "nameProp": "asset_name",
-            "aliases": [
-                "asset_code"
-            ],
-            "description": "AREMI ISF",
-            "regionIdsFile": "data/regionids/region_map-aremi_isf_combined_asset_code.json"
         }
     }
 }
