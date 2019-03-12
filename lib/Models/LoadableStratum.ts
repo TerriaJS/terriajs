@@ -1,9 +1,10 @@
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import Constructor from "../Core/Constructor";
+import StratumFromTraits from "../ModelInterfaces/StratumFromTraits";
 import ModelTraits from "../Traits/ModelTraits";
 import Model, { TraitsConstructor } from "./Model";
 
-export default function LoadableStratum<T extends TraitsConstructor<ModelTraits>>(Traits: T): Constructor<Model.StratumFromTraits<InstanceType<T>>> {
+export default function LoadableStratum<T extends TraitsConstructor<ModelTraits>>(Traits: T): Constructor<StratumFromTraits<InstanceType<T>>> {
     abstract class LoadableStratum {
     }
 

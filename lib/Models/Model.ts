@@ -1,14 +1,13 @@
-import { ObservableMap, computed, decorate, observable, trace } from 'mobx';
-import DeveloperError from 'terriajs-cesium/Source/Core/DeveloperError';
-import Constructor from '../Core/Constructor';
-import Trait from '../Traits/Trait';
-import ModelTraits from '../Traits/ModelTraits';
+import { computed, decorate, observable, ObservableMap, trace } from 'mobx';
+import LoadableStratum from '../../test/Models/LoadableStratum';
+import OrUndefined from '../Core/OrUndefined';
+import WithStrata from '../ModelInterfaces/WithStrata';
+import StratumFromTraits from '../ModelInterfaces/StratumFromTraits';
 import { ModelId } from '../Traits/ModelReference';
+import ModelTraits from '../Traits/ModelTraits';
+import Trait from '../Traits/Trait';
 import StratumOrder from './StratumOrder';
 import Terria from './Terria';
-import LoadableStratum from '../../test/Models/LoadableStratum';
-import WithStrata from '../Interfaces/WithStrata';
-import OrUndefined from '../Core/OrUndefined';
 
 export interface TraitsConstructor<T extends ModelTraits> {
     new(...args: any[]): T;
@@ -28,20 +27,20 @@ export abstract class BaseModel {
     abstract get traits(): {
         [id: string]: Trait;
     };
-    abstract get flattened(): Model.StratumFromTraits<ModelTraits>;
-    abstract get strata(): ObservableMap<string, Model.StratumFromTraits<ModelTraits>>;
-    abstract get topStratum(): Model.StratumFromTraits<ModelTraits>;
+    abstract get flattened(): StratumFromTraits<ModelTraits>;
+    abstract get strata(): ObservableMap<string, StratumFromTraits<ModelTraits>>;
+    abstract get topStratum(): StratumFromTraits<ModelTraits>;
     abstract get isLoading(): boolean;
     abstract get loadPromise(): Promise<{}>;
 
     constructor(readonly id: ModelId, readonly terria: Terria) {
     }
 
-    abstract getOrCreateStratum(id: string): Model.StratumFromTraits<ModelTraits>;
+    abstract getOrCreateStratum(id: string): StratumFromTraits<ModelTraits>;
 
-    abstract get strataTopToBottom(): Model.StratumFromTraits<ModelTraits>[];
-    abstract get strataBottomToTop(): Model.StratumFromTraits<ModelTraits>[];
-    abstract createStratumInstance(): Model.StratumFromTraits<ModelTraits>;
+    abstract get strataTopToBottom(): StratumFromTraits<ModelTraits>[];
+    abstract get strataBottomToTop(): StratumFromTraits<ModelTraits>[];
+    abstract createStratumInstance(): StratumFromTraits<ModelTraits>;
 }
 
 export interface ModelInterface<T extends ModelTraits> extends WithStrata<T> {
@@ -50,18 +49,18 @@ export interface ModelInterface<T extends ModelTraits> extends WithStrata<T> {
         [id: string]: Trait;
     };
     readonly flattened: Model.MakeReadonly<T>;
-    readonly strata: ObservableMap<string, Model.StratumFromTraits<T>>;
+    readonly strata: ObservableMap<string, StratumFromTraits<T>>;
     readonly terria: Terria;
     readonly id: string;
     readonly isLoading: boolean;
     readonly loadPromise: Promise<{}>;
 
-    getOrCreateStratum(id: string): Model.StratumFromTraits<T>;
+    getOrCreateStratum(id: string): StratumFromTraits<T>;
 
-    readonly strataTopToBottom: Model.StratumFromTraits<T>[];
-    readonly strataBottomToTop: Model.StratumFromTraits<T>[];
-    readonly topStratum: Model.StratumFromTraits<T>;
-    createStratumInstance(): Model.StratumFromTraits<T>;
+    readonly strataTopToBottom: StratumFromTraits<T>[];
+    readonly strataBottomToTop: StratumFromTraits<T>[];
+    readonly topStratum: StratumFromTraits<T>;
+    createStratumInstance(): StratumFromTraits<T>;
 }
 
 function Model<T extends TraitsConstructor<ModelTraits>>(Traits: T): ModelConstructor<ModelInterface<InstanceType<T>> & Model.InterfaceFromTraits<InstanceType<T>>> {
@@ -70,14 +69,14 @@ function Model<T extends TraitsConstructor<ModelTraits>>(Traits: T): ModelConstr
         static readonly traits = Traits.traits;
         readonly traits = Traits.traits;
         readonly flattened: Model.MakeReadonly<T>;
-        readonly strata = observable.map<string, Model.StratumFromTraits<T>>();
+        readonly strata = observable.map<string, StratumFromTraits<T>>();
 
         constructor(id: ModelId, terria: Terria) {
             super(id, terria);
             this.flattened = observable(createFlattenedLayer(this, Traits));
         }
 
-        getOrCreateStratum(id: string): Model.StratumFromTraits<T> {
+        getOrCreateStratum(id: string): StratumFromTraits<T> {
             let result = this.strata.get(id);
             if (!result) {
                 result = this.createStratumInstance();
@@ -126,7 +125,7 @@ function Model<T extends TraitsConstructor<ModelTraits>>(Traits: T): ModelConstr
             return Promise.all(promises);
         }
 
-        createStratumInstance(): Model.StratumFromTraits<T> {
+        createStratumInstance(): StratumFromTraits<T> {
             const traits = Traits.traits;
             const propertyNames = Object.keys(traits);
             const reduced: any = propertyNames.reduce((p, c) => ({ ...p, [c]: undefined }), {});
@@ -188,7 +187,6 @@ namespace Model {
     };
 
     export type InterfaceFromTraits<TDefinition extends ModelTraits> = OrUndefined<MakeReadonly<Required<TDefinition>>>;
-    export type StratumFromTraits<TDefinition extends ModelTraits> = OrUndefined<Required<TDefinition>>;
 }
 
 export default Model;

@@ -1,7 +1,7 @@
 import defaultValue from 'terriajs-cesium/Source/Core/defaultValue';
 import Constructor from '../Core/Constructor';
-import AdjustableOpacity, { AdjustableOpacityTraits } from '../Interfaces/AdjustableOpacity';
-import WithStrata from '../Interfaces/WithStrata';
+import AdjustableOpacity, { AdjustableOpacityTraits } from '../ModelInterfaces/AdjustableOpacity';
+import WithStrata from '../ModelInterfaces/WithStrata';
 
 interface RequiredOnInstance extends WithStrata<AdjustableOpacityTraits> {
     readonly opacity: number | undefined;

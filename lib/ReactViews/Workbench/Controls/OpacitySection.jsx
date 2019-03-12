@@ -8,7 +8,7 @@ import { observer } from 'mobx-react';
 import CommonStrata from '../../../Models/CommonStrata';
 
 import Styles from './opacity-section.scss';
-import AdjustableOpacity from '../../../Interfaces/AdjustableOpacity';
+import AdjustableOpacity from '../../../ModelInterfaces/AdjustableOpacity';
 
 const OpacitySection = observer(createReactClass({
     displayName: 'OpacitySection',

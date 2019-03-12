@@ -1,5 +1,6 @@
 import TerriaError from '../Core/TerriaError';
-import Model, { ModelInterface } from '../Models/Model';
+import StratumFromTraits from '../ModelInterfaces/StratumFromTraits';
+import { ModelInterface } from '../Models/Model';
 import ModelTraits from './ModelTraits';
 import Trait, { TraitOptions } from './Trait';
 
@@ -30,7 +31,7 @@ export class PrimitiveTrait<T> extends Trait {
         this.default = options.default;
     }
 
-    getValue(strataTopToBottom: Model.StratumFromTraits<ModelTraits>[]): T | undefined {
+    getValue(strataTopToBottom: StratumFromTraits<ModelTraits>[]): T | undefined {
         for (let i = 0; i < strataTopToBottom.length; ++i) {
             const stratum: any = strataTopToBottom[i];
             const value = stratum[this.id];
