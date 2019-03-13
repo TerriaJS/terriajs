@@ -20,7 +20,7 @@ const SettingPanel = createReactClass({
 
     propTypes: {
         terria: PropTypes.object.isRequired,
-        allBaseMaps: PropTypes.array.isRequired,
+        allBaseMaps: PropTypes.array,
         viewState: PropTypes.object.isRequired
     },
 
@@ -70,9 +70,10 @@ const SettingPanel = createReactClass({
                 return;
         }
         this.props.terria.viewerMode = newViewerMode;
-
+      
         // We store the user's chosen viewer mode for future use.
         this.props.terria.setLocalProperty('viewermode', newViewerMode);
+        this.props.terria.currentViewer.notifyRepaintRequired();
     },
 
     render() {

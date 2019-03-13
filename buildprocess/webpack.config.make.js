@@ -1,8 +1,7 @@
 var glob = require('glob-all');
 var configureWebpack = require('./configureWebpack');
 var path = require('path');
-var webpack = require('webpack');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 //var testGlob = ['./test/**/*.js', './test/**/*.jsx', '!./test/Utility/*.js'];
 var testGlob = [
@@ -19,6 +18,7 @@ var testGlob = [
 
 module.exports = function(hot, dev) {
     var config = {
+        mode: dev ? 'development' : 'production',
         entry: glob.sync(testGlob),
         output: {
             path: path.resolve(__dirname, '..', 'wwwroot', 'build'),
@@ -27,7 +27,7 @@ module.exports = function(hot, dev) {
         },
         devtool: 'source-map',
         module: {
-            loaders: [
+            rules: [
                 {
                     // Don't let jasmine-ajax detect require and import jasmine-core, because we bring
                     // in Jasmine via a script tag instead.
@@ -53,12 +53,7 @@ module.exports = function(hot, dev) {
         }
     };
 
-    if (!dev) {
-        config.plugins = [
-            new webpack.optimize.UglifyJsPlugin()
-        ];
-    }
-    config.plugins = [new ExtractTextPlugin({filename: "nationalmap.css", disable: false, ignoreOrder: true})];
+    config.plugins = [new MiniCssExtractPlugin({filename: "nationalmap.css", disable: false, ignoreOrder: true})];
 
-    return configureWebpack(path.resolve(__dirname, '../'), config, hot, hot, ExtractTextPlugin, true);
+    return configureWebpack(path.resolve(__dirname, '../'), config, hot, hot, MiniCssExtractPlugin, true);
 };

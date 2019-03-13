@@ -13,7 +13,7 @@
             ],
             "digits": 11,
             "description": "Statistical Area Level 1",
-            "regionIdsFile": "data/regionids/region_map-FID_SA1_2011_AUST_SA1_MAIN11.json",
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_SA1_2011_AUST_SA1_MAIN11.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -38,7 +38,7 @@
             ],
             "digits": 7,
             "description": "Statistical Area Level 1",
-            "regionIdsFile": "data/regionids/region_map-FID_SA1_2011_AUST_SA1_7DIG11.json",
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_SA1_2011_AUST_SA1_7DIG11.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -75,7 +75,7 @@
             ],
             "nameProp": "SA1_7DIG16",
             "description": "Statistical Area Level 1 2016 (ABS)",
-            "regionIdsFile": "data/regionids/region_map-SA1_2016_AUST_SA1_MAIN16.json"
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-SA1_2016_AUST_SA1_MAIN16.json"
         },
         "SA1_7DIGIT_2016": {
             "layerName": "SA1_2016_AUST",
@@ -98,7 +98,7 @@
             ],
             "nameProp": "SA1_7DIG16",
             "description": "Statistical Area Level 1 2016 (ABS)",
-            "regionIdsFile": "data/regionids/region_map-SA1_2016_AUST_SA1_7DIG16.json"
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-SA1_2016_AUST_SA1_7DIG16.json"
         },
         "SA4_2011": {
             "layerName": "FID_SA4_2011_AUST",
@@ -111,7 +111,7 @@
             ],
             "digits": 3,
             "description": "Statistical Area Level 4",
-            "regionIdsFile": "data/regionids/region_map-FID_SA4_2011_AUST_SA4_CODE11.json",
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_SA4_2011_AUST_SA4_CODE11.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -135,7 +135,7 @@
                 "sa4_name_2011"
             ],
             "description": "Statistical Area Level 4",
-            "regionIdsFile": "data/regionids/region_map-FID_SA4_2011_AUST_SA4_NAME11.json",
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_SA4_2011_AUST_SA4_NAME11.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -171,7 +171,7 @@
             ],
             "nameProp": "SA4_NAME16",
             "description": "Statistical Area Level 4 2016 (ABS)",
-            "regionIdsFile": "data/regionids/region_map-SA4_2016_AUST_SA4_CODE16.json"
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-SA4_2016_AUST_SA4_CODE16.json"
         },
         "SA4_NAME_2016": {
             "layerName": "SA4_2016_AUST",
@@ -194,7 +194,7 @@
             ],
             "nameProp": "SA4_NAME16",
             "description": "Statistical Area Level 4 2016 (ABS)",
-            "regionIdsFile": "data/regionids/region_map-SA4_2016_AUST_SA4_NAME16.json"
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-SA4_2016_AUST_SA4_NAME16.json"
         },
         "SA3_2011": {
             "layerName": "FID_SA3_2011_AUST",
@@ -207,7 +207,7 @@
             ],
             "digits": 5,
             "description": "Statistical Area Level 3",
-            "regionIdsFile": "data/regionids/region_map-FID_SA3_2011_AUST_SA3_CODE11.json",
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_SA3_2011_AUST_SA3_CODE11.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -232,7 +232,7 @@
             ],
             "digits": 5,
             "description": "Statistical Area Level 3",
-            "regionIdsFile": "data/regionids/region_map-FID_SA3_2011_AUST_SA3_NAME11.json",
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_SA3_2011_AUST_SA3_NAME11.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -268,7 +268,7 @@
             ],
             "nameProp": "SA3_NAME16",
             "description": "Statistical Area Level 3 2016 (ABS)",
-            "regionIdsFile": "data/regionids/region_map-SA3_2016_AUST_SA3_CODE16.json"
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-SA3_2016_AUST_SA3_CODE16.json"
         },
         "SA3_NAME_2016": {
             "layerName": "SA3_2016_AUST",
@@ -291,7 +291,7 @@
             ],
             "nameProp": "SA3_NAME16",
             "description": "Statistical Area Level 3 2016 (ABS)",
-            "regionIdsFile": "data/regionids/region_map-SA3_2016_AUST_SA3_NAME16.json"
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-SA3_2016_AUST_SA3_NAME16.json"
         },
         "SA2_2011": {
             "layerName": "FID_SA2_2011_AUST",
@@ -304,7 +304,7 @@
             ],
             "digits": 9,
             "description": "Statistical Area Level 2",
-            "regionIdsFile": "data/regionids/region_map-FID_SA2_2011_AUST_SA2_MAIN11.json",
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_SA2_2011_AUST_SA2_MAIN11.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -329,7 +329,7 @@
             ],
             "digits": 5,
             "description": "Statistical Area Level 2",
-            "regionIdsFile": "data/regionids/region_map-FID_SA2_2011_AUST_SA2_5DIG11.json",
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_SA2_2011_AUST_SA2_5DIG11.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -353,7 +353,7 @@
                 "sa2_name_2011"
             ],
             "description": "Statistical Area Level 2",
-            "regionIdsFile": "data/regionids/region_map-FID_SA2_2011_AUST_SA2_NAME11.json",
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_SA2_2011_AUST_SA2_NAME11.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -389,7 +389,7 @@
             ],
             "nameProp": "SA2_NAME16",
             "description": "Statistical Area Level 2 2016 (ABS)",
-            "regionIdsFile": "data/regionids/region_map-SA2_2016_AUST_SA2_MAIN16.json"
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-SA2_2016_AUST_SA2_MAIN16.json"
         },
         "SA2_5DIG_2016": {
             "layerName": "SA2_2016_AUST",
@@ -412,7 +412,7 @@
             ],
             "nameProp": "SA2_NAME16",
             "description": "Statistical Area Level 2 2016 (ABS)",
-            "regionIdsFile": "data/regionids/region_map-SA2_2016_AUST_SA2_5DIG16.json"
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-SA2_2016_AUST_SA2_5DIG16.json"
         },
         "SA2_NAME_2016": {
             "layerName": "SA2_2016_AUST",
@@ -435,7 +435,7 @@
             ],
             "nameProp": "SA2_NAME16",
             "description": "Statistical Area Level 2 2016 (ABS)",
-            "regionIdsFile": "data/regionids/region_map-SA2_2016_AUST_SA2_NAME16.json"
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-SA2_2016_AUST_SA2_NAME16.json"
         },
         "SSC": {
             "layerName": "FID_SSC_2011_AUST",
@@ -448,7 +448,7 @@
             ],
             "digits": 5,
             "description": "ABS approximations of suburbs",
-            "regionIdsFile": "data/regionids/region_map-FID_SSC_2011_AUST_SSC_CODE.json",
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_SSC_2011_AUST_SSC_CODE.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -472,7 +472,7 @@
                 "ssc_name_2011"
             ],
             "description": "ABS approximations of suburbs",
-            "regionIdsFile": "data/regionids/region_map-FID_SSC_2011_AUST_SSC_NAME.json",
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_SSC_2011_AUST_SSC_NAME.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -508,7 +508,7 @@
             ],
             "nameProp": "SSC_NAME16",
             "description": "ABS approximations of suburbs (2016)",
-            "regionIdsFile": "data/regionids/region_map-SSC_2016_AUST_SSC_CODE16.json"
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-SSC_2016_AUST_SSC_CODE16.json"
         },
         "SSC_NAME_2016": {
             "layerName": "SSC_2016_AUST",
@@ -532,7 +532,51 @@
             ],
             "nameProp": "SSC_NAME16",
             "description": "ABS approximations of suburbs (2016)",
-            "regionIdsFile": "data/regionids/region_map-SSC_2016_AUST_SSC_NAME16.json"
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-SSC_2016_AUST_SSC_NAME16.json"
+        },
+        "LGA_2018": {
+            "layerName": "LGA_2018_AUST",
+            "server": "https://vector-tiles.terria.io/LGA_2018_AUST/{z}/{x}/{y}.pbf",
+            "serverType": "MVT",
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694139400008,
+                -43.74050960205758,
+                167.99803499600011,
+                -9.142175976703571
+            ],
+            "uniqueIdProp": "FID",
+            "regionProp": "LGA_CODE18",
+            "nameProp": "LGA_NAME18",
+            "aliases": [
+                "lga_code_2018",
+                "lga_code",
+                "lga"
+            ],
+            "description": "Local Government Areas 2018 (ABS)",
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-LGA_2018_AUST_LGA_CODE18.json"
+        },
+        "LGA_2017": {
+            "layerName": "LGA_2017_AUST",
+            "server": "https://vector-tiles.terria.io/LGA_2017_AUST/{z}/{x}/{y}.pbf",
+            "serverType": "MVT",
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694139400008,
+                -43.74050960205758,
+                167.99803499600011,
+                -9.142175976703571
+            ],
+            "uniqueIdProp": "FID",
+            "regionProp": "LGA_CODE17",
+            "nameProp": "LGA_NAME17",
+            "aliases": [
+                "lga_code_2017"
+            ],
+            "description": "Local Government Areas 2017 (ABS)",
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-LGA_2017_AUST_LGA_CODE17.json"
         },
         "LGA_2016": {
             "layerName": "LGA_2016_AUST",
@@ -550,15 +594,13 @@
             ],
             "regionProp": "LGA_CODE16",
             "aliases": [
-                "lga_code_2016",
-                "lga_code",
-                "lga"
+                "lga_code_2016"
             ],
             "nameProp": "LGA_NAME16",
             "description": "Local government areas (2016)",
-            "regionIdsFile": "data/regionids/region_map-LGA_2016_AUST_LGA_CODE16.json"
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-LGA_2016_AUST_LGA_CODE16.json"
         },
-        "LGA": {
+        "LGA_2015": {
             "layerName": "FID_LGA_2015_AUST",
             "server": "https://vector-tiles.terria.io/FID_LGA_2015_AUST/{z}/{x}/{y}.pbf",
             "analyticsWmsLayerName": "region_map:FID_LGA_2015_AUST",
@@ -566,13 +608,11 @@
             "regionProp": "LGA_CODE15",
             "aliases": [
                 "lga_code_2015",
-                "lga_code_2014",
-                "lga_code_2012",
-                "lga_code_2010"
+                "lga_code_2014"
             ],
             "digits": 5,
             "description": "Local government areas",
-            "regionIdsFile": "data/regionids/region_map-FID_LGA_2015_AUST_LGA_CODE15.json",
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_LGA_2015_AUST_LGA_CODE15.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -593,11 +633,12 @@
             "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
             "regionProp": "LGA_CODE13",
             "aliases": [
-                "lga_code_2013"
+                "lga_code_2013",
+                "lga_code_2012"
             ],
             "digits": 5,
             "description": "Local government areas",
-            "regionIdsFile": "data/regionids/region_map-FID_LGA_2013_AUST_LGA_CODE13.json",
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_LGA_2013_AUST_LGA_CODE13.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -618,11 +659,12 @@
             "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
             "regionProp": "LGA_CODE11",
             "aliases": [
-                "lga_code_2011"
+                "lga_code_2011",
+                "lga_code_2010"
             ],
             "digits": 5,
             "description": "Local government areas",
-            "regionIdsFile": "data/regionids/region_map-FID_LGA_2011_AUST_LGA_CODE11.json",
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_LGA_2011_AUST_LGA_CODE11.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -645,7 +687,6 @@
             "regionProp": "LGA_NAME11",
             "aliases": [
                 "lga_name_2011",
-                "lga_name",
                 "lga name",
                 "lga_name_2015",
                 "lga_name_2014",
@@ -693,11 +734,11 @@
                     " "
                 ]
             ],
-            "disambigProp": "STE_NAME11",
-            "disambigRegionId": "STE_NAME_2011",
+            "disambigProp": "STE_NAME16",
+            "disambigRegionId": "STE_NAME_2016",
             "description": "Local government areas",
-            "regionIdsFile": "data/regionids/region_map-FID_LGA_2011_AUST_LGA_NAME11.json",
-            "regionDisambigIdsFile": "data/regionids/region_map-FID_LGA_2011_AUST_STE_NAME11.json",
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_LGA_2011_AUST_LGA_NAME11.json",
+            "regionDisambigIdsFile": "build/TerriaJS/data/regionids/region_map-FID_LGA_2011_AUST_STE_NAME11.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -731,7 +772,7 @@
                 ]
             ],
             "description": "Postal areas (ABS approximations of postcodes)",
-            "regionIdsFile": "data/regionids/region_map-FID_POA_2011_AUST_POA_CODE.json",
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_POA_2011_AUST_POA_CODE.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -776,7 +817,7 @@
             ],
             "nameProp": "POA_NAME16",
             "description": "Postal areas (ABS approximations of postcodes) (2016)",
-            "regionIdsFile": "data/regionids/region_map-POA_2016_AUST_POA_CODE16.json"
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-POA_2016_AUST_POA_CODE16.json"
         },
         "CED_CODE_2016": {
             "layerName": "FID_CED_2016_AUST",
@@ -791,7 +832,7 @@
             ],
             "digits": 3,
             "description": "Commonwealth electoral districts (2016 ABS approximations)",
-            "regionIdsFile": "data/regionids/region_map-FID_CED_2016_AUST_CED_CODE16.json",
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_CED_2016_AUST_CED_CODE16.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -816,7 +857,7 @@
                 "ced_name"
             ],
             "description": "Commonwealth electoral districts (2016 ABS approximations)",
-            "regionIdsFile": "data/regionids/region_map-FID_CED_2016_AUST_CED_NAME16.json",
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_CED_2016_AUST_CED_NAME16.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -841,7 +882,7 @@
             ],
             "digits": 3,
             "description": "Commonwealth electoral districts (2013 ABS approximations)",
-            "regionIdsFile": "data/regionids/region_map-FID_CED_2013_AUST_CED_CODE13.json",
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_CED_2013_AUST_CED_CODE13.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -865,7 +906,7 @@
                 "ced_name_2013"
             ],
             "description": "Commonwealth electoral districts (2013 ABS approximations)",
-            "regionIdsFile": "data/regionids/region_map-FID_CED_2013_AUST_CED_NAME13.json",
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_CED_2013_AUST_CED_NAME13.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -890,7 +931,7 @@
             ],
             "digits": 3,
             "description": "Commonwealth electoral districts (ABS approximations)",
-            "disabledregionIdsFile": "data/regionids/region_map-FID_CED_2011_AUST_CED_CODE.json",
+            "disabledregionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_CED_2011_AUST_CED_CODE.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -903,7 +944,7 @@
                 -9.142175976999999
             ],
             "nameProp": "CED_NAME",
-            "regionIdsFile": "data/regionids/region_map-FID_CED_2011_AUST_CED_CODE.json"
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_CED_2011_AUST_CED_CODE.json"
         },
         "CED_NAME_2011": {
             "layerName": "FID_CED_2011_AUST",
@@ -915,7 +956,7 @@
                 "ced_name_2011"
             ],
             "description": "Commonwealth electoral districts (ABS approximations)",
-            "regionIdsFile": "data/regionids/region_map-FID_CED_2011_AUST_CED_NAME.json",
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_CED_2011_AUST_CED_NAME.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -943,7 +984,7 @@
             ],
             "digits": 3,
             "description": "Commonwealth electoral districts (Australian Electoral Commission)",
-            "regionIdsFile": "data/regionids/region_map-FID_COM20160509_ELB_DIV_ID.json",
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_COM20160509_ELB_DIV_ID.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -970,7 +1011,7 @@
                 "com_elb_name"
             ],
             "description": "Commonwealth electoral districts (Australian Electoral Commission)",
-            "regionIdsFile": "data/regionids/region_map-FID_COM20160509_ELB_ELECT_DIV.json",
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_COM20160509_ELB_ELECT_DIV.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -995,7 +1036,7 @@
                 "com_elb_name_2011"
             ],
             "description": "Commonwealth electoral districts (Australian Electoral Commission)",
-            "regionIdsFile": "data/regionids/region_map-FID_COM20111216_ELB_region_ELECT_DIV.json",
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_COM20111216_ELB_region_ELECT_DIV.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -1028,7 +1069,7 @@
                 "com_elb_id_2013"
             ],
             "description": "Commonwealth electoral districts for 2013 election (Australian Electoral Commission)",
-            "regionIdsFile": "data/regionids/region_map-CommonwealthElectoralDivision_2013_ced_code_2013.json"
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-CommonwealthElectoralDivision_2013_ced_code_2013.json"
         },
         "COM_ELB_NAME_2013": {
             "layerName": "CommonwealthElectoralDivision_2013",
@@ -1049,7 +1090,7 @@
                 "com_elb_name_2013"
             ],
             "description": "Commonwealth electoral districts for 2013 election (Australian Electoral Commission)",
-            "regionIdsFile": "data/regionids/region_map-CommonwealthElectoralDivision_2013_ced_name_2013.json"
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-CommonwealthElectoralDivision_2013_ced_name_2013.json"
         },
         "COM_ELB_ID_2010": {
             "layerName": "CommonwealthElectoralDivision_2010",
@@ -1070,7 +1111,7 @@
                 "com_elb_id_2010"
             ],
             "description": "Commonwealth electoral districts for 2010 election (Australian Electoral Commission)",
-            "regionIdsFile": "data/regionids/region_map-CommonwealthElectoralDivision_2010_ced_code_2010.json"
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-CommonwealthElectoralDivision_2010_ced_code_2010.json"
         },
         "COM_ELB_NAME_2010": {
             "layerName": "CommonwealthElectoralDivision_2010",
@@ -1091,7 +1132,7 @@
                 "com_elb_name_2010"
             ],
             "description": "Commonwealth electoral districts for 2010 election (Australian Electoral Commission)",
-            "regionIdsFile": "data/regionids/region_map-CommonwealthElectoralDivision_2010_ced_name_2010.json"
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-CommonwealthElectoralDivision_2010_ced_name_2010.json"
         },
         "COM_ELB_ID_2007": {
             "layerName": "CommonwealthElectoralDivision_2007",
@@ -1112,7 +1153,7 @@
                 "com_elb_id_2007"
             ],
             "description": "Commonwealth electoral districts for 2007 election (Australian Electoral Commission)",
-            "regionIdsFile": "data/regionids/region_map-CommonwealthElectoralDivision_2007_ced_code_2007.json"
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-CommonwealthElectoralDivision_2007_ced_code_2007.json"
         },
         "COM_ELB_NAME_2007": {
             "layerName": "CommonwealthElectoralDivision_2007",
@@ -1133,7 +1174,7 @@
                 "com_elb_name_2007"
             ],
             "description": "Commonwealth electoral districts for 2007 election (Australian Electoral Commission)",
-            "regionIdsFile": "data/regionids/region_map-CommonwealthElectoralDivision_2007_ced_name_2007.json"
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-CommonwealthElectoralDivision_2007_ced_name_2007.json"
         },
         "SED": {
             "layerName": "FID_SED_2011_AUST",
@@ -1148,7 +1189,7 @@
             ],
             "digits": 5,
             "description": "State electoral districts (ABS approximations)",
-            "regionIdsFile": "data/regionids/region_map-FID_SED_2011_AUST_SED_CODE.json",
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_SED_2011_AUST_SED_CODE.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -1173,7 +1214,7 @@
                 "sed_name"
             ],
             "description": "State electoral districts (ABS approximations)",
-            "regionIdsFile": "data/regionids/region_map-FID_SED_2011_AUST_SED_NAME.json",
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_SED_2011_AUST_SED_NAME.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -1198,7 +1239,7 @@
             ],
             "digits": 5,
             "description": "Greater capital city statistical areas",
-            "regionIdsFile": "data/regionids/region_map-FID_GCCSA_2011_AUST_GCC_CODE11.json",
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_GCCSA_2011_AUST_GCC_CODE11.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -1222,7 +1263,7 @@
                 "gccsa_name_2011"
             ],
             "description": "Greater capital city statistical areas",
-            "regionIdsFile": "data/regionids/region_map-FID_GCCSA_2011_AUST_GCC_NAME11.json",
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_GCCSA_2011_AUST_GCC_NAME11.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -1258,7 +1299,7 @@
             ],
             "nameProp": "GCC_NAME16",
             "description": "Greater capital city statistical areas 2016 (ABS)",
-            "regionIdsFile": "data/regionids/region_map-GCCSA_2016_AUST_GCC_CODE16.json"
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-GCCSA_2016_AUST_GCC_CODE16.json"
         },
         "GCCSA_NAME_2016": {
             "layerName": "GCCSA_2016_AUST",
@@ -1281,7 +1322,7 @@
             ],
             "nameProp": "GCC_NAME16",
             "description": "Greater capital city statistical areas 2016 (ABS)",
-            "regionIdsFile": "data/regionids/region_map-GCCSA_2016_AUST_GCC_NAME16.json"
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-GCCSA_2016_AUST_GCC_NAME16.json"
         },
         "SUA": {
             "layerName": "FID_SUA_2011_AUST",
@@ -1296,7 +1337,7 @@
             ],
             "digits": 4,
             "description": "Significant urban areas",
-            "regionIdsFile": "data/regionids/region_map-FID_SUA_2011_AUST_SUA_CODE11.json",
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_SUA_2011_AUST_SUA_CODE11.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -1333,7 +1374,7 @@
                     ""
                 ]
             ],
-            "regionIdsFile": "data/regionids/region_map-FID_SUA_2011_AUST_SUA_NAME11.json",
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_SUA_2011_AUST_SUA_NAME11.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -1357,7 +1398,7 @@
                 "ste_code_2011"
             ],
             "digits": 1,
-            "regionIdsFile": "data/regionids/region_map-FID_STE_2011_AUST_STE_CODE11.json",
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_STE_2011_AUST_STE_CODE11.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -1389,11 +1430,14 @@
             "aliases": [
                 "ste",
                 "ste_code",
-                "ste_code_2016"
+                "ste_code_2016",
+                "ste_code_2017",
+                "ste_code_2018",
+                "ste_code_2019"
             ],
             "nameProp": "STE_NAME16",
             "description": "States and Territories 2016 (ABS)",
-            "regionIdsFile": "data/regionids/region_map-STE_2016_AUST_STE_CODE16.json"
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-STE_2016_AUST_STE_CODE16.json"
         },
         "SOS": {
             "layerName": "FID_SOS_2011_AUST",
@@ -1408,7 +1452,7 @@
             ],
             "digits": 2,
             "description": "Section of state",
-            "regionIdsFile": "data/regionids/region_map-FID_SOS_2011_AUST_SOS_CODE11.json",
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_SOS_2011_AUST_SOS_CODE11.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -1435,7 +1479,7 @@
             ],
             "digits": 3,
             "description": "Section of state range",
-            "regionIdsFile": "data/regionids/region_map-FID_SOSR_2011_AUST_SSR_CODE11.json",
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_SOSR_2011_AUST_SSR_CODE11.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -1462,7 +1506,7 @@
             ],
             "digits": 6,
             "description": "Urban centres and localities",
-            "regionIdsFile": "data/regionids/region_map-FID_UCL_2011_AUST_UCL_CODE11.json",
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_UCL_2011_AUST_UCL_CODE11.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -1489,7 +1533,7 @@
             ],
             "digits": 3,
             "description": "Indigenous regions",
-            "regionIdsFile": "data/regionids/region_map-FID_IREG_2011_AUST_IR_CODE11.json",
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_IREG_2011_AUST_IR_CODE11.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -1516,7 +1560,7 @@
             ],
             "digits": 8,
             "description": "Indigenous locations",
-            "regionIdsFile": "data/regionids/region_map-FID_ILOC_2011_AUST_IL_CODE11.json",
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_ILOC_2011_AUST_IL_CODE11.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -1543,7 +1587,7 @@
             ],
             "digits": 6,
             "description": "Indigenous areas",
-            "regionIdsFile": "data/regionids/region_map-FID_IARE_2011_AUST_IA_CODE11.json",
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_IARE_2011_AUST_IA_CODE11.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -1570,7 +1614,7 @@
             ],
             "digits": 2,
             "description": "Remoteness areas",
-            "regionIdsFile": "data/regionids/region_map-FID_RA_2011_AUST_RA_CODE11.json",
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_RA_2011_AUST_RA_CODE11.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -1597,7 +1641,7 @@
             ],
             "digits": 5,
             "description": "Tourism regions",
-            "regionIdsFile": "data/regionids/region_map-FID_TR_2015_AUST_TR_CODE15.json",
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_TR_2015_AUST_TR_CODE15.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -1623,7 +1667,7 @@
             ],
             "digits": 5,
             "description": "Tourism regions",
-            "regionIdsFile": "data/regionids/region_map-FID_TR_2013_AUST_TR_CODE13.json",
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_TR_2013_AUST_TR_CODE13.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -1650,7 +1694,7 @@
             ],
             "digits": 3,
             "description": "Natural resource management regions",
-            "regionIdsFile": "data/regionids/region_map-FID_NRMR_2011_AUST_NRMR_CODE.json",
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_NRMR_2011_AUST_NRMR_CODE.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -1674,7 +1718,7 @@
                 "nrmr_name"
             ],
             "description": "Natural resource management regions",
-            "regionIdsFile": "data/regionids/region_map-FID_NRMR_2011_AUST_NRMR_NAME.json",
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_NRMR_2011_AUST_NRMR_NAME.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -1701,7 +1745,7 @@
             ],
             "digits": 3,
             "description": "Australian drainage divisions",
-            "regionIdsFile": "data/regionids/region_map-FID_ADD_2011_AUST_ADD_CODE.json",
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_ADD_2011_AUST_ADD_CODE.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -1725,7 +1769,7 @@
                 "add_name"
             ],
             "description": "Australian drainage divisions",
-            "regionIdsFile": "data/regionids/region_map-FID_ADD_2011_AUST_ADD_NAME.json",
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_ADD_2011_AUST_ADD_NAME.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -1761,7 +1805,7 @@
             ],
             "nameProp": "ADD_NAME16",
             "description": "Australian drainage divisions (2016)",
-            "regionIdsFile": "data/regionids/region_map-ADD_2016_AUST_ADD_CODE16.json"
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-ADD_2016_AUST_ADD_CODE16.json"
         },
         "ADD_NAME_2016": {
             "layerName": "ADD_2016_AUST",
@@ -1784,7 +1828,7 @@
             ],
             "nameProp": "ADD_NAME16",
             "description": "Australian drainage divisions (2016)",
-            "regionIdsFile": "data/regionids/region_map-ADD_2016_AUST_ADD_NAME16.json"
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-ADD_2016_AUST_ADD_NAME16.json"
         },
         "PHN": {
             "layerName": "FID_PHN_boundaries_AUS_Sep2015_V5",
@@ -1799,7 +1843,7 @@
             ],
             "digits": 6,
             "description": "Primary health networks",
-            "regionIdsFile": "data/regionids/region_map-FID_PHN_boundaries_AUS_Sep2015_V5_PHN_Code.json",
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_PHN_boundaries_AUS_Sep2015_V5_PHN_Code.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -1888,7 +1932,7 @@
                     "Other Territories"
                 ]
             ],
-            "regionIdsFile": "data/regionids/region_map-FID_STE_2011_AUST_STE_NAME11.json",
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_STE_2011_AUST_STE_NAME11.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -1990,7 +2034,7 @@
                     "Other Territories"
                 ]
             ],
-            "regionIdsFile": "data/regionids/region_map-STE_2016_AUST_STE_NAME16.json"
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-STE_2016_AUST_STE_NAME16.json"
         },
         "SLA": {
             "layerName": "fid_asgc06_sla",
@@ -2019,7 +2063,7 @@
                 159.10921900799997,
                 -9.142175976999999
             ],
-            "regionIdsFile": "data/regionids/region_map-fid_asgc06_sla_SLA_CODE06.json"
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-fid_asgc06_sla_SLA_CODE06.json"
         },
         "SLA_5DIGITCODE": {
             "layerName": "fid_asgc06_sla",
@@ -2045,7 +2089,7 @@
                 159.10921900799997,
                 -9.142175976999999
             ],
-            "regionIdsFile": "data/regionids/region_map-fid_asgc06_sla_SLA_5DIGIT.json"
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-fid_asgc06_sla_SLA_5DIGIT.json"
         },
         "SLA_NAME": {
             "layerName": "fid_asgc06_sla",
@@ -2070,7 +2114,7 @@
                 159.10921900799997,
                 -9.142175976999999
             ],
-            "regionIdsFile": "data/regionids/region_map-fid_asgc06_sla_SLA_NAME06.json"
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-fid_asgc06_sla_SLA_NAME06.json"
         },
         "CD": {
             "layerName": "fid_asgc06_cd",
@@ -2098,7 +2142,7 @@
                 -9.142175976999999
             ],
             "nameProp": "CD_CODE06",
-            "regionIdsFile": "data/regionids/region_map-fid_asgc06_cd_CD_CODE06.json"
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-fid_asgc06_cd_CD_CODE06.json"
         },
         "CNT2": {
             "layerName": "FID_TM_WORLD_BORDERS",
@@ -2112,7 +2156,7 @@
             ],
             "digits": 2,
             "textCodes": true,
-            "regionIdsFile": "data/regionids/region_map-FID_TM_WORLD_BORDERS_ISO2.json",
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_TM_WORLD_BORDERS_ISO2.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -2138,7 +2182,7 @@
             ],
             "digits": 3,
             "textCodes": true,
-            "regionIdsFile": "data/regionids/region_map-FID_TM_WORLD_BORDERS_ISO3.json",
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_TM_WORLD_BORDERS_ISO3.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -2162,7 +2206,7 @@
             "aliases": [
                 "country"
             ],
-            "regionIdsFile": "data/regionids/region_map-FID_TM_WORLD_BORDERS_NAME.json",
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_TM_WORLD_BORDERS_NAME.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -2186,9 +2230,12 @@
                 "aus",
                 "aus_code",
                 "aus_code_2011",
-                "aus_code_2016"
+                "aus_code_2016",
+                "aus_code_2017",
+                "aus_code_2018",
+                "aus_code_2019"
             ],
-            "regionIdsFile": "data/regionids/region_map-FID_AUS_2011_AUST_AUS_CODE.json",
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_AUS_2011_AUST_AUS_CODE.json",
             "serverType": "MVT",
             "serverSubdomains": [],
             "serverMinZoom": 0,
@@ -2224,7 +2271,7 @@
             ],
             "nameProp": "ESA_NAME",
             "description": "Employment Service Areas 2009-2015+",
-            "regionIdsFile": "data/regionids/region_map-FID_AUS_ESA_09_ESA_CODE.json"
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_AUS_ESA_09_ESA_CODE.json"
         },
         "ESA_NAME_09": {
             "layerName": "FID_AUS_ESA_09",
@@ -2247,7 +2294,7 @@
             ],
             "nameProp": "ESA_NAME",
             "description": "Employment Service Areas 2009-2015+",
-            "regionIdsFile": "data/regionids/region_map-FID_AUS_ESA_09_ESA_NAME.json"
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_AUS_ESA_09_ESA_NAME.json"
         },
         "IBRA7_REG": {
             "layerName": "ibra7_regions",
@@ -2270,7 +2317,7 @@
             ],
             "nameProp": "REG_NAME_7",
             "description": "IBRA Regions v7",
-            "regionIdsFile": "data/regionids/region_map-ibra7_regions_REG_CODE_7.json"
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-ibra7_regions_REG_CODE_7.json"
         },
         "IBRA7_REG_NAME": {
             "layerName": "ibra7_regions",
@@ -2292,7 +2339,7 @@
             ],
             "nameProp": "REG_NAME_7",
             "description": "IBRA Regions v7",
-            "regionIdsFile": "data/regionids/region_map-ibra7_regions_REG_NAME_7.json"
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-ibra7_regions_REG_NAME_7.json"
         },
         "IBRA7_SUB": {
             "layerName": "ibra7_subregions",
@@ -2315,7 +2362,7 @@
             ],
             "nameProp": "SUB_NAME_7",
             "description": "IBRA Subregions v7",
-            "regionIdsFile": "data/regionids/region_map-ibra7_subregions_SUB_CODE_7.json"
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-ibra7_subregions_SUB_CODE_7.json"
         },
         "IBRA7_SUB_NAME": {
             "layerName": "ibra7_subregions",
@@ -2337,7 +2384,7 @@
             ],
             "nameProp": "SUB_NAME_7",
             "description": "IBRA Subregions v7",
-            "regionIdsFile": "data/regionids/region_map-ibra7_subregions_SUB_NAME_7.json"
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-ibra7_subregions_SUB_NAME_7.json"
         },
         "NZ_AU_2017": {
             "layerName": "NZ_AU2017_HD_Clipped",
@@ -2359,7 +2406,7 @@
                 "nz_au"
             ],
             "description": "Stats New Zealand Area Units 2017",
-            "regionIdsFile": "data/regionids/region_map-NZ_AU2017_HD_Clipped_AU2017.json"
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-NZ_AU2017_HD_Clipped_AU2017.json"
         },
         "NZ_AU_2017_NAME": {
             "layerName": "NZ_AU2017_HD_Clipped",
@@ -2380,7 +2427,7 @@
                 "nz_au_name_2017"
             ],
             "description": "Stats New Zealand Area Units 2017",
-            "regionIdsFile": "data/regionids/region_map-NZ_AU2017_HD_Clipped_AU2017_NAM.json"
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-NZ_AU2017_HD_Clipped_AU2017_NAM.json"
         },
         "NZ_MB_2017": {
             "layerName": "NZ_MB2017_HD_Clipped",
@@ -2402,7 +2449,28 @@
                 "nz_mb"
             ],
             "description": "Stats New Zealand Mesh Blocks 2017",
-            "regionIdsFile": "data/regionids/region_map-NZ_MB2017_HD_Clipped_MB2017.json"
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-NZ_MB2017_HD_Clipped_MB2017.json"
+        },
+        "AEC_FED_2017_AMLS": {
+            "layerName": "AEC_FED_2017_AMLS",
+            "server": "https://vector-tiles.terria.io/AEC_FED_2017_AMLS/{z}/{x}/{y}.pbf",
+            "serverType": "MVT",
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.816941,
+                -43.74051,
+                167.99803499600011,
+                -9.142176
+            ],
+            "uniqueIdProp": "FID",
+            "regionProp": "FED_ABB",
+            "nameProp": "FED_DIV",
+            "aliases": [
+                "fed_code_2017"
+            ],
+            "description": "Australian Electoral Comission Commonwealth Electoral Boundaries for ABS   Australian Marriage Law Survey",
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-AEC_FED_2017_AMLS_FED_ABB.json"
         }
     }
 }

@@ -66,7 +66,7 @@ export default class Terria {
     @observable
     readonly configParameters: ConfigParameters = {
         defaultMaximumShownFeatureInfos: 100,
-        regionMappingDefinitionsUrl: 'data/regionMapping.json',
+        regionMappingDefinitionsUrl: 'build/TerriaJS/data/regionMapping.json',
         conversionServiceBaseUrl: 'convert/',
         proj4ServiceBaseUrl: 'proj4/',
         corsProxyBaseUrl: 'proxy/',

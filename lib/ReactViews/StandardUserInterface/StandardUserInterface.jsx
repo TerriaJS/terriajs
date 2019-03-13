@@ -97,7 +97,6 @@ const StandardUserInterface = createReactClass({
     shouldUseMobileInterface() {
         return document.body.clientWidth < this.props.minimumLargeScreenWidth;
     },
-
     render() {
         const customElements = processCustomElements(
             this.props.viewState.useSmallScreenInterface,
@@ -122,10 +121,12 @@ const StandardUserInterface = createReactClass({
                             </Small>
                             <Medium>
                                 <div
-                                    className={classNames(Styles.sidePanel, {
-                                        [Styles.sidePanelHide]: this.props
-                                            .viewState.isMapFullScreen
-                                    })}
+                                    className={classNames(Styles.sidePanel,
+                                        this.props.viewState.topElement === 'SidePanel' ? 'top-element': '',
+                                        {[Styles.sidePanelHide]: this.props.viewState.isMapFullScreen}
+                                    )}
+                                     tabIndex={0}
+                                     onClick={()=> {this.props.viewState.topElement = 'SidePanel';}}
                                 >
                                     <Branding
                                         terria={terria}
@@ -211,9 +212,11 @@ const StandardUserInterface = createReactClass({
                     </aside>
                 </If> */}
 
-                <div className={Styles.featureInfo}>
+                <div className={classNames(Styles.featureInfo, this.props.viewState.topElement === 'FeatureInfo' ? 'top-element': '', {
+                    [Styles.featureInfoFullScreen]: this.props.viewState.isMapFullScreen
+                })} tabIndex={0} onClick={()=> {this.props.viewState.topElement = 'FeatureInfo';}}>
                     {/* <FeatureInfoPanel terria={terria}
-                                      viewState={this.props.viewState}
+                                  viewState={this.props.viewState}
                     /> */}
                 </div>
                 {/* <DragDropFile terria={this.props.terria}

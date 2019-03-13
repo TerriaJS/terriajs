@@ -55,8 +55,11 @@ const SidePanel = observer(createReactClass({
         }
     },
 
-    onAddDataClicked() {
+    onAddDataClicked(event) {
+        event.stopPropagation();
+        this.props.viewState.topElement = 'AddData';
         this.props.viewState.openAddData();
+        
     },
 
     onAddLocalDataClicked() {
@@ -91,6 +94,7 @@ const SidePanel = observer(createReactClass({
                         viewState={this.props.viewState}
                         minified={true}
                         animationDuration={250}
+                        btnText='Hide'
                     />
                     {/* <SearchBox
                         onSearchTextChanged={this.changeSearchText}

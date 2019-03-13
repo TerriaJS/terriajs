@@ -2,7 +2,7 @@ var path = require('path');
 var StringReplacePlugin = require("string-replace-webpack-plugin");
 var webpack = require('webpack');
 
-function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlugin, disableStyleLoader) {
+function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtractPlugin, disableStyleLoader) {
     const cesiumDir = path.dirname(require.resolve('terriajs-cesium/package.json'));
     // const fontAwesomeDir = path.resolve(path.dirname(require.resolve('font-awesome/package.json')));
     // const reactMdeDir = path.resolve(path.dirname(require.resolve('react-mde/package.json')));
@@ -22,9 +22,9 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
     config.resolve.modules.push(path.resolve(terriaJSBasePath, 'wwwroot'));
 
     config.module = config.module || {};
-    config.module.loaders = config.module.loaders || [];
+    config.module.rules = config.module.rules || [];
 
-    config.module.loaders.push({
+    config.module.rules.push({
         test: /\.js?$/,
         include: path.dirname(require.resolve('terriajs-cesium')),
         exclude: [
@@ -61,7 +61,7 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
     // web workers that include the comment as malicious.  So here we munge URLs in
     // comments so broken security software doesn't consider them links that a user
     // might actually visit.
-    config.module.loaders.push({
+    config.module.rules.push({
         test: /\.js?$/,
         include: path.resolve(cesiumDir, 'Source', 'ThirdParty'),
         loader: StringReplacePlugin.replace({
@@ -77,25 +77,7 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
         })
     });
     // Use Babel to compile our JavaScript files.
-    // config.module.loaders.push({
-    //     test: /\.jsx?$/,
-    //     include: [
-    //         path.resolve(terriaJSBasePath, 'lib'),
-    //         path.resolve(terriaJSBasePath, 'test')
-    //     ],
-    //     loader: require.resolve('babel-loader'),
-    //     query: {
-    //         sourceMap: false, // generated sourcemaps are currently bad, see https://phabricator.babeljs.io/T7257
-    //         presets: ['env', 'react'],
-    //         plugins: [
-    //             'jsx-control-statements'
-    //         ]
-    //     }
-    // });
-
-
-
-    config.module.loaders.push({
+    config.module.rules.push({
         test: /\.(ts|js)x?$/,
         include: [
             path.resolve(terriaJSBasePath, 'lib'),
@@ -106,17 +88,18 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
                 // Replace Babel's super.property getter with one that is MobX aware.
                 loader: require.resolve('string-replace-loader'),
                 options: {
-                    search: 'var _get = function get.*',
-                    replace: 'var _get = _interopRequireDefault(require(\'../Core/superGet\')).default;',
+                    search: 'function _get\\(target, property, receiver\\).*',
+                    replace: 'var _get = require(\'../Core/superGet\').default;',
                     flags: 'g'
                 }
             },
             {
                 loader: 'babel-loader',
                 options: {
-                    presets: ['env', 'react'],
+                    presets: ['@babel/preset-env', '@babel/preset-react'],
                     plugins: [
-                        'jsx-control-statements'
+                        'babel-plugin-jsx-control-statements',
+                        '@babel/plugin-transform-modules-commonjs'
                     ]
                 }
             },
@@ -135,50 +118,52 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
 
     // Use the raw loader for our view HTML.  We don't use the html-loader because it
     // will doing things with images that we don't (currently) want.
-    config.module.loaders.push({
+    config.module.rules.push({
         test: /\.html$/,
         include: path.resolve(terriaJSBasePath, 'lib', 'Views'),
         loader: require.resolve('raw-loader')
     });
 
     // Allow XML in the models directory to be required-in as a raw text.
-    config.module.loaders.push({
+    config.module.rules.push({
         test: /\.xml$/,
         include: path.resolve(terriaJSBasePath, 'lib', 'Models'),
         loader: require.resolve('raw-loader')
     });
 
-    config.module.loaders.push({
-        test: /\.json|xml$/,
+    config.module.rules.push({
+        test: /\.json|\.xml$/,
         include: path.resolve(cesiumDir, 'Source', 'Assets'),
-        loader: require.resolve('file-loader')
+        loader: require.resolve('file-loader'),
+        type: 'javascript/auto'
     });
 
-    config.module.loaders.push({
+    config.module.rules.push({
         test: /\.wasm$/,
         include: path.resolve(cesiumDir, 'Source', 'ThirdParty'),
-        loader: require.resolve('file-loader')
+        loader: require.resolve('file-loader'),
+        type: 'javascript/auto'
     });
 
-    config.module.loaders.push({
+    config.module.rules.push({
         test: /\.js$/,
         include: path.resolve(path.dirname(require.resolve('terriajs-cesium/package.json')), 'Source'),
         loader: require.resolve('./removeCesiumDebugPragmas')
     });
 
     // Don't let Cesium's `buildModuleUrl` see require - only the AMD version is relevant.
-    config.module.loaders.push({
+    config.module.rules.push({
         test: require.resolve('terriajs-cesium/Source/Core/buildModuleUrl'),
         loader: 'imports-loader?require=>false'
     });
 
     // Don't let Cesium's `crunch.js` see require - only the AMD version is relevant.
-    config.module.loaders.push({
+    config.module.rules.push({
         test: require.resolve('terriajs-cesium/Source/ThirdParty/crunch'),
         loader: 'imports-loader?require=>false'
     });
 
-    config.module.loaders.push({
+    config.module.rules.push({
         test: /\.(png|jpg|svg|gif)$/,
         include: [
             path.resolve(terriaJSBasePath),
@@ -189,22 +174,22 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
             path.resolve(terriaJSBasePath, 'wwwroot', 'fonts')
         ],
         loader: require.resolve('url-loader'),
-        query: {
+        options: {
             limit: 8192
         }
     });
 
-    config.module.loaders.push({
+    config.module.rules.push({
         test: /\.woff(2)?(\?.+)?$/,
         include: path.resolve(terriaJSBasePath, 'wwwroot', 'fonts'),
         loader: require.resolve('url-loader'),
-        query: {
+        options: {
             limit: 10000,
             mimetype: 'application/font-woff'
         }
     });
 
-    config.module.loaders.push({
+    config.module.rules.push({
         test: /\.(ttf|eot|svg)(\?.+)?$/,
         include: path.resolve(terriaJSBasePath, 'wwwroot', 'fonts'),
         loader: require.resolve('file-loader')
@@ -216,7 +201,7 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
     //     loader: require.resolve('file-loader')
     // });
 
-    config.module.loaders.push({
+    config.module.rules.push({
         test: /\.svg$/,
         include: path.resolve(terriaJSBasePath, 'wwwroot', 'images', 'icons'),
         loader: require.resolve('svg-sprite-loader'),
@@ -253,10 +238,10 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
     ]);
 
     if (hot && !disableStyleLoader) {
-        config.module.loaders.push({
+        config.module.rules.push({
             include: path.resolve(terriaJSBasePath),
             test: /\.scss$/,
-            loaders: [
+            use: [
                 require.resolve('style-loader'),
                 {
                     loader: require.resolve('css-loader'),
@@ -272,28 +257,26 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, ExtractTextPlu
                 'sass-loader?sourceMap'
             ]
         });
-    } else if (ExtractTextPlugin) {
-        config.module.loaders.push({
+    } else if (MiniCssExtractPlugin) {
+        config.module.rules.push({
             exclude: path.resolve(terriaJSBasePath, 'lib', 'Sass'),
             include: path.resolve(terriaJSBasePath, 'lib'),
             test: /\.scss$/,
-            loader: ExtractTextPlugin.extract({
-                use: [
-                    {
-                        loader: require.resolve('css-loader'),
-                        options: {
-                            sourceMap: true,
-                            modules: true,
-                            camelCase: true,
-                            localIdentName: 'tjs-[name]__[local]',
-                            importLoaders: 2
-                        }
-                    },
-                    'resolve-url-loader?sourceMap',
-                    'sass-loader?sourceMap'
-                ],
-                publicPath: ''
-            })
+            use: [
+                MiniCssExtractPlugin.loader,
+                {
+                    loader: require.resolve('css-loader'),
+                    options: {
+                        sourceMap: true,
+                        modules: true,
+                        camelCase: true,
+                        localIdentName: 'tjs-[name]__[local]',
+                        importLoaders: 2
+                    }
+                },
+                'resolve-url-loader?sourceMap',
+                'sass-loader?sourceMap'
+            ]
         });
 
         // config.module.loaders.push({

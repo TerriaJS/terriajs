@@ -42,21 +42,6 @@ const Dropdown = createReactClass({
         // this._element is updated by the ref callback attribute, https://facebook.github.io/react/docs/more-about-refs.html
         this.buttonElement = undefined;
 
-        this.resetDownloadDropdownPosition();
-    },
-
-    resetDownloadDropdownPosition() {
-        setTimeout(() => {
-            if (!this.dismounted) {
-                this.setState({
-                    dropdownPosition: {
-                        top: 'inherit',
-                        left: 'inherit',
-                        right: 'inherit'
-                    }
-                });
-            }
-        }, 100);
     },
 
     componentWillUnmount() {
@@ -68,8 +53,6 @@ const Dropdown = createReactClass({
         this.setState({
             isOpen: false
         });
-
-        this.resetDownloadDropdownPosition();
         this.removeListeners();
     },
 
@@ -98,19 +81,7 @@ const Dropdown = createReactClass({
         };
         this.scrollListeners = addScrollListeners(this.buttonElement, []);
 
-        // Figure out where the button is on the screen and set the dropdown's fixed position to right below it.
-        const outerDropdownPosition = this.buttonElement.getBoundingClientRect();
-        const dropdownPosition = {
-            top: outerDropdownPosition.bottom + 'px',
-            right: window.innerWidth - outerDropdownPosition.right + 'px'
-        };
-
-        if (this.props.matchWidth) {
-            dropdownPosition.left = outerDropdownPosition.left + 'px';
-        }
-
         this.setState({
-            dropdownPosition,
             isOpen: true
         });
 
@@ -151,7 +122,7 @@ const Dropdown = createReactClass({
                     {defined(this.props.selected) ? this.props.selected[this.props.textProperty] : this.props.children}
                     {defined(this.props.theme.icon) ? this.props.theme.icon : null}
                 </button>
-                <ul className={classNames(Styles.list, this.props.theme.list, {[isOpenStyle]: this.state.isOpen})} style={this.state.dropdownPosition}>
+                <ul className={classNames(Styles.list, this.props.theme.list, {[isOpenStyle]: this.state.isOpen})}>
                     <For each="option" of={this.props.options} index="index">
                         <li key={option[this.props.textProperty]}>
                             <Choose>

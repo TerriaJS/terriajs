@@ -6,6 +6,7 @@ import Collapsible from '../../lib/ReactViews/Custom/Collapsible/Collapsible';
 import parseCustomHtmlToReact from '../../lib/ReactViews/Custom/parseCustomHtmlToReact';
 import registerCustomComponentTypes from '../../lib/ReactViews/Custom/registerCustomComponentTypes';
 import Terria from '../../lib/Models/Terria';
+import ReactDOMServer from 'react-dom/server';
 
 import {findAllWithType, findAll} from 'react-shallow-testutils';
 
@@ -104,4 +105,27 @@ describe('parseCustomHtmlToReact and registerCustomComponentTypes', function() {
 
     // TODO: add tests for badly formed data strings.
 
+});
+
+describe('Parse html to react', () => {
+  it('should open link in new tab', function() {
+    const html = "<a href=\"https://www.csiro.au/\">csiro</a>";
+    const reactComponent = parseCustomHtmlToReact(html);
+    const reactHtml = ReactDOMServer.renderToStaticMarkup(reactComponent);
+    expect(reactHtml).toBe('<a href="https://www.csiro.au/" target="_blank" rel="noreferrer noopener">csiro</a>');
+  });
+
+  it('should correctly parse style attributes on a tag', function() {
+    const html = "<a href=\"https://www.csiro.au/\" style=\"color:yellow\" >csiro</a>";
+    const reactComponent = parseCustomHtmlToReact(html);
+    const reactHtml = ReactDOMServer.renderToStaticMarkup(reactComponent);
+    expect(reactHtml).toBe('<a href="https://www.csiro.au/" style="color:yellow" target="_blank" rel="noreferrer noopener">csiro</a>');
+  });
+
+  it('should correctly parse empty style attributes on a tag', function() {
+    const html = "<a href=\"https://www.csiro.au/\" style=\"\" >csiro</a>";
+    const reactComponent = parseCustomHtmlToReact(html);
+    const reactHtml = ReactDOMServer.renderToStaticMarkup(reactComponent);
+    expect(reactHtml).toBe('<a href="https://www.csiro.au/" target="_blank" rel="noreferrer noopener">csiro</a>');
+  });
 });

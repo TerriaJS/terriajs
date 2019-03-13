@@ -75,8 +75,11 @@ const FullScreenButton = createReactClass({
                     [Styles.minifiedFullscreenBtnWrapper]: this.props.minified
                 })}
             >
+                {this.props.minified && <label className={Styles.toggleWorkbench} htmlFor='toggle-workbench'>{this.props.btnText}</label>}
                 <button
                     type='button'
+                    id="toggle-workbench"
+                    aria-label={this.props.viewState.isMapFullScreen ? 'Show Workbench' : 'Hide Workbench'}
                     onClick={this.toggleFullScreen}
                     className={btnClassName}
                     title={this.props.viewState.isMapFullScreen ? 'Show Workbench' : 'Hide Workbench'}
