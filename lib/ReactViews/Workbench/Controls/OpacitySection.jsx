@@ -37,4 +37,5 @@ const OpacitySection = observer(createReactClass({
         );
     },
 }));
+
 module.exports = OpacitySection;

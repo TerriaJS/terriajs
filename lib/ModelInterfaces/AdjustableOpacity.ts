@@ -11,7 +11,7 @@ interface AdjustableOpacity extends WithStrata<AdjustableOpacityTraits> {
 
 namespace AdjustableOpacity {
     export function implementedBy(o: any): o is AdjustableOpacity {
-        return o.implementsAdjustableOpacity && o.opacity !== undefined;
+        return o.implementsAdjustableOpacity;
     }
 }
 

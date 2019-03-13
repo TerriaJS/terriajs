@@ -8,6 +8,7 @@ interface RequiredDefinition {
 interface RequiredInstance {
     flattened: RequiredDefinition;
     name: string | undefined;
+    nameInCatalog: string | undefined;
 }
 
 function CatalogMemberMixin<T extends Constructor<RequiredInstance>>(Base: T) {
@@ -22,7 +23,7 @@ function CatalogMemberMixin<T extends Constructor<RequiredInstance>>(Base: T) {
 
         @computed
         get nameInCatalog(): string | undefined {
-            return this.flattened.nameInCatalog || this.name;
+            return super.nameInCatalog || this.name;
         }
 
         @computed
