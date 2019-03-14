@@ -6,7 +6,7 @@ describe('WebMapServiceCatalogGroup', function() {
     it('derives getCapabilitiesUrl from url if getCapabilitiesUrl is not specified', function() {
         const terria = new Terria();
         const wms = new WebMapServiceCatalogGroup('test', terria);
-        const definition = wms.addStratum('definition');
+        const definition = wms.getOrCreateStratum('definition');
         definition.url = 'http://www.example.com';
         expect(wms.getCapabilitiesUrl).toBeDefined();
         expect(wms.url).toBeDefined();
@@ -16,7 +16,7 @@ describe('WebMapServiceCatalogGroup', function() {
     it('loads', function() {
         const terria = new Terria();
         const wms = new WebMapServiceCatalogGroup('test', terria);
-        const definition = wms.addStratum('definition');
+        const definition = wms.getOrCreateStratum('definition');
         definition.url = 'https://programs.communications.gov.au/geoserver/ows';
         autorun(() => {
             console.log(wms.members);

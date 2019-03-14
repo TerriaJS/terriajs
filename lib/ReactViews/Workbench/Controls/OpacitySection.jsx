@@ -5,8 +5,10 @@ import React from 'react';
 import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import { observer } from 'mobx-react';
+import CommonStrata from '../../../Models/CommonStrata';
 
 import Styles from './opacity-section.scss';
+import AdjustableOpacity from '../../../ModelInterfaces/AdjustableOpacity';
 
 const OpacitySection = observer(createReactClass({
     displayName: 'OpacitySection',
@@ -16,12 +18,15 @@ const OpacitySection = observer(createReactClass({
     },
 
     changeOpacity(value) {
-        this.props.item.topStratum.opacity = value / 100.0;
+        const item = this.props.item;
+        if (AdjustableOpacity.implementedBy(item)) {
+            item.getOrCreateStratum(CommonStrata.user).opacity = value / 100.0;
+        }
     },
 
     render() {
         const item = this.props.item;
-        if (false && !item.supportsOpacity) {
+        if (!AdjustableOpacity.implementedBy(item)) {
             return null;
         }
         return (
@@ -32,4 +37,5 @@ const OpacitySection = observer(createReactClass({
         );
     },
 }));
+
 module.exports = OpacitySection;

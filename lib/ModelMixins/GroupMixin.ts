@@ -1,9 +1,10 @@
+import { action, computed } from "mobx";
 import Constructor from "../Core/Constructor";
-import { computed, action } from "mobx";
-import Terria from "../Models/Terria";
-import { BaseModel, ModelInterface } from "../Models/Model";
-import ModelReference from "../Traits/ModelReference";
 import filterOutUndefined from "../Core/filterOutUndefined";
+import StratumFromTraits from "../ModelInterfaces/StratumFromTraits";
+import { BaseModel } from "../Models/Model";
+import Terria from "../Models/Terria";
+import ModelReference from "../Traits/ModelReference";
 
 interface RequiredDefinition {
     members: ReadonlyArray<ModelReference> | undefined;
@@ -12,7 +13,7 @@ interface RequiredDefinition {
 
 interface RequiredInstance {
     terria: Terria;
-    topStratum: Partial<RequiredDefinition>
+    topStratum: StratumFromTraits<RequiredDefinition>
     members: ReadonlyArray<ModelReference> | undefined;
     isOpen: boolean | undefined;
 }

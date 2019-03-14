@@ -1,12 +1,13 @@
-import { ObservableMap, computed, decorate, observable, trace } from 'mobx';
-import DeveloperError from 'terriajs-cesium/Source/Core/DeveloperError';
-import Constructor from '../Core/Constructor';
-import Trait from '../Traits/Trait';
-import ModelTraits from '../Traits/ModelTraits';
+import { computed, decorate, observable, ObservableMap, trace } from 'mobx';
+import LoadableStratum from '../../test/Models/LoadableStratum';
+import OrUndefined from '../Core/OrUndefined';
+import WithStrata from '../ModelInterfaces/WithStrata';
+import StratumFromTraits from '../ModelInterfaces/StratumFromTraits';
 import { ModelId } from '../Traits/ModelReference';
+import ModelTraits from '../Traits/ModelTraits';
+import Trait from '../Traits/Trait';
 import StratumOrder from './StratumOrder';
 import Terria from './Terria';
-import LoadableStratum from '../../test/Models/LoadableStratum';
 
 export interface TraitsConstructor<T extends ModelTraits> {
     new(...args: any[]): T;
@@ -26,58 +27,59 @@ export abstract class BaseModel {
     abstract get traits(): {
         [id: string]: Trait;
     };
-    abstract get flattened(): Partial<ModelTraits>;
-    abstract get strata(): ObservableMap<string, Partial<ModelTraits>>;
-    abstract get topStratum(): Partial<ModelTraits>;
+    abstract get flattened(): StratumFromTraits<ModelTraits>;
+    abstract get strata(): ObservableMap<string, StratumFromTraits<ModelTraits>>;
+    abstract get topStratum(): StratumFromTraits<ModelTraits>;
     abstract get isLoading(): boolean;
     abstract get loadPromise(): Promise<{}>;
 
     constructor(readonly id: ModelId, readonly terria: Terria) {
     }
 
-    abstract addStratum(id: string): Partial<ModelTraits>;
+    abstract getOrCreateStratum(id: string): StratumFromTraits<ModelTraits>;
 
-    abstract get strataTopToBottom(): Partial<ModelTraits>[];
-    abstract get strataBottomToTop(): Partial<ModelTraits>[];
-    abstract createTraitsInstance(): Partial<ModelTraits>;
+    abstract get strataTopToBottom(): StratumFromTraits<ModelTraits>[];
+    abstract get strataBottomToTop(): StratumFromTraits<ModelTraits>[];
+    abstract createStratumInstance(): StratumFromTraits<ModelTraits>;
 }
 
-export interface ModelInterface<T extends ModelTraits> {
+export interface ModelInterface<T extends ModelTraits> extends WithStrata<T> {
     readonly type: string;
     readonly traits: {
         [id: string]: Trait;
     };
     readonly flattened: Model.MakeReadonly<T>;
-    readonly strata: ObservableMap<string, Partial<T>>;
+    readonly strata: ObservableMap<string, StratumFromTraits<T>>;
     readonly terria: Terria;
     readonly id: string;
     readonly isLoading: boolean;
     readonly loadPromise: Promise<{}>;
 
-    addStratum(id: string): Partial<T>;
+    getOrCreateStratum(id: string): StratumFromTraits<T>;
 
-    readonly strataTopToBottom: Partial<T>[];
-    readonly strataBottomToTop: Partial<T>[];
-    readonly topStratum: Partial<T>;
-    createTraitsInstance(): Partial<T>;
+    readonly strataTopToBottom: StratumFromTraits<T>[];
+    readonly strataBottomToTop: StratumFromTraits<T>[];
+    readonly topStratum: StratumFromTraits<T>;
+    createStratumInstance(): StratumFromTraits<T>;
 }
 
 function Model<T extends TraitsConstructor<ModelTraits>>(Traits: T): ModelConstructor<ModelInterface<InstanceType<T>> & Model.InterfaceFromTraits<InstanceType<T>>> {
     abstract class Model extends BaseModel implements ModelInterface<T> {
         abstract get type(): string;
+        static readonly traits = Traits.traits;
         readonly traits = Traits.traits;
         readonly flattened: Model.MakeReadonly<T>;
-        readonly strata = observable.map<string, Partial<T>>();
+        readonly strata = observable.map<string, StratumFromTraits<T>>();
 
         constructor(id: ModelId, terria: Terria) {
             super(id, terria);
             this.flattened = observable(createFlattenedLayer(this, Traits));
         }
 
-        addStratum(id: string): Partial<T> {
+        getOrCreateStratum(id: string): StratumFromTraits<T> {
             let result = this.strata.get(id);
             if (!result) {
-                result = this.createTraitsInstance();
+                result = this.createStratumInstance();
                 this.strata.set(id, result);
             }
             return result;
@@ -123,7 +125,7 @@ function Model<T extends TraitsConstructor<ModelTraits>>(Traits: T): ModelConstr
             return Promise.all(promises);
         }
 
-        createTraitsInstance(): Partial<T> {
+        createStratumInstance(): StratumFromTraits<T> {
             const traits = Traits.traits;
             const propertyNames = Object.keys(traits);
             const reduced: any = propertyNames.reduce((p, c) => ({ ...p, [c]: undefined }), {});
@@ -184,15 +186,7 @@ namespace Model {
                 Readonly<TDefinition[P]>) | undefined;
     };
 
-    // This is almost like Partial<T>, except it uses `| undefined` instead of
-    // `[P in keyof T]?`, which is subtly different. The former requires that the
-    // property exist but its value may be undefined, while the latter does
-    // not require that the property exist at all.
-    type OrUndefined<T> = {
-        [P in keyof T]: T[P] | undefined;
-    }
-
-    export type InterfaceFromTraits<TDefinition extends ModelTraits> = OrUndefined<MakeReadonly<TDefinition>>;
+    export type InterfaceFromTraits<TDefinition extends ModelTraits> = OrUndefined<MakeReadonly<Required<TDefinition>>>;
 }
 
 export default Model;

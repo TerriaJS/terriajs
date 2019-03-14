@@ -1,7 +1,8 @@
 import TerriaError from '../Core/TerriaError';
+import StratumFromTraits from '../ModelInterfaces/StratumFromTraits';
+import { ModelInterface } from '../Models/Model';
 import ModelTraits from './ModelTraits';
 import Trait, { TraitOptions } from './Trait';
-import { ModelInterface } from '../Models/Model';
 
 interface TraitsConstructor<T> {
     new(): T;
@@ -32,7 +33,7 @@ export class ObjectTrait<T extends ModelTraits> extends Trait {
         this.type = options.type;
     }
 
-    getValue(strataTopToBottom: Partial<ModelTraits>[]): T | undefined {
+    getValue(strataTopToBottom: StratumFromTraits<ModelTraits>[]): T | undefined {
         const objectStrata = strataTopToBottom.map((stratum: any) => stratum[this.id]).filter(stratum => stratum !== undefined);
         if (objectStrata.length === 0) {
             return undefined;

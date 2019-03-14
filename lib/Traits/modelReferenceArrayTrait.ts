@@ -1,12 +1,11 @@
 import TerriaError from '../Core/TerriaError';
-import Trait, { TraitOptions } from "./Trait";
-import ModelReference from "./ModelReference";
-import ModelTraits from "./ModelTraits";
-import { ModelInterface, BaseModel } from '../Models/Model';
-import updateModelFromJson from '../Models/updateModelFromJson';
+import StratumFromTraits from '../ModelInterfaces/StratumFromTraits';
+import { ModelInterface } from '../Models/Model';
 import ModelFactory from '../Models/ModelFactory';
 import upsertModelFromJson from '../Models/upsertModelFromJson';
-import Terria from '../Models/Terria';
+import ModelReference from "./ModelReference";
+import ModelTraits from "./ModelTraits";
+import Trait, { TraitOptions } from "./Trait";
 
 export interface ModelArrayTraitOptions extends TraitOptions {
     factory?: ModelFactory;
@@ -34,7 +33,7 @@ export class ModelReferenceArrayProperty extends Trait {
     // It takes an optional idProperty. If not specified, the values are themselves IDs.
     // It ensures that each ID is unique and that the topmost stratum wins for a given ID.
     // There can even be properties to control relative ordering of items in different strata.
-    getValue(strataTopToBottom: Partial<ModelTraits>[]): ReadonlyArray<ModelReference> {
+    getValue(strataTopToBottom: StratumFromTraits<ModelTraits>[]): ReadonlyArray<ModelReference> {
         const result: ModelReference[] = [];
 
         type IdToBool = { [key: string]: boolean };

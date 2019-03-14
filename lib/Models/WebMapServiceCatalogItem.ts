@@ -7,34 +7,28 @@
 // 3. Observable spaghetti
 //  Solution: think in terms of pipelines with computed observables, document patterns.
 // 4. All code for all catalog item types needs to be loaded before we can do anything.
-import { computed, observable, trace, action, runInAction, autorun } from 'mobx';
-import { createTransformer } from 'mobx-utils'
+import { autorun, computed, observable, runInAction, trace } from 'mobx';
+import { createTransformer } from 'mobx-utils';
+import Rectangle from 'terriajs-cesium/Source/Core/Rectangle';
+import WebMercatorTilingScheme from 'terriajs-cesium/Source/Core/WebMercatorTilingScheme';
+import WebMapServiceImageryProvider from 'terriajs-cesium/Source/Scene/WebMapServiceImageryProvider';
 import URI from 'urijs';
-import LoadableStratum from '../../test/Models/LoadableStratum';
-import autoUpdate from '../Core/autoUpdate';
+import containsAny from '../Core/containsAny';
 import isReadOnlyArray from '../Core/isReadOnlyArray';
 import TerriaError from '../Core/TerriaError';
 import CatalogMemberMixin from '../ModelMixins/CatalogMemberMixin';
 import GetCapabilitiesMixin from '../ModelMixins/GetCapabilitiesMixin';
+import GroupMixin from '../ModelMixins/GroupMixin';
+import OpacityMixin from '../ModelMixins/OpacityMixin';
 import UrlMixin from '../ModelMixins/UrlMixin';
+import { InfoSectionTraits } from '../Traits/mixCatalogMemberTraits';
 import WebMapServiceCatalogItemTraits from '../Traits/WebMapServiceCatalogItemTraits';
+import LoadableStratum from './LoadableStratum';
 import Mappable, { ImageryParts } from './Mappable';
 import Model from './Model';
 import proxyCatalogItemUrl from './proxyCatalogItemUrl';
 import Terria from './Terria';
 import WebMapServiceCapabilities, { CapabilitiesLayer, CapabilitiesStyle, getRectangleFromLayer } from './WebMapServiceCapabilities';
-import { InfoSectionTraits } from '../Traits/mixCatalogMemberTraits';
-import containsAny from '../Core/containsAny';
-import GroupMixin from '../ModelMixins/GroupMixin';
-
-import WebMapServiceImageryProvider from 'terriajs-cesium/Source/Scene/WebMapServiceImageryProvider';
-import CesiumImageryLayer from 'terriajs-cesium/Source/Scene/ImageryLayer';
-import WebMercatorTilingScheme from 'terriajs-cesium/Source/Core/WebMercatorTilingScheme';
-import CatalogItem from '../ReactViews/DataCatalog/CatalogItem';
-import CommonStrata from './CommonStrata';
-import Rectangle from 'terriajs-cesium/Source/Core/Rectangle';
-
-
 
 interface LegendUrl {
     url: string;
@@ -52,9 +46,10 @@ interface WebMapServiceStyles {
     [layerName: string]: WebMapServiceStyle[];
 }
 
-
-class GetCapabilitiesStratum implements WebMapServiceCatalogItemTraits {
-    constructor(readonly catalogItem: WebMapServiceCatalogItem) { }
+class GetCapabilitiesStratum extends LoadableStratum(WebMapServiceCatalogItemTraits) {
+    constructor(readonly catalogItem: WebMapServiceCatalogItem) {
+        super();
+    }
 
     @observable
     capabilities: WebMapServiceCapabilities | undefined;
@@ -210,7 +205,7 @@ class GetCapabilitiesStratum implements WebMapServiceCatalogItemTraits {
     @observable intervals: any;
 }
 
-class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemberMixin(Model(WebMapServiceCatalogItemTraits)))) implements Mappable {
+class WebMapServiceCatalogItem extends GetCapabilitiesMixin(OpacityMixin(UrlMixin(CatalogMemberMixin(Model(WebMapServiceCatalogItemTraits))))) implements Mappable {
     /**
      * The collection of strings that indicate an Abstract property should be ignored.  If these strings occur anywhere
      * in the Abstract, the Abstract will not be used.  This makes it easy to filter out placeholder data like
@@ -355,7 +350,7 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemb
         }
         return {
             imageryProvider,
-            alpha: this.opacity!,
+            alpha: this.opacity,
             show: this.show !== undefined ? this.show : true
         }
     }

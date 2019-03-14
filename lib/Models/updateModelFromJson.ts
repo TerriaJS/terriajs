@@ -3,7 +3,7 @@ import TerriaError from '../Core/TerriaError';
 
 export default function updateModelFromJson(model: BaseModel, stratumName: string, json: any) {
     const traits = model.traits;
-    const stratum: any = model.addStratum(stratumName);
+    const stratum: any = model.getOrCreateStratum(stratumName);
 
     Object.keys(json).forEach(propertyName => {
         if (propertyName === 'id' || propertyName === 'type' || propertyName === 'localId') {
