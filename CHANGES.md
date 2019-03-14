@@ -4,6 +4,8 @@ Change Log
 ### Next Release
 
 * Added `disablePreview` option to all catalog items. This is useful when the preview map in the catalog will be slow to load.
+* When using splitter, Feature Info will now show only the features on the selected side.
+* Highlight polygon and polyline features.
 * Replace `getUniqueValues` with `lodash.uniq`
 * Fixed a bug where the 3D globe would not immediately refresh when toggling between the "Terrain" and "Smooth" viewer modes.
 
