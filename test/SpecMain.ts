@@ -1,12 +1,7 @@
 /*global require*/
 /// <reference types="jasmine" />
 require('terriajs-jasmine-ajax');
-import * as Enzyme from 'enzyme';
-import jasmineEnzyme from 'jasmine-enzyme';
-import Adapter from 'enzyme-adapter-react-16';
 import { configure, spy } from "mobx";
-
-Enzyme.configure({ adapter: new Adapter() });
 
 configure({
     enforceActions: true,
@@ -26,8 +21,6 @@ jasmine.getEnv().addReporter({
 });
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 60000;
-
-beforeEach(() => jasmineEnzyme());
 
 afterEach(function() {
     const jasmineAny: any = jasmine;

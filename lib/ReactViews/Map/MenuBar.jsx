@@ -3,7 +3,7 @@ import React from 'react';
 import createReactClass from 'create-react-class';
 
 import PropTypes from 'prop-types';
-
+import classNames from 'classnames';
 import SettingPanel from './Panels/SettingPanel';
 import SharePanel from './Panels/SharePanel/SharePanel';
 import ToolsPanel from './Panels/ToolsPanel/ToolsPanel';
@@ -30,11 +30,15 @@ const MenuBar = createReactClass({
         };
     },
 
+    handleClick() {
+        this.props.viewState.topElement = 'MenuBar';
+    },
+
     render() {
         const enableTools = this.props.terria.getUserProperty('tools') === '1';
-
         return (
-            <div className={Styles.menuArea}>
+            <div className={classNames(Styles.menuArea, this.props.viewState.topElement === 'MenuBar' ? 'top-element': '')}
+            onClick={this.handleClick}>
                 <ul className={Styles.menu}>
                     <li className={Styles.menuItem}>
                         <SettingPanel

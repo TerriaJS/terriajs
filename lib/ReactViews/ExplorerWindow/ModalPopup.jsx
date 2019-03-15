@@ -15,7 +15,8 @@ const ModalPopup = createReactClass({
         onClose: PropTypes.func.isRequired,
         onStartAnimatingIn: PropTypes.func,
         onDoneAnimatingIn: PropTypes.func,
-        children: PropTypes.node.isRequired
+        children: PropTypes.node.isRequired,
+        isTopElement: PropTypes.bool
     },
 
     getInitialState() {
@@ -92,7 +93,7 @@ const ModalPopup = createReactClass({
         const visible = this.state.visible;
 
         return visible ? (
-            <div className={Styles.modalWrapper}
+            <div className={classNames(Styles.modalWrapper, this.props.isTopElement ? 'top-element': '')}
                  id="explorer-panel-wrapper"
                  aria-hidden={!visible}>
                 <div onClick={this.props.onClose}

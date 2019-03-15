@@ -7,14 +7,7 @@
   color: $feature-info-color;
   border-radius: $radius-small;
   display: none;
-  position: fixed;
-  top: $mobile-header-height + 10px;
-  right: 10px;
-  max-width: 95%;
-  min-width: 150px;
-  max-height: 80vh;
-  z-index: 99;
-  font-family: $font-base;
+
 
   svg{
     fill: $feature-info-color;
@@ -22,23 +15,6 @@
 
   a{
     @include link($feature-info-bg);
-  }
-
-  // On very large screens, the feature info may be up to 40% of the screen.
-  // On small screens (mobile), it make be up to 90% of the screen.
-  // In between, it may be up to 90% of the largest mobile screen ($sm), minus a bit to leave room
-  // for the map controls on the right.  This is computed in $feature-info-medium-max-size.
-  $feature-info-medium-max-size: $sm * 0.9 - $feature-info-right-margin * 0.5;
-  $feature-info-forty-percent-size: $feature-info-medium-max-size * 100 / 40;
-
-  @media (min-width : $sm) and (max-width: $feature-info-forty-percent-size) {
-    max-width: $feature-info-medium-max-size;
-    right: $feature-info-right-margin;
-  }
-
-  @media (min-width: $feature-info-forty-percent-size) {
-    max-width: 40%;
-    right: $feature-info-right-margin;
   }
 }
 
@@ -58,16 +34,8 @@
   line-height: $modal-header-height;
 }
 
-.btn {
-  composes: btn from '../../Sass/common/_buttons.scss';
-  padding: 4px 9px;
-  margin-right: 4px;
-  color: $feature-info-btn-color;
-}
-
 .btnPanelHeading{
-  composes: btn from '../../Sass/common/_buttons.scss';
-  padding: 4px 9px;
+  padding: 0px 8px;
   color: $feature-info-btn-color;
   width: 100%;
 }
@@ -78,9 +46,9 @@
   margin-left: 3px;
 }
 
-.btn--close-feature{
+.btn--close-feature, .btnToggleFeature{
   composes: btn from '../../Sass/common/_buttons.scss';
-
+  vertical-align: middle;
   &:hover,
   &:focus {
     svg{
@@ -90,14 +58,19 @@
   svg{
     height: 23px;
     width: 23px;
+    display: block;
     fill: $feature-info-btn-color;
-    position: relative;
-    left: 10px;
   }
-  position: absolute;
-  right: 0;
-  width: $modal-header-height;
-  height: $modal-header-height;
+}
+
+.btn--close-feature{
+    position: absolute;
+    right: 8px;
+    top: 8px;
+}
+
+.btnToggleFeature{
+  padding: $padding;
 }
 
 .no-results {

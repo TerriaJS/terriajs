@@ -43,6 +43,8 @@
     height: 100%;
     padding: 0 $padding-small;
     background: $modal-secondary-bg;
+    display: flex;
+    flex-direction: column;
     form {
       margin: $padding 0;
     }
@@ -68,7 +70,7 @@
   color: $text-light;
   font-size: $font-size-mid-small;
   padding: $padding-small;
-  margin: $padding $padding-small;
+  margin: $padding;
   border-radius: 3px;
 
   &:hover,

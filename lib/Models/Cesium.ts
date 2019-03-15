@@ -1,3 +1,6 @@
+import BoundingSphere from 'terriajs-cesium/Source/Core/BoundingSphere';
+import BoundingSphereState from 'terriajs-cesium/Source/DataSources/BoundingSphereState';
+import HeadingPitchRange from 'terriajs-cesium/Source/Core/HeadingPitchRange';
 import Terria from './Terria';
 import Scene from 'terriajs-cesium/Source/Scene/Scene';
 import Viewer from 'terriajs-cesium/Source/Widgets/Viewer/Viewer';
@@ -8,6 +11,7 @@ import sampleTerrain from 'terriajs-cesium/Source/Core/sampleTerrain';
 import ImageryLayer from 'terriajs-cesium/Source/Scene/ImageryLayer';
 import { createTransformer } from 'mobx-utils';
 import { autorun } from 'mobx';
+import pollToPromise from '../Core/pollToPromise';
 
 /*global require*/
 var Cartesian2 = require('terriajs-cesium/Source/Core/Cartesian2');
@@ -49,6 +53,7 @@ export default class Cesium implements GlobeOrMap {
     readonly terria: Terria;
     readonly viewer: Viewer;
     readonly scene: Scene;
+    dataSourceDisplay: Cesium.DataSourceDisplay | undefined;
     private _disposeWorkbenchMapItemsSubscription: (() => void) | undefined;
 
     constructor(terria: Terria, viewer: Cesium.Viewer) {
@@ -116,10 +121,10 @@ export default class Cesium implements GlobeOrMap {
     }
 
     zoomTo(
-        viewOrExtent: CameraView | Cesium.Rectangle,
+        target: CameraView | Cesium.Rectangle | Cesium.DataSource | /*TODO Cesium.Cesium3DTileset*/ any,
         flightDurationSeconds: number
     ): void {
-        if (!defined(viewOrExtent)) {
+        if (!defined(target)) {
             throw new DeveloperError("viewOrExtent is required.");
         }
 
@@ -129,19 +134,19 @@ export default class Cesium implements GlobeOrMap {
 
         return when()
             .then(function() {
-                if (viewOrExtent instanceof Rectangle) {
+                if (target instanceof Rectangle) {
                     var camera = that.scene.camera;
 
                     // Work out the destination that the camera would naturally fly to
                     var destinationCartesian = camera.getRectangleCameraCoordinates(
-                        viewOrExtent
+                        target
                     );
                     var destination = Ellipsoid.WGS84.cartesianToCartographic(
                         destinationCartesian
                     );
                     var terrainProvider = that.scene.globe.terrainProvider;
                     var level = 6; // A sufficiently coarse tile level that still has approximately accurate height
-                    var positions = [Rectangle.center(viewOrExtent)];
+                    var positions = [Rectangle.center(target)];
 
                     // Perform an elevation query at the centre of the rectangle
                     return sampleTerrain(
@@ -164,19 +169,40 @@ export default class Cesium implements GlobeOrMap {
                             destination: finalDestination
                         });
                     });
-                } else if (viewOrExtent.position !== undefined) {
+                } else if (defined(target.entities)) {
+                    // Zooming to a DataSource
+                    if (target.isLoading && defined(target.loadingEvent)) {
+                        var deferred = when.defer();
+                        var removeEvent = target.loadingEvent.addEventListener(function() {
+                            removeEvent();
+                            deferred.resolve();
+                        });
+                        return deferred.promise.then(function() {
+                            return zoomToDataSource(that, target, flightDurationSeconds);
+                        });
+                    }
+                    return zoomToDataSource(that, target);
+                } else if (defined(target.readyPromise)) {
+                    return target.readyPromise.then(function() {
+                        if (defined(target.boundingSphere)) {
+                            zoomToBoundingSphere(that, target, flightDurationSeconds);
+                        }
+                    });
+                } else if (defined(target.boundingSphere)) {
+                    return zoomToBoundingSphere(that, target);
+                } else if (target.position !== undefined) {
                     that.scene.camera.flyTo({
                         duration: flightDurationSeconds,
-                        destination: viewOrExtent.position,
+                        destination: target.position,
                         orientation: {
-                            direction: viewOrExtent.direction,
-                            up: viewOrExtent.up
+                            direction: target.direction,
+                            up: target.up
                         }
                     });
                 } else {
                     that.scene.camera.flyTo({
                         duration: flightDurationSeconds,
-                        destination: viewOrExtent.rectangle
+                        destination: target.rectangle
                     });
                 }
             })
@@ -184,6 +210,60 @@ export default class Cesium implements GlobeOrMap {
                 // that.notifyRepaintRequired();
             });
     }
+}
+
+var boundingSphereScratch = new BoundingSphere();
+
+function zoomToDataSource(
+    cesium: Cesium,
+    target: Cesium.DataSource,
+    flightDurationSeconds?: number
+): Promise<void> {
+    return pollToPromise(function() {
+        const dataSourceDisplay = cesium.dataSourceDisplay;
+        if (dataSourceDisplay === undefined) {
+            return false;
+        }
+
+        var entities = target.entities.values;
+
+        var boundingSpheres = [];
+        for (var i = 0, len = entities.length; i < len; i++) {
+            var state = BoundingSphereState.PENDING;
+            try {
+                // TODO: missing Cesium type info
+                state = (<any>dataSourceDisplay).getBoundingSphere(entities[i], false, boundingSphereScratch);
+            } catch (e) {
+            }
+
+            if (state === BoundingSphereState.PENDING) {
+                return false;
+            } else if (state !== BoundingSphereState.FAILED) {
+                boundingSpheres.push(BoundingSphere.clone(boundingSphereScratch));
+            }
+        }
+
+        var boundingSphere = BoundingSphere.fromBoundingSpheres(boundingSpheres);
+        cesium.scene.camera.flyToBoundingSphere(boundingSphere, {
+            duration : flightDurationSeconds
+        });
+        return true;
+    }, {
+        pollInterval: 100,
+        timeout: 5000
+    });
+}
+
+function zoomToBoundingSphere(
+    cesium: Cesium,
+    target: { boundingSphere: Cesium.BoundingSphere },
+    flightDurationSeconds?: number
+) {
+    var boundingSphere = target.boundingSphere;
+    cesium.scene.camera.flyToBoundingSphere(target.boundingSphere, {
+        offset: new HeadingPitchRange(0.0, -0.5, boundingSphere.radius),
+        duration: flightDurationSeconds
+    });
 }
 
 const createImageryLayer: (ip: Cesium.ImageryProvider) => Cesium.ImageryLayer = createTransformer((ip: Cesium.ImageryProvider) => {

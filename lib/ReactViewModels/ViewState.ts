@@ -44,6 +44,7 @@ export default class ViewState {
     @observable mouseCoords: MouseCoords = new MouseCoords();
     @observable mobileMenuVisible: boolean = false;
     @observable explorerPanelAnimating: boolean = false;
+    @observable topElement: string = 'FeatureInfo';
 
     /**
      * Gets or sets a value indicating whether the small screen (mobile) user interface should be used.

@@ -4,28 +4,32 @@ matrix:
   include:
   - language: node_js
     node_js:
-    - '6'
+    - '8'
     script:
     - pyenv shell 2.7
     - pip install -r doc/requirements.txt
     - gulp lint docs release
     - gulp test-travis
     env:
+    - NODE_OPTIONS=--max_old_space_size=2048
     - secure: ONX4S6726nQH107YhcYsTJzH4uQDGTpSjPb33hzYT6Jv+9FBo81mcae20+zt+7AuresNXN2e/Mx6kkEooAPIa0DvMHfGu+7SPnG1yeAJVZzIJvanvYqnyMEcLbJgy09aqP8FqrW+EZAFoE5Oh1zxQqr59e/u1i3hvLdIbGE7AWM=
     - secure: Og26Aq8tfmpvZAXPdPYFLa8bGSttCI3bJTwLcJgbjwBNdX9lwNO4XTshyNM6Vp2h6JScQY2oq1gwu5ufcDOVbj9qzbkpgrGsm0MlX1FkSTPVlIrXNdU3/S7a8GXLxpmOSxiBxS/yZd8ReoY9B9rayW2HY4ffCVAM96XbptngZ98=
     - secure: C3MD7bL3aPhBQga5DfUV9f2fH5oqYd6sP9NasqYuEYAP6zFdKBtXNzpC97RNWjihB+LIizq+NKWYN5H3vNXxW79CGdEOeTluD56VtlmY0jF9doHuEQZb/lnRyrwFypgxsK+MD5XIVgPTs3s49ETdTcsFuKM7N/51pDE75NkAbSY=
     - secure: gzSiFfm+cog4Kl7kxh997UwuIIbthm5cbbwDWSJE8EnqAGuHP6XJsVnu+c1Ql+nuVidY0hCeenjdGuRMt5jSWCES6jAT1RR2j46PrCE0tLRDZIcY5m2rt9uRtAGG/Wvsk0tRdg/TPMc50f/3c4zX8iMmD4Hd1qB/G/debE6PDBE=
   - language: node_js
     node_js:
-    - '6'
+    - '8'
     install: true
     sudo: required
     services:
     - docker
     script:
-    - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then bash buildprocess/ci-deploy.sh; fi'
+      - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then bash buildprocess/ci-deploy.sh; fi'
+    after_failure:
+      - http POST "https://api.github.com/repos/${TRAVIS_REPO_SLUG}/statuses/${TRAVIS_COMMIT}" "Authorization:token ${GITHUB_TOKEN}" state=failure context=deployment "target_url=${TRAVIS_JOB_WEB_URL}"
     env:
     - secure: bV2Mb/mIGY5eGXj9CAnimUorNJ7xHqyXK+wn4zWLIRJq1/dkV50r+49LmJH9zVDPe9vByYJJvRf2oqPEqbgcFl4zux+H+lGgVSRcHhngRpi+wLAvYBeYSn4hq/c/uCQme7jViBZQgTXF0l5Aw461AO5NyftyN7Ns+I4JJ9neync=
     - secure: XuhhOSoc2lRvrcen2Fpv/cy7GxhXH0WmnkCb6e/bmUjTrqSaJNdCoOzq4uEX3Ry0A82cf3VmBN0Ukq4w+CQD6rFaONk97XKvjP1ELsU86md1KuwnZkzdeZA1E6R/1tUkUvQ87WPnAsg8GYh/RxUUJtmjJv2b5roXEuIscyUCVKM=
     - secure: dazXp7EF+6t6RjOPz9osKxLll55YjzX6E0ZuABoQV0gM4YyBLQ+miJUnBzobvcZKl9BioGVzoVmGL66vT+63IwO7B9xg4pEFY0Q77YdF7ps0wknRwcKL4VRyJdghYy1u/SdBkV6uIzrRmAwvAwDSna/NZ7qmPcbMcWaj4O6OFCs=
     - secure: ZrYlhxNYUkUHsMF3+W2T8LFZWCRQDM9N2DmmuGL1AZ1R1ErHH2rWaorv2n5Wr7qqxs57/zEjKoVgApso9PChSAkj0H5s44HQiAVlw2EoiTnC8V3wd77vJD5t2m98JPzM4XInHVYbfYzD8dkf4YPa4iH8wKOs5f0xFyR5kD1K4MU=
+    - secure: YHBdXJwydremwVc01QBBwFABxIjgv3IE3wcD7BJKHnLLSBna+j+96B9U6qTvNE7voO21+w5vCb2L0L0ctJqK0P4OBOHx3MVgnxKEKzXX4tYqSiA1CpQ7oYtzFHZ1SrCNKq/Y6DReCUP9MHfo9eygsXYHP8CDBVzgMF50CmJc1dY=

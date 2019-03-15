@@ -1,6 +1,47 @@
 Change Log
 ==========
 
+### Next Release
+
+* Highlight polygon and polyline features.
+* Replace `getUniqueValues` with `lodash.uniq`
+* Fixed a bug where the 3D globe would not immediately refresh when toggling between the "Terrain" and "Smooth" viewer modes.
+
+### v7.0.2
+
+* Fixed a bug that prevented billboard images from working on the 2D map.
+* Implemented "Zoom To" support for KML, CZML, and other vector data sources.
+* Upgraded to Cesium v1.55.
+
+### v7.0.1
+
+* Breaking Changes:
+  * TerriaJS no longer supports Internet Explorer 9 or 10.
+  * An application-level polyfill suite is now highly recommended, and it is required for Internet Explorer 11 compatibility. The easiest approach is to add `<script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>` to the `<head>` element of your application's HTML page, which will deliver a polyfill suite tailored to the end-user's browser.
+  * TerriaJS now requires Node.js v8.0 or later.
+  * TerriaJS now requires Webpack v4.0 or later.
+  * TerriaJS now uses Gulp v4.0. If you have Gulp 3 installed globally, you'll need to use `npm run gulp` to run TerriaJS gulp tasks, or upgrade your global Gulp to v4 with `npm install -g gulp@4`.
+  * TerriaJS now uses Babel v7.0.
+  * Removed `UrthecastCatalogItem`, `UrthecastCatalogGroup`, and `registerUrthcastCatalogItems`. The Urthecast functionality was dependent on an npm package that hadn't been updated in three years and had potential security vulnerabilities. Please [let us know](https://gitter.im/TerriaJS/terriajs) if you were using this functionality.
+
+### v6.5.0
+
+* Add support for rendering Mapbox Vector Tiles (MVT) layers. Currently, polygons are the only supported geometry type, and all polygons are drawn with the same outline and fill colors.
+* `wwwroot/data/regionMapping.json` is now the default region mapping file (rather than a file provided by TerriaMap), and needs to be explicitly overridden by a `regionMappingDefinitionsUrl` setting in config.json.
+
+### v6.4.0
+
+* The Feature Info panel can now be moved by clicking and dragging it.
+* The map tool buttons are now arranged horizontally instead of vertically on small-screen mobile devices.
+* When using a Web Map Service (WMS) catalog item with the `linkedWcsUrl` and `linkedWcsCoverage` properties, we now pass the selected WMS style to the Web Coverage Service (WCS) so that it can optionally return different information based on the selected style.
+* Added `stationIdWhitelist` and `stationIdBlacklist` properties to `SensorObservationServiceCatalogItem` to allow filtering certain monitoring stations in/out.
+* Fixed a bug that caused a crash when attempting to use a `style` attribute on an `<a>` tag in Markdown+HTML strings such as feature info templates.
+* Fixed a bug that displaced the chart dropdown list on mobile Safari.
+
+### v6.3.7
+
+* Upgraded to Cesium v1.53.
+
 ### v6.3.6
 
 * Dragging/dropping files now displays a more subtle notification rather than opening the large Add Data / My Data panel.
