@@ -14,6 +14,7 @@ export default class StoryEditor extends React.Component {
     this.saveStory = this.saveStory.bind(this);
     this.cancelEditing = this.cancelEditing.bind(this);
     this.updateTitle = this.updateTitle.bind(this);
+    this.onKeyDown = this.onKeyDown.bind(this);
   }
 
   UNSAFE_componentWillMount() {
@@ -47,20 +48,27 @@ export default class StoryEditor extends React.Component {
    this.props.exitEditingMode();
     this.setState({
       title: this.props.story.title,
-      text: this.propd.story.text
+      text: this.props.story.text
     });
+  }
+
+  onKeyDown(event) {
+    if(event.keyCode === 27) {
+      this.cancelEditing();
+    }
   }
 
   renderPopupEditor() {
     return (<div className={Styles.popupEditor}>
               <div className={Styles.inner}>
                 <div className={Styles.header}>
-                  <h3><input placeholder="Enter a title here" className={Styles.field} type="text" id="title" value={this.state.title} onChange={this.updateTitle}/></h3>
+                  <input placeholder="Enter a title here" className={Styles.field} type="text" id="title" value={this.state.title} onKeyDown={this.onKeyDown} onChange={this.updateTitle}/>
                   <button className={Styles.cancelBtn} onClick={this.cancelEditing} type='button' title="cancel">Cancel</button>
-                  <button className={Styles.saveBtn} onClick ={this.saveStory} type='button' title='save'>Save</button>
+                  <button disabled ={!(this.state.title.length && this.state.text.length)} className={Styles.saveBtn} onClick ={this.saveStory} type='button' title='save'>Save</button>
               </div>
               <div className={Styles.body}>
-                 <Editor 
+                 <Editor
+                      onKeyDown={this.onKeyDown}
                       text={this.state.text}
                       onChange={(text) => this.setState({text})}></Editor></div>
               </div>

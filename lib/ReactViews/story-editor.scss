@@ -37,14 +37,10 @@
   }
   .header{
     display: flex;
+    align-items: baseline;
     padding: $padding;
     border-bottom: 1px solid $field-border;
-    h3{
-      flex-grow: 1;
-      margin: 0;
-      line-height: 2
-     }
-   }
+  }
   .body{
     min-height: 150px;
     padding: $padding;
@@ -67,64 +63,42 @@
   form{
     padding: $padding;
   }
- .editorFooter{
-    display: flex;
-  }
  }
 
- .label{
-    margin-bottom: 10px;
-    composes: label from '../Sass/common/_labels.scss';
-    padding: 0;
-    line-height: 1;
-  }
 
-  .field{
-    composes: field from '../Sass/common/_form.scss';
-    margin-bottom: $padding;
-  }
+.field{
+  composes: field from '../Sass/common/_form.scss';
+  border: 0;
+  margin-right: $padding;
+  padding: 0 !important;
+}
 
-  .fieldBtn{
-    composes: btn from "../Sass/common/_buttons.scss";
-    composes: btn--map from "../Sass/common/_buttons.scss";
-    background: #9CA1AA;
-    border-radius: 3px;
-    padding: $padding;
-    margin-bottom: $padding + 3px;
-    box-shadow: none;
-    width: 100%;
-  }
+.fieldBtn{
+  composes: btn from "../Sass/common/_buttons.scss";
+  composes: btn--map from "../Sass/common/_buttons.scss";
+  background: #9CA1AA;
+  border-radius: 3px;
+  padding: $padding;
+  margin-bottom: $padding + 3px;
+  box-shadow: none;
+  width: 100%;
+}
 
- .doneBtn, .saveBtn{
-    composes: btn from "../Sass/common/_buttons.scss";
-    composes: btn-primary from "../Sass/common/_buttons.scss";
- }
+.doneBtn, .saveBtn{
+  composes: btn from "../Sass/common/_buttons.scss";
+  composes: btn-primary from "../Sass/common/_buttons.scss";
+}
 
- .saveBtn{
-   width: auto;
-   padding: 5px 15px;
- }
+.saveBtn{
+ width: auto;
+ padding: 5px 15px;
+}
  .cancelBtn{
    composes: btn from '../Sass/common/_buttons.scss';
    composes: btn--secondary from '../Sass/common/_buttons.scss';
    padding: 5px 15px;
    margin-right:$padding;
    border: 2px solid #ffffff;
- }
-
- .trashBtn, .removeBtn{
-    composes: btn from "../Sass/common/_buttons.scss";
-    composes: btn--map from "../Sass/common/_buttons.scss";
-    margin-right: $padding;
-    background: #9CA1AA;
-    border-radius: 3px;
-    padding: $padding-small $padding;
-    svg{
-      height: 25px;
-      width: 25px;
-      fill: #ffffff;
-    }
-
  }
 
 

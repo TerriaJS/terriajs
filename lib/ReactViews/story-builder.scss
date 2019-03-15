@@ -10,53 +10,9 @@
   border-left: 1px solid rgba(255, 255, 255, 0.2);
 }
 .header{
-  h3{
-    margin: 0;
-    padding: 10px;
-    text-align: center;
-    text-transform: uppercase;
-    font-weight: 500;
-  }
-  .actions{
-    display: flex;
-    padding: $padding-small;
-
-    border-top: 1px solid $overlay;
+   .actions{
     border-bottom: 1px solid $overlay;
-    .previewBtn{
-      flex-basis: 50%;
-    }
-    :global{
-      .tjs-clipboard__clipboard{
-        flex-basis: 50%;
-        padding: 0;
-        .tjs-clipboard__clipboardBody{
-          display: block;
-          margin: 0;
-        }
-        .clipBoard-lablel, .tjs-clipboard__explanation{
-          display: none
-        }
-        .tjs-clipboard__clipboardBody input{
-          position: absolute;
-          left: -10000000px;
-        }
-        .btn-copy-share-story{
-          margin: $padding-small;
-          position: relative;
-          padding-left: 40px;
-          width: calc(100% - 10px);
-             svg{
-               width: 25px;
-               height: 25px;
-               fill: #ffffff;
-               position: absolute;
-               left: 15px;
-               top: 8px;
-             }
-        }
-      }
-    }
+    padding: $padding;
   }
 }
 
@@ -93,8 +49,7 @@
    padding: $padding;
  }
 
- .captureBtn, .shareBtn, .previewBtn{
-   margin: $padding-small;
+ .captureBtn, .previewBtn{
    position: relative;
    padding-left: 40px;
    composes: btn from "../Sass/common/_buttons.scss";
@@ -109,26 +64,12 @@
    }
  }
  
-
- .captureBtn{
-   margin: 0;
- }
- .btn{
+.btn{
     margin: $padding-small 0;
     composes: btn from "../Sass/common/_buttons.scss";
     composes: btn-primary from "../Sass/common/_buttons.scss";
  }
 
- .field{
-    composes: field from '../Sass/common/_form.scss';
-    background: #9CA1AA;
-    border: 0;
-    margin-bottom: 10px;
-    color: #ffffff!important;
- }
- .label{
-   display: block;
- }
 
 .story:hover {
   background-color: $dark-with-overlay;
