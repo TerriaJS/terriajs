@@ -18,7 +18,7 @@
  }
 
  .body{
-   padding: 0 $padding $padding $padding ; 
+   padding: $padding; 
    border-top: 1px solid $overlay;
  }
  .toggleBtn{
@@ -52,4 +52,31 @@
  .viewBtn{
    composes: btn from "../Sass/common/_buttons.scss";
    composes: btn-primary from "../Sass/common/_buttons.scss";
+ }
+
+ .menu{
+   position: absolute;
+   right: 0;
+   background: #7C8591;
+   border-radius: 3px;
+ }
+
+ .menuInner{
+   padding: 0;
+   margin: 0;
+   li{
+    display: block;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+   }
+   li:last-child{
+     border-bottom: 0;
+   }
+ }
+
+
+ .menuBtn{
+   composes: btn from '../Sass/common/_buttons.scss';
+   composes: btn-tertiary from '../Sass/common/_buttons.scss';
+   font-size: 0.8rem;
+   padding: $padding/2 $padding/2;
  }
