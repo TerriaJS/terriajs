@@ -1,10 +1,10 @@
-@import '../../Sass/common/mixins';
-@import '~terriajs-variables';
+@import "../../Sass/common/mixins";
+@import "~terriajs-variables";
 
 .workBench {
   position: relative;
 }
-.workbenchEmpty{
+.workbenchEmpty {
   color: $text-light;
   font-size: $font-size-mid-small;
   padding: $padding;
@@ -12,11 +12,7 @@
   border: dashed 1px rgba(255, 255, 255, 0.5);
   margin: $padding-small;
 
-  @media print{
-    display: none;
-  }
-
-  svg{
+  svg {
     height: 25px;
     width: 25px;
     display: inline-block;
@@ -25,33 +21,41 @@
   }
 }
 .header {
-    padding: 0 $padding-small;
-    background: $dark;
-    @media print{
-      display: none;
-    }
+  padding: 0 $padding-small;
+  background: $dark;
 }
 
 .body {
-    overflow: hidden;
-    @media print{
-      height: auto;
-    }
+  overflow: hidden;
 }
 
 .addData {
   margin: $padding-small 0;
+  display: flex;
+  button{
+    height: 42px;
+  }
+}
+
+.uploadData {
+  composes: btn from "../../Sass/common/_buttons.scss";
+  composes: btn-primary from "../../Sass/common/_buttons.scss";
+  margin-left: 5px;
+  width: 45px;
+  svg{
+    fill: $text-light;
+  }
 }
 
 .button {
-  composes: btn from '../../Sass/common/_buttons.scss';
-  composes: btn-primary from '../../Sass/common/_buttons.scss';
+  composes: btn from "../../Sass/common/_buttons.scss";
+  composes: btn-primary from "../../Sass/common/_buttons.scss";
 
   line-height: $input-height;
   font-size: $font-size-mid-small;
   padding: 0;
 
-  svg{
+  svg {
     position: absolute;
     left: $padding-small;
     height: $input-glyph-height;
@@ -61,4 +65,3 @@
     fill: #ffffff;
   }
 }
-

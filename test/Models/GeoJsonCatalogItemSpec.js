@@ -5,8 +5,8 @@ var GeoJsonCatalogItem = require('../../lib/Models/GeoJsonCatalogItem');
 var TerriaError = require('../../lib/Core/TerriaError');
 var Terria = require('../../lib/Models/Terria');
 
-var loadBlob = require('terriajs-cesium/Source/Core/loadBlob');
-var loadText = require('terriajs-cesium/Source/Core/loadText');
+var loadBlob = require('../../lib/Core/loadBlob');
+var loadText = require('../../lib/Core/loadText');
 
 describe('GeoJsonCatalogItem', function() {
     var terria;
@@ -241,16 +241,6 @@ describe('GeoJsonCatalogItem', function() {
                     expect(e instanceof TerriaError).toBe(true);
                     done();
                 });
-            });
-        });
-    });
-
-    describe('TopoJSON', function() {
-        it('computes extent of TopoJSON before rendering', function(done) {
-            geojson.url = 'test/GeoJSON/polygon.topojson';
-            geojson.load().then(function() {
-                expect(geojson.rectangle.width).not.toBeCloseTo(0, 1);
-                done();
             });
         });
     });

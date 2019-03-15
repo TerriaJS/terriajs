@@ -11,7 +11,7 @@ import DataSourceClock from 'terriajs-cesium/Source/DataSources/DataSourceClock'
 import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
 import Entity from 'terriajs-cesium/Source/DataSources/Entity';
 import JulianDate from 'terriajs-cesium/Source/Core/JulianDate';
-import loadJson from 'terriajs-cesium/Source/Core/loadJson';
+import loadJson from '../../lib/Core/loadJson';
 import TimeInterval from 'terriajs-cesium/Source/Core/TimeInterval';
 import TimeIntervalCollection from 'terriajs-cesium/Source/Core/TimeIntervalCollection';
 import TimeIntervalCollectionProperty from 'terriajs-cesium/Source/DataSources/TimeIntervalCollectionProperty';

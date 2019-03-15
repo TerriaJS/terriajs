@@ -42,7 +42,8 @@ const FeatureInfoSection = createReactClass({
         position: PropTypes.object,
         catalogItem: PropTypes.object,  // Note this may not be known (eg. WFS).
         isOpen: PropTypes.bool,
-        onClickHeader: PropTypes.func
+        onClickHeader: PropTypes.func,
+        printView: PropTypes.bool
     },
 
     getInitialState() {
@@ -53,11 +54,13 @@ const FeatureInfoSection = createReactClass({
         };
     },
 
-    componentWillMount() {
+    /* eslint-disable-next-line camelcase */
+    UNSAFE_componentWillMount() {
         setSubscriptionsAndTimeouts(this, this.props.feature);
     },
 
-    componentWillReceiveProps(nextProps) {
+    /* eslint-disable-next-line camelcase */
+    UNSAFE_componentWillReceiveProps(nextProps) {
         // If the feature changed (without an unmount/mount),
         // change the subscriptions that handle time-varying data.
         if (nextProps.feature !== this.props.feature) {
@@ -198,13 +201,18 @@ const FeatureInfoSection = createReactClass({
 
         return (
             <li className={classNames(Styles.section)}>
-                <button type='button' onClick={this.clickHeader} className={Styles.title}>
-                    <span>{fullName}</span>
-                    {this.props.isOpen ? <Icon glyph={Icon.GLYPHS.opened}/> : <Icon glyph={Icon.GLYPHS.closed}/>}
-                </button>
+                <If condition={this.props.printView}>
+                    <h2>{fullName}</h2>
+                </If>
+                <If condition={!this.props.printView}>
+                    <button type='button' onClick={this.clickHeader} className={Styles.title}>
+                        <span>{fullName}</span>
+                        {this.props.isOpen ? <Icon glyph={Icon.GLYPHS.opened}/> : <Icon glyph={Icon.GLYPHS.closed}/>}
+                    </button>
+                </If>
                 <If condition={this.props.isOpen}>
                     <section className={Styles.content}>
-                    <If condition={this.hasTemplate()}>
+                    <If condition={!this.props.printView && this.hasTemplate()}>
                         <button type="button" className={Styles.rawDataButton} onClick={this.toggleRawData}>
                             {this.state.showRawData ? 'Show Curated Data' : 'Show Raw Data'}
                         </button>
@@ -218,13 +226,13 @@ const FeatureInfoSection = createReactClass({
                                 <If condition={!reactInfo.hasRawData}>
                                     <div ref="no-info" key="no-info">No information available.</div>
                                 </If>
-                                <If condition={reactInfo.timeSeriesChart}>
+                                <If condition={!this.props.printView && reactInfo.timeSeriesChart}>
                                     <div className={Styles.timeSeriesChart}>
                                         <h4>{reactInfo.timeSeriesChartTitle}</h4>
                                         {reactInfo.timeSeriesChart}
                                     </div>
                                 </If>
-                                <If condition={defined(reactInfo.downloadableData)}>
+                                <If condition={!this.props.printView && defined(reactInfo.downloadableData)}>
                                     <FeatureInfoDownload key='download'
                                         viewState={this.props.viewState}
                                         data={reactInfo.downloadableData}

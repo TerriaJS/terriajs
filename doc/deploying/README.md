@@ -2,7 +2,7 @@ This section explains how to deploy and maintain production (and production-ish)
 
 Deploying TerriaMap itself:
 
-* [Deploying TerriaMap.md](deploying-terriamap.md): General instructions for deploying TerriaMap in almost any environment.
+* [Deploying TerriaMap](deploying-terriamap.md): General instructions for deploying TerriaMap in almost any environment.
 * [Deploying to AWS](deploying-to-aws.md): Deploy TerriaMap to [Amazon Web Services (AWS)](https://aws.amazon.com/).
 * [Deploying with Kubernetes](deploying-with-kubernetes.md): Deploy TerriaMap using [Docker](https://www.docker.com/) and [Kubernetes](https://kubernetes.io/).
 

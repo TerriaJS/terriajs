@@ -1,80 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns="http://www.w3.org/2000/svg"
-   width="50px"
-   height="50px"
-   viewBox="0 0 50 50"
-   version="1.1"
-   id="svg2">
-  <defs
-     id="defs9" />
-  <!-- Generator: Sketch 3.4.3 (16044) - http://www.bohemiancoding.com/sketch -->
-  <title
-     id="title4">geolocation</title>
-  <g
-     style="fill:none;fill-rule:evenodd;stroke:none;stroke-width:1"
-     transform="matrix(2.4724577,0,0,2.4724577,-59.063562,-169.57639)"
-     id="Artboard-2">
-    <g
-       transform="translate(19,63)"
-       id="tool-measure-noShadow">
-      <g
-         transform="translate(6,11)"
-         id="Group-2"
-         style="stroke:#3f4854">
-        <g
-           transform="translate(0,8.526316)"
-           id="Group-Copy-4">
-          <path
-             id="Line-Copy-13"
-             d="M 9,0 9,4.4428312"
-             style="stroke:#000000;stroke-opacity:1" />
-          <path
-             id="Line-Copy-14"
-             d="m 3.3157895,0 0,4.4428312"
-             style="stroke:#000000;stroke-opacity:1" />
-          <path
-             id="Line-Copy-15"
-             d="m 6.1578947,0 0,3.1361162"
-             style="stroke:#000000;stroke-opacity:1" />
-          <path
-             id="Line-Copy-20"
-             d="m 0.47368421,0 0,3.1361162"
-             style="stroke:#000000;stroke-opacity:1" />
-          <path
-             id="Line-Copy-17"
-             d="m 14.684211,0 0,4.4428312"
-             style="stroke:#000000;stroke-opacity:1" />
-          <path
-             id="Line-Copy-19"
-             d="m 11.842105,0 0,3.1361162"
-             style="stroke:#000000;stroke-opacity:1" />
-          <path
-             id="Line-Copy-21"
-             d="m 17.526316,0 0,3.1361162"
-             style="stroke:#000000;stroke-opacity:1" />
+<svg width="50px" height="35px" viewBox="0 0 50 35" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 43.2 (39069) - http://www.bohemiancoding.com/sketch -->
+    <title>measure</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill-rule="evenodd">
+        <g id="measure" fill-rule="nonzero">
+            <polygon id="Line-Copy-13" points="23.763771 23.4664354 23.763771 34.4511477 26.2362287 34.4511477 26.2362287 23.4664354"></polygon>
+            <polygon id="Line-Copy-14" points="9.70980093 23.4664354 9.70980093 34.4511477 12.1822586 34.4511477 12.1822586 23.4664354"></polygon>
+            <polygon id="Line-Copy-15" points="16.7367858 23.4664354 16.7367858 31.2203501 19.2092435 31.2203501 19.2092435 23.4664354"></polygon>
+            <polygon id="Line-Copy-20" points="2.68281582 23.4664354 2.68281582 31.2203501 5.15527352 31.2203501 5.15527352 23.4664354"></polygon>
+            <polygon id="Line-Copy-17" points="37.8177422 23.4664354 37.8177422 34.4511477 40.2901999 34.4511477 40.2901999 23.4664354"></polygon>
+            <polygon id="Line-Copy-19" points="30.7907553 23.4664354 30.7907553 31.2203501 33.263213 31.2203501 33.263213 23.4664354"></polygon>
+            <polygon id="Line-Copy-21" points="44.8447266 23.4664354 44.8447266 31.2203501 47.3171843 31.2203501 47.3171843 23.4664354"></polygon>
+            <path d="M41.0709748,16.9977683 C36.4145825,16.9977683 32.6398306,13.2230164 32.6398306,8.56662405 C32.6398306,3.91023166 36.4145825,0.1354798 41.0709748,0.1354798 C45.7273672,0.1354798 49.5021191,3.91023166 49.5021191,8.56662405 C49.5021191,13.2230164 45.7273672,16.9977683 41.0709748,16.9977683 Z M41.0709748,12.4977683 C43.2420859,12.4977683 45.0021191,10.7377351 45.0021191,8.56662405 C45.0021191,6.39551303 43.2420859,4.6354798 41.0709748,4.6354798 C38.8998638,4.6354798 37.1398306,6.39551303 37.1398306,8.56662405 C37.1398306,10.7377351 38.8998638,12.4977683 41.0709748,12.4977683 Z" id="Oval-46"></path>
+            <path d="M8.92902475,16.9977683 C4.27263236,16.9977683 0.4978805,13.2230164 0.4978805,8.56662405 C0.4978805,3.91023166 4.27263236,0.1354798 8.92902475,0.1354798 C13.5854171,0.1354798 17.360169,3.91023166 17.360169,8.56662405 C17.360169,13.2230164 13.5854171,16.9977683 8.92902475,16.9977683 Z M8.92902475,12.4977683 C11.1001358,12.4977683 12.860169,10.7377351 12.860169,8.56662405 C12.860169,6.39551303 11.1001358,4.6354798 8.92902475,4.6354798 C6.75791373,4.6354798 4.9978805,6.39551303 4.9978805,8.56662405 C4.9978805,10.7377351 6.75791373,12.4977683 8.92902475,12.4977683 Z" id="Oval-46-Copy"></path>
+            <polygon id="Line" points="33.263213 7.00507169 16.7367858 7.00507169 16.7367858 9.47752939 33.263213 9.47752939"></polygon>
         </g>
-        <circle
-           r="2.5"
-           cy="2.5"
-           cx="15.5"
-           id="Oval-46"
-           style="stroke:#000000;stroke-width:1.82005136;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none" />
-        <circle
-           r="2.5"
-           cy="2.5"
-           cx="2.5"
-           id="Oval-46-Copy"
-           style="stroke:#000000;stroke-width:1.82005136;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none" />
-        <path
-           id="Line"
-           d="m 11.842105,2.368421 -5.6842103,0"
-           style="stroke:#000000;stroke-linecap:square;stroke-opacity:1" />
-      </g>
     </g>
-  </g>
 </svg>

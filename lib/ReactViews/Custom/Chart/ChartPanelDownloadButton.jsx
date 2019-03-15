@@ -34,7 +34,8 @@ const ChartPanelDownloadButton = createReactClass({
         return {href: undefined};
     },
 
-    componentWillMount() {
+    /* eslint-disable-next-line camelcase */
+    UNSAFE_componentWillMount() {
         // Changes to the graph item's catalog item results in new props being passed to this component 5 times on load...
         // a debounce is a simple way to ensure it only gets run once for every batch of real changes.
         this.debouncedRunWorker = debounce(this.runWorker, RUN_WORKER_DEBOUNCE);
@@ -44,7 +45,8 @@ const ChartPanelDownloadButton = createReactClass({
         this.debouncedRunWorker(this.props.chartableItems);
     },
 
-    componentWillReceiveProps(newProps) {
+    /* eslint-disable-next-line camelcase */
+    UNSAFE_componentWillReceiveProps(newProps) {
         this.debouncedRunWorker(newProps.chartableItems);
     },
 

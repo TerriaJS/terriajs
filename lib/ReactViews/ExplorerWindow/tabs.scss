@@ -1,13 +1,14 @@
-@import '~terriajs-variables';
-@import '../../Sass/common/mixins';
+@import "~terriajs-variables";
+@import "../../Sass/common/mixins";
 
 @include empty-module("tabs");
 
 .tab-list {
-  composes: list-reset from '../../Sass/common/_base.scss';
-  composes: clearfix from '../../Sass/common/_base.scss';
+  composes: list-reset from "../../Sass/common/_base.scss";
+  composes: clearfix from "../../Sass/common/_base.scss";
   padding-right: 100px;
-  background: $modal-tab-bg;
+  background: $color-primary;
+  border-radius: 3px 3px 0 0;
 }
 
 .tab-list__item {
@@ -25,23 +26,26 @@
 }
 
 .panel-content {
-  composes: clearfix from '../../Sass/common/_base.scss';
+  composes: clearfix from "../../Sass/common/_base.scss";
   position: relative;
   background: $modal-bg;
   color: $modal-text;
   border-top: 1px solid $grey-lighter;
   height: 100%;
   overflow: hidden;
+  border-radius: 3px;
 }
 
 .tab-left-col {
-  @media screen and (min-width: $sm) {
+  @media (min-width: $sm) {
     width: 40%;
     float: left;
     height: 100%;
     padding: 0 $padding-small;
     background: $modal-secondary-bg;
-    form{
+    display: flex;
+    flex-direction: column;
+    form {
       margin: $padding 0;
     }
   }
@@ -50,7 +54,7 @@
 :global {
   .data-explorer,
   .my-data {
-    @media screen and (min-width: $sm) {
+    @media (min-width: $sm) {
       width: 40%;
       float: left;
       height: 100%;
@@ -59,43 +63,32 @@
 }
 
 // Modal window tab buttons
-//
-// Tab buttons in modal window
-//
-// Markup:
-// <button class="btn btn--tab">Button</button>
-//
-// Style guide: Buttons.modal-tab
-//
 
 .btn--tab {
-  composes: btn from '../../Sass/common/_buttons.scss';
-
-  font-family: $font-pop;
-  background: $modal-tab-bg;
-  color: $modal-text;
+  composes: btn from "../../Sass/common/_buttons.scss";
+  background: transparent;
+  color: $text-light;
   font-size: $font-size-mid-small;
-  padding: $padding $padding*2;
+  padding: $padding-small;
+  margin: $padding;
+  border-radius: 3px;
 
-  &.btn--tab {
-    border-right: 1px solid $modal-border;
-  }
-
-  &:hover, &:focus {
-    background: $modal-selected-tab-bg;
+  &:hover,
+  &:focus {
+    background: $text-light;
     @if variable-exists(modal-selected) {
       color: $modal-selected;
     } @else {
-      color: $modal-highlight;
+      color: $color-primary;
     }
   }
 }
 
 .btn--selected {
-  background: $modal-selected-tab-bg;
+  background: $text-light;
   @if variable-exists(modal-selected) {
     color: $modal-selected;
   } @else {
-    color: $modal-highlight;
+    color: $color-primary;
   }
 }

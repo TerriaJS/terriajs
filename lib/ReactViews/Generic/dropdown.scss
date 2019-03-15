@@ -1,18 +1,18 @@
-@import '~terriajs-variables';
-@import '../../Sass/common/mixins';
+@import "~terriajs-variables";
+@import "../../Sass/common/mixins";
 
 .dropdown {
   position: relative;
 }
 
 .list {
-  composes: list-reset from '../../Sass/common/_base.scss';
+  composes: list-reset from "../../Sass/common/_base.scss";
 
-  @include transform (scaleY(0));
+  @include transform(scaleY(0));
   @include transition(transform $animation-fast cubic-bezier(0.19, 1, 0.22, 1));
   @include transform-origin(center, top);
-
-  position: fixed;
+  position: absolute;
+  width: 100%;
   overflow: hidden;
   z-index: 9999;
   box-sizing: border-box;
@@ -25,24 +25,50 @@
 }
 
 .btn--dropdown {
-  composes: btn from '../../Sass/common/_buttons.scss';
-  composes: btn-primary from '../../Sass/common/_buttons.scss';
-  composes: btn-transparent from '../../Sass/common/_buttons.scss';
+  composes: btn from "../../Sass/common/_buttons.scss";
+  composes: btn-primary from "../../Sass/common/_buttons.scss";
+  composes: btn-transparent from "../../Sass/common/_buttons.scss";
+  text-align: left;
+  background: $text-light;
+  color: $dark-lighter;
+  border: 1px solid $field-border;
+  position: relative;
+  &:hover,
+  &:focus {
+    background: $text-light;
+    color: $dark-lighter;
+    border: 1px solid $color-primary;
+  }
+  svg {
+    width: 30px;
+    height: 30px;
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    right: 10px;
+    top: 12px;
+    fill: $dark-lighter;
+  }
 }
 
 .btn--option {
-  composes: btn from '../../Sass/common/_buttons.scss';
-  composes: btn-transparent from '../../Sass/common/_buttons.scss';
-  composes: btn--small from '../../Sass/common/_buttons.scss';
+  composes: btn from "../../Sass/common/_buttons.scss";
+  composes: btn-transparent from "../../Sass/common/_buttons.scss";
+  composes: btn--small from "../../Sass/common/_buttons.scss";
 
   width: 100%;
   color: $text-black;
 
-  &:hover, &:focus {
+  &:hover,
+  &:focus {
     color: $dropdown-hover-color;
   }
 
   &.is-selected {
     color: $color-primary;
   }
+}
+
+.myDataDropdown {
+  text-align: left;
 }

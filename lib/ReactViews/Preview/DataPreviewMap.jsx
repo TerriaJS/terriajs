@@ -37,7 +37,8 @@ const DataPreviewMap = createReactClass({
         };
     },
 
-    componentWillMount() {
+    /* eslint-disable-next-line camelcase */
+    UNSAFE_componentWillMount() {
         const terria = this.props.terria;
 
         this.terriaPreview = new Terria({
@@ -47,6 +48,8 @@ const DataPreviewMap = createReactClass({
             cesiumBaseUrl: terria.cesiumBaseUrl,
             analytics: new ConsoleAnalytics()
         });
+
+        this.terriaPreview.configParameters.hideTerriaLogo = true;
 
         this.terriaPreview.viewerMode = ViewerMode.Leaflet;
         this.terriaPreview.homeView = terria.homeView;
@@ -85,7 +88,8 @@ const DataPreviewMap = createReactClass({
         }
     },
 
-    componentWillReceiveProps(newProps) {
+    /* eslint-disable-next-line camelcase */
+    UNSAFE_componentWillReceiveProps(newProps) {
         if (newProps.showMap && !this.props.showMap) {
             this.initMap(newProps.previewedCatalogItem);
         } else {

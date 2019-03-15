@@ -4,6 +4,9 @@ function watchWebpack(webpack, config, doneCallback) {
     // webpack is passed as a parameter instead of require-in because otherwise, when TerriaJS is npm link'd,
     // node will end up loading two copies of webpack.  That causes problems with some plugins (e.g. dedupe).
     var wp = webpack(config);
+    wp.hooks.watchRun.tap('NoteStart', function() {
+        console.log('STARTING INCREMENTAL WEBPACK');
+    });
     wp.watch({}, function(err, stats) {
         if (stats) {
             // Fairly minimal output for 'gulp watch'.
@@ -16,6 +19,7 @@ function watchWebpack(webpack, config, doneCallback) {
                 chunks: true,
                 assets: false
             }));
+            console.log('DONE INCREMENTAL WEBPACK');
 
             var jsonStats = stats.toJson();
             if (err || (jsonStats.errors && jsonStats.errors.length > 0)) {

@@ -1,6 +1,14 @@
 @import '~terriajs-variables';
 @import '../../Sass/common/mixins';
 
+.container {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  position: absolute;
+}
+
 .cesium-container {
   top: 0;
   right: 0;
@@ -8,10 +16,6 @@
   left: 0;
   position: absolute;
   cursor: auto;
-
-  @media print{
-    position: relative;
-  }
 
   :global {
     .selection-indicator{
@@ -34,41 +38,57 @@
         text-decoration: none;
         color: $color-primary;
       }
-    }
 
-    .cesium-credit-image{
-      display: none;
+      .cesium-credit-logoContainer::after {
+        content: "";
+        display: block;
+
+      }
     }
 
     .leaflet-control-container{
       @extend %sm-show;
+      #terriaLogo {
+        vertical-align: middle;
+      }
+      .leaflet-control-attribution {
+        line-height: 1em;
+        background: none;
+        color: white;
+        position: relative;
+        bottom: 23px;
+        #terriaLogoWrapper{
+          display: block;
+        }
+      }
+    }
+
+    #terriaLogoWrapper{
+      display: inline-block;
     }
 
     .cesium-widget, .cesium-widget canvas {
-      @media print{
-        position: relative;
-      }
       position: absolute;
       width: 100%;
       height: 100%;
       touch-action: none;
     }
   }
+}
 
-  .mapPlaceholder {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    color: black;
-    text-align: center;
-    width: 100%;
-    height: 25%;
-    margin: auto;
+.mapPlaceholder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  color: black;
+  text-align: center;
+  width: 100%;
+  height: 25%;
+  margin: auto;
 
-    @media screen and (min-width: $sm) {
-      color: white;
-    }
+  @media (min-width: $sm) {
+    color: white;
   }
 }

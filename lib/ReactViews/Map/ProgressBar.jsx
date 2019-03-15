@@ -20,7 +20,8 @@ const ProgressBar = createReactClass({
         };
     },
 
-    componentWillMount() {
+    /* eslint-disable-next-line camelcase */
+    UNSAFE_componentWillMount() {
         this.eventHelper = new EventHelper();
 
         this.eventHelper.add(this.props.terria.tileLoadProgressEvent, this.setProgress);

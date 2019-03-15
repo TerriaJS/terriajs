@@ -4,6 +4,7 @@ import defined from 'terriajs-cesium/Source/Core/defined';
 import CesiumMath from 'terriajs-cesium/Source/Core/Math';
 import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
 import FeatureInfoCatalogItem from './FeatureInfoCatalogItem.jsx';
+import DragWrapper from '../DragWrapper.jsx';
 import Loader from '../Loader.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
@@ -24,7 +25,19 @@ const FeatureInfoPanel = createReactClass({
 
     propTypes: {
         terria: PropTypes.object.isRequired,
-        viewState: PropTypes.object.isRequired
+        viewState: PropTypes.object.isRequired,
+        printView: PropTypes.bool
+    },
+
+    ref: null,
+
+    getInitialState() {
+        return {
+            left: null,
+            right: null,
+            top: null,
+            bottom: null
+        };
     },
 
     componentDidMount() {
@@ -66,7 +79,7 @@ const FeatureInfoPanel = createReactClass({
             this._pickedFeaturesSubscription = undefined;
         }
     },
-
+   
     getFeatureInfoCatalogItems() {
         const {catalogItems, featureCatalogItemPairs} = getFeaturesGroupedByCatalogItems(this.props.terria);
 
@@ -83,6 +96,7 @@ const FeatureInfoPanel = createReactClass({
                         features={features}
                         terria={this.props.terria}
                         onToggleOpen={this.toggleOpenFeature}
+                        printView={this.props.printView}
                     />
                 );
             });
@@ -98,7 +112,7 @@ const FeatureInfoPanel = createReactClass({
         }, 200);
     },
 
-    toggleCollapsed() {
+    toggleCollapsed(event) {
         this.props.viewState.featureInfoPanelIsCollapsed = !this.props.viewState.featureInfoPanelIsCollapsed;
     },
 
@@ -169,9 +183,9 @@ const FeatureInfoPanel = createReactClass({
                 <span>Lat / Lon&nbsp;</span>
                 <span>
                     {pretty.latitude + ", " + pretty.longitude}
-                    <button type='button' onClick={pinClicked}  className={locationButtonStyle}>
+                    {!this.props.printView && <button type='button' onClick={pinClicked}  className={locationButtonStyle}>
                         <Icon glyph={Icon.GLYPHS.location}/>
-                    </button>
+                    </button>}
                 </span>
             </div>
         );
@@ -211,38 +225,48 @@ const FeatureInfoPanel = createReactClass({
             }
         }
 
+        const locationElements = (
+            <If condition={position}>
+                <li>{this.renderLocationItem(position)}</li>
+            </If>
+        );
+        this.ref = React.createRef();
         return (
-            <div
-                className={panelClassName}
-                aria-hidden={!viewState.featureInfoPanelIsVisible}>
-                <div className={Styles.header}>
-                    <button type='button' onClick={ this.toggleCollapsed } className={Styles.btnPanelHeading}>
-                        Feature Information
-                    </button>
-                    <button type='button' onClick={ this.close } className={Styles.btnCloseFeature}
-                            title="Close data panel">
-                        <Icon glyph={Icon.GLYPHS.close}/>
-                    </button>
-                </div>
-                <ul className={Styles.body}>
-                    <Choose>
-                        <When condition={viewState.featureInfoPanelIsCollapsed || !viewState.featureInfoPanelIsVisible}>
-                        </When>
-                        <When condition={defined(terria.pickedFeatures) && terria.pickedFeatures.isLoading}>
-                            <li><Loader/></li>
-                        </When>
-                        <When condition={!featureInfoCatalogItems || featureInfoCatalogItems.length === 0}>
-                            <li className={Styles.noResults}>{this.getMessageForNoResults()}</li>
-                        </When>
-                        <Otherwise>
-                            {featureInfoCatalogItems}
-                        </Otherwise>
-                    </Choose>
-                    <If condition={position}>
-                        <li>{this.renderLocationItem(position)}</li>
-                    </If>
-                </ul>
-            </div>
+                <DragWrapper ref={this.ref}>
+                    <div
+                        className={panelClassName}
+                        aria-hidden={!viewState.featureInfoPanelIsVisible}>
+                        {!this.props.printView && <div className={Styles.header}>
+                            <div className={classNames('drag-handle', Styles.btnPanelHeading)}>
+                                <span>Feature Information</span>
+                                <button type='button' onClick={ this.toggleCollapsed } className={Styles.btnToggleFeature}>
+                                    {this.props.viewState.featureInfoPanelIsCollapsed ? <Icon glyph={Icon.GLYPHS.closed}/> : <Icon glyph={Icon.GLYPHS.opened}/>}
+                                </button>
+                            </div>
+                            <button type='button' onClick={ this.close } className={Styles.btnCloseFeature}
+                                    title="Close data panel">
+                                <Icon glyph={Icon.GLYPHS.close}/>
+                            </button>
+                        </div>}
+                        <ul className={Styles.body}>
+                            {this.props.printView && locationElements}
+                            <Choose>
+                                <When condition={viewState.featureInfoPanelIsCollapsed || !viewState.featureInfoPanelIsVisible}>
+                                </When>
+                                <When condition={defined(terria.pickedFeatures) && terria.pickedFeatures.isLoading}>
+                                    <li><Loader/></li>
+                                </When>
+                                <When condition={!featureInfoCatalogItems || featureInfoCatalogItems.length === 0}>
+                                    <li className={Styles.noResults}>{this.getMessageForNoResults()}</li>
+                                </When>
+                                <Otherwise>
+                                    {featureInfoCatalogItems}
+                                </Otherwise>
+                            </Choose>
+                            {!this.props.printView && locationElements}
+                        </ul>
+                    </div>
+                </DragWrapper>
         );
     },
 });
