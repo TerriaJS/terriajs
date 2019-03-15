@@ -27,47 +27,13 @@ const StoryBuilder = createReactClass({
     getInitialState() {
         return {
             editingMode: false,
-            shareUrl: "",
-            currentStory: null
+            currentStory: undefined
         };
     },
 
     removeStory(storyId) {
         this.props.terria.stories = this.props.terria.stories.filter(st => st.id !== storyId);
-        this.updateForShortening();
     },
-    shouldShorten() {
-        const localStoragePref = this.props.terria.getLocalProperty('shortenShareUrls');
-
-        return canShorten(this.props.terria) && (localStoragePref || !defined(localStoragePref));
-    },
-
-    updateForShortening() {
-      const hasStories = defined(this.props.terria.stories) && this.props.terria.stories.length > 0;
-      this.setState({
-              shareUrl: ''
-          });
-
-          if (this.shouldShorten()) {
-              buildShortShareLink(this.props.terria, hasStories)
-                  .then(shareUrl => this.setState({ shareUrl }))
-                  .otherwise(() => {
-                      this.setUnshortenedUrl();
-                      this.setState({
-                          errorMessage: 'An error occurred while attempting to shorten the URL.  Please check your internet connection and try again.'
-                      });
-                  });
-          } else {
-              this.setUnshortenedUrl();
-          }
-    },
-    setUnshortenedUrl() {
-      const hasStories = defined(this.props.terria.stories) && this.props.terria.stories.length > 0;
-      this.setState({
-          shareUrl: buildShareLink(this.props.terria, hasStories)
-      });
-    },
-
     onSave(_story) {
       const story = {
         title: _story.title,
@@ -88,7 +54,7 @@ const StoryBuilder = createReactClass({
         } else {
           this.props.terria.stories = [...(this.props.terria.stories || []), story];
         }
-        this.updateForShortening();
+
         this.setState({
             editingMode: false
         });
@@ -126,23 +92,18 @@ const StoryBuilder = createReactClass({
 
     render() {
         const hasStories = defined(this.props.terria.stories) && this.props.terria.stories.length > 0;
-        const shareUrlTextBox = <input type="text" value={new URI(this.state.shareUrl)} readOnly id='share-story' />;
         return (
             <div className={Styles.storyPanel}>
                 <div className={Styles.header}>
-                  <h3>{this.state.editingMode ? "Story Editor" : "StoryBook"}</h3>
+                  {!hasStories && this.renderIntro()}
                   <div className={Styles.actions}>
-                    <button disabled ={this.state.editingMode || !hasStories} className={Styles.previewBtn} onClick={this.runStory} title="preview stories"><Icon glyph={Icon.GLYPHS.play}/>Preview</button>
-                    <Clipboard disabled ={this.state.editingMode || !hasStories} source={ shareUrlTextBox} btnText='Share' id='share-story'><Icon glyph={Icon.GLYPHS.share}/></Clipboard>
-                   </div>
+                   {hasStories && <button disabled ={this.state.editingMode || !hasStories} className={Styles.previewBtn} onClick={this.runStory} title="preview stories"><Icon glyph={Icon.GLYPHS.play}/>Preview</button>}
+                   <button disabled={this.state.editingMode} className={Styles.captureBtn} title='capture current scene' onClick={this.onClickCapture}> <Icon glyph={Icon.GLYPHS.story}/> Capture scene </button>
+                  </div>
                 </div>
-               {!hasStories && !this.state.editingMode && this.renderIntro()}
                {!this.state.editingMode && hasStories &&  this.renderStories()}
                {this.state.editingMode && <StoryEditor removeStory={this.removeStory} exitEditingMode={()=>this.setState({editingMode: false})} story={this.state.currentStory} saveStory ={this.onSave} runStory={this.runStory}/>}
-                <div className={Styles.footer}>
-                  <button disabled={this.state.editingMode} className={Styles.captureBtn} title='capture current scene' onClick={this.onClickCapture}> <Icon glyph={Icon.GLYPHS.story}/> Capture current scene </button>
-                </div>
-                 </div>
+            </div>
         );
     }
 });
