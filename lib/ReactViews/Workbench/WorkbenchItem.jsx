@@ -10,6 +10,7 @@ import defined from 'terriajs-cesium/Source/Core/defined';
 
 import ConceptViewer from './Controls/ConceptViewer';
 import DateTimeSelectorSection from './Controls/DateTimeSelectorSection';
+import SatelliteImageryTimeFilterSection from './Controls/SatelliteImageryTimeFilterSection';
 import DimensionSelectorSection from './Controls/DimensionSelectorSection';
 import DisplayAsPercentSection from './Controls/DisplayAsPercentSection';
 import getAncestors from '../../Models/getAncestors';
@@ -104,6 +105,7 @@ const WorkbenchItem = createReactClass({
                         </If>
                         <DimensionSelectorSection item={workbenchItem}/>
                         <DateTimeSelectorSection item={workbenchItem}/>
+                        <SatelliteImageryTimeFilterSection item={workbenchItem}/>
                         <StyleSelectorSection item={workbenchItem}/>
                         <ColorScaleRangeSection item={workbenchItem}/>
                         <DisplayAsPercentSection item={workbenchItem}/>
