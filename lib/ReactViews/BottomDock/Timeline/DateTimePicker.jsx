@@ -25,16 +25,30 @@ const DateTimePicker = createReactClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        dates: PropTypes.array,         // Array of JS Date objects.
+        dates: PropTypes.array.isRequired,         // Array of JS Date objects.
         currentDate: PropTypes.object,  // JS Date object - must be an element of props.dates, or null/undefined.
-        onChange: PropTypes.func,
+        onChange: PropTypes.func.isRequired,
         openDirection: PropTypes.string,
+<<<<<<< HEAD
         dateFormat: PropTypes.object,
+=======
+        isOpen: PropTypes.bool.isRequired,
+        onOpen: PropTypes.func.isRequired,
+        onClose: PropTypes.func.isRequired,
+        showCalendarButton: PropTypes.bool
+    },
+
+    getDefaultProps() {
+        return {
+            currentDate: undefined,
+            showCalendarButton: true,
+            openDirection: 'down'
+        };
+>>>>>>> 653c993b43909980f1945599a51a12c546015fed
     },
 
     getInitialState() {
         return {
-            isOpen: false,
             century: null,
             year: null,
             month: null,
@@ -98,8 +112,16 @@ const DateTimePicker = createReactClass({
         window.removeEventListener('click', this.closePicker);
     },
 
-    closePicker() {
-        this.setState({ isOpen: false });
+    closePicker(newTime) {
+        if (newTime !== undefined) {
+            this.setState({
+                time: newTime
+            });
+        }
+
+        if (this.props.onClose) {
+            this.props.onClose();
+        }
     },
 
     renderCenturyGrid(datesObject) {
@@ -189,7 +211,7 @@ const DateTimePicker = createReactClass({
             return (
                 <div className={Styles.grid}>
                     <div className={Styles.gridHeading}>Select a time</div>
-                    <div className={Styles.gridBody}>{items.map(item => <button key={formatDateTime(item)} className={Styles.dateBtn} onClick={() => { this.setState({ time: item, isOpen: false}); this.props.onChange(item); }}>{defined(this.props.dateFormat) ? dateFormat(item, this.props.dateFormat.currentTime) : formatDateTime(item)}</button>)}</div>
+                    <div className={Styles.gridBody}>{items.map(item => <button key={formatDateTime(item)} className={Styles.dateBtn} onClick={() => { this.closePicker(item); this.props.onChange(item); }}>{defined(this.props.dateFormat) ? dateFormat(item, this.props.dateFormat.currentTime) : formatDateTime(item)}</button>)}</div>
                 </div>
             );
         }
@@ -286,7 +308,7 @@ const DateTimePicker = createReactClass({
     },
 
     toggleDatePicker() {
-        if (!this.state.isOpen) {
+        if (!this.props.isOpen) {
             // When the date picker is opened, we should update the old state with the new currentDate, but to the same granularity.
             // The current date must be one of the available item.dates, or null/undefined.
             const currentDate = this.props.currentDate;
@@ -300,10 +322,11 @@ const DateTimePicker = createReactClass({
                 };
                 this.setState(newState);
             }
+
+            this.props.onOpen();
+        } else {
+            this.props.onClose();
         }
-        this.setState({
-            isOpen: !this.state.isOpen
-        });
     },
 
     render() {
@@ -311,8 +334,8 @@ const DateTimePicker = createReactClass({
             const datesObject = objectifyDates(this.props.dates);
             return (
                 <div className={Styles.timelineDatePicker} onClick={(event) => { event.stopPropagation(); }}>
-                    <button className={Styles.togglebutton} onClick={() => { this.toggleDatePicker(); }}><Icon glyph={Icon.GLYPHS.calendar} /></button>
-                    {this.state.isOpen && <div className={classNames(Styles.datePicker, { [Styles.openBelow]: this.props.openDirection === 'down' })}>
+                    {this.props.showCalendarButton && <button className={Styles.togglebutton} onClick={() => { this.toggleDatePicker(); }}><Icon glyph={Icon.GLYPHS.calendar} /></button>}
+                    {this.props.isOpen && <div className={classNames(Styles.datePicker, { [Styles.openBelow]: this.props.openDirection === 'down' })}>
                         <button className={Styles.backbutton} disabled={!this.state[this.state.granularity]} type='button' onClick={() => this.goBack()}><Icon glyph={Icon.GLYPHS.left} /></button>
                         {!defined(this.state.century) && this.renderCenturyGrid(datesObject)}
                         {defined(this.state.century) && !defined(this.state.year) && this.renderYearGrid(datesObject[this.state.century])}

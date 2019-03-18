@@ -80,7 +80,11 @@ const ChartPanelDownloadButton = createReactClass({
             this._subscription.dispose();
         }
     },
-
+    /**
+     * Extracts column names and row data for CSV download.
+     * @param {CatalogItem[]} chartableItems 
+     * @returns { values, names } where values is an array of array rows, corresponding to the column names.
+     */
     synthesizeNameAndValueArrays(chartableItems) {
         const valueArrays = [];
         const names = [];  // We will add the catalog item name back into the csv column name.
@@ -88,7 +92,9 @@ const ChartPanelDownloadButton = createReactClass({
         for (let i = chartableItems.length - 1; i >= 0; i--) {
             const item = chartableItems[i];
             const xColumn = getXColumn(item);
-
+            if (!xColumn) {
+                continue;
+            }
             if (!names.length) {
                 names.push(getXColumnName(item, xColumn));
             }
