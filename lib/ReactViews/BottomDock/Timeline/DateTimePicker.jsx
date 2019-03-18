@@ -29,13 +29,11 @@ const DateTimePicker = createReactClass({
         currentDate: PropTypes.object,  // JS Date object - must be an element of props.dates, or null/undefined.
         onChange: PropTypes.func.isRequired,
         openDirection: PropTypes.string,
-<<<<<<< HEAD
-        dateFormat: PropTypes.object,
-=======
         isOpen: PropTypes.bool.isRequired,
         onOpen: PropTypes.func.isRequired,
         onClose: PropTypes.func.isRequired,
-        showCalendarButton: PropTypes.bool
+        showCalendarButton: PropTypes.bool,
+        dateFormat: PropTypes.object,
     },
 
     getDefaultProps() {
@@ -44,7 +42,6 @@ const DateTimePicker = createReactClass({
             showCalendarButton: true,
             openDirection: 'down'
         };
->>>>>>> 653c993b43909980f1945599a51a12c546015fed
     },
 
     getInitialState() {
