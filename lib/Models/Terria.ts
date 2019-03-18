@@ -61,7 +61,7 @@ export default class Terria {
     readonly analytics: Analytics;
 
     @observable
-    viewerMode = ViewerMode.CesiumTerrain;
+    viewerMode = ViewerMode.Leaflet;
 
     @observable
     readonly configParameters: ConfigParameters = {
