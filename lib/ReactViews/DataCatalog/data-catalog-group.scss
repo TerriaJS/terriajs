@@ -29,7 +29,7 @@
 
   text-align: left;
   font-size: $font-size-small;
-  padding: $padding-small 30px+$padding;
+  padding: 8px 30px+$padding;
   position: relative;
   width: 100%;
   font-weight: bold;
@@ -74,7 +74,7 @@
     display: block;
   }
   @media (min-width: $sm) {
-    top: 0;
+    top: 5px;
     svg{
       height: 25px;
       width: 25px;
@@ -82,12 +82,10 @@
   }
 }
 
-
-
 .caret {
   position: absolute;
   right: 2px;
-  top: 7px;
+  top: 5px;
   svg{
     fill: $charcoal-grey;
     opacity: 0.5;
@@ -96,7 +94,7 @@
   }
   @media (min-width: $sm) {
     right: 5px;
-    top: 5px;
+    top: 8px;
     svg{
       height: 18px;
       width: 18px;

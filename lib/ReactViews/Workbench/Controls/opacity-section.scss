@@ -5,46 +5,18 @@
   padding: $padding 0;
   border-bottom: 1px solid $border-color;
   font-size: $font-size-mini;
+  display: flex;
 
   label {
     margin-right: $padding-small;
     float: left;
     width: 80px;
+    flex-basis: 100px;
   }
   input[type=range] {
     width: calc(100% - 85px);
   }
-}
-
-.rangeSlider {
-  height: 2px;
-  border-radius: 5px;
-  background: $border-color;
-  width: calc(100% - 85px);
-  float: left;
-  margin-top: 7px;
-
-  :global {
-    .rangeslider__fill {
-      height: 100%;
-      background: #fff;
-      border-radius: 5px;
-      top: 0;
-      position: relative;
-    }
-
-    .rangeslider__handle {
-      width: 12px;
-      height: 12px;
-      border-radius: 20px;
-      top: -7px;
-      background: #fff;
-      display: inline-block;
-      position: relative;
-    }
-
-    .rangeslider__tooltip {
-      display: none;
-    }
+  .opacitySlider{
+    margin-top: 2px;
   }
 }

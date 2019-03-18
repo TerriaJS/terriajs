@@ -6,6 +6,20 @@
 // reason - you can change pretty much other file to do another hot-reload and get your globe back, or just zoom
 // back in.
 
+:global{
+  body {
+    height: 100vh;
+    width: 100vw;
+  }
+
+  .top-element{
+    z-index: 99999;
+    &:focus{
+      outline: none;
+    }
+  }
+}
+
 .ui-root {
   // This is a workaround for a bug in IE11 on Windows 7.
   // https://connect.microsoft.com/IE/feedback/details/796745/mouse-events-are-not-delivered-at-all-anymore-when-inside-an-svg-a-use-is-removed-from-the-dom
@@ -51,8 +65,55 @@
 }
 
 .featureInfo {
-  position: absolute;
+  // On very large screens, the feature info may be up to 40% of the screen.
+  // On small screens (mobile), it make be up to 90% of the screen.
+  // In between, it may be up to 90% of the largest mobile screen ($sm), minus a bit to leave room
+  // for the map controls on the right.  This is computed in $feature-info-medium-max-size.
+  $feature-info-medium-max-size: $sm * 0.9 - $feature-info-right-margin * 0.5;
+  $feature-info-forty-percent-size: $feature-info-medium-max-size * 100 / 40;
+
   z-index: $front-component-z-index - 20;
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  pointer-events:none;
+  left: 0;
+
+  @media (min-width : $md) {
+    left: $work-bench-width + 22px;
+    top: 62px;
+    right: 96px;
+    bottom: 0;
+    // debugger
+    // background: rgba(#ffcc00, 0.5);
+  }
+
+  & > div{
+    pointer-events: auto;
+    position: fixed;
+    top: $mobile-header-height + 10px;
+    right: 10px;
+    max-width: 95%;
+    min-width: 150px;
+    max-height: 80vh;
+    z-index: 99;
+    font-family: $font-base;
+
+    @media (min-width : $sm) and (max-width: $feature-info-forty-percent-size) {
+      max-width: $feature-info-medium-max-size;
+      right: $feature-info-right-margin;
+    }
+
+    @media (min-width: $feature-info-forty-percent-size) {
+      max-width: 40%;
+      right: $feature-info-right-margin;
+    }
+  }
+}
+
+.featureInfoFullScreen{
+  left: 0;
 }
 
 .sidePanel {

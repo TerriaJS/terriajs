@@ -40,6 +40,7 @@
   width: 30px;
   height: 30px;
   border-radius: 2px;
+  margin-right: 5px;
   svg {
     width: 20px;
     height: 20px;
@@ -59,23 +60,25 @@
 }
 
 .currentDate{
-  line-height: 2.2;
-  left: 0;
+  composes: btn from '../../../Sass/common/_buttons.scss';
+  left: 30px;
   position: absolute;
-  right: 0;
+  right: 30px;
+  width: 170px;
+  height: 100%;
   text-align: center;
   z-index: 0;
+  &:hover{
+    background: rgba(250, 250, 250, 0.2);
+  }
 }
 
 .picker{
-  width: 30px;
-  height: 30px;
   float: left;
-  margin-right: 5px;
-  background: rgba(255, 255, 255, 0.2);
   position: relative;
-  border-radius: 2px;
-  display: inline-block;
+  width: 0;
+  height: 0;
+  margin-right: 5px;
 }
 
 .datetimePrevious, .datetimeNext{

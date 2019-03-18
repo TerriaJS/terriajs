@@ -4,6 +4,7 @@ import defined from 'terriajs-cesium/Source/Core/defined';
 import CesiumMath from 'terriajs-cesium/Source/Core/Math';
 import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
 import FeatureInfoCatalogItem from './FeatureInfoCatalogItem.jsx';
+import DragWrapper from '../DragWrapper.jsx';
 import Loader from '../Loader.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
@@ -14,6 +15,7 @@ import Entity from 'terriajs-cesium/Source/DataSources/Entity';
 import Icon from "../Icon.jsx";
 import { LOCATION_MARKER_DATA_SOURCE_NAME, addMarker, removeMarker, markerVisible } from '../../Models/LocationMarkerUtils';
 import prettifyCoordinates from '../../Map/prettifyCoordinates';
+import raiseErrorToUser from '../../Models/raiseErrorToUser';
 
 import Styles from './feature-info-panel.scss';
 import classNames from 'classnames';
@@ -26,6 +28,17 @@ const FeatureInfoPanel = createReactClass({
         terria: PropTypes.object.isRequired,
         viewState: PropTypes.object.isRequired,
         printView: PropTypes.bool
+    },
+
+    ref: null,
+
+    getInitialState() {
+        return {
+            left: null,
+            right: null,
+            top: null,
+            bottom: null
+        };
     },
 
     componentDidMount() {
@@ -68,9 +81,7 @@ const FeatureInfoPanel = createReactClass({
         }
     },
 
-    getFeatureInfoCatalogItems() {
-        const {catalogItems, featureCatalogItemPairs} = getFeaturesGroupedByCatalogItems(this.props.terria);
-
+    renderFeatureInfoCatalogItems(catalogItems, featureCatalogItemPairs) {
         return catalogItems
             .filter(catalogItem => defined(catalogItem))
             .map((catalogItem, i) => {
@@ -100,7 +111,7 @@ const FeatureInfoPanel = createReactClass({
         }, 200);
     },
 
-    toggleCollapsed() {
+    toggleCollapsed(event) {
         this.props.viewState.featureInfoPanelIsCollapsed = !this.props.viewState.featureInfoPanelIsCollapsed;
     },
 
@@ -152,6 +163,14 @@ const FeatureInfoPanel = createReactClass({
         }
     },
 
+    filterIntervalsByFeature(catalogItem, feature) {
+        try {
+            catalogItem.filterIntervalsByFeature(feature, this.props.terria.pickedFeatures);
+        } catch (e) {
+            raiseErrorToUser(this.props.terria, e);
+        }
+    },
+
     renderLocationItem(cartesianPosition) {
         const catographic = Ellipsoid.WGS84.cartesianToCartographic(cartesianPosition);
         const latitude = CesiumMath.toDegrees(catographic.latitude);
@@ -183,11 +202,23 @@ const FeatureInfoPanel = createReactClass({
         const terria = this.props.terria;
         const viewState = this.props.viewState;
 
-        const featureInfoCatalogItems = this.getFeatureInfoCatalogItems();
+        const {catalogItems, featureCatalogItemPairs} = getFeaturesGroupedByCatalogItems(this.props.terria);
+        const featureInfoCatalogItems = this.renderFeatureInfoCatalogItems(catalogItems, featureCatalogItemPairs);
         const panelClassName = classNames(Styles.panel, {
             [Styles.isCollapsed]: viewState.featureInfoPanelIsCollapsed,
             [Styles.isVisible]: viewState.featureInfoPanelIsVisible
         });
+
+        const filterableCatalogItems = catalogItems
+            .filter(catalogItem => defined(catalogItem) && catalogItem.canFilterIntervalsByFeature)
+            .map(catalogItem => {
+                const features = featureCatalogItemPairs.filter(pair => pair.catalogItem === catalogItem);
+                return {
+                    catalogItem: catalogItem,
+                    feature: defined(features[0]) ? features[0].feature : undefined
+                };
+            })
+            .filter(pair => defined(pair.feature));
 
         let position;
         if (defined(terria.selectedFeature) && defined(terria.selectedFeature.position)) {
@@ -218,38 +249,51 @@ const FeatureInfoPanel = createReactClass({
                 <li>{this.renderLocationItem(position)}</li>
             </If>
         );
-
+        this.ref = React.createRef();
         return (
-            <div
-                className={panelClassName}
-                aria-hidden={!viewState.featureInfoPanelIsVisible}>
-                {!this.props.printView && <div className={Styles.header}>
-                    <button type='button' onClick={ this.toggleCollapsed } className={Styles.btnPanelHeading}>
-                        Feature Information
-                    </button>
-                    <button type='button' onClick={ this.close } className={Styles.btnCloseFeature}
-                            title="Close data panel">
-                        <Icon glyph={Icon.GLYPHS.close}/>
-                    </button>
-                </div>}
-                <ul className={Styles.body}>
-                    {this.props.printView && locationElements}
-                    <Choose>
-                        <When condition={viewState.featureInfoPanelIsCollapsed || !viewState.featureInfoPanelIsVisible}>
-                        </When>
-                        <When condition={defined(terria.pickedFeatures) && terria.pickedFeatures.isLoading}>
-                            <li><Loader/></li>
-                        </When>
-                        <When condition={!featureInfoCatalogItems || featureInfoCatalogItems.length === 0}>
-                            <li className={Styles.noResults}>{this.getMessageForNoResults()}</li>
-                        </When>
-                        <Otherwise>
-                            {featureInfoCatalogItems}
-                        </Otherwise>
-                    </Choose>
-                    {!this.props.printView && locationElements}
-                </ul>
-            </div>
+                <DragWrapper ref={this.ref}>
+                    <div
+                        className={panelClassName}
+                        aria-hidden={!viewState.featureInfoPanelIsVisible}>
+                        {!this.props.printView && <div className={Styles.header}>
+                            <div className={classNames('drag-handle', Styles.btnPanelHeading)}>
+                                <span>Feature Information</span>
+                                <button type='button' onClick={ this.toggleCollapsed } className={Styles.btnToggleFeature}>
+                                    {this.props.viewState.featureInfoPanelIsCollapsed ? <Icon glyph={Icon.GLYPHS.closed}/> : <Icon glyph={Icon.GLYPHS.opened}/>}
+                                </button>
+                            </div>
+                            <button type='button' onClick={ this.close } className={Styles.btnCloseFeature}
+                                    title="Close data panel">
+                                <Icon glyph={Icon.GLYPHS.close}/>
+                            </button>
+                        </div>}
+                        <ul className={Styles.body}>
+                            {this.props.printView && locationElements}
+                            <Choose>
+                                <When condition={viewState.featureInfoPanelIsCollapsed || !viewState.featureInfoPanelIsVisible}>
+                                </When>
+                                <When condition={defined(terria.pickedFeatures) && terria.pickedFeatures.isLoading}>
+                                    <li><Loader/></li>
+                                </When>
+                                <When condition={!featureInfoCatalogItems || featureInfoCatalogItems.length === 0}>
+                                    <li className={Styles.noResults}>{this.getMessageForNoResults()}</li>
+                                </When>
+                                <Otherwise>
+                                    {featureInfoCatalogItems}
+                                </Otherwise>
+                            </Choose>
+                            {!this.props.printView && locationElements}
+                            {filterableCatalogItems.map(pair => (
+                                <button key={pair.catalogItem.id}
+                                        type='button'
+                                        onClick={this.filterIntervalsByFeature.bind(this, pair.catalogItem, pair.feature)}
+                                        className={Styles.satelliteSuggestionBtn}>
+                                    Show {pair.catalogItem.name} at this location
+                                </button>
+                            ))}
+                        </ul>
+                    </div>
+                </DragWrapper>
         );
     },
 });
