@@ -19,6 +19,10 @@ export default class Leaflet implements GlobeOrMap {
         this.map = map;
     }
 
+    destroy() {
+        this.stopObserving();
+    }
+
     observeModelLayer() {
         this._disposeWorkbenchMapItemsSubscription = autorun(() => {
             const catalogItems = [
@@ -49,6 +53,12 @@ export default class Leaflet implements GlobeOrMap {
                 }
             });
         });
+    }
+
+    stopObserving() {
+        if (this._disposeWorkbenchMapItemsSubscription !== undefined) {
+            this._disposeWorkbenchMapItemsSubscription();
+        }
     }
 
     zoomTo(
