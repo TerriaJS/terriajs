@@ -67,7 +67,7 @@ export default class Story extends React.Component {
   render() {
     const story = this.props.story;
      return (<div className={Styles.story} >
-          <div className={Styles.storyHeader}> 
+            <div className={Styles.storyHeader}> 
             <h3>{story.title && story.title.length > 0 ? story.title : 'untitled scene'}</h3>
             <button className={Styles.toggleBtn} onClick={this.toggleMenu}><Icon glyph={Icon.GLYPHS.menuDotted}/></button>
             {this.state.menuOpen && this.renderMenu()}

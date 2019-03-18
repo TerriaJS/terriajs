@@ -20,17 +20,25 @@
 }
 
 .story-container {
-}
-
-.story {
-  width: 100%; 
+  display: flex;
+  width: 100%;
   max-width: 1200px;
   background-color: #ffffff;
   color: $text-dark;
   text-align:left;
-  font-size: 20px;
   box-sizing: border-box;
   margin: 0 auto;
+
+  .left{
+    border-right: 1px solid $field-border;
+  }
+  .right{
+    border-left: 1px solid $field-border;
+  }
+}
+
+.story {
+  flex-grow: 2;
 }
 
 .storyHeader{
@@ -51,29 +59,29 @@
   font-size: 1rem;
 }
 
-.navBtn, .pauseBtn,  .nextBtn, .previousBtn {
+.navBtn, .locationBtn, .exitBtn,  .nextBtn, .previousBtn {
   z-index: 999;
   composes: btn from '../Sass/common/_buttons.scss';
   display: block;
   padding: $padding*0.8 $padding*2.2;
-  &, &:hover, &:focus{
-    border-right: 1px solid $field-border;
-  }
   svg{
     fill: #888888;
     width: 20px;
-    height: 20px;
   }
  }
  .nextBtn, .previousBtn{
+   height: calc(100% - 51px);
    svg{
       width: 15px;
       height: 15px;
    }
  } 
- .pauseBtn {
+ .exitBtn, .locationBtn  {
+   svg{
+     height: 31px;
+   }
    &, &:focus, &:hover{
-     border-right: 0;
+     border-bottom: 1px solid $field-border;
    }
  }
 

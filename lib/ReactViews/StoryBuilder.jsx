@@ -14,8 +14,6 @@ import Styles from './story-builder.scss';
 
 let idCounter = 100;
 
-const USE_URL = false;
-
 const StoryBuilder = createReactClass({
     displayName: 'StoryBuilder',
     mixins: [ObserveModelMixin],
@@ -58,12 +56,7 @@ const StoryBuilder = createReactClass({
   },
 
     captureStory(story) {
-      if (USE_URL) {
-          story.shareUrl = new URI(buildShareLink(this.props.terria, false)).hash();
-      } else {
-          story.shareData = JSON.parse(JSON.stringify(getShareData(this.props.terria, false)));
-      }
-
+        story.shareData = JSON.parse(JSON.stringify(getShareData(this.props.terria, false)));
     },
 
     runStories() {
@@ -85,9 +78,7 @@ const StoryBuilder = createReactClass({
        this.props.terria.nowViewing.removeAll();
        if (story.shareData) {
             this.props.terria.updateFromStartData(story.shareData);
-        } else {
-            window.location = story.shareUrl;
-        }
+        }       
        this.runStories();
    },
     
@@ -113,8 +104,8 @@ const StoryBuilder = createReactClass({
                 <div className={Styles.header}>
                   {!hasStories && this.renderIntro()}
                   <div className={Styles.actions}>
-                   {hasStories && <button disabled ={this.state.editingMode || !hasStories} className={Styles.previewBtn} onClick={this.runStories} title="preview stories"><Icon glyph={Icon.GLYPHS.play}/>Preview</button>}
-                   <button disabled={this.state.editingMode} className={Styles.captureBtn} title='capture current scene' onClick={this.onClickCapture}> <Icon glyph={Icon.GLYPHS.story}/> Capture scene </button>
+                   {hasStories && <button disabled ={this.state.editingMode || !hasStories} className={Styles.previewBtn} onClick={this.runStories} title="preview stories"><Icon glyph={Icon.GLYPHS.play}/>Play Story</button>}
+                   <button disabled={this.state.editingMode} className={Styles.captureBtn} title='capture current scene' onClick={this.onClickCapture}> <Icon glyph={Icon.GLYPHS.story}/> Capture Scene </button>
                   </div>
                 </div>
                {!this.state.editingMode && hasStories &&  this.renderStories()}

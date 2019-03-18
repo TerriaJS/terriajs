@@ -63,13 +63,10 @@
      top: 8px;
    }
  }
- 
-.btn{
-    margin: $padding-small 0;
-    composes: btn from "../Sass/common/_buttons.scss";
-    composes: btn-primary from "../Sass/common/_buttons.scss";
- }
 
+ .previewBtn {
+   margin-bottom: $padding;
+ }
 
 .story:hover {
   background-color: $dark-with-overlay;
