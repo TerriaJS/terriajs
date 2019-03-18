@@ -4,6 +4,7 @@
 .story-panel {
   font-family: $font-base;
   flex-basis: 400px;
+  max-width: 400px;
   color: $text-light;
   font-size: $font-size-mid-small;
   background: $dark;
