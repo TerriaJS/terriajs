@@ -37,20 +37,28 @@ export default class Leaflet implements GlobeOrMap {
                     .map(item => item.mapItems)
             );
 
-            const allImageryParts = allMapItems
+            const allImageryLayers = allMapItems
                 .filter(ImageryParts.is)
                 .map(makeImageryLayerFromParts);
 
+            // Delete imagery layers no longer in the model
             this.map.eachLayer(layer => {
-                if (allImageryParts.indexOf(layer) === -1) {
+                const index = allImageryLayers.findIndex(l => l === layer);
+                if (index === -1) {
                     this.map.removeLayer(layer);
                 }
             });
 
-            allImageryParts.forEach(layer => {
+            // Add layer or update its zIndex
+            let zIndex = 100; // Start at an arbitrary value
+            allImageryLayers.reverse().forEach(layer => {
                 if (!this.map.hasLayer(layer)) {
                     this.map.addLayer(layer);
+                    layer.setZIndex(zIndex);
+                } else {
+                    layer.setZIndex(zIndex);
                 }
+                zIndex++;
             });
         });
     }
@@ -73,7 +81,7 @@ const createImageryLayer: (
     return new CesiumTileLayer(ip);
 });
 
-function makeImageryLayerFromParts(parts: ImageryParts): L.Layer {
+function makeImageryLayerFromParts(parts: ImageryParts): CesiumTileLayer {
     const layer = createImageryLayer(parts.imageryProvider);
     return layer;
 }
