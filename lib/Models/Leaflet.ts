@@ -39,7 +39,7 @@ export default class Leaflet implements GlobeOrMap {
 
             const allImageryLayers = allMapItems
                 .filter(ImageryParts.is)
-                .map(makeImageryLayerFromParts);
+                .map(parts => makeImageryLayerFromParts(parts, this.map));
 
             // Delete imagery layers no longer in the model
             this.map.eachLayer(layer => {
@@ -79,7 +79,20 @@ const createImageryLayer: (
     return new CesiumTileLayer(ip);
 });
 
-function makeImageryLayerFromParts(parts: ImageryParts): CesiumTileLayer {
+function makeImageryLayerFromParts(
+    parts: ImageryParts,
+    map: L.Map
+): CesiumTileLayer {
     const layer = createImageryLayer(parts.imageryProvider);
+
+    // react to show/hide and opacity changes
+    autorun(() => {
+        layer.setOpacity(parts.alpha);
+        if (parts.show) {
+            map.addLayer(layer);
+        } else {
+            map.removeLayer(layer);
+        }
+    });
     return layer;
 }
