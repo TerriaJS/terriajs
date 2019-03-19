@@ -49,15 +49,13 @@ export default class Leaflet implements GlobeOrMap {
                 }
             });
 
-            // Add layer or update its zIndex
+            // Add layer and update its zIndex
             let zIndex = 100; // Start at an arbitrary value
             allImageryLayers.reverse().forEach(layer => {
                 if (!this.map.hasLayer(layer)) {
                     this.map.addLayer(layer);
-                    layer.setZIndex(zIndex);
-                } else {
-                    layer.setZIndex(zIndex);
                 }
+                layer.setZIndex(zIndex);
                 zIndex++;
             });
         });
