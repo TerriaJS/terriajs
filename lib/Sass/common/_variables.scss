@@ -8,6 +8,7 @@ $font-feature-info: $font-mono;
 $font : $font-base;
 
 $color-primary: #08ABD5;
+$color-primary-disabled: #595B60;
 @function get-hover-color($base-color) {@return lighten($base-color, 10%);}
 $color-secondary: #06CCFF;
 
@@ -105,7 +106,7 @@ $font-size-button: 0.85rem;
 $font-size-small: 0.8125rem;
 $font-size-mid-mini: 0.7rem;
 $font-size-mini: 0.625rem;
-$font-size-credits: 0.5rem;
+$font-size-credits: 0.7rem;
 
 $font-weight-bold: 600;
 $font-weight-medium: 500;

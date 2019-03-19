@@ -7,7 +7,7 @@
   font-family: $font-base;
   font-size: $font-size-mid-small;
 
-  @media screen and (max-width: $sm) {
+  @media (max-width: $sm) {
     height: calc(100% - #{$mobile-modal-top-height});
     composes: scrollbars from '../../Sass/common/_base.scss';
     overflow: auto;
@@ -39,7 +39,7 @@
     margin: 0;
   }
 
-  @media screen and (min-width: $sm) {
+  @media (min-width: $sm) {
     h3 {
       margin: 0.5em 0;
     }

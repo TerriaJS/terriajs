@@ -24,6 +24,7 @@ const TerriaViewerWrapper = createReactClass({
     componentDidMount() {
         // Create the map/globe.
         this.terriaViewer = TerriaViewer.create(this.props.terria, {
+            terrain: this.props.terria.configParameters.cesiumTerrainUrl,
             developerAttribution: {
                 text: 'Data61',
                 link: 'http://www.csiro.au/en/Research/D61'
@@ -58,12 +59,15 @@ const TerriaViewerWrapper = createReactClass({
 
     render() {
         return (
-            <aside id="cesiumContainer"
-                   className={Styles.cesiumContainer}
-                   ref={element => {this.mapElement = element;}}
-                   onMouseMove={this.onMouseMove}>
+            <aside className={Styles.container}>
                 <div className={Styles.mapPlaceholder}>Loading the map, please wait...</div>
                 <Splitter terria={this.props.terria} />
+                <div
+                    id="cesiumContainer"
+                    className={Styles.cesiumContainer}
+                    ref={element => {this.mapElement = element;}}
+                    onMouseMove={this.onMouseMove}>
+                </div>
             </aside>
         );
     },

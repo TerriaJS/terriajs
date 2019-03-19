@@ -31,7 +31,8 @@ const ExplorerWindow = createReactClass({
         this.props.viewState.switchMobileView('nowViewing');
     },
 
-    componentWillMount() {
+    /* eslint-disable-next-line camelcase */
+    UNSAFE_componentWillMount() {
         this.props.viewState.explorerPanelAnimating = true;
 
         this._pickedFeaturesSubscription = ko.pureComputed(this.isVisible, this).subscribe(this.onVisibilityChange);
@@ -95,7 +96,7 @@ const ExplorerWindow = createReactClass({
         const visible = this.state.visible;
 
         return visible ? (
-            <div className={Styles.modalWrapper}
+            <div className={classNames(Styles.modalWrapper, this.props.viewState.topElement === 'AddData' ? 'top-element': '')}            
                  id="explorer-panel-wrapper"
                  aria-hidden={!visible}>
                 <div onClick={this.close}

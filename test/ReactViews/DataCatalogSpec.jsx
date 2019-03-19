@@ -6,6 +6,7 @@ import {getShallowRenderedOutput} from './MoreShallowTools';
 import React from 'react';
 import Terria from '../../lib/Models/Terria';
 import ViewState from '../../lib/ReactViewModels/ViewState';
+import { USER_ADDED_CATEGORY_NAME } from '../../lib/Core/addedByUser';
 
 describe('DataCatalog', function() {
     let terria;
@@ -20,7 +21,7 @@ describe('DataCatalog', function() {
         });
     });
 
-    it('does not show the user-added data group', function() {
+    it('does not show the My Data group', function() {
         const someGroup = new CatalogGroup(terria);
         someGroup.name = 'Some Group';
         terria.catalog.userAddedDataGroup.add(someGroup);
@@ -36,7 +37,7 @@ describe('DataCatalog', function() {
         let foundAnotherGroup = false;
         memberComponents.forEach(member => {
             expect(member.props.member).not.toBe(terria.catalog.userAddedDataGroup);
-            expect(member.props.member.name).not.toEqual('User-Added Data');
+            expect(member.props.member.name).not.toEqual(USER_ADDED_CATEGORY_NAME);
             foundAnotherGroup = foundAnotherGroup || member.props.member === anotherGroup;
         });
 

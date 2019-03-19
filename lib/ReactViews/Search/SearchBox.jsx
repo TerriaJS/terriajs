@@ -39,7 +39,8 @@ export default createReactClass({
         };
     },
 
-    componentWillMount() {
+    /* eslint-disable-next-line camelcase */
+    UNSAFE_componentWillMount() {
         this.searchWithDebounce = debounce(this.search, DEBOUNCE_INTERVAL);
     },
 

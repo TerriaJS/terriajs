@@ -1,4 +1,5 @@
 import React from 'react';
+import defined from 'terriajs-cesium/Source/Core/defined';
 import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import ObserveModelMixin from '../ObserveModelMixin';
@@ -62,13 +63,15 @@ const DateTimeParameterEditor = createReactClass({
     },
 
     render() {
+        const style = defined(this.props.parameter) && defined(this.props.parameter.value) ? Styles.field : Styles.fieldDatePlaceholder;
+
         return (<div>
-            <input className={Styles.field}
+            <input className={style}
                    type="date"
                    placeholder="YYYY-MM-DD"
                    onChange={this.onChangeDate}
                    value={this.state.date}/>
-            <input className={Styles.field}
+            <input className={style}
                    type="time"
                    placeholder="HH:mm:ss.sss"
                    onChange={this.onChangeTime}

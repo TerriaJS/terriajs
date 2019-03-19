@@ -7,8 +7,8 @@ import TerriaViewerWrapper from '../Map/TerriaViewerWrapper.jsx';
 import LocationBar from '../Map/Legend/LocationBar.jsx';
 import DistanceLegend from '../Map/Legend/DistanceLegend.jsx';
 import FeedbackButton from '../Feedback/FeedbackButton.jsx';
-import ObserveModelMixin from './../ObserveModelMixin';
-import BottomDock from './../BottomDock/BottomDock.jsx';
+import ObserveModelMixin from '../ObserveModelMixin';
+import BottomDock from '../BottomDock/BottomDock.jsx';
 import FeatureDetection from 'terriajs-cesium/Source/Core/FeatureDetection';
 import classNames from "classnames";
 
@@ -30,13 +30,15 @@ const MapColumn = createReactClass({
     propTypes: {
         terria: PropTypes.object.isRequired,
         viewState: PropTypes.object.isRequired,
+        customFeedbacks: PropTypes.array.isRequired,
     },
 
     getInitialState() {
         return {};
     },
 
-    componentWillMount() {
+    /* eslint-disable-next-line camelcase */
+    UNSAFE_componentWillMount() {
         if (isIE) {
             this.observer = new MutationObserver(this.resizeMapCell);
             window.addEventListener('resize', this.resizeMapCell, false);
@@ -92,10 +94,18 @@ const MapColumn = createReactClass({
                                 <DistanceLegend terria={this.props.terria}/>
                             </div>
                         </If>
-                        <If condition={!this.props.viewState.useSmallScreenInterface && this.props.terria.configParameters.feedbackUrl && !this.props.viewState.hideMapUi()}>
+                        <If condition={!this.props.customFeedbacks.length && this.props.terria.configParameters.feedbackUrl && !this.props.viewState.hideMapUi()}>
                             <div className={Styles.feedbackButtonWrapper}>
                                 <FeedbackButton viewState={this.props.viewState}/>
                             </div>
+                        </If>
+
+                        <If condition={this.props.customFeedbacks.length && this.props.terria.configParameters.feedbackUrl && !this.props.viewState.hideMapUi()}>
+                          <For each="feedbackItem" of={this.props.customFeedbacks} index="i">
+                              <div key={i}>
+                                  {feedbackItem}
+                              </div>
+                          </For>
                         </If>
                     </div>
                     <If condition={this.props.terria.configParameters.printDisclaimer}>

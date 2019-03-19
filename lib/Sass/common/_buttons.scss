@@ -53,6 +53,14 @@ $btn-setting-size: 35px;
   border-radius: $radius-small;
   padding: $padding;
 
+  &:disabled {
+    background: $color-primary-disabled !important;
+    cursor: not-allowed;
+
+    &:hover, &--hover {
+      background: $color-primary-disabled !important;
+    }
+  }
   &:hover, &--hover {
     background: get-hover-color($color-primary);
   }
@@ -82,7 +90,7 @@ $btn-setting-size: 35px;
 
 .btn--secondary {
   color: $color-primary;
-  border: 2px solid $color-primary;
+  border: $color-primary;
   border-radius: 4px;
 
   &:hover, &:focus {
@@ -126,7 +134,6 @@ $btn-setting-size: 35px;
 
 .btn--close-modal {
   @extend .btn--secondary;
-
   font-size: $font-size-small;
   padding: 4px 10px;
   margin: 5px;
@@ -136,7 +143,7 @@ $btn-setting-size: 35px;
 
 .btn--catalog {
   padding: $padding 30px+$padding;
-  @media screen and (min-width: $sm){
+  @media (min-width: $sm){
     padding: $padding-small 30px+$padding;
   }
 
@@ -147,7 +154,7 @@ $btn-setting-size: 35px;
     position: absolute;
     left: 0;
     padding: $padding $padding*2.2 $padding $padding*1.5;
-    @media screen and (min-width: $sm){
+    @media (min-width: $sm){
       padding: $padding-small $padding*2.2 $padding-small $padding*1.5;
     }
     top: 0;
@@ -158,7 +165,7 @@ $btn-setting-size: 35px;
     position: absolute;
     right: 5px;
     top: $padding;
-    @media screen and (min-width: $sm){
+    @media (min-width: $sm){
       top: $padding-small;
     }
 

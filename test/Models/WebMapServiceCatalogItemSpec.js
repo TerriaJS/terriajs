@@ -56,7 +56,8 @@ describe('WebMapServiceCatalogItem', function() {
             wmsItem.updateFromJson({
                 url: 'http://foo.com/bar',
                 metadataUrl: 'test/WMS/no_legend_url.xml',
-                layers: 'single_period'
+                layers: 'single_period',
+                dataUrl: '' // to prevent a DescribeLayer request
             });
             wmsItem.load().then(function() {
                 expect(wmsItem.legendUrl.url.indexOf('http://foo.com/bar')).toBe(0);
@@ -69,7 +70,8 @@ describe('WebMapServiceCatalogItem', function() {
                 metadataUrl: 'test/WMS/multiple_style_legend_url.xml',
                 layers: 'single_period',
                 parameters: { "styles": "jet2",
-                              "foo": "bar" }
+                              "foo": "bar" },
+                dataUrl: '' // to prevent a DescribeLayer request
             });
             wmsItem.load().then(function() {
                 expect(wmsItem.legendUrl).toEqual(new LegendUrl('http://www.example.com/foo?request=GetLegendGraphic&secondUrl&styles=jet2&foo=bar&srs=EPSG%3A3857', 'image/gif'));
@@ -82,7 +84,8 @@ describe('WebMapServiceCatalogItem', function() {
                 metadataUrl: 'test/WMS/no_legend_url.xml',
                 layers: 'single_period',
                 parameters: { "alpha": "beta",
-                              "foo": "bar" }
+                              "foo": "bar" },
+                dataUrl: '' // to prevent a DescribeLayer request
             });
             wmsItem.load().then(function() {
                 expect(wmsItem.legendUrl.url.indexOf('http://foo.com/bar?service=WMS&version=1.1.0&request=GetLegendGraphic&format=image%2Fpng&transparent=True&layer=single_period&alpha=beta&foo=bar&srs=EPSG%3A3857')).toBe(0);
@@ -94,7 +97,8 @@ describe('WebMapServiceCatalogItem', function() {
             wmsItem.updateFromJson({
                 url: 'http://example.com',
                 metadataUrl: 'test/WMS/single_style_legend_url.xml',
-                layers: 'single_period'
+                layers: 'single_period',
+                dataUrl: '' // to prevent a DescribeLayer request
             });
             wmsItem.load().then(function() {
                 expect(wmsItem.legendUrl).toEqual(new LegendUrl('http://www.example.com/foo?request=GetLegendGraphic&firstUrl&srs=EPSG%3A3857', 'image/gif'));
@@ -105,7 +109,8 @@ describe('WebMapServiceCatalogItem', function() {
             wmsItem.updateFromJson({
                 url: 'http://example.com',
                 metadataUrl: 'test/WMS/multiple_style_legend_url.xml',
-                layers: 'single_period'
+                layers: 'single_period',
+                dataUrl: '' // to prevent a DescribeLayer request
             });
             wmsItem.load().then(function() {
                 expect(wmsItem.legendUrl).toEqual(new LegendUrl('http://www.example.com/foo?request=GetLegendGraphic&firstUrl&srs=EPSG%3A3857', 'image/gif'));
@@ -116,7 +121,8 @@ describe('WebMapServiceCatalogItem', function() {
             wmsItem.updateFromJson({
                 url: 'http://example.com',
                 metadataUrl: 'test/WMS/single_style_multiple_legend_urls.xml',
-                layers: 'single_period'
+                layers: 'single_period',
+                dataUrl: '' // to prevent a DescribeLayer request
             });
             wmsItem.load().then(function() {
                 expect(wmsItem.legendUrl).toEqual(new LegendUrl('http://www.example.com/foo?request=GetLegendGraphic&firstUrl&srs=EPSG%3A3857', 'image/gif'));
@@ -128,7 +134,8 @@ describe('WebMapServiceCatalogItem', function() {
             wmsItem.updateFromJson({
                 url: 'http://example.com',
                 metadataUrl: 'test/WMS/single_style_legend_url.xml',
-                layers: 'single_period'
+                layers: 'single_period',
+                dataUrl: '' // to prevent a DescribeLayer request
             });
 
             wmsItem.legendUrl = new LegendUrl('http://www.example.com/blahFace');
@@ -144,7 +151,8 @@ describe('WebMapServiceCatalogItem', function() {
             wmsItem.updateFromJson({
                 url: 'http://foo.com/bar',
                 metadataUrl: 'test/WMS/single_metadata_url.xml',
-                layers: 'single_period'
+                layers: 'single_period',
+                dataUrl: '' // to prevent a DescribeLayer request
             });
             wmsItem.load().then(function() {
                 expect(wmsItem.findInfoSection('Metadata Links').content).toBe('http://examplemetadata.com');
@@ -155,7 +163,8 @@ describe('WebMapServiceCatalogItem', function() {
             wmsItem.updateFromJson({
                 url: 'http://foo.com/bar',
                 metadataUrl: 'test/WMS/multiple_metadata_url.xml',
-                layers: 'single_period'
+                layers: 'single_period',
+                dataUrl: '' // to prevent a DescribeLayer request
             });
             wmsItem.load().then(function() {
                 expect(wmsItem.findInfoSection('Metadata Links').content).toBe('http://examplemetadata1.com<br>http://examplemetadata2.com');
@@ -301,6 +310,10 @@ describe('WebMapServiceCatalogItem', function() {
             awesome: 'maybe'
         };
         wmsItem.getFeatureInfoFormats = [];
+
+        // This initialTime is before any interval, so internally it will be changed to the first start date.
+        wmsItem.initialTimeSource = '2012-01-01T12:00:00Z';
+
         wmsItem.intervals = new TimeIntervalCollection([
             new TimeInterval({
                 start: JulianDate.fromIso8601('2013-08-01T15:00:00Z'),
@@ -311,8 +324,6 @@ describe('WebMapServiceCatalogItem', function() {
                 stop: JulianDate.fromIso8601('2013-09-03T13:00:00Z')
             })
         ]);
-        // This initialTime is before any interval, so internally it will be changed to the first start date.
-        wmsItem.initialTimeSource = '2012-01-01T12:00:00Z';
 
         var json = wmsItem.serializeToJson();
 
@@ -345,13 +356,9 @@ describe('WebMapServiceCatalogItem', function() {
         wmsItem.updateFromJson({
             attribution: "Plain text"
         });
-        expect(wmsItem.attribution).toEqual(new Credit({
-            text: "Plain text",
-            imageUrl: undefined,
-            link: undefined
-        }));
+        expect(wmsItem.attribution).toEqual(new Credit('Plain text'));
     });
-    it('can get handle object in textAttribution', function() {
+    it('can handle object in textAttribution', function() {
         var test = {
             text: "test",
             link: "link"
@@ -359,8 +366,8 @@ describe('WebMapServiceCatalogItem', function() {
         wmsItem.updateFromJson({
             attribution: test
         });
-        expect(wmsItem.attribution.text).toEqual("test");
-        expect(wmsItem.attribution.link).toEqual("link");
+        expect(wmsItem.attribution.html).toContain("test");
+        expect(wmsItem.attribution.html).toContain("link");
     });
 
     it('can understand comma-separated datetimes', function(done) {
@@ -374,7 +381,8 @@ describe('WebMapServiceCatalogItem', function() {
         wmsItem.updateFromJson({
             url: 'http://example.com',
             metadataUrl: 'test/WMS/comma_sep_datetimes.xml',
-            layers: '13_intervals'
+            layers: '13_intervals',
+            dataUrl: '' // to prevent a DescribeLayer request
         });
         wmsItem.load().then(function() {
             expect(wmsItem.intervals.length).toEqual(13);
@@ -387,7 +395,8 @@ describe('WebMapServiceCatalogItem', function() {
         wmsItem.updateFromJson({
             url: 'http://example.com',
             metadataUrl: 'test/WMS/single_period_datetimes.xml',
-            layers: 'single_period'
+            layers: 'single_period',
+            dataUrl: '' // to prevent a DescribeLayer request
         });
         wmsItem.load().then(function() {
             expect(wmsItem.intervals.length).toEqual(1);
@@ -401,7 +410,8 @@ describe('WebMapServiceCatalogItem', function() {
         wmsItem.updateFromJson({
             url: 'http://example.com',
             metadataUrl: 'test/WMS/period_datetimes.xml',
-            layers: 'single_period'
+            layers: 'single_period',
+            dataUrl: '' // to prevent a DescribeLayer request
         });
         wmsItem.load().then(function() {
             expect(wmsItem.intervals.length).toEqual(11);
@@ -414,7 +424,8 @@ describe('WebMapServiceCatalogItem', function() {
         wmsItem.updateFromJson({
             url: 'http://example.com',
             metadataUrl: 'test/WMS/period_datetimes_multiple_units.xml',
-            layers: 'single_period'
+            layers: 'single_period',
+            dataUrl: '' // to prevent a DescribeLayer request
         });
         wmsItem.load().then(function() {
             expect(wmsItem.intervals.length).toEqual(8);
@@ -427,7 +438,8 @@ describe('WebMapServiceCatalogItem', function() {
         wmsItem.updateFromJson({
             url: 'http://example.com',
             metadataUrl: 'test/WMS/period_datetimes_crossing_leap_second.xml',
-            layers: 'single_period'
+            layers: 'single_period',
+            dataUrl: '' // to prevent a DescribeLayer request
         });
         wmsItem.load().then(function() {
             expect(wmsItem.intervals.length).toEqual(9);
@@ -442,7 +454,8 @@ describe('WebMapServiceCatalogItem', function() {
         wmsItem.updateFromJson({
             url: 'http://example.com',
             metadataUrl: 'test/WMS/bad_datetime.xml',
-            layers: 'single_period'
+            layers: 'single_period',
+            dataUrl: '' // to prevent a DescribeLayer request
         });
         var remover = wmsItem.terria.error.addEventListener(function() {
             expect(true).toBe(true);
@@ -463,7 +476,8 @@ describe('WebMapServiceCatalogItem', function() {
         wmsItem.updateFromJson({
             url: 'http://example.com',
             metadataUrl: 'test/WMS/comma_sep_datetimes_inherited.xml',
-            layers: '13_intervals'
+            layers: '13_intervals',
+            dataUrl: '' // to prevent a DescribeLayer request
         });
         wmsItem.load().then(function() {
             expect(wmsItem.intervals.length).toEqual(13);
@@ -474,7 +488,8 @@ describe('WebMapServiceCatalogItem', function() {
         wmsItem.updateFromJson({
             url: 'http://example.com',
             metadataUrl: 'test/WMS/single_style_legend_url.xml',
-            layers: 'foo,single_period'
+            layers: 'foo,single_period',
+            dataUrl: '' // to prevent a DescribeLayer request
         });
         wmsItem.load().then(function() {
             expect(wmsItem.layers).toBe('single_period');
@@ -485,7 +500,8 @@ describe('WebMapServiceCatalogItem', function() {
         wmsItem.updateFromJson({
             url: 'http://example.com',
             metadataUrl: 'test/WMS/single_style_legend_url.xml',
-            layers: 'foo,bar'
+            layers: 'foo,bar',
+            dataUrl: '' // to prevent a DescribeLayer request
         });
         wmsItem.load().then(done.fail).otherwise(done);
     });
@@ -494,7 +510,8 @@ describe('WebMapServiceCatalogItem', function() {
         wmsItem.updateFromJson({
             url: 'http://example.com',
             metadataUrl: 'test/WMS/single_style_legend_url.xml',
-            layers: 'namespace:single_period'
+            layers: 'namespace:single_period',
+            dataUrl: '' // to prevent a DescribeLayer request
         });
         wmsItem.load().then(function() {
             expect(wmsItem.layers).toBe('single_period');
@@ -505,7 +522,8 @@ describe('WebMapServiceCatalogItem', function() {
         wmsItem.updateFromJson({
             url: 'http://example.com',
             metadataUrl: 'test/WMS/ncwms_service.xml',
-            layers: 'ncwms'
+            layers: 'ncwms',
+            dataUrl: '' // to prevent a DescribeLayer request
         });
         wmsItem.load().then(function() {
             expect(wmsItem.isNcWMS).toBe(true);
@@ -517,7 +535,8 @@ describe('WebMapServiceCatalogItem', function() {
         wmsItem.updateFromJson({
             url: 'http://example.com',
             metadataUrl: 'test/WMS/ncwms2_service.xml',
-            layers: 'mylayer'
+            layers: 'mylayer',
+            dataUrl: '' // to prevent a DescribeLayer request
         });
         wmsItem.load().then(function() {
             expect(wmsItem.isNcWMS).toBe(true);
@@ -529,7 +548,8 @@ describe('WebMapServiceCatalogItem', function() {
         wmsItem.updateFromJson({
             url: 'http://example.com',
             metadataUrl: 'test/WMS/single_style_legend_url.xml',
-            layers: 'single_period'
+            layers: 'single_period',
+            dataUrl: '' // to prevent a DescribeLayer request
         });
         wmsItem.load().then(function() {
             expect(wmsItem.isNcWMS).toBe(undefined);
@@ -541,7 +561,8 @@ describe('WebMapServiceCatalogItem', function() {
         wmsItem.updateFromJson({
             url: 'http://example.com',
             metadataUrl: 'test/WMS/colorscalerange.xml',
-            layers: 'mylayer'
+            layers: 'mylayer',
+            dataUrl: '' // to prevent a DescribeLayer request
         });
         wmsItem.load().then(function() {
             expect(wmsItem.supportsColorScaleRange).toBe(true);
@@ -553,7 +574,8 @@ describe('WebMapServiceCatalogItem', function() {
             wmsItem.updateFromJson({
                 url: 'http://example.com',
                 metadataUrl: 'test/WMS/styles_and_dimensions.xml',
-                layers: 'A'
+                layers: 'A',
+                dataUrl: '' // to prevent a DescribeLayer request
             });
 
             wmsItem.load().then(function() {
@@ -591,7 +613,8 @@ describe('WebMapServiceCatalogItem', function() {
                 layers: 'A',
                 dimensions: {
                     elevation: '-0.90625'
-                }
+                },
+                dataUrl: '' // to prevent a DescribeLayer request
             });
 
             wmsItem.load().then(function() {
@@ -607,7 +630,8 @@ describe('WebMapServiceCatalogItem', function() {
                 layers: 'A',
                 dimensions: {
                     custom: 'Another thing'
-                }
+                },
+                dataUrl: '' // to prevent a DescribeLayer request
             });
 
             wmsItem.load().then(function() {

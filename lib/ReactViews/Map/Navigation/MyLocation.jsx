@@ -25,7 +25,8 @@ const MyLocation = createReactClass({
 
     _marker: undefined,
 
-    componentWillMount() {
+    /* eslint-disable-next-line camelcase */
+    UNSAFE_componentWillMount() {
         this._marker = new GeoJsonCatalogItem(this.props.terria);
     },
 
@@ -162,7 +163,7 @@ const MyLocation = createReactClass({
 
         return <div className={Styles.toolButton}>
                   <button type='button' className={toggleStyle}
-                          title='go to my location'
+                          title='Centre map at your current location'
                           onClick={this.handleCick}>
                           <Icon glyph={Icon.GLYPHS.geolocation}/>
                   </button>

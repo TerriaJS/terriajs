@@ -4,7 +4,7 @@
 
 var Terria = require('../../lib/Models/Terria');
 var Legend = require('../../lib/Map/Legend');
-var loadWithXhr = require('terriajs-cesium/Source/Core/loadWithXhr');
+var loadWithXhr = require('../../lib/Core/loadWithXhr');
 var ArcGisMapServerCatalogItem = require('../../lib/Models/ArcGisMapServerCatalogItem');
 var LegendUrl = require('../../lib/Map/LegendUrl');
 
@@ -28,7 +28,7 @@ describe('ArcGisMapServerCatalogItem', function() {
                 url = url.replace(/MapServer\/Legend\/?\?f=json$/i, 'legend.json');
                 url = url.replace(/MapServer\/Layers\/?\?f=json$/i, 'layers.json');
                 url = url.replace(/MapServer\/31\/?\?f=json$/i, '31.json');
-                arguments[0] = require('file-loader!../../wwwroot/test/ArcGisMapServer/Dynamic_National_Map_Hydrography_and_Marine/' + url);
+                arguments[0] = 'test/ArcGisMapServer/Dynamic_National_Map_Hydrography_and_Marine/' + url;
             }
             return realLoadWithXhr.apply(undefined, arguments);
         });

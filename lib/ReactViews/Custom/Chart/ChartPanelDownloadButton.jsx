@@ -34,7 +34,8 @@ const ChartPanelDownloadButton = createReactClass({
         return {href: undefined};
     },
 
-    componentWillMount() {
+    /* eslint-disable-next-line camelcase */
+    UNSAFE_componentWillMount() {
         // Changes to the graph item's catalog item results in new props being passed to this component 5 times on load...
         // a debounce is a simple way to ensure it only gets run once for every batch of real changes.
         this.debouncedRunWorker = debounce(this.runWorker, RUN_WORKER_DEBOUNCE);
@@ -44,7 +45,8 @@ const ChartPanelDownloadButton = createReactClass({
         this.debouncedRunWorker(this.props.chartableItems);
     },
 
-    componentWillReceiveProps(newProps) {
+    /* eslint-disable-next-line camelcase */
+    UNSAFE_componentWillReceiveProps(newProps) {
         this.debouncedRunWorker(newProps.chartableItems);
     },
 
@@ -78,7 +80,11 @@ const ChartPanelDownloadButton = createReactClass({
             this._subscription.dispose();
         }
     },
-
+    /**
+     * Extracts column names and row data for CSV download.
+     * @param {CatalogItem[]} chartableItems 
+     * @returns { values, names } where values is an array of array rows, corresponding to the column names.
+     */
     synthesizeNameAndValueArrays(chartableItems) {
         const valueArrays = [];
         const names = [];  // We will add the catalog item name back into the csv column name.
@@ -86,7 +92,9 @@ const ChartPanelDownloadButton = createReactClass({
         for (let i = chartableItems.length - 1; i >= 0; i--) {
             const item = chartableItems[i];
             const xColumn = getXColumn(item);
-
+            if (!xColumn) {
+                continue;
+            }
             if (!names.length) {
                 names.push(getXColumnName(item, xColumn));
             }

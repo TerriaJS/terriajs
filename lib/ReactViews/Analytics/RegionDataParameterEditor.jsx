@@ -22,11 +22,13 @@ const RegionDataParameterEditor = createReactClass({
         parameter: PropTypes.object
     },
 
-    componentWillMount() {
+    /* eslint-disable-next-line camelcase */
+    UNSAFE_componentWillMount() {
         this.catalogItemDetails = {};
     },
 
-    componentWillReceiveProps(nextProps) {
+    /* eslint-disable-next-line camelcase */
+    UNSAFE_componentWillReceiveProps(nextProps) {
         this.catalogItemDetails = {};
     },
 

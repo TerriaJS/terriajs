@@ -1,5 +1,5 @@
 var spawnSync = require('child_process').spawnSync;
-var gutil = require('gulp-util');
+var PluginError = require('plugin-error');
 
 function runExternalModule(module, args) {
     var modulePath = require.resolve(module);
@@ -9,7 +9,7 @@ function runExternalModule(module, args) {
         shell: false
     });
     if (result.status !== 0) {
-        throw new gutil.PluginError(module, 'External module exited with an error.', { showStack: false });
+        throw new PluginError(module, 'External module exited with an error.', { showStack: false });
     }
 }
 

@@ -15,10 +15,20 @@
   display: block;
   border-bottom: 1px solid $grey-lighter;
   font-weight: 400;
+  display: flex;
+  svg{
+    fill: $text-dark;
+    width: 14px;
+    height: 14px;
+    padding: 3px;
+  }
   &:hover,
   &:focus {
     color: $color-primary;
     text-decoration: underline;
     border-bottom: 1px solid $grey-lighter;
+    svg{
+      fill: $color-primary;;
+    }
   }
 }

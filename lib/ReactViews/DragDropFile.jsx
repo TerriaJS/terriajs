@@ -17,6 +17,8 @@ const DragDropFile = createReactClass({
         viewState: PropTypes.object,
     },
 
+    target: null,
+
     handleDrop(e) {
         e.preventDefault();
         e.stopPropagation();
@@ -25,17 +27,28 @@ const DragDropFile = createReactClass({
             .then(addedCatalogItems => {
                 if (addedCatalogItems.length > 0) {
                     this.props.viewState.myDataIsUploadView = false;
-                    this.props.viewState.viewCatalogMember(addedCatalogItems[0]);
+                    if(this.props.viewState.explorerPanelIsVisible) {
+                        this.props.viewState.viewCatalogMember(addedCatalogItems[0]);
+                        this.props.viewState.openUserData();
+                    } else {
+                        this.notifyUpload(addedCatalogItems);
+                    }
                 }
             });
 
         this.props.viewState.isDraggingDroppingFile = false;
     },
 
+    notifyUpload(addedCatalogItems) {
+        // update last batch of uploaded files
+        this.props.viewState.lastUploadedFiles = addedCatalogItems.map(item => item.name);
+    },
+
     handleDragEnter(e) {
         e.preventDefault();
         e.stopPropagation();
         e.dataTransfer.dropEffect = 'copy';
+        this.lastTarget = e.target;
     },
 
     handleDragOver(e) {
@@ -43,9 +56,13 @@ const DragDropFile = createReactClass({
     },
 
     handleDragLeave(e) {
+        e.preventDefault();
         if (e.screenX === 0 && e.screenY === 0) {
             this.props.viewState.isDraggingDroppingFile = false;
         }
+         if (e.target === document || e.target === this.lastTarget) {
+             this.props.viewState.isDraggingDroppingFile = false;
+         }
     },
 
     handleMouseLeave() {
@@ -72,4 +89,3 @@ const DragDropFile = createReactClass({
 });
 
 module.exports = DragDropFile;
-

@@ -20,15 +20,8 @@ const SettingPanel = createReactClass({
 
     propTypes: {
         terria: PropTypes.object.isRequired,
-        viewerModes: PropTypes.array,
-        allBaseMaps: PropTypes.array.isRequired,
+        allBaseMaps: PropTypes.array,
         viewState: PropTypes.object.isRequired
-    },
-
-    getDefaultProps() {
-        return {
-            viewerModes: ['3D Terrain', '3D Smooth', '2D']
-        };
     },
 
     getInitialState() {
@@ -77,9 +70,10 @@ const SettingPanel = createReactClass({
                 return;
         }
         this.props.terria.viewerMode = newViewerMode;
-
+      
         // We store the user's chosen viewer mode for future use.
         this.props.terria.setLocalProperty('viewermode', newViewerMode);
+        this.props.terria.currentViewer.notifyRepaintRequired();
     },
 
     render() {
@@ -91,8 +85,16 @@ const SettingPanel = createReactClass({
             outer: Styles.settingPanel,
             inner: Styles.dropdownInner,
             btn: Styles.btnDropdown,
-            icon: 'sphere'
+            icon: 'map'
         };
+
+        const viewerModes = [];
+
+        if (this.props.terria.configParameters.useCesiumIonTerrain || this.props.terria.configParameters.cesiumTerrainUrl) {
+            viewerModes.push('3D Terrain');
+        }
+
+        viewerModes.push('3D Smooth', '2D');
 
         return (
             <MenuPanel theme={dropdownTheme} btnTitle="Change view" btnText="Map" viewState={this.props.viewState}
@@ -100,7 +102,7 @@ const SettingPanel = createReactClass({
                 <div className={classNames(Styles.viewer, DropdownStyles.section)}>
                     <label className={DropdownStyles.heading}> Map View </label>
                     <ul className={Styles.viewerSelector}>
-                        <For each="viewerMode" of={this.props.viewerModes} index="i">
+                        <For each="viewerMode" of={viewerModes} index="i">
                             <li key={i} className={Styles.listItem}>
                                 <button onClick={that.selectViewer.bind(this, i)}
                                         className={classNames(Styles.btnViewer, {[Styles.isActive]: i === currentViewer})}>

@@ -45,7 +45,7 @@ Reviewers are welcome to make minor edits to a pull request (e.g. fixing typos) 
 
 After you merge a pull request, delete the associated branch if you can.  You will see an option for this on the GitHub pull request page.
 
-More information in the [Contributor's Guide](Documentation/Contributors)
+More information in the [Contributor's Guide](https://terria.io/Documentation/guide/contributing/)
 
 ## License
 

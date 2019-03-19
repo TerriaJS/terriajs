@@ -9,13 +9,17 @@
 }
 
 .title{
-  composes: btn from './feature-info-panel.scss';
+  composes: btn from '../../Sass/common/_buttons.scss';
+  color: $feature-info-btn-color;
   position: relative;
+  padding: 4px 30px 4px 8px;
+  margin-right: 30px;
   width: 100%;
   background: $feature-info-header-bg;
   min-height: 40px;
   margin: 0;
-  padding-right: 30px;
+  border: none;
+  text-align: left;
   span{
     display: block;
     font-weight: 300;
@@ -24,7 +28,7 @@
   svg{
     height: 20px;
     width: 20px;
-    fill: #fff;
+    fill: #fff!important;
     float: right;
     position: absolute;
     top: 10px;
