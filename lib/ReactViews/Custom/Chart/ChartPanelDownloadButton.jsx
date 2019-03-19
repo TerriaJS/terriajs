@@ -54,11 +54,16 @@ const ChartPanelDownloadButton = createReactClass({
         const that = this;
 
         if (window.Worker && (typeof Float32Array !== 'undefined')) {
-            that.setState({href: undefined});
+            if (that.state.href !== undefined) {
+                that.setState({href: undefined});
+            }
 
-            const loadingPromises = newValue.map(item => item.load());
-            when.all(loadingPromises).then(() => {
-                const synthesized = that.synthesizeNameAndValueArrays(newValue);
+            const loadingPromises = newValue.map(function(item) {
+                return when(item.load()).then(() => item).otherwise(() => undefined);
+            });
+
+            when.all(loadingPromises).then(items => {
+                const synthesized = that.synthesizeNameAndValueArrays(newValue.filter(item => item !== undefined));
                 // Could implement this using TaskProcessor, but requires webpack magic.
                 const HrefWorker = require('worker-loader!./downloadHrefWorker');
                 const worker = new HrefWorker;
@@ -78,6 +83,9 @@ const ChartPanelDownloadButton = createReactClass({
     componentWillUnmount() {
         if (defined(this._subscription)) {
             this._subscription.dispose();
+        }
+        if (defined(this.debouncedRunWorker)) {
+            this.debouncedRunWorker.cancel();
         }
     },
     /**
