@@ -37,26 +37,35 @@ export default class Leaflet implements GlobeOrMap {
                     .map(item => item.mapItems)
             );
 
-            const allImageryLayers = allMapItems
+            const allImagery = allMapItems
                 .filter(ImageryParts.is)
-                .map(parts => makeImageryLayerFromParts(parts, this.map));
+                .map(parts => ({
+                    parts: parts,
+                    layer: createImageryLayer(parts.imageryProvider)
+                }));
 
             // Delete imagery layers no longer in the model
-            this.map.eachLayer(layer => {
-                const index = allImageryLayers.findIndex(l => l === layer);
+            this.map.eachLayer(mapLayer => {
+                const index = allImagery.findIndex(im => im.layer === mapLayer);
                 if (index === -1) {
-                    this.map.removeLayer(layer);
+                    this.map.removeLayer(mapLayer);
                 }
             });
 
             // Add layer and update its zIndex
             let zIndex = 100; // Start at an arbitrary value
-            allImageryLayers.reverse().forEach(layer => {
-                if (!this.map.hasLayer(layer)) {
-                    this.map.addLayer(layer);
+            allImagery.reverse().forEach(({ parts, layer }) => {
+                if (parts.show) {
+                    layer.setOpacity(parts.alpha);
+                    layer.setZIndex(zIndex);
+                    zIndex++;
+
+                    if (!this.map.hasLayer(layer)) {
+                        this.map.addLayer(layer);
+                    }
+                } else {
+                    this.map.removeLayer(layer);
                 }
-                layer.setZIndex(zIndex);
-                zIndex++;
             });
         });
     }
@@ -78,21 +87,3 @@ const createImageryLayer: (
 ) => CesiumTileLayer = createTransformer((ip: Cesium.ImageryProvider) => {
     return new CesiumTileLayer(ip);
 });
-
-function makeImageryLayerFromParts(
-    parts: ImageryParts,
-    map: L.Map
-): CesiumTileLayer {
-    const layer = createImageryLayer(parts.imageryProvider);
-
-    // react to show/hide and opacity changes
-    autorun(() => {
-        layer.setOpacity(parts.alpha);
-        if (parts.show) {
-            map.addLayer(layer);
-        } else {
-            map.removeLayer(layer);
-        }
-    });
-    return layer;
-}
