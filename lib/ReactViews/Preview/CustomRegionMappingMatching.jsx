@@ -16,27 +16,24 @@ const CustomRegionMappingMatching = createReactClass({
     },
 
     componentDidMount() {
-        const urls = Object.keys(RegionProviderList.metaList); // Probably only one URL
-        if (urls.length === 1) {
-            RegionProviderList.metaList[urls[0]]
-                .then(rpList =>
-                    rpList.regionProviders.filter(rp => rp.server.getTile)
-                )
-                .then(customRegionProviders => {
-                    this.setState({
-                        geoJsonProps: customRegionProviders.map(
-                            rp => rp.aliases[0]
-                        )
-                    });
-                });
-        }
+        RegionProviderList.fromUrl(
+            this.props.terria.configParameters.regionMappingDefinitionsUrl,
+            this.props.terria.corsProxy
+        ).then(rpList =>
+            rpList.regionProviders.filter(rp => rp.server.getTile)
+        )
+        .then(customRegionProviders => {
+            this.setState({
+                geoJsonRegionProviders: customRegionProviders
+            });
+        });
     },
 
     getInitialState() {
         return {
             csvColumn: "",
-            geoJsonProp: "",
-            geoJsonProps: []
+            geoJsonRegionProvider: undefined,
+            geoJsonRegionProviders: []
         };
     },
 
@@ -46,36 +43,23 @@ const CustomRegionMappingMatching = createReactClass({
         });
     },
 
-    handleGeoJsonPropChange(evt) {
+    handleGeoJsonRegionProviderChange(evt) {
         this.setState({
-            geoJsonProp: evt.target.value
+            geoJsonRegionProvider: this.state.geoJsonRegionProviders.find(rp => rp.regionType === evt.target.value)
         });
     },
 
     handleConfirm(evt) {
-        // Add alias, reinitialise CsvCatalogItem
-        const regionProviderAlias = this.state.geoJsonProp;
-        const newAlias = this.state.csvColumn;
-
-        const urls = Object.keys(RegionProviderList.metaList); // Probably only one URL
-        if (urls.length === 1) {
-            RegionProviderList.metaList[urls[0]]
-                .then(
-                    rpList =>
-                        rpList.regionProviders.filter(
-                            rp => rp.aliases[0] === regionProviderAlias
-                        )[0]
-                )
-                .then(rp => {
-                    rp.aliases.push(newAlias);
-                    // Undo tagging the CsvCatalogItem a chart and reload it
-                    this.props.previewed.isEnabled = false;
-                    this.props.previewed.isMappable = true;
-                    this.props.previewed._load().then(() => {
-                        this.props.previewed.isEnabled = true;
-                    });
-                });
-        }
+        this.props.previewed.tableStyle.updateFromJson({
+            regionVariable: this.state.csvColumn,
+            regionType: this.state.geoJsonRegionProvider.regionType
+        });
+        // Undo tagging the CsvCatalogItem a chart and reload it
+        this.props.previewed.isEnabled = false;
+        this.props.previewed.isMappable = true;
+        this.props.previewed._load().then(() => {
+            this.props.previewed.isEnabled = true;
+        });
     },
 
     render() {
@@ -106,12 +90,12 @@ const CustomRegionMappingMatching = createReactClass({
                 Select geojson & property:
                 <select
                     value={this.state.value}
-                    onChange={this.handleGeoJsonPropChange}
+                    onChange={this.handleGeoJsonRegionProviderChange}
                 >
                     <option value="" />
-                    {this.state.geoJsonProps.map(prop => (
-                        <option key={prop} value={prop}>
-                            {prop}
+                    {this.state.geoJsonRegionProviders.map(rp => (
+                        <option key={rp.regionType} value={rp.regionType}>
+                            {rp.regionType}
                         </option>
                     ))}
                 </select>
