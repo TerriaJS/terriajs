@@ -55,6 +55,9 @@ export default class Terria {
     readonly currentViewer = new NoViewer(this);
     readonly dataSources = new DataSourceCollection();
 
+    appName?: string;
+    supportEmail?: string;
+    
     /**
      * Gets or sets the instance to which to report Google Analytics-style log events.
      * If a global `ga` function is defined, this defaults to `GoogleAnalytics`.  Otherwise, it defaults
