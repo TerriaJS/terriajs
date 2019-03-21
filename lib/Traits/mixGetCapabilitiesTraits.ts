@@ -13,10 +13,9 @@ export default function mixGetCapabilitiesTraits<TBase extends ModelTraits.Const
         @primitiveTrait({
             type: 'string',
             name: 'GetCapabilities Cache Duration',
-            description: 'The amount of time to cache GetCapabilities responses.',
-            default: '1d'
+            description: 'The amount of time to cache GetCapabilities responses.'
         })
-        getCapabilitiesCacheDuration?: string;
+        getCapabilitiesCacheDuration: string = '1d';
     }
     return GetCapabilitiesTraits;
 }

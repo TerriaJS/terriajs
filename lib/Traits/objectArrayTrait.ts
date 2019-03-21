@@ -124,4 +124,8 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
             return result;
         });
     }
+
+    isSameType(trait: Trait): boolean {
+        return trait instanceof ObjectArrayTrait && trait.type === this.type && trait.idProperty === this.idProperty;
+    }
 }

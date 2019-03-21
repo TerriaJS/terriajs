@@ -74,4 +74,8 @@ export class ObjectTrait<T extends ModelTraits> extends Trait {
 
         return result;
     }
+
+    isSameType(trait: Trait): boolean {
+        return trait instanceof ObjectTrait && trait.type === this.type;
+    }
 }

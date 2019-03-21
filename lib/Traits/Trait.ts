@@ -21,4 +21,6 @@ export default abstract class Trait {
     abstract getValue(strataTopToBottom: StratumFromTraits<ModelTraits>[]): any;
 
     abstract fromJson<TTraits extends ModelTraits>(model: ModelInterface<TTraits>, stratumName: string, jsonValue: any): any;
+
+    abstract isSameType(trait: Trait): boolean;
 }

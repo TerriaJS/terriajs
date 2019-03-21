@@ -205,7 +205,7 @@ class GetCapabilitiesStratum extends LoadableStratum(WebMapServiceCatalogItemTra
     @observable intervals: any;
 }
 
-class WebMapServiceCatalogItem extends GetCapabilitiesMixin(OpacityMixin(UrlMixin(CatalogMemberMixin(Model(WebMapServiceCatalogItemTraits))))) implements Mappable {
+class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemberMixin(Model(WebMapServiceCatalogItemTraits)))) implements Mappable {
     /**
      * The collection of strings that indicate an Abstract property should be ignored.  If these strings occur anywhere
      * in the Abstract, the Abstract will not be used.  This makes it easy to filter out placeholder data like
@@ -405,7 +405,6 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(OpacityMixin(UrlMixi
     })
 
 }
-
 
 export default WebMapServiceCatalogItem;
 

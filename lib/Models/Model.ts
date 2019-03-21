@@ -1,6 +1,5 @@
 import { computed, decorate, observable, ObservableMap, trace } from 'mobx';
 import LoadableStratum from '../../test/Models/LoadableStratum';
-import OrUndefined from '../Core/OrUndefined';
 import WithStrata from '../ModelInterfaces/WithStrata';
 import StratumFromTraits from '../ModelInterfaces/StratumFromTraits';
 import { ModelId } from '../Traits/ModelReference';
@@ -8,6 +7,7 @@ import ModelTraits from '../Traits/ModelTraits';
 import Trait from '../Traits/Trait';
 import StratumOrder from './StratumOrder';
 import Terria from './Terria';
+import Complete from '../Core/Complete';
 
 export interface TraitsConstructor<T extends ModelTraits> {
     new(...args: any[]): T;
@@ -137,11 +137,17 @@ function Model<T extends TraitsConstructor<ModelTraits>>(Traits: T): ModelConstr
 
     // Add top-level accessors that don't already exist.
     const traits = Traits.traits;
+    const traitsInstance = new Traits();
     Object.keys(traits).forEach(propertyName => {
         if (!(propertyName in Model.prototype)) {
+            const defaultValue = (<any>traitsInstance)[propertyName];
             Object.defineProperty(Model.prototype, propertyName, {
                 get: function(this: Model) {
-                    return (<any>this.flattened)[propertyName];
+                    const value = (<any>this.flattened)[propertyName];
+                    if (value === undefined) {
+                        return defaultValue;
+                    }
+                    return value;
                 },
                 enumerable: true,
                 configurable: true
@@ -182,11 +188,11 @@ namespace Model {
         readonly [P in keyof TDefinition]-?: (Exclude<TDefinition[P], undefined> extends Array<infer TElement> ?
             ReadonlyArray<Readonly<TElement>> :
             TDefinition[P] extends ModelTraits ?
-                MakeReadonly<TDefinition[P]> :
-                Readonly<TDefinition[P]>) | undefined;
+                MakeReadonly<Complete<TDefinition[P]>> :
+                Readonly<TDefinition[P]>);
     };
-
-    export type InterfaceFromTraits<TDefinition extends ModelTraits> = OrUndefined<MakeReadonly<Required<TDefinition>>>;
+    
+    export type InterfaceFromTraits<TDefinition extends ModelTraits> = MakeReadonly<Complete<TDefinition>>;
 }
 
 export default Model;

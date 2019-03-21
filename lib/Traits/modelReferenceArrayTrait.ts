@@ -100,4 +100,8 @@ export class ModelReferenceArrayProperty extends Trait {
 
         return result;
     }
+
+    isSameType(trait: Trait): boolean {
+        return trait instanceof ModelReferenceArrayProperty && trait.factory === this.factory;
+    }
 }
