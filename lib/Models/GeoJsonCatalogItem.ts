@@ -155,7 +155,7 @@ load this dataset.  Please upgrade your web browser.  For the best experience, w
                 .then(function(json: any) {
                     return updateModelFromData(that, json);
                 })
-                .otherwise(function(e?: TerriaError) {
+                .otherwise(function(e: any) {
                     if (e instanceof TerriaError) {
                         throw e;
                     }
