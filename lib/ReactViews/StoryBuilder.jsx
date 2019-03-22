@@ -1,18 +1,15 @@
 import React from 'react';
 import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
-import { buildShareLink, canShorten, getShareData, buildShortShareLink } from './Map/Panels/SharePanel/BuildShareLink';
+import {getShareData } from './Map/Panels/SharePanel/BuildShareLink';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import ObserveModelMixin from './ObserveModelMixin';
-import Clipboard from './Clipboard.jsx';
 import Icon from "./Icon.jsx";
-import URI from 'urijs';
 import Story from './Story.jsx';
 import StoryEditor from './StoryEditor.jsx';
+import uniqid from 'uniqid';
 
 import Styles from './story-builder.scss';
-
-let idCounter = 100;
 
 const StoryBuilder = createReactClass({
     displayName: 'StoryBuilder',
@@ -36,7 +33,7 @@ const StoryBuilder = createReactClass({
       const story = {
         title: _story.title,
         text: _story.text,
-        id: _story.id ? _story.id : (this.props.terria.stories ? this.props.terria.stories.length : 0) + idCounter++,
+        id: _story.id ? _story.id : uniqid(),
       };
 
       !defined(_story.id) && this.captureStory(story);

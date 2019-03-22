@@ -33,7 +33,7 @@
     margin: 0 auto;
     color: $text-dark;
     box-shadow: 0 0 15px 6px rgba(100, 100, 100, 0.3);
-    border-radius: 3px;
+    border-radius: 4px;
   }
   .header{
     display: flex;
@@ -55,7 +55,7 @@
   color: $text-light;
   font-family: $font-pop;
   margin: $padding-small;
-  border-radius: 3px;
+  border-radius: 4px;
   .editorHeader{
     padding: $padding;
     border-bottom: 1px solid $overlay;
@@ -77,7 +77,7 @@
   composes: btn from "../Sass/common/_buttons.scss";
   composes: btn--map from "../Sass/common/_buttons.scss";
   background: #9CA1AA;
-  border-radius: 3px;
+  border-radius: 4px;
   padding: $padding;
   margin-bottom: $padding + 3px;
   box-shadow: none;

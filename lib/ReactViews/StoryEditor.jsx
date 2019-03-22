@@ -17,6 +17,7 @@ export default class StoryEditor extends React.Component {
     this.onKeyDown = this.onKeyDown.bind(this);
   }
 
+  /* eslint-disable-next-line camelcase */
   UNSAFE_componentWillMount() {
     const story = this.props.story;
     this.setState({
@@ -70,7 +71,7 @@ export default class StoryEditor extends React.Component {
                  <Editor
                       onKeyDown={this.onKeyDown}
                       text={this.state.text}
-                      options={{toolbar: {buttons: ['bold', 'italic', 'underline', 'strikethrough', 'quote', 'anchor', 'image', 'orderedlist', 'unorderedlist', 'h2', 'h3', 'html']}}} 
+                      options={{toolbar: {buttons: ['bold', 'italic', 'underline', 'strikethrough', 'quote', 'anchor', 'image', 'orderedlist', 'unorderedlist', 'h2', 'h3']}}} 
                       theme='beagle'
                       onChange={(text) => this.setState({text})}></Editor></div>
               </div>

@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import ObserveModelMixin from './ObserveModelMixin';
 import parseCustomHtmlToReact from './Custom/parseCustomHtmlToReact';
+import { Small, Medium } from './Generic/Responsive';
 import Icon from "./Icon.jsx";
 import Styles from './story-panel.scss';
 
@@ -19,7 +20,8 @@ const StoryPanel = createReactClass({
            currentScene: 0
         };
     },
-
+    
+    /* eslint-disable-next-line camelcase */
     UNSAFE_componentWillMount() {
         this.activateStory();
     },
@@ -62,25 +64,33 @@ const StoryPanel = createReactClass({
 
     render() {
       const story= this.props.terria.stories[this.state.currentScene];
+      const locationBtn = <button className ={Styles.locationBtn} title='center scene' onClick = {this.onCenterScene.bind(this, story)}><Icon glyph ={Icon.GLYPHS.location}/></button>;
+      const exitBtn = <button className={Styles.exitBtn} title="exit story" onClick={this.exitStory}><Icon glyph={Icon.GLYPHS.close}/></button>;
         return (
                 <div className={classNames(Styles.fullPanel, {[Styles.isHidden]: !this.props.viewState.storyShown})}>
                         <div className={Styles.storyContainer} key={story.id}>
+                          <Medium>
                            <div className={Styles.left}>
-                               <button className ={Styles.locationBtn} title='center scene' onClick = {this.onCenterScene.bind(this, story)}><Icon glyph ={Icon.GLYPHS.location}/></button>
+                               {locationBtn}
                                <button className={Styles.previousBtn} disabled={this.props.terria.stories.length <= 1} title="go to previous story" onClick={()=> this.navigateStory(this.state.currentScene - 1)}><Icon glyph={Icon.GLYPHS.left}/></button>
                             </div>
+                          </Medium>
                             <div className={Styles.story}>
                                 <div className={Styles.storyHeader}>
+                                  <Small>{locationBtn}</Small>
                                   {story.title && story.title.length > 0 ? <h3>{story.title}</h3> : <h3> untitled scene </h3>}
-                                 <div className={Styles.navBtn}> {this.props.terria.stories.map((story, i)=><button title="`go to story ${i}`" type='button' key={story.id} onClick={()=>this.navigateStory(i)}> <Icon glyph={ i === this.state.currentScene ? Icon.GLYPHS.circleFull : Icon.GLYPHS.circleEmpty }/></button>)}</div> 
+                                  <Small>{exitBtn}</Small>
+                                 <Medium><div className={Styles.navBtn}> {this.props.terria.stories.map((story, i)=><button title="`go to story ${i}`" type='button' key={story.id} onClick={()=>this.navigateStory(i)}> <Icon glyph={ i === this.state.currentScene ? Icon.GLYPHS.circleFull : Icon.GLYPHS.circleEmpty }/></button>)}</div>
+                                 </Medium>
                                </div>
                                 {story.text && <div className={Styles.body}>{parseCustomHtmlToReact(story.text)}</div>}
                             </div>
+                          <Medium>
                              <div className={Styles.right}>
-                             <button className={Styles.exitBtn} title="exit story" onClick={this.exitStory}><Icon glyph={Icon.GLYPHS.close}/></button>
- 
+                              {exitBtn} 
                              <button disabled={this.props.terria.stories.length <= 1 } className={Styles.nextBtn} title="go to next story" onClick={()=> this.navigateStory(this.state.currentScene + 1)}><Icon glyph={Icon.GLYPHS.right}/></button>
                              </div>
+                          </Medium>
                         </div>
                 </div>
         );

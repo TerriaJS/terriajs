@@ -17,6 +17,10 @@
   }
 }
 
+.stories{
+    max-height: calc(100vh - 121px);
+    overflow: auto;
+}
 
 .story {
   padding: $padding-small;
@@ -36,7 +40,7 @@
     composes: btn--map from "../Sass/common/_buttons.scss";
     margin-right: $padding;
     background: #9CA1AA;
-    border-radius: 3px;
+    border-radius: 4px;
     padding: $padding-small $padding;
     svg{
       height: 25px;
@@ -78,7 +82,7 @@
   color: $text-light;
   font-family: $font-pop;
   margin: $padding $padding 0 $padding;
-  border-radius: 3px;
+  border-radius: 4px;
   text-align: center;
   padding: 30px 10px;
   color: $text-light-dimmed;

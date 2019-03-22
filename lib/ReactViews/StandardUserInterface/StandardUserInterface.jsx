@@ -81,9 +81,9 @@ const StandardUserInterface = createReactClass({
         
        if(this.props.terria.stories && this.props.terria.stories.length && this.props.viewState.storyEnabled) {
         this.props.viewState.notifications.push({
-          title: "The map contains a story",
-          message: "would you like to view it now",
-          confirmText: "Yes please",
+          title: "This map contains a story",
+          message: "Would you like to view it now?",
+          confirmText: "Yes",
           denyText: "Maybe later",
           confirmAction: ()=> {this.props.viewState.storyShown = true;},
           denyAction: ()=>{this.props.viewState.storyShown = false;},

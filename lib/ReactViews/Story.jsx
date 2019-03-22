@@ -5,7 +5,7 @@ import Icon from "./Icon.jsx";
 import parseCustomHtmlToReact from './Custom/parseCustomHtmlToReact';
 
 export default class Story extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state ={
       menuOpen: false
@@ -39,18 +39,33 @@ export default class Story extends React.Component {
 
   viewStory() {
     this.props.viewStory(this.props.story);
+    this.setState({
+      menuOpen: false
+    });
   }
 
   editStory() {
     this.props.editStory(this.props.story);
+    this.setState({
+      menuOpen: false
+    });
+
   }
 
   recaptureStory() {
    this.props.recaptureStory(this.props.story);
+   this.setState({
+      menuOpen: false
+    });
+
   }
 
   deleteStory() {
     this.props.deleteStory(this.props.story);
+    this.setState({
+      menuOpen: false
+    });
+
   }
 
   renderMenu() {

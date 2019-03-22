@@ -39,6 +39,9 @@
 
 .story {
   flex-grow: 2;
+  @media (min-width: $sm) {
+    max-width: calc(100% - 132px) 
+  }
 }
 
 .storyHeader{
@@ -50,6 +53,9 @@
     margin: $padding ;
     font-size: 1.2rem;
     color: $dark;
+    @media (max-width : $sm) {
+      flex-grow: 2;
+   }
   }
 }
 
@@ -76,14 +82,26 @@
       height: 15px;
    }
  } 
- .exitBtn, .locationBtn  {
+  .exitBtn{
+  border-left: 1px solid $field-border;
+ }
+
+ .locationBtn{
+  border-right: 1px solid $field-border;
+ }
+
+.exitBtn, .locationBtn  {
    svg{
      height: 31px;
    }
    &, &:focus, &:hover{
-     border-bottom: 1px solid $field-border;
+    @media (min-width : $sm) {
+      border: 0px;
+      border-bottom: 1px solid $field-border;
+    }
    }
  }
+
 
 .navBtn{
   flex-grow: 2;
@@ -103,6 +121,9 @@
 
  :global{
    .story.tjs-notification-window__wrapper{
+     @media (min-width: $md) {
+       left: $work-bench-width;
+     }
      .tjs-notification-window__notification{
        background-color: $color-primary;
        color: #ffffff;
