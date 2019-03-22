@@ -1,7 +1,6 @@
 import { observable } from 'mobx';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import CesiumEvent from 'terriajs-cesium/Source/Core/Event';
-import DataSourceCollection from "terriajs-cesium/Source/DataSources/DataSourceCollection";
 import RuntimeError from 'terriajs-cesium/Source/Core/RuntimeError';
 import when from 'terriajs-cesium/Source/ThirdParty/when';
 import URI from 'urijs';
@@ -53,7 +52,6 @@ export default class Terria {
     readonly workbench = new Workbench();
     readonly catalog = new Catalog(this);
     readonly currentViewer = new NoViewer(this);
-    readonly dataSources = new DataSourceCollection();
 
     appName?: string;
     supportEmail?: string;

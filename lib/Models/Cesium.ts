@@ -1,6 +1,7 @@
 import BoundingSphere from 'terriajs-cesium/Source/Core/BoundingSphere';
 import BoundingSphereState from 'terriajs-cesium/Source/DataSources/BoundingSphereState';
 import DataSource from 'terriajs-cesium/Source/DataSources/DataSource';
+import DataSourceCollection from "terriajs-cesium/Source/DataSources/DataSourceCollection";
 import HeadingPitchRange from 'terriajs-cesium/Source/Core/HeadingPitchRange';
 import Terria from './Terria';
 import Scene from 'terriajs-cesium/Source/Scene/Scene';
@@ -54,7 +55,11 @@ export default class Cesium implements GlobeOrMap {
     readonly terria: Terria;
     readonly viewer: Viewer;
     readonly scene: Scene;
+    readonly dataSources: DataSourceCollection = new DataSourceCollection();    
+    
     dataSourceDisplay: Cesium.DataSourceDisplay | undefined;
+
+    
     private _disposeWorkbenchMapItemsSubscription: (() => void) | undefined;
 
     constructor(terria: Terria, viewer: Cesium.Viewer) {
@@ -83,7 +88,7 @@ export default class Cesium implements GlobeOrMap {
             const allDataSources = allMapItems.filter(isDataSource);
 
             // Remove deleted data sources
-            let dataSources = this.terria.dataSources;
+            let dataSources = this.dataSources;
             for (let i = 0; i < dataSources.length; i++) {
                 const d = dataSources.get(i);
                 if (allDataSources.indexOf(d) === -1) {
