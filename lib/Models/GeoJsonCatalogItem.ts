@@ -60,12 +60,10 @@ export default class GeoJsonCatalogItem
                             sender: that,
                             title: "Error loading GeoJSON",
                             message:
-                                "\
-An error occurred parsing the provided data as JSON.  This may indicate that the file is invalid or that it \
-is not supported by " +
+                                "An error occurred parsing the provided data as JSON.  This may indicate that the file is invalid or that it " +
+                                "is not supported by " +
                                 that.terria.appName +
-                                '.  If you would like assistance or further information, please email us \
-at <a href="mailto:' +
+                                '.  If you would like assistance or further information, please email us at <a href="mailto:' +
                                 that.terria.supportEmail +
                                 '">' +
                                 that.terria.supportEmail +
@@ -84,12 +82,10 @@ at <a href="mailto:' +
                         sender: that,
                         title: "Error loading GeoJSON",
                         message:
-                            "\
-An error occurred while loading a GeoJSON file.  This may indicate that the file is invalid or that it \
-is not supported by " +
+                            "An error occurred while loading a GeoJSON file.  This may indicate that the file is invalid or that it " +
+                            "is not supported by " +
                             that.terria.appName +
-                            '.  If you would like assistance or further information, please email us \
-at <a href="mailto:' +
+                            '.  If you would like assistance or further information, please email us at <a href="mailto:' +
                             that.terria.supportEmail +
                             '">' +
                             that.terria.supportEmail +
@@ -105,8 +101,7 @@ at <a href="mailto:' +
                         sender: that,
                         title: "Unsupported web browser",
                         message:
-                            "\
-Sorry, your web browser does not support the File API, which " +
+                            "Sorry, your web browser does not support the File API, which " +
                             that.terria.appName +
                             ' requires in order to \
 load this dataset.  Please upgrade your web browser.  For the best experience, we recommend the latest versions of \
