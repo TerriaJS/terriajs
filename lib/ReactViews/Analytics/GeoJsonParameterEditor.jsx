@@ -2,20 +2,14 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-
-
 import defined from 'terriajs-cesium/Source/Core/defined';
-
 import ObserveModelMixin from '../ObserveModelMixin';
 import Styles from './parameter-editors.scss';
-
 import PointParameterEditor from './PointParameterEditor';
 import PolygonParameterEditor from './PolygonParameterEditor';
 import SelectAPolygonParameterEditor from './SelectAPolygonParameterEditor';
 import RegionPicker from './RegionPicker';
-
 import createReactClass from 'create-react-class';
-
 import GeoJsonParameter from '../../Models/GeoJsonParameter';
 
 const GeoJsonParameterEditor = createReactClass({
