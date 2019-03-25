@@ -47,9 +47,9 @@ And restart your tomcat server
 sudo /etc/init.d/tomcat8 restart
 ```
 
-##Installing Geoserver
+## Installing Geoserver
 
-To install geoserver, go to http://geoserver.org/ and download the current stable web archive file to your home folder, unzip the file and copy geoserver.war to your home folder, and then copy that file to the tomcat installation as the desired name for the geoserver and restart.  For example to create a geoserver called my_new_geoserver use the commands below.
+To install geoserver, go to the [GeoServer website](http://geoserver.org/) and download the current stable web archive file to your home folder, unzip the file and copy geoserver.war to your home folder, and then copy that file to the tomcat installation as the desired name for the geoserver and restart.  For example to create a geoserver called my_new_geoserver use the commands below.
 
 ```
 sudo cp geoserver.war /var/lib/tomcat8/webapps/my_new_geoserver.war
