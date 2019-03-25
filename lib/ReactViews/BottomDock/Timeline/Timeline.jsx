@@ -134,7 +134,7 @@ const Timeline = createReactClass({
                             isOpen={this.state.isPickerOpen}
                             onOpen={this.onOpenPicker}
                             onClose={this.onClosePicker}
-                            dateFormat={catalogItem.dateFOrmat} />
+                            dateFormat={catalogItem.dateFormat} />
                     </If>
                     <CesiumTimeline terria={terria} />
                 </div>
