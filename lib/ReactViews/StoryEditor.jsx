@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Editor from 'react-medium-editor';
+import classNames from 'classnames';
 import Styles from './story-editor.scss';
 
 export default class StoryEditor extends React.Component {
@@ -9,12 +10,17 @@ export default class StoryEditor extends React.Component {
     this.state = {
       title: '',
       text: '',
-      id: null,
+      id: undefined,
+      inView: false
     };
     this.saveStory = this.saveStory.bind(this);
     this.cancelEditing = this.cancelEditing.bind(this);
     this.updateTitle = this.updateTitle.bind(this);
     this.onKeyDown = this.onKeyDown.bind(this);
+
+    this.slideInTimer =  null;
+    this.slideOutTimer = null;
+    this.escKeyListener = null;
   }
 
   /* eslint-disable-next-line camelcase */
@@ -26,7 +32,38 @@ export default class StoryEditor extends React.Component {
       id: story.id
     });
   }
-  
+
+  componentDidMount() {
+        this.slideIn();
+  }
+
+    slideIn() {
+       this.slideInTimer = setTimeout(() => {
+            this.setState({
+                inView: true
+            });
+        }, 300);
+    }
+
+    slideOut() {
+      this.slideOutTimer = this.setState({
+        inView: false
+      });
+        setTimeout(() => {this.cancelEditing();}, 300);
+    }
+
+    componentWillUnmount() {
+        clearTimeout(this.slideInTimer);
+        if(this.slideOutTimer) {
+          clearTimeout(this.slideOutTimer);
+        }
+      this.setState({
+        title: '',
+        text: '',
+        id: undefined
+      });
+    }
+
   updateTitle(event) {
     this.setState({
       title: event.target.value
@@ -60,7 +97,7 @@ export default class StoryEditor extends React.Component {
   }
 
   renderPopupEditor() {
-    return (<div className={Styles.popupEditor}>
+    return (<div className={classNames(Styles.popupEditor, {[Styles.isMounted]: this.state.inView})}>
               <div className={Styles.inner}>
                 <div className={Styles.header}>
                   <input placeholder="Enter a title here" className={Styles.field} type="text" id="title" value={this.state.title} onKeyDown={this.onKeyDown} onChange={this.updateTitle}/>
@@ -71,7 +108,11 @@ export default class StoryEditor extends React.Component {
                  <Editor
                       onKeyDown={this.onKeyDown}
                       text={this.state.text}
-                      options={{toolbar: {buttons: ['bold', 'italic', 'underline', 'strikethrough', 'quote', 'anchor', 'image', 'orderedlist', 'unorderedlist', 'h2', 'h3']}}} 
+                      options={{
+                        fileDragging:{
+                          allowedTypes: []
+                        },
+                        toolbar: {buttons: ['bold', 'italic', 'underline', 'strikethrough', 'quote', 'anchor', 'image', 'orderedlist', 'unorderedlist', 'h2', 'h3']}}} 
                       theme='beagle'
                       onChange={(text) => this.setState({text})}></Editor></div>
               </div>
@@ -100,4 +141,4 @@ StoryEditor.propTypes ={
   exitEditingMode: PropTypes.func
 };
 
-StoryEditor.defaultProps = { story: {title: '', text: '', id: null} };
+StoryEditor.defaultProps = { story: {title: '', text: '', id: undefined} };

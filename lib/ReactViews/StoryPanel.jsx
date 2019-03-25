@@ -6,6 +6,7 @@ import ObserveModelMixin from './ObserveModelMixin';
 import parseCustomHtmlToReact from './Custom/parseCustomHtmlToReact';
 import { Small, Medium } from './Generic/Responsive';
 import Icon from "./Icon.jsx";
+import { Swipeable } from 'react-swipeable'
 import Styles from './story-panel.scss';
 
 const StoryPanel = createReactClass({
@@ -15,15 +16,53 @@ const StoryPanel = createReactClass({
         terria: PropTypes.object.isRequired,
         viewState: PropTypes.object.isRequired
     },
+    slideInTimer: null,
+    slideOutTimer: null,
+    escKeyListener: null,
+
     getInitialState() {
         return {
-           currentScene: 0
+           currentScene: 0, 
+           inView: false
         };
     },
     
     /* eslint-disable-next-line camelcase */
     UNSAFE_componentWillMount() {
         this.activateStory();
+    },
+
+    componentDidMount() {
+        this.slideIn();
+        this.escKeyListener = e => {
+            if (e.keyCode === 27) {
+                this.exitStory();
+            }
+        };
+        window.addEventListener('keydown', this.escKeyListener, true);
+    },
+
+    slideIn() {
+       this.slideInTimer = setTimeout(() => {
+            this.setState({
+                inView: true
+            });
+        }, 300);
+    },
+
+    slideOut() {
+      this.slideOutTimer = this.setState({
+        inView: false
+      });
+        setTimeout(() => {this.exitStory();}, 300);
+    },
+
+    componentWillUnmount() {
+        window.removeEventListener('keydown', this.escKeyListener, false);
+        clearTimeout(this.slideInTimer);
+        if(this.slideOutTimer) {
+          clearTimeout(this.slideOutTimer);
+        }
     },
 
     navigateStory(index) {
@@ -56,6 +95,14 @@ const StoryPanel = createReactClass({
         this.props.terria.updateFromStartData(story.shareData);
       }
     },
+   
+    goToPrevStory(){
+      this.navigateStory(this.state.currentScene - 1);
+    },
+
+    goToNextStory() {
+      this.navigateStory(this.state.currentScene - 1)
+    },
 
     exitStory() {
         this.props.viewState.storyShown = !this.props.viewState.storyShown; 
@@ -65,14 +112,15 @@ const StoryPanel = createReactClass({
     render() {
       const story= this.props.terria.stories[this.state.currentScene];
       const locationBtn = <button className ={Styles.locationBtn} title='center scene' onClick = {this.onCenterScene.bind(this, story)}><Icon glyph ={Icon.GLYPHS.location}/></button>;
-      const exitBtn = <button className={Styles.exitBtn} title="exit story" onClick={this.exitStory}><Icon glyph={Icon.GLYPHS.close}/></button>;
+      const exitBtn = <button className={Styles.exitBtn} title="exit story" onClick={this.slideOut}><Icon glyph={Icon.GLYPHS.close}/></button>;
         return (
+          <Swipeable onSwipedLeft = {this.goToPrevStory}>
                 <div className={classNames(Styles.fullPanel, {[Styles.isHidden]: !this.props.viewState.storyShown})}>
-                        <div className={Styles.storyContainer} key={story.id}>
+                        <div className={classNames(Styles.storyContainer, {[Styles.isMounted]: this.state.inView})} key={story.id}>
                           <Medium>
                            <div className={Styles.left}>
                                {locationBtn}
-                               <button className={Styles.previousBtn} disabled={this.props.terria.stories.length <= 1} title="go to previous story" onClick={()=> this.navigateStory(this.state.currentScene - 1)}><Icon glyph={Icon.GLYPHS.left}/></button>
+                               <button className={Styles.previousBtn} disabled={this.props.terria.stories.length <= 1} title="go to previous scene" onClick={this.goToPrevStory}><Icon glyph={Icon.GLYPHS.left}/></button>
                             </div>
                           </Medium>
                             <div className={Styles.story}>
@@ -88,11 +136,12 @@ const StoryPanel = createReactClass({
                           <Medium>
                              <div className={Styles.right}>
                               {exitBtn} 
-                             <button disabled={this.props.terria.stories.length <= 1 } className={Styles.nextBtn} title="go to next story" onClick={()=> this.navigateStory(this.state.currentScene + 1)}><Icon glyph={Icon.GLYPHS.right}/></button>
+                             <button disabled={this.props.terria.stories.length <= 1 } className={Styles.nextBtn} title="go to next scene" onClick={this.goToNextStory}><Icon glyph={Icon.GLYPHS.right}/></button>
                              </div>
                           </Medium>
                         </div>
                 </div>
+          </Swipeable>
         );
     }
 });

@@ -6,10 +6,11 @@
   font-family: $font-pop;
   width: 100%;
   padding-left: $padding * 2;
-  padding-right: 80px;
+  padding-right: $padding*2;
   bottom: 30px;
-  z-index: 998;
+  z-index: 9;
   box-sizing: border-box;
+  pointer-events: none;
   @media (min-width: $md) {
     padding-left: 30px + $work-bench-width;
     padding-right: 50px;
@@ -20,8 +21,18 @@
 }
 
 .story-container {
+  &.is-mounted{
+    opacity: 1;
+    @include transform(none);
+  }
+  @include transform(translateY(20%));
+  opacity: 0;
+  @include transition(all 0.3s);
+  pointer-events: auto;
   display: flex;
+  opacity: 0;
   width: 100%;
+  min-height: 100px;
   max-width: 1200px;
   background-color: #ffffff;
   color: $text-dark;
@@ -39,13 +50,16 @@
 
 .story {
   flex-grow: 2;
+  max-width:100%;
   @media (min-width: $sm) {
-    max-width: calc(100% - 132px) 
+    max-width: calc(100% - 104px) 
   }
 }
 
 .storyHeader{
   display: flex;
+  max-width: 100%;
+  overflow: hidden;
   padding: $padding;
   border-bottom: 1px solid $field-border;
   padding: 0;
@@ -63,13 +77,15 @@
   padding: $padding * 1.5 $padding;
   color: $dark;
   font-size: 1rem;
+  max-height: 400px;
+  overflow-y: auto;
 }
 
-.navBtn, .locationBtn, .exitBtn,  .nextBtn, .previousBtn {
+.locationBtn, .exitBtn,  .nextBtn, .previousBtn {
   z-index: 999;
   composes: btn from '../Sass/common/_buttons.scss';
   display: block;
-  padding: $padding*0.8 $padding*2.2;
+  padding: $padding*0.8 $padding*1.6;
   svg{
     fill: #888888;
     width: 20px;
@@ -107,12 +123,14 @@
   flex-grow: 2;
   display: flex;
   justify-content: flex-end;
+  padding: $padding*0.8 $padding*2.2;
   button{
     background: transparent;
     border: 0;
     box-shadow: 0;
   }
   svg{
+    fill: #888888;
     float: right;
     width: 10px;
     height: 10px;

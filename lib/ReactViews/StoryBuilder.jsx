@@ -90,7 +90,8 @@ const StoryBuilder = createReactClass({
 
     onClickCapture() {
       this.setState({
-        editingMode: true
+        editingMode: true,
+        currentStory: undefined
       });
     },
 

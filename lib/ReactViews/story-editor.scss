@@ -16,12 +16,19 @@
   }
 }
 .popupEditor{
+ &.is-mounted{
+    opacity: 1;
+    @include transform(none);
+  }
+  @include transform(translateY(20%));
+  opacity: 0;
+  @include transition(all 0.3s);
+
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba($overlay, 0.5);
   z-index: 999999;
   display: flex;
   flex-direction: column;
@@ -38,12 +45,12 @@
   .header{
     display: flex;
     align-items: baseline;
-    padding: $padding;
+    padding: $padding * 1.6;
     border-bottom: 1px solid $field-border;
   }
   .body{
     min-height: 150px;
-    padding: $padding;
+    padding: $padding * 1.6;
     p{
       margin-top: 0;
     }
