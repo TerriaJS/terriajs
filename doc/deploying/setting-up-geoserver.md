@@ -1,14 +1,17 @@
-##Installing Java and Tomcat7
-On ubuntu install the java and tomcat7 packages
+# Setting up GeoServer
+
+## Installing Java and Tomcat8
+
+On ubuntu install the java and tomcat8 packages
 
 ```
 sudo add-apt-repository ppa:webupd8team/java
 sudo apt-get update
-sudo apt-get install -y oracle-java7-installer
-sudo apt-get install -y oracle-java7-set-default
+sudo apt-get install -y oracle-java8-installer
+sudo apt-get install -y oracle-java8-set-default
 ```
 
-Check that you have the correct java version installed.  It should be 1.7._xx.
+Check that you have the correct java version installed.  It should be 1.8._xx.
 
 ```
 java -version
@@ -17,16 +20,17 @@ java -version
 Now install Tomcat
 
 ```
-sudo apt-get install tomcat7
+sudo apt-get install tomcat8
 ```
 
 To check that the server is running properly, open your browser and go to http://localhost:8080.
 
-###Tuning up the Tomcat server
-Edit the tomcat7 settings file
+### Tuning up the Tomcat server
+
+Edit the tomcat8 settings file
 
 ```
-sudo nano /etc/default/tomcat7
+sudo nano /etc/default/tomcat8
 ```
 
 Make the following changes to JAVA_OPTS and JAVA_HOME
@@ -34,13 +38,13 @@ Make the following changes to JAVA_OPTS and JAVA_HOME
 ```
 JAVA_OPTS="-Djava.awt.headless=true -server -Xmx8384m -Xms2048m -XX:SoftRefLRUPolicyMSPerMB=36000 -XX:MaxPermSize=2048m -XX:+UseParallelGC"
 
-JAVA_HOME=/usr/lib/jvm/java-7-oracle/jre
+JAVA_HOME=/usr/lib/jvm/java-8-oracle/jre
 ```
 
 And restart your tomcat server
 
 ```
-sudo /etc/init.d/tomcat7 restart
+sudo /etc/init.d/tomcat8 restart
 ```
 
 ##Installing Geoserver
@@ -48,8 +52,8 @@ sudo /etc/init.d/tomcat7 restart
 To install geoserver, go to http://geoserver.org/ and download the current stable web archive file to your home folder, unzip the file and copy geoserver.war to your home folder, and then copy that file to the tomcat installation as the desired name for the geoserver and restart.  For example to create a geoserver called my_new_geoserver use the commands below.
 
 ```
-sudo cp geoserver.war /var/lib/tomcat7/webapps/my_new_geoserver.war
-sudo /etc/init.d/tomcat7 restart
+sudo cp geoserver.war /var/lib/tomcat8/webapps/my_new_geoserver.war
+sudo /etc/init.d/tomcat8 restart
 ```
 
 You should now be able to see a geoserver running at http://localhost:8080/my_new_geoserver/ .  
@@ -165,10 +169,10 @@ ssh -i geoserver-instance.pem ubuntu@xx.xx.xx.xx
 From the shell the first thing you need to do is move the webapps folder in tomcat to the instance storage.
 
 ```
-sudo /etc/init.d/tomcat7 stop
-sudo cp -rf /var/lib/tomcat7/webapps /var/lib/tomcat7/webapps.orig
-sudo mv /var/lib/tomcat7/webapps/ /mnt
-sudo ln -s /mnt/webapps /var/lib/tomcat7/webapps
+sudo /etc/init.d/tomcat8 stop
+sudo cp -rf /var/lib/tomcat8/webapps /var/lib/tomcat8/webapps.orig
+sudo mv /var/lib/tomcat8/webapps/ /mnt
+sudo ln -s /mnt/webapps /var/lib/tomcat8/webapps
 ```
 
 and copy your uploaded geoserver
@@ -180,7 +184,7 @@ sudo cp *.war /mnt/webapps
 and then restart
 
 ```
-sudo /etc/init.d/tomcat7 start
+sudo /etc/init.d/tomcat8 start
 sudo /etc/init.d/nginx restart
 ```
 
