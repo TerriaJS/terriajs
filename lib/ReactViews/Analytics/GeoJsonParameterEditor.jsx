@@ -3,20 +3,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
 
-import CesiumMath from 'terriajs-cesium/Source/Core/Math';
 import defined from 'terriajs-cesium/Source/Core/defined';
-import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
 
-import UserDrawing from '../../Models/UserDrawing';
 import ObserveModelMixin from '../ObserveModelMixin';
 import Styles from './parameter-editors.scss';
 
 import PointParameterEditor from './PointParameterEditor';
 import PolygonParameterEditor from './PolygonParameterEditor';
 import SelectAPolygonParameterEditor from './SelectAPolygonParameterEditor';
-import RegionParameterEditor from './RegionParameterEditor';
 import RegionPicker from './RegionPicker';
 
 import createReactClass from 'create-react-class';
@@ -30,10 +25,6 @@ const GeoJsonParameterEditor = createReactClass({
         previewed: PropTypes.object,
         parameter: PropTypes.object,
         viewState: PropTypes.object
-    },
-
-    componentWillMount() {
-        var that = this;
     },
 
     onCleanUp() {
@@ -63,7 +54,7 @@ const GeoJsonParameterEditor = createReactClass({
             <div>
                 <div><strong>Select Location</strong></div>
                 <div className="container" style={{"marginTop": "10px",
-                    "marginBottom":"10px",
+                    "marginBottom": "10px",
                     "display": "table",
                     "width": "100%"
                     }}>
@@ -73,8 +64,8 @@ const GeoJsonParameterEditor = createReactClass({
                             <strong>Point (lat/lon)</strong>
                     </button>
                     <button type="button"
-                            style={{"marginLeft" : "2%",
-                                    "marginRight" : "2%"
+                            style={{"marginLeft": "2%",
+                                    "marginRight": "2%"
                                   }}
                             onClick={this.selectPolygonOnMap}
                             className={Styles.btnLocationSelector}>
@@ -90,7 +81,7 @@ const GeoJsonParameterEditor = createReactClass({
                        type="text"
                        readOnly
                        value={GeoJsonParameterEditor.getDisplayValue(this.props.parameter.value, this.props.parameter)}/>
-                <If condition={GeoJsonParameterEditor.getDisplayValue(this.props.parameter.value, this.props.parameter)==""}>
+                <If condition={GeoJsonParameterEditor.getDisplayValue(this.props.parameter.value, this.props.parameter)===""}>
                     <div>
                         Nothing has been selected, please use the buttons above to make a selection.
                     </div>

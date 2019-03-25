@@ -1,4 +1,3 @@
-import Cartographic from 'terriajs-cesium/Source/Core/Cartographic';
 import CesiumMath from 'terriajs-cesium/Source/Core/Math';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
@@ -23,7 +22,7 @@ const SelectAPolygonParameterEditor = createReactClass({
     },
 
     setDisplayValue(e) {
-        SelectAPolygonParameterEditor.setDisplayValue(e, parameter);
+        SelectAPolygonParameterEditor.setDisplayValue(e, this.props.parameter);
     },
 
     selectExistingPolygonOnMap() {
