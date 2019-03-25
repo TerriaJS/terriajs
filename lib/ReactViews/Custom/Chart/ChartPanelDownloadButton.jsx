@@ -4,6 +4,7 @@ import FileSaver from 'file-saver';
 import PropTypes from 'prop-types';
 import React from 'react';
 import defined from 'terriajs-cesium/Source/Core/defined';
+import FeatureDetection from 'terriajs-cesium/Source/Core/FeatureDetection';
 import when from 'terriajs-cesium/Source/ThirdParty/when';
 import VarType from '../../../Map/VarType';
 import Icon from "../../Icon.jsx";
@@ -59,35 +60,43 @@ const ChartPanelDownloadButton = createReactClass({
         return {values: valueArrays, names: names};
     },
 
+    isDownloadSupported() {
+        return FeatureDetection.supportsTypedArrays() && FeatureDetection.supportsWebWorkers();
+    },
+
     download() {
-        const that = this;
-
-        if (window.Worker && (typeof Float32Array !== 'undefined')) {
-            const loadingPromises = that.props.chartableItems.map(function(item) {
-                return when(item.load()).then(() => item).otherwise(() => undefined);
-            });
-
-            when.all(loadingPromises).then(items => {
-                const synthesized = that.synthesizeNameAndValueArrays(items.filter(item => item !== undefined));
-                // Could implement this using TaskProcessor, but requires webpack magic.
-                const HrefWorker = require('worker-loader!./downloadHrefWorker');
-                const worker = new HrefWorker();
-                // console.log('names and value arrays', synthesized.names, synthesized.values);
-                if (synthesized.values && synthesized.values.length > 0) {
-                    worker.postMessage(synthesized);
-                    worker.onmessage = function(event) {
-                        // console.log('got worker message', event.data.slice(0, 60), '...');
-                        const blob = new Blob([event.data], {
-                            type: 'text/csv;charset=utf-8'
-                        });
-                        FileSaver.saveAs(blob, 'chart data.csv');
-                    };
-                }
-            });
+        if (!this.isDownloadSupported()) {
+            return;
         }
+
+        const loadingPromises = this.props.chartableItems.map(item => {
+            return when(item.load()).then(() => item).otherwise(() => undefined);
+        });
+
+        when.all(loadingPromises).then(items => {
+            const synthesized = this.synthesizeNameAndValueArrays(items.filter(item => item !== undefined));
+            // Could implement this using TaskProcessor, but requires webpack magic.
+            const HrefWorker = require('worker-loader!./downloadHrefWorker');
+            const worker = new HrefWorker();
+            // console.log('names and value arrays', synthesized.names, synthesized.values);
+            if (synthesized.values && synthesized.values.length > 0) {
+                worker.postMessage(synthesized);
+                worker.onmessage = event => {
+                    // console.log('got worker message', event.data.slice(0, 60), '...');
+                    const blob = new Blob([event.data], {
+                        type: 'text/csv;charset=utf-8'
+                    });
+                    FileSaver.saveAs(blob, 'chart data.csv');
+                };
+            }
+        });
     },
 
     render() {
+        if (!this.isDownloadSupported()) {
+            return null;
+        }
+
         return (
             <button className={Styles.btnDownload}
                     onClick={this.download}>
