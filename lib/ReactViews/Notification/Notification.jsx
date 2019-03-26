@@ -7,8 +7,10 @@ import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import NotificationWindow from './NotificationWindow';
 import triggerResize from '../../Core/triggerResize';
+import { observer } from 'mobx-react';
 
-const Notification = createReactClass({
+
+const Notification = observer(createReactClass({
     displayName: 'Notification',
     mixins: [ObserveModelMixin],
 
@@ -45,7 +47,7 @@ const Notification = createReactClass({
     },
 
     render() {
-        const notification = this.props.viewState.notifications[0] || null;
+        const notification = this.props.viewState.notifications.length > 0 && this.props.viewState.notifications[0] || null;
         return notification && (
             <NotificationWindow
                 title={notification.title}
@@ -59,6 +61,6 @@ const Notification = createReactClass({
                 height={notification.height}
             />);
     },
-});
+}));
 
 module.exports = Notification;
