@@ -1,13 +1,16 @@
 import { computed, decorate, observable, ObservableMap, trace } from 'mobx';
 import LoadableStratum from '../../test/Models/LoadableStratum';
-import WithStrata from '../ModelInterfaces/WithStrata';
 import StratumFromTraits from '../ModelInterfaces/StratumFromTraits';
+import WithStrata from '../ModelInterfaces/WithStrata';
 import { ModelId } from '../Traits/ModelReference';
 import ModelTraits from '../Traits/ModelTraits';
 import Trait from '../Traits/Trait';
+import ModelPropertiesFromTraits from './ModelPropertiesFromTraits';
 import StratumOrder from './StratumOrder';
 import Terria from './Terria';
-import Complete from '../Core/Complete';
+import OrUndefined from '../Core/OrUndefined';
+import FlattenedFromTraits from './FlattenedFromTraits';
+import createStratumInstance from './createStratumInstance';
 
 export interface TraitsConstructor<T extends ModelTraits> {
     new(...args: any[]): T;
@@ -27,7 +30,7 @@ export abstract class BaseModel {
     abstract get traits(): {
         [id: string]: Trait;
     };
-    abstract get flattened(): StratumFromTraits<ModelTraits>;
+    abstract get flattened(): FlattenedFromTraits<ModelTraits>;
     abstract get strata(): ObservableMap<string, StratumFromTraits<ModelTraits>>;
     abstract get topStratum(): StratumFromTraits<ModelTraits>;
     abstract get isLoading(): boolean;
@@ -48,7 +51,7 @@ export interface ModelInterface<T extends ModelTraits> extends WithStrata<T> {
     readonly traits: {
         [id: string]: Trait;
     };
-    readonly flattened: Model.MakeReadonly<T>;
+    readonly flattened: FlattenedFromTraits<T>;
     readonly strata: ObservableMap<string, StratumFromTraits<T>>;
     readonly terria: Terria;
     readonly id: string;
@@ -61,14 +64,17 @@ export interface ModelInterface<T extends ModelTraits> extends WithStrata<T> {
     readonly strataBottomToTop: StratumFromTraits<T>[];
     readonly topStratum: StratumFromTraits<T>;
     createStratumInstance(): StratumFromTraits<T>;
+
+    setTrait<Key extends keyof StratumFromTraits<T>>(stratumId: string, trait: Key, value: StratumFromTraits<T>[Key]): void;
+    getTrait<Key extends keyof StratumFromTraits<T>>(stratumId: string, trait: Key): StratumFromTraits<T>[Key];
 }
 
-function Model<T extends TraitsConstructor<ModelTraits>>(Traits: T): ModelConstructor<ModelInterface<InstanceType<T>> & Model.InterfaceFromTraits<InstanceType<T>>> {
+function Model<T extends TraitsConstructor<ModelTraits>>(Traits: T): ModelConstructor<ModelInterface<InstanceType<T>> & ModelPropertiesFromTraits<InstanceType<T>>> {
     abstract class Model extends BaseModel implements ModelInterface<T> {
         abstract get type(): string;
         static readonly traits = Traits.traits;
         readonly traits = Traits.traits;
-        readonly flattened: Model.MakeReadonly<T>;
+        readonly flattened: FlattenedFromTraits<T>;
         readonly strata = observable.map<string, StratumFromTraits<T>>();
 
         constructor(id: ModelId, terria: Terria) {
@@ -126,10 +132,15 @@ function Model<T extends TraitsConstructor<ModelTraits>>(Traits: T): ModelConstr
         }
 
         createStratumInstance(): StratumFromTraits<T> {
-            const traits = Traits.traits;
-            const propertyNames = Object.keys(traits);
-            const reduced: any = propertyNames.reduce((p, c) => ({ ...p, [c]: undefined }), {});
-            return observable(reduced);
+            return createStratumInstance<T>(Traits);
+        }
+
+        setTrait<Key extends keyof StratumFromTraits<T>>(stratumId: string, trait: Key, value: StratumFromTraits<T>[Key]): void {
+            this.getOrCreateStratum(stratumId)[trait] = value;
+        }
+
+        getTrait<Key extends keyof StratumFromTraits<T>>(stratumId: string, trait: Key): StratumFromTraits<T>[Key] {
+            return this.getOrCreateStratum(stratumId)[trait];
         }
     }
 
@@ -181,18 +192,6 @@ function Model<T extends TraitsConstructor<ModelTraits>>(Traits: T): ModelConstr
     }
 
     return <any>Model;
-}
-
-namespace Model {
-    export type MakeReadonly<TDefinition extends ModelTraits> = {
-        readonly [P in keyof TDefinition]-?: (Exclude<TDefinition[P], undefined> extends Array<infer TElement> ?
-            ReadonlyArray<Readonly<TElement>> :
-            TDefinition[P] extends ModelTraits ?
-                MakeReadonly<Complete<TDefinition[P]>> :
-                Readonly<TDefinition[P]>);
-    };
-    
-    export type InterfaceFromTraits<TDefinition extends ModelTraits> = MakeReadonly<Complete<TDefinition>>;
 }
 
 export default Model;

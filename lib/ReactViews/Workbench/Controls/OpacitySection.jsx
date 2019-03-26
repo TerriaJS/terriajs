@@ -8,7 +8,7 @@ import { observer } from 'mobx-react';
 import CommonStrata from '../../../Models/CommonStrata';
 
 import Styles from './opacity-section.scss';
-import { anyHasTrait } from '../../../Models/hasTrait';
+import { hasTrait2 } from '../../../Models/hasTrait';
 import mixRasterLayerTraits from '../../../Traits/mixRasterLayerTraits';
 import ModelTraits from '../../../Traits/ModelTraits';
 
@@ -21,14 +21,14 @@ const OpacitySection = observer(createReactClass({
 
     changeOpacity(value) {
         const item = this.props.item;
-        if (anyHasTrait(mixRasterLayerTraits(ModelTraits), 'opacity', item)) {
-            item.getOrCreateStratum(CommonStrata.user).opacity = value / 100.0;
+        if (hasTrait2(item, mixRasterLayerTraits(ModelTraits), 'opacity')) {
+            item.setTrait('user', 'opacity', value / 100.0);
         }
     },
 
     render() {
         const item = this.props.item;
-        if (!anyHasTrait(mixRasterLayerTraits(ModelTraits), 'opacity', item) || item.opacity === undefined) {
+        if (!hasTrait2(item, mixRasterLayerTraits(ModelTraits), 'opacity') || item.opacity === undefined) {
             return null;
         }
         return (

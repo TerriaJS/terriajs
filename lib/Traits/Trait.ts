@@ -1,5 +1,5 @@
 import StratumFromTraits from "../ModelInterfaces/StratumFromTraits";
-import { ModelInterface } from "../Models/Model";
+import { BaseModel } from "../Models/Model";
 import ModelTraits from "./ModelTraits";
 
 export interface TraitOptions {
@@ -20,7 +20,7 @@ export default abstract class Trait {
 
     abstract getValue(strataTopToBottom: StratumFromTraits<ModelTraits>[]): any;
 
-    abstract fromJson<TTraits extends ModelTraits>(model: ModelInterface<TTraits>, stratumName: string, jsonValue: any): any;
+    abstract fromJson(model: BaseModel, stratumName: string, jsonValue: any): any;
 
     abstract isSameType(trait: Trait): boolean;
 }

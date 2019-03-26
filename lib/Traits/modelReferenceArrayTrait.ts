@@ -1,6 +1,6 @@
 import TerriaError from '../Core/TerriaError';
 import StratumFromTraits from '../ModelInterfaces/StratumFromTraits';
-import { ModelInterface } from '../Models/Model';
+import { BaseModel } from '../Models/Model';
 import ModelFactory from '../Models/ModelFactory';
 import upsertModelFromJson from '../Models/upsertModelFromJson';
 import ModelReference from "./ModelReference";
@@ -67,7 +67,7 @@ export class ModelReferenceArrayProperty extends Trait {
         return Object.freeze(result);
     }
 
-    fromJson<TTraits extends ModelTraits>(model: ModelInterface<TTraits>, stratumName: string, jsonValue: any): ReadonlyArray<ModelReference> {
+    fromJson(model: BaseModel, stratumName: string, jsonValue: any): ReadonlyArray<ModelReference> {
         // TODO: support removals
 
         if (!Array.isArray(jsonValue)) {

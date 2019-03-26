@@ -1,8 +1,10 @@
 import TerriaError from '../Core/TerriaError';
 import StratumFromTraits from '../ModelInterfaces/StratumFromTraits';
-import { ModelInterface } from '../Models/Model';
+import { BaseModel } from '../Models/Model';
 import ModelTraits from './ModelTraits';
 import Trait, { TraitOptions } from './Trait';
+import FlattenedFromTraits from '../Models/FlattenedFromTraits';
+import createStratumInstance from '../Models/createStratumInstance';
 
 interface TraitsConstructor<T> {
     new(): T;
@@ -15,7 +17,6 @@ interface TraitsConstructor<T> {
 export interface ObjectArrayTraitOptions<T extends ModelTraits> extends TraitOptions {
     type: TraitsConstructor<T>;
     idProperty: keyof T;
-    default?: ReadonlyArray<T>;
 }
 
 export default function objectArrayTrait<T extends ModelTraits>(options: ObjectArrayTraitOptions<T>) {
@@ -31,19 +32,17 @@ export default function objectArrayTrait<T extends ModelTraits>(options: ObjectA
 export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
     readonly type: TraitsConstructor<T>;
     readonly idProperty: keyof T;
-    readonly default: ReadonlyArray<T> | undefined;
 
     constructor(id: string, options: ObjectArrayTraitOptions<T>) {
         super(id, options);
         this.type = options.type;
         this.idProperty = options.idProperty;
-        this.default = options.default;
     }
 
-    getValue(strataTopToBottom: StratumFromTraits<ModelTraits>[]): ReadonlyArray<T> | undefined {
+    getValue(strataTopToBottom: StratumFromTraits<ModelTraits>[]): ReadonlyArray<FlattenedFromTraits<T>> | undefined {
         const objectArrayStrata = strataTopToBottom.map((stratum: any) => stratum[this.id]).filter(stratum => stratum !== undefined);
         if (objectArrayStrata === undefined) {
-            return this.default;
+            return undefined;
         }
 
         const result: T[][] = [];
@@ -78,7 +77,7 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
         // Flatten each unique object.
         return result.map(strata => {
             const ResultType = this.type;
-            const result = new ResultType();
+            const result = createStratumInstance(ResultType);
             const resultAny: any = result;
 
             const traits = ResultType.traits;
@@ -86,11 +85,11 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
                 resultAny[traitId] = traits[traitId].getValue(strata);
             });
 
-            return result;
+            return resultAny;
         });
     }
 
-    fromJson<TTraits extends ModelTraits>(model: ModelInterface<TTraits>, stratumName: string, jsonValue: any): ReadonlyArray<T> {
+    fromJson(model: BaseModel, stratumName: string, jsonValue: any): ReadonlyArray<StratumFromTraits<T>> {
         // TODO: support removals
 
         if (!Array.isArray(jsonValue)) {

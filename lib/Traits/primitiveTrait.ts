@@ -1,6 +1,6 @@
 import TerriaError from '../Core/TerriaError';
 import StratumFromTraits from '../ModelInterfaces/StratumFromTraits';
-import { ModelInterface } from '../Models/Model';
+import { ModelInterface, BaseModel } from '../Models/Model';
 import ModelTraits from './ModelTraits';
 import Trait, { TraitOptions } from './Trait';
 
@@ -40,7 +40,7 @@ export class PrimitiveTrait<T> extends Trait {
         return undefined;
     }
 
-    fromJson<TTraits extends ModelTraits>(model: ModelInterface<TTraits>, stratumName: string, jsonValue: any): T {
+    fromJson(model: BaseModel, stratumName: string, jsonValue: any): T {
         if (typeof jsonValue !== this.type) {
             throw new TerriaError({
                 title: 'Invalid property',

@@ -16,13 +16,14 @@ import URI from 'urijs';
 import containsAny from '../Core/containsAny';
 import isReadOnlyArray from '../Core/isReadOnlyArray';
 import TerriaError from '../Core/TerriaError';
+import StratumFromTraits from '../ModelInterfaces/StratumFromTraits';
 import CatalogMemberMixin from '../ModelMixins/CatalogMemberMixin';
 import GetCapabilitiesMixin from '../ModelMixins/GetCapabilitiesMixin';
 import GroupMixin from '../ModelMixins/GroupMixin';
-import OpacityMixin from '../ModelMixins/OpacityMixin';
 import UrlMixin from '../ModelMixins/UrlMixin';
 import { InfoSectionTraits } from '../Traits/mixCatalogMemberTraits';
 import WebMapServiceCatalogItemTraits from '../Traits/WebMapServiceCatalogItemTraits';
+import createStratumInstance from './createStratumInstance';
 import LoadableStratum from './LoadableStratum';
 import Mappable, { ImageryParts } from './Mappable';
 import Model from './Model';
@@ -127,8 +128,8 @@ class GetCapabilitiesStratum extends LoadableStratum(WebMapServiceCatalogItemTra
     }
 
     @computed
-    get info(): InfoSectionTraits[] {
-        const result: InfoSectionTraits[] = [];
+    get info(): StratumFromTraits<InfoSectionTraits>[] {
+        const result: StratumFromTraits<InfoSectionTraits>[] = [];
 
         let firstDataDescription: string | undefined;
         for (const layer of this.capabilitiesLayers.values()) {
@@ -139,7 +140,7 @@ class GetCapabilitiesStratum extends LoadableStratum(WebMapServiceCatalogItemTra
             const suffix = this.capabilitiesLayers.size === 1 ? '' : ` - ${layer.Title}`;
             const name = `Data Description${suffix}`;
 
-            const traits = new InfoSectionTraits();
+            const traits = createStratumInstance(InfoSectionTraits);
             traits.name = name;
             traits.content = layer.Abstract;
             result.push(traits);
@@ -151,7 +152,7 @@ class GetCapabilitiesStratum extends LoadableStratum(WebMapServiceCatalogItemTra
         const service = this.capabilities && this.capabilities.Service;
         if (service) {
             if (service && service.Abstract && !containsAny(service.Abstract, WebMapServiceCatalogItem.abstractsToIgnore) && service.Abstract !== firstDataDescription) {
-                const traits = new InfoSectionTraits();
+                const traits = createStratumInstance(InfoSectionTraits);
                 traits.name = 'Service Description';
                 traits.content = service.Abstract;
                 result.push(traits);
@@ -159,7 +160,7 @@ class GetCapabilitiesStratum extends LoadableStratum(WebMapServiceCatalogItemTra
 
             // Show the Access Constraints if it isn't "none" (because that's the default, and usually a lie).
             if (service.AccessConstraints && !/^none$/i.test(service.AccessConstraints)) {
-                const traits = new InfoSectionTraits();
+                const traits = createStratumInstance(InfoSectionTraits);
                 traits.name = 'Access Constraints';
                 traits.content = service.AccessConstraints;
                 result.push(traits);
@@ -170,7 +171,7 @@ class GetCapabilitiesStratum extends LoadableStratum(WebMapServiceCatalogItemTra
     }
 
     @computed
-    get rectangle(): Rectangle | undefined {
+    get rectangle(): Readonly<Rectangle> | undefined {
         const layers: CapabilitiesLayer[] = [...this.capabilitiesLayers.values()].filter(layer => layer !== undefined).map(l => l!);
         // Needs to take union of all layer rectangles
         return layers.length > 0 ? getRectangleFromLayer(layers[0]) : undefined

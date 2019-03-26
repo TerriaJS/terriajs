@@ -4,6 +4,7 @@ import objectTrait from '../../lib/Traits/objectTrait';
 import ModelTraits from '../../lib/Traits/ModelTraits';
 import Model from '../../lib/Models/Model';
 import Terria from '../../lib/Models/Terria';
+import createStratumInstance from '../../lib/Models/createStratumInstance';
 
 configure({
     enforceActions: true,
@@ -64,11 +65,11 @@ describe('objectTrait', function() {
         model.strata.set('definition', definition);
         model.strata.set('user', user);
 
-        definition.inner = new InnerTraits();
+        definition.inner = createStratumInstance(InnerTraits);
         definition.inner.foo = 'a';
         definition.inner.bar = 1;
 
-        user.inner = new InnerTraits();
+        user.inner = createStratumInstance(InnerTraits);
         user.inner.bar = 2;
         user.inner.baz = true;
 
@@ -90,11 +91,11 @@ describe('objectTrait', function() {
         model.strata.set('definition', definition);
         model.strata.set('user', user);
 
-        definition.inner = new InnerTraits();
+        definition.inner = createStratumInstance(InnerTraits);
         definition.inner.foo = 'a';
         definition.inner.bar = 1;
 
-        user.inner = new InnerTraits();
+        user.inner = createStratumInstance(InnerTraits);
 
         expect(model.inner).toBeDefined();
 

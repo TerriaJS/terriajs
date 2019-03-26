@@ -5,6 +5,7 @@ import ModelTraits from '../../lib/Traits/ModelTraits';
 import Model from '../../lib/Models/Model';
 import Terria from '../../lib/Models/Terria';
 import objectArrayTrait from '../../lib/Traits/objectArrayTrait';
+import createStratumInstance from '../../lib/Models/createStratumInstance';
 
 configure({
     enforceActions: true,
@@ -70,14 +71,14 @@ describe('objectArrayTrait', function() {
         model.strata.set('definition', definition);
         model.strata.set('user', user);
 
-        definition.inner = [ new InnerTraits(), new InnerTraits() ];
+        definition.inner = [ createStratumInstance(InnerTraits), createStratumInstance(InnerTraits) ];
         definition.inner[0].foo = 'a';
         definition.inner[0].bar = 1;
         definition.inner[1].foo = 'b';
         definition.inner[1].bar = 2;
         definition.inner[1].baz = true;
 
-        user.inner = [ new InnerTraits(), new InnerTraits() ];
+        user.inner = [ createStratumInstance(InnerTraits), createStratumInstance(InnerTraits) ];
         user.inner[0].foo = 'b';
         user.inner[0].baz = false;
         user.inner[1].foo = 'c';
@@ -112,14 +113,14 @@ describe('objectArrayTrait', function() {
         model.strata.set('definition', definition);
         model.strata.set('user', user);
 
-        definition.inner = [ new InnerTraits(), new InnerTraits() ];
+        definition.inner = [ createStratumInstance(InnerTraits), createStratumInstance(InnerTraits) ];
         definition.inner[0].foo = 'a';
         definition.inner[0].bar = 1;
         definition.inner[1].foo = 'b';
         definition.inner[1].bar = 2;
         definition.inner[1].baz = true;
 
-        user.inner = [ new InnerTraits(), new InnerTraits() ];
+        user.inner = [ createStratumInstance(InnerTraits), createStratumInstance(InnerTraits) ];
         user.inner[0].foo = 'b';
         user.inner[0].baz = false;
         user.inner[1].foo = 'c';
@@ -130,7 +131,7 @@ describe('objectArrayTrait', function() {
         if (model.inner !== undefined) {
             expect(model.inner.length).toEqual(3);
 
-            const newOne = new InnerTraits();
+            const newOne = createStratumInstance(InnerTraits);
             definition.inner.push(newOne);
             newOne.foo = 'c';
             newOne.bar = 4;
@@ -153,14 +154,14 @@ describe('objectArrayTrait', function() {
         model.strata.set('definition', definition);
         model.strata.set('user', user);
 
-        definition.inner = [ new InnerTraits(), new InnerTraits() ];
+        definition.inner = [ createStratumInstance(InnerTraits), createStratumInstance(InnerTraits) ];
         definition.inner[0].foo = 'a';
         definition.inner[0].bar = 1;
         definition.inner[1].foo = 'b';
         definition.inner[1].bar = 2;
         definition.inner[1].baz = true;
 
-        user.inner = [ new InnerTraits(), new InnerTraits() ];
+        user.inner = [ createStratumInstance(InnerTraits), createStratumInstance(InnerTraits) ];
         user.inner[0].foo = 'b';
         user.inner[0].bar = 42; // indicates removed, according to InnerTraits.isRemoval.
         user.inner[1].foo = 'c';
