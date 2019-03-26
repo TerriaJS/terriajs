@@ -46,7 +46,7 @@ export abstract class BaseModel {
     abstract createStratumInstance(): StratumFromTraits<ModelTraits>;
 }
 
-export interface ModelInterface<T extends ModelTraits> extends WithStrata<T> {
+export interface ModelInterface<T extends ModelTraits> {
     readonly type: string;
     readonly traits: {
         [id: string]: Trait;
