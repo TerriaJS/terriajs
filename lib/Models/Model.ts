@@ -1,16 +1,14 @@
 import { computed, decorate, observable, ObservableMap, trace } from 'mobx';
 import LoadableStratum from '../../test/Models/LoadableStratum';
-import StratumFromTraits from './StratumFromTraits';
-import WithStrata from '../ModelInterfaces/WithStrata';
 import { ModelId } from '../Traits/ModelReference';
 import ModelTraits from '../Traits/ModelTraits';
 import Trait from '../Traits/Trait';
+import createStratumInstance from './createStratumInstance';
+import FlattenedFromTraits from './FlattenedFromTraits';
 import ModelPropertiesFromTraits from './ModelPropertiesFromTraits';
+import StratumFromTraits from './StratumFromTraits';
 import StratumOrder from './StratumOrder';
 import Terria from './Terria';
-import OrUndefined from '../Core/OrUndefined';
-import FlattenedFromTraits from './FlattenedFromTraits';
-import createStratumInstance from './createStratumInstance';
 
 export interface TraitsConstructor<T extends ModelTraits> {
     new(...args: any[]): T;
