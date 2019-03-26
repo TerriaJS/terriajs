@@ -11,6 +11,7 @@ Change Log
 * Highlight polygon and polyline features.
 * Replace `getUniqueValues` with `lodash.uniq`
 * Fixed a bug where the 3D globe would not immediately refresh when toggling between the "Terrain" and "Smooth" viewer modes.
+* Apply `dateFormat`, if specified, to date/time pickers and date/time selectors.
 * Fixed a bug that could cause the chart panel at the bottom to flicker on and off rapidly when there is an error loading chart data.
 
 ### v7.0.2
