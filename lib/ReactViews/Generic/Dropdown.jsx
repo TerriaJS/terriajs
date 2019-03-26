@@ -128,6 +128,8 @@ const Dropdown = createReactClass({
                             <Choose>
                                 <When condition={option.href}>
                                     <a href={option.href}
+                                       target="_blank"
+                                       rel="noopener noreferrer"
                                        className={classNames(Styles.btnOption, this.props.theme.btnOption || '', {[Styles.isSelected]: option === this.props.selected})}
                                        download={option.download}>
                                         {option[this.props.textProperty]}
