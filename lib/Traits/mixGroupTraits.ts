@@ -3,8 +3,9 @@ import ModelTraits from './ModelTraits';
 import modelReferenceArrayTrait from './modelReferenceArrayTrait';
 import primitiveTrait from './primitiveTrait';
 import CatalogMemberFactory from '../Models/CatalogMemberFactory';
+import TraitsConstructor from './TraitsConstructor';
 
-export default function mixGroupTraits<TBase extends ModelTraits.Constructor>(Base: TBase) {
+export default function mixGroupTraits<TBase extends TraitsConstructor<ModelTraits>>(Base: TBase) {
     class GroupTraits extends Base {
         @primitiveTrait({
             name: 'Is Open',

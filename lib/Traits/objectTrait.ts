@@ -5,13 +5,7 @@ import ModelTraits from './ModelTraits';
 import Trait, { TraitOptions } from './Trait';
 import FlattenedFromTraits from '../Models/FlattenedFromTraits';
 import createStratumInstance from '../Models/createStratumInstance';
-
-interface TraitsConstructor<T> {
-    new(): T;
-    traits: {
-        [id: string]: Trait;
-    };
-}
+import TraitsConstructor from './TraitsConstructor';
 
 export interface ObjectTraitOptions<T extends ModelTraits> extends TraitOptions {
     type: TraitsConstructor<T>;

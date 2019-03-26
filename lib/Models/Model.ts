@@ -3,20 +3,13 @@ import LoadableStratum from '../../test/Models/LoadableStratum';
 import { ModelId } from '../Traits/ModelReference';
 import ModelTraits from '../Traits/ModelTraits';
 import Trait from '../Traits/Trait';
+import TraitsConstructor from '../Traits/TraitsConstructor';
 import createStratumInstance from './createStratumInstance';
 import FlattenedFromTraits from './FlattenedFromTraits';
 import ModelPropertiesFromTraits from './ModelPropertiesFromTraits';
 import StratumFromTraits from './StratumFromTraits';
 import StratumOrder from './StratumOrder';
 import Terria from './Terria';
-
-export interface TraitsConstructor<T extends ModelTraits> {
-    new(...args: any[]): T;
-    prototype: T;
-    traits: {
-        [key: string]: Trait;
-    }
-}
 
 export interface ModelConstructor<T> {
     new(id: string, terria: Terria): T;

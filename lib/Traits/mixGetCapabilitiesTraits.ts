@@ -1,7 +1,8 @@
 import ModelTraits from './ModelTraits';
 import primitiveTrait from './primitiveTrait';
+import TraitsConstructor from './TraitsConstructor';
 
-export default function mixGetCapabilitiesTraits<TBase extends ModelTraits.Constructor>(Base: TBase) {
+export default function mixGetCapabilitiesTraits<TBase extends TraitsConstructor<ModelTraits>>(Base: TBase) {
     class GetCapabilitiesTraits extends Base {
         @primitiveTrait({
             type: 'string',

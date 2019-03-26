@@ -1,7 +1,8 @@
 import ModelTraits from './ModelTraits';
-import primitiveTrait from './primitiveTrait';
-import objectTrait from './objectTrait';
 import objectArrayTrait from './objectArrayTrait';
+import objectTrait from './objectTrait';
+import primitiveTrait from './primitiveTrait';
+import TraitsConstructor from './TraitsConstructor';
 
 export class InfoSectionTraits extends ModelTraits {
     @primitiveTrait({
@@ -23,7 +24,7 @@ export class InfoSectionTraits extends ModelTraits {
     }
 }
 
-export default function mixCatalogMemberTraits<TBase extends ModelTraits.Constructor>(Base: TBase) {
+export default function mixCatalogMemberTraits<TBase extends TraitsConstructor<ModelTraits>>(Base: TBase) {
     class CatalogMemberTraits extends Base {
         @primitiveTrait({
             type: 'string',

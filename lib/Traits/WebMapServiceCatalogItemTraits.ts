@@ -4,8 +4,6 @@ import ModelTraits from './ModelTraits';
 import mixUrlTraits from './mixUrlTraits';
 import mixGetCapabilitiesTraits from './mixGetCapabilitiesTraits';
 import mixRasterLayerTraits from './mixRasterLayerTraits';
-import { TraitsConstructor } from '../Models/Model';
-import Trait from './Trait';
 
 export default class WebMapServiceCatalogItemTraits extends mixGetCapabilitiesTraits(mixRasterLayerTraits(mixUrlTraits(mixCatalogMemberTraits(ModelTraits)))) {
     @primitiveTrait({
@@ -36,43 +34,3 @@ export default class WebMapServiceCatalogItemTraits extends mixGetCapabilitiesTr
     })
     availableStyles?: any; // TODO
 }
-
-// interface Test {
-//     foo: number;
-//     bar?: number;
-//     baz: number | undefined;
-// }
-
-// let x: Complete<WebMapServiceCatalogItemTraits> = <any>{};
-// const q = x.opacity;
-// const r = x.layers;
-// console.log(q);
-// console.log(r);
-
-// let y: Complete<Test> = <any>{};
-// const foo: number = y.foo;
-// const bar: number | undefined = y.bar;
-// const baz: number | undefined = y.baz;
-
-// interface Test2 {
-//     foo: number;
-//     bar: number | undefined;
-//     baz: number | undefined;
-// }
-
-// let t1: Test = <any>{};
-// let t2: Test2 = <any>{};
-
-// t1 = t2;
-// t2 = t1;
-
-// interface InterfaceWithOptional {
-//     foo?: number;
-//   }
-  
-//   interface InterfaceWithUndefined {
-//     foo: number | undefined;
-//   }
-  
-//   const x: InterfaceWithUndefined = <InterfaceWithOptional><any>{};
-  

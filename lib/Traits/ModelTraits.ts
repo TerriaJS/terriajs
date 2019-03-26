@@ -7,8 +7,4 @@ class ModelTraits {
     }
 }
 
-namespace ModelTraits {
-    export type Constructor = new(...args: any[]) => ModelTraits;
-}
-
 export default ModelTraits;

@@ -1,9 +1,8 @@
-import Complete from "../Core/Complete";
-import ModelTraits from "../Traits/ModelTraits";
-import WebMapServiceCatalogItemTraits from "../Traits/WebMapServiceCatalogItemTraits";
-import { TraitsConstructor } from "./Model";
-import ModelPropertiesFromTraits from "./ModelPropertiesFromTraits";
 import { InfoSectionTraits } from "../Traits/mixCatalogMemberTraits";
+import ModelTraits from "../Traits/ModelTraits";
+import TraitsConstructor from "../Traits/TraitsConstructor";
+import WebMapServiceCatalogItemTraits from "../Traits/WebMapServiceCatalogItemTraits";
+import ModelPropertiesFromTraits from "./ModelPropertiesFromTraits";
 
 type HasGettableModelTrait<TTraits extends ModelTraits, Key extends keyof TTraits> = ModelPropertiesFromTraits<Pick<TTraits, Key>>;
 

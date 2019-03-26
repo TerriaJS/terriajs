@@ -1,7 +1,7 @@
-import ModelTraits from "../Traits/ModelTraits";
-import { TraitsConstructor } from "./Model";
-import StratumFromTraits from "./StratumFromTraits";
 import { observable } from "mobx";
+import ModelTraits from "../Traits/ModelTraits";
+import TraitsConstructor from "../Traits/TraitsConstructor";
+import StratumFromTraits from "./StratumFromTraits";
 
 /**
  * Creates a mutable stratum of a given type.

@@ -1,7 +1,8 @@
 import ModelTraits from './ModelTraits';
 import primitiveTrait from './primitiveTrait';
+import TraitsConstructor from './TraitsConstructor';
 
-export default function mixUrlTraits<TBase extends ModelTraits.Constructor>(Base: TBase) {
+export default function mixUrlTraits<TBase extends TraitsConstructor<ModelTraits>>(Base: TBase) {
     class UrlTraits extends Base {
         @primitiveTrait({
             type: 'string',

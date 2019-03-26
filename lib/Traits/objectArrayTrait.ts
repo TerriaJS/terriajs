@@ -5,17 +5,14 @@ import ModelTraits from './ModelTraits';
 import Trait, { TraitOptions } from './Trait';
 import FlattenedFromTraits from '../Models/FlattenedFromTraits';
 import createStratumInstance from '../Models/createStratumInstance';
+import TraitsConstructor from './TraitsConstructor';
 
-interface TraitsConstructor<T> {
-    new(): T;
-    traits: {
-        [id: string]: Trait;
-    };
+interface TraitsConstructorWithRemoval<T> extends TraitsConstructor<T> {
     isRemoval?: (instance: T) => boolean;
 }
 
 export interface ObjectArrayTraitOptions<T extends ModelTraits> extends TraitOptions {
-    type: TraitsConstructor<T>;
+    type: TraitsConstructorWithRemoval<T>;
     idProperty: keyof T;
 }
 
@@ -30,7 +27,7 @@ export default function objectArrayTrait<T extends ModelTraits>(options: ObjectA
 }
 
 export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
-    readonly type: TraitsConstructor<T>;
+    readonly type: TraitsConstructorWithRemoval<T>;
     readonly idProperty: keyof T;
 
     constructor(id: string, options: ObjectArrayTraitOptions<T>) {
