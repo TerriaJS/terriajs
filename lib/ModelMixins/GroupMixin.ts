@@ -1,7 +1,7 @@
 import { action, computed } from "mobx";
 import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
-import StratumFromTraits from "../ModelInterfaces/StratumFromTraits";
+import StratumFromTraits from "../Models/StratumFromTraits";
 import { BaseModel } from "../Models/Model";
 import Terria from "../Models/Terria";
 import ModelReference from "../Traits/ModelReference";

@@ -1,5 +1,5 @@
 import TerriaError from '../Core/TerriaError';
-import StratumFromTraits from '../ModelInterfaces/StratumFromTraits';
+import StratumFromTraits from '../Models/StratumFromTraits';
 import { BaseModel } from '../Models/Model';
 import ModelFactory from '../Models/ModelFactory';
 import upsertModelFromJson from '../Models/upsertModelFromJson';

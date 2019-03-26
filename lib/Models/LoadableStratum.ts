@@ -1,6 +1,6 @@
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import Constructor from "../Core/Constructor";
-import StratumFromTraits from "../ModelInterfaces/StratumFromTraits";
+import StratumFromTraits from "./StratumFromTraits";
 import ModelTraits from "../Traits/ModelTraits";
 import Model, { TraitsConstructor } from "./Model";
 

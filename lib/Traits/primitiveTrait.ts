@@ -1,5 +1,5 @@
 import TerriaError from '../Core/TerriaError';
-import StratumFromTraits from '../ModelInterfaces/StratumFromTraits';
+import StratumFromTraits from '../Models/StratumFromTraits';
 import { ModelInterface, BaseModel } from '../Models/Model';
 import ModelTraits from './ModelTraits';
 import Trait, { TraitOptions } from './Trait';

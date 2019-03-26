@@ -1,6 +1,6 @@
 import ModelTraits from "../Traits/ModelTraits";
 import { TraitsConstructor } from "./Model";
-import StratumFromTraits from "../ModelInterfaces/StratumFromTraits";
+import StratumFromTraits from "./StratumFromTraits";
 import { observable } from "mobx";
 
 /**

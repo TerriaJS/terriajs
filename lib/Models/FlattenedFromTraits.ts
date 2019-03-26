@@ -1,6 +1,6 @@
 import ModelTraits from "../Traits/ModelTraits";
 import Complete from "../Core/Complete";
-import StratumFromTraits from "../ModelInterfaces/StratumFromTraits";
+import StratumFromTraits from "./StratumFromTraits";
 import OrUndefined from "../Core/OrUndefined";
 
 // Flattened properties:

@@ -1,5 +1,5 @@
 import AllowsUndefined from '../../lib/Core/AllowsUndefined';
-import StratumFromTraits from '../../lib/ModelInterfaces/StratumFromTraits';
+import StratumFromTraits from '../../lib/Models/StratumFromTraits';
 import TraitsForTesting from './TraitsForTesting';
 import { Equals, expectFalse, expectTrue, IsWritableArray, IsWritable } from './TypeChecks';
 

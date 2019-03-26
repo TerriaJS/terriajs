@@ -1,4 +1,4 @@
-import StratumFromTraits from "../ModelInterfaces/StratumFromTraits";
+import StratumFromTraits from "../Models/StratumFromTraits";
 import { BaseModel } from "../Models/Model";
 import ModelTraits from "./ModelTraits";
 

@@ -1,6 +1,6 @@
 import { computed, decorate, observable, ObservableMap, trace } from 'mobx';
 import LoadableStratum from '../../test/Models/LoadableStratum';
-import StratumFromTraits from '../ModelInterfaces/StratumFromTraits';
+import StratumFromTraits from './StratumFromTraits';
 import WithStrata from '../ModelInterfaces/WithStrata';
 import { ModelId } from '../Traits/ModelReference';
 import ModelTraits from '../Traits/ModelTraits';
