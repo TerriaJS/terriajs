@@ -1,16 +1,16 @@
 'use strict';
 
+import createReactClass from 'create-react-class';
+import { observer } from 'mobx-react';
+import PropTypes from 'prop-types';
 import Slider from 'rc-slider';
 import React from 'react';
-import createReactClass from 'create-react-class';
-import PropTypes from 'prop-types';
-import { observer } from 'mobx-react';
 import CommonStrata from '../../../Models/CommonStrata';
-
-import Styles from './opacity-section.scss';
-import { hasTrait2 } from '../../../Models/hasTrait';
+import hasTraits from '../../../Models/hasTraits';
 import mixRasterLayerTraits from '../../../Traits/mixRasterLayerTraits';
 import ModelTraits from '../../../Traits/ModelTraits';
+import Styles from './opacity-section.scss';
+
 
 const OpacitySection = observer(createReactClass({
     displayName: 'OpacitySection',
@@ -21,14 +21,14 @@ const OpacitySection = observer(createReactClass({
 
     changeOpacity(value) {
         const item = this.props.item;
-        if (hasTrait2(item, mixRasterLayerTraits(ModelTraits), 'opacity')) {
-            item.setTrait('user', 'opacity', value / 100.0);
+        if (hasTraits(item, mixRasterLayerTraits(ModelTraits), 'opacity')) {
+            item.setTrait(CommonStrata.user, 'opacity', value / 100.0);
         }
     },
 
     render() {
         const item = this.props.item;
-        if (!hasTrait2(item, mixRasterLayerTraits(ModelTraits), 'opacity') || item.opacity === undefined) {
+        if (!hasTraits(item, mixRasterLayerTraits(ModelTraits), 'opacity') || item.opacity === undefined) {
             return null;
         }
         return (
