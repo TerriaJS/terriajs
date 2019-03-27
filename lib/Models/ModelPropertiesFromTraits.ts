@@ -1,10 +1,6 @@
-import ModelTraits from "../Traits/ModelTraits";
-import Complete from "../Core/Complete";
 import AllowsUndefined from "../Core/AllowsUndefined";
-
-// Model properties:
-// * Are deeply read-only
-// * May only be undefined if the trait does not have a default value.
+import Complete from "../Core/Complete";
+import ModelTraits from "../Traits/ModelTraits";
 
 type Recurse<TDefinition extends ModelTraits> = {
     readonly [P in keyof TDefinition]: (Exclude<TDefinition[P], undefined> extends Array<infer TElement>
@@ -16,6 +12,15 @@ type Recurse<TDefinition extends ModelTraits> = {
             : Readonly<TDefinition[P]>));
 };
 
+/**
+ * Transforms a {@link ModelTraits} class into a type representative of the traits properties exposed on
+ * a {@link Model} class. All properties of the new type:
+ *
+ *   * Are read-only.
+ *   * Do not allow undefined if the trait property itself does not allow undefined (i.e. it's not optional).
+ *
+ * Nested traits classes follow the rules above.
+ */
 type ModelPropertiesFromTraits<TDefinition extends ModelTraits> = Recurse<Complete<TDefinition>>;
 
 export default ModelPropertiesFromTraits;
