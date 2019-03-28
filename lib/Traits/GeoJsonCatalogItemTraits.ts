@@ -1,3 +1,4 @@
+import anyTrait from "./anyTrait";
 import mixCatalogMemberTraits from "./mixCatalogMemberTraits";
 import ModelTraits from "./ModelTraits";
 import mixUrlTraits from "./mixUrlTraits";
@@ -73,4 +74,17 @@ export default class GeoJsonCatalogItemTraits extends mixGetCapabilitiesTraits(
         description: 'Styling rules that follow simplestyle-spec',
     })
     style?: StyleTraits
+
+    @anyTrait({
+        name: 'geoJsonData',
+        description: 'A geojson data object'
+    })
+    geoJsonData?: any
+
+    @primitiveTrait({
+        type: 'string',
+        name: 'geoJsonString',
+        description: 'A geojson string'
+    })
+    geoJsonString?: string
 }

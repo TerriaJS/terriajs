@@ -149,7 +149,8 @@ export default class Cesium implements GlobeOrMap {
         flightDurationSeconds: number
     ): void {
         if (!defined(target)) {
-            throw new DeveloperError("viewOrExtent is required.");
+            return;
+            //throw new DeveloperError("viewOrExtent is required.");
         }
 
         flightDurationSeconds = defaultValue(flightDurationSeconds, 3.0);
