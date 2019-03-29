@@ -1,13 +1,14 @@
-import OrUndefined from "../Core/OrUndefined";
-import ModelTraits from "../Traits/ModelTraits";
+import { Equals, If } from "../Core/TypeConditionals";
+import { Complete, NotUndefined } from "../Core/TypeModifiers";
+import ModelTraits, { ExcludeModelTraitsHidden, IsValidSimpleTraitType } from "../Traits/ModelTraits";
 
-type Recurse<TDefinition extends ModelTraits> = {
-    [P in keyof TDefinition]: (Exclude<TDefinition[P], undefined> extends Array<infer TElement> ?
-        Array<Recurse<OrUndefined<Required<TElement>>>> | undefined :
-        Exclude<TDefinition[P], undefined> extends ModelTraits ?
-            Recurse<OrUndefined<Required<TDefinition[P]>>> :
-            TDefinition[P]);
-};
+type SingleTrait<TTrait> = If<
+    IsValidSimpleTraitType<NonNullable<TTrait>>,
+    TTrait,
+    TTrait extends ModelTraits ? StratumFromTraits<TTrait> : never
+>;
+
+type ArrayTrait<TTrait, TElement> = Array<SingleTrait<TElement>>;
 
 /**
  * Transforms a {@link ModelTraits} class into a type usable as a stratum.
@@ -18,7 +19,10 @@ type Recurse<TDefinition extends ModelTraits> = {
  *
  * Nested traits classes follow the rules above.
  */
-type StratumFromTraits<TDefinition extends ModelTraits> = Recurse<OrUndefined<Required<TDefinition>>>;
+type StratumFromTraits<TDefinition extends ModelTraits> = Complete<ExcludeModelTraitsHidden<{
+    [P in keyof TDefinition]: NotUndefined<TDefinition[P]> extends Array<infer TElement>
+        ? (ArrayTrait<TDefinition[P], TElement> | undefined)
+        : (SingleTrait<TDefinition[P]> | undefined);
+}>>;
 
 export default StratumFromTraits;
-

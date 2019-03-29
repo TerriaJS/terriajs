@@ -1,24 +1,15 @@
 import { action, computed } from "mobx";
 import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
-import StratumFromTraits from "../Models/StratumFromTraits";
-import { BaseModel } from "../Models/Model";
-import Terria from "../Models/Terria";
-import ModelReference from "../Traits/ModelReference";
+import { BaseModel, ModelInterface } from "../Models/Model";
+import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
+import mixGroupTraits from "../Traits/mixGroupTraits";
+import ModelTraits from "../Traits/ModelTraits";
 
-interface RequiredDefinition {
-    members: ReadonlyArray<ModelReference> | undefined;
-    isOpen: boolean | undefined;
+class RequiredTraits extends mixGroupTraits(ModelTraits) {
 }
 
-interface RequiredInstance {
-    terria: Terria;
-    topStratum: StratumFromTraits<RequiredDefinition>
-    members: ReadonlyArray<ModelReference> | undefined;
-    isOpen: boolean | undefined;
-}
-
-function GroupMixin<T extends Constructor<RequiredInstance>>(Base: T) {
+function GroupMixin<T extends Constructor<ModelInterface<RequiredTraits> & ModelPropertiesFromTraits<RequiredTraits>>>(Base: T) {
     class GroupMixin extends Base {
         get isGroup() {
             return true;

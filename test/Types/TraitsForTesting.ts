@@ -3,7 +3,7 @@ import objectTrait from "../../lib/Traits/objectTrait";
 import objectArrayTrait from "../../lib/Traits/objectArrayTrait";
 import ModelTraits from "../../lib/Traits/ModelTraits";
 
-class NestedTraits extends ModelTraits {
+export class NestedTraits extends ModelTraits {
     @primitiveTrait({
         name: 'WithDefault',
         description: 'Description',
@@ -17,6 +17,13 @@ class NestedTraits extends ModelTraits {
         type: 'number'
     })
     withoutDefault?: number;
+
+    // TODO: Add trait decorator for unknown object
+    unknownObject?: object;
+    unknownObjectWithDefault: object = {};
+
+    // TODO: Add/extend trait for nullable primitive
+    withNull?: string | null;
 }
 
 export default class TraitsForTesting extends ModelTraits {
@@ -34,6 +41,13 @@ export default class TraitsForTesting extends ModelTraits {
     })
     withoutDefault?: number;
 
+    @primitiveTrait({
+        name: 'SomeBool',
+        description: 'Description',
+        type: 'boolean'
+    })
+    someBool?: boolean;
+
     @objectTrait({
         name: 'NestedWithDefault',
         description: 'Description',
@@ -47,6 +61,8 @@ export default class TraitsForTesting extends ModelTraits {
         type: NestedTraits
     })
     nestedWithoutDefault?: NestedTraits;
+
+    nestedNullable?: NestedTraits | null;
 
     @objectArrayTrait({
         name: 'NestedArrayWithDefault',
@@ -63,4 +79,11 @@ export default class TraitsForTesting extends ModelTraits {
         idProperty: 'withDefault'
     })
     nestedArrayWithoutDefault?: NestedTraits[];
+
+    // TODO: Add trait decorator for unknown object
+    unknownObject?: object;
+    unknownObjectWithDefault: object = {};
+
+    // TODO: Add/extend trait for nullable primitive
+    withNull?: string | null;
 }

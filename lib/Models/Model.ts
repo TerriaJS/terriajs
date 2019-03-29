@@ -61,19 +61,19 @@ export interface ModelInterface<T extends ModelTraits> {
 }
 
 function Model<T extends TraitsConstructor<ModelTraits>>(Traits: T): ModelConstructor<ModelInterface<InstanceType<T>> & ModelPropertiesFromTraits<InstanceType<T>>> {
-    abstract class Model extends BaseModel implements ModelInterface<T> {
+    abstract class Model extends BaseModel implements ModelInterface<InstanceType<T>> {
         abstract get type(): string;
         static readonly traits = Traits.traits;
         readonly traits = Traits.traits;
-        readonly flattened: FlattenedFromTraits<T>;
-        readonly strata = observable.map<string, StratumFromTraits<T>>();
+        readonly flattened: FlattenedFromTraits<InstanceType<T>>;
+        readonly strata = observable.map<string, StratumFromTraits<InstanceType<T>>>();
 
         constructor(id: ModelId, terria: Terria) {
             super(id, terria);
             this.flattened = observable(createFlattenedLayer(this, Traits));
         }
 
-        getOrCreateStratum(id: string): StratumFromTraits<T> {
+        getOrCreateStratum(id: string): StratumFromTraits<InstanceType<T>> {
             let result = this.strata.get(id);
             if (!result) {
                 result = this.createStratumInstance();
@@ -122,15 +122,15 @@ function Model<T extends TraitsConstructor<ModelTraits>>(Traits: T): ModelConstr
             return Promise.all(promises);
         }
 
-        createStratumInstance(): StratumFromTraits<T> {
+        createStratumInstance(): StratumFromTraits<InstanceType<T>> {
             return createStratumInstance<T>(Traits);
         }
 
-        setTrait<Key extends keyof StratumFromTraits<T>>(stratumId: string, trait: Key, value: StratumFromTraits<T>[Key]): void {
+        setTrait<Key extends keyof StratumFromTraits<InstanceType<T>>>(stratumId: string, trait: Key, value: StratumFromTraits<InstanceType<T>>[Key]): void {
             this.getOrCreateStratum(stratumId)[trait] = value;
         }
 
-        getTrait<Key extends keyof StratumFromTraits<T>>(stratumId: string, trait: Key): StratumFromTraits<T>[Key] {
+        getTrait<Key extends keyof StratumFromTraits<InstanceType<T>>>(stratumId: string, trait: Key): StratumFromTraits<InstanceType<T>>[Key] {
             return this.getOrCreateStratum(stratumId)[trait];
         }
     }
