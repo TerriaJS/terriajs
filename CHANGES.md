@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### Next Release
+
+* Added `hideLayerAfterMinScaleDenominator` property to `WebMapServiceCatalogItem`. When true, TerriaJS will show a message and display nothing rather than silently show a scaled-up version of the layer when the user zooms in past the layer's advertised `MinScaleDenominator`.
+
 ### v7.1.0
 
 * Support displaying availability for imagery layers on charts, by adding `"showOnChart": true" or clicking a button in the UI.
