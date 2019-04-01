@@ -206,7 +206,8 @@ const FeatureInfoPanel = createReactClass({
         const featureInfoCatalogItems = this.renderFeatureInfoCatalogItems(catalogItems, featureCatalogItemPairs);
         const panelClassName = classNames(Styles.panel, {
             [Styles.isCollapsed]: viewState.featureInfoPanelIsCollapsed,
-            [Styles.isVisible]: viewState.featureInfoPanelIsVisible
+            [Styles.isVisible]: viewState.featureInfoPanelIsVisible,
+            [Styles.isOpaque]: viewState.explorerPanelIsVisible
         });
 
         const filterableCatalogItems = catalogItems

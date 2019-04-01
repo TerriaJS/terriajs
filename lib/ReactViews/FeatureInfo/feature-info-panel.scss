@@ -28,6 +28,10 @@
   display: block;
 }
 
+.is-opaque{
+  opacity: 0.6;
+}
+
 .header{
   background: $feature-info-header-bg;
   padding-right: $input-height;
