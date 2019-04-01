@@ -129,7 +129,7 @@ const StoryPanel = createReactClass({
                                   {story.title && story.title.length > 0 ? <h3>{story.title}</h3> : <h3> untitled scene </h3>}
                                   <Small>{exitBtn}</Small>
                                   <If condition = {this.props.terria.stories.length >=2}>
-                                    <Medium><div className={Styles.navBtn}> {this.props.terria.stories.map((story, i)=><button title={`go to story ${i}`} type='button' key={story.id} onClick={()=>this.navigateStory(i)}> <Icon glyph={ i === this.state.currentScene ? Icon.GLYPHS.circleFull : Icon.GLYPHS.circleEmpty }/></button>)}</div>
+                                    <Medium><div className={Styles.navBtn}> {this.props.terria.stories.map((story, i)=><button title={`go to story ${story.title}`} type='button' key={story.id} onClick={()=>this.navigateStory(i)}> <Icon glyph={ i === this.state.currentScene ? Icon.GLYPHS.circleFull : Icon.GLYPHS.circleEmpty }/></button>)}</div>
                                  </Medium>
                                   </If>
                                </div>
