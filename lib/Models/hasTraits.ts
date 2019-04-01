@@ -2,19 +2,19 @@ import ModelTraits from "../Traits/ModelTraits";
 import TraitsConstructor from "../Traits/TraitsConstructor";
 import ModelPropertiesFromTraits from "./ModelPropertiesFromTraits";
 
-type HasGettableModelTrait<TTraits extends ModelTraits, Key extends keyof TTraits> = ModelPropertiesFromTraits<Pick<TTraits, Key>>;
+type HasGettableModelTrait<TTraits extends ModelTraits, Key extends keyof TTraits> = ModelPropertiesFromTraits<Pick<TTraits, Key | '__isModelTraits'>>;
 
 type HasStratumTrait<TTraits extends ModelTraits, Key extends keyof TTraits> = {
     getTrait(stratumId: string, trait: Key): TTraits[Key] | undefined;
     setTrait(stratumId: string, trait: Key, value: TTraits[Key] | undefined): void;
 };
 
-type HasTrait<TTraits extends ModelTraits, Key extends keyof TTraits> = HasGettableModelTrait<TTraits, Key> & HasStratumTrait<TTraits, Key>;
+export type HasTrait<TTraits extends ModelTraits, Key extends keyof TTraits> = HasGettableModelTrait<TTraits, Key> & HasStratumTrait<TTraits, Key>;
 
 /**
  * Determines if a model instance has a trait that matches the name and type of one defined in
  * a {@link ModelTraits} class.
- * 
+ *
  * @param model The model to check for presence of the trait.
  * @param TraitsClass The {@link ModelTraits} class containing the trait of interest.
  * @param trait1 The name of a trait of interest.
@@ -39,11 +39,11 @@ function hasTraits(model: any, TraitsClass: TraitsConstructor<ModelTraits>, ...t
     for (const trait of traits) {
         const modelTrait = model.traits[trait];
         const traitsTrait = TraitsClass.traits[trait];
-    
+
         if (modelTrait === undefined || traitsTrait === undefined) {
             return false;
         }
-        
+
         if (!traitsTrait.isSameType(modelTrait)) {
             return false;
         }

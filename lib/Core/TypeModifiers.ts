@@ -1,11 +1,18 @@
-import { If, AllowsUndefined } from "./TypeConditionals";
+import { If, AllowsUndefined, AllowsNull } from "./TypeConditionals";
 
 /**
  * Makes a target type `| undefined` if the source type is `| undefined`.
  * @example
- * type T = ApplyUndefined<number | undefined, string>; // string | undefined
+ * type T = CopyUndefined<number | undefined, string>; // string | undefined
  */
-export type ApplyUndefined<TSource, TTarget> = If<AllowsUndefined<TSource>, TTarget | undefined, TTarget>;
+export type CopyUndefined<TSource, TTarget> = If<AllowsUndefined<TSource>, TTarget | undefined, TTarget>;
+
+/**
+ * Makes a target type `| null` if the source type is `| null`.
+ * @example
+ * type T = CopyNull<number | null, string>; // string | undefined
+ */
+export type CopyNull<TSource, TTarget> = If<AllowsNull<TSource>, TTarget | null, TTarget>;
 
 /**
  * Removes `| undefined` from the type.

@@ -7,7 +7,7 @@ import FlattenedFromTraits from '../Models/FlattenedFromTraits';
 import createStratumInstance from '../Models/createStratumInstance';
 import TraitsConstructor from './TraitsConstructor';
 
-interface TraitsConstructorWithRemoval<T> extends TraitsConstructor<T> {
+interface TraitsConstructorWithRemoval<T extends ModelTraits> extends TraitsConstructor<T> {
     isRemoval?: (instance: T) => boolean;
 }
 

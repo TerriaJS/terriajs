@@ -7,6 +7,7 @@ import CatalogGroup from './CatalogGroup';
 import DataCatalogMember from './DataCatalogMember';
 import getAncestors from '../../Models/getAncestors';
 import { observer } from 'mobx-react';
+import CommonStrata from '../../Models/CommonStrata';
 
 const DataCatalogGroup = observer(createReactClass({
     displayName: 'DataCatalogGroup',
@@ -55,7 +56,7 @@ const DataCatalogGroup = observer(createReactClass({
         if (this.props.manageIsOpenLocally) {
             this.toggleStateIsOpen();
         }
-        this.props.group.toggleOpen();
+        this.props.group.toggleOpen(CommonStrata.user);
     },
 
     clickGroup() {

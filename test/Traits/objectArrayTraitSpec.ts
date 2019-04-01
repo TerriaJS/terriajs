@@ -57,8 +57,8 @@ describe('objectArrayTrait', function() {
     it('returns undefined if all strata are undefined', function() {
         const terria = new Terria();
         const model = new TestModel('test', terria);
-        model.strata.set('definition', model.createStratumInstance());
-        model.strata.set('user', model.createStratumInstance());
+        model.strata.set('definition', createStratumInstance(OuterTraits));
+        model.strata.set('user', createStratumInstance(OuterTraits));
         expect(model.inner).toBeUndefined();
     });
 
@@ -66,8 +66,8 @@ describe('objectArrayTrait', function() {
         const terria = new Terria();
         const model = new TestModel('test', terria);
 
-        const definition = model.createStratumInstance();
-        const user = model.createStratumInstance();
+        const definition = createStratumInstance(OuterTraits);
+        const user = createStratumInstance(OuterTraits);
         model.strata.set('definition', definition);
         model.strata.set('user', user);
 
@@ -108,8 +108,8 @@ describe('objectArrayTrait', function() {
         const terria = new Terria();
         const model = new TestModel('test', terria);
 
-        const definition = model.createStratumInstance();
-        const user = model.createStratumInstance();
+        const definition = createStratumInstance(OuterTraits);
+        const user = createStratumInstance(OuterTraits);
         model.strata.set('definition', definition);
         model.strata.set('user', user);
 
@@ -149,8 +149,8 @@ describe('objectArrayTrait', function() {
         const terria = new Terria();
         const model = new TestModel('test', terria);
 
-        const definition = model.createStratumInstance();
-        const user = model.createStratumInstance();
+        const definition = createStratumInstance(OuterTraits);
+        const user = createStratumInstance(OuterTraits);
         model.strata.set('definition', definition);
         model.strata.set('user', user);
 

@@ -30,11 +30,11 @@ export abstract class BaseModel {
     constructor(readonly id: ModelId, readonly terria: Terria) {
     }
 
-    abstract getOrCreateStratum(id: string): StratumFromTraits<ModelTraits>;
-
     abstract get strataTopToBottom(): StratumFromTraits<ModelTraits>[];
     abstract get strataBottomToTop(): StratumFromTraits<ModelTraits>[];
-    abstract createStratumInstance(): StratumFromTraits<ModelTraits>;
+
+    abstract setTrait(stratumId: string, trait: unknown, value: unknown): void;
+    abstract getTrait(stratumId: string, trait: unknown): unknown;
 }
 
 export interface ModelInterface<T extends ModelTraits> {
@@ -49,12 +49,9 @@ export interface ModelInterface<T extends ModelTraits> {
     readonly isLoading: boolean;
     readonly loadPromise: Promise<{}>;
 
-    getOrCreateStratum(id: string): StratumFromTraits<T>;
-
     readonly strataTopToBottom: StratumFromTraits<T>[];
     readonly strataBottomToTop: StratumFromTraits<T>[];
     readonly topStratum: StratumFromTraits<T>;
-    createStratumInstance(): StratumFromTraits<T>;
 
     setTrait<Key extends keyof StratumFromTraits<T>>(stratumId: string, trait: Key, value: StratumFromTraits<T>[Key]): void;
     getTrait<Key extends keyof StratumFromTraits<T>>(stratumId: string, trait: Key): StratumFromTraits<T>[Key];
@@ -73,10 +70,10 @@ function Model<T extends TraitsConstructor<ModelTraits>>(Traits: T): ModelConstr
             this.flattened = observable(createFlattenedLayer(this, Traits));
         }
 
-        getOrCreateStratum(id: string): StratumFromTraits<InstanceType<T>> {
+        private getOrCreateStratum(id: string): StratumFromTraits<InstanceType<T>> {
             let result = this.strata.get(id);
             if (!result) {
-                result = this.createStratumInstance();
+                result = createStratumInstance(Traits);
                 this.strata.set(id, result);
             }
             return result;
@@ -120,10 +117,6 @@ function Model<T extends TraitsConstructor<ModelTraits>>(Traits: T): ModelConstr
             }
 
             return Promise.all(promises);
-        }
-
-        createStratumInstance(): StratumFromTraits<InstanceType<T>> {
-            return createStratumInstance<T>(Traits);
         }
 
         setTrait<Key extends keyof StratumFromTraits<InstanceType<T>>>(stratumId: string, trait: Key, value: StratumFromTraits<InstanceType<T>>[Key]): void {

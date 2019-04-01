@@ -1,5 +1,5 @@
 import { If } from "../Core/TypeConditionals";
-import { Complete, NotUndefined } from "../Core/TypeModifiers";
+import { Complete, NotUndefined, CopyNull } from "../Core/TypeModifiers";
 import ModelTraits, { ExcludeModelTraitsHidden, IsValidSimpleTraitType } from "../Traits/ModelTraits";
 
 type SingleTrait<TTrait> = If<
@@ -21,8 +21,8 @@ type ArrayTrait<TTrait, TElement> = ReadonlyArray<SingleTrait<TElement>>;
  */
 type FlattenedFromTraits<TDefinition extends ModelTraits> = Complete<ExcludeModelTraitsHidden<{
     readonly [P in keyof TDefinition]: NotUndefined<TDefinition[P]> extends Array<infer TElement>
-        ? (ArrayTrait<TDefinition[P], TElement> | undefined)
-        : (SingleTrait<TDefinition[P]> | undefined);
+        ? (CopyNull<TDefinition[P], ArrayTrait<TDefinition[P], TElement>> | undefined)
+        : (CopyNull<TDefinition[P], SingleTrait<TDefinition[P]>> | undefined);
 }>>;
 
 export default FlattenedFromTraits;

@@ -3,7 +3,6 @@ import TerriaError from '../Core/TerriaError';
 
 export default function updateModelFromJson(model: BaseModel, stratumName: string, json: any) {
     const traits = model.traits;
-    const stratum: any = model.getOrCreateStratum(stratumName);
 
     Object.keys(json).forEach(propertyName => {
         if (propertyName === 'id' || propertyName === 'type' || propertyName === 'localId') {
@@ -20,9 +19,9 @@ export default function updateModelFromJson(model: BaseModel, stratumName: strin
 
         const jsonValue = json[propertyName];
         if (jsonValue === undefined) {
-            stratum[propertyName] = undefined;
+            model.setTrait(stratumName, propertyName, undefined);
         } else {
-            stratum[propertyName] = trait.fromJson(model, stratumName, jsonValue);
+            model.setTrait(stratumName, propertyName, trait.fromJson(model, stratumName, jsonValue));
         }
     });
 }

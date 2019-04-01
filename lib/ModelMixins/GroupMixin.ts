@@ -25,8 +25,8 @@ function GroupMixin<T extends Constructor<ModelInterface<RequiredTraits> & Model
         }
 
         @action
-        toggleOpen() {
-            this.topStratum.isOpen = !this.isOpen;
+        toggleOpen(stratumId: string) {
+            this.setTrait(stratumId, 'isOpen', !this.isOpen);
         }
     }
 

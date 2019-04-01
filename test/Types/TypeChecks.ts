@@ -1,4 +1,4 @@
-import { Equals, IsWritableArray, IsReadonlyArray, IsWritable, IsReadonly, True, False } from "../../lib/Core/TypeConditionals";
+import { Equals, IsWritableArray, IsReadonlyArray, IsWritable, IsReadonly } from "../../lib/Core/TypeConditionals";
 
 // Based on the approach described here: https://stackoverflow.com/a/49579497
 export function expectTrue<T extends true>() {}

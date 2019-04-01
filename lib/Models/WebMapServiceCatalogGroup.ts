@@ -78,27 +78,30 @@ class GetCapabilitiesStratum extends LoadableStratum(WebMapServiceCatalogGroupTr
                 }
 
                 const layerId = id + "/" + encodeURIComponent(layer.Name);
-                let model = this.catalogGroup.terria.getModelById(
+                const existingModel = this.catalogGroup.terria.getModelById(
                     WebMapServiceCatalogItem,
                     layerId
                 );
-                if (!model) {
+
+                let model: WebMapServiceCatalogItem;
+                if (existingModel === undefined) {
                     model = new WebMapServiceCatalogItem(
                         layerId,
                         this.catalogGroup.terria
                     );
                     this.catalogGroup.terria.addModel(model);
+                } else {
+                    model = existingModel;
                 }
 
-                const stratum = model.getOrCreateStratum(
-                    CommonStrata.inheritedFromParentGroup
-                );
+
                 runInAction(() => {
-                    stratum.name = layer.Title;
-                    stratum.url = this.catalogGroup.url;
-                    stratum.getCapabilitiesUrl = this.catalogGroup.getCapabilitiesUrl;
-                    stratum.getCapabilitiesCacheDuration = this.catalogGroup.getCapabilitiesCacheDuration;
-                    stratum.layers = layer.Name;
+                    const stratum = CommonStrata.inheritedFromParentGroup;
+                    model.setTrait(stratum, 'name', layer.Title);
+                    model.setTrait(stratum, 'url', this.catalogGroup.url);
+                    model.setTrait(stratum, 'getCapabilitiesUrl', this.catalogGroup.getCapabilitiesUrl);
+                    model.setTrait(stratum, 'getCapabilitiesCacheDuration', this.catalogGroup.getCapabilitiesCacheDuration);
+                    model.setTrait(stratum, 'layers', layer.Name);
                 })
 
                 members.push(layerId);

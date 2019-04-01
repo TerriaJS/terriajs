@@ -22,7 +22,7 @@ import GetCapabilitiesMixin from '../ModelMixins/GetCapabilitiesMixin';
 import GroupMixin from '../ModelMixins/GroupMixin';
 import UrlMixin from '../ModelMixins/UrlMixin';
 import { InfoSectionTraits } from '../Traits/mixCatalogMemberTraits';
-import WebMapServiceCatalogItemTraits from '../Traits/WebMapServiceCatalogItemTraits';
+import WebMapServiceCatalogItemTraits, { WebMapServiceAvailableLayerStylesTraits, LegendTraits } from '../Traits/WebMapServiceCatalogItemTraits';
 import createStratumInstance from './createStratumInstance';
 import LoadableStratum from './LoadableStratum';
 import Mappable, { ImageryParts } from './Mappable';
@@ -30,6 +30,7 @@ import Model from './Model';
 import proxyCatalogItemUrl from './proxyCatalogItemUrl';
 import Terria from './Terria';
 import WebMapServiceCapabilities, { CapabilitiesLayer, CapabilitiesStyle, getRectangleFromLayer } from './WebMapServiceCapabilities';
+import ModelPropertiesFromTraits from './ModelPropertiesFromTraits';
 
 interface LegendUrl {
     url: string;
@@ -87,8 +88,8 @@ class GetCapabilitiesStratum extends LoadableStratum(WebMapServiceCatalogItemTra
     }
 
     @computed
-    get availableStyles(): WebMapServiceStyles {
-        const result: WebMapServiceStyles = {};
+    get availableStyles(): StratumFromTraits<WebMapServiceAvailableLayerStylesTraits>[] {
+        const result: StratumFromTraits<WebMapServiceAvailableLayerStylesTraits>[] = [];
 
         if (!this.capabilities) {
             return result;
@@ -101,26 +102,29 @@ class GetCapabilitiesStratum extends LoadableStratum(WebMapServiceCatalogItemTra
             const layer = layerTuple[1];
 
             const styles: ReadonlyArray<CapabilitiesStyle> = layer ? this.capabilities.getInheritedValues(layer, 'Style') : [];
-            result[layerName] = styles.map(style => {
-                var wmsLegendUrl = isReadOnlyArray(style.LegendURL) ? style.LegendURL[0] : style.LegendURL;
+            result.push({
+                layerName: layerName,
+                styles: styles.map(style => {
+                    var wmsLegendUrl = isReadOnlyArray(style.LegendURL) ? style.LegendURL[0] : style.LegendURL;
 
-                var legendUri, legendMimeType;
-                if (wmsLegendUrl && wmsLegendUrl.OnlineResource && wmsLegendUrl.OnlineResource['xlink:href']) {
-                    legendUri = new URI(decodeURIComponent(wmsLegendUrl.OnlineResource['xlink:href']));
-                    legendMimeType = wmsLegendUrl.Format;
-                }
+                    var legendUri, legendMimeType;
+                    if (wmsLegendUrl && wmsLegendUrl.OnlineResource && wmsLegendUrl.OnlineResource['xlink:href']) {
+                        legendUri = new URI(decodeURIComponent(wmsLegendUrl.OnlineResource['xlink:href']));
+                        legendMimeType = wmsLegendUrl.Format;
+                    }
 
-                const legendUrl = !legendUri ? undefined : {
-                    url: legendUri.toString(),
-                    mimeType: legendMimeType
-                };
+                    const legendUrl = !legendUri ? undefined : {
+                        url: legendUri.toString(),
+                        mimeType: legendMimeType
+                    };
 
-                return {
-                    name: style.Name,
-                    title: style.Title,
-                    abstract: style.Abstract,
-                    legendUrl: legendUrl
-                };
+                    return {
+                        name: style.Name,
+                        title: style.Title,
+                        abstract: style.Abstract,
+                        legendUrl: legendUrl
+                    };
+                })
             });
         }
 
@@ -277,19 +281,19 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemb
     }
 
     @computed
-    get legendUrls(): ReadonlyArray<LegendUrl> {
-        function getLegendUrlsForLayer(layer: string, availableStyles: WebMapServiceStyles): LegendUrl[] {
-            const styles = availableStyles[layer];
-            if (styles === undefined) {
+    get legendUrls(): StratumFromTraits<LegendTraits>[] {
+        const availableStyles = this.availableStyles || [];
+        function getLegendUrlsForLayer(layer: string) {
+            const styles = availableStyles.find(candidate => candidate.layerName === layer);
+            if (styles === undefined || styles.styles === undefined) {
                 return [];
             }
-            const legendUrls: LegendUrl[] = styles.map(style => style.legendUrl).filter(legendUrl => legendUrl !== undefined).map(l => l!);
-            return legendUrls
+            const legendUrls = styles.styles.map(style => style.legendUrl).filter(legendUrl => legendUrl !== undefined).map(l => l!);
+            return legendUrls;
         }
 
-        const stratum = <GetCapabilitiesStratum>this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName);
-        const a = this.layersArray.map(layer => getLegendUrlsForLayer(layer, stratum.availableStyles))
-        return ([] as LegendUrl[]).concat(...a);
+        const a = this.layersArray.map(layer => getLegendUrlsForLayer(layer))
+        return ([] as StratumFromTraits<LegendTraits>[]).concat(...a);
     }
 
     protected get defaultGetCapabilitiesUrl(): string | undefined {
