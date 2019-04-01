@@ -43,6 +43,8 @@
   text-align:left;
   box-sizing: border-box;
   margin: 0 auto;
+  border-radius: 2px;
+  box-shadow: 0 0 15px 6px rgba(100, 100, 100, 0.3);
 
   .left{
     border-right: 1px solid $field-border;

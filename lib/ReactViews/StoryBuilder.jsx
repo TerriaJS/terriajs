@@ -42,7 +42,7 @@ const StoryBuilder = createReactClass({
     
       if(storyIndex >= 0) {
         // replace the old story
-        this.props.terria.stories = [...this.props.terria.stories.slice(0, storyIndex), ...this.props.terria.stories.slice(storyIndex + 1), story];
+        this.props.terria.stories = [...this.props.terria.stories.slice(0, storyIndex), story, ...this.props.terria.stories.slice(storyIndex + 1)];
       } else {
         this.props.terria.stories = [...(this.props.terria.stories || []), story];
       }

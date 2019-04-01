@@ -20,17 +20,17 @@ export default class Story extends React.Component {
   }
     /* eslint-disable-next-line camelcase */
   UNSAFE_componentWillMount() {
-      document.body.addEventListener('click', ()=>this.hideList)
+      window.addEventListener('click', this.hideList);
   }
 
   componentWillUnmount() {
-      document.body.removeEventListener('click', ()=>this.hideList)
+      window.removeEventListener('click', this.hideList);
   }
 
-  hideList(){
+  hideList() {
     this.setState({
       menuOpen: false
-    })
+    });
   }
 
   getTruncatedContent(text) {
@@ -47,7 +47,8 @@ export default class Story extends React.Component {
     return "";
   }
 
-  toggleMenu() {
+  toggleMenu(event) {
+    event.stopPropagation();
     this.setState({
       menuOpen: !this.state.menuOpen
     }); 
@@ -56,36 +57,26 @@ export default class Story extends React.Component {
   viewStory(event) {
     event.stopPropagation();
     this.props.viewStory(this.props.story);
-    this.setState({
-      menuOpen: false
-    });
+    this.hideList();
   }
 
   editStory(event) {
     event.stopPropagation();
     this.props.editStory(this.props.story);
-    this.setState({
-      menuOpen: false
-    });
-
+    this.hideList();
   }
+
 
   recaptureStory(event) {
    event.stopPropagation();
    this.props.recaptureStory(this.props.story);
-   this.setState({
-      menuOpen: false
-    });
-
+   this.hideList();
   }
 
   deleteStory(event) {
     event.stopPropagation();
     this.props.deleteStory(this.props.story);
-    this.setState({
-      menuOpen: false
-    });
-
+    this.hideList()
   }
 
   renderMenu() {
@@ -101,7 +92,7 @@ export default class Story extends React.Component {
 
   render() {
     const story = this.props.story;
-     return (<div className={Styles.story} >
+     return (<div className={Styles.story}>
             <div className={Styles.storyHeader}> 
             <h3>{story.title && story.title.length > 0 ? story.title : 'untitled scene'}</h3>
             <button className={Styles.toggleBtn} onClick={this.toggleMenu}><Icon glyph={Icon.GLYPHS.menuDotted}/></button>

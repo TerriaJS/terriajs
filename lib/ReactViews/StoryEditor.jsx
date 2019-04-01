@@ -102,14 +102,14 @@ export default class StoryEditor extends React.Component {
                 <div className={Styles.header}>
                   <input placeholder="Enter a title here" className={Styles.field} type="text" id="title" value={this.state.title} onKeyDown={this.onKeyDown} onChange={this.updateTitle}/>
                   <button className={Styles.cancelBtn} onClick={this.cancelEditing} type='button' title="cancel">Cancel</button>
-                  <button disabled ={!(this.state.title.length && this.state.text.length)} className={Styles.saveBtn} onClick ={this.saveStory} type='button' title='save'>Save</button>
+                  <button disabled ={!this.state.title.length} className={Styles.saveBtn} onClick ={this.saveStory} type='button' title='save'>Save</button>
               </div>
               <div className={Styles.body}>
                  <Editor
                       onKeyDown={this.onKeyDown}
                       text={this.state.text}
                       options={{
-                        fileDragging:{
+                        fileDragging: {
                           allowedTypes: []
                         },
                         toolbar: {buttons: ['bold', 'italic', 'underline', 'strikethrough', 'quote', 'anchor', 'image', 'orderedlist', 'unorderedlist', 'h2', 'h3']}}} 
