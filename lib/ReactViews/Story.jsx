@@ -66,7 +66,6 @@ export default class Story extends React.Component {
     this.hideList();
   }
 
-
   recaptureStory(event) {
    event.stopPropagation();
    this.props.recaptureStory(this.props.story);
@@ -76,7 +75,7 @@ export default class Story extends React.Component {
   deleteStory(event) {
     event.stopPropagation();
     this.props.deleteStory(this.props.story);
-    this.hideList()
+    this.hideList();
   }
 
   renderMenu() {
