@@ -39,6 +39,7 @@ const ChartPanel = createReactClass({
                     .forEach(column=>column.toggleActive());
             }
         }
+       this.props.viewState.chartIsOpen = false;
     },
 
     componentDidUpdate() {
@@ -50,6 +51,7 @@ const ChartPanel = createReactClass({
     render() {
         const chartableItems = this.props.terria.catalog.chartableItems;
         if (findIndex(chartableItems, ci => !ci.dontChartAlone) < 0) {
+            this.props.viewState.chartIsOpen = false;
             return null;
         }
 
@@ -75,6 +77,7 @@ const ChartPanel = createReactClass({
 
         const isVisible = (data.length > 0) || isLoading;
         if (!isVisible) {
+            this.props.viewState.chartIsOpen = false;
             return null;
         }
         let loader;
@@ -84,6 +87,7 @@ const ChartPanel = createReactClass({
         }
         if (data.length > 0) {
             // TODO: use a calculation for the 34 pixels taken off...
+            this.props.viewState.chartIsOpen = true;
             chart = (
                 <Chart data={data} axisLabel={{x: xUnits, y: undefined}} height={height - 34}/>
             );

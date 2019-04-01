@@ -64,8 +64,10 @@
  }
 
  .menu{
+   z-index:99;
    position: absolute;
-   right: 0;
+   right: 8px;
+   top: 8px;
    background: #7C8591;
    border-radius: 4px;
  }

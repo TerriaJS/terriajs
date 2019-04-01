@@ -115,7 +115,7 @@ const StoryPanel = createReactClass({
       const exitBtn = <button className={Styles.exitBtn} title="exit story" onClick={this.slideOut}><Icon glyph={Icon.GLYPHS.close}/></button>;
         return (
           <Swipeable onSwipedLeft = {this.goToPrevStory}>
-                <div className={classNames(Styles.fullPanel, {[Styles.isHidden]: !this.props.viewState.storyShown})}>
+                <div className={classNames(Styles.fullPanel, {[Styles.isHidden]: !this.props.viewState.storyShown, [Styles.isPushedUp]: this.props.viewState.chartIsOpen})}>
                         <div className={classNames(Styles.storyContainer, {[Styles.isMounted]: this.state.inView})} key={story.id}>
                           <Medium>
                            <div className={Styles.left}>
@@ -128,8 +128,10 @@ const StoryPanel = createReactClass({
                                   <Small>{locationBtn}</Small>
                                   {story.title && story.title.length > 0 ? <h3>{story.title}</h3> : <h3> untitled scene </h3>}
                                   <Small>{exitBtn}</Small>
-                                 <Medium><div className={Styles.navBtn}> {this.props.terria.stories.map((story, i)=><button title="`go to story ${i}`" type='button' key={story.id} onClick={()=>this.navigateStory(i)}> <Icon glyph={ i === this.state.currentScene ? Icon.GLYPHS.circleFull : Icon.GLYPHS.circleEmpty }/></button>)}</div>
+                                  <If condition = {this.props.terria.stories.length >=2}>
+                                    <Medium><div className={Styles.navBtn}> {this.props.terria.stories.map((story, i)=><button title="`go to story ${i}`" type='button' key={story.id} onClick={()=>this.navigateStory(i)}> <Icon glyph={ i === this.state.currentScene ? Icon.GLYPHS.circleFull : Icon.GLYPHS.circleEmpty }/></button>)}</div>
                                  </Medium>
+                                  </If>
                                </div>
                                 {story.text && <div className={Styles.body}>{parseCustomHtmlToReact(story.text)}</div>}
                             </div>

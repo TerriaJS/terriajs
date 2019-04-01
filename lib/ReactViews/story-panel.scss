@@ -20,6 +20,10 @@
   }
 }
 
+.isPushedUp{
+  bottom: 350px;
+}
+
 .story-container {
   &.is-mounted{
     opacity: 1;
@@ -86,6 +90,11 @@
   composes: btn from '../Sass/common/_buttons.scss';
   display: block;
   padding: $padding*0.8 $padding*1.6;
+  &:not([disabled]):hover, &:not([disabled]):focus{
+    svg{
+      fill: $color-primary;
+    }
+  }
   svg{
     fill: #888888;
     width: 20px;

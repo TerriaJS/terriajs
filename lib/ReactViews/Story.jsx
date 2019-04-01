@@ -16,7 +16,23 @@ export default class Story extends React.Component {
     this.deleteStory = this.deleteStory.bind(this);
     this.editStory = this.editStory.bind(this);
     this.recaptureStory = this.recaptureStory.bind(this);
+    this.hideList = this.hideList.bind(this);
   }
+    /* eslint-disable-next-line camelcase */
+  UNSAFE_componentWillMount() {
+      document.body.addEventListener('click', ()=>this.hideList)
+  }
+
+  componentWillUnmount() {
+      document.body.removeEventListener('click', ()=>this.hideList)
+  }
+
+  hideList(){
+    this.setState({
+      menuOpen: false
+    })
+  }
+
   getTruncatedContent(text) {
     const content = parseCustomHtmlToReact(text);
     if(content) {
@@ -37,14 +53,16 @@ export default class Story extends React.Component {
     }); 
   }
 
-  viewStory() {
+  viewStory(event) {
+    event.stopPropagation();
     this.props.viewStory(this.props.story);
     this.setState({
       menuOpen: false
     });
   }
 
-  editStory() {
+  editStory(event) {
+    event.stopPropagation();
     this.props.editStory(this.props.story);
     this.setState({
       menuOpen: false
@@ -52,7 +70,8 @@ export default class Story extends React.Component {
 
   }
 
-  recaptureStory() {
+  recaptureStory(event) {
+   event.stopPropagation();
    this.props.recaptureStory(this.props.story);
    this.setState({
       menuOpen: false
@@ -60,7 +79,8 @@ export default class Story extends React.Component {
 
   }
 
-  deleteStory() {
+  deleteStory(event) {
+    event.stopPropagation();
     this.props.deleteStory(this.props.story);
     this.setState({
       menuOpen: false
