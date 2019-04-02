@@ -39,8 +39,8 @@ const StoryBuilder = createReactClass({
     },
 
     removeStory(index, story) {
-        this.props.terria.stories = this.props.terria.stories.filter(st => st.id !== story.id);
-      if(index <= this.props.viewState.currentStoryId) {
+      this.props.terria.stories = this.props.terria.stories.filter(st => st.id !== story.id);
+      if(index < this.props.viewState.currentStoryId) {
         this.props.viewState.currentStoryId -= 1;
       }
     },
@@ -87,9 +87,6 @@ const StoryBuilder = createReactClass({
     },
 
    viewStory(index, story) {
-      if(story.shareData) {
-        activateStory(story, this.props.terria)
-      }
       this.props.viewState.currentStoryId = index;
       this.runStories();
    },

@@ -46,11 +46,17 @@ const StoryPanel = createReactClass({
 
     getInitialState() {
         return {
-           currentScene: 0, 
            inView: false
         };
     },
-    
+    /* eslint-disable-next-line camelcase */
+  UNSAFE_componentWillMount() {
+    const stories = this.props.terria.stories || [];
+    if(this.props.viewState.currentStoryId > stories.length - 1 || this.props.viewState.currentStoryId < 0) {
+      this.props.viewState.currentStoryId = 0;
+    }
+    this.activateStory(stories[this.props.viewState.currentStoryId]);
+  },    
     componentDidMount() {
         this.slideIn();
         this.escKeyListener = e => {
@@ -90,12 +96,9 @@ const StoryPanel = createReactClass({
         } else if(index >= this.props.terria.stories.length) {
           index = 0;
         }
-        if (index !== this.state.currentScene) {
-          this.setState({ 
-            currentScene: index
-          });
-          this.props.viewState.currentStoryId = index;
-          if (index< (this.props.terria.stories || []).length) {
+        if (index !== this.props.viewState.currentStoryId) {
+            this.props.viewState.currentStoryId = index;
+          if (index < (this.props.terria.stories || []).length) {
               this.activateStory(this.props.terria.stories[index]);
           }
       }
@@ -114,11 +117,11 @@ const StoryPanel = createReactClass({
     },
    
     goToPrevStory() {
-      this.navigateStory(this.state.currentScene - 1);
+      this.navigateStory(this.props.viewState.currentStoryId - 1);
     },
 
     goToNextStory() {
-      this.navigateStory(this.state.currentScene + 1);
+      this.navigateStory(this.props.viewState.currentStoryId + 1);
     },
 
     exitStory() {
@@ -127,7 +130,8 @@ const StoryPanel = createReactClass({
     },
 
     render() {
-      const story= this.props.terria.stories[this.props.viewState.currentStoryId];
+      const stories = this.props.terria.stories || [];
+      const story= stories[this.props.viewState.currentStoryId];
       const locationBtn = <button className ={Styles.locationBtn} title='center scene' onClick = {this.onCenterScene.bind(this, story)}><Icon glyph ={Icon.GLYPHS.location}/></button>;
       const exitBtn = <button className={Styles.exitBtn} title="exit story" onClick={this.slideOut}><Icon glyph={Icon.GLYPHS.close}/></button>;
         return (
@@ -146,7 +150,7 @@ const StoryPanel = createReactClass({
                                   {story.title && story.title.length > 0 ? <h3>{story.title}</h3> : <h3> untitled scene </h3>}
                                   <Small>{exitBtn}</Small>
                                   <If condition = {this.props.terria.stories.length >=2}>
-                                    <Medium><div className={Styles.navBtn}> {this.props.terria.stories.map((story, i)=><button title={`go to story ${story.title}`} type='button' key={story.id} onClick={()=>this.navigateStory(i)}> <Icon glyph={ i === this.state.currentScene ? Icon.GLYPHS.circleFull : Icon.GLYPHS.circleEmpty }/></button>)}</div>
+                                    <Medium><div className={Styles.navBtn}> {stories.map((story, i)=><button title={`go to story ${story.title}`} type='button' key={story.id} onClick={()=>this.navigateStory(i)}> <Icon glyph={ i === this.props.viewState.currentStoryId ? Icon.GLYPHS.circleFull : Icon.GLYPHS.circleEmpty }/></button>)}</div>
                                  </Medium>
                                   </If>
                                </div>
