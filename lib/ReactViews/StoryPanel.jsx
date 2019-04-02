@@ -9,14 +9,29 @@ import Icon from "./Icon.jsx";
 import { Swipeable } from 'react-swipeable';
 import Styles from './story-panel.scss';
 
-
-const buildPath = function(item) {
-      if(!item.parent){
+// given a nowviewing item, build its path in the data catalog
+export function buildPath(item) {
+      if(!item.parent) {
         return item.name;
       }
       return buildPath(item.parent) + '/' +  item.name;
  }
 
+export function activateStory(story, terria) {
+     if(story.shareData) {
+        terria.updateFromStartData(story.shareData).then(()=>{
+        const sharedCatalogMembers = story.shareData.initSources[2].sharedCatalogMembers || story.shareData.initSources[1].sharedCatalogMembers;
+        const nowViewingPaths = Object.keys(sharedCatalogMembers);
+        const nowViewing = terria.nowViewing.items;
+        nowViewing.slice().forEach(item=>{
+          const path = buildPath(item);
+          if(nowViewingPaths.indexOf(path) < 0) {
+            item.isEnabled = false;
+          } 
+        });
+      });
+    }
+}
 
 const StoryPanel = createReactClass({
     displayName: 'StoryPanel',
@@ -36,11 +51,6 @@ const StoryPanel = createReactClass({
         };
     },
     
-    /* eslint-disable-next-line camelcase */
-    UNSAFE_componentWillMount() {
-        this.activateStory();
-    },
-
     componentDidMount() {
         this.slideIn();
         this.escKeyListener = e => {
@@ -92,24 +102,13 @@ const StoryPanel = createReactClass({
 
     // This is in StoryPanel and StoryBuilder
     activateStory(_story) {
-        const story = _story? _story : this.props.terria.stories[0];
-        this.onCenterScene(story);
+      const story = _story? _story : this.props.terria.stories[0];
+      activateStory(story, this.props.terria);
     },
 
     onCenterScene(story) {
-      const that = this;
       if(story.shareData) {
-        this.props.terria.updateFromStartData(story.shareData).then(()=>{
-        const sharedCatalogMembers = story.shareData.initSources[2].sharedCatalogMembers || story.shareData.initSources[1].sharedCatalogMembers;
-        const nowViewingPaths = Object.keys(sharedCatalogMembers);
-        const nowViewing = that.props.terria.nowViewing.items;
-          nowViewing.forEach(item=>{
-            const path = buildPath(item);
-            if(nowViewingPaths.indexOf(path) < 0) {
-              item.isEnabled = false;
-            } 
-          });
-        });
+        this.props.terria.updateFromStartData(story.shareData);
       }
     },
    

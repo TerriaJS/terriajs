@@ -8,6 +8,7 @@ import Icon from "./Icon.jsx";
 import Story from './Story.jsx';
 import StoryEditor from './StoryEditor.jsx';
 import uniqid from 'uniqid';
+import { activateStory } from './StoryPanel.jsx';
 
 import Styles from './story-builder.scss';
 
@@ -72,11 +73,10 @@ const StoryBuilder = createReactClass({
     },
 
    viewStory(story) {
-       this.props.terria.nowViewing.removeAll();
-       if (story.shareData) {
-            this.props.terria.updateFromStartData(story.shareData);
-        }       
-       this.runStories();
+      if(story.shareData) {
+        activateStory(story, this.props.terria)
+      }
+      this.runStories();
    },
     
      renderIntro() {
