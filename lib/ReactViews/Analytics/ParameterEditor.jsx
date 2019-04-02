@@ -18,6 +18,7 @@ import BooleanParameterEditor from './BooleanParameterEditor';
 import DateTimeParameterEditor from './DateTimeParameterEditor';
 import EnumerationParameterEditor from './EnumerationParameterEditor';
 import GenericParameterEditor from './GenericParameterEditor';
+import GeoJsonParameterEditor from './GeoJsonParameterEditor';
 import defined from 'terriajs-cesium/Source/Core/defined';
 
 import Styles from './parameter-editors.scss';
@@ -225,6 +226,21 @@ ParameterEditor.parameterTypeConverters = [
                                     parameterViewModel={parameterEditor.props.parameterViewModel}
                                 />
                             </div>);
+            }
+        }
+    },
+    {
+        id: 'geojson',
+        parameterTypeToDiv: function GeoJsonParameterToDiv(type, parameterEditor) {
+            if (type === this.id) {
+                return (<div>
+                            {parameterEditor.renderLabel()}
+                             <GeoJsonParameterEditor
+                                previewed={parameterEditor.props.previewed}
+                                viewState={parameterEditor.props.viewState}
+                                parameter={parameterEditor.props.parameter}
+                             />
+                        </div>);
             }
         }
     },

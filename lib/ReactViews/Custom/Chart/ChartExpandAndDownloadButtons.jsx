@@ -191,8 +191,13 @@ function expand(props, sourceIndex) {
         if (existingIndex >= 0) {
             // First, keep a copy of the active items and colors used, so we can keep them the same with the new chart.
             const oldCatalogItem = group.items[existingIndex];
-            activeConcepts = oldCatalogItem.tableStructure.columns.map(column => column.isActive);
-            existingColors = oldCatalogItem.tableStructure.columns.map(column => column.color);
+            if (defined(oldCatalogItem.tableStructure) && defined(oldCatalogItem.tableStructure.columns)) {
+                activeConcepts = oldCatalogItem.tableStructure.columns.map(column => column.isActive);
+                existingColors = oldCatalogItem.tableStructure.columns.map(column => column.color);
+            } else {
+                activeConcepts = undefined;
+                existingColors = undefined;
+            }
             oldCatalogItem.isEnabled = false;
             group.remove(oldCatalogItem);
         }

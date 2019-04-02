@@ -1,5 +1,6 @@
 import React from 'react';
 import createReactClass from 'create-react-class';
+import dateFormat from 'dateformat';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import PropTypes from 'prop-types';
@@ -31,7 +32,8 @@ const DateTimePicker = createReactClass({
         isOpen: PropTypes.bool.isRequired,
         onOpen: PropTypes.func.isRequired,
         onClose: PropTypes.func.isRequired,
-        showCalendarButton: PropTypes.bool
+        showCalendarButton: PropTypes.bool,
+        dateFormat: PropTypes.object,
     },
 
     getDefaultProps() {
@@ -206,7 +208,7 @@ const DateTimePicker = createReactClass({
             return (
                 <div className={Styles.grid}>
                     <div className={Styles.gridHeading}>Select a time</div>
-                    <div className={Styles.gridBody}>{items.map(item => <button key={formatDateTime(item)} className={Styles.dateBtn} onClick={() => { this.closePicker(item); this.props.onChange(item); }}>{formatDateTime(item)}</button>)}</div>
+                    <div className={Styles.gridBody}>{items.map(item => <button key={formatDateTime(item)} className={Styles.dateBtn} onClick={() => { this.closePicker(item); this.props.onChange(item); }}>{defined(this.props.dateFormat) ? dateFormat(item, this.props.dateFormat.currentTime) : formatDateTime(item)}</button>)}</div>
                 </div>
             );
         }

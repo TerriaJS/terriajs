@@ -100,7 +100,7 @@ const ChartPanel = createReactClass({
                         <div className={Styles.body}>
                             <div className={Styles.header}>
                                 <label className={Styles.sectionLabel}>{loader || 'Charts'}</label>
-                                <ChartPanelDownloadButton chartableItems={this.props.terria.catalog.chartableItems} errorEvent={this.props.terria.error} />
+                                <ChartPanelDownloadButton chartableItems={this.props.terria.catalog.chartableItems} />
                                 <button type='button' className={Styles.btnCloseChartPanel} onClick={this.closePanel}>
                                     <Icon glyph={Icon.GLYPHS.close}/>
                                 </button>
