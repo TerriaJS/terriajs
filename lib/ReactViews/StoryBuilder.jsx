@@ -12,6 +12,17 @@ import { activateStory } from './StoryPanel.jsx';
 
 import Styles from './story-builder.scss';
 
+function array_move(arr, old_index, new_index) {
+    if (new_index >= arr.length) {
+        var k = new_index - arr.length + 1;
+        while (k--) {
+            arr.push(undefined);
+        }
+    }
+    arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
+    return arr; // for testing
+};
+
 const StoryBuilder = createReactClass({
     displayName: 'StoryBuilder',
     mixins: [ObserveModelMixin],
@@ -82,6 +93,16 @@ const StoryBuilder = createReactClass({
       this.props.viewState.currentStoryId = index;
       this.runStories();
    },
+   
+  moveUp(index, story) {
+    const stories = this.props.terria.stories || [];
+    this.props.terria.stories = array_move(stories, index, index-1);
+  },
+
+  moveDown(index, story) {
+    const stories = this.props.terria.stories || [];
+    this.props.terria.stories = array_move(stories, index, index+1);
+  },
     
      renderIntro() {
       return (<div className={Styles.intro}><Icon glyph={Icon.GLYPHS.story}/> <strong>This is your story editor</strong><div className={Styles.instructions}>
@@ -89,7 +110,8 @@ const StoryBuilder = createReactClass({
     },
 
     renderStories() {
-      return <div className={Styles.stories}>{this.props.terria.stories.map((story, i)=><Story key={story.id} story={story} deleteStory={this.removeStory.bind(this, i)} recaptureStory={this.captureStory} viewStory={this.viewStory.bind(this, i)} editStory={this.editStory}/>)}</div>; 
+      const stories = this.props.terria.stories || [];
+      return <div className={Styles.stories}>{stories.map((story, i)=><Story key={story.id} story={story} moveDown={i < stories.length-1 ? this.moveDown.bind(this, i) : undefined} moveUp = {i > 0? this.moveUp.bind(this, i) : undefined} deleteStory={this.removeStory.bind(this, i)} recaptureStory={this.captureStory} viewStory={this.viewStory.bind(this, i)} editStory={this.editStory}/>)}</div>; 
       },
 
     onClickCapture() {

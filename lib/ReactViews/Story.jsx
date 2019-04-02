@@ -17,6 +17,8 @@ export default class Story extends React.Component {
     this.editStory = this.editStory.bind(this);
     this.recaptureStory = this.recaptureStory.bind(this);
     this.hideList = this.hideList.bind(this);
+    this.moveUp = this.moveUp.bind(this);
+    this.moveDown = this.moveDown.bind(this);
   }
     /* eslint-disable-next-line camelcase */
   UNSAFE_componentWillMount() {
@@ -78,6 +80,18 @@ export default class Story extends React.Component {
     this.hideList();
   }
 
+  moveUp(event) {
+    event.stopPropagation();
+    this.props.moveUp();
+    this.hideList();
+  }
+
+  moveDown(event) {
+    event.stopPropagation();
+    this.props.moveDown();
+    this.hideList();
+  }
+
   renderMenu() {
     return (<div className={Styles.menu}>
                <ul className={Styles.menuInner}>
@@ -85,6 +99,8 @@ export default class Story extends React.Component {
                   <li><button className={Styles.menuBtn} type='button' title='edit' onClick={this.editStory}>Edit</button></li>
                   <li><button className={Styles.menuBtn} type='button' title='recapture' onClick={this.recaptureStory}>Recapture</button></li>
                   <li><button className={Styles.menuBtn} type='button' title='delete' onClick={this.deleteStory}>Delete</button></li>
+                 {this.props.moveUp && <li><button className={Styles.menuBtn} type='button' title='move up' onClick={this.moveUp}>Move up</button></li>}
+                 {this.props.moveDown && <li><button className={Styles.menuBtn} type='button' title='move down' onClick={this.moveDown}>Move down</button></li>}
                </ul>
       </div>);
   }
@@ -110,5 +126,7 @@ Story.propTypes ={
   editStory: PropTypes.func,
   viewStory: PropTypes.func, 
   deleteStory: PropTypes.func,
-  recaptureStory: PropTypes.func
+  recaptureStory: PropTypes.func,
+  moveUp: PropTypes.func,
+  moveDown: PropTypes.func
 };
