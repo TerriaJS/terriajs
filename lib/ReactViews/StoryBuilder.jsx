@@ -27,8 +27,11 @@ const StoryBuilder = createReactClass({
         };
     },
 
-    removeStory(story) {
+    removeStory(index, story) {
         this.props.terria.stories = this.props.terria.stories.filter(st => st.id !== story.id);
+      if(index <= this.props.viewState.currentStoryId) {
+        this.props.viewState.currentStoryId -= 1;
+      }
     },
     onSave(_story) {
       const story = {
@@ -72,10 +75,11 @@ const StoryBuilder = createReactClass({
           });
     },
 
-   viewStory(story) {
+   viewStory(index, story) {
       if(story.shareData) {
         activateStory(story, this.props.terria)
       }
+      this.props.viewState.currentStoryId = index;
       this.runStories();
    },
     
@@ -85,7 +89,7 @@ const StoryBuilder = createReactClass({
     },
 
     renderStories() {
-      return <div className={Styles.stories}>{this.props.terria.stories.map(story=><Story key={story.id} story={story} deleteStory={this.removeStory} recaptureStory={this.captureStory} viewStory={this.viewStory} editStory={this.editStory}/>)}</div>; 
+      return <div className={Styles.stories}>{this.props.terria.stories.map((story, i)=><Story key={story.id} story={story} deleteStory={this.removeStory.bind(this, i)} recaptureStory={this.captureStory} viewStory={this.viewStory.bind(this, i)} editStory={this.editStory}/>)}</div>; 
       },
 
     onClickCapture() {

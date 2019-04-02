@@ -94,6 +94,7 @@ const StoryPanel = createReactClass({
           this.setState({ 
             currentScene: index
           });
+          this.props.viewState.currentStoryId = index;
           if (index< (this.props.terria.stories || []).length) {
               this.activateStory(this.props.terria.stories[index]);
           }
@@ -126,7 +127,7 @@ const StoryPanel = createReactClass({
     },
 
     render() {
-      const story= this.props.terria.stories[this.state.currentScene];
+      const story= this.props.terria.stories[this.props.viewState.currentStoryId];
       const locationBtn = <button className ={Styles.locationBtn} title='center scene' onClick = {this.onCenterScene.bind(this, story)}><Icon glyph ={Icon.GLYPHS.location}/></button>;
       const exitBtn = <button className={Styles.exitBtn} title="exit story" onClick={this.slideOut}><Icon glyph={Icon.GLYPHS.close}/></button>;
         return (
