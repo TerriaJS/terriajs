@@ -85,6 +85,9 @@
   font-size: 1rem;
   max-height: 400px;
   overflow-y: auto;
+  img{
+    max-width: 100%;
+  }
 }
 
 .locationBtn, .exitBtn,  .nextBtn, .previousBtn {
