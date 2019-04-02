@@ -5,6 +5,7 @@ Change Log
 
 * Added `hideLayerAfterMinScaleDenominator` property to `WebMapServiceCatalogItem`. When true, TerriaJS will show a message and display nothing rather than silently show a scaled-up version of the layer when the user zooms in past the layer's advertised `MinScaleDenominator`.
 * Added `GeoJsonParameterEditor`.
+* Fixed a bug that resulted in blank titles for catalog groups loaded from automatically detected (WMS) servers
 
 ### v7.1.0
 
