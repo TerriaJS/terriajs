@@ -5,14 +5,12 @@ import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import Color from "terriajs-cesium/Source/Core/Color";
 import ColorMaterialProperty from "terriajs-cesium/Source/DataSources/ColorMaterialProperty";
 import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
-import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import EntityCollection from "terriajs-cesium/Source/DataSources/EntityCollection";
 import GeoJsonCatalogItemTraits from "../Traits/GeoJsonCatalogItemTraits";
 import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
-import GetCapabilitiesMixin from "../ModelMixins/GetCapabilitiesMixin";
 import isDefined from "../Core/isDefined";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import LoadableStratum from "./LoadableStratum";
@@ -376,27 +374,6 @@ export default class GeoJsonCatalogItem
             return dataSource;
         });
     }
-}
-
-function nameIsDerivedFromUrl(name: string, url?: string) {
-    if (name === url) {
-        return true;
-    }
-
-    if (!url) {
-        return false;
-    }
-
-    // Is the name just the end of the URL?
-    var indexOfNameInUrl = url.lastIndexOf(name);
-    if (
-        indexOfNameInUrl >= 0 &&
-        indexOfNameInUrl === url.length - name.length
-    ) {
-        return true;
-    }
-
-    return false;
 }
 
 function reprojectToGeographic(geoJson: any, proj4ServiceBaseUrl?: string) {
