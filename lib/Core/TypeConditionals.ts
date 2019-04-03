@@ -11,7 +11,7 @@ export type If<C extends boolean, Then, Else> = [C] extends [true] ? Then : Else
 export type And<A extends boolean, B extends boolean> = [A] extends [true] ? ([B] extends [true] ? true : false) : false;
 
 /**
- * Resolves to `true` if either conditionals are `true`, or `false` if both are `false`.
+ * Resolves to `true` if any of the provided conditionals are `true`, or `false` if all are `false`.
  */
 export type Or<
     A extends boolean,
@@ -62,7 +62,7 @@ type ReadonlyKeys<T> = {
 }[keyof T];
 
 /**
- * Resolves to `true` if `T` is ann `Array`; otherwise, `false`.
+ * Resolves to `true` if `T` is an `Array`; otherwise, `false`.
  */
 export type IsWritableArray<T> = Extends<T, Array<any>>;
 
