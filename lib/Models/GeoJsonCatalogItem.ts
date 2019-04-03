@@ -29,22 +29,21 @@ import when from "terriajs-cesium/Source/ThirdParty/when";
 import Terria from "./Terria";
 import LoadGeoJsonMixin from "../ModelMixins/LoadGeoJsonMixin";
 
-var formatPropertyValue = require("../Core/formatPropertyValue");
-var hashFromString = require("../Core/hashFromString");
-var loadBlob = require("../Core/loadBlob");
-var loadJson = require("../Core/loadJson");
-var proxyCatalogItemUrl = require("./proxyCatalogItemUrl");
-var readJson = require("../Core/readJson");
-var Reproject = require("../Map/Reproject");
-var standardCssColors = require("../Core/standardCssColors");
-var zip = require("terriajs-cesium/Source/ThirdParty/zip");
+const formatPropertyValue = require("../Core/formatPropertyValue");
+const hashFromString = require("../Core/hashFromString");
+const loadBlob = require("../Core/loadBlob");
+const loadJson = require("../Core/loadJson");
+const proxyCatalogItemUrl = require("./proxyCatalogItemUrl");
+const Reproject = require("../Map/Reproject");
+const standardCssColors = require("../Core/standardCssColors");
+const zip = require("terriajs-cesium/Source/ThirdParty/zip");
 
 type Coordinates = number[];
 
-var zipFileRegex = /.zip\b/i;
-var geoJsonRegex = /.geojson\b/i;
+const zipFileRegex = /.zip\b/i;
+const geoJsonRegex = /.geojson\b/i;
 
-var simpleStyleIdentifiers = [
+const simpleStyleIdentifiers = [
     "title",
     "description", //
     "marker-size",
@@ -132,8 +131,8 @@ class LoadGeoJsonStratum extends LoadableStratum(GeoJsonCatalogItemTraits) {
         // If this GeoJSON data is an object literal with a single property, treat that
         // property as the name of the data source, and the property's value as the
         // actual GeoJSON.
-        var numProperties = 0;
-        var propertyName;
+        let numProperties = 0;
+        let propertyName;
         for (propertyName in geoJson) {
             if (geoJson.hasOwnProperty(propertyName)) {
                 ++numProperties;
@@ -143,7 +142,7 @@ class LoadGeoJsonStratum extends LoadableStratum(GeoJsonCatalogItemTraits) {
             }
         }
 
-        var name;
+        let name;
         if (numProperties === 1 && isDefined(propertyName)) {
             name = propertyName;
             geoJson = geoJson[propertyName];
@@ -219,7 +218,7 @@ export default class GeoJsonCatalogItem
             name: string
         ): Color {
             if (colorString === undefined) {
-                var color = Color.fromCssColorString(
+                const color = Color.fromCssColorString(
                     getRandomCssColor(standardCssColors.highContrast, name)
                 );
                 color.alpha = 1;
@@ -238,7 +237,7 @@ export default class GeoJsonCatalogItem
         }
 
         function parseMarkerSize(sizeString?: string): number | undefined {
-            var sizes: { [name: string]: number } = {
+            const sizes: { [name: string]: number } = {
                 small: 24,
                 medium: 48,
                 large: 64
@@ -254,9 +253,9 @@ export default class GeoJsonCatalogItem
             return parseInt(sizeString, 10); // SimpleStyle doesn't allow 'marker-size: 20', but people will do it.
         }
 
-        var style = defaultValue(this.style, {});
+        const style = defaultValue(this.style, {});
 
-        var options = {
+        const options = {
             describe: describeWithoutUnderscores,
             markerSize: defaultValue(parseMarkerSize(style["marker-size"]), 20),
             markerSymbol: style["marker-symbol"], // and undefined if none
@@ -283,12 +282,12 @@ export default class GeoJsonCatalogItem
             dataSource
         ) {
             const entities = dataSource.entities;
-            for (var i = 0; i < entities.values.length; ++i) {
-                var entity = entities.values[i];
+            for (let i = 0; i < entities.values.length; ++i) {
+                const entity = entities.values[i];
 
                 /* If no marker symbol was provided but Cesium has generated one for a point, then turn it into
                a filled circle instead of the default marker. */
-                var properties = entity.properties || {};
+                const properties = entity.properties || {};
                 if (
                     isDefined(entity.billboard) &&
                     !isDefined(properties["marker-symbol"]) &&
@@ -357,11 +356,11 @@ export default class GeoJsonCatalogItem
                         );
                     }
 
-                    var hierarchy: PolygonHierarchy = getPropertyValue(
+                    const hierarchy: PolygonHierarchy = getPropertyValue(
                         entity.polygon.hierarchy
                     );
 
-                    var positions = hierarchy.positions;
+                    const positions = hierarchy.positions;
                     closePolyline(positions);
 
                     entity.polyline.positions = new ConstantProperty(positions);
@@ -401,7 +400,7 @@ function nameIsDerivedFromUrl(name: string, url?: string) {
 }
 
 function reprojectToGeographic(geoJson: any, proj4ServiceBaseUrl?: string) {
-    var code: string | undefined;
+    let code: string | undefined;
 
     if (!isDefined(geoJson.crs)) {
         code = undefined;
@@ -451,8 +450,8 @@ function reprojectPointList(
     if (!(pts[0] instanceof Array)) {
         return Reproject.reprojectPoint(pts, code, "EPSG:4326");
     }
-    var pts_out = [];
-    for (var i = 0; i < pts.length; i++) {
+    const pts_out = [];
+    for (let i = 0; i < pts.length; i++) {
         pts_out.push(Reproject.reprojectPoint(pts[i], code, "EPSG:4326"));
     }
     return pts_out;
@@ -464,7 +463,7 @@ function filterValue(
     prop: string,
     func: (obj: any, prop: string) => void
 ) {
-    for (var p in obj) {
+    for (let p in obj) {
         if (obj.hasOwnProperty(p) === false) {
             continue;
         } else if (p === prop) {
@@ -487,8 +486,8 @@ function filterArray(
         return pts;
     }
 
-    var result = new Array(pts.length);
-    for (var i = 0; i < pts.length; i++) {
+    const result = new Array(pts.length);
+    for (let i = 0; i < pts.length; i++) {
         result[i] = filterArray(pts[i], func); //at array of arrays of points
     }
     return result;
@@ -504,7 +503,7 @@ function getJson(entry: any, deferred: any) {
  * Get a random color for the data based on the passed string (usually dataset name).
  */
 function getRandomCssColor(cssColors: string[], name: string): string {
-    var index = hashFromString(name || "") % cssColors.length;
+    const index = hashFromString(name || "") % cssColors.length;
     return cssColors[index];
 }
 
@@ -513,8 +512,8 @@ function describeWithoutUnderscores(
     properties: any,
     nameProperty?: string
 ): string {
-    var html = "";
-    for (var key in properties) {
+    let html = "";
+    for (let key in properties) {
         if (properties.hasOwnProperty(key)) {
             if (
                 key === nameProperty ||
@@ -522,7 +521,7 @@ function describeWithoutUnderscores(
             ) {
                 continue;
             }
-            var value = properties[key];
+            let value = properties[key];
             if (typeof value === "object") {
                 value = describeWithoutUnderscores(value);
             } else {
@@ -551,7 +550,7 @@ function polygonHasWideOutline(polygon: PolygonGraphics) {
 }
 
 function polygonIsFilled(polygon: PolygonGraphics) {
-    var fill = true;
+    let fill = true;
     if (isDefined(polygon.fill)) {
         fill = polygon.fill;
     }
@@ -603,7 +602,7 @@ function createEntitiesFromHoles(
         return;
     }
 
-    for (var i = 0; i < holes.length; ++i) {
+    for (let i = 0; i < holes.length; ++i) {
         createEntityFromHole(entityCollection, holes[i], mainEntity);
     }
 }
@@ -621,7 +620,7 @@ function createEntityFromHole(
         return;
     }
 
-    var entity = new Entity();
+    const entity = new Entity();
 
     entity.name = mainEntity.name;
     entity.availability = mainEntity.availability;
@@ -647,15 +646,15 @@ function getPropertyValue<T>(property: Property): T {
 
 function loadZipFile(url: string) {
     return loadBlob(url).then(function(blob: Blob) {
-        var deferred = when.defer();
+        let deferred = when.defer();
         zip.createReader(
             new zip.BlobReader(blob),
             function(reader: any) {
                 // Look for a file with a .geojson extension.
                 reader.getEntries(function(entries: any) {
-                    var resolved = false;
-                    for (var i = 0; i < entries.length; i++) {
-                        var entry = entries[i];
+                    let resolved = false;
+                    for (let i = 0; i < entries.length; i++) {
+                        const entry = entries[i];
                         if (geoJsonRegex.test(entry.filename)) {
                             getJson(entry, deferred);
                             resolved = true;
