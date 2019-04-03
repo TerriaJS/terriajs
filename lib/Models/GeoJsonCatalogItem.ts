@@ -22,10 +22,10 @@ import PolygonHierarchy from "terriajs-cesium/Source/Core/PolygonHierarchy";
 import PolylineGraphics from "terriajs-cesium/Source/DataSources/PolylineGraphics";
 import Property from "terriajs-cesium/Source/DataSources/Property";
 import TerriaError from "../Core/TerriaError";
+import StratumOrder from "../Models/StratumOrder";
+import Terria from "./Terria";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import when from "terriajs-cesium/Source/ThirdParty/when";
-import Terria from "./Terria";
-import LoadGeoJsonMixin from "../ModelMixins/LoadGeoJsonMixin";
 
 const formatPropertyValue = require("../Core/formatPropertyValue");
 const hashFromString = require("../Core/hashFromString");
@@ -55,6 +55,7 @@ const simpleStyleIdentifiers = [
 ];
 
 class LoadGeoJsonStratum extends LoadableStratum(GeoJsonCatalogItemTraits) {
+
     constructor(readonly catalogItem: GeoJsonCatalogItem) {
         super();
     }
@@ -156,10 +157,8 @@ class LoadGeoJsonStratum extends LoadableStratum(GeoJsonCatalogItemTraits) {
     }
 }
 
-export default class GeoJsonCatalogItem
-    extends LoadGeoJsonMixin(
-        UrlMixin(CatalogMemberMixin(Model(GeoJsonCatalogItemTraits)))
-    )
+class GeoJsonCatalogItem
+    extends UrlMixin(CatalogMemberMixin(Model(GeoJsonCatalogItemTraits)))
     implements Mappable {
     @observable
     show: boolean = true;
@@ -170,7 +169,7 @@ export default class GeoJsonCatalogItem
     constructor(id: string, terria: Terria) {
         super(id, terria);
         this.strata.set(
-            LoadGeoJsonMixin.loadGeoJsonStratumName,
+            GeoJsonCatalogItem.loadGeoJsonStratumName,
             new LoadGeoJsonStratum(this)
         );
     }
@@ -191,7 +190,7 @@ export default class GeoJsonCatalogItem
 
     loadData(): Promise<void> {
         const loadGeoJsonStratum = <LoadGeoJsonStratum>(
-            this.strata.get(LoadGeoJsonMixin.loadGeoJsonStratumName)
+            this.strata.get(GeoJsonCatalogItem.loadGeoJsonStratumName)
         );
         return loadGeoJsonStratum
             .loadGeoJson()
@@ -374,7 +373,14 @@ export default class GeoJsonCatalogItem
             return dataSource;
         });
     }
+    }
+
+namespace GeoJsonCatalogItem {
+    export const loadGeoJsonStratumName = 'loadGeoJson';    
+    StratumOrder.addLoadStratum(loadGeoJsonStratumName);
 }
+
+export default GeoJsonCatalogItem;
 
 function reprojectToGeographic(geoJson: any, proj4ServiceBaseUrl?: string) {
     let code: string | undefined;
