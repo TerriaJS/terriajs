@@ -1,9 +1,8 @@
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import Constructor from "../Core/Constructor";
-import StratumFromTraits from "./StratumFromTraits";
 import ModelTraits from "../Traits/ModelTraits";
-import Model from "./Model";
 import TraitsConstructor from "../Traits/TraitsConstructor";
+import StratumFromTraits from "./StratumFromTraits";
 
 export default function LoadableStratum<T extends TraitsConstructor<ModelTraits>>(Traits: T): Constructor<StratumFromTraits<InstanceType<T>>> {
     abstract class LoadableStratum {
@@ -12,12 +11,12 @@ export default function LoadableStratum<T extends TraitsConstructor<ModelTraits>
     // All traits return undefined by default, and throw if set.
     const traits = Traits.traits;
     Object.keys(traits).forEach(propertyName => {
-        if (!(propertyName in Model.prototype)) {
-            Object.defineProperty(Model.prototype, propertyName, {
-                get: function(this: LoadableStratum) {
+        if (!(propertyName in LoadableStratum.prototype)) {
+            Object.defineProperty(LoadableStratum.prototype, propertyName, {
+                get: function() {
                     return undefined;
                 },
-                set: function(this: LoadableStratum) {
+                set: function(value: any) {
                     throw new DeveloperError('Traits of a LoadableStratum may not be set.');
                 },
                 enumerable: true,

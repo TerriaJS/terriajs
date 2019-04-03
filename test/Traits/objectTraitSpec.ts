@@ -2,7 +2,7 @@ import { configure, runInAction, autorun } from 'mobx';
 import primitiveTrait from '../../lib/Traits/primitiveTrait';
 import objectTrait from '../../lib/Traits/objectTrait';
 import ModelTraits from '../../lib/Traits/ModelTraits';
-import Model from '../../lib/Models/Model';
+import CreateModel from '../../lib/Models/CreateModel';
 import Terria from '../../lib/Models/Terria';
 import createStratumInstance from '../../lib/Models/createStratumInstance';
 
@@ -43,7 +43,7 @@ class OuterTraits extends ModelTraits {
     inner?: InnerTraits;
 }
 
-class TestModel extends Model(OuterTraits) {
+class TestModel extends CreateModel(OuterTraits) {
 
 }
 

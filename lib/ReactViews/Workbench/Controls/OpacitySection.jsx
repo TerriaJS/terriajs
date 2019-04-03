@@ -7,8 +7,7 @@ import Slider from 'rc-slider';
 import React from 'react';
 import CommonStrata from '../../../Models/CommonStrata';
 import hasTraits from '../../../Models/hasTraits';
-import mixRasterLayerTraits from '../../../Traits/mixRasterLayerTraits';
-import ModelTraits from '../../../Traits/ModelTraits';
+import RasterLayerTraits from '../../../Traits/RasterLayerTraits';
 import Styles from './opacity-section.scss';
 
 
@@ -21,14 +20,14 @@ const OpacitySection = observer(createReactClass({
 
     changeOpacity(value) {
         const item = this.props.item;
-        if (hasTraits(item, mixRasterLayerTraits(ModelTraits), 'opacity')) {
+        if (hasTraits(item, RasterLayerTraits, 'opacity')) {
             item.setTrait(CommonStrata.user, 'opacity', value / 100.0);
         }
     },
 
     render() {
         const item = this.props.item;
-        if (!hasTraits(item, mixRasterLayerTraits(ModelTraits), 'opacity') || item.opacity === undefined) {
+        if (!hasTraits(item, RasterLayerTraits, 'opacity') || item.opacity === undefined) {
             return null;
         }
         return (

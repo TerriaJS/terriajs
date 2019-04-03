@@ -1,9 +1,9 @@
 import CatalogMemberMixin from '../ModelMixins/CatalogMemberMixin';
 import GroupMixin from '../ModelMixins/GroupMixin';
 import CatalogGroupTraits from '../Traits/CatalogGroupTraits';
-import Model from './Model';
+import CreateModel from './CreateModel';
 
-export default class CatalogGroup extends GroupMixin(CatalogMemberMixin(Model(CatalogGroupTraits))) {
+export default class CatalogGroup extends GroupMixin(CatalogMemberMixin(CreateModel(CatalogGroupTraits))) {
     get type() {
         return 'group';
     }

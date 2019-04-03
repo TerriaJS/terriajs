@@ -1,15 +1,10 @@
 import { action, computed } from "mobx";
 import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
-import { BaseModel, ModelInterface } from "../Models/Model";
-import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
-import mixGroupTraits from "../Traits/mixGroupTraits";
-import ModelTraits from "../Traits/ModelTraits";
+import Model, { BaseModel } from "../Models/Model";
+import GroupTraits from "../Traits/GroupTraits";
 
-class RequiredTraits extends mixGroupTraits(ModelTraits) {
-}
-
-function GroupMixin<T extends Constructor<ModelInterface<RequiredTraits> & ModelPropertiesFromTraits<RequiredTraits>>>(Base: T) {
+function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
     class GroupMixin extends Base {
         get isGroup() {
             return true;
@@ -20,7 +15,6 @@ function GroupMixin<T extends Constructor<ModelInterface<RequiredTraits> & Model
             if (members === undefined) {
                 return [];
             }
-            members;
             return filterOutUndefined(members.map(id => this.terria.getModelById(BaseModel, id)));
         }
 

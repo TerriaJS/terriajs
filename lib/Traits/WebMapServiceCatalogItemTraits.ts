@@ -1,11 +1,12 @@
-import mixCatalogMemberTraits from './mixCatalogMemberTraits';
-import primitiveTrait from './primitiveTrait';
+import CatalogMemberTraits from './CatalogMemberTraits';
+import GetCapabilitiesTraits from './GetCapabilitiesTraits';
+import mixTraits from './mixTraits';
 import ModelTraits from './ModelTraits';
-import mixUrlTraits from './mixUrlTraits';
-import mixGetCapabilitiesTraits from './mixGetCapabilitiesTraits';
-import mixRasterLayerTraits from './mixRasterLayerTraits';
-import objectTrait from './objectTrait';
 import objectArrayTrait from './objectArrayTrait';
+import objectTrait from './objectTrait';
+import primitiveTrait from './primitiveTrait';
+import RasterLayerTraits from './RasterLayerTraits';
+import UrlTraits from './UrlTraits';
 
 export class LegendTraits extends ModelTraits {
     @primitiveTrait({
@@ -70,7 +71,12 @@ export class WebMapServiceAvailableLayerStylesTraits extends ModelTraits {
     styles?: WebMapServiceAvailableStyleTraits[];
 }
 
-export default class WebMapServiceCatalogItemTraits extends mixGetCapabilitiesTraits(mixRasterLayerTraits(mixUrlTraits(mixCatalogMemberTraits(ModelTraits)))) {
+export default class WebMapServiceCatalogItemTraits extends mixTraits(
+    GetCapabilitiesTraits,
+    RasterLayerTraits,
+    UrlTraits,
+    CatalogMemberTraits
+) {
     @primitiveTrait({
         type: 'string',
         name: 'Is GeoServer',

@@ -16,21 +16,20 @@ import URI from 'urijs';
 import containsAny from '../Core/containsAny';
 import isReadOnlyArray from '../Core/isReadOnlyArray';
 import TerriaError from '../Core/TerriaError';
-import StratumFromTraits from './StratumFromTraits';
 import CatalogMemberMixin from '../ModelMixins/CatalogMemberMixin';
 import GetCapabilitiesMixin from '../ModelMixins/GetCapabilitiesMixin';
 import GroupMixin from '../ModelMixins/GroupMixin';
 import UrlMixin from '../ModelMixins/UrlMixin';
-import { InfoSectionTraits } from '../Traits/mixCatalogMemberTraits';
-import WebMapServiceCatalogItemTraits, { WebMapServiceAvailableLayerStylesTraits, LegendTraits } from '../Traits/WebMapServiceCatalogItemTraits';
+import { InfoSectionTraits } from '../Traits/CatalogMemberTraits';
+import WebMapServiceCatalogItemTraits, { LegendTraits, WebMapServiceAvailableLayerStylesTraits } from '../Traits/WebMapServiceCatalogItemTraits';
 import createStratumInstance from './createStratumInstance';
 import LoadableStratum from './LoadableStratum';
 import Mappable, { ImageryParts } from './Mappable';
-import Model from './Model';
+import CreateModel from './CreateModel';
 import proxyCatalogItemUrl from './proxyCatalogItemUrl';
+import StratumFromTraits from './StratumFromTraits';
 import Terria from './Terria';
 import WebMapServiceCapabilities, { CapabilitiesLayer, CapabilitiesStyle, getRectangleFromLayer } from './WebMapServiceCapabilities';
-import ModelPropertiesFromTraits from './ModelPropertiesFromTraits';
 
 interface LegendUrl {
     url: string;
@@ -210,7 +209,7 @@ class GetCapabilitiesStratum extends LoadableStratum(WebMapServiceCatalogItemTra
     @observable intervals: any;
 }
 
-class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemberMixin(Model(WebMapServiceCatalogItemTraits)))) implements Mappable {
+class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemberMixin(CreateModel(WebMapServiceCatalogItemTraits)))) implements Mappable {
     /**
      * The collection of strings that indicate an Abstract property should be ignored.  If these strings occur anywhere
      * in the Abstract, the Abstract will not be used.  This makes it easy to filter out placeholder data like

@@ -1,17 +1,9 @@
 import { computed } from 'mobx';
 import Constructor from '../Core/Constructor';
+import Model from '../Models/Model';
+import CatalogMemberTraits from '../Traits/CatalogMemberTraits';
 
-interface RequiredDefinition {
-    nameInCatalog: string | undefined;
-}
-
-interface RequiredInstance {
-    flattened: RequiredDefinition;
-    name: string | undefined;
-    nameInCatalog: string | undefined;
-}
-
-function CatalogMemberMixin<T extends Constructor<RequiredInstance>>(Base: T) {
+function CatalogMemberMixin<T extends Constructor<Model<CatalogMemberTraits>>>(Base: T) {
     abstract class CatalogMemberMixin extends Base {
         abstract get type(): string;
 

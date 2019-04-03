@@ -9,7 +9,7 @@ import UrlMixin from '../ModelMixins/UrlMixin';
 import ModelReference from '../Traits/ModelReference';
 import WebMapServiceCatalogGroupTraits from '../Traits/WebMapServiceCatalogGroupTraits';
 import CommonStrata from './CommonStrata';
-import Model from './Model';
+import CreateModel from './CreateModel';
 import proxyCatalogItemUrl from './proxyCatalogItemUrl';
 import Terria from './Terria';
 import WebMapServiceCapabilities, { CapabilitiesLayer } from './WebMapServiceCapabilities';
@@ -127,7 +127,7 @@ class GetCapabilitiesStratum extends LoadableStratum(WebMapServiceCatalogGroupTr
     }
 }
 
-export default class WebMapServiceCatalogGroup extends GetCapabilitiesMixin(UrlMixin(GroupMixin(CatalogMemberMixin(Model(WebMapServiceCatalogGroupTraits))))) {
+export default class WebMapServiceCatalogGroup extends GetCapabilitiesMixin(UrlMixin(GroupMixin(CatalogMemberMixin(CreateModel(WebMapServiceCatalogGroupTraits))))) {
     static readonly type = 'wms-group';
 
     get type() {

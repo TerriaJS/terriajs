@@ -1,11 +1,16 @@
-import mixGroupTraits from './mixGroupTraits';
-import mixCatalogMemberTraits from './mixCatalogMemberTraits';
-import ModelTraits from './ModelTraits';
-import mixUrlTraits from './mixUrlTraits';
+import CatalogMemberTraits from './CatalogMemberTraits';
+import GetCapabilitiesTraits from './GetCapabilitiesTraits';
+import GroupTraits from './GroupTraits';
+import mixTraits from './mixTraits';
 import primitiveTrait from './primitiveTrait';
-import mixGetCapabilitiesTraits from './mixGetCapabilitiesTraits';
+import UrlTraits from './UrlTraits';
 
-export default class WebMapServiceCatalogGroupTraits extends mixGetCapabilitiesTraits(mixGroupTraits(mixUrlTraits(mixCatalogMemberTraits(ModelTraits)))) {
+export default class WebMapServiceCatalogGroupTraits extends mixTraits(
+    GetCapabilitiesTraits,
+    GroupTraits,
+    UrlTraits,
+    CatalogMemberTraits
+) {
     @primitiveTrait({
         type: 'boolean',
         name: 'Flatten',

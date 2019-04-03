@@ -1,5 +1,5 @@
-import Model, { BaseModel } from './Model';
 import 'terriajs-cesium/Source/Scene/ImageryProvider';
+import { BaseModel } from './Model';
 
 // Shouldn't this be a class?
 export interface ImageryParts {
