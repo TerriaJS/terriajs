@@ -1,4 +1,4 @@
-import { Equals, If } from "../Core/TypeConditionals";
+import { If } from "../Core/TypeConditionals";
 import { Complete, NotUndefined } from "../Core/TypeModifiers";
 import ModelTraits, { ExcludeModelTraitsHidden, IsValidSimpleTraitType } from "../Traits/ModelTraits";
 

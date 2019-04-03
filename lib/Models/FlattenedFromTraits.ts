@@ -1,5 +1,5 @@
 import { If } from "../Core/TypeConditionals";
-import { Complete, NotUndefined, CopyNull } from "../Core/TypeModifiers";
+import { Complete, CopyNull, NotUndefined } from "../Core/TypeModifiers";
 import ModelTraits, { ExcludeModelTraitsHidden, IsValidSimpleTraitType } from "../Traits/ModelTraits";
 
 type SingleTrait<TTrait> = If<
