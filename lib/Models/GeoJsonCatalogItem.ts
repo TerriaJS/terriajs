@@ -165,7 +165,7 @@ class GeoJsonCatalogItem
                 throw new TerriaError({
                     sender: this,
                     title: "Error loading GeoJSON",
-                    message: `An error occurred while loading GeoJSON object or string. This may indicate that the object or string is invalid or that it is not supported by ${
+                    message: `An error occurred while loading the GeoJSON. This may indicate that the GeoJSON is invalid or that it is not supported by ${
                         this.terria.appName
                     }. If you would like assistance or further information, please email us at <a href="mailto:${
                         this.terria.supportEmail
