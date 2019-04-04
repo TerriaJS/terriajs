@@ -133,9 +133,6 @@ class LoadGeoJsonStratum extends LoadableStratum(GeoJsonCatalogItemTraits) {
 class GeoJsonCatalogItem
     extends UrlMixin(CatalogMemberMixin(Model(GeoJsonCatalogItemTraits)))
     implements Mappable {
-    @observable
-    show: boolean = true;
-
     constructor(id: string, terria: Terria) {
         super(id, terria);
         this.strata.set(
@@ -151,7 +148,9 @@ class GeoJsonCatalogItem
         }
         // Construct a dataSource to return immediately
         const dataSource = new GeoJsonDataSource();
-        dataSource.show = this.show;
+        if (isDefined(this.show)) {
+            dataSource.show = this.show;
+        }
 
         // then, asynchronously reproject the data and load the dataSource
         const proj4ServiceBaseUrl = this.terria.configParameters

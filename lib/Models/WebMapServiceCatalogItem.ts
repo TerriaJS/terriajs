@@ -228,9 +228,6 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(OpacityMixin(UrlMixi
     readonly showsInfo = true;
 
     @observable
-    show: boolean | undefined;
-
-    @observable
     ancestors: (GroupMixin.GroupMixin & CatalogMemberMixin.CatalogMemberMixin)[] | undefined;
 
     get type() {
@@ -248,8 +245,6 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(OpacityMixin(UrlMixi
         if (this.opacity === undefined) {
             console.log('Whaaaaa... This should have a default of 0.8');
         }
-        this.show = true;
-
         autorun(() => {
             console.log(`Opacity changed to ${this.opacity}`);
         })
