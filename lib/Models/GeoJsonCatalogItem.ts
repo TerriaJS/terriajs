@@ -136,9 +136,6 @@ class GeoJsonCatalogItem
     @observable
     show: boolean = true;
 
-    @observable
-    dataSource?: GeoJsonDataSource;
-
     constructor(id: string, terria: Terria) {
         super(id, terria);
         this.strata.set(
