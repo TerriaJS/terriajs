@@ -998,6 +998,30 @@
             ],
             "nameProp": "SORTNAME"
         },
+        "ELB_2019": {
+            "layerName": "ELB_2019",
+            "server": "https://tiles.terria.io/ELB_2019/{z}/{x}/{y}.pbf",
+            "serverType": "MVT",
+            "serverMaxNativeZoom": 12,
+            "serverMinZoom": 0,
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-ELB_NAME_2019_ELB_2019.json",
+            "regionProp": "Sortname",
+            "nameProp": "Sortname",
+            "aliases": [
+              "com_elb",
+              "com_elb_name",
+              "com_elb_name_2019",
+              "divisionnm"
+            ],
+            "description": "Federal electoral divisions for 2019 election (AEC)",
+            "bbox": [
+              96.81694140799998,
+              -43.74050960300003,
+              159.10921900799997,
+              -9.142175976999999
+            ]
+          }
+        },
         "COM_ELB_NAME_2016": {
             "layerName": "FID_COM20160509_ELB",
             "server": "https://vector-tiles.terria.io/FID_COM20160509_ELB/{z}/{x}/{y}.pbf",
@@ -1006,9 +1030,7 @@
             "regionProp": "ELECT_DIV",
             "textCodes": true,
             "aliases": [
-                "divisionnm",
                 "com_elb_name_2016",
-                "com_elb_name"
             ],
             "description": "Commonwealth electoral districts (Australian Electoral Commission)",
             "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_COM20160509_ELB_ELECT_DIV.json",
