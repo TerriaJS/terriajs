@@ -135,7 +135,7 @@ const SharePanel = createReactClass({
 
     setUnshortenedUrl() {
         this.setState({
-            shareUrl: buildShareLink(this.props.terria)
+            shareUrl: buildShareLink(this.props.terria, this.props.viewState)
         });
     },
 
