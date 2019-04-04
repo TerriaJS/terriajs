@@ -1,5 +1,5 @@
 import BillboardGraphics from "terriajs-cesium/Source/DataSources/BillboardGraphics";
-import { computed, observable } from "mobx";
+import { computed, observable, toJS } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import Color from "terriajs-cesium/Source/Core/Color";
@@ -55,41 +55,46 @@ const simpleStyleIdentifiers = [
 ];
 
 class LoadGeoJsonStratum extends LoadableStratum(GeoJsonCatalogItemTraits) {
+    @observable
+    loadedGeoJson: any;
 
     constructor(readonly catalogItem: GeoJsonCatalogItem) {
         super();
     }
 
+    @computed
+    get name() {
+        if (isDefined(this.loadedGeoJson)) {
+            return unwrapSinglePropertyObject(this.loadedGeoJson).name;
+        }
+    }
+
+    @computed
+    get geoJsonData() {
+        if (isDefined(this.loadedGeoJson)) {
+            return unwrapSinglePropertyObject(this.loadedGeoJson).obj;
+        }
+    }
+
     loadGeoJson() {
         let url = this.catalogItem.url,
-            geoJsonData = this.catalogItem.geoJsonData,
             geoJsonString = this.catalogItem.geoJsonString;
         let appName = this.catalogItem.terria.appName,
             supportEmail = this.catalogItem.terria.supportEmail;
 
-        if (isDefined(geoJsonData) || isDefined(geoJsonString)) {
+        if (isDefined(geoJsonString)) {
             /* Try loading from data or string */
-            let data;
-            if (isDefined(geoJsonData)) {
-                data = geoJsonData;
-            } else if (isDefined(geoJsonString)) {
-                try {
-                    data = JSON.parse(geoJsonString);
-                } catch (e) {
-                    throw new TerriaError({
-                        sender: this,
-                        title: "Error loading GeoJSON",
-                        message: `An error occurred parsing the provided data as JSON. This may indicate that the file is invalid or that it is not supported by ${appName}. If you would like assistance or further information, please email us at <a href="mailto:${supportEmail}">${supportEmail}</a>.`
-                    });
-                }
-            }
-            return when(this.setTraitsFromData(data)).otherwise(() => {
+            try {
+                this.loadedGeoJson = JSON.parse(geoJsonString);
+            } catch (e) {
                 throw new TerriaError({
                     sender: this,
                     title: "Error loading GeoJSON",
-                    message: `An error occurred while loading GeoJSON object or string. This may indicate that the object or string is invalid or that it is not supported by ${appName}. If you would like assistance or further information, please email us at <a href="mailto:${supportEmail}">${supportEmail}</a>.`
+                    message: `An error occurred parsing the provided data as JSON. This may indicate that the file is invalid or that it is not supported by ${appName}. If you would like assistance or further information, please email us at <a href="mailto:${supportEmail}">${supportEmail}</a>.`
                 });
-            });
+            }
+
+            return when();
         }
 
         if (isDefined(url)) {
@@ -109,9 +114,7 @@ class LoadGeoJsonStratum extends LoadableStratum(GeoJsonCatalogItemTraits) {
             }
 
             return jsonPromise
-                .then((data: any) => {
-                    return this.setTraitsFromData(data);
-                })
+                .then((data: any) => (this.loadedGeoJson = data))
                 .otherwise((e?: Error) => {
                     if (e instanceof TerriaError) {
                         throw e;
@@ -124,36 +127,6 @@ class LoadGeoJsonStratum extends LoadableStratum(GeoJsonCatalogItemTraits) {
                     }
                 });
         }
-    }
-
-    setTraitsFromData(geoJson: any): Promise<void> {
-        // If this GeoJSON data is an object literal with a single property, treat that
-        // property as the name of the data source, and the property's value as the
-        // actual GeoJSON.
-        let numProperties = 0;
-        let propertyName;
-        for (propertyName in geoJson) {
-            if (geoJson.hasOwnProperty(propertyName)) {
-                ++numProperties;
-                if (numProperties > 1) {
-                    break; // no need to count past 2 properties.
-                }
-            }
-        }
-
-        let name;
-        if (numProperties === 1 && isDefined(propertyName)) {
-            name = propertyName;
-            geoJson = geoJson[propertyName];
-            this.name = name;
-        }
-
-        // Reproject the features if they're not already EPSG:4326.
-        const proj4ServiceBaseUrl = this.catalogItem.terria.configParameters
-            .proj4ServiceBaseUrl;
-        return when(reprojectToGeographic(geoJson, proj4ServiceBaseUrl), () => {
-            this.geoJsonData = geoJson;
-        });
     }
 }
 
@@ -176,12 +149,34 @@ class GeoJsonCatalogItem
 
     @computed
     get mapItems() {
-        if (this.dataSource === undefined) {
+        if (this.geoJsonData === undefined) {
             return [];
         }
+        // Construct a dataSource to return immediately
+        const dataSource = new GeoJsonDataSource();
+        dataSource.show = this.show;
 
-        this.dataSource.show = this.show;
-        return [this.dataSource];
+        // then, asynchronously reproject the data and load the dataSource
+        const proj4ServiceBaseUrl = this.terria.configParameters
+            .proj4ServiceBaseUrl;
+
+        const geoJson: any = toJS(this.geoJsonData); // toJS because reprojectToGeographic needs a plain JS value
+        when(reprojectToGeographic(geoJson, proj4ServiceBaseUrl))
+            .then((geoJson: any) => {
+                this.loadDataSource(dataSource, geoJson);
+            })
+            .otherwise(() => {
+                throw new TerriaError({
+                    sender: this,
+                    title: "Error loading GeoJSON",
+                    message: `An error occurred while loading GeoJSON object or string. This may indicate that the object or string is invalid or that it is not supported by ${
+                        this.terria.appName
+                    }. If you would like assistance or further information, please email us at <a href="mailto:${
+                        this.terria.supportEmail
+                    }">${this.terria.supportEmail}</a>.`
+                });
+            });
+        return [dataSource];
     }
 
     loadMetadata(): Promise<void> {
@@ -189,18 +184,17 @@ class GeoJsonCatalogItem
     }
 
     loadData(): Promise<void> {
+        const stratumName = GeoJsonCatalogItem.loadGeoJsonStratumName;
         const loadGeoJsonStratum = <LoadGeoJsonStratum>(
-            this.strata.get(GeoJsonCatalogItem.loadGeoJsonStratumName)
+            this.strata.get(stratumName)
         );
-        return loadGeoJsonStratum
-            .loadGeoJson()
-            .then(() => this.buildDataSource(this.geoJsonData))
-            .then((dataSource: GeoJsonDataSource) => {
-                this.dataSource = dataSource;
-            });
+        return loadGeoJsonStratum.loadGeoJson();
     }
 
-    buildDataSource(geoJson: any): Promise<GeoJsonDataSource> {
+    loadDataSource(
+        dataSource: GeoJsonDataSource,
+        geoJson: any
+    ): Promise<GeoJsonDataSource> {
         /* Style information is applied as follows, in decreasing priority:
            - simple-style properties set directly on individual features in the GeoJSON file
            - simple-style properties set as the 'Style' property on the catalog item
@@ -275,9 +269,7 @@ class GeoJsonCatalogItem
             options.fill.alpha = 0.75;
         }
 
-        return GeoJsonDataSource.load(geoJson, options).then(function(
-            dataSource
-        ) {
+        return dataSource.load(geoJson, options).then(function(dataSource) {
             const entities = dataSource.entities;
             for (let i = 0; i < entities.values.length; ++i) {
                 const entity = entities.values[i];
@@ -373,10 +365,10 @@ class GeoJsonCatalogItem
             return dataSource;
         });
     }
-    }
+}
 
 namespace GeoJsonCatalogItem {
-    export const loadGeoJsonStratumName = 'loadGeoJson';    
+    export const loadGeoJsonStratumName = "loadGeoJson";
     StratumOrder.addLoadStratum(loadGeoJsonStratumName);
 }
 
@@ -405,7 +397,7 @@ function reprojectToGeographic(geoJson: any, proj4ServiceBaseUrl?: string) {
     };
 
     if (!Reproject.willNeedReprojecting(code)) {
-        return true;
+        return geoJson;
     }
 
     return when(Reproject.checkProjection(proj4ServiceBaseUrl, code), function(
@@ -417,6 +409,7 @@ function reprojectToGeographic(geoJson: any, proj4ServiceBaseUrl?: string) {
                     return reprojectPointList(pts, code);
                 });
             });
+            return geoJson;
         } else {
             throw new DeveloperError(
                 "The crs code for this datasource is unsupported."
@@ -653,4 +646,13 @@ function loadZipFile(url: string) {
         );
         return deferred.promise;
     });
+}
+
+function unwrapSinglePropertyObject(obj: any) {
+    let name;
+    if (Object.keys(obj).length === 1) {
+        name = Object.keys(obj)[0];
+        obj = obj[name];
+    }
+    return { name, obj };
 }
