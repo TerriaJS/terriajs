@@ -120,7 +120,7 @@ const SharePanel = createReactClass({
                 placeholder: 'Shortening...'
             });
 
-            buildShortShareLink(this.props.terria)
+            buildShortShareLink(this.props.terria, this.props.viewState)
                 .then(shareUrl => this.setState({ shareUrl }))
                 .otherwise(() => {
                     this.setUnshortenedUrl();
