@@ -3,6 +3,7 @@ import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import ko from 'terriajs-cesium/Source/ThirdParty/knockout';
+import defined from 'terriajs-cesium/Source/Core/defined';
 
 import ObserveModelMixin from '../ObserveModelMixin';
 import Tabs from './Tabs.jsx';
@@ -41,6 +42,9 @@ const ExplorerWindow = createReactClass({
 
         if (terria.sharedFromExplorerPanel) {
             viewState.openAddData();
+        }
+        if (defined(terria.previewedItemId) && terria.catalog.shareKeyIndex[terria.previewedItemId]) {
+            viewState.viewCatalogMember(terria.catalog.shareKeyIndex[terria.previewedItemId]);
         }
         this.onVisibilityChange(this.isVisible());
     },
