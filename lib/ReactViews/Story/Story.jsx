@@ -6,6 +6,22 @@ import Icon from "../Icon.jsx";
 import parseCustomHtmlToReact from '../Custom/parseCustomHtmlToReact';
 import {sortable} from 'react-anything-sortable';
 
+const findTextContent = (content)=>{
+  if(typeof content === "string") {
+    return content;
+  }
+  if(content[0] && content[0].props && content[0].props.children){
+    return findTextContent(content[0].props.children)
+  }
+  if(!content.props || !content.props.children) {
+    return '';
+  }
+  if(typeof content.props.children === "string") {
+    return content.props.children;
+  } 
+  return findTextContent(content.props.children);
+ };
+
 class Story extends React.Component {
   constructor(props) {
     super(props);
@@ -39,16 +55,7 @@ class Story extends React.Component {
 
   getTruncatedContent(text) {
     const content = parseCustomHtmlToReact(text);
-    let except = ''; 
-    if(content) {
-     if(content.props && content.props.children) {
-       except =  content.props.children.slice(0, 100);
-     } else if(content.length > 0 && content[0].props && content[0].props.children) {
-       except =  content[0].props.children;
-     } else if(content.length > 0 && !content[0].props) {
-       except =  content;
-     }
-    }
+    const except = findTextContent(content);
     return except.slice(0, 100);
   }
 
