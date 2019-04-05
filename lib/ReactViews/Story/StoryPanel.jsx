@@ -173,5 +173,3 @@ const StoryPanel = createReactClass({
 });
 
 export default StoryPanel;
-
-
