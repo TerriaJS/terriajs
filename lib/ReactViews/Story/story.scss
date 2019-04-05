@@ -4,7 +4,7 @@
   background: #667080;
   color: #FFFFFF;
   margin: $padding $padding 0 $padding;
-  border-radius: 4px;
+  border-radius: 2px;
   width: calc(100% - 20px);
   h3{
     font-weight: normal;
@@ -25,6 +25,7 @@
  .body{
    padding: $padding; 
    border-top: 1px solid $overlay;
+   font-size: 0.8rem;
    a{
       color: $color-primary;
     }
@@ -53,7 +54,7 @@
     composes: btn--map from "../../Sass/common/_buttons.scss";
     margin-right: $padding;
     background: #9CA1AA;
-    border-radius: 4px;
+    border-radius: 2px;
     padding: $padding-small $padding;
     svg{
       height: 25px;
@@ -73,7 +74,7 @@
    right: 8px;
    top: 8px;
    background: #7C8591;
-   border-radius: 4px;
+   border-radius: 2px;
  }
 
  .menuInner{
