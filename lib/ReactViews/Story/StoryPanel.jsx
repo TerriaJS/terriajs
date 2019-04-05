@@ -135,7 +135,7 @@ const StoryPanel = createReactClass({
       const locationBtn = <button className ={Styles.locationBtn} title='center scene' onClick = {this.onCenterScene.bind(this, story)}><Icon glyph ={Icon.GLYPHS.location}/></button>;
       const exitBtn = <button className={Styles.exitBtn} title="exit story" onClick={this.slideOut}><Icon glyph={Icon.GLYPHS.close}/></button>;
         return (
-          <Swipeable onSwipedLeft = {this.goToPrevStory}>
+          <Swipeable onSwipedLeft = {this.goToPrevStory} onSwipeRight={this.goToNextStory}>
                 <div className={classNames(Styles.fullPanel, {[Styles.isHidden]: !this.props.viewState.storyShown, [Styles.isPushedUp]: this.props.viewState.chartIsOpen})}>
                         <div className={classNames(Styles.storyContainer, {[Styles.isMounted]: this.state.inView})} key={story.id}>
                           <Medium>
@@ -162,9 +162,12 @@ const StoryPanel = createReactClass({
                              <button disabled={this.props.terria.stories.length <= 1 } className={Styles.nextBtn} title="go to next scene" onClick={this.goToNextStory}><Icon glyph={Icon.GLYPHS.right}/></button>
                              </div>
                           </Medium>
+                        <Small><div className={Styles.navBtnMobile}> {stories.map((story, i)=><button title={`go to story ${story.title}`} type='button' key={story.id} className={classNames(Styles.mobileNavBtn, {[Styles.isActive]: i === this.props.viewState.currentStoryId})} onClick={()=>this.navigateStory(i)}>{i}</button>)}</div>
+                                 </Small>
                         </div>
+
                 </div>
-          </Swipeable>
+         </Swipeable>
         );
     }
 });

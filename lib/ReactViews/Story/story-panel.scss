@@ -151,6 +151,24 @@
   }
 }
 
+.navBtnMobile{
+  display: flex;
+  width: 100%;
+  bottom: -25px;
+  position: absolute;
+ }
+ .mobileNavBtn{
+  composes: btn from '../../Sass/common/_buttons.scss';
+  background: #ffffff;
+  color: $text-dark;
+  padding: 2px 8px;
+  border-right: 1px solid #dddddd;
+  border-top: 1px solid #dddddd;
+  &.isActive{
+    background: $color-primary;
+    color: #ffffff;
+  }
+ }
  :global{
    .story.tjs-notification-window__wrapper{
      @media (min-width: $md) {
