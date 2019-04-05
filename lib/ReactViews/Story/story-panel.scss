@@ -7,12 +7,13 @@
   width: 100%;
   padding-left: $padding * 2;
   padding-right: $padding*2;
-  bottom: 90px;
+  bottom: 100px;
   z-index: 9;
   box-sizing: border-box;
   pointer-events: none;
   @media (min-width: $md) {
     padding-left: 30px + $work-bench-width;
+    bottom: 90px;
     padding-right: 50px;
   }
   &.is-hidden {
@@ -88,6 +89,25 @@
   img{
     max-width: 100%;
   }
+  *{
+    max-width: 100%;
+    overflow: hidden;
+    /* These are technically the same, but use both */
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+
+    -ms-word-break: break-all;
+    /* This is the dangerous one in WebKit, as it breaks things wherever */
+    word-break: break-all;
+    /* Instead use this non-standard one: */
+    word-break: break-word;
+
+    /* Adds a hyphen where the word breaks, if supported (No Blink) */
+    -ms-hyphens: auto;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    }
 }
 
 .locationBtn, .exitBtn,  .nextBtn, .previousBtn {
