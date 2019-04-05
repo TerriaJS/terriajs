@@ -10,8 +10,8 @@ const findTextContent = (content)=>{
   if(typeof content === "string") {
     return content;
   }
-  if(content[0] && content[0].props && content[0].props.children){
-    return findTextContent(content[0].props.children)
+  if(content[0] && content[0].props && content[0].props.children) {
+    return findTextContent(content[0].props.children);
   }
   if(!content.props || !content.props.children) {
     return '';
