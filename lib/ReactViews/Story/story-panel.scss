@@ -1,5 +1,5 @@
 @import '~terriajs-variables';
-@import '../Sass/common/mixins';
+@import '../../Sass/common/mixins';
 
 .full-panel {
   position: absolute;
@@ -92,7 +92,7 @@
 
 .locationBtn, .exitBtn,  .nextBtn, .previousBtn {
   z-index: 999;
-  composes: btn from '../Sass/common/_buttons.scss';
+  composes: btn from '../../Sass/common/_buttons.scss';
   display: block;
   padding: $padding*0.8 $padding*1.6;
   &:not([disabled]):hover, &:not([disabled]):focus{

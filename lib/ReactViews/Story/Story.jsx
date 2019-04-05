@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Styles from './story.scss';
-import Icon from "./Icon.jsx";
-import parseCustomHtmlToReact from './Custom/parseCustomHtmlToReact';
+import Icon from "../Icon.jsx";
+import parseCustomHtmlToReact from '../Custom/parseCustomHtmlToReact';
 
 export default class Story extends React.Component {
   constructor(props) {

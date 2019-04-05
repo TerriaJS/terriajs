@@ -1,5 +1,5 @@
 @import '~terriajs-variables';
-@import '../Sass/common/mixins';
+@import '../../Sass/common/mixins';
 
 .story-panel {
   font-family: $font-base;
@@ -36,8 +36,8 @@
  }
 
  .trashBtn, .removeBtn{
-    composes: btn from "../Sass/common/_buttons.scss";
-    composes: btn--map from "../Sass/common/_buttons.scss";
+    composes: btn from "../../Sass/common/_buttons.scss";
+    composes: btn--map from "../../Sass/common/_buttons.scss";
     margin-right: $padding;
     background: #9CA1AA;
     border-radius: 4px;
@@ -57,8 +57,8 @@
  .captureBtn, .previewBtn{
    position: relative;
    padding-left: 40px;
-   composes: btn from "../Sass/common/_buttons.scss";
-   composes: btn-primary from "../Sass/common/_buttons.scss";
+   composes: btn from "../../Sass/common/_buttons.scss";
+   composes: btn-primary from "../../Sass/common/_buttons.scss";
    svg{
      width: 25px;
      height: 25px;

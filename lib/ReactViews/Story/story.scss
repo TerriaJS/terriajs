@@ -1,5 +1,5 @@
 @import '~terriajs-variables';
-@import '../Sass/common/mixins';
+@import '../../Sass/common/mixins';
 .story {
   background: #667080;
   color: #FFFFFF;
@@ -31,7 +31,7 @@
    }
  }
  .toggleBtn{
-   composes: btn from '../Sass/common/_buttons.scss';
+   composes: btn from '../../Sass/common/_buttons.scss';
    position: absolute;
    top: $padding;
    right: $padding;
@@ -45,8 +45,8 @@
    display: flex;
  }
  .removeBtn{
-    composes: btn from "../Sass/common/_buttons.scss";
-    composes: btn--map from "../Sass/common/_buttons.scss";
+    composes: btn from "../../Sass/common/_buttons.scss";
+    composes: btn--map from "../../Sass/common/_buttons.scss";
     margin-right: $padding;
     background: #9CA1AA;
     border-radius: 4px;
@@ -59,8 +59,8 @@
  }
 
  .viewBtn{
-   composes: btn from "../Sass/common/_buttons.scss";
-   composes: btn-primary from "../Sass/common/_buttons.scss";
+   composes: btn from "../../Sass/common/_buttons.scss";
+   composes: btn-primary from "../../Sass/common/_buttons.scss";
  }
 
  .menu{
@@ -86,8 +86,8 @@
 
 
  .menuBtn{
-   composes: btn from '../Sass/common/_buttons.scss';
-   composes: btn-tertiary from '../Sass/common/_buttons.scss';
+   composes: btn from '../../Sass/common/_buttons.scss';
+   composes: btn-tertiary from '../../Sass/common/_buttons.scss';
    font-size: 0.8rem;
    padding: $padding/2 $padding/2;
  }

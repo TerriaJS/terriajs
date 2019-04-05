@@ -20,8 +20,8 @@ import ProgressBar from '../Map/ProgressBar.jsx';
 import SidePanel from './../SidePanel/SidePanel.jsx';
 import processCustomElements from './processCustomElements';
 import FullScreenButton from './../SidePanel/FullScreenButton.jsx';
-import StoryPanel from './../StoryPanel.jsx';
-import StoryBuilder from './../StoryBuilder.jsx';
+import StoryPanel from './../Story/StoryPanel.jsx';
+import StoryBuilder from './../Story/StoryBuilder.jsx';
 
 import { Small, Medium } from '../Generic/Responsive';
 import classNames from 'classnames';

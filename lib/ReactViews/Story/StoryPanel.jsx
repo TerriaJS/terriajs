@@ -2,10 +2,10 @@ import React from 'react';
 import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import ObserveModelMixin from './ObserveModelMixin';
-import parseCustomHtmlToReact from './Custom/parseCustomHtmlToReact';
-import { Small, Medium } from './Generic/Responsive';
-import Icon from "./Icon.jsx";
+import ObserveModelMixin from '../ObserveModelMixin';
+import parseCustomHtmlToReact from '../Custom/parseCustomHtmlToReact';
+import { Small, Medium } from '../Generic/Responsive';
+import Icon from "../Icon.jsx";
 import { Swipeable } from 'react-swipeable';
 import Styles from './story-panel.scss';
 

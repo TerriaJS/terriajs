@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Editor from 'react-medium-editor';
+import Editor from '../Generic/Editor.jsx';
 import classNames from 'classnames';
 import Styles from './story-editor.scss';
 
@@ -107,15 +107,11 @@ export default class StoryEditor extends React.Component {
               <div className={Styles.body}>
                  <Editor
                       onKeyDown={this.onKeyDown}
-                      text={this.state.text}
-                      options={{
-                        fileDragging: {
-                          allowedTypes: []
-                        },
-                        toolbar: {buttons: ['bold', 'italic', 'underline', 'strikethrough', 'quote', 'anchor', 'image', 'orderedlist', 'unorderedlist', 'h2', 'h3']}}} 
-                      theme='beagle'
-                      onChange={(text) => this.setState({text})}></Editor></div>
+                      html={this.state.text}
+                      onChange={(text) => this.setState({text})}>
+                 </Editor>
               </div>
+            </div>
        </div>
     );
   }

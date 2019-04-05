@@ -1,10 +1,10 @@
 import React from 'react';
 import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
-import {getShareData } from './Map/Panels/SharePanel/BuildShareLink';
+import {getShareData } from '../Map/Panels/SharePanel/BuildShareLink';
 import defined from 'terriajs-cesium/Source/Core/defined';
-import ObserveModelMixin from './ObserveModelMixin';
-import Icon from "./Icon.jsx";
+import ObserveModelMixin from '../ObserveModelMixin';
+import Icon from "../Icon.jsx";
 import Story from './Story.jsx';
 import StoryEditor from './StoryEditor.jsx';
 import uniqid from 'uniqid';

@@ -1,5 +1,5 @@
 @import '~terriajs-variables';
-@import '../Sass/common/mixins';
+@import '../../Sass/common/mixins';
 
 :global{
   .medium-editor-toolbar{
@@ -74,15 +74,15 @@
 
 
 .field{
-  composes: field from '../Sass/common/_form.scss';
+  composes: field from '../../Sass/common/_form.scss';
   border: 0;
   margin-right: $padding;
   padding: 0 !important;
 }
 
 .fieldBtn{
-  composes: btn from "../Sass/common/_buttons.scss";
-  composes: btn--map from "../Sass/common/_buttons.scss";
+  composes: btn from "../../Sass/common/_buttons.scss";
+  composes: btn--map from "../../Sass/common/_buttons.scss";
   background: #9CA1AA;
   border-radius: 4px;
   padding: $padding;
@@ -92,8 +92,8 @@
 }
 
 .doneBtn, .saveBtn{
-  composes: btn from "../Sass/common/_buttons.scss";
-  composes: btn-primary from "../Sass/common/_buttons.scss";
+  composes: btn from "../../Sass/common/_buttons.scss";
+  composes: btn-primary from "../../Sass/common/_buttons.scss";
 }
 
 .saveBtn{
@@ -101,8 +101,8 @@
  padding: 5px 15px;
 }
  .cancelBtn{
-   composes: btn from '../Sass/common/_buttons.scss';
-   composes: btn--secondary from '../Sass/common/_buttons.scss';
+   composes: btn from '../../Sass/common/_buttons.scss';
+   composes: btn--secondary from '../../Sass/common/_buttons.scss';
    padding: 5px 15px;
    margin-right:$padding;
    border: 2px solid #ffffff;
