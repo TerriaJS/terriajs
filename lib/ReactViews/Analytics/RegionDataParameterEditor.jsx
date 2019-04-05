@@ -159,6 +159,7 @@ const RegionDataParameterEditor = createReactClass({
                     <ul className={Styles.tree}>
                         <For each="catalogItem" index="i" of={this.catalogItemsWithMatchingRegion()}>
                             <CatalogGroup
+                                truncate={catalogItem.name && catalogItem.name.indexOf(' ') === -1}
                                 key={catalogItem.uniqueId}
                                 text={catalogItem.name}
                                 topLevel={false}

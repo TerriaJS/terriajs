@@ -20,7 +20,9 @@ function CatalogGroup(props) {
                             Styles.btnCatalog,
                             {[Styles.btnCatalogTopLevel]: props.topLevel},
                             {[Styles.btnIsOpen]: props.open},
-                            {[Styles.isPreviewed]: props.selected}
+                            {[Styles.isPreviewed]: props.selected},
+                            // apply css to truncate if we've only got a url and not a very long string
+                            {[Styles.shouldTruncate]: props.truncate}
                         )}
                     title={props.title}
                     onClick={props.onClick}>
@@ -69,6 +71,7 @@ function CatalogGroup(props) {
 CatalogGroup.propTypes = {
     text: PropTypes.string,
     title: PropTypes.string,
+    truncate: PropTypes.bool,
     topLevel: PropTypes.bool,
     open: PropTypes.bool,
     loading: PropTypes.bool,

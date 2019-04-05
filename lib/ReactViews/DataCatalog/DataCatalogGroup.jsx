@@ -72,10 +72,15 @@ const DataCatalogGroup = createReactClass({
             this.props.viewState.previewedItem === this.props.group;
     },
 
+    shouldTruncate() {
+        return this.props.group.nameInCatalog && this.props.group.nameInCatalog.indexOf(' ') === -1;
+    },
+
     render() {
         const group = this.props.group;
         return (
             <CatalogGroup
+                truncate={this.shouldTruncate()}
                 text={group.nameInCatalog}
                 title={getAncestors(group).map(member => member.nameInCatalog).join(' → ')}
                 topLevel={this.isTopLevel()}
