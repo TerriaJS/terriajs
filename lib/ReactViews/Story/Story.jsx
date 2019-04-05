@@ -39,16 +39,17 @@ class Story extends React.Component {
 
   getTruncatedContent(text) {
     const content = parseCustomHtmlToReact(text);
+    let except = ''; 
     if(content) {
      if(content.props && content.props.children) {
-       return content.props.children;
+       except =  content.props.children.slice(0, 100);
      } else if(content.length > 0 && content[0].props && content[0].props.children) {
-       return content[0].props.children;
+       except =  content[0].props.children;
      } else if(content.length > 0 && !content[0].props) {
-       return content;
+       except =  content;
      }
     }
-    return "";
+    return except.slice(0, 100);
   }
 
   toggleMenu(event) {
