@@ -8,6 +8,7 @@ import DataPreviewMap from './DataPreviewMap';
 import Description from './Description';
 import ObserveModelMixin from '../ObserveModelMixin';
 import Styles from './mappable-preview.scss';
+import SharePanel from '../Map/Panels/SharePanel/SharePanel.jsx';
 
 /**
  * CatalogItem preview that is mappable (as opposed to say, an analytics item that can't be displayed on a map without
@@ -49,7 +50,13 @@ const MappablePreview = createReactClass({
                     {this.props.previewed.isEnabled ? 'Remove from the map' : 'Add to the map'}
                 </button>
                 <div className={Styles.previewedInfo}>
-                    <h3 className={Styles.h3}>{catalogItem.name}</h3>
+                    <div className={Styles.titleAndShareWrapper}>
+                        <h3 className={Styles.h3}>{catalogItem.name}</h3>
+                        <div className={Styles.shareLinkWrapper}>
+                            <SharePanel terria={this.props.terria}
+                                viewState={this.props.viewState} />
+                        </div>
+                    </div>
                     <Description item={catalogItem} />
                 </div>
             </div>

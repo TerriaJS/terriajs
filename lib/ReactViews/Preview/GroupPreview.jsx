@@ -9,6 +9,7 @@ import DataPreviewUrl from './DataPreviewUrl.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
 import Styles from './mappable-preview.scss';
 import parseCustomMarkdownToReact from '../Custom/parseCustomMarkdownToReact';
+import SharePanel from '../Map/Panels/SharePanel/SharePanel.jsx';
 
 /**
  * A "preview" for CatalogGroup.
@@ -32,7 +33,13 @@ const GroupPreview = createReactClass({
 
         return (
             <div>
-                <h3>{this.props.previewed.name}</h3>
+                <div className={Styles.titleAndShareWrapper}>
+                    <h3>{this.props.previewed.name}</h3>
+                    <div className={Styles.shareLinkWrapper}>
+                        <SharePanel terria={this.props.terria}
+                            viewState={this.props.viewState} />
+                    </div>
+                </div>
                 <div className={Styles.previewedInfo}>
                     <div className={Styles.url}>
                         <Choose>

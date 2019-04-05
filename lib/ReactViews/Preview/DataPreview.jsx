@@ -10,7 +10,6 @@ import React from 'react';
 import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import Styles from './data-preview.scss';
-import SharePanel from '../Map/Panels/SharePanel/SharePanel.jsx';
 
 /**
  * Data preview section, for the preview map see DataPreviewMap
@@ -37,8 +36,6 @@ const DataPreview = createReactClass({
         }
         return (
             <div className={Styles.preview}>
-                <SharePanel terria={this.props.terria}
-                    viewState={this.props.viewState}/>
                 <Choose>
                     <When condition={previewed && previewed.isMappable}>
                         <div className={Styles.previewInner}>
