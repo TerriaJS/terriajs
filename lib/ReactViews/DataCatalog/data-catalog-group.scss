@@ -26,6 +26,7 @@
 
 .btn--catalog {
   composes: btn from '../../Sass/common/_buttons.scss';
+  @extend %wrap;
 
   text-align: left;
   font-size: $font-size-small;
