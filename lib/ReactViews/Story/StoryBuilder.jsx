@@ -7,9 +7,11 @@ import ObserveModelMixin from '../ObserveModelMixin';
 import Icon from "../Icon.jsx";
 import Story from './Story.jsx';
 import StoryEditor from './StoryEditor.jsx';
+import Sortable from 'react-anything-sortable';
 import uniqid from 'uniqid';
 
 import Styles from './story-builder.scss';
+import '!!style-loader!css-loader?sourceMap!react-anything-sortable/sortable.css';
 
 function arrayMove(arr, oldIndex, newIndex) {
     if (newIndex >= arr.length) {
@@ -99,6 +101,12 @@ const StoryBuilder = createReactClass({
     const stories = this.props.terria.stories || [];
     this.props.terria.stories = arrayMove(stories, index, index+1);
   },
+  
+  onSort(sortedArray, currentDraggingSortData, currentDraggingIndex) {
+    console.log(sortedArray);
+    console.log(currentDraggingSortData);
+    console.log(currentDraggingIndex);
+  },
     
      renderIntro() {
       return (<div className={Styles.intro}><Icon glyph={Icon.GLYPHS.story}/> <strong>This is your story editor</strong><div className={Styles.instructions}>
@@ -107,8 +115,22 @@ const StoryBuilder = createReactClass({
 
     renderStories() {
       const stories = this.props.terria.stories || [];
-      return <div className={Styles.stories}>{stories.map((story, i)=><Story key={story.id} story={story} moveDown={i < stories.length-1 ? this.moveDown.bind(this, i) : undefined} moveUp = {i > 0? this.moveUp.bind(this, i) : undefined} deleteStory={this.removeStory.bind(this, i)} recaptureStory={this.captureStory} viewStory={this.viewStory.bind(this, i)} editStory={this.editStory}/>)}</div>; 
-      },
+      return (<div className={Styles.stories}>
+      <Sortable onSort={this.onSort} direction="vertical" dynamic={true}>
+        <For each='story' index="index" of={stories}>
+          <Story key={story.id} 
+                 story={story} 
+                 sortData={story} 
+                 moveDown={index < stories.length-1 ? this.moveDown.bind(this, index) : undefined} 
+                 moveUp = {index > 0? this.moveUp.bind(this,index) : undefined} 
+                 deleteStory={this.removeStory.bind(this, index)} 
+                 recaptureStory={this.captureStory} 
+                 viewStory={this.viewStory.bind(this, index)} 
+                 editStory={this.editStory}/>
+        </For>
+        </Sortable>
+      </div>); 
+    },
 
     onClickCapture() {
       this.setState({

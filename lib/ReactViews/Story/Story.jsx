@@ -3,8 +3,10 @@ import PropTypes from 'prop-types';
 import Styles from './story.scss';
 import Icon from "../Icon.jsx";
 import parseCustomHtmlToReact from '../Custom/parseCustomHtmlToReact';
+import {sortable} from 'react-anything-sortable';
 
-export default class Story extends React.Component {
+
+class Story extends React.Component {
   constructor(props) {
     super(props);
     this.state ={
@@ -111,7 +113,11 @@ export default class Story extends React.Component {
 
      return (<div className={Styles.story}>
             <div className={Styles.storyHeader}> 
-            <h3>{story.title && story.title.length > 0 ? story.title : 'untitled scene'}</h3>
+            <h3 className={Styles.draggable}  
+                onMouseDown={this.props.onMouseDown}
+                onTouchStart={this.props.onTouchStart}>
+       {story.title && story.title.length > 0 ? story.title : 'untitled scene'} 
+            </h3>
             <button className={Styles.toggleBtn} onClick={this.toggleMenu}><Icon glyph={Icon.GLYPHS.menuDotted}/></button>
             {this.state.menuOpen && this.renderMenu()}
           </div>
@@ -128,5 +134,9 @@ Story.propTypes ={
   deleteStory: PropTypes.func,
   recaptureStory: PropTypes.func,
   moveUp: PropTypes.func,
-  moveDown: PropTypes.func
+  moveDown: PropTypes.func,
+  onMouseDown: PropTypes.func.isRequired,
+  onTouchStart: PropTypes.func.isRequired,
 };
+
+module.exports = sortable(Story);

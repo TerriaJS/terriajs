@@ -1,6 +1,6 @@
 @import '~terriajs-variables';
 @import '../../Sass/common/mixins';
-.story {
+.story{
   background: #667080;
   color: #FFFFFF;
   margin: $padding $padding 0 $padding;
@@ -86,11 +86,14 @@
      border-bottom: 0;
    }
  }
-
-
  .menuBtn{
    composes: btn from '../../Sass/common/_buttons.scss';
    composes: btn-tertiary from '../../Sass/common/_buttons.scss';
    font-size: 0.8rem;
    padding: $padding/2 $padding/2;
+ }
+ 
+ .draggable{
+   font-size: 0.9rem;
+   cursor: move;
  }
