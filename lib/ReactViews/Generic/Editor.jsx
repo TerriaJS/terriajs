@@ -6,31 +6,15 @@ import '!!style-loader!css-loader?sourceMap!pell/dist/pell.css';
 export default class Editor extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {html: null}
-    this.onChange = this.onChange.bind(this);
   }
-  static getDerivedStateFromProps(props, state) {
-    if (props.html !== state.html) {
-      return {
-        html: props.html
-      }
-    }
-    return state;
-  }
+  
     componentDidMount() {
       this.editor = init({
             element: this.node,
-            onChange: this.onChange, 
+            onChange: this.props.onChange, 
             actions: this.props.actions,
       }); 
       this.editor.content.innerHTML = this.props.html;
-  }
-
-  onChange(html) {
-    this.props.onChange(html);
-    this.setState({
-      html
-    })
   }
 
   componentWillUnmount() {
