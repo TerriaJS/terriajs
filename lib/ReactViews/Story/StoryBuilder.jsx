@@ -103,9 +103,7 @@ const StoryBuilder = createReactClass({
   },
   
   onSort(sortedArray, currentDraggingSortData, currentDraggingIndex) {
-    console.log(sortedArray);
-    console.log(currentDraggingSortData);
-    console.log(currentDraggingIndex);
+    this.props.terria.stories = sortedArray;
   },
     
      renderIntro() {

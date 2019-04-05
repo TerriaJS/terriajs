@@ -1,10 +1,11 @@
 @import '~terriajs-variables';
 @import '../../Sass/common/mixins';
-.story{
+.story:global(.ui-sortable-item){
   background: #667080;
   color: #FFFFFF;
   margin: $padding $padding 0 $padding;
   border-radius: 4px;
+  width: calc(100% - 20px);
   h3{
     font-weight: normal;
     margin: 0;

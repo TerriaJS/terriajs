@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Styles from './story.scss';
+import classNames from 'classnames';
 import Icon from "../Icon.jsx";
 import parseCustomHtmlToReact from '../Custom/parseCustomHtmlToReact';
 import {sortable} from 'react-anything-sortable';
-
 
 class Story extends React.Component {
   constructor(props) {
@@ -111,12 +111,13 @@ class Story extends React.Component {
     const story = this.props.story;
     const bodyText = this.getTruncatedContent(story.text);
 
-     return (<div className={Styles.story}>
+     return (<div className={classNames(this.props.className, Styles.story)}
+                  onMouseDown={this.props.onMouseDown}
+                  style={this.props.style}
+                  onTouchStart={this.props.onTouchStart}>
             <div className={Styles.storyHeader}> 
-            <h3 className={Styles.draggable}  
-                onMouseDown={this.props.onMouseDown}
-                onTouchStart={this.props.onTouchStart}>
-       {story.title && story.title.length > 0 ? story.title : 'untitled scene'} 
+            <h3 className={Styles.draggable}> 
+                       {story.title && story.title.length > 0 ? story.title : 'untitled scene'} 
             </h3>
             <button className={Styles.toggleBtn} onClick={this.toggleMenu}><Icon glyph={Icon.GLYPHS.menuDotted}/></button>
             {this.state.menuOpen && this.renderMenu()}
@@ -137,6 +138,8 @@ Story.propTypes ={
   moveDown: PropTypes.func,
   onMouseDown: PropTypes.func.isRequired,
   onTouchStart: PropTypes.func.isRequired,
+  style: PropTypes.object,
+  className: PropTypes.string,
 };
 
 module.exports = sortable(Story);
