@@ -31,4 +31,4 @@ Editor.propTypes  = {
   actions: PropTypes.array
 };
 
-Editor.defaultProps = { actions: ['bold', 'underline', 'image', 'link']};
+Editor.defaultProps = { actions: ['bold', 'italic', 'underline', 'heading1', 'heading2', 'olist', 'ulist', 'image', 'link']};

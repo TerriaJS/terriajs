@@ -24,6 +24,9 @@
  .body{
    padding: $padding; 
    border-top: 1px solid $overlay;
+   a{
+      color: $color-primary;
+    }
    img{
       max-width: 100%;
       height: auto;
