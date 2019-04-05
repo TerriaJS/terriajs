@@ -819,6 +819,54 @@
             "description": "Postal areas (ABS approximations of postcodes) (2016)",
             "regionIdsFile": "build/TerriaJS/data/regionids/region_map-POA_2016_AUST_POA_CODE16.json"
         },
+        "CED_CODE18": {
+            "layerName": "CED_2018",
+            "server": "https://tiles.terria.io/CED_2018/{z}/{x}/{y}.pbf",
+            "serverType": "MVT",
+            "serverMaxNativeZoom": 12,
+            "serverMinZoom": 0,
+            "serverMaxZoom": 28,
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-CED_CODE18_CED_2018.json",
+            "regionProp": "CED_CODE18",
+            "nameProp": "CED_NAME18",
+            "aliases": [
+              "ced",
+              "ced_code",
+              "ced_2018",
+              "ced_code_2018"
+            ],
+            "description": "Commonwealth electoral divisions 2018 by code (ABS)",
+            "bbox": [
+              96.82,
+              -43.74,
+              159.11,
+              -9.14
+            ]
+        },
+        "CED_NAME18": {
+            "layerName": "CED_2018",
+            "server": "https://tiles.terria.io/CED_2018/{z}/{x}/{y}.pbf",
+            "serverType": "MVT",
+            "serverMaxNativeZoom": 12,
+            "serverMinZoom": 0,
+            "serverMaxZoom": 28,
+            "digits": 3,
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-CED_NAME18_CED_2018.json",
+            "regionProp": "CED_NAME18",
+            "nameProp": "CED_NAME18",
+            "aliases": [
+              "ced_name",
+              "ced_name_2018"
+            ],
+            "description": "Commonwealth electoral divisions 2018 by name (ABS)",
+            "bbox": [
+              96.82,
+              -43.74,
+              159.11,
+              -9.14
+            ]
+          }
+        },
         "CED_CODE_2016": {
             "layerName": "FID_CED_2016_AUST",
             "server": "https://vector-tiles.terria.io/FID_CED_2016_AUST/{z}/{x}/{y}.pbf",
@@ -826,9 +874,7 @@
             "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
             "regionProp": "CED_CODE16",
             "aliases": [
-                "ced_code_2016",
-                "ced_code",
-                "ced"
+                "ced_code_2016"
             ],
             "digits": 3,
             "description": "Commonwealth electoral districts (2016 ABS approximations)",
@@ -853,8 +899,7 @@
             "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
             "regionProp": "CED_NAME16",
             "aliases": [
-                "ced_name_2016",
-                "ced_name"
+                "ced_name_2016"
             ],
             "description": "Commonwealth electoral districts (2016 ABS approximations)",
             "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_CED_2016_AUST_CED_NAME16.json",
@@ -1020,7 +1065,7 @@
               159.10921900799997,
               -9.142175976999999
             ]
-          }
+          
         },
         "COM_ELB_NAME_2016": {
             "layerName": "FID_COM20160509_ELB",
@@ -1030,7 +1075,7 @@
             "regionProp": "ELECT_DIV",
             "textCodes": true,
             "aliases": [
-                "com_elb_name_2016",
+                "com_elb_name_2016"
             ],
             "description": "Commonwealth electoral districts (Australian Electoral Commission)",
             "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_COM20160509_ELB_ELECT_DIV.json",
