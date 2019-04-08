@@ -1053,7 +1053,6 @@
             "regionProp": "Sortname",
             "nameProp": "Sortname",
             "aliases": [
-              "com_elb",
               "com_elb_name",
               "com_elb_name_2019",
               "divisionnm"
