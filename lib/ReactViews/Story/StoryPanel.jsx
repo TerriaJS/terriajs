@@ -20,8 +20,12 @@ export function buildPath(item) {
 export function activateStory(story, terria) {
      if(story.shareData) {
         terria.updateFromStartData(story.shareData).then(()=>{
-        const sharedCatalogMembers = story.shareData.initSources[2].sharedCatalogMembers || story.shareData.initSources[1].sharedCatalogMembers;
-        const nowViewingPaths = Object.keys(sharedCatalogMembers);
+        const nowViewingPaths = story.shareData.initSources.reduce((p, c) => {
+          if (c.sharedCatalogMembers) {
+            return p.concat(Object.keys(c.sharedCatalogMembers));
+          }
+          return p;
+        }, []);
         const nowViewing = terria.nowViewing.items;
         nowViewing.slice().forEach(item=>{
           const path = buildPath(item);
