@@ -72,7 +72,7 @@ const DataPreviewSections = createReactClass({
                             <h4 className={Styles.h4}>{item.name}</h4>
                             <Choose>
                                 <When condition={item.name && item.name.indexOf("URL") !== -1 }>
-                                    <input readOnly
+                                    <textarea readOnly
                                         className={Styles.field}
                                         type="text"
                                         value={window.location.protocol + "//" + window.location.hostname + item.content}
