@@ -53,6 +53,13 @@
 }
 
 .field {
+  textarea {
+    resize: none;
+    color: #888;
+    display: block;
+    padding: .5rem .5rem;
+  }
+
   composes: field from '../../Sass/common/_form.scss';
 }
 
