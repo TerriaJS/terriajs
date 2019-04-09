@@ -72,9 +72,11 @@ const DataPreviewSections = createReactClass({
                             <h4 className={Styles.h4}>{item.name}</h4>
                             <Choose>
                                 <When condition={item.name && item.name.indexOf("URL") !== -1 }>
-                                    <a href={window.location.protocol + "//" + window.location.hostname + item.content} target="_blank" rel="noopener noreferrer">
-			                {window.location.protocol + "//" + window.location.hostname + item.content}
-				    </a>
+                                    <input readOnly
+                                        className={Styles.field}
+                                        type="text"
+                                        value={window.location.protocol + "//" + window.location.hostname + item.content}
+                                        onClick={e => e.target.select()} />
                                 </When>
                                 <Otherwise>
                                     {parseCustomMarkdownToReact(item.content, {catalogItem: metadataItem})}
