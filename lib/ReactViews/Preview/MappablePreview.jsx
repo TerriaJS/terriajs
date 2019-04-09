@@ -53,7 +53,9 @@ const MappablePreview = createReactClass({
                     <div className={Styles.titleAndShareWrapper}>
                         <h3 className={Styles.h3}>{catalogItem.name}</h3>
                         <div className={Styles.shareLinkWrapper}>
-                            <SharePanel terria={this.props.terria}
+                            <SharePanel
+                                autoShare
+                                terria={this.props.terria}
                                 viewState={this.props.viewState} />
                         </div>
                     </div>

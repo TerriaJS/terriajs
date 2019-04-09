@@ -36,7 +36,9 @@ const GroupPreview = createReactClass({
                 <div className={Styles.titleAndShareWrapper}>
                     <h3>{this.props.previewed.name}</h3>
                     <div className={Styles.shareLinkWrapper}>
-                        <SharePanel terria={this.props.terria}
+                        <SharePanel
+                            autoShare
+                            terria={this.props.terria}
                             viewState={this.props.viewState} />
                     </div>
                 </div>

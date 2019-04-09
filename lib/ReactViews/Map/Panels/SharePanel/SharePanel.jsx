@@ -2,6 +2,7 @@
 
 import { buildShareLink, buildShortShareLink, canShorten } from './BuildShareLink';
 import classNames from 'classnames';
+import AutoClipboard from '../../../AutoClipboard/AutoClipboard';
 import Clipboard from '../../../Clipboard';
 import createReactClass from 'create-react-class';
 import defined from 'terriajs-cesium/Source/Core/defined';
@@ -25,6 +26,7 @@ const SharePanel = createReactClass({
         userPropWhiteList: PropTypes.array,
         advancedIsOpen: PropTypes.bool,
         shortenUrls: PropTypes.bool,
+        autoShare: PropTypes.bool,
         viewState: PropTypes.object.isRequired
     },
 
@@ -228,6 +230,52 @@ const SharePanel = createReactClass({
     },
 
     renderContent() {
+        if (this.props.autoShare) {
+            return this.renderContentForAutoShare();
+        } else {
+            return this.renderContentForPrint();
+        }
+    },
+
+    renderContentForAutoShare() {
+        const shareUrlTextBox = <input className={Styles.autoShareUrlfield} type="text" value={this.state.shareUrl}
+            placeholder={this.state.placeholder} readOnly
+            onClick={e => e.target.select()} id='share-url' />;
+
+        return (
+            <Choose>
+                <When condition={this.state.shareUrl === ''}>
+                    <Loader message="Generating share URL..." />
+                </When>
+                <Otherwise>
+                    <div className={Styles.clipboard}>
+                        <AutoClipboard text={this.state.shareUrl} source={shareUrlTextBox} id='share-url' />
+                    </div>
+                </Otherwise>
+            </Choose>
+        );
+    },
+
+    // renderContentForAutoShare() {
+    //     const shareUrlTextBox = <input className={Styles.autoShareUrlfield} type="text" value={this.state.shareUrl}
+    //         placeholder={this.state.placeholder} readOnly
+    //         onClick={e => e.target.select()} id='share-url' />;
+
+    //     return (
+    //         <Choose>
+    //             <When condition={this.state.shareUrl === ''}>
+    //                 <Loader message="Generating share URL..." />
+    //             </When>
+    //             <Otherwise>
+    //                 <div className={Styles.clipboard}>
+    //                     <AutoClipboard text={this.state.shareUrl} source={shareUrlTextBox} id='share-url' />
+    //                 </div>
+    //             </Otherwise>
+    //         </Choose>
+    //     );
+    // },
+
+    renderContentForPrint() {
         const iframeCode = this.state.shareUrl.length ?
             `<iframe style="width: 720px; height: 600px; border: none;" src="${this.state.shareUrl}" allowFullScreen mozAllowFullScreen webkitAllowFullScreen></iframe>`
             : '';
@@ -284,17 +332,20 @@ const SharePanel = createReactClass({
     },
 
     render() {
+        const { autoShare } = this.props;
         const dropdownTheme = {
             btn: Styles.btnShare,
-            outer: Styles.sharePanel,
+            outer: classNames(Styles.sharePanel, {[Styles.autoShare]: autoShare}),
             inner: Styles.dropdownInner,
             icon: 'share'
         };
 
+        const btnText = autoShare ? 'Share' : 'Share / Print';
+
         return (
             <div>
                 <MenuPanel theme={dropdownTheme}
-                    btnText="Share / Print"
+                    btnText={btnText}
                     viewState={this.props.viewState}
                     btnTitle="Share your map with others"
                     isOpen={this.state.isOpen}
