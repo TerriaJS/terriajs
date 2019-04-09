@@ -70,7 +70,12 @@ const DataPreviewSections = createReactClass({
                     <If condition={item.content && item.content.length > 0}>
                         <div key={i}>
                             <h4 className={Styles.h4}>{item.name}</h4>
-                            {parseCustomMarkdownToReact(item.content, {catalogItem: metadataItem})}
+                            <If condition={item.name && item.name.indexOf("URL") !== -1 }>
+                               {window.location.protocol + "//" + window.location.hostname + item.content}
+                            </If>
+                            <If condition={item.name && item.name.indexOf("URL") === -1 }>
+                                {parseCustomMarkdownToReact(item.content, {catalogItem: metadataItem})}
+                            </If>
                         </div>
                     </If>
                 </For>
