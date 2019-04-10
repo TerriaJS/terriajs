@@ -67,7 +67,7 @@ const DataPreview = createReactClass({
                     </When>
                     <Otherwise>
                         <div className={Styles.placeholder}>
-                            <p>Select a dataset to see a preview</p>
+                            <p>Click GNZ Services to view a list of service URLs</p>
                             <p>- OR -</p>
                             <button className={Styles.btnBackToMap} onClick={this.backToMap}>Go to the map</button>
                         </div>
