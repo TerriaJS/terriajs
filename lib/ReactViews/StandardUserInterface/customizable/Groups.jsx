@@ -11,3 +11,5 @@ export function Menu() {}
 export function Nav() {}
 /** No-op grouping element for elements that should be added to the experimental features*/
 export function ExperimentalMenu() {}
+/** No-op grouping element for elements that should be added to the Feedback*/
+export function Feedback() {}

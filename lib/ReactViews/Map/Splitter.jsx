@@ -13,6 +13,7 @@ try {
     const options = Object.defineProperty({}, 'passive', {
         get: function () {
             passiveSupported = true;
+            return true;
         }
     });
 
@@ -171,7 +172,7 @@ const Splitter = createReactClass({
                 <div className={Styles.dividerWrapper}>
                     <div className={Styles.divider} style={dividerStyle}></div>
                 </div>
-                <div className={Styles.thumb} style={thumbStyle} onMouseDown={this.startDrag} onTouchStart={this.startDrag}><Icon glyph={Icon.GLYPHS.splitter}/></div>
+                <button className={Styles.thumb} style={thumbStyle} onClick={e => e.preventDefault()} onMouseDown={this.startDrag} onTouchStart={this.startDrag} title="Drag left or right to adjust views" ><Icon glyph={Icon.GLYPHS.splitter}/></button>
             </div>
         );
     }

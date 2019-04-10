@@ -4,7 +4,7 @@
 var Terria = require('../../lib/Models/Terria');
 var WebMapServiceCatalogGroup = require('../../lib/Models/WebMapServiceCatalogGroup');
 
-var loadText = require('terriajs-cesium/Source/Core/loadText');
+var loadText = require('../../lib/Core/loadText');
 var GeographicTilingScheme = require('terriajs-cesium/Source/Core/GeographicTilingScheme');
 var WebMercatorTilingScheme = require('terriajs-cesium/Source/Core/WebMercatorTilingScheme');
 

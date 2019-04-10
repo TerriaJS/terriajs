@@ -1,5 +1,5 @@
 import React from 'react';
-
+import Icon from '../Icon.jsx';
 import PropTypes from 'prop-types';
 
 import Styles from './mobile-menu-item.scss';
@@ -10,8 +10,8 @@ export default function MobileMenuItem(props) {
         <div className={Styles.root}>
             <Choose>
                 <When condition={props.href}>
-                    <a href={props.href} target="_blank" onClick={props.onClick}
-                       className={Styles.link}>{props.caption}</a>
+                    <a href={props.href} target="_blank" rel="noopener noreferrer" onClick={props.onClick}
+                       className={Styles.link}>{props.caption}{props.href !== '#' && <Icon glyph={Icon.GLYPHS.externalLink}/>}</a>
                 </When>
                 <Otherwise>
                     <button onClick={props.onClick} className={Styles.link}>{props.caption}</button>

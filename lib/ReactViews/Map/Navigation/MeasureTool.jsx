@@ -113,7 +113,7 @@ const MeasureTool = createReactClass({
 
         // Request the triangles that make up the polygon from Cesium.
         const tangentPlane = EllipsoidTangentPlane.fromPoints(positions, Ellipsoid.WGS84);
-        const polygons = PolygonGeometryLibrary.polygonsFromHierarchy(new PolygonHierarchy(positions), perPositionHeight, tangentPlane, Ellipsoid.WGS84);
+        const polygons = PolygonGeometryLibrary.polygonsFromHierarchy(new PolygonHierarchy(positions), tangentPlane.projectPointsOntoPlane.bind(tangentPlane), !perPositionHeight, Ellipsoid.WGS84);
 
         const geom = PolygonGeometryLibrary.createGeometryFromPositions(Ellipsoid.WGS84,
                                                                         polygons.polygons[0],
@@ -190,7 +190,7 @@ const MeasureTool = createReactClass({
     render() {
         return <div className={Styles.toolButton}>
                   <button type='button' className={Styles.btn}
-                          title='measure distance between two points'
+                          title='Measure distance between locations'
                           onClick={this.handleClick}>
                           <Icon glyph={Icon.GLYPHS.measure}/>
                   </button>

@@ -36,7 +36,8 @@ const Timeline = createReactClass({
 
     getInitialState() {
         return {
-            currentTimeString: '<>'
+            currentTimeString: '<>',
+            isPickerOpen: false
         };
     },
 
@@ -99,6 +100,18 @@ const Timeline = createReactClass({
         this.props.terria.currentViewer.notifyRepaintRequired();
     },
 
+    onOpenPicker() {
+        this.setState({
+            isPickerOpen: true
+        });
+    },
+
+    onClosePicker() {
+        this.setState({
+            isPickerOpen: false
+        });
+    },
+
     render() {
         const terria = this.props.terria;
         const catalogItem = terria.timeSeriesStack.topLayer;
@@ -113,7 +126,15 @@ const Timeline = createReactClass({
                 <div className={Styles.controlsRow}>
                     <TimelineControls clock={terria.clock} analytics={terria.analytics} currentViewer={terria.currentViewer} />
                     <If condition={defined(catalogItem.availableDates) && (catalogItem.availableDates.length !== 0)}>
-                        <DateTimePicker currentDate={catalogItem.clampedDiscreteTime} dates={catalogItem.availableDates} onChange={this.changeDateTime} openDirection='up'/>
+                        <DateTimePicker
+                            currentDate={catalogItem.clampedDiscreteTime}
+                            dates={catalogItem.availableDates}
+                            onChange={this.changeDateTime}
+                            openDirection='up'
+                            isOpen={this.state.isPickerOpen}
+                            onOpen={this.onOpenPicker}
+                            onClose={this.onClosePicker}
+                            dateFormat={catalogItem.dateFormat} />
                     </If>
                     <CesiumTimeline terria={terria} />
                 </div>

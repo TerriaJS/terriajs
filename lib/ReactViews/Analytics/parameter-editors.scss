@@ -166,3 +166,22 @@
     padding-right: 5px;
   }
 }
+
+.btn-location-selector {
+  composes: btn from "../../Sass/common/_buttons.scss";
+  composes: btn--tertiary from "../../Sass/common/_buttons.scss";
+
+  border: 2px solid #404855;
+  font-size: 0.9rem;
+  padding: 10px 12px;
+  border-radius: 0px;
+  display: table-cell;
+  text-align: center;
+  width: 32%;
+
+  &:hover, &:focus {
+    border: 2px solid #404855;
+    background: #404855;
+    color: white
+  }
+}

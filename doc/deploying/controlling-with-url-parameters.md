@@ -12,8 +12,9 @@ For example: [http://nationalmap.gov.au#test&map=2d](http://nationalmap.gov.au#t
 Parameter      | Meaning
 ---------------|--------
 `clean`          | Don't load the default catalog files for this site.
-`map=2d`         | Use the 2D (Leaflet) map instead of the default.
-`map=3d`         | Use the 3D (Cesium) map instead of the default.
+`map=2d`         | Use the 2D (Leaflet) map, instead of the default.
+`map=3d`         | Use the 3D (Cesium) map, instead of the default.
+`map=3dSmooth`   | Use the 3D (Cesium) map without terrain, instead of the default.
 `hideExplorerPanel=1` | Collapse the catalog (left side) panel, useful for embedding.
 `mode=preview`   | Operate in "preview mode", which mostly means not showing a warning if the screen is `small`  
 `share=`...      | Load a map view previously saved using the "Share" function with URL shortening.

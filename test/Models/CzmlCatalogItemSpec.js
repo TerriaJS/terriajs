@@ -5,8 +5,8 @@ var CzmlCatalogItem = require('../../lib/Models/CzmlCatalogItem');
 var TerriaError = require('../../lib/Core/TerriaError');
 var Terria = require('../../lib/Models/Terria');
 
-var loadBlob = require('terriajs-cesium/Source/Core/loadBlob');
-var loadText = require('terriajs-cesium/Source/Core/loadText');
+var loadBlob = require('../../lib/Core/loadBlob');
+var loadText = require('../../lib/Core/loadText');
 
 describe('CzmlCatalogItem', function() {
     var terria;

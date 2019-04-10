@@ -2,7 +2,7 @@
 
 /*global require*/
 var CkanCatalogItem = require('../../lib/Models/CkanCatalogItem');
-var loadText = require('terriajs-cesium/Source/Core/loadText');
+var loadText = require('../../lib/Core/loadText');
 var Terria = require('../../lib/Models/Terria');
 var TerriaError = require('../../lib/Core/TerriaError');
 var WebMapServiceCatalogItem = require('../../lib/Models/WebMapServiceCatalogItem');

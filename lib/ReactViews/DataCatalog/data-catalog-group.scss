@@ -4,6 +4,24 @@
 .root {
   font-family: $font-base;
   color: $data-catalog-color;
+  position: relative;
+}
+
+.trashGroup{
+  composes: btn from '../../Sass/common/_buttons.scss';
+  position: absolute;
+  color: $color-primary;
+  right: 2px;
+  top: 2px;
+  @media (max-width: $sm) {
+    top: 10px;
+  }
+  svg{
+    height: 18px;
+    width: 18px;
+    margin: 3px;
+    fill: $charcoal-grey;
+  }
 }
 
 .btn--catalog {
@@ -11,11 +29,12 @@
 
   text-align: left;
   font-size: $font-size-small;
-  padding: $padding-small 30px+$padding;
+  padding: 8px 30px+$padding;
   position: relative;
   width: 100%;
   font-weight: bold;
   line-height: normal;
+  position: relative;
 
   svg{
     display: inline-block;
@@ -44,7 +63,6 @@
   color: #ffffff;
 }
 
-
 .folder {
   position: absolute;
   left: 8px;
@@ -56,7 +74,7 @@
     display: block;
   }
   @media (min-width: $sm) {
-    top: 0;
+    top: 5px;
     svg{
       height: 25px;
       width: 25px;
@@ -67,7 +85,7 @@
 .caret {
   position: absolute;
   right: 2px;
-  top: 7px;
+  top: 5px;
   svg{
     fill: $charcoal-grey;
     opacity: 0.5;
@@ -76,11 +94,14 @@
   }
   @media (min-width: $sm) {
     right: 5px;
-    top: 5px;
+    top: 8px;
     svg{
       height: 18px;
       width: 18px;
     }
+  }
+  &.offsetRight{
+    right: 20px;
   }
 }
 

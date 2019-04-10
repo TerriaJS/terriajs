@@ -155,7 +155,7 @@ describe('AbsIttCatalogItem', function() {
                 })
             });
 
-            jasmine.Ajax.stubRequest('data/regionMapping.json').andReturn({
+            jasmine.Ajax.stubRequest('build/TerriaJS/data/regionMapping.json').andReturn({
                 responseText: JSON.stringify({
                     "regionWmsMap": {
                         "SA4": {
@@ -169,7 +169,7 @@ describe('AbsIttCatalogItem', function() {
                             ],
                             "digits": 3,
                             "description": "Statistical Area Level 4",
-                            "regionIdsFile": "data/regionids/region_map-FID_SA4_2011_AUST_SA4_CODE11.json"
+                            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_SA4_2011_AUST_SA4_CODE11.json"
                         },
                         "AUS": {
                             "layerName": "region_map:FID_AUS_2011_AUST",
@@ -178,7 +178,7 @@ describe('AbsIttCatalogItem', function() {
                             "aliases": [
                                 "aus"
                             ],
-                            "regionIdsFile": "data/regionids/region_map-FID_AUS_2011_AUST_AUS_CODE.json"
+                            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_AUS_2011_AUST_AUS_CODE.json"
                         }
                     }
                 })
@@ -200,7 +200,7 @@ describe('AbsIttCatalogItem', function() {
                 responseText: 'SA4,Tot_P_M,Tot_P_F,Tot_P_P\n101,104000,104000,208000\n102,150000,160000,310000'
             });
 
-            jasmine.Ajax.stubRequest('data/regionids/region_map-FID_AUS_2011_AUST_AUS_CODE.json').andReturn({
+            jasmine.Ajax.stubRequest('build/TerriaJS/data/regionids/region_map-FID_AUS_2011_AUST_AUS_CODE.json').andReturn({
                 responseText: JSON.stringify({
                     "layer": "region_map:FID_AUS_2011_AUST",
                     "property": "AUS_CODE",
@@ -208,7 +208,7 @@ describe('AbsIttCatalogItem', function() {
                 })
             });
 
-            jasmine.Ajax.stubRequest('data/regionids/region_map-FID_SA4_2011_AUST_SA4_CODE11.json').andReturn({
+            jasmine.Ajax.stubRequest('build/TerriaJS/data/regionids/region_map-FID_SA4_2011_AUST_SA4_CODE11.json').andReturn({
                 responseText: JSON.stringify({
                     "layer": "region_map:FID_SA4_2011_AUST",
                     "property": "SA4_CODE11",

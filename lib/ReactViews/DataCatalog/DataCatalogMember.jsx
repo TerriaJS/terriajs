@@ -12,24 +12,32 @@ import DataCatalogGroup from './DataCatalogGroup.jsx';
  */
 export default createReactClass({
     mixins: [ObserveModelMixin],
-    
+
     displayName: 'DataCatalogMember',
 
     propTypes: {
         member: PropTypes.object.isRequired,
         viewState: PropTypes.object.isRequired,
-        manageIsOpenLocally: PropTypes.bool
+        manageIsOpenLocally: PropTypes.bool,
+        removable: PropTypes.bool,
+        terria: PropTypes.object
     },
 
     render() {
         if (this.props.member.isGroup) {
             return (
-                <DataCatalogGroup group={this.props.member} viewState={this.props.viewState}
-                                  manageIsOpenLocally={this.props.manageIsOpenLocally} />
+                <DataCatalogGroup group={this.props.member}
+                                  viewState={this.props.viewState}
+                                  manageIsOpenLocally={this.props.manageIsOpenLocally}
+                                  removable={this.props.removable}
+                                  terria={this.props.terria}/>
             );
         } else {
             return (
-                <DataCatalogItem item={this.props.member} viewState={this.props.viewState} />
+                <DataCatalogItem item={this.props.member}
+                                 viewState={this.props.viewState}
+                                 removable={this.props.removable}
+                                 terria={this.props.terria}/>
             );
         }
     }

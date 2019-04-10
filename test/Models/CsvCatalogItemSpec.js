@@ -323,6 +323,8 @@ describe('CsvCatalogItem with lat and lon', function() {
             expect(TimeInterval.contains(featureA.availability, JulianDate.fromIso8601('2015-08-03'))).toBe(true);
             expect(TimeInterval.contains(featureA.availability, JulianDate.fromIso8601('2015-08-04'))).toBe(true);
             expect(TimeInterval.contains(featureA.availability, JulianDate.fromIso8601('2015-08-08'))).toBe(false);
+            // Check there is no animation gap at the end of moving point csv
+            expect(JulianDate.equalsEpsilon(csvItem.clock.stopTime, JulianDate.fromIso8601('2015-08-06'), 1)).toBe(true);
         }).otherwise(fail).then(done);
     });
 
@@ -1220,7 +1222,7 @@ describe('CsvCatalogItem with region mapping', function() {
                 'data/regionids/region_map-FID_LGA_2011_AUST_STE_NAME11.json',
                 'data/regionids/region_map-FID_STE_2011_AUST_STE_NAME11.json'
             ]).then(function(resources) {
-                jasmine.Ajax.stubRequest('http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows?transparent=true&format=image%2Fpng&exceptions=application%2Fvnd.ogc.se_xml&styles=&tiled=true&service=WMS&version=1.1.1&request=GetFeatureInfo&layers=region_map%3AFID_LGA_2011_AUST&srs=EPSG%3A3857&bbox=16437018.562444303%2C-3913575.8482010253%2C16593561.59637234%2C-3757032.814272985&width=256&height=256&query_layers=region_map%3AFID_LGA_2011_AUST&x=249&y=135&info_format=application%2Fjson').andReturn({
+                jasmine.Ajax.stubRequest('http://regionmap-dev.nationalmap.nicta.com.au/region_map/ows?transparent=true&format=image%2Fpng&exceptions=application%2Fvnd.ogc.se_xml&styles=&tiled=true&service=WMS&version=1.1.1&request=GetFeatureInfo&layers=region_map%3AFID_LGA_2011_AUST&bbox=16437018.562444303%2C-3913575.8482010253%2C16593561.59637234%2C-3757032.814272985&width=256&height=256&srs=EPSG%3A3857&query_layers=region_map%3AFID_LGA_2011_AUST&x=249&y=135&info_format=application%2Fjson').andReturn({
                     responseText: JSON.stringify({
                         "type": "FeatureCollection",
                         "features": [{
@@ -1249,7 +1251,7 @@ describe('CsvCatalogItem with region mapping', function() {
                     })
                 });
                 // Use a regular expression for this URL because IE9 has ~1e-10 differences in the bbox parameter.
-                jasmine.Ajax.stubRequest(new RegExp('http://regionmap-dev\\.nationalmap\\.nicta\\.com\\.au/region_map/ows\\?transparent=true&format=image%2Fpng&exceptions=application%2Fvnd\\.ogc\\.se_xml&styles=&tiled=true&service=WMS&version=1\\.1\\.1&request=GetFeatureInfo&layers=region_map%3AFID_LGA_2011_AUST&srs=EPSG%3A3857&bbox=16280475\\.5285162\\d\\d%2C-4618019\\.5008772\\d\\d%2C16358747\\.0454802\\d\\d%2C-4539747\\.9839131\\d\\d&width=256&height=256&query_layers=region_map%3AFID_LGA_2011_AUST&x=126&y=58&info_format=application%2Fjson')).andReturn({
+                jasmine.Ajax.stubRequest(new RegExp('http://regionmap-dev\\.nationalmap\\.nicta\\.com\\.au/region_map/ows\\?transparent=true&format=image%2Fpng&exceptions=application%2Fvnd\\.ogc\\.se_xml&styles=&tiled=true&service=WMS&version=1\\.1\\.1&request=GetFeatureInfo&layers=region_map%3AFID_LGA_2011_AUST&bbox=16280475\\.5285162\\d\\d%2C-4618019\\.5008772\\d\\d%2C16358747\\.0454802\\d\\d%2C-4539747\\.9839131\\d\\d&width=256&height=256&srs=EPSG%3A3857&query_layers=region_map%3AFID_LGA_2011_AUST&x=126&y=58&info_format=application%2Fjson')).andReturn({
                     responseText: JSON.stringify({
                         "type": "FeatureCollection",
                         "features": [{

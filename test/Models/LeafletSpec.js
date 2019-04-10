@@ -11,7 +11,7 @@ var GeoJsonDataSource = require('terriajs-cesium/Source/DataSources/GeoJsonDataS
 var ImageryLayerFeatureInfo = require('terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo');
 var L = require('leaflet');
 var Leaflet = require('../../lib/Models/Leaflet');
-var loadJson = require('terriajs-cesium/Source/Core/loadJson');
+var loadJson = require('../../lib/Core/loadJson');
 var Terria = require('../../lib/Models/Terria');
 var when = require('terriajs-cesium/Source/ThirdParty/when');
 

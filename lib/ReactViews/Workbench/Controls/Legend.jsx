@@ -41,7 +41,11 @@ const Legend = createReactClass({
     renderLegend(legendUrl, i) {
         const isImage = legendUrl.isImage();
         const insertDirectly = !!legendUrl.safeSvgContent; // we only insert content we generated ourselves, not arbitrary SVG from init files.
-        const safeSvgContent = {__html: legendUrl.safeSvgContent};
+
+        const svg = legendUrl.safeSvgContent;
+        // Safari xlink NS issue fix
+        const processedSvg = svg ? svg.replace(/NS\d+:href/gi, 'xlink:href') : null;
+        const safeSvgContent = {__html: processedSvg};
 
         // We proxy the legend so it's cached, and so that the Print/Export feature works with non-CORS servers.
         // We make it absolute because the print view is opened on a different domain (about:blank) so relative
@@ -62,7 +66,7 @@ const Legend = createReactClass({
                         <a onError={this.onImageError.bind(this, legendUrl)}
                            href={proxiedUrl}
                            className={Styles.imageAnchor}
-                           target="_blank">
+                           target="_blank" rel="noreferrer noopener">
                             <img src={proxiedUrl}/>
                         </a>
                     </li>
@@ -70,7 +74,7 @@ const Legend = createReactClass({
                 <Otherwise>
                     <li key={proxiedUrl}>
                         <a href={proxiedUrl}
-                           target="_blank">Open legend in a separate tab
+                           target="_blank" rel="noreferrer noopener">Open legend in a separate tab
                         </a>
                     </li>
                 </Otherwise>

@@ -11,7 +11,7 @@ var Entity = require('terriajs-cesium/Source/DataSources/Entity');
 var GeoJsonDataSource = require('terriajs-cesium/Source/DataSources/GeoJsonDataSource');
 var ImageryLayer = require('terriajs-cesium/Source/Scene/ImageryLayer');
 var ImageryLayerFeatureInfo = require('terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo');
-var loadJson = require('terriajs-cesium/Source/Core/loadJson');
+var loadJson = require('../../lib/Core/loadJson');
 var Rectangle = require('terriajs-cesium/Source/Core/Rectangle');
 var SceneTransforms = require('terriajs-cesium/Source/Scene/SceneTransforms');
 var supportsWebGL = require('../../lib/Core/supportsWebGL');
@@ -47,7 +47,9 @@ describeIfSupported('Cesium Model', function() {
 
         spyOn(terria.tileLoadProgressEvent, 'raiseEvent');
 
-        var cesiumWidget = new CesiumWidget(container);
+        var cesiumWidget = new CesiumWidget(container, {
+            imageryProvider: new TileCoordinatesImageryProvider()
+        });
 
         spyOn(cesiumWidget.screenSpaceEventHandler, 'setInputAction');
 

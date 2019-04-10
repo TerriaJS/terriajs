@@ -163,7 +163,7 @@ const MyLocation = createReactClass({
 
         return <div className={Styles.toolButton}>
                   <button type='button' className={toggleStyle}
-                          title='go to my location'
+                          title='Centre map at your current location'
                           onClick={this.handleCick}>
                           <Icon glyph={Icon.GLYPHS.geolocation}/>
                   </button>
