@@ -21,6 +21,7 @@ const DEFAULT_SECTION_ORDER = [
     'Dataset Description',
     'Service Description',
     'Resource Description',
+    'Data Custodian Details',
     'Licence',
     'Access Constraints',
     'Author',
