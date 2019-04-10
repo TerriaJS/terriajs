@@ -1,13 +1,12 @@
 Change Log
 ==========
 
-### v6.0.#
-
-* Promoted Data Custodian to the top of the Data Catalogue Preview (with the exception of disclaimer which will take priority if present) to make the data set author more discoverable.
 ### Next Release
 
 * Added `hideLayerAfterMinScaleDenominator` property to `WebMapServiceCatalogItem`. When true, TerriaJS will show a message and display nothing rather than silently show a scaled-up version of the layer when the user zooms in past the layer's advertised `MinScaleDenominator`.
 * Added `GeoJsonParameterEditor`.
+* Promoted Data Custodian to the top of the Data Catalogue Preview (with the exception of disclaimer which will take priority if present) to make the data set author more discoverable.
+* Added Data Custodian Details to `DEFAULT_SECTION_ORDER`
 
 ### v7.1.0
 
