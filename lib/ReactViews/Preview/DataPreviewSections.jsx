@@ -15,11 +15,13 @@ naturalSort.insensitive = true;
 // Should get it from option
 const DEFAULT_SECTION_ORDER = [
     'Disclaimer',
+    'Data Custodian',
     'Description',
     'Data Description',
     'Dataset Description',
     'Service Description',
     'Resource Description',
+    'Data Custodian Details',
     'Licence',
     'Access Constraints',
     'Author',
