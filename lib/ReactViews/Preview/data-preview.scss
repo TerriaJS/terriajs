@@ -53,13 +53,6 @@
 }
 
 .field {
-  textarea {
-    resize: none;
-    color: #888;
-    display: block;
-    padding: .5rem .5rem;
-  }
-
   composes: field from '../../Sass/common/_form.scss';
 }
 
@@ -71,4 +64,13 @@
 
 .h3 {
   composes: h3 from '../../Sass/common/_base.scss';
+}
+
+.urlfield {
+  composes: field from '../../Sass/common/_form.scss';
+
+  resize: none;
+  color: #888;
+  display: block;
+  padding: .5rem .5rem;
 }
