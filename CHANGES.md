@@ -17,6 +17,7 @@ Change Log
 * Fixed a bug that prevented catalog item split state (left/right/both) from being shared for CSV layers.
 * Fixed a bug where the 3D globe would not immediately refresh when toggling between the "Terrain" and "Smooth" viewer modes.
 * Fixed a bug that could cause the chart panel at the bottom to flicker on and off rapidly when there is an error loading chart data.
+* Fixed map tool button positioning on small-screen devices when viewing time series layers.
 
 ### v7.0.2
 
