@@ -25,10 +25,6 @@ Change Log
 * Implemented "Zoom To" support for KML, CZML, and other vector data sources.
 * Upgraded to Cesium v1.55.
 
-### Next Release
-
-* Added `disablePreview` option to all catalog items. This is useful when the preview map in the catalog will be slow to load.
-
 ### v7.0.1
 
 * Breaking Changes:
