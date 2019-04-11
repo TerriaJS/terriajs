@@ -7,6 +7,8 @@ Change Log
 * Replace `getUniqueValues` with `lodash.uniq`
 * Added `hideLayerAfterMinScaleDenominator` property to `WebMapServiceCatalogItem`. When true, TerriaJS will show a message and display nothing rather than silently show a scaled-up version of the layer when the user zooms in past the layer's advertised `MinScaleDenominator`.
 * Added `GeoJsonParameterEditor`.
+* Added `clampToTerrain` property to `GeoJsonCatalogItem`.
+* When clicking a polygon in 3D Terrain mode, the white outline is now correctly shown on the terrain surface. Not that Internet Explorer 11 and very old hardware may still draw the highlight in the wrong place due to missing support for a required feature.
 
 ### v7.1.0
 
