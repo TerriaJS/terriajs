@@ -5,7 +5,19 @@ Change Log
 
 * Added `GltfCatalogItem` for displaying [glTF](https://www.khronos.org/gltf/) models on the 3D scene.
 * Replace `getUniqueValues` with `lodash.uniq`
+* Added `hideLayerAfterMinScaleDenominator` property to `WebMapServiceCatalogItem`. When true, TerriaJS will show a message and display nothing rather than silently show a scaled-up version of the layer when the user zooms in past the layer's advertised `MinScaleDenominator`.
+* Added `GeoJsonParameterEditor`.
+
+### v7.1.0
+
+* Support displaying availability for imagery layers on charts, by adding `"showOnChart": true" or clicking a button in the UI.
+* Added a `featureTimesProperty` property to all `ImageryLayerCatalogItem`s. This is useful for datasets that do not have data for all locations at all times, such as daily sensor swaths of near-real-time or historical satellite imagery. The property specifies the name of a property returned by the layer's feature information query that indicates the times when data is available at that particular location. When this property is set, TerriaJS will display an interface on the workbench to allow the user to filter the times to only those times where data is available at a particular location. It will also display a button at the bottom of the Feature Information panel allowing the user to filter for the selected location.
+* Added `disablePreview` option to all catalog items. This is useful when the preview map in the catalog will be slow to load.
+* When using the splitter, the feature info panel will now show only the features on the clicked side of the splitter.
+* Vector polygons and polylines are now higlighted when clicked.
+* Fixed a bug that prevented catalog item split state (left/right/both) from being shared for CSV layers.
 * Fixed a bug where the 3D globe would not immediately refresh when toggling between the "Terrain" and "Smooth" viewer modes.
+* Fixed a bug that could cause the chart panel at the bottom to flicker on and off rapidly when there is an error loading chart data.
 
 ### v7.0.2
 
