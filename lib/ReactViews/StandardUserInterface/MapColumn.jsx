@@ -9,6 +9,7 @@ import DistanceLegend from '../Map/Legend/DistanceLegend.jsx';
 import FeedbackButton from '../Feedback/FeedbackButton.jsx';
 import ObserveModelMixin from '../ObserveModelMixin';
 import BottomDock from '../BottomDock/BottomDock.jsx';
+import defined from 'terriajs-cesium/Source/Core/defined';
 import FeatureDetection from 'terriajs-cesium/Source/Core/FeatureDetection';
 import classNames from "classnames";
 
@@ -95,7 +96,13 @@ const MapColumn = createReactClass({
                             </div>
                         </If>
                         <If condition={!this.props.customFeedbacks.length && this.props.terria.configParameters.feedbackUrl && !this.props.viewState.hideMapUi()}>
-                            <div className={Styles.feedbackButtonWrapper}>
+                            <div
+                                className={classNames(Styles.feedbackButtonWrapper, {
+                                    [Styles.withTimeSeriesControls]: defined(
+                                        this.props.terria.timeSeriesStack.topLayer
+                                    ),
+                                })}
+                            >
                                 <FeedbackButton viewState={this.props.viewState}/>
                             </div>
                         </If>
