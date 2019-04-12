@@ -2,8 +2,6 @@
 
 /*global require,describe,it,expect,beforeEach,fail*/
 
-var Credit = require('terriajs-cesium/Source/Core/Credit');
-var ImageryProvider = require('terriajs-cesium/Source/Scene/ImageryProvider');
 var JulianDate = require('terriajs-cesium/Source/Core/JulianDate');
 var Rectangle = require('terriajs-cesium/Source/Core/Rectangle');
 var TimeInterval = require('terriajs-cesium/Source/Core/TimeInterval');
