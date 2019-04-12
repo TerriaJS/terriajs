@@ -1,3 +1,4 @@
+import AsyncMappableMixin from '../ModelMixins/AsyncMappableMixin';
 import BillboardGraphics from "terriajs-cesium/Source/DataSources/BillboardGraphics";
 import { computed, observable, toJS } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
@@ -26,6 +27,7 @@ import StratumOrder from "../Models/StratumOrder";
 import Terria from "./Terria";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import when from "terriajs-cesium/Source/ThirdParty/when";
+import makeRealPromise from '../Core/makeRealPromise';
 
 const formatPropertyValue = require("../Core/formatPropertyValue");
 const hashFromString = require("../Core/hashFromString");
@@ -131,7 +133,7 @@ class LoadGeoJsonStratum extends LoadableStratum(GeoJsonCatalogItemTraits) {
 }
 
 class GeoJsonCatalogItem
-    extends UrlMixin(CatalogMemberMixin(Model(GeoJsonCatalogItemTraits)))
+    extends AsyncMappableMixin(UrlMixin(CatalogMemberMixin(Model(GeoJsonCatalogItemTraits))))
     implements Mappable {
     constructor(id: string, terria: Terria) {
         super(id, terria);
@@ -142,26 +144,22 @@ class GeoJsonCatalogItem
     }
 
     @computed
-    get mapItems() {
+    get asyncMapItems() {
         if (this.geoJsonData === undefined) {
             return [];
         }
-        // Construct a dataSource to return immediately
-        const dataSource = new GeoJsonDataSource();
-        if (isDefined(this.show)) {
-            dataSource.show = this.show;
-        }
 
-        // then, asynchronously reproject the data and load the dataSource
-        const proj4ServiceBaseUrl = this.terria.configParameters
-            .proj4ServiceBaseUrl;
-
+        const proj4ServiceBaseUrl = this.terria.configParameters.proj4ServiceBaseUrl;
         const geoJson: any = toJS(this.geoJsonData); // toJS because reprojectToGeographic needs a plain JS value
-        when(reprojectToGeographic(geoJson, proj4ServiceBaseUrl))
-            .then((geoJson: any) => {
-                this.loadDataSource(dataSource, geoJson);
+        const show = this.show;
+
+        const dataSourcePromise = reprojectToGeographic(geoJson, proj4ServiceBaseUrl)
+            .then((geojson: any) => {
+                const dataSource = new GeoJsonDataSource();
+                dataSource.show = show || false;
+                return this.loadDataSource(dataSource, geojson);
             })
-            .otherwise(() => {
+            .catch(() => {
                 throw new TerriaError({
                     sender: this,
                     title: "Error loading GeoJSON",
@@ -172,7 +170,8 @@ class GeoJsonCatalogItem
                     }">${this.terria.supportEmail}</a>.`
                 });
             });
-        return [dataSource];
+
+        return [dataSourcePromise];
     }
 
     loadMetadata(): Promise<void> {
@@ -196,7 +195,7 @@ class GeoJsonCatalogItem
            - simple-style properties set as the 'Style' property on the catalog item
            - our 'options' set below (and point styling applied after Cesium loads the GeoJSON)
            - if anything is underspecified there, then Cesium's defaults come in.
-           
+
            See https://github.com/mapbox/simplestyle-spec/tree/master/1.1.0
         */
 
@@ -265,7 +264,7 @@ class GeoJsonCatalogItem
             options.fill.alpha = 0.75;
         }
 
-        return dataSource.load(geoJson, options).then(function(dataSource) {
+        return makeRealPromise<GeoJsonDataSource>(dataSource.load(geoJson, options)).then(function(dataSource) {
             const entities = dataSource.entities;
             for (let i = 0; i < entities.values.length; ++i) {
                 const entity = entities.values[i];
@@ -370,7 +369,7 @@ namespace GeoJsonCatalogItem {
 
 export default GeoJsonCatalogItem;
 
-function reprojectToGeographic(geoJson: any, proj4ServiceBaseUrl?: string) {
+function reprojectToGeographic(geoJson: any, proj4ServiceBaseUrl?: string): Promise<any> {
     let code: string | undefined;
 
     if (!isDefined(geoJson.crs)) {
@@ -393,10 +392,10 @@ function reprojectToGeographic(geoJson: any, proj4ServiceBaseUrl?: string) {
     };
 
     if (!Reproject.willNeedReprojecting(code)) {
-        return geoJson;
+        return Promise.resolve(geoJson);
     }
 
-    return when(Reproject.checkProjection(proj4ServiceBaseUrl, code), function(
+    return makeRealPromise<boolean>(Reproject.checkProjection(proj4ServiceBaseUrl, code)).then(function(
         result: boolean
     ) {
         if (result) {
