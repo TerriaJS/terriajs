@@ -9,6 +9,7 @@ Change Log
 * Added `GeoJsonParameterEditor`.
 * Added `clampToTerrain` property to `GeoJsonCatalogItem`.
 * When clicking a polygon in 3D Terrain mode, the white outline is now correctly shown on the terrain surface. Note that Internet Explorer 11 and old GPU hardware cannot support drawing the highlight on terrain, so it will not be drawn at all in these environments.
+* Fixed a bug that caused some chart "Expand" options to be hidden.
 
 ### v7.1.0
 
@@ -20,6 +21,7 @@ Change Log
 * Fixed a bug that prevented catalog item split state (left/right/both) from being shared for CSV layers.
 * Fixed a bug where the 3D globe would not immediately refresh when toggling between the "Terrain" and "Smooth" viewer modes.
 * Fixed a bug that could cause the chart panel at the bottom to flicker on and off rapidly when there is an error loading chart data.
+* Fixed map tool button positioning on small-screen devices when viewing time series layers.
 
 ### v7.0.2
 
