@@ -1,7 +1,8 @@
-import { computed } from 'mobx';
+import { computed, observable, runInAction } from 'mobx';
 import Constructor from '../Core/Constructor';
 import Model from '../Models/Model';
 import CatalogMemberTraits from '../Traits/CatalogMemberTraits';
+import { createTransformer } from 'mobx-utils';
 
 type CatalogMember = Model<CatalogMemberTraits>;
 
@@ -9,7 +10,50 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
     abstract class CatalogMemberMixin extends Base {
         abstract get type(): string;
 
-        abstract loadMetadata(): Promise<void>
+        get isMetadataLoading(): boolean {
+            return this._isMetadataLoading;
+        }
+
+        @observable
+        private _isMetadataLoading = false;
+
+        private _metadataPromise: Promise<void> | undefined = undefined;
+
+        loadMetadata(): Promise<void> {
+            const newPromise = this.loadMetadataKeepAlive;
+            if (newPromise !== this._metadataPromise) {
+                if (this._metadataPromise) {
+                    // TODO - cancel old promise
+                    //this._metadataPromise.cancel();
+                }
+
+                this._metadataPromise = newPromise;
+
+                runInAction(() => {
+                    this._isMetadataLoading = true;
+                });
+                newPromise.then((result) => {
+                    runInAction(() => {
+                        this._isMetadataLoading = false;
+                    });
+                    return result;
+                }).catch((e) => {
+                    runInAction(() => {
+                        this._isMetadataLoading = false;
+                    });
+                    throw e;
+                });
+            }
+
+            return newPromise;
+        }
+
+        abstract get loadMetadataPromise(): Promise<void>;
+
+        @computed({ keepAlive: true })
+        private get loadMetadataKeepAlive(): Promise<void> {
+            return this.loadMetadataPromise;
+        }
 
         get hasCatalogMemberMixin() {
             return true;

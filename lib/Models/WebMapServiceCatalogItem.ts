@@ -30,6 +30,7 @@ import proxyCatalogItemUrl from './proxyCatalogItemUrl';
 import StratumFromTraits from './StratumFromTraits';
 import Terria from './Terria';
 import WebMapServiceCapabilities, { CapabilitiesLayer, CapabilitiesStyle, getRectangleFromLayer } from './WebMapServiceCapabilities';
+import { RectangleTraits } from '../Traits/MappableTraits';
 
 interface LegendUrl {
     url: string;
@@ -48,36 +49,24 @@ interface WebMapServiceStyles {
 }
 
 class GetCapabilitiesStratum extends LoadableStratum(WebMapServiceCatalogItemTraits) {
-    constructor(readonly catalogItem: WebMapServiceCatalogItem) {
-        super();
-    }
+    static load(catalogItem: WebMapServiceCatalogItem): Promise<GetCapabilitiesStratum> {
+        console.log('Loading GetCapabilities');
 
-    @observable
-    capabilities: WebMapServiceCapabilities | undefined;
-
-    @observable
-    isLoading: boolean = false;
-
-    loadCapabilities(): Promise<void> {
-        runInAction(() => {
-            this.isLoading = true;
-            this.capabilities = undefined;
-        });
-
-        if (this.catalogItem.getCapabilitiesUrl === undefined) {
+        if (catalogItem.getCapabilitiesUrl === undefined) {
             return Promise.reject(new TerriaError({
                 title: 'Unable to load GetCapabilities',
                 message: 'Could not load the Web Map Service (WMS) GetCapabilities document because the catalog item does not have a `url`.'
             }));
         }
 
-        const proxiedUrl = proxyCatalogItemUrl(this.catalogItem, this.catalogItem.getCapabilitiesUrl, this.catalogItem.getCapabilitiesCacheDuration);
+        const proxiedUrl = proxyCatalogItemUrl(catalogItem, catalogItem.getCapabilitiesUrl, catalogItem.getCapabilitiesCacheDuration);
         return WebMapServiceCapabilities.fromUrl(proxiedUrl).then(capabilities => {
-            runInAction(() => {
-                this.capabilities = capabilities;
-                this.isLoading = false;
-            })
+            return new GetCapabilitiesStratum(catalogItem, capabilities);
         });
+    }
+
+    constructor(readonly catalogItem: WebMapServiceCatalogItem, readonly capabilities: WebMapServiceCapabilities) {
+        super();
     }
 
     @computed
@@ -174,7 +163,7 @@ class GetCapabilitiesStratum extends LoadableStratum(WebMapServiceCatalogItemTra
     }
 
     @computed
-    get rectangle(): Readonly<Rectangle> | undefined {
+    get rectangle(): StratumFromTraits<RectangleTraits> | undefined {
         const layers: CapabilitiesLayer[] = [...this.capabilitiesLayers.values()].filter(layer => layer !== undefined).map(l => l!);
         // Needs to take union of all layer rectangles
         return layers.length > 0 ? getRectangleFromLayer(layers[0]) : undefined
@@ -245,7 +234,6 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemb
 
     constructor(id: string, terria: Terria) {
         super(id, terria);
-        this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, new GetCapabilitiesStratum(this));
         if (this.opacity === undefined) {
             console.log('Whaaaaa... This should have a default of 0.8');
         }
@@ -254,9 +242,10 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemb
         })
     }
 
-    loadMetadata(): Promise<void> {
-        const getCapabilitiesStratum: GetCapabilitiesStratum = <GetCapabilitiesStratum>this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName);
-        return getCapabilitiesStratum.loadCapabilities();
+    get loadMetadataPromise(): Promise<void> {
+        return GetCapabilitiesStratum.load(this).then(stratum => {
+            this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, stratum);
+        });
     }
 
     loadData(): Promise<void> {
@@ -374,9 +363,7 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemb
 
     private _createImageryProvider = createTransformer((time: string): Cesium.WebMapServiceImageryProvider | undefined => {
         // Don't show anything on the map until GetCapabilities finishes loading.
-        // TODO should this be a more general loading check? eliminate the cast?
-        const stratum = <GetCapabilitiesStratum>this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName);
-        if (stratum.isLoading) {
+        if (this.isMetadataLoading) {
             return undefined;
         }
 
@@ -399,7 +386,7 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemb
             // getFeatureInfoParameters: parameters,
             tilingScheme: /*defined(this.tilingScheme) ? this.tilingScheme :*/ new WebMercatorTilingScheme(),
             maximumLevel: 20,
-            rectangle: stratum.rectangle
+            rectangle: this.rectangle ? Rectangle.fromDegrees(this.rectangle.west, this.rectangle.south, this.rectangle.east, this.rectangle.north) : undefined
         });
     })
 

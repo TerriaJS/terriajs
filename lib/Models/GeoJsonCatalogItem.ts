@@ -175,7 +175,7 @@ class GeoJsonCatalogItem
         return [dataSourcePromise];
     }
 
-    loadMetadata(): Promise<void> {
+    get loadMetadataPromise(): Promise<void> {
         return Promise.resolve();
     }
 

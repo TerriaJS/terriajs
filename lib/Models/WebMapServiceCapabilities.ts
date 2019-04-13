@@ -5,6 +5,8 @@ import loadXML from '../Core/loadXML';
 import TerriaError from '../Core/TerriaError';
 import isReadOnlyArray from '../Core/isReadOnlyArray';
 import Rectangle from 'terriajs-cesium/Source/Core/Rectangle';
+import StratumFromTraits from './StratumFromTraits';
+import { RectangleTraits } from '../Traits/MappableTraits';
 
 
 export interface OnlineResource {
@@ -67,14 +69,24 @@ type Mutable<T> = {
     -readonly [P in keyof T]: T[P];
 };
 
-export function getRectangleFromLayer(layer: CapabilitiesLayer): Rectangle | undefined {
+export function getRectangleFromLayer(layer: CapabilitiesLayer): StratumFromTraits<RectangleTraits> | undefined {
     var egbb = layer.EX_GeographicBoundingBox; // required in WMS 1.3.0
     if (egbb) {
-        return Rectangle.fromDegrees(egbb.westBoundLongitude, egbb.southBoundLatitude, egbb.eastBoundLongitude, egbb.northBoundLatitude);
+        return {
+            west: egbb.westBoundLongitude,
+            south: egbb.southBoundLatitude,
+            east: egbb.eastBoundLongitude,
+            north: egbb.northBoundLatitude
+        };
     } else {
         var llbb = layer.LatLonBoundingBox; // required in WMS 1.0.0 through 1.1.1
         if (llbb) {
-            return Rectangle.fromDegrees(llbb.minx, llbb.miny, llbb.maxx, llbb.maxy);
+            return {
+                west: llbb.minx,
+                south: llbb.miny,
+                east: llbb.maxx,
+                north: llbb.maxy
+            };
         }
     }
     return undefined;
