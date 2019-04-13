@@ -28,6 +28,7 @@ import Terria from "./Terria";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import when from "terriajs-cesium/Source/ThirdParty/when";
 import makeRealPromise from '../Core/makeRealPromise';
+import CreateModel from './CreateModel';
 
 const formatPropertyValue = require("../Core/formatPropertyValue");
 const hashFromString = require("../Core/hashFromString");
@@ -133,7 +134,7 @@ class LoadGeoJsonStratum extends LoadableStratum(GeoJsonCatalogItemTraits) {
 }
 
 class GeoJsonCatalogItem
-    extends AsyncMappableMixin(UrlMixin(CatalogMemberMixin(Model(GeoJsonCatalogItemTraits))))
+    extends AsyncMappableMixin(UrlMixin(CatalogMemberMixin(CreateModel(GeoJsonCatalogItemTraits))))
     implements Mappable {
     constructor(id: string, terria: Terria) {
         super(id, terria);

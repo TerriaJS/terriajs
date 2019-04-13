@@ -1,12 +1,11 @@
 import anyTrait from "./anyTrait";
-import mixCatalogMemberTraits from "./mixCatalogMemberTraits";
+import CatalogMemberTraits from "./CatalogMemberTraits";
+import MappableTraits from "./MappableTraits";
+import mixTraits from "./mixTraits";
 import ModelTraits from "./ModelTraits";
-import mixUrlTraits from "./mixUrlTraits";
-import mixGetCapabilitiesTraits from "./mixGetCapabilitiesTraits";
 import objectTrait from "./objectTrait";
 import primitiveTrait from "./primitiveTrait";
-import objectArrayTrait from "./objectArrayTrait";
-import mixMappableTraits from "./mixMappableTraits";
+import UrlTraits from "./UrlTraits";
 
 export class StyleTraits extends ModelTraits {
     @primitiveTrait({
@@ -66,8 +65,10 @@ export class StyleTraits extends ModelTraits {
     "fill-opacity"?: string;
 }
 
-export default class GeoJsonCatalogItemTraits extends mixUrlTraits(
-    mixMappableTraits(mixCatalogMemberTraits(ModelTraits))
+export default class GeoJsonCatalogItemTraits extends mixTraits(
+    UrlTraits,
+    MappableTraits,
+    CatalogMemberTraits
 ) {
     @objectTrait({
         type: StyleTraits,

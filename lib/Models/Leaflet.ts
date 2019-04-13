@@ -1,9 +1,10 @@
 import CesiumTileLayer from "../Map/CesiumTileLayer";
 import GlobeOrMap, { CameraView } from "./GlobeOrMap";
-import Mappable, { DataSource, ImageryParts } from "./Mappable";
+import Mappable, { ImageryParts } from "./Mappable";
 import Terria from "./Terria";
 import { autorun } from "mobx";
 import { createTransformer } from "mobx-utils";
+import { DataSource } from "cesium";
 
 function isDefined<T>(value: T | undefined): value is T {
     return value !== undefined;
