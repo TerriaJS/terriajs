@@ -3,7 +3,9 @@ import Constructor from '../Core/Constructor';
 import Model from '../Models/Model';
 import CatalogMemberTraits from '../Traits/CatalogMemberTraits';
 
-function CatalogMemberMixin<T extends Constructor<Model<CatalogMemberTraits>>>(Base: T) {
+type CatalogMember = Model<CatalogMemberTraits>;
+
+function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
     abstract class CatalogMemberMixin extends Base {
         abstract get type(): string;
 

@@ -21,8 +21,8 @@ type ArrayTrait<TTrait, TElement> = ReadonlyArray<SingleTrait<TElement>>;
  */
 type FlattenedFromTraits<TDefinition extends ModelTraits> = Complete<ExcludeModelTraitsHidden<{
     readonly [P in keyof TDefinition]: NotUndefined<TDefinition[P]> extends Array<infer TElement>
-        ? (CopyNull<TDefinition[P], ArrayTrait<TDefinition[P], TElement>> | undefined)
-        : (CopyNull<TDefinition[P], SingleTrait<TDefinition[P]>> | undefined);
+        ? ArrayTrait<TDefinition[P], TElement> extends infer R ? CopyNull<TDefinition[P], R> | undefined : never
+        : SingleTrait<TDefinition[P]> extends infer R ? CopyNull<TDefinition[P], R> | undefined : never;
 }>>;
 
 export default FlattenedFromTraits;

@@ -15,6 +15,26 @@ export type CopyUndefined<TSource, TTarget> = If<AllowsUndefined<TSource>, TTarg
 export type CopyNull<TSource, TTarget> = If<AllowsNull<TSource>, TTarget | null, TTarget>;
 
 /**
+ * Makes a target type `| null` and/or `| undefined` if the source
+ * type is these.
+ * @example
+ * type T = CopyNullAndUndefined<number | null | undefined, string>; // string | null | undefined
+ */
+export type CopyNullAndUndefined<TSource, TTarget> = If<
+    AllowsNull<TSource>,
+    If<
+        AllowsUndefined<TSource>,
+        TTarget | null | undefined,
+        TTarget | null
+    >,
+    If<
+        AllowsUndefined<TSource>,
+        TTarget | undefined,
+        TTarget
+    >
+>;
+
+/**
  * Removes `| undefined` from the type.
  * @example
  * type T = NotUndefined<number | undefined>; // number

@@ -1,5 +1,5 @@
 import { If } from "../Core/TypeConditionals";
-import { Complete, CopyNull, CopyUndefined } from "../Core/TypeModifiers";
+import { Complete, CopyNullAndUndefined } from "../Core/TypeModifiers";
 import ModelTraits, { ExcludeModelTraitsHidden, IsValidSimpleTraitType } from "../Traits/ModelTraits";
 
 type SingleTrait<TTrait> = If<
@@ -20,8 +20,8 @@ type ArrayTrait<TTrait, TElement> = ReadonlyArray<SingleTrait<TElement>>;
  */
 type ModelPropertiesFromTraits<TDefinition extends ModelTraits> = Complete<ExcludeModelTraitsHidden<{
     readonly [P in keyof TDefinition]: NonNullable<TDefinition[P]> extends Array<infer TElement>
-        ? CopyNull<TDefinition[P], CopyUndefined<TDefinition[P], ArrayTrait<TDefinition[P], TElement>>>
-        : CopyNull<TDefinition[P], CopyUndefined<TDefinition[P], SingleTrait<TDefinition[P]>>>;
+        ? ArrayTrait<TDefinition[P], TElement> extends infer R ? CopyNullAndUndefined<TDefinition[P], R> : never
+        : SingleTrait<TDefinition[P]> extends infer R ? CopyNullAndUndefined<TDefinition[P], R> : never;
 }>>;
 
 export default ModelPropertiesFromTraits;

@@ -11,19 +11,23 @@ import StratumOrder from './StratumOrder';
 import Terria from './Terria';
 
 export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(Traits: T): ModelConstructor<Model<InstanceType<T>>> {
-    abstract class Model extends BaseModel implements ModelInterface<InstanceType<T>> {
+    type Traits = InstanceType<T>;
+    type StratumTraits = StratumFromTraits<Traits>;
+    type FlattenedTraits = FlattenedFromTraits<Traits>;
+
+    abstract class Model extends BaseModel implements ModelInterface<Traits> {
         abstract get type(): string;
         static readonly traits = Traits.traits;
         readonly traits = Traits.traits;
-        readonly flattened: FlattenedFromTraits<InstanceType<T>>;
-        readonly strata = observable.map<string, StratumFromTraits<InstanceType<T>>>();
+        readonly flattened: FlattenedTraits;
+        readonly strata = observable.map<string, StratumTraits>();
 
         constructor(id: ModelId, terria: Terria) {
             super(id, terria);
             this.flattened = observable(createFlattenedLayer(this, Traits));
         }
 
-        private getOrCreateStratum(id: string): StratumFromTraits<InstanceType<T>> {
+        private getOrCreateStratum(id: string): StratumTraits {
             let result = this.strata.get(id);
             if (!result) {
                 result = createStratumInstance(Traits);
@@ -72,11 +76,11 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(Tr
             return Promise.all(promises);
         }
 
-        setTrait<Key extends keyof StratumFromTraits<InstanceType<T>>>(stratumId: string, trait: Key, value: StratumFromTraits<InstanceType<T>>[Key]): void {
+        setTrait<Key extends keyof StratumTraits>(stratumId: string, trait: Key, value: StratumTraits[Key]): void {
             this.getOrCreateStratum(stratumId)[trait] = value;
         }
 
-        getTrait<Key extends keyof StratumFromTraits<InstanceType<T>>>(stratumId: string, trait: Key): StratumFromTraits<InstanceType<T>>[Key] {
+        getTrait<Key extends keyof StratumTraits>(stratumId: string, trait: Key): StratumTraits[Key] {
             return this.getOrCreateStratum(stratumId)[trait];
         }
     }
