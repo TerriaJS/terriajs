@@ -9,6 +9,7 @@ import {sortable} from 'react-anything-sortable';
 import defined from 'terriajs-cesium/Source/Core/defined';
 
 import ConceptViewer from './Controls/ConceptViewer';
+import CommonStrata from '../../Models/CommonStrata';
 import DateTimeSelectorSection from './Controls/DateTimeSelectorSection';
 import DimensionSelectorSection from './Controls/DimensionSelectorSection';
 import DisplayAsPercentSection from './Controls/DisplayAsPercentSection';
@@ -54,7 +55,7 @@ const WorkbenchItem = observer(createReactClass({
     },
 
     toggleVisibility() {
-        this.props.item.show = this.props.item.show === undefined ? true : !this.props.item.show;
+        this.props.item.getOrCreateStratum(CommonStrata.user).show = !this.props.item.show;
     },
 
     render() {

@@ -7,6 +7,7 @@ import objectTrait from './objectTrait';
 import primitiveTrait from './primitiveTrait';
 import RasterLayerTraits from './RasterLayerTraits';
 import UrlTraits from './UrlTraits';
+import MappableTraits from './MappableTraits';
 
 export class LegendTraits extends ModelTraits {
     @primitiveTrait({
@@ -75,7 +76,8 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
     GetCapabilitiesTraits,
     RasterLayerTraits,
     UrlTraits,
-    CatalogMemberTraits
+    MappableTraits,
+    CatalogMemberTraits,
 ) {
     @primitiveTrait({
         type: 'string',

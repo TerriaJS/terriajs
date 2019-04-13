@@ -1,12 +1,14 @@
 import BoundingSphere from 'terriajs-cesium/Source/Core/BoundingSphere';
 import BoundingSphereState from 'terriajs-cesium/Source/DataSources/BoundingSphereState';
+import DataSource from 'terriajs-cesium/Source/DataSources/DataSource';
+import DataSourceCollection from "terriajs-cesium/Source/DataSources/DataSourceCollection";
 import HeadingPitchRange from 'terriajs-cesium/Source/Core/HeadingPitchRange';
 import Terria from './Terria';
 import Scene from 'terriajs-cesium/Source/Scene/Scene';
 import Viewer from 'terriajs-cesium/Source/Widgets/Viewer/Viewer';
 import GlobeOrMap, { CameraView } from './GlobeOrMap';
 import Rectangle from 'terriajs-cesium/Source/Core/Rectangle';
-import Mappable, { DataSource, ImageryParts } from './Mappable';
+import Mappable, { ImageryParts } from './Mappable';
 import sampleTerrain from 'terriajs-cesium/Source/Core/sampleTerrain';
 import ImageryLayer from 'terriajs-cesium/Source/Scene/ImageryLayer';
 import { createTransformer } from 'mobx-utils';
@@ -53,7 +55,11 @@ export default class Cesium implements GlobeOrMap {
     readonly terria: Terria;
     readonly viewer: Viewer;
     readonly scene: Scene;
+    readonly dataSources: DataSourceCollection = new DataSourceCollection();    
+    
     dataSourceDisplay: Cesium.DataSourceDisplay | undefined;
+
+    
     private _disposeWorkbenchMapItemsSubscription: (() => void) | undefined;
 
     constructor(terria: Terria, viewer: Cesium.Viewer) {
@@ -78,13 +84,31 @@ export default class Cesium implements GlobeOrMap {
             );
             // TODO: Look up the type in a map and call the associated function.
             //       That way the supported types of map items is extensible.
+
+            const allDataSources = allMapItems.filter(isDataSource);
+
+            // Remove deleted data sources
+            let dataSources = this.dataSources;
+            for (let i = 0; i < dataSources.length; i++) {
+                const d = dataSources.get(i);
+                if (allDataSources.indexOf(d) === -1) {
+                    dataSources.remove(d);
+                }
+            }
+
+            // Add new data sources
+            allDataSources.forEach(d => {
+                if (!dataSources.contains(d)) {
+                    dataSources.add(d);
+                }
+            });
+
             // This is the Cesium ImageryLayer, not our Typescript one
             const allImageryParts = allMapItems
                 .filter(ImageryParts.is)
                 .map(
                     makeImageryLayerFromParts
                 );
-            //const dataSources = allMapItems.filter(mapItem => mapItem instanceof DataSource);
 
             // Delete imagery layers that are no longer in the model
             for (let i = 0; i < this.scene.imageryLayers.length; i++) {
@@ -125,7 +149,8 @@ export default class Cesium implements GlobeOrMap {
         flightDurationSeconds: number
     ): void {
         if (!defined(target)) {
-            throw new DeveloperError("viewOrExtent is required.");
+            return;
+            //throw new DeveloperError("viewOrExtent is required.");
         }
 
         flightDurationSeconds = defaultValue(flightDurationSeconds, 3.0);
@@ -277,4 +302,8 @@ function makeImageryLayerFromParts(parts: ImageryParts): Cesium.ImageryLayer {
     layer.alpha = parts.alpha;
     layer.show = parts.show;
     return layer;
+}
+
+function isDataSource(object: DataSource | ImageryParts): object is DataSource {
+    return "entities" in object;
 }
