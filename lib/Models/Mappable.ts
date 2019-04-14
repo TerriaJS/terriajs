@@ -1,3 +1,4 @@
+import DataSource from 'terriajs-cesium/Source/DataSources/DataSource';
 import Model, { BaseModel } from './Model';
 import 'terriajs-cesium/Source/Scene/ImageryProvider';
 
@@ -16,12 +17,6 @@ export namespace ImageryParts {
     export function is(object: ImageryParts | DataSource): object is ImageryParts {
         return 'imageryProvider' in object;
     }
-}
-
-
-
-
-export interface DataSource {
 }
 
 interface Mappable {
