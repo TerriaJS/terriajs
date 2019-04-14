@@ -9,19 +9,30 @@ import UrlMixin from '../ModelMixins/UrlMixin';
 import ModelReference from '../Traits/ModelReference';
 import WebMapServiceCatalogGroupTraits from '../Traits/WebMapServiceCatalogGroupTraits';
 import CommonStrata from './CommonStrata';
-import Model from './Model';
+import CreateModel from './CreateModel';
 import proxyCatalogItemUrl from './proxyCatalogItemUrl';
 import Terria from './Terria';
 import WebMapServiceCapabilities, { CapabilitiesLayer } from './WebMapServiceCapabilities';
 import WebMapServiceCatalogItem from './WebMapServiceCatalogItem';
 
 class GetCapabilitiesStratum extends LoadableStratum(WebMapServiceCatalogGroupTraits) {
-    constructor(readonly catalogGroup: WebMapServiceCatalogGroup) {
-        super();
+    static load(catalogItem: WebMapServiceCatalogGroup): Promise<GetCapabilitiesStratum> {
+        if (catalogItem.getCapabilitiesUrl === undefined) {
+            return Promise.reject(new TerriaError({
+                title: 'Unable to load GetCapabilities',
+                message: 'Could not load the Web Map Service (WMS) GetCapabilities document because the catalog item does not have a `url`.'
+            }));
+        }
+
+        const proxiedUrl = proxyCatalogItemUrl(catalogItem, catalogItem.getCapabilitiesUrl, catalogItem.getCapabilitiesCacheDuration);
+        return WebMapServiceCapabilities.fromUrl(proxiedUrl).then(capabilities => {
+            return new GetCapabilitiesStratum(catalogItem, capabilities);
+        });
     }
 
-    @observable
-    capabilities: WebMapServiceCapabilities | undefined;
+    constructor(readonly catalogGroup: WebMapServiceCatalogGroup, readonly capabilities: WebMapServiceCapabilities) {
+        super();
+    }
 
     @observable
     isLoading: boolean = false;
@@ -30,83 +41,49 @@ class GetCapabilitiesStratum extends LoadableStratum(WebMapServiceCatalogGroupTr
     members: ModelReference[] | undefined;
 
     @action
-    loadCapabilities(): Promise<void> {
-        this.isLoading = true;
-        this.capabilities = undefined;
-
-        if (this.catalogGroup.getCapabilitiesUrl === undefined) {
-            return Promise.reject(
-                new TerriaError({
-                    title: "Unable to load GetCapabilities",
-                    message:
-                        "Could not load the Web Map Service (WMS) GetCapabilities document because the catalog item does not have a `url`."
-                })
-            );
-        }
-
-        const proxiedUrl = proxyCatalogItemUrl(
-            this.catalogGroup,
-            this.catalogGroup.getCapabilitiesUrl,
-            this.catalogGroup.getCapabilitiesCacheDuration
-        );
-        return WebMapServiceCapabilities.fromUrl(proxiedUrl).then(capabilities => {
-            runInAction(() => {
-                this.capabilities = capabilities;
-                this.isLoading = false;
-            });
-        });
-    }
-
-    createMembers(): Promise<void> {
-        const p = this.capabilities ? Promise.resolve() : this.loadCapabilities();
-        return p.then(() => {
-            if (!this.capabilities) {
-                throw Error("How? Also throwing this makes Typescript happy");
-            }
-
-            const layers = this.catalogGroup.flatten
+    createMembers() {
+        const layers = this.catalogGroup.flatten
             ? this.capabilities.allLayers
             : this.getTopLevelLayers(this.capabilities.rootLayers);
 
-            const id = this.catalogGroup.id;
+        const id = this.catalogGroup.id;
 
-            // Create a model for each Layer at this level.
-            const members: ModelReference[] = [];
-            layers.forEach(layer => {
-                if (!layer.Name) {
-                    return;
-                }
+        // Create a model for each Layer at this level.
+        const members: ModelReference[] = [];
+        layers.forEach(layer => {
+            if (!layer.Name) {
+                return;
+            }
 
-                const layerId = id + "/" + encodeURIComponent(layer.Name);
-                let model = this.catalogGroup.terria.getModelById(
-                    WebMapServiceCatalogItem,
-                    layerId
+            const layerId = id + "/" + encodeURIComponent(layer.Name);
+            const existingModel = this.catalogGroup.terria.getModelById(
+                WebMapServiceCatalogItem,
+                layerId
+            );
+
+            let model: WebMapServiceCatalogItem;
+            if (existingModel === undefined) {
+                model = new WebMapServiceCatalogItem(
+                    layerId,
+                    this.catalogGroup.terria
                 );
-                if (!model) {
-                    model = new WebMapServiceCatalogItem(
-                        layerId,
-                        this.catalogGroup.terria
-                    );
-                    this.catalogGroup.terria.addModel(model);
-                }
+                this.catalogGroup.terria.addModel(model);
+            } else {
+                model = existingModel;
+            }
 
-                const stratum = model.getOrCreateStratum(
-                    CommonStrata.inheritedFromParentGroup
-                );
-                runInAction(() => {
-                    stratum.name = layer.Title;
-                    stratum.url = this.catalogGroup.url;
-                    stratum.getCapabilitiesUrl = this.catalogGroup.getCapabilitiesUrl;
-                    stratum.getCapabilitiesCacheDuration = this.catalogGroup.getCapabilitiesCacheDuration;
-                    stratum.layers = layer.Name;
-                })
 
-                members.push(layerId);
-            });
+            const stratum = CommonStrata.inheritedFromParentGroup;
+            model.setTrait(stratum, 'name', layer.Title);
+            model.setTrait(stratum, 'url', this.catalogGroup.url);
+            model.setTrait(stratum, 'getCapabilitiesUrl', this.catalogGroup.getCapabilitiesUrl);
+            model.setTrait(stratum, 'getCapabilitiesCacheDuration', this.catalogGroup.getCapabilitiesCacheDuration);
+            model.setTrait(stratum, 'layers', layer.Name);
 
-            runInAction(() => {this.members = members});
+            members.push(layerId);
         });
 
+        this.members = members;
     }
 
     private getTopLevelLayers(
@@ -124,7 +101,7 @@ class GetCapabilitiesStratum extends LoadableStratum(WebMapServiceCatalogGroupTr
     }
 }
 
-export default class WebMapServiceCatalogGroup extends GetCapabilitiesMixin(UrlMixin(GroupMixin(CatalogMemberMixin(Model(WebMapServiceCatalogGroupTraits))))) {
+export default class WebMapServiceCatalogGroup extends GetCapabilitiesMixin(UrlMixin(GroupMixin(CatalogMemberMixin(CreateModel(WebMapServiceCatalogGroupTraits))))) {
     static readonly type = 'wms-group';
 
     get type() {
@@ -133,20 +110,20 @@ export default class WebMapServiceCatalogGroup extends GetCapabilitiesMixin(UrlM
 
     constructor(id: string, terria: Terria) {
         super(id, terria);
-        this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, new GetCapabilitiesStratum(this));
     }
 
-    loadMetadata(): Promise<void> {
-        const getCapabilitiesStratum: GetCapabilitiesStratum = <GetCapabilitiesStratum>this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName);
-        return getCapabilitiesStratum.loadCapabilities();
+    get loadMetadataPromise(): Promise<void> {
+        return GetCapabilitiesStratum.load(this).then(stratum => {
+            this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, stratum);
+        });
     }
 
     loadMembers(): Promise<void> {
-        const getCapabilitiesStratum: GetCapabilitiesStratum = <GetCapabilitiesStratum>this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName);
-        return getCapabilitiesStratum.createMembers();
+        return this.loadMetadataPromise.then(() => {
+            const getCapabilitiesStratum: GetCapabilitiesStratum = <GetCapabilitiesStratum>this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName);
+            return getCapabilitiesStratum.createMembers();
+        });
     }
-
-
 
     protected get defaultGetCapabilitiesUrl(): string | undefined {
         if (this.uri) {

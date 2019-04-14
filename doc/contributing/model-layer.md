@@ -86,3 +86,10 @@ Therefore, whenever possible, TerriaJS logic should be in the Model layer instea
 # All settable properties should be Traits
 
 All settable properties of a Model should be in its Traits. Because Traits are the only properties that are serialized/deserialized for catalog configuration and for sharing, settable properties that are not part of Traits prevent us from being able to completely recover application state. The only exception to this rule is for highly transient properties, such as whether a load from a remote source is currently in progress.
+
+
+Points in need of organization:
+
+* If you override a gettable property in a derived class, its type must be covariant with the base class type. That is, it is fine of the derived class property returns `string` while the base class property returns `string | undefined`. And it is fine if the derived class returns `Dog` while the base class returns `Animal`. But it is not ok if this relationahsip is reversed. You shouldn't really have any settable properties, but if you do, the types of such properties must be identical in base and derived classes.
+* Evaluate observable properties as late as possible. In particular, avoid getting the value of an observable before starting an async operation and using it when it completes.
+* Pay attention to comparer to use with observables to determine if a new value is equal to an old one.

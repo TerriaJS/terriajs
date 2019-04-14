@@ -1,5 +1,13 @@
-import primitiveTrait from './primitiveTrait';
+import { JsonObject } from '../Core/Json';
+import { Equals, Or } from '../Core/TypeConditionals';
+import ModelReference from './ModelReference';
 import Trait from './Trait';
+
+// Traits may be:
+// * JSON primitive types: number, string, boolean, null
+// * Schemaless JSON-style objects.
+// * References to other ModelTraits types.
+// * Arrays of any of the above.
 
 class ModelTraits {
     static traits: {
@@ -7,8 +15,13 @@ class ModelTraits {
     }
 }
 
-namespace ModelTraits {
-    export type Constructor = new(...args: any[]) => ModelTraits;
-}
+export type IsValidSimpleTraitType<T> = Or<
+    Equals<T, ModelReference>,
+    Equals<T, JsonObject>,
+    Equals<T, string>,
+    Equals<T, number>,
+    Equals<T, boolean>,
+    Equals<T, null>
+>;
 
 export default ModelTraits;

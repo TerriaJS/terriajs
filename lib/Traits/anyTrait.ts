@@ -1,8 +1,8 @@
+import isDefined from '../Core/isDefined';
+import { BaseModel } from '../Models/Model';
+import StratumFromTraits from '../Models/StratumFromTraits';
 import ModelTraits from './ModelTraits';
 import Trait, { TraitOptions } from './Trait';
-import isDefined from '../Core/isDefined';
-import StratumFromTraits from '../ModelInterfaces/StratumFromTraits';
-import { ModelInterface } from '../Models/Model';
 
 export interface AnyTraitOptions extends TraitOptions {
 }
@@ -29,7 +29,11 @@ export class AnyTrait extends Trait {
         }
     }
 
-    fromJson<TTraits extends ModelTraits>(model: ModelInterface<TTraits>, stratumName: string, jsonValue: any): any {
+    fromJson(model: BaseModel, stratumName: string, jsonValue: any): any {
         return jsonValue;
+    }
+
+    isSameType(trait: Trait): boolean {
+        return trait instanceof AnyTrait;
     }
 }

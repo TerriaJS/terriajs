@@ -19,16 +19,18 @@ import TerriaError from '../Core/TerriaError';
 import CatalogMemberMixin from '../ModelMixins/CatalogMemberMixin';
 import GetCapabilitiesMixin from '../ModelMixins/GetCapabilitiesMixin';
 import GroupMixin from '../ModelMixins/GroupMixin';
-import OpacityMixin from '../ModelMixins/OpacityMixin';
 import UrlMixin from '../ModelMixins/UrlMixin';
-import { InfoSectionTraits } from '../Traits/mixCatalogMemberTraits';
-import WebMapServiceCatalogItemTraits from '../Traits/WebMapServiceCatalogItemTraits';
+import { InfoSectionTraits } from '../Traits/CatalogMemberTraits';
+import WebMapServiceCatalogItemTraits, { LegendTraits, WebMapServiceAvailableLayerStylesTraits } from '../Traits/WebMapServiceCatalogItemTraits';
+import createStratumInstance from './createStratumInstance';
 import LoadableStratum from './LoadableStratum';
 import Mappable, { ImageryParts } from './Mappable';
-import Model from './Model';
+import CreateModel from './CreateModel';
 import proxyCatalogItemUrl from './proxyCatalogItemUrl';
+import StratumFromTraits from './StratumFromTraits';
 import Terria from './Terria';
 import WebMapServiceCapabilities, { CapabilitiesLayer, CapabilitiesStyle, getRectangleFromLayer } from './WebMapServiceCapabilities';
+import { RectangleTraits } from '../Traits/MappableTraits';
 
 interface LegendUrl {
     url: string;
@@ -47,36 +49,24 @@ interface WebMapServiceStyles {
 }
 
 class GetCapabilitiesStratum extends LoadableStratum(WebMapServiceCatalogItemTraits) {
-    constructor(readonly catalogItem: WebMapServiceCatalogItem) {
-        super();
-    }
+    static load(catalogItem: WebMapServiceCatalogItem): Promise<GetCapabilitiesStratum> {
+        console.log('Loading GetCapabilities');
 
-    @observable
-    capabilities: WebMapServiceCapabilities | undefined;
-
-    @observable
-    isLoading: boolean = false;
-
-    loadCapabilities(): Promise<void> {
-        runInAction(() => {
-            this.isLoading = true;
-            this.capabilities = undefined;
-        });
-
-        if (this.catalogItem.getCapabilitiesUrl === undefined) {
+        if (catalogItem.getCapabilitiesUrl === undefined) {
             return Promise.reject(new TerriaError({
                 title: 'Unable to load GetCapabilities',
                 message: 'Could not load the Web Map Service (WMS) GetCapabilities document because the catalog item does not have a `url`.'
             }));
         }
 
-        const proxiedUrl = proxyCatalogItemUrl(this.catalogItem, this.catalogItem.getCapabilitiesUrl, this.catalogItem.getCapabilitiesCacheDuration);
+        const proxiedUrl = proxyCatalogItemUrl(catalogItem, catalogItem.getCapabilitiesUrl, catalogItem.getCapabilitiesCacheDuration);
         return WebMapServiceCapabilities.fromUrl(proxiedUrl).then(capabilities => {
-            runInAction(() => {
-                this.capabilities = capabilities;
-                this.isLoading = false;
-            })
+            return new GetCapabilitiesStratum(catalogItem, capabilities);
         });
+    }
+
+    constructor(readonly catalogItem: WebMapServiceCatalogItem, readonly capabilities: WebMapServiceCapabilities) {
+        super();
     }
 
     @computed
@@ -86,8 +76,8 @@ class GetCapabilitiesStratum extends LoadableStratum(WebMapServiceCatalogItemTra
     }
 
     @computed
-    get availableStyles(): WebMapServiceStyles {
-        const result: WebMapServiceStyles = {};
+    get availableStyles(): StratumFromTraits<WebMapServiceAvailableLayerStylesTraits>[] {
+        const result: StratumFromTraits<WebMapServiceAvailableLayerStylesTraits>[] = [];
 
         if (!this.capabilities) {
             return result;
@@ -100,26 +90,29 @@ class GetCapabilitiesStratum extends LoadableStratum(WebMapServiceCatalogItemTra
             const layer = layerTuple[1];
 
             const styles: ReadonlyArray<CapabilitiesStyle> = layer ? this.capabilities.getInheritedValues(layer, 'Style') : [];
-            result[layerName] = styles.map(style => {
-                var wmsLegendUrl = isReadOnlyArray(style.LegendURL) ? style.LegendURL[0] : style.LegendURL;
+            result.push({
+                layerName: layerName,
+                styles: styles.map(style => {
+                    var wmsLegendUrl = isReadOnlyArray(style.LegendURL) ? style.LegendURL[0] : style.LegendURL;
 
-                var legendUri, legendMimeType;
-                if (wmsLegendUrl && wmsLegendUrl.OnlineResource && wmsLegendUrl.OnlineResource['xlink:href']) {
-                    legendUri = new URI(decodeURIComponent(wmsLegendUrl.OnlineResource['xlink:href']));
-                    legendMimeType = wmsLegendUrl.Format;
-                }
+                    var legendUri, legendMimeType;
+                    if (wmsLegendUrl && wmsLegendUrl.OnlineResource && wmsLegendUrl.OnlineResource['xlink:href']) {
+                        legendUri = new URI(decodeURIComponent(wmsLegendUrl.OnlineResource['xlink:href']));
+                        legendMimeType = wmsLegendUrl.Format;
+                    }
 
-                const legendUrl = !legendUri ? undefined : {
-                    url: legendUri.toString(),
-                    mimeType: legendMimeType
-                };
+                    const legendUrl = !legendUri ? undefined : {
+                        url: legendUri.toString(),
+                        mimeType: legendMimeType
+                    };
 
-                return {
-                    name: style.Name,
-                    title: style.Title,
-                    abstract: style.Abstract,
-                    legendUrl: legendUrl
-                };
+                    return {
+                        name: style.Name,
+                        title: style.Title,
+                        abstract: style.Abstract,
+                        legendUrl: legendUrl
+                    };
+                })
             });
         }
 
@@ -127,8 +120,8 @@ class GetCapabilitiesStratum extends LoadableStratum(WebMapServiceCatalogItemTra
     }
 
     @computed
-    get info(): InfoSectionTraits[] {
-        const result: InfoSectionTraits[] = [];
+    get info(): StratumFromTraits<InfoSectionTraits>[] {
+        const result: StratumFromTraits<InfoSectionTraits>[] = [];
 
         let firstDataDescription: string | undefined;
         for (const layer of this.capabilitiesLayers.values()) {
@@ -139,7 +132,7 @@ class GetCapabilitiesStratum extends LoadableStratum(WebMapServiceCatalogItemTra
             const suffix = this.capabilitiesLayers.size === 1 ? '' : ` - ${layer.Title}`;
             const name = `Data Description${suffix}`;
 
-            const traits = new InfoSectionTraits();
+            const traits = createStratumInstance(InfoSectionTraits);
             traits.name = name;
             traits.content = layer.Abstract;
             result.push(traits);
@@ -151,7 +144,7 @@ class GetCapabilitiesStratum extends LoadableStratum(WebMapServiceCatalogItemTra
         const service = this.capabilities && this.capabilities.Service;
         if (service) {
             if (service && service.Abstract && !containsAny(service.Abstract, WebMapServiceCatalogItem.abstractsToIgnore) && service.Abstract !== firstDataDescription) {
-                const traits = new InfoSectionTraits();
+                const traits = createStratumInstance(InfoSectionTraits);
                 traits.name = 'Service Description';
                 traits.content = service.Abstract;
                 result.push(traits);
@@ -159,7 +152,7 @@ class GetCapabilitiesStratum extends LoadableStratum(WebMapServiceCatalogItemTra
 
             // Show the Access Constraints if it isn't "none" (because that's the default, and usually a lie).
             if (service.AccessConstraints && !/^none$/i.test(service.AccessConstraints)) {
-                const traits = new InfoSectionTraits();
+                const traits = createStratumInstance(InfoSectionTraits);
                 traits.name = 'Access Constraints';
                 traits.content = service.AccessConstraints;
                 result.push(traits);
@@ -170,7 +163,7 @@ class GetCapabilitiesStratum extends LoadableStratum(WebMapServiceCatalogItemTra
     }
 
     @computed
-    get rectangle(): Rectangle | undefined {
+    get rectangle(): StratumFromTraits<RectangleTraits> | undefined {
         const layers: CapabilitiesLayer[] = [...this.capabilitiesLayers.values()].filter(layer => layer !== undefined).map(l => l!);
         // Needs to take union of all layer rectangles
         return layers.length > 0 ? getRectangleFromLayer(layers[0]) : undefined
@@ -205,7 +198,7 @@ class GetCapabilitiesStratum extends LoadableStratum(WebMapServiceCatalogItemTra
     @observable intervals: any;
 }
 
-class WebMapServiceCatalogItem extends GetCapabilitiesMixin(OpacityMixin(UrlMixin(CatalogMemberMixin(Model(WebMapServiceCatalogItemTraits))))) implements Mappable {
+class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemberMixin(CreateModel(WebMapServiceCatalogItemTraits)))) implements Mappable {
     /**
      * The collection of strings that indicate an Abstract property should be ignored.  If these strings occur anywhere
      * in the Abstract, the Abstract will not be used.  This makes it easy to filter out placeholder data like
@@ -241,7 +234,6 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(OpacityMixin(UrlMixi
 
     constructor(id: string, terria: Terria) {
         super(id, terria);
-        this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, new GetCapabilitiesStratum(this));
         if (this.opacity === undefined) {
             console.log('Whaaaaa... This should have a default of 0.8');
         }
@@ -250,12 +242,13 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(OpacityMixin(UrlMixi
         })
     }
 
-    loadMetadata(): Promise<void> {
-        const getCapabilitiesStratum: GetCapabilitiesStratum = <GetCapabilitiesStratum>this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName);
-        return getCapabilitiesStratum.loadCapabilities();
+    protected get loadMetadataPromise(): Promise<void> {
+        return GetCapabilitiesStratum.load(this).then(stratum => {
+            this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, stratum);
+        });
     }
 
-    loadData(): Promise<void> {
+    loadMapItems(): Promise<void> {
         return this.loadMetadata();
     }
 
@@ -271,19 +264,19 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(OpacityMixin(UrlMixi
     }
 
     @computed
-    get legendUrls(): ReadonlyArray<LegendUrl> {
-        function getLegendUrlsForLayer(layer: string, availableStyles: WebMapServiceStyles): LegendUrl[] {
-            const styles = availableStyles[layer];
-            if (styles === undefined) {
+    get legendUrls(): StratumFromTraits<LegendTraits>[] {
+        const availableStyles = this.availableStyles || [];
+        function getLegendUrlsForLayer(layer: string) {
+            const styles = availableStyles.find(candidate => candidate.layerName === layer);
+            if (styles === undefined || styles.styles === undefined) {
                 return [];
             }
-            const legendUrls: LegendUrl[] = styles.map(style => style.legendUrl).filter(legendUrl => legendUrl !== undefined).map(l => l!);
-            return legendUrls
+            const legendUrls = styles.styles.map(style => style.legendUrl).filter(legendUrl => legendUrl !== undefined).map(l => l!);
+            return legendUrls;
         }
 
-        const stratum = <GetCapabilitiesStratum>this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName);
-        const a = this.layersArray.map(layer => getLegendUrlsForLayer(layer, stratum.availableStyles))
-        return ([] as LegendUrl[]).concat(...a);
+        const a = this.layersArray.map(layer => getLegendUrlsForLayer(layer))
+        return ([] as StratumFromTraits<LegendTraits>[]).concat(...a);
     }
 
     protected get defaultGetCapabilitiesUrl(): string | undefined {
@@ -370,9 +363,7 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(OpacityMixin(UrlMixi
 
     private _createImageryProvider = createTransformer((time: string): Cesium.WebMapServiceImageryProvider | undefined => {
         // Don't show anything on the map until GetCapabilities finishes loading.
-        // TODO should this be a more general loading check? eliminate the cast?
-        const stratum = <GetCapabilitiesStratum>this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName);
-        if (stratum.isLoading) {
+        if (this.isMetadataLoading) {
             return undefined;
         }
 
@@ -395,12 +386,11 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(OpacityMixin(UrlMixi
             // getFeatureInfoParameters: parameters,
             tilingScheme: /*defined(this.tilingScheme) ? this.tilingScheme :*/ new WebMercatorTilingScheme(),
             maximumLevel: 20,
-            rectangle: stratum.rectangle
+            rectangle: this.rectangle ? Rectangle.fromDegrees(this.rectangle.west, this.rectangle.south, this.rectangle.east, this.rectangle.north) : undefined
         });
     })
 
 }
-
 
 export default WebMapServiceCatalogItem;
 

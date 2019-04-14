@@ -1,14 +1,15 @@
 'use strict';
 
+import createReactClass from 'create-react-class';
+import { observer } from 'mobx-react';
+import PropTypes from 'prop-types';
 import Slider from 'rc-slider';
 import React from 'react';
-import createReactClass from 'create-react-class';
-import PropTypes from 'prop-types';
-import { observer } from 'mobx-react';
 import CommonStrata from '../../../Models/CommonStrata';
-
+import hasTraits from '../../../Models/hasTraits';
+import RasterLayerTraits from '../../../Traits/RasterLayerTraits';
 import Styles from './opacity-section.scss';
-import AdjustableOpacity from '../../../ModelInterfaces/AdjustableOpacity';
+
 
 const OpacitySection = observer(createReactClass({
     displayName: 'OpacitySection',
@@ -19,14 +20,14 @@ const OpacitySection = observer(createReactClass({
 
     changeOpacity(value) {
         const item = this.props.item;
-        if (AdjustableOpacity.implementedBy(item)) {
-            item.getOrCreateStratum(CommonStrata.user).opacity = value / 100.0;
+        if (hasTraits(item, RasterLayerTraits, 'opacity')) {
+            item.setTrait(CommonStrata.user, 'opacity', value / 100.0);
         }
     },
 
     render() {
         const item = this.props.item;
-        if (!AdjustableOpacity.implementedBy(item)) {
+        if (!hasTraits(item, RasterLayerTraits, 'opacity') || item.opacity === undefined) {
             return null;
         }
         return (

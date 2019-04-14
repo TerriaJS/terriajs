@@ -1,31 +1,30 @@
-import BillboardGraphics from "terriajs-cesium/Source/DataSources/BillboardGraphics";
-import { computed, observable, toJS } from "mobx";
+import { computed } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import Color from "terriajs-cesium/Source/Core/Color";
-import ColorMaterialProperty from "terriajs-cesium/Source/DataSources/ColorMaterialProperty";
-import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
+import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import PolygonHierarchy from "terriajs-cesium/Source/Core/PolygonHierarchy";
+import BillboardGraphics from "terriajs-cesium/Source/DataSources/BillboardGraphics";
+import ColorMaterialProperty from "terriajs-cesium/Source/DataSources/ColorMaterialProperty";
+import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import EntityCollection from "terriajs-cesium/Source/DataSources/EntityCollection";
-import GeoJsonCatalogItemTraits from "../Traits/GeoJsonCatalogItemTraits";
 import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
-import isDefined from "../Core/isDefined";
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-import LoadableStratum from "./LoadableStratum";
-import Mappable from "./Mappable";
-import Model from "./Model";
 import PointGraphics from "terriajs-cesium/Source/DataSources/PointGraphics";
 import PolygonGraphics from "terriajs-cesium/Source/DataSources/PolygonGraphics";
-import PolygonHierarchy from "terriajs-cesium/Source/Core/PolygonHierarchy";
 import PolylineGraphics from "terriajs-cesium/Source/DataSources/PolylineGraphics";
 import Property from "terriajs-cesium/Source/DataSources/Property";
+import isDefined from "../Core/isDefined";
+import JsonValue, { isJsonObject, JsonObject } from "../Core/Json";
+import makeRealPromise from '../Core/makeRealPromise';
 import TerriaError from "../Core/TerriaError";
-import StratumOrder from "../Models/StratumOrder";
-import Terria from "./Terria";
+import AsyncMappableMixin from '../ModelMixins/AsyncMappableMixin';
+import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
-import when from "terriajs-cesium/Source/ThirdParty/when";
+import GeoJsonCatalogItemTraits from "../Traits/GeoJsonCatalogItemTraits";
+import CreateModel from './CreateModel';
+import Terria from "./Terria";
 
 const formatPropertyValue = require("../Core/formatPropertyValue");
 const hashFromString = require("../Core/hashFromString");
@@ -54,149 +53,102 @@ const simpleStyleIdentifiers = [
     "fill-opacity"
 ];
 
-class LoadGeoJsonStratum extends LoadableStratum(GeoJsonCatalogItemTraits) {
-    @observable
-    loadedGeoJson: any;
-
-    constructor(readonly catalogItem: GeoJsonCatalogItem) {
-        super();
-    }
-
-    @computed
-    get name() {
-        if (isDefined(this.loadedGeoJson)) {
-            return unwrapSinglePropertyObject(this.loadedGeoJson).name;
-        }
-    }
-
-    @computed
-    get geoJsonData() {
-        if (isDefined(this.loadedGeoJson)) {
-            return unwrapSinglePropertyObject(this.loadedGeoJson).obj;
-        }
-    }
-
-    loadGeoJson() {
-        let url = this.catalogItem.url,
-            geoJsonString = this.catalogItem.geoJsonString;
-        let appName = this.catalogItem.terria.appName,
-            supportEmail = this.catalogItem.terria.supportEmail;
-
-        if (isDefined(geoJsonString)) {
-            /* Try loading from data or string */
-            try {
-                this.loadedGeoJson = JSON.parse(geoJsonString);
-            } catch (e) {
-                throw new TerriaError({
-                    sender: this,
-                    title: "Error loading GeoJSON",
-                    message: `An error occurred parsing the provided data as JSON. This may indicate that the file is invalid or that it is not supported by ${appName}. If you would like assistance or further information, please email us at <a href="mailto:${supportEmail}">${supportEmail}</a>.`
-                });
-            }
-
-            return when();
-        }
-
-        if (isDefined(url)) {
-            // try loading from a zip file url or a regular url
-            let jsonPromise;
-            if (zipFileRegex.test(url)) {
-                if (typeof FileReader === "undefined") {
-                    throw new TerriaError({
-                        sender: this,
-                        title: "Unsupported web browser",
-                        message: `Sorry, your web browser does not support the File API, which ${appName} requires in order to load this dataset. Please upgrade your web browser.  For the best experience, we recommend the latest versions of <a href="http://www.google.com/chrome" target="_blank">Google Chrome</a>, or <a href="http://www.mozilla.org/firefox" target="_blank">Mozilla Firefox</a>, or <a href="http://www.microsoft.com/ie" target="_blank">Internet Explorer 11</a>.`
-                    });
-                }
-                jsonPromise = loadZipFile(proxyCatalogItemUrl(this, url, "1d"));
-            } else {
-                jsonPromise = loadJson(proxyCatalogItemUrl(this, url, "1d"));
-            }
-
-            return jsonPromise
-                .then((data: any) => (this.loadedGeoJson = data))
-                .otherwise((e?: Error) => {
-                    if (e instanceof TerriaError) {
-                        throw e;
-                    } else {
-                        throw new TerriaError({
-                            sender: this,
-                            title: "Could not load JSON",
-                            message: `An error occurred while retrieving JSON data from the provided link.<p>If you entered the link manually, please verify that the link is correct.</p><p>This error may also indicate that the server does not support <a href="http://enable-cors.org/" target="_blank">CORS</a>. If this is your server, verify that CORS is enabled and enable it if it is not.  If you do not control the server, please contact the administrator of the server and ask them to enable CORS. Or, contact the ${appName} team by emailing <a href="mailto:${supportEmail}">${supportEmail}</a> and ask us to add this server to the list of non-CORS-supporting servers that may be proxied by ${appName} itself.</p><p>If you did not enter this link manually, this error may indicate that the data source you\'re trying to add is temporarily unavailable or there is a problem with your internet connection.  Try adding the data source again, and if the problem persists, please report it by sending an email to <a href="mailto:${supportEmail}">${supportEmail}</a>.</p>`
-                        });
-                    }
-                });
-        }
-    }
-}
-
 class GeoJsonCatalogItem
-    extends UrlMixin(CatalogMemberMixin(Model(GeoJsonCatalogItemTraits)))
-    implements Mappable {
+    extends AsyncMappableMixin(UrlMixin(CatalogMemberMixin(CreateModel(GeoJsonCatalogItemTraits)))) {
+
+    private _dataSource: GeoJsonDataSource | undefined;
+
     constructor(id: string, terria: Terria) {
         super(id, terria);
-        this.strata.set(
-            GeoJsonCatalogItem.loadGeoJsonStratumName,
-            new LoadGeoJsonStratum(this)
-        );
+    }
+
+    protected get loadMapItemsPromise(): Promise<void> {
+        const createLoadError = () => new TerriaError({
+            sender: this,
+            title: "Could not load GeoJSON",
+            message: `An error occurred while retrieving JSON data from the provided link.` +
+                     `<p>If you entered the link manually, please verify that the link is correct.</p>` +
+                     `<p>This error may also indicate that the server does not support ` +
+                     `<a href="http://enable-cors.org/" target="_blank">CORS</a>. If this is your server, ` +
+                     `verify that CORS is enabled and enable it if it is not.  If you do not control the ` +
+                     `server, please contact the administrator of the server and ask them to enable CORS. Or, ` +
+                     `contact the ${this.terria.appName} team by emailing ` +
+                     `<a href="mailto:${this.terria.supportEmail}">${this.terria.supportEmail}</a> ` +
+                     `and ask us to add this server to the list of non-CORS-supporting servers that may be ` +
+                     `proxied by ${this.terria.appName} itself.</p><p>If you did not enter this link manually, ` +
+                     `this error may indicate that the data source you're trying to add is temporarily unavailable ` +
+                     `or there is a problem with your internet connection.  Try adding the data source again, and if ` +
+                     `the problem persists, please report it by sending an email to ` +
+                     `<a href="mailto:${this.terria.supportEmail}">${this.terria.supportEmail}</a>.</p>`
+        });
+
+        return new Promise<JsonValue | undefined>((resolve, reject) => {
+            if (isDefined(this.geoJsonData)) {
+                resolve(this.geoJsonData);
+            } else if (isDefined(this.geoJsonString)) {
+                resolve(<JsonValue>JSON.parse(this.geoJsonString));
+            } else if (isDefined(this.url)) {
+                // try loading from a zip file url or a regular url
+                if (zipFileRegex.test(this.url)) {
+                    if (typeof FileReader === "undefined") {
+                        throw new TerriaError({
+                            sender: this,
+                            title: "Unsupported web browser",
+                            message: `Sorry, your web browser does not support the File API, which ${this.terria.appName} requires in order to load this dataset. Please upgrade your web browser.  For the best experience, we recommend the latest versions of <a href="http://www.google.com/chrome" target="_blank">Google Chrome</a>, or <a href="http://www.mozilla.org/firefox" target="_blank">Mozilla Firefox</a>, or <a href="http://www.microsoft.com/ie" target="_blank">Internet Explorer 11</a>.`
+                        });
+                    }
+                    resolve(loadZipFile(proxyCatalogItemUrl(this, this.url, "1d")));
+                } else {
+                    resolve(makeRealPromise<JsonValue>(loadJson(proxyCatalogItemUrl(this, this.url, "1d"))));
+                }
+            } else {
+                throw new TerriaError({
+                    sender: this,
+                    title: "No GeoJSON available",
+                    message: `The GeoJSON catalog item cannot be loaded because it was not configured ` +
+                             `with a \`url\`, \`geoJsonData\`, or \`geoJsonString\` property.`
+                });
+            }
+        }).then((geoJson: JsonValue | undefined) => {
+            if (!isJsonObject(geoJson)) {
+                throw createLoadError();
+            }
+            return reprojectToGeographic(geoJson, this.terria.configParameters.proj4ServiceBaseUrl);
+        }).then((geoJsonWgs84: JsonObject) => {
+            return this.loadDataSource(geoJsonWgs84);
+        }).then((dataSource) => {
+            this._dataSource = dataSource;
+        }).catch((e) => {
+            if (e instanceof TerriaError) {
+                throw e;
+            } else {
+                throw createLoadError();
+            }
+        });
     }
 
     @computed
     get mapItems() {
-        if (this.geoJsonData === undefined) {
+        if (this.isLoadingMapItems || this._dataSource === undefined) {
             return [];
         }
-        // Construct a dataSource to return immediately
-        const dataSource = new GeoJsonDataSource();
-        if (isDefined(this.show)) {
-            dataSource.show = this.show;
-        }
 
-        // then, asynchronously reproject the data and load the dataSource
-        const proj4ServiceBaseUrl = this.terria.configParameters
-            .proj4ServiceBaseUrl;
-
-        const geoJson: any = toJS(this.geoJsonData); // toJS because reprojectToGeographic needs a plain JS value
-        when(reprojectToGeographic(geoJson, proj4ServiceBaseUrl))
-            .then((geoJson: any) => {
-                this.loadDataSource(dataSource, geoJson);
-            })
-            .otherwise(() => {
-                throw new TerriaError({
-                    sender: this,
-                    title: "Error loading GeoJSON",
-                    message: `An error occurred while loading the GeoJSON. This may indicate that the GeoJSON is invalid or that it is not supported by ${
-                        this.terria.appName
-                    }. If you would like assistance or further information, please email us at <a href="mailto:${
-                        this.terria.supportEmail
-                    }">${this.terria.supportEmail}</a>.`
-                });
-            });
-        return [dataSource];
+        return [this._dataSource];
     }
 
-    loadMetadata(): Promise<void> {
+    protected get loadMetadataPromise(): Promise<void> {
         return Promise.resolve();
     }
 
-    loadData(): Promise<void> {
-        const stratumName = GeoJsonCatalogItem.loadGeoJsonStratumName;
-        const loadGeoJsonStratum = <LoadGeoJsonStratum>(
-            this.strata.get(stratumName)
-        );
-        return loadGeoJsonStratum.loadGeoJson();
-    }
-
-    loadDataSource(
-        dataSource: GeoJsonDataSource,
-        geoJson: any
+    private loadDataSource(
+        geoJson: JsonObject
     ): Promise<GeoJsonDataSource> {
         /* Style information is applied as follows, in decreasing priority:
            - simple-style properties set directly on individual features in the GeoJSON file
            - simple-style properties set as the 'Style' property on the catalog item
            - our 'options' set below (and point styling applied after Cesium loads the GeoJSON)
            - if anything is underspecified there, then Cesium's defaults come in.
-           
+
            See https://github.com/mapbox/simplestyle-spec/tree/master/1.1.0
         */
 
@@ -265,7 +217,7 @@ class GeoJsonCatalogItem
             options.fill.alpha = 0.75;
         }
 
-        return dataSource.load(geoJson, options).then(function(dataSource) {
+        return makeRealPromise<GeoJsonDataSource>(GeoJsonDataSource.load(geoJson, options)).then(function(dataSource) {
             const entities = dataSource.entities;
             for (let i = 0; i < entities.values.length; ++i) {
                 const entity = entities.values[i];
@@ -363,24 +315,19 @@ class GeoJsonCatalogItem
     }
 }
 
-namespace GeoJsonCatalogItem {
-    export const loadGeoJsonStratumName = "loadGeoJson";
-    StratumOrder.addLoadStratum(loadGeoJsonStratumName);
-}
-
 export default GeoJsonCatalogItem;
 
-function reprojectToGeographic(geoJson: any, proj4ServiceBaseUrl?: string) {
+function reprojectToGeographic(geoJson: JsonObject, proj4ServiceBaseUrl?: string): Promise<JsonObject> {
     let code: string | undefined;
 
-    if (!isDefined(geoJson.crs)) {
+    if (!isJsonObject(geoJson.crs)) {
         code = undefined;
-    } else if (geoJson.crs.type === "EPSG") {
+    } else if (geoJson.crs.type === "EPSG" && isJsonObject(geoJson.crs.properties) && geoJson.crs.properties.code) {
         code = "EPSG:" + geoJson.crs.properties.code;
     } else if (
+        isJsonObject(geoJson.crs.properties) &&
         geoJson.crs.type === "name" &&
-        isDefined(geoJson.crs.properties) &&
-        isDefined(geoJson.crs.properties.name)
+        geoJson.crs.properties.name
     ) {
         code = Reproject.crsStringToCode(geoJson.crs.properties.name);
     }
@@ -393,10 +340,10 @@ function reprojectToGeographic(geoJson: any, proj4ServiceBaseUrl?: string) {
     };
 
     if (!Reproject.willNeedReprojecting(code)) {
-        return geoJson;
+        return Promise.resolve(geoJson);
     }
 
-    return when(Reproject.checkProjection(proj4ServiceBaseUrl, code), function(
+    return makeRealPromise<boolean>(Reproject.checkProjection(proj4ServiceBaseUrl, code)).then(function(
         result: boolean
     ) {
         if (result) {
@@ -463,12 +410,6 @@ function filterArray(
         result[i] = filterArray(pts[i], func); //at array of arrays of points
     }
     return result;
-}
-
-function getJson(entry: any, deferred: any) {
-    entry.getData(new zip.Data64URIWriter(), function(uri: string) {
-        deferred.resolve(loadJson(uri));
-    });
 }
 
 /**
@@ -616,31 +557,33 @@ function getPropertyValue<T>(property: Property): T {
     return property.getValue(JulianDate.now());
 }
 
-function loadZipFile(url: string) {
-    return loadBlob(url).then(function(blob: Blob) {
-        let deferred = when.defer();
-        zip.createReader(
-            new zip.BlobReader(blob),
-            function(reader: any) {
-                // Look for a file with a .geojson extension.
-                reader.getEntries(function(entries: any) {
-                    let resolved = false;
-                    for (let i = 0; i < entries.length; i++) {
-                        const entry = entries[i];
-                        if (geoJsonRegex.test(entry.filename)) {
-                            getJson(entry, deferred);
-                            resolved = true;
+function loadZipFile(url: string): Promise<JsonValue> {
+    return makeRealPromise<Blob>(loadBlob(url)).then(function(blob: Blob) {
+        return new Promise((resolve, reject) => {
+            zip.createReader(
+                new zip.BlobReader(blob),
+                function(reader: any) {
+                    // Look for a file with a .geojson extension.
+                    reader.getEntries(function(entries: any) {
+                        let resolved = false;
+                        for (let i = 0; i < entries.length; i++) {
+                            const entry = entries[i];
+                            if (geoJsonRegex.test(entry.filename)) {
+                                entry.getData(new zip.Data64URIWriter(), function(uri: string) {
+                                    resolve(makeRealPromise<JsonValue>(loadJson(uri)));
+                                });
+                                resolved = true;
+                            }
                         }
-                    }
 
-                    if (!resolved) {
-                        deferred.reject();
-                    }
-                });
-            },
-            (e: Error) => deferred.reject(e)
-        );
-        return deferred.promise;
+                        if (!resolved) {
+                            reject();
+                        }
+                    });
+                },
+                (e: Error) => reject(e)
+            );
+        });
     });
 }
 

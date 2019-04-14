@@ -55,7 +55,7 @@ export default class Terria {
 
     appName?: string;
     supportEmail?: string;
-    
+
     /**
      * Gets or sets the instance to which to report Google Analytics-style log events.
      * If a global `ga` function is defined, this defaults to `GoogleAnalytics`.  Otherwise, it defaults
@@ -64,7 +64,7 @@ export default class Terria {
     readonly analytics: Analytics;
 
     @observable
-    viewerMode = ViewerMode.Leaflet;
+    viewerMode = ViewerMode.CesiumTerrain;
 
     @observable
     readonly configParameters: ConfigParameters = {

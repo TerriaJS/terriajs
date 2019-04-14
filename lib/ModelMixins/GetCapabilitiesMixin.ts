@@ -1,17 +1,12 @@
 import { computed } from 'mobx';
 import Constructor from '../Core/Constructor';
+import Model from '../Models/Model';
 import StratumOrder from '../Models/StratumOrder';
+import GetCapabilitiesTraits from '../Traits/GetCapabilitiesTraits';
 
-interface RequiredOnDefinition {
-    getCapabilitiesUrl: string | undefined;
-}
+type CapabilitiesModel = Model<GetCapabilitiesTraits>;
 
-interface RequiredOnInstance {
-    url: string | undefined;
-    flattened: RequiredOnDefinition;
-}
-
-function GetCapabilitiesMixin<T extends Constructor<RequiredOnInstance>>(Base: T) {
+function GetCapabilitiesMixin<T extends Constructor<CapabilitiesModel>>(Base: T) {
     abstract class GetCapabilitiesMixin extends Base {
         protected abstract get defaultGetCapabilitiesUrl(): string | undefined;
 
