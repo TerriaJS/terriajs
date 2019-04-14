@@ -1,5 +1,6 @@
+import { JsonObject } from '../Core/Json';
 import { Equals, Or } from '../Core/TypeConditionals';
-import ModelReference, { RemovedModelId } from './ModelReference';
+import ModelReference from './ModelReference';
 import Trait from './Trait';
 
 // Traits may be:
@@ -9,19 +10,17 @@ import Trait from './Trait';
 // * Arrays of any of the above.
 
 class ModelTraits {
-    __isModelTraits: true = true;
     static traits: {
         [id: string]: Trait;
     }
 }
 
-export type ExcludeModelTraitsHidden<T> = Pick<T, Exclude<keyof T, '__isModelTraits'>>;
 export type IsValidSimpleTraitType<T> = Or<
-    Equals<T, boolean>,
     Equals<T, ModelReference>,
-    Equals<T, object>,
+    Equals<T, JsonObject>,
     Equals<T, string>,
     Equals<T, number>,
+    Equals<T, boolean>,
     Equals<T, null>
 >;
 

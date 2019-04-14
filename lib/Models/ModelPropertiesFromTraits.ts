@@ -1,6 +1,6 @@
 import { If } from "../Core/TypeConditionals";
 import { Complete, CopyNullAndUndefined } from "../Core/TypeModifiers";
-import ModelTraits, { ExcludeModelTraitsHidden, IsValidSimpleTraitType } from "../Traits/ModelTraits";
+import ModelTraits, { IsValidSimpleTraitType } from "../Traits/ModelTraits";
 
 type SingleTrait<TTrait> = If<
     IsValidSimpleTraitType<NonNullable<TTrait>>,
@@ -18,10 +18,10 @@ type ArrayTrait<TTrait, TElement> = ReadonlyArray<SingleTrait<TElement>>;
  *
  * Nested traits classes follow the rules above.
  */
-type ModelPropertiesFromTraits<TDefinition extends ModelTraits> = Complete<ExcludeModelTraitsHidden<{
+type ModelPropertiesFromTraits<TDefinition extends ModelTraits> = Complete<{
     readonly [P in keyof TDefinition]: NonNullable<TDefinition[P]> extends Array<infer TElement>
         ? ArrayTrait<TDefinition[P], TElement> extends infer R ? CopyNullAndUndefined<TDefinition[P], R> : never
         : SingleTrait<TDefinition[P]> extends infer R ? CopyNullAndUndefined<TDefinition[P], R> : never;
-}>>;
+}>;
 
 export default ModelPropertiesFromTraits;

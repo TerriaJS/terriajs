@@ -6,6 +6,7 @@ import ModelTraits from "./ModelTraits";
 import objectTrait from "./objectTrait";
 import primitiveTrait from "./primitiveTrait";
 import UrlTraits from "./UrlTraits";
+import { JsonObject } from "../Core/Json";
 
 export class StyleTraits extends ModelTraits {
     @primitiveTrait({
@@ -81,7 +82,7 @@ export default class GeoJsonCatalogItemTraits extends mixTraits(
         name: "geoJsonData",
         description: "A geojson data object"
     })
-    geoJsonData?: any;
+    geoJsonData?: JsonObject;
 
     @primitiveTrait({
         type: "string",

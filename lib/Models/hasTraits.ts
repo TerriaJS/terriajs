@@ -2,7 +2,7 @@ import ModelTraits from "../Traits/ModelTraits";
 import TraitsConstructor from "../Traits/TraitsConstructor";
 import ModelPropertiesFromTraits from "./ModelPropertiesFromTraits";
 
-type HasGettableModelTrait<TTraits extends ModelTraits, Key extends keyof TTraits> = ModelPropertiesFromTraits<Pick<TTraits, Key | '__isModelTraits'>>;
+type HasGettableModelTrait<TTraits extends ModelTraits, Key extends keyof TTraits> = ModelPropertiesFromTraits<Pick<TTraits, Key>>;
 
 type HasStratumTrait<TTraits extends ModelTraits, Key extends keyof TTraits> = {
     getTrait(stratumId: string, trait: Key): TTraits[Key] | undefined;

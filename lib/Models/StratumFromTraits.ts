@@ -1,6 +1,6 @@
 import { If } from "../Core/TypeConditionals";
 import { Complete, NotUndefined } from "../Core/TypeModifiers";
-import ModelTraits, { ExcludeModelTraitsHidden, IsValidSimpleTraitType } from "../Traits/ModelTraits";
+import ModelTraits, { IsValidSimpleTraitType } from "../Traits/ModelTraits";
 
 type SingleTrait<TTrait> = If<
     IsValidSimpleTraitType<NonNullable<TTrait>>,
@@ -19,10 +19,10 @@ type ArrayTrait<TTrait, TElement> = Array<SingleTrait<TElement>>;
  *
  * Nested traits classes follow the rules above.
  */
-type StratumFromTraits<TDefinition extends ModelTraits> = Complete<ExcludeModelTraitsHidden<{
+type StratumFromTraits<TDefinition extends ModelTraits> = Complete<{
     [P in keyof TDefinition]: NotUndefined<TDefinition[P]> extends Array<infer TElement>
         ? (ArrayTrait<TDefinition[P], TElement> | undefined)
         : (SingleTrait<TDefinition[P]> | undefined);
-}>>;
+}>;
 
 export default StratumFromTraits;

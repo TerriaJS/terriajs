@@ -19,7 +19,9 @@ export type Or<
     C extends boolean = false,
     D extends boolean = false,
     E extends boolean = false,
-    F extends boolean = false
+    F extends boolean = false,
+    G extends boolean = false,
+    H extends boolean = false
 > = [A] extends [true]
     ? true
     : ([B] extends [true]
@@ -32,7 +34,11 @@ export type Or<
                     ? true
                     : ([F] extends [true]
                         ? true
-                        : false)))));
+                        : [G] extends [true]
+                            ? true
+                            : [H] extends [true]
+                                ? true
+                                : false)))));
 
 /**
  * Inverts a conditional, changing `true` to `false` and `false` to `true`.
