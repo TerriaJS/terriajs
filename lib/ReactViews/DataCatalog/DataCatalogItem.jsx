@@ -77,9 +77,6 @@ const DataCatalogItem = observer(createReactClass({
         //raiseErrorOnRejectedPromise(this.props.item.terria, this.props.item.load());
         if (this.props.item.loadMetadata) {
             this.props.item.loadMetadata();
-            this.props.item.loadMetadata();
-            this.props.item.loadMetadata();
-            this.props.item.loadMetadata();
         }
         this.props.viewState.viewCatalogMember(this.props.item);
         // mobile switch to nowvewing
