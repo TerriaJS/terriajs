@@ -48,8 +48,8 @@ const DataCatalogItem = observer(createReactClass({
     toggleEnable(event) {
         const itemWorkbenchIndex = this.props.item.terria.workbench.items.indexOf(this.props.item)
         if (itemWorkbenchIndex === -1) {
-            if (this.props.item.loadData) {
-                this.props.item.loadData();
+            if (this.props.item.loadMapItems) {
+                this.props.item.loadMapItems();
             }
             this.props.item.terria.workbench.items.push(this.props.item);
             this.props.item.ancestors = this.props.ancestors;

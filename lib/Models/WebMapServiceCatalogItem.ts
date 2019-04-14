@@ -242,13 +242,13 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemb
         })
     }
 
-    get loadMetadataPromise(): Promise<void> {
+    protected get loadMetadataPromise(): Promise<void> {
         return GetCapabilitiesStratum.load(this).then(stratum => {
             this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, stratum);
         });
     }
 
-    loadData(): Promise<void> {
+    loadMapItems(): Promise<void> {
         return this.loadMetadata();
     }
 

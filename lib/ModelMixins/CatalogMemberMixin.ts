@@ -10,6 +10,9 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
     abstract class CatalogMemberMixin extends Base {
         abstract get type(): string;
 
+        /**
+         * Gets a value indicating whether metadata is currently loading.
+         */
         get isMetadataLoading(): boolean {
             return this._isMetadataLoading;
         }
@@ -19,6 +22,9 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
 
         private _metadataPromise: Promise<void> | undefined = undefined;
 
+        /**
+         * Asynchronously loads metadata.
+         */
         loadMetadata(): Promise<void> {
             const newPromise = this.loadMetadataKeepAlive;
             if (newPromise !== this._metadataPromise) {
@@ -48,7 +54,11 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
             return newPromise;
         }
 
-        abstract get loadMetadataPromise(): Promise<void>;
+        /**
+         * Gets a promise for loaded metadata. This method does _not_ need to consider
+         * whether the metadata is already loaded.
+         */
+        protected abstract get loadMetadataPromise(): Promise<void>;
 
         @computed({ keepAlive: true })
         private get loadMetadataKeepAlive(): Promise<void> {
