@@ -92,3 +92,4 @@ Points in need of organization:
 
 * If you override a gettable property in a derived class, its type must be covariant with the base class type. That is, it is fine of the derived class property returns `string` while the base class property returns `string | undefined`. And it is fine if the derived class returns `Dog` while the base class returns `Animal`. But it is not ok if this relationahsip is reversed. You shouldn't really have any settable properties, but if you do, the types of such properties must be identical in base and derived classes.
 * Evaluate observable properties as late as possible. In particular, avoid getting the value of an observable before starting an async operation and using it when it completes.
+* Pay attention to comparer to use with observables to determine if a new value is equal to an old one.

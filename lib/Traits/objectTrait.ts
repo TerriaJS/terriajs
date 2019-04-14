@@ -6,6 +6,7 @@ import Trait, { TraitOptions } from './Trait';
 import FlattenedFromTraits from '../Models/FlattenedFromTraits';
 import createStratumInstance from '../Models/createStratumInstance';
 import TraitsConstructor from './TraitsConstructor';
+import { computed } from 'mobx';
 
 export interface ObjectTraitOptions<T extends ModelTraits> extends TraitOptions {
     type: TraitsConstructor<T>;
@@ -23,6 +24,7 @@ export default function objectTrait<T extends ModelTraits>(options: ObjectTraitO
 
 export class ObjectTrait<T extends ModelTraits> extends Trait {
     readonly type: TraitsConstructor<T>;
+    readonly decoratorForFlattened = computed.struct;
 
     constructor(id: string, options: ObjectTraitOptions<T>) {
         super(id, options);

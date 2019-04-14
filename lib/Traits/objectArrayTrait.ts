@@ -6,6 +6,7 @@ import Trait, { TraitOptions } from './Trait';
 import FlattenedFromTraits from '../Models/FlattenedFromTraits';
 import createStratumInstance from '../Models/createStratumInstance';
 import TraitsConstructor from './TraitsConstructor';
+import { computed } from 'mobx';
 
 interface TraitsConstructorWithRemoval<T extends ModelTraits> extends TraitsConstructor<T> {
     isRemoval?: (instance: T) => boolean;
@@ -29,6 +30,7 @@ export default function objectArrayTrait<T extends ModelTraits>(options: ObjectA
 export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
     readonly type: TraitsConstructorWithRemoval<T>;
     readonly idProperty: keyof T;
+    readonly decoratorForFlattened = computed.struct;
 
     constructor(id: string, options: ObjectArrayTraitOptions<T>) {
         super(id, options);

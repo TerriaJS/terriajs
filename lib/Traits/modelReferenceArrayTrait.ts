@@ -6,6 +6,7 @@ import upsertModelFromJson from '../Models/upsertModelFromJson';
 import ModelReference from "./ModelReference";
 import ModelTraits from "./ModelTraits";
 import Trait, { TraitOptions } from "./Trait";
+import { computed } from 'mobx';
 
 export interface ModelArrayTraitOptions extends TraitOptions {
     factory?: ModelFactory;
@@ -22,6 +23,7 @@ export default function modelReferenceArrayTrait<T>(options: ModelArrayTraitOpti
 }
 
 export class ModelReferenceArrayProperty extends Trait {
+    readonly decoratorForFlattened = computed.struct;
     private factory: ModelFactory | undefined;
 
     constructor(id: string, options: ModelArrayTraitOptions) {

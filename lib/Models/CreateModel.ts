@@ -24,7 +24,7 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(Tr
 
         constructor(id: ModelId, terria: Terria) {
             super(id, terria);
-            this.flattened = observable(createFlattenedLayer(this, Traits));
+            this.flattened = createFlattenedLayer(this, Traits);
         }
 
         private getOrCreateStratum(id: string): StratumTraits {
@@ -90,12 +90,12 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(Tr
     // Add top-level accessors that don't already exist.
     const traits = Traits.traits;
     const traitsInstance = new Traits();
-    Object.keys(traits).forEach(propertyName => {
-        if (!(propertyName in Model.prototype)) {
-            const defaultValue = (<any>traitsInstance)[propertyName];
-            Object.defineProperty(Model.prototype, propertyName, {
+    Object.keys(traits).forEach(traitName => {
+        if (!(traitName in Model.prototype)) {
+            const defaultValue = (<any>traitsInstance)[traitName];
+            Object.defineProperty(Model.prototype, traitName, {
                 get: function(this: Model) {
-                    const value = (<any>this.flattened)[propertyName];
+                    const value = (<any>this.flattened)[traitName];
                     if (value === undefined) {
                         return defaultValue;
                     }
@@ -105,7 +105,7 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(Tr
                 configurable: true
             });
 
-            decorators[propertyName] = computed;
+            decorators[traitName] = computed;
         }
     });
 
@@ -118,16 +118,23 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(Tr
             id: model.id + ':flattened'
         };
 
-        Object.keys(traits).forEach(propertyName => {
-            const property = traits[propertyName];
+        const decorators: { [id: string]: PropertyDecorator } = {};
 
-            Object.defineProperty(flattened, propertyName, {
+        Object.keys(traits).forEach(traitName => {
+            const trait = traits[traitName];
+
+            Object.defineProperty(flattened, traitName, {
                 get: function() {
-                    return property.getValue(model.strataTopToBottom);
+                    return trait.getValue(model.strataTopToBottom);
                 },
-                enumerable: true
+                enumerable: true,
+                configurable: true
             });
+
+            decorators[traitName] = trait.decoratorForFlattened || computed;
         });
+
+        decorate(flattened, decorators);
 
         return flattened;
     }
