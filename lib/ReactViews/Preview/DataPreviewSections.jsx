@@ -71,7 +71,7 @@ const DataPreviewSections = createReactClass({
                         <div key={i}>
                             <h4 className={Styles.h4}>{item.name}</h4>
                             <Choose>
-                                <When condition={item.name && item.name.indexOf("URL") !== -1 }>
+                                <When condition={true}>
                                     <textarea readOnly
                                         className={Styles.urlfield}
                                         value={window.location.protocol + "//" + window.location.hostname + item.content}
