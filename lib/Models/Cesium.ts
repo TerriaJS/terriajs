@@ -1,74 +1,46 @@
+import { autorun } from 'mobx';
+import { createTransformer } from 'mobx-utils';
 import BoundingSphere from 'terriajs-cesium/Source/Core/BoundingSphere';
+import Cartographic from 'terriajs-cesium/Source/Core/Cartographic';
+import defaultValue from 'terriajs-cesium/Source/Core/defaultValue';
+import defined from 'terriajs-cesium/Source/Core/defined';
+import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
+import HeadingPitchRange from 'terriajs-cesium/Source/Core/HeadingPitchRange';
+import Rectangle from 'terriajs-cesium/Source/Core/Rectangle';
+import sampleTerrain from 'terriajs-cesium/Source/Core/sampleTerrain';
 import BoundingSphereState from 'terriajs-cesium/Source/DataSources/BoundingSphereState';
 import DataSource from 'terriajs-cesium/Source/DataSources/DataSource';
 import DataSourceCollection from "terriajs-cesium/Source/DataSources/DataSourceCollection";
-import HeadingPitchRange from 'terriajs-cesium/Source/Core/HeadingPitchRange';
-import Terria from './Terria';
-import Scene from 'terriajs-cesium/Source/Scene/Scene';
-import Viewer from 'terriajs-cesium/Source/Widgets/Viewer/Viewer';
-import GlobeOrMap, { CameraView } from './GlobeOrMap';
-import Rectangle from 'terriajs-cesium/Source/Core/Rectangle';
-import Mappable, { ImageryParts } from './Mappable';
-import sampleTerrain from 'terriajs-cesium/Source/Core/sampleTerrain';
 import ImageryLayer from 'terriajs-cesium/Source/Scene/ImageryLayer';
-import { createTransformer } from 'mobx-utils';
-import { autorun } from 'mobx';
+import Scene from 'terriajs-cesium/Source/Scene/Scene';
+import when from 'terriajs-cesium/Source/ThirdParty/when';
+import CesiumWidget from 'terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget';
+import isDefined from '../Core/isDefined';
 import pollToPromise from '../Core/pollToPromise';
-
-/*global require*/
-var Cartesian2 = require('terriajs-cesium/Source/Core/Cartesian2');
-var Cartesian3 = require('terriajs-cesium/Source/Core/Cartesian3');
-var Cartographic = require('terriajs-cesium/Source/Core/Cartographic');
-var CesiumMath = require('terriajs-cesium/Source/Core/Math');
-var defaultValue = require('terriajs-cesium/Source/Core/defaultValue');
-var defined = require('terriajs-cesium/Source/Core/defined');
-var destroyObject = require('terriajs-cesium/Source/Core/destroyObject');
-var DeveloperError = require('terriajs-cesium/Source/Core/DeveloperError');
-var Ellipsoid = require('terriajs-cesium/Source/Core/Ellipsoid');
-var Entity = require('terriajs-cesium/Source/DataSources/Entity');
-var formatError = require('terriajs-cesium/Source/Core/formatError');
-var getTimestamp = require('terriajs-cesium/Source/Core/getTimestamp');
-var JulianDate = require('terriajs-cesium/Source/Core/JulianDate');
-var knockout = require('terriajs-cesium/Source/ThirdParty/knockout');
-var loadWithXhr = require('../Core/loadWithXhr');
-var Matrix4 = require('terriajs-cesium/Source/Core/Matrix4');
-var SceneTransforms = require('terriajs-cesium/Source/Scene/SceneTransforms');
-var ScreenSpaceEventType = require('terriajs-cesium/Source/Core/ScreenSpaceEventType');
-var TaskProcessor = require('terriajs-cesium/Source/Core/TaskProcessor');
-var Transforms = require('terriajs-cesium/Source/Core/Transforms');
-var when = require('terriajs-cesium/Source/ThirdParty/when');
-var EventHelper = require('terriajs-cesium/Source/Core/EventHelper');
-var ImagerySplitDirection = require('terriajs-cesium/Source/Scene/ImagerySplitDirection');
-
-var CesiumSelectionIndicator = require('../Map/CesiumSelectionIndicator');
-var Feature = require('./Feature');
-var inherit = require('../Core/inherit');
-var TerriaError = require('../Core/TerriaError');
-var PickedFeatures = require('../Map/PickedFeatures');
-var ViewerMode = require('./ViewerMode');
-
-function isDefined<T>(value: T | undefined): value is T {
-    return value !== undefined;
-}
+import CesiumRenderLoopPauser from '../Map/CesiumRenderLoopPauser';
+import GlobeOrMap, { CameraView } from './GlobeOrMap';
+import Mappable, { ImageryParts } from './Mappable';
+import Terria from './Terria';
 
 export default class Cesium implements GlobeOrMap {
     readonly terria: Terria;
-    readonly viewer: Viewer;
+    readonly cesiumWidget: CesiumWidget;
     readonly scene: Scene;
-    readonly dataSources: DataSourceCollection = new DataSourceCollection();    
-    
+    readonly dataSources: DataSourceCollection = new DataSourceCollection();
     dataSourceDisplay: Cesium.DataSourceDisplay | undefined;
+    readonly pauser: CesiumRenderLoopPauser;
 
-    
     private _disposeWorkbenchMapItemsSubscription: (() => void) | undefined;
 
-    constructor(terria: Terria, viewer: Cesium.Viewer) {
+    constructor(terria: Terria, cesiumWidget: CesiumWidget) {
         this.terria = terria;
-        this.viewer = viewer;
-        this.scene = viewer.scene;
+        this.cesiumWidget = cesiumWidget;
+        this.scene = cesiumWidget.scene;
+        this.pauser = new CesiumRenderLoopPauser(this.cesiumWidget);
     }
 
     destroy() {
+        this.pauser.destroy();
         this.stopObserving();
     }
 
@@ -135,6 +107,8 @@ export default class Cesium implements GlobeOrMap {
                     }
                 }
             }
+
+            this.notifyRepaintRequired();
         });
     }
 
@@ -179,11 +153,11 @@ export default class Cesium implements GlobeOrMap {
                         level,
                         positions
                     ).then(function(results) {
-                        var finalDestinationCartographic = {
-                            longitude: destination.longitude,
-                            latitude: destination.latitude,
-                            height: destination.height + results[0].height
-                        };
+                        var finalDestinationCartographic = new Cartographic(
+                            destination.longitude,
+                            destination.latitude,
+                            destination.height + results[0].height
+                        );
 
                         var finalDestination = Ellipsoid.WGS84.cartographicToCartesian(
                             finalDestinationCartographic
@@ -232,8 +206,12 @@ export default class Cesium implements GlobeOrMap {
                 }
             })
             .then(function() {
-                // that.notifyRepaintRequired();
+                that.notifyRepaintRequired();
             });
+    }
+
+    notifyRepaintRequired() {
+        this.pauser.notifyRepaintRequired();
     }
 }
 

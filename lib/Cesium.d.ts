@@ -1083,3 +1083,6 @@ declare module 'terriajs-cesium/Source/Workers/createTaskProcessorWorker' {
 
 // Additional declarations to fix type errors
 declare module 'terriajs-cesium/Source/ThirdParty/when';
+declare module 'terriajs-cesium/Source/Core/getTimestamp' {
+    export default function getTimestamp(): number;
+}
