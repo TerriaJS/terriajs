@@ -93,7 +93,9 @@ export default class Leaflet implements GlobeOrMap {
             // Add new data sources, remove hidden ones
             allDataSources.forEach(d => {
                 if (d.show) {
-                    dataSources.add(d);
+                    if (!dataSources.contains(d)) {
+                        dataSources.add(d);
+                    }
                 } else {
                     dataSources.remove(d);
                 }
