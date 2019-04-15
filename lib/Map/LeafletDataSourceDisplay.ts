@@ -46,10 +46,10 @@ interface LeafletDataSourceDisplayOptions {
  * Visualizes a collection of {@link DataSource} instances in Leaflet.
  */
 export default class LeafletDataSourceDisplay {
-    private readonly displayID: string;
+    private readonly _displayID: string;
 
     // Gets the scene associated with this display.
-    private readonly scene: LeafletScene;
+    private readonly _scene: LeafletScene;
 
     /**
      * Gets the default data source instance which can be used to
@@ -57,53 +57,53 @@ export default class LeafletDataSourceDisplay {
      * a specific data source. This instance is always available
      * and does not appear in the list dataSources collection.
      */
-    private readonly defaultDataSource: LeafletDataSource;
+    private readonly _defaultDataSource: LeafletDataSource;
 
     // Gets the collection of data sources to display.
-    private readonly dataSourceCollection: DataSourceCollection;
+    private readonly _dataSourceCollection: DataSourceCollection;
 
-    private readonly visualizersCallback: VisualizersCallback;
-    private readonly eventHelper: EventHelper;
+    private readonly _visualizersCallback: VisualizersCallback;
+    private readonly _eventHelper: EventHelper;
 
     // Gets a value indicating whether or not all entities in the data source are ready
-    private ready: boolean;
+    private _ready: boolean;
 
-    private lastTime: JulianDate;
+    private _lastTime: JulianDate;
 
     constructor(options: LeafletDataSourceDisplayOptions) {
-        this.displayID = createGuid();
-        this.scene = options.scene;
-        this.dataSourceCollection = options.dataSourceCollection;
-        this.visualizersCallback = defaultValue(
+        this._displayID = createGuid();
+        this._scene = options.scene;
+        this._dataSourceCollection = options.dataSourceCollection;
+        this._visualizersCallback = defaultValue(
             options.visualizersCallback,
             LeafletDataSourceDisplay.defaultVisualizersCallback
         );
 
-        this.eventHelper = new EventHelper();
-        this.eventHelper.add(
-            this.dataSourceCollection.dataSourceAdded,
-            this.onDataSourceAdded as () => void,
+        this._eventHelper = new EventHelper();
+        this._eventHelper.add(
+            this._dataSourceCollection.dataSourceAdded,
+            this._onDataSourceAdded as () => void,
             this
         );
-        this.eventHelper.add(
-            this.dataSourceCollection.dataSourceRemoved,
-            this.onDataSourceRemoved as () => void,
+        this._eventHelper.add(
+            this._dataSourceCollection.dataSourceRemoved,
+            this._onDataSourceRemoved as () => void,
             this
         );
 
-        for (let i = 0, len = this.dataSourceCollection.length; i < len; i++) {
-            this.onDataSourceAdded(
-                this.dataSourceCollection,
-                this.dataSourceCollection.get(i)
+        for (let i = 0, len = this._dataSourceCollection.length; i < len; i++) {
+            this._onDataSourceAdded(
+                this._dataSourceCollection,
+                this._dataSourceCollection.get(i)
             );
         }
 
         const defaultDataSource = new CustomDataSource();
-        this.onDataSourceAdded(undefined, defaultDataSource);
-        this.defaultDataSource = defaultDataSource;
+        this._onDataSourceAdded(undefined, defaultDataSource);
+        this._defaultDataSource = defaultDataSource;
 
-        this.ready = false;
-        this.lastTime = JulianDate.now();
+        this._ready = false;
+        this._lastTime = JulianDate.now();
     }
 
     /**
@@ -129,7 +129,7 @@ export default class LeafletDataSourceDisplay {
         let x;
         let visualizers;
         let vLength;
-        const dataSources = this.dataSourceCollection;
+        const dataSources = this._dataSourceCollection;
         const length = dataSources.length;
         for (let i = 0; i < length; i++) {
             const dataSource = <LeafletDataSource>dataSources.get(i);
@@ -137,7 +137,7 @@ export default class LeafletDataSourceDisplay {
                 result = dataSource.update(time) && result;
             }
 
-            visualizers = this.getVisualizersForDataSource(dataSource);
+            visualizers = this._getVisualizersForDataSource(dataSource);
             if (isDefined(visualizers)) {
                 vLength = visualizers.length;
                 for (x = 0; x < vLength; x++) {
@@ -146,7 +146,7 @@ export default class LeafletDataSourceDisplay {
             }
         }
 
-        visualizers = this.getVisualizersForDataSource(this.defaultDataSource);
+        visualizers = this._getVisualizersForDataSource(this._defaultDataSource);
         if (isDefined(visualizers)) {
             vLength = visualizers.length;
             for (x = 0; x < vLength; x++) {
@@ -154,52 +154,52 @@ export default class LeafletDataSourceDisplay {
             }
         }
 
-        this.ready = result;
-        this.lastTime = JulianDate.clone(time, this.lastTime);
+        this._ready = result;
+        this._lastTime = JulianDate.clone(time, this._lastTime);
         return result;
     }
 
     destroy() {
-        this.eventHelper.removeAll();
+        this._eventHelper.removeAll();
 
-        const dataSourceCollection = this.dataSourceCollection;
+        const dataSourceCollection = this._dataSourceCollection;
         for (
             let i = 0, length = dataSourceCollection.length;
             i < length;
             ++i
         ) {
-            this.onDataSourceRemoved(
-                this.dataSourceCollection,
+            this._onDataSourceRemoved(
+                this._dataSourceCollection,
                 dataSourceCollection.get(i)
             );
         }
-        this.onDataSourceRemoved(undefined, this.defaultDataSource);
+        this._onDataSourceRemoved(undefined, this._defaultDataSource);
         return destroyObject(this);
     }
 
-    private onDataSourceAdded(
+    private _onDataSourceAdded(
         _dataSourceCollection: DataSourceCollection | undefined,
         dataSource: LeafletDataSource
     ) {
-        const visualizers = this.visualizersCallback(
-            this.scene,
+        const visualizers = this._visualizersCallback(
+            this._scene,
             undefined,
             dataSource
         );
 
         dataSource.visualizersByDisplayID =
             dataSource.visualizersByDisplayID || {};
-        dataSource.visualizersByDisplayID[this.displayID] = visualizers;
+        dataSource.visualizersByDisplayID[this._displayID] = visualizers;
 
         dataSource.visualizers = dataSource.visualizers || [];
         dataSource.visualizers = dataSource.visualizers.concat(visualizers);
     }
 
-    private onDataSourceRemoved(
+    private _onDataSourceRemoved(
         _dataSourceCollection: DataSourceCollection | undefined,
         dataSource: LeafletDataSource
     ) {
-        const visualizers = this.getVisualizersForDataSource(dataSource);
+        const visualizers = this._getVisualizersForDataSource(dataSource);
         if (!isDefined(visualizers)) {
             return;
         }
@@ -216,17 +216,17 @@ export default class LeafletDataSourceDisplay {
         }
 
         if (isDefined(dataSource.visualizersByDisplayID)) {
-            delete dataSource.visualizersByDisplayID[this.displayID];
+            delete dataSource.visualizersByDisplayID[this._displayID];
         }
     }
 
-    private getVisualizersForDataSource(dataSource: LeafletDataSource) {
+    private _getVisualizersForDataSource(dataSource: LeafletDataSource) {
         const visualizersByDisplayID = dataSource.visualizersByDisplayID;
         if (
             isDefined(visualizersByDisplayID) &&
-            isDefined(visualizersByDisplayID[this.displayID])
+            isDefined(visualizersByDisplayID[this._displayID])
         ) {
-            return visualizersByDisplayID[this.displayID];
+            return visualizersByDisplayID[this._displayID];
         }
     }
 
@@ -235,9 +235,9 @@ export default class LeafletDataSourceDisplay {
      * produced for the given entities.
      */
     getLatLngBounds(dataSource: LeafletDataSource) {
-        this.update(this.lastTime);
+        this.update(this._lastTime);
 
-        const visualizers = this.getVisualizersForDataSource(dataSource);
+        const visualizers = this._getVisualizersForDataSource(dataSource);
         if (!isDefined(visualizers)) {
             return;
         }
@@ -272,16 +272,16 @@ export default class LeafletDataSourceDisplay {
         allowPartial: boolean,
         result: BoundingSphere
     ) {
-        if (!this.ready) {
+        if (!this._ready) {
             return BoundingSphereState.PENDING;
         }
 
         let length;
-        let dataSource: LeafletDataSource | undefined = this.defaultDataSource;
+        let dataSource: LeafletDataSource | undefined = this._defaultDataSource;
         if (!dataSource.entities.contains(entity)) {
             dataSource = undefined;
 
-            const dataSources = this.dataSourceCollection;
+            const dataSources = this._dataSourceCollection;
             length = dataSources.length;
             for (let i = 0; i < length; i++) {
                 const d = dataSources.get(i);

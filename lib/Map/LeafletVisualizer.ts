@@ -81,23 +81,23 @@ const tmpImage =
  * A {@link Visualizer} which maps {@link Entity#point} to Leaflet primitives.
  **/
 class LeafletGeomVisualizer {
-    private readonly featureGroup: L.FeatureGroup;
-    private readonly entitiesToVisualize: AssociativeArray;
-    private readonly entityHash: EntityHash;
+    private readonly _featureGroup: L.FeatureGroup;
+    private readonly _entitiesToVisualize: AssociativeArray;
+    private readonly _entityHash: EntityHash;
 
     constructor(
         readonly leafletScene: LeafletScene,
         readonly entityCollection: EntityCollection
     ) {
         entityCollection.collectionChanged.addEventListener(
-            this.onCollectionChanged,
+            this._onCollectionChanged,
             this
         );
-        this.featureGroup = L.featureGroup().addTo(leafletScene.map);
-        this.entitiesToVisualize = new AssociativeArray();
-        this.entityHash = {};
+        this._featureGroup = L.featureGroup().addTo(leafletScene.map);
+        this._entitiesToVisualize = new AssociativeArray();
+        this._entityHash = {};
 
-        this.onCollectionChanged(
+        this._onCollectionChanged(
             entityCollection,
             entityCollection.values,
             [],
@@ -105,16 +105,16 @@ class LeafletGeomVisualizer {
         );
     }
 
-    private onCollectionChanged(
+    private _onCollectionChanged(
         _entityCollection: EntityCollection,
         added: Entity[],
         removed: Entity[],
         changed: Entity[]
     ) {
         let entity;
-        const featureGroup = this.featureGroup;
-        const entities = this.entitiesToVisualize;
-        const entityHash = this.entityHash;
+        const featureGroup = this._featureGroup;
+        const entities = this._entitiesToVisualize;
+        const entityHash = this._entityHash;
 
         for (let i = added.length - 1; i > -1; i--) {
             entity = added[i];
@@ -162,40 +162,40 @@ class LeafletGeomVisualizer {
      *
      */
     public update(time: JulianDate): boolean {
-        const entities = this.entitiesToVisualize.values;
-        const entityHash = this.entityHash;
+        const entities = this._entitiesToVisualize.values;
+        const entityHash = this._entityHash;
 
         for (let i = 0, len = entities.length; i < len; i++) {
             const entity = entities[i];
             const entityDetails = entityHash[entity.id];
 
             if (isDefined(entity.point)) {
-                this.updatePoint(entity, time, entityHash, entityDetails);
+                this._updatePoint(entity, time, entityHash, entityDetails);
             }
             if (isDefined(entity.billboard)) {
-                this.updateBillboard(entity, time, entityHash, entityDetails);
+                this._updateBillboard(entity, time, entityHash, entityDetails);
             }
             if (isDefined(entity.label)) {
-                this.updateLabel(entity, time, entityHash, entityDetails);
+                this._updateLabel(entity, time, entityHash, entityDetails);
             }
             if (isDefined(entity.polyline)) {
-                this.updatePolyline(entity, time, entityHash, entityDetails);
+                this._updatePolyline(entity, time, entityHash, entityDetails);
             }
             if (isDefined(entity.polygon)) {
-                this.updatePolygon(entity, time, entityHash, entityDetails);
+                this._updatePolygon(entity, time, entityHash, entityDetails);
             }
         }
 
         return true;
     }
 
-    private updatePoint(
+    private _updatePoint(
         entity: Entity,
         time: JulianDate,
         _entityHash: EntityHash,
         entityDetails: EntityDetails
     ) {
-        const featureGroup = this.featureGroup;
+        const featureGroup = this._featureGroup;
         const pointGraphics = entity.point;
 
         const show =
@@ -315,14 +315,14 @@ class LeafletGeomVisualizer {
         }
     }
 
-    private updateBillboard(
+    private _updateBillboard(
         entity: Entity,
         time: JulianDate,
         _entityHash: EntityHash,
         entityDetails: EntityDetails
     ) {
         const markerGraphics = entity.billboard;
-        const featureGroup = this.featureGroup;
+        const featureGroup = this._featureGroup;
         let position;
         let marker: L.Marker;
 
@@ -467,14 +467,14 @@ class LeafletGeomVisualizer {
         }
     }
 
-    private updateLabel(
+    private _updateLabel(
         entity: Entity,
         time: JulianDate,
         _entityHash: EntityHash,
         entityDetails: EntityDetails
     ) {
         const labelGraphics = entity.label;
-        const featureGroup = this.featureGroup;
+        const featureGroup = this._featureGroup;
         let position;
         let marker: L.Marker;
 
@@ -603,13 +603,13 @@ class LeafletGeomVisualizer {
         }
     }
 
-    private updatePolygon(
+    private _updatePolygon(
         entity: Entity,
         time: JulianDate,
         _entityHash: EntityHash,
         entityDetails: EntityDetails
     ) {
-        const featureGroup = this.featureGroup;
+        const featureGroup = this._featureGroup;
         const polygonGraphics = entity.polygon;
 
         const show =
@@ -731,14 +731,14 @@ class LeafletGeomVisualizer {
         }
     }
 
-    private updatePolyline(
+    private _updatePolyline(
         entity: Entity,
         time: JulianDate,
         _entityHash: EntityHash,
         entityDetails: EntityDetails
     ) {
         const polylineGraphics = entity.polyline;
-        const featureGroup = this.featureGroup;
+        const featureGroup = this._featureGroup;
         let positions, polyline;
 
         let details = entityDetails.polyline;
@@ -850,18 +850,18 @@ class LeafletGeomVisualizer {
      * Removes and destroys all primitives created by this instance.
      */
     destroy() {
-        const entities = this.entitiesToVisualize.values;
-        const entityHash = this.entityHash;
+        const entities = this._entitiesToVisualize.values;
+        const entityHash = this._entityHash;
 
         for (let i = entities.length - 1; i > -1; i--) {
-            cleanEntity(entities[i], this.featureGroup, entityHash);
+            cleanEntity(entities[i], this._featureGroup, entityHash);
         }
 
         this.entityCollection.collectionChanged.removeEventListener(
-            this.onCollectionChanged,
+            this._onCollectionChanged,
             this
         );
-        this.leafletScene.map.removeLayer(this.featureGroup);
+        this.leafletScene.map.removeLayer(this._featureGroup);
         return destroyObject(this);
     }
 
@@ -872,8 +872,8 @@ class LeafletGeomVisualizer {
     getLatLngBounds(): LatLngBounds | undefined {
         let result: LatLngBounds | undefined;
 
-        Object.keys(this.entityHash).forEach(entityId => {
-            const entityDetails: any = this.entityHash[entityId];
+        Object.keys(this._entityHash).forEach(entityId => {
+            const entityDetails: any = this._entityHash[entityId];
 
             Object.keys(entityDetails).forEach(primitiveId => {
                 const primitive = entityDetails[primitiveId];
