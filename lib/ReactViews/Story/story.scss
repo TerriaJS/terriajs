@@ -1,7 +1,7 @@
 @import '~terriajs-variables';
 @import '../../Sass/common/mixins';
 .story:global(.ui-sortable-item){
-  background: #667080;
+  background: $dark-with-overlay;
   color: #FFFFFF;
   margin: $padding $padding 0 $padding;
   border-radius: 2px;
@@ -49,19 +49,6 @@
  .footer{
    display: flex;
  }
- .removeBtn{
-    composes: btn from "../../Sass/common/_buttons.scss";
-    composes: btn--map from "../../Sass/common/_buttons.scss";
-    margin-right: $padding;
-    background: #9CA1AA;
-    border-radius: 2px;
-    padding: $padding-small $padding;
-    svg{
-      height: 25px;
-      width: 25px;
-      fill: #ffffff;
-    }
- }
 
  .viewBtn{
    composes: btn from "../../Sass/common/_buttons.scss";
@@ -73,7 +60,7 @@
    position: absolute;
    right: 8px;
    top: 8px;
-   background: #7C8591;
+   background: $dark-lighter;
    border-radius: 2px;
  }
 

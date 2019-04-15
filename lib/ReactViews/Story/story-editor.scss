@@ -2,16 +2,9 @@
 @import '../../Sass/common/mixins';
 
 :global{
-  .medium-editor-toolbar{
-    z-index: 9999999!important;
-    font-family: $font-base;
-  }
-  .medium-editor-element{
-    min-height: 50px;
-    max-height: 80vh;
-    overflow-y: auto;
+  .pell-button{
     &:focus{
-      outline: none;
+     outline: 1px solid $color-primary;  
     }
   }
 }
