@@ -132,7 +132,7 @@ class GeoJsonCatalogItem
         if (this.isLoadingMapItems || this._dataSource === undefined) {
             return [];
         }
-
+        this._dataSource.show = this.show;
         return [this._dataSource];
     }
 
