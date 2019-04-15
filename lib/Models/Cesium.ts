@@ -5,10 +5,7 @@ import Cartographic from 'terriajs-cesium/Source/Core/Cartographic';
 import defaultValue from 'terriajs-cesium/Source/Core/defaultValue';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
-import getTimestamp from 'terriajs-cesium/Source/Core/getTimestamp';
 import HeadingPitchRange from 'terriajs-cesium/Source/Core/HeadingPitchRange';
-import JulianDate from 'terriajs-cesium/Source/Core/JulianDate';
-import Matrix4 from 'terriajs-cesium/Source/Core/Matrix4';
 import Rectangle from 'terriajs-cesium/Source/Core/Rectangle';
 import sampleTerrain from 'terriajs-cesium/Source/Core/sampleTerrain';
 import BoundingSphereState from 'terriajs-cesium/Source/DataSources/BoundingSphereState';
@@ -17,106 +14,33 @@ import DataSourceCollection from "terriajs-cesium/Source/DataSources/DataSourceC
 import ImageryLayer from 'terriajs-cesium/Source/Scene/ImageryLayer';
 import Scene from 'terriajs-cesium/Source/Scene/Scene';
 import when from 'terriajs-cesium/Source/ThirdParty/when';
-import Viewer from 'terriajs-cesium/Source/Widgets/Viewer/Viewer';
+import CesiumWidget from 'terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget';
 import isDefined from '../Core/isDefined';
 import pollToPromise from '../Core/pollToPromise';
+import CesiumRenderLoopPauser from '../Map/CesiumRenderLoopPauser';
 import GlobeOrMap, { CameraView } from './GlobeOrMap';
 import Mappable, { ImageryParts } from './Mappable';
 import Terria from './Terria';
-import CesiumEvent from 'terriajs-cesium/Source/Core/Event';
 
 export default class Cesium implements GlobeOrMap {
     readonly terria: Terria;
-    readonly viewer: Viewer;
+    readonly cesiumWidget: CesiumWidget;
     readonly scene: Scene;
     readonly dataSources: DataSourceCollection = new DataSourceCollection();
     dataSourceDisplay: Cesium.DataSourceDisplay | undefined;
-
-    /**
-     * Gets or sets whether to output info to the console when starting and stopping rendering loop.
-     * @type {boolean}
-     */
-    verboseRendering = false;
-
-    /**
-     * Gets or sets whether the viewer has stopped rendering since startup or last set to false.
-     * @type {boolean}
-     */
-    stoppedRendering = false;
+    readonly pauser: CesiumRenderLoopPauser;
 
     private _disposeWorkbenchMapItemsSubscription: (() => void) | undefined;
-    private _boundNotifyRepaintRequired: (() => void) | undefined;
-    private _wheelEvent: string | undefined;
-    private _removePostRenderListener: CesiumEvent.RemoveCallback | undefined;
-    private _lastCameraViewMatrix = new Matrix4();
-    private _lastCameraMoveTime: number = -Number.MAX_VALUE;
 
-    constructor(terria: Terria, viewer: Cesium.Viewer) {
+    constructor(terria: Terria, cesiumWidget: CesiumWidget) {
         this.terria = terria;
-        this.viewer = viewer;
-        this.scene = viewer.scene;
-
-        this._removePostRenderListener = this.scene.postRender.addEventListener(this.postRender.bind(this));
-
-        this._boundNotifyRepaintRequired = this.notifyRepaintRequired.bind(this);
-        var canvas = this.viewer.canvas;
-        canvas.addEventListener('mousemove', this._boundNotifyRepaintRequired, false);
-        canvas.addEventListener('mousedown', this._boundNotifyRepaintRequired, false);
-        canvas.addEventListener('mouseup', this._boundNotifyRepaintRequired, false);
-        canvas.addEventListener('touchstart', this._boundNotifyRepaintRequired, false);
-        canvas.addEventListener('touchend', this._boundNotifyRepaintRequired, false);
-        canvas.addEventListener('touchmove', this._boundNotifyRepaintRequired, false);
-
-        if (defined(globalThis.PointerEvent)) {
-            canvas.addEventListener('pointerdown', this._boundNotifyRepaintRequired, false);
-            canvas.addEventListener('pointerup', this._boundNotifyRepaintRequired, false);
-            canvas.addEventListener('pointermove', this._boundNotifyRepaintRequired, false);
-        }
-
-        // Detect available wheel event
-        this._wheelEvent = undefined;
-        if ('onwheel' in canvas) {
-            // spec event type
-            this._wheelEvent = 'wheel';
-        } else if (defined(globalThis.onmousewheel)) {
-            // legacy event type
-            this._wheelEvent = 'mousewheel';
-        } else {
-            // older Firefox
-            this._wheelEvent = 'DOMMouseScroll';
-        }
-
-        canvas.addEventListener(this._wheelEvent, this._boundNotifyRepaintRequired, false);
-
-        window.addEventListener('resize', this._boundNotifyRepaintRequired, false);
+        this.cesiumWidget = cesiumWidget;
+        this.scene = cesiumWidget.scene;
+        this.pauser = new CesiumRenderLoopPauser(this.cesiumWidget);
     }
 
     destroy() {
-        if (this._removePostRenderListener) {
-            this._removePostRenderListener();
-        }
-
-        if (this._boundNotifyRepaintRequired) {
-            this.viewer.canvas.removeEventListener('mousemove', this._boundNotifyRepaintRequired, false);
-            this.viewer.canvas.removeEventListener('mousedown', this._boundNotifyRepaintRequired, false);
-            this.viewer.canvas.removeEventListener('mouseup', this._boundNotifyRepaintRequired, false);
-            this.viewer.canvas.removeEventListener('touchstart', this._boundNotifyRepaintRequired, false);
-            this.viewer.canvas.removeEventListener('touchend', this._boundNotifyRepaintRequired, false);
-            this.viewer.canvas.removeEventListener('touchmove', this._boundNotifyRepaintRequired, false);
-
-            if (defined(globalThis.PointerEvent)) {
-                this.viewer.canvas.removeEventListener('pointerdown', this._boundNotifyRepaintRequired, false);
-                this.viewer.canvas.removeEventListener('pointerup', this._boundNotifyRepaintRequired, false);
-                this.viewer.canvas.removeEventListener('pointermove', this._boundNotifyRepaintRequired, false);
-            }
-
-            if (this._wheelEvent) {
-                this.viewer.canvas.removeEventListener(this._wheelEvent, this._boundNotifyRepaintRequired, false);
-            }
-
-            window.removeEventListener('resize', this._boundNotifyRepaintRequired, false);
-        }
-
+        this.pauser.destroy();
         this.stopObserving();
     }
 
@@ -287,50 +211,7 @@ export default class Cesium implements GlobeOrMap {
     }
 
     notifyRepaintRequired() {
-        if (this.verboseRendering && !this.viewer.useDefaultRenderLoop) {
-            console.log('starting rendering @ ' + getTimestamp());
-        }
-        this._lastCameraMoveTime = getTimestamp();
-        this.viewer.useDefaultRenderLoop = true;
-    }
-
-    private postRender(date: JulianDate) {
-        // We can safely stop rendering when:
-        //  - the camera position hasn't changed in over a second,
-        //  - there are no tiles waiting to load, and
-        //  - the clock is not animating
-        //  - there are no tweens in progress
-
-        const now = getTimestamp();
-
-        const scene = this.scene;
-
-        if (!Matrix4.equalsEpsilon(this._lastCameraViewMatrix, scene.camera.viewMatrix, 1e-5)) {
-            this._lastCameraMoveTime = now;
-        }
-
-        const cameraMovedInLastSecond = now - this._lastCameraMoveTime < 1000;
-
-        const surface = (<any>scene.globe)._surface;
-        const terrainTilesWaiting = !surface._tileProvider.ready || surface._tileLoadQueueHigh.length > 0 || surface._tileLoadQueueMedium.length > 0 || surface._tileLoadQueueLow.length > 0 || surface._debug.tilesWaitingForChildren > 0;
-        const tweens = (<any>scene).tweens;
-
-        if (!cameraMovedInLastSecond && !terrainTilesWaiting && !this.viewer.clock.shouldAnimate && tweens.length === 0) {
-            if (this.verboseRendering) {
-                console.log('stopping rendering @ ' + getTimestamp());
-            }
-            this.viewer.useDefaultRenderLoop = false;
-            this.stoppedRendering = true;
-        }
-
-        Matrix4.clone(scene.camera.viewMatrix, this._lastCameraViewMatrix);
-
-        // TODO: re-add when selection indicator is added
-        // var feature = this.terria.selectedFeature;
-        // if (defined(feature) && defined(feature.position)) {
-        //     this._selectionIndicator.position = feature.position.getValue(cesium.terria.clock.currentTime);
-        // }
-        // this._selectionIndicator.update();
+        this.pauser.notifyRepaintRequired();
     }
 }
 
