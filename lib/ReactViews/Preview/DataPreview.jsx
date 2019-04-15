@@ -3,7 +3,6 @@
 import Chart from '../Custom/Chart/Chart';
 import Description from './Description';
 import GroupPreview from './GroupPreview';
-import InvokeFunction from '../Analytics/InvokeFunction';
 import MappablePreview from './MappablePreview';
 import React from 'react';
 import createReactClass from 'create-react-class';

@@ -46,7 +46,7 @@ const CesiumTimeline = createReactClass({
             const clock = e.clock;
             clock.currentTime = e.timeJulian;
             clock.shouldAnimate = false;
-            //this.props.terria.currentViewer.notifyRepaintRequired();
+            this.props.terria.currentViewer.notifyRepaintRequired();
         };
 
         this.cesiumTimeline.addEventListener('settime', this.cesiumTimeline.scrubFunction, false);

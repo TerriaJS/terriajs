@@ -103,7 +103,7 @@ const StandardUserInterface = observer(createReactClass({
         );
 
         const terria = this.props.terria;
-        const allBaseMaps = this.props.allBaseMaps;
+        // const allBaseMaps = this.props.allBaseMaps;
         return (
             <div className={Styles.uiRoot} ref={w => (this._wrapper = w)}>
                 <div className={Styles.ui}>

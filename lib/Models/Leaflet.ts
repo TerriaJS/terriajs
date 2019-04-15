@@ -113,6 +113,10 @@ export default class Leaflet implements GlobeOrMap {
         viewOrExtent: CameraView | Cesium.Rectangle,
         flightDurationSeconds: number
     ): void {}
+
+    notifyRepaintRequired() {
+        // No action necessary.
+    }
 }
 
 const createImageryLayer: (
