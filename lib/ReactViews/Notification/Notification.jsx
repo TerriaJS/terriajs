@@ -9,7 +9,6 @@ import NotificationWindow from './NotificationWindow';
 import triggerResize from '../../Core/triggerResize';
 import { observer } from 'mobx-react';
 
-
 const Notification = observer(createReactClass({
     displayName: 'Notification',
     mixins: [ObserveModelMixin],

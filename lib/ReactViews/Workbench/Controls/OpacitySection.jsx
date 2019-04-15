@@ -10,7 +10,6 @@ import hasTraits from '../../../Models/hasTraits';
 import RasterLayerTraits from '../../../Traits/RasterLayerTraits';
 import Styles from './opacity-section.scss';
 
-
 const OpacitySection = observer(createReactClass({
     displayName: 'OpacitySection',
 

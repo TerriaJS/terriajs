@@ -2,13 +2,8 @@ import React from 'react';
 
 import createReactClass from 'create-react-class';
 
-
 import PropTypes from 'prop-types';
 
-import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
-import ObserveModelMixin from '../ObserveModelMixin';
-import SearchBox from '../Search/SearchBox';
-import SidebarSearch from '../Search/SidebarSearch';
 import Workbench from '../Workbench/Workbench';
 import Icon from "../Icon";
 import FullScreenButton from './FullScreenButton';
@@ -20,7 +15,6 @@ import { observer } from 'mobx-react';
 
 const SidePanel = observer(createReactClass({
     displayName: 'SidePanel',
-    //mixins: [ObserveModelMixin],
 
     propTypes: {
         terria: PropTypes.object.isRequired,
@@ -59,7 +53,7 @@ const SidePanel = observer(createReactClass({
         event.stopPropagation();
         this.props.viewState.topElement = 'AddData';
         this.props.viewState.openAddData();
-        
+
     },
 
     onAddLocalDataClicked() {
@@ -83,7 +77,7 @@ const SidePanel = observer(createReactClass({
     },
 
     render() {
-        const searchState = this.props.viewState.searchState;
+        // const searchState = this.props.viewState.searchState;
 
         return (
             <div className={Styles.workBench}>

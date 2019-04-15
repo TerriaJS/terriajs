@@ -7,7 +7,6 @@ import PropTypes from 'prop-types';
 
 import DataCatalog from '../../DataCatalog/DataCatalog';
 import DataPreview from '../../Preview/DataPreview';
-import ObserveModelMixin from '../../ObserveModelMixin';
 import SearchBox from '../../Search/SearchBox';
 
 import Styles from './data-catalog-tab.scss';
@@ -15,7 +14,6 @@ import Styles from './data-catalog-tab.scss';
 // The DataCatalog Tab
 const DataCatalogTab = observer(createReactClass({
     displayName: 'DataCatalogTab',
-    //mixins: [ObserveModelMixin],
 
     propTypes: {
         terria: PropTypes.object,

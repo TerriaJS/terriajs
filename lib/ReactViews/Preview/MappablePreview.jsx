@@ -4,7 +4,6 @@ import createReactClass from 'create-react-class';
 
 import PropTypes from 'prop-types';
 
-import DataPreviewMap from './DataPreviewMap';
 import Description from './Description';
 import ObserveModelMixin from '../ObserveModelMixin';
 import Styles from './mappable-preview.scss';

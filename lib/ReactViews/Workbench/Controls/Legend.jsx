@@ -12,14 +12,13 @@ import URI from 'urijs';
 import { observer } from 'mobx-react';
 import Styles from './legend.scss';
 
-
 /* A lookup map for displayable mime types */
-var DISPLAYABLE_MIME_TYPES = ['image/jpeg', 'image/gif', 'image/png', 'image/svg+xml', 'image/bmp', 'image/x-bmp']
+const DISPLAYABLE_MIME_TYPES = ['image/jpeg', 'image/gif', 'image/png', 'image/svg+xml', 'image/bmp', 'image/x-bmp']
     .reduce(function(acc, mimeType) {
         acc[mimeType] = true;
         return acc;
     }, {});
-var IMAGE_URL_REGEX = /[.\/](png|jpg|jpeg|gif|svg)/i;
+    const IMAGE_URL_REGEX = /[.\/](png|jpg|jpeg|gif|svg)/i;
 
 function checkMimeType(legendUrl) {
     if (legendUrl.mimeType) {
