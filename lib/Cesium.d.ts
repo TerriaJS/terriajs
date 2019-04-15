@@ -499,8 +499,14 @@ declare module 'terriajs-cesium/Source/DataSources/BillboardGraphics' {
 declare module 'terriajs-cesium/Source/DataSources/BillboardVisualizer' {
     export default Cesium.BillboardVisualizer;
 }
-// TODO
-declare module 'terriajs-cesium/Source/DataSources/BoundingSphereState';
+declare module 'terriajs-cesium/Source/DataSources/BoundingSphereState' {
+    enum BoundingSphereState {
+        DONE,
+        PENDING,
+        FAILED
+    }
+    export default BoundingSphereState;
+}
 declare module 'terriajs-cesium/Source/DataSources/BoxGeometryUpdater' {
     export default Cesium.BoxGeometryUpdater;
 }
