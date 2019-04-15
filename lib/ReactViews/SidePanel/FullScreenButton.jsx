@@ -2,16 +2,15 @@
 const React = require('react');
 const createReactClass = require('create-react-class');
 const PropTypes = require('prop-types');
-import ObserveModelMixin from '../ObserveModelMixin';
 import triggerResize from '../../Core/triggerResize';
 import Styles from './full_screen_button.scss';
 import classNames from 'classnames';
 import Icon from '../Icon.jsx';
+import { observer } from 'mobx-react';
 
 // The button to make the map full screen and hide the workbench.
-const FullScreenButton = createReactClass({
+const FullScreenButton = observer(createReactClass({
     displayName: 'FullScreenButton',
-    mixins: [ObserveModelMixin],
 
     propTypes: {
         terria: PropTypes.object,
@@ -89,5 +88,5 @@ const FullScreenButton = createReactClass({
             </div>
         );
     }
-});
+}));
 module.exports = FullScreenButton;
