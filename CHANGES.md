@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### v7.2.1
+
+* Removed an extra close curly brace from `regionMapping.json`.
+
 ### v7.2.0
 
 * Added `hideLayerAfterMinScaleDenominator` property to `WebMapServiceCatalogItem`. When true, TerriaJS will show a message and display nothing rather than silently show a scaled-up version of the layer when the user zooms in past the layer's advertised `MinScaleDenominator`.
