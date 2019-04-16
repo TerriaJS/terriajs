@@ -57,7 +57,7 @@
     "mustache": "^2.2.1",
     "mutationobserver-shim": "^0.3.1",
     "pbf": "^3.0.1",
-    "pell": "git://github.com/TerriaJS/pell#master",
+    "pell": "^1.0.6",
     "point-in-polygon": "^1.0.1",
     "proj4": "^2.4.4",
     "prop-types": "^15.6.0",

@@ -139,7 +139,7 @@ const StoryPanel = createReactClass({
       const locationBtn = <button className ={Styles.locationBtn} title='center scene' onClick = {this.onCenterScene.bind(this, story)}><Icon glyph ={Icon.GLYPHS.location}/></button>;
       const exitBtn = <button className={Styles.exitBtn} title="exit story" onClick={this.slideOut}><Icon glyph={Icon.GLYPHS.close}/></button>;
         return (
-          <Swipeable onSwipedLeft = {this.goToNextStory} onSwipedRight={this.goToPrevStory}>
+          <Swipeable onSwipedLeft = {this.goToPrevStory} onSwipedRight={this.goToNextStory}>
                 <div className={classNames(Styles.fullPanel, {[Styles.isHidden]: !this.props.viewState.storyShown, [Styles.isPushedUp]: this.props.viewState.chartIsOpen})}>
                         <div className={classNames(Styles.storyContainer, {[Styles.isMounted]: this.state.inView})} key={story.id}>
                           <Medium>
