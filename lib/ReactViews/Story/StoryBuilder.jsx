@@ -1,6 +1,7 @@
 import React from 'react';
 import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
+import combine from 'terriajs-cesium/Source/Core/combine';
 import {getShareData } from '../Map/Panels/SharePanel/BuildShareLink';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import ObserveModelMixin from '../ObserveModelMixin';
@@ -52,15 +53,15 @@ const StoryBuilder = createReactClass({
         id: _story.id ? _story.id : uniqid(),
       };
 
-      !defined(_story.id) && this.captureStory(story);
-
       const storyIndex = (this.props.terria.stories || []).map(story => story.id).indexOf(_story.id);
     
       if(storyIndex >= 0) {
-        // replace the old story
-        this.props.terria.stories = [...this.props.terria.stories.slice(0, storyIndex), story, ...this.props.terria.stories.slice(storyIndex + 1)];
+        const oldStory = this.props.terria.stories[storyIndex];
+        // replace the old story, we need to replace the stories array so that
+        // it is observable
+        this.props.terria.stories = [...this.props.terria.stories.slice(0, storyIndex), combine(story, oldStory), ...this.props.terria.stories.slice(storyIndex + 1)];
       } else {
-        this.props.terria.stories = [...(this.props.terria.stories || []), story];
+        this.captureStory(story);
       }
 
       this.setState({
@@ -70,6 +71,7 @@ const StoryBuilder = createReactClass({
 
     captureStory(story) {
         story.shareData = JSON.parse(JSON.stringify(getShareData(this.props.terria, false)));
+        this.props.terria.stories = [...(this.props.terria.stories || []), story];
     },
 
     runStories() {
