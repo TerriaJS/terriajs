@@ -13,6 +13,12 @@ import Icon from "../../Icon.jsx";
 import Styles from './setting-panel.scss';
 import DropdownStyles from './panel.scss';
 
+const viewerModeLabels = {
+    [ViewerMode.CesiumTerrain]: '3D Terrain',
+    [ViewerMode.CesiumEllipsoid]: '3D Smooth',
+    [ViewerMode.Leaflet]: '2D'
+};
+
 // The basemap and viewer setting panel
 const SettingPanel = createReactClass({
     displayName: 'SettingPanel',
@@ -70,7 +76,7 @@ const SettingPanel = createReactClass({
                 return;
         }
         this.props.terria.viewerMode = newViewerMode;
-      
+
         // We store the user's chosen viewer mode for future use.
         this.props.terria.setLocalProperty('viewermode', newViewerMode);
         this.props.terria.currentViewer.notifyRepaintRequired();
@@ -91,10 +97,13 @@ const SettingPanel = createReactClass({
         const viewerModes = [];
 
         if (this.props.terria.configParameters.useCesiumIonTerrain || this.props.terria.configParameters.cesiumTerrainUrl) {
-            viewerModes.push('3D Terrain');
+            viewerModes.push(ViewerMode.CesiumTerrain);
         }
 
-        viewerModes.push('3D Smooth', '2D');
+        viewerModes.push(
+            ViewerMode.CesiumEllipsoid,
+            ViewerMode.Leaflet
+        );
 
         return (
             <MenuPanel theme={dropdownTheme} btnTitle="Change view" btnText="Map" viewState={this.props.viewState}
@@ -102,11 +111,11 @@ const SettingPanel = createReactClass({
                 <div className={classNames(Styles.viewer, DropdownStyles.section)}>
                     <label className={DropdownStyles.heading}> Map View </label>
                     <ul className={Styles.viewerSelector}>
-                        <For each="viewerMode" of={viewerModes} index="i">
-                            <li key={i} className={Styles.listItem}>
-                                <button onClick={that.selectViewer.bind(this, i)}
-                                        className={classNames(Styles.btnViewer, {[Styles.isActive]: i === currentViewer})}>
-                                    {viewerMode}
+                        <For each="viewerMode" of={viewerModes}>
+                            <li key={viewerMode} className={Styles.listItem}>
+                                <button onClick={that.selectViewer.bind(this, viewerMode)}
+                                        className={classNames(Styles.btnViewer, {[Styles.isActive]: viewerMode === currentViewer})}>
+                                    {viewerModeLabels[viewerMode]}
                                 </button>
                             </li>
                         </For>

@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### next patch
+
+* Fixed Map View '2D' button activating 3D ellipsoid viewer when the instance has no terrain.
+
 ### v7.2.0
 
 * Added `hideLayerAfterMinScaleDenominator` property to `WebMapServiceCatalogItem`. When true, TerriaJS will show a message and display nothing rather than silently show a scaled-up version of the layer when the user zooms in past the layer's advertised `MinScaleDenominator`.
