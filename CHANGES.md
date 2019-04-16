@@ -3,6 +3,7 @@ Change Log
 
 ### Next Release
 
+* Fix error in polygon selection when some layers have no geometry.
 * Added `hideLayerAfterMinScaleDenominator` property to `WebMapServiceCatalogItem`. When true, TerriaJS will show a message and display nothing rather than silently show a scaled-up version of the layer when the user zooms in past the layer's advertised `MinScaleDenominator`.
 * Added `GeoJsonParameterEditor`.
 
