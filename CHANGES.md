@@ -1,12 +1,15 @@
 Change Log
 ==========
 
-### Next Release
+### v7.2.0
 
 * Added `GltfCatalogItem` for displaying [glTF](https://www.khronos.org/gltf/) models on the 3D scene.
 * Replace `getUniqueValues` with `lodash.uniq`
 * Added `hideLayerAfterMinScaleDenominator` property to `WebMapServiceCatalogItem`. When true, TerriaJS will show a message and display nothing rather than silently show a scaled-up version of the layer when the user zooms in past the layer's advertised `MinScaleDenominator`.
 * Added `GeoJsonParameterEditor`.
+* Fixed a bug that caused some chart "Expand" options to be hidden.
+* Added `CED_CODE18` and `CED_NAME18` region types to `regionMapping.json`. These are now the default for CSV files that reference `ced`, `ced_code` and `ced_name` (previously the 2016 versions were used).
+* Improved support for WMTS, setting a maximum level to request tiles at.
 
 ### v7.1.0
 
@@ -18,6 +21,7 @@ Change Log
 * Fixed a bug that prevented catalog item split state (left/right/both) from being shared for CSV layers.
 * Fixed a bug where the 3D globe would not immediately refresh when toggling between the "Terrain" and "Smooth" viewer modes.
 * Fixed a bug that could cause the chart panel at the bottom to flicker on and off rapidly when there is an error loading chart data.
+* Fixed map tool button positioning on small-screen devices when viewing time series layers.
 
 ### v7.0.2
 
