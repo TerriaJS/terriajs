@@ -35,9 +35,6 @@ class GetCapabilitiesStratum extends LoadableStratum(WebMapServiceCatalogGroupTr
     }
 
     @observable
-    isLoading: boolean = false;
-
-    @observable
     members: ModelReference[] | undefined;
 
     @action

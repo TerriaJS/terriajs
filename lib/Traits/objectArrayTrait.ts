@@ -39,8 +39,8 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
     }
 
     getValue(strataTopToBottom: StratumFromTraits<ModelTraits>[]): ReadonlyArray<FlattenedFromTraits<T>> | undefined {
-        const objectArrayStrata = strataTopToBottom.map((stratum: any) => stratum[this.id]).filter(stratum => stratum !== undefined);
-        if (objectArrayStrata === undefined) {
+        const objectArrayStrata = strataTopToBottom.map((stratum: any) => stratum[this.id]).filter(stratumValue => stratumValue !== undefined);
+        if (objectArrayStrata.length === 0) {
             return undefined;
         }
 
