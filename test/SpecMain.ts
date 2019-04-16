@@ -2,6 +2,7 @@
 /// <reference types="jasmine" />
 require('terriajs-jasmine-ajax');
 import { configure, spy } from "mobx";
+require("regenerator-runtime/runtime");
 
 configure({
     enforceActions: true,

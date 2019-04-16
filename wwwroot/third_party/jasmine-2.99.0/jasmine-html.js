@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2008-2015 Pivotal Labs
+Copyright (c) 2008-2018 Pivotal Labs
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -34,6 +34,46 @@ jasmineRequire.HtmlReporter = function(j$) {
     elapsed: function() { return 0; }
   };
 
+  function ResultsStateBuilder() {
+    this.topResults = new j$.ResultsNode({}, '', null);
+    this.currentParent = this.topResults;
+    this.specsExecuted = 0;
+    this.failureCount = 0;
+    this.pendingSpecCount = 0;
+  }
+
+  ResultsStateBuilder.prototype.suiteStarted = function(result) {
+    this.currentParent.addChild(result, 'suite');
+    this.currentParent = this.currentParent.last();
+  };
+
+  ResultsStateBuilder.prototype.suiteDone = function(result) {
+    if (this.currentParent !== this.topResults) {
+      this.currentParent = this.currentParent.parent;
+    }
+  };
+
+  ResultsStateBuilder.prototype.specStarted = function(result) {
+  };
+
+  ResultsStateBuilder.prototype.specDone = function(result) {
+    this.currentParent.addChild(result, 'spec');
+
+    if (result.status !== 'disabled') {
+      this.specsExecuted++;
+    }
+
+    if (result.status === 'failed') {
+      this.failureCount++;
+    }
+
+    if (result.status == 'pending') {
+      this.pendingSpecCount++;
+    }
+  };
+
+
+
   function HtmlReporter(options) {
     var env = options.env || {},
       getContainer = options.getContainer,
@@ -41,32 +81,30 @@ jasmineRequire.HtmlReporter = function(j$) {
       createTextNode = options.createTextNode,
       onRaiseExceptionsClick = options.onRaiseExceptionsClick || function() {},
       onThrowExpectationsClick = options.onThrowExpectationsClick || function() {},
+      onRandomClick = options.onRandomClick || function() {},
       addToExistingQueryString = options.addToExistingQueryString || defaultQueryString,
+      filterSpecs = options.filterSpecs,
       timer = options.timer || noopTimer,
       results = [],
-      specsExecuted = 0,
-      failureCount = 0,
-      pendingSpecCount = 0,
       htmlReporterMain,
       symbols,
-      failedSuites = [];
+      failedSuites = [],
+      deprecationWarnings = [];
 
     this.initialize = function() {
       clearPrior();
       htmlReporterMain = createDom('div', {className: 'jasmine_html-reporter'},
-        createDom('div', {className: 'banner'},
-          createDom('a', {className: 'title', href: 'http://jasmine.github.io/', target: '_blank'}),
-          createDom('span', {className: 'version'}, j$.version)
+        createDom('div', {className: 'jasmine-banner'},
+          createDom('a', {className: 'jasmine-title', href: 'http://jasmine.github.io/', target: '_blank'}),
+          createDom('span', {className: 'jasmine-version'}, j$.version)
         ),
-        createDom('ul', {className: 'symbol-summary'}),
-        createDom('div', {className: 'alert'}),
-        createDom('div', {className: 'results'},
-          createDom('div', {className: 'failures'})
+        createDom('ul', {className: 'jasmine-symbol-summary'}),
+        createDom('div', {className: 'jasmine-alert'}),
+        createDom('div', {className: 'jasmine-results'},
+          createDom('div', {className: 'jasmine-failures'})
         )
       );
       getContainer().appendChild(htmlReporterMain);
-
-      symbols = find('.symbol-summary');
     };
 
     var totalSpecsDefined;
@@ -75,14 +113,12 @@ jasmineRequire.HtmlReporter = function(j$) {
       timer.start();
     };
 
-    var summary = createDom('div', {className: 'summary'});
+    var summary = createDom('div', {className: 'jasmine-summary'});
 
-    var topResults = new j$.ResultsNode({}, '', null),
-      currentParent = topResults;
+    var stateBuilder = new ResultsStateBuilder();
 
     this.suiteStarted = function(result) {
-      currentParent.addChild(result, 'suite');
-      currentParent = currentParent.last();
+      stateBuilder.suiteStarted(result);
     };
 
     this.suiteDone = function(result) {
@@ -90,151 +126,185 @@ jasmineRequire.HtmlReporter = function(j$) {
         failedSuites.push(result);
       }
 
-      if (currentParent == topResults) {
-        return;
-      }
-
-      currentParent = currentParent.parent;
+      stateBuilder.suiteDone(result);
+      addDeprecationWarnings(result);
     };
 
     this.specStarted = function(result) {
-      currentParent.addChild(result, 'spec');
+      stateBuilder.specStarted(result);
     };
 
     var failures = [];
     this.specDone = function(result) {
+      stateBuilder.specDone(result);
+
       if(noExpectations(result) && typeof console !== 'undefined' && typeof console.error !== 'undefined') {
         console.error('Spec \'' + result.fullName + '\' has no expectations.');
       }
 
-      if (result.status != 'disabled') {
-        specsExecuted++;
+      if (!symbols){
+        symbols = find('.jasmine-symbol-summary');
       }
 
       symbols.appendChild(createDom('li', {
-          className: noExpectations(result) ? 'empty' : result.status,
+          className: noExpectations(result) ? 'jasmine-empty' : 'jasmine-' + result.status,
           id: 'spec_' + result.id,
           title: result.fullName
         }
       ));
 
       if (result.status == 'failed') {
-        failureCount++;
-
         var failure =
-          createDom('div', {className: 'spec-detail failed'},
-            createDom('div', {className: 'description'},
+          createDom('div', {className: 'jasmine-spec-detail jasmine-failed'},
+            createDom('div', {className: 'jasmine-description'},
               createDom('a', {title: result.fullName, href: specHref(result)}, result.fullName)
             ),
-            createDom('div', {className: 'messages'})
+            createDom('div', {className: 'jasmine-messages'})
           );
         var messages = failure.childNodes[1];
 
         for (var i = 0; i < result.failedExpectations.length; i++) {
           var expectation = result.failedExpectations[i];
-          messages.appendChild(createDom('div', {className: 'result-message'}, expectation.message));
-          messages.appendChild(createDom('div', {className: 'stack-trace'}, expectation.stack));
+          messages.appendChild(createDom('div', {className: 'jasmine-result-message'}, expectation.message));
+          messages.appendChild(createDom('div', {className: 'jasmine-stack-trace'}, expectation.stack));
         }
 
         failures.push(failure);
       }
 
-      if (result.status == 'pending') {
-        pendingSpecCount++;
-      }
+      addDeprecationWarnings(result);
     };
 
-    this.jasmineDone = function() {
-      var banner = find('.banner');
-      var alert = find('.alert');
-      alert.appendChild(createDom('span', {className: 'duration'}, 'finished in ' + timer.elapsed() / 1000 + 's'));
+    this.jasmineDone = function(doneResult) {
+      var banner = find('.jasmine-banner');
+      var alert = find('.jasmine-alert');
+      var order = doneResult && doneResult.order;
+      alert.appendChild(createDom('span', {className: 'jasmine-duration'}, 'finished in ' + timer.elapsed() / 1000 + 's'));
 
       banner.appendChild(
-        createDom('div', { className: 'run-options' },
-          createDom('span', { className: 'trigger' }, 'Options'),
-          createDom('div', { className: 'payload' },
-            createDom('div', { className: 'exceptions' },
+        createDom('div', { className: 'jasmine-run-options' },
+          createDom('span', { className: 'jasmine-trigger' }, 'Options'),
+          createDom('div', { className: 'jasmine-payload' },
+            createDom('div', { className: 'jasmine-exceptions' },
               createDom('input', {
-                className: 'raise',
-                id: 'raise-exceptions',
+                className: 'jasmine-raise',
+                id: 'jasmine-raise-exceptions',
                 type: 'checkbox'
               }),
-              createDom('label', { className: 'label', 'for': 'raise-exceptions' }, 'raise exceptions')),
-            createDom('div', { className: 'throw-failures' },
+              createDom('label', { className: 'jasmine-label', 'for': 'jasmine-raise-exceptions' }, 'raise exceptions')),
+            createDom('div', { className: 'jasmine-throw-failures' },
               createDom('input', {
-                className: 'throw',
-                id: 'throw-failures',
+                className: 'jasmine-throw',
+                id: 'jasmine-throw-failures',
                 type: 'checkbox'
               }),
-              createDom('label', { className: 'label', 'for': 'throw-failures' }, 'stop spec on expectation failure'))
+              createDom('label', { className: 'jasmine-label', 'for': 'jasmine-throw-failures' }, 'stop spec on expectation failure')),
+            createDom('div', { className: 'jasmine-random-order' },
+              createDom('input', {
+                className: 'jasmine-random',
+                id: 'jasmine-random-order',
+                type: 'checkbox'
+              }),
+              createDom('label', { className: 'jasmine-label', 'for': 'jasmine-random-order' }, 'run tests in random order'))
           )
         ));
 
-      var raiseCheckbox = find('#raise-exceptions');
+      var raiseCheckbox = find('#jasmine-raise-exceptions');
 
       raiseCheckbox.checked = !env.catchingExceptions();
       raiseCheckbox.onclick = onRaiseExceptionsClick;
 
-      var throwCheckbox = find('#throw-failures');
+      var throwCheckbox = find('#jasmine-throw-failures');
       throwCheckbox.checked = env.throwingExpectationFailures();
       throwCheckbox.onclick = onThrowExpectationsClick;
 
-      var optionsMenu = find('.run-options'),
-          optionsTrigger = optionsMenu.querySelector('.trigger'),
-          optionsPayload = optionsMenu.querySelector('.payload'),
-          isOpen = /\bopen\b/;
+      var randomCheckbox = find('#jasmine-random-order');
+      randomCheckbox.checked = env.randomTests();
+      randomCheckbox.onclick = onRandomClick;
+
+      var optionsMenu = find('.jasmine-run-options'),
+          optionsTrigger = optionsMenu.querySelector('.jasmine-trigger'),
+          optionsPayload = optionsMenu.querySelector('.jasmine-payload'),
+          isOpen = /\bjasmine-open\b/;
 
       optionsTrigger.onclick = function() {
         if (isOpen.test(optionsPayload.className)) {
           optionsPayload.className = optionsPayload.className.replace(isOpen, '');
         } else {
-          optionsPayload.className += ' open';
+          optionsPayload.className += ' jasmine-open';
         }
       };
 
-      if (specsExecuted < totalSpecsDefined) {
-        var skippedMessage = 'Ran ' + specsExecuted + ' of ' + totalSpecsDefined + ' specs - run all';
+      if (stateBuilder.specsExecuted < totalSpecsDefined) {
+        var skippedMessage = 'Ran ' + stateBuilder.specsExecuted + ' of ' + totalSpecsDefined + ' specs - run all';
+        var skippedLink = addToExistingQueryString('spec', '');
         alert.appendChild(
-          createDom('span', {className: 'bar skipped'},
-            createDom('a', {href: '?', title: 'Run all specs'}, skippedMessage)
+          createDom('span', {className: 'jasmine-bar jasmine-skipped'},
+            createDom('a', {href: skippedLink, title: 'Run all specs'}, skippedMessage)
           )
         );
       }
       var statusBarMessage = '';
-      var statusBarClassName = 'bar ';
+      var statusBarClassName = 'jasmine-bar ';
 
       if (totalSpecsDefined > 0) {
-        statusBarMessage += pluralize('spec', specsExecuted) + ', ' + pluralize('failure', failureCount);
-        if (pendingSpecCount) { statusBarMessage += ', ' + pluralize('pending spec', pendingSpecCount); }
-        statusBarClassName += (failureCount > 0) ? 'failed' : 'passed';
+        statusBarMessage += pluralize('spec', stateBuilder.specsExecuted) + ', ' + pluralize('failure', stateBuilder.failureCount);
+        if (stateBuilder.pendingSpecCount) { statusBarMessage += ', ' + pluralize('pending spec', stateBuilder.pendingSpecCount); }
+        statusBarClassName += (stateBuilder.failureCount > 0) ? 'jasmine-failed' : 'jasmine-passed';
       } else {
-        statusBarClassName += 'skipped';
+        statusBarClassName += 'jasmine-skipped';
         statusBarMessage += 'No specs found';
       }
 
-      alert.appendChild(createDom('span', {className: statusBarClassName}, statusBarMessage));
+      var seedBar;
+      if (order && order.random) {
+        seedBar = createDom('span', {className: 'jasmine-seed-bar'},
+          ', randomized with seed ',
+          createDom('a', {title: 'randomized with seed ' + order.seed, href: seedHref(order.seed)}, order.seed)
+        );
+      }
 
-      for(i = 0; i < failedSuites.length; i++) {
+      alert.appendChild(createDom('span', {className: statusBarClassName}, statusBarMessage, seedBar));
+
+      var errorBarClassName = 'jasmine-bar jasmine-errored';
+      var errorBarMessagePrefix = 'AfterAll ';
+
+      for(var i = 0; i < failedSuites.length; i++) {
         var failedSuite = failedSuites[i];
         for(var j = 0; j < failedSuite.failedExpectations.length; j++) {
-          var errorBarMessage = 'AfterAll ' + failedSuite.failedExpectations[j].message;
-          var errorBarClassName = 'bar errored';
-          alert.appendChild(createDom('span', {className: errorBarClassName}, errorBarMessage));
+          alert.appendChild(createDom('span', {className: errorBarClassName}, errorBarMessagePrefix + failedSuite.failedExpectations[j].message));
         }
       }
 
-      var results = find('.results');
+      var globalFailures = (doneResult && doneResult.failedExpectations) || [];
+      for(i = 0; i < globalFailures.length; i++) {
+        var failure = globalFailures[i];
+        alert.appendChild(createDom('span', {className: errorBarClassName}, errorBarMessagePrefix + failure.message));
+      }
+
+      addDeprecationWarnings(doneResult);
+
+      var warningBarClassName = 'jasmine-bar jasmine-warning';
+      for(i = 0; i < deprecationWarnings.length; i++) {
+        var warning = deprecationWarnings[i];
+        alert.appendChild(createDom('span', {className: warningBarClassName}, 'DEPRECATION: ' + warning));
+      }
+
+      var results = find('.jasmine-results');
       results.appendChild(summary);
 
-      summaryList(topResults, summary);
+      summaryList(stateBuilder.topResults, summary);
 
       function summaryList(resultsTree, domParent) {
         var specListNode;
         for (var i = 0; i < resultsTree.children.length; i++) {
           var resultNode = resultsTree.children[i];
+          if (filterSpecs && !hasActiveSpec(resultNode)) {
+            continue;
+          }
           if (resultNode.type == 'suite') {
-            var suiteListNode = createDom('ul', {className: 'suite', id: 'suite-' + resultNode.result.id},
-              createDom('li', {className: 'suite-detail'},
+            var suiteListNode = createDom('ul', {className: 'jasmine-suite', id: 'suite-' + resultNode.result.id},
+              createDom('li', {className: 'jasmine-suite-detail'},
                 createDom('a', {href: specHref(resultNode.result)}, resultNode.result.description)
               )
             );
@@ -243,8 +313,8 @@ jasmineRequire.HtmlReporter = function(j$) {
             domParent.appendChild(suiteListNode);
           }
           if (resultNode.type == 'spec') {
-            if (domParent.getAttribute('class') != 'specs') {
-              specListNode = createDom('ul', {className: 'specs'});
+            if (domParent.getAttribute('class') != 'jasmine-specs') {
+              specListNode = createDom('ul', {className: 'jasmine-specs'});
               domParent.appendChild(specListNode);
             }
             var specDescription = resultNode.result.description;
@@ -256,7 +326,7 @@ jasmineRequire.HtmlReporter = function(j$) {
             }
             specListNode.appendChild(
               createDom('li', {
-                  className: resultNode.result.status,
+                  className: 'jasmine-' + resultNode.result.status,
                   id: 'spec-' + resultNode.result.id
                 },
                 createDom('a', {href: specHref(resultNode.result)}, specDescription)
@@ -268,31 +338,42 @@ jasmineRequire.HtmlReporter = function(j$) {
 
       if (failures.length) {
         alert.appendChild(
-          createDom('span', {className: 'menu bar spec-list'},
+          createDom('span', {className: 'jasmine-menu jasmine-bar jasmine-spec-list'},
             createDom('span', {}, 'Spec List | '),
-            createDom('a', {className: 'failures-menu', href: '#'}, 'Failures')));
+            createDom('a', {className: 'jasmine-failures-menu', href: '#'}, 'Failures')));
         alert.appendChild(
-          createDom('span', {className: 'menu bar failure-list'},
-            createDom('a', {className: 'spec-list-menu', href: '#'}, 'Spec List'),
+          createDom('span', {className: 'jasmine-menu jasmine-bar jasmine-failure-list'},
+            createDom('a', {className: 'jasmine-spec-list-menu', href: '#'}, 'Spec List'),
             createDom('span', {}, ' | Failures ')));
 
-        find('.failures-menu').onclick = function() {
-          setMenuModeTo('failure-list');
+        find('.jasmine-failures-menu').onclick = function() {
+          setMenuModeTo('jasmine-failure-list');
         };
-        find('.spec-list-menu').onclick = function() {
-          setMenuModeTo('spec-list');
+        find('.jasmine-spec-list-menu').onclick = function() {
+          setMenuModeTo('jasmine-spec-list');
         };
 
-        setMenuModeTo('failure-list');
+        setMenuModeTo('jasmine-failure-list');
 
-        var failureNode = find('.failures');
-        for (var i = 0; i < failures.length; i++) {
+        var failureNode = find('.jasmine-failures');
+        for (i = 0; i < failures.length; i++) {
           failureNode.appendChild(failures[i]);
         }
       }
     };
 
     return this;
+
+    function addDeprecationWarnings(result) {
+      if (result && result.deprecationWarnings) {
+        for(var i = 0; i < result.deprecationWarnings.length; i++) {
+          var warning = result.deprecationWarnings[i].message;
+          if (!j$.util.arrayContains(warning)) {
+            deprecationWarnings.push(warning);
+          }
+        }
+      }
+    }
 
     function find(selector) {
       return getContainer().querySelector('.jasmine_html-reporter ' + selector);
@@ -343,6 +424,10 @@ jasmineRequire.HtmlReporter = function(j$) {
       return addToExistingQueryString('spec', result.fullName);
     }
 
+    function seedHref(seed) {
+      return addToExistingQueryString('seed', seed);
+    }
+
     function defaultQueryString(key, value) {
       return '?' + key + '=' + value;
     }
@@ -354,6 +439,20 @@ jasmineRequire.HtmlReporter = function(j$) {
     function noExpectations(result) {
       return (result.failedExpectations.length + result.passedExpectations.length) === 0 &&
         result.status === 'passed';
+    }
+
+    function hasActiveSpec(resultNode) {
+      if (resultNode.type == 'spec' && resultNode.result.status != 'disabled') {
+        return true;
+      }
+
+      if (resultNode.type == 'suite') {
+        for (var i = 0, j = resultNode.children.length; i < j; i++) {
+          if (hasActiveSpec(resultNode.children[i])) {
+            return true;
+          }
+        }
+      }
     }
   }
 
