@@ -1,4 +1,4 @@
-import { computed, decorate, observable, trace } from 'mobx';
+import { computed, decorate, observable, trace, runInAction } from 'mobx';
 import LoadableStratum from '../../test/Models/LoadableStratum';
 import { ModelId } from '../Traits/ModelReference';
 import ModelTraits from '../Traits/ModelTraits';
@@ -30,8 +30,11 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(Tr
         private getOrCreateStratum(id: string): StratumTraits {
             let result = this.strata.get(id);
             if (!result) {
-                result = createStratumInstance(Traits);
-                this.strata.set(id, result);
+                const newStratum = createStratumInstance(Traits);
+                runInAction(() => {
+                    this.strata.set(id, newStratum);
+                });
+                result = newStratum;
             }
             return result;
         }
@@ -50,30 +53,6 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(Tr
         @computed
         get topStratum() {
             return this.strataTopToBottom[0];
-        }
-
-        get isLoading(): boolean {
-            for (const stratum of this.strata.values()) {
-                if (stratum instanceof LoadableStratum && stratum.isLoading) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        get loadPromise(): Promise<{}> {
-            const promises = [];
-
-            for (const stratum of this.strata.values()) {
-                if (stratum instanceof LoadableStratum) {
-                    const loadPromise = stratum.loadPromise;
-                    if (loadPromise !== undefined) {
-                        promises.push(loadPromise);
-                    }
-                }
-            }
-
-            return Promise.all(promises);
         }
 
         setTrait<Key extends keyof StratumTraits>(stratumId: string, trait: Key, value: StratumTraits[Key]): void {
