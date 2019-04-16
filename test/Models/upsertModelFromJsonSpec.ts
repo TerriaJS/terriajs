@@ -29,7 +29,7 @@ describe('upsertModelFromJson', function() {
         expect(wms.layers).toBe('mybroadband:MyBroadband_ADSL_Availability')
     });
 
-    it('can merge members from multiple strata', function(done) {
+    it('can merge members from multiple strata', async function() {
         CatalogMemberFactory.register(WebMapServiceCatalogGroup.type, WebMapServiceCatalogGroup);
         CatalogMemberFactory.register(WebMapServiceCatalogItem.type, WebMapServiceCatalogItem);
 
@@ -66,17 +66,19 @@ describe('upsertModelFromJson', function() {
             afterIsLoadingOverTime.push(group.isLoading);
         });
 
-        expect(beforeIsLoadingOverTime.length).toBe(1);
-        expect(beforeIsLoadingOverTime[0]).toBe(false);
-        expect(afterIsLoadingOverTime[0]).toBe(true);
-        expect(memberModelsOverTime[0].length).toBe(1);
+        let itemDispose;
 
-        group.loadPromise.then(() => {
+        try {
+            expect(beforeIsLoadingOverTime.length).toBe(1);
+            expect(beforeIsLoadingOverTime[0]).toBe(false);
+            expect(afterIsLoadingOverTime[0]).toBe(true);
+            expect(memberModelsOverTime[0].length).toBe(1);
+
+            await group.loadPromise;
             expect(beforeIsLoadingOverTime.length).toBe(2);
             expect(beforeIsLoadingOverTime[1]).toBe(false);
             expect(afterIsLoadingOverTime[1]).toBe(false);
             expect(memberModelsOverTime[1].length).toBeGreaterThan(1);
-        }).then(() => {
             const item = terria.getModelById(WebMapServiceCatalogItem, '/Test/mybroadband%3AMyBroadband_ADSL_Availability');
             expect(item).toBeDefined();
             if (!item) {
@@ -85,7 +87,7 @@ describe('upsertModelFromJson', function() {
 
             const layersOverTime: (string | undefined)[] = [];
             const isGeoServerOverTime: (boolean | undefined)[] = [];
-            const itemDispose = autorun(() => {
+            itemDispose = autorun(() => {
                 expect(group.memberModels).toContain(item);
                 layersOverTime.push(item.layers);
                 isGeoServerOverTime.push(item.isGeoServer);
@@ -95,14 +97,15 @@ describe('upsertModelFromJson', function() {
             expect(layersOverTime[0]).toBe('mybroadband:MyBroadband_ADSL_Availability');
             expect(isGeoServerOverTime[0]).toBe(false);
 
-            item.loadPromise.then(() => {
-                expect(layersOverTime.length).toBe(2);
-                expect(layersOverTime[1]).toBe('mybroadband:MyBroadband_ADSL_Availability');
-                expect(isGeoServerOverTime[1]).toBe(true);
+            await item.loadPromise;
+            expect(layersOverTime.length).toBe(2);
+            expect(layersOverTime[1]).toBe('mybroadband:MyBroadband_ADSL_Availability');
+            expect(isGeoServerOverTime[1]).toBe(true);
+        } finally {
+            dispose();
+            if (itemDispose) {
                 itemDispose();
-                dispose();
-                done();
-            });
-        });
+            }
+        }
     });
 });

@@ -1,6 +1,8 @@
 import WebMapServiceCatalogItem from '../../lib/Models/WebMapServiceCatalogItem';
 import { autorun, runInAction, observable } from 'mobx';
 import Terria from '../../lib/Models/Terria';
+import { ImageryParts } from '../../lib/Models/Mappable';
+import WebMapServiceImageryProvider from 'terriajs-cesium/Source/Scene/WebMapServiceImageryProvider';
 
 describe('WebMapServiceCatalogItem', function() {
     it('derives getCapabilitiesUrl from url if getCapabilitiesUrl is not specified', function() {
@@ -14,18 +16,18 @@ describe('WebMapServiceCatalogItem', function() {
     });
 
     it('loads', function() {
+        expect().nothing();
         const terria = new Terria();
         const wms = new WebMapServiceCatalogItem('test', terria);
-        const definition = wms.getOrCreateStratum('definition');
-        definition.url = 'https://programs.communications.gov.au/geoserver/ows';
-        definition.layers = 'mobile-black-spot-programme:funded-base-stations-group';
-        wms.loadData();
-        autorun(() => {
-            console.log(wms.availableStyles);
+        runInAction(() => {
+            const definition = wms.getOrCreateStratum('definition');
+            definition.url = 'https://programs.communications.gov.au/geoserver/ows';
+            definition.layers = 'mobile-black-spot-programme:funded-base-stations-group';
         });
+        return wms.loadData();
     });
 
-    it('updates description from a GetCapabilities', function(done) {
+    it('updates description from a GetCapabilities', async function() {
         let wms: WebMapServiceCatalogItem;
         const terria = new Terria();
         wms = new WebMapServiceCatalogItem('test', terria);
@@ -43,19 +45,53 @@ describe('WebMapServiceCatalogItem', function() {
                 }
             }
         });
-        autorun(reaction => {
-            const p = wms.loadData();
-            p.then(() => {
-                wms;
-                expect(description).toBe('Layer-Group type layer: mobile-black-spot-programme:funded-base-stations-group');
-                cleanup();
-                done();
-            }, err => {
-                fail(err);
-                cleanup();
-                done();
-            });
-            reaction.dispose();
+        try {
+            // await new Promise((resolve, reject) => {
+            //     autorun(reaction => {
+            //         resolve(wms.loadData());
+            //         reaction.dispose();
+            //     });
+            // });
+            await wms.loadData();
+            expect(description).toBe('Layer-Group type layer: mobile-black-spot-programme:funded-base-stations-group');
+        }
+        finally {
+            cleanup();
+        }
+
+    });
+
+    it('correctly contstructs ImageryProvider', async function() {
+        let wms: WebMapServiceCatalogItem;
+        const terria = new Terria();
+        wms = new WebMapServiceCatalogItem('test', terria);
+        runInAction(() => {
+            const definition = wms.getOrCreateStratum('definition');
+            definition.url = 'https://programs.communications.gov.au/geoserver/ows';
+            definition.layers = 'mobile-black-spot-programme:funded-base-stations-group';
         });
+        let mapItems: ImageryParts[] = [];
+        const cleanup = autorun(() => {
+            mapItems = wms.mapItems.slice();
+        });
+        try {
+            // Is it important that `mapItems` is empty here? Not really right?
+            //  Anything that cares about `mapItems` will start subscribing after calling loadData anyway
+            await new Promise(resolve => {
+                autorun(reaction => {
+                    resolve(wms.loadData());
+                    reaction.dispose();
+                });
+            });
+            expect(mapItems.length).toBe(1);
+            expect(mapItems[0].alpha).toBeCloseTo(0.8);
+            expect(mapItems[0].imageryProvider instanceof WebMapServiceImageryProvider).toBeTruthy();
+            if (mapItems[0].imageryProvider instanceof WebMapServiceImageryProvider) {
+                expect(mapItems[0].imageryProvider.url).toBe('https://programs.communications.gov.au/geoserver/ows');
+            }
+        }
+        finally {
+            cleanup();
+        }
     });
 });
