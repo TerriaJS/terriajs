@@ -29,6 +29,7 @@ const DataCatalogItem = createReactClass({
     },
 
     onBtnClicked(event) {
+        this.props.viewState.storyShown = false;
         if (defined(this.props.item.invoke) || this.props.viewState.useSmallScreenInterface) {
             this.setPreviewedItem();
         } else if(this.props.removable) {
