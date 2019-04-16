@@ -19,6 +19,8 @@ import Workbench from './Workbench';
 import PickedFeatures from '../Map/PickedFeatures';
 import Mappable from './Mappable';
 
+const Clock = require('./Clock');
+
 interface ConfigParameters {
     defaultMaximumShownFeatureInfos?: number;
     regionMappingDefinitionsUrl?: string;
@@ -52,6 +54,10 @@ export default class Terria {
     readonly workbench = new Workbench();
     readonly catalog = new Catalog(this);
     readonly currentViewer = new NoViewer(this);
+    readonly clock: any = new Clock({shouldAnimate: false})
+
+    appName?: string;
+    supportEmail?: string;
 
     /**
      * Gets or sets the instance to which to report Google Analytics-style log events.

@@ -499,8 +499,14 @@ declare module 'terriajs-cesium/Source/DataSources/BillboardGraphics' {
 declare module 'terriajs-cesium/Source/DataSources/BillboardVisualizer' {
     export default Cesium.BillboardVisualizer;
 }
-// TODO
-declare module 'terriajs-cesium/Source/DataSources/BoundingSphereState';
+declare module 'terriajs-cesium/Source/DataSources/BoundingSphereState' {
+    enum BoundingSphereState {
+        DONE,
+        PENDING,
+        FAILED
+    }
+    export default BoundingSphereState;
+}
 declare module 'terriajs-cesium/Source/DataSources/BoxGeometryUpdater' {
     export default Cesium.BoxGeometryUpdater;
 }
@@ -1077,3 +1083,6 @@ declare module 'terriajs-cesium/Source/Workers/createTaskProcessorWorker' {
 
 // Additional declarations to fix type errors
 declare module 'terriajs-cesium/Source/ThirdParty/when';
+declare module 'terriajs-cesium/Source/Core/getTimestamp' {
+    export default function getTimestamp(): number;
+}

@@ -2,8 +2,9 @@ import { configure, runInAction, autorun } from 'mobx';
 import primitiveTrait from '../../lib/Traits/primitiveTrait';
 import objectTrait from '../../lib/Traits/objectTrait';
 import ModelTraits from '../../lib/Traits/ModelTraits';
-import Model from '../../lib/Models/Model';
+import CreateModel from '../../lib/Models/CreateModel';
 import Terria from '../../lib/Models/Terria';
+import createStratumInstance from '../../lib/Models/createStratumInstance';
 
 configure({
     enforceActions: true,
@@ -42,7 +43,7 @@ class OuterTraits extends ModelTraits {
     inner?: InnerTraits;
 }
 
-class TestModel extends Model(OuterTraits) {
+class TestModel extends CreateModel(OuterTraits) {
 
 }
 
@@ -50,8 +51,8 @@ describe('objectTrait', function() {
     it('returns undefined if all strata are undefined', function() {
         const terria = new Terria();
         const model = new TestModel('test', terria);
-        model.strata.set('definition', model.createStratumInstance());
-        model.strata.set('user', model.createStratumInstance());
+        model.strata.set('definition', createStratumInstance(OuterTraits));
+        model.strata.set('user', createStratumInstance(OuterTraits));
         expect(model.inner).toBeUndefined();
     });
 
@@ -59,16 +60,16 @@ describe('objectTrait', function() {
         const terria = new Terria();
         const model = new TestModel('test', terria);
 
-        const definition = model.createStratumInstance();
-        const user = model.createStratumInstance();
+        const definition = createStratumInstance(OuterTraits);
+        const user = createStratumInstance(OuterTraits);
         model.strata.set('definition', definition);
         model.strata.set('user', user);
 
-        definition.inner = new InnerTraits();
+        definition.inner = createStratumInstance(InnerTraits);
         definition.inner.foo = 'a';
         definition.inner.bar = 1;
 
-        user.inner = new InnerTraits();
+        user.inner = createStratumInstance(InnerTraits);
         user.inner.bar = 2;
         user.inner.baz = true;
 
@@ -85,16 +86,16 @@ describe('objectTrait', function() {
         const terria = new Terria();
         const model = new TestModel('test', terria);
 
-        const definition = model.createStratumInstance();
-        const user = model.createStratumInstance();
+        const definition = createStratumInstance(OuterTraits);
+        const user = createStratumInstance(OuterTraits);
         model.strata.set('definition', definition);
         model.strata.set('user', user);
 
-        definition.inner = new InnerTraits();
+        definition.inner = createStratumInstance(InnerTraits);
         definition.inner.foo = 'a';
         definition.inner.bar = 1;
 
-        user.inner = new InnerTraits();
+        user.inner = createStratumInstance(InnerTraits);
 
         expect(model.inner).toBeDefined();
 

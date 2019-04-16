@@ -1,5 +1,6 @@
-import Model, { BaseModel } from './Model';
+import DataSource from 'terriajs-cesium/Source/DataSources/DataSource';
 import 'terriajs-cesium/Source/Scene/ImageryProvider';
+import { BaseModel } from './Model';
 
 // Shouldn't this be a class?
 export interface ImageryParts {
@@ -16,12 +17,6 @@ export namespace ImageryParts {
     export function is(object: ImageryParts | DataSource): object is ImageryParts {
         return 'imageryProvider' in object;
     }
-}
-
-
-
-
-export interface DataSource {
 }
 
 interface Mappable {

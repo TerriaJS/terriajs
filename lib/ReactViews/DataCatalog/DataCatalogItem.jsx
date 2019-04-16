@@ -6,7 +6,6 @@ import addedByUser from '../../Core/addedByUser';
 import removeUserAddedData from '../../Models/removeUserAddedData';
 import CatalogItem from './CatalogItem';
 import getAncestors from '../../Models/getAncestors';
-import raiseErrorOnRejectedPromise from '../../Models/raiseErrorOnRejectedPromise';
 import { observer } from 'mobx-react';
 
 const STATE_TO_TITLE = {
@@ -33,7 +32,7 @@ const DataCatalogItem = observer(createReactClass({
     onBtnClicked(event) {
         if (this.props.onActionButtonClicked) {
             this.props.onActionButtonClicked(this.props.item);
-            return
+            return;
         }
 
         if (defined(this.props.item.invoke) || this.props.viewState.useSmallScreenInterface) {
@@ -46,10 +45,10 @@ const DataCatalogItem = observer(createReactClass({
     },
 
     toggleEnable(event) {
-        const itemWorkbenchIndex = this.props.item.terria.workbench.items.indexOf(this.props.item)
+        const itemWorkbenchIndex = this.props.item.terria.workbench.items.indexOf(this.props.item);
         if (itemWorkbenchIndex === -1) {
-            if (this.props.item.loadData) {
-                this.props.item.loadData();
+            if (this.props.item.loadMapItems) {
+                this.props.item.loadMapItems();
             }
             this.props.item.terria.workbench.items.push(this.props.item);
             this.props.item.ancestors = this.props.ancestors;
@@ -74,7 +73,7 @@ const DataCatalogItem = observer(createReactClass({
     },
 
     setPreviewedItem() {
-        //raiseErrorOnRejectedPromise(this.props.item.terria, this.props.item.load());
+        // raiseErrorOnRejectedPromise(this.props.item.terria, this.props.item.load());
         if (this.props.item.loadMetadata) {
             this.props.item.loadMetadata();
         }

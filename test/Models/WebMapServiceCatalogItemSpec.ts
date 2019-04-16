@@ -8,8 +8,7 @@ describe('WebMapServiceCatalogItem', function() {
     it('derives getCapabilitiesUrl from url if getCapabilitiesUrl is not specified', function() {
         const terria = new Terria();
         const wms = new WebMapServiceCatalogItem('test', terria);
-        const definition = wms.getOrCreateStratum('definition');
-        definition.url = 'http://www.example.com';
+        wms.setTrait('definition', 'url', 'http://www.example.com');
         expect(wms.getCapabilitiesUrl).toBeDefined();
         expect(wms.url).toBeDefined();
         expect(wms.getCapabilitiesUrl && wms.getCapabilitiesUrl.indexOf(wms.url || 'undefined') === 0).toBe(true);
@@ -20,11 +19,10 @@ describe('WebMapServiceCatalogItem', function() {
         const terria = new Terria();
         const wms = new WebMapServiceCatalogItem('test', terria);
         runInAction(() => {
-            const definition = wms.getOrCreateStratum('definition');
-            definition.url = 'https://programs.communications.gov.au/geoserver/ows';
-            definition.layers = 'mobile-black-spot-programme:funded-base-stations-group';
+            wms.setTrait('definition', 'url', 'https://programs.communications.gov.au/geoserver/ows');
+            wms.setTrait('definition', 'layers', 'mobile-black-spot-programme:funded-base-stations-group');
         });
-        return wms.loadData();
+        return wms.loadMapItems();
     });
 
     it('updates description from a GetCapabilities', async function() {
@@ -32,9 +30,8 @@ describe('WebMapServiceCatalogItem', function() {
         const terria = new Terria();
         wms = new WebMapServiceCatalogItem('test', terria);
         runInAction(() => {
-            const definition = wms.getOrCreateStratum('definition');
-            definition.url = 'https://programs.communications.gov.au/geoserver/ows';
-            definition.layers = 'mobile-black-spot-programme:funded-base-stations-group';
+            wms.setTrait('definition', 'url', 'https://programs.communications.gov.au/geoserver/ows');
+            wms.setTrait('definition', 'layers', 'mobile-black-spot-programme:funded-base-stations-group');
         });
         let description: String | undefined;
         const cleanup = autorun(() => {
@@ -46,13 +43,7 @@ describe('WebMapServiceCatalogItem', function() {
             }
         });
         try {
-            // await new Promise((resolve, reject) => {
-            //     autorun(reaction => {
-            //         resolve(wms.loadData());
-            //         reaction.dispose();
-            //     });
-            // });
-            await wms.loadData();
+            await wms.loadMetadata();
             expect(description).toBe('Layer-Group type layer: mobile-black-spot-programme:funded-base-stations-group');
         }
         finally {
@@ -66,23 +57,15 @@ describe('WebMapServiceCatalogItem', function() {
         const terria = new Terria();
         wms = new WebMapServiceCatalogItem('test', terria);
         runInAction(() => {
-            const definition = wms.getOrCreateStratum('definition');
-            definition.url = 'https://programs.communications.gov.au/geoserver/ows';
-            definition.layers = 'mobile-black-spot-programme:funded-base-stations-group';
+            wms.setTrait('definition', 'url', 'https://programs.communications.gov.au/geoserver/ows');
+            wms.setTrait('definition', 'layers', 'mobile-black-spot-programme:funded-base-stations-group');
         });
         let mapItems: ImageryParts[] = [];
         const cleanup = autorun(() => {
             mapItems = wms.mapItems.slice();
         });
         try {
-            // Is it important that `mapItems` is empty here? Not really right?
-            //  Anything that cares about `mapItems` will start subscribing after calling loadData anyway
-            await new Promise(resolve => {
-                autorun(reaction => {
-                    resolve(wms.loadData());
-                    reaction.dispose();
-                });
-            });
+            await wms.loadMetadata();
             expect(mapItems.length).toBe(1);
             expect(mapItems[0].alpha).toBeCloseTo(0.8);
             expect(mapItems[0].imageryProvider instanceof WebMapServiceImageryProvider).toBeTruthy();

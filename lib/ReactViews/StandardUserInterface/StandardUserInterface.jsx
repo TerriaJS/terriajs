@@ -15,7 +15,6 @@ import MapNavigation from '../Map/MapNavigation';
 import ExperimentalFeatures from '../Map/ExperimentalFeatures';
 // import MobileHeader from '../Mobile/MobileHeader';
 import Notification from '../Notification/Notification';
-import ObserveModelMixin from '../ObserveModelMixin';
 // import ProgressBar from '../Map/ProgressBar';
 import SidePanel from '../SidePanel/SidePanel';
 import processCustomElements from './processCustomElements';
@@ -25,11 +24,11 @@ import classNames from 'classnames';
 import 'inobounce';
 
 import Styles from './standard-user-interface.scss';
+import { observer } from 'mobx-react';
 
 /** blah */
-const StandardUserInterface = createReactClass({
+const StandardUserInterface = observer(createReactClass({
     displayName: 'StandardUserInterface',
-    mixins: [ObserveModelMixin],
 
     propTypes: {
         /**
@@ -104,7 +103,7 @@ const StandardUserInterface = createReactClass({
         );
 
         const terria = this.props.terria;
-        const allBaseMaps = this.props.allBaseMaps;
+        // const allBaseMaps = this.props.allBaseMaps;
         return (
             <div className={Styles.uiRoot} ref={w => (this._wrapper = w)}>
                 <div className={Styles.ui}>
@@ -226,6 +225,6 @@ const StandardUserInterface = createReactClass({
             </div>
         );
     }
-});
+}));
 
 module.exports = StandardUserInterface;

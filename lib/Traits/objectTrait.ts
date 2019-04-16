@@ -1,15 +1,12 @@
 import TerriaError from '../Core/TerriaError';
-import StratumFromTraits from '../ModelInterfaces/StratumFromTraits';
-import { ModelInterface } from '../Models/Model';
+import StratumFromTraits from '../Models/StratumFromTraits';
+import { BaseModel } from '../Models/Model';
 import ModelTraits from './ModelTraits';
 import Trait, { TraitOptions } from './Trait';
-
-interface TraitsConstructor<T> {
-    new(): T;
-    traits: {
-        [id: string]: Trait;
-    };
-}
+import FlattenedFromTraits from '../Models/FlattenedFromTraits';
+import createStratumInstance from '../Models/createStratumInstance';
+import TraitsConstructor from './TraitsConstructor';
+import { computed } from 'mobx';
 
 export interface ObjectTraitOptions<T extends ModelTraits> extends TraitOptions {
     type: TraitsConstructor<T>;
@@ -27,20 +24,21 @@ export default function objectTrait<T extends ModelTraits>(options: ObjectTraitO
 
 export class ObjectTrait<T extends ModelTraits> extends Trait {
     readonly type: TraitsConstructor<T>;
+    readonly decoratorForFlattened = computed.struct;
 
     constructor(id: string, options: ObjectTraitOptions<T>) {
         super(id, options);
         this.type = options.type;
     }
 
-    getValue(strataTopToBottom: StratumFromTraits<ModelTraits>[]): T | undefined {
+    getValue(strataTopToBottom: StratumFromTraits<ModelTraits>[]): FlattenedFromTraits<T> | undefined {
         const objectStrata = strataTopToBottom.map((stratum: any) => stratum[this.id]).filter(stratum => stratum !== undefined);
         if (objectStrata.length === 0) {
             return undefined;
         }
 
         const ResultType = this.type;
-        const result = new ResultType();
+        const result = createStratumInstance(ResultType);
         const resultAny: any = result;
 
         const traits = ResultType.traits;
@@ -48,10 +46,12 @@ export class ObjectTrait<T extends ModelTraits> extends Trait {
             resultAny[traitId] = traits[traitId].getValue(objectStrata);
         });
 
-        return result;
+        // TODO: where do we apply defaults for the nested traits instance?
+
+        return resultAny;
     }
 
-    fromJson<TTraits extends ModelTraits>(model: ModelInterface<TTraits>, stratumName: string, jsonValue: any): T {
+    fromJson(model: BaseModel, stratumName: string, jsonValue: any): StratumFromTraits<T> {
         const ResultType = this.type;
         const result: any = new ResultType();
 
@@ -73,5 +73,9 @@ export class ObjectTrait<T extends ModelTraits> extends Trait {
         });
 
         return result;
+    }
+
+    isSameType(trait: Trait): boolean {
+        return trait instanceof ObjectTrait && trait.type === this.type;
     }
 }

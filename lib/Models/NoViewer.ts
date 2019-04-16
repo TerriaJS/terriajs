@@ -19,6 +19,9 @@ class NoViewer implements GlobeOrMap {
     zoomTo(v: Cesium.Rectangle) {
         // Set initial view?
     }
+
+    notifyRepaintRequired() {
+    }
 }
 
 export default NoViewer;

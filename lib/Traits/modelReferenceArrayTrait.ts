@@ -1,11 +1,12 @@
 import TerriaError from '../Core/TerriaError';
-import StratumFromTraits from '../ModelInterfaces/StratumFromTraits';
-import { ModelInterface } from '../Models/Model';
+import StratumFromTraits from '../Models/StratumFromTraits';
+import { BaseModel } from '../Models/Model';
 import ModelFactory from '../Models/ModelFactory';
 import upsertModelFromJson from '../Models/upsertModelFromJson';
 import ModelReference from "./ModelReference";
 import ModelTraits from "./ModelTraits";
 import Trait, { TraitOptions } from "./Trait";
+import { computed } from 'mobx';
 
 export interface ModelArrayTraitOptions extends TraitOptions {
     factory?: ModelFactory;
@@ -22,6 +23,7 @@ export default function modelReferenceArrayTrait<T>(options: ModelArrayTraitOpti
 }
 
 export class ModelReferenceArrayProperty extends Trait {
+    readonly decoratorForFlattened = computed.struct;
     private factory: ModelFactory | undefined;
 
     constructor(id: string, options: ModelArrayTraitOptions) {
@@ -67,7 +69,7 @@ export class ModelReferenceArrayProperty extends Trait {
         return Object.freeze(result);
     }
 
-    fromJson<TTraits extends ModelTraits>(model: ModelInterface<TTraits>, stratumName: string, jsonValue: any): ReadonlyArray<ModelReference> {
+    fromJson(model: BaseModel, stratumName: string, jsonValue: any): ReadonlyArray<ModelReference> {
         // TODO: support removals
 
         if (!Array.isArray(jsonValue)) {
@@ -99,5 +101,9 @@ export class ModelReferenceArrayProperty extends Trait {
         });
 
         return result;
+    }
+
+    isSameType(trait: Trait): boolean {
+        return trait instanceof ModelReferenceArrayProperty && trait.factory === this.factory;
     }
 }

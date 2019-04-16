@@ -1,6 +1,6 @@
 import TerriaError from '../Core/TerriaError';
-import StratumFromTraits from '../ModelInterfaces/StratumFromTraits';
-import { ModelInterface } from '../Models/Model';
+import StratumFromTraits from '../Models/StratumFromTraits';
+import { ModelInterface, BaseModel } from '../Models/Model';
 import ModelTraits from './ModelTraits';
 import Trait, { TraitOptions } from './Trait';
 
@@ -8,7 +8,6 @@ type PrimitiveType = 'string' | 'number' | 'boolean';
 
 export interface PrimitiveTraitOptions<T> extends TraitOptions {
     type: PrimitiveType;
-    default?: T;
 }
 
 export default function primitiveTrait<T>(options: PrimitiveTraitOptions<T>) {
@@ -23,12 +22,10 @@ export default function primitiveTrait<T>(options: PrimitiveTraitOptions<T>) {
 
 export class PrimitiveTrait<T> extends Trait {
     readonly type: PrimitiveType;
-    readonly default?: T;
 
     constructor(id: string, options: PrimitiveTraitOptions<T>) {
         super(id, options);
         this.type = options.type;
-        this.default = options.default;
     }
 
     getValue(strataTopToBottom: StratumFromTraits<ModelTraits>[]): T | undefined {
@@ -40,10 +37,10 @@ export class PrimitiveTrait<T> extends Trait {
             }
         }
 
-        return this.default; // TODO: is it a good idea to have a default?
+        return undefined;
     }
 
-    fromJson<TTraits extends ModelTraits>(model: ModelInterface<TTraits>, stratumName: string, jsonValue: any): T {
+    fromJson(model: BaseModel, stratumName: string, jsonValue: any): T {
         if (typeof jsonValue !== this.type) {
             throw new TerriaError({
                 title: 'Invalid property',
@@ -52,5 +49,9 @@ export class PrimitiveTrait<T> extends Trait {
         }
 
         return jsonValue;
+    }
+
+    isSameType(trait: Trait): boolean {
+        return trait instanceof PrimitiveTrait && trait.type === this.type;
     }
 }

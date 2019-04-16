@@ -1,18 +1,15 @@
 import BadgeBar from '../BadgeBar';
 import Icon from "../Icon";
-import ObserveModelMixin from '../ObserveModelMixin';
 import React from 'react';
 import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import WorkbenchList from './WorkbenchList';
 import { observer } from 'mobx-react';
 
-
 import Styles from './workbench.scss';
 
 const Workbench = observer(createReactClass({
     displayName: 'Workbench',
-    // mixins: [ObserveModelMixin],
 
     propTypes: {
         terria: PropTypes.object.isRequired,

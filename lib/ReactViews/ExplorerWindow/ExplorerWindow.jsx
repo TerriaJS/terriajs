@@ -4,13 +4,11 @@ import PropTypes from 'prop-types';
 import ko from 'terriajs-cesium/Source/ThirdParty/knockout';
 import { observer } from 'mobx-react';
 
-import ObserveModelMixin from '../ObserveModelMixin';
 import ModalPopup from './ModalPopup';
 import Tabs from './Tabs';
 
 const ExplorerWindow = observer(createReactClass({
     displayName: 'ExplorerWindow',
-    //mixins: [ObserveModelMixin],
 
     propTypes: {
         terria: PropTypes.object.isRequired,
@@ -36,6 +34,7 @@ const ExplorerWindow = observer(createReactClass({
         this.props.viewState.explorerPanelAnimating = false;
     },
 
+    /* eslint-disable-next-line camelcase */
     UNSAFE_componentWillMount() {
         this._pickedFeaturesSubscription = ko.pureComputed(this.isVisible, this).subscribe(this.onVisibilityChange);
     },

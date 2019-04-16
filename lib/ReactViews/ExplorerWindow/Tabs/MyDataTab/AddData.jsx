@@ -2,14 +2,12 @@ import React from 'react';
 import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import Icon from '../../../Icon.jsx';
-import addUserCatalogMember from '../../../../Models/addUserCatalogMember';
 // import createCatalogItemFromFileOrUrl from '../../../../Models/createCatalogItemFromFileOrUrl';
 // import createCatalogMemberFromType from '../../../../Models/createCatalogMemberFromType';
 import Dropdown from '../../../Generic/Dropdown';
 import FileInput from './FileInput';
 import getDataType from '../../../../Core/getDataType';
 import ObserveModelMixin from '../../../ObserveModelMixin';
-import TerriaError from '../../../../Core/TerriaError';
 // import addUserFiles from '../../../../Models/addUserFiles';
 import Styles from './add-data.scss';
 import Loader from '../../../Loader';
@@ -206,14 +204,14 @@ const AddData = createReactClass({
 /**
  * Loads a catalog item from a file.
  */
-function loadFile(viewModel) {
-    return createCatalogItemFromFileOrUrl(
-        viewModel.props.terria,
-        viewModel.props.viewState,
-        viewModel.state.remoteUrl,
-        viewModel.state.remoteDataType.value,
-        true
-    );
-}
+// function loadFile(viewModel) {
+//     return createCatalogItemFromFileOrUrl(
+//         viewModel.props.terria,
+//         viewModel.props.viewState,
+//         viewModel.state.remoteUrl,
+//         viewModel.state.remoteDataType.value,
+//         true
+//     );
+// }
 
 module.exports = AddData;
