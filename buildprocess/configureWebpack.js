@@ -103,7 +103,7 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
                     ]
                 }
             },
-            'ts-loader'
+            require.resolve('ts-loader')
         ]
     });
 
