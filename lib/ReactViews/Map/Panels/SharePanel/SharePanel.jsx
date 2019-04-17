@@ -2,7 +2,7 @@
 
 import { buildShareLink, buildShortShareLink, canShorten } from './BuildShareLink';
 import classNames from 'classnames';
-import AutoClipboard from '../../../AutoClipboard/AutoClipboard';
+// import AutoClipboard from '../../../AutoClipboard/AutoClipboard';
 import Clipboard from '../../../Clipboard';
 import createReactClass from 'create-react-class';
 import defined from 'terriajs-cesium/Source/Core/defined';
@@ -26,7 +26,8 @@ const SharePanel = createReactClass({
         userPropWhiteList: PropTypes.array,
         advancedIsOpen: PropTypes.bool,
         shortenUrls: PropTypes.bool,
-        autoShare: PropTypes.bool,
+        catalogShare: PropTypes.bool,
+        modalWidth: PropTypes.number,
         viewState: PropTypes.object.isRequired
     },
 
@@ -230,15 +231,15 @@ const SharePanel = createReactClass({
     },
 
     renderContent() {
-        if (this.props.autoShare) {
-            return this.renderContentForAutoShare();
+        if (this.props.catalogShare) {
+            return this.renderContentForCatalogShare();
         } else {
             return this.renderContentForPrint();
         }
     },
 
-    renderContentForAutoShare() {
-        const shareUrlTextBox = <input className={Styles.autoShareUrlfield} type="text" value={this.state.shareUrl}
+    renderContentForCatalogShare() {
+        const shareUrlTextBox = <input className={Styles.catalogShareUrlfield} type="text" value={this.state.shareUrl}
             placeholder={this.state.placeholder} readOnly
             onClick={e => e.target.select()} id='share-url' />;
 
@@ -248,32 +249,13 @@ const SharePanel = createReactClass({
                     <Loader message="Generating share URL..." />
                 </When>
                 <Otherwise>
-                    <div className={Styles.clipboard}>
-                        <AutoClipboard text={this.state.shareUrl} source={shareUrlTextBox} id='share-url' />
+                    <div className={Styles.clipboardForCatalogShare}>
+                        <Clipboard text={this.state.shareUrl} source={shareUrlTextBox} id='share-url' />
                     </div>
                 </Otherwise>
             </Choose>
         );
     },
-
-    // renderContentForAutoShare() {
-    //     const shareUrlTextBox = <input className={Styles.autoShareUrlfield} type="text" value={this.state.shareUrl}
-    //         placeholder={this.state.placeholder} readOnly
-    //         onClick={e => e.target.select()} id='share-url' />;
-
-    //     return (
-    //         <Choose>
-    //             <When condition={this.state.shareUrl === ''}>
-    //                 <Loader message="Generating share URL..." />
-    //             </When>
-    //             <Otherwise>
-    //                 <div className={Styles.clipboard}>
-    //                     <AutoClipboard text={this.state.shareUrl} source={shareUrlTextBox} id='share-url' />
-    //                 </div>
-    //             </Otherwise>
-    //         </Choose>
-    //     );
-    // },
 
     renderContentForPrint() {
         const iframeCode = this.state.shareUrl.length ?
@@ -286,7 +268,7 @@ const SharePanel = createReactClass({
 
         return (
             <div>
-                <div className={Styles.clipboard}><Clipboard source={shareUrlTextBox} id='share-url' /></div>
+                <div className={DropdownStyles.section}><Clipboard source={shareUrlTextBox} id='share-url' /></div>
                 <div className={DropdownStyles.section}>
                     <div>Print Map</div>
                     <div className={Styles.explanation}>Open a printable version of this map.</div>
@@ -332,24 +314,27 @@ const SharePanel = createReactClass({
     },
 
     render() {
-        const { autoShare } = this.props;
+        const { catalogShare, modalWidth } = this.props;
         const dropdownTheme = {
             btn: Styles.btnShare,
-            outer: classNames(Styles.sharePanel, {[Styles.autoShare]: autoShare}),
+            outer: classNames(Styles.sharePanel, {[Styles.catalogShare]: catalogShare}),
             inner: Styles.dropdownInner,
             icon: 'share'
         };
 
-        const btnText = autoShare ? 'Share' : 'Share / Print';
+        const btnText = catalogShare ? 'Share' : 'Share / Print';
+        const btnTitle = catalogShare ? 'Share your catalogue with others' : 'Share your map with others';
 
         return (
             <div>
                 <MenuPanel theme={dropdownTheme}
                     btnText={btnText}
                     viewState={this.props.viewState}
-                    btnTitle="Share your map with others"
+                    btnTitle={btnTitle}
                     isOpen={this.state.isOpen}
                     onOpenChanged={this.changeOpenState}
+                    showDropdownAsModal={catalogShare}
+                    modalWidth={modalWidth}
                     smallScreen={this.props.viewState.useSmallScreenInterface}>
                     <If condition={this.state.isOpen}>
                         {this.renderContent()}

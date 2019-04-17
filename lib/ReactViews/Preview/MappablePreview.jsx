@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 
 import DataPreviewMap from './DataPreviewMap';
 import Description from './Description';
+import measureWidth from './measureWidth';
 import ObserveModelMixin from '../ObserveModelMixin';
 import Styles from './mappable-preview.scss';
 import SharePanel from '../Map/Panels/SharePanel/SharePanel.jsx';
@@ -21,7 +22,8 @@ const MappablePreview = createReactClass({
     propTypes: {
         previewed: PropTypes.object.isRequired,
         terria: PropTypes.object.isRequired,
-        viewState: PropTypes.object.isRequired
+        viewState: PropTypes.object.isRequired,
+        widthFromMeasureWidthHOC: PropTypes.number,
     },
 
     toggleOnMap(event) {
@@ -50,11 +52,12 @@ const MappablePreview = createReactClass({
                     {this.props.previewed.isEnabled ? 'Remove from the map' : 'Add to the map'}
                 </button>
                 <div className={Styles.previewedInfo}>
-                    <div className={Styles.titleAndShareWrapper}>
+                    <div className={Styles.titleAndShareWrapper} ref={component => (this.refToMeasure = component)}>
                         <h3 className={Styles.h3}>{catalogItem.name}</h3>
                         <div className={Styles.shareLinkWrapper}>
                             <SharePanel
-                                autoShare
+                                catalogShare
+                                modalWidth={this.props.widthFromMeasureWidthHOC}
                                 terria={this.props.terria}
                                 viewState={this.props.viewState} />
                         </div>
@@ -66,5 +69,5 @@ const MappablePreview = createReactClass({
     },
 });
 
-export default MappablePreview;
+export default measureWidth(MappablePreview);
 

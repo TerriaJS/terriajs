@@ -44,6 +44,37 @@
   &.is-open {
     @include transform (scale(1) translateZ(0));
   }
+  &.show-dropdown-as-modal {
+    @include transform (translate3d(0, -300px, 0));
+    opacity:0;
+  }
+  &.is-open.show-dropdown-as-modal {
+    @include transform (translate3d(0, 0, 0));
+    opacity:1;
+  }
+}
+.inner-close-btn {
+  composes: btn from '../../../Sass/common/_buttons.scss';
+  position: absolute;
+  z-index:10;
+  top: 5px;
+  right: 0px;
+
+  &:hover {
+    svg {
+      fill: $color-primary;
+    }
+  }
+
+  svg {
+    fill: #FFFFFF;
+    height: 20px;
+    width: 20px;
+  }
+}
+.inner-close-btn--for-modal {
+  top: 10px;
+  right:10px;
 }
 
 .caret {

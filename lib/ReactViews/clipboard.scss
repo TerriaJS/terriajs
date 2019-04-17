@@ -1,18 +1,25 @@
 @import '~terriajs-variables';
+@import '~terriajs-mixins';
 
 .clipboard{
-  padding: 5px;
+  // padding: 5px;
   position: relative;
 }
 .clipboardBody{
   display: flex;
   margin: 10px 0 0 0;
+  input {
+    border:none;
+    &:read-only:not(select) {
+      background:$dark-with-overlay;
+    }
+  }
 }
 
 .copyBtn{
   composes: btn from '../Sass/common/_buttons.scss';
   composes: btn-primary from '../Sass/common/_buttons.scss';
-  width: 60px;
+  width: 65px;
 }
 
 .tooltip{
@@ -39,8 +46,31 @@
   }
 }
 
+.tooltip-wrapper {
+  position: relative;
+  line-height: 10px;
+  margin-top: 10px;
+  svg{
+    height: 20px;
+    width: 20px;
+    fill: #ffffff;
+    margin: $input-glyph-margin;
+    margin-left:0;
+    display: inline-block;
+  }
+}
+.tooltip-text{
+  @include vertical-align();
+  position: absolute;
+  left: 30px;
+}
+
+.title {
+  margin-bottom: 5px;
+}
+
 .explanation {
   font-size: smaller;
   font-weight: lighter;
-  color: $text-light-dimmed;
+  margin-bottom: 15px;
 }

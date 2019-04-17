@@ -6,6 +6,7 @@ import classNames from 'classnames';
 import defined from 'terriajs-cesium/Source/Core/defined';
 
 import Styles from './panel.scss';
+import Icon from "../../Icon.jsx";
 
 const InnerPanel = createReactClass({
     propTypes: {
@@ -16,6 +17,10 @@ const InnerPanel = createReactClass({
         doNotCloseFlag: PropTypes.string,
         /** Will be called when the panel has finished hiding */
         onDismissed: PropTypes.func,
+        /** Animate as modal instead of dropdown */
+        showDropdownAsModal: PropTypes.bool,
+        /** Relative width to draw from */
+        modalWidth: PropTypes.number,
         /** Theme to style components */
         theme: PropTypes.object,
         /** How far the caret at the top of the panel should be from its left, as CSS (so #px or #% are both valid) */
@@ -48,20 +53,24 @@ const InnerPanel = createReactClass({
         window.removeEventListener('click', this.close);
     },
 
+    forceClose(e) {
+        window.removeEventListener('click', this.close);
+
+        // If we're closing we want to immediately change the css class to cause it to animate shut, then when it's
+        // finished actually stop it rendering with isOpen = false
+        this.setState({
+            isOpenCss: false
+        });
+
+        setTimeout(() => {
+            this.props.onDismissed();
+        }, 200); // TODO: Determine when it stops animating instead of duplicating the 200ms timeout?
+    },
+
     close(e) {
         // Only close if this wasn't a click on an open/close button.
         if (!this.props.doNotCloseFlag || !e[this.props.doNotCloseFlag]) {
-            window.removeEventListener('click', this.close);
-
-            // If we're closing we want to immediately change the css class to cause it to animate shut, then when it's
-            // finished actually stop it rendering with isOpen = false
-            this.setState({
-                isOpenCss: false
-            });
-
-            setTimeout(() => {
-                this.props.onDismissed();
-            }, 200); // TODO: Determine when it stops animating instead of duplicating the 200ms timeout?
+            this.forceClose(e);
         }
     },
 
@@ -70,15 +79,31 @@ const InnerPanel = createReactClass({
             <div className={classNames(
                     Styles.inner,
                     this.props.theme.inner,
-                    {[Styles.isOpen]: this.state.isOpenCss}
-                 )}
-                 ref={this.props.innerRef}
-                 onClick={e => e.stopPropagation()}
-                 style={{
-                     left: this.props.dropdownOffset,
-                     transformOrigin: this.props.caretOffset && `${this.props.caretOffset} top`
-                 }}>
-                <If condition={defined(this.props.caretOffset)}>
+                    {[Styles.isOpen]: this.state.isOpenCss},
+                    {[Styles.showDropdownAsModal]: this.props.showDropdownAsModal}
+                )}
+                ref={this.props.innerRef}
+                onClick={e => e.stopPropagation()}
+                style={{
+                    width: this.props.modalWidth,
+                    left: this.props.dropdownOffset,
+                    transformOrigin: this.props.caretOffset && `${this.props.caretOffset} top`
+                }}>
+                <button
+                    type='button'
+                    className={classNames(
+                        Styles.innerCloseBtn,
+                        {
+                            [Styles.innerCloseBtnForModal]: this.props.showDropdownAsModal
+                        }
+                    )}
+                    onClick={this.forceClose}
+                    title='Close'
+                    aria-label='Close'
+                >
+                    <Icon glyph={Icon.GLYPHS.close}/>
+                </button>
+                <If condition={defined(this.props.caretOffset) && !this.props.showDropdownAsModal}>
                     <span className={Styles.caret} style={{left: this.props.caretOffset}}/>
                 </If>
                 <div className={Styles.content}>

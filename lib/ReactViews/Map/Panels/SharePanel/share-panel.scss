@@ -5,13 +5,17 @@
   font-size: $font-size-mid-small;
 }
 
-.auto-share {
+.catalog-share {
   float:right;
 }
 
 .dropdown-inner {
   width: $share-panel-width;
   @include transform-origin(50%, top);
+}
+
+.catalog-share-inner {
+  margin: 0 10px 10px;
 }
 
 .heading-label {
@@ -56,22 +60,8 @@
   color: #ddd;
   background: $overlay;
 }
-.clipboard{
-  margin: 10px 0 0 0;
-}
-
-.autoShareUrlfield{
-  composes: field from '../../../../Sass/common/_form.scss';
-  background: $overlay;
-  color: #fff!important;
-  &::selection {
-    background: $color-primary;; /* WebKit/Blink Browsers */
-    color: #fff;
-  }
-  &::-moz-selection {
-    background: $color-primary;; /* Gecko Browsers */
-    color: #fff;
-  }
+.clipboard-for-catalog-share {
+  margin: 15px;
 }
 
 .shareUrlfield{
@@ -86,6 +76,10 @@
     background: $color-primary;; /* Gecko Browsers */
     color: #fff;
   }
+}
+
+.catalogShareUrlfield{
+  composes: shareUrlfield;
 }
 
 .mobileHeader{

@@ -3,27 +3,31 @@ import React from 'react';
 import Styles from './clipboard.scss';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
+import Icon from "./Icon.jsx";
 
 export default class Clipboard extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            tooltip: null
+            tooltip: null,
+            success: null,
         };
         this.resetTooltipLater = this.resetTooltipLater.bind(this);
     }
 
     componentDidMount() {
-        this.clipboardBtn = new clipboard(`.btn-copy-${this.props.id}`);
+        this.clipboardBtn = new clipboard(`.btn-copy-${this.props.id}`, );
         this.clipboardBtn.on('success', _ => {
             this.setState({
-                tooltip: "copied!"
+                tooltip: "Copied to clipboard",
+                success: true,
             });
             this.resetTooltipLater();
         });
         this.clipboardBtn.on('error', _ => {
             this.setState({
-                tooltip: "copy unsuccessful!"
+                tooltip: "Copy unsuccessful...",
+                success: false,
             });
             this.resetTooltipLater();
         });
@@ -45,7 +49,8 @@ export default class Clipboard extends React.Component {
         this.removeTimeout();
         this._timerID = window.setTimeout(() => {
             this.setState({
-                tooltip: null
+                tooltip: null,
+                success: null,
             });
         }, 3000);
     }
@@ -53,7 +58,7 @@ export default class Clipboard extends React.Component {
     render() {
         return (
             <div className={Styles.clipboard}>
-                <div>Share URL</div>
+                <div className={Styles.title}>Share link</div>
                 <div className={Styles.explanation}>Anyone visiting this URL will see this map view.</div>
                 <div className={Styles.clipboardBody}>
                     {this.props.source}
@@ -61,7 +66,10 @@ export default class Clipboard extends React.Component {
                         Copy
                     </button>
                 </div>
-                {this.state.tooltip && <span className={Styles.tooltip}>{this.state.tooltip}</span>}
+                {this.state.tooltip && <div className={Styles.tooltipWrapper}>
+                    <Icon glyph={this.state.success ? Icon.GLYPHS.selected : Icon.GLYPHS.close} />
+                    <span className={Styles.tooltipText}>{this.state.tooltip}</span>
+                </div>}
             </div>
         );
     }

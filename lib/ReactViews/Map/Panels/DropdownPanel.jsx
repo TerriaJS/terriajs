@@ -77,6 +77,8 @@ const DropdownPanel = createReactClass({
                 </button>
                 <If condition={this.isOpen()}>
                     <InnerPanel
+                        showDropdownAsModal={this.props.showDropdownAsModal}
+                        modalWidth={this.props.modalWidth}
                         onDismissed={this.onDismissed}
                         innerRef={this.onInnerMounted}
                         doNotCloseFlag={this.getDoNotCloseFlag()}
