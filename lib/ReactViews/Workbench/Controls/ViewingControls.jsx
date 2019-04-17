@@ -27,7 +27,8 @@ const ViewingControls = createReactClass({
     },
 
     removeFromMap() {
-        this.props.item.isEnabled = false;
+        const workbench = this.props.viewState.terria.workbench;
+        workbench.removeItem(this.props.item);
     },
 
     zoomTo() {
