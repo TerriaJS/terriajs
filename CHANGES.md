@@ -1,9 +1,13 @@
 Change Log
 ==========
 
-### next patch
+### Next Release
 
 * Fixed Map View '2D' button activating 3D ellipsoid viewer when the instance has no terrain.
+
+### v7.2.1
+
+* Removed an extra close curly brace from `regionMapping.json`.
 
 ### v7.2.0
 
