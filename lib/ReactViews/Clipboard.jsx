@@ -16,7 +16,7 @@ export default class Clipboard extends React.Component {
     }
 
     componentDidMount() {
-        this.clipboardBtn = new clipboard(`.btn-copy-${this.props.id}`, );
+        this.clipboardBtn = new clipboard(`.btn-copy-${this.props.id}`);
         this.clipboardBtn.on('success', _ => {
             this.setState({
                 tooltip: "Copied to clipboard",
