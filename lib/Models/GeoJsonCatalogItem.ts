@@ -58,6 +58,8 @@ class GeoJsonCatalogItem
 
     private _dataSource: GeoJsonDataSource | undefined;
 
+    readonly canZoomTo = true;
+
     constructor(id: string, terria: Terria) {
         super(id, terria);
     }

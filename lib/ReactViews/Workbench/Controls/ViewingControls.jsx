@@ -32,7 +32,8 @@ const ViewingControls = createReactClass({
     },
 
     zoomTo() {
-        this.props.item.zoomToAndUseClock();
+        const viewer = this.props.viewState.terria.currentViewer;
+        viewer.zoomTo(this.props.item);
     },
 
     openFeature() {
