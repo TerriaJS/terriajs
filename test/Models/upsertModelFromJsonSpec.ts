@@ -1,6 +1,5 @@
-import { autorun, configure, runInAction, spy } from "mobx";
+import { runInAction } from "mobx";
 import CatalogMemberFactory from "../../lib/Models/CatalogMemberFactory";
-import { BaseModel } from "../../lib/Models/Model";
 import Terria from "../../lib/Models/Terria";
 import upsertModelFromJson from "../../lib/Models/upsertModelFromJson";
 import WebMapServiceCatalogGroup from "../../lib/Models/WebMapServiceCatalogGroup";
@@ -56,56 +55,37 @@ describe('upsertModelFromJson', function() {
         });
 
         const group = <WebMapServiceCatalogGroup>model;
-
-        const beforeIsLoadingOverTime: boolean[] = [];
-        const afterIsLoadingOverTime: boolean[] = [];
-        const memberModelsOverTime: ReadonlyArray<BaseModel>[] = [];
-        const dispose = autorun(() => {
-            beforeIsLoadingOverTime.push(group.isLoading);
-            memberModelsOverTime.push(group.memberModels);
-            afterIsLoadingOverTime.push(group.isLoading);
-        });
-
-        let itemDispose;
-
-        try {
-            expect(beforeIsLoadingOverTime.length).toBe(1);
-            expect(beforeIsLoadingOverTime[0]).toBe(false);
-            expect(afterIsLoadingOverTime[0]).toBe(true);
-            expect(memberModelsOverTime[0].length).toBe(1);
-
-            await group.loadPromise;
-            expect(beforeIsLoadingOverTime.length).toBe(2);
-            expect(beforeIsLoadingOverTime[1]).toBe(false);
-            expect(afterIsLoadingOverTime[1]).toBe(false);
-            expect(memberModelsOverTime[1].length).toBeGreaterThan(1);
-            const item = terria.getModelById(WebMapServiceCatalogItem, '/Test/mybroadband%3AMyBroadband_ADSL_Availability');
-            expect(item).toBeDefined();
-            if (!item) {
-                return;
-            }
-
-            const layersOverTime: (string | undefined)[] = [];
-            const isGeoServerOverTime: (boolean | undefined)[] = [];
-            itemDispose = autorun(() => {
-                expect(group.memberModels).toContain(item);
-                layersOverTime.push(item.layers);
-                isGeoServerOverTime.push(item.isGeoServer);
-            });
-
-            expect(layersOverTime.length).toBe(1);
-            expect(layersOverTime[0]).toBe('mybroadband:MyBroadband_ADSL_Availability');
-            expect(isGeoServerOverTime[0]).toBe(false);
-
-            await item.loadPromise;
-            expect(layersOverTime.length).toBe(2);
-            expect(layersOverTime[1]).toBe('mybroadband:MyBroadband_ADSL_Availability');
-            expect(isGeoServerOverTime[1]).toBe(true);
-        } finally {
-            dispose();
-            if (itemDispose) {
-                itemDispose();
-            }
+        const item = terria.getModelById(WebMapServiceCatalogItem, '/Test/mybroadband%3AMyBroadband_ADSL_Availability');
+        expect(item).toBeDefined();
+        if (!item) {
+            return;
         }
+
+        expect(group.isLoadingMetadata).toBe(false);
+        expect(group.isLoadingMembers).toBe(false);
+        expect(group.memberModels.length).toBe(1);
+        expect(group.memberModels[0]).toBe(item);
+        expect(item.name).toBe('Override');
+        expect(item.layers).toBeUndefined();
+        expect(item.isGeoServer).toBe(false);
+
+        const loadMetadataPromise = group.loadMetadata();
+        const loadMembersPromise = group.loadMembers();
+
+        expect(group.isLoadingMetadata).toBe(true);
+        expect(group.isLoadingMembers).toBe(true);
+
+        await loadMetadataPromise;
+        await loadMembersPromise;
+
+        expect(group.isLoadingMetadata).toBe(false);
+        expect(group.memberModels.length).toBeGreaterThan(1);
+        expect(group.memberModels.indexOf(item)).toBeGreaterThanOrEqual(0);
+        expect(item.name).toBe('Override');
+        expect(item.layers).toBe('mybroadband:MyBroadband_ADSL_Availability');
+
+        await item.loadMetadata();
+
+        expect(item.isGeoServer).toBe(true);
     });
 });

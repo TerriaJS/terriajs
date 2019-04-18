@@ -46,7 +46,7 @@ interface TerriaOptions {
 }
 
 export default class Terria {
-    private models = new Map<string, BaseModel>();
+    private models = observable.map<string, BaseModel>();
 
     readonly error = new CesiumEvent();
     readonly beforeViewerChanged = new CesiumEvent();
