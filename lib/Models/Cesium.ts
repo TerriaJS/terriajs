@@ -119,7 +119,7 @@ export default class Cesium implements GlobeOrMap {
     }
 
     zoomTo(
-        target: CameraView | Cesium.Rectangle | Cesium.DataSource | /*TODO Cesium.Cesium3DTileset*/ any,
+        target: CameraView | Cesium.Rectangle | Cesium.DataSource | Mappable | /*TODO Cesium.Cesium3DTileset*/ any,
         flightDurationSeconds: number
     ): void {
         if (!defined(target)) {
@@ -198,7 +198,30 @@ export default class Cesium implements GlobeOrMap {
                             up: target.up
                         }
                     });
-                } else {
+                } else if (Mappable.is(target)) {
+
+                    if (isDefined(target.rectangle)) {
+
+                        const {west, south, east, north} = target.rectangle;
+                        if (isDefined(west) &&
+                            isDefined(south) &&
+                            isDefined(east) &&
+                            isDefined(north))
+                        {
+                            return that.scene.camera.flyTo({
+                                duration: flightDurationSeconds,
+                                destination: Rectangle.fromDegrees(west, south, east, north)
+                            });
+                        }
+                    }
+
+                    if (target.mapItems.length > 0) {
+                        // Zoom to the first item!
+                        that.zoomTo(target.mapItems[0], flightDurationSeconds);
+                    }
+
+                } else if(defined(target.rectangle)) {
+
                     that.scene.camera.flyTo({
                         duration: flightDurationSeconds,
                         destination: target.rectangle

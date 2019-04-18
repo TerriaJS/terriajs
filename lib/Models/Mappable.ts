@@ -19,8 +19,16 @@ export namespace ImageryParts {
     }
 }
 
+interface Rectangle {
+    west?: number;
+    south?: number;
+    east?: number;
+    north?: number;
+}
+
 interface Mappable {
     readonly mapItems: ReadonlyArray<DataSource | ImageryParts>;
+    rectangle?: Rectangle;
 }
 
 namespace Mappable {
