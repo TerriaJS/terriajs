@@ -1,9 +1,16 @@
 Change Log
 ==========
 
+### Next Release
+
+* Fixed Map View '2D' button activating 3D ellipsoid viewer when the instance has no terrain.
+
+### v7.2.1
+
+* Removed an extra close curly brace from `regionMapping.json`.
+
 ### v7.2.0
 
-* Fix error in polygon selection when some layers have no geometry.
 * Added `hideLayerAfterMinScaleDenominator` property to `WebMapServiceCatalogItem`. When true, TerriaJS will show a message and display nothing rather than silently show a scaled-up version of the layer when the user zooms in past the layer's advertised `MinScaleDenominator`.
 * Added `GeoJsonParameterEditor`.
 * Fixed a bug that caused some chart "Expand" options to be hidden.
