@@ -1,12 +1,17 @@
-import CesiumTileLayer from "../Map/CesiumTileLayer";
-import DataSourceCollection from "terriajs-cesium/Source/DataSources/DataSourceCollection";
-import GlobeOrMap, { CameraView } from "./GlobeOrMap";
-import Mappable, { ImageryParts } from "./Mappable";
-import LeafletScene from "../Map/LeafletScene";
-import Terria from "./Terria";
 import { autorun } from "mobx";
 import { createTransformer } from "mobx-utils";
-import { DataSource } from "cesium";
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
+import DataSourceCollection from "terriajs-cesium/Source/DataSources/DataSourceCollection";
+import when from "terriajs-cesium/Source/ThirdParty/when";
+import CesiumTileLayer from "../Map/CesiumTileLayer";
+import LeafletDataSourceDisplay from "../Map/LeafletDataSourceDisplay";
+import LeafletScene from "../Map/LeafletScene";
+import rectangleToLatLngBounds from "../Map/rectangleToLatLngBounds";
+import GlobeOrMap, { CameraView } from "./GlobeOrMap";
+import Mappable, { ImageryParts } from "./Mappable";
+import Terria from "./Terria";
 
 function isDefined<T>(value: T | undefined): value is T {
     return value !== undefined;
@@ -17,6 +22,8 @@ export default class Leaflet implements GlobeOrMap {
     readonly map: L.Map;
     readonly scene: LeafletScene;
     readonly dataSources: DataSourceCollection = new DataSourceCollection();
+    dataSourceDisplay?: LeafletDataSourceDisplay;
+
     private _disposeWorkbenchMapItemsSubscription: (() => void) | undefined;
 
     constructor(terria: Terria, map: L.Map) {
@@ -110,9 +117,74 @@ export default class Leaflet implements GlobeOrMap {
     }
 
     zoomTo(
-        viewOrExtent: CameraView | Cesium.Rectangle,
+        target:
+            | CameraView
+            | Cesium.Rectangle
+            | Cesium.DataSource
+            | Mappable
+            | any,
         flightDurationSeconds: number
-    ): void {}
+    ): void {
+        if (!isDefined(target)) {
+            return;
+            //throw new DeveloperError("target is required.");
+        }
+
+        const that = this;
+
+        return when().then(function() {
+            var bounds;
+
+            // Target is a KML data source
+            if (isDefined(target.entities)) {
+                if (isDefined(that.dataSourceDisplay)) {
+                    bounds = that.dataSourceDisplay.getLatLngBounds(target);
+                }
+            } else {
+                let extent;
+
+                if (target instanceof Rectangle) {
+                    extent = target;
+                } else if (Mappable.is(target)) {
+                    if (isDefined(target.rectangle)) {
+                        const { west, south, east, north } = target.rectangle;
+                        if (
+                            isDefined(west) &&
+                            isDefined(south) &&
+                            isDefined(east) &&
+                            isDefined(north)
+                        ) {
+                            extent = Rectangle.fromDegrees(
+                                west,
+                                south,
+                                east,
+                                north
+                            );
+                        }
+                    } else {
+                        // Zoom to the first item!
+                        that.zoomTo(target.mapItems[0], flightDurationSeconds);
+                    }
+                } else {
+                    extent = target.rectangle;
+                }
+
+                // Account for a bounding box crossing the date line.
+                if (extent.east < extent.west) {
+                    extent = Rectangle.clone(extent);
+                    extent.east += CesiumMath.TWO_PI;
+                }
+                bounds = rectangleToLatLngBounds(extent);
+            }
+
+            if (isDefined(bounds)) {
+                that.map.flyToBounds(bounds, {
+                    animate: flightDurationSeconds > 0.0,
+                    duration: flightDurationSeconds
+                });
+            }
+        });
+    }
 
     notifyRepaintRequired() {
         // No action necessary.

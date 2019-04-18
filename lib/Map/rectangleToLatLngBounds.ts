@@ -1,20 +1,17 @@
-'use strict';
+import L from 'leaflet';
+import CesiumMath from 'terriajs-cesium/Source/Core/Math';
+import Rectangle from 'terriajs-cesium/Source/Core/Rectangle';
 
-/*global require*/
-var L = require('leaflet');
-var CesiumMath = require('terriajs-cesium/Source/Core/Math');
 
 /**
  * Converts a Cesium Rectangle into a Leaflet LatLngBounds.
  * @param {Rectangle} rectangle The rectangle to convert.
  * @return {L.latLngBounds} The equivalent Leaflet latLngBounds.
  */
-var rectangleToLatLngBounds = function(rectangle) {
+export default function rectangleToLatLngBounds(rectangle: Rectangle) {
     var west = CesiumMath.toDegrees(rectangle.west);
     var south = CesiumMath.toDegrees(rectangle.south);
     var east = CesiumMath.toDegrees(rectangle.east);
     var north = CesiumMath.toDegrees(rectangle.north);
     return L.latLngBounds([south, west], [north, east]);
 };
-
-module.exports = rectangleToLatLngBounds;
