@@ -22,8 +22,8 @@
   box-shadow: $box-shadow;
   z-index: 20;
   border-radius: $radius-small;
-  background: $dark;
-  color: #fff;
+  background: $grey-lightest;
+  color: $text-darker;
   border: $border-style;
   max-width: calc(100vw - 10px);
 

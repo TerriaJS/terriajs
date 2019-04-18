@@ -11,7 +11,8 @@
   input {
     border:none;
     &:read-only:not(select) {
-      background:$dark-with-overlay;
+      background: $grey-lighter2;
+      flex-shrink: 3;
     }
   }
 }
@@ -19,7 +20,8 @@
 .copyBtn{
   composes: btn from '../Sass/common/_buttons.scss';
   composes: btn-primary from '../Sass/common/_buttons.scss';
-  width: 65px;
+  composes: btn-large from '../Sass/common/_buttons.scss';
+  width: 80px;
 }
 
 .tooltip{
@@ -53,7 +55,7 @@
   svg{
     height: 20px;
     width: 20px;
-    fill: #ffffff;
+    fill: $dark;
     margin: $input-glyph-margin;
     margin-left:0;
     display: inline-block;
@@ -66,11 +68,10 @@
 }
 
 .title {
-  margin-bottom: 5px;
+  margin-bottom: 8px;
 }
 
 .explanation {
-  font-size: smaller;
-  font-weight: lighter;
+  opacity:0.8;
   margin-bottom: 15px;
 }

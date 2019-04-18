@@ -47,7 +47,7 @@
 @include empty-module('link-wrapper');
 
 .link {
-  @include link($overlay);
+  @include link($grey-lighter2);
 }
 
 .paragraph {
@@ -66,15 +66,19 @@
 
 .shareUrlfield{
   composes: field from '../../../../Sass/common/_form.scss';
-  background: $overlay;
-  color: #fff!important;
+  composes: field-large from '../../../../Sass/common/_form.scss';
+  background: $grey-lighter2;
+  color: $text-dark2!important;
+  &[type=text] {
+    height: $input-height-large;
+  }
   &::selection {
-    background: $color-primary;; /* WebKit/Blink Browsers */
-    color: #fff;
+    background: $grey-lighter2; /* WebKit/Blink Browsers */
+    color: $text-dark2;
   }
   &::-moz-selection {
-    background: $color-primary;; /* Gecko Browsers */
-    color: #fff;
+    background: $grey-lighter2; /* Gecko Browsers */
+    color: $text-dark2;
   }
 }
 
