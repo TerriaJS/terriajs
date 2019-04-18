@@ -1,5 +1,4 @@
 import { computed, decorate, observable, trace, runInAction } from 'mobx';
-import LoadableStratum from '../../test/Models/LoadableStratum';
 import { ModelId } from '../Traits/ModelReference';
 import ModelTraits from '../Traits/ModelTraits';
 import TraitsConstructor from '../Traits/TraitsConstructor';

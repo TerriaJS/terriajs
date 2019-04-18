@@ -244,7 +244,9 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemb
 
     protected get loadMetadataPromise(): Promise<void> {
         return GetCapabilitiesStratum.load(this).then(stratum => {
-            this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, stratum);
+            runInAction(() => {
+                this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, stratum);
+            });
         });
     }
 
@@ -363,7 +365,7 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemb
 
     private _createImageryProvider = createTransformer((time: string): Cesium.WebMapServiceImageryProvider | undefined => {
         // Don't show anything on the map until GetCapabilities finishes loading.
-        if (this.isMetadataLoading) {
+        if (this.isLoadingMetadata) {
             return undefined;
         }
 

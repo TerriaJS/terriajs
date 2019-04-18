@@ -20,8 +20,6 @@ export abstract class BaseModel {
     abstract get flattened(): FlattenedFromTraits<ModelTraits>;
     abstract get strata(): ObservableMap<string, StratumFromTraits<ModelTraits>>;
     abstract get topStratum(): StratumFromTraits<ModelTraits>;
-    abstract get isLoading(): boolean;
-    abstract get loadPromise(): Promise<{}>;
 
     constructor(readonly id: ModelId, readonly terria: Terria) {
     }
@@ -42,8 +40,6 @@ export interface ModelInterface<T extends ModelTraits> {
     readonly strata: ObservableMap<string, StratumFromTraits<T>>;
     readonly terria: Terria;
     readonly id: string;
-    readonly isLoading: boolean;
-    readonly loadPromise: Promise<{}>;
 
     readonly strataTopToBottom: StratumFromTraits<T>[];
     readonly strataBottomToTop: StratumFromTraits<T>[];

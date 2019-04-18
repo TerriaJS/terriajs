@@ -14,6 +14,7 @@ import proxyCatalogItemUrl from './proxyCatalogItemUrl';
 import Terria from './Terria';
 import WebMapServiceCapabilities, { CapabilitiesLayer } from './WebMapServiceCapabilities';
 import WebMapServiceCatalogItem from './WebMapServiceCatalogItem';
+import filterOutUndefined from '../Core/filterOutUndefined';
 
 class GetCapabilitiesStratum extends LoadableStratum(WebMapServiceCatalogGroupTraits) {
     static load(catalogItem: WebMapServiceCatalogGroup): Promise<GetCapabilitiesStratum> {
@@ -34,67 +35,72 @@ class GetCapabilitiesStratum extends LoadableStratum(WebMapServiceCatalogGroupTr
         super();
     }
 
-    @observable
-    members: ModelReference[] | undefined;
-
-    @action
-    createMembers() {
-        const layers = this.catalogGroup.flatten
-            ? this.capabilities.allLayers
-            : this.getTopLevelLayers(this.capabilities.rootLayers);
-
-        const id = this.catalogGroup.id;
-
-        // Create a model for each Layer at this level.
-        const members: ModelReference[] = [];
-        layers.forEach(layer => {
+    @computed
+    get members(): ModelReference[] {
+        return filterOutUndefined(this.topLevelLayers.map(layer => {
             if (!layer.Name) {
-                return;
+                return undefined;
             }
-
-            const layerId = id + "/" + encodeURIComponent(layer.Name);
-            const existingModel = this.catalogGroup.terria.getModelById(
-                WebMapServiceCatalogItem,
-                layerId
-            );
-
-            let model: WebMapServiceCatalogItem;
-            if (existingModel === undefined) {
-                model = new WebMapServiceCatalogItem(
-                    layerId,
-                    this.catalogGroup.terria
-                );
-                this.catalogGroup.terria.addModel(model);
-            } else {
-                model = existingModel;
-            }
-
-
-            const stratum = CommonStrata.inheritedFromParentGroup;
-            model.setTrait(stratum, 'name', layer.Title);
-            model.setTrait(stratum, 'url', this.catalogGroup.url);
-            model.setTrait(stratum, 'getCapabilitiesUrl', this.catalogGroup.getCapabilitiesUrl);
-            model.setTrait(stratum, 'getCapabilitiesCacheDuration', this.catalogGroup.getCapabilitiesCacheDuration);
-            model.setTrait(stratum, 'layers', layer.Name);
-
-            members.push(layerId);
-        });
-
-        this.members = members;
+            return this.catalogGroup.id + '/' + encodeURIComponent(layer.Name)
+        }));
     }
 
-    private getTopLevelLayers(
-        rootLayers: CapabilitiesLayer[]
-    ): ReadonlyArray<CapabilitiesLayer> {
-        if (rootLayers.length === 1) {
-            const subLayers = rootLayers[0].Layer;
-            if (subLayers === undefined) {
-                return [];
-            }
-            return isReadOnlyArray(subLayers) ? subLayers : [subLayers];
+    get topLevelLayers(): readonly CapabilitiesLayer[] {
+        if (this.catalogGroup.flatten) {
+            return this.capabilities.allLayers;
         } else {
-            return rootLayers;
+            const rootLayers = this.capabilities.rootLayers;
+            if (rootLayers.length === 1) {
+                const subLayers = rootLayers[0].Layer;
+                if (subLayers === undefined) {
+                    return [];
+                }
+                return isReadOnlyArray(subLayers) ? subLayers : [subLayers];
+            } else {
+                return rootLayers;
+            }
         }
+    }
+
+    @action
+    createMembersFromLayers() {
+        this.topLevelLayers.forEach(layer => this.createMemberFromLayer(layer));
+    }
+
+    @action
+    createMemberFromLayer(layer: CapabilitiesLayer) {
+        if (!layer.Name) {
+            return;
+        }
+
+        const id = this.catalogGroup.id;
+        const layerId = id + '/' + encodeURIComponent(layer.Name);
+        const existingModel = this.catalogGroup.terria.getModelById(
+            WebMapServiceCatalogItem,
+            layerId
+        );
+
+        let model: WebMapServiceCatalogItem;
+        if (existingModel === undefined) {
+            model = new WebMapServiceCatalogItem(
+                layerId,
+                this.catalogGroup.terria
+            );
+            this.catalogGroup.terria.addModel(model);
+        } else {
+            model = existingModel;
+        }
+
+        // Replace the stratum inherited from the parent group.
+        const stratum = CommonStrata.inheritedFromParentGroup;
+
+        model.strata.delete(stratum);
+
+        model.setTrait(stratum, 'name', layer.Title);
+        model.setTrait(stratum, 'url', this.catalogGroup.url);
+        model.setTrait(stratum, 'getCapabilitiesUrl', this.catalogGroup.getCapabilitiesUrl);
+        model.setTrait(stratum, 'getCapabilitiesCacheDuration', this.catalogGroup.getCapabilitiesCacheDuration);
+        model.setTrait(stratum, 'layers', layer.Name);
     }
 }
 
@@ -109,16 +115,20 @@ export default class WebMapServiceCatalogGroup extends GetCapabilitiesMixin(UrlM
         super(id, terria);
     }
 
-    get loadMetadataPromise(): Promise<void> {
+    protected get loadMetadataPromise(): Promise<void> {
         return GetCapabilitiesStratum.load(this).then(stratum => {
-            this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, stratum);
+            runInAction(() => {
+                this.strata.set(GetCapabilitiesMixin.getCapabilitiesStratumName, stratum);
+            });
         });
     }
 
-    loadMembers(): Promise<void> {
-        return this.loadMetadataPromise.then(() => {
-            const getCapabilitiesStratum: GetCapabilitiesStratum = <GetCapabilitiesStratum>this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName);
-            return getCapabilitiesStratum.createMembers();
+    protected get loadMembersPromise(): Promise<void> {
+        return this.loadMetadata().then(() => {
+            const getCapabilitiesStratum = <GetCapabilitiesStratum | undefined>this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName);
+            if (getCapabilitiesStratum) {
+                getCapabilitiesStratum.createMembersFromLayers();
+            }
         });
     }
 

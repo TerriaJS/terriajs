@@ -84,7 +84,7 @@ const DataCatalogGroup = observer(createReactClass({
                 title={getAncestors(group).map(member => member.nameInCatalog).join(' → ')}
                 topLevel={this.isTopLevel()}
                 open={this.isOpen()}
-                loading={group.isLoading}
+                loading={group.isLoading || group.isLoadingMembers}
                 emptyMessage="This group is empty"
                 onClick={this.clickGroup}
                 removable={this.props.removable}

@@ -13,12 +13,12 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
         /**
          * Gets a value indicating whether metadata is currently loading.
          */
-        get isMetadataLoading(): boolean {
-            return this._isMetadataLoading;
+        get isLoadingMetadata(): boolean {
+            return this._isLoadingMetadata;
         }
 
         @observable
-        private _isMetadataLoading = false;
+        private _isLoadingMetadata = false;
 
         private _metadataPromise: Promise<void> | undefined = undefined;
 
@@ -36,16 +36,16 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
                 this._metadataPromise = newPromise;
 
                 runInAction(() => {
-                    this._isMetadataLoading = true;
+                    this._isLoadingMetadata = true;
                 });
                 newPromise.then((result) => {
                     runInAction(() => {
-                        this._isMetadataLoading = false;
+                        this._isLoadingMetadata = false;
                     });
                     return result;
                 }).catch((e) => {
                     runInAction(() => {
-                        this._isMetadataLoading = false;
+                        this._isLoadingMetadata = false;
                     });
                     throw e;
                 });
