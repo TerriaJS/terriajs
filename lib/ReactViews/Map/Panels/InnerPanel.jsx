@@ -45,16 +45,27 @@ const InnerPanel = createReactClass({
     },
 
     componentDidMount() {
+        this.escKeyListener = e => {
+            if (e.keyCode === 27) {
+                this.close(e);
+            }
+        };
         window.addEventListener('click', this.close);
+        window.addEventListener('keydown', this.escKeyListener, true);
         setTimeout(() => this.setState({isOpenCss: true}));
     },
 
     componentWillUnmount() {
-        window.removeEventListener('click', this.close);
+        this.cleanListeners();
     },
 
-    forceClose(e) {
+    cleanListeners() {
         window.removeEventListener('click', this.close);
+        window.removeEventListener('keydown', this.escKeyListener, true);
+    },
+
+    forceClose() {
+        this.cleanListeners();
 
         // If we're closing we want to immediately change the css class to cause it to animate shut, then when it's
         // finished actually stop it rendering with isOpen = false
@@ -70,7 +81,7 @@ const InnerPanel = createReactClass({
     close(e) {
         // Only close if this wasn't a click on an open/close button.
         if (!this.props.doNotCloseFlag || !e[this.props.doNotCloseFlag]) {
-            this.forceClose(e);
+            this.forceClose();
         }
     },
 

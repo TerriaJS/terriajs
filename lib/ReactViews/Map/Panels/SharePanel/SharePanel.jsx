@@ -2,7 +2,6 @@
 
 import { buildShareLink, buildShortShareLink, canShorten } from './BuildShareLink';
 import classNames from 'classnames';
-// import AutoClipboard from '../../../AutoClipboard/AutoClipboard';
 import Clipboard from '../../../Clipboard';
 import createReactClass from 'create-react-class';
 import defined from 'terriajs-cesium/Source/Core/defined';
@@ -172,6 +171,7 @@ const SharePanel = createReactClass({
 
         if (open) {
             this.updateForShortening();
+            this.props.viewState.shareModalIsVisible = true;
         }
     },
 
@@ -335,7 +335,9 @@ const SharePanel = createReactClass({
                     onOpenChanged={this.changeOpenState}
                     showDropdownAsModal={catalogShare}
                     modalWidth={modalWidth}
-                    smallScreen={this.props.viewState.useSmallScreenInterface}>
+                    smallScreen={this.props.viewState.useSmallScreenInterface}
+                    onDismissed={() => {if (catalogShare) this.props.viewState.shareModalIsVisible = false; }}
+                >
                     <If condition={this.state.isOpen}>
                         {this.renderContent()}
                     </If>

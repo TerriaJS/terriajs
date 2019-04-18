@@ -60,7 +60,7 @@
   top: 5px;
   right: 0px;
 
-  &:hover {
+  &:hover, &:focus {
     svg {
       fill: $color-primary;
     }
