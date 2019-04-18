@@ -1,5 +1,5 @@
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
+import DataSource from "terriajs-cesiums/Source/DataSources/DataSource";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import Constructor from "../Core/Constructor";
 import isDefined from "../Core/isDefined";
@@ -26,12 +26,6 @@ export default function ZoomableMixin<T extends Constructor<ZoomableModel>>(
                     this.rectangle.north
                 );
                 return this.zoomToRectangle(rect);
-            } else {
-                // TODO: zoom to a bounding rectangle
-                const dataSource = this.mapItems.find(isDataSource);
-                if (isDefined(dataSource)) {
-                    return this.terria.currentViewer.zoomTo(dataSource);
-                }
             }
         }
 
