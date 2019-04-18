@@ -163,7 +163,10 @@ export default class Leaflet implements GlobeOrMap {
                         }
                     } else {
                         // Zoom to the first item!
-                        that.zoomTo(target.mapItems[0], flightDurationSeconds);
+                        return that.zoomTo(
+                            target.mapItems[0],
+                            flightDurationSeconds
+                        );
                     }
                 } else {
                     extent = target.rectangle;

@@ -217,7 +217,7 @@ export default class Cesium implements GlobeOrMap {
 
                     if (target.mapItems.length > 0) {
                         // Zoom to the first item!
-                        that.zoomTo(target.mapItems[0], flightDurationSeconds);
+                        return that.zoomTo(target.mapItems[0], flightDurationSeconds);
                     }
 
                 } else if(defined(target.rectangle)) {
