@@ -31,6 +31,7 @@ import StratumFromTraits from './StratumFromTraits';
 import Terria from './Terria';
 import WebMapServiceCapabilities, { CapabilitiesLayer, CapabilitiesStyle, getRectangleFromLayer } from './WebMapServiceCapabilities';
 import { RectangleTraits } from '../Traits/MappableTraits';
+import { DiscreteTimeTraits } from '../Traits/DiscretelyTimeVaryingTraits';
 
 interface LegendUrl {
     url: string;
@@ -195,7 +196,65 @@ class GetCapabilitiesStratum extends LoadableStratum(WebMapServiceCatalogItemTra
         }
     }
 
-    @observable intervals: any;
+    @computed
+    get legendUrls(): StratumFromTraits<LegendTraits>[] {
+        const result: StratumFromTraits<LegendTraits>[] = [];
+
+        // TODO
+
+        // const availableStyles = this.availableStyles || [];
+        // this.capabilitiesLayers.forEach((layer, name) => {
+        //     const styles = availableStyles.find(candidate => candidate.layerName === name);
+        //     if (styles === undefined || styles.styles === undefined) {
+        //         return [];
+        //     }
+        //     const legendUrls = styles.styles.map(style => style.legendUrl).filter(legendUrl => legendUrl !== undefined).map(l => l!);
+        //     return legendUrls;
+        // });
+
+        return result;
+    }
+
+    @computed
+    get discreteTimes(): StratumFromTraits<DiscreteTimeTraits>[] | undefined {
+        const result: StratumFromTraits<DiscreteTimeTraits>[] = [];
+
+        for (let layer of this.capabilitiesLayers.values()) {
+            if (!layer) {
+                continue;
+            }
+            const dimensions = this.capabilities.getInheritedValues(layer, 'Dimension');
+            const timeDimension = dimensions.find(dimension => dimension.name.toLowerCase() === 'time');
+            if (!timeDimension) {
+                continue;
+            }
+
+            let extent: string = timeDimension;
+
+            // WMS 1.1.1 puts dimension values in an Extent element instead of directly in the Dimension element.
+            const extentElements = this.capabilities.getInheritedValues(layer, 'Extent');
+            const extentElement = extentElements.find(extent => extent.name.toLowerCase() === 'time');
+            if (extentElement) {
+                extent = extentElement;
+            }
+
+            if (!extent || !extent.split) {
+                continue;
+            }
+
+            const values = extent.split(',');
+            for (let i = 0; i < values.length; ++i) {
+                result.push({
+                    time: values[i],
+                    tag: undefined
+                });
+            }
+
+            // TODO: remove duplicates? sort the times?
+        }
+
+        return result;
+    }
 }
 
 class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemberMixin(CreateModel(WebMapServiceCatalogItemTraits)))) implements Mappable {
@@ -265,22 +324,6 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemb
         }
     }
 
-    @computed
-    get legendUrls(): StratumFromTraits<LegendTraits>[] {
-        const availableStyles = this.availableStyles || [];
-        function getLegendUrlsForLayer(layer: string) {
-            const styles = availableStyles.find(candidate => candidate.layerName === layer);
-            if (styles === undefined || styles.styles === undefined) {
-                return [];
-            }
-            const legendUrls = styles.styles.map(style => style.legendUrl).filter(legendUrl => legendUrl !== undefined).map(l => l!);
-            return legendUrls;
-        }
-
-        const a = this.layersArray.map(layer => getLegendUrlsForLayer(layer))
-        return ([] as StratumFromTraits<LegendTraits>[]).concat(...a);
-    }
-
     protected get defaultGetCapabilitiesUrl(): string | undefined {
         if (this.uri) {
             return this.uri.clone().setSearch({
@@ -319,19 +362,17 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemb
         }
 
         return result;
+    }
 
+    isPreviousTimeAvailable(): boolean {
+        return false;
+    }
 
-        // .filter(item => item !== undefined);
+    isNextTimeAvailable(): boolean {
+        return false;
     }
 
     @computed
-    // @autoUpdate(function(this: WebMapServiceCatalogItem, parts: ImageryParts) {
-    //     console.log('Updating ImageryParts');
-    //     parts.alpha = this.opacity!;
-    //     if (this.show) {
-    //         parts.show = this.show;
-    //     }
-    // })
     private get _currentImageryParts(): ImageryParts | undefined {
         trace();
         const imageryProvider = this._createImageryProvider(this.currentDiscreteTime || 'now');
@@ -369,12 +410,6 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemb
             return undefined;
         }
 
-        // return {
-        //     wms: true,
-        //     isGeoServer: this.isGeoServer || false,
-        //     alpha: 1.0
-        // };
-
         console.log(`Creating new ImageryProvider for ${time}`);
 
         return new WebMapServiceImageryProvider({
@@ -395,28 +430,3 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemb
 }
 
 export default WebMapServiceCatalogItem;
-
-// class Cesium {
-//     scene: any;
-
-//     constructor(terria) {
-//         autorun(() => {
-//             terria.nowViewing.items.forEach(workbenchItem => {
-//                 const mapItems = workbenchItem.mapItems;
-//                 if (!mapItems) {
-//                     return;
-//                 }
-
-//                 mapItems.forEach(mapItem => {
-//                     // TODO: Look up the type in a map and call the associated function.
-//                     //       That way the supported types of map items is extensible.
-//                     if (mapItem instanceof ImageryLayer) {
-//                         this.scene.imageryLayers.add(mapItem);
-//                     } else if (mapItem instanceof DataSource) {
-//                         this.scene.dataSources.add(mapItem);
-//                     }
-//                 });
-//             });
-//         });
-//     }
-// }

@@ -42,6 +42,24 @@ export interface CapabilitiesLatLonBoundingBox {
     readonly maxy: number;
 }
 
+export type CapabilitiesDimension = string & {
+    readonly name: string;
+    readonly units: string;
+    readonly unitSymbol?: string;
+    readonly default?: string;
+    readonly multipleValues?: boolean;
+    readonly nearestValue?: boolean;
+    readonly current?: boolean;
+}
+
+export type CapabilitiesExtent = string & {
+    readonly name: string;
+    readonly default?: string;
+    readonly multipleValues?: boolean;
+    readonly nearestValues?: boolean;
+    readonly current?: boolean;
+}
+
 export interface CapabilitiesLayer {
     readonly _parent?: CapabilitiesLayer;
     readonly Name?: string;
@@ -51,6 +69,10 @@ export interface CapabilitiesLayer {
     readonly LatLonBoundingBox?: CapabilitiesLatLonBoundingBox; // WMS 1.0.0-1.1.1
     readonly Style?: CapabilitiesStyle | ReadonlyArray<CapabilitiesStyle>;
     readonly Layer?: CapabilitiesLayer | ReadonlyArray<CapabilitiesLayer>;
+    readonly Dimension?: CapabilitiesDimension | ReadonlyArray<CapabilitiesDimension>;
+
+    // WMS 1.1.1 puts dimension values in an Extent element instead of directly in the Dimension element.
+    readonly Extent?: CapabilitiesExtent | ReadonlyArray<CapabilitiesExtent>;
 }
 
 export interface CapabilitiesService {
