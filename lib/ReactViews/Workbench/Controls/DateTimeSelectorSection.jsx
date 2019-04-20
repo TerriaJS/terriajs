@@ -13,6 +13,7 @@ import DateTimePicker from '../../BottomDock/Timeline/DateTimePicker';
 import {formatDateTime} from '../../BottomDock/Timeline/DateFormats';
 import Styles from './datetime-selector-section.scss';
 import Icon from '../../Icon';
+import CommonStrata from '../../../Models/CommonStrata';
 
 const DateTimeSelectorSection = observer(createReactClass({
     displayName: 'DateTimeSelectorSection',
@@ -25,27 +26,27 @@ const DateTimeSelectorSection = observer(createReactClass({
         const item = this.props.item;
 
         // Give this item focus on the timeline (if it is connected to the timeline), so that the user can select all available dates for this item.
-        item.terria.timeSeriesStack.promoteLayerToTop(item);
+        // item.terria.timeSeriesStack.promoteLayerToTop(item);
 
         // Set the time on the item, set it to use its own clock, update the imagery and repaint.
-        item.currentTime = JulianDate.fromDate(new Date(time));
-        // item.terria.currentViewer.notifyRepaintRequired();
+        item.setTrait(CommonStrata.user, 'currentTime', JulianDate.toIso8601(JulianDate.fromDate(time)));
+        item.terria.currentViewer.notifyRepaintRequired();
     },
 
     onTimelineButtonClicked() {
         const item = this.props.item;
         item.useOwnClock = !item.useOwnClock;
         item.useClock(); // Adds this item to the timeline.
-        // item.terria.currentViewer.notifyRepaintRequired();
+        item.terria.currentViewer.notifyRepaintRequired();
     },
 
     onPreviousButtonClicked() {
         const item = this.props.item;
 
         // Give this item focus on the timeline (if it is connected to the timeline), so that the user can select all available dates for this item.
-        item.terria.timeSeriesStack.promoteLayerToTop(item);
+        // item.terria.timeSeriesStack.promoteLayerToTop(item);
 
-        item.moveToPreviousTime();
+        item.moveToPreviousDiscreteTime(CommonStrata.user);
 
         // Repaint imagery on layers that don't subscribe to clock changes.
         // item.terria.currentViewer.notifyRepaintRequired();
@@ -55,9 +56,9 @@ const DateTimeSelectorSection = observer(createReactClass({
         const item = this.props.item;
 
         // Give this item focus on the timeline (if it is connected to the timeline), so that the user can select all available dates for this item.
-        item.terria.timeSeriesStack.promoteLayerToTop(item);
+        // item.terria.timeSeriesStack.promoteLayerToTop(item);
 
-        item.moveToNextTime();
+        item.moveToNextDiscreteTime(CommonStrata.user);
 
         // Repaint imagery on layers that don't subscribe to clock changes.
         // item.terria.currentViewer.notifyRepaintRequired();
@@ -65,23 +66,23 @@ const DateTimeSelectorSection = observer(createReactClass({
 
     render() {
         const item = this.props.item;
-        const discreteTimes = item.discreteTimes;
-        const discreteTime = undefined; // TODO
+        const discreteTimes = item.discreteTimesAsSortedJulianDates;
 
         if (!defined(discreteTimes)) {
             return null;
         }
 
-        const jsDates = discreteTimes.map(timeTrait => JulianDate.toDate(JulianDate.fromIso8601(timeTrait.time)));
+        const discreteTime = item.currentDiscreteJulianDate === undefined ? undefined : JulianDate.toDate(item.currentDiscreteJulianDate);
+        const jsDates = discreteTimes.map(timeTrait => JulianDate.toDate(timeTrait.time));
 
         return (
             <div className={Styles.datetimeSelector}>
                 <div className={Styles.title}>Time:</div>
                 <div className={Styles.datetimeSelectorInner}>
                   <div className={Styles.datetimeAndPicker}>
-                      <button className={Styles.datetimePrevious} disabled={!item.isPreviousTimeAvailable()} onClick={this.onPreviousButtonClicked} title='Previous time'><Icon glyph={Icon.GLYPHS.previous}/></button>
+                      <button className={Styles.datetimePrevious} disabled={!item.isPreviousDiscreteTimeAvailable} onClick={this.onPreviousButtonClicked} title='Previous time'><Icon glyph={Icon.GLYPHS.previous}/></button>
                       <span className={Styles.currentDate}>{defined(discreteTime) ? formatDateTime(discreteTime) : "Currently out of range."}</span>
-                      <button className={Styles.datetimeNext} disabled={!item.isNextTimeAvailable()} onClick={this.onNextButtonClicked} title='Next time'><Icon glyph={Icon.GLYPHS.next}/></button>
+                      <button className={Styles.datetimeNext} disabled={!item.isNextDiscreteTimeAvailable} onClick={this.onNextButtonClicked} title='Next time'><Icon glyph={Icon.GLYPHS.next}/></button>
                   </div>
                   <div className={Styles.picker} title='Select a time'>
                       <DateTimePicker currentDate={item.clampedDiscreteTime} dates={jsDates} onChange={this.changeDateTime} openDirection='down'/>

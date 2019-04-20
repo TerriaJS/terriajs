@@ -32,6 +32,7 @@ import Terria from './Terria';
 import WebMapServiceCapabilities, { CapabilitiesLayer, CapabilitiesStyle, getRectangleFromLayer } from './WebMapServiceCapabilities';
 import { RectangleTraits } from '../Traits/MappableTraits';
 import { DiscreteTimeTraits } from '../Traits/DiscretelyTimeVaryingTraits';
+import DiscretelyTimeVaryingMixin from '../ModelMixins/DiscretelyTimeVaryingMixin';
 
 interface LegendUrl {
     url: string;
@@ -257,7 +258,7 @@ class GetCapabilitiesStratum extends LoadableStratum(WebMapServiceCatalogItemTra
     }
 }
 
-class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemberMixin(CreateModel(WebMapServiceCatalogItemTraits)))) implements Mappable {
+class WebMapServiceCatalogItem extends DiscretelyTimeVaryingMixin(GetCapabilitiesMixin(UrlMixin(CatalogMemberMixin(CreateModel(WebMapServiceCatalogItemTraits))))) implements Mappable {
     /**
      * The collection of strings that indicate an Abstract property should be ignored.  If these strings occur anywhere
      * in the Abstract, the Abstract will not be used.  This makes it easy to filter out placeholder data like
@@ -362,14 +363,6 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemb
         }
 
         return result;
-    }
-
-    isPreviousTimeAvailable(): boolean {
-        return false;
-    }
-
-    isNextTimeAvailable(): boolean {
-        return false;
     }
 
     @computed
