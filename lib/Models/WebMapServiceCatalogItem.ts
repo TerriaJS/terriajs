@@ -33,6 +33,7 @@ import WebMapServiceCapabilities, { CapabilitiesLayer, CapabilitiesStyle, getRec
 import { RectangleTraits } from '../Traits/MappableTraits';
 import { DiscreteTimeTraits } from '../Traits/DiscretelyTimeVaryingTraits';
 import DiscretelyTimeVaryingMixin from '../ModelMixins/DiscretelyTimeVaryingMixin';
+import createTransformerAllowUndefined from '../Core/createTransformerForUndefined';
 
 interface LegendUrl {
     url: string;
@@ -387,7 +388,7 @@ class WebMapServiceCatalogItem extends DiscretelyTimeVaryingMixin(GetCapabilitie
         }
     }
 
-    private _createImageryProvider = defaultToNoTime(createTransformer((time: string | NoTime): Cesium.WebMapServiceImageryProvider | undefined => {
+    private _createImageryProvider = createTransformerAllowUndefined((time: string | undefined): Cesium.WebMapServiceImageryProvider | undefined => {
         // Don't show anything on the map until GetCapabilities finishes loading.
         if (this.isLoadingMetadata) {
             return undefined;
@@ -399,7 +400,7 @@ class WebMapServiceCatalogItem extends DiscretelyTimeVaryingMixin(GetCapabilitie
             ...WebMapServiceCatalogItem.defaultParameters
         };
 
-        if (!isNoTime(time)) {
+        if (time !== undefined) {
             parameters.time = time;
         }
 
@@ -416,24 +417,7 @@ class WebMapServiceCatalogItem extends DiscretelyTimeVaryingMixin(GetCapabilitie
             maximumLevel: 20,
             rectangle: this.rectangle ? Rectangle.fromDegrees(this.rectangle.west, this.rectangle.south, this.rectangle.east, this.rectangle.north) : undefined
         });
-    }));
-}
-
-// All this NoTime stuff is required before MobX's createTransformer can't handle transforming `undefined`.
-interface NoTime {
-    noTime: true
-};
-
-function isNoTime(x: string | NoTime): x is NoTime {
-    return (<any>x).noTime === true;
-}
-
-const noTime: NoTime = { noTime: true };
-
-function defaultToNoTime(f: (time: string | NoTime) => Cesium.WebMapServiceImageryProvider | undefined) {
-    return function(time: string | undefined) {
-        return f(time === undefined ? noTime : time);
-    }
+    });
 }
 
 export default WebMapServiceCatalogItem;
