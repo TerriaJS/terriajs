@@ -33,7 +33,7 @@ import WebMapServiceCapabilities, { CapabilitiesLayer, CapabilitiesStyle, getRec
 import { RectangleTraits } from '../Traits/MappableTraits';
 import { DiscreteTimeTraits } from '../Traits/DiscretelyTimeVaryingTraits';
 import DiscretelyTimeVaryingMixin from '../ModelMixins/DiscretelyTimeVaryingMixin';
-import createTransformerAllowUndefined from '../Core/createTransformerForUndefined';
+import createTransformerAllowUndefined from '../Core/createTransformerAllowUndefined';
 
 interface LegendUrl {
     url: string;
