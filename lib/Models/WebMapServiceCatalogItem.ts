@@ -338,16 +338,6 @@ class WebMapServiceCatalogItem extends DiscretelyTimeVaryingMixin(GetCapabilitie
     }
 
     @computed
-    get currentDiscreteTime(): string | undefined {
-        return undefined; // TODO
-    }
-
-    @computed
-    get nextDiscreteTime(): string | undefined {
-        return undefined; // TODO
-    }
-
-    @computed
     get mapItems() {
         trace();
         const result = [];
@@ -368,7 +358,7 @@ class WebMapServiceCatalogItem extends DiscretelyTimeVaryingMixin(GetCapabilitie
     @computed
     private get _currentImageryParts(): ImageryParts | undefined {
         trace();
-        const imageryProvider = this._createImageryProvider(this.currentDiscreteTime || 'now');
+        const imageryProvider = this._createImageryProvider(this.currentDiscreteTimeTag);
         if (imageryProvider === undefined) {
             return undefined;
         }
@@ -382,8 +372,8 @@ class WebMapServiceCatalogItem extends DiscretelyTimeVaryingMixin(GetCapabilitie
     @computed
     private get _nextImageryParts(): ImageryParts | undefined {
         trace();
-        if (this.nextDiscreteTime) {
-            const imageryProvider = this._createImageryProvider(this.nextDiscreteTime);
+        if (this.nextDiscreteTimeTag) {
+            const imageryProvider = this._createImageryProvider(this.nextDiscreteTimeTag);
             if (imageryProvider === undefined) {
                 return undefined;
             }
@@ -397,7 +387,7 @@ class WebMapServiceCatalogItem extends DiscretelyTimeVaryingMixin(GetCapabilitie
         }
     }
 
-    private _createImageryProvider = createTransformer((time: string): Cesium.WebMapServiceImageryProvider | undefined => {
+    private _createImageryProvider = defaultToNoTime(createTransformer((time: string | NoTime): Cesium.WebMapServiceImageryProvider | undefined => {
         // Don't show anything on the map until GetCapabilities finishes loading.
         if (this.isLoadingMetadata) {
             return undefined;
@@ -405,21 +395,45 @@ class WebMapServiceCatalogItem extends DiscretelyTimeVaryingMixin(GetCapabilitie
 
         console.log(`Creating new ImageryProvider for ${time}`);
 
+        const parameters: any = {
+            ...WebMapServiceCatalogItem.defaultParameters
+        };
+
+        if (!isNoTime(time)) {
+            parameters.time = time;
+        }
+
         return new WebMapServiceImageryProvider({
             url: this.url || '',
             // layers: this.layers || '',
             // For testing prefetching
-            layers: time !== 'now' ? time : (this.layers || ''),
+            layers: this.layers || '',
             // getFeatureInfoFormats: this.getFeatureInfoFormats,
             // parameters: parameters,
-            parameters: WebMapServiceCatalogItem.defaultParameters,
+            parameters: parameters,
             // getFeatureInfoParameters: parameters,
             tilingScheme: /*defined(this.tilingScheme) ? this.tilingScheme :*/ new WebMercatorTilingScheme(),
             maximumLevel: 20,
             rectangle: this.rectangle ? Rectangle.fromDegrees(this.rectangle.west, this.rectangle.south, this.rectangle.east, this.rectangle.north) : undefined
         });
-    })
+    }));
+}
 
+// All this NoTime stuff is required before MobX's createTransformer can't handle transforming `undefined`.
+interface NoTime {
+    noTime: true
+};
+
+function isNoTime(x: string | NoTime): x is NoTime {
+    return (<any>x).noTime === true;
+}
+
+const noTime: NoTime = { noTime: true };
+
+function defaultToNoTime(f: (time: string | NoTime) => Cesium.WebMapServiceImageryProvider | undefined) {
+    return function(time: string | undefined) {
+        return f(time === undefined ? noTime : time);
+    }
 }
 
 export default WebMapServiceCatalogItem;
