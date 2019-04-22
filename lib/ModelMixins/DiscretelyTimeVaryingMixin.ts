@@ -1,8 +1,9 @@
-import { computed, action } from "mobx";
+import { action, computed } from "mobx";
 import binarySearch from "terriajs-cesium/Source/Core/binarySearch";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
+import TerriaError from '../Core/TerriaError';
 import Model from "../Models/Model";
 import DiscretelyTimeVaryingTraits from "../Traits/DiscretelyTimeVaryingTraits";
 
@@ -48,7 +49,7 @@ export default function DiscretelyTimeVaryingMixin<T extends Constructor<Discret
             }
 
             const discreteTimes = this.discreteTimesAsSortedJulianDates;
-            if (discreteTimes === undefined) {
+            if (discreteTimes === undefined || discreteTimes.length === 0) {
                 return undefined;
             }
 
@@ -128,6 +129,45 @@ export default function DiscretelyTimeVaryingMixin<T extends Constructor<Discret
         @computed
         get isNextDiscreteTimeAvailable(): boolean {
             return this.nextDiscreteTimeIndex !== undefined;
+        }
+
+        @computed
+        get currentTime() {
+            const time = super.currentTime;
+            if (time === undefined) {
+                if (this.initialTime === 'now') {
+                    return JulianDate.toIso8601(JulianDate.now());
+                } else if (this.initialTime === 'start') {
+                    return this.startTime;
+                } else if (this.initialTime === 'stop') {
+                    return this.stopTime;
+                } else {
+                    throw new TerriaError({
+                        sender: this,
+                        title: 'Invalid initialTime value',
+                        message: 'The `initialTime` property has an invalid value: `' + this.initialTime + '`.'
+                    });
+                }
+            }
+            return time;
+        }
+
+        @computed
+        get startTime() {
+            const time = super.startTime;
+            if (time === undefined && this.discreteTimesAsSortedJulianDates && this.discreteTimesAsSortedJulianDates.length > 0) {
+                return JulianDate.toIso8601(this.discreteTimesAsSortedJulianDates[0].time);
+            }
+            return time;
+        }
+
+        @computed
+        get stopTime() {
+            const time = super.stopTime;
+            if (time === undefined && this.discreteTimesAsSortedJulianDates && this.discreteTimesAsSortedJulianDates.length > 0) {
+                return JulianDate.toIso8601(this.discreteTimesAsSortedJulianDates[this.discreteTimesAsSortedJulianDates.length - 1].time);
+            }
+            return time;
         }
 
         @action
