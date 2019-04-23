@@ -31,6 +31,9 @@ import StratumFromTraits from './StratumFromTraits';
 import Terria from './Terria';
 import WebMapServiceCapabilities, { CapabilitiesLayer, CapabilitiesStyle, getRectangleFromLayer } from './WebMapServiceCapabilities';
 import { RectangleTraits } from '../Traits/MappableTraits';
+import DiscretelyTimeVaryingMixin from '../ModelMixins/DiscretelyTimeVaryingMixin';
+import createTransformerAllowUndefined from '../Core/createTransformerAllowUndefined';
+import DiscreteTimeTraits from '../Traits/DiscreteTimeTraits';
 
 interface LegendUrl {
     url: string;
@@ -195,10 +198,47 @@ class GetCapabilitiesStratum extends LoadableStratum(WebMapServiceCatalogItemTra
         }
     }
 
-    @observable intervals: any;
+    @computed
+    get discreteTimes(): StratumFromTraits<DiscreteTimeTraits>[] | undefined {
+        const result: StratumFromTraits<DiscreteTimeTraits>[] = [];
+
+        for (let layer of this.capabilitiesLayers.values()) {
+            if (!layer) {
+                continue;
+            }
+            const dimensions = this.capabilities.getInheritedValues(layer, 'Dimension');
+            const timeDimension = dimensions.find(dimension => dimension.name.toLowerCase() === 'time');
+            if (!timeDimension) {
+                continue;
+            }
+
+            let extent: string = timeDimension;
+
+            // WMS 1.1.1 puts dimension values in an Extent element instead of directly in the Dimension element.
+            const extentElements = this.capabilities.getInheritedValues(layer, 'Extent');
+            const extentElement = extentElements.find(extent => extent.name.toLowerCase() === 'time');
+            if (extentElement) {
+                extent = extentElement;
+            }
+
+            if (!extent || !extent.split) {
+                continue;
+            }
+
+            const values = extent.split(',');
+            for (let i = 0; i < values.length; ++i) {
+                result.push({
+                    time: values[i],
+                    tag: undefined
+                });
+            }
+        }
+
+        return result;
+    }
 }
 
-class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemberMixin(CreateModel(WebMapServiceCatalogItemTraits)))) implements Mappable {
+class WebMapServiceCatalogItem extends DiscretelyTimeVaryingMixin(GetCapabilitiesMixin(UrlMixin(CatalogMemberMixin(CreateModel(WebMapServiceCatalogItemTraits))))) implements Mappable {
     /**
      * The collection of strings that indicate an Abstract property should be ignored.  If these strings occur anywhere
      * in the Abstract, the Abstract will not be used.  This makes it easy to filter out placeholder data like
@@ -266,19 +306,44 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemb
     }
 
     @computed
+    get stylesArray(): ReadonlyArray<string> {
+        if (Array.isArray(this.styles)) {
+            return this.styles;
+        } else if (this.styles) {
+            return this.styles.split(',');
+        } else {
+            return [];
+        }
+    }
+
+    @computed
     get legendUrls(): StratumFromTraits<LegendTraits>[] {
         const availableStyles = this.availableStyles || [];
-        function getLegendUrlsForLayer(layer: string) {
-            const styles = availableStyles.find(candidate => candidate.layerName === layer);
-            if (styles === undefined || styles.styles === undefined) {
-                return [];
+        const layers = this.layersArray;
+        const styles = this.stylesArray;
+
+        const result: StratumFromTraits<LegendTraits>[] = [];
+
+        for (let i = 0; i < layers.length; ++i) {
+            const layer = layers[i];
+            const style = i < styles.length ? styles[i] : undefined;
+
+            const layerAvailableStyles = availableStyles.find(candidate => candidate.layerName === layer);
+            if (layerAvailableStyles !== undefined && layerAvailableStyles.styles !== undefined) {
+                // Use the first style if none is explicitly specified.
+                // Note that the WMS 1.3.0 spec (section 7.3.3.4) explicitly says we can't assume this,
+                // but because the server has no other way of indicating the default style, let's hope that
+                // sanity prevails.
+                const layerStyle = style === undefined
+                    ? layerAvailableStyles.styles[0]
+                    : layerAvailableStyles.styles.find(candidate => candidate.name === style);
+                if (layerStyle !== undefined && layerStyle.legendUrl !== undefined) {
+                    result.push(layerStyle.legendUrl);
+                }
             }
-            const legendUrls = styles.styles.map(style => style.legendUrl).filter(legendUrl => legendUrl !== undefined).map(l => l!);
-            return legendUrls;
         }
 
-        const a = this.layersArray.map(layer => getLegendUrlsForLayer(layer))
-        return ([] as StratumFromTraits<LegendTraits>[]).concat(...a);
+        return result;
     }
 
     protected get defaultGetCapabilitiesUrl(): string | undefined {
@@ -291,16 +356,6 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemb
         } else {
             return undefined;
         }
-    }
-
-    @computed
-    get currentDiscreteTime(): string | undefined {
-        return undefined; // TODO
-    }
-
-    @computed
-    get nextDiscreteTime(): string | undefined {
-        return undefined; // TODO
     }
 
     @computed
@@ -319,22 +374,12 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemb
         }
 
         return result;
-
-
-        // .filter(item => item !== undefined);
     }
 
     @computed
-    // @autoUpdate(function(this: WebMapServiceCatalogItem, parts: ImageryParts) {
-    //     console.log('Updating ImageryParts');
-    //     parts.alpha = this.opacity!;
-    //     if (this.show) {
-    //         parts.show = this.show;
-    //     }
-    // })
     private get _currentImageryParts(): ImageryParts | undefined {
         trace();
-        const imageryProvider = this._createImageryProvider(this.currentDiscreteTime || 'now');
+        const imageryProvider = this._createImageryProvider(this.currentDiscreteTimeTag);
         if (imageryProvider === undefined) {
             return undefined;
         }
@@ -348,8 +393,8 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemb
     @computed
     private get _nextImageryParts(): ImageryParts | undefined {
         trace();
-        if (this.nextDiscreteTime) {
-            const imageryProvider = this._createImageryProvider(this.nextDiscreteTime);
+        if (this.nextDiscreteTimeTag) {
+            const imageryProvider = this._createImageryProvider(this.nextDiscreteTimeTag);
             if (imageryProvider === undefined) {
                 return undefined;
             }
@@ -363,60 +408,36 @@ class WebMapServiceCatalogItem extends GetCapabilitiesMixin(UrlMixin(CatalogMemb
         }
     }
 
-    private _createImageryProvider = createTransformer((time: string): Cesium.WebMapServiceImageryProvider | undefined => {
+    private _createImageryProvider = createTransformerAllowUndefined((time: string | undefined): Cesium.WebMapServiceImageryProvider | undefined => {
         // Don't show anything on the map until GetCapabilities finishes loading.
         if (this.isLoadingMetadata) {
             return undefined;
         }
 
-        // return {
-        //     wms: true,
-        //     isGeoServer: this.isGeoServer || false,
-        //     alpha: 1.0
-        // };
+        console.log(`Creating new ImageryProvider for time ${time}`);
 
-        console.log(`Creating new ImageryProvider for ${time}`);
+        const parameters: any = {
+            ...WebMapServiceCatalogItem.defaultParameters,
+        };
+
+        if (time !== undefined) {
+            parameters.time = time;
+        }
 
         return new WebMapServiceImageryProvider({
             url: this.url || '',
             // layers: this.layers || '',
             // For testing prefetching
-            layers: time !== 'now' ? time : (this.layers || ''),
+            layers: this.layers || '',
             // getFeatureInfoFormats: this.getFeatureInfoFormats,
             // parameters: parameters,
-            parameters: WebMapServiceCatalogItem.defaultParameters,
+            parameters: parameters,
             // getFeatureInfoParameters: parameters,
             tilingScheme: /*defined(this.tilingScheme) ? this.tilingScheme :*/ new WebMercatorTilingScheme(),
             maximumLevel: 20,
             rectangle: this.rectangle ? Rectangle.fromDegrees(this.rectangle.west, this.rectangle.south, this.rectangle.east, this.rectangle.north) : undefined
         });
-    })
-
+    });
 }
 
 export default WebMapServiceCatalogItem;
-
-// class Cesium {
-//     scene: any;
-
-//     constructor(terria) {
-//         autorun(() => {
-//             terria.nowViewing.items.forEach(workbenchItem => {
-//                 const mapItems = workbenchItem.mapItems;
-//                 if (!mapItems) {
-//                     return;
-//                 }
-
-//                 mapItems.forEach(mapItem => {
-//                     // TODO: Look up the type in a map and call the associated function.
-//                     //       That way the supported types of map items is extensible.
-//                     if (mapItem instanceof ImageryLayer) {
-//                         this.scene.imageryLayers.add(mapItem);
-//                     } else if (mapItem instanceof DataSource) {
-//                         this.scene.dataSources.add(mapItem);
-//                     }
-//                 });
-//             });
-//         });
-//     }
-// }

@@ -49,16 +49,18 @@ class GetCapabilitiesStratum extends LoadableStratum(WebMapServiceCatalogGroupTr
         if (this.catalogGroup.flatten) {
             return this.capabilities.allLayers;
         } else {
-            const rootLayers = this.capabilities.rootLayers;
-            if (rootLayers.length === 1) {
-                const subLayers = rootLayers[0].Layer;
-                if (subLayers === undefined) {
-                    return [];
+            let rootLayers: readonly CapabilitiesLayer[] = this.capabilities.rootLayers;
+            while (rootLayers && rootLayers.length === 1 && rootLayers[0].Name === undefined) {
+                const subLayer: CapabilitiesLayer | readonly CapabilitiesLayer[] | undefined = rootLayers[0].Layer;
+                if (subLayer && isReadOnlyArray(subLayer)) {
+                    rootLayers = subLayer;
+                } else if (subLayer) {
+                    rootLayers = [subLayer];
+                } else {
+                    break;
                 }
-                return isReadOnlyArray(subLayers) ? subLayers : [subLayers];
-            } else {
-                return rootLayers;
             }
+            return rootLayers;
         }
     }
 

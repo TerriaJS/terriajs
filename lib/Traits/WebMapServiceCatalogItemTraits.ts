@@ -8,6 +8,7 @@ import primitiveTrait from './primitiveTrait';
 import RasterLayerTraits from './RasterLayerTraits';
 import UrlTraits from './UrlTraits';
 import MappableTraits from './MappableTraits';
+import DiscretelyTimeVaryingTraits from './DiscretelyTimeVaryingTraits';
 
 export class LegendTraits extends ModelTraits {
     @primitiveTrait({
@@ -73,6 +74,7 @@ export class WebMapServiceAvailableLayerStylesTraits extends ModelTraits {
 }
 
 export default class WebMapServiceCatalogItemTraits extends mixTraits(
+    DiscretelyTimeVaryingTraits,
     GetCapabilitiesTraits,
     RasterLayerTraits,
     UrlTraits,
@@ -88,17 +90,17 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
 
     @primitiveTrait({
         type: 'string',
-        name: 'Intervals',
-        description: 'Intervals'
-    })
-    intervals?: any; // TODO
-
-    @primitiveTrait({
-        type: 'string',
         name: 'Layer(s)',
         description: 'The layer or layers to display.'
     })
     layers?: string;
+
+    @primitiveTrait({
+        type: 'string',
+        name: 'Style(s)',
+        description: 'The styles to use with each of the `Layer(s)`.'
+    })
+    styles?: string;
 
     @objectArrayTrait({
         type: WebMapServiceAvailableLayerStylesTraits,
@@ -107,4 +109,12 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
         idProperty: 'layerName'
     })
     availableStyles?: WebMapServiceAvailableLayerStylesTraits[];
+
+    @objectArrayTrait({
+        name: 'Legend URLs',
+        description: 'The legends to display on the workbench.',
+        type: LegendTraits,
+        idProperty: "url"
+    })
+    legendUrls?: LegendTraits[];
 }
