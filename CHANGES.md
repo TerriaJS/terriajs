@@ -4,7 +4,6 @@ Change Log
 ### v7.2.0
 
 * Added `GltfCatalogItem` for displaying [glTF](https://www.khronos.org/gltf/) models on the 3D scene.
-* Replace `getUniqueValues` with `lodash.uniq`
 * Added `hideLayerAfterMinScaleDenominator` property to `WebMapServiceCatalogItem`. When true, TerriaJS will show a message and display nothing rather than silently show a scaled-up version of the layer when the user zooms in past the layer's advertised `MinScaleDenominator`.
 * Added `GeoJsonParameterEditor`.
 * Fixed a bug that caused some chart "Expand" options to be hidden.
