@@ -12,7 +12,9 @@
     border:none;
     &:read-only:not(select) {
       background: $grey-lighter2;
-      flex-shrink: 3;
+      width: calc(100% - 80px);
+      padding-left: 1rem;
+      padding-right: 0;
     }
   }
 }
