@@ -18,8 +18,8 @@ import ViewerMode from './ViewerMode';
 import Workbench from './Workbench';
 import PickedFeatures from '../Map/PickedFeatures';
 import Mappable from './Mappable';
-
-const Clock = require('./Clock');
+import TimeSeriesStack from './TimeSeriesStack';
+import Clock from 'terriajs-cesium/Source/Core/Clock';
 
 interface ConfigParameters {
     defaultMaximumShownFeatureInfos?: number;
@@ -65,6 +65,11 @@ export default class Terria {
      * to `ConsoleAnalytics`.
      */
     readonly analytics: Analytics;
+
+    /**
+     * Gets the stack of layers active on the timeline.
+     */
+    readonly timeSeriesStack = new TimeSeriesStack(this.clock);
 
     @observable
     viewerMode = ViewerMode.CesiumTerrain;

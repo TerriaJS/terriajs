@@ -7,6 +7,7 @@ import TerriaViewerWrapper from '../Map/TerriaViewerWrapper';
 import FeedbackButton from '../Feedback/FeedbackButton';
 import ObserveModelMixin from '../ObserveModelMixin';
 import FeatureDetection from 'terriajs-cesium/Source/Core/FeatureDetection';
+import BottomDock from '../BottomDock/BottomDock';
 import classNames from "classnames";
 
 import Styles from './map-column.scss';
@@ -116,8 +117,8 @@ const MapColumn = createReactClass({
                 <If condition={!this.props.viewState.hideMapUi()}>
                     <div className={Styles.mapRow}>
                         <div className={Styles.mapCell}>
-                            {/* <BottomDock terria={this.props.terria} viewState={this.props.viewState}
-                                        domElementRef={this.addBottomDock}/> */}
+                            <BottomDock terria={this.props.terria} viewState={this.props.viewState}
+                                        domElementRef={this.addBottomDock}/>
                         </div>
                     </div>
                 </If>

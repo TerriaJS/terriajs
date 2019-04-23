@@ -10,7 +10,7 @@ export default class TimeVaryingTraits extends ModelTraits {
     currentTime?: string;
 
     @primitiveTrait({
-        name: 'Initial Time',
+        name: 'Initial Time Source',
         description: 'The initial time to use if `Current Time` is not specified. Valid values are:\n\n' +
                      '  * `start` - the dataset\'s start time\n' +
                      '  * `stop` - the dataset\'s stop time\n' +
@@ -18,7 +18,7 @@ export default class TimeVaryingTraits extends ModelTraits {
                      'This value is ignored if `Current Time` is specified',
         type: 'string'
     })
-    initialTime: string = 'now';
+    initialTimeSource: string = 'now';
 
     @primitiveTrait({
         name: 'Start Time',
