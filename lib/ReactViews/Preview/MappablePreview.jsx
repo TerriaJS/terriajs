@@ -57,6 +57,7 @@ const MappablePreview = createReactClass({
                         <div className={Styles.shareLinkWrapper}>
                             <SharePanel
                                 catalogShare
+                                catalogShareWithoutText
                                 modalWidth={this.props.widthFromMeasureWidthHOC}
                                 terria={this.props.terria}
                                 viewState={this.props.viewState} />

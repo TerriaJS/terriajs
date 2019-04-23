@@ -66,7 +66,9 @@ export default class Clipboard extends React.Component {
                         Copy
                     </button>
                 </div>
-                {this.state.tooltip && <div className={Styles.tooltipWrapper}>
+                {this.state.tooltip && <div className={classNames(Styles.tooltipWrapper, {
+                    [Styles.tooltipWrapperLightBg]: this.props.lightBackground,
+                })}>
                     <Icon glyph={this.state.success ? Icon.GLYPHS.selected : Icon.GLYPHS.close} />
                     <span className={Styles.tooltipText}>{this.state.tooltip}</span>
                 </div>}
@@ -78,4 +80,5 @@ export default class Clipboard extends React.Component {
 Clipboard.propTypes = {
     id: PropTypes.string.isRequired,
     source: PropTypes.object.isRequired,
+    lightBackground: PropTypes.bool,
 };

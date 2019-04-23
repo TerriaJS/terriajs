@@ -9,17 +9,40 @@
   float:right;
 }
 
+.catalog-share-inner {
+  background: $grey-lightest;
+  color: $text-darker;  
+}
+
 .dropdown-inner {
   width: $share-panel-width;
   @include transform-origin(50%, top);
 }
 
-.catalog-share-inner {
-  margin: 0 10px 10px;
-}
-
 .heading-label {
 
+}
+
+.btn--catalogShare {
+  font-size: $font-size-data-preview;
+  background: transparent;
+  color: $color-primary;
+  box-shadow:none;
+  svg {
+    fill: $color-primary;
+  }
+  &:hover, &:focus {
+    color: $text-light;
+  }
+}
+.btn--withoutText {
+  svg {
+    fill: $text-darker;
+  }
+  // not in design but should give life to the button?
+  &:hover, &:focus {
+    color: $color-primary;
+  }
 }
 
 .btn--wrapper {

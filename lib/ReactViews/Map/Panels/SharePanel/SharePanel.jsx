@@ -26,6 +26,7 @@ const SharePanel = createReactClass({
         advancedIsOpen: PropTypes.bool,
         shortenUrls: PropTypes.bool,
         catalogShare: PropTypes.bool,
+        catalogShareWithoutText: PropTypes.bool,
         modalWidth: PropTypes.number,
         viewState: PropTypes.object.isRequired
     },
@@ -250,7 +251,7 @@ const SharePanel = createReactClass({
                 </When>
                 <Otherwise>
                     <div className={Styles.clipboardForCatalogShare}>
-                        <Clipboard text={this.state.shareUrl} source={shareUrlTextBox} id='share-url' />
+                        <Clipboard lightBackground text={this.state.shareUrl} source={shareUrlTextBox} id='share-url' />
                     </div>
                 </Otherwise>
             </Choose>
@@ -314,11 +315,16 @@ const SharePanel = createReactClass({
     },
 
     render() {
-        const { catalogShare, modalWidth } = this.props;
+        const { catalogShare, catalogShareWithoutText, modalWidth } = this.props;
         const dropdownTheme = {
-            btn: Styles.btnShare,
+            btn: classNames({
+                [Styles.btnCatalogShare]: catalogShare,
+                [Styles.btnWithoutText]: catalogShareWithoutText,
+            }),
             outer: classNames(Styles.sharePanel, {[Styles.catalogShare]: catalogShare}),
-            inner: Styles.dropdownInner,
+            inner: classNames(Styles.dropdownInner, {
+                [Styles.catalogShareInner]: catalogShare,
+            }),
             icon: 'share'
         };
 
@@ -328,7 +334,7 @@ const SharePanel = createReactClass({
         return (
             <div>
                 <MenuPanel theme={dropdownTheme}
-                    btnText={btnText}
+                    btnText={catalogShareWithoutText ? null : btnText}
                     viewState={this.props.viewState}
                     btnTitle={btnTitle}
                     isOpen={this.state.isOpen}

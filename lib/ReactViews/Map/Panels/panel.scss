@@ -22,8 +22,8 @@
   box-shadow: $box-shadow;
   z-index: 20;
   border-radius: $radius-small;
-  background: $grey-lightest;
-  color: $text-darker;
+  background: $dark;
+  color: $text-light;
   border: $border-style;
   max-width: calc(100vw - 10px);
 
@@ -120,7 +120,7 @@
 
   svg{
     fill: #9CA1AA;
-    margin: 0 3px 0 4px;
+    margin: 0 3px 1px 4px;
     vertical-align: bottom;
 
   }
