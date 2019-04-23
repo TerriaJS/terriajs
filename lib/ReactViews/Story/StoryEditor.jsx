@@ -17,7 +17,8 @@ export default class StoryEditor extends React.Component {
     this.keys = {
       ctrl: false,
       enter: false
-    }
+    };
+
     this.saveStory = this.saveStory.bind(this);
     this.cancelEditing = this.cancelEditing.bind(this);
     this.updateTitle = this.updateTitle.bind(this);
