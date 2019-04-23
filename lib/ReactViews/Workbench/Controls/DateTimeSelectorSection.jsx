@@ -68,7 +68,7 @@ const DateTimeSelectorSection = observer(createReactClass({
         const item = this.props.item;
         const discreteTimes = item.discreteTimesAsSortedJulianDates;
 
-        if (!defined(discreteTimes)) {
+        if (!defined(discreteTimes) || discreteTimes.length === 0) {
             return null;
         }
 

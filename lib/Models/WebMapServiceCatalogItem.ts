@@ -199,25 +199,6 @@ class GetCapabilitiesStratum extends LoadableStratum(WebMapServiceCatalogItemTra
     }
 
     @computed
-    get legendUrls(): StratumFromTraits<LegendTraits>[] {
-        const result: StratumFromTraits<LegendTraits>[] = [];
-
-        // TODO
-
-        // const availableStyles = this.availableStyles || [];
-        // this.capabilitiesLayers.forEach((layer, name) => {
-        //     const styles = availableStyles.find(candidate => candidate.layerName === name);
-        //     if (styles === undefined || styles.styles === undefined) {
-        //         return [];
-        //     }
-        //     const legendUrls = styles.styles.map(style => style.legendUrl).filter(legendUrl => legendUrl !== undefined).map(l => l!);
-        //     return legendUrls;
-        // });
-
-        return result;
-    }
-
-    @computed
     get discreteTimes(): StratumFromTraits<DiscreteTimeTraits>[] | undefined {
         const result: StratumFromTraits<DiscreteTimeTraits>[] = [];
 
@@ -324,6 +305,47 @@ class WebMapServiceCatalogItem extends DiscretelyTimeVaryingMixin(GetCapabilitie
         } else {
             return [];
         }
+    }
+
+    @computed
+    get stylesArray(): ReadonlyArray<string> {
+        if (Array.isArray(this.styles)) {
+            return this.styles;
+        } else if (this.styles) {
+            return this.styles.split(',');
+        } else {
+            return [];
+        }
+    }
+
+    @computed
+    get legendUrls(): StratumFromTraits<LegendTraits>[] {
+        const availableStyles = this.availableStyles || [];
+        const layers = this.layersArray;
+        const styles = this.stylesArray;
+
+        const result: StratumFromTraits<LegendTraits>[] = [];
+
+        for (let i = 0; i < layers.length; ++i) {
+            const layer = layers[i];
+            const style = i < styles.length ? styles[i] : undefined;
+
+            const layerAvailableStyles = availableStyles.find(candidate => candidate.layerName === layer);
+            if (layerAvailableStyles !== undefined && layerAvailableStyles.styles !== undefined) {
+                // Use the first style if none is explicitly specified.
+                // Note that the WMS 1.3.0 spec (section 7.3.3.4) explicitly says we can't assume this,
+                // but because the server has no other way of indicating the default style, let's hope that
+                // sanity prevails.
+                const layerStyle = style === undefined
+                    ? layerAvailableStyles.styles[0]
+                    : layerAvailableStyles.styles.find(candidate => candidate.name === style);
+                if (layerStyle !== undefined && layerStyle.legendUrl !== undefined) {
+                    result.push(layerStyle.legendUrl);
+                }
+            }
+        }
+
+        return result;
     }
 
     protected get defaultGetCapabilitiesUrl(): string | undefined {
