@@ -31,9 +31,9 @@ import StratumFromTraits from './StratumFromTraits';
 import Terria from './Terria';
 import WebMapServiceCapabilities, { CapabilitiesLayer, CapabilitiesStyle, getRectangleFromLayer } from './WebMapServiceCapabilities';
 import { RectangleTraits } from '../Traits/MappableTraits';
-import { DiscreteTimeTraits } from '../Traits/DiscretelyTimeVaryingTraits';
 import DiscretelyTimeVaryingMixin from '../ModelMixins/DiscretelyTimeVaryingMixin';
 import createTransformerAllowUndefined from '../Core/createTransformerAllowUndefined';
+import DiscreteTimeTraits from '../Traits/DiscreteTimeTraits';
 
 interface LegendUrl {
     url: string;
@@ -232,8 +232,6 @@ class GetCapabilitiesStratum extends LoadableStratum(WebMapServiceCatalogItemTra
                     tag: undefined
                 });
             }
-
-            // TODO: remove duplicates? sort the times?
         }
 
         return result;
@@ -416,10 +414,10 @@ class WebMapServiceCatalogItem extends DiscretelyTimeVaryingMixin(GetCapabilitie
             return undefined;
         }
 
-        console.log(`Creating new ImageryProvider for ${time}`);
+        console.log(`Creating new ImageryProvider for time ${time}`);
 
         const parameters: any = {
-            ...WebMapServiceCatalogItem.defaultParameters
+            ...WebMapServiceCatalogItem.defaultParameters,
         };
 
         if (time !== undefined) {
