@@ -1,23 +1,7 @@
-import ModelTraits from "./ModelTraits";
-import TimeVaryingTraits from "./TimeVaryingTraits";
-import primitiveTrait from "./primitiveTrait";
+import DiscreteTimeTraits from "./DiscreteTimeTraits";
 import objectArrayTrait from "./objectArrayTrait";
-
-export class DiscreteTimeTraits extends ModelTraits {
-    @primitiveTrait({
-        name: 'Time',
-        description: 'The discrete time, expressed as an ISO8601 sttring.',
-        type: 'string'
-    })
-    time?: string;
-
-    @primitiveTrait({
-        name: 'Tag',
-        description: 'The tag associated with this time. If a tag is not specified, the time itself is used as the tag.',
-        type: 'string'
-    })
-    tag?: string;
-}
+import primitiveTrait from "./primitiveTrait";
+import TimeVaryingTraits from "./TimeVaryingTraits";
 
 export default class DiscretelyTimeVaryingTraits extends TimeVaryingTraits {
     @objectArrayTrait({
