@@ -87,6 +87,7 @@ export default class Cesium implements GlobeOrMap {
                 const imageryLayer = this.scene.imageryLayers.get(i);
                 if (allImageryParts.indexOf(imageryLayer) === -1) {
                     this.scene.imageryLayers.remove(imageryLayer);
+                    --i;
                 }
             }
             // Iterate backwards so that adding multiple layers adds them in increasing cesium index order
