@@ -13,11 +13,17 @@ export default class StoryEditor extends React.Component {
       id: undefined,
       inView: false
     };
+
+    this.keys = {
+      ctrl: false,
+      enter: false
+    }
     this.saveStory = this.saveStory.bind(this);
     this.cancelEditing = this.cancelEditing.bind(this);
     this.updateTitle = this.updateTitle.bind(this);
     this.onKeyDown = this.onKeyDown.bind(this);
 
+    this.onKeyUp = this.onKeyUp.bind(this);
     this.slideInTimer =  null;
     this.slideOutTimer = null;
     this.escKeyListener = null;
@@ -37,32 +43,34 @@ export default class StoryEditor extends React.Component {
         this.slideIn();
   }
 
-    slideIn() {
-       this.slideInTimer = setTimeout(() => {
-            this.setState({
-                inView: true
-            });
-        }, 300);
-    }
+  slideIn() {
+     this.slideInTimer = setTimeout(() => {
+          this.setState({
+              inView: true
+          });
 
-    slideOut() {
-      this.slideOutTimer = this.setState({
-        inView: false
-      });
-        setTimeout(() => {this.cancelEditing();}, 300);
-    }
+    this.titleInput.focus();
+      }, 300);
+  }
 
-    componentWillUnmount() {
-        clearTimeout(this.slideInTimer);
-        if(this.slideOutTimer) {
-          clearTimeout(this.slideOutTimer);
-        }
-      this.setState({
-        title: '',
-        text: '',
-        id: undefined
-      });
-    }
+  slideOut() {
+    this.slideOutTimer = this.setState({
+      inView: false
+    });
+      setTimeout(() => {this.cancelEditing();}, 300);
+  }
+
+  componentWillUnmount() {
+      clearTimeout(this.slideInTimer);
+      if(this.slideOutTimer) {
+        clearTimeout(this.slideOutTimer);
+      }
+    this.setState({
+      title: '',
+      text: '',
+      id: undefined
+    });
+  }
 
   updateTitle(event) {
     this.setState({
@@ -94,19 +102,38 @@ export default class StoryEditor extends React.Component {
     if(event.keyCode === 27) {
       this.cancelEditing();
     }
+    if(event.keyCode === 13) {
+      this.keys.enter = true;
+    }
+
+    if(event.keyCode === 17) {
+      this.keys.ctrl = true;
+    }
+  }
+
+  onKeyUp(event) {
+    if((event.keyCode === 13 || event.keyCode === 17)  && this.keys.enter && this.keys.ctrl) this.saveStory();
+
+    if(event.keyCode === 13) {
+      this.keys.enter = false;
+    }
+
+    if(event.keyCode === 17) {
+      this.keys.ctrl = false;
+    }
+
   }
 
   renderPopupEditor() {
-    return (<div className={classNames(Styles.popupEditor, {[Styles.isMounted]: this.state.inView})}>
+    return (<div onKeyDown={this.onKeyDown} onKeyUp = {this.onKeyUp} className={classNames(Styles.popupEditor, {[Styles.isMounted]: this.state.inView})}>
               <div className={Styles.inner}>
                 <div className={Styles.header}>
-                  <input placeholder="Enter a title here" className={Styles.field} type="text" id="title" value={this.state.title} onKeyDown={this.onKeyDown} onChange={this.updateTitle}/>
+                  <input ref={titleInput => this.titleInput = titleInput} placeholder="Enter a title here" className={Styles.field} type="text" id="title" value={this.state.title} onChange={this.updateTitle}/>
                   <button className={Styles.cancelBtn} onClick={this.cancelEditing} type='button' title="cancel">Cancel</button>
                   <button disabled ={!this.state.title.length} className={Styles.saveBtn} onClick ={this.saveStory} type='button' title='save'>Save</button>
               </div>
               <div className={Styles.body}>
                  <Editor
-                      onKeyDown={this.onKeyDown}
                       html={this.state.text}
                       onChange={(text) => this.setState({text})}>
                  </Editor>

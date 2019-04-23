@@ -8,13 +8,13 @@ export default class Editor extends React.Component {
     super(props);
   }
   
-    componentDidMount() {
-      this.editor = init({
-            element: this.node,
-            onChange: this.props.onChange, 
-            actions: this.props.actions,
-      }); 
-      this.editor.content.innerHTML = this.props.html;
+  componentDidMount() {
+    this.editor = init({
+          element: this.node,
+          onChange: this.props.onChange, 
+          actions: this.props.actions,
+    }); 
+    this.editor.content.innerHTML = this.props.html;
   }
 
   componentWillUnmount() {
