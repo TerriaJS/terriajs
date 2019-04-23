@@ -39,7 +39,8 @@ const DataPreview = createReactClass({
                 <Choose>
                     <When condition={previewed && previewed.isMappable}>
                         <div className={Styles.previewInner}>
-                            <MappablePreview previewed={previewed} terria={this.props.terria}
+                            <MappablePreview previewed={previewed}
+                                             terria={this.props.terria}
                                              viewState={this.props.viewState}/>
                         </div>
                     </When>

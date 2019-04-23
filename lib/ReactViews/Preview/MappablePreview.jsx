@@ -54,14 +54,16 @@ const MappablePreview = createReactClass({
                 <div className={Styles.previewedInfo}>
                     <div className={Styles.titleAndShareWrapper} ref={component => (this.refToMeasure = component)}>
                         <h3 className={Styles.h3}>{catalogItem.name}</h3>
-                        <div className={Styles.shareLinkWrapper}>
-                            <SharePanel
-                                catalogShare
-                                catalogShareWithoutText
-                                modalWidth={this.props.widthFromMeasureWidthHOC}
-                                terria={this.props.terria}
-                                viewState={this.props.viewState} />
-                        </div>
+                        <If condition={catalogItem.dataUrlType !== 'local'}>
+                            <div className={Styles.shareLinkWrapper}>
+                                <SharePanel
+                                    catalogShare
+                                    catalogShareWithoutText
+                                    modalWidth={this.props.widthFromMeasureWidthHOC}
+                                    terria={this.props.terria}
+                                    viewState={this.props.viewState} />
+                            </div>
+                        </If>
                     </div>
                     <Description item={catalogItem} />
                 </div>
