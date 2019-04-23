@@ -4,6 +4,7 @@ Change Log
 ### Next Release
 
 * Fixed Map View '2D' button activating 3D ellipsoid viewer when the instance has no terrain.
+* Added sharing within the data catalog to share a given catalog item
 
 ### v7.2.1
 
