@@ -62,12 +62,12 @@
 
   &:hover, &:focus {
     svg {
-      fill: $color-primary;
+      fill: $grey;
     }
   }
 
   svg {
-    fill: #FFFFFF;
+    fill: $grey;
     height: 20px;
     width: 20px;
   }

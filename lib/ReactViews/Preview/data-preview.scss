@@ -35,6 +35,7 @@
   margin: 0 $padding-small;
   padding: $padding * 2;
   position: relative;
+  box-sizing: border-box;
 
   h3 {
     margin: 0;
