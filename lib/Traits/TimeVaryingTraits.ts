@@ -47,4 +47,11 @@ export default class TimeVaryingTraits extends ModelTraits {
         type: 'boolean'
     })
     isPaused: boolean = true;
+
+    @primitiveTrait({
+        name: 'Use Own Clock',
+        description: 'True if this dataset has its own clock independent from the application timeline; false to use the application timeline.',
+        type: 'boolean'
+    })
+    useOwnClock: boolean = true;
 }

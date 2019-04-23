@@ -35,8 +35,9 @@ const DateTimeSelectorSection = observer(createReactClass({
 
     onTimelineButtonClicked() {
         const item = this.props.item;
-        item.useOwnClock = !item.useOwnClock;
-        item.useClock(); // Adds this item to the timeline.
+        item.setTrait(CommonStrata.user, 'useOwnClock', !item.useOwnClock);
+        // item.useOwnClock = !item.useOwnClock;
+        // item.useClock(); // Adds this item to the timeline.
         item.terria.currentViewer.notifyRepaintRequired();
     },
 
