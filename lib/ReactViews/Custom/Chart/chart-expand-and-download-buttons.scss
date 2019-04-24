@@ -5,6 +5,7 @@
   float: left;
   &__list {
     display: flex;
+    flex-direction: column;
   }
 
   &__btn {
@@ -49,8 +50,6 @@
   padding: 1px 8px;
   margin-right: 3px;
   width: auto;
-  display: flex;
-  flex-direction: column;
 }
 
 .btn-small {
