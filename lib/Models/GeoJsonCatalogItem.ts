@@ -25,6 +25,7 @@ import UrlMixin from "../ModelMixins/UrlMixin";
 import GeoJsonCatalogItemTraits from "../Traits/GeoJsonCatalogItemTraits";
 import CreateModel from './CreateModel';
 import Terria from "./Terria";
+import readJson from "../Core/readJson";
 
 const formatPropertyValue = require("../Core/formatPropertyValue");
 const hashFromString = require("../Core/hashFromString");
@@ -58,10 +59,17 @@ class GeoJsonCatalogItem
 
     private _dataSource: GeoJsonDataSource | undefined;
 
+    private _geoJsonFile?: File;
+
     readonly canZoomTo = true;
 
     constructor(id: string, terria: Terria) {
         super(id, terria);
+    }
+
+    loadFromFile(file: File) {
+        this._geoJsonFile = file;
+        return this.loadMapItems();
     }
 
     protected get loadMapItemsPromise(): Promise<void> {
@@ -89,6 +97,8 @@ class GeoJsonCatalogItem
                 resolve(this.geoJsonData);
             } else if (isDefined(this.geoJsonString)) {
                 resolve(<JsonValue>JSON.parse(this.geoJsonString));
+            } else if (isDefined(this._geoJsonFile)) {
+                resolve(readJson(this._geoJsonFile));
             } else if (isDefined(this.url)) {
                 // try loading from a zip file url or a regular url
                 if (zipFileRegex.test(this.url)) {

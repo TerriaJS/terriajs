@@ -1,4 +1,6 @@
 import React from 'react';
+import { observer } from 'mobx-react';
+
 import classNames from 'classnames';
 import createReactClass from 'create-react-class';
 import Icon from '../../../Icon.jsx';
@@ -12,7 +14,7 @@ import ObserveModelMixin from '../../../ObserveModelMixin';
 import Styles from './my-data-tab.scss';
 
 // My data tab include Add data section and preview section
-const MyDataTab = createReactClass({
+const MyDataTab = observer(createReactClass({
     displayName: 'MyDataTab',
     mixins: [ObserveModelMixin],
 
@@ -28,7 +30,7 @@ const MyDataTab = createReactClass({
     },
 
     hasUserAddedData() {
-        return this.props.terria.catalog.userAddedDataGroup.items.length > 0;
+        return this.props.terria.catalog.userAddedDataGroup.members.length > 0;
     },
 
     changeTab(active) {
@@ -138,7 +140,7 @@ const MyDataTab = createReactClass({
                             <div className={Styles.tabLeft}>{this.renderTabs()}</div>
 
                             <ul className={Styles.dataCatalog}>
-                              <DataCatalog items={this.props.terria.catalog.userAddedDataGroup.items}
+                              <DataCatalog items={this.props.terria.catalog.userAddedDataGroup.memberModels}
                                            removable={true}
                                            viewState={this.props.viewState}
                                            terria={this.props.terria}/>
@@ -159,6 +161,6 @@ const MyDataTab = createReactClass({
             </div>
         );
     }
-});
+}));
 
 module.exports = MyDataTab;
