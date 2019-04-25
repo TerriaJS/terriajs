@@ -1,25 +1,22 @@
-import { action, computed, observable, autorun, IReactionDisposer } from "mobx";
-import { BaseModel } from "./Model";
-import TimeVarying from "../ModelMixins/TimeVarying";
+import { action, computed, observable, IReactionDisposer, autorun } from "mobx";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import TimeVarying from "../ModelMixins/TimeVarying";
 import CommonStrata from "./CommonStrata";
 
 /**
- * Manages a stack of all the time series layers currently being shown and makes sure the clock provided is always tracking
- * the highest one. When the top-most layer is disabled, the clock will track the next highest in the stack. Provides access
- * to the current top layer so that can be displayed to the user.
+ * Manages a stack of all the time-varying datasets currently attached to the timeline. Provides
+ * access to the current top dataset so that it can be displayed to the user.
  *
- * @param clock The clock that should track the highest layer.
  * @constructor
  */
-export default class TimeSeriesStack {
+export default class TimelineStack {
     /**
      * The stratum of each layer in the stack in which to store the current time as the clock ticks.
      */
     tickStratumId: string = CommonStrata.user;
 
     @observable
-    private readonly _layerStack: TimeVarying[] = [];
+    items: TimeVarying[] = [];
 
     private _disposeClockAutorun: IReactionDisposer;
     private _disposeTickSubscription: Cesium.Event.RemoveCallback;
@@ -27,7 +24,7 @@ export default class TimeSeriesStack {
     constructor(readonly clock: Cesium.Clock) {
         // Keep the Cesium clock in sync with the top layer's clock.
         this._disposeClockAutorun = autorun(() => {
-            const topLayer = this.topLayer;
+            const topLayer = this.top;
             if (!topLayer || !topLayer.currentTimeAsJulianDate) {
                 this.clock.shouldAnimate = false;
                 return;
@@ -42,10 +39,11 @@ export default class TimeSeriesStack {
                 this.clock.multiplier = 60.0;
             }
             this.clock.shouldAnimate = !topLayer.isPaused;
+            this.clock.tick();
         });
 
         this._disposeTickSubscription = this.clock.onTick.addEventListener(() => {
-            this.syncLayersToClockCurrentTime(this.tickStratumId);
+            this.syncToClock(this.tickStratumId);
         });
     }
 
@@ -59,46 +57,50 @@ export default class TimeSeriesStack {
     }
 
     /**
-     * The topmost time-series layer that has a valid `currentTime` and that is not using its own clock, or undefined if there
-     * is no such layer in the stack.
+     * The topmost time-series layer, or undefined if there is no such layer in the stack.
      */
     @computed
-    get topLayer(): TimeVarying | undefined {
-        // Find the topmost layer that has a current time and that is not using its own clock.
-        for (let i = this._layerStack.length - 1; i >= 0; --i) {
-            const layer = this._layerStack[i];
-            if (layer.currentTimeAsJulianDate !== undefined && !layer.useOwnClock) {
-                return layer;
-            }
+    get top(): TimeVarying | undefined {
+        if (this.items.length === 0) {
+            return undefined;
         }
-        return undefined;
+        return this.items[0];
     }
 
     /**
-     * Adds the supplied {@link CatalogItem} to the top of the stack. If the item is already in the stack, it will be moved
+     * Determines if the stack contains a given item.
+     * @param item The item to check.
+     * @returns True if the stack contains the item; otherwise, false.
+     */
+    contains(item: TimeVarying): boolean {
+        return this.items.indexOf(item) >= 0;
+    }
+
+    /**
+     * Adds the supplied {@link TimeVarying} to the top of the stack. If the item is already in the stack, it will be moved
      * rather than added twice.
      *
      * @param item
      */
     @action
-    addLayerToTop(item: TimeVarying) {
-        var currentIndex = this._layerStack.indexOf(item);
-        this._layerStack.push(item);
+    addToTop(item: TimeVarying) {
+        var currentIndex = this.items.indexOf(item);
+        this.items.push(item);
         if (currentIndex > -1) {
-            this._layerStack.splice(currentIndex, 1);
+            this.items.splice(currentIndex, 1);
         }
     }
 
     /**
      * Removes a layer from the stack, no matter what its location. If the layer is currently at the top, the value of
-     * {@link TimeSeriesStack#topLayer} will change.
+     * {@link TimelineStack#topLayer} will change.
      *
      * @param item;
      */
     @action
-    removeLayer(item: TimeVarying) {
-        var index = this._layerStack.indexOf(item);
-        this._layerStack.splice(index, 1);
+    remove(item: TimeVarying) {
+        var index = this.items.indexOf(item);
+        this.items.splice(index, 1);
     }
 
     /**
@@ -108,25 +110,35 @@ export default class TimeSeriesStack {
      * @param item
      */
     @action
-    promoteLayerToTop(item: TimeVarying) {
-        var currentIndex = this._layerStack.indexOf(item);
+    promoteToTop(item: TimeVarying) {
+        var currentIndex = this.items.indexOf(item);
         if (currentIndex > -1) {
-            this.addLayerToTop(item);
+            this.addToTop(item);
         }
     }
 
     /**
-     * Synchronizes all layers in the stack to the current time of the {@link TimeSeriesStack#clock}.
-     * @param stratumId
+     * Synchronizes all layers in the stack to the current time and the paused state of the provided clock.
+     * Synchronizes the {@link TimelineStack#top} to the clock's `startTime`, `endTime`, and `multiplier`.
+     * @param stratumId The stratum in which to modify properties.
+     * @param clock The clock to sync to.
      */
     @action
-    syncLayersToClockCurrentTime(stratumId: string) {
-        const currentTime = JulianDate.toIso8601(this.clock.currentTime);
-        for (let i = 0; i < this._layerStack.length; ++i) {
-            const layer = this._layerStack[i];
-            if (!layer.useOwnClock) {
-                layer.setTrait(stratumId, 'currentTime', currentTime);
-            }
+    syncToClock(stratumId: string) {
+        const clock = this.clock;
+        const currentTime = JulianDate.toIso8601(clock.currentTime);
+        const isPaused = !clock.shouldAnimate;
+
+        if (this.top) {
+            this.top.setTrait(stratumId, 'startTime', JulianDate.toIso8601(clock.startTime));
+            this.top.setTrait(stratumId, 'stopTime', JulianDate.toIso8601(clock.stopTime));
+            this.top.setTrait(stratumId, 'multiplier', clock.multiplier);
+        }
+
+        for (let i = 0; i < this.items.length; ++i) {
+            const layer = this.items[i];
+            layer.setTrait(stratumId, 'currentTime', currentTime);
+            layer.setTrait(stratumId, 'isPaused', isPaused);
         }
     }
 }

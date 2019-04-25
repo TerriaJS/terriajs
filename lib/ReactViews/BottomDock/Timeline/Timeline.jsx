@@ -15,6 +15,7 @@ import DateTimePicker from './DateTimePicker';
 import {formatDateTime} from './DateFormats';
 
 import Styles from './timeline.scss';
+import CommonStrata from '../../../Models/CommonStrata';
 
 const Timeline = observer(createReactClass({
     displayName: 'Timeline',
@@ -35,22 +36,23 @@ const Timeline = observer(createReactClass({
     },
 
     changeDateTime(time) {
-        this.props.terria.clock.currentTime = JulianDate.fromDate(new Date(time));
+        this.props.terria.timelineClock.currentTime = JulianDate.fromDate(new Date(time));
+        this.props.terria.timelineStack.syncToClock(CommonStrata.user);
         this.props.terria.currentViewer.notifyRepaintRequired();
     },
 
     render() {
         const terria = this.props.terria;
-        const catalogItem = terria.timeSeriesStack.topLayer;
+        const catalogItem = terria.timelineStack.top;
         if (!defined(catalogItem)) {
             return null;
         }
 
         const jsDate = JulianDate.toDate(catalogItem.currentTimeAsJulianDate);
-        const timeSeriesStack = this.props.terria.timeSeriesStack;
+        const timelineStack = this.props.terria.timelineStack;
         let currentTime;
-        if (defined(timeSeriesStack.topLayer) && defined(timeSeriesStack.topLayer.dateFormat) && defined(timeSeriesStack.topLayer.dateFormat.currentTime)) {
-            currentTime = dateFormat(jsDate, this.props.terria.timeSeriesStack.topLayer.dateFormat.currentTime);
+        if (defined(timelineStack.top) && defined(timelineStack.top.dateFormat) && defined(timelineStack.top.dateFormat.currentTime)) {
+            currentTime = dateFormat(jsDate, this.props.terria.timelineStack.top.dateFormat.currentTime);
         } else {
             currentTime = formatDateTime(jsDate, this.props.locale);
         }
@@ -64,7 +66,7 @@ const Timeline = observer(createReactClass({
                     <div className={Styles.textCell} title="Name of the dataset whose time range is shown">{catalogItem.name} {currentTime}</div>
                 </div>
                 <div className={Styles.controlsRow}>
-                    <TimelineControls clock={terria.clock} analytics={terria.analytics} currentViewer={terria.currentViewer} />
+                    <TimelineControls clock={terria.timelineClock} analytics={terria.analytics} currentViewer={terria.currentViewer} />
                     <If condition={defined(discreteTimes) && discreteTimes.length !== 0 && defined(currentDiscreteJulianDate)}>
                         <DateTimePicker currentDate={JulianDate.toDate(currentDiscreteJulianDate)} dates={discreteTimes.map(time => JulianDate.toDate(time))} onChange={this.changeDateTime} openDirection='up'/>
                     </If>

@@ -23,11 +23,12 @@ const BottomDock = observer(createReactClass({
 
     render() {
         const terria = this.props.terria;
+        const top = terria.timelineStack.top;
 
         return (
             <div className={`${Styles.bottomDock} ${this.props.viewState.topElement === 'BottomDock' ? 'top-element': ''}`} ref={this.props.domElementRef} tabIndex={0} onClick={this.handleClick}>
                 {/* <ChartPanel terria={terria} onHeightChange={this.onHeightChange} viewState={this.props.viewState}/> */}
-                <If condition={terria.timeSeriesStack.topLayer}>
+                <If condition={top}>
                     <Timeline terria={terria}/>
                 </If>
             </div>

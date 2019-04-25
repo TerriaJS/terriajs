@@ -18,17 +18,17 @@ const CesiumTimeline = createReactClass({
     },
 
     componentDidMount() {
-        this.cesiumTimeline = new WrappedTimeline(this.timelineContainer, this.props.terria.clock);
+        this.cesiumTimeline = new WrappedTimeline(this.timelineContainer, this.props.terria.timelineClock);
 
         this.cesiumTimeline.makeLabel = time => {
-            if (defined(this.props.terria.timeSeriesStack.topLayer)) {
-                const layer = this.props.terria.timeSeriesStack.topLayer;
+            if (defined(this.props.terria.timelineStack.top)) {
+                const layer = this.props.terria.timelineStack.top;
                 if (defined(layer.dateFormat) && defined(layer.dateFormat.timelineTic)) {
                     return dateFormat(JulianDate.toDate(time), layer.dateFormat.timelineTic);
                 }
             }
             // Adjust the label format as you zoom by using the visible timeline's start and end
-            // (not the fixed this.props.terria.clock.startTime and stopTime).
+            // (not the fixed this.props.terria.timelineClock.startTime and stopTime).
             const startJulian = this.cesiumTimeline._startJulian;
             const endJulian = this.cesiumTimeline._endJulian;
             const totalDays = JulianDate.daysDifference(endJulian, startJulian);
@@ -45,19 +45,18 @@ const CesiumTimeline = createReactClass({
             const clock = e.clock;
             clock.currentTime = e.timeJulian;
             clock.shouldAnimate = false;
-            const timeSeriesStack = this.props.terria.timeSeriesStack;
-            if (timeSeriesStack.topLayer) {
+            const timelineStack = this.props.terria.timelineStack;
+            if (timelineStack.top) {
                 runInAction(() => {
-                    timeSeriesStack.topLayer.setTrait(CommonStrata.user, 'isPaused', true);
-                    timeSeriesStack.syncLayersToClockCurrentTime(CommonStrata.user);
+                    timelineStack.syncToClock(CommonStrata.user);
                 });
             }
             this.props.terria.currentViewer.notifyRepaintRequired();
         }, false);
 
         this.disposeZoomAutorun = autorun(() => {
-            const timeSeriesStack = this.props.terria.timeSeriesStack;
-            const topLayer = timeSeriesStack.topLayer;
+            const timelineStack = this.props.terria.timelineStack;
+            const topLayer = timelineStack.top;
             if (topLayer) {
                 this.cesiumTimeline.zoomTo(topLayer.startTimeAsJulianDate, topLayer.stopTimeAsJulianDate);
             }

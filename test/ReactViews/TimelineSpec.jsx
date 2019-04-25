@@ -29,7 +29,7 @@ describe('Timeline', function() {
         it('currentTime should be used if provided', function() {
             const timeline = <Timeline terria={terria}/>;
             catalogItem.dateFormat.currentTime = "mmm";
-            terria.timeSeriesStack.addLayerToTop(catalogItem);
+            terria.timelineStack.addToTop(catalogItem);
             terria.clock.currentTime = JulianDate.fromIso8601('2016-01-03');
             terria.clock.onTick.raiseEvent(terria.clock);
 
@@ -39,7 +39,7 @@ describe('Timeline', function() {
 
         it('currentTime should not be used if not provided', function() {
             const timeline = <Timeline terria={terria}/>;
-            terria.timeSeriesStack.addLayerToTop(catalogItem);
+            terria.timelineStack.addToTop(catalogItem);
             terria.clock.currentTime = JulianDate.fromIso8601('2016-01-01T00:00');
             terria.clock.onTick.raiseEvent(terria.clock);
 
