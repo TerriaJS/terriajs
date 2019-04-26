@@ -1,4 +1,5 @@
 @import '~terriajs-variables';
+@import './mixins';
 
 
 .input {
@@ -33,6 +34,10 @@
   padding: .5rem .5rem;
   vertical-align: middle;
   -webkit-appearance: none;
+
+  @include placeholder {
+    opacity: 0.6;
+  }
 }
 
 .field {
