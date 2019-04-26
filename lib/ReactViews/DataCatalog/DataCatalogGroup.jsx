@@ -82,14 +82,7 @@ const DataCatalogGroup = createReactClass({
 
         const url = group.url || '';
         // strip protocol
-        const httpProtocol = url.indexOf('http');
-        const lastSlashIndex = url.indexOf('//');
-
-        if (httpProtocol === 0 && lastSlashIndex > -1) {
-            return url.substring(lastSlashIndex + 2);
-        } else {
-            return url;
-        }
+        return url.replace(/^https?:\/\//, '');
     },
 
     render() {
