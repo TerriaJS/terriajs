@@ -250,7 +250,7 @@ describeIfSupported('Cesium Model', function() {
                 doClick({position: expectedPosScreenCoords});
 
                 terria.pickedFeatures.allFeaturesAvailablePromise.then(function() {
-                    expect(cesium.scene.drillPick).toHaveBeenCalledWith(expectedPosScreenCoords, terria.configParameters.defaultMaximumShownFeatureInfos + 1);
+                    expect(cesium.scene.drillPick).toHaveBeenCalledWith(expectedPosScreenCoords);
 
                     expect(terria.pickedFeatures.features[0].name).toBe('entity1');
                     expect(terria.pickedFeatures.features[1].name).toBe('entity2');
