@@ -74,6 +74,16 @@ const StoryBuilder = createReactClass({
         this.props.terria.stories = [...(this.props.terria.stories || []), story];
     },
 
+    reCaptureScene(story) {
+        const storyIndex = (this.props.terria.stories || []).map(story => story.id).indexOf(story.id);
+        if(storyIndex >= 0) {
+          story.shareData = JSON.parse(JSON.stringify(getShareData(this.props.terria, false)));
+          this.props.terria.stories = [...this.props.terria.stories.slice(0, storyIndex), story, ...this.props.terria.stories.slice(storyIndex + 1)];
+        } else {
+          throw new Error('Story does not exsit');
+        } 
+    },
+
     runStories() {
         this.props.viewState.storyBuilderShown = false;
         this.props.viewState.storyShown = true;
@@ -124,7 +134,7 @@ const StoryBuilder = createReactClass({
                  moveDown={index < stories.length-1 ? this.moveDown.bind(this, index) : undefined} 
                  moveUp = {index > 0? this.moveUp.bind(this,index) : undefined} 
                  deleteStory={this.removeStory.bind(this, index)} 
-                 recaptureStory={this.captureStory} 
+                 recaptureStory={this.reCaptureScene} 
                  viewStory={this.viewStory.bind(this, index)} 
                  editStory={this.editStory}/>
         </For>
