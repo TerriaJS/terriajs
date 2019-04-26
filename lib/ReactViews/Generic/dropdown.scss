@@ -28,15 +28,16 @@
   composes: btn from "../../Sass/common/_buttons.scss";
   composes: btn-primary from "../../Sass/common/_buttons.scss";
   composes: btn-transparent from "../../Sass/common/_buttons.scss";
+  font-size: $font-size-mid-small;
   text-align: left;
   background: $text-light;
-  color: $dark-lighter;
+  color: $text-dark;
   border: 1px solid $field-border;
   position: relative;
   &:hover,
   &:focus {
     background: $text-light;
-    color: $dark-lighter;
+    color: $text-dark;
     border: 1px solid $color-primary;
   }
   svg {
@@ -57,7 +58,7 @@
   composes: btn--small from "../../Sass/common/_buttons.scss";
 
   width: 100%;
-  color: $text-black;
+  color: $text-dark;
 
   &:hover,
   &:focus {
