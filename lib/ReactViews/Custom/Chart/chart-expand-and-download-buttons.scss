@@ -13,16 +13,9 @@
   }
 
   &__btn--option {
-    width: auto;
+    width: 100%;
     float: left;
     color: $color-primary;
-
-    // this makes sure the hover highlight fills the full width of the item
-    li a {
-      display: block;
-      padding-top: 0;
-      padding-bottom: 0;
-    }
 
     &:hover, &:focus {
       background: $color-primary;

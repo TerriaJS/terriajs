@@ -27,11 +27,12 @@
 .dropdown__list {
   display: flex;
   flex-direction: column;
-  // this makes sure the hover highlight fills the full width of the item
   li a {
+    // this makes sure the hover highlight fills the full width of the item
     display: block;
     padding-top: 0;
     padding-bottom: 0;
+    width: 100%;
     @if variable-exists(text-link) {
       color: $text-link;
     }
