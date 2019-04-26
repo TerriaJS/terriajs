@@ -12,18 +12,27 @@
 }
 
 .icon--download {
-  display: inline-block;
-  vertical-align: bottom;
-  svg{
+  // the default icon styling for a dropdown is for a btn--primary, so we have to make some adjustments
+  padding-right: 10px;
+  svg {
+    position: absolute;
+    top: 6px;
+    right: 5px;
     height: 20px;
     width: 20px;
-    fill: $text-light;
+    fill: currentColor;
   }
 }
 
 .dropdown__list {
   display: flex;
+  flex-direction: column;
   li a {
+    // this makes sure the hover highlight fills the full width of the item
+    display: block;
+    padding-top: 0;
+    padding-bottom: 0;
+    width: 100%;
     @if variable-exists(text-link) {
       color: $text-link;
     }
