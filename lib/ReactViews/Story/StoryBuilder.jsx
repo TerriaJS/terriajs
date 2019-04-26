@@ -71,7 +71,7 @@ const StoryBuilder = createReactClass({
 
     captureStory(story) {
         story.shareData = JSON.parse(JSON.stringify(getShareData(this.props.terria, false)));
-        this.props.terria.stories = [...(this.props.terria.stories || []), story];
+        this.props.terria.stories.push(story);
     },
 
     reCaptureScene(story) {
