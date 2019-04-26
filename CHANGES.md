@@ -6,6 +6,8 @@ Change Log
 * Added `GltfCatalogItem` for displaying [glTF](https://www.khronos.org/gltf/) models on the 3D scene.
 * Replace `getUniqueValues` with `lodash.uniq`
 * Fixed Map View '2D' button activating 3D ellipsoid viewer when the instance has no terrain.
+* Added `clampToTerrain` property to `GeoJsonCatalogItem`.
+* When clicking a polygon in 3D Terrain mode, the white outline is now correctly shown on the terrain surface. Note that Internet Explorer 11 and old GPU hardware cannot support drawing the highlight on terrain, so it will not be drawn at all in these environments.
 
 ### v7.2.1
 
@@ -15,8 +17,6 @@ Change Log
 
 * Added `hideLayerAfterMinScaleDenominator` property to `WebMapServiceCatalogItem`. When true, TerriaJS will show a message and display nothing rather than silently show a scaled-up version of the layer when the user zooms in past the layer's advertised `MinScaleDenominator`.
 * Added `GeoJsonParameterEditor`.
-* Added `clampToTerrain` property to `GeoJsonCatalogItem`.
-* When clicking a polygon in 3D Terrain mode, the white outline is now correctly shown on the terrain surface. Note that Internet Explorer 11 and old GPU hardware cannot support drawing the highlight on terrain, so it will not be drawn at all in these environments.
 * Fixed a bug that caused some chart "Expand" options to be hidden.
 * Added `CED_CODE18` and `CED_NAME18` region types to `regionMapping.json`. These are now the default for CSV files that reference `ced`, `ced_code` and `ced_name` (previously the 2016 versions were used).
 * Improved support for WMTS, setting a maximum level to request tiles at.
