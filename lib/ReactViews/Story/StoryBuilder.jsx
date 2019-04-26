@@ -9,7 +9,7 @@ import Icon from "../Icon.jsx";
 import Story from './Story.jsx';
 import StoryEditor from './StoryEditor.jsx';
 import Sortable from 'react-anything-sortable';
-import uniqid from 'uniqid';
+import createGuid from 'terriajs-cesium/Source/Core/createGuid';
 
 import Styles from './story-builder.scss';
 import '!!style-loader!css-loader?sourceMap!react-anything-sortable/sortable.css';
@@ -50,7 +50,7 @@ const StoryBuilder = createReactClass({
       const story = {
         title: _story.title,
         text: _story.text,
-        id: _story.id ? _story.id : uniqid(),
+        id: _story.id ? _story.id : createGuid(),
       };
 
       const storyIndex = (this.props.terria.stories || []).map(story => story.id).indexOf(_story.id);
@@ -71,7 +71,7 @@ const StoryBuilder = createReactClass({
 
     captureStory(story) {
         story.shareData = JSON.parse(JSON.stringify(getShareData(this.props.terria, false)));
-        this.props.terria.stories.push(story);
+        this.props.terria.stories =  [...(this.props.terria.stories || []), story];
     },
 
     reCaptureScene(story) {

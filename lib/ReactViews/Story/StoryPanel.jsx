@@ -9,14 +9,6 @@ import Icon from "../Icon.jsx";
 import { Swipeable } from 'react-swipeable';
 import Styles from './story-panel.scss';
 
-// given a nowviewing item, build its path in the data catalog
-export function buildPath(item) {
-      if(!item.parent) {
-        return item.name;
-      }
-      return buildPath(item.parent) + '/' +  item.name;
- }
-
 export function activateStory(story, terria) {
      if(story.shareData) {
         terria.updateFromStartData(story.shareData, false).then(()=>{
@@ -28,7 +20,7 @@ export function activateStory(story, terria) {
         }, []);
         const nowViewing = terria.nowViewing.items;
         nowViewing.slice().forEach(item=>{
-          const path = buildPath(item);
+          const path = item.uniqueId; 
           if(nowViewingPaths.indexOf(path) < 0) {
             item.isEnabled = false;
           } 
