@@ -33,17 +33,17 @@ export default function DiscretelyTimeVaryingMixin<T extends Constructor<Discret
             return time;
         }
 
-        @computed
+        @computed({ equals: JulianDate.equals })
         get currentTimeAsJulianDate() {
             return toJulianDate(this.currentTime);
         }
 
-        @computed
+        @computed({ equals: JulianDate.equals })
         get startTimeAsJulianDate() {
             return toJulianDate(this.startTime);
         }
 
-        @computed
+        @computed({ equals: JulianDate.equals })
         get stopTimeAsJulianDate() {
             return toJulianDate(this.stopTime);
         }
@@ -126,7 +126,7 @@ export default function DiscretelyTimeVaryingMixin<T extends Constructor<Discret
             return index - 1;
         }
 
-        @computed
+        @computed({ equals: JulianDate.equals })
         get currentDiscreteJulianDate() {
             const index = this.currentDiscreteTimeIndex;
             return index === undefined ? undefined : this.discreteTimesAsSortedJulianDates![index].time;

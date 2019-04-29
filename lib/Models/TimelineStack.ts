@@ -39,7 +39,6 @@ export default class TimelineStack {
                 this.clock.multiplier = 60.0;
             }
             this.clock.shouldAnimate = !topLayer.isPaused;
-            this.clock.tick();
         });
 
         this._disposeTickSubscription = this.clock.onTick.addEventListener(() => {
@@ -64,7 +63,7 @@ export default class TimelineStack {
         if (this.items.length === 0) {
             return undefined;
         }
-        return this.items[0];
+        return this.items[this.items.length - 1];
     }
 
     /**
