@@ -83,8 +83,8 @@ describe('WebMapServiceCatalogItem', function() {
                 url: 'http://foo.com/bar',
                 metadataUrl: 'test/WMS/no_legend_url.xml',
                 layers: 'single_period',
-                styles: 'blah',
-                parameters: { "alpha": "beta",
+                parameters: { "styles": "blah",
+                              "alpha": "beta",
                               "foo": "bar" },
                 dataUrl: '' // to prevent a DescribeLayer request
             });
