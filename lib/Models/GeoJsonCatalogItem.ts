@@ -67,9 +67,8 @@ class GeoJsonCatalogItem
         super(id, terria);
     }
 
-    loadFromFile(file: File) {
+    setFileInput(file: File) {
         this._geoJsonFile = file;
-        return this.loadMapItems();
     }
 
     protected get loadMapItemsPromise(): Promise<void> {

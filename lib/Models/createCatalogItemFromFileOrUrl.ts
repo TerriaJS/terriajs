@@ -169,29 +169,26 @@ function loadItem(newCatalogItem: BaseModel, fileOrUrl: File | string) {
     let promise;
     if (typeof fileOrUrl === "string") {
         newCatalogItem.setTrait(CommonStrata.user, "url", fileOrUrl);
-        if (CatalogMemberMixin.isMixedInto(newCatalogItem)) {
-            promise = newCatalogItem.loadMetadata();
-        }
     } else {
-        if (canLoadFromFile(newCatalogItem)) {
-            promise = newCatalogItem.loadFromFile(fileOrUrl);
+        if (hasFileInput(newCatalogItem)) {
+            newCatalogItem.setFileInput(fileOrUrl);
         }
         // TODO
         // newCatalogItem.dataSourceUrl = fileOrUrl.name;
         // newCatalogItem.dataUrlType = "local";
     }
 
-    if (isDefined(promise)) {
-        return promise.then(() => newCatalogItem);
+    if (CatalogMemberMixin.isMixedInto(newCatalogItem)) {
+        return newCatalogItem.loadMetadata().then(() => newCatalogItem);
     } else {
         return Promise.resolve(newCatalogItem);
     }
 }
 
-interface LoadableFromFile extends BaseModel {
-    loadFromFile(file: File): Promise<void>;
+interface HasFileInput extends BaseModel {
+    setFileInput(file: File): void;
 }
 
-function canLoadFromFile(model: BaseModel): model is LoadableFromFile {
-    return "loadFromFile" in model;
+function hasFileInput(model: BaseModel): model is HasFileInput {
+    return "setFileInput" in model;
 }
