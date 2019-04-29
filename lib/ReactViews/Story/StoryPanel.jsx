@@ -11,7 +11,7 @@ import Styles from './story-panel.scss';
 
 export function activateStory(story, terria) {
      if(story.shareData) {
-        terria.updateFromStartData(story.shareData, false).then(()=>{
+        terria.updateFromStartData(story.shareData,true).then(()=>{
         const nowViewingPaths = story.shareData.initSources.reduce((p, c) => {
           if (c.sharedCatalogMembers) {
             return p.concat(Object.keys(c.sharedCatalogMembers));
