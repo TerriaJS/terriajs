@@ -8,6 +8,7 @@ Change Log
 * Fixed Map View '2D' button activating 3D ellipsoid viewer when the instance has no terrain.
 * Added `clampToTerrain` property to `GeoJsonCatalogItem`.
 * When clicking a polygon in 3D Terrain mode, the white outline is now correctly shown on the terrain surface. Note that Internet Explorer 11 and old GPU hardware cannot support drawing the highlight on terrain, so it will not be drawn at all in these environments.
+* Support State Electoral Districts 2018 and 2016 (SED_Code_2018, SED_Code_2016, SED_Name_2018, SED_Name_2016)
 
 ### v7.2.1
 
