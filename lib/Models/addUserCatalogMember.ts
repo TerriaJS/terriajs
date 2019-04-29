@@ -44,7 +44,10 @@ export default function addUserCatalogMember(
         }
 
         if (defaultValue(options.enable, true)) {
-            terria.workbench.items.push(newCatalogItem);
+            // add to workbench if it doesn't hold an item by the same id
+            if (!terria.workbench.items.find(item => item.id === newCatalogItem.id)) {
+                terria.workbench.items.push(newCatalogItem);
+            }
         }
 
         if (defaultValue(options.zoomTo, true) && Mappable.is(newCatalogItem)) {
