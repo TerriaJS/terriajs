@@ -9,6 +9,7 @@ import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import createCatalogItemFromFileOrUrl from "./createCatalogItemFromFileOrUrl";
 import addUserCatalogMember from "./addUserCatalogMember";
 import TerriaError from "../Core/TerriaError";
+import Mappable from "./Mappable";
 
 interface FileType {
     value: String;
@@ -85,8 +86,6 @@ export default function addUserFiles(
             const items = addedItems.filter(
                 item => item && !(item instanceof TerriaError)
             );
-
-            items.forEach(item => terria.workbench.items.push(item));
 
             tempCatalogItemList.forEach(item => {
                 terria.catalog.userAddedDataGroup.remove(item);

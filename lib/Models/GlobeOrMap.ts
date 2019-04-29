@@ -1,6 +1,7 @@
 'use strict';
 
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import Mappable from "./Mappable";
 
 /*global require*/
 var Color = require('terriajs-cesium/Source/Core/Color');
@@ -28,7 +29,7 @@ export type CameraView = {
 
 
 export default interface GlobeOrMap {
-    zoomTo(viewOrExtent: CameraView | Cesium.Rectangle, flightDurationSeconds: number): void;
+    zoomTo(viewOrExtent: CameraView | Cesium.Rectangle | Mappable, flightDurationSeconds: number): void;
 }
 
 /**

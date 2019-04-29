@@ -8,6 +8,9 @@ import GroupTraits from "../Traits/GroupTraits";
 import when from "terriajs-cesium/Source/ThirdParty/when";
 import TerriaError from "../Core/TerriaError";
 import CommonStrata from "./CommonStrata";
+import Mappable from "./Mappable";
+import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
+import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
 
 interface AddUserCatalogMemberOptions {
     enable?: boolean;
@@ -22,8 +25,9 @@ interface AddUserCatalogMemberOptions {
 export default function addUserCatalogMember(
     terria: Terria,
     newCatalogMemberOrPromise: BaseModel | Promise<BaseModel | undefined>,
-    options?: AddUserCatalogMemberOptions
+    optionsArg?: AddUserCatalogMemberOptions
 ) {
+    const options: AddUserCatalogMemberOptions = defaultValue(optionsArg, {});
     return when(newCatalogMemberOrPromise, function(newCatalogItem: BaseModel) {
         if (!isDefined(newCatalogItem)) {
             return;
@@ -33,16 +37,18 @@ export default function addUserCatalogMember(
         terria.catalog.userAddedDataGroup.setTrait(CommonStrata.user, "isOpen", true);
 
         if (
-            isDefined(options) &&
             isDefined(options.open) &&
             hasTraits(newCatalogItem, GroupTraits, "isOpen")
         ) {
             newCatalogItem.setTrait("user", "isOpen", true);
         }
 
-        if (isDefined(options) && isDefined(options.zoomTo)) {
-            // TODO: this throws a cesium rendering error
-            //terria.currentViewer.zoomTo(newCatalogItem);
+        if (defaultValue(options.enable, true)) {
+            terria.workbench.items.push(newCatalogItem);
+        }
+
+        if (defaultValue(options.zoomTo, true) && Mappable.is(newCatalogItem)) {
+            newCatalogItem.loadMapItems().then(() => terria.currentViewer.zoomTo(newCatalogItem));
         }
 
         return newCatalogItem;
