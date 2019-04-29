@@ -10,6 +10,8 @@ import createCatalogItemFromFileOrUrl from "./createCatalogItemFromFileOrUrl";
 import addUserCatalogMember from "./addUserCatalogMember";
 import TerriaError from "../Core/TerriaError";
 import Mappable from "./Mappable";
+import updateModelFromJson from "./updateModelFromJson";
+import isDefined from "../Core/isDefined";
 
 interface FileType {
     value: String;
@@ -40,9 +42,8 @@ export default function addUserFiles(
         }
     }
 
-    function loadInitFile(file: File) {
-        // TODO: add init source
-        throw new DeveloperError("Adding init source not implemented");
+    function loadInitData(initData: {catalog: any}) {
+        updateModelFromJson(terria.catalog.group, CommonStrata.definition, {members: initData.catalog});
     }
 
     for (let i = 0; i < files.length; i++) {
@@ -55,12 +56,19 @@ export default function addUserFiles(
             "Loading file..."
         );
         terria.catalog.userAddedDataGroup.add(tempCatalogItem);
+
         let loadPromise;
         if (file.name.toUpperCase().indexOf(".JSON") !== -1) {
             const promise = readJson(file).then((json: any) => {
-                if (json.catalog || json.services) {
+                if (isDefined(json.catalog)) {
                     // This is an init file.
-                    return loadInitFile(file);
+                    try {
+                        loadInitData(json);
+                    } finally {
+                        tempCatalogItemList.splice(tempCatalogItemList.indexOf(tempCatalogItem), 1);
+                        terria.workbench.removeItem(tempCatalogItem);
+                        terria.catalog.userAddedDataGroup.remove(tempCatalogItem);
+                    }
                 } else {
                     return loadCatalogItemFromFile(file);
                 }
