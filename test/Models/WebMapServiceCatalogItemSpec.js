@@ -83,13 +83,13 @@ describe('WebMapServiceCatalogItem', function() {
                 url: 'http://foo.com/bar',
                 metadataUrl: 'test/WMS/no_legend_url.xml',
                 layers: 'single_period',
-                parameters: { "styles": "blah",
+                parameters: {
                               "alpha": "beta",
                               "foo": "bar" },
                 dataUrl: '' // to prevent a DescribeLayer request
             });
             wmsItem.load().then(function() {
-                expect(wmsItem.legendUrl.url.indexOf('http://foo.com/bar?service=WMS&version=1.1.0&request=GetLegendGraphic&format=image%2Fpng&transparent=True&layer=single_period&alpha=beta&foo=bar&styles=blah&srs=EPSG%3A3857')).toBe(0);
+                expect(wmsItem.legendUrl.url.indexOf('http://foo.com/bar?service=WMS&version=1.1.0&request=GetLegendGraphic&format=image%2Fpng&transparent=True&layer=single_period&styles=jet&alpha=beta&foo=bar&srs=EPSG%3A3857')).toBe(0);
             }).then(done).otherwise(done.fail);
 
         });
