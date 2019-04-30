@@ -4,6 +4,7 @@ Change Log
 ### Next Release
 
 * Fixed Map View '2D' button activating 3D ellipsoid viewer when the instance has no terrain.
+* Fixed a bug to prevent all legends from drawing when a WMS layer style has no `LegendUrl`.
 
 ### v7.2.1
 
