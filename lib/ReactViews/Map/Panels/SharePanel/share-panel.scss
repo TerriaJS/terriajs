@@ -80,8 +80,10 @@
 
 .field {
   composes: field from '../../../../Sass/common/_form.scss';
-  color: #ddd;
   background: $overlay;
+  &[type=text] {
+    color: $text-light;
+  }
 }
 .clipboard-for-catalog-share {
   margin: 15px;
@@ -90,23 +92,26 @@
 .shareUrlfield{
   composes: field from '../../../../Sass/common/_form.scss';
   composes: field-large from '../../../../Sass/common/_form.scss';
-  background: $grey-lighter2;
-  color: $text-dark2!important;
+  background: $overlay;
+  color: $text-light!important;
   &[type=text] {
     height: $input-height-large;
   }
   &::selection {
-    background: $grey-lighter2; /* WebKit/Blink Browsers */
-    color: $text-dark2;
+    background: $color-primary;; /* WebKit/Blink Browsers */
+    color: #fff;
   }
   &::-moz-selection {
-    background: $grey-lighter2; /* Gecko Browsers */
-    color: $text-dark2;
+    background: $color-primary;; /* Gecko Browsers */
+    color: #fff;
   }
 }
-
 .catalogShareUrlfield{
   composes: shareUrlfield;
+}
+.catalogShareUrlfield--light{
+  background: $grey-lighter2;
+  color: $text-dark2!important;
 }
 
 .mobileHeader{

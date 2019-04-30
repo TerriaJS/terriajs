@@ -240,7 +240,8 @@ const SharePanel = createReactClass({
     },
 
     renderContentForCatalogShare() {
-        const shareUrlTextBox = <input className={Styles.catalogShareUrlfield} type="text" value={this.state.shareUrl}
+        const shareUrlTextBox = <input className={classNames(Styles.catalogShareUrlfield, Styles.catalogShareUrlfieldLight)}
+            type="text" value={this.state.shareUrl}
             placeholder={this.state.placeholder} readOnly
             onClick={e => e.target.select()} id='share-url' />;
 
@@ -251,7 +252,7 @@ const SharePanel = createReactClass({
                 </When>
                 <Otherwise>
                     <div className={Styles.clipboardForCatalogShare}>
-                        <Clipboard lightBackground text={this.state.shareUrl} source={shareUrlTextBox} id='share-url' />
+                        <Clipboard theme="light" text={this.state.shareUrl} source={shareUrlTextBox} id='share-url' />
                     </div>
                 </Otherwise>
             </Choose>

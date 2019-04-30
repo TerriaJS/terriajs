@@ -56,18 +56,22 @@ export default class Clipboard extends React.Component {
     }
 
     render() {
+        const isLightTheme = this.props.theme === "light";
+
         return (
             <div className={Styles.clipboard}>
                 <div className={Styles.title}>Share URL</div>
                 <div className={Styles.explanation}>Anyone with this URL will be able to access this map.</div>
-                <div className={Styles.clipboardBody}>
+                <div className={classNames(Styles.clipboardBody, {
+                    [Styles.clipboardBodyLight]: isLightTheme,
+                })}>
                     {this.props.source}
                     <button className={classNames(`btn-copy-${this.props.id}`, Styles.copyBtn)} data-clipboard-target={`#${this.props.id}`}>
                         Copy
                     </button>
                 </div>
                 {this.state.tooltip && <div className={classNames(Styles.tooltipWrapper, {
-                    [Styles.tooltipWrapperLightBg]: this.props.lightBackground,
+                    [Styles.tooltipWrapperLight]: isLightTheme,
                 })}>
                     <Icon glyph={this.state.success ? Icon.GLYPHS.selected : Icon.GLYPHS.close} />
                     <span className={Styles.tooltipText}>{this.state.tooltip}</span>
@@ -80,5 +84,5 @@ export default class Clipboard extends React.Component {
 Clipboard.propTypes = {
     id: PropTypes.string.isRequired,
     source: PropTypes.object.isRequired,
-    lightBackground: PropTypes.bool,
+    theme: PropTypes.oneOf(['dark', 'light']),
 };

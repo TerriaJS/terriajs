@@ -8,6 +8,8 @@
 .clipboardBody{
   display: flex;
   margin: 10px 0 0 0;
+}
+.clipboardBody--light {
   input {
     border:none;
     &:read-only:not(select) {
@@ -63,7 +65,7 @@
     display: inline-block;
   }
 }
-.tooltip-wrapper--lightBg {
+.tooltip-wrapper--light {
   svg {
     fill: $dark;
   }
