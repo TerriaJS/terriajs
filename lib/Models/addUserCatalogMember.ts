@@ -11,6 +11,7 @@ import CommonStrata from "./CommonStrata";
 import Mappable from "./Mappable";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
+import GroupMixin from "../ModelMixins/GroupMixin";
 
 interface AddUserCatalogMemberOptions {
     enable?: boolean;
@@ -43,7 +44,7 @@ export default function addUserCatalogMember(
             newCatalogItem.setTrait("user", "isOpen", true);
         }
 
-        if (defaultValue(options.enable, true)) {
+        if (defaultValue(options.enable, true) && !GroupMixin.isMixedInto(newCatalogItem)) {
             // add to workbench if it doesn't hold an item by the same id
             if (!terria.workbench.items.find(item => item.id === newCatalogItem.id)) {
                 terria.workbench.items.push(newCatalogItem);
