@@ -1,0 +1,37 @@
+@import '~terriajs-variables';
+
+.input {
+  composes: field from '../../../Sass/common/_form.scss';
+}
+
+.large {
+  height: $input-height-large;
+}
+
+.light {
+  border-color: transparent; // use transparent instead of no-border for layout +/ high contrast
+  &:focus {
+    border-color: transparent;
+  }
+  background: $grey-lighter2;
+  color: $text-dark2;
+  /* WebKit/Blink Browsers */
+  &::selection,
+  /* Gecko Browsers */
+  &::-moz-selection {
+    background: $color-primary;
+    color: $text-light;
+  }
+}
+
+.dark {
+  background: $overlay;
+  color: $text-light;
+  /* WebKit/Blink Browsers */
+  &::selection,
+  /* Gecko Browsers */
+  &::-moz-selection {
+    background: $grey-lighter2;
+    color: $color-primary;
+  }
+}

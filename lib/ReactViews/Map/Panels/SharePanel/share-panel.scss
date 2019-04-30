@@ -19,10 +19,6 @@
   @include transform-origin(50%, top);
 }
 
-.heading-label {
-
-}
-
 .btn--catalogShare {
   font-size: $font-size-data-preview;
   background: transparent;
@@ -78,40 +74,14 @@
   display: block;
 }
 
-.field {
-  composes: field from '../../../../Sass/common/_form.scss';
-  background: $overlay;
-  &[type=text] {
-    color: $text-light;
-  }
-}
 .clipboard-for-catalog-share {
   margin: 15px;
 }
 
-.shareUrlfield{
-  composes: field from '../../../../Sass/common/_form.scss';
-  composes: field-large from '../../../../Sass/common/_form.scss';
-  background: $overlay;
-  color: $text-light!important;
-  &[type=text] {
-    height: $input-height-large;
-  }
-  &::selection {
-    background: $color-primary;; /* WebKit/Blink Browsers */
-    color: #fff;
-  }
-  &::-moz-selection {
-    background: $color-primary;; /* Gecko Browsers */
-    color: #fff;
-  }
-}
-.catalogShareUrlfield{
-  composes: shareUrlfield;
-}
-.catalogShareUrlfield--light{
-  background: $grey-lighter2;
-  color: $text-dark2!important;
+.shareUrlfield {
+  width: calc(100% - 80px);
+  padding-left: 1rem;
+  padding-right: 0;
 }
 
 .mobileHeader{

@@ -2,25 +2,12 @@
 @import '~terriajs-mixins';
 
 .clipboard{
-  // padding: 5px;
   position: relative;
 }
 .clipboardBody{
   display: flex;
   margin: 10px 0 0 0;
 }
-.clipboardBody--light {
-  input {
-    border:none;
-    &:read-only:not(select) {
-      background: $grey-lighter2;
-      width: calc(100% - 80px);
-      padding-left: 1rem;
-      padding-right: 0;
-    }
-  }
-}
-
 .copyBtn{
   composes: btn from '../Sass/common/_buttons.scss';
   composes: btn-primary from '../Sass/common/_buttons.scss';

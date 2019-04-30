@@ -7,6 +7,7 @@ import createReactClass from 'create-react-class';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import DropdownStyles from '../panel.scss';
 import Icon from "../../../Icon.jsx";
+import Input from "../../../Styled/Input/Input.jsx";
 import Loader from '../../../Loader';
 import MenuPanel from '../../../StandardUserInterface/customizable/MenuPanel.jsx';
 import ObserverModelMixin from '../../../ObserveModelMixin';
@@ -231,6 +232,19 @@ const SharePanel = createReactClass({
         }
     },
 
+    getShareUrlInput(theme) {
+        return (
+            <Input
+                className={Styles.shareUrlfield}
+                light={theme === "light"}
+                dark={theme === "dark"}
+                large
+                type="text" value={this.state.shareUrl}
+                placeholder={this.state.placeholder} readOnly
+                onClick={e => e.target.select()} id='share-url' />
+        );
+    },
+
     renderContent() {
         if (this.props.catalogShare) {
             return this.renderContentForCatalogShare();
@@ -240,11 +254,6 @@ const SharePanel = createReactClass({
     },
 
     renderContentForCatalogShare() {
-        const shareUrlTextBox = <input className={classNames(Styles.catalogShareUrlfield, Styles.catalogShareUrlfieldLight)}
-            type="text" value={this.state.shareUrl}
-            placeholder={this.state.placeholder} readOnly
-            onClick={e => e.target.select()} id='share-url' />;
-
         return (
             <Choose>
                 <When condition={this.state.shareUrl === ''}>
@@ -252,7 +261,7 @@ const SharePanel = createReactClass({
                 </When>
                 <Otherwise>
                     <div className={Styles.clipboardForCatalogShare}>
-                        <Clipboard theme="light" text={this.state.shareUrl} source={shareUrlTextBox} id='share-url' />
+                        <Clipboard theme="light" text={this.state.shareUrl} source={this.getShareUrlInput('light')} id='share-url' />
                     </div>
                 </Otherwise>
             </Choose>
@@ -264,13 +273,9 @@ const SharePanel = createReactClass({
             `<iframe style="width: 720px; height: 600px; border: none;" src="${this.state.shareUrl}" allowFullScreen mozAllowFullScreen webkitAllowFullScreen></iframe>`
             : '';
 
-        const shareUrlTextBox = <input className={Styles.shareUrlfield} type="text" value={this.state.shareUrl}
-            placeholder={this.state.placeholder} readOnly
-            onClick={e => e.target.select()} id='share-url' />;
-
         return (
             <div>
-                <div className={DropdownStyles.section}><Clipboard source={shareUrlTextBox} id='share-url' /></div>
+                <div className={DropdownStyles.section}><Clipboard source={this.getShareUrlInput('dark')} id='share-url' /></div>
                 <div className={DropdownStyles.section}>
                     <div>Print Map</div>
                     <div className={Styles.explanation}>Open a printable version of this map.</div>
@@ -292,7 +297,7 @@ const SharePanel = createReactClass({
                     <If condition={this.advancedIsOpen()}>
                         <div className={DropdownStyles.section}>
                             <p className={Styles.paragraph}>To embed, copy this code to embed this map into an HTML page:</p>
-                            <input className={Styles.field} type="text" readOnly placeholder={this.state.placeholder}
+                            <Input large dark className={Styles.field} type="text" readOnly placeholder={this.state.placeholder}
                                 value={iframeCode}
                                 onClick={e => e.target.select()} />
                         </div>

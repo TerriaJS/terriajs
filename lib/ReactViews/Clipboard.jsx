@@ -62,9 +62,7 @@ export default class Clipboard extends React.Component {
             <div className={Styles.clipboard}>
                 <div className={Styles.title}>Share URL</div>
                 <div className={Styles.explanation}>Anyone with this URL will be able to access this map.</div>
-                <div className={classNames(Styles.clipboardBody, {
-                    [Styles.clipboardBodyLight]: isLightTheme,
-                })}>
+                <div className={Styles.clipboardBody}>
                     {this.props.source}
                     <button className={classNames(`btn-copy-${this.props.id}`, Styles.copyBtn)} data-clipboard-target={`#${this.props.id}`}>
                         Copy
