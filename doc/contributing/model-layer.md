@@ -101,10 +101,6 @@ Datasets that are synchronized to the timeline clock are listed in `terria.timel
 
     Note: In our old architecture there was a `useOwnClock` property, which no longer exists in the new architecture. Instead, datasets that would have been `useOwnClock=false` should now be added to the `timelineStack`.
 
-The timeline UI will copy changes to the current time to all datasets in the `timelineStack`. It will copy changes to `startTime`, `stopTime`, and `multiplier` to the "active" (top) dataset in the timeline stack.
+On tick of the timeline clock, the `TimelineStack` will the current time and paused state to all datasets it contains. It will copy changes to `startTime`, `stopTime`, and `multiplier` to the "active" (top) dataset in the timeline stack.
 
-When the timeline clock ticks, it will copy the currentTime to all datasets in the `timelineStack`.
-
-When timeline attachment is activated, the UI will copy the dataset's properties to the global clock.
-
-When a new dataset becomes the top of the `timelineStack`, its `startTime`, `stopTime`, and `multiplier` are copied to the global clock.
+When a dataset becomes the top of the timeline stack, or the top dataset's time-related properties change, the `currentTime`, `startTime`, `stopTime`, and `multiplier` properties are copied to the timeline's clock.
