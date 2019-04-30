@@ -6,17 +6,46 @@ import filterOutUndefined from "../Core/filterOutUndefined";
 import TerriaError from '../Core/TerriaError';
 import Model from "../Models/Model";
 import DiscretelyTimeVaryingTraits from "../Traits/DiscretelyTimeVaryingTraits";
+import TimeVarying from "./TimeVarying";
 
 type DiscretelyTimeVarying = Model<DiscretelyTimeVaryingTraits>;
 
 export default function DiscretelyTimeVaryingMixin<T extends Constructor<DiscretelyTimeVarying>>(Base: T) {
-    abstract class DiscretelyTimeVaryingMixin extends Base {
+    abstract class DiscretelyTimeVaryingMixin extends Base implements TimeVarying {
         @computed
-        get currentTimeAsJulianDate() {
-            if (this.currentTime === undefined) {
-                return undefined;
+        get currentTime() {
+            const time = super.currentTime;
+            if (time === undefined) {
+                if (this.initialTimeSource === 'now') {
+                    return JulianDate.toIso8601(JulianDate.now());
+                } else if (this.initialTimeSource === 'start') {
+                    return this.startTime;
+                } else if (this.initialTimeSource === 'stop') {
+                    return this.stopTime;
+                } else {
+                    throw new TerriaError({
+                        sender: this,
+                        title: 'Invalid initialTime value',
+                        message: 'The `initialTime` property has an invalid value: `' + this.initialTimeSource + '`.'
+                    });
+                }
             }
-            return JulianDate.fromIso8601(this.currentTime);
+            return time;
+        }
+
+        @computed({ equals: JulianDate.equals })
+        get currentTimeAsJulianDate() {
+            return toJulianDate(this.currentTime);
+        }
+
+        @computed({ equals: JulianDate.equals })
+        get startTimeAsJulianDate() {
+            return toJulianDate(this.startTime);
+        }
+
+        @computed({ equals: JulianDate.equals })
+        get stopTimeAsJulianDate() {
+            return toJulianDate(this.stopTime);
         }
 
         @computed
@@ -97,7 +126,7 @@ export default function DiscretelyTimeVaryingMixin<T extends Constructor<Discret
             return index - 1;
         }
 
-        @computed
+        @computed({ equals: JulianDate.equals })
         get currentDiscreteJulianDate() {
             const index = this.currentDiscreteTimeIndex;
             return index === undefined ? undefined : this.discreteTimesAsSortedJulianDates![index].time;
@@ -129,27 +158,6 @@ export default function DiscretelyTimeVaryingMixin<T extends Constructor<Discret
         @computed
         get isNextDiscreteTimeAvailable(): boolean {
             return this.nextDiscreteTimeIndex !== undefined;
-        }
-
-        @computed
-        get currentTime() {
-            const time = super.currentTime;
-            if (time === undefined) {
-                if (this.initialTime === 'now') {
-                    return JulianDate.toIso8601(JulianDate.now());
-                } else if (this.initialTime === 'start') {
-                    return this.startTime;
-                } else if (this.initialTime === 'stop') {
-                    return this.stopTime;
-                } else {
-                    throw new TerriaError({
-                        sender: this,
-                        title: 'Invalid initialTime value',
-                        message: 'The `initialTime` property has an invalid value: `' + this.initialTime + '`.'
-                    });
-                }
-            }
-            return time;
         }
 
         @computed
@@ -190,4 +198,11 @@ export default function DiscretelyTimeVaryingMixin<T extends Constructor<Discret
     }
 
     return DiscretelyTimeVaryingMixin;
+}
+
+function toJulianDate(time: string | undefined): JulianDate | undefined {
+    if (time === undefined) {
+        return undefined;
+    }
+    return JulianDate.fromIso8601(time);
 }

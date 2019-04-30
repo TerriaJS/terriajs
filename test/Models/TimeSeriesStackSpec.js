@@ -1,7 +1,7 @@
 'use strict';
 
 /*global require*/
-var TimeSeriesStack = require('../../lib/Models/TimeSeriesStack');
+var TimeSeriesStack = require('../../lib/Models/TimelineStack');
 var CatalogItem = require('../../lib/Models/CatalogItem');
 var Terria = require('../../lib/Models/Terria');
 

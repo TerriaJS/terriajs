@@ -1,35 +1,34 @@
 'use strict';
 
-import React from 'react';
-import PropTypes from 'prop-types';
-import createReactClass from 'create-react-class';
-import knockout from 'terriajs-cesium/Source/ThirdParty/knockout';
-
-import WrappedTimeline from 'terriajs-cesium/Source/Widgets/Timeline/Timeline';
-import JulianDate from 'terriajs-cesium/Source/Core/JulianDate';
-import {formatDateTime, formatDate, formatTime} from './DateFormats';
 import Styles from '!style-loader!css-loader?modules&sourceMap!sass-loader?sourceMap!./cesium-timeline.scss';
-import defined from 'terriajs-cesium/Source/Core/defined';
+import createReactClass from 'create-react-class';
 import dateFormat from 'dateformat';
+import { autorun, runInAction } from 'mobx';
+import PropTypes from 'prop-types';
+import React from 'react';
+import defined from 'terriajs-cesium/Source/Core/defined';
+import JulianDate from 'terriajs-cesium/Source/Core/JulianDate';
+import WrappedTimeline from 'terriajs-cesium/Source/Widgets/Timeline/Timeline';
+import CommonStrata from '../../../Models/CommonStrata';
+import { formatDate, formatDateTime, formatTime } from './DateFormats';
 
 const CesiumTimeline = createReactClass({
     propTypes: {
-        terria: PropTypes.object.isRequired,
-        autoPlay: PropTypes.bool
+        terria: PropTypes.object.isRequired
     },
 
     componentDidMount() {
-        this.cesiumTimeline = new WrappedTimeline(this.timelineContainer, this.props.terria.clock);
+        this.cesiumTimeline = new WrappedTimeline(this.timelineContainer, this.props.terria.timelineClock);
 
         this.cesiumTimeline.makeLabel = time => {
-            if (defined(this.props.terria.timeSeriesStack.topLayer)) {
-                const layer = this.props.terria.timeSeriesStack.topLayer;
-                if (defined(layer.dateFormat.timelineTic)) {
+            if (defined(this.props.terria.timelineStack.top)) {
+                const layer = this.props.terria.timelineStack.top;
+                if (defined(layer.dateFormat) && defined(layer.dateFormat.timelineTic)) {
                     return dateFormat(JulianDate.toDate(time), layer.dateFormat.timelineTic);
                 }
             }
             // Adjust the label format as you zoom by using the visible timeline's start and end
-            // (not the fixed this.props.terria.clock.startTime and stopTime).
+            // (not the fixed this.props.terria.timelineClock.startTime and stopTime).
             const startJulian = this.cesiumTimeline._startJulian;
             const endJulian = this.cesiumTimeline._endJulian;
             const totalDays = JulianDate.daysDifference(endJulian, startJulian);
@@ -42,25 +41,30 @@ const CesiumTimeline = createReactClass({
             return formatDateTime(JulianDate.toDate(time), this.locale);
         };
 
-        this.cesiumTimeline.scrubFunction = e => {
+        this.cesiumTimeline.addEventListener('settime', e => {
             const clock = e.clock;
             clock.currentTime = e.timeJulian;
             clock.shouldAnimate = false;
+            const timelineStack = this.props.terria.timelineStack;
+            if (timelineStack.top) {
+                runInAction(() => {
+                    timelineStack.syncToClock(CommonStrata.user);
+                });
+            }
             this.props.terria.currentViewer.notifyRepaintRequired();
-        };
+        }, false);
 
-        this.cesiumTimeline.addEventListener('settime', this.cesiumTimeline.scrubFunction, false);
-
-        this.topLayerSubscription = knockout.getObservable(this.props.terria.timeSeriesStack, 'topLayer').subscribe(() => this.zoom());
-        this.zoom();
-    },
-
-    zoom() {
-        this.cesiumTimeline.zoomTo(this.props.terria.clock.startTime, this.props.terria.clock.stopTime);
+        this.disposeZoomAutorun = autorun(() => {
+            const timelineStack = this.props.terria.timelineStack;
+            const topLayer = timelineStack.top;
+            if (topLayer) {
+                this.cesiumTimeline.zoomTo(topLayer.startTimeAsJulianDate, topLayer.stopTimeAsJulianDate);
+            }
+        });
     },
 
     componentWillUnmount() {
-        this.topLayerSubscription.dispose();
+        this.disposeZoomAutorun();
     },
 
     shouldComponentUpdate() {

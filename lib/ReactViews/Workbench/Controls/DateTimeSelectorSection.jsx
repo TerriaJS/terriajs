@@ -26,7 +26,7 @@ const DateTimeSelectorSection = observer(createReactClass({
         const item = this.props.item;
 
         // Give this item focus on the timeline (if it is connected to the timeline), so that the user can select all available dates for this item.
-        // item.terria.timeSeriesStack.promoteLayerToTop(item);
+        item.terria.timelineStack.promoteToTop(item);
 
         // Set the time on the item, set it to use its own clock, update the imagery and repaint.
         item.setTrait(CommonStrata.user, 'currentTime', JulianDate.toIso8601(JulianDate.fromDate(time)));
@@ -35,8 +35,12 @@ const DateTimeSelectorSection = observer(createReactClass({
 
     onTimelineButtonClicked() {
         const item = this.props.item;
-        item.useOwnClock = !item.useOwnClock;
-        item.useClock(); // Adds this item to the timeline.
+        const terria = item.terria;
+        if (terria.timelineStack.items.indexOf(item) >= 0) {
+            terria.timelineStack.remove(item);
+        } else {
+            terria.timelineStack.addToTop(item);
+        }
         item.terria.currentViewer.notifyRepaintRequired();
     },
 
@@ -44,24 +48,24 @@ const DateTimeSelectorSection = observer(createReactClass({
         const item = this.props.item;
 
         // Give this item focus on the timeline (if it is connected to the timeline), so that the user can select all available dates for this item.
-        // item.terria.timeSeriesStack.promoteLayerToTop(item);
+        item.terria.timelineStack.promoteToTop(item);
 
         item.moveToPreviousDiscreteTime(CommonStrata.user);
 
         // Repaint imagery on layers that don't subscribe to clock changes.
-        // item.terria.currentViewer.notifyRepaintRequired();
+        item.terria.currentViewer.notifyRepaintRequired();
     },
 
     onNextButtonClicked() {
         const item = this.props.item;
 
         // Give this item focus on the timeline (if it is connected to the timeline), so that the user can select all available dates for this item.
-        // item.terria.timeSeriesStack.promoteLayerToTop(item);
+        item.terria.timelineStack.promoteToTop(item);
 
         item.moveToNextDiscreteTime(CommonStrata.user);
 
         // Repaint imagery on layers that don't subscribe to clock changes.
-        // item.terria.currentViewer.notifyRepaintRequired();
+        item.terria.currentViewer.notifyRepaintRequired();
     },
 
     render() {
@@ -74,6 +78,7 @@ const DateTimeSelectorSection = observer(createReactClass({
 
         const discreteTime = item.currentDiscreteJulianDate === undefined ? undefined : JulianDate.toDate(item.currentDiscreteJulianDate);
         const jsDates = discreteTimes.map(timeTrait => JulianDate.toDate(timeTrait.time));
+        const attachedToTimeline = item.terria.timelineStack.contains(item);
 
         return (
             <div className={Styles.datetimeSelector}>
@@ -87,7 +92,7 @@ const DateTimeSelectorSection = observer(createReactClass({
                   <div className={Styles.picker} title='Select a time'>
                       <DateTimePicker currentDate={item.clampedDiscreteTime} dates={jsDates} onChange={this.changeDateTime} openDirection='down'/>
                   </div>
-                  <button className={classNames(Styles.timelineButton, {[Styles.timelineActive]: !item.useOwnClock})} type='button' onClick={this.onTimelineButtonClicked} title='Use timeline'>
+                  <button className={classNames(Styles.timelineButton, {[Styles.timelineActive]: attachedToTimeline})} type='button' onClick={this.onTimelineButtonClicked} title='Use timeline'>
                       <Icon glyph={Icon.GLYPHS.timeline}/>
                   </button>
                 </div>

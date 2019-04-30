@@ -83,13 +83,24 @@ We want to keep the UI as small and simple as possible, because:
 
 Therefore, whenever possible, TerriaJS logic should be in the Model layer instead of in the UI. The UI should be a pure function from Model state to React components, and actions that simply execute functions or change a small number of properties in the Model layer.
 
-# All settable properties should be Traits
+Evaluate observable properties as late as possible. In particular, avoid getting the value of an observable before starting an async operation and using it when it completes.
 
-All settable properties of a Model should be in its Traits. Because Traits are the only properties that are serialized/deserialized for catalog configuration and for sharing, settable properties that are not part of Traits prevent us from being able to completely recover application state. The only exception to this rule is for highly transient properties, such as whether a load from a remote source is currently in progress.
+# Defining Properties
 
+A few notes on defining properties in Model classes:
 
-Points in need of organization:
+* _Set only traits_: All settable properties of a Model should be in its Traits. Because Traits are the only properties that are serialized/deserialized for catalog configuration and for sharing, settable properties that are not part of Traits prevent us from being able to completely recover application state. The only exception to this rule is for highly transient properties, such as whether a load from a remote source is currently in progress.
+* _Covariance_: If you override a gettable property in a derived class, its type must be covariant with the base class type. That is, it is fine of the derived class property returns `string` while the base class property returns `string | undefined`. And it is fine if the derived class returns `Dog` while the base class returns `Animal`. But it is not ok if this relationahsip is reversed. You shouldn't really have any settable properties, but if you do, the types of such properties must be identical in base and derived classes.
+* _Equals_: Pay attention to the comparer/equals to use with observables to determine if a new value is equal to an old one. The default `equals` is usually fine for primitive types (e.g. string, number, boolean), observable arrays, and objects whose properties are themselves observable (e.g. Traits). But for other types, especially Cesium types like JulianDate, Cartographic, and Cartesian3, it is essential to specify an `equals`. Typically this looks like this: `@computed({ equals: JulianDate.equals })`.
 
-* If you override a gettable property in a derived class, its type must be covariant with the base class type. That is, it is fine of the derived class property returns `string` while the base class property returns `string | undefined`. And it is fine if the derived class returns `Dog` while the base class returns `Animal`. But it is not ok if this relationahsip is reversed. You shouldn't really have any settable properties, but if you do, the types of such properties must be identical in base and derived classes.
-* Evaluate observable properties as late as possible. In particular, avoid getting the value of an observable before starting an async operation and using it when it completes.
-* Pay attention to comparer to use with observables to determine if a new value is equal to an old one.
+# Time
+
+Time-varying Models have their own `currentTime`, `startTime`, `stopTime`, etc. properties. The `currentTime` is the property that the dataset should use to determine what to display (i.e. what time to show).
+
+Datasets that are synchronized to the timeline clock are listed in `terria.timelineStack`.
+
+    Note: In our old architecture there was a `useOwnClock` property, which no longer exists in the new architecture. Instead, datasets that would have been `useOwnClock=false` should now be added to the `timelineStack`.
+
+On tick of the timeline clock, the `TimelineStack` will the current time and paused state to all datasets it contains. It will copy changes to `startTime`, `stopTime`, and `multiplier` to the "active" (top) dataset in the timeline stack.
+
+When a dataset becomes the top of the timeline stack, or the top dataset's time-related properties change, the `currentTime`, `startTime`, `stopTime`, and `multiplier` properties are copied to the timeline's clock.

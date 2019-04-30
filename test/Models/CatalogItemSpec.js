@@ -189,8 +189,8 @@ describe('CatalogItem', function () {
 
     describe('time series data: ', function() {
         beforeEach(function () {
-            spyOn(terria.timeSeriesStack, 'addLayerToTop');
-            spyOn(terria.timeSeriesStack, 'removeLayer');
+            spyOn(terria.timelineStack, 'addToTop');
+            spyOn(terria.timelineStack, 'remove');
         });
 
         describe('when item has clock', function() {
@@ -201,21 +201,21 @@ describe('CatalogItem', function () {
                };
             });
 
-            it('item should be added to top of timeSeriesStack when enabled', function(done) {
+            it('item should be added to top of timelineStack when enabled', function(done) {
                 item.isEnabled = true;
 
                 item._loadForEnablePromise.then(function() {
-                   expect(terria.timeSeriesStack.addLayerToTop).toHaveBeenCalledWith(item);
+                   expect(terria.timelineStack.addToTop).toHaveBeenCalledWith(item);
                    done();
                 });
             });
 
-            it('should be removed from timeSeriesStack when disabled', function(done) {
+            it('should be removed from timelineStack when disabled', function(done) {
                 item.isEnabled = true;
 
                 item._loadForEnablePromise.then(function() {
                     item.isEnabled = false;
-                    expect(terria.timeSeriesStack.removeLayer).toHaveBeenCalledWith(item);
+                    expect(terria.timelineStack.removeLayer).toHaveBeenCalledWith(item);
                     done();
                 });
             });
@@ -223,11 +223,11 @@ describe('CatalogItem', function () {
         });
 
         describe('when item has no clock', function() {
-           it('should not call timeSeriesStack', function(done) {
+           it('should not call timelineStack', function(done) {
                item.isEnabled = true;
 
                item._loadForEnablePromise.then(function() {
-                   expect(terria.timeSeriesStack.addLayerToTop).not.toHaveBeenCalled();
+                   expect(terria.timelineStack.addToTop).not.toHaveBeenCalled();
                    done();
                });
            });

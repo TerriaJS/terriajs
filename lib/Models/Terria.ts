@@ -18,8 +18,8 @@ import ViewerMode from './ViewerMode';
 import Workbench from './Workbench';
 import PickedFeatures from '../Map/PickedFeatures';
 import Mappable from './Mappable';
-
-const Clock = require('./Clock');
+import TimelineStack from './TimelineStack';
+import Clock from 'terriajs-cesium/Source/Core/Clock';
 
 interface ConfigParameters {
     defaultMaximumShownFeatureInfos?: number;
@@ -54,7 +54,7 @@ export default class Terria {
     readonly workbench = new Workbench();
     readonly catalog = new Catalog(this);
     readonly currentViewer = new NoViewer(this);
-    readonly clock: any = new Clock({shouldAnimate: false})
+    readonly timelineClock = new Clock({ shouldAnimate: false });
 
     appName?: string;
     supportEmail?: string;
@@ -65,6 +65,11 @@ export default class Terria {
      * to `ConsoleAnalytics`.
      */
     readonly analytics: Analytics;
+
+    /**
+     * Gets the stack of layers active on the timeline.
+     */
+    readonly timelineStack = new TimelineStack(this.timelineClock);
 
     @observable
     viewerMode = ViewerMode.CesiumTerrain;
