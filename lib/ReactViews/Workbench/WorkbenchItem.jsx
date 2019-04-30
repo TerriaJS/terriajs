@@ -22,6 +22,7 @@ import ColorScaleRangeSection from './Controls/ColorScaleRangeSection';
 import ShortReport from './Controls/ShortReport';
 import StyleSelectorSection from './Controls/StyleSelectorSection';
 import ViewingControls from './Controls/ViewingControls';
+import Timer from '../Generic/Timer/Timer';
 
 import Styles from './workbench-item.scss';
 import Icon from '../Icon.jsx';
@@ -84,6 +85,9 @@ const WorkbenchItem = createReactClass({
                             </If>
                             {workbenchItem.name}
                         </div>
+                    </li>
+                    <li className={Styles.timerColumn}>
+                        <Timer></Timer>
                     </li>
                     <li className={Styles.toggleColumn}>
                         <button type='button'
