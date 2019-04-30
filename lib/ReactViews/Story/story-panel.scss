@@ -114,7 +114,7 @@
   composes: btn from '../../Sass/common/_buttons.scss';
   display: block;
   padding: $padding*0.8 $padding*1.6;
-  &:not([disabled]):hover, &:not([disabled]):focus{
+  &:not([disabled]):hover {
     svg{
       fill: $color-primary;
     }

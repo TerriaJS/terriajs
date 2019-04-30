@@ -104,7 +104,7 @@ const StoryBuilder = createReactClass({
        <p>1. Capture scenes from your map</p><p>2. Add text and images</p><p>3. Share with others</p></div></div>);
     },
 
-  openMenu(story){
+  openMenu(story) {
     this.setState({
       storyWithOpenMenu: story
     });
