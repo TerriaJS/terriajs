@@ -35,13 +35,13 @@ export default function addUserCatalogMember(
         }
 
         terria.catalog.userAddedDataGroup.add(newCatalogItem);
-        terria.catalog.userAddedDataGroup.setTrait(CommonStrata.user, "isOpen", true);
+        terria.catalog.userAddedDataGroup.setTrait(CommonStrata.definition, "isOpen", true);
 
         if (
             isDefined(options.open) &&
             hasTraits(newCatalogItem, GroupTraits, "isOpen")
         ) {
-            newCatalogItem.setTrait("user", "isOpen", true);
+            newCatalogItem.setTrait(CommonStrata.definition, "isOpen", true);
         }
 
         if (defaultValue(options.enable, true) && !GroupMixin.isMixedInto(newCatalogItem)) {

@@ -26,7 +26,7 @@ export default function createCatalogItemFromUrl(
             terria,
             "",
             undefined,
-            CommonStrata.user,
+            CommonStrata.definition,
             { type: mapping[index].type, name: url, url: url }
         );
 
@@ -34,7 +34,7 @@ export default function createCatalogItemFromUrl(
             return item
                 .loadMetadata()
                 .then(() => item)
-                .catch(() => {
+                .catch((e) => {
                     return createCatalogItemFromUrl(
                         url,
                         terria,

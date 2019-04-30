@@ -77,7 +77,7 @@ function createCatalogMember(
         terria,
         "",
         undefined,
-        CommonStrata.user,
+        CommonStrata.definition,
         json
     );
 }
@@ -166,9 +166,8 @@ function getConfirmation(
 }
 
 function loadItem(newCatalogItem: BaseModel, fileOrUrl: File | string) {
-    let promise;
     if (typeof fileOrUrl === "string") {
-        newCatalogItem.setTrait(CommonStrata.user, "url", fileOrUrl);
+        newCatalogItem.setTrait(CommonStrata.definition, "url", fileOrUrl);
     } else {
         if (hasFileInput(newCatalogItem)) {
             newCatalogItem.setFileInput(fileOrUrl);

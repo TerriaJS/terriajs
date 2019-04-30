@@ -49,9 +49,9 @@ export default function addUserFiles(
     for (let i = 0; i < files.length; i++) {
         const file = files[i];
         const tempCatalogItem = new ResultPendingCatalogItem(file.name, terria);
-        tempCatalogItem.setTrait(CommonStrata.user, "name", file.name);
+        tempCatalogItem.setTrait(CommonStrata.definition, "name", file.name);
         tempCatalogItem.setTrait(
-            CommonStrata.user,
+            CommonStrata.definition,
             "description",
             "Loading file..."
         );
