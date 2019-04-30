@@ -173,7 +173,9 @@ const SharePanel = createReactClass({
 
         if (open) {
             this.updateForShortening();
-            this.props.viewState.shareModalIsVisible = true;
+            if (this.props.catalogShare) {
+                this.props.viewState.shareModalIsVisible = true;
+            }
         }
     },
 
