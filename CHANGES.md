@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+## Next Release
+
+* Fixed a bug where all available styles were being retrieved from a `GetCapabilities` for each layer within a WMS Group resulting in memory crashes on WMS's with many layers.
+
+
 ### v7.3.0
 
 * Added `GltfCatalogItem` for displaying [glTF](https://www.khronos.org/gltf/) models on the 3D scene.
