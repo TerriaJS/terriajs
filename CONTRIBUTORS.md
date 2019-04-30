@@ -23,6 +23,7 @@ The following people have contributed to TerriaJS:
    * [Ashley Stacey](https://github.com/a-stacey)
    * [Jacky Jiang](https://github.com/t83714)
    * [Sajid Anower](https://github.com/sajidanower23)
+   * [Regina Pramesti](https://github.com/reginapramesti)
    * [Nanda Sankaran](https://github.com/na9da)
    * [Emma Krantz](https://github.com/KeyboardSounds)
    * [Rowan Winsemius](https://github.com/rowanwins)
