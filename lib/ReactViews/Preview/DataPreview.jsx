@@ -27,7 +27,11 @@ const DataPreview = observer(createReactClass({
     },
 
     render() {
-        const previewed = this.props.previewed;
+        let previewed = this.props.previewed;
+        if (previewed !== undefined && previewed.dereferenced !== undefined) {
+            previewed = previewed.dereferenced;
+        }
+
         let chartData;
         if (previewed && !previewed.isMappable && previewed.tableStructure) {
             chartData = previewed.chartData();
