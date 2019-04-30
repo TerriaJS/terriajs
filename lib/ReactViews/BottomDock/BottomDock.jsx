@@ -3,7 +3,7 @@
 import React from 'react';
 import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
-//import ChartPanel from '../Custom/Chart/ChartPanel';
+// import ChartPanel from '../Custom/Chart/ChartPanel';
 import { observer } from 'mobx-react';
 import Timeline from './Timeline/Timeline';
 import Styles from './bottom-dock.scss';
