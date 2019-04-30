@@ -2,7 +2,7 @@
 
 The following people have contributed to TerriaJS:
 
-* [NICTA](http://www.nicta.com.au/) / [CSIRO Data61](http://www.csiro.au/en/Research/D61)
+* [NICTA](http://www.nicta.com.au/) / [CSIRO's Data61](http://www.csiro.au/en/Research/D61)
    * [Bill Simpson-Young](https://github.com/bsimyo)
    * [Keith Grochow](https://github.com/kgrochow)
    * [Kevin Ring](https://github.com/kring)
@@ -23,6 +23,9 @@ The following people have contributed to TerriaJS:
    * [Ashley Stacey](https://github.com/a-stacey)
    * [Jacky Jiang](https://github.com/t83714)
    * [Sajid Anower](https://github.com/sajidanower23)
+   * [Nanda Sankaran](https://github.com/na9da)
+   * [Emma Krantz](https://github.com/KeyboardSounds)
+   * [Rowan Winsemius](https://github.com/rowanwins)
 * [Geoscience Australia](http://www.ga.gov.au/)
    * [Darren Reid](https://github.com/Layoric)
    * [Andrew Hicks](https://github.com/andrewdhicks)
