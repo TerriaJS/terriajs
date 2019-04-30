@@ -121,7 +121,7 @@
   }
   svg{
     fill: #888888;
-    width: 20px;
+    width: 15px;
   }
  }
  .nextBtn, .previousBtn{
@@ -137,6 +137,9 @@
 
  .locationBtn{
   border-right: 1px solid $field-border;
+  svg{
+    width: 18px;
+  }
  }
 
 .exitBtn, .locationBtn  {

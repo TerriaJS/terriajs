@@ -123,7 +123,7 @@ const StandardUserInterface = createReactClass({
         const terria = this.props.terria;
         const allBaseMaps = this.props.allBaseMaps;
         
-        const showStoryBuilder = this.props.viewState.storyEnabled && this.props.viewState.storyBuilderShown && !this.shouldUseMobileInterface();
+        const showStoryBuilder = this.props.viewState.storyBuilderShown && !this.shouldUseMobileInterface();
         const showStoryPanel = this.props.terria.stories && Array.isArray(this.props.terria.stories) && this.props.terria.stories.length && this.props.viewState.storyShown && !this.props.viewState.explorerPanelIsVisible && !this.props.viewState.storyBuilderShown;
         return (
             <div className={Styles.storyWrapper}>
@@ -256,7 +256,7 @@ const StandardUserInterface = createReactClass({
                     <DragDropNotification lastUploadedFiles={this.props.viewState.lastUploadedFiles} viewState={this.props.viewState}/>
                     {showStoryPanel && <StoryPanel terria={terria} viewState={this.props.viewState}/>}
                 </div>
-                {showStoryBuilder && <StoryBuilder terria={terria} viewState={this.props.viewState}/>}
+                {this.props.viewState.storyEnabled && <StoryBuilder isVisible ={showStoryBuilder} terria={terria} viewState={this.props.viewState}/>}
             </div>
         );
     }

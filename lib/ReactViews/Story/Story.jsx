@@ -25,19 +25,14 @@ const findTextContent = (content)=>{
 class Story extends React.Component {
   constructor(props) {
     super(props);
-    this.state ={
-      menuOpen: false
-    };
-
     this.toggleMenu = this.toggleMenu.bind(this);
     this.viewStory = this.viewStory.bind(this);
     this.deleteStory = this.deleteStory.bind(this);
     this.editStory = this.editStory.bind(this);
     this.recaptureStory = this.recaptureStory.bind(this);
     this.hideList = this.hideList.bind(this);
-    this.moveUp = this.moveUp.bind(this);
-    this.moveDown = this.moveDown.bind(this);
   }
+
     /* eslint-disable-next-line camelcase */
   UNSAFE_componentWillMount() {
       window.addEventListener('click', this.hideList);
@@ -48,9 +43,7 @@ class Story extends React.Component {
   }
 
   hideList() {
-    this.setState({
-      menuOpen: false
-    });
+    this.props.openMenu(null);
   }
 
   getTruncatedContent(text) {
@@ -61,9 +54,7 @@ class Story extends React.Component {
 
   toggleMenu(event) {
     event.stopPropagation();
-    this.setState({
-      menuOpen: !this.state.menuOpen
-    }); 
+    this.props.openMenu(this.props.story);
   }
 
   viewStory(event) {
@@ -90,27 +81,13 @@ class Story extends React.Component {
     this.hideList();
   }
 
-  moveUp(event) {
-    event.stopPropagation();
-    this.props.moveUp();
-    this.hideList();
-  }
-
-  moveDown(event) {
-    event.stopPropagation();
-    this.props.moveDown();
-    this.hideList();
-  }
-
-  renderMenu() {
+    renderMenu() {
     return (<div className={Styles.menu}>
                <ul className={Styles.menuInner}>
                   <li><button className={Styles.menuBtn} type='button' title='view' onClick={this.viewStory}>View</button></li>
                   <li><button className={Styles.menuBtn} type='button' title='edit' onClick={this.editStory}>Edit</button></li>
                   <li><button className={Styles.menuBtn} type='button' title='recapture' onClick={this.recaptureStory}>Recapture</button></li>
                   <li><button className={Styles.menuBtn} type='button' title='delete' onClick={this.deleteStory}>Delete</button></li>
-                 {this.props.moveUp && <li><button className={Styles.menuBtn} type='button' title='move up' onClick={this.moveUp}>Move up</button></li>}
-                 {this.props.moveDown && <li><button className={Styles.menuBtn} type='button' title='move down' onClick={this.moveDown}>Move down</button></li>}
                </ul>
       </div>);
   }
@@ -128,7 +105,7 @@ class Story extends React.Component {
                        {story.title && story.title.length > 0 ? story.title : 'untitled scene'} 
             </h3>
             <button className={Styles.toggleBtn} onClick={this.toggleMenu}><Icon glyph={Icon.GLYPHS.menuDotted}/></button>
-            {this.state.menuOpen && this.renderMenu()}
+            {this.props.menuOpen && this.renderMenu()}
           </div>
             {bodyText.length > 0 && <div className={Styles.body}>{bodyText}</div>}
            </div>
@@ -142,12 +119,12 @@ Story.propTypes ={
   viewStory: PropTypes.func, 
   deleteStory: PropTypes.func,
   recaptureStory: PropTypes.func,
-  moveUp: PropTypes.func,
-  moveDown: PropTypes.func,
   onMouseDown: PropTypes.func.isRequired,
   onTouchStart: PropTypes.func.isRequired,
   style: PropTypes.object,
   className: PropTypes.string,
+  menuOpen: PropTypes.bool,
+  openMenu: PropTypes.func
 };
 
 module.exports = sortable(Story);

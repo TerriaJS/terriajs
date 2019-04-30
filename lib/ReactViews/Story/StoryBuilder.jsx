@@ -10,26 +10,17 @@ import Story from './Story.jsx';
 import StoryEditor from './StoryEditor.jsx';
 import Sortable from 'react-anything-sortable';
 import createGuid from 'terriajs-cesium/Source/Core/createGuid';
+import classNames from 'classnames';
 
 import Styles from './story-builder.scss';
 import '!!style-loader!css-loader?sourceMap!react-anything-sortable/sortable.css';
-
-function arrayMove(arr, oldIndex, newIndex) {
-    if (newIndex >= arr.length) {
-        let k = newIndex - arr.length + 1;
-        while (k--) {
-            arr.push(undefined);
-        }
-    }
-    arr.splice(newIndex, 0, arr.splice(oldIndex, 1)[0]);
-    return arr; 
-}
 
 const StoryBuilder = createReactClass({
     displayName: 'StoryBuilder',
     mixins: [ObserveModelMixin],
     propTypes: {
         terria: PropTypes.object.isRequired,
+        isVisible: PropTypes.bool,
         viewState: PropTypes.object.isRequired
     },
 
@@ -103,17 +94,7 @@ const StoryBuilder = createReactClass({
       this.props.viewState.currentStoryId = index;
       this.runStories();
    },
-   
-  moveUp(index, story) {
-    const stories = this.props.terria.stories || [];
-    this.props.terria.stories = arrayMove(stories, index, index-1);
-  },
-
-  moveDown(index, story) {
-    const stories = this.props.terria.stories || [];
-    this.props.terria.stories = arrayMove(stories, index, index+1);
-  },
-  
+    
   onSort(sortedArray, currentDraggingSortData, currentDraggingIndex) {
     this.props.terria.stories = sortedArray;
   },
@@ -123,24 +104,34 @@ const StoryBuilder = createReactClass({
        <p>1. Capture scenes from your map</p><p>2. Add text and images</p><p>3. Share with others</p></div></div>);
     },
 
-    renderStories() {
-      const stories = this.props.terria.stories || [];
-      return (<div className={Styles.stories}>
-      <Sortable onSort={this.onSort} direction="vertical" dynamic={true}>
-        <For each='story' index="index" of={stories}>
-          <Story key={story.id} 
-                 story={story} 
-                 sortData={story} 
-                 moveDown={index < stories.length-1 ? this.moveDown.bind(this, index) : undefined} 
-                 moveUp = {index > 0? this.moveUp.bind(this,index) : undefined} 
-                 deleteStory={this.removeStory.bind(this, index)} 
-                 recaptureStory={this.reCaptureScene} 
-                 viewStory={this.viewStory.bind(this, index)} 
-                 editStory={this.editStory}/>
-        </For>
-        </Sortable>
-      </div>); 
-    },
+  openMenu(story){
+    this.setState({
+      storyWithOpenMenu: story
+    });
+  },
+
+  renderStories(editingMode) {
+    const stories = this.props.terria.stories || [];
+    const className = classNames({
+          [Styles.stories]: true,
+          [Styles.isActive]: editingMode
+      });
+    return (<div className={className}>
+    <Sortable onSort={this.onSort} direction="vertical" dynamic={true}>
+      <For each='story' index="index" of={stories}>
+        <Story key={story.id} 
+               story={story} 
+               sortData={story} 
+               deleteStory={this.removeStory.bind(this, index)} 
+               recaptureStory={this.reCaptureScene} 
+               viewStory={this.viewStory.bind(this, index)} 
+               menuOpen ={this.state.storyWithOpenMenu === story}
+               openMenu = {this.openMenu}
+               editStory={this.editStory}/>
+      </For>
+      </Sortable>
+    </div>); 
+  },
 
     onClickCapture() {
       this.setState({
@@ -151,8 +142,13 @@ const StoryBuilder = createReactClass({
 
     render() {
         const hasStories = defined(this.props.terria.stories) && this.props.terria.stories.length > 0;
+        const className = classNames({
+            [Styles.storyPanel]: true,
+            [Styles.isVisible]: this.props.isVisible,
+            [Styles.isHidden]: !this.props.isVisible
+        });
         return (
-            <div className={Styles.storyPanel}>
+            <div className={className}>
                 <div className={Styles.header}>
                   {!hasStories && this.renderIntro()}
                   <div className={Styles.actions}>
@@ -160,7 +156,7 @@ const StoryBuilder = createReactClass({
                    <button disabled={this.state.editingMode} className={Styles.captureBtn} title='capture current scene' onClick={this.onClickCapture}> <Icon glyph={Icon.GLYPHS.story}/> Capture Scene </button>
                   </div>
                 </div>
-               {!this.state.editingMode && hasStories &&  this.renderStories()}
+               {hasStories &&  this.renderStories(this.state.editingMode)}
                {this.state.editingMode && <StoryEditor removeStory={this.removeStory} exitEditingMode={()=>this.setState({editingMode: false})} story={this.state.currentStory} saveStory ={this.onSave}/>}
             </div>
         );
