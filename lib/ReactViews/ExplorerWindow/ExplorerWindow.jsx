@@ -40,9 +40,6 @@ const ExplorerWindow = createReactClass({
 
         this._pickedFeaturesSubscription = ko.pureComputed(this.isVisible, this).subscribe(this.onVisibilityChange);
 
-        if (terria.sharedFromExplorerPanel) {
-            viewState.openAddData();
-        }
         if (defined(terria.previewedItemId) && terria.catalog.shareKeyIndex[terria.previewedItemId]) {
             viewState.viewCatalogMember(terria.catalog.shareKeyIndex[terria.previewedItemId]);
         }
