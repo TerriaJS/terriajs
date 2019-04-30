@@ -1,11 +1,15 @@
 Change Log
 ==========
 
-### Next Release
+## Next Release
+
+* Fixed a bug where all available styles were being retrieved from a `GetCapabilities` for each layer within a WMS Group resulting in memory crashes on WMS's with many layers.
+
+
+### v7.3.0
 
 * Added `GltfCatalogItem` for displaying [glTF](https://www.khronos.org/gltf/) models on the 3D scene.
-* Replace `getUniqueValues` with `lodash.uniq`
-* Fixed Map View '2D' button activating 3D ellipsoid viewer when the instance has no terrain.
+* Fixed a bug where the Map settings '2D' button activated '3D Smooth' view when configured without support for '3D Terrain'.
 * Added `clampToTerrain` property to `GeoJsonCatalogItem`.
 * When clicking a polygon in 3D Terrain mode, the white outline is now correctly shown on the terrain surface. Note that Internet Explorer 11 and old GPU hardware cannot support drawing the highlight on terrain, so it will not be drawn at all in these environments.
 * Support State Electoral Districts 2018 and 2016 (SED_Code_2018, SED_Code_2016, SED_Name_2018, SED_Name_2016)
