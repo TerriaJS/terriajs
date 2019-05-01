@@ -5,12 +5,10 @@ import { BaseModel } from "./Model";
 import isDefined from "../Core/isDefined";
 import hasTraits from "./hasTraits";
 import GroupTraits from "../Traits/GroupTraits";
-import when from "terriajs-cesium/Source/ThirdParty/when";
 import TerriaError from "../Core/TerriaError";
 import CommonStrata from "./CommonStrata";
 import Mappable from "./Mappable";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
-import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
 import GroupMixin from "../ModelMixins/GroupMixin";
 
 interface AddUserCatalogMemberOptions {
@@ -37,11 +35,11 @@ export default function addUserCatalogMember(
             return;
         }
 
-        terria.catalog.userAddedDataGroup.add(newCatalogItem);
         terria.catalog.userAddedDataGroup.setTrait(CommonStrata.definition, "isOpen", true);
+        terria.catalog.userAddedDataGroup.add(CommonStrata.user, newCatalogItem);
 
         if (isDefined(options.open) && hasTraits(newCatalogItem, GroupTraits, "isOpen")) {
-            newCatalogItem.setTrait(CommonStrata.definition, "isOpen", true);
+            newCatalogItem.setTrait(CommonStrata.user, "isOpen", true);
         }
 
         if (defaultValue(options.enable, true) && !GroupMixin.isMixedInto(newCatalogItem)) {

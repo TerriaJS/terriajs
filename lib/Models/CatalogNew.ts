@@ -9,26 +9,6 @@ import Model, { BaseModel } from "./Model";
 import CommonStrata from "./CommonStrata";
 import ModelReference from "../Traits/ModelReference";
 
-class UserAddedDataGroup extends CatalogGroup {
-    add(member: BaseModel) {
-        const members = this.getTrait(CommonStrata.user, "members") || [];
-        this.setTrait(
-            CommonStrata.user,
-            "members",
-            members.concat([member.id])
-        );
-    }
-
-    remove(member: BaseModel) {
-        const members = this.getTrait(CommonStrata.user, "members") || [];
-        const index = members.indexOf(member.id);
-        if (index !== -1) {
-            members.splice(index, 1);
-            this.setTrait(CommonStrata.user, "members", members);
-        }
-    }
-}
-
 export default class Catalog {
     readonly group: CatalogGroup;
     readonly terria: Terria;
@@ -38,30 +18,31 @@ export default class Catalog {
         this.group = new CatalogGroup("/", this.terria);
     }
 
-    get userAddedDataGroup(): UserAddedDataGroup {
-        let group = <UserAddedDataGroup>(
-            this.group.memberModels.find(m => m.id === USER_ADDED_CATEGORY_NAME)
-        );
+    get userAddedDataGroup(): CatalogGroup {
+        let group = this.userAddedDataGroupIfItExists;
         if (isDefined(group)) {
             return group;
         }
-
-        group = new UserAddedDataGroup(USER_ADDED_CATEGORY_NAME, this.terria);
-        group.setTrait(CommonStrata.user, "name", USER_ADDED_CATEGORY_NAME);
+        group = new CatalogGroup(USER_ADDED_CATEGORY_NAME, this.terria);
         group.setTrait(
-            CommonStrata.user,
+            CommonStrata.definition,
+            "name",
+            USER_ADDED_CATEGORY_NAME
+        );
+        group.setTrait(
+            CommonStrata.definition,
             "description",
             "The group for data that was added by the user via the Add Data panel."
         );
         this.terria.addModel(group);
-        this.group.setTrait(CommonStrata.user, "members", [group.id]);
+        this.group.add(CommonStrata.definition, group);
         return group;
     }
 
     get userAddedDataGroupIfItExists(): CatalogGroup | undefined {
-        const group = <CatalogGroup>(
-            this.group.memberModels.find(m => m.id === USER_ADDED_CATEGORY_NAME)
+        const group = this.group.memberModels.find(
+            m => m.id === USER_ADDED_CATEGORY_NAME
         );
-        return group;
+        return <CatalogGroup | undefined>group;
     }
 }

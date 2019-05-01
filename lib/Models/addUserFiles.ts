@@ -5,11 +5,9 @@ import CommonStrata from "./CommonStrata";
 import readJson from "../Core/readJson";
 import getDataType from "../Core/getDataType";
 import raiseErrorOnRejectedPromise from "./raiseErrorOnRejectedPromise";
-import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import createCatalogItemFromFileOrUrl from "./createCatalogItemFromFileOrUrl";
 import addUserCatalogMember from "./addUserCatalogMember";
 import TerriaError from "../Core/TerriaError";
-import Mappable from "./Mappable";
 import updateModelFromJson from "./updateModelFromJson";
 import isDefined from "../Core/isDefined";
 
@@ -55,7 +53,7 @@ export default function addUserFiles(
             "description",
             "Loading file..."
         );
-        terria.catalog.userAddedDataGroup.add(tempCatalogItem);
+        terria.catalog.userAddedDataGroup.add(CommonStrata.user, tempCatalogItem);
 
         let loadPromise;
         if (file.name.toUpperCase().indexOf(".JSON") !== -1) {
@@ -67,7 +65,7 @@ export default function addUserFiles(
                     } finally {
                         tempCatalogItemList.splice(tempCatalogItemList.indexOf(tempCatalogItem), 1);
                         terria.workbench.removeItem(tempCatalogItem);
-                        terria.catalog.userAddedDataGroup.remove(tempCatalogItem);
+                        terria.catalog.userAddedDataGroup.remove(CommonStrata.user, tempCatalogItem);
                     }
                 } else {
                     return loadCatalogItemFromFile(file);
@@ -96,7 +94,7 @@ export default function addUserFiles(
             );
 
             tempCatalogItemList.forEach(item => {
-                terria.catalog.userAddedDataGroup.remove(item);
+                terria.catalog.userAddedDataGroup.remove(CommonStrata.user, item);
                 terria.workbench.removeItem(item);
             });
             return items;
