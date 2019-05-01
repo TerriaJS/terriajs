@@ -159,6 +159,8 @@ $chart-text-color: #fff;
 $chart-line-color: #ccc;
 $chart-preview-line-color: $chart-line-color;
 $chart-darker: darken($dark, 8%);
+$chart-panel-background: $dark;
+$chart-panel-header: $chart-darker;
 
 $charcoal-grey: #3f4854;
 $turquoise-blue: #08abd5;
