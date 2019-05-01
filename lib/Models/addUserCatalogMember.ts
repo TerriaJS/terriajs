@@ -35,7 +35,7 @@ export default function addUserCatalogMember(
             return;
         }
 
-        terria.catalog.userAddedDataGroup.setTrait(CommonStrata.definition, "isOpen", true);
+        terria.catalog.userAddedDataGroup.setTrait(CommonStrata.user, "isOpen", true);
         terria.catalog.userAddedDataGroup.add(CommonStrata.user, newCatalogItem);
 
         if (isDefined(options.open) && hasTraits(newCatalogItem, GroupTraits, "isOpen")) {

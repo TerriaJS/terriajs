@@ -41,15 +41,15 @@ export default function addUserFiles(
     }
 
     function loadInitData(initData: {catalog: any}) {
-        updateModelFromJson(terria.catalog.group, CommonStrata.definition, {members: initData.catalog});
+        updateModelFromJson(terria.catalog.group, CommonStrata.user, {members: initData.catalog});
     }
 
     for (let i = 0; i < files.length; i++) {
         const file = files[i];
         const tempCatalogItem = new ResultPendingCatalogItem(file.name, terria);
-        tempCatalogItem.setTrait(CommonStrata.definition, "name", file.name);
+        tempCatalogItem.setTrait(CommonStrata.user, "name", file.name);
         tempCatalogItem.setTrait(
-            CommonStrata.definition,
+            CommonStrata.user,
             "description",
             "Loading file..."
         );
