@@ -45,37 +45,36 @@ const DataCatalogItem = observer(createReactClass({
     },
 
     toggleEnable(event) {
-        const itemWorkbenchIndex = this.props.item.terria.workbench.items.indexOf(this.props.item);
-        if (itemWorkbenchIndex === -1) {
-            if (this.props.item.loadMapItems) {
-                this.props.item.loadMapItems();
-            }
-            this.props.item.terria.workbench.items.push(this.props.item);
-            this.props.item.ancestors = this.props.ancestors;
+        const catalogItem = this.props.item;
+        if (catalogItem.loadReference) {
+            // TODO: handle promise rejection
+            catalogItem.loadReference();
+        }
+        const workbench = catalogItem.terria.workbench;
+        if (workbench.contains(catalogItem)) {
+            catalogItem.ancestors = undefined;
+            workbench.remove(catalogItem);
         } else {
-            this.props.item.terria.workbench.items.splice(itemWorkbenchIndex, 1);
-            this.props.item.ancestors = undefined;
+            catalogItem.ancestors = this.props.ancestors;
+            workbench.add(catalogItem);
         }
 
-        // this.props.item.toggleEnabled();
+        // set preview as well
+        this.setPreviewedItem();
 
-        // // set preview as well
-        // this.setPreviewedItem();
-
-        // if (this.props.item.isEnabled === true && !event.shiftKey && !event.ctrlKey) {
-        //     // close modal window
-        //     this.props.viewState.explorerPanelIsVisible = false;
-        //     this.props.viewState.mobileView = null;
-        //     if (this.props.viewState.firstTimeAddingData) {
-        //         this.props.viewState.featureInfoPanelIsVisible = true;
-        //     }
-        // }
+        if (workbench.contains(catalogItem) && !event.shiftKey && !event.ctrlKey) {
+            this.props.viewState.explorerPanelIsVisible = false;
+            this.props.viewState.mobileView = null;
+        }
     },
 
     setPreviewedItem() {
         // raiseErrorOnRejectedPromise(this.props.item.terria, this.props.item.load());
         if (this.props.item.loadMetadata) {
             this.props.item.loadMetadata();
+        }
+        if (this.props.item.loadReference) {
+            this.props.item.loadReference();
         }
         this.props.viewState.viewCatalogMember(this.props.item);
         // mobile switch to nowvewing
@@ -114,7 +113,7 @@ const DataCatalogItem = observer(createReactClass({
             return 'trash';
         } else if(addedByUser(this.props.item)) {
             return null;
-        }else if (this.props.item.isEnabled) {
+        }else if (this.props.item.terria.workbench.contains(this.props.item)) {
             return 'remove';
         } else if (!defined(this.props.item.invoke)) {
             return 'add';

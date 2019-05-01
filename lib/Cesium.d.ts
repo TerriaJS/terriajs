@@ -1086,3 +1086,4 @@ declare module 'terriajs-cesium/Source/ThirdParty/when';
 declare module 'terriajs-cesium/Source/Core/getTimestamp' {
     export default function getTimestamp(): number;
 }
+declare module 'terriajs-cesium/Source/Core/createGuid';

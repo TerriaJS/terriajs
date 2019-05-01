@@ -57,6 +57,11 @@ const simpleStyleIdentifiers = [
 class GeoJsonCatalogItem
     extends AsyncMappableMixin(UrlMixin(CatalogMemberMixin(CreateModel(GeoJsonCatalogItemTraits)))) {
 
+    static readonly type = 'geojson';
+    get type() {
+        return GeoJsonCatalogItem.type;
+    }
+
     private _dataSource: GeoJsonDataSource | undefined;
 
     private _geoJsonFile?: File;

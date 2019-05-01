@@ -5,7 +5,6 @@ import classNames from 'classnames';
 
 import DataCatalogTab from './Tabs/DataCatalogTab';
 import MyDataTab from './Tabs/MyDataTab/MyDataTab';
-import ObserveModelMixin from '../ObserveModelMixin';
 import defined from 'terriajs-cesium/Source/Core/defined';
 
 import Styles from './tabs.scss';

@@ -295,6 +295,30 @@ class WebMapServiceCatalogItem extends DiscretelyTimeVaryingMixin(GetCapabilitie
     }
 
     @computed
+    get layers(): string | undefined {
+        let layers = super.layers;
+
+        if (layers === undefined && this.uri !== undefined) {
+            // Try to extract a layer from the URL
+            const query: any = this.uri.query(true);
+            layers = query.layers;
+        }
+
+        if (layers === undefined) {
+            // Use the first layer with a name in GetCapabilities
+            const capabilitiesStratum = <GetCapabilitiesStratum | undefined>this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName);
+            if (capabilitiesStratum !== undefined) {
+                const firstLayerWithName = capabilitiesStratum.capabilities.allLayers.find(layer => layer.Name !== undefined);
+                if (firstLayerWithName !== undefined) {
+                    return firstLayerWithName.Name;
+                }
+            }
+        }
+
+        return layers;
+    }
+
+    @computed
     get layersArray(): ReadonlyArray<string> {
         if (Array.isArray(this.layers)) {
             return this.layers;
@@ -335,7 +359,7 @@ class WebMapServiceCatalogItem extends DiscretelyTimeVaryingMixin(GetCapabilitie
                 // but because the server has no other way of indicating the default style, let's hope that
                 // sanity prevails.
                 const layerStyle = style === undefined
-                    ? layerAvailableStyles.styles[0]
+                    ? (layerAvailableStyles.styles.length > 0 ? layerAvailableStyles.styles[0] : undefined)
                     : layerAvailableStyles.styles.find(candidate => candidate.name === style);
                 if (layerStyle !== undefined && layerStyle.legendUrl !== undefined) {
                     result.push(layerStyle.legendUrl);
