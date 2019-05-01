@@ -63,7 +63,7 @@ export default class Workbench {
      * @returns The index of the model or its dereferenced equivalent, or -1 if neither exist on the workbench.
      */
     indexOf(item: BaseModel) {
-        return this.items.findIndex(model => model === item || dereferenceModel(model) === item);
+        return this.items.findIndex(model => model === item || dereferenceModel(model) === dereferenceModel(item));
     }
 }
 

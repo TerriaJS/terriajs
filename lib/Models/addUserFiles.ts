@@ -64,7 +64,7 @@ export default function addUserFiles(
                         loadInitData(json);
                     } finally {
                         tempCatalogItemList.splice(tempCatalogItemList.indexOf(tempCatalogItem), 1);
-                        terria.workbench.removeItem(tempCatalogItem);
+                        terria.workbench.remove(tempCatalogItem);
                         terria.catalog.userAddedDataGroup.remove(CommonStrata.user, tempCatalogItem);
                     }
                 } else {
@@ -79,7 +79,7 @@ export default function addUserFiles(
         }
 
         tempCatalogItem.loadPromise = loadPromise;
-        terria.workbench.items.push(tempCatalogItem);
+        terria.workbench.add(tempCatalogItem);
         tempCatalogItemList.push(tempCatalogItem);
     }
 
@@ -95,7 +95,7 @@ export default function addUserFiles(
 
             tempCatalogItemList.forEach(item => {
                 terria.catalog.userAddedDataGroup.remove(CommonStrata.user, item);
-                terria.workbench.removeItem(item);
+                terria.workbench.remove(item);
             });
             return items;
         }
