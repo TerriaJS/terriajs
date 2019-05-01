@@ -9,7 +9,6 @@ import PropTypes from 'prop-types';
 import DataCatalog from '../../../DataCatalog/DataCatalog.jsx';
 import DataPreview from '../../../Preview/DataPreview.jsx';
 import AddData from './AddData.jsx';
-import ObserveModelMixin from '../../../ObserveModelMixin';
 
 import Styles from './my-data-tab.scss';
 
