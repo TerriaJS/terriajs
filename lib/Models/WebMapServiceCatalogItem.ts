@@ -295,6 +295,30 @@ class WebMapServiceCatalogItem extends DiscretelyTimeVaryingMixin(GetCapabilitie
     }
 
     @computed
+    get layers(): string | undefined {
+        let layers = super.layers;
+
+        if (layers === undefined && this.uri !== undefined) {
+            // Try to extract a layer from the URL
+            const query: any = this.uri.query(true);
+            layers = query.layers;
+        }
+
+        if (layers === undefined) {
+            // Use the first layer with a name in GetCapabilities
+            const capabilitiesStratum = <GetCapabilitiesStratum | undefined>this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName);
+            if (capabilitiesStratum !== undefined) {
+                const firstLayerWithName = capabilitiesStratum.capabilities.allLayers.find(layer => layer.Name !== undefined);
+                if (firstLayerWithName !== undefined) {
+                    return firstLayerWithName.Name;
+                }
+            }
+        }
+
+        return layers;
+    }
+
+    @computed
     get layersArray(): ReadonlyArray<string> {
         if (Array.isArray(this.layers)) {
             return this.layers;

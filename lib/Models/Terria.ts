@@ -20,6 +20,7 @@ import PickedFeatures from '../Map/PickedFeatures';
 import Mappable from './Mappable';
 import TimelineStack from './TimelineStack';
 import Clock from 'terriajs-cesium/Source/Core/Clock';
+require("regenerator-runtime/runtime");
 
 interface ConfigParameters {
     defaultMaximumShownFeatureInfos?: number;

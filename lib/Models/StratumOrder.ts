@@ -30,6 +30,7 @@ export default class StratumOrder {
     nextUser: number = 3 * million;
 
     constructor() {
+        this.addDefinitionStratum(CommonStrata.defaults);
         this.addDefinitionStratum(CommonStrata.inheritedFromParentGroup);
         this.addDefinitionStratum(CommonStrata.definition);
         this.addUserStratum(CommonStrata.user);

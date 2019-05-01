@@ -45,16 +45,17 @@ const DataCatalogItem = observer(createReactClass({
     },
 
     toggleEnable(event) {
-        const itemWorkbenchIndex = this.props.item.terria.workbench.items.indexOf(this.props.item);
+        const catalogItem = this.props.item.dereferenced ? this.props.item.dereferenced : this.props.item;
+        const itemWorkbenchIndex = catalogItem.terria.workbench.items.indexOf(catalogItem);
         if (itemWorkbenchIndex === -1) {
-            if (this.props.item.loadMapItems) {
-                this.props.item.loadMapItems();
+            if (catalogItem.loadMapItems) {
+                catalogItem.loadMapItems();
             }
-            this.props.item.terria.workbench.items.push(this.props.item);
-            this.props.item.ancestors = this.props.ancestors;
+            catalogItem.terria.workbench.items.push(catalogItem);
+            catalogItem.ancestors = this.props.ancestors;
         } else {
-            this.props.item.terria.workbench.items.splice(itemWorkbenchIndex, 1);
-            this.props.item.ancestors = undefined;
+            catalogItem.terria.workbench.items.splice(itemWorkbenchIndex, 1);
+            catalogItem.ancestors = undefined;
         }
 
         // this.props.item.toggleEnabled();

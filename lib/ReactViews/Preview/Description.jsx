@@ -103,12 +103,12 @@ const Description = createReactClass({
                         <Choose>
                             <When condition={catalogItem.type === 'wms' || (catalogItem.type === 'esri-mapServer' && defined(catalogItem.layers))}>
                                 <p key="wms-layers">
-                                    Layer name{catalogItem.layers.split(',').length > 1 ? 's' : ''}: {catalogItem.layers}
+                                    Layer name{(catalogItem.layers || '').split(',').length > 1 ? 's' : ''}: {catalogItem.layers}
                                 </p>
                             </When>
                             <When condition={catalogItem.type === 'wfs'}>
                                 <p key="wfs-typeNames">
-                                    Type name{catalogItem.typeNames.split(',').length > 1 ? 's' : ''}: {catalogItem.typeNames}
+                                    Type name{(catalogItem.typeNames || '').split(',').length > 1 ? 's' : ''}: {catalogItem.typeNames}
                                 </p>
                             </When>
                         </Choose>

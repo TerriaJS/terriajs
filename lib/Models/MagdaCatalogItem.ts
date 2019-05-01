@@ -1,17 +1,82 @@
-import { observable, runInAction } from "mobx";
-import JsonValue, { isJsonObject, JsonObject } from "../Core/Json";
+import { computed, observable } from "mobx";
+import createGuid from "terriajs-cesium/Source/Core/createGuid";
+import JsonValue, { isJsonObject, JsonArray } from "../Core/Json";
 import loadJson from "../Core/loadJson";
 import makeRealPromise from "../Core/makeRealPromise";
 import TerriaError from "../Core/TerriaError";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
-import MagdaCatalogItemTraits from "../Traits/MagdaCatalogItemTraits";
+import MagdaCatalogItemTraits, { MagdaDistributionFormatTraits } from "../Traits/MagdaCatalogItemTraits";
+import CatalogMemberFactory from "./CatalogMemberFactory";
 import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
+import createStratumInstance from "./createStratumInstance";
 import { BaseModel } from "./Model";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
-import WebMapServiceCatalogItem from "./WebMapServiceCatalogItem";
+import Terria from "./Terria";
+import upsertModelFromJson from "./upsertModelFromJson";
+
+const defaultDistributionFormats = [
+    createStratumInstance(MagdaDistributionFormatTraits, {
+        id: 'WMS',
+        formatRegex: '^wms$',
+        terriaDefinition: {
+            type: 'wms'
+        }
+    }),
+    createStratumInstance(MagdaDistributionFormatTraits, {
+        id: 'EsriMapServer',
+        formatRegex: '^esri rest$',
+        urlRegex: 'MapServer',
+        terriaDefinition: {
+            type: 'esri-mapServer'
+        }
+    }),
+    createStratumInstance(MagdaDistributionFormatTraits, {
+        id: 'CSV',
+        formatRegex: '^csv(-geo-)?',
+        terriaDefinition: {
+            type: 'csv'
+        }
+    }),
+    createStratumInstance(MagdaDistributionFormatTraits, {
+        id: 'CZML',
+        formatRegex: '^czml$',
+        terriaDefinition: {
+            type: 'czml'
+        }
+    }),
+    createStratumInstance(MagdaDistributionFormatTraits, {
+        id: 'KML',
+        formatRegex: '^km[lz]$',
+        terriaDefinition: {
+            type: 'kml'
+        }
+    }),
+    createStratumInstance(MagdaDistributionFormatTraits, {
+        id: 'GeoJSON',
+        formatRegex: '^geojson$',
+        terriaDefinition: {
+            type: 'geojson'
+        }
+    }),
+    createStratumInstance(MagdaDistributionFormatTraits, {
+        id: 'WFS',
+        formatRegex: '^wfs$',
+        terriaDefinition: {
+            type: 'wfs'
+        }
+    }),
+    createStratumInstance(MagdaDistributionFormatTraits, {
+        id: 'EsriFeatureServer',
+        formatRegex: '^esri rest$',
+        urlRegex: 'FeatureServer',
+        terriaDefinition: {
+            type: 'esri-featureServer'
+        }
+    })
+];
 
 export default class MagdaCatalogItem extends ReferenceMixin(UrlMixin(CatalogMemberMixin(CreateModel(MagdaCatalogItemTraits)))) {
     static readonly type = 'magda';
@@ -21,6 +86,12 @@ export default class MagdaCatalogItem extends ReferenceMixin(UrlMixin(CatalogMem
 
     get type() {
         return MagdaCatalogItem.type;
+    }
+
+    constructor(id: string, terria: Terria) {
+        super(id, terria);
+
+        this.setTrait(CommonStrata.defaults, 'distributionFormats', defaultDistributionFormats);
     }
 
     get dereferenced(): BaseModel | undefined {
@@ -53,7 +124,7 @@ export default class MagdaCatalogItem extends ReferenceMixin(UrlMixin(CatalogMem
                 const proxiedUrl = proxyCatalogItemUrl(this, distributionUri.toString(), '1d');
                 return makeRealPromise<JsonValue>(loadJson(proxiedUrl)).then(distributionJson => {
                     if (isJsonObject(distributionJson) && distributionJson.id !== undefined) {
-                        return [distributionJson];
+                        return <JsonArray>[distributionJson];
                     } else {
                         return [];
                     }
@@ -98,215 +169,107 @@ export default class MagdaCatalogItem extends ReferenceMixin(UrlMixin(CatalogMem
                 });
             }
         }).then(distributionsToConsider => {
-            runInAction(() => {
-                const item = new WebMapServiceCatalogItem(this.id + '/test', this.terria);
-                item.setTrait(CommonStrata.inheritedFromParentGroup, 'info', [{
-                    name: 'Test',
-                    content: distributionsToConsider.length.toString()
-                }]);
-                item.setTrait(CommonStrata.definition, 'url', 'https://programs.communications.gov.au/geoserver/ows');
-                item.setTrait(CommonStrata.definition, 'layers', 'mybroadband:MyBroadband_ADSL_Availability');
-                this._reference = item;
-            });
-            // var catalogItemCreatingAttempts = [];
-            // for (let i = 0; i < distributionsToConsider.length; ++i) {
-            //     const attempt = MagdaCatalogItem.createCatalogItemFromDistribution({
-            //         terria: this.terria,
-            //         distribution: distributionsToConsider[i],
-            //         magdaBaseUrl: this.url,
-            //         wmsDistributionFormat: this.allowWms
-            //             ? this.wmsDistributionFormat
-            //             : undefined,
-            //         // kmlDistributionFormat: that.allowKml
-            //         //     ? that.kmlDistributionFormat
-            //         //     : undefined,
-            //         // wfsDistributionFormat: that.allowWfs
-            //         //     ? that.wfsDistributionFormat
-            //         //     : undefined,
-            //         // csvDistributionFormat: that.allowCsv
-            //         //     ? that.csvDistributionFormat
-            //         //     : undefined,
-            //         // esriMapServerDistributionFormat: that.allowEsriMapServer
-            //         //     ? that.esriMapServerDistributionFormat
-            //         //     : undefined,
-            //         // geoJsonDistributionFormat: that.allowGeoJson
-            //         //     ? that.geoJsonDistributionFormat
-            //         //     : undefined,
-            //         // czmlDistributionFormat: that.allowCzml
-            //         //     ? that.czmlDistributionFormat
-            //         //     : undefined,
-            //         // dataCustodian: this.dataCustodian,
-            //         // itemProperties: this.itemProperties,
-            //         // allowWfsGroups: true,
-            //         // allowWmsGroups: true,
-            //         // zoomOnEnable: that.zoomOnEnable
-            //     }).then(catalogItem => {
-            //         if (!defined(catalogItem)) {
-            //             var e =new Error();
-            //             e.ignore = true;
-            //             throw e;
-            //             //--- creation function may return undefined.
-            //             //--- This should be considered as failed but not report to user.
-            //         }else {
-            //             catalogItem.name = this.name;
-            //             return catalogItem;
-            //         }
-            //     });
-            //     catalogItemCreatingAttempts.push(attempt);
-            // }
+            return this.createCatalogItemFromDistributions(distributionsToConsider);
+        }).then(catalogItem => {
+            this._reference = catalogItem;
         });
     }
 
-    // static createCatalogItemFromDistribution(options: {
-    //     distribution: JsonObject,
-    //     parent: JsonObject
-    // }) {
-    //     var distribution = options.distribution;
-    //     var parent = options.parent;
+    async createCatalogItemFromDistributions(distributions: JsonArray): Promise<BaseModel | undefined> {
+        const distributionFormats = this.distributionFormats || [];
+        const formatRegexs = distributionFormats.map(distributionFormat => {
+            if (distributionFormat.formatRegex !== undefined) {
+                return new RegExp(distributionFormat.formatRegex, 'i');
+            }
+        });
+        const urlRegexs = distributionFormats.map(distributionFormat => {
+            if (distributionFormat.urlRegex !== undefined) {
+                return new RegExp(distributionFormat.urlRegex, 'i');
+            }
+        });
 
-    //     var formats = [
-    //         // Format Regex, Catalog Item, (optional) URL regex
-    //         [options.wmsDistributionFormat, WebMapServiceCatalogItem],
-    //         [options.wfsDistributionFormat, WebFeatureServiceCatalogItem],
-    //         [
-    //             options.esriMapServerDistributionFormat,
-    //             ArcGisMapServerCatalogItem,
-    //             /MapServer/
-    //         ],
-    //         [
-    //             options.esriFeatureServerDistributionFormat,
-    //             ArcGisFeatureServerCatalogItem,
-    //             /FeatureServer/
-    //         ],
-    //         [options.kmlDistributionFormat, KmlCatalogItem],
-    //         [options.geoJsonDistributionFormat, GeoJsonCatalogItem],
-    //         [options.czmlDistributionFormat, CzmlCatalogItem],
-    //         [options.csvDistributionFormat, CsvCatalogItem]
-    //     ].filter(function(format) {
-    //         return defined(format[0]);
-    //     });
+        class InheritedStratum {
+            constructor(readonly magda: MagdaCatalogItem, readonly url: string) {
+            }
 
-    //     var dcatJson = distribution.aspects["dcat-distribution-strings"];
-    //     var datasetFormat = distribution.aspects["dataset-format"];
-    //     let formatString = dcatJson.format;
-    //     if (datasetFormat && datasetFormat.format) {
-    //         formatString = datasetFormat.format;
-    //     }
+            @computed
+            get name() {
+                return this.magda.name;
+            }
 
-    //     var baseUrl = dcatJson.downloadURL;
-    //     if (!defined(baseUrl)) {
-    //         if (dcatJson.accessURL) {
-    //             baseUrl = dcatJson.accessURL;
-    //         } else {
-    //             return when(undefined);
-    //         }
-    //     }
+            @computed
+            get info() {
+                return this.magda.info;
+            }
+        }
 
-    //     var matchingFormats = formats.filter(function(format) {
-    //         // Matching formats must match the format regex,
-    //         // and also the URL regex if it exists.
-    //         return (
-    //             formatString.match(format[0]) &&
-    //             (!defined(format[2]) || baseUrl.match(format[2]))
-    //         );
-    //     });
-    //     if (matchingFormats.length === 0) {
-    //         return when(undefined);
-    //     }
+        for (let i = 0; i < distributionFormats.length; ++i) {
+            const distributionFormat = distributionFormats[i];
+            const formatRegex = formatRegexs[i];
+            const urlRegex = urlRegexs[i];
 
-    //     var isWms = matchingFormats[0][1] === WebMapServiceCatalogItem;
-    //     var isWfs = matchingFormats[0][1] === WebFeatureServiceCatalogItem;
+            // Find distributions that match this format
+            for (let j = 0; j < distributions.length; ++j) {
+                const distribution = distributions[j];
 
-    //     // Extract the layer name from the URL.
-    //     var uri = new URI(baseUrl);
-    //     var params = uri.search(true);
+                if (!isJsonObject(distribution)) {
+                    continue;
+                }
 
-    //     // Remove the query portion of the WMS URL.
-    //     var url = baseUrl;
+                const aspects = distribution.aspects;
+                if (!isJsonObject(aspects)) {
+                    continue;
+                }
 
-    //     var newItem;
-    //     if (isWms || isWfs) {
-    //         uri.search("");
-    //         url = uri.toString();
-    //         var layerName = params.LAYERS || params.layers || params.typeName;
-    //         if (defined(layerName)) {
-    //             newItem = isWms
-    //                 ? new WebMapServiceCatalogItem(options.terria)
-    //                 : new WebFeatureServiceCatalogItem(options.terria);
-    //             newItem.layers = layerName;
-    //             newItem.url = url;
-    //         } else {
-    //             // Construct a WMS/WFS CatalogGroup and return the first item
-    //             var newGroup;
-    //             if (isWms && options.allowWmsGroups) {
-    //                 newGroup = new WebMapServiceCatalogGroup(options.terria);
-    //                 newGroup.flatten = true;
-    //             } else if (isWfs && options.allowWfsGroups) {
-    //                 newGroup = new WebFeatureServiceCatalogGroup(options.terria);
-    //             } else {
-    //                 return when(undefined);
-    //             }
-    //             newGroup.url = url;
-    //             newItem = newGroup.load().then(function() {
-    //                 if (newGroup.items.length === 0) {
-    //                     return undefined;
-    //                 } else {
-    //                     return newGroup.items[0];
-    //                 }
-    //             });
-    //         }
-    //     } else {
-    //         newItem = new matchingFormats[0][1](options.terria);
-    //         newItem.url = url;
-    //     }
-    //     return when(newItem).then(function(newItem) {
-    //         if (!newItem) {
-    //             return undefined;
-    //         }
+                const dcatJson = aspects['dcat-distribution-strings'];
+                const datasetFormat = aspects['dataset-format'];
 
-    //         newItem.name = dcatJson.title;
+                let format: string | undefined;
+                let url: string | undefined;
 
-    //         newItem.info.push({
-    //             name: "Distribution Description",
-    //             content: dcatJson.description
-    //         });
+                if (isJsonObject(dcatJson)) {
+                    if (typeof dcatJson.format === 'string') {
+                        format = dcatJson.format;
+                    }
+                    if (typeof dcatJson.downloadURL === 'string') {
+                        url = dcatJson.downloadURL;
+                    }
 
-    //         // newItem.dataUrl = new URI(options.ckanBaseUrl).segment('dataset').segment(itemData.name).toString();
-    //         // newItem.dataUrlType = 'direct';
+                    if (url === undefined && typeof dcatJson.accessURL === 'string') {
+                        url = dcatJson.accessURL;
+                    }
+                }
 
-    //         if (defined(options.dataCustodian)) {
-    //             newItem.dataCustodian = options.dataCustodian;
-    //         }
+                if (isJsonObject(datasetFormat) && typeof datasetFormat.format === 'string')  {
+                    format = datasetFormat.format;
+                }
 
-    //         if (typeof options.itemProperties === "object") {
-    //             newItem.updateFromJson(options.itemProperties);
-    //         }
+                if (format === undefined || url === undefined) {
+                    continue;
+                }
 
-    //         if (defined(parent)) {
-    //             newItem.id = parent.uniqueId + "/" + distribution.id;
-    //         }
+                const formatRegex = formatRegexs[i];
+                const urlRegex = urlRegexs[i];
+                if (formatRegex !== undefined && !formatRegex.test(format) || urlRegex !== undefined && !urlRegex.test(url)) {
+                    continue;
+                }
 
-    //         if (defined(options.zoomOnEnable)) {
-    //             newItem.zoomOnEnable = options.zoomOnEnable;
-    //         }
+                const definition = Object.assign({}, distributionFormat.terriaDefinition);
+                definition.localId = createGuid();
 
-    //         knockout.getObservable(newItem, "isLoading").subscribe(function(value) {
-    //             try {
-    //                 if (value === true) return;
-    //                 if (window.parent !== window) {
-    //                     window.parent.postMessage("loading complete", "*");
-    //                 }
+                try {
+                    const catalogMember = upsertModelFromJson(CatalogMemberFactory, this.terria, this.id, undefined, CommonStrata.definition, definition);
+                    catalogMember.strata.set(CommonStrata.inheritedFromParentGroup, new InheritedStratum(this, url));
+                    if (CatalogMemberMixin.isMixedInto(catalogMember)) {
+                        await catalogMember.loadMetadata();
+                    }
+                    return catalogMember;
+                } catch (e) {
+                    continue;
+                }
+            }
+        }
 
-    //                 if (window.opener) {
-    //                     window.opener.postMessage("loading complete", "*");
-    //                 }
-    //             } catch (e) {
-    //                 console.log(e);
-    //             }
-    //         });
-
-    //         return newItem;
-    //     });
-
-    // }
+        return undefined;
+    }
 }

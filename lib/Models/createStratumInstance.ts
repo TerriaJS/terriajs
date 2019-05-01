@@ -8,9 +8,10 @@ import StratumFromTraits from "./StratumFromTraits";
  * @param Traits The traits class for which to create a stratum.
  * @returns The stratum instance.
  */
-export default function createStratumInstance<T extends TraitsConstructor<ModelTraits>>(Traits: T): StratumFromTraits<InstanceType<T>> {
+export default function createStratumInstance<T extends TraitsConstructor<ModelTraits>>(Traits: T, values?: Partial<InstanceType<T>>): StratumFromTraits<InstanceType<T>> {
+    const defaults: any = values || {};
     const traits = Traits.traits;
     const propertyNames = Object.keys(traits);
-    const reduced: any = propertyNames.reduce((p, c) => ({ ...p, [c]: undefined }), {});
+    const reduced: any = propertyNames.reduce((p, c) => ({ ...p, [c]: defaults[c] }), {});
     return observable(reduced);
 }

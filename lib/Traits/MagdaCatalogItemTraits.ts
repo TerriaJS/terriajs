@@ -3,6 +3,42 @@ import mixTraits from "./mixTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import UrlTraits from "./UrlTraits";
 import primitiveTrait from "./primitiveTrait";
+import objectArrayTrait from "./objectArrayTrait";
+import anyTrait from "./anyTrait";
+import { JsonObject } from "../Core/Json";
+
+export class MagdaDistributionFormatTraits extends ModelTraits {
+    @primitiveTrait({
+        name: 'ID',
+        description: 'The ID of this distribution format.',
+        type: 'string'
+    })
+    id?: string;
+
+    @primitiveTrait({
+        name: 'Format Regular Expression',
+        description: 'A regular expression that is matched against the distribution\'s format.',
+        type: 'string'
+    })
+    formatRegex?: string;
+
+    @primitiveTrait({
+        name: 'URL Regular Expression',
+        description: 'A regular expression that is matched against the distribution\'s URL.',
+        type: 'string'
+    })
+    urlRegex?: string;
+
+    @anyTrait({
+        name: 'Terria Definition',
+        description: 'The Terria catalog member definition to use when the URL and Format regular expressions match. The `URL` property will also be set.'
+    })
+    terriaDefinition?: JsonObject | null;
+
+    static isRemoval(format: MagdaDistributionFormatTraits) {
+        return format.terriaDefinition === null;
+    }
+}
 
 export default class MagdaCatalogItemTraits extends mixTraits(
     UrlTraits,
@@ -27,17 +63,11 @@ export default class MagdaCatalogItemTraits extends mixTraits(
     })
     distributionId?: string;
 
-    @primitiveTrait({
-        name: 'Allow WMS',
-        description: 'Whether or not to allow the use of a Web Map Service (WMS) distribution.',
-        type: 'boolean'
+    @objectArrayTrait({
+        name: 'Distribution Formats',
+        description: 'The supported distribution formats and their mapping to Terria types. These are listed in order of preference.',
+        type: MagdaDistributionFormatTraits,
+        idProperty: 'id'
     })
-    allowWms: boolean = true;
-
-    @primitiveTrait({
-        name: 'WMS Distribution Format',
-        description: 'A regular expression that, when it matches a distribution\'s format, indicates that the distribution is a WMS distribution.',
-        type: 'string'
-    })
-    wmsDistributionFormat: string = '^wms$';
+    distributionFormats?: MagdaDistributionFormatTraits[];
 }
