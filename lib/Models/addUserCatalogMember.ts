@@ -28,8 +28,11 @@ export default function addUserCatalogMember(
     newCatalogMemberOrPromise: BaseModel | Promise<BaseModel | undefined>,
     optionsArg?: AddUserCatalogMemberOptions
 ) {
-    const options: AddUserCatalogMemberOptions = defaultValue(optionsArg, {});
-    return when(newCatalogMemberOrPromise, function(newCatalogItem: BaseModel) {
+    const promise = newCatalogMemberOrPromise instanceof Promise
+        ? newCatalogMemberOrPromise
+        : Promise.resolve(newCatalogMemberOrPromise);
+
+    return promise.then((newCatalogItem?: BaseModel) => {
         if (!isDefined(newCatalogItem)) {
             return;
         }
@@ -37,10 +40,7 @@ export default function addUserCatalogMember(
         terria.catalog.userAddedDataGroup.add(newCatalogItem);
         terria.catalog.userAddedDataGroup.setTrait(CommonStrata.definition, "isOpen", true);
 
-        if (
-            isDefined(options.open) &&
-            hasTraits(newCatalogItem, GroupTraits, "isOpen")
-        ) {
+        if (isDefined(options.open) && hasTraits(newCatalogItem, GroupTraits, "isOpen")) {
             newCatalogItem.setTrait(CommonStrata.definition, "isOpen", true);
         }
 
@@ -56,7 +56,7 @@ export default function addUserCatalogMember(
         }
 
         return newCatalogItem;
-    }).otherwise((e: any) => {
+    }).catch((e: any) => {
         if (!(e instanceof TerriaError)) {
             e = new TerriaError({
                 title: "Data could not be added",
