@@ -4,10 +4,9 @@ Change Log
 ## Next Release
 
 * Fixed Map View '2D' button activating 3D ellipsoid viewer when the instance has no terrain.
-* Added sharing within the data catalog to share a given catalog item
+* Added sharing within the data catalog to share a given catalog group or item
 * Fixed a bug where all available styles were being retrieved from a `GetCapabilities` for each layer within a WMS Group resulting in memory crashes on WMS's with many layers.
 * Support State Electoral Districts 2018 and 2016 (SED_Code_2018, SED_Code_2016, SED_Name_2018, SED_Name_2016)
-* Added the ability to share catalog groups and items
 
 ### v7.3.0
 
