@@ -83,7 +83,7 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
         }
 
         @action remove(stratumId: string, member: BaseModel) {
-            const members = this.getTrait(CommonStrata.user, "members");
+            const members = this.getTrait(stratumId, "members");
             if (isDefined(members)) {
                 const index = members.indexOf(member.id);
                 if (index !== -1) {
