@@ -16,7 +16,6 @@ import Styles from './my-data-tab.scss';
 // My data tab include Add data section and preview section
 const MyDataTab = observer(createReactClass({
     displayName: 'MyDataTab',
-    mixins: [ObserveModelMixin],
 
     propTypes: {
         terria: PropTypes.object,

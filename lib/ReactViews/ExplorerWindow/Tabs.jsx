@@ -9,10 +9,10 @@ import ObserveModelMixin from '../ObserveModelMixin';
 import defined from 'terriajs-cesium/Source/Core/defined';
 
 import Styles from './tabs.scss';
+import { observer } from 'mobx-react';
 
-const Tabs = createReactClass({
+const Tabs = observer(createReactClass({
     displayName: 'Tabs',
-    mixins: [ObserveModelMixin],
 
     propTypes: {
         terria: PropTypes.object.isRequired,
@@ -118,6 +118,6 @@ const Tabs = createReactClass({
             </div>
         );
     },
-});
+}));
 
 module.exports = Tabs;
