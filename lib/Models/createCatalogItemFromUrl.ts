@@ -69,6 +69,7 @@ createCatalogItemFromUrl.register = function(
     });
 };
 
+// TODO: move registrations to a seperate file
 createCatalogItemFromUrl.register(matchesExtension("geojson"), "geojson");
 createCatalogItemFromUrl.register(matchesUrl(/\/wms/i), "wms-group", true);
 
