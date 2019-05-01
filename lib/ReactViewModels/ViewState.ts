@@ -1,4 +1,3 @@
-import addedByUser from '../Core/addedByUser';
 import clone from 'terriajs-cesium/Source/Core/clone';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import DisclaimerHandler from './DisclaimerHandler';
@@ -9,6 +8,7 @@ import Terria from '../Models/Terria';
 import { observable, reaction, IReactionDisposer } from 'mobx';
 import { BaseModel } from '../Models/Model';
 import PickedFeatures from '../Map/PickedFeatures';
+import isDefined from '../Core/isDefined';
 
 interface ViewStateOptions {
     terria: Terria;
@@ -153,7 +153,13 @@ export default class ViewState {
     }
 
     viewCatalogMember(catalogMember: BaseModel) {
-        if (addedByUser(catalogMember)) {
+        // TODO call addedByUser() when it is fixed
+        let addedByUser = false;
+        if (isDefined(this.terria.catalog.userAddedDataGroupIfItExists)) {
+            const userAddedDataGroup = this.terria.catalog.userAddedDataGroup;
+            addedByUser = Boolean(userAddedDataGroup.memberModels.find(m => m === catalogMember));
+        }
+        if (addedByUser) {
             this.userDataPreviewedItem = catalogMember;
             this.openUserData();
         } else {

@@ -2,15 +2,19 @@ import React from 'react';
 import createReactClass from 'create-react-class';
 import PropTypes from 'prop-types';
 import Icon from '../../../Icon.jsx';
-// import createCatalogItemFromFileOrUrl from '../../../../Models/createCatalogItemFromFileOrUrl';
-// import createCatalogMemberFromType from '../../../../Models/createCatalogMemberFromType';
+import createCatalogItemFromFileOrUrl from '../../../../Models/createCatalogItemFromFileOrUrl';
+import upsertModelFromJson from '../../../../Models/upsertModelFromJson';
+import addUserCatalogMember from '../../../../Models/addUserCatalogMember';
+import CatalogMemberFactory from '../../../../Models/CatalogMemberFactory';
+import CommonStrata from '../../../../Models/CommonStrata';
 import Dropdown from '../../../Generic/Dropdown';
 import FileInput from './FileInput';
 import getDataType from '../../../../Core/getDataType';
 import ObserveModelMixin from '../../../ObserveModelMixin';
-// import addUserFiles from '../../../../Models/addUserFiles';
 import Styles from './add-data.scss';
 import Loader from '../../../Loader';
+import TerriaError from '../../../../Core/TerriaError';
+import addUserFiles from '../../../../Models/addUserFiles';
 
 // Local and remote data have different dataType options
 const remoteDataType = getDataType().remoteDataType;
@@ -52,50 +56,56 @@ const AddData = createReactClass({
     },
 
     handleUploadFile(e) {
-        // this.setState({
-        //   isLoading: true
-        // });
-        // addUserFiles(e.target.files, this.props.terria, this.props.viewState, this.state.localDataType)
-        //     .then(addedCatalogItems => {
-        //         if (addedCatalogItems.length > 0) {
-        //             this.onFileAddFinished(addedCatalogItems[0]);
-        //         }
-        //         this.setState({
-        //           isLoading: false
-        //         });
-        //         // reset active tab when file handling is done
-        //         this.props.resetTab();
-        // });
+        this.setState({
+          isLoading: true
+        });
+        addUserFiles(e.target.files, this.props.terria, this.props.viewState, this.state.localDataType)
+            .then(addedCatalogItems => {
+                if (addedCatalogItems && addedCatalogItems.length > 0) {
+                    this.onFileAddFinished(addedCatalogItems[0]);
+                }
+                this.setState({
+                  isLoading: false
+                });
+                // reset active tab when file handling is done
+                this.props.resetTab();
+        });
     },
 
     handleUrl(e) {
-        // const url = this.state.remoteUrl;
-        // e.preventDefault();
-        // this.props.terria.analytics.logEvent('addDataUrl', url);
-        // const that = this;
-        // this.setState({
-        //   isLoading: true
-        // });
-        // let promise;
-        // if (that.state.remoteDataType.value === 'auto') {
-        //     promise = loadFile(that);
-        // } else {
-        //     const newItem = createCatalogMemberFromType(that.state.remoteDataType.value, that.props.terria);
-        //     newItem.name = that.state.remoteUrl;
-        //     newItem.url = that.state.remoteUrl;
-        //     promise = newItem.load().then(function() {
-        //         return newItem;
-        //     });
-        // }
-        // addUserCatalogMember(this.props.terria, promise).then(addedItem => {
-        //     if (addedItem && !(addedItem instanceof TerriaError)) {
-        //         this.onFileAddFinished(addedItem);
-        //     }
-        //     this.setState({
-        //       isLoading: false
-        //     });
-        //     this.props.resetTab();
-        // });
+        const url = this.state.remoteUrl;
+        e.preventDefault();
+        this.props.terria.analytics.logEvent('addDataUrl', url);
+        this.setState({
+          isLoading: true
+        });
+        let promise;
+        if (this.state.remoteDataType.value === 'auto') {
+            promise = loadFile(this);
+        } else {
+            try {
+                const newItem = upsertModelFromJson(
+                    CatalogMemberFactory,
+                    this.props.terria,
+                    "",
+                    undefined,
+                    CommonStrata.definition,
+                    { type: this.state.remoteDataType.value, name: url, url: url }
+                );
+                promise = newItem.loadMetadata().then(() => newItem);
+            } catch(e) {
+                promise = Promise.reject(e);
+            }
+        }
+        addUserCatalogMember(this.props.terria, promise).then(addedItem => {
+            if (addedItem && !(addedItem instanceof TerriaError)) {
+                this.onFileAddFinished(addedItem);
+            }
+            this.setState({
+              isLoading: false
+            });
+            this.props.resetTab();
+        });
     },
 
     onFileAddFinished(fileToSelect) {
@@ -204,14 +214,14 @@ const AddData = createReactClass({
 /**
  * Loads a catalog item from a file.
  */
-// function loadFile(viewModel) {
-//     return createCatalogItemFromFileOrUrl(
-//         viewModel.props.terria,
-//         viewModel.props.viewState,
-//         viewModel.state.remoteUrl,
-//         viewModel.state.remoteDataType.value,
-//         true
-//     );
-// }
+function loadFile(viewModel) {
+    return createCatalogItemFromFileOrUrl(
+        viewModel.props.terria,
+        viewModel.props.viewState,
+        viewModel.state.remoteUrl,
+        viewModel.state.remoteDataType.value,
+        true
+    );
+}
 
 module.exports = AddData;

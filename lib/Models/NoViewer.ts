@@ -1,8 +1,9 @@
 'use strict';
 
-import GlobeOrMap from "./GlobeOrMap";
+import GlobeOrMap, { CameraView } from "./GlobeOrMap";
 import Terria from "./Terria";
 import "terriajs-cesium/Source/Core/Rectangle";
+import Mappable from "./Mappable";
 
 /*global require*/
 var inherit = require('../Core/inherit');
@@ -16,7 +17,7 @@ class NoViewer implements GlobeOrMap {
         this.terria = terria;
     }
 
-    zoomTo(v: Cesium.Rectangle) {
+    zoomTo(v: CameraView | Cesium.Rectangle | Mappable) {
         // Set initial view?
     }
 

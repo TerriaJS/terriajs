@@ -8,7 +8,7 @@ export default class Workbench {
 
     removeItem(item: BaseModel) {
         const index = this.items.indexOf(item);
-        if (isDefined(index)) {
+        if (index !== -1) {
             this.items.splice(index, 1)
         }
     }
