@@ -26,7 +26,7 @@ interface AddUserCatalogMemberOptions {
 export default function addUserCatalogMember(
     terria: Terria,
     newCatalogMemberOrPromise: BaseModel | Promise<BaseModel | undefined>,
-    optionsArg?: AddUserCatalogMemberOptions
+    options: AddUserCatalogMemberOptions = {}
 ) {
     const promise = newCatalogMemberOrPromise instanceof Promise
         ? newCatalogMemberOrPromise
