@@ -29,6 +29,7 @@ interface Rectangle {
 interface Mappable {
     readonly mapItems: ReadonlyArray<DataSource | ImageryParts>;
     rectangle?: Rectangle;
+    loadMapItems(): Promise<void>;
 }
 
 namespace Mappable {
