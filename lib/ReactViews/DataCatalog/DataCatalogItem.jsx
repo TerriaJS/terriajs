@@ -45,32 +45,27 @@ const DataCatalogItem = observer(createReactClass({
     },
 
     toggleEnable(event) {
-        const catalogItem = this.props.item.dereferenced ? this.props.item.dereferenced : this.props.item;
-        const itemWorkbenchIndex = catalogItem.terria.workbench.items.indexOf(catalogItem);
-        if (itemWorkbenchIndex === -1) {
-            if (catalogItem.loadMapItems) {
-                catalogItem.loadMapItems();
-            }
-            catalogItem.terria.workbench.items.push(catalogItem);
-            catalogItem.ancestors = this.props.ancestors;
-        } else {
-            catalogItem.terria.workbench.items.splice(itemWorkbenchIndex, 1);
+        const catalogItem = this.props.item;
+        if (catalogItem.loadReference) {
+            // TODO: handle promise rejection
+            catalogItem.loadReference();
+        }
+        const workbench = catalogItem.terria.workbench;
+        if (workbench.contains(catalogItem)) {
             catalogItem.ancestors = undefined;
+            workbench.remove(catalogItem);
+        } else {
+            catalogItem.ancestors = this.props.ancestors;
+            workbench.add(catalogItem);
         }
 
-        // this.props.item.toggleEnabled();
+        // set preview as well
+        this.setPreviewedItem();
 
-        // // set preview as well
-        // this.setPreviewedItem();
-
-        // if (this.props.item.isEnabled === true && !event.shiftKey && !event.ctrlKey) {
-        //     // close modal window
-        //     this.props.viewState.explorerPanelIsVisible = false;
-        //     this.props.viewState.mobileView = null;
-        //     if (this.props.viewState.firstTimeAddingData) {
-        //         this.props.viewState.featureInfoPanelIsVisible = true;
-        //     }
-        // }
+        if (workbench.contains(catalogItem) && !event.shiftKey && !event.ctrlKey) {
+            this.props.viewState.explorerPanelIsVisible = false;
+            this.props.viewState.mobileView = null;
+        }
     },
 
     setPreviewedItem() {
@@ -118,7 +113,7 @@ const DataCatalogItem = observer(createReactClass({
             return 'trash';
         } else if(addedByUser(this.props.item)) {
             return null;
-        }else if (this.props.item.isEnabled) {
+        }else if (this.props.item.terria.workbench.contains(this.props.item)) {
             return 'remove';
         } else if (!defined(this.props.item.invoke)) {
             return 'add';

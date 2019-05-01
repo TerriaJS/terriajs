@@ -359,7 +359,7 @@ class WebMapServiceCatalogItem extends DiscretelyTimeVaryingMixin(GetCapabilitie
                 // but because the server has no other way of indicating the default style, let's hope that
                 // sanity prevails.
                 const layerStyle = style === undefined
-                    ? layerAvailableStyles.styles[0]
+                    ? (layerAvailableStyles.styles.length > 0 ? layerAvailableStyles.styles[0] : undefined)
                     : layerAvailableStyles.styles.find(candidate => candidate.name === style);
                 if (layerStyle !== undefined && layerStyle.legendUrl !== undefined) {
                     result.push(layerStyle.legendUrl);

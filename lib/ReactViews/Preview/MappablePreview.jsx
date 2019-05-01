@@ -23,8 +23,21 @@ const MappablePreview = createReactClass({
     },
 
     toggleOnMap(event) {
-        this.props.previewed.toggleEnabled();
-        if (this.props.previewed.isEnabled === true && !event.shiftKey && !event.ctrlKey) {
+        const catalogItem = this.props.previewed;
+        if (catalogItem.loadReference) {
+            // TODO: handle promise rejection
+            catalogItem.loadReference();
+        }
+        const workbench = this.props.terria.workbench;
+        if (workbench.contains(catalogItem)) {
+            // catalogItem.ancestors = undefined;
+            workbench.remove(catalogItem);
+        } else {
+            // catalogItem.ancestors = this.props.ancestors;
+            workbench.add(catalogItem);
+        }
+
+        if (workbench.contains(catalogItem) && !event.shiftKey && !event.ctrlKey) {
             this.props.viewState.explorerPanelIsVisible = false;
             this.props.viewState.mobileView = null;
         }
@@ -45,7 +58,7 @@ const MappablePreview = createReactClass({
                 </If>
                 <button type='button' onClick={this.toggleOnMap}
                         className={Styles.btnAdd}>
-                    {this.props.previewed.isEnabled ? 'Remove from the map' : 'Add to the map'}
+                    {this.props.previewed.terria.workbench.contains(this.props.previewed) ? 'Remove from the map' : 'Add to the map'}
                 </button>
                 <div className={Styles.previewedInfo}>
                     <h3 className={Styles.h3}>{catalogItem.name}</h3>

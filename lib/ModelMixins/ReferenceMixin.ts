@@ -1,8 +1,15 @@
 import { computed, observable, runInAction } from "mobx";
 import Constructor from "../Core/Constructor";
-import Model, { BaseModel } from "../Models/Model";
+import Model, { BaseModel, ModelInterface } from "../Models/Model";
 import ModelTraits from "../Traits/ModelTraits";
 
+type RequiredTraits = ModelTraits;
+
+interface ReferenceInterface extends ModelInterface<RequiredTraits> {
+    readonly isLoadingReference: boolean;
+    readonly dereferenced: BaseModel | undefined;
+    loadReference(): Promise<void>;
+}
 /**
  * A mixin for a Model that acts as a "reference" to another Model, which is its "true"
  * representation. The reference is "dereferenced" to obtain the other model, but only
@@ -11,8 +18,8 @@ import ModelTraits from "../Traits/ModelTraits";
  * loaded, the `CkanCatalogItem` may be dereferenced to obtain the `WebMapServiceCatalogItem`,
  * `GeoJsonCatalogItem`, or whatever else representing the dataset.
  */
-export default function ReferenceMixin<T extends Constructor<Model<ModelTraits>>>(Base: T) {
-    abstract class ReferenceMixin extends Base {
+function ReferenceMixin<T extends Constructor<Model<RequiredTraits>>>(Base: T) {
+    abstract class ReferenceMixin extends Base implements ReferenceInterface {
         get isLoadingReference(): boolean {
             return this._isLoadingReference;
         }
@@ -71,3 +78,9 @@ export default function ReferenceMixin<T extends Constructor<Model<ModelTraits>>
 
     return ReferenceMixin;
 }
+
+ReferenceMixin.is = function(model: BaseModel): model is ReferenceInterface {
+    return 'loadReference' in model && 'dereferenced' in model;
+}
+
+export default ReferenceMixin;
