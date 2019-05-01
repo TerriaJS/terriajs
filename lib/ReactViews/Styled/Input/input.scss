@@ -10,10 +10,12 @@
 
 .light {
   border-color: transparent; // use transparent instead of no-border for layout +/ high contrast
+  &, &:read-only:not(select) {
+    background: $grey-lighter2; 
+  }
   &:focus {
     border-color: transparent;
   }
-  background: $grey-lighter2;
   color: $text-dark2;
   /* WebKit/Blink Browsers */
   &::selection,
@@ -25,7 +27,9 @@
 }
 
 .dark {
-  background: $overlay;
+  &, &:read-only:not(select) {
+    background: $overlay;
+  }
   color: $text-light;
   /* WebKit/Blink Browsers */
   &::selection,
