@@ -14,8 +14,7 @@ import ObserveModelMixin from '../../../ObserveModelMixin';
 import Styles from './add-data.scss';
 import Loader from '../../../Loader';
 import TerriaError from '../../../../Core/TerriaError';
-
-const addUserFiles =  require('../../../../Models/addUserFiles').default;
+import addUserFiles from '../../../../Models/addUserFiles';
 
 // Local and remote data have different dataType options
 const remoteDataType = getDataType().remoteDataType;
@@ -92,7 +91,7 @@ const AddData = createReactClass({
                     undefined,
                     CommonStrata.definition,
                     { type: this.state.remoteDataType.value, name: url, url: url }
-                )
+                );
                 promise = newItem.loadMetadata().then(() => newItem);
             } catch(e) {
                 promise = Promise.reject(e);
