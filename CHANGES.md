@@ -21,6 +21,7 @@ Change Log
 
 * Added `hideLayerAfterMinScaleDenominator` property to `WebMapServiceCatalogItem`. When true, TerriaJS will show a message and display nothing rather than silently show a scaled-up version of the layer when the user zooms in past the layer's advertised `MinScaleDenominator`.
 * Added `GeoJsonParameterEditor`.
+* Fixed a bug that resulted in blank titles for catalog groups loaded from automatically detected (WMS) servers
 * Fixed a bug that caused some chart "Expand" options to be hidden.
 * Added `CED_CODE18` and `CED_NAME18` region types to `regionMapping.json`. These are now the default for CSV files that reference `ced`, `ced_code` and `ced_name` (previously the 2016 versions were used).
 * Improved support for WMTS, setting a maximum level to request tiles at.
