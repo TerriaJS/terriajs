@@ -31,10 +31,11 @@ beforeEach(function() {
 
 const decodeAndParseStartHash = (url) => JSON.parse(URI.decode(URI.parse(url).fragment.replace(/start=/, '')));
 
-const flattenInitSources = (initSources) => initSources.reduce((acc, val) => {
-    Object.entries(val).forEach(([key, value]) => {
-        acc[key] = value;
+const flattenInitSources = (initSources) => initSources.reduce((acc, initSource) => {
+    Object.keys(initSource).forEach((key) => {
+        acc[key] = initSource[key];
     });
+
     return acc;
 }, {});
 
