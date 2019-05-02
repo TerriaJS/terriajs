@@ -35,7 +35,7 @@
     "d3-selection": "^1.0.0",
     "d3-shape": "^1.0.0",
     "d3-transition": "^1.0.0",
-    "date-fns": "^2.0.0-alpha.27",
+    "date-fns": "2.0.0-alpha.27",
     "dateformat": "^3.0.3",
     "dompurify": "^1.0.2",
     "file-loader": "^3.0.1",
