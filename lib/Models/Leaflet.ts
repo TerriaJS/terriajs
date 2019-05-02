@@ -9,9 +9,12 @@ import CesiumTileLayer from "../Map/CesiumTileLayer";
 import LeafletDataSourceDisplay from "../Map/LeafletDataSourceDisplay";
 import LeafletScene from "../Map/LeafletScene";
 import rectangleToLatLngBounds from "../Map/rectangleToLatLngBounds";
-import GlobeOrMap, { CameraView } from "./GlobeOrMap";
+import GlobeOrMap, { CameraView } from "./GlobeOrMap"
 import Mappable, { ImageryParts } from "./Mappable";
 import Terria from "./Terria";
+import L from "leaflet";
+import LeafletVisualizer from "../Map/LeafletVisualizer";
+import TerriaViewer from "../ViewModels/TerriaViewer";
 
 function isDefined<T>(value: T | undefined): value is T {
     return value !== undefined;
@@ -19,25 +22,95 @@ function isDefined<T>(value: T | undefined): value is T {
 
 export default class Leaflet implements GlobeOrMap {
     readonly terria: Terria;
+    readonly terriaViewer: TerriaViewer;
     readonly map: L.Map;
     readonly scene: LeafletScene;
     readonly dataSources: DataSourceCollection = new DataSourceCollection();
-    dataSourceDisplay?: LeafletDataSourceDisplay;
+    readonly dataSourceDisplay: LeafletDataSourceDisplay;
+    private readonly attributionControl: L.Control.Attribution
+    private readonly leafletVisualizer: LeafletVisualizer;
+    private readonly disposeWorkbenchMapItemsSubscription: (() => void);
 
-    private _disposeWorkbenchMapItemsSubscription: (() => void) | undefined;
+    constructor(terriaViewer: TerriaViewer) {
+        this.terria = terriaViewer.terria;
+        this.terriaViewer = terriaViewer;
+        const map = L.map(this.terriaViewer.container, {
+            zoomControl: false,
+            attributionControl: false,
+            maxZoom: 14, //this.maximumLeafletZoomLevel,
+            zoomSnap: 1, // Change to  0.2 for incremental zoom when Chrome fixes canvas scaling gaps
+            preferCanvas: true,
+            worldCopyJump: true
+        }).setView([-28.5, 135], 5);
 
-    constructor(terria: Terria, map: L.Map) {
-        this.terria = terria;
-        this.map = map;
         this.scene = new LeafletScene(map);
+
+        this.attributionControl = L.control.attribution({
+            position: 'bottomleft'
+        });
+        map.addControl(this.attributionControl);
+
+        // this.map.screenSpaceEventHandler = {
+        //     setInputAction : function() {},
+        //     remoteInputAction : function() {}
+        // };
+
+        this.leafletVisualizer = new LeafletVisualizer();
+
+        // const terriaLogo = this.terriaViewer.defaultTerriaCredit ? this.terriaViewer.defaultTerriaCredit.html : '';
+
+        // const creditParts = [
+        //     this._getDisclaimer(),
+        //     this._developerAttribution && createCredit(this._developerAttribution.text, this._developerAttribution.link),
+        //     new Credit('<a target="_blank" href="http://leafletjs.com/">Leaflet</a>')
+        // ];
+
+        // this.attributionControl.setPrefix(terriaLogo + creditParts.filter(part => defined(part)).map(credit => credit.html).join(' | '));
+
+        // map.on("boxzoomend", function(e) {
+        //     console.log(e.boxZoomBounds);
+        // });
+
+        this.dataSourceDisplay = new LeafletDataSourceDisplay({
+            scene : this.scene,
+            dataSourceCollection : this.dataSources,
+            visualizersCallback: <any>this.leafletVisualizer.visualizersCallback // fix type error
+        });
+
+        // eventHelper = new EventHelper();
+
+        // var that = this;
+        // eventHelper.add(that.terria.clock.onTick, function(clock) {
+        //     that.dataSourceDisplay.update(clock.currentTime);
+        // });
+
+
+        // this.leafletEventHelper = eventHelper;
+
+        // var ticker = function() {
+        //     if (defined(that.terria.leaflet)) {
+        //         that.terria.clock.tick();
+        //         cesiumRequestAnimationFrame(ticker);
+        //     }
+        // };
+
+        // ticker();
+
+        // this.zoomTo(rect, 0.0);
+
+        this.map = map;
+        this.disposeWorkbenchMapItemsSubscription = this.observeModelLayer();
+        // return when();
     }
 
     destroy() {
-        this.stopObserving();
+        this.disposeWorkbenchMapItemsSubscription();
+        this.dataSourceDisplay.destroy();
+        this.map.remove();
     }
 
-    observeModelLayer() {
-        this._disposeWorkbenchMapItemsSubscription = autorun(() => {
+    private observeModelLayer() {
+        return autorun(() => {
             const catalogItems = [
                 ...this.terria.workbench.items,
                 this.terria.baseMap
@@ -108,12 +181,6 @@ export default class Leaflet implements GlobeOrMap {
                 }
             });
         });
-    }
-
-    stopObserving() {
-        if (this._disposeWorkbenchMapItemsSubscription !== undefined) {
-            this._disposeWorkbenchMapItemsSubscription();
-        }
     }
 
     zoomTo(

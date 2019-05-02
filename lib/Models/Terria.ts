@@ -1,4 +1,4 @@
-import { observable } from 'mobx';
+import { observable, computed } from 'mobx';
 import defined from 'terriajs-cesium/Source/Core/defined';
 import CesiumEvent from 'terriajs-cesium/Source/Core/Event';
 import RuntimeError from 'terriajs-cesium/Source/Core/RuntimeError';
@@ -20,6 +20,9 @@ import PickedFeatures from '../Map/PickedFeatures';
 import Mappable from './Mappable';
 import TimelineStack from './TimelineStack';
 import Clock from 'terriajs-cesium/Source/Core/Clock';
+import GlobeOrMap from './GlobeOrMap';
+import TerriaViewer from '../ViewModels/TerriaViewer';
+
 require("regenerator-runtime/runtime");
 
 interface ConfigParameters {
@@ -54,8 +57,10 @@ export default class Terria {
     readonly afterViewerChanged = new CesiumEvent();
     readonly workbench = new Workbench();
     readonly catalog = new Catalog(this);
-    readonly currentViewer = new NoViewer(this);
     readonly timelineClock = new Clock({ shouldAnimate: false });
+    // Set in TerriaViewerWrapper.jsx. This is temporary while I work out what should own TerriaViewer
+    // terriaViewer, currentViewer, baseMap and other viewer-related properties will go with TerriaViewer
+    @observable terriaViewer: TerriaViewer | undefined;
 
     appName?: string;
     supportEmail?: string;
@@ -110,6 +115,23 @@ export default class Terria {
                 this.analytics = new ConsoleAnalytics();
             }
         }
+    }
+
+    @computed
+    get currentViewer(): GlobeOrMap {
+        return this.terriaViewer && this.terriaViewer.currentViewer || new NoViewer(this);
+        // return new NoViewer(this);
+        // switch (this.viewerMode) {
+        //     case ViewerMode.CesiumEllipsoid:
+        //     case ViewerMode.CesiumTerrain:
+        //         return new Cesium(this);
+
+        //     case ViewerMode.Leaflet:
+
+        //     default:
+        //         return new NoViewer(this);
+
+        // }
     }
 
     getModelById<T extends BaseModel>(type: Class<T>, id: ModelReference): T | undefined {
