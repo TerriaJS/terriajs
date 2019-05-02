@@ -30,13 +30,13 @@ export class MagdaDistributionFormatTraits extends ModelTraits {
     urlRegex?: string;
 
     @anyTrait({
-        name: 'Terria Definition',
-        description: 'The Terria catalog member definition to use when the URL and Format regular expressions match. The `URL` property will also be set.'
+        name: 'Definition',
+        description: 'The catalog member definition to use when the URL and Format regular expressions match. The `URL` property will also be set.'
     })
-    terriaDefinition?: JsonObject | null;
+    definition?: JsonObject | null;
 
     static isRemoval(format: MagdaDistributionFormatTraits) {
-        return format.terriaDefinition === null;
+        return format.definition === null;
     }
 }
 
@@ -70,4 +70,10 @@ export default class MagdaCatalogItemTraits extends mixTraits(
         idProperty: 'id'
     })
     distributionFormats?: MagdaDistributionFormatTraits[];
+
+    @anyTrait({
+        name: 'Definition',
+        description: 'The catalog member definition to use for _all_ catalog items, regardless of type. The format-specified definition will be layered on top of this one.'
+    })
+    definition?: JsonObject;
 }
