@@ -1,13 +1,20 @@
 import Mappable from "./Mappable";
 import CreateModel from "./CreateModel";
-import BingMapsCatalaogItemTraits from "../Traits/BingMapsCatalogItemTraits";
+import BingMapsCatalogItemTraits from "../Traits/BingMapsCatalogItemTraits";
 import BingMapsImageryProvider from "terriajs-cesium/Source/Scene/BingMapsImageryProvider";
 import Credit from "terriajs-cesium/Source/Core/Credit";
 import { computed } from "mobx";
+import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 
-export default class BingMapsCatalaogItem
-    extends CreateModel(BingMapsCatalaogItemTraits)
+export default class BingMapsCatalogItem
+    extends CatalogMemberMixin(CreateModel(BingMapsCatalogItemTraits))
     implements Mappable {
+    static readonly type = "bing-maps";
+
+    get type() {
+        return BingMapsCatalogItem.type;
+    }
+
     @computed get mapItems() {
         const imageryProvider = this._createImageryProvider();
         return [
@@ -17,6 +24,10 @@ export default class BingMapsCatalaogItem
                 alpha: this.opacity
             }
         ];
+    }
+
+    protected get loadMetadataPromise(): Promise<void> {
+        return Promise.resolve();
     }
 
     loadMapItems() {
