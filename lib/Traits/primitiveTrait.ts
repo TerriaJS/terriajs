@@ -8,6 +8,7 @@ type PrimitiveType = 'string' | 'number' | 'boolean';
 
 export interface PrimitiveTraitOptions<T> extends TraitOptions {
     type: PrimitiveType;
+    isNullable?: boolean;
 }
 
 export default function primitiveTrait<T>(options: PrimitiveTraitOptions<T>) {
@@ -22,10 +23,12 @@ export default function primitiveTrait<T>(options: PrimitiveTraitOptions<T>) {
 
 export class PrimitiveTrait<T> extends Trait {
     readonly type: PrimitiveType;
+    readonly isNullable: boolean;
 
     constructor(id: string, options: PrimitiveTraitOptions<T>) {
         super(id, options);
         this.type = options.type;
+        this.isNullable = options.isNullable || false;
     }
 
     getValue(strataTopToBottom: StratumFromTraits<ModelTraits>[]): T | undefined {
@@ -41,7 +44,7 @@ export class PrimitiveTrait<T> extends Trait {
     }
 
     fromJson(model: BaseModel, stratumName: string, jsonValue: any): T {
-        if (typeof jsonValue !== this.type) {
+        if (typeof jsonValue !== this.type && (!this.isNullable || jsonValue !== null)) {
             throw new TerriaError({
                 title: 'Invalid property',
                 message: `Property ${this.id} is expected to be of type ${this.type} but instead it is of type ${typeof jsonValue}.`
@@ -52,6 +55,6 @@ export class PrimitiveTrait<T> extends Trait {
     }
 
     isSameType(trait: Trait): boolean {
-        return trait instanceof PrimitiveTrait && trait.type === this.type;
+        return trait instanceof PrimitiveTrait && trait.type === this.type && trait.isNullable === this.isNullable;
     }
 }

@@ -86,10 +86,18 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
                 }
             });
         }
+
+        @computed
+        get hasDescription(): boolean {
+            return (this.description !== undefined && this.description.length > 0) ||
+                   (this.info !== undefined && this.info.some(info => descriptionRegex.test(info.name || '')));
+        }
     }
 
     return CatalogMemberMixin;
 }
+
+const descriptionRegex = /description/i;
 
 namespace CatalogMemberMixin {
     export interface CatalogMemberMixin extends InstanceType<ReturnType<typeof CatalogMemberMixin>> {}

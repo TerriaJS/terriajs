@@ -37,7 +37,7 @@ describe('WebMapServiceCatalogItem', function() {
         const cleanup = autorun(() => {
             if (wms.info !== undefined) {
                 const descSection = wms.info.find(section => section.name === 'Data Description');
-                if (descSection !== undefined && descSection.content !== undefined) {
+                if (descSection !== undefined && descSection.content !== undefined && descSection.content !== null) {
                     description = descSection.content;
                 }
             }

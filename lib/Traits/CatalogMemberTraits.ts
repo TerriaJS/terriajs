@@ -14,9 +14,10 @@ export class InfoSectionTraits extends ModelTraits {
     @primitiveTrait({
         type: 'string',
         name: 'Content',
-        description: 'The content of the section, in Markdown and HTML format.'
+        description: 'The content of the section, in Markdown and HTML format.',
+        isNullable: true
     })
-    content?: string;
+    content?: string | null;
 
     static isRemoval(infoSection: InfoSectionTraits) {
         return infoSection.content === null;

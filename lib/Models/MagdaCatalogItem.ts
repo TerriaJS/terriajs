@@ -1,4 +1,4 @@
-import { computed, observable } from "mobx";
+import { computed, observable, toJS } from "mobx";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import JsonValue, { isJsonObject, JsonArray } from "../Core/Json";
 import loadJson from "../Core/loadJson";
@@ -16,67 +16,6 @@ import { BaseModel } from "./Model";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import Terria from "./Terria";
 import upsertModelFromJson from "./upsertModelFromJson";
-
-const defaultDistributionFormats = [
-    createStratumInstance(MagdaDistributionFormatTraits, {
-        id: 'WMS',
-        formatRegex: '^wms$',
-        terriaDefinition: {
-            type: 'wms'
-        }
-    }),
-    createStratumInstance(MagdaDistributionFormatTraits, {
-        id: 'EsriMapServer',
-        formatRegex: '^esri rest$',
-        urlRegex: 'MapServer',
-        terriaDefinition: {
-            type: 'esri-mapServer'
-        }
-    }),
-    createStratumInstance(MagdaDistributionFormatTraits, {
-        id: 'CSV',
-        formatRegex: '^csv(-geo-)?',
-        terriaDefinition: {
-            type: 'csv'
-        }
-    }),
-    createStratumInstance(MagdaDistributionFormatTraits, {
-        id: 'CZML',
-        formatRegex: '^czml$',
-        terriaDefinition: {
-            type: 'czml'
-        }
-    }),
-    createStratumInstance(MagdaDistributionFormatTraits, {
-        id: 'KML',
-        formatRegex: '^km[lz]$',
-        terriaDefinition: {
-            type: 'kml'
-        }
-    }),
-    createStratumInstance(MagdaDistributionFormatTraits, {
-        id: 'GeoJSON',
-        formatRegex: '^geojson$',
-        terriaDefinition: {
-            type: 'geojson'
-        }
-    }),
-    createStratumInstance(MagdaDistributionFormatTraits, {
-        id: 'WFS',
-        formatRegex: '^wfs$',
-        terriaDefinition: {
-            type: 'wfs'
-        }
-    }),
-    createStratumInstance(MagdaDistributionFormatTraits, {
-        id: 'EsriFeatureServer',
-        formatRegex: '^esri rest$',
-        urlRegex: 'FeatureServer',
-        terriaDefinition: {
-            type: 'esri-featureServer'
-        }
-    })
-];
 
 export default class MagdaCatalogItem extends ReferenceMixin(UrlMixin(CatalogMemberMixin(CreateModel(MagdaCatalogItemTraits)))) {
     static readonly type = 'magda';
@@ -248,13 +187,11 @@ export default class MagdaCatalogItem extends ReferenceMixin(UrlMixin(CatalogMem
                     continue;
                 }
 
-                const formatRegex = formatRegexs[i];
-                const urlRegex = urlRegexs[i];
                 if (formatRegex !== undefined && !formatRegex.test(format) || urlRegex !== undefined && !urlRegex.test(url)) {
                     continue;
                 }
 
-                const definition = Object.assign({}, distributionFormat.terriaDefinition);
+                const definition = Object.assign({}, toJS(this.definition), toJS(distributionFormat.definition));
                 definition.localId = createGuid();
 
                 try {
@@ -273,3 +210,64 @@ export default class MagdaCatalogItem extends ReferenceMixin(UrlMixin(CatalogMem
         return undefined;
     }
 }
+
+const defaultDistributionFormats = [
+    createStratumInstance(MagdaDistributionFormatTraits, {
+        id: 'WMS',
+        formatRegex: '^wms$',
+        definition: {
+            type: 'wms'
+        }
+    }),
+    createStratumInstance(MagdaDistributionFormatTraits, {
+        id: 'EsriMapServer',
+        formatRegex: '^esri rest$',
+        urlRegex: 'MapServer',
+        definition: {
+            type: 'esri-mapServer'
+        }
+    }),
+    createStratumInstance(MagdaDistributionFormatTraits, {
+        id: 'CSV',
+        formatRegex: '^csv(-geo-)?',
+        definition: {
+            type: 'csv'
+        }
+    }),
+    createStratumInstance(MagdaDistributionFormatTraits, {
+        id: 'CZML',
+        formatRegex: '^czml$',
+        definition: {
+            type: 'czml'
+        }
+    }),
+    createStratumInstance(MagdaDistributionFormatTraits, {
+        id: 'KML',
+        formatRegex: '^km[lz]$',
+        definition: {
+            type: 'kml'
+        }
+    }),
+    createStratumInstance(MagdaDistributionFormatTraits, {
+        id: 'GeoJSON',
+        formatRegex: '^geojson$',
+        definition: {
+            type: 'geojson'
+        }
+    }),
+    createStratumInstance(MagdaDistributionFormatTraits, {
+        id: 'WFS',
+        formatRegex: '^wfs$',
+        definition: {
+            type: 'wfs'
+        }
+    }),
+    createStratumInstance(MagdaDistributionFormatTraits, {
+        id: 'EsriFeatureServer',
+        formatRegex: '^esri rest$',
+        urlRegex: 'FeatureServer',
+        definition: {
+            type: 'esri-featureServer'
+        }
+    })
+];
