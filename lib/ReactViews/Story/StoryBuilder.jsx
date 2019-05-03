@@ -11,7 +11,7 @@ import StoryEditor from './StoryEditor.jsx';
 import Sortable from 'react-anything-sortable';
 import createGuid from 'terriajs-cesium/Source/Core/createGuid';
 import classNames from 'classnames';
-
+import BadgeBar from '../BadgeBar.jsx';
 import Styles from './story-builder.scss';
 
 const StoryBuilder = createReactClass({
@@ -36,6 +36,10 @@ const StoryBuilder = createReactClass({
         this.props.viewState.currentStoryId -= 1;
       }
     },
+   
+  removeAllStories(){
+    this.props.terria.stories = [];
+  },
     onSave(_story) {
       const story = {
         title: _story.title,
@@ -120,6 +124,12 @@ const StoryBuilder = createReactClass({
           [Styles.isActive]: editingMode
       });
     return (<div className={className}>
+                <BadgeBar label="Stories" badge={this.props.terria.stories.length}>
+                    <button type='button' onClick={this.removeAllStories} className={Styles.removeButton}>
+                        Remove All <Icon glyph={Icon.GLYPHS.remove}/>
+                    </button>
+                </BadgeBar>
+
     <Sortable onSort={this.onSort} direction="vertical" dynamic={true}>
       <For each='story' index="index" of={stories}>
         <Story key={story.id} 

@@ -109,3 +109,19 @@
     margin: 20px auto;
   }
 }
+.remove-button {
+  composes: btn from '../../Sass/common/_buttons.scss';
+  color: $text-light;
+  font-size: $font-size-mid-mini;
+  padding: 0;
+  text-transform: uppercase;
+  svg{
+    height: 12px;
+    width: 12px;
+    margin: 4px;
+    fill: #ffffff;
+    vertical-align: bottom;
+    display: inline-block;
+  }
+}
+
