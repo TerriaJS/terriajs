@@ -90,4 +90,11 @@ export default class GeoJsonCatalogItemTraits extends mixTraits(
         description: "A geojson string"
     })
     geoJsonString?: string;
+
+    @primitiveTrait({
+        type: "boolean",
+        name: "Clamp to Ground",
+        description: "Whether the features in this GeoJSON should be clamped to the terrain surface."
+    })
+    clampToGround: boolean = false;
 }

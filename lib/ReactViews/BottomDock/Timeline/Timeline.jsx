@@ -25,6 +25,12 @@ const Timeline = observer(createReactClass({
         locale: PropTypes.object
     },
 
+    getInitialState() {
+        return {
+            isPickerOpen: false
+        };
+    },
+
     /* eslint-disable-next-line camelcase */
     UNSAFE_componentWillMount() {
         this.resizeListener = () => this.timeline && this.timeline.resize();
@@ -39,6 +45,18 @@ const Timeline = observer(createReactClass({
         this.props.terria.timelineClock.currentTime = JulianDate.fromDate(new Date(time));
         this.props.terria.timelineStack.syncToClock(CommonStrata.user);
         this.props.terria.currentViewer.notifyRepaintRequired();
+    },
+
+    onOpenPicker() {
+        this.setState({
+            isPickerOpen: true
+        });
+    },
+
+    onClosePicker() {
+        this.setState({
+            isPickerOpen: false
+        });
     },
 
     render() {
@@ -68,7 +86,15 @@ const Timeline = observer(createReactClass({
                 <div className={Styles.controlsRow}>
                     <TimelineControls clock={terria.timelineClock} analytics={terria.analytics} currentViewer={terria.currentViewer} />
                     <If condition={defined(discreteTimes) && discreteTimes.length !== 0 && defined(currentDiscreteJulianDate)}>
-                        <DateTimePicker currentDate={JulianDate.toDate(currentDiscreteJulianDate)} dates={discreteTimes.map(time => JulianDate.toDate(time))} onChange={this.changeDateTime} openDirection='up'/>
+                        <DateTimePicker
+                            currentDate={JulianDate.toDate(currentDiscreteJulianDate)}
+                            dates={discreteTimes.map(time => JulianDate.toDate(time))}
+                            onChange={this.changeDateTime}
+                            openDirection='up'
+                            isOpen={this.state.isPickerOpen}
+                            onOpen={this.onOpenPicker}
+                            onClose={this.onClosePicker}
+                            dateFormat={catalogItem.dateFormat} />
                     </If>
                     <CesiumTimeline terria={terria} />
                 </div>

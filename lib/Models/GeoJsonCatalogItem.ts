@@ -220,7 +220,8 @@ class GeoJsonCatalogItem
             polygonStroke: getColor(defaultValue(style.stroke, "#000000")),
             polylineStroke: defaultColor(style.stroke, this.name || ""),
             markerOpacity: style["marker-opacity"], // not in SimpleStyle spec or supported by Cesium but see below
-            fill: defaultColor(style.fill, (this.name || "") + " fill")
+            fill: defaultColor(style.fill, (this.name || "") + " fill"),
+            clampToGround: this.clampToGround
         };
 
         if (isDefined(style["stroke-opacity"])) {

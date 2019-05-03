@@ -117,4 +117,22 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
         idProperty: "url"
     })
     legendUrls?: LegendTraits[];
+
+    @primitiveTrait({
+        type: 'number',
+        name: 'Minimum Scale Denominator',
+        description: 'The denominator of the largest scale (smallest denominator) for which tiles should be requested. ' +
+                     'For example, if this value is 1000, then tiles representing a scale larger than 1:1000 (i.e. ' +
+                     'numerically smaller denominator, when zooming in closer) will not be requested.  Instead, tiles of ' +
+                     'the largest-available scale, as specified by this property, will be used and will simply get ' +
+                     'blurier as the user zooms in closer.'
+    })
+    minScaleDenominator?: number;
+
+    @primitiveTrait({
+        type: 'boolean',
+        name: 'Hide Layer After Minimum Scale Denominator',
+        description: 'True to hide tiles when the `Minimum Scale Denominator` is exceeded. If false, we can zoom in arbitrarily close to the (increasingly blurry) layer.'
+    })
+    hideLayerAfterMinScaleDenominator: boolean = false;
 }

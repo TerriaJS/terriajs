@@ -1,5 +1,7 @@
 'use strict';
 
+import dateFormat from 'dateformat';
+
 import React from 'react';
 import createReactClass from 'create-react-class';
 import classNames from 'classnames';
@@ -22,6 +24,12 @@ const DateTimeSelectorSection = observer(createReactClass({
         item: PropTypes.object.isRequired
     },
 
+    getInitialState() {
+        return {
+            isOpen: false
+        };
+    },
+
     changeDateTime(time) {
         const item = this.props.item;
 
@@ -42,6 +50,11 @@ const DateTimeSelectorSection = observer(createReactClass({
             terria.timelineStack.addToTop(item);
         }
         item.terria.currentViewer.notifyRepaintRequired();
+    },
+
+    onShowOnChartButtonClicked() {
+        const item = this.props.item;
+        item.showOnChart = !item.showOnChart;
     },
 
     onPreviousButtonClicked() {
@@ -68,7 +81,28 @@ const DateTimeSelectorSection = observer(createReactClass({
         item.terria.currentViewer.notifyRepaintRequired();
     },
 
+    onOpen() {
+        this.setState({
+            isOpen: true
+        });
+    },
+
+    onClose() {
+        this.setState({
+            isOpen: false
+        });
+    },
+
+    toggleOpen(event) {
+        this.setState({
+            isOpen: !this.state.isOpen
+        });
+        event.stopPropagation();
+    },
+
     render() {
+        let discreteTime;
+        let format;
         const item = this.props.item;
         const discreteTimes = item.discreteTimesAsSortedJulianDates;
 
@@ -76,7 +110,16 @@ const DateTimeSelectorSection = observer(createReactClass({
             return null;
         }
 
-        const discreteTime = item.currentDiscreteJulianDate === undefined ? undefined : JulianDate.toDate(item.currentDiscreteJulianDate);
+        if (defined(item.currentDiscreteJulianDate)) {
+            const time = JulianDate.toDate(item.currentDiscreteJulianDate);
+            if (defined(item.dateFormat) && defined(item.dateFormat.currentTime)) {
+                format = item.dateFormat;
+                discreteTime = dateFormat(time, item.dateFormat.currentTime);
+            } else {
+                discreteTime = formatDateTime(time);
+            }
+        }
+
         const jsDates = discreteTimes.map(timeTrait => JulianDate.toDate(timeTrait.time));
         const attachedToTimeline = item.terria.timelineStack.contains(item);
 
@@ -86,14 +129,26 @@ const DateTimeSelectorSection = observer(createReactClass({
                 <div className={Styles.datetimeSelectorInner}>
                   <div className={Styles.datetimeAndPicker}>
                       <button className={Styles.datetimePrevious} disabled={!item.isPreviousDiscreteTimeAvailable} onClick={this.onPreviousButtonClicked} title='Previous time'><Icon glyph={Icon.GLYPHS.previous}/></button>
-                      <span className={Styles.currentDate}>{defined(discreteTime) ? formatDateTime(discreteTime) : "Currently out of range."}</span>
+                      <button className={Styles.currentDate} onClick={this.toggleOpen} title="Select a time">{defined(discreteTime) ? discreteTime : "Currently out of range."}</button>
                       <button className={Styles.datetimeNext} disabled={!item.isNextDiscreteTimeAvailable} onClick={this.onNextButtonClicked} title='Next time'><Icon glyph={Icon.GLYPHS.next}/></button>
                   </div>
                   <div className={Styles.picker} title='Select a time'>
-                      <DateTimePicker currentDate={item.clampedDiscreteTime} dates={jsDates} onChange={this.changeDateTime} openDirection='down'/>
+                    <DateTimePicker
+                        currentDate={item.currentDiscreteJulianDate === undefined ? undefined : JulianDate.toDate(item.currentDiscreteJulianDate)}
+                        dates={jsDates}
+                        onChange={this.changeDateTime}
+                        openDirection='down'
+                        isOpen={this.state.isOpen}
+                        showCalendarButton={false}
+                        onOpen={this.onOpen}
+                        onClose={this.onClose}
+                        dateFormat={format} />
                   </div>
                   <button className={classNames(Styles.timelineButton, {[Styles.timelineActive]: attachedToTimeline})} type='button' onClick={this.onTimelineButtonClicked} title='Use timeline'>
                       <Icon glyph={Icon.GLYPHS.timeline}/>
+                  </button>
+                  <button className={classNames(Styles.timelineButton, {[Styles.timelineActive]: item.showOnChart})} type='button' onClick={this.onShowOnChartButtonClicked} title='Show available times on chart'>
+                      <Icon glyph={Icon.GLYPHS.lineChart}/>
                   </button>
                 </div>
             </div>

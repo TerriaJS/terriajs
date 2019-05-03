@@ -166,14 +166,6 @@ function getConfirmation(
 }
 
 function loadItem(newCatalogItem: BaseModel, fileOrUrl: File | string) {
-    newCatalogItem.setTrait(
-        CommonStrata.definition,
-        "name",
-        compactName(<string>(
-            newCatalogItem.getTrait(CommonStrata.definition, "name")
-        ))
-    );
-
     if (typeof fileOrUrl === "string") {
         newCatalogItem.setTrait(CommonStrata.definition, "url", fileOrUrl);
     } else {
@@ -198,15 +190,4 @@ interface HasFileInput extends BaseModel {
 
 function hasFileInput(model: BaseModel): model is HasFileInput {
     return "setFileInput" in model;
-}
-
-/**
- * Return the basename of path/URL.
- */
-function compactName(name: string): string {
-    const lastSlashIndex = name.lastIndexOf("/");
-    if (lastSlashIndex >= 0) {
-        name = name.substring(lastSlashIndex + 1);
-    }
-    return name;
 }

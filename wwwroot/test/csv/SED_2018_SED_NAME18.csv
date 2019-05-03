@@ -1,0 +1,451 @@
+SED_NAME18,Value
+Albury,46
+Auburn,87
+Ballina,39
+Balmain,51
+Bankstown,29
+Barwon,55
+Bathurst,63
+Baulkham Hills,42
+Bega,70
+Blacktown,49
+Blue Mountains,17
+Cabramatta,92
+Camden,97
+Campbelltown,19
+Canterbury,61
+Castle Hill,0
+Cessnock,15
+Charlestown,49
+Clarence,19
+Coffs Harbour,30
+Coogee,28
+Cootamundra,58
+Cronulla,56
+Davidson,21
+Drummoyne,59
+Dubbo,16
+East Hills,23
+Epping,89
+Fairfield,22
+Gosford,92
+Goulburn,44
+Granville,15
+Hawkesbury,81
+Heathcote,92
+Heffron,12
+Holsworthy,15
+Hornsby,16
+Keira,81
+Kiama,62
+Kogarah,51
+Ku-ring-gai,84
+Lake Macquarie,42
+Lakemba,23
+Lane Cove,14
+Lismore,66
+Liverpool,70
+Londonderry,29
+Macquarie Fields,5
+Maitland,69
+Manly,29
+Maroubra,41
+Miranda,26
+Monaro,99
+Mount Druitt,46
+Mulgoa,43
+Murray,62
+Myall Lakes,58
+Newcastle,24
+Newtown,54
+North Shore,49
+Northern Tablelands,40
+Oatley,36
+Orange,20
+Oxley,44
+Parramatta,37
+Penrith,9
+Pittwater,1
+Port Macquarie,8
+Port Stephens,7
+Prospect,60
+Riverstone,10
+Rockdale,17
+Ryde,54
+Seven Hills,56
+Shellharbour,67
+South Coast,49
+Strathfield,3
+Summer Hill,45
+Swansea,22
+Sydney,63
+Tamworth,29
+Terrigal,77
+The Entrance,28
+Tweed,44
+Upper Hunter,96
+Vaucluse,91
+Wagga Wagga,57
+Wakehurst,61
+Wallsend,60
+Willoughby,12
+Wollondilly,59
+Wollongong,45
+Wyong,55
+No usual address (NSW),8
+Migratory - Offshore - Shipping (NSW),43
+Albert Park (Southern Metropolitan),42
+Altona (Western Metropolitan),84
+Bass (Eastern Victoria),25
+Bayswater (Eastern Metropolitan),86
+Bellarine (Western Victoria),75
+Benambra (Northern Victoria),85
+Bendigo East (Northern Victoria),96
+Bendigo West (Northern Victoria),78
+Bentleigh (Southern Metropolitan),45
+Box Hill (Eastern Metropolitan),19
+Brighton (Southern Metropolitan),3
+Broadmeadows (Northern Metropolitan),23
+Brunswick (Northern Metropolitan),63
+Bulleen (Eastern Metropolitan),51
+Bundoora (Northern Metropolitan),83
+Buninyong (Western Victoria),79
+Burwood (Southern Metropolitan),26
+Carrum (South-Eastern Metropolitan),3
+Caulfield (Southern Metropolitan),67
+Clarinda (South-Eastern Metropolitan),81
+Cranbourne (South-Eastern Metropolitan),19
+Croydon (Eastern Metropolitan),34
+Dandenong (South-Eastern Metropolitan),21
+Eildon (Northern Victoria),57
+Eltham (Eastern Metropolitan),98
+Essendon (Western Metropolitan),31
+Euroa (Northern Victoria),44
+Evelyn (Eastern Victoria),28
+Ferntree Gully (Eastern Metropolitan),53
+Footscray (Western Metropolitan),64
+Forest Hill (Eastern Metropolitan),31
+Frankston (South-Eastern Metropolitan),63
+Geelong (Western Victoria),94
+Gembrook (Eastern Victoria),29
+Gippsland East (Eastern Victoria),74
+Gippsland South (Eastern Victoria),63
+Hastings (Eastern Victoria),82
+Hawthorn (Southern Metropolitan),99
+Ivanhoe (Eastern Metropolitan),15
+Kew (Southern Metropolitan),14
+Keysborough (South-Eastern Metropolitan),46
+Kororoit (Western Metropolitan),25
+Lara (Western Victoria),99
+Lowan (Western Victoria),39
+Macedon (Northern Victoria),34
+Malvern (Southern Metropolitan),87
+Melbourne (Northern Metropolitan),30
+Melton (Western Victoria),83
+Mildura (Northern Victoria),74
+Mill Park (Northern Metropolitan),99
+Monbulk (Eastern Victoria),93
+Mordialloc (South-Eastern Metropolitan),6
+Mornington (Eastern Victoria),27
+Morwell (Eastern Victoria),67
+Mount Waverley (Eastern Metropolitan),60
+Mulgrave (South-Eastern Metropolitan),32
+Murray Plains (Northern Victoria),96
+Narracan (Eastern Victoria),54
+Narre Warren North (South-Eastern Metropolitan),28
+Narre Warren South (South-Eastern Metropolitan),24
+Nepean (Eastern Victoria),10
+Niddrie (Western Metropolitan),0
+Northcote (Northern Metropolitan),5
+Oakleigh (Southern Metropolitan),61
+Ovens Valley (Northern Victoria),26
+Pascoe Vale (Northern Metropolitan),8
+Polwarth (Western Victoria),4
+Prahran (Southern Metropolitan),70
+Preston (Northern Metropolitan),6
+Richmond (Northern Metropolitan),46
+Ringwood (Eastern Metropolitan),47
+Ripon (Western Victoria),8
+Rowville (South-Eastern Metropolitan),94
+Sandringham (Southern Metropolitan),17
+Shepparton (Northern Victoria),3
+South Barwon (Western Victoria),34
+South-West Coast (Western Victoria),56
+St Albans (Western Metropolitan),35
+Sunbury (Western Metropolitan),32
+Sydenham (Western Metropolitan),61
+Tarneit (Western Metropolitan),92
+Thomastown (Northern Metropolitan),12
+Warrandyte (Eastern Metropolitan),70
+Wendouree (Western Victoria),70
+Werribee (Western Metropolitan),35
+Williamstown (Western Metropolitan),64
+Yan Yean (Northern Victoria),21
+Yuroke (Northern Metropolitan),88
+No usual address (Vic.),13
+Migratory - Offshore - Shipping (Vic.),99
+Algester,33
+Aspley,8
+Bancroft,93
+Barron River,30
+Bonney,68
+Broadwater,64
+Buderim,49
+Bulimba,91
+Bundaberg,6
+Bundamba,36
+Burdekin,4
+Burleigh,60
+Burnett,36
+Cairns,11
+Callide,23
+Caloundra,87
+Capalaba,56
+Chatsworth,3
+Clayfield,94
+Condamine,69
+Cook,68
+Coomera,6
+Cooper,35
+Currumbin,26
+Everton,14
+Ferny Grove,28
+Gaven,85
+Gladstone,90
+Glass House,23
+Greenslopes,39
+Gregory,37
+Gympie,27
+Hervey Bay,38
+Hill,88
+Hinchinbrook,84
+Inala,93
+Ipswich,92
+Ipswich West,1
+Jordan,57
+Kawana,96
+Keppel,22
+Kurwongbah,20
+Lockyer,75
+Logan,99
+Lytton,16
+Macalister,64
+Mackay,49
+Maiwar,100
+Mansfield,9
+Maroochydore,5
+Maryborough,25
+McConnel,34
+Mermaid Beach,43
+Miller,95
+Mirani,18
+Moggill,8
+Morayfield,5
+Mount Ommaney,62
+Mudgeeraba,12
+Mulgrave,92
+Mundingburra,90
+Murrumba,91
+Nanango,50
+Nicklin,82
+Ninderry,7
+Noosa,40
+Nudgee,50
+Oodgeroo,66
+Pine Rivers,35
+Pumicestone,64
+Redcliffe,89
+Redlands,23
+Rockhampton,18
+Sandgate,59
+Scenic Rim,42
+South Brisbane,13
+Southern Downs,60
+Southport,70
+Springwood,28
+Stafford,12
+Stretton,95
+Surfers Paradise,22
+Theodore,77
+Thuringowa,44
+Toohey,51
+Toowoomba North,62
+Toowoomba South,99
+Townsville,16
+Traeger,75
+Warrego,61
+Waterford,77
+Whitsunday,89
+Woodridge,51
+No usual address (Qld),1
+Migratory - Offshore - Shipping (Qld),68
+Adelaide,32
+Badcoe,58
+Black,27
+Bragg,4
+Chaffey,2
+Cheltenham,80
+Colton,75
+Croydon,72
+Davenport,73
+Dunstan,87
+Elder,6
+Elizabeth,82
+Enfield,66
+Finniss,82
+Flinders,58
+Florey,28
+Frome,32
+Gibson,96
+Giles,49
+Hammond,6
+Hartley,51
+Heysen,36
+Hurtle Vale,90
+Kaurna,80
+Kavel,59
+King,76
+Lee,40
+Light,14
+Mackillop,53
+Mawson,60
+Morialta,64
+Morphett,16
+Mount Gambier,77
+Narungga,37
+Newland,57
+Playford,31
+Port Adelaide,76
+Ramsay,47
+Reynell,44
+Schubert,64
+Stuart (SA),82
+Taylor,1
+Torrens,99
+Unley,36
+Waite,39
+West Torrens,41
+Wright,53
+No usual address (SA),94
+Migratory - Offshore - Shipping (SA),56
+Albany (South West),23
+Armadale (East Metropolitan),85
+Balcatta (North Metropolitan),21
+Baldivis (South Metropolitan),60
+Bassendean (East Metropolitan),15
+Bateman (South Metropolitan),100
+Belmont (East Metropolitan),87
+Bicton (South Metropolitan),53
+Bunbury (South West),88
+Burns Beach (North Metropolitan),13
+Butler (North Metropolitan),93
+Cannington (South Metropolitan),23
+Carine (North Metropolitan),27
+Central Wheatbelt (Agricultural),24
+Churchlands (North Metropolitan),61
+Cockburn (South Metropolitan),16
+Collie-Preston (South West),84
+Cottesloe (North Metropolitan),23
+Darling Range (East Metropolitan),12
+Dawesville (South West),97
+Forrestfield (East Metropolitan),84
+Fremantle (South Metropolitan),72
+Geraldton (Agricultural),1
+Girrawheen (North Metropolitan),74
+Hillarys (North Metropolitan),46
+Jandakot (South Metropolitan),100
+Joondalup (North Metropolitan),89
+Kalamunda (East Metropolitan),30
+Kalgoorlie (Mining and Pastoral),88
+Kimberley (Mining and Pastoral),55
+Kingsley (North Metropolitan),63
+Kwinana (South Metropolitan),40
+Mandurah (South West),8
+Maylands (East Metropolitan),75
+Midland (East Metropolitan),18
+Mirrabooka (East Metropolitan),40
+Moore (Agricultural),81
+Morley (East Metropolitan),95
+Mount Lawley (East Metropolitan),24
+Murray-Wellington (South West),67
+Nedlands (North Metropolitan),91
+North West Central (Mining and Pastoral),58
+Perth (North Metropolitan),80
+Pilbara (Mining and Pastoral),52
+Riverton (South Metropolitan),57
+Rockingham (South Metropolitan),80
+Roe (Agricultural),33
+Scarborough (North Metropolitan),27
+South Perth (South Metropolitan),26
+Southern River (South Metropolitan),69
+Swan Hills (East Metropolitan),83
+Thornlie (East Metropolitan),81
+Vasse (South West),41
+Victoria Park (South Metropolitan),28
+Wanneroo (North Metropolitan),12
+Warnbro (South Metropolitan),74
+Warren-Blackwood (South West),18
+West Swan (East Metropolitan),16
+Willagee (South Metropolitan),51
+No usual address (WA),85
+Migratory - Offshore - Shipping (WA),63
+Bass (Launceston),64
+Bass (McIntyre),73
+Bass (Rosevears),6
+Bass (Windermere),97
+Braddon (Mersey),69
+Braddon (Montgomery),41
+Braddon (Murchison),47
+Clark (Derwent),44
+Clark (Elwick),4
+Clark (Hobart),8
+Clark (Nelson),92
+Franklin (Huon),83
+Franklin (Nelson),61
+Franklin (Pembroke),71
+Franklin (Rumney),57
+Lyons (Derwent),28
+Lyons (Launceston),72
+Lyons (McIntyre),49
+Lyons (Montgomery),92
+Lyons (Prosser),6
+Lyons (Rumney),51
+No usual address (Tas.),51
+Migratory - Offshore - Shipping (Tas.),55
+Arafura,92
+Araluen,100
+Arnhem,13
+Barkly,21
+Blain,63
+Braitling,95
+Brennan,47
+Casuarina,20
+Daly,88
+Drysdale,26
+Fannie Bay,76
+Fong Lim,82
+Goyder,24
+Johnston,18
+Karama,58
+Katherine,96
+Namatjira,1
+Nelson,53
+Nhulunbuy,99
+Nightcliff,50
+Port Darwin,10
+Sanderson,46
+Spillett,47
+Stuart (NT),16
+Wanguri,90
+No usual address (NT),51
+Migratory - Offshore - Shipping (NT),53
+Brindabella,61
+Ginninderra,30
+Kurrajong,86
+Murrumbidgee,53
+Yerrabi,85
+No usual address (ACT),22
+Migratory - Offshore - Shipping (ACT),90
+Unclassified (OT),8
+No usual address (OT),22
+Migratory - Offshore - Shipping (OT),99

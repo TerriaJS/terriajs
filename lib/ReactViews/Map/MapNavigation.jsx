@@ -10,6 +10,9 @@ import ToggleSplitterTool from './Navigation/ToggleSplitterTool';
 import ViewerMode from '../../Models/ViewerMode';
 import ZoomControl from './Navigation/ZoomControl';
 
+import classNames from 'classnames';
+import defined from 'terriajs-cesium/Source/Core/defined';
+
 // The map navigation region
 const MapNavigation = createReactClass({
     displayName: 'MapNavigation',
@@ -29,7 +32,13 @@ const MapNavigation = createReactClass({
 
     render() {
         return (
-            <div className={Styles.mapNavigation}>
+            <div
+                className={classNames(Styles.mapNavigation, {
+                    [Styles.withTimeSeriesControls]: defined(
+                        this.props.terria.timelineStack.top
+                    ),
+                })}
+            >
               <Medium>
                 <div className={Styles.navs}>
                   <If condition={this.props.terria.viewerMode !== ViewerMode.Leaflet}>
