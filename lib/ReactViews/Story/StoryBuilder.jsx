@@ -13,7 +13,6 @@ import createGuid from 'terriajs-cesium/Source/Core/createGuid';
 import classNames from 'classnames';
 
 import Styles from './story-builder.scss';
-import '!!style-loader!css-loader?sourceMap!react-anything-sortable/sortable.css';
 
 const StoryBuilder = createReactClass({
     displayName: 'StoryBuilder',
@@ -62,8 +61,12 @@ const StoryBuilder = createReactClass({
 
     captureStory(story) {
         story.shareData = JSON.parse(JSON.stringify(getShareData(this.props.terria, false)));
-        this.props.terria.stories =  [...(this.props.terria.stories || []), story];
-    },
+         if (this.props.terria.stories === undefined) {
+          this.props.terria.stories = [story];
+        } else {
+            this.props.terria.stories.push(story);
+          }
+      },
 
     reCaptureScene(story) {
         const storyIndex = (this.props.terria.stories || []).map(story => story.id).indexOf(story.id);

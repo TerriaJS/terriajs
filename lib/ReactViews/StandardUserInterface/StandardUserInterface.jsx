@@ -79,7 +79,7 @@ const StandardUserInterface = createReactClass({
 
         this.resizeListener();
         
-       if(this.props.terria.stories && this.props.terria.stories.length && this.props.viewState.storyEnabled) {
+       if(this.props.terria.configParameters.storyEnabled && this.props.terria.stories && this.props.terria.stories.length) {
         this.props.viewState.notifications.push({
           title: "This map contains a story",
           message: "Would you like to view it now?",
@@ -226,6 +226,7 @@ const StandardUserInterface = createReactClass({
                                 viewState={this.props.viewState}
                                 allBaseMaps={allBaseMaps}
                                 menuItems={customElements.menu}
+                                animationDuration={250}
                             />
                             <MapNavigation terria={terria}
                                         viewState={this.props.viewState}
@@ -256,7 +257,7 @@ const StandardUserInterface = createReactClass({
                     <DragDropNotification lastUploadedFiles={this.props.viewState.lastUploadedFiles} viewState={this.props.viewState}/>
                     {showStoryPanel && <StoryPanel terria={terria} viewState={this.props.viewState}/>}
                 </div>
-                {this.props.viewState.storyEnabled && <StoryBuilder isVisible ={showStoryBuilder} terria={terria} viewState={this.props.viewState}/>}
+                {this.props.terria.configParameters.storyEnabled && <StoryBuilder isVisible ={showStoryBuilder} terria={terria} viewState={this.props.viewState}/>}
             </div>
         );
     }

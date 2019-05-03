@@ -1,7 +1,6 @@
 import React from 'react';
 import {init} from 'pell';
 import PropTypes from 'prop-types';
-import '!!style-loader!css-loader?sourceMap!pell/dist/pell.css';
 
 export default class Editor extends React.Component {
   constructor(props) {

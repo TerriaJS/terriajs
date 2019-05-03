@@ -1,5 +1,5 @@
 import React from 'react';
-
+import triggerResize from '../../Core/triggerResize';
 import createReactClass from 'create-react-class';
 
 import PropTypes from 'prop-types';
@@ -21,6 +21,7 @@ const MenuBar = createReactClass({
         terria: PropTypes.object,
         viewState: PropTypes.object.isRequired,
         allBaseMaps: PropTypes.array,
+        animationDuration: PropTypes.number,
         menuItems: PropTypes.arrayOf(PropTypes.element)
     },
 
@@ -36,6 +37,11 @@ const MenuBar = createReactClass({
    
     onStoryButtonClick() {
       this.props.viewState.storyBuilderShown = !this.props.viewState.storyBuilderShown; 
+      this.props.terria.currentViewer.notifyRepaintRequired();
+      // Allow any animations to finish, then trigger a resize.
+        setTimeout(function() {
+            triggerResize();
+        }, this.props.animationDuration || 1);
     },
 
     render() {
@@ -44,7 +50,7 @@ const MenuBar = createReactClass({
             <div className={classNames(Styles.menuArea, this.props.viewState.topElement === 'MenuBar' ? 'top-element': '')}
             onClick={this.handleClick}>
                 <ul className={Styles.menu}>
-                  <If condition = {this.props.viewState.storyEnabled}>
+                  <If condition = {this.props.terria.configParameters.storyEnabled}>
                     <li className={Styles.menuItem}>
                         <button 
                             className={Styles.storyBtn}

@@ -28,7 +28,7 @@
   display: block;
 }
 
-.is-opaque{
+.is-translucent{
   opacity: 0.6;
 }
 
@@ -71,6 +71,10 @@
     position: absolute;
     right: 8px;
     top: 8px;
+    svg{
+      width: 15px;
+      height: 26px;
+    }
 }
 
 .btnToggleFeature{
