@@ -46,4 +46,11 @@ export default class MappableTraits extends ModelTraits {
         description: 'The bounding box rectangle that contains all the data in this catalog item.'
     })
     rectangle?: RectangleTraits;
+
+    @primitiveTrait({
+        type: 'boolean',
+        name: 'Disable Preview',
+        description: 'Disables the preview on the Add Data panel. This is useful when the preview will be very slow to load.'
+    })
+    disablePreview: boolean = false;
 }

@@ -8,32 +8,33 @@
 //  Solution: think in terms of pipelines with computed observables, document patterns.
 // 4. All code for all catalog item types needs to be loaded before we can do anything.
 import { autorun, computed, observable, runInAction, trace } from 'mobx';
-import { createTransformer } from 'mobx-utils';
+import Ellipsoid from 'terriajs-cesium/Source/Core/Ellipsoid';
 import Rectangle from 'terriajs-cesium/Source/Core/Rectangle';
 import WebMercatorTilingScheme from 'terriajs-cesium/Source/Core/WebMercatorTilingScheme';
+import ImageryProvider from 'terriajs-cesium/Source/Scene/ImageryProvider';
 import WebMapServiceImageryProvider from 'terriajs-cesium/Source/Scene/WebMapServiceImageryProvider';
 import URI from 'urijs';
 import containsAny from '../Core/containsAny';
+import createTransformerAllowUndefined from '../Core/createTransformerAllowUndefined';
 import isReadOnlyArray from '../Core/isReadOnlyArray';
 import TerriaError from '../Core/TerriaError';
 import CatalogMemberMixin from '../ModelMixins/CatalogMemberMixin';
+import DiscretelyTimeVaryingMixin from '../ModelMixins/DiscretelyTimeVaryingMixin';
 import GetCapabilitiesMixin from '../ModelMixins/GetCapabilitiesMixin';
 import GroupMixin from '../ModelMixins/GroupMixin';
 import UrlMixin from '../ModelMixins/UrlMixin';
 import { InfoSectionTraits } from '../Traits/CatalogMemberTraits';
+import DiscreteTimeTraits from '../Traits/DiscreteTimeTraits';
+import { RectangleTraits } from '../Traits/MappableTraits';
 import WebMapServiceCatalogItemTraits, { LegendTraits, WebMapServiceAvailableLayerStylesTraits } from '../Traits/WebMapServiceCatalogItemTraits';
+import CreateModel from './CreateModel';
 import createStratumInstance from './createStratumInstance';
 import LoadableStratum from './LoadableStratum';
 import Mappable, { ImageryParts } from './Mappable';
-import CreateModel from './CreateModel';
 import proxyCatalogItemUrl from './proxyCatalogItemUrl';
 import StratumFromTraits from './StratumFromTraits';
 import Terria from './Terria';
 import WebMapServiceCapabilities, { CapabilitiesLayer, CapabilitiesStyle, getRectangleFromLayer } from './WebMapServiceCapabilities';
-import { RectangleTraits } from '../Traits/MappableTraits';
-import DiscretelyTimeVaryingMixin from '../ModelMixins/DiscretelyTimeVaryingMixin';
-import createTransformerAllowUndefined from '../Core/createTransformerAllowUndefined';
-import DiscreteTimeTraits from '../Traits/DiscreteTimeTraits';
 
 interface LegendUrl {
     url: string;
@@ -448,20 +449,66 @@ class WebMapServiceCatalogItem extends DiscretelyTimeVaryingMixin(GetCapabilitie
             parameters.time = time;
         }
 
-        return new WebMapServiceImageryProvider({
+        const maximumLevel = scaleDenominatorToLevel(this.minScaleDenominator);
+
+        const imageryOptions = {
             url: this.url || '',
-            // layers: this.layers || '',
-            // For testing prefetching
             layers: this.layers || '',
-            // getFeatureInfoFormats: this.getFeatureInfoFormats,
-            // parameters: parameters,
             parameters: parameters,
-            // getFeatureInfoParameters: parameters,
             tilingScheme: /*defined(this.tilingScheme) ? this.tilingScheme :*/ new WebMercatorTilingScheme(),
-            maximumLevel: 20,
+            maximumLevel: maximumLevel,
             rectangle: this.rectangle ? Rectangle.fromDegrees(this.rectangle.west, this.rectangle.south, this.rectangle.east, this.rectangle.north) : undefined
-        });
+        };
+
+        if (imageryOptions.maximumLevel !== undefined && this.hideLayerAfterMinScaleDenominator) {
+            // Make Cesium request one extra level so we can tell the user what's happening and return a blank image.
+            ++imageryOptions.maximumLevel;
+        }
+
+        const imageryProvider = new WebMapServiceImageryProvider(imageryOptions);
+
+        if (maximumLevel !== undefined && this.hideLayerAfterMinScaleDenominator) {
+            const realRequestImage = imageryProvider.requestImage;
+            let messageDisplayed = false;
+
+            imageryProvider.requestImage = (x: number, y: number, level: number) => {
+                if (level > maximumLevel) {
+                    if (!messageDisplayed) {
+                        this.terria.error.raiseEvent(new TerriaError({
+                            title: 'Dataset will not be shown at this scale',
+                            message: 'The "' + this.name + '" dataset will not be shown when zoomed in this close to the map because the data custodian has ' +
+                            'indicated that the data is not intended or suitable for display at this scale.  Click the dataset\'s Info button on the ' +
+                            'Now Viewing tab for more information about the dataset and the data custodian.'
+                        }));
+                        messageDisplayed = true;
+                    }
+                    // cast to any because @types/cesium currently has the wrong signature for this function.
+                    return (<any>ImageryProvider).loadImage(imageryProvider, this.terria.baseUrl + 'images/blank.png');
+                }
+                return realRequestImage.call(imageryProvider, x, y, level);
+            };
+        }
+
+        return imageryProvider;
     });
+}
+
+function scaleDenominatorToLevel(minScaleDenominator: number | undefined): number | undefined {
+    if (minScaleDenominator == undefined || minScaleDenominator <= 0.0) {
+        return undefined;
+    }
+
+    var metersPerPixel = 0.00028; // from WMS 1.3.0 spec section 7.2.4.6.9
+    var tileWidth = 256;
+
+    var circumferenceAtEquator = 2 * Math.PI * Ellipsoid.WGS84.maximumRadius;
+    var distancePerPixelAtLevel0 = circumferenceAtEquator / tileWidth;
+    var level0ScaleDenominator = distancePerPixelAtLevel0 / metersPerPixel;
+
+    // 1e-6 epsilon from WMS 1.3.0 spec, section 7.2.4.6.9.
+    var ratio = level0ScaleDenominator / (minScaleDenominator - 1e-6);
+    var levelAtMinScaleDenominator = Math.log(ratio) / Math.log(2);
+    return levelAtMinScaleDenominator | 0;
 }
 
 export default WebMapServiceCatalogItem;
