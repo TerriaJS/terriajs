@@ -1,6 +1,9 @@
 Change Log
 ==========
 
+## Next Release
+* Remove comma dangle on `regionMapping.json`.
+
 ### v7.4.0
 
 * Upgraded to Cesium v1.57.
