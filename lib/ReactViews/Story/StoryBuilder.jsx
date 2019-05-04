@@ -37,7 +37,7 @@ const StoryBuilder = createReactClass({
       }
     },
    
-  removeAllStories(){
+   removeAllStories() {
     this.props.terria.stories = [];
   },
     onSave(_story) {

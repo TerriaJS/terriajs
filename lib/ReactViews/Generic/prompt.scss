@@ -6,12 +6,18 @@
   background:$color-primary;
   padding: 16px;
   width: 200px;
-  top: 50px;
+  top: 40px;
+  left: -80px;
   text-align: center;
   color: #ffffff;
   font-family:$font-base;
   font-size: 0.9rem;
   border-radius: $radius-small;
+  opacity: 0;
+  @include transition(left $animation-fast ease-in);
+  &.isVisible{
+    opacity: 1;
+  }
 
   &:before{
     width: 18px;
@@ -23,6 +29,12 @@
     top: -8px;
     left: 110px;
     transform: rotate(45deg);
+  }
+  h3{
+    margin: 5px;
+  }
+  small{
+    font-size: 0.8rem;
   }
 }
 .btn{

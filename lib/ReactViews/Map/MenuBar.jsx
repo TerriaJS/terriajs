@@ -42,15 +42,19 @@ const MenuBar = createReactClass({
         setTimeout(function() {
             triggerResize();
         }, this.props.animationDuration || 1);
+      this.props.viewState.toggleFeaturePrompt('story', false);
     },
 
     render() {
+        const storyEnabled = this.props.terria.configParameters.storyEnabled;
         const enableTools = this.props.terria.getUserProperty('tools') === '1';
+        const promptHtml = storyEnabled  && this.props.terria.stories.length > 0 ? (<div>You can view and create stories at any time by clicking here.</div>) : (<div><small>INTRODUCING</small><h3>Data Stories</h3><div>Create and share interactive stories directly from your map.</div></div>);
+        const delayTime = storyEnabled && this.props.terria.stories.length > 0 ? 1000 : 2000;
         return (
             <div className={classNames(Styles.menuArea, this.props.viewState.topElement === 'MenuBar' ? 'top-element': '')}
             onClick={this.handleClick}>
                 <ul className={Styles.menu}>
-                  <If condition = {this.props.terria.configParameters.storyEnabled}>
+                  <If condition = {storyEnabled}>
                     <li className={Styles.menuItem}>
                         <button 
                             className={Styles.storyBtn}
@@ -59,7 +63,7 @@ const MenuBar = createReactClass({
                             <Icon glyph={Icon.GLYPHS.story}/>
                             <span>Story</span>
                         </button>
-                        {this.props.viewState.featurePrompts.indexOf('story') >= 0 && <Prompt content={"You can view and create stories at any time by clicking here."} dismissText={"Got it, thanks!"} dismissAction={()=>this.props.viewState.toggleFeaturePrompt('story', false)}/>}
+                        {this.props.viewState.featurePrompts.indexOf('story') >= 0 && <Prompt content={promptHtml} displayDelay={delayTime} dismissText={"Got it, thanks!"} dismissAction={()=>this.props.viewState.toggleFeaturePrompt('story', false)}/>}
                     </li>
                   </If>
                     <li className={Styles.menuItem}>
