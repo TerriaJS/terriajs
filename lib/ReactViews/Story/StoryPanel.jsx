@@ -75,7 +75,7 @@ const StoryPanel = createReactClass({
       this.slideOutTimer = this.setState({
         inView: false
       });
-        setTimeout(() => {this.exitStory();}, 300);
+      setTimeout(() => {this.exitStory();}, 300);
     },
 
     componentWillUnmount() {
@@ -121,7 +121,7 @@ const StoryPanel = createReactClass({
     },
 
     exitStory() {
-        this.props.viewState.storyShown = !this.props.viewState.storyShown; 
+        this.props.viewState.storyShown = false;
         this.props.terria.currentViewer.notifyRepaintRequired();
     },
 

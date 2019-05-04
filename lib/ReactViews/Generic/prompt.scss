@@ -1,0 +1,36 @@
+@import '~terriajs-variables';
+@import '../../Sass/common/mixins';
+
+.prompt {
+  position: absolute;
+  background:$color-primary;
+  padding: 16px;
+  width: 200px;
+  top: 50px;
+  text-align: center;
+  color: #ffffff;
+  font-family:$font-base;
+  font-size: 0.9rem;
+  border-radius: $radius-small;
+
+  &:before{
+    width: 18px;
+    height: 18px;
+    content: '';
+    background: inherit;
+    display: block;
+    position: absolute;
+    top: -8px;
+    left: 110px;
+    transform: rotate(45deg);
+  }
+}
+.btn{
+    composes: btn from '../../Sass/common/_buttons.scss';
+    margin-top: $padding;
+    border-bottom: 1px solid #ffffff;
+    &:hover, &:focus{
+      border-bottom: 1px solid #ffffff;
+    }
+  }
+

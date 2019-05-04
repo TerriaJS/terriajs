@@ -9,7 +9,7 @@ import SharePanel from './Panels/SharePanel/SharePanel.jsx';
 import ToolsPanel from './Panels/ToolsPanel/ToolsPanel.jsx';
 import Icon from "../Icon.jsx";
 import ObserveModelMixin from '../ObserveModelMixin';
-
+import Prompt from '../Generic/Prompt';
 import Styles from './menu-bar.scss';
 
 // The map navigation region
@@ -59,6 +59,7 @@ const MenuBar = createReactClass({
                             <Icon glyph={Icon.GLYPHS.story}/>
                             <span>Story</span>
                         </button>
+                        {this.props.viewState.featurePrompts.indexOf('story') >= 0 && <Prompt content={"You can view and create stories at any time by clicking here."} dismissText={"Got it, thanks!"} dismissAction={()=>this.props.viewState.toggleFeaturePrompt('story', false)}/>}
                     </li>
                   </If>
                     <li className={Styles.menuItem}>
