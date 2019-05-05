@@ -1,53 +1,56 @@
-@import '~terriajs-variables';
-@import '../../Sass/common/mixins';
+@import "~terriajs-variables";
+@import "../../Sass/common/mixins";
 
 .root {
-
 }
 
-.btn--add{
-  composes: btn from '../../Sass/common/_buttons.scss';
-  composes: btn-primary from '../../Sass/common/_buttons.scss';
+.btn--add {
+  composes: btn from "../../Sass/common/_buttons.scss";
+  composes: btn-primary from "../../Sass/common/_buttons.scss";
   z-index: 10; // keeps the button above the preview map in IE9.
   padding: 10px;
 
   // toggle-enable data-preview__add-to-map
-  @media (min-width: $sm){
-      display: inline-block;
-      width: inherit;
-      position: absolute;
-      top: $padding-small;
-      right: $padding-small;
+  @media (min-width: $sm) {
+    display: inline-block;
+    width: inherit;
+    position: absolute;
+    top: $padding-small;
+    right: $padding-small;
   }
 }
 
 .previewed--info {
-  margin: 2*$padding;
+  margin: 2 * $padding;
 }
 
 .field {
-  composes: field from '../../Sass/common/_form.scss';
+  composes: field from "../../Sass/common/_form.scss";
 }
 
-.description{
+.description {
   @extend %wrap;
 
   a {
-    @include link($modal-bg);  // The background is taken from tabs.scss's panel-content.
+    @include link(
+      $modal-bg
+    ); // The background is taken from tabs.scss's panel-content.
   }
 }
 
 .link {
-  @include link($modal-bg);  // The background is taken from tabs.scss's panel-content.
+  @include link(
+    $modal-bg
+  ); // The background is taken from tabs.scss's panel-content.
 }
 
 .h3 {
-  composes: h3 from '../../Sass/common/_base.scss';
+  composes: h3 from "../../Sass/common/_base.scss";
 
   font-size: $font-size-mid-large;
 }
 .h4 {
-  composes: h4 from '../../Sass/common/_base.scss';
+  composes: h4 from "../../Sass/common/_base.scss";
 
   font-size: $font-size-mid-small;
 }

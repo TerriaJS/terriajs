@@ -1,5 +1,5 @@
-@import '~terriajs-variables';
-@import '../../../Sass/common/mixins';
+@import "~terriajs-variables";
+@import "../../../Sass/common/mixins";
 
 .dropdown {
   float: left;
@@ -9,7 +9,7 @@
   }
 
   &__btn {
-    composes: btn--small from '../../../Sass/common/_buttons.scss';
+    composes: btn--small from "../../../Sass/common/_buttons.scss";
   }
 
   &__btn--option {
@@ -17,7 +17,8 @@
     float: left;
     color: $color-primary;
 
-    &:hover, &:focus {
+    &:hover,
+    &:focus {
       background: $color-primary;
       color: orange;
       text-decoration: none;
@@ -53,29 +54,30 @@
 }
 
 .btn-small {
-  composes: btn--small from '../../../Sass/common/_buttons.scss';
+  composes: btn--small from "../../../Sass/common/_buttons.scss";
 }
 
 .btn-download {
-  composes: btn from '../../../Sass/common/_buttons.scss';
+  composes: btn from "../../../Sass/common/_buttons.scss";
   text-align: center;
   padding: 4px 3px;
   margin-left: 3px;
   vertical-align: top;
 
-  svg{
+  svg {
     height: 20px;
     width: 20px;
   }
 
-  &:hover, &:focus {
+  &:hover,
+  &:focus {
     text-decoration: none;
   }
 }
 
 .btn--chart-expand {
-  composes: btn from '../../../Sass/common/_buttons.scss';
-  composes: btn-primary from '../../../Sass/common/_buttons.scss';
+  composes: btn from "../../../Sass/common/_buttons.scss";
+  composes: btn-primary from "../../../Sass/common/_buttons.scss";
 
   display: inline-block;
   z-index: 999;
@@ -86,8 +88,8 @@
 }
 
 .a--download {
-  composes: btn--download from '../../../Sass/common/_buttons.scss';
-  composes: btn-primary from '../../../Sass/common/_buttons.scss';
+  composes: btn--download from "../../../Sass/common/_buttons.scss";
+  composes: btn-primary from "../../../Sass/common/_buttons.scss";
 
   display: inline-block;
   text-align: center;
@@ -96,12 +98,13 @@
   width: 30px;
   vertical-align: -5px;
 
-  svg{
+  svg {
     height: 20px;
     width: 20px;
   }
 
-  &:hover, &:focus {
+  &:hover,
+  &:focus {
     text-decoration: none;
   }
 }

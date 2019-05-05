@@ -1,17 +1,17 @@
-@import '~terriajs-variables';
-@import '../../../Sass/common/mixins';
+@import "~terriajs-variables";
+@import "../../../Sass/common/mixins";
 
 .root {
   height: 100%;
 }
 
 .data-explorer {
-  composes: tab-left-col from '../tabs.scss';
+  composes: tab-left-col from "../tabs.scss";
 }
 
 .data-catalog {
-  composes: list-reset from '../../../Sass/common/_base.scss';
-  composes: scrollbars from '../../../Sass/common/_base.scss';
+  composes: list-reset from "../../../Sass/common/_base.scss";
+  composes: scrollbars from "../../../Sass/common/_base.scss";
 
   font-size: $font-size-mid-small;
 
@@ -29,11 +29,10 @@
 }
 
 .data--catalog-group {
-  composes: list-reset from '../../../Sass/common/_base.scss';
+  composes: list-reset from "../../../Sass/common/_base.scss";
   padding-left: $padding-small;
 }
 
 .label {
-  composes: label from '../../../Sass/common/_labels.scss';
+  composes: label from "../../../Sass/common/_labels.scss";
 }
-

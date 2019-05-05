@@ -1,5 +1,5 @@
-@import '~terriajs-variables';
-@import '../../../Sass/common/mixins';
+@import "~terriajs-variables";
+@import "../../../Sass/common/mixins";
 .zoomControl {
   display: none;
 
@@ -24,10 +24,12 @@
   }
 }
 
-.list{
-  composes: list-reset from '../../../Sass/common/_base.scss';
+.list {
+  composes: list-reset from "../../../Sass/common/_base.scss";
 }
 
-.increase, .decrease, .refresh {
-  composes: btn from '../../../Sass/common/_buttons.scss';
+.increase,
+.decrease,
+.refresh {
+  composes: btn from "../../../Sass/common/_buttons.scss";
 }
