@@ -1,20 +1,20 @@
-@import '~terriajs-variables';
-.toolsPanel{
+@import "~terriajs-variables";
+.toolsPanel {
   width: 200px;
 }
 
-.submit{
-  composes: btn from '../../../../Sass/common/_buttons.scss';
-  composes: btn-primary from '../../../../Sass/common/_buttons.scss';
+.submit {
+  composes: btn from "../../../../Sass/common/_buttons.scss";
+  composes: btn-primary from "../../../../Sass/common/_buttons.scss";
   margin: 10px auto;
   display: block;
   // prevent jump when button content change
   height: 45px;
-  svg{
+  svg {
     fill: #fff;
   }
 }
 
-.results{
+.results {
   padding: 7px;
 }

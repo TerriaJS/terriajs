@@ -32,7 +32,7 @@
 .addData {
   margin: $padding-small 0;
   display: flex;
-  button{
+  button {
     height: 42px;
   }
 }
@@ -42,7 +42,7 @@
   composes: btn-primary from "../../Sass/common/_buttons.scss";
   margin-left: 5px;
   width: 45px;
-  svg{
+  svg {
     fill: $text-light;
   }
 }

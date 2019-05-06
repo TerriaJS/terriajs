@@ -1,67 +1,67 @@
-@import '~terriajs-variables';
+@import "~terriajs-variables";
 
 @mixin transition($transition...) {
-    -moz-transition:    $transition;
-    -o-transition:      $transition;
-    -webkit-transition: $transition;
-    transition:         $transition;
+  -moz-transition: $transition;
+  -o-transition: $transition;
+  -webkit-transition: $transition;
+  transition: $transition;
 }
 
 @mixin transform($transforms) {
-     -moz-transform: $transforms;
-       -o-transform: $transforms;
-      -ms-transform: $transforms;
+  -moz-transform: $transforms;
+  -o-transform: $transforms;
+  -ms-transform: $transforms;
   -webkit-transform: $transforms;
-          transform: $transforms;
+  transform: $transforms;
 }
 // rotate
-@mixin rotate ($deg) {
+@mixin rotate($deg) {
   @include transform(rotate(#{$deg}deg));
 }
 
 // scale
 @mixin scale($scale) {
-   @include transform(scale($scale));
+  @include transform(scale($scale));
 }
 // translate
-@mixin translate ($x, $y) {
-   @include transform(translate($x, $y));
+@mixin translate($x, $y) {
+  @include transform(translate($x, $y));
 }
 // skew
-@mixin skew ($x, $y) {
-   @include transform(skew(#{$x}deg, #{$y}deg));
+@mixin skew($x, $y) {
+  @include transform(skew(#{$x}deg, #{$y}deg));
 }
 //transform origin
-@mixin transform-origin ($origin) {
-    moz-transform-origin: $origin;
-       -o-transform-origin: $origin;
-      -ms-transform-origin: $origin;
+@mixin transform-origin($origin) {
+  moz-transform-origin: $origin;
+  -o-transform-origin: $origin;
+  -ms-transform-origin: $origin;
   -webkit-transform-origin: $origin;
-          transform-origin: $origin;
+  transform-origin: $origin;
 }
 //transform origin
-@mixin transform-origin ($origin, $origin2) {
-    moz-transform-origin: $origin $origin2;
-    -o-transform-origin: $origin $origin2;
-    -ms-transform-origin: $origin $origin2;
-    -webkit-transform-origin: $origin $origin2;
-    transform-origin: $origin $origin2;
+@mixin transform-origin($origin, $origin2) {
+  moz-transform-origin: $origin $origin2;
+  -o-transform-origin: $origin $origin2;
+  -ms-transform-origin: $origin $origin2;
+  -webkit-transform-origin: $origin $origin2;
+  transform-origin: $origin $origin2;
 }
 
-@mixin icon-font($content){
-    /* use !important to prevent issues with browser extensions that change fonts */
-    font-family: 'icomoon' !important;
-    speak: none;
-    font-style: normal;
-    font-weight: normal;
-    font-variant: normal;
-    text-transform: none;
-    line-height: 1;
+@mixin icon-font($content) {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: "icomoon" !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
 
-    /* Better Font Rendering =========== */
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    content: $content;
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  content: $content;
 }
 
 /* Mixin */
@@ -74,20 +74,20 @@
 }
 
 //Wrapping text only, not url
-%wrap{
-   /* These are technically the same, but use both */
+%wrap {
+  /* These are technically the same, but use both */
   overflow-wrap: break-word;
   word-wrap: break-word;
   word-break: break-word;
 }
 // Use this to override wrap
-%unwrap{
+%unwrap {
   overflow-wrap: normal;
   word-wrap: normal;
   word-break: normal;
 }
 // currently not used, but just in case we need it
-%url{
+%url {
   word-break: break-all;
   hyphens: none;
 }
@@ -100,7 +100,9 @@
 }
 
 @mixin empty-module($module-name) {
-  .#{$module-name} { /*!*/ }
+  .#{$module-name} {
+    /*!*/
+  }
 }
 
 // %link is deprecated. Instead of @extend %link;, use @include link($bg-color);
@@ -108,7 +110,7 @@
   @if variable-exists(text-link) {
     color: $text-link;
   } @else {
-    color: $color-primary;  // for backwards compatibility
+    color: $color-primary; // for backwards compatibility
   }
   text-decoration: $link-text-decoration;
   &:visited {
@@ -124,7 +126,7 @@
   text-decoration: $link-text-decoration;
   color: get-link-color($bg-color);
   &:visited {
-    color: get-visited-link-color($bg-color)
+    color: get-visited-link-color($bg-color);
   }
 }
 
@@ -132,61 +134,67 @@
   &::placeholder {
     @content;
   }
-  
-  &::-webkit-input-placeholder { // Chrome/Opera/Safari
-      @content;
+
+  &::-webkit-input-placeholder {
+    // Chrome/Opera/Safari
+    @content;
   }
 
-  &:-moz-placeholder { // Firefox 18-
-      @content;
+  &:-moz-placeholder {
+    // Firefox 18-
+    @content;
   }
 
-  &::-moz-placeholder {  // Firefox 19+
-      @content;
+  &::-moz-placeholder {
+    // Firefox 19+
+    @content;
   }
 
-  &:-ms-input-placeholder { // IE 10+
-      @content;
+  &:-ms-input-placeholder {
+    // IE 10+
+    @content;
   }
 }
 
-%sm-show, %md-show, %lg-show {
-  display: none !important
+%sm-show,
+%md-show,
+%lg-show {
+  display: none !important;
 }
 
 @media (min-width: $sm) {
   %sm-show {
-    display: block !important
+    display: block !important;
   }
 }
 
 @media (min-width: $md) {
   %md-show {
-    display: block !important
+    display: block !important;
   }
 }
 
 @media (min-width: $lg) {
   %lg-show {
-    display: block !important
+    display: block !important;
   }
 }
 
 @media (min-width: $sm) {
   %sm-hide {
-    display: none !important
+    display: none !important;
   }
 }
 
 @media (min-width: $md) {
   %md-hide {
-    display: none !important
+    display: none !important;
   }
 }
 
 @media (min-width: $lg) {
   %lg-hide {
-    display: none !important
+    display: none !important;
   }
 }
 

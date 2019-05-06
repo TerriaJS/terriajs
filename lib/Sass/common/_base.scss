@@ -1,5 +1,5 @@
-@import '~terriajs-variables';
-@import 'mixins';
+@import "~terriajs-variables";
+@import "mixins";
 
 .clearfix {
   @extend %clearfix;
@@ -12,7 +12,7 @@
 }
 
 .display-none {
-  display: none !important
+  display: none !important;
 }
 
 .hide {
@@ -24,7 +24,9 @@
 }
 
 .link {
-  @include link($overlay); // Arbitrarily use the workbench's background as the default.
+  @include link(
+    $overlay
+  ); // Arbitrarily use the workbench's background as the default.
 }
 
 .sm-show {
@@ -110,7 +112,6 @@
 }
 
 @media (min-width: 40em) {
-
   .sm-col {
     float: left;
     box-sizing: border-box;
@@ -168,11 +169,9 @@
   .sm-col-12 {
     width: 100%;
   }
-
 }
 
 @media (min-width: 52em) {
-
   .md-col {
     float: left;
     box-sizing: border-box;
@@ -230,11 +229,9 @@
   .md-col-12 {
     width: 100%;
   }
-
 }
 
 @media (min-width: 64em) {
-
   .lg-col {
     float: left;
     box-sizing: border-box;
@@ -292,14 +289,13 @@
   .lg-col-12 {
     width: 100%;
   }
-
 }
 
 .flex {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
-  display: flex
+  display: flex;
 }
 
 .flex-column {
@@ -307,55 +303,55 @@
   -webkit-box-direction: normal;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
-  flex-direction: column
+  flex-direction: column;
 }
 
 .flex-wrap {
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
-  flex-wrap: wrap
+  flex-wrap: wrap;
 }
 
 .flex-center {
   -webkit-box-align: center;
   -webkit-align-items: center;
   -ms-flex-align: center;
-  align-items: center
+  align-items: center;
 }
 
 .flex-baseline {
   -webkit-box-align: baseline;
   -webkit-align-items: baseline;
   -ms-flex-align: baseline;
-  align-items: baseline
+  align-items: baseline;
 }
 
 .flex-stretch {
   -webkit-box-align: stretch;
   -webkit-align-items: stretch;
   -ms-flex-align: stretch;
-  align-items: stretch
+  align-items: stretch;
 }
 
 .flex-start {
   -webkit-box-align: start;
   -webkit-align-items: flex-start;
   -ms-flex-align: start;
-  align-items: flex-start
+  align-items: flex-start;
 }
 
 .flex-end {
   -webkit-box-align: end;
   -webkit-align-items: flex-end;
   -ms-flex-align: end;
-  align-items: flex-end
+  align-items: flex-end;
 }
 
 .flex-justify {
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   -ms-flex-pack: justify;
-  justify-content: space-between
+  justify-content: space-between;
 }
 
 .flex-auto {
@@ -371,28 +367,28 @@
   -webkit-box-flex: 1;
   -webkit-flex: 1 0 auto;
   -ms-flex: 1 0 auto;
-  flex: 1 0 auto
+  flex: 1 0 auto;
 }
 
 .flex-none {
   -webkit-box-flex: 0;
   -webkit-flex: none;
   -ms-flex: none;
-  flex: none
+  flex: none;
 }
 
 .flex-first {
   -webkit-box-ordinal-group: 0;
   -webkit-order: -1;
   -ms-flex-order: -1;
-  order: -1
+  order: -1;
 }
 
 .flex-last {
   -webkit-box-ordinal-group: 100000;
   -webkit-order: 99999;
   -ms-flex-order: 99999;
-  order: 99999
+  order: 99999;
 }
 
 @media (min-width: 40em) {
@@ -400,7 +396,7 @@
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
-    display: flex
+    display: flex;
   }
 }
 
@@ -409,7 +405,7 @@
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
-    display: flex
+    display: flex;
   }
 }
 
@@ -418,7 +414,7 @@
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
-    display: flex
+    display: flex;
   }
 }
 
@@ -445,7 +441,7 @@
   }
 
   position: relative;
-  background: #F00 !important;
+  background: #f00 !important;
   color: magenta !important;
   border: 3px orange dashed !important;
 
@@ -457,13 +453,13 @@
 
 @keyframes flash {
   0% {
-    background: #F00;
+    background: #f00;
     color: magenta;
     border: 3px orange dashed;
   }
 
   50% {
-    background: #0FF;
+    background: #0ff;
     color: black;
     border: 3px red dashed;
   }
@@ -486,34 +482,39 @@
   }
 }
 
-.h1, .h2, .h3, .h4, .h5, .h6 {
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
   font-family: $font-base;
   font-weight: $font-weight-bold;
   line-height: 1.25;
   margin-top: 1em;
-  margin-bottom: .5em;
+  margin-bottom: 0.5em;
 }
 
 .h1 {
-  font-size: 2rem
+  font-size: 2rem;
 }
 
 .h2 {
-  font-size: 1.5rem
+  font-size: 1.5rem;
 }
 
 .h3 {
-  font-size: 1.25rem
+  font-size: 1.25rem;
 }
 
 .h4 {
-  font-size: 1rem
+  font-size: 1rem;
 }
 
 .h5 {
-  font-size: .875rem
+  font-size: 0.875rem;
 }
 
 .h6 {
-  font-size: .75rem
+  font-size: 0.75rem;
 }

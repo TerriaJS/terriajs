@@ -1,5 +1,5 @@
-@import '~terriajs-variables';
-@import '../../Sass/common/mixins';
+@import "~terriajs-variables";
+@import "../../Sass/common/mixins";
 
 .preview {
   height: 100%;
@@ -9,7 +9,7 @@
 
   @media (max-width: $sm) {
     height: calc(100% - #{$mobile-modal-top-height});
-    composes: scrollbars from '../../Sass/common/_base.scss';
+    composes: scrollbars from "../../Sass/common/_base.scss";
     overflow: auto;
   }
 }
@@ -21,8 +21,8 @@
 }
 
 .btn--back-to-map {
-  composes: btn from '../../Sass/common/_buttons.scss';
-  composes: btn--tertiary from '../../Sass/common/_buttons.scss';
+  composes: btn from "../../Sass/common/_buttons.scss";
+  composes: btn--tertiary from "../../Sass/common/_buttons.scss";
   font-size: $font-size-mid-small;
 }
 
@@ -30,7 +30,7 @@
   height: 100%;
   overflow-y: auto;
   overflow-x: auto;
-  composes: scrollbars from '../../Sass/common/_base.scss';
+  composes: scrollbars from "../../Sass/common/_base.scss";
 
   margin: 0 $padding-small;
   position: relative;
@@ -53,15 +53,15 @@
 }
 
 .field {
-  composes: field from '../../Sass/common/_form.scss';
+  composes: field from "../../Sass/common/_form.scss";
 }
 
 .h4 {
-  composes: h4 from '../../Sass/common/_base.scss';
+  composes: h4 from "../../Sass/common/_base.scss";
 
   font-size: $font-size-mid-small;
 }
 
 .h3 {
-  composes: h3 from '../../Sass/common/_base.scss';
+  composes: h3 from "../../Sass/common/_base.scss";
 }
