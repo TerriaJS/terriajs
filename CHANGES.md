@@ -1,8 +1,9 @@
 Change Log
 ==========
 
-## Next Release
-* Remove comma dangle on `regionMapping.json`.
+### v7.4.1
+
+* Remove dangling comma in `regionMapping.json`.
 
 * Fixed Map View '2D' button activating 3D ellipsoid viewer when the instance has no terrain.
 * Fixed a bug to prevent all legends from drawing when a WMS layer style has no `LegendUrl`.
