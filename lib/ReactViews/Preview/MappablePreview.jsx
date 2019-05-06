@@ -25,8 +25,9 @@ const MappablePreview = createReactClass({
 
   toggleOnMap(event) {
     this.props.previewed.toggleEnabled();
-    if (defined(this.props.viewState.storyShown))
+    if (defined(this.props.viewState.storyShown)) {
       this.props.viewState.storyShown = false;
+    }
     if (
       this.props.previewed.isEnabled === true &&
       !event.shiftKey &&

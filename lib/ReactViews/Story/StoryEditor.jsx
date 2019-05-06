@@ -119,8 +119,9 @@ export default class StoryEditor extends React.Component {
       (event.keyCode === 13 || event.keyCode === 17) &&
       this.keys.enter &&
       this.keys.ctrl
-    )
+    ) {
       this.saveStory();
+    }
 
     if (event.keyCode === 13) {
       this.keys.enter = false;
