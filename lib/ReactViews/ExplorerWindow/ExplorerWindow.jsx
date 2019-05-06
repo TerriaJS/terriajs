@@ -1,63 +1,73 @@
-import React from 'react';
-import createReactClass from 'create-react-class';
-import PropTypes from 'prop-types';
-import ko from 'terriajs-cesium/Source/ThirdParty/knockout';
-import { observer } from 'mobx-react';
+import React from "react";
+import createReactClass from "create-react-class";
+import PropTypes from "prop-types";
+import ko from "terriajs-cesium/Source/ThirdParty/knockout";
+import { observer } from "mobx-react";
 
-import ModalPopup from './ModalPopup';
-import Tabs from './Tabs';
+import ModalPopup from "./ModalPopup";
+import Tabs from "./Tabs";
 
-const ExplorerWindow = observer(createReactClass({
-    displayName: 'ExplorerWindow',
+const ExplorerWindow = observer(
+  createReactClass({
+    displayName: "ExplorerWindow",
 
     propTypes: {
-        terria: PropTypes.object.isRequired,
-        viewState: PropTypes.object.isRequired
+      terria: PropTypes.object.isRequired,
+      viewState: PropTypes.object.isRequired
     },
 
     getInitialState() {
-        return {
-            isMounted: false
-        };
+      return {
+        isMounted: false
+      };
     },
 
     onClose() {
-        this.props.viewState.explorerPanelIsVisible = false;
-        this.props.viewState.switchMobileView('nowViewing');
+      this.props.viewState.explorerPanelIsVisible = false;
+      this.props.viewState.switchMobileView("nowViewing");
     },
 
     onStartAnimatingIn() {
-        this.props.viewState.explorerPanelAnimating = true;
+      this.props.viewState.explorerPanelAnimating = true;
     },
 
     onDoneAnimatingIn() {
-        this.props.viewState.explorerPanelAnimating = false;
+      this.props.viewState.explorerPanelAnimating = false;
     },
 
     /* eslint-disable-next-line camelcase */
     UNSAFE_componentWillMount() {
-        this._pickedFeaturesSubscription = ko.pureComputed(this.isVisible, this).subscribe(this.onVisibilityChange);
+      this._pickedFeaturesSubscription = ko
+        .pureComputed(this.isVisible, this)
+        .subscribe(this.onVisibilityChange);
     },
 
     componentWillUnmount() {
-        this._pickedFeaturesSubscription.dispose();
+      this._pickedFeaturesSubscription.dispose();
     },
 
     isVisible() {
-        return !this.props.viewState.useSmallScreenInterface && !this.props.viewState.hideMapUi() && this.props.viewState.explorerPanelIsVisible;
+      return (
+        !this.props.viewState.useSmallScreenInterface &&
+        !this.props.viewState.hideMapUi() &&
+        this.props.viewState.explorerPanelIsVisible
+      );
     },
 
     render() {
-        return (
-            <ModalPopup isVisible={this.isVisible()}
-                        isTopElement={this.props.viewState.topElement === 'AddData'}
-                        onClose={this.onClose}
-                        onStartAnimatingIn={this.onStartAnimatingIn}
-                        onDoneAnimatingIn={this.onDoneAnimatingIn}>
-                <Tabs terria={this.props.terria} viewState={this.props.viewState}/>
-            </ModalPopup>
-        );
+      return (
+        <ModalPopup
+          isVisible={this.isVisible()}
+          isTopElement={this.props.viewState.topElement === "AddData"}
+          onClose={this.onClose}
+          onStartAnimatingIn={this.onStartAnimatingIn}
+          onDoneAnimatingIn={this.onDoneAnimatingIn}
+        >
+          <Tabs terria={this.props.terria} viewState={this.props.viewState} />
+        </ModalPopup>
+      );
     }
-}));
+  })
+);
 
 module.exports = ExplorerWindow;

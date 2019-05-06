@@ -1,8 +1,8 @@
 export type ModelId = string;
 
 export interface RemovedModelId {
-    removed: ModelId
-};
+  removed: ModelId;
+}
 
 /**
  * Represents either a reference to a particular model ID or the _lack_ of a reference
@@ -11,9 +11,13 @@ export interface RemovedModelId {
 type ModelReference = ModelId | RemovedModelId;
 
 namespace ModelReference {
-    export function isRemoved(reference: ModelReference): reference is RemovedModelId {
-        return reference ? (<RemovedModelId>reference).removed !== undefined : false;
-    }
+  export function isRemoved(
+    reference: ModelReference
+  ): reference is RemovedModelId {
+    return reference
+      ? (<RemovedModelId>reference).removed !== undefined
+      : false;
+  }
 }
 
 export default ModelReference;

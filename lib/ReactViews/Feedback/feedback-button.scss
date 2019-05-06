@@ -1,5 +1,5 @@
-@import '~terriajs-variables';
-@import '../../Sass/common/mixins';
+@import "~terriajs-variables";
+@import "../../Sass/common/mixins";
 
 .feedback {
   background: #fff;
@@ -11,7 +11,7 @@
 }
 
 .btnFeedback {
-  composes: btn from '../../Sass/common/_buttons.scss';
+  composes: btn from "../../Sass/common/_buttons.scss";
   padding: 5px;
 
   svg {
@@ -26,4 +26,3 @@
     line-height: 2.2;
   }
 }
-

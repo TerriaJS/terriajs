@@ -3,11 +3,11 @@ import CreateModel from "./CreateModel";
 import ResultPendingCatalogItemTraits from "../Traits/ResultPendingCatalogItemTraits";
 
 export default class ResultPendingCatalogItem extends CatalogMemberMixin(
-    CreateModel(ResultPendingCatalogItemTraits)
+  CreateModel(ResultPendingCatalogItemTraits)
 ) {
-    loadPromise = Promise.resolve();
+  loadPromise = Promise.resolve();
 
-    get loadMetadataPromise() {
-        return this.loadPromise;
-    }
+  get loadMetadataPromise() {
+    return this.loadPromise;
+  }
 }

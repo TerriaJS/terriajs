@@ -1,5 +1,5 @@
-@import '~terriajs-variables';
-@import '../../../Sass/common/mixins';
+@import "~terriajs-variables";
+@import "../../../Sass/common/mixins";
 
 // D3 Axis
 .chart {
@@ -40,7 +40,7 @@
       position: absolute;
       text-align: center;
       overflow: hidden;
-      height: 18px
+      height: 18px;
     }
 
     .base-chart-title .color {
@@ -48,7 +48,7 @@
       width: 10px;
       height: 10px;
       margin: 2px;
-  }
+    }
 
     .base-chart-title .name {
       margin-right: 7px;
@@ -105,23 +105,22 @@
   }
 }
 
-.concepts{
+.concepts {
   display: flex;
 }
-.conceptsList{
+.conceptsList {
   margin: 0;
   list-style: none;
-  ul{
+  ul {
     display: flex;
 
-    li{
+    li {
       background: rgba(255, 255, 255, 0.2);
       padding: 0px 10px;
       border-radius: 2px;
       display: block;
       margin: 0 10px 5px 0;
       flex-basis: 48%;
-     }
+    }
   }
-
 }

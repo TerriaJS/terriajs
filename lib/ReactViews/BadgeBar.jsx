@@ -1,31 +1,32 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import createReactClass from 'create-react-class';
-import defined from 'terriajs-cesium/Source/Core/defined';
-import Styles from './badge-bar.scss';
+import React from "react";
+import PropTypes from "prop-types";
+import createReactClass from "create-react-class";
+import defined from "terriajs-cesium/Source/Core/defined";
+import Styles from "./badge-bar.scss";
 
 const BadgeBar = createReactClass({
-    propTypes: {
-        label: PropTypes.string,
-        badge: PropTypes.number,
-        buttonCaption: PropTypes.string,
-        children: PropTypes.node
-    },
+  propTypes: {
+    label: PropTypes.string,
+    badge: PropTypes.number,
+    buttonCaption: PropTypes.string,
+    children: PropTypes.node
+  },
 
-    render() {
-        return (
-            <ul className={Styles.header}>
-                <li>
-                    <label className={Styles.title}>{this.props.label}</label>
-                </li>
-                {defined(this.props.badge) &&
-                (<li><label className={Styles.labelBadge}>[ {this.props.badge} ]</label></li>)}
-                <li>
-                    {this.props.children}
-                </li>
-            </ul>
-        );
-    }
+  render() {
+    return (
+      <ul className={Styles.header}>
+        <li>
+          <label className={Styles.title}>{this.props.label}</label>
+        </li>
+        {defined(this.props.badge) && (
+          <li>
+            <label className={Styles.labelBadge}>[ {this.props.badge} ]</label>
+          </li>
+        )}
+        <li>{this.props.children}</li>
+      </ul>
+    );
+  }
 });
 
 export default BadgeBar;

@@ -1,14 +1,14 @@
-@import '~terriajs-variables';
-@import '../../../Sass/common/mixins';
+@import "~terriajs-variables";
+@import "../../../Sass/common/mixins";
 
 .btn-download {
-  composes: btn from '../../../Sass/common/_buttons.scss';
+  composes: btn from "../../../Sass/common/_buttons.scss";
 
   padding: 10px;
   color: #fff;
   float: right;
   margin-right: $input-height;
-  svg{
+  svg {
     height: 20px;
     width: 20px;
     fill: #ffffff;
@@ -16,7 +16,8 @@
     vertical-align: bottom;
   }
 
-  &:hover, &:focus {
+  &:hover,
+  &:focus {
     text-decoration: none;
     color: $color-primary;
   }

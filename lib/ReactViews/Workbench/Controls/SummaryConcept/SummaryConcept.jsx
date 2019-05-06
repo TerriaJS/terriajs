@@ -1,17 +1,17 @@
-'use strict';
+"use strict";
 
-import flattenNested from '../../../../Core/flattenNested';
-import ActiveConcept from './ActiveConcept';
-import OpenInactiveConcept from './OpenInactiveConcept';
-import Icon from '../../../Icon';
-import ObserveModelMixin from '../../../ObserveModelMixin';
-import React from 'react';
-import createReactClass from 'create-react-class';
-import PropTypes from 'prop-types';
-import Styles from './summary-concept.scss';
+import flattenNested from "../../../../Core/flattenNested";
+import ActiveConcept from "./ActiveConcept";
+import OpenInactiveConcept from "./OpenInactiveConcept";
+import Icon from "../../../Icon";
+import ObserveModelMixin from "../../../ObserveModelMixin";
+import React from "react";
+import createReactClass from "create-react-class";
+import PropTypes from "prop-types";
+import Styles from "./summary-concept.scss";
 
-const ADD_FIRST_TEXT = 'Add a condition';
-const ADD_MORE_TEXT = 'Add new condition';
+const ADD_FIRST_TEXT = "Add a condition";
+const ADD_MORE_TEXT = "Add new condition";
 
 /*
  * SummaryConcept displays all the active and open nodes under a given
@@ -36,42 +36,72 @@ const ADD_MORE_TEXT = 'Add new condition';
  * both leaf nodes and parent nodes.
  */
 const SummaryConcept = createReactClass({
-    displayName: 'SummaryConcept',
-    mixins: [ObserveModelMixin],
+  displayName: "SummaryConcept",
+  mixins: [ObserveModelMixin],
 
-    propTypes: {
-        concept: PropTypes.object.isRequired,  // Must be a SummaryConcept.
-        isLoading: PropTypes.bool
-    },
+  propTypes: {
+    concept: PropTypes.object.isRequired, // Must be a SummaryConcept.
+    isLoading: PropTypes.bool
+  },
 
-    render() {
-        const concept = this.props.concept;
-        // Leaf nodes have either an undefined or a 0-length `items` array.
-        const isLeafNode = concept => (!concept.items || concept.items.length === 0);
-        const activeLeafNodes = concept.getNodes(isLeafNode).filter(concept => concept.isActive);
-        const activeLeafNodesByParent = groupByParentId(activeLeafNodes, parent => parent.id);
-        const openDescendantsWithoutActiveChildren = getOpenDescendantsWithoutActiveChildren(concept);
-        const isLoading = this.props.isLoading;
-        return (
-            <div className={Styles.root}>
-                <div className={Styles.title}>{concept.name}:</div>
-                <For each="group" index="i" of={activeLeafNodesByParent}>
-                    <ActiveConcept key={i} rootConcept={concept} activeLeafNodesWithParent={group} isLoading={isLoading}/>
-                </For>
-                <If condition={activeLeafNodesByParent.length === 0 && openDescendantsWithoutActiveChildren.length === 0}>
-                    <div className={Styles.noConditions}>
-                        None
-                    </div>
-                </If>
-                <If condition={openDescendantsWithoutActiveChildren.length > 0 && !isLoading}>
-                    <OpenInactiveConcept rootConcept={concept} openInactiveConcept={openDescendantsWithoutActiveChildren[0]}/>
-                </If>
-                <If condition={concept.allowMultiple && openDescendantsWithoutActiveChildren.length === 0}>
-                    <AddButton rootConcept={concept} numberOfExisting={activeLeafNodesByParent.length}/>
-                </If>
-            </div>
-        );
-    },
+  render() {
+    const concept = this.props.concept;
+    // Leaf nodes have either an undefined or a 0-length `items` array.
+    const isLeafNode = concept => !concept.items || concept.items.length === 0;
+    const activeLeafNodes = concept
+      .getNodes(isLeafNode)
+      .filter(concept => concept.isActive);
+    const activeLeafNodesByParent = groupByParentId(
+      activeLeafNodes,
+      parent => parent.id
+    );
+    const openDescendantsWithoutActiveChildren = getOpenDescendantsWithoutActiveChildren(
+      concept
+    );
+    const isLoading = this.props.isLoading;
+    return (
+      <div className={Styles.root}>
+        <div className={Styles.title}>{concept.name}:</div>
+        <For each="group" index="i" of={activeLeafNodesByParent}>
+          <ActiveConcept
+            key={i}
+            rootConcept={concept}
+            activeLeafNodesWithParent={group}
+            isLoading={isLoading}
+          />
+        </For>
+        <If
+          condition={
+            activeLeafNodesByParent.length === 0 &&
+            openDescendantsWithoutActiveChildren.length === 0
+          }
+        >
+          <div className={Styles.noConditions}>None</div>
+        </If>
+        <If
+          condition={
+            openDescendantsWithoutActiveChildren.length > 0 && !isLoading
+          }
+        >
+          <OpenInactiveConcept
+            rootConcept={concept}
+            openInactiveConcept={openDescendantsWithoutActiveChildren[0]}
+          />
+        </If>
+        <If
+          condition={
+            concept.allowMultiple &&
+            openDescendantsWithoutActiveChildren.length === 0
+          }
+        >
+          <AddButton
+            rootConcept={concept}
+            numberOfExisting={activeLeafNodesByParent.length}
+          />
+        </If>
+      </div>
+    );
+  }
 });
 
 /**
@@ -81,9 +111,9 @@ const SummaryConcept = createReactClass({
  * @return {Array} A nested array of open concepts.
  */
 function getOpenDescendantsWithoutActiveChildren(concept) {
-    const openDescendants = getOpenDescendants(concept);
-    const flattenedOpenDescendants = flattenNested(openDescendants);
-    return flattenedOpenDescendants.filter(hasNoActiveChildren);
+  const openDescendants = getOpenDescendants(concept);
+  const flattenedOpenDescendants = flattenNested(openDescendants);
+  return flattenedOpenDescendants.filter(hasNoActiveChildren);
 }
 
 /**
@@ -93,13 +123,13 @@ function getOpenDescendantsWithoutActiveChildren(concept) {
  * @return {Array} A nested array of open concepts.
  */
 function getOpenDescendants(concept) {
-    if (concept.isOpen) {
-        return [concept];
-    }
-    if (!concept.items) {
-        return [];
-    }
-    return concept.items.map(child => getOpenDescendants(child));
+  if (concept.isOpen) {
+    return [concept];
+  }
+  if (!concept.items) {
+    return [];
+  }
+  return concept.items.map(child => getOpenDescendants(child));
 }
 
 /**
@@ -107,7 +137,7 @@ function getOpenDescendants(concept) {
  * @return {Boolean} Does this concept have no active children?
  */
 function hasNoActiveChildren(concept) {
-    return !concept.items || concept.items.every(child => !child.isActive);
+  return !concept.items || concept.items.every(child => !child.isActive);
 }
 
 /**
@@ -118,51 +148,51 @@ function hasNoActiveChildren(concept) {
  * @private
  */
 function groupByParentId(nodes, idFunction) {
-    const results = {};
-    nodes.forEach(node => {
-        const id = idFunction(node.parent);
-        if (!results[id]) {
-            results[id] = {parent: node.parent, children: []};
-        }
-        results[id].children.push(node);
-    });
-    return Object.keys(results).map(key => results[key]);
+  const results = {};
+  nodes.forEach(node => {
+    const id = idFunction(node.parent);
+    if (!results[id]) {
+      results[id] = { parent: node.parent, children: [] };
+    }
+    results[id].children.push(node);
+  });
+  return Object.keys(results).map(key => results[key]);
 }
 
 /**
-* Function that is called to find the id of a parent.
-* Eg. parent => parent.id.
-* @callback groupByParentId~idFunction
-* @param  {Object} parent A parent.
-* @return {String} The parent id.
-*/
+ * Function that is called to find the id of a parent.
+ * Eg. parent => parent.id.
+ * @callback groupByParentId~idFunction
+ * @param  {Object} parent A parent.
+ * @return {String} The parent id.
+ */
 
 const AddButton = createReactClass({
-    displayName: 'AddButton',
-    mixins: [ObserveModelMixin],
+  displayName: "AddButton",
+  mixins: [ObserveModelMixin],
 
-    propTypes: {
-        rootConcept: PropTypes.object.isRequired,
-        numberOfExisting: PropTypes.number
-    },
+  propTypes: {
+    rootConcept: PropTypes.object.isRequired,
+    numberOfExisting: PropTypes.number
+  },
 
-    addNew() {
-        this.props.rootConcept.closeDescendants();
-        this.props.rootConcept.isOpen = true;
-    },
+  addNew() {
+    this.props.rootConcept.closeDescendants();
+    this.props.rootConcept.isOpen = true;
+  },
 
-    render() {
-        const addText = (this.props.numberOfExisting > 0) ? ADD_MORE_TEXT : ADD_FIRST_TEXT;
-        return (
-            <div className={Styles.section}>
-                <button onClick={this.addNew} className={Styles.btnAddNew}>
-                    <Icon glyph={Icon.GLYPHS.add}/>
-                    <span className={Styles.text}>{addText}</span>
-                </button>
-            </div>
-        );
-    },
+  render() {
+    const addText =
+      this.props.numberOfExisting > 0 ? ADD_MORE_TEXT : ADD_FIRST_TEXT;
+    return (
+      <div className={Styles.section}>
+        <button onClick={this.addNew} className={Styles.btnAddNew}>
+          <Icon glyph={Icon.GLYPHS.add} />
+          <span className={Styles.text}>{addText}</span>
+        </button>
+      </div>
+    );
+  }
 });
 
 module.exports = SummaryConcept;
-

@@ -1,5 +1,5 @@
-@import '~terriajs-variables';
-@import '../../Sass/common/mixins';
+@import "~terriajs-variables";
+@import "../../Sass/common/mixins";
 
 .map__inner {
   display: table;
@@ -38,7 +38,7 @@
 @include empty-module("feedback");
 
 .location-distance {
-  composes: clearfix from '../../Sass/common/_base.scss';
+  composes: clearfix from "../../Sass/common/_base.scss";
   display: none;
   @media (min-width: $sm) {
     display: block;
@@ -50,9 +50,9 @@
 }
 
 .feedback-button-wrapper {
-  @media(min-width: $sm){
+  @media (min-width: $sm) {
     bottom: 100px;
-    right: $padding*2;
+    right: $padding * 2;
     margin: 0;
   }
   position: absolute;
