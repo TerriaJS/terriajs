@@ -132,7 +132,10 @@ const StoryPanel = createReactClass({
       const exitBtn = <button className={Styles.exitBtn} title="exit story" onClick={this.slideOut}><Icon glyph={Icon.GLYPHS.close}/></button>;
         return (
           <Swipeable onSwipedLeft = {this.goToNextStory} onSwipedRight={this.goToPrevStory}>
-                <div className={classNames(Styles.fullPanel, {[Styles.isHidden]: !this.props.viewState.storyShown, [Styles.isPushedUp]: this.props.viewState.chartIsOpen})}>
+                <div className={classNames(Styles.fullPanel, {
+                                 [Styles.isHidden]: !this.props.viewState.storyShown, 
+                                 [Styles.isPushedUp]: this.props.viewState.chartIsOpen,
+                                 [Styles.isCentered]: this.props.viewState.isMapFullScreen})}>
                         <div className={classNames(Styles.storyContainer, {[Styles.isMounted]: this.state.inView})} key={story.id}>
                           <Medium>
                            <div className={Styles.left}>

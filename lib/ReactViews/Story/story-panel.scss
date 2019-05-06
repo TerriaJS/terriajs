@@ -11,6 +11,7 @@
   z-index: 9;
   box-sizing: border-box;
   pointer-events: none;
+  @include transition(padding, 0.2s);
   @media (min-width: $md) {
     padding-left: 30px + $work-bench-width;
     bottom: 90px;
@@ -23,6 +24,13 @@
 
 .isPushedUp{
   bottom: 350px;
+}
+
+.isCentered{
+  padding-left: 20px;
+   // when changing to full screen, the story panel should move to center slower
+  // than side panel slide in/out
+ transition-delay: 0.5s;
 }
 
 .story-container {
