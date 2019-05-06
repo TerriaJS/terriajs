@@ -1,46 +1,58 @@
-'use strict';
+"use strict";
 
 /*global require*/
-var CesiumTerrainCatalogItem = require('../../lib/Models/CesiumTerrainCatalogItem');
-var CesiumTerrainProvider = require('terriajs-cesium/Source/Core/CesiumTerrainProvider');
-var loadWithXhr = require('../../lib/Core/loadWithXhr');
-var Terria = require('../../lib/Models/Terria');
+var CesiumTerrainCatalogItem = require("../../lib/Models/CesiumTerrainCatalogItem");
+var CesiumTerrainProvider = require("terriajs-cesium/Source/Core/CesiumTerrainProvider");
+var loadWithXhr = require("../../lib/Core/loadWithXhr");
+var Terria = require("../../lib/Models/Terria");
 
-describe('CesiumTerrainCatalogItem', function() {
-    var terria;
-    var item;
+describe("CesiumTerrainCatalogItem", function() {
+  var terria;
+  var item;
 
-    beforeEach(function() {
-        terria = new Terria({
-            baseUrl: './'
-        });
-        item = new CesiumTerrainCatalogItem(terria);
+  beforeEach(function() {
+    terria = new Terria({
+      baseUrl: "./"
+    });
+    item = new CesiumTerrainCatalogItem(terria);
+  });
+
+  it("has correct type", function() {
+    expect(item.type).toBe("cesium-terrain");
+    expect(item.typeName).toContain("Cesium");
+  });
+
+  it("creates imagery provider with correct URL", function(done) {
+    spyOn(loadWithXhr, "load").and.callFake(function(
+      url,
+      responseType,
+      method,
+      data,
+      headers,
+      deferred,
+      overrideMimeType,
+      preferText,
+      timeout
+    ) {
+      expect(url.indexOf("http://example.com/foo/bar")).toBe(0);
+      deferred.resolve(
+        JSON.stringify({
+          tilejson: "2.1.0",
+          format: "heightmap-1.0",
+          version: "1.0.0",
+          scheme: "tms",
+          tiles: ["{z}/{x}/{y}.terrain?v={version}"]
+        })
+      );
     });
 
-    it('has correct type', function() {
-        expect(item.type).toBe('cesium-terrain');
-        expect(item.typeName).toContain('Cesium');
-    });
-
-    it('creates imagery provider with correct URL', function(done) {
-        spyOn(loadWithXhr, 'load').and.callFake(function(url, responseType, method, data, headers, deferred, overrideMimeType, preferText, timeout) {
-            expect(url.indexOf('http://example.com/foo/bar')).toBe(0);
-            deferred.resolve(JSON.stringify({
-                tilejson: '2.1.0',
-                format : 'heightmap-1.0',
-                version : '1.0.0',
-                scheme : 'tms',
-                tiles : [
-                    '{z}/{x}/{y}.terrain?v={version}'
-                ]
-            }));
-        });
-
-        item.url = 'http://example.com/foo/bar';
-        var terrainProvider = item._createTerrainProvider();
-        expect(terrainProvider instanceof CesiumTerrainProvider).toBe(true);
-        terrainProvider.readyPromise.then(function() {
-            expect(loadWithXhr.load.calls.any()).toBe(true);
-        }).then(done);
-    });
+    item.url = "http://example.com/foo/bar";
+    var terrainProvider = item._createTerrainProvider();
+    expect(terrainProvider instanceof CesiumTerrainProvider).toBe(true);
+    terrainProvider.readyPromise
+      .then(function() {
+        expect(loadWithXhr.load.calls.any()).toBe(true);
+      })
+      .then(done);
+  });
 });

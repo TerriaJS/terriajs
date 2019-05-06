@@ -1,14 +1,12 @@
-'use strict';
+"use strict";
 
 /*global require,describe,it,expect*/
-var sortedIndices = require('../../lib/Core/sortedIndices');
+var sortedIndices = require("../../lib/Core/sortedIndices");
 
-describe('sortedIndices', function() {
-
-    it('works', function() {
-        var data = ['c', 'a', 'b', 'd'];
-        var indices = sortedIndices(data);
-        expect(indices).toEqual([1, 2, 0, 3]);
-    });
-
+describe("sortedIndices", function() {
+  it("works", function() {
+    var data = ["c", "a", "b", "d"];
+    var indices = sortedIndices(data);
+    expect(indices).toEqual([1, 2, 0, 3]);
+  });
 });

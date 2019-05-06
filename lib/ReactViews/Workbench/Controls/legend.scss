@@ -1,21 +1,21 @@
-@import '~terriajs-variables';
+@import "~terriajs-variables";
 
 .legend {
-  composes: clearfix from '../../../Sass/common/_base.scss';
-  composes: list-reset from '../../../Sass/common/_base.scss';
+  composes: clearfix from "../../../Sass/common/_base.scss";
+  composes: list-reset from "../../../Sass/common/_base.scss";
   font-family: $font-mono;
   font-size: $font-size-small;
 
   li {
     display: block;
   }
-  .legendImagehasError{
+  .legendImagehasError {
     display: none;
   }
 }
 
 .legend__inner {
-  a{
+  a {
     // Only the actual legend should be clickable rather than the whole area
     display: inline-block;
   }
@@ -44,11 +44,10 @@
   }
 }
 
-
-.loader{
+.loader {
   font-family: $font-base;
-  svg{
-     fill: #fff;
+  svg {
+    fill: #fff;
   }
 }
 

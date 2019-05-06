@@ -1,5 +1,5 @@
-@import '~terriajs-variables';
-@import '../../../../Sass/common/mixins';
+@import "~terriajs-variables";
+@import "../../../../Sass/common/mixins";
 
 @include empty-module("file-input");
 
@@ -23,10 +23,10 @@
 }
 
 .btn {
-  composes: btn from '../../../../Sass/common/_buttons.scss';
-  composes: btn-primary from '../../../../Sass/common/_buttons.scss';
+  composes: btn from "../../../../Sass/common/_buttons.scss";
+  composes: btn-primary from "../../../../Sass/common/_buttons.scss";
 
   &--hover {
-    composes: btn-primary--hover from '../../../../Sass/common/_buttons.scss';
+    composes: btn-primary--hover from "../../../../Sass/common/_buttons.scss";
   }
 }

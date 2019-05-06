@@ -1,20 +1,20 @@
-@import '~terriajs-variables';
-@import '../../Sass/common/mixins';
+@import "~terriajs-variables";
+@import "../../Sass/common/mixins";
 
 // NOTE: When changing this file with hot-reloading on you might see the globe in the map disappear. Don't panic! This
 // happens because losing this stylesheet for a second causes Cesium to zoom itself as far out as it can go for some
 // reason - you can change pretty much other file to do another hot-reload and get your globe back, or just zoom
 // back in.
 
-:global{
+:global {
   body {
     height: 100vh;
     width: 100vw;
   }
 
-  .top-element{
+  .top-element {
     z-index: 99999;
-    &:focus{
+    &:focus {
       outline: none;
     }
   }
@@ -77,10 +77,10 @@
   right: 0;
   bottom: 0;
   top: 0;
-  pointer-events:none;
+  pointer-events: none;
   left: 0;
 
-  @media (min-width : $md) {
+  @media (min-width: $md) {
     left: $work-bench-width + 22px;
     top: 62px;
     right: 96px;
@@ -89,7 +89,7 @@
     // background: rgba(#ffcc00, 0.5);
   }
 
-  & > div{
+  & > div {
     pointer-events: auto;
     position: fixed;
     top: $mobile-header-height + 10px;
@@ -100,7 +100,7 @@
     z-index: 99;
     font-family: $font-base;
 
-    @media (min-width : $sm) and (max-width: $feature-info-forty-percent-size) {
+    @media (min-width: $sm) and (max-width: $feature-info-forty-percent-size) {
       max-width: $feature-info-medium-max-size;
       right: $feature-info-right-margin;
     }
@@ -112,7 +112,7 @@
   }
 }
 
-.featureInfoFullScreen{
+.featureInfoFullScreen {
   left: 0;
 }
 
