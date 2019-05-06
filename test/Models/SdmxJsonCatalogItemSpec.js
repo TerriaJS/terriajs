@@ -16,6 +16,7 @@ describe('SdmxJsonCatalogItem', function() {
         terria = new Terria({
             baseUrl: './'
         });
+        terria.configParameters.regionMappingDefinitionsUrl = 'test/SDMX-JSON/regionMappingSdmx.json';
         item = new SdmxJsonCatalogItem(terria);
     });
 
@@ -85,7 +86,7 @@ describe('SdmxJsonCatalogItem', function() {
                 loadText('test/SDMX-JSON/data-as-observations.json').then(function(text) { dataAsObs = text; }),
                 loadText('test/SDMX-JSON/data-ste-no-year.json').then(function(text) { dataNoSteYear = text; }),
                 loadText('test/SDMX-JSON/data-as-obs-repeated-dim.json').then(function(text) { dataAsObsRepeated = text; }),
-                loadText('data/regionMapping.json').then(function(text) { regionMappingJson = text; }),
+                loadText('test/SDMX-JSON/regionMappingSdmx.json').then(function(text) { regionMappingJson = text; }),
                 loadText('data/regionids/region_map-FID_LGA_2013_AUST_LGA_CODE13.json').then(function(text) { lga13Data = text; }),
                 loadText('data/regionids/region_map-FID_STE_2011_AUST_STE_CODE11.json').then(function(text) { steData = text; })
             ]).then(function() {
@@ -100,7 +101,7 @@ describe('SdmxJsonCatalogItem', function() {
                 jasmine.Ajax.stubRequest('http://sdmx.example.com/sdmx-json/data/FOO-OBS/./all').andReturn({ responseText: dataAsObs });
                 jasmine.Ajax.stubRequest('http://sdmx.example.com/sdmx-json/data/FOO-STE-NO-YEAR/./all').andReturn({ responseText: dataNoSteYear });
                 jasmine.Ajax.stubRequest('http://sdmx.example.com/sdmx-json/data/FOO-OBS-RPT/./all').andReturn({ responseText: dataAsObsRepeated });
-                jasmine.Ajax.stubRequest('data/regionMapping.json').andReturn({ responseText: regionMappingJson });
+                jasmine.Ajax.stubRequest('test/SDMX-JSON/regionMappingSdmx.json').andReturn({ responseText: regionMappingJson });
                 jasmine.Ajax.stubRequest('data/regionids/region_map-FID_LGA_2013_AUST_LGA_CODE13.json').andReturn({ responseText: lga13Data });
                 jasmine.Ajax.stubRequest('data/regionids/region_map-FID_STE_2011_AUST_STE_CODE11.json').andReturn({ responseText: steData });
             }).then(done).otherwise(done.fail);
