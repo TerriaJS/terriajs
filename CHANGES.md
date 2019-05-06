@@ -4,6 +4,7 @@ Change Log
 ### v7.4.1
 
 * Remove dangling comma in `regionMapping.json`.
+* `WebMapServicCatalogItem` now includes the current `style` in generated `GetLegendGraphic` URLs. 
 
 ### v7.4.0
 
