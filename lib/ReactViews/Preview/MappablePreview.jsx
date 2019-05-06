@@ -51,7 +51,7 @@ const MappablePreview = createReactClass({
         const catalogItem = this.props.previewed.nowViewingCatalogItem || this.props.previewed;
         return (
             <div className={Styles.root}>
-                <If condition={catalogItem.isMappable}>
+                <If condition={catalogItem.isMappable && !catalogItem.disablePreview}>
                     {/* <DataPreviewMap terria={this.props.terria}
                                     previewedCatalogItem={catalogItem}
                                     showMap={!this.props.viewState.explorerPanelAnimating || this.props.viewState.useSmallScreenInterface} /> */}

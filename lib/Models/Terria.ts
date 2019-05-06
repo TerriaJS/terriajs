@@ -46,12 +46,14 @@ interface StartOptions {
 type Analytics = any;
 
 interface TerriaOptions {
+    baseUrl?: string;
     analytics?: Analytics;
 }
 
 export default class Terria {
     private models = observable.map<string, BaseModel>();
 
+    readonly baseUrl: string = 'build/TerriaJS/';
     readonly error = new CesiumEvent();
     readonly beforeViewerChanged = new CesiumEvent();
     readonly afterViewerChanged = new CesiumEvent();
@@ -107,6 +109,14 @@ export default class Terria {
     readonly userProperties = new Map<string, any>();
 
     constructor(options: TerriaOptions = {}) {
+        if (options.baseUrl) {
+            if (options.baseUrl.lastIndexOf('/') !== options.baseUrl.length - 1) {
+                this.baseUrl = options.baseUrl + '/';
+            } else {
+                this.baseUrl = options.baseUrl;
+            }
+        }
+
         this.analytics = options.analytics;
         if (!defined(this.analytics)) {
             if (typeof window !== 'undefined' && defined((<any>window).ga)) {

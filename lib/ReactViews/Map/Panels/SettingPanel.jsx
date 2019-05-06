@@ -14,6 +14,12 @@ import Icon from "../../Icon";
 import Styles from './setting-panel.scss';
 import DropdownStyles from './panel.scss';
 
+const viewerModeLabels = {
+    [ViewerMode.CesiumTerrain]: '3D Terrain',
+    [ViewerMode.CesiumEllipsoid]: '3D Smooth',
+    [ViewerMode.Leaflet]: '2D'
+};
+
 // The basemap and viewer setting panel
 const SettingPanel = observer(createReactClass({
     displayName: 'SettingPanel',
@@ -54,12 +60,13 @@ const SettingPanel = observer(createReactClass({
 
     selectViewer(viewer, event) {
         event.stopPropagation();
-        if (viewer === '3D Terrain' || viewer === '3D Smooth') {
+        if (viewer === ViewerMode.CesiumTerrain || viewer === ViewerMode.CesiumEllipsoid) {
             this.props.terria.terriaViewer.viewerMode = 'cesium';
-        } else if (viewer === '2D') {
+        } else if (ViewerMode.Leaflet) {
             this.props.terria.terriaViewer.viewerMode = 'leaflet';
+        } else {
+            console.error(`Trying to select ViewerMode ${viewer} that doesn't exist`);
         }
-
         // We store the user's chosen viewer mode for future use.
         // this.props.terria.setLocalProperty('viewermode', newViewerMode);
         this.props.terria.currentViewer.notifyRepaintRequired();
@@ -84,10 +91,13 @@ const SettingPanel = observer(createReactClass({
         const viewerModes = [];
 
         if (this.props.terria.configParameters.useCesiumIonTerrain || this.props.terria.configParameters.cesiumTerrainUrl) {
-            viewerModes.push('3D Terrain');
+            viewerModes.push(ViewerMode.CesiumTerrain);
         }
 
-        viewerModes.push('3D Smooth', '2D');
+        viewerModes.push(
+            ViewerMode.CesiumEllipsoid,
+            ViewerMode.Leaflet
+        );
 
         return (
             <MenuPanel theme={dropdownTheme} btnTitle="Change view" btnText="Map" viewState={this.props.viewState}
@@ -95,11 +105,11 @@ const SettingPanel = observer(createReactClass({
                 <div className={classNames(Styles.viewer, DropdownStyles.section)}>
                     <label className={DropdownStyles.heading}> Map View </label>
                     <ul className={Styles.viewerSelector}>
-                        <For each="viewerMode" of={viewerModes} index="i">
-                            <li key={i} className={Styles.listItem}>
+                        <For each="viewerMode" of={viewerModes}>
+                            <li key={viewerMode} className={Styles.listItem}>
                                 <button onClick={that.selectViewer.bind(this, viewerMode)}
-                                        className={classNames(Styles.btnViewer, {[Styles.isActive]: i === currentViewer})}>
-                                    {viewerMode}
+                                        className={classNames(Styles.btnViewer, {[Styles.isActive]: viewerMode === currentViewer})}>
+                                    {viewerModeLabels[viewerMode]}
                                 </button>
                             </li>
                         </For>

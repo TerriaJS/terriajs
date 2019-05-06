@@ -5,6 +5,7 @@
   float: left;
   &__list {
     display: flex;
+    flex-direction: column;
   }
 
   &__btn {
@@ -12,7 +13,7 @@
   }
 
   &__btn--option {
-    width: auto;
+    width: 100%;
     float: left;
     color: $color-primary;
 

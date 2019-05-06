@@ -12,7 +12,7 @@
   position: absolute;
   color: $color-primary;
   right: 2px;
-  top: 2px;
+  top: 5px;
   @media (max-width: $sm) {
     top: 10px;
   }
@@ -26,10 +26,12 @@
 
 .btn--catalog {
   composes: btn from '../../Sass/common/_buttons.scss';
+  @extend %wrap;
 
   text-align: left;
   font-size: $font-size-small;
   padding: 8px 30px+$padding;
+  min-height: 35px;
   position: relative;
   width: 100%;
   font-weight: bold;

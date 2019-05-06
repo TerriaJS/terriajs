@@ -1,22 +1,16 @@
 'use strict';
-/* global Float32Array */
-/* eslint new-parens: 0 */
-import React from 'react';
-import PropTypes from 'prop-types';
 import createReactClass from 'create-react-class';
-import debounce from 'lodash.debounce';
-
+import FileSaver from 'file-saver';
+import PropTypes from 'prop-types';
+import React from 'react';
 import defined from 'terriajs-cesium/Source/Core/defined';
+import FeatureDetection from 'terriajs-cesium/Source/Core/FeatureDetection';
 import when from 'terriajs-cesium/Source/ThirdParty/when';
-
-import DataUri from '../../../Core/DataUri';
-import ObserveModelMixin from '../../ObserveModelMixin';
 import VarType from '../../../Map/VarType';
 import Icon from "../../Icon";
-
+import ObserveModelMixin from '../../ObserveModelMixin';
 import Styles from './chart-panel-download-button.scss';
 
-const RUN_WORKER_DEBOUNCE = 100; // Wait 100ms for initial setup changes to be completed.
 const TIME_COLUMN_DEFAULT_NAME = 'date';
 
 const ChartPanelDownloadButton = createReactClass({
@@ -24,63 +18,14 @@ const ChartPanelDownloadButton = createReactClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        chartableItems: PropTypes.array.isRequired,
-        errorEvent: PropTypes.object.isRequired
+        chartableItems: PropTypes.array.isRequired
     },
 
-    _subscription: undefined,
-
-    getInitialState: function() {
-        return {href: undefined};
-    },
-
-    /* eslint-disable-next-line camelcase */
-    UNSAFE_componentWillMount() {
-        // Changes to the graph item's catalog item results in new props being passed to this component 5 times on load...
-        // a debounce is a simple way to ensure it only gets run once for every batch of real changes.
-        this.debouncedRunWorker = debounce(this.runWorker, RUN_WORKER_DEBOUNCE);
-    },
-
-    componentDidMount() {
-        this.debouncedRunWorker(this.props.chartableItems);
-    },
-
-    /* eslint-disable-next-line camelcase */
-    UNSAFE_componentWillReceiveProps(newProps) {
-        this.debouncedRunWorker(newProps.chartableItems);
-    },
-
-    runWorker(newValue) {
-        const that = this;
-
-        if (window.Worker && (typeof Float32Array !== 'undefined')) {
-            that.setState({href: undefined});
-
-            const loadingPromises = newValue.map(item => item.load());
-            when.all(loadingPromises).then(() => {
-                const synthesized = that.synthesizeNameAndValueArrays(newValue);
-                // Could implement this using TaskProcessor, but requires webpack magic.
-                const HrefWorker = require('worker-loader!./downloadHrefWorker');
-                const worker = new HrefWorker;
-                // console.log('names and value arrays', synthesized.names, synthesized.values);
-                if (synthesized.values && synthesized.values.length > 0) {
-                    worker.postMessage(synthesized);
-                    worker.onmessage = function(event) {
-                        // console.log('got worker message', event.data.slice(0, 60), '...');
-                        that.setState({href: event.data});
-                    };
-                }
-            });
-        }
-        // Currently no fallback for IE9-10 - just can't download.
-    },
-
-    componentWillUnmount() {
-        if (defined(this._subscription)) {
-            this._subscription.dispose();
-        }
-    },
-
+    /**
+     * Extracts column names and row data for CSV download.
+     * @param {CatalogItem[]} chartableItems
+     * @returns { values, names } where values is an array of array rows, corresponding to the column names.
+     */
     synthesizeNameAndValueArrays(chartableItems) {
         const valueArrays = [];
         const names = [];  // We will add the catalog item name back into the csv column name.
@@ -88,7 +33,9 @@ const ChartPanelDownloadButton = createReactClass({
         for (let i = chartableItems.length - 1; i >= 0; i--) {
             const item = chartableItems[i];
             const xColumn = getXColumn(item);
-
+            if (!xColumn) {
+                continue;
+            }
             if (!names.length) {
                 names.push(getXColumnName(item, xColumn));
             }
@@ -113,25 +60,50 @@ const ChartPanelDownloadButton = createReactClass({
         return {values: valueArrays, names: names};
     },
 
-    render() {
-        if (this.state.href) {
-            if (DataUri.checkCompatibility()) {
-                return (
-                    <a className={Styles.btnDownload}
-                       download='chart data.csv'
-                       href={this.state.href}>
-                    <Icon glyph={Icon.GLYPHS.download}/>Download</a>
-                );
-            } else {
-                return (
-                    <span className={Styles.btnDownload}
-                          onClick={DataUri.checkCompatibility.bind(null, this.props.errorEvent, this.state.href)}>
-                    <Icon glyph={Icon.GLYPHS.download}/>Download</span>
-                );
-            }
-        }
-        return null;
+    isDownloadSupported() {
+        return FeatureDetection.supportsTypedArrays() && FeatureDetection.supportsWebWorkers();
     },
+
+    download() {
+        if (!this.isDownloadSupported()) {
+            return;
+        }
+
+        const loadingPromises = this.props.chartableItems.map(item => {
+            return when(item.load()).then(() => item).otherwise(() => undefined);
+        });
+
+        when.all(loadingPromises).then(items => {
+            const synthesized = this.synthesizeNameAndValueArrays(items.filter(item => item !== undefined));
+            // Could implement this using TaskProcessor, but requires webpack magic.
+            const HrefWorker = require('worker-loader!./downloadHrefWorker');
+            const worker = new HrefWorker();
+            // console.log('names and value arrays', synthesized.names, synthesized.values);
+            if (synthesized.values && synthesized.values.length > 0) {
+                worker.postMessage(synthesized);
+                worker.onmessage = event => {
+                    // console.log('got worker message', event.data.slice(0, 60), '...');
+                    const blob = new Blob([event.data], {
+                        type: 'text/csv;charset=utf-8'
+                    });
+                    FileSaver.saveAs(blob, 'chart data.csv');
+                };
+            }
+        });
+    },
+
+    render() {
+        if (!this.isDownloadSupported()) {
+            return null;
+        }
+
+        return (
+            <button className={Styles.btnDownload}
+                    onClick={this.download}>
+                <Icon glyph={Icon.GLYPHS.download}/>Download
+            </button>
+        );
+    }
 });
 
 /**

@@ -488,11 +488,15 @@ function zoomToDataSource(
 
 function zoomToBoundingSphere(
     cesium: Cesium,
-    target: { boundingSphere: Cesium.BoundingSphere },
+    target: { boundingSphere: Cesium.BoundingSphere, modelMatrix?: Cesium.Matrix4 },
     flightDurationSeconds?: number
 ) {
     var boundingSphere = target.boundingSphere;
-    cesium.scene.camera.flyToBoundingSphere(target.boundingSphere, {
+    var modelMatrix = target.modelMatrix;
+    if (modelMatrix) {
+        boundingSphere = BoundingSphere.transform(boundingSphere, modelMatrix);
+    }
+    cesium.scene.camera.flyToBoundingSphere(boundingSphere, {
         offset: new HeadingPitchRange(0.0, -0.5, boundingSphere.radius),
         duration: flightDurationSeconds
     });
