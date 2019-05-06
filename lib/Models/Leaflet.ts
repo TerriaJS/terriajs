@@ -20,6 +20,8 @@ function isDefined<T>(value: T | undefined): value is T {
     return value !== undefined;
 }
 
+// This class is an observer. It probably won't contain any observables itself
+
 export default class Leaflet implements GlobeOrMap {
     readonly terria: Terria;
     readonly terriaViewer: TerriaViewer;
@@ -255,6 +257,12 @@ export default class Leaflet implements GlobeOrMap {
             }
         });
     }
+
+    getCurrentExtent() {
+        const bounds = this.map.getBounds();
+        return Rectangle.fromDegrees(bounds.getWest(), bounds.getSouth(), bounds.getEast(), bounds.getNorth());
+    }
+
 
     notifyRepaintRequired() {
         // No action necessary.

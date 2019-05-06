@@ -10,4 +10,5 @@ export type CameraView = {
 export default interface GlobeOrMap {
     destroy(): void;
     zoomTo(viewOrExtent: CameraView | Cesium.Rectangle | Mappable, flightDurationSeconds: number): void;
+    getCurrentExtent(): Cesium.Rectangle;
 }

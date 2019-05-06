@@ -116,7 +116,6 @@ export default class Terria {
             }
         }
     }
-
     @computed
     get currentViewer(): GlobeOrMap {
         return this.terriaViewer && this.terriaViewer.currentViewer || new NoViewer(this);

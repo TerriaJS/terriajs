@@ -1,9 +1,9 @@
-import Terria from "../Models/Terria";
-import { observable, computed, autorun, runInAction, action, reaction } from "mobx";
+import { observable, reaction, runInAction } from "mobx";
+import Rectangle from 'terriajs-cesium/Source/Core/Rectangle';
 import GlobeOrMap from "../Models/GlobeOrMap";
 import Leaflet from "../Models/Leaflet";
 import Cesium from "../Models/Cesium";
-import { createTransformer } from "mobx-utils";
+import Terria from "../Models/Terria";
 
 // A class that deals with initialising, destroying and switching between viewers
 // Each map-view should have it's own TerriaViewer
@@ -13,56 +13,53 @@ interface ViewerOptions {
     [key: string]: string | number | undefined;
 }
 
-function createViewer(terriaViewer: TerriaViewer, viewerMode: string): GlobeOrMap | undefined {
-    console.log(`Creating a viewer: ${terriaViewer}`);
-    if (terriaViewer.currentViewer !== undefined) {
-        // Get viewer parameters to apply to new viewer
-        // terriaViewer.currentViewer.getCamera...
-
-        terriaViewer.currentViewer.destroy();
-    }
-    if (viewerMode === 'leaflet') {
-        return new Leaflet(terriaViewer);
-    }
-    // } else if (viewerMode === 'cesium') {
-    //     return new Cesium(terriaViewer);
-    // }
-
-    // Apply previous
-}
-
 export default class TerriaViewer {
     readonly terria: Terria;
     readonly container: string | HTMLElement;
-    readonly createViewer: (viewerMode: string) => GlobeOrMap | undefined;
     readonly stopViewerAutorun: () => void;
 
     @observable
     baseMap: undefined; // Wire up base maps
 
     @observable
-    viewerMode: string | undefined;
+    viewerMode: string | undefined= 'leaflet';
 
     @observable
     currentViewer: GlobeOrMap | undefined;
 
+    // Random rectangle
+    defaultExtent: Rectangle = Rectangle.fromDegrees(120, -45, 155, -15);
+
     constructor(terria: Terria) {
         this.terria = terria;
         this.container = 'cesiumContainer';
-        this.createViewer = createTransformer((viewerMode) => createViewer(this, viewerMode));
-
         this.stopViewerAutorun = reaction(() => this.viewerMode, (viewerMode) => {
+            let bounds: Rectangle | undefined;
+            if (this.currentViewer !== undefined) {
+                // Get viewer parameters to apply to new viewer
+                // terriaViewer.currentViewer.getCamera...
+                bounds = this.currentViewer.getCurrentExtent();
+                this.currentViewer.destroy();
+            }
             const newViewer = viewerMode !== undefined ? this.createViewer(viewerMode) : undefined;
+            // Apply previous parameters
+            if (newViewer !== undefined) {
+                newViewer.zoomTo(bounds || this.defaultExtent, 1);
+            }
             runInAction(() => {
                 this.currentViewer = newViewer;
             });
-        });
-
-        this.viewerMode = 'leaflet';
+        }, {fireImmediately: true});
     }
 
-    @computed
-    get renderer() {
-        return createViewer
+    createViewer(viewerMode: string): GlobeOrMap | undefined {
+        console.log(`Creating a viewer: ${viewerMode}`);
+
+        if (viewerMode === 'leaflet') {
+            return new Leaflet(this);
+        } else if (viewerMode === 'cesium') {
+            return new Cesium(this);
+        }
+
     }
 }

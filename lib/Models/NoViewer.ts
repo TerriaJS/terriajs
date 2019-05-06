@@ -26,6 +26,10 @@ class NoViewer implements GlobeOrMap {
 
     notifyRepaintRequired() {
     }
+
+    getCurrentExtent() {
+        return Rectangle.fromDegrees(120, -45, 155, -15); // This is just a random rectangle. Replace it when there's a home view available
+    }
 }
 
 export default NoViewer;
