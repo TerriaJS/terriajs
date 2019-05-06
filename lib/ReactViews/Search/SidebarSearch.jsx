@@ -6,6 +6,7 @@ import BadgeBar from '../BadgeBar.jsx';
 import Styles from './sidebar-search.scss';
 import LocationSearchResults from './LocationSearchResults.jsx';
 import SideBarDatasetSearchResults from './SideBarDatasetSearchResults.jsx';
+import WorkbenchDataSearchResults from './WorkbenchDataSearchResults.jsx';
 
 import {addMarker} from '../../Models/LocationMarkerUtils';
 
@@ -43,6 +44,11 @@ const SidebarSearch = createReactClass({
                             <SideBarDatasetSearchResults terria={this.props.terria}
                                                          viewState={this.props.viewState}
                                                          />
+                            <WorkbenchDataSearchResults terria={this.props.terria}
+                                                        viewState={this.props.viewState}
+                                                        search={this.props.viewState.searchState.workbenchDataSearchProvider}
+                                                        isWaitingForSearchToStart={this.props.isWaitingForSearchToStart}
+                                                        />
                         </If>
                         <For each="search" of={this.props.viewState.searchState.locationSearchProviders}>
                             <LocationSearchResults key={search.name}

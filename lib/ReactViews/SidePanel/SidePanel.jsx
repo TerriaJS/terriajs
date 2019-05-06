@@ -65,6 +65,7 @@ const SidePanel = createReactClass({
 
     changeSearchText(newText) {
         this.props.viewState.searchState.locationSearchText = newText;
+        this.props.viewState.searchState.workbenchDataSearchText = newText;
 
         if (newText.length === 0) {
             removeMarker(this.props.terria);
@@ -73,10 +74,12 @@ const SidePanel = createReactClass({
 
     search() {
         this.props.viewState.searchState.searchLocations();
+        this.props.viewState.searchState.searchWorkbenchData();
     },
 
-    startLocationSearch() {
+    startLocationAndWorkbenchSearch() {
         this.props.viewState.searchState.showLocationSearchResults = true;
+        this.props.viewState.searchState.showWorkbenchDataSearchResults = true;
     },
 
     render() {
@@ -97,7 +100,7 @@ const SidePanel = createReactClass({
                     <SearchBox
                         onSearchTextChanged={this.changeSearchText}
                         onDoSearch={this.search}
-                        onFocus={this.startLocationSearch}
+                        onFocus={this.startLocationAndWorkbenchSearch}
                         searchText={searchState.locationSearchText}
                         placeholder='Search for locations'
 
