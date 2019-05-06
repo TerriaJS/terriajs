@@ -1339,7 +1339,7 @@
             "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
             "regionProp": "SED_CODE",
             "aliases": [
-                "sed_code_2011",
+                "sed_code_2011"
             ],
             "digits": 5,
             "description": "State electoral districts (ABS approximations)",
