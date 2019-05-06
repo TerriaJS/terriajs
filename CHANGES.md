@@ -1,8 +1,9 @@
 Change Log
 ==========
 
-## Next Release
-* Remove comma dangle on `regionMapping.json`.
+### v7.4.1
+
+* Remove dangling comma in `regionMapping.json`.
 
 ### v7.4.0
 
