@@ -1,15 +1,15 @@
-@import '~terriajs-variables';
-@import '../../Sass/common/mixins';
+@import "~terriajs-variables";
+@import "../../Sass/common/mixins";
 
-:global{
-  .pell-button{
-    &:focus{
-     outline: 1px solid $color-primary;  
+:global {
+  .pell-button {
+    &:focus {
+      outline: 1px solid $color-primary;
     }
   }
 }
-.popupEditor{
- &.is-mounted{
+.popupEditor {
+  &.is-mounted {
     opacity: 1;
     @include transform(none);
   }
@@ -26,7 +26,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  .inner{
+  .inner {
     width: 800px;
     background: #ffffff;
     z-index: 9999;
@@ -36,47 +36,46 @@
     border-radius: 4px;
     padding: 6px;
   }
-  .header{
+  .header {
     display: flex;
     align-items: baseline;
     padding: $padding;
     border-bottom: 1px solid $field-border;
   }
-  .body{
+  .body {
     min-height: 150px;
-    p{
+    p {
       margin-top: 0;
     }
   }
 }
 
-.editor{
+.editor {
   background: $dark-with-overlay;
   color: $text-light;
   font-family: $font-pop;
   margin: $padding-small;
   border-radius: 4px;
-  .editorHeader{
+  .editorHeader {
     padding: $padding;
     border-bottom: 1px solid $overlay;
   }
-  form{
+  form {
     padding: $padding;
   }
- }
+}
 
-
-.field{
-  composes: field from '../../Sass/common/_form.scss';
+.field {
+  composes: field from "../../Sass/common/_form.scss";
   border: 0;
   margin-right: $padding;
   padding: 0 !important;
 }
 
-.fieldBtn{
+.fieldBtn {
   composes: btn from "../../Sass/common/_buttons.scss";
   composes: btn--map from "../../Sass/common/_buttons.scss";
-  background: #9CA1AA;
+  background: #9ca1aa;
   border-radius: 4px;
   padding: $padding;
   margin-bottom: $padding + 3px;
@@ -84,21 +83,20 @@
   width: 100%;
 }
 
-.doneBtn, .saveBtn{
+.doneBtn,
+.saveBtn {
   composes: btn from "../../Sass/common/_buttons.scss";
   composes: btn-primary from "../../Sass/common/_buttons.scss";
 }
 
-.saveBtn{
- width: auto;
- padding: 5px 15px;
+.saveBtn {
+  width: auto;
+  padding: 5px 15px;
 }
- .cancelBtn{
-   composes: btn from '../../Sass/common/_buttons.scss';
-   composes: btn--secondary from '../../Sass/common/_buttons.scss';
-   padding: 5px 15px;
-   margin-right:$padding;
-   border: 2px solid #ffffff;
- }
-
-
+.cancelBtn {
+  composes: btn from "../../Sass/common/_buttons.scss";
+  composes: btn--secondary from "../../Sass/common/_buttons.scss";
+  padding: 5px 15px;
+  margin-right: $padding;
+  border: 2px solid #ffffff;
+}

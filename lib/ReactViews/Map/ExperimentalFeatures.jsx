@@ -1,39 +1,39 @@
-import React from 'react';
-import createReactClass from 'create-react-class';
-import PropTypes from 'prop-types';
+import React from "react";
+import createReactClass from "create-react-class";
+import PropTypes from "prop-types";
 
-import ObserveModelMixin from '../ObserveModelMixin';
+import ObserveModelMixin from "../ObserveModelMixin";
 
-import Styles from './experimental-features.scss';
+import Styles from "./experimental-features.scss";
 
 // The experimental features
 const ExperimentalFeatures = createReactClass({
-    displayName: 'ExperimentalFeatures',
-    mixins: [ObserveModelMixin],
+  displayName: "ExperimentalFeatures",
+  mixins: [ObserveModelMixin],
 
-    propTypes: {
-        terria: PropTypes.object.isRequired,
-        viewState: PropTypes.object.isRequired,
-        experimentalItems: PropTypes.arrayOf(PropTypes.element)
-    },
+  propTypes: {
+    terria: PropTypes.object.isRequired,
+    viewState: PropTypes.object.isRequired,
+    experimentalItems: PropTypes.arrayOf(PropTypes.element)
+  },
 
-    getDefaultProps() {
-        return {
-            experimentalItems: []
-        };
-    },
+  getDefaultProps() {
+    return {
+      experimentalItems: []
+    };
+  },
 
-    render() {
-        return (
-            <div className={Styles.experimentalFeatures}>
-                <For each="item" of={this.props.experimentalItems} index="i">
-                    <div className={Styles.control} key={i}>
-                        {item}
-                    </div>
-                </For>
-            </div>
-        );
-    }
+  render() {
+    return (
+      <div className={Styles.experimentalFeatures}>
+        <For each="item" of={this.props.experimentalItems} index="i">
+          <div className={Styles.control} key={i}>
+            {item}
+          </div>
+        </For>
+      </div>
+    );
+  }
 });
 
 export default ExperimentalFeatures;

@@ -1,5 +1,5 @@
-@import '~terriajs-variables';
-@import '../../Sass/common/mixins';
+@import "~terriajs-variables";
+@import "../../Sass/common/mixins";
 
 .container {
   top: 0;
@@ -18,14 +18,14 @@
   cursor: auto;
 
   :global {
-    .selection-indicator{
+    .selection-indicator {
       pointer-events: none;
       position: absolute;
       width: 50px;
       height: 50px;
     }
 
-    .cesium-widget-credits{
+    .cesium-widget-credits {
       position: absolute;
       bottom: 23px;
       left: 1rem;
@@ -42,11 +42,10 @@
       .cesium-credit-logoContainer::after {
         content: "";
         display: block;
-
       }
     }
 
-    .leaflet-control-container{
+    .leaflet-control-container {
       @extend %sm-show;
       #terriaLogo {
         vertical-align: middle;
@@ -57,17 +56,18 @@
         color: white;
         position: relative;
         bottom: 23px;
-        #terriaLogoWrapper{
+        #terriaLogoWrapper {
           display: block;
         }
       }
     }
 
-    #terriaLogoWrapper{
+    #terriaLogoWrapper {
       display: inline-block;
     }
 
-    .cesium-widget, .cesium-widget canvas {
+    .cesium-widget,
+    .cesium-widget canvas {
       position: absolute;
       width: 100%;
       height: 100%;

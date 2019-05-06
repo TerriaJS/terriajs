@@ -1,26 +1,26 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import Styles from './story.scss';
-import classNames from 'classnames';
+import React from "react";
+import PropTypes from "prop-types";
+import Styles from "./story.scss";
+import classNames from "classnames";
 import Icon from "../Icon.jsx";
-import parseCustomHtmlToReact from '../Custom/parseCustomHtmlToReact';
-import {sortable} from 'react-anything-sortable';
+import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
+import { sortable } from "react-anything-sortable";
 
-const findTextContent = (content)=>{
-  if(typeof content === "string") {
+const findTextContent = content => {
+  if (typeof content === "string") {
     return content;
   }
-  if(content[0] && content[0].props && content[0].props.children) {
+  if (content[0] && content[0].props && content[0].props.children) {
     return findTextContent(content[0].props.children);
   }
-  if(!content.props || !content.props.children) {
-    return '';
+  if (!content.props || !content.props.children) {
+    return "";
   }
-  if(typeof content.props.children === "string") {
+  if (typeof content.props.children === "string") {
     return content.props.children;
-  } 
+  }
   return findTextContent(content.props.children);
- };
+};
 
 class Story extends React.Component {
   constructor(props) {
@@ -33,13 +33,13 @@ class Story extends React.Component {
     this.hideList = this.hideList.bind(this);
   }
 
-    /* eslint-disable-next-line camelcase */
+  /* eslint-disable-next-line camelcase */
   UNSAFE_componentWillMount() {
-      window.addEventListener('click', this.hideList);
+    window.addEventListener("click", this.hideList);
   }
 
   componentWillUnmount() {
-      window.removeEventListener('click', this.hideList);
+    window.removeEventListener("click", this.hideList);
   }
 
   hideList() {
@@ -70,9 +70,9 @@ class Story extends React.Component {
   }
 
   recaptureStory(event) {
-   event.stopPropagation();
-   this.props.recaptureStory(this.props.story);
-   this.hideList();
+    event.stopPropagation();
+    this.props.recaptureStory(this.props.story);
+    this.hideList();
   }
 
   deleteStory(event) {
@@ -81,42 +81,87 @@ class Story extends React.Component {
     this.hideList();
   }
 
-    renderMenu() {
-    return (<div className={Styles.menu}>
-               <ul className={Styles.menuInner}>
-                  <li><button className={Styles.menuBtn} type='button' title='view' onClick={this.viewStory}>View</button></li>
-                  <li><button className={Styles.menuBtn} type='button' title='edit' onClick={this.editStory}>Edit</button></li>
-                  <li><button className={Styles.menuBtn} type='button' title='recapture' onClick={this.recaptureStory}>Recapture</button></li>
-                  <li><button className={Styles.menuBtn} type='button' title='delete' onClick={this.deleteStory}>Delete</button></li>
-               </ul>
-      </div>);
+  renderMenu() {
+    return (
+      <div className={Styles.menu}>
+        <ul className={Styles.menuInner}>
+          <li>
+            <button
+              className={Styles.menuBtn}
+              type="button"
+              title="view"
+              onClick={this.viewStory}
+            >
+              View
+            </button>
+          </li>
+          <li>
+            <button
+              className={Styles.menuBtn}
+              type="button"
+              title="edit"
+              onClick={this.editStory}
+            >
+              Edit
+            </button>
+          </li>
+          <li>
+            <button
+              className={Styles.menuBtn}
+              type="button"
+              title="recapture"
+              onClick={this.recaptureStory}
+            >
+              Recapture
+            </button>
+          </li>
+          <li>
+            <button
+              className={Styles.menuBtn}
+              type="button"
+              title="delete"
+              onClick={this.deleteStory}
+            >
+              Delete
+            </button>
+          </li>
+        </ul>
+      </div>
+    );
   }
 
   render() {
     const story = this.props.story;
     const bodyText = this.getTruncatedContent(story.text);
 
-     return (<div className={classNames(this.props.className, Styles.story)}
-                  onMouseDown={this.props.onMouseDown}
-                  style={this.props.style}
-                  onTouchStart={this.props.onTouchStart}>
-            <div className={Styles.storyHeader}> 
-            <h3 className={Styles.draggable}> 
-                       {story.title && story.title.length > 0 ? story.title : 'untitled scene'} 
-            </h3>
-            <button className={Styles.toggleBtn} onClick={this.toggleMenu}><Icon glyph={Icon.GLYPHS.menuDotted}/></button>
-            {this.props.menuOpen && this.renderMenu()}
-          </div>
-            {bodyText.length > 0 && <div className={Styles.body}>{bodyText}</div>}
-           </div>
-     ); 
+    return (
+      <div
+        className={classNames(this.props.className, Styles.story)}
+        onMouseDown={this.props.onMouseDown}
+        style={this.props.style}
+        onTouchStart={this.props.onTouchStart}
+      >
+        <div className={Styles.storyHeader}>
+          <h3 className={Styles.draggable}>
+            {story.title && story.title.length > 0
+              ? story.title
+              : "untitled scene"}
+          </h3>
+          <button className={Styles.toggleBtn} onClick={this.toggleMenu}>
+            <Icon glyph={Icon.GLYPHS.menuDotted} />
+          </button>
+          {this.props.menuOpen && this.renderMenu()}
+        </div>
+        {bodyText.length > 0 && <div className={Styles.body}>{bodyText}</div>}
+      </div>
+    );
   }
 }
 
-Story.propTypes ={
+Story.propTypes = {
   story: PropTypes.object,
   editStory: PropTypes.func,
-  viewStory: PropTypes.func, 
+  viewStory: PropTypes.func,
   deleteStory: PropTypes.func,
   recaptureStory: PropTypes.func,
   onMouseDown: PropTypes.func.isRequired,

@@ -1,5 +1,5 @@
-@import '~terriajs-variables';
-@import '../../Sass/common/mixins';
+@import "~terriajs-variables";
+@import "../../Sass/common/mixins";
 .story-panel {
   font-family: $font-base;
   flex-basis: 400px;
@@ -10,87 +10,87 @@
   display: block;
   transition: all 0.25s;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  &.isVisible{
+  &.isVisible {
     visibility: visible;
     margin-right: 0;
   }
-  &.isHidden{
+  &.isHidden {
     visibility: hidden;
     margin-right: -400px;
   }
-
 }
-.header{
-   .actions{
+.header {
+  .actions {
     border-bottom: 1px solid $overlay;
     padding: $padding;
   }
 }
 
-.stories{
-    height: calc(100vh - 121px);
-    overflow: auto;
-    &.isActive{
-      opacity: 0.7;
-    }
+.stories {
+  height: calc(100vh - 121px);
+  overflow: auto;
+  &.isActive {
+    opacity: 0.7;
+  }
 }
 
 .story {
   padding: $padding-small;
   margin: $padding-small;
   background: #667080;
-  color: #FFFFFF;
+  color: #ffffff;
   margin: $padding;
   border: 1px solid rgba(255, 255, 255, 0.15);
-  h3{
+  h3 {
     font-weight: normal;
     margin: 0;
   }
- }
+}
 
- .trashBtn, .removeBtn{
-    composes: btn from "../../Sass/common/_buttons.scss";
-    composes: btn--map from "../../Sass/common/_buttons.scss";
-    margin-right: $padding;
-    background: #9CA1AA;
-    border-radius: 4px;
-    padding: $padding-small $padding;
-    svg{
-      height: 25px;
-      width: 25px;
-      fill: #ffffff;
-    }
+.trashBtn,
+.removeBtn {
+  composes: btn from "../../Sass/common/_buttons.scss";
+  composes: btn--map from "../../Sass/common/_buttons.scss";
+  margin-right: $padding;
+  background: #9ca1aa;
+  border-radius: 4px;
+  padding: $padding-small $padding;
+  svg {
+    height: 25px;
+    width: 25px;
+    fill: #ffffff;
+  }
+}
 
- }
+.footer {
+  padding: $padding;
+}
 
- .footer{
-   padding: $padding;
- }
+.captureBtn,
+.previewBtn {
+  position: relative;
+  padding-left: 40px;
+  composes: btn from "../../Sass/common/_buttons.scss";
+  composes: btn-primary from "../../Sass/common/_buttons.scss";
+  svg {
+    width: 25px;
+    height: 25px;
+    fill: #ffffff;
+    position: absolute;
+    left: 15px;
+    top: 8px;
+  }
+}
 
- .captureBtn, .previewBtn{
-   position: relative;
-   padding-left: 40px;
-   composes: btn from "../../Sass/common/_buttons.scss";
-   composes: btn-primary from "../../Sass/common/_buttons.scss";
-   svg{
-     width: 25px;
-     height: 25px;
-     fill: #ffffff;
-     position: absolute;
-     left: 15px;
-     top: 8px;
-   }
- }
-
- .previewBtn {
-   margin-bottom: $padding;
- }
+.previewBtn {
+  margin-bottom: $padding;
+}
 
 .story:hover {
   background-color: $dark-with-overlay;
 }
 
-.intro{
+.intro {
   background: $dark-with-overlay;
   color: $text-light;
   font-family: $font-pop;
@@ -99,10 +99,10 @@
   text-align: center;
   padding: 30px 10px;
   color: $text-light-dimmed;
-  strong{
+  strong {
     color: $text-light;
   }
-  svg{
+  svg {
     width: 70px;
     height: 70px;
     fill: $text-light-dimmed;
@@ -110,12 +110,12 @@
   }
 }
 .remove-button {
-  composes: btn from '../../Sass/common/_buttons.scss';
+  composes: btn from "../../Sass/common/_buttons.scss";
   color: $text-light;
   font-size: $font-size-mid-mini;
   padding: 0;
   text-transform: uppercase;
-  svg{
+  svg {
     height: 12px;
     width: 12px;
     margin: 4px;
@@ -124,4 +124,3 @@
     display: inline-block;
   }
 }
-
