@@ -1241,16 +1241,105 @@
             "description": "Commonwealth electoral districts for 2007 election (Australian Electoral Commission)",
             "regionIdsFile": "build/TerriaJS/data/regionids/region_map-CommonwealthElectoralDivision_2007_ced_name_2007.json"
         },
-        "SED": {
+        "SED_CODE16": {
+            "layerName": "SED_2018",
+            "server": "https://tiles.terria.io/SED_2018/{z}/{x}/{y}.pbf",
+            "serverType": "MVT",
+            "serverMaxNativeZoom": 12,
+            "serverMinZoom": 0,
+            "serverMaxZoom": 28,
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-SED_CODE18_SED_2018.json",
+            "regionProp": "SED_CODE18",
+            "nameProp": "SED_NAME18",
+            "aliases": [
+              "sed",
+              "sed_code",
+              "sed_2018",
+              "sed_code_2018"
+            ],
+            "description": "State electoral divisions 2018 by code (ABS)",
+            "bbox": [
+              96.82,
+              -43.74,
+              159.11,
+              -9.14
+            ]
+        },
+        "SED_NAME18": {
+            "layerName": "SED_2018",
+            "server": "https://tiles.terria.io/SED_2018/{z}/{x}/{y}.pbf",
+            "serverType": "MVT",
+            "serverMaxNativeZoom": 12,
+            "serverMinZoom": 0,
+            "serverMaxZoom": 28,
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-SED_NAME18_SED_2018.json",
+            "regionProp": "SED_NAME18",
+            "nameProp": "SED_NAME18",
+            "aliases": [
+              "sed_name",
+              "sed_name_2018"
+            ],
+            "description": "State electoral divisions 2018 by code (ABS)",
+            "bbox": [
+              96.82,
+              -43.74,
+              159.11,
+              -9.14
+            ]
+        },
+        "SED_CODE18": {
+            "layerName": "SED_2016",
+            "server": "https://tiles.terria.io/SED_2016/{z}/{x}/{y}.pbf",
+            "serverType": "MVT",
+            "serverMaxNativeZoom": 12,
+            "serverMinZoom": 0,
+            "serverMaxZoom": 28,
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-SED_CODE18_SED_2016.json",
+            "regionProp": "SED_CODE16",
+            "nameProp": "SED_NAME16",
+            "aliases": [
+              "sed_2016",
+              "sed_code_2016",
+              "sed_code16"
+            ],
+            "description": "State electoral divisions 2016 by code (ABS)",
+            "bbox": [
+              96.82,
+              -43.74,
+              159.11,
+              -9.14
+            ]
+          },
+          "SED_NAME16": {
+            "layerName": "SED_2016",
+            "server": "https://tiles.terria.io/SED_2016/{z}/{x}/{y}.pbf",
+            "serverType": "MVT",
+            "serverMaxNativeZoom": 12,
+            "serverMinZoom": 0,
+            "serverMaxZoom": 28,
+            "regionIdsFile": "build/TerriaJS/data/regionids/region_map-SED_NAME16_SED_2016.json",
+            "regionProp": "SED_NAME16",
+            "nameProp": "SED_NAME16",
+            "aliases": [
+              "sed_name_2016",
+              "sed_name16"
+            ],
+            "description": "State electoral divisions 2016 by code (ABS)",
+            "bbox": [
+              96.82,
+              -43.74,
+              159.11,
+              -9.14
+            ]
+        },          
+        "SED_CODE11": {
             "layerName": "FID_SED_2011_AUST",
             "server": "https://vector-tiles.terria.io/FID_SED_2011_AUST/{z}/{x}/{y}.pbf",
             "analyticsWmsLayerName": "region_map:FID_SED_2011_AUST",
             "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
             "regionProp": "SED_CODE",
             "aliases": [
-                "sed_code_2011",
-                "sed_code",
-                "sed"
+                "sed_code_2011"
             ],
             "digits": 5,
             "description": "State electoral districts (ABS approximations)",
@@ -1268,15 +1357,14 @@
             ],
             "nameProp": "SED_NAME"
         },
-        "SED_NAME": {
+        "SED_NAME11": {
             "layerName": "FID_SED_2011_AUST",
             "server": "https://vector-tiles.terria.io/FID_SED_2011_AUST/{z}/{x}/{y}.pbf",
             "analyticsWmsLayerName": "region_map:FID_SED_2011_AUST",
             "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
             "regionProp": "SED_NAME",
             "aliases": [
-                "sed_name_2011",
-                "sed_name"
+                "sed_name_2011"
             ],
             "description": "State electoral districts (ABS approximations)",
             "regionIdsFile": "build/TerriaJS/data/regionids/region_map-FID_SED_2011_AUST_SED_NAME.json",

@@ -72,11 +72,25 @@ const DataCatalogGroup = createReactClass({
             this.props.viewState.previewedItem === this.props.group;
     },
 
+    getNameOrPrettyUrl() {
+        // Grab a name via nameInCatalog, if it's a blank string, try and generate one from the url
+        const group = this.props.group;
+        const nameInCatalog = group.nameInCatalog || '';
+        if (nameInCatalog !== '') {
+            return nameInCatalog;
+        }
+
+        const url = group.url || '';
+        // strip protocol
+        return url.replace(/^https?:\/\//, '');
+    },
+
     render() {
         const group = this.props.group;
+
         return (
             <CatalogGroup
-                text={group.nameInCatalog}
+                text={this.getNameOrPrettyUrl()}
                 title={getAncestors(group).map(member => member.nameInCatalog).join(' → ')}
                 topLevel={this.isTopLevel()}
                 open={this.isOpen()}
