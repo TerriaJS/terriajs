@@ -168,10 +168,10 @@ describe('ImageryLayerCatalogItem', function() {
         });
 
         function failLoad(statusCode, times) {
-            return spyOn(Resource.prototype, 'fetchImage').and.callFake(function(preferBlob) {
+            return spyOn(Resource.prototype, 'fetchImage').and.callFake(function(options) {
                 if (times > 0) {
                     --times;
-                    if (preferBlob) {
+                    if (options.preferBlob) {
                         return when.reject(new RequestErrorEvent(statusCode, 'bad', []));
                     } else {
                         return when.reject(image);
@@ -208,8 +208,8 @@ describe('ImageryLayerCatalogItem', function() {
         });
 
         it('eventually gives up on a tile that only succeeds when loaded via blob', function(done) {
-            const fetchImage = spyOn(Resource.prototype, 'fetchImage').and.callFake(function(preferBlob) {
-                if (preferBlob) {
+            const fetchImage = spyOn(Resource.prototype, 'fetchImage').and.callFake(function(options) {
+                if (options.preferBlob) {
                     return runLater(function() {
                         return image;
                     });

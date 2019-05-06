@@ -1,5 +1,5 @@
-@import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,400italic,600);
-@import url(https://fonts.googleapis.com/css?family=Lato:400,700);
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,400italic,600");
+@import url("https://fonts.googleapis.com/css?family=Lato:400,700");
 
 $font-pop:'Open Sans', sans-serif;
 $font-base: 'Open Sans', sans-serif;
@@ -149,6 +149,8 @@ $chart-text-color: #fff;
 $chart-line-color: #ccc;
 $chart-preview-line-color: $chart-line-color;
 $chart-darker: darken($dark, 8%);
+$chart-panel-background: $dark;
+$chart-panel-header: $chart-darker;
 
 $charcoal-grey: #3f4854;
 $turquoise-blue: #08abd5;
