@@ -124,7 +124,7 @@ const StoryBuilder = createReactClass({
           [Styles.isActive]: editingMode
       });
     return (<div className={className}>
-                <BadgeBar label="Stories" badge={this.props.terria.stories.length}>
+                <BadgeBar label="Scenes" badge={this.props.terria.stories.length}>
                     <button type='button' onClick={this.removeAllStories} className={Styles.removeButton}>
                         Remove All <Icon glyph={Icon.GLYPHS.remove}/>
                     </button>

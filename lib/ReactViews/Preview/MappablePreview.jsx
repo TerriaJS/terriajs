@@ -3,7 +3,7 @@ import React from 'react';
 import createReactClass from 'create-react-class';
 
 import PropTypes from 'prop-types';
-
+import defined from 'terriajs-cesium/Source/Core/defined';
 import DataPreviewMap from './DataPreviewMap';
 import Description from './Description';
 import ObserveModelMixin from '../ObserveModelMixin';
@@ -25,7 +25,7 @@ const MappablePreview = createReactClass({
 
     toggleOnMap(event) {
         this.props.previewed.toggleEnabled();
-        this.props.viewState.storyShown = false;
+        if(defined(this.props.viewState.storyShown)) this.props.viewState.storyShown = false;
         if (this.props.previewed.isEnabled === true && !event.shiftKey && !event.ctrlKey) {
             this.props.viewState.explorerPanelIsVisible = false;
             this.props.viewState.mobileView = null;
