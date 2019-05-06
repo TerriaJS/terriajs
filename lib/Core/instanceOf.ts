@@ -1,4 +1,4 @@
-import Class from './Class';
+import Class from "./Class";
 
 /**
  * Determines whether a given instance is an instance of a given class.
@@ -11,6 +11,9 @@ import Class from './Class';
  * @example
  * const isCatalogGroup = instanceOf(CatalogGroup, catalogMember);
  */
-export default function instanceOf<T>(type: Class<T>, instance: any): instance is T {
-    return instance instanceof <any>type;
+export default function instanceOf<T>(
+  type: Class<T>,
+  instance: any
+): instance is T {
+  return instance instanceof <any>type;
 }

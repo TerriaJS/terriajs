@@ -1,10 +1,10 @@
-@import '~terriajs-variables';
-@import '../../Sass/common/mixins';
+@import "~terriajs-variables";
+@import "../../Sass/common/mixins";
 
-.map{
+.map {
   position: relative;
 }
-.badge{
+.badge {
   top: 5px;
   left: 5px;
   padding: 3px 5px 3px 5px;

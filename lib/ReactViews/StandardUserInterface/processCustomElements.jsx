@@ -1,11 +1,11 @@
-import React from 'react';
-import {Nav, Menu, ExperimentalMenu, Feedback} from './customizable/Groups';
+import React from "react";
+import { Nav, Menu, ExperimentalMenu, Feedback } from "./customizable/Groups";
 
 const GROUP_ELEMENT_TO_KEY_MAPPING = {
-    'menu': Menu,
-    'nav': Nav,
-    'experimentalMenu': ExperimentalMenu,
-    'feedback': Feedback
+  menu: Menu,
+  nav: Nav,
+  experimentalMenu: ExperimentalMenu,
+  feedback: Feedback
 };
 
 const groupElementKeys = Object.keys(GROUP_ELEMENT_TO_KEY_MAPPING);
@@ -22,27 +22,31 @@ const groupElementKeys = Object.keys(GROUP_ELEMENT_TO_KEY_MAPPING);
  *      for "menu", an array for "nav" etc.
  */
 export default function processCustomElements(isSmallScreen, customUI) {
-    const groupElements = React.Children.toArray(customUI);
+  const groupElements = React.Children.toArray(customUI);
 
-    return groupElements.reduce((soFar, groupElement) => {
-        const key = findKeyForGroupElement(groupElement);
-        soFar[key] = soFar[key].concat(getGroupChildren(isSmallScreen, groupElement));
+  return groupElements.reduce((soFar, groupElement) => {
+    const key = findKeyForGroupElement(groupElement);
+    soFar[key] = soFar[key].concat(
+      getGroupChildren(isSmallScreen, groupElement)
+    );
 
-        return soFar;
-    }, buildEmptyAccumulator());
+    return soFar;
+  }, buildEmptyAccumulator());
 }
 
 /** Builds an empty accumulator object - each location for custom elements will have an empty array in the return object */
 function buildEmptyAccumulator() {
-    return groupElementKeys.reduce((acc, key) => {
-        acc[key] = [];
-        return acc;
-    }, {});
+  return groupElementKeys.reduce((acc, key) => {
+    acc[key] = [];
+    return acc;
+  }, {});
 }
 
 /** Finds the associated key string for the grouping element provided - e.g. a <Nav> element will resolve to 'nav' */
 function findKeyForGroupElement(groupElement) {
-    return groupElementKeys.filter(key => groupElement.type === GROUP_ELEMENT_TO_KEY_MAPPING[key])[0];
+  return groupElementKeys.filter(
+    key => groupElement.type === GROUP_ELEMENT_TO_KEY_MAPPING[key]
+  )[0];
 }
 
 /**
@@ -54,15 +58,19 @@ function findKeyForGroupElement(groupElement) {
  * @returns {Array<Element>} a collection of processed children.
  */
 function getGroupChildren(isSmallScreen, groupElement) {
-    return React.Children.map(groupElement.props.children, child => {
-        if (typeof child === 'string') {
-            return (<span>{child}</span>);
-        } else if (child && child.type.propTypes && child.type.propTypes.smallScreen) {
-            return React.cloneElement(child, {
-                smallScreen: isSmallScreen
-            });
-        } else {
-            return child;
-        }
-    });
+  return React.Children.map(groupElement.props.children, child => {
+    if (typeof child === "string") {
+      return <span>{child}</span>;
+    } else if (
+      child &&
+      child.type.propTypes &&
+      child.type.propTypes.smallScreen
+    ) {
+      return React.cloneElement(child, {
+        smallScreen: isSmallScreen
+      });
+    } else {
+      return child;
+    }
+  });
 }

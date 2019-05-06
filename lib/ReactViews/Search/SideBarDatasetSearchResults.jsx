@@ -1,59 +1,74 @@
-import ObserveModelMixin from '../ObserveModelMixin';
-import React from 'react';
-import createReactClass from 'create-react-class';
-import PropTypes from 'prop-types';
-import SearchResult from './SearchResult';
-import classNames from 'classnames';
+import ObserveModelMixin from "../ObserveModelMixin";
+import React from "react";
+import createReactClass from "create-react-class";
+import PropTypes from "prop-types";
+import SearchResult from "./SearchResult";
+import classNames from "classnames";
 import Icon from "../Icon";
-import Styles from './sidebar-dataset-search-results.scss';
+import Styles from "./sidebar-dataset-search-results.scss";
 
 const SideBarDatasetSearchResults = createReactClass({
-    displayName: 'SideBarDatasetSearchResults',
-    mixins: [ObserveModelMixin],
+  displayName: "SideBarDatasetSearchResults",
+  mixins: [ObserveModelMixin],
 
-    propTypes: {
-        viewState: PropTypes.object.isRequired,
-        terria: PropTypes.object.isRequired,
-        theme: PropTypes.string
-    },
+  propTypes: {
+    viewState: PropTypes.object.isRequired,
+    terria: PropTypes.object.isRequired,
+    theme: PropTypes.string
+  },
 
-    getDefaultProps() {
-        return {
-            theme: "dark"
-        };
-    },
+  getDefaultProps() {
+    return {
+      theme: "dark"
+    };
+  },
 
-    getInitialState() {
-        return {
-            isOpen: true
-        };
-    },
+  getInitialState() {
+    return {
+      isOpen: true
+    };
+  },
 
-    searchInDataCatalog() {
-        this.props.viewState.searchInCatalog(this.props.viewState.searchState.locationSearchText);
-    },
+  searchInDataCatalog() {
+    this.props.viewState.searchInCatalog(
+      this.props.viewState.searchState.locationSearchText
+    );
+  },
 
-    toggleGroup() {
-        this.setState({
-            isOpen: !this.state.isOpen
-        });
-    },
+  toggleGroup() {
+    this.setState({
+      isOpen: !this.state.isOpen
+    });
+  },
 
-    render() {
-        return (<div key='data'
-                     className={classNames(Styles.providerResult, {[Styles.isOpen]: this.state.isOpen, [Styles.dark]: this.props.theme === 'dark', [Styles.light]: this.props.theme === 'light'})}>
-                    <button onClick={this.toggleGroup} className={Styles.heading}>
-                        <span>Data</span>
-                        <Icon glyph={this.state.isOpen ? Icon.GLYPHS.opened : Icon.GLYPHS.closed}/>
-                    </button>
-                    <ul className={Styles.items}>
-                      <SearchResult clickAction={this.searchInDataCatalog}
-                                    icon='data'
-                                    name={`Search for "${this.props.viewState.searchState.locationSearchText}" in the Data Catalogue`}
-                      />
-                    </ul>
-                </div>);
-    },
+  render() {
+    return (
+      <div
+        key="data"
+        className={classNames(Styles.providerResult, {
+          [Styles.isOpen]: this.state.isOpen,
+          [Styles.dark]: this.props.theme === "dark",
+          [Styles.light]: this.props.theme === "light"
+        })}
+      >
+        <button onClick={this.toggleGroup} className={Styles.heading}>
+          <span>Data</span>
+          <Icon
+            glyph={this.state.isOpen ? Icon.GLYPHS.opened : Icon.GLYPHS.closed}
+          />
+        </button>
+        <ul className={Styles.items}>
+          <SearchResult
+            clickAction={this.searchInDataCatalog}
+            icon="data"
+            name={`Search for "${
+              this.props.viewState.searchState.locationSearchText
+            }" in the Data Catalogue`}
+          />
+        </ul>
+      </div>
+    );
+  }
 });
 
 module.exports = SideBarDatasetSearchResults;

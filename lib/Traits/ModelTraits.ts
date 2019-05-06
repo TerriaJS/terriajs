@@ -1,7 +1,7 @@
-import { JsonObject } from '../Core/Json';
-import { Equals, Or } from '../Core/TypeConditionals';
-import ModelReference from './ModelReference';
-import Trait from './Trait';
+import { JsonObject } from "../Core/Json";
+import { Equals, Or } from "../Core/TypeConditionals";
+import ModelReference from "./ModelReference";
+import Trait from "./Trait";
 
 // Traits may be:
 // * JSON primitive types: number, string, boolean, null
@@ -10,18 +10,18 @@ import Trait from './Trait';
 // * Arrays of any of the above.
 
 class ModelTraits {
-    static traits: {
-        [id: string]: Trait;
-    }
+  static traits: {
+    [id: string]: Trait;
+  };
 }
 
 export type IsValidSimpleTraitType<T> = Or<
-    Equals<T, ModelReference>,
-    Equals<T, JsonObject>,
-    Equals<T, string>,
-    Equals<T, number>,
-    Equals<T, boolean>,
-    Equals<T, null>
+  Equals<T, ModelReference>,
+  Equals<T, JsonObject>,
+  Equals<T, string>,
+  Equals<T, number>,
+  Equals<T, boolean>,
+  Equals<T, null>
 >;
 
 export default ModelTraits;

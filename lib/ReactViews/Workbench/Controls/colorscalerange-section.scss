@@ -1,4 +1,4 @@
-@import '~terriajs-variables';
+@import "~terriajs-variables";
 
 .colorscalerange {
   font-size: $font-size-mid-small;
@@ -14,11 +14,11 @@
 }
 
 .btn {
-  composes: btn from '../../../Sass/common/_buttons.scss';
-  composes: btn-primary from '../../../Sass/common/_buttons.scss';
+  composes: btn from "../../../Sass/common/_buttons.scss";
+  composes: btn-primary from "../../../Sass/common/_buttons.scss";
   margin-top: 10px;
 }
 
 .field {
-  composes: field from '../../../Sass/common/_form.scss';
+  composes: field from "../../../Sass/common/_form.scss";
 }

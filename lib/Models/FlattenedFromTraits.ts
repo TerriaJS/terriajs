@@ -3,9 +3,9 @@ import { Complete, CopyNull, NotUndefined } from "../Core/TypeModifiers";
 import ModelTraits, { IsValidSimpleTraitType } from "../Traits/ModelTraits";
 
 type SingleTrait<TTrait> = If<
-    IsValidSimpleTraitType<NonNullable<TTrait>>,
-    TTrait,
-    TTrait extends ModelTraits ? FlattenedFromTraits<TTrait> : never
+  IsValidSimpleTraitType<NonNullable<TTrait>>,
+  TTrait,
+  TTrait extends ModelTraits ? FlattenedFromTraits<TTrait> : never
 >;
 
 type ArrayTrait<TTrait, TElement> = ReadonlyArray<SingleTrait<TElement>>;
@@ -19,10 +19,18 @@ type ArrayTrait<TTrait, TElement> = ReadonlyArray<SingleTrait<TElement>>;
  *
  * Nested traits classes follow the rules above.
  */
-type FlattenedFromTraits<TDefinition extends ModelTraits> = Complete<{
-    readonly [P in keyof TDefinition]: NotUndefined<TDefinition[P]> extends Array<infer TElement>
-        ? ArrayTrait<TDefinition[P], TElement> extends infer R ? CopyNull<TDefinition[P], R> | undefined : never
-        : SingleTrait<TDefinition[P]> extends infer R ? CopyNull<TDefinition[P], R> | undefined : never;
-}>;
+type FlattenedFromTraits<TDefinition extends ModelTraits> = Complete<
+  {
+    readonly [P in keyof TDefinition]: NotUndefined<
+      TDefinition[P]
+    > extends Array<infer TElement>
+      ? ArrayTrait<TDefinition[P], TElement> extends infer R
+        ? CopyNull<TDefinition[P], R> | undefined
+        : never
+      : SingleTrait<TDefinition[P]> extends infer R
+      ? CopyNull<TDefinition[P], R> | undefined
+      : never
+  }
+>;
 
 export default FlattenedFromTraits;

@@ -1,14 +1,15 @@
-@import '~terriajs-variables';
-@import '../../Sass/common/mixins';
+@import "~terriajs-variables";
+@import "../../Sass/common/mixins";
 
-.workbench {}
+.workbench {
+}
 
 .remove-button {
-  composes: btn from '../../Sass/common/_buttons.scss';
+  composes: btn from "../../Sass/common/_buttons.scss";
   color: $text-light;
   font-size: $font-size-mid-mini;
   padding: 0;
-  svg{
+  svg {
     height: 12px;
     width: 12px;
     margin: 4px;
@@ -17,4 +18,3 @@
     display: inline-block;
   }
 }
-
