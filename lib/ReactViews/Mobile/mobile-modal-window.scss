@@ -1,8 +1,8 @@
-@import '~terriajs-variables';
-@import '../../Sass/common/mixins';
+@import "~terriajs-variables";
+@import "../../Sass/common/mixins";
 
-.mobileModal{
-  composes: scrollbars from '../../Sass/common/_base.scss';
+.mobileModal {
+  composes: scrollbars from "../../Sass/common/_base.scss";
   position: fixed;
   top: $mobile-header-height;
   bottom: 0;
@@ -14,13 +14,13 @@
   overflow-x: hidden;
   overflow-y: hidden;
   width: 100%;
-  &.isOpen{
-      display: block;
+  &.isOpen {
+    display: block;
   }
 }
 
-.modalBg{
-  composes: scrollbars from '../../Sass/common/_base.scss';
+.modalBg {
+  composes: scrollbars from "../../Sass/common/_base.scss";
 
   overflow-y: auto;
   overflow-x: hidden;
@@ -36,13 +36,13 @@
 }
 
 .button {
-  composes: btn from '../../Sass/common/_buttons.scss';
+  composes: btn from "../../Sass/common/_buttons.scss";
   color: #fff;
 
   width: auto;
 }
 
-.done-button{
+.done-button {
   composes: button;
 
   float: right;
@@ -60,7 +60,8 @@
   &--inactive {
     opacity: 0.5;
 
-    &:focus, &:hover {
+    &:focus,
+    &:hover {
       opacity: 0.5;
     }
   }
@@ -70,10 +71,10 @@
   height: 18px;
   width: 18px;
   margin: 6px;
-  fill: #FFFFFF;
-  stroke: #FFFFFF;
+  fill: #ffffff;
+  stroke: #ffffff;
 }
 
 .data-catalog {
-  composes: data-catalog from '../ExplorerWindow/Tabs/data-catalog-tab.scss';
+  composes: data-catalog from "../ExplorerWindow/Tabs/data-catalog-tab.scss";
 }

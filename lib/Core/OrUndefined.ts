@@ -4,8 +4,6 @@
  * each property exist but its value may be undefined, while `Partial<T>` does
  * not require that the property exist at all.
  */
-type OrUndefined<T> = {
-    [P in keyof T]: T[P] | undefined;
-}
+type OrUndefined<T> = { [P in keyof T]: T[P] | undefined };
 
 export default OrUndefined;

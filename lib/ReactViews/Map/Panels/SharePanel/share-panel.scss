@@ -1,5 +1,5 @@
-@import '~terriajs-variables';
-@import '../../../../Sass/common/mixins';
+@import "~terriajs-variables";
+@import "../../../../Sass/common/mixins";
 
 .share-panel {
   font-size: $font-size-mid-small;
@@ -11,7 +11,6 @@
 }
 
 .heading-label {
-
 }
 
 .btn--wrapper {
@@ -36,7 +35,7 @@
   }
 }
 
-@include empty-module('link-wrapper');
+@include empty-module("link-wrapper");
 
 .link {
   @include link($overlay);
@@ -48,29 +47,29 @@
 }
 
 .field {
-  composes: field from '../../../../Sass/common/_form.scss';
+  composes: field from "../../../../Sass/common/_form.scss";
   color: #ddd;
   background: $overlay;
 }
-.clipboard{
+.clipboard {
   margin: 10px 0 0 0;
 }
 
-.shareUrlfield{
-  composes: field from '../../../../Sass/common/_form.scss';
+.shareUrlfield {
+  composes: field from "../../../../Sass/common/_form.scss";
   background: $overlay;
-  color: #fff!important;
+  color: #fff !important;
   &::selection {
-    background: $color-primary;; /* WebKit/Blink Browsers */
+    background: $color-primary; /* WebKit/Blink Browsers */
     color: #fff;
   }
   &::-moz-selection {
-    background: $color-primary;; /* Gecko Browsers */
+    background: $color-primary; /* Gecko Browsers */
     color: #fff;
   }
 }
 
-.mobileHeader{
+.mobileHeader {
   margin-bottom: 10px;
 }
 
@@ -81,7 +80,7 @@
     background: transparent;
     outline: 0;
   }
-  svg{
+  svg {
     display: inline;
     padding-right: 5px;
     fill: #fff;
@@ -96,9 +95,10 @@
   color: $text-light-dimmed;
 }
 
-.format-button, .print-button {
-  composes: btn from '../../../../Sass/common/_buttons.scss';
-  composes: btn-primary from '../../../../Sass/common/_buttons.scss';
+.format-button,
+.print-button {
+  composes: btn from "../../../../Sass/common/_buttons.scss";
+  composes: btn-primary from "../../../../Sass/common/_buttons.scss";
   width: auto;
   display: inline;
   margin: 2px;

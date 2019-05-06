@@ -7,45 +7,45 @@ import { computed } from "mobx";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 
 export default class BingMapsCatalogItem
-    extends CatalogMemberMixin(CreateModel(BingMapsCatalogItemTraits))
-    implements Mappable {
-    static readonly type = "bing-maps";
+  extends CatalogMemberMixin(CreateModel(BingMapsCatalogItemTraits))
+  implements Mappable {
+  static readonly type = "bing-maps";
 
-    get type() {
-        return BingMapsCatalogItem.type;
-    }
+  get type() {
+    return BingMapsCatalogItem.type;
+  }
 
-    @computed get mapItems() {
-        const imageryProvider = this._createImageryProvider();
-        return [
-            {
-                imageryProvider,
-                show: this.show,
-                alpha: this.opacity
-            }
-        ];
-    }
+  @computed get mapItems() {
+    const imageryProvider = this._createImageryProvider();
+    return [
+      {
+        imageryProvider,
+        show: this.show,
+        alpha: this.opacity
+      }
+    ];
+  }
 
-    protected get loadMetadataPromise(): Promise<void> {
-        return Promise.resolve();
-    }
+  protected get loadMetadataPromise(): Promise<void> {
+    return Promise.resolve();
+  }
 
-    loadMapItems() {
-        return Promise.resolve();
-    }
+  loadMapItems() {
+    return Promise.resolve();
+  }
 
-    _createImageryProvider() {
-        const result = new BingMapsImageryProvider({
-            url: "//dev.virtualearth.net",
-            mapStyle: this.mapStyle,
-            key: this.key
-        });
+  _createImageryProvider() {
+    const result = new BingMapsImageryProvider({
+      url: "//dev.virtualearth.net",
+      mapStyle: this.mapStyle,
+      key: this.key
+    });
 
-        // open in a new window
-        (<any>result)._credit = new Credit(
-            '<a href="http://www.bing.com" target="_blank">Bing</a>'
-        );
-        result.defaultGamma = 1.0;
-        return result;
-    }
+    // open in a new window
+    (<any>result)._credit = new Credit(
+      '<a href="http://www.bing.com" target="_blank">Bing</a>'
+    );
+    result.defaultGamma = 1.0;
+    return result;
+  }
 }

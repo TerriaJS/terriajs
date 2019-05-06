@@ -1,30 +1,30 @@
 .progress-bar {
-    z-index: 1;
-    position: absolute;
-    top: 0;
-    left: 0;
-    background: rgba(255, 255, 255, 0.8);
-    height: 5px;
-    transition: opacity 200ms linear, width 200ms linear, visibility 400ms linear;
+  z-index: 1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: rgba(255, 255, 255, 0.8);
+  height: 5px;
+  transition: opacity 200ms linear, width 200ms linear, visibility 400ms linear;
 }
 
 .complete {
-    animation-duration: 400ms;
-    animation-name: complete;
+  animation-duration: 400ms;
+  animation-name: complete;
 }
 
 @keyframes complete {
-    from {
-        opacity: 1;
-    }
+  from {
+    opacity: 1;
+  }
 
-    50% {
-        width: 100%;
-        opacity: 1;
-    }
+  50% {
+    width: 100%;
+    opacity: 1;
+  }
 
-    to {
-        opacity: 0;
-        width: 100%;
-    }
+  to {
+    opacity: 0;
+    width: 100%;
+  }
 }

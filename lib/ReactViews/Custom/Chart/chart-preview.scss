@@ -1,5 +1,5 @@
-@import '~terriajs-variables';
-@import '../../../Sass/common/mixins';
+@import "~terriajs-variables";
+@import "../../../Sass/common/mixins";
 
 .chart-td {
   background: $feature-info-bg;
@@ -10,7 +10,6 @@
   padding: 0;
 
   :global {
-
     .line-chart text {
       fill: $feature-info-color;
       // font-family: monospace;
@@ -27,7 +26,6 @@
       stroke: $chart-preview-line-color;
       stroke-width: 1;
     }
-
   }
 }
 

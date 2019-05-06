@@ -1,5 +1,5 @@
-@import '~terriajs-variables';
-@import '../../../Sass/common/mixins';
+@import "~terriajs-variables";
+@import "../../../Sass/common/mixins";
 // Map Compass
 //
 // Markup:
@@ -11,18 +11,18 @@
 //
 // Style guide: Component.map-compass
 
-.compass{
+.compass {
   position: relative;
   cursor: default;
   width: $compass-width;
   height: $compass-width;
-  composes: sm-show from '../../../Sass/common/_base.scss';
+  composes: sm-show from "../../../Sass/common/_base.scss";
 
-  svg{
+  svg {
     fill: $dark;
   }
 }
-.innerRing{
+.innerRing {
   @include vertical-align();
   height: $compass-width - $ring-width -20px;
   width: $compass-width - $ring-width -20px;
@@ -33,8 +33,8 @@
   box-sizing: border-box;
   background: #ffffff;
 }
-.rotationMarker{
-  background-image: url('../../../../wwwroot/images/compass-rotation-marker.svg');
+.rotationMarker {
+  background-image: url("../../../../wwwroot/images/compass-rotation-marker.svg");
   height: $compass-width - 4px;
   width: $compass-width - 4px;
   border-radius: 50%;
@@ -45,7 +45,7 @@
   background-size: contain;
 }
 
-.outerRing{
+.outerRing {
   height: $compass-width;
   width: $compass-width;
   border-radius: 50%;
@@ -54,7 +54,7 @@
   background-size: contain;
   top: 0;
   left: 0;
-  svg{
+  svg {
     width: 100%;
     height: 100%;
   }

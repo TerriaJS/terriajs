@@ -1,6 +1,6 @@
 :global {
-  @import '~rc-slider/assets/index';
-  .rc-slider{
+  @import "~rc-slider/assets/index";
+  .rc-slider {
     margin-right: 5px;
     margin-top: 5px;
   }
@@ -10,15 +10,15 @@
     height: 2px;
   }
 
-  .rc-slider-handle{
+  .rc-slider-handle {
     border: 0;
     width: 12px;
     height: 12px;
   }
-  .rc-slider-rail{
+  .rc-slider-rail {
     background-color: rgba(255, 255, 255, 0.15);
   }
-  .rc-slider-track{
+  .rc-slider-track {
     background-color: #ffffff;
   }
 }

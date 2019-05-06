@@ -1,4 +1,10 @@
-import { Equals, IsWritableArray, IsReadonlyArray, IsWritable, IsReadonly } from "../../lib/Core/TypeConditionals";
+import {
+  Equals,
+  IsWritableArray,
+  IsReadonlyArray,
+  IsWritable,
+  IsReadonly
+} from "../../lib/Core/TypeConditionals";
 
 // Based on the approach described here: https://stackoverflow.com/a/49579497
 export function expectTrue<T extends true>() {}
@@ -19,7 +25,7 @@ expectFalse<IsReadonlyArray<number[]>>();
 expectTrue<IsReadonlyArray<ReadonlyArray<number>>>();
 expectFalse<IsWritableArray<ReadonlyArray<number>>>();
 
-expectTrue<IsWritable<{ foo: number }, 'foo'>>();
-expectFalse<IsWritable<{ readonly foo: number }, 'foo'>>();
-expectTrue<IsReadonly<{ readonly foo: number }, 'foo'>>();
-expectFalse<IsReadonly<{ foo: number }, 'foo'>>();
+expectTrue<IsWritable<{ foo: number }, "foo">>();
+expectFalse<IsWritable<{ readonly foo: number }, "foo">>();
+expectTrue<IsReadonly<{ readonly foo: number }, "foo">>();
+expectFalse<IsReadonly<{ foo: number }, "foo">>();

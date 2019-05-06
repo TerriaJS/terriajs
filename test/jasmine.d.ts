@@ -1,1 +1,1 @@
-declare module 'jasmine-enzyme';
+declare module "jasmine-enzyme";
