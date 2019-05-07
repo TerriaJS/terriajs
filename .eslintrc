@@ -57,7 +57,7 @@
         "block-scoped-var": 0, // see Babel section
         "complexity": 0,
         "consistent-return": 0,
-        "curly": [1, "multi-line"],
+        "curly": 0,
         "default-case": 0,
         "dot-notation": [0, {
             "allowKeywords": true,
