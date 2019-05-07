@@ -27,7 +27,8 @@
   flex-direction: column;
   justify-content: center;
   .inner {
-    width: 800px;
+    max-width: 800px;
+    width: 80vw;
     background: #ffffff;
     z-index: 9999;
     margin: 0 auto;
