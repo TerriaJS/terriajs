@@ -20,9 +20,10 @@ Then, enable workspaces by editing the TerriaMap `package.json` file, adding the
 
 ```json
   "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
+  "workspaces": {
+    "packages": ["packages/terriajs"],
+    "nohoist": ["**/husky"]
+  },
 ```
 
 Do _not_ commit this change.
