@@ -20,6 +20,19 @@
 .storyHeader {
   position: relative;
   padding: $padding;
+  svg.recapture{
+    height: 20px;
+    width: 20px;
+    fill: #ffffff;
+    position: absolute;
+    right: 40px;
+    opacity: 0;
+    @include transition(all, 1.8s);
+
+  &.isSuccessful{
+      opacity: 1;
+    }
+  }
 }
 
 .body {

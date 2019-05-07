@@ -29,7 +29,7 @@ class Story extends React.Component {
     this.viewStory = this.viewStory.bind(this);
     this.deleteStory = this.deleteStory.bind(this);
     this.editStory = this.editStory.bind(this);
-    this.reCaptureStory = this.reCaptureStory.bind(this);
+    this.recaptureStory = this.recaptureStory.bind(this);
     this.hideList = this.hideList.bind(this);
   }
 
@@ -69,9 +69,9 @@ class Story extends React.Component {
     this.hideList();
   }
 
-  reCaptureStory(event) {
+  recaptureStory(event) {
     event.stopPropagation();
-    this.props.reCaptureStory(this.props.story);
+    this.props.recaptureStory(this.props.story);
     this.hideList();
   }
 
@@ -109,11 +109,11 @@ class Story extends React.Component {
             <button
               className={classNames({
                 [Styles.menuBtn]: true,
-                [Styles.isSuccessful]: this.props.reCaptureStorySuccessful
+                [Styles.isSuccessful]: this.props.recaptureStorySuccessful
               })}
               type="button"
               title="re-capture"
-              onClick={this.reCaptureStory}
+              onClick={this.recaptureStory}
             >
               Recapture
             </button>
@@ -144,8 +144,13 @@ class Story extends React.Component {
         style={this.props.style}
         onTouchStart={this.props.onTouchStart}
       >
+        
         <div className={Styles.storyHeader}>
           <h3 className={Styles.draggable}>
+          <Icon className={classNames({
+                [Styles.recapture]: true,
+                [Styles.isSuccessful]: this.props.recaptureStorySuccessful
+              })} glyph={Icon.GLYPHS.recapture}/>
             {story.title && story.title.length > 0
               ? story.title
               : "untitled scene"}
@@ -166,8 +171,8 @@ Story.propTypes = {
   editStory: PropTypes.func,
   viewStory: PropTypes.func,
   deleteStory: PropTypes.func,
-  reCaptureStory: PropTypes.func,
-  reCaptureStorySuccessful: PropTypes.bool,
+  recaptureStory: PropTypes.func,
+  recaptureStorySuccessful: PropTypes.bool,
   onMouseDown: PropTypes.func.isRequired,
   onTouchStart: PropTypes.func.isRequired,
   style: PropTypes.object,

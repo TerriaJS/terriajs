@@ -27,7 +27,7 @@ const StoryBuilder = createReactClass({
     return {
       editingMode: false,
       currentStory: undefined,
-      reCaptureSuccessFul: undefined
+      recaptureSuccessFul: undefined
     };
   },
 
@@ -83,7 +83,8 @@ const StoryBuilder = createReactClass({
     }
   },
 
-  reCaptureScene(story) {
+  recaptureScene(story) {
+    clearTimeout(this.resetReCaptureStatus);
     const storyIndex = (this.props.terria.stories || [])
       .map(story => story.id)
       .indexOf(story.id);
@@ -97,8 +98,10 @@ const StoryBuilder = createReactClass({
         ...this.props.terria.stories.slice(storyIndex + 1)
       ];
       this.setState({
-        reCaptureSuccessFul: story.id
+        recaptureSuccessFul: story.id
       });
+
+      setTimeout(this.resetReCaptureStatus, 2000);
     } else {
       throw new Error("Story does not exsit");
     }
@@ -106,7 +109,7 @@ const StoryBuilder = createReactClass({
 
   resetReCaptureStatus() {
     this.setState({
-      reCaptureSuccessFul: undefined
+      recaptureSuccessFul: undefined
     });
   },
 
@@ -132,6 +135,10 @@ const StoryBuilder = createReactClass({
 
   onSort(sortedArray, currentDraggingSortData, currentDraggingIndex) {
     this.props.terria.stories = sortedArray;
+  },
+
+  componentWillUnmount() {
+    clearTimeout(this.resetReCaptureStatus);
   },
 
   renderIntro() {
@@ -179,9 +186,9 @@ const StoryBuilder = createReactClass({
               story={story}
               sortData={story}
               deleteStory={this.removeStory.bind(this, index)}
-              reCaptureStory={this.reCaptureScene}
-              reCaptureStorySuccessful={Boolean(
-                story.id === this.state.reCaptureSuccessFul
+              recaptureStory={this.recaptureScene}
+              recaptureStorySuccessful={Boolean(
+                story.id === this.state.recaptureSuccessFul
               )}
               viewStory={this.viewStory.bind(this, index)}
               menuOpen={this.state.storyWithOpenMenu === story}
