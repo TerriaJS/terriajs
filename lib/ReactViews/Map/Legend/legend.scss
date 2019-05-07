@@ -1,5 +1,5 @@
-@import '~terriajs-variables';
-@import '../../../Sass/common/mixins';
+@import "~terriajs-variables";
+@import "../../../Sass/common/mixins";
 
 $distance-bg: rgba($dark, 0.9);
 
@@ -18,11 +18,11 @@ $distance-bg: rgba($dark, 0.9);
   font-family: $font-mono;
   max-height: 21px;
   margin-top: 5px;
-  &:hover{
+  &:hover {
     background: $faint-bg;
   }
 
-  .bar{
+  .bar {
     background: #fff;
     margin: 0 auto;
     display: block;
@@ -30,41 +30,43 @@ $distance-bg: rgba($dark, 0.9);
   }
 }
 
-.locationBar, .distanceLegend{
+.locationBar,
+.distanceLegend {
   composes: baseLegend;
   // Adjust colors to match btn--map.
   background-color: $charcoal-grey;
   color: $text-light;
-  &:hover{
+  &:hover {
     background: $color-primary;
   }
   //
   margin-right: $padding-small;
-  span{
+  span {
     padding: 0 $padding-small;
   }
 
-  li, div{
+  li,
+  div {
     display: inline-block;
     padding: 0 $padding-small;
     text-align: left;
   }
 
-  .section-long{
+  .section-long {
     width: 130px;
   }
 
-  .section{
+  .section {
     width: 112px;
   }
 
-  .section-short{
+  .section-short {
     width: 70px;
   }
 }
 
-.distanceLegend{
-  &:hover{
+.distanceLegend {
+  &:hover {
     background: $charcoal-grey;
   }
   text-align: center;

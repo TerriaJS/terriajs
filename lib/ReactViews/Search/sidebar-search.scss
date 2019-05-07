@@ -1,5 +1,5 @@
-@import '../../Sass/common/mixins';
-@import '~terriajs-variables';
+@import "../../Sass/common/mixins";
+@import "~terriajs-variables";
 
 .results {
   @include transition(all 0.5s ease-in-out);
@@ -8,7 +8,7 @@
 }
 
 .results-content {
-  composes: scrollbars from '../../Sass/common/_base.scss';
+  composes: scrollbars from "../../Sass/common/_base.scss";
 
   height: calc(100vh - #{$workbench-header + $logo-height});
   overflow-x: hidden;
@@ -17,7 +17,7 @@
 }
 
 .heading {
-  composes: h4 from '../../Sass/common/_base.scss';
+  composes: h4 from "../../Sass/common/_base.scss";
 
   padding: $padding-small;
   position: relative;
@@ -25,7 +25,7 @@
   text-align: left;
   color: $text-light;
 
-  svg{
+  svg {
     height: 20px;
     width: 20px;
     position: absolute;
@@ -36,25 +36,23 @@
 
 .provider-result {
   margin-top: $padding-small;
-  svg{
+  svg {
     fill: #ffffff;
   }
-  .items{
+  .items {
     display: none;
   }
 }
 
-
-.btnList{
-  composes: clearfix from '../../Sass/common/_base.scss';
-  composes: list-reset from '../../Sass/common/_base.scss';
+.btnList {
+  composes: clearfix from "../../Sass/common/_base.scss";
+  composes: list-reset from "../../Sass/common/_base.scss";
 }
 
-
 .btn--done {
-  composes: btn from '../../Sass/common/_buttons.scss';
-  composes: btn from '../badge-bar.scss';
-  composes: btn--tertiary-dark from '../../Sass/common/_buttons.scss';
+  composes: btn from "../../Sass/common/_buttons.scss";
+  composes: btn from "../badge-bar.scss";
+  composes: btn--tertiary-dark from "../../Sass/common/_buttons.scss";
   padding: 5px;
   font-size: $font-size-mid-mini;
   border-radius: 2px;

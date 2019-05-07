@@ -1,7 +1,7 @@
-@import '~terriajs-variables';
+@import "~terriajs-variables";
 
 .input {
-  composes: field from '../../../Sass/common/_form.scss';
+  composes: field from "../../../Sass/common/_form.scss";
 }
 
 .large {
@@ -10,8 +10,9 @@
 
 .light {
   border-color: transparent; // use transparent instead of no-border for layout +/ high contrast
-  &, &:read-only:not(select) {
-    background: $grey-lighter2; 
+  &,
+  &:read-only:not(select) {
+    background: $grey-lighter2;
   }
   &:focus {
     border-color: transparent;
@@ -27,7 +28,8 @@
 }
 
 .dark {
-  &, &:read-only:not(select) {
+  &,
+  &:read-only:not(select) {
     background: $overlay;
   }
   color: $text-light;

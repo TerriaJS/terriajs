@@ -1,6 +1,5 @@
-@import '~terriajs-variables';
-@import './mixins';
-
+@import "~terriajs-variables";
+@import "./mixins";
 
 .input {
   font-family: inherit;
@@ -19,7 +18,7 @@
   height: $input-height;
   color: $text-dark;
   display: block;
-  padding: .5rem .5rem;
+  padding: 0.5rem 0.5rem;
   vertical-align: middle;
   -webkit-appearance: none;
 
@@ -46,11 +45,11 @@
 
 .field:disabled,
 .field.is-disabled {
-  background-color: rgba(0, 0, 0, .125);
-  opacity: .5;
+  background-color: rgba(0, 0, 0, 0.125);
+  opacity: 0.5;
 }
 
 .field:read-only:not(select),
 .field.is-read-only {
-  background-color: rgba(0, 0, 0, .125);
+  background-color: rgba(0, 0, 0, 0.125);
 }

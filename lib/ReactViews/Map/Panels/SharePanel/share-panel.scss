@@ -1,17 +1,17 @@
-@import '~terriajs-variables';
-@import '../../../../Sass/common/mixins';
+@import "~terriajs-variables";
+@import "../../../../Sass/common/mixins";
 
 .share-panel {
   font-size: $font-size-mid-small;
 }
 
 .catalog-share {
-  float:right;
+  float: right;
 }
 
 .catalog-share-inner {
   background: $grey-lightest;
-  color: $text-darker;  
+  color: $text-darker;
 }
 
 .dropdown-inner {
@@ -23,11 +23,12 @@
   font-size: $font-size-data-preview;
   background: transparent;
   color: $color-primary;
-  box-shadow:none;
+  box-shadow: none;
   svg {
     fill: $color-primary;
   }
-  &:hover, &:focus {
+  &:hover,
+  &:focus {
     color: $text-light;
   }
 }
@@ -36,7 +37,8 @@
     fill: $text-darker;
   }
   // not in design but should give life to the button?
-  &:hover, &:focus {
+  &:hover,
+  &:focus {
     color: $color-primary;
   }
 }
@@ -63,7 +65,7 @@
   }
 }
 
-@include empty-module('link-wrapper');
+@include empty-module("link-wrapper");
 
 .link {
   @include link($grey-lighter2);
@@ -84,7 +86,7 @@
   padding-right: 0;
 }
 
-.mobileHeader{
+.mobileHeader {
   margin-bottom: 10px;
 }
 
@@ -95,7 +97,7 @@
     background: transparent;
     outline: 0;
   }
-  svg{
+  svg {
     display: inline;
     padding-right: 5px;
     fill: #fff;
@@ -110,9 +112,10 @@
   color: $text-light-dimmed;
 }
 
-.format-button, .print-button {
-  composes: btn from '../../../../Sass/common/_buttons.scss';
-  composes: btn-primary from '../../../../Sass/common/_buttons.scss';
+.format-button,
+.print-button {
+  composes: btn from "../../../../Sass/common/_buttons.scss";
+  composes: btn-primary from "../../../../Sass/common/_buttons.scss";
   width: auto;
   display: inline;
   margin: 2px;
