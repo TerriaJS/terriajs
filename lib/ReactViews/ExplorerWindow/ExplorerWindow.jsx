@@ -34,22 +34,12 @@ const ExplorerWindow = createReactClass({
 
   /* eslint-disable-next-line camelcase */
   UNSAFE_componentWillMount() {
-    const { terria, viewState } = this.props;
-
     this.props.viewState.explorerPanelAnimating = true;
 
     this._pickedFeaturesSubscription = ko
       .pureComputed(this.isVisible, this)
       .subscribe(this.onVisibilityChange);
 
-    if (
-      defined(terria.previewedItemId) &&
-      terria.catalog.shareKeyIndex[terria.previewedItemId]
-    ) {
-      viewState.viewCatalogMember(
-        terria.catalog.shareKeyIndex[terria.previewedItemId]
-      );
-    }
     this.onVisibilityChange(this.isVisible());
   },
 
