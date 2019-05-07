@@ -180,7 +180,9 @@ const StoryBuilder = createReactClass({
               sortData={story}
               deleteStory={this.removeStory.bind(this, index)}
               reCaptureStory={this.reCaptureScene}
-              reCaptureStorySuccessful = {Boolean(story.id === this.state.reCaptureSuccessFul)}
+              reCaptureStorySuccessful={Boolean(
+                story.id === this.state.reCaptureSuccessFul
+              )}
               viewStory={this.viewStory.bind(this, index)}
               menuOpen={this.state.storyWithOpenMenu === story}
               openMenu={this.openMenu}

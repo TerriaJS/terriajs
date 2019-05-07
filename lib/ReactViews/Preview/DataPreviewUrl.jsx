@@ -69,8 +69,9 @@ const DataPreviewUrl = createReactClass({
         >
           <p>
             Layer name
-            {this.props.metadataItem.layers.split(",").length > 1 ? "s" : ""}:{" "}
-            {this.props.metadataItem.layers}
+            {this.props.metadataItem.layers.split(",").length > 1
+              ? "s"
+              : ""}: {this.props.metadataItem.layers}
           </p>
         </If>
         <If condition={this.props.metadataItem.type === "wfs"}>
