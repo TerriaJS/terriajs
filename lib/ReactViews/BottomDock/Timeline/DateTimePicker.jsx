@@ -2,7 +2,6 @@ import React from 'react';
 import createReactClass from 'create-react-class';
 import dateFormat from 'dateformat';
 import DatePicker from 'react-datepicker';
-import { parse } from 'date-fns';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import uniq from 'lodash.uniq';
@@ -177,8 +176,8 @@ const DateTimePicker = createReactClass({
       if (datesObject[this.state.year][this.state.month].dates && datesObject[this.state.year][this.state.month].dates.length > 31) {
         // Create one date object per day, using an arbitrary time. This does it via Object.keys.
         const days = datesObject[this.state.year][this.state.month].indice;
-        const daysToDisplay = days.map(d => parse(`${d}/${this.state.month}/${this.state.year}`, 'dd/MM/yyyy', new Date()));
-        const selected = defined(this.state.day) ? parse(`${this.state.day}/${this.state.month}/${this.state.year}`, 'dd/MM/yyyy', new Date()) : null;
+        const daysToDisplay = days.map(d => new Date(this.state.year, this.state.month - 1, d));
+        const selected = defined(this.state.day) ? new Date(this.state.year, this.state.month - 1, this.state.day) : null;
         // const monthObject = this.props.datesObject[this.state.year][this.state.month];
         // const daysToDisplay = Object.keys(monthObject).map(dayNumber => monthObject[dayNumber][0]);
         // const selected = defined(this.state.day) ? this.props.datesObject[this.state.year][this.state.month][this.state.day][0] : null;
