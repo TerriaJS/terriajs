@@ -22,7 +22,7 @@ import ColorScaleRangeSection from "./Controls/ColorScaleRangeSection";
 import ShortReport from "./Controls/ShortReport";
 import StyleSelectorSection from "./Controls/StyleSelectorSection";
 import ViewingControls from "./Controls/ViewingControls";
-import Timer from "../Generic/Timer/Timer";
+import TimerSection from "./Controls/TimerSection";
 
 import Styles from "./workbench-item.scss";
 import Icon from "../Icon.jsx";
@@ -101,23 +101,6 @@ const WorkbenchItem = createReactClass({
               {workbenchItem.name}
             </div>
           </li>
-          <li className={Styles.timerColumn}>
-            <If
-              condition={
-                defined(workbenchItem.polling) &&
-                workbenchItem.polling.isPolling
-              }
-            >
-              <Timer
-                tooltipText={`Next data update at ${
-                  workbenchItem.polling.nextScheduledUpdateTime
-                }`}
-                radius={8}
-                start={workbenchItem.polling.previousUpdateTime}
-                stop={workbenchItem.polling.nextScheduledUpdateTime}
-              />
-            </If>
-          </li>
           <li className={Styles.toggleColumn}>
             <button
               type="button"
@@ -176,6 +159,7 @@ const WorkbenchItem = createReactClass({
             >
               <ShortReport item={workbenchItem} />
             </If>
+            <TimerSection item={workbenchItem} />
           </div>
         </If>
       </li>

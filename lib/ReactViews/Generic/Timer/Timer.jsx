@@ -56,6 +56,14 @@ const Timer = createReactClass({
       Styles.elapsedTime,
       Styles.backgroundCircle
     );
+
+    updateTimer(
+      this.props.radius,
+      this.calculateTimerInterval(),
+      this.containerId,
+      Styles.elapsedTime,
+      Styles.backgroundCircle
+    );
   },
 
   render() {
