@@ -89,7 +89,7 @@ const WorkbenchItem = createReactClass({
                     <li className={Styles.timerColumn}>
                         <If condition={defined(workbenchItem.polling) && workbenchItem.polling.isPolling}>
                             <Timer tooltipText={`Next data update at ${workbenchItem.polling.nextScheduledUpdateTime}`}
-                                   radius={8} 
+                                   radius={10} 
                                    start={workbenchItem.polling.previousUpdateTime}  
                                    stop={workbenchItem.polling.nextScheduledUpdateTime}></Timer>
                         </If>

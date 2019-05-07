@@ -1,7 +1,20 @@
+@import '~terriajs-variables';
+
 .timer {
     fill: currentColor;
 }
 
-.backgroundCircle {
-    opacity: 0.5;
+.background-circle {
+    opacity: 0.4;
+}
+
+// We decided not to use a seconds hand, but I've left the animation code in here just in case we change our minds.
+// .seconds-hand {
+//     stroke: lighten($dark-with-overlay, 20%);
+//     stroke-width: 1.5px;
+// }
+
+.elapsedTime {
+     /*! keep */
+     // We ask SASS not to delete this empty selector so that the Timer can import its class name
 }

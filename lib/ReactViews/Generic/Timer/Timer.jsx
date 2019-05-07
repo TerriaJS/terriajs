@@ -27,10 +27,7 @@ const Timer = createReactClass({
     containerId: 'timer-container-' + new Date().getTime().toString(),
 
     getDefaultProps() {
-        return {
-            elapsedTimeClass: Styles.elapsedTime,
-            backgroundCircleClass: Styles.backgroundCircle
-        };
+        return {};
     },
 
     // Calculates how long the timer should run for (in seconds).
@@ -45,11 +42,11 @@ const Timer = createReactClass({
     },
 
     componentDidUpdate() {
-        updateTimer(this.props.radius, this.calculateTimerInterval(), this.containerId);
+        updateTimer(this.props.radius, this.calculateTimerInterval(), this.containerId, Styles.elapsedTime, Styles.backgroundCircle);
     },
 
     componentDidMount() {
-        createTimer(this.props.radius, this.calculateTimerInterval(), this.containerId, this.props.elapsedTimeClass, this.props.backgroundCircleClass);
+        createTimer(this.props.radius, this.calculateTimerInterval(), this.containerId, Styles.elapsedTime, Styles.backgroundCircle);
     },
 
     render() {
