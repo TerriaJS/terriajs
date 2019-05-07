@@ -1,4 +1,4 @@
-@import '~terriajs-variables';
+@import "~terriajs-variables";
 
 .divider-wrapper {
   position: absolute;
@@ -7,36 +7,36 @@
 }
 
 .divider {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 50%;
-    width: 1px;
-    background-color: #fff;
-    pointer-events: none;
-    z-index: 999;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  background-color: #fff;
+  pointer-events: none;
+  z-index: 999;
 }
 
 .thumb {
-    position: absolute;
-    width: 40px;
-    height: 40px;
-    border-radius: 20px;
-    border: 1px solid lightgrey;
-    text-align: center;
-    line-height: 38px;
-    left: 50%;
-    top: 50%;
-    font-size: 28px;
-    font-family: monospace;
-    background-color: white;
-    color: grey;
-    margin-top: -20px;
-    margin-left: -20px;
-    z-index: 999;
-    padding: 8px;
-    cursor: ew-resize;
-    svg{
-      fill: #000
-    }
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  border: 1px solid lightgrey;
+  text-align: center;
+  line-height: 38px;
+  left: 50%;
+  top: 50%;
+  font-size: 28px;
+  font-family: monospace;
+  background-color: white;
+  color: grey;
+  margin-top: -20px;
+  margin-left: -20px;
+  z-index: 999;
+  padding: 8px;
+  cursor: ew-resize;
+  svg {
+    fill: #000;
+  }
 }

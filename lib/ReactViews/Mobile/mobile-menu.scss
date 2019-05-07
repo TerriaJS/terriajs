@@ -1,13 +1,16 @@
-@import '~terriajs-variables';
-@import '../../Sass/common/mixins';
+@import "~terriajs-variables";
+@import "../../Sass/common/mixins";
 
 .overlay {
   position: fixed;
-  left: 0; right: 0; top: 0; bottom: 0;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
 }
 
 .mobile-nav {
-  composes: list-reset from '../../Sass/common/_base.scss';
+  composes: list-reset from "../../Sass/common/_base.scss";
   position: absolute;
   left: 0;
   right: 0;
