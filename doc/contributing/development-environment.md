@@ -21,7 +21,7 @@ Then, enable workspaces by editing the TerriaMap `package.json` file, adding the
 ```json
   "private": true,
   "workspaces": {
-    "packages": ["packages/terriajs"],
+    "packages": ["packages/*"],
     "nohoist": ["**/husky"]
   },
 ```
