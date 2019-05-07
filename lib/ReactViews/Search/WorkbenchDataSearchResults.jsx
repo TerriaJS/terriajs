@@ -32,8 +32,7 @@ const WorkbenchDataSearchResults = createReactClass({
         };
     },
 
-    onDataClick(d) {
-        console.log(this);
+    onMatchClick(d) {
         console.log(d);
     },
 
@@ -60,9 +59,9 @@ const WorkbenchDataSearchResults = createReactClass({
         const search = this.props.search;
         const allDatasetResults = [];
         for (let i = 0; i < search.searchResults.length; i++) {
-            const ds = search.searchResults[i];
-            for (let ii = 0; ii < ds.results.length; ii++) {
-                allDatasetResults.push({match: ds.results[ii], WorkbenchItem: ds});
+            const workbenchItem = search.searchResults[i];
+            for (let ii = 0; ii < workbenchItem.matches.length; ii++) {
+                allDatasetResults.push({match: workbenchItem.matches[ii].match, WorkbenchItem: workbenchItem.workbenchItem});
             }
         }
         const results = allDatasetResults.length > 5 ? (this.state.isExpanded ? allDatasetResults : allDatasetResults.slice(0, 5)) : allDatasetResults;
@@ -77,12 +76,12 @@ const WorkbenchDataSearchResults = createReactClass({
 
                         {results.map((result, i) => (
                             <SearchResult key={i}
-                                          clickAction={this.onDataClick.bind(null, result)}
-                                          name={result.match.match.toUpperCase()}
+                                          clickAction={this.onMatchClick.bind(null, result)}
+                                          name={`${result.match.toUpperCase()} (${result.WorkbenchItem.name})`}
                                           icon='data'
                                           theme={this.props.theme}/>
                         ))}
-                        {search.searchResults.length > 5  && <button className={Styles.footer} onClick={this.toggleExpand}>{this.renderResultsFooter()}<Icon glyph={this.state.isExpanded ? Icon.GLYPHS.opened : Icon.GLYPHS.closed}/></button>}
+                        {allDatasetResults.length > 5  && <button className={Styles.footer} onClick={this.toggleExpand}>{this.renderResultsFooter()}<Icon glyph={this.state.isExpanded ? Icon.GLYPHS.opened : Icon.GLYPHS.closed}/></button>}
                     </ul>
                 </div>);
     },
