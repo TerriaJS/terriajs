@@ -1,6 +1,5 @@
-@import '~terriajs-variables';
-@import '../../Sass/common/_mixins';
-
+@import "~terriajs-variables";
+@import "../../Sass/common/_mixins";
 
 .window {
   display: none;
@@ -31,7 +30,7 @@
 }
 
 .caret {
-  content: '';
+  content: "";
   display: block;
   height: 20px;
   width: 20px;
@@ -50,8 +49,8 @@
 }
 
 .btn {
-  composes: btn from '../../Sass/common/_buttons.scss';
-  composes: btn-primary from '../../Sass/common/_buttons.scss';
+  composes: btn from "../../Sass/common/_buttons.scss";
+  composes: btn-primary from "../../Sass/common/_buttons.scss";
   padding: 5px !important;
   font-size: $font-size-small !important;
   color: white !important;

@@ -1,4 +1,4 @@
-@import '~terriajs-variables';
+@import "~terriajs-variables";
 
 .controls {
   display: table-cell;
@@ -9,15 +9,15 @@
 .timeline__control {
   height: 29px;
   width: 29px;
-  composes: btn from '../../../Sass/common/_buttons.scss';
-  svg{
+  composes: btn from "../../../Sass/common/_buttons.scss";
+  svg {
     height: 25px;
     width: 25px;
     fill: #ffffff;
   }
 
   &.is-active {
-    svg{
+    svg {
       fill: $color-primary;
     }
   }

@@ -1,21 +1,21 @@
-@import '~terriajs-variables';
+@import "~terriajs-variables";
 
-.clipboard{
+.clipboard {
   padding: 5px;
   position: relative;
 }
-.clipboardBody{
+.clipboardBody {
   display: flex;
   margin: 10px 0 0 0;
 }
 
-.copyBtn{
-  composes: btn from '../Sass/common/_buttons.scss';
-  composes: btn-primary from '../Sass/common/_buttons.scss';
+.copyBtn {
+  composes: btn from "../Sass/common/_buttons.scss";
+  composes: btn-primary from "../Sass/common/_buttons.scss";
   width: 60px;
 }
 
-.tooltip{
+.tooltip {
   position: absolute;
   background: #fff;
   color: #000;
@@ -26,7 +26,7 @@
   top: 80px;
   z-index: 999;
   &:before {
-    content: '';
+    content: "";
     display: block;
     height: 10px;
     width: 10px;

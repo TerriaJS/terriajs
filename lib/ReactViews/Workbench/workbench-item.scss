@@ -1,5 +1,5 @@
-@import '~terriajs-variables';
-@import '../../Sass/common/mixins';
+@import "~terriajs-variables";
+@import "../../Sass/common/mixins";
 
 $workbench-margin: $padding-small;
 
@@ -25,34 +25,33 @@ $workbench-margin: $padding-small;
 }
 
 .inner {
-  composes: clearfix from '../../Sass/common/_base.scss';
+  composes: clearfix from "../../Sass/common/_base.scss";
   padding: $padding;
   border-top: 1px solid $border-color;
-  img{
+  img {
     max-width: 100%;
     height: auto;
   }
 }
 
 .header {
-  composes: list-reset from '../../Sass/common/_base.scss';
+  composes: list-reset from "../../Sass/common/_base.scss";
   width: 100%;
 }
 
 .header-clearfix {
-  composes: clearfix from '../../Sass/common/_base.scss';
+  composes: clearfix from "../../Sass/common/_base.scss";
 }
 
-
 .visibilityColumn {
-  composes: col from  '../../Sass/common/_base.scss';
-  composes: col-1 from  '../../Sass/common/_base.scss';
+  composes: col from "../../Sass/common/_base.scss";
+  composes: col-1 from "../../Sass/common/_base.scss";
   padding: 8px 10px;
   //remove additional space below inline element
-  button{
+  button {
     display: block;
   }
-  svg{
+  svg {
     height: 14px;
     width: 14px;
     fill: #fff;
@@ -60,22 +59,22 @@ $workbench-margin: $padding-small;
 }
 
 .btn-visibility {
-  composes: btn from '../../Sass/common/_buttons.scss';
+  composes: btn from "../../Sass/common/_buttons.scss";
 }
 
 .nameColumn {
-  composes: col from  '../../Sass/common/_base.scss';
-  composes: col-9 from  '../../Sass/common/_base.scss';
+  composes: col from "../../Sass/common/_base.scss";
+  composes: col-9 from "../../Sass/common/_base.scss";
   padding: 5px;
-  text-align:left;
+  text-align: left;
 }
 
 .toggleColumn {
-  composes: col from  '../../Sass/common/_base.scss';
-  composes: col-1 from  '../../Sass/common/_base.scss';
+  composes: col from "../../Sass/common/_base.scss";
+  composes: col-1 from "../../Sass/common/_base.scss";
   padding: 5px;
   //remove additional space below inline element
-  svg{
+  svg {
     height: 18px;
     width: 18px;
     fill: #fff;
@@ -83,7 +82,7 @@ $workbench-margin: $padding-small;
 }
 
 .btn-toggle {
-  composes: btn from '../../Sass/common/_buttons.scss';
+  composes: btn from "../../Sass/common/_buttons.scss";
   display: block;
 }
 
@@ -91,10 +90,10 @@ $workbench-margin: $padding-small;
   float: left;
   font-size: 140%;
   margin-right: 5px;
-  svg{
+  svg {
     height: 18px;
     width: 18px;
-    fill: #CCC;
+    fill: #ccc;
     display: inline-block;
     vertical-align: top;
   }
@@ -106,8 +105,8 @@ $workbench-margin: $padding-small;
 }
 
 .timerColumn {
-  composes: col from  '../../Sass/common/_base.scss';
-  composes: col-1 from  '../../Sass/common/_base.scss';
+  composes: col from "../../Sass/common/_base.scss";
+  composes: col-1 from "../../Sass/common/_base.scss";
 
   width: fit-content;
   padding: 5px;

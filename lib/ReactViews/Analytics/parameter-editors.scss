@@ -179,9 +179,10 @@
   text-align: center;
   width: 32%;
 
-  &:hover, &:focus {
+  &:hover,
+  &:focus {
     border: 2px solid #404855;
     background: #404855;
-    color: white
+    color: white;
   }
 }

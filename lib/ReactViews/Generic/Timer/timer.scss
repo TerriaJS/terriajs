@@ -1,11 +1,11 @@
-@import '~terriajs-variables';
+@import "~terriajs-variables";
 
 .timer {
-    fill: currentColor;
+  fill: currentColor;
 }
 
 .background-circle {
-    opacity: 0.4;
+  opacity: 0.4;
 }
 
 // We decided not to use a seconds hand, but I've left the animation code in here just in case we change our minds.
@@ -15,6 +15,6 @@
 // }
 
 .elapsedTime {
-     /*! keep */
-     // We ask SASS not to delete this empty selector so that the Timer can import its class name
+  /*! keep */
+  // We ask SASS not to delete this empty selector so that the Timer can import its class name
 }

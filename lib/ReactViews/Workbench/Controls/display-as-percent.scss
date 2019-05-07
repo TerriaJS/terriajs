@@ -1,13 +1,13 @@
-@import '~terriajs-variables';
-@import '../../../Sass/common/mixins';
+@import "~terriajs-variables";
+@import "../../../Sass/common/mixins";
 
 .btn {
-  composes: btn from '../../../Sass/common/_buttons.scss';
+  composes: btn from "../../../Sass/common/_buttons.scss";
   color: $text-light;
   margin-top: $padding;
   position: relative;
   text-align: left;
-  svg{
+  svg {
     height: 14px;
     width: 14px;
     fill: #fff;
@@ -15,7 +15,7 @@
     top: 5px;
     left: 5px;
   }
-  span{
+  span {
     line-height: 1.2;
     vertical-align: top;
     display: inline-block;

@@ -1,5 +1,5 @@
-@import '~terriajs-variables';
-@import '../../Sass/common/mixins';
+@import "~terriajs-variables";
+@import "../../Sass/common/mixins";
 
 .root {
   font-family: $font-base;
@@ -7,8 +7,8 @@
   position: relative;
 }
 
-.trashGroup{
-  composes: btn from '../../Sass/common/_buttons.scss';
+.trashGroup {
+  composes: btn from "../../Sass/common/_buttons.scss";
   position: absolute;
   color: $color-primary;
   right: 2px;
@@ -16,7 +16,7 @@
   @media (max-width: $sm) {
     top: 10px;
   }
-  svg{
+  svg {
     height: 18px;
     width: 18px;
     margin: 3px;
@@ -25,12 +25,12 @@
 }
 
 .btn--catalog {
-  composes: btn from '../../Sass/common/_buttons.scss';
+  composes: btn from "../../Sass/common/_buttons.scss";
   @extend %wrap;
 
   text-align: left;
   font-size: $font-size-small;
-  padding: 8px 30px+$padding;
+  padding: 8px 30px + $padding;
   min-height: 35px;
   position: relative;
   width: 100%;
@@ -38,7 +38,7 @@
   line-height: normal;
   position: relative;
 
-  svg{
+  svg {
     display: inline-block;
   }
   @media (max-width: $sm) {
@@ -48,19 +48,20 @@
     border-bottom: 1px solid $grey-lighter;
   }
 
-  &:hover, &:focus {
+  &:hover,
+  &:focus {
     background: $modal-highlight;
     color: #fff;
   }
 }
 
-.btnCatalogTopLevel{
+.btnCatalogTopLevel {
   font-weight: 600;
   border-bottom: 1px solid $grey-lighter;
   padding-left: $padding;
 }
 
-.isPreviewed{
+.isPreviewed {
   background: $modal-highlight;
   color: #ffffff;
 }
@@ -70,14 +71,14 @@
   left: 8px;
   top: 5px;
   opacity: 0.5;
-  svg{
+  svg {
     height: 30px;
     width: 30px;
     display: block;
   }
   @media (min-width: $sm) {
     top: 5px;
-    svg{
+    svg {
       height: 25px;
       width: 25px;
     }
@@ -88,7 +89,7 @@
   position: absolute;
   right: 2px;
   top: 5px;
-  svg{
+  svg {
     fill: $charcoal-grey;
     opacity: 0.5;
     height: 25px;
@@ -97,18 +98,18 @@
   @media (min-width: $sm) {
     right: 5px;
     top: 8px;
-    svg{
+    svg {
       height: 18px;
       width: 18px;
     }
   }
-  &.offsetRight{
+  &.offsetRight {
     right: 20px;
   }
 }
 
 .catalog-group {
-  composes: list-reset from '../../Sass/common/_base.scss';
+  composes: list-reset from "../../Sass/common/_base.scss";
   padding-left: $padding;
   padding-top: $padding / 2;
   &--lower-level {
@@ -118,7 +119,7 @@
 }
 
 .label {
-  composes: label from '../../Sass/common/_labels.scss';
+  composes: label from "../../Sass/common/_labels.scss";
   font-size: $font-size-small;
 }
 
