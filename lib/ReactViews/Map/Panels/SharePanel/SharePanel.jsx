@@ -275,7 +275,7 @@ const SharePanel = createReactClass({
     if (this.props.catalogShare) {
       return this.renderContentForCatalogShare();
     } else {
-      return this.renderContentForPrint();
+      return this.renderContentWithPrintAndEmbed();
     }
   },
 
@@ -299,7 +299,7 @@ const SharePanel = createReactClass({
     );
   },
 
-  renderContentForPrint() {
+  renderContentWithPrintAndEmbed() {
     const iframeCode = this.state.shareUrl.length
       ? `<iframe style="width: 720px; height: 600px; border: none;" src="${
           this.state.shareUrl
