@@ -100,6 +100,6 @@ describe("BuildShareLink", function() {
 
         done();
       })
-      .otherwise(fail);
+      .otherwise(done.fail);
   });
 });
