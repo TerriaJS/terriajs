@@ -26,7 +26,8 @@ const StoryBuilder = createReactClass({
   getInitialState() {
     return {
       editingMode: false,
-      currentStory: undefined
+      currentStory: undefined,
+      reCaptureSuccessFul: undefined
     };
   },
 
@@ -95,9 +96,18 @@ const StoryBuilder = createReactClass({
         story,
         ...this.props.terria.stories.slice(storyIndex + 1)
       ];
+      this.setState({
+        reCaptureSuccessFul: story.id
+      });
     } else {
       throw new Error("Story does not exsit");
     }
+  },
+
+  resetReCaptureStatus() {
+    this.setState({
+      reCaptureSuccessFul: undefined
+    });
   },
 
   runStories() {
@@ -169,7 +179,8 @@ const StoryBuilder = createReactClass({
               story={story}
               sortData={story}
               deleteStory={this.removeStory.bind(this, index)}
-              recaptureStory={this.reCaptureScene}
+              reCaptureStory={this.reCaptureScene}
+              reCaptureStorySuccessful = {Boolean(story.id === this.state.reCaptureSuccessFul)}
               viewStory={this.viewStory.bind(this, index)}
               menuOpen={this.state.storyWithOpenMenu === story}
               openMenu={this.openMenu}

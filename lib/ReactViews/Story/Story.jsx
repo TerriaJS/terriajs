@@ -29,7 +29,7 @@ class Story extends React.Component {
     this.viewStory = this.viewStory.bind(this);
     this.deleteStory = this.deleteStory.bind(this);
     this.editStory = this.editStory.bind(this);
-    this.recaptureStory = this.recaptureStory.bind(this);
+    this.reCaptureStory = this.reCaptureStory.bind(this);
     this.hideList = this.hideList.bind(this);
   }
 
@@ -69,9 +69,9 @@ class Story extends React.Component {
     this.hideList();
   }
 
-  recaptureStory(event) {
+  reCaptureStory(event) {
     event.stopPropagation();
-    this.props.recaptureStory(this.props.story);
+    this.props.reCaptureStory(this.props.story);
     this.hideList();
   }
 
@@ -107,10 +107,13 @@ class Story extends React.Component {
           </li>
           <li>
             <button
-              className={Styles.menuBtn}
+              className= {classNames({
+      [Styles.menuBtn]: true,
+      [Styles.isSuccessful]: this.props.reCaptureStorySuccessful
+    })}
               type="button"
-              title="recapture"
-              onClick={this.recaptureStory}
+              title="re-capture"
+              onClick={this.reCaptureStory}
             >
               Recapture
             </button>
@@ -163,7 +166,8 @@ Story.propTypes = {
   editStory: PropTypes.func,
   viewStory: PropTypes.func,
   deleteStory: PropTypes.func,
-  recaptureStory: PropTypes.func,
+  reCaptureStory: PropTypes.func,
+  reCaptureStorySuccessful: PropTypes.bool,
   onMouseDown: PropTypes.func.isRequired,
   onTouchStart: PropTypes.func.isRequired,
   style: PropTypes.object,

@@ -58,9 +58,8 @@
 .menu {
   z-index: 99;
   position: absolute;
-  right: 8px;
-  top: 8px;
-  background: $dark-lighter;
+  right: $padding/2;
+  top: $padding/2;
   border-radius: 2px;
 }
 
@@ -80,6 +79,11 @@
   composes: btn-tertiary from "../../Sass/common/_buttons.scss";
   font-size: 0.8rem;
   padding: $padding/2 $padding/2;
+  background: #7d8999;
+  width: 100%;
+  &:hover, &:focus{
+    background: lighten(#7d8999, 10%);
+  }
 }
 
 .draggable {
