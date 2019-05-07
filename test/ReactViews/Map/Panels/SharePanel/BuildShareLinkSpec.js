@@ -55,51 +55,88 @@ describe("BuildShareLink", function() {
     expect(initSources.sharedFromExplorerPanel).toBeUndefined();
   });
 
-  it("should generate a url with catalog sharing flags", function(done) {
-    catalog
-      .updateFromJson([
-        {
-          name: "A",
-          type: "group",
-          items: [
-            {
-              id: "C",
-              name: "C",
-              type: "wms",
-              isEnabled: false
-            }
-          ]
-        },
-        {
-          name: "B",
-          type: "group"
-        }
-      ])
-      .then(function() {
-        // preview the wms item & the share link should reflect that
-        viewState.viewCatalogMember(catalog.group.items[0].items[0]);
-        const shareLink = buildShareLink(terria, viewState);
-        const params = decodeAndParseStartHash(shareLink);
-        const initSources = flattenInitSources(params.initSources);
+  describe("should generate a url that opens to the catalog", function() {
+    it("when the explorer window is open without a previewed catalog item", function(done) {
+      catalog
+        .updateFromJson([
+          {
+            name: "A",
+            type: "group",
+            items: [
+              {
+                id: "C",
+                name: "C",
+                type: "wms",
+                isEnabled: false
+              }
+            ]
+          },
+          {
+            name: "B",
+            type: "group"
+          }
+        ])
+        .then(function() {
+          // preview the wms item & the share link should reflect that
+          viewState.openAddData();
+          const shareLink = buildShareLink(terria, viewState);
+          const params = decodeAndParseStartHash(shareLink);
+          const initSources = flattenInitSources(params.initSources);
 
-        expect(initSources.previewedItemId).toBe("C");
-        expect(initSources.sharedFromExplorerPanel).toBe(true);
+          expect(initSources.previewedItemId).toBe(undefined);
+          expect(initSources.sharedFromExplorerPanel).toBe(true);
 
-        return catalog.updateByShareKeys({});
-      })
-      .then(function() {
-        // close the catalog & the share link should reflect that
-        viewState.closeCatalog();
-        const params = decodeAndParseStartHash(
-          buildShareLink(terria, viewState)
-        );
-        const initSources = flattenInitSources(params.initSources);
+          done();
+        })
+        .otherwise(done.fail);
+    });
 
-        expect(initSources.previewedItemId).toBeUndefined();
-        expect(initSources.sharedFromExplorerPanel).toBeUndefined();
+    it("when the explorer window is open with a previewed catalog item", function(done) {
+      catalog
+        .updateFromJson([
+          {
+            name: "A",
+            type: "group",
+            items: [
+              {
+                id: "C",
+                name: "C",
+                type: "wms",
+                isEnabled: false
+              }
+            ]
+          },
+          {
+            name: "B",
+            type: "group"
+          }
+        ])
+        .then(function() {
+          // preview the wms item & the share link should reflect that
+          viewState.viewCatalogMember(catalog.group.items[0].items[0]);
+          const shareLink = buildShareLink(terria, viewState);
+          const params = decodeAndParseStartHash(shareLink);
+          const initSources = flattenInitSources(params.initSources);
 
-        done();
-      })
-      .otherwise(done.fail);
+          expect(initSources.previewedItemId).toBe("C");
+          expect(initSources.sharedFromExplorerPanel).toBe(true);
+
+          return catalog.updateByShareKeys({});
+        })
+        .then(function() {
+          // close the catalog & the share link should reflect that
+          viewState.closeCatalog();
+          const params = decodeAndParseStartHash(
+            buildShareLink(terria, viewState)
+          );
+          const initSources = flattenInitSources(params.initSources);
+
+          expect(initSources.previewedItemId).toBeUndefined();
+          expect(initSources.sharedFromExplorerPanel).toBeUndefined();
+
+          done();
+        })
+        .otherwise(done.fail);
+    });
   });
 });
