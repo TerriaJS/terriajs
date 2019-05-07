@@ -14,11 +14,9 @@ const Timer = createReactClass({
     mixins: [ObserveModelMixin],
 
     propTypes: {
-        start: PropTypes.object, // how long the timer runs for in seconds
-        stop: PropTypes.object,
+        start: PropTypes.object.isRequired, // When the timer should start. js Date.
+        stop: PropTypes.object.isRequired, // When the timer should stop. js Date.
         radius: PropTypes.number.isRequired, // the radius of the timer circle
-        elapsedTimeClass: PropTypes.string, // the name of the css class used for styling the the time indicator
-        backgroundCircleClass: PropTypes.string, // the name of the css classed used for styling the background colour
         tooltipText: PropTypes.string
     },
 
@@ -46,7 +44,7 @@ const Timer = createReactClass({
     },
 
     componentDidMount() {
-        createTimer(this.props.radius, this.calculateTimerInterval(), this.containerId, Styles.elapsedTime, Styles.backgroundCircle);
+        createTimer(this.props.radius, this.containerId, Styles.elapsedTime, Styles.backgroundCircle);
     },
 
     render() {
