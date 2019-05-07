@@ -3,7 +3,6 @@ import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import ko from "terriajs-cesium/Source/ThirdParty/knockout";
-import defined from "terriajs-cesium/Source/Core/defined";
 
 import ObserveModelMixin from "../ObserveModelMixin";
 import Tabs from "./Tabs.jsx";
