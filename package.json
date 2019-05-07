@@ -136,5 +136,8 @@
     "hooks": {
       "pre-commit": "pretty-quick --staged --pattern \"{lib,test}/**/*.{js,jsx,ts,tsx,scss}\""
     }
+  },
+  "workspaces": {
+    "nohoist": ["husky"]
   }
 }
