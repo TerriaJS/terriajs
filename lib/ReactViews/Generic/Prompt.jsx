@@ -24,9 +24,6 @@ export default class Prompt extends React.Component {
   componentDidMount() {
     this.fadeIn();
   }
-  dismissPrompt() {
-    this.props.dismissAction();
-  }
   createMarkup() {
     return {
       __html: this.props.content
@@ -43,7 +40,7 @@ export default class Prompt extends React.Component {
         <button
           className={Styles.btn}
           title={this.props.dismissText}
-          onClick={this.dismissPrompt.bind(this)}
+          onClick={this.props.dismissAction}
         >
           {this.props.dismissText}
         </button>
