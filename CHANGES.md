@@ -1,8 +1,10 @@
 Change Log
 ==========
 
-## Next Release
-* Remove comma dangle on `regionMapping.json`.
+### v7.4.1
+
+* Remove dangling comma in `regionMapping.json`.
+* `WebMapServicCatalogItem` now includes the current `style` in generated `GetLegendGraphic` URLs. 
 
 * Fixed Map View '2D' button activating 3D ellipsoid viewer when the instance has no terrain.
 * Added sharing within the data catalog to share a given catalog group or item
