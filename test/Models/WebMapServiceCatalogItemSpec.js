@@ -105,7 +105,7 @@ describe("WebMapServiceCatalogItem", function() {
         .then(function() {
           expect(
             wmsItem.legendUrl.url.indexOf(
-              "http://foo.com/bar?service=WMS&version=1.1.0&request=GetLegendGraphic&format=image%2Fpng&transparent=True&layer=single_period&alpha=beta&foo=bar&srs=EPSG%3A3857"
+              "http://foo.com/bar?service=WMS&version=1.1.0&request=GetLegendGraphic&format=image%2Fpng&transparent=True&layer=single_period&styles=jet&alpha=beta&foo=bar&srs=EPSG%3A3857"
             )
           ).toBe(0);
         })
