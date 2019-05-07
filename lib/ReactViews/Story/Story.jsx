@@ -107,10 +107,10 @@ class Story extends React.Component {
           </li>
           <li>
             <button
-              className= {classNames({
-      [Styles.menuBtn]: true,
-      [Styles.isSuccessful]: this.props.reCaptureStorySuccessful
-    })}
+              className={classNames({
+                [Styles.menuBtn]: true,
+                [Styles.isSuccessful]: this.props.reCaptureStorySuccessful
+              })}
               type="button"
               title="re-capture"
               onClick={this.reCaptureStory}

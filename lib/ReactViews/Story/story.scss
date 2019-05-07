@@ -81,7 +81,8 @@
   padding: $padding/2 $padding/2;
   background: #7d8999;
   width: 100%;
-  &:hover, &:focus{
+  &:hover,
+  &:focus {
     background: lighten(#7d8999, 10%);
   }
 }
