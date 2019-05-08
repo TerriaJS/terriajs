@@ -144,13 +144,15 @@ class Story extends React.Component {
         style={this.props.style}
         onTouchStart={this.props.onTouchStart}
       >
-        
         <div className={Styles.storyHeader}>
           <h3 className={Styles.draggable}>
-          <Icon className={classNames({
+            <Icon
+              className={classNames({
                 [Styles.recapture]: true,
                 [Styles.isSuccessful]: this.props.recaptureStorySuccessful
-              })} glyph={Icon.GLYPHS.recapture}/>
+              })}
+              glyph={Icon.GLYPHS.recapture}
+            />
             {story.title && story.title.length > 0
               ? story.title
               : "untitled scene"}

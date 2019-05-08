@@ -12,10 +12,10 @@ import Styles from "./story-panel.scss";
 
 export function activateStory(story, terria) {
   if (story.shareData) {
-      const promises = story.shareData.initSources.map(initSource=>
-           terria.addInitSource(initSource, true)
-      );
-     when.all(promises).then(() => {
+    const promises = story.shareData.initSources.map(initSource =>
+      terria.addInitSource(initSource, true)
+    );
+    when.all(promises).then(() => {
       const nowViewingPaths = story.shareData.initSources.reduce((p, c) => {
         if (c.sharedCatalogMembers) {
           return p.concat(Object.keys(c.sharedCatalogMembers));
