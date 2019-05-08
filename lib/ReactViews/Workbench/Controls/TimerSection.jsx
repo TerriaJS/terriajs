@@ -35,11 +35,18 @@ const TimerSection = createReactClass({
 
   getCountdownDuration() {
     // How many seconds until our next update?
-    return Math.floor((this.props.item.polling.nextScheduledUpdateTime.getTime() - new Date().getTime()) / 1000);
+    return Math.floor(
+      (this.props.item.polling.nextScheduledUpdateTime.getTime() -
+        new Date().getTime()) /
+        1000
+    );
   },
 
   getTimerStartTime() {
-    return new Date(this.props.item.polling.nextScheduledUpdateTime - (this.props.item.polling.seconds * 1000));
+    return new Date(
+      this.props.item.polling.nextScheduledUpdateTime -
+        this.props.item.polling.seconds * 1000
+    );
   },
 
   // Ticks down the countdown clock
@@ -98,9 +105,7 @@ const TimerSection = createReactClass({
   render() {
     return (
       <div>
-        <If
-          condition={this.isEnabled()}
-        >
+        <If condition={this.isEnabled()}>
           <div className={Styles.section}>
             <div className={Styles.timerContainer}>
               <Timer
