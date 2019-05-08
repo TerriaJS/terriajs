@@ -113,7 +113,7 @@ const TimerSection = createReactClass({
                   this.props.item.polling.nextScheduledUpdateTime
                 }`}
                 radius={10}
-                start={getTimerStartTime()}
+                start={this.getTimerStartTime()}
                 stop={this.props.item.polling.nextScheduledUpdateTime}
               />
             </div>
