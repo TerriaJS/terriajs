@@ -64,7 +64,7 @@ $workbench-margin: $padding-small;
 
 .nameColumn {
   composes: col from "../../Sass/common/_base.scss";
-  composes: col-9 from "../../Sass/common/_base.scss";
+  composes: col-10 from "../../Sass/common/_base.scss";
   padding: 5px;
   text-align: left;
 }
@@ -102,12 +102,4 @@ $workbench-margin: $padding-small;
 .draggable {
   font-size: $font-size-mid-small;
   cursor: move;
-}
-
-.timerColumn {
-  composes: col from "../../Sass/common/_base.scss";
-  composes: col-1 from "../../Sass/common/_base.scss";
-
-  width: fit-content;
-  padding: 5px;
 }

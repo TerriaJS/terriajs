@@ -3,15 +3,13 @@
 import React from "react";
 import PropTypes from "prop-types";
 import createReactClass from "create-react-class";
-import ObserveModelMixin from "./../../ObserveModelMixin";
 
-import { createTimer, updateTimer } from "./drawTimer";
+import { createTimer, startTimer as startTimerAnimation } from "./drawTimer";
 
 import Styles from "./timer.scss";
 
 const Timer = createReactClass({
   displayName: "Timer",
-  mixins: [ObserveModelMixin],
 
   propTypes: {
     start: PropTypes.object.isRequired, // When the timer should start. js Date.
@@ -39,14 +37,44 @@ const Timer = createReactClass({
     return 0;
   },
 
-  componentDidUpdate() {
-    updateTimer(
-      this.props.radius,
-      this.calculateTimerInterval(),
-      this.containerId,
-      Styles.elapsedTime,
-      Styles.backgroundCircle
+  calculateElaspedTime() {
+    const elapsed = Math.floor(
+      (new Date().getTime() - this.props.start.getTime()) / 1000
     );
+    if (elapsed > 0) {
+      return elapsed;
+    }
+    return 0;
+  },
+
+  startTimer() {
+    // only start the timer if the current time is after the start time passed in through props
+    if (new Date().getTime() > this.props.start.getTime()) {
+      startTimerAnimation(
+        this.props.radius,
+        this.calculateTimerInterval(),
+        this.containerId,
+        Styles.elapsedTime,
+        Styles.backgroundCircle,
+        this.calculateElaspedTime()
+      );
+    }
+  },
+
+  shouldComponentUpdate(nextProps, nextState) {
+    // We only want to update and rerender if our props have actually changed.
+    let changed = false;
+    for (const key in Object.keys(this.props)) {
+      if (nextProps[key] !== this.props[key]) {
+        changed = true;
+        break;
+      }
+    }
+    return changed;
+  },
+
+  componentDidUpdate() {
+    this.startTimer();
   },
 
   componentDidMount() {
@@ -57,13 +85,7 @@ const Timer = createReactClass({
       Styles.backgroundCircle
     );
 
-    updateTimer(
-      this.props.radius,
-      this.calculateTimerInterval(),
-      this.containerId,
-      Styles.elapsedTime,
-      Styles.backgroundCircle
-    );
+    this.startTimer();
   },
 
   render() {

@@ -18,12 +18,31 @@ const TimerSection = createReactClass({
     item: PropTypes.object.isRequired
   },
 
+  isEnabled() {
+    return (
+      defined(this.props.item) &&
+      defined(this.props.item.polling) &&
+      this.props.item.polling.isPolling &&
+      defined(this.props.item.polling.nextScheduledUpdateTime)
+    );
+  },
+
   getInitialState() {
     return {
       secondsLeft: 0
     };
   },
 
+  getCountdownDuration() {
+    // How many seconds until our next update?
+    return Math.floor((this.props.item.polling.nextScheduledUpdateTime.getTime() - new Date().getTime()) / 1000);
+  },
+
+  getTimerStartTime() {
+    return new Date(this.props.item.polling.nextScheduledUpdateTime - (this.props.item.polling.seconds * 1000));
+  },
+
+  // Ticks down the countdown clock
   countdown() {
     if (this.state.secondsLeft > 0) {
       this.setState(() => {
@@ -32,46 +51,55 @@ const TimerSection = createReactClass({
         };
       });
     } else {
+      // Stop.
       clearInterval(this.interval);
     }
   },
 
-  startTimer() {
+  startCountdown() {
     this.setState({
-      secondsLeft: this.props.item.polling.seconds
+      secondsLeft: this.getCountdownDuration()
     });
     this.interval = setInterval(this.countdown, 1000);
   },
-  
-  getTimerString() {
+
+  getCountdownString() {
     const date = new Date(null);
     date.setSeconds(this.state.secondsLeft);
     return date.toISOString().substr(11, 8);
   },
 
   componentDidUpdate() {
-    if (this.lastUpdated !== this.props.item.polling.previousUpdateTime) {
+    if (!this.isEnabled()) {
+      return;
+    }
+
+    if (this.nextUpdate !== this.props.item.polling.nextScheduledUpdateTime) {
       if (defined(this.interval)) {
         clearInterval(this.interval);
       }
-      this.startTimer();
-      this.lastUpdated = this.props.item.polling.previousUpdateTime;
+      this.startCountdown();
+      this.nextUpdate = this.props.item.polling.nextScheduledUpdateTime;
     }
   },
 
   componentDidMount() {
-    this.startTimer();
+    if (!this.isEnabled()) {
+      return;
+    }
+
+    this.startCountdown();
+  },
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
   },
 
   render() {
     return (
       <div>
         <If
-          condition={
-            defined(this.props.item.polling) &&
-            this.props.item.polling.isPolling &&
-            this.props.item.polling.nextScheduledUpdateTime
-          }
+          condition={this.isEnabled()}
         >
           <div className={Styles.section}>
             <div className={Styles.timerContainer}>
@@ -80,11 +108,11 @@ const TimerSection = createReactClass({
                   this.props.item.polling.nextScheduledUpdateTime
                 }`}
                 radius={10}
-                start={this.props.item.polling.previousUpdateTime}
+                start={getTimerStartTime()}
                 stop={this.props.item.polling.nextScheduledUpdateTime}
               />
             </div>
-            <span>Next data update in {this.getTimerString()}</span>
+            <span>Next data update in {this.getCountdownString()}</span>
           </div>
         </If>
       </div>
