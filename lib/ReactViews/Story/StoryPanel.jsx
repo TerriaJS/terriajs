@@ -7,11 +7,15 @@ import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
 import { Small, Medium } from "../Generic/Responsive";
 import Icon from "../Icon.jsx";
 import { Swipeable } from "react-swipeable";
+import when from "terriajs-cesium/Source/ThirdParty/when";
 import Styles from "./story-panel.scss";
 
 export function activateStory(story, terria) {
   if (story.shareData) {
-    terria.updateFromStartData(story.shareData, true).then(() => {
+      const promises = story.shareData.initSources.map(initSource=>
+           terria.addInitSource(initSource, true)
+      );
+     when.all(promises).then(() => {
       const nowViewingPaths = story.shareData.initSources.reduce((p, c) => {
         if (c.sharedCatalogMembers) {
           return p.concat(Object.keys(c.sharedCatalogMembers));
