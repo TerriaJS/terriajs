@@ -125,6 +125,7 @@ const WorkbenchItem = createReactClass({
             />
             <OpacitySection item={workbenchItem} />
             <LeftRightSection item={workbenchItem} />
+            <TimerSection item={workbenchItem} />
             <If
               condition={
                 defined(workbenchItem.concepts) &&
@@ -159,7 +160,6 @@ const WorkbenchItem = createReactClass({
             >
               <ShortReport item={workbenchItem} />
             </If>
-            <TimerSection item={workbenchItem} />
           </div>
         </If>
       </li>

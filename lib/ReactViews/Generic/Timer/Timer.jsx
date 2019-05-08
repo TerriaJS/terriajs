@@ -63,14 +63,12 @@ const Timer = createReactClass({
 
   shouldComponentUpdate(nextProps, nextState) {
     // We only want to update and rerender if our props have actually changed.
-    let changed = false;
-    for (const key in Object.keys(this.props)) {
-      if (nextProps[key] !== this.props[key]) {
-        changed = true;
-        break;
-      }
-    }
-    return changed;
+    return (
+      this.props.start.getTime() !== nextProps.start.getTime() ||
+      this.props.stop.getTime() !== nextProps.stop.getTime() ||
+      this.props.radius !== nextProps.radius ||
+      this.props.tooltipText !== nextProps.tooltipText
+    );
   },
 
   componentDidUpdate() {
