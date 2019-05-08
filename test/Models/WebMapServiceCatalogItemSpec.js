@@ -370,6 +370,28 @@ describe('WebMapServiceCatalogItem', function() {
         expect(wmsItem.attribution.html).toContain("link");
     });
 
+    it('produces correct interval types', function(done) {
+        // <Dimension name="time" units="ISO8601" multipleValues="true" current="true" default="2014-01-01T00:00:00.000Z">
+        // 2002-01-01T00:00:00.000Z,2003-01-01T00:00:00.000Z,2004-01-01T00:00:00.000Z,
+        // 2005-01-01T00:00:00.000Z,2006-01-01T00:00:00.000Z,2007-01-01T00:00:00.000Z,
+        // 2008-01-01T00:00:00.000Z,2009-01-01T00:00:00.000Z,2010-01-01T00:00:00.000Z,
+        // 2011-01-01T00:00:00.000Z,2012-01-01T00:00:00.000Z,2013-01-01T00:00:00.000Z,
+        // 2014-01-01T00:00:00.000Z
+        // </Dimension>
+        wmsItem.updateFromJson({
+            url: 'http://example.com',
+            metadataUrl: 'test/WMS/comma_sep_datetimes.xml',
+            layers: '13_intervals',
+            dataUrl: '' // to prevent a DescribeLayer request
+        });
+        wmsItem.load().then(function() {
+            const firstInterval = wmsItem.intervals.get(0);
+            expect(typeof firstInterval.data).toEqual('string');
+            expect(typeof firstInterval.start).toEqual(typeof new JulianDate());
+            expect(typeof firstInterval.stop).toEqual(typeof new JulianDate());
+        }).then(done).otherwise(done.fail);
+    });
+
     it('can understand comma-separated datetimes', function(done) {
         // <Dimension name="time" units="ISO8601" multipleValues="true" current="true" default="2014-01-01T00:00:00.000Z">
         // 2002-01-01T00:00:00.000Z,2003-01-01T00:00:00.000Z,2004-01-01T00:00:00.000Z,
@@ -386,6 +408,22 @@ describe('WebMapServiceCatalogItem', function() {
         });
         wmsItem.load().then(function() {
             expect(wmsItem.intervals.length).toEqual(13);
+            
+            const firstInterval = wmsItem.intervals.get(0);
+            expect(firstInterval.data).toEqual('2002-01-01T00:00:00.000Z');
+            expect(firstInterval.start.dayNumber).toEqual(2452275);
+            expect(firstInterval.start.secondsOfDay).toEqual(43232);
+            expect(firstInterval.start.dayNumber).toEqual(2452640);
+            expect(firstInterval.start.secondsOfDay).toEqual(43232);
+
+            const lastInterval = wmsItem.intervals.get(12);
+
+            expect(lastInterval.data).toEqual('2014-01-01T00:00:00.000Z');
+            expect(lastInterval.start.dayNumber).toEqual(2456658);
+            expect(lastInterval.start.secondsOfDay).toEqual(43235);
+            expect(lastInterval.start.dayNumber).toEqual(2457023);
+            expect(lastInterval.start.secondsOfDay).toEqual(43235);
+
         }).then(done).otherwise(done.fail);
     });
 
@@ -400,8 +438,16 @@ describe('WebMapServiceCatalogItem', function() {
         });
         wmsItem.load().then(function() {
             expect(wmsItem.intervals.length).toEqual(1);
-        }).then(done).otherwise(done.fail);
 
+            const firstInterval = wmsItem.intervals.get(0);
+            expect(firstInterval.data).toEqual('2015-04-27T06:15:00.000Z');
+            expect(typeof firstInterval.data).toEqual('string');
+
+            expect(firstInterval.start.dayNumber).toEqual(2457139);
+            expect(firstInterval.start.secondsOfDay).toEqual(65735);
+            expect(firstInterval.stop.dayNumber).toEqual(2457139);
+            expect(firstInterval.stop.secondsOfDay).toEqual(74735);
+        }).then(done).otherwise(done.fail);
     });
 
     it('can understand three-part period datetimes', function(done) {
@@ -415,6 +461,55 @@ describe('WebMapServiceCatalogItem', function() {
         });
         wmsItem.load().then(function() {
             expect(wmsItem.intervals.length).toEqual(11);
+
+            const firstInterval = wmsItem.intervals.get(0);
+            expect(firstInterval.data).toEqual('2015-04-27T16:15:00.000+10:00');
+            expect(typeof firstInterval.data).toEqual('string');
+            expect(typeof firstInterval.start).toEqual(typeof new JulianDate());
+            expect(typeof firstInterval.stop).toEqual(typeof new JulianDate());
+
+            expect(firstInterval.start.dayNumber).toEqual(2457139);
+            expect(firstInterval.start.secondsOfDay).toEqual(65735);
+            expect(firstInterval.stop.dayNumber).toEqual(2457139);
+            expect(firstInterval.stop.secondsOfDay).toEqual(66635);
+
+            const lastInterval = wmsItem.intervals.get(10);
+            expect(lastInterval.data).toEqual('2015-04-27T18:45:00.000+10:00');
+
+        }).then(done).otherwise(done.fail);
+    });
+
+    it('can understand three-part period date with no time', function(done) {
+        // <Dimension name="time" units="ISO8601" />
+        //   <Extent name="time">2015-04-27/2015-04-29/P1D</Extent>
+        wmsItem.updateFromJson({
+            url: 'http://example.com',
+            metadataUrl: 'test/WMS/period_date_notime.xml',
+            layers: 'single_period',
+            dataUrl: '' // to prevent a DescribeLayer request
+        });
+        wmsItem.load().then(function() {
+            expect(wmsItem.intervals.length).toEqual(3);
+
+            const firstInterval = wmsItem.intervals.get(0);
+            expect(firstInterval.data).toEqual('2015-04-27');
+
+            const lastInterval = wmsItem.intervals.get(2);
+            expect(lastInterval.data).toEqual('2015-04-29');
+        }).then(done).otherwise(done.fail);
+    });
+
+    it('limits intervals returned', function(done) {
+        // <Dimension name="time" units="ISO8601" />
+        //   <Extent name="time">2015-04-27T16:15:00/2018-04-27T18:45:00/PT15M</Extent>
+        wmsItem.updateFromJson({
+            url: 'http://example.com',
+            metadataUrl: 'test/WMS/period_datetimes_many_intervals.xml',
+            layers: 'single_period',
+            dataUrl: '' // to prevent a DescribeLayer request
+        });
+        wmsItem.load().then(function() {
+            expect(wmsItem.intervals.length).toEqual(1000);
         }).then(done).otherwise(done.fail);
     });
 
