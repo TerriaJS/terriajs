@@ -454,7 +454,7 @@ describe("WebMapServiceCatalogItem", function() {
       .load()
       .then(function() {
         expect(wmsItem.intervals.length).toEqual(13);
-        
+
         const firstInterval = wmsItem.intervals.get(0);
         expect(firstInterval.data).toEqual("2002-01-01T00:00:00.000Z");
         expect(firstInterval.start.dayNumber).toEqual(2452275);
@@ -566,12 +566,12 @@ describe("WebMapServiceCatalogItem", function() {
       dataUrl: "" // to prevent a DescribeLayer request
     });
     wmsItem
-    .load()
-    .then(function() {
+      .load()
+      .then(function() {
         expect(wmsItem.intervals.length).toEqual(1000);
-    })
-    .then(done)
-    .otherwise(done.fail);
+      })
+      .then(done)
+      .otherwise(done.fail);
   });
 
   it("supports multiple units in a single period", function(done) {
