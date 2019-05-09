@@ -1,15 +1,15 @@
-@import '~terriajs-variables';
-@import '../../Sass/common/mixins';
+@import "~terriajs-variables";
+@import "../../Sass/common/mixins";
 @include empty-module("time-series-chart");
 
 .section {
-  composes: clearfix from '../../Sass/common/_base.scss';
+  composes: clearfix from "../../Sass/common/_base.scss";
   background: $feature-info-section-bg;
   border-top: 1px solid $dark-lighter;
 }
 
-.title{
-  composes: btn from '../../Sass/common/_buttons.scss';
+.title {
+  composes: btn from "../../Sass/common/_buttons.scss";
   color: $feature-info-btn-color;
   position: relative;
   padding: 4px 30px 4px 8px;
@@ -20,15 +20,15 @@
   margin: 0;
   border: none;
   text-align: left;
-  span{
+  span {
     display: block;
     font-weight: 300;
     font-size: $font-size-mid-small;
   }
-  svg{
+  svg {
     height: 20px;
     width: 20px;
-    fill: #fff!important;
+    fill: #fff !important;
     float: right;
     position: absolute;
     top: 10px;
@@ -36,7 +36,7 @@
   }
 }
 
-.content{
+.content {
   padding: $padding-small;
   position: relative;
 
@@ -66,9 +66,9 @@
 }
 
 .raw-data-button {
-  composes: btn from '../../Sass/common/_buttons.scss';
-  composes: btn-primary from '../../Sass/common/_buttons.scss';
-  composes: btn--small from '../../Sass/common/_buttons.scss';
+  composes: btn from "../../Sass/common/_buttons.scss";
+  composes: btn-primary from "../../Sass/common/_buttons.scss";
+  composes: btn--small from "../../Sass/common/_buttons.scss";
 
   width: auto;
   float: right;

@@ -1,7 +1,7 @@
-@import '~terriajs-variables';
-@import '../Sass/common/mixins';
+@import "~terriajs-variables";
+@import "../Sass/common/mixins";
 
-.notification{
+.notification {
   font-family: $font-base;
   right: -280px;
   top: 80px;
@@ -12,12 +12,12 @@
   border: 0;
   transition: all 0.25s;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  &.isActive{
+  &.isActive {
     right: 100px;
   }
 }
 
-.icon{
+.icon {
   background: $color-primary;
   padding: 15px;
   position: absolute;
@@ -25,22 +25,21 @@
   top: 0;
   bottom: 0;
   width: 35px;
-  svg{
+  svg {
     fill: rgba(#ffffff, 0.9);
     width: 35px;
   }
 }
 
-
-.info{
+.info {
   padding: 15px 15px 15px 80px;
   color: $dark;
   width: 180px;
   word-wrap: break-word;
-  .filename{
+  .filename {
     font-weight: 600;
   }
-  .action{
+  .action {
     color: $color-primary;
   }
 }

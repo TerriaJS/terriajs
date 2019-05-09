@@ -1,12 +1,12 @@
-@import '~terriajs-variables';
-@import '../../Sass/common/mixins';
+@import "~terriajs-variables";
+@import "../../Sass/common/mixins";
 
 .full-panel {
   position: absolute;
   font-family: $font-pop;
   width: 100%;
   padding-left: $padding * 2;
-  padding-right: $padding*2;
+  padding-right: $padding * 2;
   bottom: 100px;
   z-index: 9;
   box-sizing: border-box;
@@ -21,12 +21,12 @@
   }
 }
 
-.isPushedUp{
+.isPushedUp {
   bottom: 350px;
 }
 
 .story-container {
-  &.is-mounted{
+  &.is-mounted {
     opacity: 1;
     @include transform(none);
   }
@@ -41,55 +41,55 @@
   max-width: 1200px;
   background-color: #ffffff;
   color: $text-dark;
-  text-align:left;
+  text-align: left;
   box-sizing: border-box;
   margin: 0 auto;
   border-radius: 2px;
   box-shadow: 0 0 15px 6px rgba(100, 100, 100, 0.3);
 
-  .left{
+  .left {
     border-right: 1px solid $field-border;
   }
-  .right{
+  .right {
     border-left: 1px solid $field-border;
   }
 }
 
 .story {
   flex-grow: 2;
-  max-width:100%;
+  max-width: 100%;
   @media (min-width: $sm) {
-    max-width: calc(100% - 104px) 
+    max-width: calc(100% - 104px);
   }
 }
 
-.storyHeader{
+.storyHeader {
   display: flex;
   max-width: 100%;
   overflow: hidden;
   padding: $padding;
   border-bottom: 1px solid $field-border;
   padding: 0;
-  h3{
-    margin: $padding ;
+  h3 {
+    margin: $padding;
     font-size: 1.2rem;
     color: $dark;
-    @media (max-width : $sm) {
+    @media (max-width: $sm) {
       flex-grow: 2;
-   }
+    }
   }
 }
 
-.body{
+.body {
   padding: $padding * 1.5 $padding;
   color: $dark;
   font-size: 1rem;
   max-height: 400px;
   overflow-y: auto;
-  img{
+  img {
     max-width: 100%;
   }
-  *{
+  * {
     max-width: 100%;
     /* These are technically the same, but use both */
     overflow-wrap: break-word;
@@ -106,63 +106,70 @@
     -moz-hyphens: auto;
     -webkit-hyphens: auto;
     hyphens: auto;
-    }
+  }
 }
 
-.locationBtn, .exitBtn,  .nextBtn, .previousBtn {
+.locationBtn,
+.exitBtn,
+.nextBtn,
+.previousBtn {
   z-index: 999;
-  composes: btn from '../../Sass/common/_buttons.scss';
+  composes: btn from "../../Sass/common/_buttons.scss";
   display: block;
-  padding: $padding*0.8 $padding*1.6;
-  &:not([disabled]):hover, &:not([disabled]):focus{
-    svg{
+  padding: $padding * 0.8 $padding * 1.6;
+  &:not([disabled]):hover,
+  &:not([disabled]):focus {
+    svg {
       fill: $color-primary;
     }
   }
-  svg{
+  svg {
     fill: #888888;
     width: 20px;
   }
- }
- .nextBtn, .previousBtn{
-   height: calc(100% - 51px);
-   svg{
-      width: 15px;
-      height: 15px;
-   }
- } 
-  .exitBtn{
+}
+.nextBtn,
+.previousBtn {
+  height: calc(100% - 51px);
+  svg {
+    width: 15px;
+    height: 15px;
+  }
+}
+.exitBtn {
   border-left: 1px solid $field-border;
- }
+}
 
- .locationBtn{
+.locationBtn {
   border-right: 1px solid $field-border;
- }
+}
 
-.exitBtn, .locationBtn  {
-   svg{
-     height: 31px;
-   }
-   &, &:focus, &:hover{
-    @media (min-width : $sm) {
+.exitBtn,
+.locationBtn {
+  svg {
+    height: 31px;
+  }
+  &,
+  &:focus,
+  &:hover {
+    @media (min-width: $sm) {
       border: 0px;
       border-bottom: 1px solid $field-border;
     }
-   }
- }
+  }
+}
 
-
-.navBtn{
+.navBtn {
   flex-grow: 2;
   display: flex;
   justify-content: flex-end;
-  padding: $padding*0.8 $padding*2.2;
-  button{
+  padding: $padding * 0.8 $padding * 2.2;
+  button {
     background: transparent;
     border: 0;
     box-shadow: 0;
   }
-  svg{
+  svg {
     fill: #888888;
     float: right;
     width: 10px;
@@ -170,48 +177,47 @@
   }
 }
 
-.navBtnMobile{
+.navBtnMobile {
   display: flex;
   width: 100%;
   bottom: -25px;
   position: absolute;
- }
- .mobileNavBtn{
-  composes: btn from '../../Sass/common/_buttons.scss';
+}
+.mobileNavBtn {
+  composes: btn from "../../Sass/common/_buttons.scss";
   background: #ffffff;
   color: $text-dark;
   padding: 2px 8px;
   border-right: 1px solid #dddddd;
   border-top: 1px solid #dddddd;
-  &.isActive{
+  &.isActive {
     background: $color-primary;
     color: #ffffff;
   }
- }
- :global{
-   .story.tjs-notification-window__wrapper{
-     @media (min-width: $md) {
-       left: $work-bench-width;
-     }
-     .tjs-notification-window__notification{
-       background-color: $color-primary;
-       color: #ffffff;
-       border: 1px solid rgba(#ffffff, 0.1);
-       text-align: center;
-     }
-     h3{
-
-     }
-     .tjs-notification-window__footer{
-       display: flex;
-       border-top: 1px solid rgba(#ffffff, 0.8);
-       button{
-         background-color: transparent;
-         font-weight: bold;
-         &:first-of-type{
-           border-right: 1px solid rgba(#ffffff, 0.8);
-         }
-       }
-     }
-   }
- }
+}
+:global {
+  .story.tjs-notification-window__wrapper {
+    @media (min-width: $md) {
+      left: $work-bench-width;
+    }
+    .tjs-notification-window__notification {
+      background-color: $color-primary;
+      color: #ffffff;
+      border: 1px solid rgba(#ffffff, 0.1);
+      text-align: center;
+    }
+    h3 {
+    }
+    .tjs-notification-window__footer {
+      display: flex;
+      border-top: 1px solid rgba(#ffffff, 0.8);
+      button {
+        background-color: transparent;
+        font-weight: bold;
+        &:first-of-type {
+          border-right: 1px solid rgba(#ffffff, 0.8);
+        }
+      }
+    }
+  }
+}
