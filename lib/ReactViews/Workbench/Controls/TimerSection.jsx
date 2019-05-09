@@ -23,7 +23,8 @@ const TimerSection = createReactClass({
       defined(this.props.item) &&
       defined(this.props.item.polling) &&
       this.props.item.polling.isPolling &&
-      defined(this.props.item.polling.nextScheduledUpdateTime)
+      defined(this.props.item.polling.nextScheduledUpdateTime) &&
+      this.props.item.polling.seconds < 30 * 60 * 1000 // only show refresh timer for refresh intervals less than 30 minutes
     );
   },
 
@@ -73,7 +74,14 @@ const TimerSection = createReactClass({
   getCountdownString() {
     const date = new Date(null);
     date.setSeconds(this.state.secondsLeft);
-    return date.toISOString().substr(11, 8);
+
+    const addLeadingZeroIfRequired = numString =>
+      numString.length < 2 ? "0" + numString : numString;
+
+    const minutes = addLeadingZeroIfRequired(date.getMinutes().toString());
+    const seconds = addLeadingZeroIfRequired(date.getSeconds().toString());
+
+    return `00:${minutes}:${seconds}`;
   },
 
   componentDidUpdate() {
