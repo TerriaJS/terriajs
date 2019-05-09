@@ -26,7 +26,6 @@
     "space-before-blocks": [1, "always"],
     "space-in-parens": [1, "never"],
     "spaced-comment": [1, "always"],
-    "wrap-regex": 1,
     "no-var": 1,
     "react/no-string-refs": 0
   }

@@ -8,6 +8,7 @@ var CesiumWidget = require('terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWi
 var Color = require('terriajs-cesium/Source/Core/Color');
 var Ellipsoid = require('terriajs-cesium/Source/Core/Ellipsoid');
 var Entity = require('terriajs-cesium/Source/DataSources/Entity');
+var FeatureDetection = require('terriajs-cesium/Source/Core/FeatureDetection');
 var GeoJsonDataSource = require('terriajs-cesium/Source/DataSources/GeoJsonDataSource');
 var ImageryLayer = require('terriajs-cesium/Source/Scene/ImageryLayer');
 var ImageryLayerFeatureInfo = require('terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo');
@@ -249,7 +250,7 @@ describeIfSupported('Cesium Model', function() {
                 doClick({position: expectedPosScreenCoords});
 
                 terria.pickedFeatures.allFeaturesAvailablePromise.then(function() {
-                    expect(cesium.scene.drillPick).toHaveBeenCalledWith(expectedPosScreenCoords, 100);
+                    expect(cesium.scene.drillPick).toHaveBeenCalledWith(expectedPosScreenCoords);
 
                     expect(terria.pickedFeatures.features[0].name).toBe('entity1');
                     expect(terria.pickedFeatures.features[1].name).toBe('entity2');
@@ -279,39 +280,44 @@ describeIfSupported('Cesium Model', function() {
         });
     });
 
-    it('should create GeoJSON for polygon when a rasterized polygon feature is selected', function(done) {
-        loadJson('test/GeoJSON/polygon.geojson').then(function(polygonGeoJson) {
-            var entity = new Entity();
-            entity.data = polygonGeoJson;
+    // Internet Explorer does not support (and likely never will support) depth textues, so we
+    // can't put lines on terrain, so we won't create a highlight for polylines or polygons,
+    // so don't try to test for it.
+    if (!FeatureDetection.isInternetExplorer()) {
+        it('should create GeoJSON for polygon when a rasterized polygon feature is selected', function(done) {
+            loadJson('test/GeoJSON/polygon.geojson').then(function(polygonGeoJson) {
+                var entity = new Entity();
+                entity.data = polygonGeoJson;
 
-            terria.selectedFeature = entity;
+                terria.selectedFeature = entity;
 
-            expect(terria.cesium._highlightPromise).toBeDefined();
-            expect(terria.cesium._removeHighlightCallback).toBeDefined();
+                expect(terria.cesium._highlightPromise).toBeDefined();
+                expect(terria.cesium._removeHighlightCallback).toBeDefined();
 
-            return terria.cesium._highlightPromise.then(function() {
-                expect(terria.dataSources.length).toBe(1);
-                expect(terria.dataSources.get(0) instanceof GeoJsonDataSource).toBe(true);
-            });
-        }).then(done).otherwise(done.fail);
-    });
+                return terria.cesium._highlightPromise.then(function() {
+                    expect(terria.dataSources.length).toBe(1);
+                    expect(terria.dataSources.get(0) instanceof GeoJsonDataSource).toBe(true);
+                });
+            }).then(done).otherwise(done.fail);
+        });
 
-    it('should create GeoJSON for polyline when a rasterized polyline feature is selected', function(done) {
-        loadJson('test/GeoJSON/polyline.geojson').then(function(polylineGeoJson) {
-            var entity = new Entity();
-            entity.data = polylineGeoJson;
+        it('should create GeoJSON for polyline when a rasterized polyline feature is selected', function(done) {
+            loadJson('test/GeoJSON/polyline.geojson').then(function(polylineGeoJson) {
+                var entity = new Entity();
+                entity.data = polylineGeoJson;
 
-            terria.selectedFeature = entity;
+                terria.selectedFeature = entity;
 
-            expect(terria.cesium._highlightPromise).toBeDefined();
-            expect(terria.cesium._removeHighlightCallback).toBeDefined();
+                expect(terria.cesium._highlightPromise).toBeDefined();
+                expect(terria.cesium._removeHighlightCallback).toBeDefined();
 
-            return terria.cesium._highlightPromise.then(function() {
-                expect(terria.dataSources.length).toBe(1);
-                expect(terria.dataSources.get(0) instanceof GeoJsonDataSource).toBe(true);
-            });
-        }).then(done).otherwise(done.fail);
-    });
+                return terria.cesium._highlightPromise.then(function() {
+                    expect(terria.dataSources.length).toBe(1);
+                    expect(terria.dataSources.get(0) instanceof GeoJsonDataSource).toBe(true);
+                });
+            }).then(done).otherwise(done.fail);
+        });
+    }
 
     it('should update the style of a vector polygon when selected', function(done) {
         GeoJsonDataSource.load('test/GeoJSON/polygon.geojson').then(function(dataSource) {

@@ -43,13 +43,15 @@ const FeatureInfoDownload = createReactClass({
     render() {
         const links = this.getLinks();
 
+        const icon = <span className={Styles.iconDownload}><Icon glyph={Icon.GLYPHS.opened}/></span>;
+
         if (DataUri.checkCompatibility()) {
             return (
                 <Dropdown options={links}
                           textProperty="label"
-                          theme={{dropdown: Styles.download, list: Styles.dropdownList, button: Styles.dropdownButton}}
+                          theme={{dropdown: Styles.download, list: Styles.dropdownList, button: Styles.dropdownButton, icon: icon}}
                           buttonClassName={Styles.btn}>
-                    <span className={Styles.iconDownload}><Icon glyph={Icon.GLYPHS.download}/></span> Download this Table&nbsp;▾
+                     Download this Table&nbsp;
                 </Dropdown>
             );
         } else {

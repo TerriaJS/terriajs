@@ -7,14 +7,6 @@
     transition:         $transition;
 }
 
-@mixin placeholder {
-  &::-webkit-input-placeholder {@content}
-  &:-moz-placeholder {@content}
-  &::-moz-placeholder {@content}
-  &:-ms-input-placeholder {@content}
-}
-
-
 @mixin transform($transforms) {
      -moz-transform: $transforms;
        -o-transform: $transforms;
@@ -133,6 +125,28 @@
   color: get-link-color($bg-color);
   &:visited {
     color: get-visited-link-color($bg-color)
+  }
+}
+
+@mixin placeholder {
+  &::placeholder {
+    @content;
+  }
+  
+  &::-webkit-input-placeholder { // Chrome/Opera/Safari
+      @content;
+  }
+
+  &:-moz-placeholder { // Firefox 18-
+      @content;
+  }
+
+  &::-moz-placeholder {  // Firefox 19+
+      @content;
+  }
+
+  &:-ms-input-placeholder { // IE 10+
+      @content;
   }
 }
 
