@@ -1,4 +1,4 @@
-@import '~terriajs-variables';
+@import "~terriajs-variables";
 
 .shadow-selector {
   font-size: 0.9rem;
@@ -16,6 +16,6 @@
 }
 
 .field {
-  composes: field from '../../../Sass/common/_form.scss';
+  composes: field from "../../../Sass/common/_form.scss";
   color: black;
 }

@@ -1,101 +1,101 @@
-@import '~terriajs-variables';
-@import '../../Sass/common/mixins';
-.story:global(.ui-sortable-item){
+@import "~terriajs-variables";
+@import "../../Sass/common/mixins";
+.story:global(.ui-sortable-item) {
   background: #667080;
-  color: #FFFFFF;
+  color: #ffffff;
   margin: $padding $padding 0 $padding;
   border-radius: 2px;
   width: calc(100% - 20px);
-  h3{
+  h3 {
     font-weight: normal;
     margin: 0;
   }
-  img{
+  img {
     max-width: 100%;
     height: auto;
     max-height: 500px;
   }
- }
+}
 
- .storyHeader{
-   position: relative;
-   padding: $padding;
- }
+.storyHeader {
+  position: relative;
+  padding: $padding;
+}
 
- .body{
-   padding: $padding; 
-   border-top: 1px solid $overlay;
-   font-size: 0.8rem;
-   a{
-      color: $color-primary;
-    }
-   img{
-      max-width: 100%;
-      height: auto;
-      max-height: 200px;
-   }
- }
- .toggleBtn{
-   composes: btn from '../../Sass/common/_buttons.scss';
-   position: absolute;
-   top: $padding;
-   right: $padding;
-   svg{
-     width: 20px;
-     height: 20px;
-     fill: #9CA1AA;
-   }
- }
- .footer{
-   display: flex;
- }
- .removeBtn{
-    composes: btn from "../../Sass/common/_buttons.scss";
-    composes: btn--map from "../../Sass/common/_buttons.scss";
-    margin-right: $padding;
-    background: #9CA1AA;
-    border-radius: 2px;
-    padding: $padding-small $padding;
-    svg{
-      height: 25px;
-      width: 25px;
-      fill: #ffffff;
-    }
- }
+.body {
+  padding: $padding;
+  border-top: 1px solid $overlay;
+  font-size: 0.8rem;
+  a {
+    color: $color-primary;
+  }
+  img {
+    max-width: 100%;
+    height: auto;
+    max-height: 200px;
+  }
+}
+.toggleBtn {
+  composes: btn from "../../Sass/common/_buttons.scss";
+  position: absolute;
+  top: $padding;
+  right: $padding;
+  svg {
+    width: 20px;
+    height: 20px;
+    fill: #9ca1aa;
+  }
+}
+.footer {
+  display: flex;
+}
+.removeBtn {
+  composes: btn from "../../Sass/common/_buttons.scss";
+  composes: btn--map from "../../Sass/common/_buttons.scss";
+  margin-right: $padding;
+  background: #9ca1aa;
+  border-radius: 2px;
+  padding: $padding-small $padding;
+  svg {
+    height: 25px;
+    width: 25px;
+    fill: #ffffff;
+  }
+}
 
- .viewBtn{
-   composes: btn from "../../Sass/common/_buttons.scss";
-   composes: btn-primary from "../../Sass/common/_buttons.scss";
- }
+.viewBtn {
+  composes: btn from "../../Sass/common/_buttons.scss";
+  composes: btn-primary from "../../Sass/common/_buttons.scss";
+}
 
- .menu{
-   z-index:99;
-   position: absolute;
-   right: 8px;
-   top: 8px;
-   background: #7C8591;
-   border-radius: 2px;
- }
+.menu {
+  z-index: 99;
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  background: #7c8591;
+  border-radius: 2px;
+}
 
- .menuInner{
-   padding: 0;
-   margin: 0;
-   li{
+.menuInner {
+  padding: 0;
+  margin: 0;
+  li {
     display: block;
     border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-   }
-   li:last-child{
-     border-bottom: 0;
-   }
- }
- .menuBtn{
-   composes: btn from '../../Sass/common/_buttons.scss';
-   composes: btn-tertiary from '../../Sass/common/_buttons.scss';
-   font-size: 0.8rem;
-   padding: $padding/2 $padding/2;
- }
- 
- .draggable{
-   font-size: 0.9rem;
-   cursor: move;
- }
+  }
+  li:last-child {
+    border-bottom: 0;
+  }
+}
+.menuBtn {
+  composes: btn from "../../Sass/common/_buttons.scss";
+  composes: btn-tertiary from "../../Sass/common/_buttons.scss";
+  font-size: 0.8rem;
+  padding: $padding/2 $padding/2;
+}
+
+.draggable {
+  font-size: 0.9rem;
+  cursor: move;
+}
