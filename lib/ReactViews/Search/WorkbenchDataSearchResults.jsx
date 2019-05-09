@@ -61,7 +61,7 @@ const WorkbenchDataSearchResults = createReactClass({
         for (let i = 0; i < search.searchResults.length; i++) {
             const workbenchItem = search.searchResults[i];
             for (let ii = 0; ii < workbenchItem.matches.length; ii++) {
-                allDatasetResults.push({match: workbenchItem.matches[ii].match, WorkbenchItem: workbenchItem.workbenchItem});
+                allDatasetResults.push({match: workbenchItem.matches[ii].matchFieldText, WorkbenchItem: workbenchItem.workbenchItem});
             }
         }
         const results = allDatasetResults.length > 5 ? (this.state.isExpanded ? allDatasetResults : allDatasetResults.slice(0, 5)) : allDatasetResults;
