@@ -105,7 +105,7 @@ describe("WebMapServiceCatalogItem", function() {
         .then(function() {
           expect(
             wmsItem.legendUrl.url.indexOf(
-              "http://foo.com/bar?service=WMS&version=1.1.0&request=GetLegendGraphic&format=image%2Fpng&transparent=True&layer=single_period&alpha=beta&foo=bar&srs=EPSG%3A3857"
+              "http://foo.com/bar?service=WMS&version=1.1.0&request=GetLegendGraphic&format=image%2Fpng&transparent=True&layer=single_period&styles=jet&alpha=beta&foo=bar&srs=EPSG%3A3857"
             )
           ).toBe(0);
         })
@@ -454,6 +454,20 @@ describe("WebMapServiceCatalogItem", function() {
       .load()
       .then(function() {
         expect(wmsItem.intervals.length).toEqual(13);
+
+        const firstInterval = wmsItem.intervals.get(0);
+        expect(firstInterval.data).toEqual("2002-01-01T00:00:00.000Z");
+        expect(firstInterval.start.dayNumber).toEqual(2452275);
+        expect(firstInterval.start.secondsOfDay).toEqual(43232);
+        expect(firstInterval.stop.dayNumber).toEqual(2452640);
+        expect(firstInterval.stop.secondsOfDay).toEqual(43232);
+
+        const lastInterval = wmsItem.intervals.get(12);
+        expect(lastInterval.data).toEqual("2014-01-01T00:00:00.000Z");
+        expect(lastInterval.start.dayNumber).toEqual(2456658);
+        expect(lastInterval.start.secondsOfDay).toEqual(43235);
+        expect(lastInterval.stop.dayNumber).toEqual(2457023);
+        expect(lastInterval.stop.secondsOfDay).toEqual(43235);
       })
       .then(done)
       .otherwise(done.fail);
@@ -472,6 +486,15 @@ describe("WebMapServiceCatalogItem", function() {
       .load()
       .then(function() {
         expect(wmsItem.intervals.length).toEqual(1);
+
+        const firstInterval = wmsItem.intervals.get(0);
+        // expect(firstInterval.data).toEqual("2015-04-27T06:15:00.000Z");
+        // expect(typeof firstInterval.data).toEqual("string");
+
+        expect(firstInterval.start.dayNumber).toEqual(2457140);
+        expect(firstInterval.start.secondsOfDay).toEqual(15335);
+        expect(firstInterval.stop.dayNumber).toEqual(2457140);
+        expect(firstInterval.stop.secondsOfDay).toEqual(24335);
       })
       .then(done)
       .otherwise(done.fail);
@@ -490,6 +513,62 @@ describe("WebMapServiceCatalogItem", function() {
       .load()
       .then(function() {
         expect(wmsItem.intervals.length).toEqual(11);
+
+        const firstInterval = wmsItem.intervals.get(0);
+        expect(firstInterval.data).toEqual("2015-04-27T16:15:00Z");
+        expect(typeof firstInterval.data).toEqual("string");
+        expect(typeof firstInterval.start).toEqual(typeof new JulianDate());
+        expect(typeof firstInterval.stop).toEqual(typeof new JulianDate());
+
+        expect(firstInterval.start.dayNumber).toEqual(2457140);
+        expect(firstInterval.start.secondsOfDay).toEqual(15335);
+        expect(firstInterval.stop.dayNumber).toEqual(2457140);
+        expect(firstInterval.stop.secondsOfDay).toEqual(16235);
+
+        const lastInterval = wmsItem.intervals.get(10);
+        expect(lastInterval.data).toEqual("2015-04-27T18:45:00Z");
+      })
+      .then(done)
+      .otherwise(done.fail);
+  });
+
+  it("can understand three-part period date with no time", function(done) {
+    // <Dimension name="time" units="ISO8601" />
+    //   <Extent name="time">2015-04-27/2015-04-29/P1D</Extent>
+    wmsItem.updateFromJson({
+      url: "http://example.com",
+      metadataUrl: "test/WMS/period_date_notime.xml",
+      layers: "single_period",
+      dataUrl: "" // to prevent a DescribeLayer request
+    });
+    wmsItem
+      .load()
+      .then(function() {
+        expect(wmsItem.intervals.length).toEqual(3);
+
+        const firstInterval = wmsItem.intervals.get(0);
+        expect(firstInterval.data).toEqual("2015-04-27");
+
+        const lastInterval = wmsItem.intervals.get(2);
+        expect(lastInterval.data).toEqual("2015-04-29");
+      })
+      .then(done)
+      .otherwise(done.fail);
+  });
+
+  it("limits intervals returned", function(done) {
+    // <Dimension name="time" units="ISO8601" />
+    //   <Extent name="time">2015-04-27T16:15:00/2018-04-27T18:45:00/PT15M</Extent>
+    wmsItem.updateFromJson({
+      url: "http://example.com",
+      metadataUrl: "test/WMS/period_datetimes_many_intervals.xml",
+      layers: "single_period",
+      dataUrl: "" // to prevent a DescribeLayer request
+    });
+    wmsItem
+      .load()
+      .then(function() {
+        expect(wmsItem.intervals.length).toEqual(1000);
       })
       .then(done)
       .otherwise(done.fail);

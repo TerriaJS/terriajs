@@ -6,6 +6,7 @@ matrix:
     node_js:
     - '8'
     script:
+    - npm run prettier-check
     - pyenv shell 2.7
     - pip install -r doc/requirements.txt
     - gulp lint docs release
