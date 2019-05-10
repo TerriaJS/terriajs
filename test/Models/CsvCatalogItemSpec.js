@@ -6,9 +6,11 @@ var Color = require("terriajs-cesium/Source/Core/Color");
 var JulianDate = require("terriajs-cesium/Source/Core/JulianDate");
 var Rectangle = require("terriajs-cesium/Source/Core/Rectangle");
 
+var loadText = require("../../lib/Core/loadText");
 var CatalogItem = require("../../lib/Models/CatalogItem");
 var CsvCatalogItem = require("../../lib/Models/CsvCatalogItem");
 var ImageryLayerCatalogItem = require("../../lib/Models/ImageryLayerCatalogItem");
+var TableStructure = require("../../lib/Map/TableStructure");
 var ImageryProviderHooks = require("../../lib/Map/ImageryProviderHooks");
 var loadAndStubTextResources = require("../Utility/loadAndStubTextResources");
 var TableStyle = require("../../lib/Models/TableStyle");
@@ -1934,5 +1936,69 @@ describe("CsvCatalogItem with no geo", function() {
       })
       .otherwise(fail)
       .then(done);
+  });
+});
+
+describe("CsvTableCatalogItem", function() {
+  var terria;
+  var csvItem;
+  var columns;
+  var tableStructure;
+
+  beforeEach(function() {
+    terria = new Terria({
+      baseUrl: "./"
+    });
+    csvItem = new CsvCatalogItem(terria);
+    columns = {
+      "0": {
+        active: false
+      },
+      "1": {
+        active: true
+      },
+      "2": {
+        active: false
+      }
+    };
+    tableStructure = new TableStructure(undefined, { columnOptions: columns });
+  });
+
+  describe("syncActiveColumns", function() {
+    // xit("syncs tableStyle with tableStructure upon serialising", function(done) {
+    it("syncs tableStyle with tableStructure upon serialising", function(done) {
+      loadText("test/csv_nongeo/time_series.csv")
+        .then(function(text) {
+          tableStructure.loadFromCsv(text);
+          csvItem.initializeFromTableStructure(tableStructure);
+        })
+        .then(function() {
+          csvItem
+            .updateFromJson({
+              type: "csv",
+              tableStyle: {
+                columns: columns
+              }
+            })
+            .then(function() {
+              expect(csvItem.tableStyle.columns[0].active).toBe(false);
+              expect(csvItem.tableStyle.columns[1].active).toBe(true);
+              expect(csvItem.tableStyle.columns[2].active).toBe(false);
+            })
+            .then(function() {
+              // toggleActive (via the UI) on tableStructure items do not reflect back into table styles
+              expect(csvItem.tableStructure.items[0].isActive).toBe(false);
+              expect(csvItem.tableStructure.items[1].isActive).toBe(true);
+              expect(csvItem.tableStructure.items[2].isActive).toBe(false);
+              csvItem.tableStructure.items[2].toggleActive();
+              expect(csvItem.tableStructure.items[2].isActive).toBe(true);
+              // active should still be false on _tableStyle_ until we sync changes
+              expect(csvItem.tableStyle.columns[2].active).toBe(false);
+            })
+            .otherwise(done.fail);
+        })
+        .then(done)
+        .otherwise(done.fail);
+    });
   });
 });

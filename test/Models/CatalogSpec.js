@@ -3,11 +3,14 @@
 /*global require,describe,it,expect,beforeEach*/
 var Terria = require("../../lib/Models/Terria");
 var loadJson = require("../../lib/Core/loadJson");
+var CHART_DATA_CATEGORY_NAME = require("../../lib/Core/addedForCharts")
+  .CHART_DATA_CATEGORY_NAME;
 
 var Catalog = require("../../lib/Models/Catalog");
 var CatalogItem = require("../../lib/Models/CatalogItem");
 var createCatalogMemberFromType = require("../../lib/Models/createCatalogMemberFromType");
 var CatalogGroup = require("../../lib/Models/CatalogGroup");
+var ChartDataGroup = require("../../lib/Models/ChartDataGroup");
 var GeoJsonCatalogItem = require("../../lib/Models/GeoJsonCatalogItem");
 var ImageryLayerCatalogItem = require("../../lib/Models/ImageryLayerCatalogItem");
 var WebMapServiceCatalogItem = require("../../lib/Models/WebMapServiceCatalogItem");
@@ -49,6 +52,17 @@ describe("Catalog", function() {
           .otherwise(done.fail);
       })
       .otherwise(done.fail);
+  });
+
+  describe("chartDataGroup", function() {
+    it("returns the group used for chart data when retrieved via chartDataGroup", function() {
+      const group = catalog.chartDataGroup;
+      expect(group instanceof ChartDataGroup);
+      expect(group.name).toBe(CHART_DATA_CATEGORY_NAME);
+      expect(group.type).toBe("chartDataGroup");
+      expect(group.typeName).toBe("Group for charts");
+      expect(group.isUserSupplied).toBe(true);
+    });
   });
 
   describe("updateByShareKeys", function() {

@@ -10,7 +10,6 @@ import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import defined from "terriajs-cesium/Source/Core/defined";
 import clone from "terriajs-cesium/Source/Core/clone";
 
-import CatalogGroup from "../../../Models/CatalogGroup";
 import CsvCatalogItem from "../../../Models/CsvCatalogItem";
 import Dropdown from "../../Generic/Dropdown";
 import Polling from "../../../Models/Polling";
@@ -251,11 +250,7 @@ function expand(props, sourceIndex) {
         replace: props.pollReplace
       });
     }
-    const group = terria.catalog.upsertCatalogGroup(
-      CatalogGroup,
-      "Chart Data",
-      "A group for chart data."
-    );
+    const group = terria.catalog.chartDataGroup;
     group.isOpen = true;
     const existingIndex = group.items
       .map(item => item.uniqueId)
