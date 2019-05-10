@@ -89,7 +89,7 @@ export default class TableColumn {
   }
 
   @computed
-  uniqueValues(): readonly string[] {
+  get uniqueValues(): readonly string[] {
     return uniq(this.values);
   }
 

@@ -8,6 +8,7 @@ import Model, { BaseModel, ModelConstructor, ModelInterface } from "./Model";
 import StratumFromTraits from "./StratumFromTraits";
 import StratumOrder from "./StratumOrder";
 import Terria from "./Terria";
+import createFlattenedStrataView from "./createFlattenedStrataView";
 
 export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
   Traits: T
@@ -25,7 +26,7 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
 
     constructor(id: ModelId, terria: Terria) {
       super(id, terria);
-      this.flattened = createFlattenedLayer(this, Traits);
+      this.flattened = createFlattenedStrataView<T>(this, Traits);
     }
 
     private getOrCreateStratum(id: string): StratumTraits {
@@ -97,37 +98,6 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
   });
 
   decorate(Model, decorators);
-
-  function createFlattenedLayer<T extends TraitsConstructor<ModelTraits>>(
-    model: Model,
-    Traits: T
-  ) {
-    const traits = Traits.traits;
-
-    const flattened: any = {
-      id: model.id + ":flattened"
-    };
-
-    const decorators: { [id: string]: PropertyDecorator } = {};
-
-    Object.keys(traits).forEach(traitName => {
-      const trait = traits[traitName];
-
-      Object.defineProperty(flattened, traitName, {
-        get: function() {
-          return trait.getValue(model.strataTopToBottom);
-        },
-        enumerable: true,
-        configurable: true
-      });
-
-      decorators[traitName] = trait.decoratorForFlattened || computed;
-    });
-
-    decorate(flattened, decorators);
-
-    return flattened;
-  }
 
   return <any>Model;
 }
