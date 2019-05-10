@@ -11,6 +11,7 @@ import { computed } from "mobx";
 export interface ObjectTraitOptions<T extends ModelTraits>
   extends TraitOptions {
   type: TraitsConstructor<T>;
+  isNullable?: boolean;
 }
 
 export default function objectTrait<T extends ModelTraits>(
@@ -27,11 +28,13 @@ export default function objectTrait<T extends ModelTraits>(
 
 export class ObjectTrait<T extends ModelTraits> extends Trait {
   readonly type: TraitsConstructor<T>;
+  readonly isNullable: boolean;
   readonly decoratorForFlattened = computed.struct;
 
   constructor(id: string, options: ObjectTraitOptions<T>) {
     super(id, options);
     this.type = options.type;
+    this.isNullable = options.isNullable || false;
   }
 
   getValue(
@@ -66,6 +69,10 @@ export class ObjectTrait<T extends ModelTraits> extends Trait {
     const ResultType = this.type;
     const result: any = new ResultType();
 
+    if (this.isNullable && jsonValue === null) {
+      return jsonValue;
+    }
+
     Object.keys(jsonValue).forEach(propertyName => {
       const trait = ResultType.traits[propertyName];
       if (trait === undefined) {
@@ -87,6 +94,10 @@ export class ObjectTrait<T extends ModelTraits> extends Trait {
   }
 
   isSameType(trait: Trait): boolean {
-    return trait instanceof ObjectTrait && trait.type === this.type;
+    return (
+      trait instanceof ObjectTrait &&
+      trait.type === this.type &&
+      trait.isNullable === this.isNullable
+    );
   }
 }

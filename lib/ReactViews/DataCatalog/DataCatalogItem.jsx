@@ -60,6 +60,12 @@ const DataCatalogItem = observer(
         workbench.remove(catalogItem);
       } else {
         catalogItem.ancestors = this.props.ancestors;
+
+        if (catalogItem.loadMapItems) {
+          // TODO: handle promise rejection.
+          catalogItem.loadMapItems();
+        }
+
         workbench.add(catalogItem);
       }
 

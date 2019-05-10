@@ -14,7 +14,7 @@ export class InfoSectionTraits extends ModelTraits {
   @primitiveTrait({
     type: "string",
     name: "Content",
-    description: "The content of the section, in Markdown and HTML format.",
+    description: "The content of the section, in Markdown and HTML format. Set this property to null to remove this section entirely.",
     isNullable: true
   })
   content?: string | null;
