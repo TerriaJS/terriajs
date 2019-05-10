@@ -118,6 +118,7 @@ export default class CsvCatalogItem extends AsyncMappableMixin(
     const dataSource = new CustomDataSource(this.name || "CsvCatalogItem");
 
     dataSource.entities.suspendEvents();
+
     for (let i = 0; i < longitudes.length && i < latitudes.length; ++i) {
       const longitude = longitudes[i];
       const latitude = latitudes[i];
@@ -135,6 +136,7 @@ export default class CsvCatalogItem extends AsyncMappableMixin(
         })
       );
     }
+
     dataSource.entities.resumeEvents();
 
     return dataSource;
