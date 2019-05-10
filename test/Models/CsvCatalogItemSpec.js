@@ -1900,13 +1900,16 @@ describe("CsvCatalogItem with region mapping", function() {
   });
 });
 
-describe("CsvCatalogItem with no geo", function() {
+describe("CsvCatalogItem with no geo using default bundled regionMapping", function() {
   var terria;
   var csvItem;
   beforeEach(function() {
     terria = new Terria({
       baseUrl: "./"
     });
+    terria.configParameters.regionMappingDefinitionsUrl =
+      "data/regionMapping.json";
+
     csvItem = new CsvCatalogItem(terria);
   });
 
@@ -1917,6 +1920,9 @@ describe("CsvCatalogItem with no geo", function() {
       .then(function() {
         expect(csvItem.isMappable).toEqual(false);
         expect(csvItem.regionMapping).toBeUndefined();
+        expect(csvItem.tableStructure.name).toBe("");
+        expect(csvItem.tableStructure.allowMultiple).toBe(true);
+        expect(csvItem.tableStructure.items.length).toBe(2);
       })
       .otherwise(fail)
       .then(done);
@@ -1931,6 +1937,7 @@ describe("CsvCatalogItem with no geo", function() {
         expect(
           csvItem.tableStructure.columnsByType[VarType.ALT].length
         ).toEqual(0);
+        expect(csvItem.tableStructure.items.length).toBe(3);
       })
       .otherwise(fail)
       .then(done);
