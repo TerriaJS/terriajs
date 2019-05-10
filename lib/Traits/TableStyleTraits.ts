@@ -60,14 +60,6 @@ export default class TableStyleTraits extends ModelTraits {
   })
   longitudeColumn?: string;
 
-  @primitiveTrait({
-    name: "Scale Column",
-    description:
-      "The column to use to scale points. This property is ignored for regions.",
-    type: "string"
-  })
-  scaleColumn?: string;
-
   @objectTrait({
     name: "Color",
     description: "Options for controlling the color of points or regions.",

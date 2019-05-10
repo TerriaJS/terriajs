@@ -16,6 +16,7 @@ import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumFromTraits from "./StratumFromTraits";
 import StratumOrder from "./StratumOrder";
 import Terria from "./Terria";
+import TableAutomaticStylesStratum from "../Table/TableAutomaticStylesStratum";
 
 // Types of CSVs:
 // - Points - Latitude and longitude columns or address
@@ -28,7 +29,7 @@ import Terria from "./Terria";
 // - points, no ID, time -> "blips" with a duration (perhaps provided by another column)
 //
 
-const tableGuessesStratumName = "tableGuesses";
+const automaticTableStylesStratumName = "automaticTableStyles";
 
 export default class CsvCatalogItem extends AsyncMappableMixin(
   TableMixin(UrlMixin(CatalogMemberMixin(CreateModel(CsvCatalogItemTraits))))
@@ -39,7 +40,7 @@ export default class CsvCatalogItem extends AsyncMappableMixin(
 
   constructor(id: string, terria: Terria) {
     super(id, terria);
-    this.strata.set(tableGuessesStratumName, new GuessesStratum(this));
+    this.strata.set(automaticTableStylesStratumName, new TableAutomaticStylesStratum(this));
   }
 
   get type() {
@@ -75,47 +76,4 @@ export default class CsvCatalogItem extends AsyncMappableMixin(
   }
 }
 
-class GuessesStratum extends LoadableStratum(CsvCatalogItemTraits) {
-  constructor(readonly catalogItem: CsvCatalogItem) {
-    super();
-  }
-
-  get defaultStyle(): StratumFromTraits<TableStyleTraits> | undefined {
-    // Use the default style to select the spatial key (lon/lat, region, none i.e. chart)
-    // for all styles.
-    const longitudeColumn = this.catalogItem.findFirstColumnByType(
-      TableColumnType.longitude
-    );
-    const latitudeColumn = this.catalogItem.findFirstColumnByType(
-      TableColumnType.latitude
-    );
-    if (longitudeColumn !== undefined && latitudeColumn !== undefined) {
-      return createStratumInstance(TableStyleTraits, {
-        longitudeColumn: longitudeColumn.name,
-        latitudeColumn: latitudeColumn.name
-      });
-    }
-
-    return undefined;
-  }
-
-  get styles(): StratumFromTraits<TableStyleTraits>[] {
-    // Create a style to color by every scalar and enum.
-    const columns = this.catalogItem.tableColumns.filter(
-      column =>
-        column.type === TableColumnType.scalar ||
-        column.type === TableColumnType.enum
-    );
-
-    return columns.map(column =>
-      createStratumInstance(TableStyleTraits, {
-        id: column.name,
-        color: createStratumInstance(TableColorStyleTraits, {
-          colorColumn: column.name
-        })
-      })
-    );
-  }
-}
-
-StratumOrder.addLoadStratum(tableGuessesStratumName);
+StratumOrder.addLoadStratum(automaticTableStylesStratumName);

@@ -17,6 +17,7 @@ import TableColumn from "../Table/TableColumn";
 import TableColumnType from "../Table/TableColumnType";
 import TableStyleTraits from "../Traits/TableStyleTraits";
 import TableTraits from "../Traits/TableTraits";
+import TableStyle from "../Table/TableStyle";
 
 export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
   Base: T
@@ -30,12 +31,17 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
     dataColumnMajor: string[][] | undefined;
 
     @computed
-    get tableColumns(): TableColumn[] {
+    get tableColumns(): readonly TableColumn[] {
       if (this.dataColumnMajor === undefined) {
         return [];
       }
 
       return this.dataColumnMajor.map((_, i) => this.getTableColumn(i));
+    }
+
+    @computed
+    get tableStyles(): TableStyle[] {
+      return this.stylesWithDefaults.map((_, i) => this.getTableStyle(i));
     }
 
     @computed
@@ -53,8 +59,8 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
     get mapItems(): (DataSource | ImageryParts)[] {
       const result: (DataSource | ImageryParts)[] = [];
 
-      const styles = this.stylesWithDefaults;
-      if (this.selectedStyle === undefined || styles === undefined) {
+      const styles = this.tableStyles;
+      if (this.selectedStyle === undefined) {
         return result;
       }
 
@@ -68,62 +74,49 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
       ]);
     }
 
-    private readonly createLongitudeLatitudeDataSource = createTransformer((
-      style: FlattenedFromTraits<TableStyleTraits>
-    ): DataSource | undefined => {
-      const longitudeColumnName = style.longitudeColumn;
-      const latitudeColumnName = style.latitudeColumn;
-      if (
-        longitudeColumnName === undefined ||
-        latitudeColumnName === undefined
-      ) {
-        return undefined;
-      }
-
-      const longitudeColumn = this.findColumnByName(longitudeColumnName);
-      const latitudeColumn = this.findColumnByName(latitudeColumnName);
-      if (longitudeColumn === undefined || latitudeColumn === undefined) {
-        return undefined;
-      }
-
-      const longitudes = longitudeColumn.valuesAsNumbers.values;
-      const latitudes = latitudeColumn.valuesAsNumbers.values;
-
-      // const colorStyles = style.color || createStratumInstance(TableColorStyleTraits);
-      // const colorColumnName = colorStyles.colorColumn;
-      // const colorColumn = colorColumnName ? this.findColumnByName(colorColumnName) : undefined;
-
-      const dataSource = new CustomDataSource(this.name || "CsvCatalogItem");
-
-      dataSource.entities.suspendEvents();
-
-      for (let i = 0; i < longitudes.length && i < latitudes.length; ++i) {
-        const longitude = longitudes[i];
-        const latitude = latitudes[i];
-        if (longitude === null || latitude === null) {
-          continue;
+    private readonly createLongitudeLatitudeDataSource = createTransformer(
+      (style: TableStyle): DataSource | undefined => {
+        if (!style.isPoints()) {
+          return undefined;
         }
 
-        dataSource.entities.add(
-          new Entity({
-            position: Cartesian3.fromDegrees(longitude, latitude, 0.0),
-            point: new PointGraphics({
-              color: Color.RED,
-              pixelSize: 5
+        const longitudes = style.longitudeColumn.valuesAsNumbers.values;
+        const latitudes = style.latitudeColumn.valuesAsNumbers.values;
+
+        const colorColumnName = style.colorTraits.colorColumn
+        const colorColumn = colorColumnName ? this.findColumnByName(colorColumnName) : undefined;
+
+        const dataSource = new CustomDataSource(this.name || "CsvCatalogItem");
+
+        dataSource.entities.suspendEvents();
+
+        for (let i = 0; i < longitudes.length && i < latitudes.length; ++i) {
+          const longitude = longitudes[i];
+          const latitude = latitudes[i];
+          if (longitude === null || latitude === null) {
+            continue;
+          }
+
+          dataSource.entities.add(
+            new Entity({
+              position: Cartesian3.fromDegrees(longitude, latitude, 0.0),
+              point: new PointGraphics({
+                color: Color.RED,
+                pixelSize: 5
+              })
             })
-          })
-        );
+          );
+        }
+
+        dataSource.entities.resumeEvents();
+
+        return dataSource;
       }
-
-      dataSource.entities.resumeEvents();
-
-      return dataSource;
-    })
+    );
 
     @computed
     get stylesWithDefaults(): readonly FlattenedFromTraits<TableStyleTraits>[] {
-      const styles: readonly ModelPropertiesFromTraits<TableStyleTraits>[] =
-        this.styles || [];
+      const styles = this.styles || [];
       const defaultStyle:
         | ModelPropertiesFromTraits<TableStyleTraits>
         | undefined = this.defaultStyle;
@@ -150,6 +143,10 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
 
     private readonly getTableColumn = createTransformer((index: number) => {
       return new TableColumn(this, index);
+    });
+
+    private readonly getTableStyle = createTransformer((index: number) => {
+      return new TableStyle(this, index);
     });
   }
 
