@@ -18,10 +18,6 @@ const Timer = createReactClass({
     tooltipText: PropTypes.string
   },
 
-  // We need a unique selector for the timer container.
-  // If we use a class and there are multiple timers, our drawTimer functions don't know which one to draw to.
-  containerId: "timer-container-" + new Date().getTime().toString(),
-
   getDefaultProps() {
     return {};
   },
@@ -73,6 +69,12 @@ const Timer = createReactClass({
 
   componentDidUpdate() {
     this.startTimer();
+  },
+
+  componentWillMount() {
+    // We need a unique selector for the timer container.
+    // If we use a class and there are multiple timers, our drawTimer functions don't know which one to draw to.
+    this.containerId = "timer-container-" + new Date().getTime().toString();
   },
 
   componentDidMount() {
