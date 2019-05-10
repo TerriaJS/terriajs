@@ -29,6 +29,7 @@ import "inobounce";
 
 import Styles from "./standard-user-interface.scss";
 
+const animationDuration = 250;
 /** blah */
 const StandardUserInterface = createReactClass({
   displayName: "StandardUserInterface",
@@ -204,7 +205,7 @@ const StandardUserInterface = createReactClass({
                     viewState={this.props.viewState}
                     minified={false}
                     btnText="Show workbench"
-                    animationDuration={250}
+                    animationDuration={animationDuration}
                   />
                 </div>
               </Medium>
@@ -250,7 +251,7 @@ const StandardUserInterface = createReactClass({
                 viewState={this.props.viewState}
                 allBaseMaps={allBaseMaps}
                 menuItems={customElements.menu}
-                animationDuration={250}
+                animationDuration={animationDuration}
               />
               <MapNavigation
                 terria={terria}
@@ -316,6 +317,7 @@ const StandardUserInterface = createReactClass({
             isVisible={showStoryBuilder}
             terria={terria}
             viewState={this.props.viewState}
+            animationDuration ={animationDuration}
           />
         )}
       </div>

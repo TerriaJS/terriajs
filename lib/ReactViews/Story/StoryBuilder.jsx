@@ -12,6 +12,7 @@ import Sortable from "react-anything-sortable";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import classNames from "classnames";
 import BadgeBar from "../BadgeBar.jsx";
+import triggerResize from "../../Core/triggerResize";
 import Styles from "./story-builder.scss";
 
 const StoryBuilder = createReactClass({
@@ -20,7 +21,8 @@ const StoryBuilder = createReactClass({
   propTypes: {
     terria: PropTypes.object.isRequired,
     isVisible: PropTypes.bool,
-    viewState: PropTypes.object.isRequired
+    viewState: PropTypes.object.isRequired, 
+    animationDuration: PropTypes.number
   },
 
   getInitialState() {
@@ -116,6 +118,9 @@ const StoryBuilder = createReactClass({
   runStories() {
     this.props.viewState.storyBuilderShown = false;
     this.props.viewState.storyShown = true;
+    setTimeout(function() {
+      triggerResize();
+     }, this.props.animationDuration || 1);
     this.props.terria.currentViewer.notifyRepaintRequired();
   },
 
