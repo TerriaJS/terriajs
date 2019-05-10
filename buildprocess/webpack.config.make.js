@@ -13,7 +13,8 @@ var testGlob = [
     './test/Traits/objectTraitSpec.ts',
     './test/Traits/objectArrayTraitSpec.ts',
     './test/Models/LoadableStratumSpec.ts',
-    './test/Models/upsertModelFromJsonSpec.ts'
+    './test/Models/upsertModelFromJsonSpec.ts',
+    './test/Table/CsvSpec.ts'
 ];
 
 module.exports = function(hot, dev) {

@@ -12,7 +12,7 @@ export default function createStratumInstance<
   T extends TraitsConstructor<ModelTraits>
 >(
   Traits: T,
-  values?: Partial<InstanceType<T>>
+  values?: Partial<StratumFromTraits<InstanceType<T>>>
 ): StratumFromTraits<InstanceType<T>> {
   const defaults: any = values || {};
   const traits = Traits.traits;
