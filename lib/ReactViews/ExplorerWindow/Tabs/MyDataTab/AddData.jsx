@@ -150,6 +150,7 @@ const AddData = createReactClass({
               selectOption={this.selectLocalOption}
               matchWidth={true}
               theme={dropdownTheme}
+              height="150px"
             />
             <label className={Styles.label}>
               <strong>Step 2:</strong> Select file
@@ -173,6 +174,7 @@ const AddData = createReactClass({
               selectOption={this.selectRemoteOption}
               matchWidth={true}
               theme={dropdownTheme}
+              height="150px"
             />
             <label className={Styles.label}>
               <strong>Step 2:</strong> Enter the URL of the data file or web

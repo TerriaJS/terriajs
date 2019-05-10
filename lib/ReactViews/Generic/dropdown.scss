@@ -21,6 +21,7 @@
 
   &.is-open {
     transform: scaleY(1);
+    overflow-y: scroll;
   }
 }
 

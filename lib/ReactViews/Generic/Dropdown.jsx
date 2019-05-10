@@ -18,7 +18,8 @@ const Dropdown = createReactClass({
     selectOption: PropTypes.func, // The callback function; its arguments are the chosen object and its index.
     textProperty: PropTypes.string, // property to display as text
     matchWidth: PropTypes.bool,
-    children: PropTypes.any
+    children: PropTypes.any,
+    height: PropTypes.string
   },
 
   getDefaultProps() {
@@ -27,7 +28,8 @@ const Dropdown = createReactClass({
       selected: undefined,
       textProperty: "name",
       align: "left",
-      theme: {}
+      theme: {},
+      height: "auto"
     };
   },
 
@@ -115,6 +117,7 @@ const Dropdown = createReactClass({
 
   render() {
     const isOpenStyle = Styles.isOpen + " " + (this.props.theme.isOpen || "");
+    const height = this.props.height;
     return (
       <div className={classNames(Styles.dropdown, this.props.theme.dropdown)}>
         <button
@@ -134,6 +137,7 @@ const Dropdown = createReactClass({
           className={classNames(Styles.list, this.props.theme.list, {
             [isOpenStyle]: this.state.isOpen
           })}
+          style={{ height }}
         >
           <For each="option" of={this.props.options} index="index">
             <li key={option[this.props.textProperty]}>
