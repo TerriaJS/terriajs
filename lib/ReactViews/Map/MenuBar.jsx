@@ -45,7 +45,9 @@ const MenuBar = createReactClass({
     }, this.props.animationDuration || 1);
     this.props.viewState.toggleFeaturePrompt("story", false, true);
   },
-
+  dismissAction() {
+    this.props.viewState.toggleFeaturePrompt("story", false, Boolean(this.props.terria.stories.length));
+  },
   render() {
     const storyEnabled = this.props.terria.configParameters.storyEnabled;
     const enableTools = this.props.terria.getUserProperty("tools") === "1";
@@ -86,9 +88,7 @@ const MenuBar = createReactClass({
                   content={promptHtml}
                   displayDelay={delayTime}
                   dismissText={"Got it, thanks!"}
-                  dismissAction={() =>
-                    this.props.viewState.toggleFeaturePrompt("story", false, Boolean(this.props.terria.stories.length))
-                  }
+                  dismissAction={this.dismissAction}
                 />
               )}
             </li>
