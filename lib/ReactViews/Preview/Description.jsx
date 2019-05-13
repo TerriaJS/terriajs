@@ -148,8 +148,9 @@ const Description = createReactClass({
               >
                 <p key="wms-layers">
                   Layer name
-                  {(catalogItem.layers || "").split(",").length > 1 ? "s" : ""}:{" "}
-                  {catalogItem.layers}
+                  {(catalogItem.layers || "").split(",").length > 1
+                    ? "s"
+                    : ""}: {catalogItem.layers}
                 </p>
               </When>
               <When condition={catalogItem.type === "wfs"}>

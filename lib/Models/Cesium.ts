@@ -1,12 +1,16 @@
-import { autorun } from "mobx";
+import { autorun, computed, reaction } from "mobx";
 import { createTransformer } from "mobx-utils";
 import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
+import createWorldTerrain from "terriajs-cesium/Source/Core/createWorldTerrain";
+import Credit from "terriajs-cesium/Source/Core/Credit";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import defined from "terriajs-cesium/Source/Core/defined";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
+import EllipsoidTerrainProvider from "terriajs-cesium/Source/Core/EllipsoidTerrainProvider";
+import FeatureDetection from "terriajs-cesium/Source/Core/FeatureDetection";
 import HeadingPitchRange from "terriajs-cesium/Source/Core/HeadingPitchRange";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
@@ -19,19 +23,16 @@ import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import DataSourceCollection from "terriajs-cesium/Source/DataSources/DataSourceCollection";
 import ImageryLayer from "terriajs-cesium/Source/Scene/ImageryLayer";
 import Scene from "terriajs-cesium/Source/Scene/Scene";
+import SingleTileImageryProvider from "terriajs-cesium/Source/Scene/SingleTileImageryProvider";
 import when from "terriajs-cesium/Source/ThirdParty/when";
 import CesiumWidget from "terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget";
 import isDefined from "../Core/isDefined";
 import pollToPromise from "../Core/pollToPromise";
 import CesiumRenderLoopPauser from "../Map/CesiumRenderLoopPauser";
+import TerriaViewer from "../ViewModels/TerriaViewer";
 import GlobeOrMap, { CameraView } from "./GlobeOrMap";
 import Mappable, { ImageryParts } from "./Mappable";
 import Terria from "./Terria";
-import TerriaViewer from "../ViewModels/TerriaViewer";
-import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
-import EllipsoidTerrainProvider from "terriajs-cesium/Source/Core/EllipsoidTerrainProvider";
-import FeatureDetection from "terriajs-cesium/Source/Core/FeatureDetection";
-import SingleTileImageryProvider from "terriajs-cesium/Source/Scene/SingleTileImageryProvider";
 
 // Intermediary
 var cartesian3Scratch = new Cartesian3();
@@ -53,9 +54,8 @@ export default class Cesium implements GlobeOrMap {
   readonly dataSources: DataSourceCollection = new DataSourceCollection();
   dataSourceDisplay: Cesium.DataSourceDisplay | undefined;
   readonly pauser: CesiumRenderLoopPauser;
-  private _terrainProvider: TerrainProvider = new EllipsoidTerrainProvider();
-
-  private _disposeWorkbenchMapItemsSubscription: (() => void) | undefined;
+  private readonly _disposeWorkbenchMapItemsSubscription: () => void;
+  private readonly _disposeTerrainReaction: () => void;
 
   constructor(terriaViewer: TerriaViewer) {
     this.terriaViewer = terriaViewer;
@@ -149,6 +149,10 @@ export default class Cesium implements GlobeOrMap {
     //     ScreenSpaceEventType.LEFT_DOUBLE_CLICK, KeyboardEventModifier.SHIFT);
 
     this.pauser = new CesiumRenderLoopPauser(this.cesiumWidget);
+    this._disposeWorkbenchMapItemsSubscription = this.observeModelLayer();
+    this._disposeTerrainReaction = autorun(() => {
+      this.scene.globe.terrainProvider = this._terrainProvider;
+    });
   }
 
   destroy() {
@@ -180,11 +184,12 @@ export default class Cesium implements GlobeOrMap {
     //     this.monitor.destroy();
     //     this.monitor = undefined;
     // }
+    this._disposeTerrainReaction();
     cesiumWidget.destroy();
   }
 
-  observeModelLayer() {
-    this._disposeWorkbenchMapItemsSubscription = autorun(() => {
+  private observeModelLayer() {
+    return autorun(() => {
       const catalogItems = [
         ...this.terria.workbench.items,
         this.terria.baseMap
@@ -492,6 +497,50 @@ export default class Cesium implements GlobeOrMap {
     // rect.center = center;
     return rect;
   }
+
+  // It's nice to co-locate creation of Ion TerrainProvider and Credit, but not necessary
+  @computed
+  private get _terrainWithCredits(): {
+    terrain: Cesium.TerrainProvider;
+    credit?: Cesium.Credit;
+  } {
+    if (
+      this.terriaViewer.viewerOptions.cesium.useTerrain &&
+      this.terria.configParameters.useCesiumIonTerrain
+    ) {
+      const logo = require("terriajs-cesium/Source/Assets/Images/ion-credit.png");
+      const ionCredit = new Credit(
+        '<a href="https://cesium.com/" target="_blank" rel="noopener noreferrer"><img src="' +
+          logo +
+          '" title="Cesium ion"/></a>',
+        true
+      );
+      return {
+        terrain: createWorldTerrain({}),
+        credit: ionCredit
+      };
+    }
+    return { terrain: new EllipsoidTerrainProvider() };
+  }
+
+  // WIP working out how to deal with credits
+  // This function isn't used anywhere yet
+  @computed
+  get _extraCredits() {
+    const credits: { cesium?: Cesium.Credit; terria?: Cesium.Credit } = {};
+    if (this._terrainWithCredits.credit) {
+      credits.cesium = this._terrainWithCredits.credit;
+    }
+    if (!this.terria.configParameters.hideTerriaLogo) {
+      //credits.terria = ...
+    }
+    return credits;
+  }
+
+  @computed
+  private get _terrainProvider(): Cesium.TerrainProvider {
+    return this._terrainWithCredits.terrain;
+  }
 }
 
 var boundingSphereScratch = new BoundingSphere();
@@ -564,7 +613,6 @@ function zoomToBoundingSphere(
 const createImageryLayer: (
   ip: Cesium.ImageryProvider
 ) => Cesium.ImageryLayer = createTransformer((ip: Cesium.ImageryProvider) => {
-  console.log("Creating a new ImageryLayer");
   return new ImageryLayer(ip);
 });
 

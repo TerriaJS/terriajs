@@ -37,6 +37,9 @@ interface ConfigParameters {
   initFragmentPaths?: string[];
   interceptBrowserPrint?: boolean;
   tabbedCatalog?: boolean;
+  useCesiumIonTerrain?: boolean;
+  cesiumIonAccessToken?: string;
+  hideTerriaLogo?: boolean;
 }
 
 interface StartOptions {
@@ -80,9 +83,6 @@ export default class Terria {
   readonly timelineStack = new TimelineStack(this.timelineClock);
 
   @observable
-  viewerMode = ViewerMode.CesiumTerrain;
-
-  @observable
   readonly configParameters: ConfigParameters = {
     defaultMaximumShownFeatureInfos: 100,
     regionMappingDefinitionsUrl: "build/TerriaJS/data/regionMapping.json",
@@ -94,7 +94,10 @@ export default class Terria {
     feedbackUrl: undefined,
     initFragmentPaths: ["init/"],
     interceptBrowserPrint: true,
-    tabbedCatalog: false
+    tabbedCatalog: false,
+    useCesiumIonTerrain: true,
+    cesiumIonAccessToken: undefined,
+    hideTerriaLogo: false
   };
 
   @observable

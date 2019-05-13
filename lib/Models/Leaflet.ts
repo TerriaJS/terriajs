@@ -29,9 +29,9 @@ export default class Leaflet implements GlobeOrMap {
   readonly scene: LeafletScene;
   readonly dataSources: DataSourceCollection = new DataSourceCollection();
   readonly dataSourceDisplay: LeafletDataSourceDisplay;
-  private readonly attributionControl: L.Control.Attribution;
-  private readonly leafletVisualizer: LeafletVisualizer;
-  private readonly disposeWorkbenchMapItemsSubscription: () => void;
+  private readonly _attributionControl: L.Control.Attribution;
+  private readonly _leafletVisualizer: LeafletVisualizer;
+  private readonly _disposeWorkbenchMapItemsSubscription: () => void;
 
   constructor(terriaViewer: TerriaViewer) {
     this.terria = terriaViewer.terria;
@@ -47,17 +47,17 @@ export default class Leaflet implements GlobeOrMap {
 
     this.scene = new LeafletScene(map);
 
-    this.attributionControl = L.control.attribution({
+    this._attributionControl = L.control.attribution({
       position: "bottomleft"
     });
-    map.addControl(this.attributionControl);
+    map.addControl(this._attributionControl);
 
     // this.map.screenSpaceEventHandler = {
     //     setInputAction : function() {},
     //     remoteInputAction : function() {}
     // };
 
-    this.leafletVisualizer = new LeafletVisualizer();
+    this._leafletVisualizer = new LeafletVisualizer();
 
     // const terriaLogo = this.terriaViewer.defaultTerriaCredit ? this.terriaViewer.defaultTerriaCredit.html : '';
 
@@ -76,7 +76,7 @@ export default class Leaflet implements GlobeOrMap {
     this.dataSourceDisplay = new LeafletDataSourceDisplay({
       scene: this.scene,
       dataSourceCollection: this.dataSources,
-      visualizersCallback: <any>this.leafletVisualizer.visualizersCallback // fix type error
+      visualizersCallback: <any>this._leafletVisualizer.visualizersCallback // fix type error
     });
 
     // eventHelper = new EventHelper();
@@ -100,12 +100,12 @@ export default class Leaflet implements GlobeOrMap {
     // this.zoomTo(rect, 0.0);
 
     this.map = map;
-    this.disposeWorkbenchMapItemsSubscription = this.observeModelLayer();
+    this._disposeWorkbenchMapItemsSubscription = this.observeModelLayer();
     // return when();
   }
 
   destroy() {
-    this.disposeWorkbenchMapItemsSubscription();
+    this._disposeWorkbenchMapItemsSubscription();
     this.dataSourceDisplay.destroy();
     this.map.remove();
   }

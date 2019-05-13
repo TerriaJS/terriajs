@@ -9,9 +9,22 @@ import Terria from "../Models/Terria";
 // Each map-view should have it's own TerriaViewer
 
 // Each viewer has it's own options
+// Extending from ViewerOptions is just to signify they should be serialisable
+// Maybe this should have traits and strata?
+// Probably. That could encode App defaults & user settings. Could be useuful if you want a reset button or similar
 interface ViewerOptions {
-  [key: string]: string | number | undefined;
+  [key: string]: string | number | boolean | undefined;
 }
+
+interface CesiumOptions extends ViewerOptions {
+  useTerrain: boolean;
+}
+
+interface LeafletOptions extends ViewerOptions {}
+
+const cesiumDefaults: CesiumOptions = {
+  useTerrain: true
+};
 
 export default class TerriaViewer {
   readonly terria: Terria;
@@ -22,12 +35,19 @@ export default class TerriaViewer {
   baseMap: undefined; // Wire up base maps
 
   @observable
-  viewerMode: string | undefined = "leaflet";
+  viewerMode: string | undefined = "cesium";
 
   @observable
   currentViewer: GlobeOrMap | undefined;
 
-  // Random rectangle
+  // Set by UI
+  @observable
+  viewerOptions: { cesium: CesiumOptions; leaflet: LeafletOptions } = {
+    cesium: cesiumDefaults,
+    leaflet: {}
+  };
+
+  // Random rectangle. Work out reactivity
   defaultExtent: Rectangle = Rectangle.fromDegrees(120, -45, 155, -15);
 
   constructor(terria: Terria) {
