@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### Next Release
+
+* Added the "Story" feature for building and sharing guided tours of maps and data.
+
 ### v7.4.1
 
 * Remove dangling comma in `regionMapping.json`.
