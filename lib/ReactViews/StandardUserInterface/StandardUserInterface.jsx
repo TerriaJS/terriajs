@@ -85,7 +85,8 @@ const StandardUserInterface = createReactClass({
     if (
       this.props.terria.configParameters.storyEnabled &&
       this.props.terria.stories &&
-      this.props.terria.stories.length
+      this.props.terria.stories.length&&
+      !this.props.viewState.storyShown
     ) {
       this.props.viewState.notifications.push({
         title: "This map contains a story",
