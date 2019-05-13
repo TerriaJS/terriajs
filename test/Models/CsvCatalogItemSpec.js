@@ -6,11 +6,9 @@ var Color = require("terriajs-cesium/Source/Core/Color");
 var JulianDate = require("terriajs-cesium/Source/Core/JulianDate");
 var Rectangle = require("terriajs-cesium/Source/Core/Rectangle");
 
-var loadText = require("../../lib/Core/loadText");
 var CatalogItem = require("../../lib/Models/CatalogItem");
 var CsvCatalogItem = require("../../lib/Models/CsvCatalogItem");
 var ImageryLayerCatalogItem = require("../../lib/Models/ImageryLayerCatalogItem");
-var TableStructure = require("../../lib/Map/TableStructure");
 var ImageryProviderHooks = require("../../lib/Map/ImageryProviderHooks");
 var loadAndStubTextResources = require("../Utility/loadAndStubTextResources");
 var TableStyle = require("../../lib/Models/TableStyle");
