@@ -41,12 +41,12 @@ Editor.defaultProps = {
     "ulist",
     "image",
     {
-      name: 'link',
-      result: ()=>{
-    /* eslint-disable-next-line no-alert */
-        const url = window.prompt('Enter the link URL', 'http://');
+      name: "link",
+      result: () => {
+        /* eslint-disable-next-line no-alert */
+        const url = window.prompt("Enter the link URL", "http://");
         if (url) {
-            exec('createLink', url);
+          exec("createLink", url);
         }
       }
     }

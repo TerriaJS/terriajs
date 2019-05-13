@@ -46,12 +46,17 @@ const MenuBar = createReactClass({
     this.props.viewState.toggleFeaturePrompt("story", false, true);
   },
   dismissAction() {
-    this.props.viewState.toggleFeaturePrompt("story", false, Boolean(this.props.terria.stories.length));
+    this.props.viewState.toggleFeaturePrompt(
+      "story",
+      false,
+      Boolean(this.props.terria.stories.length)
+    );
   },
   render() {
     const storyEnabled = this.props.terria.configParameters.storyEnabled;
     const enableTools = this.props.terria.getUserProperty("tools") === "1";
-    const promptHtml = this.props.terria.stories.length > 0 ? (
+    const promptHtml =
+      this.props.terria.stories.length > 0 ? (
         <div>You can view and create stories at any time by clicking here.</div>
       ) : (
         <div>
@@ -83,14 +88,15 @@ const MenuBar = createReactClass({
                 <Icon glyph={Icon.GLYPHS.story} />
                 <span>Story</span>
               </button>
-              {storyEnabled && this.props.viewState.featurePrompts.indexOf("story") >= 0 && (
-                <Prompt
-                  content={promptHtml}
-                  displayDelay={delayTime}
-                  dismissText={"Got it, thanks!"}
-                  dismissAction={this.dismissAction}
-                />
-              )}
+              {storyEnabled &&
+                this.props.viewState.featurePrompts.indexOf("story") >= 0 && (
+                  <Prompt
+                    content={promptHtml}
+                    displayDelay={delayTime}
+                    dismissText={"Got it, thanks!"}
+                    dismissAction={this.dismissAction}
+                  />
+                )}
             </li>
           </If>
           <li className={Styles.menuItem}>

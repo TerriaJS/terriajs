@@ -21,7 +21,7 @@ const StoryBuilder = createReactClass({
   propTypes: {
     terria: PropTypes.object.isRequired,
     isVisible: PropTypes.bool,
-    viewState: PropTypes.object.isRequired, 
+    viewState: PropTypes.object.isRequired,
     animationDuration: PropTypes.number
   },
 
@@ -120,7 +120,7 @@ const StoryBuilder = createReactClass({
     this.props.viewState.storyShown = true;
     setTimeout(function() {
       triggerResize();
-     }, this.props.animationDuration || 1);
+    }, this.props.animationDuration || 1);
     this.props.terria.currentViewer.notifyRepaintRequired();
   },
 

@@ -85,7 +85,7 @@ const StandardUserInterface = createReactClass({
     if (
       this.props.terria.configParameters.storyEnabled &&
       this.props.terria.stories &&
-      this.props.terria.stories.length&&
+      this.props.terria.stories.length &&
       !this.props.viewState.storyShown
     ) {
       this.props.viewState.notifications.push({
@@ -318,7 +318,7 @@ const StandardUserInterface = createReactClass({
             isVisible={showStoryBuilder}
             terria={terria}
             viewState={this.props.viewState}
-            animationDuration ={animationDuration}
+            animationDuration={animationDuration}
           />
         )}
       </div>
