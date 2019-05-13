@@ -1,0 +1,103 @@
+@import "~terriajs-variables";
+@import "../../Sass/common/mixins";
+
+:global {
+  .pell-button {
+    &:focus {
+      outline: 1px solid $color-primary;
+    }
+  }
+}
+.popupEditor {
+  &.is-mounted {
+    opacity: 1;
+    @include transform(none);
+  }
+  @include transform(translateY(20%));
+  opacity: 0;
+  @include transition(all 0.3s);
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 999999;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  .inner {
+    max-width: 800px;
+    width: 80vw;
+    background: #ffffff;
+    z-index: 9999;
+    margin: 0 auto;
+    color: $text-dark;
+    box-shadow: 0 0 15px 6px rgba(100, 100, 100, 0.3);
+    border-radius: 4px;
+    padding: 6px;
+  }
+  .header {
+    display: flex;
+    align-items: baseline;
+    padding: $padding;
+    border-bottom: 1px solid $field-border;
+  }
+  .body {
+    min-height: 150px;
+    p {
+      margin-top: 0;
+    }
+  }
+}
+
+.editor {
+  background: $dark-with-overlay;
+  color: $text-light;
+  font-family: $font-pop;
+  margin: $padding-small;
+  border-radius: 4px;
+  .editorHeader {
+    padding: $padding;
+    border-bottom: 1px solid $overlay;
+  }
+  form {
+    padding: $padding;
+  }
+}
+
+.field {
+  composes: field from "../../Sass/common/_form.scss";
+  border: 0;
+  margin-right: $padding;
+  padding: 0 !important;
+}
+
+.fieldBtn {
+  composes: btn from "../../Sass/common/_buttons.scss";
+  composes: btn--map from "../../Sass/common/_buttons.scss";
+  background: #9ca1aa;
+  border-radius: 4px;
+  padding: $padding;
+  margin-bottom: $padding + 3px;
+  box-shadow: none;
+  width: 100%;
+}
+
+.doneBtn,
+.saveBtn {
+  composes: btn from "../../Sass/common/_buttons.scss";
+  composes: btn-primary from "../../Sass/common/_buttons.scss";
+}
+
+.saveBtn {
+  width: auto;
+  padding: 5px 15px;
+}
+.cancelBtn {
+  composes: btn from "../../Sass/common/_buttons.scss";
+  composes: btn--secondary from "../../Sass/common/_buttons.scss";
+  padding: 5px 15px;
+  margin-right: $padding;
+  border: 2px solid #ffffff;
+}
