@@ -1939,63 +1939,150 @@ describe("CsvCatalogItem with no geo", function() {
   });
 });
 
-describe("CsvTableCatalogItem", function() {
+describe("CsvTableCatalogItem & chart sharing", function() {
   var terria;
   var csvItem;
   var columns;
-  var tableStructure;
 
   beforeEach(function() {
     terria = new Terria({
       baseUrl: "./"
     });
     csvItem = new CsvCatalogItem(terria);
-    columns = {
-      "0": {
-        active: false
-      },
-      "1": {
-        active: true
-      },
-      "2": {
-        active: false
-      }
-    };
-    tableStructure = new TableStructure(undefined, { columnOptions: columns });
   });
 
-  describe("syncActiveColumns", function() {
-    // xit("syncs tableStyle with tableStructure upon serialising", function(done) {
-    it("syncs tableStyle with tableStructure upon serialising", function(done) {
-      loadText("test/csv_nongeo/time_series.csv")
-        .then(function(text) {
-          tableStructure.loadFromCsv(text);
-          csvItem.initializeFromTableStructure(tableStructure);
+  describe("serialization around tableStyle & tableStructures for non-geo time series csvs", function() {
+    it("initialises the correct 'no variables selected' state", function(done) {
+      columns = {
+        "0": {
+          active: false
+        },
+        "1": {
+          active: false
+        },
+        "2": {
+          active: false
+        }
+      };
+      // the flow for shared csv items is that the tableStyle is serialised
+      csvItem
+        .updateFromJson({
+          type: "csv",
+          url: "test/csv_nongeo/time_series.csv",
+          isEnabled: true,
+          isShown: true,
+          tableStyle: {
+            columns: columns
+          }
         })
         .then(function() {
-          csvItem
-            .updateFromJson({
-              type: "csv",
-              tableStyle: {
-                columns: columns
-              }
-            })
-            .then(function() {
-              expect(csvItem.tableStyle.columns[0].active).toBe(false);
-              expect(csvItem.tableStyle.columns[1].active).toBe(true);
-              expect(csvItem.tableStyle.columns[2].active).toBe(false);
-            })
-            .then(function() {
-              // toggleActive (via the UI) on tableStructure items do not reflect back into table styles
-              expect(csvItem.tableStructure.items[0].isActive).toBe(false);
-              expect(csvItem.tableStructure.items[1].isActive).toBe(true);
-              expect(csvItem.tableStructure.items[2].isActive).toBe(false);
-              csvItem.tableStructure.items[2].toggleActive();
-              expect(csvItem.tableStructure.items[2].isActive).toBe(true);
-              // active should still be false on _tableStyle_ until we sync changes
-              expect(csvItem.tableStyle.columns[2].active).toBe(false);
-            })
-            .otherwise(done.fail);
+          expect(csvItem.tableStyle.columns[0].active).toBe(columns[0].active);
+          expect(csvItem.tableStyle.columns[1].active).toBe(columns[1].active);
+          expect(csvItem.tableStyle.columns[2].active).toBe(columns[2].active);
+        })
+        .then(csvItem.load.bind(csvItem))
+        .then(function() {
+          // because we load in non-geospatial data, makeChartable() will make sure there's one active item when enabled
+          const tableStructure = csvItem.concepts[0];
+          expect(tableStructure.items[0].isActive).toBe(false);
+          expect(tableStructure.items[1].isActive).toBe(true);
+          expect(tableStructure.items[2].isActive).toBe(false);
+
+          // we apply table style columns to structure when loading from a shared (chart) catalog item
+          csvItem.applyTableStyleColumnsToStructure(
+            { columns: columns },
+            csvItem.tableStructure
+          );
+
+          // Check that the table structure now overrode and reflects the columnstyle provided
+          expect(tableStructure.items[0].isActive).toBe(false);
+          expect(tableStructure.items[1].isActive).toBe(false);
+          expect(tableStructure.items[2].isActive).toBe(false);
+        })
+        .then(function() {
+          const serialized = csvItem.serializeToJson();
+          expect(serialized.tableStyle.columns[0].active).toBe(false);
+          expect(serialized.tableStyle.columns[1].active).toBe(false);
+          expect(serialized.tableStyle.columns[2].active).toBe(false);
+        })
+        .then(done)
+        .otherwise(done.fail);
+    });
+    it("initialises and shares the correct 'second variable is selected' state", function(done) {
+      columns = {
+        "0": {
+          active: false
+        },
+        "1": {
+          active: false
+        },
+        "2": {
+          active: true
+        }
+      };
+      // the flow for shared csv items is that the tableStyle is serialised
+      csvItem
+        .updateFromJson({
+          type: "csv",
+          url: "test/csv_nongeo/time_series.csv",
+          isEnabled: true,
+          isShown: true,
+          tableStyle: {
+            columns: columns
+          }
+        })
+        .then(function() {
+          expect(csvItem.tableStyle.columns[0].active).toBe(columns[0].active);
+          expect(csvItem.tableStyle.columns[1].active).toBe(columns[1].active);
+          expect(csvItem.tableStyle.columns[2].active).toBe(columns[2].active);
+        })
+        .then(csvItem.load.bind(csvItem))
+        .then(function() {
+          // because we load in non-geospatial data, and there are activeItems
+          // ensureActiveColumnForNonSpatial() shouldn't change active columns
+          const tableStructure = csvItem.concepts[0];
+          expect(tableStructure.items[0].isActive).toBe(false);
+          expect(tableStructure.items[1].isActive).toBe(false);
+          expect(tableStructure.items[2].isActive).toBe(true);
+
+          // we apply table style columns to structure when loading from a shared (chart) catalog item
+          csvItem.applyTableStyleColumnsToStructure(
+            { columns: columns },
+            csvItem.tableStructure
+          );
+
+          expect(tableStructure.items[0].isActive).toBe(false);
+          expect(tableStructure.items[1].isActive).toBe(false);
+          expect(tableStructure.items[2].isActive).toBe(true);
+        })
+        .then(function() {
+          const tableStructure = csvItem.concepts[0];
+
+          // toggleActive on tableStructure items do not reflect back into table styles
+          tableStructure.items[1].toggleActive();
+          expect(tableStructure.items[1].isActive).toBe(true);
+
+          expect(tableStructure.items[0].isActive).toBe(false);
+          expect(tableStructure.items[1].isActive).toBe(true);
+          expect(tableStructure.items[2].isActive).toBe(true);
+          // active should still be false on !tableStyle! until we sync changes
+          expect(csvItem.tableStyle.columns[1].active).toBe(false);
+
+          expect(csvItem.tableStyle.columns[0].active).toBe(false);
+          expect(csvItem.tableStyle.columns[1].active).toBe(false);
+          expect(csvItem.tableStyle.columns[2].active).toBe(true);
+          // apply the structure to the tableStyle
+          csvItem.syncActiveColumns(csvItem.tableStyle, csvItem.tableStructure);
+
+          expect(csvItem.tableStyle.columns[0].active).toBe(false);
+          expect(csvItem.tableStyle.columns[1].active).toBe(true);
+          expect(csvItem.tableStyle.columns[2].active).toBe(true);
+        })
+        .then(function() {
+          const serialized = csvItem.serializeToJson();
+          expect(serialized.tableStyle.columns[0].active).toBe(false);
+          expect(serialized.tableStyle.columns[1].active).toBe(true);
+          expect(serialized.tableStyle.columns[2].active).toBe(true);
         })
         .then(done)
         .otherwise(done.fail);

@@ -200,7 +200,8 @@ function expand(props, sourceIndex) {
   function makeNewCatalogItem() {
     const url = defined(sourceIndex) ? props.sources[sourceIndex] : undefined;
     const newCatalogItem = new CsvCatalogItem(terria, url, {
-      tableStyle: makeTableStyle()
+      tableStyle: makeTableStyle(),
+      isCsvForCharting: true
     });
     let tableStructure = props.tableStructure;
     if (
