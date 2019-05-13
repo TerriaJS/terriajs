@@ -163,7 +163,7 @@ const StoryPanel = createReactClass({
         <div
           className={classNames(Styles.fullPanel, {
             [Styles.isHidden]: !this.props.viewState.storyShown,
-            [Styles.isPushedUp]: this.props.viewState.chartIsOpen(),
+            [Styles.isPushedUp]: this.props.viewState.chartIsOpen,
             [Styles.isCentered]: this.props.viewState.isMapFullScreen
           })}
         >

@@ -29,7 +29,7 @@ const ChartPanel = createReactClass({
   },
 
   closePanel() {
-    this.props.viewState.chartIsOpen(false);
+    this.props.viewState.chartIsOpen = false;
   },
 
   componentDidUpdate() {
@@ -40,7 +40,7 @@ const ChartPanel = createReactClass({
 
   render() {
     const chartableItems = this.props.terria.catalog.chartableItems;
-    if (this.props.viewState.chartIsOpen() === false) {
+    if (this.props.viewState.chartIsOpen === false) {
       return null;
     }
     let data = [];
