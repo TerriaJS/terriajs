@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import Styles from "./prompt.scss";
 import classNames from "classnames";
 
-export default class Prompt extends React.Component {
+export default class Prompt extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -23,11 +23,6 @@ export default class Prompt extends React.Component {
   }
   componentDidMount() {
     this.fadeIn();
-  }
-  createMarkup() {
-    return {
-      __html: this.props.content
-    };
   }
   render() {
     return (
@@ -51,7 +46,6 @@ export default class Prompt extends React.Component {
 
 Prompt.propTypes = {
   content: PropTypes.object,
-  html: PropTypes.bool,
   dismissText: PropTypes.string,
   dismissAction: PropTypes.func,
   displayDelay: PropTypes.number

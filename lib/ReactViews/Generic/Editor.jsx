@@ -2,7 +2,7 @@ import React from "react";
 import { init, exec } from "pell";
 import PropTypes from "prop-types";
 
-export default class Editor extends React.Component {
+export default class Editor extends React.PureComponent {
   constructor(props) {
     super(props);
   }
