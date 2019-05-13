@@ -6,26 +6,28 @@ import Trait, { TraitOptions } from "./Trait";
 
 type PrimitiveType = "string" | "number" | "boolean";
 
-export interface PrimitiveTraitOptions<T> extends TraitOptions {
+export interface PrimitiveArrayTraitOptions<T> extends TraitOptions {
   type: PrimitiveType;
   isNullable?: boolean;
 }
 
-export default function primitiveTrait<T>(options: PrimitiveTraitOptions<T>) {
+export default function primitiveArrayTrait<T>(
+  options: PrimitiveArrayTraitOptions<T>
+) {
   return function(target: any, propertyKey: string) {
     const constructor = target.constructor;
     if (!constructor.traits) {
       constructor.traits = {};
     }
-    constructor.traits[propertyKey] = new PrimitiveTrait(propertyKey, options);
+    constructor.traits[propertyKey] = new PrimitiveArrayTrait(propertyKey, options);
   };
 }
 
-export class PrimitiveTrait<T> extends Trait {
+export class PrimitiveArrayTrait<T> extends Trait {
   readonly type: PrimitiveType;
   readonly isNullable: boolean;
 
-  constructor(id: string, options: PrimitiveTraitOptions<T>) {
+  constructor(id: string, options: PrimitiveArrayTraitOptions<T>) {
     super(id, options);
     this.type = options.type;
     this.isNullable = options.isNullable || false;
@@ -43,16 +45,13 @@ export class PrimitiveTrait<T> extends Trait {
     return undefined;
   }
 
-  fromJson(model: BaseModel, stratumName: string, jsonValue: any): T {
-    if (
-      typeof jsonValue !== this.type &&
-      (!this.isNullable || jsonValue !== null)
-    ) {
+  fromJson(model: BaseModel, stratumName: string, jsonValue: any): T[] {
+    if (!this.isValidJson(jsonValue)) {
       throw new TerriaError({
         title: "Invalid property",
         message: `Property ${this.id} is expected to be of type ${
           this.type
-        } but instead it is of type ${typeof jsonValue}.`
+        }[].`
       });
     }
 
@@ -61,9 +60,21 @@ export class PrimitiveTrait<T> extends Trait {
 
   isSameType(trait: Trait): boolean {
     return (
-      trait instanceof PrimitiveTrait &&
+      trait instanceof PrimitiveArrayTrait &&
       trait.type === this.type &&
       trait.isNullable === this.isNullable
     );
+  }
+
+  private isValidJson(jsonValue: any): boolean {
+    if (jsonValue === null && this.isNullable) {
+      return true;
+    }
+
+    if (!Array.isArray(jsonValue)) {
+      return false;
+    }
+
+    return jsonValue.every(item => typeof item === this.type);
   }
 }

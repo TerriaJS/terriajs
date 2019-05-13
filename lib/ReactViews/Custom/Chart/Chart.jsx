@@ -26,7 +26,6 @@ import when from "terriajs-cesium/Source/ThirdParty/when";
 import ChartData from "../../../Charts/ChartData";
 import ChartRenderer from "../../../Charts/ChartRenderer";
 import proxyCatalogItemUrl from "../../../Models/proxyCatalogItemUrl";
-import TableStructure from "../../../Map/TableStructure";
 import VarType from "../../../Map/VarType";
 
 import Styles from "./chart.scss";

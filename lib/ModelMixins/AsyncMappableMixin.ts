@@ -19,6 +19,11 @@ export default function AsyncMappableMixin<
   T extends Constructor<RequiredInstance>
 >(Base: T) {
   abstract class AsyncMappableMixin extends Base implements Mappable {
+    // TODO
+    get isMappable() {
+      return true;
+    }
+
     get isLoadingMapItems(): boolean {
       return this._isLoadingMapItems;
     }
