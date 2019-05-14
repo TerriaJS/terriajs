@@ -26,6 +26,10 @@
   display: block;
 }
 
+.is-translucent {
+  opacity: 0.6;
+}
+
 .header {
   background: $feature-info-header-bg;
   padding-right: $input-height;
@@ -66,6 +70,10 @@
   position: absolute;
   right: 8px;
   top: 8px;
+  svg {
+    width: 15px;
+    height: 26px;
+  }
 }
 
 .btnToggleFeature {
