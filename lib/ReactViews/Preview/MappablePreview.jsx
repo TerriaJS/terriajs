@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 
 import DataPreviewMap from "./DataPreviewMap";
 import Description from "./Description";
-import measureComponent from "../measureComponent";
+import measureElement from "../measureElement";
 import ObserveModelMixin from "../ObserveModelMixin";
 import Styles from "./mappable-preview.scss";
 import SharePanel from "../Map/Panels/SharePanel/SharePanel.jsx";
@@ -23,7 +23,7 @@ const MappablePreview = createReactClass({
     previewed: PropTypes.object.isRequired,
     terria: PropTypes.object.isRequired,
     viewState: PropTypes.object.isRequired,
-    widthFromMeasureComponentHOC: PropTypes.number
+    widthFromMeasureElementHOC: PropTypes.number
   },
 
   toggleOnMap(event) {
@@ -77,7 +77,7 @@ const MappablePreview = createReactClass({
                 <SharePanel
                   catalogShare
                   catalogShareWithoutText
-                  modalWidth={this.props.widthFromMeasureComponentHOC}
+                  modalWidth={this.props.widthFromMeasureElementHOC}
                   terria={this.props.terria}
                   viewState={this.props.viewState}
                 />
@@ -91,4 +91,4 @@ const MappablePreview = createReactClass({
   }
 });
 
-export default measureComponent(MappablePreview);
+export default measureElement(MappablePreview);
