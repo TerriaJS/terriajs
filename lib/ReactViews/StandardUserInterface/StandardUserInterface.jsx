@@ -54,7 +54,7 @@ const StandardUserInterface = createReactClass({
   },
 
   getDefaultProps() {
-    return {minimumLargeScreenWidth: 768};
+    return { minimumLargeScreenWidth: 768 };
   },
 
   /* eslint-disable-next-line camelcase */
