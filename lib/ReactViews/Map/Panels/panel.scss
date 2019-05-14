@@ -57,8 +57,8 @@
   composes: btn from "../../../Sass/common/_buttons.scss";
   position: absolute;
   z-index: 10;
-  top: 5px;
-  right: 0px;
+  top: $padding-small;
+  right: $padding-small;
 
   &:hover,
   &:focus {
@@ -69,13 +69,13 @@
 
   svg {
     fill: $grey;
-    height: 20px;
-    width: 20px;
+    height: 10px;
+    width: 10px;
   }
 }
 .inner-close-btn--for-modal {
-  top: 10px;
-  right: 10px;
+  top: 15px;
+  right: 15px;
 }
 
 .caret {
