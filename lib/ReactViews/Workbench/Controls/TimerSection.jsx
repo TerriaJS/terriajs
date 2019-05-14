@@ -112,7 +112,7 @@ const TimerSection = createReactClass({
 
   render() {
     return (
-      <div>
+      <>
         <If condition={this.isEnabled()}>
           <div className={Styles.section}>
             <div className={Styles.timerContainer}>
@@ -121,14 +121,14 @@ const TimerSection = createReactClass({
                   this.props.item.polling.nextScheduledUpdateTime
                 }`}
                 radius={10}
-                start={this.getTimerStartTime()}
-                stop={this.props.item.polling.nextScheduledUpdateTime}
+                start={this.getTimerStartTime().getTime()}
+                stop={this.props.item.polling.nextScheduledUpdateTime.getTime()}
               />
             </div>
             <span>Next data update in {this.getCountdownString()}</span>
           </div>
         </If>
-      </div>
+      </>
     );
   }
 });
