@@ -1,13 +1,17 @@
 Change Log
 ==========
 
+### Next Release
+
+* Added the "Story" feature for building and sharing guided tours of maps and data.
+* Added sharing within the data catalog to share a given catalog group or item
+
 ### v7.4.1
 
 * Remove dangling comma in `regionMapping.json`.
 * `WebMapServicCatalogItem` now includes the current `style` in generated `GetLegendGraphic` URLs. 
 
 * Fixed Map View '2D' button activating 3D ellipsoid viewer when the instance has no terrain.
-* Added sharing within the data catalog to share a given catalog group or item
 * Fixed a bug where all available styles were being retrieved from a `GetCapabilities` for each layer within a WMS Group resulting in memory crashes on WMS's with many layers.
 ### v7.4.0
 

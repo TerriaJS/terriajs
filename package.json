@@ -57,6 +57,7 @@
     "mustache": "^2.2.1",
     "mutationobserver-shim": "^0.3.1",
     "pbf": "^3.0.1",
+    "pell": "git://github.com/TerriaJS/pell#master",
     "point-in-polygon": "^1.0.1",
     "proj4": "^2.4.4",
     "prop-types": "^15.6.0",
@@ -68,6 +69,7 @@
     "react-datepicker": "0.53.0",
     "react-dom": "^16.3.2",
     "react-responsive": "^5.0.0",
+    "react-swipeable": "^5.1.0",
     "resolve-url-loader": "^3.0.1",
     "retry": "^0.12.0",
     "sass-loader": "^7.1.0",
@@ -91,6 +93,7 @@
     "fs-extra": "^7.0.1",
     "generate-terriajs-schema": "^1.4.0",
     "glob-all": "^3.0.1",
+    "husky": "^2.2.0",
     "jasmine-core": "^2.9.1",
     "jsdoc": "^3.4.0",
     "karma": "^4.0.0",
@@ -110,6 +113,7 @@
     "node-sass": "^4.11.0",
     "plugin-error": "^1.0.1",
     "prettier": "1.17.0",
+    "pretty-quick": "^1.10.0",
     "react-shallow-testutils": "^3.0.0",
     "react-test-renderer": "^16.3.2",
     "terriajs-jasmine-ajax": "^3.2.1",
@@ -126,6 +130,13 @@
     "dev": "webpack-dev-server --inline --config buildprocess/webpack.config.dev.js --host 0.0.0.0",
     "hot": "webpack-dev-server --inline --config buildprocess/webpack.config.hot.js --hot --host 0.0.0.0",
     "publish-doc": "bash -c \"rm -rf wwwroot/doc && mkdir wwwroot/doc && cp doc/index-built.html wwwroot/doc/index.html && cp doc/CNAME wwwroot/doc/CNAME && gulp docs && cd wwwroot/doc && git init && git remote add origin $npm_package_config_docRepo && git add . && git commit -m 'Generate Documentation' && git push -f origin HEAD:gh-pages\"",
-    "prettier": "prettier --write \"{lib,test}/**/*.{js,jsx,ts,tsx,scss}\""
+    "prettier": "prettier --write \"{lib,test}/**/*.{js,jsx,ts,tsx,scss}\"",
+    "pretty-quick": "pretty-quick --pattern \"{lib,test}/**/*.{js,jsx,ts,tsx,scss}\"",
+    "prettier-check": "prettier --check \"{lib,test}/**/*.{js,jsx,ts,tsx,scss}\""
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged --pattern \"{lib,test}/**/*.{js,jsx,ts,tsx,scss}\""
+    }
   }
 }

@@ -29,6 +29,9 @@ const DataCatalogItem = createReactClass({
   },
 
   onBtnClicked(event) {
+    if (defined(this.props.viewState.storyShown)) {
+      this.props.viewState.storyShown = false;
+    }
     if (
       defined(this.props.item.invoke) ||
       this.props.viewState.useSmallScreenInterface

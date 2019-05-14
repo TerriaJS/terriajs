@@ -19,13 +19,6 @@ const ExplorerWindow = createReactClass({
     terria: PropTypes.object.isRequired,
     viewState: PropTypes.object.isRequired
   },
-
-  getInitialState() {
-    return {
-      isMounted: false
-    };
-  },
-
   close() {
     this.props.viewState.explorerPanelIsVisible = false;
     this.props.viewState.switchMobileView("nowViewing");
