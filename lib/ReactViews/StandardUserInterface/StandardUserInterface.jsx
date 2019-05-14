@@ -29,6 +29,7 @@ import "inobounce";
 
 import Styles from "./standard-user-interface.scss";
 
+const animationDuration = 250;
 /** blah */
 const StandardUserInterface = createReactClass({
   displayName: "StandardUserInterface",
@@ -53,7 +54,7 @@ const StandardUserInterface = createReactClass({
   },
 
   getDefaultProps() {
-    return {};
+    return { minimumLargeScreenWidth: 768 };
   },
 
   /* eslint-disable-next-line camelcase */
@@ -82,9 +83,10 @@ const StandardUserInterface = createReactClass({
     this.resizeListener();
 
     if (
+      this.props.terria.configParameters.storyEnabled &&
       this.props.terria.stories &&
       this.props.terria.stories.length &&
-      this.props.viewState.storyEnabled
+      !this.props.viewState.storyShown
     ) {
       this.props.viewState.notifications.push({
         title: "This map contains a story",
@@ -105,6 +107,9 @@ const StandardUserInterface = createReactClass({
 
   componentDidMount() {
     this._wrapper.addEventListener("dragover", this.dragOverListener, false);
+    this.props.terria.configParameters.storyEnabled &&
+      this.props.terria.stories.length === 0 &&
+      this.props.viewState.toggleFeaturePrompt("story", true);
   },
 
   componentWillUnmount() {
@@ -134,12 +139,10 @@ const StandardUserInterface = createReactClass({
     const allBaseMaps = this.props.allBaseMaps;
 
     const showStoryBuilder =
-      this.props.viewState.storyEnabled &&
       this.props.viewState.storyBuilderShown &&
       !this.shouldUseMobileInterface();
     const showStoryPanel =
-      this.props.terria.stories &&
-      Array.isArray(this.props.terria.stories) &&
+      this.props.terria.configParameters.storyEnabled &&
       this.props.terria.stories.length &&
       this.props.viewState.storyShown &&
       !this.props.viewState.explorerPanelIsVisible &&
@@ -203,7 +206,7 @@ const StandardUserInterface = createReactClass({
                     viewState={this.props.viewState}
                     minified={false}
                     btnText="Show workbench"
-                    animationDuration={250}
+                    animationDuration={animationDuration}
                   />
                 </div>
               </Medium>
@@ -249,6 +252,7 @@ const StandardUserInterface = createReactClass({
                 viewState={this.props.viewState}
                 allBaseMaps={allBaseMaps}
                 menuItems={customElements.menu}
+                animationDuration={animationDuration}
               />
               <MapNavigation
                 terria={terria}
@@ -309,8 +313,13 @@ const StandardUserInterface = createReactClass({
             <StoryPanel terria={terria} viewState={this.props.viewState} />
           )}
         </div>
-        {showStoryBuilder && (
-          <StoryBuilder terria={terria} viewState={this.props.viewState} />
+        {this.props.terria.configParameters.storyEnabled && (
+          <StoryBuilder
+            isVisible={showStoryBuilder}
+            terria={terria}
+            viewState={this.props.viewState}
+            animationDuration={animationDuration}
+          />
         )}
       </div>
     );

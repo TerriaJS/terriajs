@@ -7,19 +7,16 @@ import parseCustomHtmlToReact from "../Custom/parseCustomHtmlToReact";
 import { Small, Medium } from "../Generic/Responsive";
 import Icon from "../Icon.jsx";
 import { Swipeable } from "react-swipeable";
+import when from "terriajs-cesium/Source/ThirdParty/when";
+import defined from "terriajs-cesium/Source/Core/defined";
 import Styles from "./story-panel.scss";
-
-// given a nowviewing item, build its path in the data catalog
-export function buildPath(item) {
-  if (!item.parent) {
-    return item.name;
-  }
-  return buildPath(item.parent) + "/" + item.name;
-}
 
 export function activateStory(story, terria) {
   if (story.shareData) {
-    terria.updateFromStartData(story.shareData).then(() => {
+    const promises = story.shareData.initSources.map(initSource =>
+      terria.addInitSource(initSource, true)
+    );
+    when.all(promises).then(() => {
       const nowViewingPaths = story.shareData.initSources.reduce((p, c) => {
         if (c.sharedCatalogMembers) {
           return p.concat(Object.keys(c.sharedCatalogMembers));
@@ -28,9 +25,12 @@ export function activateStory(story, terria) {
       }, []);
       const nowViewing = terria.nowViewing.items;
       nowViewing.slice().forEach(item => {
-        const path = buildPath(item);
+        const itemToCheck = defined(item.creatorCatalogItem)
+          ? item.creatorCatalogItem
+          : item;
+        const path = itemToCheck.uniqueId;
         if (nowViewingPaths.indexOf(path) < 0) {
-          item.isEnabled = false;
+          itemToCheck.isEnabled = false;
         }
       });
     });
@@ -134,7 +134,7 @@ const StoryPanel = createReactClass({
   },
 
   exitStory() {
-    this.props.viewState.storyShown = !this.props.viewState.storyShown;
+    this.props.viewState.storyShown = false;
     this.props.terria.currentViewer.notifyRepaintRequired();
   },
 
@@ -161,13 +161,14 @@ const StoryPanel = createReactClass({
     );
     return (
       <Swipeable
-        onSwipedLeft={this.goToPrevStory}
-        onSwipedRight={this.goToNextStory}
+        onSwipedLeft={this.goToNextStory}
+        onSwipedRight={this.goToPrevStory}
       >
         <div
           className={classNames(Styles.fullPanel, {
             [Styles.isHidden]: !this.props.viewState.storyShown,
-            [Styles.isPushedUp]: this.props.viewState.chartIsOpen
+            [Styles.isPushedUp]: this.props.viewState.chartIsOpen,
+            [Styles.isCentered]: this.props.viewState.isMapFullScreen
           })}
         >
           <div

@@ -13,11 +13,18 @@ export default class StoryEditor extends React.Component {
       id: undefined,
       inView: false
     };
+
+    this.keys = {
+      ctrl: false,
+      enter: false
+    };
+
     this.saveStory = this.saveStory.bind(this);
     this.cancelEditing = this.cancelEditing.bind(this);
     this.updateTitle = this.updateTitle.bind(this);
     this.onKeyDown = this.onKeyDown.bind(this);
 
+    this.onKeyUp = this.onKeyUp.bind(this);
     this.slideInTimer = null;
     this.slideOutTimer = null;
     this.escKeyListener = null;
@@ -42,6 +49,8 @@ export default class StoryEditor extends React.Component {
       this.setState({
         inView: true
       });
+
+      this.titleInput.focus();
     }, 300);
   }
 
@@ -96,11 +105,38 @@ export default class StoryEditor extends React.Component {
     if (event.keyCode === 27) {
       this.cancelEditing();
     }
+    if (event.keyCode === 13) {
+      this.keys.enter = true;
+    }
+
+    if (event.keyCode === 17) {
+      this.keys.ctrl = true;
+    }
+  }
+
+  onKeyUp(event) {
+    if (
+      (event.keyCode === 13 || event.keyCode === 17) &&
+      this.keys.enter &&
+      this.keys.ctrl
+    ) {
+      this.saveStory();
+    }
+
+    if (event.keyCode === 13) {
+      this.keys.enter = false;
+    }
+
+    if (event.keyCode === 17) {
+      this.keys.ctrl = false;
+    }
   }
 
   renderPopupEditor() {
     return (
       <div
+        onKeyDown={this.onKeyDown}
+        onKeyUp={this.onKeyUp}
         className={classNames(Styles.popupEditor, {
           [Styles.isMounted]: this.state.inView
         })}
@@ -108,12 +144,12 @@ export default class StoryEditor extends React.Component {
         <div className={Styles.inner}>
           <div className={Styles.header}>
             <input
+              ref={titleInput => (this.titleInput = titleInput)}
               placeholder="Enter a title here"
               className={Styles.field}
               type="text"
               id="title"
               value={this.state.title}
-              onKeyDown={this.onKeyDown}
               onChange={this.updateTitle}
             />
             <button
@@ -136,7 +172,6 @@ export default class StoryEditor extends React.Component {
           </div>
           <div className={Styles.body}>
             <Editor
-              onKeyDown={this.onKeyDown}
               html={this.state.text}
               onChange={text => this.setState({ text })}
             />

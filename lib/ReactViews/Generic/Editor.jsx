@@ -1,9 +1,8 @@
 import React from "react";
-import { init } from "pell";
+import { init, exec } from "pell";
 import PropTypes from "prop-types";
-import "!!style-loader!css-loader?sourceMap!pell/dist/pell.css";
 
-export default class Editor extends React.Component {
+export default class Editor extends React.PureComponent {
   constructor(props) {
     super(props);
   }
@@ -41,6 +40,15 @@ Editor.defaultProps = {
     "olist",
     "ulist",
     "image",
-    "link"
+    {
+      name: "link",
+      result: () => {
+        /* eslint-disable-next-line no-alert */
+        const url = window.prompt("Enter the link URL", "http://");
+        if (url) {
+          exec("createLink", url);
+        }
+      }
+    }
   ]
 };
