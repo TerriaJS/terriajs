@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 
 import DataPreviewSections from "./DataPreviewSections";
 import DataPreviewUrl from "./DataPreviewUrl.jsx";
-import measureWidth from "./measureWidth";
+import measureComponent from "../measureComponent";
 import ObserveModelMixin from "../ObserveModelMixin";
 import Styles from "./mappable-preview.scss";
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
@@ -23,7 +23,7 @@ const GroupPreview = createReactClass({
     previewed: PropTypes.object.isRequired,
     terria: PropTypes.object.isRequired,
     viewState: PropTypes.object.isRequired,
-    widthFromMeasureWidthHOC: PropTypes.number
+    widthFromMeasureComponentHOC: PropTypes.number
   },
 
   backToMap() {
@@ -44,7 +44,7 @@ const GroupPreview = createReactClass({
           <div className={Styles.shareLinkWrapper}>
             <SharePanel
               catalogShare
-              modalWidth={this.props.widthFromMeasureWidthHOC}
+              modalWidth={this.props.widthFromMeasureComponentHOC}
               terria={this.props.terria}
               viewState={this.props.viewState}
             />
@@ -96,4 +96,4 @@ const GroupPreview = createReactClass({
   }
 });
 
-export default measureWidth(GroupPreview);
+export default measureComponent(GroupPreview);
