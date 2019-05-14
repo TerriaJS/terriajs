@@ -25,7 +25,9 @@ export function activateStory(story, terria) {
       }, []);
       const nowViewing = terria.nowViewing.items;
       nowViewing.slice().forEach(item => {
-        const itemToCheck = defined(item.creatorCatalogItem) ? item.creatorCatalogItem : item;
+        const itemToCheck = defined(item.creatorCatalogItem)
+          ? item.creatorCatalogItem
+          : item;
         const path = itemToCheck.uniqueId;
         if (nowViewingPaths.indexOf(path) < 0) {
           itemToCheck.isEnabled = false;
