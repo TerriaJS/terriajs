@@ -1,14 +1,21 @@
+import L from "leaflet";
 import { autorun } from "mobx";
 import { createTransformer } from "mobx-utils";
+import Clock from "terriajs-cesium/Source/Core/Clock";
+import EventHelper from "terriajs-cesium/Source/Core/EventHelper";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import cesiumRequestAnimationFrame from "terriajs-cesium/Source/Core/requestAnimationFrame";
+import cesiumCancelAnimationFrame from "terriajs-cesium/Source/Core/cancelAnimationFrame";
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import DataSourceCollection from "terriajs-cesium/Source/DataSources/DataSourceCollection";
 import when from "terriajs-cesium/Source/ThirdParty/when";
 import CesiumTileLayer from "../Map/CesiumTileLayer";
 import LeafletDataSourceDisplay from "../Map/LeafletDataSourceDisplay";
 import LeafletScene from "../Map/LeafletScene";
+import LeafletVisualizer from "../Map/LeafletVisualizer";
 import rectangleToLatLngBounds from "../Map/rectangleToLatLngBounds";
+import TerriaViewer from "../ViewModels/TerriaViewer";
 import GlobeOrMap, { CameraView } from "./GlobeOrMap";
 import Mappable, { ImageryParts } from "./Mappable";
 import Terria from "./Terria";
@@ -17,27 +24,104 @@ function isDefined<T>(value: T | undefined): value is T {
   return value !== undefined;
 }
 
+// This class is an observer. It probably won't contain any observables itself
+
 export default class Leaflet implements GlobeOrMap {
   readonly terria: Terria;
+  readonly terriaViewer: TerriaViewer;
   readonly map: L.Map;
   readonly scene: LeafletScene;
   readonly dataSources: DataSourceCollection = new DataSourceCollection();
-  dataSourceDisplay?: LeafletDataSourceDisplay;
+  readonly dataSourceDisplay: LeafletDataSourceDisplay;
+  private readonly _attributionControl: L.Control.Attribution;
+  private readonly _leafletVisualizer: LeafletVisualizer;
+  private readonly _eventHelper: EventHelper;
+  private readonly _disposeWorkbenchMapItemsSubscription: () => void;
+  private _stopRequestAnimationFrame: boolean = false;
+  private _cesiumReqAnimFrameId: number | undefined;
 
-  private _disposeWorkbenchMapItemsSubscription: (() => void) | undefined;
+  constructor(terriaViewer: TerriaViewer) {
+    this.terria = terriaViewer.terria;
+    this.terriaViewer = terriaViewer;
+    this.map = L.map(this.terriaViewer.container, {
+      zoomControl: false,
+      attributionControl: false,
+      maxZoom: 14, //this.maximumLeafletZoomLevel,
+      zoomSnap: 1, // Change to  0.2 for incremental zoom when Chrome fixes canvas scaling gaps
+      preferCanvas: true,
+      worldCopyJump: true
+    }).setView([-28.5, 135], 5);
 
-  constructor(terria: Terria, map: L.Map) {
-    this.terria = terria;
-    this.map = map;
-    this.scene = new LeafletScene(map);
+    this.scene = new LeafletScene(this.map);
+
+    this._attributionControl = L.control.attribution({
+      position: "bottomleft"
+    });
+    this.map.addControl(this._attributionControl);
+
+    // this.map.screenSpaceEventHandler = {
+    //     setInputAction : function() {},
+    //     remoteInputAction : function() {}
+    // };
+
+    this._leafletVisualizer = new LeafletVisualizer();
+
+    // const terriaLogo = this.terriaViewer.defaultTerriaCredit ? this.terriaViewer.defaultTerriaCredit.html : '';
+
+    // const creditParts = [
+    //     this._getDisclaimer(),
+    //     this._developerAttribution && createCredit(this._developerAttribution.text, this._developerAttribution.link),
+    //     new Credit('<a target="_blank" href="http://leafletjs.com/">Leaflet</a>')
+    // ];
+
+    // this.attributionControl.setPrefix(terriaLogo + creditParts.filter(part => defined(part)).map(credit => credit.html).join(' | '));
+
+    // map.on("boxzoomend", function(e) {
+    //     console.log(e.boxZoomBounds);
+    // });
+
+    this.dataSourceDisplay = new LeafletDataSourceDisplay({
+      scene: this.scene,
+      dataSourceCollection: this.dataSources,
+      visualizersCallback: <any>this._leafletVisualizer.visualizersCallback // fix type error
+    });
+
+    this._eventHelper = new EventHelper();
+
+    this._eventHelper.add(this.terria.timelineClock.onTick, <any>((
+      clock: Clock
+    ) => {
+      this.dataSourceDisplay.update(clock.currentTime);
+    }));
+
+    const ticker = () => {
+      if (!this._stopRequestAnimationFrame) {
+        this.terria.timelineClock.tick();
+        this._cesiumReqAnimFrameId = cesiumRequestAnimationFrame(ticker);
+      }
+    };
+
+    ticker();
+
+    this._disposeWorkbenchMapItemsSubscription = this.observeModelLayer();
+    // return when();
   }
 
   destroy() {
-    this.stopObserving();
+    this._disposeWorkbenchMapItemsSubscription();
+    this._eventHelper.removeAll();
+    // This variable prevents a race condition if destroy() is called
+    // synchronously as a result of timelineClock ticking due to ticker()
+    this._stopRequestAnimationFrame = true;
+    if (isDefined(this._cesiumReqAnimFrameId)) {
+      cesiumCancelAnimationFrame(this._cesiumReqAnimFrameId);
+    }
+    this.dataSourceDisplay.destroy();
+    this.map.remove();
   }
 
-  observeModelLayer() {
-    this._disposeWorkbenchMapItemsSubscription = autorun(() => {
+  private observeModelLayer() {
+    return autorun(() => {
       const catalogItems = [
         ...this.terria.workbench.items,
         this.terria.baseMap
@@ -106,12 +190,6 @@ export default class Leaflet implements GlobeOrMap {
     });
   }
 
-  stopObserving() {
-    if (this._disposeWorkbenchMapItemsSubscription !== undefined) {
-      this._disposeWorkbenchMapItemsSubscription();
-    }
-  }
-
   zoomTo(
     target: CameraView | Cesium.Rectangle | Cesium.DataSource | Mappable | any,
     flightDurationSeconds: number
@@ -170,6 +248,16 @@ export default class Leaflet implements GlobeOrMap {
         });
       }
     });
+  }
+
+  getCurrentExtent() {
+    const bounds = this.map.getBounds();
+    return Rectangle.fromDegrees(
+      bounds.getWest(),
+      bounds.getSouth(),
+      bounds.getEast(),
+      bounds.getNorth()
+    );
   }
 
   notifyRepaintRequired() {

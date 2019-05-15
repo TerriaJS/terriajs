@@ -66,7 +66,7 @@ export default function addUserCatalogMember(
       if (defaultValue(options.zoomTo, true) && Mappable.is(newCatalogItem)) {
         newCatalogItem
           .loadMapItems()
-          .then(() => terria.currentViewer.zoomTo(newCatalogItem));
+          .then(() => terria.currentViewer.zoomTo(newCatalogItem, 1));
       }
 
       return newCatalogItem;

@@ -1,4 +1,4 @@
-import { observable } from "mobx";
+import { observable, computed } from "mobx";
 import defined from "terriajs-cesium/Source/Core/defined";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import RuntimeError from "terriajs-cesium/Source/Core/RuntimeError";
@@ -20,6 +20,9 @@ import PickedFeatures from "../Map/PickedFeatures";
 import Mappable from "./Mappable";
 import TimelineStack from "./TimelineStack";
 import Clock from "terriajs-cesium/Source/Core/Clock";
+import GlobeOrMap from "./GlobeOrMap";
+import TerriaViewer from "../ViewModels/TerriaViewer";
+
 require("regenerator-runtime/runtime");
 
 interface ConfigParameters {
@@ -34,6 +37,9 @@ interface ConfigParameters {
   initFragmentPaths?: string[];
   interceptBrowserPrint?: boolean;
   tabbedCatalog?: boolean;
+  useCesiumIonTerrain?: boolean;
+  cesiumIonAccessToken?: string;
+  hideTerriaLogo?: boolean;
 }
 
 interface StartOptions {
@@ -56,8 +62,10 @@ export default class Terria {
   readonly afterViewerChanged = new CesiumEvent();
   readonly workbench = new Workbench();
   readonly catalog = new Catalog(this);
-  readonly currentViewer = new NoViewer(this);
   readonly timelineClock = new Clock({ shouldAnimate: false });
+  // Set in TerriaViewerWrapper.jsx. This is temporary while I work out what should own TerriaViewer
+  // terriaViewer, currentViewer, baseMap and other viewer-related properties will go with TerriaViewer
+  @observable terriaViewer: TerriaViewer | undefined;
 
   appName?: string;
   supportEmail?: string;
@@ -75,9 +83,6 @@ export default class Terria {
   readonly timelineStack = new TimelineStack(this.timelineClock);
 
   @observable
-  viewerMode = ViewerMode.CesiumTerrain;
-
-  @observable
   readonly configParameters: ConfigParameters = {
     defaultMaximumShownFeatureInfos: 100,
     regionMappingDefinitionsUrl: "build/TerriaJS/data/regionMapping.json",
@@ -89,7 +94,10 @@ export default class Terria {
     feedbackUrl: undefined,
     initFragmentPaths: ["init/"],
     interceptBrowserPrint: true,
-    tabbedCatalog: false
+    tabbedCatalog: false,
+    useCesiumIonTerrain: true,
+    cesiumIonAccessToken: undefined,
+    hideTerriaLogo: false
   };
 
   @observable
@@ -118,6 +126,25 @@ export default class Terria {
         this.analytics = new ConsoleAnalytics();
       }
     }
+  }
+  @computed
+  get currentViewer(): GlobeOrMap {
+    return (
+      (this.terriaViewer && this.terriaViewer.currentViewer) ||
+      new NoViewer(this)
+    );
+    // return new NoViewer(this);
+    // switch (this.viewerMode) {
+    //     case ViewerMode.CesiumEllipsoid:
+    //     case ViewerMode.CesiumTerrain:
+    //         return new Cesium(this);
+
+    //     case ViewerMode.Leaflet:
+
+    //     default:
+    //         return new NoViewer(this);
+
+    // }
   }
 
   getModelById<T extends BaseModel>(
