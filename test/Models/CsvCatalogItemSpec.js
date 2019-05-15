@@ -1928,6 +1928,68 @@ describe("CsvCatalogItem with no geo using default bundled regionMapping", funct
       .then(done);
   });
 
+  it("does not automatically enable a column if a table style is loaded in without a dataVariable", function(done) {
+    csvItem.url = "test/csv_nongeo/xy.csv";
+    csvItem
+      .updateFromJson({
+        tableStyle: {
+          dataVariable: "y"
+        }
+      })
+      .then(function() {
+        return csvItem.load();
+      })
+      .then(function() {
+        expect(csvItem.tableStructure.activeItems.length).toEqual(1);
+        expect(csvItem.tableStructure.items.length).toEqual(2);
+        expect(csvItem.tableStructure.activeItems[0].name).toEqual("y");
+        expect(csvItem.tableStructure.name).toBe("");
+        expect(csvItem.tableStructure.allowMultiple).toBe(true);
+      })
+      .then(function() {
+        csvItem.updateFromJson({
+          tableStyle: {}
+        });
+      })
+      .then(function() {
+        expect(csvItem.isMappable).toEqual(false);
+        expect(csvItem.tableStructure.items.length).toEqual(2);
+        expect(csvItem.tableStructure.activeItems.length).toEqual(0);
+      })
+      .otherwise(fail)
+      .then(done);
+  });
+
+  it("does not automatically enable a column if a table style is loaded in with columns all unactive", function(done) {
+    csvItem.url = "test/csv_nongeo/xy.csv";
+    csvItem
+      .updateFromJson({
+        tableStyle: {
+          columns: {
+            "0": {
+              active: false
+            },
+            "1": {
+              active: false
+            },
+            "2": {
+              active: false
+            }
+          }
+        }
+      })
+      .then(function() {
+        return csvItem.load();
+      })
+      .then(function() {
+        expect(csvItem.tableStructure.activeItems.length).toEqual(0);
+        expect(csvItem.tableStructure.items.length).toEqual(2);
+        expect(csvItem.tableStructure.name).toBe("");
+      })
+      .otherwise(fail)
+      .then(done);
+  });
+
   it("interprets height column as non-geo", function(done) {
     csvItem.url = "test/csv_nongeo/x_height.csv";
     csvItem
@@ -1987,10 +2049,9 @@ describe("CsvTableCatalogItem & chart sharing", function() {
         })
         .then(csvItem.load.bind(csvItem))
         .then(function() {
-          // because we load in non-geospatial data, makeChartable() will make sure there's one active item when enabled
           const tableStructure = csvItem.concepts[0];
           expect(tableStructure.items[0].isActive).toBe(false);
-          expect(tableStructure.items[1].isActive).toBe(true);
+          expect(tableStructure.items[1].isActive).toBe(false);
           expect(tableStructure.items[2].isActive).toBe(false);
 
           // we apply table style columns to structure when loading from a shared (chart) catalog item
