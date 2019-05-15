@@ -1,20 +1,24 @@
+import L from "leaflet";
 import { autorun } from "mobx";
 import { createTransformer } from "mobx-utils";
+import Clock from "terriajs-cesium/Source/Core/Clock";
+import EventHelper from "terriajs-cesium/Source/Core/EventHelper";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import cesiumRequestAnimationFrame from "terriajs-cesium/Source/Core/requestAnimationFrame";
+import cesiumCancelAnimationFrame from "terriajs-cesium/Source/Core/cancelAnimationFrame";
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import DataSourceCollection from "terriajs-cesium/Source/DataSources/DataSourceCollection";
 import when from "terriajs-cesium/Source/ThirdParty/when";
 import CesiumTileLayer from "../Map/CesiumTileLayer";
 import LeafletDataSourceDisplay from "../Map/LeafletDataSourceDisplay";
 import LeafletScene from "../Map/LeafletScene";
+import LeafletVisualizer from "../Map/LeafletVisualizer";
 import rectangleToLatLngBounds from "../Map/rectangleToLatLngBounds";
+import TerriaViewer from "../ViewModels/TerriaViewer";
 import GlobeOrMap, { CameraView } from "./GlobeOrMap";
 import Mappable, { ImageryParts } from "./Mappable";
 import Terria from "./Terria";
-import L from "leaflet";
-import LeafletVisualizer from "../Map/LeafletVisualizer";
-import TerriaViewer from "../ViewModels/TerriaViewer";
 
 function isDefined<T>(value: T | undefined): value is T {
   return value !== undefined;
@@ -31,7 +35,10 @@ export default class Leaflet implements GlobeOrMap {
   readonly dataSourceDisplay: LeafletDataSourceDisplay;
   private readonly _attributionControl: L.Control.Attribution;
   private readonly _leafletVisualizer: LeafletVisualizer;
+  private readonly _eventHelper: EventHelper;
   private readonly _disposeWorkbenchMapItemsSubscription: () => void;
+  private _stopRequestAnimationFrame: boolean = false;
+  private _cesiumReqAnimFrameId: number | undefined;
 
   constructor(terriaViewer: TerriaViewer) {
     this.terria = terriaViewer.terria;
@@ -79,23 +86,22 @@ export default class Leaflet implements GlobeOrMap {
       visualizersCallback: <any>this._leafletVisualizer.visualizersCallback // fix type error
     });
 
-    // eventHelper = new EventHelper();
+    this._eventHelper = new EventHelper();
 
-    // var that = this;
-    // eventHelper.add(that.terria.clock.onTick, function(clock) {
-    //     that.dataSourceDisplay.update(clock.currentTime);
-    // });
+    this._eventHelper.add(this.terria.timelineClock.onTick, <any>((
+      clock: Clock
+    ) => {
+      this.dataSourceDisplay.update(clock.currentTime);
+    }));
 
-    // this.leafletEventHelper = eventHelper;
+    const ticker = () => {
+      if (!this._stopRequestAnimationFrame) {
+        this.terria.timelineClock.tick();
+        this._cesiumReqAnimFrameId = cesiumRequestAnimationFrame(ticker);
+      }
+    };
 
-    // var ticker = function() {
-    //     if (defined(that.terria.leaflet)) {
-    //         that.terria.clock.tick();
-    //         cesiumRequestAnimationFrame(ticker);
-    //     }
-    // };
-
-    // ticker();
+    ticker();
 
     // this.zoomTo(rect, 0.0);
 
@@ -106,6 +112,13 @@ export default class Leaflet implements GlobeOrMap {
 
   destroy() {
     this._disposeWorkbenchMapItemsSubscription();
+    this._eventHelper.removeAll();
+    // This variable prevents a race condition if destroy() is called
+    // synchronously as a result of timelineClock ticking due to ticker()
+    this._stopRequestAnimationFrame = true;
+    if (isDefined(this._cesiumReqAnimFrameId)) {
+      cesiumCancelAnimationFrame(this._cesiumReqAnimFrameId);
+    }
     this.dataSourceDisplay.destroy();
     this.map.remove();
   }

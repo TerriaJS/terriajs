@@ -1,15 +1,18 @@
-import { autorun, computed, reaction } from "mobx";
+import { autorun, computed } from "mobx";
 import { createTransformer } from "mobx-utils";
 import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
+import Clock from "terriajs-cesium/Source/Core/Clock";
 import createWorldTerrain from "terriajs-cesium/Source/Core/createWorldTerrain";
 import Credit from "terriajs-cesium/Source/Core/Credit";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import defined from "terriajs-cesium/Source/Core/defined";
+import destroyObject from "terriajs-cesium/Source/Core/destroyObject";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import EllipsoidTerrainProvider from "terriajs-cesium/Source/Core/EllipsoidTerrainProvider";
+import EventHelper from "terriajs-cesium/Source/Core/EventHelper";
 import FeatureDetection from "terriajs-cesium/Source/Core/FeatureDetection";
 import HeadingPitchRange from "terriajs-cesium/Source/Core/HeadingPitchRange";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
@@ -21,6 +24,7 @@ import Transforms from "terriajs-cesium/Source/Core/Transforms";
 import BoundingSphereState from "terriajs-cesium/Source/DataSources/BoundingSphereState";
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import DataSourceCollection from "terriajs-cesium/Source/DataSources/DataSourceCollection";
+import DataSourceDisplay from "terriajs-cesium/Source/DataSources/DataSourceDisplay";
 import ImageryLayer from "terriajs-cesium/Source/Scene/ImageryLayer";
 import Scene from "terriajs-cesium/Source/Scene/Scene";
 import SingleTileImageryProvider from "terriajs-cesium/Source/Scene/SingleTileImageryProvider";
@@ -52,8 +56,9 @@ export default class Cesium implements GlobeOrMap {
   readonly cesiumWidget: CesiumWidget;
   readonly scene: Scene;
   readonly dataSources: DataSourceCollection = new DataSourceCollection();
-  dataSourceDisplay: Cesium.DataSourceDisplay | undefined;
+  readonly dataSourceDisplay: Cesium.DataSourceDisplay;
   readonly pauser: CesiumRenderLoopPauser;
+  private readonly _eventHelper: EventHelper;
   private readonly _disposeWorkbenchMapItemsSubscription: () => void;
   private readonly _disposeTerrainReaction: () => void;
 
@@ -86,6 +91,19 @@ export default class Cesium implements GlobeOrMap {
     //create CesiumViewer
     this.cesiumWidget = new CesiumWidget(this.terriaViewer.container, options);
     this.scene = this.cesiumWidget.scene;
+
+    this.dataSourceDisplay = new DataSourceDisplay({
+      scene: this.scene,
+      dataSourceCollection: this.dataSources
+    });
+
+    this._eventHelper = new EventHelper();
+
+    this._eventHelper.add(this.terria.timelineClock.onTick, <any>((
+      clock: Clock
+    ) => {
+      this.dataSourceDisplay.update(clock.currentTime);
+    }));
 
     // Disable HDR lighting for better performance and to avoid changing imagery colors.
     (<any>this.scene).highDynamicRange = false;
@@ -156,23 +174,7 @@ export default class Cesium implements GlobeOrMap {
   }
 
   destroy() {
-    this.pauser.destroy();
-    this.stopObserving();
-    const cesiumWidget = this.cesiumWidget;
-
-    // this.terria.cesium.destroy();
     // Port old Cesium.prototype.destroy stuff
-
-    // if (this.cesiumEventHelper) {
-    //     this.cesiumEventHelper.removeAll();
-    //     this.cesiumEventHelper = undefined;
-    // }
-
-    if (this.dataSourceDisplay !== undefined) {
-      this.dataSourceDisplay.destroy();
-      this.dataSourceDisplay = undefined;
-    }
-
     // this._enableSelectExtent(cesiumWidget.scene, false);
 
     // var inputHandler = cesiumWidget.screenSpaceEventHandler;
@@ -184,8 +186,14 @@ export default class Cesium implements GlobeOrMap {
     //     this.monitor.destroy();
     //     this.monitor = undefined;
     // }
+
+    this.pauser.destroy();
+    this.stopObserving();
+    this._eventHelper.removeAll();
+    this.dataSourceDisplay.destroy();
     this._disposeTerrainReaction();
-    cesiumWidget.destroy();
+    this.cesiumWidget.destroy();
+    destroyObject(this);
   }
 
   private observeModelLayer() {
