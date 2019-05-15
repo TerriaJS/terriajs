@@ -43,7 +43,7 @@ export default class Leaflet implements GlobeOrMap {
   constructor(terriaViewer: TerriaViewer) {
     this.terria = terriaViewer.terria;
     this.terriaViewer = terriaViewer;
-    const map = L.map(this.terriaViewer.container, {
+    this.map = L.map(this.terriaViewer.container, {
       zoomControl: false,
       attributionControl: false,
       maxZoom: 14, //this.maximumLeafletZoomLevel,
@@ -52,12 +52,12 @@ export default class Leaflet implements GlobeOrMap {
       worldCopyJump: true
     }).setView([-28.5, 135], 5);
 
-    this.scene = new LeafletScene(map);
+    this.scene = new LeafletScene(this.map);
 
     this._attributionControl = L.control.attribution({
       position: "bottomleft"
     });
-    map.addControl(this._attributionControl);
+    this.map.addControl(this._attributionControl);
 
     // this.map.screenSpaceEventHandler = {
     //     setInputAction : function() {},
@@ -103,9 +103,6 @@ export default class Leaflet implements GlobeOrMap {
 
     ticker();
 
-    // this.zoomTo(rect, 0.0);
-
-    this.map = map;
     this._disposeWorkbenchMapItemsSubscription = this.observeModelLayer();
     // return when();
   }

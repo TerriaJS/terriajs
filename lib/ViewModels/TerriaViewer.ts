@@ -67,7 +67,7 @@ export default class TerriaViewer {
           viewerMode !== undefined ? this.createViewer(viewerMode) : undefined;
         // Apply previous parameters
         if (newViewer !== undefined) {
-          newViewer.zoomTo(bounds || this.defaultExtent, 1);
+          newViewer.zoomTo(bounds || this.defaultExtent, 0.0);
         }
         runInAction(() => {
           this.currentViewer = newViewer;
