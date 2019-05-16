@@ -1948,7 +1948,10 @@ describe("CsvCatalogItem with no geo using default bundled regionMapping", funct
       })
       .then(function() {
         csvItem.updateFromJson({
-          tableStyle: {}
+          tableStyle: {
+            allVariablesUnactive: true,
+            dataVariable: undefined
+          }
         });
       })
       .then(function() {
@@ -1965,6 +1968,7 @@ describe("CsvCatalogItem with no geo using default bundled regionMapping", funct
     csvItem
       .updateFromJson({
         tableStyle: {
+          allVariablesUnactive: true,
           columns: {
             "0": {
               active: false
@@ -2019,7 +2023,52 @@ describe("CsvTableCatalogItem & chart sharing", function() {
   });
 
   describe("serialization around tableStyle & tableStructures for non-geo time series csvs", function() {
-    it("initialises the correct 'no variables selected' state", function(done) {
+    it("can be round-tripped with serializeToJson and updateFromJson", function() {
+      columns = {
+        "0": {
+          active: false
+        },
+        "1": {
+          active: false
+        },
+        "2": {
+          active: false
+        }
+      };
+      csvItem.updateFromJson({
+        type: "csv",
+        url: "test/csv_nongeo/time_series.csv",
+        isEnabled: true,
+        isShown: true,
+        isCsvForCharting: true,
+        tableStyle: {
+          columns: columns
+        }
+      });
+
+      var json = csvItem.serializeToJson();
+
+      var reconstructed = new CsvCatalogItem(terria);
+      reconstructed.updateFromJson(json);
+
+      expect(reconstructed.type).toEqual(csvItem.type);
+      expect(reconstructed.url).toEqual(csvItem.url);
+      expect(reconstructed.isEnabled).toEqual(csvItem.isEnabled);
+      expect(reconstructed.isShown).toEqual(csvItem.isShown);
+      expect(reconstructed.isCsvForCharting).toEqual(csvItem.isCsvForCharting);
+
+      expect(reconstructed.tableStyle.columns[0].active).toBe(
+        columns[0].active
+      );
+      expect(reconstructed.tableStyle.columns[1].active).toBe(
+        columns[1].active
+      );
+      expect(reconstructed.tableStyle.columns[2].active).toBe(
+        columns[2].active
+      );
+    });
+
+    it("initialises and shares the correct 'no variables selected' state", function(done) {
       columns = {
         "0": {
           active: false
@@ -2038,6 +2087,7 @@ describe("CsvTableCatalogItem & chart sharing", function() {
           url: "test/csv_nongeo/time_series.csv",
           isEnabled: true,
           isShown: true,
+          isCsvForCharting: true,
           tableStyle: {
             columns: columns
           }
@@ -2051,7 +2101,7 @@ describe("CsvTableCatalogItem & chart sharing", function() {
         .then(function() {
           const tableStructure = csvItem.concepts[0];
           expect(tableStructure.items[0].isActive).toBe(false);
-          expect(tableStructure.items[1].isActive).toBe(false);
+          expect(tableStructure.items[1].isActive).toBe(true);
           expect(tableStructure.items[2].isActive).toBe(false);
 
           // we apply table style columns to structure when loading from a shared (chart) catalog item
@@ -2064,9 +2114,11 @@ describe("CsvTableCatalogItem & chart sharing", function() {
           expect(tableStructure.items[0].isActive).toBe(false);
           expect(tableStructure.items[1].isActive).toBe(false);
           expect(tableStructure.items[2].isActive).toBe(false);
+          expect(tableStructure.activeItems.length).toBe(0);
         })
         .then(function() {
           const serialized = csvItem.serializeToJson();
+          expect(serialized.tableStyle.allVariablesUnactive).toBe(true);
           expect(serialized.tableStyle.columns[0].active).toBe(false);
           expect(serialized.tableStyle.columns[1].active).toBe(false);
           expect(serialized.tableStyle.columns[2].active).toBe(false);
@@ -2074,7 +2126,7 @@ describe("CsvTableCatalogItem & chart sharing", function() {
         .then(done)
         .otherwise(done.fail);
     });
-    it("initialises and shares the correct 'second variable is selected' state", function(done) {
+    it("initialises the correct 'second variable is selected' state & shares newly toggled state", function(done) {
       columns = {
         "0": {
           active: false
@@ -2093,6 +2145,7 @@ describe("CsvTableCatalogItem & chart sharing", function() {
           url: "test/csv_nongeo/time_series.csv",
           isEnabled: true,
           isShown: true,
+          isCsvForCharting: true,
           tableStyle: {
             columns: columns
           }
@@ -2111,41 +2164,26 @@ describe("CsvTableCatalogItem & chart sharing", function() {
           expect(tableStructure.items[1].isActive).toBe(false);
           expect(tableStructure.items[2].isActive).toBe(true);
 
-          // we apply table style columns to structure when loading from a shared (chart) catalog item
-          csvItem.applyTableStyleColumnsToStructure(
-            { columns: columns },
-            csvItem.tableStructure
-          );
-
-          expect(tableStructure.items[0].isActive).toBe(false);
-          expect(tableStructure.items[1].isActive).toBe(false);
-          expect(tableStructure.items[2].isActive).toBe(true);
-        })
-        .then(function() {
-          const tableStructure = csvItem.concepts[0];
-
           // toggleActive on tableStructure items do not reflect back into table styles
           tableStructure.items[1].toggleActive();
           expect(tableStructure.items[1].isActive).toBe(true);
 
+          // should have two active items on tableStructure now
           expect(tableStructure.items[0].isActive).toBe(false);
           expect(tableStructure.items[1].isActive).toBe(true);
           expect(tableStructure.items[2].isActive).toBe(true);
-          // active should still be false on !tableStyle! until we sync changes
-          expect(csvItem.tableStyle.columns[1].active).toBe(false);
 
+          // however active should still be false on !tableStyle! until we sync changes
           expect(csvItem.tableStyle.columns[0].active).toBe(false);
           expect(csvItem.tableStyle.columns[1].active).toBe(false);
           expect(csvItem.tableStyle.columns[2].active).toBe(true);
-          // apply the structure to the tableStyle
-          csvItem.syncActiveColumns(csvItem.tableStyle, csvItem.tableStructure);
 
+          // trigger a syncActiveColumns through serialization
+          const serialized = csvItem.serializeToJson();
           expect(csvItem.tableStyle.columns[0].active).toBe(false);
           expect(csvItem.tableStyle.columns[1].active).toBe(true);
           expect(csvItem.tableStyle.columns[2].active).toBe(true);
-        })
-        .then(function() {
-          const serialized = csvItem.serializeToJson();
+          expect(serialized.tableStyle.allVariablesUnactive).toBe(undefined);
           expect(serialized.tableStyle.columns[0].active).toBe(false);
           expect(serialized.tableStyle.columns[1].active).toBe(true);
           expect(serialized.tableStyle.columns[2].active).toBe(true);
