@@ -233,12 +233,8 @@ function expand(props, sourceIndex) {
     );
     newCatalogItem.name =
       props.title || (props.feature && props.feature.name) || "Chart";
-    newCatalogItem.id =
-      newCatalogItem.name +
-      (props.id ? " " + props.id : "") +
-      " (" +
-      props.catalogItem.name +
-      ")";
+    const group = terria.catalog.chartDataGroup;
+    newCatalogItem.id = group.uniqueId + "/" + newCatalogItem.name;
 
     if (defined(props.pollSeconds)) {
       const pollSources = props.pollSources;
@@ -251,7 +247,6 @@ function expand(props, sourceIndex) {
         replace: props.pollReplace
       });
     }
-    const group = terria.catalog.chartDataGroup;
     group.isOpen = true;
     const existingIndex = group.items
       .map(item => item.uniqueId)
