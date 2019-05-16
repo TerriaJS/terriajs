@@ -12,9 +12,12 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import destroyObject from "terriajs-cesium/Source/Core/destroyObject";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import EllipsoidTerrainProvider from "terriajs-cesium/Source/Core/EllipsoidTerrainProvider";
+import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import EventHelper from "terriajs-cesium/Source/Core/EventHelper";
 import FeatureDetection from "terriajs-cesium/Source/Core/FeatureDetection";
 import HeadingPitchRange from "terriajs-cesium/Source/Core/HeadingPitchRange";
+import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
+import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
 import PerspectiveFrustum from "terriajs-cesium/Source/Core/PerspectiveFrustum";
@@ -28,6 +31,7 @@ import DataSourceDisplay from "terriajs-cesium/Source/DataSources/DataSourceDisp
 import ImageryLayer from "terriajs-cesium/Source/Scene/ImageryLayer";
 import Scene from "terriajs-cesium/Source/Scene/Scene";
 import SingleTileImageryProvider from "terriajs-cesium/Source/Scene/SingleTileImageryProvider";
+import ScreenSpaceEventType from "terriajs-cesium/Source/Core/ScreenSpaceEventType";
 import when from "terriajs-cesium/Source/ThirdParty/when";
 import CesiumWidget from "terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget";
 import isDefined from "../Core/isDefined";
@@ -37,6 +41,9 @@ import TerriaViewer from "../ViewModels/TerriaViewer";
 import GlobeOrMap, { CameraView } from "./GlobeOrMap";
 import Mappable, { ImageryParts } from "./Mappable";
 import Terria from "./Terria";
+import PickedFeatures, { ProviderCoordsMap } from "../Map/PickedFeatures";
+
+const Feature = require("./Feature");
 
 // Intermediary
 var cartesian3Scratch = new Cartesian3();
@@ -50,7 +57,7 @@ var southeastCartographicScratch = new Cartographic();
 var northeastCartographicScratch = new Cartographic();
 var northwestCartographicScratch = new Cartographic();
 
-export default class Cesium implements GlobeOrMap {
+export default class Cesium extends GlobeOrMap {
   readonly terria: Terria;
   readonly terriaViewer: TerriaViewer;
   readonly cesiumWidget: CesiumWidget;
@@ -63,6 +70,7 @@ export default class Cesium implements GlobeOrMap {
   private readonly _disposeTerrainReaction: () => void;
 
   constructor(terriaViewer: TerriaViewer) {
+    super();
     this.terriaViewer = terriaViewer;
     this.terria = terriaViewer.terria;
 
@@ -152,7 +160,7 @@ export default class Cesium implements GlobeOrMap {
 
     // scene.frameState.creditDisplay.addDefaultCredit(new Credit('<a href="http://cesiumjs.org" target="_blank" rel="noopener noreferrer">CESIUM</a>'));
 
-    // var inputHandler = viewer.screenSpaceEventHandler;
+    const inputHandler = this.cesiumWidget.screenSpaceEventHandler;
 
     // // Add double click zoom
     // inputHandler.setInputAction(
@@ -166,6 +174,11 @@ export default class Cesium implements GlobeOrMap {
     //     },
     //     ScreenSpaceEventType.LEFT_DOUBLE_CLICK, KeyboardEventModifier.SHIFT);
 
+    // Handle left click by picking objects from the map.
+    inputHandler.setInputAction(e => {
+      this.pickFromScreenPosition(e.position);
+    }, ScreenSpaceEventType.LEFT_CLICK);
+
     this.pauser = new CesiumRenderLoopPauser(this.cesiumWidget);
     this._disposeWorkbenchMapItemsSubscription = this.observeModelLayer();
     this._disposeTerrainReaction = autorun(() => {
@@ -177,10 +190,12 @@ export default class Cesium implements GlobeOrMap {
     // Port old Cesium.prototype.destroy stuff
     // this._enableSelectExtent(cesiumWidget.scene, false);
 
-    // var inputHandler = cesiumWidget.screenSpaceEventHandler;
+    const inputHandler = this.cesiumWidget.screenSpaceEventHandler;
     // inputHandler.removeInputAction(ScreenSpaceEventType.MOUSE_MOVE);
     // inputHandler.removeInputAction(ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
     // inputHandler.removeInputAction(ScreenSpaceEventType.LEFT_DOUBLE_CLICK, KeyboardEventModifier.SHIFT);
+
+    inputHandler.removeInputAction(ScreenSpaceEventType.LEFT_CLICK);
 
     // if (defined(this.monitor)) {
     //     this.monitor.destroy();
@@ -548,6 +563,251 @@ export default class Cesium implements GlobeOrMap {
   @computed
   private get _terrainProvider(): Cesium.TerrainProvider {
     return this._terrainWithCredits.terrain;
+  }
+
+  /**
+   * Picks features based on coordinates relative to the Cesium window. Will draw a ray from the camera through the point
+   * specified and set terria.pickedFeatures based on this.
+   *
+   */
+  pickFromScreenPosition(screenPosition: Cartesian2) {
+    const pickRay = this.scene.camera.getPickRay(screenPosition);
+    const pickPosition = this.scene.globe.pick(pickRay, this.scene);
+    const pickPositionCartographic = Ellipsoid.WGS84.cartesianToCartographic(
+      pickPosition
+    );
+
+    const vectorFeatures = this.pickVectorFeatures(screenPosition);
+
+    const providerCoords = this._attachProviderCoordHooks();
+    const pickRasterPromise = this.scene.imageryLayers.pickImageryLayerFeatures(
+      pickRay,
+      this.scene
+    );
+
+    const result = this._buildPickedFeatures(
+      providerCoords,
+      pickPosition,
+      vectorFeatures,
+      pickRasterPromise ? [pickRasterPromise] : [],
+      undefined,
+      pickPositionCartographic.height
+    );
+    // const mapInteractionModeStack = this.terria.mapInteractionModeStack;
+    // if (
+    //   defined(mapInteractionModeStack) &&
+    //   mapInteractionModeStack.length > 0
+    // ) {
+    //   mapInteractionModeStack[
+    //     mapInteractionModeStack.length - 1
+    //   ].pickedFeatures = result;
+    // } else {
+    this.terria.pickedFeatures = result;
+    // }
+  }
+
+  /**
+   * Picks all *vector* features (e.g. GeoJSON) shown at a certain position on the screen, ignoring raster features
+   * (e.g. WFS). Because all vector features are already in memory, this is synchronous.
+   *
+   * @param screenPosition position on the screen to look for features
+   * @returns The features found.
+   */
+  pickVectorFeatures(screenPosition: Cartesian2) {
+    // Pick vector features
+    const vectorFeatures = [];
+    const pickedList = this.scene.drillPick(screenPosition);
+    for (let i = 0; i < pickedList.length; ++i) {
+      const picked = pickedList[i];
+      let id = picked.id;
+
+      if (
+        id &&
+        id.entityCollection &&
+        id.entityCollection.owner &&
+        id.entityCollection.owner.name === GlobeOrMap._featureHighlightName
+      ) {
+        continue;
+      }
+
+      if (!defined(id) && defined(picked.primitive)) {
+        id = picked.primitive.id;
+      }
+      if (id instanceof Entity && vectorFeatures.indexOf(id) === -1) {
+        const feature = Feature.fromEntityCollectionOrEntity(id);
+        vectorFeatures.push(feature);
+      } else if (
+        picked.primitive &&
+        picked.primitive._catalogItem &&
+        picked.primitive._catalogItem.getFeaturesFromPickResult
+      ) {
+        const result = picked.primitive._catalogItem.getFeaturesFromPickResult(
+          screenPosition,
+          picked
+        );
+        if (result) {
+          if (Array.isArray(result)) {
+            vectorFeatures.push(...result);
+          } else {
+            vectorFeatures.push(result);
+          }
+        }
+      }
+    }
+
+    return vectorFeatures;
+  }
+
+  /**
+   * Hooks into the {@link ImageryProvider#pickFeatures} method of every imagery provider in the scene - when this method is
+   * evaluated (usually as part of feature picking), it will record the tile coordinates used against the url of the
+   * imagery provider in an object that is returned by this method. Hooks are removed immediately after being executed once.
+   *
+   * returns {{x, y, level}} A map of urls to the coords used by the imagery provider when picking features. Will
+   *     initially be empty but will be updated as the hooks are evaluated.
+
+   */
+  private _attachProviderCoordHooks() {
+    const providerCoords: ProviderCoordsMap = {};
+
+    const pickFeaturesHook = function(
+      imageryProvider: ImageryProvider,
+      oldPick: (
+        x: number,
+        y: number,
+        level: number,
+        longitude: number,
+        latitiude: number
+      ) => Promise<ImageryLayerFeatureInfo[]>,
+      x: number,
+      y: number,
+      level: number,
+      longitude: number,
+      latitude: number
+    ) {
+      const featuresPromise = oldPick.call(
+        imageryProvider,
+        x,
+        y,
+        level,
+        longitude,
+        latitude
+      );
+
+      // Use url to uniquely identify providers because what else can we do?
+      if ((<any>imageryProvider).url) {
+        providerCoords[(<any>imageryProvider).url] = {
+          x: x,
+          y: y,
+          level: level
+        };
+      }
+
+      imageryProvider.pickFeatures = oldPick;
+      return featuresPromise;
+    };
+
+    for (let j = 0; j < this.scene.imageryLayers.length; j++) {
+      const imageryProvider = this.scene.imageryLayers.get(j).imageryProvider;
+      imageryProvider.pickFeatures = pickFeaturesHook.bind(
+        undefined,
+        imageryProvider,
+        imageryProvider.pickFeatures
+      );
+    }
+
+    return providerCoords;
+  }
+
+  /**
+   * Builds a {@link PickedFeatures} object from a number of inputs.
+   *
+   * @param providerCoords A map of imagery provider urls to the coords used to get features for that provider.
+   * @param  pickPosition The position in the 3D model that has been picked.
+   * @param existingFeatures Existing features - the results of feature promises will be appended to this.
+   * @param featurePromises Zero or more promises that each resolve to a list of {@link ImageryLayerFeatureInfo}s
+   *     (usually there will be one promise per ImageryLayer. These will be combined as part of
+   *     {@link PickedFeatures#allFeaturesAvailablePromise} and their results used to build the final
+   *     {@link PickedFeatures#features} array.
+   * @param imageryLayers An array of ImageryLayers that should line up with the one passed as featurePromises.
+   * @param defaultHeight The height to use for feature position heights if none is available when picking.
+   * @returns A {@link PickedFeatures} object that is a combination of everything passed.
+   */
+  private _buildPickedFeatures(
+    providerCoords: ProviderCoordsMap,
+    pickPosition: Cartesian3,
+    existingFeatures: Entity[],
+    featurePromises: Promise<ImageryLayerFeatureInfo[]>[],
+    imageryLayers: ImageryLayer[] | undefined,
+    defaultHeight: number
+  ): PickedFeatures {
+    const result = new PickedFeatures();
+
+    result.providerCoords = providerCoords;
+    result.pickPosition = pickPosition;
+
+    result.allFeaturesAvailablePromise = Promise.all(featurePromises)
+      .then(allFeatures => {
+        result.isLoading = false;
+
+        result.features = allFeatures.reduce(
+          (resultFeaturesSoFar, imageryLayerFeatures, i) => {
+            if (!isDefined(imageryLayerFeatures)) {
+              return resultFeaturesSoFar;
+            }
+
+            const features = imageryLayerFeatures.map(feature => {
+              if (isDefined(imageryLayers)) {
+                (<any>feature).imageryLayer = imageryLayers[i];
+              }
+
+              if (!isDefined(feature.position)) {
+                feature.position = Ellipsoid.WGS84.cartesianToCartographic(
+                  pickPosition
+                );
+              }
+
+              // If the picked feature does not have a height, use the height of the picked location.
+              // This at least avoids major parallax effects on the selection indicator.
+              if (
+                !isDefined(feature.position.height) ||
+                feature.position.height === 0.0
+              ) {
+                feature.position.height = defaultHeight;
+              }
+              return this._createFeatureFromImageryLayerFeature(feature);
+            });
+
+            // TODO
+            // if (this.terria.showSplitter) {
+            //   // Select only features from the same side or both sides of the splitter
+            //   const screenPosition = this.computePositionOnScreen(
+            //     result.pickPosition
+            //   );
+            //   const pickedSide = this.terria.getSplitterSideForScreenPosition(
+            //     screenPosition
+            //   );
+
+            //   features = features.filter(function(feature) {
+            //     const splitDirection = feature.imageryLayer.splitDirection;
+            //     return (
+            //       splitDirection === pickedSide ||
+            //       splitDirection === ImagerySplitDirection.NONE
+            //     );
+            //   });
+            // }
+
+            return resultFeaturesSoFar.concat(features);
+          },
+          defaultValue(existingFeatures, [])
+        );
+      })
+      .catch(() => {
+        result.isLoading = false;
+        result.error = "An unknown error occurred while picking features.";
+      });
+
+    return result;
   }
 }
 

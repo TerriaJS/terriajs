@@ -26,7 +26,7 @@ function isDefined<T>(value: T | undefined): value is T {
 
 // This class is an observer. It probably won't contain any observables itself
 
-export default class Leaflet implements GlobeOrMap {
+export default class Leaflet extends GlobeOrMap {
   readonly terria: Terria;
   readonly terriaViewer: TerriaViewer;
   readonly map: L.Map;
@@ -41,6 +41,7 @@ export default class Leaflet implements GlobeOrMap {
   private _cesiumReqAnimFrameId: number | undefined;
 
   constructor(terriaViewer: TerriaViewer) {
+    super();
     this.terria = terriaViewer.terria;
     this.terriaViewer = terriaViewer;
     this.map = L.map(this.terriaViewer.container, {

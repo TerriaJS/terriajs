@@ -10,10 +10,11 @@ var inherit = require("../Core/inherit");
 var Rectangle = require("terriajs-cesium/Source/Core/Rectangle");
 var when = require("terriajs-cesium/Source/ThirdParty/when");
 
-class NoViewer implements GlobeOrMap {
+class NoViewer extends GlobeOrMap {
   private readonly terria: Terria;
 
   constructor(terria: Terria) {
+    super();
     this.terria = terria;
   }
 
