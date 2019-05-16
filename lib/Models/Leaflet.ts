@@ -1,24 +1,37 @@
 import L from "leaflet";
 import { autorun } from "mobx";
 import { createTransformer } from "mobx-utils";
-import Clock from "terriajs-cesium/Source/Core/Clock";
-import EventHelper from "terriajs-cesium/Source/Core/EventHelper";
+import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-import cesiumRequestAnimationFrame from "terriajs-cesium/Source/Core/requestAnimationFrame";
-import cesiumCancelAnimationFrame from "terriajs-cesium/Source/Core/cancelAnimationFrame";
+import Clock from "terriajs-cesium/Source/Core/Clock";
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import DataSourceCollection from "terriajs-cesium/Source/DataSources/DataSourceCollection";
-import when from "terriajs-cesium/Source/ThirdParty/when";
-import CesiumTileLayer from "../Map/CesiumTileLayer";
+import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
+import Entity from "terriajs-cesium/Source/DataSources/Entity";
+import EventHelper from "terriajs-cesium/Source/Core/EventHelper";
+import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import LeafletDataSourceDisplay from "../Map/LeafletDataSourceDisplay";
 import LeafletScene from "../Map/LeafletScene";
 import LeafletVisualizer from "../Map/LeafletVisualizer";
+import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import cesiumRequestAnimationFrame from "terriajs-cesium/Source/Core/requestAnimationFrame";
+import cesiumCancelAnimationFrame from "terriajs-cesium/Source/Core/cancelAnimationFrame";
+import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
+import when from "terriajs-cesium/Source/ThirdParty/when";
 import rectangleToLatLngBounds from "../Map/rectangleToLatLngBounds";
-import TerriaViewer from "../ViewModels/TerriaViewer";
+
+import CesiumTileLayer from "../Map/CesiumTileLayer";
 import GlobeOrMap, { CameraView } from "./GlobeOrMap";
 import Mappable, { ImageryParts } from "./Mappable";
+import PickedFeatures, {
+  ProviderCoords,
+  ProviderCoordsMap
+} from "../Map/PickedFeatures";
 import Terria from "./Terria";
+import TerriaViewer from "../ViewModels/TerriaViewer";
+import runLater from "../Core/runLater";
+
+const Feature = require("./Feature");
 
 function isDefined<T>(value: T | undefined): value is T {
   return value !== undefined;
@@ -39,6 +52,7 @@ export default class Leaflet extends GlobeOrMap {
   private readonly _disposeWorkbenchMapItemsSubscription: () => void;
   private _stopRequestAnimationFrame: boolean = false;
   private _cesiumReqAnimFrameId: number | undefined;
+  private _pickedFeatures: PickedFeatures | undefined = undefined;
 
   constructor(terriaViewer: TerriaViewer) {
     super();
@@ -80,6 +94,17 @@ export default class Leaflet extends GlobeOrMap {
     // map.on("boxzoomend", function(e) {
     //     console.log(e.boxZoomBounds);
     // });
+
+    this.map.on("click", e => {
+      // if (!that._dragboxcompleted && that.map.dragging.enabled()) {
+      this._pickFeatures((<L.LeafletMouseEvent>e).latlng);
+      // }
+      // that._dragboxcompleted = false;
+    });
+
+    this.scene.featureClicked.addEventListener((entity, event) => {
+      this._featurePicked(entity, event);
+    });
 
     this.dataSourceDisplay = new LeafletDataSourceDisplay({
       scene: this.scene,
@@ -263,6 +288,227 @@ export default class Leaflet extends GlobeOrMap {
 
   notifyRepaintRequired() {
     // No action necessary.
+  }
+
+  /*
+   * There are two "listeners" for clicks which are set up in our constructor.
+   * - One fires for any click: `map.on('click', ...`.  It calls `pickFeatures`.
+   * - One fires only for vector features: `this.scene.featureClicked.addEventListener`.
+   *    It calls `featurePicked`, which calls `pickFeatures` and then adds the feature it found, if any.
+   * These events can fire in either order.
+   * Billboards do not fire the first event.
+   *
+   * Note that `pickFeatures` does nothing if `leaflet._pickedFeatures` is already set.
+   * Otherwise, it sets it, runs `runLater` to clear it, and starts the asynchronous raster feature picking.
+   *
+   * So:
+   * If only the first event is received, it triggers the raster-feature picking as desired.
+   * If both are received in the order above, the second adds the vector features to the list of raster features as desired.
+   * If both are received in the reverse order, the vector-feature click kicks off the same behavior as the other click would have;
+   * and when the next click is received, it is ignored - again, as desired.
+   */
+
+  private _featurePicked(
+    entity: Entity | undefined,
+    event: L.LeafletMouseEvent
+  ) {
+    this._pickFeatures(event.latlng);
+
+    // Ignore clicks on the feature highlight.
+    if (entity && entity.entityCollection && entity.entityCollection.owner) {
+      const owner = entity.entityCollection.owner;
+      if (
+        owner instanceof DataSource &&
+        owner.name == GlobeOrMap._featureHighlightName
+      ) {
+        return;
+      }
+    }
+
+    const feature = Feature.fromEntityCollectionOrEntity(entity);
+    if (isDefined(this._pickedFeatures)) {
+      this._pickedFeatures.features.push(feature);
+
+      if (isDefined(entity) && entity.position) {
+        this._pickedFeatures.pickPosition = (<any>entity.position)._value;
+      }
+    }
+  }
+
+  private _pickFeatures(
+    latlng: L.LatLng,
+    tileCoordinates?: any,
+    existingFeatures?: Entity[]
+  ) {
+    if (isDefined(this._pickedFeatures)) {
+      // Picking is already in progress.
+      return;
+    }
+
+    this._pickedFeatures = new PickedFeatures();
+
+    if (isDefined(existingFeatures)) {
+      this._pickedFeatures.features = existingFeatures;
+    }
+
+    // We run this later because vector click events and the map click event can come through in any order, but we can
+    // be reasonably sure that all of them will be processed by the time our runLater func is invoked.
+    const cleanup = runLater(() => {
+      // Set this again just in case a vector pick came through and reset it to the vector's position.
+      const newPickLocation = Ellipsoid.WGS84.cartographicToCartesian(
+        pickedLocation
+      );
+      // TODO
+      // const mapInteractionModeStack = this.terria.mapInteractionModeStack;
+      // if (
+      //   defined(mapInteractionModeStack) &&
+      //   mapInteractionModeStack.length > 0
+      // ) {
+      //   mapInteractionModeStack[
+      //     mapInteractionModeStack.length - 1
+      //   ].pickedFeatures.pickPosition = newPickLocation;
+      // } else
+      if (isDefined(this.terria.pickedFeatures)) {
+        this.terria.pickedFeatures.pickPosition = newPickLocation;
+      }
+
+      // Unset this so that the next click will start building features from scratch.
+      this._pickedFeatures = undefined;
+    });
+
+    const imageryLayers: CesiumTileLayer[] = [];
+    this.map.eachLayer(layer => {
+      if (isImageryLayer(layer)) {
+        imageryLayers.push(layer);
+      }
+    });
+    tileCoordinates = defaultValue(tileCoordinates, {});
+
+    const pickedLocation = Cartographic.fromDegrees(latlng.lng, latlng.lat);
+    this._pickedFeatures.pickPosition = Ellipsoid.WGS84.cartographicToCartesian(
+      pickedLocation
+    );
+
+    // We want the all available promise to return after the cleanup one to make sure all vector click events have resolved.
+    const promises = [cleanup].concat(
+      imageryLayers.map(imageryLayer => {
+        const imageryLayerUrl = (<any>imageryLayer.imageryProvider).url;
+        const longRadians = CesiumMath.toRadians(latlng.lng);
+        const latRadians = CesiumMath.toRadians(latlng.lat);
+
+        if (tileCoordinates[imageryLayerUrl]) {
+          return Promise.resolve(tileCoordinates[imageryLayerUrl]);
+        } else {
+          return imageryLayer
+            .getFeaturePickingCoords(this.map, longRadians, latRadians)
+            .then(coords => {
+              return imageryLayer
+                .pickFeatures(
+                  coords.x,
+                  coords.y,
+                  coords.level,
+                  longRadians,
+                  latRadians
+                )
+                .then(features => {
+                  return {
+                    features: features,
+                    imageryLayer: imageryLayer,
+                    coords: coords
+                  };
+                });
+            });
+        }
+      })
+    );
+
+    const pickedFeatures = this._pickedFeatures;
+
+    pickedFeatures.allFeaturesAvailablePromise = Promise.all(promises)
+      .then((results: any) => {
+        // Get rid of the cleanup promise
+        const promiseResult: {
+          features: ImageryLayerFeatureInfo[];
+          imageryLayer: CesiumTileLayer;
+          coords: ProviderCoords;
+        }[] = results.slice(1);
+
+        pickedFeatures.isLoading = false;
+        pickedFeatures.providerCoords = {};
+
+        const filteredResults = promiseResult.filter(function(result) {
+          return isDefined(result.features) && result.features.length > 0;
+        });
+
+        pickedFeatures.providerCoords = filteredResults.reduce(function(
+          coordsSoFar: ProviderCoordsMap,
+          result
+        ) {
+          const imageryProvider = result.imageryLayer.imageryProvider;
+          coordsSoFar[(<any>imageryProvider).url] = result.coords;
+          return coordsSoFar;
+        },
+        {});
+
+        pickedFeatures.features = filteredResults.reduce(
+          (allFeatures, result) => {
+            // TODO
+            // if (this.terria.showSplitter) {
+            //   // Skip unless the layer is on the picked side or belongs to both sides of the splitter
+            //   const screenPosition = this.computePositionOnScreen(
+            //     pickedFeatures.pickPosition
+            //   );
+            //   const pickedSide = this.terria.getSplitterSideForScreenPosition(
+            //     screenPosition
+            //   );
+            //   const splitDirection = result.imageryLayer.splitDirection;
+
+            //   if (
+            //     !(
+            //       splitDirection === pickedSide ||
+            //       splitDirection === ImagerySplitDirection.NONE
+            //     )
+            //   ) {
+            //     return allFeatures;
+            //   }
+            // }
+
+            return allFeatures.concat(
+              result.features.map(feature => {
+                (<any>feature).imageryLayer = result.imageryLayer;
+
+                // For features without a position, use the picked location.
+                if (!isDefined(feature.position)) {
+                  feature.position = pickedLocation;
+                }
+
+                return this._createFeatureFromImageryLayerFeature(feature);
+              })
+            );
+          },
+          pickedFeatures.features
+        );
+      })
+      .catch(e => {
+        pickedFeatures.isLoading = false;
+        pickedFeatures.error =
+          "An unknown error occurred while picking features.";
+
+        throw e;
+      });
+
+    // TODO
+    // const mapInteractionModeStack = this.terria.mapInteractionModeStack;
+    // if (
+    //   defined(mapInteractionModeStack) &&
+    //   mapInteractionModeStack.length > 0
+    // ) {
+    //   mapInteractionModeStack[
+    //     mapInteractionModeStack.length - 1
+    //   ].pickedFeatures = this._pickedFeatures;
+    // } else {
+    this.terria.pickedFeatures = this._pickedFeatures;
+    // }
   }
 }
 
