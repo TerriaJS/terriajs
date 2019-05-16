@@ -34,16 +34,16 @@ import SingleTileImageryProvider from "terriajs-cesium/Source/Scene/SingleTileIm
 import ScreenSpaceEventType from "terriajs-cesium/Source/Core/ScreenSpaceEventType";
 import when from "terriajs-cesium/Source/ThirdParty/when";
 import CesiumWidget from "terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget";
+
 import isDefined from "../Core/isDefined";
 import pollToPromise from "../Core/pollToPromise";
 import CesiumRenderLoopPauser from "../Map/CesiumRenderLoopPauser";
+import Feature from "./Feature";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import GlobeOrMap, { CameraView } from "./GlobeOrMap";
 import Mappable, { ImageryParts } from "./Mappable";
 import Terria from "./Terria";
 import PickedFeatures, { ProviderCoordsMap } from "../Map/PickedFeatures";
-
-const Feature = require("./Feature");
 
 // Intermediary
 var cartesian3Scratch = new Cartesian3();

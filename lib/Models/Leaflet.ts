@@ -18,9 +18,9 @@ import cesiumRequestAnimationFrame from "terriajs-cesium/Source/Core/requestAnim
 import cesiumCancelAnimationFrame from "terriajs-cesium/Source/Core/cancelAnimationFrame";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import when from "terriajs-cesium/Source/ThirdParty/when";
-import rectangleToLatLngBounds from "../Map/rectangleToLatLngBounds";
 
 import CesiumTileLayer from "../Map/CesiumTileLayer";
+import Feature from "./Feature";
 import GlobeOrMap, { CameraView } from "./GlobeOrMap";
 import Mappable, { ImageryParts } from "./Mappable";
 import PickedFeatures, {
@@ -29,9 +29,8 @@ import PickedFeatures, {
 } from "../Map/PickedFeatures";
 import Terria from "./Terria";
 import TerriaViewer from "../ViewModels/TerriaViewer";
+import rectangleToLatLngBounds from "../Map/rectangleToLatLngBounds";
 import runLater from "../Core/runLater";
-
-const Feature = require("./Feature");
 
 function isDefined<T>(value: T | undefined): value is T {
   return value !== undefined;
@@ -308,14 +307,11 @@ export default class Leaflet extends GlobeOrMap {
    * and when the next click is received, it is ignored - again, as desired.
    */
 
-  private _featurePicked(
-    entity: Entity | undefined,
-    event: L.LeafletMouseEvent
-  ) {
+  private _featurePicked(entity: Entity, event: L.LeafletMouseEvent) {
     this._pickFeatures(event.latlng);
 
     // Ignore clicks on the feature highlight.
-    if (entity && entity.entityCollection && entity.entityCollection.owner) {
+    if (entity.entityCollection && entity.entityCollection.owner) {
       const owner = entity.entityCollection.owner;
       if (
         owner instanceof DataSource &&
