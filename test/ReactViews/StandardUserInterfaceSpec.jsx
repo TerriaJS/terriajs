@@ -22,10 +22,10 @@ describe("StandardUserInterface", function() {
     });
   });
 
-  it("has class ui-root", function() {
+  it("has class story-wrapper", function() {
     const ui = <StandardUserInterface terria={terria} viewState={viewState} />;
     const result = getShallowRenderedOutput(ui);
-    expect(result.props.className).toContain("ui-root");
+    expect(result.props.className).toContain("story-wrapper");
   });
 
   it("feature info panel has top-element class when it is the top element", function() {
