@@ -4,19 +4,8 @@ var path = require('path');
 var MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 //var testGlob = ['./test/**/*.js', './test/**/*.jsx', '!./test/Utility/*.js'];
-var testGlob = [
-    './test/SpecMain.ts',
-    './test/Models/Experiment.ts',
-    './test/Models/StratumOrderSpec.ts',
-    './test/Models/WebMapServiceCatalogItemSpec.ts',
-    './test/Models/WebMapServiceCatalogGroupSpec.ts',
-    './test/Traits/objectTraitSpec.ts',
-    './test/Traits/objectArrayTraitSpec.ts',
-    './test/Models/LoadableStratumSpec.ts',
-    './test/Models/upsertModelFromJsonSpec.ts',
-    './test/Table/CsvSpec.ts'
-];
-
+var testGlob = ['./test/SpecMain.ts', './test/**/*Spec.ts', './test/Models/Experiment.ts'];
+console.log(glob.sync(testGlob));
 module.exports = function(hot, dev) {
     var config = {
         mode: dev ? 'development' : 'production',
