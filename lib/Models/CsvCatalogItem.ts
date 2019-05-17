@@ -40,7 +40,10 @@ export default class CsvCatalogItem extends AsyncMappableMixin(
 
   constructor(id: string, terria: Terria) {
     super(id, terria);
-    this.strata.set(automaticTableStylesStratumName, new TableAutomaticStylesStratum(this));
+    this.strata.set(
+      automaticTableStylesStratumName,
+      new TableAutomaticStylesStratum(this)
+    );
   }
 
   get type() {

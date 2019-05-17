@@ -5,6 +5,7 @@ import TableTimeStyleTraits from "./TableTimeStyleTraits";
 import ModelTraits from "./ModelTraits";
 import objectTrait from "./objectTrait";
 import primitiveTrait from "./primitiveTrait";
+import StratumFromTraits from "../Models/StratumFromTraits";
 
 export default class TableStyleTraits extends ModelTraits {
   @primitiveTrait({
@@ -89,7 +90,7 @@ export default class TableStyleTraits extends ModelTraits {
   })
   time?: TableTimeStyleTraits;
 
-  static isRemoval(style: TableStyleTraits) {
+  static isRemoval(style: StratumFromTraits<TableStyleTraits>) {
     return style.title === null;
   }
 }

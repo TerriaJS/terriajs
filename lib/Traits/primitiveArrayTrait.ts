@@ -19,7 +19,10 @@ export default function primitiveArrayTrait<T>(
     if (!constructor.traits) {
       constructor.traits = {};
     }
-    constructor.traits[propertyKey] = new PrimitiveArrayTrait(propertyKey, options);
+    constructor.traits[propertyKey] = new PrimitiveArrayTrait(
+      propertyKey,
+      options
+    );
   };
 }
 
@@ -49,9 +52,7 @@ export class PrimitiveArrayTrait<T> extends Trait {
     if (!this.isValidJson(jsonValue)) {
       throw new TerriaError({
         title: "Invalid property",
-        message: `Property ${this.id} is expected to be of type ${
-          this.type
-        }[].`
+        message: `Property ${this.id} is expected to be of type ${this.type}[].`
       });
     }
 

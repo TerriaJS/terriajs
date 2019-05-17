@@ -8,16 +8,12 @@ import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import PointGraphics from "terriajs-cesium/Source/DataSources/PointGraphics";
 import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
-import createFlattenedStrataView from "../Models/createFlattenedStrataView";
-import FlattenedFromTraits from "../Models/FlattenedFromTraits";
 import { ImageryParts } from "../Models/Mappable";
 import Model from "../Models/Model";
-import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
 import TableColumn from "../Table/TableColumn";
 import TableColumnType from "../Table/TableColumnType";
-import TableStyleTraits from "../Traits/TableStyleTraits";
-import TableTraits from "../Traits/TableTraits";
 import TableStyle from "../Table/TableStyle";
+import TableTraits from "../Traits/TableTraits";
 
 export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
   Base: T
@@ -41,7 +37,15 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
 
     @computed
     get tableStyles(): TableStyle[] {
-      return this.stylesWithDefaults.map((_, i) => this.getTableStyle(i));
+      if (this.styles === undefined) {
+        return [];
+      }
+      return this.styles.map((_, i) => this.getTableStyle(i));
+    }
+
+    @computed
+    get defaultTableStyle(): TableStyle {
+      return new TableStyle(this, -1);
     }
 
     @computed
@@ -53,6 +57,16 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
         return this.styles[0].id;
       }
       return undefined;
+    }
+
+    @computed
+    get selectedTableStyle(): TableStyle | undefined {
+      const selectedStyle = this.selectedStyle;
+      if (selectedStyle === undefined) {
+        return undefined;
+      }
+
+      return this.tableStyles.find(style => style.id === this.selectedStyle);
     }
 
     @computed
@@ -83,8 +97,10 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
         const longitudes = style.longitudeColumn.valuesAsNumbers.values;
         const latitudes = style.latitudeColumn.valuesAsNumbers.values;
 
-        const colorColumnName = style.colorTraits.colorColumn
-        const colorColumn = colorColumnName ? this.findColumnByName(colorColumnName) : undefined;
+        const colorColumnName = style.colorTraits.colorColumn;
+        const colorColumn = colorColumnName
+          ? this.findColumnByName(colorColumnName)
+          : undefined;
 
         const dataSource = new CustomDataSource(this.name || "CsvCatalogItem");
 
@@ -113,25 +129,6 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
         return dataSource;
       }
     );
-
-    @computed
-    get stylesWithDefaults(): readonly FlattenedFromTraits<TableStyleTraits>[] {
-      const styles = this.styles || [];
-      const defaultStyle:
-        | ModelPropertiesFromTraits<TableStyleTraits>
-        | undefined = this.defaultStyle;
-      if (defaultStyle === undefined) {
-        return styles;
-      }
-
-      return styles.map(style => {
-        const model = {
-          id: style.id + ":with-defaults",
-          strataTopToBottom: [style, defaultStyle]
-        };
-        return createFlattenedStrataView(model, TableStyleTraits);
-      });
-    }
 
     findFirstColumnByType(type: TableColumnType): TableColumn | undefined {
       return this.tableColumns.find(column => column.type === type);
