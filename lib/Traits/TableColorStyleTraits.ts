@@ -87,7 +87,7 @@ export default class TableColorStyleTraits extends ModelTraits {
       "The colors to use for the bins, each specified as CSS color " +
       "strings. If there are more colors than bins, the extra colors are " +
       "ignored. If there are more bins than colors, `Color Palette` or " +
-      "random colors are used for the remaining bins.",
+      "a default color is used for the remaining bins.",
     type: "number"
   })
   binColors?: string[];

@@ -14,6 +14,7 @@ import TableColumn from "../Table/TableColumn";
 import TableColumnType from "../Table/TableColumnType";
 import TableStyle from "../Table/TableStyle";
 import TableTraits from "../Traits/TableTraits";
+import ConstantColorMap from "../Map/ConstantColorMap";
 
 export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
   Base: T
@@ -96,19 +97,21 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
 
         const longitudes = style.longitudeColumn.valuesAsNumbers.values;
         const latitudes = style.latitudeColumn.valuesAsNumbers.values;
-
-        const colorColumnName = style.colorTraits.colorColumn;
-        const colorColumn = colorColumnName
-          ? this.findColumnByName(colorColumnName)
-          : undefined;
+        const values = style.colorColumn ? style.colorColumn.valuesAsNumbers.values : undefined || [];
 
         const dataSource = new CustomDataSource(this.name || "CsvCatalogItem");
+
+        let colorMap = this.selectedTableStyle ? this.selectedTableStyle.colorMap : undefined;
+        if (colorMap === undefined) {
+          colorMap = new ConstantColorMap(Color.RED);
+        }
 
         dataSource.entities.suspendEvents();
 
         for (let i = 0; i < longitudes.length && i < latitudes.length; ++i) {
           const longitude = longitudes[i];
           const latitude = latitudes[i];
+          const value = values[i];
           if (longitude === null || latitude === null) {
             continue;
           }
@@ -117,7 +120,7 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
             new Entity({
               position: Cartesian3.fromDegrees(longitude, latitude, 0.0),
               point: new PointGraphics({
-                color: Color.RED,
+                color: colorMap.mapValueToColor(value),
                 pixelSize: 5
               })
             })

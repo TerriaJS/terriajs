@@ -16,6 +16,7 @@ import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
 import createEmptyModel from "../Models/createEmptyModel";
 import ConstantColorMap from "../Map/ConstantColorMap";
 import ColorPalette from "./ColorPalette";
+import DiscreteColorMap from "../Map/DiscreteColorMap";
 
 const defaultColor = "yellow";
 
@@ -132,6 +133,10 @@ export default class TableStyle {
 
   @computed
   get numberOfColorBins(): number {
+    // The number of bins is controlled by:
+    // 1) the number of items in the `binMaximums` list
+    //      -or, if it is undefined-
+    // 2) the value of numberOfColorBins
     if (this.colorTraits.binMaximums !== undefined) {
       const binMaximums = this.colorTraits.binMaximums;
       const colorColumn = this.colorColumn;
@@ -149,24 +154,13 @@ export default class TableStyle {
         return explicitBins + 1;
       }
       return explicitBins;
-    } else if (this.colorTraits.numberOfBins !== undefined) {
-      return this.colorTraits.numberOfBins;
-    } else {
-      return 0;
     }
+    return this.colorTraits.numberOfBins;
   }
 
   @computed
   get binColors(): readonly Readonly<Color>[] {
-    // The number of bins is controlled by:
-    // 1) the number of items in the `binMaximums` list
-    //      -or, if it has none-
-    // 2) the value of numberOfColorBins
-    const binMaximums = this.colorTraits.binMaximums;
-    let numberOfBins =
-      binMaximums !== undefined && binMaximums.length > 0
-        ? binMaximums.length
-        : this.numberOfColorBins;
+    const numberOfBins = this.numberOfColorBins;
 
     // Pick a color for every bin.
     const binColors = this.colorTraits.binColors || [];
@@ -191,6 +185,7 @@ export default class TableStyle {
     const colorTraits = this.colorTraits;
 
     if (colorColumn === undefined) {
+      // No column to color by, so use the same color for everything.
       const color =
         colorTraits.nullColor !== undefined
           ? Color.fromCssColorString(colorTraits.nullColor)
@@ -199,6 +194,19 @@ export default class TableStyle {
           : Color.fromCssColorString(defaultColor);
       return new ConstantColorMap(color);
     }
+
+    const maximums = computeMaximums(this.numberOfColorBins, this.colorTraits.binMaximums, colorColumn);
+
+    return new DiscreteColorMap({
+      bins: this.binColors.map((color, i) => {
+        return {
+          color: color.toCssColorString(), // TODO
+          maximum: maximums[i],
+          includeMinimumInThisBin: false
+        };
+      }),
+      nullColor: colorTraits.nullColor || 'rgba(0,0,0,0)'
+    })
   }
 
   private resolveColumn(name: string | undefined): TableColumn | undefined {
@@ -207,4 +215,27 @@ export default class TableStyle {
     }
     return this.tableModel.tableColumns.find(column => column.name === name);
   }
+}
+
+function computeMaximums(numberOfBins: number, bins: readonly number[] | undefined, column: TableColumn): number[] {
+  // TODO
+  const asNumbers = column.valuesAsNumbers;
+  const min = asNumbers.minimum;
+  const max = asNumbers.maximum;
+  if (min === undefined || max === undefined) {
+    return [];
+  }
+
+  let next = min;
+  const step = (max - min) / numberOfBins;
+
+  const result: number[] = [];
+  for (let i = 0; i < numberOfBins - 1; ++i) {
+    next += step;
+    result.push(next);
+  }
+
+  result.push(max);
+
+  return result;
 }
