@@ -6,11 +6,9 @@ import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import FeatureInfoCatalogItem from "./FeatureInfoCatalogItem";
 import DragWrapper from "../DragWrapper";
 import Loader from "../Loader";
-import ObserveModelMixin from "../ObserveModelMixin";
 import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
-import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import Icon from "../Icon";
 import {
@@ -24,10 +22,11 @@ import raiseErrorToUser from "../../Models/raiseErrorToUser";
 
 import Styles from "./feature-info-panel.scss";
 import classNames from "classnames";
+import { observer, disposeOnUnmount } from "mobx-react";
+import { reaction } from "mobx";
 
-const FeatureInfoPanel = createReactClass({
+const FeatureInfoPanel = observer(createReactClass({
   displayName: "FeatureInfoPanel",
-  mixins: [ObserveModelMixin],
 
   propTypes: {
     terria: PropTypes.object.isRequired,
@@ -49,10 +48,7 @@ const FeatureInfoPanel = createReactClass({
   componentDidMount() {
     const createFakeSelectedFeatureDuringPicking = true;
     const terria = this.props.terria;
-    this._pickedFeaturesSubscription = knockout
-      .getObservable(terria, "pickedFeatures")
-      .subscribe(() => {
-        const pickedFeatures = terria.pickedFeatures;
+    disposeOnUnmount(this, reaction(() => terria.pickedFeatures, (pickedFeatures) => {
         if (!defined(pickedFeatures)) {
           terria.selectedFeature = undefined;
         } else {
@@ -70,7 +66,7 @@ const FeatureInfoPanel = createReactClass({
               // We only show features that are associated with a catalog item, so make sure the one we select to be
               // open initially is one we're actually going to show.
               const featuresShownAtAll = pickedFeatures.features.filter(x =>
-                defined(determineCatalogItem(terria.nowViewing, x))
+                defined(determineCatalogItem(terria.workbench, x))
               );
               terria.selectedFeature = featuresShownAtAll.filter(
                 featureHasInfo
@@ -85,14 +81,7 @@ const FeatureInfoPanel = createReactClass({
             });
           }
         }
-      });
-  },
-
-  componentWillUnmount() {
-    if (defined(this._pickedFeaturesSubscription)) {
-      this._pickedFeaturesSubscription.dispose();
-      this._pickedFeaturesSubscription = undefined;
-    }
+    }));
   },
 
   renderFeatureInfoCatalogItems(catalogItems, featureCatalogItemPairs) {
@@ -142,7 +131,7 @@ const FeatureInfoPanel = createReactClass({
   },
 
   getMessageForNoResults() {
-    if (this.props.terria.nowViewing.hasItems) {
+    if (this.props.terria.workbench.items.length > 0) {
       // feature info shows up becuase data has been added for the first time
       if (this.props.viewState.firstTimeAddingData) {
         this.props.viewState.firstTimeAddingData = false;
@@ -386,7 +375,7 @@ const FeatureInfoPanel = createReactClass({
       </DragWrapper>
     );
   }
-});
+}));
 
 /**
  * Returns an object of {catalogItems, featureCatalogItemPairs}.
@@ -404,7 +393,7 @@ function getFeaturesGroupedByCatalogItems(terria) {
     // if (!defined(feature.position)) {
     //     feature.position = terria.pickedFeatures.pickPosition;
     // }
-    const catalogItem = determineCatalogItem(terria.nowViewing, feature);
+    const catalogItem = determineCatalogItem(terria.workbench, feature);
     featureCatalogItemPairs.push({
       catalogItem: catalogItem,
       feature: feature
@@ -421,13 +410,13 @@ function getFeaturesGroupedByCatalogItems(terria) {
 /**
  * Figures out what the catalog item for a feature is.
  *
- * @param nowViewing {@link NowViewing} to look in the items for.
+ * @param workbench {@link Workbench} to look in the items for.
  * @param feature Feature to match
  * @returns {CatalogItem}
  */
-function determineCatalogItem(nowViewing, feature) {
-  if (!defined(nowViewing)) {
-    // So that specs do not need to define a nowViewing.
+function determineCatalogItem(workbench, feature) {
+  if (!defined(workbench)) {
+    // So that specs do not need to define a workbench.
     return undefined;
   }
 
@@ -456,9 +445,9 @@ function determineCatalogItem(nowViewing, feature) {
       };
     }
 
-    for (i = nowViewing.items.length - 1; i >= 0; i--) {
-      item = nowViewing.items[i];
-      if (item.dataSource === dataSource) {
+    for (i = workbench.items.length - 1; i >= 0; i--) {
+      item = workbench.items[i];
+      if (item.mapItems.some(mapItem => mapItem === dataSource)) {
         result = item;
         break;
       }
@@ -470,9 +459,10 @@ function determineCatalogItem(nowViewing, feature) {
   // we can match up the imagery layer on the feature with a now-viewing item.
   if (defined(feature.imageryLayer)) {
     const imageryLayer = feature.imageryLayer;
-    for (i = nowViewing.items.length - 1; i >= 0; i--) {
-      if (nowViewing.items[i].imageryLayer === imageryLayer) {
-        result = nowViewing.items[i];
+    for (i = workbench.items.length - 1; i >= 0; i--) {
+      const item = workbench.items[i];
+      if (item.mapItems.some(mapItem => mapItem.imageryProvider === imageryLayer.imageryProvider)) {
+        result = workbench.items[i];
         break;
       }
     }
