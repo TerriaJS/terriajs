@@ -2,7 +2,6 @@ import { ObservableMap } from "mobx";
 import { ModelId } from "../Traits/ModelReference";
 import ModelTraits from "../Traits/ModelTraits";
 import Trait from "../Traits/Trait";
-import FlattenedFromTraits from "./FlattenedFromTraits";
 import ModelPropertiesFromTraits from "./ModelPropertiesFromTraits";
 import StratumFromTraits from "./StratumFromTraits";
 import Terria from "./Terria";
@@ -17,7 +16,6 @@ export abstract class BaseModel {
   abstract get traits(): {
     [id: string]: Trait;
   };
-  abstract get flattened(): FlattenedFromTraits<ModelTraits>;
   abstract get strata(): ObservableMap<string, StratumFromTraits<ModelTraits>>;
   abstract get topStratum(): StratumFromTraits<ModelTraits>;
 
@@ -35,7 +33,6 @@ export interface ModelInterface<T extends ModelTraits> {
   readonly traits: {
     [id: string]: Trait;
   };
-  readonly flattened: FlattenedFromTraits<T>;
   readonly strata: ObservableMap<string, StratumFromTraits<T>>;
   readonly terria: Terria;
   readonly id: string;

@@ -14,7 +14,10 @@ export default class Csv {
    * @param columnMajor True if the returned array is an array of columns; False if the returned array is an array of rows.
    * @returns A promise that resolves to the CSV data.
    */
-  static parseString(csv: string, columnMajor: boolean = false): Promise<string[][]> {
+  static parseString(
+    csv: string,
+    columnMajor: boolean = false
+  ): Promise<string[][]> {
     return new Promise<string[][]>((resolve, reject) => {
       papaparse.parse(csv, {
         ...getParseOptions(columnMajor, resolve, reject)
@@ -28,7 +31,10 @@ export default class Csv {
    * @param columnMajor True if the returned array is an array of columns; False if the returned array is an array of rows.
    * @returns A promise that resolves to the CSV data.
    */
-  static parseFile(file: File, columnMajor: boolean = false): Promise<string[][]> {
+  static parseFile(
+    file: File,
+    columnMajor: boolean = false
+  ): Promise<string[][]> {
     return new Promise<string[][]>((resolve, reject) => {
       papaparse.parse(file, {
         ...getParseOptions(columnMajor, resolve, reject)
@@ -42,7 +48,10 @@ export default class Csv {
    * @param columnMajor True if the returned array is an array of columns; False if the returned array is an array of rows.
    * @returns A promise that resolves to the CSV data.
    */
-  static parseUrl(url: string, columnMajor: boolean = false): Promise<string[][]> {
+  static parseUrl(
+    url: string,
+    columnMajor: boolean = false
+  ): Promise<string[][]> {
     return new Promise<string[][]>((resolve, reject) => {
       papaparse.parse(url, {
         ...getParseOptions(columnMajor, resolve, reject),
@@ -52,11 +61,20 @@ export default class Csv {
   }
 }
 
-function getParseOptions(columnMajor: boolean, resolve: (value: string[][]) => void, reject: (reason?: any) => void): papaparse.ParseConfig {
-  return columnMajor ? getParseOptionsColumnMajor(resolve, reject): getParseOptionsRowMajor(resolve, reject);
+function getParseOptions(
+  columnMajor: boolean,
+  resolve: (value: string[][]) => void,
+  reject: (reason?: any) => void
+): papaparse.ParseConfig {
+  return columnMajor
+    ? getParseOptionsColumnMajor(resolve, reject)
+    : getParseOptionsRowMajor(resolve, reject);
 }
 
-function getParseOptionsRowMajor(resolve: (value: string[][]) => void, reject: (reason?: any) => void): papaparse.ParseConfig {
+function getParseOptionsRowMajor(
+  resolve: (value: string[][]) => void,
+  reject: (reason?: any) => void
+): papaparse.ParseConfig {
   const result: string[][] = [];
 
   return {
@@ -77,7 +95,10 @@ function getParseOptionsRowMajor(resolve: (value: string[][]) => void, reject: (
   };
 }
 
-function getParseOptionsColumnMajor(resolve: (value: string[][]) => void, reject: (reason?: any) => void): papaparse.ParseConfig {
+function getParseOptionsColumnMajor(
+  resolve: (value: string[][]) => void,
+  reject: (reason?: any) => void
+): papaparse.ParseConfig {
   const result: string[][] = [];
 
   return {

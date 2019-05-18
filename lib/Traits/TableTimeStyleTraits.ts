@@ -4,7 +4,8 @@ import primitiveTrait from "./primitiveTrait";
 export default class TableTimeStyleTraits extends ModelTraits {
   @primitiveTrait({
     name: "Time Column",
-    description: "The column that indicates the time of a sample or the start time of an interval.",
+    description:
+      "The column that indicates the time of a sample or the start time of an interval.",
     type: "string"
   })
   timeColumn?: string;

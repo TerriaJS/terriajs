@@ -7,10 +7,12 @@ import FlattenedFromTraits from "../Models/FlattenedFromTraits";
 import createStratumInstance from "../Models/createStratumInstance";
 import TraitsConstructor from "./TraitsConstructor";
 import { computed } from "mobx";
+import addModelStrataView from "../Models/addModelStrataView";
+import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
 
 interface TraitsConstructorWithRemoval<T extends ModelTraits>
   extends TraitsConstructor<T> {
-  isRemoval?: (instance: T) => boolean;
+  isRemoval?: (instance: StratumFromTraits<T>) => boolean;
 }
 
 export interface ObjectArrayTraitOptions<T extends ModelTraits>
@@ -47,7 +49,7 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
 
   getValue(
     strataTopToBottom: StratumFromTraits<ModelTraits>[]
-  ): ReadonlyArray<FlattenedFromTraits<T>> | undefined {
+  ): ReadonlyArray<ModelPropertiesFromTraits<T>> | undefined {
     const objectArrayStrata = strataTopToBottom
       .map((stratum: any) => stratum[this.id])
       .filter(stratumValue => stratumValue !== undefined);
@@ -55,8 +57,8 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
       return undefined;
     }
 
-    const result: T[][] = [];
-    const idMap: { [id: string]: T[] } = {};
+    const result: StratumFromTraits<T>[][] = [];
+    const idMap: { [id: string]: StratumFromTraits<T>[] } = {};
     const removedIds: { [id: string]: boolean } = {};
 
     // Find the unique objects and the strata that go into each.
@@ -64,7 +66,7 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
       const objectArray = objectArrayStrata[i];
 
       if (objectArray) {
-        objectArray.forEach((o: T) => {
+        objectArray.forEach((o: StratumFromTraits<T>) => {
           const id = o[this.idProperty].toString();
           if (this.type.isRemoval !== undefined && this.type.isRemoval(o)) {
             // This ID is removed in this stratum.
@@ -86,16 +88,11 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
 
     // Flatten each unique object.
     return result.map(strata => {
-      const ResultType = this.type;
-      const result = createStratumInstance(ResultType);
-      const resultAny: any = result;
-
-      const traits = ResultType.traits;
-      Object.keys(traits).forEach(traitId => {
-        resultAny[traitId] = traits[traitId].getValue(strata);
-      });
-
-      return resultAny;
+      const model = {
+        strataTopToBottom: strata
+      };
+      addModelStrataView(model, this.type);
+      return <ModelPropertiesFromTraits<T>>(<unknown>model);
     });
   }
 

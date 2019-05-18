@@ -3,11 +3,11 @@ import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import { observer } from "mobx-react";
 
-import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
+// import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Styles from "./terria-viewer-wrapper.scss";
 
-import Splitter from "./Splitter";
-import ObserveModelMixin from "../ObserveModelMixin";
+// import Splitter from "./Splitter";
+// import ObserveModelMixin from "../ObserveModelMixin";
 import TerriaViewer from "../../ViewModels/TerriaViewer";
 
 const TerriaViewerWrapper = observer(

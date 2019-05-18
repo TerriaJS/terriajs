@@ -10,7 +10,9 @@ enum TableColumnType {
   address
 }
 
-export function stringToTableColumnType(s: string): TableColumnType | undefined {
+export function stringToTableColumnType(
+  s: string
+): TableColumnType | undefined {
   return TableColumnType[<keyof typeof TableColumnType>s];
 }
 
