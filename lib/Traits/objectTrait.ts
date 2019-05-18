@@ -46,6 +46,10 @@ export class ObjectTrait<T extends ModelTraits> extends Trait {
       .map((stratum: any) => stratum[this.id])
       .filter(stratum => stratum !== undefined);
 
+    if (objectStrata.length === 0) {
+      return undefined;
+    }
+
     const model = {
       strataTopToBottom: objectStrata
     };
