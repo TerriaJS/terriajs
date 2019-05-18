@@ -6,12 +6,12 @@ import Branding from "../SidePanel/Branding";
 // import DragDropFile from '../DragDropFile';
 // import DragDropNotification from './../DragDropNotification';
 import ExplorerWindow from "../ExplorerWindow/ExplorerWindow";
-// import FeatureInfoPanel from '../FeatureInfo/FeatureInfoPanel';
+import FeatureInfoPanel from '../FeatureInfo/FeatureInfoPanel';
 // import FeedbackForm from '../Feedback/FeedbackForm';
 import MapColumn from "./MapColumn";
 import MapInteractionWindow from "../Notification/MapInteractionWindow";
 import MapNavigation from "../Map/MapNavigation";
-// import MenuBar from '../Map/MenuBar';
+import MenuBar from "../Map/MenuBar";
 import ExperimentalFeatures from "../Map/ExperimentalFeatures";
 // import MobileHeader from '../Mobile/MobileHeader';
 import Notification from "../Notification/Notification";
@@ -107,7 +107,7 @@ const StandardUserInterface = observer(
       );
 
       const terria = this.props.terria;
-      // const allBaseMaps = this.props.allBaseMaps;
+      const allBaseMaps = this.props.allBaseMaps;
       return (
         <div className={Styles.uiRoot} ref={w => (this._wrapper = w)}>
           <div className={Styles.ui}>
@@ -202,11 +202,12 @@ const StandardUserInterface = observer(
                   .explorerPanelIsVisible
               })}
             >
-              {/* <MenuBar terria={terria}
-                                 viewState={this.props.viewState}
-                                 allBaseMaps={allBaseMaps}
-                                 menuItems={customElements.menu}
-                        /> */}
+              <MenuBar
+                terria={terria}
+                viewState={this.props.viewState}
+                allBaseMaps={allBaseMaps}
+                menuItems={customElements.menu}
+              />
               <MapNavigation
                 terria={terria}
                 viewState={this.props.viewState}
@@ -243,9 +244,7 @@ const StandardUserInterface = observer(
               this.props.viewState.topElement = "FeatureInfo";
             }}
           >
-            {/* <FeatureInfoPanel terria={terria}
-                                  viewState={this.props.viewState}
-                    /> */}
+          <FeatureInfoPanel terria={terria} viewState={this.props.viewState} />
           </div>
           {/* <DragDropFile terria={this.props.terria}
                               viewState={this.props.viewState}

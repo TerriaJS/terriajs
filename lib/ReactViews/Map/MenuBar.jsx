@@ -20,7 +20,7 @@ const MenuBar = createReactClass({
   propTypes: {
     terria: PropTypes.object,
     viewState: PropTypes.object.isRequired,
-    allBaseMaps: PropTypes.array,
+    allBaseMaps: PropTypes.array, // Not implemented yet
     menuItems: PropTypes.arrayOf(PropTypes.element)
   },
 
@@ -35,7 +35,7 @@ const MenuBar = createReactClass({
   },
 
   render() {
-    const enableTools = this.props.terria.getUserProperty("tools") === "1";
+    // const enableTools = this.props.terria.getUserProperty('tools') === '1';
     return (
       <div
         className={classNames(
@@ -48,31 +48,24 @@ const MenuBar = createReactClass({
           <li className={Styles.menuItem}>
             <SettingPanel
               terria={this.props.terria}
-              allBaseMaps={this.props.allBaseMaps}
               viewState={this.props.viewState}
             />
           </li>
-          <li className={Styles.menuItem}>
-            <SharePanel
-              terria={this.props.terria}
-              viewState={this.props.viewState}
-            />
-          </li>
-          {enableTools && (
-            <li className={Styles.menuItem}>
-              <ToolsPanel
-                terria={this.props.terria}
-                viewState={this.props.viewState}
-              />
-            </li>
-          )}
-          <If condition={!this.props.viewState.useSmallScreenInterface}>
-            <For each="element" of={this.props.menuItems} index="i">
-              <li className={Styles.menuItem} key={i}>
-                {element}
-              </li>
-            </For>
-          </If>
+          {/* <li className={Styles.menuItem}>
+                        <SharePanel terria={this.props.terria}
+                                    viewState={this.props.viewState}/>
+                    </li>
+                    {enableTools && <li className={Styles.menuItem}>
+                        <ToolsPanel terria={this.props.terria}
+                                    viewState={this.props.viewState}/>
+                    </li>}
+                    <If condition={!this.props.viewState.useSmallScreenInterface}>
+                        <For each="element" of={this.props.menuItems} index="i">
+                            <li className={Styles.menuItem} key={i}>
+                                {element}
+                            </li>
+                        </For>
+                    </If> */}
         </ul>
       </div>
     );

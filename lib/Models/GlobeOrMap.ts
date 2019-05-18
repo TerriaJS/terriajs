@@ -1,23 +1,7 @@
-"use strict";
-
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
+import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import Mappable from "./Mappable";
-
-/*global require*/
-var Color = require("terriajs-cesium/Source/Core/Color");
-var defined = require("terriajs-cesium/Source/Core/defined");
-var DeveloperError = require("terriajs-cesium/Source/Core/DeveloperError");
-var Ellipsoid = require("terriajs-cesium/Source/Core/Ellipsoid");
-// var featureDataToGeoJson = require('../Map/featureDataToGeoJson');
-// var MapboxVectorTileImageryProvider = require('../Map/MapboxVectorTileImageryProvider');
-// var MapboxVectorCanvasTileLayer = require('../Map/MapboxVectorCanvasTileLayer');
-// var GeoJsonCatalogItem = require('./GeoJsonCatalogItem');
-
-var Feature = require("./Feature");
-var ImageryLayer = require("terriajs-cesium/Source/Scene/ImageryLayer");
-var rectangleToLatLngBounds = require("../Map/rectangleToLatLngBounds");
-
-require("./ImageryLayerFeatureInfo"); // overrides Cesium's prototype.configureDescriptionFromProperties
+import Feature from "./Feature";
 
 export type CameraView = {
   rectangle: Cesium.Rectangle;
@@ -26,9 +10,38 @@ export type CameraView = {
   up: any;
 };
 
-export default interface GlobeOrMap {
-  zoomTo(
+export default abstract class GlobeOrMap {
+  protected static _featureHighlightName = "___$FeatureHighlight&__";
+
+  abstract destroy(): void;
+  abstract zoomTo(
     viewOrExtent: CameraView | Cesium.Rectangle | Mappable,
     flightDurationSeconds: number
   ): void;
+  abstract getCurrentExtent(): Cesium.Rectangle;
+
+  /**
+   * Creates a {@see Feature} (based on an {@see Entity}) from a {@see ImageryLayerFeatureInfo}.
+   * @param imageryFeature The imagery layer feature for which to create an entity-based feature.
+   * @return The created feature.
+   */
+  protected _createFeatureFromImageryLayerFeature(
+    imageryFeature: ImageryLayerFeatureInfo
+  ) {
+    const feature = new Feature({
+      id: imageryFeature.name
+    });
+    feature.name = imageryFeature.name;
+    (<any>feature).description = imageryFeature.description; // already defined by the new Entity
+    feature.properties = (<any>imageryFeature).properties;
+    (<any>feature).data = imageryFeature.data;
+
+    (<any>feature).imageryLayer = (<any>imageryFeature).imageryLayer;
+    feature.position = Ellipsoid.WGS84.cartographicToCartesian(
+      imageryFeature.position
+    );
+    (<any>feature).coords = (<any>imageryFeature).coords;
+
+    return feature;
+  }
 }

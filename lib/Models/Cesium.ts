@@ -1,51 +1,218 @@
-import { autorun } from "mobx";
+import { autorun, computed } from "mobx";
 import { createTransformer } from "mobx-utils";
 import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
+import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
+import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
+import Clock from "terriajs-cesium/Source/Core/Clock";
+import createWorldTerrain from "terriajs-cesium/Source/Core/createWorldTerrain";
+import Credit from "terriajs-cesium/Source/Core/Credit";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import defined from "terriajs-cesium/Source/Core/defined";
+import destroyObject from "terriajs-cesium/Source/Core/destroyObject";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
+import EllipsoidTerrainProvider from "terriajs-cesium/Source/Core/EllipsoidTerrainProvider";
+import Entity from "terriajs-cesium/Source/DataSources/Entity";
+import EventHelper from "terriajs-cesium/Source/Core/EventHelper";
+import FeatureDetection from "terriajs-cesium/Source/Core/FeatureDetection";
 import HeadingPitchRange from "terriajs-cesium/Source/Core/HeadingPitchRange";
+import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
+import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
+import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
+import PerspectiveFrustum from "terriajs-cesium/Source/Core/PerspectiveFrustum";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import sampleTerrain from "terriajs-cesium/Source/Core/sampleTerrain";
+import Transforms from "terriajs-cesium/Source/Core/Transforms";
 import BoundingSphereState from "terriajs-cesium/Source/DataSources/BoundingSphereState";
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import DataSourceCollection from "terriajs-cesium/Source/DataSources/DataSourceCollection";
+import DataSourceDisplay from "terriajs-cesium/Source/DataSources/DataSourceDisplay";
 import ImageryLayer from "terriajs-cesium/Source/Scene/ImageryLayer";
 import Scene from "terriajs-cesium/Source/Scene/Scene";
+import SingleTileImageryProvider from "terriajs-cesium/Source/Scene/SingleTileImageryProvider";
+import ScreenSpaceEventType from "terriajs-cesium/Source/Core/ScreenSpaceEventType";
 import when from "terriajs-cesium/Source/ThirdParty/when";
 import CesiumWidget from "terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget";
+
 import isDefined from "../Core/isDefined";
 import pollToPromise from "../Core/pollToPromise";
 import CesiumRenderLoopPauser from "../Map/CesiumRenderLoopPauser";
+import Feature from "./Feature";
+import TerriaViewer from "../ViewModels/TerriaViewer";
 import GlobeOrMap, { CameraView } from "./GlobeOrMap";
 import Mappable, { ImageryParts } from "./Mappable";
 import Terria from "./Terria";
+import PickedFeatures, { ProviderCoordsMap } from "../Map/PickedFeatures";
 
-export default class Cesium implements GlobeOrMap {
+// Intermediary
+var cartesian3Scratch = new Cartesian3();
+var enuToFixedScratch = new Matrix4();
+var southwestScratch = new Cartesian3();
+var southeastScratch = new Cartesian3();
+var northeastScratch = new Cartesian3();
+var northwestScratch = new Cartesian3();
+var southwestCartographicScratch = new Cartographic();
+var southeastCartographicScratch = new Cartographic();
+var northeastCartographicScratch = new Cartographic();
+var northwestCartographicScratch = new Cartographic();
+
+export default class Cesium extends GlobeOrMap {
   readonly terria: Terria;
+  readonly terriaViewer: TerriaViewer;
   readonly cesiumWidget: CesiumWidget;
   readonly scene: Scene;
   readonly dataSources: DataSourceCollection = new DataSourceCollection();
-  dataSourceDisplay: Cesium.DataSourceDisplay | undefined;
+  readonly dataSourceDisplay: Cesium.DataSourceDisplay;
   readonly pauser: CesiumRenderLoopPauser;
+  private readonly _eventHelper: EventHelper;
+  private readonly _disposeWorkbenchMapItemsSubscription: () => void;
+  private readonly _disposeTerrainReaction: () => void;
 
-  private _disposeWorkbenchMapItemsSubscription: (() => void) | undefined;
+  constructor(terriaViewer: TerriaViewer) {
+    super();
+    this.terriaViewer = terriaViewer;
+    this.terria = terriaViewer.terria;
 
-  constructor(terria: Terria, cesiumWidget: CesiumWidget) {
-    this.terria = terria;
-    this.cesiumWidget = cesiumWidget;
-    this.scene = cesiumWidget.scene;
+    this._terrainProvider;
+    const terrainProvider = this._terrainProvider;
+
+    //An arbitrary base64 encoded image used to populate the placeholder SingleTileImageryProvider
+    var img =
+      "data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUA \
+    AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO \
+    9TXL0Y4OHwAAAABJRU5ErkJggg==";
+
+    var options = {
+      dataSources: this.dataSources,
+      clock: this.terria.timelineClock,
+      terrainProvider: terrainProvider,
+      imageryProvider: new SingleTileImageryProvider({ url: img }),
+      scene3DOnly: true,
+      // Workaround for Firefox bug with WebGL and printing:
+      // https://bugzilla.mozilla.org/show_bug.cgi?id=976173
+      ...((<any>FeatureDetection).isFirefox() && {
+        contextOptions: { webgl: { preserveDrawingBuffer: true } }
+      })
+    };
+
+    //create CesiumViewer
+    this.cesiumWidget = new CesiumWidget(this.terriaViewer.container, options);
+    this.scene = this.cesiumWidget.scene;
+
+    this.dataSourceDisplay = new DataSourceDisplay({
+      scene: this.scene,
+      dataSourceCollection: this.dataSources
+    });
+
+    this._eventHelper = new EventHelper();
+
+    this._eventHelper.add(this.terria.timelineClock.onTick, <any>((
+      clock: Clock
+    ) => {
+      this.dataSourceDisplay.update(clock.currentTime);
+    }));
+
+    // Disable HDR lighting for better performance and to avoid changing imagery colors.
+    (<any>this.scene).highDynamicRange = false;
+
+    this.scene.imageryLayers.removeAll();
+
+    //catch Cesium terrain provider down and switch to Ellipsoid
+    //     terrainProvider.errorEvent.addEventListener(function(err) {
+    //         console.log('Terrain provider error.  ', err.message);
+    //         if (viewer.scene.terrainProvider instanceof CesiumTerrainProvider) {
+    //             console.log('Switching to EllipsoidTerrainProvider.');
+    //             that.terria.viewerMode = ViewerMode.CesiumEllipsoid;
+    //             if (!defined(that.TerrainMessageViewed)) {
+    //                 that.terria.error.raiseEvent({
+    //                     title : 'Terrain Server Not Responding',
+    //                     message : '\
+    // The terrain server is not responding at the moment.  You can still use all the features of '+that.terria.appName+' \
+    // but there will be no terrain detail in 3D mode.  We\'re sorry for the inconvenience.  Please try \
+    // again later and the terrain server should be responding as expected.  If the issue persists, please contact \
+    // us via email at '+that.terria.supportEmail+'.'
+    //                 });
+    //                 that.TerrainMessageViewed = true;
+    //             }
+    //         }
+    //     });
+
+    // if (defined(this._defaultTerriaCredit)) {
+    //     var containerElement = getElement(container);
+    //     var creditsElement = containerElement && containerElement.getElementsByClassName('cesium-widget-credits')[0];
+    //     var logoContainer = creditsElement && creditsElement.getElementsByClassName('cesium-credit-logoContainer')[0];
+    //     if (logoContainer) {
+    //         creditsElement.insertBefore(this._defaultTerriaCredit.element, logoContainer);
+    //     }
+    // }
+
+    this.scene.globe.depthTestAgainstTerrain = false;
+
+    // var d = this._getDisclaimer();
+    // if (d) {
+    //     scene.frameState.creditDisplay.addDefaultCredit(d);
+    // }
+
+    // if (defined(this._developerAttribution)) {
+    //     scene.frameState.creditDisplay.addDefaultCredit(createCredit(this._developerAttribution.text, this._developerAttribution.link));
+    // }
+
+    // scene.frameState.creditDisplay.addDefaultCredit(new Credit('<a href="http://cesiumjs.org" target="_blank" rel="noopener noreferrer">CESIUM</a>'));
+
+    const inputHandler = this.cesiumWidget.screenSpaceEventHandler;
+
+    // // Add double click zoom
+    // inputHandler.setInputAction(
+    //     function (movement) {
+    //         zoomIn(scene, movement.position);
+    //     },
+    //     ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
+    // inputHandler.setInputAction(
+    //     function (movement) {
+    //         zoomOut(scene, movement.position);
+    //     },
+    //     ScreenSpaceEventType.LEFT_DOUBLE_CLICK, KeyboardEventModifier.SHIFT);
+
+    // Handle left click by picking objects from the map.
+    inputHandler.setInputAction(e => {
+      this.pickFromScreenPosition(e.position);
+    }, ScreenSpaceEventType.LEFT_CLICK);
+
     this.pauser = new CesiumRenderLoopPauser(this.cesiumWidget);
+    this._disposeWorkbenchMapItemsSubscription = this.observeModelLayer();
+    this._disposeTerrainReaction = autorun(() => {
+      this.scene.globe.terrainProvider = this._terrainProvider;
+    });
   }
 
   destroy() {
+    // Port old Cesium.prototype.destroy stuff
+    // this._enableSelectExtent(cesiumWidget.scene, false);
+
+    const inputHandler = this.cesiumWidget.screenSpaceEventHandler;
+    // inputHandler.removeInputAction(ScreenSpaceEventType.MOUSE_MOVE);
+    // inputHandler.removeInputAction(ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
+    // inputHandler.removeInputAction(ScreenSpaceEventType.LEFT_DOUBLE_CLICK, KeyboardEventModifier.SHIFT);
+
+    inputHandler.removeInputAction(ScreenSpaceEventType.LEFT_CLICK);
+
+    // if (defined(this.monitor)) {
+    //     this.monitor.destroy();
+    //     this.monitor = undefined;
+    // }
+
     this.pauser.destroy();
     this.stopObserving();
+    this._eventHelper.removeAll();
+    this.dataSourceDisplay.destroy();
+    this._disposeTerrainReaction();
+    this.cesiumWidget.destroy();
+    destroyObject(this);
   }
 
-  observeModelLayer() {
-    this._disposeWorkbenchMapItemsSubscription = autorun(() => {
+  private observeModelLayer() {
+    return autorun(() => {
       const catalogItems = [
         ...this.terria.workbench.items,
         this.terria.baseMap
@@ -242,6 +409,406 @@ export default class Cesium implements GlobeOrMap {
   notifyRepaintRequired() {
     this.pauser.notifyRepaintRequired();
   }
+
+  getCurrentExtent() {
+    const scene = this.scene;
+    const camera = scene.camera;
+
+    const width = scene.canvas.clientWidth;
+    const height = scene.canvas.clientHeight;
+
+    const centerOfScreen = new Cartesian2(width / 2.0, height / 2.0);
+    const pickRay = scene.camera.getPickRay(centerOfScreen);
+    const center = scene.globe.pick(pickRay, scene);
+
+    if (!defined(center)) {
+      // TODO: binary search to find the horizon point and use that as the center.
+      return this.terriaViewer.defaultExtent; // This is just a random rectangle. Replace it when there's a home view available
+      // return this.terria.homeView.rectangle;
+    }
+
+    const ellipsoid = this.scene.globe.ellipsoid;
+
+    const frustrum = scene.camera.frustum as PerspectiveFrustum;
+
+    const fovy = frustrum.fovy * 0.5;
+    const fovx = Math.atan(Math.tan(fovy) * frustrum.aspectRatio);
+
+    const cameraOffset = Cartesian3.subtract(
+      camera.positionWC,
+      center,
+      cartesian3Scratch
+    );
+    const cameraHeight = Cartesian3.magnitude(cameraOffset);
+    const xDistance = cameraHeight * Math.tan(fovx);
+    const yDistance = cameraHeight * Math.tan(fovy);
+
+    const southwestEnu = new Cartesian3(-xDistance, -yDistance, 0.0);
+    const southeastEnu = new Cartesian3(xDistance, -yDistance, 0.0);
+    const northeastEnu = new Cartesian3(xDistance, yDistance, 0.0);
+    const northwestEnu = new Cartesian3(-xDistance, yDistance, 0.0);
+
+    const enuToFixed = Transforms.eastNorthUpToFixedFrame(
+      center,
+      ellipsoid,
+      enuToFixedScratch
+    );
+    const southwest = Matrix4.multiplyByPoint(
+      enuToFixed,
+      southwestEnu,
+      southwestScratch
+    );
+    const southeast = Matrix4.multiplyByPoint(
+      enuToFixed,
+      southeastEnu,
+      southeastScratch
+    );
+    const northeast = Matrix4.multiplyByPoint(
+      enuToFixed,
+      northeastEnu,
+      northeastScratch
+    );
+    const northwest = Matrix4.multiplyByPoint(
+      enuToFixed,
+      northwestEnu,
+      northwestScratch
+    );
+
+    const southwestCartographic = ellipsoid.cartesianToCartographic(
+      southwest,
+      southwestCartographicScratch
+    );
+    const southeastCartographic = ellipsoid.cartesianToCartographic(
+      southeast,
+      southeastCartographicScratch
+    );
+    const northeastCartographic = ellipsoid.cartesianToCartographic(
+      northeast,
+      northeastCartographicScratch
+    );
+    const northwestCartographic = ellipsoid.cartesianToCartographic(
+      northwest,
+      northwestCartographicScratch
+    );
+
+    // Account for date-line wrapping
+    if (southeastCartographic.longitude < southwestCartographic.longitude) {
+      southeastCartographic.longitude += CesiumMath.TWO_PI;
+    }
+    if (northeastCartographic.longitude < northwestCartographic.longitude) {
+      northeastCartographic.longitude += CesiumMath.TWO_PI;
+    }
+
+    const rect = new Rectangle(
+      CesiumMath.convertLongitudeRange(
+        Math.min(
+          southwestCartographic.longitude,
+          northwestCartographic.longitude
+        )
+      ),
+      Math.min(southwestCartographic.latitude, southeastCartographic.latitude),
+      CesiumMath.convertLongitudeRange(
+        Math.max(
+          northeastCartographic.longitude,
+          southeastCartographic.longitude
+        )
+      ),
+      Math.max(northeastCartographic.latitude, northwestCartographic.latitude)
+    );
+
+    // center isn't a member variable and doesn't seem to be used anywhere else in Terria
+    // rect.center = center;
+    return rect;
+  }
+
+  // It's nice to co-locate creation of Ion TerrainProvider and Credit, but not necessary
+  @computed
+  private get _terrainWithCredits(): {
+    terrain: Cesium.TerrainProvider;
+    credit?: Cesium.Credit;
+  } {
+    if (
+      this.terriaViewer.viewerOptions.cesium.useTerrain &&
+      this.terria.configParameters.useCesiumIonTerrain
+    ) {
+      const logo = require("terriajs-cesium/Source/Assets/Images/ion-credit.png");
+      const ionCredit = new Credit(
+        '<a href="https://cesium.com/" target="_blank" rel="noopener noreferrer"><img src="' +
+          logo +
+          '" title="Cesium ion"/></a>',
+        true
+      );
+      return {
+        terrain: createWorldTerrain({}),
+        credit: ionCredit
+      };
+    }
+    return { terrain: new EllipsoidTerrainProvider() };
+  }
+
+  // WIP working out how to deal with credits
+  // This function isn't used anywhere yet
+  @computed
+  get _extraCredits() {
+    const credits: { cesium?: Cesium.Credit; terria?: Cesium.Credit } = {};
+    if (this._terrainWithCredits.credit) {
+      credits.cesium = this._terrainWithCredits.credit;
+    }
+    if (!this.terria.configParameters.hideTerriaLogo) {
+      //credits.terria = ...
+    }
+    return credits;
+  }
+
+  @computed
+  private get _terrainProvider(): Cesium.TerrainProvider {
+    return this._terrainWithCredits.terrain;
+  }
+
+  /**
+   * Picks features based on coordinates relative to the Cesium window. Will draw a ray from the camera through the point
+   * specified and set terria.pickedFeatures based on this.
+   *
+   */
+  pickFromScreenPosition(screenPosition: Cartesian2) {
+    const pickRay = this.scene.camera.getPickRay(screenPosition);
+    const pickPosition = this.scene.globe.pick(pickRay, this.scene);
+    const pickPositionCartographic = Ellipsoid.WGS84.cartesianToCartographic(
+      pickPosition
+    );
+
+    const vectorFeatures = this.pickVectorFeatures(screenPosition);
+
+    const providerCoords = this._attachProviderCoordHooks();
+    const pickRasterPromise = this.scene.imageryLayers.pickImageryLayerFeatures(
+      pickRay,
+      this.scene
+    );
+
+    const result = this._buildPickedFeatures(
+      providerCoords,
+      pickPosition,
+      vectorFeatures,
+      pickRasterPromise ? [pickRasterPromise] : [],
+      undefined,
+      pickPositionCartographic.height
+    );
+    // const mapInteractionModeStack = this.terria.mapInteractionModeStack;
+    // if (
+    //   defined(mapInteractionModeStack) &&
+    //   mapInteractionModeStack.length > 0
+    // ) {
+    //   mapInteractionModeStack[
+    //     mapInteractionModeStack.length - 1
+    //   ].pickedFeatures = result;
+    // } else {
+    this.terria.pickedFeatures = result;
+    // }
+  }
+
+  /**
+   * Picks all *vector* features (e.g. GeoJSON) shown at a certain position on the screen, ignoring raster features
+   * (e.g. WFS). Because all vector features are already in memory, this is synchronous.
+   *
+   * @param screenPosition position on the screen to look for features
+   * @returns The features found.
+   */
+  pickVectorFeatures(screenPosition: Cartesian2) {
+    // Pick vector features
+    const vectorFeatures = [];
+    const pickedList = this.scene.drillPick(screenPosition);
+    for (let i = 0; i < pickedList.length; ++i) {
+      const picked = pickedList[i];
+      let id = picked.id;
+
+      if (
+        id &&
+        id.entityCollection &&
+        id.entityCollection.owner &&
+        id.entityCollection.owner.name === GlobeOrMap._featureHighlightName
+      ) {
+        continue;
+      }
+
+      if (!defined(id) && defined(picked.primitive)) {
+        id = picked.primitive.id;
+      }
+      if (id instanceof Entity && vectorFeatures.indexOf(id) === -1) {
+        const feature = Feature.fromEntityCollectionOrEntity(id);
+        vectorFeatures.push(feature);
+      } else if (
+        picked.primitive &&
+        picked.primitive._catalogItem &&
+        picked.primitive._catalogItem.getFeaturesFromPickResult
+      ) {
+        const result = picked.primitive._catalogItem.getFeaturesFromPickResult(
+          screenPosition,
+          picked
+        );
+        if (result) {
+          if (Array.isArray(result)) {
+            vectorFeatures.push(...result);
+          } else {
+            vectorFeatures.push(result);
+          }
+        }
+      }
+    }
+
+    return vectorFeatures;
+  }
+
+  /**
+   * Hooks into the {@link ImageryProvider#pickFeatures} method of every imagery provider in the scene - when this method is
+   * evaluated (usually as part of feature picking), it will record the tile coordinates used against the url of the
+   * imagery provider in an object that is returned by this method. Hooks are removed immediately after being executed once.
+   *
+   * returns {{x, y, level}} A map of urls to the coords used by the imagery provider when picking features. Will
+   *     initially be empty but will be updated as the hooks are evaluated.
+
+   */
+  private _attachProviderCoordHooks() {
+    const providerCoords: ProviderCoordsMap = {};
+
+    const pickFeaturesHook = function(
+      imageryProvider: ImageryProvider,
+      oldPick: (
+        x: number,
+        y: number,
+        level: number,
+        longitude: number,
+        latitiude: number
+      ) => Promise<ImageryLayerFeatureInfo[]>,
+      x: number,
+      y: number,
+      level: number,
+      longitude: number,
+      latitude: number
+    ) {
+      const featuresPromise = oldPick.call(
+        imageryProvider,
+        x,
+        y,
+        level,
+        longitude,
+        latitude
+      );
+
+      // Use url to uniquely identify providers because what else can we do?
+      if ((<any>imageryProvider).url) {
+        providerCoords[(<any>imageryProvider).url] = {
+          x: x,
+          y: y,
+          level: level
+        };
+      }
+
+      imageryProvider.pickFeatures = oldPick;
+      return featuresPromise;
+    };
+
+    for (let j = 0; j < this.scene.imageryLayers.length; j++) {
+      const imageryProvider = this.scene.imageryLayers.get(j).imageryProvider;
+      imageryProvider.pickFeatures = pickFeaturesHook.bind(
+        undefined,
+        imageryProvider,
+        imageryProvider.pickFeatures
+      );
+    }
+
+    return providerCoords;
+  }
+
+  /**
+   * Builds a {@link PickedFeatures} object from a number of inputs.
+   *
+   * @param providerCoords A map of imagery provider urls to the coords used to get features for that provider.
+   * @param  pickPosition The position in the 3D model that has been picked.
+   * @param existingFeatures Existing features - the results of feature promises will be appended to this.
+   * @param featurePromises Zero or more promises that each resolve to a list of {@link ImageryLayerFeatureInfo}s
+   *     (usually there will be one promise per ImageryLayer. These will be combined as part of
+   *     {@link PickedFeatures#allFeaturesAvailablePromise} and their results used to build the final
+   *     {@link PickedFeatures#features} array.
+   * @param imageryLayers An array of ImageryLayers that should line up with the one passed as featurePromises.
+   * @param defaultHeight The height to use for feature position heights if none is available when picking.
+   * @returns A {@link PickedFeatures} object that is a combination of everything passed.
+   */
+  private _buildPickedFeatures(
+    providerCoords: ProviderCoordsMap,
+    pickPosition: Cartesian3,
+    existingFeatures: Entity[],
+    featurePromises: Promise<ImageryLayerFeatureInfo[]>[],
+    imageryLayers: ImageryLayer[] | undefined,
+    defaultHeight: number
+  ): PickedFeatures {
+    const result = new PickedFeatures();
+
+    result.providerCoords = providerCoords;
+    result.pickPosition = pickPosition;
+
+    result.allFeaturesAvailablePromise = Promise.all(featurePromises)
+      .then(allFeatures => {
+        result.isLoading = false;
+
+        result.features = allFeatures.reduce(
+          (resultFeaturesSoFar, imageryLayerFeatures, i) => {
+            if (!isDefined(imageryLayerFeatures)) {
+              return resultFeaturesSoFar;
+            }
+
+            const features = imageryLayerFeatures.map(feature => {
+              if (isDefined(imageryLayers)) {
+                (<any>feature).imageryLayer = imageryLayers[i];
+              }
+
+              if (!isDefined(feature.position)) {
+                feature.position = Ellipsoid.WGS84.cartesianToCartographic(
+                  pickPosition
+                );
+              }
+
+              // If the picked feature does not have a height, use the height of the picked location.
+              // This at least avoids major parallax effects on the selection indicator.
+              if (
+                !isDefined(feature.position.height) ||
+                feature.position.height === 0.0
+              ) {
+                feature.position.height = defaultHeight;
+              }
+              return this._createFeatureFromImageryLayerFeature(feature);
+            });
+
+            // TODO
+            // if (this.terria.showSplitter) {
+            //   // Select only features from the same side or both sides of the splitter
+            //   const screenPosition = this.computePositionOnScreen(
+            //     result.pickPosition
+            //   );
+            //   const pickedSide = this.terria.getSplitterSideForScreenPosition(
+            //     screenPosition
+            //   );
+
+            //   features = features.filter(function(feature) {
+            //     const splitDirection = feature.imageryLayer.splitDirection;
+            //     return (
+            //       splitDirection === pickedSide ||
+            //       splitDirection === ImagerySplitDirection.NONE
+            //     );
+            //   });
+            // }
+
+            return resultFeaturesSoFar.concat(features);
+          },
+          defaultValue(existingFeatures, [])
+        );
+      })
+      .catch(() => {
+        result.isLoading = false;
+        result.error = "An unknown error occurred while picking features.";
+      });
+
+    return result;
+  }
 }
 
 var boundingSphereScratch = new BoundingSphere();
@@ -314,7 +881,6 @@ function zoomToBoundingSphere(
 const createImageryLayer: (
   ip: Cesium.ImageryProvider
 ) => Cesium.ImageryLayer = createTransformer((ip: Cesium.ImageryProvider) => {
-  console.log("Creating a new ImageryLayer");
   return new ImageryLayer(ip);
 });
 
