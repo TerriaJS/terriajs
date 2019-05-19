@@ -2,14 +2,14 @@ import ColorMap from "./ColorMap";
 import Color from "terriajs-cesium/Source/Core/Color";
 
 export interface DiscreteBin {
-  includeMinimumInThisBin: boolean;
-  maximum: number;
-  color: string;
+  readonly includeMinimumInThisBin: boolean;
+  readonly maximum: number;
+  readonly color: Readonly<Color>;
 }
 
 export interface DiscreteColorMapOptions {
-  bins: DiscreteBin[];
-  nullColor: string;
+  readonly bins: readonly DiscreteBin[];
+  readonly nullColor: Readonly<Color>;
 }
 
 export default class DiscreteColorMap extends ColorMap {
@@ -21,7 +21,7 @@ export default class DiscreteColorMap extends ColorMap {
   constructor(options: DiscreteColorMapOptions) {
     super();
 
-    this._nullColor = Color.fromCssColorString(options.nullColor);
+    this._nullColor = Color.clone(options.nullColor);
     this._includeMinimumInThisBin = [];
     this._maximums = [];
     this._colors = [];
@@ -29,7 +29,7 @@ export default class DiscreteColorMap extends ColorMap {
     options.bins.forEach(bin => {
       this._maximums.push(bin.maximum);
       this._includeMinimumInThisBin.push(bin.includeMinimumInThisBin);
-      this._colors.push(Color.fromCssColorString(bin.color));
+      this._colors.push(Color.clone(bin.color));
     });
   }
 

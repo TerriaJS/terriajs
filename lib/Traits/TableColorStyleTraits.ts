@@ -110,4 +110,11 @@ export default class TableColorStyleTraits extends ModelTraits {
     type: "number"
   })
   legendTicks?: number;
+
+  @primitiveTrait({
+    name: "Outline Color",
+    description: "The CSS color to use for point and region outlines.",
+    type: "string"
+  })
+  outlineColor: string = "black";
 }

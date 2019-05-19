@@ -130,6 +130,8 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
           colorMap = new ConstantColorMap(Color.RED);
         }
 
+        const outlineColor = Color.fromCssColorString(style.colorTraits.outlineColor);
+
         dataSource.entities.suspendEvents();
 
         for (let i = 0; i < longitudes.length && i < latitudes.length; ++i) {
@@ -145,7 +147,9 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
               position: Cartesian3.fromDegrees(longitude, latitude, 0.0),
               point: new PointGraphics({
                 color: colorMap.mapValueToColor(value),
-                pixelSize: 5
+                pixelSize: 5,
+                outlineWidth: 1,
+                outlineColor: outlineColor
               })
             })
           );

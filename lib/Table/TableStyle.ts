@@ -258,18 +258,24 @@ export default class TableStyle {
       return new ConstantColorMap(color);
     }
 
-    const maximums = computeMaximums(this.numberOfColorBins, this.colorTraits.binMaximums, colorColumn);
+    const maximums = computeMaximums(
+      this.numberOfColorBins,
+      this.colorTraits.binMaximums,
+      colorColumn
+    );
 
     return new DiscreteColorMap({
       bins: this.binColors.map((color, i) => {
         return {
-          color: color.toCssColorString(), // TODO
+          color: color,
           maximum: maximums[i],
           includeMinimumInThisBin: false
         };
       }),
-      nullColor: colorTraits.nullColor || 'rgba(0,0,0,0)'
-    })
+      nullColor: colorTraits.nullColor
+        ? Color.fromCssColorString(colorTraits.nullColor)
+        : new Color(0.0, 0.0, 0.0, 0.0)
+    });
   }
 
   private resolveColumn(name: string | undefined): TableColumn | undefined {
@@ -280,7 +286,11 @@ export default class TableStyle {
   }
 }
 
-function computeMaximums(numberOfBins: number, bins: readonly number[] | undefined, column: TableColumn): number[] {
+function computeMaximums(
+  numberOfBins: number,
+  bins: readonly number[] | undefined,
+  column: TableColumn
+): number[] {
   // TODO
   const asNumbers = column.valuesAsNumbers;
   const min = asNumbers.minimum;
