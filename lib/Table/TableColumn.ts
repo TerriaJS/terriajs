@@ -19,6 +19,9 @@ export interface ColumnValuesAsNumbers {
   readonly numberOfNonNumbers: number;
 }
 
+/**
+ * A column of tabular data.
+ */
 export default class TableColumn {
   readonly columnNumber: number;
   readonly tableModel: TableModel;
@@ -28,6 +31,9 @@ export default class TableColumn {
     this.tableModel = tableModel;
   }
 
+  /**
+   * Gets the raw, uninterpreted values in the column.
+   */
   @computed
   get values(): readonly string[] {
     const result: string[] = [];
@@ -43,6 +49,10 @@ export default class TableColumn {
     return result;
   }
 
+  /**
+   * Gets the column values as numbers, and returns information about how many
+   * rows were successfully converted to numbers and the range of values.
+   */
   @computed
   get valuesAsNumbers(): ColumnValuesAsNumbers {
     const numbers: (number | null)[] = [];
@@ -88,11 +98,18 @@ export default class TableColumn {
     };
   }
 
+  /**
+   * Gets the unique values in this column.
+   */
   @computed
   get uniqueValues(): readonly string[] {
     return uniq(this.values);
   }
 
+  /**
+   * Gets the name of this column. If the column's name is blank, this property
+   * will return `Column#` where `#` is the zero-based index of the column.
+   */
   @computed
   get name(): string {
     const data = this.tableModel.dataColumnMajor;
@@ -107,6 +124,9 @@ export default class TableColumn {
     return data[this.columnNumber][0];
   }
 
+  /**
+   * Gets the {@link TableColumnTraits} for this column.
+   */
   @computed
   get traits(): ModelPropertiesFromTraits<TableColumnTraits> {
     const columns = this.tableModel.columns || [];
@@ -116,6 +136,11 @@ export default class TableColumn {
     );
   }
 
+  /**
+   * Gets the type of this column. If {@link #traits} has an explicit
+   * {@link TableColumnTraits#type} specified, it is returned directly.
+   * Otherwise, the type is guessed from the column name and contents.
+   */
   @computed
   get type(): TableColumnType {
     // Use the explicit column type, if any.
