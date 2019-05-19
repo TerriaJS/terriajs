@@ -53,5 +53,5 @@ export default class TableTraits extends mixTraits(
     description: "The ID of the currently-selected style.",
     type: "string"
   })
-  selectedStyle?: string;
+  activeStyle?: string;
 }

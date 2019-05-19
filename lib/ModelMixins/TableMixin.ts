@@ -27,6 +27,9 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
     @observable
     dataColumnMajor: string[][] | undefined;
 
+    /**
+     * Gets a {@link TableColumn} for each of the columns in the raw data.
+     */
     @computed
     get tableColumns(): readonly TableColumn[] {
       if (this.dataColumnMajor === undefined) {
@@ -36,6 +39,10 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
       return this.dataColumnMajor.map((_, i) => this.getTableColumn(i));
     }
 
+    /**
+     * Gets a {@link TableStyle} for each of the {@link styles}. If there
+     * are no styles, returns an empty array.
+     */
     @computed
     get tableStyles(): TableStyle[] {
       if (this.styles === undefined) {
@@ -44,14 +51,24 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
       return this.styles.map((_, i) => this.getTableStyle(i));
     }
 
+    /**
+     * Gets the default {@link TableStyle}, which is used for styling
+     * only when there are no styles defined.
+     */
     @computed
     get defaultTableStyle(): TableStyle {
       return new TableStyle(this, -1);
     }
 
+    /**
+     * Gets the {@link TableStyleTraits#id} of the currently-active style.
+     * Note that this is a trait so there is no guarantee that a style
+     * with this ID actually exists. If no active style is explicitly
+     * specified, the ID of the first of the {@link #styles} is used.
+     */
     @computed
-    get selectedStyle(): string | undefined {
-      const value = super.selectedStyle;
+    get activeStyle(): string | undefined {
+      const value = super.activeStyle;
       if (value !== undefined) {
         return value;
       } else if (this.styles && this.styles.length > 0) {
@@ -60,26 +77,33 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
       return undefined;
     }
 
+    /**
+     * Gets the active {@link TableStyle}, which is the item from {@link #tableStyles}
+     * with an ID that matches {@link #activeStyle}, if any.
+     */
     @computed
-    get selectedTableStyle(): TableStyle | undefined {
-      const selectedStyle = this.selectedStyle;
-      if (selectedStyle === undefined) {
+    get activeTableStyle(): TableStyle | undefined {
+      const activeStyle = this.activeStyle;
+      if (activeStyle === undefined) {
         return undefined;
       }
 
-      return this.tableStyles.find(style => style.id === this.selectedStyle);
+      return this.tableStyles.find(style => style.id === this.activeStyle);
     }
 
+    /**
+     * Gets the items to show on the map.
+     */
     @computed
     get mapItems(): (DataSource | ImageryParts)[] {
       const result: (DataSource | ImageryParts)[] = [];
 
       const styles = this.tableStyles;
-      if (this.selectedStyle === undefined) {
+      if (this.activeStyle === undefined) {
         return result;
       }
 
-      const style = styles.find(style => style.id === this.selectedStyle);
+      const style = styles.find(style => style.id === this.activeStyle);
       if (style === undefined) {
         return result;
       }
@@ -101,7 +125,7 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
 
         const dataSource = new CustomDataSource(this.name || "CsvCatalogItem");
 
-        let colorMap = this.selectedTableStyle ? this.selectedTableStyle.colorMap : undefined;
+        let colorMap = this.activeTableStyle ? this.activeTableStyle.colorMap : undefined;
         if (colorMap === undefined) {
           colorMap = new ConstantColorMap(Color.RED);
         }
