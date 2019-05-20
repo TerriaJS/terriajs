@@ -109,11 +109,7 @@ const DataCatalogItem = observer(
         <CatalogItem
           onTextClick={this.setPreviewedItem}
           selected={this.isSelected()}
-          text={
-            item.nameInCatalog +
-            ": " +
-            this.props.ancestors.map(m => m.nameInCatalog).join(" -> ")
-          }
+          text={item.nameInCatalog}
           title={getAncestors(item)
             .map(member => member.nameInCatalog)
             .join(" → ")}
