@@ -121,9 +121,11 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
 
         const longitudes = style.longitudeColumn.valuesAsNumbers.values;
         const latitudes = style.latitudeColumn.valuesAsNumbers.values;
-        const values = style.colorColumn ? style.colorColumn.valuesAsNumbers.values : undefined || [];
 
-        const dataSource = new CustomDataSource(this.name || "CsvCatalogItem");
+        const colorColumn = style.colorColumn;
+        const valueFunction = colorColumn !== undefined ? colorColumn.valueFunctionForType : () => null;
+
+        const dataSource = new CustomDataSource(this.name || "Table");
 
         let colorMap = this.activeTableStyle ? this.activeTableStyle.colorMap : undefined;
         if (colorMap === undefined) {
@@ -137,7 +139,7 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
         for (let i = 0; i < longitudes.length && i < latitudes.length; ++i) {
           const longitude = longitudes[i];
           const latitude = latitudes[i];
-          const value = values[i];
+          const value = valueFunction(i);
           if (longitude === null || latitude === null) {
             continue;
           }

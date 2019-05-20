@@ -33,8 +33,8 @@ export default class DiscreteColorMap extends ColorMap {
     });
   }
 
-  mapValueToColor(value: number | null | undefined): Readonly<Color> {
-    if (value === undefined || value === null) {
+  mapValueToColor(value: string | number | null | undefined): Readonly<Color> {
+    if (typeof value !== "number") {
       return this._nullColor;
     }
 

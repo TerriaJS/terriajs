@@ -3,6 +3,23 @@ import anyTrait from "./anyTrait";
 import ModelTraits from "./ModelTraits";
 import primitiveArrayTrait from "./primitiveArrayTrait";
 import primitiveTrait from "./primitiveTrait";
+import objectArrayTrait from "./objectArrayTrait";
+
+export class EnumColorTraits extends ModelTraits {
+  @primitiveTrait({
+    name: "Value",
+    description: "The enumerated value to map to a color.",
+    type: "string"
+  })
+  value?: string;
+
+  @primitiveTrait({
+    name: "Color",
+    description: "The CSS color to use for the enumerated value.",
+    type: "string"
+  })
+  color?: string;
+}
 
 export default class TableColorStyleTraits extends ModelTraits {
   @primitiveTrait({
@@ -62,7 +79,9 @@ export default class TableColorStyleTraits extends ModelTraits {
   @primitiveTrait({
     name: "Number of Bins",
     description:
-      "The number of different colors to bin the data into. This property is ignored if `Bin Maximums` is specified.",
+      "The number of different colors to bin the data into. This property " +
+      "is ignored if `Bin Maximums` is specified for a `scalar` column or " +
+      "`Bin Values` is specified for any other type of column.",
     type: "number"
   })
   numberOfBins: number = 7;
@@ -76,7 +95,8 @@ export default class TableColorStyleTraits extends ModelTraits {
       "from the first value in this array to the second value in this " +
       "array. And so on. If the maximum value of the dataset is greater " +
       "than the last value in this array, an additional bin is added " +
-      "automatically.",
+      "automatically. This property is ignored if the `Color Column` " +
+      "is not a scalar.",
     type: "number"
   })
   binMaximums?: number[];
@@ -86,21 +106,35 @@ export default class TableColorStyleTraits extends ModelTraits {
     description:
       "The colors to use for the bins, each specified as CSS color " +
       "strings. If there are more colors than bins, the extra colors are " +
-      "ignored. If there are more bins than colors, `Color Palette` or " +
-      "a default color is used for the remaining bins.",
+      "ignored. If there are more bins than colors, the colors are repeated " +
+      "as necessary.",
     type: "number"
   })
   binColors?: string[];
+
+  @objectArrayTrait({
+    name: "Enum Colors",
+    description:
+      "The colors to use for enumerated values. This property is ignored " +
+      "if the `Color Column` type is not `enum`.",
+    type: EnumColorTraits,
+    idProperty: "value"
+  })
+  enumColors?: EnumColorTraits[];
 
   @primitiveTrait({
     name: "Color Palette",
     description:
       "The name of a [ColorBrewer](http://colorbrewer2.org/) palette to use when mapping values " +
       "to colors. This property is ignored if `Bin Colors` is defined and has enough colors for " +
-      "all bins.",
+      "all bins, or if `Enum Colors` is defined. The default value depends on the type of the " +
+      "`Color Column` and on the data. Scalar columns that cross zero will use the divering " +
+      "purple-to-orange palette `PuOr`. Scala columns that do not cross zero will use the " +
+      "sequential yellow-orange-red palette `YlOrRd`. All other scenarios will use the " +
+      "21 color `HighContrast` palette.",
     type: "string"
   })
-  colorPalette: string = "YlOrRd";
+  colorPalette?: string;
 
   @primitiveTrait({
     name: "Legend Ticks",

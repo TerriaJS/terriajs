@@ -26,6 +26,7 @@ import GeoJsonCatalogItemTraits from "../Traits/GeoJsonCatalogItemTraits";
 import CreateModel from "./CreateModel";
 import Terria from "./Terria";
 import readJson from "../Core/readJson";
+import StandardCssColors from "../Core/StandardCssColors";
 
 const formatPropertyValue = require("../Core/formatPropertyValue");
 const hashFromString = require("../Core/hashFromString");
@@ -33,7 +34,6 @@ const loadBlob = require("../Core/loadBlob");
 const loadJson = require("../Core/loadJson");
 const proxyCatalogItemUrl = require("./proxyCatalogItemUrl");
 const Reproject = require("../Map/Reproject");
-const standardCssColors = require("../Core/standardCssColors");
 const zip = require("terriajs-cesium/Source/ThirdParty/zip");
 
 type Coordinates = number[];
@@ -194,7 +194,7 @@ class GeoJsonCatalogItem extends AsyncMappableMixin(
     ): Color {
       if (colorString === undefined) {
         const color = Color.fromCssColorString(
-          getRandomCssColor(standardCssColors.highContrast, name)
+          getRandomCssColor(StandardCssColors.highContrast, name)
         );
         color.alpha = 1;
         return color;
