@@ -16,7 +16,7 @@ const defaultColor = "black";
 
 export default class ColorPalette {
   static fromString(s: string, numberOfColors: number): ColorPalette {
-    if (s === 'HighContrast') {
+    if (s === "HighContrast") {
       return new ColorPalette(StandardCssColors.highContrast);
     }
     // First look up a colorbrewer palette

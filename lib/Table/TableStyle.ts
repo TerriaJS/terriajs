@@ -345,15 +345,17 @@ export default class TableStyle {
       });
     } else if (colorColumn.type === TableColumnType.enum) {
       return new EnumColorMap({
-        enumColors: filterOutUndefined(this.enumColors.map(e => {
-          if (e.value === undefined || e.color === undefined) {
-            return undefined;
-          }
-          return {
-            value: e.value,
-            color: Color.fromCssColorString(e.color)
-          };
-        })),
+        enumColors: filterOutUndefined(
+          this.enumColors.map(e => {
+            if (e.value === undefined || e.color === undefined) {
+              return undefined;
+            }
+            return {
+              value: e.value,
+              color: Color.fromCssColorString(e.color)
+            };
+          })
+        ),
         nullColor: colorTraits.nullColor
           ? Color.fromCssColorString(colorTraits.nullColor)
           : new Color(0.0, 0.0, 0.0, 0.0)

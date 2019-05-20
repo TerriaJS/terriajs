@@ -32,7 +32,7 @@ export default class EnumColorMap extends ColorMap {
   mapValueToColor(value: string | number | null | undefined): Readonly<Color> {
     if (value === undefined || value === null) {
       return this._nullColor;
-    } else if (typeof value !== 'string') {
+    } else if (typeof value !== "string") {
       value = value.toString();
     }
 
