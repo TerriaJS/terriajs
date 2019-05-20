@@ -110,9 +110,7 @@ const DataCatalogItem = observer(
           onTextClick={this.setPreviewedItem}
           selected={this.isSelected()}
           text={item.nameInCatalog}
-          title={getAncestors(item)
-            .map(member => member.nameInCatalog)
-            .join(" → ")}
+          title={this.props.ancestors.map(m => m.nameInCatalog).join(" -> ")}
           btnState={this.getState()}
           onBtnClick={this.onBtnClicked}
           titleOverrides={STATE_TO_TITLE}
