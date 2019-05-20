@@ -33,7 +33,7 @@ const TerriaViewerWrapper = observer(
       //     }
       // });
       this.terriaViewer = new TerriaViewer(this.props.terria);
-      this.props.terria.terriaViewer = this.terriaViewer;
+      this.props.terria.mainViewer = this.terriaViewer;
     },
 
     componentWillUnmount() {

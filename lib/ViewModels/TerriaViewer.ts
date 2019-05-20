@@ -4,6 +4,7 @@ import GlobeOrMap from "../Models/GlobeOrMap";
 import Leaflet from "../Models/Leaflet";
 import Cesium from "../Models/Cesium";
 import Terria from "../Models/Terria";
+import Mappable from "../Models/Mappable";
 
 // A class that deals with initialising, destroying and switching between viewers
 // Each map-view should have it's own TerriaViewer
@@ -32,7 +33,7 @@ export default class TerriaViewer {
   readonly stopViewerAutorun: () => void;
 
   @observable
-  baseMap: undefined; // Wire up base maps
+  baseMap: Mappable | undefined;
 
   @observable
   viewerMode: string | undefined = "cesium";

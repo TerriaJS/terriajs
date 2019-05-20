@@ -124,7 +124,7 @@ export default class Leaflet implements GlobeOrMap {
     return autorun(() => {
       const catalogItems = [
         ...this.terria.workbench.items,
-        this.terria.baseMap
+        this.terriaViewer.baseMap
       ];
       // Flatmap
       const allMapItems = ([] as (DataSource | ImageryParts)[]).concat(
