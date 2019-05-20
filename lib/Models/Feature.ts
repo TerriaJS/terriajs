@@ -1,4 +1,5 @@
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
+import ImageryLayer from "terriajs-cesium/Source/Scene/ImageryLayer";
 import { observable } from "mobx";
 
 const customProperties = ["entityCollection", "properties", "data"];
@@ -40,7 +41,11 @@ export default class Feature extends Entity {
    */
   @observable updateCounters: any = undefined;
 
+  data: any;
+
   cesiumEntity?: Entity;
+
+  imageryLayer?: ImageryLayer;
 
   constructor(options: any) {
     super(options);

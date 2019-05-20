@@ -23,6 +23,10 @@ import TimelineStack from "./TimelineStack";
 import Clock from "terriajs-cesium/Source/Core/Clock";
 import GlobeOrMap from "./GlobeOrMap";
 import TerriaViewer from "../ViewModels/TerriaViewer";
+import Feature from "./Feature";
+import Cesium from "./Cesium";
+import Leaflet from "./Leaflet";
+import isDefined from "../Core/isDefined";
 
 require("regenerator-runtime/runtime");
 
@@ -108,7 +112,9 @@ export default class Terria {
   pickedFeatures: PickedFeatures | undefined;
 
   @observable
-  selectedFeature: Entity | undefined;
+  selectedFeature: Feature | undefined;
+
+  baseMapContrastColor: string = "#ffffff";
 
   @observable
   readonly userProperties = new Map<string, any>();
@@ -149,6 +155,20 @@ export default class Terria {
     //         return new NoViewer(this);
 
     // }
+  }
+
+  @computed
+  get cesium(): Cesium | undefined {
+    if (isDefined(this.terriaViewer) && this.terriaViewer instanceof Cesium) {
+      return this.terriaViewer;
+    }
+  }
+
+  @computed
+  get leaflet(): Leaflet | undefined {
+    if (isDefined(this.terriaViewer) && this.terriaViewer instanceof Leaflet) {
+      return this.terriaViewer;
+    }
   }
 
   getModelById<T extends BaseModel>(
