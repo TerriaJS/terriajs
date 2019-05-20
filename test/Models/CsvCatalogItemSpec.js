@@ -2067,6 +2067,82 @@ describe("CsvTableCatalogItem & chart sharing", function() {
         columns[2].active
       );
     });
+    it("generates columns on a table style on serialization, when a CsvCatalogItem is created without them", function(done) {
+      columns = {
+        "0": {
+          active: false
+        },
+        "1": {
+          active: false
+        },
+        "2": {
+          active: true
+        }
+      };
+
+      csvItem.updateFromJson({
+        type: "csv",
+        url: "test/csv_nongeo/time_series.csv",
+        isEnabled: true,
+        isShown: true,
+        isCsvForCharting: false
+      });
+
+      expect(csvItem.tableStyle.columns).toBeUndefined();
+
+      csvItem.load().then(function() {
+        // loaded in with 1 active item,
+        expect(csvItem.concepts[0].activeItems.length).toEqual(1);
+        expect(csvItem.concepts[0].items.length).toEqual(3);
+        expect(csvItem.concepts[0].items[0].isActive).toEqual(false);
+        expect(csvItem.concepts[0].items[1].isActive).toEqual(true);
+        expect(csvItem.concepts[0].items[2].isActive).toEqual(false);
+
+        // deselect first and choose the second item
+        csvItem.concepts[0].items[1].toggleActive();
+        csvItem.concepts[0].items[2].toggleActive();
+        expect(csvItem.concepts[0].items[1].isActive).toEqual(false);
+        expect(csvItem.concepts[0].items[2].isActive).toEqual(true);
+
+        var json = csvItem.serializeToJson();
+
+        var reconstructed = new CsvCatalogItem(terria);
+        reconstructed.updateFromJson(json);
+        expect(reconstructed.tableStyle.columns[0].active).toBe(
+          columns[0].active
+        );
+        expect(reconstructed.tableStyle.columns[1].active).toBe(
+          columns[1].active
+        );
+        expect(reconstructed.tableStyle.columns[2].active).toBe(
+          columns[2].active
+        );
+        expect(reconstructed.tableStyle.columns[1].chartLineColor).toBe(
+          reconstructed.colors[0]
+        );
+        expect(reconstructed.tableStyle.columns[2].chartLineColor).toBe(
+          reconstructed.colors[1]
+        );
+
+        // try with 2 active item selected
+        csvItem.concepts[0].items[1].toggleActive();
+        expect(csvItem.concepts[0].items[1].isActive).toEqual(true);
+        expect(csvItem.concepts[0].items[2].isActive).toEqual(true);
+        var json2 = csvItem.serializeToJson();
+        var reconstructed2 = new CsvCatalogItem(terria);
+        reconstructed2.updateFromJson(json2);
+        expect(reconstructed2.tableStyle.columns[0].active).toBe(false);
+        expect(reconstructed2.tableStyle.columns[1].active).toBe(true);
+        expect(reconstructed2.tableStyle.columns[2].active).toBe(true);
+        expect(reconstructed2.tableStyle.columns[1].chartLineColor).toBe(
+          reconstructed2.colors[0]
+        );
+        expect(reconstructed2.tableStyle.columns[2].chartLineColor).toBe(
+          reconstructed2.colors[1]
+        );
+        done();
+      });
+    });
 
     it("initialises and shares the correct 'no variables selected' state", function(done) {
       columns = {
