@@ -12,6 +12,16 @@ declare class CesiumTileLayer extends L.TileLayer {
     options?: L.TileLayerOptions
   );
 
-  getFeaturePickingCoords(map: L.Map, longitudeRadians: number, latitudeRadians: number): Promise<ProviderCoords>;
-  pickFeatures(x: number, y: number, level: number, longitudeRadians: number, latitudeRadians: number): Promise<ImageryLayerFeatureInfo[]>;
+  getFeaturePickingCoords(
+    map: L.Map,
+    longitudeRadians: number,
+    latitudeRadians: number
+  ): Promise<ProviderCoords>;
+  pickFeatures(
+    x: number,
+    y: number,
+    level: number,
+    longitudeRadians: number,
+    latitudeRadians: number
+  ): Promise<ImageryLayerFeatureInfo[]>;
 }

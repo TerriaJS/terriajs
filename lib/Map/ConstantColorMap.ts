@@ -6,7 +6,9 @@ export default class ConstantColorMap extends ColorMap {
     super();
   }
 
-  mapValueToColor(value: number | null | undefined): Readonly<Color> | undefined {
+  mapValueToColor(
+    value: number | null | undefined
+  ): Readonly<Color> | undefined {
     return this.color;
   }
 }

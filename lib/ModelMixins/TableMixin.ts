@@ -121,21 +121,32 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
 
         const longitudes = style.longitudeColumn.valuesAsNumbers.values;
         const latitudes = style.latitudeColumn.valuesAsNumbers.values;
-        const values = style.colorColumn ? style.colorColumn.valuesAsNumbers.values : undefined || [];
 
-        const dataSource = new CustomDataSource(this.name || "CsvCatalogItem");
+        const colorColumn = style.colorColumn;
+        const valueFunction =
+          colorColumn !== undefined
+            ? colorColumn.valueFunctionForType
+            : () => null;
 
-        let colorMap = this.activeTableStyle ? this.activeTableStyle.colorMap : undefined;
+        const dataSource = new CustomDataSource(this.name || "Table");
+
+        let colorMap = this.activeTableStyle
+          ? this.activeTableStyle.colorMap
+          : undefined;
         if (colorMap === undefined) {
           colorMap = new ConstantColorMap(Color.RED);
         }
+
+        const outlineColor = Color.fromCssColorString(
+          style.colorTraits.outlineColor
+        );
 
         dataSource.entities.suspendEvents();
 
         for (let i = 0; i < longitudes.length && i < latitudes.length; ++i) {
           const longitude = longitudes[i];
           const latitude = latitudes[i];
-          const value = values[i];
+          const value = valueFunction(i);
           if (longitude === null || latitude === null) {
             continue;
           }
@@ -145,7 +156,9 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
               position: Cartesian3.fromDegrees(longitude, latitude, 0.0),
               point: new PointGraphics({
                 color: colorMap.mapValueToColor(value),
-                pixelSize: 5
+                pixelSize: 5,
+                outlineWidth: 1,
+                outlineColor: outlineColor
               })
             })
           );
