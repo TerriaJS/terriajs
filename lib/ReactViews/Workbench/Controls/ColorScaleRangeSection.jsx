@@ -24,9 +24,6 @@ const ColorScaleRangeSection = createReactClass({
     };
   },
 
-  componentDidUpdate() {
-    this.props.item.refresh();
-  },
   /* eslint-disable-next-line camelcase */
   UNSAFE_componentWillMount() {
     this.setState({
@@ -79,7 +76,6 @@ const ColorScaleRangeSection = createReactClass({
 
     this.props.item.colorScaleMinimum = min;
     this.props.item.colorScaleMaximum = max;
-    this.props.item.refresh();
   },
 
   changeRangeMin(event) {
