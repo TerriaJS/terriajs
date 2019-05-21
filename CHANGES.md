@@ -1,8 +1,15 @@
 Change Log
 ==========
 
-## Next Release
-* Remove comma dangle on `regionMapping.json`.
+### Next Release
+
+* Added the "Story" feature for building and sharing guided tours of maps and data.
+* Switched to using the new "on demand" versions of the Bing Maps aerial and roads basemaps. The previous versions are deprecated.
+
+### v7.4.1
+
+* Remove dangling comma in `regionMapping.json`.
+* `WebMapServicCatalogItem` now includes the current `style` in generated `GetLegendGraphic` URLs. 
 
 ### v7.4.0
 
