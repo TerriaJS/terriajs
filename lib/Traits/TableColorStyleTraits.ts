@@ -1,9 +1,7 @@
-import { JsonObject } from "../Core/Json";
-import anyTrait from "./anyTrait";
 import ModelTraits from "./ModelTraits";
+import objectArrayTrait from "./objectArrayTrait";
 import primitiveArrayTrait from "./primitiveArrayTrait";
 import primitiveTrait from "./primitiveTrait";
-import objectArrayTrait from "./objectArrayTrait";
 
 export class EnumColorTraits extends ModelTraits {
   @primitiveTrait({
