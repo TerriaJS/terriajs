@@ -1,8 +1,8 @@
-@import '~terriajs-variables';
-@import '../../../Sass/common/mixins';
+@import "~terriajs-variables";
+@import "../../../Sass/common/mixins";
 
 .btn {
-  composes: btn from '../../../Sass/common/_buttons.scss';
+  composes: btn from "../../../Sass/common/_buttons.scss";
 
   border-radius: 50%;
   display: block;
@@ -36,14 +36,15 @@
   background: $color-primary;
 
   svg {
-    fill: #FFF;
+    fill: #fff;
 
     path {
-       fill: #FFF;
+      fill: #fff;
     }
   }
 
-  &:hover, &--hover {
+  &:hover,
+  &--hover {
     background: get-hover-color($color-primary);
   }
 }
@@ -70,19 +71,37 @@
 }
 
 @-moz-keyframes blinker {
-  0% { opacity: 1.0; }
-  50% { opacity: 0.0; }
-  100% { opacity: 1.0; }
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 @-webkit-keyframes blinker {
-  0% { opacity: 1.0; }
-  50% { opacity: 0.0; }
-  100% { opacity: 1.0; }
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 @keyframes blinker {
-  0% { opacity: 1.0; }
-  50% { opacity: 0.0; }
-  100% { opacity: 1.0; }
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }

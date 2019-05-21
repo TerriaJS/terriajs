@@ -1,7 +1,7 @@
-@import '~terriajs-variables';
+@import "~terriajs-variables";
 
 .no-results {
-  composes: label from '../../Sass/common/_labels.scss';
+  composes: label from "../../Sass/common/_labels.scss";
   padding-left: $padding;
   font-size: $font-size-mid-small;
 }

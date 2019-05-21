@@ -454,7 +454,7 @@ describe("WebMapServiceCatalogItem", function() {
       .load()
       .then(function() {
         expect(wmsItem.intervals.length).toEqual(13);
-        
+
         const firstInterval = wmsItem.intervals.get(0);
         expect(firstInterval.data).toEqual("2002-01-01T00:00:00.000Z");
         expect(firstInterval.start.dayNumber).toEqual(2452275);
@@ -520,10 +520,10 @@ describe("WebMapServiceCatalogItem", function() {
         expect(typeof firstInterval.start).toEqual(typeof new JulianDate());
         expect(typeof firstInterval.stop).toEqual(typeof new JulianDate());
 
-        expect(firstInterval.start.dayNumber).toEqual(2457140);  // gets 2457139
+        expect(firstInterval.start.dayNumber).toEqual(2457140); // gets 2457139
         expect(firstInterval.start.secondsOfDay).toEqual(15335); //gets 65735
-        expect(firstInterval.stop.dayNumber).toEqual(2457140);   // gets 2457139
-        expect(firstInterval.stop.secondsOfDay).toEqual(16235);  // gets 66635 
+        expect(firstInterval.stop.dayNumber).toEqual(2457140); // gets 2457139
+        expect(firstInterval.stop.secondsOfDay).toEqual(16235); // gets 66635
 
         const lastInterval = wmsItem.intervals.get(10);
         expect(lastInterval.data).toEqual("2015-04-27T18:45:00Z");
@@ -566,12 +566,12 @@ describe("WebMapServiceCatalogItem", function() {
       dataUrl: "" // to prevent a DescribeLayer request
     });
     wmsItem
-    .load()
-    .then(function() {
+      .load()
+      .then(function() {
         expect(wmsItem.intervals.length).toEqual(1000);
-    })
-    .then(done)
-    .otherwise(done.fail);
+      })
+      .then(done)
+      .otherwise(done.fail);
   });
 
   it("supports multiple units in a single period", function(done) {
