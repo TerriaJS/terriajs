@@ -8,6 +8,7 @@ import { Small, Medium } from "../Generic/Responsive";
 import Icon from "../Icon.jsx";
 import { Swipeable } from "react-swipeable";
 import when from "terriajs-cesium/Source/ThirdParty/when";
+import defined from "terriajs-cesium/Source/Core/defined";
 import Styles from "./story-panel.scss";
 
 export function activateStory(story, terria) {
@@ -24,9 +25,12 @@ export function activateStory(story, terria) {
       }, []);
       const nowViewing = terria.nowViewing.items;
       nowViewing.slice().forEach(item => {
-        const path = item.uniqueId;
+        const itemToCheck = defined(item.creatorCatalogItem)
+          ? item.creatorCatalogItem
+          : item;
+        const path = itemToCheck.uniqueId;
         if (nowViewingPaths.indexOf(path) < 0) {
-          item.isEnabled = false;
+          itemToCheck.isEnabled = false;
         }
       });
     });

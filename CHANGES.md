@@ -5,6 +5,7 @@ Change Log
 
 * Added the "Story" feature for building and sharing guided tours of maps and data.
 * Added sharing within the data catalog to share a given catalog group or item
+* Switched to using the new "on demand" versions of the Bing Maps aerial and roads basemaps. The previous versions are deprecated.
 
 ### v7.4.1
 
