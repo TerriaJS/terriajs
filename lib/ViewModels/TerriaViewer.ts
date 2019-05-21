@@ -78,7 +78,7 @@ export default class TerriaViewer {
     );
   }
 
-  createViewer(viewerMode: string): GlobeOrMap | undefined {
+  private createViewer(viewerMode: string): GlobeOrMap | undefined {
     console.log(`Creating a viewer: ${viewerMode}`);
 
     if (viewerMode === "leaflet") {
@@ -86,5 +86,14 @@ export default class TerriaViewer {
     } else if (viewerMode === "cesium") {
       return new Cesium(this);
     }
+  }
+
+  destroy() {
+    // destroy the current viewer
+    // this is exactly the type of side-effect we set out to remove
+    // probably should refactor the whole terriaViewer.viewerMode = something
+    // to be terriaViewer.setViewerMode(something)
+    this.viewerMode = undefined;
+    this.stopViewerAutorun();
   }
 }
