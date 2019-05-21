@@ -12,16 +12,40 @@ const ColorScaleRangeSection = createReactClass({
   mixins: [ObserveModelMixin],
 
   propTypes: {
-    item: PropTypes.object.isRequired
+    item: PropTypes.object.isRequired,
+    minValue: PropTypes.number,
+    maxValue: PropTypes.number
   },
 
-  minRange: -50,
-  maxRange: 50,
+  getInitialState: function() {
+    return {
+      minRange: -50,
+      maxRange: 50
+    };
+  },
+
+  componentDidUpdate() {
+    this.props.item.refresh();
+  },
+  /* eslint-disable-next-line camelcase */
+  UNSAFE_componentWillMount() {
+    this.setState({
+      minRange: this.props.minValue,
+      maxRange: this.props.maxValue
+    });
+  },
+  /* eslint-disable-next-line camelcase */
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    this.setState({
+      minRange: nextProps.minValue,
+      maxRange: nextProps.maxValue
+    });
+  },
 
   updateRange(e) {
     e.preventDefault();
 
-    const min = parseFloat(this.minRange);
+    const min = parseFloat(this.state.minRange);
     if (min !== min) {
       // is NaN?
       this.props.item.terria.error.raiseEvent({
@@ -32,7 +56,7 @@ const ColorScaleRangeSection = createReactClass({
       return;
     }
 
-    const max = parseFloat(this.maxRange);
+    const max = parseFloat(this.state.maxRange);
     if (max !== max) {
       // is NaN?
       this.props.item.terria.error.raiseEvent({
@@ -59,11 +83,15 @@ const ColorScaleRangeSection = createReactClass({
   },
 
   changeRangeMin(event) {
-    this.minRange = event.target.value;
+    this.setState({
+      minRange: event.target.value
+    });
   },
 
   changeRangeMax(event) {
-    this.maxRange = event.target.value;
+    this.setState({
+      maxRange: event.target.value
+    });
   },
 
   render() {
@@ -71,10 +99,6 @@ const ColorScaleRangeSection = createReactClass({
     if (!defined(item.colorScaleMinimum) || !defined(item.colorScaleMaximum)) {
       return null;
     }
-
-    this.minRange = item.colorScaleMinimum;
-    this.maxRange = item.colorScaleMaximum;
-
     return (
       <form className={Styles.colorscalerange} onSubmit={this.updateRange}>
         <div className={Styles.title}>Color Scale Range </div>
@@ -83,7 +107,7 @@ const ColorScaleRangeSection = createReactClass({
           className={Styles.field}
           type="text"
           name="rangeMax"
-          defaultValue={this.maxRange}
+          value={this.state.maxRange}
           onChange={this.changeRangeMax}
         />
         <label htmlFor="rangeMin">Minimum: </label>
@@ -91,7 +115,7 @@ const ColorScaleRangeSection = createReactClass({
           className={Styles.field}
           type="text"
           name="rangeMin"
-          defaultValue={this.minRange}
+          value={this.state.minRange}
           onChange={this.changeRangeMin}
         />
         <button type="submit" title="Update Range" className={Styles.btn}>
