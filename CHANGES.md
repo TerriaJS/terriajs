@@ -12,8 +12,6 @@ Change Log
 * Remove dangling comma in `regionMapping.json`.
 * `WebMapServicCatalogItem` now includes the current `style` in generated `GetLegendGraphic` URLs. 
 
-* Fixed Map View '2D' button activating 3D ellipsoid viewer when the instance has no terrain.
-* Fixed a bug where all available styles were being retrieved from a `GetCapabilities` for each layer within a WMS Group resulting in memory crashes on WMS's with many layers.
 ### v7.4.0
 
 * Upgraded to Cesium v1.57.
