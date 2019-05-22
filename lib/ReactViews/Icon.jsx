@@ -76,6 +76,7 @@ const GLYPHS = {
   circleFull: require("../../wwwroot/images/icons/circlef-full.svg"),
   circleEmpty: require("../../wwwroot/images/icons/circle-empty.svg"),
   story: require("../../wwwroot/images/icons/story.svg"),
+  recapture: require("../../wwwroot/images/icons/recapture.svg"),
   menuDotted: require("../../wwwroot/images/icons/menu-dotted.svg")
 };
 

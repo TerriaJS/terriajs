@@ -11,6 +11,7 @@
   z-index: 9;
   box-sizing: border-box;
   pointer-events: none;
+  @include transition(padding, 0.2s);
   @media (min-width: $md) {
     padding-left: 30px + $work-bench-width;
     bottom: 90px;
@@ -23,6 +24,13 @@
 
 .isPushedUp {
   bottom: 350px;
+}
+
+.isCentered {
+  padding-left: 20px;
+  // when changing to full screen, the story panel should move to center slower
+  // than side panel slide in/out
+  transition-delay: 0.5s;
 }
 
 .story-container {
@@ -117,15 +125,14 @@
   composes: btn from "../../Sass/common/_buttons.scss";
   display: block;
   padding: $padding * 0.8 $padding * 1.6;
-  &:not([disabled]):hover,
-  &:not([disabled]):focus {
+  &:not([disabled]):hover {
     svg {
       fill: $color-primary;
     }
   }
   svg {
     fill: #888888;
-    width: 20px;
+    width: 15px;
   }
 }
 .nextBtn,
@@ -142,6 +149,9 @@
 
 .locationBtn {
   border-right: 1px solid $field-border;
+  svg {
+    width: 18px;
+  }
 }
 
 .exitBtn,

@@ -24,6 +24,7 @@ import ShadowSection from "./Controls/ShadowSection";
 import ShortReport from "./Controls/ShortReport";
 import StyleSelectorSection from "./Controls/StyleSelectorSection";
 import ViewingControls from "./Controls/ViewingControls";
+import TimerSection from "./Controls/TimerSection";
 
 import Styles from "./workbench-item.scss";
 import Icon from "../Icon.jsx";
@@ -126,6 +127,7 @@ const WorkbenchItem = createReactClass({
             />
             <OpacitySection item={workbenchItem} />
             <LeftRightSection item={workbenchItem} />
+            <TimerSection item={workbenchItem} />
             <If
               condition={
                 defined(workbenchItem.concepts) &&
@@ -141,7 +143,11 @@ const WorkbenchItem = createReactClass({
             <DateTimeSelectorSection item={workbenchItem} />
             <SatelliteImageryTimeFilterSection item={workbenchItem} />
             <StyleSelectorSection item={workbenchItem} />
-            <ColorScaleRangeSection item={workbenchItem} />
+            <ColorScaleRangeSection
+              item={workbenchItem}
+              minValue={workbenchItem.colorScaleMinimum}
+              maxValue={workbenchItem.colorScaleMaximum}
+            />
             <DisplayAsPercentSection item={workbenchItem} />
             <Legend item={workbenchItem} />
             <If

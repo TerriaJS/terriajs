@@ -1,6 +1,7 @@
 import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
+import combine from "terriajs-cesium/Source/Core/combine";
 import { getShareData } from "../Map/Panels/SharePanel/BuildShareLink";
 import defined from "terriajs-cesium/Source/Core/defined";
 import ObserveModelMixin from "../ObserveModelMixin";
@@ -8,34 +9,27 @@ import Icon from "../Icon.jsx";
 import Story from "./Story.jsx";
 import StoryEditor from "./StoryEditor.jsx";
 import Sortable from "react-anything-sortable";
-import uniqid from "uniqid";
-
+import createGuid from "terriajs-cesium/Source/Core/createGuid";
+import classNames from "classnames";
+import BadgeBar from "../BadgeBar.jsx";
+import triggerResize from "../../Core/triggerResize";
 import Styles from "./story-builder.scss";
-import "!!style-loader!css-loader?sourceMap!react-anything-sortable/sortable.css";
-
-function arrayMove(arr, oldIndex, newIndex) {
-  if (newIndex >= arr.length) {
-    let k = newIndex - arr.length + 1;
-    while (k--) {
-      arr.push(undefined);
-    }
-  }
-  arr.splice(newIndex, 0, arr.splice(oldIndex, 1)[0]);
-  return arr;
-}
 
 const StoryBuilder = createReactClass({
   displayName: "StoryBuilder",
   mixins: [ObserveModelMixin],
   propTypes: {
     terria: PropTypes.object.isRequired,
-    viewState: PropTypes.object.isRequired
+    isVisible: PropTypes.bool,
+    viewState: PropTypes.object.isRequired,
+    animationDuration: PropTypes.number
   },
 
   getInitialState() {
     return {
       editingMode: false,
-      currentStory: undefined
+      currentStory: undefined,
+      recaptureSuccessFul: undefined
     };
   },
 
@@ -47,28 +41,32 @@ const StoryBuilder = createReactClass({
       this.props.viewState.currentStoryId -= 1;
     }
   },
+
+  removeAllStories() {
+    this.props.terria.stories = [];
+  },
   onSave(_story) {
     const story = {
       title: _story.title,
       text: _story.text,
-      id: _story.id ? _story.id : uniqid()
+      id: _story.id ? _story.id : createGuid()
     };
-
-    !defined(_story.id) && this.captureStory(story);
 
     const storyIndex = (this.props.terria.stories || [])
       .map(story => story.id)
       .indexOf(_story.id);
 
     if (storyIndex >= 0) {
-      // replace the old story
+      const oldStory = this.props.terria.stories[storyIndex];
+      // replace the old story, we need to replace the stories array so that
+      // it is observable
       this.props.terria.stories = [
         ...this.props.terria.stories.slice(0, storyIndex),
-        story,
+        combine(story, oldStory),
         ...this.props.terria.stories.slice(storyIndex + 1)
       ];
     } else {
-      this.props.terria.stories = [...(this.props.terria.stories || []), story];
+      this.captureStory(story);
     }
 
     this.setState({
@@ -80,11 +78,49 @@ const StoryBuilder = createReactClass({
     story.shareData = JSON.parse(
       JSON.stringify(getShareData(this.props.terria, false))
     );
+    if (this.props.terria.stories === undefined) {
+      this.props.terria.stories = [story];
+    } else {
+      this.props.terria.stories.push(story);
+    }
+  },
+
+  recaptureScene(story) {
+    clearTimeout(this.resetReCaptureStatus);
+    const storyIndex = (this.props.terria.stories || [])
+      .map(story => story.id)
+      .indexOf(story.id);
+    if (storyIndex >= 0) {
+      story.shareData = JSON.parse(
+        JSON.stringify(getShareData(this.props.terria, false))
+      );
+      this.props.terria.stories = [
+        ...this.props.terria.stories.slice(0, storyIndex),
+        story,
+        ...this.props.terria.stories.slice(storyIndex + 1)
+      ];
+      this.setState({
+        recaptureSuccessFul: story.id
+      });
+
+      setTimeout(this.resetReCaptureStatus, 2000);
+    } else {
+      throw new Error("Story does not exsit");
+    }
+  },
+
+  resetReCaptureStatus() {
+    this.setState({
+      recaptureSuccessFul: undefined
+    });
   },
 
   runStories() {
     this.props.viewState.storyBuilderShown = false;
     this.props.viewState.storyShown = true;
+    setTimeout(function() {
+      triggerResize();
+    }, this.props.animationDuration || 1);
     this.props.terria.currentViewer.notifyRepaintRequired();
   },
 
@@ -102,18 +138,12 @@ const StoryBuilder = createReactClass({
     this.runStories();
   },
 
-  moveUp(index, story) {
-    const stories = this.props.terria.stories || [];
-    this.props.terria.stories = arrayMove(stories, index, index - 1);
-  },
-
-  moveDown(index, story) {
-    const stories = this.props.terria.stories || [];
-    this.props.terria.stories = arrayMove(stories, index, index + 1);
-  },
-
   onSort(sortedArray, currentDraggingSortData, currentDraggingIndex) {
     this.props.terria.stories = sortedArray;
+  },
+
+  componentWillUnmount() {
+    clearTimeout(this.resetReCaptureStatus);
   },
 
   renderIntro() {
@@ -130,25 +160,44 @@ const StoryBuilder = createReactClass({
     );
   },
 
-  renderStories() {
+  openMenu(story) {
+    this.setState({
+      storyWithOpenMenu: story
+    });
+  },
+
+  renderStories(editingMode) {
     const stories = this.props.terria.stories || [];
+    const className = classNames({
+      [Styles.stories]: true,
+      [Styles.isActive]: editingMode
+    });
     return (
-      <div className={Styles.stories}>
+      <div className={className}>
+        <BadgeBar label="Scenes" badge={this.props.terria.stories.length}>
+          <button
+            type="button"
+            onClick={this.removeAllStories}
+            className={Styles.removeButton}
+          >
+            Remove All <Icon glyph={Icon.GLYPHS.remove} />
+          </button>
+        </BadgeBar>
+
         <Sortable onSort={this.onSort} direction="vertical" dynamic={true}>
           <For each="story" index="index" of={stories}>
             <Story
               key={story.id}
               story={story}
               sortData={story}
-              moveDown={
-                index < stories.length - 1
-                  ? this.moveDown.bind(this, index)
-                  : undefined
-              }
-              moveUp={index > 0 ? this.moveUp.bind(this, index) : undefined}
               deleteStory={this.removeStory.bind(this, index)}
-              recaptureStory={this.captureStory}
+              recaptureStory={this.recaptureScene}
+              recaptureStorySuccessful={Boolean(
+                story.id === this.state.recaptureSuccessFul
+              )}
               viewStory={this.viewStory.bind(this, index)}
+              menuOpen={this.state.storyWithOpenMenu === story}
+              openMenu={this.openMenu}
               editStory={this.editStory}
             />
           </For>
@@ -168,8 +217,13 @@ const StoryBuilder = createReactClass({
     const hasStories =
       defined(this.props.terria.stories) &&
       this.props.terria.stories.length > 0;
+    const className = classNames({
+      [Styles.storyPanel]: true,
+      [Styles.isVisible]: this.props.isVisible,
+      [Styles.isHidden]: !this.props.isVisible
+    });
     return (
-      <div className={Styles.storyPanel}>
+      <div className={className}>
         <div className={Styles.header}>
           {!hasStories && this.renderIntro()}
           <div className={Styles.actions}>
@@ -195,7 +249,7 @@ const StoryBuilder = createReactClass({
             </button>
           </div>
         </div>
-        {!this.state.editingMode && hasStories && this.renderStories()}
+        {hasStories && this.renderStories(this.state.editingMode)}
         {this.state.editingMode && (
           <StoryEditor
             removeStory={this.removeStory}
