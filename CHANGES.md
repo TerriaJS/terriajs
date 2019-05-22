@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### v7.5.1
+
+* Fixed a bug in Cesium that prevented the new Bing Maps "on demand" basemaps from working on `https` sites.
+
 ### v7.5.0
 
 * Added the "Story" feature for building and sharing guided tours of maps and data.
