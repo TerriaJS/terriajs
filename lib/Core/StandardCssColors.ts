@@ -1,6 +1,4 @@
-"use strict";
-
-var standardCssColors = {
+const StandardCssColors = {
   // Colors are from Kelly's 1965 paper 'Twenty-two colors of maximum contrast'
   // http://www.iscc.org/pdf/PC54_1724_001.pdf
   // Converted from the NBS/ISCC Color System using http://tx4.us/nbs-iscc.htm
@@ -56,4 +54,4 @@ var standardCssColors = {
   ]
 };
 
-module.exports = standardCssColors;
+export default StandardCssColors;

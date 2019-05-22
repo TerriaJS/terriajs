@@ -1,4 +1,4 @@
-import uniq from "lodash.uniq";
+import countBy from "lodash.countby";
 import { computed } from "mobx";
 import createStratumInstance from "../Models/createStratumInstance";
 import Model from "../Models/Model";
@@ -19,6 +19,22 @@ export interface ColumnValuesAsNumbers {
   readonly numberOfNonNumbers: number;
 }
 
+export interface UniqueColumnValues {
+  /**
+   * Gets the unique values, ordered from most common to least common.
+   */
+  readonly values: ReadonlyArray<string>;
+
+  /**
+   * Gets the count of each value. This is a parallel array to
+   * {@link #values}.
+   */
+  readonly counts: ReadonlyArray<number>;
+}
+
+/**
+ * A column of tabular data.
+ */
 export default class TableColumn {
   readonly columnNumber: number;
   readonly tableModel: TableModel;
@@ -28,6 +44,9 @@ export default class TableColumn {
     this.tableModel = tableModel;
   }
 
+  /**
+   * Gets the raw, uninterpreted values in the column.
+   */
   @computed
   get values(): readonly string[] {
     const result: string[] = [];
@@ -43,11 +62,15 @@ export default class TableColumn {
     return result;
   }
 
+  /**
+   * Gets the column values as numbers, and returns information about how many
+   * rows were successfully converted to numbers and the range of values.
+   */
   @computed
   get valuesAsNumbers(): ColumnValuesAsNumbers {
     const numbers: (number | null)[] = [];
     let minimum = Number.MAX_VALUE;
-    let maximum = Number.MIN_VALUE;
+    let maximum = -Number.MAX_VALUE;
     let numberOfValidNumbers = 0;
     let numberOfNonNumbers = 0;
 
@@ -73,7 +96,7 @@ export default class TableColumn {
       if (n !== null) {
         ++numberOfValidNumbers;
         minimum = Math.min(minimum, n);
-        maximum = Math.min(maximum, n);
+        maximum = Math.max(maximum, n);
       }
 
       numbers.push(n);
@@ -88,11 +111,31 @@ export default class TableColumn {
     };
   }
 
+  /**
+   * Gets the unique values in this column.
+   */
   @computed
-  get uniqueValues(): readonly string[] {
-    return uniq(this.values);
+  get uniqueValues(): UniqueColumnValues {
+    const count = countBy(this.values);
+
+    function toArray(key: string, value: number): [string, number] {
+      return [key, value];
+    }
+    const countArray = Object.keys(count).map(key => toArray(key, count[key]));
+    countArray.sort(function(a, b) {
+      return b[1] - a[1];
+    });
+
+    return {
+      values: countArray.map(a => a[0]),
+      counts: countArray.map(a => a[1])
+    };
   }
 
+  /**
+   * Gets the name of this column. If the column's name is blank, this property
+   * will return `Column#` where `#` is the zero-based index of the column.
+   */
   @computed
   get name(): string {
     const data = this.tableModel.dataColumnMajor;
@@ -107,6 +150,9 @@ export default class TableColumn {
     return data[this.columnNumber][0];
   }
 
+  /**
+   * Gets the {@link TableColumnTraits} for this column.
+   */
   @computed
   get traits(): ModelPropertiesFromTraits<TableColumnTraits> {
     const columns = this.tableModel.columns || [];
@@ -116,6 +162,11 @@ export default class TableColumn {
     );
   }
 
+  /**
+   * Gets the type of this column. If {@link #traits} has an explicit
+   * {@link TableColumnTraits#type} specified, it is returned directly.
+   * Otherwise, the type is guessed from the column name and contents.
+   */
   @computed
   get type(): TableColumnType {
     // Use the explicit column type, if any.
@@ -148,10 +199,10 @@ export default class TableColumn {
         // If there are relatively few different values, treat it as an enumeration.
         // If there are heaps of different values, treat it as just ordinary
         // free-form text.
-        const uniqueValues = this.uniqueValues;
+        const uniqueValues = this.uniqueValues.values;
         if (
-          uniqueValues.length < 10 ||
-          uniqueValues.length < this.values.length / 2
+          uniqueValues.length <= 7 ||
+          uniqueValues.length < this.values.length / 10
         ) {
           type = TableColumnType.enum;
         } else {
@@ -161,6 +212,27 @@ export default class TableColumn {
     }
 
     return type;
+  }
+
+  /**
+   * Gets a function that can be used to retrieve the value of this column for
+   * a given row as a type appropriate for the column {@link #type}. For
+   * example, if {@link #type} is {@link TableColumnType#scalar}, the value
+   * will be a number or null.
+   */
+  @computed
+  get valueFunctionForType(): (rowIndex: number) => string | number | null {
+    if (this.type === TableColumnType.scalar) {
+      const values = this.valuesAsNumbers.values;
+      return function(rowIndex: number) {
+        return values[rowIndex];
+      };
+    }
+
+    const values = this.values;
+    return function(rowIndex: number) {
+      return values[rowIndex];
+    };
   }
 
   private guessColumnTypeFromName(name: string): TableColumnType | undefined {

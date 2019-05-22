@@ -2,6 +2,7 @@ import { computed, observable } from "mobx";
 import Clock from "terriajs-cesium/Source/Core/Clock";
 import defined from "terriajs-cesium/Source/Core/defined";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
+import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import RuntimeError from "terriajs-cesium/Source/Core/RuntimeError";
 import when from "terriajs-cesium/Source/ThirdParty/when";
 import URI from "urijs";
@@ -104,6 +105,9 @@ export default class Terria {
 
   @observable
   pickedFeatures: PickedFeatures | undefined;
+
+  @observable
+  selectedFeature: Entity | undefined;
 
   @observable
   readonly userProperties = new Map<string, any>();

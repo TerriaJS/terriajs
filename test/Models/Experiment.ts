@@ -50,7 +50,6 @@ describe("NewStuff", function() {
     });
 
     autorun(dispose => {
-      console.log("flattened: " + wms.flattened);
       console.log("Run: " + wms.memberModels.length);
       wms.memberModels.forEach(model => {
         if (CatalogMemberMixin.isMixedInto(model)) {

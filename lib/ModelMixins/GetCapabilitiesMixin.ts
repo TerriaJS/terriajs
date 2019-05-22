@@ -14,8 +14,8 @@ function GetCapabilitiesMixin<T extends Constructor<CapabilitiesModel>>(
 
     @computed
     get getCapabilitiesUrl(): string | undefined {
-      const getCapabilitiesUrl = this.flattened.getCapabilitiesUrl;
-      if (getCapabilitiesUrl) {
+      const getCapabilitiesUrl = super.getCapabilitiesUrl;
+      if (getCapabilitiesUrl !== undefined) {
         return getCapabilitiesUrl;
       } else {
         return this.defaultGetCapabilitiesUrl;

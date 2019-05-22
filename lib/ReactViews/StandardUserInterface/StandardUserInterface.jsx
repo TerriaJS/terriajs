@@ -6,7 +6,7 @@ import Branding from "../SidePanel/Branding";
 // import DragDropFile from '../DragDropFile';
 // import DragDropNotification from './../DragDropNotification';
 import ExplorerWindow from "../ExplorerWindow/ExplorerWindow";
-// import FeatureInfoPanel from '../FeatureInfo/FeatureInfoPanel';
+import FeatureInfoPanel from "../FeatureInfo/FeatureInfoPanel";
 // import FeedbackForm from '../Feedback/FeedbackForm';
 import MapColumn from "./MapColumn";
 import MapInteractionWindow from "../Notification/MapInteractionWindow";
@@ -244,9 +244,10 @@ const StandardUserInterface = observer(
               this.props.viewState.topElement = "FeatureInfo";
             }}
           >
-            {/* <FeatureInfoPanel terria={terria}
-                                  viewState={this.props.viewState}
-                    /> */}
+            <FeatureInfoPanel
+              terria={terria}
+              viewState={this.props.viewState}
+            />
           </div>
           {/* <DragDropFile terria={this.props.terria}
                               viewState={this.props.viewState}

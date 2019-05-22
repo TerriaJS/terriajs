@@ -34,16 +34,14 @@ export default class TableColumnTraits extends ModelTraits {
 
   @primitiveArrayTrait({
     name: "Values to Replace with Zero",
-    description:
-      "Values of the column to replace with 0.0, such as `-`.",
+    description: "Values of the column to replace with 0.0, such as `-`.",
     type: "string"
   })
   replaceWithZeroValues?: string[];
 
   @primitiveArrayTrait({
     name: "Values to Replace with Null",
-    description:
-      "Values of the column to replace with null, such as `NA`.",
+    description: "Values of the column to replace with null, such as `NA`.",
     type: "string"
   })
   replaceWithNullValues?: string[];

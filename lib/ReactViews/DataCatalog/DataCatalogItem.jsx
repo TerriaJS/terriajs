@@ -1,12 +1,11 @@
-import React from "react";
 import createReactClass from "create-react-class";
+import { observer } from "mobx-react";
 import PropTypes from "prop-types";
+import React from "react";
 import defined from "terriajs-cesium/Source/Core/defined";
 import addedByUser from "../../Core/addedByUser";
 import removeUserAddedData from "../../Models/removeUserAddedData";
 import CatalogItem from "./CatalogItem";
-import getAncestors from "../../Models/getAncestors";
-import { observer } from "mobx-react";
 
 const STATE_TO_TITLE = {
   loading: "Loading...",
@@ -109,14 +108,8 @@ const DataCatalogItem = observer(
         <CatalogItem
           onTextClick={this.setPreviewedItem}
           selected={this.isSelected()}
-          text={
-            item.nameInCatalog +
-            ": " +
-            this.props.ancestors.map(m => m.nameInCatalog).join(" -> ")
-          }
-          title={getAncestors(item)
-            .map(member => member.nameInCatalog)
-            .join(" → ")}
+          text={item.nameInCatalog}
+          title={this.props.ancestors.map(m => m.nameInCatalog).join(" -> ")}
           btnState={this.getState()}
           onBtnClick={this.onBtnClicked}
           titleOverrides={STATE_TO_TITLE}

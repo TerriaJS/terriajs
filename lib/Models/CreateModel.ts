@@ -1,32 +1,28 @@
-import { computed, decorate, observable, trace, runInAction } from "mobx";
+import { computed, observable, runInAction, trace } from "mobx";
 import { ModelId } from "../Traits/ModelReference";
 import ModelTraits from "../Traits/ModelTraits";
 import TraitsConstructor from "../Traits/TraitsConstructor";
+import addModelStrataView from "./addModelStrataView";
 import createStratumInstance from "./createStratumInstance";
-import FlattenedFromTraits from "./FlattenedFromTraits";
 import Model, { BaseModel, ModelConstructor, ModelInterface } from "./Model";
 import StratumFromTraits from "./StratumFromTraits";
 import StratumOrder from "./StratumOrder";
 import Terria from "./Terria";
-import createFlattenedStrataView from "./createFlattenedStrataView";
 
 export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
   Traits: T
 ): ModelConstructor<Model<InstanceType<T>>> {
   type Traits = InstanceType<T>;
   type StratumTraits = StratumFromTraits<Traits>;
-  type FlattenedTraits = FlattenedFromTraits<Traits>;
 
   abstract class Model extends BaseModel implements ModelInterface<Traits> {
     abstract get type(): string;
     static readonly traits = Traits.traits;
     readonly traits = Traits.traits;
-    readonly flattened: FlattenedTraits;
     readonly strata = observable.map<string, StratumTraits>();
 
     constructor(id: ModelId, terria: Terria) {
       super(id, terria);
-      this.flattened = createFlattenedStrataView<T>(this, Traits);
     }
 
     private getOrCreateStratum(id: string): StratumTraits {
@@ -42,7 +38,7 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
     }
 
     @computed
-    get strataTopToBottom() {
+    get strataTopToBottom(): StratumTraits[] {
       trace();
       return StratumOrder.sortTopToBottom(this.strata);
     }
@@ -73,31 +69,6 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
     }
   }
 
-  const decorators: any = {};
-
-  // Add top-level accessors that don't already exist.
-  const traits = Traits.traits;
-  const traitsInstance = new Traits();
-  Object.keys(traits).forEach(traitName => {
-    if (!(traitName in Model.prototype)) {
-      const defaultValue = (<any>traitsInstance)[traitName];
-      Object.defineProperty(Model.prototype, traitName, {
-        get: function(this: Model) {
-          const value = (<any>this.flattened)[traitName];
-          if (value === undefined) {
-            return defaultValue;
-          }
-          return value;
-        },
-        enumerable: true,
-        configurable: true
-      });
-
-      decorators[traitName] = computed;
-    }
-  });
-
-  decorate(Model, decorators);
-
+  addModelStrataView(Model, Traits);
   return <any>Model;
 }
