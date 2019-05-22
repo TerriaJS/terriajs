@@ -2021,7 +2021,22 @@ describe("CsvCatalogItem & chart sharing", function() {
     });
     csvItem = new CsvCatalogItem(terria);
   });
+  describe("serialization around tableStyle & tableStructures for geo csvs", function() {
+    it("does not generate columns when allowMultiple is false", function() {
+      csvItem.updateFromJson({
+        type: "csv",
+        url: "test/csv/lat_lon_name_value.csv",
+        isEnabled: true,
+        isShown: true,
+        isCsvForCharting: false
+      });
 
+      expect(csvItem.tableStructure.allowMultiple).toBe(false);
+      expect(csvItem.isMappable).toBe(true);
+      var json = csvItem.serializeToJson();
+      expect(json.columns).toBeUndefined();
+    });
+  });
   describe("serialization around tableStyle & tableStructures for non-geo time series csvs", function() {
     it("can be round-tripped with serializeToJson and updateFromJson", function() {
       columns = {
@@ -2093,6 +2108,8 @@ describe("CsvCatalogItem & chart sharing", function() {
       });
 
       var json = csvItem.serializeToJson();
+      expect(json.dataUrl).toEqual(dataUrl);
+
       var reconstructed = new CsvCatalogItem(terria);
       reconstructed.updateFromJson(json);
 
@@ -2112,7 +2129,7 @@ describe("CsvCatalogItem & chart sharing", function() {
         columns[2].active
       );
     });
-    it("generates columns on a table style on serialization, when a CsvCatalogItem is created without them", function(done) {
+    it("generates columns on a table style on serialization for chartable items, when a CsvCatalogItem is created without them", function(done) {
       columns = {
         "0": {
           active: false
@@ -2137,6 +2154,8 @@ describe("CsvCatalogItem & chart sharing", function() {
 
       csvItem.load().then(function() {
         // loaded in with 1 active item,
+        expect(csvItem.isMappable).toBe(false);
+        expect(csvItem.concepts[0].allowMultiple).toEqual(true);
         expect(csvItem.concepts[0].activeItems.length).toEqual(1);
         expect(csvItem.concepts[0].items.length).toEqual(3);
         expect(csvItem.concepts[0].items[0].isActive).toEqual(false);
