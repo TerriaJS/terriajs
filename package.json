@@ -87,6 +87,7 @@
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",
+    "date-fns-tz": "^1.0.7",
     "electron": "^2.0.0",
     "eslint": "^5.14.1",
     "eslint-plugin-jsx-control-statements": "^2.2.1",
