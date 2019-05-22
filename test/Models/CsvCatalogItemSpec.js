@@ -2023,18 +2023,51 @@ describe("CsvCatalogItem & chart sharing", function() {
   });
   describe("serialization around tableStyle & tableStructures for geo csvs", function() {
     it("does not generate columns when allowMultiple is false", function() {
-      csvItem.updateFromJson({
-        type: "csv",
-        url: "test/csv/lat_lon_name_value.csv",
-        isEnabled: true,
-        isShown: true,
-        isCsvForCharting: false
-      });
-
-      expect(csvItem.tableStructure.allowMultiple).toBe(false);
-      expect(csvItem.isMappable).toBe(true);
-      var json = csvItem.serializeToJson();
-      expect(json.columns).toBeUndefined();
+      csvItem
+        .updateFromJson({
+          type: "csv",
+          url: "test/csv/lat_lon_name_value.csv",
+          isEnabled: true,
+          isShown: true,
+          isvForCharting: false
+        })
+        .then(csvItem.load.bind(csvItem))
+        .then(function() {
+          expect(csvItem.tableStructure.allowMultiple).toBe(false);
+          expect(csvItem.isMappable).toBe(true);
+          var json = csvItem.serializeToJson();
+          expect(json.columns).toBeUndefined();
+        });
+    });
+    it("toggles the selected dataVariable in tablestructure from updateFromJson (e.g. story-transitions)", function(done) {
+      csvItem
+        .updateFromJson({
+          type: "csv",
+          url: "test/csv/lat_lon_name_value.csv",
+          isEnabled: true,
+          isShown: true,
+          isCsvForCharting: false
+        })
+        .then(csvItem.load.bind(csvItem))
+        .then(function() {
+          expect(csvItem.isMappable).toEqual(true);
+          expect(csvItem.concepts[0].activeItems.length).toEqual(1);
+          expect(csvItem.concepts[0].activeItems[0].name).toEqual("value");
+        })
+        .then(function() {
+          csvItem.updateFromJson({
+            tableStyle: {
+              dataVariable: "name"
+            }
+          });
+        })
+        .then(function() {
+          expect(csvItem.isMappable).toEqual(true);
+          expect(csvItem.concepts[0].activeItems.length).toEqual(1);
+          expect(csvItem.concepts[0].activeItems[0].name).toEqual("name");
+        })
+        .then(done)
+        .otherwise(done.fail);
     });
   });
   describe("serialization around tableStyle & tableStructures for non-geo time series csvs", function() {
@@ -2152,60 +2185,63 @@ describe("CsvCatalogItem & chart sharing", function() {
 
       expect(csvItem.tableStyle.columns).toBeUndefined();
 
-      csvItem.load().then(function() {
-        // loaded in with 1 active item,
-        expect(csvItem.isMappable).toBe(false);
-        expect(csvItem.concepts[0].allowMultiple).toEqual(true);
-        expect(csvItem.concepts[0].activeItems.length).toEqual(1);
-        expect(csvItem.concepts[0].items.length).toEqual(3);
-        expect(csvItem.concepts[0].items[0].isActive).toEqual(false);
-        expect(csvItem.concepts[0].items[1].isActive).toEqual(true);
-        expect(csvItem.concepts[0].items[2].isActive).toEqual(false);
+      csvItem
+        .load()
+        .then(function() {
+          // loaded in with 1 active item,
+          expect(csvItem.isMappable).toBe(false);
+          expect(csvItem.concepts[0].allowMultiple).toEqual(true);
+          expect(csvItem.concepts[0].activeItems.length).toEqual(1);
+          expect(csvItem.concepts[0].items.length).toEqual(3);
+          expect(csvItem.concepts[0].items[0].isActive).toEqual(false);
+          expect(csvItem.concepts[0].items[1].isActive).toEqual(true);
+          expect(csvItem.concepts[0].items[2].isActive).toEqual(false);
 
-        // deselect first and choose the second item
-        csvItem.concepts[0].items[1].toggleActive();
-        csvItem.concepts[0].items[2].toggleActive();
-        expect(csvItem.concepts[0].items[1].isActive).toEqual(false);
-        expect(csvItem.concepts[0].items[2].isActive).toEqual(true);
+          // deselect first and choose the second item
+          csvItem.concepts[0].items[1].toggleActive();
+          csvItem.concepts[0].items[2].toggleActive();
+          expect(csvItem.concepts[0].items[1].isActive).toEqual(false);
+          expect(csvItem.concepts[0].items[2].isActive).toEqual(true);
 
-        var json = csvItem.serializeToJson();
+          var json = csvItem.serializeToJson();
 
-        var reconstructed = new CsvCatalogItem(terria);
-        reconstructed.updateFromJson(json);
-        expect(reconstructed.tableStyle.columns[0].active).toBe(
-          columns[0].active
-        );
-        expect(reconstructed.tableStyle.columns[1].active).toBe(
-          columns[1].active
-        );
-        expect(reconstructed.tableStyle.columns[2].active).toBe(
-          columns[2].active
-        );
-        expect(reconstructed.tableStyle.columns[1].chartLineColor).toBe(
-          reconstructed.colors[0]
-        );
-        expect(reconstructed.tableStyle.columns[2].chartLineColor).toBe(
-          reconstructed.colors[1]
-        );
+          var reconstructed = new CsvCatalogItem(terria);
+          reconstructed.updateFromJson(json);
+          expect(reconstructed.tableStyle.columns[0].active).toBe(
+            columns[0].active
+          );
+          expect(reconstructed.tableStyle.columns[1].active).toBe(
+            columns[1].active
+          );
+          expect(reconstructed.tableStyle.columns[2].active).toBe(
+            columns[2].active
+          );
+          expect(reconstructed.tableStyle.columns[1].chartLineColor).toBe(
+            reconstructed.colors[0]
+          );
+          expect(reconstructed.tableStyle.columns[2].chartLineColor).toBe(
+            reconstructed.colors[1]
+          );
 
-        // try with 2 active item selected
-        csvItem.concepts[0].items[1].toggleActive();
-        expect(csvItem.concepts[0].items[1].isActive).toEqual(true);
-        expect(csvItem.concepts[0].items[2].isActive).toEqual(true);
-        var json2 = csvItem.serializeToJson();
-        var reconstructed2 = new CsvCatalogItem(terria);
-        reconstructed2.updateFromJson(json2);
-        expect(reconstructed2.tableStyle.columns[0].active).toBe(false);
-        expect(reconstructed2.tableStyle.columns[1].active).toBe(true);
-        expect(reconstructed2.tableStyle.columns[2].active).toBe(true);
-        expect(reconstructed2.tableStyle.columns[1].chartLineColor).toBe(
-          reconstructed2.colors[0]
-        );
-        expect(reconstructed2.tableStyle.columns[2].chartLineColor).toBe(
-          reconstructed2.colors[1]
-        );
-        done();
-      });
+          // try with 2 active item selected
+          csvItem.concepts[0].items[1].toggleActive();
+          expect(csvItem.concepts[0].items[1].isActive).toEqual(true);
+          expect(csvItem.concepts[0].items[2].isActive).toEqual(true);
+          var json2 = csvItem.serializeToJson();
+          var reconstructed2 = new CsvCatalogItem(terria);
+          reconstructed2.updateFromJson(json2);
+          expect(reconstructed2.tableStyle.columns[0].active).toBe(false);
+          expect(reconstructed2.tableStyle.columns[1].active).toBe(true);
+          expect(reconstructed2.tableStyle.columns[2].active).toBe(true);
+          expect(reconstructed2.tableStyle.columns[1].chartLineColor).toBe(
+            reconstructed2.colors[0]
+          );
+          expect(reconstructed2.tableStyle.columns[2].chartLineColor).toBe(
+            reconstructed2.colors[1]
+          );
+        })
+        .then(done)
+        .otherwise(done.fail);
     });
 
     it("initialises and shares the correct 'no variables selected' state", function(done) {
