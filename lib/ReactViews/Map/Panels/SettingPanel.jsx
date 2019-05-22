@@ -10,7 +10,7 @@ import { action } from "mobx";
 // import ViewerMode from "../../../Models/ViewerMode";
 // import ObserveModelMixin from "../../ObserveModelMixin";
 import MenuPanel from "../../StandardUserInterface/customizable/MenuPanel";
-// import Icon from "../../Icon";
+import Icon from "../../Icon";
 
 import Styles from "./setting-panel.scss";
 import DropdownStyles from "./panel.scss";
