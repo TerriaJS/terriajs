@@ -16,6 +16,7 @@ import Styles from "./viewing-controls.scss";
 import createCatalogMemberFromType from "../../../Models/createCatalogMemberFromType";
 import addUserCatalogMember from "../../../Models/addUserCatalogMember";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
+import CommonStrata from "../../../Models/CommonStrata";
 
 const ViewingControls = createReactClass({
   displayName: "ViewingControls",
@@ -65,7 +66,7 @@ const ViewingControls = createReactClass({
 
   splitItem() {
     const item = this.props.item;
-    item.splitDirection = ImagerySplitDirection.RIGHT;
+    item.setTrait(CommonStrata.user, "splitDirection", ImagerySplitDirection.RIGHT);
     const serializedItem = item.serializeToJson();
     serializedItem.name = serializedItem.name + " (copy)";
     serializedItem.splitDirection = ImagerySplitDirection.LEFT;

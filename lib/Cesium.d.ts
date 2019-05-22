@@ -1087,3 +1087,12 @@ declare module "terriajs-cesium/Source/Core/getTimestamp" {
   export default function getTimestamp(): number;
 }
 declare module "terriajs-cesium/Source/Core/createGuid";
+
+declare module "terriajs-cesium/Source/Scene/ImagerySplitDirection" {
+  enum ImagerySplitDirection {
+    LEFT,
+    NONE,
+    RIGHT
+  }
+  export default ImagerySplitDirection;
+}

@@ -65,6 +65,7 @@ export default class Cesium extends GlobeOrMap {
   readonly dataSources: DataSourceCollection = new DataSourceCollection();
   readonly dataSourceDisplay: Cesium.DataSourceDisplay;
   readonly pauser: CesiumRenderLoopPauser;
+  readonly canShowSplitter = true;
   private readonly _eventHelper: EventHelper;
   private readonly _disposeWorkbenchMapItemsSubscription: () => void;
   private readonly _disposeTerrainReaction: () => void;
