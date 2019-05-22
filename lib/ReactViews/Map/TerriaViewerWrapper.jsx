@@ -32,12 +32,15 @@ const TerriaViewerWrapper = observer(
       //         link: 'http://www.csiro.au/en/Research/D61'
       //     }
       // });
-      this.terriaViewer = new TerriaViewer(this.props.terria);
-      this.props.terria.terriaViewer = this.terriaViewer;
+      this.props.terria.mainViewer = new TerriaViewer(this.props.terria);
+      if (this.props.terria.baseMaps.length > 0) {
+        this.props.terria.mainViewer.baseMap = this.props.terria.baseMaps[0].mappable;
+      }
     },
 
     componentWillUnmount() {
-      this.terriaViewer && this.terriaViewer.destroy();
+      this.props.terria.mainViewer && this.props.terria.mainViewer.destroy();
+      this.props.terria.mainViewer = undefined;
       this.mapElement.innerHTML = "";
     },
 

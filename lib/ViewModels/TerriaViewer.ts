@@ -4,6 +4,7 @@ import GlobeOrMap from "../Models/GlobeOrMap";
 import Leaflet from "../Models/Leaflet";
 import Cesium from "../Models/Cesium";
 import Terria from "../Models/Terria";
+import Mappable from "../Models/Mappable";
 
 // A class that deals with initialising, destroying and switching between viewers
 // Each map-view should have it's own TerriaViewer
@@ -32,7 +33,7 @@ export default class TerriaViewer {
   readonly stopViewerAutorun: () => void;
 
   @observable
-  baseMap: undefined; // Wire up base maps
+  baseMap: Mappable | undefined;
 
   @observable
   viewerMode: string | undefined = "cesium";
@@ -77,7 +78,7 @@ export default class TerriaViewer {
     );
   }
 
-  createViewer(viewerMode: string): GlobeOrMap | undefined {
+  private createViewer(viewerMode: string): GlobeOrMap | undefined {
     console.log(`Creating a viewer: ${viewerMode}`);
 
     if (viewerMode === "leaflet") {
@@ -85,5 +86,14 @@ export default class TerriaViewer {
     } else if (viewerMode === "cesium") {
       return new Cesium(this);
     }
+  }
+
+  destroy() {
+    // destroy the current viewer
+    // this is exactly the type of side-effect we set out to remove
+    // probably should refactor the whole terriaViewer.viewerMode = something
+    // to be terriaViewer.setViewerMode(something)
+    this.viewerMode = undefined;
+    this.stopViewerAutorun();
   }
 }

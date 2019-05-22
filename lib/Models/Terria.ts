@@ -1,4 +1,5 @@
-import { observable, computed } from "mobx";
+import { computed, observable } from "mobx";
+import Clock from "terriajs-cesium/Source/Core/Clock";
 import defined from "terriajs-cesium/Source/Core/defined";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
@@ -10,19 +11,17 @@ import ConsoleAnalytics from "../Core/ConsoleAnalytics";
 import GoogleAnalytics from "../Core/GoogleAnalytics";
 import instanceOf from "../Core/instanceOf";
 import loadJson5 from "../Core/loadJson5";
+import PickedFeatures from "../Map/PickedFeatures";
 import ModelReference from "../Traits/ModelReference";
+import { BaseMapViewModel } from "../ViewModels/BaseMapViewModel";
+import TerriaViewer from "../ViewModels/TerriaViewer";
 import Catalog from "./CatalogNew";
+import GlobeOrMap from "./GlobeOrMap";
 import { BaseModel } from "./Model";
 import NoViewer from "./NoViewer";
-import updateModelFromJson from "./updateModelFromJson";
-import ViewerMode from "./ViewerMode";
-import Workbench from "./Workbench";
-import PickedFeatures from "../Map/PickedFeatures";
-import Mappable from "./Mappable";
 import TimelineStack from "./TimelineStack";
-import Clock from "terriajs-cesium/Source/Core/Clock";
-import GlobeOrMap from "./GlobeOrMap";
-import TerriaViewer from "../ViewModels/TerriaViewer";
+import updateModelFromJson from "./updateModelFromJson";
+import Workbench from "./Workbench";
 
 require("regenerator-runtime/runtime");
 
@@ -66,7 +65,7 @@ export default class Terria {
   readonly timelineClock = new Clock({ shouldAnimate: false });
   // Set in TerriaViewerWrapper.jsx. This is temporary while I work out what should own TerriaViewer
   // terriaViewer, currentViewer, baseMap and other viewer-related properties will go with TerriaViewer
-  @observable terriaViewer: TerriaViewer | undefined;
+  @observable mainViewer: TerriaViewer | undefined;
 
   appName?: string;
   supportEmail?: string;
@@ -102,7 +101,7 @@ export default class Terria {
   };
 
   @observable
-  baseMap: Mappable | undefined;
+  baseMaps: BaseMapViewModel[] = [];
 
   @observable
   pickedFeatures: PickedFeatures | undefined;
@@ -134,21 +133,8 @@ export default class Terria {
   @computed
   get currentViewer(): GlobeOrMap {
     return (
-      (this.terriaViewer && this.terriaViewer.currentViewer) ||
-      new NoViewer(this)
+      (this.mainViewer && this.mainViewer.currentViewer) || new NoViewer(this)
     );
-    // return new NoViewer(this);
-    // switch (this.viewerMode) {
-    //     case ViewerMode.CesiumEllipsoid:
-    //     case ViewerMode.CesiumTerrain:
-    //         return new Cesium(this);
-
-    //     case ViewerMode.Leaflet:
-
-    //     default:
-    //         return new NoViewer(this);
-
-    // }
   }
 
   getModelById<T extends BaseModel>(
