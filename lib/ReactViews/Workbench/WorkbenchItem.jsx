@@ -137,7 +137,11 @@ const WorkbenchItem = createReactClass({
             <DateTimeSelectorSection item={workbenchItem} />
             <SatelliteImageryTimeFilterSection item={workbenchItem} />
             <StyleSelectorSection item={workbenchItem} />
-            <ColorScaleRangeSection item={workbenchItem} />
+            <ColorScaleRangeSection
+              item={workbenchItem}
+              minValue={workbenchItem.colorScaleMinimum}
+              maxValue={workbenchItem.colorScaleMaximum}
+            />
             <DisplayAsPercentSection item={workbenchItem} />
             <Legend item={workbenchItem} />
             <If
