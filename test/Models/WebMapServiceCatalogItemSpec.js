@@ -594,7 +594,7 @@ describe("WebMapServiceCatalogItem", function() {
 
   it("ignores leap seconds when evaluating period", function(done) {
     // <Dimension name="time" units="ISO8601" />
-    //   <Extent name="time">2015-06-30T20:00:00Z/2015-07-01T01:00:00Z/PT15M</Extent>
+    //   <Extent name="time">2015-06-30T23:00:00Z/2015-07-01T01:00:00Z/PT15M</Extent>
     wmsItem.updateFromJson({
       url: "http://example.com",
       metadataUrl: "test/WMS/period_datetimes_crossing_leap_second.xml",
