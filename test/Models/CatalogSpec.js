@@ -10,7 +10,6 @@ var Catalog = require("../../lib/Models/Catalog");
 var CatalogItem = require("../../lib/Models/CatalogItem");
 var createCatalogMemberFromType = require("../../lib/Models/createCatalogMemberFromType");
 var CatalogGroup = require("../../lib/Models/CatalogGroup");
-var ChartDataGroup = require("../../lib/Models/ChartDataGroup");
 var GeoJsonCatalogItem = require("../../lib/Models/GeoJsonCatalogItem");
 var ImageryLayerCatalogItem = require("../../lib/Models/ImageryLayerCatalogItem");
 var WebMapServiceCatalogItem = require("../../lib/Models/WebMapServiceCatalogItem");
@@ -57,10 +56,9 @@ describe("Catalog", function() {
   describe("chartDataGroup", function() {
     it("returns the group used for chart data when retrieved via chartDataGroup", function() {
       const group = catalog.chartDataGroup;
-      expect(group instanceof ChartDataGroup);
       expect(group.name).toBe(CHART_DATA_CATEGORY_NAME);
-      expect(group.type).toBe("chartDataGroup");
-      expect(group.typeName).toBe("Group for charts");
+      expect(group.type).toBe("group");
+      expect(group.description).toBe("A group for chart data.");
       expect(group.isUserSupplied).toBe(true);
     });
   });

@@ -2022,7 +2022,7 @@ describe("CsvCatalogItem & chart sharing", function() {
     csvItem = new CsvCatalogItem(terria);
   });
   describe("serialization around tableStyle & tableStructures for geo csvs", function() {
-    it("does not generate columns when allowMultiple is false", function() {
+    it("does not generate columns when allowMultiple is false", function(done) {
       csvItem
         .updateFromJson({
           type: "csv",
@@ -2037,7 +2037,9 @@ describe("CsvCatalogItem & chart sharing", function() {
           expect(csvItem.isMappable).toBe(true);
           var json = csvItem.serializeToJson();
           expect(json.columns).toBeUndefined();
-        });
+        })
+        .then(done)
+        .otherwise(done.fail);
     });
     it("toggles the selected dataVariable in tablestructure from updateFromJson (e.g. story-transitions)", function(done) {
       csvItem
