@@ -107,15 +107,6 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
         ]
     });
 
-    config.module.rules.push({
-      test: /\.(ts|js)x?$/,
-      include: [path.resolve(terriaJSBasePath, "lib")],
-      use: {
-        loader: "istanbul-instrumenter-loader"
-      },
-      enforce: "post"
-    });
-
     // config.module.loaders.push({
     //     test: /\.(ts|js)$/,
     //     include: [
