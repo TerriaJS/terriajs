@@ -2010,7 +2010,7 @@ describe("CsvCatalogItem with no geo using default bundled regionMapping", funct
   });
 });
 
-describe("CsvTableCatalogItem & chart sharing", function() {
+describe("CsvCatalogItem & chart sharing", function() {
   var terria;
   var csvItem;
   var columns;
@@ -2057,6 +2057,51 @@ describe("CsvTableCatalogItem & chart sharing", function() {
       expect(reconstructed.isShown).toEqual(csvItem.isShown);
       expect(reconstructed.isCsvForCharting).toEqual(csvItem.isCsvForCharting);
 
+      expect(reconstructed.tableStyle.columns[0].active).toBe(
+        columns[0].active
+      );
+      expect(reconstructed.tableStyle.columns[1].active).toBe(
+        columns[1].active
+      );
+      expect(reconstructed.tableStyle.columns[2].active).toBe(
+        columns[2].active
+      );
+    });
+    it("serializes the dataurl for sharing if url does not exist", function() {
+      columns = {
+        "0": {
+          active: false
+        },
+        "1": {
+          active: false
+        },
+        "2": {
+          active: false
+        }
+      };
+      const dataUrl =
+        "data:attachment/csv,Time%2CCapacity%2CPower%0A2015-10-19T00%3A10%3A00%2B1000%2C0.1%2C0.085%0A2015-10-19T01%3A15%3A00%2B1000%2C0.2%2C0.14%0A2015-10-19T02%3A20%3A00%2B1000%2C0.3%2C0.3%0A2015-10-19T03%3A25%3A00%2B1000%2C0%2C0%0A2015-10-19T04%3A30%3A00%2B1000%2C0.1%2C0%0A2015-10-19T05%3A35%3A00%2B1000%2C-0.4%2C0%0A2015-10-19T06%3A40%3A00%2B1000%2C0.4%2C0.3%0A2015-10-19T07%3A45%3A00%2B1000%2C0.1%2C0.1";
+      csvItem.updateFromJson({
+        type: "csv",
+        dataUrl: dataUrl,
+        isEnabled: true,
+        isShown: true,
+        isCsvForCharting: true,
+        tableStyle: {
+          columns: columns
+        }
+      });
+
+      var json = csvItem.serializeToJson();
+      var reconstructed = new CsvCatalogItem(terria);
+      reconstructed.updateFromJson(json);
+
+      expect(reconstructed.type).toEqual(csvItem.type);
+      expect(reconstructed.url).toBeUndefined();
+      expect(reconstructed.dataUrl).toEqual(dataUrl);
+      expect(reconstructed.isEnabled).toEqual(csvItem.isEnabled);
+      expect(reconstructed.isShown).toEqual(csvItem.isShown);
+      expect(reconstructed.isCsvForCharting).toEqual(csvItem.isCsvForCharting);
       expect(reconstructed.tableStyle.columns[0].active).toBe(
         columns[0].active
       );
