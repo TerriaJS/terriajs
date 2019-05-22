@@ -7,7 +7,7 @@ import SearchResult from './SearchResult.jsx';
 import classNames from 'classnames';
 import Icon from "../Icon.jsx";
 import Styles from './location-search-result.scss';
-import { addGeoJsonFeatureFromWorkbenchData } from '../../Models/workbenchDataSearchUtils.js';
+import addGeoJsonFeatureFromWorkbenchData from '../../Models/addGeoJsonFeatureFromWorkbenchData.js';
 
 const WorkbenchDataSearchResults = createReactClass({
     displayName: 'WorkbenchDataSearchResults',
@@ -33,8 +33,8 @@ const WorkbenchDataSearchResults = createReactClass({
         };
     },
 
-    onMatchClick(feature) {
-        addGeoJsonFeatureFromWorkbenchData(this.props.terria, feature);
+    onMatchClick(result) {
+        addGeoJsonFeatureFromWorkbenchData(this.props.terria, result);
     },
 
     toggleGroup() {
@@ -70,7 +70,7 @@ const WorkbenchDataSearchResults = createReactClass({
 
                         {results.map((result, i) => (
                             <SearchResult key={i}
-                                          clickAction={this.onMatchClick.bind(null, result.feature)}
+                                          clickAction={this.onMatchClick.bind(null, result)}
                                           name={`${result.matchFieldText.toUpperCase()} (${result.workbenchItem.name})`}
                                           icon='data'
                                           theme={this.props.theme}/>
