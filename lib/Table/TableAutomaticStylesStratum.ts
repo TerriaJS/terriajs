@@ -14,7 +14,7 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
     super();
   }
 
-  get defaultStyle(): StratumFromTraits<TableStyleTraits> | undefined {
+  get defaultStyle(): StratumFromTraits<TableStyleTraits> {
     // Use the default style to select the spatial key (lon/lat, region, none i.e. chart)
     // for all styles.
     const longitudeColumn = this.catalogItem.findFirstColumnByType(
@@ -23,14 +23,17 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
     const latitudeColumn = this.catalogItem.findFirstColumnByType(
       TableColumnType.latitude
     );
-    if (longitudeColumn !== undefined && latitudeColumn !== undefined) {
-      return createStratumInstance(TableStyleTraits, {
-        longitudeColumn: longitudeColumn.name,
-        latitudeColumn: latitudeColumn.name
-      });
-    }
+    const regionColumn = this.catalogItem.findFirstColumnByType(
+      TableColumnType.region
+    );
 
-    return undefined;
+    return createStratumInstance(TableStyleTraits, {
+      longitudeColumn:
+        longitudeColumn && latitudeColumn ? longitudeColumn.name : undefined,
+      latitudeColumn:
+        longitudeColumn && latitudeColumn ? latitudeColumn.name : undefined,
+      regionColumn: regionColumn ? regionColumn.name : undefined
+    });
   }
 
   get styles(): StratumFromTraits<TableStyleTraits>[] {

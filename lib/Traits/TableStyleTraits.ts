@@ -39,13 +39,6 @@ export default class TableStyleTraits extends ModelTraits {
   regionColumn?: string;
 
   @primitiveTrait({
-    name: "Region Type",
-    description: "The region type that the `Region Column` refers to.",
-    type: "string"
-  })
-  regionType?: string;
-
-  @primitiveTrait({
     name: "Latitude Column",
     description:
       "The column to use for the latitude of points. If `Region Column` is specified, this property is ignored.",

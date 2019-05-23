@@ -27,7 +27,7 @@ require("regenerator-runtime/runtime");
 
 interface ConfigParameters {
   defaultMaximumShownFeatureInfos?: number;
-  regionMappingDefinitionsUrl?: string;
+  regionMappingDefinitionsUrl: string;
   conversionServiceBaseUrl?: string;
   proj4ServiceBaseUrl?: string;
   corsProxyBaseUrl?: string;
