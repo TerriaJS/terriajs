@@ -2035,7 +2035,7 @@ describe("CsvCatalogItem & chart sharing", function() {
               isEnabled: true,
               isShown: true
             })
-            .then(timeSeriesCsv.load.bind(timeSeriesCsv)),
+            .then(xyCsv.load.bind(xyCsv)),
           timeSeriesCsv
             .updateFromJson({
               type: "csv",
@@ -2089,6 +2089,53 @@ describe("CsvCatalogItem & chart sharing", function() {
           expect(xyCsv.tableStructure.activeItems.length).toBe(0);
           done();
         });
+    });
+    // Catalog items get shown and hidden through traversing stories, ensure they're initialised correctly
+    describe("should not read an out of date state of tableStructure.activeItems when show is toggled", function(done) {
+      it("with time series csvs", function(done) {
+        const timeSeriesCsv = new CsvCatalogItem(terria);
+        timeSeriesCsv
+          .updateFromJson({
+            type: "csv",
+            url: "test/csv_nongeo/time_series.csv",
+            isEnabled: true,
+            isShown: true
+          })
+          .then(timeSeriesCsv.load.bind(timeSeriesCsv))
+          .then(function() {
+            expect(
+              timeSeriesCsv.tableStyle.allVariablesUnactive
+            ).toBeUndefined();
+            expect(timeSeriesCsv.tableStructure.items[1].isActive).toBe(true);
+            timeSeriesCsv.tableStyle.allVariablesUnactive = true;
+            expect(timeSeriesCsv.tableStructure.items[1].isActive).toBe(true);
+            timeSeriesCsv._show();
+            expect(timeSeriesCsv.tableStructure.items[1].isActive).toBe(false);
+
+            done();
+          });
+      });
+      it("with scalar csvs", function(done) {
+        const xyCsv = new CsvCatalogItem(terria);
+        xyCsv
+          .updateFromJson({
+            type: "csv",
+            url: "test/csv_nongeo/xy.csv",
+            isEnabled: true,
+            isShown: true
+          })
+          .then(xyCsv.load.bind(xyCsv))
+          .then(function() {
+            expect(xyCsv.tableStyle.allVariablesUnactive).toBeUndefined();
+            expect(xyCsv.tableStructure.items[1].isActive).toBe(true);
+            xyCsv.tableStyle.allVariablesUnactive = true;
+            expect(xyCsv.tableStructure.items[1].isActive).toBe(true);
+            xyCsv._show();
+            expect(xyCsv.tableStructure.items[1].isActive).toBe(false);
+
+            done();
+          });
+      });
     });
   });
   describe("serialization around tableStyle & tableStructures for geo csvs", function() {
