@@ -32,6 +32,25 @@ export default class TableColumnTraits extends ModelTraits {
   })
   type?: string;
 
+  @primitiveTrait({
+    name: "Region Type",
+    description:
+      "The type of region referenced by the values in this column. If " +
+      "`Type` is not defined and this value can be resolved, the column " +
+      "`Type` will be `region`.",
+    type: "string"
+  })
+  regionType?: string;
+
+  @primitiveTrait({
+    name: "Region Type Disambiguation Column",
+    description:
+      "The name of the column to use to disambiguate region matches in " +
+      "this column.",
+    type: "string"
+  })
+  regionDisambiguationColumn?: string;
+
   @primitiveArrayTrait({
     name: "Values to Replace with Zero",
     description: "Values of the column to replace with 0.0, such as `-`.",

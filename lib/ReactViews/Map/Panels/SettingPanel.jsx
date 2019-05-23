@@ -33,9 +33,7 @@ class SettingPanel extends React.Component {
   constructor(props) {
     super();
     this.state = {
-      activeMapName: props.terria.baseMap
-        ? props.terria.baseMap.name
-        : "(None)"
+      activeMapName: props.terria.baseMap ? props.terria.baseMap.name : "(None)"
     };
   }
 
@@ -69,8 +67,7 @@ class SettingPanel extends React.Component {
     event.stopPropagation();
     if (viewer === "3D Terrain" || viewer === "3D Smooth") {
       mainViewer.viewerMode = "cesium";
-      mainViewer.viewerOptions.cesium.useTerrain =
-        viewer === "3D Terrain";
+      mainViewer.viewerOptions.cesium.useTerrain = viewer === "3D Terrain";
     } else if (viewer === "2D") {
       mainViewer.viewerMode = "leaflet";
     } else {
@@ -148,16 +145,14 @@ class SettingPanel extends React.Component {
                 <button
                   className={classNames(Styles.btnBaseMap, {
                     [Styles.isActive]:
-                      baseMap.mappable ===
-                      this.props.terria.mainViewer.baseMap
+                      baseMap.mappable === this.props.terria.mainViewer.baseMap
                   })}
                   onClick={this.selectBaseMap.bind(this, baseMap)}
                   onMouseEnter={this.mouseEnterBaseMap.bind(this, baseMap)}
                   onMouseLeave={this.mouseLeaveBaseMap.bind(this, baseMap)}
                   onFocus={this.mouseEnterBaseMap.bind(this, baseMap)}
                 >
-                  {baseMap.mappable ===
-                  this.props.terria.mainViewer.baseMap ? (
+                  {baseMap.mappable === this.props.terria.mainViewer.baseMap ? (
                     <Icon glyph={Icon.GLYPHS.selected} />
                   ) : null}
                   <img alt={baseMap.mappable.name} src={baseMap.image} />

@@ -6,9 +6,13 @@ import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
 import TableColumnTraits from "../Traits/TableColumnTraits";
 import TableTraits from "../Traits/TableTraits";
 import TableColumnType, { stringToTableColumnType } from "./TableColumnType";
+import RegionProviderList from "../Map/RegionProviderList";
+import RegionProvider from "../Map/RegionProvider";
 
 interface TableModel extends Model<TableTraits> {
   readonly dataColumnMajor: string[][] | undefined;
+  readonly regionProviderList: RegionProviderList | undefined;
+  readonly tableColumns: readonly TableColumn[];
 }
 
 export interface ColumnValuesAsNumbers {
@@ -17,6 +21,17 @@ export interface ColumnValuesAsNumbers {
   readonly maximum: number | undefined;
   readonly numberOfValidNumbers: number;
   readonly numberOfNonNumbers: number;
+}
+
+export interface ColumnValuesAsRegions {
+  readonly regionIds: ReadonlyArray<string | null>;
+  readonly numberOfValidRegions: number;
+  readonly numberOfNonRegions: number;
+  readonly numberOfRegionsWithMultipleRows: number;
+  readonly regionIdToRowNumbersMap: ReadonlyMap<
+    string,
+    number | readonly number[]
+  >;
 }
 
 export interface UniqueColumnValues {
@@ -132,6 +147,71 @@ export default class TableColumn {
     };
   }
 
+  @computed
+  get valuesAsRegions(): ColumnValuesAsRegions {
+    const values = this.values;
+    const map = new Map<string, number | number[]>();
+
+    const regionType = this.regionType;
+    if (regionType === undefined) {
+      // No regions.
+      return {
+        numberOfValidRegions: 0,
+        numberOfNonRegions: values.length,
+        numberOfRegionsWithMultipleRows: 0,
+        regionIds: values.map(() => null),
+        regionIdToRowNumbersMap: map
+      };
+    }
+
+    const regionIds: (string | null)[] = [];
+    let numberOfValidRegions = 0;
+    let numberOfNonRegions = 0;
+    let numberOfRegionsWithMultipleRows = 0;
+
+    for (let i = 0; i < values.length; ++i) {
+      const value = values[i];
+      const regionId: string | null = this.findMatchingRegion(
+        regionType,
+        value
+      );
+      regionIds.push(regionId);
+
+      if (regionId !== null) {
+        ++numberOfValidRegions;
+
+        const rows = map.get(regionId);
+        if (rows === undefined) {
+          map.set(regionId, i);
+        } else if (typeof rows === "number") {
+          numberOfRegionsWithMultipleRows++;
+          map.set(regionId, [rows, i]);
+        } else {
+          rows.push(i);
+        }
+      } else {
+        ++numberOfNonRegions;
+      }
+    }
+
+    return {
+      regionIds: regionIds,
+      regionIdToRowNumbersMap: map,
+      numberOfValidRegions: numberOfValidRegions,
+      numberOfNonRegions: numberOfNonRegions,
+      numberOfRegionsWithMultipleRows: numberOfRegionsWithMultipleRows
+    };
+  }
+
+  findMatchingRegion(
+    regionType: typeof RegionProvider,
+    rowValue: string
+  ): string | null {
+    // TODO: validate that the rowValue is actually a valid region, if possible.
+    // TODO: implement replacements
+    return rowValue.length > 0 ? rowValue.toLowerCase() : null;
+  }
+
   /**
    * Gets the name of this column. If the column's name is blank, this property
    * will return `Column#` where `#` is the zero-based index of the column.
@@ -175,6 +255,10 @@ export default class TableColumn {
       type = stringToTableColumnType(this.traits.type);
     }
 
+    if (type === undefined && this.regionType !== undefined) {
+      type = TableColumnType.region;
+    }
+
     if (type === undefined) {
       type = this.guessColumnTypeFromName(this.name);
     }
@@ -212,6 +296,57 @@ export default class TableColumn {
     }
 
     return type;
+  }
+
+  @computed
+  get regionType(): typeof RegionProvider | undefined {
+    const regions = this.tableModel.regionProviderList;
+    if (regions === undefined) {
+      return undefined;
+    }
+
+    const regionType = this.traits.regionType;
+    if (regionType !== undefined) {
+      // Explicit region type specified, we just need to resolve it.
+      return regions.getRegionProvider(regionType);
+    }
+
+    // No region type specified, so match the column name against the region
+    // aliases.
+    const details = regions.getRegionDetails([this.name]);
+    if (details.length > 0) {
+      return details[0].regionProvider;
+    }
+
+    return undefined;
+  }
+
+  @computed
+  get regionDisambiguationColumn(): TableColumn | undefined {
+    if (this.regionType === undefined) {
+      return undefined;
+    }
+
+    const columnName = this.traits.regionDisambiguationColumn;
+    if (columnName !== undefined) {
+      // Resolve the explicit disambiguation column.
+      return this.tableModel.tableColumns.find(
+        column => column.name === columnName
+      );
+    }
+
+    // See if the region provider likes any of the table's other columns for
+    // disambiguation.
+    const disambigName = (<any>this.regionType).findDisambigVariable(
+      this.tableModel.tableColumns.map(column => column.name)
+    );
+    if (disambigName === undefined) {
+      return undefined;
+    }
+
+    return this.tableModel.tableColumns.find(
+      column => column.name === disambigName
+    );
   }
 
   /**

@@ -12,7 +12,9 @@ import FlattenedFromTraits from "../Models/FlattenedFromTraits";
 import Model from "../Models/Model";
 import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
 import TableChartStyleTraits from "../Traits/TableChartStyleTraits";
-import TableColorStyleTraits, { EnumColorTraits } from "../Traits/TableColorStyleTraits";
+import TableColorStyleTraits, {
+  EnumColorTraits
+} from "../Traits/TableColorStyleTraits";
 import TableScaleStyleTraits from "../Traits/TableScaleStyleTraits";
 import TableStyleTraits from "../Traits/TableStyleTraits";
 import TableTraits from "../Traits/TableTraits";
@@ -315,20 +317,11 @@ export default class TableStyle {
    * for this style.
    */
   @computed
-  get colorMap(): ColorMap | undefined {
+  get colorMap(): ColorMap {
     const colorColumn = this.colorColumn;
     const colorTraits = this.colorTraits;
 
-    if (colorColumn === undefined) {
-      // No column to color by, so use the same color for everything.
-      const color =
-        colorTraits.nullColor !== undefined
-          ? Color.fromCssColorString(colorTraits.nullColor)
-          : this.binColors.length > 0
-          ? this.binColors[0]
-          : Color.fromCssColorString(defaultColor);
-      return new ConstantColorMap(color);
-    } else if (colorColumn.type === TableColumnType.scalar) {
+    if (colorColumn && colorColumn.type === TableColumnType.scalar) {
       const maximums = this.binMaximums;
       return new DiscreteColorMap({
         bins: this.binColors.map((color, i) => {
@@ -342,7 +335,7 @@ export default class TableStyle {
           ? Color.fromCssColorString(colorTraits.nullColor)
           : new Color(0.0, 0.0, 0.0, 0.0)
       });
-    } else if (colorColumn.type === TableColumnType.enum) {
+    } else if (colorColumn && colorColumn.type === TableColumnType.enum) {
       return new EnumColorMap({
         enumColors: filterOutUndefined(
           this.enumColors.map(e => {
@@ -359,6 +352,15 @@ export default class TableStyle {
           ? Color.fromCssColorString(colorTraits.nullColor)
           : new Color(0.0, 0.0, 0.0, 0.0)
       });
+    } else {
+      // No column to color by, so use the same color for everything.
+      const color =
+        colorTraits.nullColor !== undefined
+          ? Color.fromCssColorString(colorTraits.nullColor)
+          : this.binColors.length > 0
+          ? this.binColors[0]
+          : Color.fromCssColorString(defaultColor);
+      return new ConstantColorMap(color);
     }
   }
 
