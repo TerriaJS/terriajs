@@ -1,10 +1,10 @@
 <Filter>
     <Or>
-        {{#properties}}
+        {{#fields}}
         <PropertyIsLike wildCard="%" singleChar="." escape="!" matchCase="false">
             <PropertyName>{{.}}</PropertyName>
             <Literal>%{{query}}%</Literal>
         </PropertyIsLike>
-        {{/properties}}
+        {{/fields}}
     </Or>
 </Filter>
