@@ -31,6 +31,7 @@ import Terria from "./Terria";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import rectangleToLatLngBounds from "../Map/rectangleToLatLngBounds";
 import runLater from "../Core/runLater";
+import SplitterTraits from "../Traits/SplitterTraits";
 
 function isDefined<T>(value: T | undefined): value is T {
   return value !== undefined;
@@ -52,6 +53,7 @@ export default class Leaflet extends GlobeOrMap {
   private _stopRequestAnimationFrame: boolean = false;
   private _cesiumReqAnimFrameId: number | undefined;
   private _pickedFeatures: PickedFeatures | undefined = undefined;
+  private _pauseMapInteractionCount = 0;
 
   constructor(terriaViewer: TerriaViewer) {
     super();
@@ -130,6 +132,28 @@ export default class Leaflet extends GlobeOrMap {
 
     this._disposeWorkbenchMapItemsSubscription = this.observeModelLayer();
     // return when();
+  }
+
+  getContainer() {
+    return this.map.getContainer();
+  }
+
+  pauseMapInteraction() {
+    ++this._pauseMapInteractionCount;
+    if (this._pauseMapInteractionCount === 1) {
+      this.map.dragging.disable();
+    }
+  }
+
+  resumeMapInteraction() {
+    --this._pauseMapInteractionCount;
+    if (this._pauseMapInteractionCount === 0) {
+      setTimeout(() => {
+        if (this._pauseMapInteractionCount === 0) {
+          this.map.dragging.enable();
+        }
+      }, 0);
+    }
   }
 
   destroy() {

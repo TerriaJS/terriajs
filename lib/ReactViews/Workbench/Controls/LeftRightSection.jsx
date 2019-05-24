@@ -9,27 +9,27 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 
 // import Icon from '../../Icon';
-import ObserveModelMixin from "../../ObserveModelMixin";
 import Styles from "./left-right-section.scss";
+import { observer } from "mobx-react";
+import CommonStrata from "../../../Models/CommonStrata";
 
-const LeftRightSection = createReactClass({
+const LeftRightSection = observer(createReactClass({
   displayName: "LeftRightSection",
-  mixins: [ObserveModelMixin],
 
   propTypes: {
     item: PropTypes.object.isRequired
   },
 
   goLeft() {
-    this.props.item.splitDirection = ImagerySplitDirection.LEFT;
+    this.props.item.setTrait(CommonStrata.user, "splitDirection", ImagerySplitDirection.LEFT);
   },
 
   goBoth() {
-    this.props.item.splitDirection = ImagerySplitDirection.NONE;
+    this.props.item.setTrait(CommonStrata.user, "splitDirection", ImagerySplitDirection.NONE);
   },
 
   goRight() {
-    this.props.item.splitDirection = ImagerySplitDirection.RIGHT;
+    this.props.item.setTrait(CommonStrata.user, "splitDirection", ImagerySplitDirection.RIGHT);
   },
 
   render() {
@@ -77,6 +77,6 @@ const LeftRightSection = createReactClass({
       </div>
     );
   }
-});
+}));
 
 module.exports = LeftRightSection;

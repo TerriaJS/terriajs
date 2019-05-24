@@ -2,6 +2,8 @@ import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import Mappable from "./Mappable";
 import Feature from "./Feature";
+import Terria from "./Terria";
+import { BaseModel } from "./Model";
 
 export type CameraView = {
   rectangle: Cesium.Rectangle;
@@ -19,6 +21,15 @@ export default abstract class GlobeOrMap {
     flightDurationSeconds: number
   ): void;
   abstract getCurrentExtent(): Cesium.Rectangle;
+
+  /* Gets the current container element.
+   */
+  abstract getContainer(): Element | undefined;
+
+  abstract pauseMapInteraction(): void;
+  abstract resumeMapInteraction(): void;
+
+  abstract notifyRepaintRequired(): void;
 
   /**
    * Creates a {@see Feature} (based on an {@see Entity}) from a {@see ImageryLayerFeatureInfo}.

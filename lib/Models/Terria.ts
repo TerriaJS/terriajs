@@ -112,6 +112,11 @@ export default class Terria {
   @observable
   readonly userProperties = new Map<string, any>();
 
+  /* Splitter controls */
+  @observable showSplitter = false;
+  @observable splitPosition = 0.5;
+  @observable splitPositionVertical = 0.5;
+
   constructor(options: TerriaOptions = {}) {
     if (options.baseUrl) {
       if (options.baseUrl.lastIndexOf("/") !== options.baseUrl.length - 1) {
