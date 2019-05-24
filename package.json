@@ -117,7 +117,7 @@
     "react-shallow-testutils": "^3.0.0",
     "react-test-renderer": "^16.3.2",
     "terriajs-jasmine-ajax": "^3.2.1",
-    "terriajs-server": "^2.9.1",
+    "terriajs-server": "^3.0.0",
     "webpack-dev-server": "^3.1.14"
   },
   "scripts": {
@@ -126,7 +126,7 @@
     "postinstall": "gulp post-npm-install",
     "gulp": "gulp",
     "make-schema": "gulp make-schema",
-    "start": "bash -c \"./node_modules/terriajs-server/run_server.sh --port 3002 || ../terriajs-server/run_server.sh --port 3002 || ../../node_modules/terriajs-server/run_server.sh --port 3002\"",
+    "start": "terriajs-server --port 3002",
     "dev": "webpack-dev-server --inline --config buildprocess/webpack.config.dev.js --host 0.0.0.0",
     "hot": "webpack-dev-server --inline --config buildprocess/webpack.config.hot.js --hot --host 0.0.0.0",
     "publish-doc": "bash -c \"rm -rf wwwroot/doc && mkdir wwwroot/doc && cp doc/index-built.html wwwroot/doc/index.html && cp doc/CNAME wwwroot/doc/CNAME && gulp docs && cd wwwroot/doc && git init && git remote add origin $npm_package_config_docRepo && git add . && git commit -m 'Generate Documentation' && git push -f origin HEAD:gh-pages\"",
