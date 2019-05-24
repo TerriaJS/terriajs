@@ -29,7 +29,10 @@ export default class CesiumRenderLoopPauser {
   private _lastCameraViewMatrix = new Matrix4();
   private _lastCameraMoveTime: number = -Number.MAX_VALUE;
 
-  constructor(readonly cesiumWidget: CesiumWidget, readonly postRenderCallback: () => void) {
+  constructor(
+    readonly cesiumWidget: CesiumWidget,
+    readonly postRenderCallback: () => void
+  ) {
     const scene = this.cesiumWidget.scene;
     this._removePostRenderListener = scene.postRender.addEventListener(
       this.postRender.bind(this)

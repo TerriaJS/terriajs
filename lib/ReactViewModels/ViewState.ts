@@ -246,7 +246,11 @@ export default class ViewState {
     return this.getNextNotification() && this.getNextNotification().hideUi;
   }
 
-  toggleFeaturePrompt(feature: string, state: boolean, persistent: boolean = false) {
+  toggleFeaturePrompt(
+    feature: string,
+    state: boolean,
+    persistent: boolean = false
+  ) {
     const featureIndexInPrompts = this.featurePrompts.indexOf(feature);
     if (
       state &&

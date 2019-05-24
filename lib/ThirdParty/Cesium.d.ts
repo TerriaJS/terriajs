@@ -136,7 +136,7 @@ declare module "terriajs-cesium/Source/Core/FeatureDetection" {
   namespace Cesium.FeatureDetection {
     function isInternetExplorer(): boolean;
     function isEdge(): boolean;
-  };
+  }
   export default Cesium.FeatureDetection;
 }
 declare module "terriajs-cesium/Source/Core/Fullscreen" {

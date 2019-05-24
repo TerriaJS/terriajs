@@ -68,7 +68,9 @@ const FeatureInfoPanel = observer(
               }
               if (defined(pickedFeatures.allFeaturesAvailablePromise)) {
                 pickedFeatures.allFeaturesAvailablePromise.then(() => {
-                  if (this.props.viewState.featureInfoPanelIsVisible === false) {
+                  if (
+                    this.props.viewState.featureInfoPanelIsVisible === false
+                  ) {
                     // Panel is closed, refrain from setting selectedFeature
                     return;
                   }
