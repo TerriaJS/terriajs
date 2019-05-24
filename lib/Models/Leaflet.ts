@@ -25,6 +25,7 @@ import when from "terriajs-cesium/Source/ThirdParty/when";
 import CesiumTileLayer from "../Map/CesiumTileLayer";
 import Feature from "./Feature";
 import GlobeOrMap, { CameraView } from "./GlobeOrMap";
+import LeafletSelectionIndicator from "../Map/LeafletSelectionIndicator";
 import Mappable, { ImageryParts } from "./Mappable";
 import PickedFeatures, {
   ProviderCoords,
@@ -81,6 +82,8 @@ export default class Leaflet extends GlobeOrMap {
   private readonly _disposeWorkbenchMapItemsSubscription: () => void;
   private readonly _disposeSplitterPositionSubscription: () => void;
   private readonly _disposeShowSplitterSubscription: () => void;
+  private readonly _selectionIndicator: LeafletSelectionIndicator;
+  private readonly _disposeSelectedFeatureSubscription: () => void;
 
   constructor(terriaViewer: TerriaViewer) {
     super();
@@ -108,6 +111,7 @@ export default class Leaflet extends GlobeOrMap {
     // };
 
     this._leafletVisualizer = new LeafletVisualizer();
+    this._selectionIndicator = new LeafletSelectionIndicator(this);
 
     // const terriaLogo = this.terriaViewer.defaultTerriaCredit ? this.terriaViewer.defaultTerriaCredit.html : '';
 
@@ -157,6 +161,10 @@ export default class Leaflet extends GlobeOrMap {
 
     ticker();
 
+    this._disposeSelectedFeatureSubscription = autorun(() => {
+      this._selectFeature();
+    });
+
     this._disposeWorkbenchMapItemsSubscription = this.observeModelLayer();
 
     this._disposeSplitterPositionSubscription = autorun(() => {
@@ -201,6 +209,7 @@ export default class Leaflet extends GlobeOrMap {
   }
 
   destroy() {
+    this._disposeSelectedFeatureSubscription();
     this._disposeWorkbenchMapItemsSubscription();
     this._disposeShowSplitterSubscription();
     this._disposeSplitterPositionSubscription();
@@ -688,6 +697,29 @@ export default class Leaflet extends GlobeOrMap {
       result = new Cartesian2(point.x, point.y);
     }
     return result;
+  }
+
+  private _selectFeature() {
+    const feature = this.terria.selectedFeature;
+
+    this._highlightFeature(feature);
+
+    if (isDefined(feature) && isDefined(feature.position)) {
+      const cartographicScratch = new Cartographic();
+      const cartographic = Ellipsoid.WGS84.cartesianToCartographic(
+        feature.position.getValue(this.terria.timelineClock.currentTime),
+        cartographicScratch
+      );
+      this._selectionIndicator.setLatLng(
+        L.latLng([
+          CesiumMath.toDegrees(cartographic.latitude),
+          CesiumMath.toDegrees(cartographic.longitude)
+        ])
+      );
+      this._selectionIndicator.animateSelectionIndicatorAppear();
+    } else {
+      this._selectionIndicator.animateSelectionIndicatorDepart();
+    }
   }
 }
 

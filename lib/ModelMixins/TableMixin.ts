@@ -1,20 +1,24 @@
-import { computed, observable } from "mobx";
+import { computed, observable, runInAction } from "mobx";
 import { createTransformer } from "mobx-utils";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Color from "terriajs-cesium/Source/Core/Color";
+import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import PointGraphics from "terriajs-cesium/Source/DataSources/PointGraphics";
 import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
+import makeRealPromise from "../Core/makeRealPromise";
+import ConstantColorMap from "../Map/ConstantColorMap";
+import RegionProviderList from "../Map/RegionProviderList";
 import { ImageryParts } from "../Models/Mappable";
 import Model from "../Models/Model";
 import TableColumn from "../Table/TableColumn";
 import TableColumnType from "../Table/TableColumnType";
 import TableStyle from "../Table/TableStyle";
 import TableTraits from "../Traits/TableTraits";
-import ConstantColorMap from "../Map/ConstantColorMap";
+import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
 
 export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
   Base: T
@@ -26,6 +30,12 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
      */
     @observable
     dataColumnMajor: string[][] | undefined;
+
+    /**
+     * The list of region providers to be used with this table.
+     */
+    @observable
+    regionProviderList: RegionProviderList | undefined;
 
     /**
      * Gets a {@link TableColumn} for each of the columns in the raw data.
@@ -109,8 +119,31 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
       }
 
       return filterOutUndefined([
-        this.createLongitudeLatitudeDataSource(style)
+        this.createLongitudeLatitudeDataSource(style),
+        this.createRegionMappedImageryLayer(style)
       ]);
+    }
+
+    protected loadTableMixin(): Promise<void> {
+      // TODO: pass proxy to fromUrl
+      return makeRealPromise(
+        RegionProviderList.fromUrl(
+          this.terria.configParameters.regionMappingDefinitionsUrl,
+          undefined
+        )
+      ).then(regionProviderList => {
+        runInAction(() => {
+          this.regionProviderList = regionProviderList;
+        });
+      });
+    }
+
+    findFirstColumnByType(type: TableColumnType): TableColumn | undefined {
+      return this.tableColumns.find(column => column.type === type);
+    }
+
+    findColumnByName(name: string): TableColumn | undefined {
+      return this.tableColumns.find(column => column.name === name);
     }
 
     private readonly createLongitudeLatitudeDataSource = createTransformer(
@@ -128,19 +161,14 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
             ? colorColumn.valueFunctionForType
             : () => null;
 
-        const dataSource = new CustomDataSource(this.name || "Table");
-
-        let colorMap = this.activeTableStyle
-          ? this.activeTableStyle.colorMap
-          : undefined;
-        if (colorMap === undefined) {
-          colorMap = new ConstantColorMap(Color.RED);
-        }
+        const colorMap = (this.activeTableStyle || this.defaultTableStyle)
+          .colorMap;
 
         const outlineColor = Color.fromCssColorString(
           style.colorTraits.outlineColor
         );
 
+        const dataSource = new CustomDataSource(this.name || "Table");
         dataSource.entities.suspendEvents();
 
         for (let i = 0; i < longitudes.length && i < latitudes.length; ++i) {
@@ -170,13 +198,87 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
       }
     );
 
-    findFirstColumnByType(type: TableColumnType): TableColumn | undefined {
-      return this.tableColumns.find(column => column.type === type);
-    }
+    private readonly createRegionMappedImageryLayer = createTransformer(
+      (style: TableStyle): ImageryParts | undefined => {
+        if (!style.isRegions()) {
+          return undefined;
+        }
 
-    findColumnByName(name: string): TableColumn | undefined {
-      return this.tableColumns.find(column => column.name === name);
-    }
+        const regionColumn = style.regionColumn;
+        const regionType: any = regionColumn.regionType;
+        if (regionType === undefined) {
+          return undefined;
+        }
+
+        const baseMapContrastColor = "white"; //this.terria.baseMapContrastColor;
+
+        const colorColumn = style.colorColumn;
+        const valueFunction =
+          colorColumn !== undefined
+            ? colorColumn.valueFunctionForType
+            : () => null;
+        const colorMap = (this.activeTableStyle || this.defaultTableStyle)
+          .colorMap;
+        const valuesAsRegions = regionColumn.valuesAsRegions;
+
+        return {
+          alpha: this.opacity,
+          imageryProvider: <any>new MapboxVectorTileImageryProvider({
+            url: regionType.server,
+            layerName: regionType.layerName,
+            styleFunc: function(feature: any) {
+              const featureRegion = feature.properties[regionType.regionProp];
+              const regionIdString =
+                featureRegion !== undefined && featureRegion !== null
+                  ? featureRegion.toString()
+                  : "";
+              const rowNumbers = valuesAsRegions.regionIdToRowNumbersMap.get(
+                regionIdString
+              );
+              let value: string | number | null;
+
+              if (rowNumbers === undefined) {
+                value = null;
+              } else if (typeof rowNumbers === "number") {
+                value = valueFunction(rowNumbers);
+              } else {
+                // TODO: multiple rows have data for this region
+                value = valueFunction(rowNumbers[0]);
+              }
+
+              const color = colorMap.mapValueToColor(value);
+              if (color === undefined) {
+                return undefined;
+              }
+
+              return {
+                fillStyle: color.toCssColorString(),
+                strokeStyle: baseMapContrastColor,
+                lineWidth: 1,
+                lineJoin: "miter"
+              };
+            },
+            subdomains: regionType.serverSubdomains,
+            rectangle: Rectangle.fromDegrees(
+              regionType.bbox[0],
+              regionType.bbox[1],
+              regionType.bbox[2],
+              regionType.bbox[3]
+            ),
+            minimumZoom: regionType.serverMinZoom,
+            maximumNativeZoom: regionType.serverMaxNativeZoom,
+            maximumZoom: regionType.serverMaxZoom,
+            uniqueIdProp: regionType.uniqueIdProp
+            // featureInfoFunc: addDescriptionAndProperties(
+            //   regionMapping,
+            //   regionIndices,
+            //   regionImageryProvider
+            // )
+          }),
+          show: this.show
+        };
+      }
+    );
 
     private readonly getTableColumn = createTransformer((index: number) => {
       return new TableColumn(this, index);

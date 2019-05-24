@@ -51,7 +51,7 @@ export default class CsvCatalogItem extends AsyncMappableMixin(
   }
 
   protected get loadMapItemsPromise(): Promise<void> {
-    return Promise.resolve()
+    return this.loadTableMixin()
       .then(() => {
         if (this.csvString !== undefined) {
           return Csv.parseString(this.csvString, true);

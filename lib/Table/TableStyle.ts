@@ -1,10 +1,16 @@
 import { computed } from "mobx";
 import Color from "terriajs-cesium/Source/Core/Color";
+import filterOutUndefined from "../Core/filterOutUndefined";
 import ColorMap from "../Map/ColorMap";
+import ConstantColorMap from "../Map/ConstantColorMap";
+import DiscreteColorMap from "../Map/DiscreteColorMap";
+import EnumColorMap from "../Map/EnumColorMap";
 import addModelStrataView from "../Models/addModelStrataView";
+import createEmptyModel from "../Models/createEmptyModel";
 import createStratumInstance from "../Models/createStratumInstance";
 import FlattenedFromTraits from "../Models/FlattenedFromTraits";
 import Model from "../Models/Model";
+import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
 import TableChartStyleTraits from "../Traits/TableChartStyleTraits";
 import TableColorStyleTraits, {
   EnumColorTraits
@@ -12,15 +18,9 @@ import TableColorStyleTraits, {
 import TableScaleStyleTraits from "../Traits/TableScaleStyleTraits";
 import TableStyleTraits from "../Traits/TableStyleTraits";
 import TableTraits from "../Traits/TableTraits";
+import ColorPalette from "./ColorPalette";
 import TableColumn from "./TableColumn";
 import TableColumnType from "./TableColumnType";
-import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
-import createEmptyModel from "../Models/createEmptyModel";
-import ConstantColorMap from "../Map/ConstantColorMap";
-import ColorPalette from "./ColorPalette";
-import DiscreteColorMap from "../Map/DiscreteColorMap";
-import EnumColorMap from "../Map/EnumColorMap";
-import filterOutUndefined from "../Core/filterOutUndefined";
 
 const defaultColor = "yellow";
 
@@ -184,84 +184,44 @@ export default class TableStyle {
     return this.xAxisColumn !== undefined && this.yAxisColumn !== undefined;
   }
 
-  /**
-   * Gets the number of bins (i.e. color blocks on a legend) to use in
-   * coloring this data for visualization on a map. If the property returns
-   * `0`, the data is colored using a continuous color map rather than
-   * discrete bins.
-   */
-  @computed
-  get numberOfColorBins(): number {
-    if (this.colorColumn === undefined) {
-      return 0;
-    }
-
-    // The number of bins is controlled by:
-    // 1) the number of items in the `binMaximums` / `binValues` list
-    //      -or, if it is undefined-
-    // 2) the value of numberOfColorBins
-    if (this.colorColumn.type === TableColumnType.scalar) {
-      if (this.colorTraits.binMaximums !== undefined) {
-        const binMaximums = this.colorTraits.binMaximums;
-        const colorColumn = this.colorColumn;
-
-        const explicitBins = binMaximums.length;
-        if (
-          colorColumn !== undefined &&
-          colorColumn.type === TableColumnType.scalar &&
-          colorColumn.valuesAsNumbers.maximum !== undefined &&
-          (binMaximums.length === 0 ||
-            colorColumn.valuesAsNumbers.maximum >
-              binMaximums[binMaximums.length - 1])
-        ) {
-          // Add an extra bin to accomodate the maximum value of the dataset.
-          return explicitBins + 1;
-        }
-        return explicitBins;
-      } else {
-        return this.colorTraits.numberOfBins;
-      }
-    } else if (this.colorColumn.type === TableColumnType.enum) {
-      if (this.colorTraits.enumColors !== undefined) {
-        return this.colorTraits.enumColors.length;
-      } else {
-        return Math.max(
-          this.colorTraits.numberOfBins,
-          this.colorColumn.uniqueValues.values.length
-        );
-      }
-    }
-    return 0;
-  }
-
   @computed
   get colorPalette(): ColorPalette {
-    if (this.colorTraits.colorPalette !== undefined) {
-      return ColorPalette.fromString(
-        this.colorTraits.colorPalette,
-        this.numberOfColorBins
-      );
-    } else if (
-      this.colorColumn === undefined ||
-      this.colorColumn.type === TableColumnType.enum
-    ) {
-      // Enumerated values, or no color column at all, so use
-      // a large, high contrast palette.
-      return ColorPalette.fromString("HighContrast", this.numberOfColorBins);
-    } else if (this.colorColumn.type === TableColumnType.scalar) {
-      const valuesAsNumbers = this.colorColumn.valuesAsNumbers;
-      if (
-        valuesAsNumbers !== undefined &&
-        (valuesAsNumbers.minimum || 0.0) < 0.0 &&
-        (valuesAsNumbers.maximum || 0.0) > 0.0
-      ) {
-        // Values cross zero, so use a diverging palette
-        return ColorPalette.fromString("PuOr", this.numberOfColorBins);
-      }
+    const colorColumn = this.colorColumn;
+
+    if (colorColumn === undefined) {
+      return new ColorPalette([]);
     }
 
-    // Use a sequential palette.
-    return ColorPalette.fromString("YlOrRd", this.numberOfColorBins);
+    let paletteName = this.colorTraits.colorPalette;
+    let numberOfBins: number | undefined;
+
+    if (colorColumn.type === TableColumnType.enum) {
+      // Enumerated values, so use a large, high contrast palette.
+      paletteName = paletteName || "HighContrast";
+      numberOfBins = colorColumn.uniqueValues.values.length;
+    } else if (colorColumn.type === TableColumnType.scalar) {
+      if (paletteName === undefined) {
+        const valuesAsNumbers = colorColumn.valuesAsNumbers;
+        if (
+          valuesAsNumbers !== undefined &&
+          (valuesAsNumbers.minimum || 0.0) < 0.0 &&
+          (valuesAsNumbers.maximum || 0.0) > 0.0
+        ) {
+          // Values cross zero, so use a diverging palette
+          paletteName = "PuOr";
+        } else {
+          // Values do not cross zero so use a sequential palette.
+          paletteName = "YlOrRd";
+        }
+      }
+      numberOfBins = this.binMaximums.length;
+    }
+
+    if (paletteName !== undefined && numberOfBins !== undefined) {
+      return ColorPalette.fromString(paletteName, numberOfBins);
+    } else {
+      return new ColorPalette([]);
+    }
   }
 
   /**
@@ -270,7 +230,7 @@ export default class TableStyle {
    */
   @computed
   get binColors(): readonly Readonly<Color>[] {
-    const numberOfBins = this.numberOfColorBins;
+    const numberOfBins = this.binMaximums.length;
 
     // Pick a color for every bin.
     const binColors = this.colorTraits.binColors || [];
@@ -286,6 +246,51 @@ export default class TableStyle {
   }
 
   @computed
+  get binMaximums(): readonly number[] {
+    const colorColumn = this.colorColumn;
+    if (colorColumn === undefined) {
+      return this.colorTraits.binMaximums || [];
+    }
+
+    const binMaximums = this.colorTraits.binMaximums;
+    if (binMaximums !== undefined) {
+      if (
+        colorColumn.type === TableColumnType.scalar &&
+        colorColumn.valuesAsNumbers.maximum !== undefined &&
+        (binMaximums.length === 0 ||
+          colorColumn.valuesAsNumbers.maximum >
+            binMaximums[binMaximums.length - 1])
+      ) {
+        // Add an extra bin to accomodate the maximum value of the dataset.
+        return binMaximums.concat([colorColumn.valuesAsNumbers.maximum]);
+      }
+      return binMaximums;
+    } else {
+      // TODO: compute maximums according to ckmeans, quantile, etc.
+      const asNumbers = colorColumn.valuesAsNumbers;
+      const min = asNumbers.minimum;
+      const max = asNumbers.maximum;
+      if (min === undefined || max === undefined) {
+        return [];
+      }
+
+      const numberOfBins = this.colorTraits.numberOfBins;
+      let next = min;
+      const step = (max - min) / numberOfBins;
+
+      const result: number[] = [];
+      for (let i = 0; i < numberOfBins - 1; ++i) {
+        next += step;
+        result.push(next);
+      }
+
+      result.push(max);
+
+      return result;
+    }
+  }
+
+  @computed
   get enumColors(): readonly ModelPropertiesFromTraits<EnumColorTraits>[] {
     if (this.colorTraits.enumColors !== undefined) {
       return this.colorTraits.enumColors;
@@ -298,10 +303,11 @@ export default class TableStyle {
 
     // Create a color for each unique value
     const uniqueValues = colorColumn.uniqueValues.values;
+    const palette = this.colorPalette;
     return uniqueValues.map((value, i) => {
       return {
         value: value,
-        color: this.colorPalette.selectColor(i).toCssColorString()
+        color: palette.selectColor(i).toCssColorString()
       };
     });
   }
@@ -311,26 +317,12 @@ export default class TableStyle {
    * for this style.
    */
   @computed
-  get colorMap(): ColorMap | undefined {
+  get colorMap(): ColorMap {
     const colorColumn = this.colorColumn;
     const colorTraits = this.colorTraits;
 
-    if (colorColumn === undefined) {
-      // No column to color by, so use the same color for everything.
-      const color =
-        colorTraits.nullColor !== undefined
-          ? Color.fromCssColorString(colorTraits.nullColor)
-          : this.binColors.length > 0
-          ? this.binColors[0]
-          : Color.fromCssColorString(defaultColor);
-      return new ConstantColorMap(color);
-    } else if (colorColumn.type === TableColumnType.scalar) {
-      const maximums = computeMaximums(
-        this.numberOfColorBins,
-        this.colorTraits.binMaximums,
-        colorColumn
-      );
-
+    if (colorColumn && colorColumn.type === TableColumnType.scalar) {
+      const maximums = this.binMaximums;
       return new DiscreteColorMap({
         bins: this.binColors.map((color, i) => {
           return {
@@ -343,7 +335,7 @@ export default class TableStyle {
           ? Color.fromCssColorString(colorTraits.nullColor)
           : new Color(0.0, 0.0, 0.0, 0.0)
       });
-    } else if (colorColumn.type === TableColumnType.enum) {
+    } else if (colorColumn && colorColumn.type === TableColumnType.enum) {
       return new EnumColorMap({
         enumColors: filterOutUndefined(
           this.enumColors.map(e => {
@@ -360,6 +352,15 @@ export default class TableStyle {
           ? Color.fromCssColorString(colorTraits.nullColor)
           : new Color(0.0, 0.0, 0.0, 0.0)
       });
+    } else {
+      // No column to color by, so use the same color for everything.
+      const color =
+        colorTraits.nullColor !== undefined
+          ? Color.fromCssColorString(colorTraits.nullColor)
+          : this.binColors.length > 0
+          ? this.binColors[0]
+          : Color.fromCssColorString(defaultColor);
+      return new ConstantColorMap(color);
     }
   }
 
@@ -369,31 +370,4 @@ export default class TableStyle {
     }
     return this.tableModel.tableColumns.find(column => column.name === name);
   }
-}
-
-function computeMaximums(
-  numberOfBins: number,
-  bins: readonly number[] | undefined,
-  column: TableColumn
-): number[] {
-  // TODO
-  const asNumbers = column.valuesAsNumbers;
-  const min = asNumbers.minimum;
-  const max = asNumbers.maximum;
-  if (min === undefined || max === undefined) {
-    return [];
-  }
-
-  let next = min;
-  const step = (max - min) / numberOfBins;
-
-  const result: number[] = [];
-  for (let i = 0; i < numberOfBins - 1; ++i) {
-    next += step;
-    result.push(next);
-  }
-
-  result.push(max);
-
-  return result;
 }
