@@ -866,12 +866,6 @@ export default class Cesium extends GlobeOrMap {
       return;
     }
 
-    item.mapItems.forEach(mapItem => {
-      if (ImageryParts.is(mapItem)) {
-        mapItem.imageryProvider;
-      }
-    });
-
     this._imageryLayersForItem(item).forEach(imageryLayer => {
       if (this.terria.showSplitter) {
         (<any>imageryLayer).splitDirection = item.splitDirection;

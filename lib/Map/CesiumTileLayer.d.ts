@@ -1,11 +1,13 @@
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import { ProviderCoords } from "./PickedFeatures";
+import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 
 export = CesiumTileLayer;
 
 declare class CesiumTileLayer extends L.TileLayer {
   imageryProvider: ImageryProvider;
+  splitDirection?: ImagerySplitDirection;
 
   constructor(
     imageryProvider: Cesium.ImageryProvider,
