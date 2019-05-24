@@ -2,14 +2,13 @@
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import React from "react";
+import { observer } from "mobx-react";
 
 import Icon from "../../Icon";
-import ObserveModelMixin from "../../ObserveModelMixin";
 import Styles from "./toggle_splitter_tool.scss";
 
-const ToggleSplitterTool = createReactClass({
+const ToggleSplitterTool = observer(createReactClass({
   displayName: "ToggleSplitterTool",
-  mixins: [ObserveModelMixin],
 
   propTypes: {
     terria: PropTypes.object
@@ -43,6 +42,6 @@ const ToggleSplitterTool = createReactClass({
       </div>
     );
   }
-});
+}));
 
 export default ToggleSplitterTool;
