@@ -133,6 +133,10 @@ declare module "terriajs-cesium/Source/Core/ExtrapolationType" {
   export default Cesium.ExtrapolationType;
 }
 declare module "terriajs-cesium/Source/Core/FeatureDetection" {
+  namespace Cesium.FeatureDetection {
+    function isInternetExplorer(): boolean;
+    function isEdge(): boolean;
+  };
   export default Cesium.FeatureDetection;
 }
 declare module "terriajs-cesium/Source/Core/Fullscreen" {
@@ -1087,3 +1091,12 @@ declare module "terriajs-cesium/Source/Core/getTimestamp" {
   export default function getTimestamp(): number;
 }
 declare module "terriajs-cesium/Source/Core/createGuid";
+
+declare module "terriajs-cesium/Source/Scene/ImagerySplitDirection" {
+  enum ImagerySplitDirection {
+    LEFT,
+    NONE,
+    RIGHT
+  }
+  export default ImagerySplitDirection;
+}

@@ -1,25 +1,25 @@
 "use strict";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-import defined from "terriajs-cesium/Source/Core/defined";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-import Icon from "../../Icon";
-import ObserveModelMixin from "../../ObserveModelMixin";
-import PickedFeatures from "../../../Map/PickedFeatures";
+import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import React from "react";
+import classNames from "classnames";
 import createReactClass from "create-react-class";
+import defined from "terriajs-cesium/Source/Core/defined";
+import { observer } from "mobx-react";
+import createGuid from "terriajs-cesium/Source/Core/createGuid";
+import when from "terriajs-cesium/Source/ThirdParty/when";
+
+import CommonStrata from "../../../Models/CommonStrata";
+import Icon from "../../Icon";
+import PickedFeatures from "../../../Map/PickedFeatures";
 import PropTypes from "prop-types";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-import when from "terriajs-cesium/Source/ThirdParty/when";
-import classNames from "classnames";
 import Styles from "./viewing-controls.scss";
-
-import createCatalogMemberFromType from "../../../Models/createCatalogMemberFromType";
 import addUserCatalogMember from "../../../Models/addUserCatalogMember";
-import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 
-const ViewingControls = createReactClass({
+const ViewingControls = observer(createReactClass({
   displayName: "ViewingControls",
-  mixins: [ObserveModelMixin],
 
   propTypes: {
     item: PropTypes.object.isRequired,
@@ -65,24 +65,19 @@ const ViewingControls = createReactClass({
 
   splitItem() {
     const item = this.props.item;
-    item.splitDirection = ImagerySplitDirection.RIGHT;
-    const serializedItem = item.serializeToJson();
-    serializedItem.name = serializedItem.name + " (copy)";
-    serializedItem.splitDirection = ImagerySplitDirection.LEFT;
-    delete serializedItem.id;
+    const terria = item.terria;
 
-    const newItem = createCatalogMemberFromType(item.type, item.terria);
-    newItem.updateFromJson(serializedItem);
+    const newItemId = createGuid();
+    const newItem = item.duplicateModel(newItemId);
 
-    if (newItem.useOwnClock === false) {
-      newItem.useOwnClock = true;
-    }
+    item.setTrait(CommonStrata.user, "splitDirection", ImagerySplitDirection.RIGHT);
+    newItem.setTrait(CommonStrata.user, "name", item.name + " (copy)");
+    newItem.setTrait(CommonStrata.user, "splitDirection", ImagerySplitDirection.LEFT);
 
-    // newItem is added to terria.nowViewing automatically by the "isEnabled" observable on CatalogItem (see isEnabledChanged).
-    // However, nothing adds it to terria.catalog automatically, which is required so the new item can be shared.
-    addUserCatalogMember(item.terria, newItem, { open: false, zoomTo: false });
+    terria.showSplitter = true;
 
-    item.terria.showSplitter = true;
+    // Add it to terria.catalog, which is required so the new item can be shared.
+    addUserCatalogMember(terria, newItem, { open: false, zoomTo: false });
   },
 
   previewItem() {
@@ -203,5 +198,5 @@ const ViewingControls = createReactClass({
       </ul>
     );
   }
-});
+}));
 module.exports = ViewingControls;

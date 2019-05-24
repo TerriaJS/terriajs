@@ -3,8 +3,7 @@ import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import Icon from "../Icon";
 import Styles from "./splitter.scss";
-
-import ObserveModelMixin from "../ObserveModelMixin";
+import { observer } from "mobx-react";
 
 // Feature detect support for passive: true in event subscriptions.
 // See https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#Safely_detecting_option_support
@@ -23,9 +22,8 @@ try {
 
 const notPassive = passiveSupported ? { passive: false } : false;
 
-const Splitter = createReactClass({
+const Splitter = observer(createReactClass({
   displayName: "Splitter",
-  mixins: [ObserveModelMixin],
 
   propTypes: {
     terria: PropTypes.object.isRequired,
@@ -79,8 +77,7 @@ const Splitter = createReactClass({
       clientY = event.targetTouches.item(0).clientY;
     }
 
-    const viewer = this.props.terria.currentViewer;
-
+    const viewer = this.props.terria.mainViewer.currentViewer;
     const container = viewer.getContainer();
     const mapRect = container.getBoundingClientRect();
 
@@ -212,6 +209,6 @@ const Splitter = createReactClass({
       </div>
     );
   }
-});
+}));
 
 module.exports = Splitter;

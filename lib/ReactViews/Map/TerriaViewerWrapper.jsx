@@ -6,8 +6,7 @@ import { observer } from "mobx-react";
 // import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Styles from "./terria-viewer-wrapper.scss";
 
-// import Splitter from "./Splitter";
-// import ObserveModelMixin from "../ObserveModelMixin";
+import Splitter from "./Splitter";
 import TerriaViewer from "../../ViewModels/TerriaViewer";
 
 const TerriaViewerWrapper = observer(
@@ -68,7 +67,7 @@ const TerriaViewerWrapper = observer(
           <div className={Styles.mapPlaceholder}>
             Loading the map, please wait...
           </div>
-          {/* <Splitter terria={this.props.terria} /> */}
+          <Splitter terria={this.props.terria} />
           <div
             id="cesiumContainer"
             className={Styles.cesiumContainer}
