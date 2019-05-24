@@ -7,6 +7,8 @@ import FlattenedFromTraits from "../Models/FlattenedFromTraits";
 import createStratumInstance from "../Models/createStratumInstance";
 import TraitsConstructor from "./TraitsConstructor";
 import { computed } from "mobx";
+import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
+import addModelStrataView from "../Models/addModelStrataView";
 
 export interface ObjectTraitOptions<T extends ModelTraits>
   extends TraitOptions {
@@ -39,26 +41,20 @@ export class ObjectTrait<T extends ModelTraits> extends Trait {
 
   getValue(
     strataTopToBottom: StratumFromTraits<ModelTraits>[]
-  ): FlattenedFromTraits<T> | undefined {
+  ): ModelPropertiesFromTraits<T> | undefined {
     const objectStrata = strataTopToBottom
       .map((stratum: any) => stratum[this.id])
       .filter(stratum => stratum !== undefined);
+
     if (objectStrata.length === 0) {
       return undefined;
     }
 
-    const ResultType = this.type;
-    const result = createStratumInstance(ResultType);
-    const resultAny: any = result;
-
-    const traits = ResultType.traits;
-    Object.keys(traits).forEach(traitId => {
-      resultAny[traitId] = traits[traitId].getValue(objectStrata);
-    });
-
-    // TODO: where do we apply defaults for the nested traits instance?
-
-    return resultAny;
+    const model = {
+      strataTopToBottom: objectStrata
+    };
+    addModelStrataView(model, this.type);
+    return <any>model;
   }
 
   fromJson(

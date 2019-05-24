@@ -20,12 +20,12 @@ import createReactClass from "create-react-class";
 import defined from "terriajs-cesium/Source/Core/defined";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
-import loadText from "../../../Core/loadText";
+// import loadText from "../../../Core/loadText";
 import when from "terriajs-cesium/Source/ThirdParty/when";
 
 import ChartData from "../../../Charts/ChartData";
 import ChartRenderer from "../../../Charts/ChartRenderer";
-import proxyCatalogItemUrl from "../../../Models/proxyCatalogItemUrl";
+// import proxyCatalogItemUrl from "../../../Models/proxyCatalogItemUrl";
 import VarType from "../../../Map/VarType";
 
 import Styles from "./chart.scss";
@@ -305,13 +305,15 @@ const Chart = createReactClass({
  * @return {Promise} A promise which resolves to a table structure.
  */
 function loadIntoTableStructure(catalogItem, url) {
-  if (defined(catalogItem) && defined(catalogItem.loadIntoTableStructure)) {
-    return catalogItem.loadIntoTableStructure(url);
-  }
-  // As a fallback, try to load in the data file as csv.
-  const tableStructure = new TableStructure("feature info");
-  url = proxyCatalogItemUrl(catalogItem, url, "0d");
-  return loadText(url).then(tableStructure.loadFromCsv.bind(tableStructure));
+  // TODO
+  return when();
+  // if (defined(catalogItem) && defined(catalogItem.loadIntoTableStructure)) {
+  //   return catalogItem.loadIntoTableStructure(url);
+  // }
+  // // As a fallback, try to load in the data file as csv.
+  // const tableStructure = new TableStructure("feature info");
+  // url = proxyCatalogItemUrl(catalogItem, url, "0d");
+  // return loadText(url).then(tableStructure.loadFromCsv.bind(tableStructure));
 }
 
 module.exports = Chart;

@@ -13,7 +13,7 @@ export default class TableTraits extends mixTraits(
   CatalogMemberTraits,
   TimeVaryingTraits,
   MappableTraits,
-  RasterLayerTraits,
+  RasterLayerTraits
 ) {
   @primitiveTrait({
     name: "Show Warning for Unmatched Regions",
@@ -33,7 +33,8 @@ export default class TableTraits extends mixTraits(
 
   @objectArrayTrait({
     name: "Styles",
-    description: "The set of styles that can be used to visualize this dataset.",
+    description:
+      "The set of styles that can be used to visualize this dataset.",
     type: TableStyleTraits,
     idProperty: "id"
   })
@@ -48,10 +49,9 @@ export default class TableTraits extends mixTraits(
   defaultStyle?: TableStyleTraits;
 
   @primitiveTrait({
-    name: 'Selected Style',
-    description: 'The ID of the currently-selected style.',
-    type: 'string'
+    name: "Selected Style",
+    description: "The ID of the currently-selected style.",
+    type: "string"
   })
-  selectedStyle?: string;
-
+  activeStyle?: string;
 }

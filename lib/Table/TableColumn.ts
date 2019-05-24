@@ -1,4 +1,4 @@
-import uniq from "lodash.uniq";
+import countBy from "lodash.countby";
 import { computed } from "mobx";
 import createStratumInstance from "../Models/createStratumInstance";
 import Model from "../Models/Model";
@@ -6,9 +6,13 @@ import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
 import TableColumnTraits from "../Traits/TableColumnTraits";
 import TableTraits from "../Traits/TableTraits";
 import TableColumnType, { stringToTableColumnType } from "./TableColumnType";
+import RegionProviderList from "../Map/RegionProviderList";
+import RegionProvider from "../Map/RegionProvider";
 
 interface TableModel extends Model<TableTraits> {
   readonly dataColumnMajor: string[][] | undefined;
+  readonly regionProviderList: RegionProviderList | undefined;
+  readonly tableColumns: readonly TableColumn[];
 }
 
 export interface ColumnValuesAsNumbers {
@@ -19,6 +23,33 @@ export interface ColumnValuesAsNumbers {
   readonly numberOfNonNumbers: number;
 }
 
+export interface ColumnValuesAsRegions {
+  readonly regionIds: ReadonlyArray<string | null>;
+  readonly numberOfValidRegions: number;
+  readonly numberOfNonRegions: number;
+  readonly numberOfRegionsWithMultipleRows: number;
+  readonly regionIdToRowNumbersMap: ReadonlyMap<
+    string,
+    number | readonly number[]
+  >;
+}
+
+export interface UniqueColumnValues {
+  /**
+   * Gets the unique values, ordered from most common to least common.
+   */
+  readonly values: ReadonlyArray<string>;
+
+  /**
+   * Gets the count of each value. This is a parallel array to
+   * {@link #values}.
+   */
+  readonly counts: ReadonlyArray<number>;
+}
+
+/**
+ * A column of tabular data.
+ */
 export default class TableColumn {
   readonly columnNumber: number;
   readonly tableModel: TableModel;
@@ -28,6 +59,9 @@ export default class TableColumn {
     this.tableModel = tableModel;
   }
 
+  /**
+   * Gets the raw, uninterpreted values in the column.
+   */
   @computed
   get values(): readonly string[] {
     const result: string[] = [];
@@ -43,11 +77,15 @@ export default class TableColumn {
     return result;
   }
 
+  /**
+   * Gets the column values as numbers, and returns information about how many
+   * rows were successfully converted to numbers and the range of values.
+   */
   @computed
   get valuesAsNumbers(): ColumnValuesAsNumbers {
     const numbers: (number | null)[] = [];
     let minimum = Number.MAX_VALUE;
-    let maximum = Number.MIN_VALUE;
+    let maximum = -Number.MAX_VALUE;
     let numberOfValidNumbers = 0;
     let numberOfNonNumbers = 0;
 
@@ -73,7 +111,7 @@ export default class TableColumn {
       if (n !== null) {
         ++numberOfValidNumbers;
         minimum = Math.min(minimum, n);
-        maximum = Math.min(maximum, n);
+        maximum = Math.max(maximum, n);
       }
 
       numbers.push(n);
@@ -88,11 +126,96 @@ export default class TableColumn {
     };
   }
 
+  /**
+   * Gets the unique values in this column.
+   */
   @computed
-  get uniqueValues(): readonly string[] {
-    return uniq(this.values);
+  get uniqueValues(): UniqueColumnValues {
+    const count = countBy(this.values);
+
+    function toArray(key: string, value: number): [string, number] {
+      return [key, value];
+    }
+    const countArray = Object.keys(count).map(key => toArray(key, count[key]));
+    countArray.sort(function(a, b) {
+      return b[1] - a[1];
+    });
+
+    return {
+      values: countArray.map(a => a[0]),
+      counts: countArray.map(a => a[1])
+    };
   }
 
+  @computed
+  get valuesAsRegions(): ColumnValuesAsRegions {
+    const values = this.values;
+    const map = new Map<string, number | number[]>();
+
+    const regionType = this.regionType;
+    if (regionType === undefined) {
+      // No regions.
+      return {
+        numberOfValidRegions: 0,
+        numberOfNonRegions: values.length,
+        numberOfRegionsWithMultipleRows: 0,
+        regionIds: values.map(() => null),
+        regionIdToRowNumbersMap: map
+      };
+    }
+
+    const regionIds: (string | null)[] = [];
+    let numberOfValidRegions = 0;
+    let numberOfNonRegions = 0;
+    let numberOfRegionsWithMultipleRows = 0;
+
+    for (let i = 0; i < values.length; ++i) {
+      const value = values[i];
+      const regionId: string | null = this.findMatchingRegion(
+        regionType,
+        value
+      );
+      regionIds.push(regionId);
+
+      if (regionId !== null) {
+        ++numberOfValidRegions;
+
+        const rows = map.get(regionId);
+        if (rows === undefined) {
+          map.set(regionId, i);
+        } else if (typeof rows === "number") {
+          numberOfRegionsWithMultipleRows++;
+          map.set(regionId, [rows, i]);
+        } else {
+          rows.push(i);
+        }
+      } else {
+        ++numberOfNonRegions;
+      }
+    }
+
+    return {
+      regionIds: regionIds,
+      regionIdToRowNumbersMap: map,
+      numberOfValidRegions: numberOfValidRegions,
+      numberOfNonRegions: numberOfNonRegions,
+      numberOfRegionsWithMultipleRows: numberOfRegionsWithMultipleRows
+    };
+  }
+
+  findMatchingRegion(
+    regionType: typeof RegionProvider,
+    rowValue: string
+  ): string | null {
+    // TODO: validate that the rowValue is actually a valid region, if possible.
+    // TODO: implement replacements
+    return rowValue.length > 0 ? rowValue.toLowerCase() : null;
+  }
+
+  /**
+   * Gets the name of this column. If the column's name is blank, this property
+   * will return `Column#` where `#` is the zero-based index of the column.
+   */
   @computed
   get name(): string {
     const data = this.tableModel.dataColumnMajor;
@@ -107,6 +230,9 @@ export default class TableColumn {
     return data[this.columnNumber][0];
   }
 
+  /**
+   * Gets the {@link TableColumnTraits} for this column.
+   */
   @computed
   get traits(): ModelPropertiesFromTraits<TableColumnTraits> {
     const columns = this.tableModel.columns || [];
@@ -116,12 +242,21 @@ export default class TableColumn {
     );
   }
 
+  /**
+   * Gets the type of this column. If {@link #traits} has an explicit
+   * {@link TableColumnTraits#type} specified, it is returned directly.
+   * Otherwise, the type is guessed from the column name and contents.
+   */
   @computed
   get type(): TableColumnType {
     // Use the explicit column type, if any.
     let type: TableColumnType | undefined;
     if (this.traits.type !== undefined) {
       type = stringToTableColumnType(this.traits.type);
+    }
+
+    if (type === undefined && this.regionType !== undefined) {
+      type = TableColumnType.region;
     }
 
     if (type === undefined) {
@@ -148,10 +283,10 @@ export default class TableColumn {
         // If there are relatively few different values, treat it as an enumeration.
         // If there are heaps of different values, treat it as just ordinary
         // free-form text.
-        const uniqueValues = this.uniqueValues;
+        const uniqueValues = this.uniqueValues.values;
         if (
-          uniqueValues.length < 10 ||
-          uniqueValues.length < this.values.length / 2
+          uniqueValues.length <= 7 ||
+          uniqueValues.length < this.values.length / 10
         ) {
           type = TableColumnType.enum;
         } else {
@@ -161,6 +296,78 @@ export default class TableColumn {
     }
 
     return type;
+  }
+
+  @computed
+  get regionType(): typeof RegionProvider | undefined {
+    const regions = this.tableModel.regionProviderList;
+    if (regions === undefined) {
+      return undefined;
+    }
+
+    const regionType = this.traits.regionType;
+    if (regionType !== undefined) {
+      // Explicit region type specified, we just need to resolve it.
+      return regions.getRegionProvider(regionType);
+    }
+
+    // No region type specified, so match the column name against the region
+    // aliases.
+    const details = regions.getRegionDetails([this.name]);
+    if (details.length > 0) {
+      return details[0].regionProvider;
+    }
+
+    return undefined;
+  }
+
+  @computed
+  get regionDisambiguationColumn(): TableColumn | undefined {
+    if (this.regionType === undefined) {
+      return undefined;
+    }
+
+    const columnName = this.traits.regionDisambiguationColumn;
+    if (columnName !== undefined) {
+      // Resolve the explicit disambiguation column.
+      return this.tableModel.tableColumns.find(
+        column => column.name === columnName
+      );
+    }
+
+    // See if the region provider likes any of the table's other columns for
+    // disambiguation.
+    const disambigName = (<any>this.regionType).findDisambigVariable(
+      this.tableModel.tableColumns.map(column => column.name)
+    );
+    if (disambigName === undefined) {
+      return undefined;
+    }
+
+    return this.tableModel.tableColumns.find(
+      column => column.name === disambigName
+    );
+  }
+
+  /**
+   * Gets a function that can be used to retrieve the value of this column for
+   * a given row as a type appropriate for the column {@link #type}. For
+   * example, if {@link #type} is {@link TableColumnType#scalar}, the value
+   * will be a number or null.
+   */
+  @computed
+  get valueFunctionForType(): (rowIndex: number) => string | number | null {
+    if (this.type === TableColumnType.scalar) {
+      const values = this.valuesAsNumbers.values;
+      return function(rowIndex: number) {
+        return values[rowIndex];
+      };
+    }
+
+    const values = this.values;
+    return function(rowIndex: number) {
+      return values[rowIndex];
+    };
   }
 
   private guessColumnTypeFromName(name: string): TableColumnType | undefined {

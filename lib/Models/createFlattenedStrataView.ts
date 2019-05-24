@@ -12,7 +12,9 @@ export interface Flattenable<T> {
 export default function createFlattenedStrataView<
   T extends TraitsConstructor<ModelTraits>
 >(
-  model: Flattenable<FlattenedFromTraits<InstanceType<T>>> | Flattenable<StratumFromTraits<InstanceType<T>>>,
+  model:
+    | Flattenable<FlattenedFromTraits<InstanceType<T>>>
+    | Flattenable<StratumFromTraits<InstanceType<T>>>,
   Traits: T
 ): FlattenedFromTraits<InstanceType<T>> {
   const traits = Traits.traits;

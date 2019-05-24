@@ -10,7 +10,8 @@
         "jsx": "preserve",
         "esModuleInterop": true,
         "allowSyntheticDefaultImports": true,
-        "outDir": "ts-out"
+        "outDir": "ts-out",
+        "resolveJsonModule": true
     },
     "include": [
         "./lib/**/*",

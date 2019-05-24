@@ -5,6 +5,7 @@ import TableTimeStyleTraits from "./TableTimeStyleTraits";
 import ModelTraits from "./ModelTraits";
 import objectTrait from "./objectTrait";
 import primitiveTrait from "./primitiveTrait";
+import StratumFromTraits from "../Models/StratumFromTraits";
 
 export default class TableStyleTraits extends ModelTraits {
   @primitiveTrait({
@@ -38,13 +39,6 @@ export default class TableStyleTraits extends ModelTraits {
   regionColumn?: string;
 
   @primitiveTrait({
-    name: "Region Type",
-    description: "The region type that the `Region Column` refers to.",
-    type: "string"
-  })
-  regionType?: string;
-
-  @primitiveTrait({
     name: "Latitude Column",
     description:
       "The column to use for the latitude of points. If `Region Column` is specified, this property is ignored.",
@@ -59,14 +53,6 @@ export default class TableStyleTraits extends ModelTraits {
     type: "string"
   })
   longitudeColumn?: string;
-
-  @primitiveTrait({
-    name: "Scale Column",
-    description:
-      "The column to use to scale points. This property is ignored for regions.",
-    type: "string"
-  })
-  scaleColumn?: string;
 
   @objectTrait({
     name: "Color",
@@ -97,7 +83,7 @@ export default class TableStyleTraits extends ModelTraits {
   })
   time?: TableTimeStyleTraits;
 
-  static isRemoval(style: TableStyleTraits) {
+  static isRemoval(style: StratumFromTraits<TableStyleTraits>) {
     return style.title === null;
   }
 }

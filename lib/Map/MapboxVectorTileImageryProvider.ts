@@ -1,61 +1,28 @@
+import Point from "@mapbox/point-geometry";
+import { VectorTile, VectorTileFeature } from "@mapbox/vector-tile";
+import Protobuf from "pbf";
 import BoundingRectangle from "terriajs-cesium/Source/Core/BoundingRectangle";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-import CesiumEvent from "terriajs-cesium/Source/Core/Event";
+import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
+import CesiumEvent from "terriajs-cesium/Source/Core/Event";
+import Intersect from "terriajs-cesium/Source/Core/Intersect";
+import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
+import WindingOrder from "terriajs-cesium/Source/Core/WindingOrder";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
-import Intersect from "terriajs-cesium/Source/Core/Intersect";
-import Protobuf from "pbf";
-import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
-import WindingOrder from "terriajs-cesium/Source/Core/WindingOrder";
-import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
-import computeRingWindingOrder from "./computeRingWindingOrder";
-import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
-import loadArrayBuffer from "../Core/loadArrayBuffer";
+import when from "terriajs-cesium/Source/ThirdParty/when";
+import URITemplate from "urijs/src/URITemplate";
 import isDefined from "../Core/isDefined";
-
-import "terriajs-cesium/Source/Core/defineProperties";
-const VectorTile = require("@mapbox/vector-tile");
-const URITemplate = require("urijs/src/URITemplate");
+import loadArrayBuffer from "../Core/loadArrayBuffer";
+import computeRingWindingOrder from "./computeRingWindingOrder";
 
 interface Coords {
   x: number;
   y: number;
   level: number;
-}
-
-interface URITemplate {
-  expression: string;
-  expand(data: any): string;
-}
-
-enum VectorTileFeatureType {
-  POLYGON_FEATURE = 3
-}
-
-declare class Point {
-  x: number;
-  y: number;
-  constructor(x: number, y: number);
-  sub(p: Point): Point;
-}
-
-interface VectorTileFeature {
-  type: VectorTileFeatureType;
-  properties: { [key: string]: string };
-  bbox: () => number[];
-  loadGeometry(): Point[][];
-}
-
-interface VectorTileLayer {
-  length: number;
-  feature(i: number): VectorTileFeature;
-  extent: number;
-}
-
-interface VectorTile {
-  layers: { [key: string]: VectorTileLayer };
 }
 
 interface SimpleStyle {
@@ -69,7 +36,7 @@ interface MapboxVectorTileImageryProviderOptions {
   url: string;
   layerName: string;
   subdomains?: unknown[];
-  styleFunc: (id: string) => SimpleStyle | undefined;
+  styleFunc: (feature: any) => SimpleStyle | undefined;
   minimumZoom?: number;
   maximumZoom?: number;
   maximumNativeZoom?: number;
@@ -78,11 +45,12 @@ interface MapboxVectorTileImageryProviderOptions {
   featureInfoFunc?: (feature: unknown) => ImageryLayerFeatureInfo;
 }
 
-export default class MapboxVectorTileImageryProvider extends ImageryProvider {
-  private readonly _uriTemplate: URITemplate;
+export default class MapboxVectorTileImageryProvider
+  implements ImageryProvider {
+  private readonly _uriTemplate: uri.URITemplate;
   private readonly _layerName: string;
-  private readonly _subdomains: unknown[];
-  private readonly _styleFunc: (id: string) => SimpleStyle | undefined;
+  private readonly _subdomains: string[];
+  private readonly _styleFunc: (feature: any) => SimpleStyle | undefined;
   private readonly _tilingScheme: WebMercatorTilingScheme;
   private readonly _tileWidth: number;
   private readonly _tileHeight: number;
@@ -91,14 +59,11 @@ export default class MapboxVectorTileImageryProvider extends ImageryProvider {
   private readonly _maximumNativeLevel: number;
   private readonly _rectangle: Rectangle;
   private readonly _uniqueIdProp: string;
-  private readonly _featureInfoFunc?: (
-    feature: unknown
-  ) => ImageryLayerFeatureInfo;
+  private readonly _featureInfoFunc?: (feature: any) => ImageryLayerFeatureInfo;
   private readonly _errorEvent = new CesiumEvent();
   private readonly _ready = true;
 
   constructor(options: MapboxVectorTileImageryProviderOptions) {
-    super();
     this._uriTemplate = new URITemplate(options.url);
 
     if (typeof options.layerName !== "string") {
@@ -202,6 +167,58 @@ export default class MapboxVectorTileImageryProvider extends ImageryProvider {
     return true;
   }
 
+  get credit(): Cesium.Credit {
+    return <any>undefined;
+  }
+
+  get defaultAlpha(): number {
+    return <any>undefined;
+  }
+
+  get defaultBrightness(): number {
+    return <any>undefined;
+  }
+
+  get defaultContrast(): number {
+    return <any>undefined;
+  }
+
+  get defaultGamma(): number {
+    return <any>undefined;
+  }
+
+  get defaultHue(): number {
+    return <any>undefined;
+  }
+
+  get defaultSaturation(): number {
+    return <any>undefined;
+  }
+
+  get defaultMagnificationFilter(): any {
+    return undefined;
+  }
+
+  get defaultMinificationFilter(): any {
+    return undefined;
+  }
+
+  get proxy(): Cesium.Proxy {
+    return <any>undefined;
+  }
+
+  get readyPromise(): Promise<boolean> {
+    return when(true);
+  }
+
+  get tileDiscardPolicy(): Cesium.TileDiscardPolicy {
+    return <any>undefined;
+  }
+
+  getTileCredits(x: number, y: number, level: number): Cesium.Credit[] {
+    return [];
+  }
+
   _getSubdomain(x: number, y: number, level: number) {
     if (this._subdomains.length === 0) {
       return undefined;
@@ -213,9 +230,9 @@ export default class MapboxVectorTileImageryProvider extends ImageryProvider {
 
   _buildImageUrl(x: number, y: number, level: number) {
     return this._uriTemplate.expand({
-      z: level,
-      x: x,
-      y: y,
+      z: level.toString(),
+      x: x.toString(),
+      y: y.toString(),
       s: this._getSubdomain(x, y, level)
     });
   }
@@ -293,8 +310,8 @@ export default class MapboxVectorTileImageryProvider extends ImageryProvider {
     // Features
     for (let i = 0; i < layer.length; i++) {
       const feature = layer.feature(i);
-      if (feature.type === VectorTileFeatureType.POLYGON_FEATURE) {
-        const style = this._styleFunc(feature.properties[this._uniqueIdProp]);
+      if (VectorTileFeature.types[feature.type] === "Polygon") {
+        const style = this._styleFunc(feature);
         if (!style) continue;
         context.fillStyle = style.fillStyle;
         context.strokeStyle = style.strokeStyle;
@@ -449,7 +466,7 @@ export default class MapboxVectorTileImageryProvider extends ImageryProvider {
       for (let i = 0; i < layer.length; i++) {
         const feature = layer.feature(i);
         if (
-          feature.type === VectorTileFeatureType.POLYGON_FEATURE &&
+          VectorTileFeature.types[feature.type] === "Polygon" &&
           isFeatureClicked(
             overzoomGeometry(
               feature.loadGeometry(),
@@ -475,10 +492,10 @@ export default class MapboxVectorTileImageryProvider extends ImageryProvider {
 
   createHighlightImageryProvider(regionUniqueID: string) {
     const that = this;
-    const styleFunc = function(FID: string) {
-      if (regionUniqueID === FID) {
+    const styleFunc = function(feature: any) {
+      if (regionUniqueID === feature.properties[that._uniqueIdProp]) {
         // No fill, but same style border as the regions, just thicker
-        const regionStyling = that._styleFunc(FID);
+        const regionStyling = that._styleFunc(feature);
         if (isDefined(regionStyling)) {
           regionStyling.fillStyle = "rgba(0,0,0,0)";
           regionStyling.lineJoin = "round";
