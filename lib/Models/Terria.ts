@@ -2,7 +2,6 @@ import { computed, observable } from "mobx";
 import Clock from "terriajs-cesium/Source/Core/Clock";
 import defined from "terriajs-cesium/Source/Core/defined";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
-import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import RuntimeError from "terriajs-cesium/Source/Core/RuntimeError";
 import when from "terriajs-cesium/Source/ThirdParty/when";
 import URI from "urijs";
@@ -10,13 +9,17 @@ import Class from "../Core/Class";
 import ConsoleAnalytics from "../Core/ConsoleAnalytics";
 import GoogleAnalytics from "../Core/GoogleAnalytics";
 import instanceOf from "../Core/instanceOf";
+import isDefined from "../Core/isDefined";
 import loadJson5 from "../Core/loadJson5";
 import PickedFeatures from "../Map/PickedFeatures";
 import ModelReference from "../Traits/ModelReference";
 import { BaseMapViewModel } from "../ViewModels/BaseMapViewModel";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import Catalog from "./CatalogNew";
+import Cesium from "./Cesium";
+import Feature from "./Feature";
 import GlobeOrMap from "./GlobeOrMap";
+import Leaflet from "./Leaflet";
 import { BaseModel } from "./Model";
 import NoViewer from "./NoViewer";
 import TimelineStack from "./TimelineStack";
@@ -107,7 +110,9 @@ export default class Terria {
   pickedFeatures: PickedFeatures | undefined;
 
   @observable
-  selectedFeature: Entity | undefined;
+  selectedFeature: Feature | undefined;
+
+  baseMapContrastColor: string = "#ffffff";
 
   @observable
   readonly userProperties = new Map<string, any>();
@@ -135,6 +140,20 @@ export default class Terria {
     return (
       (this.mainViewer && this.mainViewer.currentViewer) || new NoViewer(this)
     );
+  }
+
+  @computed
+  get cesium(): Cesium | undefined {
+    if (isDefined(this.mainViewer) && this.mainViewer instanceof Cesium) {
+      return this.mainViewer;
+    }
+  }
+
+  @computed
+  get leaflet(): Leaflet | undefined {
+    if (isDefined(this.mainViewer) && this.mainViewer instanceof Leaflet) {
+      return this.mainViewer;
+    }
   }
 
   getModelById<T extends BaseModel>(

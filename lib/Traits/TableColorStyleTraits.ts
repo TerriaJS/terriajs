@@ -79,7 +79,7 @@ export default class TableColorStyleTraits extends ModelTraits {
     description:
       "The number of different colors to bin the data into. This property " +
       "is ignored if `Bin Maximums` is specified for a `scalar` column or " +
-      "`Bin Values` is specified for any other type of column.",
+      "`Enum Colors` is specified for an `enum` column.",
     type: "number"
   })
   numberOfBins: number = 7;
@@ -126,7 +126,7 @@ export default class TableColorStyleTraits extends ModelTraits {
       "The name of a [ColorBrewer](http://colorbrewer2.org/) palette to use when mapping values " +
       "to colors. This property is ignored if `Bin Colors` is defined and has enough colors for " +
       "all bins, or if `Enum Colors` is defined. The default value depends on the type of the " +
-      "`Color Column` and on the data. Scalar columns that cross zero will use the divering " +
+      "`Color Column` and on the data. Scalar columns that cross zero will use the diverging " +
       "purple-to-orange palette `PuOr`. Scala columns that do not cross zero will use the " +
       "sequential yellow-orange-red palette `YlOrRd`. All other scenarios will use the " +
       "21 color `HighContrast` palette.",

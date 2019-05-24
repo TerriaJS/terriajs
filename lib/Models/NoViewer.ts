@@ -11,7 +11,7 @@ var Rectangle = require("terriajs-cesium/Source/Core/Rectangle");
 var when = require("terriajs-cesium/Source/ThirdParty/when");
 
 class NoViewer extends GlobeOrMap {
-  private readonly terria: Terria;
+  readonly terria: Terria;
 
   constructor(terria: Terria) {
     super();

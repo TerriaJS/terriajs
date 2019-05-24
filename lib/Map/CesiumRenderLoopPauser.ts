@@ -29,7 +29,7 @@ export default class CesiumRenderLoopPauser {
   private _lastCameraViewMatrix = new Matrix4();
   private _lastCameraMoveTime: number = -Number.MAX_VALUE;
 
-  constructor(readonly cesiumWidget: CesiumWidget) {
+  constructor(readonly cesiumWidget: CesiumWidget, readonly postRenderCallback: () => void) {
     const scene = this.cesiumWidget.scene;
     this._removePostRenderListener = scene.postRender.addEventListener(
       this.postRender.bind(this)
@@ -259,12 +259,6 @@ export default class CesiumRenderLoopPauser {
     }
 
     Matrix4.clone(scene.camera.viewMatrix, this._lastCameraViewMatrix);
-
-    // TODO: re-add when selection indicator is added
-    // var feature = this.terria.selectedFeature;
-    // if (defined(feature) && defined(feature.position)) {
-    //     this._selectionIndicator.position = feature.position.getValue(cesium.terria.clock.currentTime);
-    // }
-    // this._selectionIndicator.update();
+    this.postRenderCallback();
   }
 }

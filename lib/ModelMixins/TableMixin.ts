@@ -254,7 +254,8 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
               return {
                 fillStyle: color.toCssColorString(),
                 strokeStyle: baseMapContrastColor,
-                lineWidth: 1
+                lineWidth: 1,
+                lineJoin: "miter"
               };
             },
             subdomains: regionType.serverSubdomains,

@@ -35,6 +35,7 @@ import ScreenSpaceEventType from "terriajs-cesium/Source/Core/ScreenSpaceEventTy
 import when from "terriajs-cesium/Source/ThirdParty/when";
 import CesiumWidget from "terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget";
 
+import CesiumSelectionIndicator from "../Map/CesiumSelectionIndicator";
 import isDefined from "../Core/isDefined";
 import pollToPromise from "../Core/pollToPromise";
 import CesiumRenderLoopPauser from "../Map/CesiumRenderLoopPauser";
@@ -57,6 +58,14 @@ var southeastCartographicScratch = new Cartographic();
 var northeastCartographicScratch = new Cartographic();
 var northwestCartographicScratch = new Cartographic();
 
+interface CesiumSelectionIndicator {
+  position: Cartesian3;
+  animateAppear(): void;
+  animateDepart(): void;
+  update(): void;
+  destroy(): void;
+}
+
 export default class Cesium extends GlobeOrMap {
   readonly terria: Terria;
   readonly terriaViewer: TerriaViewer;
@@ -66,6 +75,8 @@ export default class Cesium extends GlobeOrMap {
   readonly dataSourceDisplay: Cesium.DataSourceDisplay;
   readonly pauser: CesiumRenderLoopPauser;
   private readonly _eventHelper: EventHelper;
+  private readonly _selectionIndicator: CesiumSelectionIndicator;
+  private readonly _disposeSelectedFeatureSubscription: () => void;
   private readonly _disposeWorkbenchMapItemsSubscription: () => void;
   private readonly _disposeTerrainReaction: () => void;
 
@@ -104,6 +115,10 @@ export default class Cesium extends GlobeOrMap {
       scene: this.scene,
       dataSourceCollection: this.dataSources
     });
+
+    this._selectionIndicator = new CesiumSelectionIndicator(this);
+
+    this.supportsPolylinesOnTerrain = (<any>this.scene).context.depthTexture;
 
     this._eventHelper = new EventHelper();
 
@@ -179,7 +194,21 @@ export default class Cesium extends GlobeOrMap {
       this.pickFromScreenPosition(e.position);
     }, ScreenSpaceEventType.LEFT_CLICK);
 
-    this.pauser = new CesiumRenderLoopPauser(this.cesiumWidget);
+    this.pauser = new CesiumRenderLoopPauser(this.cesiumWidget, () => {
+      // Post render, update selection indicator position
+      const feature = this.terria.selectedFeature;
+      if (isDefined(feature) && isDefined(feature.position)) {
+        this._selectionIndicator.position = feature.position.getValue(
+          this.terria.timelineClock.currentTime
+        );
+      }
+      this._selectionIndicator.update();
+    });
+
+    this._disposeSelectedFeatureSubscription = autorun(() => {
+      this._selectFeature();
+    });
+
     this._disposeWorkbenchMapItemsSubscription = this.observeModelLayer();
     this._disposeTerrainReaction = autorun(() => {
       this.scene.globe.terrainProvider = this._terrainProvider;
@@ -202,11 +231,16 @@ export default class Cesium extends GlobeOrMap {
     //     this.monitor = undefined;
     // }
 
+    if (isDefined(this._selectionIndicator)) {
+      this._selectionIndicator.destroy();
+    }
+
     this.pauser.destroy();
     this.stopObserving();
     this._eventHelper.removeAll();
     this.dataSourceDisplay.destroy();
     this._disposeTerrainReaction();
+    this._disposeSelectedFeatureSubscription();
     this.cesiumWidget.destroy();
     destroyObject(this);
   }
@@ -808,6 +842,23 @@ export default class Cesium extends GlobeOrMap {
       });
 
     return result;
+  }
+
+  _selectFeature() {
+    const feature = this.terria.selectedFeature;
+
+    this._highlightFeature(feature);
+
+    if (isDefined(feature) && isDefined(feature.position)) {
+      this._selectionIndicator.position = feature.position.getValue(
+        this.terria.timelineClock.currentTime
+      );
+      this._selectionIndicator.animateAppear();
+    } else {
+      this._selectionIndicator.animateDepart();
+    }
+
+    this._selectionIndicator.update();
   }
 }
 
