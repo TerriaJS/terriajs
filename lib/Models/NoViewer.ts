@@ -6,12 +6,10 @@ import "terriajs-cesium/Source/Core/Rectangle";
 import Mappable from "./Mappable";
 
 /*global require*/
-var inherit = require("../Core/inherit");
 var Rectangle = require("terriajs-cesium/Source/Core/Rectangle");
-var when = require("terriajs-cesium/Source/ThirdParty/when");
 
 class NoViewer extends GlobeOrMap {
-  private readonly terria: Terria;
+  readonly terria: Terria;
 
   constructor(terria: Terria) {
     super();

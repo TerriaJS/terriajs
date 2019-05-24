@@ -31,6 +31,7 @@ import DataSourceCollection from "terriajs-cesium/Source/DataSources/DataSourceC
 import DataSourceDisplay from "terriajs-cesium/Source/DataSources/DataSourceDisplay";
 import ImageryLayer from "terriajs-cesium/Source/Scene/ImageryLayer";
 import Scene from "terriajs-cesium/Source/Scene/Scene";
+import SceneTransforms from "terriajs-cesium/Source/Scene/SceneTransforms";
 import SingleTileImageryProvider from "terriajs-cesium/Source/Scene/SingleTileImageryProvider";
 import ScreenSpaceEventType from "terriajs-cesium/Source/Core/ScreenSpaceEventType";
 import when from "terriajs-cesium/Source/ThirdParty/when";
@@ -807,7 +808,7 @@ export default class Cesium extends GlobeOrMap {
               return resultFeaturesSoFar;
             }
 
-            const features = imageryLayerFeatures.map(feature => {
+            let features = imageryLayerFeatures.map(feature => {
               if (isDefined(imageryLayers)) {
                 (<any>feature).imageryLayer = imageryLayers[i];
               }
@@ -829,24 +830,24 @@ export default class Cesium extends GlobeOrMap {
               return this._createFeatureFromImageryLayerFeature(feature);
             });
 
-            // TODO
-            // if (this.terria.showSplitter) {
-            //   // Select only features from the same side or both sides of the splitter
-            //   const screenPosition = this.computePositionOnScreen(
-            //     result.pickPosition
-            //   );
-            //   const pickedSide = this.terria.getSplitterSideForScreenPosition(
-            //     screenPosition
-            //   );
+            if (this.terria.showSplitter && isDefined(result.pickPosition)) {
+              // Select only features from the same side or both sides of the splitter
+              const screenPosition = this._computePositionOnScreen(
+                result.pickPosition
+              );
+              const pickedSide = this._getSplitterSideForScreenPosition(
+                screenPosition
+              );
 
-            //   features = features.filter(function(feature) {
-            //     const splitDirection = feature.imageryLayer.splitDirection;
-            //     return (
-            //       splitDirection === pickedSide ||
-            //       splitDirection === ImagerySplitDirection.NONE
-            //     );
-            //   });
-            // }
+              features = features.filter(feature => {
+                const splitDirection = (<any>feature).imageryLayer
+                  .splitDirection;
+                return (
+                  splitDirection === pickedSide ||
+                  splitDirection === ImagerySplitDirection.NONE
+                );
+              });
+            }
 
             return resultFeaturesSoFar.concat(features);
           },
@@ -890,6 +891,20 @@ export default class Cesium extends GlobeOrMap {
       }
     }
     return imageryLayers;
+  }
+
+  /**
+   * Computes the screen position of a given world position.
+   * @param position The world position in Earth-centered Fixed coordinates.
+   * @param [result] The instance to which to copy the result.
+   * @return The screen position, or undefined if the position is not on the screen.
+   */
+  private _computePositionOnScreen(position: Cartesian3, result?: Cartesian2) {
+    return SceneTransforms.wgs84ToWindowCoordinates(
+      this.scene,
+      position,
+      result
+    );
   }
 }
 

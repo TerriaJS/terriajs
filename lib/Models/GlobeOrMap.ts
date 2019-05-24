@@ -1,9 +1,12 @@
+import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
+import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import Mappable from "./Mappable";
 import Feature from "./Feature";
 import Terria from "./Terria";
-import { BaseModel } from "./Model";
+import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
+import isDefined from "../Core/isDefined";
 
 export type CameraView = {
   rectangle: Cesium.Rectangle;
@@ -13,6 +16,7 @@ export type CameraView = {
 };
 
 export default abstract class GlobeOrMap {
+  abstract readonly terria: Terria;
   protected static _featureHighlightName = "___$FeatureHighlight&__";
 
   abstract destroy(): void;
@@ -54,5 +58,27 @@ export default abstract class GlobeOrMap {
     (<any>feature).coords = (<any>imageryFeature).coords;
 
     return feature;
+  }
+
+  /**
+   * Returns the side of the splitter the `position` lies on.
+   *
+   * @param The screen position.
+   * @return The side of the splitter on which `position` lies.
+   */
+  protected _getSplitterSideForScreenPosition(
+    position: Cartesian2 | Cartesian3
+  ): ImagerySplitDirection | undefined {
+    const container = this.terria.currentViewer.getContainer();
+    if (!isDefined(container)) {
+      return;
+    }
+
+    const splitterX = container.clientWidth * this.terria.splitPosition;
+    if (position.x <= splitterX) {
+      return ImagerySplitDirection.LEFT;
+    } else {
+      return ImagerySplitDirection.RIGHT;
+    }
   }
 }

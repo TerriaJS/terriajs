@@ -1,6 +1,8 @@
 import L from "leaflet";
-import { autorun, computed } from "mobx";
+import { autorun } from "mobx";
 import { createTransformer } from "mobx-utils";
+import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
+import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Clock from "terriajs-cesium/Source/Core/Clock";
@@ -35,10 +37,7 @@ import runLater from "../Core/runLater";
 import hasTraits from "./hasTraits";
 import SplitterTraits from "../Traits/SplitterTraits";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
-
-function isDefined<T>(value: T | undefined): value is T {
-  return value !== undefined;
-}
+import isDefined from "../Core/isDefined";
 
 interface SplitterClips {
   left: string;
@@ -519,26 +518,29 @@ export default class Leaflet extends GlobeOrMap {
 
         pickedFeatures.features = filteredResults.reduce(
           (allFeatures, result) => {
-            // TODO
-            // if (this.terria.showSplitter) {
-            //   // Skip unless the layer is on the picked side or belongs to both sides of the splitter
-            //   const screenPosition = this.computePositionOnScreen(
-            //     pickedFeatures.pickPosition
-            //   );
-            //   const pickedSide = this.terria.getSplitterSideForScreenPosition(
-            //     screenPosition
-            //   );
-            //   const splitDirection = result.imageryLayer.splitDirection;
+            if (
+              this.terria.showSplitter &&
+              isDefined(pickedFeatures.pickPosition)
+            ) {
+              // Skip this feature, unless the imagery layer is on the picked side or
+              // belongs to both sides of the splitter
+              const screenPosition = this._computePositionOnScreen(
+                pickedFeatures.pickPosition
+              );
+              const pickedSide = this._getSplitterSideForScreenPosition(
+                screenPosition
+              );
+              const layerDirection = result.imageryLayer.splitDirection;
 
-            //   if (
-            //     !(
-            //       splitDirection === pickedSide ||
-            //       splitDirection === ImagerySplitDirection.NONE
-            //     )
-            //   ) {
-            //     return allFeatures;
-            //   }
-            // }
+              if (
+                !(
+                  layerDirection === pickedSide ||
+                  layerDirection === ImagerySplitDirection.NONE
+                )
+              ) {
+                return allFeatures;
+              }
+            }
 
             return allFeatures.concat(
               result.features.map(feature => {
@@ -655,6 +657,37 @@ export default class Leaflet extends GlobeOrMap {
       clipPositionWithinMap: clipPositionWithinMap,
       clipX: clipX
     };
+  }
+
+  /**
+   * Computes the screen position of a given world position.
+   * @param position The world position in Earth-centered Fixed coordinates.
+   * @param [result] The instance to which to copy the result.
+   * @return The screen position, or undefined if the position is not on the screen.
+   */
+  private _computePositionOnScreen(
+    position: Cartesian3,
+    result?: Cartesian2
+  ): Cartesian2 {
+    const cartographicScratch = new Cartographic();
+    const cartographic = Ellipsoid.WGS84.cartesianToCartographic(
+      position,
+      cartographicScratch
+    );
+    const point = this.map.latLngToContainerPoint(
+      L.latLng(
+        CesiumMath.toDegrees(cartographic.latitude),
+        CesiumMath.toDegrees(cartographic.longitude)
+      )
+    );
+
+    if (isDefined(result)) {
+      result.x = point.x;
+      result.y = point.y;
+    } else {
+      result = new Cartesian2(point.x, point.y);
+    }
+    return result;
   }
 }
 
