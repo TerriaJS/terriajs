@@ -5,7 +5,6 @@ var clone = require("terriajs-cesium/Source/Core/clone");
 var Color = require("terriajs-cesium/Source/Core/Color");
 var JulianDate = require("terriajs-cesium/Source/Core/JulianDate");
 var Rectangle = require("terriajs-cesium/Source/Core/Rectangle");
-var when = require("terriajs-cesium/Source/ThirdParty/when");
 
 var CatalogItem = require("../../lib/Models/CatalogItem");
 var CsvCatalogItem = require("../../lib/Models/CsvCatalogItem");
@@ -2023,72 +2022,102 @@ describe("CsvCatalogItem & chart sharing", function() {
     csvItem = new CsvCatalogItem(terria);
   });
   describe("disableIncompatibleTableColumn interaction", function() {
-    it("should not disable other charted columns if there are no active columns in use", function(done) {
-      const xyCsv = new CsvCatalogItem(terria);
-      const timeSeriesCsv = new CsvCatalogItem(terria);
-      when
-        .all([
-          xyCsv
-            .updateFromJson({
-              type: "csv",
-              url: "test/csv_nongeo/xy.csv",
-              isEnabled: true,
-              isShown: true
-            })
-            .then(xyCsv.load.bind(xyCsv)),
-          timeSeriesCsv
-            .updateFromJson({
+    describe("should not disable other charted columns if there are no active columns in use", function() {
+      it("activates time series columns when loading the time series last", function(done) {
+        const xyCsv = new CsvCatalogItem(terria);
+        const timeSeriesCsv = new CsvCatalogItem(terria);
+        xyCsv
+          .updateFromJson({
+            type: "csv",
+            url: "test/csv_nongeo/xy.csv",
+            isEnabled: true,
+            isShown: true
+          })
+          .then(xyCsv.load.bind(xyCsv))
+          .then(function() {
+            timeSeriesCsv.updateFromJson({
               type: "csv",
               url: "test/csv_nongeo/time_series.csv",
               isEnabled: true,
               isShown: true
-            })
-            .then(timeSeriesCsv.load.bind(timeSeriesCsv))
-        ])
-        .then(function() {
-          expect(timeSeriesCsv.tableStructure.allowMultiple).toBe(true);
-          expect(xyCsv.tableStructure.allowMultiple).toBe(true);
-          expect(terria.catalog.chartableItems.length).toBe(2);
-          expect(timeSeriesCsv.tableStructure.activeItems.length).toBe(1);
-          expect(xyCsv.tableStructure.activeItems.length).toBe(0);
-          expect(timeSeriesCsv.xAxis.type).not.toBe(xyCsv.xAxis.type);
-          // Do an update from json that triggers a 'toggleActiveCallback'
-          xyCsv.updateFromJson({
-            tableStyle: {
-              dataVariable: "y"
-            }
+            });
+          })
+          .then(timeSeriesCsv.load.bind(timeSeriesCsv))
+          .then(function() {
+            expect(timeSeriesCsv.tableStructure.allowMultiple).toBe(true);
+            expect(xyCsv.tableStructure.allowMultiple).toBe(true);
+            expect(terria.catalog.chartableItems.length).toBe(2);
+            expect(timeSeriesCsv.tableStructure.activeItems.length).toBe(1);
+            expect(xyCsv.tableStructure.activeItems.length).toBe(0);
+            expect(timeSeriesCsv.xAxis.type).not.toBe(xyCsv.xAxis.type);
+            done();
           });
-          expect(timeSeriesCsv.tableStructure.activeItems.length).toBe(0);
-          expect(xyCsv.tableStructure.activeItems.length).toBe(1);
+      });
+      it("activates scalar columns when loading the time series first", function(done) {
+        const xyCsv = new CsvCatalogItem(terria);
+        const timeSeriesCsv = new CsvCatalogItem(terria);
+        timeSeriesCsv
+          .updateFromJson({
+            type: "csv",
+            url: "test/csv_nongeo/time_series.csv",
+            isEnabled: true,
+            isShown: true
+          })
+          .then(timeSeriesCsv.load.bind(timeSeriesCsv))
+          .then(function() {
+            xyCsv.updateFromJson({
+              type: "csv",
+              url: "test/csv_nongeo/xy.csv",
+              isEnabled: true,
+              isShown: true
+            });
+          })
+          .then(xyCsv.load.bind(xyCsv))
+          .then(function() {
+            expect(timeSeriesCsv.tableStructure.allowMultiple).toBe(true);
+            expect(xyCsv.tableStructure.allowMultiple).toBe(true);
+            expect(terria.catalog.chartableItems.length).toBe(2);
+            expect(timeSeriesCsv.tableStructure.activeItems.length).toBe(0);
+            expect(xyCsv.tableStructure.activeItems.length).toBe(1);
+            expect(timeSeriesCsv.xAxis.type).not.toBe(xyCsv.xAxis.type);
+            // Do an update from json that triggers a 'toggleActiveCallback'
+            xyCsv.updateFromJson({
+              tableStyle: {
+                dataVariable: "y"
+              }
+            });
+            expect(timeSeriesCsv.tableStructure.activeItems.length).toBe(0);
+            expect(xyCsv.tableStructure.activeItems.length).toBe(1);
 
-          // if we enable columns on timeSeries, then go ahead and
-          // tell the xyCsv to make sure it's disabled, the toggleActive callback
-          // shouldn't go ahead and disable the other charted items
-          timeSeriesCsv.updateFromJson({
-            tableStyle: {
-              columns: {
-                "0": {
-                  active: false
-                },
-                "1": {
-                  active: true
-                },
-                "2": {
-                  active: true
+            // if we enable columns on timeSeries, then go ahead and
+            // tell the xyCsv to make sure it's disabled, the toggleActive callback
+            // shouldn't go ahead and disable the other charted items
+            timeSeriesCsv.updateFromJson({
+              tableStyle: {
+                columns: {
+                  "0": {
+                    active: false
+                  },
+                  "1": {
+                    active: true
+                  },
+                  "2": {
+                    active: true
+                  }
                 }
               }
-            }
-          });
-          xyCsv.updateFromJson({
-            tableStyle: {
-              allVariablesUnactive: true
-            }
-          });
+            });
+            xyCsv.updateFromJson({
+              tableStyle: {
+                allVariablesUnactive: true
+              }
+            });
 
-          expect(timeSeriesCsv.tableStructure.activeItems.length).toBe(2);
-          expect(xyCsv.tableStructure.activeItems.length).toBe(0);
-          done();
-        });
+            expect(timeSeriesCsv.tableStructure.activeItems.length).toBe(2);
+            expect(xyCsv.tableStructure.activeItems.length).toBe(0);
+            done();
+          });
+      });
     });
     // Catalog items get shown and hidden through traversing stories, ensure they're initialised correctly
     describe("should not read an out of date state of tableStructure.activeItems when show is toggled", function() {
