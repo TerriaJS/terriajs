@@ -7,6 +7,7 @@ import classNames from "classnames";
 import createReactClass from "create-react-class";
 import defined from "terriajs-cesium/Source/Core/defined";
 import { observer } from "mobx-react";
+import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import when from "terriajs-cesium/Source/ThirdParty/when";
 
 import CommonStrata from "../../../Models/CommonStrata";
@@ -65,7 +66,9 @@ const ViewingControls = observer(createReactClass({
   splitItem() {
     const item = this.props.item;
     const terria = item.terria;
-    const newItem = item.duplicateModel(item.id + " (copy)");
+
+    const newItemId = createGuid();
+    const newItem = item.duplicateModel(newItemId);
 
     item.setTrait(CommonStrata.user, "splitDirection", ImagerySplitDirection.RIGHT);
     newItem.setTrait(CommonStrata.user, "name", item.name + " (copy)");
