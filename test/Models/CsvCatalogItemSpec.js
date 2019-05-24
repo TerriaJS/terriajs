@@ -2091,7 +2091,7 @@ describe("CsvCatalogItem & chart sharing", function() {
         });
     });
     // Catalog items get shown and hidden through traversing stories, ensure they're initialised correctly
-    describe("should not read an out of date state of tableStructure.activeItems when show is toggled", function(done) {
+    describe("should not read an out of date state of tableStructure.activeItems when show is toggled", function() {
       it("with time series csvs", function(done) {
         const timeSeriesCsv = new CsvCatalogItem(terria);
         timeSeriesCsv
