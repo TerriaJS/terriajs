@@ -16,12 +16,6 @@ const ExplorerWindow = observer(
       viewState: PropTypes.object.isRequired
     },
 
-    getInitialState() {
-      return {
-        isMounted: false
-      };
-    },
-
     onClose() {
       this.props.viewState.explorerPanelIsVisible = false;
       this.props.viewState.switchMobileView("nowViewing");

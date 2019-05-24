@@ -68,6 +68,11 @@ const FeatureInfoPanel = observer(
               }
               if (defined(pickedFeatures.allFeaturesAvailablePromise)) {
                 pickedFeatures.allFeaturesAvailablePromise.then(() => {
+                  if (this.props.viewState.featureInfoPanelIsVisible === false) {
+                    // Panel is closed, refrain from setting selectedFeature
+                    return;
+                  }
+
                   // We only show features that are associated with a catalog item, so make sure the one we select to be
                   // open initially is one we're actually going to show.
                   const featuresShownAtAll = pickedFeatures.features.filter(x =>
@@ -242,7 +247,8 @@ const FeatureInfoPanel = observer(
       );
       const panelClassName = classNames(Styles.panel, {
         [Styles.isCollapsed]: viewState.featureInfoPanelIsCollapsed,
-        [Styles.isVisible]: viewState.featureInfoPanelIsVisible
+        [Styles.isVisible]: viewState.featureInfoPanelIsVisible,
+        [Styles.isTranslucent]: viewState.explorerPanelIsVisible
       });
 
       const filterableCatalogItems = catalogItems

@@ -51,6 +51,7 @@ const HelpMenuPanel = createReactClass({
         theme={dropdownTheme}
         btnText="Help"
         viewState={this.props.viewState}
+        isOpen={this.state.isOpen}
         btnTitle="get help"
         onOpenChanged={this.onOpenChanged}
         forceClosed={defined(this.props.helpViewState.currentSequence)}

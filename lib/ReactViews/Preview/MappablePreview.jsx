@@ -3,7 +3,8 @@ import React from "react";
 import createReactClass from "create-react-class";
 
 import PropTypes from "prop-types";
-
+import defined from "terriajs-cesium/Source/Core/defined";
+// import DataPreviewMap from "./DataPreviewMap";
 import Description from "./Description";
 import ObserveModelMixin from "../ObserveModelMixin";
 import Styles from "./mappable-preview.scss";
@@ -23,6 +24,9 @@ const MappablePreview = createReactClass({
   },
 
   toggleOnMap(event) {
+    if (defined(this.props.viewState.storyShown)) {
+      this.props.viewState.storyShown = false;
+    }
     const catalogItem = this.props.previewed;
     if (catalogItem.loadReference) {
       // TODO: handle promise rejection
