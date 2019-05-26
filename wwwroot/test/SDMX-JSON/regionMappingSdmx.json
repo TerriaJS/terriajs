@@ -1,0 +1,2449 @@
+{
+    "comments": "Matching takes place in the order defined in this file. Place code matches before name matches, and smaller regions before larger ones.",
+    "regionWmsMap": {
+        "SA1_2011": {
+            "layerName": "FID_SA1_2011_AUST",
+            "server": "https://vector-tiles.terria.io/FID_SA1_2011_AUST/{z}/{x}/{y}.pbf",
+            "analyticsWmsLayerName": "region_map:FID_SA1_2011_AUST",
+            "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+            "regionProp": "SA1_MAIN11",
+            "aliases": [
+                "sa1_code_2011",
+                "sa1_maincode_2011"
+            ],
+            "digits": 11,
+            "description": "Statistical Area Level 1",
+            "regionIdsFile": "data/regionids/region_map-FID_SA1_2011_AUST_SA1_MAIN11.json",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694140799998,
+                -43.74050960300003,
+                159.10921900799997,
+                -9.142175976999999
+            ],
+            "nameProp": "SA1_7DIG11"
+        },
+        "SA1_7DIGIT_2011": {
+            "layerName": "FID_SA1_2011_AUST",
+            "server": "https://vector-tiles.terria.io/FID_SA1_2011_AUST/{z}/{x}/{y}.pbf",
+            "analyticsWmsLayerName": "region_map:FID_SA1_2011_AUST",
+            "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+            "regionProp": "SA1_7DIG11",
+            "aliases": [
+                "sa1_7digitcode_2011"
+            ],
+            "digits": 7,
+            "description": "Statistical Area Level 1",
+            "regionIdsFile": "data/regionids/region_map-FID_SA1_2011_AUST_SA1_7DIG11.json",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694140799998,
+                -43.74050960300003,
+                159.10921900799997,
+                -9.142175976999999
+            ],
+            "nameProp": "SA1_7DIG11"
+        },
+        "SA1_2016": {
+            "layerName": "SA1_2016_AUST",
+            "server": "https://vector-tiles.terria.io/SA1_2016_AUST/{z}/{x}/{y}.pbf",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694139400007,
+                -43.74050960299996,
+                167.99803499600006,
+                -9.142175976999962
+            ],
+            "regionProp": "SA1_MAIN16",
+            "aliases": [
+                "sa1",
+                "sa1_code",
+                "sa1_maincode_2016",
+                "sa1_code_2016"
+            ],
+            "nameProp": "SA1_7DIG16",
+            "description": "Statistical Area Level 1 2016 (ABS)",
+            "regionIdsFile": "data/regionids/region_map-SA1_2016_AUST_SA1_MAIN16.json"
+        },
+        "SA1_7DIGIT_2016": {
+            "layerName": "SA1_2016_AUST",
+            "server": "https://vector-tiles.terria.io/SA1_2016_AUST/{z}/{x}/{y}.pbf",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694139400007,
+                -43.74050960299996,
+                167.99803499600006,
+                -9.142175976999962
+            ],
+            "regionProp": "SA1_7DIG16",
+            "aliases": [
+                "sa1_7digitcode",
+                "sa1_7digitcode_2016"
+            ],
+            "nameProp": "SA1_7DIG16",
+            "description": "Statistical Area Level 1 2016 (ABS)",
+            "regionIdsFile": "data/regionids/region_map-SA1_2016_AUST_SA1_7DIG16.json"
+        },
+        "SA4_2011": {
+            "layerName": "FID_SA4_2011_AUST",
+            "server": "https://vector-tiles.terria.io/FID_SA4_2011_AUST/{z}/{x}/{y}.pbf",
+            "analyticsWmsLayerName": "region_map:FID_SA4_2011_AUST",
+            "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+            "regionProp": "SA4_CODE11",
+            "aliases": [
+                "sa4_code_2011"
+            ],
+            "digits": 3,
+            "description": "Statistical Area Level 4",
+            "regionIdsFile": "data/regionids/region_map-FID_SA4_2011_AUST_SA4_CODE11.json",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694140799998,
+                -43.74050960300003,
+                159.10921900799997,
+                -9.142175976999999
+            ],
+            "nameProp": "SA4_NAME11"
+        },
+        "SA4_NAME_2011": {
+            "layerName": "FID_SA4_2011_AUST",
+            "server": "https://vector-tiles.terria.io/FID_SA4_2011_AUST/{z}/{x}/{y}.pbf",
+            "analyticsWmsLayerName": "region_map:FID_SA4_2011_AUST",
+            "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+            "regionProp": "SA4_NAME11",
+            "aliases": [
+                "sa4_name_2011"
+            ],
+            "description": "Statistical Area Level 4",
+            "regionIdsFile": "data/regionids/region_map-FID_SA4_2011_AUST_SA4_NAME11.json",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694140799998,
+                -43.74050960300003,
+                159.10921900799997,
+                -9.142175976999999
+            ],
+            "nameProp": "SA4_NAME11"
+        },
+        "SA4_2016": {
+            "layerName": "SA4_2016_AUST",
+            "server": "https://vector-tiles.terria.io/SA4_2016_AUST/{z}/{x}/{y}.pbf",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694139400007,
+                -43.74050960299996,
+                167.99803499600006,
+                -9.142175976999962
+            ],
+            "regionProp": "SA4_CODE16",
+            "aliases": [
+                "sa4",
+                "sa4_code",
+                "sa4_code_2016"
+            ],
+            "nameProp": "SA4_NAME16",
+            "description": "Statistical Area Level 4 2016 (ABS)",
+            "regionIdsFile": "data/regionids/region_map-SA4_2016_AUST_SA4_CODE16.json"
+        },
+        "SA4_NAME_2016": {
+            "layerName": "SA4_2016_AUST",
+            "server": "https://vector-tiles.terria.io/SA4_2016_AUST/{z}/{x}/{y}.pbf",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694139400007,
+                -43.74050960299996,
+                167.99803499600006,
+                -9.142175976999962
+            ],
+            "regionProp": "SA4_NAME16",
+            "aliases": [
+                "sa4_name",
+                "sa4_name_2016"
+            ],
+            "nameProp": "SA4_NAME16",
+            "description": "Statistical Area Level 4 2016 (ABS)",
+            "regionIdsFile": "data/regionids/region_map-SA4_2016_AUST_SA4_NAME16.json"
+        },
+        "SA3_2011": {
+            "layerName": "FID_SA3_2011_AUST",
+            "server": "https://vector-tiles.terria.io/FID_SA3_2011_AUST/{z}/{x}/{y}.pbf",
+            "analyticsWmsLayerName": "region_map:FID_SA3_2011_AUST",
+            "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+            "regionProp": "SA3_CODE11",
+            "aliases": [
+                "sa3_code_2011"
+            ],
+            "digits": 5,
+            "description": "Statistical Area Level 3",
+            "regionIdsFile": "data/regionids/region_map-FID_SA3_2011_AUST_SA3_CODE11.json",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694140799998,
+                -43.74050960300003,
+                159.10921900799997,
+                -9.142175976999999
+            ],
+            "nameProp": "SA3_NAME11"
+        },
+        "SA3_NAME_2011": {
+            "layerName": "FID_SA3_2011_AUST",
+            "server": "https://vector-tiles.terria.io/FID_SA3_2011_AUST/{z}/{x}/{y}.pbf",
+            "analyticsWmsLayerName": "region_map:FID_SA3_2011_AUST",
+            "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+            "regionProp": "SA3_NAME11",
+            "aliases": [
+                "sa3_name_2011"
+            ],
+            "digits": 5,
+            "description": "Statistical Area Level 3",
+            "regionIdsFile": "data/regionids/region_map-FID_SA3_2011_AUST_SA3_NAME11.json",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694140799998,
+                -43.74050960300003,
+                159.10921900799997,
+                -9.142175976999999
+            ],
+            "nameProp": "SA3_NAME11"
+        },
+        "SA3_2016": {
+            "layerName": "SA3_2016_AUST",
+            "server": "https://vector-tiles.terria.io/SA3_2016_AUST/{z}/{x}/{y}.pbf",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694139400007,
+                -43.74050960299996,
+                167.99803499600006,
+                -9.142175976999962
+            ],
+            "regionProp": "SA3_CODE16",
+            "aliases": [
+                "sa3",
+                "sa3_code",
+                "sa3_code_2016"
+            ],
+            "nameProp": "SA3_NAME16",
+            "description": "Statistical Area Level 3 2016 (ABS)",
+            "regionIdsFile": "data/regionids/region_map-SA3_2016_AUST_SA3_CODE16.json"
+        },
+        "SA3_NAME_2016": {
+            "layerName": "SA3_2016_AUST",
+            "server": "https://vector-tiles.terria.io/SA3_2016_AUST/{z}/{x}/{y}.pbf",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694139400007,
+                -43.74050960299996,
+                167.99803499600006,
+                -9.142175976999962
+            ],
+            "regionProp": "SA3_NAME16",
+            "aliases": [
+                "sa3_name",
+                "sa3_name_2016"
+            ],
+            "nameProp": "SA3_NAME16",
+            "description": "Statistical Area Level 3 2016 (ABS)",
+            "regionIdsFile": "data/regionids/region_map-SA3_2016_AUST_SA3_NAME16.json"
+        },
+        "SA2_2011": {
+            "layerName": "FID_SA2_2011_AUST",
+            "server": "https://vector-tiles.terria.io/FID_SA2_2011_AUST/{z}/{x}/{y}.pbf",
+            "analyticsWmsLayerName": "region_map:FID_SA2_2011_AUST",
+            "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+            "regionProp": "SA2_MAIN11",
+            "aliases": [
+                "sa2_code_2011"
+            ],
+            "digits": 9,
+            "description": "Statistical Area Level 2",
+            "regionIdsFile": "data/regionids/region_map-FID_SA2_2011_AUST_SA2_MAIN11.json",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694140799998,
+                -43.74050960300003,
+                159.10921900799997,
+                -9.142175976999999
+            ],
+            "nameProp": "SA2_NAME11"
+        },
+        "SA2_5DIG_2011": {
+            "layerName": "FID_SA2_2011_AUST",
+            "server": "https://vector-tiles.terria.io/FID_SA2_2011_AUST/{z}/{x}/{y}.pbf",
+            "analyticsWmsLayerName": "region_map:FID_SA2_2011_AUST",
+            "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+            "regionProp": "SA2_5DIG11",
+            "aliases": [
+                "sa2_5digitcode_2011"
+            ],
+            "digits": 5,
+            "description": "Statistical Area Level 2",
+            "regionIdsFile": "data/regionids/region_map-FID_SA2_2011_AUST_SA2_5DIG11.json",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694140799998,
+                -43.74050960300003,
+                159.10921900799997,
+                -9.142175976999999
+            ],
+            "nameProp": "SA2_NAME11"
+        },
+        "SA2_NAME_2011": {
+            "layerName": "FID_SA2_2011_AUST",
+            "server": "https://vector-tiles.terria.io/FID_SA2_2011_AUST/{z}/{x}/{y}.pbf",
+            "analyticsWmsLayerName": "region_map:FID_SA2_2011_AUST",
+            "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+            "regionProp": "SA2_NAME11",
+            "aliases": [
+                "sa2_name_2011"
+            ],
+            "description": "Statistical Area Level 2",
+            "regionIdsFile": "data/regionids/region_map-FID_SA2_2011_AUST_SA2_NAME11.json",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694140799998,
+                -43.74050960300003,
+                159.10921900799997,
+                -9.142175976999999
+            ],
+            "nameProp": "SA2_NAME11"
+        },
+        "SA2_2016": {
+            "layerName": "SA2_2016_AUST",
+            "server": "https://vector-tiles.terria.io/SA2_2016_AUST/{z}/{x}/{y}.pbf",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694139400007,
+                -43.74050960299996,
+                167.99803499600006,
+                -9.142175976999962
+            ],
+            "regionProp": "SA2_MAIN16",
+            "aliases": [
+                "sa2",
+                "sa2_code",
+                "sa2_code_2016"
+            ],
+            "nameProp": "SA2_NAME16",
+            "description": "Statistical Area Level 2 2016 (ABS)",
+            "regionIdsFile": "data/regionids/region_map-SA2_2016_AUST_SA2_MAIN16.json"
+        },
+        "SA2_5DIG_2016": {
+            "layerName": "SA2_2016_AUST",
+            "server": "https://vector-tiles.terria.io/SA2_2016_AUST/{z}/{x}/{y}.pbf",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694139400007,
+                -43.74050960299996,
+                167.99803499600006,
+                -9.142175976999962
+            ],
+            "regionProp": "SA2_5DIG16",
+            "aliases": [
+                "sa2_5digitcode",
+                "sa2_5digitcode_2016"
+            ],
+            "nameProp": "SA2_NAME16",
+            "description": "Statistical Area Level 2 2016 (ABS)",
+            "regionIdsFile": "data/regionids/region_map-SA2_2016_AUST_SA2_5DIG16.json"
+        },
+        "SA2_NAME_2016": {
+            "layerName": "SA2_2016_AUST",
+            "server": "https://vector-tiles.terria.io/SA2_2016_AUST/{z}/{x}/{y}.pbf",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694139400007,
+                -43.74050960299996,
+                167.99803499600006,
+                -9.142175976999962
+            ],
+            "regionProp": "SA2_NAME16",
+            "aliases": [
+                "sa2_name",
+                "sa2_name_2016"
+            ],
+            "nameProp": "SA2_NAME16",
+            "description": "Statistical Area Level 2 2016 (ABS)",
+            "regionIdsFile": "data/regionids/region_map-SA2_2016_AUST_SA2_NAME16.json"
+        },
+        "SSC": {
+            "layerName": "FID_SSC_2011_AUST",
+            "server": "https://vector-tiles.terria.io/FID_SSC_2011_AUST/{z}/{x}/{y}.pbf",
+            "analyticsWmsLayerName": "region_map:FID_SSC_2011_AUST",
+            "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+            "regionProp": "SSC_CODE",
+            "aliases": [
+                "ssc_code_2011"
+            ],
+            "digits": 5,
+            "description": "ABS approximations of suburbs",
+            "regionIdsFile": "data/regionids/region_map-FID_SSC_2011_AUST_SSC_CODE.json",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694140799998,
+                -43.740509602999985,
+                159.10921900799997,
+                -9.142175976999999
+            ],
+            "nameProp": "SSC_NAME"
+        },
+        "SSC_NAME": {
+            "layerName": "FID_SSC_2011_AUST",
+            "server": "https://vector-tiles.terria.io/FID_SSC_2011_AUST/{z}/{x}/{y}.pbf",
+            "analyticsWmsLayerName": "region_map:FID_SSC_2011_AUST",
+            "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+            "regionProp": "SSC_NAME",
+            "aliases": [
+                "ssc_name_2011"
+            ],
+            "description": "ABS approximations of suburbs",
+            "regionIdsFile": "data/regionids/region_map-FID_SSC_2011_AUST_SSC_NAME.json",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694140799998,
+                -43.740509602999985,
+                159.10921900799997,
+                -9.142175976999999
+            ],
+            "nameProp": "SSC_NAME"
+        },
+        "SSC_2016": {
+            "layerName": "SSC_2016_AUST",
+            "server": "https://vector-tiles.terria.io/SSC_2016_AUST/{z}/{x}/{y}.pbf",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694139400007,
+                -43.74050960299996,
+                167.99803499600006,
+                -9.142175976999962
+            ],
+            "regionProp": "SSC_CODE16",
+            "aliases": [
+                "ssc_code_2016",
+                "ssc_code",
+                "ssc"
+            ],
+            "nameProp": "SSC_NAME16",
+            "description": "ABS approximations of suburbs (2016)",
+            "regionIdsFile": "data/regionids/region_map-SSC_2016_AUST_SSC_CODE16.json"
+        },
+        "SSC_NAME_2016": {
+            "layerName": "SSC_2016_AUST",
+            "server": "https://vector-tiles.terria.io/SSC_2016_AUST/{z}/{x}/{y}.pbf",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694139400007,
+                -43.74050960299996,
+                167.99803499600006,
+                -9.142175976999962
+            ],
+            "regionProp": "SSC_NAME16",
+            "aliases": [
+                "ssc_name_2016",
+                "ssc_name",
+                "suburb"
+            ],
+            "nameProp": "SSC_NAME16",
+            "description": "ABS approximations of suburbs (2016)",
+            "regionIdsFile": "data/regionids/region_map-SSC_2016_AUST_SSC_NAME16.json"
+        },
+        "LGA_2018": {
+            "layerName": "LGA_2018_AUST",
+            "server": "https://vector-tiles.terria.io/LGA_2018_AUST/{z}/{x}/{y}.pbf",
+            "serverType": "MVT",
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694139400008,
+                -43.74050960205758,
+                167.99803499600011,
+                -9.142175976703571
+            ],
+            "uniqueIdProp": "FID",
+            "regionProp": "LGA_CODE18",
+            "nameProp": "LGA_NAME18",
+            "aliases": [
+                "lga_code_2018",
+                "lga_code",
+                "lga"
+            ],
+            "description": "Local Government Areas 2018 (ABS)",
+            "regionIdsFile": "data/regionids/region_map-LGA_2018_AUST_LGA_CODE18.json"
+        },
+        "LGA_2017": {
+            "layerName": "LGA_2017_AUST",
+            "server": "https://vector-tiles.terria.io/LGA_2017_AUST/{z}/{x}/{y}.pbf",
+            "serverType": "MVT",
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694139400008,
+                -43.74050960205758,
+                167.99803499600011,
+                -9.142175976703571
+            ],
+            "uniqueIdProp": "FID",
+            "regionProp": "LGA_CODE17",
+            "nameProp": "LGA_NAME17",
+            "aliases": [
+                "lga_code_2017"
+            ],
+            "description": "Local Government Areas 2017 (ABS)",
+            "regionIdsFile": "data/regionids/region_map-LGA_2017_AUST_LGA_CODE17.json"
+        },
+        "LGA_2016": {
+            "layerName": "LGA_2016_AUST",
+            "server": "https://vector-tiles.terria.io/LGA_2016_AUST/{z}/{x}/{y}.pbf",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694139400007,
+                -43.74050960299996,
+                167.99803499600006,
+                -9.142175976999962
+            ],
+            "regionProp": "LGA_CODE16",
+            "aliases": [
+                "lga_code_2016"
+            ],
+            "nameProp": "LGA_NAME16",
+            "description": "Local government areas (2016)",
+            "regionIdsFile": "data/regionids/region_map-LGA_2016_AUST_LGA_CODE16.json"
+        },
+        "LGA_2015": {
+            "layerName": "FID_LGA_2015_AUST",
+            "server": "https://vector-tiles.terria.io/FID_LGA_2015_AUST/{z}/{x}/{y}.pbf",
+            "analyticsWmsLayerName": "region_map:FID_LGA_2015_AUST",
+            "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+            "regionProp": "LGA_CODE15",
+            "aliases": [
+                "lga_code_2015",
+                "lga_code_2014"
+            ],
+            "digits": 5,
+            "description": "Local government areas",
+            "regionIdsFile": "data/regionids/region_map-FID_LGA_2015_AUST_LGA_CODE15.json",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694140799998,
+                -43.740509602999985,
+                159.10921900799997,
+                -9.142175976999999
+            ],
+            "nameProp": "LGA_NAME15"
+        },
+        "LGA_2013": {
+            "layerName": "FID_LGA_2013_AUST",
+            "server": "https://vector-tiles.terria.io/FID_LGA_2013_AUST/{z}/{x}/{y}.pbf",
+            "analyticsWmsLayerName": "region_map:FID_LGA_2013_AUST",
+            "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+            "regionProp": "LGA_CODE13",
+            "aliases": [
+                "lga_code_2013",
+                "lga_code_2012"
+            ],
+            "digits": 5,
+            "description": "Local government areas",
+            "regionIdsFile": "data/regionids/region_map-FID_LGA_2013_AUST_LGA_CODE13.json",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694140799998,
+                -43.740509602999985,
+                159.10921900799997,
+                -9.142175976999999
+            ],
+            "nameProp": "LGA_NAME13"
+        },
+        "LGA_2011": {
+            "layerName": "FID_LGA_2011_AUST",
+            "server": "https://vector-tiles.terria.io/FID_LGA_2011_AUST/{z}/{x}/{y}.pbf",
+            "analyticsWmsLayerName": "region_map:FID_LGA_2011_AUST",
+            "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+            "regionProp": "LGA_CODE11",
+            "aliases": [
+                "lga_code_2011",
+                "lga_code_2010"
+            ],
+            "digits": 5,
+            "description": "Local government areas",
+            "regionIdsFile": "data/regionids/region_map-FID_LGA_2011_AUST_LGA_CODE11.json",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                112.92111395999996,
+                -43.74050957999999,
+                153.63872711999997,
+                -9.142175969999997
+            ],
+            "nameProp": "LGA_NAME11"
+        },
+        "LGA_NAME_2011": {
+            "_comment": "This section must go before State",
+            "layerName": "FID_LGA_2011_AUST",
+            "server": "https://vector-tiles.terria.io/FID_LGA_2011_AUST/{z}/{x}/{y}.pbf",
+            "analyticsWmsLayerName": "region_map:FID_LGA_2011_AUST",
+            "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+            "regionProp": "LGA_NAME11",
+            "aliases": [
+                "lga_name",
+                "lga_name_2011",
+                "lga_name_2015",
+                "lga_name_2014",
+                "lga_name_2013",
+                "lga_name_2012",
+                "lga_name_2010"
+            ],
+            "serverReplacements": [
+                [
+                    " \\([a-z]+\\)$",
+                    ""
+                ],
+                [
+                    "-",
+                    " "
+                ]
+            ],
+            "dataReplacements": [
+                [
+                    "^The ",
+                    ""
+                ],
+                [
+                    "^.*Council of (the )?",
+                    ""
+                ],
+                [
+                    "^.* of (the )?",
+                    ""
+                ],
+                [
+                    " Council$",
+                    ""
+                ],
+                [
+                    " (Shire|City|Rural City|Borough|District|Aboriginal|Municipality|Municipal|Regional|Town|Government Community|Aboriginal Shire|Island|\\(Unincorporated\\)|\\(Uninc.\\))$",
+                    ""
+                ],
+                [
+                    "( \\([A-Z]+\\)$)",
+                    ""
+                ],
+                [
+                    "-",
+                    " "
+                ]
+            ],
+            "disambigProp": "STE_NAME16",
+            "disambigRegionId": "STE_NAME_2016",
+            "description": "Local government areas",
+            "regionIdsFile": "data/regionids/region_map-FID_LGA_2011_AUST_LGA_NAME11.json",
+            "regionDisambigIdsFile": "data/regionids/region_map-FID_LGA_2011_AUST_STE_NAME11.json",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                112.92111395999996,
+                -43.74050957999999,
+                153.63872711999997,
+                -9.142175969999997
+            ],
+            "nameProp": "LGA_NAME11"
+        },
+        "POA": {
+            "layerName": "FID_POA_2011_AUST",
+            "server": "https://vector-tiles.terria.io/FID_POA_2011_AUST/{z}/{x}/{y}.pbf",
+            "analyticsWmsLayerName": "region_map:FID_POA_2011_AUST",
+            "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+            "regionProp": "POA_CODE",
+            "aliases": [
+                "poa_2011",
+                "postcode_2011",
+                "poa_code_2011",
+                "postcode_2015"
+            ],
+            "digits": 4,
+            "dataReplacements": [
+                [
+                    "^(?=\\d\\d\\d$)",
+                    "0"
+                ]
+            ],
+            "description": "Postal areas (ABS approximations of postcodes)",
+            "regionIdsFile": "data/regionids/region_map-FID_POA_2011_AUST_POA_CODE.json",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694140799998,
+                -43.59821500299999,
+                159.10921900799997,
+                -9.142175976999999
+            ],
+            "nameProp": "POA_NAME"
+        },
+        "POA_2016": {
+            "layerName": "POA_2016_AUST",
+            "server": "https://vector-tiles.terria.io/POA_2016_AUST/{z}/{x}/{y}.pbf",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694139400007,
+                -43.74050960299996,
+                167.99803499600006,
+                -9.142175976999962
+            ],
+            "regionProp": "POA_CODE16",
+            "aliases": [
+                "poa_code_2016",
+                "poa_code",
+                "poa",
+                "postcode_2016",
+                "postcode"
+            ],
+            "digits": 4,
+            "dataReplacements": [
+                [
+                    "^(?=\\d\\d\\d$)",
+                    "0"
+                ]
+            ],
+            "nameProp": "POA_NAME16",
+            "description": "Postal areas (ABS approximations of postcodes) (2016)",
+            "regionIdsFile": "data/regionids/region_map-POA_2016_AUST_POA_CODE16.json"
+        },
+        "CED_CODE_2016": {
+            "layerName": "FID_CED_2016_AUST",
+            "server": "https://vector-tiles.terria.io/FID_CED_2016_AUST/{z}/{x}/{y}.pbf",
+            "analyticsWmsLayerName": "region_map:FID_CED_2016_AUST",
+            "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+            "regionProp": "CED_CODE16",
+            "aliases": [
+                "ced_code_2016",
+                "ced_code",
+                "ced"
+            ],
+            "digits": 3,
+            "description": "Commonwealth electoral districts (2016 ABS approximations)",
+            "regionIdsFile": "data/regionids/region_map-FID_CED_2016_AUST_CED_CODE16.json",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694140799998,
+                -43.74050960300003,
+                159.10921900799997,
+                -9.142175976999999
+            ],
+            "nameProp": "CED_NAME16"
+        },
+        "CED_NAME_2016": {
+            "layerName": "FID_CED_2016_AUST",
+            "server": "https://vector-tiles.terria.io/FID_CED_2016_AUST/{z}/{x}/{y}.pbf",
+            "analyticsWmsLayerName": "region_map:FID_CED_2016_AUST",
+            "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+            "regionProp": "CED_NAME16",
+            "aliases": [
+                "ced_name_2016",
+                "ced_name"
+            ],
+            "description": "Commonwealth electoral districts (2016 ABS approximations)",
+            "regionIdsFile": "data/regionids/region_map-FID_CED_2016_AUST_CED_NAME16.json",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694140799998,
+                -43.74050960300003,
+                159.10921900799997,
+                -9.142175976999999
+            ],
+            "nameProp": "CED_NAME16"
+        },
+        "CED_CODE_2013": {
+            "layerName": "FID_CED_2013_AUST",
+            "server": "https://vector-tiles.terria.io/FID_CED_2013_AUST/{z}/{x}/{y}.pbf",
+            "analyticsWmsLayerName": "region_map:FID_CED_2013_AUST",
+            "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+            "regionProp": "CED_CODE13",
+            "aliases": [
+                "ced_code_2013"
+            ],
+            "digits": 3,
+            "description": "Commonwealth electoral districts (2013 ABS approximations)",
+            "regionIdsFile": "data/regionids/region_map-FID_CED_2013_AUST_CED_CODE13.json",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694140799998,
+                -43.740509602999985,
+                159.10921900799997,
+                -9.142175976999999
+            ],
+            "nameProp": "CED_NAME13"
+        },
+        "CED_NAME_2013": {
+            "layerName": "FID_CED_2013_AUST",
+            "server": "https://vector-tiles.terria.io/FID_CED_2013_AUST/{z}/{x}/{y}.pbf",
+            "analyticsWmsLayerName": "region_map:FID_CED_2013_AUST",
+            "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+            "regionProp": "CED_NAME13",
+            "aliases": [
+                "ced_name_2013"
+            ],
+            "description": "Commonwealth electoral districts (2013 ABS approximations)",
+            "regionIdsFile": "data/regionids/region_map-FID_CED_2013_AUST_CED_NAME13.json",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694140799998,
+                -43.740509602999985,
+                159.10921900799997,
+                -9.142175976999999
+            ],
+            "nameProp": "CED_NAME13"
+        },
+        "CED_CODE_2011": {
+            "layerName": "FID_CED_2011_AUST",
+            "server": "https://vector-tiles.terria.io/FID_CED_2011_AUST/{z}/{x}/{y}.pbf",
+            "analyticsWmsLayerName": "region_map:FID_CED_2011_AUST",
+            "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+            "regionProp": "CED_CODE",
+            "aliases": [
+                "ced_code_2011"
+            ],
+            "digits": 3,
+            "description": "Commonwealth electoral districts (ABS approximations)",
+            "disabledregionIdsFile": "data/regionids/region_map-FID_CED_2011_AUST_CED_CODE.json",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694140799998,
+                -43.740509602999985,
+                159.10921900799997,
+                -9.142175976999999
+            ],
+            "nameProp": "CED_NAME",
+            "regionIdsFile": "data/regionids/region_map-FID_CED_2011_AUST_CED_CODE.json"
+        },
+        "CED_NAME_2011": {
+            "layerName": "FID_CED_2011_AUST",
+            "server": "https://vector-tiles.terria.io/FID_CED_2011_AUST/{z}/{x}/{y}.pbf",
+            "analyticsWmsLayerName": "region_map:FID_CED_2011_AUST",
+            "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+            "regionProp": "CED_NAME",
+            "aliases": [
+                "ced_name_2011"
+            ],
+            "description": "Commonwealth electoral districts (ABS approximations)",
+            "regionIdsFile": "data/regionids/region_map-FID_CED_2011_AUST_CED_NAME.json",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694140799998,
+                -43.740509602999985,
+                159.10921900799997,
+                -9.142175976999999
+            ],
+            "nameProp": "CED_NAME"
+        },
+        "COM_ELB_ID_2016": {
+            "layerName": "FID_COM20160509_ELB",
+            "server": "https://vector-tiles.terria.io/FID_COM20160509_ELB/{z}/{x}/{y}.pbf",
+            "analyticsWmsLayerName": "region_map:FID_COM20160509_ELB",
+            "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+            "regionProp": "DIV_ID",
+            "aliases": [
+                "divisionid",
+                "com_elb_id_2016",
+                "com_elb_id",
+                "com_elb"
+            ],
+            "digits": 3,
+            "description": "Commonwealth electoral districts (Australian Electoral Commission)",
+            "regionIdsFile": "data/regionids/region_map-FID_COM20160509_ELB_DIV_ID.json",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81676599999997,
+                -43.740509999999986,
+                159.1092189999999,
+                -9.142175999999996
+            ],
+            "nameProp": "SORTNAME"
+        },
+        "COM_ELB_NAME_2016": {
+            "layerName": "FID_COM20160509_ELB",
+            "server": "https://vector-tiles.terria.io/FID_COM20160509_ELB/{z}/{x}/{y}.pbf",
+            "analyticsWmsLayerName": "region_map:FID_COM20160509_ELB",
+            "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+            "regionProp": "ELECT_DIV",
+            "textCodes": true,
+            "aliases": [
+                "divisionnm",
+                "com_elb_name_2016",
+                "com_elb_name"
+            ],
+            "description": "Commonwealth electoral districts (Australian Electoral Commission)",
+            "regionIdsFile": "data/regionids/region_map-FID_COM20160509_ELB_ELECT_DIV.json",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81676599999997,
+                -43.740509999999986,
+                159.1092189999999,
+                -9.142175999999996
+            ],
+            "nameProp": "SORTNAME"
+        },
+        "COM_ELB_NAME_2011": {
+            "layerName": "FID_COM20111216_ELB_region",
+            "server": "https://vector-tiles.terria.io/FID_COM20111216_ELB_region/{z}/{x}/{y}.pbf",
+            "analyticsWmsLayerName": "region_map:FID_COM20111216_ELB_region",
+            "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+            "regionProp": "ELECT_DIV",
+            "textCodes": true,
+            "aliases": [
+                "com_elb_name_2011"
+            ],
+            "description": "Commonwealth electoral districts (Australian Electoral Commission)",
+            "regionIdsFile": "data/regionids/region_map-FID_COM20111216_ELB_region_ELECT_DIV.json",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81676599999999,
+                -43.74050999999999,
+                159.10921899999994,
+                -9.142175999999997
+            ],
+            "nameProp": "SORTNAME"
+        },
+        "COM_ELB_ID_2013": {
+            "layerName": "CommonwealthElectoralDivision_2013",
+            "server": "https://vector-tiles.terria.io/CommonwealthElectoralDivision_2013/{z}/{x}/{y}.pbf",
+            "serverType": "MVT",
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.816766,
+                -43.74051,
+                159.109219,
+                -9.142176
+            ],
+            "uniqueIdProp": "FID",
+            "regionProp": "ced_code_2013",
+            "nameProp": "ced_name_2013",
+            "aliases": [
+                "com_elb_id_2013"
+            ],
+            "description": "Commonwealth electoral districts for 2013 election (Australian Electoral Commission)",
+            "regionIdsFile": "data/regionids/region_map-CommonwealthElectoralDivision_2013_ced_code_2013.json"
+        },
+        "COM_ELB_NAME_2013": {
+            "layerName": "CommonwealthElectoralDivision_2013",
+            "server": "https://vector-tiles.terria.io/CommonwealthElectoralDivision_2013/{z}/{x}/{y}.pbf",
+            "serverType": "MVT",
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.816766,
+                -43.74051,
+                159.109219,
+                -9.142176
+            ],
+            "uniqueIdProp": "FID",
+            "regionProp": "ced_name_2013",
+            "nameProp": "ced_name_2013",
+            "aliases": [
+                "com_elb_name_2013"
+            ],
+            "description": "Commonwealth electoral districts for 2013 election (Australian Electoral Commission)",
+            "regionIdsFile": "data/regionids/region_map-CommonwealthElectoralDivision_2013_ced_name_2013.json"
+        },
+        "COM_ELB_ID_2010": {
+            "layerName": "CommonwealthElectoralDivision_2010",
+            "server": "https://vector-tiles.terria.io/CommonwealthElectoralDivision_2010/{z}/{x}/{y}.pbf",
+            "serverType": "MVT",
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.816766,
+                -43.74051,
+                159.109219,
+                -9.142176
+            ],
+            "uniqueIdProp": "FID",
+            "regionProp": "ced_code_2010",
+            "nameProp": "ced_name_2010",
+            "aliases": [
+                "com_elb_id_2010"
+            ],
+            "description": "Commonwealth electoral districts for 2010 election (Australian Electoral Commission)",
+            "regionIdsFile": "data/regionids/region_map-CommonwealthElectoralDivision_2010_ced_code_2010.json"
+        },
+        "COM_ELB_NAME_2010": {
+            "layerName": "CommonwealthElectoralDivision_2010",
+            "server": "https://vector-tiles.terria.io/CommonwealthElectoralDivision_2010/{z}/{x}/{y}.pbf",
+            "serverType": "MVT",
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.816766,
+                -43.74051,
+                159.109219,
+                -9.142176
+            ],
+            "uniqueIdProp": "FID",
+            "regionProp": "ced_name_2010",
+            "nameProp": "ced_name_2010",
+            "aliases": [
+                "com_elb_name_2010"
+            ],
+            "description": "Commonwealth electoral districts for 2010 election (Australian Electoral Commission)",
+            "regionIdsFile": "data/regionids/region_map-CommonwealthElectoralDivision_2010_ced_name_2010.json"
+        },
+        "COM_ELB_ID_2007": {
+            "layerName": "CommonwealthElectoralDivision_2007",
+            "server": "https://vector-tiles.terria.io/CommonwealthElectoralDivision_2007/{z}/{x}/{y}.pbf",
+            "serverType": "MVT",
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.817997,
+                -43.74051,
+                159.105442,
+                -9.142186
+            ],
+            "uniqueIdProp": "FID",
+            "regionProp": "ced_code_2007",
+            "nameProp": "ced_name_2007",
+            "aliases": [
+                "com_elb_id_2007"
+            ],
+            "description": "Commonwealth electoral districts for 2007 election (Australian Electoral Commission)",
+            "regionIdsFile": "data/regionids/region_map-CommonwealthElectoralDivision_2007_ced_code_2007.json"
+        },
+        "COM_ELB_NAME_2007": {
+            "layerName": "CommonwealthElectoralDivision_2007",
+            "server": "https://vector-tiles.terria.io/CommonwealthElectoralDivision_2007/{z}/{x}/{y}.pbf",
+            "serverType": "MVT",
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.817997,
+                -43.74051,
+                159.105442,
+                -9.142186
+            ],
+            "uniqueIdProp": "FID",
+            "regionProp": "ced_name_2007",
+            "nameProp": "ced_name_2007",
+            "aliases": [
+                "com_elb_name_2007"
+            ],
+            "description": "Commonwealth electoral districts for 2007 election (Australian Electoral Commission)",
+            "regionIdsFile": "data/regionids/region_map-CommonwealthElectoralDivision_2007_ced_name_2007.json"
+        },
+        "SED": {
+            "layerName": "FID_SED_2011_AUST",
+            "server": "https://vector-tiles.terria.io/FID_SED_2011_AUST/{z}/{x}/{y}.pbf",
+            "analyticsWmsLayerName": "region_map:FID_SED_2011_AUST",
+            "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+            "regionProp": "SED_CODE",
+            "aliases": [
+                "sed_code_2011",
+                "sed_code",
+                "sed"
+            ],
+            "digits": 5,
+            "description": "State electoral districts (ABS approximations)",
+            "regionIdsFile": "data/regionids/region_map-FID_SED_2011_AUST_SED_CODE.json",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                112.92111395199997,
+                -43.740509602999985,
+                159.10921900799997,
+                -9.142175976999999
+            ],
+            "nameProp": "SED_NAME"
+        },
+        "SED_NAME": {
+            "layerName": "FID_SED_2011_AUST",
+            "server": "https://vector-tiles.terria.io/FID_SED_2011_AUST/{z}/{x}/{y}.pbf",
+            "analyticsWmsLayerName": "region_map:FID_SED_2011_AUST",
+            "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+            "regionProp": "SED_NAME",
+            "aliases": [
+                "sed_name_2011",
+                "sed_name"
+            ],
+            "description": "State electoral districts (ABS approximations)",
+            "regionIdsFile": "data/regionids/region_map-FID_SED_2011_AUST_SED_NAME.json",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                112.92111395199997,
+                -43.740509602999985,
+                159.10921900799997,
+                -9.142175976999999
+            ],
+            "nameProp": "SED_NAME"
+        },
+        "GCCSA_2011": {
+            "layerName": "FID_GCCSA_2011_AUST",
+            "server": "https://vector-tiles.terria.io/FID_GCCSA_2011_AUST/{z}/{x}/{y}.pbf",
+            "analyticsWmsLayerName": "region_map:FID_GCCSA_2011_AUST",
+            "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+            "regionProp": "GCC_CODE11",
+            "aliases": [
+                "gccsa_code_2011"
+            ],
+            "digits": 5,
+            "description": "Greater capital city statistical areas",
+            "regionIdsFile": "data/regionids/region_map-FID_GCCSA_2011_AUST_GCC_CODE11.json",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694140799998,
+                -43.74050960300003,
+                159.10921900799997,
+                -9.142175976999999
+            ],
+            "nameProp": "GCC_NAME11"
+        },
+        "GCCSA_NAME_2011": {
+            "layerName": "FID_GCCSA_2011_AUST",
+            "server": "https://vector-tiles.terria.io/FID_GCCSA_2011_AUST/{z}/{x}/{y}.pbf",
+            "analyticsWmsLayerName": "region_map:FID_GCCSA_2011_AUST",
+            "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+            "regionProp": "GCC_NAME11",
+            "aliases": [
+                "gccsa_name_2011"
+            ],
+            "description": "Greater capital city statistical areas",
+            "regionIdsFile": "data/regionids/region_map-FID_GCCSA_2011_AUST_GCC_NAME11.json",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694140799998,
+                -43.74050960300003,
+                159.10921900799997,
+                -9.142175976999999
+            ],
+            "nameProp": "GCC_NAME11"
+        },
+        "GCCSA_2016": {
+            "layerName": "GCCSA_2016_AUST",
+            "server": "https://vector-tiles.terria.io/GCCSA_2016_AUST/{z}/{x}/{y}.pbf",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694139400007,
+                -43.74050960299996,
+                167.99803499600006,
+                -9.142175976999962
+            ],
+            "regionProp": "GCC_CODE16",
+            "aliases": [
+                "gccsa",
+                "gccsa_code",
+                "gccsa_code_2016"
+            ],
+            "nameProp": "GCC_NAME16",
+            "description": "Greater capital city statistical areas 2016 (ABS)",
+            "regionIdsFile": "data/regionids/region_map-GCCSA_2016_AUST_GCC_CODE16.json"
+        },
+        "GCCSA_NAME_2016": {
+            "layerName": "GCCSA_2016_AUST",
+            "server": "https://vector-tiles.terria.io/GCCSA_2016_AUST/{z}/{x}/{y}.pbf",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694139400007,
+                -43.74050960299996,
+                167.99803499600006,
+                -9.142175976999962
+            ],
+            "regionProp": "GCC_NAME16",
+            "aliases": [
+                "gccsa_name",
+                "gccsa_name_2016"
+            ],
+            "nameProp": "GCC_NAME16",
+            "description": "Greater capital city statistical areas 2016 (ABS)",
+            "regionIdsFile": "data/regionids/region_map-GCCSA_2016_AUST_GCC_NAME16.json"
+        },
+        "SUA": {
+            "layerName": "FID_SUA_2011_AUST",
+            "server": "https://vector-tiles.terria.io/FID_SUA_2011_AUST/{z}/{x}/{y}.pbf",
+            "analyticsWmsLayerName": "region_map:FID_SUA_2011_AUST",
+            "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+            "regionProp": "SUA_CODE11",
+            "aliases": [
+                "sua_code_2011",
+                "sua_code",
+                "sua"
+            ],
+            "digits": 4,
+            "description": "Significant urban areas",
+            "regionIdsFile": "data/regionids/region_map-FID_SUA_2011_AUST_SUA_CODE11.json",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694140799998,
+                -43.740509602999985,
+                159.10921900799997,
+                -9.142175976999999
+            ],
+            "nameProp": "SUA_NAME11"
+        },
+        "SUA_NAME": {
+            "layerName": "FID_SUA_2011_AUST",
+            "server": "https://vector-tiles.terria.io/FID_SUA_2011_AUST/{z}/{x}/{y}.pbf",
+            "analyticsWmsLayerName": "region_map:FID_SUA_2011_AUST",
+            "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+            "regionProp": "SUA_NAME11",
+            "aliases": [
+                "sua_name_2011",
+                "sua_name"
+            ],
+            "description": "Significant urban areas",
+            "serverReplacements": [
+                [
+                    "[^A-Za-z]",
+                    ""
+                ]
+            ],
+            "dataReplacements": [
+                [
+                    "[^A-Za-z]",
+                    ""
+                ]
+            ],
+            "regionIdsFile": "data/regionids/region_map-FID_SUA_2011_AUST_SUA_NAME11.json",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694140799998,
+                -43.740509602999985,
+                159.10921900799997,
+                -9.142175976999999
+            ],
+            "nameProp": "SUA_NAME11"
+        },
+        "STE_2011": {
+            "layerName": "FID_STE_2011_AUST",
+            "server": "https://vector-tiles.terria.io/FID_STE_2011_AUST/{z}/{x}/{y}.pbf",
+            "analyticsWmsLayerName": "region_map:FID_STE_2011_AUST",
+            "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+            "regionProp": "STE_CODE11",
+            "aliases": [
+                "ste_code_2011"
+            ],
+            "digits": 1,
+            "regionIdsFile": "data/regionids/region_map-FID_STE_2011_AUST_STE_CODE11.json",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694140799998,
+                -43.74050960300003,
+                159.10921900799997,
+                -9.142175976999999
+            ],
+            "nameProp": "STE_NAME11"
+        },
+        "STE_2016": {
+            "layerName": "STE_2016_AUST",
+            "server": "https://vector-tiles.terria.io/STE_2016_AUST/{z}/{x}/{y}.pbf",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694139400007,
+                -43.74050960299996,
+                167.99803499600006,
+                -9.142175976999962
+            ],
+            "regionProp": "STE_CODE16",
+            "aliases": [
+                "ste",
+                "ste_code",
+                "ste_code_2016"
+            ],
+            "nameProp": "STE_NAME16",
+            "description": "States and Territories 2016 (ABS)",
+            "regionIdsFile": "data/regionids/region_map-STE_2016_AUST_STE_CODE16.json"
+        },
+        "SOS": {
+            "layerName": "FID_SOS_2011_AUST",
+            "server": "https://vector-tiles.terria.io/FID_SOS_2011_AUST/{z}/{x}/{y}.pbf",
+            "analyticsWmsLayerName": "region_map:FID_SOS_2011_AUST",
+            "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+            "regionProp": "SOS_CODE11",
+            "aliases": [
+                "sos_code_2011",
+                "sos_code",
+                "sos"
+            ],
+            "digits": 2,
+            "description": "Section of state",
+            "regionIdsFile": "data/regionids/region_map-FID_SOS_2011_AUST_SOS_CODE11.json",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694140799998,
+                -43.740509602999985,
+                159.10921900799997,
+                -9.142175976999999
+            ],
+            "nameProp": "SOS_NAME11"
+        },
+        "SOSR": {
+            "layerName": "FID_SOSR_2011_AUST",
+            "server": "https://vector-tiles.terria.io/FID_SOSR_2011_AUST/{z}/{x}/{y}.pbf",
+            "analyticsWmsLayerName": "region_map:FID_SOSR_2011_AUST",
+            "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+            "regionProp": "SSR_CODE11",
+            "aliases": [
+                "sosr_code_2011",
+                "sosr_code",
+                "sosr"
+            ],
+            "digits": 3,
+            "description": "Section of state range",
+            "regionIdsFile": "data/regionids/region_map-FID_SOSR_2011_AUST_SSR_CODE11.json",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694140799998,
+                -43.740509602999985,
+                159.10921900799997,
+                -9.142175976999999
+            ],
+            "nameProp": "SSR_NAME11"
+        },
+        "UCL": {
+            "layerName": "FID_UCL_2011_AUST",
+            "server": "https://vector-tiles.terria.io/FID_UCL_2011_AUST/{z}/{x}/{y}.pbf",
+            "analyticsWmsLayerName": "region_map:FID_UCL_2011_AUST",
+            "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+            "regionProp": "UCL_CODE11",
+            "aliases": [
+                "ucl_code_2011",
+                "ucl_code",
+                "ucl"
+            ],
+            "digits": 6,
+            "description": "Urban centres and localities",
+            "regionIdsFile": "data/regionids/region_map-FID_UCL_2011_AUST_UCL_CODE11.json",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694140799998,
+                -43.740509602999985,
+                159.10921900799997,
+                -9.142175976999999
+            ],
+            "nameProp": "UCL_NAME11"
+        },
+        "IREG": {
+            "layerName": "FID_IREG_2011_AUST",
+            "server": "https://vector-tiles.terria.io/FID_IREG_2011_AUST/{z}/{x}/{y}.pbf",
+            "analyticsWmsLayerName": "region_map:FID_IREG_2011_AUST",
+            "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+            "regionProp": "IR_CODE11",
+            "aliases": [
+                "ireg_code_2011",
+                "ireg_code",
+                "ireg"
+            ],
+            "digits": 3,
+            "description": "Indigenous regions",
+            "regionIdsFile": "data/regionids/region_map-FID_IREG_2011_AUST_IR_CODE11.json",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694140799998,
+                -43.740509602999985,
+                159.10921900799997,
+                -9.142175976999999
+            ],
+            "nameProp": "IR_NAME11"
+        },
+        "ILOC": {
+            "layerName": "FID_ILOC_2011_AUST",
+            "server": "https://vector-tiles.terria.io/FID_ILOC_2011_AUST/{z}/{x}/{y}.pbf",
+            "analyticsWmsLayerName": "region_map:FID_ILOC_2011_AUST",
+            "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+            "regionProp": "IL_CODE11",
+            "aliases": [
+                "iloc_code_2011",
+                "iloc_code",
+                "iloc"
+            ],
+            "digits": 8,
+            "description": "Indigenous locations",
+            "regionIdsFile": "data/regionids/region_map-FID_ILOC_2011_AUST_IL_CODE11.json",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694140799998,
+                -43.740509602999985,
+                159.10921900799997,
+                -9.142175976999999
+            ],
+            "nameProp": "IL_NAME11"
+        },
+        "IARE": {
+            "layerName": "FID_IARE_2011_AUST",
+            "server": "https://vector-tiles.terria.io/FID_IARE_2011_AUST/{z}/{x}/{y}.pbf",
+            "analyticsWmsLayerName": "region_map:FID_IARE_2011_AUST",
+            "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+            "regionProp": "IA_CODE11",
+            "aliases": [
+                "iare_code_2011",
+                "iare_code",
+                "iare"
+            ],
+            "digits": 6,
+            "description": "Indigenous areas",
+            "regionIdsFile": "data/regionids/region_map-FID_IARE_2011_AUST_IA_CODE11.json",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694140799998,
+                -43.740509602999985,
+                159.10921900799997,
+                -9.142175976999999
+            ],
+            "nameProp": "IA_NAME11"
+        },
+        "RA": {
+            "layerName": "FID_RA_2011_AUST",
+            "server": "https://vector-tiles.terria.io/FID_RA_2011_AUST/{z}/{x}/{y}.pbf",
+            "analyticsWmsLayerName": "region_map:FID_RA_2011_AUST",
+            "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+            "regionProp": "RA_CODE11",
+            "aliases": [
+                "ra_code_2011",
+                "ra_code",
+                "ra"
+            ],
+            "digits": 2,
+            "description": "Remoteness areas",
+            "regionIdsFile": "data/regionids/region_map-FID_RA_2011_AUST_RA_CODE11.json",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694140799998,
+                -43.740509602999985,
+                159.10921900799997,
+                -9.142175976999999
+            ],
+            "nameProp": "RA_NAME11"
+        },
+        "TR": {
+            "layerName": "FID_TR_2015_AUST",
+            "server": "https://vector-tiles.terria.io/FID_TR_2015_AUST/{z}/{x}/{y}.pbf",
+            "analyticsWmsLayerName": "region_map:FID_TR_2015_AUST",
+            "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+            "regionProp": "TR_CODE15",
+            "aliases": [
+                "tr_code_2015",
+                "tr_code",
+                "tr"
+            ],
+            "digits": 5,
+            "description": "Tourism regions",
+            "regionIdsFile": "data/regionids/region_map-FID_TR_2015_AUST_TR_CODE15.json",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                112.92111395199997,
+                -43.740509602999985,
+                159.10921900799997,
+                -9.142175976999999
+            ],
+            "nameProp": "TR_NAME15"
+        },
+        "TR_2013": {
+            "layerName": "FID_TR_2013_AUST",
+            "server": "https://vector-tiles.terria.io/FID_TR_2013_AUST/{z}/{x}/{y}.pbf",
+            "analyticsWmsLayerName": "region_map:FID_TR_2013_AUST",
+            "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+            "regionProp": "TR_CODE13",
+            "aliases": [
+                "tr_code_2013",
+                "tr_2013"
+            ],
+            "digits": 5,
+            "description": "Tourism regions",
+            "regionIdsFile": "data/regionids/region_map-FID_TR_2013_AUST_TR_CODE13.json",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                112.92111395199997,
+                -43.740509602999985,
+                159.10921900799997,
+                -9.142175976999999
+            ],
+            "nameProp": "TR_NAME13"
+        },
+        "NRMR": {
+            "layerName": "FID_NRMR_2011_AUST",
+            "server": "https://vector-tiles.terria.io/FID_NRMR_2011_AUST/{z}/{x}/{y}.pbf",
+            "analyticsWmsLayerName": "region_map:FID_NRMR_2011_AUST",
+            "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+            "regionProp": "NRMR_CODE",
+            "aliases": [
+                "nrmr",
+                "nrmr_code",
+                "nrmr_code_2011"
+            ],
+            "digits": 3,
+            "description": "Natural resource management regions",
+            "regionIdsFile": "data/regionids/region_map-FID_NRMR_2011_AUST_NRMR_CODE.json",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694140799995,
+                -43.74050960299998,
+                159.10921900799994,
+                -9.142175976999997
+            ],
+            "nameProp": "NRMR_NAME"
+        },
+        "NRMR_NAME": {
+            "layerName": "FID_NRMR_2011_AUST",
+            "server": "https://vector-tiles.terria.io/FID_NRMR_2011_AUST/{z}/{x}/{y}.pbf",
+            "analyticsWmsLayerName": "region_map:FID_NRMR_2011_AUST",
+            "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+            "regionProp": "NRMR_NAME",
+            "aliases": [
+                "nrmr_name"
+            ],
+            "description": "Natural resource management regions",
+            "regionIdsFile": "data/regionids/region_map-FID_NRMR_2011_AUST_NRMR_NAME.json",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694140799995,
+                -43.74050960299998,
+                159.10921900799994,
+                -9.142175976999997
+            ],
+            "nameProp": "NRMR_NAME"
+        },
+        "ADD": {
+            "layerName": "FID_ADD_2011_AUST",
+            "server": "https://vector-tiles.terria.io/FID_ADD_2011_AUST/{z}/{x}/{y}.pbf",
+            "analyticsWmsLayerName": "region_map:FID_ADD_2011_AUST",
+            "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+            "regionProp": "ADD_CODE",
+            "aliases": [
+                "add",
+                "add_code",
+                "add_code_2011"
+            ],
+            "digits": 3,
+            "description": "Australian drainage divisions",
+            "regionIdsFile": "data/regionids/region_map-FID_ADD_2011_AUST_ADD_CODE.json",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                112.92111395199994,
+                -43.74050960299998,
+                159.10921900799994,
+                -9.142175976999997
+            ],
+            "nameProp": "ADD_NAME"
+        },
+        "ADD_NAME": {
+            "layerName": "FID_ADD_2011_AUST",
+            "server": "https://vector-tiles.terria.io/FID_ADD_2011_AUST/{z}/{x}/{y}.pbf",
+            "analyticsWmsLayerName": "region_map:FID_ADD_2011_AUST",
+            "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+            "regionProp": "ADD_NAME",
+            "aliases": [
+                "add_name"
+            ],
+            "description": "Australian drainage divisions",
+            "regionIdsFile": "data/regionids/region_map-FID_ADD_2011_AUST_ADD_NAME.json",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                112.92111395199994,
+                -43.74050960299998,
+                159.10921900799994,
+                -9.142175976999997
+            ],
+            "nameProp": "ADD_NAME"
+        },
+        "ADD_2016": {
+            "layerName": "ADD_2016_AUST",
+            "server": "https://vector-tiles.terria.io/ADD_2016_AUST/{z}/{x}/{y}.pbf",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694139400007,
+                -43.74050960299996,
+                167.99803499600006,
+                -9.142175976999962
+            ],
+            "regionProp": "ADD_CODE16",
+            "aliases": [
+                "add_code_2016",
+                "add_code",
+                "add"
+            ],
+            "nameProp": "ADD_NAME16",
+            "description": "Australian drainage divisions (2016)",
+            "regionIdsFile": "data/regionids/region_map-ADD_2016_AUST_ADD_CODE16.json"
+        },
+        "ADD_NAME_2016": {
+            "layerName": "ADD_2016_AUST",
+            "server": "https://vector-tiles.terria.io/ADD_2016_AUST/{z}/{x}/{y}.pbf",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694139400007,
+                -43.74050960299996,
+                167.99803499600006,
+                -9.142175976999962
+            ],
+            "regionProp": "ADD_NAME16",
+            "aliases": [
+                "add_name_2016",
+                "add_name"
+            ],
+            "nameProp": "ADD_NAME16",
+            "description": "Australian drainage divisions (2016)",
+            "regionIdsFile": "data/regionids/region_map-ADD_2016_AUST_ADD_NAME16.json"
+        },
+        "PHN": {
+            "layerName": "FID_PHN_boundaries_AUS_Sep2015_V5",
+            "server": "https://vector-tiles.terria.io/FID_PHN_boundaries_AUS_Sep2015_V5/{z}/{x}/{y}.pbf",
+            "analyticsWmsLayerName": "region_map:FID_PHN_boundaries_AUS_Sep2015_V5",
+            "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+            "regionProp": "PHN_Code",
+            "aliases": [
+                "phn_code_2015",
+                "phn_code",
+                "phn"
+            ],
+            "digits": 6,
+            "description": "Primary health networks",
+            "regionIdsFile": "data/regionids/region_map-FID_PHN_boundaries_AUS_Sep2015_V5_PHN_Code.json",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694140800003,
+                -43.74050960299996,
+                159.10921900800005,
+                -9.142175976999962
+            ],
+            "nameProp": "PHN_Name"
+        },
+        "STE_NAME_2011": {
+            "layerName": "FID_STE_2011_AUST",
+            "server": "https://vector-tiles.terria.io/FID_STE_2011_AUST/{z}/{x}/{y}.pbf",
+            "analyticsWmsLayerName": "region_map:FID_STE_2011_AUST",
+            "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+            "regionProp": "STE_NAME11",
+            "aliases": [
+                "ste_name_2011"
+            ],
+            "dataReplacements": [
+                [
+                    "^Vic[.]?$",
+                    "Victoria"
+                ],
+                [
+                    "^N[ .]?S[ .]?W[ .]?$",
+                    "New South Wales"
+                ],
+                [
+                    "^S[ .]?A[ .]?$",
+                    "South Australia"
+                ],
+                [
+                    "^N[ .]?T[ .]?$",
+                    "Northern Territory"
+                ],
+                [
+                    "^W[ .]?A[ .]?$",
+                    "Western Australia"
+                ],
+                [
+                    "^Tas[.]?$",
+                    "Tasmania"
+                ],
+                [
+                    "^Q[ .]?L[ .]?D[ .]?$",
+                    "Queensland"
+                ],
+                [
+                    "^A[ .]?C[ .]?T[ .]?$",
+                    "Australian Capital Territory"
+                ],
+                [
+                    "^1$",
+                    "New South Wales"
+                ],
+                [
+                    "^2$",
+                    "Victoria"
+                ],
+                [
+                    "^3$",
+                    "Queensland"
+                ],
+                [
+                    "^4$",
+                    "South Australia"
+                ],
+                [
+                    "^5$",
+                    "Western Australia"
+                ],
+                [
+                    "^6$",
+                    "Northern Territory"
+                ],
+                [
+                    "^7$",
+                    "Australian Capital Territory"
+                ],
+                [
+                    "^8$",
+                    "Other Territories"
+                ]
+            ],
+            "regionIdsFile": "data/regionids/region_map-FID_STE_2011_AUST_STE_NAME11.json",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694140799998,
+                -43.74050960300003,
+                159.10921900799997,
+                -9.142175976999999
+            ],
+            "nameProp": "STE_NAME11"
+        },
+        "STE_NAME_2016": {
+            "layerName": "STE_2016_AUST",
+            "server": "https://vector-tiles.terria.io/STE_2016_AUST/{z}/{x}/{y}.pbf",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694139400007,
+                -43.74050960299996,
+                167.99803499600006,
+                -9.142175976999962
+            ],
+            "regionProp": "STE_NAME16",
+            "aliases": [
+                "state",
+                "ste_name",
+                "ste_name_2016"
+            ],
+            "nameProp": "STE_NAME16",
+            "description": "States and Territories 2016 (ABS)",
+            "dataReplacements": [
+                [
+                    "^Vic[.]?$",
+                    "Victoria"
+                ],
+                [
+                    "^N[ .]?S[ .]?W[ .]?$",
+                    "New South Wales"
+                ],
+                [
+                    "^S[ .]?A[ .]?$",
+                    "South Australia"
+                ],
+                [
+                    "^N[ .]?T[ .]?$",
+                    "Northern Territory"
+                ],
+                [
+                    "^W[ .]?A[ .]?$",
+                    "Western Australia"
+                ],
+                [
+                    "^Tas[.]?$",
+                    "Tasmania"
+                ],
+                [
+                    "^Q[ .]?L[ .]?D[ .]?$",
+                    "Queensland"
+                ],
+                [
+                    "^A[ .]?C[ .]?T[ .]?$",
+                    "Australian Capital Territory"
+                ],
+                [
+                    "^1$",
+                    "New South Wales"
+                ],
+                [
+                    "^2$",
+                    "Victoria"
+                ],
+                [
+                    "^3$",
+                    "Queensland"
+                ],
+                [
+                    "^4$",
+                    "South Australia"
+                ],
+                [
+                    "^5$",
+                    "Western Australia"
+                ],
+                [
+                    "^6$",
+                    "Northern Territory"
+                ],
+                [
+                    "^7$",
+                    "Australian Capital Territory"
+                ],
+                [
+                    "^8$",
+                    "Other Territories"
+                ]
+            ],
+            "regionIdsFile": "data/regionids/region_map-STE_2016_AUST_STE_NAME16.json"
+        },
+        "SLA": {
+            "layerName": "fid_asgc06_sla",
+            "server": "https://vector-tiles.terria.io/fid_asgc06_sla/{z}/{x}/{y}.pbf",
+            "analyticsWmsLayerName": "region_map:fid_asgc06_sla",
+            "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+            "regionProp": "SLA_CODE06",
+            "nameProp": "SLA_NAME06",
+            "aliases": [
+                "sla_code_2006",
+                "sla_code",
+                "sla_9digitcode_2006",
+                "sla_9digitcode",
+                "sla"
+            ],
+            "digits": 9,
+            "description": "Statistical Local Areas (obsolete)",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81676569599999,
+                -43.740509602999985,
+                159.10921900799997,
+                -9.142175976999999
+            ],
+            "regionIdsFile": "data/regionids/region_map-fid_asgc06_sla_SLA_CODE06.json"
+        },
+        "SLA_5DIGITCODE": {
+            "layerName": "fid_asgc06_sla",
+            "server": "https://vector-tiles.terria.io/fid_asgc06_sla/{z}/{x}/{y}.pbf",
+            "analyticsWmsLayerName": "region_map:fid_asgc06_sla",
+            "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+            "regionProp": "SLA_5DIGIT",
+            "nameProp": "SLA_NAME06",
+            "aliases": [
+                "sla_5digitcode_2006",
+                "sla_5digitcode"
+            ],
+            "digits": 5,
+            "description": "Statistical Local Areas (obsolete)",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81676569599999,
+                -43.740509602999985,
+                159.10921900799997,
+                -9.142175976999999
+            ],
+            "regionIdsFile": "data/regionids/region_map-fid_asgc06_sla_SLA_5DIGIT.json"
+        },
+        "SLA_NAME": {
+            "layerName": "fid_asgc06_sla",
+            "server": "https://vector-tiles.terria.io/fid_asgc06_sla/{z}/{x}/{y}.pbf",
+            "analyticsWmsLayerName": "region_map:fid_asgc06_sla",
+            "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+            "regionProp": "SLA_NAME06",
+            "nameProp": "SLA_NAME06",
+            "aliases": [
+                "sla_name_2006",
+                "sla_name"
+            ],
+            "description": "Statistical Local Areas (obsolete)",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81676569599999,
+                -43.740509602999985,
+                159.10921900799997,
+                -9.142175976999999
+            ],
+            "regionIdsFile": "data/regionids/region_map-fid_asgc06_sla_SLA_NAME06.json"
+        },
+        "CD": {
+            "layerName": "fid_asgc06_cd",
+            "server": "https://vector-tiles.terria.io/fid_asgc06_cd/{z}/{x}/{y}.pbf",
+            "analyticsWmsLayerName": "region_map:fid_asgc06_cd",
+            "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+            "regionProp": "CD_CODE06",
+            "aliases": [
+                "cd_7digitcode_2006",
+                "cd_code_2006",
+                "cd_code",
+                "cd"
+            ],
+            "digits": 7,
+            "description": "Census collection district (obsolete)",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.76945846399997,
+                -43.740509602999985,
+                159.10921900799997,
+                -9.142175976999999
+            ],
+            "nameProp": "CD_CODE06",
+            "regionIdsFile": "data/regionids/region_map-fid_asgc06_cd_CD_CODE06.json"
+        },
+        "CNT2": {
+            "layerName": "FID_TM_WORLD_BORDERS",
+            "server": "https://vector-tiles.terria.io/FID_TM_WORLD_BORDERS/{z}/{x}/{y}.pbf",
+            "analyticsWmsLayerName": "region_map:FID_TM_WORLD_BORDERS",
+            "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+            "regionProp": "ISO2",
+            "aliases": [
+                "cnt2",
+                "iso2"
+            ],
+            "digits": 2,
+            "textCodes": true,
+            "regionIdsFile": "data/regionids/region_map-FID_TM_WORLD_BORDERS_ISO2.json",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 10,
+            "serverMaxZoom": 28,
+            "bbox": [
+                -179.99999999999994,
+                -85.05109999999998,
+                179.99999999999994,
+                83.62359600000005
+            ],
+            "nameProp": "NAME"
+        },
+        "CNT3": {
+            "layerName": "FID_TM_WORLD_BORDERS",
+            "server": "https://vector-tiles.terria.io/FID_TM_WORLD_BORDERS/{z}/{x}/{y}.pbf",
+            "analyticsWmsLayerName": "region_map:FID_TM_WORLD_BORDERS",
+            "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+            "regionProp": "ISO3",
+            "aliases": [
+                "cnt3",
+                "iso3"
+            ],
+            "digits": 3,
+            "textCodes": true,
+            "regionIdsFile": "data/regionids/region_map-FID_TM_WORLD_BORDERS_ISO3.json",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 10,
+            "serverMaxZoom": 28,
+            "bbox": [
+                -179.99999999999994,
+                -85.05109999999998,
+                179.99999999999994,
+                83.62359600000005
+            ],
+            "nameProp": "NAME"
+        },
+        "COUNTRY": {
+            "layerName": "FID_TM_WORLD_BORDERS",
+            "server": "https://vector-tiles.terria.io/FID_TM_WORLD_BORDERS/{z}/{x}/{y}.pbf",
+            "analyticsWmsLayerName": "region_map:FID_TM_WORLD_BORDERS",
+            "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+            "regionProp": "NAME",
+            "textCodes": true,
+            "aliases": [
+                "country"
+            ],
+            "regionIdsFile": "data/regionids/region_map-FID_TM_WORLD_BORDERS_NAME.json",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 10,
+            "serverMaxZoom": 28,
+            "bbox": [
+                -179.99999999999994,
+                -85.05109999999998,
+                179.99999999999994,
+                83.62359600000005
+            ],
+            "nameProp": "NAME"
+        },
+        "AUS": {
+            "layerName": "FID_AUS_2011_AUST",
+            "server": "https://vector-tiles.terria.io/FID_AUS_2011_AUST/{z}/{x}/{y}.pbf",
+            "analyticsWmsLayerName": "region_map:FID_AUS_2011_AUST",
+            "analyticsWmsServer": "http://geoserver.nationalmap.nicta.com.au/region_map/ows",
+            "regionProp": "AUS_CODE",
+            "aliases": [
+                "aus",
+                "aus_code",
+                "aus_code_2011",
+                "aus_code_2016"
+            ],
+            "regionIdsFile": "data/regionids/region_map-FID_AUS_2011_AUST_AUS_CODE.json",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81694140799998,
+                -43.74050960300003,
+                159.10921900799997,
+                -9.142175976999999
+            ],
+            "nameProp": "AUS_NAME"
+        },
+        "ESA_09": {
+            "layerName": "FID_AUS_ESA_09",
+            "server": "https://vector-tiles.terria.io/FID_AUS_ESA_09/{z}/{x}/{y}.pbf",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81676599999999,
+                -43.74050999999999,
+                159.10921899999994,
+                -9.142175999999997
+            ],
+            "regionProp": "ESA_CODE",
+            "aliases": [
+                "esa",
+                "esa_code",
+                "esa_code_2009"
+            ],
+            "nameProp": "ESA_NAME",
+            "description": "Employment Service Areas 2009-2015+",
+            "regionIdsFile": "data/regionids/region_map-FID_AUS_ESA_09_ESA_CODE.json"
+        },
+        "ESA_NAME_09": {
+            "layerName": "FID_AUS_ESA_09",
+            "server": "https://vector-tiles.terria.io/FID_AUS_ESA_09/{z}/{x}/{y}.pbf",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                96.81676599999999,
+                -43.74050999999999,
+                159.10921899999994,
+                -9.142175999999997
+            ],
+            "regionProp": "ESA_NAME",
+            "aliases": [
+                "esa_name",
+                "esa_name_2009"
+            ],
+            "nameProp": "ESA_NAME",
+            "description": "Employment Service Areas 2009-2015+",
+            "regionIdsFile": "data/regionids/region_map-FID_AUS_ESA_09_ESA_NAME.json"
+        },
+        "IBRA7_REG": {
+            "layerName": "ibra7_regions",
+            "server": "https://vector-tiles.terria.io/ibra7_regions/{z}/{x}/{y}.pbf",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                72.57737629065888,
+                -54.776992953536805,
+                167.9981399159851,
+                -9.141289999999968
+            ],
+            "regionProp": "REG_CODE_7",
+            "aliases": [
+                "ibra7_reg",
+                "ibra7_reg_code"
+            ],
+            "nameProp": "REG_NAME_7",
+            "description": "IBRA Regions v7",
+            "regionIdsFile": "data/regionids/region_map-ibra7_regions_REG_CODE_7.json"
+        },
+        "IBRA7_REG_NAME": {
+            "layerName": "ibra7_regions",
+            "server": "https://vector-tiles.terria.io/ibra7_regions/{z}/{x}/{y}.pbf",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                72.57737629065888,
+                -54.776992953536805,
+                167.9981399159851,
+                -9.141289999999968
+            ],
+            "regionProp": "REG_NAME_7",
+            "aliases": [
+                "ibra7_reg_name"
+            ],
+            "nameProp": "REG_NAME_7",
+            "description": "IBRA Regions v7",
+            "regionIdsFile": "data/regionids/region_map-ibra7_regions_REG_NAME_7.json"
+        },
+        "IBRA7_SUB": {
+            "layerName": "ibra7_subregions",
+            "server": "https://vector-tiles.terria.io/ibra7_subregions/{z}/{x}/{y}.pbf",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                72.57737629065888,
+                -54.77699295353692,
+                167.9981399159851,
+                -9.141289999999968
+            ],
+            "regionProp": "SUB_CODE_7",
+            "aliases": [
+                "ibra7_sub",
+                "ibra7_sub_code"
+            ],
+            "nameProp": "SUB_NAME_7",
+            "description": "IBRA Subregions v7",
+            "regionIdsFile": "data/regionids/region_map-ibra7_subregions_SUB_CODE_7.json"
+        },
+        "IBRA7_SUB_NAME": {
+            "layerName": "ibra7_subregions",
+            "server": "https://vector-tiles.terria.io/ibra7_subregions/{z}/{x}/{y}.pbf",
+            "serverType": "MVT",
+            "serverSubdomains": [],
+            "serverMinZoom": 0,
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                72.57737629065888,
+                -54.77699295353692,
+                167.9981399159851,
+                -9.141289999999968
+            ],
+            "regionProp": "SUB_NAME_7",
+            "aliases": [
+                "ibra7_sub_name"
+            ],
+            "nameProp": "SUB_NAME_7",
+            "description": "IBRA Subregions v7",
+            "regionIdsFile": "data/regionids/region_map-ibra7_subregions_SUB_NAME_7.json"
+        },
+        "NZ_AU_2017": {
+            "layerName": "NZ_AU2017_HD_Clipped",
+            "server": "https://vector-tiles.terria.io/NZ_AU2017_HD_Clipped/{z}/{x}/{y}.pbf",
+            "serverType": "MVT",
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                -176.89314232298426,
+                -47.28999251282331,
+                178.57724348546415,
+                -34.392630183116
+            ],
+            "uniqueIdProp": "FID",
+            "regionProp": "AU2017",
+            "nameProp": "AU2017_NAM",
+            "aliases": [
+                "nz_au_code_2017",
+                "nz_au"
+            ],
+            "description": "Stats New Zealand Area Units 2017",
+            "regionIdsFile": "data/regionids/region_map-NZ_AU2017_HD_Clipped_AU2017.json"
+        },
+        "NZ_AU_2017_NAME": {
+            "layerName": "NZ_AU2017_HD_Clipped",
+            "server": "https://vector-tiles.terria.io/NZ_AU2017_HD_Clipped/{z}/{x}/{y}.pbf",
+            "serverType": "MVT",
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                -176.89314232298426,
+                -47.28999251282331,
+                178.57724348546415,
+                -34.392630183116
+            ],
+            "uniqueIdProp": "FID",
+            "regionProp": "AU2017_NAM",
+            "nameProp": "AU2017_NAM",
+            "aliases": [
+                "nz_au_name_2017"
+            ],
+            "description": "Stats New Zealand Area Units 2017",
+            "regionIdsFile": "data/regionids/region_map-NZ_AU2017_HD_Clipped_AU2017_NAM.json"
+        },
+        "NZ_MB_2017": {
+            "layerName": "NZ_MB2017_HD_Clipped",
+            "server": "https://vector-tiles.terria.io/NZ_MB2017_HD_Clipped/{z}/{x}/{y}.pbf",
+            "serverType": "MVT",
+            "serverMaxNativeZoom": 12,
+            "serverMaxZoom": 28,
+            "bbox": [
+                -176.89314232298426,
+                -47.28999251282331,
+                178.57724348546415,
+                -34.392630183116
+            ],
+            "uniqueIdProp": "FID",
+            "regionProp": "MB2017",
+            "nameProp": "MB2017",
+            "aliases": [
+                "nz_mb_code_2017",
+                "nz_mb"
+            ],
+            "description": "Stats New Zealand Mesh Blocks 2017",
+            "regionIdsFile": "data/regionids/region_map-NZ_MB2017_HD_Clipped_MB2017.json"
+        }
+    }
+}

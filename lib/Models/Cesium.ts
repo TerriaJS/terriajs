@@ -81,6 +81,12 @@ export default class Cesium extends GlobeOrMap {
   readonly canShowSplitter = true;
   private readonly _eventHelper: EventHelper;
   private _pauseMapInteractionCount = 0;
+  private _lastTarget:
+    | CameraView
+    | Cesium.Rectangle
+    | Cesium.DataSource
+    | Mappable
+    | /*TODO Cesium.Cesium3DTileset*/ any;
 
   /* Disposers */
   private readonly _selectionIndicator: CesiumSelectionIndicator;
@@ -394,7 +400,7 @@ export default class Cesium extends GlobeOrMap {
     flightDurationSeconds = defaultValue(flightDurationSeconds, 3.0);
 
     var that = this;
-
+    that._lastTarget = target;
     return when()
       .then(function() {
         if (target instanceof Rectangle) {
@@ -415,6 +421,10 @@ export default class Cesium extends GlobeOrMap {
           return sampleTerrain(terrainProvider, level, positions).then(function(
             results
           ) {
+            if (that._lastTarget !== target) {
+              return;
+            }
+
             var finalDestinationCartographic = new Cartographic(
               destination.longitude,
               destination.latitude,
@@ -439,13 +449,16 @@ export default class Cesium extends GlobeOrMap {
               deferred.resolve();
             });
             return deferred.promise.then(function() {
+              if (that._lastTarget !== target) {
+                return;
+              }
               return zoomToDataSource(that, target, flightDurationSeconds);
             });
           }
           return zoomToDataSource(that, target);
         } else if (defined(target.readyPromise)) {
           return target.readyPromise.then(function() {
-            if (defined(target.boundingSphere)) {
+            if (defined(target.boundingSphere) && that._lastTarget === target) {
               zoomToBoundingSphere(that, target, flightDurationSeconds);
             }
           });

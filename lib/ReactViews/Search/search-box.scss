@@ -41,14 +41,14 @@ input[type="text"].searchField {
 
 .searchClear {
   composes: btn from "../../Sass/common/_buttons.scss";
-  right: 0;
-  top: 0;
+  right: 0px;
+  top: 0px;
   position: absolute;
   height: $input-height;
   width: $input-height;
   svg {
-    height: 25px;
-    width: 25px;
+    height: 15px;
+    width: 15px;
     margin: 0 auto;
     fill: $charcoal-grey;
     fill-opacity: 0.5;
