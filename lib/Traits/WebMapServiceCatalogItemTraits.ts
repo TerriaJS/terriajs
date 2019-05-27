@@ -10,6 +10,7 @@ import UrlTraits from "./UrlTraits";
 import MappableTraits from "./MappableTraits";
 import DiscretelyTimeVaryingTraits from "./DiscretelyTimeVaryingTraits";
 import SplitterTraits from "./SplitterTraits";
+import LayerOrderingTraits from "./LayerOrderingTraits";
 
 export class LegendTraits extends ModelTraits {
   @primitiveTrait({
@@ -75,6 +76,7 @@ export class WebMapServiceAvailableLayerStylesTraits extends ModelTraits {
 }
 
 export default class WebMapServiceCatalogItemTraits extends mixTraits(
+  LayerOrderingTraits,
   SplitterTraits,
   DiscretelyTimeVaryingTraits,
   GetCapabilitiesTraits,

@@ -8,8 +8,10 @@ import objectTrait from "./objectTrait";
 import primitiveTrait from "./primitiveTrait";
 import RasterLayerTraits from "./RasterLayerTraits";
 import TimeVaryingTraits from "./TimeVaryingTraits";
+import LayerOrderingTraits from "./LayerOrderingTraits";
 
 export default class TableTraits extends mixTraits(
+  LayerOrderingTraits,
   CatalogMemberTraits,
   TimeVaryingTraits,
   MappableTraits,
