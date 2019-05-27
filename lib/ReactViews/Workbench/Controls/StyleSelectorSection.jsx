@@ -4,92 +4,70 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
-import ObserveModelMixin from "../../ObserveModelMixin";
-
+import { observer } from "mobx-react";
 import Styles from "./style-selector-section.scss";
+import CommonStrata from "../../../Models/CommonStrata";
 
 const StyleSelectorSection = createReactClass({
   displayName: "StyleSelectorSection",
-  mixins: [ObserveModelMixin],
 
   propTypes: {
     item: PropTypes.object.isRequired
   },
 
-  changeStyle(layer, event) {
-    const item = this.props.item;
-    const layers = item.layers.split(",");
-    const styles = item.styles.split(",");
-
-    const layerIndex = layers.indexOf(layer.name);
-    if (layerIndex === -1) {
-      // Not a valid layer?  Something went wrong.
-      return;
-    }
-
-    styles[layerIndex] = event.target.value;
-    item.styles = styles.join(",");
-    item.refresh();
+  changeStyle(styleSelector, event) {
+    styleSelector.chooseActiveStyle(CommonStrata.user, event.target.value);
   },
 
   render() {
     const item = this.props.item;
-
-    // This section only makes sense if we have a layer that supports styles.
-    if (
-      item.disableUserChanges ||
-      !defined(item.availableStyles) ||
-      !defined(item.styles) ||
-      !defined(item.layers) ||
-      item.layers.length === 0
-    ) {
+    if (defined(item.styleSelector)) {
+      return this.renderSingleStyleSelector(item.styleSelector);
+    } else if (defined(item.styleSelectors)) {
+      return this.renderMultipleStyleSelectors(item.styleSelectors);
+    } else {
       return null;
     }
-
-    const layerTitles = item.layerTitles;
-    const styles = item.styles.split(",");
-    const layers = item.layers.split(",").map((item, i) => ({
-      name: item.trim(),
-      title: (layerTitles && layerTitles[i]) || item.trim(),
-      style: styles[i]
-    }));
-
-    return (
-      <div className={Styles.styleSelector}>
-        {layers.map(this.renderStyleSelectorForLayer)}
-      </div>
-    );
   },
 
-  renderStyleSelectorForLayer(layer) {
-    const item = this.props.item;
-    const styles = item.availableStyles[layer.name];
-    if (!defined(styles) || styles.length < 2) {
+  renderSingleStyleSelector(styleSelector) {
+    const availableStyles = styleSelector.availableStyles;
+    if (!defined(availableStyles) || availableStyles.length < 2) {
       return null;
     }
 
-    const label =
-      item.layers.indexOf(",") >= 0 ? layer.title + " Style" : "Style";
+    const label = styleSelector.name && styleSelector.name.length > 0 && (
+      <label className={Styles.title} htmlFor={styleSelector.name}>
+        {label}
+      </label>
+    );
 
     return (
-      <div key={layer.name}>
-        <label className={Styles.title} htmlFor={layer.name}>
-          {label}
-        </label>
+      <div key={styleSelector.id}>
+        {label}
         <select
           className={Styles.field}
-          name={layer.name}
-          value={layer.style}
-          onChange={this.changeStyle.bind(this, layer)}
+          name={styleSelector.id}
+          value={styleSelector.activeStyleId}
+          onChange={this.changeStyle.bind(this, styleSelector)}
         >
-          {styles.map(item => (
-            <option key={item.name} value={item.name}>
-              {item.title || item.name}
+          {availableStyles.map(item => (
+            <option key={item.id} value={item.id}>
+              {item.name}
             </option>
           ))}
         </select>
       </div>
     );
+  },
+
+  renderMultipleStyleSelectors(styleSelectors) {
+    return (
+      <div className={Styles.styleSelector}>
+        {styleSelectors.map(this.renderSingleStyleSelector)}
+      </div>
+    );
   }
 });
-module.exports = StyleSelectorSection;
+
+module.exports = observer(StyleSelectorSection);
