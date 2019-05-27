@@ -6,6 +6,8 @@ import CsvCatalogItemTraits from "../Traits/CsvCatalogItemTraits";
 import TableColorStyleTraits from "../Traits/TableColorStyleTraits";
 import TableStyleTraits from "../Traits/TableStyleTraits";
 import TableColumnType from "./TableColumnType";
+import LegendTraits, { LegendItemTraits } from "../Traits/LegendTraits";
+import { computed } from "mobx";
 
 export default class TableAutomaticStylesStratum extends LoadableStratum(
   CsvCatalogItemTraits
@@ -44,13 +46,54 @@ export default class TableAutomaticStylesStratum extends LoadableStratum(
         column.type === TableColumnType.enum
     );
 
-    return columns.map(column =>
+    return columns.map((column, i) =>
       createStratumInstance(TableStyleTraits, {
         id: column.name,
         color: createStratumInstance(TableColorStyleTraits, {
-          colorColumn: column.name
+          colorColumn: column.name,
+          legend: new TableAutomaticLegendStratum(this.catalogItem, i)
         })
       })
     );
+  }
+}
+
+class TableAutomaticLegendStratum extends LoadableStratum(LegendTraits) {
+  constructor(readonly catalogItem: CsvCatalogItem, readonly index: number) {
+    super();
+  }
+
+  @computed
+  get legendFromActiveStyle(): StratumFromTraits<LegendTraits> | undefined {
+    const tableStyle = this.catalogItem.activeTableStyle;
+    if (tableStyle === undefined) {
+      return undefined;
+    }
+
+    return tableStyle.createColorLegend();
+  }
+
+  @computed
+  get url() {
+    if (this.legendFromActiveStyle === undefined) {
+      return undefined;
+    }
+    return this.legendFromActiveStyle.url;
+  }
+
+  @computed
+  get urlMimeType() {
+    if (this.legendFromActiveStyle === undefined) {
+      return undefined;
+    }
+    return this.legendFromActiveStyle.urlMimeType;
+  }
+
+  @computed
+  get items(): StratumFromTraits<LegendItemTraits>[] {
+    if (this.legendFromActiveStyle === undefined) {
+      return [];
+    }
+    return this.legendFromActiveStyle.items || [];
   }
 }

@@ -10,22 +10,7 @@ import UrlTraits from "./UrlTraits";
 import MappableTraits from "./MappableTraits";
 import DiscretelyTimeVaryingTraits from "./DiscretelyTimeVaryingTraits";
 import SplitterTraits from "./SplitterTraits";
-
-export class LegendTraits extends ModelTraits {
-  @primitiveTrait({
-    type: "string",
-    name: "URL",
-    description: "The URL of the legend image."
-  })
-  url?: string;
-
-  @primitiveTrait({
-    type: "string",
-    name: "MIME Type",
-    description: "The MIME type of the legend image."
-  })
-  mimeType?: string;
-}
+import LegendTraits from "./LegendTraits";
 
 export class WebMapServiceAvailableStyleTraits extends ModelTraits {
   @primitiveTrait({
@@ -118,7 +103,7 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
     type: LegendTraits,
     idProperty: "url"
   })
-  legendUrls?: LegendTraits[];
+  legends?: LegendTraits[];
 
   @primitiveTrait({
     type: "number",

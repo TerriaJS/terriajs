@@ -395,10 +395,15 @@ const allCommas = /,/g;
 
 function toNumber(value: string): number | null {
   // Remove commas and try to parse as a number.
+  const withoutCommas = value.replace(allCommas, "");
+  if (withoutCommas.length === 0) {
+    // Treat an empty string as not a number rather than as zero.
+    return null;
+  }
+
   // `Number()` requires that the entire string form a number, unlike
   // parseInt and parseFloat which allow extra non-number characters
   // at the end.
-  const withoutCommas = value.replace(allCommas, "");
   const asNumber = Number(withoutCommas);
   if (!Number.isNaN(asNumber)) {
     return asNumber;

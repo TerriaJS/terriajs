@@ -54,3 +54,34 @@
 .imageAnchor {
   max-width: 100%;
 }
+
+.generatedLegend {
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+.legendBox {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+}
+
+.legendTitles {
+  line-height: 30px;
+  padding-left: 5px;
+}
+
+.legendTitleAbove {
+  position: absolute;
+  margin-top: -30px;
+}
+
+.legendTitleBelow {
+  position: absolute;
+  margin-top: 0px;
+}
+
+.legendTitle {
+  position: absolute;
+  margin-top: -15px;
+}

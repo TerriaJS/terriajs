@@ -19,6 +19,8 @@ import TableColumn from "../Table/TableColumn";
 import TableColumnType from "../Table/TableColumnType";
 import TableStyle from "../Table/TableStyle";
 import TableTraits from "../Traits/TableTraits";
+import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
+import LegendTraits from "../Traits/LegendTraits";
 
 export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
   Base: T
@@ -151,6 +153,15 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
       };
     }
 
+    get legends(): readonly ModelPropertiesFromTraits<LegendTraits>[] {
+      if (this.activeTableStyle === undefined) {
+        return [];
+      }
+
+      const colorLegend = this.activeTableStyle.colorTraits.legend;
+      return filterOutUndefined([colorLegend]);
+    }
+
     findFirstColumnByType(type: TableColumnType): TableColumn | undefined {
       return this.tableColumns.find(column => column.type === type);
     }
@@ -192,7 +203,7 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
           .colorMap;
 
         const outlineColor = Color.fromCssColorString(
-          style.colorTraits.outlineColor
+          "white" //this.terria.baseMapContrastColor;
         );
 
         const dataSource = new CustomDataSource(this.name || "Table");
