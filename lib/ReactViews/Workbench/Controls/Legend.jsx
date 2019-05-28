@@ -60,11 +60,19 @@ const Legend = observer(
       return this.legendsWithError[legend.url];
     },
 
-    renderLegend(legendUrl, i) {
-      const isImage = checkMimeType(legendUrl);
-      const insertDirectly = !!legendUrl.safeSvgContent; // we only insert content we generated ourselves, not arbitrary SVG from init files.
+    renderLegend(legend, i) {
+      if (defined(legend.url)) {
+        return this.renderImageLegend(legend, i);
+      } else {
+        return this.renderGeneratedLegend(legend, i);
+      }
+    },
 
-      const svg = legendUrl.safeSvgContent;
+    renderImageLegend(legend, i) {
+      const isImage = checkMimeType(legend);
+      const insertDirectly = !!legend.safeSvgContent; // we only insert content we generated ourselves, not arbitrary SVG from init files.
+
+      const svg = legend.safeSvgContent;
       // Safari xlink NS issue fix
       const processedSvg = svg
         ? svg.replace(/NS\d+:href/gi, "xlink:href")
@@ -75,7 +83,7 @@ const Legend = observer(
       // We make it absolute because the print view is opened on a different domain (about:blank) so relative
       // URLs will not work.
       const proxiedUrl = makeAbsolute(
-        proxyCatalogItemUrl(this.props.item, legendUrl.url)
+        proxyCatalogItemUrl(this.props.item, legend.url)
       );
 
       return (
@@ -83,11 +91,9 @@ const Legend = observer(
           <When condition={isImage && insertDirectly}>
             <li
               key={i}
-              onError={this.onImageError.bind(this, legendUrl)}
+              onError={this.onImageError.bind(this, legend)}
               className={classNames(Styles.legendSvg, {
-                [Styles.legendImagehasError]: this.doesLegendHaveError(
-                  legendUrl
-                )
+                [Styles.legendImagehasError]: this.doesLegendHaveError(legend)
               })}
               dangerouslySetInnerHTML={safeSvgContent}
             />
@@ -96,13 +102,11 @@ const Legend = observer(
             <li
               key={proxiedUrl}
               className={classNames({
-                [Styles.legendImagehasError]: this.doesLegendHaveError(
-                  legendUrl
-                )
+                [Styles.legendImagehasError]: this.doesLegendHaveError(legend)
               })}
             >
               <a
-                onError={this.onImageError.bind(this, legendUrl)}
+                onError={this.onImageError.bind(this, legend)}
                 href={proxiedUrl}
                 className={Styles.imageAnchor}
                 target="_blank"
@@ -123,6 +127,51 @@ const Legend = observer(
       );
     },
 
+    renderGeneratedLegend(legend, i) {
+      return (
+        <li key={i} className={Styles.generatedLegend}>
+          <table>
+            <tbody>{legend.items.map(this.renderLegendItem)}</tbody>
+          </table>
+        </li>
+      );
+    },
+
+    renderLegendItem(legendItem, i) {
+      const boxStyle = {
+        backgroundColor: legendItem.color,
+        border: legendItem.addSpacingAbove ? "1px solid black" : undefined
+      };
+
+      return (
+        <React.Fragment key={i}>
+          {legendItem.addSpacingAbove && (
+            <tr className={Styles.legendSpacer}>
+              <td />
+            </tr>
+          )}
+          <tr>
+            <td className={Styles.legendBox} style={boxStyle} />
+            <td className={Styles.legendTitles}>
+              {legendItem.titleAbove && (
+                <div className={Styles.legendTitleAbove}>
+                  {legendItem.titleAbove}
+                </div>
+              )}
+              {legendItem.title && (
+                <div className={Styles.legendTitle}>{legendItem.title}</div>
+              )}
+              {legendItem.titleBelow && (
+                <div className={Styles.legendTitleBelow}>
+                  {legendItem.titleBelow}
+                </div>
+              )}
+            </td>
+          </tr>
+        </React.Fragment>
+      );
+    },
+
     render() {
       return (
         <ul className={Styles.legend}>
@@ -134,11 +183,7 @@ const Legend = observer(
                 </li>
               </When>
               <Otherwise>
-                <For
-                  each="legend"
-                  index="i"
-                  of={this.props.item.legendUrls || []}
-                >
+                <For each="legend" index="i" of={this.props.item.legends || []}>
                   {this.renderLegend(legend, i)}
                 </For>
               </Otherwise>

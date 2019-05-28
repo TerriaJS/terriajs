@@ -1,5 +1,8 @@
 import ColorMap from "./ColorMap";
 import Color from "terriajs-cesium/Source/Core/Color";
+import StratumFromTraits from "../Models/StratumFromTraits";
+import LegendTraits, { LegendItemTraits } from "../Traits/LegendTraits";
+import createStratumInstance from "../Models/createStratumInstance";
 
 export interface DiscreteBin {
   readonly includeMinimumInThisBin: boolean;
@@ -13,32 +16,36 @@ export interface DiscreteColorMapOptions {
 }
 
 export default class DiscreteColorMap extends ColorMap {
-  private _includeMinimumInThisBin: boolean[];
-  private _maximums: number[];
-  private _colors: Color[];
-  private _nullColor: Color;
+  includeMinimumInThisBin: readonly boolean[];
+  maximums: readonly number[];
+  colors: readonly Readonly<Color>[];
+  nullColor: Readonly<Color>;
 
   constructor(options: DiscreteColorMapOptions) {
     super();
 
-    this._nullColor = Color.clone(options.nullColor);
-    this._includeMinimumInThisBin = [];
-    this._maximums = [];
-    this._colors = [];
+    const includeMinimumInThisBin: boolean[] = [];
+    const maximums: number[] = [];
+    const colors: Color[] = [];
 
     options.bins.forEach(bin => {
-      this._maximums.push(bin.maximum);
-      this._includeMinimumInThisBin.push(bin.includeMinimumInThisBin);
-      this._colors.push(Color.clone(bin.color));
+      maximums.push(bin.maximum);
+      includeMinimumInThisBin.push(bin.includeMinimumInThisBin);
+      colors.push(Color.clone(bin.color));
     });
+
+    this.includeMinimumInThisBin = [];
+    this.maximums = maximums;
+    this.colors = colors;
+    this.nullColor = Color.clone(options.nullColor);
   }
 
   mapValueToColor(value: string | number | null | undefined): Readonly<Color> {
     if (typeof value !== "number") {
-      return this._nullColor;
+      return this.nullColor;
     }
 
-    const maximums = this._maximums;
+    const maximums = this.maximums;
     let i, len;
     for (
       i = 0, len = maximums.length - 1;
@@ -50,12 +57,12 @@ export default class DiscreteColorMap extends ColorMap {
     // `includeMinimumInThisBin` for the _next_ bin.
     if (
       value === maximums[i] &&
-      i < this._includeMinimumInThisBin.length - 1 &&
-      this._includeMinimumInThisBin[i + 1]
+      i < this.includeMinimumInThisBin.length - 1 &&
+      this.includeMinimumInThisBin[i + 1]
     ) {
       ++i;
     }
 
-    return this._colors[i];
+    return this.colors[i];
   }
 }

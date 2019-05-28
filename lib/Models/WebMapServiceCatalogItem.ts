@@ -25,9 +25,9 @@ import GroupMixin from "../ModelMixins/GroupMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
 import DiscreteTimeTraits from "../Traits/DiscreteTimeTraits";
+import LegendTraits from "../Traits/LegendTraits";
 import { RectangleTraits } from "../Traits/MappableTraits";
 import WebMapServiceCatalogItemTraits, {
-  LegendTraits,
   WebMapServiceAvailableLayerStylesTraits
 } from "../Traits/WebMapServiceCatalogItemTraits";
 import CreateModel from "./CreateModel";
@@ -42,6 +42,7 @@ import WebMapServiceCapabilities, {
   CapabilitiesStyle,
   getRectangleFromLayer
 } from "./WebMapServiceCapabilities";
+import ModelPropertiesFromTraits from "./ModelPropertiesFromTraits";
 
 interface LegendUrl {
   url: string;
@@ -151,10 +152,10 @@ class GetCapabilitiesStratum extends LoadableStratum(
 
           const legendUrl = !legendUri
             ? undefined
-            : {
+            : createStratumInstance(LegendTraits, {
                 url: legendUri.toString(),
-                mimeType: legendMimeType
-              };
+                urlMimeType: legendMimeType
+              });
 
           return {
             name: style.Name,
@@ -431,12 +432,12 @@ class WebMapServiceCatalogItem
   }
 
   @computed
-  get legendUrls(): StratumFromTraits<LegendTraits>[] {
+  get legendUrls(): ModelPropertiesFromTraits<LegendTraits>[] {
     const availableStyles = this.availableStyles || [];
     const layers = this.layersArray;
     const styles = this.stylesArray;
 
-    const result: StratumFromTraits<LegendTraits>[] = [];
+    const result: ModelPropertiesFromTraits<LegendTraits>[] = [];
 
     for (let i = 0; i < layers.length; ++i) {
       const layer = layers[i];

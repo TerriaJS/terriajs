@@ -1,32 +1,17 @@
 import CatalogMemberTraits from "./CatalogMemberTraits";
+import DiscretelyTimeVaryingTraits from "./DiscretelyTimeVaryingTraits";
 import GetCapabilitiesTraits from "./GetCapabilitiesTraits";
+import LayerOrderingTraits from "./LayerOrderingTraits";
+import LegendTraits from "./LegendTraits";
+import MappableTraits from "./MappableTraits";
 import mixTraits from "./mixTraits";
 import ModelTraits from "./ModelTraits";
 import objectArrayTrait from "./objectArrayTrait";
 import objectTrait from "./objectTrait";
 import primitiveTrait from "./primitiveTrait";
 import RasterLayerTraits from "./RasterLayerTraits";
-import UrlTraits from "./UrlTraits";
-import MappableTraits from "./MappableTraits";
-import DiscretelyTimeVaryingTraits from "./DiscretelyTimeVaryingTraits";
 import SplitterTraits from "./SplitterTraits";
-import LayerOrderingTraits from "./LayerOrderingTraits";
-
-export class LegendTraits extends ModelTraits {
-  @primitiveTrait({
-    type: "string",
-    name: "URL",
-    description: "The URL of the legend image."
-  })
-  url?: string;
-
-  @primitiveTrait({
-    type: "string",
-    name: "MIME Type",
-    description: "The MIME type of the legend image."
-  })
-  mimeType?: string;
-}
+import UrlTraits from "./UrlTraits";
 
 export class WebMapServiceAvailableStyleTraits extends ModelTraits {
   @primitiveTrait({
@@ -120,7 +105,7 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
     type: LegendTraits,
     idProperty: "url"
   })
-  legendUrls?: LegendTraits[];
+  legends?: LegendTraits[];
 
   @primitiveTrait({
     type: "number",

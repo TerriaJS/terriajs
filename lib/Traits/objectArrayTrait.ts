@@ -18,7 +18,7 @@ interface TraitsConstructorWithRemoval<T extends ModelTraits>
 export interface ObjectArrayTraitOptions<T extends ModelTraits>
   extends TraitOptions {
   type: TraitsConstructorWithRemoval<T>;
-  idProperty: keyof T;
+  idProperty: keyof T | "index";
 }
 
 export default function objectArrayTrait<T extends ModelTraits>(
@@ -38,7 +38,7 @@ export default function objectArrayTrait<T extends ModelTraits>(
 
 export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
   readonly type: TraitsConstructorWithRemoval<T>;
-  readonly idProperty: keyof T;
+  readonly idProperty: keyof T | "index";
   readonly decoratorForFlattened = computed.struct;
 
   constructor(id: string, options: ObjectArrayTraitOptions<T>) {
@@ -66,23 +66,30 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
       const objectArray = objectArrayStrata[i];
 
       if (objectArray) {
-        objectArray.forEach((o: StratumFromTraits<T>) => {
-          const id = o[this.idProperty].toString();
-          if (this.type.isRemoval !== undefined && this.type.isRemoval(o)) {
-            // This ID is removed in this stratum.
-            removedIds[id] = true;
-          } else if (removedIds[id]) {
-            // This ID was removed by a stratum above this one, so ignore it.
-            return;
-          } else if (!idMap[id]) {
-            // This is the first time we've seen this ID, so add it
-            const newObjectStrata = [o];
-            idMap[id] = newObjectStrata;
-            result.push(newObjectStrata);
-          } else {
-            idMap[id].push(o);
+        objectArray.forEach(
+          (o: StratumFromTraits<T> & { index?: number }, i: number) => {
+            const id =
+              this.idProperty === "index"
+                ? o.index === undefined
+                  ? i.toString()
+                  : o.index.toString()
+                : o[this.idProperty].toString();
+            if (this.type.isRemoval !== undefined && this.type.isRemoval(o)) {
+              // This ID is removed in this stratum.
+              removedIds[id] = true;
+            } else if (removedIds[id]) {
+              // This ID was removed by a stratum above this one, so ignore it.
+              return;
+            } else if (!idMap[id]) {
+              // This is the first time we've seen this ID, so add it
+              const newObjectStrata = [o];
+              idMap[id] = newObjectStrata;
+              result.push(newObjectStrata);
+            } else {
+              idMap[id].push(o);
+            }
           }
-        });
+        );
       }
     }
 
