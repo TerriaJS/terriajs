@@ -64,7 +64,7 @@ export class LegendItemTraits extends ModelTraits {
     name: "Add Spacing Above",
     description:
       "True to add a bit of extra spacing above this item in order to separate it visually from the rest of the legend.",
-    type: "number"
+    type: "boolean"
   })
   addSpacingAbove?: boolean;
 }
