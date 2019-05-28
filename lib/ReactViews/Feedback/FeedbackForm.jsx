@@ -28,6 +28,20 @@ const FeedbackForm = createReactClass({
     };
   },
 
+  componentDidMount() {
+    this.escKeyListener = e => {
+      if (e.keyCode === 27) {
+        this.onDismiss();
+      }
+    };
+    window.addEventListener("keydown", this.escKeyListener, true);
+  },
+
+  componentWillUnmount() {
+    // Feedback form stays mounted, but leave this in to ensure it gets cleaned up if that ever changes
+    window.removeEventListener("keydown", this.escKeyListener, true);
+  },
+
   onDismiss() {
     this.props.viewState.feedbackFormIsVisible = false;
     this.setState(this.getInitialState());

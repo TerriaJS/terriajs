@@ -76,7 +76,11 @@ const StoryBuilder = createReactClass({
 
   captureStory(story) {
     story.shareData = JSON.parse(
-      JSON.stringify(getShareData(this.props.terria, false))
+      JSON.stringify(
+        getShareData(this.props.terria, this.props.viewState, {
+          includeStories: false
+        })
+      )
     );
     if (this.props.terria.stories === undefined) {
       this.props.terria.stories = [story];
@@ -92,7 +96,11 @@ const StoryBuilder = createReactClass({
       .indexOf(story.id);
     if (storyIndex >= 0) {
       story.shareData = JSON.parse(
-        JSON.stringify(getShareData(this.props.terria, false))
+        JSON.stringify(
+          getShareData(this.props.terria, this.props.viewState, {
+            includeStories: false
+          })
+        )
       );
       this.props.terria.stories = [
         ...this.props.terria.stories.slice(0, storyIndex),
