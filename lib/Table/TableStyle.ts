@@ -366,47 +366,6 @@ export default class TableStyle {
     }
   }
 
-  createColorLegend(): StratumFromTraits<LegendTraits> | undefined {
-    const colorMap = this.colorMap;
-    const colorColumn = this.colorColumn;
-
-    if (colorMap instanceof DiscreteColorMap) {
-      const minimum =
-        this.colorColumn &&
-        this.colorColumn.valuesAsNumbers.minimum !== undefined
-          ? this.colorColumn.valuesAsNumbers.minimum
-          : 0.0;
-
-      const nullBin =
-        this.colorColumn &&
-        this.colorColumn.valuesAsNumbers.numberOfValidNumbers < this.colorColumn.valuesAsNumbers.values.length
-          ? [
-              createStratumInstance(LegendItemTraits, {
-                color: this.colorTraits.nullColor || "rgba(0, 0, 0, 0)",
-                spacingAbove: 8,
-                title: this.colorTraits.nullLabel || "(No value)"
-              })
-            ]
-          : [];
-
-      return createStratumInstance(LegendTraits, {
-        items: colorMap.maximums
-          .map((maximum, i) => {
-            const isBottom = i === 0;
-            return createStratumInstance(LegendItemTraits, {
-              color: colorMap.colors[i].toCssColorString(),
-              titleBelow: isBottom ? minimum.toString() : undefined, // TODO: format value
-              titleAbove: maximum.toString() // TODO: format value
-            });
-          })
-          .reverse()
-          .concat(nullBin)
-      });
-    }
-
-    return undefined;
-  }
-
   private resolveColumn(name: string | undefined): TableColumn | undefined {
     if (name === undefined) {
       return undefined;

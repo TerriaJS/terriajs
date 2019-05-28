@@ -63,12 +63,12 @@ export class LegendItemTraits extends ModelTraits {
   imageUrl?: string;
 
   @primitiveTrait({
-    name: "Spacing Above",
+    name: "Add Spacing Above",
     description:
-      "The number of pixels of extra spacing to place above this item.",
+      "True to add a bit of extra spacing above this item in order to separate it visually from the rest of the legend.",
     type: "number",
   })
-  spacingAbove?: number;
+  addSpacingAbove?: boolean;
 }
 
 export default class LegendTraits extends ModelTraits {

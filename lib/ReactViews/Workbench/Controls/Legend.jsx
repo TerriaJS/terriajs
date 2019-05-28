@@ -138,17 +138,15 @@ const Legend = observer(
     },
 
     renderLegendItem(legendItem, i) {
-      const hasSpacing = legendItem.spacingAbove && legendItem.spacingAbove > 0;
-
       const boxStyle = {
         backgroundColor: legendItem.color,
-        border: hasSpacing ? "1px solid black" : undefined
+        border: legendItem.addSpacingAbove ? "1px solid black" : undefined
       };
 
       return (
         <React.Fragment key={i}>
-          {hasSpacing && (
-            <tr height={legendItem.spacingAbove}>
+          {legendItem.addSpacingAbove && (
+            <tr className={Styles.legendSpacer}>
               <td />
             </tr>
           )}

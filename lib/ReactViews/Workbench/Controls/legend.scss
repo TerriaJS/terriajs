@@ -12,6 +12,9 @@
   .legendImagehasError {
     display: none;
   }
+
+  // Small font size prevents the font from dictating the table row height.
+  font-size: 5px;
 }
 
 .legend__inner {
@@ -56,24 +59,30 @@
 }
 
 .generatedLegend {
-  padding-top: 15px;
-  padding-bottom: 15px;
+  padding-top: $legend-padding;
+  padding-bottom: $legend-padding;
 }
 
 .legendBox {
   display: inline-block;
-  width: 30px;
-  height: 30px;
+  width: $legend-item-width;
+  height: $legend-item-height;
 }
 
 .legendTitles {
-  line-height: 30px;
+  font-size: 12px;
+  line-height: $legend-item-height;
   padding-left: 5px;
 }
 
 .legendTitleAbove {
   position: absolute;
-  margin-top: -30px;
+  margin-top: -$legend-item-height;
+}
+
+.legendTitleAbove::before {
+  content: "-";
+  padding-left: -5px;
 }
 
 .legendTitleBelow {
@@ -81,7 +90,15 @@
   margin-top: 0px;
 }
 
+.legendTitleBelow::before {
+  content: "-";
+}
+
 .legendTitle {
   position: absolute;
-  margin-top: -15px;
+  margin-top: -($legend-item-height / 2);
+}
+
+.legendSpacer {
+  height: $legend-spacer-height;
 }
