@@ -1,16 +1,17 @@
 import CatalogMemberTraits from "./CatalogMemberTraits";
+import DiscretelyTimeVaryingTraits from "./DiscretelyTimeVaryingTraits";
 import GetCapabilitiesTraits from "./GetCapabilitiesTraits";
+import LayerOrderingTraits from "./LayerOrderingTraits";
+import LegendTraits from "./LegendTraits";
+import MappableTraits from "./MappableTraits";
 import mixTraits from "./mixTraits";
 import ModelTraits from "./ModelTraits";
 import objectArrayTrait from "./objectArrayTrait";
 import objectTrait from "./objectTrait";
 import primitiveTrait from "./primitiveTrait";
 import RasterLayerTraits from "./RasterLayerTraits";
-import UrlTraits from "./UrlTraits";
-import MappableTraits from "./MappableTraits";
-import DiscretelyTimeVaryingTraits from "./DiscretelyTimeVaryingTraits";
 import SplitterTraits from "./SplitterTraits";
-import LegendTraits from "./LegendTraits";
+import UrlTraits from "./UrlTraits";
 
 export class WebMapServiceAvailableStyleTraits extends ModelTraits {
   @primitiveTrait({
@@ -60,6 +61,7 @@ export class WebMapServiceAvailableLayerStylesTraits extends ModelTraits {
 }
 
 export default class WebMapServiceCatalogItemTraits extends mixTraits(
+  LayerOrderingTraits,
   SplitterTraits,
   DiscretelyTimeVaryingTraits,
   GetCapabilitiesTraits,

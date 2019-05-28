@@ -95,6 +95,10 @@ class GetCapabilitiesStratum extends LoadableStratum(
     super();
   }
 
+  @computed get supportsReordering() {
+    return !this.keepOnTop;
+  }
+
   @computed
   get capabilitiesLayers(): ReadonlyMap<string, CapabilitiesLayer | undefined> {
     const lookup: (
