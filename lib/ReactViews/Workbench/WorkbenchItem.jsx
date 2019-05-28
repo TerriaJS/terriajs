@@ -22,6 +22,7 @@ import ColorScaleRangeSection from "./Controls/ColorScaleRangeSection";
 import ShortReport from "./Controls/ShortReport";
 import StyleSelectorSection from "./Controls/StyleSelectorSection";
 import ViewingControls from "./Controls/ViewingControls";
+import TimerSection from "./Controls/TimerSection";
 
 import Styles from "./workbench-item.scss";
 import Icon from "../Icon.jsx";
@@ -124,6 +125,7 @@ const WorkbenchItem = createReactClass({
             />
             <OpacitySection item={workbenchItem} />
             <LeftRightSection item={workbenchItem} />
+            <TimerSection item={workbenchItem} />
             <If
               condition={
                 defined(workbenchItem.concepts) &&
