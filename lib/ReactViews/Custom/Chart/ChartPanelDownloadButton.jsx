@@ -45,9 +45,12 @@ const ChartPanelDownloadButton = createReactClass({
         if (!defined(columns[0])) {
           continue;
         }
-        const yColumns = item.tableStructure.columnsByType[
+        let yColumns = item.tableStructure.columnsByType[
           VarType.SCALAR
-        ].filter(column => column.isActive);
+        ];
+        if(!item.tableStructure.downloadAllColumns) {
+          yColumns = yColumns.filter(column => column.isActive);
+        }
         if (yColumns.length > 0) {
           columns = columns.concat(yColumns);
           // Use typed array if possible so we can pass by pointer to the web worker.
