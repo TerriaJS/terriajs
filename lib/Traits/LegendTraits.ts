@@ -7,7 +7,7 @@ export class LegendItemTraits extends ModelTraits {
   @primitiveTrait({
     name: "Title",
     description: "The title to display next to this legend item.",
-    type: "string",
+    type: "string"
   })
   title?: string;
 
@@ -16,7 +16,7 @@ export class LegendItemTraits extends ModelTraits {
     description:
       "The title to display above this legend item, i.e. marking the top of " +
       "a box on the legend.",
-    type: "string",
+    type: "string"
   })
   titleAbove?: string;
 
@@ -25,7 +25,7 @@ export class LegendItemTraits extends ModelTraits {
     description:
       "The title to display below this legend item, i.e. marking the bottom of " +
       "a box on the legend.",
-    type: "string",
+    type: "string"
   })
   titleBelow?: string;
 
@@ -34,15 +34,14 @@ export class LegendItemTraits extends ModelTraits {
     description:
       "The CSS color to display for this item. This property is ignored if " +
       "`Legend URL` is specified.",
-    type: "string",
+    type: "string"
   })
   color?: string;
 
   @primitiveTrait({
     name: "Outline Color",
-    description:
-      "The CSS color with which to outline this item.",
-    type: "string",
+    description: "The CSS color with which to outline this item.",
+    type: "string"
   })
   outlineColor?: string;
 
@@ -50,15 +49,14 @@ export class LegendItemTraits extends ModelTraits {
     name: "Multiple Colors",
     description:
       "Multiple colors to show with this item in a grid arrangement.",
-    type: "string",
+    type: "string"
   })
   multipleColors?: string[];
 
   @primitiveTrait({
     name: "Image URL",
-    description:
-      "The URL of an image to display with this item.",
-    type: "string",
+    description: "The URL of an image to display with this item.",
+    type: "string"
   })
   imageUrl?: string;
 
@@ -66,7 +64,7 @@ export class LegendItemTraits extends ModelTraits {
     name: "Add Spacing Above",
     description:
       "True to add a bit of extra spacing above this item in order to separate it visually from the rest of the legend.",
-    type: "number",
+    type: "number"
   })
   addSpacingAbove?: boolean;
 }

@@ -27,7 +27,9 @@ import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
 import DiscreteTimeTraits from "../Traits/DiscreteTimeTraits";
 import LegendTraits from "../Traits/LegendTraits";
 import { RectangleTraits } from "../Traits/MappableTraits";
-import WebMapServiceCatalogItemTraits, { WebMapServiceAvailableLayerStylesTraits } from "../Traits/WebMapServiceCatalogItemTraits";
+import WebMapServiceCatalogItemTraits, {
+  WebMapServiceAvailableLayerStylesTraits
+} from "../Traits/WebMapServiceCatalogItemTraits";
 import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";
 import LoadableStratum from "./LoadableStratum";
@@ -35,7 +37,11 @@ import Mappable, { ImageryParts } from "./Mappable";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import StratumFromTraits from "./StratumFromTraits";
 import Terria from "./Terria";
-import WebMapServiceCapabilities, { CapabilitiesLayer, CapabilitiesStyle, getRectangleFromLayer } from "./WebMapServiceCapabilities";
+import WebMapServiceCapabilities, {
+  CapabilitiesLayer,
+  CapabilitiesStyle,
+  getRectangleFromLayer
+} from "./WebMapServiceCapabilities";
 import ModelPropertiesFromTraits from "./ModelPropertiesFromTraits";
 
 interface LegendUrl {
