@@ -40,7 +40,7 @@ export class WebMapServiceAvailableStyleTraits extends ModelTraits {
     name: "Style Name",
     description: "The name of the style."
   })
-  legendUrl?: LegendTraits;
+  legend?: LegendTraits;
 }
 
 export class WebMapServiceAvailableLayerStylesTraits extends ModelTraits {
@@ -103,7 +103,7 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
     name: "Legend URLs",
     description: "The legends to display on the workbench.",
     type: LegendTraits,
-    idProperty: "url"
+    idProperty: "index"
   })
   legends?: LegendTraits[];
 

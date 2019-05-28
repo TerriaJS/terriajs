@@ -150,7 +150,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
             legendMimeType = wmsLegendUrl.Format;
           }
 
-          const legendUrl = !legendUri
+          const legend = !legendUri
             ? undefined
             : createStratumInstance(LegendTraits, {
                 url: legendUri.toString(),
@@ -161,7 +161,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
             name: style.Name,
             title: style.Title,
             abstract: style.Abstract,
-            legendUrl: legendUrl
+            legend: legend
           };
         })
       });
@@ -432,7 +432,12 @@ class WebMapServiceCatalogItem
   }
 
   @computed
-  get legendUrls(): ModelPropertiesFromTraits<LegendTraits>[] {
+  get legends(): readonly ModelPropertiesFromTraits<LegendTraits>[] {
+    const superLegends = super.legends;
+    if (superLegends !== undefined) {
+      return superLegends;
+    }
+
     const availableStyles = this.availableStyles || [];
     const layers = this.layersArray;
     const styles = this.stylesArray;
@@ -462,8 +467,8 @@ class WebMapServiceCatalogItem
             : layerAvailableStyles.styles.find(
                 candidate => candidate.name === style
               );
-        if (layerStyle !== undefined && layerStyle.legendUrl !== undefined) {
-          result.push(layerStyle.legendUrl);
+        if (layerStyle !== undefined && layerStyle.legend !== undefined) {
+          result.push(layerStyle.legend);
         }
       }
     }
