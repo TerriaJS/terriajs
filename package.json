@@ -71,6 +71,7 @@
     "react-datepicker": "0.53.0",
     "react-dom": "^16.3.2",
     "react-responsive": "^5.0.0",
+    "react-router-dom": "^5.0.0",
     "react-swipeable": "^5.1.0",
     "resolve-url-loader": "^3.0.1",
     "retry": "^0.12.0",

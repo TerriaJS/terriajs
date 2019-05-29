@@ -1,6 +1,7 @@
 import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
+import { withRouter } from "react-router-dom";
 import defined from "terriajs-cesium/Source/Core/defined";
 import addedByUser from "../../Core/addedByUser";
 import removeUserAddedData from "../../Models/removeUserAddedData";
@@ -8,6 +9,7 @@ import CatalogItem from "./CatalogItem";
 import getAncestors from "../../Models/getAncestors";
 import ObserveModelMixin from "../ObserveModelMixin";
 import raiseErrorOnRejectedPromise from "../../Models/raiseErrorOnRejectedPromise";
+import URI from "urijs";
 
 const STATE_TO_TITLE = {
   loading: "Loading...",
@@ -23,6 +25,7 @@ const DataCatalogItem = createReactClass({
 
   propTypes: {
     item: PropTypes.object.isRequired,
+    match: PropTypes.object.isRequired,
     viewState: PropTypes.object.isRequired,
     removable: PropTypes.bool,
     terria: PropTypes.object
@@ -73,6 +76,11 @@ const DataCatalogItem = createReactClass({
   },
 
   isSelected() {
+    return (
+      this.props.item.uniqueId ===
+      URI.decode(this.props.match.params.catalogMemberId)
+    );
+    // TODO: check userdata
     return addedByUser(this.props.item)
       ? this.props.viewState.userDataPreviewedItem === this.props.item
       : this.props.viewState.previewedItem === this.props.item;
@@ -84,6 +92,7 @@ const DataCatalogItem = createReactClass({
       <CatalogItem
         onTextClick={this.setPreviewedItem}
         selected={this.isSelected()}
+        linkTo={URI.encode(item.uniqueId)}
         text={item.nameInCatalog}
         title={getAncestors(item)
           .map(member => member.nameInCatalog)
@@ -114,4 +123,4 @@ const DataCatalogItem = createReactClass({
   }
 });
 
-module.exports = DataCatalogItem;
+module.exports = withRouter(DataCatalogItem);

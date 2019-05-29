@@ -3,7 +3,7 @@ import React from "react";
 import createReactClass from "create-react-class";
 
 import PropTypes from "prop-types";
-
+import { Link } from "react-router-dom";
 import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
 import ObserveModelMixin from "../ObserveModelMixin";
 import SearchBox from "../Search/SearchBox.jsx";
@@ -102,7 +102,8 @@ const SidePanel = createReactClass({
             placeholder="Search for locations"
           />
           <div className={Styles.addData}>
-            <button
+            <Link
+              to="/catalog/"
               type="button"
               onClick={this.onAddDataClicked}
               className={Styles.button}
@@ -110,7 +111,7 @@ const SidePanel = createReactClass({
             >
               <Icon glyph={Icon.GLYPHS.add} />
               Add data
-            </button>
+            </Link>
             <button
               type="button"
               onClick={this.onAddLocalDataClicked}

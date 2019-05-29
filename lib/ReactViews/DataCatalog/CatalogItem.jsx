@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import Icon from "../Icon.jsx";
-
+import { Link } from "react-router-dom";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 
 import Styles from "./data-catalog-item.scss";
@@ -28,7 +28,8 @@ function CatalogItem(props) {
   const stateToTitle = defaultValue(props.titleOverrides, STATE_TO_TITLE);
   return (
     <li className={classNames(Styles.root)}>
-      <button
+      <Link
+        to={props.linkTo}
         type="button"
         onClick={props.onTextClick}
         title={props.title}
@@ -37,7 +38,7 @@ function CatalogItem(props) {
         })}
       >
         {props.text}
-      </button>
+      </Link>
       <button
         type="button"
         onClick={props.onBtnClick}
@@ -55,6 +56,7 @@ CatalogItem.propTypes = {
   selected: PropTypes.bool,
   text: PropTypes.string,
   title: PropTypes.string,
+  linkTo: PropTypes.string,
   onBtnClick: PropTypes.func,
   btnState: PropTypes.oneOf(Object.keys(STATE_TO_ICONS)),
   titleOverrides: PropTypes.object

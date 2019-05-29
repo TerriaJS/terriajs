@@ -1,9 +1,9 @@
 import React from "react";
-
+import URI from "urijs";
 import createReactClass from "create-react-class";
 
 import PropTypes from "prop-types";
-
+import { withRouter } from "react-router-dom";
 import DataCatalog from "../../DataCatalog/DataCatalog.jsx";
 import DataPreview from "../../Preview/DataPreview.jsx";
 import ObserveModelMixin from "../../ObserveModelMixin";
@@ -19,6 +19,7 @@ const DataCatalogTab = createReactClass({
   propTypes: {
     terria: PropTypes.object,
     viewState: PropTypes.object,
+    match: PropTypes.object,
     items: PropTypes.array,
     searchPlaceholder: PropTypes.string
   },
@@ -39,6 +40,11 @@ const DataCatalogTab = createReactClass({
 
   render() {
     const terria = this.props.terria;
+    const idToDecode =
+      this.props.match.params && this.props.match.params.catalogMemberId;
+    const cleanPath = URI.decode(idToDecode);
+    const previewedItem = this.props.terria.catalog.shareKeyIndex[cleanPath];
+
     return (
       <div className={Styles.root}>
         <div className={Styles.dataExplorer}>
@@ -57,11 +63,12 @@ const DataCatalogTab = createReactClass({
         <DataPreview
           terria={terria}
           viewState={this.props.viewState}
-          previewed={this.props.viewState.previewedItem}
+          // previewed={this.props.viewState.previewedItem}
+          previewed={previewedItem}
         />
       </div>
     );
   }
 });
 
-module.exports = DataCatalogTab;
+module.exports = withRouter(DataCatalogTab);
