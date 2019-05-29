@@ -132,13 +132,13 @@
     "dev": "webpack-dev-server --inline --config buildprocess/webpack.config.dev.js --host 0.0.0.0",
     "hot": "webpack-dev-server --inline --config buildprocess/webpack.config.hot.js --hot --host 0.0.0.0",
     "publish-doc": "bash -c \"rm -rf wwwroot/doc && mkdir wwwroot/doc && cp doc/index-built.html wwwroot/doc/index.html && cp doc/CNAME wwwroot/doc/CNAME && gulp docs && cd wwwroot/doc && git init && git remote add origin $npm_package_config_docRepo && git add . && git commit -m 'Generate Documentation' && git push -f origin HEAD:gh-pages\"",
-    "prettier": "prettier --write \"{lib,test}/**/*.{js,jsx,ts,tsx,scss}\"",
-    "pretty-quick": "pretty-quick --pattern \"{lib,test}/**/*.{js,jsx,ts,tsx,scss}\"",
-    "prettier-check": "prettier --check \"{lib,test}/**/*.{js,jsx,ts,tsx,scss}\""
+    "prettier": "prettier --write \"**/*\"",
+    "pretty-quick": "pretty-quick",
+    "prettier-check": "prettier --check \"**/*\""
   },
   "husky": {
     "hooks": {
-      "pre-commit": "pretty-quick --staged --pattern \"{lib,test}/**/*.{js,jsx,ts,tsx,scss}\""
+      "pre-commit": "pretty-quick --staged"
     }
   }
 }
