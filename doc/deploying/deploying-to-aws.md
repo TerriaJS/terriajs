@@ -1,3 +1,5 @@
+<!-- This document should be in two places: TerriaJS/terriajs and TerriaJS/TerriaMap. Make sure you update both copies when you change this document. --->
+
 Most of our production TerriaJS-based sites are hosted on Amazon Web Services (AWS).  This page describes how to use the automated AWS deployment mechanism available in TerriaMap.  There are, of course, countless other ways to deploy to AWS.
 
 ## Prerequisites
