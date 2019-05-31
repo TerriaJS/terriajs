@@ -102,6 +102,10 @@ const DataPreviewMap = createReactClass({
 
   /* eslint-disable-next-line camelcase */
   UNSAFE_componentWillReceiveProps(newProps) {
+    // if (this.props.previewedCatalogItem !== newProps.previewedCatalogItem) {
+    if (this.lastPreviewedCatalogItem !== newProps.previewedCatalogItem) {
+      this.destroyPreviewMap();
+    }
     if (newProps.showMap && !this.props.showMap) {
       this.initMap(newProps.previewedCatalogItem);
     } else {

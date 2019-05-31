@@ -9,19 +9,21 @@ class RoutingListener extends React.Component {
   }
   /* eslint-disable-next-line camelcase */
   UNSAFE_componentWillMount() {
+    this.props.viewState.history = this.props.history;
     this.syncLocation();
   }
   componentDidUpdate() {
     this.syncLocation();
   }
   syncLocation() {
-    this.props.viewState.location = this.props.location;
+    // this.props.viewState.location = this.props.location;
   }
   render() {
     return <></>;
   }
 }
 RoutingListener.propTypes = {
+  history: PropTypes.object.isRequired,
   location: PropTypes.object.isRequired,
   viewState: PropTypes.object.isRequired
 };

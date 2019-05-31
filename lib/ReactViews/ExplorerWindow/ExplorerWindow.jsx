@@ -1,6 +1,7 @@
 import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
+import { withRouter } from "react-router-dom";
 import classNames from "classnames";
 import ko from "terriajs-cesium/Source/ThirdParty/knockout";
 
@@ -14,25 +15,46 @@ const SLIDE_DURATION = 300;
 const ExplorerWindow = createReactClass({
   displayName: "ExplorerWindow",
   mixins: [ObserveModelMixin],
-
+  getInitialState() {
+    return {
+      visible: false,
+      slidIn: true
+    };
+  },
   propTypes: {
     terria: PropTypes.object.isRequired,
-    viewState: PropTypes.object.isRequired
+    viewState: PropTypes.object.isRequired,
+    match: PropTypes.object.isRequired
   },
   close() {
     this.props.viewState.explorerPanelIsVisible = false;
     this.props.viewState.switchMobileView("nowViewing");
+    this.onVisibilityChange(false);
+  },
+
+  syncMatchFromExplorer() {
+    // sync up explorer route matching state to viewstate
+    this.props.viewState.matchFromExplorer = this.props.match;
   },
 
   /* eslint-disable-next-line camelcase */
   UNSAFE_componentWillMount() {
+    this.syncMatchFromExplorer();
     this.props.viewState.explorerPanelAnimating = true;
+    const checkIncomingRoute = props => {
+      if (
+        (props.match && props.match.path === "/catalog/:catalogMemberId") ||
+        props.match.path === "/catalog/"
+      ) {
+        this.props.viewState.explorerPanelIsVisible = true;
+        this.onVisibilityChange(true);
+      }
+    };
+    checkIncomingRoute(this.props);
 
     this._pickedFeaturesSubscription = ko
       .pureComputed(this.isVisible, this)
       .subscribe(this.onVisibilityChange);
-
-    this.onVisibilityChange(this.isVisible());
   },
 
   componentDidMount() {
@@ -43,6 +65,16 @@ const ExplorerWindow = createReactClass({
       }
     };
     window.addEventListener("keydown", this.escKeyListener, true);
+  },
+
+  componentDidUpdate() {
+    this.syncMatchFromExplorer();
+    if (this.isVisible() && !this.state.visible) {
+      this.onVisibilityChange(true);
+    }
+    if (this.props.viewState.explorerPanelIsVisible && !this.state.visible) {
+      this.onVisibilityChange(true);
+    }
   },
 
   onVisibilityChange(isVisible) {
@@ -91,14 +123,13 @@ const ExplorerWindow = createReactClass({
 
   isVisible() {
     return (
-      !this.props.viewState.useSmallScreenInterface &&
-      !this.props.viewState.hideMapUi() &&
-      this.props.viewState.explorerPanelIsVisible
+      this.props.match.path === "/catalog/:catalogMemberId" ||
+      this.props.match.path === "/catalog/"
     );
   },
 
   render() {
-    const visible = this.state.visible;
+    const visible = this.isVisible();
 
     return visible ? (
       <div
@@ -140,4 +171,4 @@ const ExplorerWindow = createReactClass({
   }
 });
 
-module.exports = ExplorerWindow;
+module.exports = withRouter(ExplorerWindow);
