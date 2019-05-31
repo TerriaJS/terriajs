@@ -4,7 +4,7 @@ Most of our production TerriaJS-based sites are hosted on Amazon Web Services (A
 
 ### awscli
 
-Deploying requires a recent version of `awscli`. It's recommended to install and maintain this using `pip` as the Homebrew and Ubuntu packages are quite old.
+Deploying requires a recent version of `awscli`. It's recommended to install and maintain this using python's `pip` as the Homebrew and Ubuntu packages are quite old.
 
 ```sh
 pip install awscli
@@ -47,15 +47,29 @@ You will need to modify [deploy/aws/stack.json](https://github.com/TerriaJS/Terr
 * `SSLCertificateId` in `Resources.ElasticLoadBalancer.Listeners`: The SSL certificate to use for HTTPS connections to the deployment.  If you don't have a certificate or don't want to support HTTPS, remove the entire listener with `"LoadBalancerPort": "443"`.
 * `terriamap-sharing` in `Resources.S3Role.Properties.Policies.PolicyDocument.Statement`: This authorizes the EC2 instances to access an S3 bucket to be used to store JSON blobs for the sharing feature.  You will want to create a bucket for this purpose and add its name here.
 
-## Deploy
+## Getting ready to deploy
 
-Prior to deploying, please tag the release, e.g.
+Prior to deploying, please tag the release with the date, e.g.
 
 ```
 git tag -a 2016-05-17 -m '2016-05-17 release'
-git push origin 2016-05-17
 ```
 
+This is used to name the CloudFormation stack, so it's important to get it right. Before deploying, double check that the tag is correct with:
+```
+git describe
+```
+Also run:
+```
+git status
+```
+and make sure your working directory is clean and that all changes are pushed to the remote origin repository. This is generally the only time that you want to commit changes to `package-lock.json` if you've updated any npm packages.
+
+Once you're happy with your release, remember to push the tag.
+```
+git push origin 2016-05-17
+```
+## Deploy
 Deployment is initiated via `npm` scripts.  A full production deployment may be initiated with:
 
 ```
@@ -90,6 +104,7 @@ Each stack is automatically assigned its own URL based on the name of the stack.
 ```
 https://terriajs-map-2016-05-17.terria.io/
 ```
+**If you don't see your release immediately, don't panic! It can take 10 minutes or so to appear.**
 
 ### Update DNS alias
 
@@ -102,4 +117,4 @@ map.terria.io -> terriajs-map-2016-05-17.terria.io
 
 ### Troubleshooting
 
-The default Mac OS `tar` command [causes trouble](http://superuser.com/questions/318809/linux-os-x-tar-incompatibility-tarballs-created-on-os-x-give-errors-when-unt). You'll need to replace it with `gtar`, eg. using homebrew.
+The default Mac OS `tar` command [causes trouble](http://superuser.com/questions/318809/linux-os-x-tar-incompatibility-tarballs-created-on-os-x-give-errors-when-unt). You'll need to replace it with `gtar`, eg. using Homebrew.
