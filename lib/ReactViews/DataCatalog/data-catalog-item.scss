@@ -8,26 +8,9 @@
   position: relative;
 }
 
-a.btn-catalog-item:not(select),
-a.btn-catalog-item:not(select):visited {
-  color: $text-black;
-  &:focus,
-  &:hover {
-    color: $modal-highlight;
-    &:before {
-      opacity: 1;
-    }
-  }
-  &--is-previewed {
-    color: $modal-highlight;
-    font-weight: $font-weight-bold;
-    &:before {
-      opacity: 1;
-    }
-  }
-}
 .btn-catalog-item {
   display: block;
+  color: $text-black;
   font-size: $font-size-small;
   composes: btn from "../../Sass/common/_buttons.scss";
   @extend %wrap;
@@ -35,6 +18,23 @@ a.btn-catalog-item:not(select):visited {
   width: 100%;
   padding: 8px $padding * 2.5 8px $padding;
   line-height: normal;
+
+  &:focus,
+  &:hover {
+    color: $modal-highlight;
+    &:before {
+      opacity: 1;
+    }
+  }
+
+  &--is-previewed {
+    color: $modal-highlight;
+    font-weight: $font-weight-bold;
+    &:before {
+      opacity: 1;
+    }
+  }
+
   @media (max-width: $sm) {
     font-size: $font-size-mid-small;
     padding-top: 10px;

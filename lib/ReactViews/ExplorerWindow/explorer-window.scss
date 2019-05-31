@@ -42,9 +42,6 @@
     opacity: 1;
     @include transform(none);
   }
-  a {
-    @include link($modal-bg);
-  }
 }
 
 .modal-overlay {
