@@ -486,7 +486,7 @@ function describeWithoutUnderscores(
 function polygonHasWideOutline(polygon: PolygonGraphics) {
   return (
     isDefined(polygon.outlineWidth) &&
-    getPropertyValue(polygon.outlineWidth) > 1
+    getPropertyValue<number>(polygon.outlineWidth) > 1
   );
 }
 

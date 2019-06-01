@@ -73,7 +73,7 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
                 ? o.index === undefined
                   ? i.toString()
                   : o.index.toString()
-                : o[this.idProperty].toString();
+                : <string><unknown>o[this.idProperty];
             if (this.type.isRemoval !== undefined && this.type.isRemoval(o)) {
               // This ID is removed in this stratum.
               removedIds[id] = true;
