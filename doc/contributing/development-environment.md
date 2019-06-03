@@ -107,9 +107,9 @@ Prettier is used to format this codebase.
 If you've branched prior to prettier being applied, merging will be a hassle. Here's how to do it (relatively) painlessly:
 
 * Create a new branch for your merge: git checkout -b whatever-merge
-* Merge the last commit before prettier into your branch: git merge pre-prettier. Resolve any conflicts as usual.
+* If you haven't already installed npm-merge-driver, add it to your local git config via `npx npm-merge-driver install`.
+* Merge the last commit before prettier into your branch: git merge pre-prettier. Resolve any conflicts as usual. If utilising yarn, it will resolve any `yarn-lock.json` conflicts automatically with another `yarn install`
 * Commit the merge above.
-* Resolve any npm lock file conflicts with `npx npm-merge-driver install` or `yarn install`
 * Merge the commit that ran prettier on all the source files into your branch. This is likely to cause heaps of conflicts, but because you've already merged the last commit before prettier, and because the prettier commit only changes formatting, you can safely accept your version any time there is a conflict. git merge post-prettier --strategy=ours --no-commit.
 * Run prettier on the result of the merge before committing it: npm run prettier
 * Commit the merged result.
