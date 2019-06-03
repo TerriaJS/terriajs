@@ -102,6 +102,27 @@ Once your TerriaJS pull request has been merged and a new version of the `terria
 
 The `package.json` in the `master` branch of TerriaMap should point to official releases of `terriajs` on npm, NOT GitHub branches.  In other words, it is ok to commit a package.json with a git URL to a branch, but do _not_ merge it to master.
 
+## Prettier
+Prettier is used to format this codebase.
+If you've branched prior to prettier being applied, merging will be a hassle. Here's how to do it (relatively) painlessly:
+
+* Create a new branch for your merge: git checkout -b whatever-merge
+* Merge the last commit before prettier into your branch: git merge pre-prettier. Resolve any conflicts as usual.
+* Commit the merge above.
+* Resolve any npm lock file conflicts with `npx npm-merge-driver install` or `yarn install`
+* Merge the commit that ran prettier on all the source files into your branch. This is likely to cause heaps of conflicts, but because you've already merged the last commit before prettier, and because the prettier commit only changes formatting, you can safely accept your version any time there is a conflict. git merge post-prettier --strategy=ours --no-commit.
+* Run prettier on the result of the merge before committing it: npm run prettier
+* Commit the merged result.
+* Merge master into your branch in order to pick up any changes in master that happened after the prettiergeddon: git merge origin/master. Resolve any conflicts as normal.
+* Commit and push your branch.
+* Open a pull request of your merge branch into the original one. It should merge cleanly.
+
+If you're merging a branch-that-has-already-followed-this-procedure into your branch, you can follow the procedure above except that you need to use different commits instead of pre-prettier and post-prettier. Look at the commits in the source branch and you should see two that look like this:
+
+<img src="../img/prettier-commits.png" />
+
+Use the commit hash of the commit that merged pre-prettier in place of pre-prettier above. Use the commit hash of the commit that merged post-prettier in place of post-prettier above.
+
 ## Documentation
 
 Documentation is automatically generated from the source via JSDoc (reference) and MkDocs (user guide) by running:
