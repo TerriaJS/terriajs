@@ -97,7 +97,7 @@
     "glob-all": "^3.0.1",
     "husky": "^2.2.0",
     "jasmine-core": "^2.9.1",
-    "jsdoc": "^3.4.0",
+    "jsdoc": "^3.5.0",
     "karma": "^4.0.0",
     "karma-browserstack-launcher": "^1.4.0",
     "karma-chrome-launcher": "^2.0.0",
