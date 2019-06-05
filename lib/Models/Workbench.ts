@@ -9,8 +9,7 @@ interface WorkbenchItem extends BaseModel {
 }
 
 export default class Workbench {
-  @observable
-  private readonly _items: WorkbenchItem[] = [];
+  private readonly _items = observable.array<WorkbenchItem>();
 
   /**
    * Gets the list of items on the workbench.
@@ -26,10 +25,7 @@ export default class Workbench {
    */
   @action
   remove(item: BaseModel) {
-    const index = this.indexOf(item);
-    if (index >= 0) {
-      this._items.splice(index, 1);
-    }
+    this._items.remove(item);
   }
 
   /**
@@ -37,7 +33,7 @@ export default class Workbench {
    */
   @action
   removeAll() {
-    this._items.length = 0;
+    this._items.clear();
   }
 
   /**
