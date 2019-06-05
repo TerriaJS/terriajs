@@ -3,8 +3,10 @@ import mixTraits from "./mixTraits";
 import RasterLayerTraits from "./RasterLayerTraits";
 import MappableTraits from "./MappableTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
+import LayerOrderingTraits from "./LayerOrderingTraits";
 
 export default class BingMapsCatalogItemTraits extends mixTraits(
+  LayerOrderingTraits,
   RasterLayerTraits,
   MappableTraits,
   CatalogMemberTraits

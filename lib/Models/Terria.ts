@@ -40,6 +40,7 @@ interface ConfigParameters {
   shareUrl?: string;
   feedbackUrl?: string;
   initFragmentPaths?: string[];
+  storyEnabled: boolean;
   interceptBrowserPrint?: boolean;
   tabbedCatalog?: boolean;
   useCesiumIonTerrain?: boolean;
@@ -103,6 +104,7 @@ export default class Terria {
     shareUrl: "share",
     feedbackUrl: undefined,
     initFragmentPaths: ["init/"],
+    storyEnabled: true,
     interceptBrowserPrint: true,
     tabbedCatalog: false,
     useCesiumIonTerrain: true,
@@ -123,6 +125,12 @@ export default class Terria {
 
   @observable
   readonly userProperties = new Map<string, any>();
+
+  /* Splitter controls */
+  @observable showSplitter = false;
+  @observable splitPosition = 0.5;
+  @observable splitPositionVertical = 0.5;
+  @observable stories: any[] = [];
 
   constructor(options: TerriaOptions = {}) {
     if (options.baseUrl) {
@@ -210,6 +218,9 @@ export default class Terria {
                 members: initData.catalog
               });
             }
+            if (initData.stories !== undefined) {
+              this.stories = initData.stories;
+            }
           });
         })
       );
@@ -218,6 +229,36 @@ export default class Terria {
 
   getUserProperty(key: string) {
     return undefined;
+  }
+
+  getLocalProperty(key: string): string | boolean | null {
+    try {
+      if (!defined(window.localStorage)) {
+        return null;
+      }
+    } catch (e) {
+      // SecurityError can arise if 3rd party cookies are blocked in Chrome and we're served in an iFrame
+      return null;
+    }
+    var v = window.localStorage.getItem(this.appName + "." + key);
+    if (v === "true") {
+      return true;
+    } else if (v === "false") {
+      return false;
+    }
+    return v;
+  }
+
+  setLocalProperty(key: string, value: string | boolean): boolean {
+    try {
+      if (!defined(window.localStorage)) {
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
+    window.localStorage.setItem(this.appName + "." + key, value.toString());
+    return true;
   }
 }
 

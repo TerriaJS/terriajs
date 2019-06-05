@@ -21,6 +21,8 @@ import TableTraits from "../Traits/TableTraits";
 import ColorPalette from "./ColorPalette";
 import TableColumn from "./TableColumn";
 import TableColumnType from "./TableColumnType";
+import LegendTraits, { LegendItemTraits } from "../Traits/LegendTraits";
+import StratumFromTraits from "../Models/StratumFromTraits";
 
 const defaultColor = "yellow";
 

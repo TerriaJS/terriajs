@@ -10,15 +10,17 @@ import PointGraphics from "terriajs-cesium/Source/DataSources/PointGraphics";
 import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import makeRealPromise from "../Core/makeRealPromise";
-import ConstantColorMap from "../Map/ConstantColorMap";
+import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
 import RegionProviderList from "../Map/RegionProviderList";
 import { ImageryParts } from "../Models/Mappable";
 import Model from "../Models/Model";
+import SelectableStyle, { AvailableStyle } from "../Models/SelectableStyle";
 import TableColumn from "../Table/TableColumn";
 import TableColumnType from "../Table/TableColumnType";
 import TableStyle from "../Table/TableStyle";
 import TableTraits from "../Traits/TableTraits";
-import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
+import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
+import LegendTraits from "../Traits/LegendTraits";
 
 export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
   Base: T
@@ -124,6 +126,50 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
       ]);
     }
 
+    @computed
+    get styleSelector(): SelectableStyle {
+      const tableModel = this;
+      return {
+        get id(): string {
+          return "style";
+        },
+        get name(): string {
+          return "";
+        },
+        get availableStyles(): readonly AvailableStyle[] {
+          return tableModel.tableStyles.map(style => {
+            return {
+              id: style.id,
+              name: style.styleTraits.title || style.id
+            };
+          });
+        },
+        get activeStyleId(): string | undefined {
+          return tableModel.activeStyle;
+        },
+        chooseActiveStyle(stratumId: string, styleId: string) {
+          tableModel.setTrait(stratumId, "activeStyle", styleId);
+        }
+      };
+    }
+
+    get legends(): readonly ModelPropertiesFromTraits<LegendTraits>[] {
+      if (this.activeTableStyle === undefined) {
+        return [];
+      }
+
+      const colorLegend = this.activeTableStyle.colorTraits.legend;
+      return filterOutUndefined([colorLegend]);
+    }
+
+    findFirstColumnByType(type: TableColumnType): TableColumn | undefined {
+      return this.tableColumns.find(column => column.type === type);
+    }
+
+    findColumnByName(name: string): TableColumn | undefined {
+      return this.tableColumns.find(column => column.name === name);
+    }
+
     protected loadTableMixin(): Promise<void> {
       // TODO: pass proxy to fromUrl
       return makeRealPromise(
@@ -136,14 +182,6 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
           this.regionProviderList = regionProviderList;
         });
       });
-    }
-
-    findFirstColumnByType(type: TableColumnType): TableColumn | undefined {
-      return this.tableColumns.find(column => column.type === type);
-    }
-
-    findColumnByName(name: string): TableColumn | undefined {
-      return this.tableColumns.find(column => column.name === name);
     }
 
     private readonly createLongitudeLatitudeDataSource = createTransformer(
@@ -165,7 +203,7 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
           .colorMap;
 
         const outlineColor = Color.fromCssColorString(
-          style.colorTraits.outlineColor
+          "white" //this.terria.baseMapContrastColor;
         );
 
         const dataSource = new CustomDataSource(this.name || "Table");

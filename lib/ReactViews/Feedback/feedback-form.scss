@@ -85,12 +85,12 @@
 .btnClose {
   composes: btn from "../../Sass/common/_buttons.scss";
   position: absolute;
-  right: 0;
-  top: 5px;
+  right: 10px;
+  top: 10px;
   svg {
     fill: $text-light;
-    height: 30px;
-    width: 30px;
+    height: 15px;
+    width: 15px;
     &:hover {
       fill: $color-primary;
     }

@@ -1,17 +1,21 @@
 import { observable, computed, action } from "mobx";
+
 import { BaseModel } from "./Model";
-import isDefined from "../Core/isDefined";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 
+interface WorkbenchItem extends BaseModel {
+  supportsReordering?: boolean;
+  keepOnTop?: boolean;
+}
+
 export default class Workbench {
-  @observable
-  private readonly _items: BaseModel[] = [];
+  private readonly _items = observable.array<WorkbenchItem>();
 
   /**
    * Gets the list of items on the workbench.
    */
   @computed
-  get items(): readonly BaseModel[] {
+  get items(): readonly WorkbenchItem[] {
     return this._items.map(dereferenceModel);
   }
 
@@ -21,10 +25,7 @@ export default class Workbench {
    */
   @action
   remove(item: BaseModel) {
-    const index = this.indexOf(item);
-    if (index >= 0) {
-      this._items.splice(index, 1);
-    }
+    this._items.remove(item);
   }
 
   /**
@@ -32,7 +33,7 @@ export default class Workbench {
    */
   @action
   removeAll() {
-    this._items.length = 0;
+    this._items.clear();
   }
 
   /**
@@ -42,10 +43,49 @@ export default class Workbench {
    * @param item The model to add.
    */
   @action
-  add(item: BaseModel) {
-    if (!this.contains(item)) {
-      this._items.push(item);
+  add(item: WorkbenchItem, index: number = 0) {
+    if (this.contains(item)) {
+      return;
     }
+
+    // Keep reorderable data sources (e.g.: imagery layers) below non-orderable ones (e.g.: GeoJSON).
+    if (item.supportsReordering) {
+      while (
+        index < this.items.length &&
+        !this.items[index].supportsReordering
+      ) {
+        ++index;
+      }
+    } else {
+      while (
+        index > 0 &&
+        this.items.length > 0 &&
+        this.items[index - 1].supportsReordering
+      ) {
+        --index;
+      }
+    }
+
+    if (!item.keepOnTop) {
+      while (
+        index < this.items.length &&
+        this.items[index].keepOnTop &&
+        this.items[index].supportsReordering === item.supportsReordering
+      ) {
+        ++index;
+      }
+    } else {
+      while (
+        index > 0 &&
+        this.items.length > 0 &&
+        this.items[index - 1].keepOnTop &&
+        this.items[index - 1].supportsReordering === item.supportsReordering
+      ) {
+        --index;
+      }
+    }
+
+    this._items.splice(index, 0, item);
   }
 
   /**

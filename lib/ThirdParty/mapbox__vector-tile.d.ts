@@ -1,5 +1,4 @@
-
-declare module '@mapbox/vector-tile' {
+declare module "@mapbox/vector-tile" {
   import Protobuf from "pbf";
   import Point from "@mapbox/point-geometry";
 

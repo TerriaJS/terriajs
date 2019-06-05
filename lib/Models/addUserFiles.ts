@@ -60,7 +60,7 @@ export default function addUserFiles(
     let loadPromise;
     if (file.name.toUpperCase().indexOf(".JSON") !== -1) {
       const promise = readJson(file).then((json: any) => {
-        if (isDefined(json.catalog)) {
+        if (isDefined(json.catalog) || isDefined(json.stories)) {
           // This is an init file.
           try {
             loadInitData(json);

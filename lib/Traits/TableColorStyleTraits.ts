@@ -2,6 +2,8 @@ import ModelTraits from "./ModelTraits";
 import objectArrayTrait from "./objectArrayTrait";
 import primitiveArrayTrait from "./primitiveArrayTrait";
 import primitiveTrait from "./primitiveTrait";
+import objectTrait from "./objectTrait";
+import LegendTraits from "./LegendTraits";
 
 export class EnumColorTraits extends ModelTraits {
   @primitiveTrait({
@@ -143,10 +145,12 @@ export default class TableColorStyleTraits extends ModelTraits {
   })
   legendTicks?: number;
 
-  @primitiveTrait({
-    name: "Outline Color",
-    description: "The CSS color to use for point and region outlines.",
-    type: "string"
+  @objectTrait({
+    name: "Legend",
+    description:
+      "The legend to show with this style. If not specified, a suitable " +
+      "is created automatically from the other parameters.",
+    type: LegendTraits
   })
-  outlineColor: string = "black";
+  legend?: LegendTraits;
 }

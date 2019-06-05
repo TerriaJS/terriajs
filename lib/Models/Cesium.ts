@@ -18,6 +18,7 @@ import FeatureDetection from "terriajs-cesium/Source/Core/FeatureDetection";
 import HeadingPitchRange from "terriajs-cesium/Source/Core/HeadingPitchRange";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
+import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
 import PerspectiveFrustum from "terriajs-cesium/Source/Core/PerspectiveFrustum";
@@ -30,6 +31,7 @@ import DataSourceCollection from "terriajs-cesium/Source/DataSources/DataSourceC
 import DataSourceDisplay from "terriajs-cesium/Source/DataSources/DataSourceDisplay";
 import ImageryLayer from "terriajs-cesium/Source/Scene/ImageryLayer";
 import Scene from "terriajs-cesium/Source/Scene/Scene";
+import SceneTransforms from "terriajs-cesium/Source/Scene/SceneTransforms";
 import SingleTileImageryProvider from "terriajs-cesium/Source/Scene/SingleTileImageryProvider";
 import ScreenSpaceEventType from "terriajs-cesium/Source/Core/ScreenSpaceEventType";
 import when from "terriajs-cesium/Source/ThirdParty/when";
@@ -45,6 +47,8 @@ import GlobeOrMap, { CameraView } from "./GlobeOrMap";
 import Mappable, { ImageryParts } from "./Mappable";
 import Terria from "./Terria";
 import PickedFeatures, { ProviderCoordsMap } from "../Map/PickedFeatures";
+import SplitterTraits from "../Traits/SplitterTraits";
+import hasTraits from "./hasTraits";
 
 // Intermediary
 var cartesian3Scratch = new Cartesian3();
@@ -74,11 +78,23 @@ export default class Cesium extends GlobeOrMap {
   readonly dataSources: DataSourceCollection = new DataSourceCollection();
   readonly dataSourceDisplay: Cesium.DataSourceDisplay;
   readonly pauser: CesiumRenderLoopPauser;
+  readonly canShowSplitter = true;
   private readonly _eventHelper: EventHelper;
+  private _pauseMapInteractionCount = 0;
+  private _lastTarget:
+    | CameraView
+    | Cesium.Rectangle
+    | Cesium.DataSource
+    | Mappable
+    | /*TODO Cesium.Cesium3DTileset*/ any;
+
+  /* Disposers */
   private readonly _selectionIndicator: CesiumSelectionIndicator;
   private readonly _disposeSelectedFeatureSubscription: () => void;
   private readonly _disposeWorkbenchMapItemsSubscription: () => void;
   private readonly _disposeTerrainReaction: () => void;
+  private readonly _disposeSplitterPositionSubscription: () => void;
+  private readonly _disposeShowSplitterSubscription: () => void;
 
   constructor(terriaViewer: TerriaViewer, container: string | HTMLElement) {
     super();
@@ -213,6 +229,44 @@ export default class Cesium extends GlobeOrMap {
     this._disposeTerrainReaction = autorun(() => {
       this.scene.globe.terrainProvider = this._terrainProvider;
     });
+
+    this._disposeSplitterPositionSubscription = autorun(() => {
+      if (this.scene) {
+        this.scene.imagerySplitPosition = this.terria.splitPosition;
+        this.notifyRepaintRequired();
+      }
+    });
+
+    this._disposeShowSplitterSubscription = autorun(() => {
+      this.terria.workbench.items.forEach(item => {
+        if (Mappable.is(item)) {
+          this._updateItemForSplitter(item);
+        }
+      });
+      this.notifyRepaintRequired();
+    });
+  }
+
+  getContainer() {
+    return this.cesiumWidget.container;
+  }
+
+  pauseMapInteraction() {
+    ++this._pauseMapInteractionCount;
+    if (this._pauseMapInteractionCount === 1) {
+      this.scene.screenSpaceCameraController.enableInputs = false;
+    }
+  }
+
+  resumeMapInteraction() {
+    --this._pauseMapInteractionCount;
+    if (this._pauseMapInteractionCount === 0) {
+      setTimeout(() => {
+        if (this._pauseMapInteractionCount === 0) {
+          this.scene.screenSpaceCameraController.enableInputs = true;
+        }
+      }, 0);
+    }
   }
 
   destroy() {
@@ -239,7 +293,11 @@ export default class Cesium extends GlobeOrMap {
     this.stopObserving();
     this._eventHelper.removeAll();
     this.dataSourceDisplay.destroy();
+
     this._disposeTerrainReaction();
+    this._disposeSplitterPositionSubscription();
+    this._disposeShowSplitterSubscription();
+
     this._disposeSelectedFeatureSubscription();
     this.cesiumWidget.destroy();
     destroyObject(this);
@@ -339,7 +397,7 @@ export default class Cesium extends GlobeOrMap {
     flightDurationSeconds = defaultValue(flightDurationSeconds, 3.0);
 
     var that = this;
-
+    that._lastTarget = target;
     return when()
       .then(function() {
         if (target instanceof Rectangle) {
@@ -360,6 +418,10 @@ export default class Cesium extends GlobeOrMap {
           return sampleTerrain(terrainProvider, level, positions).then(function(
             results
           ) {
+            if (that._lastTarget !== target) {
+              return;
+            }
+
             var finalDestinationCartographic = new Cartographic(
               destination.longitude,
               destination.latitude,
@@ -384,13 +446,16 @@ export default class Cesium extends GlobeOrMap {
               deferred.resolve();
             });
             return deferred.promise.then(function() {
+              if (that._lastTarget !== target) {
+                return;
+              }
               return zoomToDataSource(that, target, flightDurationSeconds);
             });
           }
           return zoomToDataSource(that, target);
         } else if (defined(target.readyPromise)) {
           return target.readyPromise.then(function() {
-            if (defined(target.boundingSphere)) {
+            if (defined(target.boundingSphere) && that._lastTarget === target) {
               zoomToBoundingSphere(that, target, flightDurationSeconds);
             }
           });
@@ -787,7 +852,7 @@ export default class Cesium extends GlobeOrMap {
               return resultFeaturesSoFar;
             }
 
-            const features = imageryLayerFeatures.map(feature => {
+            let features = imageryLayerFeatures.map(feature => {
               if (isDefined(imageryLayers)) {
                 (<any>feature).imageryLayer = imageryLayers[i];
               }
@@ -809,24 +874,24 @@ export default class Cesium extends GlobeOrMap {
               return this._createFeatureFromImageryLayerFeature(feature);
             });
 
-            // TODO
-            // if (this.terria.showSplitter) {
-            //   // Select only features from the same side or both sides of the splitter
-            //   const screenPosition = this.computePositionOnScreen(
-            //     result.pickPosition
-            //   );
-            //   const pickedSide = this.terria.getSplitterSideForScreenPosition(
-            //     screenPosition
-            //   );
+            if (this.terria.showSplitter && isDefined(result.pickPosition)) {
+              // Select only features from the same side or both sides of the splitter
+              const screenPosition = this._computePositionOnScreen(
+                result.pickPosition
+              );
+              const pickedSide = this._getSplitterSideForScreenPosition(
+                screenPosition
+              );
 
-            //   features = features.filter(function(feature) {
-            //     const splitDirection = feature.imageryLayer.splitDirection;
-            //     return (
-            //       splitDirection === pickedSide ||
-            //       splitDirection === ImagerySplitDirection.NONE
-            //     );
-            //   });
-            // }
+              features = features.filter(feature => {
+                const splitDirection = (<any>feature).imageryLayer
+                  .splitDirection;
+                return (
+                  splitDirection === pickedSide ||
+                  splitDirection === ImagerySplitDirection.NONE
+                );
+              });
+            }
 
             return resultFeaturesSoFar.concat(features);
           },
@@ -839,6 +904,51 @@ export default class Cesium extends GlobeOrMap {
       });
 
     return result;
+  }
+
+  private _updateItemForSplitter(item: Mappable) {
+    if (!hasTraits(item, SplitterTraits, "splitDirection")) {
+      return;
+    }
+
+    this._imageryLayersForItem(item).forEach(imageryLayer => {
+      if (this.terria.showSplitter) {
+        (<any>imageryLayer).splitDirection = item.splitDirection;
+      } else {
+        (<any>imageryLayer).splitDirection = ImagerySplitDirection.NONE;
+      }
+    });
+
+    this.notifyRepaintRequired();
+  }
+
+  private _imageryLayersForItem(item: Mappable): ImageryLayer[] {
+    const allImageryParts = item.mapItems.filter(ImageryParts.is);
+    const imageryLayers = [];
+
+    for (let i = 0; i < allImageryParts.length; i++) {
+      let index = this.scene.imageryLayers.indexOf(
+        makeImageryLayerFromParts(allImageryParts[i])
+      );
+      if (index !== -1) {
+        imageryLayers.push(this.scene.imageryLayers.get(index));
+      }
+    }
+    return imageryLayers;
+  }
+
+  /**
+   * Computes the screen position of a given world position.
+   * @param position The world position in Earth-centered Fixed coordinates.
+   * @param [result] The instance to which to copy the result.
+   * @return The screen position, or undefined if the position is not on the screen.
+   */
+  private _computePositionOnScreen(position: Cartesian3, result?: Cartesian2) {
+    return SceneTransforms.wgs84ToWindowCoordinates(
+      this.scene,
+      position,
+      result
+    );
   }
 
   _selectFeature() {

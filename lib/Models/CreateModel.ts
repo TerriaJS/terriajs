@@ -37,6 +37,15 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
       return result;
     }
 
+    duplicateModel(newId: ModelId): this {
+      const newModel = new (<any>this.constructor)(newId, this.terria);
+      this.strata.forEach((strata, stratumId) => {
+        newModel.strata.set(stratumId, createStratumInstance(Traits, strata));
+      });
+      this.terria.addModel(newModel);
+      return newModel;
+    }
+
     @computed
     get strataTopToBottom(): StratumTraits[] {
       trace();

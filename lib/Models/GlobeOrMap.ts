@@ -1,20 +1,22 @@
+import { Feature as GeoJSONFeature, Position } from "geojson";
+import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
+import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
+import clone from "terriajs-cesium/Source/Core/clone";
 import Color from "terriajs-cesium/Source/Core/Color";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-import { Feature as GeoJSONFeature, Position } from "geojson";
 import ImageryLayer from "terriajs-cesium/Source/Scene/ImageryLayer";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
-import clone from "terriajs-cesium/Source/Core/clone";
-
-import Feature from "./Feature";
-import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
-import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
-import MapboxVectorCanvasTileLayer from "../Map/MapboxVectorCanvasTileLayer";
-import Mappable from "./Mappable";
-import Terria from "./Terria";
+import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import isDefined from "../Core/isDefined";
 import featureDataToGeoJson from "../Map/featureDataToGeoJson";
+import MapboxVectorCanvasTileLayer from "../Map/MapboxVectorCanvasTileLayer";
+import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
 import rectangleToLatLngBounds from "../Map/rectangleToLatLngBounds";
 import CommonStrata from "./CommonStrata";
+import Feature from "./Feature";
+import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
+import Mappable from "./Mappable";
+import Terria from "./Terria";
 
 export type CameraView = {
   rectangle: Cesium.Rectangle;
@@ -24,9 +26,8 @@ export type CameraView = {
 };
 
 export default abstract class GlobeOrMap {
+  abstract readonly terria: Terria;
   protected static _featureHighlightName = "___$FeatureHighlight&__";
-
-  abstract terria: Terria;
 
   private _removeHighlightCallback?: () => void;
   private _highlightPromise: Promise<void> | undefined;
@@ -38,6 +39,15 @@ export default abstract class GlobeOrMap {
     flightDurationSeconds: number
   ): void;
   abstract getCurrentExtent(): Cesium.Rectangle;
+
+  /* Gets the current container element.
+   */
+  abstract getContainer(): Element | undefined;
+
+  abstract pauseMapInteraction(): void;
+  abstract resumeMapInteraction(): void;
+
+  abstract notifyRepaintRequired(): void;
 
   /**
    * Creates a {@see Feature} (based on an {@see Entity}) from a {@see ImageryLayerFeatureInfo}.
@@ -62,6 +72,28 @@ export default abstract class GlobeOrMap {
     (<any>feature).coords = (<any>imageryFeature).coords;
 
     return feature;
+  }
+
+  /**
+   * Returns the side of the splitter the `position` lies on.
+   *
+   * @param The screen position.
+   * @return The side of the splitter on which `position` lies.
+   */
+  protected _getSplitterSideForScreenPosition(
+    position: Cartesian2 | Cartesian3
+  ): ImagerySplitDirection | undefined {
+    const container = this.terria.currentViewer.getContainer();
+    if (!isDefined(container)) {
+      return;
+    }
+
+    const splitterX = container.clientWidth * this.terria.splitPosition;
+    if (position.x <= splitterX) {
+      return ImagerySplitDirection.LEFT;
+    } else {
+      return ImagerySplitDirection.RIGHT;
+    }
   }
 
   _highlightFeature(feature: Feature | undefined) {

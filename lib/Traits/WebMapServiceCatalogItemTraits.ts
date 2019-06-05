@@ -1,30 +1,17 @@
 import CatalogMemberTraits from "./CatalogMemberTraits";
+import DiscretelyTimeVaryingTraits from "./DiscretelyTimeVaryingTraits";
 import GetCapabilitiesTraits from "./GetCapabilitiesTraits";
+import LayerOrderingTraits from "./LayerOrderingTraits";
+import LegendTraits from "./LegendTraits";
+import MappableTraits from "./MappableTraits";
 import mixTraits from "./mixTraits";
 import ModelTraits from "./ModelTraits";
 import objectArrayTrait from "./objectArrayTrait";
 import objectTrait from "./objectTrait";
 import primitiveTrait from "./primitiveTrait";
 import RasterLayerTraits from "./RasterLayerTraits";
+import SplitterTraits from "./SplitterTraits";
 import UrlTraits from "./UrlTraits";
-import MappableTraits from "./MappableTraits";
-import DiscretelyTimeVaryingTraits from "./DiscretelyTimeVaryingTraits";
-
-export class LegendTraits extends ModelTraits {
-  @primitiveTrait({
-    type: "string",
-    name: "URL",
-    description: "The URL of the legend image."
-  })
-  url?: string;
-
-  @primitiveTrait({
-    type: "string",
-    name: "MIME Type",
-    description: "The MIME type of the legend image."
-  })
-  mimeType?: string;
-}
 
 export class WebMapServiceAvailableStyleTraits extends ModelTraits {
   @primitiveTrait({
@@ -53,7 +40,7 @@ export class WebMapServiceAvailableStyleTraits extends ModelTraits {
     name: "Style Name",
     description: "The name of the style."
   })
-  legendUrl?: LegendTraits;
+  legend?: LegendTraits;
 }
 
 export class WebMapServiceAvailableLayerStylesTraits extends ModelTraits {
@@ -74,6 +61,8 @@ export class WebMapServiceAvailableLayerStylesTraits extends ModelTraits {
 }
 
 export default class WebMapServiceCatalogItemTraits extends mixTraits(
+  LayerOrderingTraits,
+  SplitterTraits,
   DiscretelyTimeVaryingTraits,
   GetCapabilitiesTraits,
   RasterLayerTraits,
@@ -114,9 +103,9 @@ export default class WebMapServiceCatalogItemTraits extends mixTraits(
     name: "Legend URLs",
     description: "The legends to display on the workbench.",
     type: LegendTraits,
-    idProperty: "url"
+    idProperty: "index"
   })
-  legendUrls?: LegendTraits[];
+  legends?: LegendTraits[];
 
   @primitiveTrait({
     type: "number",

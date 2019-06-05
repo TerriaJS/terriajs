@@ -1,6 +1,8 @@
 import L from "leaflet";
 import { autorun } from "mobx";
 import { createTransformer } from "mobx-utils";
+import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
+import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Clock from "terriajs-cesium/Source/Core/Clock";
@@ -9,6 +11,7 @@ import DataSourceCollection from "terriajs-cesium/Source/DataSources/DataSourceC
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import EventHelper from "terriajs-cesium/Source/Core/EventHelper";
+import FeatureDetection from "terriajs-cesium/Source/Core/FeatureDetection";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import LeafletDataSourceDisplay from "../Map/LeafletDataSourceDisplay";
 import LeafletScene from "../Map/LeafletScene";
@@ -32,10 +35,30 @@ import Terria from "./Terria";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import rectangleToLatLngBounds from "../Map/rectangleToLatLngBounds";
 import runLater from "../Core/runLater";
+import hasTraits from "./hasTraits";
+import SplitterTraits from "../Traits/SplitterTraits";
+import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
+import isDefined from "../Core/isDefined";
 
-function isDefined<T>(value: T | undefined): value is T {
-  return value !== undefined;
+interface SplitterClips {
+  left: string;
+  right: string;
+  clipPositionWithinMap?: number;
+  clipX?: number;
 }
+
+// As of Internet Explorer 11.483.15063.0 and Edge 40.15063.0.0 (EdgeHTML 15.15063) there is an apparent
+// bug in both browsers where setting the `clip` CSS style on our Leaflet layers does not consistently
+// cause the new clip to be applied.  The change shows up in the DOM inspector, but it is not reflected
+// in the rendered view.  You can reproduce it by adding a layer and toggling it between left/both/right
+// repeatedly, and you will quickly see it fail to update sometimes.  Unfortunateely my attempts to
+// reproduce this in jsfiddle were unsuccessful, so presumably there is something unusual about our
+// setup.  In any case, we do the usually-horrible thing here of detecting these browsers by their user
+// agent, and then work around the bug by hiding the DOM element, forcing it to updated by asking for
+// its bounding client rectangle, and then showing it again.  There's a bit of a performance hit to
+// this, so we don't do it on other browsers that do not experience this bug.
+const useClipUpdateWorkaround =
+  FeatureDetection.isInternetExplorer() || FeatureDetection.isEdge();
 
 // This class is an observer. It probably won't contain any observables itself
 
@@ -46,15 +69,21 @@ export default class Leaflet extends GlobeOrMap {
   readonly scene: LeafletScene;
   readonly dataSources: DataSourceCollection = new DataSourceCollection();
   readonly dataSourceDisplay: LeafletDataSourceDisplay;
+  readonly canShowSplitter = true;
   private readonly _attributionControl: L.Control.Attribution;
   private readonly _leafletVisualizer: LeafletVisualizer;
   private readonly _eventHelper: EventHelper;
-  private readonly _selectionIndicator: LeafletSelectionIndicator;
-  private readonly _disposeSelectedFeatureSubscription: () => void;
-  private readonly _disposeWorkbenchMapItemsSubscription: () => void;
   private _stopRequestAnimationFrame: boolean = false;
   private _cesiumReqAnimFrameId: number | undefined;
   private _pickedFeatures: PickedFeatures | undefined = undefined;
+  private _pauseMapInteractionCount = 0;
+
+  /* Disposers */
+  private readonly _disposeWorkbenchMapItemsSubscription: () => void;
+  private readonly _disposeSplitterPositionSubscription: () => void;
+  private readonly _disposeShowSplitterSubscription: () => void;
+  private readonly _selectionIndicator: LeafletSelectionIndicator;
+  private readonly _disposeSelectedFeatureSubscription: () => void;
 
   constructor(terriaViewer: TerriaViewer, container: string | HTMLElement) {
     super();
@@ -137,12 +166,53 @@ export default class Leaflet extends GlobeOrMap {
     });
 
     this._disposeWorkbenchMapItemsSubscription = this.observeModelLayer();
-    // return when();
+
+    this._disposeSplitterPositionSubscription = autorun(() => {
+      this.terria.workbench.items.forEach(item => {
+        const clips = this._getClipsForSplitter();
+        if (Mappable.is(item)) {
+          this._updateItemForSplitter(item, clips);
+        }
+      });
+    });
+
+    this._disposeShowSplitterSubscription = autorun(() => {
+      this.terria.workbench.items.forEach(item => {
+        const clips = this._getClipsForSplitter();
+        if (Mappable.is(item)) {
+          this._updateItemForSplitter(item, clips);
+        }
+      });
+    });
+  }
+
+  getContainer() {
+    return this.map.getContainer();
+  }
+
+  pauseMapInteraction() {
+    ++this._pauseMapInteractionCount;
+    if (this._pauseMapInteractionCount === 1) {
+      this.map.dragging.disable();
+    }
+  }
+
+  resumeMapInteraction() {
+    --this._pauseMapInteractionCount;
+    if (this._pauseMapInteractionCount === 0) {
+      setTimeout(() => {
+        if (this._pauseMapInteractionCount === 0) {
+          this.map.dragging.enable();
+        }
+      }, 0);
+    }
   }
 
   destroy() {
     this._disposeSelectedFeatureSubscription();
     this._disposeWorkbenchMapItemsSubscription();
+    this._disposeShowSplitterSubscription();
+    this._disposeSplitterPositionSubscription();
     this._eventHelper.removeAll();
     // This variable prevents a race condition if destroy() is called
     // synchronously as a result of timelineClock ticking due to ticker()
@@ -454,26 +524,29 @@ export default class Leaflet extends GlobeOrMap {
 
         pickedFeatures.features = filteredResults.reduce(
           (allFeatures, result) => {
-            // TODO
-            // if (this.terria.showSplitter) {
-            //   // Skip unless the layer is on the picked side or belongs to both sides of the splitter
-            //   const screenPosition = this.computePositionOnScreen(
-            //     pickedFeatures.pickPosition
-            //   );
-            //   const pickedSide = this.terria.getSplitterSideForScreenPosition(
-            //     screenPosition
-            //   );
-            //   const splitDirection = result.imageryLayer.splitDirection;
+            if (
+              this.terria.showSplitter &&
+              isDefined(pickedFeatures.pickPosition)
+            ) {
+              // Skip this feature, unless the imagery layer is on the picked side or
+              // belongs to both sides of the splitter
+              const screenPosition = this._computePositionOnScreen(
+                pickedFeatures.pickPosition
+              );
+              const pickedSide = this._getSplitterSideForScreenPosition(
+                screenPosition
+              );
+              const layerDirection = result.imageryLayer.splitDirection;
 
-            //   if (
-            //     !(
-            //       splitDirection === pickedSide ||
-            //       splitDirection === ImagerySplitDirection.NONE
-            //     )
-            //   ) {
-            //     return allFeatures;
-            //   }
-            // }
+              if (
+                !(
+                  layerDirection === pickedSide ||
+                  layerDirection === ImagerySplitDirection.NONE
+                )
+              ) {
+                return allFeatures;
+              }
+            }
 
             return allFeatures.concat(
               result.features.map(feature => {
@@ -511,6 +584,116 @@ export default class Leaflet extends GlobeOrMap {
     // } else {
     this.terria.pickedFeatures = this._pickedFeatures;
     // }
+  }
+
+  private _updateItemForSplitter(
+    item: Mappable,
+    clips: SplitterClips | undefined
+  ) {
+    if (!hasTraits(item, SplitterTraits, "splitDirection")) {
+      return;
+    }
+
+    this._imageryLayersForItem(item).forEach(layer => {
+      const container = layer.getContainer();
+      if (!container) {
+        return;
+      }
+
+      const { left: clipLeft, right: clipRight } =
+        clips || this._getClipsForSplitter();
+
+      let display = null;
+      if (useClipUpdateWorkaround) {
+        display = container.style.display;
+        container.style.display = "none";
+        container.getBoundingClientRect();
+      }
+
+      if (item.splitDirection === ImagerySplitDirection.LEFT) {
+        container.style.clip = clipLeft;
+      } else if (item.splitDirection === ImagerySplitDirection.RIGHT) {
+        container.style.clip = clipRight;
+      } else {
+        container.style.clip = "auto";
+      }
+
+      layer.splitDirection = item.splitDirection;
+      if (useClipUpdateWorkaround) {
+        container.style.display = display;
+      }
+    });
+  }
+
+  private _imageryLayersForItem(item: Mappable): CesiumTileLayer[] {
+    const allImageryParts = item.mapItems.filter(ImageryParts.is);
+    const imageryLayers: CesiumTileLayer[] = [];
+    this.map.eachLayer(layer => {
+      if (isImageryLayer(layer)) {
+        const found = allImageryParts.find(
+          p => p.imageryProvider === layer.imageryProvider
+        );
+        if (found) {
+          imageryLayers.push(layer);
+        }
+      }
+    });
+    return imageryLayers;
+  }
+
+  private _getClipsForSplitter(): SplitterClips {
+    let clipLeft = "";
+    let clipRight = "";
+    let clipPositionWithinMap;
+    let clipX;
+    if (this.terria.showSplitter) {
+      const map = this.map;
+      const size = map.getSize();
+      const nw = map.containerPointToLayerPoint([0, 0]);
+      const se = map.containerPointToLayerPoint(size);
+      clipPositionWithinMap = size.x * this.terria.splitPosition;
+      clipX = Math.round(nw.x + clipPositionWithinMap);
+      clipLeft = "rect(" + [nw.y, clipX, se.y, nw.x].join("px,") + "px)";
+      clipRight = "rect(" + [nw.y, se.x, se.y, clipX].join("px,") + "px)";
+    }
+
+    return {
+      left: clipLeft,
+      right: clipRight,
+      clipPositionWithinMap: clipPositionWithinMap,
+      clipX: clipX
+    };
+  }
+
+  /**
+   * Computes the screen position of a given world position.
+   * @param position The world position in Earth-centered Fixed coordinates.
+   * @param [result] The instance to which to copy the result.
+   * @return The screen position, or undefined if the position is not on the screen.
+   */
+  private _computePositionOnScreen(
+    position: Cartesian3,
+    result?: Cartesian2
+  ): Cartesian2 {
+    const cartographicScratch = new Cartographic();
+    const cartographic = Ellipsoid.WGS84.cartesianToCartographic(
+      position,
+      cartographicScratch
+    );
+    const point = this.map.latLngToContainerPoint(
+      L.latLng(
+        CesiumMath.toDegrees(cartographic.latitude),
+        CesiumMath.toDegrees(cartographic.longitude)
+      )
+    );
+
+    if (isDefined(result)) {
+      result.x = point.x;
+      result.y = point.y;
+    } else {
+      result = new Cartesian2(point.x, point.y);
+    }
+    return result;
   }
 
   private _selectFeature() {

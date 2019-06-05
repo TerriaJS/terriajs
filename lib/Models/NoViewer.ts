@@ -6,9 +6,7 @@ import "terriajs-cesium/Source/Core/Rectangle";
 import Mappable from "./Mappable";
 
 /*global require*/
-var inherit = require("../Core/inherit");
 var Rectangle = require("terriajs-cesium/Source/Core/Rectangle");
-var when = require("terriajs-cesium/Source/ThirdParty/when");
 
 class NoViewer extends GlobeOrMap {
   readonly terria: Terria;
@@ -29,6 +27,13 @@ class NoViewer extends GlobeOrMap {
   getCurrentExtent() {
     return Rectangle.fromDegrees(120, -45, 155, -15); // This is just a random rectangle. Replace it when there's a home view available
   }
+
+  getContainer() {
+    return undefined;
+  }
+
+  pauseMapInteraction() {}
+  resumeMapInteraction() {}
 }
 
 export default NoViewer;

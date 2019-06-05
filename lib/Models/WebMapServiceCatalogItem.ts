@@ -25,9 +25,9 @@ import GroupMixin from "../ModelMixins/GroupMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
 import DiscreteTimeTraits from "../Traits/DiscreteTimeTraits";
+import LegendTraits from "../Traits/LegendTraits";
 import { RectangleTraits } from "../Traits/MappableTraits";
 import WebMapServiceCatalogItemTraits, {
-  LegendTraits,
   WebMapServiceAvailableLayerStylesTraits
 } from "../Traits/WebMapServiceCatalogItemTraits";
 import CreateModel from "./CreateModel";
@@ -42,6 +42,7 @@ import WebMapServiceCapabilities, {
   CapabilitiesStyle,
   getRectangleFromLayer
 } from "./WebMapServiceCapabilities";
+import ModelPropertiesFromTraits from "./ModelPropertiesFromTraits";
 
 interface LegendUrl {
   url: string;
@@ -92,6 +93,10 @@ class GetCapabilitiesStratum extends LoadableStratum(
     readonly capabilities: WebMapServiceCapabilities
   ) {
     super();
+  }
+
+  @computed get supportsReordering() {
+    return !this.keepOnTop;
   }
 
   @computed
@@ -145,18 +150,18 @@ class GetCapabilitiesStratum extends LoadableStratum(
             legendMimeType = wmsLegendUrl.Format;
           }
 
-          const legendUrl = !legendUri
+          const legend = !legendUri
             ? undefined
-            : {
+            : createStratumInstance(LegendTraits, {
                 url: legendUri.toString(),
-                mimeType: legendMimeType
-              };
+                urlMimeType: legendMimeType
+              });
 
           return {
             name: style.Name,
             title: style.Title,
             abstract: style.Abstract,
-            legendUrl: legendUrl
+            legend: legend
           };
         })
       });
@@ -335,6 +340,7 @@ class WebMapServiceCatalogItem
   static readonly type = "wms";
   readonly canZoomTo = true;
   readonly showsInfo = true;
+  readonly supportsSplitting = true;
 
   @observable
   ancestors:
@@ -426,12 +432,17 @@ class WebMapServiceCatalogItem
   }
 
   @computed
-  get legendUrls(): StratumFromTraits<LegendTraits>[] {
+  get legends(): readonly ModelPropertiesFromTraits<LegendTraits>[] {
+    const superLegends = super.legends;
+    if (superLegends !== undefined) {
+      return superLegends;
+    }
+
     const availableStyles = this.availableStyles || [];
     const layers = this.layersArray;
     const styles = this.stylesArray;
 
-    const result: StratumFromTraits<LegendTraits>[] = [];
+    const result: ModelPropertiesFromTraits<LegendTraits>[] = [];
 
     for (let i = 0; i < layers.length; ++i) {
       const layer = layers[i];
@@ -456,8 +467,8 @@ class WebMapServiceCatalogItem
             : layerAvailableStyles.styles.find(
                 candidate => candidate.name === style
               );
-        if (layerStyle !== undefined && layerStyle.legendUrl !== undefined) {
-          result.push(layerStyle.legendUrl);
+        if (layerStyle !== undefined && layerStyle.legend !== undefined) {
+          result.push(layerStyle.legend);
         }
       }
     }

@@ -45,6 +45,16 @@ export default class ViewState {
   @observable mobileMenuVisible: boolean = false;
   @observable explorerPanelAnimating: boolean = false;
   @observable topElement: string = "FeatureInfo";
+  @observable storyBuilderShown: boolean = false;
+
+  // default value is null, because user has not made decision to show or
+  // not show story
+  // will be explicitly set to false when user 1. dismiss story
+  // notification or 2. close a story
+  @observable storyShown: boolean | null = null;
+
+  @observable currentStoryId: number = 0;
+  @observable featurePrompts: any[] = [];
 
   /**
    * Gets or sets a value indicating whether the small screen (mobile) user interface should be used.
@@ -80,7 +90,9 @@ export default class ViewState {
   private _unsubscribeErrorListener: any;
   private _pickedFeaturesSubscription: IReactionDisposer;
   private _isMapFullScreenSubscription: IReactionDisposer;
+  private _showStoriesSubscription: IReactionDisposer;
   private _mobileMenuSubscription: IReactionDisposer;
+  private _storyPromptSubscription: IReactionDisposer;
   private _disclaimerHandler: DisclaimerHandler;
 
   constructor(options: ViewStateOptions) {
@@ -125,6 +137,23 @@ export default class ViewState {
         terria.userProperties.get("hideExplorerPanel") === "1",
       (isMapFullScreen: boolean) => {
         this.isMapFullScreen = isMapFullScreen;
+
+        // if /#hideWorkbench=1 exists in url onload, show stories directly
+        // any show/hide workbench will not automatically show story
+        if (!defined(this.storyShown)) {
+          // why only checkk config params here? because terria.stories are not
+          // set at the moment, and that property will be checked in rendering
+          // Here are all are checking are: is terria story enabled in this app?
+          // if so we should show it when app first laod, if workbench is hiddne
+          this.storyShown = terria.configParameters.storyEnabled;
+        }
+      }
+    );
+
+    this._showStoriesSubscription = reaction(
+      () => Boolean(terria.userProperties.get("playStory")),
+      (playStory: boolean) => {
+        this.storyShown = terria.configParameters.storyEnabled && playStory;
       }
     );
 
@@ -139,6 +168,18 @@ export default class ViewState {
     );
 
     this._disclaimerHandler = new DisclaimerHandler(terria, this);
+
+    this._storyPromptSubscription = reaction(
+      () => this.storyShown,
+      (storyShown: boolean | null) => {
+        if (storyShown === false) {
+          // only show it once
+          if (!this.terria.getLocalProperty("storyPrompted")) {
+            this.toggleFeaturePrompt("story", true, false);
+          }
+        }
+      }
+    );
   }
 
   dispose() {
@@ -146,6 +187,8 @@ export default class ViewState {
     this._unsubscribeErrorListener();
     this._mobileMenuSubscription();
     this._isMapFullScreenSubscription();
+    this._showStoriesSubscription();
+    this._storyPromptSubscription();
     this._disclaimerHandler.dispose();
   }
 
@@ -201,5 +244,25 @@ export default class ViewState {
 
   hideMapUi() {
     return this.getNextNotification() && this.getNextNotification().hideUi;
+  }
+
+  toggleFeaturePrompt(
+    feature: string,
+    state: boolean,
+    persistent: boolean = false
+  ) {
+    const featureIndexInPrompts = this.featurePrompts.indexOf(feature);
+    if (
+      state &&
+      featureIndexInPrompts < 0 &&
+      !this.terria.getLocalProperty(`${feature}Prompted`)
+    ) {
+      this.featurePrompts.push(feature);
+    } else if (!state && featureIndexInPrompts >= 0) {
+      this.featurePrompts.splice(featureIndexInPrompts, 1);
+    }
+    if (persistent) {
+      this.terria.setLocalProperty(`${feature}Prompted`, true);
+    }
   }
 }

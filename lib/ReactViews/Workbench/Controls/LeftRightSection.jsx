@@ -9,74 +9,88 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 
 // import Icon from '../../Icon';
-import ObserveModelMixin from "../../ObserveModelMixin";
 import Styles from "./left-right-section.scss";
+import { observer } from "mobx-react";
+import CommonStrata from "../../../Models/CommonStrata";
 
-const LeftRightSection = createReactClass({
-  displayName: "LeftRightSection",
-  mixins: [ObserveModelMixin],
+const LeftRightSection = observer(
+  createReactClass({
+    displayName: "LeftRightSection",
 
-  propTypes: {
-    item: PropTypes.object.isRequired
-  },
+    propTypes: {
+      item: PropTypes.object.isRequired
+    },
 
-  goLeft() {
-    this.props.item.splitDirection = ImagerySplitDirection.LEFT;
-  },
+    goLeft() {
+      this.props.item.setTrait(
+        CommonStrata.user,
+        "splitDirection",
+        ImagerySplitDirection.LEFT
+      );
+    },
 
-  goBoth() {
-    this.props.item.splitDirection = ImagerySplitDirection.NONE;
-  },
+    goBoth() {
+      this.props.item.setTrait(
+        CommonStrata.user,
+        "splitDirection",
+        ImagerySplitDirection.NONE
+      );
+    },
 
-  goRight() {
-    this.props.item.splitDirection = ImagerySplitDirection.RIGHT;
-  },
+    goRight() {
+      this.props.item.setTrait(
+        CommonStrata.user,
+        "splitDirection",
+        ImagerySplitDirection.RIGHT
+      );
+    },
 
-  render() {
-    const item = this.props.item;
-    const splitDirection = item.splitDirection;
-    if (
-      !item.supportsSplitting ||
-      !defined(splitDirection) ||
-      !item.terria.showSplitter
-    ) {
-      return null;
+    render() {
+      const item = this.props.item;
+      const splitDirection = item.splitDirection;
+      if (
+        !item.supportsSplitting ||
+        !defined(splitDirection) ||
+        !item.terria.showSplitter
+      ) {
+        return null;
+      }
+      return (
+        <div className={Styles.leftRightSection}>
+          <button
+            type="button"
+            onClick={this.goLeft}
+            className={classNames(Styles.goLeft, {
+              [Styles.isActive]: splitDirection === ImagerySplitDirection.LEFT
+            })}
+            title="Show on the left side"
+          >
+            Left
+          </button>
+          <button
+            type="button"
+            onClick={this.goBoth}
+            className={classNames(Styles.goBoth, {
+              [Styles.isActive]: splitDirection === ImagerySplitDirection.NONE
+            })}
+            title="Show on both sides"
+          >
+            Both
+          </button>
+          <button
+            type="button"
+            onClick={this.goRight}
+            className={classNames(Styles.goRight, {
+              [Styles.isActive]: splitDirection === ImagerySplitDirection.RIGHT
+            })}
+            title="Show on the right side"
+          >
+            Right
+          </button>
+        </div>
+      );
     }
-    return (
-      <div className={Styles.leftRightSection}>
-        <button
-          type="button"
-          onClick={this.goLeft}
-          className={classNames(Styles.goLeft, {
-            [Styles.isActive]: splitDirection === ImagerySplitDirection.LEFT
-          })}
-          title="Show on the left side"
-        >
-          Left
-        </button>
-        <button
-          type="button"
-          onClick={this.goBoth}
-          className={classNames(Styles.goBoth, {
-            [Styles.isActive]: splitDirection === ImagerySplitDirection.NONE
-          })}
-          title="Show on both sides"
-        >
-          Both
-        </button>
-        <button
-          type="button"
-          onClick={this.goRight}
-          className={classNames(Styles.goRight, {
-            [Styles.isActive]: splitDirection === ImagerySplitDirection.RIGHT
-          })}
-          title="Show on the right side"
-        >
-          Right
-        </button>
-      </div>
-    );
-  }
-});
+  })
+);
 
 module.exports = LeftRightSection;
