@@ -56,11 +56,11 @@ export default class Leaflet extends GlobeOrMap {
   private _cesiumReqAnimFrameId: number | undefined;
   private _pickedFeatures: PickedFeatures | undefined = undefined;
 
-  constructor(terriaViewer: TerriaViewer) {
+  constructor(terriaViewer: TerriaViewer, container: string | HTMLElement) {
     super();
     this.terria = terriaViewer.terria;
     this.terriaViewer = terriaViewer;
-    this.map = L.map(this.terriaViewer.container, {
+    this.map = L.map(container, {
       zoomControl: false,
       attributionControl: false,
       maxZoom: 14, //this.maximumLeafletZoomLevel,
@@ -157,15 +157,12 @@ export default class Leaflet extends GlobeOrMap {
   private observeModelLayer() {
     return autorun(() => {
       const catalogItems = [
-        ...this.terria.workbench.items,
+        ...this.terriaViewer.items.get(),
         this.terriaViewer.baseMap
       ];
       // Flatmap
       const allMapItems = ([] as (DataSource | ImageryParts)[]).concat(
-        ...catalogItems
-          .filter(isDefined)
-          .filter(Mappable.is)
-          .map(item => item.mapItems)
+        ...catalogItems.filter(isDefined).map(item => item.mapItems)
       );
 
       const allImagery = allMapItems.filter(ImageryParts.is).map(parts => ({

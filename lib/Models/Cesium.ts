@@ -80,7 +80,7 @@ export default class Cesium extends GlobeOrMap {
   private readonly _disposeWorkbenchMapItemsSubscription: () => void;
   private readonly _disposeTerrainReaction: () => void;
 
-  constructor(terriaViewer: TerriaViewer) {
+  constructor(terriaViewer: TerriaViewer, container: string | HTMLElement) {
     super();
     this.terriaViewer = terriaViewer;
     this.terria = terriaViewer.terria;
@@ -108,7 +108,7 @@ export default class Cesium extends GlobeOrMap {
     };
 
     //create CesiumViewer
-    this.cesiumWidget = new CesiumWidget(this.terriaViewer.container, options);
+    this.cesiumWidget = new CesiumWidget(container, options);
     this.scene = this.cesiumWidget.scene;
 
     this.dataSourceDisplay = new DataSourceDisplay({
@@ -248,15 +248,12 @@ export default class Cesium extends GlobeOrMap {
   private observeModelLayer() {
     return autorun(() => {
       const catalogItems = [
-        ...this.terria.workbench.items,
+        ...this.terriaViewer.items.get(),
         this.terriaViewer.baseMap
       ];
       // Flatmap
       const allMapItems = ([] as (DataSource | ImageryParts)[]).concat(
-        ...catalogItems
-          .filter(isDefined)
-          .filter(Mappable.is)
-          .map(item => item.mapItems)
+        ...catalogItems.filter(isDefined).map(item => item.mapItems)
       );
       // TODO: Look up the type in a map and call the associated function.
       //       That way the supported types of map items is extensible.
@@ -562,7 +559,7 @@ export default class Cesium extends GlobeOrMap {
     credit?: Cesium.Credit;
   } {
     if (
-      this.terriaViewer.viewerOptions.cesium.useTerrain &&
+      this.terriaViewer.viewerOptions.useTerrain &&
       this.terria.configParameters.useCesiumIonTerrain
     ) {
       const logo = require("terriajs-cesium/Source/Assets/Images/ion-credit.png");

@@ -25,6 +25,8 @@ import NoViewer from "./NoViewer";
 import TimelineStack from "./TimelineStack";
 import updateModelFromJson from "./updateModelFromJson";
 import Workbench from "./Workbench";
+import Mappable from "./Mappable";
+import filterOutUndefined from "../Core/filterOutUndefined";
 
 require("regenerator-runtime/runtime");
 
@@ -66,9 +68,14 @@ export default class Terria {
   readonly workbench = new Workbench();
   readonly catalog = new Catalog(this);
   readonly timelineClock = new Clock({ shouldAnimate: false });
-  // Set in TerriaViewerWrapper.jsx. This is temporary while I work out what should own TerriaViewer
-  // terriaViewer, currentViewer, baseMap and other viewer-related properties will go with TerriaViewer
-  @observable mainViewer: TerriaViewer | undefined;
+  readonly mainViewer: TerriaViewer = new TerriaViewer(
+    this,
+    computed(() =>
+      filterOutUndefined(
+        this.workbench.items.map(item => (Mappable.is(item) ? item : undefined))
+      )
+    )
+  );
 
   appName?: string;
   supportEmail?: string;

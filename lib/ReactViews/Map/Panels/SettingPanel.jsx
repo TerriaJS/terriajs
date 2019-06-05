@@ -5,7 +5,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import { observer } from "mobx-react";
-import { action } from "mobx";
+import { action, runInAction } from "mobx";
 
 // import ViewerMode from "../../../Models/ViewerMode";
 // import ObserveModelMixin from "../../ObserveModelMixin";
@@ -14,6 +14,8 @@ import Icon from "../../Icon";
 
 import Styles from "./setting-panel.scss";
 import DropdownStyles from "./panel.scss";
+import Terria from "../../../Models/Terria";
+import ViewState from "../../../ReactViewModels/ViewState";
 
 // const viewerModeLabels = {
 //   [ViewerMode.CesiumTerrain]: "3D Terrain",
@@ -22,6 +24,13 @@ import DropdownStyles from "./panel.scss";
 // };
 
 // The basemap and viewer setting panel
+/**
+ * @typedef {object} Props
+ * @prop {Terria} terria
+ * @prop {ViewState} viewState
+ *
+ * @extends {React.Component<Props>}
+ */
 @observer
 class SettingPanel extends React.Component {
   static propTypes = {
@@ -30,16 +39,25 @@ class SettingPanel extends React.Component {
     viewState: PropTypes.object.isRequired
   };
 
+  /**
+   * @param {Props} props
+   */
   constructor(props) {
-    super();
+    super(props);
     this.state = {
-      activeMapName: props.terria.baseMap ? props.terria.baseMap.name : "(None)"
+      activeMapName: props.terria.mainViewer.baseMap
+        ? props.terria.baseMap.name
+        : "(None)"
     };
   }
 
+  // @computed get activeMapName
+
   selectBaseMap(baseMap, event) {
     event.stopPropagation();
-    this.props.terria.mainViewer.baseMap = baseMap.mappable;
+    runInAction(() => {
+      this.props.terria.mainViewer.baseMap = baseMap.mappable;
+    });
     // this.props.terria.baseMapContrastColor = baseMap.contrastColor;
 
     // We store the user's chosen basemap for future use, but it's up to the instance to decide
@@ -67,7 +85,7 @@ class SettingPanel extends React.Component {
     event.stopPropagation();
     if (viewer === "3D Terrain" || viewer === "3D Smooth") {
       mainViewer.viewerMode = "cesium";
-      mainViewer.viewerOptions.cesium.useTerrain = viewer === "3D Terrain";
+      mainViewer.viewerOptions.useTerrain = viewer === "3D Terrain";
     } else if (viewer === "2D") {
       mainViewer.viewerMode = "leaflet";
     } else {
@@ -85,7 +103,7 @@ class SettingPanel extends React.Component {
 
     const currentViewer =
       this.props.terria.mainViewer.viewerMode === "cesium"
-        ? this.props.terria.mainViewer.viewerOptions.cesium.useTerrain
+        ? this.props.terria.mainViewer.viewerOptions.useTerrain
           ? "3D Terrain"
           : "3D Smooth"
         : "2D";
