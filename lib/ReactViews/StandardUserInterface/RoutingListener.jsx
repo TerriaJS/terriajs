@@ -16,7 +16,7 @@ class RoutingListener extends React.Component {
     this.syncLocation();
   }
   syncLocation() {
-    // this.props.viewState.location = this.props.location;
+    this.props.viewState.location = this.props.location;
   }
   render() {
     return <></>;

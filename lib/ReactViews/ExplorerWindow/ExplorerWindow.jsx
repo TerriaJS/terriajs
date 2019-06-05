@@ -5,6 +5,10 @@ import { withRouter } from "react-router-dom";
 import classNames from "classnames";
 import ko from "terriajs-cesium/Source/ThirdParty/knockout";
 
+import {
+  CATALOG_ROUTE,
+  CATALOG_MEMBER_ROUTE
+} from "../../ReactViewModels/TerriaRouting.js";
 import ObserveModelMixin from "../ObserveModelMixin";
 import Tabs from "./Tabs.jsx";
 
@@ -43,8 +47,8 @@ const ExplorerWindow = createReactClass({
     this.props.viewState.explorerPanelAnimating = true;
     const checkIncomingRoute = props => {
       if (
-        (props.match && props.match.path === "/catalog/:catalogMemberId") ||
-        props.match.path === "/catalog/"
+        (props.match && props.match.path === CATALOG_MEMBER_ROUTE) ||
+        props.match.path === CATALOG_ROUTE
       ) {
         this.props.viewState.explorerPanelIsVisible = true;
         this.onVisibilityChange(true);
@@ -123,8 +127,8 @@ const ExplorerWindow = createReactClass({
 
   isVisible() {
     return (
-      this.props.match.path === "/catalog/:catalogMemberId" ||
-      this.props.match.path === "/catalog/"
+      this.props.match.path === CATALOG_MEMBER_ROUTE ||
+      this.props.match.path === CATALOG_ROUTE
     );
   },
 

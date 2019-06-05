@@ -5,6 +5,8 @@ import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
+
+import { CATALOG_ROUTE } from "../../ReactViewModels/TerriaRouting.js";
 import ObserveModelMixin from "../ObserveModelMixin";
 import SearchBox from "../Search/SearchBox.jsx";
 import SidebarSearch from "../Search/SidebarSearch.jsx";
@@ -103,7 +105,7 @@ const SidePanel = createReactClass({
           />
           <div className={Styles.addData}>
             <Link
-              to="/catalog/"
+              to={CATALOG_ROUTE}
               type="button"
               onClick={this.onAddDataClicked}
               className={Styles.button}

@@ -1,12 +1,12 @@
 import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
+import { BrowserRouter as Router, Route, withRouter } from "react-router-dom";
+
 import {
-  BrowserRouter as Router,
-  Route,
-  Switch,
-  withRouter
-} from "react-router-dom";
+  CATALOG_ROUTE,
+  CATALOG_MEMBER_ROUTE
+} from "../../ReactViewModels/TerriaRouting.js";
 import arrayContains from "../../Core/arrayContains";
 import Branding from "./../SidePanel/Branding.jsx";
 import DragDropFile from "./../DragDropFile.jsx";
@@ -229,7 +229,7 @@ const StandardUserInterface = createReactClass({
                 />
                 <main>
                   <Route
-                    path={["/catalog/:catalogMemberId", "/catalog/", "*"]}
+                    path={[CATALOG_MEMBER_ROUTE, CATALOG_ROUTE, "*"]}
                     render={() => (
                       <ExplorerWindow
                         terria={terria}
