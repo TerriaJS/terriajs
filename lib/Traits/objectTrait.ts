@@ -1,14 +1,13 @@
+import { computed } from "mobx";
 import TerriaError from "../Core/TerriaError";
-import StratumFromTraits from "../Models/StratumFromTraits";
+import addModelStrataView from "../Models/addModelStrataView";
 import { BaseModel } from "../Models/Model";
+import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
+import saveStratumToJson from "../Models/saveStratumToJson";
+import StratumFromTraits from "../Models/StratumFromTraits";
 import ModelTraits from "./ModelTraits";
 import Trait, { TraitOptions } from "./Trait";
-import FlattenedFromTraits from "../Models/FlattenedFromTraits";
-import createStratumInstance from "../Models/createStratumInstance";
 import TraitsConstructor from "./TraitsConstructor";
-import { computed } from "mobx";
-import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
-import addModelStrataView from "../Models/addModelStrataView";
 
 export interface ObjectTraitOptions<T extends ModelTraits>
   extends TraitOptions {
@@ -87,6 +86,14 @@ export class ObjectTrait<T extends ModelTraits> extends Trait {
     });
 
     return result;
+  }
+
+  toJson(value: StratumFromTraits<T> | undefined): any {
+    if (value === undefined) {
+      return undefined;
+    }
+
+    return saveStratumToJson(this.type.traits, value);
   }
 
   isSameType(trait: Trait): boolean {
