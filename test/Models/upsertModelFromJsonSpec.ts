@@ -59,7 +59,7 @@ describe("upsertModelFromJson", function() {
       members: [
         {
           type: "wms",
-          localId: "mybroadband%3AMyBroadband_ADSL_Availability",
+          localId: "mobile-black-spot-programme%3Afunded-base-stations-round4-group",
           name: "Override"
         }
       ]
@@ -82,7 +82,7 @@ describe("upsertModelFromJson", function() {
     const group = <WebMapServiceCatalogGroup>model;
     const item = terria.getModelById(
       WebMapServiceCatalogItem,
-      "/Test/mybroadband%3AMyBroadband_ADSL_Availability"
+      "/Test/mobile-black-spot-programme%3Afunded-base-stations-round4-group"
     );
     expect(item).toBeDefined();
     if (!item) {
@@ -110,7 +110,7 @@ describe("upsertModelFromJson", function() {
     expect(group.memberModels.length).toBeGreaterThan(1);
     expect(group.memberModels.indexOf(item)).toBeGreaterThanOrEqual(0);
     expect(item.name).toBe("Override");
-    expect(item.layers).toBe("mybroadband:MyBroadband_ADSL_Availability");
+    expect(item.layers).toBe("mobile-black-spot-programme:funded-base-stations-round4-group");
 
     await item.loadMetadata();
 
