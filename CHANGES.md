@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### v7.5.2
+
+* Upgraded to Cesium v1.58.1.
+
 ### v7.5.1
 
 * Fixed a bug in Cesium that prevented the new Bing Maps "on demand" basemaps from working on `https` sites.
