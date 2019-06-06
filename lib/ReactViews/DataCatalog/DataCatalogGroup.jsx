@@ -1,6 +1,7 @@
 import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
+import URI from "urijs";
 import addedByUser from "../../Core/addedByUser";
 import removeUserAddedData from "../../Models/removeUserAddedData";
 import CatalogGroup from "./CatalogGroup";
@@ -90,6 +91,7 @@ const DataCatalogGroup = createReactClass({
 
     return (
       <CatalogGroup
+        linkTo={URI.encode(group.uniqueId)}
         text={this.getNameOrPrettyUrl()}
         title={getAncestors(group)
           .map(member => member.nameInCatalog)

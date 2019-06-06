@@ -28,6 +28,8 @@
   composes: btn from "../../Sass/common/_buttons.scss";
   @extend %wrap;
 
+  display: block;
+  color: $text-black;
   text-align: left;
   font-size: $font-size-small;
   padding: 8px 30px + $padding;

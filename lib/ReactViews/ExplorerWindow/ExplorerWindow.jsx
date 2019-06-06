@@ -36,14 +36,8 @@ const ExplorerWindow = createReactClass({
     this.onVisibilityChange(false);
   },
 
-  syncMatchFromExplorer() {
-    // sync up explorer route matching state to viewstate
-    this.props.viewState.matchFromExplorer = this.props.match;
-  },
-
   /* eslint-disable-next-line camelcase */
   UNSAFE_componentWillMount() {
-    this.syncMatchFromExplorer();
     this.props.viewState.explorerPanelAnimating = true;
     const checkIncomingRoute = props => {
       if (
@@ -72,7 +66,6 @@ const ExplorerWindow = createReactClass({
   },
 
   componentDidUpdate() {
-    this.syncMatchFromExplorer();
     if (this.isVisible() && !this.state.visible) {
       this.onVisibilityChange(true);
     }
@@ -100,10 +93,10 @@ const ExplorerWindow = createReactClass({
         slidIn: true
       });
 
-      setTimeout(
-        () => (this.props.viewState.explorerPanelAnimating = false),
-        SLIDE_DURATION
-      );
+      setTimeout(() => {
+        this.props.viewState.explorerPanelAnimating = false;
+        this.props.viewState.explorerPanelIsVisible = true;
+      }, SLIDE_DURATION);
     });
   },
 

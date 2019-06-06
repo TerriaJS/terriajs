@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 
@@ -15,8 +16,8 @@ import Styles from "./data-catalog-group.scss";
 function CatalogGroup(props) {
   return (
     <li className={Styles.root}>
-      <button
-        type="button"
+      <Link
+        to={props.linkTo}
         className={classNames(
           Styles.btnCatalog,
           { [Styles.btnCatalogTopLevel]: props.topLevel },
@@ -47,7 +48,7 @@ function CatalogGroup(props) {
             <Icon glyph={Icon.GLYPHS.closed} />
           )}
         </span>
-      </button>
+      </Link>
       <If condition={props.removable}>
         <button
           type="button"
@@ -89,6 +90,7 @@ function CatalogGroup(props) {
 CatalogGroup.propTypes = {
   text: PropTypes.string,
   title: PropTypes.string,
+  linkTo: PropTypes.string,
   topLevel: PropTypes.bool,
   open: PropTypes.bool,
   loading: PropTypes.bool,

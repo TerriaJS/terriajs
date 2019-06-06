@@ -1,8 +1,8 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import Icon from "../Icon.jsx";
-import { Link } from "react-router-dom";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 
 import Styles from "./data-catalog-item.scss";
@@ -30,7 +30,6 @@ function CatalogItem(props) {
     <li className={classNames(Styles.root)}>
       <Link
         to={props.linkTo}
-        type="button"
         onClick={props.onTextClick}
         title={props.title}
         className={classNames(Styles.btnCatalogItem, {

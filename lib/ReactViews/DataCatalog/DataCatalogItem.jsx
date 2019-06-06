@@ -80,10 +80,6 @@ const DataCatalogItem = createReactClass({
       this.props.item.uniqueId ===
       URI.decode(this.props.match.params.catalogMemberId)
     );
-    // TODO: check userdata
-    return addedByUser(this.props.item)
-      ? this.props.viewState.userDataPreviewedItem === this.props.item
-      : this.props.viewState.previewedItem === this.props.item;
   },
 
   render() {

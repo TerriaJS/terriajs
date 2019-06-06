@@ -10,6 +10,7 @@ import measureElement from "../measureElement";
 import ObserveModelMixin from "../ObserveModelMixin";
 import Styles from "./mappable-preview.scss";
 import SharePanel from "../Map/Panels/SharePanel/SharePanel.jsx";
+import ErrorBoundary from "../ErrorBoundary/ErrorBoundary.jsx";
 
 /**
  * CatalogItem preview that is mappable (as opposed to say, an analytics item that can't be displayed on a map without
@@ -50,15 +51,27 @@ const MappablePreview = createReactClass({
       this.props.previewed.nowViewingCatalogItem || this.props.previewed;
     return (
       <div className={Styles.root}>
-        <If condition={catalogItem.isMappable && !catalogItem.disablePreview}>
-          <DataPreviewMap
-            terria={this.props.terria}
-            previewedCatalogItem={catalogItem}
-            showMap={
-              !this.props.viewState.explorerPanelAnimating ||
-              this.props.viewState.useSmallScreenInterface
-            }
-          />
+        <If
+          condition={
+            catalogItem.isMappable &&
+            !catalogItem.disablePreview &&
+            this.props.viewState.explorerPanelIsVisible
+          }
+        >
+          <ErrorBoundary terria={this.props.terria}>
+            <DataPreviewMap
+              key={[
+                catalogItem.uniqueId,
+                this.props.viewState.explorerPanelIsVisible
+              ]}
+              terria={this.props.terria}
+              previewedCatalogItem={catalogItem}
+              showMap={
+                !this.props.viewState.explorerPanelAnimating ||
+                this.props.viewState.useSmallScreenInterface
+              }
+            />
+          </ErrorBoundary>
         </If>
         <button
           type="button"
