@@ -151,9 +151,7 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
     });
   }
 
-  toJson(
-    value: readonly StratumFromTraits<T>[] | undefined
-  ): any {
+  toJson(value: readonly StratumFromTraits<T>[] | undefined): any {
     if (value === undefined) {
       return undefined;
     }
