@@ -26,7 +26,11 @@ export default function saveModelToJson(
     if (stratum === undefined) {
       return;
     }
-    result[stratumId] = saveStratumToJson(model.traits, stratum);
+
+    const stratumJson = saveStratumToJson(model.traits, stratum);
+    stratumJson.id = model.id;
+    stratumJson.type = model.type;
+    result[stratumId] = stratumJson;
   });
 
   return result;
