@@ -2,6 +2,7 @@ import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import { BrowserRouter as Router, Route, withRouter } from "react-router-dom";
+import { Helmet } from "react-helmet";
 
 import {
   CATALOG_ROUTE,
@@ -163,6 +164,10 @@ const StandardUserInterface = createReactClass({
           })}
           ref={w => (this._wrapper = w)}
         >
+          <Helmet>
+            <title>{this.props.terria.appName}</title>
+            <meta name="description" content="A web map built on Terria Map" />
+          </Helmet>
           <RoutingListener viewState={this.props.viewState} />
           <div className={Styles.ui}>
             <div className={Styles.uiInner}>

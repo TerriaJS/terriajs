@@ -70,6 +70,7 @@
     "react-anything-sortable": "^1.5.2",
     "react-datepicker": "0.53.0",
     "react-dom": "^16.3.2",
+    "react-helmet": "^5.2.1",
     "react-responsive": "^5.0.0",
     "react-router-dom": "^5.0.0",
     "react-swipeable": "^5.1.0",

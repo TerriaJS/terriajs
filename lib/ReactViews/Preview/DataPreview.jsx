@@ -1,12 +1,13 @@
 "use strict";
+import React from "react";
+import { Helmet } from "react-helmet";
 
 import Chart from "../Custom/Chart/Chart";
-import Description from "./Description";
+import Description, { getMetaDescriptionSummary } from "./Description";
 import GroupPreview from "./GroupPreview";
 import InvokeFunction from "../Analytics/InvokeFunction";
 import MappablePreview from "./MappablePreview";
 import ObserveModelMixin from "../ObserveModelMixin";
-import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import Styles from "./data-preview.scss";
@@ -36,6 +37,17 @@ const DataPreview = createReactClass({
     }
     return (
       <div className={Styles.preview}>
+        <If condition={previewed}>
+          <Helmet>
+            <title>
+              {previewed.name} - {this.props.terria.appName}
+            </title>
+            <meta
+              name="description"
+              content={getMetaDescriptionSummary(previewed)}
+            />
+          </Helmet>
+        </If>
         <Choose>
           <When condition={previewed && previewed.isMappable}>
             <div className={Styles.previewInner}>
