@@ -28,6 +28,8 @@ And on the server, change to the directory where you copied those files and dire
 
 The server will start on port 3001.  You can specify a different port by adding `--port 1234` to the command-line above.
 
+Ensure that you specify the `baseHref` path in your `devserverconfig.json` if you are serving your TerriaMap from a directory.
+
 It is usually a good idea to run another web server, such as [nginx](https://nginx.org/en/) or [Varnish](https://varnish-cache.org/) on port 80 and then reverse-proxy to the Node.js server, rather than running terriajs-server on port 80 directly.   You will find a varnish VCL file with the TerriaMap source code in the [deploy/varnish directory](https://github.com/TerriaJS/TerriaMap/tree/master/deploy/varnish).  In addition to acting as a reverse proxy for the Node.js server, the supplied Varnish configuration also caches requests to proxied map data in order to improve performance.
 
 ### Using any web server
@@ -38,6 +40,7 @@ It is usually a good idea to run another web server, such as [nginx](https://ngi
 2. It includes a simple service at `/proxy` that allows TerriaJS to access geospatial data servers that don't support [CORS](../connecting-to-data/cross-origin-resource-sharing.md).  If this service is not available, TerriaJS won't be able to access any datasets that are on other servers and that don't support CORS.
 3. It includes another service at `/convert` that uses [GDAL](http://www.gdal.org/) and OGR to transform otherwise unsupported geospatial vector data (e.g. shapefiles) to GeoJSON for display by the TerriaJS client.  If this service is not available, these data formats will not be supported.  However, all the [formats that TerriaJS supports directly](../connecting-to-data/catalog-items.md) will work just fine.
 * When configured correctly, it persists blobs of JSON for use in the sharing feature.  If this service is not available, the JSON can be stored in the share URL, instead.  However, this makes for some extremely long URLs.
+4. It reroutes and serves up a build-time-prerendered index.html of your catalog URLs so they can be indexed by search engines.
 
 If these limitations are acceptable, you can run your TerriaMap on virtually any web server by simply copying the TerriaMap `wwwroot` onto the server!
 
