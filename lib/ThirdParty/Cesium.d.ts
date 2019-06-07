@@ -728,7 +728,29 @@ declare module "terriajs-cesium/Source/Scene/Appearance" {
   export default Cesium.Appearance;
 }
 declare module "terriajs-cesium/Source/Scene/ArcGisMapServerImageryProvider" {
-  export default Cesium.ArcGisMapServerImageryProvider;
+  class ArcGisMapServerImageryProvider extends Cesium.ArcGisMapServerImageryProvider {
+    constructor(options: {
+      url: string;
+      tileDiscardPolicy?: Cesium.TileDiscardPolicy;
+      proxy?: Cesium.Proxy;
+      usePreCachedTilesIfAvailable?: boolean;
+      enablePickFeatures?: boolean;
+      rectangle?: Cesium.Rectangle;
+      tilingScheme?: Cesium.TilingScheme;
+      ellipsoid?: Cesium.Ellipsoid;
+      tileWidth?: number;
+      tileHeight?: number;
+      maximumLevel?: number;
+      layers?: string;
+      parameters?: any;
+      mapServerData?: any;
+    });
+    layers?: string;
+    parameters?: any;
+    usePreCachedTiles?: boolean;
+    enablePickFeatures?: boolean;
+  }
+  export default ArcGisMapServerImageryProvider;
 }
 declare module "terriajs-cesium/Source/Scene/Billboard" {
   export default Cesium.Billboard;
