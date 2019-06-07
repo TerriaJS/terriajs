@@ -26,6 +26,7 @@ import TimelineStack from "./TimelineStack";
 import updateModelFromJson from "./updateModelFromJson";
 import Workbench from "./Workbench";
 import CommonStrata from "./CommonStrata";
+import magdaRecordToCatalogMemberDefinition from "./magdaRecordToCatalogMember";
 
 require("regenerator-runtime/runtime");
 
@@ -231,39 +232,10 @@ export default class Terria {
 
       // Transform the Magda catalog structure to the Terria one.
       const members = aspects.group.members.map((member: any) => {
-        const aspects = member.aspects;
-        if (!aspects) {
-          return undefined;
-        }
-
-        const terria = aspects.terria;
-        if (!terria) {
-          return undefined;
-        }
-
-        if (aspects.group) {
-          // Represent as a Magda catalog group so that we can load members when
-          // the group is opened.
-          return {
-            id: member.id,
-            name: member.name,
-            type: "magda-group",
-            url: "http://saas.terria.io", // TODO
-            groupId: member.id,
-            definition: {
-              type: terria.type,
-              members: aspects.group.members,
-              ...terria.definition
-            }
-          };
-        } else {
-          return {
-            id: member.id,
-            name: member.name,
-            type: terria.type,
-            ...terria.definition
-          };
-        }
+        return magdaRecordToCatalogMemberDefinition({
+          magdaBaseUrl: "http://saas.terria.io",
+          record: member
+        });
       });
 
       updateModelFromJson(this.catalog.group, CommonStrata.definition, {

@@ -4,6 +4,16 @@ import ModelPropertiesFromTraits from "./ModelPropertiesFromTraits";
 
 interface Options {
   /**
+   * The base URL of the Magda server.
+   */
+  magdaBaseUrl: string;
+
+  /**
+   * The Magda record.
+   */
+  record: JsonObject;
+
+  /**
    * The supported distribution formats and their mapping to Terria types.
    * These are listed in order of preference. This property is only used
    * for records that do not have a `terria` aspect and are not groups.
@@ -28,9 +38,9 @@ interface Options {
  * @param options Options for creating the catalog member.
  */
 export default function magdaRecordToCatalogMemberDefinition(
-  record: JsonObject,
-  options: Options = {}
+  options: Options
 ): JsonObject | undefined {
+  const record = options.record;
   const aspects = record.aspects;
   if (!isJsonObject(aspects)) {
     return undefined;
@@ -49,7 +59,7 @@ export default function magdaRecordToCatalogMemberDefinition(
       id: record.id,
       name: record.name,
       type: "magda-group",
-      url: "http://saas.terria.io", // TODO
+      url: options.magdaBaseUrl,
       groupId: record.id,
       definition: {
         type: terria.type,

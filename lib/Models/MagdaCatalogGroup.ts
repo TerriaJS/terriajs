@@ -1,4 +1,4 @@
-import { observable, runInAction } from "mobx";
+import { observable, runInAction, toJS } from "mobx";
 import JsonValue, { isJsonObject } from "../Core/Json";
 import loadJson from "../Core/loadJson";
 import makeRealPromise from "../Core/makeRealPromise";
@@ -49,13 +49,14 @@ export default class MagdaCatalogGroup extends MagdaMixin(
   }
 
   protected get loadReferencePromise(): Promise<void> {
-    return Promise.resolve().then(() => {
+    return new Promise(resolve => {
+      const url = this.url;
       const recordUri = this.buildRecordUri(this.groupId, {
         optionalAspects: ["group", "terria"],
         dereference: true
       });
 
-      if (recordUri === undefined) {
+      if (url === undefined || recordUri === undefined) {
         throw new TerriaError({
           sender: this,
           title: "MagdaCatalogGroup cannot load",
@@ -66,37 +67,51 @@ export default class MagdaCatalogGroup extends MagdaMixin(
 
       const proxiedUrl = proxyCatalogItemUrl(this, recordUri.toString(), "1d");
 
-      const loadPromise = makeRealPromise<JsonValue>(loadJson(proxiedUrl));
-      return loadPromise.then(groupJson => {
+      const terria = this.terria;
+      const id = this.id;
+      const name = this.name;
+      const definition = toJS(this.definition);
+      const distributionFormats = toJS(this.distributionFormats);
+
+      const jsonPromise = makeRealPromise<JsonValue>(loadJson(proxiedUrl));
+      const loadPromise = jsonPromise.then(groupJson => {
         if (!isJsonObject(groupJson) || !isJsonObject(groupJson.aspects)) {
           return;
         }
 
-        const terria = isJsonObject(groupJson.aspects.terria)
+        const terriaAspect = isJsonObject(groupJson.aspects.terria)
           ? groupJson.aspects.terria
           : {};
-        const group = isJsonObject(groupJson.aspects.group)
+        const groupAspect = isJsonObject(groupJson.aspects.group)
           ? groupJson.aspects.group
           : {};
 
         const groupDefinition = {
-          id: this.id + ":dereferenced",
-          name: this.name,
-          type: terria.type ? terria.type : "group",
-          members: Array.isArray(group.members) ? group.members.map((member: any) => magdaRecordToCatalogMemberDefinition(member, {
-            definition: this.definition,
-            distributionFormats: this.distributionFormats
-          })) : [],
+          id: id + ":dereferenced",
+          name: name,
+          type: terriaAspect.type ? terriaAspect.type : "group",
+          members: Array.isArray(groupAspect.members)
+            ? groupAspect.members.map((member: any) =>
+                magdaRecordToCatalogMemberDefinition({
+                  magdaBaseUrl: url,
+                  record: member,
+                  definition: definition,
+                  distributionFormats: distributionFormats
+                })
+              )
+            : [],
           // TODO: merge the terria definition with our traits definition, don't just choose one or the other.
-          ...(isJsonObject(terria.definition)
-            ? terria.definition
-            : this.definition)
+          ...(isJsonObject(terriaAspect.definition)
+            ? terriaAspect.definition
+            : definition)
         };
 
+        // TODO: if this model already exists, should we replace
+        // its definition stratum entirely rather than updating it?
         const dereferenced = upsertModelFromJson(
           CatalogMemberFactory,
-          this.terria,
-          this.id,
+          terria,
+          id,
           undefined,
           CommonStrata.definition,
           groupDefinition
@@ -106,6 +121,7 @@ export default class MagdaCatalogGroup extends MagdaMixin(
           this._reference = dereferenced;
         });
       });
+      resolve(loadPromise);
     });
   }
 
