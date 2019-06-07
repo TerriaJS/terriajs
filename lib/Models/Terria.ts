@@ -25,6 +25,7 @@ import NoViewer from "./NoViewer";
 import TimelineStack from "./TimelineStack";
 import updateModelFromJson from "./updateModelFromJson";
 import Workbench from "./Workbench";
+import CommonStrata from "./CommonStrata";
 
 require("regenerator-runtime/runtime");
 
@@ -197,6 +198,10 @@ export default class Terria {
     var baseUri = new URI(options.configUrl).filename("");
 
     return loadJson5(options.configUrl).then((config: any) => {
+      if (config.aspects) {
+        return this.loadMagdaConfig(config);
+      }
+
       const initializationUrls = config.initializationUrls;
       return when.all(
         initializationUrls.map((initializationUrl: string) => {
@@ -207,7 +212,7 @@ export default class Terria {
             ).toString()
           ).then((initData: any) => {
             if (initData.catalog !== undefined) {
-              updateModelFromJson(this.catalog.group, "definition", {
+              updateModelFromJson(this.catalog.group, CommonStrata.definition, {
                 members: initData.catalog
               });
             }
@@ -218,6 +223,53 @@ export default class Terria {
         })
       );
     });
+  }
+
+  loadMagdaConfig(config: any) {
+    const aspects = config.aspects;
+    if (aspects.group && aspects.group.members) {
+
+      // Transform the Magda catalog structure to the Terria one.
+      const members = aspects.group.members.map((member: any) => {
+        const aspects = member.aspects;
+        if (!aspects) {
+          return undefined;
+        }
+
+        const terria = aspects.terria;
+        if (!terria) {
+          return undefined;
+        }
+
+        if (aspects.group) {
+          // Represent as a Magda catalog group so that we can load members when
+          // the group is opened.
+          return {
+            id: member.id,
+            name: member.name,
+            type: "magda-group",
+            url: "http://saas.terria.io", // TODO
+            groupId: member.id,
+            definition: {
+              type: terria.type,
+              members: aspects.group.members,
+              ...terria.definition
+            }
+          };
+        } else {
+          return {
+            id: member.id,
+            name: member.name,
+            type: terria.type,
+            ...terria.definition
+          };
+        }
+      });
+
+      updateModelFromJson(this.catalog.group, CommonStrata.definition, {
+        members: members
+      });
+    }
   }
 
   getUserProperty(key: string) {

@@ -1,47 +1,11 @@
-import ModelTraits from "./ModelTraits";
-import mixTraits from "./mixTraits";
-import CatalogMemberTraits from "./CatalogMemberTraits";
-import UrlTraits from "./UrlTraits";
-import primitiveTrait from "./primitiveTrait";
-import objectArrayTrait from "./objectArrayTrait";
-import anyTrait from "./anyTrait";
 import { JsonObject } from "../Core/Json";
-
-export class MagdaDistributionFormatTraits extends ModelTraits {
-  @primitiveTrait({
-    name: "ID",
-    description: "The ID of this distribution format.",
-    type: "string"
-  })
-  id?: string;
-
-  @primitiveTrait({
-    name: "Format Regular Expression",
-    description:
-      "A regular expression that is matched against the distribution's format.",
-    type: "string"
-  })
-  formatRegex?: string;
-
-  @primitiveTrait({
-    name: "URL Regular Expression",
-    description:
-      "A regular expression that is matched against the distribution's URL.",
-    type: "string"
-  })
-  urlRegex?: string;
-
-  @anyTrait({
-    name: "Definition",
-    description:
-      "The catalog member definition to use when the URL and Format regular expressions match. The `URL` property will also be set."
-  })
-  definition?: JsonObject | null;
-
-  static isRemoval(format: MagdaDistributionFormatTraits) {
-    return format.definition === null;
-  }
-}
+import anyTrait from "./anyTrait";
+import CatalogMemberTraits from "./CatalogMemberTraits";
+import MagdaDistributionFormatTraits from "./MagdaDistributionFormatTraits";
+import mixTraits from "./mixTraits";
+import objectArrayTrait from "./objectArrayTrait";
+import primitiveTrait from "./primitiveTrait";
+import UrlTraits from "./UrlTraits";
 
 export default class MagdaCatalogItemTraits extends mixTraits(
   UrlTraits,
