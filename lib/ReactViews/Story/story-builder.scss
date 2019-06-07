@@ -127,7 +127,7 @@
 .tutBtn {
   composes: btn from "../../Sass/common/_buttons.scss";
   color: $text-light;
-  font-size: $font-size-mid-mini;
+  font-size: $font-size-button;
   padding: $padding $padding * 2;
   background: $overlay;
   border-radius: $padding * 2;
@@ -137,7 +137,7 @@
     height: 20px;
     width: 20px;
     margin: 0 4px;
-    fill: #ffffff;
+    fill: $faint-bg;
     vertical-align: bottom;
     display: inline-block;
   }
