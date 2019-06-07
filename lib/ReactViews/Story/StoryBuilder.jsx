@@ -29,7 +29,8 @@ const StoryBuilder = createReactClass({
     return {
       editingMode: false,
       currentStory: undefined,
-      recaptureSuccessFul: undefined
+      recaptureSuccessFul: undefined,
+      videoGuideVisible: false
     };
   },
 
@@ -87,6 +88,12 @@ const StoryBuilder = createReactClass({
     } else {
       this.props.terria.stories.push(story);
     }
+  },
+
+  toggleVideoGuide() {
+    this.setState({
+      showVideoGuide: !this.state.showVideoGuide
+    });
   },
 
   recaptureScene(story) {
@@ -160,9 +167,28 @@ const StoryBuilder = createReactClass({
         <Icon glyph={Icon.GLYPHS.story} />{" "}
         <strong>This is your story editor</strong>
         <div className={Styles.instructions}>
-          <p>1. Capture scenes from your map</p>
-          <p>2. Add text and images</p>
-          <p>3. Share with others</p>
+          Create and share interactive stories directly from your map
+          <div>
+            <button onClick={this.toggleVideoGuide} className={Styles.tutBtn}>
+              <Icon glyph={Icon.GLYPHS.play} />
+              Getting Started{" "}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  },
+
+  renderVideoGuide() {
+    return (
+      <div className={Styles.videoGuideWrapper} onClick={this.toggleVideoGuide}>
+        <div className={Styles.videoGuide} onClick={e => e.stopPropagation()}>
+          <iframe
+            width="560"
+            height="315"
+            src="https://www.youtube.com/embed/fbiQawV8IYY"
+            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+          />
         </div>
       </div>
     );
@@ -232,6 +258,7 @@ const StoryBuilder = createReactClass({
     });
     return (
       <div className={className}>
+        {this.state.showVideoGuide && this.renderVideoGuide()}
         <div className={Styles.header}>
           {!hasStories && this.renderIntro()}
           <div className={Styles.actions}>

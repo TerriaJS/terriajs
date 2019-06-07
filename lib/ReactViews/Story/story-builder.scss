@@ -123,3 +123,46 @@
     display: inline-block;
   }
 }
+
+.tutBtn {
+  composes: btn from "../../Sass/common/_buttons.scss";
+  color: $text-light;
+  font-size: $font-size-mid-mini;
+  padding: $padding $padding * 2;
+  background: $overlay;
+  border-radius: $padding * 2;
+  margin-top: $padding;
+
+  svg {
+    height: 12px;
+    width: 12px;
+    margin: 4px;
+    fill: #ffffff;
+    vertical-align: bottom;
+    display: inline-block;
+  }
+}
+
+.VideoGuideWrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba($dark-with-overlay, 0.8);
+}
+
+.videoGuide {
+  margin: 0;
+  width: 560px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 100%;
+  z-index: 9999;
+
+  iframe {
+    width: 100%;
+  }
+}
