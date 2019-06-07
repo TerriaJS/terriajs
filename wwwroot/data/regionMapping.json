@@ -2624,63 +2624,6 @@
             ],
             "description": "Australian Electoral Comission Commonwealth Electoral Boundaries for ABS   Australian Marriage Law Survey",
             "regionIdsFile": "build/TerriaJS/data/regionids/region_map-AEC_FED_2017_AMLS_FED_ABB.json"
-        },
-        "SPC_EEC_CODE": {
-          "layerName": "SPC_EEC",
-          "server": "https://tile-test.terria.io/SPC_EEC/{z}/{x}/{y}.pbf",
-          "serverType": "MVT",
-          "serverMaxNativeZoom": 12,
-          "serverMinZoom": 0,
-          "serverMaxZoom": 28,
-          "regionIdsFile": "build/TerriaJS/data/regionids/region_map-SPC_EEC_CODE_SPC_EEC.json",
-          "regionProp": "country_id",
-          "nameProp": "country_name",
-          "aliases": [
-            "spc_co_id",
-            "SPC_CO_ID",
-            "SPC_COUNTRY_ID",
-            "CO_ID",
-            "COUNTRY_ID"
-          ],
-          "description": "SPC EEC by code",
-          "bbox": [
-            -179.99999999999994,
-            -30.930209,
-            179.99999999999994,
-            23.774728
-          ]
-        },
-        "SPC_EEC_NAME": {
-          "layerName": "SPC_EEC",
-          "server": "https://tile-test.terria.io/SPC_EEC/{z}/{x}/{y}.pbf",
-          "serverType": "MVT",
-          "serverMaxNativeZoom": 12,
-          "serverMinZoom": 0,
-          "serverMaxZoom": 28,
-          "regionIdsFile": "build/TerriaJS/data/regionids/region_map-SPC_EEC_NAME_SPC_EEC.json",
-          "regionProp": "country",
-          "nameProp": "country",
-          "aliases": [
-            "coname",
-            "CO_NAME",
-            "country_name",
-            "COUNTRY_NAME",
-            "COUNTRY",
-            "Countries",
-            "spcconame",
-            "SPC_CO_NAME",
-            "spc_country_name",
-            "SPC_COUNTRY_NAME",
-            "SPC_COUNTRY",
-            "SPC_Countries"
-          ],
-          "description": "SPC EEC by name",
-          "bbox": [
-            -179.99999999999994,
-            -30.930209,
-            179.99999999999994,
-            23.774728
-          ]
         }
     }
 }
