@@ -126,6 +126,7 @@ export default class MagdaCatalogItem extends MagdaMixin(
       }));
     }
 
+    const name = this.name;
     const distributionId = this.distributionId;
     const definition = toJS(this.definition);
     const distributionFormats = this.preparedDistributionFormats;
@@ -141,13 +142,14 @@ export default class MagdaCatalogItem extends MagdaMixin(
     }).then(datasetJson => {
       return magdaRecordToCatalogMemberDefinition({
         magdaBaseUrl: url,
+        name: name,
         record: datasetJson,
         preferredDistributionId: distributionId,
         definition: definition,
         distributionFormats: distributionFormats
       });
     }).then(modelDefinition => {
-      this._reference = upsertModelFromJson(
+      const model = upsertModelFromJson(
         CatalogMemberFactory,
         this.terria,
         this.id,
@@ -155,6 +157,12 @@ export default class MagdaCatalogItem extends MagdaMixin(
         CommonStrata.definition,
         modelDefinition
       );
+      if (CatalogMemberMixin.isMixedInto(model)) {
+        return model.loadMetadata().then(() => <BaseModel>model);
+      }
+      return model;
+    }).then(model => {
+      this._reference = model;
     });
   }
 }

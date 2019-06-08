@@ -21,6 +21,11 @@ interface Options {
   record: JsonObject;
 
   /**
+   * The name to use for the model. If not specified, the record's name is used.
+   */
+  name?: string;
+
+  /**
    * The ID of the preferred distribution to access.
    */
   preferredDistributionId?: string;
@@ -146,14 +151,13 @@ export default function magdaRecordToCatalogMemberDefinition(
         }
 
         const completeDefinition = Object.assign(
-          {},
-          toJS(definition),
-          toJS(distributionFormat.definition),
           {
-            name: record.name,
-            id: record.id,
+            name: options.name || record.name,
+            localId: record.id,
             url: url
-          }
+          },
+          toJS(definition),
+          toJS(distributionFormat.definition)
         );
 
         return completeDefinition;
