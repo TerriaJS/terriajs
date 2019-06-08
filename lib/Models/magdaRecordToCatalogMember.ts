@@ -148,7 +148,12 @@ export default function magdaRecordToCatalogMemberDefinition(
         const completeDefinition = Object.assign(
           {},
           toJS(definition),
-          toJS(distributionFormat.definition)
+          toJS(distributionFormat.definition),
+          {
+            name: record.name,
+            id: record.id,
+            url: url
+          }
         );
 
         return completeDefinition;
