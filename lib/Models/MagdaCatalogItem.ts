@@ -119,11 +119,13 @@ export default class MagdaCatalogItem extends MagdaMixin(
   protected get loadReferencePromise(): Promise<void> {
     const url = this.url;
     if (url === undefined) {
-      return Promise.reject(new TerriaError({
-        sender: this,
-        title: "Cannot load Magda record",
-        message: "The Magda URL is required."
-      }));
+      return Promise.reject(
+        new TerriaError({
+          sender: this,
+          title: "Cannot load Magda record",
+          message: "The Magda URL is required."
+        })
+      );
     }
 
     const name = this.name;
@@ -139,30 +141,33 @@ export default class MagdaCatalogItem extends MagdaMixin(
         "terria"
       ],
       dereference: true
-    }).then(datasetJson => {
-      return magdaRecordToCatalogMemberDefinition({
-        magdaBaseUrl: url,
-        name: name,
-        record: datasetJson,
-        preferredDistributionId: distributionId,
-        definition: definition,
-        distributionFormats: distributionFormats
+    })
+      .then(datasetJson => {
+        return magdaRecordToCatalogMemberDefinition({
+          magdaBaseUrl: url,
+          name: name,
+          record: datasetJson,
+          preferredDistributionId: distributionId,
+          definition: definition,
+          distributionFormats: distributionFormats
+        });
+      })
+      .then(modelDefinition => {
+        const model = upsertModelFromJson(
+          CatalogMemberFactory,
+          this.terria,
+          this.id,
+          undefined,
+          CommonStrata.definition,
+          modelDefinition
+        );
+        if (CatalogMemberMixin.isMixedInto(model)) {
+          return model.loadMetadata().then(() => <BaseModel>model);
+        }
+        return model;
+      })
+      .then(model => {
+        this._reference = model;
       });
-    }).then(modelDefinition => {
-      const model = upsertModelFromJson(
-        CatalogMemberFactory,
-        this.terria,
-        this.id,
-        undefined,
-        CommonStrata.definition,
-        modelDefinition
-      );
-      if (CatalogMemberMixin.isMixedInto(model)) {
-        return model.loadMetadata().then(() => <BaseModel>model);
-      }
-      return model;
-    }).then(model => {
-      this._reference = model;
-    });
   }
 }

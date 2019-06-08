@@ -35,7 +35,10 @@ interface Options {
    * These are listed in order of preference. This property is only used
    * for records that do not have a `terria` aspect and are not groups.
    */
-  distributionFormats?: readonly MagdaPreparedDistributionFormat[] | null | undefined;
+  distributionFormats?:
+    | readonly MagdaPreparedDistributionFormat[]
+    | null
+    | undefined;
 
   /**
    * The catalog member definition to use for _all_ catalog items, regardless
@@ -64,7 +67,9 @@ export default function magdaRecordToCatalogMemberDefinition(
   const terria = isJsonObject(aspects.terria) ? aspects.terria : {};
   const group = isJsonObject(aspects.group) ? aspects.group : {};
   const maybeDatasetDistributions = aspects["dataset-distributions"];
-  const datasetDistributions = isJsonObject(maybeDatasetDistributions) ? maybeDatasetDistributions : {};
+  const datasetDistributions = isJsonObject(maybeDatasetDistributions)
+    ? maybeDatasetDistributions
+    : {};
 
   if (group && group.members) {
     // Represent as a Magda catalog group so that we can load members when
@@ -79,7 +84,9 @@ export default function magdaRecordToCatalogMemberDefinition(
         type: terria.type,
         members: group.members,
         // TODO: merge the terria definition with our traits definition, don't just choose one or the other.
-        ...(isJsonObject(terria.definition) ? terria.definition : options.definition)
+        ...(isJsonObject(terria.definition)
+          ? terria.definition
+          : options.definition)
       }
     };
   } else if (terria && terria.type && isJsonObject(terria.definition)) {
@@ -93,7 +100,9 @@ export default function magdaRecordToCatalogMemberDefinition(
     // Find a suitable definition for this non-Terria dataset.
     const definition = options.definition || {};
     const distributionFormats = options.distributionFormats || [];
-    const distributions = Array.isArray(datasetDistributions.distributions) ? datasetDistributions.distributions : [];
+    const distributions = Array.isArray(datasetDistributions.distributions)
+      ? datasetDistributions.distributions
+      : [];
 
     for (let i = 0; i < distributionFormats.length; ++i) {
       const distributionFormat = distributionFormats[i];

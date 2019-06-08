@@ -229,7 +229,6 @@ export default class Terria {
   loadMagdaConfig(config: any) {
     const aspects = config.aspects;
     if (aspects.group && aspects.group.members) {
-
       // Transform the Magda catalog structure to the Terria one.
       const members = aspects.group.members.map((member: any) => {
         return magdaRecordToCatalogMemberDefinition({
