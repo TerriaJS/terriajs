@@ -58,9 +58,8 @@ export default function magdaRecordToCatalogMemberDefinition(
 
   const terria = isJsonObject(aspects.terria) ? aspects.terria : {};
   const group = isJsonObject(aspects.group) ? aspects.group : {};
-  const distributions = isJsonObject(aspects.distributions) && Array.isArray(aspects.distributions.distributions)
-    ? aspects.distributions.distributions
-    : [];
+  const maybeDatasetDistributions = aspects["dataset-distributions"];
+  const datasetDistributions = isJsonObject(maybeDatasetDistributions) ? maybeDatasetDistributions : {};
 
   if (group && group.members) {
     // Represent as a Magda catalog group so that we can load members when
@@ -89,6 +88,7 @@ export default function magdaRecordToCatalogMemberDefinition(
     // Find a suitable definition for this non-Terria dataset.
     const definition = options.definition || {};
     const distributionFormats = options.distributionFormats || [];
+    const distributions = Array.isArray(datasetDistributions.distributions) ? datasetDistributions.distributions : [];
 
     for (let i = 0; i < distributionFormats.length; ++i) {
       const distributionFormat = distributionFormats[i];
