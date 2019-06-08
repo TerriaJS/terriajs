@@ -51,7 +51,8 @@ export default class MagdaCatalogGroup extends MagdaMixin(
   protected get loadReferencePromise(): Promise<void> {
     return new Promise(resolve => {
       const url = this.url;
-      const recordUri = this.buildRecordUri(this.groupId, {
+      const recordUri = this.buildMagdaRecordUri({
+        id: this.groupId,
         optionalAspects: ["group", "terria"],
         dereference: true
       });
@@ -71,7 +72,7 @@ export default class MagdaCatalogGroup extends MagdaMixin(
       const id = this.id;
       const name = this.name;
       const definition = toJS(this.definition);
-      const distributionFormats = toJS(this.distributionFormats);
+      const distributionFormats = this.preparedDistributionFormats;
 
       const jsonPromise = makeRealPromise<JsonValue>(loadJson(proxiedUrl));
       const loadPromise = jsonPromise.then(groupJson => {

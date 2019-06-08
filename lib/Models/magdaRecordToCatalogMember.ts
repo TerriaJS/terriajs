@@ -1,6 +1,13 @@
 import { isJsonObject, JsonObject } from "../Core/Json";
 import MagdaDistributionFormatTraits from "../Traits/MagdaDistributionFormatTraits";
 import ModelPropertiesFromTraits from "./ModelPropertiesFromTraits";
+import { toJS } from "mobx";
+
+interface MagdaPreparedDistributionFormat {
+  readonly formatRegex: RegExp | undefined;
+  readonly urlRegex: RegExp | undefined;
+  readonly definition: JsonObject | null | undefined;
+}
 
 interface Options {
   /**
@@ -14,13 +21,16 @@ interface Options {
   record: JsonObject;
 
   /**
+   * The ID of the preferred distribution to access.
+   */
+  preferredDistributionId?: string;
+
+  /**
    * The supported distribution formats and their mapping to Terria types.
    * These are listed in order of preference. This property is only used
    * for records that do not have a `terria` aspect and are not groups.
    */
-  distributionFormats?: readonly ModelPropertiesFromTraits<
-    MagdaDistributionFormatTraits
-  >[];
+  distributionFormats?: readonly MagdaPreparedDistributionFormat[] | null | undefined;
 
   /**
    * The catalog member definition to use for _all_ catalog items, regardless
@@ -48,9 +58,9 @@ export default function magdaRecordToCatalogMemberDefinition(
 
   const terria = isJsonObject(aspects.terria) ? aspects.terria : {};
   const group = isJsonObject(aspects.group) ? aspects.group : {};
-  const distributions = isJsonObject(aspects.distributions)
-    ? aspects.distributions
-    : {};
+  const distributions = isJsonObject(aspects.distributions) && Array.isArray(aspects.distributions.distributions)
+    ? aspects.distributions.distributions
+    : [];
 
   if (group && group.members) {
     // Represent as a Magda catalog group so that we can load members when
@@ -77,7 +87,73 @@ export default function magdaRecordToCatalogMemberDefinition(
     };
   } else {
     // Find a suitable definition for this non-Terria dataset.
-    // TODO
+    const definition = options.definition || {};
+    const distributionFormats = options.distributionFormats || [];
+
+    for (let i = 0; i < distributionFormats.length; ++i) {
+      const distributionFormat = distributionFormats[i];
+      const formatRegex = distributionFormat.formatRegex;
+      const urlRegex = distributionFormat.urlRegex;
+
+      // Find distributions that match this format
+      for (let j = 0; j < distributions.length; ++j) {
+        const distribution = distributions[j];
+
+        if (!isJsonObject(distribution)) {
+          continue;
+        }
+
+        const aspects = distribution.aspects;
+        if (!isJsonObject(aspects)) {
+          continue;
+        }
+
+        const dcatJson = aspects["dcat-distribution-strings"];
+        const datasetFormat = aspects["dataset-format"];
+
+        let format: string | undefined;
+        let url: string | undefined;
+
+        if (isJsonObject(dcatJson)) {
+          if (typeof dcatJson.format === "string") {
+            format = dcatJson.format;
+          }
+          if (typeof dcatJson.downloadURL === "string") {
+            url = dcatJson.downloadURL;
+          }
+
+          if (url === undefined && typeof dcatJson.accessURL === "string") {
+            url = dcatJson.accessURL;
+          }
+        }
+
+        if (
+          isJsonObject(datasetFormat) &&
+          typeof datasetFormat.format === "string"
+        ) {
+          format = datasetFormat.format;
+        }
+
+        if (format === undefined || url === undefined) {
+          continue;
+        }
+
+        if (
+          (formatRegex !== undefined && !formatRegex.test(format)) ||
+          (urlRegex !== undefined && !urlRegex.test(url))
+        ) {
+          continue;
+        }
+
+        const completeDefinition = Object.assign(
+          {},
+          toJS(definition),
+          toJS(distributionFormat.definition)
+        );
+
+        return completeDefinition;
+      }
+    }
     return undefined;
   }
 }
