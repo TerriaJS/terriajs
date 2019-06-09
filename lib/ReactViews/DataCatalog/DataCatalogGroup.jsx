@@ -91,7 +91,10 @@ const DataCatalogGroup = observer(
     },
 
     render() {
-      const group = this.props.group;
+      let group = this.props.group;
+      if (group !== undefined && group.dereferenced !== undefined) {
+        group = group.dereferenced;
+      }
 
       return (
         <CatalogGroup

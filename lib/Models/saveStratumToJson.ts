@@ -1,10 +1,9 @@
 import { JsonObject } from "../Core/Json";
-import ModelTraits from "../Traits/ModelTraits";
-import Trait from "../Traits/Trait";
+import ModelTraits, { TraitDefinitions } from "../Traits/ModelTraits";
 import StratumFromTraits from "./StratumFromTraits";
 
 export default function saveStratumToJson(
-  traits: { [traitId: string]: Trait },
+  traits: TraitDefinitions,
   stratum: Readonly<StratumFromTraits<ModelTraits>>
 ): JsonObject {
   const stratumAny: any = stratum;
