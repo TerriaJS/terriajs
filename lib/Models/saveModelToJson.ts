@@ -27,11 +27,11 @@ export default function saveModelToJson(
       return;
     }
 
-    const stratumJson = saveStratumToJson(model.traits, stratum);
-    stratumJson.id = model.id;
-    stratumJson.type = model.type;
-    result[stratumId] = stratumJson;
+    result[stratumId] = saveStratumToJson(model.traits, stratum);
   });
+
+  result.id = model.id;
+  result.type = model.type;
 
   return result;
 }
