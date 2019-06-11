@@ -13,6 +13,7 @@ import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import classNames from "classnames";
 import BadgeBar from "../BadgeBar.jsx";
 import triggerResize from "../../Core/triggerResize";
+import Loader from "../Loader";
 import Styles from "./story-builder.scss";
 
 const StoryBuilder = createReactClass({
@@ -182,13 +183,23 @@ const StoryBuilder = createReactClass({
   renderVideoGuide() {
     return (
       <div className={Styles.videoGuideWrapper} onClick={this.toggleVideoGuide}>
-        <div className={Styles.videoGuide} onClick={e => e.stopPropagation()}>
-          <iframe
-            width="560"
-            height="315"
-            src="https://www.youtube.com/embed/fbiQawV8IYY"
-            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-          />
+        <div
+          className={Styles.videoGuide}
+          onClick={e => e.stopPropagation()}
+          style={{
+            backgroundImage: `url(${require("../../../wwwroot/images/data-stories-getting-started.jpg")})`
+          }}
+        >
+          <div className={Styles.videoGuideRatio}>
+            <div className={Styles.videoGuideLoading}>
+              <Loader message={` `} />
+            </div>
+            <iframe
+              className={Styles.videoGuideIframe}
+              src="https://www.youtube.com/embed/fbiQawV8IYY"
+              allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+            />
+          </div>
         </div>
       </div>
     );
