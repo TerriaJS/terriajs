@@ -92,10 +92,6 @@ export default class MagdaCatalogGroup extends MagdaMixin(
           name: name,
           type:
             typeof terriaAspect.type === "string" ? terriaAspect.type : "group",
-          // TODO: merge the terria definition with our traits definition, don't just choose one or the other.
-          ...(isJsonObject(terriaAspect.definition)
-            ? terriaAspect.definition
-            : definition),
           members: Array.isArray(groupAspect.members)
             ? groupAspect.members.map((member: any) =>
                 magdaRecordToCatalogMemberDefinition({
@@ -119,10 +115,13 @@ export default class MagdaCatalogGroup extends MagdaMixin(
           Object.keys(terriaDefinition).forEach(key => {
             const value = terriaDefinition[key];
             if (key === "members" && Array.isArray(value)) {
-              const members = value.filter(member => typeof member !== "string");
-              groupDefinition.definition[key] = members;
+              value.forEach(member => {
+                if (typeof member !== "string") {
+                  groupDefinition.members.push(member);
+                }
+              });
             } else {
-              groupDefinition.definition[key] = value;
+              groupDefinition[key] = value;
             }
           });
         }

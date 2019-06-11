@@ -98,10 +98,13 @@ export default function magdaRecordToCatalogMemberDefinition(
       Object.keys(definition).forEach(key => {
         const value = definition[key];
         if (key === "members" && Array.isArray(value)) {
-          const members = value.filter(member => typeof member !== "string");
-          groupDefinition[key] = members;
+          value.forEach(member => {
+            if (typeof member !== "string") {
+              groupDefinition.members.push(member);
+            }
+          });
         } else {
-          groupDefinition[key] = value;
+          groupDefinition.definition[key] = value;
         }
       });
     }
