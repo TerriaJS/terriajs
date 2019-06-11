@@ -31,7 +31,8 @@ const StoryBuilder = createReactClass({
       editingMode: false,
       currentStory: undefined,
       recaptureSuccessful: undefined,
-      videoGuideVisible: false
+      showVideoGuide: false, // for whether to actually render `renderVideoGuide()`
+      videoGuideVisible: false // for animating
     };
   },
 
@@ -92,9 +93,25 @@ const StoryBuilder = createReactClass({
   },
 
   toggleVideoGuide() {
-    this.setState({
-      showVideoGuide: !this.state.showVideoGuide
-    });
+    const showVideoGuide = this.state.showVideoGuide;
+    // If not enabled
+    if (!showVideoGuide) {
+      this.setState({
+        showVideoGuide: !showVideoGuide,
+        videoGuideVisible: true
+      });
+    }
+    // Otherwise we immediately trigger exit animations, then close it 300ms later
+    if (showVideoGuide) {
+      this.slideOutTimer = this.setState({
+        videoGuideVisible: false
+      });
+      setTimeout(() => {
+        this.setState({
+          showVideoGuide: !showVideoGuide
+        });
+      }, 300);
+    }
   },
 
   recaptureScene(story) {
@@ -182,7 +199,13 @@ const StoryBuilder = createReactClass({
 
   renderVideoGuide() {
     return (
-      <div className={Styles.videoGuideWrapper} onClick={this.toggleVideoGuide}>
+      <div
+        className={classNames({
+          [Styles.videoGuideWrapper]: true,
+          [Styles.videoGuideWrapperClosing]: !this.state.videoGuideVisible
+        })}
+        onClick={this.toggleVideoGuide}
+      >
         <div
           className={Styles.videoGuide}
           onClick={e => e.stopPropagation()}

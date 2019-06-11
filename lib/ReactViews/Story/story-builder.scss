@@ -151,16 +151,31 @@
     opacity: 1;
   }
 }
+@include keyframes(story-fade-out) {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
 
 @include keyframes(story-slide-up) {
   0% {
-    @include transform(translate(-50%, 50%));
+    @include transform(translate(-50%, 0%));
   }
   100% {
     @include transform(translate(-50%, -50%));
   }
 }
-
+@include keyframes(story-slide-down) {
+  0% {
+    @include transform(translate(-50%, -50%));
+  }
+  100% {
+    @include transform(translate(-50%, 0%));
+  }
+}
 .VideoGuideWrapper {
   position: fixed;
   z-index: 99999;
@@ -171,6 +186,12 @@
   background: rgba($dark-with-overlay, 0.8);
   opacity: 1;
   @include animation("story-fade-in 0.3s");
+}
+.VideoGuideWrapper--closing {
+  @include animation("story-fade-out 0.3s");
+  & > div {
+    @include animation("story-slide-down 0.3s");
+  }
 }
 
 .videoGuide {
