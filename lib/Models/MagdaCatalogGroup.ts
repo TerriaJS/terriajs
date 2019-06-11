@@ -69,7 +69,7 @@ export default class MagdaCatalogGroup extends MagdaMixin(
       const proxiedUrl = proxyCatalogItemUrl(this, recordUri.toString(), "1d");
 
       const terria = this.terria;
-      const id = this.id.replace(/:magda$/, "");
+      const id = this.id;
       const name = this.name;
       const definition = toJS(this.definition);
       const distributionFormats = this.preparedDistributionFormats;
@@ -87,10 +87,11 @@ export default class MagdaCatalogGroup extends MagdaMixin(
           ? groupJson.aspects.group
           : {};
 
-        const groupDefinition = {
+        const groupDefinition: any = {
           id: id,
           name: name,
-          type: terriaAspect.type ? terriaAspect.type : "group",
+          type:
+            typeof terriaAspect.type === "string" ? terriaAspect.type : "group",
           members: Array.isArray(groupAspect.members)
             ? groupAspect.members.map((member: any) =>
                 magdaRecordToCatalogMemberDefinition({
@@ -100,20 +101,43 @@ export default class MagdaCatalogGroup extends MagdaMixin(
                   distributionFormats: distributionFormats
                 })
               )
-            : [],
-          // TODO: merge the terria definition with our traits definition, don't just choose one or the other.
-          ...(isJsonObject(terriaAspect.definition)
-            ? terriaAspect.definition
-            : definition)
+            : []
         };
+
+        // If the `terria` aspect has `members`, remove any that are simple
+        // strings. We need the actual member definitions, which we'll get from
+        // the dereferenced `group` aspect.
+        // TODO: merge the terria definition with our traits definition, don't just choose one or the other.
+        const terriaDefinition = isJsonObject(terriaAspect.definition)
+          ? terriaAspect.definition
+          : definition;
+        if (terriaDefinition !== undefined) {
+          Object.keys(terriaDefinition).forEach(key => {
+            const value = terriaDefinition[key];
+            if (key === "members" && Array.isArray(value)) {
+              value.forEach(member => {
+                if (typeof member !== "string") {
+                  groupDefinition.members.push(member);
+                }
+              });
+            } else {
+              groupDefinition[key] = value;
+            }
+          });
+        }
+
+        const dereferenced =
+          this._reference && this._reference.type === groupDefinition.type
+            ? this._reference
+            : CatalogMemberFactory.create(groupDefinition.type, id, terria);
 
         // TODO: if this model already exists, should we replace
         // its definition stratum entirely rather than updating it?
-        const dereferenced = upsertModelFromJson(
+        upsertModelFromJson(
           CatalogMemberFactory,
           terria,
           id,
-          undefined,
+          dereferenced,
           CommonStrata.definition,
           groupDefinition
         );

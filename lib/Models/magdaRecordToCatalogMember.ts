@@ -74,8 +74,8 @@ export default function magdaRecordToCatalogMemberDefinition(
   if (group && group.members) {
     // Represent as a Magda catalog group so that we can load members when
     // the group is opened.
-    return {
-      id: record.id + ":magda",
+    const groupDefinition: any = {
+      id: record.id,
       name: record.name,
       type: "magda-group",
       url: options.magdaBaseUrl,
@@ -83,13 +83,33 @@ export default function magdaRecordToCatalogMemberDefinition(
       definition: {
         id: record.id,
         type: terria.type,
-        members: group.members,
-        // TODO: merge the terria definition with our traits definition, don't just choose one or the other.
-        ...(isJsonObject(terria.definition)
-          ? terria.definition
-          : options.definition)
+        members: group.members
       }
     };
+
+    // If the `terria` aspect has `members`, remove any that are simple
+    // strings. We need the actual member definitions, which we'll get from
+    // the dereferenced `group` aspect.
+    // TODO: merge the terria definition with our traits definition, don't just choose one or the other.
+    const definition = isJsonObject(terria.definition)
+      ? terria.definition
+      : options.definition;
+    if (definition !== undefined) {
+      Object.keys(definition).forEach(key => {
+        const value = definition[key];
+        if (key === "members" && Array.isArray(value)) {
+          value.forEach(member => {
+            if (typeof member !== "string") {
+              groupDefinition.members.push(member);
+            }
+          });
+        } else {
+          groupDefinition.definition[key] = value;
+        }
+      });
+    }
+
+    return groupDefinition;
   } else if (terria && terria.type && isJsonObject(terria.definition)) {
     return {
       id: record.id,
