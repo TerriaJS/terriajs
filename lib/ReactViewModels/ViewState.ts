@@ -32,7 +32,9 @@ export default class ViewState {
   readonly terria: Terria;
 
   @observable previewedItem: BaseModel | undefined;
+  @observable previewedItemAncestors: BaseModel[] | undefined;
   @observable userDataPreviewedItem: BaseModel | undefined;
+  @observable userDataPreviewedItemAncestors: BaseModel[] | undefined;
   @observable explorerPanelIsVisible: boolean = false;
   @observable activeTabCategory: string = "data-catalog";
   @observable activeTabIdInCategory: string | undefined = undefined;
@@ -212,7 +214,7 @@ export default class ViewState {
     this.searchState.searchCatalog();
   }
 
-  viewCatalogMember(catalogMember: BaseModel) {
+  viewCatalogMember(catalogMember: BaseModel, ancestors: BaseModel[]) {
     // TODO call addedByUser() when it is fixed
     let addedByUser = false;
     if (isDefined(this.terria.catalog.userAddedDataGroupIfItExists)) {
@@ -223,13 +225,15 @@ export default class ViewState {
     }
     if (addedByUser) {
       this.userDataPreviewedItem = catalogMember;
+      this.userDataPreviewedItemAncestors = ancestors.slice();
       this.openUserData();
     } else {
       this.previewedItem = catalogMember;
+      this.previewedItemAncestors = ancestors.slice();
       this.openAddData();
-      if (this.terria.configParameters.tabbedCatalog) {
+      if (ancestors.length > 0 && this.terria.configParameters.tabbedCatalog) {
         // Go to specific tab
-        this.activeTabIdInCategory = getAncestors(catalogMember)[0].name;
+        this.activeTabIdInCategory = ancestors[0].id;
       }
     }
   }

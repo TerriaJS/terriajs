@@ -63,7 +63,7 @@ const DataCatalogGroup = observer(
     clickGroup() {
       this.toggleOpen();
       this.props.group.loadMembers();
-      this.props.viewState.viewCatalogMember(this.props.group);
+      this.props.viewState.viewCatalogMember(this.props.group, this.props.ancestors);
     },
 
     isTopLevel() {
