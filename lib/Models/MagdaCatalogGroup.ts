@@ -91,6 +91,10 @@ export default class MagdaCatalogGroup extends MagdaMixin(
           id: id,
           name: name,
           type: terriaAspect.type ? terriaAspect.type : "group",
+          // TODO: merge the terria definition with our traits definition, don't just choose one or the other.
+          ...(isJsonObject(terriaAspect.definition)
+            ? terriaAspect.definition
+            : definition),
           members: Array.isArray(groupAspect.members)
             ? groupAspect.members.map((member: any) =>
                 magdaRecordToCatalogMemberDefinition({
@@ -100,11 +104,7 @@ export default class MagdaCatalogGroup extends MagdaMixin(
                   distributionFormats: distributionFormats
                 })
               )
-            : [],
-          // TODO: merge the terria definition with our traits definition, don't just choose one or the other.
-          ...(isJsonObject(terriaAspect.definition)
-            ? terriaAspect.definition
-            : definition)
+            : []
         };
 
         // TODO: if this model already exists, should we replace
