@@ -75,7 +75,7 @@ export default function magdaRecordToCatalogMemberDefinition(
     // Represent as a Magda catalog group so that we can load members when
     // the group is opened.
     const groupDefinition: any = {
-      id: record.id + ":magda",
+      id: record.id,
       name: record.name,
       type: "magda-group",
       url: options.magdaBaseUrl,
@@ -99,9 +99,9 @@ export default function magdaRecordToCatalogMemberDefinition(
         const value = definition[key];
         if (key === "members" && Array.isArray(value)) {
           const members = value.filter(member => typeof member !== "string");
-          groupDefinition.definition[key] = members;
+          groupDefinition[key] = members;
         } else {
-          groupDefinition.definition[key] = value;
+          groupDefinition[key] = value;
         }
       });
     }
