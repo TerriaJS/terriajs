@@ -29,7 +29,7 @@ const StoryBuilder = createReactClass({
     return {
       editingMode: false,
       currentStory: undefined,
-      recaptureSuccessFul: undefined,
+      recaptureSuccessful: undefined,
       videoGuideVisible: false
     };
   },
@@ -115,7 +115,7 @@ const StoryBuilder = createReactClass({
         ...this.props.terria.stories.slice(storyIndex + 1)
       ];
       this.setState({
-        recaptureSuccessFul: story.id
+        recaptureSuccessful: story.id
       });
 
       setTimeout(this.resetReCaptureStatus, 2000);
@@ -126,7 +126,7 @@ const StoryBuilder = createReactClass({
 
   resetReCaptureStatus() {
     this.setState({
-      recaptureSuccessFul: undefined
+      recaptureSuccessful: undefined
     });
   },
 
@@ -227,7 +227,7 @@ const StoryBuilder = createReactClass({
               deleteStory={this.removeStory.bind(this, index)}
               recaptureStory={this.recaptureScene}
               recaptureStorySuccessful={Boolean(
-                story.id === this.state.recaptureSuccessFul
+                story.id === this.state.recaptureSuccessful
               )}
               viewStory={this.viewStory.bind(this, index)}
               menuOpen={this.state.storyWithOpenMenu === story}
