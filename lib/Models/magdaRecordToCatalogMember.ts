@@ -75,12 +75,13 @@ export default function magdaRecordToCatalogMemberDefinition(
     // Represent as a Magda catalog group so that we can load members when
     // the group is opened.
     return {
-      id: record.id,
+      id: record.id + ":magda",
       name: record.name,
       type: "magda-group",
       url: options.magdaBaseUrl,
       groupId: record.id,
       definition: {
+        id: record.id,
         type: terria.type,
         members: group.members,
         // TODO: merge the terria definition with our traits definition, don't just choose one or the other.

@@ -69,7 +69,7 @@ export default class MagdaCatalogGroup extends MagdaMixin(
       const proxiedUrl = proxyCatalogItemUrl(this, recordUri.toString(), "1d");
 
       const terria = this.terria;
-      const id = this.id;
+      const id = this.id.replace(/:magda$/, "");
       const name = this.name;
       const definition = toJS(this.definition);
       const distributionFormats = this.preparedDistributionFormats;
@@ -88,7 +88,7 @@ export default class MagdaCatalogGroup extends MagdaMixin(
           : {};
 
         const groupDefinition = {
-          id: id + ":dereferenced",
+          id: id,
           name: name,
           type: terriaAspect.type ? terriaAspect.type : "group",
           members: Array.isArray(groupAspect.members)
@@ -121,6 +121,12 @@ export default class MagdaCatalogGroup extends MagdaMixin(
         runInAction(() => {
           this._reference = dereferenced;
         });
+
+        if (GroupMixin.isMixedInto(dereferenced)) {
+          return dereferenced.loadMembers();
+        } else if (CatalogMemberMixin.isMixedInto(dereferenced)) {
+          return dereferenced.loadMetadata();
+        }
       });
       resolve(loadPromise);
     });
