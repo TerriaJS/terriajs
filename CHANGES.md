@@ -2,6 +2,7 @@ Change Log
 ==========
 ### v7.6.0
 * Added video intro to building a story
+* Allow vector tiles for region mapping to return 404 for empty tiles. 
 
 ### v7.5.2
 
