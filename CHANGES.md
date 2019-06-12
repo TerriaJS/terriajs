@@ -1,12 +1,16 @@
 Change Log
 ==========
+
+### Next Release
+* Fixed inability to share SOS items
+
 ### v7.6.0
 * Added video intro to building a story
 * Allow vector tiles for region mapping to return 404 for empty tiles. 
 
 ### v7.5.2
-
 * Upgraded to Cesium v1.58.1.
+* Charts are now shared in share & story links
 
 ### v7.5.1
 
