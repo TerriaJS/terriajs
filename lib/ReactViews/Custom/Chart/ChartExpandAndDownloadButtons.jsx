@@ -232,7 +232,7 @@ function expand(props, sourceIndex) {
         ) {
           const procedure = SensorObservationServiceCatalogItem.getObjectCorrespondingToSelectedConcept(
             props.catalogItem,
-            "procedure"
+            "procedures"
           );
           newCatalogItem.regenerationOptions = {
             procedure: procedure
