@@ -1,5 +1,7 @@
 Change Log
 ==========
+### v7.6.0
+* Added video intro to building a story
 
 ### v7.5.2
 
