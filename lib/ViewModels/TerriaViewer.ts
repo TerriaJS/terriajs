@@ -1,6 +1,7 @@
 import {
   computed,
   IComputedValue,
+  IObservableValue,
   observable,
   reaction,
   runInAction
@@ -36,12 +37,8 @@ export default class TerriaViewer {
   @observable
   baseMap: Mappable | undefined;
 
-  // TODO: Is IComputedValue the correct type semantically?
-  // It will correctly accept either an observable.box(val) or computed(() => val + val2)
-  // But the type signature doesn't really signify that.
-  // Need something like an IReactiveValue
   // This is a "view" of a workbench/other
-  readonly items: IComputedValue<Mappable[]>;
+  readonly items: IComputedValue<Mappable[]> | IObservableValue<Mappable[]>;
 
   @observable
   _attached: boolean = false;
@@ -57,6 +54,7 @@ export default class TerriaViewer {
   viewerOptions: ViewerOptions = viewerOptionsDefaults;
 
   // Random rectangle. Work out reactivity
+  // Should this be homeView instead (and have 3D view properties)?
   defaultExtent: Rectangle = Rectangle.fromDegrees(120, -45, 155, -15);
 
   constructor(terria: Terria, items: IComputedValue<Mappable[]>) {

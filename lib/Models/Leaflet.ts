@@ -85,6 +85,12 @@ export default class Leaflet extends GlobeOrMap {
   private readonly _selectionIndicator: LeafletSelectionIndicator;
   private readonly _disposeSelectedFeatureSubscription: () => void;
 
+  private _createImageryLayer: (
+    ip: Cesium.ImageryProvider
+  ) => CesiumTileLayer = createTransformer((ip: Cesium.ImageryProvider) => {
+    return new CesiumTileLayer(ip);
+  });
+
   constructor(terriaViewer: TerriaViewer, container: string | HTMLElement) {
     super();
     this.terria = terriaViewer.terria;
@@ -168,7 +174,7 @@ export default class Leaflet extends GlobeOrMap {
     this._disposeWorkbenchMapItemsSubscription = this.observeModelLayer();
 
     this._disposeSplitterPositionSubscription = autorun(() => {
-      this.terria.workbench.items.forEach(item => {
+      this.terriaViewer.items.get().forEach(item => {
         const clips = this._getClipsForSplitter();
         if (Mappable.is(item)) {
           this._updateItemForSplitter(item, clips);
@@ -177,7 +183,7 @@ export default class Leaflet extends GlobeOrMap {
     });
 
     this._disposeShowSplitterSubscription = autorun(() => {
-      this.terria.workbench.items.forEach(item => {
+      this.terriaViewer.items.get().forEach(item => {
         const clips = this._getClipsForSplitter();
         if (Mappable.is(item)) {
           this._updateItemForSplitter(item, clips);
@@ -237,7 +243,7 @@ export default class Leaflet extends GlobeOrMap {
 
       const allImagery = allMapItems.filter(ImageryParts.is).map(parts => ({
         parts: parts,
-        layer: createImageryLayer(parts.imageryProvider)
+        layer: this._createImageryLayer(parts.imageryProvider)
       }));
 
       // Delete imagery layers no longer in the model
@@ -719,12 +725,6 @@ export default class Leaflet extends GlobeOrMap {
     }
   }
 }
-
-const createImageryLayer: (
-  ip: Cesium.ImageryProvider
-) => CesiumTileLayer = createTransformer((ip: Cesium.ImageryProvider) => {
-  return new CesiumTileLayer(ip);
-});
 
 function isImageryLayer(someLayer: L.Layer): someLayer is CesiumTileLayer {
   return "imageryProvider" in someLayer;

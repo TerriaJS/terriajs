@@ -1,26 +1,18 @@
 "use strict";
 
-const CesiumMath = require("terriajs-cesium/Source/Core/Math");
-// const ConsoleAnalytics = require("../../Core/ConsoleAnalytics");
-import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
-import React, { useEffect, useRef } from "react";
-import PropTypes from "prop-types";
-// import Terria from "../../Models/Terria";
-import TerriaViewer from "../../ViewModels/TerriaViewer";
-const ViewerMode = require("../../Models/ViewerMode");
-const when = require("terriajs-cesium/Source/ThirdParty/when");
 import classNames from "classnames";
-
-import Styles from "./data-preview-map.scss";
-import GeoJsonCatalogItem from "../../Models/GeoJsonCatalogItem";
-import CommonStrata from "../../Models/CommonStrata";
+import { autorun, computed, observable, runInAction } from "mobx";
 import { observer } from "mobx-react";
-import Terria from "../../Models/Terria";
-import Mappable from "../../Models/Mappable";
-import { observable, runInAction, computed, trace, autorun } from "mobx";
+import PropTypes from "prop-types";
+import React from "react";
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import filterOutUndefined from "../../Core/filterOutUndefined";
-
-/
+import CommonStrata from "../../Models/CommonStrata";
+import GeoJsonCatalogItem from "../../Models/GeoJsonCatalogItem";
+import Mappable from "../../Models/Mappable";
+import Terria from "../../Models/Terria";
+import TerriaViewer from "../../ViewModels/TerriaViewer";
+import Styles from "./data-preview-map.scss";
 
 /**
  * Leaflet-based preview map that sits within the preview.
@@ -49,6 +41,12 @@ class DataPreviewMap extends React.Component {
    */
   previewViewer;
 
+  /**
+   * @type {string}
+   */
+  @observable
+  previewBadgeText = "";
+
   static propTypes = {
     terria: PropTypes.object.isRequired,
     previewed: PropTypes.object,
@@ -57,13 +55,13 @@ class DataPreviewMap extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      previewBadgeText: "PREVIEW LOADING..."
-    };
-    this.container = undefined;
+
+    /**
+     * @param {HTMLElement | null} container
+     */
     this.containerRef = container => {
       if (container === null) {
-        this.previewViewer._attached && this.previewViewer.detach();
+        this.previewViewer.attached && this.previewViewer.detach();
       } else {
         this.initPreview(container);
       }
@@ -71,15 +69,20 @@ class DataPreviewMap extends React.Component {
     this.previewViewer = new TerriaViewer(
       this.props.terria,
       computed(() => {
-        const l = filterOutUndefined([this.props.previewed]);
-        console.log(`Previewing ${l[0] && l[0].name}`);
-        return l;
+        // Can previewed be undefined?
+        return filterOutUndefined([
+          this.props.previewed,
+          this.boundingRectangleCatalogItem
+        ]);
       })
     );
     autorun(() => {
-      console.log(
-        `Changed preview map viewer mode to ${this.previewViewer.viewerMode}`
-      );
+      if (this.props.showMap && this.props.previewed !== undefined) {
+        this.previewBadgeText = "PREVIEW LOADING...";
+        this.props.previewed.loadMapItems().then(() => {
+          this.previewBadgeText = "DATA PREVIEW";
+        });
+      }
     });
     runInAction(() => {
       this.previewViewer.viewerMode = "leaflet";
@@ -90,6 +93,9 @@ class DataPreviewMap extends React.Component {
     // previewViewer.initialView = terria.homeView;
   }
 
+  /**
+   * @param {HTMLElement} container
+   */
   initPreview(container) {
     console.log(
       "Initialising preview map. This might be expensive, so this should only show up when the preview map disappears and reappears"
@@ -103,11 +109,13 @@ class DataPreviewMap extends React.Component {
             : undefined;
       }
     });
-    if (this.previewViewer._attached) {
+    if (this.previewViewer.attached) {
       this.previewViewer.detach();
     }
     this.previewViewer.attach(container);
 
+    // Implement zooming to extent on click
+    // Have to disable map interactions first
     this.isZoomedToExtent = false;
     // Following 2 shouldn't be needed in new architecture
     // this.lastPreviewedCatalogItem = undefined;
@@ -128,6 +136,15 @@ class DataPreviewMap extends React.Component {
     //     }
     //   }
     // );
+
+    //       // disable preview map interaction
+    //       const map = this.terriaViewer.terria.leaflet.map;
+    //       map.touchZoom.disable();
+    //       map.doubleClickZoom.disable();
+    //       map.scrollWheelZoom.disable();
+    //       map.boxZoom.disable();
+    //       map.keyboard.disable();
+    //       map.dragging.disable();
   }
 
   componentWillUnmount() {
@@ -137,6 +154,74 @@ class DataPreviewMap extends React.Component {
       this._unsubscribeErrorHandler();
       this._unsubscribeErrorHandler = undefined;
     }
+  }
+
+  @computed
+  get boundingRectangleCatalogItem() {
+    if (this.props.previewed.rectangle === undefined) {
+      return undefined;
+    }
+
+    let west = this.props.previewed.rectangle.west;
+    let south = this.props.previewed.rectangle.south;
+    let east = this.props.previewed.rectangle.east;
+    let north = this.props.previewed.rectangle.north;
+
+    if (!this.isZoomedToExtent) {
+      // When zoomed out, make sure the dataset rectangle is at least 5% of the width and height
+      // the home view, so that it is actually visible.
+      const minimumFraction = 0.05;
+      const homeView = this.previewViewer.defaultExtent;
+      const minimumWidth =
+        CesiumMath.toDegrees(homeView.width) * minimumFraction;
+      if (east - west < minimumWidth) {
+        const center = (east + west) * 0.5;
+        west = center - minimumWidth * 0.5;
+        east = center + minimumWidth * 0.5;
+      }
+
+      const minimumHeight =
+        CesiumMath.toDegrees(homeView.height) * minimumFraction;
+      if (north - south < minimumHeight) {
+        const center = (north + south) * 0.5;
+        south = center - minimumHeight * 0.5;
+        north = center + minimumHeight * 0.5;
+      }
+    }
+
+    const rectangleCatalogItem = new GeoJsonCatalogItem(
+      "__preview-data-extent",
+      this.props.terria
+    );
+    rectangleCatalogItem.setTrait(CommonStrata.user, "geoJsonData", {
+      type: "FeatureCollection",
+      features: [
+        {
+          type: "Feature",
+          properties: {
+            stroke: "#08ABD5",
+            "stroke-width": 2,
+            "stroke-opacity": 1,
+            fill: "#555555",
+            "fill-opacity": 0
+          },
+          geometry: {
+            type: "Polygon",
+            coordinates: [
+              [
+                [west, south],
+                [west, north],
+                [east, north],
+                [east, south],
+                [west, south]
+              ]
+            ]
+          }
+        }
+      ]
+    });
+    rectangleCatalogItem.loadMapItems();
+    return rectangleCatalogItem;
   }
 
   render() {
@@ -156,7 +241,7 @@ class DataPreviewMap extends React.Component {
           </Otherwise>
         </Choose>
 
-        <label className={Styles.badge}>{this.state.previewBadgeText}</label>
+        <label className={Styles.badge}>{this.previewBadgeText}</label>
       </div>
     );
   }
@@ -308,118 +393,3 @@ export default DataPreviewMap;
 
 //     this.updateBoundingRectangle(this.props.previewedCatalogItem);
 //   },
-
-//   updateBoundingRectangle(catalogItem) {
-//     if (defined(this.rectangleCatalogItem)) {
-//       this.rectangleCatalogItem.isEnabled = false;
-//       this.rectangleCatalogItem = undefined;
-//     }
-
-//     catalogItem = defaultValue(catalogItem.nowViewingCatalogItem, catalogItem);
-
-//     if (!defined(catalogItem) || !defined(catalogItem.rectangle)) {
-//       return;
-//     }
-
-//     let west = catalogItem.rectangle.west;
-//     let south = catalogItem.rectangle.south;
-//     let east = catalogItem.rectangle.east;
-//     let north = catalogItem.rectangle.north;
-
-//     if (!this.isZoomedToExtent) {
-//       // When zoomed out, make sure the dataset rectangle is at least 5% of the width and height
-//       // the home view, so that it is actually visible.
-//       const minimumFraction = 0.05;
-//       const homeView = this.terriaPreview.homeView.rectangle;
-
-//       const minimumWidth = (homeView.east - homeView.west) * minimumFraction;
-//       if (east - west < minimumWidth) {
-//         const center = (east + west) * 0.5;
-//         west = center - minimumWidth * 0.5;
-//         east = center + minimumWidth * 0.5;
-//       }
-
-//       const minimumHeight = (homeView.north - homeView.south) * minimumFraction;
-//       if (north - south < minimumHeight) {
-//         const center = (north + south) * 0.5;
-//         south = center - minimumHeight * 0.5;
-//         north = center + minimumHeight * 0.5;
-//       }
-//     }
-
-//     west = CesiumMath.toDegrees(west);
-//     south = CesiumMath.toDegrees(south);
-//     east = CesiumMath.toDegrees(east);
-//     north = CesiumMath.toDegrees(north);
-
-//     this.rectangleCatalogItem = new GeoJsonCatalogItem(
-//       "_preview-data-extent",
-//       this.terria
-//     );
-//     this.rectangleCatalogItem.setTrait(CommonStrata.user, "geoJsonData", {
-//       type: "FeatureCollection",
-//       features: [
-//         {
-//           type: "Feature",
-//           properties: {
-//             stroke: "#08ABD5",
-//             "stroke-width": 2,
-//             "stroke-opacity": 1,
-//             fill: "#555555",
-//             "fill-opacity": 0
-//           },
-//           geometry: {
-//             type: "Polygon",
-//             coordinates: [
-//               [
-//                 [west, south],
-//                 [west, north],
-//                 [east, north],
-//                 [east, south],
-//                 [west, south]
-//               ]
-//             ]
-//           }
-//         }
-//       ]
-//     });
-//     this.previewViewer.workbench.push(this.rectangleCatalogItem);
-//     this.rectangleCatalogItem.isEnabled = true;
-//   },
-
-//   mapIsReady(mapContainer) {
-//     if (mapContainer) {
-//       this.mapElement = mapContainer;
-
-//       if (this.props.showMap) {
-//         this.initMap(this.props.previewedCatalogItem);
-//       }
-//     }
-//   },
-
-//   destroyPreviewMap() {
-//     this.terriaViewer && this.terriaViewer.destroy();
-//     if (this.mapElement) {
-//       this.mapElement.innerHTML = "";
-//     }
-//   },
-
-//   initMap(previewedCatalogItem) {
-//     if (this.mapElement) {
-//       this.terriaViewer = TerriaViewer.create(this.terriaPreview, {
-//         mapContainer: this.mapElement
-//       });
-
-//       // disable preview map interaction
-//       const map = this.terriaViewer.terria.leaflet.map;
-//       map.touchZoom.disable();
-//       map.doubleClickZoom.disable();
-//       map.scrollWheelZoom.disable();
-//       map.boxZoom.disable();
-//       map.keyboard.disable();
-//       map.dragging.disable();
-
-//       this.updatePreview(previewedCatalogItem);
-//     }
-//   }
-// };

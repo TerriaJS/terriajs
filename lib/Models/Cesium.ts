@@ -96,6 +96,12 @@ export default class Cesium extends GlobeOrMap {
   private readonly _disposeSplitterPositionSubscription: () => void;
   private readonly _disposeShowSplitterSubscription: () => void;
 
+  private _createImageryLayer: (
+    ip: Cesium.ImageryProvider
+  ) => Cesium.ImageryLayer = createTransformer((ip: Cesium.ImageryProvider) => {
+    return new ImageryLayer(ip);
+  });
+
   constructor(terriaViewer: TerriaViewer, container: string | HTMLElement) {
     super();
     this.terriaViewer = terriaViewer;
@@ -238,7 +244,7 @@ export default class Cesium extends GlobeOrMap {
     });
 
     this._disposeShowSplitterSubscription = autorun(() => {
-      this.terria.workbench.items.forEach(item => {
+      this.terriaViewer.items.get().forEach(item => {
         if (Mappable.is(item)) {
           this._updateItemForSplitter(item);
         }
@@ -334,10 +340,9 @@ export default class Cesium extends GlobeOrMap {
         }
       });
 
-      // This is the Cesium ImageryLayer, not our Typescript one
       const allImageryParts = allMapItems
         .filter(ImageryParts.is)
-        .map(makeImageryLayerFromParts);
+        .map(this._makeImageryLayerFromParts.bind(this));
 
       // Delete imagery layers that are no longer in the model
       for (let i = 0; i < this.scene.imageryLayers.length; i++) {
@@ -928,13 +933,21 @@ export default class Cesium extends GlobeOrMap {
 
     for (let i = 0; i < allImageryParts.length; i++) {
       let index = this.scene.imageryLayers.indexOf(
-        makeImageryLayerFromParts(allImageryParts[i])
+        this._makeImageryLayerFromParts(allImageryParts[i])
       );
       if (index !== -1) {
         imageryLayers.push(this.scene.imageryLayers.get(index));
       }
     }
     return imageryLayers;
+  }
+
+  private _makeImageryLayerFromParts(parts: ImageryParts): Cesium.ImageryLayer {
+    const layer = this._createImageryLayer(parts.imageryProvider);
+
+    layer.alpha = parts.alpha;
+    layer.show = parts.show;
+    return layer;
   }
 
   /**
@@ -1034,20 +1047,6 @@ function zoomToBoundingSphere(
     offset: new HeadingPitchRange(0.0, -0.5, boundingSphere.radius),
     duration: flightDurationSeconds
   });
-}
-
-const createImageryLayer: (
-  ip: Cesium.ImageryProvider
-) => Cesium.ImageryLayer = createTransformer((ip: Cesium.ImageryProvider) => {
-  return new ImageryLayer(ip);
-});
-
-function makeImageryLayerFromParts(parts: ImageryParts): Cesium.ImageryLayer {
-  const layer = createImageryLayer(parts.imageryProvider);
-
-  layer.alpha = parts.alpha;
-  layer.show = parts.show;
-  return layer;
 }
 
 function isDataSource(object: DataSource | ImageryParts): object is DataSource {
