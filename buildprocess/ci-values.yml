@@ -33,6 +33,10 @@ terriamap:
                 bucket: "terriajs-ci-sharing"
                 accessKeyId: "secret"
                 secretAccessKey: "secret"
+        feedback:
+            userAgent: TerriaBot (TerriaJS Feedback)
+            issuesUrl: https://api.github.com/repos/TerriaJS/demo-feedback/issues
+            accessToken: secret
     clientConfig:
         initializationUrls:
         - helm
@@ -52,6 +56,7 @@ terriamap:
             supportEmail: "info@terria.io"
             mobileDefaultViewerMode: "2d"
             experimentalFeatures: true
+            feedbackUrl: "feedback"
     resources:
         requests:
             cpu: 10m
