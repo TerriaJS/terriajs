@@ -93,7 +93,10 @@ const DataCatalogItem = observer(
       if (this.props.item.loadReference) {
         this.props.item.loadReference();
       }
-      this.props.viewState.viewCatalogMember(this.props.item);
+      this.props.viewState.viewCatalogMember(
+        this.props.item,
+        this.props.ancestors
+      );
       // mobile switch to nowvewing
       this.props.viewState.switchMobileView(
         this.props.viewState.mobileViewOptions.preview

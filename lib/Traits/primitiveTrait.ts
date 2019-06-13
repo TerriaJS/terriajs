@@ -59,6 +59,10 @@ export class PrimitiveTrait<T> extends Trait {
     return jsonValue;
   }
 
+  toJson(value: T): any {
+    return value;
+  }
+
   isSameType(trait: Trait): boolean {
     return (
       trait instanceof PrimitiveTrait &&

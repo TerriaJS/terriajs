@@ -99,7 +99,7 @@ const ViewingControls = observer(
       (this.props.item.ancestors || []).forEach(group => {
         group.topStratum.isOpen = true;
       });
-      this.props.viewState.viewCatalogMember(item);
+      this.props.viewState.viewCatalogMember(item, []); // TODO: set ancestors
       this.props.viewState.switchMobileView(
         this.props.viewState.mobileViewOptions.preview
       );
