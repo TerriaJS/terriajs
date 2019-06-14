@@ -1,6 +1,12 @@
 Change Log
 ==========
+
+### v7.6.1
+
+* Fix a bug that could cause a lot of extra space to the left of a chart on the feature info panel.
+
 ### v7.6.0
+
 * Added video intro to building a story
 * Allow vector tiles for region mapping to return 404 for empty tiles. 
 
