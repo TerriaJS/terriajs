@@ -30,6 +30,7 @@ interface Rectangle {
 
 interface Mappable {
   readonly mapItems: ReadonlyArray<DataSource | ImageryParts>;
+  // rectangle is in degrees
   rectangle?: Rectangle;
   loadMapItems(): Promise<void>;
 }

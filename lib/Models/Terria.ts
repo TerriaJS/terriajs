@@ -7,6 +7,7 @@ import when from "terriajs-cesium/Source/ThirdParty/when";
 import URI from "urijs";
 import Class from "../Core/Class";
 import ConsoleAnalytics from "../Core/ConsoleAnalytics";
+import filterOutUndefined from "../Core/filterOutUndefined";
 import GoogleAnalytics from "../Core/GoogleAnalytics";
 import instanceOf from "../Core/instanceOf";
 import isDefined from "../Core/isDefined";
@@ -17,16 +18,17 @@ import { BaseMapViewModel } from "../ViewModels/BaseMapViewModel";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import Catalog from "./CatalogNew";
 import Cesium from "./Cesium";
+import CommonStrata from "./CommonStrata";
 import Feature from "./Feature";
 import GlobeOrMap from "./GlobeOrMap";
 import Leaflet from "./Leaflet";
+import magdaRecordToCatalogMemberDefinition from "./magdaRecordToCatalogMember";
+import Mappable from "./Mappable";
 import { BaseModel } from "./Model";
 import NoViewer from "./NoViewer";
 import TimelineStack from "./TimelineStack";
 import updateModelFromJson from "./updateModelFromJson";
 import Workbench from "./Workbench";
-import CommonStrata from "./CommonStrata";
-import magdaRecordToCatalogMemberDefinition from "./magdaRecordToCatalogMember";
 
 require("regenerator-runtime/runtime");
 
@@ -69,9 +71,14 @@ export default class Terria {
   readonly workbench = new Workbench();
   readonly catalog = new Catalog(this);
   readonly timelineClock = new Clock({ shouldAnimate: false });
-  // Set in TerriaViewerWrapper.jsx. This is temporary while I work out what should own TerriaViewer
-  // terriaViewer, currentViewer, baseMap and other viewer-related properties will go with TerriaViewer
-  @observable mainViewer: TerriaViewer | undefined;
+  readonly mainViewer: TerriaViewer = new TerriaViewer(
+    this,
+    computed(() =>
+      filterOutUndefined(
+        this.workbench.items.map(item => (Mappable.is(item) ? item : undefined))
+      )
+    )
+  );
 
   appName?: string;
   supportEmail?: string;
