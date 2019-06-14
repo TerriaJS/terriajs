@@ -1,11 +1,14 @@
 Change Log
 ==========
 
+### v7.6.2
+
+* Fixed a bug that made some input boxes unreadable in some web browsers.
+
 ### v7.6.1
 
 * Fixed a bug that prevented the "Feedback" button from working correctly.
 * Fix a bug that could cause a lot of extra space to the left of a chart on the feature info panel.
-* Fixed a bug that made some input boxes unreadable in some web browsers.
 
 ### v7.6.0
 
