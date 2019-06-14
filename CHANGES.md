@@ -1,6 +1,12 @@
 Change Log
 ==========
+
+### v7.6.1
+
+* Fixed a bug that prevented the "Feedback" buttom from working correctly.
+
 ### v7.6.0
+
 * Added video intro to building a story
 * Allow vector tiles for region mapping to return 404 for empty tiles. 
 
