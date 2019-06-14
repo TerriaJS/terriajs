@@ -3,8 +3,8 @@ Change Log
 
 ### v7.6.1
 
+* Fixed a bug that prevented the "Feedback" button from working correctly.
 * Fix a bug that could cause a lot of extra space to the left of a chart on the feature info panel.
-* Fixed a bug that prevented the "Feedback" buttom from working correctly.
 
 ### v7.6.0
 
