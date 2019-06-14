@@ -3,7 +3,7 @@ Change Log
 
 ### v7.6.1
 
-* Fixed a bug that prevented the "Feedback" buttom from working correctly.
+* Fixed a bug that prevented the "Feedback" button from working correctly.
 
 ### v7.6.0
 
