@@ -12,7 +12,7 @@ export default class CatalogGroup extends GroupMixin(
     return CatalogGroup.type;
   }
 
-  get loadMetadataPromise(): Promise<void> {
+  protected forceLoadMetadata(): Promise<void> {
     return Promise.resolve(undefined);
   }
 

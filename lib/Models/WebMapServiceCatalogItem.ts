@@ -366,7 +366,7 @@ class WebMapServiceCatalogItem
     });
   }
 
-  protected get loadMetadataPromise(): Promise<void> {
+  protected forceLoadMetadata(): Promise<void> {
     return GetCapabilitiesStratum.load(this).then(stratum => {
       runInAction(() => {
         this.strata.set(

@@ -1,16 +1,18 @@
-import { computed, observable } from "mobx";
+import { computed, observable, runInAction } from "mobx";
+import { createTransformer } from "mobx-utils";
 import Clock from "terriajs-cesium/Source/Core/Clock";
 import defined from "terriajs-cesium/Source/Core/defined";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import RuntimeError from "terriajs-cesium/Source/Core/RuntimeError";
-import when from "terriajs-cesium/Source/ThirdParty/when";
 import URI from "urijs";
+import AsyncLoader from "../Core/AsyncLoader";
 import Class from "../Core/Class";
 import ConsoleAnalytics from "../Core/ConsoleAnalytics";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import GoogleAnalytics from "../Core/GoogleAnalytics";
 import instanceOf from "../Core/instanceOf";
 import isDefined from "../Core/isDefined";
+import JsonValue, { isJsonObject, JsonObject } from "../Core/Json";
 import loadJson5 from "../Core/loadJson5";
 import PickedFeatures from "../Map/PickedFeatures";
 import ModelReference from "../Traits/ModelReference";
@@ -21,6 +23,7 @@ import Cesium from "./Cesium";
 import CommonStrata from "./CommonStrata";
 import Feature from "./Feature";
 import GlobeOrMap from "./GlobeOrMap";
+import InitSource, { isInitOptions, isInitUrl } from "./InitSource";
 import Leaflet from "./Leaflet";
 import magdaRecordToCatalogMemberDefinition from "./magdaRecordToCatalogMember";
 import Mappable from "./Mappable";
@@ -41,7 +44,7 @@ interface ConfigParameters {
   proxyableDomainsUrl?: string;
   shareUrl?: string;
   feedbackUrl?: string;
-  initFragmentPaths?: string[];
+  initFragmentPaths: string[];
   storyEnabled: boolean;
   interceptBrowserPrint?: boolean;
   tabbedCatalog?: boolean;
@@ -128,6 +131,12 @@ export default class Terria {
   @observable
   readonly userProperties = new Map<string, any>();
 
+  @observable
+  readonly initSources: InitSource[] = [];
+  private _initSourceLoader = new AsyncLoader(
+    this.forceLoadInitSources.bind(this)
+  );
+
   /* Splitter controls */
   @observable showSplitter = false;
   @observable splitPosition = 0.5;
@@ -152,6 +161,7 @@ export default class Terria {
       }
     }
   }
+
   @computed
   get currentViewer(): GlobeOrMap {
     return (
@@ -203,34 +213,65 @@ export default class Terria {
   }
 
   start(options: StartOptions) {
-    var baseUri = new URI(options.configUrl).filename("");
+    const baseUri = new URI(options.configUrl).filename("");
 
     return loadJson5(options.configUrl).then((config: any) => {
       if (config.aspects) {
         return this.loadMagdaConfig(config);
       }
 
-      const initializationUrls = config.initializationUrls;
-      return when.all(
-        initializationUrls.map((initializationUrl: string) => {
-          return loadJson5(
-            buildInitUrlFromFragment(
-              "init/",
-              generateInitializationUrl(baseUri, initializationUrl)
-            ).toString()
-          ).then((initData: any) => {
-            if (initData.catalog !== undefined) {
-              updateModelFromJson(this.catalog.group, CommonStrata.definition, {
-                members: initData.catalog
-              });
-            }
-            if (initData.stories !== undefined) {
-              this.stories = initData.stories;
-            }
-          });
-        })
+      const initializationUrls: string[] = config.initializationUrls;
+      const initSources = initializationUrls.map(url =>
+        generateInitializationUrl(
+          baseUri,
+          this.configParameters.initFragmentPaths,
+          url
+        )
       );
+
+      runInAction(() => {
+        this.initSources.push(...initSources);
+      });
     });
+  }
+
+  get isLoadingInitSources(): boolean {
+    return this._initSourceLoader.isLoading;
+  }
+
+  /**
+   * Asynchronously loads init sources
+   */
+  loadInitSources(): Promise<void> {
+    return this._initSourceLoader.load();
+  }
+
+  protected forceLoadInitSources(): Promise<void> {
+    const initSourcePromises = this.initSources.map(initSource => {
+      return loadInitSource(initSource).catch(e => {
+        this.error.raiseEvent(e);
+        return undefined;
+      });
+    });
+
+    return Promise.all(initSourcePromises).then(initSources => {
+      runInAction(() => {
+        initSources.forEach(initSource => {
+          if (initSource === undefined) {
+            return;
+          }
+          this.applyInitData(initSource);
+        });
+      });
+    });
+  }
+
+  private applyInitData(initData: JsonObject) {
+    if (initData.catalog !== undefined) {
+      updateModelFromJson(this.catalog.group, CommonStrata.definition, {
+        members: initData.catalog
+      });
+    }
   }
 
   loadMagdaConfig(config: any) {
@@ -285,17 +326,55 @@ export default class Terria {
   }
 }
 
-function generateInitializationUrl(baseUri: uri.URI, url: string) {
+function generateInitializationUrl(
+  baseUri: uri.URI,
+  initFragmentPaths: string[],
+  url: string
+): InitSource {
   if (url.toLowerCase().substring(url.length - 5) !== ".json") {
     return {
-      baseUri: baseUri,
-      initFragment: url
+      options: initFragmentPaths.map(fragmentPath => {
+        return {
+          initUrl: URI.joinPaths(fragmentPath, url + ".json")
+            .absoluteTo(baseUri)
+            .toString()
+        };
+      })
     };
   }
-  return new URI(url).absoluteTo(baseUri).toString();
+  return {
+    initUrl: new URI(url).absoluteTo(baseUri).toString()
+  };
 }
 
-function buildInitUrlFromFragment(path: string, fragmentObject: any) {
-  const uri = new URI(path + fragmentObject.initFragment + ".json");
-  return fragmentObject.baseUri ? uri.absoluteTo(fragmentObject.baseUri) : uri;
-}
+const loadInitSource = createTransformer(
+  (initSource: InitSource): Promise<JsonObject | undefined> => {
+    let promise: Promise<JsonValue | undefined>;
+
+    if (isInitUrl(initSource)) {
+      promise = loadJson5(initSource.initUrl);
+    } else if (isInitOptions(initSource)) {
+      promise = initSource.options.reduce((previousOptionPromise, option) => {
+        return previousOptionPromise
+          .then(json => {
+            if (json === undefined) {
+              return loadInitSource(option);
+            }
+            return json;
+          })
+          .catch(_ => {
+            return loadInitSource(option);
+          });
+      }, Promise.resolve<JsonObject | undefined>(undefined));
+    } else {
+      promise = Promise.resolve(initSource.data);
+    }
+
+    return promise.then(jsonValue => {
+      if (isJsonObject(jsonValue)) {
+        return jsonValue;
+      }
+      return undefined;
+    });
+  }
+);

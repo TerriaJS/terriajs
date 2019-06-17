@@ -112,7 +112,7 @@ export default class MagdaCatalogItem extends MagdaMixin(
     return this._reference;
   }
 
-  protected get loadMetadataPromise(): Promise<void> {
+  protected forceLoadMetadata(): Promise<void> {
     return this.loadReference();
   }
 

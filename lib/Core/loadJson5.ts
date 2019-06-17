@@ -1,18 +1,19 @@
-"use strict";
-/* global require  */
+import json5 from "json5";
+import Resource from "terriajs-cesium/Source/Core/Resource";
+import JsonValue from "./Json";
+import makeRealPromise from "./makeRealPromise";
 
-var json5 = require("json5");
-var Resource = require("terriajs-cesium/Source/Core/Resource");
-
-var defaultHeaders = {
+const defaultHeaders = {
   Accept: "application/json5,application/json;q=0.8,*/*;q=0.01"
 };
+
 /*
  * A modified version of Cesium's loadJson function, supporting the more flexible JSON5 specification.
  */
-
-function loadJson5(urlOrResource) {
-  var resource;
+export default function loadJson5(
+  urlOrResource: string | Resource
+): Promise<JsonValue> {
+  let resource: Resource;
   if (urlOrResource instanceof Resource) {
     resource = urlOrResource;
   } else {
@@ -22,12 +23,11 @@ function loadJson5(urlOrResource) {
     });
   }
 
-  return resource.fetchText().then(function(value) {
+  const promise = makeRealPromise<string>(resource.fetchText());
+  return promise.then(function(value: string) {
     return json5.parse(value);
   });
 }
 
 // Use these headers if passing a Cesium Resource to loadJson5
 loadJson5.defaultHeaders = defaultHeaders;
-
-module.exports = loadJson5;

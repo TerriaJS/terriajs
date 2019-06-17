@@ -3,6 +3,7 @@ import Constructor from "../Core/Constructor";
 import Model from "../Models/Model";
 import CatalogMemberTraits from "../Traits/CatalogMemberTraits";
 import { createTransformer } from "mobx-utils";
+import AsyncLoader from "../Core/AsyncLoader";
 
 type CatalogMember = Model<CatalogMemberTraits>;
 
@@ -10,62 +11,24 @@ function CatalogMemberMixin<T extends Constructor<CatalogMember>>(Base: T) {
   abstract class CatalogMemberMixin extends Base {
     abstract get type(): string;
 
+    private _metadataLoader = new AsyncLoader(this.forceLoadMetadata.bind(this));
+
     /**
      * Gets a value indicating whether metadata is currently loading.
      */
     get isLoadingMetadata(): boolean {
-      return this._isLoadingMetadata;
+      return this._metadataLoader.isLoading;
     }
 
-    @observable
-    private _isLoadingMetadata = false;
-
-    private _metadataPromise: Promise<void> | undefined = undefined;
-
-    /**
-     * Asynchronously loads metadata.
-     */
     loadMetadata(): Promise<void> {
-      const newPromise = this.loadMetadataKeepAlive;
-      if (newPromise !== this._metadataPromise) {
-        if (this._metadataPromise) {
-          // TODO - cancel old promise
-          //this._metadataPromise.cancel();
-        }
-
-        this._metadataPromise = newPromise;
-
-        runInAction(() => {
-          this._isLoadingMetadata = true;
-        });
-        newPromise
-          .then(result => {
-            runInAction(() => {
-              this._isLoadingMetadata = false;
-            });
-            return result;
-          })
-          .catch(e => {
-            runInAction(() => {
-              this._isLoadingMetadata = false;
-            });
-            throw e;
-          });
-      }
-
-      return newPromise;
+      return this._metadataLoader.load();
     }
 
     /**
-     * Gets a promise for loaded metadata. This method does _not_ need to consider
+     * Forces load of the metadata. This method does _not_ need to consider
      * whether the metadata is already loaded.
      */
-    protected abstract get loadMetadataPromise(): Promise<void>;
-
-    @computed({ keepAlive: true })
-    private get loadMetadataKeepAlive(): Promise<void> {
-      return this.loadMetadataPromise;
-    }
+    protected abstract forceLoadMetadata(): Promise<void>;
 
     get hasCatalogMemberMixin() {
       return true;

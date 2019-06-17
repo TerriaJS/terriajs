@@ -174,7 +174,7 @@ class GeoJsonCatalogItem extends AsyncMappableMixin(
     return [this._dataSource];
   }
 
-  protected get loadMetadataPromise(): Promise<void> {
+  protected forceLoadMetadata(): Promise<void> {
     return Promise.resolve();
   }
 

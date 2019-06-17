@@ -26,6 +26,7 @@
     "@types/create-react-class": "^15.6.2",
     "@types/geojson": "^7946.0.7",
     "@types/jasmine": "^2.8.8",
+    "@types/json5": "^0.0.30",
     "@types/leaflet": "^1.4.3",
     "@types/lodash.countby": "^4.6.6",
     "@types/lodash.uniq": "^4.5.6",

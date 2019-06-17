@@ -156,7 +156,7 @@ export default class MagdaCatalogGroup extends MagdaMixin(
     });
   }
 
-  protected get loadMetadataPromise(): Promise<void> {
+  protected forceLoadMetadata(): Promise<void> {
     return this.loadReference();
   }
 
