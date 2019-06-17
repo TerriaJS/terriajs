@@ -18,6 +18,7 @@ import PickedFeatures from "../Map/PickedFeatures";
 import ModelReference from "../Traits/ModelReference";
 import { BaseMapViewModel } from "../ViewModels/BaseMapViewModel";
 import TerriaViewer from "../ViewModels/TerriaViewer";
+import CatalogMemberFactory from "./CatalogMemberFactory";
 import Catalog from "./CatalogNew";
 import Cesium from "./Cesium";
 import CommonStrata from "./CommonStrata";
@@ -31,6 +32,7 @@ import { BaseModel } from "./Model";
 import NoViewer from "./NoViewer";
 import TimelineStack from "./TimelineStack";
 import updateModelFromJson from "./updateModelFromJson";
+import upsertModelFromJson from "./upsertModelFromJson";
 import Workbench from "./Workbench";
 
 require("regenerator-runtime/runtime");
@@ -270,6 +272,35 @@ export default class Terria {
     if (initData.catalog !== undefined) {
       updateModelFromJson(this.catalog.group, CommonStrata.definition, {
         members: initData.catalog
+      });
+    }
+
+    const strata = initData.strata;
+    if (isJsonObject(strata)) {
+      Object.keys(strata).forEach(stratum => {
+        const models = strata[stratum];
+        if (!isJsonObject(models)) {
+          return;
+        }
+
+        Object.keys(models).forEach(modelId => {
+          const model = models[modelId];
+          if (!isJsonObject(model)) {
+            return;
+          }
+
+          upsertModelFromJson(
+            CatalogMemberFactory,
+            this,
+            "/",
+            undefined,
+            stratum,
+            {
+              ...model,
+              id: modelId
+            }
+          );
+        });
       });
     }
   }
