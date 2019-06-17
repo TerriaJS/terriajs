@@ -91,9 +91,6 @@ export default class MagdaCatalogItem extends MagdaMixin(
     })
   ];
 
-  @observable
-  private _reference: BaseModel | undefined;
-
   get type() {
     return MagdaCatalogItem.type;
   }
@@ -108,15 +105,11 @@ export default class MagdaCatalogItem extends MagdaMixin(
     );
   }
 
-  get dereferenced(): BaseModel | undefined {
-    return this._reference;
-  }
-
   protected forceLoadMetadata(): Promise<void> {
     return this.loadReference();
   }
 
-  protected get loadReferencePromise(): Promise<void> {
+  protected forceLoadReference(previousTarget: BaseModel | undefined): Promise<BaseModel | undefined> {
     const url = this.url;
     if (url === undefined) {
       return Promise.reject(
@@ -160,8 +153,8 @@ export default class MagdaCatalogItem extends MagdaMixin(
         }
 
         const dereferenced =
-          this._reference && this._reference.type === modelDefinition.type
-            ? this._reference
+        previousTarget && previousTarget.type === modelDefinition.type
+            ? previousTarget
             : CatalogMemberFactory.create(<string>modelDefinition.type, id, terria);
 
         const model = upsertModelFromJson(
@@ -172,13 +165,11 @@ export default class MagdaCatalogItem extends MagdaMixin(
           CommonStrata.definition,
           modelDefinition
         );
+
         if (CatalogMemberMixin.isMixedInto(model)) {
           return model.loadMetadata().then(() => <BaseModel>model);
         }
         return Promise.resolve(model);
-      })
-      .then((model: BaseModel | undefined) => {
-        this._reference = model;
       });
   }
 }

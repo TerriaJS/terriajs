@@ -1,7 +1,9 @@
-import { computed, observable, runInAction } from "mobx";
+import { computed, observable, runInAction, untracked } from "mobx";
 import Constructor from "../Core/Constructor";
 import Model, { BaseModel, ModelInterface } from "../Models/Model";
 import ModelTraits from "../Traits/ModelTraits";
+import AsyncLoader from "../Core/AsyncLoader";
+import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 
 type RequiredTraits = ModelTraits;
 
@@ -20,26 +22,40 @@ interface ReferenceInterface extends ModelInterface<RequiredTraits> {
  */
 function ReferenceMixin<T extends Constructor<Model<RequiredTraits>>>(Base: T) {
   abstract class ReferenceMixin extends Base implements ReferenceInterface {
-    get isLoadingReference(): boolean {
-      return this._isLoadingReference;
-    }
-
     @observable
-    private _isLoadingReference = false;
+    private _dereferenced: BaseModel | undefined;
 
-    private _referencePromise: Promise<void> | undefined = undefined;
-
-    abstract get dereferenced(): BaseModel | undefined;
+    private _referenceLoader = new AsyncLoader(() => {
+      const previousTarget = untracked(() => this._dereferenced);
+      return this.forceLoadReference(previousTarget).then(target => {
+        if (target && target.id !== this.id) {
+          throw new DeveloperError("The model returned by `forceLoadReference` must have the same `id` as the `ReferenceMixin` itself.");
+        }
+        this._dereferenced = target;
+      });
+    });
 
     /**
-     * Gets a promise for loading the reference to another object. This method
-     * does _not_ need to consider whether the target is already loaded.
+     * Forces load of the reference. This method does _not_ need to consider
+     * whether the reference is already loaded.
      */
-    protected abstract get loadReferencePromise(): Promise<void>;
+    protected abstract forceLoadReference(
+      previousTarget: BaseModel | undefined
+    ): Promise<BaseModel | undefined>;
 
-    @computed({ keepAlive: true })
-    private get loadReferenceKeepAlive(): Promise<void> {
-      return this.loadReferencePromise;
+    /**
+     * Gets a value indicating whether the reference is currently loading. While this is true,
+     * {@link ModelMixin#dereferenced} may be undefined or stale.
+     */
+    get isLoadingReference(): boolean {
+      return this._referenceLoader.isLoading;
+    }
+
+    /**
+     * Gets the target model of the reference. This model must have the same `id` as this model.
+     */
+    get dereferenced(): BaseModel | undefined {
+      return this._dereferenced;
     }
 
     /**
@@ -47,34 +63,7 @@ function ReferenceMixin<T extends Constructor<Model<RequiredTraits>>>(Base: T) {
      * {@link ReferenceMixin#dereferenced} should return the target of the reference.
      */
     loadReference(): Promise<void> {
-      const newPromise = this.loadReferenceKeepAlive;
-      if (newPromise !== this._referencePromise) {
-        if (this._referencePromise) {
-          // TODO - cancel old promise
-          //this._referencePromise.cancel();
-        }
-
-        this._referencePromise = newPromise;
-
-        runInAction(() => {
-          this._isLoadingReference = true;
-        });
-        newPromise
-          .then(result => {
-            runInAction(() => {
-              this._isLoadingReference = false;
-            });
-            return result;
-          })
-          .catch(e => {
-            runInAction(() => {
-              this._isLoadingReference = false;
-            });
-            throw e;
-          });
-      }
-
-      return newPromise;
+      return this._referenceLoader.load();
     }
   }
 

@@ -104,3 +104,14 @@ Datasets that are synchronized to the timeline clock are listed in `terria.timel
 On tick of the timeline clock, the `TimelineStack` will the current time and paused state to all datasets it contains. It will copy changes to `startTime`, `stopTime`, and `multiplier` to the "active" (top) dataset in the timeline stack.
 
 When a dataset becomes the top of the timeline stack, or the top dataset's time-related properties change, the `currentTime`, `startTime`, `stopTime`, and `multiplier` properties are copied to the timeline's clock.
+
+# ReferenceMixin
+
+`ReferenceMixin` is used to create models that act as references to other models. The target model is accessible via the `dereferenced` property, but it may be undefined until the promise returned by `loadReference` resolves. Some rules:
+
+* The `id` of the target (`dereferenced`) model must be the same as the `id` of the model with `ReferenceMixin`.
+* The model with `ReferenceMixin` must be in `terria.models`.
+* The target (`dereferenced`) model must _not_ be in `terria.models`.
+* Multiple references (i.e. models with different `id` properties) cannot point to the same target.
+
+Thus, for a given model that may or may not be the target of a reference, we can obtain the reference model by looking up the `id` in `terria.models`.
