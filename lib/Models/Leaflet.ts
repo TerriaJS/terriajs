@@ -84,6 +84,7 @@ export default class Leaflet extends GlobeOrMap {
   private readonly _disposeShowSplitterSubscription: () => void;
   private readonly _selectionIndicator: LeafletSelectionIndicator;
   private readonly _disposeSelectedFeatureSubscription: () => void;
+  private readonly _disposeDisableMouseInteractionSubscription: () => void;
 
   private _createImageryLayer: (
     ip: Cesium.ImageryProvider
@@ -189,6 +190,23 @@ export default class Leaflet extends GlobeOrMap {
           this._updateItemForSplitter(item, clips);
         }
       });
+    });
+
+    this._disposeDisableMouseInteractionSubscription = autorun(() => {
+      const map = this.map;
+      const interactions = [
+        map.touchZoom,
+        map.doubleClickZoom,
+        map.scrollWheelZoom,
+        map.boxZoom,
+        map.keyboard,
+        map.dragging
+      ];
+      if (this.terriaViewer.disableMouseInteraction) {
+        interactions.forEach(handler => handler.disable());
+      } else {
+        interactions.forEach(handler => handler.enable());
+      }
     });
   }
 
