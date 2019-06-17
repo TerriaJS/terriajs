@@ -1,7 +1,7 @@
 "use strict";
 
 import classNames from "classnames";
-import { autorun, computed, observable, runInAction } from "mobx";
+import { autorun, computed, observable, runInAction, action } from "mobx";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import React from "react";
@@ -76,16 +76,9 @@ class DataPreviewMap extends React.Component {
         ]);
       })
     );
-    autorun(() => {
-      if (this.props.showMap && this.props.previewed !== undefined) {
-        this.previewBadgeText = "PREVIEW LOADING...";
-        this.props.previewed.loadMapItems().then(() => {
-          this.previewBadgeText = "DATA PREVIEW";
-        });
-      }
-    });
     runInAction(() => {
       this.previewViewer.viewerMode = "leaflet";
+      this.previewViewer.disableMouseInteraction = true;
     });
     // Not yet implemented
     // previewViewer.hideTerriaLogo = true;
@@ -96,11 +89,12 @@ class DataPreviewMap extends React.Component {
   /**
    * @param {HTMLElement} container
    */
+  @action
   initPreview(container) {
     console.log(
       "Initialising preview map. This might be expensive, so this should only show up when the preview map disappears and reappears"
     );
-    runInAction(() => {
+    this.isZoomedToExtent = false;
       // Change this to choose positron if it's available
       if (this.previewViewer.baseMap === undefined) {
         this.previewViewer.baseMap =
@@ -108,18 +102,27 @@ class DataPreviewMap extends React.Component {
             ? this.props.terria.baseMaps[0].mappable
             : undefined;
       }
-    });
     if (this.previewViewer.attached) {
       this.previewViewer.detach();
     }
     this.previewViewer.attach(container);
-
-    // Implement zooming to extent on click
-    // Have to disable map interactions first
-    this.isZoomedToExtent = false;
-    // Following 2 shouldn't be needed in new architecture
-    // this.lastPreviewedCatalogItem = undefined;
-    // this.removePreviewFromMap = undefined;
+    this._disposePreviewBadgeTextUpdater = autorun(() => {
+      if (this.props.showMap && this.props.previewed !== undefined) {
+        this.previewBadgeText = "PREVIEW LOADING...";
+        this.props.previewed.loadMapItems().then(() => {
+          this.previewBadgeText = "DATA PREVIEW";
+        });
+      }
+    });
+    this._disposeZoomToExtentSubscription = autorun(() => {
+      if (this.isZoomedToExtent) {
+        this.previewViewer.currentViewer.zoomTo(this.props.previewed);
+      } else {
+        this.previewViewer.currentViewer.zoomTo(
+          this.previewViewer.defaultExtent
+        );
+      }
+    });
 
     // this._unsubscribeErrorHandler = this.terriaPreview.error.addEventListener(
     //   e => {
@@ -136,18 +139,10 @@ class DataPreviewMap extends React.Component {
     //     }
     //   }
     // );
-
-    //       // disable preview map interaction
-    //       const map = this.terriaViewer.terria.leaflet.map;
-    //       map.touchZoom.disable();
-    //       map.doubleClickZoom.disable();
-    //       map.scrollWheelZoom.disable();
-    //       map.boxZoom.disable();
-    //       map.keyboard.disable();
-    //       map.dragging.disable();
   }
 
   componentWillUnmount() {
+    this._disposePreviewBadgeTextUpdater();
     this.previewViewer.detach();
 
     if (this._unsubscribeErrorHandler) {
@@ -222,6 +217,11 @@ class DataPreviewMap extends React.Component {
     });
     rectangleCatalogItem.loadMapItems();
     return rectangleCatalogItem;
+  }
+
+  @action.bound
+  clickMap(evt) {
+    this.isZoomedToExtent = !this.isZoomedToExtent;
   }
 
   render() {

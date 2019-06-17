@@ -63,16 +63,14 @@ class MappablePreview extends React.Component {
   }
 
   render() {
+    // TODO: re-introduce disablePreview to catalog items
+    const catalogItem = this.props.previewed;
     return (
       <div className={Styles.root}>
-        <If
-          condition={
-            Mappable.is(this.props.previewed) && !catalogItem.disablePreview
-          }
-        >
+        <If condition={Mappable.is(catalogItem) && !catalogItem.disablePreview}>
           <DataPreviewMap
             terria={this.props.terria}
-            previewed={this.props.previewed}
+            previewed={catalogItem}
             showMap={
               !this.props.viewState.explorerPanelAnimating ||
               this.props.viewState.useSmallScreenInterface
@@ -84,13 +82,13 @@ class MappablePreview extends React.Component {
           onClick={this.toggleOnMap}
           className={Styles.btnAdd}
         >
-          {this.props.terria.workbench.contains(this.props.previewed)
+          {this.props.terria.workbench.contains(catalogItem)
             ? "Remove from the map"
             : "Add to the map"}
         </button>
         <div className={Styles.previewedInfo}>
-          <h3 className={Styles.h3}>{this.props.previewed.name}</h3>
-          <Description item={this.props.previewed} />
+          <h3 className={Styles.h3}>{catalogItem.name}</h3>
+          <Description item={catalogItem} />
         </div>
       </div>
     );
