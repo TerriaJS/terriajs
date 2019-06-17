@@ -1,6 +1,6 @@
 import { computed, observable, toJS } from "mobx";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
-import JsonValue, { isJsonObject, JsonArray } from "../Core/Json";
+import JsonValue, { isJsonObject, JsonArray, JsonObject } from "../Core/Json";
 import loadJson from "../Core/loadJson";
 import makeRealPromise from "../Core/makeRealPromise";
 import TerriaError from "../Core/TerriaError";
@@ -128,6 +128,8 @@ export default class MagdaCatalogItem extends MagdaMixin(
       );
     }
 
+    const terria = this.terria;
+    const id = this.id;
     const name = this.name;
     const distributionId = this.distributionId;
     const definition = toJS(this.definition);
@@ -152,21 +154,30 @@ export default class MagdaCatalogItem extends MagdaMixin(
           distributionFormats: distributionFormats
         });
       })
-      .then(modelDefinition => {
+      .then((modelDefinition: JsonObject | undefined): Promise<BaseModel | undefined> => {
+        if (modelDefinition === undefined || !modelDefinition.type) {
+          return Promise.resolve(undefined);
+        }
+
+        const dereferenced =
+          this._reference && this._reference.type === modelDefinition.type
+            ? this._reference
+            : CatalogMemberFactory.create(<string>modelDefinition.type, id, terria);
+
         const model = upsertModelFromJson(
           CatalogMemberFactory,
           this.terria,
           this.id,
-          undefined,
+          dereferenced,
           CommonStrata.definition,
           modelDefinition
         );
         if (CatalogMemberMixin.isMixedInto(model)) {
           return model.loadMetadata().then(() => <BaseModel>model);
         }
-        return model;
+        return Promise.resolve(model);
       })
-      .then(model => {
+      .then((model: BaseModel | undefined) => {
         this._reference = model;
       });
   }
