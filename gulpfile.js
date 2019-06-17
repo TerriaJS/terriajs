@@ -10,7 +10,6 @@
 // the devDependencies available.  Individual tasks, other than `post-npm-install` and any tasks it
 // calls, may require in `devDependency` modules locally.
 var gulp = require('gulp');
-var spawnSync = require('child_process').spawnSync;
 
 gulp.task('build-specs', function(done) {
     var runWebpack = require('./buildprocess/runWebpack.js');
@@ -124,6 +123,8 @@ function runKarma(configFile, done) {
 }
 
 gulp.task('code-attribution', function userAttribution(done) {
+    var spawnSync = require('child_process').spawnSync;
+    
     var result = spawnSync('yarn', ['licenses generate-disclaimer > doc/acknowledgements/attributions.md'], {
         stdio: 'inherit',
         shell: true
