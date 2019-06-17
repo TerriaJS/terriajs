@@ -498,7 +498,28 @@ declare module "terriajs-cesium/Source/Core/subdivideArray" {
   export default Cesium.subdivideArray;
 }
 declare module "terriajs-cesium/Source/DataSources/BillboardGraphics" {
-  export default Cesium.BillboardGraphics;
+  class BillboardGraphics extends Cesium.BillboardGraphics {
+    heightReference?: Cesium.Property;
+    constructor(options?: { image?: Cesium.Property;
+        show?: Cesium.Property;
+        scale?: Cesium.Property;
+        horizontalOrigin?: Cesium.Property;
+        verticalOrigin?: Cesium.Property;
+        eyeOffset?: Cesium.Property;
+        pixelOffset?: Cesium.Property;
+        rotation?: Cesium.Property;
+        alignedAxis?: Cesium.Property;
+        width?: Cesium.Property;
+        height?: Cesium.Property;
+        color?: Cesium.Property;
+        scaleByDistance?: Cesium.Property;
+        translucencyByDistance?: Cesium.Property;
+        pixelOffsetScaleByDistance?: Cesium.Property;
+        imageSubRegion?: Cesium.Property;
+        heightReference?: Cesium.Property;
+    });
+}
+  export default BillboardGraphics;
 }
 declare module "terriajs-cesium/Source/DataSources/BillboardVisualizer" {
   export default Cesium.BillboardVisualizer;
