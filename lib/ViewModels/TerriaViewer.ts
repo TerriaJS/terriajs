@@ -53,6 +53,10 @@ export default class TerriaViewer {
   @observable
   viewerOptions: ViewerOptions = viewerOptionsDefaults;
 
+  // Disable all mouse (& keyboard) interaction
+  @observable
+  disableMouseInteraction: boolean = false;
+
   // Random rectangle. Work out reactivity
   // Should this be homeView instead (and have 3D view properties)?
   defaultExtent: Rectangle = Rectangle.fromDegrees(120, -45, 155, -15);
