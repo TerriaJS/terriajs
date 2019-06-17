@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### v7.6.3
+
+* Fixed a bug with picking features that cross the anti-meridian in 2D mode 
+
 ### v7.6.2
 
 * Fixed a bug that made some input boxes unreadable in some web browsers.
