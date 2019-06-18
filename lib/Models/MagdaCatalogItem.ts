@@ -124,7 +124,7 @@ export default class MagdaCatalogItem extends MagdaMixin(
     }
 
     const terria = this.terria;
-    const id = this.id;
+    const id = this.globalId;
     const name = this.name;
     const distributionId = this.distributionId;
     const definition = toJS(this.definition);
@@ -169,7 +169,7 @@ export default class MagdaCatalogItem extends MagdaMixin(
           const model = upsertModelFromJson(
             CatalogMemberFactory,
             this.terria,
-            this.id,
+            this.globalId,
             dereferenced,
             CommonStrata.definition,
             modelDefinition

@@ -64,7 +64,7 @@ export default class MagdaCatalogGroup extends MagdaMixin(
       const proxiedUrl = proxyCatalogItemUrl(this, recordUri.toString(), "1d");
 
       const terria = this.terria;
-      const id = this.id;
+      const id = this.globalId;
       const name = this.name;
       const definition = toJS(this.definition);
       const distributionFormats = this.preparedDistributionFormats;

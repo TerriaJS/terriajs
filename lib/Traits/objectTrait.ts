@@ -45,7 +45,7 @@ export class ObjectTrait<T extends ModelTraits> extends Trait {
   getValue(
     model: BaseModel
   ): Model<T> | undefined {
-    const result = new this.ModelClass(model.id, model.terria);
+    const result = new this.ModelClass(model.globalId, model.terria);
     model.strata.forEach((parentStratum: any, stratumId) => {
       const childStratum = parentStratum[this.id];
       result.strata.set(stratumId, childStratum);

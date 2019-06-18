@@ -203,15 +203,15 @@ export default class Terria {
   }
 
   addModel(model: BaseModel) {
-    if (ModelReference.isRemoved(model.id)) {
+    if (ModelReference.isRemoved(model.globalId)) {
       return;
     }
 
-    if (this.models.has(model.id)) {
+    if (this.models.has(model.globalId)) {
       throw new RuntimeError("A model with the specified ID already exists.");
     }
 
-    this.models.set(model.id, model);
+    this.models.set(model.globalId, model);
   }
 
   start(options: StartOptions) {

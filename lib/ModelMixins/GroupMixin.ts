@@ -76,16 +76,16 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
     @action add(stratumId: string, member: BaseModel) {
       const members = this.getTrait(stratumId, "members");
       if (isDefined(members)) {
-        members.push(member.id);
+        members.push(member.globalId);
       } else {
-        this.setTrait(stratumId, "members", [member.id]);
+        this.setTrait(stratumId, "members", [member.globalId]);
       }
     }
 
     @action remove(stratumId: string, member: BaseModel) {
       const members = this.getTrait(stratumId, "members");
       if (isDefined(members)) {
-        const index = members.indexOf(member.id);
+        const index = members.indexOf(member.globalId);
         if (index !== -1) {
           members.splice(index, 1);
         }

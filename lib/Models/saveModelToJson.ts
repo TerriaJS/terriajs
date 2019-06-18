@@ -30,7 +30,7 @@ export default function saveModelToJson(
     result[stratumId] = saveStratumToJson(model.traits, stratum);
   });
 
-  result.id = model.id;
+  result.id = model.globalId;
   result.type = model.type;
 
   return result;

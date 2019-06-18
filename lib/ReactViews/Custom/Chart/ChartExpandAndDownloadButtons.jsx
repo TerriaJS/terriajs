@@ -233,7 +233,7 @@ function expand(props, sourceIndex) {
     );
     newCatalogItem.name =
       props.title || (props.feature && props.feature.name) || "Chart";
-    newCatalogItem.id =
+    newCatalogItem.globalId =
       newCatalogItem.name +
       (props.id ? " " + props.id : "") +
       " (" +
