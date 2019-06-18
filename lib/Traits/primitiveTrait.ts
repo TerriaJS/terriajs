@@ -31,9 +31,14 @@ export class PrimitiveTrait<T> extends Trait {
     this.isNullable = options.isNullable || false;
   }
 
-  getValue(strataTopToBottom: StratumFromTraits<ModelTraits>[]): T | undefined {
+  getValue(model: BaseModel): T | undefined {
+    const strataTopToBottom = model.strataTopToBottom;
     for (let i = 0; i < strataTopToBottom.length; ++i) {
       const stratum: any = strataTopToBottom[i];
+      if (stratum === undefined) {
+        continue;
+      }
+
       const value = stratum[this.id];
       if (value !== undefined) {
         return value;

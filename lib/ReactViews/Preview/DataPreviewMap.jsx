@@ -95,13 +95,13 @@ class DataPreviewMap extends React.Component {
       "Initialising preview map. This might be expensive, so this should only show up when the preview map disappears and reappears"
     );
     this.isZoomedToExtent = false;
-      // Change this to choose positron if it's available
-      if (this.previewViewer.baseMap === undefined) {
-        this.previewViewer.baseMap =
-          this.props.terria.baseMaps.length > 0
-            ? this.props.terria.baseMaps[0].mappable
-            : undefined;
-      }
+    // Change this to choose positron if it's available
+    if (this.previewViewer.baseMap === undefined) {
+      this.previewViewer.baseMap =
+        this.props.terria.baseMaps.length > 0
+          ? this.props.terria.baseMaps[0].mappable
+          : undefined;
+    }
     if (this.previewViewer.attached) {
       this.previewViewer.detach();
     }
@@ -153,14 +153,24 @@ class DataPreviewMap extends React.Component {
 
   @computed
   get boundingRectangleCatalogItem() {
-    if (this.props.previewed.rectangle === undefined) {
+    const rectangle = this.props.previewed.rectangle;
+    if (rectangle === undefined) {
       return undefined;
     }
 
-    let west = this.props.previewed.rectangle.west;
-    let south = this.props.previewed.rectangle.south;
-    let east = this.props.previewed.rectangle.east;
-    let north = this.props.previewed.rectangle.north;
+    let west = rectangle.west;
+    let south = rectangle.south;
+    let east = rectangle.east;
+    let north = rectangle.north;
+
+    if (
+      west === undefined ||
+      south === undefined ||
+      east === undefined ||
+      north === undefined
+    ) {
+      return undefined;
+    }
 
     if (!this.isZoomedToExtent) {
       // When zoomed out, make sure the dataset rectangle is at least 5% of the width and height

@@ -109,7 +109,9 @@ export default class MagdaCatalogItem extends MagdaMixin(
     return this.loadReference();
   }
 
-  protected forceLoadReference(previousTarget: BaseModel | undefined): Promise<BaseModel | undefined> {
+  protected forceLoadReference(
+    previousTarget: BaseModel | undefined
+  ): Promise<BaseModel | undefined> {
     const url = this.url;
     if (url === undefined) {
       return Promise.reject(
@@ -147,29 +149,37 @@ export default class MagdaCatalogItem extends MagdaMixin(
           distributionFormats: distributionFormats
         });
       })
-      .then((modelDefinition: JsonObject | undefined): Promise<BaseModel | undefined> => {
-        if (modelDefinition === undefined || !modelDefinition.type) {
-          return Promise.resolve(undefined);
+      .then(
+        (
+          modelDefinition: JsonObject | undefined
+        ): Promise<BaseModel | undefined> => {
+          if (modelDefinition === undefined || !modelDefinition.type) {
+            return Promise.resolve(undefined);
+          }
+
+          const dereferenced =
+            previousTarget && previousTarget.type === modelDefinition.type
+              ? previousTarget
+              : CatalogMemberFactory.create(
+                  <string>modelDefinition.type,
+                  id,
+                  terria
+                );
+
+          const model = upsertModelFromJson(
+            CatalogMemberFactory,
+            this.terria,
+            this.id,
+            dereferenced,
+            CommonStrata.definition,
+            modelDefinition
+          );
+
+          if (CatalogMemberMixin.isMixedInto(model)) {
+            return model.loadMetadata().then(() => <BaseModel>model);
+          }
+          return Promise.resolve(model);
         }
-
-        const dereferenced =
-        previousTarget && previousTarget.type === modelDefinition.type
-            ? previousTarget
-            : CatalogMemberFactory.create(<string>modelDefinition.type, id, terria);
-
-        const model = upsertModelFromJson(
-          CatalogMemberFactory,
-          this.terria,
-          this.id,
-          dereferenced,
-          CommonStrata.definition,
-          modelDefinition
-        );
-
-        if (CatalogMemberMixin.isMixedInto(model)) {
-          return model.loadMetadata().then(() => <BaseModel>model);
-        }
-        return Promise.resolve(model);
-      });
+      );
   }
 }

@@ -31,9 +31,6 @@ export default class MagdaCatalogGroup extends MagdaMixin(
     return MagdaCatalogGroup.type;
   }
 
-  @observable
-  private _reference: BaseModel | undefined;
-
   constructor(id: string, terria: Terria) {
     super(id, terria);
 
@@ -44,11 +41,9 @@ export default class MagdaCatalogGroup extends MagdaMixin(
     );
   }
 
-  get dereferenced(): BaseModel | undefined {
-    return this._reference;
-  }
-
-  protected get loadReferencePromise(): Promise<void> {
+  protected forceLoadReference(
+    previousTarget: BaseModel | undefined
+  ): Promise<BaseModel | undefined> {
     return new Promise(resolve => {
       const url = this.url;
       const recordUri = this.buildMagdaRecordUri({
@@ -127,8 +122,8 @@ export default class MagdaCatalogGroup extends MagdaMixin(
         }
 
         const dereferenced =
-          this._reference && this._reference.type === groupDefinition.type
-            ? this._reference
+          previousTarget && previousTarget.type === groupDefinition.type
+            ? previousTarget
             : CatalogMemberFactory.create(groupDefinition.type, id, terria);
 
         // TODO: if this model already exists, should we replace
@@ -142,15 +137,12 @@ export default class MagdaCatalogGroup extends MagdaMixin(
           groupDefinition
         );
 
-        runInAction(() => {
-          this._reference = dereferenced;
-        });
-
         if (GroupMixin.isMixedInto(dereferenced)) {
-          return dereferenced.loadMembers();
+          return dereferenced.loadMembers().then(() => dereferenced);
         } else if (CatalogMemberMixin.isMixedInto(dereferenced)) {
-          return dereferenced.loadMetadata();
+          return dereferenced.loadMetadata().then(() => dereferenced);
         }
+        return Promise.resolve(dereferenced);
       });
       resolve(loadPromise);
     });
