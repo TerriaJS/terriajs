@@ -9,10 +9,40 @@ import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import CommonStrata from "../../Models/CommonStrata";
 import GeoJsonCatalogItem from "../../Models/GeoJsonCatalogItem";
-import Mappable from "../../Models/Mappable";
+import Mappable, { ImageryParts } from "../../Models/Mappable";
 import Terria from "../../Models/Terria";
 import TerriaViewer from "../../ViewModels/TerriaViewer";
 import Styles from "./data-preview-map.scss";
+
+/**
+ * @implements Mappable
+ */
+class AdaptForPreviewMap {
+  /**
+   *
+   * @param {Mappable} mappable
+   */
+  constructor(mappable) {
+    this.mappable = mappable;
+  }
+
+  loadMapItems() {
+    return this.mappable.loadMapItems();
+  }
+
+  @computed
+  get mapItems() {
+    return this.mappable.mapItems.map(m =>
+      ImageryParts.is(m)
+        ? {
+            ...m,
+            alpha: m.alpha !== 0.0 ? 1.0 : 0.0,
+            show: true
+          }
+        : m
+    );
+  }
+}
 
 /**
  * Leaflet-based preview map that sits within the preview.
@@ -26,6 +56,7 @@ import Styles from "./data-preview-map.scss";
  *
  */
 
+// TODO: Can this.props.previewed be undefined?
 /**
  *
  * @extends {React.Component<Props>}
@@ -71,7 +102,7 @@ class DataPreviewMap extends React.Component {
       computed(() => {
         // Can previewed be undefined?
         return filterOutUndefined([
-          this.props.previewed,
+          new AdaptForPreviewMap(this.props.previewed),
           this.boundingRectangleCatalogItem
         ]);
       })
@@ -95,13 +126,13 @@ class DataPreviewMap extends React.Component {
       "Initialising preview map. This might be expensive, so this should only show up when the preview map disappears and reappears"
     );
     this.isZoomedToExtent = false;
-      // Change this to choose positron if it's available
-      if (this.previewViewer.baseMap === undefined) {
-        this.previewViewer.baseMap =
-          this.props.terria.baseMaps.length > 0
-            ? this.props.terria.baseMaps[0].mappable
-            : undefined;
-      }
+    // Change this to choose positron if it's available
+    if (this.previewViewer.baseMap === undefined) {
+      this.previewViewer.baseMap =
+        this.props.terria.baseMaps.length > 0
+          ? this.props.terria.baseMaps[0].mappable
+          : undefined;
+    }
     if (this.previewViewer.attached) {
       this.previewViewer.detach();
     }
