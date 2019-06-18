@@ -9,13 +9,15 @@ import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import CommonStrata from "../../Models/CommonStrata";
 import GeoJsonCatalogItem from "../../Models/GeoJsonCatalogItem";
+// eslint-disable-next-line no-unused-vars
 import Mappable, { ImageryParts } from "../../Models/Mappable";
+// eslint-disable-next-line no-unused-vars
 import Terria from "../../Models/Terria";
 import TerriaViewer from "../../ViewModels/TerriaViewer";
 import Styles from "./data-preview-map.scss";
 
 /**
- * @implements Mappable
+ * @implements {Mappable}
  */
 class AdaptForPreviewMap {
   /**
@@ -23,16 +25,16 @@ class AdaptForPreviewMap {
    * @param {Mappable} mappable
    */
   constructor(mappable) {
-    this.mappable = mappable;
+    this._mappable = mappable;
   }
 
   loadMapItems() {
-    return this.mappable.loadMapItems();
+    return this._mappable.loadMapItems();
   }
 
   @computed
   get mapItems() {
-    return this.mappable.mapItems.map(m =>
+    return this._mappable.mapItems.map(m =>
       ImageryParts.is(m)
         ? {
             ...m,
@@ -91,9 +93,8 @@ class DataPreviewMap extends React.Component {
      * @param {HTMLElement | null} container
      */
     this.containerRef = container => {
-      if (container === null) {
-        this.previewViewer.attached && this.previewViewer.detach();
-      } else {
+      this.previewViewer.attached && this.previewViewer.detach();
+      if (container !== null) {
         this.initPreview(container);
       }
     };
@@ -133,9 +134,6 @@ class DataPreviewMap extends React.Component {
           ? this.props.terria.baseMaps[0].mappable
           : undefined;
     }
-    if (this.previewViewer.attached) {
-      this.previewViewer.detach();
-    }
     this.previewViewer.attach(container);
     this._disposePreviewBadgeTextUpdater = autorun(() => {
       if (this.props.showMap && this.props.previewed !== undefined) {
@@ -173,7 +171,10 @@ class DataPreviewMap extends React.Component {
   }
 
   componentWillUnmount() {
-    this._disposePreviewBadgeTextUpdater();
+    this._disposePreviewBadgeTextUpdater &&
+      this._disposePreviewBadgeTextUpdater();
+    this._disposeZoomToExtentSubscription &&
+      this._disposeZoomToExtentSubscription();
     this.previewViewer.detach();
 
     if (this._unsubscribeErrorHandler) {
