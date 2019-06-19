@@ -1,15 +1,12 @@
 import { computed } from "mobx";
 import TerriaError from "../Core/TerriaError";
-import addModelStrataView from "../Models/addModelStrataView";
 import Model, { BaseModel, ModelConstructor } from "../Models/Model";
-import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
 import saveStratumToJson from "../Models/saveStratumToJson";
 import StratumFromTraits from "../Models/StratumFromTraits";
 import ModelTraits from "./ModelTraits";
 import Trait, { TraitOptions } from "./Trait";
+import traitsClassToModelClass from "./traitsClassToModelClass";
 import TraitsConstructor from "./TraitsConstructor";
-import CreateModel from "../Models/CreateModel";
-import { createTransformer } from "mobx-utils";
 
 export interface ObjectTraitOptions<T extends ModelTraits>
   extends TraitOptions {
@@ -42,12 +39,12 @@ export class ObjectTrait<T extends ModelTraits> extends Trait {
     this.ModelClass = traitsClassToModelClass(this.type);
   }
 
-  getValue(
-    model: BaseModel
-  ): Model<T> | undefined {
-    const result = new this.ModelClass(model.globalId, model.terria);
+  getValue(model: BaseModel): Model<T> | undefined {
+    const result = new this.ModelClass(model.uniqueId, model.terria);
     model.strata.forEach((parentStratum: any, stratumId) => {
+      if (!parentStratum) return;
       const childStratum = parentStratum[this.id];
+      if (!childStratum) return;
       result.strata.set(stratumId, childStratum);
     });
     return result;
@@ -101,7 +98,3 @@ export class ObjectTrait<T extends ModelTraits> extends Trait {
     );
   }
 }
-
-const traitsClassToModelClass = createTransformer(function<T extends ModelTraits>(traitsClass: TraitsConstructor<T>) {
-  return CreateModel(traitsClass);
-});

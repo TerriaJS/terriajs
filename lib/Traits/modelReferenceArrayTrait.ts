@@ -111,12 +111,14 @@ export class ModelReferenceArrayProperty extends Trait {
         const nestedModel = upsertModelFromJson(
           this.factory,
           model.terria,
-          model.globalId,
+          model.uniqueId === undefined ? "/" : model.uniqueId,
           undefined,
           stratumName,
           jsonElement
         );
-        return nestedModel.globalId;
+
+        // This model will definitely have an ID.
+        return nestedModel.uniqueId!;
       } else {
         throw new TerriaError({
           title: "Invalid property",

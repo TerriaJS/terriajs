@@ -21,7 +21,7 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
     readonly traits = Traits.traits;
     readonly strata = observable.map<string, StratumTraits>();
 
-    constructor(id: ModelId, terria: Terria) {
+    constructor(id: string | undefined, terria: Terria) {
       super(id, terria);
     }
 
@@ -49,12 +49,12 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
     @computed
     get strataTopToBottom(): StratumTraits[] {
       trace();
-      return StratumOrder.sortTopToBottom(this.strata);
+      return Array.from(StratumOrder.sortTopToBottom(this.strata).values());
     }
 
     @computed
     get strataBottomToTop() {
-      return StratumOrder.sortBottomToTop(this.strata);
+      return Array.from(StratumOrder.sortBottomToTop(this.strata).values());
     }
 
     @computed

@@ -356,16 +356,6 @@ class WebMapServiceCatalogItem
     return true;
   }
 
-  constructor(id: string, terria: Terria) {
-    super(id, terria);
-    if (this.opacity === undefined) {
-      console.log("Whaaaaa... This should have a default of 0.8");
-    }
-    autorun(() => {
-      console.log(`Opacity changed to ${this.opacity}`);
-    });
-  }
-
   protected forceLoadMetadata(): Promise<void> {
     return GetCapabilitiesStratum.load(this).then(stratum => {
       runInAction(() => {

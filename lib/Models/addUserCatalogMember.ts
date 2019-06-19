@@ -57,7 +57,7 @@ export default function addUserCatalogMember(
       ) {
         // add to workbench if it doesn't hold an item by the same id
         if (
-          !terria.workbench.items.find(item => item.globalId === newCatalogItem.globalId)
+          !terria.workbench.items.find(item => item.uniqueId === newCatalogItem.uniqueId)
         ) {
           terria.workbench.add(newCatalogItem);
         }

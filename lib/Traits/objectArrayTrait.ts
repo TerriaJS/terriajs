@@ -1,15 +1,16 @@
-import TerriaError from "../Core/TerriaError";
-import StratumFromTraits from "../Models/StratumFromTraits";
-import { BaseModel } from "../Models/Model";
-import ModelTraits from "./ModelTraits";
-import Trait, { TraitOptions } from "./Trait";
-import FlattenedFromTraits from "../Models/FlattenedFromTraits";
-import createStratumInstance from "../Models/createStratumInstance";
-import TraitsConstructor from "./TraitsConstructor";
 import { computed } from "mobx";
+import TerriaError from "../Core/TerriaError";
 import addModelStrataView from "../Models/addModelStrataView";
+import CommonStrata from "../Models/CommonStrata";
+import Model, { BaseModel, ModelConstructor } from "../Models/Model";
 import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
 import saveStratumToJson from "../Models/saveStratumToJson";
+import StratumFromTraits from "../Models/StratumFromTraits";
+import ModelTraits from "./ModelTraits";
+import Trait, { TraitOptions } from "./Trait";
+import traitsClassToModelClass from "./traitsClassToModelClass";
+import TraitsConstructor from "./TraitsConstructor";
+import StratumOrder from "../Models/StratumOrder";
 
 interface TraitsConstructorWithRemoval<T extends ModelTraits>
   extends TraitsConstructor<T> {
@@ -41,67 +42,74 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
   readonly type: TraitsConstructorWithRemoval<T>;
   readonly idProperty: keyof T | "index";
   readonly decoratorForFlattened = computed.struct;
+  readonly ModelClass: ModelConstructor<Model<T>>;
 
   constructor(id: string, options: ObjectArrayTraitOptions<T>) {
     super(id, options);
     this.type = options.type;
     this.idProperty = options.idProperty;
+    this.ModelClass = traitsClassToModelClass(this.type);
   }
 
-  getValue(
-    model: BaseModel
-  ): ReadonlyArray<ModelPropertiesFromTraits<T>> | undefined {
-    const strataTopToBottom = model.strataTopToBottom;
-    const objectArrayStrata = strataTopToBottom
-      .map((stratum: any) => stratum && stratum[this.id])
-      .filter(stratumValue => stratumValue !== undefined);
-    if (objectArrayStrata.length === 0) {
-      return undefined;
-    }
+  getValue(model: BaseModel): readonly Model<T>[] | undefined {
+    const strataTopToBottom: Map<string, any> = StratumOrder.sortTopToBottom(
+      model.strata
+    );
 
-    const result: StratumFromTraits<T>[][] = [];
-    const idMap: { [id: string]: StratumFromTraits<T>[] } = {};
+    // const objectArrayStrata = strataTopToBottom
+    //   .map((stratum: any) => stratum && stratum[this.id])
+    //   .filter(stratumValue => stratumValue !== undefined);
+    // if (objectArrayStrata.length === 0) {
+    //   return undefined;
+    // }
+
+    const result: Map<string, StratumFromTraits<T>>[] = [];
+    const idMap: { [id: string]: Map<string, StratumFromTraits<T>> } = {};
     const removedIds: { [id: string]: boolean } = {};
 
     // Find the unique objects and the strata that go into each.
-    for (let i = 0; i < objectArrayStrata.length; ++i) {
-      const objectArray = objectArrayStrata[i];
+    for (let stratumId of strataTopToBottom.keys()) {
+      const stratum = strataTopToBottom.get(stratumId);
+      const objectArray = stratum[this.id];
 
-      if (objectArray) {
-        objectArray.forEach(
-          (o: StratumFromTraits<T> & { index?: number }, i: number) => {
-            const id =
-              this.idProperty === "index"
-                ? o.index === undefined
-                  ? i.toString()
-                  : o.index.toString()
-                : <string>(<unknown>o[this.idProperty]);
-            if (this.type.isRemoval !== undefined && this.type.isRemoval(o)) {
-              // This ID is removed in this stratum.
-              removedIds[id] = true;
-            } else if (removedIds[id]) {
-              // This ID was removed by a stratum above this one, so ignore it.
-              return;
-            } else if (!idMap[id]) {
-              // This is the first time we've seen this ID, so add it
-              const newObjectStrata = [o];
-              idMap[id] = newObjectStrata;
-              result.push(newObjectStrata);
-            } else {
-              idMap[id].push(o);
-            }
-          }
-        );
+      if (!objectArray) {
+        continue;
       }
+
+      objectArray.forEach(
+        (o: StratumFromTraits<T> & { index?: number }, i: number) => {
+          const id =
+            this.idProperty === "index"
+              ? o.index === undefined
+                ? i.toString()
+                : o.index.toString()
+              : <string>(<unknown>o[this.idProperty]);
+          if (this.type.isRemoval !== undefined && this.type.isRemoval(o)) {
+            // This ID is removed in this stratum.
+            removedIds[id] = true;
+          } else if (removedIds[id]) {
+            // This ID was removed by a stratum above this one, so ignore it.
+            return;
+          } else if (!idMap[id]) {
+            // This is the first time we've seen this ID, so add it
+            const strataMap = new Map<string, StratumFromTraits<T>>();
+            strataMap.set(stratumId, o);
+            idMap[id] = strataMap;
+            result.push(strataMap);
+          } else {
+            idMap[id].set(stratumId, o);
+          }
+        }
+      );
     }
 
     // Flatten each unique object.
-    return result.map(strata => {
-      const model = {
-        strataTopToBottom: strata
-      };
-      addModelStrataView(model, this.type);
-      return <ModelPropertiesFromTraits<T>>(<unknown>model);
+    return result.map(modelSource => {
+      const result = new this.ModelClass(model.uniqueId, model.terria);
+      modelSource.forEach((stratum: any, stratumId) => {
+        result.strata.set(stratumId, stratum);
+      });
+      return result;
     });
   }
 

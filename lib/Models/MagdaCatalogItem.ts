@@ -20,6 +20,7 @@ import upsertModelFromJson from "./upsertModelFromJson";
 import StratumFromTraits from "./StratumFromTraits";
 import MagdaMixin from "../ModelMixins/MagdaMixin";
 import magdaRecordToCatalogMemberDefinition from "./magdaRecordToCatalogMember";
+import updateModelFromJson from "./updateModelFromJson";
 
 export default class MagdaCatalogItem extends MagdaMixin(
   ReferenceMixin(
@@ -124,7 +125,7 @@ export default class MagdaCatalogItem extends MagdaMixin(
     }
 
     const terria = this.terria;
-    const id = this.globalId;
+    const id = this.uniqueId;
     const name = this.name;
     const distributionId = this.distributionId;
     const definition = toJS(this.definition);
@@ -166,19 +167,26 @@ export default class MagdaCatalogItem extends MagdaMixin(
                   terria
                 );
 
-          const model = upsertModelFromJson(
-            CatalogMemberFactory,
-            this.terria,
-            this.globalId,
+          if (dereferenced === undefined) {
+            throw new TerriaError({
+              sender: this,
+              title: "Unable to create catalog member",
+              message: `Catalog member of type ${
+                modelDefinition.type
+              } does not exist.`
+            });
+          }
+
+          updateModelFromJson(
             dereferenced,
             CommonStrata.definition,
             modelDefinition
           );
 
-          if (CatalogMemberMixin.isMixedInto(model)) {
-            return model.loadMetadata().then(() => <BaseModel>model);
+          if (CatalogMemberMixin.isMixedInto(dereferenced)) {
+            return dereferenced.loadMetadata().then(() => <BaseModel>dereferenced);
           }
-          return Promise.resolve(model);
+          return Promise.resolve(dereferenced);
         }
       );
   }

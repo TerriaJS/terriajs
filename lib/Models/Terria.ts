@@ -2,6 +2,7 @@ import { computed, observable, runInAction } from "mobx";
 import { createTransformer } from "mobx-utils";
 import Clock from "terriajs-cesium/Source/Core/Clock";
 import defined from "terriajs-cesium/Source/Core/defined";
+import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import RuntimeError from "terriajs-cesium/Source/Core/RuntimeError";
 import URI from "urijs";
@@ -187,31 +188,27 @@ export default class Terria {
 
   getModelById<T extends BaseModel>(
     type: Class<T>,
-    id: ModelReference
+    id: string
   ): T | undefined {
-    if (ModelReference.isRemoved(id)) {
-      return undefined;
-    } else {
-      const model = this.models.get(id);
-      if (instanceOf(type, model)) {
-        return model;
-      }
-
-      // Model does not have the requested type.
-      return undefined;
+    const model = this.models.get(id);
+    if (instanceOf(type, model)) {
+      return model;
     }
+
+    // Model does not have the requested type.
+    return undefined;
   }
 
   addModel(model: BaseModel) {
-    if (ModelReference.isRemoved(model.globalId)) {
-      return;
+    if (model.uniqueId === undefined) {
+      throw new DeveloperError("A model without a `uniqueId` cannot be added.");
     }
 
-    if (this.models.has(model.globalId)) {
+    if (this.models.has(model.uniqueId)) {
       throw new RuntimeError("A model with the specified ID already exists.");
     }
 
-    this.models.set(model.globalId, model);
+    this.models.set(model.uniqueId, model);
   }
 
   start(options: StartOptions) {

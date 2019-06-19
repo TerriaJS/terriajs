@@ -58,7 +58,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
         if (!layer.Name) {
           return undefined;
         }
-        return this.catalogGroup.globalId + "/" + encodeURIComponent(layer.Name);
+        return this.catalogGroup.uniqueId + "/" + encodeURIComponent(layer.Name);
       })
     );
   }
@@ -101,7 +101,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
       return;
     }
 
-    const id = this.catalogGroup.globalId;
+    const id = this.catalogGroup.uniqueId;
     const layerId = id + "/" + encodeURIComponent(layer.Name);
     const existingModel = this.catalogGroup.terria.getModelById(
       WebMapServiceCatalogItem,
@@ -146,10 +146,6 @@ export default class WebMapServiceCatalogGroup extends GetCapabilitiesMixin(
 
   get type() {
     return WebMapServiceCatalogGroup.type;
-  }
-
-  constructor(id: string, terria: Terria) {
-    super(id, terria);
   }
 
   protected forceLoadMetadata(): Promise<void> {

@@ -10,11 +10,11 @@ export default class ModelFactory {
     this.constructors.set(type, constructor);
   }
 
-  create(type: string, id: string, terria: Terria): BaseModel | undefined {
+  create(type: string, uniqueId: string | undefined, terria: Terria): BaseModel | undefined {
     const Constructor = this.constructors.get(type);
     if (Constructor === undefined) {
       return undefined;
     }
-    return new Constructor(id, terria);
+    return new Constructor(uniqueId, terria);
   }
 }

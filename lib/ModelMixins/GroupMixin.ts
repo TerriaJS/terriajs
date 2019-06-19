@@ -1,10 +1,11 @@
 import { action, computed, observable, runInAction } from "mobx";
+import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
+import isDefined from "../Core/isDefined";
 import Model, { BaseModel } from "../Models/Model";
 import GroupTraits from "../Traits/GroupTraits";
-import CommonStrata from "../Models/CommonStrata";
-import isDefined from "../Core/isDefined";
+import ModelReference from "../Traits/ModelReference";
 
 function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
   abstract class GroupMixin extends Base {
@@ -31,7 +32,11 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
         return [];
       }
       return filterOutUndefined(
-        members.map(id => this.terria.getModelById(BaseModel, id))
+        members.map(id =>
+          ModelReference.isRemoved(id)
+            ? undefined
+            : this.terria.getModelById(BaseModel, id)
+        )
       );
     }
 
@@ -73,19 +78,31 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
       return this.loadMembersPromise;
     }
 
-    @action add(stratumId: string, member: BaseModel) {
+    @action
+    add(stratumId: string, member: BaseModel) {
+      if (member.uniqueId === undefined) {
+        throw new DeveloperError(
+          "A model without a `uniqueId` cannot be added to a group."
+        );
+      }
+
       const members = this.getTrait(stratumId, "members");
       if (isDefined(members)) {
-        members.push(member.globalId);
+        members.push(member.uniqueId);
       } else {
-        this.setTrait(stratumId, "members", [member.globalId]);
+        this.setTrait(stratumId, "members", [member.uniqueId]);
       }
     }
 
-    @action remove(stratumId: string, member: BaseModel) {
+    @action
+    remove(stratumId: string, member: BaseModel) {
+      if (member.uniqueId === undefined) {
+        return;
+      }
+
       const members = this.getTrait(stratumId, "members");
       if (isDefined(members)) {
-        const index = members.indexOf(member.globalId);
+        const index = members.indexOf(member.uniqueId);
         if (index !== -1) {
           members.splice(index, 1);
         }

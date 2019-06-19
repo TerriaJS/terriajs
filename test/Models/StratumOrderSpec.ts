@@ -62,8 +62,8 @@ describe("StratumOrder", function() {
       ["f", f]
     ]);
 
-    expect(so.sortBottomToTop(strata)).toEqual([b, f, a, c, d, e]);
-    expect(so.sortTopToBottom(strata)).toEqual([e, d, c, a, f, b]);
+    expect(Array.from(so.sortBottomToTop(strata).values())).toEqual([b, f, a, c, d, e]);
+    expect(Array.from(so.sortTopToBottom(strata).values())).toEqual([e, d, c, a, f, b]);
   });
 
   it("add functions do not change the priority of existing strata", function() {

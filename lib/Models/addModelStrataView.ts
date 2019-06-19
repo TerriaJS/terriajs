@@ -9,6 +9,7 @@ export interface Flattenable<T> {
   readonly strataTopToBottom: (
     | ModelPropertiesFromTraits<T>
     | StratumFromTraits<T>)[];
+  readonly strata: any; // TODO
 }
 
 /**
