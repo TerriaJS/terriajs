@@ -1,44 +1,44 @@
 import L from "leaflet";
 import { autorun } from "mobx";
 import { createTransformer } from "mobx-utils";
+import cesiumCancelAnimationFrame from "terriajs-cesium/Source/Core/cancelAnimationFrame";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Clock from "terriajs-cesium/Source/Core/Clock";
-import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
-import DataSourceCollection from "terriajs-cesium/Source/DataSources/DataSourceCollection";
+import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import EventHelper from "terriajs-cesium/Source/Core/EventHelper";
 import FeatureDetection from "terriajs-cesium/Source/Core/FeatureDetection";
-import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
-import LeafletDataSourceDisplay from "../Map/LeafletDataSourceDisplay";
-import LeafletScene from "../Map/LeafletScene";
-import LeafletVisualizer from "../Map/LeafletVisualizer";
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import cesiumRequestAnimationFrame from "terriajs-cesium/Source/Core/requestAnimationFrame";
-import cesiumCancelAnimationFrame from "terriajs-cesium/Source/Core/cancelAnimationFrame";
-import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
+import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
+import DataSourceCollection from "terriajs-cesium/Source/DataSources/DataSourceCollection";
+import Entity from "terriajs-cesium/Source/DataSources/Entity";
+import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
+import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import when from "terriajs-cesium/Source/ThirdParty/when";
-
+import filterOutUndefined from "../Core/filterOutUndefined";
+import isDefined from "../Core/isDefined";
+import runLater from "../Core/runLater";
 import CesiumTileLayer from "../Map/CesiumTileLayer";
-import Feature from "./Feature";
-import GlobeOrMap, { CameraView } from "./GlobeOrMap";
+import LeafletDataSourceDisplay from "../Map/LeafletDataSourceDisplay";
+import LeafletScene from "../Map/LeafletScene";
 import LeafletSelectionIndicator from "../Map/LeafletSelectionIndicator";
-import Mappable, { ImageryParts } from "./Mappable";
+import LeafletVisualizer from "../Map/LeafletVisualizer";
 import PickedFeatures, {
   ProviderCoords,
   ProviderCoordsMap
 } from "../Map/PickedFeatures";
-import Terria from "./Terria";
-import TerriaViewer from "../ViewModels/TerriaViewer";
 import rectangleToLatLngBounds from "../Map/rectangleToLatLngBounds";
-import runLater from "../Core/runLater";
-import hasTraits from "./hasTraits";
 import SplitterTraits from "../Traits/SplitterTraits";
-import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
-import isDefined from "../Core/isDefined";
+import TerriaViewer from "../ViewModels/TerriaViewer";
+import Feature from "./Feature";
+import GlobeOrMap, { CameraView } from "./GlobeOrMap";
+import hasTraits from "./hasTraits";
+import Mappable, { ImageryParts } from "./Mappable";
+import Terria from "./Terria";
 
 interface SplitterClips {
   left: string;
@@ -73,6 +73,7 @@ export default class Leaflet extends GlobeOrMap {
   private readonly _attributionControl: L.Control.Attribution;
   private readonly _leafletVisualizer: LeafletVisualizer;
   private readonly _eventHelper: EventHelper;
+  private readonly _selectionIndicator: LeafletSelectionIndicator;
   private _stopRequestAnimationFrame: boolean = false;
   private _cesiumReqAnimFrameId: number | undefined;
   private _pickedFeatures: PickedFeatures | undefined = undefined;
@@ -82,9 +83,8 @@ export default class Leaflet extends GlobeOrMap {
   private readonly _disposeWorkbenchMapItemsSubscription: () => void;
   private readonly _disposeSplitterPositionSubscription: () => void;
   private readonly _disposeShowSplitterSubscription: () => void;
-  private readonly _selectionIndicator: LeafletSelectionIndicator;
-  private readonly _disposeSelectedFeatureSubscription: () => void;
-  private readonly _disposeDisableMouseInteractionSubscription: () => void;
+  private readonly _disposeDisableInteractionSubscription: () => void;
+  private _disposeSelectedFeatureSubscription?: () => void;
 
   private _createImageryLayer: (
     ip: Cesium.ImageryProvider
@@ -134,21 +134,10 @@ export default class Leaflet extends GlobeOrMap {
     //     console.log(e.boxZoomBounds);
     // });
 
-    this.map.on("click", e => {
-      // if (!that._dragboxcompleted && that.map.dragging.enabled()) {
-      this._pickFeatures((<L.LeafletMouseEvent>e).latlng);
-      // }
-      // that._dragboxcompleted = false;
-    });
-
-    this.scene.featureClicked.addEventListener((entity, event) => {
-      this._featurePicked(entity, event);
-    });
-
     this.dataSourceDisplay = new LeafletDataSourceDisplay({
       scene: this.scene,
       dataSourceCollection: this.dataSources,
-      visualizersCallback: <any>this._leafletVisualizer.visualizersCallback // fix type error
+      visualizersCallback: <any>this._leafletVisualizer.visualizersCallback // TODO: fix type error
     });
 
     this._eventHelper = new EventHelper();
@@ -167,10 +156,6 @@ export default class Leaflet extends GlobeOrMap {
     };
 
     ticker();
-
-    this._disposeSelectedFeatureSubscription = autorun(() => {
-      this._selectFeature();
-    });
 
     this._disposeWorkbenchMapItemsSubscription = this.observeModelLayer();
 
@@ -192,20 +177,41 @@ export default class Leaflet extends GlobeOrMap {
       });
     });
 
-    this._disposeDisableMouseInteractionSubscription = autorun(() => {
+    this._disposeDisableInteractionSubscription = autorun(() => {
       const map = this.map;
-      const interactions = [
+      const interactions = filterOutUndefined([
         map.touchZoom,
         map.doubleClickZoom,
         map.scrollWheelZoom,
         map.boxZoom,
         map.keyboard,
-        map.dragging
-      ];
-      if (this.terriaViewer.disableMouseInteraction) {
+        map.dragging,
+        map.tap
+      ]);
+      const pickLocation = (e: L.LeafletEvent) => {
+        // if (!this._dragboxcompleted && that.map.dragging.enabled()) {
+        this._pickFeatures((<L.LeafletMouseEvent>e).latlng);
+        // }
+        // this._dragboxcompleted = false;
+      };
+      const pickFeature = (entity: Entity, event: L.LeafletMouseEvent) => {
+        this._featurePicked(entity, event);
+      };
+
+      if (this.terriaViewer.disableInteraction) {
         interactions.forEach(handler => handler.disable());
+        this.map.off("click", pickLocation);
+        this.scene.featureClicked.removeEventListener(pickFeature);
+        this._disposeSelectedFeatureSubscription &&
+          this._disposeSelectedFeatureSubscription();
       } else {
         interactions.forEach(handler => handler.enable());
+        this.map.on("click", pickLocation);
+        this.scene.featureClicked.addEventListener(pickFeature);
+        this._disposeSelectedFeatureSubscription = autorun(() => {
+          const feature = this.terria.selectedFeature;
+          this._selectFeature(feature);
+        });
       }
     });
   }
@@ -233,11 +239,13 @@ export default class Leaflet extends GlobeOrMap {
   }
 
   destroy() {
-    this._disposeSelectedFeatureSubscription();
+    this._disposeSelectedFeatureSubscription &&
+      this._disposeSelectedFeatureSubscription();
     this._disposeWorkbenchMapItemsSubscription();
     this._disposeShowSplitterSubscription();
     this._disposeSplitterPositionSubscription();
     this._eventHelper.removeAll();
+    this._disposeDisableInteractionSubscription();
     // This variable prevents a race condition if destroy() is called
     // synchronously as a result of timelineClock ticking due to ticker()
     this._stopRequestAnimationFrame = true;
@@ -720,9 +728,7 @@ export default class Leaflet extends GlobeOrMap {
     return result;
   }
 
-  private _selectFeature() {
-    const feature = this.terria.selectedFeature;
-
+  private _selectFeature(feature: Feature | undefined) {
     this._highlightFeature(feature);
 
     if (isDefined(feature) && isDefined(feature.position)) {
