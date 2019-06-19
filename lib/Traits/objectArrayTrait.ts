@@ -21,6 +21,7 @@ export interface ObjectArrayTraitOptions<T extends ModelTraits>
   extends TraitOptions {
   type: TraitsConstructorWithRemoval<T>;
   idProperty: keyof T | "index";
+  modelClass?: ModelConstructor<Model<T>>;
 }
 
 export default function objectArrayTrait<T extends ModelTraits>(
@@ -42,13 +43,13 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
   readonly type: TraitsConstructorWithRemoval<T>;
   readonly idProperty: keyof T | "index";
   readonly decoratorForFlattened = computed.struct;
-  readonly ModelClass: ModelConstructor<Model<T>>;
+  readonly modelClass: ModelConstructor<Model<T>>;
 
   constructor(id: string, options: ObjectArrayTraitOptions<T>) {
     super(id, options);
     this.type = options.type;
     this.idProperty = options.idProperty;
-    this.ModelClass = traitsClassToModelClass(this.type);
+    this.modelClass = options.modelClass || traitsClassToModelClass(this.type);
   }
 
   getValue(model: BaseModel): readonly Model<T>[] | undefined {
@@ -105,7 +106,7 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
 
     // Flatten each unique object.
     return result.map(modelSource => {
-      const result = new this.ModelClass(model.uniqueId, model.terria);
+      const result = new this.modelClass(model.uniqueId, model.terria);
       modelSource.forEach((stratum: any, stratumId) => {
         result.strata.set(stratumId, stratum);
       });

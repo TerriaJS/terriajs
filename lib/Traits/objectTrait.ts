@@ -11,6 +11,7 @@ import TraitsConstructor from "./TraitsConstructor";
 export interface ObjectTraitOptions<T extends ModelTraits>
   extends TraitOptions {
   type: TraitsConstructor<T>;
+  modelClass?: ModelConstructor<Model<T>>;
   isNullable?: boolean;
 }
 
@@ -30,17 +31,17 @@ export class ObjectTrait<T extends ModelTraits> extends Trait {
   readonly type: TraitsConstructor<T>;
   readonly isNullable: boolean;
   readonly decoratorForFlattened = computed.struct;
-  readonly ModelClass: ModelConstructor<Model<T>>;
+  readonly modelClass: ModelConstructor<Model<T>>;
 
   constructor(id: string, options: ObjectTraitOptions<T>) {
     super(id, options);
     this.type = options.type;
     this.isNullable = options.isNullable || false;
-    this.ModelClass = traitsClassToModelClass(this.type);
+    this.modelClass = options.modelClass || traitsClassToModelClass(this.type);
   }
 
   getValue(model: BaseModel): Model<T> | undefined {
-    const result = new this.ModelClass(model.uniqueId, model.terria);
+    const result = new this.modelClass(model.uniqueId, model.terria);
     model.strata.forEach((parentStratum: any, stratumId) => {
       if (!parentStratum) return;
       const childStratum = parentStratum[this.id];
