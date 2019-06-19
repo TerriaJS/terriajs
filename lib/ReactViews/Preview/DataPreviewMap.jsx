@@ -110,7 +110,7 @@ class DataPreviewMap extends React.Component {
     );
     runInAction(() => {
       this.previewViewer.viewerMode = "leaflet";
-      this.previewViewer.disableMouseInteraction = true;
+      this.previewViewer.disableInteraction = true;
     });
     // Not yet implemented
     // previewViewer.hideTerriaLogo = true;
@@ -228,20 +228,16 @@ class DataPreviewMap extends React.Component {
           properties: {
             stroke: "#08ABD5",
             "stroke-width": 2,
-            "stroke-opacity": 1,
-            fill: "#555555",
-            "fill-opacity": 0
+            "stroke-opacity": 1
           },
           geometry: {
-            type: "Polygon",
+            type: "LineString",
             coordinates: [
-              [
-                [west, south],
-                [west, north],
-                [east, north],
-                [east, south],
-                [west, south]
-              ]
+              [west, south],
+              [west, north],
+              [east, north],
+              [east, south],
+              [west, south]
             ]
           }
         }
