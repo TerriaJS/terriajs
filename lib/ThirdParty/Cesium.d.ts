@@ -497,28 +497,68 @@ declare module "terriajs-cesium/Source/Core/sampleTerrain" {
 declare module "terriajs-cesium/Source/Core/subdivideArray" {
   export default Cesium.subdivideArray;
 }
-declare module "terriajs-cesium/Source/DataSources/BillboardGraphics" {
-  class BillboardGraphics extends Cesium.BillboardGraphics {
-    heightReference?: Cesium.Property;
-    constructor(options?: { image?: Cesium.Property;
-        show?: Cesium.Property;
-        scale?: Cesium.Property;
-        horizontalOrigin?: Cesium.Property;
-        verticalOrigin?: Cesium.Property;
-        eyeOffset?: Cesium.Property;
-        pixelOffset?: Cesium.Property;
-        rotation?: Cesium.Property;
-        alignedAxis?: Cesium.Property;
-        width?: Cesium.Property;
-        height?: Cesium.Property;
-        color?: Cesium.Property;
-        scaleByDistance?: Cesium.Property;
-        translucencyByDistance?: Cesium.Property;
-        pixelOffsetScaleByDistance?: Cesium.Property;
-        imageSubRegion?: Cesium.Property;
-        heightReference?: Cesium.Property;
-    });
+
+declare module "terriajs-cesium/Source/Core/Property" {
+  abstract class Property<T = any> {
+    readonly isConstant: boolean;
+    readonly definitionChanged: Cesium.Event;
+    getValue(time: Cesium.JulianDate, result?: T): T;
+    equals(other?: Property<T>): boolean;
+  }
+  export default Property;
 }
+
+declare module "terriajs-cesium/Source/DataSources/BillboardGraphics" {
+  import Property from "terriajs-cesium/Source/Core/Property";
+  import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
+  import BoundingRectangle from "terriajs-cesium/Source/Core/BoundingRectangle";
+  import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
+  import HorizontalOrigin from "terriajs-cesium/Source/Scene/HorizontalOrigin";
+  import VerticalOrigin from "terriajs-cesium/Source/Scene/VerticalOrigin";
+  import Color from "terriajs-cesium/Source/Core/Color";
+  import Event from "terriajs-cesium/Source/Core/Event";
+
+  class BillboardGraphics {
+    definitionChanged: Event;
+    image: Property<string>;
+    imageSubRegion: Property<BoundingRectangle>;
+    scale: Property<number>; 
+    rotation: Property<number>;
+    alignedAxis: Property<Cartesian3>;
+    horizontalOrigin: Property<HorizontalOrigin>; 
+    verticalOrigin: Property<VerticalOrigin>; 
+    color: Property<Color>; 
+    eyeOffset: Property<Cartesian3>; 
+    pixelOffset: Property<Cartesian3>; 
+    show: Property<boolean>;
+    width: Property<number>;
+    height: Property<number>;
+    scaleByDistance: Property<number>;
+    translucencyByDistance: Property<number>;
+    pixelOffsetScaleByDistance: Property<number>;
+    heightReference: Property<HeightReference>;
+    constructor(options?: {
+      image?: string;
+      imageSubRegion?: BoundingRectangle;
+      scale?: number; 
+      rotation?: number;
+      alignedAxis?: Cartesian3;
+      horizontalOrigin?: HorizontalOrigin; 
+      verticalOrigin?: VerticalOrigin; 
+      color?: Color; 
+      eyeOffset?: Cartesian3; 
+      pixelOffset?: Cartesian3; 
+      show?: boolean;
+      width?: number;
+      height?: number;
+      scaleByDistance?: number;
+      translucencyByDistance?: number;
+      pixelOffsetScaleByDistance?: number;
+      heightReference?: HeightReference;
+    });
+    clone(result?: BillboardGraphics): BillboardGraphics;
+    merge(source: BillboardGraphics): BillboardGraphics;
+  }
   export default BillboardGraphics;
 }
 declare module "terriajs-cesium/Source/DataSources/BillboardVisualizer" {

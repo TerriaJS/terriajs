@@ -5,11 +5,11 @@ export default interface BillboardData {
     /**
      * Where to put the billboard
      */
-    position: Cartesian3;
+    position?: Cartesian3;
     
     /**
      * The billboard image to draw
      */
-    billboard: BillboardGraphics;
+    billboard?: BillboardGraphics;
   }
   

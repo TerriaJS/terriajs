@@ -7,11 +7,13 @@ import RasterLayerTraits from "./RasterLayerTraits";
 import LayerOrderingTraits from "./LayerOrderingTraits";
 import MappableTraits from "./MappableTraits";
 import primitiveTrait from "./primitiveTrait";
-import BillboardTraits from "./BillboardTraits";
 
 export default class GtfsCatalogItemTraits extends mixTraits(
     UrlTraits,
-    BillboardTraits
+    CatalogMemberTraits,
+    MappableTraits,
+    RasterLayerTraits,
+    LayerOrderingTraits
   ) {
     @primitiveTrait({
       name: "GTFS API key",

@@ -8,17 +8,22 @@ import CreateModel from "./CreateModel";
 
 import GtfsCatalogItemTraits from "../Traits/GtfsCatalogItemTraits";
 import Terria from "./Terria";
-import BillboardsMixin from "./BillboardsMixin";
+import BillboardData from "./BillboardData";
+import createBillboardDataSource from './createBillboardDataSource';
+
+
 import BillboardGraphics from "terriajs-cesium/Source/DataSources/BillboardGraphics";
-import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
+import DataSource from 'terriajs-cesium/Source/DataSources/CustomDataSource'
+import { computed } from "mobx";
 
 export default class GtfsCatalogItem extends AsyncMappableMixin(
-  UrlMixin(
-    BillboardsMixin(CatalogMemberMixin(CreateModel(GtfsCatalogItemTraits)))
+  UrlMixin(CatalogMemberMixin(CreateModel(GtfsCatalogItemTraits))
   )
 ) {
+  private billboardDataList: BillboardData[] = [];
+  
   static get type() {
     return "gtfs";
   }
@@ -35,12 +40,8 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
     return new Promise(() => {
       // TODO: Load actual data
       const b: BillboardGraphics = new BillboardGraphics({
-        image: new ConstantProperty(
-          "public/img/glyphicons_242_google_maps.png"
-        ),
-        heightReference: new ConstantProperty(
-          HeightReference.RELATIVE_TO_GROUND
-        )
+        image: "public/img/glyphicons_242_google_maps.png",
+        heightReference: HeightReference.RELATIVE_TO_GROUND
       });
 
       this.billboardDataList = [];
@@ -53,5 +54,10 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
 
   protected get loadMetadataPromise(): Promise<void> {
     return Promise.resolve();
+  }
+
+  @computed
+  get mapItems(): DataSource[] {
+    return [createBillboardDataSource("gtfs_billboards", this.billboardDataList)];
   }
 }
