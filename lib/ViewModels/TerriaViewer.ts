@@ -55,7 +55,7 @@ export default class TerriaViewer {
 
   // Disable all mouse (& keyboard) interaction
   @observable
-  disableMouseInteraction: boolean = false;
+  disableInteraction: boolean = false;
 
   // Random rectangle. Work out reactivity
   // Should this be homeView instead (and have 3D view properties)?

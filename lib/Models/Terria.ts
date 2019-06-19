@@ -29,6 +29,9 @@ import NoViewer from "./NoViewer";
 import TimelineStack from "./TimelineStack";
 import updateModelFromJson from "./updateModelFromJson";
 import Workbench from "./Workbench";
+import CorsProxy from "../Core/CorsProxy";
+import { isNullOrUndefined } from "util";
+import ServerConfig from "../Core/ServerConfig";
 
 require("regenerator-runtime/runtime");
 
@@ -84,6 +87,12 @@ export default class Terria {
   supportEmail?: string;
 
   /**
+   * Gets or sets the {@link this.corsProxy} used to determine if a URL needs to be proxied and to proxy it if necessary.
+   * @type {CorsProxy}
+   */
+  corsProxy: CorsProxy = new CorsProxy();
+
+  /**
    * Gets or sets the instance to which to report Google Analytics-style log events.
    * If a global `ga` function is defined, this defaults to `GoogleAnalytics`.  Otherwise, it defaults
    * to `ConsoleAnalytics`.
@@ -113,6 +122,8 @@ export default class Terria {
     cesiumIonAccessToken: undefined,
     hideTerriaLogo: false
   };
+
+  readonly serverConfig: any = new ServerConfig();
 
   @observable
   baseMaps: BaseMapViewModel[] = [];
@@ -210,6 +221,10 @@ export default class Terria {
         return this.loadMagdaConfig(config);
       }
 
+      this.serverConfig.init(config.serverConfigUrl).then((serverConfig: any) =>
+        this.initCorsProxy(config, serverConfig)
+      );
+
       const initializationUrls = config.initializationUrls;
       return when.all(
         initializationUrls.map((initializationUrl: string) => {
@@ -248,6 +263,35 @@ export default class Terria {
         members: members
       });
     }
+  }
+
+  initCorsProxy(config: any, serverConfig: any): Promise<void> {
+    // All the "proxyableDomains" bits here are due to a pre-serverConfig mechanism for whitelisting domains.
+    // We should deprecate it.
+    
+    // If a URL was specified in the config paramaters to get the proxyable domains from, get them from that
+    var pdu = this.configParameters.proxyableDomainsUrl;
+    const proxyableDomainsPromise = pdu ? loadJson5(pdu) : Promise.resolve();
+    return proxyableDomainsPromise.then(
+      (proxyableDomains: { allowProxyFor: any; proxyableDomains: any }) => {
+        if (proxyableDomains) {
+          // format of proxyableDomains JSON file slightly differs from serverConfig format.
+          proxyableDomains.allowProxyFor =
+            proxyableDomains.allowProxyFor || proxyableDomains.proxyableDomains;
+        }
+
+        // If there isn't anything there, check the server config
+        if (typeof serverConfig === "object") {
+          serverConfig = serverConfig.config; // if server config is unavailable, this remains undefined.
+        }
+
+        this.corsProxy.init(
+          proxyableDomains || serverConfig,
+          this.configParameters.corsProxyBaseUrl,
+          config.proxyDomains // fall back to local config
+        );
+      }
+    );
   }
 
   getUserProperty(key: string) {

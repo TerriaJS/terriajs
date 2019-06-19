@@ -6,8 +6,11 @@ import { observer } from "mobx-react";
 import Styles from "./terria-viewer-wrapper.scss";
 
 import Splitter from "./Splitter";
+// eslint-disable-next-line no-unused-vars
 import TerriaViewer from "../../ViewModels/TerriaViewer";
+// eslint-disable-next-line no-unused-vars
 import Terria from "../../Models/Terria";
+// eslint-disable-next-line no-unused-vars
 import ViewState from "../../ReactViewModels/ViewState";
 
 /**
@@ -23,13 +26,19 @@ class TerriaViewerWrapper extends React.Component {
     terria: PropTypes.object.isRequired,
     viewState: PropTypes.object.isRequired
   };
+  lastMouseX = -1;
+  lastMouseY = -1;
 
-  constructor(props) {
-    super(props);
-    this.lastMouseX = -1;
-    this.lastMouseY = -1;
-    this.mapElement = React.createRef();
-  }
+  /**
+   * @argument {HTMLDivElement} container
+   */
+  containerRef = container => {
+    this.props.terria.mainViewer.attached &&
+      this.props.terria.mainViewer.detach();
+    if (container !== null) {
+      this.props.terria.mainViewer.attach(container);
+    }
+  };
 
   componentDidMount() {
     // Create the map/globe.
@@ -43,13 +52,11 @@ class TerriaViewerWrapper extends React.Component {
     if (this.props.terria.baseMaps.length > 0) {
       this.props.terria.mainViewer.baseMap = this.props.terria.baseMaps[0].mappable;
     }
-    this.props.terria.mainViewer.attach(this.mapElement.current);
   }
 
   componentWillUnmount() {
     this.props.terria.mainViewer.attached &&
       this.props.terria.mainViewer.detach();
-    this.mapElement.current.innerHTML = "";
   }
 
   onMouseMove(event) {
@@ -76,11 +83,11 @@ class TerriaViewerWrapper extends React.Component {
         <div className={Styles.mapPlaceholder}>
           Loading the map, please wait...
         </div>
-        {/* <Splitter terria={this.props.terria} /> */}
+        <Splitter terria={this.props.terria} />
         <div
           id="cesiumContainer"
           className={Styles.cesiumContainer}
-          ref={this.mapElement}
+          ref={this.containerRef}
           onMouseMove={this.onMouseMove}
         />
       </aside>

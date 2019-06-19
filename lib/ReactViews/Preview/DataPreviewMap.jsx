@@ -9,10 +9,42 @@ import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import filterOutUndefined from "../../Core/filterOutUndefined";
 import CommonStrata from "../../Models/CommonStrata";
 import GeoJsonCatalogItem from "../../Models/GeoJsonCatalogItem";
-import Mappable from "../../Models/Mappable";
+// eslint-disable-next-line no-unused-vars
+import Mappable, { ImageryParts } from "../../Models/Mappable";
+// eslint-disable-next-line no-unused-vars
 import Terria from "../../Models/Terria";
 import TerriaViewer from "../../ViewModels/TerriaViewer";
 import Styles from "./data-preview-map.scss";
+
+/**
+ * @implements {Mappable}
+ */
+class AdaptForPreviewMap {
+  /**
+   *
+   * @param {Mappable} mappable
+   */
+  constructor(mappable) {
+    this._mappable = mappable;
+  }
+
+  loadMapItems() {
+    return this._mappable.loadMapItems();
+  }
+
+  @computed
+  get mapItems() {
+    return this._mappable.mapItems.map(m =>
+      ImageryParts.is(m)
+        ? {
+            ...m,
+            alpha: m.alpha !== 0.0 ? 1.0 : 0.0,
+            show: true
+          }
+        : m
+    );
+  }
+}
 
 /**
  * Leaflet-based preview map that sits within the preview.
@@ -26,6 +58,7 @@ import Styles from "./data-preview-map.scss";
  *
  */
 
+// TODO: Can this.props.previewed be undefined?
 /**
  *
  * @extends {React.Component<Props>}
@@ -60,9 +93,8 @@ class DataPreviewMap extends React.Component {
      * @param {HTMLElement | null} container
      */
     this.containerRef = container => {
-      if (container === null) {
-        this.previewViewer.attached && this.previewViewer.detach();
-      } else {
+      this.previewViewer.attached && this.previewViewer.detach();
+      if (container !== null) {
         this.initPreview(container);
       }
     };
@@ -71,14 +103,14 @@ class DataPreviewMap extends React.Component {
       computed(() => {
         // Can previewed be undefined?
         return filterOutUndefined([
-          this.props.previewed,
+          new AdaptForPreviewMap(this.props.previewed),
           this.boundingRectangleCatalogItem
         ]);
       })
     );
     runInAction(() => {
       this.previewViewer.viewerMode = "leaflet";
-      this.previewViewer.disableMouseInteraction = true;
+      this.previewViewer.disableInteraction = true;
     });
     // Not yet implemented
     // previewViewer.hideTerriaLogo = true;
@@ -95,15 +127,12 @@ class DataPreviewMap extends React.Component {
       "Initialising preview map. This might be expensive, so this should only show up when the preview map disappears and reappears"
     );
     this.isZoomedToExtent = false;
-      // Change this to choose positron if it's available
-      if (this.previewViewer.baseMap === undefined) {
-        this.previewViewer.baseMap =
-          this.props.terria.baseMaps.length > 0
-            ? this.props.terria.baseMaps[0].mappable
-            : undefined;
-      }
-    if (this.previewViewer.attached) {
-      this.previewViewer.detach();
+    // Change this to choose positron if it's available
+    if (this.previewViewer.baseMap === undefined) {
+      this.previewViewer.baseMap =
+        this.props.terria.baseMaps.length > 0
+          ? this.props.terria.baseMaps[0].mappable
+          : undefined;
     }
     this.previewViewer.attach(container);
     this._disposePreviewBadgeTextUpdater = autorun(() => {
@@ -142,7 +171,10 @@ class DataPreviewMap extends React.Component {
   }
 
   componentWillUnmount() {
-    this._disposePreviewBadgeTextUpdater();
+    this._disposePreviewBadgeTextUpdater &&
+      this._disposePreviewBadgeTextUpdater();
+    this._disposeZoomToExtentSubscription &&
+      this._disposeZoomToExtentSubscription();
     this.previewViewer.detach();
 
     if (this._unsubscribeErrorHandler) {
@@ -196,20 +228,16 @@ class DataPreviewMap extends React.Component {
           properties: {
             stroke: "#08ABD5",
             "stroke-width": 2,
-            "stroke-opacity": 1,
-            fill: "#555555",
-            "fill-opacity": 0
+            "stroke-opacity": 1
           },
           geometry: {
-            type: "Polygon",
+            type: "LineString",
             coordinates: [
-              [
-                [west, south],
-                [west, north],
-                [east, north],
-                [east, south],
-                [west, south]
-              ]
+              [west, south],
+              [west, north],
+              [east, north],
+              [east, south],
+              [west, south]
             ]
           }
         }
