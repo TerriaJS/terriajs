@@ -43,6 +43,7 @@ import WebMapServiceCapabilities, {
   getRectangleFromLayer
 } from "./WebMapServiceCapabilities";
 import ModelPropertiesFromTraits from "./ModelPropertiesFromTraits";
+import Model from "./Model";
 
 interface LegendUrl {
   url: string;
@@ -356,17 +357,7 @@ class WebMapServiceCatalogItem
     return true;
   }
 
-  constructor(id: string, terria: Terria) {
-    super(id, terria);
-    if (this.opacity === undefined) {
-      console.log("Whaaaaa... This should have a default of 0.8");
-    }
-    autorun(() => {
-      console.log(`Opacity changed to ${this.opacity}`);
-    });
-  }
-
-  protected get loadMetadataPromise(): Promise<void> {
+  protected forceLoadMetadata(): Promise<void> {
     return GetCapabilitiesStratum.load(this).then(stratum => {
       runInAction(() => {
         this.strata.set(
@@ -432,7 +423,7 @@ class WebMapServiceCatalogItem
   }
 
   @computed
-  get legends(): readonly ModelPropertiesFromTraits<LegendTraits>[] {
+  get legends(): readonly Model<LegendTraits>[] {
     const superLegends = super.legends;
     if (superLegends !== undefined) {
       return superLegends;
@@ -442,7 +433,7 @@ class WebMapServiceCatalogItem
     const layers = this.layersArray;
     const styles = this.stylesArray;
 
-    const result: ModelPropertiesFromTraits<LegendTraits>[] = [];
+    const result: Model<LegendTraits>[] = [];
 
     for (let i = 0; i < layers.length; ++i) {
       const layer = layers[i];

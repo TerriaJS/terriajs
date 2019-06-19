@@ -1,23 +1,23 @@
-import { observable, runInAction, toJS } from "mobx";
+import { toJS } from "mobx";
 import JsonValue, { isJsonObject } from "../Core/Json";
 import loadJson from "../Core/loadJson";
 import makeRealPromise from "../Core/makeRealPromise";
 import TerriaError from "../Core/TerriaError";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
+import GroupMixin from "../ModelMixins/GroupMixin";
 import MagdaMixin from "../ModelMixins/MagdaMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import MagdaCatalogGroupTraits from "../Traits/MagdaCatalogGroupTraits";
+import CatalogMemberFactory from "./CatalogMemberFactory";
 import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
 import MagdaCatalogItem from "./MagdaCatalogItem";
+import magdaRecordToCatalogMemberDefinition from "./magdaRecordToCatalogMember";
 import { BaseModel } from "./Model";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import Terria from "./Terria";
-import upsertModelFromJson from "./upsertModelFromJson";
-import CatalogMemberFactory from "./CatalogMemberFactory";
-import GroupMixin from "../ModelMixins/GroupMixin";
-import magdaRecordToCatalogMemberDefinition from "./magdaRecordToCatalogMember";
+import updateModelFromJson from "./updateModelFromJson";
 
 export default class MagdaCatalogGroup extends MagdaMixin(
   GroupMixin(
@@ -31,9 +31,6 @@ export default class MagdaCatalogGroup extends MagdaMixin(
     return MagdaCatalogGroup.type;
   }
 
-  @observable
-  private _reference: BaseModel | undefined;
-
   constructor(id: string, terria: Terria) {
     super(id, terria);
 
@@ -44,11 +41,9 @@ export default class MagdaCatalogGroup extends MagdaMixin(
     );
   }
 
-  get dereferenced(): BaseModel | undefined {
-    return this._reference;
-  }
-
-  protected get loadReferencePromise(): Promise<void> {
+  protected forceLoadReference(
+    previousTarget: BaseModel | undefined
+  ): Promise<BaseModel | undefined> {
     return new Promise(resolve => {
       const url = this.url;
       const recordUri = this.buildMagdaRecordUri({
@@ -69,7 +64,7 @@ export default class MagdaCatalogGroup extends MagdaMixin(
       const proxiedUrl = proxyCatalogItemUrl(this, recordUri.toString(), "1d");
 
       const terria = this.terria;
-      const id = this.id;
+      const id = this.uniqueId;
       const name = this.name;
       const definition = toJS(this.definition);
       const distributionFormats = this.preparedDistributionFormats;
@@ -77,7 +72,7 @@ export default class MagdaCatalogGroup extends MagdaMixin(
       const jsonPromise = makeRealPromise<JsonValue>(loadJson(proxiedUrl));
       const loadPromise = jsonPromise.then(groupJson => {
         if (!isJsonObject(groupJson) || !isJsonObject(groupJson.aspects)) {
-          return;
+          return Promise.resolve(undefined);
         }
 
         const terriaAspect = isJsonObject(groupJson.aspects.terria)
@@ -127,36 +122,44 @@ export default class MagdaCatalogGroup extends MagdaMixin(
         }
 
         const dereferenced =
-          this._reference && this._reference.type === groupDefinition.type
-            ? this._reference
-            : CatalogMemberFactory.create(groupDefinition.type, id, terria);
+          previousTarget && previousTarget.type === groupDefinition.type
+            ? previousTarget
+            : CatalogMemberFactory.create(
+                groupDefinition.type,
+                undefined,
+                terria
+              );
+
+        if (dereferenced === undefined) {
+          throw new TerriaError({
+            sender: this,
+            title: "Unable to create catalog member",
+            message: `Catalog member of type ${
+              groupDefinition.type
+            } does not exist.`
+          });
+        }
 
         // TODO: if this model already exists, should we replace
         // its definition stratum entirely rather than updating it?
-        upsertModelFromJson(
-          CatalogMemberFactory,
-          terria,
-          id,
+        updateModelFromJson(
           dereferenced,
           CommonStrata.definition,
           groupDefinition
         );
 
-        runInAction(() => {
-          this._reference = dereferenced;
-        });
-
         if (GroupMixin.isMixedInto(dereferenced)) {
-          return dereferenced.loadMembers();
+          return dereferenced.loadMembers().then(() => dereferenced);
         } else if (CatalogMemberMixin.isMixedInto(dereferenced)) {
-          return dereferenced.loadMetadata();
+          return dereferenced.loadMetadata().then(() => dereferenced);
         }
+        return Promise.resolve(dereferenced);
       });
       resolve(loadPromise);
     });
   }
 
-  protected get loadMetadataPromise(): Promise<void> {
+  protected forceLoadMetadata(): Promise<void> {
     return this.loadReference();
   }
 

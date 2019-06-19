@@ -24,7 +24,7 @@ export default function upsertModelFromJson(
         });
       }
 
-      id = parentId + "/" + localId;
+      id = (parentId || "") + "/" + localId;
     }
 
     model = terria.getModelById(BaseModel, id);

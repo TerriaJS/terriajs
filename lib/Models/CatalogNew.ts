@@ -37,7 +37,7 @@ export default class Catalog {
 
   get userAddedDataGroupIfItExists(): CatalogGroup | undefined {
     const group = this.group.memberModels.find(
-      m => m.id === USER_ADDED_CATEGORY_NAME
+      m => m.uniqueId === USER_ADDED_CATEGORY_NAME
     );
     return <CatalogGroup | undefined>group;
   }

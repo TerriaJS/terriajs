@@ -51,12 +51,12 @@ class OuterTraits extends ModelTraits {
 class TestModel extends CreateModel(OuterTraits) {}
 
 describe("objectArrayTrait", function() {
-  it("returns undefined if all strata are undefined", function() {
+  it("returns an empty model if all strata are undefined", function() {
     const terria = new Terria();
     const model = new TestModel("test", terria);
     model.strata.set("definition", createStratumInstance(OuterTraits));
     model.strata.set("user", createStratumInstance(OuterTraits));
-    expect(model.inner).toBeUndefined();
+    expect(model.inner).toBeDefined();
   });
 
   it("combines values from different strata", function() {

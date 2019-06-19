@@ -3,6 +3,7 @@ import TraitsConstructor from "../Traits/TraitsConstructor";
 import addModelStrataView from "./addModelStrataView";
 import createStratumInstance from "./createStratumInstance";
 import ModelPropertiesFromTraits from "./ModelPropertiesFromTraits";
+import CommonStrata from "./CommonStrata";
 
 /**
  * Creates an empty instance implementing `ModelPropertiesFromTraits<Traits>`.
@@ -14,9 +15,11 @@ import ModelPropertiesFromTraits from "./ModelPropertiesFromTraits";
 export default function createEmptyModel<
   T extends TraitsConstructor<ModelTraits>
 >(Traits: T): ModelPropertiesFromTraits<InstanceType<T>> {
+  const stratum = createStratumInstance(Traits);
   return addModelStrataView(
     {
-      strataTopToBottom: [createStratumInstance(Traits)]
+      strataTopToBottom: [stratum],
+      strata: new Map([[CommonStrata.definition, stratum]])
     },
     Traits
   );

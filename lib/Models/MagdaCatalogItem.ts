@@ -1,6 +1,6 @@
 import { computed, observable, toJS } from "mobx";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
-import JsonValue, { isJsonObject, JsonArray } from "../Core/Json";
+import JsonValue, { isJsonObject, JsonArray, JsonObject } from "../Core/Json";
 import loadJson from "../Core/loadJson";
 import makeRealPromise from "../Core/makeRealPromise";
 import TerriaError from "../Core/TerriaError";
@@ -20,6 +20,7 @@ import upsertModelFromJson from "./upsertModelFromJson";
 import StratumFromTraits from "./StratumFromTraits";
 import MagdaMixin from "../ModelMixins/MagdaMixin";
 import magdaRecordToCatalogMemberDefinition from "./magdaRecordToCatalogMember";
+import updateModelFromJson from "./updateModelFromJson";
 
 export default class MagdaCatalogItem extends MagdaMixin(
   ReferenceMixin(
@@ -91,9 +92,6 @@ export default class MagdaCatalogItem extends MagdaMixin(
     })
   ];
 
-  @observable
-  private _reference: BaseModel | undefined;
-
   get type() {
     return MagdaCatalogItem.type;
   }
@@ -108,15 +106,13 @@ export default class MagdaCatalogItem extends MagdaMixin(
     );
   }
 
-  get dereferenced(): BaseModel | undefined {
-    return this._reference;
-  }
-
-  protected get loadMetadataPromise(): Promise<void> {
+  protected forceLoadMetadata(): Promise<void> {
     return this.loadReference();
   }
 
-  protected get loadReferencePromise(): Promise<void> {
+  protected forceLoadReference(
+    previousTarget: BaseModel | undefined
+  ): Promise<BaseModel | undefined> {
     const url = this.url;
     if (url === undefined) {
       return Promise.reject(
@@ -128,6 +124,8 @@ export default class MagdaCatalogItem extends MagdaMixin(
       );
     }
 
+    const terria = this.terria;
+    const id = this.uniqueId;
     const name = this.name;
     const distributionId = this.distributionId;
     const definition = toJS(this.definition);
@@ -152,22 +150,46 @@ export default class MagdaCatalogItem extends MagdaMixin(
           distributionFormats: distributionFormats
         });
       })
-      .then(modelDefinition => {
-        const model = upsertModelFromJson(
-          CatalogMemberFactory,
-          this.terria,
-          this.id,
-          undefined,
-          CommonStrata.definition,
-          modelDefinition
-        );
-        if (CatalogMemberMixin.isMixedInto(model)) {
-          return model.loadMetadata().then(() => <BaseModel>model);
+      .then(
+        (
+          modelDefinition: JsonObject | undefined
+        ): Promise<BaseModel | undefined> => {
+          if (modelDefinition === undefined || !modelDefinition.type) {
+            return Promise.resolve(undefined);
+          }
+
+          const dereferenced =
+            previousTarget && previousTarget.type === modelDefinition.type
+              ? previousTarget
+              : CatalogMemberFactory.create(
+                  <string>modelDefinition.type,
+                  id,
+                  terria
+                );
+
+          if (dereferenced === undefined) {
+            throw new TerriaError({
+              sender: this,
+              title: "Unable to create catalog member",
+              message: `Catalog member of type ${
+                modelDefinition.type
+              } does not exist.`
+            });
+          }
+
+          updateModelFromJson(
+            dereferenced,
+            CommonStrata.definition,
+            modelDefinition
+          );
+
+          if (CatalogMemberMixin.isMixedInto(dereferenced)) {
+            return dereferenced
+              .loadMetadata()
+              .then(() => <BaseModel>dereferenced);
+          }
+          return Promise.resolve(dereferenced);
         }
-        return model;
-      })
-      .then(model => {
-        this._reference = model;
-      });
+      );
   }
 }
