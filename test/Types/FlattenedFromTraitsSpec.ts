@@ -1,12 +1,13 @@
+import { JsonObject } from "../../lib/Core/Json";
+import {
+  AllowsUndefined,
+  Equals,
+  IsWritable,
+  IsWritableArray
+} from "../../lib/Core/TypeConditionals";
 import FlattenedFromTraits from "../../lib/Models/FlattenedFromTraits";
 import TraitsForTesting, { NestedTraits } from "./TraitsForTesting";
 import { expectFalse, expectTrue } from "./TypeChecks";
-import {
-  Equals,
-  IsWritable,
-  AllowsUndefined,
-  IsWritableArray
-} from "../../lib/Core/TypeConditionals";
 
 type Flattened = FlattenedFromTraits<TraitsForTesting>;
 const flattened: Flattened = <any>{};
@@ -14,9 +15,9 @@ const flattened: Flattened = <any>{};
 // Simple properties allow undefined, whether they have a default or not.
 expectTrue<Equals<typeof flattened.withDefault, number | undefined>>();
 expectTrue<Equals<typeof flattened.withoutDefault, number | undefined>>();
-expectTrue<Equals<typeof flattened.unknownObject, object | undefined>>();
+expectTrue<Equals<typeof flattened.unknownObject, JsonObject | undefined>>();
 expectTrue<
-  Equals<typeof flattened.unknownObjectWithDefault, object | undefined>
+  Equals<typeof flattened.unknownObjectWithDefault, JsonObject | undefined>
 >();
 expectTrue<Equals<typeof flattened.withNull, string | null | undefined>>();
 expectTrue<
@@ -39,9 +40,9 @@ if (nested) {
   // All nested properties allow undefined.
   expectTrue<Equals<typeof nested.withDefault, number | undefined>>();
   expectTrue<Equals<typeof nested.withoutDefault, number | undefined>>();
-  expectTrue<Equals<typeof nested.unknownObject, object | undefined>>();
+  expectTrue<Equals<typeof nested.unknownObject, JsonObject | undefined>>();
   expectTrue<
-    Equals<typeof nested.unknownObjectWithDefault, object | undefined>
+    Equals<typeof nested.unknownObjectWithDefault, JsonObject | undefined>
   >();
   expectTrue<Equals<typeof nested.withNull, string | null | undefined>>();
 
@@ -72,9 +73,9 @@ if (array) {
   // Properties in traits in arrays allow undefined.
   expectTrue<Equals<typeof first.withDefault, number | undefined>>();
   expectTrue<Equals<typeof first.withoutDefault, number | undefined>>();
-  expectTrue<Equals<typeof first.unknownObject, object | undefined>>();
+  expectTrue<Equals<typeof first.unknownObject, JsonObject | undefined>>();
   expectTrue<
-    Equals<typeof first.unknownObjectWithDefault, object | undefined>
+    Equals<typeof first.unknownObjectWithDefault, JsonObject | undefined>
   >();
   expectTrue<Equals<typeof first.withNull, string | null | undefined>>();
 

@@ -1,27 +1,18 @@
 "use strict";
 
-import React from "react";
-// import createReactClass from "create-react-class";
-import PropTypes from "prop-types";
 import classNames from "classnames";
-import { observer } from "mobx-react";
 import { action, runInAction } from "mobx";
-
-// import ViewerMode from "../../../Models/ViewerMode";
-// import ObserveModelMixin from "../../ObserveModelMixin";
-import MenuPanel from "../../StandardUserInterface/customizable/MenuPanel";
-import Icon from "../../Icon";
-
-import Styles from "./setting-panel.scss";
-import DropdownStyles from "./panel.scss";
+import { observer } from "mobx-react";
+import PropTypes from "prop-types";
+import React from "react";
+// eslint-disable-next-line no-unused-vars
 import Terria from "../../../Models/Terria";
+// eslint-disable-next-line no-unused-vars
 import ViewState from "../../../ReactViewModels/ViewState";
-
-// const viewerModeLabels = {
-//   [ViewerMode.CesiumTerrain]: "3D Terrain",
-//   [ViewerMode.CesiumEllipsoid]: "3D Smooth",
-//   [ViewerMode.Leaflet]: "2D"
-// };
+import Icon from "../../Icon";
+import MenuPanel from "../../StandardUserInterface/customizable/MenuPanel";
+import DropdownStyles from "./panel.scss";
+import Styles from "./setting-panel.scss";
 
 // The basemap and viewer setting panel
 /**
@@ -50,8 +41,6 @@ class SettingPanel extends React.Component {
         : "(None)"
     };
   }
-
-  // @computed get activeMapName
 
   selectBaseMap(baseMap, event) {
     event.stopPropagation();

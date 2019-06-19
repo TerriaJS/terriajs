@@ -43,6 +43,7 @@ import WebMapServiceCapabilities, {
   getRectangleFromLayer
 } from "./WebMapServiceCapabilities";
 import ModelPropertiesFromTraits from "./ModelPropertiesFromTraits";
+import Model from "./Model";
 
 interface LegendUrl {
   url: string;
@@ -422,7 +423,7 @@ class WebMapServiceCatalogItem
   }
 
   @computed
-  get legends(): readonly ModelPropertiesFromTraits<LegendTraits>[] {
+  get legends(): readonly Model<LegendTraits>[] {
     const superLegends = super.legends;
     if (superLegends !== undefined) {
       return superLegends;
@@ -432,7 +433,7 @@ class WebMapServiceCatalogItem
     const layers = this.layersArray;
     const styles = this.stylesArray;
 
-    const result: ModelPropertiesFromTraits<LegendTraits>[] = [];
+    const result: Model<LegendTraits>[] = [];
 
     for (let i = 0; i < layers.length; ++i) {
       const layer = layers[i];

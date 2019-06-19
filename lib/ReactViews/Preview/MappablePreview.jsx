@@ -2,12 +2,16 @@ import PropTypes from "prop-types";
 import React from "react";
 import defined from "terriajs-cesium/Source/Core/defined";
 import Mappable from "../../Models/Mappable";
+// eslint-disable-next-line no-unused-vars
 import Terria from "../../Models/Terria";
+// eslint-disable-next-line no-unused-vars
 import ViewState from "../../ReactViewModels/ViewState";
 import DataPreviewMap from "./DataPreviewMap";
 // import DataPreviewMap from "./DataPreviewMap";
 import Description from "./Description";
 import Styles from "./mappable-preview.scss";
+import { observer } from "mobx-react";
+import { action } from "mobx";
 
 /**
  * @typedef {object} Props
@@ -22,6 +26,7 @@ import Styles from "./mappable-preview.scss";
  * configuration of other parameters.
  * @extends {React.Component<Props>}
  */
+@observer
 class MappablePreview extends React.Component {
   static propTypes = {
     previewed: PropTypes.object.isRequired,
@@ -29,6 +34,7 @@ class MappablePreview extends React.Component {
     viewState: PropTypes.object.isRequired
   };
 
+  @action.bound
   toggleOnMap(event) {
     if (defined(this.props.viewState.storyShown)) {
       this.props.viewState.storyShown = false;

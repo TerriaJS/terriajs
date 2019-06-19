@@ -2,6 +2,7 @@ import primitiveTrait from "../../lib/Traits/primitiveTrait";
 import objectTrait from "../../lib/Traits/objectTrait";
 import objectArrayTrait from "../../lib/Traits/objectArrayTrait";
 import ModelTraits from "../../lib/Traits/ModelTraits";
+import { JsonObject } from "../../lib/Core/Json";
 
 export class NestedTraits extends ModelTraits {
   @primitiveTrait({
@@ -19,8 +20,8 @@ export class NestedTraits extends ModelTraits {
   withoutDefault?: number;
 
   // TODO: Add trait decorator for unknown object
-  unknownObject?: object;
-  unknownObjectWithDefault: object = {};
+  unknownObject?: JsonObject;
+  unknownObjectWithDefault: JsonObject = {};
 
   // TODO: Add/extend trait for nullable primitive
   withNull?: string | null;
@@ -81,8 +82,8 @@ export default class TraitsForTesting extends ModelTraits {
   nestedArrayWithoutDefault?: NestedTraits[];
 
   // TODO: Add trait decorator for unknown object
-  unknownObject?: object;
-  unknownObjectWithDefault: object = {};
+  unknownObject?: JsonObject;
+  unknownObjectWithDefault: JsonObject = {};
 
   // TODO: Add/extend trait for nullable primitive
   withNull?: string | null;
