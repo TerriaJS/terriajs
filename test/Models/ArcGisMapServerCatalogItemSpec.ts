@@ -2,11 +2,12 @@ import { configure, runInAction } from "mobx";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
 import ArcGisMapServerImageryProvider from "terriajs-cesium/Source/Scene/ArcGisMapServerImageryProvider";
+import when from "terriajs-cesium/Source/ThirdParty/when";
+import isDefined from "../../lib/Core/isDefined";
 import _loadWithXhr from "../../lib/Core/loadWithXhr";
 import ArcGisMapServerCatalogItem from "../../lib/Models/ArcGisMapServerCatalogItem";
 import Terria from "../../lib/Models/Terria";
 import { RectangleTraits } from "../../lib/Traits/MappableTraits";
-import isDefined from "../../lib/Core/isDefined";
 
 configure({
   enforceActions: "observed",
@@ -36,14 +37,22 @@ describe("ArcGisMapServerCatalogItem", function() {
       url = url.replace("http://example.com/42/", "");
       if (url.match("Dynamic_National_Map_Hydrography_and_Marine/MapServer")) {
         url = url.replace(/^.*\/MapServer/, "MapServer");
-        url = url.replace(/MapServer\/?\?f=json$/i, "mapserver.json");
-        url = url.replace(/MapServer\/Legend\/?\?f=json$/i, "legend.json");
-        url = url.replace(/MapServer\/Layers\/?\?f=json$/i, "layers.json");
-        url = url.replace(/MapServer\/31\/?\?f=json$/i, "31.json");
+        url = url.replace(/MapServer\/?\?.*/i, "mapserver.json");
+        url = url.replace(/MapServer\/Legend\/?\?.*/i, "legend.json");
+        url = url.replace(/MapServer\/Layers\/?\?.*/i, "layers.json");
+        url = url.replace(/MapServer\/31\/?\?.*/i, "31.json");
         args[0] =
           "test/ArcGisMapServer/Dynamic_National_Map_Hydrography_and_Marine/" +
           url;
+      } else if (url.match("/token")) {
+        args[0] =
+          "test/ArcGisMapServer/Dynamic_National_Map_Hydrography_and_Marine/token.json";
+        args[1] = "text";
+        args[2] = "GET";
+        args[3] = undefined;
+        return realLoadWithXhr(...args);
       }
+
       return realLoadWithXhr(...args);
     });
   });
@@ -94,6 +103,37 @@ describe("ArcGisMapServerCatalogItem", function() {
       expect(item.allSelectedLayers.length).toBe(1);
       expect(item.layers).toBe("31");
     });
+
+    describe("when tokenUrl is set", function() {
+      beforeEach(() => {
+        runInAction(() => {
+          item = new ArcGisMapServerCatalogItem("test", new Terria());
+          item.setTrait("definition", "url", singleLayerUrl);
+          item.setTrait("definition", "tokenUrl", "http://example.com/token");
+        });
+      });
+
+      it("fetches the token", async function() {
+        await item.loadMapItems();
+        expect(loadWithXhr.load.calls.argsFor(0)[0]).toBe(
+          "http://example.com/token"
+        );
+      });
+
+      it("adds the token to subsequent requests", async function() {
+        await item.loadMapItems();
+        const tokenre = /token=fakeToken/;
+        expect(tokenre.test(loadWithXhr.load.calls.argsFor(1)[0])).toBeTruthy();
+        expect(tokenre.test(loadWithXhr.load.calls.argsFor(2)[0])).toBeTruthy();
+        expect(tokenre.test(loadWithXhr.load.calls.argsFor(3)[0])).toBeTruthy();
+      });
+
+      it("passess the token to the imageryProvider", async function() {
+        await item.loadMapItems();
+        const imageryProvider = item.mapItems[0].imageryProvider;
+        expect(imageryProvider.token).toBe("fakeToken");
+      });
+    });
   });
 
   describe("after loading", function() {
@@ -120,29 +160,56 @@ describe("ArcGisMapServerCatalogItem", function() {
         expect(item.mapItems[0].show).toBe(false);
       });
 
-      it("correctly creates an `imageryProvider`", function() {
-        runInAction(() => {
-          item.setTrait("definition", "layers", "31");
-          item.setTrait("definition", "parameters", { foo: "bar" });
-          item.setTrait("definition", "maximumScaleBeforeMessage", 1);
+      describe("imageryProvider", function() {
+        let imageryProvider: ArcGisMapServerImageryProvider;
+
+        beforeEach(function() {
+          runInAction(() => {
+            item.setTrait("definition", "layers", "31");
+            item.setTrait("definition", "parameters", { foo: "bar" });
+            item.setTrait("definition", "maximumScaleBeforeMessage", 1);
+          });
+
+          imageryProvider = item.mapItems[0].imageryProvider;
         });
 
-        const imageryProvider = item.mapItems[0].imageryProvider;
-        expect(
-          imageryProvider instanceof ArcGisMapServerImageryProvider
-        ).toBeTruthy();
-        expect(imageryProvider.url).toBe(mapServerUrl + "/");
-        expect(imageryProvider.layers).toBe(item.layers);
-        expect(
-          imageryProvider.tilingScheme instanceof WebMercatorTilingScheme
-        ).toBeTruthy();
-        expect(imageryProvider.maximumLevel).toBe(13);
-        expect(imageryProvider.parameters).toEqual(item.parameters);
-        expect(imageryProvider.enablePickFeatures).toBe(true);
+        it("should be an ArcGisMapServerImageryProvider", function() {
+          expect(
+            imageryProvider instanceof ArcGisMapServerImageryProvider
+          ).toBeTruthy();
+        });
 
-        spyOn(item.terria.error, "raiseEvent");
-        imageryProvider.requestImage(0, 0, 100);
-        expect(item.terria.error.raiseEvent).toHaveBeenCalled();
+        it("sets the URL correctly", function() {
+          expect(imageryProvider.url).toBe(mapServerUrl + "/");
+        });
+
+        it("sets the layers correctly", function() {
+          expect(imageryProvider.layers).toBe("31");
+        });
+
+        it("tilingScheme should be a WebMercatorTilingScheme", function() {
+          expect(
+            imageryProvider.tilingScheme instanceof WebMercatorTilingScheme
+          ).toBeTruthy();
+        });
+
+        it("sets the maximumLevel", function() {
+          expect(imageryProvider.maximumLevel).toBe(13);
+        });
+
+        it("passes on request parameters", function() {
+          expect(imageryProvider.parameters).toEqual(item.parameters);
+        });
+
+        it("correctly sets enablePickFeatures", function() {
+          expect(imageryProvider.enablePickFeatures).toBe(true);
+        });
+
+        it("raise an error if requested level is above maximumScaleBeforeMessage", function() {
+          spyOn(item.terria.error, "raiseEvent");
+          imageryProvider.requestImage(0, 0, 100);
+          expect(item.terria.error.raiseEvent).toHaveBeenCalled();
+        });
       });
     });
 

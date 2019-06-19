@@ -84,12 +84,19 @@ export default class Leaflet extends GlobeOrMap {
   private readonly _disposeShowSplitterSubscription: () => void;
   private readonly _selectionIndicator: LeafletSelectionIndicator;
   private readonly _disposeSelectedFeatureSubscription: () => void;
+  private readonly _disposeDisableMouseInteractionSubscription: () => void;
 
-  constructor(terriaViewer: TerriaViewer) {
+  private _createImageryLayer: (
+    ip: Cesium.ImageryProvider
+  ) => CesiumTileLayer = createTransformer((ip: Cesium.ImageryProvider) => {
+    return new CesiumTileLayer(ip);
+  });
+
+  constructor(terriaViewer: TerriaViewer, container: string | HTMLElement) {
     super();
     this.terria = terriaViewer.terria;
     this.terriaViewer = terriaViewer;
-    this.map = L.map(this.terriaViewer.container, {
+    this.map = L.map(container, {
       zoomControl: false,
       attributionControl: false,
       maxZoom: 14, //this.maximumLeafletZoomLevel,
@@ -168,7 +175,7 @@ export default class Leaflet extends GlobeOrMap {
     this._disposeWorkbenchMapItemsSubscription = this.observeModelLayer();
 
     this._disposeSplitterPositionSubscription = autorun(() => {
-      this.terria.workbench.items.forEach(item => {
+      this.terriaViewer.items.get().forEach(item => {
         const clips = this._getClipsForSplitter();
         if (Mappable.is(item)) {
           this._updateItemForSplitter(item, clips);
@@ -177,12 +184,29 @@ export default class Leaflet extends GlobeOrMap {
     });
 
     this._disposeShowSplitterSubscription = autorun(() => {
-      this.terria.workbench.items.forEach(item => {
+      this.terriaViewer.items.get().forEach(item => {
         const clips = this._getClipsForSplitter();
         if (Mappable.is(item)) {
           this._updateItemForSplitter(item, clips);
         }
       });
+    });
+
+    this._disposeDisableMouseInteractionSubscription = autorun(() => {
+      const map = this.map;
+      const interactions = [
+        map.touchZoom,
+        map.doubleClickZoom,
+        map.scrollWheelZoom,
+        map.boxZoom,
+        map.keyboard,
+        map.dragging
+      ];
+      if (this.terriaViewer.disableMouseInteraction) {
+        interactions.forEach(handler => handler.disable());
+      } else {
+        interactions.forEach(handler => handler.enable());
+      }
     });
   }
 
@@ -227,20 +251,17 @@ export default class Leaflet extends GlobeOrMap {
   private observeModelLayer() {
     return autorun(() => {
       const catalogItems = [
-        ...this.terria.workbench.items,
+        ...this.terriaViewer.items.get(),
         this.terriaViewer.baseMap
       ];
       // Flatmap
       const allMapItems = ([] as (DataSource | ImageryParts)[]).concat(
-        ...catalogItems
-          .filter(isDefined)
-          .filter(Mappable.is)
-          .map(item => item.mapItems)
+        ...catalogItems.filter(isDefined).map(item => item.mapItems)
       );
 
       const allImagery = allMapItems.filter(ImageryParts.is).map(parts => ({
         parts: parts,
-        layer: createImageryLayer(parts.imageryProvider)
+        layer: this._createImageryLayer(parts.imageryProvider)
       }));
 
       // Delete imagery layers no longer in the model
@@ -722,12 +743,6 @@ export default class Leaflet extends GlobeOrMap {
     }
   }
 }
-
-const createImageryLayer: (
-  ip: Cesium.ImageryProvider
-) => CesiumTileLayer = createTransformer((ip: Cesium.ImageryProvider) => {
-  return new CesiumTileLayer(ip);
-});
 
 function isImageryLayer(someLayer: L.Layer): someLayer is CesiumTileLayer {
   return "imageryProvider" in someLayer;

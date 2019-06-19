@@ -73,4 +73,11 @@ export default class ArcGisMapServerCatalogItemTraits extends mixTraits(
     type: "boolean"
   })
   showTilesAfterMessage = true;
+
+  @primitiveTrait({
+    name: "Token URL",
+    description: "URL to use for fetching request tokens",
+    type: "string"
+  })
+  tokenUrl?: string;
 }

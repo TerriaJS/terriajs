@@ -7,6 +7,7 @@ import ModelReference from "./ModelReference";
 import ModelTraits from "./ModelTraits";
 import Trait, { TraitOptions } from "./Trait";
 import { computed } from "mobx";
+import { JsonArray } from "../Core/Json";
 
 export interface ModelArrayTraitOptions extends TraitOptions {
   factory?: ModelFactory;
@@ -124,6 +125,10 @@ export class ModelReferenceArrayProperty extends Trait {
     });
 
     return result;
+  }
+
+  toJson(value: ReadonlyArray<ModelReference> | undefined): any {
+    return value;
   }
 
   isSameType(trait: Trait): boolean {

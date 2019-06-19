@@ -34,6 +34,10 @@ export class AnyTrait extends Trait {
     return jsonValue;
   }
 
+  toJson(value: any): any {
+    return value;
+  }
+
   isSameType(trait: Trait): boolean {
     return trait instanceof AnyTrait;
   }

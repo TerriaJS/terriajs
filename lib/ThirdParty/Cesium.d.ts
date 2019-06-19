@@ -744,11 +744,13 @@ declare module "terriajs-cesium/Source/Scene/ArcGisMapServerImageryProvider" {
       layers?: string;
       parameters?: any;
       mapServerData?: any;
+      token?: string;
     });
-    layers?: string;
-    parameters?: any;
-    usePreCachedTiles?: boolean;
-    enablePickFeatures?: boolean;
+    readonly layers?: string;
+    readonly parameters?: any;
+    readonly usePreCachedTiles?: boolean;
+    readonly enablePickFeatures?: boolean;
+    readonly token?: string;
   }
   export default ArcGisMapServerImageryProvider;
 }

@@ -3,8 +3,8 @@ import { computed, runInAction } from "mobx";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import WebMercatorTilingScheme from "terriajs-cesium/Source/Core/WebMercatorTilingScheme";
-import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import ArcGisMapServerImageryProvider from "terriajs-cesium/Source/Scene/ArcGisMapServerImageryProvider";
+import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
 import URI from "urijs";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
@@ -20,6 +20,7 @@ import LegendTraits, { LegendItemTraits } from "../Traits/LegendTraits";
 import { RectangleTraits } from "../Traits/MappableTraits";
 import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";
+import getToken from "./getToken";
 import LoadableStratum from "./LoadableStratum";
 import Mappable from "./Mappable";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
@@ -76,7 +77,8 @@ class MapServerStratum extends LoadableStratum(
     private readonly _allLayers: Layer[],
     private readonly _legends: {
       layers?: { layerId: number; layerName: string; legend: Legend[] }[];
-    }
+    },
+    readonly token: string | undefined
   ) {
     super();
   }
@@ -94,6 +96,11 @@ class MapServerStratum extends LoadableStratum(
       });
     }
 
+    let token: string | undefined;
+    if (isDefined(item.tokenUrl)) {
+      token = await getToken(item.terria, item.tokenUrl, item.url);
+    }
+
     let layerId;
     const lastSegment = item.uri.segment(-1);
     if (lastSegment && lastSegment.match(/\d+/)) {
@@ -101,9 +108,15 @@ class MapServerStratum extends LoadableStratum(
       layerId = lastSegment;
     }
 
-    const serviceUri = getBaseURI(item);
-    const layersUri = getBaseURI(item).segment(layerId || "layers"); // either 'layers' or a number
-    const legendUri = getBaseURI(item).segment("legend");
+    let serviceUri = getBaseURI(item);
+    let layersUri = getBaseURI(item).segment(layerId || "layers"); // either 'layers' or a number
+    let legendUri = getBaseURI(item).segment("legend");
+
+    if (isDefined(token)) {
+      serviceUri = serviceUri.addQuery("token", token);
+      layersUri = layersUri.addQuery("token", token);
+      legendUri = legendUri.addQuery("token", token);
+    }
 
     // TODO: if tokenUrl, fetch and pass token as parameter
     const serviceMetadata = getJson(item, serviceUri);
@@ -134,7 +147,13 @@ class MapServerStratum extends LoadableStratum(
       });
     }
 
-    const stratum = new MapServerStratum(item, mapServer, allLayers, legend);
+    const stratum = new MapServerStratum(
+      item,
+      mapServer,
+      allLayers,
+      legend,
+      token
+    );
     return stratum;
   }
 
@@ -292,7 +311,8 @@ export default class ArcGisMapServerCatalogItem
       parameters: this.parameters,
       enablePickFeatures: this.allowFeaturePicking,
       usePreCachedTilesIfAvailable: !dynamicRequired,
-      mapServerData: stratum.mapServerData
+      mapServerData: stratum.mapServerData,
+      token: stratum.token
     });
 
     const maximumLevelBeforeMessage = maximumScaleToLevel(
