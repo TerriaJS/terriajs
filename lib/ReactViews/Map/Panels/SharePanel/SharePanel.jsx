@@ -271,6 +271,44 @@ const SharePanel = createReactClass({
     );
   },
 
+  onAddWebDataClicked() {
+    this.setState({
+      isOpen: false
+    });
+    this.props.viewState.openUserData();
+  },
+
+  hasUserAddedData() {
+    return this.props.terria.catalog.userAddedDataGroup.items.length > 0;
+  },
+
+  renderWarning() {
+    return (
+      <If condition={this.hasUserAddedData()}>
+        <div className={Styles.warning}>
+          <p className={Styles.paragraph}>
+            <strong>Note:</strong>
+          </p>
+          <p className={Styles.paragraph}>
+            The following data sources will NOT be shared because they include
+            data from this local system. To share these data sources, publish
+            their data on a web server and{" "}
+            <a onClick={this.onAddWebDataClicked}>add them using a url</a>.
+          </p>
+          <ul className={Styles.paragraph}>
+            {this.props.terria.catalog.userAddedDataGroup.items.map(item => {
+              return (
+                <li>
+                  <strong>{item.name}</strong>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      </If>
+    );
+  },
+
   renderContent() {
     if (this.props.catalogShare) {
       return this.renderContentForCatalogShare();
@@ -293,6 +331,7 @@ const SharePanel = createReactClass({
               source={this.getShareUrlInput("light")}
               id="share-url"
             />
+            {this.renderWarning()}
           </div>
         </Otherwise>
       </Choose>
@@ -310,6 +349,7 @@ const SharePanel = createReactClass({
       <div>
         <div className={DropdownStyles.section}>
           <Clipboard source={this.getShareUrlInput("dark")} id="share-url" />
+          {this.renderWarning()}
         </div>
         <div className={DropdownStyles.section}>
           <div>Print Map</div>

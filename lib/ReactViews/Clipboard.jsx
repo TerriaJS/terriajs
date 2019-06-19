@@ -87,19 +87,6 @@ export default class Clipboard extends React.Component {
             <span className={Styles.tooltipText}>{this.state.tooltip}</span>
           </div>
         )}
-        <div className={Styles.warning}>
-          <div className={Styles.title}>
-            <strong>Note:</strong>
-          </div>
-          <div className={Styles.explanation}>
-            The following data sources will NOT be shared because they include
-            data from this local system. To share these data sources, publish
-            their data on a web server and add them using a url.
-          </div>
-          <div>
-            <strong>solarFarms.csv</strong>
-          </div>
-        </div>
       </div>
     );
   }
