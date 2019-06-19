@@ -186,10 +186,7 @@ export default class Terria {
     }
   }
 
-  getModelById<T extends BaseModel>(
-    type: Class<T>,
-    id: string
-  ): T | undefined {
+  getModelById<T extends BaseModel>(type: Class<T>, id: string): T | undefined {
     const model = this.models.get(id);
     if (instanceOf(type, model)) {
       return model;

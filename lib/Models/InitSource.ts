@@ -17,9 +17,7 @@ interface InitOptions {
 
 type InitSource = InitUrl | InitData | InitOptions;
 
-export function isInitUrl(
-  initSource: InitSource
-): initSource is InitUrl {
+export function isInitUrl(initSource: InitSource): initSource is InitUrl {
   return "initUrl" in initSource;
 }
 

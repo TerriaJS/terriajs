@@ -1,5 +1,10 @@
 import { JsonObject } from "../../lib/Core/Json";
-import { AllowsUndefined, Equals, IsWritable, IsWritableArray } from "../../lib/Core/TypeConditionals";
+import {
+  AllowsUndefined,
+  Equals,
+  IsWritable,
+  IsWritableArray
+} from "../../lib/Core/TypeConditionals";
 import Model from "../../lib/Models/Model";
 import ModelPropertiesFromTraits from "../../lib/Models/ModelPropertiesFromTraits";
 import TraitsForTesting, { NestedTraits } from "./TraitsForTesting";

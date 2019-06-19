@@ -184,7 +184,9 @@ export default class MagdaCatalogItem extends MagdaMixin(
           );
 
           if (CatalogMemberMixin.isMixedInto(dereferenced)) {
-            return dereferenced.loadMetadata().then(() => <BaseModel>dereferenced);
+            return dereferenced
+              .loadMetadata()
+              .then(() => <BaseModel>dereferenced);
           }
           return Promise.resolve(dereferenced);
         }

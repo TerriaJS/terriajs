@@ -29,7 +29,9 @@ function ReferenceMixin<T extends Constructor<Model<RequiredTraits>>>(Base: T) {
       const previousTarget = untracked(() => this._dereferenced);
       return this.forceLoadReference(previousTarget).then(target => {
         if (target && target.uniqueId !== this.uniqueId) {
-          throw new DeveloperError("The model returned by `forceLoadReference` must have the same `id` as the `ReferenceMixin` itself.");
+          throw new DeveloperError(
+            "The model returned by `forceLoadReference` must have the same `id` as the `ReferenceMixin` itself."
+          );
         }
         this._dereferenced = target;
       });
