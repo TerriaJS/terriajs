@@ -7,7 +7,6 @@ import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import loadJson from "./loadJson";
 import FeatureDetection from "terriajs-cesium/Source/Core/FeatureDetection";
 
-var DEFAULT_BASE_PROXY_PATH = "proxy/";
 
 /**
  * Rewrites URLs so that they're resolved via the TerriaJS-Server proxy rather than going direct. This is most useful
@@ -18,11 +17,13 @@ var DEFAULT_BASE_PROXY_PATH = "proxy/";
  */
 export default class CorsProxy {
 
+  static readonly DEFAULT_BASE_PROXY_PATH = "proxy/";
+
   /**
    * The base URL of the TerriaJS server proxy, to which requests will be appended. In most cases this is the server's
    * host + '/proxy'.
    */
-  baseProxyUrl = undefined;
+  baseProxyUrl: string = CorsProxy.DEFAULT_BASE_PROXY_PATH;
 
   /**
    *  Domains that should be proxied for, as set by config files. Stored as an array of hosts - if a TLD is specified,
@@ -72,7 +73,7 @@ export default class CorsProxy {
    */
   init(
     serverConfig: any,
-    baseProxyUrl: string = DEFAULT_BASE_PROXY_PATH,
+    baseProxyUrl: string = CorsProxy.DEFAULT_BASE_PROXY_PATH,
     proxyDomains: string[] = []
   ) {
     if (!isNullOrUndefined(serverConfig)) {
@@ -81,6 +82,11 @@ export default class CorsProxy {
       if (Array.isArray(serverConfig.allowProxyFor)) {
         this.proxyDomains = serverConfig.allowProxyFor;
       }
+    }
+    this.baseProxyUrl = baseProxyUrl;
+
+    if(isNullOrUndefined(this.proxyDomains)) {
+      this.proxyDomains = proxyDomains;
     }
   }
 

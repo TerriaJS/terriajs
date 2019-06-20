@@ -1,29 +1,34 @@
 import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
-
 import UrlMixin from "../ModelMixins/UrlMixin";
-
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
-
 import CreateModel from "./CreateModel";
-
 import GtfsCatalogItemTraits from "../Traits/GtfsCatalogItemTraits";
 import Terria from "./Terria";
 import BillboardData from "./BillboardData";
-import createBillboardDataSource from './createBillboardDataSource';
-
+import createBillboardDataSource from "./createBillboardDataSource";
+import loadArrayBuffer from "../Core/loadArrayBuffer";
+import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
+import TerriaError from "../Core/TerriaError";
+import {
+  FeedMessage,
+  FeedMessageReader,
+  FeedEntity
+} from "./GtfsRealtimeProtoBufReaders";
 
 import BillboardGraphics from "terriajs-cesium/Source/DataSources/BillboardGraphics";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
-import DataSource from 'terriajs-cesium/Source/DataSources/CustomDataSource'
-import { computed } from "mobx";
+import DataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 
+import { computed, observable } from "mobx";
+import Pbf from "pbf";
+import { isNull, isNullOrUndefined } from "util";
 export default class GtfsCatalogItem extends AsyncMappableMixin(
-  UrlMixin(CatalogMemberMixin(CreateModel(GtfsCatalogItemTraits))
-  )
+  UrlMixin(CatalogMemberMixin(CreateModel(GtfsCatalogItemTraits)))
 ) {
+  @observable
   private billboardDataList: BillboardData[] = [];
-  
+
   static get type() {
     return "gtfs";
   }
@@ -37,19 +42,28 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
   }
 
   protected get loadMapItemsPromise(): Promise<void> {
-    return new Promise(() => {
-      // TODO: Load actual data
-      const b: BillboardGraphics = new BillboardGraphics({
-        image: "public/img/glyphicons_242_google_maps.png",
-        heightReference: HeightReference.RELATIVE_TO_GROUND
+    return this.retrieveData()
+      .then((data: FeedMessage) => {
+        if (isNullOrUndefined(data.entity)) {
+          return;
+        }
+        // TODO: fix this
+        // @ts-ignore: Type error
+        this.billboardDataList = data.entity
+          .map((entity: FeedEntity) =>
+            this.convertFeedEntityToBillboardData(entity)
+          )
+          .filter((item: BillboardData | null) => !isNullOrUndefined(item));
+      })
+      .catch((e: Error) => {
+        throw new TerriaError({
+          title: `Could not ${this.nameInCatalog}.`,
+          sender: this,
+          message: `There was an error loading the data for ${
+            this.nameInCatalog
+          }.`
+        });
       });
-
-      this.billboardDataList = [];
-      this.billboardDataList.push({
-        billboard: b,
-        position: Cartesian3.fromDegrees(151.2099, -33.865143, 0) // Sydney
-      });
-    });
   }
 
   protected get loadMetadataPromise(): Promise<void> {
@@ -58,6 +72,51 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
 
   @computed
   get mapItems(): DataSource[] {
-    return [createBillboardDataSource("gtfs_billboards", this.billboardDataList)];
+    return [
+      createBillboardDataSource("gtfs_billboards", this.billboardDataList)
+    ];
+  }
+
+  retrieveData(): Promise<FeedMessage> {
+    // These headers work for the Transport for NSW APIs. Presumably, other services will require different headers.
+    const headers = {
+      Authorization: `apikey ${this.apiKey}`,
+      "Content-Type": "application/x-google-protobuf;charset=UTF-8"
+    };
+
+    if (!isNullOrUndefined(this.url)) {
+      return loadArrayBuffer(proxyCatalogItemUrl(this, this.url), headers).then(
+        (arr: ArrayBuffer) => {
+          const pbfBuffer = new Pbf(new Uint8Array(arr));
+          return new FeedMessageReader().read(pbfBuffer);
+        }
+      );
+    } else {
+      return Promise.reject();
+    }
+  }
+
+  convertFeedEntityToBillboardData(entity: FeedEntity): BillboardData | null {
+    const billboard: BillboardGraphics = new BillboardGraphics({
+      image: "public/img/glyphicons_242_google_maps.png", // TODO: get from catalog item
+      heightReference: HeightReference.RELATIVE_TO_GROUND
+    });
+
+    if (
+      !isNullOrUndefined(entity.vehicle) &&
+      !isNullOrUndefined(entity.vehicle.position) &&
+      !isNullOrUndefined(entity.vehicle.position.latitude) &&
+      !isNullOrUndefined(entity.vehicle.position.longitude)
+    ) {
+      return {
+        billboard: billboard,
+        position: Cartesian3.fromDegrees(
+          entity.vehicle.position.longitude,
+          entity.vehicle.position.latitude
+        )
+      };
+    } else {
+      return null;
+    }
   }
 }
