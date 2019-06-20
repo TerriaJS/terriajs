@@ -1,5 +1,6 @@
 "use strict";
 import React from "react";
+import { withRouter } from "react-router-dom";
 import { Helmet } from "react-helmet";
 
 import Chart from "../Custom/Chart/Chart";
@@ -22,7 +23,8 @@ const DataPreview = createReactClass({
   propTypes: {
     terria: PropTypes.object.isRequired,
     viewState: PropTypes.object,
-    previewed: PropTypes.object
+    previewed: PropTypes.object,
+    location: PropTypes.object.isRequired
   },
 
   backToMap() {
@@ -31,6 +33,10 @@ const DataPreview = createReactClass({
 
   render() {
     const previewed = this.props.previewed;
+    const appBaseUrl = this.props.terria.configParameters.appBaseUrl;
+    const pathname = this.props.location && this.props.location.pathname;
+    const pathForCanonical =
+      pathname && pathname.charAt(0) === "/" ? pathname.slice(1) : pathname;
     let chartData;
     if (previewed && !previewed.isMappable && previewed.tableStructure) {
       chartData = previewed.chartData();
@@ -46,6 +52,9 @@ const DataPreview = createReactClass({
               name="description"
               content={getMetaDescriptionSummary(previewed)}
             />
+            <If condition={appBaseUrl && pathForCanonical}>
+              <link rel="canonical" href={`${appBaseUrl}${pathForCanonical}`} />
+            </If>
           </Helmet>
         </If>
         <Choose>
@@ -105,4 +114,4 @@ const DataPreview = createReactClass({
   }
 });
 
-module.exports = DataPreview;
+module.exports = withRouter(DataPreview);

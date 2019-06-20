@@ -28,7 +28,7 @@ And on the server, change to the directory where you copied those files and dire
 
 The server will start on port 3001.  You can specify a different port by adding `--port 1234` to the command-line above.
 
-Ensure that you specify the `baseHref` path in your `devserverconfig.json` if you are serving your TerriaMap from a directory.
+Ensure that you specify the `baseHref` path in your `devserverconfig.json` if you are serving your TerriaMap from a directory, and an `appBaseUrl` so a sitemap & other links can be generated.
 
 It is usually a good idea to run another web server, such as [nginx](https://nginx.org/en/) or [Varnish](https://varnish-cache.org/) on port 80 and then reverse-proxy to the Node.js server, rather than running terriajs-server on port 80 directly.   You will find a varnish VCL file with the TerriaMap source code in the [deploy/varnish directory](https://github.com/TerriaJS/TerriaMap/tree/master/deploy/varnish).  In addition to acting as a reverse proxy for the Node.js server, the supplied Varnish configuration also caches requests to proxied map data in order to improve performance.
 
