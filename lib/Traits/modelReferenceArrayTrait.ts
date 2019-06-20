@@ -41,9 +41,8 @@ export class ModelReferenceArrayProperty extends Trait {
   // It takes an optional idProperty. If not specified, the values are themselves IDs.
   // It ensures that each ID is unique and that the topmost stratum wins for a given ID.
   // There can even be properties to control relative ordering of items in different strata.
-  getValue(
-    strataTopToBottom: StratumFromTraits<ModelTraits>[]
-  ): ReadonlyArray<ModelReference> {
+  getValue(model: BaseModel): ReadonlyArray<ModelReference> {
+    const strataTopToBottom = model.strataTopToBottom;
     const result: ModelReference[] = [];
 
     type IdToBool = { [key: string]: boolean };
@@ -53,6 +52,10 @@ export class ModelReferenceArrayProperty extends Trait {
     // Create a single array with all the unique model IDs.
     for (let i = 0; i < strataTopToBottom.length; ++i) {
       const stratum: any = strataTopToBottom[i];
+      if (stratum === undefined) {
+        continue;
+      }
+
       const modelIdArray: ModelReference[] = stratum[this.id];
 
       if (modelIdArray) {
@@ -108,12 +111,14 @@ export class ModelReferenceArrayProperty extends Trait {
         const nestedModel = upsertModelFromJson(
           this.factory,
           model.terria,
-          model.id,
+          model.uniqueId === undefined ? "/" : model.uniqueId,
           undefined,
           stratumName,
           jsonElement
         );
-        return nestedModel.id;
+
+        // This model will definitely have an ID.
+        return nestedModel.uniqueId!;
       } else {
         throw new TerriaError({
           title: "Invalid property",

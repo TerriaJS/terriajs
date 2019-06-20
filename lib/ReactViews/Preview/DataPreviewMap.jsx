@@ -110,7 +110,7 @@ class DataPreviewMap extends React.Component {
     );
     runInAction(() => {
       this.previewViewer.viewerMode = "leaflet";
-      this.previewViewer.disableMouseInteraction = true;
+      this.previewViewer.disableInteraction = true;
     });
     // Not yet implemented
     // previewViewer.hideTerriaLogo = true;
@@ -185,14 +185,24 @@ class DataPreviewMap extends React.Component {
 
   @computed
   get boundingRectangleCatalogItem() {
-    if (this.props.previewed.rectangle === undefined) {
+    const rectangle = this.props.previewed.rectangle;
+    if (rectangle === undefined) {
       return undefined;
     }
 
-    let west = this.props.previewed.rectangle.west;
-    let south = this.props.previewed.rectangle.south;
-    let east = this.props.previewed.rectangle.east;
-    let north = this.props.previewed.rectangle.north;
+    let west = rectangle.west;
+    let south = rectangle.south;
+    let east = rectangle.east;
+    let north = rectangle.north;
+
+    if (
+      west === undefined ||
+      south === undefined ||
+      east === undefined ||
+      north === undefined
+    ) {
+      return undefined;
+    }
 
     if (!this.isZoomedToExtent) {
       // When zoomed out, make sure the dataset rectangle is at least 5% of the width and height
@@ -228,20 +238,16 @@ class DataPreviewMap extends React.Component {
           properties: {
             stroke: "#08ABD5",
             "stroke-width": 2,
-            "stroke-opacity": 1,
-            fill: "#555555",
-            "fill-opacity": 0
+            "stroke-opacity": 1
           },
           geometry: {
-            type: "Polygon",
+            type: "LineString",
             coordinates: [
-              [
-                [west, south],
-                [west, north],
-                [east, north],
-                [east, south],
-                [west, south]
-              ]
+              [west, south],
+              [west, north],
+              [east, north],
+              [east, south],
+              [west, south]
             ]
           }
         }

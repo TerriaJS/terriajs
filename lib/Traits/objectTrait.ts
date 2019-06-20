@@ -1,17 +1,17 @@
 import { computed } from "mobx";
 import TerriaError from "../Core/TerriaError";
-import addModelStrataView from "../Models/addModelStrataView";
-import { BaseModel } from "../Models/Model";
-import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
+import Model, { BaseModel, ModelConstructor } from "../Models/Model";
 import saveStratumToJson from "../Models/saveStratumToJson";
 import StratumFromTraits from "../Models/StratumFromTraits";
 import ModelTraits from "./ModelTraits";
 import Trait, { TraitOptions } from "./Trait";
+import traitsClassToModelClass from "./traitsClassToModelClass";
 import TraitsConstructor from "./TraitsConstructor";
 
 export interface ObjectTraitOptions<T extends ModelTraits>
   extends TraitOptions {
   type: TraitsConstructor<T>;
+  modelClass?: ModelConstructor<Model<T>>;
   isNullable?: boolean;
 }
 
@@ -31,29 +31,24 @@ export class ObjectTrait<T extends ModelTraits> extends Trait {
   readonly type: TraitsConstructor<T>;
   readonly isNullable: boolean;
   readonly decoratorForFlattened = computed.struct;
+  readonly modelClass: ModelConstructor<Model<T>>;
 
   constructor(id: string, options: ObjectTraitOptions<T>) {
     super(id, options);
     this.type = options.type;
     this.isNullable = options.isNullable || false;
+    this.modelClass = options.modelClass || traitsClassToModelClass(this.type);
   }
 
-  getValue(
-    strataTopToBottom: StratumFromTraits<ModelTraits>[]
-  ): ModelPropertiesFromTraits<T> | undefined {
-    const objectStrata = strataTopToBottom
-      .map((stratum: any) => stratum[this.id])
-      .filter(stratum => stratum !== undefined);
-
-    if (objectStrata.length === 0) {
-      return undefined;
-    }
-
-    const model = {
-      strataTopToBottom: objectStrata
-    };
-    addModelStrataView(model, this.type);
-    return <any>model;
+  getValue(model: BaseModel): Model<T> | undefined {
+    const result = new this.modelClass(model.uniqueId, model.terria);
+    model.strata.forEach((parentStratum: any, stratumId) => {
+      if (!parentStratum) return;
+      const childStratum = parentStratum[this.id];
+      if (!childStratum) return;
+      result.strata.set(stratumId, childStratum);
+    });
+    return result;
   }
 
   fromJson(

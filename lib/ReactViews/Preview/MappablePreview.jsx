@@ -69,7 +69,6 @@ class MappablePreview extends React.Component {
   }
 
   render() {
-    // TODO: re-introduce disablePreview to catalog items
     const catalogItem = this.props.previewed;
     return (
       <div className={Styles.root}>

@@ -63,8 +63,10 @@ const Legend = observer(
     renderLegend(legend, i) {
       if (defined(legend.url)) {
         return this.renderImageLegend(legend, i);
-      } else {
+      } else if (defined(legend.items)) {
         return this.renderGeneratedLegend(legend, i);
+      } else {
+        return null;
       }
     },
 

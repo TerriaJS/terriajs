@@ -36,7 +36,7 @@ describe("NewStuff", function() {
     terria.addModel(wmsItem2);
 
     runInAction(() => {
-      wms.setTrait(CommonStrata.definition, "members", [wmsItem2.id]);
+      wms.setTrait(CommonStrata.definition, "members", [wmsItem2.uniqueId!]);
       wms.setTrait(
         CommonStrata.definition,
         "name",
@@ -53,7 +53,7 @@ describe("NewStuff", function() {
       console.log("Run: " + wms.memberModels.length);
       wms.memberModels.forEach(model => {
         if (CatalogMemberMixin.isMixedInto(model)) {
-          console.log(`${model.name}: ${model.id}`);
+          console.log(`${model.name}: ${model.uniqueId}`);
         }
         if (Mappable.is(model)) {
           console.log(model.mapItems);

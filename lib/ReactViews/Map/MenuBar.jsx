@@ -5,8 +5,8 @@ import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import SettingPanel from "./Panels/SettingPanel";
-// import SharePanel from "./Panels/SharePanel/SharePanel";
-// import ToolsPanel from "./Panels/ToolsPanel/ToolsPanel";
+import SharePanel from "./Panels/SharePanel/SharePanel";
+import ToolsPanel from "./Panels/ToolsPanel/ToolsPanel";
 import Icon from "../Icon";
 import ObserveModelMixin from "../ObserveModelMixin";
 import Prompt from "../Generic/Prompt";
@@ -54,7 +54,7 @@ const MenuBar = createReactClass({
   },
   render() {
     const storyEnabled = this.props.terria.configParameters.storyEnabled;
-    // const enableTools = this.props.terria.getUserProperty("tools") === "1";
+    const enableTools = this.props.terria.getUserProperty("tools") === "1";
     const promptHtml =
       this.props.terria.stories.length > 0 ? (
         <div>You can view and create stories at any time by clicking here.</div>
@@ -105,21 +105,27 @@ const MenuBar = createReactClass({
               viewState={this.props.viewState}
             />
           </li>
-          {/* <li className={Styles.menuItem}>
-                        <SharePanel terria={this.props.terria}
-                                    viewState={this.props.viewState}/>
-                    </li>
-                    {enableTools && <li className={Styles.menuItem}>
-                        <ToolsPanel terria={this.props.terria}
-                                    viewState={this.props.viewState}/>
-                    </li>}
-                    <If condition={!this.props.viewState.useSmallScreenInterface}>
-                        <For each="element" of={this.props.menuItems} index="i">
-                            <li className={Styles.menuItem} key={i}>
-                                {element}
-                            </li>
-                        </For>
-                    </If> */}
+          <li className={Styles.menuItem}>
+            <SharePanel
+              terria={this.props.terria}
+              viewState={this.props.viewState}
+            />
+          </li>
+          {enableTools && (
+            <li className={Styles.menuItem}>
+              <ToolsPanel
+                terria={this.props.terria}
+                viewState={this.props.viewState}
+              />
+            </li>
+          )}
+          <If condition={!this.props.viewState.useSmallScreenInterface}>
+            <For each="element" of={this.props.menuItems} index="i">
+              <li className={Styles.menuItem} key={i}>
+                {element}
+              </li>
+            </For>
+          </If>
         </ul>
       </div>
     );

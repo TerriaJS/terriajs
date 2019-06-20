@@ -121,7 +121,7 @@ const DataCatalogGroup = observer(
           <If condition={this.isOpen()}>
             <For each="item" of={group.memberModels}>
               <DataCatalogMember
-                key={item.id}
+                key={item.uniqueId}
                 member={item}
                 viewState={this.props.viewState}
                 userData={this.props.userData}
