@@ -382,7 +382,7 @@ export default class ArcGisMapServerCatalogItem
 
     const layerIds = this.layers.split(",");
     return stratum.allLayers.filter(({ id }) =>
-      layerIds.includes(id.toString())
+      layerIds.find(x => x == id.toString())
     );
   }
 }
