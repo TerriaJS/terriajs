@@ -37,8 +37,9 @@ import TerriaViewer from "../ViewModels/TerriaViewer";
 import Feature from "./Feature";
 import GlobeOrMap, { CameraView } from "./GlobeOrMap";
 import hasTraits from "./hasTraits";
-import Mappable, { ImageryParts } from "./Mappable";
+import Mappable, { ImageryParts, isDataSource } from "./Mappable";
 import Terria from "./Terria";
+import flatMap from "../Core/flatMap";
 
 interface SplitterClips {
   left: string;
@@ -59,8 +60,6 @@ interface SplitterClips {
 // this, so we don't do it on other browsers that do not experience this bug.
 const useClipUpdateWorkaround =
   FeatureDetection.isInternetExplorer() || FeatureDetection.isEdge();
-
-// This class is an observer. It probably won't contain any observables itself
 
 export default class Leaflet extends GlobeOrMap {
   readonly terria: Terria;
@@ -262,9 +261,9 @@ export default class Leaflet extends GlobeOrMap {
         ...this.terriaViewer.items.get(),
         this.terriaViewer.baseMap
       ];
-      // Flatmap
-      const allMapItems = ([] as (DataSource | ImageryParts)[]).concat(
-        ...catalogItems.filter(isDefined).map(item => item.mapItems)
+      const allMapItems = flatMap(
+        catalogItems.filter(isDefined),
+        item => item.mapItems
       );
 
       const allImagery = allMapItems.filter(ImageryParts.is).map(parts => ({
@@ -752,8 +751,4 @@ export default class Leaflet extends GlobeOrMap {
 
 function isImageryLayer(someLayer: L.Layer): someLayer is CesiumTileLayer {
   return "imageryProvider" in someLayer;
-}
-
-function isDataSource(object: DataSource | ImageryParts): object is DataSource {
-  return "entities" in object;
 }

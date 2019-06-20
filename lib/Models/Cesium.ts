@@ -1,4 +1,4 @@
-import { autorun, computed } from "mobx";
+import { autorun, computed, IObservableArray, observe } from "mobx";
 import { createTransformer } from "mobx-utils";
 import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
@@ -36,6 +36,7 @@ import SingleTileImageryProvider from "terriajs-cesium/Source/Scene/SingleTileIm
 import ScreenSpaceEventType from "terriajs-cesium/Source/Core/ScreenSpaceEventType";
 import when from "terriajs-cesium/Source/ThirdParty/when";
 import CesiumWidget from "terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget";
+import Model from "terriajs-cesium/Source/Scene/Model";
 
 import CesiumSelectionIndicator from "../Map/CesiumSelectionIndicator";
 import isDefined from "../Core/isDefined";
@@ -44,11 +45,16 @@ import CesiumRenderLoopPauser from "../Map/CesiumRenderLoopPauser";
 import Feature from "./Feature";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import GlobeOrMap, { CameraView } from "./GlobeOrMap";
-import Mappable, { ImageryParts } from "./Mappable";
+import Mappable, {
+  ImageryParts,
+  isDataSource,
+  isCesiumModel
+} from "./Mappable";
 import Terria from "./Terria";
 import PickedFeatures, { ProviderCoordsMap } from "../Map/PickedFeatures";
 import SplitterTraits from "../Traits/SplitterTraits";
 import hasTraits from "./hasTraits";
+import flatMap from "../Core/flatMap";
 
 // Intermediary
 var cartesian3Scratch = new Cartesian3();
@@ -87,6 +93,12 @@ export default class Cesium extends GlobeOrMap {
     | Cesium.DataSource
     | Mappable
     | /*TODO Cesium.Cesium3DTileset*/ any;
+
+  // Track which models were mapped on the last Cesium scene update
+  // Used for removing models from the map that are no longer needed
+  // Won't leak unless we stop observing the model layer without destroying this Cesium object
+  // This would be an array of weak references if it could be
+  private _lastModels: Model[] | undefined;
 
   /* Disposers */
   private readonly _selectionIndicator: CesiumSelectionIndicator;
@@ -231,7 +243,7 @@ export default class Cesium extends GlobeOrMap {
       this._selectFeature();
     });
 
-    this._disposeWorkbenchMapItemsSubscription = this.observeModelLayer();
+    this._disposeWorkbenchMapItemsSubscription = this._observeModelLayer();
     this._disposeTerrainReaction = autorun(() => {
       this.scene.globe.terrainProvider = this._terrainProvider;
     });
@@ -309,20 +321,26 @@ export default class Cesium extends GlobeOrMap {
     destroyObject(this);
   }
 
-  private observeModelLayer() {
+  @computed
+  private get _allMapItems() {
+    const catalogItems = [
+      ...this.terriaViewer.items.get(),
+      this.terriaViewer.baseMap
+    ];
+    return flatMap(catalogItems.filter(isDefined), item => item.mapItems);
+  }
+
+  private _observeModelLayer() {
+    const disposeModelsSubscription = observe(
+      this,
+      "_allMapItems" as any,
+      (...args: any[]) => console.log(args)
+    );
     return autorun(() => {
-      const catalogItems = [
-        ...this.terriaViewer.items.get(),
-        this.terriaViewer.baseMap
-      ];
-      // Flatmap
-      const allMapItems = ([] as (DataSource | ImageryParts)[]).concat(
-        ...catalogItems.filter(isDefined).map(item => item.mapItems)
-      );
       // TODO: Look up the type in a map and call the associated function.
       //       That way the supported types of map items is extensible.
 
-      const allDataSources = allMapItems.filter(isDataSource);
+      const allDataSources = this._allMapItems.filter(isDataSource);
 
       // Remove deleted data sources
       let dataSources = this.dataSources;
@@ -340,7 +358,7 @@ export default class Cesium extends GlobeOrMap {
         }
       });
 
-      const allImageryParts = allMapItems
+      const allImageryParts = this._allMapItems
         .filter(ImageryParts.is)
         .map(this._makeImageryLayerFromParts.bind(this));
 
@@ -374,6 +392,21 @@ export default class Cesium extends GlobeOrMap {
           }
         }
       }
+
+      const allModels = this._allMapItems.filter(isCesiumModel);
+      allModels.forEach(m => {
+        if (!this.scene.primitives.contains(m)) {
+          this.scene.primitives.add(m);
+        }
+      });
+      if (this._lastModels) {
+        this._lastModels.forEach(m => {
+          if (!allModels.includes(m) && this.scene.primitives.contains(m)) {
+            this.scene.primitives.remove(m);
+          }
+        });
+      }
+      this._lastModels = allModels;
 
       this.notifyRepaintRequired();
     });
@@ -1047,8 +1080,4 @@ function zoomToBoundingSphere(
     offset: new HeadingPitchRange(0.0, -0.5, boundingSphere.radius),
     duration: flightDurationSeconds
   });
-}
-
-function isDataSource(object: DataSource | ImageryParts): object is DataSource {
-  return "entities" in object;
 }
