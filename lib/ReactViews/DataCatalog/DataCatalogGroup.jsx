@@ -102,7 +102,7 @@ const DataCatalogGroup = observer(
       return (
         <CatalogGroup
           text={this.getNameOrPrettyUrl()}
-          title={getAncestors(group)
+          title={this.props.ancestors
             .map(member => member.nameInCatalog)
             .join(" → ")}
           topLevel={this.isTopLevel()}

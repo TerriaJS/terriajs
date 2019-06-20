@@ -163,7 +163,7 @@ export default class MagdaCatalogGroup extends MagdaMixin(
     return this.loadReference();
   }
 
-  protected get loadMembersPromise(): Promise<void> {
+  protected forceLoadMembers(): Promise<void> {
     return this.loadReference();
   }
 }

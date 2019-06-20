@@ -1,9 +1,10 @@
-import { computed, observable, runInAction } from "mobx";
+import { computed, observable, runInAction, toJS } from "mobx";
 import { createTransformer } from "mobx-utils";
 import Clock from "terriajs-cesium/Source/Core/Clock";
 import defined from "terriajs-cesium/Source/Core/defined";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
+import queryToObject from "terriajs-cesium/Source/Core/queryToObject";
 import RuntimeError from "terriajs-cesium/Source/Core/RuntimeError";
 import URI from "urijs";
 import AsyncLoader from "../Core/AsyncLoader";
@@ -15,8 +16,9 @@ import instanceOf from "../Core/instanceOf";
 import isDefined from "../Core/isDefined";
 import JsonValue, { isJsonObject, JsonObject } from "../Core/Json";
 import loadJson5 from "../Core/loadJson5";
+import TerriaError from "../Core/TerriaError";
 import PickedFeatures from "../Map/PickedFeatures";
-import ModelReference from "../Traits/ModelReference";
+import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import { BaseMapViewModel } from "../ViewModels/BaseMapViewModel";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import CatalogMemberFactory from "./CatalogMemberFactory";
@@ -58,6 +60,7 @@ interface ConfigParameters {
 
 interface StartOptions {
   configUrl: string;
+  applicationUrl?: string;
 }
 
 type Analytics = any;
@@ -211,24 +214,30 @@ export default class Terria {
   start(options: StartOptions) {
     const baseUri = new URI(options.configUrl).filename("");
 
-    return loadJson5(options.configUrl).then((config: any) => {
-      if (config.aspects) {
-        return this.loadMagdaConfig(config);
-      }
+    return loadJson5(options.configUrl)
+      .then((config: any) => {
+        if (config.aspects) {
+          return this.loadMagdaConfig(config);
+        }
 
-      const initializationUrls: string[] = config.initializationUrls;
-      const initSources = initializationUrls.map(url =>
-        generateInitializationUrl(
-          baseUri,
-          this.configParameters.initFragmentPaths,
-          url
-        )
-      );
+        const initializationUrls: string[] = config.initializationUrls;
+        const initSources = initializationUrls.map(url =>
+          generateInitializationUrl(
+            baseUri,
+            this.configParameters.initFragmentPaths,
+            url
+          )
+        );
 
-      runInAction(() => {
-        this.initSources.push(...initSources);
+        runInAction(() => {
+          this.initSources.push(...initSources);
+        });
+      })
+      .then(() => {
+        if (options.applicationUrl) {
+          return this.updateApplicationUrl(options.applicationUrl);
+        }
       });
-    });
   }
 
   get isLoadingInitSources(): boolean {
@@ -240,6 +249,24 @@ export default class Terria {
    */
   loadInitSources(): Promise<void> {
     return this._initSourceLoader.load();
+  }
+
+  updateApplicationUrl(newUrl: string) {
+    const uri = new URI(newUrl);
+    const hash = uri.fragment();
+    const hashProperties = queryToObject(hash);
+
+    return interpretHash(
+      this,
+      hashProperties,
+      this.userProperties,
+      new URI(newUrl)
+        .filename("")
+        .query("")
+        .hash("")
+    ).then(() => {
+      return this.loadInitSources();
+    });
   }
 
   protected forceLoadInitSources(): Promise<void> {
@@ -263,6 +290,8 @@ export default class Terria {
   }
 
   private applyInitData(initData: JsonObject) {
+    initData = toJS(initData);
+
     if (initData.catalog !== undefined) {
       updateModelFromJson(this.catalog.group, CommonStrata.definition, {
         members: initData.catalog
@@ -295,6 +324,36 @@ export default class Terria {
             }
           );
         });
+      });
+    }
+
+    const workbench = initData.workbench;
+    if (Array.isArray(workbench)) {
+      workbench.forEach(modelId => {
+        if (typeof modelId !== "string") {
+          throw new TerriaError({
+            sender: this,
+            title: "Invalid model ID in workbench",
+            message: "A model ID in the workbench list is not a string."
+          });
+        }
+        const model = this.getModelById(BaseModel, modelId);
+        if (model === undefined) {
+          throw new TerriaError({
+            sender: this,
+            title: "Unknown model ID in workbench",
+            message: `A model ID in the workbench, ${modelId}, could not be found.`
+          });
+        }
+        this.workbench.add(model);
+
+        if (ReferenceMixin.is(model)) {
+          model.loadReference();
+        }
+
+        if (Mappable.is(model)) {
+          model.loadMapItems();
+        }
       });
     }
   }
@@ -403,3 +462,88 @@ const loadInitSource = createTransformer(
     });
   }
 );
+
+function interpretHash(
+  terria: Terria,
+  hashProperties: any,
+  userProperties: Map<string, any>,
+  baseUri: uri.URI
+) {
+  // Resolve #share=xyz with the share data service.
+  const promise = Promise.resolve({});
+  // defined(hashProperties.share) && defined(terria.shareDataService)
+  //   ? terria.shareDataService.resolveData(hashProperties.share)
+  //   : Promise.resolve({});
+
+  return promise.then(shareProps => {
+    Object.keys(hashProperties).forEach(function(property) {
+      const propertyValue = hashProperties[property];
+
+      if (property === "clean") {
+        terria.initSources.splice(0, terria.initSources.length);
+      } else if (property === "start") {
+        // a share link that hasn't been shortened: JSON embedded in URL (only works for small quantities of JSON)
+        const startData = JSON.parse(propertyValue);
+
+        // TODO: version check, filtering, etc.
+
+        terria.initSources.push(
+          ...startData.initSources.map((initSource: any) => {
+            return {
+              data: initSource
+            };
+          })
+        );
+      } else if (defined(propertyValue) && propertyValue.length > 0) {
+        userProperties.set(property, propertyValue);
+      } else {
+        const initSourceFile = generateInitializationUrl(
+          baseUri,
+          terria.configParameters.initFragmentPaths,
+          property
+        );
+        terria.initSources.push(initSourceFile);
+      }
+    });
+    // if (shareProps) {
+    //   interpretStartData(
+    //     terria,
+    //     shareProps
+    //   );
+    // }
+  });
+}
+
+// function interpretStartData(
+//   terria: Terria,
+//   startData: any
+// ) {
+//   if (defined(startData.version) && startData.version !== latestStartVersion) {
+//     adjustForBackwardCompatibility(startData);
+//   }
+
+//   if (defined(terria.filterStartDataCallback)) {
+//     startData = terria.filterStartDataCallback(startData) || startData;
+//   }
+
+//   // Include any initSources specified in the URL.
+//   if (defined(startData.initSources)) {
+//     for (var i = 0; i < startData.initSources.length; ++i) {
+//       var initSource = startData.initSources[i];
+//       // avoid loading terria.json twice
+//       if (
+//         temporaryInitSources.indexOf(initSource) < 0 &&
+//         !initFragmentExists(temporaryInitSources, initSource)
+//       ) {
+//         temporaryInitSources.push(initSource);
+//         // Only add external files to the application's list of init sources.
+//         if (
+//           typeof initSource === "string" &&
+//           persistentInitSources.indexOf(initSource) < 0
+//         ) {
+//           persistentInitSources.push(initSource);
+//         }
+//       }
+//     }
+//   }
+// }

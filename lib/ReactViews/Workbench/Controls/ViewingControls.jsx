@@ -17,6 +17,7 @@ import PropTypes from "prop-types";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import Styles from "./viewing-controls.scss";
 import addUserCatalogMember from "../../../Models/addUserCatalogMember";
+import getAncestors from "../../../Models/getAncestors";
 
 const ViewingControls = observer(
   createReactClass({
@@ -96,10 +97,10 @@ const ViewingControls = observer(
         item = item.sourceCatalogItem;
       }
       // Open up all the parents (doesn't matter that this sets it to enabled as well because it already is).
-      (this.props.item.ancestors || []).forEach(group => {
-        group.topStratum.isOpen = true;
+      getAncestors(this.props.item.terria, this.props.item).forEach(group => {
+        group.setTrait(CommonStrata.user, "isOpen", true);
       });
-      this.props.viewState.viewCatalogMember(item, []); // TODO: set ancestors
+      this.props.viewState.viewCatalogMember(item);
       this.props.viewState.switchMobileView(
         this.props.viewState.mobileViewOptions.preview
       );
