@@ -277,7 +277,7 @@ export default class ArcGisMapServerCatalogItem
   readonly showsInfo = true;
   readonly isMappable = true;
 
-  get loadMetadataPromise() {
+  protected forceLoadMetadata(): Promise<void> {
     return MapServerStratum.load(this).then(stratum => {
       runInAction(() => {
         this.strata.set(MapServerStratum.stratumName, stratum);
