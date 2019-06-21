@@ -329,7 +329,10 @@ export default class Terria {
             return;
           }
 
-          upsertModelFromJson(
+          const dereferenced = model.dereferenced;
+          delete model.dereferenced;
+
+          const loadedModel = upsertModelFromJson(
             CatalogMemberFactory,
             this,
             "/",
@@ -340,6 +343,27 @@ export default class Terria {
               id: modelId
             }
           );
+
+          if (dereferenced) {
+            if (ReferenceMixin.is(loadedModel)) {
+              loadedModel.loadReference().then(() => {
+                upsertModelFromJson(
+                  CatalogMemberFactory,
+                  this,
+                  "/",
+                  loadedModel.dereferenced,
+                  stratum,
+                  dereferenced
+                );
+              });
+            } else {
+              throw new TerriaError({
+                sender: this,
+                title: "Model cannot be dereferenced",
+                message: "The stratum has a `dereferenced` property, but the model cannot be dereferenced."
+              });
+            }
+          }
         });
       });
     }
