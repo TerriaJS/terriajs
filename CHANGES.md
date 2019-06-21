@@ -4,6 +4,7 @@ Change Log
 ### v7.6.3
 
 * Fixed a bug with picking features that cross the anti-meridian in 2D mode 
+* Fixed a bug where `ArcGisMapServerCatalogItem` legends were being created during search.
 
 ### v7.6.2
 
