@@ -30,7 +30,6 @@ import TimelineStack from "./TimelineStack";
 import updateModelFromJson from "./updateModelFromJson";
 import Workbench from "./Workbench";
 import CorsProxy from "../Core/CorsProxy";
-import { isNullOrUndefined } from "util";
 import ServerConfig from "../Core/ServerConfig";
 
 require("regenerator-runtime/runtime");

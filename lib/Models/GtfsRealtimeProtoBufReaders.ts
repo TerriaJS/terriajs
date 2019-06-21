@@ -4,7 +4,6 @@
 // If this file is regenerated, a lot of manual massaging is required to make it useful.
 
 import Pbf from "pbf";
-import { isNullOrUndefined } from "util";
 
 export abstract class ProtobufMessageReader<T> {
   abstract readonly defaultMessage: T;
@@ -49,15 +48,15 @@ export class FeedMessageReader extends ProtobufMessageReader<FeedMessage> {
   }
 
   protected readField(tag: number, obj?: FeedMessage, pbf?: Pbf): void {
-    if (isNullOrUndefined(pbf)) {
+    if (pbf === null || pbf === undefined) {
       return;
     }
 
-    if (isNullOrUndefined(obj)) {
+    if (obj === null || obj === undefined) {
       obj = {};
     }
 
-    if (isNullOrUndefined(obj.entity)) {
+    if (obj.entity === null || obj.entity === undefined) {
       obj.entity = [];
     }
 
@@ -121,11 +120,11 @@ export class FeedHeaderReader extends ProtobufMessageReader<FeedHeader> {
   };
 
   protected readField(tag: number, obj?: FeedHeader, pbf?: Pbf): void {
-    if (isNullOrUndefined(pbf)) {
+    if (pbf === null || pbf === undefined) {
       return;
     }
 
-    if (isNullOrUndefined(obj)) {
+    if (obj === null || obj === undefined) {
       obj = {};
     }
 
@@ -155,11 +154,11 @@ export class FeedEntityReader extends ProtobufMessageReader<FeedEntity> {
   };
 
   protected readField(tag: number, obj?: FeedEntity, pbf?: Pbf): void {
-    if (isNullOrUndefined(pbf)) {
+    if (pbf === null || pbf === undefined) {
       return;
     }
 
-    if (isNullOrUndefined(obj)) {
+    if (obj === null || obj === undefined) {
       obj = {};
     }
 
@@ -223,15 +222,15 @@ export class TripUpdateReader extends ProtobufMessageReader<TripUpdate> {
   };
 
   protected readField(tag: number, obj?: TripUpdate, pbf?: Pbf): void {
-    if (isNullOrUndefined(pbf)) {
+    if (pbf === null || pbf === undefined) {
       return;
     }
 
-    if (isNullOrUndefined(obj)) {
+    if (obj === null || obj === undefined) {
       obj = {};
     }
 
-    if (isNullOrUndefined(obj.stop_time_update)) {
+    if (obj.stop_time_update === null || obj.stop_time_update === undefined) {
       obj.stop_time_update = [];
     }
 
@@ -292,11 +291,11 @@ export class StopTimeEventReader extends ProtobufMessageReader<StopTimeEvent> {
   };
 
   protected readField(tag: number, obj?: StopTimeEvent, pbf?: Pbf): void {
-    if (isNullOrUndefined(pbf)) {
+    if (pbf === null || pbf === undefined) {
       return;
     }
 
-    if (isNullOrUndefined(obj)) {
+    if (obj === null || obj === undefined) {
       obj = {};
     }
 
@@ -343,11 +342,11 @@ export class StopTimeUpdateReader extends ProtobufMessageReader<
   };
 
   protected readField(tag: number, obj?: StopTimeUpdate, pbf?: Pbf): void {
-    if (isNullOrUndefined(pbf)) {
+    if (pbf === null || pbf === undefined) {
       return;
     }
 
-    if (isNullOrUndefined(obj)) {
+    if (obj === null || obj === undefined) {
       obj = {};
     }
 
@@ -449,11 +448,11 @@ export class VehiclePositionReader extends ProtobufMessageReader<
   };
 
   protected readField(tag: number, obj?: VehiclePosition, pbf?: Pbf): void {
-    if (isNullOrUndefined(pbf)) {
+    if (pbf === null || pbf === undefined) {
       return;
     }
 
-    if (isNullOrUndefined(obj)) {
+    if (obj === null || obj === undefined) {
       obj = {};
     }
 
@@ -560,19 +559,19 @@ export class AlertReader extends ProtobufMessageReader<Alert> {
   };
 
   protected readField(tag: number, obj?: Alert, pbf?: Pbf): void {
-    if (isNullOrUndefined(pbf)) {
+    if (pbf === null || pbf === undefined) {
       return;
     }
 
-    if (isNullOrUndefined(obj)) {
+    if (obj === null || obj === undefined) {
       obj = {};
     }
 
-    if (isNullOrUndefined(obj.active_period)) {
+    if (obj.active_period === null || obj.active_period === undefined) {
       obj.active_period = [];
     }
 
-    if (isNullOrUndefined(obj.informed_entity)) {
+    if (obj.informed_entity === null || obj.informed_entity === undefined) {
       obj.informed_entity = [];
     }
 
@@ -681,11 +680,11 @@ export class TimeRangeReader extends ProtobufMessageReader<TimeRange> {
   };
 
   protected readField(tag: number, obj?: TimeRange, pbf?: Pbf): void {
-    if (isNullOrUndefined(pbf)) {
+    if (pbf === null || pbf === undefined) {
       return;
     }
 
-    if (isNullOrUndefined(obj)) {
+    if (obj === null || obj === undefined) {
       obj = {};
     }
 
@@ -724,11 +723,11 @@ export class PositionReader extends ProtobufMessageReader<Position> {
   };
 
   protected readField(tag: number, obj?: Position, pbf?: Pbf): void {
-    if (isNullOrUndefined(pbf)) {
+    if (pbf === null || pbf === undefined) {
       return;
     }
 
-    if (isNullOrUndefined(obj)) {
+    if (obj === null || obj === undefined) {
       obj = {};
     }
 
@@ -781,11 +780,11 @@ export class TripDescriptorReader extends ProtobufMessageReader<
   };
 
   protected readField(tag: number, obj?: TripDescriptor, pbf?: Pbf): void {
-    if (isNullOrUndefined(pbf)) {
+    if (pbf === null || pbf === undefined) {
       return;
     }
 
-    if (isNullOrUndefined(obj)) {
+    if (obj === null || obj === undefined) {
       obj = {};
     }
 
@@ -863,11 +862,11 @@ export class VehicleDescriptorReader extends ProtobufMessageReader<
   };
 
   protected readField(tag: number, obj?: VehicleDescriptor, pbf?: Pbf): void {
-    if (isNullOrUndefined(pbf)) {
+    if (pbf === null || pbf === undefined) {
       return;
     }
 
-    if (isNullOrUndefined(obj)) {
+    if (obj === null || obj === undefined) {
       obj = {};
     }
 
@@ -917,11 +916,11 @@ export class EntitySelectorReader extends ProtobufMessageReader<
   };
 
   protected readField(tag: number, obj?: EntitySelector, pbf?: Pbf): void {
-    if (isNullOrUndefined(pbf)) {
+    if (pbf === null || pbf === undefined) {
       return;
     }
 
-    if (isNullOrUndefined(obj)) {
+    if (obj === null || obj === undefined) {
       obj = {};
     }
 
@@ -961,15 +960,15 @@ export class TranslatedStringReader extends ProtobufMessageReader<
   readonly defaultMessage: TranslatedString = { translation: [] };
 
   protected readField(tag: number, obj?: TranslatedString, pbf?: Pbf): void {
-    if (isNullOrUndefined(pbf)) {
+    if (pbf === null || pbf === undefined) {
       return;
     }
 
-    if (isNullOrUndefined(obj)) {
+    if (obj === null || obj === undefined) {
       obj = {};
     }
 
-    if (isNullOrUndefined(obj.translation)) {
+    if (obj.translation === null || obj.translation === undefined) {
       obj.translation = [];
     }
 
@@ -1005,11 +1004,11 @@ export class TranslationReader extends ProtobufMessageReader<Translation> {
   readonly defaultMessage: Translation = { text: "", language: "" };
 
   protected readField(tag: number, obj?: Translation, pbf?: Pbf): void {
-    if (isNullOrUndefined(pbf)) {
+    if (pbf === null || pbf === undefined) {
       return;
     }
 
-    if (isNullOrUndefined(obj)) {
+    if (obj === null || obj === undefined) {
       obj = {};
     }
 

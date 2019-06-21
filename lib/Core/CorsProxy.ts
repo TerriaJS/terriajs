@@ -1,12 +1,9 @@
-import { isNullOrUndefined } from "util";
-
 import URI from "urijs";
 
 import defined from "terriajs-cesium/Source/Core/defined";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import loadJson from "./loadJson";
 import FeatureDetection from "terriajs-cesium/Source/Core/FeatureDetection";
-
 
 /**
  * Rewrites URLs so that they're resolved via the TerriaJS-Server proxy rather than going direct. This is most useful
@@ -16,7 +13,6 @@ import FeatureDetection from "terriajs-cesium/Source/Core/FeatureDetection";
  * particularly on time-series data).
  */
 export default class CorsProxy {
-
   static readonly DEFAULT_BASE_PROXY_PATH = "proxy/";
 
   /**
@@ -76,7 +72,7 @@ export default class CorsProxy {
     baseProxyUrl: string = CorsProxy.DEFAULT_BASE_PROXY_PATH,
     proxyDomains: string[] = []
   ) {
-    if (!isNullOrUndefined(serverConfig)) {
+    if (serverConfig !== null && serverConfig !== undefined) {
       this.isOpenProxy = !!serverConfig.proxyAllDomains;
       // ignore client list of allowed proxies in favour of definitive server list.
       if (Array.isArray(serverConfig.allowProxyFor)) {
@@ -85,7 +81,7 @@ export default class CorsProxy {
     }
     this.baseProxyUrl = baseProxyUrl;
 
-    if(isNullOrUndefined(this.proxyDomains)) {
+    if (this.proxyDomains === null || this.proxyDomains === undefined) {
       this.proxyDomains = proxyDomains;
     }
   }
@@ -98,7 +94,7 @@ export default class CorsProxy {
    * @returns The result.
    */
   private hostInDomains(host: string, domains?: string[]) {
-    if (isNullOrUndefined(domains)) {
+    if (domains === null || domains === undefined) {
       return false;
     }
 

@@ -22,7 +22,7 @@ import DataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 
 import { computed, observable } from "mobx";
 import Pbf from "pbf";
-import { isNull, isNullOrUndefined } from "util";
+
 export default class GtfsCatalogItem extends AsyncMappableMixin(
   UrlMixin(CatalogMemberMixin(CreateModel(GtfsCatalogItemTraits)))
 ) {
@@ -42,18 +42,22 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
   }
 
   protected get loadMapItemsPromise(): Promise<void> {
-    return this.retrieveData()
+    const promise: Promise<void> = this.retrieveData()
       .then((data: FeedMessage) => {
-        if (isNullOrUndefined(data.entity)) {
+        if (data.entity === null || data.entity === undefined) {
           return;
         }
-        // TODO: fix this
-        // @ts-ignore: Type error
         this.billboardDataList = data.entity
           .map((entity: FeedEntity) =>
             this.convertFeedEntityToBillboardData(entity)
           )
-          .filter((item: BillboardData | null) => !isNullOrUndefined(item));
+          .filter(
+            (item: BillboardData) =>
+              item.billboard !== null &&
+              item.billboard !== undefined &&
+              item.position !== null &&
+              item.position !== undefined
+          );
       })
       .catch((e: Error) => {
         throw new TerriaError({
@@ -64,6 +68,14 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
           }.`
         });
       });
+
+      console.log("ping");
+
+      if (this.refreshInterval !== null && this.refreshInterval !== undefined && this.refreshInterval > 0) {
+        setTimeout(() => {this.loadMapItemsPromise}, this.refreshInterval * 1000);
+      }
+
+      return promise;
   }
 
   protected get loadMetadataPromise(): Promise<void> {
@@ -84,7 +96,7 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
       "Content-Type": "application/x-google-protobuf;charset=UTF-8"
     };
 
-    if (!isNullOrUndefined(this.url)) {
+    if (this.url !== null && this.url !== undefined) {
       return loadArrayBuffer(proxyCatalogItemUrl(this, this.url), headers).then(
         (arr: ArrayBuffer) => {
           const pbfBuffer = new Pbf(new Uint8Array(arr));
@@ -96,27 +108,32 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
     }
   }
 
-  convertFeedEntityToBillboardData(entity: FeedEntity): BillboardData | null {
+  convertFeedEntityToBillboardData(entity: FeedEntity): BillboardData {
     const billboard: BillboardGraphics = new BillboardGraphics({
       image: "public/img/glyphicons_242_google_maps.png", // TODO: get from catalog item
       heightReference: HeightReference.RELATIVE_TO_GROUND
     });
 
+    let position = undefined;
     if (
-      !isNullOrUndefined(entity.vehicle) &&
-      !isNullOrUndefined(entity.vehicle.position) &&
-      !isNullOrUndefined(entity.vehicle.position.latitude) &&
-      !isNullOrUndefined(entity.vehicle.position.longitude)
+      entity.vehicle !== null &&
+      entity.vehicle !== undefined &&
+      entity.vehicle.position !== null &&
+      entity.vehicle.position !== undefined &&
+      entity.vehicle.position.latitude !== null &&
+      entity.vehicle.position.latitude !== undefined &&
+      entity.vehicle.position.longitude !== null &&
+      entity.vehicle.position.longitude !== undefined
     ) {
-      return {
-        billboard: billboard,
-        position: Cartesian3.fromDegrees(
-          entity.vehicle.position.longitude,
-          entity.vehicle.position.latitude
-        )
-      };
-    } else {
-      return null;
+      position = Cartesian3.fromDegrees(
+        entity.vehicle.position.longitude,
+        entity.vehicle.position.latitude
+      );
     }
+
+    return {
+      billboard: billboard,
+      position: position
+    };
   }
 }
