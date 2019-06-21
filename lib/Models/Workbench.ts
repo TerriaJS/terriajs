@@ -34,7 +34,10 @@ export default class Workbench {
    */
   @action
   remove(item: BaseModel) {
-    this._items.remove(item);
+    const index = this.indexOf(item);
+    if (index >= 0) {
+      this._items.splice(index, 1);
+    }
   }
 
   /**
