@@ -39,6 +39,7 @@ import upsertModelFromJson from "./upsertModelFromJson";
 import Workbench from "./Workbench";
 import ShareDataService from "./ShareDataService";
 import ServerConfig from "../Core/ServerConfig";
+import GroupMixin from "../ModelMixins/GroupMixin";
 
 require("regenerator-runtime/runtime");
 
@@ -300,77 +301,130 @@ export default class Terria {
           if (initSource === undefined) {
             return;
           }
-          this.applyInitData(initSource);
+          this.applyInitData(toJS(initSource));
         });
       });
     });
   }
 
-  private applyInitData(initData: JsonObject) {
-    initData = toJS(initData);
+  private loadModelStratum(
+    modelId: string,
+    stratumId: string,
+    allModelStratumData: JsonObject
+  ): Promise<BaseModel> {
+    const thisModelStratumData = allModelStratumData[modelId];
+    if (!isJsonObject(thisModelStratumData)) {
+      throw new TerriaError({
+        sender: this,
+        title: "Invalid model traits",
+        message: "The traits of a model must be a JSON object."
+      });
+    }
+
+    let promise: Promise<void>;
+
+    const containerIds = thisModelStratumData.knownContainerUniqueIds;
+    if (Array.isArray(containerIds)) {
+      delete thisModelStratumData.knownContainerUniqueIds;
+      // Groups that contain this item must be loaded before this item.
+      const containerPromises = containerIds.map(containerId => {
+        if (typeof containerId !== "string") {
+          return Promise.resolve(undefined);
+        }
+        return this.loadModelStratum(
+          containerId,
+          stratumId,
+          allModelStratumData
+        ).then(container => {
+          if (GroupMixin.isMixedInto(container)) {
+            return container.loadMembers();
+          }
+        });
+      });
+      promise = Promise.all(containerPromises).then(() => undefined);
+    } else {
+      promise = Promise.resolve();
+    }
+
+    return promise.then(() => {
+      const dereferenced = thisModelStratumData.dereferenced;
+      delete thisModelStratumData.dereferenced;
+
+      const loadedModel = upsertModelFromJson(
+        CatalogMemberFactory,
+        this,
+        "/",
+        undefined,
+        stratumId,
+        {
+          ...thisModelStratumData,
+          id: modelId
+        }
+      );
+
+      if (dereferenced) {
+        if (ReferenceMixin.is(loadedModel)) {
+          return loadedModel
+            .loadReference()
+            .then(() => {
+              return upsertModelFromJson(
+                CatalogMemberFactory,
+                this,
+                "/",
+                loadedModel.dereferenced,
+                stratumId,
+                dereferenced
+              );
+            })
+            .then(() => loadedModel);
+        } else {
+          throw new TerriaError({
+            sender: this,
+            title: "Model cannot be dereferenced",
+            message:
+              "The stratum has a `dereferenced` property, but the model cannot be dereferenced."
+          });
+        }
+      }
+
+      return loadedModel;
+    });
+  }
+
+  private applyInitData(initData: JsonObject): Promise<void> {
+    const stratumId =
+      typeof initData.stratum === "string"
+        ? initData.stratum
+        : CommonStrata.definition;
 
     if (initData.catalog !== undefined) {
-      updateModelFromJson(this.catalog.group, CommonStrata.definition, {
+      updateModelFromJson(this.catalog.group, stratumId, {
         members: initData.catalog
       });
     }
 
-    const strata = initData.strata;
-    if (isJsonObject(strata)) {
-      Object.keys(strata).forEach(stratum => {
-        const models = strata[stratum];
-        if (!isJsonObject(models)) {
-          return;
-        }
+    // Copy but don't yet load the workbench.
+    const workbench = Array.isArray(initData.workbench)
+      ? initData.workbench.slice()
+      : [];
 
-        Object.keys(models).forEach(modelId => {
-          const model = models[modelId];
-          if (!isJsonObject(model)) {
-            return;
-          }
+    // Load the models
+    let promise: Promise<void>;
 
-          const dereferenced = model.dereferenced;
-          delete model.dereferenced;
-
-          const loadedModel = upsertModelFromJson(
-            CatalogMemberFactory,
-            this,
-            "/",
-            undefined,
-            stratum,
-            {
-              ...model,
-              id: modelId
-            }
-          );
-
-          if (dereferenced) {
-            if (ReferenceMixin.is(loadedModel)) {
-              loadedModel.loadReference().then(() => {
-                upsertModelFromJson(
-                  CatalogMemberFactory,
-                  this,
-                  "/",
-                  loadedModel.dereferenced,
-                  stratum,
-                  dereferenced
-                );
-              });
-            } else {
-              throw new TerriaError({
-                sender: this,
-                title: "Model cannot be dereferenced",
-                message: "The stratum has a `dereferenced` property, but the model cannot be dereferenced."
-              });
-            }
-          }
-        });
-      });
+    const models = initData.models;
+    if (isJsonObject(models)) {
+      promise = Promise.all(
+        Object.keys(models).map(modelId => {
+          return this.loadModelStratum(modelId, stratumId, models);
+        })
+      ).then(() => undefined);
+    } else {
+      promise = Promise.resolve();
     }
 
-    const workbench = initData.workbench;
-    if (Array.isArray(workbench)) {
-      workbench.forEach(modelId => {
+    return promise.then(async () => {
+      // Now load the workbench
+      for (let modelId of workbench) {
         if (typeof modelId !== "string") {
           throw new TerriaError({
             sender: this,
@@ -378,7 +432,8 @@ export default class Terria {
             message: "A model ID in the workbench list is not a string."
           });
         }
-        const model = this.getModelById(BaseModel, modelId);
+
+        let model = this.getModelById(BaseModel, modelId);
         if (model === undefined) {
           throw new TerriaError({
             sender: this,
@@ -389,14 +444,15 @@ export default class Terria {
         this.workbench.add(model);
 
         if (ReferenceMixin.is(model)) {
-          model.loadReference();
+          await model.loadReference();
+          model = model.dereferenced || model;
         }
 
         if (Mappable.is(model)) {
-          model.loadMapItems();
+          await model.loadMapItems();
         }
-      });
-    }
+      }
+    });
   }
 
   loadMagdaConfig(config: any) {
