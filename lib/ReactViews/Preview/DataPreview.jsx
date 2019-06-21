@@ -13,6 +13,12 @@ import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import Styles from "./data-preview.scss";
 
+const prerenderEnd = () => {
+  if (document && document.dispatchEvent) {
+    document.dispatchEvent(new Event("prerender-end"));
+  }
+};
+
 /**
  * Data preview section, for the preview map see DataPreviewMap
  */
@@ -25,6 +31,45 @@ const DataPreview = createReactClass({
     viewState: PropTypes.object,
     previewed: PropTypes.object,
     location: PropTypes.object.isRequired
+  },
+
+  getInitialState() {
+    return {
+      // For prerendering & expanding parent catalog on first load
+      loaded: false
+    };
+  },
+
+  componentDidMount() {
+    // Make sure our prerenderer doesn't stall waiting forever
+    setTimeout(prerenderEnd, 10000);
+    this.checkEnableWithParents();
+  },
+
+  componentDidUpdate() {
+    this.checkEnableWithParents();
+  },
+
+  checkEnableWithParents() {
+    if (
+      !this.state.loaded &&
+      this.props.previewed &&
+      !this.props.previewed.isLoading
+    ) {
+      // also enable parents for the first load ever,
+      // to ensure that the catalog hierarchy is visible as users can land
+      // directly on a previewed item now via URL-routing only, without share link
+      this.props.previewed.parent &&
+        this.props.previewed.parent.enableWithParents &&
+        this.props.previewed.parent.enableWithParents();
+
+      prerenderEnd();
+
+      this.setState({ loaded: true });
+    } else if (!this.state.loaded && !this.props.previewed) {
+      // we're on /catalog/ without a previewed item, immediately prerender end
+      prerenderEnd();
+    }
   },
 
   backToMap() {
