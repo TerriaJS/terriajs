@@ -518,6 +518,7 @@ declare module "terriajs-cesium/Source/DataSources/BillboardGraphics" {
   import VerticalOrigin from "terriajs-cesium/Source/Scene/VerticalOrigin";
   import Color from "terriajs-cesium/Source/Core/Color";
   import Event from "terriajs-cesium/Source/Core/Event";
+  import NearFarScalar from "terriajs-cesium/Source/Core/NearFarScalar";
 
   class BillboardGraphics {
     definitionChanged: Event;
@@ -534,9 +535,9 @@ declare module "terriajs-cesium/Source/DataSources/BillboardGraphics" {
     show: Property<boolean>;
     width: Property<number>;
     height: Property<number>;
-    scaleByDistance: Property<number>;
-    translucencyByDistance: Property<number>;
-    pixelOffsetScaleByDistance: Property<number>;
+    scaleByDistance: Property<NearFarScalar>;
+    translucencyByDistance: Property<NearFarScalar>;
+    pixelOffsetScaleByDistance: Property<NearFarScalar>;
     heightReference: Property<HeightReference>;
     constructor(options?: {
       image?: string;
@@ -552,9 +553,9 @@ declare module "terriajs-cesium/Source/DataSources/BillboardGraphics" {
       show?: boolean;
       width?: number;
       height?: number;
-      scaleByDistance?: number;
-      translucencyByDistance?: number;
-      pixelOffsetScaleByDistance?: number;
+      scaleByDistance?: NearFarScalar;
+      translucencyByDistance?: NearFarScalar;
+      pixelOffsetScaleByDistance?: NearFarScalar;
       heightReference?: HeightReference;
     });
     clone(result?: BillboardGraphics): BillboardGraphics;

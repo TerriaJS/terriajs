@@ -23,4 +23,11 @@ export default class GtfsCatalogItemTraits extends mixTraits(
       type: "string"
     })
     apiKey?: string;
+
+    @primitiveTrait({
+      name: "Image url",
+      description: "Url for the image to use to represent a vehicle. Recommended size 32x32 pixels.",
+      type: "string"
+    })
+    image?: string;
   }

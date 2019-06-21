@@ -19,6 +19,7 @@ import BillboardGraphics from "terriajs-cesium/Source/DataSources/BillboardGraph
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
 import DataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
+import NearFarScalar from "terriajs-cesium/Source/Core/NearFarScalar";
 
 import { computed, observable } from "mobx";
 import Pbf from "pbf";
@@ -69,13 +70,19 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
         });
       });
 
-      console.log("ping");
+    console.log("ping");
 
-      if (this.refreshInterval !== null && this.refreshInterval !== undefined && this.refreshInterval > 0) {
-        setTimeout(() => {this.loadMapItemsPromise}, this.refreshInterval * 1000);
-      }
+    if (
+      this.refreshInterval !== null &&
+      this.refreshInterval !== undefined &&
+      this.refreshInterval > 0
+    ) {
+      setTimeout(() => {
+        this.loadMapItemsPromise;
+      }, this.refreshInterval * 1000);
+    }
 
-      return promise;
+    return promise;
   }
 
   protected get loadMetadataPromise(): Promise<void> {
@@ -109,9 +116,14 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
   }
 
   convertFeedEntityToBillboardData(entity: FeedEntity): BillboardData {
+    if (this.terria.mainViewer.viewerMode === "cesium") {
+    }
+
     const billboard: BillboardGraphics = new BillboardGraphics({
-      image: "public/img/glyphicons_242_google_maps.png", // TODO: get from catalog item
-      heightReference: HeightReference.RELATIVE_TO_GROUND
+      image: this.terria.baseUrl + this.image,
+      heightReference: HeightReference.RELATIVE_TO_GROUND,
+      // near and far distances are arbitrary, these ones look nice
+      scaleByDistance: new NearFarScalar(0.1, 1.0, 100000, 0.1) 
     });
 
     let position = undefined;
