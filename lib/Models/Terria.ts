@@ -37,6 +37,8 @@ import TimelineStack from "./TimelineStack";
 import updateModelFromJson from "./updateModelFromJson";
 import upsertModelFromJson from "./upsertModelFromJson";
 import Workbench from "./Workbench";
+import ShareDataService from "./ShareDataService";
+import ServerConfig from "../Core/ServerConfig";
 
 require("regenerator-runtime/runtime");
 
@@ -47,6 +49,7 @@ interface ConfigParameters {
   proj4ServiceBaseUrl?: string;
   corsProxyBaseUrl?: string;
   proxyableDomainsUrl?: string;
+  serverConfigUrl?: string;
   shareUrl?: string;
   feedbackUrl?: string;
   initFragmentPaths: string[];
@@ -61,6 +64,7 @@ interface ConfigParameters {
 interface StartOptions {
   configUrl: string;
   applicationUrl?: string;
+  shareDataService?: ShareDataService;
 }
 
 type Analytics = any;
@@ -112,6 +116,7 @@ export default class Terria {
     proj4ServiceBaseUrl: "proj4/",
     corsProxyBaseUrl: "proxy/",
     proxyableDomainsUrl: "proxyabledomains/",
+    serverConfigUrl: "serverconfig/",
     shareUrl: "share",
     feedbackUrl: undefined,
     initFragmentPaths: ["init/"],
@@ -142,6 +147,9 @@ export default class Terria {
   private _initSourceLoader = new AsyncLoader(
     this.forceLoadInitSources.bind(this)
   );
+
+  @observable serverConfig: any; // TODO
+  @observable shareDataService: ShareDataService | undefined;
 
   /* Splitter controls */
   @observable showSplitter = false;
@@ -212,6 +220,8 @@ export default class Terria {
   }
 
   start(options: StartOptions) {
+    this.shareDataService = options.shareDataService;
+
     const baseUri = new URI(options.configUrl).filename("");
 
     return loadJson5(options.configUrl)
@@ -234,6 +244,13 @@ export default class Terria {
         });
       })
       .then(() => {
+        this.serverConfig = new ServerConfig();
+        return this.serverConfig.init(this.configParameters.serverConfigUrl);
+      })
+      .then(serverConfig => {
+        if (this.shareDataService && serverConfig) {
+          this.shareDataService.init(serverConfig);
+        }
         if (options.applicationUrl) {
           return this.updateApplicationUrl(options.applicationUrl);
         }
@@ -470,12 +487,12 @@ function interpretHash(
   baseUri: uri.URI
 ) {
   // Resolve #share=xyz with the share data service.
-  const promise = Promise.resolve({});
-  // defined(hashProperties.share) && defined(terria.shareDataService)
-  //   ? terria.shareDataService.resolveData(hashProperties.share)
-  //   : Promise.resolve({});
+  const promise =
+    hashProperties.share !== undefined && terria.shareDataService !== undefined
+      ? terria.shareDataService.resolveData(hashProperties.share)
+      : Promise.resolve({});
 
-  return promise.then(shareProps => {
+  return promise.then((shareProps: any) => {
     Object.keys(hashProperties).forEach(function(property) {
       const propertyValue = hashProperties[property];
 
@@ -484,16 +501,7 @@ function interpretHash(
       } else if (property === "start") {
         // a share link that hasn't been shortened: JSON embedded in URL (only works for small quantities of JSON)
         const startData = JSON.parse(propertyValue);
-
-        // TODO: version check, filtering, etc.
-
-        terria.initSources.push(
-          ...startData.initSources.map((initSource: any) => {
-            return {
-              data: initSource
-            };
-          })
-        );
+        interpretStartData(terria, startData);
       } else if (defined(propertyValue) && propertyValue.length > 0) {
         userProperties.set(property, propertyValue);
       } else {
@@ -505,45 +513,52 @@ function interpretHash(
         terria.initSources.push(initSourceFile);
       }
     });
-    // if (shareProps) {
-    //   interpretStartData(
-    //     terria,
-    //     shareProps
-    //   );
-    // }
+
+    if (shareProps) {
+      interpretStartData(terria, shareProps);
+    }
   });
 }
 
-// function interpretStartData(
-//   terria: Terria,
-//   startData: any
-// ) {
-//   if (defined(startData.version) && startData.version !== latestStartVersion) {
-//     adjustForBackwardCompatibility(startData);
-//   }
+function interpretStartData(terria: Terria, startData: any) {
+  // TODO: version check, filtering, etc.
 
-//   if (defined(terria.filterStartDataCallback)) {
-//     startData = terria.filterStartDataCallback(startData) || startData;
-//   }
+  if (startData.initSources) {
+    terria.initSources.push(
+      ...startData.initSources.map((initSource: any) => {
+        return {
+          data: initSource
+        };
+      })
+    );
+  }
 
-//   // Include any initSources specified in the URL.
-//   if (defined(startData.initSources)) {
-//     for (var i = 0; i < startData.initSources.length; ++i) {
-//       var initSource = startData.initSources[i];
-//       // avoid loading terria.json twice
-//       if (
-//         temporaryInitSources.indexOf(initSource) < 0 &&
-//         !initFragmentExists(temporaryInitSources, initSource)
-//       ) {
-//         temporaryInitSources.push(initSource);
-//         // Only add external files to the application's list of init sources.
-//         if (
-//           typeof initSource === "string" &&
-//           persistentInitSources.indexOf(initSource) < 0
-//         ) {
-//           persistentInitSources.push(initSource);
-//         }
-//       }
-//     }
-//   }
-// }
+  // if (defined(startData.version) && startData.version !== latestStartVersion) {
+  //   adjustForBackwardCompatibility(startData);
+  // }
+
+  // if (defined(terria.filterStartDataCallback)) {
+  //   startData = terria.filterStartDataCallback(startData) || startData;
+  // }
+
+  // // Include any initSources specified in the URL.
+  // if (defined(startData.initSources)) {
+  //   for (var i = 0; i < startData.initSources.length; ++i) {
+  //     var initSource = startData.initSources[i];
+  //     // avoid loading terria.json twice
+  //     if (
+  //       temporaryInitSources.indexOf(initSource) < 0 &&
+  //       !initFragmentExists(temporaryInitSources, initSource)
+  //     ) {
+  //       temporaryInitSources.push(initSource);
+  //       // Only add external files to the application's list of init sources.
+  //       if (
+  //         typeof initSource === "string" &&
+  //         persistentInitSources.indexOf(initSource) < 0
+  //       ) {
+  //         persistentInitSources.push(initSource);
+  //       }
+  //     }
+  //   }
+  // }
+}
