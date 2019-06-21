@@ -405,7 +405,7 @@ export default class Terria {
 
     // Copy but don't yet load the workbench.
     const workbench = Array.isArray(initData.workbench)
-      ? initData.workbench.slice()
+      ? initData.workbench.slice().reverse()
       : [];
 
     // Load the models
