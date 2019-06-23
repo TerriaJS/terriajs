@@ -1,10 +1,8 @@
-import { computed, observable, toJS } from "mobx";
-import createGuid from "terriajs-cesium/Source/Core/createGuid";
-import JsonValue, { isJsonObject, JsonArray, JsonObject } from "../Core/Json";
-import loadJson from "../Core/loadJson";
-import makeRealPromise from "../Core/makeRealPromise";
+import { toJS } from "mobx";
+import { JsonObject } from "../Core/Json";
 import TerriaError from "../Core/TerriaError";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
+import MagdaMixin from "../ModelMixins/MagdaMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import MagdaCatalogItemTraits from "../Traits/MagdaCatalogItemTraits";
@@ -13,13 +11,10 @@ import CatalogMemberFactory from "./CatalogMemberFactory";
 import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";
-import { BaseModel } from "./Model";
-import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
-import Terria from "./Terria";
-import upsertModelFromJson from "./upsertModelFromJson";
-import StratumFromTraits from "./StratumFromTraits";
-import MagdaMixin from "../ModelMixins/MagdaMixin";
 import magdaRecordToCatalogMemberDefinition from "./magdaRecordToCatalogMember";
+import { BaseModel } from "./Model";
+import StratumFromTraits from "./StratumFromTraits";
+import Terria from "./Terria";
 import updateModelFromJson from "./updateModelFromJson";
 
 export default class MagdaCatalogItem extends MagdaMixin(

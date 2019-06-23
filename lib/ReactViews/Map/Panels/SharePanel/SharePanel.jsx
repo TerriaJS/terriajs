@@ -134,7 +134,7 @@ const SharePanel = createReactClass({
 
       buildShortShareLink(this.props.terria)
         .then(shareUrl => this.setState({ shareUrl }))
-        .otherwise(() => {
+        .catch(() => {
           this.setUnshortenedUrl();
           this.setState({
             errorMessage:
@@ -216,10 +216,10 @@ const SharePanel = createReactClass({
       readyCallback: windowToPrint => {
         if (printAutomatically) {
           printWindow(windowToPrint)
-            .otherwise(e => {
+            .catch(e => {
               this.props.terria.error.raiseEvent(e);
             })
-            .always(() => {
+            .finally(() => {
               if (iframe) {
                 document.body.removeChild(iframe);
               }

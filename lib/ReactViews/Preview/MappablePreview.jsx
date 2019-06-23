@@ -46,10 +46,8 @@ class MappablePreview extends React.Component {
     }
     const workbench = this.props.terria.workbench;
     if (workbench.contains(catalogItem)) {
-      // catalogItem.ancestors = undefined;
       workbench.remove(catalogItem);
     } else {
-      // catalogItem.ancestors = this.props.ancestors;
       if (catalogItem.loadMapItems) {
         // TODO: handle promise rejection.
         catalogItem.loadMapItems();

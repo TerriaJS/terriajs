@@ -114,7 +114,7 @@ const AddData = createReactClass({
 
   onFileAddFinished(fileToSelect) {
     this.props.viewState.myDataIsUploadView = false;
-    this.props.viewState.viewCatalogMember(fileToSelect, []); // TODO: set ancestors correctly
+    this.props.viewState.viewCatalogMember(fileToSelect);
   },
 
   onRemoteUrlChange(event) {

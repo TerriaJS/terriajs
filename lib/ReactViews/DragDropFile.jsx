@@ -32,7 +32,7 @@ const DragDropFile = createReactClass({
       if (addedCatalogItems.length > 0) {
         this.props.viewState.myDataIsUploadView = false;
         if (this.props.viewState.explorerPanelIsVisible) {
-          this.props.viewState.viewCatalogMember(addedCatalogItems[0], []); // TODO: set ancestors correctly
+          this.props.viewState.viewCatalogMember(addedCatalogItems[0]);
           this.props.viewState.openUserData();
         } else {
           this.notifyUpload(addedCatalogItems);

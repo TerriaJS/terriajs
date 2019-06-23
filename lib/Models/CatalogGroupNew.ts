@@ -16,7 +16,7 @@ export default class CatalogGroup extends GroupMixin(
     return Promise.resolve(undefined);
   }
 
-  protected get loadMembersPromise(): Promise<void> {
+  protected forceLoadMembers(): Promise<void> {
     return Promise.resolve();
   }
 }

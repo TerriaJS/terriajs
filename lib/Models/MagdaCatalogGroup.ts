@@ -69,7 +69,7 @@ export default class MagdaCatalogGroup extends MagdaMixin(
       const definition = toJS(this.definition);
       const distributionFormats = this.preparedDistributionFormats;
 
-      const jsonPromise = makeRealPromise<JsonValue>(loadJson(proxiedUrl));
+      const jsonPromise = loadJson(proxiedUrl);
       const loadPromise = jsonPromise.then(groupJson => {
         if (!isJsonObject(groupJson) || !isJsonObject(groupJson.aspects)) {
           return Promise.resolve(undefined);
@@ -163,7 +163,7 @@ export default class MagdaCatalogGroup extends MagdaMixin(
     return this.loadReference();
   }
 
-  protected get loadMembersPromise(): Promise<void> {
+  protected forceLoadMembers(): Promise<void> {
     return this.loadReference();
   }
 }
