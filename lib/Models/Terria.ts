@@ -1,4 +1,4 @@
-import { computed, observable, runInAction, toJS } from "mobx";
+import { computed, observable, runInAction, toJS, action } from "mobx";
 import { createTransformer } from "mobx-utils";
 import Clock from "terriajs-cesium/Source/Core/Clock";
 import defined from "terriajs-cesium/Source/Core/defined";
@@ -391,7 +391,8 @@ export default class Terria {
     });
   }
 
-  private applyInitData(initData: JsonObject): Promise<void> {
+  @action
+  applyInitData(initData: JsonObject): Promise<void> {
     const stratumId =
       typeof initData.stratum === "string"
         ? initData.stratum
