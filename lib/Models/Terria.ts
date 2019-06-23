@@ -422,7 +422,9 @@ export default class Terria {
       promise = Promise.resolve();
     }
 
-    return promise.then(async () => {
+    return promise.then(() => {
+      const promises: Promise<void>[] = [];
+
       // Now load the workbench
       for (let modelId of workbench) {
         if (typeof modelId !== "string") {
@@ -444,14 +446,16 @@ export default class Terria {
         this.workbench.add(model);
 
         if (ReferenceMixin.is(model)) {
-          await model.loadReference();
+          promises.push(model.loadReference());
           model = model.dereferenced || model;
         }
 
         if (Mappable.is(model)) {
-          await model.loadMapItems();
+          promises.push(model.loadMapItems());
         }
       }
+
+      return Promise.all(promises).then(() => undefined);
     });
   }
 
