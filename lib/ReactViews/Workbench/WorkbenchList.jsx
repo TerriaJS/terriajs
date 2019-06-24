@@ -38,7 +38,7 @@ class WorkbenchList extends React.Component {
             <WorkbenchItem
               item={item}
               sortData={item}
-              key={item.id}
+              key={item.uniqueId}
               viewState={this.props.viewState}
             />
           </For>

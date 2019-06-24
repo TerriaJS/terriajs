@@ -2,6 +2,7 @@ import { observable, computed, action } from "mobx";
 
 import { BaseModel } from "./Model";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
+import filterOutUndefined from "../Core/filterOutUndefined";
 
 interface WorkbenchItem extends BaseModel {
   supportsReordering?: boolean;
@@ -9,8 +10,7 @@ interface WorkbenchItem extends BaseModel {
 }
 
 export default class Workbench {
-  @observable
-  private readonly _items: WorkbenchItem[] = [];
+  private readonly _items = observable.array<WorkbenchItem>();
 
   /**
    * Gets the list of items on the workbench.
@@ -18,6 +18,14 @@ export default class Workbench {
   @computed
   get items(): readonly WorkbenchItem[] {
     return this._items.map(dereferenceModel);
+  }
+
+  /**
+   * Gets the unique IDs of the items in the workbench.
+   */
+  @computed
+  get itemIds(): readonly string[] {
+    return filterOutUndefined(this._items.map(item => item.uniqueId));
   }
 
   /**
@@ -37,7 +45,7 @@ export default class Workbench {
    */
   @action
   removeAll() {
-    this._items.length = 0;
+    this._items.clear();
   }
 
   /**

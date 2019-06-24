@@ -1,6 +1,7 @@
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import "terriajs-cesium/Source/Scene/ImageryProvider";
-import { BaseModel } from "./Model";
+import Model, { BaseModel } from "./Model";
+import MappableTraits from "../Traits/MappableTraits";
 
 // Shouldn't this be a class?
 export interface ImageryParts {
@@ -21,16 +22,8 @@ export namespace ImageryParts {
   }
 }
 
-interface Rectangle {
-  west?: number;
-  south?: number;
-  east?: number;
-  north?: number;
-}
-
-interface Mappable {
+interface Mappable extends Model<MappableTraits> {
   readonly mapItems: ReadonlyArray<DataSource | ImageryParts>;
-  rectangle?: Rectangle;
   loadMapItems(): Promise<void>;
 }
 

@@ -5,7 +5,6 @@ import addedByUser from "../../Core/addedByUser";
 import removeUserAddedData from "../../Models/removeUserAddedData";
 import CatalogGroup from "./CatalogGroup";
 import DataCatalogMember from "./DataCatalogMember";
-import getAncestors from "../../Models/getAncestors";
 import { observer } from "mobx-react";
 import CommonStrata from "../../Models/CommonStrata";
 
@@ -63,7 +62,10 @@ const DataCatalogGroup = observer(
     clickGroup() {
       this.toggleOpen();
       this.props.group.loadMembers();
-      this.props.viewState.viewCatalogMember(this.props.group);
+      this.props.viewState.viewCatalogMember(
+        this.props.group,
+        this.props.ancestors
+      );
     },
 
     isTopLevel() {
@@ -91,12 +93,15 @@ const DataCatalogGroup = observer(
     },
 
     render() {
-      const group = this.props.group;
+      let group = this.props.group;
+      if (group !== undefined && group.dereferenced !== undefined) {
+        group = group.dereferenced;
+      }
 
       return (
         <CatalogGroup
           text={this.getNameOrPrettyUrl()}
-          title={getAncestors(group)
+          title={this.props.ancestors
             .map(member => member.nameInCatalog)
             .join(" → ")}
           topLevel={this.isTopLevel()}
@@ -115,7 +120,7 @@ const DataCatalogGroup = observer(
           <If condition={this.isOpen()}>
             <For each="item" of={group.memberModels}>
               <DataCatalogMember
-                key={item.id}
+                key={item.uniqueId}
                 member={item}
                 viewState={this.props.viewState}
                 userData={this.props.userData}

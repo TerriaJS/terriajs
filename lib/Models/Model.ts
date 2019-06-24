@@ -7,7 +7,7 @@ import StratumFromTraits from "./StratumFromTraits";
 import Terria from "./Terria";
 
 export interface ModelConstructor<T> {
-  new (id: string, terria: Terria): T;
+  new (uniqueId: string | undefined, terria: Terria): T;
   prototype: T;
 }
 
@@ -16,10 +16,11 @@ export abstract class BaseModel {
   abstract get traits(): {
     [id: string]: Trait;
   };
+  abstract get knownContainerUniqueIds(): string[];
   abstract get strata(): ObservableMap<string, StratumFromTraits<ModelTraits>>;
   abstract get topStratum(): StratumFromTraits<ModelTraits>;
 
-  constructor(readonly id: ModelId, readonly terria: Terria) {}
+  constructor(readonly uniqueId: string | undefined, readonly terria: Terria) {}
 
   abstract get strataTopToBottom(): StratumFromTraits<ModelTraits>[];
   abstract get strataBottomToTop(): StratumFromTraits<ModelTraits>[];
@@ -35,7 +36,8 @@ export interface ModelInterface<T extends ModelTraits> {
   };
   readonly strata: ObservableMap<string, StratumFromTraits<T>>;
   readonly terria: Terria;
-  readonly id: string;
+  readonly uniqueId: string | undefined;
+  readonly knownContainerUniqueIds: string[];
 
   readonly strataTopToBottom: StratumFromTraits<T>[];
   readonly strataBottomToTop: StratumFromTraits<T>[];

@@ -59,11 +59,8 @@ const DataCatalogItem = observer(
       }
       const workbench = catalogItem.terria.workbench;
       if (workbench.contains(catalogItem)) {
-        catalogItem.ancestors = undefined;
         workbench.remove(catalogItem);
       } else {
-        catalogItem.ancestors = this.props.ancestors;
-
         if (catalogItem.loadMapItems) {
           // TODO: handle promise rejection.
           catalogItem.loadMapItems();
@@ -93,7 +90,10 @@ const DataCatalogItem = observer(
       if (this.props.item.loadReference) {
         this.props.item.loadReference();
       }
-      this.props.viewState.viewCatalogMember(this.props.item);
+      this.props.viewState.viewCatalogMember(
+        this.props.item,
+        this.props.ancestors
+      );
       // mobile switch to nowvewing
       this.props.viewState.switchMobileView(
         this.props.viewState.mobileViewOptions.preview

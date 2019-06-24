@@ -30,7 +30,7 @@ export default class BingMapsCatalogItem
     ];
   }
 
-  protected get loadMetadataPromise(): Promise<void> {
+  protected forceLoadMetadata(): Promise<void> {
     return Promise.resolve();
   }
 

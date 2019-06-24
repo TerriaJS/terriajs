@@ -1,31 +1,91 @@
-import { computed, observable, toJS } from "mobx";
-import createGuid from "terriajs-cesium/Source/Core/createGuid";
-import JsonValue, { isJsonObject, JsonArray } from "../Core/Json";
-import loadJson from "../Core/loadJson";
-import makeRealPromise from "../Core/makeRealPromise";
+import { toJS } from "mobx";
+import { JsonObject } from "../Core/Json";
 import TerriaError from "../Core/TerriaError";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
+import MagdaMixin from "../ModelMixins/MagdaMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
-import MagdaCatalogItemTraits, {
-  MagdaDistributionFormatTraits
-} from "../Traits/MagdaCatalogItemTraits";
+import MagdaCatalogItemTraits from "../Traits/MagdaCatalogItemTraits";
+import MagdaDistributionFormatTraits from "../Traits/MagdaDistributionFormatTraits";
 import CatalogMemberFactory from "./CatalogMemberFactory";
 import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";
+import magdaRecordToCatalogMemberDefinition from "./magdaRecordToCatalogMember";
 import { BaseModel } from "./Model";
-import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
+import StratumFromTraits from "./StratumFromTraits";
 import Terria from "./Terria";
-import upsertModelFromJson from "./upsertModelFromJson";
+import updateModelFromJson from "./updateModelFromJson";
 
-export default class MagdaCatalogItem extends ReferenceMixin(
-  UrlMixin(CatalogMemberMixin(CreateModel(MagdaCatalogItemTraits)))
+export default class MagdaCatalogItem extends MagdaMixin(
+  ReferenceMixin(
+    UrlMixin(CatalogMemberMixin(CreateModel(MagdaCatalogItemTraits)))
+  )
 ) {
   static readonly type = "magda";
 
-  @observable
-  private _reference: BaseModel | undefined;
+  static readonly defaultDistributionFormats: StratumFromTraits<
+    MagdaDistributionFormatTraits
+  >[] = [
+    createStratumInstance(MagdaDistributionFormatTraits, {
+      id: "WMS",
+      formatRegex: "^wms$",
+      definition: {
+        type: "wms"
+      }
+    }),
+    createStratumInstance(MagdaDistributionFormatTraits, {
+      id: "EsriMapServer",
+      formatRegex: "^esri rest$",
+      urlRegex: "MapServer",
+      definition: {
+        type: "esri-mapServer"
+      }
+    }),
+    createStratumInstance(MagdaDistributionFormatTraits, {
+      id: "CSV",
+      formatRegex: "^csv(-geo-)?",
+      definition: {
+        type: "csv"
+      }
+    }),
+    createStratumInstance(MagdaDistributionFormatTraits, {
+      id: "CZML",
+      formatRegex: "^czml$",
+      definition: {
+        type: "czml"
+      }
+    }),
+    createStratumInstance(MagdaDistributionFormatTraits, {
+      id: "KML",
+      formatRegex: "^km[lz]$",
+      definition: {
+        type: "kml"
+      }
+    }),
+    createStratumInstance(MagdaDistributionFormatTraits, {
+      id: "GeoJSON",
+      formatRegex: "^geojson$",
+      definition: {
+        type: "geojson"
+      }
+    }),
+    createStratumInstance(MagdaDistributionFormatTraits, {
+      id: "WFS",
+      formatRegex: "^wfs$",
+      definition: {
+        type: "wfs"
+      }
+    }),
+    createStratumInstance(MagdaDistributionFormatTraits, {
+      id: "EsriFeatureServer",
+      formatRegex: "^esri rest$",
+      urlRegex: "FeatureServer",
+      definition: {
+        type: "esri-featureServer"
+      }
+    })
+  ];
 
   get type() {
     return MagdaCatalogItem.type;
@@ -37,285 +97,94 @@ export default class MagdaCatalogItem extends ReferenceMixin(
     this.setTrait(
       CommonStrata.defaults,
       "distributionFormats",
-      defaultDistributionFormats
+      MagdaCatalogItem.defaultDistributionFormats
     );
   }
 
-  get dereferenced(): BaseModel | undefined {
-    return this._reference;
-  }
-
-  protected get loadMetadataPromise(): Promise<void> {
+  protected forceLoadMetadata(): Promise<void> {
     return this.loadReference();
   }
 
-  protected get loadReferencePromise(): Promise<void> {
-    return Promise.resolve()
-      .then(() => {
-        if (this.uri === undefined) {
-          throw new TerriaError({
-            sender: this,
-            title: "url must be specified",
-            message: "MagdaCatalogItem requires that `url` be specified."
-          });
-        }
-
-        const baseUri = this.uri.segment("api/v0/registry");
-        if (this.distributionId !== undefined) {
-          const distributionUri = baseUri
-            .clone()
-            .segment(`records/${encodeURIComponent(this.distributionId)}`)
-            .addQuery({
-              aspect: "dcat-distribution-strings",
-              optionlAspect: "dataset-format"
-            });
-          const proxiedUrl = proxyCatalogItemUrl(
-            this,
-            distributionUri.toString(),
-            "1d"
-          );
-          return makeRealPromise<JsonValue>(loadJson(proxiedUrl)).then(
-            distributionJson => {
-              if (
-                isJsonObject(distributionJson) &&
-                distributionJson.id !== undefined
-              ) {
-                return <JsonArray>[distributionJson];
-              } else {
-                return [];
-              }
-            }
-          );
-        } else if (this.datasetId !== undefined) {
-          const datasetUri = baseUri
-            .clone()
-            .segment(`records/${encodeURIComponent(this.datasetId)}`)
-            .addQuery({
-              aspect: "dataset-distributions",
-              optionalAspect: "dataset-format",
-              dereference: true
-            });
-          const proxiedUrl = proxyCatalogItemUrl(
-            this,
-            datasetUri.toString(),
-            "1d"
-          );
-          return makeRealPromise<JsonValue>(loadJson(proxiedUrl)).then(
-            datasetJson => {
-              if (!isJsonObject(datasetJson)) {
-                return [];
-              }
-
-              const aspects = datasetJson.aspects;
-              if (!isJsonObject(aspects)) {
-                return [];
-              }
-
-              const distributionsAspect = aspects["dataset-distributions"];
-              if (!isJsonObject(distributionsAspect)) {
-                return [];
-              }
-
-              const distributions = distributionsAspect.distributions;
-              if (!Array.isArray(distributions)) {
-                return [];
-              }
-
-              return distributions;
-            }
-          );
-        } else {
-          throw new TerriaError({
-            sender: this,
-            title: "distributionId or datasetId must be specified",
-            message:
-              "MagdaCatalogItem requires that either `distributionId` or `datasetId` be specified."
-          });
-        }
-      })
-      .then(distributionsToConsider => {
-        return this.createCatalogItemFromDistributions(distributionsToConsider);
-      })
-      .then(catalogItem => {
-        this._reference = catalogItem;
-      });
-  }
-
-  async createCatalogItemFromDistributions(
-    distributions: JsonArray
+  protected forceLoadReference(
+    previousTarget: BaseModel | undefined
   ): Promise<BaseModel | undefined> {
-    const distributionFormats = this.distributionFormats || [];
-    const formatRegexs = distributionFormats.map(distributionFormat => {
-      if (distributionFormat.formatRegex !== undefined) {
-        return new RegExp(distributionFormat.formatRegex, "i");
-      }
-    });
-    const urlRegexs = distributionFormats.map(distributionFormat => {
-      if (distributionFormat.urlRegex !== undefined) {
-        return new RegExp(distributionFormat.urlRegex, "i");
-      }
-    });
-
-    class InheritedStratum {
-      constructor(readonly magda: MagdaCatalogItem, readonly url: string) {}
-
-      @computed
-      get name() {
-        return this.magda.name;
-      }
-
-      @computed
-      get info() {
-        return this.magda.info;
-      }
+    const url = this.url;
+    if (url === undefined) {
+      return Promise.reject(
+        new TerriaError({
+          sender: this,
+          title: "Cannot load Magda record",
+          message: "The Magda URL is required."
+        })
+      );
     }
 
-    for (let i = 0; i < distributionFormats.length; ++i) {
-      const distributionFormat = distributionFormats[i];
-      const formatRegex = formatRegexs[i];
-      const urlRegex = urlRegexs[i];
+    const terria = this.terria;
+    const id = this.uniqueId;
+    const name = this.name;
+    const distributionId = this.distributionId;
+    const definition = toJS(this.definition);
+    const distributionFormats = this.preparedDistributionFormats;
 
-      // Find distributions that match this format
-      for (let j = 0; j < distributions.length; ++j) {
-        const distribution = distributions[j];
-
-        if (!isJsonObject(distribution)) {
-          continue;
-        }
-
-        const aspects = distribution.aspects;
-        if (!isJsonObject(aspects)) {
-          continue;
-        }
-
-        const dcatJson = aspects["dcat-distribution-strings"];
-        const datasetFormat = aspects["dataset-format"];
-
-        let format: string | undefined;
-        let url: string | undefined;
-
-        if (isJsonObject(dcatJson)) {
-          if (typeof dcatJson.format === "string") {
-            format = dcatJson.format;
+    return this.loadMagdaRecord({
+      id: this.datasetId,
+      optionalAspects: [
+        "dcat-dataset-strings",
+        "dataset-distributions",
+        "terria"
+      ],
+      dereference: true
+    })
+      .then(datasetJson => {
+        return magdaRecordToCatalogMemberDefinition({
+          magdaBaseUrl: url,
+          name: name,
+          record: datasetJson,
+          preferredDistributionId: distributionId,
+          definition: definition,
+          distributionFormats: distributionFormats
+        });
+      })
+      .then(
+        (
+          modelDefinition: JsonObject | undefined
+        ): Promise<BaseModel | undefined> => {
+          if (modelDefinition === undefined || !modelDefinition.type) {
+            return Promise.resolve(undefined);
           }
-          if (typeof dcatJson.downloadURL === "string") {
-            url = dcatJson.downloadURL;
+
+          const dereferenced =
+            previousTarget && previousTarget.type === modelDefinition.type
+              ? previousTarget
+              : CatalogMemberFactory.create(
+                  <string>modelDefinition.type,
+                  id,
+                  terria
+                );
+
+          if (dereferenced === undefined) {
+            throw new TerriaError({
+              sender: this,
+              title: "Unable to create catalog member",
+              message: `Catalog member of type ${
+                modelDefinition.type
+              } does not exist.`
+            });
           }
 
-          if (url === undefined && typeof dcatJson.accessURL === "string") {
-            url = dcatJson.accessURL;
-          }
-        }
-
-        if (
-          isJsonObject(datasetFormat) &&
-          typeof datasetFormat.format === "string"
-        ) {
-          format = datasetFormat.format;
-        }
-
-        if (format === undefined || url === undefined) {
-          continue;
-        }
-
-        if (
-          (formatRegex !== undefined && !formatRegex.test(format)) ||
-          (urlRegex !== undefined && !urlRegex.test(url))
-        ) {
-          continue;
-        }
-
-        const definition = Object.assign(
-          {},
-          toJS(this.definition),
-          toJS(distributionFormat.definition)
-        );
-        definition.localId = createGuid();
-
-        try {
-          const catalogMember = upsertModelFromJson(
-            CatalogMemberFactory,
-            this.terria,
-            this.id,
-            undefined,
+          updateModelFromJson(
+            dereferenced,
             CommonStrata.definition,
-            definition
+            modelDefinition
           );
-          catalogMember.strata.set(
-            CommonStrata.inheritedFromParentGroup,
-            new InheritedStratum(this, url)
-          );
-          if (CatalogMemberMixin.isMixedInto(catalogMember)) {
-            await catalogMember.loadMetadata();
-          }
-          return catalogMember;
-        } catch (e) {
-          continue;
-        }
-      }
-    }
 
-    return undefined;
+          if (CatalogMemberMixin.isMixedInto(dereferenced)) {
+            return dereferenced
+              .loadMetadata()
+              .then(() => <BaseModel>dereferenced);
+          }
+          return Promise.resolve(dereferenced);
+        }
+      );
   }
 }
-
-const defaultDistributionFormats = [
-  createStratumInstance(MagdaDistributionFormatTraits, {
-    id: "WMS",
-    formatRegex: "^wms$",
-    definition: {
-      type: "wms"
-    }
-  }),
-  createStratumInstance(MagdaDistributionFormatTraits, {
-    id: "EsriMapServer",
-    formatRegex: "^esri rest$",
-    urlRegex: "MapServer",
-    definition: {
-      type: "esri-mapServer"
-    }
-  }),
-  createStratumInstance(MagdaDistributionFormatTraits, {
-    id: "CSV",
-    formatRegex: "^csv(-geo-)?",
-    definition: {
-      type: "csv"
-    }
-  }),
-  createStratumInstance(MagdaDistributionFormatTraits, {
-    id: "CZML",
-    formatRegex: "^czml$",
-    definition: {
-      type: "czml"
-    }
-  }),
-  createStratumInstance(MagdaDistributionFormatTraits, {
-    id: "KML",
-    formatRegex: "^km[lz]$",
-    definition: {
-      type: "kml"
-    }
-  }),
-  createStratumInstance(MagdaDistributionFormatTraits, {
-    id: "GeoJSON",
-    formatRegex: "^geojson$",
-    definition: {
-      type: "geojson"
-    }
-  }),
-  createStratumInstance(MagdaDistributionFormatTraits, {
-    id: "WFS",
-    formatRegex: "^wfs$",
-    definition: {
-      type: "wfs"
-    }
-  }),
-  createStratumInstance(MagdaDistributionFormatTraits, {
-    id: "EsriFeatureServer",
-    formatRegex: "^esri rest$",
-    urlRegex: "FeatureServer",
-    definition: {
-      type: "esri-featureServer"
-    }
-  })
-];

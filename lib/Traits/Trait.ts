@@ -1,7 +1,5 @@
-import StratumFromTraits from "../Models/StratumFromTraits";
+import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import { BaseModel } from "../Models/Model";
-import ModelTraits from "./ModelTraits";
-import { IComputed } from "mobx";
 
 export interface TraitOptions {
   name: string;
@@ -20,9 +18,9 @@ export default abstract class Trait {
     this.description = options.description;
   }
 
-  abstract getValue(strataTopToBottom: StratumFromTraits<ModelTraits>[]): any;
-
+  abstract getValue(model: BaseModel): any;
   abstract fromJson(model: BaseModel, stratumName: string, jsonValue: any): any;
+  abstract toJson(value: any): any;
 
   abstract isSameType(trait: Trait): boolean;
 }

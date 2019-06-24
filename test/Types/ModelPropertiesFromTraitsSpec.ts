@@ -1,13 +1,14 @@
+import { JsonObject } from "../../lib/Core/Json";
 import {
   AllowsUndefined,
   Equals,
   IsWritable,
   IsWritableArray
 } from "../../lib/Core/TypeConditionals";
+import Model from "../../lib/Models/Model";
 import ModelPropertiesFromTraits from "../../lib/Models/ModelPropertiesFromTraits";
 import TraitsForTesting, { NestedTraits } from "./TraitsForTesting";
 import { expectFalse, expectTrue } from "./TypeChecks";
-import { IsValidSimpleTraitType } from "../../lib/Traits/ModelTraits";
 
 type ModelProperties = ModelPropertiesFromTraits<TraitsForTesting>;
 
@@ -17,15 +18,19 @@ const modelProperties: ModelProperties = <any>{};
 expectTrue<Equals<typeof modelProperties.withDefault, number>>();
 expectTrue<Equals<typeof modelProperties.withoutDefault, number | undefined>>();
 expectTrue<Equals<typeof modelProperties.someBool, boolean | undefined>>();
-expectTrue<Equals<typeof modelProperties.unknownObject, object | undefined>>();
-expectTrue<Equals<typeof modelProperties.unknownObjectWithDefault, object>>();
+expectTrue<
+  Equals<typeof modelProperties.unknownObject, JsonObject | undefined>
+>();
+expectTrue<
+  Equals<typeof modelProperties.unknownObjectWithDefault, JsonObject>
+>();
 expectTrue<
   Equals<typeof modelProperties.withNull, string | null | undefined>
 >();
 expectTrue<
   Equals<
     typeof modelProperties.nestedNullable,
-    ModelPropertiesFromTraits<NestedTraits> | null | undefined
+    Model<NestedTraits> | null | undefined
   >
 >();
 
@@ -42,8 +47,8 @@ if (nested) {
   // Nested properties allow undefined only if they do not have a default.
   expectTrue<Equals<typeof nested.withDefault, number>>();
   expectTrue<Equals<typeof nested.withoutDefault, number | undefined>>();
-  expectTrue<Equals<typeof nested.unknownObject, object | undefined>>();
-  expectTrue<Equals<typeof nested.unknownObjectWithDefault, object>>();
+  expectTrue<Equals<typeof nested.unknownObject, JsonObject | undefined>>();
+  expectTrue<Equals<typeof nested.unknownObjectWithDefault, JsonObject>>();
   expectTrue<Equals<typeof nested.withNull, string | null | undefined>>();
 
   // Nested properties may not be modified.
@@ -73,8 +78,8 @@ if (array) {
   // Properties in traits in arrays allow undefined only if they do not have a default.
   expectTrue<Equals<typeof first.withDefault, number>>();
   expectTrue<Equals<typeof first.withoutDefault, number | undefined>>();
-  expectTrue<Equals<typeof first.unknownObject, object | undefined>>();
-  expectTrue<Equals<typeof first.unknownObjectWithDefault, object>>();
+  expectTrue<Equals<typeof first.unknownObject, JsonObject | undefined>>();
+  expectTrue<Equals<typeof first.unknownObjectWithDefault, JsonObject>>();
   expectTrue<Equals<typeof first.withNull, string | null | undefined>>();
 
   // Properties in traits in arrays can not be modified.

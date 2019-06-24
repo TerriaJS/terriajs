@@ -74,7 +74,7 @@ export default class CsvCatalogItem extends AsyncMappableMixin(
       });
   }
 
-  protected get loadMetadataPromise(): Promise<void> {
+  protected forceLoadMetadata(): Promise<void> {
     return Promise.resolve();
   }
 }

@@ -6,15 +6,17 @@ import CreateModel from "./CreateModel";
 export default class CatalogGroup extends GroupMixin(
   CatalogMemberMixin(CreateModel(CatalogGroupTraits))
 ) {
+  static readonly type = "group";
+
   get type() {
-    return "group";
+    return CatalogGroup.type;
   }
 
-  get loadMetadataPromise(): Promise<void> {
+  protected forceLoadMetadata(): Promise<void> {
     return Promise.resolve(undefined);
   }
 
-  protected get loadMembersPromise(): Promise<void> {
+  protected forceLoadMembers(): Promise<void> {
     return Promise.resolve();
   }
 }

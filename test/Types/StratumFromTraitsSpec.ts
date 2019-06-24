@@ -7,6 +7,7 @@ import {
   AllowsUndefined,
   IsWritableArray
 } from "../../lib/Core/TypeConditionals";
+import { JsonObject } from "../../lib/Core/Json";
 
 type Stratum = StratumFromTraits<TraitsForTesting>;
 
@@ -15,9 +16,9 @@ const stratum: Stratum = <any>{};
 // Simple properties allow undefined, whether they have a default or not.
 expectTrue<Equals<typeof stratum.withDefault, number | undefined>>();
 expectTrue<Equals<typeof stratum.withoutDefault, number | undefined>>();
-expectTrue<Equals<typeof stratum.unknownObject, object | undefined>>();
+expectTrue<Equals<typeof stratum.unknownObject, JsonObject | undefined>>();
 expectTrue<
-  Equals<typeof stratum.unknownObjectWithDefault, object | undefined>
+  Equals<typeof stratum.unknownObjectWithDefault, JsonObject | undefined>
 >();
 expectTrue<Equals<typeof stratum.withNull, string | null | undefined>>();
 
@@ -37,9 +38,9 @@ if (nested) {
   // All nested properties allow undefined.
   expectTrue<Equals<typeof nested.withDefault, number | undefined>>();
   expectTrue<Equals<typeof nested.withoutDefault, number | undefined>>();
-  expectTrue<Equals<typeof nested.unknownObject, object | undefined>>();
+  expectTrue<Equals<typeof nested.unknownObject, JsonObject | undefined>>();
   expectTrue<
-    Equals<typeof nested.unknownObjectWithDefault, object | undefined>
+    Equals<typeof nested.unknownObjectWithDefault, JsonObject | undefined>
   >();
   expectTrue<Equals<typeof nested.withNull, string | null | undefined>>();
 
@@ -73,9 +74,9 @@ if (array) {
   // Properties in traits in arrays allow undefined.
   expectTrue<Equals<typeof first.withDefault, number | undefined>>();
   expectTrue<Equals<typeof first.withoutDefault, number | undefined>>();
-  expectTrue<Equals<typeof first.unknownObject, object | undefined>>();
+  expectTrue<Equals<typeof first.unknownObject, JsonObject | undefined>>();
   expectTrue<
-    Equals<typeof first.unknownObjectWithDefault, object | undefined>
+    Equals<typeof first.unknownObjectWithDefault, JsonObject | undefined>
   >();
   expectTrue<Equals<typeof first.withNull, string | null | undefined>>();
 

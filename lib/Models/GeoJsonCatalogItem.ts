@@ -125,11 +125,7 @@ class GeoJsonCatalogItem extends AsyncMappableMixin(
           }
           resolve(loadZipFile(proxyCatalogItemUrl(this, this.url, "1d")));
         } else {
-          resolve(
-            makeRealPromise<JsonValue>(
-              loadJson(proxyCatalogItemUrl(this, this.url, "1d"))
-            )
-          );
+          resolve(loadJson(proxyCatalogItemUrl(this, this.url, "1d")));
         }
       } else {
         throw new TerriaError({
@@ -174,7 +170,7 @@ class GeoJsonCatalogItem extends AsyncMappableMixin(
     return [this._dataSource];
   }
 
-  protected get loadMetadataPromise(): Promise<void> {
+  protected forceLoadMetadata(): Promise<void> {
     return Promise.resolve();
   }
 
@@ -486,7 +482,7 @@ function describeWithoutUnderscores(
 function polygonHasWideOutline(polygon: PolygonGraphics) {
   return (
     isDefined(polygon.outlineWidth) &&
-    getPropertyValue(polygon.outlineWidth) > 1
+    getPropertyValue<number>(polygon.outlineWidth) > 1
   );
 }
 
@@ -598,7 +594,7 @@ function loadZipFile(url: string): Promise<JsonValue> {
               const entry = entries[i];
               if (geoJsonRegex.test(entry.filename)) {
                 entry.getData(new zip.Data64URIWriter(), function(uri: string) {
-                  resolve(makeRealPromise<JsonValue>(loadJson(uri)));
+                  resolve(loadJson(uri));
                 });
                 resolved = true;
               }
