@@ -3,9 +3,9 @@ Change Log
 
 ### v7.6.3
 
-* Fixed a bug with picking features that cross the anti-meridian in 2D mode 
+* Fixed a bug with picking features that cross the anti-meridian in 2D mode .
 * Fixed a bug where `ArcGisMapServerCatalogItem` legends were being created during search.
-* Fixed a bug where region mapping would not accurately reflect share link parameters
+* Fixed a bug where region mapping would not accurately reflect share link parameters.
 
 ### v7.6.2
 
