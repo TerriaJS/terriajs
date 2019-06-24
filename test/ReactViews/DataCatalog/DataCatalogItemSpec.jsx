@@ -6,7 +6,7 @@ import CatalogItem from "../../../lib/Models/CatalogItem";
 import Terria from "../../../lib/Models/Terria";
 import ViewState from "../../../lib/ReactViewModels/ViewState";
 import CatalogItemComponent from "../../../lib/ReactViews/DataCatalog/CatalogItem";
-import DataCatalogItem from "../../../lib/ReactViews/DataCatalog/DataCatalogItem";
+import { DataCatalogItemRaw } from "../../../lib/ReactViews/DataCatalog/DataCatalogItem";
 import { getShallowRenderedOutput } from "../MoreShallowTools";
 
 function makeItemUserAdded(item, terria) {
@@ -242,7 +242,8 @@ describe("DataCatalogItem", () => {
 
   function renderShallow() {
     return getShallowRenderedOutput(
-      <DataCatalogItem
+      <DataCatalogItemRaw
+        match={{ params: {} }}
         viewState={viewState}
         item={item}
         removable={removable}

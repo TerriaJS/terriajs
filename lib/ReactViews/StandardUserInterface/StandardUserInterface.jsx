@@ -353,4 +353,8 @@ const AppRouting = props => (
   </Router>
 );
 
-module.exports = AppRouting;
+module.exports = {
+  default: AppRouting,
+  StandardUserInterface: AppRouting,
+  StandardUserInterfaceRaw: StandardUserInterface
+};

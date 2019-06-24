@@ -119,4 +119,8 @@ const DataCatalogItem = createReactClass({
   }
 });
 
-module.exports = withRouter(DataCatalogItem);
+module.exports = {
+  default: withRouter(DataCatalogItem),
+  DataCatalogItem: withRouter(DataCatalogItem),
+  DataCatalogItemRaw: DataCatalogItem
+};

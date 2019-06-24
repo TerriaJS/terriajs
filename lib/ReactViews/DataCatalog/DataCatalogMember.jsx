@@ -4,7 +4,7 @@ import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import ObserveModelMixin from "../ObserveModelMixin";
-import DataCatalogItem from "./DataCatalogItem.jsx";
+import { DataCatalogItem } from "./DataCatalogItem.jsx";
 import DataCatalogGroup from "./DataCatalogGroup.jsx";
 
 /**
