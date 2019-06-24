@@ -432,6 +432,10 @@ export default class Terria {
       });
     }
 
+    if (Array.isArray(initData.stories)) {
+      this.stories = initData.stories;
+    }
+
     // Copy but don't yet load the workbench.
     const workbench = Array.isArray(initData.workbench)
       ? initData.workbench.slice().reverse()
