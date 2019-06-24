@@ -11,31 +11,15 @@ import Icon from "../Icon.jsx";
 import Styles from "./story-panel.scss";
 
 export function activateStory(story, terria) {
-  const promises = runInAction(() => {
+  return runInAction(() => {
     if (story.shareData) {
       return story.shareData.initSources.map(initSource =>
-        terria.applyInitData(initSource, true)
+        terria.applyInitData({
+          initData: initSource,
+          replaceStratum: true
+        })
       );
     }
-  });
-
-  return Promise.all(promises).then(() => {
-    // const nowViewingPaths = story.shareData.initSources.reduce((p, c) => {
-    //   if (c.sharedCatalogMembers) {
-    //     return p.concat(Object.keys(c.sharedCatalogMembers));
-    //   }
-    //   return p;
-    // }, []);
-    // const nowViewing = terria.nowViewing.items;
-    // nowViewing.slice().forEach(item => {
-    //   const itemToCheck = defined(item.creatorCatalogItem)
-    //     ? item.creatorCatalogItem
-    //     : item;
-    //   const path = itemToCheck.uniqueId;
-    //   if (nowViewingPaths.indexOf(path) < 0) {
-    //     itemToCheck.isEnabled = false;
-    //   }
-    // });
   });
 }
 

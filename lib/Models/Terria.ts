@@ -75,6 +75,11 @@ interface TerriaOptions {
   analytics?: Analytics;
 }
 
+interface ApplyInitDataOptions {
+  initData: JsonObject;
+  replaceStratum?: boolean;
+}
+
 export default class Terria {
   private models = observable.map<string, BaseModel>();
 
@@ -301,7 +306,9 @@ export default class Terria {
           if (initSource === undefined) {
             return;
           }
-          this.applyInitData(toJS(initSource));
+          this.applyInitData({
+            initData: initSource
+          });
         });
       });
     });
@@ -310,7 +317,8 @@ export default class Terria {
   private loadModelStratum(
     modelId: string,
     stratumId: string,
-    allModelStratumData: JsonObject
+    allModelStratumData: JsonObject,
+    replaceStratum: boolean
   ): Promise<BaseModel> {
     const thisModelStratumData = allModelStratumData[modelId];
     if (!isJsonObject(thisModelStratumData)) {
@@ -334,7 +342,8 @@ export default class Terria {
         return this.loadModelStratum(
           containerId,
           stratumId,
-          allModelStratumData
+          allModelStratumData,
+          replaceStratum
         ).then(container => {
           if (GroupMixin.isMixedInto(container)) {
             return container.loadMembers();
@@ -347,7 +356,7 @@ export default class Terria {
     }
 
     return promise.then(() => {
-      const dereferenced = thisModelStratumData.dereferenced;
+      let dereferenced = thisModelStratumData.dereferenced;
       delete thisModelStratumData.dereferenced;
 
       const loadedModel = upsertModelFromJson(
@@ -359,8 +368,21 @@ export default class Terria {
         {
           ...thisModelStratumData,
           id: modelId
-        }
+        },
+        replaceStratum
       );
+
+      // If we're replacing the stratum and the existing model is already
+      // dereferenced, we need to replace the dereferenced stratum, too,
+      // even if there's no trace of it it in the load data.
+      if (
+        replaceStratum &&
+        dereferenced === undefined &&
+        ReferenceMixin.is(loadedModel) &&
+        loadedModel.dereferenced !== undefined
+      ) {
+        dereferenced = {};
+      }
 
       if (dereferenced) {
         if (ReferenceMixin.is(loadedModel)) {
@@ -373,7 +395,8 @@ export default class Terria {
                 "/",
                 loadedModel.dereferenced,
                 stratumId,
-                dereferenced
+                dereferenced,
+                replaceStratum
               );
             })
             .then(() => loadedModel);
@@ -392,7 +415,12 @@ export default class Terria {
   }
 
   @action
-  applyInitData(initData: JsonObject): Promise<void> {
+  applyInitData({
+    initData,
+    replaceStratum = false
+  }: ApplyInitDataOptions): Promise<void> {
+    initData = toJS(initData);
+
     const stratumId =
       typeof initData.stratum === "string"
         ? initData.stratum
@@ -416,7 +444,12 @@ export default class Terria {
     if (isJsonObject(models)) {
       promise = Promise.all(
         Object.keys(models).map(modelId => {
-          return this.loadModelStratum(modelId, stratumId, models);
+          return this.loadModelStratum(
+            modelId,
+            stratumId,
+            models,
+            replaceStratum
+          );
         })
       ).then(() => undefined);
     } else {
@@ -424,39 +457,40 @@ export default class Terria {
     }
 
     return promise.then(() => {
-      const promises: Promise<void>[] = [];
+      return runInAction(() => {
+        const promises: Promise<void>[] = [];
 
-      // Now load the workbench
-      for (let modelId of workbench) {
-        if (typeof modelId !== "string") {
-          throw new TerriaError({
-            sender: this,
-            title: "Invalid model ID in workbench",
-            message: "A model ID in the workbench list is not a string."
-          });
+        // Set the new contents of the workbench.
+        const newItems = filterOutUndefined(
+          workbench.map(modelId => {
+            if (typeof modelId !== "string") {
+              throw new TerriaError({
+                sender: this,
+                title: "Invalid model ID in workbench",
+                message: "A model ID in the workbench list is not a string."
+              });
+            }
+
+            return this.getModelById(BaseModel, modelId);
+          })
+        );
+
+        this.workbench.items = newItems;
+
+        // Load the items on the workbench
+        for (let model of newItems) {
+          if (ReferenceMixin.is(model)) {
+            promises.push(model.loadReference());
+            model = model.dereferenced || model;
+          }
+
+          if (Mappable.is(model)) {
+            promises.push(model.loadMapItems());
+          }
         }
 
-        let model = this.getModelById(BaseModel, modelId);
-        if (model === undefined) {
-          throw new TerriaError({
-            sender: this,
-            title: "Unknown model ID in workbench",
-            message: `A model ID in the workbench, ${modelId}, could not be found.`
-          });
-        }
-        this.workbench.add(model);
-
-        if (ReferenceMixin.is(model)) {
-          promises.push(model.loadReference());
-          model = model.dereferenced || model;
-        }
-
-        if (Mappable.is(model)) {
-          promises.push(model.loadMapItems());
-        }
-      }
-
-      return Promise.all(promises).then(() => undefined);
+        return Promise.all(promises).then(() => undefined);
+      });
     });
   }
 
