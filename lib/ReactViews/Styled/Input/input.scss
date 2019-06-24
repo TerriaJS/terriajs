@@ -9,6 +9,7 @@
 }
 
 .light {
+  background: $grey-lighter2;
   border-color: transparent; // use transparent instead of no-border for layout +/ high contrast
   &,
   &:read-only:not(select) {
@@ -28,6 +29,7 @@
 }
 
 .dark {
+  background: $overlay;
   &,
   &:read-only:not(select) {
     background: $overlay;

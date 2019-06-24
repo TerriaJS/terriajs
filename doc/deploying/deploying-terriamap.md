@@ -23,7 +23,7 @@ Then, copy the following files and directories from your local system where you 
 And on the server, change to the directory where you copied those files and directories and run:
 
 ```
-./node_modules/terriajs-server/run_server.sh --config-file devserverconfig.json
+./node_modules/.bin/pm2 start ecosystem-production.config.js --update-env --env production
 ```
 
 The server will start on port 3001.  You can specify a different port by adding `--port 1234` to the command-line above.
