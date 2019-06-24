@@ -293,7 +293,13 @@ const SharePanel = createReactClass({
             The following data sources will NOT be shared because they include
             data from this local system. To share these data sources, publish
             their data on a web server and{" "}
-            <a onClick={this.onAddWebDataClicked}>add them using a url</a>.
+            <a
+              className={Styles.warningLink}
+              onClick={this.onAddWebDataClicked}
+            >
+              add them using a url
+            </a>
+            .
           </p>
           <ul className={Styles.paragraph}>
             {this.props.terria.catalog.userAddedDataGroup.items.map(

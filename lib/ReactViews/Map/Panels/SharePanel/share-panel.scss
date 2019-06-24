@@ -137,10 +137,9 @@
     padding-inline-start: 0;
     list-style: none;
   }
-
-  a {
-    color: #552800 !important;
-    text-decoration: underline !important;
+  .warning-link {
+    color: #552800;
+    text-decoration: underline;
     cursor: pointer;
   }
 }
