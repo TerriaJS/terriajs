@@ -2,8 +2,10 @@ import mixTraits from "./mixTraits";
 import primitiveTrait from "./primitiveTrait";
 import TableTraits from "./TableTraits";
 import UrlTraits from "./UrlTraits";
+import FeatureInfoTraits from "./FeatureInfoTraits";
 
 export default class CsvCatalogItemTraits extends mixTraits(
+  FeatureInfoTraits,
   UrlTraits,
   TableTraits
 ) {
