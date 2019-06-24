@@ -124,3 +124,22 @@
 .print-view-loader {
   fill: $text-light;
 }
+
+.warning {
+  margin: $padding 0;
+  border-radius: $radius-small;
+  background: #feb938;
+  color: #552800;
+  padding: $padding;
+
+  ul {
+    padding-top: $padding;
+    padding-inline-start: 0;
+    list-style: none;
+  }
+  .warning-link {
+    color: #552800;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+}
