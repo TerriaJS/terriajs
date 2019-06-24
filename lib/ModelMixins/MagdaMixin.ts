@@ -88,7 +88,7 @@ export default function MagdaMixin<T extends Constructor<MagdaModel>>(Base: T) {
         );
       }
       const proxiedUrl = proxyCatalogItemUrl(this, recordUri.toString(), "0d");
-      return makeRealPromise<JsonObject>(loadJson(proxiedUrl));
+      return loadJson(proxiedUrl);
     }
   }
 

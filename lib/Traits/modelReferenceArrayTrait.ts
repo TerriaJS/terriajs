@@ -21,14 +21,14 @@ export default function modelReferenceArrayTrait<T>(
     if (!constructor.traits) {
       constructor.traits = {};
     }
-    constructor.traits[propertyKey] = new ModelReferenceArrayProperty(
+    constructor.traits[propertyKey] = new ModelReferenceArrayTrait(
       propertyKey,
       options
     );
   };
 }
 
-export class ModelReferenceArrayProperty extends Trait {
+export class ModelReferenceArrayTrait extends Trait {
   readonly decoratorForFlattened = computed.struct;
   private factory: ModelFactory | undefined;
 
@@ -138,7 +138,7 @@ export class ModelReferenceArrayProperty extends Trait {
 
   isSameType(trait: Trait): boolean {
     return (
-      trait instanceof ModelReferenceArrayProperty &&
+      trait instanceof ModelReferenceArrayTrait &&
       trait.factory === this.factory
     );
   }

@@ -125,11 +125,7 @@ class GeoJsonCatalogItem extends AsyncMappableMixin(
           }
           resolve(loadZipFile(proxyCatalogItemUrl(this, this.url, "1d")));
         } else {
-          resolve(
-            makeRealPromise<JsonValue>(
-              loadJson(proxyCatalogItemUrl(this, this.url, "1d"))
-            )
-          );
+          resolve(loadJson(proxyCatalogItemUrl(this, this.url, "1d")));
         }
       } else {
         throw new TerriaError({
@@ -598,7 +594,7 @@ function loadZipFile(url: string): Promise<JsonValue> {
               const entry = entries[i];
               if (geoJsonRegex.test(entry.filename)) {
                 entry.getData(new zip.Data64URIWriter(), function(uri: string) {
-                  resolve(makeRealPromise<JsonValue>(loadJson(uri)));
+                  resolve(loadJson(uri));
                 });
                 resolved = true;
               }

@@ -23,7 +23,7 @@ const CatalogShortcut = createReactClass({
 
   handleClick() {
     if (defined(this.props.catalogMember)) {
-      this.props.viewState.viewCatalogMember(this.props.catalogMember, []); // TODO: set ancestors
+      this.props.viewState.viewCatalogMember(this.props.catalogMember);
     }
   },
 

@@ -1,9 +1,10 @@
-import { computed, observable, runInAction } from "mobx";
+import { computed, observable, runInAction, toJS } from "mobx";
 import { createTransformer } from "mobx-utils";
 import Clock from "terriajs-cesium/Source/Core/Clock";
 import defined from "terriajs-cesium/Source/Core/defined";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
+import queryToObject from "terriajs-cesium/Source/Core/queryToObject";
 import RuntimeError from "terriajs-cesium/Source/Core/RuntimeError";
 import URI from "urijs";
 import AsyncLoader from "../Core/AsyncLoader";
@@ -15,8 +16,9 @@ import instanceOf from "../Core/instanceOf";
 import isDefined from "../Core/isDefined";
 import JsonValue, { isJsonObject, JsonObject } from "../Core/Json";
 import loadJson5 from "../Core/loadJson5";
+import TerriaError from "../Core/TerriaError";
 import PickedFeatures from "../Map/PickedFeatures";
-import ModelReference from "../Traits/ModelReference";
+import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import { BaseMapViewModel } from "../ViewModels/BaseMapViewModel";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import CatalogMemberFactory from "./CatalogMemberFactory";
@@ -35,6 +37,9 @@ import TimelineStack from "./TimelineStack";
 import updateModelFromJson from "./updateModelFromJson";
 import upsertModelFromJson from "./upsertModelFromJson";
 import Workbench from "./Workbench";
+import ShareDataService from "./ShareDataService";
+import ServerConfig from "../Core/ServerConfig";
+import GroupMixin from "../ModelMixins/GroupMixin";
 
 require("regenerator-runtime/runtime");
 
@@ -45,6 +50,7 @@ interface ConfigParameters {
   proj4ServiceBaseUrl?: string;
   corsProxyBaseUrl?: string;
   proxyableDomainsUrl?: string;
+  serverConfigUrl?: string;
   shareUrl?: string;
   feedbackUrl?: string;
   initFragmentPaths: string[];
@@ -58,6 +64,8 @@ interface ConfigParameters {
 
 interface StartOptions {
   configUrl: string;
+  applicationUrl?: string;
+  shareDataService?: ShareDataService;
 }
 
 type Analytics = any;
@@ -109,6 +117,7 @@ export default class Terria {
     proj4ServiceBaseUrl: "proj4/",
     corsProxyBaseUrl: "proxy/",
     proxyableDomainsUrl: "proxyabledomains/",
+    serverConfigUrl: "serverconfig/",
     shareUrl: "share",
     feedbackUrl: undefined,
     initFragmentPaths: ["init/"],
@@ -139,6 +148,9 @@ export default class Terria {
   private _initSourceLoader = new AsyncLoader(
     this.forceLoadInitSources.bind(this)
   );
+
+  @observable serverConfig: any; // TODO
+  @observable shareDataService: ShareDataService | undefined;
 
   /* Splitter controls */
   @observable showSplitter = false;
@@ -209,26 +221,41 @@ export default class Terria {
   }
 
   start(options: StartOptions) {
+    this.shareDataService = options.shareDataService;
+
     const baseUri = new URI(options.configUrl).filename("");
 
-    return loadJson5(options.configUrl).then((config: any) => {
-      if (config.aspects) {
-        return this.loadMagdaConfig(config);
-      }
+    return loadJson5(options.configUrl)
+      .then((config: any) => {
+        if (config.aspects) {
+          return this.loadMagdaConfig(config);
+        }
 
-      const initializationUrls: string[] = config.initializationUrls;
-      const initSources = initializationUrls.map(url =>
-        generateInitializationUrl(
-          baseUri,
-          this.configParameters.initFragmentPaths,
-          url
-        )
-      );
+        const initializationUrls: string[] = config.initializationUrls;
+        const initSources = initializationUrls.map(url =>
+          generateInitializationUrl(
+            baseUri,
+            this.configParameters.initFragmentPaths,
+            url
+          )
+        );
 
-      runInAction(() => {
-        this.initSources.push(...initSources);
+        runInAction(() => {
+          this.initSources.push(...initSources);
+        });
+      })
+      .then(() => {
+        this.serverConfig = new ServerConfig();
+        return this.serverConfig.init(this.configParameters.serverConfigUrl);
+      })
+      .then(serverConfig => {
+        if (this.shareDataService && serverConfig) {
+          this.shareDataService.init(serverConfig);
+        }
+        if (options.applicationUrl) {
+          return this.updateApplicationUrl(options.applicationUrl);
+        }
       });
-    });
   }
 
   get isLoadingInitSources(): boolean {
@@ -240,6 +267,24 @@ export default class Terria {
    */
   loadInitSources(): Promise<void> {
     return this._initSourceLoader.load();
+  }
+
+  updateApplicationUrl(newUrl: string) {
+    const uri = new URI(newUrl);
+    const hash = uri.fragment();
+    const hashProperties = queryToObject(hash);
+
+    return interpretHash(
+      this,
+      hashProperties,
+      this.userProperties,
+      new URI(newUrl)
+        .filename("")
+        .query("")
+        .hash("")
+    ).then(() => {
+      return this.loadInitSources();
+    });
   }
 
   protected forceLoadInitSources(): Promise<void> {
@@ -256,47 +301,158 @@ export default class Terria {
           if (initSource === undefined) {
             return;
           }
-          this.applyInitData(initSource);
+          this.applyInitData(toJS(initSource));
         });
       });
     });
   }
 
-  private applyInitData(initData: JsonObject) {
+  private loadModelStratum(
+    modelId: string,
+    stratumId: string,
+    allModelStratumData: JsonObject
+  ): Promise<BaseModel> {
+    const thisModelStratumData = allModelStratumData[modelId];
+    if (!isJsonObject(thisModelStratumData)) {
+      throw new TerriaError({
+        sender: this,
+        title: "Invalid model traits",
+        message: "The traits of a model must be a JSON object."
+      });
+    }
+
+    let promise: Promise<void>;
+
+    const containerIds = thisModelStratumData.knownContainerUniqueIds;
+    if (Array.isArray(containerIds)) {
+      delete thisModelStratumData.knownContainerUniqueIds;
+      // Groups that contain this item must be loaded before this item.
+      const containerPromises = containerIds.map(containerId => {
+        if (typeof containerId !== "string") {
+          return Promise.resolve(undefined);
+        }
+        return this.loadModelStratum(
+          containerId,
+          stratumId,
+          allModelStratumData
+        ).then(container => {
+          if (GroupMixin.isMixedInto(container)) {
+            return container.loadMembers();
+          }
+        });
+      });
+      promise = Promise.all(containerPromises).then(() => undefined);
+    } else {
+      promise = Promise.resolve();
+    }
+
+    return promise.then(() => {
+      const dereferenced = thisModelStratumData.dereferenced;
+      delete thisModelStratumData.dereferenced;
+
+      const loadedModel = upsertModelFromJson(
+        CatalogMemberFactory,
+        this,
+        "/",
+        undefined,
+        stratumId,
+        {
+          ...thisModelStratumData,
+          id: modelId
+        }
+      );
+
+      if (dereferenced) {
+        if (ReferenceMixin.is(loadedModel)) {
+          return loadedModel
+            .loadReference()
+            .then(() => {
+              return upsertModelFromJson(
+                CatalogMemberFactory,
+                this,
+                "/",
+                loadedModel.dereferenced,
+                stratumId,
+                dereferenced
+              );
+            })
+            .then(() => loadedModel);
+        } else {
+          throw new TerriaError({
+            sender: this,
+            title: "Model cannot be dereferenced",
+            message:
+              "The stratum has a `dereferenced` property, but the model cannot be dereferenced."
+          });
+        }
+      }
+
+      return loadedModel;
+    });
+  }
+
+  private applyInitData(initData: JsonObject): Promise<void> {
+    const stratumId =
+      typeof initData.stratum === "string"
+        ? initData.stratum
+        : CommonStrata.definition;
+
     if (initData.catalog !== undefined) {
-      updateModelFromJson(this.catalog.group, CommonStrata.definition, {
+      updateModelFromJson(this.catalog.group, stratumId, {
         members: initData.catalog
       });
     }
 
-    const strata = initData.strata;
-    if (isJsonObject(strata)) {
-      Object.keys(strata).forEach(stratum => {
-        const models = strata[stratum];
-        if (!isJsonObject(models)) {
-          return;
+    // Copy but don't yet load the workbench.
+    const workbench = Array.isArray(initData.workbench)
+      ? initData.workbench.slice().reverse()
+      : [];
+
+    // Load the models
+    let promise: Promise<void>;
+
+    const models = initData.models;
+    if (isJsonObject(models)) {
+      promise = Promise.all(
+        Object.keys(models).map(modelId => {
+          return this.loadModelStratum(modelId, stratumId, models);
+        })
+      ).then(() => undefined);
+    } else {
+      promise = Promise.resolve();
+    }
+
+    return promise.then(async () => {
+      // Now load the workbench
+      for (let modelId of workbench) {
+        if (typeof modelId !== "string") {
+          throw new TerriaError({
+            sender: this,
+            title: "Invalid model ID in workbench",
+            message: "A model ID in the workbench list is not a string."
+          });
         }
 
-        Object.keys(models).forEach(modelId => {
-          const model = models[modelId];
-          if (!isJsonObject(model)) {
-            return;
-          }
+        let model = this.getModelById(BaseModel, modelId);
+        if (model === undefined) {
+          throw new TerriaError({
+            sender: this,
+            title: "Unknown model ID in workbench",
+            message: `A model ID in the workbench, ${modelId}, could not be found.`
+          });
+        }
+        this.workbench.add(model);
 
-          upsertModelFromJson(
-            CatalogMemberFactory,
-            this,
-            "/",
-            undefined,
-            stratum,
-            {
-              ...model,
-              id: modelId
-            }
-          );
-        });
-      });
-    }
+        if (ReferenceMixin.is(model)) {
+          await model.loadReference();
+          model = model.dereferenced || model;
+        }
+
+        if (Mappable.is(model)) {
+          await model.loadMapItems();
+        }
+      }
+    });
   }
 
   loadMagdaConfig(config: any) {
@@ -403,3 +559,86 @@ const loadInitSource = createTransformer(
     });
   }
 );
+
+function interpretHash(
+  terria: Terria,
+  hashProperties: any,
+  userProperties: Map<string, any>,
+  baseUri: uri.URI
+) {
+  // Resolve #share=xyz with the share data service.
+  const promise =
+    hashProperties.share !== undefined && terria.shareDataService !== undefined
+      ? terria.shareDataService.resolveData(hashProperties.share)
+      : Promise.resolve({});
+
+  return promise.then((shareProps: any) => {
+    Object.keys(hashProperties).forEach(function(property) {
+      const propertyValue = hashProperties[property];
+
+      if (property === "clean") {
+        terria.initSources.splice(0, terria.initSources.length);
+      } else if (property === "start") {
+        // a share link that hasn't been shortened: JSON embedded in URL (only works for small quantities of JSON)
+        const startData = JSON.parse(propertyValue);
+        interpretStartData(terria, startData);
+      } else if (defined(propertyValue) && propertyValue.length > 0) {
+        userProperties.set(property, propertyValue);
+      } else {
+        const initSourceFile = generateInitializationUrl(
+          baseUri,
+          terria.configParameters.initFragmentPaths,
+          property
+        );
+        terria.initSources.push(initSourceFile);
+      }
+    });
+
+    if (shareProps) {
+      interpretStartData(terria, shareProps);
+    }
+  });
+}
+
+function interpretStartData(terria: Terria, startData: any) {
+  // TODO: version check, filtering, etc.
+
+  if (startData.initSources) {
+    terria.initSources.push(
+      ...startData.initSources.map((initSource: any) => {
+        return {
+          data: initSource
+        };
+      })
+    );
+  }
+
+  // if (defined(startData.version) && startData.version !== latestStartVersion) {
+  //   adjustForBackwardCompatibility(startData);
+  // }
+
+  // if (defined(terria.filterStartDataCallback)) {
+  //   startData = terria.filterStartDataCallback(startData) || startData;
+  // }
+
+  // // Include any initSources specified in the URL.
+  // if (defined(startData.initSources)) {
+  //   for (var i = 0; i < startData.initSources.length; ++i) {
+  //     var initSource = startData.initSources[i];
+  //     // avoid loading terria.json twice
+  //     if (
+  //       temporaryInitSources.indexOf(initSource) < 0 &&
+  //       !initFragmentExists(temporaryInitSources, initSource)
+  //     ) {
+  //       temporaryInitSources.push(initSource);
+  //       // Only add external files to the application's list of init sources.
+  //       if (
+  //         typeof initSource === "string" &&
+  //         persistentInitSources.indexOf(initSource) < 0
+  //       ) {
+  //         persistentInitSources.push(initSource);
+  //       }
+  //     }
+  //   }
+  // }
+}

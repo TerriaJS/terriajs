@@ -21,6 +21,15 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
     readonly traits = Traits.traits;
     readonly strata = observable.map<string, StratumTraits>();
 
+    /**
+     * Gets the uniqueIds of models that are known to contain this one.
+     * This is important because strata sometimes flow from container to
+     * containee, so the properties of this model may not be complete
+     * if the container isn't loaded yet. It's also important for locating
+     * this model in a hierarchical catalog.
+     */
+    readonly knownContainerUniqueIds: string[] = [];
+
     constructor(id: string | undefined, terria: Terria) {
       super(id, terria);
     }

@@ -161,7 +161,7 @@ export default class WebMapServiceCatalogGroup extends GetCapabilitiesMixin(
     });
   }
 
-  protected get loadMembersPromise(): Promise<void> {
+  protected forceLoadMembers(): Promise<void> {
     return this.loadMetadata().then(() => {
       const getCapabilitiesStratum = <GetCapabilitiesStratum | undefined>(
         this.strata.get(GetCapabilitiesMixin.getCapabilitiesStratumName)

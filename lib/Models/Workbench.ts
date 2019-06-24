@@ -2,6 +2,7 @@ import { observable, computed, action } from "mobx";
 
 import { BaseModel } from "./Model";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
+import filterOutUndefined from "../Core/filterOutUndefined";
 
 interface WorkbenchItem extends BaseModel {
   supportsReordering?: boolean;
@@ -20,12 +21,23 @@ export default class Workbench {
   }
 
   /**
+   * Gets the unique IDs of the items in the workbench.
+   */
+  @computed
+  get itemIds(): readonly string[] {
+    return filterOutUndefined(this._items.map(item => item.uniqueId));
+  }
+
+  /**
    * Removes a model or its dereferenced equivalent from the workbench.
    * @param item The model.
    */
   @action
   remove(item: BaseModel) {
-    this._items.remove(item);
+    const index = this.indexOf(item);
+    if (index >= 0) {
+      this._items.splice(index, 1);
+    }
   }
 
   /**

@@ -343,11 +343,6 @@ class WebMapServiceCatalogItem
   readonly showsInfo = true;
   readonly supportsSplitting = true;
 
-  @observable
-  ancestors:
-    | (GroupMixin.GroupMixin & CatalogMemberMixin.CatalogMemberMixin)[]
-    | undefined;
-
   get type() {
     return WebMapServiceCatalogItem.type;
   }

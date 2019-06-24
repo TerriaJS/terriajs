@@ -16,6 +16,7 @@ export abstract class BaseModel {
   abstract get traits(): {
     [id: string]: Trait;
   };
+  abstract get knownContainerUniqueIds(): string[];
   abstract get strata(): ObservableMap<string, StratumFromTraits<ModelTraits>>;
   abstract get topStratum(): StratumFromTraits<ModelTraits>;
 
@@ -36,6 +37,7 @@ export interface ModelInterface<T extends ModelTraits> {
   readonly strata: ObservableMap<string, StratumFromTraits<T>>;
   readonly terria: Terria;
   readonly uniqueId: string | undefined;
+  readonly knownContainerUniqueIds: string[];
 
   readonly strataTopToBottom: StratumFromTraits<T>[];
   readonly strataBottomToTop: StratumFromTraits<T>[];
