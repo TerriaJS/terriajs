@@ -173,7 +173,7 @@ describe("DataCatalogItem", () => {
       });
     });
 
-    describe("isSelected prop as", () => {
+    describe("selected prop as", () => {
       describe("true when", () => {
         it("item is added by user and the current user data previewed item", () => {
           makeItemUserAdded(item, terria);
@@ -185,7 +185,11 @@ describe("DataCatalogItem", () => {
         });
 
         afterEach(() => {
-          expect(getRenderedProp("selected")).toBe(true);
+          expect(
+            getRenderedProp("selected", {
+              match: { params: { catalogMemberId: `${item.uniqueId}` } }
+            })
+          ).toBe(true);
         });
       });
 
@@ -199,7 +203,11 @@ describe("DataCatalogItem", () => {
         });
 
         afterEach(() => {
-          expect(getRenderedProp("selected")).toBe(false);
+          expect(
+            getRenderedProp("selected", {
+              match: { params: { catalogMemberId: `not-this-item` } }
+            })
+          ).toBe(false);
         });
       });
     });
@@ -234,13 +242,14 @@ describe("DataCatalogItem", () => {
     });
   }
 
-  function getRenderedProp(propName) {
-    return findAllWithType(renderShallow(), CatalogItemComponent)[0].props[
-      propName
-    ];
+  function getRenderedProp(propName, additionalProps) {
+    return findAllWithType(
+      renderShallow(additionalProps),
+      CatalogItemComponent
+    )[0].props[propName];
   }
 
-  function renderShallow() {
+  function renderShallow(additionalProps = {}) {
     return getShallowRenderedOutput(
       <DataCatalogItemRaw
         match={{ params: {} }}
@@ -248,6 +257,7 @@ describe("DataCatalogItem", () => {
         item={item}
         removable={removable}
         terria={terria}
+        {...additionalProps}
       />
     );
   }
