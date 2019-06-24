@@ -814,9 +814,6 @@ declare module "terriajs-cesium/Source/Scene/HeightReference" {
 declare module "terriajs-cesium/Source/Scene/HorizontalOrigin" {
   export default Cesium.HorizontalOrigin;
 }
-declare module "terriajs-cesium/Source/Scene/ImageryLayer" {
-  export default Cesium.ImageryLayer;
-}
 declare module "terriajs-cesium/Source/Scene/ImageryLayerCollection" {
   export default Cesium.ImageryLayerCollection;
 }
@@ -1099,4 +1096,10 @@ declare module "terriajs-cesium/Source/Scene/ImagerySplitDirection" {
     RIGHT
   }
   export default ImagerySplitDirection;
+}
+declare module "terriajs-cesium/Source/Scene/ImageryLayer" {
+  import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
+  export default class ImageryLayer extends Cesium.ImageryLayer {
+    splitDirection: ImagerySplitDirection;
+  }
 }
