@@ -13,11 +13,14 @@ export default class Workbench {
   private readonly _items = observable.array<WorkbenchItem>();
 
   /**
-   * Gets the list of items on the workbench.
+   * Gets or sets the list of items on the workbench.
    */
   @computed
   get items(): readonly WorkbenchItem[] {
     return this._items.map(dereferenceModel);
+  }
+  set items(items: readonly WorkbenchItem[]) {
+    this._items.spliceWithArray(0, this._items.length, items.slice());
   }
 
   /**
