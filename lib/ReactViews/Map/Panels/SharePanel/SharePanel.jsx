@@ -296,13 +296,15 @@ const SharePanel = createReactClass({
             <a onClick={this.onAddWebDataClicked}>add them using a url</a>.
           </p>
           <ul className={Styles.paragraph}>
-            {this.props.terria.catalog.userAddedDataGroup.items.map(item => {
-              return (
-                <li>
-                  <strong>{item.name}</strong>
-                </li>
-              );
-            })}
+            {this.props.terria.catalog.userAddedDataGroup.items.map(
+              (item, i) => {
+                return (
+                  <li key={i}>
+                    <strong>{item.name}</strong>
+                  </li>
+                );
+              }
+            )}
           </ul>
         </div>
       </If>
