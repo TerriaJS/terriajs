@@ -8,6 +8,7 @@ import {
 } from "mobx";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import CameraView from "../Models/CameraView";
 import Cesium from "../Models/Cesium";
 import GlobeOrMap from "../Models/GlobeOrMap";
 import Leaflet from "../Models/Leaflet";
@@ -57,9 +58,8 @@ export default class TerriaViewer {
   @observable
   disableInteraction: boolean = false;
 
-  // Random rectangle. Work out reactivity
-  // Should this be homeView instead (and have 3D view properties)?
-  defaultExtent: Rectangle = Rectangle.fromDegrees(120, -45, 155, -15);
+  @observable
+  homeCamera: CameraView = new CameraView(Rectangle.MAX_VALUE);
 
   constructor(terria: Terria, items: IComputedValue<Mappable[]>) {
     this.terria = terria;
@@ -77,7 +77,7 @@ export default class TerriaViewer {
   }
 
   // Pull out attaching logic into it's own step. This allows constructing a TerriaViewer
-  // before it's UI element is mounted in React to set basemap, items, viewermode
+  // before its UI element is mounted in React to set basemap, items, viewermode
   attach(mapContainer?: string | HTMLElement) {
     if (this._attached) {
       throw new DeveloperError(
@@ -92,11 +92,11 @@ export default class TerriaViewer {
     this._stopViewerReaction = reaction(
       () => ({ viewerMode: this.viewerMode, attached: this._attached }),
       ({ viewerMode, attached }) => {
-        let bounds: Rectangle | undefined;
+        let bounds: CameraView | undefined;
         if (this._currentViewer !== undefined) {
           // Get viewer parameters to apply to new viewer
           // terriaViewer.currentViewer.getCamera...
-          bounds = this._currentViewer.getCurrentExtent();
+          bounds = this._currentViewer.getCurrentCameraView();
           this._currentViewer.destroy();
         }
         const newViewer =
@@ -105,7 +105,7 @@ export default class TerriaViewer {
             : undefined;
         // Apply previous parameters
         if (newViewer !== undefined) {
-          newViewer.zoomTo(bounds || this.defaultExtent, 0.0);
+          newViewer.zoomTo(bounds || this.homeCamera, 0.0);
         }
         runInAction(() => {
           this._currentViewer = newViewer;

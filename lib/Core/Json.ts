@@ -15,3 +15,7 @@ export function isJsonObject(
     !Array.isArray(value)
   );
 }
+
+export function isJsonNumber(value: JsonValue | undefined): value is number {
+  return typeof value === "number";
+}

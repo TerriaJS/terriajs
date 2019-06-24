@@ -32,13 +32,14 @@ import PickedFeatures, {
   ProviderCoordsMap
 } from "../Map/PickedFeatures";
 import rectangleToLatLngBounds from "../Map/rectangleToLatLngBounds";
+import SplitterTraits from "../Traits/SplitterTraits";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import Feature from "./Feature";
-import GlobeOrMap, { CameraView } from "./GlobeOrMap";
+import GlobeOrMap from "./GlobeOrMap";
+import hasTraits from "./hasTraits";
 import Mappable, { ImageryParts } from "./Mappable";
 import Terria from "./Terria";
-import hasTraits from "./hasTraits";
-import SplitterTraits from "../Traits/SplitterTraits";
+import CameraView from "./CameraView";
 
 interface SplitterClips {
   left: string;
@@ -364,13 +365,15 @@ export default class Leaflet extends GlobeOrMap {
     });
   }
 
-  getCurrentExtent() {
+  getCurrentCameraView(): CameraView {
     const bounds = this.map.getBounds();
-    return Rectangle.fromDegrees(
-      bounds.getWest(),
-      bounds.getSouth(),
-      bounds.getEast(),
-      bounds.getNorth()
+    return new CameraView(
+      Rectangle.fromDegrees(
+        bounds.getWest(),
+        bounds.getSouth(),
+        bounds.getEast(),
+        bounds.getNorth()
+      )
     );
   }
 

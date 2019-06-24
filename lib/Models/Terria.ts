@@ -40,6 +40,7 @@ import Workbench from "./Workbench";
 import ShareDataService from "./ShareDataService";
 import ServerConfig from "../Core/ServerConfig";
 import GroupMixin from "../ModelMixins/GroupMixin";
+import CameraView from "./CameraView";
 
 require("regenerator-runtime/runtime");
 
@@ -434,6 +435,15 @@ export default class Terria {
 
     if (Array.isArray(initData.stories)) {
       this.stories = initData.stories;
+    }
+
+    if (isJsonObject(initData.homeCamera)) {
+      this.mainViewer.homeCamera = CameraView.fromJson(initData.homeCamera);
+    }
+
+    if (isJsonObject(initData.initialCamera)) {
+      const initialCamera = CameraView.fromJson(initData.initialCamera);
+      this.currentViewer.zoomTo(initialCamera, 2.0);
     }
 
     // Copy but don't yet load the workbench.
