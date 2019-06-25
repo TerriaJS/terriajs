@@ -1,6 +1,30 @@
 Change Log
 ==========
 
+### v7.6.3
+
+* Fixed a bug with picking features that cross the anti-meridian in 2D mode .
+* Fixed a bug where `ArcGisMapServerCatalogItem` legends were being created during search.
+* Fixed a bug where region mapping would not accurately reflect share link parameters.
+
+### v7.6.2
+
+* Fixed a bug that made some input boxes unreadable in some web browsers.
+
+### v7.6.1
+
+* Fixed a bug that prevented the "Feedback" button from working correctly.
+* Fix a bug that could cause a lot of extra space to the left of a chart on the feature info panel.
+
+### v7.6.0
+
+* Added video intro to building a story
+* Allow vector tiles for region mapping to return 404 for empty tiles. 
+
+### v7.5.2
+
+* Upgraded to Cesium v1.58.1.
+
 ### v7.5.1
 
 * Fixed a bug in Cesium that prevented the new Bing Maps "on demand" basemaps from working on `https` sites.
@@ -8,6 +32,7 @@ Change Log
 ### v7.5.0
 
 * Added the "Story" feature for building and sharing guided tours of maps and data.
+* Added sharing within the data catalog to share a given catalog group or item
 * Switched to using the new "on demand" versions of the Bing Maps aerial and roads basemaps. The previous versions are deprecated.
 
 ### v7.4.1

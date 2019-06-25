@@ -1,0 +1,17 @@
+@import "~terriajs-variables";
+
+.section {
+  background: $overlay;
+  margin-top: 10px;
+  display: flex;
+  padding: $padding;
+  // align-items: center;
+  align-content: flex-start;
+
+  font-weight: $font-weight-light;
+  font-size: $font-size-mid-small;
+}
+
+.timer-container {
+  padding-right: 10px;
+}

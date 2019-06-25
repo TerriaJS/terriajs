@@ -23,6 +23,7 @@ import ShortReport from "./Controls/ShortReport";
 import StyleSelectorSection from "./Controls/StyleSelectorSection";
 import ViewingControls from "./Controls/ViewingControls";
 import { observer } from "mobx-react";
+import TimerSection from "./Controls/TimerSection";
 
 import Styles from "./workbench-item.scss";
 import Icon from "../Icon";
@@ -126,6 +127,7 @@ const WorkbenchItem = observer(
               />
               <OpacitySection item={workbenchItem} />
               <LeftRightSection item={workbenchItem} />
+              <TimerSection item={workbenchItem} />
               <If
                 condition={
                   defined(workbenchItem.concepts) &&

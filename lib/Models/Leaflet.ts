@@ -172,8 +172,15 @@ export default class Leaflet extends GlobeOrMap {
         map.tap
       ]);
       const pickLocation = (e: L.LeafletEvent) => {
+        const mouseEvent = <L.LeafletMouseEvent>e;
+
+        // Handle click events that cross the anti-meridian
+        if (mouseEvent.latlng.lng > 180 || mouseEvent.latlng.lng < -180) {
+          mouseEvent.latlng = mouseEvent.latlng.wrap();
+        }
+
         // if (!this._dragboxcompleted && that.map.dragging.enabled()) {
-        this._pickFeatures((<L.LeafletMouseEvent>e).latlng);
+        this._pickFeatures(mouseEvent.latlng);
         // }
         // this._dragboxcompleted = false;
       };

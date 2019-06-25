@@ -10,6 +10,9 @@ import { BaseModel } from "../Models/Model";
 import PickedFeatures from "../Map/PickedFeatures";
 import isDefined from "../Core/isDefined";
 
+export const DATA_CATALOG_NAME = "data-catalog";
+export const USER_DATA_NAME = "my-data";
+
 interface ViewStateOptions {
   terria: Terria;
   catalogSearchProvider: any;
@@ -34,7 +37,7 @@ export default class ViewState {
   @observable previewedItem: BaseModel | undefined;
   @observable userDataPreviewedItem: BaseModel | undefined;
   @observable explorerPanelIsVisible: boolean = false;
-  @observable activeTabCategory: string = "data-catalog";
+  @observable activeTabCategory: string = DATA_CATALOG_NAME;
   @observable activeTabIdInCategory: string | undefined = undefined;
   @observable isDraggingDroppingFile: boolean = false;
   @observable mobileView: string | null = null;
@@ -87,12 +90,19 @@ export default class ViewState {
    */
   @observable feedbackFormIsVisible: boolean = false;
 
+  /**
+   * Gets or sets a value indicating whether the catalog's model share panel
+   * is currently visible.
+   */
+  @observable shareModelIsVisible: boolean = false;
+
   private _unsubscribeErrorListener: any;
   private _pickedFeaturesSubscription: IReactionDisposer;
   private _isMapFullScreenSubscription: IReactionDisposer;
   private _showStoriesSubscription: IReactionDisposer;
   private _mobileMenuSubscription: IReactionDisposer;
   private _storyPromptSubscription: IReactionDisposer;
+  private _previewedItemIdSubscription: IReactionDisposer;
   private _disclaimerHandler: DisclaimerHandler;
 
   constructor(options: ViewStateOptions) {
@@ -180,6 +190,20 @@ export default class ViewState {
         }
       }
     );
+
+    this._previewedItemIdSubscription = reaction(
+      () => this.terria.previewedItemId,
+      (previewedItemId: string | undefined) => {
+        if (previewedItemId === undefined) {
+          return;
+        }
+
+        const model = this.terria.getModelById(BaseModel, previewedItemId);
+        if (model !== undefined) {
+          this.viewCatalogMember(model);
+        }
+      }
+    );
   }
 
   dispose() {
@@ -189,17 +213,18 @@ export default class ViewState {
     this._isMapFullScreenSubscription();
     this._showStoriesSubscription();
     this._storyPromptSubscription();
+    this._previewedItemIdSubscription();
     this._disclaimerHandler.dispose();
   }
 
   openAddData() {
     this.explorerPanelIsVisible = true;
-    this.activeTabCategory = "data-catalog";
+    this.activeTabCategory = DATA_CATALOG_NAME;
   }
 
   openUserData() {
     this.explorerPanelIsVisible = true;
-    this.activeTabCategory = "my-data";
+    this.activeTabCategory = USER_DATA_NAME;
   }
 
   closeCatalog() {
@@ -267,5 +292,9 @@ export default class ViewState {
     if (persistent) {
       this.terria.setLocalProperty(`${feature}Prompted`, true);
     }
+  }
+
+  viewingUserData() {
+    return this.activeTabCategory === USER_DATA_NAME;
   }
 }
