@@ -4,6 +4,7 @@ import RasterLayerTraits from "./RasterLayerTraits";
 import MappableTraits from "./MappableTraits";
 import CatalogMemberTraits from "./CatalogMemberTraits";
 import LayerOrderingTraits from "./LayerOrderingTraits";
+import BingMapsStyle from "terriajs-cesium/Source/Scene/BingMapsStyle";
 
 export default class BingMapsCatalogItemTraits extends mixTraits(
   LayerOrderingTraits,
@@ -16,7 +17,7 @@ export default class BingMapsCatalogItemTraits extends mixTraits(
     name: "Map style",
     description: "Type of Bing Maps imagery"
   })
-  mapStyle?: string;
+  mapStyle?: BingMapsStyle;
 
   @primitiveTrait({
     type: "string",

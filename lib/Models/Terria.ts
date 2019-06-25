@@ -60,6 +60,7 @@ interface ConfigParameters {
   useCesiumIonTerrain?: boolean;
   cesiumIonAccessToken?: string;
   hideTerriaLogo?: boolean;
+  useCesiumIonBingImagery: boolean;
 }
 
 interface StartOptions {
@@ -131,7 +132,8 @@ export default class Terria {
     tabbedCatalog: false,
     useCesiumIonTerrain: true,
     cesiumIonAccessToken: undefined,
-    hideTerriaLogo: false
+    hideTerriaLogo: false,
+    useCesiumIonBingImagery: true
   };
 
   @observable
