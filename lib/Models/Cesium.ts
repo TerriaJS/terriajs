@@ -43,12 +43,13 @@ import pollToPromise from "../Core/pollToPromise";
 import CesiumRenderLoopPauser from "../Map/CesiumRenderLoopPauser";
 import Feature from "./Feature";
 import TerriaViewer from "../ViewModels/TerriaViewer";
-import GlobeOrMap, { CameraView } from "./GlobeOrMap";
+import GlobeOrMap from "./GlobeOrMap";
 import Mappable, { ImageryParts } from "./Mappable";
 import Terria from "./Terria";
 import PickedFeatures, { ProviderCoordsMap } from "../Map/PickedFeatures";
 import SplitterTraits from "../Traits/SplitterTraits";
 import hasTraits from "./hasTraits";
+import CameraView from "./CameraView";
 
 // Intermediary
 var cartesian3Scratch = new Cartesian3();
@@ -528,7 +529,7 @@ export default class Cesium extends GlobeOrMap {
     };
   }
 
-  getCurrentExtent() {
+  getCurrentCameraView(): CameraView {
     const scene = this.scene;
     const camera = scene.camera;
 
@@ -541,7 +542,7 @@ export default class Cesium extends GlobeOrMap {
 
     if (!defined(center)) {
       // TODO: binary search to find the horizon point and use that as the center.
-      return this.terriaViewer.defaultExtent; // This is just a random rectangle. Replace it when there's a home view available
+      return this.terriaViewer.homeCamera; // This is just a random rectangle. Replace it when there's a home view available
       // return this.terria.homeView.rectangle;
     }
 
@@ -636,7 +637,12 @@ export default class Cesium extends GlobeOrMap {
 
     // center isn't a member variable and doesn't seem to be used anywhere else in Terria
     // rect.center = center;
-    return rect;
+    return new CameraView(
+      rect,
+      camera.positionWC,
+      camera.directionWC,
+      camera.upWC
+    );
   }
 
   // It's nice to co-locate creation of Ion TerrainProvider and Credit, but not necessary

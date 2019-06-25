@@ -111,6 +111,7 @@ class DataPreviewMap extends React.Component {
     runInAction(() => {
       this.previewViewer.viewerMode = "leaflet";
       this.previewViewer.disableInteraction = true;
+      this.previewViewer.homeCamera = this.props.terria.mainViewer.homeCamera;
     });
     // Not yet implemented
     // previewViewer.hideTerriaLogo = true;
@@ -147,9 +148,7 @@ class DataPreviewMap extends React.Component {
       if (this.isZoomedToExtent) {
         this.previewViewer.currentViewer.zoomTo(this.props.previewed);
       } else {
-        this.previewViewer.currentViewer.zoomTo(
-          this.previewViewer.defaultExtent
-        );
+        this.previewViewer.currentViewer.zoomTo(this.previewViewer.homeCamera);
       }
     });
 
@@ -208,7 +207,7 @@ class DataPreviewMap extends React.Component {
       // When zoomed out, make sure the dataset rectangle is at least 5% of the width and height
       // the home view, so that it is actually visible.
       const minimumFraction = 0.05;
-      const homeView = this.previewViewer.defaultExtent;
+      const homeView = this.previewViewer.homeCamera;
       const minimumWidth =
         CesiumMath.toDegrees(homeView.width) * minimumFraction;
       if (east - west < minimumWidth) {

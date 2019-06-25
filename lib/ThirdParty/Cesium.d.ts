@@ -245,7 +245,10 @@ declare module "terriajs-cesium/Source/Core/Matrix2" {
   export default Cesium.Matrix2;
 }
 declare module "terriajs-cesium/Source/Core/Matrix3" {
-  export default Cesium.Matrix3;
+  import Quaternion from "terriajs-cesium/Source/Core/Quaternion";
+  export default class Matrix3 extends Cesium.Matrix3 {
+    static fromQuaternion(quaternion: Quaternion, result?: Matrix3): Matrix3;
+  }
 }
 declare module "terriajs-cesium/Source/Core/Matrix4" {
   export default Cesium.Matrix4;

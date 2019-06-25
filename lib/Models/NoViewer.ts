@@ -1,15 +1,14 @@
 "use strict";
 
-import GlobeOrMap, { CameraView } from "./GlobeOrMap";
-import Terria from "./Terria";
-import "terriajs-cesium/Source/Core/Rectangle";
+import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import CameraView from "./CameraView";
+import GlobeOrMap from "./GlobeOrMap";
 import Mappable from "./Mappable";
-
-/*global require*/
-var Rectangle = require("terriajs-cesium/Source/Core/Rectangle");
+import Terria from "./Terria";
 
 class NoViewer extends GlobeOrMap {
   readonly terria: Terria;
+  private _currentView: CameraView = new CameraView(Rectangle.MAX_VALUE);
 
   constructor(terria: Terria) {
     super();
@@ -19,13 +18,17 @@ class NoViewer extends GlobeOrMap {
   destroy() {}
 
   zoomTo(v: CameraView | Cesium.Rectangle | Mappable, t: any) {
-    // Set initial view?
+    if (v instanceof CameraView) {
+      this._currentView = v;
+    } else if (v instanceof Rectangle) {
+      this._currentView = new CameraView(v);
+    }
   }
 
   notifyRepaintRequired() {}
 
-  getCurrentExtent() {
-    return Rectangle.fromDegrees(120, -45, 155, -15); // This is just a random rectangle. Replace it when there's a home view available
+  getCurrentCameraView(): CameraView {
+    return this._currentView;
   }
 
   getContainer() {

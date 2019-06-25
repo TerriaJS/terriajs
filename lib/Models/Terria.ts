@@ -14,7 +14,11 @@ import filterOutUndefined from "../Core/filterOutUndefined";
 import GoogleAnalytics from "../Core/GoogleAnalytics";
 import instanceOf from "../Core/instanceOf";
 import isDefined from "../Core/isDefined";
-import JsonValue, { isJsonObject, JsonObject } from "../Core/Json";
+import JsonValue, {
+  isJsonObject,
+  JsonObject,
+  isJsonString
+} from "../Core/Json";
 import loadJson5 from "../Core/loadJson5";
 import TerriaError from "../Core/TerriaError";
 import PickedFeatures from "../Map/PickedFeatures";
@@ -40,6 +44,7 @@ import Workbench from "./Workbench";
 import ShareDataService from "./ShareDataService";
 import ServerConfig from "../Core/ServerConfig";
 import GroupMixin from "../ModelMixins/GroupMixin";
+import CameraView from "./CameraView";
 
 require("regenerator-runtime/runtime");
 
@@ -436,6 +441,31 @@ export default class Terria {
 
     if (Array.isArray(initData.stories)) {
       this.stories = initData.stories;
+    }
+
+    if (isJsonString(initData.viewerMode)) {
+      switch (initData.viewerMode.toLowerCase()) {
+        case "3d".toLowerCase():
+          this.mainViewer.viewerOptions.useTerrain = true;
+          this.mainViewer.viewerMode = "cesium";
+          break;
+        case "3dSmooth".toLowerCase():
+          this.mainViewer.viewerOptions.useTerrain = false;
+          this.mainViewer.viewerMode = "cesium";
+          break;
+        case "2d".toLowerCase():
+          this.mainViewer.viewerMode = "leaflet";
+          break;
+      }
+    }
+
+    if (isJsonObject(initData.homeCamera)) {
+      this.mainViewer.homeCamera = CameraView.fromJson(initData.homeCamera);
+    }
+
+    if (isJsonObject(initData.initialCamera)) {
+      const initialCamera = CameraView.fromJson(initData.initialCamera);
+      this.currentViewer.zoomTo(initialCamera, 2.0);
     }
 
     // Copy but don't yet load the workbench.
