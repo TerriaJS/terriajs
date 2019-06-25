@@ -5,7 +5,6 @@ import addedByUser from "../../Core/addedByUser";
 import removeUserAddedData from "../../Models/removeUserAddedData";
 import CatalogGroup from "./CatalogGroup";
 import DataCatalogMember from "./DataCatalogMember";
-import getAncestors from "../../Models/getAncestors";
 import { observer } from "mobx-react";
 import CommonStrata from "../../Models/CommonStrata";
 
@@ -102,7 +101,7 @@ const DataCatalogGroup = observer(
       return (
         <CatalogGroup
           text={this.getNameOrPrettyUrl()}
-          title={getAncestors(group)
+          title={this.props.ancestors
             .map(member => member.nameInCatalog)
             .join(" → ")}
           topLevel={this.isTopLevel()}

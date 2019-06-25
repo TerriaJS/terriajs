@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "target": "es2015",
+        "target": "es2018",
         "experimentalDecorators": true,
         "module": "es2015",
         "moduleResolution": "node",

@@ -93,8 +93,7 @@ export default class Cesium extends GlobeOrMap {
   private readonly _disposeSelectedFeatureSubscription: () => void;
   private readonly _disposeWorkbenchMapItemsSubscription: () => void;
   private readonly _disposeTerrainReaction: () => void;
-  private readonly _disposeSplitterPositionSubscription: () => void;
-  private readonly _disposeShowSplitterSubscription: () => void;
+  private readonly _disposeSplitterReaction: () => void;
 
   private _createImageryLayer: (
     ip: Cesium.ImageryProvider
@@ -235,22 +234,7 @@ export default class Cesium extends GlobeOrMap {
     this._disposeTerrainReaction = autorun(() => {
       this.scene.globe.terrainProvider = this._terrainProvider;
     });
-
-    this._disposeSplitterPositionSubscription = autorun(() => {
-      if (this.scene) {
-        this.scene.imagerySplitPosition = this.terria.splitPosition;
-        this.notifyRepaintRequired();
-      }
-    });
-
-    this._disposeShowSplitterSubscription = autorun(() => {
-      this.terriaViewer.items.get().forEach(item => {
-        if (Mappable.is(item)) {
-          this._updateItemForSplitter(item);
-        }
-      });
-      this.notifyRepaintRequired();
-    });
+    this._disposeSplitterReaction = this._reactToSplitterChanges();
   }
 
   getContainer() {
@@ -301,10 +285,9 @@ export default class Cesium extends GlobeOrMap {
     this.dataSourceDisplay.destroy();
 
     this._disposeTerrainReaction();
-    this._disposeSplitterPositionSubscription();
-    this._disposeShowSplitterSubscription();
 
     this._disposeSelectedFeatureSubscription();
+    this._disposeSplitterReaction();
     this.cesiumWidget.destroy();
     destroyObject(this);
   }
@@ -509,6 +492,40 @@ export default class Cesium extends GlobeOrMap {
 
   notifyRepaintRequired() {
     this.pauser.notifyRepaintRequired();
+  }
+
+  _reactToSplitterChanges() {
+    const disposeSplitPositionChange = autorun(() => {
+      if (this.scene) {
+        this.scene.imagerySplitPosition = this.terria.splitPosition;
+        this.notifyRepaintRequired();
+      }
+    });
+
+    const disposeSplitDirectionChange = autorun(() => {
+      const items = this.terria.mainViewer.items.get();
+      const showSplitter = this.terria.showSplitter;
+      items.forEach(item => {
+        if (hasTraits(item, SplitterTraits, "splitDirection")) {
+          const layers = this.getImageryLayersForItem(item);
+          const splitDirection = item.splitDirection;
+
+          layers.forEach(layer => {
+            if (showSplitter) {
+              layer.splitDirection = splitDirection;
+            } else {
+              layer.splitDirection = ImagerySplitDirection.NONE;
+            }
+          });
+        }
+      });
+      this.notifyRepaintRequired();
+    });
+
+    return function() {
+      disposeSplitPositionChange();
+      disposeSplitDirectionChange();
+    };
   }
 
   getCurrentExtent() {
@@ -911,32 +928,16 @@ export default class Cesium extends GlobeOrMap {
     return result;
   }
 
-  private _updateItemForSplitter(item: Mappable) {
-    if (!hasTraits(item, SplitterTraits, "splitDirection")) {
-      return;
-    }
-
-    this._imageryLayersForItem(item).forEach(imageryLayer => {
-      if (this.terria.showSplitter) {
-        (<any>imageryLayer).splitDirection = item.splitDirection;
-      } else {
-        (<any>imageryLayer).splitDirection = ImagerySplitDirection.NONE;
-      }
-    });
-
-    this.notifyRepaintRequired();
-  }
-
-  private _imageryLayersForItem(item: Mappable): ImageryLayer[] {
+  getImageryLayersForItem(item: Mappable): ImageryLayer[] {
     const allImageryParts = item.mapItems.filter(ImageryParts.is);
-    const imageryLayers = [];
+    const imageryLayers: ImageryLayer[] = [];
 
     for (let i = 0; i < allImageryParts.length; i++) {
       let index = this.scene.imageryLayers.indexOf(
         this._makeImageryLayerFromParts(allImageryParts[i])
       );
       if (index !== -1) {
-        imageryLayers.push(this.scene.imageryLayers.get(index));
+        imageryLayers.push(<ImageryLayer>this.scene.imageryLayers.get(index));
       }
     }
     return imageryLayers;
