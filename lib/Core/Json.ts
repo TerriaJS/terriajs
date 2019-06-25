@@ -19,3 +19,7 @@ export function isJsonObject(
 export function isJsonNumber(value: JsonValue | undefined): value is number {
   return typeof value === "number";
 }
+
+export function isJsonString(value: JsonValue | undefined): value is string {
+  return typeof value === "string";
+}

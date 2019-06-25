@@ -34,12 +34,12 @@ import PickedFeatures, {
 import rectangleToLatLngBounds from "../Map/rectangleToLatLngBounds";
 import SplitterTraits from "../Traits/SplitterTraits";
 import TerriaViewer from "../ViewModels/TerriaViewer";
+import CameraView from "./CameraView";
 import Feature from "./Feature";
 import GlobeOrMap from "./GlobeOrMap";
 import hasTraits from "./hasTraits";
 import Mappable, { ImageryParts } from "./Mappable";
 import Terria from "./Terria";
-import CameraView from "./CameraView";
 
 interface SplitterClips {
   left: string;
@@ -329,6 +329,8 @@ export default class Leaflet extends GlobeOrMap {
 
         if (target instanceof Rectangle) {
           extent = target;
+        } else if (target instanceof CameraView) {
+          extent = target.rectangle;
         } else if (Mappable.is(target)) {
           if (isDefined(target.rectangle)) {
             const { west, south, east, north } = target.rectangle;

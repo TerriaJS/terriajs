@@ -111,6 +111,7 @@ class DataPreviewMap extends React.Component {
     runInAction(() => {
       this.previewViewer.viewerMode = "leaflet";
       this.previewViewer.disableInteraction = true;
+      this.previewViewer.homeCamera = this.props.terria.mainViewer.homeCamera;
     });
     // Not yet implemented
     // previewViewer.hideTerriaLogo = true;
@@ -147,9 +148,7 @@ class DataPreviewMap extends React.Component {
       if (this.isZoomedToExtent) {
         this.previewViewer.currentViewer.zoomTo(this.props.previewed);
       } else {
-        this.previewViewer.currentViewer.zoomTo(
-          this.previewViewer.homeCamera
-        );
+        this.previewViewer.currentViewer.zoomTo(this.previewViewer.homeCamera);
       }
     });
 

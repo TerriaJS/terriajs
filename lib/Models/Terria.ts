@@ -14,7 +14,11 @@ import filterOutUndefined from "../Core/filterOutUndefined";
 import GoogleAnalytics from "../Core/GoogleAnalytics";
 import instanceOf from "../Core/instanceOf";
 import isDefined from "../Core/isDefined";
-import JsonValue, { isJsonObject, JsonObject } from "../Core/Json";
+import JsonValue, {
+  isJsonObject,
+  JsonObject,
+  isJsonString
+} from "../Core/Json";
 import loadJson5 from "../Core/loadJson5";
 import TerriaError from "../Core/TerriaError";
 import PickedFeatures from "../Map/PickedFeatures";
@@ -435,6 +439,22 @@ export default class Terria {
 
     if (Array.isArray(initData.stories)) {
       this.stories = initData.stories;
+    }
+
+    if (isJsonString(initData.viewerMode)) {
+      switch (initData.viewerMode.toLowerCase()) {
+        case "3d".toLowerCase():
+          this.mainViewer.viewerOptions.useTerrain = true;
+          this.mainViewer.viewerMode = "cesium";
+          break;
+        case "3dSmooth".toLowerCase():
+          this.mainViewer.viewerOptions.useTerrain = false;
+          this.mainViewer.viewerMode = "cesium";
+          break;
+        case "2d".toLowerCase():
+          this.mainViewer.viewerMode = "leaflet";
+          break;
+      }
     }
 
     if (isJsonObject(initData.homeCamera)) {

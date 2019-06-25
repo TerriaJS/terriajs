@@ -31,9 +31,6 @@ const viewerOptionsDefaults: ViewerOptions = {
 
 export default class TerriaViewer {
   readonly terria: Terria;
-  // Do we need to store the map container?
-  // private _container: string | HTMLElement | undefined;
-  private _stopViewerReaction: (() => void) | undefined;
 
   @observable
   baseMap: Mappable | undefined;
@@ -42,13 +39,7 @@ export default class TerriaViewer {
   readonly items: IComputedValue<Mappable[]> | IObservableValue<Mappable[]>;
 
   @observable
-  _attached: boolean = false;
-
-  @observable
   viewerMode: string | undefined = "cesium";
-
-  @observable
-  private _currentViewer: GlobeOrMap | undefined;
 
   // Set by UI
   @observable
@@ -61,6 +52,9 @@ export default class TerriaViewer {
   @observable
   homeCamera: CameraView = new CameraView(Rectangle.MAX_VALUE);
 
+  @observable
+  mapContainer: string | HTMLElement | undefined;
+
   constructor(terria: Terria, items: IComputedValue<Mappable[]>) {
     this.terria = terria;
     this.items = items;
@@ -68,72 +62,49 @@ export default class TerriaViewer {
 
   @computed
   get attached(): boolean {
-    return this._attached;
+    return this.mapContainer !== undefined;
   }
 
-  @computed
+  private _lastViewer: GlobeOrMap | undefined;
+
+  @computed({
+    keepAlive: true
+  })
   get currentViewer(): GlobeOrMap {
-    return this._currentViewer || new NoViewer(this.terria);
+    let currentView: CameraView | undefined;
+    if (this._lastViewer !== undefined) {
+      currentView = this._lastViewer.getCurrentCameraView();
+      this._lastViewer.destroy();
+      this._lastViewer = undefined;
+    }
+
+    const viewerMode = this.attached ? this.viewerMode : undefined;
+    console.log(`Creating a viewer: ${viewerMode}`);
+
+    let newViewer: GlobeOrMap | undefined;
+    if (this.mapContainer && viewerMode === "leaflet") {
+      newViewer = new Leaflet(this, this.mapContainer);
+    } else if (this.mapContainer && viewerMode === "cesium") {
+      newViewer = new Cesium(this, this.mapContainer);
+    } else {
+      newViewer = new NoViewer(this.terria);
+    }
+
+    newViewer.zoomTo(currentView || this.homeCamera, 0.0);
+
+    this._lastViewer = newViewer;
+
+    return newViewer;
   }
 
   // Pull out attaching logic into it's own step. This allows constructing a TerriaViewer
   // before its UI element is mounted in React to set basemap, items, viewermode
   attach(mapContainer?: string | HTMLElement) {
-    if (this._attached) {
-      throw new DeveloperError(
-        "Attempted to attach TerriaViewer to a container when it was already attached"
-      );
-    }
-    this._attached = true;
-    const container =
-      mapContainer !== undefined ? mapContainer : "cesiumContainer";
-
-    // A "computed" for _currentViewer
-    this._stopViewerReaction = reaction(
-      () => ({ viewerMode: this.viewerMode, attached: this._attached }),
-      ({ viewerMode, attached }) => {
-        let bounds: CameraView | undefined;
-        if (this._currentViewer !== undefined) {
-          // Get viewer parameters to apply to new viewer
-          // terriaViewer.currentViewer.getCamera...
-          bounds = this._currentViewer.getCurrentCameraView();
-          this._currentViewer.destroy();
-        }
-        const newViewer =
-          attached && viewerMode !== undefined
-            ? this.createViewer(viewerMode, container)
-            : undefined;
-        // Apply previous parameters
-        if (newViewer !== undefined) {
-          newViewer.zoomTo(bounds || this.homeCamera, 0.0);
-        }
-        runInAction(() => {
-          this._currentViewer = newViewer;
-        });
-      },
-      { fireImmediately: true }
-    );
-  }
-
-  private createViewer(
-    viewerMode: string,
-    container: string | HTMLElement
-  ): GlobeOrMap | undefined {
-    console.log(`Creating a viewer: ${viewerMode}`);
-
-    if (viewerMode === "leaflet") {
-      return new Leaflet(this, container);
-    } else if (viewerMode === "cesium") {
-      return new Cesium(this, container);
-    }
+    this.mapContainer = mapContainer;
   }
 
   detach() {
     // Detach from a container
-    // Can then be attached to another container, if needed
-    this._attached = false;
-    if (this._stopViewerReaction !== undefined) {
-      this._stopViewerReaction();
-    }
+    this.mapContainer = undefined;
   }
 }

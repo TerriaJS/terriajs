@@ -637,7 +637,12 @@ export default class Cesium extends GlobeOrMap {
 
     // center isn't a member variable and doesn't seem to be used anywhere else in Terria
     // rect.center = center;
-    return new CameraView(rect, camera.positionWC, camera.directionWC, camera.upWC);
+    return new CameraView(
+      rect,
+      camera.positionWC,
+      camera.directionWC,
+      camera.upWC
+    );
   }
 
   // It's nice to co-locate creation of Ion TerrainProvider and Credit, but not necessary

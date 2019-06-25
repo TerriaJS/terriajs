@@ -8,6 +8,7 @@ import Terria from "./Terria";
 
 class NoViewer extends GlobeOrMap {
   readonly terria: Terria;
+  private _currentView: CameraView = new CameraView(Rectangle.MAX_VALUE);
 
   constructor(terria: Terria) {
     super();
@@ -17,13 +18,17 @@ class NoViewer extends GlobeOrMap {
   destroy() {}
 
   zoomTo(v: CameraView | Cesium.Rectangle | Mappable, t: any) {
-    // Set initial view?
+    if (v instanceof CameraView) {
+      this._currentView = v;
+    } else if (v instanceof Rectangle) {
+      this._currentView = new CameraView(v);
+    }
   }
 
   notifyRepaintRequired() {}
 
   getCurrentCameraView(): CameraView {
-    return new CameraView(Rectangle.fromDegrees(120, -45, 155, -15)); // This is just a random rectangle. Replace it when there's a home view available
+    return this._currentView;
   }
 
   getContainer() {
