@@ -23,7 +23,7 @@
   z-index: 20;
   border-radius: $radius-small;
   background: $dark;
-  color: #fff;
+  color: $text-light;
   border: $border-style;
   max-width: calc(100vw - 10px);
 
@@ -44,6 +44,38 @@
   &.is-open {
     @include transform(scale(1) translateZ(0));
   }
+  &.show-dropdown-as-modal {
+    @include transform(translate3d(0, -300px, 0));
+    opacity: 0;
+  }
+  &.is-open.show-dropdown-as-modal {
+    @include transform(translate3d(0, 0, 0));
+    opacity: 1;
+  }
+}
+.inner-close-btn {
+  composes: btn from "../../../Sass/common/_buttons.scss";
+  position: absolute;
+  z-index: 10;
+  top: $padding-small;
+  right: $padding-small;
+
+  &:hover,
+  &:focus {
+    svg {
+      fill: $color-primary;
+    }
+  }
+
+  svg {
+    fill: $grey;
+    height: 10px;
+    width: 10px;
+  }
+}
+.inner-close-btn--for-modal {
+  top: 15px;
+  right: 15px;
 }
 
 .caret {
@@ -89,7 +121,7 @@
 
   svg {
     fill: #9ca1aa;
-    margin: 0 3px 0 4px;
+    margin: 0 3px 1px 4px;
     vertical-align: bottom;
   }
 

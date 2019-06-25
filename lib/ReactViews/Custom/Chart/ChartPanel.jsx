@@ -93,6 +93,7 @@ const ChartPanel = createReactClass({
                 />
                 <button
                   type="button"
+                  title="Close Panel"
                   className={Styles.btnCloseChartPanel}
                   onClick={this.closePanel}
                 >

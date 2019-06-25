@@ -12,6 +12,8 @@ import Description from "./Description";
 import Styles from "./mappable-preview.scss";
 import { observer } from "mobx-react";
 import { action } from "mobx";
+import measureElement from "../measureElement";
+import SharePanel from "../Map/Panels/SharePanel/SharePanel.jsx";
 
 /**
  * @typedef {object} Props
@@ -31,7 +33,8 @@ class MappablePreview extends React.Component {
   static propTypes = {
     previewed: PropTypes.object.isRequired,
     terria: PropTypes.object.isRequired,
-    viewState: PropTypes.object.isRequired
+    viewState: PropTypes.object.isRequired,
+    widthFromMeasureElementHOC: PropTypes.number
   };
 
   @action.bound
@@ -90,11 +93,33 @@ class MappablePreview extends React.Component {
             : "Add to the map"}
         </button>
         <div className={Styles.previewedInfo}>
-          <h3 className={Styles.h3}>{catalogItem.name}</h3>
+          <div
+            className={Styles.titleAndShareWrapper}
+            ref={component => (this.refToMeasure = component)}
+          >
+            <h3 className={Styles.h3}>{catalogItem.name}</h3>
+            <If
+              condition={
+                catalogItem.dataUrlType !== "local" &&
+                !this.props.viewState.useSmallScreenInterface
+              }
+            >
+              <div className={Styles.shareLinkWrapper}>
+                <SharePanel
+                  catalogShare
+                  catalogShareWithoutText
+                  modalWidth={this.props.widthFromMeasureElementHOC}
+                  terria={this.props.terria}
+                  viewState={this.props.viewState}
+                />
+              </div>
+            </If>
+          </div>
           <Description item={catalogItem} />
         </div>
       </div>
     );
   }
 }
-export default MappablePreview;
+
+export default measureElement(MappablePreview);

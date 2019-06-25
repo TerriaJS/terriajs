@@ -3,12 +3,14 @@ import React from "react";
 import Styles from "./clipboard.scss";
 import classNames from "classnames";
 import PropTypes from "prop-types";
+import Icon from "./Icon.jsx";
 
 export default class Clipboard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      tooltip: null
+      tooltip: null,
+      success: null
     };
     this.resetTooltipLater = this.resetTooltipLater.bind(this);
   }
@@ -17,13 +19,15 @@ export default class Clipboard extends React.Component {
     this.clipboardBtn = new clipboard(`.btn-copy-${this.props.id}`);
     this.clipboardBtn.on("success", _ => {
       this.setState({
-        tooltip: "copied!"
+        tooltip: "Copied to clipboard",
+        success: true
       });
       this.resetTooltipLater();
     });
     this.clipboardBtn.on("error", _ => {
       this.setState({
-        tooltip: "copy unsuccessful!"
+        tooltip: "Copy unsuccessful...",
+        success: false
       });
       this.resetTooltipLater();
     });
@@ -45,17 +49,20 @@ export default class Clipboard extends React.Component {
     this.removeTimeout();
     this._timerID = window.setTimeout(() => {
       this.setState({
-        tooltip: null
+        tooltip: null,
+        success: null
       });
     }, 3000);
   }
 
   render() {
+    const isLightTheme = this.props.theme === "light";
+
     return (
       <div className={Styles.clipboard}>
-        <div>Share URL</div>
+        <div className={Styles.title}>Share URL</div>
         <div className={Styles.explanation}>
-          Anyone visiting this URL will see this map view.
+          Anyone with this URL will be able to access this map.
         </div>
         <div className={Styles.clipboardBody}>
           {this.props.source}
@@ -67,7 +74,18 @@ export default class Clipboard extends React.Component {
           </button>
         </div>
         {this.state.tooltip && (
-          <span className={Styles.tooltip}>{this.state.tooltip}</span>
+          <div
+            className={classNames(Styles.tooltipWrapper, {
+              [Styles.tooltipWrapperLight]: isLightTheme
+            })}
+          >
+            <Icon
+              glyph={
+                this.state.success ? Icon.GLYPHS.selected : Icon.GLYPHS.close
+              }
+            />
+            <span className={Styles.tooltipText}>{this.state.tooltip}</span>
+          </div>
         )}
       </div>
     );
@@ -76,5 +94,6 @@ export default class Clipboard extends React.Component {
 
 Clipboard.propTypes = {
   id: PropTypes.string.isRequired,
-  source: PropTypes.object.isRequired
+  source: PropTypes.object.isRequired,
+  theme: PropTypes.oneOf(["dark", "light"])
 };

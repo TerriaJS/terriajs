@@ -168,7 +168,16 @@ export default class Terria {
   @observable showSplitter = false;
   @observable splitPosition = 0.5;
   @observable splitPositionVertical = 0.5;
+
   @observable stories: any[] = [];
+
+  // TODO: this is duplicated with properties on ViewState, which is
+  //       kind of terrible.
+  /**
+   * Gets or sets the ID of the catalog member that is currently being
+   * previewed.
+   */
+  @observable previewedItemId: string | undefined;
 
   constructor(options: TerriaOptions = {}) {
     if (options.baseUrl) {
@@ -466,6 +475,10 @@ export default class Terria {
     if (isJsonObject(initData.initialCamera)) {
       const initialCamera = CameraView.fromJson(initData.initialCamera);
       this.currentViewer.zoomTo(initialCamera, 2.0);
+    }
+
+    if (isJsonString(initData.previewedItemId)) {
+      this.previewedItemId = initData.previewedItemId;
     }
 
     // Copy but don't yet load the workbench.

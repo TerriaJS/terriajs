@@ -10,7 +10,6 @@ import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import defined from "terriajs-cesium/Source/Core/defined";
 import clone from "terriajs-cesium/Source/Core/clone";
 
-import CatalogGroup from "../../../Models/CatalogGroup";
 import CsvCatalogItem from "../../../Models/CsvCatalogItem";
 import Dropdown from "../../Generic/Dropdown";
 import Polling from "../../../Models/Polling";
@@ -201,7 +200,8 @@ function expand(props, sourceIndex) {
   function makeNewCatalogItem() {
     const url = defined(sourceIndex) ? props.sources[sourceIndex] : undefined;
     const newCatalogItem = new CsvCatalogItem(terria, url, {
-      tableStyle: makeTableStyle()
+      tableStyle: makeTableStyle(),
+      isCsvForCharting: true
     });
     let tableStructure = props.tableStructure;
     if (
@@ -233,12 +233,8 @@ function expand(props, sourceIndex) {
     );
     newCatalogItem.name =
       props.title || (props.feature && props.feature.name) || "Chart";
-    newCatalogItem.uniqueId =
-      newCatalogItem.name +
-      (props.id ? " " + props.id : "") +
-      " (" +
-      props.catalogItem.name +
-      ")";
+    const group = terria.catalog.chartDataGroup;
+    newCatalogItem.uniqueId = group.uniqueId + "/" + newCatalogItem.name;
 
     if (defined(props.pollSeconds)) {
       const pollSources = props.pollSources;
@@ -251,11 +247,6 @@ function expand(props, sourceIndex) {
         replace: props.pollReplace
       });
     }
-    const group = terria.catalog.upsertCatalogGroup(
-      CatalogGroup,
-      "Chart Data",
-      "A group for chart data."
-    );
     group.isOpen = true;
     const existingIndex = group.items
       .map(item => item.uniqueId)

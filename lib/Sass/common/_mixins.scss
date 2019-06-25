@@ -48,6 +48,32 @@
   transform-origin: $origin $origin2;
 }
 
+// animation mixins
+@mixin keyframes($animation-name) {
+  @-webkit-keyframes #{$animation-name} {
+    @content;
+  }
+  @-moz-keyframes #{$animation-name} {
+    @content;
+  }
+  @-ms-keyframes #{$animation-name} {
+    @content;
+  }
+  @-o-keyframes #{$animation-name} {
+    @content;
+  }
+  @keyframes #{$animation-name} {
+    @content;
+  }
+}
+@mixin animation($animation-name) {
+  -webkit-animation: #{$animation-name};
+  -moz-animation: #{$animation-name};
+  -ms-animation: #{$animation-name};
+  -o-animation: #{$animation-name};
+  animation: #{$animation-name};
+}
+
 @mixin icon-font($content) {
   /* use !important to prevent issues with browser extensions that change fonts */
   font-family: "icomoon" !important;
