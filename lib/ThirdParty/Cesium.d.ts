@@ -740,7 +740,19 @@ declare module "terriajs-cesium/Source/Scene/BingMapsImageryProvider" {
   export default Cesium.BingMapsImageryProvider;
 }
 declare module "terriajs-cesium/Source/Scene/BingMapsStyle" {
-  export default Cesium.BingMapsStyle;
+  enum BingMapsStyle {
+    AERIAL,
+    AERIAL_WITH_LABELS,
+    AERIAL_WITH_LABELS_ON_DEMAND,
+    ROAD,
+    ROAD_ON_DEMAND,
+    CANVAS_DARK,
+    CANVAS_LIGHT,
+    CANVAS_GRAY,
+    ORDNANCE_SURVEY,
+    COLLINS_BART
+  }
+  export default BingMapsStyle;
 }
 declare module "terriajs-cesium/Source/Scene/BlendEquation" {
   export default Cesium.BlendEquation;
@@ -1102,4 +1114,13 @@ declare module "terriajs-cesium/Source/Scene/ImageryLayer" {
   export default class ImageryLayer extends Cesium.ImageryLayer {
     splitDirection: ImagerySplitDirection;
   }
+}
+
+declare module "terriajs-cesium/Source/Scene/IonWorldImageryStyle" {
+  enum IonWorldImageryStyle {
+    AERIAL,
+    AERIAL_WITH_LABELS,
+    ROAD
+  }
+  export default IonWorldImageryStyle;
 }

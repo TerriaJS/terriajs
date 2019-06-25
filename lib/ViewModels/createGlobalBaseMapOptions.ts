@@ -5,12 +5,12 @@ import WebMapServiceCatalogItem from "../Models/WebMapServiceCatalogItem";
 import CommonStrata from "../Models/CommonStrata";
 import Terria from "../Models/Terria";
 import { BaseMapViewModel } from "./BaseMapViewModel";
-// var createBingBaseMapOptions = require("./createBingBaseMapOptions");
+import createBingBaseMapOptions from "./createBingBaseMapOptions";
 import OpenStreetMapCatalogItem from "../Models/OpenStreetMapCatalogItem";
 import { runInAction } from "mobx";
 
-function createGlobalBaseMapOptions(terria: Terria /*, bingMapsKey*/) {
-  const result = []; //createBingBaseMapOptions(terria, bingMapsKey);
+function createGlobalBaseMapOptions(terria: Terria, bingMapsKey: string) {
+  const result = createBingBaseMapOptions(terria, bingMapsKey);
 
   var naturalEarthII = new WebMapServiceCatalogItem(
     "basemap-natural-earth-II",
