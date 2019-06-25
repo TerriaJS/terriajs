@@ -118,7 +118,7 @@ If you've forked TerriaMap prior to prettier being applied, merging will be a ha
 
 If you're merging a branch-that-has-already-followed-this-procedure into your branch, you can follow the procedure above except that you need to use different commits instead of `pre-prettier` and `post-prettier`. Look at the commits in the source branch and you should see two that look like this:
 
-<img src="contributing/img/prettier-commits.png" />
+<img src="../contributing/img/prettier-commits.png" />
 
 Use the commit hash of the commit that merged `pre-prettier` in place of `pre-prettier` above. Use the commit hash of the commit that merged `post-prettier` in place of `post-prettier` above.
 
