@@ -1,4 +1,4 @@
-import lodash from "lodash";
+import uniqWith from "lodash-es/uniqWith";
 import { computed, runInAction } from "mobx";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
@@ -253,7 +253,7 @@ class MapServerStratum extends LoadableStratum(
       });
     });
 
-    legend.items = lodash.uniqWith(
+    legend.items = uniqWith(
       legend.items,
       (a, b) => a.imageUrl === b.imageUrl
     );
