@@ -253,10 +253,7 @@ class MapServerStratum extends LoadableStratum(
       });
     });
 
-    legend.items = uniqWith(
-      legend.items,
-      (a, b) => a.imageUrl === b.imageUrl
-    );
+    legend.items = uniqWith(legend.items, (a, b) => a.imageUrl === b.imageUrl);
 
     return [legend];
   }

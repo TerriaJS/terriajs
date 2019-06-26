@@ -1,4 +1,4 @@
-import countBy from "lodash-es/countby";
+import countBy from "lodash-es/countBy";
 import { computed } from "mobx";
 import createStratumInstance from "../Models/createStratumInstance";
 import Model from "../Models/Model";
