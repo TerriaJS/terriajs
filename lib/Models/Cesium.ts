@@ -107,30 +107,33 @@ export default class Cesium extends GlobeOrMap {
     this.terriaViewer = terriaViewer;
     this.terria = terriaViewer.terria;
 
-    this._terrainProvider;
-    const terrainProvider = this._terrainProvider;
-
     //An arbitrary base64 encoded image used to populate the placeholder SingleTileImageryProvider
-    var img =
+    const img =
       "data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUA \
     AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO \
     9TXL0Y4OHwAAAABJRU5ErkJggg==";
 
-    var options = {
+    const options = {
       dataSources: this.dataSources,
       clock: this.terria.timelineClock,
-      terrainProvider: terrainProvider,
+      terrainProvider: this._terrainProvider,
       imageryProvider: new SingleTileImageryProvider({ url: img }),
-      scene3DOnly: true,
-      // Workaround for Firefox bug with WebGL and printing:
-      // https://bugzilla.mozilla.org/show_bug.cgi?id=976173
-      ...((<any>FeatureDetection).isFirefox() && {
-        contextOptions: { webgl: { preserveDrawingBuffer: true } }
-      })
+      scene3DOnly: true
     };
 
+    // Workaround for Firefox bug with WebGL and printing:
+    // https://bugzilla.mozilla.org/show_bug.cgi?id=976173
+    const firefoxBugOptions = (<any>FeatureDetection).isFirefox()
+      ? {
+          contextOptions: { webgl: { preserveDrawingBuffer: true } }
+        }
+      : undefined;
+
     //create CesiumViewer
-    this.cesiumWidget = new CesiumWidget(container, options);
+    this.cesiumWidget = new CesiumWidget(
+      container,
+      Object.assign({}, options, firefoxBugOptions)
+    );
     this.scene = this.cesiumWidget.scene;
 
     this.dataSourceDisplay = new DataSourceDisplay({
