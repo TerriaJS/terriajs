@@ -1,4 +1,4 @@
-import ObserveModelMixin from "../ObserveModelMixin";
+import { observer } from "mobx-react";
 import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
@@ -8,9 +8,8 @@ import classNames from "classnames";
 import Icon from "../Icon";
 import Styles from "./location-search-result.scss";
 
-const LocationSearchResults = createReactClass({
+const LocationSearchResults = observer(createReactClass({
   displayName: "LocationSearchResults",
-  mixins: [ObserveModelMixin],
 
   propTypes: {
     viewState: PropTypes.object.isRequired,
@@ -106,6 +105,6 @@ const LocationSearchResults = createReactClass({
       </div>
     );
   }
-});
+}));
 
 module.exports = LocationSearchResults;

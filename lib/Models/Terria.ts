@@ -66,6 +66,7 @@ interface ConfigParameters {
   cesiumIonAccessToken?: string;
   hideTerriaLogo?: boolean;
   useCesiumIonBingImagery: boolean;
+  bingMapsKey?: string;
 }
 
 interface StartOptions {
@@ -138,7 +139,8 @@ export default class Terria {
     useCesiumIonTerrain: true,
     cesiumIonAccessToken: undefined,
     hideTerriaLogo: false,
-    useCesiumIonBingImagery: true
+    useCesiumIonBingImagery: true,
+    bingMapsKey: undefined
   };
 
   @observable
@@ -248,6 +250,15 @@ export default class Terria {
 
     return loadJson5(options.configUrl)
       .then((config: any) => {
+
+        if (config.parameters) {
+          Object.keys(config.parameters).forEach(key => {
+            if (this.configParameters.hasOwnProperty(key)) {
+              (<any>this.configParameters)[key] = config.parameters[key];
+            }
+          });
+        }
+
         if (config.aspects) {
           return this.loadMagdaConfig(config);
         }

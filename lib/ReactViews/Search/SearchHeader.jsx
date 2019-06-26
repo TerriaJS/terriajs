@@ -1,14 +1,12 @@
 import Loader from "../Loader";
-import ObserveModelMixin from "../ObserveModelMixin";
+import { observer } from "mobx-react";
 import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import Styles from "./search-header.scss";
 
 /** Renders either a loader or a message based off search state. */
-export default createReactClass({
-  mixins: [ObserveModelMixin],
-
+export default observer(createReactClass({
   displayName: "SearchHeader",
 
   propTypes: {
@@ -36,4 +34,4 @@ export default createReactClass({
       return null;
     }
   }
-});
+}));

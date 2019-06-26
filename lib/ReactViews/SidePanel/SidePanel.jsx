@@ -1,17 +1,15 @@
-import React from "react";
-
 import createReactClass from "create-react-class";
-
-import PropTypes from "prop-types";
-
-import Workbench from "../Workbench/Workbench";
-import Icon from "../Icon";
-import FullScreenButton from "./FullScreenButton";
-import { removeMarker } from "../../Models/LocationMarkerUtils";
-import SearchBox from "../Search/SearchBox";
-import Styles from "./side-panel.scss";
 import { reaction } from "mobx";
 import { observer } from "mobx-react";
+import PropTypes from "prop-types";
+import React from "react";
+import { removeMarker } from "../../Models/LocationMarkerUtils";
+import Icon from "../Icon";
+import SearchBox from "../Search/SearchBox";
+import SidebarSearch from "../Search/SidebarSearch";
+import Workbench from "../Workbench/Workbench";
+import FullScreenButton from "./FullScreenButton";
+import Styles from "./side-panel.scss";
 
 const SidePanel = observer(
   createReactClass({
