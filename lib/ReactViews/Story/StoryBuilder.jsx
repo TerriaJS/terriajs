@@ -234,6 +234,17 @@ const StoryBuilder = createReactClass({
     });
   },
 
+  hideStoryBuilder() {
+    this.props.viewState.storyBuilderShown = !this.props.viewState
+      .storyBuilderShown;
+    this.props.terria.currentViewer.notifyRepaintRequired();
+    // Allow any animations to finish, then trigger a resize.
+    setTimeout(function() {
+      triggerResize();
+    }, this.props.animationDuration || 1);
+    this.props.viewState.toggleFeaturePrompt("story", false, true);
+  },
+
   renderStories(editingMode) {
     const stories = this.props.terria.stories || [];
     const className = classNames({
@@ -292,6 +303,15 @@ const StoryBuilder = createReactClass({
     });
     return (
       <div className={className}>
+        <button
+          type="button"
+          onClick={this.hideStoryBuilder}
+          className={Styles.btnHideStoryBuilder}
+          title='hide story builder'
+        >
+        <Icon glyph={Icon.GLYPHS.right} />
+        </button>
+
         {this.state.showVideoGuide && this.renderVideoGuide()}
         <div className={Styles.header}>
           {!hasStories && this.renderIntro()}
