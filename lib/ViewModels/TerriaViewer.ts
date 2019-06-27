@@ -1,12 +1,5 @@
-import {
-  computed,
-  IComputedValue,
-  IObservableValue,
-  observable,
-  reaction,
-  runInAction
-} from "mobx";
-import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
+import { computed, IComputedValue, IObservableValue, observable } from "mobx";
+import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import CameraView from "../Models/CameraView";
 import Cesium from "../Models/Cesium";
@@ -55,6 +48,10 @@ export default class TerriaViewer {
   @observable
   mapContainer: string | HTMLElement | undefined;
 
+  // TODO: hook these up
+  readonly beforeViewerChanged = new CesiumEvent();
+  readonly afterViewerChanged = new CesiumEvent();
+
   constructor(terria: Terria, items: IComputedValue<Mappable[]>) {
     this.terria = terria;
     this.items = items;
@@ -81,7 +78,7 @@ export default class TerriaViewer {
     const viewerMode = this.attached ? this.viewerMode : undefined;
     console.log(`Creating a viewer: ${viewerMode}`);
 
-    let newViewer: GlobeOrMap | undefined;
+    let newViewer: GlobeOrMap;
     if (this.mapContainer && viewerMode === "leaflet") {
       newViewer = new Leaflet(this, this.mapContainer);
     } else if (this.mapContainer && viewerMode === "cesium") {
@@ -90,9 +87,9 @@ export default class TerriaViewer {
       newViewer = new NoViewer(this.terria);
     }
 
-    newViewer.zoomTo(currentView || this.homeCamera, 0.0);
-
     this._lastViewer = newViewer;
+
+    newViewer.zoomTo(currentView || this.homeCamera, 0.0);
 
     return newViewer;
   }

@@ -81,7 +81,7 @@ const DistanceLegend = createReactClass({
     this.addUpdateSubscription();
 
     this.viewerSubscriptions.push(
-      this.props.terria.afterViewerChanged.addEventListener(() => {
+      this.props.terria.mainViewer.afterViewerChanged.addEventListener(() => {
         this.addUpdateSubscription();
       })
     );
