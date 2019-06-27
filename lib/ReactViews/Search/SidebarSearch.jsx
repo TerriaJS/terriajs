@@ -54,10 +54,10 @@ const SidebarSearch = observer(
               </If>
               <For
                 each="search"
-                of={this.props.viewState.searchState.locationSearchProviders}
+                of={this.props.viewState.searchState.locationSearchResults}
               >
                 <LocationSearchResults
-                  key={search.name}
+                  key={search.searchProvider.name}
                   terria={this.props.terria}
                   viewState={this.props.viewState}
                   search={search}

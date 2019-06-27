@@ -1,4 +1,4 @@
-import { computed } from "mobx";
+import { computed, toJS } from "mobx";
 import CzmlDataSource from "terriajs-cesium/Source/DataSources/CzmlDataSource";
 import isDefined from "../Core/isDefined";
 import { JsonObject } from "../Core/Json";
@@ -7,35 +7,9 @@ import TerriaError from "../Core/TerriaError";
 import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
-import anyTrait from "../Traits/anyTrait";
-import CatalogMemberTraits from "../Traits/CatalogMemberTraits";
-import FeatureInfoTraits from "../Traits/FeatureInfoTraits";
-import MappableTraits from "../Traits/MappableTraits";
-import mixTraits from "../Traits/mixTraits";
-import primitiveTrait from "../Traits/primitiveTrait";
-import UrlTraits from "../Traits/UrlTraits";
+import CzmlCatalogItemTraits from "../Traits/CzmlCatalogItemTraits";
 import CreateModel from "./CreateModel";
 import Mappable from "./Mappable";
-
-export class CzmlCatalogItemTraits extends mixTraits(
-  FeatureInfoTraits,
-  UrlTraits,
-  CatalogMemberTraits,
-  MappableTraits
-) {
-  @anyTrait({
-    name: "CZML Data",
-    description: "A CZML data array."
-  })
-  czmlData?: JsonObject[];
-
-  @primitiveTrait({
-    type: "string",
-    name: "CZML String",
-    description: "A CZML string."
-  })
-  czmlString?: string;
-}
 
 export default class CzmlCatalogItem
   extends AsyncMappableMixin(
@@ -59,7 +33,7 @@ export default class CzmlCatalogItem
   protected get loadMapItemsPromise(): Promise<void> {
     return new Promise<string | readonly JsonObject[]>(resolve => {
       if (isDefined(this.czmlData)) {
-        resolve(this.czmlData);
+        resolve(toJS(this.czmlData));
       } else if (isDefined(this.czmlString)) {
         resolve(JSON.parse(this.czmlString));
       } else if (isDefined(this._czmlFile)) {

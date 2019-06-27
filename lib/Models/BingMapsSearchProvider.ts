@@ -10,6 +10,7 @@ import loadJsonp from "../Core/loadJsonp";
 import SearchProvider from "./SearchProvider";
 import SearchResult from "./SearchResult";
 import Terria from "./Terria";
+import SearchProviderResults from "./SearchProviderResults";
 
 interface BingMapsSearchProviderOptions {
   terria: Terria;
@@ -27,8 +28,6 @@ export default class BingMapsSearchProvider extends SearchProvider {
   @observable flightDurationSeconds: number;
   @observable primaryCountry: string;
   @observable culture: string;
-
-  private _lastSearchText: string | undefined;
 
   constructor(options: BingMapsSearchProviderOptions) {
     super();
@@ -56,14 +55,16 @@ export default class BingMapsSearchProvider extends SearchProvider {
     }
   }
 
-  protected doSearch(searchText: string): Promise<void> {
+  protected doSearch(
+    searchText: string,
+    searchResults: SearchProviderResults
+  ): Promise<void> {
+    searchResults.results.length = 0;
+    searchResults.message = undefined;
+
     if (searchText === undefined || /^\s*$/.test(searchText)) {
-      this.searchResults.length = 0;
       return Promise.resolve();
     }
-
-    this.searchResults.length = 0;
-    this.searchMessage = undefined;
 
     this.terria.analytics.logEvent("search", "bing", searchText);
 
@@ -87,8 +88,6 @@ export default class BingMapsSearchProvider extends SearchProvider {
       latitudeDegrees = CesiumMath.toDegrees(center.latitude);
     }
 
-    this._lastSearchText = searchText;
-
     const promise: Promise<any> = loadJsonp(
       new Resource({
         url:
@@ -109,19 +108,21 @@ export default class BingMapsSearchProvider extends SearchProvider {
 
     return promise
       .then(result => {
-        if (searchText !== this._lastSearchText) {
+        if (searchResults.isCanceled) {
           // A new search has superseded this one, so ignore the result.
           return;
         }
 
         if (result.resourceSets.length === 0) {
-          this.searchMessage = "Sorry, no locations match your search query.";
+          searchResults.message =
+            "Sorry, no locations match your search query.";
           return;
         }
 
         var resourceSet = result.resourceSets[0];
         if (resourceSet.resources.length === 0) {
-          this.searchMessage = "Sorry, no locations match your search query.";
+          searchResults.message =
+            "Sorry, no locations match your search query.";
           return;
         }
 
@@ -171,20 +172,21 @@ export default class BingMapsSearchProvider extends SearchProvider {
           );
         }
 
-        this.searchResults.push(...primaryCountryLocations);
-        this.searchResults.push(...otherLocations);
+        searchResults.results.push(...primaryCountryLocations);
+        searchResults.results.push(...otherLocations);
 
-        if (this.searchResults.length === 0) {
-          this.searchMessage = "Sorry, no locations match your search query.";
+        if (searchResults.results.length === 0) {
+          searchResults.message =
+            "Sorry, no locations match your search query.";
         }
       })
       .catch(() => {
-        if (searchText !== this._lastSearchText) {
+        if (searchResults.isCanceled) {
           // A new search has superseded this one, so ignore the result.
           return;
         }
 
-        this.searchMessage =
+        searchResults.message =
           "An error occurred while searching.  Please check your internet connection or try again later.";
       });
   }

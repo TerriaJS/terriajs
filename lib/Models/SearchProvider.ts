@@ -1,19 +1,10 @@
-import { observable, action } from "mobx";
+import { action, observable } from "mobx";
+import { fromPromise } from "mobx-utils";
+import SearchProviderResults from "./SearchProviderResults";
 
 export default abstract class SearchProvider {
   @observable name = "Unknown";
   @observable isOpen = true;
-  @observable searchResults: any[] = [];
-  @observable searchMessage: string | undefined;
-
-  @observable
-  private _isSearching = false;
-
-  constructor() {}
-
-  get isSearching() {
-    return this._isSearching;
-  }
 
   @action
   toggleOpen() {
@@ -21,13 +12,16 @@ export default abstract class SearchProvider {
   }
 
   @action
-  search(searchText: string): Promise<void> {
-    if (searchText && searchText.length > 0)
-    this._isSearching = true;
-    return this.doSearch(searchText).finally(() => {
-      this._isSearching = false;
-    });
+  search(searchText: string): SearchProviderResults {
+    const result = new SearchProviderResults(this);
+    result.resultsCompletePromise = fromPromise(
+      this.doSearch(searchText, result)
+    );
+    return result;
   }
 
-  protected abstract doSearch(searchText: string): Promise<void>;
+  protected abstract doSearch(
+    searchText: string,
+    results: SearchProviderResults
+  ): Promise<void>;
 }

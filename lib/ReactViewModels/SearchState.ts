@@ -1,6 +1,14 @@
 import CatalogItemNameSearchProviderViewModel from "../ViewModels/CatalogItemNameSearchProviderViewModel";
-import { observable, reaction, IReactionDisposer, computed, action } from "mobx";
+import {
+  observable,
+  reaction,
+  IReactionDisposer,
+  computed,
+  action
+} from "mobx";
 import Terria from "../Models/Terria";
+import SearchProviderResults from "../Models/SearchProviderResults";
+import SearchProvider from "../Models/SearchProvider";
 
 interface SearchStateOptions {
   terria: Terria;
@@ -10,9 +18,9 @@ interface SearchStateOptions {
 
 export default class SearchState {
   @observable
-  catalogSearchProvider: any; //CatalogItemNameSearchProviderViewModel;
+  catalogSearchProvider: SearchProvider;
 
-  @observable locationSearchProviders: any[];
+  @observable locationSearchProviders: SearchProvider[];
 
   @observable catalogSearchText: string = "";
   @observable isWaitingToStartCatalogSearch: boolean = false;
@@ -26,6 +34,10 @@ export default class SearchState {
   @observable showLocationSearchResults: boolean = true;
   @observable showMobileLocationSearch: boolean = false;
   @observable showMobileCatalogSearch: boolean = false;
+
+  @observable locationSearchResults: SearchProviderResults[] = [];
+  @observable catalogSearchResults: SearchProviderResults | undefined;
+  @observable unifiedSearchResults: SearchProviderResults[] = [];
 
   private _catalogSearchDisposer: IReactionDisposer;
   private _locationSearchDisposer: IReactionDisposer;
@@ -66,6 +78,12 @@ export default class SearchState {
     );
   }
 
+  dispose() {
+    this._catalogSearchDisposer();
+    this._locationSearchDisposer();
+    this._unifiedSearchDisposer();
+  }
+
   @computed
   get unifiedSearchProviders() {
     return [this.catalogSearchProvider].concat(this.locationSearchProviders);
@@ -75,7 +93,12 @@ export default class SearchState {
   searchCatalog() {
     if (this.isWaitingToStartCatalogSearch) {
       this.isWaitingToStartCatalogSearch = false;
-      return this.catalogSearchProvider.search(this.catalogSearchText);
+      if (this.catalogSearchResults) {
+        this.catalogSearchResults.isCanceled = true;
+      }
+      this.catalogSearchResults = this.catalogSearchProvider.search(
+        this.catalogSearchText
+      );
     }
   }
 
@@ -83,8 +106,11 @@ export default class SearchState {
   searchLocations() {
     if (this.isWaitingToStartLocationSearch) {
       this.isWaitingToStartLocationSearch = false;
-      return this.locationSearchProviders.map(searchProvider =>
-        searchProvider.search(this.locationSearchText)
+      this.locationSearchResults.forEach(results => {
+        results.isCanceled = true;
+      });
+      this.locationSearchResults = this.locationSearchProviders.map(
+        searchProvider => searchProvider.search(this.locationSearchText)
       );
     }
   }
@@ -93,8 +119,11 @@ export default class SearchState {
   searchUnified() {
     if (this.isWaitingToStartUnifiedSearch) {
       this.isWaitingToStartUnifiedSearch = false;
-      return this.unifiedSearchProviders.map(searchProvider =>
-        searchProvider.search(this.unifiedSearchText)
+      this.unifiedSearchResults.forEach(results => {
+        results.isCanceled = true;
+      });
+      this.unifiedSearchResults = this.unifiedSearchProviders.map(
+        searchProvider => searchProvider.search(this.unifiedSearchText)
       );
     }
   }

@@ -1,122 +1,95 @@
-// import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
-// import defined from "terriajs-cesium/Source/Core/defined";
-// import Entity from "terriajs-cesium/Source/DataSources/Entity.js";
-// import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-// import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
-// import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-// import VerticalOrigin from "terriajs-cesium/Source/Scene/VerticalOrigin";
-// import sampleTerrain from "terriajs-cesium/Source/Core/sampleTerrain";
-// import prettifyCoordinates from "../Map/prettifyCoordinates";
+import markerIcon from "./markerIcon";
+import prettifyCoordinates from "../Map/prettifyCoordinates";
+import CommonStrata from "./CommonStrata";
+import CzmlCatalogItem from "./CzmlCatalogItem";
+import Terria from "./Terria";
+import raiseErrorOnRejectedPromise from "./raiseErrorOnRejectedPromise";
 
-// import markerIcon from "../../wwwroot/images/map-pin.png";
-// import MappableTraits from "../Traits/MappableTraits";
-// import CreateModel from "./CreateModel";
-// import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
-// import { DataSource } from "cesium";
-// import { ImageryParts } from "./Mappable";
+export const LOCATION_MARKER_DATA_SOURCE_NAME =
+  "TerriaJS Location Marker Points";
+export const MARKER_UNIQUE_ID = "__TERRRIAJS-LOCATIONMARKER__";
 
-// const LOCATION_MARKER_DATA_SOURCE_NAME = "TerriaJS Location Marker Points";
+export interface MarkerDetails {
+  name: string;
+  location: { longitude: number; latitude: number; height?: number };
+  heightReference?: "NONE" | "CLAMP_TO_GROUND" | "RELATIVE_TO_GROUND";
+}
+/**
+ * Adds a location marker to the map with the position supplied in the result, adding a data source to terria if one hasn't
+ * already been added, and removing all previously added markers in that data source. This data source is stored in
+ * terria.locationMarker.
+ */
+export function addMarker(
+  terria: Terria,
+  details: MarkerDetails
+): CzmlCatalogItem {
+  const location = details.location;
 
-// class LocationMarker extends AsyncMappableMixin(CreateModel(MappableTraits)) {
-//   get mapItems(): (DataSource | ImageryParts)[] {
-//     return [];
-//   }
+  const displayCoords = prettifyCoordinates(
+    details.location.longitude,
+    details.location.latitude,
+    { digits: 5 }
+  );
 
-//   protected get loadMapItemsPromise(): Promise<void> {
-//     return Promise.resolve();
-//   }
-// }
+  const billboard: any = {
+    image: markerIcon,
+    scale: 0.5,
+    verticalOrigin: "BOTTOM",
+    heightReference:
+      details.heightReference ||
+      (details.location.height === undefined ? "CLAMP_TO_GROUND" : "NONE")
+  };
 
-// /**
-//  * Adds a location marker to the map with the position supplied in the result, adding a data source to terria if one hasn't
-//  * already been added, and removing all previously added markers in that data source. This data source is stored in
-//  * terria.locationMarker.
-//  */
-// export function addMarker(terria, result) {
-//   terria.locationMarker.entities.removeAll();
+  const document = {
+    id: "document",
+    name: LOCATION_MARKER_DATA_SOURCE_NAME,
+    version: "1.0"
+  };
 
-//   const cartographicPosition = Cartographic.fromDegrees(
-//     result.location.longitude,
-//     result.location.latitude
-//   );
+  const marker = {
+    name: details.name,
+    position: {
+      cartographicDegrees: [
+        location.longitude,
+        location.latitude,
+        location.height || 0.0
+      ]
+    },
+    description: `<table><tr><td>Lat / Lon</td><td>${displayCoords.latitude}, ${
+      displayCoords.longitude
+    }</td></tr></table>`,
+    billboard: billboard
+  };
 
-//   const displayCoords = prettifyCoordinates(
-//     result.location.longitude,
-//     result.location.latitude,
-//     { digits: 5 }
-//   );
+  let catalogItem = terria.getModelById(CzmlCatalogItem, MARKER_UNIQUE_ID);
+  if (catalogItem === undefined) {
+    catalogItem = new CzmlCatalogItem(MARKER_UNIQUE_ID, terria);
+    catalogItem.setTrait(
+      CommonStrata.definition,
+      "name",
+      LOCATION_MARKER_DATA_SOURCE_NAME
+    );
+    terria.addModel(catalogItem);
+  }
+  catalogItem.setTrait(CommonStrata.user, "czmlData", [document, marker]);
 
-//   const firstPointEntity = new Entity({
-//     name: result.name,
-//     position: Ellipsoid.WGS84.cartographicToCartesian(cartographicPosition),
-//     description: `<table><tr><td>Lat / Lon</td><td>${displayCoords.latitude}, ${
-//       displayCoords.longitude
-//     }</td></tr></table>`,
-//     billboard: {
-//       image: markerIcon,
-//       scale: 0.5,
-//       eyeOffset: new Cartesian3(0.0, 0.0, 50.0),
-//       verticalOrigin: VerticalOrigin.BOTTOM
-//     }
-//   });
+  raiseErrorOnRejectedPromise(catalogItem.loadMapItems());
 
-//   if (
-//     terria.cesium &&
-//     terria.cesium.scene &&
-//     terria.cesium.scene.globe &&
-//     terria.cesium.scene.globe.terrainProvider
-//   ) {
-//     correctEntityHeight(
-//       firstPointEntity,
-//       cartographicPosition,
-//       terria.cesium.scene.globe.terrainProvider,
-//       15
-//     );
-//   }
+  terria.overlays.add(catalogItem);
 
-//   terria.locationMarker.entities.add(firstPointEntity);
-// }
+  return catalogItem;
+}
 
-// /**
-//  * Gets the most detailed height from terrainProvider at currentCartographicPosition and updates entity position.
-//  * It starts querying at levelHint and makes its way down to level zero.
-//  */
-// function correctEntityHeight(
-//   entity,
-//   currentCartographicPosition,
-//   terrainProvider,
-//   levelHint
-// ) {
-//   sampleTerrain(terrainProvider, levelHint, [currentCartographicPosition]).then(
-//     function(updatedPositions) {
-//       if (updatedPositions[0].height !== undefined) {
-//         entity.position = Ellipsoid.WGS84.cartographicToCartesian(
-//           updatedPositions[0]
-//         );
-//       } else if (levelHint > 0) {
-//         correctEntityHeight(
-//           entity,
-//           currentCartographicPosition,
-//           terrainProvider,
-//           levelHint - 1
-//         );
-//       }
-//     }
-//   );
-// }
+/** Removes a marker previously added in {@link #addMarker}. */
+export function removeMarker(terria: Terria) {
+  const catalogItem = terria.getModelById(CzmlCatalogItem, MARKER_UNIQUE_ID);
+  if (catalogItem !== undefined) {
+    terria.overlays.remove(catalogItem);
+  }
+}
 
-// /** Removes a marker previously added in {@link #addMarker}. */
-// export function removeMarker(terria) {
-//   terria.dataSources.remove(terria.locationMarker);
-//   terria.locationMarker = undefined;
-// }
-
-// /** Determines whether the location marker is visible previously added in {@link #addMarker}. */
-// export function markerVisible(terria) {
-//   return defined(terria.locationMarker);
-// }
-
-// /**
-//  * The name given to the data source created by {@link #addMarker}.
-//  */
-// export { LOCATION_MARKER_DATA_SOURCE_NAME };
+/** Determines whether the location marker is visible previously added in {@link #addMarker}. */
+export function isMarkerVisible(terria: Terria) {
+  const catalogItem = terria.getModelById(CzmlCatalogItem, MARKER_UNIQUE_ID);
+  return catalogItem !== undefined && terria.overlays.contains(catalogItem);
+}
