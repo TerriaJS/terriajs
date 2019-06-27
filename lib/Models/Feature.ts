@@ -47,6 +47,8 @@ export default class Feature extends Entity {
 
   imageryLayer?: ImageryLayer;
 
+  cesiumPrimitive?: any;
+
   constructor(options: any) {
     super(options);
     addCustomFeatureProperties(this);
