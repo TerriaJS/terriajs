@@ -11,13 +11,13 @@ export default observer(
     displayName: "SearchHeader",
 
     propTypes: {
-      searchProvider: PropTypes.object.isRequired,
+      searchResults: PropTypes.object.isRequired,
       isWaitingForSearchToStart: PropTypes.bool
     },
 
     render() {
       if (
-        this.props.searchProvider.isSearching ||
+        this.props.searchResults.isSearching ||
         this.props.isWaitingForSearchToStart
       ) {
         return (
@@ -25,10 +25,10 @@ export default observer(
             <Loader />
           </div>
         );
-      } else if (this.props.searchProvider.searchMessage) {
+      } else if (this.props.searchResults.message) {
         return (
           <div key="message" className={Styles.noResults}>
-            {this.props.searchProvider.searchMessage}
+            {this.props.searchResults.message}
           </div>
         );
       } else {

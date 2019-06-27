@@ -53,7 +53,7 @@ export default class SearchState {
       () => this.catalogSearchText,
       () => {
         this.isWaitingToStartCatalogSearch = true;
-        this.catalogSearchProvider.search("");
+        this.catalogSearchResults = this.catalogSearchProvider.search("");
       }
     );
 
@@ -61,9 +61,11 @@ export default class SearchState {
       () => this.locationSearchText,
       () => {
         this.isWaitingToStartLocationSearch = true;
-        this.locationSearchProviders.forEach(provider => {
-          provider.search("");
-        });
+        this.locationSearchResults = this.locationSearchProviders.map(
+          provider => {
+            return provider.search("");
+          }
+        );
       }
     );
 
@@ -71,9 +73,11 @@ export default class SearchState {
       () => this.unifiedSearchText,
       () => {
         this.isWaitingToStartUnifiedSearch = true;
-        this.unifiedSearchProviders.forEach(provider => {
-          provider.search("");
-        });
+        this.unifiedSearchResults = this.unifiedSearchProviders.map(
+          provider => {
+            return provider.search("");
+          }
+        );
       }
     );
   }

@@ -80,7 +80,7 @@ const LocationSearchResults = observer(
             />
           </button>
           <SearchHeader
-            searchProvider={searchProvider}
+            searchResults={search}
             isWaitingForSearchToStart={this.props.isWaitingForSearchToStart}
           />
           <ul className={Styles.items}>
