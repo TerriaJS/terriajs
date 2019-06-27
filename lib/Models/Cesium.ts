@@ -224,8 +224,12 @@ export default class Cesium extends GlobeOrMap {
       // a clamped position, use that instead, because the regular
       // position doesn't take terrain clamping into account.
       if (isDefined(feature)) {
-        if (isDefined(feature.cesiumPrimitive) && isDefined(feature.cesiumPrimitive._clampedPosition)) {
-          this._selectionIndicator.position = feature.cesiumPrimitive._clampedPosition;
+        if (
+          isDefined(feature.cesiumPrimitive) &&
+          isDefined(feature.cesiumPrimitive._clampedPosition)
+        ) {
+          this._selectionIndicator.position =
+            feature.cesiumPrimitive._clampedPosition;
         } else if (isDefined(feature.position)) {
           this._selectionIndicator.position = feature.position.getValue(
             this.terria.timelineClock.currentTime
