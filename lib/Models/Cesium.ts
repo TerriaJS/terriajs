@@ -94,12 +94,6 @@ export default class Cesium extends GlobeOrMap {
     | Mappable
     | /*TODO Cesium.Cesium3DTileset*/ any;
 
-  // Track which models were mapped on the last Cesium scene update
-  // Used for removing models from the map that are no longer needed
-  // Won't leak unless we stop observing the model layer without destroying this Cesium object
-  // This would be an array of weak references if it could be
-  private _lastModels: Model[] | undefined;
-
   /* Disposers */
   private readonly _selectionIndicator: CesiumSelectionIndicator;
   private readonly _disposeSelectedFeatureSubscription: () => void;
@@ -331,11 +325,6 @@ export default class Cesium extends GlobeOrMap {
   }
 
   private _observeModelLayer() {
-    const disposeModelsSubscription = observe(
-      this,
-      "_allMapItems" as any,
-      (...args: any[]) => console.log(args)
-    );
     return autorun(() => {
       // TODO: Look up the type in a map and call the associated function.
       //       That way the supported types of map items is extensible.
@@ -392,21 +381,6 @@ export default class Cesium extends GlobeOrMap {
           }
         }
       }
-
-      const allModels = this._allMapItems.filter(isCesiumModel);
-      allModels.forEach(m => {
-        if (!this.scene.primitives.contains(m)) {
-          this.scene.primitives.add(m);
-        }
-      });
-      if (this._lastModels) {
-        this._lastModels.forEach(m => {
-          if (!allModels.includes(m) && this.scene.primitives.contains(m)) {
-            this.scene.primitives.remove(m);
-          }
-        });
-      }
-      this._lastModels = allModels;
 
       this.notifyRepaintRequired();
     });
