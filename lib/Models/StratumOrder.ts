@@ -75,7 +75,7 @@ export default class StratumOrder {
    * @param strata The strata to sort.
    * @returns The strata sorted top-to-bottom.
    */
-  sortTopToBottom<T>(strata: Map<string, T>): T[] {
+  sortTopToBottom<T>(strata: Map<string, T>): Map<string, T> {
     return this.sort(strata, (a, b) => {
       const aPriority = this.priorities.get(a[0]);
       if (aPriority === undefined) {
@@ -100,7 +100,7 @@ export default class StratumOrder {
    * @param strata The strata to sort.
    * @returns The strata sorted bottom-to-top.
    */
-  sortBottomToTop<T>(strata: Map<string, T>): T[] {
+  sortBottomToTop<T>(strata: Map<string, T>): Map<string, T> {
     return this.sort(strata, (a, b) => {
       const aPriority = this.priorities.get(a[0]);
       if (aPriority === undefined) {
@@ -122,10 +122,8 @@ export default class StratumOrder {
   private sort<T>(
     strata: Map<string, T>,
     sortFunction: (a: [string, T], b: [string, T]) => number
-  ): T[] {
-    return Array.from(strata.entries())
-      .sort(sortFunction)
-      .map(e => e[1]);
+  ): Map<string, T> {
+    return new Map(Array.from(strata.entries()).sort(sortFunction));
   }
 
   static readonly instance = new StratumOrder();
@@ -160,7 +158,7 @@ export default class StratumOrder {
    * @param strata The strata to sort.
    * @returns The strata sorted top-to-bottom.
    */
-  static sortTopToBottom<T>(strata: Map<string, T>): T[] {
+  static sortTopToBottom<T>(strata: Map<string, T>): Map<string, T> {
     return StratumOrder.instance.sortTopToBottom<T>(strata);
   }
 
@@ -170,7 +168,7 @@ export default class StratumOrder {
    * @param strata The strata to sort.
    * @returns The strata sorted bottom-to-top.
    */
-  static sortBottomToTop<T>(strata: Map<string, T>): T[] {
+  static sortBottomToTop<T>(strata: Map<string, T>): Map<string, T> {
     return StratumOrder.instance.sortBottomToTop<T>(strata);
   }
 }

@@ -1,7 +1,6 @@
 import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
-import ko from "terriajs-cesium/Source/ThirdParty/knockout";
 import { observer } from "mobx-react";
 
 import ModalPopup from "./ModalPopup";
@@ -27,17 +26,6 @@ const ExplorerWindow = observer(
 
     onDoneAnimatingIn() {
       this.props.viewState.explorerPanelAnimating = false;
-    },
-
-    /* eslint-disable-next-line camelcase */
-    UNSAFE_componentWillMount() {
-      this._pickedFeaturesSubscription = ko
-        .pureComputed(this.isVisible, this)
-        .subscribe(this.onVisibilityChange);
-    },
-
-    componentWillUnmount() {
-      this._pickedFeaturesSubscription.dispose();
     },
 
     isVisible() {

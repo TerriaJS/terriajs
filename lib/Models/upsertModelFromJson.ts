@@ -1,7 +1,7 @@
-import ModelFactory from "./ModelFactory";
-import { BaseModel } from "./Model";
-import Terria from "./Terria";
 import TerriaError from "../Core/TerriaError";
+import { BaseModel } from "./Model";
+import ModelFactory from "./ModelFactory";
+import Terria from "./Terria";
 import updateModelFromJson from "./updateModelFromJson";
 
 export default function upsertModelFromJson(
@@ -10,7 +10,8 @@ export default function upsertModelFromJson(
   parentId: string,
   model: BaseModel | undefined,
   stratumName: string,
-  json: any
+  json: any,
+  replaceStratum: boolean = false
 ): BaseModel {
   if (model === undefined) {
     let id = json.id;
@@ -24,7 +25,7 @@ export default function upsertModelFromJson(
         });
       }
 
-      id = parentId + "/" + localId;
+      id = (parentId || "") + "/" + localId;
     }
 
     model = terria.getModelById(BaseModel, id);
@@ -41,7 +42,7 @@ export default function upsertModelFromJson(
     }
   }
 
-  updateModelFromJson(model, stratumName, json);
+  updateModelFromJson(model, stratumName, json, replaceStratum);
 
   return model;
 }

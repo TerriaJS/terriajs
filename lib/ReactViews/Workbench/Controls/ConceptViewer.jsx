@@ -26,6 +26,7 @@ const ConceptViewer = createReactClass({
         concept.isVisible &&
         !SummaryConceptModel.prototype.isPrototypeOf(concept)
     );
+
     return (
       <div className={Styles.root}>
         <If condition={nonSummaryConcept.length > 0}>

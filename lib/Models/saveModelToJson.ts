@@ -30,7 +30,11 @@ export default function saveModelToJson(
     result[stratumId] = saveStratumToJson(model.traits, stratum);
   });
 
-  result.id = model.id;
+  if (model.uniqueId !== undefined) {
+    // TODO: should the JSON property be named `uniqueId` too?
+    result.id = model.uniqueId;
+  }
+
   result.type = model.type;
 
   return result;

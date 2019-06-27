@@ -43,12 +43,13 @@ import pollToPromise from "../Core/pollToPromise";
 import CesiumRenderLoopPauser from "../Map/CesiumRenderLoopPauser";
 import Feature from "./Feature";
 import TerriaViewer from "../ViewModels/TerriaViewer";
-import GlobeOrMap, { CameraView } from "./GlobeOrMap";
+import GlobeOrMap from "./GlobeOrMap";
 import Mappable, { ImageryParts } from "./Mappable";
 import Terria from "./Terria";
 import PickedFeatures, { ProviderCoordsMap } from "../Map/PickedFeatures";
 import SplitterTraits from "../Traits/SplitterTraits";
 import hasTraits from "./hasTraits";
+import CameraView from "./CameraView";
 
 // Intermediary
 var cartesian3Scratch = new Cartesian3();
@@ -93,8 +94,7 @@ export default class Cesium extends GlobeOrMap {
   private readonly _disposeSelectedFeatureSubscription: () => void;
   private readonly _disposeWorkbenchMapItemsSubscription: () => void;
   private readonly _disposeTerrainReaction: () => void;
-  private readonly _disposeSplitterPositionSubscription: () => void;
-  private readonly _disposeShowSplitterSubscription: () => void;
+  private readonly _disposeSplitterReaction: () => void;
 
   private _createImageryLayer: (
     ip: Cesium.ImageryProvider
@@ -107,30 +107,33 @@ export default class Cesium extends GlobeOrMap {
     this.terriaViewer = terriaViewer;
     this.terria = terriaViewer.terria;
 
-    this._terrainProvider;
-    const terrainProvider = this._terrainProvider;
-
     //An arbitrary base64 encoded image used to populate the placeholder SingleTileImageryProvider
-    var img =
+    const img =
       "data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUA \
     AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO \
     9TXL0Y4OHwAAAABJRU5ErkJggg==";
 
-    var options = {
+    const options = {
       dataSources: this.dataSources,
       clock: this.terria.timelineClock,
-      terrainProvider: terrainProvider,
+      terrainProvider: this._terrainProvider,
       imageryProvider: new SingleTileImageryProvider({ url: img }),
-      scene3DOnly: true,
-      // Workaround for Firefox bug with WebGL and printing:
-      // https://bugzilla.mozilla.org/show_bug.cgi?id=976173
-      ...((<any>FeatureDetection).isFirefox() && {
-        contextOptions: { webgl: { preserveDrawingBuffer: true } }
-      })
+      scene3DOnly: true
     };
 
+    // Workaround for Firefox bug with WebGL and printing:
+    // https://bugzilla.mozilla.org/show_bug.cgi?id=976173
+    const firefoxBugOptions = (<any>FeatureDetection).isFirefox()
+      ? {
+          contextOptions: { webgl: { preserveDrawingBuffer: true } }
+        }
+      : undefined;
+
     //create CesiumViewer
-    this.cesiumWidget = new CesiumWidget(container, options);
+    this.cesiumWidget = new CesiumWidget(
+      container,
+      Object.assign({}, options, firefoxBugOptions)
+    );
     this.scene = this.cesiumWidget.scene;
 
     this.dataSourceDisplay = new DataSourceDisplay({
@@ -235,22 +238,7 @@ export default class Cesium extends GlobeOrMap {
     this._disposeTerrainReaction = autorun(() => {
       this.scene.globe.terrainProvider = this._terrainProvider;
     });
-
-    this._disposeSplitterPositionSubscription = autorun(() => {
-      if (this.scene) {
-        this.scene.imagerySplitPosition = this.terria.splitPosition;
-        this.notifyRepaintRequired();
-      }
-    });
-
-    this._disposeShowSplitterSubscription = autorun(() => {
-      this.terriaViewer.items.get().forEach(item => {
-        if (Mappable.is(item)) {
-          this._updateItemForSplitter(item);
-        }
-      });
-      this.notifyRepaintRequired();
-    });
+    this._disposeSplitterReaction = this._reactToSplitterChanges();
   }
 
   getContainer() {
@@ -301,10 +289,9 @@ export default class Cesium extends GlobeOrMap {
     this.dataSourceDisplay.destroy();
 
     this._disposeTerrainReaction();
-    this._disposeSplitterPositionSubscription();
-    this._disposeShowSplitterSubscription();
 
     this._disposeSelectedFeatureSubscription();
+    this._disposeSplitterReaction();
     this.cesiumWidget.destroy();
     destroyObject(this);
   }
@@ -511,7 +498,41 @@ export default class Cesium extends GlobeOrMap {
     this.pauser.notifyRepaintRequired();
   }
 
-  getCurrentExtent() {
+  _reactToSplitterChanges() {
+    const disposeSplitPositionChange = autorun(() => {
+      if (this.scene) {
+        this.scene.imagerySplitPosition = this.terria.splitPosition;
+        this.notifyRepaintRequired();
+      }
+    });
+
+    const disposeSplitDirectionChange = autorun(() => {
+      const items = this.terria.mainViewer.items.get();
+      const showSplitter = this.terria.showSplitter;
+      items.forEach(item => {
+        if (hasTraits(item, SplitterTraits, "splitDirection")) {
+          const layers = this.getImageryLayersForItem(item);
+          const splitDirection = item.splitDirection;
+
+          layers.forEach(layer => {
+            if (showSplitter) {
+              layer.splitDirection = splitDirection;
+            } else {
+              layer.splitDirection = ImagerySplitDirection.NONE;
+            }
+          });
+        }
+      });
+      this.notifyRepaintRequired();
+    });
+
+    return function() {
+      disposeSplitPositionChange();
+      disposeSplitDirectionChange();
+    };
+  }
+
+  getCurrentCameraView(): CameraView {
     const scene = this.scene;
     const camera = scene.camera;
 
@@ -524,7 +545,7 @@ export default class Cesium extends GlobeOrMap {
 
     if (!defined(center)) {
       // TODO: binary search to find the horizon point and use that as the center.
-      return this.terriaViewer.defaultExtent; // This is just a random rectangle. Replace it when there's a home view available
+      return this.terriaViewer.homeCamera; // This is just a random rectangle. Replace it when there's a home view available
       // return this.terria.homeView.rectangle;
     }
 
@@ -619,7 +640,12 @@ export default class Cesium extends GlobeOrMap {
 
     // center isn't a member variable and doesn't seem to be used anywhere else in Terria
     // rect.center = center;
-    return rect;
+    return new CameraView(
+      rect,
+      camera.positionWC,
+      camera.directionWC,
+      camera.upWC
+    );
   }
 
   // It's nice to co-locate creation of Ion TerrainProvider and Credit, but not necessary
@@ -911,32 +937,16 @@ export default class Cesium extends GlobeOrMap {
     return result;
   }
 
-  private _updateItemForSplitter(item: Mappable) {
-    if (!hasTraits(item, SplitterTraits, "splitDirection")) {
-      return;
-    }
-
-    this._imageryLayersForItem(item).forEach(imageryLayer => {
-      if (this.terria.showSplitter) {
-        (<any>imageryLayer).splitDirection = item.splitDirection;
-      } else {
-        (<any>imageryLayer).splitDirection = ImagerySplitDirection.NONE;
-      }
-    });
-
-    this.notifyRepaintRequired();
-  }
-
-  private _imageryLayersForItem(item: Mappable): ImageryLayer[] {
+  getImageryLayersForItem(item: Mappable): ImageryLayer[] {
     const allImageryParts = item.mapItems.filter(ImageryParts.is);
-    const imageryLayers = [];
+    const imageryLayers: ImageryLayer[] = [];
 
     for (let i = 0; i < allImageryParts.length; i++) {
       let index = this.scene.imageryLayers.indexOf(
         this._makeImageryLayerFromParts(allImageryParts[i])
       );
       if (index !== -1) {
-        imageryLayers.push(this.scene.imageryLayers.get(index));
+        imageryLayers.push(<ImageryLayer>this.scene.imageryLayers.get(index));
       }
     }
     return imageryLayers;

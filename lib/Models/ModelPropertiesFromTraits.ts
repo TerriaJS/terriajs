@@ -1,11 +1,12 @@
 import { If } from "../Core/TypeConditionals";
 import { Complete, CopyNullAndUndefined } from "../Core/TypeModifiers";
 import ModelTraits, { IsValidSimpleTraitType } from "../Traits/ModelTraits";
+import Model from "./Model";
 
 type SingleTrait<TTrait> = If<
   IsValidSimpleTraitType<NonNullable<TTrait>>,
   TTrait,
-  TTrait extends ModelTraits ? ModelPropertiesFromTraits<TTrait> : never
+  TTrait extends ModelTraits ? Model<TTrait> : never
 >;
 type ArrayTrait<TTrait, TElement> = ReadonlyArray<SingleTrait<TElement>>;
 

@@ -6,6 +6,7 @@ import ConstantColorMap from "../Map/ConstantColorMap";
 import DiscreteColorMap from "../Map/DiscreteColorMap";
 import EnumColorMap from "../Map/EnumColorMap";
 import addModelStrataView from "../Models/addModelStrataView";
+import CommonStrata from "../Models/CommonStrata";
 import createEmptyModel from "../Models/createEmptyModel";
 import createStratumInstance from "../Models/createStratumInstance";
 import FlattenedFromTraits from "../Models/FlattenedFromTraits";
@@ -21,8 +22,6 @@ import TableTraits from "../Traits/TableTraits";
 import ColorPalette from "./ColorPalette";
 import TableColumn from "./TableColumn";
 import TableColumnType from "./TableColumnType";
-import LegendTraits, { LegendItemTraits } from "../Traits/LegendTraits";
-import StratumFromTraits from "../Models/StratumFromTraits";
 
 const defaultColor = "yellow";
 
@@ -66,7 +65,8 @@ export default class TableStyle {
       const defaultStyle =
         this.tableModel.defaultStyle || createStratumInstance(TableStyleTraits);
       const model = {
-        strataTopToBottom: [defaultStyle]
+        strataTopToBottom: [defaultStyle],
+        strata: new Map([[CommonStrata.definition, defaultStyle]]) // TODO
       };
       return addModelStrataView(model, TableStyleTraits);
     } else if (this.tableModel.defaultStyle === undefined) {
@@ -76,7 +76,12 @@ export default class TableStyle {
       // Create a flattened view of this style plus the default style.
       const style = this.tableModel.styles[this.styleNumber];
       const model = {
-        strataTopToBottom: [style, this.tableModel.defaultStyle]
+        strataTopToBottom: [style, this.tableModel.defaultStyle],
+        strata: new Map([
+          // TODO
+          [CommonStrata.defaults, this.tableModel.defaultStyle],
+          [CommonStrata.definition, style]
+        ])
       };
       return addModelStrataView(model, TableStyleTraits);
     }

@@ -1,22 +1,13 @@
 import { computed, observable, runInAction } from "mobx";
-import {
-  createTransformer,
-  fromPromise,
-  IPromiseBasedObservable
-} from "mobx-utils";
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
-import when from "terriajs-cesium/Source/ThirdParty/when";
 import Constructor from "../Core/Constructor";
-import filterOutUndefined from "../Core/filterOutUndefined";
 import Mappable, { ImageryParts } from "../Models/Mappable";
+import Model from "../Models/Model";
 import Terria from "../Models/Terria";
-
-interface RequiredInstance {
-  terria: Terria;
-}
+import MappableTraits from "../Traits/MappableTraits";
 
 export default function AsyncMappableMixin<
-  T extends Constructor<RequiredInstance>
+  T extends Constructor<Model<MappableTraits>>
 >(Base: T) {
   abstract class AsyncMappableMixin extends Base implements Mappable {
     // TODO

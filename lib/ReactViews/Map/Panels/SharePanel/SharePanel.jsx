@@ -11,6 +11,7 @@ import createReactClass from "create-react-class";
 import defined from "terriajs-cesium/Source/Core/defined";
 import DropdownStyles from "../panel.scss";
 import Icon from "../../../Icon";
+import Input from "../../../Styled/Input/Input";
 import Loader from "../../../Loader";
 import MenuPanel from "../../../StandardUserInterface/customizable/MenuPanel";
 import ObserverModelMixin from "../../../ObserveModelMixin";
@@ -29,6 +30,9 @@ const SharePanel = createReactClass({
     userPropWhiteList: PropTypes.array,
     advancedIsOpen: PropTypes.bool,
     shortenUrls: PropTypes.bool,
+    catalogShare: PropTypes.bool,
+    catalogShareWithoutText: PropTypes.bool,
+    modalWidth: PropTypes.number,
     viewState: PropTypes.object.isRequired
   },
 
@@ -132,9 +136,9 @@ const SharePanel = createReactClass({
         placeholder: "Shortening..."
       });
 
-      buildShortShareLink(this.props.terria)
+      buildShortShareLink(this.props.terria, this.props.viewState)
         .then(shareUrl => this.setState({ shareUrl }))
-        .otherwise(() => {
+        .catch(() => {
           this.setUnshortenedUrl();
           this.setState({
             errorMessage:
@@ -148,7 +152,7 @@ const SharePanel = createReactClass({
 
   setUnshortenedUrl() {
     this.setState({
-      shareUrl: buildShareLink(this.props.terria)
+      shareUrl: buildShareLink(this.props.terria, this.props.viewState)
     });
   },
 
@@ -187,6 +191,9 @@ const SharePanel = createReactClass({
 
     if (open) {
       this.updateForShortening();
+      if (this.props.catalogShare) {
+        this.props.viewState.shareModalIsVisible = true;
+      }
     }
   },
 
@@ -216,10 +223,10 @@ const SharePanel = createReactClass({
       readyCallback: windowToPrint => {
         if (printAutomatically) {
           printWindow(windowToPrint)
-            .otherwise(e => {
+            .catch(e => {
               this.props.terria.error.raiseEvent(e);
             })
-            .always(() => {
+            .finally(() => {
               if (iframe) {
                 document.body.removeChild(iframe);
               }
@@ -247,16 +254,13 @@ const SharePanel = createReactClass({
     }
   },
 
-  renderContent() {
-    const iframeCode = this.state.shareUrl.length
-      ? `<iframe style="width: 720px; height: 600px; border: none;" src="${
-          this.state.shareUrl
-        }" allowFullScreen mozAllowFullScreen webkitAllowFullScreen></iframe>`
-      : "";
-
-    const shareUrlTextBox = (
-      <input
+  getShareUrlInput(theme) {
+    return (
+      <Input
         className={Styles.shareUrlfield}
+        light={theme === "light"}
+        dark={theme === "dark"}
+        large
         type="text"
         value={this.state.shareUrl}
         placeholder={this.state.placeholder}
@@ -265,11 +269,95 @@ const SharePanel = createReactClass({
         id="share-url"
       />
     );
+  },
+
+  onAddWebDataClicked() {
+    this.setState({
+      isOpen: false
+    });
+    this.props.viewState.openUserData();
+  },
+
+  hasUserAddedData() {
+    return this.props.terria.catalog.userAddedDataGroup.members.length > 0;
+  },
+
+  renderWarning() {
+    return (
+      <If condition={this.hasUserAddedData()}>
+        <div className={Styles.warning}>
+          <p className={Styles.paragraph}>
+            <strong>Note:</strong>
+          </p>
+          <p className={Styles.paragraph}>
+            The following data sources will NOT be shared because they include
+            data from this local system. To share these data sources, publish
+            their data on a web server and{" "}
+            <a
+              className={Styles.warningLink}
+              onClick={this.onAddWebDataClicked}
+            >
+              add them using a url
+            </a>
+            .
+          </p>
+          <ul className={Styles.paragraph}>
+            {this.props.terria.catalog.userAddedDataGroup.items.map(
+              (item, i) => {
+                return (
+                  <li key={i}>
+                    <strong>{item.name}</strong>
+                  </li>
+                );
+              }
+            )}
+          </ul>
+        </div>
+      </If>
+    );
+  },
+
+  renderContent() {
+    if (this.props.catalogShare) {
+      return this.renderContentForCatalogShare();
+    } else {
+      return this.renderContentWithPrintAndEmbed();
+    }
+  },
+
+  renderContentForCatalogShare() {
+    return (
+      <Choose>
+        <When condition={this.state.shareUrl === ""}>
+          <Loader message="Generating share URL..." />
+        </When>
+        <Otherwise>
+          <div className={Styles.clipboardForCatalogShare}>
+            <Clipboard
+              theme="light"
+              text={this.state.shareUrl}
+              source={this.getShareUrlInput("light")}
+              id="share-url"
+            />
+            {this.renderWarning()}
+          </div>
+        </Otherwise>
+      </Choose>
+    );
+  },
+
+  renderContentWithPrintAndEmbed() {
+    const iframeCode = this.state.shareUrl.length
+      ? `<iframe style="width: 720px; height: 600px; border: none;" src="${
+          this.state.shareUrl
+        }" allowFullScreen mozAllowFullScreen webkitAllowFullScreen></iframe>`
+      : "";
 
     return (
       <div>
-        <div className={Styles.clipboard}>
-          <Clipboard source={shareUrlTextBox} id="share-url" />
+        <div className={DropdownStyles.section}>
+          <Clipboard source={this.getShareUrlInput("dark")} id="share-url" />
+          {this.renderWarning()}
         </div>
         <div className={DropdownStyles.section}>
           <div>Print Map</div>
@@ -318,7 +406,9 @@ const SharePanel = createReactClass({
               <p className={Styles.paragraph}>
                 To embed, copy this code to embed this map into an HTML page:
               </p>
-              <input
+              <Input
+                large
+                dark
                 className={Styles.field}
                 type="text"
                 readOnly
@@ -364,23 +454,41 @@ const SharePanel = createReactClass({
   },
 
   render() {
+    const { catalogShare, catalogShareWithoutText, modalWidth } = this.props;
     const dropdownTheme = {
-      btn: Styles.btnShare,
-      outer: Styles.sharePanel,
-      inner: Styles.dropdownInner,
+      btn: classNames({
+        [Styles.btnCatalogShare]: catalogShare,
+        [Styles.btnWithoutText]: catalogShareWithoutText
+      }),
+      outer: classNames(Styles.sharePanel, {
+        [Styles.catalogShare]: catalogShare
+      }),
+      inner: classNames(Styles.dropdownInner, {
+        [Styles.catalogShareInner]: catalogShare
+      }),
       icon: "share"
     };
+
+    const btnText = catalogShare ? "Share" : "Share / Print";
+    const btnTitle = catalogShare
+      ? "Share your catalogue with others"
+      : "Share your map with others";
 
     return (
       <div>
         <MenuPanel
           theme={dropdownTheme}
-          btnText="Share / Print"
+          btnText={catalogShareWithoutText ? null : btnText}
           viewState={this.props.viewState}
-          btnTitle="Share your map with others"
+          btnTitle={btnTitle}
           isOpen={this.state.isOpen}
           onOpenChanged={this.changeOpenState}
+          showDropdownAsModal={catalogShare}
+          modalWidth={modalWidth}
           smallScreen={this.props.viewState.useSmallScreenInterface}
+          onDismissed={() => {
+            if (catalogShare) this.props.viewState.shareModalIsVisible = false;
+          }}
         >
           <If condition={this.state.isOpen}>{this.renderContent()}</If>
         </MenuPanel>

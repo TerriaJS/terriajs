@@ -30,7 +30,7 @@ export default class BingMapsCatalogItem
     ];
   }
 
-  protected get loadMetadataPromise(): Promise<void> {
+  protected forceLoadMetadata(): Promise<void> {
     return Promise.resolve();
   }
 
@@ -41,7 +41,7 @@ export default class BingMapsCatalogItem
   _createImageryProvider() {
     const result = new BingMapsImageryProvider({
       url: "//dev.virtualearth.net",
-      mapStyle: this.mapStyle,
+      mapStyle: <any>this.mapStyle,
       key: this.key
     });
 

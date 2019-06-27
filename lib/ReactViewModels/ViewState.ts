@@ -10,6 +10,9 @@ import { BaseModel } from "../Models/Model";
 import PickedFeatures from "../Map/PickedFeatures";
 import isDefined from "../Core/isDefined";
 
+export const DATA_CATALOG_NAME = "data-catalog";
+export const USER_DATA_NAME = "my-data";
+
 interface ViewStateOptions {
   terria: Terria;
   catalogSearchProvider: any;
@@ -32,11 +35,9 @@ export default class ViewState {
   readonly terria: Terria;
 
   @observable previewedItem: BaseModel | undefined;
-  @observable previewedItemAncestors: BaseModel[] | undefined;
   @observable userDataPreviewedItem: BaseModel | undefined;
-  @observable userDataPreviewedItemAncestors: BaseModel[] | undefined;
   @observable explorerPanelIsVisible: boolean = false;
-  @observable activeTabCategory: string = "data-catalog";
+  @observable activeTabCategory: string = DATA_CATALOG_NAME;
   @observable activeTabIdInCategory: string | undefined = undefined;
   @observable isDraggingDroppingFile: boolean = false;
   @observable mobileView: string | null = null;
@@ -89,12 +90,19 @@ export default class ViewState {
    */
   @observable feedbackFormIsVisible: boolean = false;
 
+  /**
+   * Gets or sets a value indicating whether the catalog's model share panel
+   * is currently visible.
+   */
+  @observable shareModelIsVisible: boolean = false;
+
   private _unsubscribeErrorListener: any;
   private _pickedFeaturesSubscription: IReactionDisposer;
   private _isMapFullScreenSubscription: IReactionDisposer;
   private _showStoriesSubscription: IReactionDisposer;
   private _mobileMenuSubscription: IReactionDisposer;
   private _storyPromptSubscription: IReactionDisposer;
+  private _previewedItemIdSubscription: IReactionDisposer;
   private _disclaimerHandler: DisclaimerHandler;
 
   constructor(options: ViewStateOptions) {
@@ -182,6 +190,20 @@ export default class ViewState {
         }
       }
     );
+
+    this._previewedItemIdSubscription = reaction(
+      () => this.terria.previewedItemId,
+      (previewedItemId: string | undefined) => {
+        if (previewedItemId === undefined) {
+          return;
+        }
+
+        const model = this.terria.getModelById(BaseModel, previewedItemId);
+        if (model !== undefined) {
+          this.viewCatalogMember(model);
+        }
+      }
+    );
   }
 
   dispose() {
@@ -191,17 +213,18 @@ export default class ViewState {
     this._isMapFullScreenSubscription();
     this._showStoriesSubscription();
     this._storyPromptSubscription();
+    this._previewedItemIdSubscription();
     this._disclaimerHandler.dispose();
   }
 
   openAddData() {
     this.explorerPanelIsVisible = true;
-    this.activeTabCategory = "data-catalog";
+    this.activeTabCategory = DATA_CATALOG_NAME;
   }
 
   openUserData() {
     this.explorerPanelIsVisible = true;
-    this.activeTabCategory = "my-data";
+    this.activeTabCategory = USER_DATA_NAME;
   }
 
   closeCatalog() {
@@ -214,7 +237,7 @@ export default class ViewState {
     this.searchState.searchCatalog();
   }
 
-  viewCatalogMember(catalogMember: BaseModel, ancestors: BaseModel[]) {
+  viewCatalogMember(catalogMember: BaseModel) {
     // TODO call addedByUser() when it is fixed
     let addedByUser = false;
     if (isDefined(this.terria.catalog.userAddedDataGroupIfItExists)) {
@@ -225,15 +248,16 @@ export default class ViewState {
     }
     if (addedByUser) {
       this.userDataPreviewedItem = catalogMember;
-      this.userDataPreviewedItemAncestors = ancestors.slice();
       this.openUserData();
     } else {
       this.previewedItem = catalogMember;
-      this.previewedItemAncestors = ancestors.slice();
       this.openAddData();
-      if (ancestors.length > 0 && this.terria.configParameters.tabbedCatalog) {
+      if (this.terria.configParameters.tabbedCatalog) {
         // Go to specific tab
-        this.activeTabIdInCategory = ancestors[0].id;
+        this.activeTabIdInCategory = getAncestors(
+          catalogMember.terria,
+          catalogMember
+        )[0].uniqueId;
       }
     }
   }
@@ -268,5 +292,9 @@ export default class ViewState {
     if (persistent) {
       this.terria.setLocalProperty(`${feature}Prompted`, true);
     }
+  }
+
+  viewingUserData() {
+    return this.activeTabCategory === USER_DATA_NAME;
   }
 }

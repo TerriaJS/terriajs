@@ -17,13 +17,7 @@ import Feature from "./Feature";
 import GeoJsonCatalogItem from "./GeoJsonCatalogItem";
 import Mappable from "./Mappable";
 import Terria from "./Terria";
-
-export type CameraView = {
-  rectangle: Cesium.Rectangle;
-  position: any;
-  direction: any;
-  up: any;
-};
+import CameraView from "./CameraView";
 
 export default abstract class GlobeOrMap {
   abstract readonly terria: Terria;
@@ -38,7 +32,7 @@ export default abstract class GlobeOrMap {
     viewOrExtent: CameraView | Cesium.Rectangle | Mappable,
     flightDurationSeconds: number
   ): void;
-  abstract getCurrentExtent(): Cesium.Rectangle;
+  abstract getCurrentCameraView(): CameraView;
 
   /* Gets the current container element.
    */

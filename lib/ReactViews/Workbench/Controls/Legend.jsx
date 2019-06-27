@@ -63,8 +63,10 @@ const Legend = observer(
     renderLegend(legend, i) {
       if (defined(legend.url)) {
         return this.renderImageLegend(legend, i);
-      } else {
+      } else if (defined(legend.items)) {
         return this.renderGeneratedLegend(legend, i);
+      } else {
+        return null;
       }
     },
 
@@ -138,10 +140,23 @@ const Legend = observer(
     },
 
     renderLegendItem(legendItem, i) {
-      const boxStyle = {
-        backgroundColor: legendItem.color,
+      let boxStyle = {
         border: legendItem.addSpacingAbove ? "1px solid black" : undefined
       };
+      if (legendItem.imageUrl) {
+        boxStyle = {
+          backgroundImage: `url(${legendItem.imageUrl})`,
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center",
+          backgroundSize: "cover",
+          ...boxStyle
+        };
+      } else {
+        boxStyle = {
+          backgroundColor: legendItem.color,
+          ...boxStyle
+        };
+      }
 
       return (
         <React.Fragment key={i}>

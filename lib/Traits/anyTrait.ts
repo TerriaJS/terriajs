@@ -21,9 +21,10 @@ export class AnyTrait extends Trait {
     super(id, options);
   }
 
-  getValue(strataTopToBottom: StratumFromTraits<ModelTraits>[]): any {
-    const stratum: any = strataTopToBottom.find((stratum: any) =>
-      isDefined(stratum[this.id])
+  getValue(model: BaseModel): any {
+    const strataTopToBottom = model.strataTopToBottom;
+    const stratum: any = strataTopToBottom.find(
+      (stratum: any) => isDefined(stratum) && isDefined(stratum[this.id])
     );
     if (isDefined(stratum)) {
       return stratum[this.id];

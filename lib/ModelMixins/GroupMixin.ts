@@ -1,28 +1,36 @@
 import { action, computed, observable, runInAction } from "mobx";
+import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
+import isDefined from "../Core/isDefined";
 import Model, { BaseModel } from "../Models/Model";
 import GroupTraits from "../Traits/GroupTraits";
-import CommonStrata from "../Models/CommonStrata";
-import isDefined from "../Core/isDefined";
+import ModelReference from "../Traits/ModelReference";
+import AsyncLoader from "../Core/AsyncLoader";
 
 function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
   abstract class GroupMixin extends Base {
+    private _memberLoader = new AsyncLoader(this.forceLoadMembers.bind(this));
+
+    /**
+     * Forces load of the group members. This method does _not_ need to consider
+     * whether the group members are already loaded. When the promise returned
+     * by this function resolves, the list of members in `GroupMixin#members`
+     * and `GroupMixin#memberModels` should be complete, but the individual
+     * members will not necessarily be loaded themselves.
+     */
+    protected abstract forceLoadMembers(): Promise<void>;
+
     get isGroup() {
       return true;
     }
 
     /**
-     * Gets a value indicating whether metadata is currently loading.
+     * Gets a value indicating whether the set of members is currently loading.
      */
     get isLoadingMembers(): boolean {
-      return this._isLoadingMembers;
+      return this._memberLoader.isLoading;
     }
-
-    @observable
-    private _isLoadingMembers = false;
-
-    private _membersPromise: Promise<void> | undefined = undefined;
 
     @computed
     get memberModels(): ReadonlyArray<BaseModel> {
@@ -31,7 +39,11 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
         return [];
       }
       return filterOutUndefined(
-        members.map(id => this.terria.getModelById(BaseModel, id))
+        members.map(id =>
+          ModelReference.isRemoved(id)
+            ? undefined
+            : this.terria.getModelById(BaseModel, id)
+        )
       );
     }
 
@@ -40,52 +52,56 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
       this.setTrait(stratumId, "isOpen", !this.isOpen);
     }
 
+    /**
+     * Load the group members if necessary. Returns an existing promise
+     * if the members are already loaded or if loading is already in progress,
+     * so it is safe and performant to call this function as often as
+     * necessary. When the promise returned by this function resolves, the
+     * list of members in `GroupMixin#members` and `GroupMixin#memberModels`
+     * should be complete, but the individual members will not necessarily be
+     * loaded themselves.
+     */
     loadMembers(): Promise<void> {
-      const newPromise = this.loadMembersKeepAlive;
-      if (newPromise !== this._membersPromise) {
-        this._membersPromise = newPromise;
-
+      return this._memberLoader.load().finally(() => {
         runInAction(() => {
-          this._isLoadingMembers = true;
+          if (this.uniqueId) {
+            for (let memberModel of this.memberModels) {
+              if (
+                memberModel.knownContainerUniqueIds.indexOf(this.uniqueId) < 0
+              ) {
+                memberModel.knownContainerUniqueIds.push(this.uniqueId);
+              }
+            }
+          }
         });
-        newPromise
-          .then(result => {
-            runInAction(() => {
-              this._isLoadingMembers = false;
-            });
-            return result;
-          })
-          .catch(e => {
-            runInAction(() => {
-              this._isLoadingMembers = false;
-            });
-            throw e;
-          });
+      });
+    }
+
+    @action
+    add(stratumId: string, member: BaseModel) {
+      if (member.uniqueId === undefined) {
+        throw new DeveloperError(
+          "A model without a `uniqueId` cannot be added to a group."
+        );
       }
 
-      return newPromise;
-    }
-
-    protected abstract get loadMembersPromise(): Promise<void>;
-
-    @computed({ keepAlive: true })
-    private get loadMembersKeepAlive(): Promise<void> {
-      return this.loadMembersPromise;
-    }
-
-    @action add(stratumId: string, member: BaseModel) {
       const members = this.getTrait(stratumId, "members");
       if (isDefined(members)) {
-        members.push(member.id);
+        members.push(member.uniqueId);
       } else {
-        this.setTrait(stratumId, "members", [member.id]);
+        this.setTrait(stratumId, "members", [member.uniqueId]);
       }
     }
 
-    @action remove(stratumId: string, member: BaseModel) {
+    @action
+    remove(stratumId: string, member: BaseModel) {
+      if (member.uniqueId === undefined) {
+        return;
+      }
+
       const members = this.getTrait(stratumId, "members");
       if (isDefined(members)) {
-        const index = members.indexOf(member.id);
+        const index = members.indexOf(member.uniqueId);
         if (index !== -1) {
           members.splice(index, 1);
         }

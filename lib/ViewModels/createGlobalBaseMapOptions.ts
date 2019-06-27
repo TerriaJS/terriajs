@@ -5,11 +5,12 @@ import WebMapServiceCatalogItem from "../Models/WebMapServiceCatalogItem";
 import CommonStrata from "../Models/CommonStrata";
 import Terria from "../Models/Terria";
 import { BaseMapViewModel } from "./BaseMapViewModel";
-// var createBingBaseMapOptions = require("./createBingBaseMapOptions");
-// var OpenStreetMapCatalogItem = require("../Models/OpenStreetMapCatalogItem");
+import createBingBaseMapOptions from "./createBingBaseMapOptions";
+import OpenStreetMapCatalogItem from "../Models/OpenStreetMapCatalogItem";
+import { runInAction } from "mobx";
 
-function createGlobalBaseMapOptions(terria: Terria /*, bingMapsKey*/) {
-  const result = []; //createBingBaseMapOptions(terria, bingMapsKey);
+function createGlobalBaseMapOptions(terria: Terria, bingMapsKey: string) {
+  const result = createBingBaseMapOptions(terria, bingMapsKey);
 
   var naturalEarthII = new WebMapServiceCatalogItem(
     "basemap-natural-earth-II",
@@ -64,53 +65,66 @@ function createGlobalBaseMapOptions(terria: Terria /*, bingMapsKey*/) {
     )
   );
 
-  // var positron = new OpenStreetMapCatalogItem(terria);
-  // positron.name = "Positron (Light)";
-  // positron.url = "https://global.ssl.fastly.net/light_all/";
+  const positron = new OpenStreetMapCatalogItem("basemap-positron", terria);
+  runInAction(() => {
+    positron.setTrait(CommonStrata.user, "name", "Positron (Light)");
+    positron.setTrait(
+      CommonStrata.user,
+      "url",
+      "https://global.ssl.fastly.net/light_all/"
+    );
 
-  // // https://cartodb.com/basemaps/ gives two different attribution strings. In any case HTML gets swallowed, so we have to adapt.
-  // // 1 '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy;
-  // //   <a href="http://cartodb.com/attributions">CartoDB</a>'
-  // // 2 Map tiles by <a href="http://cartodb.com/attributions#basemaps">CartoDB</a>, under <a href="https://creativecommons.org/licenses/by/3.0/">
-  // //   CC BY 3.0</a>. Data by <a href="http://www.openstreetmap.org/">OpenStreetMap</a>, under ODbL.
-  // positron.attribution =
-  //   "© OpenStreetMap contributors ODbL, © CartoDB CC-BY 3.0";
+    // https://cartodb.com/basemaps/ gives two different attribution strings. In any case HTML gets swallowed, so we have to adapt.
+    // 1 '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy;
+    //   <a href="http://cartodb.com/attributions">CartoDB</a>'
+    // 2 Map tiles by <a href="http://cartodb.com/attributions#basemaps">CartoDB</a>, under <a href="https://creativecommons.org/licenses/by/3.0/">
+    //   CC BY 3.0</a>. Data by <a href="http://www.openstreetmap.org/">OpenStreetMap</a>, under ODbL.
+    positron.setTrait(
+      CommonStrata.user,
+      "attribution",
+      "© OpenStreetMap contributors ODbL, © CartoDB CC-BY 3.0"
+    );
 
-  // positron.opacity = 1.0;
-  // positron.subdomains = [
-  //   "cartodb-basemaps-a",
-  //   "cartodb-basemaps-b",
-  //   "cartodb-basemaps-c",
-  //   "cartodb-basemaps-d"
-  // ];
-  // result.push(
-  //   new BaseMapViewModel({
-  //     image: require("../../wwwroot/images/positron.png"),
-  //     catalogItem: positron,
-  //     contrastColor: "#000000"
-  //   })
-  // );
+    positron.setTrait(CommonStrata.user, "opacity", 1.0);
+    positron.setTrait(CommonStrata.user, "subdomains", [
+      "cartodb-basemaps-a",
+      "cartodb-basemaps-b",
+      "cartodb-basemaps-c",
+      "cartodb-basemaps-d"
+    ]);
+  });
+  result.push(
+    new BaseMapViewModel(positron, require("../../wwwroot/images/positron.png"))
+  );
 
-  // var darkMatter = new OpenStreetMapCatalogItem(terria);
-  // darkMatter.name = "Dark Matter";
-  // darkMatter.url = "https://global.ssl.fastly.net/dark_all/";
+  const darkMatter = new OpenStreetMapCatalogItem("basemap-darkmatter", terria);
+  runInAction(() => {
+    darkMatter.setTrait(CommonStrata.user, "name", "Dark Matter");
+    darkMatter.setTrait(
+      CommonStrata.user,
+      "url",
+      "https://global.ssl.fastly.net/dark_all/"
+    );
+    darkMatter.setTrait(
+      CommonStrata.user,
+      "attribution",
+      "© OpenStreetMap contributors ODbL, © CartoDB CC-BY 3.0"
+    );
+    darkMatter.setTrait(CommonStrata.user, "opacity", 1.0);
+    darkMatter.setTrait(CommonStrata.user, "subdomains", [
+      "cartodb-basemaps-a",
+      "cartodb-basemaps-b",
+      "cartodb-basemaps-c",
+      "cartodb-basemaps-d"
+    ]);
+  });
 
-  // darkMatter.attribution =
-  //   "© OpenStreetMap contributors ODbL, © CartoDB CC-BY 3.0";
-
-  // darkMatter.opacity = 1.0;
-  // darkMatter.subdomains = [
-  //   "cartodb-basemaps-a",
-  //   "cartodb-basemaps-b",
-  //   "cartodb-basemaps-c",
-  //   "cartodb-basemaps-d"
-  // ];
-  // result.push(
-  //   new BaseMapViewModel({
-  //     image: require("../../wwwroot/images/dark-matter.png"),
-  //     catalogItem: darkMatter
-  //   })
-  // );
+  result.push(
+    new BaseMapViewModel(
+      darkMatter,
+      require("../../wwwroot/images/dark-matter.png")
+    )
+  );
 
   return result;
 }

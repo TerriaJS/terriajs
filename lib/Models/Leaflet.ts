@@ -34,8 +34,9 @@ import PickedFeatures, {
 import rectangleToLatLngBounds from "../Map/rectangleToLatLngBounds";
 import SplitterTraits from "../Traits/SplitterTraits";
 import TerriaViewer from "../ViewModels/TerriaViewer";
+import CameraView from "./CameraView";
 import Feature from "./Feature";
-import GlobeOrMap, { CameraView } from "./GlobeOrMap";
+import GlobeOrMap from "./GlobeOrMap";
 import hasTraits from "./hasTraits";
 import Mappable, { ImageryParts } from "./Mappable";
 import Terria from "./Terria";
@@ -81,10 +82,9 @@ export default class Leaflet extends GlobeOrMap {
 
   /* Disposers */
   private readonly _disposeWorkbenchMapItemsSubscription: () => void;
-  private readonly _disposeSplitterPositionSubscription: () => void;
-  private readonly _disposeShowSplitterSubscription: () => void;
   private readonly _disposeDisableInteractionSubscription: () => void;
   private _disposeSelectedFeatureSubscription?: () => void;
+  private _disposeSplitterReaction: () => void;
 
   private _createImageryLayer: (
     ip: Cesium.ImageryProvider
@@ -158,24 +158,7 @@ export default class Leaflet extends GlobeOrMap {
     ticker();
 
     this._disposeWorkbenchMapItemsSubscription = this.observeModelLayer();
-
-    this._disposeSplitterPositionSubscription = autorun(() => {
-      this.terriaViewer.items.get().forEach(item => {
-        const clips = this._getClipsForSplitter();
-        if (Mappable.is(item)) {
-          this._updateItemForSplitter(item, clips);
-        }
-      });
-    });
-
-    this._disposeShowSplitterSubscription = autorun(() => {
-      this.terriaViewer.items.get().forEach(item => {
-        const clips = this._getClipsForSplitter();
-        if (Mappable.is(item)) {
-          this._updateItemForSplitter(item, clips);
-        }
-      });
-    });
+    this._disposeSplitterReaction = this._reactToSplitterChanges();
 
     this._disposeDisableInteractionSubscription = autorun(() => {
       const map = this.map;
@@ -189,8 +172,15 @@ export default class Leaflet extends GlobeOrMap {
         map.tap
       ]);
       const pickLocation = (e: L.LeafletEvent) => {
+        const mouseEvent = <L.LeafletMouseEvent>e;
+
+        // Handle click events that cross the anti-meridian
+        if (mouseEvent.latlng.lng > 180 || mouseEvent.latlng.lng < -180) {
+          mouseEvent.latlng = mouseEvent.latlng.wrap();
+        }
+
         // if (!this._dragboxcompleted && that.map.dragging.enabled()) {
-        this._pickFeatures((<L.LeafletMouseEvent>e).latlng);
+        this._pickFeatures(mouseEvent.latlng);
         // }
         // this._dragboxcompleted = false;
       };
@@ -241,9 +231,8 @@ export default class Leaflet extends GlobeOrMap {
   destroy() {
     this._disposeSelectedFeatureSubscription &&
       this._disposeSelectedFeatureSubscription();
+    this._disposeSplitterReaction();
     this._disposeWorkbenchMapItemsSubscription();
-    this._disposeShowSplitterSubscription();
-    this._disposeSplitterPositionSubscription();
     this._eventHelper.removeAll();
     this._disposeDisableInteractionSubscription();
     // This variable prevents a race condition if destroy() is called
@@ -347,6 +336,8 @@ export default class Leaflet extends GlobeOrMap {
 
         if (target instanceof Rectangle) {
           extent = target;
+        } else if (target instanceof CameraView) {
+          extent = target.rectangle;
         } else if (Mappable.is(target)) {
           if (isDefined(target.rectangle)) {
             const { west, south, east, north } = target.rectangle;
@@ -383,13 +374,15 @@ export default class Leaflet extends GlobeOrMap {
     });
   }
 
-  getCurrentExtent() {
+  getCurrentCameraView(): CameraView {
     const bounds = this.map.getBounds();
-    return Rectangle.fromDegrees(
-      bounds.getWest(),
-      bounds.getSouth(),
-      bounds.getEast(),
-      bounds.getNorth()
+    return new CameraView(
+      Rectangle.fromDegrees(
+        bounds.getWest(),
+        bounds.getSouth(),
+        bounds.getEast(),
+        bounds.getNorth()
+      )
     );
   }
 
@@ -618,46 +611,32 @@ export default class Leaflet extends GlobeOrMap {
     // }
   }
 
-  private _updateItemForSplitter(
-    item: Mappable,
-    clips: SplitterClips | undefined
-  ) {
-    if (!hasTraits(item, SplitterTraits, "splitDirection")) {
-      return;
-    }
+  _reactToSplitterChanges() {
+    return autorun(() => {
+      const items = this.terria.mainViewer.items.get();
+      const showSplitter = this.terria.showSplitter;
+      const splitPosition = this.terria.splitPosition;
+      items.forEach(item => {
+        if (hasTraits(item, SplitterTraits, "splitDirection")) {
+          const layers = this.getImageryLayersForItem(item);
+          const splitDirection = item.splitDirection;
 
-    this._imageryLayersForItem(item).forEach(layer => {
-      const container = layer.getContainer();
-      if (!container) {
-        return;
-      }
-
-      const { left: clipLeft, right: clipRight } =
-        clips || this._getClipsForSplitter();
-
-      let display = null;
-      if (useClipUpdateWorkaround) {
-        display = container.style.display;
-        container.style.display = "none";
-        container.getBoundingClientRect();
-      }
-
-      if (item.splitDirection === ImagerySplitDirection.LEFT) {
-        container.style.clip = clipLeft;
-      } else if (item.splitDirection === ImagerySplitDirection.RIGHT) {
-        container.style.clip = clipRight;
-      } else {
-        container.style.clip = "auto";
-      }
-
-      layer.splitDirection = item.splitDirection;
-      if (useClipUpdateWorkaround) {
-        container.style.display = display;
-      }
+          layers.forEach(layer => {
+            if (showSplitter) {
+              layer.splitDirection = splitDirection;
+              layer.splitPosition = splitPosition;
+            } else {
+              layer.splitDirection = ImagerySplitDirection.NONE;
+              layer.splitPosition = splitPosition;
+            }
+          });
+        }
+      });
+      this.notifyRepaintRequired();
     });
   }
 
-  private _imageryLayersForItem(item: Mappable): CesiumTileLayer[] {
+  getImageryLayersForItem(item: Mappable): CesiumTileLayer[] {
     const allImageryParts = item.mapItems.filter(ImageryParts.is);
     const imageryLayers: CesiumTileLayer[] = [];
     this.map.eachLayer(layer => {
@@ -671,30 +650,6 @@ export default class Leaflet extends GlobeOrMap {
       }
     });
     return imageryLayers;
-  }
-
-  private _getClipsForSplitter(): SplitterClips {
-    let clipLeft = "";
-    let clipRight = "";
-    let clipPositionWithinMap;
-    let clipX;
-    if (this.terria.showSplitter) {
-      const map = this.map;
-      const size = map.getSize();
-      const nw = map.containerPointToLayerPoint([0, 0]);
-      const se = map.containerPointToLayerPoint(size);
-      clipPositionWithinMap = size.x * this.terria.splitPosition;
-      clipX = Math.round(nw.x + clipPositionWithinMap);
-      clipLeft = "rect(" + [nw.y, clipX, se.y, nw.x].join("px,") + "px)";
-      clipRight = "rect(" + [nw.y, se.x, se.y, clipX].join("px,") + "px)";
-    }
-
-    return {
-      left: clipLeft,
-      right: clipRight,
-      clipPositionWithinMap: clipPositionWithinMap,
-      clipX: clipX
-    };
   }
 
   /**

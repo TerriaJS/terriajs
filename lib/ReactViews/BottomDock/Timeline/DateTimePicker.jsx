@@ -5,7 +5,7 @@ import DatePicker from "react-datepicker";
 import moment from "moment";
 import PropTypes from "prop-types";
 import classNames from "classnames";
-import uniq from "lodash.uniq";
+import uniq from "lodash-es/uniq";
 import defined from "terriajs-cesium/Source/Core/defined";
 import { formatDateTime } from "./DateFormats";
 import Icon from "../../Icon";

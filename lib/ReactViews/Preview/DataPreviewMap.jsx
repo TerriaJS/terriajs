@@ -111,6 +111,7 @@ class DataPreviewMap extends React.Component {
     runInAction(() => {
       this.previewViewer.viewerMode = "leaflet";
       this.previewViewer.disableInteraction = true;
+      this.previewViewer.homeCamera = this.props.terria.mainViewer.homeCamera;
     });
     // Not yet implemented
     // previewViewer.hideTerriaLogo = true;
@@ -147,9 +148,7 @@ class DataPreviewMap extends React.Component {
       if (this.isZoomedToExtent) {
         this.previewViewer.currentViewer.zoomTo(this.props.previewed);
       } else {
-        this.previewViewer.currentViewer.zoomTo(
-          this.previewViewer.defaultExtent
-        );
+        this.previewViewer.currentViewer.zoomTo(this.previewViewer.homeCamera);
       }
     });
 
@@ -185,20 +184,30 @@ class DataPreviewMap extends React.Component {
 
   @computed
   get boundingRectangleCatalogItem() {
-    if (this.props.previewed.rectangle === undefined) {
+    const rectangle = this.props.previewed.rectangle;
+    if (rectangle === undefined) {
       return undefined;
     }
 
-    let west = this.props.previewed.rectangle.west;
-    let south = this.props.previewed.rectangle.south;
-    let east = this.props.previewed.rectangle.east;
-    let north = this.props.previewed.rectangle.north;
+    let west = rectangle.west;
+    let south = rectangle.south;
+    let east = rectangle.east;
+    let north = rectangle.north;
+
+    if (
+      west === undefined ||
+      south === undefined ||
+      east === undefined ||
+      north === undefined
+    ) {
+      return undefined;
+    }
 
     if (!this.isZoomedToExtent) {
       // When zoomed out, make sure the dataset rectangle is at least 5% of the width and height
       // the home view, so that it is actually visible.
       const minimumFraction = 0.05;
-      const homeView = this.previewViewer.defaultExtent;
+      const homeView = this.previewViewer.homeCamera;
       const minimumWidth =
         CesiumMath.toDegrees(homeView.width) * minimumFraction;
       if (east - west < minimumWidth) {

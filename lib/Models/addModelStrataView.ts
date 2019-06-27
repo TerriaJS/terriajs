@@ -9,6 +9,7 @@ export interface Flattenable<T> {
   readonly strataTopToBottom: (
     | ModelPropertiesFromTraits<T>
     | StratumFromTraits<T>)[];
+  readonly strata: any; // TODO
 }
 
 /**
@@ -42,7 +43,7 @@ export default function addModelStrataView<
     const defaultValue = traitsInstance[traitName];
     Object.defineProperty(propertyTarget, traitName, {
       get: function() {
-        const value = trait.getValue(this.strataTopToBottom);
+        const value = trait.getValue(this);
         return value === undefined ? defaultValue : value;
       },
       enumerable: true,

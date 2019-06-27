@@ -27,6 +27,10 @@ import Pbf from "pbf";
 export default class GtfsCatalogItem extends AsyncMappableMixin(
   UrlMixin(CatalogMemberMixin(CreateModel(GtfsCatalogItemTraits)))
 ) {
+  protected forceLoadMetadata(): Promise<void> {
+    return Promise.resolve();
+  }
+
   @observable
   private billboardDataList: BillboardData[] = [];
 
@@ -62,7 +66,7 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
       })
       .catch((e: Error) => {
         throw new TerriaError({
-          title: `Could not ${this.nameInCatalog}.`,
+          title: `Could not load ${this.nameInCatalog}.`,
           sender: this,
           message: `There was an error loading the data for ${
             this.nameInCatalog
@@ -83,10 +87,6 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
     }
 
     return promise;
-  }
-
-  protected get loadMetadataPromise(): Promise<void> {
-    return Promise.resolve();
   }
 
   @computed
@@ -123,7 +123,7 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
       image: this.terria.baseUrl + this.image,
       heightReference: HeightReference.RELATIVE_TO_GROUND,
       // near and far distances are arbitrary, these ones look nice
-      scaleByDistance: new NearFarScalar(0.1, 1.0, 100000, 0.1) 
+      scaleByDistance: new NearFarScalar(0.1, 1.0, 100000, 0.1)
     });
 
     let position = undefined;
