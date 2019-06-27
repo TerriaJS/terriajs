@@ -169,13 +169,18 @@ const StoryPanel = createReactClass({
         onSwipedRight={this.goToPrevStory}
       >
         <div
-          className={classNames(Styles.fullPanel, {
-            [Styles.isHidden]: !this.props.viewState.storyShown,
-            [Styles.isPushedUp]: this.props.viewState.chartIsOpen,
-            [Styles.isCentered]: this.props.viewState.isMapFullScreen
-          }, this.props.viewState.topElement === "StoryPanel" ? "top-element" : ""
+          className={classNames(
+            Styles.fullPanel,
+            {
+              [Styles.isHidden]: !this.props.viewState.storyShown,
+              [Styles.isPushedUp]: this.props.viewState.chartIsOpen,
+              [Styles.isCentered]: this.props.viewState.isMapFullScreen
+            },
+            this.props.viewState.topElement === "StoryPanel"
+              ? "top-element"
+              : ""
           )}
-         onClick ={this.onClickContainer}
+          onClick={this.onClickContainer}
         >
           <div
             className={classNames(Styles.storyContainer, {
