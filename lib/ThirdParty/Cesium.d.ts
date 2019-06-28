@@ -1156,3 +1156,30 @@ declare module "terriajs-cesium/Source/Scene/IonWorldImageryStyle" {
   }
   export default IonWorldImageryStyle;
 }
+
+declare module "terriajs-cesium/Source/Core/IonResource" {
+  export default class IonResource {
+    static fromAssetId(
+      assetId: number,
+      options: { accessToken?: string; server?: string }
+    ): Promise<IonResource>;
+  }
+}
+
+declare module "terriajs-cesium/Source/Scene/Cesium3DTileset" {
+  import IonResource from "terriajs-cesium/Source/Core/IonResource";
+  export default class Cesium3DTileset {
+    url: string | IonResource;
+    show: boolean;
+    shadows: Cesium.ShadowMode;
+    maximumScreenSpaceError: number;
+
+    constructor(options: {
+      url: string | IonResource;
+      show?: boolean;
+      shadows?: Cesium.ShadowMode;
+    });
+
+    destroy(): void;
+  }
+}
