@@ -5,9 +5,11 @@ var clone = require("terriajs-cesium/Source/Core/clone");
 var Color = require("terriajs-cesium/Source/Core/Color");
 var JulianDate = require("terriajs-cesium/Source/Core/JulianDate");
 var Rectangle = require("terriajs-cesium/Source/Core/Rectangle");
+var when = require("terriajs-cesium/Source/ThirdParty/when");
 
 var CatalogItem = require("../../lib/Models/CatalogItem");
 var CsvCatalogItem = require("../../lib/Models/CsvCatalogItem");
+var SensorObservationServiceCatalogItem = require("../../lib/Models/SensorObservationServiceCatalogItem");
 var ImageryLayerCatalogItem = require("../../lib/Models/ImageryLayerCatalogItem");
 var ImageryProviderHooks = require("../../lib/Map/ImageryProviderHooks");
 var loadAndStubTextResources = require("../Utility/loadAndStubTextResources");
@@ -15,6 +17,7 @@ var TableStyle = require("../../lib/Models/TableStyle");
 var Terria = require("../../lib/Models/Terria");
 var TimeInterval = require("terriajs-cesium/Source/Core/TimeInterval");
 var VarType = require("../../lib/Map/VarType");
+var TableStructure = require("../../lib/Map/TableStructure");
 
 var greenTableStyle = new TableStyle({
   colorMap: [
@@ -2511,6 +2514,72 @@ describe("CsvCatalogItem & chart sharing", function() {
           expect(serialized.tableStyle.columns[0].active).toBe(false);
           expect(serialized.tableStyle.columns[1].active).toBe(true);
           expect(serialized.tableStyle.columns[2].active).toBe(true);
+        })
+        .then(done)
+        .otherwise(done.fail);
+    });
+  });
+  describe("load behaviour around SensorObservationServiceCatalogItem generated csvs", function() {
+    var sosItem;
+    var tableStructure;
+    beforeEach(function() {
+      terria = new Terria({
+        baseUrl: "./"
+      });
+      csvItem = new CsvCatalogItem(terria);
+      tableStructure = new TableStructure();
+      sosItem = new SensorObservationServiceCatalogItem(terria);
+      sosItem.id = "SosItem";
+      terria.catalog.group.add(sosItem);
+    });
+    it("attempts a load when `data` property is not undefined", function(done) {
+      csvItem
+        .updateFromJson({
+          type: "csv",
+          url: "test/data/service/at/SOMEIDENTIFIER101", // this url shouldn't be utilised at all
+          sourceCatalogItemId: "SosItem",
+          regenerationOptions: {
+            // also does nothing for the test but required for sos chart sharing
+            procedure: {
+              identifier:
+                "http://test.domain/test/data/service/tstypes/YearlyMean",
+              title: "Annual+average",
+              defaultDuration: "40y"
+            }
+          },
+          isEnabled: true,
+          isShown: true,
+          isCsvForCharting: true,
+          tableStyle: {
+            columns: {}
+          }
+        })
+        .then(function() {
+          csvItem.data = when.resolve(tableStructure);
+        })
+        .then(csvItem.load.bind(csvItem))
+        .then(function() {
+          expect(csvItem.tableStructure).toEqual(tableStructure);
+        })
+        .then(done)
+        .otherwise(done.fail);
+    });
+    it("does not load when we haven't defined how to load it via the csv's `data` property", function(done) {
+      csvItem
+        .updateFromJson({
+          type: "csv",
+          url: "test/data/service/at/SOMEIDENTIFIER101", // this url shouldn't be utilised at all
+          sourceCatalogItemId: "SosItem",
+          isEnabled: true,
+          isShown: true,
+          isCsvForCharting: true,
+          tableStyle: {
+            columns: {}
+          }
+        })
+        .then(csvItem.load.bind(csvItem))
+        .then(function() {
+          expect(csvItem.tableStructure).toBeUndefined();
         })
         .then(done)
         .otherwise(done.fail);

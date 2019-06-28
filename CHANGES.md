@@ -1,6 +1,9 @@
 Change Log
 ==========
 
+### Next Release
+* Fixed inability to share SOS items
+
 ### v7.6.4
 
 * Add scrollbar to dropdown boxes.
@@ -31,8 +34,8 @@ Change Log
 * Allow vector tiles for region mapping to return 404 for empty tiles. 
 
 ### v7.5.2
-
 * Upgraded to Cesium v1.58.1.
+* Charts are now shared in share & story links
 
 ### v7.5.1
 
