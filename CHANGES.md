@@ -4,7 +4,32 @@ Change Log
 ### Next Release
 * Fixed inability to share SOS items
 
+### v7.6.4
+
+* Add scrollbar to dropdown boxes.
+* Add support for SDMX version 2.1 to existing `SdmxJsonCatalogItem`.
+* Add a warning when sharing a map describing datasets which will be missing.
+* Enable the story panel to be ordered to the front. 
+* Disable the autocomplete on the title field when adding a new scene to a story.
+* Fix SED codes for regionmapping
+
+### v7.6.3
+
+* Fixed a bug with picking features that cross the anti-meridian in 2D mode .
+* Fixed a bug where `ArcGisMapServerCatalogItem` legends were being created during search.
+* Fixed a bug where region mapping would not accurately reflect share link parameters.
+
+### v7.6.2
+
+* Fixed a bug that made some input boxes unreadable in some web browsers.
+
+### v7.6.1
+
+* Fixed a bug that prevented the "Feedback" button from working correctly.
+* Fix a bug that could cause a lot of extra space to the left of a chart on the feature info panel.
+
 ### v7.6.0
+
 * Added video intro to building a story
 * Allow vector tiles for region mapping to return 404 for empty tiles. 
 
