@@ -1,6 +1,15 @@
 Change Log
 ==========
 
+### v7.6.4
+
+* Add scrollbar to dropdown boxes.
+* Add support for SDMX version 2.1 to existing `SdmxJsonCatalogItem`.
+* Add a warning when sharing a map describing datasets which will be missing.
+* Enable the story panel to be ordered to the front. 
+* Disable the autocomplete on the title field when adding a new scene to a story.
+* Fix SED codes for regionmapping
+
 ### v7.6.3
 
 * Fixed a bug with picking features that cross the anti-meridian in 2D mode .
