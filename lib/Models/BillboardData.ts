@@ -2,14 +2,10 @@ import BillboardGraphics from "terriajs-cesium/Source/DataSources/BillboardGraph
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 
 export default interface BillboardData {
-    /**
-     * Where to put the billboard
-     */
-    position?: Cartesian3;
-    
-    /**
-     * The billboard image to draw
-     */
-    billboard?: BillboardGraphics;
-  }
-  
+  /**
+   * Where to put the billboard
+   */
+  position?: Cartesian3;
+
+  billboardGraphicsOptions?: any;
+}

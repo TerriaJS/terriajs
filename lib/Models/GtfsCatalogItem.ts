@@ -5,7 +5,10 @@ import CreateModel from "./CreateModel";
 import GtfsCatalogItemTraits from "../Traits/GtfsCatalogItemTraits";
 import Terria from "./Terria";
 import BillboardData from "./BillboardData";
-import createBillboardDataSource from "./createBillboardDataSource";
+import {
+  createBillboardDataSource,
+  updateBillboardDataSource
+} from "./createBillboardDataSource";
 import loadArrayBuffer from "../Core/loadArrayBuffer";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import TerriaError from "../Core/TerriaError";
@@ -14,12 +17,14 @@ import {
   FeedMessageReader,
   FeedEntity
 } from "./GtfsRealtimeProtoBufReaders";
+import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
 
 import BillboardGraphics from "terriajs-cesium/Source/DataSources/BillboardGraphics";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
 import DataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import NearFarScalar from "terriajs-cesium/Source/Core/NearFarScalar";
+import Color from "terriajs-cesium/Source/Core/Color";
 
 import { computed, observable } from "mobx";
 import Pbf from "pbf";
@@ -33,6 +38,11 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
 
   @observable
   private billboardDataList: BillboardData[] = [];
+
+  @computed
+  get dataSource(): DataSource {
+    return createBillboardDataSource("gtfs_billboards", this.billboardDataList);
+  }
 
   static get type() {
     return "gtfs";
@@ -58,10 +68,7 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
           )
           .filter(
             (item: BillboardData) =>
-              item.billboard !== null &&
-              item.billboard !== undefined &&
-              item.position !== null &&
-              item.position !== undefined
+              item.position !== null && item.position !== undefined
           );
       })
       .catch((e: Error) => {
@@ -73,8 +80,6 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
           }.`
         });
       });
-
-    console.log("ping");
 
     if (
       this.refreshInterval !== null &&
@@ -91,9 +96,12 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
 
   @computed
   get mapItems(): DataSource[] {
-    return [
-      createBillboardDataSource("gtfs_billboards", this.billboardDataList)
-    ];
+    updateBillboardDataSource(this.dataSource, entity => {
+      entity.billboard.color = new ConstantProperty(
+        new Color(1.0, 1.0, 1.0, this.opacity)
+      );
+    });
+    return [this.dataSource];
   }
 
   retrieveData(): Promise<FeedMessage> {
@@ -119,13 +127,6 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
     if (this.terria.mainViewer.viewerMode === "cesium") {
     }
 
-    const billboard: BillboardGraphics = new BillboardGraphics({
-      image: this.terria.baseUrl + this.image,
-      heightReference: HeightReference.RELATIVE_TO_GROUND,
-      // near and far distances are arbitrary, these ones look nice
-      scaleByDistance: new NearFarScalar(0.1, 1.0, 100000, 0.1)
-    });
-
     let position = undefined;
     if (
       entity.vehicle !== null &&
@@ -144,8 +145,14 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
     }
 
     return {
-      billboard: billboard,
-      position: position
+      position: position,
+      billboardGraphicsOptions: {
+        image: this.terria.baseUrl + this.image,
+        heightReference: HeightReference.RELATIVE_TO_GROUND,
+        // near and far distances are arbitrary, these ones look nice
+        scaleByDistance: new NearFarScalar(0.1, 1.0, 100000, 0.1),
+        color: new Color(1.0, 1.0, 1.0, this.opacity)
+      }
     };
   }
 }
