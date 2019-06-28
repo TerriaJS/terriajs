@@ -215,6 +215,7 @@ export default class ViewState {
     this._storyPromptSubscription();
     this._previewedItemIdSubscription();
     this._disclaimerHandler.dispose();
+    this.searchState.dispose();
   }
 
   openAddData() {

@@ -9,6 +9,11 @@ declare module "terriajs-cesium/Source/Core/AssociativeArray" {
 declare module "terriajs-cesium/Source/Core/AxisAlignedBoundingBox" {
   export default Cesium.AxisAlignedBoundingBox;
 }
+declare module "terriajs-cesium/Source/Core/BingMapsApi" {
+  export default class BingMapsApi {
+    static getKey(providedKey?: string): string;
+  }
+}
 declare module "terriajs-cesium/Source/Core/BoundingRectangle" {
   export default Cesium.BoundingRectangle;
 }

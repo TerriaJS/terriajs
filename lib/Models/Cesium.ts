@@ -222,11 +222,24 @@ export default class Cesium extends GlobeOrMap {
     this.pauser = new CesiumRenderLoopPauser(this.cesiumWidget, () => {
       // Post render, update selection indicator position
       const feature = this.terria.selectedFeature;
-      if (isDefined(feature) && isDefined(feature.position)) {
-        this._selectionIndicator.position = feature.position.getValue(
-          this.terria.timelineClock.currentTime
-        );
+
+      // If the feature has an associated primitive and that primitive has
+      // a clamped position, use that instead, because the regular
+      // position doesn't take terrain clamping into account.
+      if (isDefined(feature)) {
+        if (
+          isDefined(feature.cesiumPrimitive) &&
+          isDefined(feature.cesiumPrimitive._clampedPosition)
+        ) {
+          this._selectionIndicator.position =
+            feature.cesiumPrimitive._clampedPosition;
+        } else if (isDefined(feature.position)) {
+          this._selectionIndicator.position = feature.position.getValue(
+            this.terria.timelineClock.currentTime
+          );
+        }
       }
+
       this._selectionIndicator.update();
     });
 
@@ -735,7 +748,7 @@ export default class Cesium extends GlobeOrMap {
 
   /**
    * Picks all *vector* features (e.g. GeoJSON) shown at a certain position on the screen, ignoring raster features
-   * (e.g. WFS). Because all vector features are already in memory, this is synchronous.
+   * (e.g. WMS). Because all vector features are already in memory, this is synchronous.
    *
    * @param screenPosition position on the screen to look for features
    * @returns The features found.
@@ -762,6 +775,9 @@ export default class Cesium extends GlobeOrMap {
       }
       if (id instanceof Entity && vectorFeatures.indexOf(id) === -1) {
         const feature = Feature.fromEntityCollectionOrEntity(id);
+        if (picked.primitive) {
+          feature.cesiumPrimitive = picked.primitive;
+        }
         vectorFeatures.push(feature);
       } else if (
         picked.primitive &&
