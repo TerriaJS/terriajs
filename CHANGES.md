@@ -1,6 +1,9 @@
 Change Log
 ==========
 
+### Next Release
+* Add quality slider for 3d map (toggles Cesium's maximumScreenSpaceError & resolutionScale)
+
 ### v7.6.4
 
 * Add scrollbar to dropdown boxes.

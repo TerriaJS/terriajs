@@ -63,3 +63,18 @@
     border: 2px solid $turquoise-blue;
   }
 }
+
+.quality-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.quality-heading {
+  text-align: center;
+}
+.quality-label {
+  display: inline-block;
+}
+.opacity-slider {
+  margin-left: 10px;
+}

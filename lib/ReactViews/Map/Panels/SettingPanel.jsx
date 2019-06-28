@@ -4,6 +4,7 @@ import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import classNames from "classnames";
+import Slider from "rc-slider";
 
 import ViewerMode from "../../../Models/ViewerMode";
 import ObserveModelMixin from "../../ObserveModelMixin";
@@ -17,6 +18,12 @@ const viewerModeLabels = {
   [ViewerMode.CesiumTerrain]: "3D Terrain",
   [ViewerMode.CesiumEllipsoid]: "3D Smooth",
   [ViewerMode.Leaflet]: "2D"
+};
+
+const qualityLabels = {
+  0: "Maximum performance, lower quality",
+  1: "Balanced performance & quality",
+  2: "Maximum quality, lower performance"
 };
 
 // The basemap and viewer setting panel
@@ -163,6 +170,50 @@ const SettingPanel = createReactClass({
             </For>
           </ul>
         </div>
+        <If condition={this.props.terria.viewerMode !== ViewerMode.Leaflet}>
+          <div className={DropdownStyles.section}>
+            <label
+              htmlFor="mapQuality"
+              className={classNames(
+                DropdownStyles.subHeading,
+                Styles.qualityHeading
+              )}
+            >
+              Optimise for:
+            </label>
+            <section
+              className={Styles.qualityWrapper}
+              title={qualityLabels[this.props.terria.quality]}
+            >
+              <label
+                className={classNames(
+                  DropdownStyles.subHeading,
+                  Styles.qualityLabel
+                )}
+              >
+                Performance
+              </label>
+              <Slider
+                id="mapQuality"
+                className={Styles.opacitySlider}
+                min={0}
+                max={2}
+                value={this.props.terria.quality}
+                onChange={val => (this.props.terria.quality = val)}
+                // Awaiting https://github.com/react-component/slider/pull/420
+                // aria-valuetext={qualityLabels[this.props.terria.quality]}
+              />
+              <label
+                className={classNames(
+                  DropdownStyles.subHeading,
+                  Styles.qualityLabel
+                )}
+              >
+                Quality
+              </label>
+            </section>
+          </div>
+        </If>
       </MenuPanel>
     );
   }
