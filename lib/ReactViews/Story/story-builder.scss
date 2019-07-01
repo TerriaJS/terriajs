@@ -10,7 +10,7 @@
   display: block;
   transition: all 0.25s;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  position:relative;
+  position: relative;
   &.isVisible {
     visibility: visible;
     margin-right: 0;
@@ -21,22 +21,22 @@
   }
 }
 
-.btnHideStoryBuilder{
-    position: absolute;
-    z-index: 79;
-    left: -18px;
-    padding: 8px 2px;
-    border: 0;
-    background: #3f4854;
-    border-left: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 2px 0px 0px 2px;
-    transform: perspective(10px) rotateY(-10deg);
-    top:70px;
-    svg{
-      height: 15px;
+.btnHideStoryBuilder {
+  position: absolute;
+  z-index: 79;
+  left: -18px;
+  padding: 8px 2px;
+  border: 0;
+  background: #3f4854;
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 2px 0px 0px 2px;
+  transform: perspective(10px) rotateY(-10deg);
+  top: 70px;
+  svg {
+    height: 15px;
     width: 15px;
     fill: #ffffff;
-    }
+  }
 }
 .header {
   .actions {

@@ -307,9 +307,9 @@ const StoryBuilder = createReactClass({
           type="button"
           onClick={this.hideStoryBuilder}
           className={Styles.btnHideStoryBuilder}
-          title='hide story builder'
+          title="hide story builder"
         >
-        <Icon glyph={Icon.GLYPHS.right} />
+          <Icon glyph={Icon.GLYPHS.right} />
         </button>
 
         {this.state.showVideoGuide && this.renderVideoGuide()}
