@@ -67,6 +67,7 @@ interface ConfigParameters {
   hideTerriaLogo?: boolean;
   useCesiumIonBingImagery: boolean;
   bingMapsKey?: string;
+  brandBarElements?: string[];
 }
 
 interface StartOptions {
@@ -145,7 +146,8 @@ export default class Terria {
     cesiumIonAccessToken: undefined,
     hideTerriaLogo: false,
     useCesiumIonBingImagery: true,
-    bingMapsKey: undefined
+    bingMapsKey: undefined,
+    brandBarElements: undefined
   };
 
   @observable
