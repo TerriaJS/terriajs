@@ -385,7 +385,7 @@ export default class MapboxVectorTileImageryProvider
     level: number,
     longitude: number,
     latitude: number
-  ): Promise<ImageryLayerFeatureInfo[]>  {
+  ): Promise<ImageryLayerFeatureInfo[]> {
     let nativeTile: Coords;
     let levelDelta: number;
     const requestedTile = {
