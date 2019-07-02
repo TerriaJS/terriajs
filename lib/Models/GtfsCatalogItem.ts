@@ -26,23 +26,62 @@ import DataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import NearFarScalar from "terriajs-cesium/Source/Core/NearFarScalar";
 import Color from "terriajs-cesium/Source/Core/Color";
 
-import { computed, observable } from "mobx";
+import {
+  computed,
+  observable,
+  reaction,
+  action,
+  runInAction,
+  IReactionDisposer,
+  onBecomeObserved,
+  onBecomeUnobserved,
+  getObserverTree
+} from "mobx";
+import { now } from "mobx-utils";
+
 import Pbf from "pbf";
 
 export default class GtfsCatalogItem extends AsyncMappableMixin(
   UrlMixin(CatalogMemberMixin(CreateModel(GtfsCatalogItemTraits)))
 ) {
-  protected forceLoadMetadata(): Promise<void> {
-    return Promise.resolve();
-  }
+  disposer: IReactionDisposer | undefined;
 
   @observable
   private billboardDataList: BillboardData[] = [];
 
   @computed
-  get dataSource(): DataSource {
-    return createBillboardDataSource("gtfs_billboards", this.billboardDataList);
+  private get _pollingTimer(): number | undefined {
+    if (this.refreshInterval !== null && this.refreshInterval !== undefined) {
+      return now(this.refreshInterval * 1000);
+    }
   }
+
+  @computed
+  private get dataSource(): DataSource {
+    const result = createBillboardDataSource(
+      "gtfs_billboards",
+      this.billboardDataList
+    );
+    // this.doPolling(result);
+    return result;
+  }
+
+  // private cleanup(reactionDisposer: IReactionDisposer | undefined) {
+  //   if (reactionDisposer) {
+  //     reactionDisposer();
+  //   }
+  // }
+
+  // what if we put the dispose on the datasource's destructor instead?
+  // private readonly doPolling = createTransformer((dataSource: DataSource) => {
+  //   return reaction(
+  //     () => this._pollingTimer,
+  //     () => {
+  //       console.log("ping");
+  //       this.loadMapItemsPromise;
+  //     }
+  //   );
+  // }, this.cleanup.bind(this))
 
   static get type() {
     return "gtfs";
@@ -52,46 +91,18 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
     return GtfsCatalogItem.type;
   }
 
-  constructor(id: string, terria: Terria) {
-    super(id, terria);
+  @computed
+  get nextScheduledUpdateTime(): Date | undefined {
+    if (this._pollingTimer !== null && this._pollingTimer !== undefined) {
+      return new Date(this._pollingTimer);
+    } else {
+      return undefined;
+    }
   }
 
-  protected get loadMapItemsPromise(): Promise<void> {
-    const promise: Promise<void> = this.retrieveData()
-      .then((data: FeedMessage) => {
-        if (data.entity === null || data.entity === undefined) {
-          return;
-        }
-        this.billboardDataList = data.entity
-          .map((entity: FeedEntity) =>
-            this.convertFeedEntityToBillboardData(entity)
-          )
-          .filter(
-            (item: BillboardData) =>
-              item.position !== null && item.position !== undefined
-          );
-      })
-      .catch((e: Error) => {
-        throw new TerriaError({
-          title: `Could not load ${this.nameInCatalog}.`,
-          sender: this,
-          message: `There was an error loading the data for ${
-            this.nameInCatalog
-          }.`
-        });
-      });
-
-    if (
-      this.refreshInterval !== null &&
-      this.refreshInterval !== undefined &&
-      this.refreshInterval > 0
-    ) {
-      setTimeout(() => {
-        this.loadMapItemsPromise;
-      }, this.refreshInterval * 1000);
-    }
-
-    return promise;
+  @computed
+  get isPolling() {
+    return this._pollingTimer !== null && this._pollingTimer !== undefined;
   }
 
   @computed
@@ -104,11 +115,79 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
     return [this.dataSource];
   }
 
+  constructor(id: string, terria: Terria) {
+    super(id, terria);
+
+    onBecomeObserved(this, "mapItems", () => {
+      this.disposer = reaction(
+        () => this._pollingTimer,
+        () => {
+          console.log("ping");
+          this.loadMapItemsPromise;
+          // console.log(getObserverTree(this, "mapItems"));
+        }
+      );
+    });
+    onBecomeUnobserved(this, "mapItems", () => {
+      if (this.disposer !== undefined && this.disposer !== null) {
+        this.disposer();
+      }
+    });
+  }
+
+  protected forceLoadMetadata(): Promise<void> {
+    return Promise.resolve();
+  }
+
+  // returns a promise that resolves once map items have loaded
+  protected get loadMapItemsPromise(): Promise<void> {
+    const promise: Promise<void> = this.retrieveData()
+      .then((data: FeedMessage) => {
+        if (data.entity === null || data.entity === undefined) {
+          return [];
+        }
+
+        return data.entity
+          .map((entity: FeedEntity) =>
+            this.convertFeedEntityToBillboardData(entity)
+          )
+          .filter(
+            (item: BillboardData) =>
+              item.position !== null && item.position !== undefined
+          );
+      })
+      .then(data => {
+        runInAction(() => (this.billboardDataList = data));
+      })
+      .catch((e: Error) => {
+        throw new TerriaError({
+          title: `Could not load ${this.nameInCatalog}.`,
+          sender: this,
+          message: `There was an error loading the data for ${
+            this.nameInCatalog
+          }.`
+        });
+      });
+
+    // if (
+    //   this.refreshInterval !== null &&
+    //   this.refreshInterval !== undefined &&
+    //   this.refreshInterval > 0
+    // ) {
+    //   setTimeout(() => {
+    //     this.loadMapItemsPromise;
+    //   }, this.refreshInterval * 1000);
+    // }
+
+    return promise;
+  }
+
   retrieveData(): Promise<FeedMessage> {
     // These headers work for the Transport for NSW APIs. Presumably, other services will require different headers.
     const headers = {
       Authorization: `apikey ${this.apiKey}`,
-      "Content-Type": "application/x-google-protobuf;charset=UTF-8"
+      "Content-Type": "application/x-google-protobuf;charset=UTF-8",
+      "Cache-Control": "no-cache"
     };
 
     if (this.url !== null && this.url !== undefined) {
