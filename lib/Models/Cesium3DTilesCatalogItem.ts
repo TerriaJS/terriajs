@@ -1,4 +1,4 @@
-import { computed } from "mobx";
+import { computed, observable } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import clone from "terriajs-cesium/Source/Core/clone";
 import IonResource from "terriajs-cesium/Source/Core/IonResource";
@@ -9,6 +9,7 @@ import Cesium3DTileStyle from "terriajs-cesium/Source/Scene/Cesium3DTileStyle";
 import ShadowMode from "terriajs-cesium/Source/Scene/ShadowMode";
 import isDefined from "../Core/isDefined";
 import loadJson from "../Core/loadJson";
+import makeRealPromise from "../Core/makeRealPromise";
 import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import Cesium3DTilesCatalogItemTraits, {
@@ -20,8 +21,14 @@ import Mappable from "./Mappable";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import raiseErrorToUser from "./raiseErrorToUser";
 
-class ExtendedCesium3DTileset extends Cesium3DTileset {
+class ObservableCesium3DTileset extends Cesium3DTileset {
   _catalogItem?: Cesium3DTilesCatalogItem;
+  @observable destroyed = false;
+
+  destroy() {
+    super.destroy();
+    this.destroyed = true;
+  }
 }
 
 export default class Cesium3DTilesCatalogItem
@@ -36,7 +43,7 @@ export default class Cesium3DTilesCatalogItem
   readonly canZoomTo = true;
   readonly showsInfo = true;
 
-  private tileset?: ExtendedCesium3DTileset;
+  private tileset?: ObservableCesium3DTileset;
 
   get isMappable() {
     return true;
@@ -48,43 +55,78 @@ export default class Cesium3DTilesCatalogItem
 
   protected get loadMapItemsPromise() {
     return (async () => {
-      if (!isDefined(this.url) && !isDefined(this.ionAssetId)) {
-        return;
-      }
+      const tileset = this.createTileset(
+        this.url,
+        this.ionAssetId,
+        this.ionAccessToken,
+        this.ionServer,
+        this.optionsObj
+      );
 
-      let resource: IonResource | Resource | undefined;
-      if (isDefined(this.ionAssetId)) {
-        try {
-          resource = await IonResource.fromAssetId(this.ionAssetId, {
-            accessToken:
-              this.ionAccessToken ||
-              this.terria.configParameters.cesiumIonAccessToken,
-            server: this.ionServer
-          });
-        } catch (e) {
-          raiseErrorToUser(this.terria, e);
-        }
-      } else if (isDefined(this.url)) {
-        resource = new Resource({ url: this.url });
+      if (isDefined(tileset) && !tileset.destroyed) {
+        this.tileset = tileset;
       }
-
-      if (!isDefined(resource)) {
-        return;
-      }
-
-      let options: any = {};
-      if (isDefined(this.options)) {
-        Object.keys(OptionsTraits.traits).forEach(name => {
-          options[name] = (<any>this).options[name];
-        });
-      }
-
-      this.tileset = new ExtendedCesium3DTileset({
-        ...options,
-        url: resource
-      });
-      this.tileset._catalogItem = this;
     })();
+  }
+
+  @computed get mapItems() {
+    if (this.isLoadingMapItems || !isDefined(this.tileset)) {
+      return [];
+    }
+
+    this.tileset.style = this.cesiumTileStyle;
+    this.tileset.shadows = this.cesiumShadows;
+    this.tileset.show = this.show;
+    return [this.tileset];
+  }
+
+  @computed get optionsObj() {
+    const options: any = {};
+    if (isDefined(this.options)) {
+      Object.keys(OptionsTraits.traits).forEach(name => {
+        options[name] = (<any>this.options)[name];
+      });
+    }
+    return options;
+  }
+
+  private createTileset(
+    url: string | undefined,
+    ionAssetId: number | undefined,
+    ionAccessToken: string | undefined,
+    ionServer: string | undefined,
+    options: any
+  ) {
+    if (!isDefined(url) && !isDefined(ionAssetId)) {
+      return;
+    }
+
+    let resource: Promise<IonResource> | Resource | undefined;
+    if (isDefined(ionAssetId)) {
+      resource = <Promise<IonResource>>makeRealPromise(
+        IonResource.fromAssetId(ionAssetId, {
+          accessToken:
+            ionAccessToken || this.terria.configParameters.cesiumIonAccessToken,
+          server: ionServer
+        })
+      ).catch(e => {
+        raiseErrorToUser(this.terria, e);
+      });
+    } else if (isDefined(url)) {
+      resource = new Resource({ url });
+    }
+
+    if (!isDefined(resource)) {
+      return;
+    }
+
+    const tileset = new ObservableCesium3DTileset({
+      ...options,
+      url: resource
+    });
+
+    tileset._catalogItem = this;
+    return tileset;
   }
 
   @computed get showExpressionFromFilters() {
@@ -143,17 +185,6 @@ export default class Cesium3DTilesCatalogItem
       default:
         return ShadowMode.DISABLED;
     }
-  }
-
-  @computed get mapItems() {
-    if (this.isLoadingMapItems || !isDefined(this.tileset)) {
-      return [];
-    }
-
-    this.tileset.style = this.cesiumTileStyle;
-    this.tileset.shadows = this.cesiumShadows;
-    this.tileset.show = this.show;
-    return [this.tileset];
   }
 
   getFeaturesFromPickResult(_screenPosition: Cartesian2, pickResult: any) {

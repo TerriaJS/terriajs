@@ -387,7 +387,7 @@ export default class Cesium extends GlobeOrMap {
           isCesium3DTileset(prim) &&
           allCesium3DTilesets.indexOf(prim) === -1
         ) {
-          removePrimitiveWithoutDestroy(this.scene.primitives, prim);
+          this.scene.primitives.remove(prim);
         }
       }
 
@@ -1101,14 +1101,4 @@ function zoomToBoundingSphere(
 
 function isDataSource(object: MapItem): object is DataSource {
   return "entities" in object;
-}
-
-function removePrimitiveWithoutDestroy(
-  primitives: PrimitiveCollection,
-  primitive: any
-) {
-  const previousValue = primitives.destroyPrimitives;
-  primitives.destroyPrimitives = false;
-  primitives.remove(primitive);
-  primitives.destroyPrimitives = previousValue;
 }
