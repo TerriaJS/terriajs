@@ -1,8 +1,8 @@
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
+import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
 import "terriajs-cesium/Source/Scene/ImageryProvider";
-import Model, { BaseModel } from "./Model";
 import MappableTraits from "../Traits/MappableTraits";
-import { Cesium3DTileset } from "cesium";
+import Model, { BaseModel } from "./Model";
 
 export type MapItem = ImageryParts | DataSource | Cesium3DTileset;
 

@@ -100,6 +100,16 @@ export default abstract class GlobeOrMap {
     if (isDefined(feature)) {
       let hasGeometry = false;
 
+      if (isDefined(feature._cesium3DTileFeature)) {
+        const originalColor = feature._cesium3DTileFeature.color;
+        feature._cesium3DTileFeature.color = Color.YELLOW;
+        this._removeHighlightCallback = function() {
+          if (isDefined(feature._cesium3DTileFeature)) {
+            feature._cesium3DTileFeature.color = originalColor;
+          }
+        };
+      }
+
       if (isDefined(feature.polygon)) {
         hasGeometry = true;
 

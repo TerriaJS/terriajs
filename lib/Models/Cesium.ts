@@ -22,6 +22,8 @@ import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDire
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
 import PerspectiveFrustum from "terriajs-cesium/Source/Core/PerspectiveFrustum";
+import Primitive from "terriajs-cesium/Source/Scene/Primitive";
+import PrimitiveCollection from "terriajs-cesium/Source/Scene/PrimitiveCollection";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import sampleTerrain from "terriajs-cesium/Source/Core/sampleTerrain";
 import Transforms from "terriajs-cesium/Source/Core/Transforms";
@@ -385,7 +387,7 @@ export default class Cesium extends GlobeOrMap {
           isCesium3DTileset(prim) &&
           allCesium3DTilesets.indexOf(prim) === -1
         ) {
-          (<any>primitives).removeAndDestroy(prim);
+          removePrimitiveWithoutDestroy(this.scene.primitives, <Primitive>prim);
         }
       }
 
@@ -794,6 +796,7 @@ export default class Cesium extends GlobeOrMap {
       if (!defined(id) && defined(picked.primitive)) {
         id = picked.primitive.id;
       }
+
       if (id instanceof Entity && vectorFeatures.indexOf(id) === -1) {
         const feature = Feature.fromEntityCollectionOrEntity(id);
         if (picked.primitive) {
@@ -1098,4 +1101,14 @@ function zoomToBoundingSphere(
 
 function isDataSource(object: MapItem): object is DataSource {
   return "entities" in object;
+}
+
+function removePrimitiveWithoutDestroy(
+  primitives: PrimitiveCollection,
+  primitive: Primitive
+) {
+  const previousValue = primitives.destroyPrimitives;
+  primitives.destroyPrimitives = false;
+  primitives.remove(primitive);
+  primitives.destroyPrimitives = previousValue;
 }
