@@ -110,7 +110,7 @@ const MapColumn = createReactClass({
               <div
                 className={classNames(Styles.feedbackButtonWrapper, {
                   [Styles.withTimeSeriesControls]: defined(
-                    this.props.terria.timeSeriesStack.topLayer
+                    this.props.terria.timelineStack.topLayer
                   )
                 })}
               >

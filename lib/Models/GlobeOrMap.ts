@@ -241,14 +241,15 @@ export default abstract class GlobeOrMap {
             ));
             catalogItem.setTrait(CommonStrata.user, "clampToGround", true);
             catalogItem.setTrait(CommonStrata.user, "style", {
-              "stroke-width": "2",
+              "stroke-width": 2,
               stroke: this.terria.baseMapContrastColor,
               fill: undefined,
-              "fill-opacity": "0",
+              "fill-opacity": 0,
               "marker-color": this.terria.baseMapContrastColor,
               "marker-size": undefined,
               "marker-symbol": undefined,
-              "marker-opacity": undefined
+              "marker-opacity": undefined,
+              "stroke-opacity": undefined
             });
 
             const removeCallback = (this._removeHighlightCallback = () => {

@@ -1,4 +1,4 @@
-import { computed, observable, runInAction, toJS, action } from "mobx";
+import { action, computed, observable, runInAction, toJS } from "mobx";
 import { createTransformer } from "mobx-utils";
 import Clock from "terriajs-cesium/Source/Core/Clock";
 import defined from "terriajs-cesium/Source/Core/defined";
@@ -16,15 +16,18 @@ import instanceOf from "../Core/instanceOf";
 import isDefined from "../Core/isDefined";
 import JsonValue, {
   isJsonObject,
-  JsonObject,
-  isJsonString
+  isJsonString,
+  JsonObject
 } from "../Core/Json";
 import loadJson5 from "../Core/loadJson5";
+import ServerConfig from "../Core/ServerConfig";
 import TerriaError from "../Core/TerriaError";
 import PickedFeatures from "../Map/PickedFeatures";
+import GroupMixin from "../ModelMixins/GroupMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import { BaseMapViewModel } from "../ViewModels/BaseMapViewModel";
 import TerriaViewer from "../ViewModels/TerriaViewer";
+import CameraView from "./CameraView";
 import CatalogMemberFactory from "./CatalogMemberFactory";
 import Catalog from "./CatalogNew";
 import Cesium from "./Cesium";
@@ -37,15 +40,12 @@ import magdaRecordToCatalogMemberDefinition from "./magdaRecordToCatalogMember";
 import Mappable from "./Mappable";
 import { BaseModel } from "./Model";
 import NoViewer from "./NoViewer";
+import ShareDataService from "./ShareDataService";
 import TimelineStack from "./TimelineStack";
 import updateModelFromJson from "./updateModelFromJson";
 import upsertModelFromJson from "./upsertModelFromJson";
 import Workbench from "./Workbench";
 import CorsProxy from "../Core/CorsProxy";
-import ShareDataService from "./ShareDataService";
-import ServerConfig from "../Core/ServerConfig";
-import GroupMixin from "../ModelMixins/GroupMixin";
-import CameraView from "./CameraView";
 
 require("regenerator-runtime/runtime");
 
@@ -67,6 +67,8 @@ interface ConfigParameters {
   cesiumIonAccessToken?: string;
   hideTerriaLogo?: boolean;
   useCesiumIonBingImagery: boolean;
+  bingMapsKey?: string;
+  brandBarElements?: string[];
 }
 
 interface StartOptions {
@@ -92,16 +94,21 @@ export default class Terria {
 
   readonly baseUrl: string = "build/TerriaJS/";
   readonly error = new CesiumEvent();
-  readonly beforeViewerChanged = new CesiumEvent();
-  readonly afterViewerChanged = new CesiumEvent();
   readonly workbench = new Workbench();
+  readonly overlays = new Workbench();
   readonly catalog = new Catalog(this);
   readonly timelineClock = new Clock({ shouldAnimate: false });
-  readonly mainViewer: TerriaViewer = new TerriaViewer(
+  readonly mainViewer = new TerriaViewer(
     this,
     computed(() =>
       filterOutUndefined(
-        this.workbench.items.map(item => (Mappable.is(item) ? item : undefined))
+        this.overlays.items
+          .map(item => (Mappable.is(item) ? item : undefined))
+          .concat(
+            this.workbench.items.map(item =>
+              Mappable.is(item) ? item : undefined
+            )
+          )
       )
     )
   );
@@ -145,7 +152,9 @@ export default class Terria {
     useCesiumIonTerrain: true,
     cesiumIonAccessToken: undefined,
     hideTerriaLogo: false,
-    useCesiumIonBingImagery: true
+    useCesiumIonBingImagery: true,
+    bingMapsKey: undefined,
+    brandBarElements: undefined
   };
 
   @observable
@@ -255,6 +264,14 @@ export default class Terria {
 
     return loadJson5(options.configUrl)
       .then((config: any) => {
+        if (config.parameters) {
+          Object.keys(config.parameters).forEach(key => {
+            if (this.configParameters.hasOwnProperty(key)) {
+              (<any>this.configParameters)[key] = config.parameters[key];
+            }
+          });
+        }
+
         if (config.aspects) {
           return this.loadMagdaConfig(config);
         }
