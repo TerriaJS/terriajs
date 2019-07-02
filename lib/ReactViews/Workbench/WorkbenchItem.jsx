@@ -1,32 +1,31 @@
 "use strict";
 
 import classNames from "classnames";
-import React from "react";
 import createReactClass from "create-react-class";
+import { observer } from "mobx-react";
 import PropTypes from "prop-types";
+import React from "react";
 import { sortable } from "react-anything-sortable";
-
 import defined from "terriajs-cesium/Source/Core/defined";
-
-import ConceptViewer from "./Controls/ConceptViewer";
 import CommonStrata from "../../Models/CommonStrata";
+import getAncestors from "../../Models/getAncestors";
+import Icon from "../Icon";
+import ColorScaleRangeSection from "./Controls/ColorScaleRangeSection";
+import ConceptViewer from "./Controls/ConceptViewer";
 import DateTimeSelectorSection from "./Controls/DateTimeSelectorSection";
-import SatelliteImageryTimeFilterSection from "./Controls/SatelliteImageryTimeFilterSection";
 import DimensionSelectorSection from "./Controls/DimensionSelectorSection";
 import DisplayAsPercentSection from "./Controls/DisplayAsPercentSection";
-import getAncestors from "../../Models/getAncestors";
+import FilterSection from "./Controls/FilterSection";
 import LeftRightSection from "./Controls/LeftRightSection";
 import Legend from "./Controls/Legend";
 import OpacitySection from "./Controls/OpacitySection";
-import ColorScaleRangeSection from "./Controls/ColorScaleRangeSection";
+import SatelliteImageryTimeFilterSection from "./Controls/SatelliteImageryTimeFilterSection";
+import ShadowSection from "./Controls/ShadowSection";
 import ShortReport from "./Controls/ShortReport";
 import StyleSelectorSection from "./Controls/StyleSelectorSection";
-import ViewingControls from "./Controls/ViewingControls";
-import { observer } from "mobx-react";
 import TimerSection from "./Controls/TimerSection";
-
+import ViewingControls from "./Controls/ViewingControls";
 import Styles from "./workbench-item.scss";
-import Icon from "../Icon";
 
 const WorkbenchItem = observer(
   createReactClass({
@@ -137,6 +136,8 @@ const WorkbenchItem = observer(
               >
                 <ConceptViewer item={workbenchItem} />
               </If>
+              <FilterSection item={workbenchItem} />
+              <ShadowSection item={workbenchItem} />
               <DimensionSelectorSection item={workbenchItem} />
               <DateTimeSelectorSection item={workbenchItem} />
               <SatelliteImageryTimeFilterSection item={workbenchItem} />

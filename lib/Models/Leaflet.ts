@@ -38,7 +38,7 @@ import CameraView from "./CameraView";
 import Feature from "./Feature";
 import GlobeOrMap from "./GlobeOrMap";
 import hasTraits from "./hasTraits";
-import Mappable, { ImageryParts } from "./Mappable";
+import Mappable, { ImageryParts, MapItem } from "./Mappable";
 import Terria from "./Terria";
 
 interface SplitterClips {
@@ -252,7 +252,7 @@ export default class Leaflet extends GlobeOrMap {
         this.terriaViewer.baseMap
       ];
       // Flatmap
-      const allMapItems = ([] as (DataSource | ImageryParts)[]).concat(
+      const allMapItems = ([] as MapItem[]).concat(
         ...catalogItems.filter(isDefined).map(item => item.mapItems)
       );
 
@@ -709,6 +709,6 @@ function isImageryLayer(someLayer: L.Layer): someLayer is CesiumTileLayer {
   return "imageryProvider" in someLayer;
 }
 
-function isDataSource(object: DataSource | ImageryParts): object is DataSource {
+function isDataSource(object: MapItem): object is DataSource {
   return "entities" in object;
 }
