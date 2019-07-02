@@ -19,7 +19,8 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
     abstract get type(): string;
     static readonly traits = Traits.traits;
     readonly traits = Traits.traits;
-    readonly strata = observable.map<string, StratumTraits>();
+    readonly TraitsClass: TraitsConstructor<InstanceType<T>> = <any>Traits;
+    readonly strata: Map<string, StratumTraits>;
 
     /**
      * Gets the uniqueIds of models that are known to contain this one.
@@ -30,8 +31,13 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
      */
     readonly knownContainerUniqueIds: string[] = [];
 
-    constructor(id: string | undefined, terria: Terria) {
+    constructor(
+      id: string | undefined,
+      terria: Terria,
+      strata?: Map<string, StratumTraits>
+    ) {
       super(id, terria);
+      this.strata = strata || observable.map<string, StratumTraits>();
     }
 
     private getOrCreateStratum(id: string): StratumTraits {

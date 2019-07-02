@@ -1,5 +1,6 @@
 import { computed } from "mobx";
 import TerriaError from "../Core/TerriaError";
+import createStratumInstance from "../Models/createStratumInstance";
 import Model, { BaseModel, ModelConstructor } from "../Models/Model";
 import saveStratumToJson from "../Models/saveStratumToJson";
 import StratumFromTraits from "../Models/StratumFromTraits";
@@ -40,15 +41,82 @@ export class ObjectTrait<T extends ModelTraits> extends Trait {
     this.modelClass = options.modelClass || traitsClassToModelClass(this.type);
   }
 
-  getValue(model: BaseModel): Model<T> | undefined {
-    const result = new this.modelClass(model.uniqueId, model.terria);
-    model.strata.forEach((parentStratum: any, stratumId) => {
-      if (!parentStratum) return;
-      const childStratum = parentStratum[this.id];
-      if (!childStratum) return;
-      result.strata.set(stratumId, childStratum);
-    });
-    return result;
+  getValue(model: BaseModel): Model<T> {
+    class NestedStrataView implements Map<string, T> {
+      constructor(
+        readonly parentTraitsClass: TraitsConstructor<ModelTraits>,
+        readonly parent: Map<string, StratumFromTraits<ModelTraits>>,
+        readonly propertyId: string
+      ) {}
+
+      clear(): void {
+        this.parent.forEach((value: any) => {
+          value[this.propertyId] = undefined;
+        });
+      }
+      delete(key: string): boolean {
+        const parentValue: any = this.parent.get(key);
+        const hasValue = parentValue[this.propertyId] !== undefined;
+        parentValue[this.propertyId] = undefined;
+        return hasValue;
+      }
+      forEach(
+        callbackfn: (value: T, key: string, map: Map<string, T>) => void,
+        thisArg?: any
+      ): void {
+        this.parent.forEach((parentValue: any, key: string) => {
+          const value = parentValue[this.propertyId];
+          callbackfn.call(thisArg, value, key, this);
+        });
+      }
+      get(key: string): T | undefined {
+        const parentValue: any = this.parent.get(key);
+        if (parentValue !== undefined) {
+          return parentValue[this.propertyId];
+        }
+        return undefined;
+      }
+      has(key: string): boolean {
+        return this.parent.has(key);
+      }
+      set(key: string, value: T): this {
+        let parentValue: any = this.parent.get(key);
+        if (parentValue === undefined) {
+          parentValue = createStratumInstance(this.parentTraitsClass);
+          this.parent.set(key, parentValue);
+        }
+        parentValue[this.propertyId] = value;
+        return this;
+      }
+      get size(): number {
+        return this.parent.size;
+      }
+      [Symbol.iterator](): IterableIterator<[string, T]> {
+        throw new Error("Method not implemented.");
+      }
+      *entries(): IterableIterator<[string, T]> {
+        for (let entry of this.parent.entries()) {
+          const parentValue: any = entry[1];
+          yield [entry[0], parentValue[this.propertyId]];
+        }
+      }
+      keys(): IterableIterator<string> {
+        return this.parent.keys();
+      }
+      *values(): IterableIterator<T> {
+        for (let entry of this.parent.entries()) {
+          const parentValue: any = entry[1];
+          yield parentValue[this.propertyId];
+        }
+      }
+      [Symbol.toStringTag]: string;
+    }
+
+    return new this.modelClass(
+      model.uniqueId,
+      model.terria,
+      new NestedStrataView(model.TraitsClass, model.strata, this.id)
+    );
   }
 
   fromJson(

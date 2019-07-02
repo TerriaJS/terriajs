@@ -1,13 +1,16 @@
-import { ObservableMap } from "mobx";
-import { ModelId } from "../Traits/ModelReference";
 import ModelTraits from "../Traits/ModelTraits";
 import Trait from "../Traits/Trait";
+import TraitsConstructor from "../Traits/TraitsConstructor";
 import ModelPropertiesFromTraits from "./ModelPropertiesFromTraits";
 import StratumFromTraits from "./StratumFromTraits";
 import Terria from "./Terria";
 
 export interface ModelConstructor<T> {
-  new (uniqueId: string | undefined, terria: Terria): T;
+  new (
+    uniqueId: string | undefined,
+    terria: Terria,
+    strata?: Map<string, StratumFromTraits<ModelTraits>>
+  ): T;
   prototype: T;
 }
 
@@ -16,8 +19,9 @@ export abstract class BaseModel {
   abstract get traits(): {
     [id: string]: Trait;
   };
+  abstract get TraitsClass(): TraitsConstructor<ModelTraits>;
   abstract get knownContainerUniqueIds(): string[];
-  abstract get strata(): ObservableMap<string, StratumFromTraits<ModelTraits>>;
+  abstract get strata(): Map<string, StratumFromTraits<ModelTraits>>;
   abstract get topStratum(): StratumFromTraits<ModelTraits>;
 
   constructor(readonly uniqueId: string | undefined, readonly terria: Terria) {}
@@ -34,7 +38,8 @@ export interface ModelInterface<T extends ModelTraits> {
   readonly traits: {
     [id: string]: Trait;
   };
-  readonly strata: ObservableMap<string, StratumFromTraits<T>>;
+  readonly TraitsClass: TraitsConstructor<T>;
+  readonly strata: Map<string, StratumFromTraits<T>>;
   readonly terria: Terria;
   readonly uniqueId: string | undefined;
   readonly knownContainerUniqueIds: string[];

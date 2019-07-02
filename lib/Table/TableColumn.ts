@@ -1,13 +1,13 @@
 import countBy from "lodash-es/countBy";
 import { computed } from "mobx";
-import createStratumInstance from "../Models/createStratumInstance";
+import RegionProvider from "../Map/RegionProvider";
+import RegionProviderList from "../Map/RegionProviderList";
+import createEmptyModel from "../Models/createEmptyModel";
 import Model from "../Models/Model";
 import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
 import TableColumnTraits from "../Traits/TableColumnTraits";
 import TableTraits from "../Traits/TableTraits";
 import TableColumnType, { stringToTableColumnType } from "./TableColumnType";
-import RegionProviderList from "../Map/RegionProviderList";
-import RegionProvider from "../Map/RegionProvider";
 
 interface TableModel extends Model<TableTraits> {
   readonly dataColumnMajor: string[][] | undefined;
@@ -238,7 +238,7 @@ export default class TableColumn {
     const columns = this.tableModel.columns || [];
     return (
       columns.find(column => column.name === this.name) ||
-      createStratumInstance(TableColumnTraits)
+      createEmptyModel(TableColumnTraits)
     );
   }
 

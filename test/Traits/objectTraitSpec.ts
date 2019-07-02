@@ -41,6 +41,13 @@ class OuterTraits extends ModelTraits {
     description: "Inner"
   })
   inner?: InnerTraits;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Other",
+    description: "Other"
+  })
+  other?: string;
 }
 
 class TestModel extends CreateModel(OuterTraits) {}
@@ -111,5 +118,16 @@ describe("objectTrait", function() {
 
       expect(model.inner.bar).toEqual(2);
     }
+  });
+
+  it("updates to reflect new strata added after evaluation", function() {
+    const terria = new Terria();
+    const model = new TestModel("test", terria);
+
+    model.inner.setTrait("user", "bar", 1);
+    expect(model.inner.bar).toBe(1);
+
+    model.setTrait("user", "other", "test");
+    expect(model.inner.bar).toBe(1);
   });
 });
