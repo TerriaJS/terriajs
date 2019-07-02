@@ -275,7 +275,7 @@ export default class MapboxVectorTileImageryProvider
       nativeTile.level
     );
 
-    return loadArrayBuffer(url).then((data: any) => {
+    return loadArrayBuffer(url.toString()).then((data: any) => {
       return this._drawTile(
         requestedTile,
         nativeTile,
@@ -385,7 +385,7 @@ export default class MapboxVectorTileImageryProvider
     level: number,
     longitude: number,
     latitude: number
-  ) {
+  ): Promise<ImageryLayerFeatureInfo[]>  {
     let nativeTile: Coords;
     let levelDelta: number;
     const requestedTile = {
@@ -417,7 +417,7 @@ export default class MapboxVectorTileImageryProvider
       nativeTile.level
     );
 
-    return loadArrayBuffer(url).then((data: any) => {
+    return loadArrayBuffer(url.toString()).then((data: any) => {
       const layer = new VectorTile(new Protobuf(data)).layers[that._layerName];
 
       if (!isDefined(layer)) {
@@ -519,7 +519,7 @@ export default class MapboxVectorTileImageryProvider
       styleFunc: styleFunc
     });
     imageryProvider.pickFeatures = function() {
-      return undefined;
+      return Promise.resolve([]);
     }; // Turn off feature picking
     return imageryProvider;
   }
