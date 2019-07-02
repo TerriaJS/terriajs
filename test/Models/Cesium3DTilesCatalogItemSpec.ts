@@ -183,7 +183,9 @@ describe("Cesium3DTilesCatalogItemSpec", function() {
               const tileset = item.mapItems[0];
               await item.loadMapItems();
               expect(item.mapItems[0] === tileset).toBeTruthy();
-              tileset.destroy();
+              runInAction(() => {
+                tileset.destroy();
+              });
               await item.loadMapItems();
               expect(item.mapItems[0] === tileset).toBeFalsy();
             });
