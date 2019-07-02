@@ -387,7 +387,7 @@ export default class Cesium extends GlobeOrMap {
           isCesium3DTileset(prim) &&
           allCesium3DTilesets.indexOf(prim) === -1
         ) {
-          removePrimitiveWithoutDestroy(this.scene.primitives, <Primitive>prim);
+          removePrimitiveWithoutDestroy(this.scene.primitives, prim);
         }
       }
 
@@ -1105,7 +1105,7 @@ function isDataSource(object: MapItem): object is DataSource {
 
 function removePrimitiveWithoutDestroy(
   primitives: PrimitiveCollection,
-  primitive: Primitive
+  primitive: any
 ) {
   const previousValue = primitives.destroyPrimitives;
   primitives.destroyPrimitives = false;
