@@ -49,7 +49,7 @@ const MenuBar = createReactClass({
     this.props.viewState.toggleFeaturePrompt(
       "story",
       false,
-      Boolean(this.props.terria.stories.length)
+      true
     );
   },
   render() {
