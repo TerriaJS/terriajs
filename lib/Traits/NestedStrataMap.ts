@@ -22,6 +22,9 @@ export default class NestedStrataMap<T extends ModelTraits>
   }
   delete(key: string): boolean {
     const parentValue: any = this.parent.get(key);
+    if (parentValue === undefined) {
+      return false;
+    }
     const hasValue = parentValue[this.parentProperty] !== undefined;
     parentValue[this.parentProperty] = undefined;
     return hasValue;
@@ -32,15 +35,14 @@ export default class NestedStrataMap<T extends ModelTraits>
   ): void {
     this.parent.forEach((parentValue: any, key: string) => {
       const value = parentValue[this.parentProperty];
-      callbackfn.call(thisArg, value, key, this);
+      if (value !== undefined) {
+        callbackfn.call(thisArg, value, key, this);
+      }
     });
   }
   get(key: string): T | undefined {
     const parentValue: any = this.parent.get(key);
-    if (parentValue !== undefined) {
-      return parentValue[this.parentProperty];
-    }
-    return undefined;
+    return parentValue && parentValue[this.parentProperty];
   }
   has(key: string): boolean {
     return this.parent.has(key);
@@ -63,16 +65,27 @@ export default class NestedStrataMap<T extends ModelTraits>
   *entries(): IterableIterator<[string, T]> {
     for (let entry of this.parent.entries()) {
       const parentValue: any = entry[1];
-      yield [entry[0], parentValue[this.parentProperty]];
+      const value = parentValue[this.parentProperty];
+      if (value === undefined) {
+        continue;
+      }
+      yield [entry[0], value];
     }
   }
-  keys(): IterableIterator<string> {
-    return this.parent.keys();
+  *keys(): IterableIterator<string> {
+    // Only return keys that have a value.
+    for (let entry of this.entries()) {
+      yield entry[0];
+    }
   }
   *values(): IterableIterator<T> {
     for (let entry of this.parent.entries()) {
       const parentValue: any = entry[1];
-      yield parentValue[this.parentProperty];
+      const value = parentValue[this.parentProperty];
+      if (value === undefined) {
+        continue;
+      }
+      yield value;
     }
   }
   get [Symbol.toStringTag](): string {
