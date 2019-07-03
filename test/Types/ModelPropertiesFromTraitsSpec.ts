@@ -27,38 +27,33 @@ expectTrue<
 expectTrue<
   Equals<typeof modelProperties.withNull, string | null | undefined>
 >();
-expectTrue<
-  Equals<
-    typeof modelProperties.nestedNullable,
-    Model<NestedTraits> | null | undefined
-  >
->();
 
 // No properties can be modified.
 expectFalse<IsWritable<typeof modelProperties, "withDefault">>();
 expectFalse<IsWritable<typeof modelProperties, "withoutDefault">>();
 
-// Properties that are nested traits allow undefined only if they do not have a default.
+// Properties that are nested traits do not allow undefined even if they do not have a default.
 expectFalse<AllowsUndefined<typeof modelProperties.nestedWithDefault>>();
-expectTrue<AllowsUndefined<typeof modelProperties.nestedWithoutDefault>>();
+expectFalse<AllowsUndefined<typeof modelProperties.nestedWithoutDefault>>();
 
 const nested = modelProperties.nestedWithDefault;
-if (nested) {
-  // Nested properties allow undefined only if they do not have a default.
-  expectTrue<Equals<typeof nested.withDefault, number>>();
-  expectTrue<Equals<typeof nested.withoutDefault, number | undefined>>();
-  expectTrue<Equals<typeof nested.unknownObject, JsonObject | undefined>>();
-  expectTrue<Equals<typeof nested.unknownObjectWithDefault, JsonObject>>();
-  expectTrue<Equals<typeof nested.withNull, string | null | undefined>>();
 
-  // Nested properties may not be modified.
-  expectFalse<IsWritable<typeof nested, "withDefault">>();
-  expectFalse<IsWritable<typeof nested, "withoutDefault">>();
-}
+// Nested properties allow undefined only if they do not have a default.
+expectTrue<Equals<typeof nested.withDefault, number>>();
+expectTrue<Equals<typeof nested.withoutDefault, number | undefined>>();
+expectTrue<Equals<typeof nested.unknownObject, JsonObject | undefined>>();
+expectTrue<Equals<typeof nested.unknownObjectWithDefault, JsonObject>>();
+expectTrue<Equals<typeof nested.withNull, string | null | undefined>>();
+
+// Nested properties may not be modified.
+expectFalse<IsWritable<typeof nested, "withDefault">>();
+expectFalse<IsWritable<typeof nested, "withoutDefault">>();
 
 // Properties that are arrays of traits allow undefined only if they do not have a default.
 expectFalse<AllowsUndefined<typeof modelProperties.nestedArrayWithDefault>>();
-expectTrue<AllowsUndefined<typeof modelProperties.nestedArrayWithoutDefault>>();
+expectFalse<
+  AllowsUndefined<typeof modelProperties.nestedArrayWithoutDefault>
+>();
 
 // Array traits are not writable.
 expectFalse<

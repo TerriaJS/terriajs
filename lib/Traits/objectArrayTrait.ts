@@ -1,21 +1,17 @@
 import { computed } from "mobx";
+import { computedFn } from "mobx-utils";
 import TerriaError from "../Core/TerriaError";
-import addModelStrataView from "../Models/addModelStrataView";
-import CommonStrata from "../Models/CommonStrata";
 import Model, { BaseModel, ModelConstructor } from "../Models/Model";
-import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
 import saveStratumToJson from "../Models/saveStratumToJson";
 import StratumFromTraits from "../Models/StratumFromTraits";
+import StratumOrder from "../Models/StratumOrder";
+import ArrayNestedStrataMap, {
+  getObjectId,
+  TraitsConstructorWithRemoval
+} from "./ArrayNestedStrataMap";
 import ModelTraits from "./ModelTraits";
 import Trait, { TraitOptions } from "./Trait";
 import traitsClassToModelClass from "./traitsClassToModelClass";
-import TraitsConstructor from "./TraitsConstructor";
-import StratumOrder from "../Models/StratumOrder";
-
-interface TraitsConstructorWithRemoval<T extends ModelTraits>
-  extends TraitsConstructor<T> {
-  isRemoval?: (instance: StratumFromTraits<T>) => boolean;
-}
 
 export interface ObjectArrayTraitOptions<T extends ModelTraits>
   extends TraitOptions {
@@ -52,21 +48,31 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
     this.modelClass = options.modelClass || traitsClassToModelClass(this.type);
   }
 
+  private readonly createObject: (
+    model: BaseModel,
+    objectId: string
+  ) => Model<T> = computedFn((model: BaseModel, objectId: string) => {
+    return new this.modelClass(
+      undefined,
+      model.terria,
+      new ArrayNestedStrataMap(
+        model.TraitsClass,
+        model.strata,
+        this.id,
+        this.type,
+        this.idProperty,
+        objectId
+      )
+    );
+  });
+
   getValue(model: BaseModel): readonly Model<T>[] | undefined {
     const strataTopToBottom: Map<string, any> = StratumOrder.sortTopToBottom(
       model.strata
     );
 
-    // const objectArrayStrata = strataTopToBottom
-    //   .map((stratum: any) => stratum && stratum[this.id])
-    //   .filter(stratumValue => stratumValue !== undefined);
-    // if (objectArrayStrata.length === 0) {
-    //   return undefined;
-    // }
-
-    const result: Map<string, StratumFromTraits<T>>[] = [];
-    const idMap: { [id: string]: Map<string, StratumFromTraits<T>> } = {};
-    const removedIds: { [id: string]: boolean } = {};
+    const ids = new Set<string>();
+    const removedIds = new Set<string>();
 
     // Find the unique objects and the strata that go into each.
     for (let stratumId of strataTopToBottom.keys()) {
@@ -79,39 +85,32 @@ export class ObjectArrayTrait<T extends ModelTraits> extends Trait {
 
       objectArray.forEach(
         (o: StratumFromTraits<T> & { index?: number }, i: number) => {
-          const id =
-            this.idProperty === "index"
-              ? o.index === undefined
-                ? i.toString()
-                : o.index.toString()
-              : <string>(<unknown>o[this.idProperty]);
+          const id = getObjectId(this.idProperty, o, i);
+
           if (this.type.isRemoval !== undefined && this.type.isRemoval(o)) {
             // This ID is removed in this stratum.
-            removedIds[id] = true;
-          } else if (removedIds[id]) {
+            removedIds.add(id);
+          } else if (removedIds.has(id)) {
             // This ID was removed by a stratum above this one, so ignore it.
             return;
-          } else if (!idMap[id]) {
-            // This is the first time we've seen this ID, so add it
-            const strataMap = new Map<string, StratumFromTraits<T>>();
-            strataMap.set(stratumId, o);
-            idMap[id] = strataMap;
-            result.push(strataMap);
           } else {
-            idMap[id].set(stratumId, o);
+            ids.add(id);
           }
         }
       );
     }
 
-    // Flatten each unique object.
-    return result.map(modelSource => {
-      const result = new this.modelClass(model.uniqueId, model.terria);
-      modelSource.forEach((stratum: any, stratumId) => {
-        result.strata.set(stratumId, stratum);
-      });
-      return result;
+    // Create a model instance for each unique ID. Note that `createObject` is
+    // memoized so we'll get the same model for the same ID each time,
+    // at least when we're in a reactive context.
+
+    const result: Model<T>[] = [];
+
+    ids.forEach(value => {
+      result.push(this.createObject(model, value));
     });
+
+    return result;
   }
 
   fromJson(

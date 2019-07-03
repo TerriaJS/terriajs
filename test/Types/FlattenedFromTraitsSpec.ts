@@ -20,12 +20,6 @@ expectTrue<
   Equals<typeof flattened.unknownObjectWithDefault, JsonObject | undefined>
 >();
 expectTrue<Equals<typeof flattened.withNull, string | null | undefined>>();
-expectTrue<
-  Equals<
-    typeof flattened.nestedNullable,
-    FlattenedFromTraits<NestedTraits> | null | undefined
-  >
->();
 
 // Properties may not be modified.
 expectFalse<IsWritable<typeof flattened, "withDefault">>();
