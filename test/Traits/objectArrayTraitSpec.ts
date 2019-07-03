@@ -203,6 +203,13 @@ describe("objectArrayTrait", function() {
       expect(newObj.foo).toBe("test");
       newObj.setTrait("user", "bar", 4);
       expect(newObj.bar).toBe(4);
+      newObj.setTrait("definition", "baz", true);
+      expect(newObj.baz).toBe(true);
     }
+
+    expect(model.inner.length).toBe(1);
+    expect(model.inner[0].foo).toBe("test");
+    expect(model.inner[0].bar).toBe(4);
+    expect(model.inner[0].baz).toBe(true);
   });
 });

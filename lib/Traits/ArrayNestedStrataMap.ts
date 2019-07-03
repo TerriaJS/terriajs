@@ -84,7 +84,8 @@ export default class ArrayNestedStrataMap<T extends ModelTraits>
 
     let array = parentValue[this.parentProperty];
     if (array === undefined) {
-      array = parentValue[this.parentProperty] = [];
+      parentValue[this.parentProperty] = [];
+      array = parentValue[this.parentProperty];
     }
 
     (<any>value)[this.objectIdProperty] = this.objectId;
