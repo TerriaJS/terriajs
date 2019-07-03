@@ -1,17 +1,15 @@
-import React from "react";
-
 import createReactClass from "create-react-class";
-
-import PropTypes from "prop-types";
-
-import Workbench from "../Workbench/Workbench";
-import Icon from "../Icon";
-import FullScreenButton from "./FullScreenButton";
-import { removeMarker } from "../../Models/LocationMarkerUtils";
-
-import Styles from "./side-panel.scss";
 import { reaction } from "mobx";
 import { observer } from "mobx-react";
+import PropTypes from "prop-types";
+import React from "react";
+import { removeMarker } from "../../Models/LocationMarkerUtils";
+import Icon from "../Icon";
+import SearchBox from "../Search/SearchBox";
+import SidebarSearch from "../Search/SidebarSearch";
+import Workbench from "../Workbench/Workbench";
+import FullScreenButton from "./FullScreenButton";
+import Styles from "./side-panel.scss";
 
 const SidePanel = observer(
   createReactClass({
@@ -80,7 +78,7 @@ const SidePanel = observer(
     },
 
     render() {
-      // const searchState = this.props.viewState.searchState;
+      const searchState = this.props.viewState.searchState;
 
       return (
         <div className={Styles.workBench}>
@@ -92,13 +90,13 @@ const SidePanel = observer(
               animationDuration={250}
               btnText="Hide"
             />
-            {/* <SearchBox
-                        onSearchTextChanged={this.changeSearchText}
-                        onDoSearch={this.search}
-                        onFocus={this.startLocationSearch}
-                        searchText={searchState.locationSearchText}
-                        placeholder='Search for locations'
-                    /> */}
+            <SearchBox
+              onSearchTextChanged={this.changeSearchText}
+              onDoSearch={this.search}
+              onFocus={this.startLocationSearch}
+              searchText={searchState.locationSearchText}
+              placeholder="Search for locations"
+            />
             <div className={Styles.addData}>
               <button
                 type="button"
@@ -121,12 +119,20 @@ const SidePanel = observer(
           </div>
           <div className={Styles.body}>
             <Choose>
-              {/* <When condition={searchState.locationSearchText.length > 0 && searchState.showLocationSearchResults}>
-                            <SidebarSearch
-                                terria={this.props.terria}
-                                viewState={this.props.viewState}
-                                isWaitingForSearchToStart={searchState.isWaitingToStartLocationSearch} />
-                        </When> */}
+              <When
+                condition={
+                  searchState.locationSearchText.length > 0 &&
+                  searchState.showLocationSearchResults
+                }
+              >
+                <SidebarSearch
+                  terria={this.props.terria}
+                  viewState={this.props.viewState}
+                  isWaitingForSearchToStart={
+                    searchState.isWaitingToStartLocationSearch
+                  }
+                />
+              </When>
               <When
                 condition={
                   this.props.terria.workbench.items &&

@@ -1,19 +1,21 @@
+import { JsonObject } from "../Core/Json";
 import anyTrait from "./anyTrait";
 import CatalogMemberTraits from "./CatalogMemberTraits";
+import FeatureInfoTraits from "./FeatureInfoTraits";
 import MappableTraits from "./MappableTraits";
 import mixTraits from "./mixTraits";
 import ModelTraits from "./ModelTraits";
 import objectTrait from "./objectTrait";
 import primitiveTrait from "./primitiveTrait";
 import UrlTraits from "./UrlTraits";
-import { JsonObject } from "../Core/Json";
-import FeatureInfoTraits from "./FeatureInfoTraits";
 
 export class StyleTraits extends ModelTraits {
   @primitiveTrait({
     type: "string",
     name: "marker-size",
-    description: "Marker size."
+    description:
+      "Marker size. Valid values are `small`, `medium`, or `large`. If the " +
+      "value is a number, it is the size in pixels."
   })
   "marker-size"?: string;
 
@@ -32,11 +34,11 @@ export class StyleTraits extends ModelTraits {
   "marker-symbol"?: string;
 
   @primitiveTrait({
-    type: "string",
+    type: "number",
     name: "marker-opacity",
     description: "Marker opacity."
   })
-  "marker-opacity"?: string;
+  "marker-opacity"?: number;
 
   @primitiveTrait({
     type: "string",
@@ -47,10 +49,17 @@ export class StyleTraits extends ModelTraits {
 
   @primitiveTrait({
     type: "string",
+    name: "stroke-opacity",
+    description: "Stroke opacity."
+  })
+  "stroke-opacity"?: number;
+
+  @primitiveTrait({
+    type: "number",
     name: "stroke-width",
     description: "Stroke width."
   })
-  "stroke-width"?: string;
+  "stroke-width"?: number;
 
   @primitiveTrait({
     type: "string",
@@ -60,11 +69,11 @@ export class StyleTraits extends ModelTraits {
   "fill"?: string;
 
   @primitiveTrait({
-    type: "string",
+    type: "number",
     name: "fill-opacity",
     description: "Fill opacity."
   })
-  "fill-opacity"?: string;
+  "fill-opacity"?: number;
 }
 
 export default class GeoJsonCatalogItemTraits extends mixTraits(

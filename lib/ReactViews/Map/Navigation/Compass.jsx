@@ -30,7 +30,7 @@ const Compass = createReactClass({
   },
 
   componentDidMount() {
-    this._unsubscribeFromViewerChange = this.props.terria.afterViewerChanged.addEventListener(
+    this._unsubscribeFromViewerChange = this.props.terria.mainViewer.afterViewerChanged.addEventListener(
       () => viewerChange(this)
     );
     viewerChange(this);

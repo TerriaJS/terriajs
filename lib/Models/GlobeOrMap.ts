@@ -100,6 +100,16 @@ export default abstract class GlobeOrMap {
     if (isDefined(feature)) {
       let hasGeometry = false;
 
+      if (isDefined(feature._cesium3DTileFeature)) {
+        const originalColor = feature._cesium3DTileFeature.color;
+        feature._cesium3DTileFeature.color = Color.YELLOW;
+        this._removeHighlightCallback = function() {
+          if (isDefined(feature._cesium3DTileFeature)) {
+            feature._cesium3DTileFeature.color = originalColor;
+          }
+        };
+      }
+
       if (isDefined(feature.polygon)) {
         hasGeometry = true;
 
@@ -241,14 +251,15 @@ export default abstract class GlobeOrMap {
             ));
             catalogItem.setTrait(CommonStrata.user, "clampToGround", true);
             catalogItem.setTrait(CommonStrata.user, "style", {
-              "stroke-width": "2",
+              "stroke-width": 2,
               stroke: this.terria.baseMapContrastColor,
               fill: undefined,
-              "fill-opacity": "0",
+              "fill-opacity": 0,
               "marker-color": this.terria.baseMapContrastColor,
               "marker-size": undefined,
               "marker-symbol": undefined,
-              "marker-opacity": undefined
+              "marker-opacity": undefined,
+              "stroke-opacity": undefined
             });
 
             const removeCallback = (this._removeHighlightCallback = () => {

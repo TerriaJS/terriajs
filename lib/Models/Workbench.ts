@@ -1,8 +1,7 @@
-import { observable, computed, action } from "mobx";
-
-import { BaseModel } from "./Model";
-import ReferenceMixin from "../ModelMixins/ReferenceMixin";
+import { action, computed, observable } from "mobx";
 import filterOutUndefined from "../Core/filterOutUndefined";
+import ReferenceMixin from "../ModelMixins/ReferenceMixin";
+import { BaseModel } from "./Model";
 
 interface WorkbenchItem extends BaseModel {
   supportsReordering?: boolean;

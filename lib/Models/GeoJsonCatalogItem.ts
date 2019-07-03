@@ -18,15 +18,18 @@ import Property from "terriajs-cesium/Source/DataSources/Property";
 import isDefined from "../Core/isDefined";
 import JsonValue, { isJsonObject, JsonObject } from "../Core/Json";
 import makeRealPromise from "../Core/makeRealPromise";
+import readJson from "../Core/readJson";
+import StandardCssColors from "../Core/StandardCssColors";
 import TerriaError from "../Core/TerriaError";
 import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
-import GeoJsonCatalogItemTraits from "../Traits/GeoJsonCatalogItemTraits";
+import GeoJsonCatalogItemTraits, {
+  StyleTraits
+} from "../Traits/GeoJsonCatalogItemTraits";
+import createEmptyModel from "./createEmptyModel";
 import CreateModel from "./CreateModel";
 import Terria from "./Terria";
-import readJson from "../Core/readJson";
-import StandardCssColors from "../Core/StandardCssColors";
 
 const formatPropertyValue = require("../Core/formatPropertyValue");
 const hashFromString = require("../Core/hashFromString");
@@ -224,7 +227,7 @@ class GeoJsonCatalogItem extends AsyncMappableMixin(
       return parseInt(sizeString, 10); // SimpleStyle doesn't allow 'marker-size: 20', but people will do it.
     }
 
-    const style = defaultValue(this.style, {});
+    const style = this.style || createEmptyModel(StyleTraits);
 
     const options = {
       describe: describeWithoutUnderscores,
@@ -241,11 +244,11 @@ class GeoJsonCatalogItem extends AsyncMappableMixin(
     };
 
     if (isDefined(style["stroke-opacity"])) {
-      options.stroke.alpha = parseFloat(style["stroke-opacity"]);
+      options.stroke.alpha = style["stroke-opacity"];
     }
 
     if (isDefined(style["fill-opacity"])) {
-      options.fill.alpha = parseFloat(style["fill-opacity"]);
+      options.fill.alpha = style["fill-opacity"];
     } else {
       options.fill.alpha = 0.75;
     }

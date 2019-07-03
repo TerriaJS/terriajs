@@ -15,7 +15,7 @@ import {
   LOCATION_MARKER_DATA_SOURCE_NAME,
   addMarker,
   removeMarker,
-  markerVisible
+  isMarkerVisible
 } from "../../Models/LocationMarkerUtils";
 import prettifyCoordinates from "../../Map/prettifyCoordinates";
 import raiseErrorToUser from "../../Models/raiseErrorToUser";
@@ -169,7 +169,7 @@ const FeatureInfoPanel = observer(
     },
 
     pinClicked(longitude, latitude) {
-      if (!markerVisible(this.props.terria)) {
+      if (!isMarkerVisible(this.props.terria)) {
         this.addManualMarker(longitude, latitude);
       } else {
         removeMarker(this.props.terria);
@@ -180,7 +180,7 @@ const FeatureInfoPanel = observer(
       if (
         defined(latitude) &&
         defined(longitude) &&
-        markerVisible(this.props.terria)
+        isMarkerVisible(this.props.terria)
       ) {
         removeMarker(this.props.terria);
         this.addManualMarker(longitude, latitude);
@@ -205,14 +205,14 @@ const FeatureInfoPanel = observer(
       const latitude = CesiumMath.toDegrees(catographic.latitude);
       const longitude = CesiumMath.toDegrees(catographic.longitude);
       const pretty = prettifyCoordinates(longitude, latitude);
-      this.locationUpdated(longitude, latitude);
+      // this.locationUpdated(longitude, latitude);
 
       const that = this;
       const pinClicked = function() {
         that.pinClicked(longitude, latitude);
       };
 
-      const locationButtonStyle = markerVisible(this.props.terria)
+      const locationButtonStyle = isMarkerVisible(this.props.terria)
         ? Styles.btnLocationSelected
         : Styles.btnLocation;
 

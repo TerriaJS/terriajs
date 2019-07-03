@@ -1,4 +1,4 @@
-import { computed, observable, runInAction, toJS, action } from "mobx";
+import { action, computed, observable, runInAction, toJS } from "mobx";
 import { createTransformer } from "mobx-utils";
 import Clock from "terriajs-cesium/Source/Core/Clock";
 import defined from "terriajs-cesium/Source/Core/defined";
@@ -16,15 +16,18 @@ import instanceOf from "../Core/instanceOf";
 import isDefined from "../Core/isDefined";
 import JsonValue, {
   isJsonObject,
-  JsonObject,
-  isJsonString
+  isJsonString,
+  JsonObject
 } from "../Core/Json";
 import loadJson5 from "../Core/loadJson5";
+import ServerConfig from "../Core/ServerConfig";
 import TerriaError from "../Core/TerriaError";
 import PickedFeatures from "../Map/PickedFeatures";
+import GroupMixin from "../ModelMixins/GroupMixin";
 import ReferenceMixin from "../ModelMixins/ReferenceMixin";
 import { BaseMapViewModel } from "../ViewModels/BaseMapViewModel";
 import TerriaViewer from "../ViewModels/TerriaViewer";
+import CameraView from "./CameraView";
 import CatalogMemberFactory from "./CatalogMemberFactory";
 import Catalog from "./CatalogNew";
 import Cesium from "./Cesium";
@@ -37,14 +40,12 @@ import magdaRecordToCatalogMemberDefinition from "./magdaRecordToCatalogMember";
 import Mappable from "./Mappable";
 import { BaseModel } from "./Model";
 import NoViewer from "./NoViewer";
+import ShareDataService from "./ShareDataService";
 import TimelineStack from "./TimelineStack";
 import updateModelFromJson from "./updateModelFromJson";
 import upsertModelFromJson from "./upsertModelFromJson";
 import Workbench from "./Workbench";
-import ShareDataService from "./ShareDataService";
-import ServerConfig from "../Core/ServerConfig";
-import GroupMixin from "../ModelMixins/GroupMixin";
-import CameraView from "./CameraView";
+import CorsProxy from "../Core/CorsProxy";
 
 require("regenerator-runtime/runtime");
 
@@ -66,6 +67,8 @@ interface ConfigParameters {
   cesiumIonAccessToken?: string;
   hideTerriaLogo?: boolean;
   useCesiumIonBingImagery: boolean;
+  bingMapsKey?: string;
+  brandBarElements?: string[];
 }
 
 interface StartOptions {
@@ -91,22 +94,33 @@ export default class Terria {
 
   readonly baseUrl: string = "build/TerriaJS/";
   readonly error = new CesiumEvent();
-  readonly beforeViewerChanged = new CesiumEvent();
-  readonly afterViewerChanged = new CesiumEvent();
   readonly workbench = new Workbench();
+  readonly overlays = new Workbench();
   readonly catalog = new Catalog(this);
   readonly timelineClock = new Clock({ shouldAnimate: false });
-  readonly mainViewer: TerriaViewer = new TerriaViewer(
+  readonly mainViewer = new TerriaViewer(
     this,
     computed(() =>
       filterOutUndefined(
-        this.workbench.items.map(item => (Mappable.is(item) ? item : undefined))
+        this.overlays.items
+          .map(item => (Mappable.is(item) ? item : undefined))
+          .concat(
+            this.workbench.items.map(item =>
+              Mappable.is(item) ? item : undefined
+            )
+          )
       )
     )
   );
 
   appName?: string;
   supportEmail?: string;
+
+  /**
+   * Gets or sets the {@link this.corsProxy} used to determine if a URL needs to be proxied and to proxy it if necessary.
+   * @type {CorsProxy}
+   */
+  corsProxy: CorsProxy = new CorsProxy();
 
   /**
    * Gets or sets the instance to which to report Google Analytics-style log events.
@@ -138,7 +152,9 @@ export default class Terria {
     useCesiumIonTerrain: true,
     cesiumIonAccessToken: undefined,
     hideTerriaLogo: false,
-    useCesiumIonBingImagery: true
+    useCesiumIonBingImagery: true,
+    bingMapsKey: undefined,
+    brandBarElements: undefined
   };
 
   @observable
@@ -248,6 +264,14 @@ export default class Terria {
 
     return loadJson5(options.configUrl)
       .then((config: any) => {
+        if (config.parameters) {
+          Object.keys(config.parameters).forEach(key => {
+            if (this.configParameters.hasOwnProperty(key)) {
+              (<any>this.configParameters)[key] = config.parameters[key];
+            }
+          });
+        }
+
         if (config.aspects) {
           return this.loadMagdaConfig(config);
         }
@@ -267,7 +291,11 @@ export default class Terria {
       })
       .then(() => {
         this.serverConfig = new ServerConfig();
-        return this.serverConfig.init(this.configParameters.serverConfigUrl);
+        return this.serverConfig
+          .init(this.configParameters.serverConfigUrl)
+          .then((serverConfig: any) =>
+            this.initCorsProxy(this.configParameters, serverConfig)
+          );
       })
       .then(serverConfig => {
         if (this.shareDataService && serverConfig) {
@@ -558,6 +586,35 @@ export default class Terria {
         members: members
       });
     }
+  }
+
+  initCorsProxy(config: any, serverConfig: any): Promise<void> {
+    // All the "proxyableDomains" bits here are due to a pre-serverConfig mechanism for whitelisting domains.
+    // We should deprecate it.s
+
+    // If a URL was specified in the config paramaters to get the proxyable domains from, get them from that
+    var pdu = this.configParameters.proxyableDomainsUrl;
+    const proxyableDomainsPromise: Promise<JsonValue | void> = pdu
+      ? loadJson5(pdu)
+      : Promise.resolve();
+    return proxyableDomainsPromise.then((proxyableDomains: any | void) => {
+      if (proxyableDomains) {
+        // format of proxyableDomains JSON file slightly differs from serverConfig format.
+        proxyableDomains.allowProxyFor =
+          proxyableDomains.allowProxyFor || proxyableDomains.proxyableDomains;
+      }
+
+      // If there isn't anything there, check the server config
+      if (typeof serverConfig === "object") {
+        serverConfig = serverConfig.config; // if server config is unavailable, this remains undefined.
+      }
+
+      this.corsProxy.init(
+        proxyableDomains || serverConfig,
+        this.configParameters.corsProxyBaseUrl,
+        config.proxyDomains // fall back to local config
+      );
+    });
   }
 
   getUserProperty(key: string) {
