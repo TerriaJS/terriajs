@@ -5,10 +5,6 @@ import CreateModel from "./CreateModel";
 import GtfsCatalogItemTraits from "../Traits/GtfsCatalogItemTraits";
 import Terria from "./Terria";
 import BillboardData from "./BillboardData";
-import {
-  createBillboardDataSource,
-  updateBillboardDataSource
-} from "./createBillboardDataSource";
 import loadArrayBuffer from "../Core/loadArrayBuffer";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import TerriaError from "../Core/TerriaError";
@@ -17,7 +13,6 @@ import {
   FeedMessageReader,
   FeedEntity
 } from "./GtfsRealtimeProtoBufReaders";
-import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
 
 import BillboardGraphics from "terriajs-cesium/Source/DataSources/BillboardGraphics";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
@@ -26,29 +21,33 @@ import DataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import NearFarScalar from "terriajs-cesium/Source/Core/NearFarScalar";
 import Color from "terriajs-cesium/Source/Core/Color";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
-import isEqual from "lodash-es/isEqual";
 
 import {
   computed,
   observable,
   reaction,
-  action,
   runInAction,
   IReactionDisposer,
   onBecomeObserved,
-  onBecomeUnobserved,
-  getObserverTree
+  onBecomeUnobserved
 } from "mobx";
 import { now } from "mobx-utils";
 
 import Pbf from "pbf";
 
+/**
+ * For displaying realtime transport data. See [here](https://developers.google.com/transit/gtfs-realtime/reference/)
+ * for the spec.
+ */
 export default class GtfsCatalogItem extends AsyncMappableMixin(
   UrlMixin(CatalogMemberMixin(CreateModel(GtfsCatalogItemTraits)))
 ) {
   disposer: IReactionDisposer | undefined;
 
-  private _dataSource: DataSource;
+  /**
+   * Always use the getter to read this. This is a cache for a computed property.
+   */
+  protected _dataSource: DataSource = new DataSource("billboard");
 
   static get type() {
     return "gtfs";
@@ -59,25 +58,17 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
   }
 
   @observable
-  private billboardDataList: BillboardData[] = [];
+  protected billboardDataList: BillboardData[] = [];
 
   @computed
-  private get _pollingTimer(): number | undefined {
+  protected get _pollingTimer(): number | undefined {
     if (this.refreshInterval !== null && this.refreshInterval !== undefined) {
       return now(this.refreshInterval * 1000);
     }
   }
 
-  needToUpdateBillboard(
-    entityBillboard: BillboardGraphics,
-    billboardGraphicsOptions: any
-  ) {
-    billboardGraphicsOptions.color.alpha = this.opacity;
-    return !entityBillboard.color.equals(billboardGraphicsOptions.color);
-  }
-
   @computed
-  private get dataSource(): DataSource {
+  protected get dataSource(): DataSource {
     this._dataSource.entities.suspendEvents();
 
     for (let data of this.billboardDataList) {
@@ -122,8 +113,13 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
 
   @computed
   get nextScheduledUpdateTime(): Date | undefined {
-    if (this._pollingTimer !== null && this._pollingTimer !== undefined) {
-      return new Date(this._pollingTimer);
+    if (
+      this._pollingTimer !== null &&
+      this._pollingTimer !== undefined &&
+      this.refreshInterval !== undefined &&
+      this.refreshInterval !== null
+    ) {
+      return new Date(this._pollingTimer + this.refreshInterval * 1000);
     } else {
       return undefined;
     }
@@ -141,9 +137,7 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
 
   constructor(id: string, terria: Terria) {
     super(id, terria);
-
-    this._dataSource = new DataSource("billboard");
-
+    // We should only poll when our map items have consumers
     onBecomeObserved(this, "mapItems", () => {
       this.disposer = reaction(
         () => this._pollingTimer,
@@ -165,7 +159,6 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
     return Promise.resolve();
   }
 
-  // returns a promise that resolves once map items have loaded
   protected get loadMapItemsPromise(): Promise<void> {
     const promise: Promise<void> = this.retrieveData()
       .then((data: FeedMessage) => {
@@ -198,7 +191,16 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
     return promise;
   }
 
-  retrieveData(): Promise<FeedMessage> {
+  // See this.dataSource
+  protected needToUpdateBillboard(
+    entityBillboard: BillboardGraphics,
+    billboardGraphicsOptions: any
+  ) {
+    billboardGraphicsOptions.color.alpha = this.opacity;
+    return !entityBillboard.color.equals(billboardGraphicsOptions.color);
+  }
+
+  protected retrieveData(): Promise<FeedMessage> {
     // These headers work for the Transport for NSW APIs. Presumably, other services will require different headers.
     const headers = {
       Authorization: `apikey ${this.apiKey}`,
@@ -218,7 +220,9 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
     }
   }
 
-  convertFeedEntityToBillboardData(entity: FeedEntity): BillboardData {
+  protected convertFeedEntityToBillboardData(
+    entity: FeedEntity
+  ): BillboardData {
     if (entity.id == undefined) {
       return {};
     }

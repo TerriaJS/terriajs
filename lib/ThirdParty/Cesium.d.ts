@@ -547,27 +547,28 @@ declare module "terriajs-cesium/Source/DataSources/BillboardGraphics" {
     translucencyByDistance: Property<NearFarScalar>;
     pixelOffsetScaleByDistance: Property<NearFarScalar>;
     heightReference: Property<HeightReference>;
-    constructor(options?: {
-      image?: string;
-      imageSubRegion?: BoundingRectangle;
-      scale?: number;
-      rotation?: number;
-      alignedAxis?: Cartesian3;
-      horizontalOrigin?: HorizontalOrigin;
-      verticalOrigin?: VerticalOrigin;
-      color?: Color;
-      eyeOffset?: Cartesian3;
-      pixelOffset?: Cartesian3;
-      show?: boolean;
-      width?: number;
-      height?: number;
-      scaleByDistance?: NearFarScalar;
-      translucencyByDistance?: NearFarScalar;
-      pixelOffsetScaleByDistance?: NearFarScalar;
-      heightReference?: HeightReference;
-    });
+    constructor(options?: BillboardGraphicsOptions);
     clone(result?: BillboardGraphics): BillboardGraphics;
     merge(source: BillboardGraphics): BillboardGraphics;
+  }
+  export interface BillboardGraphicsOptions {
+    image?: string;
+    imageSubRegion?: BoundingRectangle;
+    scale?: number;
+    rotation?: number;
+    alignedAxis?: Cartesian3;
+    horizontalOrigin?: HorizontalOrigin;
+    verticalOrigin?: VerticalOrigin;
+    color?: Color;
+    eyeOffset?: Cartesian3;
+    pixelOffset?: Cartesian3;
+    show?: boolean;
+    width?: number;
+    height?: number;
+    scaleByDistance?: NearFarScalar;
+    translucencyByDistance?: NearFarScalar;
+    pixelOffsetScaleByDistance?: NearFarScalar;
+    heightReference?: HeightReference;
   }
   export default BillboardGraphics;
 }
