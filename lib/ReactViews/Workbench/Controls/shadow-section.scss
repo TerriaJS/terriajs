@@ -1,0 +1,21 @@
+@import "~terriajs-variables";
+
+.shadow-selector {
+  font-size: 0.9rem;
+  margin-top: 10px;
+  label {
+    margin-right: $padding-small;
+  }
+}
+
+.title {
+  display: block;
+  margin-top: 10px;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.field {
+  composes: field from "../../../Sass/common/_form.scss";
+  color: black;
+}

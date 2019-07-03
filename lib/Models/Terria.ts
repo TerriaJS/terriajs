@@ -45,6 +45,7 @@ import TimelineStack from "./TimelineStack";
 import updateModelFromJson from "./updateModelFromJson";
 import upsertModelFromJson from "./upsertModelFromJson";
 import Workbench from "./Workbench";
+import CorsProxy from "../Core/CorsProxy";
 
 require("regenerator-runtime/runtime");
 
@@ -114,6 +115,12 @@ export default class Terria {
 
   appName?: string;
   supportEmail?: string;
+
+  /**
+   * Gets or sets the {@link this.corsProxy} used to determine if a URL needs to be proxied and to proxy it if necessary.
+   * @type {CorsProxy}
+   */
+  corsProxy: CorsProxy = new CorsProxy();
 
   /**
    * Gets or sets the instance to which to report Google Analytics-style log events.
@@ -284,7 +291,11 @@ export default class Terria {
       })
       .then(() => {
         this.serverConfig = new ServerConfig();
-        return this.serverConfig.init(this.configParameters.serverConfigUrl);
+        return this.serverConfig
+          .init(this.configParameters.serverConfigUrl)
+          .then((serverConfig: any) =>
+            this.initCorsProxy(this.configParameters, serverConfig)
+          );
       })
       .then(serverConfig => {
         if (this.shareDataService && serverConfig) {
@@ -575,6 +586,35 @@ export default class Terria {
         members: members
       });
     }
+  }
+
+  initCorsProxy(config: any, serverConfig: any): Promise<void> {
+    // All the "proxyableDomains" bits here are due to a pre-serverConfig mechanism for whitelisting domains.
+    // We should deprecate it.s
+
+    // If a URL was specified in the config paramaters to get the proxyable domains from, get them from that
+    var pdu = this.configParameters.proxyableDomainsUrl;
+    const proxyableDomainsPromise: Promise<JsonValue | void> = pdu
+      ? loadJson5(pdu)
+      : Promise.resolve();
+    return proxyableDomainsPromise.then((proxyableDomains: any | void) => {
+      if (proxyableDomains) {
+        // format of proxyableDomains JSON file slightly differs from serverConfig format.
+        proxyableDomains.allowProxyFor =
+          proxyableDomains.allowProxyFor || proxyableDomains.proxyableDomains;
+      }
+
+      // If there isn't anything there, check the server config
+      if (typeof serverConfig === "object") {
+        serverConfig = serverConfig.config; // if server config is unavailable, this remains undefined.
+      }
+
+      this.corsProxy.init(
+        proxyableDomains || serverConfig,
+        this.configParameters.corsProxyBaseUrl,
+        config.proxyDomains // fall back to local config
+      );
+    });
   }
 
   getUserProperty(key: string) {

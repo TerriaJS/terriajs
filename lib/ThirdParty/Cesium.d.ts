@@ -141,6 +141,7 @@ declare module "terriajs-cesium/Source/Core/FeatureDetection" {
   namespace Cesium.FeatureDetection {
     function isInternetExplorer(): boolean;
     function isEdge(): boolean;
+    function internetExplorerVersion(): any[];
   }
   export default Cesium.FeatureDetection;
 }
@@ -505,8 +506,70 @@ declare module "terriajs-cesium/Source/Core/sampleTerrain" {
 declare module "terriajs-cesium/Source/Core/subdivideArray" {
   export default Cesium.subdivideArray;
 }
+
+declare module "terriajs-cesium/Source/Core/Property" {
+  abstract class Property<T = any> {
+    readonly isConstant: boolean;
+    readonly definitionChanged: Cesium.Event;
+    getValue(time: Cesium.JulianDate, result?: T): T;
+    equals(other?: Property<T>): boolean;
+  }
+  export default Property;
+}
+
 declare module "terriajs-cesium/Source/DataSources/BillboardGraphics" {
-  export default Cesium.BillboardGraphics;
+  import Property from "terriajs-cesium/Source/Core/Property";
+  import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
+  import BoundingRectangle from "terriajs-cesium/Source/Core/BoundingRectangle";
+  import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
+  import HorizontalOrigin from "terriajs-cesium/Source/Scene/HorizontalOrigin";
+  import VerticalOrigin from "terriajs-cesium/Source/Scene/VerticalOrigin";
+  import Color from "terriajs-cesium/Source/Core/Color";
+  import Event from "terriajs-cesium/Source/Core/Event";
+  import NearFarScalar from "terriajs-cesium/Source/Core/NearFarScalar";
+
+  class BillboardGraphics {
+    definitionChanged: Event;
+    image: Property<string>;
+    imageSubRegion: Property<BoundingRectangle>;
+    scale: Property<number>;
+    rotation: Property<number>;
+    alignedAxis: Property<Cartesian3>;
+    horizontalOrigin: Property<HorizontalOrigin>;
+    verticalOrigin: Property<VerticalOrigin>;
+    color: Property<Color>;
+    eyeOffset: Property<Cartesian3>;
+    pixelOffset: Property<Cartesian3>;
+    show: Property<boolean>;
+    width: Property<number>;
+    height: Property<number>;
+    scaleByDistance: Property<NearFarScalar>;
+    translucencyByDistance: Property<NearFarScalar>;
+    pixelOffsetScaleByDistance: Property<NearFarScalar>;
+    heightReference: Property<HeightReference>;
+    constructor(options?: {
+      image?: string;
+      imageSubRegion?: BoundingRectangle;
+      scale?: number;
+      rotation?: number;
+      alignedAxis?: Cartesian3;
+      horizontalOrigin?: HorizontalOrigin;
+      verticalOrigin?: VerticalOrigin;
+      color?: Color;
+      eyeOffset?: Cartesian3;
+      pixelOffset?: Cartesian3;
+      show?: boolean;
+      width?: number;
+      height?: number;
+      scaleByDistance?: NearFarScalar;
+      translucencyByDistance?: NearFarScalar;
+      pixelOffsetScaleByDistance?: NearFarScalar;
+      heightReference?: HeightReference;
+    });
+    clone(result?: BillboardGraphics): BillboardGraphics;
+    merge(source: BillboardGraphics): BillboardGraphics;
+  }
+  export default BillboardGraphics;
 }
 declare module "terriajs-cesium/Source/DataSources/BillboardVisualizer" {
   export default Cesium.BillboardVisualizer;
@@ -1155,4 +1218,53 @@ declare module "terriajs-cesium/Source/Scene/IonWorldImageryStyle" {
     ROAD
   }
   export default IonWorldImageryStyle;
+}
+
+declare module "terriajs-cesium/Source/Core/IonResource" {
+  export default class IonResource {
+    url: string;
+    static fromAssetId(
+      assetId: number,
+      options: { accessToken?: string; server?: string }
+    ): Promise<IonResource>;
+  }
+}
+
+declare module "terriajs-cesium/Source/Scene/Cesium3DTileset" {
+  import IonResource from "terriajs-cesium/Source/Core/IonResource";
+  import Cesium3DTileStyle from "terriajs-cesium/Source/Scene/Cesium3DTileStyle";
+
+  export default class Cesium3DTileset {
+    url: string;
+    show: boolean;
+    maximumScreenSpaceError: number;
+    style?: Cesium3DTileStyle;
+    shadows?: Cesium.ShadowMode;
+
+    constructor(options: {
+      url: string | IonResource | Cesium.Resource;
+      show?: boolean;
+      shadows?: Cesium.ShadowMode;
+    });
+
+    destroy(): void;
+  }
+}
+
+declare module "terriajs-cesium/Source/Scene/Cesium3DTileStyle" {
+  export default class Cesium3DTileStyle {
+    constructor(style: {
+      show?: string | { conditions: string[] };
+      color?: string | { conditions: string[] };
+      meta?: { [key: string]: string };
+    });
+  }
+}
+
+declare module "terriajs-cesium/Source/Scene/Cesium3DTileFeature" {
+  export default class Cesium3DTileFeature {
+    color: Cesium.Color;
+    getPropertyNames(): string[];
+    getProperty(name: string): unknown;
+  }
 }

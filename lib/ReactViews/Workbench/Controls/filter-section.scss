@@ -1,0 +1,22 @@
+@import "~terriajs-variables";
+.filters {
+  composes: clearfix from "../../../Sass/common/_base.scss";
+  padding: $padding 0;
+  border-bottom: 1px solid $border-color;
+  font-size: $font-size-mini;
+  label {
+    margin-right: $padding-small;
+    float: left;
+    width: 80px;
+  }
+  input[type="range"] {
+    width: calc(100% - 85px);
+  }
+}
+
+.filter {
+  display: flex;
+  label {
+    flex-basis: 100px;
+  }
+}

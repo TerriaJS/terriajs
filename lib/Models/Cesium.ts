@@ -22,6 +22,8 @@ import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDire
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
 import PerspectiveFrustum from "terriajs-cesium/Source/Core/PerspectiveFrustum";
+import Primitive from "terriajs-cesium/Source/Scene/Primitive";
+import PrimitiveCollection from "terriajs-cesium/Source/Scene/PrimitiveCollection";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import sampleTerrain from "terriajs-cesium/Source/Core/sampleTerrain";
 import Transforms from "terriajs-cesium/Source/Core/Transforms";
@@ -44,7 +46,7 @@ import CesiumRenderLoopPauser from "../Map/CesiumRenderLoopPauser";
 import Feature from "./Feature";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import GlobeOrMap from "./GlobeOrMap";
-import Mappable, { ImageryParts } from "./Mappable";
+import Mappable, { ImageryParts, MapItem, isCesium3DTileset } from "./Mappable";
 import Terria from "./Terria";
 import PickedFeatures, { ProviderCoordsMap } from "../Map/PickedFeatures";
 import SplitterTraits from "../Traits/SplitterTraits";
@@ -316,7 +318,7 @@ export default class Cesium extends GlobeOrMap {
         this.terriaViewer.baseMap
       ];
       // Flatmap
-      const allMapItems = ([] as (DataSource | ImageryParts)[]).concat(
+      const allMapItems = ([] as MapItem[]).concat(
         ...catalogItems.filter(isDefined).map(item => item.mapItems)
       );
       // TODO: Look up the type in a map and call the associated function.
@@ -374,6 +376,27 @@ export default class Cesium extends GlobeOrMap {
           }
         }
       }
+
+      const allCesium3DTilesets = allMapItems.filter(isCesium3DTileset);
+
+      // Remove deleted tilesets
+      const primitives = this.scene.primitives;
+      for (let i = 0; i < this.scene.primitives.length; i++) {
+        const prim = primitives.get(i);
+        if (
+          isCesium3DTileset(prim) &&
+          allCesium3DTilesets.indexOf(prim) === -1
+        ) {
+          this.scene.primitives.remove(prim);
+        }
+      }
+
+      // Add new tilesets
+      allCesium3DTilesets.forEach(tileset => {
+        if (!primitives.contains(tileset)) {
+          primitives.add(tileset);
+        }
+      });
 
       this.notifyRepaintRequired();
     });
@@ -773,6 +796,7 @@ export default class Cesium extends GlobeOrMap {
       if (!defined(id) && defined(picked.primitive)) {
         id = picked.primitive.id;
       }
+
       if (id instanceof Entity && vectorFeatures.indexOf(id) === -1) {
         const feature = Feature.fromEntityCollectionOrEntity(id);
         if (picked.primitive) {
@@ -1075,6 +1099,6 @@ function zoomToBoundingSphere(
   });
 }
 
-function isDataSource(object: DataSource | ImageryParts): object is DataSource {
+function isDataSource(object: MapItem): object is DataSource {
   return "entities" in object;
 }
