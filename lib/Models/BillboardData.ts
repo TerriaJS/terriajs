@@ -8,4 +8,6 @@ export default interface BillboardData {
   position?: Cartesian3;
 
   billboardGraphicsOptions?: any;
+
+  sourceId?: string;
 }

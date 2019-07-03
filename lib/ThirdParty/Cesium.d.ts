@@ -622,7 +622,11 @@ declare module "terriajs-cesium/Source/DataSources/CorridorGraphics" {
   export default Cesium.CorridorGraphics;
 }
 declare module "terriajs-cesium/Source/DataSources/CustomDataSource" {
-  export default Cesium.CustomDataSource;
+  import EntityCollection from "terriajs-cesium/Source/DataSources/EntityCollection";
+  class CustomDataSource extends Cesium.CustomDataSource {
+    entities: EntityCollection;
+  }
+  export default CustomDataSource;
 }
 declare module "terriajs-cesium/Source/DataSources/CylinderGeometryUpdater" {
   export default Cesium.CylinderGeometryUpdater;
@@ -631,16 +635,33 @@ declare module "terriajs-cesium/Source/DataSources/CylinderGraphics" {
   export default Cesium.CylinderGraphics;
 }
 declare module "terriajs-cesium/Source/DataSources/CzmlDataSource" {
-  export default Cesium.CzmlDataSource;
+  import EntityCollection from "terriajs-cesium/Source/DataSources/EntityCollection";
+  import Resource from "terriajs-cesium/Source/Core/Resource";
+  class CzmlDataSource extends Cesium.CzmlDataSource {
+    entities: EntityCollection;
+    static load(
+      czml: Resource | string | object,
+      options?: { sourceUri?: string }
+    ): Promise<CzmlDataSource>;
+  }
+  export default CzmlDataSource;
 }
 declare module "terriajs-cesium/Source/DataSources/DataSource" {
-  export default Cesium.DataSource;
+  import EntityCollection from "terriajs-cesium/Source/DataSources/EntityCollection";
+  class DataSource extends Cesium.DataSource {
+    entities: EntityCollection;
+  }
+  export default DataSource;
 }
 declare module "terriajs-cesium/Source/DataSources/DataSourceClock" {
   export default Cesium.DataSourceClock;
 }
 declare module "terriajs-cesium/Source/DataSources/DataSourceCollection" {
-  export default Cesium.DataSourceCollection;
+  import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
+  class DataSourceCollection extends Cesium.DataSourceCollection {
+    get(index: number): DataSource;
+  }
+  export default DataSourceCollection;
 }
 declare module "terriajs-cesium/Source/DataSources/DataSourceDisplay" {
   export default Cesium.DataSourceDisplay;
@@ -661,19 +682,33 @@ declare module "terriajs-cesium/Source/DataSources/EllipsoidGraphics" {
   export default Cesium.EllipsoidGraphics;
 }
 declare module "terriajs-cesium/Source/DataSources/Entity" {
-  export default Cesium.Entity;
+  import BillboardGraphics from "terriajs-cesium/Source/DataSources/BillboardGraphics";
+  class Entity extends Cesium.Entity {
+    billboard: BillboardGraphics;
+  }
+  export default Entity;
 }
 declare module "terriajs-cesium/Source/DataSources/EntityCluster" {
   export default Cesium.EntityCluster;
 }
 declare module "terriajs-cesium/Source/DataSources/EntityCollection" {
-  export default Cesium.EntityCollection;
+  import Entity from "terriajs-cesium/Source/DataSources/Entity";
+  class EntityCollection extends Cesium.EntityCollection {
+    values: Entity[];
+    getById(id: string): Entity;
+    getOrCreateEntity(id: string): Entity;
+  }
+  export default EntityCollection;
 }
 declare module "terriajs-cesium/Source/DataSources/EntityView" {
   export default Cesium.EntityView;
 }
 declare module "terriajs-cesium/Source/DataSources/GeoJsonDataSource" {
-  export default Cesium.GeoJsonDataSource;
+  import EntityCollection from "terriajs-cesium/Source/DataSources/EntityCollection";
+  class GeoJsonDataSource extends Cesium.GeoJsonDataSource {
+    entities: EntityCollection;
+  }
+  export default GeoJsonDataSource;
 }
 declare module "terriajs-cesium/Source/DataSources/GeometryUpdater" {
   export default Cesium.GeometryUpdater;

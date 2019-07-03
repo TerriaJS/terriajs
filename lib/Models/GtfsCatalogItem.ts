@@ -25,6 +25,8 @@ import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
 import DataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import NearFarScalar from "terriajs-cesium/Source/Core/NearFarScalar";
 import Color from "terriajs-cesium/Source/Core/Color";
+import Entity from "terriajs-cesium/Source/DataSources/Entity";
+import isEqual from "lodash-es/isEqual";
 
 import {
   computed,
@@ -46,6 +48,16 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
 ) {
   disposer: IReactionDisposer | undefined;
 
+  private _dataSource: DataSource;
+
+  static get type() {
+    return "gtfs";
+  }
+
+  get type() {
+    return GtfsCatalogItem.type;
+  }
+
   @observable
   private billboardDataList: BillboardData[] = [];
 
@@ -56,39 +68,56 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
     }
   }
 
+  needToUpdateBillboard(
+    entityBillboard: BillboardGraphics,
+    billboardGraphicsOptions: any
+  ) {
+    billboardGraphicsOptions.color.alpha = this.opacity;
+    return !entityBillboard.color.equals(billboardGraphicsOptions.color);
+  }
+
   @computed
   private get dataSource(): DataSource {
-    const result = createBillboardDataSource(
-      "gtfs_billboards",
-      this.billboardDataList
-    );
-    // this.doPolling(result);
-    return result;
-  }
+    this._dataSource.entities.suspendEvents();
 
-  // private cleanup(reactionDisposer: IReactionDisposer | undefined) {
-  //   if (reactionDisposer) {
-  //     reactionDisposer();
-  //   }
-  // }
+    for (let data of this.billboardDataList) {
+      if (data.sourceId === undefined) {
+        continue;
+      }
+      const entity: Entity = this._dataSource.entities.getOrCreateEntity(
+        data.sourceId
+      );
 
-  // what if we put the dispose on the datasource's destructor instead?
-  // private readonly doPolling = createTransformer((dataSource: DataSource) => {
-  //   return reaction(
-  //     () => this._pollingTimer,
-  //     () => {
-  //       console.log("ping");
-  //       this.loadMapItemsPromise;
-  //     }
-  //   );
-  // }, this.cleanup.bind(this))
+      if (data.position !== undefined && entity.position !== data.position) {
+        entity.position = data.position;
+      }
 
-  static get type() {
-    return "gtfs";
-  }
+      if (
+        entity.billboard == undefined ||
+        this.needToUpdateBillboard(
+          entity.billboard,
+          data.billboardGraphicsOptions
+        )
+      ) {
+        entity.billboard = new BillboardGraphics(data.billboardGraphicsOptions);
+      }
+    }
 
-  get type() {
-    return GtfsCatalogItem.type;
+    // remove entities that no longer exist
+    if (
+      this._dataSource.entities.values.length > this.billboardDataList.length
+    ) {
+      const idSet = new Set(this.billboardDataList.map(val => val.sourceId));
+
+      this._dataSource.entities.values
+        .filter(entity => !idSet.has(entity.id))
+        .forEach(entity => this._dataSource.entities.remove(entity));
+    }
+
+    this._dataSource.entities.resumeEvents();
+    this.terria.currentViewer.notifyRepaintRequired();
+
+    return this._dataSource;
   }
 
   @computed
@@ -107,16 +136,13 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
 
   @computed
   get mapItems(): DataSource[] {
-    updateBillboardDataSource(this.dataSource, entity => {
-      entity.billboard.color = new ConstantProperty(
-        new Color(1.0, 1.0, 1.0, this.opacity)
-      );
-    });
     return [this.dataSource];
   }
 
   constructor(id: string, terria: Terria) {
     super(id, terria);
+
+    this._dataSource = new DataSource("billboard");
 
     onBecomeObserved(this, "mapItems", () => {
       this.disposer = reaction(
@@ -169,16 +195,6 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
         });
       });
 
-    // if (
-    //   this.refreshInterval !== null &&
-    //   this.refreshInterval !== undefined &&
-    //   this.refreshInterval > 0
-    // ) {
-    //   setTimeout(() => {
-    //     this.loadMapItemsPromise;
-    //   }, this.refreshInterval * 1000);
-    // }
-
     return promise;
   }
 
@@ -203,7 +219,8 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
   }
 
   convertFeedEntityToBillboardData(entity: FeedEntity): BillboardData {
-    if (this.terria.mainViewer.viewerMode === "cesium") {
+    if (entity.id == undefined) {
+      return {};
     }
 
     let position = undefined;
@@ -224,6 +241,7 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
     }
 
     return {
+      sourceId: entity.id,
       position: position,
       billboardGraphicsOptions: {
         image: this.terria.baseUrl + this.image,

@@ -1,6 +1,5 @@
 import BillboardData from "./BillboardData";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
-import DataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import BillboardGraphics from "terriajs-cesium/Source/DataSources/BillboardGraphics";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
@@ -13,7 +12,7 @@ import { func } from "prop-types";
 export function createBillboardDataSource(
   name: string,
   billboardDataList: BillboardData[]
-): DataSource {
+): CustomDataSource {
   const dataSource = new CustomDataSource(name || "Billboards");
   dataSource.entities.suspendEvents();
 
@@ -34,7 +33,7 @@ export function createBillboardDataSource(
 }
 
 export function updateBillboardDataSource(
-  dataSource: DataSource,
+  dataSource: CustomDataSource,
   updater: (entity: Entity) => void
 ) {
   dataSource.entities.suspendEvents();
