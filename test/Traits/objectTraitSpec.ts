@@ -124,10 +124,28 @@ describe("objectTrait", function() {
     const terria = new Terria();
     const model = new TestModel("test", terria);
 
-    model.inner.setTrait("user", "bar", 1);
-    expect(model.inner.bar).toBe(1);
+    const inner = model.inner;
+    inner.setTrait("user", "bar", 1);
+    expect(inner.bar).toBe(1);
+    expect(inner.baz).toBeUndefined();
 
     model.setTrait("user", "other", "test");
+    expect(inner.bar).toBe(1);
+    expect(inner.baz).toBeUndefined();
+
+    model.setTrait(
+      "definition",
+      "inner",
+      createStratumInstance(InnerTraits, {
+        bar: 2,
+        baz: true
+      })
+    );
+
+    expect(inner.bar).toBe(1);
+    expect(inner.baz).toBe(true);
+
     expect(model.inner.bar).toBe(1);
+    expect(model.inner.baz).toBe(true);
   });
 });

@@ -33,6 +33,14 @@ export abstract class BaseModel {
   abstract getTrait(stratumId: string, trait: unknown): unknown;
 }
 
+export type ArrayElementTypes<T extends ModelTraits> = {
+  [P in keyof T]-?: NonNullable<T[P]> extends ArrayLike<infer E>
+    ? E extends ModelTraits
+      ? E
+      : never
+    : never
+};
+
 export interface ModelInterface<T extends ModelTraits> {
   readonly type: string;
   readonly traits: {
@@ -57,6 +65,20 @@ export interface ModelInterface<T extends ModelTraits> {
     stratumId: string,
     trait: Key
   ): StratumFromTraits<T>[Key];
+
+  /**
+   * Adds a new object to an {@link objectArrayTrait}.
+   * @param stratumId The ID of the stratum in which to add the object.
+   * @param trait The name of the {@link objectArrayTrait} property.
+   * @param objectId The ID of the new object.
+   * @returns The new object, or undefined if the object still does not exist
+   *          because a stratum above the specified one has removed it.
+   */
+  addObject<Key extends keyof ArrayElementTypes<T>>(
+    stratumId: string,
+    trait: Key,
+    objectId: string
+  ): Model<ArrayElementTypes<T>[Key]> | undefined;
 }
 
 type Model<T extends ModelTraits> = ModelInterface<T> &
