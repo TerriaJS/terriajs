@@ -1,4 +1,5 @@
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
+import Quaternion from "terriajs-cesium/Source/Core/Quaternion";
 import { BillboardGraphicsOptions } from "terriajs-cesium/Source/DataSources/BillboardGraphics";
 
 export default interface BillboardData {
@@ -16,4 +17,6 @@ export default interface BillboardData {
    * Unique identifier of this data in its source system.
    */
   sourceId?: string;
+
+  orientation?: Quaternion;
 }

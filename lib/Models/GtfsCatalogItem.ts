@@ -21,6 +21,12 @@ import DataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import NearFarScalar from "terriajs-cesium/Source/Core/NearFarScalar";
 import Color from "terriajs-cesium/Source/Core/Color";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
+import Axis from "terriajs-cesium/Source/Scene/Axis";
+import ShadowMode from "terriajs-cesium/Source/Scene/ShadowMode";
+import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
+import ModelGraphics from "terriajs-cesium/Source/DataSources/ModelGraphics";
+import Transforms from "terriajs-cesium/Source/Core/Transforms";
+import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
 
 import {
   computed,
@@ -79,6 +85,13 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
         data.sourceId
       );
 
+      if (!entity.model && this._model) {
+        entity.model = this._model;
+        if (data.orientation) {
+          entity.orientation = new ConstantProperty(data.orientation);
+        }
+      }
+
       if (data.position !== undefined && entity.position !== data.position) {
         entity.position = data.position;
       }
@@ -133,6 +146,43 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
   @computed
   get mapItems(): DataSource[] {
     return [this.dataSource];
+  }
+
+  @computed
+  private get _cesiumUpAxis() {
+    if (this.model.upAxis === undefined) {
+      return Axis.Z;
+    }
+    return Axis.fromName(this.model.upAxis);
+  }
+
+  @computed
+  private get _cesiumForwardAxis() {
+    if (this.model.forwardAxis === undefined) {
+      return Axis.X;
+    }
+    return Axis.fromName(this.model.forwardAxis);
+  }
+
+  @computed
+  private get _model() {
+    if (this.model.url === undefined) {
+      return undefined;
+    }
+
+    const options = {
+      uri: this.model.url,
+      upAxis: this._cesiumUpAxis,
+      forwardAxis: this._cesiumForwardAxis,
+      scale: this.model.scale !== undefined ? this.model.scale : 1,
+      heightReference: new ConstantProperty(HeightReference.RELATIVE_TO_GROUND),
+      distanceDisplayCondition: new ConstantProperty({
+        near: 0.0,
+        far: this.model.maximumDistance
+      })
+    };
+
+    return new ModelGraphics(options);
   }
 
   constructor(id: string, terria: Terria) {
@@ -228,6 +278,7 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
     }
 
     let position = undefined;
+    let orientation = undefined;
     if (
       entity.vehicle !== null &&
       entity.vehicle !== undefined &&
@@ -236,17 +287,28 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
       entity.vehicle.position.latitude !== null &&
       entity.vehicle.position.latitude !== undefined &&
       entity.vehicle.position.longitude !== null &&
-      entity.vehicle.position.longitude !== undefined
+      entity.vehicle.position.longitude !== undefined &&
+      entity.vehicle.position.bearing !== null &&
+      entity.vehicle.position.bearing !== undefined
     ) {
       position = Cartesian3.fromDegrees(
         entity.vehicle.position.longitude,
         entity.vehicle.position.latitude
+      );
+      orientation = Transforms.headingPitchRollQuaternion(
+        position,
+        HeadingPitchRoll.fromDegrees(
+          entity.vehicle.position.bearing - 90.0,
+          0.0,
+          0.0
+        )
       );
     }
 
     return {
       sourceId: entity.id,
       position: position,
+      orientation: orientation,
       billboardGraphicsOptions: {
         image: this.terria.baseUrl + this.image,
         heightReference: HeightReference.RELATIVE_TO_GROUND,
