@@ -1220,6 +1220,23 @@ declare module "terriajs-cesium/Source/Scene/IonWorldImageryStyle" {
   export default IonWorldImageryStyle;
 }
 
+declare module "terriajs-cesium/Source/Scene/Axis" {
+  enum Axis {
+    X,
+    Y,
+    Z
+  }
+  namespace Axis {
+    function fromName(name: string): Axis;
+    const Y_UP_TO_Z_UP: Cesium.Matrix4;
+    const X_UP_TO_Z_UP: Cesium.Matrix4;
+    const Z_UP_TO_X_UP: Cesium.Matrix4;
+    const Z_UP_TO_Y_UP: Cesium.Matrix4;
+    const X_UP_TO_Y_UP: Cesium.Matrix4;
+  }
+  export default Axis;
+}
+
 declare module "terriajs-cesium/Source/Core/IonResource" {
   export default class IonResource {
     url: string;
