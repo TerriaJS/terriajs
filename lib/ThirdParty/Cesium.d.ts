@@ -1255,3 +1255,69 @@ declare module "terriajs-cesium/Source/Scene/IonWorldImageryStyle" {
   }
   export default IonWorldImageryStyle;
 }
+
+declare module "terriajs-cesium/Source/Scene/Axis" {
+  enum Axis {
+    X,
+    Y,
+    Z
+  }
+  namespace Axis {
+    function fromName(name: string): Axis;
+    const Y_UP_TO_Z_UP: Cesium.Matrix4;
+    const X_UP_TO_Z_UP: Cesium.Matrix4;
+    const Z_UP_TO_X_UP: Cesium.Matrix4;
+    const Z_UP_TO_Y_UP: Cesium.Matrix4;
+    const X_UP_TO_Y_UP: Cesium.Matrix4;
+  }
+  export default Axis;
+}
+
+declare module "terriajs-cesium/Source/Core/IonResource" {
+  export default class IonResource {
+    url: string;
+    static fromAssetId(
+      assetId: number,
+      options: { accessToken?: string; server?: string }
+    ): Promise<IonResource>;
+  }
+}
+
+declare module "terriajs-cesium/Source/Scene/Cesium3DTileset" {
+  import IonResource from "terriajs-cesium/Source/Core/IonResource";
+  import Cesium3DTileStyle from "terriajs-cesium/Source/Scene/Cesium3DTileStyle";
+
+  export default class Cesium3DTileset {
+    url: string;
+    show: boolean;
+    maximumScreenSpaceError: number;
+    style?: Cesium3DTileStyle;
+    shadows?: Cesium.ShadowMode;
+
+    constructor(options: {
+      url: string | IonResource | Cesium.Resource;
+      show?: boolean;
+      shadows?: Cesium.ShadowMode;
+    });
+
+    destroy(): void;
+  }
+}
+
+declare module "terriajs-cesium/Source/Scene/Cesium3DTileStyle" {
+  export default class Cesium3DTileStyle {
+    constructor(style: {
+      show?: string | { conditions: string[] };
+      color?: string | { conditions: string[] };
+      meta?: { [key: string]: string };
+    });
+  }
+}
+
+declare module "terriajs-cesium/Source/Scene/Cesium3DTileFeature" {
+  export default class Cesium3DTileFeature {
+    color: Cesium.Color;
+    getPropertyNames(): string[];
+    getProperty(name: string): unknown;
+  }
+}

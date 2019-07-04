@@ -63,8 +63,6 @@ export default class TraitsForTesting extends ModelTraits {
   })
   nestedWithoutDefault?: NestedTraits;
 
-  nestedNullable?: NestedTraits | null;
-
   @objectArrayTrait({
     name: "NestedArrayWithDefault",
     description: "Description",

@@ -1,17 +1,24 @@
 import { computed, observable, runInAction, trace } from "mobx";
+import { getObjectId } from "../Traits/ArrayNestedStrataMap";
 import { ModelId } from "../Traits/ModelReference";
 import ModelTraits from "../Traits/ModelTraits";
+import { ObjectArrayTrait } from "../Traits/objectArrayTrait";
 import TraitsConstructor from "../Traits/TraitsConstructor";
 import addModelStrataView from "./addModelStrataView";
 import createStratumInstance from "./createStratumInstance";
-import Model, { BaseModel, ModelConstructor, ModelInterface } from "./Model";
+import ModelType, {
+  ArrayElementTypes,
+  BaseModel,
+  ModelConstructor,
+  ModelInterface
+} from "./Model";
 import StratumFromTraits from "./StratumFromTraits";
 import StratumOrder from "./StratumOrder";
 import Terria from "./Terria";
 
 export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
   Traits: T
-): ModelConstructor<Model<InstanceType<T>>> {
+): ModelConstructor<ModelType<InstanceType<T>>> {
   type Traits = InstanceType<T>;
   type StratumTraits = StratumFromTraits<Traits>;
 
@@ -19,7 +26,8 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
     abstract get type(): string;
     static readonly traits = Traits.traits;
     readonly traits = Traits.traits;
-    readonly strata = observable.map<string, StratumTraits>();
+    readonly TraitsClass: TraitsConstructor<InstanceType<T>> = <any>Traits;
+    readonly strata: Map<string, StratumTraits>;
 
     /**
      * Gets the uniqueIds of models that are known to contain this one.
@@ -30,8 +38,13 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
      */
     readonly knownContainerUniqueIds: string[] = [];
 
-    constructor(id: string | undefined, terria: Terria) {
+    constructor(
+      id: string | undefined,
+      terria: Terria,
+      strata?: Map<string, StratumTraits>
+    ) {
       super(id, terria);
+      this.strata = strata || observable.map<string, StratumTraits>();
     }
 
     private getOrCreateStratum(id: string): StratumTraits {
@@ -84,6 +97,35 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
       trait: Key
     ): StratumTraits[Key] {
       return this.getOrCreateStratum(stratumId)[trait];
+    }
+
+    addObject<Key extends keyof ArrayElementTypes<Traits>>(
+      stratumId: string,
+      traitId: Key,
+      objectId: string
+    ): ModelType<ArrayElementTypes<Traits>[Key]> | undefined {
+      const trait = this.traits[traitId as string] as ObjectArrayTrait<
+        ArrayElementTypes<Traits>[Key]
+      >;
+      const nestedTraitsClass = trait.type;
+      const newStratum = createStratumInstance(nestedTraitsClass);
+      (<any>newStratum)[trait.idProperty] = objectId;
+
+      const stratum: any = this.getOrCreateStratum(stratumId);
+      let array = stratum[traitId];
+      if (array === undefined) {
+        stratum[traitId] = [];
+        array = stratum[traitId];
+      }
+
+      array.push(newStratum);
+
+      const models: readonly ModelType<ArrayElementTypes<Traits>[Key]>[] = (<
+        any
+      >this)[traitId];
+      return models.find(
+        (o: any, i: number) => getObjectId(trait.idProperty, o, i) === objectId
+      );
     }
   }
 

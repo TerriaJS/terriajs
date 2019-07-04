@@ -1,9 +1,7 @@
 import { computed, observable, runInAction } from "mobx";
-import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import Constructor from "../Core/Constructor";
-import Mappable, { ImageryParts } from "../Models/Mappable";
+import Mappable, { MapItem } from "../Models/Mappable";
 import Model from "../Models/Model";
-import Terria from "../Models/Terria";
 import MappableTraits from "../Traits/MappableTraits";
 
 export default function AsyncMappableMixin<
@@ -24,7 +22,7 @@ export default function AsyncMappableMixin<
 
     private _mapItemsPromise: Promise<void> | undefined = undefined;
 
-    abstract get mapItems(): (DataSource | ImageryParts)[];
+    abstract get mapItems(): MapItem[];
 
     /**
      * Gets a promise for loaded map items. This method does _not_ need to consider

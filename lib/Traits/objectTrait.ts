@@ -1,5 +1,6 @@
 import { computed } from "mobx";
 import TerriaError from "../Core/TerriaError";
+import createStratumInstance from "../Models/createStratumInstance";
 import Model, { BaseModel, ModelConstructor } from "../Models/Model";
 import saveStratumToJson from "../Models/saveStratumToJson";
 import StratumFromTraits from "../Models/StratumFromTraits";
@@ -7,6 +8,7 @@ import ModelTraits from "./ModelTraits";
 import Trait, { TraitOptions } from "./Trait";
 import traitsClassToModelClass from "./traitsClassToModelClass";
 import TraitsConstructor from "./TraitsConstructor";
+import NestedStrataMap from "./NestedStrataMap";
 
 export interface ObjectTraitOptions<T extends ModelTraits>
   extends TraitOptions {
@@ -40,15 +42,12 @@ export class ObjectTrait<T extends ModelTraits> extends Trait {
     this.modelClass = options.modelClass || traitsClassToModelClass(this.type);
   }
 
-  getValue(model: BaseModel): Model<T> | undefined {
-    const result = new this.modelClass(model.uniqueId, model.terria);
-    model.strata.forEach((parentStratum: any, stratumId) => {
-      if (!parentStratum) return;
-      const childStratum = parentStratum[this.id];
-      if (!childStratum) return;
-      result.strata.set(stratumId, childStratum);
-    });
-    return result;
+  getValue(model: BaseModel): Model<T> {
+    return new this.modelClass(
+      undefined,
+      model.terria,
+      new NestedStrataMap<T>(model.TraitsClass, model.strata, this.id)
+    );
   }
 
   fromJson(

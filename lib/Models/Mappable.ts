@@ -1,7 +1,10 @@
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
+import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
 import "terriajs-cesium/Source/Scene/ImageryProvider";
-import Model, { BaseModel } from "./Model";
 import MappableTraits from "../Traits/MappableTraits";
+import Model, { BaseModel } from "./Model";
+
+export type MapItem = ImageryParts | DataSource | Cesium3DTileset;
 
 // Shouldn't this be a class?
 export interface ImageryParts {
@@ -15,15 +18,13 @@ export interface ImageryParts {
 
 // This discriminator only discriminates between ImageryParts and DataSource
 export namespace ImageryParts {
-  export function is(
-    object: ImageryParts | DataSource
-  ): object is ImageryParts {
+  export function is(object: MapItem): object is ImageryParts {
     return "imageryProvider" in object;
   }
 }
 
 interface Mappable extends Model<MappableTraits> {
-  readonly mapItems: ReadonlyArray<DataSource | ImageryParts>;
+  readonly mapItems: ReadonlyArray<MapItem>;
   loadMapItems(): Promise<void>;
 }
 
@@ -31,6 +32,12 @@ namespace Mappable {
   export function is(model: BaseModel | Mappable): model is Mappable {
     return "mapItems" in model;
   }
+}
+
+export function isCesium3DTileset(
+  mapItem: MapItem
+): mapItem is Cesium3DTileset {
+  return "allTilesLoaded" in mapItem;
 }
 
 export default Mappable;
