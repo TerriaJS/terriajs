@@ -8,6 +8,10 @@ import LayerOrderingTraits from "./LayerOrderingTraits";
 import MappableTraits from "./MappableTraits";
 import primitiveTrait from "./primitiveTrait";
 import AutoRefreshingTraits from "./AutoRefreshingTraits";
+import GltfTraits from "./GltfTraits";
+import objectTrait from "./objectTrait";
+import GltfCatalogItemTraits from "./GltfCatalogItemTraits";
+import GtfsModelTraits from "./GtfsModelTraits";
 
 export default class GtfsCatalogItemTraits extends mixTraits(
   UrlTraits,
@@ -32,4 +36,11 @@ export default class GtfsCatalogItemTraits extends mixTraits(
     type: "string"
   })
   image?: string;
+
+  @objectTrait({
+    name: "Model",
+    description: "3D model to use to represent a vehicle.",
+    type: GtfsModelTraits
+  })
+  model?: GtfsModelTraits;
 }
