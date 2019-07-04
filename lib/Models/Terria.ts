@@ -47,8 +47,6 @@ import upsertModelFromJson from "./upsertModelFromJson";
 import Workbench from "./Workbench";
 import CorsProxy from "../Core/CorsProxy";
 
-require("regenerator-runtime/runtime");
-
 interface ConfigParameters {
   defaultMaximumShownFeatureInfos?: number;
   regionMappingDefinitionsUrl: string;
