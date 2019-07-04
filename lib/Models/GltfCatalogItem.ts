@@ -83,7 +83,7 @@ export class GltfCatalogItemTraits extends mixTraits(
     description:
       'Indicates whether this tileset casts and receives shadows. Valid values are "NONE", "BOTH", "CAST", and "RECEIVE".'
   })
-  shadows?: string;
+  shadows: string = "NONE";
 }
 
 export default class GltfCatalogItem

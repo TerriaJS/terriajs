@@ -120,7 +120,8 @@ export default class Cesium extends GlobeOrMap {
       clock: this.terria.timelineClock,
       terrainProvider: this._terrainProvider,
       imageryProvider: new SingleTileImageryProvider({ url: img }),
-      scene3DOnly: true
+      scene3DOnly: true,
+      shadows: true
     };
 
     // Workaround for Firefox bug with WebGL and printing:
