@@ -4,7 +4,7 @@ import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import CreateModel from "./CreateModel";
 import GtfsCatalogItemTraits from "../Traits/GtfsCatalogItemTraits";
 import Terria from "./Terria";
-import BillboardData from "./BillboardData";
+import VehicleData from "./VehicleData";
 import loadArrayBuffer from "../Core/loadArrayBuffer";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import TerriaError from "../Core/TerriaError";
@@ -22,11 +22,11 @@ import NearFarScalar from "terriajs-cesium/Source/Core/NearFarScalar";
 import Color from "terriajs-cesium/Source/Core/Color";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import Axis from "terriajs-cesium/Source/Scene/Axis";
-import ShadowMode from "terriajs-cesium/Source/Scene/ShadowMode";
 import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
 import ModelGraphics from "terriajs-cesium/Source/DataSources/ModelGraphics";
 import Transforms from "terriajs-cesium/Source/Core/Transforms";
 import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
+import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 
 import {
   computed,
@@ -64,7 +64,7 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
   }
 
   @observable
-  protected billboardDataList: BillboardData[] = [];
+  protected vehicleData: VehicleData[] = [];
 
   @computed
   protected get _pollingTimer(): number | undefined {
@@ -77,7 +77,7 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
   protected get dataSource(): DataSource {
     this._dataSource.entities.suspendEvents();
 
-    for (let data of this.billboardDataList) {
+    for (let data of this.vehicleData) {
       if (data.sourceId === undefined) {
         continue;
       }
@@ -87,9 +87,15 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
 
       if (!entity.model && this._model) {
         entity.model = this._model;
-        if (data.orientation) {
-          entity.orientation = new ConstantProperty(data.orientation);
-        }
+      }
+
+      if (
+        this.model !== undefined &&
+        this.model !== null &&
+        data.orientation !== undefined &&
+        data.orientation !== null
+      ) {
+        entity.orientation = new ConstantProperty(data.orientation);
       }
 
       if (data.position !== undefined && entity.position !== data.position) {
@@ -97,21 +103,25 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
       }
 
       if (
-        entity.billboard == undefined ||
-        this.needToUpdateBillboard(
-          entity.billboard,
-          data.billboardGraphicsOptions
-        )
+        data.billboardGraphics !== null &&
+        data.billboardGraphics !== undefined
       ) {
-        entity.billboard = new BillboardGraphics(data.billboardGraphicsOptions);
+        if (entity.billboard === null || entity.billboard === undefined) {
+          entity.billboard = data.billboardGraphics;
+        }
+
+        data.billboardGraphics.color.getValue(
+          new JulianDate()
+        ).alpha = this.opacity;
+        if (!entity.billboard.color.equals(data.billboardGraphics.color)) {
+          entity.billboard.color = data.billboardGraphics.color;
+        }
       }
     }
 
     // remove entities that no longer exist
-    if (
-      this._dataSource.entities.values.length > this.billboardDataList.length
-    ) {
-      const idSet = new Set(this.billboardDataList.map(val => val.sourceId));
+    if (this._dataSource.entities.values.length > this.vehicleData.length) {
+      const idSet = new Set(this.vehicleData.map(val => val.sourceId));
 
       this._dataSource.entities.values
         .filter(entity => !idSet.has(entity.id))
@@ -221,12 +231,12 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
             this.convertFeedEntityToBillboardData(entity)
           )
           .filter(
-            (item: BillboardData) =>
+            (item: VehicleData) =>
               item.position !== null && item.position !== undefined
           );
       })
       .then(data => {
-        runInAction(() => (this.billboardDataList = data));
+        runInAction(() => (this.vehicleData = data));
       })
       .catch((e: Error) => {
         throw new TerriaError({
@@ -239,15 +249,6 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
       });
 
     return promise;
-  }
-
-  // See this.dataSource
-  protected needToUpdateBillboard(
-    entityBillboard: BillboardGraphics,
-    billboardGraphicsOptions: any
-  ) {
-    billboardGraphicsOptions.color.alpha = this.opacity;
-    return !entityBillboard.color.equals(billboardGraphicsOptions.color);
   }
 
   protected retrieveData(): Promise<FeedMessage> {
@@ -270,9 +271,7 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
     }
   }
 
-  protected convertFeedEntityToBillboardData(
-    entity: FeedEntity
-  ): BillboardData {
+  protected convertFeedEntityToBillboardData(entity: FeedEntity): VehicleData {
     if (entity.id == undefined) {
       return {};
     }
@@ -309,13 +308,13 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
       sourceId: entity.id,
       position: position,
       orientation: orientation,
-      billboardGraphicsOptions: {
+      billboardGraphics: new BillboardGraphics({
         image: this.terria.baseUrl + this.image,
         heightReference: HeightReference.RELATIVE_TO_GROUND,
         // near and far distances are arbitrary, these ones look nice
         scaleByDistance: new NearFarScalar(0.1, 1.0, 100000, 0.1),
         color: new Color(1.0, 1.0, 1.0, this.opacity)
-      }
+      })
     };
   }
 }
