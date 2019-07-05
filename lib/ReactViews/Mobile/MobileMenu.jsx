@@ -51,15 +51,17 @@ const MobileMenu = createReactClass({
   hideMenu() {
     this.props.viewState.mobileMenuVisible = false;
   },
-  
-  runStories(){
+
+  runStories() {
     this.props.viewState.storyBuilderShown = false;
     this.props.viewState.storyShown = true;
     this.props.viewState.mobileMenuVisible = false;
   },
 
   render() {
-    const hasStories =  this.props.terria.configParameters.storyEnabled && defined(this.props.terria.stories) &&
+    const hasStories =
+      this.props.terria.configParameters.storyEnabled &&
+      defined(this.props.terria.stories) &&
       this.props.terria.stories.length > 0;
     // return this.props.viewState.mobileMenuVisible ? (
     return (
