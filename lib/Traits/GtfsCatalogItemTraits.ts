@@ -12,6 +12,7 @@ import GltfTraits from "./GltfTraits";
 import objectTrait from "./objectTrait";
 import GltfCatalogItemTraits from "./GltfCatalogItemTraits";
 import GtfsModelTraits from "./GtfsModelTraits";
+import FeatureInfoTraits from "./FeatureInfoTraits";
 
 export default class GtfsCatalogItemTraits extends mixTraits(
   UrlTraits,
@@ -19,7 +20,8 @@ export default class GtfsCatalogItemTraits extends mixTraits(
   MappableTraits,
   RasterLayerTraits,
   LayerOrderingTraits,
-  AutoRefreshingTraits
+  AutoRefreshingTraits,
+  FeatureInfoTraits
 ) {
   @primitiveTrait({
     name: "GTFS API key",

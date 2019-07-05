@@ -16,4 +16,6 @@ export default interface VehicleData {
   sourceId?: string;
 
   orientation?: Quaternion;
+
+  featureInfo?: Map<string, any>;
 }

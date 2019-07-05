@@ -27,6 +27,7 @@ import ModelGraphics from "terriajs-cesium/Source/DataSources/ModelGraphics";
 import Transforms from "terriajs-cesium/Source/Core/Transforms";
 import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import PropertyBag from "terriajs-cesium/Source/DataSources/PropertyBag";
 
 import {
   computed,
@@ -40,6 +41,7 @@ import {
 import { now } from "mobx-utils";
 
 import Pbf from "pbf";
+import prettyPrintGtfsEntityField from "./prettyPrintGtfsEntityField";
 
 /**
  * For displaying realtime transport data. See [here](https://developers.google.com/transit/gtfs-realtime/reference/)
@@ -115,6 +117,14 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
         ).alpha = this.opacity;
         if (!entity.billboard.color.equals(data.billboardGraphics.color)) {
           entity.billboard.color = data.billboardGraphics.color;
+        }
+      }
+
+      if (data.featureInfo !== undefined && data.featureInfo !== null) {
+        entity.properties = new PropertyBag();
+
+        for (let key of data.featureInfo.keys()) {
+          entity.properties.addProperty(key, data.featureInfo.get(key));
         }
       }
     }
@@ -278,6 +288,7 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
 
     let position = undefined;
     let orientation = undefined;
+    let featureInfo: Map<string, any> = new Map();
     if (
       entity.vehicle !== null &&
       entity.vehicle !== undefined &&
@@ -302,12 +313,34 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
           0.0
         )
       );
+      // featureInfo.set("speed", entity.vehicle.position.speed);
     }
+
+    // if (entity.vehicle !== null && entity.vehicle !== undefined) {
+    //   if (entity.vehicle.trip !== undefined && entity.vehicle.trip !== null) {
+    //     featureInfo.set("route", entity.vehicle.trip.route_id);
+    //     featureInfo.set("direction", entity.vehicle.trip.direction_id);
+    //   }
+
+    //   featureInfo.set("occupancy", entity.vehicle.occupancy_status);
+    // }
+
+    featureInfo.set(
+      "route_short_name",
+      prettyPrintGtfsEntityField("route_short_name", entity)
+    );
+    featureInfo.set(
+      "occupancy_status_str",
+      prettyPrintGtfsEntityField("occupancy_status_str", entity)
+    );
+    featureInfo.set("speed_km", prettyPrintGtfsEntityField("speed_km", entity));
+    featureInfo.set("bearing", prettyPrintGtfsEntityField("bearing", entity));
 
     return {
       sourceId: entity.id,
       position: position,
       orientation: orientation,
+      featureInfo: featureInfo,
       billboardGraphics: new BillboardGraphics({
         image: this.terria.baseUrl + this.image,
         heightReference: HeightReference.RELATIVE_TO_GROUND,

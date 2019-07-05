@@ -1321,3 +1321,21 @@ declare module "terriajs-cesium/Source/Scene/Cesium3DTileFeature" {
     getProperty(name: string): unknown;
   }
 }
+
+declare module "terriajs-cesium/Source/DataSources/PropertyBag" {
+  import Property from "terriajs-cesium/Source/Core/Property";
+  import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+
+  export default class PropertyBag {
+    constructor(value?: string, createPropertyCallback?: () => any);
+    addProperty<T = any>(
+      propertyName: string,
+      value?: T,
+      createPropertyCallback?: () => any
+    ): void;
+    equals(other: Property): boolean;
+    getValue<T = any>(time: JulianDate, result?: T): T;
+    hasProperty(propertyName: string): boolean;
+    removeProperty(propertyName: string): void;
+  }
+}

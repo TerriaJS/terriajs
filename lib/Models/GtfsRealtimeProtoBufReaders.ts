@@ -327,13 +327,13 @@ export class VehiclePositionReader extends ProtobufMessageReader<
   }
 }
 
-enum VehicleStopStatus {
+export enum VehicleStopStatus {
   INCOMING_AT,
   STOPPED_AT,
   IN_TRANSIT_TO
 }
 
-enum CongestionLevel {
+export enum CongestionLevel {
   UNKNOWN_CONGESTION_LEVEL,
   RUNNING_SMOOTHLY,
   STOP_AND_GO,
@@ -341,7 +341,7 @@ enum CongestionLevel {
   SEVERE_CONGESTION
 }
 
-enum OccupancyStatus {
+export enum OccupancyStatus {
   EMPTY,
   MANY_SEATS_AVAILABLE,
   FEW_SEATS_AVAILABLE,
