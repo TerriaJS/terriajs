@@ -2,7 +2,10 @@ Change Log
 ==========
 
 ### Next Release
-* Fixed inability to share SOS items
+
+* Fixed inability to share SOS items.
+* Added an option to the mobile menu to allow a story to be resumed after it is closed.
+
 
 ### v7.6.4
 
