@@ -99,7 +99,10 @@ const MobileMenu = createReactClass({
             />
           </If>
           <If condition={hasStories}>
-            <MobileMenuItem onClick={this.runStories} caption="View stories" />
+            <MobileMenuItem
+              onClick={this.runStories}
+              caption={`View Stories (${this.props.terria.stories.length})`}
+            />
           </If>
         </div>
       </div>
