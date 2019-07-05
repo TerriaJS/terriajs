@@ -1,5 +1,5 @@
 import React from "react";
-
+import defined from "terriajs-cesium/Source/Core/defined";
 import createReactClass from "create-react-class";
 
 import PropTypes from "prop-types";
@@ -51,8 +51,15 @@ const MobileMenu = createReactClass({
   hideMenu() {
     this.props.viewState.mobileMenuVisible = false;
   },
+  
+  runStories(){
+    this.props.viewState.storyBuilderShown = false;
+    this.props.viewState.storyShown = true;
+  },
 
   render() {
+    const hasStories =  this.props.terria.configParameters.storyEnabled && defined(this.props.terria.stories) &&
+      this.props.terria.stories.length > 0;
     // return this.props.viewState.mobileMenuVisible ? (
     return (
       <div>
@@ -87,6 +94,9 @@ const MobileMenu = createReactClass({
               onClick={this.onFeedbackFormClick}
               caption="Give Feedback"
             />
+          </If>
+          <If condition={hasStories}>
+            <MobileMenuItem onClick={this.runStories} caption="View stories" />
           </If>
         </div>
       </div>
