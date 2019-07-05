@@ -539,6 +539,9 @@ class WebMapServiceCatalogItem
       if (this.isLoadingMetadata) {
         return undefined;
       }
+      if (this.url === undefined) {
+        return undefined;
+      }
 
       console.log(`Creating new ImageryProvider for time ${time}`);
 
@@ -553,7 +556,7 @@ class WebMapServiceCatalogItem
       const maximumLevel = scaleDenominatorToLevel(this.minScaleDenominator);
 
       const imageryOptions = {
-        url: this.url || "",
+        url: proxyCatalogItemUrl(this, this.url),
         layers: this.layers || "",
         parameters: parameters,
         tilingScheme: /*defined(this.tilingScheme) ? this.tilingScheme :*/ new WebMercatorTilingScheme(),
