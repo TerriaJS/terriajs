@@ -55,6 +55,7 @@ const MobileMenu = createReactClass({
   runStories(){
     this.props.viewState.storyBuilderShown = false;
     this.props.viewState.storyShown = true;
+    this.props.viewState.mobileMenuVisible = false;
   },
 
   render() {
