@@ -1,7 +1,5 @@
 'use strict';
 
-const polyfillUrl = require("../lib/Core/polyfill").url;
-
 module.exports = function(config) {
     return {
         browserDisconnectTimeout: 10000, // default 2000
@@ -19,7 +17,6 @@ module.exports = function(config) {
 
         // list of files / patterns to load in the browser
         files: [
-            polyfillUrl,
             'build/TerriaJS-specs.js',
             {
                 pattern: '**/*',

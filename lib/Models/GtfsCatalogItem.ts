@@ -4,11 +4,7 @@ import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import CreateModel from "./CreateModel";
 import GtfsCatalogItemTraits from "../Traits/GtfsCatalogItemTraits";
 import Terria from "./Terria";
-import BillboardData from "./BillboardData";
-import {
-  createBillboardDataSource,
-  updateBillboardDataSource
-} from "./createBillboardDataSource";
+import VehicleData from "./VehicleData";
 import loadArrayBuffer from "../Core/loadArrayBuffer";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import TerriaError from "../Core/TerriaError";
@@ -17,7 +13,6 @@ import {
   FeedMessageReader,
   FeedEntity
 } from "./GtfsRealtimeProtoBufReaders";
-import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
 
 import BillboardGraphics from "terriajs-cesium/Source/DataSources/BillboardGraphics";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
@@ -25,63 +20,50 @@ import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
 import DataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import NearFarScalar from "terriajs-cesium/Source/Core/NearFarScalar";
 import Color from "terriajs-cesium/Source/Core/Color";
+import Entity from "terriajs-cesium/Source/DataSources/Entity";
+import Axis from "terriajs-cesium/Source/Scene/Axis";
+import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
+import ModelGraphics from "terriajs-cesium/Source/DataSources/ModelGraphics";
+import Transforms from "terriajs-cesium/Source/Core/Transforms";
+import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
+import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import PropertyBag from "terriajs-cesium/Source/DataSources/PropertyBag";
 
 import {
   computed,
   observable,
   reaction,
-  action,
   runInAction,
   IReactionDisposer,
   onBecomeObserved,
-  onBecomeUnobserved,
-  getObserverTree
+  onBecomeUnobserved
 } from "mobx";
 import { now } from "mobx-utils";
 
 import Pbf from "pbf";
+import prettyPrintGtfsEntityField from "./prettyPrintGtfsEntityField";
 
+/**
+ * For displaying realtime transport data. See [here](https://developers.google.com/transit/gtfs-realtime/reference/)
+ * for the spec.
+ */
 export default class GtfsCatalogItem extends AsyncMappableMixin(
   UrlMixin(CatalogMemberMixin(CreateModel(GtfsCatalogItemTraits)))
 ) {
   disposer: IReactionDisposer | undefined;
 
-  @observable
-  private billboardDataList: BillboardData[] = [];
+  /**
+   * Always use the getter to read this. This is a cache for a computed property.
+   */
+  protected _dataSource: DataSource = new DataSource("billboard");
 
-  @computed
-  private get _pollingTimer(): number | undefined {
-    if (this.refreshInterval !== null && this.refreshInterval !== undefined) {
-      return now(this.refreshInterval * 1000);
-    }
-  }
-
-  @computed
-  private get dataSource(): DataSource {
-    const result = createBillboardDataSource(
-      "gtfs_billboards",
-      this.billboardDataList
-    );
-    // this.doPolling(result);
-    return result;
-  }
-
-  // private cleanup(reactionDisposer: IReactionDisposer | undefined) {
-  //   if (reactionDisposer) {
-  //     reactionDisposer();
-  //   }
-  // }
-
-  // what if we put the dispose on the datasource's destructor instead?
-  // private readonly doPolling = createTransformer((dataSource: DataSource) => {
-  //   return reaction(
-  //     () => this._pollingTimer,
-  //     () => {
-  //       console.log("ping");
-  //       this.loadMapItemsPromise;
-  //     }
-  //   );
-  // }, this.cleanup.bind(this))
+  protected static readonly FEATURE_INFO_TEMPLATE_FIELDS: string[] = [
+    "route_short_name",
+    "occupancy_status#str",
+    "speed#km",
+    "speed",
+    "bearing"
+  ];
 
   static get type() {
     return "gtfs";
@@ -91,10 +73,94 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
     return GtfsCatalogItem.type;
   }
 
+  @observable
+  protected vehicleData: VehicleData[] = [];
+
+  @computed
+  protected get _pollingTimer(): number | undefined {
+    if (this.refreshInterval !== null && this.refreshInterval !== undefined) {
+      return now(this.refreshInterval * 1000);
+    }
+  }
+
+  @computed
+  protected get dataSource(): DataSource {
+    this._dataSource.entities.suspendEvents();
+
+    for (let data of this.vehicleData) {
+      if (data.sourceId === undefined) {
+        continue;
+      }
+      const entity: Entity = this._dataSource.entities.getOrCreateEntity(
+        data.sourceId
+      );
+
+      if (!entity.model && this._model) {
+        entity.model = this._model;
+      }
+
+      if (
+        this.model !== undefined &&
+        this.model !== null &&
+        data.orientation !== undefined &&
+        data.orientation !== null
+      ) {
+        entity.orientation = new ConstantProperty(data.orientation);
+      }
+
+      if (data.position !== undefined && entity.position !== data.position) {
+        entity.position = data.position;
+      }
+
+      if (
+        data.billboardGraphics !== null &&
+        data.billboardGraphics !== undefined
+      ) {
+        if (entity.billboard === null || entity.billboard === undefined) {
+          entity.billboard = data.billboardGraphics;
+        }
+
+        data.billboardGraphics.color.getValue(
+          new JulianDate()
+        ).alpha = this.opacity;
+        if (!entity.billboard.color.equals(data.billboardGraphics.color)) {
+          entity.billboard.color = data.billboardGraphics.color;
+        }
+      }
+
+      if (data.featureInfo !== undefined && data.featureInfo !== null) {
+        entity.properties = new PropertyBag();
+
+        for (let key of data.featureInfo.keys()) {
+          entity.properties.addProperty(key, data.featureInfo.get(key));
+        }
+      }
+    }
+
+    // remove entities that no longer exist
+    if (this._dataSource.entities.values.length > this.vehicleData.length) {
+      const idSet = new Set(this.vehicleData.map(val => val.sourceId));
+
+      this._dataSource.entities.values
+        .filter(entity => !idSet.has(entity.id))
+        .forEach(entity => this._dataSource.entities.remove(entity));
+    }
+
+    this._dataSource.entities.resumeEvents();
+    this.terria.currentViewer.notifyRepaintRequired();
+
+    return this._dataSource;
+  }
+
   @computed
   get nextScheduledUpdateTime(): Date | undefined {
-    if (this._pollingTimer !== null && this._pollingTimer !== undefined) {
-      return new Date(this._pollingTimer);
+    if (
+      this._pollingTimer !== null &&
+      this._pollingTimer !== undefined &&
+      this.refreshInterval !== undefined &&
+      this.refreshInterval !== null
+    ) {
+      return new Date(this._pollingTimer + this.refreshInterval * 1000);
     } else {
       return undefined;
     }
@@ -107,17 +173,49 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
 
   @computed
   get mapItems(): DataSource[] {
-    updateBillboardDataSource(this.dataSource, entity => {
-      entity.billboard.color = new ConstantProperty(
-        new Color(1.0, 1.0, 1.0, this.opacity)
-      );
-    });
     return [this.dataSource];
+  }
+
+  @computed
+  private get _cesiumUpAxis() {
+    if (this.model.upAxis === undefined) {
+      return Axis.Z;
+    }
+    return Axis.fromName(this.model.upAxis);
+  }
+
+  @computed
+  private get _cesiumForwardAxis() {
+    if (this.model.forwardAxis === undefined) {
+      return Axis.X;
+    }
+    return Axis.fromName(this.model.forwardAxis);
+  }
+
+  @computed
+  private get _model() {
+    if (this.model.url === undefined) {
+      return undefined;
+    }
+
+    const options = {
+      uri: this.model.url,
+      upAxis: this._cesiumUpAxis,
+      forwardAxis: this._cesiumForwardAxis,
+      scale: this.model.scale !== undefined ? this.model.scale : 1,
+      heightReference: new ConstantProperty(HeightReference.RELATIVE_TO_GROUND),
+      distanceDisplayCondition: new ConstantProperty({
+        near: 0.0,
+        far: this.model.maximumDistance
+      })
+    };
+
+    return new ModelGraphics(options);
   }
 
   constructor(id: string, terria: Terria) {
     super(id, terria);
-
+    // We should only poll when our map items have consumers
     onBecomeObserved(this, "mapItems", () => {
       this.disposer = reaction(
         () => this._pollingTimer,
@@ -139,7 +237,6 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
     return Promise.resolve();
   }
 
-  // returns a promise that resolves once map items have loaded
   protected get loadMapItemsPromise(): Promise<void> {
     const promise: Promise<void> = this.retrieveData()
       .then((data: FeedMessage) => {
@@ -152,12 +249,12 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
             this.convertFeedEntityToBillboardData(entity)
           )
           .filter(
-            (item: BillboardData) =>
+            (item: VehicleData) =>
               item.position !== null && item.position !== undefined
           );
       })
       .then(data => {
-        runInAction(() => (this.billboardDataList = data));
+        runInAction(() => (this.vehicleData = data));
       })
       .catch((e: Error) => {
         throw new TerriaError({
@@ -169,20 +266,10 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
         });
       });
 
-    // if (
-    //   this.refreshInterval !== null &&
-    //   this.refreshInterval !== undefined &&
-    //   this.refreshInterval > 0
-    // ) {
-    //   setTimeout(() => {
-    //     this.loadMapItemsPromise;
-    //   }, this.refreshInterval * 1000);
-    // }
-
     return promise;
   }
 
-  retrieveData(): Promise<FeedMessage> {
+  protected retrieveData(): Promise<FeedMessage> {
     // These headers work for the Transport for NSW APIs. Presumably, other services will require different headers.
     const headers = {
       Authorization: `apikey ${this.apiKey}`,
@@ -202,11 +289,14 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
     }
   }
 
-  convertFeedEntityToBillboardData(entity: FeedEntity): BillboardData {
-    if (this.terria.mainViewer.viewerMode === "cesium") {
+  protected convertFeedEntityToBillboardData(entity: FeedEntity): VehicleData {
+    if (entity.id == undefined) {
+      return {};
     }
 
     let position = undefined;
+    let orientation = undefined;
+    let featureInfo: Map<string, any> = new Map();
     if (
       entity.vehicle !== null &&
       entity.vehicle !== undefined &&
@@ -215,23 +305,41 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
       entity.vehicle.position.latitude !== null &&
       entity.vehicle.position.latitude !== undefined &&
       entity.vehicle.position.longitude !== null &&
-      entity.vehicle.position.longitude !== undefined
+      entity.vehicle.position.longitude !== undefined &&
+      entity.vehicle.position.bearing !== null &&
+      entity.vehicle.position.bearing !== undefined
     ) {
       position = Cartesian3.fromDegrees(
         entity.vehicle.position.longitude,
         entity.vehicle.position.latitude
       );
+      orientation = Transforms.headingPitchRollQuaternion(
+        position,
+        HeadingPitchRoll.fromDegrees(
+          entity.vehicle.position.bearing - 90.0,
+          0.0,
+          0.0
+        )
+      );
+    }
+
+    // Add the values that the feature info template gets populated with
+    for (let field of GtfsCatalogItem.FEATURE_INFO_TEMPLATE_FIELDS) {
+      featureInfo.set(field, prettyPrintGtfsEntityField(field, entity));
     }
 
     return {
+      sourceId: entity.id,
       position: position,
-      billboardGraphicsOptions: {
+      orientation: orientation,
+      featureInfo: featureInfo,
+      billboardGraphics: new BillboardGraphics({
         image: this.terria.baseUrl + this.image,
         heightReference: HeightReference.RELATIVE_TO_GROUND,
         // near and far distances are arbitrary, these ones look nice
         scaleByDistance: new NearFarScalar(0.1, 1.0, 100000, 0.1),
         color: new Color(1.0, 1.0, 1.0, this.opacity)
-      }
+      })
     };
   }
 }

@@ -565,27 +565,28 @@ declare module "terriajs-cesium/Source/DataSources/BillboardGraphics" {
     translucencyByDistance: Property<NearFarScalar>;
     pixelOffsetScaleByDistance: Property<NearFarScalar>;
     heightReference: Property<HeightReference>;
-    constructor(options?: {
-      image?: string;
-      imageSubRegion?: BoundingRectangle;
-      scale?: number;
-      rotation?: number;
-      alignedAxis?: Cartesian3;
-      horizontalOrigin?: HorizontalOrigin;
-      verticalOrigin?: VerticalOrigin;
-      color?: Color;
-      eyeOffset?: Cartesian3;
-      pixelOffset?: Cartesian3;
-      show?: boolean;
-      width?: number;
-      height?: number;
-      scaleByDistance?: NearFarScalar;
-      translucencyByDistance?: NearFarScalar;
-      pixelOffsetScaleByDistance?: NearFarScalar;
-      heightReference?: HeightReference;
-    });
+    constructor(options?: BillboardGraphicsOptions);
     clone(result?: BillboardGraphics): BillboardGraphics;
     merge(source: BillboardGraphics): BillboardGraphics;
+  }
+  export interface BillboardGraphicsOptions {
+    image?: string;
+    imageSubRegion?: BoundingRectangle;
+    scale?: number;
+    rotation?: number;
+    alignedAxis?: Cartesian3;
+    horizontalOrigin?: HorizontalOrigin;
+    verticalOrigin?: VerticalOrigin;
+    color?: Color;
+    eyeOffset?: Cartesian3;
+    pixelOffset?: Cartesian3;
+    show?: boolean;
+    width?: number;
+    height?: number;
+    scaleByDistance?: NearFarScalar;
+    translucencyByDistance?: NearFarScalar;
+    pixelOffsetScaleByDistance?: NearFarScalar;
+    heightReference?: HeightReference;
   }
   export default BillboardGraphics;
 }
@@ -640,7 +641,11 @@ declare module "terriajs-cesium/Source/DataSources/CorridorGraphics" {
   export default Cesium.CorridorGraphics;
 }
 declare module "terriajs-cesium/Source/DataSources/CustomDataSource" {
-  export default Cesium.CustomDataSource;
+  import EntityCollection from "terriajs-cesium/Source/DataSources/EntityCollection";
+  class CustomDataSource extends Cesium.CustomDataSource {
+    entities: EntityCollection;
+  }
+  export default CustomDataSource;
 }
 declare module "terriajs-cesium/Source/DataSources/CylinderGeometryUpdater" {
   export default Cesium.CylinderGeometryUpdater;
@@ -649,16 +654,33 @@ declare module "terriajs-cesium/Source/DataSources/CylinderGraphics" {
   export default Cesium.CylinderGraphics;
 }
 declare module "terriajs-cesium/Source/DataSources/CzmlDataSource" {
-  export default Cesium.CzmlDataSource;
+  import EntityCollection from "terriajs-cesium/Source/DataSources/EntityCollection";
+  import Resource from "terriajs-cesium/Source/Core/Resource";
+  class CzmlDataSource extends Cesium.CzmlDataSource {
+    entities: EntityCollection;
+    static load(
+      czml: Resource | string | object,
+      options?: { sourceUri?: string }
+    ): Promise<CzmlDataSource>;
+  }
+  export default CzmlDataSource;
 }
 declare module "terriajs-cesium/Source/DataSources/DataSource" {
-  export default Cesium.DataSource;
+  import EntityCollection from "terriajs-cesium/Source/DataSources/EntityCollection";
+  class DataSource extends Cesium.DataSource {
+    entities: EntityCollection;
+  }
+  export default DataSource;
 }
 declare module "terriajs-cesium/Source/DataSources/DataSourceClock" {
   export default Cesium.DataSourceClock;
 }
 declare module "terriajs-cesium/Source/DataSources/DataSourceCollection" {
-  export default Cesium.DataSourceCollection;
+  import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
+  class DataSourceCollection extends Cesium.DataSourceCollection {
+    get(index: number): DataSource;
+  }
+  export default DataSourceCollection;
 }
 declare module "terriajs-cesium/Source/DataSources/DataSourceDisplay" {
   export default Cesium.DataSourceDisplay;
@@ -679,19 +701,33 @@ declare module "terriajs-cesium/Source/DataSources/EllipsoidGraphics" {
   export default Cesium.EllipsoidGraphics;
 }
 declare module "terriajs-cesium/Source/DataSources/Entity" {
-  export default Cesium.Entity;
+  import BillboardGraphics from "terriajs-cesium/Source/DataSources/BillboardGraphics";
+  class Entity extends Cesium.Entity {
+    billboard: BillboardGraphics;
+  }
+  export default Entity;
 }
 declare module "terriajs-cesium/Source/DataSources/EntityCluster" {
   export default Cesium.EntityCluster;
 }
 declare module "terriajs-cesium/Source/DataSources/EntityCollection" {
-  export default Cesium.EntityCollection;
+  import Entity from "terriajs-cesium/Source/DataSources/Entity";
+  class EntityCollection extends Cesium.EntityCollection {
+    values: Entity[];
+    getById(id: string): Entity;
+    getOrCreateEntity(id: string): Entity;
+  }
+  export default EntityCollection;
 }
 declare module "terriajs-cesium/Source/DataSources/EntityView" {
   export default Cesium.EntityView;
 }
 declare module "terriajs-cesium/Source/DataSources/GeoJsonDataSource" {
-  export default Cesium.GeoJsonDataSource;
+  import EntityCollection from "terriajs-cesium/Source/DataSources/EntityCollection";
+  class GeoJsonDataSource extends Cesium.GeoJsonDataSource {
+    entities: EntityCollection;
+  }
+  export default GeoJsonDataSource;
 }
 declare module "terriajs-cesium/Source/DataSources/GeometryUpdater" {
   export default Cesium.GeometryUpdater;
@@ -1301,5 +1337,23 @@ declare module "terriajs-cesium/Source/Scene/Cesium3DTileFeature" {
     color: Cesium.Color;
     getPropertyNames(): string[];
     getProperty(name: string): unknown;
+  }
+}
+
+declare module "terriajs-cesium/Source/DataSources/PropertyBag" {
+  import Property from "terriajs-cesium/Source/Core/Property";
+  import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+
+  export default class PropertyBag {
+    constructor(value?: string, createPropertyCallback?: () => any);
+    addProperty<T = any>(
+      propertyName: string,
+      value?: T,
+      createPropertyCallback?: () => any
+    ): void;
+    equals(other: Property): boolean;
+    getValue<T = any>(time: JulianDate, result?: T): T;
+    hasProperty(propertyName: string): boolean;
+    removeProperty(propertyName: string): void;
   }
 }
