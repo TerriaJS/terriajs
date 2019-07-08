@@ -46,7 +46,12 @@ import CesiumRenderLoopPauser from "../Map/CesiumRenderLoopPauser";
 import Feature from "./Feature";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import GlobeOrMap from "./GlobeOrMap";
-import Mappable, { ImageryParts, MapItem, isCesium3DTileset } from "./Mappable";
+import Mappable, {
+  ImageryParts,
+  MapItem,
+  isCesium3DTileset,
+  isTerrainProvider
+} from "./Mappable";
 import Terria from "./Terria";
 import PickedFeatures, { ProviderCoordsMap } from "../Map/PickedFeatures";
 import SplitterTraits from "../Traits/SplitterTraits";
@@ -312,20 +317,23 @@ export default class Cesium extends GlobeOrMap {
     destroyObject(this);
   }
 
+  @computed
+  private get _allMapItems() {
+    const catalogItems = [
+      ...this.terriaViewer.items.get(),
+      this.terriaViewer.baseMap
+    ];
+    // Flatmap
+    return ([] as MapItem[]).concat(
+      ...catalogItems.filter(isDefined).map(item => item.mapItems)
+    );
+  }
+
   private observeModelLayer() {
     return autorun(() => {
-      const catalogItems = [
-        ...this.terriaViewer.items.get(),
-        this.terriaViewer.baseMap
-      ];
-      // Flatmap
-      const allMapItems = ([] as MapItem[]).concat(
-        ...catalogItems.filter(isDefined).map(item => item.mapItems)
-      );
       // TODO: Look up the type in a map and call the associated function.
       //       That way the supported types of map items is extensible.
-
-      const allDataSources = allMapItems.filter(isDataSource);
+      const allDataSources = this._allMapItems.filter(isDataSource);
 
       // Remove deleted data sources
       let dataSources = this.dataSources;
@@ -343,7 +351,7 @@ export default class Cesium extends GlobeOrMap {
         }
       });
 
-      const allImageryParts = allMapItems
+      const allImageryParts = this._allMapItems
         .filter(ImageryParts.is)
         .map(this._makeImageryLayerFromParts.bind(this));
 
@@ -378,7 +386,7 @@ export default class Cesium extends GlobeOrMap {
         }
       }
 
-      const allCesium3DTilesets = allMapItems.filter(isCesium3DTileset);
+      const allCesium3DTilesets = this._allMapItems.filter(isCesium3DTileset);
 
       // Remove deleted tilesets
       const primitives = this.scene.primitives;
@@ -691,10 +699,14 @@ export default class Cesium extends GlobeOrMap {
     terrain: Cesium.TerrainProvider;
     credit?: Cesium.Credit;
   } {
-    if (
-      this.terriaViewer.viewerOptions.useTerrain &&
-      this.terria.configParameters.useCesiumIonTerrain
-    ) {
+    if (!this.terriaViewer.viewerOptions.useTerrain) {
+      return { terrain: new EllipsoidTerrainProvider() };
+    }
+    // Check if there's a TerrainProvider in map items and use that if there is
+    const firstTerrianProvider = this._allMapItems.find(isTerrainProvider);
+    if (firstTerrianProvider) {
+      return { terrain: firstTerrianProvider };
+    } else if (this.terria.configParameters.useCesiumIonTerrain) {
       const logo = require("terriajs-cesium/Source/Assets/Images/ion-credit.png");
       const ionCredit = new Credit(
         '<a href="https://cesium.com/" target="_blank" rel="noopener noreferrer"><img src="' +

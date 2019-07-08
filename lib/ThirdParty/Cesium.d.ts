@@ -42,6 +42,24 @@ declare module "terriajs-cesium/Source/Core/CatmullRomSpline" {
   export default Cesium.CatmullRomSpline;
 }
 declare module "terriajs-cesium/Source/Core/CesiumTerrainProvider" {
+  import Credit from "terriajs-cesium/Source/Core/Credit";
+  import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
+  import IonResource from "terriajs-cesium/Source/Core/IonResource";
+  import TerrainProvider from "terriajs-cesium/Source/Core/TerrainProvider";
+  namespace Cesium {
+    class CesiumTerrainProvider extends TerrainProvider {
+      requestVertexNormals: boolean;
+      requestWaterMask: boolean;
+      constructor(options: {
+        url: string | Promise<IonResource>;
+        proxy?: any; // Should be Proxy
+        requestVertexNormals?: boolean;
+        requestWaterMask?: boolean;
+        ellipsoid?: Ellipsoid;
+        credit?: Credit | string;
+      });
+    }
+  }
   export default Cesium.CesiumTerrainProvider;
 }
 declare module "terriajs-cesium/Source/Core/CircleGeometry" {
