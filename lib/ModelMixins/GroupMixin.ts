@@ -94,6 +94,23 @@ function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
     }
 
     @action
+    moveMemberToIndex(stratumId: string, member: BaseModel, newIndex: number) {
+      if (member.uniqueId === undefined) {
+        return;
+      }
+      const members = this.getTrait(stratumId, "members");
+
+      if (isDefined(members)) {
+        const moveFrom = members.indexOf(member.uniqueId);
+        if (moveFrom === -1) {
+          return;
+        }
+        // shift a current member to the new index
+        members.splice(newIndex, 0, members.splice(moveFrom, 1)[0]);
+      }
+    }
+
+    @action
     remove(stratumId: string, member: BaseModel) {
       if (member.uniqueId === undefined) {
         return;
