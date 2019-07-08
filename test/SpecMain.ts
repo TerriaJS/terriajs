@@ -1,8 +1,8 @@
 /*global require*/
 /// <reference types="jasmine" />
+import "../lib/Core/prerequisites";
 require("terriajs-jasmine-ajax");
 import { configure, spy } from "mobx";
-require("regenerator-runtime/runtime");
 
 configure({
   enforceActions: true,
@@ -16,7 +16,6 @@ spy(event => {
   }
 });
 
-// require('babel-polyfill');  // Polyfills Map, Set and other ES6.
 jasmine.getEnv().addReporter({
   specDone: result =>
     (result.failedExpectations || []).forEach(expectation =>
