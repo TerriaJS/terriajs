@@ -57,6 +57,14 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
    */
   protected _dataSource: DataSource = new DataSource("billboard");
 
+  protected static readonly FEATURE_INFO_TEMPLATE_FIELDS: string[] = [
+    "route_short_name",
+    "occupancy_status#str",
+    "speed#km",
+    "speed",
+    "bearing"
+  ];
+
   static get type() {
     return "gtfs";
   }
@@ -313,28 +321,12 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
           0.0
         )
       );
-      // featureInfo.set("speed", entity.vehicle.position.speed);
     }
 
-    // if (entity.vehicle !== null && entity.vehicle !== undefined) {
-    //   if (entity.vehicle.trip !== undefined && entity.vehicle.trip !== null) {
-    //     featureInfo.set("route", entity.vehicle.trip.route_id);
-    //     featureInfo.set("direction", entity.vehicle.trip.direction_id);
-    //   }
-
-    //   featureInfo.set("occupancy", entity.vehicle.occupancy_status);
-    // }
-
-    featureInfo.set(
-      "route_short_name",
-      prettyPrintGtfsEntityField("route_short_name", entity)
-    );
-    featureInfo.set(
-      "occupancy_status_str",
-      prettyPrintGtfsEntityField("occupancy_status_str", entity)
-    );
-    featureInfo.set("speed_km", prettyPrintGtfsEntityField("speed_km", entity));
-    featureInfo.set("bearing", prettyPrintGtfsEntityField("bearing", entity));
+    // Add the values that the feature info template gets populated with
+    for (let field of GtfsCatalogItem.FEATURE_INFO_TEMPLATE_FIELDS) {
+      featureInfo.set(field, prettyPrintGtfsEntityField(field, entity));
+    }
 
     return {
       sourceId: entity.id,

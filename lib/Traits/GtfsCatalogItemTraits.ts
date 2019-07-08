@@ -13,6 +13,7 @@ import objectTrait from "./objectTrait";
 import GltfCatalogItemTraits from "./GltfCatalogItemTraits";
 import GtfsModelTraits from "./GtfsModelTraits";
 import FeatureInfoTraits from "./FeatureInfoTraits";
+import FeatureInfoTemplateTraits from "./FeatureInfoTraits";
 
 export default class GtfsCatalogItemTraits extends mixTraits(
   UrlTraits,

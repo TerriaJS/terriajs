@@ -16,7 +16,7 @@ export default function prettyPrintGtfsEntityField(
         return "";
       }
     }
-    case "occupancy_status_str": {
+    case "occupancy_status#str": {
       const occupancy: OccupancyStatus = _get(
         entity,
         "vehicle.occupancy_status"
@@ -40,8 +40,11 @@ export default function prettyPrintGtfsEntityField(
         }
       }
     }
-    case "speed_km": {
-      return (_get(entity, "vehicle.position.bearing", 0) * 3.6).toFixed(2);
+    case "speed#km": {
+      return (_get(entity, "vehicle.position.speed", 0) * 3.6).toFixed(2);
+    }
+    case "speed": {
+      return _get(entity, "vehicle.position.speed", 0).toFixed(2);
     }
     case "bearing": {
       return _get(entity, "vehicle.position.bearing", 0).toFixed(2);
