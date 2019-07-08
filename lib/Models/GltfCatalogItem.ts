@@ -8,83 +8,9 @@ import Axis from "terriajs-cesium/Source/Scene/Axis";
 import ShadowMode from "terriajs-cesium/Source/Scene/ShadowMode";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
-import CatalogMemberTraits from "../Traits/CatalogMemberTraits";
-import MappableTraits from "../Traits/MappableTraits";
-import mixTraits from "../Traits/mixTraits";
-import ModelTraits from "../Traits/ModelTraits";
-import objectTrait from "../Traits/objectTrait";
-import primitiveTrait from "../Traits/primitiveTrait";
-import UrlTraits from "../Traits/UrlTraits";
 import CreateModel from "./CreateModel";
 import Mappable from "./Mappable";
-
-class LatLonHeightTraits extends ModelTraits {
-  @primitiveTrait({
-    type: "number",
-    name: "Latitude",
-    description: "Latitude in degrees"
-  })
-  latitude?: number;
-
-  @primitiveTrait({
-    type: "number",
-    name: "Longitude",
-    description: "Longitude in degrees"
-  })
-  longitude?: number;
-
-  @primitiveTrait({
-    type: "number",
-    name: "Height",
-    description: "Height above ellipsoid in metres"
-  })
-  height?: number;
-}
-
-export class GltfCatalogItemTraits extends mixTraits(
-  UrlTraits,
-  MappableTraits,
-  CatalogMemberTraits
-) {
-  @objectTrait({
-    type: LatLonHeightTraits,
-    name: "Origin",
-    description:
-      "The origin of the model, expressed as a longitude and latitude in degrees and a height in meters. If this property is specified, the model's axes will have X pointing East, Y pointing North, and Z pointing Up. If not specified, the model is located in the Earth-Centered Earth-Fixed frame."
-  })
-  origin?: LatLonHeightTraits;
-
-  @primitiveTrait({
-    type: "string",
-    name: "Up axis",
-    description:
-      "The model's up-axis. By default models are y-up according to the glTF spec, however geo-referenced models will typically be z-up. Valid values are 'X', 'Y', or 'Z'."
-  })
-  upAxis?: string;
-
-  @primitiveTrait({
-    type: "string",
-    name: "Forward axis",
-    description:
-      "The model's forward axis. By default, glTF 2.0 models are Z-forward according to the glTF spec, however older glTF (1.0, 0.8) models used X-forward. Valid values are 'X' or 'Z'."
-  })
-  forwardAxis?: string;
-
-  @primitiveTrait({
-    type: "number",
-    name: "Scale",
-    description: "The scale factor to apply to the model"
-  })
-  scale?: number;
-
-  @primitiveTrait({
-    type: "string",
-    name: "Shadows",
-    description:
-      'Indicates whether this tileset casts and receives shadows. Valid values are "NONE", "BOTH", "CAST", and "RECEIVE".'
-  })
-  shadows: string = "NONE";
-}
+import GltfCatalogItemTraits from "../Traits/GltfCatalogItemTraits";
 
 export default class GltfCatalogItem
   extends UrlMixin(CatalogMemberMixin(CreateModel(GltfCatalogItemTraits)))
