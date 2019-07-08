@@ -96,7 +96,16 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
             {
                 loader: 'babel-loader',
                 options: {
-                    presets: ['@babel/preset-env', '@babel/preset-react'],
+                    presets: [
+                      [
+                        '@babel/preset-env',
+                        {
+                          corejs: 3,
+                          useBuiltIns: "usage"
+                        }
+                      ],
+                      '@babel/preset-react'
+                    ],
                     plugins: [
                         'babel-plugin-jsx-control-statements',
                         '@babel/plugin-transform-modules-commonjs'
