@@ -41,5 +41,5 @@ export default class GltfTraits extends ModelTraits {
     description:
       'Indicates whether this tileset casts and receives shadows. Valid values are "NONE", "BOTH", "CAST", and "RECEIVE".'
   })
-  shadows?: string;
+  shadows?: string = "NONE";
 }

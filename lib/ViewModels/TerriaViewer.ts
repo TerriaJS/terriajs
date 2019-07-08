@@ -68,12 +68,7 @@ export default class TerriaViewer {
     keepAlive: true
   })
   get currentViewer(): GlobeOrMap {
-    let currentView: CameraView | undefined;
-    if (this._lastViewer !== undefined) {
-      currentView = this._lastViewer.getCurrentCameraView();
-      this._lastViewer.destroy();
-      this._lastViewer = undefined;
-    }
+    const currentView = this.destroyCurrentViewer();
 
     const viewerMode = this.attached ? this.viewerMode : undefined;
     console.log(`Creating a viewer: ${viewerMode}`);
@@ -103,5 +98,17 @@ export default class TerriaViewer {
   detach() {
     // Detach from a container
     this.mapContainer = undefined;
+    this.destroyCurrentViewer();
+  }
+
+  private destroyCurrentViewer() {
+    let currentView: CameraView | undefined;
+    if (this._lastViewer !== undefined) {
+      console.log(`Destroying a viewer`);
+      currentView = this._lastViewer.getCurrentCameraView();
+      this._lastViewer.destroy();
+      this._lastViewer = undefined;
+    }
+    return currentView;
   }
 }
