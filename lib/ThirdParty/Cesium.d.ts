@@ -1339,3 +1339,15 @@ declare module "terriajs-cesium/Source/DataSources/PropertyBag" {
     removeProperty(propertyName: string): void;
   }
 }
+declare module "terriajs-cesium/Source/Core/Ion" {
+  import Resource from "terriajs-cesium/Source/Core/Resource";
+  import Credit from "terriajs-cesium/Source/Core/Credit";
+
+  namespace Ion {
+    let defaultAccessToken: string;
+    let defaultServer: string | Resource;
+    function getDefaultTokenCredit(providedKey: string): Credit | undefined;
+  }
+
+  export default Ion;
+}
