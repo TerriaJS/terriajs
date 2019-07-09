@@ -17,9 +17,10 @@ export default function createBingBaseMapOptions(
   let bingMapsAerial;
   let bingMapsRoads;
 
-  let params: any = {
+  let params = {
     terria: terria,
-    opacity: 1.0
+    opacity: 1.0,
+    bingMapsKey: bingMapsKey
   };
 
   if (bingMapsKey && terria.configParameters.useCesiumIonBingImagery !== true) {
@@ -30,21 +31,21 @@ export default function createBingBaseMapOptions(
     bingMapsAerialWithLabels = createBingMapsCatalogItem({
       id: "basemap-bing-aerial-with-labels",
       name: "Bing Maps Aerial with Labels",
-      style: BingMapsStyle.AERIAL_WITH_LABELS_ON_DEMAND,
+      mapStyle: BingMapsStyle.AERIAL_WITH_LABELS_ON_DEMAND,
       ...params
     });
 
     bingMapsAerial = createBingMapsCatalogItem({
       id: "basemap-bing-aerial",
       name: "Bing Maps Aerial",
-      style: BingMapsStyle.AERIAL,
+      mapStyle: BingMapsStyle.AERIAL,
       ...params
     });
 
     bingMapsRoads = createBingMapsCatalogItem({
       id: "basemap-bing-roads",
       name: "Bing Maps Roads",
-      style: BingMapsStyle.ROAD_ON_DEMAND,
+      mapStyle: BingMapsStyle.ROAD_ON_DEMAND,
       ...params
     });
   } else if (terria.configParameters.useCesiumIonBingImagery !== false) {
@@ -99,7 +100,7 @@ function createBingMapsCatalogItem(params: {
   id: string;
   name: string;
   mapStyle: BingMapsStyle;
-  bingMapsKey: string;
+  bingMapsKey?: string;
   opacity: number;
 }) {
   const item = new BingMapsCatalogItem(params.id, params.terria);
