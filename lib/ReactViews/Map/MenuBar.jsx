@@ -15,7 +15,6 @@ import Styles from "./menu-bar.scss";
 // The map navigation region
 const MenuBar = createReactClass({
   displayName: "MenuBar",
-  mixins: [ObserveModelMixin],
 
   propTypes: {
     terria: PropTypes.object,

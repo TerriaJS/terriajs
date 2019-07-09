@@ -1,4 +1,5 @@
 import React from "react";
+import {observer} from "mobx-react";
 
 import createReactClass from "create-react-class";
 
@@ -13,9 +14,8 @@ import SearchHeader from "../Search/SearchHeader";
 import Styles from "./data-catalog.scss";
 
 // Displays the data catalog.
-const DataCatalog = createReactClass({
+const DataCatalog = observer(createReactClass({
   displayName: "DataCatalog",
-  mixins: [ObserveModelMixin],
 
   propTypes: {
     terria: PropTypes.object,
@@ -65,6 +65,6 @@ const DataCatalog = createReactClass({
       </ul>
     );
   }
-});
+}));
 
 module.exports = DataCatalog;
