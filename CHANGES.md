@@ -5,7 +5,7 @@ Change Log
 
 * Fixed inability to share SOS items.
 * Added an option to the mobile menu to allow a story to be resumed after it is closed.
-
+* The "Introducing Data Stories" prompt now only needs to be dismissed once. Previously it would continue to appear on every load until you clicked the "Story" button.
 
 ### v7.6.4
 
