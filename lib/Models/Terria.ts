@@ -468,6 +468,11 @@ export default class Terria {
         ? initData.stratum
         : CommonStrata.definition;
 
+    // Extract the list of CORS-ready domains.
+    if (Array.isArray(initData.corsDomains)) {
+      this.corsProxy.corsDomains.push(...(<string[]>initData.corsDomains));
+    }
+
     if (initData.catalog !== undefined) {
       updateModelFromJson(this.catalog.group, stratumId, {
         members: initData.catalog
