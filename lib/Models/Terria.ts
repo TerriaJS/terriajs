@@ -64,7 +64,7 @@ interface ConfigParameters {
   useCesiumIonTerrain?: boolean;
   cesiumIonAccessToken?: string;
   hideTerriaLogo?: boolean;
-  useCesiumIonBingImagery: boolean;
+  useCesiumIonBingImagery?: boolean;
   bingMapsKey?: string;
   brandBarElements?: string[];
 }
@@ -150,7 +150,7 @@ export default class Terria {
     useCesiumIonTerrain: true,
     cesiumIonAccessToken: undefined,
     hideTerriaLogo: false,
-    useCesiumIonBingImagery: true,
+    useCesiumIonBingImagery: undefined,
     bingMapsKey: undefined,
     brandBarElements: undefined
   };
