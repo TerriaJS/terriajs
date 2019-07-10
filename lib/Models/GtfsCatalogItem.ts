@@ -179,7 +179,7 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
   @computed
   private get _cesiumUpAxis() {
     if (this.model.upAxis === undefined) {
-      return Axis.Z;
+      return Axis.Y;
     }
     return Axis.fromName(this.model.upAxis);
   }
@@ -187,7 +187,7 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
   @computed
   private get _cesiumForwardAxis() {
     if (this.model.forwardAxis === undefined) {
-      return Axis.X;
+      return Axis.Z;
     }
     return Axis.fromName(this.model.forwardAxis);
   }
