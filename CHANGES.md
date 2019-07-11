@@ -3,6 +3,7 @@ Change Log
 
 ### Next Release
 * Fixed inability to share SOS items
+* Add the filename to a workbench item from a drag'n'dropped file so it isn't undisplayed as 'Unnamed item'.
 
 ### v7.6.4
 
