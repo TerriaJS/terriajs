@@ -2,9 +2,8 @@ import countBy from "lodash-es/countBy";
 import { computed } from "mobx";
 import RegionProvider from "../Map/RegionProvider";
 import RegionProviderList from "../Map/RegionProviderList";
-import createEmptyModel from "../Models/createEmptyModel";
+import createCombinedModel from "../Models/createCombinedModel";
 import Model from "../Models/Model";
-import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
 import TableColumnTraits from "../Traits/TableColumnTraits";
 import TableTraits from "../Traits/TableTraits";
 import TableColumnType, { stringToTableColumnType } from "./TableColumnType";
@@ -100,6 +99,8 @@ export default class TableColumn {
       if (replaceWithZero && replaceWithZero.indexOf(value) >= 0) {
         n = 0;
       } else if (replaceWithNull && replaceWithNull.indexOf(value) >= 0) {
+        n = null;
+      } else if (value.length === 0) {
         n = null;
       } else {
         n = toNumber(values[i]);
@@ -231,15 +232,23 @@ export default class TableColumn {
   }
 
   /**
-   * Gets the {@link TableColumnTraits} for this column.
+   * Gets the {@link TableColumnTraits} for this column. The trait are derived
+   * from the default column plus this column layered on top of the default.
    */
   @computed
-  get traits(): ModelPropertiesFromTraits<TableColumnTraits> {
-    const columns = this.tableModel.columns || [];
-    return (
-      columns.find(column => column.name === this.name) ||
-      createEmptyModel(TableColumnTraits)
-    );
+  get traits(): Model<TableColumnTraits> {
+    if (
+      this.columnNumber >= 0 &&
+      this.columnNumber < this.tableModel.columns.length
+    ) {
+      const result = createCombinedModel(
+        this.tableModel.columns[this.columnNumber],
+        this.tableModel.defaultColumn
+      );
+      return result;
+    } else {
+      return this.tableModel.defaultColumn;
+    }
   }
 
   /**

@@ -104,11 +104,11 @@ export default class TableColorStyleTraits extends ModelTraits {
   @primitiveArrayTrait({
     name: "Bin Colors",
     description:
-      "The colors to use for the bins, each specified as CSS color " +
-      "strings. If there are more colors than bins, the extra colors are " +
+      "The colors to use for the bins, each specified as a CSS color " +
+      "string. If there are more colors than bins, the extra colors are " +
       "ignored. If there are more bins than colors, the colors are repeated " +
       "as necessary.",
-    type: "number"
+    type: "string"
   })
   binColors?: string[];
 

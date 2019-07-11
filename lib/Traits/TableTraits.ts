@@ -33,6 +33,13 @@ export default class TableTraits extends mixTraits(
   })
   columns?: TableColumnTraits[];
 
+  @objectTrait({
+    name: "Default Column",
+    description: "The default settings to use for all columns",
+    type: TableColumnTraits
+  })
+  defaultColumn?: TableColumnTraits;
+
   @objectArrayTrait({
     name: "Styles",
     description:
