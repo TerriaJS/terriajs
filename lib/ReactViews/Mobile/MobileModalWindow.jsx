@@ -8,7 +8,6 @@ import DataCatalog from "../DataCatalog/DataCatalog";
 import DataPreview from "../Preview/DataPreview";
 import MobileSearch from "./MobileSearch";
 import WorkbenchList from "../Workbench/WorkbenchList";
-import ObserveModelMixin from "../ObserveModelMixin";
 import Icon from "../Icon";
 
 import Styles from "./mobile-modal-window.scss";

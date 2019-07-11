@@ -6,7 +6,6 @@ import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 
 import { addMarker } from "../../Models/LocationMarkerUtils";
-import ObserveModelMixin from "../ObserveModelMixin";
 import LocationSearchResults from "../Search/LocationSearchResults";
 import SearchResult from "../Search/SearchResult";
 import Styles from "./mobile-search.scss";
