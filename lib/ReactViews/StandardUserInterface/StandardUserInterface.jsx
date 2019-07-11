@@ -13,7 +13,7 @@ import MapInteractionWindow from "../Notification/MapInteractionWindow";
 import MapNavigation from "../Map/MapNavigation";
 import MenuBar from "../Map/MenuBar";
 import ExperimentalFeatures from "../Map/ExperimentalFeatures";
-import MobileHeader from '../Mobile/MobileHeader';
+import MobileHeader from "../Mobile/MobileHeader";
 import Notification from "../Notification/Notification";
 // import ProgressBar from '../Map/ProgressBar';
 import SidePanel from "../SidePanel/SidePanel";

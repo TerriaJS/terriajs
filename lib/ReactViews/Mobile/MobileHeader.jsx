@@ -118,9 +118,10 @@ const MobileHeader = observer(
 
     render() {
       const searchState = this.props.viewState.searchState;
-      const nowViewingLength = this.props.terria.workbench.items !== undefined
-        ? this.props.terria.workbench.items.length
-        : 0;
+      const nowViewingLength =
+        this.props.terria.workbench.items !== undefined
+          ? this.props.terria.workbench.items.length
+          : 0;
 
       return (
         <div className={Styles.ui}>

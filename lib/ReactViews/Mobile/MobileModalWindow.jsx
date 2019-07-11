@@ -82,8 +82,7 @@ const MobileModalWindow = observer(
     UNSAFE_componentWillReceiveProps() {
       const numItems = this.props.terria.workbench.items.length;
       if (
-        (numItems === undefined ||
-          numItems === 0) &&
+        (numItems === undefined || numItems === 0) &&
         this.props.viewState.mobileView ===
           this.props.viewState.mobileViewOptions.nowViewing
       ) {
