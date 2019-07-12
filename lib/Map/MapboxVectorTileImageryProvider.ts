@@ -42,7 +42,7 @@ interface MapboxVectorTileImageryProviderOptions {
   maximumNativeZoom?: number;
   rectangle?: Rectangle;
   uniqueIdProp: string;
-  featureInfoFunc?: (feature: unknown) => ImageryLayerFeatureInfo;
+  featureInfoFunc?: (feature: any) => ImageryLayerFeatureInfo | undefined;
 }
 
 export default class MapboxVectorTileImageryProvider
@@ -59,7 +59,9 @@ export default class MapboxVectorTileImageryProvider
   private readonly _maximumNativeLevel: number;
   private readonly _rectangle: Rectangle;
   private readonly _uniqueIdProp: string;
-  private readonly _featureInfoFunc?: (feature: any) => ImageryLayerFeatureInfo;
+  private readonly _featureInfoFunc?: (
+    feature: any
+  ) => ImageryLayerFeatureInfo | undefined;
   private readonly _errorEvent = new CesiumEvent();
   private readonly _ready = true;
 

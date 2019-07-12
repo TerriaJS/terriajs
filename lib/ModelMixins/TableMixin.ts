@@ -22,6 +22,7 @@ import TableColumnType from "../Table/TableColumnType";
 import TableStyle from "../Table/TableStyle";
 import LegendTraits from "../Traits/LegendTraits";
 import TableTraits from "../Traits/TableTraits";
+import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 
 export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
   Base: T
@@ -334,12 +335,38 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
             minimumZoom: regionType.serverMinZoom,
             maximumNativeZoom: regionType.serverMaxNativeZoom,
             maximumZoom: regionType.serverMaxZoom,
-            uniqueIdProp: regionType.uniqueIdProp
-            // featureInfoFunc: addDescriptionAndProperties(
-            //   regionMapping,
-            //   regionIndices,
-            //   regionImageryProvider
-            // )
+            uniqueIdProp: regionType.uniqueIdProp,
+            featureInfoFunc: (feature: any) => {
+              const featureRegion = feature.properties[regionType.regionProp];
+              const regionIdString =
+                featureRegion !== undefined && featureRegion !== null
+                  ? featureRegion.toString()
+                  : "";
+              const rowNumbers = valuesAsRegions.regionIdToRowNumbersMap.get(
+                regionIdString
+              );
+
+              if (rowNumbers === undefined) {
+                return undefined;
+              } else if (typeof rowNumbers === "number") {
+                const featureInfo = new ImageryLayerFeatureInfo();
+                (<any>featureInfo).properties = {
+                  ...feature.properties,
+                  ...this.getRowValues(rowNumbers)
+                };
+                return featureInfo;
+              } else {
+                // TODO: multiple rows have data for this region
+                const featureInfo = new ImageryLayerFeatureInfo();
+                (<any>featureInfo).properties = {
+                  ...feature.properties,
+                  ...this.getRowValues(rowNumbers[0])
+                };
+                return featureInfo;
+              }
+
+              return undefined;
+            }
           }),
           show: this.show
         };
