@@ -1034,6 +1034,47 @@ export default class Cesium extends GlobeOrMap {
 
     this._selectionIndicator.update();
   }
+
+  captureScreenshot(): Promise<string> {
+    const deferred: Promise<string> = new Promise((resolve, reject) => {
+      const removeCallback = this.scene.postRender.addEventListener(() => {
+        removeCallback();
+        try {
+          const cesiumCanvas = this.scene.canvas;
+
+          // If we're using the splitter, draw the split position as a vertical white line.
+          let canvas = cesiumCanvas;
+          if (this.terria.showSplitter) {
+            canvas = document.createElement("canvas");
+            canvas.width = cesiumCanvas.width;
+            canvas.height = cesiumCanvas.height;
+
+            const context = canvas.getContext("2d");
+            if (context !== undefined && context !== null) {
+              context.drawImage(cesiumCanvas, 0, 0);
+
+              const x = this.terria.splitPosition * cesiumCanvas.width;
+              context.strokeStyle = this.terria.baseMapContrastColor;
+              context.beginPath();
+              context.moveTo(x, 0);
+              context.lineTo(x, cesiumCanvas.height);
+              context.stroke();
+            }
+          }
+
+          resolve(canvas.toDataURL("image/png"));
+        } catch (e) {
+          reject(e);
+        }
+      }, this);
+    });
+
+    // since we're hooking into the post-render event, we want to render **right now** to ensure that the screenshot
+    // image gets created. This is particularly important when showing the print view in a new tab.
+    this.scene.render(this.terria.timelineClock.currentTime);
+
+    return deferred;
+  }
 }
 
 var boundingSphereScratch = new BoundingSphere();
