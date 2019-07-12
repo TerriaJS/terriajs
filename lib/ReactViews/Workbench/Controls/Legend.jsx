@@ -7,7 +7,7 @@ import Loader from "../../Loader";
 import proxyCatalogItemUrl from "../../../Models/proxyCatalogItemUrl";
 import React from "react";
 import createReactClass from "create-react-class";
-import PropTypes, { exact } from "prop-types";
+import PropTypes from "prop-types";
 import URI from "urijs";
 import { observer } from "mobx-react";
 import Styles from "./legend.scss";
