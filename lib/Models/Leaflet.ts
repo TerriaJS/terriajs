@@ -19,6 +19,7 @@ import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import when from "terriajs-cesium/Source/ThirdParty/when";
+import html2canvas from "terriajs-html2canvas";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import isDefined from "../Core/isDefined";
 import runLater from "../Core/runLater";
@@ -701,6 +702,146 @@ export default class Leaflet extends GlobeOrMap {
       this._selectionIndicator.animateSelectionIndicatorAppear();
     } else {
       this._selectionIndicator.animateSelectionIndicatorDepart();
+    }
+  }
+
+  getClipsForSplitter() {
+    let clipLeft: string = "";
+    let clipRight: string = "";
+    let clipPositionWithinMap: number = 0;
+    let clipX: number = 0;
+    if (this.terria.showSplitter) {
+      const map = this.map;
+      const size = map.getSize();
+      const nw = map.containerPointToLayerPoint([0, 0]);
+      const se = map.containerPointToLayerPoint(size);
+      clipPositionWithinMap = size.x * this.terria.splitPosition;
+      clipX = Math.round(nw.x + clipPositionWithinMap);
+      clipLeft = "rect(" + [nw.y, clipX, se.y, nw.x].join("px,") + "px)";
+      clipRight = "rect(" + [nw.y, se.x, se.y, clipX].join("px,") + "px)";
+    }
+
+    return {
+      left: clipLeft,
+      right: clipRight,
+      clipPositionWithinMap: clipPositionWithinMap,
+      clipX: clipX
+    };
+  }
+
+  isSplitterDragThumb(element: HTMLElement) {
+    return (
+      element.className &&
+      element.className.indexOf &&
+      element.className.indexOf("tjs-splitter__thumb") >= 0
+    );
+  }
+
+  captureScreenshot(): Promise<string> {
+    // Temporarily hide the map credits.
+    this._attributionControl.remove();
+
+    var that = this;
+
+    let restoreLeft: () => boolean;
+    let restoreRight: () => boolean;
+
+    try {
+      // html2canvas can't handle the clip style which is used for the splitter. So if the splitter is active, we render
+      // a left image and a right image and compose them. Also remove the splitter drag thumb.
+      let promise: any;
+      if (this.terria.showSplitter) {
+        const clips = this.getClipsForSplitter();
+        const clipLeft = clips.left.replace(/ /g, "");
+        const clipRight = clips.right.replace(/ /g, "");
+        promise = html2canvas(this.map.getContainer(), {
+          useCORS: true,
+          ignoreElements: (element: HTMLElement) =>
+            (element.style.clip !== undefined &&
+              element.style.clip !== null &&
+              element.style.clip.replace(/ /g, "") === clipRight) ||
+            this.isSplitterDragThumb(element)
+        }).then((leftCanvas: HTMLCanvasElement) => {
+          return html2canvas(this.map.getContainer(), {
+            useCORS: true,
+            ignoreElements: (element: HTMLElement) =>
+              (element.style.clip !== undefined &&
+                element.style.clip !== null &&
+                element.style.clip.replace(/ /g, "") === clipLeft) ||
+              this.isSplitterDragThumb(element)
+          }).then((rightCanvas: HTMLCanvasElement) => {
+            const combined = document.createElement("canvas");
+            combined.width = leftCanvas.width;
+            combined.height = leftCanvas.height;
+            const context: CanvasRenderingContext2D | null = combined.getContext(
+              "2d"
+            );
+            if (context === undefined || context === null) {
+              // ERROR
+              return;
+            }
+
+            const split = clips.clipPositionWithinMap * window.devicePixelRatio;
+            context.drawImage(
+              leftCanvas,
+              0,
+              0,
+              split,
+              combined.height,
+              0,
+              0,
+              split,
+              combined.height
+            );
+            context.drawImage(
+              rightCanvas,
+              split,
+              0,
+              combined.width - split,
+              combined.height,
+              split,
+              0,
+              combined.width - split,
+              combined.height
+            );
+            return combined;
+          });
+        });
+      } else {
+        promise = html2canvas(this.map.getContainer(), {
+          useCORS: true
+        });
+      }
+
+      return new Promise<string>((resolve, reject) => {
+        when(promise)
+          .then(function(canvas: HTMLCanvasElement) {
+            resolve(canvas.toDataURL("image/png"));
+          })
+          .always(() => {
+            this._attributionControl.addTo(this.map);
+          });
+      });
+
+      // .always(function(v: string) {
+      // that.map.attributionControl.addTo(that.map);
+      // if (restoreLeft) {
+      //   restoreLeft();
+      // }
+      // if (restoreRight) {
+      //   restoreRight();
+      // }
+      // return v;
+      // });
+    } catch (e) {
+      // that.map.attributionControl.addTo(that.map);
+      // if (restoreLeft) {
+      //   restoreLeft();
+      // }
+      // if (restoreRight) {
+      //   restoreRight();
+      // }
+      return Promise.reject(e);
     }
   }
 }

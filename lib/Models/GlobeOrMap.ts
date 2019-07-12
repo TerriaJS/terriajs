@@ -7,6 +7,8 @@ import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import ImageryLayer from "terriajs-cesium/Source/Scene/ImageryLayer";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
+import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
+
 import isDefined from "../Core/isDefined";
 import featureDataToGeoJson from "../Map/featureDataToGeoJson";
 import MapboxVectorCanvasTileLayer from "../Map/MapboxVectorCanvasTileLayer";
@@ -286,5 +288,15 @@ export default abstract class GlobeOrMap {
         }
       }
     }
+  }
+
+  /**
+   * Captures a screenshot of the map.
+   * @return A promise that resolves to a data URL when the screenshot is ready.
+   */
+  captureScreenshot(): Promise<string> {
+    throw new DeveloperError(
+      "captureScreenshot must be implemented in the derived class."
+    );
   }
 }
