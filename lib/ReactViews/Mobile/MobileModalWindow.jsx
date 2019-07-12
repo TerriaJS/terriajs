@@ -8,7 +8,6 @@ import DataCatalog from "../DataCatalog/DataCatalog";
 import DataPreview from "../Preview/DataPreview";
 import MobileSearch from "./MobileSearch";
 import WorkbenchList from "../Workbench/WorkbenchList";
-import ObserveModelMixin from "../ObserveModelMixin";
 import Icon from "../Icon";
 
 import Styles from "./mobile-modal-window.scss";
@@ -82,8 +81,7 @@ const MobileModalWindow = observer(
     UNSAFE_componentWillReceiveProps() {
       const numItems = this.props.terria.workbench.items.length;
       if (
-        (numItems === undefined ||
-          numItems === 0) &&
+        (numItems === undefined || numItems === 0) &&
         this.props.viewState.mobileView ===
           this.props.viewState.mobileViewOptions.nowViewing
       ) {

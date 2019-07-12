@@ -1,7 +1,5 @@
 import TerriaError from "../Core/TerriaError";
 import { BaseModel } from "../Models/Model";
-import StratumFromTraits from "../Models/StratumFromTraits";
-import ModelTraits from "./ModelTraits";
 import Trait, { TraitOptions } from "./Trait";
 
 type PrimitiveType = "string" | "number" | "boolean";
@@ -38,12 +36,7 @@ export class PrimitiveArrayTrait<T> extends Trait {
 
   getValue(model: BaseModel): T | undefined {
     const strataTopToBottom = model.strataTopToBottom;
-    for (let i = 0; i < strataTopToBottom.length; ++i) {
-      const stratum: any = strataTopToBottom[i];
-      if (stratum === undefined) {
-        continue;
-      }
-
+    for (let stratum of <IterableIterator<any>>strataTopToBottom.values()) {
       const value = stratum[this.id];
       if (value !== undefined) {
         return value;

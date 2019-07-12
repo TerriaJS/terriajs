@@ -79,7 +79,7 @@ export default class TableStyleTraits extends ModelTraits {
     name: "Time",
     description:
       "Options for controlling how the visualization changes with time.",
-    type: TableChartStyleTraits
+    type: TableTimeStyleTraits
   })
   time?: TableTimeStyleTraits;
 

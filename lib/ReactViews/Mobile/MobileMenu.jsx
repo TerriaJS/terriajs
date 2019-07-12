@@ -5,7 +5,6 @@ import { observer } from "mobx-react";
 
 import PropTypes from "prop-types";
 
-import ObserveModelMixin from "../ObserveModelMixin";
 import classNames from "classnames";
 import MobileMenuItem from "./MobileMenuItem";
 import SettingPanel from "../Map/Panels/SettingPanel";

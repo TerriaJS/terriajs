@@ -22,12 +22,17 @@ export abstract class BaseModel {
   abstract get TraitsClass(): TraitsConstructor<ModelTraits>;
   abstract get knownContainerUniqueIds(): string[];
   abstract get strata(): Map<string, StratumFromTraits<ModelTraits>>;
-  abstract get topStratum(): StratumFromTraits<ModelTraits>;
 
   constructor(readonly uniqueId: string | undefined, readonly terria: Terria) {}
 
-  abstract get strataTopToBottom(): StratumFromTraits<ModelTraits>[];
-  abstract get strataBottomToTop(): StratumFromTraits<ModelTraits>[];
+  abstract get strataTopToBottom(): ReadonlyMap<
+    string,
+    StratumFromTraits<ModelTraits>
+  >;
+  abstract get strataBottomToTop(): ReadonlyMap<
+    string,
+    StratumFromTraits<ModelTraits>
+  >;
 
   abstract setTrait(stratumId: string, trait: unknown, value: unknown): void;
   abstract getTrait(stratumId: string, trait: unknown): unknown;
@@ -52,9 +57,8 @@ export interface ModelInterface<T extends ModelTraits> {
   readonly uniqueId: string | undefined;
   readonly knownContainerUniqueIds: string[];
 
-  readonly strataTopToBottom: StratumFromTraits<T>[];
-  readonly strataBottomToTop: StratumFromTraits<T>[];
-  readonly topStratum: StratumFromTraits<T>;
+  readonly strataTopToBottom: ReadonlyMap<string, StratumFromTraits<T>>;
+  readonly strataBottomToTop: ReadonlyMap<string, StratumFromTraits<T>>;
 
   setTrait<Key extends keyof StratumFromTraits<T>>(
     stratumId: string,

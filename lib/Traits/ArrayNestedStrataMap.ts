@@ -1,9 +1,9 @@
-import ModelTraits from "./ModelTraits";
-import TraitsConstructor from "./TraitsConstructor";
-import StratumFromTraits from "../Models/StratumFromTraits";
-import createStratumInstance from "../Models/createStratumInstance";
-import StratumOrder from "../Models/StratumOrder";
 import { computed } from "mobx";
+import createStratumInstance from "../Models/createStratumInstance";
+import StratumFromTraits from "../Models/StratumFromTraits";
+import ModelTraits from "./ModelTraits";
+import Stratified from "./Stratified";
+import TraitsConstructor from "./TraitsConstructor";
 
 /**
  * A strata map where the strata are obtained from a sub-property of another
@@ -12,8 +12,7 @@ import { computed } from "mobx";
 export default class ArrayNestedStrataMap<T extends ModelTraits>
   implements Map<string, StratumFromTraits<T>> {
   constructor(
-    readonly parentTraitsClass: TraitsConstructor<ModelTraits>,
-    readonly parent: Map<string, StratumFromTraits<ModelTraits>>,
+    readonly parentModel: Stratified<ModelTraits>,
     readonly parentProperty: string,
     readonly objectTraits: TraitsConstructorWithRemoval<T>,
     readonly objectIdProperty: string | number | symbol,
@@ -21,13 +20,13 @@ export default class ArrayNestedStrataMap<T extends ModelTraits>
   ) {}
 
   clear(): void {
-    this.parent.forEach((value: any, key: string) => {
+    this.parentModel.strata.forEach((value: any, key: string) => {
       this.delete(key);
     });
   }
 
   delete(key: string): boolean {
-    const parentValue: any = this.parent.get(key);
+    const parentValue: any = this.parentModel.strata.get(key);
     if (parentValue === undefined) {
       return false;
     }
@@ -76,10 +75,10 @@ export default class ArrayNestedStrataMap<T extends ModelTraits>
   set(key: string, value: StratumFromTraits<T>): this {
     this.delete(key);
 
-    let parentValue: any = this.parent.get(key);
+    let parentValue: any = this.parentModel.strata.get(key);
     if (parentValue === undefined) {
-      parentValue = createStratumInstance(this.parentTraitsClass);
-      this.parent.set(key, parentValue);
+      parentValue = createStratumInstance(this.parentModel.TraitsClass);
+      this.parentModel.strata.set(key, parentValue);
     }
 
     let array = parentValue[this.parentProperty];
@@ -120,9 +119,8 @@ export default class ArrayNestedStrataMap<T extends ModelTraits>
 
   @computed
   private get strata(): ReadonlyMap<string, StratumFromTraits<T>> {
-    const strataTopToBottom: Map<string, any> = StratumOrder.sortTopToBottom(
-      this.parent
-    );
+    const strataTopToBottom: ReadonlyMap<string, any> = this.parentModel
+      .strataTopToBottom;
 
     const result = new Map<string, StratumFromTraits<T>>();
 

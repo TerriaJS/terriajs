@@ -1,13 +1,10 @@
+import { computed } from "mobx";
 import TerriaError from "../Core/TerriaError";
-import StratumFromTraits from "../Models/StratumFromTraits";
 import { BaseModel } from "../Models/Model";
 import ModelFactory from "../Models/ModelFactory";
 import upsertModelFromJson from "../Models/upsertModelFromJson";
 import ModelReference from "./ModelReference";
-import ModelTraits from "./ModelTraits";
 import Trait, { TraitOptions } from "./Trait";
-import { computed } from "mobx";
-import { JsonArray } from "../Core/Json";
 
 export interface ModelArrayTraitOptions extends TraitOptions {
   factory?: ModelFactory;
@@ -50,12 +47,7 @@ export class ModelReferenceArrayTrait extends Trait {
     const removedIds: IdToBool = {};
 
     // Create a single array with all the unique model IDs.
-    for (let i = 0; i < strataTopToBottom.length; ++i) {
-      const stratum: any = strataTopToBottom[i];
-      if (stratum === undefined) {
-        continue;
-      }
-
+    for (let stratum of <IterableIterator<any>>strataTopToBottom.values()) {
       const modelIdArray: ModelReference[] = stratum[this.id];
 
       if (modelIdArray) {

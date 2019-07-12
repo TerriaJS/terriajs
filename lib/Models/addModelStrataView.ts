@@ -1,16 +1,8 @@
 import { computed, decorate } from "mobx";
 import ModelTraits from "../Traits/ModelTraits";
+import Stratified from "../Traits/Stratified";
 import TraitsConstructor from "../Traits/TraitsConstructor";
 import ModelPropertiesFromTraits from "./ModelPropertiesFromTraits";
-import StratumFromTraits from "./StratumFromTraits";
-import Constructor from "../Core/Constructor";
-
-export interface Flattenable<T> {
-  readonly strataTopToBottom: (
-    | ModelPropertiesFromTraits<T>
-    | StratumFromTraits<T>)[];
-  readonly strata: any; // TODO
-}
 
 /**
  * Adds a set of traits to a model. The values of the traits will be derived
@@ -22,7 +14,7 @@ export interface Flattenable<T> {
 export default function addModelStrataView<
   T extends TraitsConstructor<ModelTraits>
 >(
-  model: Flattenable<InstanceType<T>>,
+  model: Stratified<InstanceType<T>>,
   Traits: T
 ): ModelPropertiesFromTraits<InstanceType<T>>;
 export default function addModelStrataView<

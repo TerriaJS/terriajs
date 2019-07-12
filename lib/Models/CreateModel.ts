@@ -69,19 +69,14 @@ export default function CreateModel<T extends TraitsConstructor<ModelTraits>>(
     }
 
     @computed
-    get strataTopToBottom(): StratumTraits[] {
+    get strataTopToBottom(): ReadonlyMap<string, StratumTraits> {
       trace();
-      return Array.from(StratumOrder.sortTopToBottom(this.strata).values());
+      return StratumOrder.sortTopToBottom(this.strata);
     }
 
     @computed
-    get strataBottomToTop() {
-      return Array.from(StratumOrder.sortBottomToTop(this.strata).values());
-    }
-
-    @computed
-    get topStratum() {
-      return this.strataTopToBottom[0];
+    get strataBottomToTop(): ReadonlyMap<string, StratumTraits> {
+      return StratumOrder.sortBottomToTop(this.strata);
     }
 
     setTrait<Key extends keyof StratumTraits>(

@@ -1,7 +1,4 @@
-import isDefined from "../Core/isDefined";
 import { BaseModel } from "../Models/Model";
-import StratumFromTraits from "../Models/StratumFromTraits";
-import ModelTraits from "./ModelTraits";
 import Trait, { TraitOptions } from "./Trait";
 
 export interface AnyTraitOptions extends TraitOptions {}
@@ -22,13 +19,13 @@ export class AnyTrait extends Trait {
   }
 
   getValue(model: BaseModel): any {
-    const strataTopToBottom = model.strataTopToBottom;
-    const stratum: any = strataTopToBottom.find(
-      (stratum: any) => isDefined(stratum) && isDefined(stratum[this.id])
-    );
-    if (isDefined(stratum)) {
-      return stratum[this.id];
+    for (let stratum of model.strataTopToBottom.values()) {
+      const stratumAny: any = stratum;
+      if (stratumAny !== undefined && stratumAny[this.id] !== undefined) {
+        return stratumAny[this.id];
+      }
     }
+    return undefined;
   }
 
   fromJson(model: BaseModel, stratumName: string, jsonValue: any): any {
