@@ -44,6 +44,11 @@ export interface UniqueColumnValues {
    * {@link #values}.
    */
   readonly counts: ReadonlyArray<number>;
+
+  /**
+   * Gets the number of rows with null values.
+   */
+  readonly numberOfNulls: number;
 }
 
 /**
@@ -132,19 +137,34 @@ export default class TableColumn {
    */
   @computed
   get uniqueValues(): UniqueColumnValues {
-    const count = countBy(this.values);
+    const replaceWithNull = this.traits.replaceWithNullValues;
+
+    const values = this.values.map(value => {
+      if (value.length === 0) {
+        return "";
+      } else if (replaceWithNull && replaceWithNull.indexOf(value) >= 0) {
+        return "";
+      }
+      return value;
+    });
+
+    const count = countBy(values);
+    const nullCount = count[""];
+    delete count[""];
 
     function toArray(key: string, value: number): [string, number] {
       return [key, value];
     }
     const countArray = Object.keys(count).map(key => toArray(key, count[key]));
+
     countArray.sort(function(a, b) {
       return b[1] - a[1];
     });
 
     return {
       values: countArray.map(a => a[0]),
-      counts: countArray.map(a => a[1])
+      counts: countArray.map(a => a[1]),
+      numberOfNulls: nullCount
     };
   }
 

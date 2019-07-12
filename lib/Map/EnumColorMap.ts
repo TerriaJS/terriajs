@@ -12,38 +12,41 @@ export interface EnumColorMapOptions {
 }
 
 export default class EnumColorMap extends ColorMap {
-  private _values: string[];
-  private _colors: Color[];
-  private _nullColor: Color;
+  values: readonly string[];
+  colors: readonly Readonly<Color>[];
+  nullColor: Readonly<Color>;
 
   constructor(options: EnumColorMapOptions) {
     super();
 
-    this._nullColor = Color.clone(options.nullColor);
-    this._values = [];
-    this._colors = [];
+    this.nullColor = Color.clone(options.nullColor);
+    const values: string[] = [];
+    const colors: Readonly<Color>[] = [];
 
     options.enumColors.forEach(bin => {
-      this._values.push(bin.value);
-      this._colors.push(Color.clone(bin.color));
+      values.push(bin.value);
+      colors.push(Color.clone(bin.color));
     });
+
+    this.values = values;
+    this.colors = colors;
   }
 
   mapValueToColor(value: string | number | null | undefined): Readonly<Color> {
     if (value === undefined || value === null) {
-      return this._nullColor;
+      return this.nullColor;
     } else if (typeof value !== "string") {
       value = value.toString();
     }
 
-    const values = this._values;
+    const values = this.values;
     let i, len;
     for (let i = 0, len = values.length; i < len; ++i) {
       if (values[i] === value) {
-        return this._colors[i];
+        return this.colors[i];
       }
     }
 
-    return this._nullColor;
+    return this.nullColor;
   }
 }
