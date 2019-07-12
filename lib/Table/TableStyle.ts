@@ -287,7 +287,7 @@ export default class TableStyle {
 
   @computed
   get enumColors(): readonly ModelPropertiesFromTraits<EnumColorTraits>[] {
-    if (this.colorTraits.enumColors !== undefined) {
+    if (this.colorTraits.enumColors.length > 0) {
       return this.colorTraits.enumColors;
     }
 
