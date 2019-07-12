@@ -705,7 +705,7 @@ export default class Leaflet extends GlobeOrMap {
     }
   }
 
-  getClipsForSplitter() {
+  getClipsForSplitter(): any {
     let clipLeft: string = "";
     let clipRight: string = "";
     let clipPositionWithinMap: number = 0;
@@ -729,7 +729,7 @@ export default class Leaflet extends GlobeOrMap {
     };
   }
 
-  isSplitterDragThumb(element: HTMLElement) {
+  isSplitterDragThumb(element: HTMLElement): boolean | "" {
     return (
       element.className &&
       element.className.indexOf &&
@@ -740,11 +740,6 @@ export default class Leaflet extends GlobeOrMap {
   captureScreenshot(): Promise<string> {
     // Temporarily hide the map credits.
     this._attributionControl.remove();
-
-    var that = this;
-
-    let restoreLeft: () => boolean;
-    let restoreRight: () => boolean;
 
     try {
       // html2canvas can't handle the clip style which is used for the splitter. So if the splitter is active, we render
@@ -777,8 +772,8 @@ export default class Leaflet extends GlobeOrMap {
               "2d"
             );
             if (context === undefined || context === null) {
-              // ERROR
-              return;
+              // Error
+              return null;
             }
 
             const split = clips.clipPositionWithinMap * window.devicePixelRatio;
@@ -814,33 +809,17 @@ export default class Leaflet extends GlobeOrMap {
       }
 
       return new Promise<string>((resolve, reject) => {
+        // wrap old-style when promise with new standard library promise
         when(promise)
-          .then(function(canvas: HTMLCanvasElement) {
+          .then((canvas: HTMLCanvasElement) => {
             resolve(canvas.toDataURL("image/png"));
           })
           .always(() => {
             this._attributionControl.addTo(this.map);
           });
       });
-
-      // .always(function(v: string) {
-      // that.map.attributionControl.addTo(that.map);
-      // if (restoreLeft) {
-      //   restoreLeft();
-      // }
-      // if (restoreRight) {
-      //   restoreRight();
-      // }
-      // return v;
-      // });
     } catch (e) {
-      // that.map.attributionControl.addTo(that.map);
-      // if (restoreLeft) {
-      //   restoreLeft();
-      // }
-      // if (restoreRight) {
-      //   restoreRight();
-      // }
+      this._attributionControl.addTo(this.map);
       return Promise.reject(e);
     }
   }

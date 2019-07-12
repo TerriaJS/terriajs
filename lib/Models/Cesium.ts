@@ -35,7 +35,6 @@ import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDire
 import Scene from "terriajs-cesium/Source/Scene/Scene";
 import SceneTransforms from "terriajs-cesium/Source/Scene/SceneTransforms";
 import SingleTileImageryProvider from "terriajs-cesium/Source/Scene/SingleTileImageryProvider";
-import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import when from "terriajs-cesium/Source/ThirdParty/when";
 import CesiumWidget from "terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget";
 import isDefined from "../Core/isDefined";

@@ -44,9 +44,9 @@ const Legend = observer(
     },
 
     getDefaultProps() {
-      {
-        forPrint: false;
-      }
+      return {
+        forPrint: false
+      };
     },
 
     /* eslint-disable-next-line camelcase */
@@ -157,13 +157,15 @@ const Legend = observer(
       // Chrome and Firefox let you override this, but not IE and Edge. So...
       if (this.props.forPrint) {
         if (legendItem.imageUrl) {
-          boxContents = <img width="20px" height="16px" src={legendItem.imageUrl} />;
+          boxContents = (
+            <img width="20px" height="16px" src={legendItem.imageUrl} />
+          );
         } else {
           boxContents = <>&#9632;</>;
           boxStyle = {
             color: legendItem.color,
             fontSize: "48px",
-            lineHeight: "16px",
+            lineHeight: "16px"
           };
         }
       } else {
@@ -179,8 +181,6 @@ const Legend = observer(
           boxStyle = {
             backgroundColor: legendItem.color,
             minWidth: "20px",
-            "color-adjust": exact,
-            "-webkit-print-color-adjust": exact,
             ...boxStyle
           };
         }
