@@ -29,21 +29,21 @@ export default class TableColorStyleTraits extends ModelTraits {
   })
   colorColumn?: string;
 
-  @primitiveTrait({
-    name: "Minimum Display Value",
-    description:
-      "The minimum value to use for coloring. Any row with a value less than this will be shown as if it had this value.",
-    type: "number"
-  })
-  minimumDisplayValue?: number;
+  // @primitiveTrait({
+  //   name: "Minimum Display Value",
+  //   description:
+  //     "The minimum value to use for coloring. Any row with a value less than this will be shown as if it had this value.",
+  //   type: "number"
+  // })
+  // minimumDisplayValue?: number;
 
-  @primitiveTrait({
-    name: "Maximum Display Value",
-    description:
-      "The maximum value to use for coloring. Any row with a value greater than this will be shown as if it had this value.",
-    type: "number"
-  })
-  maximumDisplayValue?: number;
+  // @primitiveTrait({
+  //   name: "Maximum Display Value",
+  //   description:
+  //     "The maximum value to use for coloring. Any row with a value greater than this will be shown as if it had this value.",
+  //   type: "number"
+  // })
+  // maximumDisplayValue?: number;
 
   @primitiveTrait({
     name: "Null Color",

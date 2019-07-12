@@ -11,6 +11,7 @@ import { computed } from "mobx";
 import { createTransformer } from "mobx-utils";
 import DiscreteColorMap from "../Map/DiscreteColorMap";
 import TableStyle from "./TableStyle";
+import EnumColorMap from "../Map/EnumColorMap";
 
 export default class TableAutomaticStylesStratum extends LoadableStratum(
   CsvCatalogItemTraits
@@ -84,6 +85,8 @@ class ColorStyleLegend extends LoadableStratum(LegendTraits) {
     const colorMap = activeStyle.colorMap;
     if (colorMap instanceof DiscreteColorMap) {
       return this._createLegendItemsFromDiscreteColorMap(activeStyle, colorMap);
+    } else if (colorMap instanceof EnumColorMap) {
+      return this._createLegendItemsFromEnumColorMap(activeStyle, colorMap);
     }
 
     return [];
@@ -127,6 +130,32 @@ class ColorStyleLegend extends LoadableStratum(LegendTraits) {
         });
       })
       .reverse()
+      .concat(nullBin);
+  }
+
+  private _createLegendItemsFromEnumColorMap(
+    activeStyle: TableStyle,
+    colorMap: EnumColorMap
+  ): StratumFromTraits<LegendItemTraits>[] {
+    const colorColumn = activeStyle.colorColumn;
+    const nullBin =
+      colorColumn && colorColumn.uniqueValues.numberOfNulls > 0
+        ? [
+            createStratumInstance(LegendItemTraits, {
+              color: activeStyle.colorTraits.nullColor || "rgba(0, 0, 0, 0)",
+              addSpacingAbove: true,
+              title: activeStyle.colorTraits.nullLabel || "(No value)"
+            })
+          ]
+        : [];
+
+    return colorMap.values
+      .map((value, i) => {
+        return createStratumInstance(LegendItemTraits, {
+          title: value,
+          color: colorMap.colors[i].toCssColorString()
+        });
+      })
       .concat(nullBin);
   }
 
