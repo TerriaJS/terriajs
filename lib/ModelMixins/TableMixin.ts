@@ -9,18 +9,19 @@ import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import PointGraphics from "terriajs-cesium/Source/DataSources/PointGraphics";
 import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
+import { JsonObject } from "../Core/Json";
 import makeRealPromise from "../Core/makeRealPromise";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
 import RegionProviderList from "../Map/RegionProviderList";
 import { ImageryParts } from "../Models/Mappable";
 import Model from "../Models/Model";
+import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
 import SelectableStyle, { AvailableStyle } from "../Models/SelectableStyle";
 import TableColumn from "../Table/TableColumn";
 import TableColumnType from "../Table/TableColumnType";
 import TableStyle from "../Table/TableStyle";
-import TableTraits from "../Traits/TableTraits";
-import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
 import LegendTraits from "../Traits/LegendTraits";
+import TableTraits from "../Traits/TableTraits";
 
 export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
   Base: T
@@ -233,7 +234,7 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
               ? nullPointSize
               : scaledValue * pointSizeFactor + pointSizeOffset;
 
-          dataSource.entities.add(
+          const entity = dataSource.entities.add(
             new Entity({
               position: Cartesian3.fromDegrees(longitude, latitude, 0.0),
               point: new PointGraphics({
@@ -244,6 +245,7 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
               })
             })
           );
+          entity.properties = this.getRowValues(i);
         }
 
         dataSource.entities.resumeEvents();
@@ -251,6 +253,16 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
         return dataSource;
       }
     );
+
+    private getRowValues(index: number): JsonObject {
+      const result: JsonObject = {};
+
+      this.tableColumns.forEach(column => {
+        result[column.name] = column.values[index];
+      });
+
+      return result;
+    }
 
     private readonly createRegionMappedImageryLayer = createTransformer(
       (style: TableStyle): ImageryParts | undefined => {
