@@ -7,9 +7,9 @@ import when from "terriajs-cesium/Source/ThirdParty/when";
 import TerriaError from "../../Core/TerriaError";
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
 import Loader from "../Loader";
-import ObserveModelMixin from "../ObserveModelMixin";
 import ParameterEditor from "./ParameterEditor";
 import Styles from "./invoke-function.scss";
+import { observer } from "mobx-react";
 
 class FunctionViewModel {
   constructor(catalogFunction) {
@@ -42,121 +42,123 @@ class ParameterViewModel {
   }
 }
 
-const InvokeFunction = createReactClass({
-  displayName: "InvokeFunction",
-  mixins: [ObserveModelMixin],
+const InvokeFunction = observer(
+  createReactClass({
+    displayName: "InvokeFunction",
 
-  propTypes: {
-    terria: PropTypes.object,
-    previewed: PropTypes.object,
-    viewState: PropTypes.object
-  },
+    propTypes: {
+      terria: PropTypes.object,
+      previewed: PropTypes.object,
+      viewState: PropTypes.object
+    },
 
-  /* eslint-disable-next-line camelcase */
-  UNSAFE_componentWillMount() {
-    this.parametersViewModel = new FunctionViewModel(this.props.previewed);
-  },
+    /* eslint-disable-next-line camelcase */
+    UNSAFE_componentWillMount() {
+      this.parametersViewModel = new FunctionViewModel(this.props.previewed);
+    },
 
-  /* eslint-disable-next-line camelcase */
-  UNSAFE_componentWillUpdate(nextProps, nextState) {
-    if (nextProps.previewed !== this.parametersViewModel.catalogFunction) {
-      // Clear previous parameters view model, because this is a different catalog function.
-      this.parametersViewModel = new FunctionViewModel(nextProps.previewed);
-    }
-  },
-
-  submit() {
-    try {
-      const promise = when(this.props.previewed.invoke()).otherwise(
-        terriaError => {
-          if (terriaError instanceof TerriaError) {
-            this.props.previewed.terria.error.raiseEvent(terriaError);
-          }
-        }
-      );
-      // Show the Now Viewing panel
-      this.props.previewed.terria.nowViewing.showNowViewingRequested.raiseEvent();
-      // Close modal window
-      this.props.viewState.explorerPanelIsVisible = false;
-      // mobile switch to nowvewing
-      this.props.viewState.switchMobileView(
-        this.props.viewState.mobileViewOptions.preview
-      );
-
-      return promise;
-    } catch (e) {
-      if (e instanceof TerriaError) {
-        this.props.previewed.terria.error.raiseEvent(e);
+    /* eslint-disable-next-line camelcase */
+    UNSAFE_componentWillUpdate(nextProps, nextState) {
+      if (nextProps.previewed !== this.parametersViewModel.catalogFunction) {
+        // Clear previous parameters view model, because this is a different catalog function.
+        this.parametersViewModel = new FunctionViewModel(nextProps.previewed);
       }
-      return undefined;
-    }
-  },
+    },
 
-  getParams() {
-    // Key should include the previewed item identifier so that
-    // components are refreshed when different previewed items are
-    // displayed
-    return this.props.previewed.parameters.map((param, i) => (
-      <ParameterEditor
-        key={param.id + this.props.previewed.uniqueId}
-        parameter={param}
-        viewState={this.props.viewState}
-        previewed={this.props.previewed}
-        parameterViewModel={this.parametersViewModel.getParameter(param)}
-      />
-    ));
-  },
+    submit() {
+      try {
+        const promise = when(this.props.previewed.invoke()).otherwise(
+          terriaError => {
+            if (terriaError instanceof TerriaError) {
+              this.props.previewed.terria.error.raiseEvent(terriaError);
+            }
+          }
+        );
+        // Show the Now Viewing panel
+        this.props.previewed.terria.nowViewing.showNowViewingRequested.raiseEvent();
+        // Close modal window
+        this.props.viewState.explorerPanelIsVisible = false;
+        // mobile switch to nowvewing
+        this.props.viewState.switchMobileView(
+          this.props.viewState.mobileViewOptions.preview
+        );
 
-  validateParameter(parameter) {
-    if (!this.parametersViewModel.getParameter(parameter).isValueValid) {
-      // Editor says it's not valid, so it's not valid.
-      return false;
-    }
+        return promise;
+      } catch (e) {
+        if (e instanceof TerriaError) {
+          this.props.previewed.terria.error.raiseEvent(e);
+        }
+        return undefined;
+      }
+    },
 
-    // Verify that required parameters have a value.
-    if (parameter.isRequired && !defined(parameter.value)) {
-      return false;
-    }
+    getParams() {
+      // Key should include the previewed item identifier so that
+      // components are refreshed when different previewed items are
+      // displayed
+      return this.props.previewed.parameters.map((param, i) => (
+        <ParameterEditor
+          key={param.id + this.props.previewed.uniqueId}
+          parameter={param}
+          viewState={this.props.viewState}
+          previewed={this.props.previewed}
+          parameterViewModel={this.parametersViewModel.getParameter(param)}
+        />
+      ));
+    },
 
-    return true;
-  },
+    validateParameter(parameter) {
+      return true;
+      // if (!this.parametersViewModel.getParameter(parameter).isValueValid) {
+      //   // Editor says it's not valid, so it's not valid.
+      //   return false;
+      // }
 
-  render() {
-    if (this.props.previewed.isLoading) {
-      return <Loader />;
-    }
+      // // Verify that required parameters have a value.
+      // if (parameter.isRequired && !defined(parameter.value)) {
+      //   return false;
+      // }
 
-    let invalidParameters = false;
-    if (defined(this.props.previewed.parameters)) {
-      invalidParameters = !this.props.previewed.parameters.every(
-        this.validateParameter
+      // return true;
+    },
+
+    render() {
+      if (this.props.previewed.isLoading) {
+        return <Loader />;
+      }
+
+      let invalidParameters = false;
+      if (defined(this.props.previewed.parameters)) {
+        invalidParameters = !this.props.previewed.parameters.every(
+          this.validateParameter
+        );
+      }
+
+      return (
+        <div className={Styles.invokeFunction}>
+          <div className={Styles.content}>
+            <h3>{this.props.previewed.name}</h3>
+            <div className={Styles.description}>
+              {parseCustomMarkdownToReact(this.props.previewed.description, {
+                catalogItem: this.props.previewed
+              })}
+            </div>
+            {this.getParams()}
+          </div>
+          <div className={Styles.footer}>
+            <button
+              type="button"
+              className={Styles.btn}
+              onClick={this.submit}
+              disabled={invalidParameters}
+            >
+              Run Analysis
+            </button>
+          </div>
+        </div>
       );
     }
-
-    return (
-      <div className={Styles.invokeFunction}>
-        <div className={Styles.content}>
-          <h3>{this.props.previewed.name}</h3>
-          <div className={Styles.description}>
-            {parseCustomMarkdownToReact(this.props.previewed.description, {
-              catalogItem: this.props.previewed
-            })}
-          </div>
-          {this.getParams()}
-        </div>
-        <div className={Styles.footer}>
-          <button
-            type="button"
-            className={Styles.btn}
-            onClick={this.submit}
-            disabled={invalidParameters}
-          >
-            Run Analysis
-          </button>
-        </div>
-      </div>
-    );
-  }
-});
+  })
+);
 
 module.exports = InvokeFunction;

@@ -3,7 +3,7 @@ import objectTrait from "./objectTrait";
 import primitiveTrait from "./primitiveTrait";
 import anyTrait from "./anyTrait";
 
-class FeatureInfoTemplateTraits extends ModelTraits {
+export class FeatureInfoTemplateTraits extends ModelTraits {
   @primitiveTrait({
     type: "string",
     name: "Name template",

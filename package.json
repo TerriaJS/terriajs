@@ -29,6 +29,7 @@
     "@types/json5": "^0.0.30",
     "@types/leaflet": "^1.4.3",
     "@types/lodash-es": "^4.17.3",
+    "@types/mustache": "^0.8.32",
     "@types/papaparse": "^4.5.9",
     "@types/pbf": "^3.0.1",
     "@types/react": "^16.8.18",

@@ -5,6 +5,9 @@ import ResultPendingCatalogItemTraits from "../Traits/ResultPendingCatalogItemTr
 export default class ResultPendingCatalogItem extends CatalogMemberMixin(
   CreateModel(ResultPendingCatalogItemTraits)
 ) {
+  readonly showsInfo = true;
+  readonly isMappable = true;
+
   loadPromise = Promise.resolve();
 
   protected forceLoadMetadata() {
