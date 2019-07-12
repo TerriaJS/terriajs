@@ -379,6 +379,35 @@ export default class TableColumn {
     };
   }
 
+  @computed
+  get scaledValueFunctionForType(): (rowIndex: number) => number | null {
+    if (this.type === TableColumnType.scalar) {
+      const valuesAsNumbers = this.valuesAsNumbers;
+      const minimum = valuesAsNumbers.minimum;
+      const maximum = valuesAsNumbers.maximum;
+
+      if (minimum === undefined || maximum === undefined) {
+        return nullFunction;
+      }
+
+      const delta = maximum - minimum;
+      if (delta === 0.0) {
+        return nullFunction;
+      }
+
+      const values = valuesAsNumbers.values;
+      return function(rowIndex: number) {
+        const value = values[rowIndex];
+        if (value === null) {
+          return null;
+        }
+        return (value - minimum) / delta;
+      };
+    }
+
+    return nullFunction;
+  }
+
   private guessColumnTypeFromName(name: string): TableColumnType | undefined {
     const typeHintSet = [
       { hint: /^(lon|long|longitude|lng)$/i, type: TableColumnType.longitude },
@@ -417,5 +446,9 @@ function toNumber(value: string): number | null {
   if (!Number.isNaN(asNumber)) {
     return asNumber;
   }
+  return null;
+}
+
+function nullFunction(rowIndex: number) {
   return null;
 }

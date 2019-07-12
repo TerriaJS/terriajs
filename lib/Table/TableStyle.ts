@@ -13,7 +13,7 @@ import TableChartStyleTraits from "../Traits/TableChartStyleTraits";
 import TableColorStyleTraits, {
   EnumColorTraits
 } from "../Traits/TableColorStyleTraits";
-import TableScaleStyleTraits from "../Traits/TableScaleStyleTraits";
+import TablePointSizeStyleTraits from "../Traits/TablePointSizeStyleTraits";
 import TableStyleTraits from "../Traits/TableStyleTraits";
 import TableTraits from "../Traits/TableTraits";
 import ColorPalette from "./ColorPalette";
@@ -72,7 +72,7 @@ export default class TableStyle {
    * Returns a default instance of no color traits are specified explicitly.
    */
   @computed
-  get colorTraits(): ModelPropertiesFromTraits<TableColorStyleTraits> {
+  get colorTraits(): Model<TableColorStyleTraits> {
     return this.styleTraits.color;
   }
 
@@ -81,8 +81,8 @@ export default class TableStyle {
    * Returns a default instance of no scale traits are specified explicitly.
    */
   @computed
-  get scaleTraits(): FlattenedFromTraits<TableScaleStyleTraits> {
-    return this.styleTraits.scale;
+  get pointSizeTraits(): Model<TablePointSizeStyleTraits> {
+    return this.styleTraits.pointSize;
   }
 
   /**
@@ -90,7 +90,7 @@ export default class TableStyle {
    * Returns a default instance of no chart traits are specified explicitly.
    */
   @computed
-  get chartTraits(): FlattenedFromTraits<TableChartStyleTraits> {
+  get chartTraits(): Model<TableChartStyleTraits> {
     return this.styleTraits.chart;
   }
 
@@ -140,6 +140,14 @@ export default class TableStyle {
   @computed
   get colorColumn(): TableColumn | undefined {
     return this.resolveColumn(this.colorTraits.colorColumn);
+  }
+
+  /**
+   * Gets the scale column for this style, if any.
+   */
+  @computed
+  get pointSizeColumn(): TableColumn | undefined {
+    return this.resolveColumn(this.pointSizeTraits.pointSizeColumn);
   }
 
   /**

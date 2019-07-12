@@ -194,9 +194,19 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
         const latitudes = style.latitudeColumn.valuesAsNumbers.values;
 
         const colorColumn = style.colorColumn;
-        const valueFunction =
+
+        const pointSizeColumn = style.pointSizeColumn;
+        const pointSizeFactor = style.pointSizeTraits.sizeFactor;
+        const pointSizeOffset = style.pointSizeTraits.sizeOffset;
+        const nullPointSize = style.pointSizeTraits.nullSize;
+
+        const colorValueFunction =
           colorColumn !== undefined
             ? colorColumn.valueFunctionForType
+            : () => null;
+        const pointSizeValueFunction =
+          pointSizeColumn !== undefined
+            ? pointSizeColumn.scaledValueFunctionForType
             : () => null;
 
         const colorMap = (this.activeTableStyle || this.defaultTableStyle)
@@ -212,17 +222,23 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
         for (let i = 0; i < longitudes.length && i < latitudes.length; ++i) {
           const longitude = longitudes[i];
           const latitude = latitudes[i];
-          const value = valueFunction(i);
+          const value = colorValueFunction(i);
           if (longitude === null || latitude === null) {
             continue;
           }
+
+          const scaledValue = pointSizeValueFunction(i);
+          const pointSize =
+            scaledValue === null
+              ? nullPointSize
+              : scaledValue * pointSizeFactor + pointSizeOffset;
 
           dataSource.entities.add(
             new Entity({
               position: Cartesian3.fromDegrees(longitude, latitude, 0.0),
               point: new PointGraphics({
                 color: colorMap.mapValueToColor(value),
-                pixelSize: 5,
+                pixelSize: pointSize,
                 outlineWidth: 1,
                 outlineColor: outlineColor
               })
