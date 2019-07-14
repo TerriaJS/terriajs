@@ -26,7 +26,7 @@ import when from "terriajs-cesium/Source/ThirdParty/when";
 import ChartData from "../../../Charts/ChartData";
 import ChartRenderer from "../../../Charts/ChartRenderer";
 // import proxyCatalogItemUrl from "../../../Models/proxyCatalogItemUrl";
-import VarType from "../../../Map/VarType";
+import CsvCatalogItem from "../../../Models/CsvCatalogItem";
 
 import Styles from "./chart.scss";
 
@@ -72,39 +72,7 @@ const Chart = createReactClass({
   },
 
   chartDataArrayFromTableStructure(table) {
-    const xColumn = table.getColumnWithNameIdOrIndex(this.props.xColumn || 0);
-    let yColumns = [];
-    if (defined(this.props.yColumns)) {
-      yColumns = this.props.yColumns.map(column =>
-        table.getColumnWithNameIdOrIndex(column)
-      );
-    } else {
-      // Fall back to the first scalar that isn't the x column.
-      yColumns = table.columns.filter(
-        column => column !== xColumn && column.type === VarType.SCALAR
-      );
-      if (yColumns.length > 0) {
-        yColumns = [yColumns[0]];
-      } else {
-        throw new DeveloperError("No y-column available.");
-      }
-    }
-    const pointArrays = table.toPointArrays(xColumn, yColumns);
-    // The data id should be set to something unique, eg. its source id + column index.
-    // If we're here, the data was downloaded from a single file or table, so the column index is unique by itself.
-    const colors = this.props.colors;
-    return pointArrays.map(
-      (points, index) =>
-        new ChartData(points, {
-          id: index,
-          name: yColumns[index].name,
-          units: yColumns[index].units,
-          color:
-            colors && colors.length > 0
-              ? colors[index % colors.length]
-              : defaultColor
-        })
-    );
+    return table.chartItems;
   },
 
   getChartDataPromise(data, url, catalogItem) {
@@ -116,7 +84,7 @@ const Chart = createReactClass({
     } else if (defined(url)) {
       return loadIntoTableStructure(catalogItem, url)
         .then(that.chartDataArrayFromTableStructure)
-        .otherwise(function(e) {
+        .catch(function(e) {
           // It looks better to create a blank chart than no chart.
           return [];
         });
@@ -305,15 +273,17 @@ const Chart = createReactClass({
  * @return {Promise} A promise which resolves to a table structure.
  */
 function loadIntoTableStructure(catalogItem, url) {
-  // TODO
-  return when();
-  // if (defined(catalogItem) && defined(catalogItem.loadIntoTableStructure)) {
-  //   return catalogItem.loadIntoTableStructure(url);
-  // }
-  // // As a fallback, try to load in the data file as csv.
-  // const tableStructure = new TableStructure("feature info");
-  // url = proxyCatalogItemUrl(catalogItem, url, "0d");
-  // return loadText(url).then(tableStructure.loadFromCsv.bind(tableStructure));
+  const result = new CsvCatalogItem(undefined, catalogItem.terria);
+  result.setTrait("definition", "url", url);
+  const chartStyle = result.addObject("definition", "styles", "chart");
+  chartStyle.chart.setTrait("definition", "xAxisColumn", "Time (UTC)");
+  chartStyle.chart.setTrait("definition", "yAxisColumn", "MW");
+  result.setTrait("definition", "activeStyle", "chart");
+
+  // TODO: should be loadChartItems
+  return result.loadMapItems().then(() => {
+    return result;
+  });
 }
 
 module.exports = Chart;

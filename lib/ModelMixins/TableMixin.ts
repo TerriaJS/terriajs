@@ -23,6 +23,7 @@ import TableStyle from "../Table/TableStyle";
 import LegendTraits from "../Traits/LegendTraits";
 import TableTraits from "../Traits/TableTraits";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
+import ChartData, { ChartPoint } from "../Charts/ChartData";
 
 export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
   Base: T
@@ -126,6 +127,42 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
         this.createLongitudeLatitudeDataSource(style),
         this.createRegionMappedImageryLayer(style)
       ]);
+    }
+
+    @computed
+    get chartItems(): ChartData[] {
+      const style = this.activeTableStyle;
+      if (style === undefined) {
+        return [];
+      }
+
+      const xColumn = style.xAxisColumn;
+      const yColumn = style.yAxisColumn;
+      if (xColumn === undefined || yColumn === undefined) {
+        return [];
+      }
+
+      const xValues: readonly (Date | number | null)[] =
+        xColumn.type === TableColumnType.time
+          ? xColumn.valuesAsDates.values
+          : xColumn.valuesAsNumbers.values;
+      const yValues = yColumn.valuesAsNumbers.values;
+
+      const points: ChartPoint[] = [];
+      for (let i = 0; i < xValues.length; ++i) {
+        const x = xValues[i];
+        const y = yValues[i];
+        if (x === null || y === null) {
+          continue;
+        }
+        points.push({ x, y });
+      }
+
+      const chartData = new ChartData({
+        points: points
+      });
+
+      return [chartData];
     }
 
     @computed

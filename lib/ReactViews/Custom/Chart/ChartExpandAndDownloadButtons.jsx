@@ -14,7 +14,6 @@ import CsvCatalogItem from "../../../Models/CsvCatalogItem";
 import Dropdown from "../../Generic/Dropdown";
 import Polling from "../../../Models/Polling";
 import raiseErrorToUser from "../../../Models/raiseErrorToUser";
-import TableStyle from "../../../Models/TableStyle";
 import Icon from "../../Icon";
 
 import Styles from "./chart-expand-and-download-buttons.scss";
