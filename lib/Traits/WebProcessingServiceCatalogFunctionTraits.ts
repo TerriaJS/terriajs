@@ -13,4 +13,12 @@ export default class WebProcessingServiceCatalogFunctionTraits extends mixTraits
     description: "The identifier for the process"
   })
   identifier?: string;
+
+  @primitiveTrait({
+    type: "boolean",
+    name: "Execute with HTTP GET",
+    description:
+      "If true, sends a `GET` request to the Execute endpoint instead of the default `POST` request."
+  })
+  executeWithHttpGet = false;
 }

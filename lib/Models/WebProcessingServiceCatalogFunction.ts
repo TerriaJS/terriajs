@@ -108,7 +108,8 @@ export default class WebProcessingServiceCatalogFunction extends CatalogMemberMi
 
     const uri = new URI(this.url).query({
       service: "WPS",
-      request: "Execute"
+      request: "Execute",
+      version: "1.0.0"
     });
     return proxyCatalogItemUrl(this, uri.toString(), this.proxyCacheDuration);
   }
@@ -213,17 +214,27 @@ export default class WebProcessingServiceCatalogFunction extends CatalogMemberMi
     }
 
     const resultPending = this.createPendingCatalogItem();
-    const dataInputs = await Promise.all(
+    let dataInputs = await Promise.all(
       this.parameters.map(p => this.convertParameterToInput(p))
     );
     const parameters = {
-      identifier: htmlEscapeText(this.identifier),
+      Identifier: htmlEscapeText(this.identifier),
+      DataInputs: dataInputs.filter(isDefined),
       storeExecuteResponse: this.storeSupported,
-      status: this.statusSupported,
-      dataInputs: dataInputs.filter(isDefined)
+      status: this.statusSupported
     };
-    const executeXml = Mustache.render(executeWpsTemplate, parameters);
-    const promise = this.postXml(this.executeUrl, executeXml);
+    let promise: Promise<any>;
+    if (this.executeWithHttpGet) {
+      promise = this.getXml(this.executeUrl, {
+        ...parameters,
+        DataInputs: parameters.DataInputs.map(
+          ({ inputIdentifier: id, inputValue: val }) => `${id}=${val}`
+        ).join(";")
+      });
+    } else {
+      const executeXml = Mustache.render(executeWpsTemplate, parameters);
+      promise = this.postXml(this.executeUrl, executeXml);
+    }
 
     resultPending.loadPromise = promise;
     this.terria.workbench.add(resultPending);
@@ -412,7 +423,11 @@ export default class WebProcessingServiceCatalogFunction extends CatalogMemberMi
     });
   }
 
-  getXml(url: string) {
+  getXml(url: string, parameters?: any) {
+    console.log("**getXml**", url, parameters);
+    if (isDefined(parameters)) {
+      url = new URI(url).query(parameters).toString();
+    }
     return loadXML(url);
   }
 

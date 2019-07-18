@@ -70,9 +70,10 @@ describe("WebProcessingServiceCatalogFunction", function() {
 
   describe("when invoked", function() {
     let dispose: () => void;
+    let getXml: jasmine.Spy;
 
     beforeEach(async function() {
-      spyOn(wps, "getXml").and.returnValue(processDescriptionsXml);
+      getXml = spyOn(wps, "getXml").and.returnValue(processDescriptionsXml);
       dispose = reaction(() => wps.parameters, () => {});
       await wps.loadMetadata();
       runInAction(() => {
@@ -96,14 +97,26 @@ describe("WebProcessingServiceCatalogFunction", function() {
       const postXml = spyOn(wps, "postXml").and.returnValue(executeResponseXml);
       await wps.invoke();
       expect(postXml.calls.argsFor(0)[0]).toBe(
-        "http://example.com/wps?service=WPS&request=Execute"
+        "http://example.com/wps?service=WPS&request=Execute&version=1.0.0"
       );
       const execute = xml2json(xml(postXml.calls.argsFor(0)[1]));
       expect(execute.Identifier).toBe(wps.identifier);
       expect(execute.DataInputs.Input.Identifier).toBe("geometry");
-      expect(execute.DataInputs.Input.Data.ComplexData).toBe(
-        '{"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"Point","coordinates":[144.97227858979468,-37.771379205590165,-1196.8235676901866]}}]}'
+      expect(execute.DataInputs.Input.Data.ComplexData).toBeDefined();
+    });
+
+    it("makes a GET request to the Execute endpoint when `executeWithHttpGet` is true", async function() {
+      runInAction(() => wps.setTrait("definition", "executeWithHttpGet", true));
+      getXml.and.returnValue(executeResponseXml);
+      await wps.invoke();
+      const [url, params] = getXml.calls.argsFor(1);
+      expect(url).toBe(
+        "http://example.com/wps?service=WPS&request=Execute&version=1.0.0"
       );
+      expect(params.Identifier).toBe("someId");
+      expect(params.DataInputs).toMatch(/geometry=/);
+      expect(params.storeExecuteResponse).toBe(true);
+      expect(params.status).toBe(true);
     });
 
     it("adds a ResultPendingCatalogItem to the workbench", async function() {
