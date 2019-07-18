@@ -68,7 +68,9 @@ const Chart = createReactClass({
     pollUrl: PropTypes.string,
 
     // Or, provide a tableStructure directly.
-    tableStructure: PropTypes.object
+    tableStructure: PropTypes.object,
+
+    items: PropTypes.array
   },
 
   chartDataArrayFromTableStructure(table) {
@@ -80,7 +82,10 @@ const Chart = createReactClass({
     const that = this;
     if (defined(data)) {
       // Nothing to do - the data was provided (either as props.data or props.tableStructure).
-      return when(data);
+      const promises = data.map(item => item.loadMapItems());
+      return Promise.all(promises).then(items => {
+        return data.reduce((p, c) => p.concat(c.chartItems), []);
+      });
     } else if (defined(url)) {
       return loadIntoTableStructure(catalogItem, url)
         .then(that.chartDataArrayFromTableStructure)
@@ -226,6 +231,8 @@ const Chart = createReactClass({
       chartData = this.chartDataArrayFromTableStructure(
         this.props.tableStructure
       );
+    } else if (defined(this.props.items)) {
+      chartData = this.props.items;
     }
 
     // for better presentation, we order datasets  so that the ones with units information to
@@ -286,4 +293,4 @@ function loadIntoTableStructure(catalogItem, url) {
   });
 }
 
-module.exports = Chart;
+export default Chart;

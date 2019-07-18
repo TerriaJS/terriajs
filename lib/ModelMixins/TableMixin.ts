@@ -129,16 +129,19 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
       ]);
     }
 
+    /**
+     * Gets the items to show on a chart.
+     */
     @computed
     get chartItems(): ChartData[] {
       const style = this.activeTableStyle;
-      if (style === undefined) {
+      if (style === undefined || !style.isChart()) {
         return [];
       }
 
       const xColumn = style.xAxisColumn;
-      const yColumn = style.yAxisColumn;
-      if (xColumn === undefined || yColumn === undefined) {
+      const lines = style.chartTraits.lines;
+      if (xColumn === undefined || lines.length === 0) {
         return [];
       }
 
@@ -146,23 +149,34 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
         xColumn.type === TableColumnType.time
           ? xColumn.valuesAsDates.values
           : xColumn.valuesAsNumbers.values;
-      const yValues = yColumn.valuesAsNumbers.values;
 
-      const points: ChartPoint[] = [];
-      for (let i = 0; i < xValues.length; ++i) {
-        const x = xValues[i];
-        const y = yValues[i];
-        if (x === null || y === null) {
-          continue;
-        }
-        points.push({ x, y });
-      }
+      return filterOutUndefined(
+        lines.map(line => {
+          const yColumn = line.yAxisColumn
+            ? this.findColumnByName(line.yAxisColumn)
+            : undefined;
+          if (yColumn === undefined) {
+            return undefined;
+          }
+          const yValues = yColumn.valuesAsNumbers.values;
 
-      const chartData = new ChartData({
-        points: points
-      });
+          const points: ChartPoint[] = [];
+          for (let i = 0; i < xValues.length; ++i) {
+            const x = xValues[i];
+            const y = yValues[i];
+            if (x === null || y === null) {
+              continue;
+            }
+            points.push({ x, y });
+          }
 
-      return [chartData];
+          const chartData = new ChartData({
+            points: points
+          });
+
+          return chartData;
+        })
+      );
     }
 
     @computed

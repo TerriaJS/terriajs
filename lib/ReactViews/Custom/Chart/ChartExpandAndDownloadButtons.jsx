@@ -308,4 +308,4 @@ function expand(props, sourceIndex) {
   });
 }
 
-module.exports = ChartExpandAndDownloadButtons;
+export default ChartExpandAndDownloadButtons;

@@ -38,7 +38,7 @@ export default class CsvCatalogItem extends AsyncMappableMixin(
     return "csv";
   }
 
-  constructor(id: string, terria: Terria) {
+  constructor(id: string | undefined, terria: Terria) {
     super(id, terria);
     this.strata.set(
       automaticTableStylesStratumName,
