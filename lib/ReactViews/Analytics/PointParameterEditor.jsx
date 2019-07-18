@@ -10,12 +10,12 @@ import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import defined from "terriajs-cesium/Source/Core/defined";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
-import knockout from "terriajs-cesium/Source/ThirdParty/knockout";
 
 import MapInteractionMode from "../../Models/MapInteractionMode";
 import ObserveModelMixin from "../ObserveModelMixin";
 
 import Styles from "./parameter-editors.scss";
+import { runInAction, autorun } from "mobx";
 
 const PointParameterEditor = createReactClass({
   displayName: "PointParameterEditor",
@@ -169,27 +169,36 @@ PointParameterEditor.selectOnMap = function(terria, viewState, parameter) {
   // Cancel any feature picking already in progress.
   terria.pickedFeatures = undefined;
 
+  let pickedFeaturesSubscription;
   const pickPointMode = new MapInteractionMode({
     message: "Select a point by clicking on the map.",
     onCancel: function() {
       terria.mapInteractionModeStack.pop();
       viewState.openAddData();
+      if (pickedFeaturesSubscription) {
+        pickedFeaturesSubscription.dispose();
+      }
     }
   });
   terria.mapInteractionModeStack.push(pickPointMode);
 
-  knockout
-    .getObservable(pickPointMode, "pickedFeatures")
-    .subscribe(function(pickedFeatures) {
-      if (defined(pickedFeatures.pickPosition)) {
-        const value = Ellipsoid.WGS84.cartesianToCartographic(
-          pickedFeatures.pickPosition
-        );
-        terria.mapInteractionModeStack.pop();
-        parameter.value = value;
-        viewState.openAddData();
+  autorun(reaction => {
+    pickedFeaturesSubscription = reaction;
+    if (pickPointMode.pickedFeatures) {
+      const pickedFeatures = pickPointMode.pickedFeatures;
+      if (pickedFeatures.pickPosition) {
+        runInAction(() => {
+          const value = Ellipsoid.WGS84.cartesianToCartographic(
+            pickedFeatures.pickPosition
+          );
+          terria.mapInteractionModeStack.pop();
+          parameter.value = value;
+          viewState.openAddData();
+        });
       }
-    });
+      pickedFeaturesSubscription.dispose();
+    }
+  });
 
   viewState.explorerPanelIsVisible = false;
 };

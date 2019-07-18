@@ -1,4 +1,4 @@
-import { computed, observable, runInAction } from "mobx";
+import { computed, observable, runInAction, trace } from "mobx";
 import Mustache from "mustache";
 import URI from "urijs";
 import isDefined from "../Core/isDefined";
@@ -156,6 +156,9 @@ export default class WebProcessingServiceCatalogFunction extends CatalogMemberMi
     );
   }
 
+  /**
+   * Return the inputs in the processDescription
+   */
   @computed get inputs(): Input[] {
     if (!isDefined(this.processDescription)) {
       return [];
@@ -176,7 +179,14 @@ export default class WebProcessingServiceCatalogFunction extends CatalogMemberMi
     return inputs;
   }
 
-  @computed get parameters() {
+  /**
+   *  Maps the input to function parameters.
+   *
+   * We `keepAlive` because the parameter properties could be modified by
+   * UI that can come and go, but we want those modifications to persist.
+   */
+  @computed({ keepAlive: true })
+  get parameters() {
     const parameters = this.inputs.map(input => {
       const parameter = this.convertInputToParameter(input);
       if (isDefined(parameter)) {
@@ -193,6 +203,10 @@ export default class WebProcessingServiceCatalogFunction extends CatalogMemberMi
     return parameters;
   }
 
+  /**
+   * Performs the Execute request for the WPS process
+   *
+   */
   async invoke() {
     if (!isDefined(this.identifier) || !isDefined(this.executeUrl)) {
       return;
@@ -217,6 +231,11 @@ export default class WebProcessingServiceCatalogFunction extends CatalogMemberMi
     await this.handleExecuteResponse(executeResponseXml, resultPending);
   }
 
+  /**
+   * Handle the Execute response
+   *
+   * If Execute succeeded, we create a WebProcessingServiceCatalogItem to show the result.
+   */
   async handleExecuteResponse(xml: any, pendingItem: ResultPendingCatalogItem) {
     if (
       !xml ||

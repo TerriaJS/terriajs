@@ -71,6 +71,9 @@ class GeoJsonCatalogItem extends AsyncMappableMixin(
 
   readonly canZoomTo = true;
 
+  // The final data after all transformations are applied
+  readyData?: JsonObject;
+
   constructor(id: string, terria: Terria) {
     super(id, terria);
   }
@@ -150,6 +153,7 @@ class GeoJsonCatalogItem extends AsyncMappableMixin(
         );
       })
       .then((geoJsonWgs84: JsonObject) => {
+        this.readyData = geoJsonWgs84;
         return this.loadDataSource(geoJsonWgs84);
       })
       .then(dataSource => {

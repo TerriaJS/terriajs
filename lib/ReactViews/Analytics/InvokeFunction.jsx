@@ -74,8 +74,6 @@ const InvokeFunction = observer(
             }
           }
         );
-        // Show the Now Viewing panel
-        this.props.previewed.terria.nowViewing.showNowViewingRequested.raiseEvent();
         // Close modal window
         this.props.viewState.explorerPanelIsVisible = false;
         // mobile switch to nowvewing

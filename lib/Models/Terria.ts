@@ -46,6 +46,7 @@ import updateModelFromJson from "./updateModelFromJson";
 import upsertModelFromJson from "./upsertModelFromJson";
 import Workbench from "./Workbench";
 import CorsProxy from "../Core/CorsProxy";
+import MapInteractionMode from "./MapInteractionMode";
 
 interface ConfigParameters {
   defaultMaximumShownFeatureInfos?: number;
@@ -164,6 +165,13 @@ export default class Terria {
   @observable
   selectedFeature: Feature | undefined;
 
+  /**
+   * Gets or sets the stack of map interactions modes.  The mode at the top of the stack
+   * (highest index) handles click interactions with the map
+   */
+  @observable
+  mapInteractionModeStack: MapInteractionMode[] = [];
+
   baseMapContrastColor: string = "#ffffff";
 
   @observable
@@ -221,15 +229,21 @@ export default class Terria {
 
   @computed
   get cesium(): Cesium | undefined {
-    if (isDefined(this.mainViewer) && this.mainViewer instanceof Cesium) {
-      return this.mainViewer;
+    if (
+      isDefined(this.mainViewer) &&
+      this.mainViewer.currentViewer instanceof Cesium
+    ) {
+      return this.mainViewer.currentViewer;
     }
   }
 
   @computed
   get leaflet(): Leaflet | undefined {
-    if (isDefined(this.mainViewer) && this.mainViewer instanceof Leaflet) {
-      return this.mainViewer;
+    if (
+      isDefined(this.mainViewer) &&
+      this.mainViewer.currentViewer instanceof Leaflet
+    ) {
+      return this.mainViewer.currentViewer;
     }
   }
 

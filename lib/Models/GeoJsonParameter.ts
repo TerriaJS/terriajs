@@ -1,11 +1,12 @@
+import { computed, observable } from "mobx";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import FunctionParameter, {
   Options as FunctionParameterOptions
 } from "./FunctionParameter";
 import PointParameter from "./PointParameter";
-import RegionParameter from "./RegionParameter";
 import PolygonParameter, { Polygon } from "./PolygonParameter";
-import { computed } from "mobx";
+import RegionParameter from "./RegionParameter";
+import SelectAPolygonParameter from "./SelectAPolygonParameter";
 
 interface Options extends FunctionParameterOptions {
   regionParameter: RegionParameter;
@@ -19,7 +20,9 @@ export default class GeoJsonParameter extends FunctionParameter {
   static readonly RegionType = "region";
   static readonly SelectAPolygonType = "selectAPolygon";
 
+  @observable
   subtype?: string;
+
   readonly regionParameter: RegionParameter;
 
   constructor(options: Options) {
@@ -43,6 +46,12 @@ export default class GeoJsonParameter extends FunctionParameter {
         inputValue: PolygonParameter.formatValueForUrl(<Polygon>value)
       };
     }
+    if (this.subtype === GeoJsonParameter.SelectAPolygonType) {
+      return {
+        inputType: "ComplexData",
+        inputValue: SelectAPolygonParameter.formatValueForUrl(value)
+      };
+    }
   }
 
   @computed get geoJsonFeature() {
@@ -51,6 +60,9 @@ export default class GeoJsonParameter extends FunctionParameter {
     }
     if (this.subtype === GeoJsonParameter.PolygonType) {
       return PolygonParameter.getGeoJsonFeature(<Polygon>this.value);
+    }
+    if (this.subtype === GeoJsonParameter.SelectAPolygonType) {
+      return SelectAPolygonParameter.getGeoJsonFeature(this.value);
     }
     // TODO rest
   }
