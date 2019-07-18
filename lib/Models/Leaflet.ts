@@ -171,19 +171,7 @@ export default class Leaflet extends GlobeOrMap {
         map.dragging,
         map.tap
       ]);
-      const pickLocation = (e: L.LeafletEvent) => {
-        const mouseEvent = <L.LeafletMouseEvent>e;
-
-        // Handle click events that cross the anti-meridian
-        if (mouseEvent.latlng.lng > 180 || mouseEvent.latlng.lng < -180) {
-          mouseEvent.latlng = mouseEvent.latlng.wrap();
-        }
-
-        // if (!this._dragboxcompleted && that.map.dragging.enabled()) {
-        this._pickFeatures(mouseEvent.latlng);
-        // }
-        // this._dragboxcompleted = false;
-      };
+      const pickLocation = this.pickLocation.bind(this);
       const pickFeature = (entity: Entity, event: L.LeafletMouseEvent) => {
         this._featurePicked(entity, event);
       };
@@ -204,6 +192,23 @@ export default class Leaflet extends GlobeOrMap {
         });
       }
     });
+  }
+
+  /**
+   * Pick feature from mouse click event.
+   */
+  private pickLocation(e: L.LeafletEvent) {
+    const mouseEvent = <L.LeafletMouseEvent>e;
+
+    // Handle click events that cross the anti-meridian
+    if (mouseEvent.latlng.lng > 180 || mouseEvent.latlng.lng < -180) {
+      mouseEvent.latlng = mouseEvent.latlng.wrap();
+    }
+
+    // if (!this._dragboxcompleted && that.map.dragging.enabled()) {
+    this._pickFeatures(mouseEvent.latlng);
+    // }
+    // this._dragboxcompleted = false;
   }
 
   getContainer() {
@@ -455,17 +460,18 @@ export default class Leaflet extends GlobeOrMap {
       const newPickLocation = Ellipsoid.WGS84.cartographicToCartesian(
         pickedLocation
       );
-      // TODO
-      // const mapInteractionModeStack = this.terria.mapInteractionModeStack;
-      // if (
-      //   defined(mapInteractionModeStack) &&
-      //   mapInteractionModeStack.length > 0
-      // ) {
-      //   mapInteractionModeStack[
-      //     mapInteractionModeStack.length - 1
-      //   ].pickedFeatures.pickPosition = newPickLocation;
-      // } else
-      if (isDefined(this.terria.pickedFeatures)) {
+      const mapInteractionModeStack = this.terria.mapInteractionModeStack;
+      if (
+        isDefined(mapInteractionModeStack) &&
+        mapInteractionModeStack.length > 0
+      ) {
+        const pickedFeatures =
+          mapInteractionModeStack[mapInteractionModeStack.length - 1]
+            .pickedFeatures;
+        if (isDefined(pickedFeatures)) {
+          pickedFeatures.pickPosition = newPickLocation;
+        }
+      } else if (isDefined(this.terria.pickedFeatures)) {
         this.terria.pickedFeatures.pickPosition = newPickLocation;
       }
 
@@ -597,18 +603,17 @@ export default class Leaflet extends GlobeOrMap {
         throw e;
       });
 
-    // TODO
-    // const mapInteractionModeStack = this.terria.mapInteractionModeStack;
-    // if (
-    //   defined(mapInteractionModeStack) &&
-    //   mapInteractionModeStack.length > 0
-    // ) {
-    //   mapInteractionModeStack[
-    //     mapInteractionModeStack.length - 1
-    //   ].pickedFeatures = this._pickedFeatures;
-    // } else {
-    this.terria.pickedFeatures = this._pickedFeatures;
-    // }
+    const mapInteractionModeStack = this.terria.mapInteractionModeStack;
+    if (
+      isDefined(mapInteractionModeStack) &&
+      mapInteractionModeStack.length > 0
+    ) {
+      mapInteractionModeStack[
+        mapInteractionModeStack.length - 1
+      ].pickedFeatures = this._pickedFeatures;
+    } else {
+      this.terria.pickedFeatures = this._pickedFeatures;
+    }
   }
 
   _reactToSplitterChanges() {
