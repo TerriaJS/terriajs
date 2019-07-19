@@ -1,7 +1,7 @@
 Change Log
 ==========
 
-### Next Release
+### v7.6.5
 
 * Add the filename to a workbench item from a drag'n'dropped file so it isn't undisplayed as 'Unnamed item'.
 * Fixed inability to share SOS items.
@@ -40,6 +40,7 @@ Change Log
 * Allow vector tiles for region mapping to return 404 for empty tiles. 
 
 ### v7.5.2
+
 * Upgraded to Cesium v1.58.1.
 * Charts are now shared in share & story links
 
