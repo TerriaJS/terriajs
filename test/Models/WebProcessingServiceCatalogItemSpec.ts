@@ -87,6 +87,26 @@ describe("WebProcessingServiceCatalogItem", function() {
         }
       });
 
+      it("adds a shortReport for complex data with mimeType", async function() {
+        item.setTrait(CommonStrata.user, "wpsResponse", {
+          ProcessOutputs: {
+            Output: {
+              Title: "Some data",
+              Data: {
+                ComplexData: {
+                  mimeType: "text/csv",
+                  text: "abc,def"
+                }
+              }
+            }
+          }
+        });
+        await item.loadMetadata();
+        expect(item.shortReportSections[0].content).toMatch(
+          /collapsible.*chart/
+        );
+      });
+
       describe("when mimeType is terriajs catalog member json", function() {
         beforeEach(function() {
           runInAction(() => {

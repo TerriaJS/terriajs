@@ -211,14 +211,26 @@ export default class WebProcessingServiceCatalogItem
     this.strata.set(WpsLoadableStratum.stratumName, stratum);
 
     const reports: StratumFromTraits<ShortReportTraits>[] = [];
-    const promises = this.outputs.map(async output => {
+    const promises = this.outputs.map(async (output, i) => {
       if (!output.Data.ComplexData) {
         return;
       }
 
       let reportContent = output.Data.ComplexData;
       if (output.Data.ComplexData.mimeType === "text/csv") {
-        // TODO
+        reportContent =
+          '<collapsible title="' +
+          output.Title +
+          '" open="' +
+          (i === 0 ? "true" : "false") +
+          '">';
+        reportContent +=
+          '<chart can-download="true" hide-buttons="false" title="' +
+          output.Title +
+          "\" data='" +
+          output.Data.ComplexData.text +
+          '\' styling="histogram"></chart>';
+        reportContent += "</collapsible>";
       } else if (
         output.Data.ComplexData.mimeType ===
         "application/vnd.terriajs.catalog-member+json"
