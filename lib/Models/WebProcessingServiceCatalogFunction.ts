@@ -1,11 +1,12 @@
-import { computed, observable, runInAction, trace } from "mobx";
+import { computed, observable, runInAction } from "mobx";
 import Mustache from "mustache";
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import URI from "urijs";
 import isDefined from "../Core/isDefined";
-import loadWithXhr from "../Core/loadWithXhr";
-import loadXML from "../Core/loadXML";
+import runLater from "../Core/runLater";
 import TerriaError from "../Core/TerriaError";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
+import XmlRequestMixin from "../ModelMixins/XmlRequestMixin";
 import xml2json from "../ThirdParty/xml2json";
 import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
 import WebProcessingServiceCatalogFunctionTraits from "../Traits/WebProcessingServiceCatalogFunctionTraits";
@@ -13,20 +14,24 @@ import { ParameterTraits } from "../Traits/WebProcessingServiceCatalogItemTraits
 import CommonStrata from "./CommonStrata";
 import CreateModel from "./CreateModel";
 import createStratumInstance from "./createStratumInstance";
+import DateTimeParameter from "./DateTimeParameter";
 import EnumerationParameter from "./EnumerationParameter";
 import FunctionParameter, {
   Options as FunctionParameterOptions
 } from "./FunctionParameter";
 import GeoJsonParameter from "./GeoJsonParameter";
+import LineParameter from "./LineParameter";
+import PointParameter from "./PointParameter";
+import PolygonParameter from "./PolygonParameter";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import RegionParameter from "./RegionParameter";
 import RegionTypeParameter from "./RegionTypeParameter";
 import ResultPendingCatalogItem from "./ResultPendingCatalogItem";
 import StringParameter from "./StringParameter";
 import WebProcessingServiceCatalogItem from "./WebProcessingServiceCatalogItem";
-import runLater from "../Core/runLater";
-import XmlRequestMixin from "../ModelMixins/XmlRequestMixin";
+import RectangleParameter from "./RectangleParameter";
 
+const Reproject = require("../Map/Reproject");
 const sprintf = require("terriajs-cesium/Source/ThirdParty/sprintf");
 const executeWpsTemplate = require("./ExecuteWpsTemplate.xml");
 
@@ -44,12 +49,18 @@ interface ComplexData {
   Default?: { Format?: { Schema?: string } };
 }
 
+interface BoundingBoxData {
+  Default?: { CRS?: string };
+  Supported?: { CRS?: string[] };
+}
+
 interface Input {
   Identifier?: string;
   Name?: string;
   Abstract?: string;
   LiteralData?: LiteralData;
   ComplexData?: ComplexData;
+  BoundingBoxData?: BoundingBoxData;
   minOccurs?: number;
 }
 
@@ -82,6 +93,11 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
 
   readonly parameterConverters: ParameterConverter[] = [
     LiteralDataConverter,
+    DateTimeConverter,
+    PointConverter,
+    LineConverter,
+    PolygonConverter,
+    RectangleConverter,
     GeoJsonGeometryConverter
   ];
 
@@ -470,6 +486,123 @@ const LiteralDataConverter = {
   }
 };
 
+const DateTimeConverter = {
+  inputToParameter: function(input: Input, options: FunctionParameterOptions) {
+    if (
+      !isDefined(input.ComplexData) ||
+      !isDefined(input.ComplexData.Default) ||
+      !isDefined(input.ComplexData.Default.Format) ||
+      !isDefined(input.ComplexData.Default.Format.Schema)
+    ) {
+      return undefined;
+    }
+
+    var schema = input.ComplexData.Default.Format.Schema;
+    if (schema !== "http://www.w3.org/TR/xmlschema-2/#dateTime") {
+      return undefined;
+    }
+    return new DateTimeParameter(options);
+  },
+  parameterToInput: function(parameter: FunctionParameter) {
+    return {
+      inputType: "ComplexData",
+      inputValue: DateTimeParameter.formatValueForUrl(<string>parameter.value)
+    };
+  }
+};
+
+const PointConverter = simpleGeoJsonDataConverter("point", PointParameter);
+const LineConverter = simpleGeoJsonDataConverter("linestring", LineParameter);
+const PolygonConverter = simpleGeoJsonDataConverter(
+  "polygon",
+  PolygonParameter
+);
+
+const RectangleConverter = {
+  inputToParameter: function(input: Input, options: FunctionParameterOptions) {
+    if (
+      !isDefined(input.BoundingBoxData) ||
+      !isDefined(input.BoundingBoxData.Default) ||
+      !isDefined(input.BoundingBoxData.Default.CRS)
+    ) {
+      return undefined;
+    }
+    var code = Reproject.crsStringToCode(input.BoundingBoxData.Default.CRS);
+    var usedCrs = input.BoundingBoxData.Default.CRS;
+    // Find out if Terria's CRS is supported.
+    if (
+      code !== Reproject.TERRIA_CRS &&
+      isDefined(input.BoundingBoxData.Supported) &&
+      isDefined(input.BoundingBoxData.Supported.CRS)
+    ) {
+      for (let i = 0; i < input.BoundingBoxData.Supported.CRS.length; i++) {
+        if (
+          Reproject.crsStringToCode(input.BoundingBoxData.Supported.CRS[i]) ===
+          Reproject.TERRIA_CRS
+        ) {
+          code = Reproject.TERRIA_CRS;
+          usedCrs = input.BoundingBoxData.Supported.CRS[i];
+          break;
+        }
+      }
+    }
+    // We are currently only supporting Terria's CRS, because if we reproject we don't know the URI or whether
+    // the bounding box order is lat-long or long-lat.
+    if (!isDefined(code)) {
+      return undefined;
+    }
+
+    return new RectangleParameter({
+      ...options,
+      crs: usedCrs
+    });
+  },
+  parameterToInput: function(functionParameter: FunctionParameter) {
+    const parameter = <RectangleParameter>functionParameter;
+    const value = parameter.value;
+
+    if (!isDefined(value)) {
+      return;
+    }
+
+    let bboxMinCoord1, bboxMinCoord2, bboxMaxCoord1, bboxMaxCoord2, urn;
+    // We only support CRS84 and EPSG:4326
+    if (parameter.crs.indexOf("crs84") !== -1) {
+      // CRS84 uses long, lat rather that lat, long order.
+      bboxMinCoord1 = CesiumMath.toDegrees(value.west);
+      bboxMinCoord2 = CesiumMath.toDegrees(value.south);
+      bboxMaxCoord1 = CesiumMath.toDegrees(value.east);
+      bboxMaxCoord2 = CesiumMath.toDegrees(value.north);
+      // Comfortingly known as WGS 84 longitude-latitude according to Table 3 in OGC 07-092r1.
+      urn = "urn:ogc:def:crs:OGC:1.3:CRS84";
+    } else {
+      // The URN value urn:ogc:def:crs:EPSG:6.6:4326 shall mean the Coordinate Reference System (CRS) with code
+      // 4326 specified in version 6.6 of the EPSG database available at http://www.epsg.org/. That CRS specifies
+      // the axis order as Latitude followed by Longitude.
+      // We don't know about other URN versions, so are going to return 6.6 regardless of what was requested.
+      bboxMinCoord1 = CesiumMath.toDegrees(value.south);
+      bboxMinCoord2 = CesiumMath.toDegrees(value.west);
+      bboxMaxCoord1 = CesiumMath.toDegrees(value.north);
+      bboxMaxCoord2 = CesiumMath.toDegrees(value.east);
+      urn = "urn:ogc:def:crs:EPSG:6.6:4326";
+    }
+
+    return {
+      inputType: "BoundingBoxData",
+      inputValue:
+        bboxMinCoord1 +
+        "," +
+        bboxMinCoord2 +
+        "," +
+        bboxMaxCoord1 +
+        "," +
+        bboxMaxCoord2 +
+        "," +
+        urn
+    };
+  }
+};
+
 const GeoJsonGeometryConverter = {
   inputToParameter: function(input: Input, options: FunctionParameterOptions) {
     if (
@@ -513,6 +646,41 @@ const GeoJsonGeometryConverter = {
     return (<GeoJsonParameter>parameter).getProcessedValue(parameter.value);
   }
 };
+
+function simpleGeoJsonDataConverter(schemaType: string, klass: any) {
+  return {
+    inputToParameter: function(
+      input: Input,
+      options: FunctionParameterOptions
+    ) {
+      if (
+        !isDefined(input.ComplexData) ||
+        !isDefined(input.ComplexData.Default) ||
+        !isDefined(input.ComplexData.Default.Format) ||
+        !isDefined(input.ComplexData.Default.Format.Schema)
+      ) {
+        return undefined;
+      }
+
+      var schema = input.ComplexData.Default.Format.Schema;
+      if (schema.indexOf("http://geojson.org/geojson-spec.html#") !== 0) {
+        return undefined;
+      }
+
+      if (schema.substring(schema.lastIndexOf("#") + 1) !== schemaType) {
+        return undefined;
+      }
+
+      return new klass(options);
+    },
+    parameterToInput: function(parameter: FunctionParameter) {
+      return {
+        inputType: "ComplexData",
+        inputValue: klass.formatValueForUrl(parameter.value)
+      };
+    }
+  };
+}
 
 function throwInvalidWpsServerError(
   wps: WebProcessingServiceCatalogFunction,

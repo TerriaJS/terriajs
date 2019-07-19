@@ -13,6 +13,11 @@ import WebProcessingServiceCatalogItem from "../../lib/Models/WebProcessingServi
 import Workbench from "../../lib/Models/Workbench";
 import xml2json from "../../lib/ThirdParty/xml2json";
 import { xml } from "../SpecHelpers";
+import DateTimeParameter from "../../lib/Models/DateTimeParameter";
+import PointParameter from "../../lib/Models/PointParameter";
+import PolygonParameter from "../../lib/Models/PolygonParameter";
+import LineParameter from "../../lib/Models/LineParameter";
+import RectangleParameter from "../../lib/Models/RectangleParameter";
 
 const processDescriptionsXml = xml(
   require("raw-loader!../../wwwroot/test/WPS/ProcessDescriptions.xml")
@@ -229,7 +234,7 @@ describe("WebProcessingServiceCatalogFunction", function() {
         Identifier: "geometry_id",
         LiteralData: { AllowedValues: { Value: ["Point", "Polygon"] } }
       });
-      expect(parameter instanceof EnumerationParameter).toBeTruthy();
+      expect(parameter).toEqual(jasmine.any(EnumerationParameter));
       if (parameter) {
         const enumParameter = <EnumerationParameter>parameter;
         expect(enumParameter.possibleValues).toEqual(["Point", "Polygon"]);
@@ -241,7 +246,7 @@ describe("WebProcessingServiceCatalogFunction", function() {
         Identifier: "geometry_id",
         LiteralData: { AllowedValue: { Value: "Point" } }
       });
-      expect(parameter instanceof EnumerationParameter).toBeTruthy();
+      expect(parameter).toEqual(jasmine.any(EnumerationParameter));
       if (parameter) {
         const enumParameter = <EnumerationParameter>parameter;
         expect(enumParameter.possibleValues).toEqual(["Point"]);
@@ -253,7 +258,57 @@ describe("WebProcessingServiceCatalogFunction", function() {
         Identifier: "geometry_id",
         LiteralData: { AnyValue: {} }
       });
-      expect(parameter instanceof StringParameter).toBeTruthy();
+      expect(parameter).toEqual(jasmine.any(StringParameter));
+    });
+
+    it("converts ComplexData input with datetime schema to DateTimeParameter", function() {
+      const parameter = wps.convertInputToParameter({
+        Identifier: "geometry",
+        ComplexData: {
+          Default: {
+            Format: { Schema: "http://www.w3.org/TR/xmlschema-2/#dateTime" }
+          }
+        }
+      });
+      expect(parameter).toEqual(jasmine.any(DateTimeParameter));
+    });
+
+    it("converts ComplexData input with point schema to PointParameter", function() {
+      const parameter = wps.convertInputToParameter({
+        Identifier: "geometry",
+        ComplexData: {
+          Default: {
+            Format: { Schema: "http://geojson.org/geojson-spec.html#point" }
+          }
+        }
+      });
+      expect(parameter).toEqual(jasmine.any(PointParameter));
+    });
+
+    it("converts ComplexData input with line schema to LineParameter", function() {
+      const parameter = wps.convertInputToParameter({
+        Identifier: "geometry",
+        ComplexData: {
+          Default: {
+            Format: {
+              Schema: "http://geojson.org/geojson-spec.html#linestring"
+            }
+          }
+        }
+      });
+      expect(parameter).toEqual(jasmine.any(LineParameter));
+    });
+
+    it("converts ComplexData input with polygon schema to PolygonParameter", function() {
+      const parameter = wps.convertInputToParameter({
+        Identifier: "geometry",
+        ComplexData: {
+          Default: {
+            Format: { Schema: "http://geojson.org/geojson-spec.html#polygon" }
+          }
+        }
+      });
+      expect(parameter).toEqual(jasmine.any(PolygonParameter));
     });
 
     it("converts ComplexData input with GeoJson schema to GeoJsonParameter", function() {
@@ -265,7 +320,17 @@ describe("WebProcessingServiceCatalogFunction", function() {
           }
         }
       });
-      expect(parameter instanceof GeoJsonParameter).toBeTruthy();
+      expect(parameter).toEqual(jasmine.any(GeoJsonParameter));
+    });
+
+    it("converts input with BoundingBoxData to RectangleParameter", function() {
+      const parameter = wps.convertInputToParameter({
+        Identifier: "geometry",
+        BoundingBoxData: {
+          Default: { CRS: "crs84" }
+        }
+      });
+      expect(parameter).toEqual(jasmine.any(RectangleParameter));
     });
   });
 });
