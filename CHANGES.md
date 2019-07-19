@@ -1,11 +1,270 @@
-
-
 Change Log
 ==========
 
-### Next Release
+### v7.6.5
 
+* Add the filename to a workbench item from a drag'n'dropped file so it isn't undisplayed as 'Unnamed item'.
+* Fixed inability to share SOS items.
+* Added an option to the mobile menu to allow a story to be resumed after it is closed.
+* The "Introducing Data Stories" prompt now only needs to be dismissed once. Previously it would continue to appear on every load until you clicked the "Story" button.
+* Fixed a crash that could occur when the feature info panel has a chart but the selected feature has no chart data.
+* Fixed a bug where the feature info panel would show information on a vector tile region mapped dataset that had no match.
+
+### v7.6.4
+
+* Add scrollbar to dropdown boxes.
+* Add support for SDMX version 2.1 to existing `SdmxJsonCatalogItem`.
+* Add a warning when sharing a map describing datasets which will be missing.
+* Enable the story panel to be ordered to the front. 
+* Disable the autocomplete on the title field when adding a new scene to a story.
+* Fix SED codes for regionmapping
+
+### v7.6.3
+
+* Fixed a bug with picking features that cross the anti-meridian in 2D mode .
+* Fixed a bug where `ArcGisMapServerCatalogItem` legends were being created during search.
+* Fixed a bug where region mapping would not accurately reflect share link parameters.
+
+### v7.6.2
+
+* Fixed a bug that made some input boxes unreadable in some web browsers.
+
+### v7.6.1
+
+* Fixed a bug that prevented the "Feedback" button from working correctly.
+* Fix a bug that could cause a lot of extra space to the left of a chart on the feature info panel.
+
+### v7.6.0
+
+* Added video intro to building a story
+* Allow vector tiles for region mapping to return 404 for empty tiles. 
+
+### v7.5.2
+
+* Upgraded to Cesium v1.58.1.
+* Charts are now shared in share & story links
+
+### v7.5.1
+
+* Fixed a bug in Cesium that prevented the new Bing Maps "on demand" basemaps from working on `https` sites.
+
+### v7.5.0
+
+* Added the "Story" feature for building and sharing guided tours of maps and data.
+* Added sharing within the data catalog to share a given catalog group or item
+* Switched to using the new "on demand" versions of the Bing Maps aerial and roads basemaps. The previous versions are deprecated.
+
+### v7.4.1
+
+* Remove dangling comma in `regionMapping.json`.
+* `WebMapServicCatalogItem` now includes the current `style` in generated `GetLegendGraphic` URLs. 
+
+### v7.4.0
+
+* Upgraded to Cesium v1.57.
+* Fixed a bug where all available styles were being retrieved from a `GetCapabilities` for each layer within a WMS Group resulting in memory crashes on WMSs with many layers.
+* Support State Electoral Districts 2018 and 2016 (SED_Code_2018, SED_Code_2016, SED_Name_2018, SED_Name_2016)
+
+### v7.3.0
+
+* Added `GltfCatalogItem` for displaying [glTF](https://www.khronos.org/gltf/) models on the 3D scene.
+* Fixed a bug where the Map settings '2D' button activated '3D Smooth' view when configured without support for '3D Terrain'.
+* Added `clampToTerrain` property to `GeoJsonCatalogItem`.
+* When clicking a polygon in 3D Terrain mode, the white outline is now correctly shown on the terrain surface. Note that Internet Explorer 11 and old GPU hardware cannot support drawing the highlight on terrain, so it will not be drawn at all in these environments.
+
+### v7.2.1
+
+* Removed an extra close curly brace from `regionMapping.json`.
+
+### v7.2.0
+
+* Added `hideLayerAfterMinScaleDenominator` property to `WebMapServiceCatalogItem`. When true, TerriaJS will show a message and display nothing rather than silently show a scaled-up version of the layer when the user zooms in past the layer's advertised `MinScaleDenominator`.
+* Added `GeoJsonParameterEditor`.
+* Fixed a bug that resulted in blank titles for catalog groups loaded from automatically detected (WMS) servers
+* Fixed a bug that caused some chart "Expand" options to be hidden.
+* Added `CED_CODE18` and `CED_NAME18` region types to `regionMapping.json`. These are now the default for CSV files that reference `ced`, `ced_code` and `ced_name` (previously the 2016 versions were used).
+* Improved support for WMTS, setting a maximum level to request tiles at.
+
+### v7.1.0
+
+* Support displaying availability for imagery layers on charts, by adding `"showOnChart": true" or clicking a button in the UI.
+* Added a `featureTimesProperty` property to all `ImageryLayerCatalogItem`s. This is useful for datasets that do not have data for all locations at all times, such as daily sensor swaths of near-real-time or historical satellite imagery. The property specifies the name of a property returned by the layer's feature information query that indicates the times when data is available at that particular location. When this property is set, TerriaJS will display an interface on the workbench to allow the user to filter the times to only those times where data is available at a particular location. It will also display a button at the bottom of the Feature Information panel allowing the user to filter for the selected location.
+* Added `disablePreview` option to all catalog items. This is useful when the preview map in the catalog will be slow to load.
+* When using the splitter, the feature info panel will now show only the features on the clicked side of the splitter.
+* Vector polygons and polylines are now higlighted when clicked.
+* Fixed a bug that prevented catalog item split state (left/right/both) from being shared for CSV layers.
+* Fixed a bug where the 3D globe would not immediately refresh when toggling between the "Terrain" and "Smooth" viewer modes.
+* Fixed a bug that could cause the chart panel at the bottom to flicker on and off rapidly when there is an error loading chart data.
+* Fixed map tool button positioning on small-screen devices when viewing time series layers.
+
+### v7.0.2
+
+* Fixed a bug that prevented billboard images from working on the 2D map.
+* Implemented "Zoom To" support for KML, CZML, and other vector data sources.
+* Upgraded to Cesium v1.55.
+
+### v7.0.1
+
+* Breaking Changes:
+  * TerriaJS no longer supports Internet Explorer 9 or 10.
+  * An application-level polyfill suite is now highly recommended, and it is required for Internet Explorer 11 compatibility. The easiest approach is to add `<script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>` to the `<head>` element of your application's HTML page, which will deliver a polyfill suite tailored to the end-user's browser.
+  * TerriaJS now requires Node.js v8.0 or later.
+  * TerriaJS now requires Webpack v4.0 or later.
+  * TerriaJS now uses Gulp v4.0. If you have Gulp 3 installed globally, you'll need to use `npm run gulp` to run TerriaJS gulp tasks, or upgrade your global Gulp to v4 with `npm install -g gulp@4`.
+  * TerriaJS now uses Babel v7.0.
+  * Removed `UrthecastCatalogItem`, `UrthecastCatalogGroup`, and `registerUrthcastCatalogItems`. The Urthecast functionality was dependent on an npm package that hadn't been updated in three years and had potential security vulnerabilities. Please [let us know](https://gitter.im/TerriaJS/terriajs) if you were using this functionality.
+
+### v6.5.0
+
+* Add support for rendering Mapbox Vector Tiles (MVT) layers. Currently, polygons are the only supported geometry type, and all polygons are drawn with the same outline and fill colors.
+* `wwwroot/data/regionMapping.json` is now the default region mapping file (rather than a file provided by TerriaMap), and needs to be explicitly overridden by a `regionMappingDefinitionsUrl` setting in config.json.
+
+### v6.4.0
+
+* The Feature Info panel can now be moved by clicking and dragging it.
+* The map tool buttons are now arranged horizontally instead of vertically on small-screen mobile devices.
+* When using a Web Map Service (WMS) catalog item with the `linkedWcsUrl` and `linkedWcsCoverage` properties, we now pass the selected WMS style to the Web Coverage Service (WCS) so that it can optionally return different information based on the selected style.
+* Added `stationIdWhitelist` and `stationIdBlacklist` properties to `SensorObservationServiceCatalogItem` to allow filtering certain monitoring stations in/out.
+* Fixed a bug that caused a crash when attempting to use a `style` attribute on an `<a>` tag in Markdown+HTML strings such as feature info templates.
+* Fixed a bug that displaced the chart dropdown list on mobile Safari.
+
+### v6.3.7
+
+* Upgraded to Cesium v1.53.
+
+### v6.3.6
+
+* Dragging/dropping files now displays a more subtle notification rather than opening the large Add Data / My Data panel.
+* The `sendFeedback` function can now be used to send additional information if the server is configured to receive it (i.e. `devserverconfig.json`).
+* Made custom feedback controls stay in the lower-right corner of the map.
+* Improved the look of the toolbar icons in the top right, and added an icon for the About page.
+
+### v6.3.5
+
+* Changed the title text for the new button next to "Add Data" on the workbench to "Load local/web data".
+* Fixed a bug that caused the area to the right of the Terria log on the 2D map to be registered as a click on the logo instead of a click on the map.
+* Fixed a bug that caused the standard "Give Feedback" button to fail to open the feedback panel.
+* Swapped the positions of the group expand/collapse icon and the "Remove from catalogue" icon on the My Data panel, for more consistent alignment.
+* Made notifications honor the `width` and `height` properties. Previously, these values were ignored.
+
+### v6.3.4
+
+* Added the ability to add custom components to the feedback area (lower right) of the user interface.
+
+### v6.3.3
+
+* Upgraded to Cesium v1.51.
+
+### v6.3.2
+
+* Added "filterByProcedures" property to "sos" item (default: true). When false, the list of procedures is not passed as a filter to GetFeatureOfInterest request, which works better for BoM Water Data Online services.
+
+### v6.3.1
+
+* Fixed a bug that caused the compass control to be misaligned in Internet Explorer 11.
+
+### v6.3.0
+
+* Changed the "My Data" interface to be much more intuitive and tweaked the visual style of the catalog.
+* Added `CartoMapCatalogItem` to connect to layers using the [Carto Maps API](https://carto.com/developers/maps-api/).
+
+## v6.2.3
+
+* Made it possible to configure the compass control's colors using CSS.
+
+### v6.2.2
+
+* Removed the Terria logo from the preview map and made the credit there smaller.
+* Fall back to the style name in the workbench styles dropdown when no title is given for a style in WMS GetCapabilities.
+
+### v6.2.1
+
+* We now use Cesium Ion for the Bing Maps basemaps, unless a `bingMapsKey` is provided in [config.json](https://docs.terria.io/guide/customizing/client-side-config/#parameters). You can control this behavior with the `useCesiumIonBingImagery` property. Please note that if a `bingMapsKey` is not provided, the Bing Maps geocoder will always return no results.
+* Added a Terria logo in the lower left of the map. It can be disabled by setting `"hideTerriaLogo": true` in `config.json`.
+* Improved the credits display on the 2D map to be more similar to the 3D credits.
+* Fixed a bug that caused some legends to be missing or incomplete in Apple Safari.
+
+### v6.2.0
+
+* Added a simple WCS "clip and ship" functionality for WMS layers with corresponding a WCS endpoint and coverage.
+* Fixed problems canceling drag-and-drop when using some web browsers.
+* Fixed a bug that created a time period where no data is shown at the end of a time-varying CSV.
+* Fixed a bug that could cause endless tile requests with certain types of incorrect server responses.
+* Fixed a bug that could cause endless region tile requests when loading a CSV with a time column where none of the column values could actually be interpreted as a time.
+* Added automatic retry with jittered, exponential backoff for tile requests that result in a 5xx HTTP status code. This is especially useful for servers that return 503 or 504 under load. Previously, TerriaJS would frequently disable the layer and hit the user with an error message when accessing such servers.
+* Updated British National Grid transform in `Proj4Definitions` to a more accurate (~2 m) 7 parameter version https://epsg.io/27700.
+* Distinguished between 3D Terrain and 3D Smooth in share links and init files.
+* Upgraded to Cesium v1.50.
+
+### v6.1.4
+
+* Fixed a bug that could cause the workbench to appear narrower than expected on some systems, and the map to be off-center when collapsing the workbench on all systems.
+
+### v6.1.3
+
+* When clicking a `Split` button on the workbench, the new catalog item will no longer be attached to the timeline even if the original was. This avoids a confusing situation where both catalog items would be locked to the same time.
+* Added KMZ to the whitelisted formats for `MagdaCatalogItem`.
+* Fixed a bug that caused a crash when switching to 2D with vector data already on the map, including when visiting a share link with vector data when the map ends up being 2D.
+* The "Hide Workbench" button is now attached to the side of the Workbench, instead of on the opposite side of the screen from it.
+
+### v6.1.2
+
+* Fixed a bug that prevented `BingMapsSearchProviderViewModel` and other uses of `loadJsonp` from working correctly.
+
+### v6.1.1
+
+* Upgraded to terriajs-server v2.7.4.
+
+### v6.1.0
+
+* The previous default terrain provider, STK World Terrain, has been deprecated by its provider. *To continue using terrain in your deployed applications, you _must_ obtain a Cesium Ion key and add it to `config.json`*. See https://cesium.com/ to create an Ion account. New options are available in `config.json` to configure terrain from Cesium Ion or from another source. See https://terria.io/Documentation/guide/customizing/client-side-config/#parameters for configuration details.
+* Upgraded to Cesium v1.48.
+* Added `Cesium3DTilesCatalogItem` for visualizing [Cesium 3D Tiles](https://github.com/AnalyticalGraphicsInc/3d-tiles) datasets.
+* Added `IonImageryCatalogItem` for accessing imagery assets on [Cesium Ion](https://cesium.com/).
+* Added support for Cesium Ion terrain assets to `CesiumTerrainProvider`. To use an asset from Ion, specify the `ionAssetId` and optionally the `ionAccessToken` and `ionServer` properties instead of specifying a `url`.
+* Fixed a bug that could cause legends to be missing from `WebMapServiceCatalogItems` that had `isEnabled` set to true.
+
+### v6.0.5
+
+* Added `rel="noreferrer noopener"` to all `target="_blank"` links. This prevents the target page from being able to navigate the source tab to a new page.
+* Fixed a bug that caused the order of items on the Workbench to change when visiting a share link.
+
+### v6.0.4
+
+* Changed `CesiumSelectionIndicator` to no longer use Knockout binding. This will avoid a problem in some environments, such as when a Content Security Policy (CSP) is in place.
+
+### v6.0.3
+
+* Fixed a bug that prevented users from being able to enter coordinates directly into catalog function point parameter fields.
+
+### v6.0.2
+
+* Fixed a bug that prevented interaction with the 3D map when the splitter was active.
+
+### v6.0.1
+
+* Added `parameters` property to `ArcGisMapServerCatalogItem`, allowing arbitrary parameters to be passed in tile and feature info requests.
+
+### v6.0.0
+
+* Breaking Changes:
+   * An application-level polyfill suite is now required for Internet Explorer 9 and 10 compatibility. The easiest approach is to add `<script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>` to the `<head>` element of your application's HTML page.
+   * In TerriaJS v7.0.0 (the _next_ major release), a polyfill suite may be required for Internet Explorer 11 as well. Adopting the approach above now will ensure you don't need to worry about it then.
+* Overhauled support for printing. There is now a Print button on the Share panel that will provide a much better printable form of the map than the browser's built-in print feature. If a user uses the browser's print button instead, a message at the top will suggest using the TerriaJS Print feature and open the Share panel. Calling `window.print` (e.g. on a TerriaJS instance inside an iframe) will invoke the new TerriaJS print feature directly.
+* Fixed a bug that caused `Leaflet.captureScreenshot` to show all layers on both sides even with the splitter active.
+* Fixed a bug that prevented some vector features from appearing in `Leaflet.captureScreenshot`.
+* Added ability to move the splitter thumb position vertically so that users can move it to prevent occlusions.
+* Added `TerriaJsonCatalogFunction`. This catalog function allows an arbitrary HTTP GET to be invoked with user-provided parameters and return TerriaJS catalog JSON.
+* Fixed a bug that could cause the feature info panel to sometimes be nearly transparent in Internet Explorer 11.
+* Fixed a bug that caused an expanded preview chart's workbench item to erroneously show the date picker.
+* Updated `MagdaCatalogItem` to match Magda project
+
+### 5.7.0
+
+* Added `MagdaCatalogItem` to load details of a catalog item from [Magda](https://github.com/TerriaJS/magda).
 * Fixed a bug that could cause a time-dynamic WMS layer to fail to ever show up on the map if the initial time on the timeline was outside the intervals where the layer had data.
+* Fixed a bug which could cause a crash during load from share link when the layer default is to not `useOwnClock` but the share link has `useOwnClock` set.
+* Fixed an issue that caused a 'This data source is already shown' error in particular circumstances.
 
 ### 5.6.4
 
@@ -297,7 +556,7 @@ Change Log
 ### 4.8.2
 
 * Fixed a bug that prevented a `shareUrl` specified in `config.json` from actually being used by the `ShareDataService`.
-* Adding a JSON init file by dropping it on the map or selecting it from the My Data tab no longer adds an entry to the Workbench and User-Added Data catalog.
+* Adding a JSON init file by dropping it on the map or selecting it from the My Data tab no longer adds an entry to the Workbench and My Data catalog.
 * WPS return type can now be `application/vnd.terriajs.catalog-member+json` which allows a json catalog member to be returned in WPS along with the usual attributes to control display.
 * `chartLineColor` tableStyle attribute added, allowing per column specification of chart line color.
 * Fixed a bug that caused a `WebMapServiceCatalogItem` inside a `WebMapServiceCatalogGroup` to revert to defaults from GetCapabilities instead of using shared properties.
@@ -752,482 +1011,4 @@ Change Log
 * Added support for the csv datetime formats: YYYY, YYYY-MM and YYYY-MM-DD HH:MM(:SS).
 * Improved formatting of datetimes from csv files in the feature info panel.
 * Removed variables consisting only of html tags from the Now Viewing panel.
-* Improved handling of rows with missing dates in csv time columns.
-* Introduced four new json tableStyle parameters:
-  - `replaceWithZeroValues`: Defaults to `[null, '-']`. These values are coloured as if they were zero if they appear in a csv column with numbers. `null` catches missing values. These rows are ignored if they appear in a csv time column.
-  - `replaceWithNullValues`: Defaults to `['na', 'NA']`. These values are coloured as if they were null if they appear in a csv column with numbers. These rows are ignored if they appear in a csv time column.
-  - `nullColor`: A css string. Defaults to a dark blue. This colour is used to display null values (but it does not appear on the legend). It is also used to colour points when no variable is selected.
-  - `timeColumn`: Provide the name or index (starting at 0) of a csv column, if any. Defaults to the first time column found, if any. Use `null` to explicitly disregard all time columns.
-* Added id matching for catalog members:
-* Improved formatting of datetimes from csv files in the feature info panel.
-* Removed variables consisting only of HTML tags from the Now Viewing panel.
-* Added ID matching for catalog members:
-  - An `id` field can now be set in JSON for catalog members
-  - When sharing an enabled catalog item via a share link, the share link will reference the catalog item's ID
-    rather than its name as is done currently.
-  - The ID of an item should be accessed via `uniqueId` - if a catalog member doesn't have an ID set, this returns a
-    default value of the item's name plus the ID of its parent. This means that if all the ancestors of a catalog
-    member have no ID set, its ID will be its full path in the catalog.
-  - This means that if an item is renamed or moved, share links that reference it will still work.
-  - A `shareKeys` property can be also be set that contains an array of all ids that should lead to this item. This means
-    that a share link for an item that didn't previously have an ID set can still be used if it's moved, as long as it
-    has its old default ID set in `shareKeys`
-  - Old share links will still work as long as the items they lead to aren't renamed or moved.
-  - Refactor of JSON serialization - now rather than passing a number of flags that determine what should and shouldn't be
-    serialized, an `itemFilter` and `propertyFilter` are passed in options. These are usually composed of multiple filters,
-    combined using `combineFilters`.
-  - An index of all items currently in the catalog against all of that item's shareKeys is now maintained in `Catalog`
-    and can be used for O(1) lookups of any item regardless of its location.
-  - CatalogMembers now contain a reference to their parent CatalogGroup - this means that the catalog tree can now be
-    traversed in both directions.
-  - When serializing user-added items in the catalog, the children of `CatalogGroup`s with the `url` property set are
-    not serialized. Settings like `opacity` for their descendants that need to be preserved are serialized separately.
-* Generated legends now use SVG (vector) format, which look better on high resolution devices.
-* Created new Legend class, making it easy to generate client-side legends for different kinds of data.
-* Generate client-side legends for ArcGIS MapServer catalog items, by fetching JSON file, instead of just providing link to external page.
-* Fix Leaflet feature selection when zoomed out enough that the world is repeated.
-* Improved handling of lat/lon CSV files with missing latitude or longitude values.
-* Fixed a bug that prevented `SocrataCataloGroup` from working in Internet Explorer 9.
-* Added `CkanCatalogItem`, which can be used to reference a particular resource of any compatible type on a CKAN server.
-* Fixed a bug that caused the Now Viewing tab to display incorrectly in Internet Explorer 11 when switching directly to it from the Data Catalogue tab.
-
-### 1.0.54
-
-* Fixed a bug in `AbsIttCatalogItem` that caused no legend to be displayed.
-
-### 1.0.53
-
-* Improved compatibility with Internet Explorer 9.
-* Made `CswCatalogGroup` able to find geospatial datasets on more CSW servers.
-* Allow WMS parameters to be specified in json in uppercase (eg. STYLES).
-
-### 1.0.52
-
-* Added `MapBoxMapCatalogItem`, which is especially useful for base maps. A valid access token must be provided.
-* Added a `getContainer()` method to Terria's `currentViewer`.
-* Dramatically improved the performance of region mapping.
-* Introduced new quantisation (color binning) methods to dramatically improve the display of choropleths (numerical quantities displayed as colors) for CSV files, instead of always using linear. Four values for `colorBinMethod` are supported:
-  * "auto" (default), usually means "ckmeans"
-  * "ckmeans": use "CK means" method, an improved version of Jenks Even Breaks to form clusters of values that are as distinct as possible.
-  * "quantile": use quantiles, evenly distributing values between bins
-  * "none": use the previous linear color mapping method.
-* The default style for CSV files is now 7 color bins with CK means method.
-* Added support for color palettes from Color Brewer (colorbrewer2.org). Within `tableStyle`, use a value like `"colorPalette": "10-class BrBG"`.
-* Improved the display of legends for CSV files, accordingly.
-* URLs for legends are now encapsulated in a `LegendUrl` model, which accepts a mime type that will affect how the
-  legend is rendered in the sidebar.
-* Added support for the Socrata "new backend" with GeoJSON download to `SocrataCatalogGroup`.
-* Moved URL config parameters to config.json, with sensible defaults. Specifically:
-  *   regionMappingDefinitionsUrl: 'data/regionMapping.json',
-  *   conversionServiceBaseUrl: '/convert/',
-  *   proj4ServiceBaseUrl: '/proj4/',
-  *   corsProxyBaseUrl: '/proxy/'
-* Deprecated terria.regionMappingDefinitionsUrl (set it in config.json or leave it as default).
-
-### 1.0.51
-
-* Fixed a typo that prevented clearing the search query
-* Added support for Nominatim search API hosted by OpenStreetMap (http://wiki.openstreetmap.org/wiki/Nominatim) with `NominatimSearchProviderViewModel`. This works by merging to 2 queries : one with the bounding parameter for the nearest results, and the other without the bounding parameter. The `countryCodes` property can be set to limit the result to a set of specific countries.
-* Added `MapProgressBarViewModel`.  When added to the user interface with `MapProgressBarViewModel.create`, it shows a bar at the top of the map window indicating tile load progress.
-* We no longer show the entity's ID (which is usually a meaningless GUID) on the feature info panel when the feature does not have a name.  Instead, we leave the area blank.
-* Fixed a bug with time-dynamic imagery layers that caused features to be picked from the next time to be displayed, in addition to the current one.
-* Replace `.` and `#` with `_` in property names meant to be used with `featureInfoTemplate`, so that these properties can be accessed by the [mustache](https://mustache.github.io/) templating engine.
-* Added support for time-varying properties (e.g. from a CZML file) on the feature info panel.
-* `Cesium.zoomTo` now takes the terrain height into account when zooming to a rectangle.
-
-### 1.0.50
-
-* Put a white background behind legend images to fix legend images with transparent background being nearly invisible.
-* Search entries are no longer duplicated for catalog items that appear in multiple places in the Data Catalogue
-* Fixed the layer order changing in Cesium when a CSV variable is chosen.
-* Layer name is now shown in the catalog item info panel for ESRI ArcGIS MapServer layers.
-* Retrieve WFS or WCS URL associated with WMS data sources using DescribeLayer if no dataUrl is present.
-* Downgrade Leaflet to 0.7.3 to fix specific feature clicking problems with 2D maps.
-* Use `PolylineGraphics` instead of `PolygonGraphics` for unfilled polygons with an outline width greater than 1.  This works around the fact that Cesium does not support polygons with outline width great than 1 on Windows due to a WebGL limitation.
-* Sorted ABS age variables numerically, not alphabetically.
-* Removed extra space at the bottom of base map buttons.
-* Share links now remember the currently active tab in the `ExplorerPanelViewModel`.
-* Fixed a bug that prevented region mapping from working over HTTPS.
-* The proxy is now used to avoid a mixed content warning when accessing an HTTP dataset from an HTTPS deployment of TerriaJS.
-* Added `CameraView.fromLookAt` and `CameraView.fromPositionHeadingPitchRoll` functions.  These functions can be used to position the camera in new ways.
-
-### 1.0.49
-
-* Fixed a bug that caused poor performance when clicking a point on the map with lots of features and then closing the feature information panel.
-* Apply linkify, instead of markdown, to properties shown in the Feature Info Panel.
-* Fixed a bug that prevented feature scaling by value.
-* Fixed a bug that prevented the csv `displayDuration` from working.
-* Fixed a bug that ignored which column of the csv file to show as the legend initially.
-* `NowViewingTabViewModel` is now composed of a number of sections.  Each section is given the opportunity to determine whether it applies to each catalog item.  Custom sections may be added by adding them to NowViewingTabViewModel.sections`.
-* `CsvCatalogItem` and `AbsIttCatalogItem` now expose a `concepts` property that can be used to adjust the display.
-* Added `Terria.cesiumBaseUrl` property.
-* The user interface container DOM element may now be provided to `TerriaViewer` by specifying `uiContainer` in its options.  Previously it always used an element named `ui`.
-* Legend URLs are now accessed via the proxy, if applicable.
-* Fixed a bug that prevented feature scaling by value.
-* Added support for [Urthecast](https://www.urthecast.com/) with `UrthecastCatalogGroup`.
-* Fixed a bug that caused a `TypeError` on load when the share URL included enabled datasets with an order different from their order in the catalog.
-* Improved the message that is shown to the user when their browser supports WebGL but it has a "major performance caveat".
-* Fixed a bug that could cause an exception in some browsers (Internet Explorer, Safari) when loading a GeoJSON with embedded styles.
-* Fixed a bug with Leaflet 2D map where clicks on animation controls or timeline would also register on the map underneath causing undesired feature selection and, when double clicked, zooming (also removed an old hack that disabled dragging while using the timeline slider)
-* Changed Australian Topography base map server and updated the associated thumbnail.
-* Added `updateApplicationOnMessageFromParentWindow` function.  After an app calls this function at startup, TerriaJS can be controlled by its parent window when embedded in an `iframe` by messages sent with `window.postMessage`.
-
-### 1.0.48
-
-* Added the ability to disable feature picking for `ArcGisMapServerCatalogItem`.
-* Disabled feature picking for the Australian Topography and Australian Hydrography base layers created by `createAustraliaBaseMapOptions`.
-
-### 1.0.47
-
-* Make it possible to disable CSV region mapping warnings with the `showWarnings` init parameter.
-* The `name` of a feature from a CSV file is now taken from a `name` or `title` column, if it exists.  Previously the name was always "Site Data".
-* Fixed a bug that caused time-dynamic WMS layers with just one time to not be displayed.
-* Underscores are now replaced with spaces in the feature info panel for `GeoJsonCatalogItem`.
-* Added Proj4 projections to the location bar. Clicking on the bar switches between lats/longs and projected coordinates. To enable this, set `useProjection` to `true`
-* Show information for all WMS features when a location is clicked.
-* Fixed a bug that caused an exception when running inside an `<iframe>` and the user's browser blocked 3rd-party cookies.
-* HTML and Markdown text in catalog item metadata, feature information, etc. is now formatted in a more typical way.  For example, text inside `<h1>` now looks like a heading.  Previously, most HTML styling was stripped out.
-* Supports FeatureInfoTemplates on all catalog item types (previously only available on ImageryLayers).
-* Apply markdown to properties shown in the Feature Info Panel.
-* Add `includeCzml` option to CkanCatalogGroup.
-* Fixed a bug that caused `WebMapServiceCatalogItem` to incorrectly populate the catalog item's metadata with data from GetCapabilities when another layer had a `Title` with the same value as the expected layer's `Name`.
-* Update the default Australian topography basemap to Geoscience Australia's new worldwide layer (http://www.ga.gov.au/gisimg/rest/services/topography/National_Map_Colour_Basemap/MapServer)
-* Allow color maps in CSV catalog items to be expressed as strings: colorMapString: "red-white-blue".
-* Updated to [Cesium](http://cesiumjs.org) 1.15.  Significant changes relevant to TerriaJS users include:
-  * Added support for the [glTF 1.0](https://github.com/KhronosGroup/glTF/blob/master/specification/README.md) draft specification.
-  * Added support for the glTF extensions [KHR_binary_glTF](https://github.com/KhronosGroup/glTF/tree/master/extensions/Khronos/KHR_binary_glTF) and [KHR_materials_common](https://github.com/KhronosGroup/glTF/tree/KHR_materials_common/extensions/Khronos/KHR_materials_common).
-  * `ImageryLayerFeatureInfo` now has an `imageryLayer` property, indicating the layer that contains the feature.
-  * Make KML invalid coordinate processing match Google Earth behavior. [#3124](https://github.com/AnalyticalGraphicsInc/cesium/pull/3124)
-
-### 1.0.46
-
-* Fixed an incorrect require (`URIjs` instead of `urijs`).
-
-### 1.0.45
-
-* Major refactor of `CsvCatalogItem`, splitting region-mapping functionality out into `RegionProvider` and `RegionProviderList`. Dozens of new test cases. In the process, fixed a number of bugs and added new features including:
-  * Regions can be matched using regular expressions, enabling matching of messy fields like local government names ("Baw Baw", "Baw Baw Shire", "Baw Baw (S)", "Shire of Baw Baw" etc).
-  * Regions can be matched using a second field for disambiguation (eg, "Campbelltown" + "SA")
-  * Drag-and-dropped datasets with a time column behave much better: rather than a fixed time being allocated to each row, each row occupies all the time up until the next row is shown.
-  * Enumerated fields are colour coded in lat-long files, consist with region-mapped files.
-  * Feedback is now provided after region mapping, showing which regions failed to match, and which matched more than once.
-  * Bug: Fields with names starting with 'lon', 'lat' etc were too aggressively matched.
-  * Bug: Numeric codes beginning with zeros (eg, certain NT 08xx postcodes) were treated as numbers and failed to match.
-  * Bug: Fields with names that could be interpreted as regions weren't available as data variables.
-* Avoid mixed content warnings when using the CartoDB basemaps.
-* Allow Composite catalog items
-* Handle WMS time interval specifications (time/time and time/time/periodicity)
-* Moved `url` property to base CatalogItem base class.  Previously it was defined separately on most derived catalog items.
-* Most catalog items now automatically expose a `dataUrl` that is the same as their `url`.
-* Added custom definable controls to `CatalogMember`s.
-  * To define a control, subclass `CatalogMemberControl` and register the control in `ViewModels/registerCatalogMemberControl` with a unique control name, control class and required property name.
-  * If a `CatalogMember` has a property with the required property name either directly on the member or in its `customProperties` object, the control will appear in the catalog with the member and will fire the `activate` function when clicked.
-  * Controls can be registered to appear on both the left and right side using `registerLeftSideControl` and `registerRightSideControl` respectively.
-  * An example can be seen in the `CatalogMemberDownloadControl`
-  * Currently top level members do not show controls.
-* The `LocationBarViewModel` now shows the latitude and longitude coordinates of the mouse cursor in 2D as well as 3D.
-* The `LocationBarViewModel` no longer displays a misleading elevation of 0m when in "3D Smooth" mode.
-* Added `@menu-bar-right-offset` LESS parameter to control the right position of the menu bar.
-* Added `forceProxy` flag to all catalog members to indicate that an individual item should use the proxy regardless of whether the domain is in the list of domains to proxy.
-* Allow a single layer of an ArcGIS MapServer to be added through the "Add Data" interface.
-* Added `WfsFeaturesCatalogGroup`.  This group is populated with a catalog item for each feature queried from a WFS server.
-* The Feature Info panel now shows all selected features in an accordion control.  Previously it only showed the first one.
-* Added `featureInfoTemplate` property to `CatalogItem`.  It is used to provide a custom Markdown or HTML template to display when a feature in the catalog item is clicked.  The template is parameterized on the properties of the feature.
-* Updated to [Cesium](http://cesiumjs.org) 1.14.  Significant changes relevant to TerriaJS users include:
-  * Fixed issues causing the terrain and sky to disappear when the camera is near the surface. [#2415](https://github.com/AnalyticalGraphicsInc/cesium/issues/2415) and [#2271](https://github.com/AnalyticalGraphicsInc/cesium/issues/2271)
-  * Fixed issues causing the terrain and sky to disappear when the camera is near the surface. [#2415](https://github.com/AnalyticalGraphicsInc/cesium/issues/2415) and [#2271](https://github.com/AnalyticalGraphicsInc/cesium/issues/2271)
-  * Provided a workaround for Safari 9 where WebGL constants can't be accessed through `WebGLRenderingContext`. Now constants are hard-coded in `WebGLConstants`. [#2989](https://github.com/AnalyticalGraphicsInc/cesium/issues/2989)
-  * Added a workaround for Chrome 45, where the first character in a label with a small font size would not appear. [#3011](https://github.com/AnalyticalGraphicsInc/cesium/pull/3011)
-  * Fixed an issue with drill picking at low frame rates that would cause a crash. [#3010](https://github.com/AnalyticalGraphicsInc/cesium/pull/3010)
-
-### 1.0.44
-
-* Fixed a bug that could cause timeseries animation to "jump" when resuming play after it was paused.
-* Make it possible for catalog item initialMessage to require confirmation, and to be shown every time.
-* When catalog items are enabled, the checkbox now animates to indicate that loading is in progress.
-* Add `mode=preview` option in the hash portion of the URL.  When present, it is assumed that TerriaJS is being used as a previewer and the "small screen warning" will not be shown.
-* Added `maximumLeafletZoomLevel` constructor option to `TerriaViewer`, which can be used to force Leaflet to allow zooming closer than its default of level 18.
-* Added the `attribution` property to catalog items.  The attribution is displayed on the map when the catalog item is enabled.
-* Remove an unnecessary instance of the Cesium InfoBox class when viewing in 2D
-* Fixed a bug that prevented `AbsIttCatalogGroup` from successfully loading its list of catalog items.
-* Allow missing URLs on embedded data (eg. embedded czml data)
-* Fixed a bug loading URLs for ArcGIS services names that start with a number.
-* Updated to [Cesium](http://cesiumjs.org) 1.13.  Significant changes relevant to TerriaJS users include:
-  * The default `CTRL + Left Click Drag` mouse behavior is now duplicated for `CTRL + Right Click Drag` for better compatibility with Firefox on Mac OS [#2913](https://github.com/AnalyticalGraphicsInc/cesium/pull/2913).
-  * Fixed an issue where non-feature nodes prevented KML documents from loading. [#2945](https://github.com/AnalyticalGraphicsInc/cesium/pull/2945)
-
-### 1.0.43
-
-* Fixed a bug that prevent the opened/closed state of groups from being preserved when sharing.
-
-### 1.0.42
-
-* Added a `cacheDuration` property to all catalog items.  The new property is used to specify, using Varnish-like notation (e.g. '1d', '10000s') the default length of time to cache URLs related to the catalog item.
-* Fix bug when generating share URLs containing CSV items.
-* Improve wording about downloading data from non-GeoJSON-supporting WFS servers.
-
-### 1.0.41
-
-* Improvements to `AbsIttCatalogItem` caching from the Tools menu.
-
-### 1.0.40
-
-* `ArcGisMapServerCatalogItem` now shows "NoData" tiles by default even after showing the popup message saying that max zoom is exceeded.  This can be disabled by setting its `showTilesAfterMessage` property to false.
-
-### 1.0.39
-
-* Fixed a race condition in `AbsIttCatalogItem` that could cause the legend and map to show different state than the Now Viewing UI suggested.
-* Fixed a bug where an ABS concept with a comma in its name (e.g. "South Eastern Europe,nfd(c)" in Country of Birth) would cause values for concept that follow to be misappropriated to the wrong concepts.
-
-### 1.0.38
-
-* `AbsIttCatalogItem` now allows the region type to be set on demand rather than only at load time.
-* `CsvCatalogItem` can now have no display variable selected, in which case all points are the same color.
-
-### 1.0.37
-
-* Added `CswCatalogGroup` for populating a catalog by querying an OGC CSW service.
-* Added `CatalogMember.infoSectionOrder` property, to allow the order of info sections to be configured per catalog item when necessary.
-* Fixed a bug that prevented WMTS layers with a single `TileMatrixSetLink` from working correctly.
-* Added support for WMTS layers that can only provide tiles in JPEG format.
-* Fixed testing and caching of ArcGis layers from tools and added More information option for imagery layers.
-* TerriaJS no longer requires Google Analytics.  If a global `ga` function exists, it is used just as before.  Otherwise, events are, by default, logged to the console.
-* The default event analytics behavior can be specified by passing an instance of `ConsoleAnalytics` or `GoogleAnalytics` to the `Terria` constructor.  The API key to use with `GoogleAnalytics` can be specified explicitly to its constructor, or it can be specified in the `parameter.googleAnalyticsKey` property in `config.json`.
-* Made polygons drastically faster in 2D.
-* TerriaJS now shortens share URLs by default when a URL shortener is available.
-* Added Google Analytics reporting of the application URL.  This is useful for tracking use of share URLs.
-* Added the ability to specify a specific dynamic layer of an ArcGIS Server using just a URL.
-
-### 1.0.36
-
-* Calculate extent of TopoJSON files so that the viewer correctly pans+zooms when a TopoJSON file is loaded.
-* Fixed a bug that caused the `Terria#clock` to keep ticking (and therefore using CPU / battery) once started even after selecting a non-time-dynamic dataset.
-* Fixed a bug that caused the popup message to appear twice when a dataset failed to load.
-* Added layer information to the Info popup for WMS datasets.
-* Added ability to filter catalog search results by:
-  * type: `is:wms`, `-is:esri-mapserver`. A result must match any 'is:' and no '-is:'.
-  * url: `url:vic.gov.au`, `-url:nicta.com.au`. A result must match any 'url:', and no '-url:'.
-* Added ability to control the number of catalog search results: `show:20`, `show:all`
-
-### 1.0.35
-
-* Polygons from GeoJSON datasets are now filled.
-* Left-aligned feature info table column and added some space between columns.
-* Added `EarthGravityModel1996`.
-* Extended `LocationBarViewModel` to show heights relative to a geoid / mean sea level model.  By default, EGM96 is used.
-* Added support for styling GeoJSON files, either in catalog (add .style{} object) or embedded directly in the file following the [SimpleStyle spec](https://github.com/mapbox/simplestyle-spec).
-* Fixed a bug that caused the 3D view to use significant CPU time even when idle.
-* Added CartoDB's Positron and Dark Matter base maps to `createGlobalBaseMapOptions`.
-* Added support for subdomains to `OpenStreetMapCatalogItem`.
-
-### 1.0.34
-
-* Fixed a bug that prevented catalog items inside groups on the Search tab from being enabled.
-* Added `PopupMessageConfirmationViewModel`. It prevents the Popup from being closed unless the confirm button is pressed. Can also optionally have a deny button with a custom action.
-* Added support for discovering GeoJSON datasets from CKAN.
-* Added support for zipped GeoJSON files.
-* Made `KmlCatalogItem` use the proxy when required.
-* Made `FeatureInfoPanelViewModel` use the white panel background in more cases.
-* Significantly improved the experience on devices with small screens, such as phones.
-* Fixed a bug that caused only the portion of a CKAN group name before the first comma to be used.
-
-### 1.0.33
-
-* Added the `legendUrls` property to allow a catalog item to optionally have multiple legend images.
-* Added a popup message when zooming in to the "No Data" scales of an `ArcGisMapServerCatalogItem`.
-* Added `CatalogGroup.sortFunction` property to allow custom sorting of catalog items within a group.
-* Added `ImageryLayerCatalogItem.treat403AsError` property.
-* Added a title text when hovering over the label of an enabled catalog item.  The title text informs the user that clicking will zoom to the item.
-* Added `createBingBaseMapOptions` function.
-* Added an option to `KnockoutMarkdownBinding` to optionally skip HTML sanitization and therefore to allow unsafe HTML.
-* Upgraded to Cesium 1.11.
-* `CatalogItem.zoomTo` can now zoom to much smaller bounding box rectangles.
-
-### 1.0.32
-
-* Fixed CKAN resource format matching for KML, CSV, and Esri REST.
-
-### 1.0.31
-
-* Added support for optionally generating shorter URLs when sharing by using the Google URL shortening service.
-
-### 1.0.30
-
-* `WebMapServiceCatalogItem` and `ArcGisMapServerCatalogItem` now augment directly-specified metadata with metadata queried from the server.
-* "Data Details" and "Service Details" on the catalog item info panel are now collapsed by default.  This improves the performance of the panel and hides some overly technical details.
-* `ArcGisMapServerCatalogItem.layers` can now specify layer names in addition to layer IDs.  Layer names are matched in a case-insensitive manner and only if a direct ID match is not found.
-* `itemProperties` are now applied through the normal JSON loading mechanism, so properties that are represented differently in code and in JSON will now work as well.
-* Added support for `csv-geo-*` (e.g. csv-geo-au) to `CkanCatalogGroup`.
-* The format name used in CKAN can now be specified to `CkanCatalogGroup` using the `wmsResourceFormat`, `kmlResourceFormat`, `csvResourceFormat`, and `esriMapServerResourceFormat` properties.  These properties are all regular expressions.  When the format of a CKAN resource returned from `package_search` matches one of these regular expressions, it is treated as that type within TerriaJS.
-* `CkanCatalogGroup` now fills the `dataUrl` property of created items by pointing to the dataset's page on CKAN.
-* The catalog item information panel now displays `info` sections in a consistent order.  The order can be overridden by setting `CatalogItemInfoViewModel.infoSectionOrder`.
-* An empty `description` or `info` section is no longer shown on the catalog item information panel.  This can be used to remove sections that would otherwise be populated from dataset metadata.
-
-### 1.0.29
-
-* Add support for loading init files via the proxy when necessary.
-* Switched to using the updated URL for STK World Terrain, `//assets.agi.com/stk-terrain/v1/tilesets/world/tiles`.
-
-### 1.0.28
-
-* Fixed a bug that prevented links to non-image (e.g. ArcGIS Map Server) legends from appearing on the Now Viewing panel.
-
-### 1.0.27
-
-* Use terriajs-cesium 1.10.7, fixing a module load problem in really old browers like IE8.
-
-### 1.0.25
-
-* Fixed incorrect date formatting in the timeline and animation controls on Internet Explorer 9.
-* Add support for CSV files with longitude and latitude columns but no numeric value column.  Such datasets are visualized as points with a default color and do not have a legend.
-* The Feature Information popup is now automatically closed when the user changes the `AbsIttCatalogItem` filter.
-
-### 1.0.24
-
-* Deprecated:
-  * Renamed `AusGlobeViewer` to `TerriaViewer`.  `AusGlobeViewer` will continue to work until 2.0 but using it will print a deprecation warning to the browser console.
-  * `BrandBarViewModel.create` now takes a single `options` parameter.  The container element, which used to be specified as the first parameter, should now be specified as the `container` property of the `options` parameter.  The old function signature will continue to work until 2.0 but using it will print a deprecation warning to the browser console.
-* `WebMapServiceCatalogItem` now determines its rectangle from the GetCapabilities metadata even when configured to use multiple WMS layers.
-* Added the ability to specify the terrain URL or the `TerrainProvider` to use in the 3D view when constructing `TerriaViewer`.
-* `AbsIttCatalogItem` styles can now be set using the `tableStyle` property, much like `CsvCatalogItem`.
-* Improved `AbsIttCatalogItem`'s tolerance of errors from the server.
-* `NavigationViewModel` can now be constructed with a list of `controls` to include, instead of the standard `ZoomInNavigationControl`, `ResetViewNavigationControl`, and `ZoomOutNavigationControl`.
-* Fixed a bug that caused the brand bar to slide away with the explorer panel on Internet Explorer 9.
-
-### 1.0.23
-
-* Fixed a bug that prevented features from being pickable from ABS datasets on the 2D map.
-* Fixed a bug that caused the Explorer Panel tabs to be missing or misaligned in Firefox.
-
-### 1.0.22
-
-* Changed to use JPEG instead of PNG format for the Natural Earth II basemap.  This makes the tile download substantially smaller.
-
-### 1.0.21
-
-* Added an `itemProperties` property to `AbsIttCatalogGroup`.
-* Added a `nowViewingMessage` property to `CatalogItem`.  This message is shown by the `NowViewingAttentionGrabberViewModel` when the item is enabled.  Each unique message is shown only once.
-
-### 1.0.20
-
-* Added the ability to specify SVG icons on Explorer Panel tabs.
-* Added an icon to the Search tab.
-* Added support for accessing Australian Bureau of Statistics data via the ABS-ITT API, using `AbsIttCatalogGroup` and `AbsIttCatalogItem`.
-* The Now Viewing panel now contains controls for selecting which column to show in CSV datasets.
-
-### 1.0.19
-
-* Added `NowViewingAttentionGrabberViewModel`.  It calls attention the Now Viewing tab the first time a catalog item is enabled.
-* Added `isHidden` property to catalog items and groups.  Hidden items and groups do not show up in the catalog or in search results.
-
-### 1.0.18
-
-* Added `featureInfoFields` property to `CsvCatalogItem.tableStyle`.  It allows setting which fields to show in the Feature Info popup, and the name to use for each.
-* Added `OpenStreetMapCatalogItem` for connecting to tile servers using the OpenStreetMap tiling scheme.
-* Added `CkanCatalogGroup.allowEntireWmsServers` property.  When set and the group discovers a WMS resource without a layer parameter, it adds a catalog item for the entire server instead of ignoring the resource.
-* Added `WebMapTileServiceCatalogGroup` and `WebMapTileServiceCatalogItem` for accessing WMTS servers.
-* Handle the case of an `ArcGisMapServerCatalogItem` with an advertised extent that is outside the valid range.
-* We now pass ArcGIS MapServer metadata, when it's available, through to Cesium's `ArcGisMapServerImageryProvider` so that it doesn't need to re-request the metadata.
-* Changed the style of the Menu Bar to have visually-separate menu items.
-* Added support for SVG menu item icons to `MenuBarViewModel`.
-* Improved popup message box sizing.
-
-### 1.0.17
-
-* Upgraded to TerriajS Cesium 1.10.2.
-* Added `ImageryLayerCatalogItem.isRequiredForRendering`.  This is set to false by default and to true for base maps.  Slow datasets with `isRequiredForRendering=false` are less likely to prevent other datasets from appearing in the 3D view.
-* The "Dataset Testing" functionality (on the hidden Tools menu accessible by adding `#tools=1` to the URL) now gives up tile requests and considers them failed after two seconds.  It also outputs some JSON that can be used as the `blacklist` property to blacklist all of the datasets that timed out.
-* Added a feature to count the total number of datasets from the hidden Tools menu.
-* Fixed a bug that caused the 2D / 3D buttons the Maps menu to get out of sync with the actual state of the map after switching automatically to 2D due to a performance problem.
-
-### 1.0.16
-
-* Deprecated:
-  * `ArcGisMapServerCatalogGroup` has been deprecated.  Please use `ArcGisCatalogGroup` instead.
-* Replaced Cesium animation controller with TerriaJS animation controller.
-* Replaced Cesium Viewer widget with the CesiumWidget when running Cesium.
-* Added the ability to turn a complete ArcGIS Server, or individual folders within it, into a catalog group using `ArcGisCatalogGroup`.
-
-### 1.0.15
-
-* Fix imagery attribution on the 2D map.
-
-### 1.0.14
-
-* Fixed share URL generation when the application is not running at the root directory of its web server.
-* Fixed a bug that caused Internet Explorer 8 users to see a blank page instead of a message saying their browser is incompatible.
-
-### 1.0.13
-
-* Breaking changes:
-  * Added a required `@brand-bar-height` property.
-* `ExplorerPanelViewModel` can now be created with `isOpen` initially set to false.
-* TerriaJS now raises an error and hides the dataset when asked to show an `ImageryLayerCatalogItem` in Leaflet and that catalog item does not use the Web Mercator (EPSG:3857) projection.  Previously, the dataset would silently fail to display.
-* Improved error handling in `CzmlCatalogItem`, `GeoJsonCatalogItem`, and `KmlCatalogItem`.
-* Made the `clipToRectangle` property available on all `ImageryProvider`-based catalog items, not just `WebMapServiceCatalogItem`.
-* Added `CatalogMember.isPromoted` property.  Promoted catalog groups and items are displayed above non-promoted groups and items.
-* Add support for ArcGIS MapServer "Raster Layers" in addition to "Feature Layers".
-
-### 1.0.12
-
-* Allow Esri ArcGIS MapServers to be added via the "Add Data" panel.
-* Adds `baseMapName` and `viewerMode` fields to init files and share links. `baseMapName` is any base map name in the map settings panel and `viewerMode` can be set to `'2d'` or `'3d'`.
-* Added `tableStyle.legendTicks` property to `CsvCatalogItem`.  When specified, the generated legend will have the specified number of equally-spaced lines with labels in its legend.
-
-### 1.0.11
-
-* Fixed a bug that prevented HTML feature information from showing up with a white background in Internet Explorer 9 and 10.
-* Fixed a bug that prevented WMS GetCapabilities properties, such as CRS, from being properly inherited from the root layer.
-* Tweaked credit / attribution styling.
-
-### 1.0.10
-
-* Added support for a developer attribution on the map.
-* Fixed a bug that could cause results from previous async catalog searches to appear in the search results.
-
-### 1.0.9
-
-* Show Cesium `ImageryProvider` tile credits / attribution in Leaflet when using `CesiumTileLayer`.
-
-### 1.0.8
-
-* `WebMapServiceCatalogGroup` now populates the catalog using the hierarchy of layers returned by the WMS server in GetCapabilities.  To keep the previous behavior, set the `flatten` property to true.
-* Potentially breaking changes:
-  * The `getFeatureInfoAsGeoJson` and `getFeatureInfoAsXml` properties have been removed.  Use `getFeatureInfoFormats` instead.
-* Added support for text/html responses from WMS GetFeatureInfo.
-* Make the `FeatureInfoPanelViewModel` use a white background when displaying a complete HTML document.
-* `KnockoutMarkdownBinding` no longer tries to interpret complete HTML documents (i.e. those that contain an <html> tag) as Markdown.
-* The feature info popup for points loaded from CSV files now shows numeric columns with a missing value as blank instead of as 1e-34.
-* `ArcGisMapServerCatalogItem` now offers metadata, used to populate the Data Details and Service Details sections of the catalog item info panel.
-* `ArcGisMapServerCatalogGroup` now populates a "Service Description" and a "Data Description" info section for each catalog item from the MapServer's metadata.
-* The `metadataUrl` is now populated (and shown) from the regular MapServer URL.
-* Added 'keepOnTop' flag support for imageryLayers in init file to allow a layer to serve as a mask.
-* Added 'keepOnTop' support to region mapping to allow arbitrary masks based on supported regions.
-* Checkboxes in the Data Catalogue and Search tabs now have a larger clickable area.
-
-### 1.0.7
-
-* `CatalogItemNameSearchProviderViewModel` now asynchronously loads groups so items in unloaded groups can be found, too.
-* Do not automatically fly to the first location when pressing Enter in the Search input box.
-* Changed `ArcGisMapServerCatalogItem` to interpret a `maxScale` of 0 from an ArcGIS MapServer as "not specified".
-* Added an `itemProperties` property to `ArcGisMapServerCatalogGroup`, allowing properties of auto-discovered layers to be specified explicitly.
-* Added `validDropElements`, `validDropClasses`, `invalidDropElements`, and `invalidDropClasses` properties to `DragDropViewModel` for finer control over where dropping is allowed.
-* Arbitrary parameters can now be specified in `config.json` by adding them to the `parameters` property.
-
-
-### 1.0.6
-
-* Added support for region mapping based on region names instead of region numbers (example in `public/test/countries.csv`).
-* Added support for time-dynamic region mapping (example in `public/test/droughts.csv`).
-* Added the ability to specify CSV styling in the init file (example in `public/init/test.json`).
-* Improved the appearance of the legends generated with region mapping.
-* Added the ability to region-map countries (example in `public/test/countries.csv`).
-* Elminated distracting "jumping" of the selection indicator when picking point features while zoomed in very close to the surface.
-* Fixed a bug that caused features to be picked from all layers in an Esri MapServer, instead of just the visible ones.
-* Added support for the WMS MinScaleDenominator property and the Esri MapServer maxScale property, preventing layers from disappearing when zoomed in to close to the surface.
-* Polygons loaded from KML files are now placed on the terrain surface.
-* The 3D viewer now shows Bing Maps imagery unmodified, matching the 2D viewer.  Previously, it applied a gamma correction.
-* All catalog items now have an `info` property that allows arbitrary sections to be shown for the item in the info popup.
-* `CkanCatalogGroup` now has a `groupBy` property to control whether catalog items are grouped by CKAN group ("group"), CKAN organization ("organization"), or not grouped at all ("none").
-* `CkanCatalogGroup` now has a `useResourceName` property to control whether the name of the catalog item is derived from the resource (true), or the dataset itself (false).
-* The catalog item info page now renders a much more complete set of Markdown and HTML elements.
+* Improved 

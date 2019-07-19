@@ -12,9 +12,11 @@ For example: [http://nationalmap.gov.au#test&map=2d](http://nationalmap.gov.au#t
 Parameter      | Meaning
 ---------------|--------
 `clean`          | Don't load the default catalog files for this site.
-`map=2d`         | Use the 2D (Leaflet) map instead of the default.
-`map=3d`         | Use the 3D (Cesium) map instead of the default.
-`hideExplorerPanel=1` | Collapse the catalog (left side) panel, useful for embedding.
+`map=2d`         | Use the 2D (Leaflet) map, instead of the default.
+`map=3d`         | Use the 3D (Cesium) map, instead of the default.
+`map=3dSmooth`   | Use the 3D (Cesium) map without terrain, instead of the default.
+`playStory=1`    | Automatically start playing the map's Story, if there is one.
+`hideWorkbench=1` | Collapse the workbench (left side) panel, useful for embedding. Also automatically plays a story, if there is one.
 `mode=preview`   | Operate in "preview mode", which mostly means not showing a warning if the screen is `small`  
 `share=`...      | Load a map view previously saved using the "Share" function with URL shortening.
 `start=`...      | Load a map view previously saved without URL shortening. The argument is a URL-encoded JSON structure defined using an internal format described below.

@@ -1,5 +1,5 @@
-@import '~terriajs-variables';
-@import '../../../Sass/common/mixins';
+@import "~terriajs-variables";
+@import "../../../Sass/common/mixins";
 
 // concept-viewer
 
@@ -17,8 +17,8 @@
 }
 
 .children-list {
-  composes: list-reset from '../../../Sass/common/_base.scss';
-  composes: clearfix from '../../../Sass/common/_base.scss';
+  composes: list-reset from "../../../Sass/common/_base.scss";
+  composes: clearfix from "../../../Sass/common/_base.scss";
   font-weight: $font-weight-light;
 }
 
@@ -28,12 +28,12 @@
   line-height: 1.4;
 
   button {
-    svg{
+    svg {
       fill: $text-light;
     }
   }
 
-  .btnGroup{
+  .btnGroup {
     position: absolute;
     left: 0;
     top: 0;
@@ -41,46 +41,42 @@
     width: 14px;
   }
 
-  &.hasChildren.isSelectable{
+  &.hasChildren.isSelectable {
     padding: 5px 0 5px 36px;
-    .btnGroup{
+    .btnGroup {
       width: 32px;
     }
-    .btnToggleOpen{
+    .btnToggleOpen {
       float: left;
     }
-    .btnToggleActive{
+    .btnToggleActive {
       float: right;
     }
   }
 }
 
-
-
-.btnToggleOpen{
-  composes: btn from '../../../Sass/common/_buttons.scss';
+.btnToggleOpen {
+  composes: btn from "../../../Sass/common/_buttons.scss";
   display: block;
   padding: 7px 0px;
-  svg{
+  svg {
     height: 14px;
     width: 14px;
   }
 }
 
-.btnToggleActive{
-  composes: btn from '../../../Sass/common/_buttons.scss';
+.btnToggleActive {
+  composes: btn from "../../../Sass/common/_buttons.scss";
   display: block;
   padding: 7px 0px;
-  svg{
+  svg {
     height: 14px;
     width: 14px;
   }
 }
-
-
 
 .items {
-  composes: list-reset from '../../../Sass/common/_base.scss';
+  composes: list-reset from "../../../Sass/common/_base.scss";
   margin-left: 18px;
   font-weight: $font-weight-light;
 }
@@ -89,7 +85,7 @@
   color: $text-light-dimmed;
   button {
     cursor: not-allowed;
-    svg{
+    svg {
       fill: $text-light-dimmed;
     }
   }

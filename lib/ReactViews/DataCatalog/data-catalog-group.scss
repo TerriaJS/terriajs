@@ -1,63 +1,84 @@
-@import '~terriajs-variables';
-@import '../../Sass/common/mixins';
+@import "~terriajs-variables";
+@import "../../Sass/common/mixins";
 
 .root {
   font-family: $font-base;
   color: $data-catalog-color;
+  position: relative;
+}
+
+.trashGroup {
+  composes: btn from "../../Sass/common/_buttons.scss";
+  position: absolute;
+  color: $color-primary;
+  right: 2px;
+  top: 5px;
+  @media (max-width: $sm) {
+    top: 10px;
+  }
+  svg {
+    height: 18px;
+    width: 18px;
+    margin: 3px;
+    fill: $charcoal-grey;
+  }
 }
 
 .btn--catalog {
-  composes: btn from '../../Sass/common/_buttons.scss';
+  composes: btn from "../../Sass/common/_buttons.scss";
+  @extend %wrap;
 
   text-align: left;
   font-size: $font-size-small;
-  padding: $padding-small 30px+$padding;
+  padding: 8px 30px + $padding;
+  min-height: 35px;
   position: relative;
   width: 100%;
   font-weight: bold;
   line-height: normal;
+  position: relative;
 
-  svg{
+  svg {
     display: inline-block;
   }
-  @media screen and (max-width: $sm) {
+  @media (max-width: $sm) {
     font-size: $font-size-mid-small;
     padding-top: 10px;
     padding-bottom: 10px;
     border-bottom: 1px solid $grey-lighter;
   }
 
-  &:hover, &:focus {
+  &:hover,
+  &:focus {
     background: $modal-highlight;
     color: #fff;
   }
 }
 
-.btnCatalogTopLevel{
+.btnCatalogTopLevel {
   font-weight: 600;
   border-bottom: 1px solid $grey-lighter;
   padding-left: $padding;
 }
 
-.isPreviewed{
+.isPreviewed {
   background: $modal-highlight;
   color: #ffffff;
 }
-
 
 .folder {
   position: absolute;
   left: 8px;
   top: 5px;
   opacity: 0.5;
-  svg{
+  svg {
     height: 30px;
     width: 30px;
     display: block;
   }
-  @media screen and (min-width: $sm) {
-    top: 0;
-    svg{
+  @media (min-width: $sm) {
+    top: 5px;
+    svg {
       height: 25px;
       width: 25px;
     }
@@ -67,25 +88,28 @@
 .caret {
   position: absolute;
   right: 2px;
-  top: 7px;
-  svg{
+  top: 5px;
+  svg {
     fill: $charcoal-grey;
     opacity: 0.5;
     height: 25px;
     width: 25px;
   }
-  @media screen and (min-width: $sm) {
+  @media (min-width: $sm) {
     right: 5px;
-    top: 5px;
-    svg{
+    top: 8px;
+    svg {
       height: 18px;
       width: 18px;
     }
   }
+  &.offsetRight {
+    right: 20px;
+  }
 }
 
 .catalog-group {
-  composes: list-reset from '../../Sass/common/_base.scss';
+  composes: list-reset from "../../Sass/common/_base.scss";
   padding-left: $padding;
   padding-top: $padding / 2;
   &--lower-level {
@@ -95,7 +119,7 @@
 }
 
 .label {
-  composes: label from '../../Sass/common/_labels.scss';
+  composes: label from "../../Sass/common/_labels.scss";
   font-size: $font-size-small;
 }
 

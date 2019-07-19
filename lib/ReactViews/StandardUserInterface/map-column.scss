@@ -1,5 +1,5 @@
-@import '~terriajs-variables';
-@import '../../Sass/common/mixins';
+@import "~terriajs-variables";
+@import "../../Sass/common/mixins";
 
 .map__inner {
   display: table;
@@ -24,37 +24,23 @@
   display: table-cell;
   position: relative;
   width: 100%;
-
-  @media print {
-    display: block;
-  }
 }
 
-.map-cell-map{
-  @media print{
-    min-height: 80vh;
-  }
-}
+@include empty-module("map-cell-map");
 
 .map-wrapper {
   position: absolute;
   top: 0;
   width: 100%;
   z-index: 0;
-
-  @media print {
-    div, aside{
-      height: auto !important;
-    }
-  }
 }
 
 @include empty-module("feedback");
 
 .location-distance {
-  composes: clearfix from '../../Sass/common/_base.scss';
+  composes: clearfix from "../../Sass/common/_base.scss";
   display: none;
-  @media screen and (min-width: $sm) {
+  @media (min-width: $sm) {
     display: block;
   }
   position: absolute;
@@ -64,10 +50,20 @@
 }
 
 .feedback-button-wrapper {
+  @media (min-width: $sm) {
+    bottom: 100px;
+    right: $padding * 2;
+    margin: 0;
+  }
   position: absolute;
-  bottom: 100px;
-  right: $padding*2;
   z-index: 0;
+  bottom: 25px;
+  right: 16px;
+  margin: 4px 0;
+}
+
+.with-time-series-controls {
+  bottom: 58px;
 }
 
 .print-disclaimer {

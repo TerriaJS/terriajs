@@ -2,8 +2,7 @@
 TerriaJS
 ============
 
-[![Join the chat at https://gitter.im/TerriaJS/terriajs](https://badges.gitter.im/TerriaJS/terriajs.svg)](https://gitter.im/TerriaJS/terriajs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Docs](https://img.shields.io/badge/docs-online-blue.svg)](http://terria.io/Documentation)
-[![Greenkeeper badge](https://badges.greenkeeper.io/TerriaJS/terriajs.svg)](https://greenkeeper.io/)
+[![Join the chat at https://gitter.im/TerriaJS/terriajs](https://badges.gitter.im/TerriaJS/terriajs.svg)](https://gitter.im/TerriaJS/terriajs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Docs](https://img.shields.io/badge/docs-online-blue.svg)](https://docs.terria.io/)
 
 ![Terria logo](terria-logo.png "Terria logo")
 
@@ -80,10 +79,14 @@ See [Getting Started](http://terria.io/Documentation/guide/getting-started/) in 
 * **[Generate-TerriaJS-Schema](https://github.com/TerriaJS/generate-terriajs-schema)**, a tool which automatically generates a schema for validating catalog files, and also the editor, by processing TerriaJS source code.
 * **[TerriaMapStatic](https://github.com/terriajs/terriamapstatic)**, a pre-built version of TerriaMap, which can be deployed as a static HTML website, such as on Github Pages.
 
+### Big Thanks
+
+Cross-browser Testing Platform and Open Source <3 Provided by [Sauce Labs](https://saucelabs.com)
+
 ### Join the community
 
 Get in touch!
 
 * Chat in our [Gitter chat room](https://gitter.im/TerriaJS/terriajs)
 * Join the [TerriaJS Google Group](https://groups.google.com/forum/#!forum/terriajs)
-* Raise issues in the [Github issue tracker](https://github.com/TerriaJS/TerriaJS)
+* Raise issues in the [Github issue tracker](https://github.com/TerriaJS/terriajs/issues/new)

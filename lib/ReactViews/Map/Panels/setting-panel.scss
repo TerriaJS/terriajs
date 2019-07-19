@@ -1,5 +1,5 @@
-@import '~terriajs-variables';
-@import '../../../Sass/common/mixins';
+@import "~terriajs-variables";
+@import "../../../Sass/common/mixins";
 
 .setting-panel {
 }
@@ -10,8 +10,8 @@
 
 .viewer-selector,
 .base-map-selector {
-  composes: clearfix from '../../../Sass/common/_base.scss';
-  composes: list-reset from '../../../Sass/common/_base.scss';
+  composes: clearfix from "../../../Sass/common/_base.scss";
+  composes: list-reset from "../../../Sass/common/_base.scss";
 
   margin: 0 -$padding-mini;
 }
@@ -19,52 +19,47 @@
 .list-item {
   padding: $padding-mini;
 
-  composes: col from '../../../Sass/common/_base.scss';
-  composes: col-4 from '../../../Sass/common/_base.scss';
+  composes: col from "../../../Sass/common/_base.scss";
+  composes: col-4 from "../../../Sass/common/_base.scss";
 }
 
 .btn--viewer {
-  composes: btn from '../../../Sass/common/_buttons.scss';
-  composes: btn-grey from '../../../Sass/common/_buttons.scss';
+  composes: btn from "../../../Sass/common/_buttons.scss";
+  composes: btn-grey from "../../../Sass/common/_buttons.scss";
 
   color: $text-light;
 
-  &.is-active{
+  &.is-active {
     border: 1px solid rgba(255, 255, 255, 0.5);
   }
 }
 
 .btn--base-map {
-    padding: 0;
-    position: relative;
+  padding: 0;
+  position: relative;
+  display: block;
+  line-height: 1.2;
+  border: 1px solid transparent;
+  img {
+    width: 100%;
+    height: auto;
     display: block;
-    line-height: 1.2;
-    border: 1px solid transparent;
-    img {
-      width: 100%;
-      height: auto;
-      display: block;
-    }
-    &:hover,
-    &:focus {
-      border: $border-style;
-    }
-    svg{
-      position: absolute;
-      right: 0;
-      top: 0;
-      fill: #ffffff;
-      z-index: 1;
-      width: 22px;
-      border-radius: $radius-small;
-      height: 22px;
-    }
+  }
+  &:hover,
+  &:focus {
+    border: $border-style;
+  }
+  svg {
+    position: absolute;
+    right: 0;
+    top: 0;
+    fill: #ffffff;
+    z-index: 1;
+    width: 22px;
+    border-radius: $radius-small;
+    height: 22px;
+  }
   &.is-active {
     border: 2px solid $turquoise-blue;
   }
-}
-
-
-.btn--dropdown {
-  composes: btn--sphere from '../../../Sass/common/_buttons.scss';
 }

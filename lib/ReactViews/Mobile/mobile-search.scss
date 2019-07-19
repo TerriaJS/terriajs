@@ -1,11 +1,11 @@
-@import '~terriajs-variables';
-@import '../../Sass/common/mixins';
+@import "~terriajs-variables";
+@import "../../Sass/common/mixins";
 
 .mobileSearch {
 }
 
 .results {
-  composes: list-reset from '../../Sass/common/_base.scss';
+  composes: list-reset from "../../Sass/common/_base.scss";
 
   &.results {
     padding: 0 $padding $padding $padding;
@@ -26,21 +26,21 @@
 .location {
   height: calc(100vh - #{$workbench-header + $logo-height});
 
-  @media screen and (max-width : $sm) {
+  @media (max-width: $sm) {
     height: calc(100vh - #{$mobile-header-height + $modal-header-height});
   }
 }
 
 .provider-result {
   margin-top: $padding-small;
-  .items{
+  .items {
     display: none;
   }
 }
 
-.btnList{
-  composes: clearfix from '../../Sass/common/_base.scss';
-  composes: list-reset from '../../Sass/common/_base.scss';
+.btnList {
+  composes: clearfix from "../../Sass/common/_base.scss";
+  composes: list-reset from "../../Sass/common/_base.scss";
 }
 
-@include empty-module("data")
+@include empty-module("data");

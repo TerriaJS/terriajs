@@ -1,12 +1,12 @@
-@import '~terriajs-variables';
-@import '../Sass/common/mixins';
+@import "~terriajs-variables";
+@import "../Sass/common/mixins";
 
-.loader{
+.loader {
   padding: $padding-small $padding-small $padding-small 30px;
   position: relative;
   display: inline-block;
   font-family: $font-base;
-  svg{
+  svg {
     height: 15px;
     width: 15px;
     margin: 5px;
@@ -18,7 +18,7 @@
     animation: spin 2s infinite linear;
     fill: inherit;
   }
-  span{
+  span {
     line-height: 1.8;
     font-size: 14px;
   }
@@ -27,21 +27,21 @@
 @-webkit-keyframes spin {
   0% {
     -webkit-transform: rotate(0deg);
-            transform: rotate(0deg);
+    transform: rotate(0deg);
   }
   100% {
     -webkit-transform: rotate(359deg);
-            transform: rotate(359deg);
+    transform: rotate(359deg);
   }
 }
 
 @keyframes spin {
   0% {
     -webkit-transform: rotate(0deg);
-            transform: rotate(0deg);
+    transform: rotate(0deg);
   }
   100% {
     -webkit-transform: rotate(359deg);
-            transform: rotate(359deg);
+    transform: rotate(359deg);
   }
 }

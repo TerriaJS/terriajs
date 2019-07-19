@@ -84,7 +84,12 @@ The preferred way to format numbers is using the `formats` option, eg:
 
 `"type"` specifies the type of formatting that will be applied to the property. Here we are using `"number"` formatting which is also the default formatting if `"type"` is not supplied.
 
-The supported format options are `"maximumFractionDigits": X` (to set the number of decimal places to X), `"useGrouping": true` (to show thousands separators), and `"style": "percent"` (eg. to show 0.15 as 15%).
+The supported format options are:
+
+- `"maximumFractionDigits": X`: To reduce the number of decimal places to a maximum of X digits.
+- `"minimumFractionDigits": X`: To increase the number of decimal places to a minimum of X digits.
+- `"useGrouping": true`: To show thousands separators.
+- `"style": "percent"`: To show 0.15 as 15%.
 
 A second method is to use `terria.formatNumber` directly in the template. This accepts an initial JSON string describing the same options as above. To simplify the notation, the quotes around the keys are optional here.
 
@@ -115,7 +120,7 @@ The date format style used for the `"format"` property is the style from the [np
 
 As with number you can also use `terria.dateTimeformat` directly in the template. This accepts an initial JSON string describing the same options as above.
 
-              "featureInfoTemplate": "template": "{{#terria.formatDateTime}}{"format": "dd-mm-yyyy HH:MM:ss"}2017-11-23T08:47:53Z{{/terria.formatDateTime}}</b>."
+              "featureInfoTemplate": "template": "{{#terria.formatDateTime}}{format: \"dd-mm-yyyy HH:MM:ss\"}2017-11-23T08:47:53Z{{/terria.formatDateTime}}</b>."
 
 ## Time-series charts
 
@@ -133,7 +138,7 @@ You can place this chart in your template using `{{terria.timeSeries.chart}}`.  
 - `{{terria.timeSeries.data}}` - the data as a comma-separated string.
 
 Please note:
-* If any of the component information above contains double-quotes, double quotes will be removed before TerriaJS processes the template further. 
+* If any of the component information above contains double-quotes, double quotes will be removed before TerriaJS processes the template further.
 * If any of the component information above is used as part of tag attributes, it must be surrounded by double-quotes. e.g. `<chart y-column="{{terria.timeSeries.yName}}"></chart>`
 
 So you could reconstruct the chart manually as:

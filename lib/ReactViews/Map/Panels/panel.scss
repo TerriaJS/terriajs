@@ -1,5 +1,5 @@
-@import '~terriajs-variables';
-@import '../../../Sass/common/mixins';
+@import "~terriajs-variables";
+@import "../../../Sass/common/mixins";
 
 .panel {
   width: auto;
@@ -7,7 +7,7 @@
 }
 
 .content {
-  composes: scrollbars from from '../../../Sass/common/_base.scss';
+  composes: scrollbars from from "../../../Sass/common/_base.scss";
 
   max-height: calc(100vh - 150px);
   overflow-y: auto;
@@ -15,7 +15,7 @@
 }
 
 .inner {
-  @include transform (scale(0) translateZ(0));
+  @include transform(scale(0) translateZ(0));
   @include transition(0.2s all cubic-bezier(0.4, 0, 0.2, 1));
   @include transform-origin(50%, top);
 
@@ -23,7 +23,7 @@
   z-index: 20;
   border-radius: $radius-small;
   background: $dark;
-  color: #fff;
+  color: $text-light;
   border: $border-style;
   max-width: calc(100vw - 10px);
 
@@ -32,9 +32,9 @@
   left: 0;
   margin: 14px 5px 5px 5px;
 
-  @media screen and (min-width: $sm) {
+  @media (min-width: $sm) {
     position: absolute;
-    right: $padding*2;
+    right: $padding * 2;
     top: auto;
     bottom: auto;
     left: auto;
@@ -42,12 +42,44 @@
   }
 
   &.is-open {
-    @include transform (scale(1) translateZ(0));
+    @include transform(scale(1) translateZ(0));
   }
+  &.show-dropdown-as-modal {
+    @include transform(translate3d(0, -300px, 0));
+    opacity: 0;
+  }
+  &.is-open.show-dropdown-as-modal {
+    @include transform(translate3d(0, 0, 0));
+    opacity: 1;
+  }
+}
+.inner-close-btn {
+  composes: btn from "../../../Sass/common/_buttons.scss";
+  position: absolute;
+  z-index: 10;
+  top: $padding-small;
+  right: $padding-small;
+
+  &:hover,
+  &:focus {
+    svg {
+      fill: $color-primary;
+    }
+  }
+
+  svg {
+    fill: $grey;
+    height: 10px;
+    width: 10px;
+  }
+}
+.inner-close-btn--for-modal {
+  top: 15px;
+  right: 15px;
 }
 
 .caret {
-  content: '';
+  content: "";
   display: block;
   height: 20px;
   width: 20px;
@@ -80,22 +112,38 @@
 }
 
 .button {
-  composes: btn from '../../../Sass/common/_buttons.scss';
-  composes: btn--map from '../../../Sass/common/_buttons.scss';
+  composes: btn from "../../../Sass/common/_buttons.scss";
+  composes: btn--map from "../../../Sass/common/_buttons.scss";
 
   border-radius: $radius-small;
   position: relative;
+  border: 0;
 
-  &,
+  svg {
+    fill: #9ca1aa;
+    margin: 0 3px 1px 4px;
+    vertical-align: bottom;
+  }
+
+  span {
+    line-height: 1.3;
+  }
+
   &:hover,
   &:focus {
     border: 0;
+    svg {
+      fill: #ffffff;
+    }
   }
 }
 
 .overlay {
   position: fixed;
-  left: 0; right: 0; bottom: 0; top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
 }
 
 .link {

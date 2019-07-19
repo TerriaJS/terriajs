@@ -1,10 +1,30 @@
-@import '~terriajs-variables';
-@import '../../Sass/common/mixins';
+@import "~terriajs-variables";
+@import "../../Sass/common/mixins";
 
 // NOTE: When changing this file with hot-reloading on you might see the globe in the map disappear. Don't panic! This
 // happens because losing this stylesheet for a second causes Cesium to zoom itself as far out as it can go for some
 // reason - you can change pretty much other file to do another hot-reload and get your globe back, or just zoom
 // back in.
+
+.story-wrapper {
+  @media (min-width: $sm) {
+    display: flex;
+  }
+}
+
+:global {
+  body {
+    height: 100vh;
+    width: 100vw;
+  }
+
+  .top-element {
+    z-index: 99999 !important;
+    &:focus {
+      outline: none;
+    }
+  }
+}
 
 .ui-root {
   // This is a workaround for a bug in IE11 on Windows 7.
@@ -12,17 +32,18 @@
   svg use {
     pointer-events: none;
   }
+  position: relative;
+  flex-basis: 100%;
 }
 
 .ui {
-  @media screen{
-    overflow: hidden;
-  }
+  overflow: hidden;
   background: $dark;
   width: 100%;
+  height: 100vh;
 }
 
-.explorerPanelIsVisible{
+.explorerPanelIsVisible {
   opacity: 0.3;
 }
 
@@ -30,13 +51,11 @@
   font-family: $font-pop;
   background: $dark;
   width: $work-bench-width;
+  flex-basis: $work-bench-width;
   max-width: $work-bench-width;
   box-sizing: border-box;
   h1 {
     margin: 0;
-  }
-  @media print{
-    display: block;
   }
 }
 
@@ -47,37 +66,107 @@
   right: 0;
   top: $mobile-header-height;
   bottom: 0;
-  @media print {
-    position: relative;
-    display: block;
-    height: auto;
-    page-break-after: always;
-  }
 }
 
-.feedback{
-  position: relative;
+.feedback {
+  position: absolute;
   z-index: $front-component-z-index - 10;
 }
 
-.featureInfo{
+.featureInfo {
+  // On very large screens, the feature info may be up to 40% of the screen.
+  // On small screens (mobile), it make be up to 90% of the screen.
+  // In between, it may be up to 90% of the largest mobile screen ($sm), minus a bit to leave room
+  // for the map controls on the right.  This is computed in $feature-info-medium-max-size.
+  $feature-info-medium-max-size: $sm * 0.9 - $feature-info-right-margin * 0.5;
+  $feature-info-forty-percent-size: $feature-info-medium-max-size * 100 / 40;
+
   z-index: $front-component-z-index - 20;
-  position: relative;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  pointer-events: none;
+  left: 0;
+
+  @media (min-width: $md) {
+    left: $work-bench-width + 22px;
+    top: 62px;
+    right: 96px;
+    bottom: 0;
+    // debugger
+    // background: rgba(#ffcc00, 0.5);
+  }
+
+  & > div {
+    pointer-events: auto;
+    position: absolute;
+    top: $mobile-header-height + 10px;
+    right: 10px;
+    max-width: 95%;
+    min-width: 150px;
+    max-height: 80vh;
+    z-index: 99;
+    font-family: $font-base;
+
+    @media (min-width: $sm) and (max-width: $feature-info-forty-percent-size) {
+      max-width: $feature-info-medium-max-size;
+      top: 60px;
+    }
+
+    @media (min-width: $feature-info-forty-percent-size) {
+      max-width: 80%;
+      top: 0;
+    }
+  }
 }
 
-@media screen and (min-width: $sm) {
+.featureInfoFullScreen {
+  left: 0;
+}
+
+.sidePanel {
+  transition: all 0.25s;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+  visibility: visible;
+}
+
+.sidePanelHide {
+  display: block;
+  margin-left: 0-$work-bench-width;
+  visibility: hidden;
+}
+
+.showWorkbenchButton {
+  position: fixed;
+  top: 16px;
+  left: -200px;
+  z-index: 99;
+  width: 200px;
+  transition: all 0.25s;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-delay: 0.5s;
+}
+
+.showWorkbenchButtonisVisible {
+  left: 16px;
+}
+.showWorkbenchButtonisNotVisible {
+  transition-delay: 0s;
+}
+
+@media (min-width: $sm) {
   .ui {
-    display: table;
   }
   .uiInner {
-    display: table-row;
+    display: flex;
+    overflow: hidden;
   }
   .sidePanel {
-    display: table-cell;
     vertical-align: top;
   }
   .map {
-    display: table-cell;
     position: relative;
     height: 100vh;
     top: auto;
@@ -85,5 +174,7 @@
     left: auto;
     right: auto;
     overflow: hidden;
+    flex-grow: 1;
+    flex-basis: calc(100% - #{$work-bench-width});
   }
 }

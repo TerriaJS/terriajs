@@ -1,4 +1,4 @@
-@import '~terriajs-variables';
+@import "~terriajs-variables";
 
 $btn-setting-size: 35px;
 
@@ -22,7 +22,8 @@ $btn-setting-size: 35px;
   font-size: $font-size-button;
   font-family: $font-base;
 
-  &:focus, &:hover {
+  &:focus,
+  &:hover {
     box-shadow: none;
     border-color: transparent;
     outline: none;
@@ -37,7 +38,8 @@ $btn-setting-size: 35px;
 
 .btn-small {
   padding: 0;
-  &:hover, &:focus {
+  &:hover,
+  &:focus {
     color: $color-primary;
   }
 }
@@ -53,9 +55,23 @@ $btn-setting-size: 35px;
   border-radius: $radius-small;
   padding: $padding;
 
-  &:hover, &--hover {
+  &:disabled {
+    background: $color-primary-disabled !important;
+    cursor: not-allowed;
+
+    &:hover,
+    &--hover {
+      background: $color-primary-disabled !important;
+    }
+  }
+  &:hover,
+  &--hover {
     background: get-hover-color($color-primary);
   }
+}
+
+.btn-large {
+  padding: 14px 20px;
 }
 
 .btn-grey {
@@ -82,10 +98,11 @@ $btn-setting-size: 35px;
 
 .btn--secondary {
   color: $color-primary;
-  border: 2px solid $color-primary;
+  border: $color-primary;
   border-radius: 4px;
 
-  &:hover, &:focus {
+  &:hover,
+  &:focus {
     border: 2px solid get-hover-color($color-primary);
     color: get-hover-color($color-primary);
   }
@@ -98,7 +115,8 @@ $btn-setting-size: 35px;
   border-radius: 4px;
   padding: 8px 10px;
 
-  &:hover, &:focus {
+  &:hover,
+  &:focus {
     border: 2px solid $color-primary;
     color: $color-primary;
   }
@@ -110,7 +128,8 @@ $btn-setting-size: 35px;
   border-radius: 4px;
   padding: 8px 10px;
 
-  &:hover, &:focus {
+  &:hover,
+  &:focus {
     border: 1px solid $color-primary;
     color: $color-primary;
   }
@@ -126,18 +145,16 @@ $btn-setting-size: 35px;
 
 .btn--close-modal {
   @extend .btn--secondary;
-
   font-size: $font-size-small;
   padding: 4px 10px;
   margin: 5px;
   font-weight: bold;
 }
 
-
 .btn--catalog {
-  padding: $padding 30px+$padding;
-  @media screen and (min-width: $sm){
-    padding: $padding-small 30px+$padding;
+  padding: $padding 30px + $padding;
+  @media (min-width: $sm) {
+    padding: $padding-small 30px + $padding;
   }
 
   position: relative;
@@ -146,9 +163,9 @@ $btn-setting-size: 35px;
   .btn--group-indicator {
     position: absolute;
     left: 0;
-    padding: $padding $padding*2.2 $padding $padding*1.5;
-    @media screen and (min-width: $sm){
-      padding: $padding-small $padding*2.2 $padding-small $padding*1.5;
+    padding: $padding $padding * 2.2 $padding $padding * 1.5;
+    @media (min-width: $sm) {
+      padding: $padding-small $padding * 2.2 $padding-small $padding * 1.5;
     }
     top: 0;
     font-size: $font-size-mid-large;
@@ -158,10 +175,9 @@ $btn-setting-size: 35px;
     position: absolute;
     right: 5px;
     top: $padding;
-    @media screen and (min-width: $sm){
+    @media (min-width: $sm) {
       top: $padding-small;
     }
-
   }
   &:hover,
   &:focus {
@@ -173,13 +189,13 @@ $btn-setting-size: 35px;
   }
 }
 
-
 .btn--catalog-item {
   position: relative;
   width: 100%;
-  padding: $padding-small $padding*2.2 $padding-small $padding*1.5;
+  padding: $padding-small $padding * 2.2 $padding-small $padding * 1.5;
 
-  &:focus, &:hover {
+  &:focus,
+  &:hover {
     color: $modal-highlight;
     &:before {
       opacity: 1;
@@ -197,22 +213,19 @@ $btn-setting-size: 35px;
   }
 }
 
-
-
 .btn.btn--tab {
   border-right: 1px solid $modal-border;
   font-family: $font-pop;
   background: $modal-bg;
   color: $modal-text;
   font-size: $font-size-base;
-  padding: $padding $padding*2;
+  padding: $padding $padding * 2;
   border-bottom: 2px solid transparent;
-  li[aria-selected='true'] & {
+  li[aria-selected="true"] & {
     background: #fff;
     color: $modal-highlight;
   }
 }
-
 
 .btn--map {
   font-size: $font-size-small;
@@ -232,20 +245,18 @@ $btn-setting-size: 35px;
     background: $color-primary;
     text-decoration: none;
   }
-  svg{
+  svg {
     height: 15px;
     width: 15px;
     fill: $text-light;
     display: inline-block;
   }
 
-  span{
+  span {
     vertical-align: top;
     margin: 0 5px;
   }
 }
-
-
 
 .btn--search-clear {
   padding: 0;
@@ -265,7 +276,8 @@ $btn-setting-size: 35px;
 }
 
 //FIXME
-.btn--small, ._buttons__btn-primary.btn--small {
+.btn--small,
+._buttons__btn-primary.btn--small {
   padding: 4px 9px;
   margin-right: 4px;
   font-size: $font-size-small;

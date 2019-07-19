@@ -1,5 +1,5 @@
-@import '~terriajs-variables';
-@import '../../Sass/common/mixins';
+@import "~terriajs-variables";
+@import "../../Sass/common/mixins";
 
 .branding {
   box-sizing: border-box;
@@ -7,14 +7,10 @@
   overflow: hidden;
   @include transition(all, 0.5s, linear);
 
-  @media screen and (min-width: $sm) {
+  @media (min-width: $sm) {
     width: 100%;
     padding: $padding;
     height: $logo-height;
-  }
-
-  @media print{
-    height: 2cm;
   }
 
   img {

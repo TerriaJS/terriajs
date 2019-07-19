@@ -1,8 +1,8 @@
-@import '~terriajs-variables';
-@import '../Sass/common/mixins';
+@import "~terriajs-variables";
+@import "../Sass/common/mixins";
 
 .drop-zone {
-  composes: drop-zone from '../Sass/common/_drop_zone.scss';
+  composes: drop-zone from "../Sass/common/_drop_zone.scss";
 
   position: absolute;
 
@@ -18,7 +18,7 @@
 }
 
 .is-active {
-  composes: is-active from '../Sass/common/_drop_zone.scss';
+  composes: is-active from "../Sass/common/_drop_zone.scss";
 }
 
 .inner {
@@ -30,12 +30,12 @@
   font-family: $font-pop;
 
   &:before {
-    content: '';
+    content: "";
     display: block;
     height: 80px;
     width: 70px;
     margin: 0 auto;
-    background-image: url('../../wwwroot/images/drag-drop.svg');
+    background-image: url("../../wwwroot/images/drag-drop.svg");
     background-size: contain;
     background-repeat: no-repeat;
   }

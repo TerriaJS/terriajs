@@ -1,16 +1,12 @@
-@import '~terriajs-variables';
+@import "~terriajs-variables";
 
-.experimental-features{
+.experimental-features {
   position: absolute;
   left: 25px;
   bottom: 25px;
   z-index: 1;
 
-  @media print{
-    display: none;
-  }
-
-  @media screen and (min-width: $sm) {
+  @media (min-width: $sm) {
     top: auto;
     bottom: 100px;
   }

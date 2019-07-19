@@ -37,7 +37,7 @@ function getAllBranches(repo) {
             }
         }).then(pageResponse => {
             const pageOfBranches = JSON.parse(pageResponse.body);
-            result.push(...pageOfBranches);
+            result.push(...pageOfBranches.filter(branch => branch.name.indexOf('greenkeeper/') !== 0));
 
             if (pageOfBranches.length > 0) {
                 return getNextPage();

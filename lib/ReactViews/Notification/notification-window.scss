@@ -1,8 +1,8 @@
-@import '~terriajs-variables';
-@import '../../Sass/common/mixins';
+@import "~terriajs-variables";
+@import "../../Sass/common/mixins";
 
 .wrapper {
-  composes: flex from '../../Sass/common/_base.scss';
+  composes: flex from "../../Sass/common/_base.scss";
   color: $text-light;
   font-family: $font-base;
   position: fixed;
@@ -10,16 +10,17 @@
   left: 0;
   bottom: 0;
   right: 0;
-  z-index: $front-component-z-index +10;
+  z-index: $front-component-z-index + 10;
   align-items: center;
   justify-content: center;
 
   a {
     @include link($dark);
   }
-  pre{
-      display: block;
-      line-height: 2;
+  pre {
+    display: block;
+    line-height: 2;
+    white-space: pre-wrap;
   }
 }
 
@@ -28,9 +29,7 @@
   border: 1px solid darken($dark, 3%);
   background: $dark;
   z-index: 300;
-  width: 500px;
-  height: auto;
-  pre{
+  pre {
     // copy over scrollbar css because I can't compose within
     -webkit-overflow-scrolling: touch;
 
@@ -50,18 +49,18 @@
 }
 
 .title {
-  composes: h3 from '../../Sass/common/_base.scss';
+  composes: h3 from "../../Sass/common/_base.scss";
 }
 
 .inner {
-  composes: scrollbars from '../../Sass/common/_base.scss';
-  padding: $padding $padding*2;
+  composes: scrollbars from "../../Sass/common/_base.scss";
+  padding: $padding $padding * 2;
   height: 100%;
-  max-height: calc(100vh - #{$input-height*3});
+  max-height: calc(100vh - #{$input-height * 3});
   overflow-y: auto;
+  max-width: calc(100vw - 20px);
+  box-sizing: border-box;
 }
-
-
 
 .footer {
   display: block;
@@ -72,9 +71,9 @@
 }
 
 .btn {
-  composes: btn from '../../Sass/common/_buttons.scss';
+  composes: btn from "../../Sass/common/_buttons.scss";
   padding: $padding;
-  background: rgba(#fff, 0.50);
+  background: rgba(#fff, 0.5);
   text-align: center;
   width: 100%;
   font-size: $font-size-small;

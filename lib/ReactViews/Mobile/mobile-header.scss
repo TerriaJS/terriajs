@@ -1,5 +1,5 @@
-@import '~terriajs-variables';
-@import '../../Sass/common/mixins';
+@import "~terriajs-variables";
+@import "../../Sass/common/mixins";
 
 .ui {
   position: fixed;
@@ -8,14 +8,14 @@
   width: 100vw;
   height: $mobile-header-height;
   z-index: 102;
-  @media screen and (min-width: $sm) {
+  @media (min-width: $sm) {
     left: -99999px;
   }
 }
 
 .mobile-header {
-  composes: sm-hide from '../../Sass/common/_base.scss';
-  composes: clearfix from '../../Sass/common/_base.scss';
+  composes: sm-hide from "../../Sass/common/_base.scss";
+  composes: clearfix from "../../Sass/common/_base.scss";
   justify-content: space-between;
   font-family: $font-pop;
   width: 100%;
@@ -26,8 +26,8 @@
 }
 
 .btn {
-  composes: btn from '../../Sass/common/_buttons.scss';
-  composes: btn-primary from '../../Sass/common/_buttons.scss';
+  composes: btn from "../../Sass/common/_buttons.scss";
+  composes: btn-primary from "../../Sass/common/_buttons.scss";
 
   height: 40px;
   vertical-align: top;
@@ -38,7 +38,7 @@
 
   position: relative;
   margin: 0 $padding-small;
-  padding: $padding $padding $padding $padding*3;
+  padding: $padding $padding $padding $padding * 3;
   width: auto;
   text-align: right;
   font-size: 0.95rem;
@@ -85,7 +85,6 @@
     position: absolute;
     top: $padding-small;
     right: $padding-small;
-
   }
   .doubleDigit {
     font-size: 0.8rem;
@@ -111,14 +110,16 @@
 }
 
 .btnMenu {
-  composes: btn from '../../Sass/common/_buttons.scss';
+  composes: btn from "../../Sass/common/_buttons.scss";
   height: 40px;
   font-size: 25px;
   padding: 0 $padding-small;
   border-radius: $radius-small;
   margin-right: 3px;
   vertical-align: top;
-  &:hover, &:focus, & {
+  &:hover,
+  &:focus,
+  & {
     border: 1px solid rgba(#fff, 0.5);
   }
 

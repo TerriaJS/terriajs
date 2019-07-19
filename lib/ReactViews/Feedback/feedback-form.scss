@@ -1,8 +1,8 @@
-@import '~terriajs-variables';
-@import '../../Sass/common/mixins';
+@import "~terriajs-variables";
+@import "../../Sass/common/mixins";
 
 .form {
-  composes: scrollbars from '../../Sass/common/_base.scss';
+  composes: scrollbars from "../../Sass/common/_base.scss";
   font-family: $font-base;
   font-size: $font-size-mid-small;
   z-index: 1;
@@ -13,11 +13,11 @@
   box-shadow: $box-shadow;
   display: none;
 
-  @media screen and (min-width: $sm) {
+  @media (min-width: $sm) {
     bottom: 75px;
-    right: $padding*2;
+    right: $padding * 2;
   }
-  @media screen and (max-width: $sm) {
+  @media (max-width: $sm) {
     right: 0;
     top: $mobile-header-height;
     left: 0;
@@ -28,10 +28,7 @@
     display: block;
   }
   form {
-    padding: $padding*2;
-  }
-  @media print {
-    display: none;
+    padding: $padding * 2;
   }
 }
 
@@ -53,19 +50,20 @@
 }
 
 .btnSubmit {
-  composes: btn from '../../Sass/common/_buttons.scss';
+  composes: btn from "../../Sass/common/_buttons.scss";
   background: $color-primary;
   color: $text-light;
   margin-left: 10px;
   border-radius: $radius-medium;
-  padding: $padding-small $padding*2;
-  &:hover, &--hover {
+  padding: $padding-small $padding * 2;
+  &:hover,
+  &--hover {
     background: get-hover-color($color-primary);
   }
 }
 
 .field {
-  composes: field from '../../Sass/common/_form.scss';
+  composes: field from "../../Sass/common/_form.scss";
   margin-bottom: $padding;
 }
 
@@ -74,10 +72,10 @@
 }
 
 .btnCancel {
-  composes: btn from '../../Sass/common/_buttons.scss';
+  composes: btn from "../../Sass/common/_buttons.scss";
   border: 1px solid $grey;
   border-radius: $radius-medium;
-  padding: $padding-small $padding*2;
+  padding: $padding-small $padding * 2;
   &:hover {
     border: 1px solid $color-primary;
     color: $color-primary;
@@ -85,14 +83,14 @@
 }
 
 .btnClose {
-  composes: btn from '../../Sass/common/_buttons.scss';
+  composes: btn from "../../Sass/common/_buttons.scss";
   position: absolute;
-  right: 0;
-  top: 5px;
+  right: 10px;
+  top: 10px;
   svg {
     fill: $text-light;
-    height: 30px;
-    width: 30px;
+    height: 15px;
+    width: 15px;
     &:hover {
       fill: $color-primary;
     }
@@ -105,7 +103,7 @@
     border: 0px;
     background: transparent;
   }
-  svg{
+  svg {
     display: inline;
     padding-right: 5px;
     height: 14px;

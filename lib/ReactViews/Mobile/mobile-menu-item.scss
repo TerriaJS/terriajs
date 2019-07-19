@@ -1,24 +1,34 @@
-@import '~terriajs-variables';
+@import "~terriajs-variables";
 
 .root {
-  padding: 0 $padding-small*3;
+  padding: 0 $padding-small * 3;
 }
 
 .link {
-  composes: btn from '../../Sass/common/_buttons.scss';
+  composes: btn from "../../Sass/common/_buttons.scss";
 
   font-size: 1rem;
   width: 100%;
   text-align: left;
-  padding: $padding-small*3 0;
+  padding: $padding-small * 3 0;
   color: $text-dark;
   display: block;
   border-bottom: 1px solid $grey-lighter;
   font-weight: 400;
+  display: flex;
+  svg {
+    fill: $text-dark;
+    width: 14px;
+    height: 14px;
+    padding: 3px;
+  }
   &:hover,
   &:focus {
     color: $color-primary;
     text-decoration: underline;
     border-bottom: 1px solid $grey-lighter;
+    svg {
+      fill: $color-primary;
+    }
   }
 }

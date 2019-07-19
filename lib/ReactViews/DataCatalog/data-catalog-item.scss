@@ -1,8 +1,8 @@
-@import '~terriajs-variables';
-@import '../../Sass/common/mixins';
+@import "~terriajs-variables";
+@import "../../Sass/common/mixins";
 
 .root {
-  composes: clearfix from '../../Sass/common/_base.scss';
+  composes: clearfix from "../../Sass/common/_base.scss";
   display: block;
   width: 100%;
   position: relative;
@@ -10,13 +10,15 @@
 
 .btn-catalog-item {
   font-size: $font-size-small;
-  composes: btn from '../../Sass/common/_buttons.scss';
+  composes: btn from "../../Sass/common/_buttons.scss";
   @extend %wrap;
   position: relative;
   width: 100%;
-  padding: $padding-small $padding*2.5 $padding-small $padding*1.5;
+  padding: 8px $padding * 2.5 8px $padding;
+  line-height: normal;
 
-  &:focus, &:hover {
+  &:focus,
+  &:hover {
     color: $modal-highlight;
     &:before {
       opacity: 1;
@@ -31,7 +33,7 @@
     }
   }
 
-  @media screen and (max-width: $sm) {
+  @media (max-width: $sm) {
     font-size: $font-size-mid-small;
     padding-top: 10px;
     padding-bottom: 10px;
@@ -40,26 +42,26 @@
 }
 
 .btn-action {
-  composes: btn from '../../Sass/common/_buttons.scss';
-
+  composes: btn from "../../Sass/common/_buttons.scss";
   position: absolute;
   color: $color-primary;
   right: 0;
-  top: 0;
+  top: 4px;
 
-  @media screen and (max-width: $sm) {
+  @media (max-width: $sm) {
     top: 5px;
   }
 
-  svg{
+  svg {
     height: 18px;
     width: 18px;
-    margin: 6px;
+    margin: 5px;
     fill: $charcoal-grey;
   }
 
-  &:hover, &:focus{
-    svg{
+  &:hover,
+  &:focus {
+    svg {
       fill: $modal-highlight;
     }
   }
@@ -76,7 +78,7 @@
   &--loading-on-map {
     top: 3px;
     right: 12px;
-    &:before{
+    &:before {
       position: absolute;
     }
   }

@@ -24,8 +24,9 @@ If you run into trouble or want more explanation, read on.
 
 TerriaJS can be built and run on almost any macOS, Linux, or Windows system.  The following are required to build TerriaJS:
 
-* [Node.js](https://nodejs.org) v6.0 or later.  v7.x and v8.x are also known to work.  You can check your node version by running `node --version` on the command-line.
-* [npm](https://www.npmjs.com/) v3.0 or later.  v4.x and v5.x are also known to work.  npm is usually installed automatically alongside the above.  You can check your npm version by running `npm --version`.
+* The Bash command shell. On macOS or Linux you almost certainly already have this. On Windows, you can easily get it by installing [Git for Windows](https://gitforwindows.org/). In the instructions below, we assume you're using a Bash command prompt.
+* [Node.js](https://nodejs.org) v8.0 or later.  v10.x is also known to work.  You can check your node version by running `node --version` on the command-line.
+* [npm](https://www.npmjs.com/) v6.0 or later.  npm is usually installed automatically alongside the above.  You can check your npm version by running `npm --version`.
 
 The following components are optional:
 
@@ -97,6 +98,31 @@ After pulling new changes, you will need to run `npm install` again to pick up a
 rm -rf node_modules
 npm install
 ```
+
+#### Prettier
+
+[Prettier](https://prettier.io/) is used to format this codebase.
+
+If you've forked TerriaMap prior to prettier being applied, merging will be a hassle. Here's how to do it (relatively) painlessly:
+
+* Create a new branch for your merge: `git checkout -b whatever-merge`
+* If you haven't already installed `npm-merge-driver`, add it to your local git config via `npx npm-merge-driver install`.
+* Merge the last commit before prettier into your branch: `git merge pre-prettier`. Resolve any conflicts as usual. If utilising yarn, it will resolve any `yarn-lock.json` conflicts automatically with another `yarn install`
+* Commit the merge above.
+* Merge the commit that ran prettier on all the source files into your branch. This is likely to cause heaps of conflicts, but because you've already merged the last commit before prettier, and because the prettier commit only changes formatting, you can safely accept your version any time there is a conflict. `git merge post-prettier --strategy=ours --no-commit`
+* Run prettier on the result of the merge before committing it: `npm run prettier`
+* Commit the merged result.
+* Merge master into your branch in order to pick up any changes in master that happened after the prettiergeddon: `git merge origin/master`. Resolve any conflicts as normal.
+* Commit and push your branch.
+* Open a pull request of your merge branch into the original one. It should merge cleanly.
+
+If you're merging a branch-that-has-already-followed-this-procedure into your branch, you can follow the procedure above except that you need to use different commits instead of `pre-prettier` and `post-prettier`. Look at the commits in the source branch and you should see two that look like this:
+
+<img src="../contributing/img/prettier-commits.png" />
+
+Use the commit hash of the commit that merged `pre-prettier` in place of `pre-prettier` above. Use the commit hash of the commit that merged `post-prettier` in place of `post-prettier` above.
+
+Having trouble? Drop by the TerriaJS [gitter](https://gitter.im/TerriaJS/terriajs) or [forum](https://groups.google.com/forum/#!forum/terriajs) and we'll be happy to help!
 
 ### Next Steps
 

@@ -1,5 +1,5 @@
-@import '~terriajs-variables';
-@import 'mixins';
+@import "~terriajs-variables";
+@import "mixins";
 
 .drop-zone {
   @include transition(height 0.25s ease-in-out);
@@ -11,9 +11,23 @@
   &.is-active {
     @include transition(opacity, 0.2s);
     background: #fff;
-    background: -moz-radial-gradient(center, ellipse cover, rgba($dark-lighter, 0.7) 0%, rgba($dark, 1) 100%);
-    background: -webkit-radial-gradient(center, ellipse cover, rgba($dark-lighter, 0.7) 0%, rgba($dark, 1) 100%);
-    background: radial-gradient(ellipse at center, rgba($dark-lighter, 0.7) 0%, rgba($dark, 1) 100%);
+    background: -moz-radial-gradient(
+      center,
+      ellipse cover,
+      rgba($dark-lighter, 0.7) 0%,
+      rgba($dark, 1) 100%
+    );
+    background: -webkit-radial-gradient(
+      center,
+      ellipse cover,
+      rgba($dark-lighter, 0.7) 0%,
+      rgba($dark, 1) 100%
+    );
+    background: radial-gradient(
+      ellipse at center,
+      rgba($dark-lighter, 0.7) 0%,
+      rgba($dark, 1) 100%
+    );
     opacity: 1;
     display: block;
     border: 0;
