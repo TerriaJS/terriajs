@@ -24,6 +24,7 @@ import RegionTypeParameter from "./RegionTypeParameter";
 import ResultPendingCatalogItem from "./ResultPendingCatalogItem";
 import StringParameter from "./StringParameter";
 import WebProcessingServiceCatalogItem from "./WebProcessingServiceCatalogItem";
+import runLater from "../Core/runLater";
 
 const sprintf = require("terriajs-cesium/Source/ThirdParty/sprintf");
 const executeWpsTemplate = require("./ExecuteWpsTemplate.xml");
@@ -213,7 +214,7 @@ export default class WebProcessingServiceCatalogFunction extends CatalogMemberMi
       return;
     }
 
-    const resultPending = this.createPendingCatalogItem();
+    const pendingItem = this.createPendingCatalogItem();
     let dataInputs = await Promise.all(
       this.parameters.map(p => this.convertParameterToInput(p))
     );
@@ -236,18 +237,23 @@ export default class WebProcessingServiceCatalogFunction extends CatalogMemberMi
       promise = this.postXml(this.executeUrl, executeXml);
     }
 
-    resultPending.loadPromise = promise;
-    this.terria.workbench.add(resultPending);
+    pendingItem.loadPromise = promise;
+    this.terria.workbench.add(pendingItem);
     const executeResponseXml = await promise;
-    await this.handleExecuteResponse(executeResponseXml, resultPending);
+    await this.handleExecuteResponse(executeResponseXml, pendingItem);
   }
 
   /**
    * Handle the Execute response
    *
-   * If Execute succeeded, we create a WebProcessingServiceCatalogItem to show the result.
+   * If execution succeeded, we create a WebProcessingServiceCatalogItem to show the result.
+   * If execution failed, mark the pendingItem item as error.
+   * Otherwise, if statusLocation is set, poll until we get a result or the pendingItem is removed from the workbench.
    */
-  async handleExecuteResponse(xml: any, pendingItem: ResultPendingCatalogItem) {
+  async handleExecuteResponse(
+    xml: any,
+    pendingItem: ResultPendingCatalogItem
+  ): Promise<unknown> {
     if (
       !xml ||
       !xml.documentElement ||
@@ -273,6 +279,16 @@ export default class WebProcessingServiceCatalogFunction extends CatalogMemberMi
       await item.loadMapItems();
       this.terria.workbench.add(item);
       this.terria.workbench.remove(pendingItem);
+    } else if (
+      isDefined(json.statusLocation) &&
+      this.terria.workbench.contains(pendingItem)
+    ) {
+      return runLater(async () => {
+        const promise = this.getXml(json.statusLocation);
+        pendingItem.loadPromise = promise;
+        const xml = await promise;
+        return this.handleExecuteResponse(xml, pendingItem);
+      }, 500);
     }
   }
 

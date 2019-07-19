@@ -25,6 +25,10 @@ const failedExecuteResponseXml = xml(
   require("raw-loader!../../wwwroot/test/WPS/FailedExecuteResponse.xml")
 );
 
+const pendingExecuteResponseXml = xml(
+  require("raw-loader!../../wwwroot/test/WPS/PendingExecuteResponse.xml")
+);
+
 describe("WebProcessingServiceCatalogFunction", function() {
   let wps: WebProcessingServiceCatalogFunction;
 
@@ -171,6 +175,32 @@ describe("WebProcessingServiceCatalogFunction", function() {
             /identifiers passed does not match/i
           );
         }
+      });
+    });
+
+    describe("otherwise if `statusLocation` is set", function() {
+      it("polls the statusLocation for the result", async function() {
+        spyOn(wps, "postXml").and.returnValue(pendingExecuteResponseXml);
+        getXml.and.returnValues(pendingExecuteResponseXml, executeResponseXml);
+        await wps.invoke();
+        expect(getXml).toHaveBeenCalledTimes(3);
+        expect(getXml.calls.argsFor(1)[0]).toBe(
+          "http://gsky.nci.org.au/ows?check_status/123"
+        );
+        expect(getXml.calls.argsFor(2)[0]).toBe(
+          "http://gsky.nci.org.au/ows?check_status/123"
+        );
+      });
+
+      it("stops polling if pendingItem is removed from the workbench", async function() {
+        spyOn(wps.terria.workbench, "add"); // do nothing
+        spyOn(wps, "postXml").and.returnValue(pendingExecuteResponseXml);
+        getXml.and.returnValues.apply(
+          null,
+          [...Array(10)].map(() => pendingExecuteResponseXml)
+        );
+        await wps.invoke();
+        expect(getXml.calls.all.length).toBe(0);
       });
     });
   });
