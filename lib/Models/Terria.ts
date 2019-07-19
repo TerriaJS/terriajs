@@ -65,7 +65,7 @@ interface ConfigParameters {
   useCesiumIonTerrain?: boolean;
   cesiumIonAccessToken?: string;
   hideTerriaLogo?: boolean;
-  useCesiumIonBingImagery: boolean;
+  useCesiumIonBingImagery?: boolean;
   bingMapsKey?: string;
   brandBarElements?: string[];
 }
@@ -151,7 +151,7 @@ export default class Terria {
     useCesiumIonTerrain: true,
     cesiumIonAccessToken: undefined,
     hideTerriaLogo: false,
-    useCesiumIonBingImagery: true,
+    useCesiumIonBingImagery: undefined,
     bingMapsKey: undefined,
     brandBarElements: undefined
   };
@@ -481,6 +481,11 @@ export default class Terria {
       typeof initData.stratum === "string"
         ? initData.stratum
         : CommonStrata.definition;
+
+    // Extract the list of CORS-ready domains.
+    if (Array.isArray(initData.corsDomains)) {
+      this.corsProxy.corsDomains.push(...(<string[]>initData.corsDomains));
+    }
 
     if (initData.catalog !== undefined) {
       updateModelFromJson(this.catalog.group, stratumId, {

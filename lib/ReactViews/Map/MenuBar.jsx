@@ -8,14 +8,12 @@ import SettingPanel from "./Panels/SettingPanel";
 import SharePanel from "./Panels/SharePanel/SharePanel";
 import ToolsPanel from "./Panels/ToolsPanel/ToolsPanel";
 import Icon from "../Icon";
-import ObserveModelMixin from "../ObserveModelMixin";
 import Prompt from "../Generic/Prompt";
 import Styles from "./menu-bar.scss";
 
 // The map navigation region
 const MenuBar = createReactClass({
   displayName: "MenuBar",
-  mixins: [ObserveModelMixin],
 
   propTypes: {
     terria: PropTypes.object,

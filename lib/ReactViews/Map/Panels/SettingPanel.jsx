@@ -37,7 +37,7 @@ class SettingPanel extends React.Component {
     super(props);
     this.state = {
       activeMapName: props.terria.mainViewer.baseMap
-        ? props.terria.baseMap.name
+        ? props.terria.mainViewer.baseMap.name
         : "(None)"
     };
   }

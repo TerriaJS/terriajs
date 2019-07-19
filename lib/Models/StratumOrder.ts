@@ -77,16 +77,25 @@ export default class StratumOrder {
    */
   sortTopToBottom<T>(strata: Map<string, T>): Map<string, T> {
     return this.sort(strata, (a, b) => {
-      const aPriority = this.priorities.get(a[0]);
+      const aId = a[0];
+      const bId = b[0];
+
+      if (aId === "top" && bId === "bottom") {
+        return -1;
+      } else if (aId === "bottom" && bId === "top") {
+        return 1;
+      }
+
+      const aPriority = this.priorities.get(aId);
       if (aPriority === undefined) {
         throw new DeveloperError(
-          `Stratum ${a[0]} does not exist in StratumOrder.`
+          `Stratum ${aId} does not exist in StratumOrder.`
         );
       }
-      const bPriority = this.priorities.get(b[0]);
+      const bPriority = this.priorities.get(bId);
       if (bPriority === undefined) {
         throw new DeveloperError(
-          `Stratum ${b[0]} does not exist in StratumOrder.`
+          `Stratum ${bId} does not exist in StratumOrder.`
         );
       }
 
@@ -102,16 +111,25 @@ export default class StratumOrder {
    */
   sortBottomToTop<T>(strata: Map<string, T>): Map<string, T> {
     return this.sort(strata, (a, b) => {
-      const aPriority = this.priorities.get(a[0]);
+      const aId = a[0];
+      const bId = b[0];
+
+      if (aId === "top" && bId === "bottom") {
+        return 1;
+      } else if (aId === "bottom" && bId === "top") {
+        return -1;
+      }
+
+      const aPriority = this.priorities.get(aId);
       if (aPriority === undefined) {
         throw new DeveloperError(
-          `Stratum ${a[0]} does not exist in StratumOrder.`
+          `Stratum ${aId} does not exist in StratumOrder.`
         );
       }
-      const bPriority = this.priorities.get(b[0]);
+      const bPriority = this.priorities.get(bId);
       if (bPriority === undefined) {
         throw new DeveloperError(
-          `Stratum ${b[0]} does not exist in StratumOrder.`
+          `Stratum ${bId} does not exist in StratumOrder.`
         );
       }
 

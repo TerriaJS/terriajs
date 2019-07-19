@@ -1,6 +1,6 @@
 import TableChartStyleTraits from "./TableChartStyleTraits";
 import TableColorStyleTraits from "./TableColorStyleTraits";
-import TableScaleStyleTraits from "./TableScaleStyleTraits";
+import TablePointSizeStyleTraits from "./TablePointSizeStyleTraits";
 import TableTimeStyleTraits from "./TableTimeStyleTraits";
 import ModelTraits from "./ModelTraits";
 import objectTrait from "./objectTrait";
@@ -19,7 +19,8 @@ export default class TableStyleTraits extends ModelTraits {
     name: "Title",
     description:
       "The human-readable title of the style. Set this to null to remove the style entirely.",
-    type: "string"
+    type: "string",
+    isNullable: true
   })
   title?: string | null;
 
@@ -62,11 +63,12 @@ export default class TableStyleTraits extends ModelTraits {
   color?: TableColorStyleTraits;
 
   @objectTrait({
-    name: "Scale",
-    description: "Options for controlling the scale of points.",
-    type: TableScaleStyleTraits
+    name: "Point Size",
+    description:
+      "Options for controlling the size of points. This property is ignored for regions.",
+    type: TablePointSizeStyleTraits
   })
-  scale?: TableScaleStyleTraits;
+  pointSize?: TablePointSizeStyleTraits;
 
   @objectTrait({
     name: "Chart",
@@ -79,7 +81,7 @@ export default class TableStyleTraits extends ModelTraits {
     name: "Time",
     description:
       "Options for controlling how the visualization changes with time.",
-    type: TableChartStyleTraits
+    type: TableTimeStyleTraits
   })
   time?: TableTimeStyleTraits;
 
