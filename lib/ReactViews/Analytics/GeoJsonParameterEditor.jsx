@@ -14,6 +14,7 @@ import { observer } from "mobx-react";
 
 const GeoJsonParameterEditor = observer(
   createReactClass({
+    displayName: "GeoJsonParameterEditor",
     propTypes: {
       previewed: PropTypes.object,
       parameter: PropTypes.object,

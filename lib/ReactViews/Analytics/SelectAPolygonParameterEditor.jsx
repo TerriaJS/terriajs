@@ -1,5 +1,5 @@
 import createReactClass from "create-react-class";
-import { reaction, toJS } from "mobx";
+import { reaction } from "mobx";
 import PropTypes from "prop-types";
 import React from "react";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
