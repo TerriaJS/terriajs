@@ -1,4 +1,4 @@
-import { autorun, computed } from "mobx";
+import { autorun, computed, runInAction } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Color from "terriajs-cesium/Source/Core/Color";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
@@ -161,7 +161,9 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
     }
 
     // Cancel any feature picking already in progress.
-    this.terria.pickedFeatures = undefined;
+    runInAction(() => {
+      this.terria.pickedFeatures = undefined;
+    });
     const that = this;
 
     // Line will show up once user has drawn some points. Vertices of line are user points.

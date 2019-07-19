@@ -35,7 +35,9 @@ class WpsLoadableStratum extends LoadableStratum(
     if (!isDefined(item.wpsResponse) && isDefined(item.wpsResponseUrl)) {
       const url = proxyCatalogItemUrl(item, item.wpsResponseUrl, "1d");
       const wpsResponse = await item.getXml(url);
-      item.setTrait(CommonStrata.user, "wpsResponse", wpsResponse);
+      runInAction(() => {
+        item.setTrait(CommonStrata.user, "wpsResponse", wpsResponse);
+      });
     }
     return new WpsLoadableStratum(item);
   }
@@ -208,7 +210,9 @@ export default class WebProcessingServiceCatalogItem
 
   async forceLoadMetadata() {
     const stratum = await WpsLoadableStratum.load(this);
-    this.strata.set(WpsLoadableStratum.stratumName, stratum);
+    runInAction(() => {
+      this.strata.set(WpsLoadableStratum.stratumName, stratum);
+    });
 
     const reports: StratumFromTraits<ShortReportTraits>[] = [];
     const promises = this.outputs.map(async (output, i) => {

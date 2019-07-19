@@ -7,6 +7,7 @@ import supportsWebGL from "../../lib/Core/supportsWebGL";
 import PickedFeatures from "../../lib/Map/PickedFeatures";
 import Terria from "../../lib/Models/Terria";
 import UserDrawing from "../../lib/Models/UserDrawing";
+import { runInAction } from "mobx";
 
 const describeIfSupported = supportsWebGL() ? describe : xdescribe;
 
@@ -78,7 +79,9 @@ describe("UserDrawing", function() {
       465233.10329933715,
       -3804299.6786334896
     );
-    userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
+    runInAction(() => {
+      userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
+    });
     const pointEntities = onPointClicked.calls.mostRecent().args[0];
     expect(pointEntities.entities.values.length).toEqual(1);
   });
@@ -95,7 +98,9 @@ describe("UserDrawing", function() {
       465233.10329933715,
       -3804299.6786334896
     );
-    userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
+    runInAction(() => {
+      userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
+    });
     expect(userDrawing.pointEntities.entities.values.length).toEqual(1);
     expect(userDrawing.otherEntities.entities.values.length).toEqual(1);
   });
@@ -114,7 +119,9 @@ describe("UserDrawing", function() {
     const z = -3804299.6786334896;
 
     pickedFeatures.pickPosition = new Cartesian3(x, y, z);
-    userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
+    runInAction(() => {
+      userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
+    });
 
     // Check point
     const currentPoint = userDrawing.pointEntities.entities.values[0];
@@ -140,7 +147,9 @@ describe("UserDrawing", function() {
     const newY = -4660863.528418564;
     const newZ = 3551306.84427321;
     newPickedFeatures.pickPosition = new Cartesian3(newX, newY, newZ);
-    userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = newPickedFeatures;
+    runInAction(() => {
+      userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = newPickedFeatures;
+    });
 
     // Check point
     const newPoint = userDrawing.pointEntities.entities.values[1];
@@ -186,7 +195,9 @@ describe("UserDrawing", function() {
       465233.10329933715,
       -3804299.6786334896
     );
-    userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
+    runInAction(() => {
+      userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
+    });
 
     expect(userDrawing.pointEntities.entities.values.length).toEqual(1);
     expect(userDrawing.otherEntities.entities.values.length).toEqual(1);
@@ -223,7 +234,9 @@ describe("UserDrawing", function() {
       pt1Position
     );
     pickedFeatures.pickPosition = pt1CartesianPosition;
-    userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
+    runInAction(() => {
+      userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
+    });
 
     // Second point
     const pt2Position = new Cartographic(
@@ -235,7 +248,9 @@ describe("UserDrawing", function() {
       pt2Position
     );
     pickedFeatures.pickPosition = pt2CartesianPosition;
-    userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
+    runInAction(() => {
+      userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
+    });
 
     // Third point
     const pt3Position = new Cartographic(
@@ -247,7 +262,9 @@ describe("UserDrawing", function() {
       pt3Position
     );
     pickedFeatures.pickPosition = pt3CartesianPosition;
-    userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
+    runInAction(() => {
+      userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
+    });
     expect((<any>userDrawing).closeLoop).toBeFalsy();
 
     // Now pick the first point
@@ -256,7 +273,9 @@ describe("UserDrawing", function() {
     // pretending the user actually clicked on it.
     const pt1Entity = userDrawing.pointEntities.entities.values[0];
     pickedFeatures.features = [pt1Entity];
-    userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
+    runInAction(() => {
+      userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
+    });
 
     expect((<any>userDrawing).closeLoop).toBeTruthy();
     expect(userDrawing.pointEntities.entities.values.length).toEqual(3);
@@ -279,7 +298,9 @@ describe("UserDrawing", function() {
       pt1Position
     );
     pickedFeatures.pickPosition = pt1CartesianPosition;
-    userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
+    runInAction(() => {
+      userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
+    });
 
     // Second point
     const pt2Position = new Cartographic(
@@ -291,7 +312,9 @@ describe("UserDrawing", function() {
       pt2Position
     );
     pickedFeatures.pickPosition = pt2CartesianPosition;
-    userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
+    runInAction(() => {
+      userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
+    });
 
     // Third point
     const pt3Position = new Cartographic(
@@ -303,7 +326,9 @@ describe("UserDrawing", function() {
       pt3Position
     );
     pickedFeatures.pickPosition = pt3CartesianPosition;
-    userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
+    runInAction(() => {
+      userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
+    });
     expect((<any>userDrawing).closeLoop).toBeFalsy();
 
     // Now pick the first point
@@ -312,7 +337,9 @@ describe("UserDrawing", function() {
     // pretending the user actually clicked on it.
     const pt1Entity = userDrawing.pointEntities.entities.values[0];
     pickedFeatures.features = [pt1Entity];
-    userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
+    runInAction(() => {
+      userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
+    });
 
     expect((<any>userDrawing).closeLoop).toBeFalsy();
     expect(userDrawing.pointEntities.entities.values.length).toEqual(2);
@@ -334,7 +361,9 @@ describe("UserDrawing", function() {
       pt1Position
     );
     pickedFeatures.pickPosition = pt1CartesianPosition;
-    userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
+    runInAction(() => {
+      userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
+    });
 
     // Second point
     const pt2Position = new Cartographic(
@@ -346,7 +375,9 @@ describe("UserDrawing", function() {
       pt2Position
     );
     pickedFeatures.pickPosition = pt2CartesianPosition;
-    userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
+    runInAction(() => {
+      userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
+    });
 
     // Third point
     const pt3Position = new Cartographic(
@@ -358,7 +389,9 @@ describe("UserDrawing", function() {
       pt3Position
     );
     pickedFeatures.pickPosition = pt3CartesianPosition;
-    userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
+    runInAction(() => {
+      userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
+    });
     expect((<any>userDrawing).closeLoop).toBeFalsy();
     expect(userDrawing.otherEntities.entities.values.length).toEqual(1);
 
@@ -368,7 +401,9 @@ describe("UserDrawing", function() {
     // pretending the user actually clicked on it.
     const pt1Entity = userDrawing.pointEntities.entities.values[0];
     pickedFeatures.features = [pt1Entity];
-    userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
+    runInAction(() => {
+      userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
+    });
     expect((<any>userDrawing).closeLoop).toBeTruthy();
     expect(userDrawing.otherEntities.entities.values.length).toEqual(2);
 
@@ -382,7 +417,9 @@ describe("UserDrawing", function() {
       newPtPosition
     );
     pickedFeatures.pickPosition = newPtCartesianPosition;
-    userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
+    runInAction(() => {
+      userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
+    });
 
     expect((<any>userDrawing).closeLoop).toBeTruthy();
     expect(userDrawing.otherEntities.entities.values.length).toEqual(2);
@@ -405,7 +442,9 @@ describe("UserDrawing", function() {
       pt1Position
     );
     pickedFeatures.pickPosition = pt1CartesianPosition;
-    userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
+    runInAction(() => {
+      userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
+    });
 
     // Second point
     const pt2Position = new Cartographic(
@@ -417,7 +456,9 @@ describe("UserDrawing", function() {
       pt2Position
     );
     pickedFeatures.pickPosition = pt2CartesianPosition;
-    userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
+    runInAction(() => {
+      userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
+    });
 
     // Third point
     const pt3Position = new Cartographic(
@@ -429,7 +470,9 @@ describe("UserDrawing", function() {
       pt3Position
     );
     pickedFeatures.pickPosition = pt3CartesianPosition;
-    userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
+    runInAction(() => {
+      userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
+    });
     expect((<any>userDrawing).closeLoop).toBeFalsy();
 
     // Now pick the second point
@@ -438,7 +481,9 @@ describe("UserDrawing", function() {
     // pretending the user actually clicked on it.
     const pt2Entity = userDrawing.pointEntities.entities.values[1];
     pickedFeatures.features = [pt2Entity];
-    userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
+    runInAction(() => {
+      userDrawing.terria.mapInteractionModeStack[0].pickedFeatures = pickedFeatures;
+    });
 
     expect(userDrawing.pointEntities.entities.values.length).toEqual(2);
   });

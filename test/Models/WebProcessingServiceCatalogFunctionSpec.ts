@@ -1,4 +1,5 @@
-import { reaction, runInAction } from "mobx";
+import "../SpecHelpers";
+import { reaction, runInAction, configure } from "mobx";
 import isDefined from "../../lib/Core/isDefined";
 import CatalogMemberFactory from "../../lib/Models/CatalogMemberFactory";
 import CsvCatalogItem from "../../lib/Models/CsvCatalogItem";
@@ -18,6 +19,11 @@ import PointParameter from "../../lib/Models/PointParameter";
 import PolygonParameter from "../../lib/Models/PolygonParameter";
 import LineParameter from "../../lib/Models/LineParameter";
 import RectangleParameter from "../../lib/Models/RectangleParameter";
+
+configure({
+  enforceActions: "observed",
+  computedRequiresReaction: true
+});
 
 const processDescriptionsXml = xml(
   require("raw-loader!../../wwwroot/test/WPS/ProcessDescriptions.xml")

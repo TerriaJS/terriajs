@@ -1,4 +1,4 @@
-import { runInAction } from "mobx";
+import { runInAction, configure } from "mobx";
 import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
 import isDefined from "../../lib/Core/isDefined";
 import CatalogMemberFactory from "../../lib/Models/CatalogMemberFactory";
@@ -8,6 +8,11 @@ import GeoJsonCatalogItem from "../../lib/Models/GeoJsonCatalogItem";
 import Terria from "../../lib/Models/Terria";
 import WebProcessingServiceCatalogItem from "../../lib/Models/WebProcessingServiceCatalogItem";
 import { xml } from "../SpecHelpers";
+
+configure({
+  enforceActions: "observed",
+  computedRequiresReaction: true
+});
 
 const executeResponseXml = xml(
   require("raw-loader!../../wwwroot/test/WPS/ExecuteResponse.xml")
@@ -43,11 +48,13 @@ describe("WebProcessingServiceCatalogItem", function() {
   });
 
   it("loads metadata from `wpsResponseUrl` if it is set", async function() {
-    item.setTrait(
-      CommonStrata.user,
-      "wpsResponseUrl",
-      "http://example.com/WPS/test"
-    );
+    runInAction(() => {
+      item.setTrait(
+        CommonStrata.user,
+        "wpsResponseUrl",
+        "http://example.com/WPS/test"
+      );
+    });
     spyOn(item, "getXml").and.returnValue(executeResponseXml);
     await item.loadMetadata();
     expect(item.getXml).toHaveBeenCalledTimes(1);
