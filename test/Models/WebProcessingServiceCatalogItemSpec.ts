@@ -1,4 +1,5 @@
 import { runInAction } from "mobx";
+import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
 import isDefined from "../../lib/Core/isDefined";
 import CatalogMemberFactory from "../../lib/Models/CatalogMemberFactory";
 import CommonStrata from "../../lib/Models/CommonStrata";
@@ -6,7 +7,11 @@ import CsvCatalogItem from "../../lib/Models/CsvCatalogItem";
 import GeoJsonCatalogItem from "../../lib/Models/GeoJsonCatalogItem";
 import Terria from "../../lib/Models/Terria";
 import WebProcessingServiceCatalogItem from "../../lib/Models/WebProcessingServiceCatalogItem";
-import GeoJsonDataSource from "terriajs-cesium/Source/DataSources/GeoJsonDataSource";
+import { xml } from "../SpecHelpers";
+
+const executeResponseXml = xml(
+  require("raw-loader!../../wwwroot/test/WPS/ExecuteResponse.xml")
+);
 
 describe("WebProcessingServiceCatalogItem", function() {
   let item: WebProcessingServiceCatalogItem;
@@ -35,6 +40,18 @@ describe("WebProcessingServiceCatalogItem", function() {
   it("has a type & typeName", function() {
     expect(WebProcessingServiceCatalogItem.type).toBe("wps-result");
     expect(item.typeName).toBe("Web Processing Service Result");
+  });
+
+  it("loads metadata from `wpsResponseUrl` if it is set", async function() {
+    item.setTrait(
+      CommonStrata.user,
+      "wpsResponseUrl",
+      "http://example.com/WPS/test"
+    );
+    spyOn(item, "getXml").and.returnValue(executeResponseXml);
+    await item.loadMetadata();
+    expect(item.getXml).toHaveBeenCalledTimes(1);
+    expect(item.getXml).toHaveBeenCalledWith("http://example.com/WPS/test");
   });
 
   describe("after loading metadata", function() {

@@ -1,17 +1,18 @@
-import { runInAction, reaction } from "mobx";
+import { reaction, runInAction } from "mobx";
 import isDefined from "../../lib/Core/isDefined";
+import CatalogMemberFactory from "../../lib/Models/CatalogMemberFactory";
+import CsvCatalogItem from "../../lib/Models/CsvCatalogItem";
 import EnumerationParameter from "../../lib/Models/EnumerationParameter";
+import GeoJsonCatalogItem from "../../lib/Models/GeoJsonCatalogItem";
 import GeoJsonParameter from "../../lib/Models/GeoJsonParameter";
+import ResultPendingCatalogItem from "../../lib/Models/ResultPendingCatalogItem";
 import StringParameter from "../../lib/Models/StringParameter";
 import Terria from "../../lib/Models/Terria";
 import WebProcessingServiceCatalogFunction from "../../lib/Models/WebProcessingServiceCatalogFunction";
-import xml2json from "../../lib/ThirdParty/xml2json";
-import ResultPendingCatalogItem from "../../lib/Models/ResultPendingCatalogItem";
-import Workbench from "../../lib/Models/Workbench";
 import WebProcessingServiceCatalogItem from "../../lib/Models/WebProcessingServiceCatalogItem";
-import CatalogMemberFactory from "../../lib/Models/CatalogMemberFactory";
-import CsvCatalogItem from "../../lib/Models/CsvCatalogItem";
-import GeoJsonCatalogItem from "../../lib/Models/GeoJsonCatalogItem";
+import Workbench from "../../lib/Models/Workbench";
+import xml2json from "../../lib/ThirdParty/xml2json";
+import { xml } from "../SpecHelpers";
 
 const processDescriptionsXml = xml(
   require("raw-loader!../../wwwroot/test/WPS/ProcessDescriptions.xml")
@@ -268,10 +269,6 @@ describe("WebProcessingServiceCatalogFunction", function() {
     });
   });
 });
-
-function xml(text: string) {
-  return new DOMParser().parseFromString(text, "application/xml");
-}
 
 function initTerria() {
   CatalogMemberFactory.register(CsvCatalogItem.type, <any>CsvCatalogItem);

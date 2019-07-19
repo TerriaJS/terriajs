@@ -41,6 +41,13 @@ export default class WebProcessingServiceCatalogItemTraits extends mixTraits(
   })
   wpsResponse?: JsonObject;
 
+  @primitiveTrait({
+    type: "string",
+    name: "WPS Response URL",
+    description: "An optional URL to fetch the WPS response"
+  })
+  wpsResponseUrl?: string;
+
   @objectArrayTrait({
     type: ParameterTraits,
     idProperty: "name",

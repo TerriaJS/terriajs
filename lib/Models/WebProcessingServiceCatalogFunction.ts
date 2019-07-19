@@ -25,6 +25,7 @@ import ResultPendingCatalogItem from "./ResultPendingCatalogItem";
 import StringParameter from "./StringParameter";
 import WebProcessingServiceCatalogItem from "./WebProcessingServiceCatalogItem";
 import runLater from "../Core/runLater";
+import XmlRequestMixin from "../ModelMixins/XmlRequestMixin";
 
 const sprintf = require("terriajs-cesium/Source/ThirdParty/sprintf");
 const executeWpsTemplate = require("./ExecuteWpsTemplate.xml");
@@ -72,8 +73,8 @@ interface ParameterConverter {
   parameterToInput: (parameter: FunctionParameter) => InputData | undefined;
 }
 
-export default class WebProcessingServiceCatalogFunction extends CatalogMemberMixin(
-  CreateModel(WebProcessingServiceCatalogFunctionTraits)
+export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin(
+  CatalogMemberMixin(CreateModel(WebProcessingServiceCatalogFunctionTraits))
 ) {
   static readonly type = "wps";
   readonly typeName = "Web Processing Service (WPS)";
@@ -436,24 +437,6 @@ export default class WebProcessingServiceCatalogFunction extends CatalogMemberMi
       if (isDefined(info)) {
         info.push(errorInfo);
       }
-    });
-  }
-
-  getXml(url: string, parameters?: any) {
-    console.log("**getXml**", url, parameters);
-    if (isDefined(parameters)) {
-      url = new URI(url).query(parameters).toString();
-    }
-    return loadXML(url);
-  }
-
-  postXml(url: string, data: string) {
-    return loadWithXhr({
-      url: url,
-      method: "POST",
-      data,
-      overrideMimeType: "text/xml",
-      responseType: "document"
     });
   }
 }

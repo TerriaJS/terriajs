@@ -17,7 +17,9 @@ import Mappable from "./Mappable";
 import StratumFromTraits from "./StratumFromTraits";
 import StratumOrder from "./StratumOrder";
 import upsertModelFromJson from "./upsertModelFromJson";
+import XmlRequestMixin from "../ModelMixins/XmlRequestMixin";
 
+const proxyCatalogItemUrl = require("./proxyCatalogItemUrl");
 const createGuid = require("terriajs-cesium/Source/Core/createGuid");
 
 class WpsLoadableStratum extends LoadableStratum(
@@ -30,6 +32,11 @@ class WpsLoadableStratum extends LoadableStratum(
   }
 
   static async load(item: WebProcessingServiceCatalogItem) {
+    if (!isDefined(item.wpsResponse) && isDefined(item.wpsResponseUrl)) {
+      const url = proxyCatalogItemUrl(item, item.wpsResponseUrl, "1d");
+      const wpsResponse = await item.getXml(url);
+      item.setTrait(CommonStrata.user, "wpsResponse", wpsResponse);
+    }
     return new WpsLoadableStratum(item);
   }
 
@@ -170,7 +177,9 @@ class WpsLoadableStratum extends LoadableStratum(
 StratumOrder.addLoadStratum(WpsLoadableStratum.stratumName);
 
 export default class WebProcessingServiceCatalogItem
-  extends CatalogMemberMixin(CreateModel(WebProcessingServiceCatalogItemTraits))
+  extends XmlRequestMixin(
+    CatalogMemberMixin(CreateModel(WebProcessingServiceCatalogItemTraits))
+  )
   implements Mappable {
   static readonly type = "wps-result";
   readonly typeName = "Web Processing Service Result";
