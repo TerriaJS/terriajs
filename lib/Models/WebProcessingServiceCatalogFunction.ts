@@ -35,26 +35,26 @@ const Reproject = require("../Map/Reproject");
 const sprintf = require("terriajs-cesium/Source/ThirdParty/sprintf");
 const executeWpsTemplate = require("./ExecuteWpsTemplate.xml");
 
-interface AllowedValues {
+type AllowedValues = {
   Value?: string | string[];
-}
+};
 
-interface LiteralData {
+type LiteralData = {
   AllowedValues?: AllowedValues;
   AllowedValue?: AllowedValues;
   AnyValue?: unknown;
-}
+};
 
-interface ComplexData {
+type ComplexData = {
   Default?: { Format?: { Schema?: string } };
-}
+};
 
-interface BoundingBoxData {
+type BoundingBoxData = {
   Default?: { CRS?: string };
   Supported?: { CRS?: string[] };
-}
+};
 
-interface Input {
+type Input = {
   Identifier?: string;
   Name?: string;
   Abstract?: string;
@@ -62,27 +62,27 @@ interface Input {
   ComplexData?: ComplexData;
   BoundingBoxData?: BoundingBoxData;
   minOccurs?: number;
-}
+};
 
-interface ProcessDescription {
+type ProcessDescription = {
   DataInputs?: { Input: Input[] | Input };
   storeSupported?: string;
   statusSupported?: string;
-}
+};
 
-interface InputData {
+type InputData = {
   inputValue: Promise<string | undefined> | string | undefined;
   inputType: string;
-}
+};
 
-interface ParameterConverter {
+type ParameterConverter = {
   inputToParameter: (
     input: Input,
     options: FunctionParameterOptions
   ) => FunctionParameter | undefined;
 
   parameterToInput: (parameter: FunctionParameter) => InputData | undefined;
-}
+};
 
 export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin(
   CatalogMemberMixin(CreateModel(WebProcessingServiceCatalogFunctionTraits))
