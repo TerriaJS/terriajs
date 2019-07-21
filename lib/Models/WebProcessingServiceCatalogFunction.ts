@@ -1,4 +1,4 @@
-import { computed, observable, runInAction } from "mobx";
+import { computed, observable, runInAction, isObservableArray } from "mobx";
 import Mustache from "mustache";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import URI from "urijs";
@@ -101,7 +101,7 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
     GeoJsonGeometryConverter
   ];
 
-  @observable.shallow
+  @observable
   private processDescription?: ProcessDescription;
 
   @computed get describeProcessUrl() {
@@ -192,9 +192,10 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
       });
     }
 
-    const inputs = Array.isArray(dataInputs.Input)
-      ? dataInputs.Input
-      : [dataInputs.Input];
+    const inputs =
+      Array.isArray(dataInputs.Input) || isObservableArray(dataInputs.Input)
+        ? dataInputs.Input
+        : [dataInputs.Input];
     return inputs;
   }
 
@@ -468,9 +469,11 @@ const LiteralDataConverter = {
     if (isDefined(allowedValues) && isDefined(allowedValues.Value)) {
       return new EnumerationParameter({
         ...options,
-        possibleValues: Array.isArray(allowedValues.Value)
-          ? allowedValues.Value
-          : [allowedValues.Value]
+        possibleValues:
+          Array.isArray(allowedValues.Value) ||
+          isObservableArray(allowedValues.Value)
+            ? allowedValues.Value
+            : [allowedValues.Value]
       });
     } else if (isDefined(input.LiteralData.AnyValue)) {
       return new StringParameter({
