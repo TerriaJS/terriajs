@@ -192,22 +192,6 @@ export default class WebProcessingServiceCatalogItem
   @observable
   private geoJsonItem?: GeoJsonCatalogItem;
 
-  @computed get outputs() {
-    const wpsResponse = <any>this.wpsResponse;
-    if (
-      !wpsResponse ||
-      !wpsResponse.ProcessOutputs ||
-      !wpsResponse.ProcessOutputs.Output
-    ) {
-      return [];
-    }
-    const obj = wpsResponse.ProcessOutputs.Output;
-    const outputs = Array.isArray(obj) || isObservableArray(obj) ? obj : [obj];
-    return outputs.filter(
-      o => o.Identifier !== ".context" && isDefined(o.Data)
-    );
-  }
-
   async forceLoadMetadata() {
     const stratum = await WpsLoadableStratum.load(this);
     runInAction(() => {
@@ -270,6 +254,25 @@ export default class WebProcessingServiceCatalogItem
     if (isDefined(this.geoJsonItem)) {
       await this.geoJsonItem.loadMapItems();
     }
+  }
+
+  /**
+   * Returns all the process outputs skipping process contexts and empty outputs
+   */
+  @computed get outputs() {
+    const wpsResponse = <any>this.wpsResponse;
+    if (
+      !wpsResponse ||
+      !wpsResponse.ProcessOutputs ||
+      !wpsResponse.ProcessOutputs.Output
+    ) {
+      return [];
+    }
+    const obj = wpsResponse.ProcessOutputs.Output;
+    const outputs = Array.isArray(obj) || isObservableArray(obj) ? obj : [obj];
+    return outputs.filter(
+      o => o.Identifier !== ".context" && isDefined(o.Data)
+    );
   }
 
   @computed get mapItems() {
@@ -341,6 +344,9 @@ function formatOutputValue(title: string, value: string | undefined) {
   }, "");
 }
 
+/**
+ * Completely load a catalog item
+ */
 async function loadCatalogItem(item: any) {
   if (CatalogMemberMixin.isMixedInto(item)) {
     await item.loadMetadata();
@@ -351,6 +357,9 @@ async function loadCatalogItem(item: any) {
   return item;
 }
 
+/**
+ * Transform old catalog definitions to match new schema.
+ */
 function fixCatalogItemJson(json: any) {
   const { isEnabled, ...fixedJson } = json;
   if (json.type === "csv") {

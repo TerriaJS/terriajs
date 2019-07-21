@@ -104,6 +104,9 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
   @observable
   private processDescription?: ProcessDescription;
 
+  /**
+   * Returns the proxied URL for the DescribeProcess endpoint.
+   */
   @computed get describeProcessUrl() {
     if (!isDefined(this.url) || !isDefined(this.identifier)) {
       return;
@@ -119,6 +122,9 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
     return proxyCatalogItemUrl(this, uri.toString(), this.proxyCacheDuration);
   }
 
+  /**
+   * Returns the proxied URL for the Execute endpoint.
+   */
   @computed get executeUrl() {
     if (!isDefined(this.url)) {
       return;
@@ -161,6 +167,9 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
     });
   }
 
+  /**
+   * Indicates if the output can be stored by the WPS server and be accessed via a URL.
+   */
   @computed get storeSupported() {
     return (
       isDefined(this.processDescription) &&
@@ -168,6 +177,10 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
     );
   }
 
+  /**
+   * Indicates if Execute operation can return just the status information
+   * and perform the actual operation asynchronously.
+   */
   @computed get statusSupported() {
     return (
       isDefined(this.processDescription) &&
@@ -226,6 +239,8 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
   /**
    * Performs the Execute request for the WPS process
    *
+   * If `executeWithHttpGet` is true, a GET request is made
+   * instead of the default POST request.
    */
   async invoke() {
     if (!isDefined(this.identifier) || !isDefined(this.executeUrl)) {
