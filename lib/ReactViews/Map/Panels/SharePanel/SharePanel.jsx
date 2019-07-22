@@ -304,7 +304,7 @@ const SharePanel = observer(
               .
             </p>
             <ul className={Styles.paragraph}>
-              {this.props.terria.catalog.userAddedDataGroup.items.map(
+              {this.props.terria.catalog.userAddedDataGroup.members.map(
                 (item, i) => {
                   return (
                     <li key={i}>
