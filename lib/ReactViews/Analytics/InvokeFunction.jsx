@@ -106,18 +106,17 @@ const InvokeFunction = observer(
     },
 
     validateParameter(parameter) {
+      if (!this.parametersViewModel.getParameter(parameter).isValueValid) {
+        // Editor says it's not valid, so it's not valid.
+        return false;
+      }
+
+      // Verify that required parameters have a value.
+      if (parameter.isRequired && !defined(parameter.value)) {
+        return false;
+      }
+
       return true;
-      // if (!this.parametersViewModel.getParameter(parameter).isValueValid) {
-      //   // Editor says it's not valid, so it's not valid.
-      //   return false;
-      // }
-
-      // // Verify that required parameters have a value.
-      // if (parameter.isRequired && !defined(parameter.value)) {
-      //   return false;
-      // }
-
-      // return true;
     },
 
     render() {
