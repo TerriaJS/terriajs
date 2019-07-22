@@ -1,24 +1,27 @@
-import "../SpecHelpers";
-import { reaction, runInAction, configure } from "mobx";
+import { configure, reaction, runInAction } from "mobx";
+import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import isDefined from "../../lib/Core/isDefined";
 import CatalogMemberFactory from "../../lib/Models/CatalogMemberFactory";
 import CsvCatalogItem from "../../lib/Models/CsvCatalogItem";
+import DateTimeParameter from "../../lib/Models/DateTimeParameter";
 import EnumerationParameter from "../../lib/Models/EnumerationParameter";
 import GeoJsonCatalogItem from "../../lib/Models/GeoJsonCatalogItem";
 import GeoJsonParameter from "../../lib/Models/GeoJsonParameter";
+import LineParameter from "../../lib/Models/LineParameter";
+import PointParameter from "../../lib/Models/PointParameter";
+import PolygonParameter from "../../lib/Models/PolygonParameter";
+import RectangleParameter from "../../lib/Models/RectangleParameter";
 import ResultPendingCatalogItem from "../../lib/Models/ResultPendingCatalogItem";
 import StringParameter from "../../lib/Models/StringParameter";
 import Terria from "../../lib/Models/Terria";
-import WebProcessingServiceCatalogFunction from "../../lib/Models/WebProcessingServiceCatalogFunction";
+import WebProcessingServiceCatalogFunction, {
+  PointConverter
+} from "../../lib/Models/WebProcessingServiceCatalogFunction";
 import WebProcessingServiceCatalogItem from "../../lib/Models/WebProcessingServiceCatalogItem";
 import Workbench from "../../lib/Models/Workbench";
 import xml2json from "../../lib/ThirdParty/xml2json";
+import "../SpecHelpers";
 import { xml } from "../SpecHelpers";
-import DateTimeParameter from "../../lib/Models/DateTimeParameter";
-import PointParameter from "../../lib/Models/PointParameter";
-import PolygonParameter from "../../lib/Models/PolygonParameter";
-import LineParameter from "../../lib/Models/LineParameter";
-import RectangleParameter from "../../lib/Models/RectangleParameter";
 
 configure({
   enforceActions: "observed",
@@ -337,6 +340,21 @@ describe("WebProcessingServiceCatalogFunction", function() {
         }
       });
       expect(parameter).toEqual(jasmine.any(RectangleParameter));
+    });
+  });
+
+  it("can convert a parameter to data input", async function() {
+    const parameter = new PointParameter({
+      id: "foo",
+      converter: PointConverter
+    });
+    parameter.value = Cartographic.ZERO;
+    const input = await wps.convertParameterToInput(parameter);
+    expect(input).toEqual({
+      inputIdentifier: "foo",
+      inputValue:
+        '{"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"Point","coordinates":[0,0,0]}}]}',
+      inputType: "ComplexData"
     });
   });
 });

@@ -529,7 +529,10 @@ const DateTimeConverter = {
   }
 };
 
-const PointConverter = simpleGeoJsonDataConverter("point", PointParameter);
+export const PointConverter = simpleGeoJsonDataConverter(
+  "point",
+  PointParameter
+);
 const LineConverter = simpleGeoJsonDataConverter("linestring", LineParameter);
 const PolygonConverter = simpleGeoJsonDataConverter(
   "polygon",
