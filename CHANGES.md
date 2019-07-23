@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### Next Release
+* Basemaps are now loaded before being enabled & showed
+
+
 ### v7.6.5
 
 * Add the filename to a workbench item from a drag'n'dropped file so it isn't undisplayed as 'Unnamed item'.
