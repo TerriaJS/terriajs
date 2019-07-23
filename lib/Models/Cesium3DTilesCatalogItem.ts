@@ -11,7 +11,7 @@ import isDefined from "../Core/isDefined";
 import makeRealPromise from "../Core/makeRealPromise";
 import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
-import LoadFeatureInfoMixin from "../ModelMixins/LoadFeatureInfoMixin";
+import FeatureInfoMixin from "../ModelMixins/FeatureInfoMixin";
 import Cesium3DTilesCatalogItemTraits, {
   OptionsTraits
 } from "../Traits/Cesium3DCatalogItemTraits";
@@ -31,7 +31,7 @@ class ObservableCesium3DTileset extends Cesium3DTileset {
 }
 
 export default class Cesium3DTilesCatalogItem
-  extends LoadFeatureInfoMixin(
+  extends FeatureInfoMixin(
     AsyncMappableMixin(
       CatalogMemberMixin(CreateModel(Cesium3DTilesCatalogItemTraits))
     )
@@ -188,7 +188,7 @@ export default class Cesium3DTilesCatalogItem
     }
   }
 
-  getFeaturesFromPickResult(_screenPosition: Cartesian2, pickResult: any) {
+  buildFeatureFromPickResult(_screenPosition: Cartesian2, pickResult: any) {
     if (pickResult instanceof Cesium3DTileFeature) {
       const properties: { [name: string]: unknown } = {};
       pickResult.getPropertyNames().forEach(name => {
@@ -199,9 +199,7 @@ export default class Cesium3DTilesCatalogItem
         properties
       });
 
-      result._catalogItem = this;
       result._cesium3DTileFeature = pickResult;
-      this.loadFeatureInfoFromUrl(result);
       return result;
     }
   }

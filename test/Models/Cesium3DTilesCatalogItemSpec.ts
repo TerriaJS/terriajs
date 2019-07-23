@@ -9,6 +9,7 @@ import Cesium3DTilesCatalogItem from "../../lib/Models/Cesium3DTilesCatalogItem"
 import createStratumInstance from "../../lib/Models/createStratumInstance";
 import Feature from "../../lib/Models/Feature";
 import Terria from "../../lib/Models/Terria";
+import Color from "terriajs-cesium/Source/Core/Color";
 import {
   FilterTraits,
   OptionsTraits
@@ -198,16 +199,14 @@ describe("Cesium3DTilesCatalogItemSpec", function() {
     });
   });
 
-  describe("getFeaturesFromPickResult", function() {
-    it("asynchronously loads feature info from URL", function() {
-      const feature = new Cesium3DTileFeature();
-      spyOn(feature, "getPropertyNames").and.returnValue([]);
-      spyOn(item, "loadFeatureInfoFromUrl").and.callThrough();
-      item.getFeaturesFromPickResult(Cartesian2.ZERO, feature);
-      expect(item.loadFeatureInfoFromUrl).toHaveBeenCalledWith(
-        jasmine.any(Feature)
-      );
-    });
+  it("correctly builds `Feature` from picked Cesium3DTileFeature", function() {
+    const picked = new Cesium3DTileFeature();
+    spyOn(picked, "getPropertyNames").and.returnValue([]);
+    const feature = item.buildFeatureFromPickResult(Cartesian2.ZERO, picked);
+    expect(feature).toBeDefined();
+    if (feature) {
+      expect(feature._cesium3DTileFeature).toBe(picked);
+    }
   });
 });
 
