@@ -3,7 +3,7 @@ Change Log
 
 ### Next Release
 * Basemaps are now loaded before being enabled & showed
-
+* Enable css anti aliasing for MacOS
 
 ### v7.6.5
 
