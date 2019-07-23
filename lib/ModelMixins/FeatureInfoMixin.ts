@@ -4,12 +4,12 @@ import Constructor from "../Core/Constructor";
 import isDefined from "../Core/isDefined";
 import Feature from "../Models/Feature";
 import Model from "../Models/Model";
-import LoadFeatureInfoTraits from "../Traits/LoadFeatureInfoTraits";
+import FeatureInfoTraits from "../Traits/FeatureInfoTraits";
 
 const loadJson = require("../Core/loadJson");
 const proxyCatalogItemUrl = require("../Models/proxyCatalogItemUrl");
 
-type Target = Model<LoadFeatureInfoTraits>;
+type Target = Model<FeatureInfoTraits>;
 
 export default function FeatureInfoMixin<T extends Constructor<Target>>(
   Base: T

@@ -7,9 +7,7 @@ import Cesium3DTileStyle from "terriajs-cesium/Source/Scene/Cesium3DTileStyle";
 import ShadowMode from "terriajs-cesium/Source/Scene/ShadowMode";
 import Cesium3DTilesCatalogItem from "../../lib/Models/Cesium3DTilesCatalogItem";
 import createStratumInstance from "../../lib/Models/createStratumInstance";
-import Feature from "../../lib/Models/Feature";
 import Terria from "../../lib/Models/Terria";
-import Color from "terriajs-cesium/Source/Core/Color";
 import {
   FilterTraits,
   OptionsTraits

@@ -35,4 +35,12 @@ export default class FeatureInfoTraits extends ModelTraits {
       "A template object for formatting content in feature info panel"
   })
   featureInfoTemplate?: FeatureInfoTemplateTraits;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Feature Info Url template",
+    description:
+      "A template URL string for fetching feature info. Template values of the form {x} will be replaced with corresponding property values from the picked feature."
+  })
+  featureInfoUrlTemplate?: string;
 }

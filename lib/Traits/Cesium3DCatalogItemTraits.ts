@@ -1,14 +1,14 @@
-import mixTraits from "./mixTraits";
-import CatalogMemberTraits from "./CatalogMemberTraits";
-import UrlTraits from "./UrlTraits";
-import MappableTraits from "./MappableTraits";
-import primitiveTrait from "./primitiveTrait";
-import objectTrait from "./objectTrait";
-import ModelTraits from "./ModelTraits";
-import anyTrait from "./anyTrait";
 import { JsonObject } from "../Core/Json";
+import anyTrait from "./anyTrait";
+import CatalogMemberTraits from "./CatalogMemberTraits";
+import FeatureInfoTraits from "./FeatureInfoTraits";
+import MappableTraits from "./MappableTraits";
+import mixTraits from "./mixTraits";
+import ModelTraits from "./ModelTraits";
 import objectArrayTrait from "./objectArrayTrait";
-import LoadFeatureInfoTraits from "./LoadFeatureInfoTraits";
+import objectTrait from "./objectTrait";
+import primitiveTrait from "./primitiveTrait";
+import UrlTraits from "./UrlTraits";
 
 export class FilterTraits extends ModelTraits {
   @primitiveTrait({
@@ -95,7 +95,7 @@ export class OptionsTraits extends ModelTraits {
 }
 
 export default class Cesium3DTilesCatalogItemTraits extends mixTraits(
-  LoadFeatureInfoTraits,
+  FeatureInfoTraits,
   MappableTraits,
   UrlTraits,
   CatalogMemberTraits
