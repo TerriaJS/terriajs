@@ -1,9 +1,9 @@
 Change Log
 ==========
 
-### Next Release
-* Basemaps are now loaded before being enabled & showed
+### v7.6.6
 
+* Basemaps are now loaded before being enabled & showed
 
 ### v7.6.5
 
