@@ -8,6 +8,7 @@ import ModelTraits from "./ModelTraits";
 import anyTrait from "./anyTrait";
 import { JsonObject } from "../Core/Json";
 import objectArrayTrait from "./objectArrayTrait";
+import LoadFeatureInfoTraits from "./LoadFeatureInfoTraits";
 
 export class FilterTraits extends ModelTraits {
   @primitiveTrait({
@@ -94,6 +95,7 @@ export class OptionsTraits extends ModelTraits {
 }
 
 export default class Cesium3DTilesCatalogItemTraits extends mixTraits(
+  LoadFeatureInfoTraits,
   MappableTraits,
   UrlTraits,
   CatalogMemberTraits
@@ -149,11 +151,4 @@ export default class Cesium3DTilesCatalogItemTraits extends mixTraits(
     description: "The filters to apply to this catalog item."
   })
   filters?: FilterTraits[];
-
-  @primitiveTrait({
-    type: "string",
-    name: "Feature info url template",
-    description: ""
-  })
-  featureInfoUrlTemplate?: string;
 }
