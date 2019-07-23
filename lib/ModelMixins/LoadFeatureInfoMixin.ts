@@ -14,6 +14,10 @@ export default function LoadFeatureInfoMixin<T extends Constructor<Target>>(
   Base: T
 ) {
   class LoadFeatureInfoMixin extends Base {
+    /**
+     * Asynchronously loads feature info from a Url built by filling `featureInfoUrlTemplate`
+     * with feature properties.
+     */
     async loadFeatureInfoFromUrl(feature: Feature) {
       if (!isDefined(this.featureInfoUrlTemplate)) {
         return;
