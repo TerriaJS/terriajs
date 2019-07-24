@@ -7,6 +7,7 @@ import Styles from "./full_screen_button.scss";
 import classNames from "classnames";
 import Icon from "../Icon.jsx";
 import { observer } from "mobx-react";
+import { runInAction } from "mobx";
 
 // The button to make the map full screen and hide the workbench.
 const FullScreenButton = observer(
@@ -28,8 +29,10 @@ const FullScreenButton = observer(
     },
 
     toggleFullScreen() {
-      this.props.viewState.isMapFullScreen = !this.props.viewState
-        .isMapFullScreen;
+      runInAction(() => {
+        this.props.viewState.isMapFullScreen = !this.props.viewState
+          .isMapFullScreen;
+      });
 
       // this.props.terria.currentViewer.notifyRepaintRequired();
 

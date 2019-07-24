@@ -1,4 +1,4 @@
-import { computed, observable } from "mobx";
+import { computed, observable, runInAction } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import clone from "terriajs-cesium/Source/Core/clone";
 import IonResource from "terriajs-cesium/Source/Core/IonResource";
@@ -25,8 +25,10 @@ class ObservableCesium3DTileset extends Cesium3DTileset {
   @observable destroyed = false;
 
   destroy() {
-    super.destroy();
-    this.destroyed = true;
+    runInAction(() => {
+      super.destroy();
+      this.destroyed = true;
+    });
   }
 }
 

@@ -6,6 +6,7 @@ import { observer } from "mobx-react";
 
 import Icon from "../../Icon";
 import Styles from "./toggle_splitter_tool.scss";
+import { runInAction } from "mobx";
 
 const ToggleSplitterTool = observer(
   createReactClass({
@@ -17,7 +18,7 @@ const ToggleSplitterTool = observer(
 
     handleClick() {
       const terria = this.props.terria;
-      terria.showSplitter = !terria.showSplitter;
+      runInAction(() => terria.showSplitter = !terria.showSplitter);
     },
 
     render() {

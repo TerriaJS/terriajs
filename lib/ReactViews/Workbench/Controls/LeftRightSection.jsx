@@ -12,6 +12,7 @@ import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDire
 import Styles from "./left-right-section.scss";
 import { observer } from "mobx-react";
 import CommonStrata from "../../../Models/CommonStrata";
+import { runInAction } from "mobx";
 
 const LeftRightSection = observer(
   createReactClass({
@@ -22,27 +23,33 @@ const LeftRightSection = observer(
     },
 
     goLeft() {
-      this.props.item.setTrait(
-        CommonStrata.user,
-        "splitDirection",
-        ImagerySplitDirection.LEFT
-      );
+      runInAction(() => {
+        this.props.item.setTrait(
+          CommonStrata.user,
+          "splitDirection",
+          ImagerySplitDirection.LEFT
+        );
+      });
     },
 
     goBoth() {
-      this.props.item.setTrait(
-        CommonStrata.user,
-        "splitDirection",
-        ImagerySplitDirection.NONE
-      );
+      runInAction(() => {
+        this.props.item.setTrait(
+          CommonStrata.user,
+          "splitDirection",
+          ImagerySplitDirection.NONE
+        );
+      });
     },
 
     goRight() {
-      this.props.item.setTrait(
-        CommonStrata.user,
-        "splitDirection",
-        ImagerySplitDirection.RIGHT
-      );
+      runInAction(() => {
+        this.props.item.setTrait(
+          CommonStrata.user,
+          "splitDirection",
+          ImagerySplitDirection.RIGHT
+        );
+      });
     },
 
     render() {
