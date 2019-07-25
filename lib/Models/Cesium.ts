@@ -41,16 +41,6 @@ import isDefined from "../Core/isDefined";
 import pollToPromise from "../Core/pollToPromise";
 import CesiumRenderLoopPauser from "../Map/CesiumRenderLoopPauser";
 import CesiumSelectionIndicator from "../Map/CesiumSelectionIndicator";
-import Feature from "./Feature";
-import TerriaViewer from "../ViewModels/TerriaViewer";
-import GlobeOrMap from "./GlobeOrMap";
-import Mappable, {
-  ImageryParts,
-  MapItem,
-  isCesium3DTileset,
-  isTerrainProvider
-} from "./Mappable";
-import Terria from "./Terria";
 import PickedFeatures, { ProviderCoordsMap } from "../Map/PickedFeatures";
 import SplitterTraits from "../Traits/SplitterTraits";
 import TerriaViewer from "../ViewModels/TerriaViewer";
@@ -58,7 +48,7 @@ import CameraView from "./CameraView";
 import Feature from "./Feature";
 import GlobeOrMap from "./GlobeOrMap";
 import hasTraits from "./hasTraits";
-import Mappable, { ImageryParts, isCesium3DTileset, MapItem } from "./Mappable";
+import Mappable, { ImageryParts, isCesium3DTileset, isTerrainProvider, MapItem } from "./Mappable";
 import Terria from "./Terria";
 
 // Intermediary
