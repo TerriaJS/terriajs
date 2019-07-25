@@ -27,7 +27,6 @@ import UrlMixin from "../ModelMixins/UrlMixin";
 import GeoJsonCatalogItemTraits, {
   StyleTraits
 } from "../Traits/GeoJsonCatalogItemTraits";
-import createEmptyModel from "./createEmptyModel";
 import CreateModel from "./CreateModel";
 import Terria from "./Terria";
 
@@ -227,7 +226,7 @@ class GeoJsonCatalogItem extends AsyncMappableMixin(
       return parseInt(sizeString, 10); // SimpleStyle doesn't allow 'marker-size: 20', but people will do it.
     }
 
-    const style = this.style || createEmptyModel(StyleTraits);
+    const style = this.style;
 
     const options = {
       describe: describeWithoutUnderscores,

@@ -29,21 +29,21 @@ export default class TableColorStyleTraits extends ModelTraits {
   })
   colorColumn?: string;
 
-  @primitiveTrait({
-    name: "Minimum Display Value",
-    description:
-      "The minimum value to use for coloring. Any row with a value less than this will be shown as if it had this value.",
-    type: "number"
-  })
-  minimumDisplayValue?: number;
+  // @primitiveTrait({
+  //   name: "Minimum Display Value",
+  //   description:
+  //     "The minimum value to use for coloring. Any row with a value less than this will be shown as if it had this value.",
+  //   type: "number"
+  // })
+  // minimumDisplayValue?: number;
 
-  @primitiveTrait({
-    name: "Maximum Display Value",
-    description:
-      "The maximum value to use for coloring. Any row with a value greater than this will be shown as if it had this value.",
-    type: "number"
-  })
-  maximumDisplayValue?: number;
+  // @primitiveTrait({
+  //   name: "Maximum Display Value",
+  //   description:
+  //     "The maximum value to use for coloring. Any row with a value greater than this will be shown as if it had this value.",
+  //   type: "number"
+  // })
+  // maximumDisplayValue?: number;
 
   @primitiveTrait({
     name: "Null Color",
@@ -104,11 +104,11 @@ export default class TableColorStyleTraits extends ModelTraits {
   @primitiveArrayTrait({
     name: "Bin Colors",
     description:
-      "The colors to use for the bins, each specified as CSS color " +
-      "strings. If there are more colors than bins, the extra colors are " +
+      "The colors to use for the bins, each specified as a CSS color " +
+      "string. If there are more colors than bins, the extra colors are " +
       "ignored. If there are more bins than colors, the colors are repeated " +
       "as necessary.",
-    type: "number"
+    type: "string"
   })
   binColors?: string[];
 

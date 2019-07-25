@@ -19,6 +19,20 @@ export class NestedTraits extends ModelTraits {
   })
   withoutDefault?: number;
 
+  @primitiveTrait({
+    name: "another",
+    description: "another",
+    type: "string"
+  })
+  another?: string;
+
+  @primitiveTrait({
+    name: "another with default",
+    description: "another with default",
+    type: "string"
+  })
+  anotherWithDefault?: string = "default";
+
   // TODO: Add trait decorator for unknown object
   unknownObject?: JsonObject;
   unknownObjectWithDefault: JsonObject = {};

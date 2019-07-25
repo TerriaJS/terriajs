@@ -12,37 +12,35 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import destroyObject from "terriajs-cesium/Source/Core/destroyObject";
 import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
 import EllipsoidTerrainProvider from "terriajs-cesium/Source/Core/EllipsoidTerrainProvider";
-import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import EventHelper from "terriajs-cesium/Source/Core/EventHelper";
 import FeatureDetection from "terriajs-cesium/Source/Core/FeatureDetection";
 import HeadingPitchRange from "terriajs-cesium/Source/Core/HeadingPitchRange";
-import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
-import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
-import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
+import Ion from "terriajs-cesium/Source/Core/Ion";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import Matrix4 from "terriajs-cesium/Source/Core/Matrix4";
 import PerspectiveFrustum from "terriajs-cesium/Source/Core/PerspectiveFrustum";
-import Primitive from "terriajs-cesium/Source/Scene/Primitive";
-import PrimitiveCollection from "terriajs-cesium/Source/Scene/PrimitiveCollection";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import sampleTerrain from "terriajs-cesium/Source/Core/sampleTerrain";
+import ScreenSpaceEventType from "terriajs-cesium/Source/Core/ScreenSpaceEventType";
 import Transforms from "terriajs-cesium/Source/Core/Transforms";
 import BoundingSphereState from "terriajs-cesium/Source/DataSources/BoundingSphereState";
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import DataSourceCollection from "terriajs-cesium/Source/DataSources/DataSourceCollection";
 import DataSourceDisplay from "terriajs-cesium/Source/DataSources/DataSourceDisplay";
+import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import ImageryLayer from "terriajs-cesium/Source/Scene/ImageryLayer";
+import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
+import ImageryProvider from "terriajs-cesium/Source/Scene/ImageryProvider";
+import ImagerySplitDirection from "terriajs-cesium/Source/Scene/ImagerySplitDirection";
 import Scene from "terriajs-cesium/Source/Scene/Scene";
 import SceneTransforms from "terriajs-cesium/Source/Scene/SceneTransforms";
 import SingleTileImageryProvider from "terriajs-cesium/Source/Scene/SingleTileImageryProvider";
-import ScreenSpaceEventType from "terriajs-cesium/Source/Core/ScreenSpaceEventType";
 import when from "terriajs-cesium/Source/ThirdParty/when";
 import CesiumWidget from "terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget";
-
-import CesiumSelectionIndicator from "../Map/CesiumSelectionIndicator";
 import isDefined from "../Core/isDefined";
 import pollToPromise from "../Core/pollToPromise";
 import CesiumRenderLoopPauser from "../Map/CesiumRenderLoopPauser";
+import CesiumSelectionIndicator from "../Map/CesiumSelectionIndicator";
 import Feature from "./Feature";
 import TerriaViewer from "../ViewModels/TerriaViewer";
 import GlobeOrMap from "./GlobeOrMap";
@@ -55,8 +53,13 @@ import Mappable, {
 import Terria from "./Terria";
 import PickedFeatures, { ProviderCoordsMap } from "../Map/PickedFeatures";
 import SplitterTraits from "../Traits/SplitterTraits";
-import hasTraits from "./hasTraits";
+import TerriaViewer from "../ViewModels/TerriaViewer";
 import CameraView from "./CameraView";
+import Feature from "./Feature";
+import GlobeOrMap from "./GlobeOrMap";
+import hasTraits from "./hasTraits";
+import Mappable, { ImageryParts, isCesium3DTileset, MapItem } from "./Mappable";
+import Terria from "./Terria";
 
 // Intermediary
 var cartesian3Scratch = new Cartesian3();
@@ -111,8 +114,13 @@ export default class Cesium extends GlobeOrMap {
 
   constructor(terriaViewer: TerriaViewer, container: string | HTMLElement) {
     super();
+
     this.terriaViewer = terriaViewer;
     this.terria = terriaViewer.terria;
+
+    if (this.terria.configParameters.cesiumIonAccessToken !== undefined) {
+      Ion.defaultAccessToken = this.terria.configParameters.cesiumIonAccessToken;
+    }
 
     //An arbitrary base64 encoded image used to populate the placeholder SingleTileImageryProvider
     const img =
@@ -1042,6 +1050,47 @@ export default class Cesium extends GlobeOrMap {
     }
 
     this._selectionIndicator.update();
+  }
+
+  captureScreenshot(): Promise<string> {
+    const deferred: Promise<string> = new Promise((resolve, reject) => {
+      const removeCallback = this.scene.postRender.addEventListener(() => {
+        removeCallback();
+        try {
+          const cesiumCanvas = this.scene.canvas;
+
+          // If we're using the splitter, draw the split position as a vertical white line.
+          let canvas = cesiumCanvas;
+          if (this.terria.showSplitter) {
+            canvas = document.createElement("canvas");
+            canvas.width = cesiumCanvas.width;
+            canvas.height = cesiumCanvas.height;
+
+            const context = canvas.getContext("2d");
+            if (context !== undefined && context !== null) {
+              context.drawImage(cesiumCanvas, 0, 0);
+
+              const x = this.terria.splitPosition * cesiumCanvas.width;
+              context.strokeStyle = this.terria.baseMapContrastColor;
+              context.beginPath();
+              context.moveTo(x, 0);
+              context.lineTo(x, cesiumCanvas.height);
+              context.stroke();
+            }
+          }
+
+          resolve(canvas.toDataURL("image/png"));
+        } catch (e) {
+          reject(e);
+        }
+      }, this);
+    });
+
+    // since we're hooking into the post-render event, we want to render **right now** to ensure that the screenshot
+    // image gets created. This is particularly important when showing the print view in a new tab.
+    this.scene.render(this.terria.timelineClock.currentTime);
+
+    return deferred;
   }
 }
 

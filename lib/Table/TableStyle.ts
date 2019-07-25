@@ -5,10 +5,7 @@ import ColorMap from "../Map/ColorMap";
 import ConstantColorMap from "../Map/ConstantColorMap";
 import DiscreteColorMap from "../Map/DiscreteColorMap";
 import EnumColorMap from "../Map/EnumColorMap";
-import addModelStrataView from "../Models/addModelStrataView";
-import CommonStrata from "../Models/CommonStrata";
-import createEmptyModel from "../Models/createEmptyModel";
-import createStratumInstance from "../Models/createStratumInstance";
+import createCombinedModel from "../Models/createCombinedModel";
 import FlattenedFromTraits from "../Models/FlattenedFromTraits";
 import Model from "../Models/Model";
 import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
@@ -16,7 +13,7 @@ import TableChartStyleTraits from "../Traits/TableChartStyleTraits";
 import TableColorStyleTraits, {
   EnumColorTraits
 } from "../Traits/TableColorStyleTraits";
-import TableScaleStyleTraits from "../Traits/TableScaleStyleTraits";
+import TablePointSizeStyleTraits from "../Traits/TablePointSizeStyleTraits";
 import TableStyleTraits from "../Traits/TableStyleTraits";
 import TableTraits from "../Traits/TableTraits";
 import ColorPalette from "./ColorPalette";
@@ -55,35 +52,18 @@ export default class TableStyle {
    * from the default styles plus this style layered on top of the default.
    */
   @computed
-  get styleTraits(): ModelPropertiesFromTraits<TableStyleTraits> {
+  get styleTraits(): Model<TableStyleTraits> {
     if (
-      this.styleNumber < 0 ||
-      this.tableModel.styles === undefined ||
-      this.styleNumber >= this.tableModel.styles.length
+      this.styleNumber >= 0 &&
+      this.styleNumber < this.tableModel.styles.length
     ) {
-      // Use the default style (if there is one), but "flatten" it.
-      const defaultStyle =
-        this.tableModel.defaultStyle || createStratumInstance(TableStyleTraits);
-      const model = {
-        strataTopToBottom: [defaultStyle],
-        strata: new Map([[CommonStrata.definition, defaultStyle]]) // TODO
-      };
-      return addModelStrataView(model, TableStyleTraits);
-    } else if (this.tableModel.defaultStyle === undefined) {
-      // No defaults, so just return the style.
-      return this.tableModel.styles[this.styleNumber];
+      const result = createCombinedModel(
+        this.tableModel.styles[this.styleNumber],
+        this.tableModel.defaultStyle
+      );
+      return result;
     } else {
-      // Create a flattened view of this style plus the default style.
-      const style = this.tableModel.styles[this.styleNumber];
-      const model = {
-        strataTopToBottom: [style, this.tableModel.defaultStyle],
-        strata: new Map([
-          // TODO
-          [CommonStrata.defaults, this.tableModel.defaultStyle],
-          [CommonStrata.definition, style]
-        ])
-      };
-      return addModelStrataView(model, TableStyleTraits);
+      return this.tableModel.defaultStyle;
     }
   }
 
@@ -92,8 +72,8 @@ export default class TableStyle {
    * Returns a default instance of no color traits are specified explicitly.
    */
   @computed
-  get colorTraits(): ModelPropertiesFromTraits<TableColorStyleTraits> {
-    return this.styleTraits.color || createEmptyModel(TableColorStyleTraits);
+  get colorTraits(): Model<TableColorStyleTraits> {
+    return this.styleTraits.color;
   }
 
   /**
@@ -101,8 +81,8 @@ export default class TableStyle {
    * Returns a default instance of no scale traits are specified explicitly.
    */
   @computed
-  get scaleTraits(): FlattenedFromTraits<TableScaleStyleTraits> {
-    return this.styleTraits.scale || createEmptyModel(TableScaleStyleTraits);
+  get pointSizeTraits(): Model<TablePointSizeStyleTraits> {
+    return this.styleTraits.pointSize;
   }
 
   /**
@@ -110,8 +90,8 @@ export default class TableStyle {
    * Returns a default instance of no chart traits are specified explicitly.
    */
   @computed
-  get chartTraits(): FlattenedFromTraits<TableChartStyleTraits> {
-    return this.styleTraits.chart || createEmptyModel(TableChartStyleTraits);
+  get chartTraits(): Model<TableChartStyleTraits> {
+    return this.styleTraits.chart;
   }
 
   /**
@@ -160,6 +140,14 @@ export default class TableStyle {
   @computed
   get colorColumn(): TableColumn | undefined {
     return this.resolveColumn(this.colorTraits.colorColumn);
+  }
+
+  /**
+   * Gets the scale column for this style, if any.
+   */
+  @computed
+  get pointSizeColumn(): TableColumn | undefined {
+    return this.resolveColumn(this.pointSizeTraits.pointSizeColumn);
   }
 
   /**
@@ -299,7 +287,7 @@ export default class TableStyle {
 
   @computed
   get enumColors(): readonly ModelPropertiesFromTraits<EnumColorTraits>[] {
-    if (this.colorTraits.enumColors !== undefined) {
+    if (this.colorTraits.enumColors.length > 0) {
       return this.colorTraits.enumColors;
     }
 

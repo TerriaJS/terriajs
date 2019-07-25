@@ -39,7 +39,14 @@ const Legend = observer(
     displayName: "Legend",
 
     propTypes: {
-      item: PropTypes.object
+      item: PropTypes.object,
+      forPrint: PropTypes.bool
+    },
+
+    getDefaultProps() {
+      return {
+        forPrint: false
+      };
     },
 
     /* eslint-disable-next-line camelcase */
@@ -143,19 +150,40 @@ const Legend = observer(
       let boxStyle = {
         border: legendItem.addSpacingAbove ? "1px solid black" : undefined
       };
-      if (legendItem.imageUrl) {
-        boxStyle = {
-          backgroundImage: `url(${legendItem.imageUrl})`,
-          backgroundRepeat: "no-repeat",
-          backgroundPosition: "center",
-          backgroundSize: "cover",
-          ...boxStyle
-        };
+
+      let boxContents = <></>;
+
+      // Browsers don't print background colors by default, so we render things a little differently.
+      // Chrome and Firefox let you override this, but not IE and Edge. So...
+      if (this.props.forPrint) {
+        if (legendItem.imageUrl) {
+          boxContents = (
+            <img width="20px" height="16px" src={legendItem.imageUrl} />
+          );
+        } else {
+          boxContents = <>&#9632;</>;
+          boxStyle = {
+            color: legendItem.color,
+            fontSize: "48px",
+            lineHeight: "16px"
+          };
+        }
       } else {
-        boxStyle = {
-          backgroundColor: legendItem.color,
-          ...boxStyle
-        };
+        if (legendItem.imageUrl) {
+          boxStyle = {
+            backgroundImage: `url(${legendItem.imageUrl})`,
+            backgroundRepeat: "no-repeat",
+            backgroundPosition: "center",
+            backgroundSize: "cover",
+            ...boxStyle
+          };
+        } else {
+          boxStyle = {
+            backgroundColor: legendItem.color,
+            minWidth: "20px",
+            ...boxStyle
+          };
+        }
       }
 
       return (
@@ -166,7 +194,9 @@ const Legend = observer(
             </tr>
           )}
           <tr>
-            <td className={Styles.legendBox} style={boxStyle} />
+            <td className={Styles.legendBox} style={boxStyle}>
+              {boxContents}
+            </td>
             <td className={Styles.legendTitles}>
               {legendItem.titleAbove && (
                 <div className={Styles.legendTitleAbove}>

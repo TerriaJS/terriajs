@@ -2,9 +2,8 @@ import countBy from "lodash-es/countBy";
 import { computed } from "mobx";
 import RegionProvider from "../Map/RegionProvider";
 import RegionProviderList from "../Map/RegionProviderList";
-import createEmptyModel from "../Models/createEmptyModel";
+import createCombinedModel from "../Models/createCombinedModel";
 import Model from "../Models/Model";
-import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
 import TableColumnTraits from "../Traits/TableColumnTraits";
 import TableTraits from "../Traits/TableTraits";
 import TableColumnType, { stringToTableColumnType } from "./TableColumnType";
@@ -45,6 +44,11 @@ export interface UniqueColumnValues {
    * {@link #values}.
    */
   readonly counts: ReadonlyArray<number>;
+
+  /**
+   * Gets the number of rows with null values.
+   */
+  readonly numberOfNulls: number;
 }
 
 /**
@@ -101,6 +105,8 @@ export default class TableColumn {
         n = 0;
       } else if (replaceWithNull && replaceWithNull.indexOf(value) >= 0) {
         n = null;
+      } else if (value.length === 0) {
+        n = null;
       } else {
         n = toNumber(values[i]);
         if (n === null) {
@@ -131,19 +137,34 @@ export default class TableColumn {
    */
   @computed
   get uniqueValues(): UniqueColumnValues {
-    const count = countBy(this.values);
+    const replaceWithNull = this.traits.replaceWithNullValues;
+
+    const values = this.values.map(value => {
+      if (value.length === 0) {
+        return "";
+      } else if (replaceWithNull && replaceWithNull.indexOf(value) >= 0) {
+        return "";
+      }
+      return value;
+    });
+
+    const count = countBy(values);
+    const nullCount = count[""];
+    delete count[""];
 
     function toArray(key: string, value: number): [string, number] {
       return [key, value];
     }
     const countArray = Object.keys(count).map(key => toArray(key, count[key]));
+
     countArray.sort(function(a, b) {
       return b[1] - a[1];
     });
 
     return {
       values: countArray.map(a => a[0]),
-      counts: countArray.map(a => a[1])
+      counts: countArray.map(a => a[1]),
+      numberOfNulls: nullCount
     };
   }
 
@@ -231,15 +252,23 @@ export default class TableColumn {
   }
 
   /**
-   * Gets the {@link TableColumnTraits} for this column.
+   * Gets the {@link TableColumnTraits} for this column. The trait are derived
+   * from the default column plus this column layered on top of the default.
    */
   @computed
-  get traits(): ModelPropertiesFromTraits<TableColumnTraits> {
-    const columns = this.tableModel.columns || [];
-    return (
-      columns.find(column => column.name === this.name) ||
-      createEmptyModel(TableColumnTraits)
-    );
+  get traits(): Model<TableColumnTraits> {
+    if (
+      this.columnNumber >= 0 &&
+      this.columnNumber < this.tableModel.columns.length
+    ) {
+      const result = createCombinedModel(
+        this.tableModel.columns[this.columnNumber],
+        this.tableModel.defaultColumn
+      );
+      return result;
+    } else {
+      return this.tableModel.defaultColumn;
+    }
   }
 
   /**
@@ -370,6 +399,35 @@ export default class TableColumn {
     };
   }
 
+  @computed
+  get scaledValueFunctionForType(): (rowIndex: number) => number | null {
+    if (this.type === TableColumnType.scalar) {
+      const valuesAsNumbers = this.valuesAsNumbers;
+      const minimum = valuesAsNumbers.minimum;
+      const maximum = valuesAsNumbers.maximum;
+
+      if (minimum === undefined || maximum === undefined) {
+        return nullFunction;
+      }
+
+      const delta = maximum - minimum;
+      if (delta === 0.0) {
+        return nullFunction;
+      }
+
+      const values = valuesAsNumbers.values;
+      return function(rowIndex: number) {
+        const value = values[rowIndex];
+        if (value === null) {
+          return null;
+        }
+        return (value - minimum) / delta;
+      };
+    }
+
+    return nullFunction;
+  }
+
   private guessColumnTypeFromName(name: string): TableColumnType | undefined {
     const typeHintSet = [
       { hint: /^(lon|long|longitude|lng)$/i, type: TableColumnType.longitude },
@@ -408,5 +466,9 @@ function toNumber(value: string): number | null {
   if (!Number.isNaN(asNumber)) {
     return asNumber;
   }
+  return null;
+}
+
+function nullFunction(rowIndex: number) {
   return null;
 }

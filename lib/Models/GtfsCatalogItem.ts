@@ -179,7 +179,7 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
   @computed
   private get _cesiumUpAxis() {
     if (this.model.upAxis === undefined) {
-      return Axis.Z;
+      return Axis.Y;
     }
     return Axis.fromName(this.model.upAxis);
   }
@@ -187,7 +187,7 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
   @computed
   private get _cesiumForwardAxis() {
     if (this.model.forwardAxis === undefined) {
-      return Axis.X;
+      return Axis.Z;
     }
     return Axis.fromName(this.model.forwardAxis);
   }
@@ -271,11 +271,14 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
 
   protected retrieveData(): Promise<FeedMessage> {
     // These headers work for the Transport for NSW APIs. Presumably, other services will require different headers.
-    const headers = {
-      Authorization: `apikey ${this.apiKey}`,
+    const headers: any = {
       "Content-Type": "application/x-google-protobuf;charset=UTF-8",
       "Cache-Control": "no-cache"
     };
+
+    if (this.apiKey !== undefined) {
+      headers.Authorization = `apikey ${this.apiKey}`;
+    }
 
     if (this.url !== null && this.url !== undefined) {
       return loadArrayBuffer(proxyCatalogItemUrl(this, this.url), headers).then(

@@ -1060,7 +1060,15 @@ declare module "terriajs-cesium/Source/Scene/PrimitiveCollection" {
   export default Cesium.PrimitiveCollection;
 }
 declare module "terriajs-cesium/Source/Scene/Scene" {
-  export default Cesium.Scene;
+  import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+  class Scene extends Cesium.Scene {
+    canvas: HTMLCanvasElement;
+    /**
+     * NOTE: Private in Cesium, should only be called if there is no other alternative.
+     * */
+    render(time: JulianDate): void;
+  }
+  export default Scene;
 }
 declare module "terriajs-cesium/Source/Scene/SceneMode" {
   export default Cesium.SceneMode;
@@ -1150,7 +1158,11 @@ declare module "terriajs-cesium/Source/Widgets/CesiumInspector/CesiumInspectorVi
   export default Cesium.CesiumInspectorViewModel;
 }
 declare module "terriajs-cesium/Source/Widgets/CesiumWidget/CesiumWidget" {
-  export default Cesium.CesiumWidget;
+  import Scene from "terriajs-cesium/Source/Scene/Scene";
+  class CesiumWidget extends Cesium.CesiumWidget {
+    scene: Scene;
+  }
+  export default CesiumWidget;
 }
 declare module "terriajs-cesium/Source/Widgets/ClockViewModel" {
   export default Cesium.ClockViewModel;
@@ -1356,4 +1368,16 @@ declare module "terriajs-cesium/Source/DataSources/PropertyBag" {
     hasProperty(propertyName: string): boolean;
     removeProperty(propertyName: string): void;
   }
+}
+declare module "terriajs-cesium/Source/Core/Ion" {
+  import Resource from "terriajs-cesium/Source/Core/Resource";
+  import Credit from "terriajs-cesium/Source/Core/Credit";
+
+  namespace Ion {
+    let defaultAccessToken: string;
+    let defaultServer: string | Resource;
+    function getDefaultTokenCredit(providedKey: string): Credit | undefined;
+  }
+
+  export default Ion;
 }

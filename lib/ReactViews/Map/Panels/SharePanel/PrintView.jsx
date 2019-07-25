@@ -124,16 +124,12 @@ const PrintView = createReactClass({
           />
         </p>
         <h1>Legends</h1>
-        {this.props.terria.nowViewing.items.map(this.renderLegend)}
+        {this.props.terria.workbench.items.map(this.renderLegend)}
         {this.renderFeatureInfo()}
         <h1>Dataset Details</h1>
-        {this.props.terria.nowViewing.items.map(this.renderDetails)}
+        {this.props.terria.workbench.items.map(this.renderDetails)}
         <h1>Map Credits</h1>
-        <ul>
-          {this.props.terria.currentViewer
-            .getAllAttribution()
-            .map(this.renderAttribution)}
-        </ul>
+        {/* TODO: We don't have a way of getting credits yet*/}
         <If condition={this.props.terria.configParameters.printDisclaimer}>
           <h1>Print Disclaimer</h1>
           <p>{this.props.terria.configParameters.printDisclaimer.text}</p>
@@ -163,7 +159,7 @@ const PrintView = createReactClass({
             Time: {formatDateTime(catalogItem.discreteTime)}
           </div>
         )}
-        <Legend item={catalogItem} />
+        <Legend forPrint={true} item={catalogItem} />
       </div>
     );
   },

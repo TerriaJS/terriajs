@@ -13,7 +13,7 @@ import MapInteractionWindow from "../Notification/MapInteractionWindow";
 import MapNavigation from "../Map/MapNavigation";
 import MenuBar from "../Map/MenuBar";
 import ExperimentalFeatures from "../Map/ExperimentalFeatures";
-// import MobileHeader from '../Mobile/MobileHeader';
+import MobileHeader from "../Mobile/MobileHeader";
 import Notification from "../Notification/Notification";
 // import ProgressBar from '../Map/ProgressBar';
 import SidePanel from "../SidePanel/SidePanel";
@@ -159,13 +159,13 @@ const StandardUserInterface = observer(
               <div className={Styles.uiInner}>
                 <If condition={!this.props.viewState.hideMapUi()}>
                   <Small>
-                    {/* <MobileHeader
-                                    terria={terria}
-                                    menuItems={customElements.menu}
-                                    viewState={this.props.viewState}
-                                    version={this.props.version}
-                                    allBaseMaps={allBaseMaps}
-                                /> */}
+                    <MobileHeader
+                      terria={terria}
+                      menuItems={customElements.menu}
+                      viewState={this.props.viewState}
+                      version={this.props.version}
+                      allBaseMaps={allBaseMaps}
+                    />
                   </Small>
                   <Medium>
                     <div
