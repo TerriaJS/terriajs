@@ -1,4 +1,4 @@
-import { autorun, computed, runInAction } from "mobx";
+import { autorun, computed, runInAction, reaction } from "mobx";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Color from "terriajs-cesium/Source/Core/Color";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
@@ -52,6 +52,7 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
 
   private inDrawMode: boolean;
   private closeLoop: boolean;
+  private disposePickedFeatureSubscription?: () => void;
 
   constructor(options: Options) {
     super(createGuid(), options.terria);
@@ -189,30 +190,23 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
     this.terria.overlays.add(this);
 
     // Listen for user clicks on map
-    const pickPointMode = new MapInteractionMode({
-      message: this.getDialogMessage(),
-      buttonText: this.getButtonText(),
-      onCancel: () => {
-        this.terria.mapInteractionModeStack.pop();
-        this.cleanUp();
-      }
-    });
-
-    this.terria.mapInteractionModeStack.push(pickPointMode);
-    autorun(async reaction => {
-      if (isDefined(pickPointMode.pickedFeatures)) {
-        const pickedFeatures = pickPointMode.pickedFeatures;
-        if (isDefined(pickedFeatures.allFeaturesAvailablePromise)) {
-          await pickedFeatures.allFeaturesAvailablePromise;
-        }
-        if (isDefined(pickedFeatures.pickPosition)) {
-          const pickedPoint = pickedFeatures.pickPosition;
-          this.addPointToPointEntities("First Point", pickedPoint);
-          reaction.dispose();
-          this.prepareToAddNewPoint();
+    const pickPointMode = this.addMapInteractionMode();
+    this.disposePickedFeatureSubscription = reaction(
+      () => pickPointMode.pickedFeatures,
+      async (pickedFeatures, reaction) => {
+        if (isDefined(pickedFeatures)) {
+          if (isDefined(pickedFeatures.allFeaturesAvailablePromise)) {
+            await pickedFeatures.allFeaturesAvailablePromise;
+          }
+          if (isDefined(pickedFeatures.pickPosition)) {
+            const pickedPoint = pickedFeatures.pickPosition;
+            this.addPointToPointEntities("First Point", pickedPoint);
+            reaction.dispose();
+            this.prepareToAddNewPoint();
+          }
         }
       }
-    });
+    );
   }
 
   /**
@@ -235,17 +229,18 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
   }
 
   /**
-   * Called after a point has been added, this updates the MapInteractionModeStack with a listener for another point.
+   * Updates the MapInteractionModeStack with a listener for a new point.
    */
-  private mapInteractionModeUpdate() {
-    this.terria.mapInteractionModeStack.pop();
-    const that = this;
+  private addMapInteractionMode() {
     const pickPointMode = new MapInteractionMode({
       message: this.getDialogMessage(),
       buttonText: this.getButtonText(),
-      onCancel: function() {
-        that.terria.mapInteractionModeStack.pop();
-        that.cleanUp();
+      onCancel: () => {
+        if (this.disposePickedFeatureSubscription) {
+          this.disposePickedFeatureSubscription();
+        }
+        this.terria.mapInteractionModeStack.pop();
+        this.cleanUp();
       }
     });
     this.terria.mapInteractionModeStack.push(pickPointMode);
@@ -256,33 +251,36 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
    * Called after a point has been added, prepares to add and draw another point, as well as updating the dialog.
    */
   private prepareToAddNewPoint() {
-    const pickPointMode = this.mapInteractionModeUpdate();
+    this.terria.mapInteractionModeStack.pop();
+    const pickPointMode = this.addMapInteractionMode();
 
-    autorun(async reaction => {
-      if (isDefined(pickPointMode.pickedFeatures)) {
-        const pickedFeatures = pickPointMode.pickedFeatures;
-        if (isDefined(pickedFeatures.allFeaturesAvailablePromise)) {
-          await pickedFeatures.allFeaturesAvailablePromise;
-        }
-        if (isDefined(pickedFeatures.pickPosition)) {
-          const pickedPoint = pickedFeatures.pickPosition;
-          // If existing point was picked, _clickedExistingPoint handles that, and returns true.
-          // getDragCount helps us determine if the point was actually dragged rather than clicked. If it was
-          // dragged, we shouldn't treat it as a clicked-existing-point scenario.
-          if (
-            this.dragHelper.getDragCount() < 10 &&
-            !this.clickedExistingPoint(pickedFeatures.features)
-          ) {
-            // No existing point was picked, so add a new point
-            this.addPointToPointEntities("Another Point", pickedPoint);
-          } else {
-            this.dragHelper.resetDragCount();
+    this.disposePickedFeatureSubscription = reaction(
+      () => pickPointMode.pickedFeatures,
+      async (pickedFeatures, reaction) => {
+        if (isDefined(pickedFeatures)) {
+          if (isDefined(pickedFeatures.allFeaturesAvailablePromise)) {
+            await pickedFeatures.allFeaturesAvailablePromise;
           }
-          reaction.dispose();
-          this.prepareToAddNewPoint();
+          if (isDefined(pickedFeatures.pickPosition)) {
+            const pickedPoint = pickedFeatures.pickPosition;
+            // If existing point was picked, _clickedExistingPoint handles that, and returns true.
+            // getDragCount helps us determine if the point was actually dragged rather than clicked. If it was
+            // dragged, we shouldn't treat it as a clicked-existing-point scenario.
+            if (
+              this.dragHelper.getDragCount() < 10 &&
+              !this.clickedExistingPoint(pickedFeatures.features)
+            ) {
+              // No existing point was picked, so add a new point
+              this.addPointToPointEntities("Another Point", pickedPoint);
+            } else {
+              this.dragHelper.resetDragCount();
+            }
+            reaction.dispose();
+            this.prepareToAddNewPoint();
+          }
         }
       }
-    });
+    );
   }
 
   /**
