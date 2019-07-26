@@ -273,6 +273,7 @@ function configureWebpack(terriaJSBasePath, config, devMode, hot, MiniCssExtract
             test: /\.scss$/,
             use: [
                 MiniCssExtractPlugin.loader,
+                'css-modules-typescript-loader',
                 {
                     loader: require.resolve('css-loader'),
                     options: {
