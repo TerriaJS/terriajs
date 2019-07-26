@@ -1,36 +1,31 @@
 "use strict";
 
-import {
-  mouse as d3Mouse,
-  select as d3Select,
-  event as d3Event
-} from "d3-selection";
 import { axisBottom as d3AxisBottom, axisLeft as d3AxisLeft } from "d3-axis";
+import {
+  event as d3Event,
+  mouse as d3Mouse,
+  select as d3Select
+} from "d3-selection";
 import { transition as d3Transition } from "d3-transition";
 import uniq from "lodash-es/uniq";
-
+import { autorun, computed, IReactionDisposer, observable, trace } from "mobx";
+import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import defined from "terriajs-cesium/Source/Core/defined";
-
+import filterOutUndefined from "../Core/filterOutUndefined";
+import Chartable from "../Models/Chartable";
+import { BaseModel } from "../Models/Model";
+import raiseErrorOnRejectedPromise from "../Models/raiseErrorOnRejectedPromise";
+import Styles from "../ReactViews/Custom/Chart/chart.scss";
+import BaseChart from "./BaseChart";
+import ChartData, { ChartPoint } from "./ChartData";
+import d3Sync from "./d3Sync";
+import { determineChartType } from "./initializeChartTypes";
 import Scales from "./Scales";
 import Size from "./Size";
 import Title from "./Title";
 import Tooltip from "./Tooltip";
-import initializeChartTypes, {
-  determineChartType
-} from "./initializeChartTypes";
-import { observable, autorun, IReactionDisposer, computed } from "mobx";
-import Styles from "../ReactViews/Custom/Chart/chart.scss";
-import createGuid from "terriajs-cesium/Source/Core/createGuid";
 
-import d3Sync from "./d3Sync";
-import { BaseModel } from "../Models/Model";
-import raiseErrorOnRejectedPromise from "../Models/raiseErrorOnRejectedPromise";
-import Mappable from "../Models/Mappable";
-import Chartable from "../Models/Chartable";
-import ChartData, { ChartPoint } from "./ChartData";
-import BaseChart from "./BaseChart";
-import filterOutUndefined from "../Core/filterOutUndefined";
 const yAxisLabelWidth = 20;
 
 const defaultMargin = {
@@ -155,7 +150,14 @@ class ChartRenderer {
     keepAlive: true
   })
   get svg(): any {
+    trace();
+
     const d3Container = d3Select(this.element);
+
+    // Remove the old chart, if any.
+    d3Select(this.element)
+      .selectAll("*")
+      .remove();
 
     Title.create(d3Container, this.titleSettings);
 
@@ -302,11 +304,6 @@ class ChartRenderer {
     );
   }
 
-  @computed
-  get chartTransition() {
-    return d3Transition().duration(this.transitionDuration);
-  }
-
   private autoUpdateChart() {
     // Ensure the items on the chart are loaded.
     this.props.items.forEach(item => {
@@ -359,9 +356,11 @@ class ChartRenderer {
       transitionDuration
     );
 
+    const transition = d3Transition().duration(this.transitionDuration as any);
+
     // Axes.
     if (defined(scales)) {
-      this.renderAxis(hasData);
+      this.renderAxis(transition, hasData);
     }
 
     this.renderChart();
@@ -487,7 +486,7 @@ class ChartRenderer {
    * Draw X and Y axes, tick marks and labels.
    * @param {Object} renderContext
    */
-  renderAxis(hasData: boolean) {
+  renderAxis(chartTransition: any, hasData: boolean) {
     const chart = this.svg.selectAll(".base-chart");
     // Create the y-axis as needed.
     // -----------------
@@ -575,7 +574,7 @@ class ChartRenderer {
         // draw axis
         const axis = yNode
           .selectAll(".ticks")
-          .transition(this.chartTransition as any)
+          .transition(chartTransition as any)
           .call(yAxis as any);
 
         const axisWidth = !isNaN(this.yOffsets[yNodeIndex])
@@ -665,7 +664,7 @@ class ChartRenderer {
       .select(".x.axis")
       .selectAll(".tick")
       .style("opacity", 0)
-      .transition(this.chartTransition)
+      .transition(chartTransition)
       .style(
         "opacity",
         (this.styling === "feature-info" && hasXLabel) || !hasData ? 1e-6 : 1
