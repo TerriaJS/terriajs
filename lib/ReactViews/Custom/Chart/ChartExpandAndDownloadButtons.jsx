@@ -6,13 +6,13 @@ import React from "react";
 import PropTypes from "prop-types";
 import createReactClass from "create-react-class";
 
-import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
+// import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import defined from "terriajs-cesium/Source/Core/defined";
 import clone from "terriajs-cesium/Source/Core/clone";
 
-import CsvCatalogItem from "../../../Models/CsvCatalogItem";
+// import CsvCatalogItem from "../../../Models/CsvCatalogItem";
 import Dropdown from "../../Generic/Dropdown";
-import Polling from "../../../Models/Polling";
+// import Polling from "../../../Models/Polling";
 import raiseErrorOnRejectedPromise from "../../../Models/raiseErrorOnRejectedPromise";
 import Icon from "../../Icon";
 
@@ -152,48 +152,48 @@ const ChartExpandAndDownloadButtons = createReactClass({
  * @private
  */
 function expand(props, sourceIndex) {
-  function makeTableStyle() {
-    // Set the table style so that the names and units of the columns appear immediately, not with a delay.
-    const tableStyleOptions = {
-      columns: {}
-    };
-    const maxColumnNamesAndUnits = Math.max(
-      (props.columnNames || []).length,
-      (props.columnUnits || []).length
-    );
-    for (
-      let columnNumber = 0;
-      columnNumber < maxColumnNamesAndUnits;
-      columnNumber++
-    ) {
-      tableStyleOptions.columns[columnNumber] = {};
-      if (defined(props.columnNames) && props.columnNames[columnNumber]) {
-        tableStyleOptions.columns[columnNumber].name =
-          props.columnNames[columnNumber];
-      }
-      if (defined(props.columnUnits) && props.columnUnits[columnNumber]) {
-        tableStyleOptions.columns[columnNumber].units =
-          props.columnUnits[columnNumber];
-      }
-    }
-    // Set the active columns via tableStyle too.
-    // This is a bit inconsistent with the above, since above we index with column number
-    // and here we may be indexing with number or id or name.
-    // But it works. (TableStyle.columns may have multiple references to the same column.)
-    if (defined(props.xColumn)) {
-      tableStyleOptions.xAxis = props.xColumn;
-    }
-    if (defined(props.yColumns)) {
-      props.yColumns.forEach(nameOrIndex => {
-        tableStyleOptions.columns[nameOrIndex] = defaultValue(
-          tableStyleOptions.columns[nameOrIndex],
-          {}
-        );
-        tableStyleOptions.columns[nameOrIndex].active = true;
-      });
-    }
-    return new TableStyle(tableStyleOptions);
-  }
+  // function makeTableStyle() {
+  //   // Set the table style so that the names and units of the columns appear immediately, not with a delay.
+  //   const tableStyleOptions = {
+  //     columns: {}
+  //   };
+  //   const maxColumnNamesAndUnits = Math.max(
+  //     (props.columnNames || []).length,
+  //     (props.columnUnits || []).length
+  //   );
+  //   for (
+  //     let columnNumber = 0;
+  //     columnNumber < maxColumnNamesAndUnits;
+  //     columnNumber++
+  //   ) {
+  //     tableStyleOptions.columns[columnNumber] = {};
+  //     if (defined(props.columnNames) && props.columnNames[columnNumber]) {
+  //       tableStyleOptions.columns[columnNumber].name =
+  //         props.columnNames[columnNumber];
+  //     }
+  //     if (defined(props.columnUnits) && props.columnUnits[columnNumber]) {
+  //       tableStyleOptions.columns[columnNumber].units =
+  //         props.columnUnits[columnNumber];
+  //     }
+  //   }
+  //   // Set the active columns via tableStyle too.
+  //   // This is a bit inconsistent with the above, since above we index with column number
+  //   // and here we may be indexing with number or id or name.
+  //   // But it works. (TableStyle.columns may have multiple references to the same column.)
+  //   if (defined(props.xColumn)) {
+  //     tableStyleOptions.xAxis = props.xColumn;
+  //   }
+  //   if (defined(props.yColumns)) {
+  //     props.yColumns.forEach(nameOrIndex => {
+  //       tableStyleOptions.columns[nameOrIndex] = defaultValue(
+  //         tableStyleOptions.columns[nameOrIndex],
+  //         {}
+  //       );
+  //       tableStyleOptions.columns[nameOrIndex].active = true;
+  //     });
+  //   }
+  //   return new TableStyle(tableStyleOptions);
+  // }
 
   // Create a new CSV catalog item from the data source details we have
   // Side-effect: sets activeConcepts and existingColors

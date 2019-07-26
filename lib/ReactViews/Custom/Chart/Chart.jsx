@@ -21,9 +21,9 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 // import loadText from "../../../Core/loadText";
-import when from "terriajs-cesium/Source/ThirdParty/when";
+// import when from "terriajs-cesium/Source/ThirdParty/when";
 import { observer } from "mobx-react";
-import ChartData from "../../../Charts/ChartData";
+// import ChartData from "../../../Charts/ChartData";
 import ChartRenderer from "../../../Charts/ChartRenderer";
 // import proxyCatalogItemUrl from "../../../Models/proxyCatalogItemUrl";
 import CsvCatalogItem from "../../../Models/CsvCatalogItem";
@@ -31,7 +31,7 @@ import CsvCatalogItem from "../../../Models/CsvCatalogItem";
 import Styles from "./chart.scss";
 
 const defaultHeight = 100;
-const defaultColor = undefined; // Allows the line color to be set by the css, esp. in the feature info panel.
+// const defaultColor = undefined; // Allows the line color to be set by the css, esp. in the feature info panel.
 
 const Chart = observer(
   createReactClass({

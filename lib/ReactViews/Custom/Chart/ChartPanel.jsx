@@ -43,7 +43,7 @@ const ChartPanel = observer(
       // if (this.props.viewState.chartIsOpen === false) {
       //   return null;
       // }
-      let data = [];
+      const data = [];
       let xUnits;
       // chartableItems.forEach(item => {
       //   const thisData = item.chartData();
