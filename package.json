@@ -41,6 +41,7 @@
     "core-js": "^3.1.4",
     "create-react-class": "^15.6.2",
     "css-loader": "^2.1.0",
+    "css-modules-typescript-loader": "^2.0.4",
     "d3-array": "^1.0.0",
     "d3-axis": "^1.0.0",
     "d3-collection": "^1.0.0",
