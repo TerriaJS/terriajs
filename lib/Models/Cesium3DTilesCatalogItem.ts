@@ -8,17 +8,16 @@ import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
 import Cesium3DTileStyle from "terriajs-cesium/Source/Scene/Cesium3DTileStyle";
 import ShadowMode from "terriajs-cesium/Source/Scene/ShadowMode";
 import isDefined from "../Core/isDefined";
-import loadJson from "../Core/loadJson";
 import makeRealPromise from "../Core/makeRealPromise";
 import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
+import FeatureInfoMixin from "../ModelMixins/FeatureInfoMixin";
 import Cesium3DTilesCatalogItemTraits, {
   OptionsTraits
 } from "../Traits/Cesium3DCatalogItemTraits";
 import CreateModel from "./CreateModel";
 import Feature from "./Feature";
 import Mappable from "./Mappable";
-import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import raiseErrorToUser from "./raiseErrorToUser";
 
 class ObservableCesium3DTileset extends Cesium3DTileset {
@@ -32,8 +31,10 @@ class ObservableCesium3DTileset extends Cesium3DTileset {
 }
 
 export default class Cesium3DTilesCatalogItem
-  extends AsyncMappableMixin(
-    CatalogMemberMixin(CreateModel(Cesium3DTilesCatalogItemTraits))
+  extends FeatureInfoMixin(
+    AsyncMappableMixin(
+      CatalogMemberMixin(CreateModel(Cesium3DTilesCatalogItemTraits))
+    )
   )
   implements Mappable {
   static readonly type = "3d-tiles";
@@ -187,7 +188,7 @@ export default class Cesium3DTilesCatalogItem
     }
   }
 
-  getFeaturesFromPickResult(_screenPosition: Cartesian2, pickResult: any) {
+  buildFeatureFromPickResult(_screenPosition: Cartesian2, pickResult: any) {
     if (pickResult instanceof Cesium3DTileFeature) {
       const properties: { [name: string]: unknown } = {};
       pickResult.getPropertyNames().forEach(name => {
@@ -195,31 +196,10 @@ export default class Cesium3DTilesCatalogItem
       });
 
       const result = new Feature({
-        properties: properties
+        properties
       });
 
-      result._catalogItem = this;
       result._cesium3DTileFeature = pickResult;
-
-      (async () => {
-        if (isDefined(this.featureInfoUrlTemplate)) {
-          const resource = new Resource({
-            url: proxyCatalogItemUrl(this, this.featureInfoUrlTemplate, "0d"),
-            templateValues: properties
-          });
-          try {
-            const featureInfo = await loadJson(resource);
-            Object.keys(featureInfo).forEach(property => {
-              result.properties.addProperty(property, featureInfo[property]);
-            });
-          } catch (e) {
-            result.properties.addProperty(
-              "Error",
-              "Unable to retrieve feature details from:\n\n" + resource.url
-            );
-          }
-        }
-      })();
       return result;
     }
   }
