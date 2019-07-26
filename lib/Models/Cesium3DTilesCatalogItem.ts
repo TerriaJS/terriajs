@@ -53,7 +53,7 @@ export default class Cesium3DTilesCatalogItem
     return Promise.resolve();
   }
 
-  protected get loadMapItemsPromise() {
+  protected forceLoadMapItems() {
     return (async () => {
       const tileset = this.createTileset(
         this.url,

@@ -1,15 +1,12 @@
 import { DomElement } from "domhandler";
-import { ReactElement } from "react";
-import CustomComponent, { ProcessNodeContext } from "./CustomComponent";
+import React, { ReactElement } from "react";
 import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
-import React from "react";
-const utils = require("html-to-react/lib/utils");
+import CommonStrata from "../../Models/CommonStrata";
+import CsvCatalogItem from "../../Models/CsvCatalogItem";
+import Chart from "./Chart/NewChart";
 import ChartPreviewStyles from "./Chart/chart-preview.scss";
 import ChartExpandAndDownloadButtons from "./Chart/ChartExpandAndDownloadButtons";
-import Chart from "./Chart/Chart";
-import CsvCatalogItem from "../../Models/CsvCatalogItem";
-import CommonStrata from "../../Models/CommonStrata";
-import filterOutUndefined from "../../Core/filterOutUndefined";
+import CustomComponent, { ProcessNodeContext } from "./CustomComponent";
 
 /**
  * A `<chart>` custom component. It displays an interactive chart along with
@@ -189,6 +186,31 @@ export default class ChartCustomComponent extends CustomComponent {
     //   colors || ""
     // ];
 
+    const sourceItems = (sources || []).map((source, i) => {
+      const id = `${context.catalogItem.uniqueId}:${
+        context.feature.id
+      }:${source}`;
+      const item = new CsvCatalogItem(id, context.terria);
+
+      let name = title;
+      if (sourceNames && sourceNames[i]) {
+        name += " - " + sourceNames[i];
+      }
+
+      item.setTrait(CommonStrata.user, "name", name);
+
+      item.setTrait(CommonStrata.user, "url", source);
+      const chartStyle = item.addObject(CommonStrata.user, "styles", "chart")!;
+      chartStyle.chart.setTrait(CommonStrata.user, "xAxisColumn", xColumn);
+      if (yColumns) {
+        yColumns.forEach(column => {
+          chartStyle.chart.addObject(CommonStrata.user, "lines", column);
+        });
+      }
+      item.setTrait(CommonStrata.user, "activeStyle", "chart");
+      return item;
+    });
+
     const chartElements = [];
     if (node.attribs["hide-buttons"] !== "true") {
       chartElements.push(
@@ -199,7 +221,7 @@ export default class ChartCustomComponent extends CustomComponent {
           title: title,
           colors: colors, // The colors are used when the chart is expanded.
           feature: context.feature,
-          sources: sources,
+          sources: sourceItems,
           sourceNames: sourceNames,
           downloads: downloads,
           downloadNames: downloadNames,

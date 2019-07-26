@@ -24,6 +24,7 @@ import LegendTraits from "../Traits/LegendTraits";
 import TableTraits from "../Traits/TableTraits";
 import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
 import ChartData, { ChartPoint } from "../Charts/ChartData";
+import AsyncLoader from "../Core/AsyncLoader";
 
 export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
   Base: T
@@ -41,6 +42,8 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
      */
     @observable
     regionProviderList: RegionProviderList | undefined;
+
+    private _dataLoader = new AsyncLoader(this.forceLoadTableMixin.bind(this));
 
     /**
      * Gets a {@link TableColumn} for each of the columns in the raw data.
@@ -223,18 +226,32 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
       return this.tableColumns.find(column => column.name === name);
     }
 
-    protected loadTableMixin(): Promise<void> {
-      // TODO: pass proxy to fromUrl
-      return makeRealPromise(
+    protected abstract forceLoadTableData(): Promise<string[][]>;
+
+    private forceLoadTableMixin(): Promise<void> {
+      const regionProvidersPromise = makeRealPromise(
         RegionProviderList.fromUrl(
           this.terria.configParameters.regionMappingDefinitionsUrl,
-          undefined
+          this.terria.corsProxy
         )
-      ).then(regionProviderList => {
-        runInAction(() => {
-          this.regionProviderList = regionProviderList;
-        });
-      });
+      );
+      const dataPromise = this.forceLoadTableData();
+      return Promise.all([regionProvidersPromise, dataPromise]).then(
+        ([regionProviderList, dataColumnMajor]) => {
+          runInAction(() => {
+            this.regionProviderList = regionProviderList;
+            this.dataColumnMajor = dataColumnMajor;
+          });
+        }
+      );
+    }
+
+    protected forceLoadChartItems() {
+      return this._dataLoader.load();
+    }
+
+    protected forceLoadMapItems() {
+      return this._dataLoader.load();
     }
 
     private readonly createLongitudeLatitudeDataSource = createTransformer(

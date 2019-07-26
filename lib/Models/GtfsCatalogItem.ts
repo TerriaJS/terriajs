@@ -1,47 +1,45 @@
-import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
-import UrlMixin from "../ModelMixins/UrlMixin";
-import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
-import CreateModel from "./CreateModel";
-import GtfsCatalogItemTraits from "../Traits/GtfsCatalogItemTraits";
-import Terria from "./Terria";
-import VehicleData from "./VehicleData";
-import loadArrayBuffer from "../Core/loadArrayBuffer";
-import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
-import TerriaError from "../Core/TerriaError";
-import {
-  FeedMessage,
-  FeedMessageReader,
-  FeedEntity
-} from "./GtfsRealtimeProtoBufReaders";
-
-import BillboardGraphics from "terriajs-cesium/Source/DataSources/BillboardGraphics";
-import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
-import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
-import DataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
-import NearFarScalar from "terriajs-cesium/Source/Core/NearFarScalar";
-import Color from "terriajs-cesium/Source/Core/Color";
-import Entity from "terriajs-cesium/Source/DataSources/Entity";
-import Axis from "terriajs-cesium/Source/Scene/Axis";
-import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
-import ModelGraphics from "terriajs-cesium/Source/DataSources/ModelGraphics";
-import Transforms from "terriajs-cesium/Source/Core/Transforms";
-import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
-import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
-import PropertyBag from "terriajs-cesium/Source/DataSources/PropertyBag";
-
 import {
   computed,
-  observable,
-  reaction,
-  runInAction,
   IReactionDisposer,
+  observable,
   onBecomeObserved,
-  onBecomeUnobserved
+  onBecomeUnobserved,
+  reaction,
+  runInAction
 } from "mobx";
 import { now } from "mobx-utils";
-
 import Pbf from "pbf";
+import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
+import Color from "terriajs-cesium/Source/Core/Color";
+import HeadingPitchRoll from "terriajs-cesium/Source/Core/HeadingPitchRoll";
+import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import NearFarScalar from "terriajs-cesium/Source/Core/NearFarScalar";
+import Transforms from "terriajs-cesium/Source/Core/Transforms";
+import BillboardGraphics from "terriajs-cesium/Source/DataSources/BillboardGraphics";
+import ConstantProperty from "terriajs-cesium/Source/DataSources/ConstantProperty";
+import DataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
+import Entity from "terriajs-cesium/Source/DataSources/Entity";
+import ModelGraphics from "terriajs-cesium/Source/DataSources/ModelGraphics";
+import PropertyBag from "terriajs-cesium/Source/DataSources/PropertyBag";
+import Axis from "terriajs-cesium/Source/Scene/Axis";
+import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
+import loadArrayBuffer from "../Core/loadArrayBuffer";
+import TerriaError from "../Core/TerriaError";
+import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
+import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
+import UrlMixin from "../ModelMixins/UrlMixin";
+import GtfsCatalogItemTraits from "../Traits/GtfsCatalogItemTraits";
+import CreateModel from "./CreateModel";
+import {
+  FeedEntity,
+  FeedMessage,
+  FeedMessageReader
+} from "./GtfsRealtimeProtoBufReaders";
 import prettyPrintGtfsEntityField from "./prettyPrintGtfsEntityField";
+import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
+import raiseErrorOnRejectedPromise from "./raiseErrorOnRejectedPromise";
+import Terria from "./Terria";
+import VehicleData from "./VehicleData";
 
 /**
  * For displaying realtime transport data. See [here](https://developers.google.com/transit/gtfs-realtime/reference/)
@@ -221,7 +219,7 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
         () => this._pollingTimer,
         () => {
           console.log("ping");
-          this.loadMapItemsPromise;
+          raiseErrorOnRejectedPromise(this.forceLoadMapItems());
           // console.log(getObserverTree(this, "mapItems"));
         }
       );
@@ -237,7 +235,7 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
     return Promise.resolve();
   }
 
-  protected get loadMapItemsPromise(): Promise<void> {
+  protected forceLoadMapItems(): Promise<void> {
     const promise: Promise<void> = this.retrieveData()
       .then((data: FeedMessage) => {
         if (data.entity === null || data.entity === undefined) {

@@ -3,7 +3,7 @@
 import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
-// import ChartPanel from '../Custom/Chart/ChartPanel';
+import ChartPanel from "../Custom/Chart/ChartPanel";
 import { observer } from "mobx-react";
 import Timeline from "./Timeline/Timeline";
 import Styles from "./bottom-dock.scss";
@@ -37,7 +37,11 @@ const BottomDock = observer(
           tabIndex={0}
           onClick={this.handleClick}
         >
-          {/* <ChartPanel terria={terria} onHeightChange={this.onHeightChange} viewState={this.props.viewState}/> */}
+          <ChartPanel
+            terria={terria}
+            onHeightChange={this.onHeightChange}
+            viewState={this.props.viewState}
+          />
           <If condition={top}>
             <Timeline terria={terria} />
           </If>

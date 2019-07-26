@@ -13,7 +13,7 @@ import clone from "terriajs-cesium/Source/Core/clone";
 import CsvCatalogItem from "../../../Models/CsvCatalogItem";
 import Dropdown from "../../Generic/Dropdown";
 import Polling from "../../../Models/Polling";
-import raiseErrorToUser from "../../../Models/raiseErrorToUser";
+import raiseErrorOnRejectedPromise from "../../../Models/raiseErrorOnRejectedPromise";
 import Icon from "../../Icon";
 
 import Styles from "./chart-expand-and-download-buttons.scss";
@@ -67,7 +67,8 @@ const ChartExpandAndDownloadButtons = createReactClass({
       return null;
     }
     // The downloads and download names default to the sources and source names if not defined.
-    const downloads = this.props.downloads || this.props.sources;
+    const downloads =
+      this.props.downloads || this.props.sources.map(source => source.url);
     const downloadNames = this.props.downloadNames || this.props.sourceNames;
     let downloadButton;
     if (defined(this.props.sourceNames)) {
@@ -197,115 +198,95 @@ function expand(props, sourceIndex) {
   // Create a new CSV catalog item from the data source details we have
   // Side-effect: sets activeConcepts and existingColors
   function makeNewCatalogItem() {
-    const url = defined(sourceIndex) ? props.sources[sourceIndex] : undefined;
-    const newCatalogItem = new CsvCatalogItem(terria, url, {
-      tableStyle: makeTableStyle(),
-      isCsvForCharting: true
-    });
-    let tableStructure = props.tableStructure;
-    if (
-      defined(props.colors) &&
-      props.colors.length >= tableStructure.columns.length
-    ) {
-      newCatalogItem.getNextColor = index => props.colors[index];
-    }
+    return defined(sourceIndex) ? props.sources[sourceIndex] : undefined;
+    // const url = defined(sourceIndex) ? props.sources[sourceIndex] : undefined;
+    // const newCatalogItem = new CsvCatalogItem(terria, url, {
+    //   tableStyle: makeTableStyle(),
+    //   isCsvForCharting: true
+    // });
+    // let tableStructure = props.tableStructure;
+    // if (
+    //   defined(props.colors) &&
+    //   props.colors.length >= tableStructure.columns.length
+    // ) {
+    //   newCatalogItem.getNextColor = index => props.colors[index];
+    // }
 
-    // For CSV data with a URL, we could just use the usual csvCatalogItem._load to load this from the url.
-    // However, we also want this to work with urls that may be interpreted differently according to CatalogItem.loadIntoTableStructure.
-    // So use the parent catalogItem's loadIntoTableStructure (if available) to do the load.
-    // Note that CsvCatalogItem's _load function checks for data first, and only loads the URL if no data is present, so we won't double up.
-    if (
-      !defined(tableStructure) &&
-      defined(props.catalogItem) &&
-      defined(props.catalogItem.loadIntoTableStructure)
-    ) {
-      tableStructure = props.catalogItem.loadIntoTableStructure(url);
-    }
-    newCatalogItem.data = tableStructure;
-    // Without this, if the chart data comes via the proxy, it would be cached for the default period of 2 weeks.
-    // So, retain the same `cacheDuration` as the parent data file.
-    // You can override this with the `pollSeconds` attribute (coming!).
-    // If neither is set, it should default to a small duration rather than 2 weeks - say 1 minute.
-    newCatalogItem.cacheDuration = defaultValue(
-      props.catalogItem.cacheDuration,
-      "1m"
-    );
-    newCatalogItem.name =
-      props.title || (props.feature && props.feature.name) || "Chart";
-    const group = terria.catalog.chartDataGroup;
-    newCatalogItem.uniqueId = group.uniqueId + "/" + newCatalogItem.name;
+    // // For CSV data with a URL, we could just use the usual csvCatalogItem._load to load this from the url.
+    // // However, we also want this to work with urls that may be interpreted differently according to CatalogItem.loadIntoTableStructure.
+    // // So use the parent catalogItem's loadIntoTableStructure (if available) to do the load.
+    // // Note that CsvCatalogItem's _load function checks for data first, and only loads the URL if no data is present, so we won't double up.
+    // if (
+    //   !defined(tableStructure) &&
+    //   defined(props.catalogItem) &&
+    //   defined(props.catalogItem.loadIntoTableStructure)
+    // ) {
+    //   tableStructure = props.catalogItem.loadIntoTableStructure(url);
+    // }
+    // newCatalogItem.data = tableStructure;
+    // // Without this, if the chart data comes via the proxy, it would be cached for the default period of 2 weeks.
+    // // So, retain the same `cacheDuration` as the parent data file.
+    // // You can override this with the `pollSeconds` attribute (coming!).
+    // // If neither is set, it should default to a small duration rather than 2 weeks - say 1 minute.
+    // newCatalogItem.cacheDuration = defaultValue(
+    //   props.catalogItem.cacheDuration,
+    //   "1m"
+    // );
+    // newCatalogItem.name =
+    //   props.title || (props.feature && props.feature.name) || "Chart";
+    // const group = terria.catalog.chartDataGroup;
+    // newCatalogItem.uniqueId = group.uniqueId + "/" + newCatalogItem.name;
 
-    if (defined(props.pollSeconds)) {
-      const pollSources = props.pollSources;
-      newCatalogItem.polling = new Polling({
-        seconds: props.pollSeconds,
-        url:
-          defined(sourceIndex) && defined(pollSources)
-            ? pollSources[Math.min(sourceIndex, pollSources.length - 1)]
-            : undefined,
-        replace: props.pollReplace
-      });
-    }
-    group.isOpen = true;
-    const existingIndex = group.items
-      .map(item => item.uniqueId)
-      .indexOf(newCatalogItem.uniqueId);
-    if (existingIndex >= 0) {
-      // First, keep a copy of the active items and colors used, so we can keep them the same with the new chart.
-      const oldCatalogItem = group.items[existingIndex];
-      if (
-        defined(oldCatalogItem.tableStructure) &&
-        defined(oldCatalogItem.tableStructure.columns)
-      ) {
-        activeConcepts = oldCatalogItem.tableStructure.columns.map(
-          column => column.isActive
-        );
-        existingColors = oldCatalogItem.tableStructure.columns.map(
-          column => column.color
-        );
-      } else {
-        activeConcepts = undefined;
-        existingColors = undefined;
-      }
-      oldCatalogItem.isEnabled = false;
-      group.remove(oldCatalogItem);
-    }
-    group.add(newCatalogItem);
-    newCatalogItem.isLoading = true;
-    newCatalogItem.isMappable = false;
-    terria.catalog.addChartableItem(newCatalogItem); // Notify the chart panel so it shows "loading".
-    newCatalogItem.isEnabled = true; // This loads it as well.
+    // if (defined(props.pollSeconds)) {
+    //   const pollSources = props.pollSources;
+    //   newCatalogItem.polling = new Polling({
+    //     seconds: props.pollSeconds,
+    //     url:
+    //       defined(sourceIndex) && defined(pollSources)
+    //         ? pollSources[Math.min(sourceIndex, pollSources.length - 1)]
+    //         : undefined,
+    //     replace: props.pollReplace
+    //   });
+    // }
+    // group.isOpen = true;
+    // const existingIndex = group.items
+    //   .map(item => item.uniqueId)
+    //   .indexOf(newCatalogItem.uniqueId);
+    // if (existingIndex >= 0) {
+    //   // First, keep a copy of the active items and colors used, so we can keep them the same with the new chart.
+    //   const oldCatalogItem = group.items[existingIndex];
+    //   if (
+    //     defined(oldCatalogItem.tableStructure) &&
+    //     defined(oldCatalogItem.tableStructure.columns)
+    //   ) {
+    //     activeConcepts = oldCatalogItem.tableStructure.columns.map(
+    //       column => column.isActive
+    //     );
+    //     existingColors = oldCatalogItem.tableStructure.columns.map(
+    //       column => column.color
+    //     );
+    //   } else {
+    //     activeConcepts = undefined;
+    //     existingColors = undefined;
+    //   }
+    //   oldCatalogItem.isEnabled = false;
+    //   group.remove(oldCatalogItem);
+    // }
+    // group.add(newCatalogItem);
+    // newCatalogItem.isLoading = true;
+    // newCatalogItem.isMappable = false;
+    // terria.catalog.addChartableItem(newCatalogItem); // Notify the chart panel so it shows "loading".
+    // newCatalogItem.isEnabled = true; // This loads it as well.
 
-    return newCatalogItem;
+    // return newCatalogItem;
   }
 
-  let existingColors;
-  let activeConcepts;
+  // let existingColors;
+  // let activeConcepts;
   const terria = props.terria;
   const newCatalogItem = makeNewCatalogItem();
-  // Is there a better way to set up an action to occur once the file has loaded?
-  newCatalogItem.load().then(() => {
-    // Enclose in try-catch rather than otherwise so that if load itself fails, we don't do this at all.
-    try {
-      newCatalogItem.sourceCatalogItem = props.catalogItem;
-      const tableStructure = newCatalogItem.tableStructure;
-      tableStructure.sourceFeature = props.feature;
-      if (defined(existingColors)) {
-        tableStructure.columns.forEach((column, columnNumber) => {
-          column.color = existingColors[columnNumber];
-        });
-      }
-      if (defined(activeConcepts) && activeConcepts.some(a => a)) {
-        tableStructure.columns.forEach((column, columnNumber) => {
-          column.isActive = activeConcepts[columnNumber];
-        });
-      }
-      newCatalogItem.setChartable();
-    } catch (e) {
-      // This does not actually make it to the user.
-      return raiseErrorToUser(terria, e);
-    }
-  });
+  props.terria.workbench.add(newCatalogItem);
+  raiseErrorOnRejectedPromise(terria, newCatalogItem.loadChartItems());
 }
 
 export default ChartExpandAndDownloadButtons;
