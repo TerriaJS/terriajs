@@ -1,12 +1,14 @@
-import { computed, observable, runInAction, isObservableArray } from "mobx";
+import { computed, isObservableArray, observable, runInAction } from "mobx";
 import Mustache from "mustache";
 import CesiumMath from "terriajs-cesium/Source/Core/Math";
 import URI from "urijs";
 import isDefined from "../Core/isDefined";
+import loadWithXhr from "../Core/loadWithXhr";
+import loadXML from "../Core/loadXML";
 import runLater from "../Core/runLater";
 import TerriaError from "../Core/TerriaError";
+import Reproject from "../Map/Reproject";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
-import XmlRequestMixin from "../ModelMixins/XmlRequestMixin";
 import xml2json from "../ThirdParty/xml2json";
 import { InfoSectionTraits } from "../Traits/CatalogMemberTraits";
 import WebProcessingServiceCatalogFunctionTraits from "../Traits/WebProcessingServiceCatalogFunctionTraits";
@@ -24,14 +26,13 @@ import LineParameter from "./LineParameter";
 import PointParameter from "./PointParameter";
 import PolygonParameter from "./PolygonParameter";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
+import RectangleParameter from "./RectangleParameter";
 import RegionParameter from "./RegionParameter";
 import RegionTypeParameter from "./RegionTypeParameter";
 import ResultPendingCatalogItem from "./ResultPendingCatalogItem";
 import StringParameter from "./StringParameter";
 import WebProcessingServiceCatalogItem from "./WebProcessingServiceCatalogItem";
-import RectangleParameter from "./RectangleParameter";
 
-const Reproject = require("../Map/Reproject");
 const sprintf = require("terriajs-cesium/Source/ThirdParty/sprintf");
 const executeWpsTemplate = require("./ExecuteWpsTemplate.xml");
 
@@ -84,8 +85,8 @@ type ParameterConverter = {
   parameterToInput: (parameter: FunctionParameter) => InputData | undefined;
 };
 
-export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin(
-  CatalogMemberMixin(CreateModel(WebProcessingServiceCatalogFunctionTraits))
+export default class WebProcessingServiceCatalogFunction extends CatalogMemberMixin(
+  CreateModel(WebProcessingServiceCatalogFunctionTraits)
 ) {
   static readonly type = "wps";
   readonly typeName = "Web Processing Service (WPS)";
@@ -406,6 +407,8 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
 
     const id = `${this.name} ${timestamp}`;
     const item = new ResultPendingCatalogItem(id, this.terria);
+    item.showsInfo = true;
+    item.isMappable = true;
 
     const inputsSection =
       '<table class="cesium-infoBox-defaultTable">' +
@@ -469,6 +472,23 @@ export default class WebProcessingServiceCatalogFunction extends XmlRequestMixin
       if (isDefined(info)) {
         info.push(errorInfo);
       }
+    });
+  }
+
+  getXml(url: string, parameters?: any) {
+    if (isDefined(parameters)) {
+      url = new URI(url).query(parameters).toString();
+    }
+    return loadXML(url);
+  }
+
+  postXml(url: string, data: string) {
+    return loadWithXhr({
+      url: url,
+      method: "POST",
+      data,
+      overrideMimeType: "text/xml",
+      responseType: "document"
     });
   }
 }
