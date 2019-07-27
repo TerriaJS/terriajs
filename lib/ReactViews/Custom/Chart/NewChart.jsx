@@ -13,10 +13,13 @@ export default class NewChart extends React.PureComponent {
   _chartRenderer = undefined;
 
   attach(element) {
-    if (element) {
-      this._chartRenderer = new ChartRenderer(element, this.props);
-    } else if (this._chartRenderer) {
+    if (!element) {
+      return;
+    }
+
+    if (!this._chartRenderer || this._chartRenderer.element !== element) {
       this.destroyChart();
+      this._chartRenderer = new ChartRenderer(element, this.props);
     }
   }
 
@@ -29,8 +32,10 @@ export default class NewChart extends React.PureComponent {
   }
 
   destroyChart() {
-    this._chartRenderer.destroy();
-    this._chartRenderer = undefined;
+    if (this._chartRenderer) {
+      this._chartRenderer.destroy();
+      this._chartRenderer = undefined;
+    }
   }
 
   render() {

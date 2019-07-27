@@ -56,7 +56,7 @@ interface ChartRendererProps {
 class ChartRenderer {
   readonly element: HTMLElement;
 
-  @observable
+  @observable.struct
   props: ChartRendererProps;
 
   private disposeAutorun: IReactionDisposer;
