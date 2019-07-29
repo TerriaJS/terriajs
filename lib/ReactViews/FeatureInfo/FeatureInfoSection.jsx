@@ -20,7 +20,6 @@ import CustomComponents from "../Custom/CustomComponents";
 import FeatureInfoDownload from "./FeatureInfoDownload";
 import formatNumberForLocale from "../../Core/formatNumberForLocale";
 import Icon from "../Icon";
-import ObserveModelMixin from "../ObserveModelMixin";
 import propertyGetTimeValues from "../../Core/propertyGetTimeValues";
 import parseCustomMarkdownToReact from "../Custom/parseCustomMarkdownToReact";
 

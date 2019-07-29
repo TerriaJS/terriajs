@@ -10,6 +10,7 @@ import ToolsPanel from "./Panels/ToolsPanel/ToolsPanel";
 import Icon from "../Icon";
 import Prompt from "../Generic/Prompt";
 import Styles from "./menu-bar.scss";
+import { runInAction } from "mobx";
 
 // The map navigation region
 const MenuBar = createReactClass({
@@ -30,12 +31,16 @@ const MenuBar = createReactClass({
   },
 
   handleClick() {
-    this.props.viewState.topElement = "MenuBar";
+    runInAction(() => {
+      this.props.viewState.topElement = "MenuBar";
+    });
   },
 
   onStoryButtonClick() {
-    this.props.viewState.storyBuilderShown = !this.props.viewState
-      .storyBuilderShown;
+    runInAction(() => {
+      this.props.viewState.storyBuilderShown = !this.props.viewState
+        .storyBuilderShown;
+    });
     this.props.terria.currentViewer.notifyRepaintRequired();
     // Allow any animations to finish, then trigger a resize.
     setTimeout(function() {

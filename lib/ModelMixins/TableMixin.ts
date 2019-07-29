@@ -102,10 +102,9 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
       let ret = this.tableStyles.find(style => style.id === this.activeStyle);
       if (ret === undefined) {
         return this.defaultTableStyle;
-      } 
+      }
 
       return ret;
-
     }
 
     /**

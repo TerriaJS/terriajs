@@ -16,23 +16,25 @@ function createGlobalBaseMapOptions(terria: Terria, bingMapsKey: string) {
     "basemap-natural-earth-II",
     terria
   );
-  naturalEarthII.setTrait(CommonStrata.user, "name", "Natural Earth II");
-  naturalEarthII.setTrait(
-    CommonStrata.user,
-    "url",
-    "http://geoserver.nationalmap.nicta.com.au/imagery/natural-earth-ii/wms"
-  );
-  naturalEarthII.setTrait(
-    CommonStrata.user,
-    "layers",
-    "natural-earth-ii:NE2_HR_LC_SR_W_DR"
-  );
-  // naturalEarthII.parameters = {
-  //   tiled: true
-  // };
-  naturalEarthII.setTrait(CommonStrata.user, "opacity", 1.0);
-  // naturalEarthII.isRequiredForRendering = true;
-  naturalEarthII.loadMapItems();
+  runInAction(() => {
+    naturalEarthII.setTrait(CommonStrata.user, "name", "Natural Earth II");
+    naturalEarthII.setTrait(
+      CommonStrata.user,
+      "url",
+      "http://geoserver.nationalmap.nicta.com.au/imagery/natural-earth-ii/wms"
+    );
+    naturalEarthII.setTrait(
+      CommonStrata.user,
+      "layers",
+      "natural-earth-ii:NE2_HR_LC_SR_W_DR"
+    );
+    // naturalEarthII.parameters = {
+    //   tiled: true
+    // };
+    naturalEarthII.setTrait(CommonStrata.user, "opacity", 1.0);
+    // naturalEarthII.isRequiredForRendering = true;
+    naturalEarthII.loadMapItems();
+  });
 
   result.push(
     new BaseMapViewModel(
@@ -45,19 +47,21 @@ function createGlobalBaseMapOptions(terria: Terria, bingMapsKey: string) {
     "basemap-black-marble",
     terria
   );
-  blackMarble.setTrait(CommonStrata.user, "name", "NASA Black Marble");
-  blackMarble.setTrait(
-    CommonStrata.user,
-    "url",
-    "http://geoserver.nationalmap.nicta.com.au/imagery/nasa-black-marble/wms"
-  );
-  blackMarble.setTrait(
-    CommonStrata.user,
-    "layers",
-    "nasa-black-marble:dnb_land_ocean_ice.2012.54000x27000_geo"
-  );
-  blackMarble.setTrait(CommonStrata.user, "opacity", 1.0);
-  blackMarble.loadMapItems();
+  runInAction(() => {
+    blackMarble.setTrait(CommonStrata.user, "name", "NASA Black Marble");
+    blackMarble.setTrait(
+      CommonStrata.user,
+      "url",
+      "http://geoserver.nationalmap.nicta.com.au/imagery/nasa-black-marble/wms"
+    );
+    blackMarble.setTrait(
+      CommonStrata.user,
+      "layers",
+      "nasa-black-marble:dnb_land_ocean_ice.2012.54000x27000_geo"
+    );
+    blackMarble.setTrait(CommonStrata.user, "opacity", 1.0);
+    blackMarble.loadMapItems();
+  });
   result.push(
     new BaseMapViewModel(
       blackMarble,

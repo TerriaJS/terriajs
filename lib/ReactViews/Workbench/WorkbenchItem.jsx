@@ -26,6 +26,7 @@ import StyleSelectorSection from "./Controls/StyleSelectorSection";
 import TimerSection from "./Controls/TimerSection";
 import ViewingControls from "./Controls/ViewingControls";
 import Styles from "./workbench-item.scss";
+import { runInAction } from "mobx";
 
 const WorkbenchItem = observer(
   createReactClass({
@@ -54,8 +55,13 @@ const WorkbenchItem = observer(
     },
 
     toggleVisibility() {
-      this.props.item.getOrCreateStratum(CommonStrata.user).show = !this.props
-        .item.show;
+      runInAction(() => {
+        this.props.item.setTrait(
+          CommonStrata.user,
+          "show",
+          !this.props.item.show
+        );
+      });
     },
 
     render() {

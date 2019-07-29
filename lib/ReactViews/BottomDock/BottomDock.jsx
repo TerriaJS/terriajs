@@ -7,6 +7,7 @@ import PropTypes from "prop-types";
 import { observer } from "mobx-react";
 import Timeline from "./Timeline/Timeline";
 import Styles from "./bottom-dock.scss";
+import { runInAction } from "mobx";
 
 const BottomDock = observer(
   createReactClass({
@@ -19,7 +20,9 @@ const BottomDock = observer(
     },
 
     handleClick() {
-      this.props.viewState.topElement = "BottomDock";
+      runInAction(() => {
+        this.props.viewState.topElement = "BottomDock";
+      });
     },
 
     render() {

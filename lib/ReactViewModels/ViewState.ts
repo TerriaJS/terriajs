@@ -5,7 +5,13 @@ import getAncestors from "../Models/getAncestors";
 import MouseCoords from "./MouseCoords";
 import SearchState from "./SearchState";
 import Terria from "../Models/Terria";
-import { observable, reaction, IReactionDisposer } from "mobx";
+import {
+  observable,
+  reaction,
+  IReactionDisposer,
+  action,
+  runInAction
+} from "mobx";
 import { BaseModel } from "../Models/Model";
 import PickedFeatures from "../Map/PickedFeatures";
 import isDefined from "../Core/isDefined";
@@ -126,7 +132,9 @@ export default class ViewState {
           item => item.title === e.title && item.message === e.message
         ).length === 0
       ) {
-        this.notifications.push(clone(e));
+        runInAction(() => {
+          this.notifications.push(clone(e));
+        });
       }
     }));
 
@@ -218,26 +226,31 @@ export default class ViewState {
     this.searchState.dispose();
   }
 
+  @action
   openAddData() {
     this.explorerPanelIsVisible = true;
     this.activeTabCategory = DATA_CATALOG_NAME;
   }
 
+  @action
   openUserData() {
     this.explorerPanelIsVisible = true;
     this.activeTabCategory = USER_DATA_NAME;
   }
 
+  @action
   closeCatalog() {
     this.explorerPanelIsVisible = false;
   }
 
+  @action
   searchInCatalog(query: string) {
     this.openAddData();
     this.searchState.catalogSearchText = query;
     this.searchState.searchCatalog();
   }
 
+  @action
   viewCatalogMember(catalogMember: BaseModel) {
     // TODO call addedByUser() when it is fixed
     let addedByUser = false;
@@ -263,6 +276,7 @@ export default class ViewState {
     }
   }
 
+  @action
   switchMobileView(viewName: string | null) {
     this.mobileView = viewName;
   }
