@@ -11,6 +11,7 @@ import RegionPicker from "./RegionPicker";
 import createReactClass from "create-react-class";
 import GeoJsonParameter from "../../Models/GeoJsonParameter";
 import { observer } from "mobx-react";
+import { runInAction } from "mobx";
 
 const GeoJsonParameterEditor = observer(
   createReactClass({
@@ -26,33 +27,39 @@ const GeoJsonParameterEditor = observer(
     },
 
     selectPointOnMap() {
-      this.props.parameter.value = undefined;
-      PointParameterEditor.selectOnMap(
-        this.props.previewed.terria,
-        this.props.viewState,
-        this.props.parameter
-      );
-      this.props.parameter.subtype = GeoJsonParameter.PointType;
+      runInAction(() => {
+        this.props.parameter.value = undefined;
+        PointParameterEditor.selectOnMap(
+          this.props.previewed.terria,
+          this.props.viewState,
+          this.props.parameter
+        );
+        this.props.parameter.subtype = GeoJsonParameter.PointType;
+      });
     },
 
     selectPolygonOnMap() {
-      this.props.parameter.value = undefined;
-      PolygonParameterEditor.selectOnMap(
-        this.props.previewed.terria,
-        this.props.viewState,
-        this.props.parameter
-      );
-      this.props.parameter.subtype = GeoJsonParameter.PolygonType;
+      runInAction(() => {
+        this.props.parameter.value = undefined;
+        PolygonParameterEditor.selectOnMap(
+          this.props.previewed.terria,
+          this.props.viewState,
+          this.props.parameter
+        );
+        this.props.parameter.subtype = GeoJsonParameter.PolygonType;
+      });
     },
 
     selectExistingPolygonOnMap() {
-      this.props.parameter.value = undefined;
-      SelectAPolygonParameterEditor.selectOnMap(
-        this.props.previewed.terria,
-        this.props.viewState,
-        this.props.parameter
-      );
-      this.props.parameter.subtype = GeoJsonParameter.SelectAPolygonType;
+      runInAction(() => {
+        this.props.parameter.value = undefined;
+        SelectAPolygonParameterEditor.selectOnMap(
+          this.props.previewed.terria,
+          this.props.viewState,
+          this.props.parameter
+        );
+        this.props.parameter.subtype = GeoJsonParameter.SelectAPolygonType;
+      });
     },
 
     render() {

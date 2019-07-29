@@ -239,11 +239,15 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
         if (this.disposePickedFeatureSubscription) {
           this.disposePickedFeatureSubscription();
         }
-        this.terria.mapInteractionModeStack.pop();
-        this.cleanUp();
+        runInAction(() => {
+          this.terria.mapInteractionModeStack.pop();
+          this.cleanUp();
+        });
       }
     });
-    this.terria.mapInteractionModeStack.push(pickPointMode);
+    runInAction(() => {
+      this.terria.mapInteractionModeStack.push(pickPointMode);
+    });
     return pickPointMode;
   }
 
@@ -251,9 +255,11 @@ export default class UserDrawing extends CreateModel(EmptyTraits) {
    * Called after a point has been added, prepares to add and draw another point, as well as updating the dialog.
    */
   private prepareToAddNewPoint() {
-    this.terria.mapInteractionModeStack.pop();
-    const pickPointMode = this.addMapInteractionMode();
+    runInAction(() => {
+      this.terria.mapInteractionModeStack.pop();
+    });
 
+    const pickPointMode = this.addMapInteractionMode();
     this.disposePickedFeatureSubscription = reaction(
       () => pickPointMode.pickedFeatures,
       async (pickedFeatures, reaction) => {

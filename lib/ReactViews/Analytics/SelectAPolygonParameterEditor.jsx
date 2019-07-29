@@ -1,5 +1,5 @@
 import createReactClass from "create-react-class";
-import { reaction } from "mobx";
+import { reaction, runInAction } from "mobx";
 import PropTypes from "prop-types";
 import React from "react";
 import createGuid from "terriajs-cesium/Source/Core/createGuid";
@@ -111,7 +111,9 @@ SelectAPolygonParameterEditor.selectOnMap = function(
                 geojson = {
                   id: feature.id,
                   type: "Feature",
-                  properties: feature.properties.getValue(terria.timelineClock),
+                  properties: feature.properties
+                    ? feature.properties.getValue(terria.timelineClock)
+                    : undefined,
                   geometry: {
                     coordinates: [[positions]],
                     type: "MultiPolygon"
@@ -133,9 +135,11 @@ SelectAPolygonParameterEditor.selectOnMap = function(
           return when.all(promises).then(() => catalogItems);
         })
         .then(function(catalogItems) {
-          parameter.value = catalogItems.map(item => item.readyData);
-          terria.mapInteractionModeStack.pop();
-          viewState.openAddData();
+          runInAction(() => {
+            parameter.value = catalogItems.map(item => item.readyData);
+            terria.mapInteractionModeStack.pop();
+            viewState.openAddData();
+          });
           if (pickedFeaturesSubscription) {
             pickedFeaturesSubscription.dispose();
           }

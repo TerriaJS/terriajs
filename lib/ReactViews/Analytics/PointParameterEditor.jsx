@@ -166,8 +166,10 @@ PointParameterEditor.getDisplayValue = function(value) {
  * @param {FunctionParameter} parameter Parameter.
  */
 PointParameterEditor.selectOnMap = function(terria, viewState, parameter) {
-  // Cancel any feature picking already in progress.
-  terria.pickedFeatures = undefined;
+  runInAction(() => {
+    // Cancel any feature picking already in progress.
+    terria.pickedFeatures = undefined;
+  });
 
   let pickedFeaturesSubscription;
   const pickPointMode = new MapInteractionMode({
