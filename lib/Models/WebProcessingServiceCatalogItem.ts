@@ -82,25 +82,14 @@ class WpsLoadableStratum extends LoadableStratum(
     const features = this.item.parameters
       .map(param => param.geoJsonFeature)
       .filter(isDefined);
-    const geoJsonItem = <GeoJsonCatalogItem>(
-      upsertModelFromJson(
-        CatalogMemberFactory,
-        this.item.terria,
-        this.item.uniqueId || "",
-        undefined,
-        CommonStrata.user,
-        {
-          id: createGuid(),
-          type: "geojson",
-          name: this.name,
-          geoJsonData: {
-            type: "FeatureCollection",
-            features,
-            totalFeatures: features.length
-          }
-        }
-      )
-    );
+    const geoJsonItem = new GeoJsonCatalogItem(createGuid(), this.item.terria);
+    runInAction(() => {
+      geoJsonItem.setTrait(CommonStrata.user, "geoJsonData", {
+        type: "FeatureCollection",
+        features,
+        totalFeatures: features.length
+      });
+    });
     return geoJsonItem;
   }
 
