@@ -80,7 +80,9 @@ const FeatureInfoPanel = observer(
                   const featuresShownAtAll = pickedFeatures.features.filter(x =>
                     defined(determineCatalogItem(terria.workbench, x))
                   );
-                  let selectedFeature = featuresShownAtAll.filter(featureHasInfo)[0];
+                  let selectedFeature = featuresShownAtAll.filter(
+                    featureHasInfo
+                  )[0];
                   if (
                     !defined(selectedFeature) &&
                     featuresShownAtAll.length > 0
@@ -127,10 +129,13 @@ const FeatureInfoPanel = observer(
       });
 
       // give the close animation time to finish before unselecting, to avoid jumpiness
-      setTimeout(action(() => {
-        this.props.terria.pickedFeatures = undefined;
-        this.props.terria.selectedFeature = undefined;
-      }), 200);
+      setTimeout(
+        action(() => {
+          this.props.terria.pickedFeatures = undefined;
+          this.props.terria.selectedFeature = undefined;
+        }),
+        200
+      );
     },
 
     toggleCollapsed(event) {

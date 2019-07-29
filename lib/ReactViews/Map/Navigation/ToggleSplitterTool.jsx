@@ -18,7 +18,7 @@ const ToggleSplitterTool = observer(
 
     handleClick() {
       const terria = this.props.terria;
-      runInAction(() => terria.showSplitter = !terria.showSplitter);
+      runInAction(() => (terria.showSplitter = !terria.showSplitter));
     },
 
     render() {
