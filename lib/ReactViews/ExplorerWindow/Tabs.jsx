@@ -9,6 +9,7 @@ import defined from "terriajs-cesium/Source/Core/defined";
 
 import Styles from "./tabs.scss";
 import { observer } from "mobx-react";
+import { runInAction } from "mobx";
 
 const Tabs = observer(
   createReactClass({
@@ -81,22 +82,24 @@ const Tabs = observer(
     },
 
     activateTab(category, idInCategory) {
-      this.props.viewState.activeTabCategory = category;
-      if (this.props.terria.configParameters.tabbedCatalog) {
-        this.props.viewState.activeTabIdInCategory = idInCategory;
-        if (category === "data-catalog") {
-          const member = this.props.terria.catalog.group.memberModels.filter(
-            m => m.name === idInCategory
-          )[0];
-          // If member was found and member can be opened, open it (causes CkanCatalogGroups to fetch etc.)
-          if (defined(member)) {
-            if (member.toggleOpen) {
-              member.isOpen = true;
+      runInAction(() => {
+        this.props.viewState.activeTabCategory = category;
+        if (this.props.terria.configParameters.tabbedCatalog) {
+          this.props.viewState.activeTabIdInCategory = idInCategory;
+          if (category === "data-catalog") {
+            const member = this.props.terria.catalog.group.memberModels.filter(
+              m => m.name === idInCategory
+            )[0];
+            // If member was found and member can be opened, open it (causes CkanCatalogGroups to fetch etc.)
+            if (defined(member)) {
+              if (member.toggleOpen) {
+                member.isOpen = true;
+              }
+              this.props.viewState.previewedItem = member;
             }
-            this.props.viewState.previewedItem = member;
           }
         }
-      }
+      });
     },
 
     render() {

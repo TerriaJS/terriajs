@@ -12,6 +12,7 @@ import TerriaViewer from "../../ViewModels/TerriaViewer";
 import Terria from "../../Models/Terria";
 // eslint-disable-next-line no-unused-vars
 import ViewState from "../../ReactViewModels/ViewState";
+import { runInAction } from "mobx";
 
 /**
  * @typedef {object} Props
@@ -50,7 +51,9 @@ class TerriaViewerWrapper extends React.Component {
     //     }
     // });
     if (this.props.terria.baseMaps.length > 0) {
-      this.props.terria.mainViewer.baseMap = this.props.terria.baseMaps[0].mappable;
+      runInAction(() => {
+        this.props.terria.mainViewer.baseMap = this.props.terria.baseMaps[0].mappable;
+      });
     }
   }
 

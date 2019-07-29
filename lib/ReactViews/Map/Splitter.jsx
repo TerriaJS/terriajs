@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import Icon from "../Icon";
 import Styles from "./splitter.scss";
 import { observer } from "mobx-react";
+import { runInAction } from "mobx";
 
 // Feature detect support for passive: true in event subscriptions.
 // See https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener#Safely_detecting_option_support
@@ -53,7 +54,9 @@ const Splitter = observer(
     forceRefresh() {
       const smallChange =
         this.props.terria.splitPosition < 0.5 ? 0.0001 : -0.0001; // Make sure never <0 or >1.
-      this.props.terria.splitPosition += smallChange;
+      runInAction(() => {
+        this.props.terria.splitPosition += smallChange;
+      });
     },
 
     startDrag(event) {
@@ -128,8 +131,10 @@ const Splitter = observer(
       splitFractionX = Math.min(maxX, Math.max(minX, splitFractionX));
       splitFractionY = Math.min(maxY, Math.max(minY, splitFractionY));
 
-      this.props.terria.splitPosition = splitFractionX;
-      this.props.terria.splitPositionVertical = splitFractionY;
+      runInAction(() => {
+        this.props.terria.splitPosition = splitFractionX;
+        this.props.terria.splitPositionVertical = splitFractionY;
+      });
 
       event.preventDefault();
       event.stopPropagation();

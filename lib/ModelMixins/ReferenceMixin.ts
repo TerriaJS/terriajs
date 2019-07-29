@@ -28,12 +28,18 @@ function ReferenceMixin<T extends Constructor<Model<RequiredTraits>>>(Base: T) {
     private _referenceLoader = new AsyncLoader(() => {
       const previousTarget = untracked(() => this._dereferenced);
       return this.forceLoadReference(previousTarget).then(target => {
-        if (target && target.uniqueId !== this.uniqueId) {
+        if (
+          target &&
+          target.uniqueId !== undefined &&
+          target.uniqueId !== this.uniqueId
+        ) {
           throw new DeveloperError(
             "The model returned by `forceLoadReference` must have the same `id` as the `ReferenceMixin` itself."
           );
         }
-        this._dereferenced = target;
+        runInAction(() => {
+          this._dereferenced = target;
+        });
       });
     });
 

@@ -14,6 +14,7 @@ const Ray = require("terriajs-cesium/Source/Core/Ray");
 const Transforms = require("terriajs-cesium/Source/Core/Transforms");
 import Icon from "../../Icon.jsx";
 import Styles from "./compass.scss";
+import { runInAction } from "mobx";
 
 // the compass on map
 const Compass = createReactClass({
@@ -30,10 +31,12 @@ const Compass = createReactClass({
   },
 
   componentDidMount() {
-    this._unsubscribeFromViewerChange = this.props.terria.mainViewer.afterViewerChanged.addEventListener(
-      () => viewerChange(this)
-    );
-    viewerChange(this);
+    runInAction(() => {
+      this._unsubscribeFromViewerChange = this.props.terria.mainViewer.afterViewerChanged.addEventListener(
+        () => viewerChange(this)
+      );
+      viewerChange(this);
+    });
   },
 
   componentWillUnmount() {

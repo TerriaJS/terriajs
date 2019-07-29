@@ -8,6 +8,7 @@ import PropTypes from "prop-types";
 import NotificationWindow from "./NotificationWindow";
 import triggerResize from "../../Core/triggerResize";
 import { observer } from "mobx-react";
+import { runInAction } from "mobx";
 
 const Notification = observer(
   createReactClass({
@@ -37,7 +38,9 @@ const Notification = observer(
     },
 
     close(notification) {
-      this.props.viewState.notifications.splice(0, 1);
+      runInAction(() => {
+        this.props.viewState.notifications.splice(0, 1);
+      });
 
       // Force refresh once the notification is dispached if .hideUi is set since once all the .hideUi's
       // have been dispatched the UI will no longer be suppressed causing a change in the view state.

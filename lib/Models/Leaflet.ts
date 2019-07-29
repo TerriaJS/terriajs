@@ -1,5 +1,5 @@
 import L from "leaflet";
-import { autorun } from "mobx";
+import { autorun, action } from "mobx";
 import { createTransformer } from "mobx-utils";
 import cesiumCancelAnimationFrame from "terriajs-cesium/Source/Core/cancelAnimationFrame";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
@@ -627,15 +627,17 @@ export default class Leaflet extends GlobeOrMap {
           const layers = this.getImageryLayersForItem(item);
           const splitDirection = item.splitDirection;
 
-          layers.forEach(layer => {
-            if (showSplitter) {
-              layer.splitDirection = splitDirection;
-              layer.splitPosition = splitPosition;
-            } else {
-              layer.splitDirection = ImagerySplitDirection.NONE;
-              layer.splitPosition = splitPosition;
-            }
-          });
+          layers.forEach(
+            action((layer: CesiumTileLayer) => {
+              if (showSplitter) {
+                layer.splitDirection = splitDirection;
+                layer.splitPosition = splitPosition;
+              } else {
+                layer.splitDirection = ImagerySplitDirection.NONE;
+                layer.splitPosition = splitPosition;
+              }
+            })
+          );
         }
       });
       this.notifyRepaintRequired();

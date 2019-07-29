@@ -1,4 +1,4 @@
-import { autorun, computed } from "mobx";
+import { autorun, computed, runInAction } from "mobx";
 import { createTransformer } from "mobx-utils";
 import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
@@ -770,7 +770,9 @@ export default class Cesium extends GlobeOrMap {
         mapInteractionModeStack.length - 1
       ].pickedFeatures = result;
     } else {
-      this.terria.pickedFeatures = result;
+      runInAction(() => {
+        this.terria.pickedFeatures = result;
+      });
     }
   }
 
@@ -920,63 +922,66 @@ export default class Cesium extends GlobeOrMap {
 
     result.allFeaturesAvailablePromise = Promise.all(featurePromises)
       .then(allFeatures => {
-        result.isLoading = false;
-
-        result.features = allFeatures.reduce(
-          (resultFeaturesSoFar, imageryLayerFeatures, i) => {
-            if (!isDefined(imageryLayerFeatures)) {
-              return resultFeaturesSoFar;
-            }
-
-            let features = imageryLayerFeatures.map(feature => {
-              if (isDefined(imageryLayers)) {
-                (<any>feature).imageryLayer = imageryLayers[i];
+        runInAction(() => {
+          result.isLoading = false;
+          result.features = allFeatures.reduce(
+            (resultFeaturesSoFar, imageryLayerFeatures, i) => {
+              if (!isDefined(imageryLayerFeatures)) {
+                return resultFeaturesSoFar;
               }
 
-              if (!isDefined(feature.position)) {
-                feature.position = Ellipsoid.WGS84.cartesianToCartographic(
-                  pickPosition
-                );
-              }
+              let features = imageryLayerFeatures.map(feature => {
+                if (isDefined(imageryLayers)) {
+                  (<any>feature).imageryLayer = imageryLayers[i];
+                }
 
-              // If the picked feature does not have a height, use the height of the picked location.
-              // This at least avoids major parallax effects on the selection indicator.
-              if (
-                !isDefined(feature.position.height) ||
-                feature.position.height === 0.0
-              ) {
-                feature.position.height = defaultHeight;
-              }
-              return this._createFeatureFromImageryLayerFeature(feature);
-            });
+                if (!isDefined(feature.position)) {
+                  feature.position = Ellipsoid.WGS84.cartesianToCartographic(
+                    pickPosition
+                  );
+                }
 
-            if (this.terria.showSplitter && isDefined(result.pickPosition)) {
-              // Select only features from the same side or both sides of the splitter
-              const screenPosition = this._computePositionOnScreen(
-                result.pickPosition
-              );
-              const pickedSide = this._getSplitterSideForScreenPosition(
-                screenPosition
-              );
-
-              features = features.filter(feature => {
-                const splitDirection = (<any>feature).imageryLayer
-                  .splitDirection;
-                return (
-                  splitDirection === pickedSide ||
-                  splitDirection === ImagerySplitDirection.NONE
-                );
+                // If the picked feature does not have a height, use the height of the picked location.
+                // This at least avoids major parallax effects on the selection indicator.
+                if (
+                  !isDefined(feature.position.height) ||
+                  feature.position.height === 0.0
+                ) {
+                  feature.position.height = defaultHeight;
+                }
+                return this._createFeatureFromImageryLayerFeature(feature);
               });
-            }
 
-            return resultFeaturesSoFar.concat(features);
-          },
-          defaultValue(existingFeatures, [])
-        );
+              if (this.terria.showSplitter && isDefined(result.pickPosition)) {
+                // Select only features from the same side or both sides of the splitter
+                const screenPosition = this._computePositionOnScreen(
+                  result.pickPosition
+                );
+                const pickedSide = this._getSplitterSideForScreenPosition(
+                  screenPosition
+                );
+
+                features = features.filter(feature => {
+                  const splitDirection = (<any>feature).imageryLayer
+                    .splitDirection;
+                  return (
+                    splitDirection === pickedSide ||
+                    splitDirection === ImagerySplitDirection.NONE
+                  );
+                });
+              }
+
+              return resultFeaturesSoFar.concat(features);
+            },
+            defaultValue(existingFeatures, [])
+          );
+        });
       })
       .catch(() => {
-        result.isLoading = false;
-        result.error = "An unknown error occurred while picking features.";
+        runInAction(() => {
+          result.isLoading = false;
+          result.error = "An unknown error occurred while picking features.";
+        });
       });
 
     return result;

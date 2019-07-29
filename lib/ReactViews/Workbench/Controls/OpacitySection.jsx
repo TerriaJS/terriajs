@@ -9,6 +9,7 @@ import CommonStrata from "../../../Models/CommonStrata";
 import hasTraits from "../../../Models/hasTraits";
 import RasterLayerTraits from "../../../Traits/RasterLayerTraits";
 import Styles from "./opacity-section.scss";
+import { runInAction } from "mobx";
 
 const OpacitySection = observer(
   createReactClass({
@@ -21,7 +22,9 @@ const OpacitySection = observer(
     changeOpacity(value) {
       const item = this.props.item;
       if (hasTraits(item, RasterLayerTraits, "opacity")) {
-        item.setTrait(CommonStrata.user, "opacity", value / 100.0);
+        runInAction(() => {
+          item.setTrait(CommonStrata.user, "opacity", value / 100.0);
+        });
       }
     },
 

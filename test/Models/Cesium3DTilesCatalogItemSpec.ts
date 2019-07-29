@@ -1,5 +1,7 @@
 import { reaction, runInAction } from "mobx";
+import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import IonResource from "terriajs-cesium/Source/Core/IonResource";
+import Cesium3DTileFeature from "terriajs-cesium/Source/Scene/Cesium3DTileFeature";
 import Cesium3DTileset from "terriajs-cesium/Source/Scene/Cesium3DTileset";
 import Cesium3DTileStyle from "terriajs-cesium/Source/Scene/Cesium3DTileStyle";
 import ShadowMode from "terriajs-cesium/Source/Scene/ShadowMode";
@@ -7,8 +9,8 @@ import Cesium3DTilesCatalogItem from "../../lib/Models/Cesium3DTilesCatalogItem"
 import createStratumInstance from "../../lib/Models/createStratumInstance";
 import Terria from "../../lib/Models/Terria";
 import {
-  OptionsTraits,
-  FilterTraits
+  FilterTraits,
+  OptionsTraits
 } from "../../lib/Traits/Cesium3DCatalogItemTraits";
 
 describe("Cesium3DTilesCatalogItemSpec", function() {
@@ -193,6 +195,16 @@ describe("Cesium3DTilesCatalogItemSpec", function() {
         });
       });
     });
+  });
+
+  it("correctly builds `Feature` from picked Cesium3DTileFeature", function() {
+    const picked = new Cesium3DTileFeature();
+    spyOn(picked, "getPropertyNames").and.returnValue([]);
+    const feature = item.buildFeatureFromPickResult(Cartesian2.ZERO, picked);
+    expect(feature).toBeDefined();
+    if (feature) {
+      expect(feature._cesium3DTileFeature).toBe(picked);
+    }
   });
 });
 
