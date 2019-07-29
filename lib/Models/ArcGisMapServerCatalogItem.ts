@@ -286,16 +286,13 @@ export default class ArcGisMapServerCatalogItem
     return this.loadMetadata();
   }
 
-  @computed get mapItems() {
-    if (!isDefined(this.url)) {
-      return [];
-    }
-
+  @computed get imageryProvider() {
     const stratum = <MapServerStratum>(
       this.strata.get(MapServerStratum.stratumName)
     );
-    if (!isDefined(stratum)) {
-      return [];
+
+    if (!isDefined(this.url) || !isDefined(stratum)) {
+      return;
     }
 
     const maximumLevel = maximumScaleToLevel(this.maximumScale);
@@ -347,8 +344,20 @@ export default class ArcGisMapServerCatalogItem
         return realRequestImage.call(imageryProvider, x, y, level);
       };
     }
+    return imageryProvider;
+  }
 
-    return [{ alpha: this.opacity, show: this.show, imageryProvider }];
+  @computed get mapItems() {
+    if (isDefined(this.imageryProvider)) {
+      return [
+        {
+          alpha: this.opacity,
+          show: this.show,
+          imageryProvider: this.imageryProvider
+        }
+      ];
+    }
+    return [];
   }
 
   @computed get layers() {
