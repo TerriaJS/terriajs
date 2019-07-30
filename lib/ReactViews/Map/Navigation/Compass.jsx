@@ -31,12 +31,10 @@ const Compass = createReactClass({
   },
 
   componentDidMount() {
-    runInAction(() => {
-      this._unsubscribeFromViewerChange = this.props.terria.mainViewer.afterViewerChanged.addEventListener(
-        () => viewerChange(this)
-      );
-      viewerChange(this);
-    });
+    this._unsubscribeFromViewerChange = this.props.terria.mainViewer.afterViewerChanged.addEventListener(
+      () => viewerChange(this)
+    );
+    viewerChange(this);
   },
 
   componentWillUnmount() {
@@ -454,26 +452,30 @@ function orbit(viewModel, compassElement, cursorVector) {
 }
 
 function viewerChange(viewModel) {
-  if (defined(viewModel.props.terria.cesium)) {
-    if (viewModel._unsubscribeFromPostRender) {
-      viewModel._unsubscribeFromPostRender();
-      viewModel._unsubscribeFromPostRender = undefined;
-    }
-
-    viewModel._unsubscribeFromPostRender = viewModel.props.terria.cesium.scene.postRender.addEventListener(
-      function() {
-        viewModel.setState({
-          heading: viewModel.props.terria.cesium.scene.camera.heading
-        });
+  runInAction(() => {
+    if (defined(viewModel.props.terria.cesium)) {
+      if (viewModel._unsubscribeFromPostRender) {
+        viewModel._unsubscribeFromPostRender();
+        viewModel._unsubscribeFromPostRender = undefined;
       }
-    );
-  } else {
-    if (viewModel._unsubscribeFromPostRender) {
-      viewModel._unsubscribeFromPostRender();
-      viewModel._unsubscribeFromPostRender = undefined;
+
+      viewModel._unsubscribeFromPostRender = viewModel.props.terria.cesium.scene.postRender.addEventListener(
+        function() {
+          runInAction(() => {
+            viewModel.setState({
+              heading: viewModel.props.terria.cesium.scene.camera.heading
+            });
+          });
+        }
+      );
+    } else {
+      if (viewModel._unsubscribeFromPostRender) {
+        viewModel._unsubscribeFromPostRender();
+        viewModel._unsubscribeFromPostRender = undefined;
+      }
+      viewModel.showCompass = false;
     }
-    viewModel.showCompass = false;
-  }
+  });
 }
 
 module.exports = Compass;
