@@ -1,6 +1,6 @@
 import Compass from "./Navigation/Compass";
 import createReactClass from "create-react-class";
-// import MyLocation from './Navigation/MyLocation';
+import MyLocation from "./Navigation/MyLocation";
 import ObserveModelMixin from "../ObserveModelMixin";
 import PropTypes from "prop-types";
 import React from "react";
@@ -52,11 +52,11 @@ const MapNavigation = createReactClass({
           </div>
         </Medium>
         <div className={Styles.controls}>
-          {/* <If condition={!this.props.terria.configParameters.disableMyLocation}>
-                    <div className={Styles.control}>
-                        <MyLocation terria={this.props.terria}/>
-                    </div>
-                </If> */}
+          <If condition={!this.props.terria.configParameters.disableMyLocation}>
+            <div className={Styles.control}>
+              <MyLocation terria={this.props.terria} />
+            </div>
+          </If>
           <If condition={!this.props.terria.configParameters.disableSplitter}>
             <div className={Styles.control}>
               <ToggleSplitterTool terria={this.props.terria} />

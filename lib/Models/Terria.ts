@@ -67,6 +67,7 @@ interface ConfigParameters {
   useCesiumIonBingImagery?: boolean;
   bingMapsKey?: string;
   brandBarElements?: string[];
+  disableMyLocation?: boolean;
 }
 
 interface StartOptions {
