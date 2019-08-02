@@ -1,46 +1,11 @@
-import mixTraits from "../Traits/mixTraits";
-import CatalogMemberTraits from "../Traits/CatalogMemberTraits";
-import Mappable from "./Mappable";
-import ModelTraits from "../Traits/ModelTraits";
-import UrlTraits from "../Traits/UrlTraits";
-import primitiveArrayTrait from "../Traits/primitiveArrayTrait";
-import primitiveTrait from "../Traits/primitiveTrait";
-import CreateModel from "./CreateModel";
-import UrlMixin from "../ModelMixins/UrlMixin";
-import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
-import MappableTraits from "../Traits/MappableTraits";
 import { computed } from "mobx";
-import IonResource from "terriajs-cesium/Source/Core/IonResource";
 import CesiumTerrainProvider from "terriajs-cesium/Source/Core/CesiumTerrainProvider";
-
-export class CesiumTerrainCatalogItemTraits extends mixTraits(
-  UrlTraits,
-  MappableTraits,
-  CatalogMemberTraits
-) {
-  @primitiveTrait({
-    name: "Ion Asset ID",
-    type: "number",
-    description: "The ID of the Cesium Ion Asset. If this is set url is ignored"
-  })
-  ionAssetId?: number;
-
-  @primitiveTrait({
-    name: "Ion Access Token",
-    type: "string",
-    description:
-      "The Cesium Ion access token to use to access the terrain. If not specified, the token"
-  })
-  ionAccessToken?: string;
-
-  @primitiveTrait({
-    name: "Ion Server",
-    type: "string",
-    description:
-      "the Cesium Ion access token to use to access the terrain. If not specified, the default Ion server, `https://api.cesium.com/`"
-  })
-  ionServer?: string;
-}
+import IonResource from "terriajs-cesium/Source/Core/IonResource";
+import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
+import UrlMixin from "../ModelMixins/UrlMixin";
+import CesiumTerrainCatalogItemTraits from "../Traits/CesiumTerrainCatalogItemTraits";
+import CreateModel from "./CreateModel";
+import Mappable from "./Mappable";
 
 export default class CesiumTerrainCatalogItem
   extends UrlMixin(
