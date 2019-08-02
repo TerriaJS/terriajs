@@ -48,7 +48,12 @@ import CameraView from "./CameraView";
 import Feature from "./Feature";
 import GlobeOrMap from "./GlobeOrMap";
 import hasTraits from "./hasTraits";
-import Mappable, { ImageryParts, isCesium3DTileset, isTerrainProvider, MapItem } from "./Mappable";
+import Mappable, {
+  ImageryParts,
+  isCesium3DTileset,
+  isTerrainProvider,
+  MapItem
+} from "./Mappable";
 import Terria from "./Terria";
 
 // Intermediary
