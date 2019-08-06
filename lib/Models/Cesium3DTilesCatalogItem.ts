@@ -9,6 +9,7 @@ import Cesium3DTileStyle from "terriajs-cesium/Source/Scene/Cesium3DTileStyle";
 import ShadowMode from "terriajs-cesium/Source/Scene/ShadowMode";
 import isDefined from "../Core/isDefined";
 import makeRealPromise from "../Core/makeRealPromise";
+import runLater from "../Core/runLater";
 import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import FeatureInfoMixin from "../ModelMixins/FeatureInfoMixin";
@@ -18,6 +19,7 @@ import Cesium3DTilesCatalogItemTraits, {
 import CreateModel from "./CreateModel";
 import Feature from "./Feature";
 import Mappable from "./Mappable";
+import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
 import raiseErrorToUser from "./raiseErrorToUser";
 
 class ObservableCesium3DTileset extends Cesium3DTileset {
@@ -25,9 +27,14 @@ class ObservableCesium3DTileset extends Cesium3DTileset {
   @observable destroyed = false;
 
   destroy() {
-    runInAction(() => {
-      super.destroy();
-      this.destroyed = true;
+    super.destroy();
+    // TODO: we are running later to prevent this
+    // modification from happening in some computed up the call chain.
+    // Figure out why that is happening and fix it.
+    runLater(() => {
+      runInAction(() => {
+        this.destroyed = true;
+      });
     });
   }
 }
@@ -57,24 +64,35 @@ export default class Cesium3DTilesCatalogItem
   }
 
   protected get loadMapItemsPromise() {
-    return (async () => {
-      const tileset = this.createTileset(
-        this.url,
-        this.ionAssetId,
-        this.ionAccessToken,
-        this.ionServer,
-        this.optionsObj
-      );
+    this.loadTileset();
+    return Promise.resolve();
+  }
 
-      if (isDefined(tileset) && !tileset.destroyed) {
-        this.tileset = tileset;
-      }
-    })();
+  private loadTileset() {
+    if (!isDefined(this.url)) {
+      return;
+    }
+
+    const tileset = this.createNewTileset(
+      proxyCatalogItemUrl(this, this.url),
+      this.ionAssetId,
+      this.ionAccessToken,
+      this.ionServer,
+      this.optionsObj
+    );
+
+    if (isDefined(tileset) && !tileset.destroyed) {
+      this.tileset = tileset;
+    }
   }
 
   @computed get mapItems() {
     if (this.isLoadingMapItems || !isDefined(this.tileset)) {
       return [];
+    }
+
+    if (this.tileset.destroyed) {
+      this.loadTileset();
     }
 
     this.tileset.style = this.cesiumTileStyle;
@@ -93,8 +111,8 @@ export default class Cesium3DTilesCatalogItem
     return options;
   }
 
-  private createTileset(
-    url: string | undefined,
+  private createNewTileset(
+    url: string,
     ionAssetId: number | undefined,
     ionAccessToken: string | undefined,
     ionServer: string | undefined,
