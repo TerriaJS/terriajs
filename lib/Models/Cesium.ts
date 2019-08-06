@@ -126,7 +126,6 @@ export default class Cesium extends GlobeOrMap {
     const options = {
       dataSources: this.dataSources,
       clock: this.terria.timelineClock,
-      terrainProvider: this._terrainProvider,
       imageryProvider: new SingleTileImageryProvider({ url: img }),
       scene3DOnly: true,
       shadows: true
@@ -140,7 +139,6 @@ export default class Cesium extends GlobeOrMap {
         }
       : undefined;
 
-    //create CesiumViewer
     this.cesiumWidget = new CesiumWidget(
       container,
       Object.assign({}, options, firefoxBugOptions)
@@ -696,6 +694,14 @@ export default class Cesium extends GlobeOrMap {
     );
   }
 
+  @computed
+  private get _firstMapItemTerrainProviders():
+    | Cesium.TerrainProvider
+    | undefined {
+    // Get the top map item that is a terrain provider, if any are
+    return this._allMapItems.find(isTerrainProvider);
+  }
+
   // It's nice to co-locate creation of Ion TerrainProvider and Credit, but not necessary
   @computed
   private get _terrainWithCredits(): {
@@ -706,9 +712,8 @@ export default class Cesium extends GlobeOrMap {
       return { terrain: new EllipsoidTerrainProvider() };
     }
     // Check if there's a TerrainProvider in map items and use that if there is
-    const firstTerrianProvider = this._allMapItems.find(isTerrainProvider);
-    if (firstTerrianProvider) {
-      return { terrain: firstTerrianProvider };
+    if (this._firstMapItemTerrainProviders) {
+      return { terrain: this._firstMapItemTerrainProviders };
     } else if (this.terria.configParameters.useCesiumIonTerrain) {
       const logo = require("terriajs-cesium/Source/Assets/Images/ion-credit.png");
       const ionCredit = new Credit(
