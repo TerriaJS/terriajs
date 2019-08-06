@@ -147,7 +147,6 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
     }
 
     this._dataSource.entities.resumeEvents();
-    this.terria.currentViewer.notifyRepaintRequired();
 
     return this._dataSource;
   }
@@ -254,7 +253,10 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
           );
       })
       .then(data => {
-        runInAction(() => (this.vehicleData = data));
+        runInAction(() => {
+          this.vehicleData = data;
+          this.terria.currentViewer.notifyRepaintRequired();
+        });
       })
       .catch((e: Error) => {
         throw new TerriaError({

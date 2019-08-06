@@ -1,4 +1,4 @@
-import { autorun, computed, runInAction } from "mobx";
+import { autorun, computed } from "mobx";
 import { createTransformer } from "mobx-utils";
 import BoundingSphere from "terriajs-cesium/Source/Core/BoundingSphere";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
@@ -48,12 +48,7 @@ import CameraView from "./CameraView";
 import Feature from "./Feature";
 import GlobeOrMap from "./GlobeOrMap";
 import hasTraits from "./hasTraits";
-import Mappable, {
-  ImageryParts,
-  isCesium3DTileset,
-  isTerrainProvider,
-  MapItem
-} from "./Mappable";
+import Mappable, { ImageryParts, isCesium3DTileset, isTerrainProvider, MapItem } from "./Mappable";
 import Terria from "./Terria";
 
 // Intermediary
@@ -781,9 +776,7 @@ export default class Cesium extends GlobeOrMap {
     //     mapInteractionModeStack.length - 1
     //   ].pickedFeatures = result;
     // } else {
-    runInAction(() => {
-      this.terria.pickedFeatures = result;
-    });
+    this.terria.pickedFeatures = result;
     // }
   }
 
@@ -933,66 +926,63 @@ export default class Cesium extends GlobeOrMap {
 
     result.allFeaturesAvailablePromise = Promise.all(featurePromises)
       .then(allFeatures => {
-        runInAction(() => {
-          result.isLoading = false;
-          result.features = allFeatures.reduce(
-            (resultFeaturesSoFar, imageryLayerFeatures, i) => {
-              if (!isDefined(imageryLayerFeatures)) {
-                return resultFeaturesSoFar;
+        result.isLoading = false;
+
+        result.features = allFeatures.reduce(
+          (resultFeaturesSoFar, imageryLayerFeatures, i) => {
+            if (!isDefined(imageryLayerFeatures)) {
+              return resultFeaturesSoFar;
+            }
+
+            let features = imageryLayerFeatures.map(feature => {
+              if (isDefined(imageryLayers)) {
+                (<any>feature).imageryLayer = imageryLayers[i];
               }
 
-              let features = imageryLayerFeatures.map(feature => {
-                if (isDefined(imageryLayers)) {
-                  (<any>feature).imageryLayer = imageryLayers[i];
-                }
+              if (!isDefined(feature.position)) {
+                feature.position = Ellipsoid.WGS84.cartesianToCartographic(
+                  pickPosition
+                );
+              }
 
-                if (!isDefined(feature.position)) {
-                  feature.position = Ellipsoid.WGS84.cartesianToCartographic(
-                    pickPosition
-                  );
-                }
+              // If the picked feature does not have a height, use the height of the picked location.
+              // This at least avoids major parallax effects on the selection indicator.
+              if (
+                !isDefined(feature.position.height) ||
+                feature.position.height === 0.0
+              ) {
+                feature.position.height = defaultHeight;
+              }
+              return this._createFeatureFromImageryLayerFeature(feature);
+            });
 
-                // If the picked feature does not have a height, use the height of the picked location.
-                // This at least avoids major parallax effects on the selection indicator.
-                if (
-                  !isDefined(feature.position.height) ||
-                  feature.position.height === 0.0
-                ) {
-                  feature.position.height = defaultHeight;
-                }
-                return this._createFeatureFromImageryLayerFeature(feature);
+            if (this.terria.showSplitter && isDefined(result.pickPosition)) {
+              // Select only features from the same side or both sides of the splitter
+              const screenPosition = this._computePositionOnScreen(
+                result.pickPosition
+              );
+              const pickedSide = this._getSplitterSideForScreenPosition(
+                screenPosition
+              );
+
+              features = features.filter(feature => {
+                const splitDirection = (<any>feature).imageryLayer
+                  .splitDirection;
+                return (
+                  splitDirection === pickedSide ||
+                  splitDirection === ImagerySplitDirection.NONE
+                );
               });
+            }
 
-              if (this.terria.showSplitter && isDefined(result.pickPosition)) {
-                // Select only features from the same side or both sides of the splitter
-                const screenPosition = this._computePositionOnScreen(
-                  result.pickPosition
-                );
-                const pickedSide = this._getSplitterSideForScreenPosition(
-                  screenPosition
-                );
-
-                features = features.filter(feature => {
-                  const splitDirection = (<any>feature).imageryLayer
-                    .splitDirection;
-                  return (
-                    splitDirection === pickedSide ||
-                    splitDirection === ImagerySplitDirection.NONE
-                  );
-                });
-              }
-
-              return resultFeaturesSoFar.concat(features);
-            },
-            defaultValue(existingFeatures, [])
-          );
-        });
+            return resultFeaturesSoFar.concat(features);
+          },
+          defaultValue(existingFeatures, [])
+        );
       })
       .catch(() => {
-        runInAction(() => {
-          result.isLoading = false;
-          result.error = "An unknown error occurred while picking features.";
-        });
+        result.isLoading = false;
+        result.error = "An unknown error occurred while picking features.";
       });
 
     return result;
