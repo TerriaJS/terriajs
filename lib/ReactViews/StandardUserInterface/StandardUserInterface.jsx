@@ -31,6 +31,7 @@ import FullScreenButton from "./../SidePanel/FullScreenButton.jsx";
 import StoryPanel from "./../Story/StoryPanel.jsx";
 import StoryBuilder from "./../Story/StoryBuilder.jsx";
 
+import withRoutingTracker from "./withRoutingTracker";
 import { Small, Medium } from "../Generic/Responsive";
 import classNames from "classnames";
 import "inobounce";
@@ -345,7 +346,9 @@ const StandardUserInterface = createReactClass({
   }
 });
 
-const StandardUserInterfaceWithRouter = withRouter(StandardUserInterface);
+const StandardUserInterfaceWithRouter = withRouter(
+  withRoutingTracker(StandardUserInterface)
+);
 
 const AppRouting = props => (
   <Router>
