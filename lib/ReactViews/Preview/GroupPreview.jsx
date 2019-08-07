@@ -40,7 +40,7 @@ const GroupPreview = createReactClass({
           className={Styles.titleAndShareWrapper}
           ref={component => (this.refToMeasure = component)}
         >
-          <h3>{this.props.previewed.name}</h3>
+          <h1 className={Styles.heading}>{this.props.previewed.name}</h1>
           <div className={Styles.shareLinkWrapper}>
             <SharePanel
               catalogShare
@@ -60,7 +60,7 @@ const GroupPreview = createReactClass({
                 }
               >
                 <div>
-                  <h4 className={Styles.h4}>Description</h4>
+                  <h2 className={Styles.subHeading}>Description</h2>
                   {parseCustomMarkdownToReact(
                     this.props.previewed.description,
                     { catalogItem: this.props.previewed }
@@ -73,7 +73,7 @@ const GroupPreview = createReactClass({
 
             <If condition={metadataItem.dataCustodian}>
               <div>
-                <h4 className={Styles.h4}>Data Custodian</h4>
+                <h2 className={Styles.subHeading}>Data Custodian</h2>
                 {parseCustomMarkdownToReact(metadataItem.dataCustodian, {
                   catalogItem: metadataItem
                 })}

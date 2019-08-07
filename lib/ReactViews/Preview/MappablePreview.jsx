@@ -87,7 +87,7 @@ const MappablePreview = createReactClass({
             className={Styles.titleAndShareWrapper}
             ref={component => (this.refToMeasure = component)}
           >
-            <h3 className={Styles.h3}>{catalogItem.name}</h3>
+            <h1 className={Styles.heading}>{catalogItem.name}</h1>
             <If
               condition={
                 catalogItem.dataUrlType !== "local" &&

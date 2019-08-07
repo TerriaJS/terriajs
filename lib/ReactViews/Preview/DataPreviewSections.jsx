@@ -72,7 +72,7 @@ const DataPreviewSections = createReactClass({
         <For each="item" index="i" of={this.sortInfoSections(items)}>
           <If condition={item.content && item.content.length > 0}>
             <div key={i}>
-              <h4 className={Styles.h4}>{item.name}</h4>
+              <h2 className={Styles.subHeading}>{item.name}</h2>
               {parseCustomMarkdownToReact(item.content, {
                 catalogItem: metadataItem
               })}
