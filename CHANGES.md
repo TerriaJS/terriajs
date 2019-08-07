@@ -1,6 +1,28 @@
 Change Log
 ==========
 
+### v7.6.6
+
+* Basemaps are now loaded before being enabled & showed
+
+### v7.6.5
+
+* Add the filename to a workbench item from a drag'n'dropped file so it isn't undisplayed as 'Unnamed item'.
+* Fixed inability to share SOS items.
+* Added an option to the mobile menu to allow a story to be resumed after it is closed.
+* The "Introducing Data Stories" prompt now only needs to be dismissed once. Previously it would continue to appear on every load until you clicked the "Story" button.
+* Fixed a crash that could occur when the feature info panel has a chart but the selected feature has no chart data.
+* Fixed a bug where the feature info panel would show information on a vector tile region mapped dataset that had no match.
+
+### v7.6.4
+
+* Add scrollbar to dropdown boxes.
+* Add support for SDMX version 2.1 to existing `SdmxJsonCatalogItem`.
+* Add a warning when sharing a map describing datasets which will be missing.
+* Enable the story panel to be ordered to the front. 
+* Disable the autocomplete on the title field when adding a new scene to a story.
+* Fix SED codes for regionmapping
+
 ### v7.6.3
 
 * Fixed a bug with picking features that cross the anti-meridian in 2D mode .
@@ -24,6 +46,7 @@ Change Log
 ### v7.5.2
 
 * Upgraded to Cesium v1.58.1.
+* Charts are now shared in share & story links
 
 ### v7.5.1
 

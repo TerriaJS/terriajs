@@ -19,7 +19,7 @@
   }
 
   .top-element {
-    z-index: 99999;
+    z-index: 99999 !important;
     &:focus {
       outline: none;
     }
