@@ -69,7 +69,6 @@ const StandardUserInterface = createReactClass({
   /* eslint-disable-next-line camelcase */
   UNSAFE_componentWillMount() {
     const that = this;
-    // this.props.viewState.history = this.props.history;
     // only need to know on initial load
     this.dragOverListener = e => {
       if (

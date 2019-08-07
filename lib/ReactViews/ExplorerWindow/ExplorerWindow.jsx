@@ -39,16 +39,14 @@ const ExplorerWindow = createReactClass({
   /* eslint-disable-next-line camelcase */
   UNSAFE_componentWillMount() {
     this.props.viewState.explorerPanelAnimating = true;
-    const checkIncomingRoute = props => {
-      if (
-        (props.match && props.match.path === CATALOG_MEMBER_ROUTE) ||
-        props.match.path === CATALOG_ROUTE
-      ) {
-        this.props.viewState.explorerPanelIsVisible = true;
-        this.onVisibilityChange(true);
-      }
-    };
-    checkIncomingRoute(this.props);
+    const props = this.props;
+    if (
+      (props.match && props.match.path === CATALOG_MEMBER_ROUTE) ||
+      props.match.path === CATALOG_ROUTE
+    ) {
+      this.props.viewState.explorerPanelIsVisible = true;
+      this.onVisibilityChange(true);
+    }
 
     this._pickedFeaturesSubscription = ko
       .pureComputed(this.isVisible, this)
