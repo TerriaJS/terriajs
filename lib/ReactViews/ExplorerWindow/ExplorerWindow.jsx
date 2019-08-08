@@ -38,6 +38,7 @@ const ExplorerWindow = createReactClass({
 
   /* eslint-disable-next-line camelcase */
   UNSAFE_componentWillMount() {
+    this.props.viewState.matchFromExplorer = this.props.match;
     this.props.viewState.explorerPanelAnimating = true;
     const props = this.props;
     if (
@@ -64,6 +65,7 @@ const ExplorerWindow = createReactClass({
   },
 
   componentDidUpdate() {
+    this.props.viewState.matchFromExplorer = this.props.match;
     if (this.isVisible() && !this.state.visible) {
       this.onVisibilityChange(true);
     }

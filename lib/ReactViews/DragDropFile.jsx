@@ -2,9 +2,12 @@ import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
 import classNames from "classnames";
+import { withRouter } from "react-router-dom";
+import URI from "urijs";
 
 import ObserveModelMixin from "./ObserveModelMixin";
 import addUserFiles from "../Models/addUserFiles";
+import { CATALOG_ROUTE } from "../ReactViewModels/TerriaRouting.js";
 
 import Styles from "./drag-drop-file.scss";
 
@@ -14,6 +17,7 @@ const DragDropFile = createReactClass({
 
   propTypes: {
     terria: PropTypes.object,
+    history: PropTypes.object,
     viewState: PropTypes.object
   },
 
@@ -34,6 +38,10 @@ const DragDropFile = createReactClass({
         if (this.props.viewState.explorerPanelIsVisible) {
           this.props.viewState.viewCatalogMember(addedCatalogItems[0]);
           this.props.viewState.openUserData();
+          const pathToPush = `${CATALOG_ROUTE}${URI.encode(
+            addedCatalogItems[0].uniqueId
+          )}`;
+          this.props.history.push(pathToPush);
         } else {
           this.notifyUpload(addedCatalogItems);
         }
@@ -100,4 +108,4 @@ const DragDropFile = createReactClass({
   }
 });
 
-module.exports = DragDropFile;
+module.exports = withRouter(DragDropFile);
