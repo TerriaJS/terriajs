@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### v7.6.7
+
+* Fixed share disclaimer to warn only when user has added items that cannot be shared.
+
 ### v7.6.6
 
 * Basemaps are now loaded before being enabled & showed
