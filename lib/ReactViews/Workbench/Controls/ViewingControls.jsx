@@ -8,6 +8,9 @@ import PickedFeatures from "../../../Map/PickedFeatures";
 import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
+import URI from "urijs";
+import { CATALOG_ROUTE } from "../../../ReactViewModels/TerriaRouting.js";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import when from "terriajs-cesium/Source/ThirdParty/when";
 import classNames from "classnames";
@@ -149,14 +152,15 @@ const ViewingControls = createReactClass({
         </If>
         <If condition={item.showsInfo}>
           <li className={classNames(Styles.info, classList)}>
-            <button
+            <Link
+              to={`${CATALOG_ROUTE}${URI.encode(item.uniqueId)}`}
               type="button"
               onClick={this.previewItem}
               className={Styles.btn}
               title="info"
             >
               About This Data
-            </button>
+            </Link>
           </li>
           <span className={Styles.separator} />
         </If>

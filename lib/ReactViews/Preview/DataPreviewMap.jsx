@@ -330,6 +330,7 @@ const DataPreviewMap = createReactClass({
 
   initMap(previewedCatalogItem) {
     if (this.mapElement) {
+      this.terriaViewer && this.terriaViewer.destroy();
       this.terriaViewer = TerriaViewer.create(this.terriaPreview, {
         mapContainer: this.mapElement
       });
