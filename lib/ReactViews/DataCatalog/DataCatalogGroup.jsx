@@ -1,6 +1,7 @@
 import React from "react";
 import createReactClass from "create-react-class";
 import PropTypes from "prop-types";
+import { withRouter } from "react-router-dom";
 import URI from "urijs";
 import addedByUser from "../../Core/addedByUser";
 import removeUserAddedData from "../../Models/removeUserAddedData";
@@ -16,6 +17,7 @@ const DataCatalogGroup = createReactClass({
   propTypes: {
     group: PropTypes.object.isRequired,
     viewState: PropTypes.object.isRequired,
+    match: PropTypes.object.isRequired,
     /** Overrides whether to get the open state of the group from the group model or manage it internally */
     manageIsOpenLocally: PropTypes.bool,
     userData: PropTypes.bool,
@@ -35,6 +37,16 @@ const DataCatalogGroup = createReactClass({
       /** Only used if manageIsOpenLocally === true */
       isOpen: false
     };
+  },
+
+  componentDidMount() {
+    const group = this.props.group;
+    if (!group.isOpen) {
+      if (this.isSelected() && group.toggleOpen) {
+        // Toggle open when we initially navigate to a group
+        group.isOpen = true;
+      }
+    }
   },
 
   toggleStateIsOpen() {
@@ -68,9 +80,14 @@ const DataCatalogGroup = createReactClass({
   },
 
   isSelected() {
-    return addedByUser(this.props.group)
-      ? this.props.viewState.userDataPreviewedItem === this.props.group
-      : this.props.viewState.previewedItem === this.props.group;
+    const match = this.props.match || {};
+    const { params } = match;
+    return (
+      (addedByUser(this.props.group)
+        ? this.props.viewState.userDataPreviewedItem === this.props.group
+        : this.props.viewState.previewedItem === this.props.group) ||
+      URI.decode(params.catalogMemberId) === this.props.group.uniqueId
+    );
   },
 
   getNameOrPrettyUrl() {
@@ -125,4 +142,4 @@ const DataCatalogGroup = createReactClass({
   }
 });
 
-module.exports = DataCatalogGroup;
+module.exports = withRouter(DataCatalogGroup);
