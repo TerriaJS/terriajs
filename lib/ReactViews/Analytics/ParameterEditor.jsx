@@ -285,7 +285,10 @@ ParameterEditor.parameterTypeConverters = [
   },
   {
     id: "boolean-group",
-    parameterTypeToDiv: function BooleanParameterGroupToDiv(type, parameterEditor) {
+    parameterTypeToDiv: function BooleanParameterGroupToDiv(
+      type,
+      parameterEditor
+    ) {
       if (type === this.id) {
         return (
           <div>
