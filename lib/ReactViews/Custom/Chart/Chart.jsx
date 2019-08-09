@@ -94,6 +94,7 @@ const Chart = createReactClass({
     // The data id should be set to something unique, eg. its source id + column index.
     // If we're here, the data was downloaded from a single file or table, so the column index is unique by itself.
     const colors = this.props.colors;
+    if (pointArrays[0].length === 0) return [];
     return pointArrays.map(
       (points, index) =>
         new ChartData(points, {
@@ -187,6 +188,9 @@ const Chart = createReactClass({
       );
       promise.then(function(data) {
         chartParameters.data = data;
+        if (data[0].points.length === 0) {
+          chartParameters.data = [];
+        }
         ChartRenderer.update(element, chartParameters);
       });
     }
