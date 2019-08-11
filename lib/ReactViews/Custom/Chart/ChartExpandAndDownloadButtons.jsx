@@ -68,6 +68,17 @@ const ChartExpandAndDownloadButtons = createReactClass({
     if (!defined(this.props.sources) && !defined(this.props.tableStructure)) {
       return null;
     }
+
+    // This feels very smelly but it works for the aremi layer
+    // The things that are in x,y chartData points are very strange
+    let btnsShouldBeDisabled = false;
+    const f = this.props.feature;
+    this.props.catalogItem.chartData()[0].points.forEach(function(p) {
+      if (p.x === f._name && p.y === null) {
+        btnsShouldBeDisabled = true;
+      }
+    });
+
     // The downloads and download names default to the sources and source names if not defined.
     const downloads = this.props.downloads || this.props.sources;
     const downloadNames = this.props.downloadNames || this.props.sourceNames;
@@ -97,6 +108,7 @@ const ChartExpandAndDownloadButtons = createReactClass({
             selectOption={this.downloadDropdown}
             options={nameAndHrefObjects}
             theme={downloadDropdownTheme}
+            disabled={btnsShouldBeDisabled}
           >
             Download&nbsp;▾
           </Dropdown>
@@ -114,6 +126,7 @@ const ChartExpandAndDownloadButtons = createReactClass({
               selectOption={this.expandDropdown}
               options={sourceNameObjects}
               theme={dropdownTheme}
+              disabled={btnsShouldBeDisabled}
             >
               Expand&nbsp;▾
             </Dropdown>
@@ -139,6 +152,7 @@ const ChartExpandAndDownloadButtons = createReactClass({
           type="button"
           className={Styles.btnChartExpand}
           onClick={this.expandButton}
+          disabled={btnsShouldBeDisabled}
         >
           Expand
         </button>
