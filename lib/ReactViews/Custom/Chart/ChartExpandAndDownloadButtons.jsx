@@ -69,8 +69,13 @@ const ChartExpandAndDownloadButtons = createReactClass({
       return null;
     }
 
-    // This feels very smelly but it works for the aremi layer
-    // The things that are in x,y chartData points are very strange
+    // This feels very smelly but it works for the AREMI layers
+    // chartData for a catalogItem returns stuff like
+    // {x: "Butlers Gorge Power Station", y: 67.33}
+    // Occassionally y is null so we know we can't plot it
+    // {x: "Some Station", y: null}
+    // But there isn't a good way to get the chartData for a feature
+    // which is what we ideally need
     let btnsShouldBeDisabled = false;
     const f = this.props.feature;
     this.props.catalogItem.chartData()[0].points.forEach(function(p) {
