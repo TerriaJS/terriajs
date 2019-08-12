@@ -78,11 +78,14 @@ const ChartExpandAndDownloadButtons = createReactClass({
     // which is what we ideally need
     let btnsShouldBeDisabled = false;
     const f = this.props.feature;
-    this.props.catalogItem.chartData()[0].points.forEach(function(p) {
-      if (p.x === f._name && p.y === null) {
-        btnsShouldBeDisabled = true;
-      }
-    });
+    const chartData = this.props.catalogItem.chartData();
+    if (defined(chartData)) {
+      chartData[0].points.forEach(function(p) {
+        if (p.x === f._name && p.y === null) {
+          btnsShouldBeDisabled = true;
+        }
+      });
+    }
 
     // The downloads and download names default to the sources and source names if not defined.
     const downloads = this.props.downloads || this.props.sources;
