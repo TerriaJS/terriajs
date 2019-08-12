@@ -2,6 +2,7 @@ Change Log
 ==========
 
 ### v7.next
+
 * Added ability in TerriaJsonCatalogFunction to handle long requests via HTTP:202 Accepted.
     
     When attemtping to specify a Resource object with 
@@ -23,6 +24,14 @@ Change Log
     - multiple properties can be traversed.
     
     If the terria-json service returned a normal status 200 request, or any other status code besides 202, the 202 handling process is skipped, and the json response continues as normal. Requires modified version of cesium with fetchXHR.
+
+### v7.6.7
+
+* Fixed share disclaimer to warn only when user has added items that cannot be shared.
+
+### v7.6.6
+
+* Basemaps are now loaded before being enabled & showed
 
 ### v7.6.5
 
