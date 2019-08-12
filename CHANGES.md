@@ -1,7 +1,7 @@
 Change Log
 ==========
 
-### v7.next
+### v7.6.8
 
 * Added ability in TerriaJsonCatalogFunction to handle long requests via HTTP:202 Accepted.
     
