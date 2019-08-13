@@ -1,29 +1,13 @@
 Change Log
 ==========
 
+### v7.6.9
+
+* Automatically set `linkedWcsCoverage` on a WebMapServiceCatalogItem.
+
 ### v7.6.8
 
 * Added ability in TerriaJsonCatalogFunction to handle long requests via HTTP:202 Accepted.
-    
-    When attemtping to specify a Resource object with 
-    ```
-    retryAttempts = 0
-    retryAttemtps = 1
-    retryAttempts =-1
-    retryFunction = undefined
-    retryFunction = false
-    retryFunction = function(){return false;}
-    timeout = 600000
-    ```
-    or any combination of the above, it would either not make the request at all or keep makng a retry attempt every two minutes and discardng the current request, which restarts the process on the processing server as a new request.
-    
-    The terria-json entry in the catalogue init file can specify a acceptedUrl property to define where the url is in the XMLHTTPResopnse.
-    - a url returned in a header field can be specified as "headers.field",
-    - a url returned as plain text in a body can be specified as "response",
-    - a url returned as a property in the body can be specified as "response.property",
-    - multiple properties can be traversed.
-    
-    If the terria-json service returned a normal status 200 request, or any other status code besides 202, the 202 handling process is skipped, and the json response continues as normal. Requires modified version of cesium with fetchXHR.
 
 ### v7.6.7
 
