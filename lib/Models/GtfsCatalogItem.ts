@@ -239,18 +239,22 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
   protected get loadMapItemsPromise(): Promise<void> {
     const promise: Promise<void> = this.retrieveData()
       .then((data: FeedMessage) => {
-        if (data.entity === null || data.entity === undefined) {
-          return [];
-        }
+        // The following block is only "runInAction" to shush the "computedRequiresReaction: true" warnings >:C
+        // It shouldn't actually modify state.
+        return runInAction(() => {
+          if (data.entity === null || data.entity === undefined) {
+            return [];
+          }
 
-        return data.entity
-          .map((entity: FeedEntity) =>
-            this.convertFeedEntityToBillboardData(entity)
-          )
-          .filter(
-            (item: VehicleData) =>
-              item.position !== null && item.position !== undefined
-          );
+          return data.entity
+            .map((entity: FeedEntity) =>
+              this.convertFeedEntityToBillboardData(entity)
+            )
+            .filter(
+              (item: VehicleData) =>
+                item.position !== null && item.position !== undefined
+            );
+        });
       })
       .then(data => {
         runInAction(() => {
