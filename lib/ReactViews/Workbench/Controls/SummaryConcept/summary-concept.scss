@@ -1,5 +1,5 @@
-@import '~terriajs-variables';
-@import '../../../../Sass/common/mixins';
+@import "~terriajs-variables";
+@import "../../../../Sass/common/mixins";
 
 // summary-concept
 
@@ -31,7 +31,7 @@
   color: $text-light-dimmed;
   button {
     cursor: not-allowed;
-    svg{
+    svg {
       fill: $text-light-dimmed;
     }
   }
@@ -53,14 +53,14 @@
 }
 
 .children-list {
-  composes: children-list from '../concept-viewer.scss';
+  composes: children-list from "../concept-viewer.scss";
   li {
     clear: both;
   }
 }
 
 .btnClose {
-  composes: btn from '../../../../Sass/common/_buttons.scss';
+  composes: btn from "../../../../Sass/common/_buttons.scss";
   @extend %wrap;
   color: $text-light;
   font-size: $font-size-mid-mini;
@@ -68,32 +68,36 @@
   margin: 5px;
   font-weight: $font-weight-light;
   border: $border-style;
-  &:focus, &:hover {
+  &:focus,
+  &:hover {
     background: $modal-highlight;
   }
 }
 
 // Used by ActiveConcept.
 
-.btnRemove, .btnEdit {
-  composes: btn from '../../../../Sass/common/_buttons.scss';
+.btnRemove,
+.btnEdit {
+  composes: btn from "../../../../Sass/common/_buttons.scss";
   display: inline-block;
   padding: 8px 4px;
   svg {
     height: 16px;
     width: 16px;
     fill: $text-light;
-    &:focus, &:hover {
+    &:focus,
+    &:hover {
       fill: $modal-highlight;
     }
   }
 }
 
 .btnOpen {
-  composes: btn from '../../../../Sass/common/_buttons.scss';
+  composes: btn from "../../../../Sass/common/_buttons.scss";
   @extend %wrap;
   width: 100%;
-  &:focus, &:hover {
+  &:focus,
+  &:hover {
     color: $text-light;
     background: get-hover-color($overlay);
     &:before {
@@ -125,25 +129,26 @@
 
 .btnBack {
   position: absolute;
-  composes: btn from '../../../../Sass/common/_buttons.scss';
+  composes: btn from "../../../../Sass/common/_buttons.scss";
   margin-top: -2px;
   svg {
     height: 14px;
     width: 14px;
     margin: 5px;
     fill: $text-light;
-    &:focus, &:hover {
+    &:focus,
+    &:hover {
       background: $modal-highlight;
     }
   }
 }
 
 .items {
-  composes: items from '../concept-viewer.scss';
+  composes: items from "../concept-viewer.scss";
 }
 
 .list-reset {
-  composes: list-reset from '../../../../Sass/common/_base.scss';
+  composes: list-reset from "../../../../Sass/common/_base.scss";
 }
 
 // Used by AddButton.
@@ -164,8 +169,8 @@
     padding-left: 26px;
   }
   background: $color-primary;
-  &:focus, &:hover {
+  &:focus,
+  &:hover {
     background: get-hover-color($color-primary);
   }
-
 }

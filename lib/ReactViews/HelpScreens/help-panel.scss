@@ -1,5 +1,5 @@
-@import '~terriajs-variables';
-@import '../../Sass/common/_mixins';
+@import "~terriajs-variables";
+@import "../../Sass/common/_mixins";
 
 .share-panel {
   font-size: $font-size-mid-small;
@@ -11,10 +11,9 @@
 }
 
 .heading-label {
-
 }
 
-@include empty-module('link-wrapper');
+@include empty-module("link-wrapper");
 
 .link {
   @include link($overlay);
@@ -22,8 +21,8 @@
 
 .viewer-selector,
 .base-map-selector {
-  composes: clearfix from '../../Sass/common/_base.scss';
-  composes: list-reset from '../../Sass/common/_base.scss';
+  composes: clearfix from "../../Sass/common/_base.scss";
+  composes: list-reset from "../../Sass/common/_base.scss";
 
   margin: 0 -$padding-mini;
 }
@@ -33,8 +32,8 @@
 }
 
 .btn--viewer {
-  composes: btn from '../../Sass/common/_buttons.scss';
-  composes: btn-grey from '../../Sass/common/_buttons.scss';
+  composes: btn from "../../Sass/common/_buttons.scss";
+  composes: btn-grey from "../../Sass/common/_buttons.scss";
 
   font-size: 0.8rem !important;
   text-align: left !important;
@@ -47,7 +46,7 @@
 
   color: $text-light;
 
-  &.is-active{
+  &.is-active {
     border: 1px solid rgba(255, 255, 255, 0.5);
   }
 }
@@ -58,7 +57,7 @@
 }
 
 .field {
-  composes: field from '../../Sass/common/_form.scss';
+  composes: field from "../../Sass/common/_form.scss";
 
   color: #ddd;
   background: $overlay;
@@ -70,7 +69,7 @@
     border: 0px;
     background: transparent;
   }
-  svg{
+  svg {
     display: inline;
     padding-right: 5px;
     fill: #fff;

@@ -1,20 +1,26 @@
-@import '~terriajs-variables';
-@import '../../Sass/common/mixins';
+@import "~terriajs-variables";
+@import "../../Sass/common/mixins";
 
 // NOTE: When changing this file with hot-reloading on you might see the globe in the map disappear. Don't panic! This
 // happens because losing this stylesheet for a second causes Cesium to zoom itself as far out as it can go for some
 // reason - you can change pretty much other file to do another hot-reload and get your globe back, or just zoom
 // back in.
 
-:global{
+.story-wrapper {
+  @media (min-width: $sm) {
+    display: flex;
+  }
+}
+
+:global {
   body {
     height: 100vh;
     width: 100vw;
   }
 
-  .top-element{
-    z-index: 99999;
-    &:focus{
+  .top-element {
+    z-index: 99999 !important;
+    &:focus {
       outline: none;
     }
   }
@@ -26,12 +32,15 @@
   svg use {
     pointer-events: none;
   }
+  position: relative;
+  flex-basis: 100%;
 }
 
 .ui {
   overflow: hidden;
   background: $dark;
   width: 100%;
+  height: 100vh;
 }
 
 .explorerPanelIsVisible {
@@ -73,14 +82,14 @@
   $feature-info-forty-percent-size: $feature-info-medium-max-size * 100 / 40;
 
   z-index: $front-component-z-index - 20;
-  position: fixed;
+  position: absolute;
   right: 0;
   bottom: 0;
   top: 0;
-  pointer-events:none;
+  pointer-events: none;
   left: 0;
 
-  @media (min-width : $md) {
+  @media (min-width: $md) {
     left: $work-bench-width + 22px;
     top: 62px;
     right: 96px;
@@ -89,9 +98,9 @@
     // background: rgba(#ffcc00, 0.5);
   }
 
-  & > div{
+  & > div {
     pointer-events: auto;
-    position: fixed;
+    position: absolute;
     top: $mobile-header-height + 10px;
     right: 10px;
     max-width: 95%;
@@ -100,19 +109,19 @@
     z-index: 99;
     font-family: $font-base;
 
-    @media (min-width : $sm) and (max-width: $feature-info-forty-percent-size) {
+    @media (min-width: $sm) and (max-width: $feature-info-forty-percent-size) {
       max-width: $feature-info-medium-max-size;
-      right: $feature-info-right-margin;
+      top: 60px;
     }
 
     @media (min-width: $feature-info-forty-percent-size) {
-      max-width: 40%;
-      right: $feature-info-right-margin;
+      max-width: 80%;
+      top: 0;
     }
   }
 }
 
-.featureInfoFullScreen{
+.featureInfoFullScreen {
   left: 0;
 }
 

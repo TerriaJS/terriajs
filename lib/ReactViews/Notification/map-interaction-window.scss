@@ -1,8 +1,7 @@
-@import '~terriajs-variables';
-@import '../../Sass/common/mixins';
+@import "~terriajs-variables";
+@import "../../Sass/common/mixins";
 
-
-.window{
+.window {
   display: none;
   position: fixed;
   left: 50%;
@@ -14,15 +13,15 @@
   padding: $padding;
 }
 
-.isActive{
+.isActive {
   display: block;
 }
 
-.content{
+.content {
   margin-bottom: $padding;
 }
 
-.btn{
-  composes: btn from '../../Sass/common/_buttons.scss';
-  composes: btn-primary from '../../Sass/common/_buttons.scss';
+.btn {
+  composes: btn from "../../Sass/common/_buttons.scss";
+  composes: btn-primary from "../../Sass/common/_buttons.scss";
 }

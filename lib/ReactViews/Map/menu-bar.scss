@@ -1,4 +1,4 @@
-@import '~terriajs-variables';
+@import "~terriajs-variables";
 
 .menu-area {
   position: absolute;
@@ -8,9 +8,9 @@
 }
 
 .menu {
-  composes: list-reset from '../../Sass/common/_base.scss';
-  composes: clearfix from '../../Sass/common/_base.scss';
-  composes: sm-show from '../../Sass/common/_base.scss';
+  composes: list-reset from "../../Sass/common/_base.scss";
+  composes: clearfix from "../../Sass/common/_base.scss";
+  composes: sm-show from "../../Sass/common/_base.scss";
 
   /* Align About button with compass */
   margin-right: 7px;
@@ -23,5 +23,26 @@
 
   &:last-child {
     margin-right: 0;
+  }
+}
+
+.storyBtn {
+  composes: btn from "../../Sass/common/_buttons.scss";
+  composes: btn--map from "../../Sass/common/_buttons.scss";
+  svg {
+    fill: #9ca1aa;
+    margin: 0 3px 0 4px;
+    vertical-align: bottom;
+  }
+  span {
+    vertical-align: top;
+    margin: 0 5px;
+    line-height: 1.3;
+  }
+  &:hover,
+  &:focus {
+    svg {
+      fill: #ffffff;
+    }
   }
 }

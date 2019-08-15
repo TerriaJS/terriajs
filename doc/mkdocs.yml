@@ -89,3 +89,5 @@ pages:
     - Using a Custom Version of Cesium: 'contributing/using-a-custom-version-of-cesium.md'
     - Setting up Saucelabs: 'contributing/setting-up-saucelabs.md'
     - Problems and Solutions: 'contributing/problems-and-solutions.md'
+- Acknowledgements: 
+    - Attributions: 'acknowledgements/attributions.md'

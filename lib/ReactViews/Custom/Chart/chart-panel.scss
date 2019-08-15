@@ -1,14 +1,14 @@
-@import '~terriajs-variables';
-@import '../../../Sass/common/mixins';
+@import "~terriajs-variables";
+@import "../../../Sass/common/mixins";
 
-@include empty-module('inner');
-@include empty-module('chart-panel');
+@include empty-module("inner");
+@include empty-module("chart-panel");
 
 .holder {
   left: 0;
   right: 0;
   z-index: 10;
-  background: $dark;
+  background: $chart-panel-background;
   padding-bottom: 13px;
 }
 
@@ -16,7 +16,7 @@
   height: 41px;
   box-sizing: border-box;
   position: relative;
-  background-color: $chart-darker;
+  background-color: $chart-panel-header;
   font-size: $font-size-mid-small;
   fill: #fff;
 }
@@ -25,7 +25,6 @@
   color: $text-light;
 
   :global {
-
     .base-chart .axis path.domain {
       stroke: $chart-axis-color;
     }
@@ -59,7 +58,6 @@
       stroke: $chart-line-color;
       stroke-width: 1;
     }
-
   }
 }
 
@@ -67,37 +65,38 @@
   stroke-width: 2;
 }
 
-.section-label, .btn {
+.section-label,
+.btn {
   color: $text-light;
   display: inline-block;
   vertical-align: top;
 }
 
 .section-label {
-  composes: label from '../../../Sass/common/_labels.scss';
+  composes: label from "../../../Sass/common/_labels.scss";
 }
 
 .loader {
-  padding: 0px 0px 0px $padding*3 !important;
+  padding: 0px 0px 0px $padding * 3 !important;
   &:before {
     top: 0px;
   }
 }
 
 .btn--close-chart-panel {
-  composes: btn from '../../../Sass/common/_buttons.scss';
+  composes: btn from "../../../Sass/common/_buttons.scss";
   position: absolute;
   right: 0;
   top: 0;
-  padding: 8px;
-  svg{
-    height: 25px;
-    width: 25px;
+  padding: 12px;
+  svg {
+    height: 15px;
+    width: 15px;
     fill: #fff;
   }
   &:hover,
   &:focus {
-    svg{
+    svg {
       fill: $color-primary;
     }
   }

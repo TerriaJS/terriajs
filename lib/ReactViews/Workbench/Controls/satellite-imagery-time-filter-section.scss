@@ -1,6 +1,7 @@
-@import '~terriajs-variables';
+@import "~terriajs-variables";
 
-.active, .inactive {
+.active,
+.inactive {
   font-size: 0.85rem;
   margin: 8px 0 4px 0;
   border-radius: 3px;
@@ -13,8 +14,8 @@
 }
 
 .btn {
-  composes: btn-primary from '../../../Sass/common/_buttons.scss';
-  composes: btn from '../../../Sass/common/_buttons.scss';
+  composes: btn-primary from "../../../Sass/common/_buttons.scss";
+  composes: btn from "../../../Sass/common/_buttons.scss";
   padding: $padding 4px;
 }
 

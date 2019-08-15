@@ -122,7 +122,21 @@ function runKarma(configFile, done) {
     });
 }
 
-gulp.task('user-guide', gulp.series('make-schema', function userGuide(done) {
+gulp.task('code-attribution', function userAttribution(done) {
+    var spawnSync = require('child_process').spawnSync;
+    
+    var result = spawnSync('yarn', ['licenses generate-disclaimer > doc/acknowledgements/attributions.md'], {
+        stdio: 'inherit',
+        shell: true
+    });
+    if (result.status !== 0) {
+        throw new Error('Generating code attribution exited with an error.\n' + result.stderr.toString(), { showStack: false });
+    }
+    done();
+
+})
+
+gulp.task('user-guide', gulp.series(gulp.parallel('make-schema', 'code-attribution'), function userGuide(done) {
     var fse = require('fs-extra');
     var klawSync = require('klaw-sync');
     var path = require('path');

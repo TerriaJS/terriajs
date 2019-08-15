@@ -1,21 +1,21 @@
-@import '~terriajs-variables';
+@import "~terriajs-variables";
+@import "~terriajs-mixins";
 
-.clipboard{
-  padding: 5px;
+.clipboard {
   position: relative;
 }
-.clipboardBody{
+.clipboardBody {
   display: flex;
   margin: 10px 0 0 0;
 }
-
-.copyBtn{
-  composes: btn from '../Sass/common/_buttons.scss';
-  composes: btn-primary from '../Sass/common/_buttons.scss';
-  width: 60px;
+.copyBtn {
+  composes: btn from "../Sass/common/_buttons.scss";
+  composes: btn-primary from "../Sass/common/_buttons.scss";
+  composes: btn-large from "../Sass/common/_buttons.scss";
+  width: 80px;
 }
 
-.tooltip{
+.tooltip {
   position: absolute;
   background: #fff;
   color: #000;
@@ -26,7 +26,7 @@
   top: 80px;
   z-index: 999;
   &:before {
-    content: '';
+    content: "";
     display: block;
     height: 10px;
     width: 10px;
@@ -39,8 +39,35 @@
   }
 }
 
+.tooltip-wrapper {
+  position: relative;
+  line-height: 10px;
+  margin-top: 10px;
+  svg {
+    height: 20px;
+    width: 20px;
+    fill: $text-light;
+    margin: $input-glyph-margin;
+    margin-left: 0;
+    display: inline-block;
+  }
+}
+.tooltip-wrapper--light {
+  svg {
+    fill: $dark;
+  }
+}
+.tooltip-text {
+  @include vertical-align();
+  position: absolute;
+  left: 30px;
+}
+
+.title {
+  margin-bottom: 8px;
+}
+
 .explanation {
-  font-size: smaller;
-  font-weight: lighter;
-  color: $text-light-dimmed;
+  opacity: 0.8;
+  margin-bottom: 15px;
 }

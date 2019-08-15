@@ -1,25 +1,23 @@
+@import "~terriajs-variables";
+@import "../../Sass/common/mixins";
 
-@import '~terriajs-variables';
-@import '../../Sass/common/mixins';
-
-.panel{
+.panel {
   background: $feature-info-bg;
   color: $feature-info-color;
   border-radius: $radius-small;
   display: none;
 
-
-  svg{
+  svg {
     fill: $feature-info-color;
   }
 
-  a{
+  a {
     @include link($feature-info-bg);
   }
 }
 
 .is-collapsed {
-  .body{
+  .body {
     display: none;
   }
 }
@@ -28,13 +26,17 @@
   display: block;
 }
 
-.header{
+.is-translucent {
+  opacity: 0.6;
+}
+
+.header {
   background: $feature-info-header-bg;
   padding-right: $input-height;
   line-height: $modal-header-height;
 }
 
-.btnPanelHeading{
+.btnPanelHeading {
   padding: 0px 8px;
   color: $feature-info-btn-color;
   width: 100%;
@@ -46,16 +48,17 @@
   margin-left: 3px;
 }
 
-.btn--close-feature, .btnToggleFeature{
-  composes: btn from '../../Sass/common/_buttons.scss';
+.btn--close-feature,
+.btnToggleFeature {
+  composes: btn from "../../Sass/common/_buttons.scss";
   vertical-align: middle;
   &:hover,
   &:focus {
-    svg{
+    svg {
       fill: $color-primary;
     }
   }
-  svg{
+  svg {
     height: 23px;
     width: 23px;
     display: block;
@@ -63,27 +66,31 @@
   }
 }
 
-.btn--close-feature{
-    position: absolute;
-    right: 8px;
-    top: 8px;
+.btn--close-feature {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  svg {
+    width: 15px;
+    height: 26px;
+  }
 }
 
-.btnToggleFeature{
+.btnToggleFeature {
   padding: $padding;
 }
 
 .no-results {
-  composes: no-results from '../../Sass/common/_labels.scss';
+  composes: no-results from "../../Sass/common/_labels.scss";
 }
 
-.body{
-  composes: list-reset from '../../Sass/common/_base.scss';
-  composes: scrollbars from '../../Sass/common/_base.scss';
+.body {
+  composes: list-reset from "../../Sass/common/_base.scss";
+  composes: scrollbars from "../../Sass/common/_base.scss";
 
   overflow-y: auto;
   overflow-x: auto;
-  max-height: calc(80vh - #{$padding*2 + $btn-default-line-height});
+  max-height: calc(80vh - #{$padding * 2 + $btn-default-line-height});
   font-size: $font-size-feature-info;
 }
 
@@ -95,16 +102,16 @@
 }
 
 .btn-location {
-  composes: btn from '../../Sass/common/_buttons.scss';
+  composes: btn from "../../Sass/common/_buttons.scss";
   vertical-align: bottom;
   margin-left: 5px;
 
   &:hover {
-    svg{
+    svg {
       fill: $color-primary;
     }
   }
-  svg{
+  svg {
     height: 18px;
     width: 18px;
     fill: $feature-info-btn-color;
@@ -114,14 +121,14 @@
 .btn-location-selected {
   composes: btn-location;
 
-  svg{
+  svg {
     fill: $color-primary;
   }
 }
 
-.satelliteSuggestionBtn{
-   composes: btn from '../../Sass/common/_buttons.scss';
-   composes: btn-primary from '../../Sass/common/_buttons.scss';
-   margin: 8px;
-   width: calc(100% - 16px);
+.satelliteSuggestionBtn {
+  composes: btn from "../../Sass/common/_buttons.scss";
+  composes: btn-primary from "../../Sass/common/_buttons.scss";
+  margin: 8px;
+  width: calc(100% - 16px);
 }
