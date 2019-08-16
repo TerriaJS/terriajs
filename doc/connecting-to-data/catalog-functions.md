@@ -2,8 +2,3 @@ A Catalog Function is a parameterized service where the user supplies the parame
 
 | Name | Type |
 |------|------|
-| [Web Processing Service (WPS)](catalog-type-details/wps.md) | `wps` |
-| [TerriaJS JSON](catalog-type-details/terria-json.md) | `terria-json` |
-| [Places Like Me](catalog-type-details/places-like-me-function.md) | `places-like-me-function` |
-| [Spatial Detailing](catalog-type-details/spatial-detailing-function.md) | `spatial-detailing-function` |
-| [Why Am I Special](catalog-type-details/why-am-i-special-function.md) | `why-am-i-special-function` |

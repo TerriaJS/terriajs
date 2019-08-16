@@ -124,7 +124,7 @@ function runKarma(configFile, done) {
 
 gulp.task('code-attribution', function userAttribution(done) {
     var spawnSync = require('child_process').spawnSync;
-    
+
     var result = spawnSync('yarn', ['licenses generate-disclaimer > doc/acknowledgements/attributions.md'], {
         stdio: 'inherit',
         shell: true
@@ -136,7 +136,7 @@ gulp.task('code-attribution', function userAttribution(done) {
 
 })
 
-gulp.task('user-guide', gulp.series(gulp.parallel('make-schema', 'code-attribution'), function userGuide(done) {
+gulp.task('user-guide', gulp.series('code-attribution', function userGuide(done) {
     var fse = require('fs-extra');
     var klawSync = require('klaw-sync');
     var path = require('path');
@@ -169,7 +169,8 @@ gulp.task('user-guide', gulp.series(gulp.parallel('make-schema', 'code-attributi
     mkdocsyml = mkdocsyml.replace(/README\.md/g, 'index.md');
     fse.writeFileSync('build/mkdocs.yml', mkdocsyml, 'UTF-8');
 
-    generateCatalogMemberPages('wwwroot/schema', 'build/doc/connecting-to-data/catalog-type-details');
+    // Genereate doc pages manually in TerriaMap from Traits
+    // generateCatalogMemberPages('wwwroot/schema', 'build/doc/connecting-to-data/catalog-type-details');
 
     var result = spawnSync('mkdocs', ['build', '--clean', '--config-file', 'mkdocs.yml'], {
         cwd: 'build',
