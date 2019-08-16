@@ -92,7 +92,9 @@ const StoryPanel = observer(
         index = 0;
       }
       if (index !== this.props.viewState.currentStoryId) {
-        this.props.viewState.currentStoryId = index;
+        runInAction(() => {
+          this.props.viewState.currentStoryId = index;
+        });
         if (index < (this.props.terria.stories || []).length) {
           this.activateStory(this.props.terria.stories[index]);
         }
@@ -120,7 +122,9 @@ const StoryPanel = observer(
     },
 
     exitStory() {
-      this.props.viewState.storyShown = false;
+      runInAction(() => {
+        this.props.viewState.storyShown = false;
+      });
       this.props.terria.currentViewer.notifyRepaintRequired();
     },
 

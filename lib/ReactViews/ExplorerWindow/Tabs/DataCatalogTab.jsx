@@ -10,6 +10,7 @@ import DataPreview from "../../Preview/DataPreview";
 import SearchBox from "../../Search/SearchBox";
 
 import Styles from "./data-catalog-tab.scss";
+import { runInAction } from "mobx";
 
 // The DataCatalog Tab
 const DataCatalogTab = observer(
@@ -32,7 +33,9 @@ const DataCatalogTab = observer(
     },
 
     changeSearchText(newText) {
-      this.props.viewState.searchState.catalogSearchText = newText;
+      runInAction(() => {
+        this.props.viewState.searchState.catalogSearchText = newText;
+      });
     },
 
     search() {

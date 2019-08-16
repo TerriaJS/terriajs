@@ -16,6 +16,7 @@ import { formatDateTime } from "../../BottomDock/Timeline/DateFormats";
 import Styles from "./datetime-selector-section.scss";
 import Icon from "../../Icon";
 import CommonStrata from "../../../Models/CommonStrata";
+import { runInAction } from "mobx";
 
 const DateTimeSelectorSection = observer(
   createReactClass({
@@ -37,12 +38,14 @@ const DateTimeSelectorSection = observer(
       // Give this item focus on the timeline (if it is connected to the timeline), so that the user can select all available dates for this item.
       item.terria.timelineStack.promoteToTop(item);
 
-      // Set the time on the item, set it to use its own clock, update the imagery and repaint.
-      item.setTrait(
-        CommonStrata.user,
-        "currentTime",
-        JulianDate.toIso8601(JulianDate.fromDate(time))
-      );
+      runInAction(() => {
+        // Set the time on the item, set it to use its own clock, update the imagery and repaint.
+        item.setTrait(
+          CommonStrata.user,
+          "currentTime",
+          JulianDate.toIso8601(JulianDate.fromDate(time))
+        );
+      });
       item.terria.currentViewer.notifyRepaintRequired();
     },
 

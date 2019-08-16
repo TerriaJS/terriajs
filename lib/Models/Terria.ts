@@ -67,6 +67,7 @@ interface ConfigParameters {
   useCesiumIonBingImagery?: boolean;
   bingMapsKey?: string;
   brandBarElements?: string[];
+  disableMyLocation?: boolean;
 }
 
 interface StartOptions {
@@ -221,15 +222,21 @@ export default class Terria {
 
   @computed
   get cesium(): Cesium | undefined {
-    if (isDefined(this.mainViewer) && this.mainViewer instanceof Cesium) {
-      return this.mainViewer;
+    if (
+      isDefined(this.mainViewer) &&
+      this.mainViewer.currentViewer instanceof Cesium
+    ) {
+      return this.mainViewer.currentViewer;
     }
   }
 
   @computed
   get leaflet(): Leaflet | undefined {
-    if (isDefined(this.mainViewer) && this.mainViewer instanceof Leaflet) {
-      return this.mainViewer;
+    if (
+      isDefined(this.mainViewer) &&
+      this.mainViewer.currentViewer instanceof Leaflet
+    ) {
+      return this.mainViewer.currentViewer;
     }
   }
 

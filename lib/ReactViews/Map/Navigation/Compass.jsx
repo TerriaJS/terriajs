@@ -14,6 +14,7 @@ const Ray = require("terriajs-cesium/Source/Core/Ray");
 const Transforms = require("terriajs-cesium/Source/Core/Transforms");
 import Icon from "../../Icon.jsx";
 import Styles from "./compass.scss";
+import { runInAction } from "mobx";
 
 // the compass on map
 const Compass = createReactClass({
@@ -451,26 +452,30 @@ function orbit(viewModel, compassElement, cursorVector) {
 }
 
 function viewerChange(viewModel) {
-  if (defined(viewModel.props.terria.cesium)) {
-    if (viewModel._unsubscribeFromPostRender) {
-      viewModel._unsubscribeFromPostRender();
-      viewModel._unsubscribeFromPostRender = undefined;
-    }
-
-    viewModel._unsubscribeFromPostRender = viewModel.props.terria.cesium.scene.postRender.addEventListener(
-      function() {
-        viewModel.setState({
-          heading: viewModel.props.terria.cesium.scene.camera.heading
-        });
+  runInAction(() => {
+    if (defined(viewModel.props.terria.cesium)) {
+      if (viewModel._unsubscribeFromPostRender) {
+        viewModel._unsubscribeFromPostRender();
+        viewModel._unsubscribeFromPostRender = undefined;
       }
-    );
-  } else {
-    if (viewModel._unsubscribeFromPostRender) {
-      viewModel._unsubscribeFromPostRender();
-      viewModel._unsubscribeFromPostRender = undefined;
+
+      viewModel._unsubscribeFromPostRender = viewModel.props.terria.cesium.scene.postRender.addEventListener(
+        function() {
+          runInAction(() => {
+            viewModel.setState({
+              heading: viewModel.props.terria.cesium.scene.camera.heading
+            });
+          });
+        }
+      );
+    } else {
+      if (viewModel._unsubscribeFromPostRender) {
+        viewModel._unsubscribeFromPostRender();
+        viewModel._unsubscribeFromPostRender = undefined;
+      }
+      viewModel.showCompass = false;
     }
-    viewModel.showCompass = false;
-  }
+  });
 }
 
 module.exports = Compass;
