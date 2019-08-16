@@ -38,7 +38,7 @@ import {
   onBecomeObserved,
   onBecomeUnobserved
 } from "mobx";
-import { now } from "mobx-utils";
+import { now, createTransformer, ITransformer } from "mobx-utils";
 
 import Pbf from "pbf";
 import prettyPrintGtfsEntityField from "./prettyPrintGtfsEntityField";
@@ -54,6 +54,8 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
 
   /**
    * Always use the getter to read this. This is a cache for a computed property.
+   *
+   * We cache it because recreating it reactively is computationally expensive, so we modify it reactively instead.
    */
   protected _dataSource: DataSource = new DataSource("billboard");
 
@@ -74,7 +76,7 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
   }
 
   @observable
-  protected vehicleData: VehicleData[] = [];
+  protected gtfsFeedEntities: FeedEntity[] = [];
 
   @computed
   protected get _pollingTimer(): number | undefined {
@@ -83,14 +85,34 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
     }
   }
 
+  protected convertManyFeedEntitiesToBillboardData: ITransformer<
+    FeedEntity[],
+    VehicleData[]
+  > = createTransformer((feedEntity: FeedEntity[]) => {
+    return this.gtfsFeedEntities
+      .map((entity: FeedEntity) =>
+        this.convertFeedEntityToBillboardData(entity)
+      )
+      .filter(
+        (item: VehicleData) =>
+          item.position !== null && item.position !== undefined
+      );
+  });
+
   @computed
   protected get dataSource(): DataSource {
     this._dataSource.entities.suspendEvents();
 
-    for (let data of this.vehicleData) {
+    // Convert the GTFS protobuf into a more useful shape
+    const vehicleData: VehicleData[] = this.convertManyFeedEntitiesToBillboardData(
+      this.gtfsFeedEntities
+    );
+
+    for (let data of vehicleData) {
       if (data.sourceId === undefined) {
         continue;
       }
+
       const entity: Entity = this._dataSource.entities.getOrCreateEntity(
         data.sourceId
       );
@@ -138,8 +160,8 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
     }
 
     // remove entities that no longer exist
-    if (this._dataSource.entities.values.length > this.vehicleData.length) {
-      const idSet = new Set(this.vehicleData.map(val => val.sourceId));
+    if (this._dataSource.entities.values.length > vehicleData.length) {
+      const idSet = new Set(vehicleData.map(val => val.sourceId));
 
       this._dataSource.entities.values
         .filter(entity => !idSet.has(entity.id))
@@ -147,7 +169,6 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
     }
 
     this._dataSource.entities.resumeEvents();
-    this.terria.currentViewer.notifyRepaintRequired();
 
     return this._dataSource;
   }
@@ -240,21 +261,12 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
   protected get loadMapItemsPromise(): Promise<void> {
     const promise: Promise<void> = this.retrieveData()
       .then((data: FeedMessage) => {
-        if (data.entity === null || data.entity === undefined) {
-          return [];
-        }
-
-        return data.entity
-          .map((entity: FeedEntity) =>
-            this.convertFeedEntityToBillboardData(entity)
-          )
-          .filter(
-            (item: VehicleData) =>
-              item.position !== null && item.position !== undefined
-          );
-      })
-      .then(data => {
-        runInAction(() => (this.vehicleData = data));
+        runInAction(() => {
+          if (data.entity !== undefined && data.entity !== null) {
+            this.gtfsFeedEntities = data.entity;
+            this.terria.currentViewer.notifyRepaintRequired();
+          }
+        });
       })
       .catch((e: Error) => {
         throw new TerriaError({
