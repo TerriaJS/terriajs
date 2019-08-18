@@ -14,6 +14,9 @@ import Icon from "../../Icon";
 import Styles from "./chart-panel.scss";
 import { observer } from "mobx-react";
 import raiseErrorOnRejectedPromise from "../../../Models/raiseErrorOnRejectedPromise";
+import Chartable from "../../../Models/Chartable";
+import { runInAction } from "mobx";
+import CommonStrata from "../../../Models/CommonStrata";
 
 const height = 300;
 
@@ -28,8 +31,24 @@ const ChartPanel = observer(
       animationDuration: PropTypes.number
     },
 
+    hasItemsToChart() {
+      const workbench = this.props.terria.workbench;
+      const chartItems = workbench.items
+        .filter(Chartable.is)
+        .flatMap(c => c.chartItems);
+      return chartItems.length > 0;
+    },
+
     closePanel() {
-      this.props.viewState.chartIsOpen = false;
+      const workbench = this.props.terria.workbench;
+      const chartableItems = workbench.items
+        .filter(Chartable.is)
+        .filter(c => c.chartItems.length > 0);
+      chartableItems.forEach(c =>
+        runInAction(() => {
+          c.setTrait(CommonStrata.user, "show", false);
+        })
+      );
     },
 
     componentDidUpdate() {
@@ -39,6 +58,10 @@ const ChartPanel = observer(
     },
 
     render() {
+      if (!this.hasItemsToChart()) {
+        return null;
+      }
+
       // const chartableItems = this.props.terria.catalog.chartableItems;
       // if (this.props.viewState.chartIsOpen === false) {
       //   return null;

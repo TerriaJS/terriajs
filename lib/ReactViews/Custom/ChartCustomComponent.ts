@@ -7,6 +7,9 @@ import Chart from "./Chart/NewChart";
 import ChartPreviewStyles from "./Chart/chart-preview.scss";
 import ChartExpandAndDownloadButtons from "./Chart/ChartExpandAndDownloadButtons";
 import CustomComponent, { ProcessNodeContext } from "./CustomComponent";
+import raiseErrorOnRejectedPromise from "../../Models/raiseErrorOnRejectedPromise";
+import runLater from "../../Core/runLater";
+import { runInAction } from "mobx";
 
 /**
  * A `<chart>` custom component. It displays an interactive chart along with
@@ -134,7 +137,6 @@ export default class ChartCustomComponent extends CustomComponent {
     if (node.attribs === undefined) {
       return undefined;
     }
-
     checkAllPropertyKeys(node.attribs, this.attributes);
     const columnNames = splitStringIfDefined(node.attribs["column-names"]);
     const columnUnits = splitStringIfDefined(node.attribs["column-units"]);
@@ -197,17 +199,22 @@ export default class ChartCustomComponent extends CustomComponent {
         name += " - " + sourceNames[i];
       }
 
-      item.setTrait(CommonStrata.user, "name", name);
-
-      item.setTrait(CommonStrata.user, "url", source);
-      const chartStyle = item.addObject(CommonStrata.user, "styles", "chart")!;
-      chartStyle.chart.setTrait(CommonStrata.user, "xAxisColumn", xColumn);
-      if (yColumns) {
-        yColumns.forEach(column => {
-          chartStyle.chart.addObject(CommonStrata.user, "lines", column);
-        });
-      }
-      item.setTrait(CommonStrata.user, "activeStyle", "chart");
+      runInAction(() => {
+        item.setTrait(CommonStrata.user, "name", name);
+        item.setTrait(CommonStrata.user, "url", source);
+        const chartStyle = item.addObject(
+          CommonStrata.user,
+          "styles",
+          "chart"
+        )!;
+        chartStyle.chart.setTrait(CommonStrata.user, "xAxisColumn", xColumn);
+        if (yColumns) {
+          yColumns.forEach(column => {
+            chartStyle.chart.addObject(CommonStrata.user, "lines", column);
+          });
+        }
+        item.setTrait(CommonStrata.user, "activeStyle", "chart");
+      });
       return item;
     });
 
@@ -242,22 +249,24 @@ export default class ChartCustomComponent extends CustomComponent {
     }
 
     const chartItem = new CsvCatalogItem(undefined, context.terria);
-    chartItem.setTrait(CommonStrata.user, "url", url);
-    const chartStyle = chartItem.addObject(
-      CommonStrata.user,
-      "styles",
-      "chart"
-    )!;
+    runInAction(() => {
+      chartItem.setTrait(CommonStrata.user, "url", url);
+      const chartStyle = chartItem.addObject(
+        CommonStrata.user,
+        "styles",
+        "chart"
+      )!;
 
-    chartStyle.chart.setTrait(CommonStrata.user, "xAxisColumn", xColumn);
+      chartStyle.chart.setTrait(CommonStrata.user, "xAxisColumn", xColumn);
 
-    if (yColumns) {
-      yColumns.forEach(column => {
-        chartStyle.chart.addObject(CommonStrata.user, "lines", column);
-      });
-    }
+      if (yColumns) {
+        yColumns.forEach(column => {
+          chartStyle.chart.addObject(CommonStrata.user, "lines", column);
+        });
+      }
 
-    chartItem.setTrait(CommonStrata.user, "activeStyle", "chart");
+      chartItem.setTrait(CommonStrata.user, "activeStyle", "chart");
+    });
 
     chartElements.push(
       React.createElement(Chart, {

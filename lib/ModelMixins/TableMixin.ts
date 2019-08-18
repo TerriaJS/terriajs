@@ -130,6 +130,10 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
      */
     @computed
     get chartItems(): ChartData[] {
+      if (!this.show) {
+        return [];
+      }
+
       const style = this.activeTableStyle;
       if (style === undefined || !style.isChart()) {
         return [];
@@ -284,7 +288,8 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
                 pixelSize: 5,
                 outlineWidth: 1,
                 outlineColor: outlineColor
-              })
+              }),
+              show: this.show
             })
           );
           entity.properties = this.getRowValues(i);
