@@ -261,7 +261,7 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
                   ? featureRegion.toString()
                   : "";
               const rowNumbers = valuesAsRegions.regionIdToRowNumbersMap.get(
-                regionIdString
+                regionIdString.toLowerCase()
               );
               let value: string | number | null;
 
