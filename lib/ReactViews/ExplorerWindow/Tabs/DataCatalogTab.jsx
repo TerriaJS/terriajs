@@ -47,12 +47,13 @@ const DataCatalogTab = observer(
       return (
         <div className={Styles.root}>
           <div className={Styles.dataExplorer}>
-            <SearchBox
+            {/* TODO: Put this back once we add a MobX DataCatalogSearch Provider */}
+            {/* <SearchBox
               searchText={this.props.viewState.searchState.catalogSearchText}
               onSearchTextChanged={this.changeSearchText}
               onDoSearch={this.search}
               placeholder={this.props.searchPlaceholder}
-            />
+            /> */}
             <DataCatalog
               terria={this.props.terria}
               viewState={this.props.viewState}
