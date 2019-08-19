@@ -21,6 +21,7 @@ import TableStyle from "../Table/TableStyle";
 import TableTraits from "../Traits/TableTraits";
 import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
 import LegendTraits from "../Traits/LegendTraits";
+import { JsonObject } from "../Core/Json";
 
 export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
   Base: T
@@ -207,7 +208,7 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
             continue;
           }
 
-          dataSource.entities.add(
+          const entity = dataSource.entities.add(
             new Entity({
               position: Cartesian3.fromDegrees(longitude, latitude, 0.0),
               point: new PointGraphics({
@@ -218,6 +219,7 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
               })
             })
           );
+          entity.properties = this.getRowValues(i);
         }
 
         dataSource.entities.resumeEvents();
@@ -307,6 +309,16 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
         };
       }
     );
+
+    private getRowValues(index: number): JsonObject {
+      const result: JsonObject = {};
+
+      this.tableColumns.forEach(column => {
+        result[column.name] = column.values[index];
+      });
+
+      return result;
+    }
 
     private readonly getTableColumn = createTransformer((index: number) => {
       return new TableColumn(this, index);
