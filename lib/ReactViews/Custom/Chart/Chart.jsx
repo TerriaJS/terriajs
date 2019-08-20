@@ -163,7 +163,17 @@ const Chart = createReactClass({
     });
   },
 
-  componentDidUpdate() {
+  shouldComponentUpdate(nextProps) {
+    if (nextProps.data.length !== this.props.data.length) return true;
+    for (let i = 0; i < nextProps.data.length; i++) {
+      if (nextProps.data[i].points.length !== this.props.data[i].points.length)
+        return true;
+    }
+    if (nextProps.axisLabel.x !== this.props.axisLabel.x) return true;
+    return false;
+  },
+
+  componentDidUpdate(prevProps) {
     // Update the chart with props.data or props.tableStructure, if present.
     // If the data came from a URL, there are three possibilities:
     // 1. The URL has changed.
