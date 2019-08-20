@@ -101,6 +101,9 @@ const FeatureInfoSection = observer(
         }
         if (this.props.catalogItem) {
           propertyData.terria.currentTime = this.props.catalogItem.discreteTime;
+          propertyData.terria.activeStyleTitle = getActiveStyleTitle(
+            this.props.catalogItem
+          );
         }
         propertyData.terria.timeSeries = getTimeSeriesChartContext(
           this.props.catalogItem,
@@ -819,6 +822,18 @@ function getInfoAsReactComponent(that) {
     timeSeriesChart: timeSeriesChart,
     downloadableData: downloadableData
   };
+}
+
+/*
+ * Returns the title of the active style of a catalog item
+ */
+function getActiveStyleTitle(catalogItem) {
+  if (
+    catalogItem.activeTableStyle &&
+    catalogItem.activeTableStyle.styleTraits
+  ) {
+    return catalogItem.activeTableStyle.styleTraits.title;
+  }
 }
 
 // function setTimeoutsForUpdatingCustomComponents(that) {
