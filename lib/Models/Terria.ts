@@ -728,30 +728,31 @@ function interpretHash(
       : Promise.resolve({});
 
   return promise.then((shareProps: any) => {
-    Object.keys(hashProperties).forEach(function(property) {
-      const propertyValue = hashProperties[property];
+    runInAction(() => {
+      Object.keys(hashProperties).forEach(function(property) {
+        const propertyValue = hashProperties[property];
+        if (property === "clean") {
+          terria.initSources.splice(0, terria.initSources.length);
+        } else if (property === "start") {
+          // a share link that hasn't been shortened: JSON embedded in URL (only works for small quantities of JSON)
+          const startData = JSON.parse(propertyValue);
+          interpretStartData(terria, startData);
+        } else if (defined(propertyValue) && propertyValue.length > 0) {
+          userProperties.set(property, propertyValue);
+        } else {
+          const initSourceFile = generateInitializationUrl(
+            baseUri,
+            terria.configParameters.initFragmentPaths,
+            property
+          );
+          terria.initSources.push(initSourceFile);
+        }
+      });
 
-      if (property === "clean") {
-        terria.initSources.splice(0, terria.initSources.length);
-      } else if (property === "start") {
-        // a share link that hasn't been shortened: JSON embedded in URL (only works for small quantities of JSON)
-        const startData = JSON.parse(propertyValue);
-        interpretStartData(terria, startData);
-      } else if (defined(propertyValue) && propertyValue.length > 0) {
-        userProperties.set(property, propertyValue);
-      } else {
-        const initSourceFile = generateInitializationUrl(
-          baseUri,
-          terria.configParameters.initFragmentPaths,
-          property
-        );
-        terria.initSources.push(initSourceFile);
+      if (shareProps) {
+        interpretStartData(terria, shareProps);
       }
     });
-
-    if (shareProps) {
-      interpretStartData(terria, shareProps);
-    }
   });
 }
 
