@@ -363,7 +363,9 @@ class ChartRenderer {
       this.renderAxis(transition, hasData);
     }
 
-    this.renderChart();
+    if (hasData) {
+      this.renderChart();
+    }
 
     this.renderToolTip(hasData);
 
