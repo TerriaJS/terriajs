@@ -164,6 +164,7 @@ const Chart = createReactClass({
   },
 
   shouldComponentUpdate(nextProps) {
+    if (!defined(nextProps.data) || !defined(this.props.data)) return true;
     if (nextProps.data.length !== this.props.data.length) return true;
     for (let i = 0; i < nextProps.data.length; i++) {
       if (nextProps.data[i].points.length !== this.props.data[i].points.length)
@@ -242,7 +243,7 @@ const Chart = createReactClass({
         className: Styles.toolTip,
         id: this._tooltipId,
         align: "prefer-right", // With right/left alignment, the offset is relative to the svg, so need to inset.
-        offset: { top: 40, left: 33, right: 30, bottom: 5 }
+        offset: { top: 45, left: 33, right: 50, bottom: 5 }
       };
       if (this.props.styling === "histogram") {
         titleSettings = undefined;
