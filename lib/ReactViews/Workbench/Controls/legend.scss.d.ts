@@ -2,6 +2,8 @@
 // Please do not change this file!
 interface CssExports {
   'generatedLegend': string;
+  'gradientBox': string;
+  'gradientLegend': string;
   'imageAnchor': string;
   'legend': string;
   'legend--svg': string;

@@ -70,6 +70,11 @@ const Legend = observer(
     renderLegend(legend, i) {
       if (defined(legend.url)) {
         return this.renderImageLegend(legend, i);
+      } else if (
+        defined(legend.gradientColorStops) &&
+        legend.gradientColorStops.length > 0
+      ) {
+        return this.renderGradientLegend(legend, i);
       } else if (defined(legend.items)) {
         return this.renderGeneratedLegend(legend, i);
       } else {
@@ -136,17 +141,65 @@ const Legend = observer(
       );
     },
 
-    renderGeneratedLegend(legend, i) {
+    renderGradientLegend(legend, i) {
+      const colorStops = legend.gradientColorStops
+        .map(colorStop => `${colorStop.color} ${colorStop.offset * 100}%`)
+        .join(", ");
+      const gradientBoxStyle = {
+        backgroundImage: `linear-gradient(to top, ${colorStops})`,
+        height: "90%"
+      };
+
+      const gradientItems = legend.items.filter(item => item.isGradientItem);
+      const otherItems = legend.items.filter(item => !item.isGradientItem);
       return (
-        <li key={i} className={Styles.generatedLegend}>
-          <table>
-            <tbody>{legend.items.map(this.renderLegendItem)}</tbody>
+        <li key={i}>
+          <table height="100%">
+            <tbody className={Styles.gradientLegend}>
+              <tr>
+                <td
+                  rowSpan={gradientItems.length + 1}
+                  className={Styles.gradientBox}
+                >
+                  <div style={gradientBoxStyle} />
+                </td>
+              </tr>
+              {gradientItems.map((item, i) =>
+                this.renderLegendItem(item, i, false)
+              )}
+            </tbody>
+            <tbody>
+              {otherItems.map((item, i) =>
+                this.renderLegendItem(item, i, true)
+              )}
+            </tbody>
           </table>
         </li>
       );
     },
 
-    renderLegendItem(legendItem, i) {
+    renderGeneratedLegend(legend, i) {
+      return (
+        <li key={i} className={Styles.generatedLegend}>
+          <table>
+            <tbody>
+              {legend.items.map((item, i) =>
+                this.renderLegendItem(item, i, true)
+              )}
+            </tbody>
+          </table>
+        </li>
+      );
+    },
+
+    /*
+     * Renders the legend item.
+     *
+     * If drawLegendBox=false, it will not render the legend <td>
+     * column. This is used for example in `renderGradientLegend` where a legend
+     * box has already been drawn using rowspan.
+     */
+    renderLegendItem(legendItem, i, drawLegendBox) {
       let boxStyle = {
         border: legendItem.addSpacingAbove ? "1px solid black" : undefined
       };
@@ -194,9 +247,13 @@ const Legend = observer(
             </tr>
           )}
           <tr>
-            <td className={Styles.legendBox} style={boxStyle}>
-              {boxContents}
-            </td>
+            <Choose>
+              <When condition={drawLegendBox === true}>
+                <td className={Styles.legendBox} style={boxStyle}>
+                  {boxContents}
+                </td>
+              </When>
+            </Choose>
             <td className={Styles.legendTitles}>
               {legendItem.titleAbove && (
                 <div className={Styles.legendTitleAbove}>

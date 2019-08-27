@@ -6,12 +6,17 @@ import CsvCatalogItemTraits from "../Traits/CsvCatalogItemTraits";
 import TableColorStyleTraits from "../Traits/TableColorStyleTraits";
 import TableStyleTraits from "../Traits/TableStyleTraits";
 import TableColumnType from "./TableColumnType";
-import LegendTraits, { LegendItemTraits } from "../Traits/LegendTraits";
+import LegendTraits, {
+  LegendItemTraits,
+  GradientColorStopTraits
+} from "../Traits/LegendTraits";
 import { computed } from "mobx";
 import { createTransformer } from "mobx-utils";
 import DiscreteColorMap from "../Map/DiscreteColorMap";
 import TableStyle from "./TableStyle";
 import EnumColorMap from "../Map/EnumColorMap";
+import ContinuousColorMap from "../Map/ContinuousColorMap";
+import isDefined from "../Core/isDefined";
 
 export default class TableAutomaticStylesStratum extends LoadableStratum(
   CsvCatalogItemTraits
@@ -76,6 +81,24 @@ class ColorStyleLegend extends LoadableStratum(LegendTraits) {
   }
 
   @computed
+  get gradientColorStops() {
+    const activeStyle = this.catalogItem.activeTableStyle;
+    if (activeStyle === undefined) {
+      return;
+    }
+
+    const colorMap = activeStyle.colorMap;
+    if (colorMap instanceof ContinuousColorMap) {
+      return colorMap.colorStops.map(stop => {
+        return createStratumInstance(GradientColorStopTraits, {
+          offset: stop.offset,
+          color: stop.color.toCssColorString()
+        });
+      });
+    }
+  }
+
+  @computed
   get items(): StratumFromTraits<LegendItemTraits>[] {
     const activeStyle = this.catalogItem.activeTableStyle;
     if (activeStyle === undefined) {
@@ -83,13 +106,64 @@ class ColorStyleLegend extends LoadableStratum(LegendTraits) {
     }
 
     const colorMap = activeStyle.colorMap;
-    if (colorMap instanceof DiscreteColorMap) {
+    if (colorMap instanceof ContinuousColorMap) {
+      return this._createLegendItemsFromContinuousColorMap(
+        activeStyle,
+        colorMap
+      );
+    } else if (colorMap instanceof DiscreteColorMap) {
       return this._createLegendItemsFromDiscreteColorMap(activeStyle, colorMap);
     } else if (colorMap instanceof EnumColorMap) {
       return this._createLegendItemsFromEnumColorMap(activeStyle, colorMap);
     }
 
     return [];
+  }
+
+  private _createLegendItemsFromContinuousColorMap(
+    activeStyle: TableStyle,
+    colorMap: ContinuousColorMap
+  ) {
+    const ticks =
+      activeStyle.colorTraits.legendTicks === undefined
+        ? 3
+        : activeStyle.colorTraits.legendTicks;
+    const segments = ticks + 2;
+    const items = [];
+    for (let i = 0; i <= segments; i++) {
+      let value;
+      if (i === 0) {
+        value = colorMap.minimumValue;
+      } else {
+        value =
+          colorMap.minimumValue +
+          (colorMap.maximumValue - colorMap.minimumValue) * (i / segments);
+      }
+
+      items.push(
+        createStratumInstance(LegendItemTraits, {
+          title: "-" + this._formatValue(value),
+          isGradientItem: true
+        })
+      );
+    }
+
+    const colorColumn = activeStyle.colorColumn;
+    const nullSegment =
+      colorColumn &&
+      colorColumn.valuesAsNumbers.numberOfValidNumbers <
+        colorColumn.valuesAsNumbers.values.length
+        ? [
+            createStratumInstance(LegendItemTraits, {
+              title: isDefined(activeStyle.colorTraits.nullLabel)
+                ? activeStyle.colorTraits.nullLabel
+                : "(No Value)",
+              color: activeStyle.colorTraits.nullColor,
+              addSpacingAbove: true
+            })
+          ]
+        : [];
+    return items.reverse().concat(nullSegment);
   }
 
   private _createLegendItemsFromDiscreteColorMap(

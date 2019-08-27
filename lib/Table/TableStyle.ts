@@ -19,6 +19,7 @@ import TableTraits from "../Traits/TableTraits";
 import ColorPalette from "./ColorPalette";
 import TableColumn from "./TableColumn";
 import TableColumnType from "./TableColumnType";
+import ContinuousColorMap from "../Map/ContinuousColorMap";
 
 const defaultColor = "yellow";
 
@@ -211,7 +212,6 @@ export default class TableStyle {
       }
       numberOfBins = this.binMaximums.length;
     }
-
     if (paletteName !== undefined && numberOfBins !== undefined) {
       return ColorPalette.fromString(paletteName, numberOfBins);
     } else {
@@ -280,7 +280,6 @@ export default class TableStyle {
       }
 
       result.push(max);
-
       return result;
     }
   }
@@ -315,8 +314,15 @@ export default class TableStyle {
   get colorMap(): ColorMap {
     const colorColumn = this.colorColumn;
     const colorTraits = this.colorTraits;
-
-    if (colorColumn && colorColumn.type === TableColumnType.scalar) {
+    if (colorColumn && colorTraits.numberOfBins === 0) {
+      return new ContinuousColorMap({
+        minimumValue: colorColumn.valuesAsNumbers.minimum || Number.MIN_VALUE,
+        maximumValue: colorColumn.valuesAsNumbers.maximum || Number.MAX_VALUE,
+        nullColor: colorTraits.nullColor
+          ? Color.fromCssColorString(colorTraits.nullColor)
+          : new Color(0.0, 0.0, 0.0, 0.0)
+      });
+    } else if (colorColumn && colorColumn.type === TableColumnType.scalar) {
       const maximums = this.binMaximums;
       return new DiscreteColorMap({
         bins: this.binColors.map((color, i) => {

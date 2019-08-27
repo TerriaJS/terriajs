@@ -66,6 +66,17 @@
   padding-bottom: $legend-padding;
 }
 
+/* Increase spacing between legend titles for gradient legend */
+.gradientLegend .legendTitles {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.gradientBox {
+  width: $legend-item-width;
+  height: 100%;
+}
+
 .legendBox {
   display: inline-block;
   width: $legend-item-width;
@@ -75,6 +86,8 @@
 .legendTitles {
   font-size: 12px;
   line-height: $legend-item-height;
+  width: $legend-item-width;
+  height: $legend-item-height;
   padding-left: 5px;
 }
 

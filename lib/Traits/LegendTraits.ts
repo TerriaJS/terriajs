@@ -67,6 +67,29 @@ export class LegendItemTraits extends ModelTraits {
     type: "boolean"
   })
   addSpacingAbove?: boolean;
+
+  @primitiveTrait({
+    name: "Is gradient item",
+    description: "If true, this item is drawn as part of the gradient",
+    type: "boolean"
+  })
+  isGradientItem = false;
+}
+
+export class GradientColorStopTraits extends ModelTraits {
+  @primitiveTrait({
+    type: "number",
+    name: "Offset",
+    description: "Offset of the color stop, must be >= 0 and <= 1"
+  })
+  offset?: number;
+
+  @primitiveTrait({
+    type: "string",
+    name: "Color",
+    description: "Color of the color stop"
+  })
+  color?: string;
 }
 
 export default class LegendTraits extends ModelTraits {
@@ -83,6 +106,14 @@ export default class LegendTraits extends ModelTraits {
     description: "The MIME type of the `URL` legend image."
   })
   urlMimeType?: string;
+
+  @objectArrayTrait({
+    name: "Gradient Color Stops",
+    description: "Color stops for a gradient legend",
+    type: GradientColorStopTraits,
+    idProperty: "offset"
+  })
+  gradientColorStops?: GradientColorStopTraits[];
 
   @objectArrayTrait({
     name: "Items",
