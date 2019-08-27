@@ -7,7 +7,6 @@ import PropTypes from "prop-types";
 
 import DataCatalog from "../../DataCatalog/DataCatalog";
 import DataPreview from "../../Preview/DataPreview";
-import SearchBox from "../../Search/SearchBox";
 
 import Styles from "./data-catalog-tab.scss";
 import { runInAction } from "mobx";
@@ -47,12 +46,13 @@ const DataCatalogTab = observer(
       return (
         <div className={Styles.root}>
           <div className={Styles.dataExplorer}>
-            <SearchBox
+            {/* TODO: Put this back once we add a MobX DataCatalogSearch Provider */}
+            {/* <SearchBox
               searchText={this.props.viewState.searchState.catalogSearchText}
               onSearchTextChanged={this.changeSearchText}
               onDoSearch={this.search}
               placeholder={this.props.searchPlaceholder}
-            />
+            /> */}
             <DataCatalog
               terria={this.props.terria}
               viewState={this.props.viewState}

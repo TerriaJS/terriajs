@@ -6,7 +6,6 @@ import { addMarker } from "../../Models/LocationMarkerUtils";
 import BadgeBar from "../BadgeBar";
 import LocationSearchResults from "./LocationSearchResults";
 import Styles from "./sidebar-search.scss";
-import SideBarDatasetSearchResults from "./SideBarDatasetSearchResults";
 
 // Handle any of the three kinds of search based on the props
 const SidebarSearch = observer(
@@ -47,10 +46,11 @@ const SidebarSearch = observer(
                   this.props.viewState.searchState.locationSearchText.length > 0
                 }
               >
-                <SideBarDatasetSearchResults
+                {/* TODO: Put this back once we add a MobX DataCatalogSearch Provider */}
+                {/* <SideBarDatasetSearchResults
                   terria={this.props.terria}
                   viewState={this.props.viewState}
-                />
+                /> */}
               </If>
               <For
                 each="search"

@@ -1,4 +1,4 @@
-import { observable } from "mobx";
+import { observable, runInAction } from "mobx";
 import BingMapsApi from "terriajs-cesium/Source/Core/BingMapsApi";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import defined from "terriajs-cesium/Source/Core/defined";
@@ -172,8 +172,10 @@ export default class BingMapsSearchProvider extends SearchProvider {
           );
         }
 
-        searchResults.results.push(...primaryCountryLocations);
-        searchResults.results.push(...otherLocations);
+        runInAction(() => {
+          searchResults.results.push(...primaryCountryLocations);
+          searchResults.results.push(...otherLocations);
+        });
 
         if (searchResults.results.length === 0) {
           searchResults.message =

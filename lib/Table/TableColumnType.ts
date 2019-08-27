@@ -7,7 +7,8 @@ enum TableColumnType {
   enum,
   region,
   text,
-  address
+  address,
+  hidden
 }
 
 export function stringToTableColumnType(
