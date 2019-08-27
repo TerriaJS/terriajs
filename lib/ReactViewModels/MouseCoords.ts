@@ -1,5 +1,5 @@
 import debounce from "lodash-es/debounce";
-import { observable } from "mobx";
+import { observable, action, runInAction } from "mobx";
 import Cartesian2 from "terriajs-cesium/Source/Core/Cartesian2";
 import Cartographic from "terriajs-cesium/Source/Core/Cartographic";
 import EllipsoidTerrainProvider from "terriajs-cesium/Source/Core/EllipsoidTerrainProvider";
@@ -140,12 +140,14 @@ export default class MouseCoords {
         this.debounceSampleAccurateHeight(terrainProvider, intersection);
       }
     } else {
-      this.elevation = undefined;
-      this.utmZone = undefined;
-      this.latitude = undefined;
-      this.longitude = undefined;
-      this.north = undefined;
-      this.east = undefined;
+      runInAction(() => {
+        this.elevation = undefined;
+        this.utmZone = undefined;
+        this.latitude = undefined;
+        this.longitude = undefined;
+        this.north = undefined;
+        this.east = undefined;
+      });
     }
   }
 
@@ -160,6 +162,7 @@ export default class MouseCoords {
     this.cartographicToFields(coordinates);
   }
 
+  @action
   cartographicToFields(coordinates: Cartographic, errorBar?: number) {
     const latitude = CesiumMath.toDegrees(coordinates.latitude);
     const longitude = CesiumMath.toDegrees(coordinates.longitude);

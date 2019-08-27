@@ -269,28 +269,28 @@ export default class Terria {
 
     return loadJson5(options.configUrl)
       .then((config: any) => {
-        if (config.parameters) {
-          Object.keys(config.parameters).forEach(key => {
-            if (this.configParameters.hasOwnProperty(key)) {
-              (<any>this.configParameters)[key] = config.parameters[key];
-            }
-          });
-        }
-
-        if (config.aspects) {
-          return this.loadMagdaConfig(config);
-        }
-
-        const initializationUrls: string[] = config.initializationUrls;
-        const initSources = initializationUrls.map(url =>
-          generateInitializationUrl(
-            baseUri,
-            this.configParameters.initFragmentPaths,
-            url
-          )
-        );
-
         runInAction(() => {
+          if (config.parameters) {
+            Object.keys(config.parameters).forEach(key => {
+              if (this.configParameters.hasOwnProperty(key)) {
+                (<any>this.configParameters)[key] = config.parameters[key];
+              }
+            });
+          }
+
+          if (config.aspects) {
+            return this.loadMagdaConfig(config);
+          }
+
+          const initializationUrls: string[] = config.initializationUrls;
+          const initSources = initializationUrls.map(url =>
+            generateInitializationUrl(
+              baseUri,
+              this.configParameters.initFragmentPaths,
+              url
+            )
+          );
+
           this.initSources.push(...initSources);
         });
       })
