@@ -6,7 +6,6 @@ import { addMarker } from "../../Models/LocationMarkerUtils";
 import BadgeBar from "../BadgeBar";
 import LocationSearchResults from "./LocationSearchResults";
 import Styles from "./sidebar-search.scss";
-import SideBarDatasetSearchResults from "./SideBarDatasetSearchResults";
 
 // Handle any of the three kinds of search based on the props
 const SidebarSearch = observer(
