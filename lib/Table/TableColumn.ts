@@ -257,12 +257,13 @@ export default class TableColumn {
    */
   @computed
   get traits(): Model<TableColumnTraits> {
+    // It is important to match on column name and not column number because the column numbers can vary between stratum
+    const thisColumn = this.tableModel.columns.find((column) => column.name === this.name);
     if (
-      this.columnNumber >= 0 &&
-      this.columnNumber < this.tableModel.columns.length
+      thisColumn !== undefined
     ) {
       const result = createCombinedModel(
-        this.tableModel.columns[this.columnNumber],
+        thisColumn,
         this.tableModel.defaultColumn
       );
       return result;

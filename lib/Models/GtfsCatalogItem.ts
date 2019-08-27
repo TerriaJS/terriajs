@@ -15,6 +15,7 @@ import {
 } from "./GtfsRealtimeProtoBufReaders";
 
 import BillboardGraphics from "terriajs-cesium/Source/DataSources/BillboardGraphics";
+import PointGraphics from "terriajs-cesium/Source/DataSources/PointGraphics";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
 import DataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
@@ -38,7 +39,7 @@ import {
   onBecomeObserved,
   onBecomeUnobserved
 } from "mobx";
-import { now } from "mobx-utils";
+import { now, createTransformer, ITransformer } from "mobx-utils";
 
 import Pbf from "pbf";
 import prettyPrintGtfsEntityField from "./prettyPrintGtfsEntityField";
@@ -54,6 +55,8 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
 
   /**
    * Always use the getter to read this. This is a cache for a computed property.
+   *
+   * We cache it because recreating it reactively is computationally expensive, so we modify it reactively instead.
    */
   protected _dataSource: DataSource = new DataSource("billboard");
 
@@ -74,7 +77,7 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
   }
 
   @observable
-  protected vehicleData: VehicleData[] = [];
+  protected gtfsFeedEntities: FeedEntity[] = [];
 
   @computed
   protected get _pollingTimer(): number | undefined {
@@ -83,14 +86,34 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
     }
   }
 
+  protected convertManyFeedEntitiesToBillboardData: ITransformer<
+    FeedEntity[],
+    VehicleData[]
+  > = createTransformer((feedEntity: FeedEntity[]) => {
+    return this.gtfsFeedEntities
+      .map((entity: FeedEntity) =>
+        this.convertFeedEntityToBillboardData(entity)
+      )
+      .filter(
+        (item: VehicleData) =>
+          item.position !== null && item.position !== undefined
+      );
+  });
+
   @computed
   protected get dataSource(): DataSource {
     this._dataSource.entities.suspendEvents();
 
-    for (let data of this.vehicleData) {
+    // Convert the GTFS protobuf into a more useful shape
+    const vehicleData: VehicleData[] = this.convertManyFeedEntitiesToBillboardData(
+      this.gtfsFeedEntities
+    );
+
+    for (let data of vehicleData) {
       if (data.sourceId === undefined) {
         continue;
       }
+
       const entity: Entity = this._dataSource.entities.getOrCreateEntity(
         data.sourceId
       );
@@ -112,19 +135,27 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
         entity.position = data.position;
       }
 
-      if (
-        data.billboardGraphics !== null &&
-        data.billboardGraphics !== undefined
-      ) {
+      // If we're using a billboard
+      if (data.billboard !== null && data.billboard !== undefined) {
         if (entity.billboard === null || entity.billboard === undefined) {
-          entity.billboard = data.billboardGraphics;
+          entity.billboard = data.billboard;
         }
 
-        data.billboardGraphics.color.getValue(
-          new JulianDate()
-        ).alpha = this.opacity;
-        if (!entity.billboard.color.equals(data.billboardGraphics.color)) {
-          entity.billboard.color = data.billboardGraphics.color;
+        data.billboard.color.getValue(new JulianDate()).alpha = this.opacity;
+        if (!entity.billboard.color.equals(data.billboard.color)) {
+          entity.billboard.color = data.billboard.color;
+        }
+      }
+
+      // If we're using a point
+      if (data.point !== null && data.point !== undefined) {
+        if (entity.point === null || entity.point === undefined) {
+          entity.point = data.point;
+        }
+
+        data.point.color.getValue(new JulianDate()).alpha = this.opacity;
+        if (!entity.point.color.equals(data.point.color)) {
+          entity.point.color = data.point.color;
         }
       }
 
@@ -138,8 +169,8 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
     }
 
     // remove entities that no longer exist
-    if (this._dataSource.entities.values.length > this.vehicleData.length) {
-      const idSet = new Set(this.vehicleData.map(val => val.sourceId));
+    if (this._dataSource.entities.values.length > vehicleData.length) {
+      const idSet = new Set(vehicleData.map(val => val.sourceId));
 
       this._dataSource.entities.values
         .filter(entity => !idSet.has(entity.id))
@@ -147,7 +178,6 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
     }
 
     this._dataSource.entities.resumeEvents();
-    this.terria.currentViewer.notifyRepaintRequired();
 
     return this._dataSource;
   }
@@ -240,21 +270,12 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
   protected get loadMapItemsPromise(): Promise<void> {
     const promise: Promise<void> = this.retrieveData()
       .then((data: FeedMessage) => {
-        if (data.entity === null || data.entity === undefined) {
-          return [];
-        }
-
-        return data.entity
-          .map((entity: FeedEntity) =>
-            this.convertFeedEntityToBillboardData(entity)
-          )
-          .filter(
-            (item: VehicleData) =>
-              item.position !== null && item.position !== undefined
-          );
-      })
-      .then(data => {
-        runInAction(() => (this.vehicleData = data));
+        runInAction(() => {
+          if (data.entity !== undefined && data.entity !== null) {
+            this.gtfsFeedEntities = data.entity;
+            this.terria.currentViewer.notifyRepaintRequired();
+          }
+        });
       })
       .catch((e: Error) => {
         throw new TerriaError({
@@ -330,19 +351,36 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
     for (let field of GtfsCatalogItem.FEATURE_INFO_TEMPLATE_FIELDS) {
       featureInfo.set(field, prettyPrintGtfsEntityField(field, entity));
     }
+    let billboard;
+    let point;
+
+    if (this.image !== undefined && this.image !== null) {
+      billboard = new BillboardGraphics({
+        image: this.terria.baseUrl + this.image,
+        heightReference: HeightReference.RELATIVE_TO_GROUND,
+        // near and far distances are arbitrary, these ones look nice
+        scaleByDistance: new NearFarScalar(0.1, 1.0, 100000, 0.1),
+        color: new Color(1.0, 1.0, 1.0, this.opacity)
+      });
+    } else {
+      point = new PointGraphics({
+        color: Color.CYAN,
+        pixelSize: 32,
+        outlineWidth: 1,
+        outlineColor: Color.WHITE,
+        scaleByDistance: new ConstantProperty(
+          new NearFarScalar(0.1, 1.0, 100000, 0.1)
+        )
+      });
+    }
 
     return {
       sourceId: entity.id,
       position: position,
       orientation: orientation,
       featureInfo: featureInfo,
-      billboardGraphics: new BillboardGraphics({
-        image: this.terria.baseUrl + this.image,
-        heightReference: HeightReference.RELATIVE_TO_GROUND,
-        // near and far distances are arbitrary, these ones look nice
-        scaleByDistance: new NearFarScalar(0.1, 1.0, 100000, 0.1),
-        color: new Color(1.0, 1.0, 1.0, this.opacity)
-      })
+      billboard: billboard,
+      point: point
     };
   }
 }

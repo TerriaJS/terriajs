@@ -78,7 +78,9 @@ const SidePanel = observer(
     },
 
     startLocationSearch() {
-      this.props.viewState.searchState.showLocationSearchResults = true;
+      runInAction(() => {
+        this.props.viewState.searchState.showLocationSearchResults = true;
+      });
     },
 
     render() {

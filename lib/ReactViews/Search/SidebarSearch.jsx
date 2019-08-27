@@ -47,10 +47,11 @@ const SidebarSearch = observer(
                   this.props.viewState.searchState.locationSearchText.length > 0
                 }
               >
-                <SideBarDatasetSearchResults
+                {/* TODO: Put this back once we add a MobX DataCatalogSearch Provider */}
+                {/* <SideBarDatasetSearchResults
                   terria={this.props.terria}
                   viewState={this.props.viewState}
-                />
+                /> */}
               </If>
               <For
                 each="search"
