@@ -2,6 +2,7 @@ import { action, computed, observable, IReactionDisposer, autorun } from "mobx";
 import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
 import TimeVarying from "../ModelMixins/TimeVarying";
 import CommonStrata from "./CommonStrata";
+import filterOutUndefined from "../Core/filterOutUndefined";
 
 /**
  * Manages a stack of all the time-varying datasets currently attached to the timeline. Provides
@@ -77,6 +78,11 @@ export default class TimelineStack {
       return undefined;
     }
     return this.items[this.items.length - 1];
+  }
+
+  @computed
+  get itemIds(): readonly string[] {
+    return filterOutUndefined(this.items.map(item => item.uniqueId));
   }
 
   /**
