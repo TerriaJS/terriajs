@@ -59,7 +59,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
           return undefined;
         }
         return (
-          this.catalogGroup.uniqueId + "/" + encodeURIComponent(layer.Name)
+          this.catalogGroup.uniqueId + "/" + layer.Name
         );
       })
     );
@@ -104,7 +104,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
     }
 
     const id = this.catalogGroup.uniqueId;
-    const layerId = id + "/" + encodeURIComponent(layer.Name);
+    const layerId = id + "/" + layer.Name;
     const existingModel = this.catalogGroup.terria.getModelById(
       WebMapServiceCatalogItem,
       layerId
