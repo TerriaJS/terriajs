@@ -10,6 +10,8 @@ import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import defined from "terriajs-cesium/Source/Core/defined";
 import clone from "terriajs-cesium/Source/Core/clone";
 
+import GeoJsonCatalogItem from "../../../Models/GeoJsonCatalogItem";
+import CompositeCatalogItem from "../../../Models/CompositeCatalogItem";
 import CsvCatalogItem from "../../../Models/CsvCatalogItem";
 import SensorObservationServiceCatalogItem from "../../../Models/SensorObservationServiceCatalogItem";
 import Dropdown from "../../Generic/Dropdown";
@@ -175,6 +177,7 @@ const ChartExpandAndDownloadButtons = createReactClass({
  * @private
  */
 function expand(props, sourceIndex) {
+  const feature = props.feature;
   function makeTableStyle() {
     // Set the table style so that the names and units of the columns appear immediately, not with a delay.
     const tableStyleOptions = {
@@ -226,6 +229,30 @@ function expand(props, sourceIndex) {
       tableStyle: makeTableStyle(),
       isCsvForCharting: true
     });
+    const newGeoJsonItem = new GeoJsonCatalogItem(terria, null);
+    newGeoJsonItem.isUserSupplied = true;
+    newGeoJsonItem.style = {
+      "stroke-width": 3,
+      "marker-size": 30,
+      stroke: "#ffffff",
+      "marker-color": newCatalogItem.colors[0]
+    };
+    newGeoJsonItem.data = {
+      type: "Feature",
+      properties: {},
+      geometry: {
+        type: "Point",
+        coordinates: [
+          feature.properties.lon._value,
+          feature.properties.lat._value
+        ]
+      }
+    };
+
+    const compositeItem = new CompositeCatalogItem(terria, [
+      newCatalogItem,
+      newGeoJsonItem
+    ]);
     let tableStructure = props.tableStructure;
     if (
       defined(props.colors) &&
@@ -312,12 +339,22 @@ function expand(props, sourceIndex) {
       group.remove(oldCatalogItem);
     }
     group.add(newCatalogItem);
+
     newCatalogItem.isLoading = true;
     newCatalogItem.isMappable = false;
-    terria.catalog.addChartableItem(newCatalogItem); // Notify the chart panel so it shows "loading".
-    newCatalogItem.isEnabled = true; // This loads it as well.
+    newCatalogItem.isEnabled = true;
+    newCatalogItem.creatorCatalogItem = compositeItem;
 
-    return newCatalogItem;
+    terria.catalog.addChartableItem(newCatalogItem); // Notify the chart panel so it shows "loading".
+
+    newGeoJsonItem.isMappable = true;
+
+    compositeItem.isEnabled = true;
+    compositeItem.nowViewingCatalogItem = newCatalogItem;
+
+    newGeoJsonItem.style["marker-color"] = newCatalogItem.getNextColor();
+
+    return compositeItem;
   }
 
   let existingColors;
@@ -329,7 +366,12 @@ function expand(props, sourceIndex) {
     // Enclose in try-catch rather than otherwise so that if load itself fails, we don't do this at all.
     try {
       newCatalogItem.sourceCatalogItem = props.catalogItem;
-      const tableStructure = newCatalogItem.tableStructure;
+      let csvItem = null;
+      for (let i = 0; i < newCatalogItem.items.length; i++) {
+        if (newCatalogItem.items[i].type === "csv")
+          csvItem = newCatalogItem.items[i];
+      }
+      const tableStructure = csvItem.tableStructure;
       tableStructure.sourceFeature = props.feature;
       if (defined(existingColors)) {
         tableStructure.columns.forEach((column, columnNumber) => {
@@ -341,7 +383,7 @@ function expand(props, sourceIndex) {
           column.isActive = activeConcepts[columnNumber];
         });
       }
-      newCatalogItem.setChartable();
+      csvItem.setChartable();
     } catch (e) {
       // This does not actually make it to the user.
       return raiseErrorToUser(terria, e);
