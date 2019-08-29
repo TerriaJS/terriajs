@@ -1,22 +1,17 @@
-import { runInAction } from "mobx";
+import { runInAction, computed } from "mobx";
 import TerriaError from "../Core/TerriaError";
 import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
 import TableMixin from "../ModelMixins/TableMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import Csv from "../Table/Csv";
-import TableColumnType from "../Table/TableColumnType";
+import TableAutomaticStylesStratum from "../Table/TableAutomaticStylesStratum";
 import CsvCatalogItemTraits from "../Traits/CsvCatalogItemTraits";
-import TableColorStyleTraits from "../Traits/TableColorStyleTraits";
-import TableStyleTraits from "../Traits/TableStyleTraits";
 import CreateModel from "./CreateModel";
-import createStratumInstance from "./createStratumInstance";
-import LoadableStratum from "./LoadableStratum";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
-import StratumFromTraits from "./StratumFromTraits";
 import StratumOrder from "./StratumOrder";
 import Terria from "./Terria";
-import TableAutomaticStylesStratum from "../Table/TableAutomaticStylesStratum";
+import AutoRefreshingMixin from "../ModelMixins/AutoRefreshingMixin";
 
 // Types of CSVs:
 // - Points - Latitude and longitude columns or address
@@ -32,7 +27,9 @@ import TableAutomaticStylesStratum from "../Table/TableAutomaticStylesStratum";
 const automaticTableStylesStratumName = "automaticTableStyles";
 
 export default class CsvCatalogItem extends AsyncMappableMixin(
-  TableMixin(UrlMixin(CatalogMemberMixin(CreateModel(CsvCatalogItemTraits))))
+  AutoRefreshingMixin(
+    TableMixin(UrlMixin(CatalogMemberMixin(CreateModel(CsvCatalogItemTraits))))
+  )
 ) {
   static get type() {
     return "csv";
@@ -48,6 +45,47 @@ export default class CsvCatalogItem extends AsyncMappableMixin(
 
   get type() {
     return CsvCatalogItem.type;
+  }
+
+  /*
+   * The polling URL to use for refreshing data.
+   */
+  @computed get refreshUrl() {
+    return this.polling.url || this.url;
+  }
+
+  /*
+   * Called by AutoRefreshingMixin to get the polling interval
+   */
+  @computed get refreshInterval() {
+    if (this.refreshUrl) {
+      return this.polling.seconds;
+    }
+  }
+
+  /*
+   * Hook called by AutoRefreshingMixin to refresh data.
+   *
+   * The refresh happens only if a `refreshUrl` is defined.
+   * If `shouldReplaceData` is true, then the new data replaces current data,
+   * otherwise new data is appended to current data.
+   */
+  refreshData() {
+    if (!this.refreshUrl) {
+      return;
+    }
+
+    Csv.parseUrl(proxyCatalogItemUrl(this, this.refreshUrl, "1d"), true).then(
+      dataColumnMajor => {
+        runInAction(() => {
+          if (this.polling.shouldReplaceData) {
+            this.dataColumnMajor = dataColumnMajor;
+          } else {
+            this.append(dataColumnMajor);
+          }
+        });
+      }
+    );
   }
 
   protected get loadMapItemsPromise(): Promise<void> {

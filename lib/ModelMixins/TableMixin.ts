@@ -2,6 +2,7 @@ import { computed, observable, runInAction } from "mobx";
 import { createTransformer } from "mobx-utils";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Color from "terriajs-cesium/Source/Core/Color";
+import DeveloperError from "terriajs-cesium/Source/Core/DeveloperError";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
@@ -9,19 +10,19 @@ import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import PointGraphics from "terriajs-cesium/Source/DataSources/PointGraphics";
 import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
+import { JsonObject } from "../Core/Json";
 import makeRealPromise from "../Core/makeRealPromise";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
 import RegionProviderList from "../Map/RegionProviderList";
 import { ImageryParts } from "../Models/Mappable";
 import Model from "../Models/Model";
+import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
 import SelectableStyle, { AvailableStyle } from "../Models/SelectableStyle";
 import TableColumn from "../Table/TableColumn";
 import TableColumnType from "../Table/TableColumnType";
 import TableStyle from "../Table/TableStyle";
-import TableTraits from "../Traits/TableTraits";
-import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
 import LegendTraits from "../Traits/LegendTraits";
-import { JsonObject } from "../Core/Json";
+import TableTraits from "../Traits/TableTraits";
 
 export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
   Base: T
@@ -172,6 +173,29 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
         runInAction(() => {
           this.regionProviderList = regionProviderList;
         });
+      });
+    }
+
+    /*
+     * Appends new table data in column major format to this table.
+     * It is assumed that thhe column order is the same for both the tables.
+     */
+    append(dataColumnMajor2: string[][]) {
+      if (
+        this.dataColumnMajor !== undefined &&
+        this.dataColumnMajor.length !== dataColumnMajor2.length
+      ) {
+        throw new DeveloperError(
+          "Cannot add tables with different numbers of columns."
+        );
+      }
+
+      runInAction(() => {
+        const appended = this.dataColumnMajor || [];
+        dataColumnMajor2.forEach((newRows, col) => {
+          appended[col] = (appended[col] || []).concat(newRows);
+        });
+        this.dataColumnMajor = appended;
       });
     }
 
