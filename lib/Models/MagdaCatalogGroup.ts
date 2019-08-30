@@ -149,7 +149,10 @@ export default class MagdaCatalogGroup extends MagdaMixin(
         );
 
         if (GroupMixin.isMixedInto(dereferenced)) {
-          return dereferenced.loadMembers().then(() => dereferenced);
+          return dereferenced.loadMembers().then(() => {
+            dereferenced.refreshKnownContainerUniqueIds(id);
+            return dereferenced;
+          });
         } else if (CatalogMemberMixin.isMixedInto(dereferenced)) {
           return dereferenced.loadMetadata().then(() => dereferenced);
         }
