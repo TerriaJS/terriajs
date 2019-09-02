@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### v7.6.10
+
+* Use styles derived from drawingInfo from Esri Feature Services. 
+
 ### v7.6.9
 
 * Automatically set `linkedWcsCoverage` on a WebMapServiceCatalogItem.
