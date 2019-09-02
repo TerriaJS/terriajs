@@ -7,7 +7,6 @@ import PropTypes from "prop-types";
 
 import DataCatalog from "../../DataCatalog/DataCatalog";
 import DataPreview from "../../Preview/DataPreview";
-import SearchBox from "../../Search/SearchBox";
 
 import Styles from "./data-catalog-tab.scss";
 import { runInAction } from "mobx";

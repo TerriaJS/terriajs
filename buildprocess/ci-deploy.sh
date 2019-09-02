@@ -36,7 +36,7 @@ gcloud components install kubectl --quiet
 gcloud container clusters get-credentials terriajs-ci --zone australia-southeast1-a --project terriajs-automated-deployment
 
 # Install some tools we need from npm
-npm install -g sync-dependencies
+npm install -g https://github.com/terriajs/sync-dependencies
 npm install request@^2.83.0
 
 # Clone and build TerriaMap, using this version of TerriaJS

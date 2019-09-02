@@ -15,6 +15,7 @@ import {
 } from "./GtfsRealtimeProtoBufReaders";
 
 import BillboardGraphics from "terriajs-cesium/Source/DataSources/BillboardGraphics";
+import PointGraphics from "terriajs-cesium/Source/DataSources/PointGraphics";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import HeightReference from "terriajs-cesium/Source/Scene/HeightReference";
 import DataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
@@ -134,19 +135,27 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
         entity.position = data.position;
       }
 
-      if (
-        data.billboardGraphics !== null &&
-        data.billboardGraphics !== undefined
-      ) {
+      // If we're using a billboard
+      if (data.billboard !== null && data.billboard !== undefined) {
         if (entity.billboard === null || entity.billboard === undefined) {
-          entity.billboard = data.billboardGraphics;
+          entity.billboard = data.billboard;
         }
 
-        data.billboardGraphics.color.getValue(
-          new JulianDate()
-        ).alpha = this.opacity;
-        if (!entity.billboard.color.equals(data.billboardGraphics.color)) {
-          entity.billboard.color = data.billboardGraphics.color;
+        data.billboard.color.getValue(new JulianDate()).alpha = this.opacity;
+        if (!entity.billboard.color.equals(data.billboard.color)) {
+          entity.billboard.color = data.billboard.color;
+        }
+      }
+
+      // If we're using a point
+      if (data.point !== null && data.point !== undefined) {
+        if (entity.point === null || entity.point === undefined) {
+          entity.point = data.point;
+        }
+
+        data.point.color.getValue(new JulianDate()).alpha = this.opacity;
+        if (!entity.point.color.equals(data.point.color)) {
+          entity.point.color = data.point.color;
         }
       }
 
@@ -342,19 +351,36 @@ export default class GtfsCatalogItem extends AsyncMappableMixin(
     for (let field of GtfsCatalogItem.FEATURE_INFO_TEMPLATE_FIELDS) {
       featureInfo.set(field, prettyPrintGtfsEntityField(field, entity));
     }
+    let billboard;
+    let point;
+
+    if (this.image !== undefined && this.image !== null) {
+      billboard = new BillboardGraphics({
+        image: this.terria.baseUrl + this.image,
+        heightReference: HeightReference.RELATIVE_TO_GROUND,
+        // near and far distances are arbitrary, these ones look nice
+        scaleByDistance: new NearFarScalar(0.1, 1.0, 100000, 0.1),
+        color: new Color(1.0, 1.0, 1.0, this.opacity)
+      });
+    } else {
+      point = new PointGraphics({
+        color: Color.CYAN,
+        pixelSize: 32,
+        outlineWidth: 1,
+        outlineColor: Color.WHITE,
+        scaleByDistance: new ConstantProperty(
+          new NearFarScalar(0.1, 1.0, 100000, 0.1)
+        )
+      });
+    }
 
     return {
       sourceId: entity.id,
       position: position,
       orientation: orientation,
       featureInfo: featureInfo,
-      billboardGraphics: new BillboardGraphics({
-        image: this.terria.baseUrl + this.image,
-        heightReference: HeightReference.RELATIVE_TO_GROUND,
-        // near and far distances are arbitrary, these ones look nice
-        scaleByDistance: new NearFarScalar(0.1, 1.0, 100000, 0.1),
-        color: new Color(1.0, 1.0, 1.0, this.opacity)
-      })
+      billboard: billboard,
+      point: point
     };
   }
 }
