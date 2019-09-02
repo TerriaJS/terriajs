@@ -48,6 +48,7 @@ import Workbench from "./Workbench";
 import CorsProxy from "../Core/CorsProxy";
 
 interface ConfigParameters {
+  [key: string]: ConfigParameters[keyof ConfigParameters];
   defaultMaximumShownFeatureInfos?: number;
   regionMappingDefinitionsUrl: string;
   conversionServiceBaseUrl?: string;
@@ -271,11 +272,7 @@ export default class Terria {
       .then((config: any) => {
         runInAction(() => {
           if (config.parameters) {
-            Object.keys(config.parameters).forEach(key => {
-              if (this.configParameters.hasOwnProperty(key)) {
-                (<any>this.configParameters)[key] = config.parameters[key];
-              }
-            });
+            this.updateParameters(config.parameters);
           }
 
           if (config.aspects) {
@@ -338,6 +335,15 @@ export default class Terria {
         .hash("")
     ).then(() => {
       return this.loadInitSources();
+    });
+  }
+
+  @action
+  updateParameters(parameters: ConfigParameters): void {
+    Object.keys(parameters).forEach((key: string) => {
+      if (this.configParameters.hasOwnProperty(key)) {
+        this.configParameters[key] = parameters[key];
+      }
     });
   }
 
@@ -583,6 +589,12 @@ export default class Terria {
 
   loadMagdaConfig(config: any) {
     const aspects = config.aspects;
+    const configParams =
+      aspects["terria-config"] && aspects["terria-config"].parameters;
+
+    if (configParams) {
+      this.updateParameters(configParams);
+    }
     if (aspects.group && aspects.group.members) {
       // Transform the Magda catalog structure to the Terria one.
       const members = aspects.group.members.map((member: any) => {
@@ -602,7 +614,7 @@ export default class Terria {
     // All the "proxyableDomains" bits here are due to a pre-serverConfig mechanism for whitelisting domains.
     // We should deprecate it.s
 
-    // If a URL was specified in the config paramaters to get the proxyable domains from, get them from that
+    // If a URL was specified in the config parameters to get the proxyable domains from, get them from that
     var pdu = this.configParameters.proxyableDomainsUrl;
     const proxyableDomainsPromise: Promise<JsonValue | void> = pdu
       ? loadJson5(pdu)
