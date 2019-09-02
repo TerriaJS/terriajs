@@ -1,13 +1,14 @@
-import Terria from "./Terria";
-import ViewState from "../ReactViewModels/ViewState";
+import { runInAction } from "mobx";
 import isDefined from "../Core/isDefined";
-import createCatalogItemFromUrl from "./createCatalogItemFromUrl";
 import TerriaError from "../Core/TerriaError";
-import upsertModelFromJson from "./upsertModelFromJson";
+import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
+import ViewState from "../ReactViewModels/ViewState";
 import CatalogMemberFactory from "./CatalogMemberFactory";
 import CommonStrata from "./CommonStrata";
+import createCatalogItemFromUrl from "./createCatalogItemFromUrl";
 import { BaseModel } from "./Model";
-import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
+import Terria from "./Terria";
+import upsertModelFromJson from "./upsertModelFromJson";
 
 export default function createCatalogItemFromFileOrUrl(
   terria: Terria,
@@ -145,17 +146,19 @@ function getConfirmation(
   }
 
   return new Promise(resolve => {
-    viewState.notifications.push({
-      confirmText: "Upload",
-      denyText: "Cancel",
-      title: "Use conversion service?",
-      message: message,
-      confirmAction: function() {
-        resolve(true);
-      },
-      denyAction: function() {
-        resolve(false);
-      }
+    runInAction(() => {
+      viewState.notifications.push({
+        confirmText: "Upload",
+        denyText: "Cancel",
+        title: "Use conversion service?",
+        message: message,
+        confirmAction: function() {
+          resolve(true);
+        },
+        denyAction: function() {
+          resolve(false);
+        }
+      });
     });
   });
 }
