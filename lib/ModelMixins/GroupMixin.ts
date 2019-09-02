@@ -7,7 +7,6 @@ import Model, { BaseModel } from "../Models/Model";
 import GroupTraits from "../Traits/GroupTraits";
 import ModelReference from "../Traits/ModelReference";
 import AsyncLoader from "../Core/AsyncLoader";
-import { unique } from "mobx/lib/internal";
 
 function GroupMixin<T extends Constructor<Model<GroupTraits>>>(Base: T) {
   abstract class GroupMixin extends Base {
