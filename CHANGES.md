@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### v7.6.10
+
+* Resolve a bug with `SdmxJsonCatalogItem`'s v2.0 where they were being redrawn when dimensions we're changed.
+
 ### v7.6.9
 
 * Automatically set `linkedWcsCoverage` on a WebMapServiceCatalogItem.
