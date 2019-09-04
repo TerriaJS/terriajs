@@ -38,6 +38,8 @@ export default class CsvCatalogItem extends AsyncMappableMixin(
     return "csv";
   }
 
+  private _csvFile?: File;
+
   constructor(id: string, terria: Terria) {
     super(id, terria);
     this.strata.set(
@@ -50,11 +52,17 @@ export default class CsvCatalogItem extends AsyncMappableMixin(
     return CsvCatalogItem.type;
   }
 
+  setFileInput(file: File) {
+    this._csvFile = file;
+  }
+
   protected get loadMapItemsPromise(): Promise<void> {
     return this.loadTableMixin()
       .then(() => {
         if (this.csvString !== undefined) {
           return Csv.parseString(this.csvString, true);
+        } else if (this._csvFile !== undefined) {
+          return Csv.parseFile(this._csvFile, true);
         } else if (this.url !== undefined) {
           return Csv.parseUrl(proxyCatalogItemUrl(this, this.url, "1d"), true);
         } else {

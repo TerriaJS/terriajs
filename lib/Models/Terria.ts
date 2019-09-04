@@ -46,6 +46,7 @@ import updateModelFromJson from "./updateModelFromJson";
 import upsertModelFromJson from "./upsertModelFromJson";
 import Workbench from "./Workbench";
 import CorsProxy from "../Core/CorsProxy";
+import TimeVarying from "../ModelMixins/TimeVarying";
 
 interface ConfigParameters {
   [key: string]: ConfigParameters[keyof ConfigParameters];
@@ -475,7 +476,6 @@ export default class Terria {
     replaceStratum = false
   }: ApplyInitDataOptions): Promise<void> {
     initData = toJS(initData);
-
     const stratumId =
       typeof initData.stratum === "string"
         ? initData.stratum
@@ -530,6 +530,10 @@ export default class Terria {
       ? initData.workbench.slice().reverse()
       : [];
 
+    const timeline = Array.isArray(initData.timeline)
+      ? initData.timeline.slice()
+      : [];
+
     // Load the models
     let promise: Promise<void>;
 
@@ -569,6 +573,13 @@ export default class Terria {
         );
 
         this.workbench.items = newItems;
+
+        this.timelineStack.items = this.workbench.items
+          .filter(item => {
+            return item.uniqueId && timeline.indexOf(item.uniqueId) >= 0;
+            // && TODO: what is a good way to test if an item is of type TimeVarying.
+          })
+          .map(item => <TimeVarying>item);
 
         // Load the items on the workbench
         for (let model of newItems) {
@@ -740,30 +751,31 @@ function interpretHash(
       : Promise.resolve({});
 
   return promise.then((shareProps: any) => {
-    Object.keys(hashProperties).forEach(function(property) {
-      const propertyValue = hashProperties[property];
+    runInAction(() => {
+      Object.keys(hashProperties).forEach(function(property) {
+        const propertyValue = hashProperties[property];
+        if (property === "clean") {
+          terria.initSources.splice(0, terria.initSources.length);
+        } else if (property === "start") {
+          // a share link that hasn't been shortened: JSON embedded in URL (only works for small quantities of JSON)
+          const startData = JSON.parse(propertyValue);
+          interpretStartData(terria, startData);
+        } else if (defined(propertyValue) && propertyValue.length > 0) {
+          userProperties.set(property, propertyValue);
+        } else {
+          const initSourceFile = generateInitializationUrl(
+            baseUri,
+            terria.configParameters.initFragmentPaths,
+            property
+          );
+          terria.initSources.push(initSourceFile);
+        }
+      });
 
-      if (property === "clean") {
-        terria.initSources.splice(0, terria.initSources.length);
-      } else if (property === "start") {
-        // a share link that hasn't been shortened: JSON embedded in URL (only works for small quantities of JSON)
-        const startData = JSON.parse(propertyValue);
-        interpretStartData(terria, startData);
-      } else if (defined(propertyValue) && propertyValue.length > 0) {
-        userProperties.set(property, propertyValue);
-      } else {
-        const initSourceFile = generateInitializationUrl(
-          baseUri,
-          terria.configParameters.initFragmentPaths,
-          property
-        );
-        terria.initSources.push(initSourceFile);
+      if (shareProps) {
+        interpretStartData(terria, shareProps);
       }
     });
-
-    if (shareProps) {
-      interpretStartData(terria, shareProps);
-    }
   });
 }
 
