@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### v7.6.10
+
+* Fixed error when opening a URL shared from an explorer tab. #3614
+
 ### v7.6.9
 
 * Automatically set `linkedWcsCoverage` on a WebMapServiceCatalogItem.
