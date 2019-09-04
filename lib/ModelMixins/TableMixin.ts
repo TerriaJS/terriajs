@@ -3,25 +3,27 @@ import { createTransformer } from "mobx-utils";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Color from "terriajs-cesium/Source/Core/Color";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
+import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
+import TimeIntervalCollection from "terriajs-cesium/Source/Core/TimeIntervalCollection";
 import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSource";
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import PointGraphics from "terriajs-cesium/Source/DataSources/PointGraphics";
 import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
+import { JsonObject } from "../Core/Json";
 import makeRealPromise from "../Core/makeRealPromise";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
 import RegionProviderList from "../Map/RegionProviderList";
 import { ImageryParts } from "../Models/Mappable";
 import Model from "../Models/Model";
+import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
 import SelectableStyle, { AvailableStyle } from "../Models/SelectableStyle";
 import TableColumn from "../Table/TableColumn";
 import TableColumnType from "../Table/TableColumnType";
 import TableStyle from "../Table/TableStyle";
-import TableTraits from "../Traits/TableTraits";
-import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
 import LegendTraits from "../Traits/LegendTraits";
-import { JsonObject } from "../Core/Json";
+import TableTraits from "../Traits/TableTraits";
 
 export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
   Base: T
@@ -200,6 +202,10 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
         const dataSource = new CustomDataSource(this.name || "Table");
         dataSource.entities.suspendEvents();
 
+        const timeColumn =
+          style.timeColumn || this.findFirstColumnByType(TableColumnType.time);
+        const endTimeColumn = style.endTimeColumn;
+
         for (let i = 0; i < longitudes.length && i < latitudes.length; ++i) {
           const longitude = longitudes[i];
           const latitude = latitudes[i];
@@ -219,6 +225,13 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
               })
             })
           );
+          if (timeColumn) {
+            entity.availability = this.availabilityForRow(
+              i,
+              timeColumn,
+              endTimeColumn
+            );
+          }
           entity.properties = this.getRowValues(i);
         }
 
@@ -227,6 +240,37 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
         return dataSource;
       }
     );
+
+    /**
+     * Returns the availability time intervals for a row
+     */
+    private availabilityForRow(
+      index: number,
+      timeColumn: TableColumn,
+      endTimeColumn: TableColumn | undefined
+    ): TimeIntervalCollection {
+      const availability = new TimeIntervalCollection();
+      const startDates = timeColumn.valuesAsJulianDates;
+      // If endTimeColumn is defined use it for the stop dates otherwise derive
+      // stop dates from the timeColumn
+      const stopDates = endTimeColumn
+        ? endTimeColumn.valuesAsJulianDates
+        : timeColumn.stopDates;
+
+      const startDate = startDates[index];
+      const stopDate = stopDates[index] || undefined;
+      if (startDate !== null) {
+        availability.addInterval(
+          new TimeInterval({
+            start: startDate,
+            stop: stopDate,
+            isStopIncluded: false,
+            data: startDate
+          })
+        );
+      }
+      return availability;
+    }
 
     private readonly createRegionMappedImageryLayer = createTransformer(
       (style: TableStyle): ImageryParts | undefined => {

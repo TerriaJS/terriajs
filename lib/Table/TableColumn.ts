@@ -1,5 +1,8 @@
 import countBy from "lodash-es/countBy";
+import sortedUniqBy from "lodash/sortedUniqBy";
 import { computed } from "mobx";
+import JulianDate from "terriajs-cesium/Source/Core/JulianDate";
+import TimeInterval from "terriajs-cesium/Source/Core/TimeInterval";
 import RegionProvider from "../Map/RegionProvider";
 import RegionProviderList from "../Map/RegionProviderList";
 import createCombinedModel from "../Models/createCombinedModel";
@@ -224,6 +227,75 @@ export default class TableColumn {
     };
   }
 
+  /**
+   * Returns each value as a {@link JulianDate}.
+   */
+  @computed
+  get valuesAsJulianDates(): ReadonlyArray<JulianDate | null> {
+    const replaceWithNull = this.traits.replaceWithNullValues || [];
+    const julianDates = this.values.map(value => {
+      if (replaceWithNull.indexOf(value) >= 0) {
+        return null;
+      } else {
+        const jsDate = new Date(value);
+        if (Number.isNaN(Number(jsDate))) {
+          // Invalid date
+          return null;
+        } else {
+          return JulianDate.fromDate(jsDate);
+        }
+      }
+    });
+    return julianDates;
+  }
+
+  /**
+   * Returns any array of next higher date for each date in `valuesAsJulianDates`.
+   */
+  @computed
+  get stopDates(): ReadonlyArray<JulianDate | null> {
+    // Make a unique sorted list of all dates
+    const startDates = this.valuesAsJulianDates;
+    const sortedUniqueDates = sortedUniqBy(
+      startDates.filter((date): date is JulianDate => date !== null).sort(),
+      date => date && date.toString()
+    );
+
+    // Next, we calculate a stop date for the highest date in `valuesAsJulianDates`.
+    // If `sortedUniqueDates` has only 1 value we default to higest date + 1d - 1s.
+    // Otherwise, we add the average interval value to the highest date.
+    let finalIntervalSeconds = 3600 * 24 - 1; // 1d - 1s
+    const n = sortedUniqueDates.length;
+    if (n > 1) {
+      const averageIntervalSeconds =
+        JulianDate.secondsDifference(
+          sortedUniqueDates[n - 1],
+          sortedUniqueDates[0]
+        ) /
+        (n - 1);
+      finalIntervalSeconds = averageIntervalSeconds;
+    }
+    const finalDate = JulianDate.addSeconds(
+      sortedUniqueDates[n - 1],
+      finalIntervalSeconds,
+      new JulianDate()
+    );
+
+    const stopDates: (JulianDate | null)[] = startDates.map(startDate => {
+      // For each non-null start date return the next higher date from `sortedUniqueDates`,
+      // if there is no date higher than itself, return the `finalDate` computed above.
+      if (startDate) {
+        const index = sortedUniqueDates.findIndex(
+          date => date && date.equals(startDate)
+        );
+        const stopDate = sortedUniqueDates[index + 1] || finalDate;
+        return stopDate;
+      }
+      return null;
+    });
+    return stopDates;
+  }
+
   findMatchingRegion(
     regionType: typeof RegionProvider,
     rowValue: string
@@ -258,10 +330,10 @@ export default class TableColumn {
   @computed
   get traits(): Model<TableColumnTraits> {
     // It is important to match on column name and not column number because the column numbers can vary between stratum
-    const thisColumn = this.tableModel.columns.find((column) => column.name === this.name);
-    if (
-      thisColumn !== undefined
-    ) {
+    const thisColumn = this.tableModel.columns.find(
+      column => column.name === this.name
+    );
+    if (thisColumn !== undefined) {
       const result = createCombinedModel(
         thisColumn,
         this.tableModel.defaultColumn

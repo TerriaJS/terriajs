@@ -2,21 +2,17 @@ import { runInAction } from "mobx";
 import TerriaError from "../Core/TerriaError";
 import AsyncMappableMixin from "../ModelMixins/AsyncMappableMixin";
 import CatalogMemberMixin from "../ModelMixins/CatalogMemberMixin";
+import DiscretelyTimeVaryingMixin from "../ModelMixins/DiscretelyTimeVaryingMixin";
 import TableMixin from "../ModelMixins/TableMixin";
 import UrlMixin from "../ModelMixins/UrlMixin";
 import Csv from "../Table/Csv";
-import TableColumnType from "../Table/TableColumnType";
+import TableAutomaticStylesStratum from "../Table/TableAutomaticStylesStratum";
+import TableTimeVaryingStratum from "../Table/TableTimeVaryingStratum";
 import CsvCatalogItemTraits from "../Traits/CsvCatalogItemTraits";
-import TableColorStyleTraits from "../Traits/TableColorStyleTraits";
-import TableStyleTraits from "../Traits/TableStyleTraits";
 import CreateModel from "./CreateModel";
-import createStratumInstance from "./createStratumInstance";
-import LoadableStratum from "./LoadableStratum";
 import proxyCatalogItemUrl from "./proxyCatalogItemUrl";
-import StratumFromTraits from "./StratumFromTraits";
 import StratumOrder from "./StratumOrder";
 import Terria from "./Terria";
-import TableAutomaticStylesStratum from "../Table/TableAutomaticStylesStratum";
 
 // Types of CSVs:
 // - Points - Latitude and longitude columns or address
@@ -30,9 +26,12 @@ import TableAutomaticStylesStratum from "../Table/TableAutomaticStylesStratum";
 //
 
 const automaticTableStylesStratumName = "automaticTableStyles";
+const tableTimeVaryingStratumName = "tableTimeVaryingStratumName";
 
 export default class CsvCatalogItem extends AsyncMappableMixin(
-  TableMixin(UrlMixin(CatalogMemberMixin(CreateModel(CsvCatalogItemTraits))))
+  DiscretelyTimeVaryingMixin(
+    TableMixin(UrlMixin(CatalogMemberMixin(CreateModel(CsvCatalogItemTraits))))
+  )
 ) {
   static get type() {
     return "csv";
@@ -43,6 +42,10 @@ export default class CsvCatalogItem extends AsyncMappableMixin(
     this.strata.set(
       automaticTableStylesStratumName,
       new TableAutomaticStylesStratum(this)
+    );
+    this.strata.set(
+      tableTimeVaryingStratumName,
+      new TableTimeVaryingStratum(this)
     );
   }
 
@@ -80,3 +83,4 @@ export default class CsvCatalogItem extends AsyncMappableMixin(
 }
 
 StratumOrder.addLoadStratum(automaticTableStylesStratumName);
+StratumOrder.addLoadStratum(tableTimeVaryingStratumName);

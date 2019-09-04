@@ -3,10 +3,12 @@ import primitiveTrait from "./primitiveTrait";
 import TableTraits from "./TableTraits";
 import UrlTraits from "./UrlTraits";
 import FeatureInfoTraits from "./FeatureInfoTraits";
+import DiscretelyTimeVaryingTraits from "./DiscretelyTimeVaryingTraits";
 
 export default class CsvCatalogItemTraits extends mixTraits(
   FeatureInfoTraits,
   UrlTraits,
+  DiscretelyTimeVaryingTraits,
   TableTraits
 ) {
   @primitiveTrait({

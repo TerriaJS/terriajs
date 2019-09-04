@@ -19,6 +19,7 @@ import TableTraits from "../Traits/TableTraits";
 import ColorPalette from "./ColorPalette";
 import TableColumn from "./TableColumn";
 import TableColumnType from "./TableColumnType";
+import TableTimeStyleTraits from "../Traits/TableTimeStyleTraits";
 
 const defaultColor = "yellow";
 
@@ -95,6 +96,15 @@ export default class TableStyle {
   }
 
   /**
+   * Gets the {@link TableTimeStyleTraits} from the {@link #styleTraits}.
+   * Returns a default instance of no time traits are specified explicitly.
+   */
+  @computed
+  get timeTraits(): Model<TableTimeStyleTraits> {
+    return this.styleTraits.time;
+  }
+
+  /**
    * Gets the longitude column for this style, if any.
    */
   @computed
@@ -148,6 +158,19 @@ export default class TableStyle {
   @computed
   get pointSizeColumn(): TableColumn | undefined {
     return this.resolveColumn(this.pointSizeTraits.pointSizeColumn);
+  }
+
+  /**
+   * Gets the time column for this style, if any.
+   */
+  @computed
+  get timeColumn(): TableColumn | undefined {
+    return this.resolveColumn(this.timeTraits.timeColumn);
+  }
+
+  @computed
+  get endTimeColumn(): TableColumn | undefined {
+    return this.resolveColumn(this.timeTraits.endTimeColumn);
   }
 
   /**
