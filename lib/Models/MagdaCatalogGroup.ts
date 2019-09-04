@@ -88,14 +88,18 @@ export default class MagdaCatalogGroup extends MagdaMixin(
           type:
             typeof terriaAspect.type === "string" ? terriaAspect.type : "group",
           members: Array.isArray(groupAspect.members)
-            ? groupAspect.members.map((member: any) =>
-                magdaRecordToCatalogMemberDefinition({
-                  magdaBaseUrl: url,
-                  record: member,
-                  definition: definition,
-                  distributionFormats: distributionFormats
-                })
-              )
+            ? groupAspect.members
+                .map((member: any) =>
+                  magdaRecordToCatalogMemberDefinition({
+                    magdaBaseUrl: url,
+                    record: member,
+                    definition: definition,
+                    distributionFormats: distributionFormats
+                  })
+                )
+                // get rid of members that we couldn't convert to a catalog
+                // member (e.g.non supported/built distribution formats)
+                .filter(member => member)
             : []
         };
 

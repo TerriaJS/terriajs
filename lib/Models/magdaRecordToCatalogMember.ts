@@ -100,7 +100,7 @@ export default function magdaRecordToCatalogMemberDefinition(
         if (key === "members" && Array.isArray(value)) {
           value.forEach(member => {
             if (typeof member !== "string") {
-              groupDefinition.members.push(member);
+              groupDefinition.definition.members.push(member);
             }
           });
         } else {
