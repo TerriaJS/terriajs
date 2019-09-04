@@ -5,6 +5,7 @@ Change Log
 
 * Fixed error when opening a URL shared from an explorer tab. #3614
 * Resolve a bug with `SdmxJsonCatalogItem`'s v2.0 where they were being redrawn when dimensions we're changed. #3659
+* Upgrades terriajs-cesium to 1.61.0
 
 ### v7.6.9
 
