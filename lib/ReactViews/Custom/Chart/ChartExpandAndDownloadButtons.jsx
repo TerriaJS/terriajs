@@ -9,6 +9,8 @@ import createReactClass from "create-react-class";
 import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import defined from "terriajs-cesium/Source/Core/defined";
 import clone from "terriajs-cesium/Source/Core/clone";
+import Ellipsoid from "terriajs-cesium/Source/Core/Ellipsoid";
+import CesiumMath from "terriajs-cesium/Source/Core/Math";
 
 import GeoJsonCatalogItem from "../../../Models/GeoJsonCatalogItem";
 import CompositeCatalogItem from "../../../Models/CompositeCatalogItem";
@@ -81,8 +83,8 @@ const ChartExpandAndDownloadButtons = createReactClass({
     let btnsShouldBeDisabled = false;
     const f = this.props.feature;
     const chartData = this.props.catalogItem.chartData();
-    if (defined(chartData) && defined(chartData.points)) {
-      chartData.points.forEach(function(p) {
+    if (defined(chartData) && defined(chartData[0].points)) {
+      chartData[0].points.forEach(function(p) {
         if (p.x === f._name && p.y === null) {
           btnsShouldBeDisabled = true;
         }
@@ -235,16 +237,21 @@ function expand(props, sourceIndex) {
       "stroke-width": 3,
       "marker-size": 30,
       stroke: "#ffffff",
-      "marker-color": newCatalogItem.colors[0]
+      "marker-color": newCatalogItem.colors[0],
+      "marker-opacity": 1
     };
+
+    const carts = Ellipsoid.WGS84.cartesianToCartographic(
+      feature.position._value
+    );
     newGeoJsonItem.data = {
       type: "Feature",
       properties: {},
       geometry: {
         type: "Point",
         coordinates: [
-          feature.properties.lon._value,
-          feature.properties.lat._value
+          CesiumMath.toDegrees(carts.longitude),
+          CesiumMath.toDegrees(carts.latitude)
         ]
       }
     };
