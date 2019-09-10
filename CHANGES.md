@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### v7.6.11
+
+* Improve support for leaflet rendered across the anti-meridian.
+
 ### v7.6.10
 
 * Fixed error when opening a URL shared from an explorer tab. #3614
