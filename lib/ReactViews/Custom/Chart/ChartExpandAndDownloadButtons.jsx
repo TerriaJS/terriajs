@@ -80,6 +80,7 @@ const ChartExpandAndDownloadButtons = createReactClass({
     // {x: "Some Station", y: null}
     // But there isn't a good way to get the chartData for a feature
     // which is what we ideally need
+    // It doesn't work for SensorObservationService data where chartData is undefined
     let btnsShouldBeDisabled = false;
     const f = this.props.feature;
     const chartData = this.props.catalogItem.chartData();
