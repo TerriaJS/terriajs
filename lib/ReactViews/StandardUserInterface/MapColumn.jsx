@@ -16,7 +16,7 @@ import classNames from "classnames";
 import Styles from "./map-column.scss";
 
 const isIE = FeatureDetection.isInternetExplorer();
-const isChrome = FeatureDetection.isChrome();
+const chromeVersion = FeatureDetection.chromeVersion();
 
 /**
  * Right-hand column that contains the map, controls that sit over the map and sometimes the bottom dock containing
@@ -80,13 +80,16 @@ const MapColumn = createReactClass({
   },
 
   render() {
+    // TODO: remove? see: https://bugs.chromium.org/p/chromium/issues/detail?id=1001663
+    const isAboveChrome75 =
+      chromeVersion && chromeVersion[0] && Number(chromeVersion[0]) > 75;
     const mapCellClass = classNames(Styles.mapCell, {
-      [Styles.mapCellChrome]: isChrome
+      [Styles.mapCellChrome]: isAboveChrome75
     });
     return (
       <div
         className={classNames(Styles.mapInner, {
-          [Styles.mapInnerChrome]: isChrome
+          [Styles.mapInnerChrome]: isAboveChrome75
         })}
       >
         <div className={Styles.mapRow}>
