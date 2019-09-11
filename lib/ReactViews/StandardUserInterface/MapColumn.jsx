@@ -16,6 +16,7 @@ import classNames from "classnames";
 import Styles from "./map-column.scss";
 
 const isIE = FeatureDetection.isInternetExplorer();
+const isChrome = FeatureDetection.isChrome();
 
 /**
  * Right-hand column that contains the map, controls that sit over the map and sometimes the bottom dock containing
@@ -79,11 +80,18 @@ const MapColumn = createReactClass({
   },
 
   render() {
+    const mapCellClass = classNames(Styles.mapCell, {
+      [Styles.mapCellChrome]: isChrome
+    });
     return (
-      <div className={Styles.mapInner}>
+      <div
+        className={classNames(Styles.mapInner, {
+          [Styles.mapInnerChrome]: isChrome
+        })}
+      >
         <div className={Styles.mapRow}>
           <div
-            className={classNames(Styles.mapCell, Styles.mapCellMap)}
+            className={classNames(mapCellClass, Styles.mapCellMap)}
             ref={this.newMapCell}
           >
             <div
@@ -139,7 +147,7 @@ const MapColumn = createReactClass({
             </If>
           </div>
           <If condition={this.props.terria.configParameters.printDisclaimer}>
-            <div className={classNames(Styles.mapCell, "print")}>
+            <div className={classNames(mapCellClass, "print")}>
               <a
                 className={Styles.printDisclaimer}
                 href={this.props.terria.configParameters.printDisclaimer.url}
@@ -151,7 +159,7 @@ const MapColumn = createReactClass({
         </div>
         <If condition={!this.props.viewState.hideMapUi()}>
           <div className={Styles.mapRow}>
-            <div className={Styles.mapCell}>
+            <div className={mapCellClass}>
               <BottomDock
                 terria={this.props.terria}
                 viewState={this.props.viewState}
