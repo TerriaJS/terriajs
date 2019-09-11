@@ -9,6 +9,12 @@
   * {
     box-sizing: border-box;
   }
+  // Chrome only :( hack until
+  // https://bugs.chromium.org/p/chromium/issues/detail?id=1001663 gets resolved
+  @media screen and (-webkit-min-device-pixel-ratio: 0) {
+    display: flex;
+    flex-flow: column;
+  }
 }
 
 .map__row {
@@ -24,6 +30,13 @@
   display: table-cell;
   position: relative;
   width: 100%;
+
+  // Chrome only :( hack until
+  // https://bugs.chromium.org/p/chromium/issues/detail?id=1001663 gets resolved
+  @media screen and (-webkit-min-device-pixel-ratio: 0) {
+    display: block;
+    height: 100%;
+  }
 }
 
 @include empty-module("map-cell-map");
