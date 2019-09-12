@@ -300,7 +300,8 @@ const Chart = createReactClass({
       tooltipSettings: tooltipSettings,
       titleSettings: titleSettings,
       grid: grid,
-      highlightX: this.props.highlightX
+      highlightX: this.props.highlightX,
+      supportsZooming: this.props.styling !== "feature-info"
     };
   },
 
