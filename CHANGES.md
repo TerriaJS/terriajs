@@ -4,6 +4,7 @@ Change Log
 ### v7.6.11
 
 * Added a workaround for a bug in Google Chrome v76 and v77 that caused problems with sizing of the bottom dock, such as cutting off the timeline and flickering on and off over the map.
+* Set cesium rendering resolution to CSS pixel resolution. This is required because Cesium renders in native device resolution since 1.61.0.
 
 ### v7.6.10
 
