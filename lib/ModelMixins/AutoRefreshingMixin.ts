@@ -19,7 +19,7 @@ export default function AutoRefreshingMixin<
     _autoRefreshDisposer: IReactionDisposer | undefined;
 
     /* Return the interval in seconds to poll for updates. */
-    abstract refreshInterval: number | undefined;
+    abstract get refreshInterval(): number | undefined;
 
     /* Call hook for refreshing the item */
     abstract refreshData(): void;
@@ -36,34 +36,32 @@ export default function AutoRefreshingMixin<
         );
       });
       onBecomeUnobserved(this, "mapItems", () => {
-        if (
-          this._autoRefreshDisposer !== undefined &&
-          this._autoRefreshDisposer !== null
-        ) {
+        if (this._autoRefreshDisposer) {
           this._autoRefreshDisposer();
+          this._autoRefreshDisposer = undefined;
         }
       });
     }
 
     @computed
-    protected get _pollingTimer(): number | undefined {
-      if (this.refreshInterval !== null && this.refreshInterval !== undefined) {
+    private get _pollingTimer(): number | undefined {
+      if (this.refreshInterval !== undefined) {
         return now(this.refreshInterval * 1000);
+      } else {
+        return undefined;
       }
     }
 
     @computed
     get isPolling() {
-      return this._pollingTimer !== null && this._pollingTimer !== undefined;
+      return this._pollingTimer !== undefined;
     }
 
     @computed
     get nextScheduledUpdateTime(): Date | undefined {
       if (
-        this._pollingTimer !== null &&
         this._pollingTimer !== undefined &&
-        this.refreshInterval !== undefined &&
-        this.refreshInterval !== null
+        this.refreshInterval !== undefined
       ) {
         return new Date(this._pollingTimer + this.refreshInterval * 1000);
       } else {

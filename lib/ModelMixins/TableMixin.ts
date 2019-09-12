@@ -1,4 +1,4 @@
-import { computed, observable, runInAction } from "mobx";
+import { computed, observable, runInAction, action } from "mobx";
 import { createTransformer } from "mobx-utils";
 import Cartesian3 from "terriajs-cesium/Source/Core/Cartesian3";
 import Color from "terriajs-cesium/Source/Core/Color";
@@ -180,6 +180,7 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
      * Appends new table data in column major format to this table.
      * It is assumed that thhe column order is the same for both the tables.
      */
+    @action
     append(dataColumnMajor2: string[][]) {
       if (
         this.dataColumnMajor !== undefined &&
@@ -190,13 +191,14 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
         );
       }
 
-      runInAction(() => {
-        const appended = this.dataColumnMajor || [];
-        dataColumnMajor2.forEach((newRows, col) => {
-          appended[col] = (appended[col] || []).concat(newRows);
-        });
-        this.dataColumnMajor = appended;
+      const appended = this.dataColumnMajor || [];
+      dataColumnMajor2.forEach((newRows, col) => {
+        if (appended[col] === undefined) {
+          appended[col] = [];
+        }
+        appended[col].push(...newRows);
       });
+      this.dataColumnMajor = appended;
     }
 
     private readonly createLongitudeLatitudeDataSource = createTransformer(
