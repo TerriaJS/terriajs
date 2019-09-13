@@ -146,6 +146,7 @@ export default class StoryEditor extends React.Component {
             <input
               ref={titleInput => (this.titleInput = titleInput)}
               placeholder="Enter a title here"
+              autoComplete="off"
               className={Styles.field}
               type="text"
               id="title"

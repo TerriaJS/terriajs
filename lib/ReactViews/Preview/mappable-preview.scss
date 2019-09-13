@@ -15,13 +15,13 @@
     display: inline-block;
     width: inherit;
     position: absolute;
-    top: $padding-small;
-    right: $padding-small;
+    top: $padding * 2;
+    right: $padding * 2;
   }
 }
 
 .previewed--info {
-  margin: 2 * $padding;
+  margin: 2 * $padding 0;
 }
 
 .field {
@@ -29,6 +29,7 @@
 }
 
 .description {
+  composes: clearfix from "../../Sass/common/_base.scss";
   @extend %wrap;
 
   a {
@@ -44,9 +45,23 @@
   ); // The background is taken from tabs.scss's panel-content.
 }
 
+.title-and-share-wrapper {
+  display: flex;
+  justify-content: space-between;
+}
+
+.share-link--wrapper {
+  margin-top: $padding;
+  min-width: 118px;
+  float: right;
+}
+
 .h3 {
   composes: h3 from "../../Sass/common/_base.scss";
-
+  margin-top: 0;
+  padding-right: $padding-small;
+  float: left;
+  width: 80%;
   font-size: $font-size-mid-large;
 }
 .h4 {

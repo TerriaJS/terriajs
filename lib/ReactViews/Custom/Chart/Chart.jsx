@@ -132,6 +132,7 @@ const Chart = createReactClass({
       that.props.url,
       that.props.catalogItem
     );
+    if (!defined(promise)) return;
     promise.then(function(data) {
       chartParameters.data = data;
       ChartRenderer.create(that._element, chartParameters);
@@ -194,6 +195,8 @@ const Chart = createReactClass({
 
   componentWillUnmount() {
     const that = this;
+    if (!defined(this._promise)) return;
+
     this._promise.then(function(listener) {
       window.removeEventListener("resize", listener);
       // console.log('Removed resize listener for', that.props.url, that.rnd, listener);

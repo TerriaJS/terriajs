@@ -123,3 +123,115 @@
     display: inline-block;
   }
 }
+
+.tutBtn {
+  composes: btn from "../../Sass/common/_buttons.scss";
+  color: $text-light;
+  font-size: $font-size-button;
+  padding: $padding $padding * 2;
+  background: $overlay;
+  border-radius: $padding * 2;
+  margin-top: $padding;
+
+  svg {
+    height: 20px;
+    width: 20px;
+    margin: 0 4px;
+    fill: $faint-bg;
+    vertical-align: bottom;
+    display: inline-block;
+  }
+}
+
+@include keyframes(story-fade-in) {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@include keyframes(story-fade-out) {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@include keyframes(story-slide-up) {
+  0% {
+    @include transform(translate(-50%, 0%));
+  }
+  100% {
+    @include transform(translate(-50%, -50%));
+  }
+}
+@include keyframes(story-slide-down) {
+  0% {
+    @include transform(translate(-50%, -50%));
+  }
+  100% {
+    @include transform(translate(-50%, 0%));
+  }
+}
+.VideoGuideWrapper {
+  position: fixed;
+  z-index: 99999;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba($dark-with-overlay, 0.8);
+  opacity: 1;
+  @include animation("story-fade-in 0.3s");
+}
+.VideoGuideWrapper--closing {
+  @include animation("story-fade-out 0.3s");
+  & > div {
+    @include animation("story-slide-down 0.3s");
+  }
+}
+
+.videoGuide {
+  box-shadow: $box-shadow;
+  margin: 0;
+  width: 40%;
+  min-height: 31.5%;
+  background-color: black;
+  background-size: cover;
+  background-repeat: no-repeat;
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  max-width: 100%;
+  @include transform(translate(-50%, -50%));
+  @include animation("story-slide-up 0.3s");
+}
+.videoGuideRatio {
+  padding-bottom: 58.5%;
+  padding-top: 25px;
+}
+.videoGuideLoading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  svg {
+    fill: white;
+    width: 60px;
+    height: 60px;
+    top: -30px;
+    left: -30px;
+    position: absolute;
+  }
+}
+
+.videoGuide--iframe {
+  border: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}

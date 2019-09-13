@@ -3,6 +3,8 @@
 /*global require,describe,it,expect,beforeEach*/
 var Terria = require("../../lib/Models/Terria");
 var loadJson = require("../../lib/Core/loadJson");
+var CHART_DATA_CATEGORY_NAME = require("../../lib/Core/addedForCharts")
+  .CHART_DATA_CATEGORY_NAME;
 
 var Catalog = require("../../lib/Models/Catalog");
 var CatalogItem = require("../../lib/Models/CatalogItem");
@@ -49,6 +51,16 @@ describe("Catalog", function() {
           .otherwise(done.fail);
       })
       .otherwise(done.fail);
+  });
+
+  describe("chartDataGroup", function() {
+    it("returns the group used for chart data when retrieved via chartDataGroup", function() {
+      const group = catalog.chartDataGroup;
+      expect(group.name).toBe(CHART_DATA_CATEGORY_NAME);
+      expect(group.type).toBe("group");
+      expect(group.description).toBe("A group for chart data.");
+      expect(group.isUserSupplied).toBe(true);
+    });
   });
 
   describe("updateByShareKeys", function() {

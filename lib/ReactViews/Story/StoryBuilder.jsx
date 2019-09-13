@@ -13,6 +13,7 @@ import createGuid from "terriajs-cesium/Source/Core/createGuid";
 import classNames from "classnames";
 import BadgeBar from "../BadgeBar.jsx";
 import triggerResize from "../../Core/triggerResize";
+import Loader from "../Loader";
 import Styles from "./story-builder.scss";
 
 const StoryBuilder = createReactClass({
@@ -29,7 +30,9 @@ const StoryBuilder = createReactClass({
     return {
       editingMode: false,
       currentStory: undefined,
-      recaptureSuccessFul: undefined
+      recaptureSuccessful: undefined,
+      showVideoGuide: false, // for whether to actually render `renderVideoGuide()`
+      videoGuideVisible: false // for animating
     };
   },
 
@@ -76,12 +79,38 @@ const StoryBuilder = createReactClass({
 
   captureStory(story) {
     story.shareData = JSON.parse(
-      JSON.stringify(getShareData(this.props.terria, false))
+      JSON.stringify(
+        getShareData(this.props.terria, this.props.viewState, {
+          includeStories: false
+        })
+      )
     );
     if (this.props.terria.stories === undefined) {
       this.props.terria.stories = [story];
     } else {
       this.props.terria.stories.push(story);
+    }
+  },
+
+  toggleVideoGuide() {
+    const showVideoGuide = this.state.showVideoGuide;
+    // If not enabled
+    if (!showVideoGuide) {
+      this.setState({
+        showVideoGuide: !showVideoGuide,
+        videoGuideVisible: true
+      });
+    }
+    // Otherwise we immediately trigger exit animations, then close it 300ms later
+    if (showVideoGuide) {
+      this.slideOutTimer = this.setState({
+        videoGuideVisible: false
+      });
+      setTimeout(() => {
+        this.setState({
+          showVideoGuide: !showVideoGuide
+        });
+      }, 300);
     }
   },
 
@@ -92,7 +121,11 @@ const StoryBuilder = createReactClass({
       .indexOf(story.id);
     if (storyIndex >= 0) {
       story.shareData = JSON.parse(
-        JSON.stringify(getShareData(this.props.terria, false))
+        JSON.stringify(
+          getShareData(this.props.terria, this.props.viewState, {
+            includeStories: false
+          })
+        )
       );
       this.props.terria.stories = [
         ...this.props.terria.stories.slice(0, storyIndex),
@@ -100,7 +133,7 @@ const StoryBuilder = createReactClass({
         ...this.props.terria.stories.slice(storyIndex + 1)
       ];
       this.setState({
-        recaptureSuccessFul: story.id
+        recaptureSuccessful: story.id
       });
 
       setTimeout(this.resetReCaptureStatus, 2000);
@@ -111,7 +144,7 @@ const StoryBuilder = createReactClass({
 
   resetReCaptureStatus() {
     this.setState({
-      recaptureSuccessFul: undefined
+      recaptureSuccessful: undefined
     });
   },
 
@@ -152,9 +185,44 @@ const StoryBuilder = createReactClass({
         <Icon glyph={Icon.GLYPHS.story} />{" "}
         <strong>This is your story editor</strong>
         <div className={Styles.instructions}>
-          <p>1. Capture scenes from your map</p>
-          <p>2. Add text and images</p>
-          <p>3. Share with others</p>
+          Create and share interactive stories directly from your map
+          <div>
+            <button onClick={this.toggleVideoGuide} className={Styles.tutBtn}>
+              <Icon glyph={Icon.GLYPHS.play} />
+              Getting Started{" "}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  },
+
+  renderVideoGuide() {
+    return (
+      <div
+        className={classNames({
+          [Styles.videoGuideWrapper]: true,
+          [Styles.videoGuideWrapperClosing]: !this.state.videoGuideVisible
+        })}
+        onClick={this.toggleVideoGuide}
+      >
+        <div
+          className={Styles.videoGuide}
+          onClick={e => e.stopPropagation()}
+          style={{
+            backgroundImage: `url(${require("../../../wwwroot/images/data-stories-getting-started.jpg")})`
+          }}
+        >
+          <div className={Styles.videoGuideRatio}>
+            <div className={Styles.videoGuideLoading}>
+              <Loader message={` `} />
+            </div>
+            <iframe
+              className={Styles.videoGuideIframe}
+              src="https://www.youtube.com/embed/fbiQawV8IYY"
+              allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+            />
+          </div>
         </div>
       </div>
     );
@@ -193,7 +261,7 @@ const StoryBuilder = createReactClass({
               deleteStory={this.removeStory.bind(this, index)}
               recaptureStory={this.recaptureScene}
               recaptureStorySuccessful={Boolean(
-                story.id === this.state.recaptureSuccessFul
+                story.id === this.state.recaptureSuccessful
               )}
               viewStory={this.viewStory.bind(this, index)}
               menuOpen={this.state.storyWithOpenMenu === story}
@@ -224,6 +292,7 @@ const StoryBuilder = createReactClass({
     });
     return (
       <div className={className}>
+        {this.state.showVideoGuide && this.renderVideoGuide()}
         <div className={Styles.header}>
           {!hasStories && this.renderIntro()}
           <div className={Styles.actions}>

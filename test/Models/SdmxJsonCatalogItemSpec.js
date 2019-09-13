@@ -679,7 +679,7 @@ describe("SdmxJsonCatalogItem", function() {
         .then(done);
     });
 
-    it("is less than 2000 characters when serialised to JSON then URLEncoded", function(done) {
+    it("is less than 2300 characters when serialised to JSON then URLEncoded", function(done) {
       item.updateFromJson({
         name: "Name",
         description: "Description",
@@ -690,7 +690,7 @@ describe("SdmxJsonCatalogItem", function() {
         .load()
         .then(function() {
           var url = encodeURIComponent(JSON.stringify(item.serializeToJson()));
-          expect(url.length).toBeLessThan(2000);
+          expect(url.length).toBeLessThan(2300);
         })
         .otherwise(fail)
         .then(done);

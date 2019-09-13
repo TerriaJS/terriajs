@@ -5,12 +5,42 @@
   font-size: $font-size-mid-small;
 }
 
+.catalog-share {
+  float: right;
+}
+
+.catalog-share-inner {
+  background: $grey-lightest;
+  color: $text-darker;
+}
+
 .dropdown-inner {
   width: $share-panel-width;
   @include transform-origin(50%, top);
 }
 
-.heading-label {
+.btn--catalogShare {
+  font-size: $font-size-data-preview;
+  background: transparent;
+  color: $color-primary;
+  box-shadow: none;
+  svg {
+    fill: $color-primary;
+  }
+  &:hover,
+  &:focus {
+    color: $text-light;
+  }
+}
+.btn--withoutText {
+  svg {
+    fill: $text-darker;
+  }
+  // not in design but should give life to the button?
+  &:hover,
+  &:focus {
+    color: $color-primary;
+  }
 }
 
 .btn--wrapper {
@@ -38,7 +68,7 @@
 @include empty-module("link-wrapper");
 
 .link {
-  @include link($overlay);
+  @include link($grey-lighter2);
 }
 
 .paragraph {
@@ -46,27 +76,14 @@
   display: block;
 }
 
-.field {
-  composes: field from "../../../../Sass/common/_form.scss";
-  color: #ddd;
-  background: $overlay;
-}
-.clipboard {
-  margin: 10px 0 0 0;
+.clipboard-for-catalog-share {
+  margin: 15px;
 }
 
 .shareUrlfield {
-  composes: field from "../../../../Sass/common/_form.scss";
-  background: $overlay;
-  color: #fff !important;
-  &::selection {
-    background: $color-primary; /* WebKit/Blink Browsers */
-    color: #fff;
-  }
-  &::-moz-selection {
-    background: $color-primary; /* Gecko Browsers */
-    color: #fff;
-  }
+  width: calc(100% - 80px);
+  padding-left: 1rem;
+  padding-right: 0;
 }
 
 .mobileHeader {
@@ -106,4 +123,23 @@
 
 .print-view-loader {
   fill: $text-light;
+}
+
+.warning {
+  margin: $padding 0;
+  border-radius: $radius-small;
+  background: #feb938;
+  color: #552800;
+  padding: $padding;
+
+  ul {
+    padding-top: $padding;
+    padding-inline-start: 0;
+    list-style: none;
+  }
+  .warning-link {
+    color: #552800;
+    text-decoration: underline;
+    cursor: pointer;
+  }
 }
