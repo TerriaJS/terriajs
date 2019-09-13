@@ -58,9 +58,7 @@ class GetCapabilitiesStratum extends LoadableStratum(
         if (!layer.Name) {
           return undefined;
         }
-        return (
-          this.catalogGroup.uniqueId + "/" + layer.Name
-        );
+        return this.catalogGroup.uniqueId + "/" + layer.Name;
       })
     );
   }

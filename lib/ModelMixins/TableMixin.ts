@@ -11,7 +11,7 @@ import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import makeRealPromise from "../Core/makeRealPromise";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
-import RegionProviderList from "../Map/RegionProviderList";
+import JSRegionProviderList from "../Map/RegionProviderList";
 import { ImageryParts } from "../Models/Mappable";
 import Model from "../Models/Model";
 import SelectableStyle, { AvailableStyle } from "../Models/SelectableStyle";
@@ -22,6 +22,11 @@ import TableTraits from "../Traits/TableTraits";
 import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
 import LegendTraits from "../Traits/LegendTraits";
 import { JsonObject } from "../Core/Json";
+
+// TypeScript 3.6.3 can't tell JSRegionProviderList is a class and reports
+//   Cannot use namespace 'JSRegionProviderList' as a type.ts(2709)
+// This is a dodgy workaround.
+class RegionProviderList extends JSRegionProviderList {}
 
 export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
   Base: T
@@ -163,7 +168,7 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
 
     protected loadTableMixin(): Promise<void> {
       // TODO: pass proxy to fromUrl
-      return makeRealPromise(
+      return makeRealPromise<RegionProviderList>(
         RegionProviderList.fromUrl(
           this.terria.configParameters.regionMappingDefinitionsUrl,
           undefined
