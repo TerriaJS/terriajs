@@ -26,7 +26,7 @@ import { JsonObject } from "../Core/Json";
 // TypeScript 3.6.3 can't tell JSRegionProviderList is a class and reports
 //   Cannot use namespace 'JSRegionProviderList' as a type.ts(2709)
 // This is a dodgy workaround.
-class RegionProviderList extends JSRegionProviderList { }
+class RegionProviderList extends JSRegionProviderList {}
 
 export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
   Base: T
@@ -261,7 +261,7 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
           imageryProvider: <any>new MapboxVectorTileImageryProvider({
             url: regionType.server,
             layerName: regionType.layerName,
-            styleFunc: function (feature: any) {
+            styleFunc: function(feature: any) {
               const featureRegion = feature.properties[regionType.regionProp];
               const regionIdString =
                 featureRegion !== undefined && featureRegion !== null

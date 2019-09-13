@@ -11,8 +11,8 @@ import TableColumnType, { stringToTableColumnType } from "./TableColumnType";
 // TypeScript 3.6.3 can't tell JSRegionProviderList is a class and reports
 //   Cannot use namespace 'JSRegionProviderList' as a type.ts(2709)
 // This is a dodgy workaround.
-class RegionProviderList extends JSRegionProviderList { }
-class RegionProvider extends JSRegionProvider { }
+class RegionProviderList extends JSRegionProviderList {}
+class RegionProvider extends JSRegionProvider {}
 
 interface TableModel extends Model<TableTraits> {
   readonly dataColumnMajor: string[][] | undefined;
@@ -163,7 +163,7 @@ export default class TableColumn {
     }
     const countArray = Object.keys(count).map(key => toArray(key, count[key]));
 
-    countArray.sort(function (a, b) {
+    countArray.sort(function(a, b) {
       return b[1] - a[1];
     });
 
@@ -264,10 +264,10 @@ export default class TableColumn {
   @computed
   get traits(): Model<TableColumnTraits> {
     // It is important to match on column name and not column number because the column numbers can vary between stratum
-    const thisColumn = this.tableModel.columns.find((column) => column.name === this.name);
-    if (
-      thisColumn !== undefined
-    ) {
+    const thisColumn = this.tableModel.columns.find(
+      column => column.name === this.name
+    );
+    if (thisColumn !== undefined) {
       const result = createCombinedModel(
         thisColumn,
         this.tableModel.defaultColumn
@@ -395,13 +395,13 @@ export default class TableColumn {
   get valueFunctionForType(): (rowIndex: number) => string | number | null {
     if (this.type === TableColumnType.scalar) {
       const values = this.valuesAsNumbers.values;
-      return function (rowIndex: number) {
+      return function(rowIndex: number) {
         return values[rowIndex];
       };
     }
 
     const values = this.values;
-    return function (rowIndex: number) {
+    return function(rowIndex: number) {
       return values[rowIndex];
     };
   }
@@ -423,7 +423,7 @@ export default class TableColumn {
       }
 
       const values = valuesAsNumbers.values;
-      return function (rowIndex: number) {
+      return function(rowIndex: number) {
         const value = values[rowIndex];
         if (value === null) {
           return null;
