@@ -6,8 +6,10 @@ import PropTypes from "prop-types";
 import defined from "terriajs-cesium/Source/Core/defined";
 import DataPreviewMap from "./DataPreviewMap";
 import Description from "./Description";
+import measureElement from "../measureElement";
 import ObserveModelMixin from "../ObserveModelMixin";
 import Styles from "./mappable-preview.scss";
+import SharePanel from "../Map/Panels/SharePanel/SharePanel.jsx";
 
 /**
  * CatalogItem preview that is mappable (as opposed to say, an analytics item that can't be displayed on a map without
@@ -20,7 +22,8 @@ const MappablePreview = createReactClass({
   propTypes: {
     previewed: PropTypes.object.isRequired,
     terria: PropTypes.object.isRequired,
-    viewState: PropTypes.object.isRequired
+    viewState: PropTypes.object.isRequired,
+    widthFromMeasureElementHOC: PropTypes.number
   },
 
   toggleOnMap(event) {
@@ -67,7 +70,28 @@ const MappablePreview = createReactClass({
             : "Add to the map"}
         </button>
         <div className={Styles.previewedInfo}>
-          <h3 className={Styles.h3}>{catalogItem.name}</h3>
+          <div
+            className={Styles.titleAndShareWrapper}
+            ref={component => (this.refToMeasure = component)}
+          >
+            <h3 className={Styles.h3}>{catalogItem.name}</h3>
+            <If
+              condition={
+                catalogItem.dataUrlType !== "local" &&
+                !this.props.viewState.useSmallScreenInterface
+              }
+            >
+              <div className={Styles.shareLinkWrapper}>
+                <SharePanel
+                  catalogShare
+                  catalogShareWithoutText
+                  modalWidth={this.props.widthFromMeasureElementHOC}
+                  terria={this.props.terria}
+                  viewState={this.props.viewState}
+                />
+              </div>
+            </If>
+          </div>
           <Description item={catalogItem} />
         </div>
       </div>
@@ -75,4 +99,4 @@ const MappablePreview = createReactClass({
   }
 });
 
-export default MappablePreview;
+export default measureElement(MappablePreview);

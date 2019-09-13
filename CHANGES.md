@@ -1,6 +1,76 @@
 Change Log
 ==========
 
+### v7.6.11
+
+* Added a workaround for a bug in Google Chrome v76 and v77 that caused problems with sizing of the bottom dock, such as cutting off the timeline and flickering on and off over the map.
+* Set cesium rendering resolution to CSS pixel resolution. This is required because Cesium renders in native device resolution since 1.61.0.
+
+### v7.6.10
+
+* Fixed error when opening a URL shared from an explorer tab. #3614
+* Resolve a bug with `SdmxJsonCatalogItem`'s v2.0 where they were being redrawn when dimensions we're changed. #3659
+* Upgrades terriajs-cesium to 1.61.0
+
+### v7.6.9
+
+* Automatically set `linkedWcsCoverage` on a WebMapServiceCatalogItem.
+
+### v7.6.8
+
+* Added ability in TerriaJsonCatalogFunction to handle long requests via HTTP:202 Accepted.
+
+### v7.6.7
+
+* Fixed share disclaimer to warn only when user has added items that cannot be shared.
+
+### v7.6.6
+
+* Basemaps are now loaded before being enabled & showed
+
+### v7.6.5
+
+* Add the filename to a workbench item from a drag'n'dropped file so it isn't undisplayed as 'Unnamed item'.
+* Fixed inability to share SOS items.
+* Added an option to the mobile menu to allow a story to be resumed after it is closed.
+* The "Introducing Data Stories" prompt now only needs to be dismissed once. Previously it would continue to appear on every load until you clicked the "Story" button.
+* Fixed a crash that could occur when the feature info panel has a chart but the selected feature has no chart data.
+* Fixed a bug where the feature info panel would show information on a vector tile region mapped dataset that had no match.
+
+### v7.6.4
+
+* Add scrollbar to dropdown boxes.
+* Add support for SDMX version 2.1 to existing `SdmxJsonCatalogItem`.
+* Add a warning when sharing a map describing datasets which will be missing.
+* Enable the story panel to be ordered to the front. 
+* Disable the autocomplete on the title field when adding a new scene to a story.
+* Fix SED codes for regionmapping
+
+### v7.6.3
+
+* Fixed a bug with picking features that cross the anti-meridian in 2D mode .
+* Fixed a bug where `ArcGisMapServerCatalogItem` legends were being created during search.
+* Fixed a bug where region mapping would not accurately reflect share link parameters.
+
+### v7.6.2
+
+* Fixed a bug that made some input boxes unreadable in some web browsers.
+
+### v7.6.1
+
+* Fixed a bug that prevented the "Feedback" button from working correctly.
+* Fix a bug that could cause a lot of extra space to the left of a chart on the feature info panel.
+
+### v7.6.0
+
+* Added video intro to building a story
+* Allow vector tiles for region mapping to return 404 for empty tiles. 
+
+### v7.5.2
+
+* Upgraded to Cesium v1.58.1.
+* Charts are now shared in share & story links
+
 ### v7.5.1
 
 * Fixed a bug in Cesium that prevented the new Bing Maps "on demand" basemaps from working on `https` sites.
@@ -8,6 +78,7 @@ Change Log
 ### v7.5.0
 
 * Added the "Story" feature for building and sharing guided tours of maps and data.
+* Added sharing within the data catalog to share a given catalog group or item
 * Switched to using the new "on demand" versions of the Bing Maps aerial and roads basemaps. The previous versions are deprecated.
 
 ### v7.4.1

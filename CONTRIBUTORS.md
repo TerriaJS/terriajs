@@ -28,6 +28,7 @@ The following people have contributed to TerriaJS:
    * [Wing Ho](https://github.com/soyarsauce)
    * [Emma Krantz](https://github.com/KeyboardSounds)
    * [Rowan Winsemius](https://github.com/rowanwins)
+   * [Mitch Harris](https://www.linkedin.com/in/harrismitchell)
 * [Geoscience Australia](http://www.ga.gov.au/)
    * [Darren Reid](https://github.com/Layoric)
    * [Andrew Hicks](https://github.com/andrewdhicks)

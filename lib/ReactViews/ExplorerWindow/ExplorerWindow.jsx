@@ -31,12 +31,14 @@ const ExplorerWindow = createReactClass({
     this._pickedFeaturesSubscription = ko
       .pureComputed(this.isVisible, this)
       .subscribe(this.onVisibilityChange);
+
     this.onVisibilityChange(this.isVisible());
   },
 
   componentDidMount() {
     this.escKeyListener = e => {
-      if (e.keyCode === 27) {
+      // Only explicitly check share modal state, move to levels/"layers of modals" logic if we need to go any deeper
+      if (e.keyCode === 27 && !this.props.viewState.shareModalIsVisible) {
         this.close();
       }
     };
@@ -81,7 +83,8 @@ const ExplorerWindow = createReactClass({
   },
 
   componentWillUnmount() {
-    window.removeEventListener("keydown", this.escKeyListener, false);
+    // ExplorerWindow stays mounted, but leave this in to ensure it gets cleaned up if that ever changes
+    window.removeEventListener("keydown", this.escKeyListener, true);
 
     this._pickedFeaturesSubscription.dispose();
   },

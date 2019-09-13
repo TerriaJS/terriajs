@@ -18,9 +18,11 @@
   box-sizing: border-box;
   background: #fff;
   border-radius: $radius-small;
-
+  border: 1px solid rgba($grey, 0.4);
+  box-shadow: 0px 3px 15px rgba($dark, 0.15);
   &.is-open {
     transform: scaleY(1);
+    overflow-y: auto;
   }
 }
 

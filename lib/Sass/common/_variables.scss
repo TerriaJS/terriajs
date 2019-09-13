@@ -7,7 +7,7 @@ $font-mono: monospace, sans-serif;
 $font-feature-info: $font-mono;
 $font: $font-base;
 
-$color-primary: #08abd5;
+$color-primary: #519ac2;
 $color-primary-disabled: #595b60;
 @function get-hover-color($base-color) {
   @return lighten($base-color, 10%);
@@ -21,11 +21,17 @@ $dark-with-overlay: #667080;
 $dark-lighter: #595b60;
 $grey: #888888;
 $grey-lighter: #ddd;
+// todo: Fix during overhaul
+$grey-lighter2: #e6e6e6;
+$grey-lightest: #f2f2f2;
 $field-border: #ddd;
 $overlay: rgba(255, 255, 255, 0.15);
 
 $text-black: #000;
 $text-dark: #595b60;
+// todo: Fix during overhaul
+$text-dark2: #606d80;
+$text-darker: #4d5766;
 $text-light: #ffffff;
 $text-light-dimmed: #bbbbbb;
 
@@ -62,6 +68,7 @@ $padding-mini: 3px;
 
 $btn-default-line-height: 20px;
 $input-height: 40px;
+$input-height-large: 48px;
 $input-glyph-height: 24px; // This value should be $input-height * 0.6
 $input-glyph-margin: 8px; // This value should be $input-height * 0.2
 
@@ -73,6 +80,7 @@ $modal-bg: #fff;
 $modal-tab-bg: $modal-bg;
 $modal-selected-tab-bg: $modal-tab-bg;
 $modal-text: #000;
+$modal-secondary-bg: #f6f6f7;
 $modal-secondary-bg: #f6f6f7;
 $modal-overlay: rgba(#000, 0.7);
 $modal-highlight: $color-primary;
@@ -104,6 +112,8 @@ $font-size-mid-large: 1.1rem;
 $font-size-base: 1rem;
 $font-size-mid-small: 0.9rem;
 $font-size-feature-info: 0.9rem;
+// todo: update during overhaul
+$font-size-data-preview: 0.875rem;
 $font-size-button: 0.85rem;
 $font-size-small: 0.8125rem;
 $font-size-mid-mini: 0.7rem;
@@ -127,7 +137,7 @@ $chart-height: 250px;
 
 $border-color: rgba(#fff, 0.15);
 $border-style: 1px solid $border-color;
-$box-shadow: 0px 6px 22px -6px rgba(#000, 0.75);
+$box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.12), 0 2px 2px 0 rgba(0, 0, 0, 0.24);
 
 $radius-medium: 3px;
 $radius-small: 2px;

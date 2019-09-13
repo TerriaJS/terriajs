@@ -1,6 +1,6 @@
 {
   "name": "terriajs",
-  "version": "7.5.1",
+  "version": "7.6.11",
   "description": "Geospatial data visualization platform.",
   "license": "Apache-2.0",
   "engines": {
@@ -79,11 +79,11 @@
     "string-replace-webpack-plugin": "^0.1.3",
     "style-loader": "^0.23.1",
     "svg-sprite-loader": "4.1.3",
-    "terriajs-cesium": "1.57.2-nsw-1",
+    "terriajs-cesium": "1.61.0",
     "terriajs-html2canvas": "1.0.0-alpha.12-terriajs-1",
     "urijs": "^1.18.12",
     "url-loader": "^1.1.2",
-    "webpack": "^4.29.5",
+    "webpack": "~4.39.0",
     "worker-loader": "^2.0.0"
   },
   "devDependencies": {
@@ -97,7 +97,7 @@
     "glob-all": "^3.0.1",
     "husky": "^2.2.0",
     "jasmine-core": "^2.9.1",
-    "jsdoc": "^3.4.0",
+    "jsdoc": "^3.5.0",
     "karma": "^4.0.0",
     "karma-browserstack-launcher": "^1.4.0",
     "karma-chrome-launcher": "^2.0.0",
@@ -119,7 +119,7 @@
     "react-shallow-testutils": "^3.0.0",
     "react-test-renderer": "^16.3.2",
     "terriajs-jasmine-ajax": "^3.2.1",
-    "terriajs-server": "3.0.0-test-1",
+    "terriajs-server": "^3.0.1",
     "webpack-dev-server": "^3.1.14"
   },
   "scripts": {
@@ -128,17 +128,17 @@
     "postinstall": "gulp post-npm-install",
     "gulp": "gulp",
     "make-schema": "gulp make-schema",
-    "start": "bash -c \"./node_modules/terriajs-server/run_server.sh --port 3002 || ../terriajs-server/run_server.sh --port 3002 || ../../node_modules/terriajs-server/run_server.sh --port 3002\"",
+    "start": "terriajs-server --port 3002",
     "dev": "webpack-dev-server --inline --config buildprocess/webpack.config.dev.js --host 0.0.0.0",
     "hot": "webpack-dev-server --inline --config buildprocess/webpack.config.hot.js --hot --host 0.0.0.0",
     "publish-doc": "bash -c \"rm -rf wwwroot/doc && mkdir wwwroot/doc && cp doc/index-built.html wwwroot/doc/index.html && cp doc/CNAME wwwroot/doc/CNAME && gulp docs && cd wwwroot/doc && git init && git remote add origin $npm_package_config_docRepo && git add . && git commit -m 'Generate Documentation' && git push -f origin HEAD:gh-pages\"",
-    "prettier": "prettier --write \"{lib,test}/**/*.{js,jsx,ts,tsx,scss}\"",
-    "pretty-quick": "pretty-quick --pattern \"{lib,test}/**/*.{js,jsx,ts,tsx,scss}\"",
-    "prettier-check": "prettier --check \"{lib,test}/**/*.{js,jsx,ts,tsx,scss}\""
+    "prettier": "prettier --write \"**/*\"",
+    "pretty-quick": "pretty-quick",
+    "prettier-check": "prettier --check \"**/*\""
   },
   "husky": {
     "hooks": {
-      "pre-commit": "pretty-quick --staged --pattern \"{lib,test}/**/*.{js,jsx,ts,tsx,scss}\""
+      "pre-commit": "pretty-quick --staged"
     }
   }
 }

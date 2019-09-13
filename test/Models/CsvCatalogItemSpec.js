@@ -5,9 +5,11 @@ var clone = require("terriajs-cesium/Source/Core/clone");
 var Color = require("terriajs-cesium/Source/Core/Color");
 var JulianDate = require("terriajs-cesium/Source/Core/JulianDate");
 var Rectangle = require("terriajs-cesium/Source/Core/Rectangle");
+var when = require("terriajs-cesium/Source/ThirdParty/when");
 
 var CatalogItem = require("../../lib/Models/CatalogItem");
 var CsvCatalogItem = require("../../lib/Models/CsvCatalogItem");
+var SensorObservationServiceCatalogItem = require("../../lib/Models/SensorObservationServiceCatalogItem");
 var ImageryLayerCatalogItem = require("../../lib/Models/ImageryLayerCatalogItem");
 var ImageryProviderHooks = require("../../lib/Map/ImageryProviderHooks");
 var loadAndStubTextResources = require("../Utility/loadAndStubTextResources");
@@ -15,6 +17,7 @@ var TableStyle = require("../../lib/Models/TableStyle");
 var Terria = require("../../lib/Models/Terria");
 var TimeInterval = require("terriajs-cesium/Source/Core/TimeInterval");
 var VarType = require("../../lib/Map/VarType");
+var TableStructure = require("../../lib/Map/TableStructure");
 
 var greenTableStyle = new TableStyle({
   colorMap: [
@@ -1928,6 +1931,72 @@ describe("CsvCatalogItem with no geo using default bundled regionMapping", funct
       .then(done);
   });
 
+  it("does not automatically enable a column if a table style is loaded in without a dataVariable", function(done) {
+    csvItem.url = "test/csv_nongeo/xy.csv";
+    csvItem
+      .updateFromJson({
+        tableStyle: {
+          dataVariable: "y"
+        }
+      })
+      .then(function() {
+        return csvItem.load();
+      })
+      .then(function() {
+        expect(csvItem.tableStructure.activeItems.length).toEqual(1);
+        expect(csvItem.tableStructure.items.length).toEqual(2);
+        expect(csvItem.tableStructure.activeItems[0].name).toEqual("y");
+        expect(csvItem.tableStructure.name).toBe("");
+        expect(csvItem.tableStructure.allowMultiple).toBe(true);
+      })
+      .then(function() {
+        csvItem.updateFromJson({
+          tableStyle: {
+            allVariablesUnactive: true,
+            dataVariable: undefined
+          }
+        });
+      })
+      .then(function() {
+        expect(csvItem.isMappable).toEqual(false);
+        expect(csvItem.tableStructure.items.length).toEqual(2);
+        expect(csvItem.tableStructure.activeItems.length).toEqual(0);
+      })
+      .otherwise(fail)
+      .then(done);
+  });
+
+  it("does not automatically enable a column if a table style is loaded in with columns all unactive", function(done) {
+    csvItem.url = "test/csv_nongeo/xy.csv";
+    csvItem
+      .updateFromJson({
+        tableStyle: {
+          allVariablesUnactive: true,
+          columns: {
+            "0": {
+              active: false
+            },
+            "1": {
+              active: false
+            },
+            "2": {
+              active: false
+            }
+          }
+        }
+      })
+      .then(function() {
+        return csvItem.load();
+      })
+      .then(function() {
+        expect(csvItem.tableStructure.activeItems.length).toEqual(0);
+        expect(csvItem.tableStructure.items.length).toEqual(2);
+        expect(csvItem.tableStructure.name).toBe("");
+      })
+      .otherwise(fail)
+      .then(done);
+  });
+
   it("interprets height column as non-geo", function(done) {
     csvItem.url = "test/csv_nongeo/x_height.csv";
     csvItem
@@ -1941,5 +2010,579 @@ describe("CsvCatalogItem with no geo using default bundled regionMapping", funct
       })
       .otherwise(fail)
       .then(done);
+  });
+});
+
+describe("CsvCatalogItem & chart sharing", function() {
+  var terria;
+  var csvItem;
+  var columns;
+
+  beforeEach(function() {
+    terria = new Terria({
+      baseUrl: "./"
+    });
+    csvItem = new CsvCatalogItem(terria);
+  });
+  describe("disableIncompatibleTableColumn interaction", function() {
+    describe("should not disable other charted columns if there are no active columns in use", function() {
+      it("activates time series columns when loading the time series last", function(done) {
+        const xyCsv = new CsvCatalogItem(terria);
+        const timeSeriesCsv = new CsvCatalogItem(terria);
+        xyCsv
+          .updateFromJson({
+            type: "csv",
+            url: "test/csv_nongeo/xy.csv",
+            isEnabled: true,
+            isShown: true
+          })
+          .then(xyCsv.load.bind(xyCsv))
+          .then(function() {
+            timeSeriesCsv.updateFromJson({
+              type: "csv",
+              url: "test/csv_nongeo/time_series.csv",
+              isEnabled: true,
+              isShown: true
+            });
+          })
+          .then(timeSeriesCsv.load.bind(timeSeriesCsv))
+          .then(function() {
+            expect(timeSeriesCsv.tableStructure.allowMultiple).toBe(true);
+            expect(xyCsv.tableStructure.allowMultiple).toBe(true);
+            expect(terria.catalog.chartableItems.length).toBe(2);
+            expect(timeSeriesCsv.tableStructure.activeItems.length).toBe(1);
+            expect(xyCsv.tableStructure.activeItems.length).toBe(0);
+            expect(timeSeriesCsv.xAxis.type).not.toBe(xyCsv.xAxis.type);
+            done();
+          });
+      });
+      it("activates scalar columns when loading the time series first", function(done) {
+        const xyCsv = new CsvCatalogItem(terria);
+        const timeSeriesCsv = new CsvCatalogItem(terria);
+        timeSeriesCsv
+          .updateFromJson({
+            type: "csv",
+            url: "test/csv_nongeo/time_series.csv",
+            isEnabled: true,
+            isShown: true
+          })
+          .then(timeSeriesCsv.load.bind(timeSeriesCsv))
+          .then(function() {
+            xyCsv.updateFromJson({
+              type: "csv",
+              url: "test/csv_nongeo/xy.csv",
+              isEnabled: true,
+              isShown: true
+            });
+          })
+          .then(xyCsv.load.bind(xyCsv))
+          .then(function() {
+            expect(timeSeriesCsv.tableStructure.allowMultiple).toBe(true);
+            expect(xyCsv.tableStructure.allowMultiple).toBe(true);
+            expect(terria.catalog.chartableItems.length).toBe(2);
+            expect(timeSeriesCsv.tableStructure.activeItems.length).toBe(0);
+            expect(xyCsv.tableStructure.activeItems.length).toBe(1);
+            expect(timeSeriesCsv.xAxis.type).not.toBe(xyCsv.xAxis.type);
+            // Do an update from json that triggers a 'toggleActiveCallback'
+            xyCsv.updateFromJson({
+              tableStyle: {
+                dataVariable: "y"
+              }
+            });
+            expect(timeSeriesCsv.tableStructure.activeItems.length).toBe(0);
+            expect(xyCsv.tableStructure.activeItems.length).toBe(1);
+
+            // if we enable columns on timeSeries, then go ahead and
+            // tell the xyCsv to make sure it's disabled, the toggleActive callback
+            // shouldn't go ahead and disable the other charted items
+            timeSeriesCsv.updateFromJson({
+              tableStyle: {
+                columns: {
+                  "0": {
+                    active: false
+                  },
+                  "1": {
+                    active: true
+                  },
+                  "2": {
+                    active: true
+                  }
+                }
+              }
+            });
+            xyCsv.updateFromJson({
+              tableStyle: {
+                allVariablesUnactive: true
+              }
+            });
+
+            expect(timeSeriesCsv.tableStructure.activeItems.length).toBe(2);
+            expect(xyCsv.tableStructure.activeItems.length).toBe(0);
+            done();
+          });
+      });
+    });
+    // Catalog items get shown and hidden through traversing stories, ensure they're initialised correctly
+    describe("should not read an out of date state of tableStructure.activeItems when show is toggled", function() {
+      it("with time series csvs", function(done) {
+        const timeSeriesCsv = new CsvCatalogItem(terria);
+        timeSeriesCsv
+          .updateFromJson({
+            type: "csv",
+            url: "test/csv_nongeo/time_series.csv",
+            isEnabled: true,
+            isShown: true
+          })
+          .then(timeSeriesCsv.load.bind(timeSeriesCsv))
+          .then(function() {
+            expect(
+              timeSeriesCsv.tableStyle.allVariablesUnactive
+            ).toBeUndefined();
+            expect(timeSeriesCsv.tableStructure.items[1].isActive).toBe(true);
+            timeSeriesCsv.tableStyle.allVariablesUnactive = true;
+            expect(timeSeriesCsv.tableStructure.items[1].isActive).toBe(true);
+            timeSeriesCsv._show();
+            expect(timeSeriesCsv.tableStructure.items[1].isActive).toBe(false);
+
+            done();
+          });
+      });
+      it("with scalar csvs", function(done) {
+        const xyCsv = new CsvCatalogItem(terria);
+        xyCsv
+          .updateFromJson({
+            type: "csv",
+            url: "test/csv_nongeo/xy.csv",
+            isEnabled: true,
+            isShown: true
+          })
+          .then(xyCsv.load.bind(xyCsv))
+          .then(function() {
+            expect(xyCsv.tableStyle.allVariablesUnactive).toBeUndefined();
+            expect(xyCsv.tableStructure.items[1].isActive).toBe(true);
+            xyCsv.tableStyle.allVariablesUnactive = true;
+            expect(xyCsv.tableStructure.items[1].isActive).toBe(true);
+            xyCsv._show();
+            expect(xyCsv.tableStructure.items[1].isActive).toBe(false);
+
+            done();
+          });
+      });
+    });
+  });
+  describe("serialization around tableStyle & tableStructures for geo csvs", function() {
+    it("does not generate columns when allowMultiple is false", function(done) {
+      csvItem
+        .updateFromJson({
+          type: "csv",
+          url: "test/csv/lat_lon_name_value.csv",
+          isEnabled: true,
+          isShown: true,
+          isvForCharting: false
+        })
+        .then(csvItem.load.bind(csvItem))
+        .then(function() {
+          expect(csvItem.tableStructure.allowMultiple).toBe(false);
+          expect(csvItem.isMappable).toBe(true);
+          var json = csvItem.serializeToJson();
+          expect(json.columns).toBeUndefined();
+        })
+        .then(done)
+        .otherwise(done.fail);
+    });
+    it("toggles the selected dataVariable in tablestructure from updateFromJson (e.g. story-transitions)", function(done) {
+      csvItem
+        .updateFromJson({
+          type: "csv",
+          url: "test/csv/lat_lon_name_value.csv",
+          isEnabled: true,
+          isShown: true,
+          isCsvForCharting: false
+        })
+        .then(csvItem.load.bind(csvItem))
+        .then(function() {
+          expect(csvItem.isMappable).toEqual(true);
+          expect(csvItem.concepts[0].activeItems.length).toEqual(1);
+          expect(csvItem.concepts[0].activeItems[0].name).toEqual("value");
+        })
+        .then(function() {
+          csvItem.updateFromJson({
+            tableStyle: {
+              dataVariable: "name"
+            }
+          });
+        })
+        .then(function() {
+          expect(csvItem.isMappable).toEqual(true);
+          expect(csvItem.concepts[0].activeItems.length).toEqual(1);
+          expect(csvItem.concepts[0].activeItems[0].name).toEqual("name");
+        })
+        .then(done)
+        .otherwise(done.fail);
+    });
+  });
+  describe("serialization around tableStyle & tableStructures for non-geo time series csvs", function() {
+    it("can be round-tripped with serializeToJson and updateFromJson", function() {
+      columns = {
+        "0": {
+          active: false
+        },
+        "1": {
+          active: false
+        },
+        "2": {
+          active: false
+        }
+      };
+      csvItem.updateFromJson({
+        type: "csv",
+        url: "test/csv_nongeo/time_series.csv",
+        isEnabled: true,
+        isShown: true,
+        isCsvForCharting: true,
+        tableStyle: {
+          columns: columns
+        }
+      });
+
+      var json = csvItem.serializeToJson();
+
+      var reconstructed = new CsvCatalogItem(terria);
+      reconstructed.updateFromJson(json);
+
+      expect(reconstructed.type).toEqual(csvItem.type);
+      expect(reconstructed.url).toEqual(csvItem.url);
+      expect(reconstructed.isEnabled).toEqual(csvItem.isEnabled);
+      expect(reconstructed.isShown).toEqual(csvItem.isShown);
+      expect(reconstructed.isCsvForCharting).toEqual(csvItem.isCsvForCharting);
+
+      expect(reconstructed.tableStyle.columns[0].active).toBe(
+        columns[0].active
+      );
+      expect(reconstructed.tableStyle.columns[1].active).toBe(
+        columns[1].active
+      );
+      expect(reconstructed.tableStyle.columns[2].active).toBe(
+        columns[2].active
+      );
+    });
+    it("serializes the dataurl for sharing if url does not exist", function() {
+      columns = {
+        "0": {
+          active: false
+        },
+        "1": {
+          active: false
+        },
+        "2": {
+          active: false
+        }
+      };
+      const dataUrl =
+        "data:attachment/csv,Time%2CCapacity%2CPower%0A2015-10-19T00%3A10%3A00%2B1000%2C0.1%2C0.085%0A2015-10-19T01%3A15%3A00%2B1000%2C0.2%2C0.14%0A2015-10-19T02%3A20%3A00%2B1000%2C0.3%2C0.3%0A2015-10-19T03%3A25%3A00%2B1000%2C0%2C0%0A2015-10-19T04%3A30%3A00%2B1000%2C0.1%2C0%0A2015-10-19T05%3A35%3A00%2B1000%2C-0.4%2C0%0A2015-10-19T06%3A40%3A00%2B1000%2C0.4%2C0.3%0A2015-10-19T07%3A45%3A00%2B1000%2C0.1%2C0.1";
+      csvItem.updateFromJson({
+        type: "csv",
+        dataUrl: dataUrl,
+        isEnabled: true,
+        isShown: true,
+        isCsvForCharting: true,
+        tableStyle: {
+          columns: columns
+        }
+      });
+
+      var json = csvItem.serializeToJson();
+      expect(json.dataUrl).toEqual(dataUrl);
+
+      var reconstructed = new CsvCatalogItem(terria);
+      reconstructed.updateFromJson(json);
+
+      expect(reconstructed.type).toEqual(csvItem.type);
+      expect(reconstructed.url).toBeUndefined();
+      expect(reconstructed.dataUrl).toEqual(dataUrl);
+      expect(reconstructed.isEnabled).toEqual(csvItem.isEnabled);
+      expect(reconstructed.isShown).toEqual(csvItem.isShown);
+      expect(reconstructed.isCsvForCharting).toEqual(csvItem.isCsvForCharting);
+      expect(reconstructed.tableStyle.columns[0].active).toBe(
+        columns[0].active
+      );
+      expect(reconstructed.tableStyle.columns[1].active).toBe(
+        columns[1].active
+      );
+      expect(reconstructed.tableStyle.columns[2].active).toBe(
+        columns[2].active
+      );
+    });
+    it("generates columns on a table style on serialization for chartable items, when a CsvCatalogItem is created without them", function(done) {
+      columns = {
+        "0": {
+          active: false
+        },
+        "1": {
+          active: false
+        },
+        "2": {
+          active: true
+        }
+      };
+
+      csvItem.updateFromJson({
+        type: "csv",
+        url: "test/csv_nongeo/time_series.csv",
+        isEnabled: true,
+        isShown: true,
+        isCsvForCharting: false
+      });
+
+      expect(csvItem.tableStyle.columns).toBeUndefined();
+
+      csvItem
+        .load()
+        .then(function() {
+          // loaded in with 1 active item,
+          expect(csvItem.isMappable).toBe(false);
+          expect(csvItem.concepts[0].allowMultiple).toEqual(true);
+          expect(csvItem.concepts[0].activeItems.length).toEqual(1);
+          expect(csvItem.concepts[0].items.length).toEqual(3);
+          expect(csvItem.concepts[0].items[0].isActive).toEqual(false);
+          expect(csvItem.concepts[0].items[1].isActive).toEqual(true);
+          expect(csvItem.concepts[0].items[2].isActive).toEqual(false);
+
+          // deselect first and choose the second item
+          csvItem.concepts[0].items[1].toggleActive();
+          csvItem.concepts[0].items[2].toggleActive();
+          expect(csvItem.concepts[0].items[1].isActive).toEqual(false);
+          expect(csvItem.concepts[0].items[2].isActive).toEqual(true);
+
+          var json = csvItem.serializeToJson();
+
+          var reconstructed = new CsvCatalogItem(terria);
+          reconstructed.updateFromJson(json);
+          expect(reconstructed.tableStyle.columns[0].active).toBe(
+            columns[0].active
+          );
+          expect(reconstructed.tableStyle.columns[1].active).toBe(
+            columns[1].active
+          );
+          expect(reconstructed.tableStyle.columns[2].active).toBe(
+            columns[2].active
+          );
+          expect(reconstructed.tableStyle.columns[1].chartLineColor).toBe(
+            reconstructed.colors[0]
+          );
+          expect(reconstructed.tableStyle.columns[2].chartLineColor).toBe(
+            reconstructed.colors[1]
+          );
+
+          // try with 2 active item selected
+          csvItem.concepts[0].items[1].toggleActive();
+          expect(csvItem.concepts[0].items[1].isActive).toEqual(true);
+          expect(csvItem.concepts[0].items[2].isActive).toEqual(true);
+          var json2 = csvItem.serializeToJson();
+          var reconstructed2 = new CsvCatalogItem(terria);
+          reconstructed2.updateFromJson(json2);
+          expect(reconstructed2.tableStyle.columns[0].active).toBe(false);
+          expect(reconstructed2.tableStyle.columns[1].active).toBe(true);
+          expect(reconstructed2.tableStyle.columns[2].active).toBe(true);
+          expect(reconstructed2.tableStyle.columns[1].chartLineColor).toBe(
+            reconstructed2.colors[0]
+          );
+          expect(reconstructed2.tableStyle.columns[2].chartLineColor).toBe(
+            reconstructed2.colors[1]
+          );
+        })
+        .then(done)
+        .otherwise(done.fail);
+    });
+
+    it("initialises and shares the correct 'no variables selected' state", function(done) {
+      columns = {
+        "0": {
+          active: false
+        },
+        "1": {
+          active: false
+        },
+        "2": {
+          active: false
+        }
+      };
+      // the flow for shared csv items is that the tableStyle is serialised
+      csvItem
+        .updateFromJson({
+          type: "csv",
+          url: "test/csv_nongeo/time_series.csv",
+          isEnabled: true,
+          isShown: true,
+          isCsvForCharting: true,
+          tableStyle: {
+            columns: columns
+          }
+        })
+        .then(function() {
+          expect(csvItem.tableStyle.columns[0].active).toBe(columns[0].active);
+          expect(csvItem.tableStyle.columns[1].active).toBe(columns[1].active);
+          expect(csvItem.tableStyle.columns[2].active).toBe(columns[2].active);
+        })
+        .then(csvItem.load.bind(csvItem))
+        .then(function() {
+          const tableStructure = csvItem.concepts[0];
+          expect(tableStructure.items[0].isActive).toBe(false);
+          expect(tableStructure.items[1].isActive).toBe(true);
+          expect(tableStructure.items[2].isActive).toBe(false);
+
+          // we apply table style columns to structure when loading from a shared (chart) catalog item
+          csvItem.applyTableStyleColumnsToStructure(
+            { columns: columns },
+            csvItem.tableStructure
+          );
+
+          // Check that the table structure now overrode and reflects the columnstyle provided
+          expect(tableStructure.items[0].isActive).toBe(false);
+          expect(tableStructure.items[1].isActive).toBe(false);
+          expect(tableStructure.items[2].isActive).toBe(false);
+          expect(tableStructure.activeItems.length).toBe(0);
+        })
+        .then(function() {
+          const serialized = csvItem.serializeToJson();
+          expect(serialized.tableStyle.allVariablesUnactive).toBe(true);
+          expect(serialized.tableStyle.columns[0].active).toBe(false);
+          expect(serialized.tableStyle.columns[1].active).toBe(false);
+          expect(serialized.tableStyle.columns[2].active).toBe(false);
+        })
+        .then(done)
+        .otherwise(done.fail);
+    });
+    it("initialises the correct 'second variable is selected' state & shares newly toggled state", function(done) {
+      columns = {
+        "0": {
+          active: false
+        },
+        "1": {
+          active: false
+        },
+        "2": {
+          active: true
+        }
+      };
+      // the flow for shared csv items is that the tableStyle is serialised
+      csvItem
+        .updateFromJson({
+          type: "csv",
+          url: "test/csv_nongeo/time_series.csv",
+          isEnabled: true,
+          isShown: true,
+          isCsvForCharting: true,
+          tableStyle: {
+            columns: columns
+          }
+        })
+        .then(function() {
+          expect(csvItem.tableStyle.columns[0].active).toBe(columns[0].active);
+          expect(csvItem.tableStyle.columns[1].active).toBe(columns[1].active);
+          expect(csvItem.tableStyle.columns[2].active).toBe(columns[2].active);
+        })
+        .then(csvItem.load.bind(csvItem))
+        .then(function() {
+          // because we load in non-geospatial data, and there are activeItems
+          // ensureActiveColumnForNonSpatial() shouldn't change active columns
+          const tableStructure = csvItem.concepts[0];
+          expect(tableStructure.items[0].isActive).toBe(false);
+          expect(tableStructure.items[1].isActive).toBe(false);
+          expect(tableStructure.items[2].isActive).toBe(true);
+
+          // toggleActive on tableStructure items do not reflect back into table styles
+          tableStructure.items[1].toggleActive();
+          expect(tableStructure.items[1].isActive).toBe(true);
+
+          // should have two active items on tableStructure now
+          expect(tableStructure.items[0].isActive).toBe(false);
+          expect(tableStructure.items[1].isActive).toBe(true);
+          expect(tableStructure.items[2].isActive).toBe(true);
+
+          // however active should still be false on !tableStyle! until we sync changes
+          expect(csvItem.tableStyle.columns[0].active).toBe(false);
+          expect(csvItem.tableStyle.columns[1].active).toBe(false);
+          expect(csvItem.tableStyle.columns[2].active).toBe(true);
+
+          // trigger a syncActiveColumns through serialization
+          const serialized = csvItem.serializeToJson();
+          expect(csvItem.tableStyle.columns[0].active).toBe(false);
+          expect(csvItem.tableStyle.columns[1].active).toBe(true);
+          expect(csvItem.tableStyle.columns[2].active).toBe(true);
+          expect(serialized.tableStyle.allVariablesUnactive).toBe(undefined);
+          expect(serialized.tableStyle.columns[0].active).toBe(false);
+          expect(serialized.tableStyle.columns[1].active).toBe(true);
+          expect(serialized.tableStyle.columns[2].active).toBe(true);
+        })
+        .then(done)
+        .otherwise(done.fail);
+    });
+  });
+  describe("load behaviour around SensorObservationServiceCatalogItem generated csvs", function() {
+    var sosItem;
+    var tableStructure;
+    beforeEach(function() {
+      terria = new Terria({
+        baseUrl: "./"
+      });
+      csvItem = new CsvCatalogItem(terria);
+      tableStructure = new TableStructure();
+      sosItem = new SensorObservationServiceCatalogItem(terria);
+      sosItem.id = "SosItem";
+      terria.catalog.group.add(sosItem);
+    });
+    it("attempts a load when `data` property is not undefined", function(done) {
+      csvItem
+        .updateFromJson({
+          type: "csv",
+          url: "test/data/service/at/SOMEIDENTIFIER101", // this url shouldn't be utilised at all
+          sourceCatalogItemId: "SosItem",
+          regenerationOptions: {
+            // also does nothing for the test but required for sos chart sharing
+            procedure: {
+              identifier:
+                "http://test.domain/test/data/service/tstypes/YearlyMean",
+              title: "Annual+average",
+              defaultDuration: "40y"
+            }
+          },
+          isEnabled: true,
+          isShown: true,
+          isCsvForCharting: true,
+          tableStyle: {
+            columns: {}
+          }
+        })
+        .then(function() {
+          csvItem.data = when.resolve(tableStructure);
+        })
+        .then(csvItem.load.bind(csvItem))
+        .then(function() {
+          expect(csvItem.tableStructure).toEqual(tableStructure);
+        })
+        .then(done)
+        .otherwise(done.fail);
+    });
+    it("does not load when we haven't defined how to load it via the csv's `data` property", function(done) {
+      csvItem
+        .updateFromJson({
+          type: "csv",
+          url: "test/data/service/at/SOMEIDENTIFIER101", // this url shouldn't be utilised at all
+          sourceCatalogItemId: "SosItem",
+          isEnabled: true,
+          isShown: true,
+          isCsvForCharting: true,
+          tableStyle: {
+            columns: {}
+          }
+        })
+        .then(csvItem.load.bind(csvItem))
+        .then(function() {
+          expect(csvItem.tableStructure).toBeUndefined();
+        })
+        .then(done)
+        .otherwise(done.fail);
+    });
   });
 });

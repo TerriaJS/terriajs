@@ -10,8 +10,8 @@ import defaultValue from "terriajs-cesium/Source/Core/defaultValue";
 import defined from "terriajs-cesium/Source/Core/defined";
 import clone from "terriajs-cesium/Source/Core/clone";
 
-import CatalogGroup from "../../../Models/CatalogGroup";
 import CsvCatalogItem from "../../../Models/CsvCatalogItem";
+import SensorObservationServiceCatalogItem from "../../../Models/SensorObservationServiceCatalogItem";
 import Dropdown from "../../Generic/Dropdown";
 import Polling from "../../../Models/Polling";
 import raiseErrorToUser from "../../../Models/raiseErrorToUser";
@@ -201,7 +201,8 @@ function expand(props, sourceIndex) {
   function makeNewCatalogItem() {
     const url = defined(sourceIndex) ? props.sources[sourceIndex] : undefined;
     const newCatalogItem = new CsvCatalogItem(terria, url, {
-      tableStyle: makeTableStyle()
+      tableStyle: makeTableStyle(),
+      isCsvForCharting: true
     });
     let tableStructure = props.tableStructure;
     if (
@@ -221,6 +222,23 @@ function expand(props, sourceIndex) {
       defined(props.catalogItem.loadIntoTableStructure)
     ) {
       tableStructure = props.catalogItem.loadIntoTableStructure(url);
+      // At least for SensorObservationServiceCatalogItems, store a reference to that item, on the chart item being generated
+      if (props.catalogItem.type === "sos") {
+        // debugger
+        newCatalogItem.sourceCatalogItemId = props.catalogItem.uniqueId;
+        if (
+          props.catalogItem.activeConcepts &&
+          props.catalogItem.activeConcepts.length === 1
+        ) {
+          const procedure = SensorObservationServiceCatalogItem.getObjectCorrespondingToSelectedConcept(
+            props.catalogItem,
+            "procedures"
+          );
+          newCatalogItem.regenerationOptions = {
+            procedure: procedure
+          };
+        }
+      }
     }
     newCatalogItem.data = tableStructure;
     // Without this, if the chart data comes via the proxy, it would be cached for the default period of 2 weeks.
@@ -233,12 +251,8 @@ function expand(props, sourceIndex) {
     );
     newCatalogItem.name =
       props.title || (props.feature && props.feature.name) || "Chart";
-    newCatalogItem.id =
-      newCatalogItem.name +
-      (props.id ? " " + props.id : "") +
-      " (" +
-      props.catalogItem.name +
-      ")";
+    const group = terria.catalog.chartDataGroup;
+    newCatalogItem.id = group.uniqueId + "/" + newCatalogItem.name;
 
     if (defined(props.pollSeconds)) {
       const pollSources = props.pollSources;
@@ -251,11 +265,6 @@ function expand(props, sourceIndex) {
         replace: props.pollReplace
       });
     }
-    const group = terria.catalog.upsertCatalogGroup(
-      CatalogGroup,
-      "Chart Data",
-      "A group for chart data."
-    );
     group.isOpen = true;
     const existingIndex = group.items
       .map(item => item.uniqueId)
