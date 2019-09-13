@@ -12,8 +12,8 @@ import prettifyCoordinates from "../Map/prettifyCoordinates";
 import prettifyProjection from "../Map/prettifyProjection";
 import Terria from "../Models/Terria";
 
-// TypeScript 3.6.3 can't tell JSRegionProviderList is a class and reports
-//   Cannot use namespace 'JSRegionProviderList' as a type.ts(2709)
+// TypeScript 3.6.3 can't tell JSEarthGravityModel1996 is a class and reports
+//   Cannot use namespace 'JSEarthGravityModel1996' as a type.ts(2709)
 // This is a dodgy workaround.
 class EarthGravityModel1996 extends JSEarthGravityModel1996 {}
 
