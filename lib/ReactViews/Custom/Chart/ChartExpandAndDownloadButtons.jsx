@@ -11,6 +11,7 @@ import defined from "terriajs-cesium/Source/Core/defined";
 import clone from "terriajs-cesium/Source/Core/clone";
 
 import CsvCatalogItem from "../../../Models/CsvCatalogItem";
+import SensorObservationServiceCatalogItem from "../../../Models/SensorObservationServiceCatalogItem";
 import Dropdown from "../../Generic/Dropdown";
 import Polling from "../../../Models/Polling";
 import raiseErrorToUser from "../../../Models/raiseErrorToUser";
@@ -221,6 +222,23 @@ function expand(props, sourceIndex) {
       defined(props.catalogItem.loadIntoTableStructure)
     ) {
       tableStructure = props.catalogItem.loadIntoTableStructure(url);
+      // At least for SensorObservationServiceCatalogItems, store a reference to that item, on the chart item being generated
+      if (props.catalogItem.type === "sos") {
+        // debugger
+        newCatalogItem.sourceCatalogItemId = props.catalogItem.uniqueId;
+        if (
+          props.catalogItem.activeConcepts &&
+          props.catalogItem.activeConcepts.length === 1
+        ) {
+          const procedure = SensorObservationServiceCatalogItem.getObjectCorrespondingToSelectedConcept(
+            props.catalogItem,
+            "procedures"
+          );
+          newCatalogItem.regenerationOptions = {
+            procedure: procedure
+          };
+        }
+      }
     }
     newCatalogItem.data = tableStructure;
     // Without this, if the chart data comes via the proxy, it would be cached for the default period of 2 weeks.
