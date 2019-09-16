@@ -84,7 +84,7 @@ const ChartExpandAndDownloadButtons = createReactClass({
     let btnsShouldBeDisabled = false;
     const f = this.props.feature;
     const chartData = this.props.catalogItem.chartData();
-    if (defined(chartData) && defined(chartData[0].points)) {
+    if (defined(chartData) && defined(chartData[0])) {
       chartData[0].points.forEach(function(p) {
         if (p.x === f._name && p.y === null) {
           btnsShouldBeDisabled = true;
