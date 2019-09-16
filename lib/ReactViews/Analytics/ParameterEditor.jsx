@@ -15,6 +15,7 @@ import RegionParameterEditor from "./RegionParameterEditor";
 import RegionTypeParameterEditor from "./RegionTypeParameterEditor";
 import RegionDataParameterEditor from "./RegionDataParameterEditor";
 import BooleanParameterEditor from "./BooleanParameterEditor";
+import BooleanParameterGroupEditor from "./BooleanParameterGroupEditor";
 import DateTimeParameterEditor from "./DateTimeParameterEditor";
 import EnumerationParameterEditor from "./EnumerationParameterEditor";
 import GenericParameterEditor from "./GenericParameterEditor";
@@ -273,6 +274,26 @@ ParameterEditor.parameterTypeConverters = [
           <div>
             {parameterEditor.renderLabel()}
             <BooleanParameterEditor
+              previewed={parameterEditor.props.previewed}
+              parameter={parameterEditor.props.parameter}
+              parameterViewModel={parameterEditor.props.parameterViewModel}
+            />
+          </div>
+        );
+      }
+    }
+  },
+  {
+    id: "boolean-group",
+    parameterTypeToDiv: function BooleanParameterGroupToDiv(
+      type,
+      parameterEditor
+    ) {
+      if (type === this.id) {
+        return (
+          <div>
+            {parameterEditor.renderLabel()}
+            <BooleanParameterGroupEditor
               previewed={parameterEditor.props.previewed}
               parameter={parameterEditor.props.parameter}
               parameterViewModel={parameterEditor.props.parameterViewModel}
