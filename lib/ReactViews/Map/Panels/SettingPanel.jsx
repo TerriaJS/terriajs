@@ -179,7 +179,7 @@ const SettingPanel = createReactClass({
                 Styles.qualityHeading
               )}
             >
-              Optimise for:
+              Image optimisation:
             </label>
             <section
               className={Styles.qualityWrapper}
@@ -200,6 +200,7 @@ const SettingPanel = createReactClass({
                 max={2}
                 value={this.props.terria.quality}
                 onChange={val => (this.props.terria.quality = val)}
+                marks={{ 1: "" }}
                 // Awaiting https://github.com/react-component/slider/pull/420
                 // aria-valuetext={qualityLabels[this.props.terria.quality]}
               />
