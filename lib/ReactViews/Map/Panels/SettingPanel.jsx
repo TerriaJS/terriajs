@@ -204,7 +204,7 @@ const SettingPanel = createReactClass({
                 htmlFor="mapUseNativeResolution"
                 className={classNames(
                   DropdownStyles.subHeading,
-                  Styles.qualityHeading
+                  Styles.nativeResolutionHeader
                 )}
               >
                 Use native device resolution

@@ -73,6 +73,9 @@
     fill: #fff;
   }
 }
+.native-resolution-header {
+  cursor: pointer;
+}
 .btn--nativeResolution {
   composes: btn from "../../../Sass/common/_buttons.scss";
   padding-right: 5px;
