@@ -28,6 +28,14 @@ export interface ColumnValuesAsNumbers {
   readonly numberOfNonNumbers: number;
 }
 
+export interface ColumnValuesAsDates {
+  readonly values: ReadonlyArray<Date | null>;
+  readonly minimum: Date | undefined;
+  readonly maximum: Date | undefined;
+  readonly numberOfValidDates: number;
+  readonly numberOfNonDates: number;
+}
+
 export interface ColumnValuesAsRegions {
   readonly regionIds: ReadonlyArray<string | null>;
   readonly numberOfValidRegions: number;
@@ -135,6 +143,59 @@ export default class TableColumn {
       maximum: maximum === -Number.MAX_VALUE ? undefined : maximum,
       numberOfValidNumbers: numberOfValidNumbers,
       numberOfNonNumbers: numberOfNonNumbers
+    };
+  }
+
+  /**
+   * Gets the column values as dates, and returns information about how many
+   * rows were successfully converted to dates and the range of values.
+   */
+  @computed
+  get valuesAsDates(): ColumnValuesAsDates {
+    // See ECMA-262 section 15.9.1.1
+    // http://ecma-international.org/ecma-262/5.1/#sec-15.9.1.1
+    const maxDate = new Date(8.64e15);
+    const minDate = new Date(-8.64e15);
+
+    const dates: (Date | null)[] = [];
+    let minimum = maxDate;
+    let maximum = minDate;
+    let numberOfValidDates = 0;
+    let numberOfNonDates = 0;
+
+    const replaceWithNull = this.traits.replaceWithNullValues;
+
+    const values = this.values;
+    for (let i = 0; i < values.length; ++i) {
+      const value = values[i];
+
+      let d: Date | null;
+      if (replaceWithNull && replaceWithNull.indexOf(value) >= 0) {
+        d = null;
+      } else if (value.length === 0) {
+        d = null;
+      } else {
+        d = toDate(values[i]);
+        if (d === null) {
+          ++numberOfNonDates;
+        }
+      }
+
+      if (d !== null) {
+        ++numberOfValidDates;
+        minimum = d < minimum ? d : minimum;
+        maximum = d > maximum ? d : maximum;
+      }
+
+      dates.push(d);
+    }
+
+    return {
+      values: dates,
+      minimum: minimum === maxDate ? undefined : minimum,
+      maximum: maximum === minDate ? undefined : maximum,
+      numberOfValidDates: numberOfValidDates,
+      numberOfNonDates: numberOfNonDates
     };
   }
 
@@ -472,6 +533,15 @@ function toNumber(value: string): number | null {
   const asNumber = Number(withoutCommas);
   if (!Number.isNaN(asNumber)) {
     return asNumber;
+  }
+  return null;
+}
+
+function toDate(value: string): Date | null {
+  // TODO: Add much more sophisticated date parsing from old TableColumn.convertToDates.
+  const ms = Date.parse(value);
+  if (!Number.isNaN(ms)) {
+    return new Date(ms);
   }
   return null;
 }
