@@ -1,4 +1,10 @@
-import { computed, IComputedValue, IObservableValue, observable } from "mobx";
+import {
+  computed,
+  IComputedValue,
+  IObservableValue,
+  observable,
+  action
+} from "mobx";
 import CesiumEvent from "terriajs-cesium/Source/Core/Event";
 import Rectangle from "terriajs-cesium/Source/Core/Rectangle";
 import CameraView from "../Models/CameraView";
@@ -91,10 +97,12 @@ export default class TerriaViewer {
 
   // Pull out attaching logic into it's own step. This allows constructing a TerriaViewer
   // before its UI element is mounted in React to set basemap, items, viewermode
+  @action
   attach(mapContainer?: string | HTMLElement) {
     this.mapContainer = mapContainer;
   }
 
+  @action
   detach() {
     // Detach from a container
     this.mapContainer = undefined;

@@ -5,6 +5,7 @@ import { observer } from "mobx-react";
 
 import ModalPopup from "./ModalPopup";
 import Tabs from "./Tabs";
+import { runInAction } from "mobx";
 
 const ExplorerWindow = observer(
   createReactClass({
@@ -16,16 +17,20 @@ const ExplorerWindow = observer(
     },
 
     onClose() {
-      this.props.viewState.explorerPanelIsVisible = false;
+      this.props.viewState.closeCatalog();
       this.props.viewState.switchMobileView("nowViewing");
     },
 
     onStartAnimatingIn() {
-      this.props.viewState.explorerPanelAnimating = true;
+      runInAction(() => {
+        this.props.viewState.explorerPanelAnimating = true;
+      });
     },
 
     onDoneAnimatingIn() {
-      this.props.viewState.explorerPanelAnimating = false;
+      runInAction(() => {
+        this.props.viewState.explorerPanelAnimating = false;
+      });
     },
 
     isVisible() {

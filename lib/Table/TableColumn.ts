@@ -1,12 +1,18 @@
 import countBy from "lodash-es/countBy";
 import { computed } from "mobx";
-import RegionProvider from "../Map/RegionProvider";
-import RegionProviderList from "../Map/RegionProviderList";
+import JSRegionProvider from "../Map/RegionProvider";
+import JSRegionProviderList from "../Map/RegionProviderList";
 import createCombinedModel from "../Models/createCombinedModel";
 import Model from "../Models/Model";
 import TableColumnTraits from "../Traits/TableColumnTraits";
 import TableTraits from "../Traits/TableTraits";
 import TableColumnType, { stringToTableColumnType } from "./TableColumnType";
+
+// TypeScript 3.6.3 can't tell JSRegionProviderList is a class and reports
+//   Cannot use namespace 'JSRegionProviderList' as a type.ts(2709)
+// This is a dodgy workaround.
+class RegionProviderList extends JSRegionProviderList {}
+class RegionProvider extends JSRegionProvider {}
 
 interface TableModel extends Model<TableTraits> {
   readonly dataColumnMajor: string[][] | undefined;
@@ -286,7 +292,7 @@ export default class TableColumn {
   }
 
   findMatchingRegion(
-    regionType: typeof RegionProvider,
+    regionType: RegionProvider,
     rowValue: string
   ): string | null {
     // TODO: validate that the rowValue is actually a valid region, if possible.
@@ -318,12 +324,13 @@ export default class TableColumn {
    */
   @computed
   get traits(): Model<TableColumnTraits> {
-    if (
-      this.columnNumber >= 0 &&
-      this.columnNumber < this.tableModel.columns.length
-    ) {
+    // It is important to match on column name and not column number because the column numbers can vary between stratum
+    const thisColumn = this.tableModel.columns.find(
+      column => column.name === this.name
+    );
+    if (thisColumn !== undefined) {
       const result = createCombinedModel(
-        this.tableModel.columns[this.columnNumber],
+        thisColumn,
         this.tableModel.defaultColumn
       );
       return result;
@@ -389,7 +396,7 @@ export default class TableColumn {
   }
 
   @computed
-  get regionType(): typeof RegionProvider | undefined {
+  get regionType(): RegionProvider | undefined {
     const regions = this.tableModel.regionProviderList;
     if (regions === undefined) {
       return undefined;
@@ -403,7 +410,7 @@ export default class TableColumn {
 
     // No region type specified, so match the column name against the region
     // aliases.
-    const details = regions.getRegionDetails([this.name]);
+    const details = regions.getRegionDetails([this.name], undefined, undefined);
     if (details.length > 0) {
       return details[0].regionProvider;
     }

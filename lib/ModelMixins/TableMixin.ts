@@ -7,12 +7,14 @@ import CustomDataSource from "terriajs-cesium/Source/DataSources/CustomDataSourc
 import DataSource from "terriajs-cesium/Source/DataSources/DataSource";
 import Entity from "terriajs-cesium/Source/DataSources/Entity";
 import PointGraphics from "terriajs-cesium/Source/DataSources/PointGraphics";
+import ChartData, { ChartPoint } from "../Charts/ChartData";
+import AsyncLoader from "../Core/AsyncLoader";
 import Constructor from "../Core/Constructor";
 import filterOutUndefined from "../Core/filterOutUndefined";
 import { JsonObject } from "../Core/Json";
 import makeRealPromise from "../Core/makeRealPromise";
 import MapboxVectorTileImageryProvider from "../Map/MapboxVectorTileImageryProvider";
-import RegionProviderList from "../Map/RegionProviderList";
+import JSRegionProviderList from "../Map/RegionProviderList";
 import { ImageryParts } from "../Models/Mappable";
 import Model from "../Models/Model";
 import ModelPropertiesFromTraits from "../Models/ModelPropertiesFromTraits";
@@ -22,9 +24,11 @@ import TableColumnType from "../Table/TableColumnType";
 import TableStyle from "../Table/TableStyle";
 import LegendTraits from "../Traits/LegendTraits";
 import TableTraits from "../Traits/TableTraits";
-import ImageryLayerFeatureInfo from "terriajs-cesium/Source/Scene/ImageryLayerFeatureInfo";
-import ChartData, { ChartPoint } from "../Charts/ChartData";
-import AsyncLoader from "../Core/AsyncLoader";
+
+// TypeScript 3.6.3 can't tell JSRegionProviderList is a class and reports
+//   Cannot use namespace 'JSRegionProviderList' as a type.ts(2709)
+// This is a dodgy workaround.
+class RegionProviderList extends JSRegionProviderList {}
 
 export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
   Base: T
@@ -100,13 +104,17 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
      * with an ID that matches {@link #activeStyle}, if any.
      */
     @computed
-    get activeTableStyle(): TableStyle | undefined {
+    get activeTableStyle(): TableStyle {
       const activeStyle = this.activeStyle;
       if (activeStyle === undefined) {
-        return undefined;
+        return this.defaultTableStyle;
+      }
+      let ret = this.tableStyles.find(style => style.id === this.activeStyle);
+      if (ret === undefined) {
+        return this.defaultTableStyle;
       }
 
-      return this.tableStyles.find(style => style.id === this.activeStyle);
+      return ret;
     }
 
     /**
@@ -116,19 +124,9 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
     get mapItems(): (DataSource | ImageryParts)[] {
       const result: (DataSource | ImageryParts)[] = [];
 
-      const styles = this.tableStyles;
-      if (this.activeStyle === undefined) {
-        return result;
-      }
-
-      const style = styles.find(style => style.id === this.activeStyle);
-      if (style === undefined) {
-        return result;
-      }
-
       return filterOutUndefined([
-        this.createLongitudeLatitudeDataSource(style),
-        this.createRegionMappedImageryLayer(style)
+        this.createLongitudeLatitudeDataSource(this.activeTableStyle),
+        this.createRegionMappedImageryLayer(this.activeTableStyle)
       ]);
     }
 
@@ -210,10 +208,6 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
     }
 
     get legends(): readonly ModelPropertiesFromTraits<LegendTraits>[] {
-      if (this.activeTableStyle === undefined) {
-        return [];
-      }
-
       const colorLegend = this.activeTableStyle.colorTraits.legend;
       return filterOutUndefined([colorLegend]);
     }
@@ -229,7 +223,9 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
     protected abstract forceLoadTableData(): Promise<string[][]>;
 
     private forceLoadTableMixin(): Promise<void> {
-      const regionProvidersPromise = makeRealPromise(
+      const regionProvidersPromise: Promise<
+        RegionProviderList | undefined
+      > = makeRealPromise(
         RegionProviderList.fromUrl(
           this.terria.configParameters.regionMappingDefinitionsUrl,
           this.terria.corsProxy
@@ -264,19 +260,9 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
         const latitudes = style.latitudeColumn.valuesAsNumbers.values;
 
         const colorColumn = style.colorColumn;
-
-        const pointSizeColumn = style.pointSizeColumn;
-        const pointSizeFactor = style.pointSizeTraits.sizeFactor;
-        const pointSizeOffset = style.pointSizeTraits.sizeOffset;
-        const nullPointSize = style.pointSizeTraits.nullSize;
-
-        const colorValueFunction =
+        const valueFunction =
           colorColumn !== undefined
             ? colorColumn.valueFunctionForType
-            : () => null;
-        const pointSizeValueFunction =
-          pointSizeColumn !== undefined
-            ? pointSizeColumn.scaledValueFunctionForType
             : () => null;
 
         const colorMap = (this.activeTableStyle || this.defaultTableStyle)
@@ -292,23 +278,17 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
         for (let i = 0; i < longitudes.length && i < latitudes.length; ++i) {
           const longitude = longitudes[i];
           const latitude = latitudes[i];
-          const value = colorValueFunction(i);
+          const value = valueFunction(i);
           if (longitude === null || latitude === null) {
             continue;
           }
-
-          const scaledValue = pointSizeValueFunction(i);
-          const pointSize =
-            scaledValue === null
-              ? nullPointSize
-              : scaledValue * pointSizeFactor + pointSizeOffset;
 
           const entity = dataSource.entities.add(
             new Entity({
               position: Cartesian3.fromDegrees(longitude, latitude, 0.0),
               point: new PointGraphics({
                 color: colorMap.mapValueToColor(value),
-                pixelSize: pointSize,
+                pixelSize: 5,
                 outlineWidth: 1,
                 outlineColor: outlineColor
               })
@@ -322,16 +302,6 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
         return dataSource;
       }
     );
-
-    private getRowValues(index: number): JsonObject {
-      const result: JsonObject = {};
-
-      this.tableColumns.forEach(column => {
-        result[column.name] = column.values[index];
-      });
-
-      return result;
-    }
 
     private readonly createRegionMappedImageryLayer = createTransformer(
       (style: TableStyle): ImageryParts | undefined => {
@@ -368,7 +338,7 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
                   ? featureRegion.toString()
                   : "";
               const rowNumbers = valuesAsRegions.regionIdToRowNumbersMap.get(
-                regionIdString
+                regionIdString.toLowerCase()
               );
               let value: string | number | null;
 
@@ -403,43 +373,27 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
             minimumZoom: regionType.serverMinZoom,
             maximumNativeZoom: regionType.serverMaxNativeZoom,
             maximumZoom: regionType.serverMaxZoom,
-            uniqueIdProp: regionType.uniqueIdProp,
-            featureInfoFunc: (feature: any) => {
-              const featureRegion = feature.properties[regionType.regionProp];
-              const regionIdString =
-                featureRegion !== undefined && featureRegion !== null
-                  ? featureRegion.toString()
-                  : "";
-              const rowNumbers = valuesAsRegions.regionIdToRowNumbersMap.get(
-                regionIdString
-              );
-
-              if (rowNumbers === undefined) {
-                return undefined;
-              } else if (typeof rowNumbers === "number") {
-                const featureInfo = new ImageryLayerFeatureInfo();
-                (<any>featureInfo).properties = {
-                  ...feature.properties,
-                  ...this.getRowValues(rowNumbers)
-                };
-                return featureInfo;
-              } else {
-                // TODO: multiple rows have data for this region
-                const featureInfo = new ImageryLayerFeatureInfo();
-                (<any>featureInfo).properties = {
-                  ...feature.properties,
-                  ...this.getRowValues(rowNumbers[0])
-                };
-                return featureInfo;
-              }
-
-              return undefined;
-            }
+            uniqueIdProp: regionType.uniqueIdProp
+            // featureInfoFunc: addDescriptionAndProperties(
+            //   regionMapping,
+            //   regionIndices,
+            //   regionImageryProvider
+            // )
           }),
           show: this.show
         };
       }
     );
+
+    private getRowValues(index: number): JsonObject {
+      const result: JsonObject = {};
+
+      this.tableColumns.forEach(column => {
+        result[column.name] = column.values[index];
+      });
+
+      return result;
+    }
 
     private readonly getTableColumn = createTransformer((index: number) => {
       return new TableColumn(this, index);

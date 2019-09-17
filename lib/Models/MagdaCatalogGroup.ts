@@ -88,14 +88,18 @@ export default class MagdaCatalogGroup extends MagdaMixin(
           type:
             typeof terriaAspect.type === "string" ? terriaAspect.type : "group",
           members: Array.isArray(groupAspect.members)
-            ? groupAspect.members.map((member: any) =>
-                magdaRecordToCatalogMemberDefinition({
-                  magdaBaseUrl: url,
-                  record: member,
-                  definition: definition,
-                  distributionFormats: distributionFormats
-                })
-              )
+            ? groupAspect.members
+                .map((member: any) =>
+                  magdaRecordToCatalogMemberDefinition({
+                    magdaBaseUrl: url,
+                    record: member,
+                    definition: definition,
+                    distributionFormats: distributionFormats
+                  })
+                )
+                // get rid of members that we couldn't convert to a catalog
+                // member (e.g.non supported/built distribution formats)
+                .filter(member => member)
             : []
         };
 
@@ -149,7 +153,10 @@ export default class MagdaCatalogGroup extends MagdaMixin(
         );
 
         if (GroupMixin.isMixedInto(dereferenced)) {
-          return dereferenced.loadMembers().then(() => dereferenced);
+          return dereferenced.loadMembers().then(() => {
+            dereferenced.refreshKnownContainerUniqueIds(id);
+            return dereferenced;
+          });
         } else if (CatalogMemberMixin.isMixedInto(dereferenced)) {
           return dereferenced.loadMetadata().then(() => dereferenced);
         }

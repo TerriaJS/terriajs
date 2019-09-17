@@ -9,12 +9,16 @@ interface CssExports {
   'map-cell-map': string;
   'map-wrapper': string;
   'mapCell': string;
+  'mapCellChrome': string;
   'mapCellMap': string;
   'mapInner': string;
+  'mapInnerChrome': string;
   'mapRow': string;
   'mapWrapper': string;
   'map__cell': string;
+  'map__cellChrome': string;
   'map__inner': string;
+  'map__innerChrome': string;
   'map__row': string;
   'print-disclaimer': string;
   'printDisclaimer': string;
