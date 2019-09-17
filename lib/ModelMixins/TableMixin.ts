@@ -292,7 +292,7 @@ export default function TableMixin<T extends Constructor<Model<TableTraits>>>(
               position: Cartesian3.fromDegrees(longitude, latitude, 0.0),
               point: new PointGraphics({
                 color: colorMap.mapValueToColor(value),
-                pixelSize: 5,
+                pixelSize: 15,
                 outlineWidth: 1,
                 outlineColor: outlineColor
               })
