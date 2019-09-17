@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### next patch
+
+* Allow MapboxMapCatalogItems to be specified in catalog files using type "mapbox-map".
+
 ### v7.6.11
 
 * Added a workaround for a bug in Google Chrome v76 and v77 that caused problems with sizing of the bottom dock, such as cutting off the timeline and flickering on and off over the map.
