@@ -1,3 +1,4 @@
+import { runInAction } from "mobx";
 import PropTypes from "prop-types";
 import React from "react";
 import ChartRenderer from "../../../Charts/ChartRenderer";
@@ -24,7 +25,9 @@ export default class NewChart extends React.PureComponent {
   }
 
   componentDidUpdate() {
-    this._chartRenderer.props = this.props;
+    runInAction(() => {
+      this._chartRenderer.props = this.props;
+    });
   }
 
   componentWillUnmount() {
